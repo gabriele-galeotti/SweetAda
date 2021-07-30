@@ -1,0 +1,226 @@
+
+#
+# .gitignore
+#
+
+################################################################################
+# top-level directory                                                          #
+################################################################################
+.externalToolBuilders/
+.kateproject.d/
+.settings/
+.vscode/
+development/
+management/
+obj/*
+share/sweetada.*
+.RELEASE_NOTES
+.backup.rules
+.cproject
+.gdbtkinit
+.kateproject
+.project
+Makefile.db.in
+configure.gpr
+gnat.adc
+kernel.*
+*.a
+*.aout
+*.bin
+*.d
+*.dwo
+*.elf
+*.hex
+*.log
+*.lst
+*.map
+*.o
+*.out
+*.srec
+*.tmp
+
+################################################################################
+# libutils                                                                     #
+################################################################################
+libutils/stackusage.tcl
+
+################################################################################
+# freeze                                                                       #
+################################################################################
+freeze/.backup.rules
+
+################################################################################
+# RTS                                                                          #
+################################################################################
+rts/src/*/MANUAL.*
+rts/src/targets/*/MANUAL.*
+rts/sfp/
+rts/zfp/
+rts/.backup.rules
+rts/*.log
+rts/rts-compare.sh
+
+################################################################################
+# application                                                                  #
+################################################################################
+application/application.adb
+application/application.ads
+application/test-CobaltRaQ2*
+application/test-OPTi386WB*
+application/test-QEMU-i486*
+application/test-TestPlatform*
+application/test-assertions.*
+application/test-delay.*
+application/test-exceptions.*
+application/test-floatingpoint.*
+application/test-interface.*
+application/test-libgcc.*
+application/test-protectedobj.*
+application/test-taggedtypes.*
+application/test-task.*
+
+################################################################################
+# clibrary                                                                     #
+################################################################################
+clibrary/MANUAL.*
+
+################################################################################
+# core                                                                         #
+################################################################################
+core/MANUAL.*
+
+################################################################################
+# cpus                                                                         #
+################################################################################
+cpus/*/MANUAL.*
+cpus/*/L_*
+
+################################################################################
+# drivers                                                                      #
+################################################################################
+drivers/MANUAL.*
+
+################################################################################
+# modules                                                                      #
+################################################################################
+modules/MANUAL.*
+
+################################################################################
+# platforms                                                                    #
+################################################################################
+platforms/CobaltRaQ2
+platforms/OPTi386WB
+platforms/QEMU-i486
+platforms/TestPlatform
+platforms/*/MANUAL.*
+platforms/*/minirc.*
+platforms/*/terminal-exec.sh
+# generated from .in
+platforms/*/configure.ads
+platforms/*/configure.h
+# IOEMU
+#platforms/Amiga-FS-UAE/fs-uae-ioemu.cfg
+#platforms/Dreamcast/gxemul.cfg
+#platforms/*/qemu.cfg
+#platforms/*/*/qemu.cfg
+# floppy/hard disk file images
+#platforms/*/*.dsk
+#platforms/*/*.hdf
+
+################################################################################
+# Amiga-FS-UAE                                                                 #
+################################################################################
+platforms/Amiga-FS-UAE/Makefile.in
+platforms/Amiga-FS-UAE/configuration.in
+platforms/Amiga-FS-UAE/configure.ads.in
+platforms/Amiga-FS-UAE/configure.h.in
+platforms/Amiga-FS-UAE/fs-uae.conf*
+platforms/Amiga-FS-UAE/debug.uae
+platforms/Amiga-FS-UAE/fs-uae.log.txt
+platforms/Amiga-FS-UAE/test-srecord.sh
+
+################################################################################
+# DECstation5000.133                                                           #
+################################################################################
+platforms/DECstation5000.133/linker.lds
+
+################################################################################
+# Dreamcast                                                                    #
+################################################################################
+platforms/Dreamcast/1ST_READ.BIN
+platforms/Dreamcast/IP.BIN
+platforms/Dreamcast/linker.lds
+platforms/Dreamcast/sweetada.iso
+
+################################################################################
+# M5235BCC                                                                     #
+################################################################################
+platforms/M5235BCC/Makefile.in
+platforms/M5235BCC/configuration.in
+platforms/M5235BCC/configure.ads.in
+platforms/M5235BCC/configure.h.in
+platforms/M5235BCC/linker.lds
+
+################################################################################
+# MemecFX12                                                                    #
+################################################################################
+platforms/MemecFX12/impact.cmd
+platforms/MemecFX12/xmd.ini
+
+################################################################################
+# OPTi386WB                                                                    #
+################################################################################
+platforms/OPTi386WB/Makefile.in
+platforms/OPTi386WB/configuration.in
+platforms/OPTi386WB/linker.lds
+platforms/OPTi386WB/startup.S
+
+################################################################################
+# PC-x86                                                                       #
+################################################################################
+platforms/PC-x86/Makefile.in
+platforms/PC-x86/bsp-board_init.adb
+platforms/PC-x86/configuration.in
+platforms/PC-x86/configure.ads.in
+platforms/PC-x86/configure.h.in
+platforms/PC-x86/linker.lds
+platforms/PC-x86/startup-memory.S
+
+################################################################################
+# PC-x86-64                                                                    #
+################################################################################
+platforms/PC-x86-64/Makefile.in
+platforms/PC-x86-64/configuration.in
+platforms/PC-x86-64/configure.ads.in
+platforms/PC-x86-64/configure.h.in
+platforms/PC-x86-64/linker.lds
+platforms/PC-x86-64/startup-memory.S
+
+################################################################################
+# SPARCstation5                                                                #
+################################################################################
+platforms/SPARCstation5/linker.lds
+
+################################################################################
+# Spartan3E                                                                    #
+################################################################################
+platforms/Spartan3E/impact.cmd
+platforms/Spartan3E/xmd.ini
+
+################################################################################
+# System390                                                                    #
+################################################################################
+platforms/System390/SYSRES.DSD
+platforms/System390/dasd_ctlfile.txt
+platforms/System390/hercules.rc
+platforms/System390/s390.cnf
+
+################################################################################
+# ZOOM                                                                         #
+################################################################################
+platforms/ZOOM/Makefile.in
+platforms/ZOOM/configuration.in
+platforms/ZOOM/configure.ads.in
+platforms/ZOOM/configure.h.in
+platforms/ZOOM/linker.lds
+
