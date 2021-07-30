@@ -1,0 +1,4 @@
+
+ADAC_SWITCHES_RTS := -mgpopt=none
+CC_SWITCHES_RTS   := -mgpopt=none
+

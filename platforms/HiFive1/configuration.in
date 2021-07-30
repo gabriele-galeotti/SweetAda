@@ -1,0 +1,32 @@
+
+#
+# SiFive HiFive1 Rev B
+#
+# SiFive E31 RISC-V
+#
+
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
+CPU       := RISC-V
+CPU_MODEL :=
+
+GCC_SWITCHES_PLATFORM     += -march=rv32imac -mabi=ilp32 -Wa,-march=rv32imac -Wa,-mabi=ilp32
+LD_SWITCHES_PLATFORM      += -m elf32lriscv
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := dummy
+
+OPENOCD_PREFIX := /usr/local
+export OPENOCD_PREFIX
+
+SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -server
+SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -shutdown
+
+RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
+DEBUG_COMMAND :=
+

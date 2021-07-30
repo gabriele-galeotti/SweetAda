@@ -1,0 +1,12 @@
+
+#ifndef _CONFIGURE_H
+#define _CONFIGURE_H 1
+
+#define PLATFORM    "ZOOM"
+#define SUBPLATFORM "dBUG"
+#define CPU         "@CPU@"
+#define CPU_MODEL   "@CPU_MODEL@"
+
+#define PLATFORM_DBUG 1
+
+#endif /* _CONFIGURE_H */

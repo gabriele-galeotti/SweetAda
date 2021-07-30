@@ -1,0 +1,8 @@
+# source this script with "script ./platforms/System390/debug.rc"
+# breakpoint on last instruction of loader.rdr
+#b 0x00A002E8
+# breakpoint in startup.S
+#b 0x00000804
+# disassemble kernel
+#u 0x00000800
+#start

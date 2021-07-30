@@ -1,0 +1,74 @@
+
+#
+# SweetAda master configuration file
+#
+
+#
+# Environment variables:
+# OSTYPE
+#
+
+ifeq ($(OSTYPE),cmd)
+  #
+  # Windows
+  #
+  TOOLCHAIN_PREFIX := C:\Program Files\SweetAda
+  TCLSH            := $(TOOLCHAIN_PREFIX)\bin\tclsh86.exe
+else ifeq ($(OSTYPE),msys)
+  #
+  # MSYS2
+  #
+  TOOLCHAIN_PREFIX := /c/Program Files/SweetAda
+  TCLSH            := $(TOOLCHAIN_PREFIX)/bin/tclsh86.exe
+else ifeq ($(OSTYPE),darwin)
+  #
+  # OS X
+  #
+  TOOLCHAIN_PREFIX := /opt/sweetada
+  TCLSH            := tclsh
+else ifeq ($(OSTYPE),linux)
+  #
+  # Linux and other compliant environments
+  #
+  TOOLCHAIN_PREFIX := /opt/sweetada
+  TCLSH            := tclsh
+endif
+
+# standard toolchain names
+TOOLCHAIN_NAME_AArch64    := aarch64-sweetada-elf
+TOOLCHAIN_NAME_ARM        := arm-sweetada-eabi
+TOOLCHAIN_NAME_ARMeb      := armeb-sweetada-eabi
+TOOLCHAIN_NAME_AVR        := avr-sweetada-elf
+TOOLCHAIN_NAME_M68k       := m68k-sweetada-elf
+TOOLCHAIN_NAME_MIPS       := mips-sweetada-elf
+TOOLCHAIN_NAME_MIPS64     := mips64-sweetada-elf
+TOOLCHAIN_NAME_MicroBlaze := microblaze-sweetada-elf
+TOOLCHAIN_NAME_NiosII     := nios2-sweetada-elf
+TOOLCHAIN_NAME_PowerPC    := powerpc-sweetada-elf
+TOOLCHAIN_NAME_RISCV      := riscv-sweetada-elf
+TOOLCHAIN_NAME_SPARC      := sparc-sweetada-elf
+TOOLCHAIN_NAME_SPARC64    := sparc64-sweetada-elf
+TOOLCHAIN_NAME_SuperH     := sh-sweetada-elf
+TOOLCHAIN_NAME_SH4        := sh4le-sweetada-elf
+TOOLCHAIN_NAME_System390  := s390-sweetada-linux
+TOOLCHAIN_NAME_x86        := i686-sweetada-elf
+TOOLCHAIN_NAME_x86_64     := x86_64-sweetada-elf
+
+#RTS := zfp
+RTS := sfp
+
+#PROFILE := zfp
+PROFILE := sfp
+
+ifneq ($(RTS),zfp)
+USE_LIBADA := Y
+endif
+
+#USE_LIBGCC := Y
+
+#USE_CLIBRARY := Y
+
+#BUILD_MODE := GPR
+
+OPTIMIZATION_LEVEL := 1
+

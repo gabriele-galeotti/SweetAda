@@ -1,0 +1,146 @@
+
+-------------------------------------------------------------------------------
+-- SweetAda GPRbuild project file
+--
+-- Copyright (C) 2020, 2021 Gabriele Galeotti
+--
+-- This work is licensed under the terms of the MIT License.
+-- Please consult the LICENSE.txt file located in the top-level directory.
+-------------------------------------------------------------------------------
+
+with "configure";
+
+project Build is
+
+   ----------------------------------------------------------------------------
+   -- Types and variables
+   ----------------------------------------------------------------------------
+
+   Verbose := external ("VERBOSE", "");
+
+   ----------------------------------------------------------------------------
+   -- Definitions
+   ----------------------------------------------------------------------------
+
+   for Target use Configure.Toolchain_Name;
+   for Source_Dirs use Configure.Include_Directories;
+   for Object_Dir use Configure.Object_Directory;
+   for Default_Language use "Ada";
+   for Main use ("main.adb");
+
+   ----------------------------------------------------------------------------
+   -- Naming
+   ----------------------------------------------------------------------------
+
+   package Naming is
+      for Spec_Suffix ("Asm_Cpp") use ".h";
+      for Body_Suffix ("Asm_Cpp") use ".S";
+      for Spec_Suffix ("C")       use ".h";
+      for Body_Suffix ("C")       use ".c";
+      for Spec_Suffix ("Ada")     use ".ads";
+      for Body_Suffix ("Ada")     use ".adb";
+   end Naming;
+
+   ----------------------------------------------------------------------------
+   -- Builder - GNATMAKE and GPRbuild
+   ----------------------------------------------------------------------------
+
+   Builder_Switches := ();
+
+   case Verbose is
+      when "Y" | "y" | "1" => null;
+      when others          => Builder_Switches := Builder_Switches & ("-q");
+   end case;
+
+   package Builder is
+      for Global_Configuration_Pragmas use "gnat.adc";
+      for Switches ("Ada") use (
+                                "-gnat2012",
+                                "--RTS=" & Configure.RTS_Path,
+                                "-nostdinc", "-nostdlib"
+                               ) & Builder_Switches;
+   end Builder;
+
+   ----------------------------------------------------------------------------
+   -- Compiler
+   ----------------------------------------------------------------------------
+
+   Compiler_Switches := (
+                         "-wrapper", Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc-wrapper"
+                        ) & Configure.GCC_Platform_Switches;
+
+   package Compiler is
+      for Driver ("Ada") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
+      for Driver ("Asm_Cpp") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
+      for Driver ("C") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
+      for Leading_Required_Switches ("Ada") use ("-c", "-x", "ada");
+      for Multi_Unit_Object_Separator ("Ada") use "~";
+      for Include_Switches ("Asm_Cpp") use ("-I");
+      for Mapping_Spec_Suffix ("Ada") use "%s";
+      for Mapping_Body_Suffix ("Ada") use "%b";
+      for Dependency_Kind ("Ada") use "ALI_File";
+      for Switches ("Ada") use (
+                                "-O" & Configure.Optimization_Level,
+                                "-gnatef",
+                                "-gnatf",
+                                "-gnatU",
+                                "-eL", "-eS",
+                                "-gnatn",
+                                "-ffunction-sections", "-fdata-sections",
+                                "-g3", "-gdwarf-4", "-fno-omit-frame-pointer",
+                                "-gnatE",
+                                "-gnato1",
+                                "-fstack-usage",
+                                "-fdump-rtl-expand",
+                                "-gnatdu",
+                                "-gnatVa",
+                                "-gnatw.V"
+                               ) & Compiler_Switches;
+      for Switches ("C") use (
+                              "--freestanding",
+                              "-I" & Configure.SweetAda_Path & "/clibrary"
+                             );
+   end Compiler;
+
+   ----------------------------------------------------------------------------
+   -- Binder
+   ----------------------------------------------------------------------------
+
+   Binder_Switches := ();
+
+   package Binder is
+      for Driver ("Ada") use Configure.Toolchain_Prefix & "/libexec/gprbuild/gprbind";
+      for Objects_Path_File ("Ada") use Configure.Object_Directory;
+      for Switches ("Ada") use (
+                                "-nostdinc", "-nostdlib",
+                                "-F",
+                                -- "-e", "-l",
+                                "-n", "-s",
+                                "-A=gnatbind_alis.lst",
+                                "-O=gnatbind_objs.lst"
+                               ) & Binder_Switches & Configure.Implicit_Ali_Units;
+   end Binder;
+
+   ----------------------------------------------------------------------------
+   -- Linker (not used)
+   ----------------------------------------------------------------------------
+
+   package Linker is
+      for Driver use Compiler'Driver ("Ada");
+   end Linker;
+
+   ----------------------------------------------------------------------------
+   -- Clean (not used)
+   ----------------------------------------------------------------------------
+
+   package Clean is
+   end Clean;
+
+   ----------------------------------------------------------------------------
+   -- Ide (not used)
+   ----------------------------------------------------------------------------
+
+   package Ide is
+   end Ide;
+
+end Build;

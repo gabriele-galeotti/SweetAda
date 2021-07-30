@@ -1,0 +1,12 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM    : constant String := "M5235BCC";
+   SUBPLATFORM : constant String := "BDM";
+   CPU         : constant String := "@CPU@";
+   CPU_MODEL   : constant String := "@CPU_MODEL@";
+
+end Configure;

@@ -1,0 +1,32 @@
+
+#
+# GEMI embedded control board
+#
+# SH7032
+#
+
+# problemi con sfp
+#RTS := zfp
+#PROFILE := zfp
+#USE_LIBADA :=
+#USE_LIBGCC :=
+
+CPU       := SuperH
+CPU_MODEL := SH7032
+
+GCC_SWITCHES_PLATFORM     += -m1 -Wa,--isa=sh
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0xff
+
+USE_APPLICATION := dummy
+
+MEMSIM2 := $(SWEETADA_PATH)/../hardware/memSIM2/runmemsim2.sh
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := $(MEMSIM2) -m 27010 -r -10 $(SWEETADA_PATH)/$(KERNEL_ROMFILE)
+DEBUG_COMMAND :=
+

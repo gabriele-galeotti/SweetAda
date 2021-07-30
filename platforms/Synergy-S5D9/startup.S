@@ -1,0 +1,53 @@
+
+//
+// startup.S - PK-S5D9 startup.
+//
+// Copyright (C) 2020, 2021 Gabriele Galeotti
+//
+// This work is licensed under the terms of the MIT License.
+// Please consult the LICENSE.txt file located in the top-level directory.
+//
+
+#define __ASSEMBLER__ 1
+
+////////////////////////////////////////////////////////////////////////////////
+
+                .sect   .startup,"ax"
+
+                .type   _start,%function
+                .global _start
+_start:
+
+                // disable all exceptions of configurable priority (the
+                // default program, which runs with interrupts enabled, will
+                // be stopped due to halt command in OpenOCD)
+                movs    r0,#1
+                msr     primask,r0
+
+                ldr     r0,=stack
+                mov     sp,r0
+
+                //
+                // Call "adainit" procedure.
+                //
+                .extern adainit
+                bl      adainit
+
+                //
+                // Jump to high-level code.
+                //
+                .extern _ada_main
+                bl      _ada_main
+
+dead:           b       .
+
+                .size   _start,.-_start
+
+////////////////////////////////////////////////////////////////////////////////
+
+                .sect   .bss
+
+                .align  8
+                .space  1024
+stack:
+

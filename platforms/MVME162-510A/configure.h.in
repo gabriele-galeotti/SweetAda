@@ -1,0 +1,10 @@
+
+#ifndef _CONFIGURE_H
+#define _CONFIGURE_H 1
+
+#define PLATFORM  "MVME162-510A"
+#define CPU       "@CPU@"
+#define CPU_MODEL "@CPU_MODEL@"
+#define FPU_MODEL "@FPU_MODEL@"
+
+#endif /* _CONFIGURE_H */

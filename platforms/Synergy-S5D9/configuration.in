@@ -1,0 +1,32 @@
+
+#
+# Renesas Electronic PK-S5D9
+#
+# Synergy S5D9 120 MHz ARM Cortex-M4 LE
+#
+
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
+CPU       := ARM
+CPU_MODEL := CORTEXM4
+
+GCC_SWITCHES_PLATFORM     += -mcpu=cortex-m4 -Wa,-mcpu=cortex-m4
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := test-Synergy-S5D9
+
+OPENOCD_PREFIX := /usr/local
+export OPENOCD_PREFIX
+
+SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -server
+SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -shutdown
+
+RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
+DEBUG_COMMAND :=
+

@@ -1,0 +1,24 @@
+
+#
+# QEMU-MIPS (QEMU emulator)
+#
+# MIPS R4300 LE
+#
+
+CPU       := MIPS
+CPU_MODEL := R4300
+
+GCC_SWITCHES_PLATFORM     += -march=r4k -mel -mips3 -Wa,-EL
+LD_SWITCHES_PLATFORM      += -EL -Ttext 9FC00000 -Tdata 80000000
+OBJDUMP_SWITCHES_PLATFORM += --disassembler-options=hwr-names=r3000,reg-names=r3000
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00 -j .text
+
+USE_APPLICATION := dummy
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := runsweetada$(EXEEXT) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu.cfg
+DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
+

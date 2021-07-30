@@ -1,0 +1,29 @@
+
+#
+# Digi Connect ME
+#
+# ARM926EJ-S NS9210 BE
+#
+
+CPU            := ARM
+CPU_MODEL      := ARMv5
+# override cpus/ARM/configuration.in
+TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_ARMeb)
+
+GCC_SWITCHES_PLATFORM     += -mcpu=arm926ej-s -Wa,-mcpu=arm926ej-s -mabi=aapcs
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := test-DigiConnectME
+
+OPENOCD_PREFIX := /usr/local
+export OPENOCD_PREFIX
+
+SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -server
+SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -shutdown
+
+RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
+DEBUG_COMMAND :=
+

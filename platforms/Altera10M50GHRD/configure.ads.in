@@ -1,0 +1,10 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM : constant String := "Altera10M50GHRD";
+   CPU      : constant String := "@CPU@";
+
+end Configure;

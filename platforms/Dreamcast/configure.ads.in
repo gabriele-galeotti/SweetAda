@@ -1,0 +1,15 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM  : constant String := "Dreamcast";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   ROM_BOOT : constant String := "@ROM_BOOT@";
+   GXEMUL   : constant String := "@GXEMUL@";
+
+end Configure;

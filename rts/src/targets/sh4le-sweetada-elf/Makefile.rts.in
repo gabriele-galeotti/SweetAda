@@ -1,0 +1,4 @@
+
+ADAC_SWITCHES_RTS := -fno-leading-underscore
+CC_SWITCHES_RTS   := -fno-leading-underscore
+

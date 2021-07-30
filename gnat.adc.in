@@ -1,0 +1,50 @@
+
+-- gnat.adc template file
+
+pragma Discard_Names;                                                   -- zfp sfp
+pragma Task_Dispatching_Policy (FIFO_Within_Priorities);                -- zfp sfp
+pragma Locking_Policy (Ceiling_Locking);                                -- zfp sfp
+pragma Detect_Blocking;                                                 -- zfp sfp
+pragma Restrictions (No_Abort_Statements);                              -- zfp sfp
+pragma Restrictions (No_Direct_Boolean_Operators);                      -- zfp sfp
+pragma Restrictions (No_Dynamic_Attachment);                            -- zfp sfp
+pragma Restrictions (No_Dynamic_Priorities);                            -- zfp sfp
+-- allows initialization of complex objects
+pragma Restrictions (No_Elaboration_Code);                              --
+-- optimize: discard exception check
+pragma Restrictions (No_Exceptions);                                    --
+pragma Restrictions (No_Exception_Propagation);                         -- zfp
+-- object aliasing
+pragma Restrictions (No_Implicit_Aliasing);                             --
+-- compiler-generated code for object handling
+pragma Restrictions (No_Implicit_Conditionals);                         --
+pragma Restrictions (No_Implicit_Dynamic_Code);                         -- zfp sfp
+pragma Restrictions (No_Implicit_Heap_Allocations);                     -- zfp sfp
+-- compiler-generated code for object handling
+pragma Restrictions (No_Implicit_Loops);                                -- zfp
+pragma Restrictions (No_Local_Protected_Objects);                       -- zfp
+pragma Restrictions (No_Local_Timing_Events);                           -- zfp sfp
+pragma Restrictions (No_Obsolescent_Features);                          -- zfp sfp
+pragma Restrictions (No_Protected_Type_Allocators);                     -- zfp sfp
+pragma Restrictions (No_Recursion);                                     -- zfp sfp
+-- tasking
+pragma Restrictions (No_Relative_Delay);                                -- zfp
+pragma Restrictions (No_Requeue_Statements);                            -- zfp sfp
+pragma Restrictions (No_Secondary_Stack);                               -- zfp
+pragma Restrictions (No_Select_Statements);                             -- zfp sfp
+pragma Restrictions (No_Specific_Termination_Handlers);                 -- zfp sfp
+pragma Restrictions (No_Task_Allocators);                               -- zfp sfp
+-- tasking
+pragma Restrictions (No_Task_Hierarchy);                                -- zfp sfp
+pragma Restrictions (No_Task_Termination);                              -- zfp sfp
+pragma Restrictions (No_Wide_Characters);                               -- zfp sfp
+pragma Restrictions (Simple_Barriers);                                  -- zfp sfp
+pragma Restrictions (Max_Entry_Queue_Length => 1);                      -- zfp sfp
+pragma Restrictions (Max_Protected_Entries => 1);                       -- zfp sfp
+pragma Restrictions (Max_Task_Entries => 0);                            -- zfp sfp
+pragma Restrictions (No_Dependence => Ada.Asynchronous_Task_Control);   -- zfp sfp
+pragma Restrictions (No_Dependence => Ada.Calendar);                    -- zfp sfp
+pragma Restrictions (No_Dependence => Ada.Execution_Time.Group_Budget); -- zfp sfp
+pragma Restrictions (No_Dependence => Ada.Execution_Time.Timers);       -- zfp sfp
+pragma Restrictions (No_Dependence => Ada.Task_Attributes);             -- zfp sfp
+pragma Restrictions (No_Finalization);                                  -- zfp sfp

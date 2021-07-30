@@ -1,0 +1,11 @@
+
+#ifndef _CONFIGURE_H
+#define _CONFIGURE_H 1
+
+#define PLATFORM    "Amiga-FS-UAE"
+#define SUBPLATFORM "68040"
+#define CPU         "@CPU@"
+#define CPU_MODEL   "@CPU_MODEL@"
+#define CODE_RAM    1
+
+#endif /* _CONFIGURE_H */

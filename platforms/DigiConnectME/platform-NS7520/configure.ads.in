@@ -1,0 +1,11 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM  : constant String := "DigiNS7520";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
+
+end Configure;

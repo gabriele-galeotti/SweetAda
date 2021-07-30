@@ -1,0 +1,19 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM    : constant String := "PC-x86";
+   SUBPLATFORM : constant String := "SOYO-SY-6BA+-ROM";
+   CPU         : constant String := "@CPU@";
+   CPU_MODEL   : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   PC              : constant Boolean := True;
+   TICK_FREQUENCY  : constant := 1000;
+   RAM_BASEADDRESS : constant := 16#0000_0000#;
+   RAM_SIZE        : constant := 16#1000_0000#;
+   USE_APIC        : constant Boolean := False;
+
+end Configure;

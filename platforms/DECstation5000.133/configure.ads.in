@@ -1,0 +1,14 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM  : constant String := "DECstation5000.133";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   BOOT_FROM_NETWORK : constant Boolean := @BOOT_FROM_NETWORK@;
+
+end Configure;

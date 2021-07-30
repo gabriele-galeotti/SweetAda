@@ -1,0 +1,30 @@
+
+#
+# PC-x86 Freetech 586F61 (floppy disk boot version)
+#
+# SB82437FX-66 TSC @ PCI DEVICE #0
+# SB82371FB PIIX @ PCI DEVICE #7
+# W83787F SuperIO
+# RAM: 8M, 2xZ124BBK32-70A modules, TIZ44400-70 FPM DRAM
+# BIOS COMx default addresses:
+# COM1: 0x3e8
+# COM2: 0x2f8
+#
+
+CPU       := x86
+CPU_MODEL := i586
+
+GCC_SWITCHES_PLATFORM     += -march=i586 -Wa,-march=i586
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := dummy
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   :=
+DEBUG_COMMAND :=
+

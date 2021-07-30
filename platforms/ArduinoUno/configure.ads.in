@@ -1,0 +1,13 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM : constant String := "ArduinoUno";
+   CPU      : constant String := "@CPU@";
+
+   -- basic configuration parameters
+   CLOCK_XTAL : constant := 16_000_000;
+
+end Configure;

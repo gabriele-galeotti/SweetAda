@@ -1,0 +1,28 @@
+
+#
+# Spartan 3A "Spartan_3A_Eval_Test_Source_v92"
+#
+# MicroBlaze v7.00.b BE
+#
+
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
+CPU := MicroBlaze
+
+GCC_SWITCHES_PLATFORM     += -mcpu=v7.00.b
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         :=
+OBJCOPY_SWITCHES_PLATFORM +=
+
+USE_APPLICATION := dummy
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
+DEBUG_COMMAND := $(RUN_COMMAND)
+

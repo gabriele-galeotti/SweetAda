@@ -1,0 +1,14 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM    : constant String := "Malta";
+   CPU         : constant String := "@CPU@";
+   CPU_MODEL   : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   TICK_FREQUENCY : constant := 1000;
+
+end Configure;

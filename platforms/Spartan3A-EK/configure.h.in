@@ -1,0 +1,8 @@
+
+#ifndef _CONFIGURE_H
+#define _CONFIGURE_H 1
+
+#define PLATFORM "Spartan3A-EK"
+#define CPU      "@CPU@"
+
+#endif /* _CONFIGURE_H */

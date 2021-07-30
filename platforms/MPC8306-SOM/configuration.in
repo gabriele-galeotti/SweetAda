@@ -1,0 +1,22 @@
+
+#
+# MPC8306 SOM
+#
+
+CPU := PowerPC
+
+# -meabi -msdata=eabi
+GCC_SWITCHES_PLATFORM     += -mcpu=e300c3 -meabi -msoft-float -Wa,-me300 -Wa,-mregnames
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := dummy
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   :=
+DEBUG_COMMAND :=
+

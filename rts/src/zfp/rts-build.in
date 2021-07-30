@@ -1,0 +1,4 @@
+
+log_echo "%" "copying rts-common files"
+copy_rts_files . "${ADAINCLUDE}" || exit $?
+

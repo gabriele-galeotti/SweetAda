@@ -1,0 +1,14 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM  : constant String := "LEON3";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   TIMER_SYSCLK : constant := 40_000_000;
+
+end Configure;

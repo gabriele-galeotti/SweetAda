@@ -1,0 +1,16 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM    : constant String := "PC-x86-64";
+   SUBPLATFORM : constant String := "PC-USBkey";
+   CPU         : constant String := "@CPU@";
+   CPU_MODEL   : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   PC             : constant Boolean := True;
+   TICK_FREQUENCY : constant := 1000;
+
+end Configure;

@@ -1,0 +1,41 @@
+
+SweetAda is composed of three software components: core, RTS and LibGCC.
+
+1 - core)
+
+The "core" is the whole SweetAda codebase. A core file is every file in the
+SweetAda filesystem hierarchy, except those specified in 2) and 3).
+
+core files are licensed under the terms of the MIT License.
+
+Please consult the LICENSE.MIT file located in the top-level directory.
+
+2 - RTS)
+
+The "RTS" is the Ada Run-Time System. It is composed of FSF GNAT files
+extracted from a GCC/GNAT standard release, with minor changes.
+
+RTS files are located in the rts subdirectory.
+
+All RTS Ada source files have their own license, i.e., GNU GENERAL PUBLIC
+LICENSE Version 3, coupled with the GCC RUNTIME LIBRARY EXCEPTION Version 3.1.
+Other support files and scripts are licensed under the terms of the MIT License.
+
+Please consult the LICENSE.COPYING3 and the LICENSE.COPYING3.RUNTIME files
+located in the top-level directory.
+
+3 - LibGCC)
+
+LibGCC files are a small set of assembly/C files insterspersed in the various
+cpus/<cpu> subdirectories, extracted from a GCC standard FSF release. SweetAda
+LibGCC files are only a source code re-formatted and cleaned-up version, with
+minor changes, and suitable for a compile-time build. These files are not
+strictly needed if you want to link the SweetAda executable with the binary
+form of the library normally present in the compiler toolchain.
+
+All LibGCC assembly/C files have thair own license, i.e, GNU GENERAL PUBLIC
+LICENSE Version 3, coupled with the GCC RUNTIME LIBRARY EXCEPTION Version 3.1.
+
+Please consult the LICENSE.COPYING3 and the LICENSE.COPYING3.RUNTIME files
+located in the top-level directory.
+

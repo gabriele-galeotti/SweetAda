@@ -1,0 +1,32 @@
+
+#
+# FRDM-KL46Z
+#
+# MKL46Z256VLLZ4 MCU ARM Cortex-M0 LE
+#
+
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
+CPU       := ARM
+CPU_MODEL := CORTEXM0
+
+GCC_SWITCHES_PLATFORM     += -mcpu=cortex-m0 -Wa,-mcpu=cortex-m0
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := dummy
+
+OPENOCD_PREFIX := /usr/local
+export OPENOCD_PREFIX
+
+SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -server
+SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -shutdown
+
+RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
+DEBUG_COMMAND :=
+

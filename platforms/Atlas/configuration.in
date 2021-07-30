@@ -1,0 +1,24 @@
+
+#
+# Atlas board
+#
+# PowerPC PPC604
+#
+
+CPU := PowerPC
+
+# -meabi -msdata=eabi
+GCC_SWITCHES_PLATFORM     += -mcpu=604 -meabi -msoft-float -Wa,-m604 -Wa,-mregnames
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := dummy
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   :=
+DEBUG_COMMAND :=
+

@@ -1,0 +1,38 @@
+
+#
+# Core sub-Makefile configuration file
+#
+# Copyright (C) 2020, 2021 Gabriele Galeotti
+#
+
+INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                     \
+                       $(CORE_DIRECTORY)/bits                \
+                       $(CORE_DIRECTORY)/libgcc              \
+                       $(CORE_DIRECTORY)/llutils             \
+                       $(CORE_DIRECTORY)/memory_functions    \
+                       $(CORE_DIRECTORY)/mmio
+
+#
+# Units not automatically inferred as dependencies by the build system.
+#
+# abort                 may be called by exceptions and C library
+# console               called by abort
+# core                  _gnat_stack_check and other parameters
+# gnat_exceptions       called by inline checks
+# last_chance_handler   called by inline checks
+# malloc                called by allocator code
+# memory_functions      called by inline code
+#
+
+IMPLICIT_CORE_UNITS := abort_library       \
+                       console             \
+                       core                \
+                       gnat_exceptions     \
+                       last_chance_handler \
+                       malloc              \
+                       memory_functions
+# exported because needed by core Makefile
+export IMPLICIT_CORE_UNITS
+
+IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)
+

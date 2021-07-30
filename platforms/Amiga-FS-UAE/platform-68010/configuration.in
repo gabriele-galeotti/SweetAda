@@ -1,0 +1,25 @@
+
+#
+# Amiga (FS-UAE emulator)
+#
+# M68000
+#
+
+CPU       := M68k
+CPU_MODEL := M68010
+FPU_MODEL :=
+
+GCC_SWITCHES_PLATFORM     += -mcpu=68010 -Wa,-mcpu=68010
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := test-Amiga-FS-UAE
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := runsweetada$(EXEEXT) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f fs-uae-ioemu.cfg
+DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG
+

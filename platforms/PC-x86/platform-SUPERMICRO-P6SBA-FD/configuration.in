@@ -1,0 +1,26 @@
+
+#
+# PC-x86 SUPERMICRO P6SBA (floppy disk boot version)
+#
+# 82443BX host bridge
+# 82371EB PIIX4E
+# ITE IT8671F SuperIO
+#
+
+CPU       := x86
+CPU_MODEL := i686
+
+GCC_SWITCHES_PLATFORM     += -march=i586 -Wa,-march=i686
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := dummy
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   :=
+DEBUG_COMMAND :=
+

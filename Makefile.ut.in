@@ -1,0 +1,36 @@
+
+#
+# Utilities sub-Makefile
+#
+# Copyright (C) 2020, 2021 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Environment variables:
+# OSTYPE
+# SWEETADA_PATH
+# LIBUTILS_DIRECTORY
+# SCREXT
+#
+
+CREATECONFIGUREGPR := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/createconfiguregpr$(SCREXT)
+CREATEDEFINITIONS  := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/createdefinitions$(SCREXT)
+CREATEGNATADC      := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/creategnatadc$(SCREXT)
+CREATESYMLINK      := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/createsymlink$(SCREXT)
+FILEPAD            := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/filepad$(SCREXT)
+FILEPATCH          := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/filepatch$(SCREXT)
+PROCESSCFG         := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/processcfg$(SCREXT)
+
+ifeq ($(OSTYPE),cmd)
+CREATECONFIGUREGPR := $(subst /,\,$(CREATECONFIGUREGPR))
+CREATEDEFINITIONS  := $(subst /,\,$(CREATEDEFINITIONS))
+CREATEGNATADC      := $(subst /,\,$(CREATEGNATADC))
+CREATESYMLINK      := $(subst /,\,$(CREATESYMLINK))
+FILEPAD            := $(subst /,\,$(FILEPAD))
+FILEPATCH          := $(subst /,\,$(FILEPATCH))
+PROCESSCFG         := $(subst /,\,$(PROCESSCFG))
+endif
+

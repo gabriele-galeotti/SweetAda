@@ -1,0 +1,10 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM : constant String := "MPC8306-SOM";
+   CPU      : constant String := "@CPU@";
+
+end Configure;

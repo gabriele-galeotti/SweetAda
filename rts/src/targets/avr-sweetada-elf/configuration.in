@@ -1,0 +1,23 @@
+
+#
+# AVR floating point issues.
+#
+NOCOPY_FILES+=("interfac.ads")
+LIBGNAT_FILES_TARGET+=("interfac.ads")
+# s-scaval.adb:103:07: warning: "IV_Ilf" overlays smaller object
+# s-scaval.adb:103:07: warning: program execution may be erroneous
+# s-scaval.adb:103:07: warning: size of "IV_Ilf" is 64
+# s-scaval.adb:103:07: warning: size of "IS_Ilf" is 32
+# s-scaval.adb:104:07: warning: "IV_Ill" overlays smaller object
+# s-scaval.adb:104:07: warning: program execution may be erroneous
+# s-scaval.adb:104:07: warning: size of "IV_Ill" is 96
+# s-scaval.adb:104:07: warning: size of "IS_Ill" is 64
+if [ "${RTS}" = "sfp" ] ; then
+  NOCOPY_FILES+=("s-scaval.adb")
+  NOCOPY_FILES+=("s-scaval.ads")
+  NOLIB_FILES+=("s-scaval.adb")
+  NOLIB_FILES+=("s-scaval.ads")
+fi
+
+LIBGNAT_FILES_TARGET+=("system.ads")
+

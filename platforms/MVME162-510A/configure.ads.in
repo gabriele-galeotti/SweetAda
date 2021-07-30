@@ -1,0 +1,12 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM  : constant String := "MVME162-510A";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
+   FPU_MODEL : constant String := "@FPU_MODEL@";
+
+end Configure;

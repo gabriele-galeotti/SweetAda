@@ -1,0 +1,25 @@
+
+#
+# C library sub-Makefile configuration file
+#
+# Copyright (C) 2020, 2021 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+INCLUDE_DIRECTORIES += $(CLIBRARY_DIRECTORY)
+
+#
+# Units not automatically inferred as dependencies by the build system.
+#
+
+IMPLICIT_CLIBRARY_UNITS :=
+ifeq ($(USE_CLIBRARY),Y)
+IMPLICIT_CLIBRARY_UNITS += c_wrappers
+endif
+# exported because needed by clibrary Makefile
+export IMPLICIT_CLIBRARY_UNITS
+
+IMPLICIT_ALI_UNITS += $(IMPLICIT_CLIBRARY_UNITS)
+

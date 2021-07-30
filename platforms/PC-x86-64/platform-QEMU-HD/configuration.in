@@ -1,0 +1,24 @@
+
+#
+# PC-x86-64 configuration file (hard disk boot version)
+#
+
+CPU       := x86-64
+CPU_MODEL := ???
+
+GCC_SWITCHES_PLATFORM     += -mno-red-zone -m64 -Wa,--64
+# __FIX__ QEMU problems (movdqa instruction)
+GCC_SWITCHES_PLATFORM     += -mno-sse
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := test-PC-x86-64
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := runsweetada$(EXEEXT) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu.cfg
+DEBUG_COMMAND :=
+

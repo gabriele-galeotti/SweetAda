@@ -1,0 +1,10 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM : constant String := "Spartan3A-EK";
+   CPU      : constant String := "@CPU@";
+
+end Configure;

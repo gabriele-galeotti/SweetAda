@@ -1,0 +1,10 @@
+
+SUBPLATFORM := NS7520
+
+DISTCLEAN_OBJECTS_EXTRA := $(shell $(LS) platform-$(SUBPLATFORM))
+
+.PHONY : configure-subplatform
+configure-subplatform :
+	@"$(PROCESSCFG)" configure.h.in configure.h
+	@"$(PROCESSCFG)" configure.ads.in configure.ads
+

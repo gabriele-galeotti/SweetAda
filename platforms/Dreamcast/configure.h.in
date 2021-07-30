@@ -1,0 +1,9 @@
+
+#ifndef _CONFIGURE_H
+#define _CONFIGURE_H 1
+
+#define PLATFORM  "Dreamcast"
+#define CPU       "@CPU@"
+#define CPU_MODEL "@CPU_MODEL@"
+
+#endif /* _CONFIGURE_H */

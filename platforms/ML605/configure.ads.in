@@ -1,0 +1,10 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM : constant String := "ML605";
+   CPU      : constant String := "@CPU@";
+
+end Configure;

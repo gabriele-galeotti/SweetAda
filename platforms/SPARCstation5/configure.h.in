@@ -1,0 +1,10 @@
+
+#ifndef _CONFIGURE_H
+#define _CONFIGURE_H 1
+
+#define PLATFORM "@PLATFORM@"
+#define CPU      "@CPU@"
+
+#define RELOCATE_DATA @RELOCATE_DATA@
+
+#endif /* _CONFIGURE_H */

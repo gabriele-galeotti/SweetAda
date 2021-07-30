@@ -1,0 +1,10 @@
+
+#ifndef _CONFIGURE_H
+#define _CONFIGURE_H 1
+
+#define PLATFORM    "PC-x86-64"
+#define SUBPLATFORM "QEMU-HD"
+#define CPU         "@CPU@"
+#define CPU_MODEL   "@CPU_MODEL@"
+
+#endif /* _CONFIGURE_H */

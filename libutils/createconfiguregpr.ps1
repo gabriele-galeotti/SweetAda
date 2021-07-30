@@ -1,0 +1,148 @@
+
+#
+# Create "configure.gpr" GNATMAKE project file.
+#
+# Copyright (C) 2020, 2021 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Arguments:
+# arguments specified in .bat script
+#
+# Environment variables:
+# none
+#
+
+################################################################################
+# ExitWithCode()                                                               #
+#                                                                              #
+################################################################################
+function ExitWithCode
+{
+  param($exitcode)
+  $host.SetShouldExit($exitcode)
+  exit $exitcode
+}
+
+################################################################################
+# print_V()                                                                    #
+#                                                                              #
+################################################################################
+function print_V
+{
+  param([string]$f)
+  Add-Content -Path $f -Value ""
+}
+
+################################################################################
+# print_I()                                                                    #
+#                                                                              #
+################################################################################
+function print_I
+{
+  param([string]$f, [string]$t)
+  $is = ""
+  for ($i=0 ; $i -lt $indentation_level ; $i++)
+  {
+    $is += "   "
+  }
+  Add-Content -Path $f -Value "$is$t"
+}
+
+################################################################################
+# Main loop.                                                                   #
+#                                                                              #
+################################################################################
+
+$scriptname = $MyInvocation.MyCommand.Name
+
+$configure_project = $args[0]
+$configure_filename = $args[1]
+
+Remove-Item -Path $configure_filename -Force -ErrorAction Ignore
+New-Item -Name $configure_filename -ItemType File | Out-Null
+
+$indentation_level = 0
+
+#
+# Initial empty line.
+#
+print_V $configure_filename
+
+#
+# Declare project.
+#
+print_I $configure_filename "project $configure_project is"
+$indentation_level++
+print_V $configure_filename
+
+#
+# Configuration declarations.
+#
+print_I $configure_filename "for Source_Files use ();"
+print_V $configure_filename
+print_I $configure_filename "SweetAda_Path         := `"$env:SWEETADA_PATH`";"
+print_I $configure_filename "Toolchain_Prefix      := `"$env:TOOLCHAIN_PREFIX`";"
+print_I $configure_filename "Toolchain_Name        := `"$env:TOOLCHAIN_NAME`";"
+print_I $configure_filename "RTS_Path              := `"$env:RTS_PATH`";"
+print_I $configure_filename "Platform              := `"$env:PLATFORM`";"
+print_I $configure_filename "Cpu                   := `"$env:CPU`";"
+print_I $configure_filename "GCC_Platform_Switches := ("
+$gcc_platform_switches = $env:GCC_SWITCHES_PLATFORM.Trim(" ") -split "\s+"
+$count = 0
+foreach ($s in $gcc_platform_switches)
+{
+  $count = $count + 1
+  $s = "`"$s`""
+  if ($count -ne $gcc_platform_switches.Length)
+  {
+    $s += ","
+  }
+  print_I $configure_filename "                          $s"
+}
+print_I $configure_filename "                         );"
+print_I $configure_filename "Include_Directories   := ("
+$include_directories = $env:INCLUDE_DIRECTORIES.Trim(" ") -split "\s+"
+$count = 0
+foreach ($s in $include_directories)
+{
+  $count = $count + 1
+  $s = "`"$s`""
+  if ($count -ne $include_directories.Length)
+  {
+    $s += ","
+  }
+  print_I $configure_filename "                          $s"
+}
+print_I $configure_filename "                         );"
+print_I $configure_filename "Implicit_Ali_Units    := ("
+$implicit_ali_units = $env:IMPLICIT_ALI_UNITS.Trim(" ") -split "\s+"
+$count = 0
+foreach ($s in $implicit_ali_units)
+{
+  $count = $count + 1
+  $s = "`"$s`""
+  if ($count -ne $implicit_ali_units.Length)
+  {
+    $s += ","
+  }
+  print_I $configure_filename "                          $s"
+}
+print_I $configure_filename "                         );"
+print_I $configure_filename "Object_Directory      := `"$env:OBJECT_DIRECTORY`";"
+print_I $configure_filename "Optimization_Level    := `"$env:OPTIMIZATION_LEVEL`";"
+print_V $configure_filename
+
+#
+# Close the project.
+#
+$indentation_level--
+print_I $configure_filename "end $configure_project;"
+
+Write-Host "${configure_filename}: done."
+
+ExitWithCode 0
+

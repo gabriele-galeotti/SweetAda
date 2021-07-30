@@ -1,0 +1,29 @@
+
+#
+# Digi Connect ME
+#
+# ARM7TDMI NS7520 BE
+#
+
+CPU            := ARM
+CPU_MODEL      := ARM7TDMI
+# override cpus/ARM/configuration.in
+TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_ARMeb)
+
+GCC_SWITCHES_PLATFORM     += -mcpu=arm7tdmi -Wa,-mcpu=arm7tdmi -mabi=aapcs
+LD_SWITCHES_PLATFORM      += --undefined=reset
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := test-DigiConnectME
+
+OPENOCD_PREFIX := /usr/local
+export OPENOCD_PREFIX
+
+SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -server
+SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -shutdown
+
+RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
+DEBUG_COMMAND :=
+

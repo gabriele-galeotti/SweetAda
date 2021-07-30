@@ -1,0 +1,16 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM    : constant String := "Amiga-FS-UAE";
+   SUBPLATFORM : constant String := "68030";
+   CPU         : constant String := "@CPU@";
+   CPU_MODEL   : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   TIMER_SYSCLK   : constant := 7_093_790;
+   TICK_FREQUENCY : constant := 1000;
+
+end Configure;

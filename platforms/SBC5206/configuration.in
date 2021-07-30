@@ -1,0 +1,23 @@
+
+#
+# SBC5206 (QEMU emulator)
+#
+
+CPU       := M68k
+CPU_MODEL := CFv2
+
+# -Wa,--bitwise-or
+GCC_SWITCHES_PLATFORM     += -mcpu=5206 -Wa,-mcpu=5206
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_APPLICATION := test-SBC5206
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := runsweetada$(EXEEXT) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu.cfg
+DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
+

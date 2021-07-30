@@ -1,0 +1,13 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM : constant String := "SPARCstation5";
+   CPU      : constant String := "@CPU@";
+
+   -- basic configuration parameters
+   BOOT_FROM_NETWORK : constant Boolean := @BOOT_FROM_NETWORK@;
+
+end Configure;

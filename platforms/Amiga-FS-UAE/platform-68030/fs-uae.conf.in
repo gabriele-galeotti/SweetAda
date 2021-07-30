@@ -1,0 +1,19 @@
+[config]
+amiga_model = A1000
+#amiga_model = A4000/040
+kickstart_file = @SWEETADA_PATH@/@KERNEL_ROMFILE@
+logs_dir = .
+cpu = 68030
+fpu = 68881
+uae_chipset = ocs
+chip_memory = 4096
+ntsc_mode = false
+fullscreen = false
+uae_rtc = MSM6242B
+serial_port = tcp://127.0.0.1:1235
+uae_a2065 = tap
+hard_drive_0_controller = ide
+hard_drive_0 = disk.hdf
+console_debugger = 1
+sound_auto = false
+sound_output = false
