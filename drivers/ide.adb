@@ -366,7 +366,7 @@ package body IDE is
    function Is_Drive_Ready (Descriptor : IDE_Descriptor_Type) return Boolean is
       Success : Boolean := False;
    begin
-      for Loop_Count in 1 .. 100000 loop
+      for Loop_Count in 1 .. 10_0000 loop
          declare
             Drive_Status : IDE_Status_Type;
          begin
@@ -387,7 +387,7 @@ package body IDE is
    function Is_DRQ_Active (Descriptor : IDE_Descriptor_Type) return Boolean is
       Success : Boolean := False;
    begin
-      for Loop_Count in 1 .. 100000 loop
+      for Loop_Count in 1 .. 10_0000 loop
          if STATUS_Read (Descriptor).DRQ then
             Success := True;
             exit;

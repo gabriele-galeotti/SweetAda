@@ -15,7 +15,6 @@
 #
 # Environment variables:
 # OS
-# OSTYPE
 # MSYSTEM
 #
 

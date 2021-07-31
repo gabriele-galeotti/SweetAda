@@ -5,7 +5,7 @@
 # Copyright (C) 2020, 2021 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
-# Please consult the LICENSE file located in the top-level directory.
+# Please consult the LICENSE.txt file located in the top-level directory.
 #
 
 #
