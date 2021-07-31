@@ -3087,6 +3087,8 @@ Laddsf$nf:
                 movel   a6@(12),d1                      | did some processing already)
                 movel   IMM (INFINITY),d4               | useful constant (INFINITY)
                 movel   d0,d2                           | save sign bits
+                movel   d0,d7                           | into d7 as well as we may need the sign
+                                                        | bit before jumping to LfSinfty
                 movel   d1,d3
                 bclr    IMM (31),d0                     | clear sign bits
                 bclr    IMM (31),d1
@@ -3101,7 +3103,6 @@ Laddsf$nf:
 | are adding or subtracting them.
                 eorl    d3,d2                           | to check sign bits
                 bmi     1f
-                movel   d0,d7
                 andl    IMM (0x80000000),d7             | get (common) sign bit
                 bra     Lf$infty
 1:
@@ -3110,7 +3111,6 @@ Laddsf$nf:
 | return NaN).
                 cmpl    d1,d0                           | are both infinite?
                 beq     Lf$inop                         | if so return NaN
-                movel   d0,d7
                 andl    IMM (0x80000000),d7             | get a''s sign bit
                 cmpl    d4,d0                           | test now for infinity
                 beq     Lf$infty                        | if a is INFINITY return with this sign
