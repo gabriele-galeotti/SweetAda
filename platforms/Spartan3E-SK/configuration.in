@@ -5,6 +5,11 @@
 # MicroBlaze v7.00.b BE
 #
 
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
 CPU := MicroBlaze
 
 GCC_SWITCHES_PLATFORM     += -mcpu=v7.00.b

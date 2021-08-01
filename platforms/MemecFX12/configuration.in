@@ -3,6 +3,11 @@
 # Memec FX12 "XC4VFX12_base_design"
 #
 
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
 CPU       := PowerPC
 CPU_MODEL := PPC405
 
