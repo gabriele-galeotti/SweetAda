@@ -34,8 +34,6 @@ package body BSP is
 
    procedure Delay_Simple (NLoops : in Natural);
 
-   NBlinks : Integer := 6;
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -61,32 +59,58 @@ package body BSP is
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
+      NBlinks : Integer := 6;
    begin
-      DDRB.Dir5 := True;
-      loop
-         PORTB.Pin5 := True;
-         Delay_Simple (1);
-         PORTB.Pin5 := False;
-         Delay_Simple (1);
+      -- GPIO PIN 13 blink test -----------------------------------------------
+      -- on-board LED is an output
+      DDRB := (DDB5 => True, others => False);
+      for N in 1 .. NBlinks loop
+         PORTB.PORTB5 := True;
+         Delay_Simple (4);
+         PORTB.PORTB5 := False;
+         Delay_Simple (8);
       end loop;
+      Delay_Simple (32);
+      NBlinks := 3;
+      -------------------------------------------------------------------------
       if False then
-         -- on-board LED is an output
-         DDRB := (Dir5 => True, others => False);
-         for N in 1 .. NBlinks loop
-            PORTB.Pin5 := True;
-            Delay_Simple (4);
-            PORTB.Pin5 := False;
-            Delay_Simple (8);
-         end loop;
-         NBlinks := 3;
-         Delay_Simple (32);
-         for N in 1 .. NBlinks loop
-            PORTB.Pin5 := True;
-            Delay_Simple (4);
-            PORTB.Pin5 := False;
-            Delay_Simple (8);
+         loop
+            for N in 1 .. NBlinks loop
+               PORTB.PORTB5 := True;
+               Delay_Simple (4);
+               PORTB.PORTB5 := False;
+               Delay_Simple (8);
+            end loop;
+            Delay_Simple (32);
          end loop;
       end if;
+
+--      DDRB.Dir5 := True;
+--      loop
+--         PORTB.Pin5 := True;
+--         Delay_Simple (1);
+--         PORTB.Pin5 := False;
+--         Delay_Simple (1);
+--      end loop;
+--      if False then
+--         -- on-board LED is an output
+--         DDRB := (Dir5 => True, others => False);
+--         for N in 1 .. NBlinks loop
+--            PORTB.Pin5 := True;
+--            Delay_Simple (4);
+--            PORTB.Pin5 := False;
+--            Delay_Simple (8);
+--         end loop;
+--         NBlinks := 3;
+--         Delay_Simple (32);
+--         for N in 1 .. NBlinks loop
+--            PORTB.Pin5 := True;
+--            Delay_Simple (4);
+--            PORTB.Pin5 := False;
+--            Delay_Simple (8);
+--         end loop;
+--      end if;
+
    end BSP_Setup;
 
 end BSP;

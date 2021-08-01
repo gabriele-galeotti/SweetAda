@@ -31,16 +31,15 @@ package Core is
    pragma Preelaborate;
 
    KERNEL_NAME      : constant String := "Archaea";
-   KERNEL_VERSION   : constant String := "0.1";
+   KERNEL_VERSION   : constant String := "0.0";
    KERNEL_THREAD_ID : constant := 1;
 
    -- AVR CPU version with no "Atomic" aspect
    Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
+      Volatile      => True,
       Export        => True,
       Convention    => Asm,
       External_Name => "tick_count";
-
-   procedure Parameters_Dump;
 
    ----------------------------------------------------------------------------
    -- RTS-related

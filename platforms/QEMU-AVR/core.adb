@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Bits;
-with Console;
 
 package body Core is
 
@@ -27,34 +26,6 @@ package body Core is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Parameters_Dump
-   ----------------------------------------------------------------------------
-   procedure Parameters_Dump is
-   begin
-      -------------------------------------------------------------------------
-      if True then
-         Console.Print ("CPU byte order:        ");
-         if Bits.BigEndian then
-            Console.Print ("BE");
-         else
-            Console.Print ("LE");
-         end if;
-         Console.Print_NewLine;
-         Console.Print (
-                        Integer'(Standard'Word_Size),
-                        Prefix => "Standard'Word_Size:    ",
-                        NL     => True
-                       );
-         Console.Print (
-                        Integer'(Standard'Address_Size),
-                        Prefix => "Standard'Address_Size: ",
-                        NL     => True
-                       );
-      end if;
-      -------------------------------------------------------------------------
-   end Parameters_Dump;
 
    ----------------------------------------------------------------------------
    -- Stack_Check
