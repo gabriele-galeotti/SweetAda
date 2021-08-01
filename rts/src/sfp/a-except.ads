@@ -38,10 +38,6 @@
 --  This is the default version of this package. We also have cert and zfp
 --  versions.
 
---  pragma Polling (Off);
---  We must turn polling off for this unit, because otherwise we get
---  elaboration circularities with ourself.
-
 with System.Standard_Library;
 
 package Ada.Exceptions is
