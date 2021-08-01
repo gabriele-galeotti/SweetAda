@@ -13,6 +13,7 @@ package body Application is
    --                                                                        --
    --                           Local declarations                           --
    --                                                                        --
+   --                                                                        --
    --========================================================================--
 
    use System.Storage_Elements;

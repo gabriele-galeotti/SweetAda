@@ -13,6 +13,7 @@ with FATFS.Applications;
 with PythonVM;
 with Console;
 
+package body Application is
 
    --========================================================================--
    --                                                                        --

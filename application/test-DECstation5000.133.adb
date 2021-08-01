@@ -13,6 +13,7 @@ package body Application is
    --========================================================================--
    --                                                                        --
    --                                                                        --
+   --                           Local declarations                           --
    --                                                                        --
    --                                                                        --
    --========================================================================--
@@ -42,7 +43,7 @@ package body Application is
             Delay_Count : Integer;
             Port_Value  : Unsigned_32;
          begin
-            if Configure.NETWORK_BOOT then
+            if Configure.BOOT_FROM_NETWORK then
                Delay_Count := 5_000_000; -- network boot, with cache
             else
                Delay_Count := 100_000;   -- ROM without cache

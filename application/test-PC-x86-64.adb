@@ -13,6 +13,7 @@ package body Application is
    --                           Local declarations                           --
    --                                                                        --
    --                                                                        --
+   --========================================================================--
 
    use Interfaces;
    use Bits;

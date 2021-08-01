@@ -13,6 +13,7 @@ package body Application is
    --                                                                        --
    --========================================================================--
 
+   use System.Storage_Elements;
    use Interfaces;
 
    -- IOEMU GPIO 0x80000800

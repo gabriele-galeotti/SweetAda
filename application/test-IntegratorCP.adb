@@ -13,6 +13,7 @@ package body Application is
    --========================================================================--
 
    use System.Storage_Elements;
+   use Interfaces;
 
    -- IOEMU GPIO 0x1B000000
    IOEMU_IO0 : Unsigned_8 with

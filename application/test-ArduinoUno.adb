@@ -14,6 +14,7 @@ package body Application is
    --                                                                        --
    --                           Local declarations                           --
    --                                                                        --
+   --                                                                        --
    --========================================================================--
 
    use ATmega328P;
