@@ -130,11 +130,13 @@ package body BSP is
          end if;
       end;
       -- VGA ------------------------------------------------------------------
-      VGA.Init;
+      VGA.Init (0, 0);
+      VGA.Set_Mode (VGA.MODE3H);
+      VGA.Clear_Screen;
       VGA.Print (0, 0, KERNEL_NAME & ": initializing");
       if QEMU then
-         VGA.Print (0, 1, "Close this window to shutdown the emulator.");
-         VGA.Print (0, 2, "Press CTRL-ALT to enable the cursor.");
+         VGA.Print (0, 1, "Press CTRL-ALT-G to un-grab the mouse cursor.");
+         VGA.Print (0, 2, "Close this window to shutdown the emulator.");
       end if;
       -------------------------------------------------------------------------
    end BSP_Setup;
