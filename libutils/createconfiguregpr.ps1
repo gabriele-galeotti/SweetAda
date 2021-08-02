@@ -91,45 +91,57 @@ print_I $configure_filename "RTS_Path              := `"$env:RTS_PATH`";"
 print_I $configure_filename "Platform              := `"$env:PLATFORM`";"
 print_I $configure_filename "Cpu                   := `"$env:CPU`";"
 print_I $configure_filename "GCC_Platform_Switches := ("
-$gcc_platform_switches = $env:GCC_SWITCHES_PLATFORM.Trim(" ") -split "\s+"
-$count = 0
-foreach ($s in $gcc_platform_switches)
+$gcc_platform_switches = $env:GCC_SWITCHES_PLATFORM.Trim(" ")
+if ($gcc_platform_switches.Length -gt 0)
 {
-  $count = $count + 1
-  $s = "`"$s`""
-  if ($count -ne $gcc_platform_switches.Length)
+  $gcc_platform_switches_array = $gcc_platform_switches -split "\s+"
+  $count = 0
+  foreach ($s in $gcc_platform_switches_array)
   {
-    $s += ","
+    $count = $count + 1
+    $s = "`"$s`""
+    if ($count -ne $gcc_platform_switches_array.Length)
+    {
+      $s += ","
+    }
+    print_I $configure_filename "                          $s"
   }
-  print_I $configure_filename "                          $s"
 }
 print_I $configure_filename "                         );"
 print_I $configure_filename "Include_Directories   := ("
-$include_directories = $env:INCLUDE_DIRECTORIES.Trim(" ") -split "\s+"
-$count = 0
-foreach ($s in $include_directories)
+$include_directories = $env:INCLUDE_DIRECTORIES.Trim(" ")
+if ($include_directories.Length -gt 0)
 {
-  $count = $count + 1
-  $s = "`"$s`""
-  if ($count -ne $include_directories.Length)
+  $include_directories_array = $include_directories -split "\s+"
+  $count = 0
+  foreach ($s in $include_directories_array)
   {
-    $s += ","
+    $count = $count + 1
+    $s = "`"$s`""
+    if ($count -ne $include_directories_array.Length)
+    {
+      $s += ","
+    }
+    print_I $configure_filename "                          $s"
   }
-  print_I $configure_filename "                          $s"
 }
 print_I $configure_filename "                         );"
 print_I $configure_filename "Implicit_Ali_Units    := ("
-$implicit_ali_units = $env:IMPLICIT_ALI_UNITS.Trim(" ") -split "\s+"
-$count = 0
-foreach ($s in $implicit_ali_units)
+$implicit_ali_units = $env:IMPLICIT_ALI_UNITS.Trim(" ")
+if ($implicit_ali_units.Length -gt 0)
 {
-  $count = $count + 1
-  $s = "`"$s`""
-  if ($count -ne $implicit_ali_units.Length)
+  $implicit_ali_units_array = $implicit_ali_units -split "\s+"
+  $count = 0
+  foreach ($s in $implicit_ali_units_array)
   {
-    $s += ","
+    $count = $count + 1
+    $s = "`"$s`""
+    if ($count -ne $implicit_ali_units_array.Length)
+    {
+      $s += ","
+    }
+    print_I $configure_filename "                          $s"
   }
-  print_I $configure_filename "                          $s"
 }
 print_I $configure_filename "                         );"
 print_I $configure_filename "Object_Directory      := `"$env:OBJECT_DIRECTORY`";"
