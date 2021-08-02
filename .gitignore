@@ -184,6 +184,7 @@ platforms/PC-x86/configuration.in
 platforms/PC-x86/configure.ads.in
 platforms/PC-x86/configure.h.in
 platforms/PC-x86/linker.lds
+platforms/PC-x86/qemu.cfg
 platforms/PC-x86/startup-memory.S
 
 ################################################################################
@@ -194,6 +195,7 @@ platforms/PC-x86-64/configuration.in
 platforms/PC-x86-64/configure.ads.in
 platforms/PC-x86-64/configure.h.in
 platforms/PC-x86-64/linker.lds
+platforms/PC-x86-64/qemu.cfg
 platforms/PC-x86-64/startup-memory.S
 
 ################################################################################
