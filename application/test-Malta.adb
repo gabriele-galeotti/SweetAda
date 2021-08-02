@@ -3,7 +3,6 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with MIPS;
--- with MIPS32;
 with Malta;
 with IDE;
 with BlockDevices;
@@ -27,7 +26,6 @@ package body Application is
    use Interfaces;
    use Bits;
    use MIPS;
-   -- use MIPS.MIPS32;
    use Malta;
 
    --========================================================================--
@@ -66,6 +64,7 @@ package body Application is
       if True then
          declare
             Delay_Count : constant := 100_000_000;
+            Dummy       : Unsigned_32 with Volatile => True;
             Value       : Unsigned_8;
          begin
             Value := 0;
@@ -74,7 +73,7 @@ package body Application is
                -- IOEMU GPIO test
                IOEMU_IO1 := Value;
                Value := Value + 1;
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+               for Delay_Loop_Count in 1 .. Delay_Count loop Dummy := Dummy + 1; end loop;
             end loop;
          end;
       end if;
