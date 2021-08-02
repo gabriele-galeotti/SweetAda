@@ -150,35 +150,41 @@ print_I "Cpu                   := \"${CPU}\";"
 print_I "GCC_Platform_Switches := ("
 GCC_SWITCHES_PLATFORM_ARRAY=(${GCC_SWITCHES_PLATFORM})
 imax=$((${#GCC_SWITCHES_PLATFORM_ARRAY[@]}-1))
-for i in $(seq 0 $((${imax}))) ; do
-  s="\"${GCC_SWITCHES_PLATFORM_ARRAY[$i]}\""
-  if [ "${i}" -ne "${imax}" ] ; then
-    s+=","
-  fi
-  print_I "                          ${s}"
-done
+if [ "${imax}" -ge "0" ] ; then
+  for i in $(seq 0 $((${imax}))) ; do
+    s="\"${GCC_SWITCHES_PLATFORM_ARRAY[$i]}\""
+    if [ "${i}" -ne "${imax}" ] ; then
+      s+=","
+    fi
+    print_I "                          ${s}"
+  done
+fi
 print_I "                         );"
 print_I "Include_Directories   := ("
 INCLUDE_DIRECTORIES_ARRAY=(${INCLUDE_DIRECTORIES})
 imax=$((${#INCLUDE_DIRECTORIES_ARRAY[@]}-1))
-for i in $(seq 0 $((${imax}))) ; do
-  s="\"${INCLUDE_DIRECTORIES_ARRAY[$i]}\""
-  if [ "${i}" -ne "${imax}" ] ; then
-    s+=","
-  fi
-  print_I "                          ${s}"
-done
+if [ "${imax}" -ge "0" ] ; then
+  for i in $(seq 0 $((${imax}))) ; do
+    s="\"${INCLUDE_DIRECTORIES_ARRAY[$i]}\""
+    if [ "${i}" -ne "${imax}" ] ; then
+      s+=","
+    fi
+    print_I "                          ${s}"
+  done
+fi
 print_I "                         );"
 print_I "Implicit_Ali_Units    := ("
 IMPLICIT_ALI_UNITS_ARRAY=(${IMPLICIT_ALI_UNITS})
 imax=$((${#IMPLICIT_ALI_UNITS_ARRAY[@]}-1))
-for i in $(seq 0 $((${imax}))) ; do
-  s="\"${IMPLICIT_ALI_UNITS_ARRAY[$i]}\""
-  if [ "${i}" -ne "${imax}" ] ; then
-    s+=","
-  fi
-  print_I "                          ${s}"
-done
+if [ "${imax}" -ge "0" ] ; then
+  for i in $(seq 0 $((${imax}))) ; do
+    s="\"${IMPLICIT_ALI_UNITS_ARRAY[$i]}\""
+    if [ "${i}" -ne "${imax}" ] ; then
+      s+=","
+    fi
+    print_I "                          ${s}"
+  done
+fi
 print_I "                         );"
 print_I "Object_Directory      := \"${OBJECT_DIRECTORY}\";"
 print_I "Optimization_Level    := \"${OPTIMIZATION_LEVEL}\";"
