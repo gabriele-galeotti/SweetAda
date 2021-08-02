@@ -19,8 +19,6 @@ with FATFS.Applications;
 with PythonVM;
 with Console;
 
-with Srecord;
-
 package body Application is
 
    --========================================================================--
@@ -67,28 +65,6 @@ package body Application is
          PBUF.Free (P);
       end if;
    end Handle_Ethernet;
-
-   procedure RX_Serial (C : out Character);
-   procedure RX_Serial (C : out Character) is
-      R : SERDATR_Type;
-   begin
-      loop
-         R := CUSTOM.SERDATR;
-         if R.RBF then
-            C := To_Ch (R.DB);
-            exit;
-         end if;
-      end loop;
-   end RX_Serial;
-
-   procedure TX_Serial (C : in Character);
-   procedure TX_Serial (C : in Character) is
-   begin
-      loop
-         exit when CUSTOM.SERDATR.TBE;
-      end loop;
-      CUSTOM.SERDAT := (D => To_U8 (C), S => 16#01#);
-   end TX_Serial;
 
    procedure Run is
    begin
@@ -139,7 +115,7 @@ package body Application is
          end;
       end if;
       -------------------------------------------------------------------------
-      if False then
+      if True then
          declare
             TC1   : Unsigned_32 := Tick_Count;
             TC2   : Unsigned_32 := Tick_Count;
@@ -163,18 +139,6 @@ package body Application is
             end loop;
          end;
       end if;
-      -------------------------------------------------------------------------
-      TX_Serial ('C');
-      TX_Serial ('C');
-      TX_Serial ('C');
-      TX_Serial ('C');
-      TX_Serial ('C');
-      TX_Serial ('C');
-      TX_Serial ('C');
-      TX_Serial ('C');
-      -------------------------------------------------------------------------
-      Srecord.Init (RX_Serial'Access, TX_Serial'Access);
-      Srecord.Receive;
       -------------------------------------------------------------------------
       loop null; end loop;
       -------------------------------------------------------------------------
