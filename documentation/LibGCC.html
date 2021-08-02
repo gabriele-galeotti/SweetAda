@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda: LibGCC</title>
+
+<meta name="description" content="SweetAda: LibGCC">
+<meta name="keywords" content="SweetAda: LibGCC">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Optimizations.html#Optimizations" rel="next" title="Optimizations">
+<link href="The-core-complex.html#The-core-complex" rel="prev" title="The core complex">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="LibGCC"></a>
+<div class="header">
+<p>
+Next: <a href="Optimizations.html#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="The-core-complex.html#The-core-complex" accesskey="p" rel="prev">The core complex</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="LibGCC-1"></a>
+<h2 class="chapter">7 LibGCC</h2>
+<a name="index-LibGCC"></a>
+
+<p>Nearly every compiler provides an underlying library for low-level handling
+of features which are too expensive for the compiler to emit code for.
+</p>
+<p>LibGCC package provides those basic arithmetic operations which are normally
+provided by the CPU package or, if explicitly specified, the standard libgcc
+library that comes with the GCC compiler. These operations are implemented
+in pure Ada as a set of separate subprograms, and then exported so that the linker
+can resolve references when the compiler calls them, i.e., a 32-bit x 32-bit
+multiplication for a CPU that cannot handle directly.
+</p>
+<p>It is of rare use, because normally every CPU has its own set of routines.
+In SweetAda the LibGCC package is thus more or less a placeholder, in the case of
+a port for a new CPU, or experimentation.
+</p>
+
+
+
+</body>
+</html>

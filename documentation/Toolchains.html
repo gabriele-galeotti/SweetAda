@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda: Toolchains</title>
+
+<meta name="description" content="SweetAda: Toolchains">
+<meta name="keywords" content="SweetAda: Toolchains">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Configuration.html#Configuration" rel="next" title="Configuration">
+<link href="Overall-structure.html#Overall-structure" rel="prev" title="Overall structure">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Toolchains"></a>
+<div class="header">
+<p>
+Next: <a href="Configuration.html#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="Overall-structure.html#Overall-structure" accesskey="p" rel="prev">Overall structure</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Toolchains-1"></a>
+<h2 class="chapter">3 Toolchains</h2>
+<a name="index-toolchains"></a>
+<a name="index-elftool"></a>
+<a name="index-GCC-wrapper"></a>
+<a name="index-GNAT-wrapper"></a>
+<a name="index-runsweetada"></a>
+
+<p>The SweetAda system is distributed with GNU toolchains for every CPUs it can handle.
+Altough toolchains are quite generic, SweetAda does not employ neither the whole standard
+GNU FSF RTS source package nor the LibGCC library.
+</p>
+<p>The SweetAda RTS is a ZFP/SFP run-time that avoid to include subprograms from the original
+implementation, which is quite big and requires an underneath operating system.
+</p>
+<p>The LibGCC library, which is present like in every other standard toolchain, is bypassed
+and partially reimplemented in Ada. Only some low-level machine-language files are required,
+which are distributed in a separate package. This way, you have a system which is under
+your complete control at the source level, and every bit of information is known.
+Code output by the build system is thus coming directly from the compiler, without extra
+source files inclusion. Anyway, the standard LibGCC could be selected with a configuration
+variable.
+</p>
+<p>Apart from assembler, compiler and linker, toolchains have the GNATMAKE utility and a
+&quot;GCC wrapper&quot; executable, which is an auxiliary tool used to manage object output files.
+The GCC wrapper is a small piece of code between the compiler driver and the compiler
+executable. It analyzes command line parameters, selects verbosity level and instructs
+the compiler executable to generate additional output files, like assembler listing and
+Ada expanded source code. There is a companion wrapper, the &quot;GNAT wrapper&quot;, but its use
+is limited to print brief informations when GNATMAKE processes with&rsquo;ed units.
+</p>
+<p>elftool is a small utility that dumps the output object code. It is used mainly for a
+clean visual output in order to easily parse ELF sections.
+</p>
+<p>runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Configuration.html#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="Overall-structure.html#Overall-structure" accesskey="p" rel="prev">Overall structure</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

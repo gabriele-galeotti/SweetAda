@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda: IOEMU scripting</title>
+
+<meta name="description" content="SweetAda: IOEMU scripting">
+<meta name="keywords" content="SweetAda: IOEMU scripting">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Index.html#Index" rel="next" title="Index">
+<link href="Optimizations.html#Optimizations" rel="prev" title="Optimizations">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="IOEMU-scripting"></a>
+<div class="header">
+<p>
+Next: <a href="Index.html#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="Optimizations.html#Optimizations" accesskey="p" rel="prev">Optimizations</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="IOEMU-scripting-1"></a>
+<h2 class="chapter">9 IOEMU scripting</h2>
+<a name="index-IOEMU"></a>
+
+<p>The IOEMU facility allows configuration of a target emulator machine by specifying
+actions in a very basic script-like sequence of assignments and statements.
+</p>
+<p>SECTION
+Introduces a section. Section names could be &quot;IOEMU&quot; (to configure the IOEMU layer) or an I/O port or communication peripheral exported by the target machine being emulated.
+</p>
+<p>ENDSECT
+Declares the end of a section.
+</p>
+<p>Boolean expressions:
+</p><ul>
+<li> NOT
+</li><li> AND
+</li><li> OR
+</li><li> ==
+</li><li> DEFINED()
+</li></ul>
+
+<p>IF-THEN-ELSE-ELIF-ENDIF
+Classic decision structure. The test condition must be a boolean expression. IF structures can be nested. Note that IF structures can be used only inside sections.
+</p>
+<p>ARGS
+ARGS is a special directive. When you declare an ARGS directive, strings are added sequentially to the array that carries arguments for the next EXEC/EXEA command. So you can add arguments to the desired executable at various points of a section, and decided which arguments must be selected. Once the EXEC/EXEA instruction is processed, the ARGS array is reset to empty.
+</p>
+<p>EXEC
+Executes an executable. The arguments are those accumulated by means of previously processed ARGS commands. The script control flow does not proceed further until the executable returns.
+</p>
+<p>EXEA
+Same as EXEC, but the executable is launched in the background, so script control flow can proceed almost immediately.
+</p>
+<p>SLEEP
+Suspends the control flow execution for an amount of time.
+</p>
+<p>IOEMU objects<br>
+</p>
+<p>Strings<br>
+String exists when you write literals inside double-quotes. Use a backslash to enter a special characters.
+</p>
+<p>Variables<br>
+Variables are strings. Numeric values are converted to string. If you want to dereference a variable, use a &quot;$&quot; prefix followed by the name of the variable. Use braces to isolate variables when concatenating them with literals, like in &quot;${PORT1}&quot;. Note that dereferencing takes place only within double-quotes.
+There are three types of variable in IOEMU scripting: environment, global and local. Environment variables are available all the times, and are automatically imported. You can create an environment variable (being passed to child executable) with the ENV &lt;variable&gt; &lt;value&gt; directive. Global variables are created with the SET &lt;variable&gt; &lt;value&gt; directive. Variables declared within sections are local to that scope and ceased to exist when the parser leave the section.
+</p>
+<p>IOEMU creates some implicit variables during its execution.
+</p>
+<ul>
+<li> __THISFILE__<br>
+carries the name of the configuration file being processed. So you can export this variable and pass it to a emulator, that thus could use this same configuration file. Note that this is quite mandatory, because SweetAda emulators loads the IOEMU shared library and the configuration file using environment variables.
+</li><li> __SERIALPORTDEVICE__<br>
+(Linux only) carries the name of the virtual device associated with an emulator physical serial port. When you are using QEMU there is no need to use this variable, because the emulator maps physical serial ports to known TCP ports declared within command line arguments, whereas the FS-UAE emulator the IOEMU layer creates on-the-fly a virtual serial port that cannot be known before the execution.
+</li></ul>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Index.html#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="Optimizations.html#Optimizations" accesskey="p" rel="prev">Optimizations</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+
+\input texinfo
+
+@c $ makeinfo --html -o ./ sweetada.texi
+
+@c -- header -------------------------------------------------------------------
+@settitle SweetAda
+@c -----------------------------------------------------------------------------
+
+@set AUTHOR Gabriele Galeotti
+
+@c -- copying ------------------------------------------------------------------
+@copying
+This manual is for SweetAda.
+
+Copyright @copyright{} 2020, 2021 @value{AUTHOR}
+
+@quotation
+@end quotation
+@end copying
+@c -----------------------------------------------------------------------------
+
+@iftex
+@afourpaper
+@end iftex
+@tex
+\global\parindent=0pt
+\global\parskip=8pt
+\global\baselineskip=13pt
+@end tex
+
+@c -- titlepage ----------------------------------------------------------------
+@titlepage
+@title SweetAda
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+@c -----------------------------------------------------------------------------
+
+@ifnottex
+@node Top
+@top SweetAda
+@end ifnottex
+
+@menu
+* Overview::
+* Overall structure::
+* Toolchains::
+* Configuration::
+* Anatomy of a platform::
+* The core complex::
+* LibGCC::
+* Optimizations::
+* IOEMU scripting::
+* Index::
+@end menu
+
+@node Overview
+@chapter Overview
+@cindex Overview
+
+Welcome to SweetAda.
+
+SweetAda is an Ada-based development environment suitable for build lightweight applications
+in CPU-driven electronic devices. Developed from scratch with simplicity in mind,
+SweetAda tries to fill the gap between a simple, yet reliable, software/firmware control
+system and big, complex, OS-based multitasked environment.
+
+@node Overall structure
+@chapter Overall structure
+
+The SweetAda system is composed of a top-level directory which hold various directories
+and software components. They are:
+@itemize @bullet
+@item
+application@*
+generic user code
+@item
+clibrary@*
+small-size C library
+@item
+core@*
+machine-independent core software
+@item
+cpus@*
+machine-dependent CPU low-level library
+@item
+drivers@*
+I/O and peripherals components
+@item
+freeze@*
+test tool to compare two builds
+@item
+libutils@*
+script utilities
+@item
+modules@*
+various high-level libraries
+@item
+obj@*
+build system output files
+@item
+platforms@*
+platform-dependent low-level library
+@item
+rts@*
+Ada run-time
+@item
+share@*
+common auxiliary files
+@end itemize
+
+@node Toolchains
+@chapter Toolchains
+@cindex toolchains
+@cindex elftool
+@cindex GCC wrapper
+@cindex GNAT wrapper
+@cindex runsweetada
+
+The SweetAda system is distributed with GNU toolchains for every CPUs it can handle.
+Altough toolchains are quite generic, SweetAda does not employ neither the whole standard
+GNU FSF RTS source package nor the LibGCC library.
+
+The SweetAda RTS is a ZFP/SFP run-time that avoid to include subprograms from the original
+implementation, which is quite big and requires an underneath operating system.
+
+The LibGCC library, which is present like in every other standard toolchain, is bypassed
+and partially reimplemented in Ada. Only some low-level machine-language files are required,
+which are distributed in a separate package. This way, you have a system which is under
+your complete control at the source level, and every bit of information is known.
+Code output by the build system is thus coming directly from the compiler, without extra
+source files inclusion. Anyway, the standard LibGCC could be selected with a configuration
+variable.
+
+Apart from assembler, compiler and linker, toolchains have the GNATMAKE utility and a
+"GCC wrapper" executable, which is an auxiliary tool used to manage object output files.
+The GCC wrapper is a small piece of code between the compiler driver and the compiler
+executable. It analyzes command line parameters, selects verbosity level and instructs
+the compiler executable to generate additional output files, like assembler listing and
+Ada expanded source code. There is a companion wrapper, the "GNAT wrapper", but its use
+is limited to print brief informations when GNATMAKE processes with'ed units.
+
+elftool is a small utility that dumps the output object code. It is used mainly for a
+clean visual output in order to easily parse ELF sections.
+
+runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets.
+
+@node Configuration
+@chapter Configuration
+@cindex configuration
+
+SweetAda configuration is managed by a central Makefile, which loads configuration files
+in sequential steps.
+
+Configuration of SweetAda is done mainly with the help of two configuration files: "main"
+(or "system") configuration file, and a "platform" configuration file. The main configuration
+file (located in the top-level directory) defines general, target-agnostic characteristics,
+like stating Ada95 or Ada2012 mode, the optimization level, and so on; the platform configuration
+file (located in the platform's directory) defines in greater detail how the target software
+is going to be generated, and various parameters affecting low-level behaviour.
+
+Both files are, as a matter of fact, Makefile fragments that are going to be incorporated in
+the build system at compile-time. Being the SweetAda build system based on GNU Make, many
+facilitations are possible (like variable substitutions) and, if correctly arranged,
+configuration items can be made modular and easily changeable.
+
+The final output product of SweetAda compilation is the file "kernel.o". Its format depends
+on the type of toolchain used, but it is almost exclusively an ELF-class object file.
+
+NOTE: The SweetAda build machinery is Makefile-based, but you can also use an alternate
+GPR-style build model -- this is enabled by a configuration variable.
+
+The master Makefile try to detect the type of machine it is running on, and configuration
+of SweetAda begins by reading the system configuration file "configuration.in".
+
+Essential variables are set to a default value, like the path to the toolchain prefix,
+the build model, RTS type, profile, and so on.
+
+One important aspect is that configuration variables could be introduced (and could
+override pre-defined ones) at various stages of the configuration. Obviously, further
+and more specific configuration files are loaded in sequence from the very few basic
+information found in the top-level configuration.in. 
+
+Then, if it exists, a "kernel.cfg" file from the top-level directory is loaded.
+kernel.cfg contains the hardware platform which will be the build target. If kernel.cfg
+is missing, you can specify the platform (and eventually the subplatform) by assigning
+the shell environment variables PLATFORM and SUBPLATFORM, which in that case take
+precedence over an existing file. PLATFORM should be a valid directory in the "platforms"
+subdirectory, and SUBPLATFORM should be a valid subdirectory of the PLATFORM directory,
+named "platform-<SUBPLATFORM>".
+
+@example
+$ PLATFORM=PC-x86 SUBPLATFORM=QEMU-ROM make createkernelcfg
+@end example
+
+NOTE: for a cmd.exe shell you have to use a "SET" command.
+
+Once you choose a platform, you can create the kernel.cfg with the Makefile auxiliary
+target "createkernelcfg".
+
+Following this command, you can check the presence of a correct kernel.cfg file.
+The contents of kernel.cfg will be something like:
+
+@example
+PLATFORM := PC-x86
+SUBPLATFORM := QEMU-ROM
+@end example
+
+NOTE: You can create the kernel.cfg by hand and skip the createkernelcfg Makefile target.
+
+Once kernel.cfg does exist, it will be used until you issue a "make all-clean" command,
+which erases every configuration file and objects from last compilation.
+
+NOTE: Issuing a new configuration erases the old one by executing an implicit "all-clean"
+Makefile target.
+
+After the top-level configuration file is loaded, and thus Makefile knows the platform,
+the configuration.in found in that directory is loaded (e.g., ./platforms/ML605/configuration.in).
+Here you can specify nearly everything about the target machine, like the CPU model,
+fine-tuning compiler switches, run- or debug-related auxiliary scripts, and so on.
+If you need to create some information that will be used by external scripts, this is right place.
+Pay attention to export every variable you are creating that is not known by the
+build system, otherwise the external scripts are not able to access it.
+
+@example
+CPU       := x86
+CPU_MODEL := i586
+
+GCC_SWITCHES_PLATFORM     += -march=i586 -Wa,-march=i586
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_CLIBRARY := Y
+
+USE_APPLICATION := test-PC-x86
+
+ADDITIONAL_OBJECTS += ctest
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := runsweetada$(EXEEXT) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu.cfg
+DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
+
+export WIRESHARK := /usr/bin/wireshark
+@end example
+
+NOTE: In the example above, we create and export the variable WIRESHARK, which will be used
+by the launch script in order to do monitoring of network activity.
+
+Having knowledge of the hardware configuration, then the configuration.in in the
+appropriate CPU hierarchy is loaded (e.g., cpus/MIPS/configuration.in).
+
+NOTE: Once the CPU is well defined, the right files can be taken into account. The standard
+toolchain is selected by default, but you can pick another one by, e.g., overriding
+the variable TOOLCHAIN_NAME_<CPU> in the configuration.in of the platform directory.
+
+Then, the top-level "Makefile.tc.in" file is taken into account. This a very
+important part of the global configuration scenario, since it is responsible of the
+setup parameters for the compiler toolchain, compilation switches, warning switches
+and executable paths. If you want to suppress checks, warnings, or change programming
+style layout, you can comment/uncomment the appropriate compiler switch.
+
+Now that the configuration setup is complete, the build system is ready for the next
+step, the configuration target proper.
+
+@example
+$ make configure
+@end example
+
+The "configure" Makefile target will call the homonym target in every sub-Makefile
+concerned, e.g., "core", "modules", "drivers", and the platform. This way, fixing of
+files that should be included in the build or a pre-processing from a template file
+can take place. As an example, files from SUBPLATFORM specific directory could be
+symlinked in the platform set of files, the ?gnat.adc? file will be created from the
+template file "gnat.adc.in", and so on.
+
+The build system will reply by writing a brief configuration status:
+
+@example
+Configuration parameters:
+PLATFORM:           PC-x86
+SUBPLATFORM:        QEMU-ROM
+CPU:                x86
+CPU MODEL:          i586
+OSTYPE:             linux
+SWEETADA PATH:      /root/project/sweetada
+TOOLCHAIN PREFIX:   /opt/sweetada
+TOOLCHAIN NAME:     i686-sweetada-elf
+RTS ROOT PATH:      /root/project/sweetada/rts/sfp/i686-sweetada-elf
+RTS PATH:           /root/project/sweetada/rts/sfp/i686-sweetada-elf/.
+RTS:                sfp
+PROFILE:            sfp
+USE LIBADA:         Y
+BUILD MODE:         MAKEFILE
+OPTIMIZATION LEVEL: 1
+MAKE:               make
+GCC VERSION:        11.1.0
+GCC SWITCHES:       -march=i586 -Wa,-march=i586
+GCC MULTIDIR:       .
+LD SCRIPT:          linker.lds
+LD SWITCHES:        
+OBJCOPY SWITCHES:   --output-target=binary --gap-fill=0x00
+OBJDUMP SWITCHES:
+@end example
+
+You can now build the system:
+
+@example
+$ make all
+@end example
+
+The final product of the build will be the file "kernel.o", which contains an ELF object
+image of the system code.
+
+Once the final ELF object is created, you can execute the "postbuild" Makefile target,
+which extracts code/data sections from kernel.o, and produces a binary file suitable for
+ROM programming, JTAG download, and so on. This target uses the "objcopy" Binutils utility,
+so appropriate configuration switches could be selected by means of the OBJCOPY_SWITCHES
+variable in the platform's configuration.in file.
+
+NOTE: The postbuild target is a two-phase process. The first phase creates a binary
+files full of informations, then the postbuild target specified in the platform's Makefile
+is executed. This way you can customize the final binary file or take other actions,
+like add custom data, place the output file in a server?s TFTP directory, and so on.
+
+NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is no
+need to execute the postbuild target, because the emulator could use directly the kernel.o file.
+
+The SweetAda Makefile build system can be queried. The special Makefile target
+"probevariable" outputs the value of a configuration variable, so, e.g., you can execute a
+command line like:
+
+@example
+VERBOSE= PROBEVARIABLE=PROFILE make -s probevariable
+@end example
+
+and the build system will print the value associated with the variable PROFILE.
+A script could intercept the output by means of a redirection and use this information.
+Note that the VERBOSE variable is set empty and the the "-s" option is passed down
+to the Makefile so the output is not cluttered with other non-interesting output.
+
+@node Anatomy of a platform
+@chapter Anatomy of a platform
+@cindex platform
+
+In SweetAda a platform is a subdirectory. The platform contains all the files
+that are necessary for a target to produce an executable.
+
+When you are working with a platform, the master Makefile always loads configuration
+files from that directory.
+
+The platform's standard filename for a configuration file is "configuration.in".
+
+configuration.in is a Makefile fragment that defines the fundamental characteristics
+of the target, like the CPU type, GCC compilation flags, how the build process should
+takes place, and so on. Here you can also set your own variables (remember to export
+them) to tune the build environment and specify actions. Those variables will be
+processed by the master Makefile and will be available in the platform's own Makefile.
+
+A platform should naturally contain program code files. In SweetAda, some standard
+names exist, but you are free to have whatever naming scheme you need. Nearly all
+platforms have the following files:
+
+@itemize @bullet
+@item
+configuration.in@*
+the platform configuration file
+@item
+Makefile@*
+a Makefile which contains some standard targets that will be called from the master
+Makefile
+@item
+startup.S@*
+an assembler unit that should phisically setup the target and then pass control to
+the main Ada procedure (which then calls the bsp unit)
+@item
+bsp.ad[b|s]@*
+the Ada unit responsible for the high-level setup; ideally, the startup.S will
+take the CPU out of reset, configure it in a very basic mode and setup the stack
+before calling BSP Ada code
+@item
+llkernel.S@*
+here you can put exception/interrupt handling code (hence the name "low-level")
+@item
+exceptions.ad[b|s]@*
+the Ada counterpart to llkernel.S
+@item
+configure.ads.in, configure.h.in@*
+these are Ada and Assembler/C files that will be processed when you issue a "make
+configure" (that is, after the "createkernelcfg" action); after being processed,
+you will find the result, in the form of configure.ads and configure.h, which have
+the proper variables put in place once that the master Makefile knows everything
+about the platform
+@item
+platform-specific files and Ada units
+@end itemize
+
+The platform Makefile is responsible to compile all the files you need in order to
+produce a libplatform.a library that will be linked together all other object files.
+If you want to specify your own platform files, simply add them to the OBJECTS
+variable, e.g.:
+
+@example
+OBJECTS :=@*
+OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/mystartup.o@*
+OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/myllkernel.o@*
+@end example
+
+(Remember to prefix the destination directory).
+
+The Makefile will then load a common library Makefile (Makefile.lb.in) that will
+build the final libplatform.a archive.
+
+Please note that this scheme exists because the SweetAda compilation model is
+partially GNATMAKE-based, but this tool has no knowledge of which object files are
+mandatory to be linked into the final executable in order to startup the system.
+Briefly stated, everything before the main procedure is foreign code that GNATMAKE
+logic cannot have knowledge of.
+
+Obviously, if you want to write a unit that will be used after that Ada has took
+control, then there's no need to specify it in the Makefile, because GNATMAKE will
+automatically compile it during the main Ada code translation due to the with clause.
+
+Note:
+libplatform objects are, in SweetAda terms, the so-called "implicit units", i.e.,
+objects that the Ada compilation system cannot compute during the build, by analyzing
+other compilation units. Being an implicit unit, however, does not necessarily make a
+file eligible for inclusion in the variable "IMPLICIT_ALI_UNITS", which exists in the
+master Makefile, because libplatform files are assembler files that generally do not
+contribute to Ada binding phase processing.
+
+@node The core complex
+@chapter The core complex
+@cindex core
+
+Bits
+
+Bits is the fundamental package for low-level manipulation. Here you can find many
+type declarations and subprograms to simplify the handling of low-level object.
+
+C library
+
+SweetAda has a very minimalistic C library. This C library takes no active part in
+SweetAda. Contrarily to all other environments, where Ada code runs on top of another
+piece of software (almost invariably a C-coded OS), in SweetAda even various low-level
+functions normally belonging to a standard C library are written in Ada. This small
+library exists for reference purposes, and as an aid in porting foreign C user code.
+Note that only very basic functions in ctype/stdlib/stdio/string hierarchies are
+implemented.
+
+Console
+
+The console package provides basic subprograms to output fundamental
+type values on a character-oriented device, like a serial port.
+
+All the Console subprograms call Print (Character), which takes a descriptor
+where you should specify access to a subprogram that does the physical
+output. Last_Chance_Handler uses Console, so the package is one of the
+implicit units that are linked into the final kernel executables regardless
+of a with clause.
+
+Besides fundamental types output, you can find a Print_Memory subprogram
+that is useful to dump a memory section for diagnostic purposes.
+
+@node LibGCC
+@chapter LibGCC
+@cindex LibGCC
+
+Nearly every compiler provides an underlying library for low-level handling
+of features which are too expensive for the compiler to emit code for.
+
+LibGCC package provides those basic arithmetic operations which are normally
+provided by the CPU package or, if explicitly specified, the standard libgcc
+library that comes with the GCC compiler. These operations are implemented
+in pure Ada as a set of separate subprograms, and then exported so that the linker
+can resolve references when the compiler calls them, i.e., a 32-bit x 32-bit
+multiplication for a CPU that cannot handle directly.
+
+It is of rare use, because normally every CPU has its own set of routines.
+In SweetAda the LibGCC package is thus more or less a placeholder, in the case of
+a port for a new CPU, or experimentation.
+
+@node Optimizations
+@chapter Optimizations
+@cindex optimizations
+
+SweetAda provides a mechanism to allow user-defined implementations. Standard subprograms
+available in the core complex (but not limited to) could be bypassed by reimplement them.
+
+In a similar way, some package and subprograms can be selected when speed is a priority.
+The package MMIO, as an example, exposes a complete range of procedures and functions to
+allow low-level I/O, like reading an Unsigned_32 value at a specific address.
+
+These subprograms are written in Ada and are not optimized. Furthermore, they cannot be
+inlined and thus can be used as access subprograms to be designated in drivers when you
+are configuring the methods to deal with I/O. But some CPU have a subset of MMIO that
+overrides the standard one. By rewriting the subprograms with inline assembler instructions,
+speed increase could be easily obtained.
+
+Beyond that, some CPU have a second package CPU.MMIO with these inline assembler fragments
+already written. With'ing CPU.MMIO instead of MMIO lets the user directly use them.
+
+@node IOEMU scripting
+@chapter IOEMU scripting
+@cindex IOEMU
+
+The IOEMU facility allows configuration of a target emulator machine by specifying
+actions in a very basic script-like sequence of assignments and statements.
+
+SECTION
+Introduces a section. Section names could be "IOEMU" (to configure the IOEMU layer) or an I/O port or communication peripheral exported by the target machine being emulated.
+
+ENDSECT
+Declares the end of a section.
+
+Boolean expressions:
+@itemize @bullet
+@item
+NOT
+@item
+AND
+@item
+OR
+@item
+==
+@item
+DEFINED()
+@end itemize
+
+IF-THEN-ELSE-ELIF-ENDIF
+Classic decision structure. The test condition must be a boolean expression. IF structures can be nested. Note that IF structures can be used only inside sections.
+
+ARGS
+ARGS is a special directive. When you declare an ARGS directive, strings are added sequentially to the array that carries arguments for the next EXEC/EXEA command. So you can add arguments to the desired executable at various points of a section, and decided which arguments must be selected. Once the EXEC/EXEA instruction is processed, the ARGS array is reset to empty.
+
+EXEC
+Executes an executable. The arguments are those accumulated by means of previously processed ARGS commands. The script control flow does not proceed further until the executable returns.
+
+EXEA
+Same as EXEC, but the executable is launched in the background, so script control flow can proceed almost immediately.
+
+SLEEP
+Suspends the control flow execution for an amount of time.
+
+IOEMU objects@*
+
+Strings@*
+String exists when you write literals inside double-quotes. Use a backslash to enter a special characters.
+
+Variables@*
+Variables are strings. Numeric values are converted to string. If you want to dereference a variable, use a "$" prefix followed by the name of the variable. Use braces to isolate variables when concatenating them with literals, like in "$@{PORT1@}". Note that dereferencing takes place only within double-quotes.
+There are three types of variable in IOEMU scripting: environment, global and local. Environment variables are available all the times, and are automatically imported. You can create an environment variable (being passed to child executable) with the ENV <variable> <value> directive. Global variables are created with the SET <variable> <value> directive. Variables declared within sections are local to that scope and ceased to exist when the parser leave the section.
+
+IOEMU creates some implicit variables during its execution.
+
+@itemize @bullet
+@item
+__THISFILE__@*
+carries the name of the configuration file being processed. So you can export this variable and pass it to a emulator, that thus could use this same configuration file. Note that this is quite mandatory, because SweetAda emulators loads the IOEMU shared library and the configuration file using environment variables.
+@item
+__SERIALPORTDEVICE__@*
+(Linux only) carries the name of the virtual device associated with an emulator physical serial port. When you are using QEMU there is no need to use this variable, because the emulator maps physical serial ports to known TCP ports declared within command line arguments, whereas the FS-UAE emulator the IOEMU layer creates on-the-fly a virtual serial port that cannot be known before the execution.
+@end itemize
+
+@node Index
+@unnumbered Index
+@printindex cp
+
+@ifnothtml
+@contents
+@end ifnothtml
+
+@bye
+

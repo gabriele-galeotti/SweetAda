@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda: Anatomy of a platform</title>
+
+<meta name="description" content="SweetAda: Anatomy of a platform">
+<meta name="keywords" content="SweetAda: Anatomy of a platform">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="The-core-complex.html#The-core-complex" rel="next" title="The core complex">
+<link href="Configuration.html#Configuration" rel="prev" title="Configuration">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Anatomy-of-a-platform"></a>
+<div class="header">
+<p>
+Next: <a href="The-core-complex.html#The-core-complex" accesskey="n" rel="next">The core complex</a>, Previous: <a href="Configuration.html#Configuration" accesskey="p" rel="prev">Configuration</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Anatomy-of-a-platform-1"></a>
+<h2 class="chapter">5 Anatomy of a platform</h2>
+<a name="index-platform"></a>
+
+<p>In SweetAda a platform is a subdirectory. The platform contains all the files
+that are necessary for a target to produce an executable.
+</p>
+<p>When you are working with a platform, the master Makefile always loads configuration
+files from that directory.
+</p>
+<p>The platform&rsquo;s standard filename for a configuration file is &quot;configuration.in&quot;.
+</p>
+<p>configuration.in is a Makefile fragment that defines the fundamental characteristics
+of the target, like the CPU type, GCC compilation flags, how the build process should
+takes place, and so on. Here you can also set your own variables (remember to export
+them) to tune the build environment and specify actions. Those variables will be
+processed by the master Makefile and will be available in the platform&rsquo;s own Makefile.
+</p>
+<p>A platform should naturally contain program code files. In SweetAda, some standard
+names exist, but you are free to have whatever naming scheme you need. Nearly all
+platforms have the following files:
+</p>
+<ul>
+<li> configuration.in<br>
+the platform configuration file
+</li><li> Makefile<br>
+a Makefile which contains some standard targets that will be called from the master
+Makefile
+</li><li> startup.S<br>
+an assembler unit that should phisically setup the target and then pass control to
+the main Ada procedure (which then calls the bsp unit)
+</li><li> bsp.ad[b|s]<br>
+the Ada unit responsible for the high-level setup; ideally, the startup.S will
+take the CPU out of reset, configure it in a very basic mode and setup the stack
+before calling BSP Ada code
+</li><li> llkernel.S<br>
+here you can put exception/interrupt handling code (hence the name &quot;low-level&quot;)
+</li><li> exceptions.ad[b|s]<br>
+the Ada counterpart to llkernel.S
+</li><li> configure.ads.in, configure.h.in<br>
+these are Ada and Assembler/C files that will be processed when you issue a &quot;make
+configure&quot; (that is, after the &quot;createkernelcfg&quot; action); after being processed,
+you will find the result, in the form of configure.ads and configure.h, which have
+the proper variables put in place once that the master Makefile knows everything
+about the platform
+</li><li> platform-specific files and Ada units
+</li></ul>
+
+<p>The platform Makefile is responsible to compile all the files you need in order to
+produce a libplatform.a library that will be linked together all other object files.
+If you want to specify your own platform files, simply add them to the OBJECTS
+variable, e.g.:
+</p>
+<div class="example">
+<pre class="example">OBJECTS :=
+
+OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/mystartup.o
+
+OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/myllkernel.o
+
+</pre></div>
+
+<p>(Remember to prefix the destination directory).
+</p>
+<p>The Makefile will then load a common library Makefile (Makefile.lb.in) that will
+build the final libplatform.a archive.
+</p>
+<p>Please note that this scheme exists because the SweetAda compilation model is
+partially GNATMAKE-based, but this tool has no knowledge of which object files are
+mandatory to be linked into the final executable in order to startup the system.
+Briefly stated, everything before the main procedure is foreign code that GNATMAKE
+logic cannot have knowledge of.
+</p>
+<p>Obviously, if you want to write a unit that will be used after that Ada has took
+control, then there&rsquo;s no need to specify it in the Makefile, because GNATMAKE will
+automatically compile it during the main Ada code translation due to the with clause.
+</p>
+<p>Note:
+libplatform objects are, in SweetAda terms, the so-called &quot;implicit units&quot;, i.e.,
+objects that the Ada compilation system cannot compute during the build, by analyzing
+other compilation units. Being an implicit unit, however, does not necessarily make a
+file eligible for inclusion in the variable &quot;IMPLICIT_ALI_UNITS&quot;, which exists in the
+master Makefile, because libplatform files are assembler files that generally do not
+contribute to Ada binding phase processing.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="The-core-complex.html#The-core-complex" accesskey="n" rel="next">The core complex</a>, Previous: <a href="Configuration.html#Configuration" accesskey="p" rel="prev">Configuration</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
