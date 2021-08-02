@@ -163,7 +163,7 @@ fi
 
 case $1 in
   createkernelcfg)
-    "${MAKE}" PLATFORM=${PLATFORM} SUBPLATFORM=${SUBPLATFORM} createkernelcfg
+    PLATFORM=${PLATFORM} SUBPLATFORM=${SUBPLATFORM} "${MAKE}" createkernelcfg
     ;;
   configure)
     "${MAKE}" configure
