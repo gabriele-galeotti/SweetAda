@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda: Build SweetAda</title>
+
+<meta name="description" content="SweetAda: Build SweetAda">
+<meta name="keywords" content="SweetAda: Build SweetAda">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Anatomy-of-a-platform.html#Anatomy-of-a-platform" rel="next" title="Anatomy of a platform">
+<link href="Makefile-targets.html#Makefile-targets" rel="prev" title="Makefile targets">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Build-SweetAda"></a>
+<div class="header">
+<p>
+Next: <a href="Anatomy-of-a-platform.html#Anatomy-of-a-platform" accesskey="n" rel="next">Anatomy of a platform</a>, Previous: <a href="Makefile-targets.html#Makefile-targets" accesskey="p" rel="prev">Makefile targets</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Build-SweetAda-1"></a>
+<h2 class="chapter">6 Build SweetAda</h2>
+
+<p>Once that SweetAda is properly configured and your platform target is known, you can
+perform the build of the system:
+</p>
+<div class="example">
+<pre class="example">$ make all
+</pre></div>
+
+<p>The final product of the build will be the file &quot;kernel.o&quot;, which contains an ELF object
+image of the system code.
+</p>
+<p>After the final ELF object is created, you can execute the &quot;postbuild&quot; Makefile target,
+which extracts code/data sections from kernel.o, and produces a binary file suitable for
+ROM programming, JTAG download, and so on. This target uses the &quot;objcopy&quot; Binutils utility,
+so appropriate configuration switches could be selected by means of the OBJCOPY_SWITCHES
+variable in the platform&rsquo;s configuration.in file.
+</p>
+<p>NOTE: The postbuild target is a two-phase process. The first phase creates a binary
+files full of informations, then the postbuild target specified in the platform&rsquo;s Makefile
+is executed. This way you can customize the final binary file or take other actions,
+like add custom data, place the output file in a server?s TFTP directory, and so on.
+</p>
+<p>NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is no
+need to execute the postbuild target, because the emulator could use directly the kernel.o file.
+</p>
+
+
+
+</body>
+</html>

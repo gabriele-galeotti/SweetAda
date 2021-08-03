@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda: Host environment</title>
+
+<meta name="description" content="SweetAda: Host environment">
+<meta name="keywords" content="SweetAda: Host environment">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Configuration.html#Configuration" rel="next" title="Configuration">
+<link href="Toolchains.html#Toolchains" rel="prev" title="Toolchains">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Host-environment"></a>
+<div class="header">
+<p>
+Next: <a href="Configuration.html#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="Toolchains.html#Toolchains" accesskey="p" rel="prev">Toolchains</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Host-environment-1"></a>
+<h2 class="chapter">4 Host environment</h2>
+<a name="index-Host-environment"></a>
+
+<p>SweetAda is meant to run on major mainstream environments, i.e., POSIX/Linux, Windows, or OS X.
+The host machine should be able to execute 64-bit executables.
+</p>
+<p>In the following chapters, we will analyze operations in a POSIX machine.
+</p>
+<p>It is highly advisable to perform commands in the SweetAda top-level directory (which exists
+as a variable SWEETADA_PATH in the build system). The Makefile machinery is able to infer the
+SweetAda path from the context, but this feature rely on standard Makefile idioms which could
+be invalidated by an &quot;esotic&quot; environment setup.
+</p>
+<p>Hence, if you want to integrate SweetAda in a GUI, remember to change directory before
+performing an action.
+</p>
+<p>For a Windows machine, it is advisable to put in PATH the full specification of the directory
+containing the &quot;make.exe&quot; utility. Otherwise, you can setup the path to this executable in the
+menu.bat front-end, and substitute every &quot;make&quot; command with &quot;menu.bat&quot;, provided your working
+directory is the SweetAda top-level-directory.
+</p>
+<p>SweetAda supports whitespaces in paths.
+</p>
+
+
+
+</body>
+</html>

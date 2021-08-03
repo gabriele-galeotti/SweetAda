@@ -48,7 +48,10 @@ Copyright @copyright{} 2020, 2021 @value{AUTHOR}
 * Overview::
 * Overall structure::
 * Toolchains::
+* Host environment::
 * Configuration::
+* Makefile targets::
+* Building SweetAda::
 * Anatomy of a platform::
 * The core complex::
 * LibGCC::
@@ -148,6 +151,30 @@ elftool is a small utility that dumps the output object code. It is used mainly 
 clean visual output in order to easily parse ELF sections.
 
 runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets.
+
+@node Host environment
+@chapter Host environment
+@cindex Host environment
+
+SweetAda is meant to run on major mainstream environments, i.e., POSIX/Linux, Windows, or OS X.
+The host machine should be able to execute 64-bit executables.
+
+In the following chapters, we will analyze operations in a POSIX machine.
+
+It is highly advisable to perform commands in the SweetAda top-level directory (which exists
+as a variable SWEETADA_PATH in the build system). The Makefile machinery is able to infer the
+SweetAda path from the context, but this feature rely on standard Makefile idioms which could
+be invalidated by an "esotic" environment setup.
+
+Hence, if you want to integrate SweetAda in a GUI, remember to change directory before
+performing an action.
+
+For a Windows machine, it is advisable to put in PATH the full specification of the directory
+containing the "make.exe" utility. Otherwise, you can setup the path to this executable in the
+menu.bat front-end, and substitute every "make" command with "menu.bat", provided your working
+directory is the SweetAda top-level-directory.
+
+SweetAda supports whitespaces in paths.
 
 @node Configuration
 @chapter Configuration
@@ -310,29 +337,6 @@ OBJCOPY SWITCHES:   --output-target=binary --gap-fill=0x00
 OBJDUMP SWITCHES:
 @end example
 
-You can now build the system:
-
-@example
-$ make all
-@end example
-
-The final product of the build will be the file "kernel.o", which contains an ELF object
-image of the system code.
-
-Once the final ELF object is created, you can execute the "postbuild" Makefile target,
-which extracts code/data sections from kernel.o, and produces a binary file suitable for
-ROM programming, JTAG download, and so on. This target uses the "objcopy" Binutils utility,
-so appropriate configuration switches could be selected by means of the OBJCOPY_SWITCHES
-variable in the platform's configuration.in file.
-
-NOTE: The postbuild target is a two-phase process. The first phase creates a binary
-files full of informations, then the postbuild target specified in the platform's Makefile
-is executed. This way you can customize the final binary file or take other actions,
-like add custom data, place the output file in a server?s TFTP directory, and so on.
-
-NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is no
-need to execute the postbuild target, because the emulator could use directly the kernel.o file.
-
 The SweetAda Makefile build system can be queried. The special Makefile target
 "probevariable" outputs the value of a configuration variable, so, e.g., you can execute a
 command line like:
@@ -345,6 +349,66 @@ and the build system will print the value associated with the variable PROFILE.
 A script could intercept the output by means of a redirection and use this information.
 Note that the VERBOSE variable is set empty and the the "-s" option is passed down
 to the Makefile so the output is not cluttered with other non-interesting output.
+
+@node Makefile targets
+@chapter Makefile targets
+@cindex Makefile targets
+
+Following a "make createkernelcfg" and "make configure", the build system is ready
+to build SweetAda. The next phases will be a "make all" (or "make kernel") and,
+optionally, "make postbuild". Then SweetAda could be executed by means of the "make run"
+or "make debug" commands.
+
+Putting it all together, we can summarize the following fundamental steps:
+
+1) make createkernelcfg@*
+2) make configure@*
+3) make all@*
+4) make postbuild (if needed)@*
+5) make run/make debug@*
+
+Makefile targets have the following properties:
+@itemize @bullet
+@item
+idempotent
+@item
+the previous target is a prerequisite for the next
+@item
+"make clean" deletes all object files generated
+@item
+"make distclean" invalidates the whole configuration
+@end itemize
+
+Obviously, if you change something in configuration.in files (say, a compiler switch or
+the RTS profile), then you should do a "make clean" to rebuild everything. Other heavy
+changes may requires a re-configuration from the scratch.
+
+@node Building SweetAda
+@chapter Building SweetAda
+
+Once that SweetAda is properly configured and your platform target is known, you can
+perform the build of the system:
+
+@example
+$ make all
+@end example
+
+The final product of the build will be the file "kernel.o", which contains an ELF object
+image of the system code.
+
+After the final ELF object is created, you can execute the "postbuild" Makefile target,
+which extracts code/data sections from kernel.o, and produces a binary file suitable for
+ROM programming, JTAG download, and so on. This target uses the "objcopy" Binutils utility,
+so appropriate configuration switches could be selected by means of the OBJCOPY_SWITCHES
+variable in the platform's configuration.in file.
+
+NOTE: The postbuild target is a two-phase process. The first phase creates a binary
+files full of informations, then the postbuild target specified in the platform's Makefile
+is executed. This way you can customize the final binary file or take other actions,
+like add custom data, place the output file in a server?s TFTP directory, and so on.
+
+NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is no
+need to execute the postbuild target, because the emulator could use directly the kernel.o file.
 
 @node Anatomy of a platform
 @chapter Anatomy of a platform

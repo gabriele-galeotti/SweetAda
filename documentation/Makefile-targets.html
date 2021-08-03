@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda: Makefile targets</title>
+
+<meta name="description" content="SweetAda: Makefile targets">
+<meta name="keywords" content="SweetAda: Makefile targets">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Building-SweetAda.html#Building-SweetAda" rel="next" title="Building SweetAda">
+<link href="Configuration.html#Configuration" rel="prev" title="Configuration">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Makefile-targets"></a>
+<div class="header">
+<p>
+Next: <a href="Building-SweetAda.html#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a>, Previous: <a href="Configuration.html#Configuration" accesskey="p" rel="prev">Configuration</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Makefile-targets-1"></a>
+<h2 class="chapter">6 Makefile targets</h2>
+<a name="index-Makefile-targets"></a>
+
+<p>Following a &quot;make createkernelcfg&quot; and &quot;make configure&quot;, the build system is ready
+to build SweetAda. The next phases will be a &quot;make all&quot; (or &quot;make kernel&quot;) and,
+optionally, &quot;make postbuild&quot;. Then SweetAda could be executed by means of the &quot;make run&quot;
+or &quot;make debug&quot; commands.
+</p>
+<p>Putting it all together, we can summarize the following fundamental steps:
+</p>
+<p>1) make createkernelcfg<br>
+2) make configure<br>
+3) make all<br>
+4) make postbuild (if needed)<br>
+5) make run/make debug<br>
+</p>
+<p>Makefile targets have the following properties:
+</p><ul>
+<li> idempotent
+</li><li> the previous target is a prerequisite for the next
+</li><li> &quot;make clean&quot; deletes all object files generated
+</li><li> &quot;make distclean&quot; invalidates the whole configuration
+</li></ul>
+
+<p>Obviously, if you change something in configuration.in files (say, a compiler switch or
+the RTS profile), then you should do a &quot;make clean&quot; to rebuild everything. Other heavy
+changes may requires a re-configuration from the scratch.
+</p>
+
+
+
+</body>
+</html>
