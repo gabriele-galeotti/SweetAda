@@ -64,14 +64,14 @@ Next: <a href="Index.html#Index" accesskey="n" rel="next">Index</a>, Previous: <
 <p>The IOEMU facility allows configuration of a target emulator machine by specifying
 actions in a very basic script-like sequence of assignments and statements.
 </p>
-<p>SECTION
+<p>SECTION<br>
 Introduces a section. Section names could be &quot;IOEMU&quot; (to configure the IOEMU layer) or an
 I/O port or communication peripheral exported by the target machine being emulated.
 </p>
-<p>ENDSECT
+<p>ENDSECT<br>
 Declares the end of a section.
 </p>
-<p>Boolean expressions:
+<p>Boolean expressions:<br>
 </p><ul>
 <li> NOT
 </li><li> AND
@@ -80,28 +80,28 @@ Declares the end of a section.
 </li><li> DEFINED()
 </li></ul>
 
-<p>IF-THEN-ELSE-ELIF-ENDIF
+<p>IF-THEN-ELSE-ELIF-ENDIF<br>
 Classic decision structure. The test condition must be a boolean expression.
 IF structures can be nested. Note that IF structures can be used only inside
 sections.
 </p>
-<p>ARGS
+<p>ARGS<br>
 ARGS is a special directive. When you declare an ARGS directive, strings are
 added sequentially to the array that carries arguments for the next EXEC/EXEA
 command. So you can add arguments to the desired executable at various points
 of a section, and decided which arguments must be selected. Once the EXEC/EXEA
 instruction is processed, the ARGS array is reset to empty.
 </p>
-<p>EXEC
+<p>EXEC<br>
 Executes an executable. The arguments are those accumulated by means of previously
 processed ARGS commands. The script control flow does not proceed further until
 the executable returns.
 </p>
-<p>EXEA
+<p>EXEA<br>
 Same as EXEC, but the executable is launched in the background, so script control
 flow can proceed almost immediately.
 </p>
-<p>SLEEP
+<p>SLEEP<br>
 Suspends the control flow execution for an amount of time.
 </p>
 <p>IOEMU objects<br>
