@@ -1,5 +1,6 @@
 
 \input texinfo
+@setfilename sweetada
 
 @c $ makeinfo --html -o ./ sweetada.texi
 
@@ -51,6 +52,7 @@ Copyright @copyright{} 2020, 2021 @value{AUTHOR}
 * Anatomy of a platform::
 * The core complex::
 * LibGCC::
+* Building the RTS::
 * Optimizations::
 * IOEMU scripting::
 * Index::
@@ -485,6 +487,61 @@ It is of rare use, because normally every CPU has its own set of routines.
 In SweetAda the LibGCC package is thus more or less a placeholder, in the case of
 a port for a new CPU, or experimentation.
 
+@node Building the RTS
+@chapter Building the RTS
+@cindex RTS
+
+When using a SweetAda source package from a repository like GitHub, the very first
+action to perform is to build the Ada Run-Time System.
+
+Currently, RTS build is supported only by means of a Bash script, so you need an
+environment with a working Bash shell online. The script is not parameterized yet,
+so you should edit by hand, commenting out some sensible variables, unless you want
+to build the RTS for every CPU architecture.
+
+After changing your working directory to the "rts" subdirectory of the top-level
+SweetAda installation, open the rts-build.sh script with your favorite editor and locate
+the "Main loop" section of the script. After various initialization statements,
+you can see the RTS selection and the toolchain name assignments:
+
+@example
+# force the RTS type for whole build (avoid to pick up a private setting from a
+# platform-dependent configuration.in that could override it)
+#RTS=zfp
+RTS=sfp
+
+TOOLCHAIN_NAMES=()
+TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_AArch64@})
+...
+TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_x86_64@})
+@end example
+
+Choose RTS type and comment out every target, but the one you want to build. Bash
+script comments are introduced with a "#" character.
+
+@example
+RTS=zfp <--
+#RTS=sfp
+
+TOOLCHAIN_NAMES=()
+#TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_AArch64@})
+...
+#TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_MIPS64@})
+TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_MicroBlaze@}) <--
+#TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_NiosII@})
+#TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_PowerPC@})
+...
+@end example
+
+Then execute:
+
+@example
+$ ./rts-build.sh
+@end example
+
+If the SweetAda toolchain installation is fine, you should see a log of the build, with
+a successful message at the end.
+
 @node Optimizations
 @chapter Optimizations
 @cindex optimizations
@@ -513,7 +570,8 @@ The IOEMU facility allows configuration of a target emulator machine by specifyi
 actions in a very basic script-like sequence of assignments and statements.
 
 SECTION
-Introduces a section. Section names could be "IOEMU" (to configure the IOEMU layer) or an I/O port or communication peripheral exported by the target machine being emulated.
+Introduces a section. Section names could be "IOEMU" (to configure the IOEMU layer) or an
+I/O port or communication peripheral exported by the target machine being emulated.
 
 ENDSECT
 Declares the end of a section.
@@ -533,16 +591,25 @@ DEFINED()
 @end itemize
 
 IF-THEN-ELSE-ELIF-ENDIF
-Classic decision structure. The test condition must be a boolean expression. IF structures can be nested. Note that IF structures can be used only inside sections.
+Classic decision structure. The test condition must be a boolean expression.
+IF structures can be nested. Note that IF structures can be used only inside
+sections.
 
 ARGS
-ARGS is a special directive. When you declare an ARGS directive, strings are added sequentially to the array that carries arguments for the next EXEC/EXEA command. So you can add arguments to the desired executable at various points of a section, and decided which arguments must be selected. Once the EXEC/EXEA instruction is processed, the ARGS array is reset to empty.
+ARGS is a special directive. When you declare an ARGS directive, strings are
+added sequentially to the array that carries arguments for the next EXEC/EXEA
+command. So you can add arguments to the desired executable at various points
+of a section, and decided which arguments must be selected. Once the EXEC/EXEA
+instruction is processed, the ARGS array is reset to empty.
 
 EXEC
-Executes an executable. The arguments are those accumulated by means of previously processed ARGS commands. The script control flow does not proceed further until the executable returns.
+Executes an executable. The arguments are those accumulated by means of previously
+processed ARGS commands. The script control flow does not proceed further until
+the executable returns.
 
 EXEA
-Same as EXEC, but the executable is launched in the background, so script control flow can proceed almost immediately.
+Same as EXEC, but the executable is launched in the background, so script control
+flow can proceed almost immediately.
 
 SLEEP
 Suspends the control flow execution for an amount of time.
@@ -550,21 +617,37 @@ Suspends the control flow execution for an amount of time.
 IOEMU objects@*
 
 Strings@*
-String exists when you write literals inside double-quotes. Use a backslash to enter a special characters.
+String exists when you write literals inside double-quotes. Use a backslash
+to enter a special characters.
 
 Variables@*
-Variables are strings. Numeric values are converted to string. If you want to dereference a variable, use a "$" prefix followed by the name of the variable. Use braces to isolate variables when concatenating them with literals, like in "$@{PORT1@}". Note that dereferencing takes place only within double-quotes.
-There are three types of variable in IOEMU scripting: environment, global and local. Environment variables are available all the times, and are automatically imported. You can create an environment variable (being passed to child executable) with the ENV <variable> <value> directive. Global variables are created with the SET <variable> <value> directive. Variables declared within sections are local to that scope and ceased to exist when the parser leave the section.
+Variables are strings. Numeric values are converted to string. If you want
+to dereference a variable, use a "$" prefix followed by the name of the variable.
+Use braces to isolate variables when concatenating them with literals, like in
+"$@{PORT1@}". Note that dereferencing takes place only within double-quotes.
+There are three types of variable in IOEMU scripting: environment, global and local.
+Environment variables are available all the times, and are automatically imported.
+You can create an environment variable (being passed to child executable) with the
+ENV <variable> <value> directive. Global variables are created with the
+SET <variable> <value> directive. Variables declared within sections are local
+to that scope and ceased to exist when the parser leave the section.
 
 IOEMU creates some implicit variables during its execution.
 
 @itemize @bullet
 @item
 __THISFILE__@*
-carries the name of the configuration file being processed. So you can export this variable and pass it to a emulator, that thus could use this same configuration file. Note that this is quite mandatory, because SweetAda emulators loads the IOEMU shared library and the configuration file using environment variables.
+Carries the name of the configuration file being processed. So you can export
+this variable and pass it to a emulator, that thus could use this same configuration
+file. Note that this is quite mandatory, because SweetAda emulators loads the
+IOEMU shared library and the configuration file using environment variables.
 @item
-__SERIALPORTDEVICE__@*
-(Linux only) carries the name of the virtual device associated with an emulator physical serial port. When you are using QEMU there is no need to use this variable, because the emulator maps physical serial ports to known TCP ports declared within command line arguments, whereas the FS-UAE emulator the IOEMU layer creates on-the-fly a virtual serial port that cannot be known before the execution.
+__SERIALPORTDEVICE__ (Linux only)@*
+Carries the name of the virtual device associated with an emulator physical serial port.
+When you are using QEMU there is no need to use this variable, because the emulator
+maps physical serial ports to known TCP ports declared within command line arguments,
+whereas the FS-UAE emulator the IOEMU layer creates on-the-fly a virtual serial port
+that cannot be known before the execution.
 @end itemize
 
 @node Index

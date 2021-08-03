@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda: Building the RTS</title>
+
+<meta name="description" content="SweetAda: Building the RTS">
+<meta name="keywords" content="SweetAda: Building the RTS">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Optimizations.html#Optimizations" rel="next" title="Optimizations">
+<link href="LibGCC.html#LibGCC" rel="prev" title="LibGCC">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Building-the-RTS"></a>
+<div class="header">
+<p>
+Next: <a href="Optimizations.html#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="LibGCC.html#LibGCC" accesskey="p" rel="prev">LibGCC</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Building-the-RTS-1"></a>
+<h2 class="chapter">8 Building the RTS</h2>
+<a name="index-RTS"></a>
+
+<p>When using a SweetAda source package from a repository like GitHub, the very first
+action to perform is to build the Ada Run-Time System.
+</p>
+<p>Currently, RTS build is supported only by means of a Bash script, so you need an
+environment with a working Bash shell online. The script is not parameterized yet,
+so you should edit by hand, commenting out some sensible variables, unless you want
+to build the RTS for every CPU architecture.
+</p>
+<p>After changing your working directory to the &quot;rts&quot; subdirectory of the top-level
+SweetAda installation, open the rts-build.sh script with your favorite editor and locate
+the &quot;Main loop&quot; section of the script. After various initialization statements,
+you can see the RTS selection and the toolchain name assignments:
+</p>
+<div class="example">
+<pre class="example"># force the RTS type for whole build (avoid to pick up a private setting from a
+# platform-dependent configuration.in that could override it)
+#RTS=zfp
+RTS=sfp
+
+TOOLCHAIN_NAMES=()
+TOOLCHAIN_NAMES+=(${TOOLCHAIN_NAME_AArch64})
+...
+TOOLCHAIN_NAMES+=(${TOOLCHAIN_NAME_x86_64})
+</pre></div>
+
+<p>Choose RTS type and comment out every target, but the one you want to build. Bash
+script comments are introduced with a &quot;#&quot; character.
+</p>
+<div class="example">
+<pre class="example">RTS=zfp &lt;--
+#RTS=sfp
+
+TOOLCHAIN_NAMES=()
+#TOOLCHAIN_NAMES+=(${TOOLCHAIN_NAME_AArch64})
+...
+#TOOLCHAIN_NAMES+=(${TOOLCHAIN_NAME_MIPS64})
+TOOLCHAIN_NAMES+=(${TOOLCHAIN_NAME_MicroBlaze}) &lt;--
+#TOOLCHAIN_NAMES+=(${TOOLCHAIN_NAME_NiosII})
+#TOOLCHAIN_NAMES+=(${TOOLCHAIN_NAME_PowerPC})
+...
+</pre></div>
+
+<p>Then execute:
+</p>
+<div class="example">
+<pre class="example">$ ./rts-build.sh
+</pre></div>
+
+<p>If the SweetAda toolchain installation is fine, you should see a log of the build, with
+a successful message at the end.
+</p>
+
+
+
+</body>
+</html>
