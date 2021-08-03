@@ -298,8 +298,9 @@ package A2065 is
       RMD2 : RMD2_Type;
       RMD3 : RMD3_Type;
    end record with
-      Alignment => 2**3,
-      Size      => 16 * 4;
+      Alignment               => 2**3,
+      Size                    => 16 * 4,
+      Suppress_Initialization => True;
    for Receive_Message_Descriptor_Type use
    record
       RMD0 at 0 range 0 .. 15;
@@ -398,8 +399,9 @@ package A2065 is
       TMD2 : TMD2_Type;
       TMD3 : TMD3_Type;
    end record with
-      Alignment => 2**3,
-      Size      => 16 * 4;
+      Alignment               => 2**3,
+      Size                    => 16 * 4,
+      Suppress_Initialization => True;
    for Transmit_Message_Descriptor_Type use
    record
       TMD0 at 0 range 0 .. 15;

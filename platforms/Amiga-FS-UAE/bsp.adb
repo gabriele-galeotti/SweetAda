@@ -121,7 +121,7 @@ package body BSP is
       Console.TTY_Setup;
       -- A2091 ----------------------------------------------------------------
       declare
-         Success : Boolean;
+         Success : Boolean with Unreferenced => True;
       begin
          A2091.Probe (Success);
       end;
