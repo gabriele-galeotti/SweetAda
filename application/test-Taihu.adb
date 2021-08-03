@@ -2,7 +2,7 @@
 with System.Storage_Elements;
 with Interfaces;
 with PowerPC;
-with PowerPC.PPC405;
+with PPC405;
 with Taihu;
 with Console;
 
@@ -19,7 +19,7 @@ package body Application is
    use System.Storage_Elements;
    use Interfaces;
    use PowerPC;
-   use PowerPC.PPC405;
+   use PPC405;
    use Taihu;
 
    --========================================================================--

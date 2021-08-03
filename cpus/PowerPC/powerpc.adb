@@ -168,4 +168,15 @@ package body PowerPC is
 
    procedure Irq_Disable is null;
 
+   function Irq_State_Get return Irq_State_Type is
+   begin
+      return 0;
+   end Irq_State_Get;
+
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+      pragma Unreferenced (Irq_State);
+   begin
+      null;
+   end Irq_State_Set;
+
 end PowerPC;

@@ -17,7 +17,7 @@
 
 with Configure;
 with PowerPC;
-with PowerPC.PPC405;
+with PPC405;
 
 package body Taihu is
 
@@ -31,7 +31,7 @@ package body Taihu is
 
    use Configure;
    use PowerPC;
-   use PowerPC.PPC405;
+   use PPC405;
 
    --========================================================================--
    --                                                                        --

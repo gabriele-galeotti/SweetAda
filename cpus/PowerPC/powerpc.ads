@@ -227,8 +227,12 @@ package PowerPC is
    -- Interrupts
    ----------------------------------------------------------------------------
 
+   subtype Irq_State_Type is Integer;
+
    procedure Irq_Enable;
    procedure Irq_Disable;
+   function Irq_State_Get return Irq_State_Type;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type);
 
 private
 

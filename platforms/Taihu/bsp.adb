@@ -21,7 +21,7 @@ with Interfaces;
 with Core;
 with Bits;
 with PowerPC;
-with PowerPC.PPC405;
+with PPC405;
 with Taihu;
 with Exceptions;
 with MMIO;
@@ -42,7 +42,7 @@ package body BSP is
    use Core;
    use Bits;
    use PowerPC;
-   use PowerPC.PPC405;
+   use PPC405;
    use Taihu;
 
    --========================================================================--
