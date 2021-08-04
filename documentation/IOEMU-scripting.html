@@ -58,11 +58,31 @@ Next: <a href="Index.html#Index" accesskey="n" rel="next">Index</a>, Previous: <
 </div>
 <hr>
 <a name="IOEMU-scripting-1"></a>
-<h2 class="chapter">13 IOEMU scripting</h2>
+<h2 class="chapter">14 IOEMU scripting</h2>
 <a name="index-IOEMU"></a>
 
 <p>The IOEMU facility allows configuration of a target emulator machine by specifying
 actions in a very basic script-like sequence of assignments and statements.
+</p>
+<p>IOEMU configuration files are structured in declarations and sections.
+</p>
+<p>Declarations (ENV and SET) must come first, and their purposes is to declare
+environment variables globally (ENV) or local to the file or a section (SET).
+</p>
+<p>Sections are directives, either to runsweetada utility or the underlying target emulator
+(QEMU/FS-UAE/GXemul).
+</p>
+<p>The START section is processed by the runsweetada utility, which can be instructed
+to execute the selected emulator (maybe under the control of the GDB debugger).
+</p>
+<p>The configuration file is then processed by the emulator, once started. The IOEMU
+section is used to configure the coordinates of the IOEMU window. Other sections
+are interpreted as specifications of the I/O features exposed by the target emulator,
+in terms of serial ports or IOEMU graphical I/O ports. Every I/O port has a specific
+name and you can see its mapping in the Ada code platform description.
+</p>
+<p>Inside the I/O port you can set the type of widget used (a LED, a LEDBAR, an hex
+DISPLAY), its color and its size.
 </p>
 <p>SECTION<br>
 Introduces a section. Section names could be &quot;IOEMU&quot; (to configure the IOEMU layer) or an
@@ -91,6 +111,9 @@ added sequentially to the array that carries arguments for the next EXEC/EXEA
 command. So you can add arguments to the desired executable at various points
 of a section, and decided which arguments must be selected. Once the EXEC/EXEA
 instruction is processed, the ARGS array is reset to empty.
+</p>
+<p>CHDIR<br>
+Change the working directory.
 </p>
 <p>EXEC<br>
 Executes an executable. The arguments are those accumulated by means of previously

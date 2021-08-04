@@ -51,6 +51,7 @@ Copyright @copyright{} 2020, 2021 @value{AUTHOR}
 * Host environment::
 * Configuration::
 * Makefile targets::
+* Ada environment::
 * Building SweetAda::
 * Anatomy of a platform::
 * The core complex::
@@ -67,7 +68,7 @@ Copyright @copyright{} 2020, 2021 @value{AUTHOR}
 
 Welcome to SweetAda.
 
-SweetAda is an Ada-based development environment suitable for build lightweight applications
+SweetAda is an Ada-based development environment suitable to build lightweight applications
 in CPU-driven electronic devices. Developed from scratch with simplicity in mind,
 SweetAda tries to fill the gap between a simple, yet reliable, software/firmware control
 system and big, complex, OS-based multitasked environment.
@@ -163,7 +164,7 @@ In the following chapters, we will analyze operations in a POSIX machine.
 
 It is highly advisable to perform commands in the SweetAda top-level directory (which exists
 as a variable SWEETADA_PATH in the build system). The Makefile machinery is able to infer the
-SweetAda path from the context, but this feature rely on standard Makefile idioms which could
+SweetAda path from the context, but this feature relies on standard Makefile idioms which could
 be invalidated by an "esotic" environment setup.
 
 Hence, if you want to integrate SweetAda in a GUI, remember to change directory before
@@ -383,6 +384,73 @@ Obviously, if you change something in configuration.in files (say, a compiler sw
 the RTS profile), then you should do a "make clean" to rebuild everything. Other heavy
 changes may requires a re-configuration from the scratch.
 
+Makefile targets have also a "localization". Although handled by the master Makefile,
+the functional part is generally encoded in sub-Makefiles rules, either one in a directory
+like core, or the cpu one, or the platform one. For example, "make configure" has the
+effect of execute the "configure" Makefile target in every component of SweetAda (even
+if some components do not need a configuration at all). "make postbuild" is instead
+platform-dependent, and thus only the platform's sub-Makefile is called.
+
+If you want to perform special actions, you could place commands in the corresponding
+rule. But a non-intrusive method like calling a script in the RUN_COMMAND specification
+of the platform's configuration.in file could be better.
+
+@node Ada environment
+@chapter Ada environment
+
+The SweetAda build system try to supply a complete environment to build system code for
+a target. In order to instruct the compiler, the linker, the binder, and all accompanying
+tools, various files exist.
+
+Two of the most important are Makefile.tc.in and gnat.adc.in.
+
+Makefile.tc.in is a Makefile fragment that is loaded by the master Makefile and contains
+all compilation switches for a toolchain, i.e., warning switches, style switches and many
+others. You can selectively comment/uncomment a toolchain switch to suite your needs.
+
+Makefile.tc.in really should not be seen as a configuration file. Be aware that not
+all the assignments/switches are freely changeable, and many assignments are more or
+less critical to make the toolchain environment working fine. You should change only
+switches that not destroy the build flow, e.g., it is fine to comment/uncomment a warning
+switch like "-gnatwz" (in case you do not want messages for unchecked conversions),
+but it is not recommended to change the "GCC_MULTIDIR" variable, unless you known exactly
+the underlying logic behaviour.
+
+gnat.adc.in is a template for the system-wide Ada "gnat.adc" pragma profile. The pragma
+profile is specified in the top-level directory configuration.in by means of the variable
+PROFILE.
+
+When you select a profile, say "zfp", the build machinery processes this file and outputs
+a gnat.adc that contains only the pragmas that carry the selected
+RTS PROFILE as dictated in the trailing comment. gnat.adc.in will be processed by the build system
+and a gnat.adc useable by the compiler will appear in top-level directory after a "make configure".
+
+So, if you want to include/exclude a pragma, you have to add/remove that profile name in the
+trailing comment. As an example, let's say that you want to write something that forces the
+compiler to insert implicitly a rather aggressive sequence of instructions (a "trampoline",
+in technical jargon). Let's say that you choose the "sfp" profile (because you have selected
+"sfp" as your RTS). Then, gnat.adc.in should be edited in the following way:
+
+before:
+
+@example
+pragma Restrictions (No_Implicit_Dynamic_Code);                         -- zfp sfp
+@end example
+
+after
+
+@example
+pragma Restrictions (No_Implicit_Dynamic_Code);                         -- zfp
+@end example
+
+This way, the gnat.adc output by the build machinery will not contain the pragma, and the
+compiler will not complain when it will hit the offending fragment of code.
+
+Note:
+You could edit directly the gnat.adc file output by the build system (be sure to clean and
+rebuild to make the new pragmas take effect), but the old pragma configuration will be
+reinstated if you perform a "make configure" action.
+
 @node Building SweetAda
 @chapter Building SweetAda
 
@@ -504,10 +572,16 @@ contribute to Ada binding phase processing.
 @chapter The core complex
 @cindex core
 
+The core complex is a set of packages that forms the base of subprograms used by
+higher level constructs.
+
+Note that fundamental packages like Bits, LLutils, Memory_Functions, etc, are pragma
+Preelaborate, with Bits being pragma Pure.
+
 Bits
 
 Bits is the fundamental package for low-level manipulation. Here you can find many
-type declarations and subprograms to simplify the handling of low-level object.
+type declarations and subprograms to handle low-level object.
 
 C library
 
@@ -526,12 +600,55 @@ type values on a character-oriented device, like a serial port.
 
 All the Console subprograms call Print (Character), which takes a descriptor
 where you should specify access to a subprogram that does the physical
-output. Last_Chance_Handler uses Console, so the package is one of the
+output. Last_Chance_Handler could use Console, so the package is one of the
 implicit units that are linked into the final kernel executables regardless
 of a with clause.
 
 Besides fundamental types output, you can find a Print_Memory subprogram
 that is useful to dump a memory section for diagnostic purposes.
+
+GCC_Types
+
+This package implements useful types to handle LibGCC numeric subprograms.
+
+LibGCC
+
+LibGCC package implements pure Ada computation subprograms that are normally
+found in the compiler library. They exist mostly as useful references.
+
+LLutils
+
+LLutils package contains useful low-level subprograms that are too much convoluted
+to place them in the Bits unit. Besides, this would lead to make Bits non-pure.
+
+Multibyte swap subprograms are declared here, with Build_Address and its
+inverse, Address_Displacement.
+
+Malloc
+
+This package implements a simple memory allocator, and is implicitly used by the
+compiler to allocate memory on a pool, e.g., when you call the "new" operator.
+BSPs should call the initialization subprogram to reserve memory for the allocator
+before the Ada code has a chance to use it. But this could be made automatic by
+writing initialization code in the elaboration block of the package.
+
+Memory_Functions
+
+Memory_Functions is a package that provides a pure Ada implementation of the
+classical C functions to manipulate memory areas: Memcmp, Memcpy, Memmove,
+Memset, Bcopy, Cpymem.
+
+These subprograms are not optimized, but they are made separate and thus could be
+optimized by hand-crafted assembly routines.
+
+MMIO
+
+MMIO package provides unrestricted access to memory with a simple modular-valued
+load/store model, thus facilitating handling of low-level objects. Unsigned types
+of sizes 8, 16, 32, 64 bits are supported. MMIO standard subprogram bodies are separated,
+and can thus be overriden and optimized by instantiating a custom copy (perhaps
+coded in native machine language). MMIO have versions for flat, atomic, swapping
+and atomic-swapping operations.
 
 @node LibGCC
 @chapter LibGCC
@@ -636,6 +753,26 @@ already written. With'ing CPU.MMIO instead of MMIO lets the user directly use th
 The IOEMU facility allows configuration of a target emulator machine by specifying
 actions in a very basic script-like sequence of assignments and statements.
 
+IOEMU configuration files are structured in declarations and sections.
+
+Declarations (ENV and SET) must come first, and their purposes is to declare
+environment variables globally (ENV) or local to the file or a section (SET).
+
+Sections are directives, either to runsweetada utility or the underlying target emulator
+(QEMU/FS-UAE/GXemul).
+
+The START section is processed by the runsweetada utility, which can be instructed
+to execute the selected emulator (maybe under the control of the GDB debugger).
+
+The configuration file is then processed by the emulator, once started. The IOEMU
+section is used to configure the coordinates of the IOEMU window. Other sections
+are interpreted as specifications of the I/O features exposed by the target emulator,
+in terms of serial ports or IOEMU graphical I/O ports. Every I/O port has a specific
+name and you can see its mapping in the Ada code platform description.
+
+Inside the I/O port you can set the type of widget used (a LED, a LEDBAR, an hex
+DISPLAY), its color and its size.
+
 SECTION@*
 Introduces a section. Section names could be "IOEMU" (to configure the IOEMU layer) or an
 I/O port or communication peripheral exported by the target machine being emulated.
@@ -668,6 +805,9 @@ added sequentially to the array that carries arguments for the next EXEC/EXEA
 command. So you can add arguments to the desired executable at various points
 of a section, and decided which arguments must be selected. Once the EXEC/EXEA
 instruction is processed, the ARGS array is reset to empty.
+
+CHDIR@*
+Change the working directory.
 
 EXEC@*
 Executes an executable. The arguments are those accumulated by means of previously

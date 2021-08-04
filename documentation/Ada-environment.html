@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda: Ada environment</title>
+
+<meta name="description" content="SweetAda: Ada environment">
+<meta name="keywords" content="SweetAda: Ada environment">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Building-SweetAda.html#Building-SweetAda" rel="next" title="Building SweetAda">
+<link href="Makefile-targets.html#Makefile-targets" rel="prev" title="Makefile targets">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Ada-environment"></a>
+<div class="header">
+<p>
+Next: <a href="Building-SweetAda.html#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a>, Previous: <a href="Makefile-targets.html#Makefile-targets" accesskey="p" rel="prev">Makefile targets</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Ada-environment-1"></a>
+<h2 class="chapter">7 Ada environment</h2>
+
+<p>The SweetAda build system try to supply a complete environment to build system code for
+a target. In order to instruct the compiler, the linker, the binder, and all accompanying
+tools, various files exist.
+</p>
+<p>Two of the most important are Makefile.tc.in and gnat.adc.in.
+</p>
+<p>Makefile.tc.in is a Makefile fragment that is loaded by the master Makefile and contains
+all compilation switches for a toolchain, i.e., warning switches, style switches and many
+others. You can selectively comment/uncomment a toolchain switch to suite your needs.
+</p>
+<p>Makefile.tc.in really should not be seen as a configuration file. Be aware that not
+all the assignments/switches are freely changeable, and many assignments are more or
+less critical to make the toolchain environment working fine. You should change only
+switches that not destroy the build flow, e.g., it is fine to comment/uncomment a warning
+switch like &quot;-gnatwz&quot; (in case you do not want messages for unchecked conversions),
+but it is not recommended to change the &quot;GCC_MULTIDIR&quot; variable, unless you known exactly
+the underlying logic behaviour.
+</p>
+<p>gnat.adc.in is a template for the system-wide Ada &quot;gnat.adc&quot; pragma profile. The pragma
+profile is specified in the top-level directory configuration.in by means of the variable
+PROFILE.
+</p>
+<p>When you select a profile, say &quot;zfp&quot;, the build machinery processes this file and outputs
+a gnat.adc that contains only the pragmas that carry the selected
+RTS PROFILE as dictated in the trailing comment. gnat.adc.in will be processed by the build system
+and a gnat.adc useable by the compiler will appear in top-level directory after a &quot;make configure&quot;.
+</p>
+<p>So, if you want to include/exclude a pragma, you have to add/remove that profile name in the
+trailing comment. As an example, let&rsquo;s say that you want to write something that forces the
+compiler to insert implicitly a rather aggressive sequence of instructions (a &quot;trampoline&quot;,
+in technical jargon). Let&rsquo;s say that you choose the &quot;sfp&quot; profile (because you have selected
+&quot;sfp&quot; as your RTS). Then, gnat.adc.in should be edited in the following way:
+</p>
+<p>before:
+</p>
+<div class="example">
+<pre class="example">pragma Restrictions (No_Implicit_Dynamic_Code);                         -- zfp sfp
+</pre></div>
+
+<p>after
+</p>
+<div class="example">
+<pre class="example">pragma Restrictions (No_Implicit_Dynamic_Code);                         -- zfp
+</pre></div>
+
+<p>This way, the gnat.adc output by the build machinery will not contain the pragma, and the
+compiler will not complain when it will hit the offending fragment of code.
+</p>
+<p>Note:
+You could edit directly the gnat.adc file output by the build system (be sure to clean and
+rebuild to make the new pragmas take effect), but the old pragma configuration will be
+reinstated if you perform a &quot;make configure&quot; action.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Building-SweetAda.html#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a>, Previous: <a href="Makefile-targets.html#Makefile-targets" accesskey="p" rel="prev">Makefile targets</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
