@@ -14,6 +14,7 @@
 #
 # Environment variables:
 # OS
+# TEMP
 # VERBOSE
 # PLATFORM
 # SUBPLATFORM

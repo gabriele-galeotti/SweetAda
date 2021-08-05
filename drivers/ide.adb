@@ -366,7 +366,7 @@ package body IDE is
    function Is_Drive_Ready (Descriptor : IDE_Descriptor_Type) return Boolean is
       Success : Boolean := False;
    begin
-      for Loop_Count in 1 .. 10_0000 loop
+      for Loop_Count in 1 .. 100_000 loop
          declare
             Drive_Status : IDE_Status_Type;
          begin

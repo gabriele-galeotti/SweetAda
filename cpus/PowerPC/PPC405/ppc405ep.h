@@ -26,7 +26,7 @@
 #define SGR             0x3B9           /* Storage Guarded Register */
 #define DCWR            0x3BA           /* Data Cache Write-through Register */
 #define SLER            0x3BB           /* Storage Little Endian Register */
-#define EVPR            0x3D6           /* Exception Vector Prefix Register !BUG in documentation! trovato in QEMU */
+#define EVPR            0x3D6           /* Exception Vector Prefix Register __FIX__ */
 #define TSR             0x3D8           /* Timer Status Register */
 #define  PIS            (1 << 27)       /* PIT Interrupt Status */
 #define  FIS            (1 << 26)       /* FIT Interrupt Status */
