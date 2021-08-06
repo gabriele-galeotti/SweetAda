@@ -52,6 +52,7 @@ Copyright @copyright{} 2020, 2021 @value{AUTHOR}
 * Configuration::
 * Makefile targets::
 * Ada environment::
+* GPRbuild mode::
 * Building SweetAda::
 * Anatomy of a platform::
 * The core complex::
@@ -158,7 +159,8 @@ runsweetada is a small utility to ease the execution of SweetAda, mostly used in
 @cindex Host environment
 
 SweetAda is meant to run on major mainstream environments, i.e., POSIX/Linux, Windows, or OS X.
-The host machine should be able to execute 64-bit executables.
+The host machine should be able to execute 64-bit executables. SweetAda also supports whitespaces,
+although this is considered bad practice.
 
 In the following chapters, we will analyze operations in a POSIX machine.
 
@@ -170,12 +172,57 @@ be invalidated by an "esotic" environment setup.
 Hence, if you want to integrate SweetAda in a GUI, remember to change directory before
 performing an action.
 
-For a Windows machine, it is advisable to put in PATH the full specification of the directory
-containing the "make.exe" utility. Otherwise, you can setup the path to this executable in the
-menu.bat front-end, and substitute every "make" command with "menu.bat", provided your working
-directory is the SweetAda top-level-directory.
+In order to perform actions, the make utility should be invoked, followed by the
+target, like in:
 
-SweetAda supports whitespaces in paths.
+@example
+$ make configure
+@end example
+
+(provided your working directory is the SweetAda top-level-directory).
+
+While in some environments (Linux, and, if properly configured, OS X) the make utility is
+normally visible in a shell and there is no need to specify its location in the filesystem,
+in Windows and in an OS X without system development features installed, the make executable
+is missing.
+
+The two shell scripts menu.sh (Bash) and menu.bat (Windows cmd.exe) are useful to ease
+the invocation of the make executable provided in the toolchain package. Thus, eventually
+adjust the script near the "Main loop" entry point, as shown in the next lines:
+
+@example
+menu.bat:@*
+REM defaults to standard installation directory, see configuration.in
+SET MAKEEXE="C:\Program Files\SweetAda"\bin\make.exe                  <--
+@end example
+
+@example
+menu.sh:@*
+...
+  darwin)
+    # use SweetAda make (try a standard installation prefix)
+    SWEETADA_MAKE=/opt/sweetada/bin/make                     <--
+...
+  msys)
+    # use SweetAda make (try a standard installation prefix)
+    SWEETADA_MAKE="/c/Program Files/SweetAda/bin/make.exe"   <--
+@end example
+
+Once the script is properly adjusted, just execute the script by specifying the desired
+action, like as a Makefile invocation:
+
+@example
+$ ./menu.sh configure
+@end example
+
+or:
+
+@example
+> menu.bat configure
+@end example
+
+menu-dialog.sh is a Bash shell front-end for machines which have the dialog utility
+available.
 
 @node Configuration
 @chapter Configuration
@@ -450,6 +497,29 @@ Note:
 You could edit directly the gnat.adc file output by the build system (be sure to clean and
 rebuild to make the new pragmas take effect), but the old pragma configuration will be
 reinstated if you perform a "make configure" action.
+
+@node GPRbuild mode
+@chapter GPRbuild mode
+@cindex GPRbuild
+
+The SweetAda build system has two different ways to manage the compilation of the final
+executable object; the standard, default one is entirely contained in the various Makefile
+files; besides, a second option exists, i,e, using a GPRbuild project file.
+
+This behaviour is controlled by the variable BUILD_MODE in the top-level configuration.in.
+
+If you specify BUILD_MODE := GPR, then the Makefile will execute the gprbuild program
+(which is a SweetAda package) whilst taking care of system code compilation. In order to do
+this, a build.gpr exists in the top-level directory, which will be completed by the
+configuration file configure.gpr. configure.gpr is emitted by the "make configure" command
+whichever the value of BUILD_MODE is.
+
+Please note that the GPRbuild mode deals only with Ada "explicit" files. Makefile still
+has to take care of low-level files, like assembly startup files and implicit Ada units
+that could be not referenced by your code, like memory allocation routines and exceptions
+handling. GPRbuild mode indeed manages only the major compilation and binding phase, and
+so you have to provide exactly the same sequence of make commands in order to build a
+SweetAda executable.
 
 @node Building SweetAda
 @chapter Building SweetAda

@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda: GPRbuild mode</title>
+
+<meta name="description" content="SweetAda: GPRbuild mode">
+<meta name="keywords" content="SweetAda: GPRbuild mode">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Building-SweetAda.html#Building-SweetAda" rel="next" title="Building SweetAda">
+<link href="Ada-environment.html#Ada-environment" rel="prev" title="Ada environment">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="GPRbuild-mode"></a>
+<div class="header">
+<p>
+Next: <a href="Building-SweetAda.html#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a>, Previous: <a href="Ada-environment.html#Ada-environment" accesskey="p" rel="prev">Ada environment</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="GPRbuild-mode-1"></a>
+<h2 class="chapter">8 GPRbuild mode</h2>
+<a name="index-GPRbuild"></a>
+
+<p>The SweetAda build system has two different ways to manage the compilation of the final
+executable object; the standard, default one is entirely contained in the various Makefile
+files; besides, a second option exists, i,e, using a GPRbuild project file.
+</p>
+<p>This behaviour is controlled by the variable BUILD_MODE in the top-level configuration.in.
+</p>
+<p>If you specify BUILD_MODE := GPR, then the Makefile will execute the gprbuild program
+(which is a SweetAda package) whilst taking care of system code compilation. In order to do
+this, a build.gpr exists in the top-level directory, which will be completed by the
+configuration file configure.gpr. configure.gpr is emitted by the &quot;make configure&quot; command
+whichever the value of BUILD_MODE is.
+</p>
+<p>Please note that the GPRbuild mode deals only with Ada &quot;explicit&quot; files. Makefile still
+has to take care of low-level files, like assembly startup files and implicit Ada units
+that could be not referenced by your code, like memory allocation routines and exceptions
+handling. GPRbuild mode indeed manages only the major compilation and binding phase, and
+so you have to provide exactly the same sequence of make commands in order to build a
+SweetAda executable.
+</p>
+
+
+
+</body>
+</html>
