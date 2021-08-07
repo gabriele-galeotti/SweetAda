@@ -32,21 +32,24 @@ _start:
                 //
                 // Setup stack pointer.
                 //
-                movia   sp,kernel_stack
+                movhi   sp,%hiadj(kernel_stack)
+                addi    sp,sp,%lo(kernel_stack)
                 mov     fp,sp
 
                 //
                 // Call "adainit" procedure.
                 //
                 .extern adainit
-                movia   r1,adainit
+                movhi   r1,%hiadj(adainit)
+                addi    r1,r1,%lo(adainit)
                 callr   r1
 
                 //
                 // Jump to high-level code.
                 //
                 .extern _ada_main
-                movia   r1,_ada_main
+                movhi   r1,%hiadj(_ada_main)
+                addi    r1,r1,%lo(_ada_main)
                 callr   r1
 
 dead:           br      .
