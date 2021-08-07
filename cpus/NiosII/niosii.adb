@@ -41,6 +41,21 @@ package body NiosII is
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- Asm_Call
+   ----------------------------------------------------------------------------
+   procedure Asm_Call (Target_Address : in Address) is
+   begin
+      Asm (
+           Template => " mov r2,%0" & CRLF &
+                       " callr r2",
+           Outputs  => No_Output_Operands,
+           Inputs   => System.Address'Asm_Input ("r", Target_Address),
+           Clobber  => "r2",
+           Volatile => True
+          );
+   end Asm_Call;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 

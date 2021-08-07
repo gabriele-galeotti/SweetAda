@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
 with NiosII;
 
 package CPU is
@@ -26,6 +27,8 @@ package CPU is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   procedure Asm_Call (Target_Address : in System.Address) renames NiosII.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts

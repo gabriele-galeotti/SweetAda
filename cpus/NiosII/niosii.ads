@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+
 package NiosII is
 
    --========================================================================--
@@ -24,6 +26,11 @@ package NiosII is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use System;
+
+   procedure Asm_Call (Target_Address : in Address) with
+      Inline => True;
 
    subtype Irq_State_Type is Natural;
 
