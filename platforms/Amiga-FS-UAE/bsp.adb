@@ -99,9 +99,9 @@ package body BSP is
       -- serial port ----------------------------------------------------------
       -- bit    description
       -- 15     defines serial receive as 9 bit word
-      -- 14..00 defines baud rate: 1 bit every (N+1)*.2794 us
-      -- N+1 = 10E6/(baud_rate*.2794)
-      CUSTOM.SERPER := (RATE => 16#0174#, LONG => False);
+      -- 14..00 defines baud rate
+      CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC
+      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL
       -- UARTs ----------------------------------------------------------------
       UART1_Descriptor.Base_Address  := To_Address (IOEMU_CIA_BASEADDRESS + 16#40#);
       UART1_Descriptor.Scale_Address := 2;
