@@ -15,13 +15,11 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
 with Interfaces;
 with Ada.Characters.Latin_1;
 with Bits;
 with LLutils;
 with Memory_Functions;
-with CPU;
 
 package body Srecord is
 
@@ -33,7 +31,6 @@ package body Srecord is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Ada.Characters.Latin_1;
    use Bits;
@@ -46,20 +43,19 @@ package body Srecord is
                            WAIT_TYPE,
                            WAIT_BYTECOUNT1,
                            WAIT_BYTECOUNT2,
-                           WAIT_COUNT,
                            WAIT_ADDRESS,
+                           WAIT_COUNT,
                            WAIT_DATA,
                            WAIT_CHECKSUM1,
                            WAIT_CHECKSUM2,
                            WAIT_EOL
                           );
 
-   RX_Character  : Getchar_Ptr;
-   TX_Character  : Putchar_Ptr;
-   Srec          : Srecord_Type;
-   Data          : Byte_Array (0 .. 255);
-   Echo          : Boolean := False;
-   Start_Address : Integer_Address := 0;
+   RX_Character : Getchar_Ptr;
+   TX_Character : Putchar_Ptr;
+   Echo         : Boolean := False;
+   Srec         : Srecord_Type;
+   Data         : Byte_Array (0 .. 255);
 
    --========================================================================--
    --                                                                        --
@@ -85,9 +81,11 @@ package body Srecord is
       Datadigits        : Natural := 0;
       Idx               : Natural := 0;
       MSdigit           : Boolean;
+      Count             : Natural := 0;
       Checksum_Received : Unsigned_8 := 0;
       Checksum_Computed : Unsigned_8 := 0;
    begin
+      Start_Address := 0;
       Srec := NONE;
       RX_Status := WAIT_S;
       loop
@@ -142,9 +140,6 @@ package body Srecord is
                else
                   RX_Status := WAIT_EOL;
                end if;
-            ------------------
-            when WAIT_COUNT =>
-               null;
             --------------------
             when WAIT_ADDRESS =>
                if (Addressdigits mod 2) = 0 then
@@ -173,6 +168,10 @@ package body Srecord is
                else
                   RX_Status := WAIT_EOL;
                end if;
+            ------------------
+            when WAIT_COUNT =>
+               -- not implemented
+               null;
             -----------------
             when WAIT_DATA =>
                if (Datadigits mod 2) = 0 then
@@ -214,6 +213,7 @@ package body Srecord is
                      TX_Character.all ('.');
                      case Srec is
                         when S1 .. S3 =>
+                           Count := Count + 1;
                            -- commit data to memory
                            Memory_Functions.Cpymem (
                                                     Data'Address,
@@ -223,7 +223,9 @@ package body Srecord is
                         when S7 .. S9 =>
                            -- start address
                            Start_Address := Addressvalue;
-                           CPU.Asm_Call (To_Address (Start_Address));
+                           exit;
+                        when S4       =>
+                           exit;
                         when others   =>
                            null;
                      end case;
@@ -246,10 +248,15 @@ package body Srecord is
    -- Getchar: procedure pointer to get a character from terminal
    -- Putchar: procedure pointer to put a character to terminal
    ----------------------------------------------------------------------------
-   procedure Init (Getchar : in Getchar_Ptr; Putchar : in Putchar_Ptr) is
+   procedure Init (
+                   Getchar     : in Getchar_Ptr;
+                   Putchar     : in Putchar_Ptr;
+                   Echo_Enable : in Boolean
+                  ) is
    begin
       RX_Character := Getchar;
       TX_Character := Putchar;
+      Echo := Echo_Enable;
    end Init;
 
 end Srecord;

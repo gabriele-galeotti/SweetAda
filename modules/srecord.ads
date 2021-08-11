@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Storage_Elements;
+
 package Srecord is
 
    --========================================================================--
@@ -25,10 +27,18 @@ package Srecord is
    --                                                                        --
    --========================================================================--
 
+   use System.Storage_Elements;
+
    type Getchar_Ptr is access procedure (C : out Character);
    type Putchar_Ptr is access procedure (C : in Character);
 
+   Start_Address : Integer_Address := 0;
+
    procedure Receive;
-   procedure Init (Getchar : in Getchar_Ptr; Putchar : in Putchar_Ptr);
+   procedure Init (
+                   Getchar     : in Getchar_Ptr;
+                   Putchar     : in Putchar_Ptr;
+                   Echo_Enable : in Boolean
+                  );
 
 end Srecord;
