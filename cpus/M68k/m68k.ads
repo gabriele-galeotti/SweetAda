@@ -411,7 +411,8 @@ package M68k is
 
    procedure VBR_Set (VBR_Address : in Address);
 
-   procedure Asm_Call (Target_Address : in Address) with Inline => True;
+   procedure Asm_Call (Target_Address : in Address) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Irq handling

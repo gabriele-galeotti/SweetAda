@@ -42,13 +42,13 @@ package body Time is
    -- => year=1980, mon=12, day=31, hour=23, min=59, sec=59.
    ----------------------------------------------------------------------------
    function Make_Time (
-                      Year   : Positive;
-                      Month  : Positive;
-                      Day    : Positive;
-                      Hour   : Natural;
-                      Minute : Natural;
-                      Second : Natural
-                     ) return Natural is
+                       Year   : Positive;
+                       Month  : Positive;
+                       Day    : Positive;
+                       Hour   : Natural;
+                       Minute : Natural;
+                       Second : Natural
+                      ) return Natural is
       Y : Natural := Year;
       M : Natural := Month;
    begin

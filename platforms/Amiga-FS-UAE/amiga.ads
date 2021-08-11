@@ -42,8 +42,8 @@ package Amiga is
    -- PAL  28.37516 MHz
    ----------------------------------------------------------------------------
 
-   CHIPSET_CLOCK_NTSC : constant := 7_159_090;
-   CHIPSET_CLOCK_PAL  : constant := 7_093_790;
+   CHIPSET_CLOCK_NTSC : constant := 7_159_090; -- CHIPSET_CLOCK_NTSC / 2 = 3_579_545
+   CHIPSET_CLOCK_PAL  : constant := 7_093_790; -- CHIPSET_CLOCK_PAL / 2 = 3_546_895
 
    ----------------------------------------------------------------------------
    -- CUSTOM
