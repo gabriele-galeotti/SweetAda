@@ -23,8 +23,6 @@ with LLutils;
 with Memory_Functions;
 with CPU;
 
-with Console;
-
 package body Srecord is
 
    --========================================================================--
@@ -56,12 +54,12 @@ package body Srecord is
                            WAIT_EOL
                           );
 
-   RX_Character : Getchar_Ptr;
-   TX_Character : Putchar_Ptr;
-
+   RX_Character  : Getchar_Ptr;
+   TX_Character  : Putchar_Ptr;
    Srec          : Srecord_Type;
    Data          : Byte_Array (0 .. 255);
-   Start_Address : Integer_Address;
+   Echo          : Boolean := False;
+   Start_Address : Integer_Address := 0;
 
    --========================================================================--
    --                                                                        --
@@ -94,6 +92,9 @@ package body Srecord is
       RX_Status := WAIT_S;
       loop
          RX_Character.all (C);
+         if Echo then
+            TX_Character.all (C);
+         end if;
          case RX_Status is
             --------------
             when WAIT_S =>
