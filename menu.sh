@@ -161,6 +161,7 @@ if [ "x${PLATFORM}" = "x" ] ; then
   setplatform
 fi
 
+rm -f make.log make.errors.log
 case $1 in
   createkernelcfg)
     PLATFORM=${PLATFORM} SUBPLATFORM=${SUBPLATFORM} "${MAKE}" createkernelcfg
