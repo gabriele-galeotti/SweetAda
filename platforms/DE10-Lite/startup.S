@@ -15,9 +15,9 @@
                 .sect   .startup,"ax"
 
                 .set    noat
-                movhi   r1,%hi(_start)
-                ori     r1,r1,%lo(_start)
-                jmp     r1
+                movhi   r2,%hi(_start)
+                ori     r2,r2,%lo(_start)
+                jmp     r2
 
                 .type   _start,@function
                 .global _start
@@ -33,15 +33,15 @@ _start:
                 // Call "adainit" procedure.
                 //
                 .extern adainit
-                movia   r1,adainit
-                callr   r1
+                movia   r2,adainit
+                callr   r2
 
                 //
                 // Jump to high-level code.
                 //
                 .extern _ada_main
-                movia   r1,_ada_main
-                callr   r1
+                movia   r2,_ada_main
+                callr   r2
 
 dead:           br      .
 

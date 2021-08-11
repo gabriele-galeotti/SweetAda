@@ -40,17 +40,17 @@ _start:
                 // Call "adainit" procedure.
                 //
                 .extern adainit
-                movhi   r1,%hiadj(adainit)
-                addi    r1,r1,%lo(adainit)
-                callr   r1
+                movhi   r2,%hiadj(adainit)
+                addi    r2,r2,%lo(adainit)
+                callr   r2
 
                 //
                 // Jump to high-level code.
                 //
                 .extern _ada_main
-                movhi   r1,%hiadj(_ada_main)
-                addi    r1,r1,%lo(_ada_main)
-                callr   r1
+                movhi   r2,%hiadj(_ada_main)
+                addi    r2,r2,%lo(_ada_main)
+                callr   r2
 
 dead:           br      .
 
