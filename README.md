@@ -1,4 +1,16 @@
 
+--------------------------------------------------------------------------------
+
+Latest news:
+
+13/08/2021
+- burned as an EPROM, SweetAda correctly startups in an Amiga2000/68010 machine
+- Nios II very primitive interrupt support (IIC)
+- the srecord module lets you download an S-record code fragment in a machine
+  and execute it
+
+--------------------------------------------------------------------------------
+
 Welcome to SweetAda.
 
 SweetAda is a lightweight development framework whose purpose is the
