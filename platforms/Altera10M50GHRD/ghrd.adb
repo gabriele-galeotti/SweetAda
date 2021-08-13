@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ exceptions.adb                                                                                            --
+-- __FLN__ ghrd.adb                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,11 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with Core;
-with GHRD;
-
-package body Exceptions is
+package body GHRD is
 
    --========================================================================--
    --                                                                        --
@@ -29,25 +25,15 @@ package body Exceptions is
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
-
    ----------------------------------------------------------------------------
-   -- Irq_Process
+   -- Tclk_Init
    ----------------------------------------------------------------------------
-   procedure Irq_Process is
+   procedure Tclk_Init is
    begin
-      if GHRD.Timer.Status.TO then
-         Core.Tick_Count := Core.Tick_Count + 1;
-         GHRD.Timer.Status.TO := False;
-      end if;
-   end Irq_Process;
+      GHRD.Timer.Control := (STOP => True, others => <>);
+      GHRD.Timer.PeriodL := 16#0000_0000#;
+      GHRD.Timer.PeriodH := 16#0000_0001#;
+      GHRD.Timer.Control := (ITO => True, CONT => True, START => True, others => <>);
+   end Tclk_Init;
 
-   ----------------------------------------------------------------------------
-   -- Init
-   ----------------------------------------------------------------------------
-   procedure Init is
-   begin
-      null;
-   end Init;
-
-end Exceptions;
+end GHRD;

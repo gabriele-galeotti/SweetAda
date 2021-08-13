@@ -3,6 +3,7 @@ ENTRY(_start)
 
 MEMORY
 {
+        /* RAM is @ 0x08000000, memory is aliased @ 0xC0000000 */
         RAM : ORIGIN = 0xC8000000, LENGTH = 128M
 }
 
@@ -14,6 +15,7 @@ SECTIONS
         .text :
         {
                 _stext = .;
+                KEEP(*(.vectors))
                 *(.startup)
                 *(.text)
                 *(.text.*)

@@ -16,18 +16,14 @@
 
                 .set    noat
 
-                //
-                // If the entry point is exactly @ 0xC0000000, QEMU seems to
-                // think this is a Linux kernel and applies a sort of address
-                // translation (see boot.c:nios2_load_kernel()), so to avoid
-                // any kind of problems displace the entry point with a nop
-                // instruction in order to avoid that.
-                //
-                nop
-
                 .type   _start,@function
                 .global _start
 _start:
+                //
+                // Disable interrupts.
+                //
+                wrctl   status,r0
+                wrctl   ienable,r0
 
                 //
                 // Setup stack pointer.
@@ -55,6 +51,10 @@ _start:
 dead:           br      .
 
                 .size   _start,.-_start
+
+                // __FIX__ little quirk to force emission of .vectors section
+                .extern irq_entry
+                movhi   r2,%lo(irq_entry)
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -1,5 +1,6 @@
 
 with Interfaces;
+with Core;
 with GHRD;
 
 package body Application is
@@ -13,7 +14,6 @@ package body Application is
    --========================================================================--
 
    use Interfaces;
-   use GHRD;
 
    --========================================================================--
    --                                                                        --
@@ -23,19 +23,28 @@ package body Application is
    --                                                                        --
    --========================================================================--
 
+   function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean;
+   function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean is
+   begin
+      return (Core.Tick_Count - Flash_Count) > Timeout;
+   end Tick_Count_Expired;
+
    procedure Run is
    begin
       -------------------------------------------------------------------------
       if True then
          declare
-            Delay_Count : constant := 100_000_000;
-            Dummy       : Unsigned_32 with Volatile => True;
+            TC : Unsigned_32;
          begin
-            IOEMU_IO1 := 0;
+            GHRD.IOEMU_IO0 := 0;
+            TC := Core.Tick_Count;
             loop
-               -- IOEMU GPIO test
-               IOEMU_IO1 := IOEMU_IO1 + 1;
-               for Delay_Loop_Count in 1 .. Delay_Count loop Dummy := Dummy + 1; end loop;
+               if Tick_Count_Expired (TC, 1000) then
+                  TC := Core.Tick_Count;
+                  -- blink IOEMU LED
+                  GHRD.IOEMU_IO0 := 1;
+                  GHRD.IOEMU_IO0 := 0;
+               end if;
             end loop;
          end;
       end if;

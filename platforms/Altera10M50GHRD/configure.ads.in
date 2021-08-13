@@ -7,4 +7,9 @@ package Configure is
    PLATFORM : constant String := "Altera10M50GHRD";
    CPU      : constant String := "@CPU@";
 
+   -- basic configuration parameters
+   RESET_ADDRESS         : constant := @RESET_ADDRESS@;
+   EXCEPTION_ADDRESS     : constant := @EXCEPTION_ADDRESS@;
+   FAST_TLB_MISS_ADDRESS : constant := @FAST_TLB_MISS_ADDRESS@;
+
 end Configure;
