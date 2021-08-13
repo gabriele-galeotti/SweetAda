@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Interfaces;
 
 package NiosII is
 
@@ -28,16 +29,29 @@ package NiosII is
    --========================================================================--
 
    use System;
+   use Interfaces;
+
+   subtype Irq_State_Type is Boolean;
+
+   PIE : constant Unsigned_32 := 2#0000_0000_0000_0000_0000_0000_0000_0001#;
+   U   : constant Unsigned_32 := 2#0000_0000_0000_0000_0000_0000_0000_0010#;
+   EH  : constant Unsigned_32 := 2#0000_0000_0000_0000_0000_0000_0000_0100#;
+
+   ----------------------------------------------------------------------------
+   -- CPU helper subprograms
+   ----------------------------------------------------------------------------
+
+   function CPUID return Unsigned_32 with
+      Inline => True;
 
    procedure Asm_Call (Target_Address : in Address) with
       Inline => True;
-
-   subtype Irq_State_Type is Natural;
 
    ----------------------------------------------------------------------------
    -- Irq handling
    ----------------------------------------------------------------------------
 
+   procedure Irq_Enable (Irq_Line : in Natural);
    procedure Irq_Enable;
    procedure Irq_Disable;
    function Irq_State_Get return Irq_State_Type;
