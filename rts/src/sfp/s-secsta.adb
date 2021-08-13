@@ -236,7 +236,7 @@ package body System.Secondary_Stack is
                 Byte     => Stack.Top.Byte,
                 Mem_Size => Mem_Size)
       then
-         raise Storage_Error with "secondary stack exhaused";
+         raise Storage_Error with "secondary stack exhausted";
       end if;
 
       Allocate_On_Chunk
@@ -294,7 +294,7 @@ package body System.Secondary_Stack is
       --------------
 
       function Round_Up (Size : Storage_Count) return Memory_Size is
-         Algn_MS : constant Memory_Size := Standard'Maximum_Alignment;
+         Algn_MS : constant Memory_Size := Memory_Alignment;
          Size_MS : constant Memory_Size := Memory_Size (Size);
 
       begin
@@ -303,7 +303,7 @@ package body System.Secondary_Stack is
          --  Treat this case as secondary-stack depletion.
 
          if Memory_Size'Last - Algn_MS < Size_MS then
-            raise Storage_Error with "secondary stack exhaused";
+            raise Storage_Error with "secondary stack exhausted";
          end if;
 
          return ((Size_MS + Algn_MS - 1) / Algn_MS) * Algn_MS;
@@ -318,23 +318,26 @@ package body System.Secondary_Stack is
    --  Start of processing for SS_Allocate
 
    begin
-      --  It should not be possible to request an allocation of negative or
-      --  zero size.
-
-      pragma Assert (Storage_Size > 0);
-
       --  Round the requested size up to the nearest multiple of the maximum
       --  alignment to ensure efficient access.
 
-      Mem_Size := Round_Up (Storage_Size);
+      if Storage_Size = 0 then
+         Mem_Size := Memory_Alignment;
+      else
+         --  It should not be possible to request an allocation of negative
+         --  size.
 
--- __INF__ force static allocation
---       if Sec_Stack_Dynamic then
---          Allocate_Dynamic (Stack, Mem_Size, Addr);
---       else
---          Allocate_Static  (Stack, Mem_Size, Addr);
---       end if;
-      Allocate_Static (Stack, Mem_Size, Addr);
+         pragma Assert (Storage_Size >= 0);
+         Mem_Size := Round_Up (Storage_Size);
+      end if;
+
+      if Sec_Stack_Dynamic then
+         -- __INF__ force static allocation
+         --  Allocate_Dynamic (Stack, Mem_Size, Addr);
+         raise Storage_Error with "dynamic allocation not implemented";
+      else
+         Allocate_Static  (Stack, Mem_Size, Addr);
+      end if;
    end SS_Allocate;
 
    -------------
