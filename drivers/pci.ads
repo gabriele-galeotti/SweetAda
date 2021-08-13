@@ -244,13 +244,13 @@ package PCI is
                                     Success       : out Boolean
                                    );
 
-   procedure Dump_Cfg (
+   procedure Cfg_Dump (
                        Bus_Number      : in Bus_Number_Type;
                        Device_Number   : in Device_Number_Type;
                        Function_Number : in Function_Number_Type
                       );
 
-   procedure Dump_BARs (
+   procedure BARs_Dump (
                         Bus_Number      : in Bus_Number_Type;
                         Device_Number   : in Device_Number_Type;
                         Function_Number : in Function_Number_Type

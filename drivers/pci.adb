@@ -209,11 +209,11 @@ package body PCI is
    end Cfg_Find_Device_By_Id;
 
    ----------------------------------------------------------------------------
-   -- Dump_Cfg
+   -- Cfg_Dump
    ----------------------------------------------------------------------------
    -- Configuration space register dump.
    ----------------------------------------------------------------------------
-   procedure Dump_Cfg (
+   procedure Cfg_Dump (
                        Bus_Number      : in Bus_Number_Type;
                        Device_Number   : in Device_Number_Type;
                        Function_Number : in Function_Number_Type
@@ -229,15 +229,15 @@ package body PCI is
                                        );
       end loop;
       Console.Print_Memory (Cfg_Space'Address, Cfg_Space'Length);
-   end Dump_Cfg;
+   end Cfg_Dump;
 
    ----------------------------------------------------------------------------
-   -- Dump_BARs
+   -- BARs_Dump
    ----------------------------------------------------------------------------
    -- Print out BARs contents.
-   -- Dump_BARs (BUS0, 16#0A#, 0);
+   -- BARs_Dump (BUS0, 16#0A#, 0);
    ----------------------------------------------------------------------------
-   procedure Dump_BARs (
+   procedure BARs_Dump (
                         Bus_Number      : in Bus_Number_Type;
                         Device_Number   : in Device_Number_Type;
                         Function_Number : in Function_Number_Type
@@ -254,6 +254,6 @@ package body PCI is
       Console.Print (Data, Prefix => "BAR3: ", NL => True);
       Data := Cfg_Read (Bus_Number, Device_Number, Function_Number, BAR4_Register_Offset);
       Console.Print (Data, Prefix => "BAR4: ", NL => True);
-   end Dump_BARs;
+   end BARs_Dump;
 
 end PCI;
