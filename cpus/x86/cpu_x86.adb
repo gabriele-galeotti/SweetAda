@@ -319,6 +319,20 @@ package body CPU_x86 is
    end Select_Address_Bits_PDE;
 
    ----------------------------------------------------------------------------
+   -- Asm_Call
+   ----------------------------------------------------------------------------
+   procedure Asm_Call (Target_Address : in Address) is
+   begin
+      Asm (
+           Template => " call *%0",
+           Outputs  => No_Output_Operands,
+           Inputs   => Address'Asm_Input ("r", Target_Address),
+           Clobber  => "",
+           Volatile => True
+          );
+   end Asm_Call;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 

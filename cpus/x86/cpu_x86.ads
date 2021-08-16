@@ -672,6 +672,13 @@ pragma Warnings (On, "size is not a multiple of alignment");
       Suppress_Initialization => True;
 
    ----------------------------------------------------------------------------
+   -- CPU helper subprograms
+   ----------------------------------------------------------------------------
+
+   procedure Asm_Call (Target_Address : in Address) with
+      Inline => True;
+
+   ----------------------------------------------------------------------------
    -- Irq handling
    ----------------------------------------------------------------------------
 

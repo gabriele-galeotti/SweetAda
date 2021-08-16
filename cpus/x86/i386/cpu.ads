@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
 with CPU_x86;
 
 package CPU is
@@ -30,6 +31,8 @@ package CPU is
    pragma Preelaborate;
 
    package x86 renames CPU_x86;
+
+   procedure Asm_Call (Target_Address : in System.Address) renames x86.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
