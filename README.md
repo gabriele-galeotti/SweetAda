@@ -6,6 +6,7 @@ Latest news:
 18/08/2021
 - compiler warning and style switches have a separate file to be included in
   in the master Makefile, in order to increase handling and readability
+
 13/08/2021
 - burned as an EPROM, SweetAda correctly startups in an Amiga2000/68010 machine
 - Nios II very primitive interrupt support (IIC)
