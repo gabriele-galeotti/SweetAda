@@ -1,0 +1,96 @@
+
+#
+# Toolchain sub-Makefile (compiler warning switches)
+#
+# Copyright (C) 2020, 2021 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Environment variables:
+# DISABLE_STACK_USAGE
+# STACK_LIMIT
+#
+
+################################################################################
+#                                                                              #
+# Assembler/Compiler warning switches.                                         #
+#                                                                              #
+################################################################################
+
+#
+# Ada warning switches.
+#
+#ADAC_SWITCHES_WARNING += -gnatwa  # Activate most optional warnings.
+ADAC_SWITCHES_WARNING += -gnatw.a # Activate warnings on failing assertions.
+ADAC_SWITCHES_WARNING += -gnatwb  # Activate warnings on bad fixed values.
+ADAC_SWITCHES_WARNING += -gnatw.b # Activate warnings on biased representation.
+ADAC_SWITCHES_WARNING += -gnatwC  # Activate warnings on conditionals. __INF__ warning not generated for values that are known at compile time
+#ADAC_SWITCHES_WARNING += -gnatw.c # Activate warnings on missing component clauses.
+ADAC_SWITCHES_WARNING += -gnatwd  # Activate warnings on implicit dereferencing.
+ADAC_SWITCHES_WARNING += -gnatw.d # Activate tagging of warning and info messages.
+#ADAC_SWITCHES_WARNING += -gnatwe  # Treat warnings and style checks as errors.
+#ADAC_SWITCHES_WARNING += -gnatwf  # Activate warnings on unreferenced formals.
+ADAC_SWITCHES_WARNING += -gnatwg  # Activate warnings on unrecognized pragmas.
+ADAC_SWITCHES_WARNING += -gnatwh  # Activate warnings on hiding.
+#ADAC_SWITCHES_WARNING += -gnatw.h # Activate warnings on holes/gaps in records.
+ADAC_SWITCHES_WARNING += -gnatwi  # Activate warnings on implementation units.
+ADAC_SWITCHES_WARNING += -gnatw.i # Activate warnings on overlapping actuals.
+ADAC_SWITCHES_WARNING += -gnatwj  # Activate warnings on obsolescent features (Annex J).
+ADAC_SWITCHES_WARNING += -gnatwk  # Activate warnings on variables that could be constants.
+ADAC_SWITCHES_WARNING += -gnatw.k # Activate warnings on redefinition of names in standard.
+ADAC_SWITCHES_WARNING += -gnatwl  # Activate warnings for elaboration pragmas.
+ADAC_SWITCHES_WARNING += -gnatw.l # List inherited aspects.
+ADAC_SWITCHES_WARNING += -gnatwm  # Activate warnings on modified but unreferenced variables.
+ADAC_SWITCHES_WARNING += -gnatw.m # Activate warnings on suspicious modulus values.
+#ADAC_SWITCHES_WARNING += -gnatw.n # Activate warnings on atomic synchronization.
+ADAC_SWITCHES_WARNING += -gnatwo  # Activate warnings on address clause overlays.
+ADAC_SWITCHES_WARNING += -gnatw.o # Activate warnings on modified but unreferenced out parameters.
+ADAC_SWITCHES_WARNING += -gnatwp  # Activate warnings on ineffective pragma Inlines.
+ADAC_SWITCHES_WARNING += -gnatw.p # Activate warnings on parameter ordering.
+ADAC_SWITCHES_WARNING += -gnatwq  # Activate warnings on questionable missing parentheses.
+ADAC_SWITCHES_WARNING += -gnatw.q # Activate warnings on questionable layout of record types.
+ADAC_SWITCHES_WARNING += -gnatwr  # Activate warnings on redundant constructs.
+ADAC_SWITCHES_WARNING += -gnatw.r # Activate warnings for object renaming function.
+#ADAC_SWITCHES_WARNING += -gnatw_r # Activate warnings for out-of-order record representation clauses.
+ADAC_SWITCHES_WARNING += -gnatw.s # Activate warnings on overridden size clauses.
+#ADAC_SWITCHES_WARNING += -gnatwt  # Activate warnings for tracking of deleted conditional code.
+ADAC_SWITCHES_WARNING += -gnatw.t # Activate warnings on suspicious contracts.
+ADAC_SWITCHES_WARNING += -gnatw.u # Activate warnings on unordered enumeration types.
+ADAC_SWITCHES_WARNING += -gnatwv  # Activate warnings on unassigned variables.
+#ADAC_SWITCHES_WARNING += -gnatw.v # Activate info messages for non-default bit order.
+ADAC_SWITCHES_WARNING += -gnatw.V # Suppress info messages for non-default bit order.
+ADAC_SWITCHES_WARNING += -gnatww  # Activate warnings on wrong low bound assumption.
+#ADAC_SWITCHES_WARNING += -gnatw.w # Activate warnings on Warnings Off pragmas.
+ADAC_SWITCHES_WARNING += -gnatwx  # Activate warnings on Export/Import pragmas.
+ADAC_SWITCHES_WARNING += -gnatw.X # Disable warnings for No_Exception_Propagation mode.
+#ADAC_SWITCHES_WARNING += -gnatw.y # Activate information messages for why package spec needs body.
+ADAC_SWITCHES_WARNING += -gnatwz  # Activate warnings on unchecked conversions.
+ADAC_SWITCHES_WARNING += -gnatw.z # Activate warnings for size not a multiple of alignment.
+ADAC_SWITCHES_WARNING += -Wunused
+ADAC_SWITCHES_WARNING += -Wuninitialized
+ifneq ($(DISABLE_STACK_USAGE),Y)
+ADAC_SWITCHES_WARNING += -Wstack-usage=$(STACK_LIMIT)
+endif
+
+# turn on only for cosmetic purposes at the end of the development cycle
+# (nearly the same effect of -gnatwa)
+#ADAC_SWITCHES_WARNING += -gnatwu  # Activate warnings on unused entities.
+
+#
+# C compiler warning switches.
+#
+CC_SWITCHES_WARNING += -Wall -pedantic
+CC_SWITCHES_WARNING += -Wbad-function-cast
+CC_SWITCHES_WARNING += -Wcast-align
+CC_SWITCHES_WARNING += -Winline
+CC_SWITCHES_WARNING += -Wpointer-arith
+CC_SWITCHES_WARNING += -Wredundant-decls
+CC_SWITCHES_WARNING += -Wshadow
+CC_SWITCHES_WARNING += -Wsign-compare
+CC_SWITCHES_WARNING += -Wstrict-prototypes
+CC_SWITCHES_WARNING += -Wundef
+CC_SWITCHES_WARNING += -Wwrite-strings
+
