@@ -1,6 +1,6 @@
 
 #
-# Create a symbolic link.
+# Create a filesystem symbolic/soft link.
 #
 # Copyright (C) 2020, 2021 Gabriele Galeotti
 #

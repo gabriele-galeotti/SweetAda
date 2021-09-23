@@ -5,11 +5,11 @@
 # Copyright (C) 2020, 2021 Gabriele Galeotti
 #
 
-INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                     \
-                       $(CORE_DIRECTORY)/bits                \
-                       $(CORE_DIRECTORY)/libgcc              \
-                       $(CORE_DIRECTORY)/llutils             \
-                       $(CORE_DIRECTORY)/memory_functions    \
+INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                  \
+                       $(CORE_DIRECTORY)/bits             \
+                       $(CORE_DIRECTORY)/libgcc           \
+                       $(CORE_DIRECTORY)/llutils          \
+                       $(CORE_DIRECTORY)/memory_functions \
                        $(CORE_DIRECTORY)/mmio
 
 #

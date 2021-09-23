@@ -24,7 +24,7 @@ SET MAKEEXE="C:\Program Files\SweetAda"\bin\make.exe
 IF "%PLATFORM%"=="" CALL :setplatform
 
 SET ACTION_VALID=
-IF "%1"=="createkernelcfg" SET "ACTION_VALID=Y" & SET PLATFORM=%PLATFORM% & SET SUBPLATFORM=%SUBPLATFORM% & %MAKEEXE% createkernelcfg
+IF "%1"=="createkernelcfg" SET "ACTION_VALID=Y" & SET "PLATFORM=%PLATFORM%" & SET "SUBPLATFORM=%SUBPLATFORM%" & %MAKEEXE% createkernelcfg
 IF "%1"=="configure" SET "ACTION_VALID=Y" & %MAKEEXE% configure
 IF "%1"=="all" SET "ACTION_VALID=Y" & %MAKEEXE% all
 IF "%1"=="postbuild" SET "ACTION_VALID=Y" & %MAKEEXE% postbuild

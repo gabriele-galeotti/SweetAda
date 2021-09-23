@@ -37,34 +37,7 @@ $scriptname = $MyInvocation.MyCommand.Name
 $input_filename = $args[0]
 $output_filename = $args[1]
 
-$pinfo = New-Object System.Diagnostics.ProcessStartInfo
-$pinfo.CreateNoWindow = $true
-$pinfo.UseShellExecute = $false
-$pinfo.RedirectStandardError = $true
-$pinfo.RedirectStandardOutput = $true
-$pinfo.FileName = "grep.exe"
-$pinfo.Arguments = "-o", "@[_A-Za-z][_A-Za-z0-9]*@", $input_filename
-$p = New-Object System.Diagnostics.Process
-$p.StartInfo = $pinfo
-try
-{
-  $p.Start() | Out-Null
-  $stdout = $p.StandardOutput.ReadToEnd()
-  $stderr = $p.StandardError.ReadToEnd()
-  $p.WaitForExit()
-  if ($p.ExitCode -ne 0)
-  {
-    Write-Host "${scriptname}: *** Error: executing grep.exe."
-    ExitWithCode $p.ExitCode
-  }
-}
-catch
-{
-  Write-Host "${scriptname}: *** Error: executing grep.exe."
-  ExitWithCode 1
-}
-
-$symbols = $stdout.Trim([char]0xa).Split([char]0x0a).Trim([char]0x0d)
+$symbols = Select-String -Pattern "@[_A-Za-z][_A-Za-z0-9]*" $input_filename | ForEach {$_.Matches} | Select-Object -ExpandProperty Value
 
 $pinfo = New-Object System.Diagnostics.ProcessStartInfo
 $pinfo.CreateNoWindow = $true
