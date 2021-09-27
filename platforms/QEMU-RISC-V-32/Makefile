@@ -22,7 +22,7 @@ LIBRARY_NAME := platform
 
 OBJECTS :=
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o
-#OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/llkernel.o
+OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/llkernel.o
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
@@ -31,8 +31,8 @@ all: $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
-	@"$(PROCESSCFG)" configure.h.in configure.h
-	@"$(PROCESSCFG)" configure.ads.in configure.ads
+	@$(PROCESSCFG) configure.h.in configure.h
+	@$(PROCESSCFG) configure.ads.in configure.ads
 
 .PHONY : postbuild
 postbuild :

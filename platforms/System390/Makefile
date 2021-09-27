@@ -31,20 +31,20 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
-	@"$(PROCESSCFG)" s390.cnf.in s390.cnf
-	@"$(PROCESSCFG)" hercules.rc.in hercules.rc
-	@"$(PROCESSCFG)" configure.h.in configure.h
-	@"$(PROCESSCFG)" configure.ads.in configure.ads
+	@$(PROCESSCFG) s390.cnf.in s390.cnf
+	@$(PROCESSCFG) hercules.rc.in hercules.rc
+	@$(PROCESSCFG) configure.h.in configure.h
+	@$(PROCESSCFG) configure.ads.in configure.ads
 
 .PHONY : postbuild
 postbuild :
 ifeq ($(IPL_MODE),CARD_READER)
-	@"$(TCLSH)" S360obj.tcl -a 0x800 -l loader.rdr $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
+	@$(TCLSH) S360obj.tcl -a 0x800 -l loader.rdr $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
 else ifeq ($(IPL_MODE),DASD)
 	@$(RM) SYSRES.DSD
-	@"$(TCLSH)" S360obj.tcl -a 0x800 $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
+	@$(TCLSH) S360obj.tcl -a 0x800 $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
 	@$(call echo-print,"SYSRES 3390-1 * $(KERNEL_IPLFILE)")> dasd_ctlfile.txt
-	@"$(HERCULES_PREFIX)"/bin/dasdload -0 dasd_ctlfile.txt SYSRES.DSD 5
+	@$(HERCULES_PREFIX)/bin/dasdload -0 dasd_ctlfile.txt SYSRES.DSD 5
 endif
 
 .PHONY : clean

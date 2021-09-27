@@ -32,7 +32,7 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 .PHONY : installfiles
 installfiles :
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
-	@"$(CREATESYMLINK)" platform-$(SUBPLATFORM)
+	@$(CREATESYMLINK) platform-$(SUBPLATFORM)
 	@$(call echo-print,"")
 
 .PHONY : configure
@@ -40,7 +40,7 @@ configure : configure-subplatform
 
 .PHONY : postbuild
 postbuild :
-	@# dBUG S-record download
+	$(REM) dBUG S-record download
 	$(call brief-command, \
         $(OBJCOPY) -O srec $(SWEETADA_PATH)/$(KERNEL_OUTFILE) $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec \
         ,[OBJCOPY],$(KERNEL_BASENAME).srec)

@@ -35,8 +35,8 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-pll.S    \
 
 .PHONY : configure
 configure :
-	@"$(PROCESSCFG)" configure.h.in configure.h
-	@"$(PROCESSCFG)" configure.ads.in configure.ads
+	@$(PROCESSCFG) configure.h.in configure.h
+	@$(PROCESSCFG) configure.ads.in configure.ads
 
 .PHONY : postbuild
 postbuild :

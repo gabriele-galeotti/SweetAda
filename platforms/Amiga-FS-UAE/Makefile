@@ -36,9 +36,9 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-vectors.S \
 .PHONY : installfiles
 installfiles :
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
-	@"$(CREATESYMLINK)" platform-$(SUBPLATFORM)
+	@$(CREATESYMLINK) platform-$(SUBPLATFORM)
 	@$(call echo-print,"")
-	@"$(PROCESSCFG)" fs-uae.conf.in fs-uae.conf
+	@$(PROCESSCFG) fs-uae.conf.in fs-uae.conf
 
 .PHONY : configure
 configure : configure-subplatform

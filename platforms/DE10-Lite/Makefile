@@ -36,8 +36,8 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : \
 
 .PHONY : configure
 configure :
-	@"$(PROCESSCFG)" configure.h.in configure.h
-	@"$(PROCESSCFG)" configure.ads.in configure.ads
+	@$(PROCESSCFG) configure.h.in configure.h
+	@$(PROCESSCFG) configure.ads.in configure.ads
 
 .PHONY : postbuild
 postbuild :

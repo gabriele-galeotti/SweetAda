@@ -32,14 +32,14 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
-	@"$(PROCESSCFG)" configure.h.in configure.h
-	@"$(PROCESSCFG)" configure.ads.in configure.ads
+	@$(PROCESSCFG) configure.h.in configure.h
+	@$(PROCESSCFG) configure.ads.in configure.ads
 ifeq ($(ROM_BOOT),Y)
-	@"$(CREATESYMLINK)" linker.lds-ROM linker.lds
+	@$(CREATESYMLINK) linker.lds-ROM linker.lds
 else ifeq ($(CDROM_BOOT),Y)
-	@"$(CREATESYMLINK)" linker.lds-CD-ROM linker.lds
+	@$(CREATESYMLINK) linker.lds-CD-ROM linker.lds
 else ifeq ($(NETWORK_BOOT),Y)
-	@"$(CREATESYMLINK)" linker.lds-networkboot linker.lds
+	@$(CREATESYMLINK) linker.lds-networkboot linker.lds
 endif
 
 .PHONY : postbuild

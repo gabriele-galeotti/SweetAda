@@ -37,7 +37,7 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-pmdriver.S \
 .PHONY : installfiles
 installfiles :
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
-	@"$(CREATESYMLINK)" platform-$(SUBPLATFORM)
+	@$(CREATESYMLINK) platform-$(SUBPLATFORM)
 	@$(call echo-print,"")
 
 .PHONY : configure
