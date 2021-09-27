@@ -64,7 +64,7 @@ foreach ($textline in Get-Content "${gnatadc_filename}.in")
   }
 }
 
-Write-Host "${gnatadc_filename}: done."
+Write-Host "${scriptname}: ${gnatadc_filename}: done."
 
 ExitWithCode 0
 

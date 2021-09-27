@@ -83,7 +83,7 @@ catch
 
 Set-Content -Path $output_filename -Value $stdout -NoNewLine -Force
 
-Write-Host "${output_filename}: done."
+Write-Host "${scriptname}: ${output_filename}: done."
 
 ExitWithCode 0
 

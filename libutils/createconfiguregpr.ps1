@@ -154,7 +154,7 @@ print_V $configure_filename
 $indentation_level--
 print_I $configure_filename "end $configure_project;"
 
-Write-Host "${configure_filename}: done."
+Write-Host "${scriptname}: ${configure_filename}: done."
 
 ExitWithCode 0
 

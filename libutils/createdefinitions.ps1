@@ -49,7 +49,7 @@ if ("$env:SUBPLATFORM" -ne "")
 Add-Content -Path $definitions_filename -Value "CPU := `"$env:CPU`""
 Add-Content -Path $definitions_filename -Value "CPU_MODEL := `"$env:CPU_MODEL`""
 
-Write-Host "${definitions_filename}: done."
+Write-Host "${scriptname}: ${definitions_filename}: done."
 
 ExitWithCode 0
 
