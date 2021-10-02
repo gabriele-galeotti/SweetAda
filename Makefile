@@ -191,7 +191,7 @@ endif
 ifneq ($(TOOLCHAIN_PREFIX),)
 ifeq ($(OSTYPE),cmd)
 PATH := $(TOOLCHAIN_PREFIX)\bin;$(SWEETADA_PATH)\$(LIBUTILS_DIRECTORY);$(PATH)
-ifeq ($(OSTYPE),msys)
+else ifeq ($(OSTYPE),msys)
 TOOLCHAIN_PREFIX_MSYS := $(shell cygpath.exe -u "$(TOOLCHAIN_PREFIX)" 2> /dev/null)
 PATH := $(TOOLCHAIN_PREFIX_MSYS)/bin:$(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 else
