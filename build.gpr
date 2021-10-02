@@ -65,9 +65,6 @@ project Build is
    -- Compiler
    ----------------------------------------------------------------------------
 
-   -- Compiler_Switches := (
-   --                       "-wrapper", Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc-wrapper"
-   --                      ) & Configure.GCC_Platform_Switches;
    Compiler_Switches := (
                          "-wrapper", "gcc-wrapper"
                         ) & Configure.ADAC_Switches_RTS & Configure.GCC_Platform_Switches;
