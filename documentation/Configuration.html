@@ -58,7 +58,7 @@ Next: <a href="Makefile-targets.html#Makefile-targets" accesskey="n" rel="next">
 </div>
 <hr>
 <a name="Configuration-1"></a>
-<h2 class="chapter">5 Configuration</h2>
+<h2 class="chapter">6 Configuration</h2>
 <a name="index-configuration"></a>
 
 <p>SweetAda configuration is managed by a central Makefile, which loads configuration files
@@ -125,6 +125,9 @@ which erases every configuration file and objects from last compilation.
 </p>
 <p>NOTE: Issuing a new configuration erases the old one by executing an implicit &quot;all-clean&quot;
 Makefile target.
+</p>
+<p>At this point, you should build the RTS.
+See <a href="Building-the-RTS.html#Building-the-RTS">Building the RTS</a>
 </p>
 <p>After the top-level configuration file is loaded, and thus Makefile knows the platform,
 the configuration.in found in that directory is loaded (e.g., ./platforms/ML605/configuration.in).

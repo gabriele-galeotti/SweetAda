@@ -48,6 +48,7 @@ Copyright @copyright{} 2020, 2021 @value{AUTHOR}
 * Overview::
 * Overall structure::
 * Toolchains::
+* Toolchain tools::
 * Host environment::
 * Configuration::
 * Makefile targets::
@@ -57,6 +58,7 @@ Copyright @copyright{} 2020, 2021 @value{AUTHOR}
 * Anatomy of a platform::
 * The core complex::
 * LibGCC::
+* Platform descriptions::
 * Building the RTS::
 * Optimizations::
 * IOEMU scripting::
@@ -154,6 +156,74 @@ clean visual output in order to easily parse ELF sections.
 
 runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets.
 
+@node Toolchain tools
+@chapter Toolchain tools
+@cindex toolchain wrappers
+@cindex elftool
+
+SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
+
+But SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper.
+
+There are two options to obtain the wrappers:
+
+1) Steal the wrappers from a SweetAda toolchain.
+
+Download a SweetAda toolchain, and extract the two executables ...-gcc-wrapper(.exe)
+and ...-gnat-wrapper(.exe); then rename them by replacing the toolchain name triplet and
+place them along with other gcc executables; if, for example, you have an arm-unknown-elf
+toolchain, you should end up with
+
+@itemize @bullet
+@item
+.../<toolchain_prefix>/bin/arm-unknown-elf-gcc-wrapper
+@item
+.../<toolchain_prefix>/bin/arm-unknown-elf-gnat-wrapper
+@end itemize
+
+(remember the suffix .exe, if you are in a Windows environment). Same thing for elftool,
+which does not need renaming because does not have a prefix.
+
+2) Build the wrappers (and elftool)
+
+This procedure needs a C compiler available online. The current setup is for GCC in some
+Linux/MinGW machine.
+
+Go into the directory libutils/toolchain_tools and edit the Makefile by adjusting some
+variables:
+
+@itemize @bullet
+@item
+TOOLCHAIN_PREFIX := /opt/sweetada           # toolchain installation prefix
+@item
+TOOLCHAIN_NAME   := i686-sweetada-elf       # toolchain triplet name
+@item
+LIBELF           := /usr/local/lib/libelf.a # location of libelf library
+@end itemize
+
+For elftool, you sould have libelf installed in your environment setup, but it is not
+strictly needed. Remember that GNU toolchain installation prefix refers to the whole
+hierarchy, so do not add a trailing "/bin".
+
+Then, after a proper Makefile setup:
+
+@example
+$ make wrappers
+$ make install-wrappers
+@end example
+
+will build and install wrappers,
+
+@example
+$ make all
+$ make install
+@end example
+
+will build and install wrappers and elftool.
+
+This procedure should work also on a Windows cmd.exe shell, provided you have a Make
+utility available online.
+
 @node Host environment
 @chapter Host environment
 @cindex Host environment
@@ -169,7 +239,7 @@ as a variable SWEETADA_PATH in the build system). The Makefile machinery is able
 SweetAda path from the context, but this feature relies on standard Makefile idioms which could
 be invalidated by an "esotic" environment setup.
 
-Hence, if you want to integrate SweetAda in a GUI, remember to change directory before
+Hence, if you want to integrate SweetAda in a GUI, remember to change the working directory before
 performing an action.
 
 In order to perform actions, the make utility should be invoked, followed by the
@@ -292,6 +362,9 @@ which erases every configuration file and objects from last compilation.
 
 NOTE: Issuing a new configuration erases the old one by executing an implicit "all-clean"
 Makefile target.
+
+At this point, you should build the RTS.
+@xref{Building the RTS}
 
 After the top-level configuration file is loaded, and thus Makefile knows the platform,
 the configuration.in found in that directory is loaded (e.g., ./platforms/ML605/configuration.in).
@@ -741,6 +814,29 @@ It is of rare use, because normally every CPU has its own set of routines.
 In SweetAda the LibGCC package is thus more or less a placeholder, in the case of
 a port for a new CPU, or experimentation.
 
+@node Platform descriptions
+@chapter Altera10M50GHRD
+@cindex Altera10M50GHRD
+
+Altera10M50GHRD is a virtual platform in SweetAda, usable by means of the QEMU
+emulator. This platform is based on a softcore Nios II processor, implemented in
+real world on an FPGA.
+
+QEMU instantiates a few peripherals for this platform:
+- 2 timers
+- 16550-style UART
+
+By using libioemu, 8 32-bit I/O ports are available.
+
+CPU parameters are fixed at some particular addresses, as dictated by QEMU, and
+already wrapped in the platform's configuration.in.
+
+@chapter Amiga
+@cindex Amiga
+
+The Amiga platform is the well-known PC machine based on the M68k venerable class
+of CPU.
+
 @node Building the RTS
 @chapter Building the RTS
 @cindex RTS
@@ -749,52 +845,17 @@ When using a SweetAda source package from a repository like GitHub, the very fir
 action to perform is to build the Ada Run-Time System.
 
 Currently, RTS build is supported only by means of a Bash script, so you need an
-environment with a working Bash shell online. The script is not parameterized yet,
-so you should edit by hand, commenting out some sensible variables, unless you want
-to build the RTS for every CPU architecture.
+environment with a working Bash shell online.
 
-After changing your working directory to the "rts" subdirectory of the top-level
-SweetAda installation, open the rts-build.sh script with your favorite editor and locate
-the "Main loop" section of the script. After various initialization statements,
-you can see the RTS selection and the toolchain name assignments:
+The RTS can be built by firstly configure SweetAda. Once that SweetAda knows the
+platform (and thus the CPU and the toolchain involved), then
 
 @example
-# force the RTS type for whole build (avoid to pick up a private setting from a
-# platform-dependent configuration.in that could override it)
-#RTS=zfp
-RTS=sfp
-
-TOOLCHAIN_NAMES=()
-TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_AArch64@})
-...
-TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_x86_64@})
+$ make rts
 @end example
 
-Choose RTS type and comment out every target, but the one you want to build. Bash
-script comments are introduced with a "#" character.
-
-@example
-RTS=zfp <--
-#RTS=sfp
-
-TOOLCHAIN_NAMES=()
-#TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_AArch64@})
-...
-#TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_MIPS64@})
-TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_MicroBlaze@}) <--
-#TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_NiosII@})
-#TOOLCHAIN_NAMES+=($@{TOOLCHAIN_NAME_PowerPC@})
-...
-@end example
-
-Then execute:
-
-@example
-$ ./rts-build.sh
-@end example
-
-If the SweetAda toolchain installation is fine, you should see a log of the build, with
-a successful message at the end.
+will build the RTS. Once you built the RTS, it is persistent, and you don't need
+to repeat the operation, unless you modify RTS source files.
 
 @node Optimizations
 @chapter Optimizations

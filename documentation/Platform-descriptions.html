@@ -6,10 +6,10 @@ Copyright (C) 2020, 2021 Gabriele Galeotti
  -->
 <!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>SweetAda: Building the RTS</title>
+<title>SweetAda: Platform descriptions</title>
 
-<meta name="description" content="SweetAda: Building the RTS">
-<meta name="keywords" content="SweetAda: Building the RTS">
+<meta name="description" content="SweetAda: Platform descriptions">
+<meta name="keywords" content="SweetAda: Platform descriptions">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
@@ -17,8 +17,8 @@ Copyright (C) 2020, 2021 Gabriele Galeotti
 <link href="index.html#Top" rel="start" title="Top">
 <link href="Index.html#Index" rel="index" title="Index">
 <link href="index.html#Top" rel="up" title="Top">
-<link href="Optimizations.html#Optimizations" rel="next" title="Optimizations">
-<link href="Platform-descriptions.html#Platform-descriptions" rel="prev" title="Platform descriptions">
+<link href="Building-the-RTS.html#Building-the-RTS" rel="next" title="Building the RTS">
+<link href="LibGCC.html#LibGCC" rel="prev" title="LibGCC">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -51,31 +51,35 @@ ul.no-bullet {list-style: none}
 </head>
 
 <body lang="en">
-<a name="Building-the-RTS"></a>
+<a name="Platform-descriptions"></a>
 <div class="header">
 <p>
-Next: <a href="Optimizations.html#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="Platform-descriptions.html#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Building-the-RTS.html#Building-the-RTS" accesskey="n" rel="next">Building the RTS</a>, Previous: <a href="LibGCC.html#LibGCC" accesskey="p" rel="prev">LibGCC</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="Building-the-RTS-1"></a>
-<h2 class="chapter">16 Building the RTS</h2>
-<a name="index-RTS"></a>
+<a name="Altera10M50GHRD"></a>
+<h2 class="chapter">14 Altera10M50GHRD</h2>
+<a name="index-Altera10M50GHRD"></a>
 
-<p>When using a SweetAda source package from a repository like GitHub, the very first
-action to perform is to build the Ada Run-Time System.
+<p>Altera10M50GHRD is a virtual platform in SweetAda, usable by means of the QEMU
+emulator. This platform is based on a softcore Nios II processor, implemented in
+real world on an FPGA.
 </p>
-<p>Currently, RTS build is supported only by means of a Bash script, so you need an
-environment with a working Bash shell online.
+<p>QEMU instantiates a few peripherals for this platform:
+- 2 timers
+- 16550-style UART
 </p>
-<p>The RTS can be built by firstly configure SweetAda. Once that SweetAda knows the
-platform (and thus the CPU and the toolchain involved), then
+<p>By using libioemu, 8 32-bit I/O ports are available.
 </p>
-<div class="example">
-<pre class="example">$ make rts
-</pre></div>
+<p>CPU parameters are fixed at some particular addresses, as dictated by QEMU, and
+already wrapped in the platform&rsquo;s configuration.in.
+</p>
+<a name="Amiga"></a>
+<h2 class="chapter">15 Amiga</h2>
+<a name="index-Amiga"></a>
 
-<p>will build the RTS. Once you built the RTS, it is persistent, and you don&rsquo;t need
-to repeat the operation, unless you modify RTS source files.
+<p>The Amiga platform is the well-known PC machine based on the M68k venerable class
+of CPU.
 </p>
 
 
