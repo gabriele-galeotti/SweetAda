@@ -13,7 +13,10 @@
 # arguments specified in .bat script
 #
 # Environment variables:
-# none
+# PLATFORM
+# SUBPLATFORM
+# CPU
+# CPU_MODEL
 #
 
 ################################################################################

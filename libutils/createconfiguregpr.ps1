@@ -13,7 +13,20 @@
 # arguments specified in .bat script
 #
 # Environment variables:
-# none
+# SWEETADA_PATH
+# TOOLCHAIN_PREFIX
+# TOOLCHAIN_NAME
+# OBJECT_DIRECTORY
+# TOOLCHAIN_NAME
+# RTS_PATH
+# PLATFORM
+# CPU
+# ADAC_SWITCHES_RTS
+# GCC_SWITCHES_PLATFORM
+# INCLUDE_DIRECTORIES
+# IMPLICIT_ALI_UNITS
+# OBJECT_DIRECTORY
+# OPTIMIZATION_LEVEL
 #
 
 ################################################################################
@@ -90,6 +103,24 @@ print_I $configure_filename "Toolchain_Name        := `"$env:TOOLCHAIN_NAME`";"
 print_I $configure_filename "RTS_Path              := `"$env:RTS_PATH`";"
 print_I $configure_filename "Platform              := `"$env:PLATFORM`";"
 print_I $configure_filename "Cpu                   := `"$env:CPU`";"
+print_I $configure_filename "ADAC_Switches_RTS     := ("
+$adac_switches_rts = $env:ADAC_SWITCHES_RTS.Trim(" ")
+if ($adac_switches_rts.Length -gt 0)
+{
+  $adac_switches_rts_array = $adac_switches_rts -split "\s+"
+  $count = 0
+  foreach ($s in $adac_switches_rts_array)
+  {
+    $count = $count + 1
+    $s = "`"$s`""
+    if ($count -ne $adac_switches_rts_array.Length)
+    {
+      $s += ","
+    }
+    print_I $configure_filename "                          $s"
+  }
+}
+print_I $configure_filename "                         );"
 print_I $configure_filename "GCC_Platform_Switches := ("
 $gcc_platform_switches = $env:GCC_SWITCHES_PLATFORM.Trim(" ")
 if ($gcc_platform_switches.Length -gt 0)
@@ -126,7 +157,7 @@ if ($include_directories.Length -gt 0)
   }
 }
 print_I $configure_filename "                         );"
-print_I $configure_filename "Implicit_Ali_Units    := ("
+print_I $configure_filename "Implicit_ALI_Units    := ("
 $implicit_ali_units = $env:IMPLICIT_ALI_UNITS.Trim(" ")
 if ($implicit_ali_units.Length -gt 0)
 {

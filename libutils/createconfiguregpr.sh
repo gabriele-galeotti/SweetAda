@@ -23,6 +23,12 @@
 # RTS_PATH
 # PLATFORM
 # CPU
+# ADAC_SWITCHES_RTS
+# GCC_SWITCHES_PLATFORM
+# INCLUDE_DIRECTORIES
+# IMPLICIT_ALI_UNITS
+# OBJECT_DIRECTORY
+# OPTIMIZATION_LEVEL
 #
 
 ################################################################################
@@ -147,6 +153,19 @@ print_I "Toolchain_Name        := \"${TOOLCHAIN_NAME}\";"
 print_I "RTS_Path              := \"${RTS_PATH}\";"
 print_I "Platform              := \"${PLATFORM}\";"
 print_I "Cpu                   := \"${CPU}\";"
+print_I "ADAC_Switches_RTS     := ("
+ADAC_SWITCHES_RTS_ARRAY=(${ADAC_SWITCHES_RTS})
+imax=$((${#ADAC_SWITCHES_RTS_ARRAY[@]}-1))
+if [ "${imax}" -ge "0" ] ; then
+  for i in $(seq 0 $((${imax}))) ; do
+    s="\"${ADAC_SWITCHES_RTS_ARRAY[$i]}\""
+    if [ "${i}" -ne "${imax}" ] ; then
+      s+=","
+    fi
+    print_I "                          ${s}"
+  done
+fi
+print_I "                         );"
 print_I "GCC_Platform_Switches := ("
 GCC_SWITCHES_PLATFORM_ARRAY=(${GCC_SWITCHES_PLATFORM})
 imax=$((${#GCC_SWITCHES_PLATFORM_ARRAY[@]}-1))
@@ -173,7 +192,7 @@ if [ "${imax}" -ge "0" ] ; then
   done
 fi
 print_I "                         );"
-print_I "Implicit_Ali_Units    := ("
+print_I "Implicit_ALI_Units    := ("
 IMPLICIT_ALI_UNITS_ARRAY=(${IMPLICIT_ALI_UNITS})
 imax=$((${#IMPLICIT_ALI_UNITS_ARRAY[@]}-1))
 if [ "${imax}" -ge "0" ] ; then

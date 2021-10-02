@@ -34,7 +34,7 @@ function ExitWithCode
 
 $scriptname = $MyInvocation.MyCommand.Name
 
-$verbose = (Get-Item env:VERBOSE).Value
+$verbose = $env:VERBOSE
 
 $filename_target = $args[0]
 $filename_linkname = $args[1]

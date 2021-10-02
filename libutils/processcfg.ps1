@@ -13,7 +13,7 @@
 # arguments specified in .bat script
 #
 # Environment variables:
-# none
+# every variable referenced in the input file
 #
 
 ################################################################################
@@ -37,7 +37,8 @@ $scriptname = $MyInvocation.MyCommand.Name
 $input_filename = $args[0]
 $output_filename = $args[1]
 
-$symbols = Select-String -Pattern "@[_A-Za-z][_A-Za-z0-9]*" $input_filename | ForEach {$_.Matches} | Select-Object -ExpandProperty Value
+$symbols = Select-String -Pattern "@[_A-Za-z][_A-Za-z0-9]*@" $input_filename | `
+  ForEach {$_.Matches} | Select-Object -ExpandProperty Value
 
 $pinfo = New-Object System.Diagnostics.ProcessStartInfo
 $pinfo.CreateNoWindow = $true

@@ -65,9 +65,12 @@ project Build is
    -- Compiler
    ----------------------------------------------------------------------------
 
+   -- Compiler_Switches := (
+   --                       "-wrapper", Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc-wrapper"
+   --                      ) & Configure.GCC_Platform_Switches;
    Compiler_Switches := (
-                         "-wrapper", Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc-wrapper"
-                        ) & Configure.GCC_Platform_Switches;
+                         "-wrapper", "gcc-wrapper"
+                        ) & Configure.ADAC_Switches_RTS & Configure.GCC_Platform_Switches;
 
    package Compiler is
       for Driver ("Ada") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
@@ -118,7 +121,7 @@ project Build is
                                 "-n", "-s",
                                 "-A=gnatbind_alis.lst",
                                 "-O=gnatbind_objs.lst"
-                               ) & Binder_Switches & Configure.Implicit_Ali_Units;
+                               ) & Binder_Switches & Configure.Implicit_ALI_Units;
    end Binder;
 
    ----------------------------------------------------------------------------
