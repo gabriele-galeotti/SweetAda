@@ -32,28 +32,35 @@ package Linker is
    ----------------------------------------------------------------------------
    -- Memory areas imported from linker
    ----------------------------------------------------------------------------
-   SText : aliased constant Bits.Asm_Entry_Point;
-   EText : aliased constant Bits.Asm_Entry_Point;
-   SData : aliased constant Bits.Asm_Entry_Point;
-   EData : aliased constant Bits.Asm_Entry_Point;
-   SBss  : aliased constant Bits.Asm_Entry_Point;
-   EBss  : aliased constant Bits.Asm_Entry_Point;
 
-private
+   SText : aliased constant Bits.Asm_Entry_Point with
+      Import        => True,
+      Convention    => Asm,
+      External_Name => "_stext";
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
+   EText : aliased constant Bits.Asm_Entry_Point with
+      Import        => True,
+      Convention    => Asm,
+      External_Name => "_etext";
 
-   pragma Import (Asm, SText, "_stext");
-   pragma Import (Asm, EText, "_etext");
-   pragma Import (Asm, SData, "_sdata");
-   pragma Import (Asm, EData, "_edata");
-   pragma Import (Asm, SBss, "_sbss");
-   pragma Import (Asm, EBss, "_ebss");
+   SData : aliased constant Bits.Asm_Entry_Point with
+      Import        => True,
+      Convention    => Asm,
+      External_Name => "_sdata";
+
+   EData : aliased constant Bits.Asm_Entry_Point with
+      Import        => True,
+      Convention    => Asm,
+      External_Name => "_edata";
+
+   SBss  : aliased constant Bits.Asm_Entry_Point with
+      Import        => True,
+      Convention    => Asm,
+      External_Name => "_sbss";
+
+   EBss  : aliased constant Bits.Asm_Entry_Point with
+      Import        => True,
+      Convention    => Asm,
+      External_Name => "_ebss";
 
 end Linker;

@@ -47,23 +47,16 @@ package Core is
    ----------------------------------------------------------------------------
 
    -- System.Parameters imports this value
-   Default_Stack_Size_Value : Integer := -1;
+   Default_Stack_Size_Value : Integer := -1 with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gl_default_stack_size";
 
    -- stack checking
    type Stack_Access is access all Integer;
-   function Stack_Check (Stack_Address : System.Address) return Stack_Access;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Export (C, Default_Stack_Size_Value, "__gl_default_stack_size");
-   pragma Export (C, Stack_Check, "_gnat_stack_check");
+   function Stack_Check (Stack_Address : System.Address) return Stack_Access with
+      Export        => True,
+      Convention    => C,
+      External_Name => "_gnat_stack_check";
 
 end Core;

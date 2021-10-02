@@ -34,14 +34,18 @@ package LLutils is
 
    package SSE renames System.Storage_Elements;
 
-   procedure Byte_Swap_16 (Object_Address : in System.Address);
-   procedure Byte_Swap_32 (Object_Address : in System.Address);
-   procedure Byte_Swap_64 (Object_Address : in System.Address);
+   procedure Byte_Swap_16 (Object_Address : in System.Address) with
+      Inline => True;
+   procedure Byte_Swap_32 (Object_Address : in System.Address) with
+      Inline => True;
+   procedure Byte_Swap_64 (Object_Address : in System.Address) with
+      Inline => True;
 
    procedure Byte_Swap (
                         Object_Address : in System.Address;
                         Size           : in Bits.Bitsize
-                       );
+                       ) with
+      Inline => True;
 
    procedure Byte_Swap_Next (
                              Object_Address : in out System.Address;
@@ -52,19 +56,22 @@ package LLutils is
                                  Address_Pattern : System.Address;
                                  Lsb_Bit         : Bits.Address_Bit_Number;
                                  Msb_Bit         : Bits.Address_Bit_Number
-                                ) return SSE.Integer_Address;
+                                ) return SSE.Integer_Address with
+      Inline => True;
 
    function Address_Displacement (
                                   Local_Address  : System.Address;
                                   Target_Address : System.Address;
                                   Scale_Address  : Bits.Address_Shift
-                                 ) return SSE.Storage_Offset;
+                                 ) return SSE.Storage_Offset with
+      Inline => True;
 
    function Build_Address (
                            Base_Address  : System.Address;
                            Offset        : SSE.Storage_Offset;
                            Scale_Address : Bits.Address_Shift
-                          ) return System.Address;
+                          ) return System.Address with
+      Inline => True;
 
    procedure HexDigit_To_U8 (
                              C       : in     Character;
@@ -79,27 +86,5 @@ package LLutils is
                              LCase : in  Boolean;
                              C     : out Character
                             );
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (Byte_Swap_16);
-   pragma Inline (Byte_Swap_32);
-   pragma Inline (Byte_Swap_64);
-
-   pragma Inline (Byte_Swap);
-
-   pragma Inline (Select_Address_Bits);
-
-   pragma Inline (Address_Displacement);
-
-   pragma Inline (Build_Address);
 
 end LLutils;
