@@ -44,9 +44,6 @@ package M68k is
    BREAKPOINT_Instruction_Size : constant             := 2;
    BREAKPOINT_Asm_String       : constant String      := ".word 0x4E4F";
 
-   procedure NOP;
-   procedure BREAKPOINT;
-
    ----------------------------------------------------------------------------
    -- M680X0 registers
    ----------------------------------------------------------------------------
@@ -137,13 +134,25 @@ package M68k is
       T1        at 0 range 15 .. 15;
    end record;
 
-   subtype Irq_State_Type is ILEVEL_Type;
+   ----------------------------------------------------------------------------
+   -- CPU helper subprograms
+   ----------------------------------------------------------------------------
 
-   function SR_Read return SR_Type;
-   procedure SR_Write (Value : in SR_Type);
+   procedure NOP
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
+   function SR_Read return SR_Type
+      with Inline => True;
+   procedure SR_Write (Value : in SR_Type)
+      with Inline => True;
+   procedure VBR_Set (VBR_Address : in Address)
+      with Inline => True;
+   procedure Asm_Call (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Exceptions
+   -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
    subtype Exception_Vector_Id_Type is Unsigned_32 range 0 .. 255;
@@ -409,19 +418,16 @@ package M68k is
       Alignment => 2**10,
       Size      => 256 * 32;
 
-   procedure VBR_Set (VBR_Address : in Address);
+   subtype Irq_State_Type is ILEVEL_Type;
 
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- Irq handling
-   ----------------------------------------------------------------------------
-
-   procedure Irq_Enable;
-   procedure Irq_Disable;
-   function Irq_State_Get return Irq_State_Type;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type);
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   function Irq_State_Get return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
@@ -436,33 +442,11 @@ package M68k is
    end record with
       Size => CPU_Unsigned'Size;
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean);
-   procedure Lock (Lock_Object : in out Lock_Type);
-   procedure Unlock (Lock_Object : out Lock_Type);
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (NOP);
-   pragma Inline (BREAKPOINT);
-
-   pragma Inline (SR_Read);
-   pragma Inline (SR_Write);
-
-   pragma Inline (VBR_Set);
-
-   pragma Inline (Irq_Enable);
-   pragma Inline (Irq_Disable);
-
-   pragma Inline (Lock_Try);
-   pragma Inline (Lock);
-   pragma Inline (Unlock);
+   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean)
+      with Inline => True;
+   procedure Lock (Lock_Object : in out Lock_Type)
+      with Inline => True;
+   procedure Unlock (Lock_Object : out Lock_Type)
+      with Inline => True;
 
 end M68k;
