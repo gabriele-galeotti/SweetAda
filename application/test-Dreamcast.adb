@@ -52,7 +52,7 @@ package body Application is
          declare
             Delay_Count : constant := 10_000_000; -- normal
             -- Delay_Count : constant := 100; -- debug
-            Value : Unsigned_32;
+            Value : Unsigned_8;
          begin
             Value := 0;
             loop
@@ -60,8 +60,8 @@ package body Application is
                IOEMU_IO0 := 1;
                IOEMU_IO0 := 0;
                -- display values
-               IOEMU_IO1 := Unsigned_8 (Value);
-               IOEMU_IO2 := Value;
+               IOEMU_IO1 := Value;
+               IOEMU_IO2 := Unsigned_32 (Value);
                Value := Value + 1;
                -- emit an OK message
                Console.Print ("OK", NL => True);
