@@ -5,11 +5,10 @@
 # SH7032
 #
 
-# problemi con sfp
-#RTS := zfp
-#PROFILE := zfp
-#USE_LIBADA :=
-#USE_LIBGCC :=
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
 
 CPU       := SuperH
 CPU_MODEL := SH7032
