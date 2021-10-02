@@ -23,8 +23,8 @@ DISTCLEAN_OBJECTS_EXTRA += application.ad*
 .PHONY : configure
 configure :
 ifneq ($(USE_APPLICATION),)
-	@"$(CREATESYMLINK)" $(USE_APPLICATION).ads application.ads
-	@"$(CREATESYMLINK)" $(USE_APPLICATION).adb application.adb
+	@$(CREATESYMLINK) $(USE_APPLICATION).ads application.ads
+	@$(CREATESYMLINK) $(USE_APPLICATION).adb application.adb
 endif
 
 .PHONY : clean
