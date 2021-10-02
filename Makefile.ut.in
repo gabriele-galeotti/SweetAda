@@ -10,27 +10,37 @@
 
 #
 # Environment variables:
-# OSTYPE
-# SWEETADA_PATH
-# LIBUTILS_DIRECTORY
+# EXEEXT
 # SCREXT
+# SCREXT_cmd
 #
 
-CREATECONFIGUREGPR := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/createconfiguregpr$(SCREXT)
-CREATEDEFINITIONS  := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/createdefinitions$(SCREXT)
-CREATEGNATADC      := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/creategnatadc$(SCREXT)
-CREATESYMLINK      := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/createsymlink$(SCREXT)
-FILEPAD            := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/filepad$(SCREXT)
-FILEPATCH          := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/filepatch$(SCREXT)
-PROCESSCFG         := "$(SWEETADA_PATH)"/$(LIBUTILS_DIRECTORY)/processcfg$(SCREXT)
-
-ifeq ($(OSTYPE),cmd)
-CREATECONFIGUREGPR := $(subst /,\,$(CREATECONFIGUREGPR))
-CREATEDEFINITIONS  := $(subst /,\,$(CREATEDEFINITIONS))
-CREATEGNATADC      := $(subst /,\,$(CREATEGNATADC))
-CREATESYMLINK      := $(subst /,\,$(CREATESYMLINK))
-FILEPAD            := $(subst /,\,$(FILEPAD))
-FILEPATCH          := $(subst /,\,$(FILEPATCH))
-PROCESSCFG         := $(subst /,\,$(PROCESSCFG))
+ifeq ($(OSTYPE),msys)
+CREATECONFIGUREGPR := createconfiguregpr$(SCREXT_cmd)
+CREATEDEFINITIONS  := createdefinitions$(SCREXT_cmd)
+CREATEGNATADC      := creategnatadc$(SCREXT_cmd)
+CREATESYMLINK      := createsymlink$(SCREXT_cmd)
+DOS2UNIX           := dos2unix$(SCREXT_cmd)
+ELFTOOL            := elftool$(EXEEXT)
+FILEPAD            := filepad$(SCREXT_cmd)
+FILEPATCH          := filepatch$(SCREXT_cmd)
+GCC_WRAPPER        := gcc-wrapper$(EXEEXT)
+GNAT_WRAPPER       := gnat-wrapper$(EXEEXT)
+PROCESSCFG         := processcfg$(SCREXT_cmd)
+else
+CREATECONFIGUREGPR := createconfiguregpr$(SCREXT)
+CREATEDEFINITIONS  := createdefinitions$(SCREXT)
+CREATEGNATADC      := creategnatadc$(SCREXT)
+CREATESYMLINK      := createsymlink$(SCREXT)
+DOS2UNIX           := dos2unix$(SCREXT)
+ELFTOOL            := elftool$(EXEEXT)
+FILEPAD            := filepad$(SCREXT)
+FILEPATCH          := filepatch$(SCREXT)
+GCC_WRAPPER        := gcc-wrapper$(EXEEXT)
+GNAT_WRAPPER       := gnat-wrapper$(EXEEXT)
+PROCESSCFG         := processcfg$(SCREXT)
 endif
+
+# needed by RTS Makefile in cmd/msys environments
+export DOS2UNIX PROCESSCFG
 

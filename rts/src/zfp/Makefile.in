@@ -1,0 +1,34 @@
+
+LIBGNAT_SRCS += a-charac.ads
+LIBGNAT_SRCS += a-chlat1.ads
+LIBGNAT_SRCS += a-unccon.ads
+LIBGNAT_SRCS += a-uncdea.ads
+LIBGNAT_SRCS += ada.ads
+LIBGNAT_SRCS += i-c.ads
+LIBGNAT_SRCS += i-cexten.ads
+LIBGNAT_SRCS += interfac.ads
+LIBGNAT_SRCS += s-atacco.adb
+LIBGNAT_SRCS += s-atacco.ads
+LIBGNAT_SRCS += s-maccod.ads
+LIBGNAT_SRCS += s-stoele.adb
+LIBGNAT_SRCS += s-stoele.ads
+LIBGNAT_SRCS += s-unstyp.ads
+
+#
+# system.ads default configuration.
+#
+export COMMAND_LINE_ARGS         := False
+export CONFIGURABLE_RUN_TIME     := True
+export SUPPRESS_STANDARD_LIBRARY := True
+export EXIT_STATUS_SUPPORTED     := False
+export USE_ADA_MAIN_PROGRAM_NAME := False
+
+configure-rts :
+ifeq ($(OSTYPE),cmd)
+	$(CP) $(RTS_SOURCE_PATH_CMD)\*.ads $(ADAINCLUDE_PATH_CMD)
+	$(CP) $(RTS_SOURCE_PATH_CMD)\*.adb $(ADAINCLUDE_PATH_CMD)
+else
+	$(CP) $(RTS_SOURCE_PATH)/*.ads $(ADAINCLUDE_PATH)/
+	$(CP) $(RTS_SOURCE_PATH)/*.adb $(ADAINCLUDE_PATH)/
+endif
+

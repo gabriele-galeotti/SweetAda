@@ -1,0 +1,69 @@
+
+LIBGNAT_SRCS += a-assert.adb
+LIBGNAT_SRCS += a-assert.ads
+LIBGNAT_SRCS += a-charac.ads
+LIBGNAT_SRCS += a-chlat1.ads
+LIBGNAT_SRCS += a-except.adb
+LIBGNAT_SRCS += a-except.ads
+LIBGNAT_SRCS += a-tags.adb
+LIBGNAT_SRCS += a-tags.ads
+LIBGNAT_SRCS += a-unccon.ads
+LIBGNAT_SRCS += a-uncdea.ads
+LIBGNAT_SRCS += ada.ads
+LIBGNAT_SRCS += g-souinf.ads
+LIBGNAT_SRCS += gnat.ads
+LIBGNAT_SRCS += i-c.adb
+LIBGNAT_SRCS += i-c.ads
+LIBGNAT_SRCS += i-cexten.ads
+LIBGNAT_SRCS += interfac.ads
+LIBGNAT_SRCS += s-assert.adb
+LIBGNAT_SRCS += s-assert.ads
+LIBGNAT_SRCS += s-atacco.adb
+LIBGNAT_SRCS += s-atacco.ads
+LIBGNAT_SRCS += s-exctab.adb
+LIBGNAT_SRCS += s-exctab.ads
+LIBGNAT_SRCS += s-fatflt.ads
+LIBGNAT_SRCS += s-fatgen.adb
+LIBGNAT_SRCS += s-fatgen.ads
+LIBGNAT_SRCS += s-fatlfl.ads
+LIBGNAT_SRCS += s-fatllf.ads
+LIBGNAT_SRCS += s-maccod.ads
+LIBGNAT_SRCS += s-parame.ads
+LIBGNAT_SRCS += s-secsta.adb
+LIBGNAT_SRCS += s-secsta.ads
+LIBGNAT_SRCS += s-scaval.adb
+LIBGNAT_SRCS += s-scaval.ads
+LIBGNAT_SRCS += s-stalib.ads
+LIBGNAT_SRCS += s-stoele.adb
+LIBGNAT_SRCS += s-stoele.ads
+LIBGNAT_SRCS += s-unstyp.ads
+
+#
+# system.ads default configuration.
+#
+export COMMAND_LINE_ARGS         := False
+export CONFIGURABLE_RUN_TIME     := True
+export SUPPRESS_STANDARD_LIBRARY := True
+export EXIT_STATUS_SUPPORTED     := False
+export USE_ADA_MAIN_PROGRAM_NAME := False
+
+#
+# s-parame.ads default configuration.
+#
+export RUNTIME_DEFAULT_SEC_STACK_SIZE := 10 * 1024
+export SEC_STACK_DYNAMIC              := False
+
+configure-rts :
+ifeq ($(OSTYPE),cmd)
+	$(CP) $(RTS_SOURCE_PATH_CMD)\*.ads $(ADAINCLUDE_PATH_CMD)
+	$(CP) $(RTS_SOURCE_PATH_CMD)\*.adb $(ADAINCLUDE_PATH_CMD)
+	$(PROCESSCFG) $(RTS_SOURCE_PATH_CMD)/s-parame.ads.in $(ADAINCLUDE_PATH_CMD)/s-parame.ads
+else
+	$(CP) $(RTS_SOURCE_PATH)/*.ads $(ADAINCLUDE_PATH)/
+	$(CP) $(RTS_SOURCE_PATH)/*.adb $(ADAINCLUDE_PATH)/
+	$(PROCESSCFG) $(RTS_SOURCE_PATH)/s-parame.ads.in $(ADAINCLUDE_PATH)/s-parame.ads
+endif
+ifneq (,$(filter $(OSTYPE),cmd msys))
+	$(DOS2UNIX) $(ADAINCLUDE_PATH)/s-parame.ads $(ADAINCLUDE_PATH)/s-parame.ads
+endif
+

@@ -14,6 +14,8 @@
 #
 # Environment variables:
 # OS
+# MSYSTEM
+# MSYS_INSTALL_DIR
 # TEMP
 # VERBOSE
 # PLATFORM
@@ -48,16 +50,16 @@ endif
 export OSTYPE
 
 # define OS commands
+SCREXT_cmd := .bat
 ifeq ($(OSTYPE),cmd)
 TMPDIR  := $(TEMP)
 EXEEXT  := .exe
-SCREXT  := .bat
+SCREXT  := $(SCREXT_cmd)
 # cmd.exe OS commands
 CAT     := TYPE
 CD      := CD
 CP      := COPY /B /Y 1> nul
 ECHO    := ECHO
-GREP    := grep$(EXEEXT)
 LS      := DIR /B
 LS_DIRS := $(LS) /A:D
 MV      := MOVE /Y 1> nul
@@ -78,7 +80,6 @@ CAT     := cat
 CD      := cd
 CP      := cp -f
 ECHO    := printf "%s\n"
-GREP    := grep
 LS      := ls -A
 LS_DIRS := $(LS) -d
 MV      := mv -f
@@ -87,13 +88,14 @@ RM      := rm -f
 SED     := sed
 TOUCH   := touch
 endif
-export TMPDIR EXEEXT SCREXT CAT CD CP ECHO GREP LS LS_DIRS MV REM RM SED TOUCH
+export TMPDIR EXEEXT SCREXT CAT CD CP ECHO LS LS_DIRS MV REM RM SED TOUCH
 
 # generate SWEETADA_PATH
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 ifeq ($(OSTYPE),msys)
+MSYS_INSTALL_PATH := $(shell echo "$(SHELL)" | sed -e "s|/usr/bin/sh.exe||")
 # process SWEETADA_PATH through "cygpath" utility
-SWEETADA_PATH ?= $(shell cygpath.exe -u "$(MAKEFILEDIR)" 2> /dev/null)
+SWEETADA_PATH ?= $(MSYS_INSTALL_PATH)$(shell cygpath.exe -u "$(MAKEFILEDIR)" 2> /dev/null)
 else
 SWEETADA_PATH ?= $(MAKEFILEDIR)
 endif
@@ -118,11 +120,11 @@ LIBUTILS_DIRECTORY      := libutils
 SHARE_DIRECTORY         := share
 
 ifeq ($(OSTYPE),cmd)
-PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) & $(LS_DIRS) * 2> nul)
-CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) & $(LS_DIRS) * 2> nul)
+PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) && $(LS_DIRS) * 2> nul)
+CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) && $(LS_DIRS) * 2> nul)
 else
-PLATFORMS := $(shell ($(CD) $(PLATFORM_BASE_DIRECTORY) ; $(LS_DIRS) *) 2> /dev/null)
-CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) ; $(LS_DIRS) *) 2> /dev/null)
+PLATFORMS := $(shell ($(CD) $(PLATFORM_BASE_DIRECTORY) && $(LS_DIRS) *) 2> /dev/null)
+CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) && $(LS_DIRS) *) 2> /dev/null)
 endif
 
 # default filenames
@@ -145,7 +147,6 @@ CLEAN_OBJECTS        :=
 CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst *.map *.o *.out *.srec *.tmp
 DISTCLEAN_OBJECTS    :=
 
-GENERIC_GOALS  := help createkernelcfg clean distclean probevariable
 PLATFORM_GOALS := infodump configure all $(KERNEL_BASENAME) postbuild session-start session-end run debug
 
 ################################################################################
@@ -155,10 +156,10 @@ PLATFORM_GOALS := infodump configure all $(KERNEL_BASENAME) postbuild session-st
 ################################################################################
 
 # default build system parameters
-TOOLCHAIN_PREFIX   :=
+TOOLCHAIN_PREFIX   ?=
 ADA_MODE           := ADA20
 BUILD_MODE         := MAKEFILE
-RTS                :=
+RTS                ?=
 PROFILE            :=
 USE_LIBGCC         :=
 USE_LIBADA         :=
@@ -189,21 +190,23 @@ endif
 # add TOOLCHAIN_PREFIX to PATH
 ifneq ($(TOOLCHAIN_PREFIX),)
 ifeq ($(OSTYPE),cmd)
-PATH := $(TOOLCHAIN_PREFIX)\bin;$(PATH)
+PATH := $(TOOLCHAIN_PREFIX)\bin;$(SWEETADA_PATH)\$(LIBUTILS_DIRECTORY);$(PATH)
+ifeq ($(OSTYPE),msys)
+TOOLCHAIN_PREFIX_MSYS := $(shell cygpath.exe -u "$(TOOLCHAIN_PREFIX)" 2> /dev/null)
+PATH := $(TOOLCHAIN_PREFIX_MSYS)/bin:$(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 else
-PATH := $(TOOLCHAIN_PREFIX)/bin:$(PATH)
+PATH := $(TOOLCHAIN_PREFIX)/bin:$(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
 export PATH
 endif
 
 # verbose output, "Y/y/1" = enabled
 VERBOSE ?=
-
 # normalize VERBOSE
 ifeq ($(OSTYPE),cmd)
-VERBOSE := $(shell SET VERBOSE=$(VERBOSE) & $(ECHO) %VERBOSE% | $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
+VERBOSE := $(shell $(ECHO) $(VERBOSE)| $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
 else
-VERBOSE := $(shell VERBOSE="$(VERBOSE)" ; $(ECHO) "$${VERBOSE}" | $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
+VERBOSE := $(shell $(ECHO) "$(VERBOSE)" | $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
 endif
 export VERBOSE
 
@@ -216,7 +219,8 @@ MV += -v
 RM += -v
 endif
 else
-MAKEFLAGS += -s --no-print-directory
+MAKEFLAGS += s
+GNUMAKEFLAGS += --no-print-directory
 endif
 
 # load complex functions
@@ -246,7 +250,7 @@ include Makefile.ut.in
 # PLATFORM_DIRECTORY: directory of the configured platform
 # CPU_DIRECTORY: directory of the configured CPU
 #
-TOOLCHAIN_NAME           :=
+TOOLCHAIN_NAME           ?=
 TOOLCHAIN_PROGRAM_PREFIX :=
 GCC_VERSION              :=
 LIBGCC_FILENAME          :=
@@ -412,7 +416,7 @@ export RTS_BASE_PATH RTS_ROOT_PATH RTS_PATH
 export ADAC_SWITCHES_WARNING
 
 export ADA_MODE RTS PROFILE
-export USE_LIBGCC USE_LIBADA USE_CLIBRARY USE_APPLICATION
+export USE_LIBGCC USE_LIBADA USE_CLIBRARY USE_APPLICATION USE_ELFTOOL
 export ADDITIONAL_OBJECTS
 export STACK_LIMIT OPTIMIZATION_LEVEL
 export BUILD_MODE
@@ -442,6 +446,7 @@ MAKE_DRIVERS     := "$(MAKE)" KERNEL_PARENT_PATH=..    -C $(DRIVERS_DIRECTORY)
 MAKE_MODULES     := "$(MAKE)" KERNEL_PARENT_PATH=..    -C $(MODULES_DIRECTORY)
 MAKE_PLATFORMS   := "$(MAKE)" KERNEL_PARENT_PATH=../.. -C $(PLATFORM_BASE_DIRECTORY)
 MAKE_PLATFORM    := $(MAKE_PLATFORMS)/$(PLATFORM)
+MAKE_RTS         := "$(MAKE)" KERNEL_PARENT_PATH=..    -C $(RTS_DIRECTORY)
 
 CLEAN_OBJECTS += $(KERNEL_OBJFILE) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE)
 ifeq ($(OSTYPE),cmd)
@@ -641,6 +646,8 @@ ifeq ($(OSTYPE),cmd)
 	@$(SED) --in-place -e "s|\\|/|g" -e "s| |\\ |g" gnatbind_objs.lst
 else ifeq ($(OSTYPE),msys)
 	@$(SED) --in-place -e "s|\\\\\|/|g" -e "s| |\\\\\ |g" gnatbind_objs.lst
+else
+	@$(SED) --in-place -e "s| |\\\\ |g" gnatbind_objs.lst
 endif
 
 #
@@ -727,7 +734,12 @@ kernel_info : kernel_libinfo
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): ELF sections dump.")
 	@$(call echo-print,"")
+	@$(REM) readelf could be used if elftool is not available
+ifeq ($(USE_ELFTOOL),Y)
 	@$(ELFTOOL) -c dumpsections $(KERNEL_OUTFILE)
+else
+	@$(SIZE) $(KERNEL_OUTFILE)
+endif
 	@$(call echo-print,"")
 
 #
@@ -769,8 +781,8 @@ else
 	$(error Error: no valid PLATFORM, configuration not created)
 endif
 
-.PHONY : configure-1
-configure-1 : clean
+.PHONY : configure-aux
+configure-aux : clean
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): start configuration.")
 	@$(call echo-print,"")
@@ -822,7 +834,7 @@ endif
 	@$(call echo-print,"OBJDUMP SWITCHES:   $(strip $(OBJDUMP_SWITCHES_PLATFORM))")
 
 .PHONY : configure
-configure : configure-1 infodump
+configure : configure-aux infodump
 
 #
 # KERNEL_ROMFILE/postbuild/session-start/session-end/run/debug targets.
@@ -890,6 +902,25 @@ ifneq ($(DEBUG_COMMAND),)
 	-$(DEBUG_COMMAND)
 else
 	$(error Error: no DEBUG_COMMAND defined)
+endif
+
+#
+# RTS.
+#
+
+.PHONY : rts
+rts :
+ifeq ($(OSTYPE),cmd)
+	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO ( \
+          SET "MAKEFLAGS="                                  && \
+          $(MAKE_RTS) --eval="MULTILIB := %%M" configure    && \
+          $(MAKE_RTS) --eval="MULTILIB := %%M" multilib        \
+          )
+else
+	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do             \
+          MAKEFLAGS= $(MAKE_RTS) --eval="MULTILIB := $$m" configure && \
+          MAKEFLAGS= $(MAKE_RTS) --eval="MULTILIB := $$m" multilib  ;  \
+        done
 endif
 
 #

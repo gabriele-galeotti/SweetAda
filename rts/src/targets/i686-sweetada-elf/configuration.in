@@ -1,3 +1,0 @@
-
-LIBGNAT_FILES_TARGET+=("system.ads")
-

@@ -19,6 +19,9 @@
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
+# RTS_DIRECTORY
+# RTS_BASE_PATH
+# RTS
 # ADA_MODE
 # STACK_LIMIT
 # BUILD_MODE
@@ -45,7 +48,7 @@ TOOLCHAIN_PROGRAM_PREFIX := $(TOOLCHAIN_NAME)-
 # files
 TOOLCHAIN_GCC := $(TOOLCHAIN_PROGRAM_PREFIX)gcc$(EXEEXT)
 ifeq ($(OSTYPE),cmd)
-GCC_VERSION   := $(shell SET PATH=$(PATH) & $(TOOLCHAIN_GCC) -dumpversion 2> nul)
+GCC_VERSION   := $(shell SET PATH=$(PATH) && $(TOOLCHAIN_GCC) -dumpversion 2> nul)
 else
 GCC_VERSION   := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) -dumpversion 2> /dev/null)
 endif
@@ -63,9 +66,11 @@ endif
 # GCC_MULTIDIR is the multilib directory inside the library search directory
 # NOTE: this is different from "-print-multi-lib", which prints all multilibs
 ifeq ($(OSTYPE),cmd)
+GCC_MULTILIBS   := $(shell SET PATH=$(PATH) & $(TOOLCHAIN_GCC) -print-multi-lib 2> nul)
 GCC_MULTIDIR    := $(shell SET PATH=$(PATH) & $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-multi-directory 2> nul)
 LIBGCC_FILENAME := $(shell SET PATH=$(PATH) & $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-libgcc-file-name 2> nul)
 else
+GCC_MULTILIBS   := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) -print-multi-lib 2> /dev/null)
 GCC_MULTIDIR    := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-multi-directory 2> /dev/null)
 LIBGCC_FILENAME := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-libgcc-file-name 2> /dev/null)
 endif
@@ -145,9 +150,6 @@ ADAC          += --RTS="$(RTS_PATH)"
 GNATLS        += --RTS="$(RTS_PATH)"
 GNATMAKE      += --RTS="$(RTS_PATH)"
 GNATBIND      += --RTS="$(RTS_PATH)"
-
-# GPRbuild executable
-GPRBUILD := gprbuild$(EXEEXT)
 
 ################################################################################
 #                                                                              #
@@ -350,7 +352,9 @@ CC_SWITCHES_DEFAULT   += $(OPTIMIZATION_SWITCHES)
 #                                                                              #
 ################################################################################
 
--include $(RTS_ROOT_PATH)/Makefile.rts.in
+-include $(RTS_DIRECTORY)/$(RTS)/$(TOOLCHAIN_NAME)/Makefile.rts.in
+export ADAC_SWITCHES_RTS
+
 ADAC_SWITCHES_DEFAULT += $(ADAC_SWITCHES_RTS)
 CC_SWITCHES_DEFAULT   += $(CC_SWITCHES_RTS)
 
@@ -450,8 +454,6 @@ endif
 # Required for output of assembler listings and expanded Ada code.
 #
 
-GCC_WRAPPER := $(TOOLCHAIN_PROGRAM_PREFIX)gcc-wrapper$(EXEEXT)
-
 # enable verbose assembler output in GCC wrappers (should begin with "-a")
 GCC_WRAPPER_ASSEMBLER_OUTPUT := -adghlmns
 export GCC_WRAPPER_ASSEMBLER_OUTPUT
@@ -464,8 +466,6 @@ CC   += -wrapper "$(GCC_WRAPPER)"
 # Required for "brief-mode" echoed commands and Makefile timestamps to trigger
 # Ada binding.
 #
-
-GNAT_WRAPPER := $(TOOLCHAIN_PROGRAM_PREFIX)gnat-wrapper$(EXEEXT)
 
 # VERBOSE for GNAT wrapper
 GNAT_WRAPPER_VERBOSE := $(VERBOSE)
@@ -490,6 +490,9 @@ endif
 export GCC_WRAPPER_TIMESTAMP_FILENAME
 export GNAT_WRAPPER_TIMESTAMP_FILENAME
 
+GNAT_WRAPPER_GCC_EXECUTABLE := $(TOOLCHAIN_PREFIX)/bin/$(TOOLCHAIN_GCC)
+export GNAT_WRAPPER_GCC_EXECUTABLE
+
 GNATMAKE += --GCC="$(GNAT_WRAPPER)" -cargs -wrapper "$(GCC_WRAPPER)" -margs
 
 # compilation debugging
@@ -505,6 +508,6 @@ GNATMAKE += --GCC="$(GNAT_WRAPPER)" -cargs -wrapper "$(GCC_WRAPPER)" -margs
 # of spurious warnings
 ADAC_GNATBIND := $(filter-out -gnatwu -gnatya -gnatyb -gnatyM$(MLL) -gnatyu,$(ADAC))
 
-# elftool
-ELFTOOL := elftool$(EXEEXT)
+# GPRbuild executable
+GPRBUILD := gprbuild$(EXEEXT)
 

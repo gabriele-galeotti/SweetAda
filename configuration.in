@@ -18,7 +18,7 @@ else ifeq ($(OSTYPE),msys)
   #
   # MSYS2
   #
-  TOOLCHAIN_PREFIX := /c/Program Files/SweetAda
+  TOOLCHAIN_PREFIX := C:/Program Files/SweetAda
   TCLSH            := $(TOOLCHAIN_PREFIX)/bin/tclsh86.exe
 else ifeq ($(OSTYPE),darwin)
   #
@@ -68,7 +68,9 @@ endif
 
 #USE_CLIBRARY := Y
 
-#BUILD_MODE := GPR
+BUILD_MODE := GPR
 
 OPTIMIZATION_LEVEL := 1
+
+USE_ELFTOOL := Y
 
