@@ -19,6 +19,8 @@
 # ECHO
 # RM
 # SED
+# CPU
+# CPU_MODEL
 # TOOLCHAIN_NAME
 # TOOLCHAIN_ADAC
 # TOOLCHAIN_CC
@@ -44,7 +46,7 @@ MKDIR := mkdir -p
 RMDIR := rm -f -r
 endif
 
-TARGET := $(TOOLCHAIN_NAME)
+TARGET := $(CPU)
 
 ifeq ($(OSTYPE),cmd)
 MULTILIB_DIRECTORY := $(shell $(ECHO) $(MULTILIB)| $(SED) -e "s|;.*$$||")
@@ -57,8 +59,8 @@ endif
 # assemble RTS paths
 RTS_SOURCE_PATH            := ./src/$(RTS)
 RTS_SOURCE_PATH_TARGET     := ./src/targets/$(TARGET)
-ADALIB_PATH                := ./$(RTS)/$(TARGET)/$(MULTILIB_DIRECTORY)/adalib
-ADAINCLUDE_PATH            := ./$(RTS)/$(TARGET)/$(MULTILIB_DIRECTORY)/adainclude
+ADALIB_PATH                := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adalib
+ADAINCLUDE_PATH            := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adainclude
 ifeq ($(OSTYPE),cmd)
 RTS_SOURCE_PATH_CMD        := $(shell $(ECHO) $(RTS_SOURCE_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
 RTS_SOURCE_PATH_TARGET_CMD := $(shell $(ECHO) $(RTS_SOURCE_PATH_TARGET)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
@@ -72,7 +74,7 @@ AR     := $(TOOLCHAIN_AR)
 RANLIB := $(TOOLCHAIN_RANLIB)
 
 ADAC_SWITCHES :=
-ADAC_SWITCHES += --RTS="$(SWEETADA_PATH)"/rts/$(RTS)/$(TARGET)/$(MULTILIB_DIRECTORY)
+ADAC_SWITCHES += --RTS="$(SWEETADA_PATH)"/rts/$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)
 ADAC_SWITCHES += $(MULTILIB_SWITCHES)
 ifeq      ($(ADA_MODE),ADA95)
 ADAC_SWITCHES += -gnat95

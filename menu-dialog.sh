@@ -191,6 +191,11 @@ case $1 in
     PLATFORM=
     SUBPLATFORM=
     ;;
+  "rts")
+    "${MAKE}" ${MAKE_DEBUG_OPTIONS} rts 2> make.errors.log | tee make.log
+    exit_status=${PIPESTATUS[0]}
+    log_build_errors
+    ;;
   "configure")
     "${MAKE}" ${MAKE_DEBUG_OPTIONS} configure 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
@@ -260,6 +265,7 @@ printf "%s\n" "-h = help"
 printf "%s\n" "-p = pause after execution"
 printf "%s\n" "actions:"
 printf "%s\n" " createkernelcfg"
+printf "%s\n" " rts"
 printf "%s\n" " configure"
 printf "%s\n" " all"
 printf "%s\n" " kernel"
@@ -307,7 +313,7 @@ PLATFORM=
 SUBPLATFORM=
 CPU=
 
-ACTIONS="createkernelcfg configure all kernel postbuild session-start session-end run debug clean distclean"
+ACTIONS="createkernelcfg rts configure all kernel postbuild session-start session-end run debug clean distclean"
 ACTION=""
 PAUSE=""
 

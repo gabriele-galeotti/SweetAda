@@ -147,7 +147,7 @@ CLEAN_OBJECTS        :=
 CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst *.map *.o *.out *.srec *.tmp
 DISTCLEAN_OBJECTS    :=
 
-PLATFORM_GOALS := infodump configure all $(KERNEL_BASENAME) postbuild session-start session-end run debug
+PLATFORM_GOALS := infodump rts configure all $(KERNEL_BASENAME) postbuild session-start session-end run debug
 
 ################################################################################
 #                                                                              #

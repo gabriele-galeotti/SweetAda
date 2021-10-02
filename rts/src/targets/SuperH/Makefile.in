@@ -1,0 +1,36 @@
+
+#
+# SuperH floating point issues (e.g., SH7032).
+#
+# s-scaval.adb:103:07: warning: "IV_Ilf" overlays smaller object
+# s-scaval.adb:103:07: warning: program execution may be erroneous
+# s-scaval.adb:103:07: warning: size of "IV_Ilf" is 64
+# s-scaval.adb:103:07: warning: size of "IS_Ilf" is 32
+# s-scaval.adb:104:07: warning: "IV_Ill" overlays smaller object
+# s-scaval.adb:104:07: warning: program execution may be erroneous
+# s-scaval.adb:104:07: warning: size of "IV_Ill" is 96
+# s-scaval.adb:104:07: warning: size of "IS_Ill" is 64
+#
+
+ifeq ($(RTS),sfp)
+ifeq ($(CPU_MODEL),SH7032)
+LIBGNAT_SRCS := $(filter-out s-scaval.adb s-scaval.ads,$(LIBGNAT_SRCS))
+endif
+endif
+LIBGNAT_SRCS += system.ads
+
+configure-rts-target :
+ifeq ($(OSTYPE),cmd)
+	$(PROCESSCFG) $(RTS_SOURCE_PATH_TARGET_CMD)/system.ads.in $(ADAINCLUDE_PATH_CMD)/system.ads
+else
+	$(PROCESSCFG) $(RTS_SOURCE_PATH_TARGET)/system.ads.in $(ADAINCLUDE_PATH)/system.ads
+endif
+ifneq (,$(filter $(OSTYPE),cmd msys))
+	$(DOS2UNIX) $(ADAINCLUDE_PATH)/system.ads $(ADAINCLUDE_PATH)/system.ads
+endif
+ifeq ($(OSTYPE),cmd)
+	$(CP) $(RTS_SOURCE_PATH_TARGET_CMD)\Makefile.rts.in $(RTS)\$(TOOLCHAIN_NAME)
+else
+	$(CP) $(RTS_SOURCE_PATH_TARGET)/Makefile.rts.in ./$(RTS)/$(TOOLCHAIN_NAME)/
+endif
+
