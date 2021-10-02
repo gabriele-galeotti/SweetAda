@@ -61,7 +61,7 @@ package body BSP is
       -------------------------------------------------------------------------
       declare
          Value       : Unsigned_32;
-         Delay_Count : constant := 300000;
+         Delay_Count : constant := 300_000;
       begin
          Value := 0;
          LEDs_Dir := 16#FFFF_FFFF#;

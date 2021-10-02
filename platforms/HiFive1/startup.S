@@ -24,7 +24,9 @@ _start:
                 li      t0,0xb
                 csrrc   t1,mstatus,t0
 
-                // setup stack
+                //
+                // Setup stack.
+                //
                 la      sp,kernel_stack
 
                 //

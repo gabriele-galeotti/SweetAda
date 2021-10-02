@@ -51,7 +51,7 @@ package body BSP is
    ----------------------------------------------------------------------------
 
    procedure Console_Putchar (C : in Character) is
-      Delay_Count : constant := 30000;
+      Delay_Count : constant := 30_000;
    begin
       MMIO.Write_U8 (To_Address (NETARM.SERTX), Bits.To_U8 (C));
       for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;

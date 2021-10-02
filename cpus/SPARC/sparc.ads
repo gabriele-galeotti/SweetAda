@@ -107,7 +107,7 @@ package SPARC is
    procedure TBR_Set (TBR_Address : in System.Address);
 
    ----------------------------------------------------------------------------
-   -- Irq handling
+   -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
    subtype Irq_State_Type is Natural;
