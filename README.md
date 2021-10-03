@@ -3,6 +3,16 @@
 
 Latest news:
 
+02/10/2021
+- heavily changes in the Makefile build system: now you can build both SweetAda
+  and the RTS
+- Windos cmd.exe and MSYS environments are now independent, and do not require
+  support (apart the make and sed utilities)
+- SweetAda can be used with a generic GNU toolchain, you have to build only
+  the wrappers, which are provided in the form of simple sources in the libutils
+  directory
+- many bugs corrected, cosmetics changes and so on
+
 18/08/2021
 - compiler warning and style switches have a separate file to be included in
   in the master Makefile, in order to increase handling and readability
