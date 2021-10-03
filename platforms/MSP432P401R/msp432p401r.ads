@@ -39,7 +39,7 @@ package MSP432P401R is
       Import     => True,
       Convention => Ada;
 
-   PORT_BASE : constant := 16#40004C00#;
+   PORT_BASE : constant := 16#4000_4C00#;
 
    PAOUT_L : aliased Unsigned_8 with
       Address    => To_Address (PORT_BASE + 16#02#),
