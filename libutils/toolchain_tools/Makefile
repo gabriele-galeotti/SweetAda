@@ -37,7 +37,7 @@ endif
 ifeq ($(COMPILE),osx)
 CC            := /usr/x86_64-apple-darwin15/bin/x86_64-apple-darwin15-gcc
 CC_SWITCHES   := -g -std=c99 -Wall
-LD_SWITCHES   := -g
+LD_SWITCHES   := -g -static-libgcc -static-libstdc++
 LIBELF        := /usr/x86_64-apple-darwin15/x86_64-apple-darwin15/usr/local/lib/libelf.a
 LIBWINPTHREAD :=
 endif
