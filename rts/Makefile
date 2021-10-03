@@ -46,6 +46,14 @@ MKDIR := mkdir -p
 RMDIR := rm -f -r
 endif
 
+ifeq ($(TOOLCHAIN_NAME),)
+$(error Error: no valid TOOLCHAIN_NAME)
+endif
+
+ifeq ($(RTS),)
+$(error Error: no valid RTS)
+endif
+
 TARGET := $(CPU)
 
 ifeq ($(OSTYPE),cmd)

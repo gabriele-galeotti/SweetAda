@@ -147,7 +147,7 @@ CLEAN_OBJECTS        :=
 CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst *.map *.o *.out *.srec *.tmp
 DISTCLEAN_OBJECTS    :=
 
-PLATFORM_GOALS := infodump rts configure all $(KERNEL_BASENAME) postbuild session-start session-end run debug
+PLATFORM_GOALS := infodump configure all $(KERNEL_BASENAME) postbuild session-start session-end run debug
 
 ################################################################################
 #                                                                              #
@@ -349,19 +349,26 @@ ifneq ($(PLATFORM),)
 # platform known
 PLATFORM_DIRECTORY := $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
 -include $(PLATFORM_DIRECTORY)/configuration.in
-ifneq ($(CPU),)
-# CPU known
-CPU_DIRECTORY := $(CPU_BASE_DIRECTORY)/$(CPU)
--include $(CPU_DIRECTORY)/configuration.in
-endif
--include Makefile.tc.in
-# now everything about the toolchain is known
 else
 # platform not known, output an error message
 ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 $(error Error: no valid PLATFORM)
 endif
 endif
+
+ifneq ($(CPU),)
+# CPU known
+CPU_DIRECTORY := $(CPU_BASE_DIRECTORY)/$(CPU)
+-include $(CPU_DIRECTORY)/configuration.in
+endif
+
+ifeq ($(MAKECMDGOALS),rts)
+ifeq ($(CPU),)
+$(error Error: no valid CPU)
+endif
+endif
+
+-include Makefile.tc.in
 
 # high-precedence include directories
 ifneq ($(PLATFORM),)

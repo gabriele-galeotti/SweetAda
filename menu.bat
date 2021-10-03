@@ -25,7 +25,6 @@ IF "%PLATFORM%"=="" CALL :setplatform
 
 SET ACTION_VALID=
 IF "%1"=="createkernelcfg" SET "ACTION_VALID=Y" & SET "PLATFORM=%PLATFORM%" & SET "SUBPLATFORM=%SUBPLATFORM%" & %MAKEEXE% createkernelcfg
-IF "%1"=="rts" SET "ACTION_VALID=Y" & %MAKEEXE% rts
 IF "%1"=="configure" SET "ACTION_VALID=Y" & %MAKEEXE% configure
 IF "%1"=="all" SET "ACTION_VALID=Y" & %MAKEEXE% all
 IF "%1"=="postbuild" SET "ACTION_VALID=Y" & %MAKEEXE% postbuild
@@ -67,7 +66,6 @@ ECHO menu.bat ^<action^>
 ECHO.
 ECHO ^<action^> is one of:
 ECHO createkernelcfg - create a project configuration
-ECHO rts             - build a RTS
 ECHO configure       - project configure
 ECHO all             - project build
 ECHO postbuild       - project postbuild

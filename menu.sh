@@ -106,7 +106,6 @@ printf "%s\n" "Usage: ${SCRIPT_FILENAME} <action>"
 printf "%s\n" ""
 printf "%s\n" "<action> is one of:"
 printf "%s\n" "createkernelcfg - create a kernel.cfg file"
-printf "%s\n" "rts             - build a RTS"
 printf "%s\n" "configure       - configure the system for a build"
 printf "%s\n" "all             - build a target"
 printf "%s\n" "postbuild       - auxiliary post-processing"
@@ -166,9 +165,6 @@ rm -f make.log make.errors.log
 case $1 in
   createkernelcfg)
     PLATFORM=${PLATFORM} SUBPLATFORM=${SUBPLATFORM} "${MAKE}" createkernelcfg
-    ;;
-  rts)
-    "${MAKE}" rts
     ;;
   configure)
     "${MAKE}" configure
