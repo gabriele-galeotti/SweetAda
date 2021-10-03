@@ -15,7 +15,6 @@
 # Environment variables:
 # OS
 # MSYSTEM
-# MSYS_INSTALL_DIR
 # TEMP
 # VERBOSE
 # PLATFORM
