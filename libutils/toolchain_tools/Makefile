@@ -15,13 +15,32 @@
 # Environment variables:
 # OS
 # MSYSTEM
+# COMPILE
 #
 
-CC          := gcc
-CC_SWITCHES := -g -std=c99 -Wall -pedantic
-LD_SWITCHES := -g
-# location of libelf library
-LIBELF      := /usr/local/lib/libelf.a
+COMPILE ?= linux
+
+ifeq ($(COMPILE),linux)
+CC            := gcc
+CC_SWITCHES   := -g -std=c99 -Wall
+LD_SWITCHES   := -g
+LIBELF        := /usr/local/lib/libelf.a
+LIBWINPTHREAD :=
+endif
+ifeq ($(COMPILE),windows)
+CC            := /usr/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-gcc
+CC_SWITCHES   := -g -std=c99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
+LD_SWITCHES   := -g -mconsole
+LIBELF        := /usr/x86_64-w64-mingw32/mingw/lib/libelf.a
+LIBWINPTHREAD := -l:libwinpthread.a
+endif
+ifeq ($(COMPILE),osx)
+CC            := /usr/x86_64-apple-darwin15/bin/x86_64-apple-darwin15-gcc
+CC_SWITCHES   := -g -std=c99 -Wall
+LD_SWITCHES   := -g
+LIBELF        := /usr/x86_64-apple-darwin15/x86_64-apple-darwin15/usr/local/lib/libelf.a
+LIBWINPTHREAD :=
+endif
 
 # detect OS type
 # detected OS names: "linux"/"cmd"/"msys"/"darwin"
@@ -68,17 +87,17 @@ all : wrappers elftool
 wrappers : gcc-wrapper gnat-wrapper
 
 gcc-wrapper : gcc-wrapper.o library.o
-	$(CC) -o $@ $(LD_SWITCHES) $^
+	$(CC) -o $@ $(LD_SWITCHES) $^ $(LIBWINPTHREAD)
 gcc-wrapper.o : gcc-wrapper.c
 	$(CC) -o $@ -c $(CC_SWITCHES) $<
 
 gnat-wrapper : gnat-wrapper.o library.o
-	$(CC) -o $@ $(LD_SWITCHES) $^
+	$(CC) -o $@ $(LD_SWITCHES) $^ $(LIBWINPTHREAD)
 gnat-wrapper.o : gnat-wrapper.c
 	$(CC) -o $@ -c $(CC_SWITCHES) $<
 
 elftool : elftool.o library.o
-	$(CC) -o $@ $(LD_SWITCHES) $^ $(LIBELF)
+	$(CC) -o $@ $(LD_SWITCHES) $^ $(LIBELF) $(LIBWINPTHREAD)
 elftool.o : elftool.c
 	$(CC) -o $@ -c $(CC_SWITCHES) $<
 
@@ -87,14 +106,23 @@ library.o : library.c
 
 .PHONY : install
 install : install-wrappers
-	$(CP) elftool$(EXEEXT) ..
+ifeq ($(OSTYPE),darwin)
+	$(CP) elftool$(EXEEXT) ../elftool-osx$(EXEEXT)
+else
+	$(CP) elftool$(EXEEXT) ../
+endif
 
 .PHONY : install-wrappers
 install-wrappers :
+ifeq ($(OSTYPE),darwin)
+	$(CP) gcc-wrapper$(EXEEXT) ../gcc-wrapper-osx$(EXEEXT)
+	$(CP) gnat-wrapper$(EXEEXT) ../gnat-wrapper-osx$(EXEEXT)
+else
 	$(CP) gcc-wrapper$(EXEEXT) ../
 	$(CP) gnat-wrapper$(EXEEXT) ../
+endif
 
 .PHONY : clean
 clean :
-	$(RM) *.o gcc-wrapper gnat-wrapper elftool
+	$(RM) *.o gcc-wrapper gcc-wrapper.exe gnat-wrapper gnat-wrapper.exe elftool elftool.exe
 
