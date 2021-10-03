@@ -52,10 +52,13 @@ toolchain_tools/elftool
 toolchain_tools/elftool.exe
 gcc-wrapper
 gcc-wrapper.exe
+gcc-wrapper-osx
 gnat-wrapper
 gnat-wrapper.exe
+gnat-wrapper-osx
 elftool
 elftool.exe
+elftool-osx
 libutils/stackusage.tcl
 
 ################################################################################
