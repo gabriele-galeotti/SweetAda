@@ -41,9 +41,9 @@ SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
 ifeq ($(ROM_BOOT),Y)
-RUN_COMMAND   := runsweetada$(EXEEXT) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f gxemul.cfg
+RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f gxemul.cfg
 else ifeq ($(CDROM_BOOT),Y)
-RUN_COMMAND   := runsweetada$(EXEEXT) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f gxemul.cfg
+RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f gxemul.cfg
 else ifeq ($(NETWORK_BOOT),Y)
 RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/bba.tcl
 endif
