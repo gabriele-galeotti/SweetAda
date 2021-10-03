@@ -1,0 +1,1218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for SweetAda.
+
+Copyright (C) 2020, 2021 Gabriele Galeotti
+ -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>SweetAda</title>
+
+<meta name="description" content="SweetAda">
+<meta name="keywords" content="SweetAda">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="#Top" rel="start" title="Top">
+<link href="#Index" rel="index" title="Index">
+<link href="dir.html#Top" rel="up" title="(dir)">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<h1 class="settitle" align="center">SweetAda</h1>
+
+
+
+
+
+
+
+<a name="Top"></a>
+<div class="header">
+<p>
+Next: <a href="#Overview" accesskey="n" rel="next">Overview</a>, Up: <a href="dir.html#Top" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="SweetAda"></a>
+<h1 class="top">SweetAda</h1>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#Overview" accesskey="1">Overview</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Overall-structure" accesskey="2">Overall structure</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Host-environment" accesskey="3">Host environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Toolchains" accesskey="4">Toolchains</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Toolchain-tools" accesskey="5">Toolchain tools</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Building-the-RTS" accesskey="6">Building the RTS</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Configuration" accesskey="7">Configuration</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Makefile-targets" accesskey="8">Makefile targets</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Ada-environment" accesskey="9">Ada environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#GPRbuild-mode">GPRbuild mode</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Building-SweetAda">Building SweetAda</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Anatomy-of-a-platform">Anatomy of a platform</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#The-core-complex">The core complex</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#LibGCC">LibGCC</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Platform-descriptions">Platform descriptions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Optimizations">Optimizations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#IOEMU-scripting">IOEMU scripting</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Index">Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<a name="Overview"></a>
+<div class="header">
+<p>
+Next: <a href="#Overall-structure" accesskey="n" rel="next">Overall structure</a>, Previous: <a href="#Top" accesskey="p" rel="prev">Top</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Overview-1"></a>
+<h2 class="chapter">1 Overview</h2>
+<a name="index-Overview"></a>
+
+<p>Welcome to SweetAda.
+</p>
+<p>SweetAda is an Ada-based development environment suitable to build lightweight applications
+in CPU-driven electronic devices. Developed from scratch with simplicity in mind,
+SweetAda tries to fill the gap between a simple, yet reliable, software/firmware control
+system and big, complex, OS-based multitasked environment.
+</p>
+<hr>
+<a name="Overall-structure"></a>
+<div class="header">
+<p>
+Next: <a href="#Host-environment" accesskey="n" rel="next">Host environment</a>, Previous: <a href="#Overview" accesskey="p" rel="prev">Overview</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Overall-structure-1"></a>
+<h2 class="chapter">2 Overall structure</h2>
+
+<p>The SweetAda system is composed of a top-level directory which hold various directories
+and software components. They are:
+</p><ul>
+<li> application<br>
+generic user code
+</li><li> clibrary<br>
+small-size C library
+</li><li> core<br>
+machine-independent core software
+</li><li> cpus<br>
+machine-dependent CPU low-level library
+</li><li> drivers<br>
+I/O and peripherals components
+</li><li> freeze<br>
+test tool to compare two builds
+</li><li> libutils<br>
+script utilities
+</li><li> modules<br>
+various high-level libraries
+</li><li> obj<br>
+build system output files
+</li><li> platforms<br>
+platform-dependent low-level library
+</li><li> rts<br>
+Ada run-time
+</li><li> share<br>
+common auxiliary files
+</li></ul>
+
+<hr>
+<a name="Host-environment"></a>
+<div class="header">
+<p>
+Next: <a href="#Toolchains" accesskey="n" rel="next">Toolchains</a>, Previous: <a href="#Overall-structure" accesskey="p" rel="prev">Overall structure</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Host-environment-1"></a>
+<h2 class="chapter">3 Host environment</h2>
+<a name="index-Host-environment"></a>
+
+<p>SweetAda is meant to run on major mainstream environments, i.e., POSIX/Linux, Windows, or OS X.
+The host machine should be able to execute 64-bit executables. SweetAda also supports whitespaces
+in filepaths although this is considered bad practice.
+</p>
+<p>In the following chapters, we will analyze operations in a POSIX machine.
+</p>
+<p>It is highly advisable to perform commands in the SweetAda top-level directory (which exists
+as a variable SWEETADA_PATH in the build system). The Makefile machinery is able to infer the
+SweetAda path from the context, but this feature relies on standard Makefile idioms which could
+be invalidated by an &quot;esotic&quot; environment setup.
+</p>
+<p>Hence, if you want to integrate SweetAda in a GUI, remember to change the working directory before
+performing an action.
+</p>
+<p>SweetAda requires some support from the OS environment. Apart the standard low-level utilities,
+like programs to copy files and usual filesystem operations, the GNU make and GNU sed utilities
+are required in order to perform basic activities. If you do not have them available, please
+install them from your package provider, or download them form the SweetAda SourceForge repository.
+Remember to put the executable path in the visible part of the PATH environment variable which
+is parsed by the shell.
+</p>
+<p>SweetAda requires (although they are not really strictly necessary from a system standpoint)
+three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility. They are
+provided as source programs to be built in the libutils/toolchain_tools directory. You need
+a system GCC compiler available online if you want to change their behaviour (which is not
+recommended, though). However, a standard system are not expected to have them built from sources,
+because the SweetAda package already provide them as executable installed.
+</p>
+<p>The GCC wrapper is a small piece of code between the compiler driver and the compiler
+executable. It analyzes command line parameters, selects verbosity level and instructs
+the compiler executable to generate additional output files, like assembler listing and
+Ada expanded source code. There is a companion wrapper, the &quot;GNAT wrapper&quot;, but its use
+is limited to print brief informations when GNATMAKE processes with&rsquo;ed units.
+</p>
+<p>elftool is a small utility that dumps the output object code. It is used mainly for a
+clean visual output in order to easily parse ELF sections. elftool is anyway optional,
+and you can avoid its use by setting a variable in the top-level configuration.in file,
+so the stantdard &quot;size&quot; toolchain executable is thus used.
+</p>
+<p>runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets.
+</p>
+<p>While in some environments (Linux, and, if properly configured, OS X) the make utility is
+normally visible in a shell and there is no need to specify its location in the filesystem,
+in Windows and in an OS X without system development features installed, the make executable
+is missing.
+</p>
+<p>In order to perform actions, the make utility should be invoked, followed by the
+target, like in:
+</p>
+<div class="example">
+<pre class="example">$ make configure
+</pre></div>
+
+<p>(provided your working directory is the SweetAda top-level-directory).
+</p>
+<p>The two shell scripts menu.sh (Bash) and menu.bat (Windows cmd.exe) are useful to ease
+the invocation of the make executable provided in the toolchain package. Thus, eventually
+adjust the script near the &quot;Main loop&quot; entry point, as shown in the next lines:
+</p>
+<div class="example">
+<pre class="example">menu.bat:
+
+REM defaults to standard installation directory, see configuration.in
+SET MAKEEXE=&quot;C:\Program Files\SweetAda&quot;\bin\make.exe                  &lt;--
+</pre></div>
+
+<div class="example">
+<pre class="example">menu.sh:
+
+...
+  darwin)
+    # use SweetAda make (try a standard installation prefix)
+    SWEETADA_MAKE=/opt/sweetada/bin/make                     &lt;--
+...
+  msys)
+    # use SweetAda make (try a standard installation prefix)
+    SWEETADA_MAKE=&quot;/c/Program Files/SweetAda/bin/make.exe&quot;   &lt;--
+</pre></div>
+
+<p>Once the script is properly adjusted, just execute the script by specifying the desired
+action, like as a Makefile invocation:
+</p>
+<div class="example">
+<pre class="example">$ ./menu.sh configure
+</pre></div>
+
+<p>or:
+</p>
+<div class="example">
+<pre class="example">&gt; menu.bat configure
+</pre></div>
+
+<p>menu-dialog.sh is a Bash shell front-end for machines which have the dialog utility
+available.
+</p>
+<hr>
+<a name="Toolchains"></a>
+<div class="header">
+<p>
+Next: <a href="#Toolchain-tools" accesskey="n" rel="next">Toolchain tools</a>, Previous: <a href="#Host-environment" accesskey="p" rel="prev">Host environment</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Toolchains-1"></a>
+<h2 class="chapter">4 Toolchains</h2>
+<a name="index-toolchains"></a>
+<a name="index-elftool"></a>
+<a name="index-GCC-wrapper"></a>
+<a name="index-GNAT-wrapper"></a>
+<a name="index-runsweetada"></a>
+
+<p>The SweetAda system is distributed with GNU toolchains for every CPUs it can handle.
+Altough toolchains are quite generic, SweetAda does not employ neither the whole standard
+GNU FSF RTS source package nor the LibGCC library.
+</p>
+<p>The SweetAda RTS is a ZFP/SFP run-time that avoid to include subprograms from the original
+implementation, which is quite big and requires an underneath operating system.
+</p>
+<p>The LibGCC library, which is present like in every other standard toolchain, is bypassed
+and partially reimplemented in Ada. Only some low-level machine-language files are required,
+which are distributed in a separate package. This way, you have a system which is under
+your complete control at the source level, and every bit of information is known.
+Code output by the build system is thus coming directly from the compiler, without extra
+source files inclusion. Anyway, the standard LibGCC could be selected with a configuration
+variable.
+</p>
+<hr>
+<a name="Toolchain-tools"></a>
+<div class="header">
+<p>
+Next: <a href="#Building-the-RTS" accesskey="n" rel="next">Building the RTS</a>, Previous: <a href="#Toolchains" accesskey="p" rel="prev">Toolchains</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Toolchain-tools-1"></a>
+<h2 class="chapter">5 Toolchain tools</h2>
+<a name="index-toolchain-wrappers"></a>
+<a name="index-elftool-1"></a>
+
+<p>SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
+</p>
+<p>SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper, that could be
+built from sources if you have a C compiler available online. The current setup is for a
+system GCC compiler.
+</p>
+<p>Go into the directory libutils/toolchain_tools and edit the Makefile by adjusting some
+variables:
+</p>
+<ul>
+<li> CC               := gcc # C compiler
+</li><li> LIBELF           := /usr/local/lib/libelf.a # location of libelf library
+</li></ul>
+
+<p>For elftool, you sould have libelf installed in your environment setup, but it is not
+strictly needed. Remember that GNU toolchain installation prefix refers to the whole
+hierarchy, so do not add a trailing &quot;/bin&quot;.
+</p>
+<p>Then, after a proper Makefile setup:
+</p>
+<div class="example">
+<pre class="example">$ make wrappers
+$ make install-wrappers
+</pre></div>
+
+<p>will build and install wrappers,
+</p>
+<div class="example">
+<pre class="example">$ make all
+$ make install
+</pre></div>
+
+<p>will build and install wrappers and elftool.
+</p>
+<p>This procedure should work also on a Windows cmd.exe shell, provided you have a Make
+utility available online.
+</p>
+<hr>
+<a name="Building-the-RTS"></a>
+<div class="header">
+<p>
+Next: <a href="#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="#Toolchain-tools" accesskey="p" rel="prev">Toolchain tools</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Building-the-RTS-1"></a>
+<h2 class="chapter">6 Building the RTS</h2>
+<a name="index-RTS"></a>
+
+<p>The very first action to perform after an installation is to build the Ada Run-Time
+System.
+</p>
+<p>The RTS is being built by means of a makefile target:
+</p>
+<div class="example">
+<pre class="example">$ CPU=&lt;cpu&gt; make rts
+</pre></div>
+
+<p>This will build the RTS. Once you have built the RTS, it is persistent, and you don&rsquo;t need
+to repeat this operation, unless you modify RTS source files.
+</p>
+<p>Supported CPUs are in the rts/src/targets directory. Every CPU directory contains
+some makefile fragments, and the Makefile.rts.in, which is used to state GCC switches
+used during the compilation. Remember that no CPU switches should be used, because the
+build system compiles the RTS for every CPU configuration, so you should specify only
+global features, like, e.g., use of global pointers or object symbol naming.
+</p>
+<p>SweetAda comes with two RTSes, a ZFP and an SFP. The RTS which will be used is
+configurable in the top-level configuration.in file. A proper profile should be
+coupled along the RTS type, which configures system-wide pragmas (wich are in turn
+configurable by means of the gnat.adc.in configuration template).
+</p>
+<hr>
+<a name="Configuration"></a>
+<div class="header">
+<p>
+Next: <a href="#Makefile-targets" accesskey="n" rel="next">Makefile targets</a>, Previous: <a href="#Building-the-RTS" accesskey="p" rel="prev">Building the RTS</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Configuration-1"></a>
+<h2 class="chapter">7 Configuration</h2>
+<a name="index-configuration"></a>
+
+<p>SweetAda configuration is managed by a central Makefile, which loads configuration files
+in sequential steps.
+</p>
+<p>Configuration of SweetAda is done mainly with the help of two configuration files: &quot;main&quot;
+(or &quot;system&quot;) configuration file, and a &quot;platform&quot; configuration file. The main configuration
+file (located in the top-level directory) defines general, target-agnostic characteristics,
+like stating Ada95 or Ada2012 mode, the optimization level, and so on; the platform configuration
+file (located in the platform&rsquo;s directory) defines in greater detail how the target software
+is going to be generated, and various parameters affecting low-level behaviour.
+</p>
+<p>Both files are, as a matter of fact, Makefile fragments that are going to be incorporated in
+the build system at compile-time. Being the SweetAda build system based on GNU Make, many
+facilitations are possible (like variable substitutions) and, if correctly arranged,
+configuration items can be made modular and easily changeable.
+</p>
+<p>The final output product of SweetAda compilation is the file &quot;kernel.o&quot;. Its format depends
+on the type of toolchain used, but it is almost exclusively an ELF-class object file.
+</p>
+<p>NOTE: The SweetAda build machinery is Makefile-based, but you can also use an alternate
+GPR-style build model &ndash; this is enabled by a configuration variable.
+</p>
+<p>The master Makefile try to detect the type of machine it is running on, and configuration
+of SweetAda begins by reading the system configuration file &quot;configuration.in&quot;.
+</p>
+<p>Essential variables are set to a default value, like the path to the toolchain prefix,
+the build model, RTS type, profile, and so on.
+</p>
+<p>One important aspect is that configuration variables could be introduced (and could
+override pre-defined ones) at various stages of the configuration. Obviously, further
+and more specific configuration files are loaded in sequence from the very few basic
+information found in the top-level configuration.in. 
+</p>
+<p>Then, if it exists, a &quot;kernel.cfg&quot; file from the top-level directory is loaded.
+kernel.cfg contains the hardware platform which will be the build target. If kernel.cfg
+is missing, you can specify the platform (and eventually the subplatform) by assigning
+the shell environment variables PLATFORM and SUBPLATFORM, which in that case take
+precedence over an existing file. PLATFORM should be a valid directory in the &quot;platforms&quot;
+subdirectory, and SUBPLATFORM should be a valid subdirectory of the PLATFORM directory,
+named &quot;platform-&lt;SUBPLATFORM&gt;&quot;.
+</p>
+<div class="example">
+<pre class="example">$ PLATFORM=PC-x86 SUBPLATFORM=QEMU-ROM make createkernelcfg
+</pre></div>
+
+<p>NOTE: for a cmd.exe shell you have to use a &quot;SET&quot; command.
+</p>
+<p>Once you choose a platform, you can create the kernel.cfg with the Makefile auxiliary
+target &quot;createkernelcfg&quot;.
+</p>
+<p>Following this command, you can check the presence of a correct kernel.cfg file.
+The contents of kernel.cfg will be something like:
+</p>
+<div class="example">
+<pre class="example">PLATFORM := PC-x86
+SUBPLATFORM := QEMU-ROM
+</pre></div>
+
+<p>NOTE: You can create the kernel.cfg by hand and skip the createkernelcfg Makefile target.
+</p>
+<p>Once kernel.cfg does exist, it will be used until you issue a &quot;make all-clean&quot; command,
+which erases every configuration file and objects from last compilation.
+</p>
+<p>NOTE: Issuing a new configuration erases the old one by executing an implicit &quot;all-clean&quot;
+Makefile target.
+</p>
+<p>At this point, you should build the RTS.
+See <a href="#Building-the-RTS">Building the RTS</a>
+</p>
+<p>After the top-level configuration file is loaded, and thus Makefile knows the platform,
+the configuration.in found in that directory is loaded (e.g., ./platforms/ML605/configuration.in).
+Here you can specify nearly everything about the target machine, like the CPU model,
+fine-tuning compiler switches, run- or debug-related auxiliary scripts, and so on.
+If you need to create some information that will be used by external scripts, this is right place.
+Pay attention to export every variable you are creating that is not known by the
+build system, otherwise the external scripts are not able to access it.
+</p>
+<div class="example">
+<pre class="example">CPU       := x86
+CPU_MODEL := i586
+
+GCC_SWITCHES_PLATFORM     += -march=i586 -Wa,-march=i586
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+
+USE_CLIBRARY := Y
+
+USE_APPLICATION := test-PC-x86
+
+ADDITIONAL_OBJECTS += ctest
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := $(RUNSWEETADA) -k &quot;$(SWEETADA_PATH)&quot; -p &quot;$(PLATFORM_DIRECTORY)&quot; -f qemu.cfg
+DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
+
+export WIRESHARK := /usr/bin/wireshark
+</pre></div>
+
+<p>NOTE: In the example above, we create and export the variable WIRESHARK, which will be used
+by the launch script in order to do monitoring of network activity.
+</p>
+<p>Having knowledge of the hardware configuration, then the configuration.in in the
+appropriate CPU hierarchy is loaded (e.g., cpus/MIPS/configuration.in).
+</p>
+<p>NOTE: Once the CPU is well defined, the right files can be taken into account. The standard
+toolchain is selected by default, but you can pick another one by, e.g., overriding
+the variable TOOLCHAIN_NAME_&lt;CPU&gt; in the configuration.in of the platform directory.
+</p>
+<p>Then, the top-level &quot;Makefile.tc.in&quot; file is taken into account. This a very
+important part of the global configuration scenario, since it is responsible of the
+setup parameters for the compiler toolchain, compilation switches, warning switches
+and executable paths. If you want to suppress checks, warnings, or change programming
+style layout, you can comment/uncomment the appropriate compiler switch.
+</p>
+<p>Now that the configuration setup is complete, the build system is ready for the next
+step, the configuration target proper.
+</p>
+<div class="example">
+<pre class="example">$ make configure
+</pre></div>
+
+<p>The &quot;configure&quot; Makefile target will call the homonym target in every sub-Makefile
+concerned, e.g., &quot;core&quot;, &quot;modules&quot;, &quot;drivers&quot;, and the platform. This way, fixing of
+files that should be included in the build or a pre-processing from a template file
+can take place. As an example, files from SUBPLATFORM specific directory could be
+symlinked in the platform set of files, the ?gnat.adc? file will be created from the
+template file &quot;gnat.adc.in&quot;, and so on.
+</p>
+<p>The build system will reply by writing a brief configuration status:
+</p>
+<div class="example">
+<pre class="example">Configuration parameters:
+PLATFORM:           PC-x86
+SUBPLATFORM:        QEMU-ROM
+CPU:                x86
+CPU MODEL:          i586
+OSTYPE:             linux
+SWEETADA PATH:      /root/project/sweetada
+TOOLCHAIN PREFIX:   /opt/sweetada
+TOOLCHAIN NAME:     i686-sweetada-elf
+RTS ROOT PATH:      /root/project/sweetada/rts/sfp/i686-sweetada-elf
+RTS PATH:           /root/project/sweetada/rts/sfp/i686-sweetada-elf/.
+RTS:                sfp
+PROFILE:            sfp
+USE LIBADA:         Y
+BUILD MODE:         MAKEFILE
+OPTIMIZATION LEVEL: 1
+MAKE:               make
+GCC VERSION:        11.1.0
+GCC SWITCHES:       -march=i586 -Wa,-march=i586
+GCC MULTIDIR:       .
+LD SCRIPT:          linker.lds
+LD SWITCHES:        
+OBJCOPY SWITCHES:   --output-target=binary --gap-fill=0x00
+OBJDUMP SWITCHES:
+</pre></div>
+
+<p>The SweetAda Makefile build system can be queried. The special Makefile target
+&quot;probevariable&quot; outputs the value of a configuration variable, so, e.g., you can execute a
+command line like:
+</p>
+<div class="example">
+<pre class="example">VERBOSE= PROBEVARIABLE=PROFILE make -s probevariable
+</pre></div>
+
+<p>and the build system will print the value associated with the variable PROFILE.
+A script could intercept the output by means of a redirection and use this information.
+Note that the VERBOSE variable is set empty and the the &quot;-s&quot; option is passed down
+to the Makefile so the output is not cluttered with other non-interesting output.
+</p>
+<hr>
+<a name="Makefile-targets"></a>
+<div class="header">
+<p>
+Next: <a href="#Ada-environment" accesskey="n" rel="next">Ada environment</a>, Previous: <a href="#Configuration" accesskey="p" rel="prev">Configuration</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Makefile-targets-1"></a>
+<h2 class="chapter">8 Makefile targets</h2>
+<a name="index-Makefile-targets"></a>
+
+<p>Following a &quot;make createkernelcfg&quot; and &quot;make configure&quot;, the build system is ready
+to build SweetAda. The next phases will be a &quot;make all&quot; (or &quot;make kernel&quot;) and,
+optionally, &quot;make postbuild&quot;. Then SweetAda could be executed by means of the &quot;make run&quot;
+or &quot;make debug&quot; commands.
+</p>
+<p>Putting it all together, we can summarize the following fundamental steps:
+</p>
+<p>1) make createkernelcfg<br>
+2) make configure<br>
+3) make all<br>
+4) make postbuild (if needed)<br>
+5) make run/make debug<br>
+</p>
+<p>Makefile targets have the following properties:
+</p><ul>
+<li> idempotent
+</li><li> the previous target is a prerequisite for the next
+</li><li> &quot;make clean&quot; deletes all object files generated
+</li><li> &quot;make distclean&quot; invalidates the whole configuration
+</li></ul>
+
+<p>Obviously, if you change something in configuration.in files (say, a compiler switch or
+the RTS profile), then you should do a &quot;make clean&quot; to rebuild everything. Other heavy
+changes may requires a re-configuration from the scratch.
+</p>
+<p>Makefile targets have also a &quot;localization&quot;. Although handled by the master Makefile,
+the functional part is generally encoded in sub-Makefiles rules, either one in a directory
+like core, or the cpu one, or the platform one. For example, &quot;make configure&quot; has the
+effect of execute the &quot;configure&quot; Makefile target in every component of SweetAda (even
+if some components do not need a configuration at all). &quot;make postbuild&quot; is instead
+platform-dependent, and thus only the platform&rsquo;s sub-Makefile is called.
+</p>
+<p>If you want to perform special actions, you could place commands in the corresponding
+rule. But a non-intrusive method like calling a script in the RUN_COMMAND specification
+of the platform&rsquo;s configuration.in file could be better.
+</p>
+<hr>
+<a name="Ada-environment"></a>
+<div class="header">
+<p>
+Next: <a href="#GPRbuild-mode" accesskey="n" rel="next">GPRbuild mode</a>, Previous: <a href="#Makefile-targets" accesskey="p" rel="prev">Makefile targets</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Ada-environment-1"></a>
+<h2 class="chapter">9 Ada environment</h2>
+
+<p>The SweetAda build system try to supply a complete environment to build system code for
+a target. In order to instruct the compiler, the linker, the binder, and all accompanying
+tools, various files exist.
+</p>
+<p>Two of the most important are Makefile.tc.in and gnat.adc.in.
+</p>
+<p>Makefile.tc.in is a Makefile fragment that is loaded by the master Makefile and contains
+all compilation switches for a toolchain, i.e., warning switches, style switches and many
+others. You can selectively comment/uncomment a toolchain switch to suite your needs.
+</p>
+<p>Makefile.tc.in really should not be seen as a configuration file. Be aware that not
+all the assignments/switches are freely changeable, and many assignments are more or
+less critical to make the toolchain environment working fine. You should change only
+switches that not destroy the build flow, e.g., it is fine to comment/uncomment a warning
+switch like &quot;-gnatwz&quot; (in case you do not want messages for unchecked conversions),
+but it is not recommended to change the &quot;GCC_MULTIDIR&quot; variable, unless you known exactly
+the underlying logic behaviour.
+</p>
+<p>gnat.adc.in is a template for the system-wide Ada &quot;gnat.adc&quot; pragma profile. The pragma
+profile is specified in the top-level directory configuration.in by means of the variable
+PROFILE.
+</p>
+<p>When you select a profile, say &quot;zfp&quot;, the build machinery processes this file and outputs
+a gnat.adc that contains only the pragmas that carry the selected
+RTS PROFILE as dictated in the trailing comment. gnat.adc.in will be processed by the build system
+and a gnat.adc useable by the compiler will appear in top-level directory after a &quot;make configure&quot;.
+</p>
+<p>So, if you want to include/exclude a pragma, you have to add/remove that profile name in the
+trailing comment. As an example, let&rsquo;s say that you want to write something that forces the
+compiler to insert implicitly a rather aggressive sequence of instructions (a &quot;trampoline&quot;,
+in technical jargon). Let&rsquo;s say that you choose the &quot;sfp&quot; profile (because you have selected
+&quot;sfp&quot; as your RTS). Then, gnat.adc.in should be edited in the following way:
+</p>
+<p>before:
+</p>
+<div class="example">
+<pre class="example">pragma Restrictions (No_Implicit_Dynamic_Code);                         -- zfp sfp
+</pre></div>
+
+<p>after
+</p>
+<div class="example">
+<pre class="example">pragma Restrictions (No_Implicit_Dynamic_Code);                         -- zfp
+</pre></div>
+
+<p>This way, the gnat.adc output by the build machinery will not contain the pragma, and the
+compiler will not complain when it will hit the offending fragment of code.
+</p>
+<p>Note:
+You could edit directly the gnat.adc file output by the build system (be sure to clean and
+rebuild to make the new pragmas take effect), but the old pragma configuration will be
+reinstated if you perform a &quot;make configure&quot; action.
+</p>
+<hr>
+<a name="GPRbuild-mode"></a>
+<div class="header">
+<p>
+Next: <a href="#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a>, Previous: <a href="#Ada-environment" accesskey="p" rel="prev">Ada environment</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="GPRbuild-mode-1"></a>
+<h2 class="chapter">10 GPRbuild mode</h2>
+<a name="index-GPRbuild"></a>
+
+<p>The SweetAda build system has two different ways to manage the compilation of the final
+executable object; the standard, default one is entirely contained in the various Makefile
+files; besides, a second option exists, i,e, using a GPRbuild project file.
+</p>
+<p>This behaviour is controlled by the variable BUILD_MODE in the top-level configuration.in.
+</p>
+<p>If you specify BUILD_MODE := GPR, then the Makefile will execute the gprbuild program
+(which is a SweetAda package) whilst taking care of system code compilation. In order to do
+this, a build.gpr exists in the top-level directory, which will be completed by the
+configuration file configure.gpr. configure.gpr is emitted by the &quot;make configure&quot; command
+whichever the value of BUILD_MODE is.
+</p>
+<p>Please note that the GPRbuild mode deals only with Ada &quot;explicit&quot; files. Makefile still
+has to take care of low-level files, like assembly startup files and implicit Ada units
+that could be not referenced by your code, like memory allocation routines and exceptions
+handling. GPRbuild mode indeed manages only the major compilation and binding phase, and
+so you have to provide exactly the same sequence of make commands in order to build a
+SweetAda executable.
+</p>
+<hr>
+<a name="Building-SweetAda"></a>
+<div class="header">
+<p>
+Next: <a href="#Anatomy-of-a-platform" accesskey="n" rel="next">Anatomy of a platform</a>, Previous: <a href="#GPRbuild-mode" accesskey="p" rel="prev">GPRbuild mode</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Building-SweetAda-1"></a>
+<h2 class="chapter">11 Building SweetAda</h2>
+
+<p>Once that SweetAda is properly configured and your platform target is known, you can
+perform the build of the system:
+</p>
+<div class="example">
+<pre class="example">$ make all
+</pre></div>
+
+<p>The final product of the build will be the file &quot;kernel.o&quot;, which contains an ELF object
+image of the system code.
+</p>
+<p>After the final ELF object is created, you can execute the &quot;postbuild&quot; Makefile target,
+which extracts code/data sections from kernel.o, and produces a binary file suitable for
+ROM programming, JTAG download, and so on. This target uses the &quot;objcopy&quot; Binutils utility,
+so appropriate configuration switches could be selected by means of the OBJCOPY_SWITCHES
+variable in the platform&rsquo;s configuration.in file.
+</p>
+<p>NOTE: The postbuild target is a two-phase process. The first phase creates a binary
+files full of informations, then the postbuild target specified in the platform&rsquo;s Makefile
+is executed. This way you can customize the final binary file or take other actions,
+like add custom data, place the output file in a server?s TFTP directory, and so on.
+</p>
+<p>NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is no
+need to execute the postbuild target, because the emulator could use directly the kernel.o file.
+</p>
+<hr>
+<a name="Anatomy-of-a-platform"></a>
+<div class="header">
+<p>
+Next: <a href="#The-core-complex" accesskey="n" rel="next">The core complex</a>, Previous: <a href="#Building-SweetAda" accesskey="p" rel="prev">Building SweetAda</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Anatomy-of-a-platform-1"></a>
+<h2 class="chapter">12 Anatomy of a platform</h2>
+<a name="index-platform"></a>
+
+<p>In SweetAda a platform is a subdirectory. The platform contains all the files
+that are necessary for a target to produce an executable.
+</p>
+<p>When you are working with a platform, the master Makefile always loads configuration
+files from that directory.
+</p>
+<p>The platform&rsquo;s standard filename for a configuration file is &quot;configuration.in&quot;.
+</p>
+<p>configuration.in is a Makefile fragment that defines the fundamental characteristics
+of the target, like the CPU type, GCC compilation flags, how the build process should
+takes place, and so on. Here you can also set your own variables (remember to export
+them) to tune the build environment and specify actions. Those variables will be
+processed by the master Makefile and will be available in the platform&rsquo;s own Makefile.
+</p>
+<p>A platform should naturally contain program code files. In SweetAda, some standard
+names exist, but you are free to have whatever naming scheme you need. Nearly all
+platforms have the following files:
+</p>
+<ul>
+<li> configuration.in<br>
+the platform configuration file
+</li><li> Makefile<br>
+a Makefile which contains some standard targets that will be called from the master
+Makefile
+</li><li> startup.S<br>
+an assembler unit that should phisically setup the target and then pass control to
+the main Ada procedure (which then calls the bsp unit)
+</li><li> bsp.ad[b|s]<br>
+the Ada unit responsible for the high-level setup; ideally, the startup.S will
+take the CPU out of reset, configure it in a very basic mode and setup the stack
+before calling BSP Ada code
+</li><li> llkernel.S<br>
+here you can put exception/interrupt handling code (hence the name &quot;low-level&quot;)
+</li><li> exceptions.ad[b|s]<br>
+the Ada counterpart to llkernel.S
+</li><li> configure.ads.in, configure.h.in<br>
+these are Ada and Assembler/C files that will be processed when you issue a &quot;make
+configure&quot; (that is, after the &quot;createkernelcfg&quot; action); after being processed,
+you will find the result, in the form of configure.ads and configure.h, which have
+the proper variables put in place once that the master Makefile knows everything
+about the platform
+</li><li> platform-specific files and Ada units
+</li></ul>
+
+<p>The platform Makefile is responsible to compile all the files you need in order to
+produce a libplatform.a library that will be linked together all other object files.
+If you want to specify your own platform files, simply add them to the OBJECTS
+variable, e.g.:
+</p>
+<div class="example">
+<pre class="example">OBJECTS :=
+
+OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/mystartup.o
+
+OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/myllkernel.o
+
+</pre></div>
+
+<p>(Remember to prefix the destination directory).
+</p>
+<p>The Makefile will then load a common library Makefile (Makefile.lb.in) that will
+build the final libplatform.a archive.
+</p>
+<p>Please note that this scheme exists because the SweetAda compilation model is
+partially GNATMAKE-based, but this tool has no knowledge of which object files are
+mandatory to be linked into the final executable in order to startup the system.
+Briefly stated, everything before the main procedure is foreign code that GNATMAKE
+logic cannot have knowledge of.
+</p>
+<p>Obviously, if you want to write a unit that will be used after that Ada has took
+control, then there&rsquo;s no need to specify it in the Makefile, because GNATMAKE will
+automatically compile it during the main Ada code translation due to the with clause.
+</p>
+<p>Note:
+libplatform objects are, in SweetAda terms, the so-called &quot;implicit units&quot;, i.e.,
+objects that the Ada compilation system cannot compute during the build, by analyzing
+other compilation units. Being an implicit unit, however, does not necessarily make a
+file eligible for inclusion in the variable &quot;IMPLICIT_ALI_UNITS&quot;, which exists in the
+master Makefile, because libplatform files are assembler files that generally do not
+contribute to Ada binding phase processing.
+</p>
+<hr>
+<a name="The-core-complex"></a>
+<div class="header">
+<p>
+Next: <a href="#LibGCC" accesskey="n" rel="next">LibGCC</a>, Previous: <a href="#Anatomy-of-a-platform" accesskey="p" rel="prev">Anatomy of a platform</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="The-core-complex-1"></a>
+<h2 class="chapter">13 The core complex</h2>
+<a name="index-core"></a>
+
+<p>The core complex is a set of packages that forms the base of subprograms used by
+higher level constructs.
+</p>
+<p>Note that fundamental packages like Bits, LLutils, Memory_Functions, etc, are pragma
+Preelaborate, with Bits being pragma Pure.
+</p>
+<p>Bits
+</p>
+<p>Bits is the fundamental package for low-level manipulation. Here you can find many
+type declarations and subprograms to handle low-level object.
+</p>
+<p>C library
+</p>
+<p>SweetAda has a very minimalistic C library. This C library takes no active part in
+SweetAda. Contrarily to all other environments, where Ada code runs on top of another
+piece of software (almost invariably a C-coded OS), in SweetAda even various low-level
+functions normally belonging to a standard C library are written in Ada. This small
+library exists for reference purposes, and as an aid in porting foreign C user code.
+Note that only very basic functions in ctype/stdlib/stdio/string hierarchies are
+implemented.
+</p>
+<p>Console
+</p>
+<p>The console package provides basic subprograms to output fundamental
+type values on a character-oriented device, like a serial port.
+</p>
+<p>All the Console subprograms call Print (Character), which takes a descriptor
+where you should specify access to a subprogram that does the physical
+output. Last_Chance_Handler could use Console, so the package is one of the
+implicit units that are linked into the final kernel executables regardless
+of a with clause.
+</p>
+<p>Besides fundamental types output, you can find a Print_Memory subprogram
+that is useful to dump a memory section for diagnostic purposes.
+</p>
+<p>GCC_Types
+</p>
+<p>This package implements useful types to handle LibGCC numeric subprograms.
+</p>
+<p>LibGCC
+</p>
+<p>LibGCC package implements pure Ada computation subprograms that are normally
+found in the compiler library. They exist mostly as useful references.
+</p>
+<p>LLutils
+</p>
+<p>LLutils package contains useful low-level subprograms that are too much convoluted
+to place them in the Bits unit. Besides, this would lead to make Bits non-pure.
+</p>
+<p>Multibyte swap subprograms are declared here, with Build_Address and its
+inverse, Address_Displacement.
+</p>
+<p>Malloc
+</p>
+<p>This package implements a simple memory allocator, and is implicitly used by the
+compiler to allocate memory on a pool, e.g., when you call the &quot;new&quot; operator.
+BSPs should call the initialization subprogram to reserve memory for the allocator
+before the Ada code has a chance to use it. But this could be made automatic by
+writing initialization code in the elaboration block of the package.
+</p>
+<p>Memory_Functions
+</p>
+<p>Memory_Functions is a package that provides a pure Ada implementation of the
+classical C functions to manipulate memory areas: Memcmp, Memcpy, Memmove,
+Memset, Bcopy, Cpymem.
+</p>
+<p>These subprograms are not optimized, but they are made separate and thus could be
+optimized by hand-crafted assembly routines.
+</p>
+<p>MMIO
+</p>
+<p>MMIO package provides unrestricted access to memory with a simple modular-valued
+load/store model, thus facilitating handling of low-level objects. Unsigned types
+of sizes 8, 16, 32, 64 bits are supported. MMIO standard subprogram bodies are separated,
+and can thus be overriden and optimized by instantiating a custom copy (perhaps
+coded in native machine language). MMIO have versions for flat, atomic, swapping
+and atomic-swapping operations.
+</p>
+<hr>
+<a name="LibGCC"></a>
+<div class="header">
+<p>
+Next: <a href="#Platform-descriptions" accesskey="n" rel="next">Platform descriptions</a>, Previous: <a href="#The-core-complex" accesskey="p" rel="prev">The core complex</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="LibGCC-1"></a>
+<h2 class="chapter">14 LibGCC</h2>
+<a name="index-LibGCC"></a>
+
+<p>Nearly every compiler provides an underlying library for low-level handling
+of features which are too expensive to emit code for.
+</p>
+<p>SweetAda has an integrated copy of the basic routines provided by GCC&rsquo;s LibGCC.
+Anyway, there is an equivalent full-Ada implementation in the core complex.
+</p>
+<p>LibGCC package provides those basic arithmetic operations which are normally
+provided by the CPU package or, if explicitly specified, the standard libgcc
+library that comes with the GCC compiler. These operations are implemented
+in pure Ada as a set of separate subprograms, and then exported so that the linker
+can resolve references when the compiler calls them, i.e., a 32-bit x 32-bit
+multiplication for a CPU that cannot handle directly.
+</p>
+<p>It is of rare use, because normally every CPU has its own set of routines.
+In SweetAda the LibGCC package is thus more or less a placeholder, in the case of
+a port for a new CPU, or experimentation.
+</p>
+<hr>
+<a name="Platform-descriptions"></a>
+<div class="header">
+<p>
+Next: <a href="#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="#LibGCC" accesskey="p" rel="prev">LibGCC</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Platform-descriptions-1"></a>
+<h2 class="chapter">15 Platform descriptions</h2>
+
+<a name="Altera10M50GHRD"></a>
+<h3 class="section">15.1 Altera10M50GHRD</h3>
+<a name="index-Altera10M50GHRD"></a>
+
+<p>Altera10M50GHRD is a virtual platform in SweetAda, usable by means of the QEMU
+emulator. This platform is based on a softcore Nios II processor, implemented in
+real world on an FPGA.
+</p>
+<p>QEMU instantiates a few peripherals for this platform:
+- 2 timers
+- 16550-style UART
+</p>
+<p>By using libioemu, there are also 8 32-bit I/O ports are available.
+</p>
+<p>CPU parameters are fixed at some particular addresses, as dictated by QEMU, and
+already wrapped in the platform&rsquo;s configuration.in.
+</p>
+<a name="Amiga"></a>
+<h3 class="section">15.2 Amiga</h3>
+<a name="index-Amiga"></a>
+
+<p>The Amiga platform is the well-known PC machine based on the M68k venerable class
+of CPU.
+</p>
+<hr>
+<a name="Optimizations"></a>
+<div class="header">
+<p>
+Next: <a href="#IOEMU-scripting" accesskey="n" rel="next">IOEMU scripting</a>, Previous: <a href="#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Optimizations-1"></a>
+<h2 class="chapter">16 Optimizations</h2>
+<a name="index-optimizations"></a>
+
+<p>SweetAda provides a mechanism to allow user-defined implementations. Standard subprograms
+available in the core complex (but not limited to) could be bypassed by reimplement them.
+</p>
+<p>In a similar way, some package and subprograms can be selected when speed is a priority.
+The package MMIO, as an example, exposes a complete range of procedures and functions to
+allow low-level I/O, like reading an Unsigned_32 value at a specific address.
+</p>
+<p>These subprograms are written in Ada and are not optimized. Furthermore, they cannot be
+inlined and thus can be used as access subprograms to be designated in drivers when you
+are configuring the methods to deal with I/O. But some CPU have a subset of MMIO that
+overrides the standard one. By rewriting the subprograms with inline assembler instructions,
+speed increase could be easily obtained.
+</p>
+<p>Beyond that, some CPU have a second package CPU.MMIO with these inline assembler fragments
+already written. With&rsquo;ing CPU.MMIO instead of MMIO lets the user directly use them.
+</p>
+<hr>
+<a name="IOEMU-scripting"></a>
+<div class="header">
+<p>
+Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#Optimizations" accesskey="p" rel="prev">Optimizations</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="IOEMU-scripting-1"></a>
+<h2 class="chapter">17 IOEMU scripting</h2>
+<a name="index-IOEMU"></a>
+
+<p>The IOEMU facility allows configuration of a target emulator machine by specifying
+actions in a very basic script-like sequence of assignments and statements.
+</p>
+<p>IOEMU configuration files are structured in declarations and sections.
+</p>
+<p>Declarations (ENV and SET) must come first, and their purposes is to declare
+environment variables globally (ENV) or local to the file or a section (SET).
+</p>
+<p>Sections are directives, either to runsweetada utility or the underlying target emulator
+(QEMU/FS-UAE/GXemul).
+</p>
+<p>The START section is processed by the runsweetada utility, which can be instructed
+to execute the selected emulator (maybe under the control of the GDB debugger).
+</p>
+<p>The configuration file is then processed by the emulator, once started. The IOEMU
+section is used to configure the coordinates of the IOEMU window. Other sections
+are interpreted as specifications of the I/O features exposed by the target emulator,
+in terms of serial ports or IOEMU graphical I/O ports. Every I/O port has a specific
+name and you can see its mapping in the Ada code platform description.
+</p>
+<p>Inside the I/O port you can set the type of widget used (a LED, a LEDBAR, an hex
+DISPLAY), its color and its size.
+</p>
+<p>SECTION<br>
+Introduces a section. Section names could be &quot;IOEMU&quot; (to configure the IOEMU layer) or an
+I/O port or communication peripheral exported by the target machine being emulated.
+</p>
+<p>ENDSECT<br>
+Declares the end of a section.
+</p>
+<p>Boolean expressions:<br>
+</p><ul>
+<li> NOT
+</li><li> AND
+</li><li> OR
+</li><li> ==
+</li><li> DEFINED()
+</li></ul>
+
+<p>IF-THEN-ELSE-ELIF-ENDIF<br>
+Classic decision structure. The test condition must be a boolean expression.
+IF structures can be nested. Note that IF structures can be used only inside
+sections.
+</p>
+<p>ARGS<br>
+ARGS is a special directive. When you declare an ARGS directive, strings are
+added sequentially to the array that carries arguments for the next EXEC/EXEA
+command. So you can add arguments to the desired executable at various points
+of a section, and decided which arguments must be selected. Once the EXEC/EXEA
+instruction is processed, the ARGS array is reset to empty.
+</p>
+<p>CHDIR<br>
+Change the working directory.
+</p>
+<p>EXEC<br>
+Executes an executable. The arguments are those accumulated by means of previously
+processed ARGS commands. The script control flow does not proceed further until
+the executable returns.
+</p>
+<p>EXEA<br>
+Same as EXEC, but the executable is launched in the background, so script control
+flow can proceed almost immediately.
+</p>
+<p>SLEEP<br>
+Suspends the control flow execution for an amount of time.
+</p>
+<p>IOEMU objects<br>
+</p>
+<p>Strings<br>
+String exists when you write literals inside double-quotes. Use a backslash
+to enter a special characters.
+</p>
+<p>Variables<br>
+Variables are strings. Numeric values are converted to string. If you want
+to dereference a variable, use a &quot;$&quot; prefix followed by the name of the variable.
+Use braces to isolate variables when concatenating them with literals, like in
+&quot;${PORT1}&quot;. Note that dereferencing takes place only within double-quotes.
+There are three types of variable in IOEMU scripting: environment, global and local.
+Environment variables are available all the times, and are automatically imported.
+You can create an environment variable (being passed to child executable) with the
+ENV &lt;variable&gt; &lt;value&gt; directive. Global variables are created with the
+SET &lt;variable&gt; &lt;value&gt; directive. Variables declared within sections are local
+to that scope and ceased to exist when the parser leave the section.
+</p>
+<p>IOEMU creates some implicit variables during its execution.
+</p>
+<ul>
+<li> __THISFILE__<br>
+Carries the name of the configuration file being processed. So you can export
+this variable and pass it to a emulator, that thus could use this same configuration
+file. Note that this is quite mandatory, because SweetAda emulators loads the
+IOEMU shared library and the configuration file using environment variables.
+</li><li> __SERIALPORTDEVICE__ (Linux only)<br>
+Carries the name of the virtual device associated with an emulator physical serial port.
+When you are using QEMU there is no need to use this variable, because the emulator
+maps physical serial ports to known TCP ports declared within command line arguments,
+whereas the FS-UAE emulator the IOEMU layer creates on-the-fly a virtual serial port
+that cannot be known before the execution.
+</li></ul>
+
+<hr>
+<a name="Index"></a>
+<div class="header">
+<p>
+Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Index-1"></a>
+<h2 class="unnumbered">Index</h2>
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Index_cp_letter-A"><b>A</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-C"><b>C</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-E"><b>E</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-G"><b>G</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-H"><b>H</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-I"><b>I</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-L"><b>L</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-M"><b>M</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-O"><b>O</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-P"><b>P</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-R"><b>R</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-T"><b>T</b></a>
+ &nbsp; 
+</td></tr></table>
+<table class="index-cp" border="0">
+<tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-A">A</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Altera10M50GHRD">Altera10M50GHRD</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Amiga">Amiga</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-C">C</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-configuration">configuration</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Configuration">Configuration</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-core">core</a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-core-complex">The core complex</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-E">E</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-elftool">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-elftool-1">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-G">G</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-GCC-wrapper">GCC wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-GNAT-wrapper">GNAT wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-GPRbuild">GPRbuild</a>:</td><td>&nbsp;</td><td valign="top"><a href="#GPRbuild-mode">GPRbuild mode</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-H">H</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Host-environment">Host environment</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-I">I</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-IOEMU">IOEMU</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-L">L</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-LibGCC">LibGCC</a>:</td><td>&nbsp;</td><td valign="top"><a href="#LibGCC">LibGCC</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-M">M</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Makefile-targets">Makefile targets</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Makefile-targets">Makefile targets</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-O">O</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-optimizations">optimizations</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Optimizations">Optimizations</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Overview">Overview</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Overview">Overview</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-P">P</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-platform">platform</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Anatomy-of-a-platform">Anatomy of a platform</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-R">R</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-RTS">RTS</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Building-the-RTS">Building the RTS</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-runsweetada">runsweetada</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index_cp_letter-T">T</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-toolchain-wrappers">toolchain wrappers</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-toolchains">toolchains</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+</table>
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Index_cp_letter-A"><b>A</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-C"><b>C</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-E"><b>E</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-G"><b>G</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-H"><b>H</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-I"><b>I</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-L"><b>L</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-M"><b>M</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-O"><b>O</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-P"><b>P</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-R"><b>R</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-T"><b>T</b></a>
+ &nbsp; 
+</td></tr></table>
+
+
+<hr>
+
+
+
+</body>
+</html>

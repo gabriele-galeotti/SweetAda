@@ -1,6 +1,6 @@
 
 \input texinfo
-@setfilename sweetada
+@setfilename sweetada.texi
 
 @c $ makeinfo --html -o ./ sweetada.texi
 
@@ -410,7 +410,7 @@ ADDITIONAL_OBJECTS += ctest
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
-RUN_COMMAND   := runsweetada$(EXEEXT) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu.cfg
+RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu.cfg
 DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
 
 export WIRESHARK := /usr/bin/wireshark
@@ -832,7 +832,9 @@ In SweetAda the LibGCC package is thus more or less a placeholder, in the case o
 a port for a new CPU, or experimentation.
 
 @node Platform descriptions
-@chapter Altera10M50GHRD
+@chapter Platform descriptions
+
+@section Altera10M50GHRD
 @cindex Altera10M50GHRD
 
 Altera10M50GHRD is a virtual platform in SweetAda, usable by means of the QEMU
@@ -843,12 +845,12 @@ QEMU instantiates a few peripherals for this platform:
 - 2 timers
 - 16550-style UART
 
-By using libioemu, 8 32-bit I/O ports are available.
+By using libioemu, there are also 8 32-bit I/O ports are available.
 
 CPU parameters are fixed at some particular addresses, as dictated by QEMU, and
 already wrapped in the platform's configuration.in.
 
-@chapter Amiga
+@section Amiga
 @cindex Amiga
 
 The Amiga platform is the well-known PC machine based on the M68k venerable class
