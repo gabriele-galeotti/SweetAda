@@ -18,7 +18,7 @@ Copyright (C) 2020, 2021 Gabriele Galeotti
 <link href="Index.html#Index" rel="index" title="Index">
 <link href="index.html#Top" rel="up" title="Top">
 <link href="Toolchain-tools.html#Toolchain-tools" rel="next" title="Toolchain tools">
-<link href="Overall-structure.html#Overall-structure" rel="prev" title="Overall structure">
+<link href="Host-environment.html#Host-environment" rel="prev" title="Host environment">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -54,11 +54,11 @@ ul.no-bullet {list-style: none}
 <a name="Toolchains"></a>
 <div class="header">
 <p>
-Next: <a href="Toolchain-tools.html#Toolchain-tools" accesskey="n" rel="next">Toolchain tools</a>, Previous: <a href="Overall-structure.html#Overall-structure" accesskey="p" rel="prev">Overall structure</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Toolchain-tools.html#Toolchain-tools" accesskey="n" rel="next">Toolchain tools</a>, Previous: <a href="Host-environment.html#Host-environment" accesskey="p" rel="prev">Host environment</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
 <a name="Toolchains-1"></a>
-<h2 class="chapter">3 Toolchains</h2>
+<h2 class="chapter">4 Toolchains</h2>
 <a name="index-toolchains"></a>
 <a name="index-elftool"></a>
 <a name="index-GCC-wrapper"></a>
@@ -80,24 +80,6 @@ Code output by the build system is thus coming directly from the compiler, witho
 source files inclusion. Anyway, the standard LibGCC could be selected with a configuration
 variable.
 </p>
-<p>Apart from assembler, compiler and linker, toolchains have the GNATMAKE utility and a
-&quot;GCC wrapper&quot; executable, which is an auxiliary tool used to manage object output files.
-The GCC wrapper is a small piece of code between the compiler driver and the compiler
-executable. It analyzes command line parameters, selects verbosity level and instructs
-the compiler executable to generate additional output files, like assembler listing and
-Ada expanded source code. There is a companion wrapper, the &quot;GNAT wrapper&quot;, but its use
-is limited to print brief informations when GNATMAKE processes with&rsquo;ed units.
-</p>
-<p>elftool is a small utility that dumps the output object code. It is used mainly for a
-clean visual output in order to easily parse ELF sections.
-</p>
-<p>runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets.
-</p>
-<hr>
-<div class="header">
-<p>
-Next: <a href="Toolchain-tools.html#Toolchain-tools" accesskey="n" rel="next">Toolchain tools</a>, Previous: <a href="Overall-structure.html#Overall-structure" accesskey="p" rel="prev">Overall structure</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 
 
 

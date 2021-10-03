@@ -17,8 +17,8 @@ Copyright (C) 2020, 2021 Gabriele Galeotti
 <link href="index.html#Top" rel="start" title="Top">
 <link href="Index.html#Index" rel="index" title="Index">
 <link href="index.html#Top" rel="up" title="Top">
-<link href="Optimizations.html#Optimizations" rel="next" title="Optimizations">
-<link href="Platform-descriptions.html#Platform-descriptions" rel="prev" title="Platform descriptions">
+<link href="Configuration.html#Configuration" rel="next" title="Configuration">
+<link href="Toolchain-tools.html#Toolchain-tools" rel="prev" title="Toolchain tools">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -54,28 +54,35 @@ ul.no-bullet {list-style: none}
 <a name="Building-the-RTS"></a>
 <div class="header">
 <p>
-Next: <a href="Optimizations.html#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="Platform-descriptions.html#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Configuration.html#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="Toolchain-tools.html#Toolchain-tools" accesskey="p" rel="prev">Toolchain tools</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
 <a name="Building-the-RTS-1"></a>
-<h2 class="chapter">16 Building the RTS</h2>
+<h2 class="chapter">6 Building the RTS</h2>
 <a name="index-RTS"></a>
 
-<p>When using a SweetAda source package from a repository like GitHub, the very first
-action to perform is to build the Ada Run-Time System.
+<p>The very first action to perform after an installation is to build the Ada Run-Time
+System.
 </p>
-<p>Currently, RTS build is supported only by means of a Bash script, so you need an
-environment with a working Bash shell online.
-</p>
-<p>The RTS can be built by firstly configure SweetAda. Once that SweetAda knows the
-platform (and thus the CPU and the toolchain involved), then
+<p>The RTS is being built by means of a makefile target:
 </p>
 <div class="example">
-<pre class="example">$ make rts
+<pre class="example">$ CPU=&lt;cpu&gt; make rts
 </pre></div>
 
-<p>will build the RTS. Once you built the RTS, it is persistent, and you don&rsquo;t need
-to repeat the operation, unless you modify RTS source files.
+<p>This will build the RTS. Once you have built the RTS, it is persistent, and you don&rsquo;t need
+to repeat this operation, unless you modify RTS source files.
+</p>
+<p>Supported CPUs are in the rts/src/targets directory. Every CPU directory contains
+some makefile fragments, and the Makefile.rts.in, which is used to state GCC switches
+used during the compilation. Remember that no CPU switches should be used, because the
+build system compiles the RTS for every CPU configuration, so you should specify only
+global features, like, e.g., use of global pointers or object symbol naming.
+</p>
+<p>SweetAda comes with two RTSes, a ZFP and an SFP. The RTS which will be used is
+configurable in the top-level configuration.in file. A proper profile should be
+coupled along the RTS type, which configures system-wide pragmas (wich are in turn
+configurable by means of the gnat.adc.in configuration template).
 </p>
 
 

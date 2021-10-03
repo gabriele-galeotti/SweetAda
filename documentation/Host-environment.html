@@ -17,8 +17,8 @@ Copyright (C) 2020, 2021 Gabriele Galeotti
 <link href="index.html#Top" rel="start" title="Top">
 <link href="Index.html#Index" rel="index" title="Index">
 <link href="index.html#Top" rel="up" title="Top">
-<link href="Configuration.html#Configuration" rel="next" title="Configuration">
-<link href="Toolchain-tools.html#Toolchain-tools" rel="prev" title="Toolchain tools">
+<link href="Toolchains.html#Toolchains" rel="next" title="Toolchains">
+<link href="Overall-structure.html#Overall-structure" rel="prev" title="Overall structure">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -54,16 +54,16 @@ ul.no-bullet {list-style: none}
 <a name="Host-environment"></a>
 <div class="header">
 <p>
-Next: <a href="Configuration.html#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="Toolchain-tools.html#Toolchain-tools" accesskey="p" rel="prev">Toolchain tools</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Toolchains.html#Toolchains" accesskey="n" rel="next">Toolchains</a>, Previous: <a href="Overall-structure.html#Overall-structure" accesskey="p" rel="prev">Overall structure</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
 <a name="Host-environment-1"></a>
-<h2 class="chapter">5 Host environment</h2>
+<h2 class="chapter">3 Host environment</h2>
 <a name="index-Host-environment"></a>
 
 <p>SweetAda is meant to run on major mainstream environments, i.e., POSIX/Linux, Windows, or OS X.
-The host machine should be able to execute 64-bit executables. SweetAda also supports whitespaces,
-although this is considered bad practice.
+The host machine should be able to execute 64-bit executables. SweetAda also supports whitespaces
+in filepaths although this is considered bad practice.
 </p>
 <p>In the following chapters, we will analyze operations in a POSIX machine.
 </p>
@@ -75,6 +75,38 @@ be invalidated by an &quot;esotic&quot; environment setup.
 <p>Hence, if you want to integrate SweetAda in a GUI, remember to change the working directory before
 performing an action.
 </p>
+<p>SweetAda requires some support from the OS environment. Apart the standard low-level utilities,
+like programs to copy files and usual filesystem operations, the GNU make and GNU sed utilities
+are required in order to perform basic activities. If you do not have them available, please
+install them from your package provider, or download them form the SweetAda SourceForge repository.
+Remember to put the executable path in the visible part of the PATH environment variable which
+is parsed by the shell.
+</p>
+<p>SweetAda requires (although they are not really strictly necessary from a system standpoint)
+three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility. They are
+provided as source programs to be built in the libutils/toolchain_tools directory. You need
+a system GCC compiler available online if you want to change their behaviour (which is not
+recommended, though). However, a standard system are not expected to have them built from sources,
+because the SweetAda package already provide them as executable installed.
+</p>
+<p>The GCC wrapper is a small piece of code between the compiler driver and the compiler
+executable. It analyzes command line parameters, selects verbosity level and instructs
+the compiler executable to generate additional output files, like assembler listing and
+Ada expanded source code. There is a companion wrapper, the &quot;GNAT wrapper&quot;, but its use
+is limited to print brief informations when GNATMAKE processes with&rsquo;ed units.
+</p>
+<p>elftool is a small utility that dumps the output object code. It is used mainly for a
+clean visual output in order to easily parse ELF sections. elftool is anyway optional,
+and you can avoid its use by setting a variable in the top-level configuration.in file,
+so the stantdard &quot;size&quot; toolchain executable is thus used.
+</p>
+<p>runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets.
+</p>
+<p>While in some environments (Linux, and, if properly configured, OS X) the make utility is
+normally visible in a shell and there is no need to specify its location in the filesystem,
+in Windows and in an OS X without system development features installed, the make executable
+is missing.
+</p>
 <p>In order to perform actions, the make utility should be invoked, followed by the
 target, like in:
 </p>
@@ -83,11 +115,6 @@ target, like in:
 </pre></div>
 
 <p>(provided your working directory is the SweetAda top-level-directory).
-</p>
-<p>While in some environments (Linux, and, if properly configured, OS X) the make utility is
-normally visible in a shell and there is no need to specify its location in the filesystem,
-in Windows and in an OS X without system development features installed, the make executable
-is missing.
 </p>
 <p>The two shell scripts menu.sh (Bash) and menu.bat (Windows cmd.exe) are useful to ease
 the invocation of the make executable provided in the toolchain package. Thus, eventually
@@ -132,7 +159,7 @@ available.
 <hr>
 <div class="header">
 <p>
-Next: <a href="Configuration.html#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="Toolchain-tools.html#Toolchain-tools" accesskey="p" rel="prev">Toolchain tools</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Toolchains.html#Toolchains" accesskey="n" rel="next">Toolchains</a>, Previous: <a href="Overall-structure.html#Overall-structure" accesskey="p" rel="prev">Overall structure</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 
 

@@ -17,7 +17,7 @@ Copyright (C) 2020, 2021 Gabriele Galeotti
 <link href="index.html#Top" rel="start" title="Top">
 <link href="Index.html#Index" rel="index" title="Index">
 <link href="index.html#Top" rel="up" title="Top">
-<link href="Host-environment.html#Host-environment" rel="next" title="Host environment">
+<link href="Building-the-RTS.html#Building-the-RTS" rel="next" title="Building the RTS">
 <link href="Toolchains.html#Toolchains" rel="prev" title="Toolchains">
 <style type="text/css">
 <!--
@@ -54,46 +54,25 @@ ul.no-bullet {list-style: none}
 <a name="Toolchain-tools"></a>
 <div class="header">
 <p>
-Next: <a href="Host-environment.html#Host-environment" accesskey="n" rel="next">Host environment</a>, Previous: <a href="Toolchains.html#Toolchains" accesskey="p" rel="prev">Toolchains</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Building-the-RTS.html#Building-the-RTS" accesskey="n" rel="next">Building the RTS</a>, Previous: <a href="Toolchains.html#Toolchains" accesskey="p" rel="prev">Toolchains</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
 <a name="Toolchain-tools-1"></a>
-<h2 class="chapter">4 Toolchain tools</h2>
+<h2 class="chapter">5 Toolchain tools</h2>
 <a name="index-toolchain-wrappers"></a>
 <a name="index-elftool-1"></a>
 
 <p>SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
 </p>
-<p>But SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper.
-</p>
-<p>There are two options to obtain the wrappers:
-</p>
-<p>1) Steal the wrappers from a SweetAda toolchain.
-</p>
-<p>Download a SweetAda toolchain, and extract the two executables ...-gcc-wrapper(.exe)
-and ...-gnat-wrapper(.exe); then rename them by replacing the toolchain name triplet and
-place them along with other gcc executables; if, for example, you have an arm-unknown-elf
-toolchain, you should end up with
-</p>
-<ul>
-<li> .../&lt;toolchain_prefix&gt;/bin/arm-unknown-elf-gcc-wrapper
-</li><li> .../&lt;toolchain_prefix&gt;/bin/arm-unknown-elf-gnat-wrapper
-</li></ul>
-
-<p>(remember the suffix .exe, if you are in a Windows environment). Same thing for elftool,
-which does not need renaming because does not have a prefix.
-</p>
-<p>2) Build the wrappers (and elftool)
-</p>
-<p>This procedure needs a C compiler available online. The current setup is for GCC in some
-Linux/MinGW machine.
+<p>SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper, that could be
+built from sources if you have a C compiler available online. The current setup is for a
+system GCC compiler.
 </p>
 <p>Go into the directory libutils/toolchain_tools and edit the Makefile by adjusting some
 variables:
 </p>
 <ul>
-<li> TOOLCHAIN_PREFIX := /opt/sweetada           # toolchain installation prefix
-</li><li> TOOLCHAIN_NAME   := i686-sweetada-elf       # toolchain triplet name
+<li> CC               := gcc # C compiler
 </li><li> LIBELF           := /usr/local/lib/libelf.a # location of libelf library
 </li></ul>
 
@@ -120,11 +99,6 @@ $ make install
 <p>This procedure should work also on a Windows cmd.exe shell, provided you have a Make
 utility available online.
 </p>
-<hr>
-<div class="header">
-<p>
-Next: <a href="Host-environment.html#Host-environment" accesskey="n" rel="next">Host environment</a>, Previous: <a href="Toolchains.html#Toolchains" accesskey="p" rel="prev">Toolchains</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 
 
 
