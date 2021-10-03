@@ -10,6 +10,7 @@
 
 #
 # Environment variables:
+# OSTYPE
 # EXEEXT
 # SCREXT
 # SCREXT_cmd
@@ -33,11 +34,20 @@ CREATEDEFINITIONS  := createdefinitions$(SCREXT)
 CREATEGNATADC      := creategnatadc$(SCREXT)
 CREATESYMLINK      := createsymlink$(SCREXT)
 DOS2UNIX           := dos2unix$(SCREXT)
+ifeq ($(OSTYPE),darwin)
+ELFTOOL            := elftool-osx$(EXEEXT)
+else
 ELFTOOL            := elftool$(EXEEXT)
+endif
 FILEPAD            := filepad$(SCREXT)
 FILEPATCH          := filepatch$(SCREXT)
+ifeq ($(OSTYPE),darwin)
+GCC_WRAPPER        := gcc-wrapper-osx$(EXEEXT)
+GNAT_WRAPPER       := gnat-wrapper-osx$(EXEEXT)
+else
 GCC_WRAPPER        := gcc-wrapper$(EXEEXT)
 GNAT_WRAPPER       := gnat-wrapper$(EXEEXT)
+endif
 PROCESSCFG         := processcfg$(SCREXT)
 endif
 
