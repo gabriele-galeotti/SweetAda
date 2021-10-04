@@ -339,7 +339,7 @@ DISABLE_STACK_USAGE :=
 -include $(CORE_DIRECTORY)/configuration.in
 
 # try to read PLATFORM from configuration file
-ifneq ($(MAKECMDGOALS),createkernelcfg)
+ifneq (,$(filter-out createkernelcfg rts,$(MAKECMDGOALS)))
 -include $(KERNEL_CFGFILE)
 endif
 
@@ -801,8 +801,8 @@ configure-aux : clean
 	@$(MAKE_DRIVERS) configure
 	@$(MAKE_MODULES) configure
 	@$(MAKE_PLATFORM) configure
-	$(CREATECONFIGUREGPR) Configure configure.gpr
 	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
+	$(CREATECONFIGUREGPR) Configure configure.gpr
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): configuration completed.")
 	@$(call echo-print,"")
