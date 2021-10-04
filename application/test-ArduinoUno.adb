@@ -1,9 +1,11 @@
 
--- with System;
+with System;
+with System.Storage_Elements;
+
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
-with CPU;
+with AVR;
 with ATmega328P;
 with Configure;
 
@@ -44,7 +46,7 @@ package body Application is
    begin
       for L in 1 .. NLoops loop
          for Delay_Loop_Count in Integer'First .. Integer'Last loop
-            CPU.NOP;
+            AVR.NOP;
          end loop;
       end loop;
    end Delay_Simple;
@@ -54,6 +56,11 @@ package body Application is
    ----------------------------------------------------------------------------
    procedure Run is
    begin
+      -------------------------------------------------------------------------
+      if False then
+         AVR.Asm_Call (System.Storage_Elements.To_Address (16#400#));
+      end if;
+      -------------------------------------------------------------------------
       -- GPIO PIN 13 blink test -----------------------------------------------
       -- on-board LED is an output
       DDRB := (DDB5 => True, others => False);

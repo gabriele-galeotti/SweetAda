@@ -12,6 +12,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#define RAMPZ  0x3B
 #define SPL    0x3D
 #define SPH    0x3E
 #define RAMEND 0x8FF
@@ -61,7 +62,7 @@ _start:
 #endif
 3:
                 cpi     r26,lo8(_edata)
-                cpc     r27,r17
+                cpc     r27,r17                 // r17 = hi8(_edata)
                 brne    2b
 
                 //

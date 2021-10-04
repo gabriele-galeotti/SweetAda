@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Storage_Elements;
-with CPU;
+with AVR;
 with ATmega328P;
 
 package body BSP is
@@ -50,7 +50,7 @@ package body BSP is
       for L in 1 .. NLoops loop
          -- for Delay_Loop_Count in Integer'First .. Integer'Last loop
          for Delay_Loop_Count in 1 .. 2 loop
-            CPU.NOP;
+            AVR.NOP;
          end loop;
       end loop;
    end Delay_Simple;

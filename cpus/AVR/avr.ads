@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu.ads                                                                                                   --
+-- __FLN__ avr.ads                                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,9 +16,8 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with AVR;
 
-package CPU is
+package AVR is
 
    --========================================================================--
    --                                                                        --
@@ -30,19 +29,28 @@ package CPU is
 
    pragma Preelaborate;
 
+   use System;
+
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure Asm_Call (Target_Address : in System.Address) renames AVR.Asm_Call;
+   procedure NOP
+      with Inline => True;
+   procedure RET
+      with Inline => True;
+   procedure Asm_Call (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is AVR.Irq_State_Type;
+   subtype Irq_State_Type is Integer;
 
-   procedure Irq_Enable  renames AVR.Irq_Enable;
-   procedure Irq_Disable renames AVR.Irq_Disable;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
 
-end CPU;
+end AVR;

@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu.adb                                                                                                   --
+-- __FLN__ avr.adb                                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -17,7 +17,7 @@
 
 with System.Machine_Code;
 
-package body CPU is
+package body AVR is
 
    --========================================================================--
    --                                                                        --
@@ -66,6 +66,20 @@ package body CPU is
    end RET;
 
    ----------------------------------------------------------------------------
+   -- Asm_Call
+   ----------------------------------------------------------------------------
+   procedure Asm_Call (Target_Address : in Address) is
+   begin
+      Asm (
+           Template => " icall",
+           Outputs  => No_Output_Operands,
+           Inputs   => Address'Asm_Input ("z", Target_Address),
+           Clobber  => "",
+           Volatile => True
+          );
+   end Asm_Call;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
@@ -91,4 +105,4 @@ package body CPU is
           );
    end Irq_Disable;
 
-end CPU;
+end AVR;
