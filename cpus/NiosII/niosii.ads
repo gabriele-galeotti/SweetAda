@@ -28,10 +28,10 @@ package NiosII is
    --                                                                        --
    --========================================================================--
 
+   pragma Preelaborate;
+
    use System;
    use Interfaces;
-
-   subtype Irq_State_Type is Boolean;
 
    PIE : constant Unsigned_32 := 2#0000_0000_0000_0000_0000_0000_0000_0001#;
    U   : constant Unsigned_32 := 2#0000_0000_0000_0000_0000_0000_0000_0010#;
@@ -41,33 +41,26 @@ package NiosII is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   function CPUID return Unsigned_32 with
-      Inline => True;
-
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
+   function CPUID return Unsigned_32
+      with Inline => True;
+   procedure Asm_Call (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Irq handling
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable (Irq_Line : in Natural);
-   procedure Irq_Enable;
-   procedure Irq_Disable;
-   function Irq_State_Get return Irq_State_Type;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type);
+   subtype Irq_State_Type is Boolean;
 
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (Irq_Enable);
-   pragma Inline (Irq_Disable);
+   procedure Irq_Enable (Irq_Line : in Natural)
+      with Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   function Irq_State_Get return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
 end NiosII;
