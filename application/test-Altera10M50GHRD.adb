@@ -39,7 +39,7 @@ package body Application is
             GHRD.IOEMU_IO0 := 0;
             TC := Core.Tick_Count;
             loop
-               if Tick_Count_Expired (TC, 1000) then
+               if Tick_Count_Expired (TC, 1_000) then
                   TC := Core.Tick_Count;
                   -- blink IOEMU LED
                   GHRD.IOEMU_IO0 := 1;
