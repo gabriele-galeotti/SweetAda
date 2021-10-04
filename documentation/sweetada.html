@@ -357,11 +357,14 @@ System.
 <p>The RTS is being built by means of a makefile target:
 </p>
 <div class="example">
-<pre class="example">$ CPU=&lt;cpu&gt; make rts
+<pre class="example">$ CPU=&lt;cpu&gt; [TOOLCHAIN_NAME=&lt;toolchain&gt;] make rts
 </pre></div>
 
-<p>This will build the RTS. Once you have built the RTS, it is persistent, and you don&rsquo;t need
-to repeat this operation, unless you modify RTS source files.
+<p>This will build the RTS. If you do not specify the toolchain (e.g., &quot;arm-unknown-eabi&quot;)
+then the toolchain found in the mapping of the top-level configuration.in will be used.
+</p>
+<p>Once you have built the RTS, it is persistent, and you don&rsquo;t need to repeat this
+operation, unless you modify RTS source files.
 </p>
 <p>Supported CPUs are in the rts/src/targets directory. Every CPU directory contains
 some makefile fragments, and the Makefile.rts.in, which is used to state GCC switches

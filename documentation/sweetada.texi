@@ -2,7 +2,7 @@
 \input texinfo
 @setfilename sweetada.texi
 
-@c $ makeinfo --html -o ./ sweetada.texi
+@c $ makeinfo --html --no-split -o ./ sweetada.texi
 
 @c -- header -------------------------------------------------------------------
 @settitle SweetAda
@@ -294,11 +294,14 @@ System.
 The RTS is being built by means of a makefile target:
 
 @example
-$ CPU=<cpu> make rts
+$ CPU=<cpu> [TOOLCHAIN_NAME=<toolchain>] make rts
 @end example
 
-This will build the RTS. Once you have built the RTS, it is persistent, and you don't need
-to repeat this operation, unless you modify RTS source files.
+This will build the RTS. If you do not specify the toolchain (e.g., "arm-unknown-eabi")
+then the toolchain found in the mapping of the top-level configuration.in will be used.
+
+Once you have built the RTS, it is persistent, and you don't need to repeat this
+operation, unless you modify RTS source files.
 
 Supported CPUs are in the rts/src/targets directory. Every CPU directory contains
 some makefile fragments, and the Makefile.rts.in, which is used to state GCC switches
