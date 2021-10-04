@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Interfaces;
 with Definitions;
 
 package body RISCV is
@@ -41,17 +42,95 @@ package body RISCV is
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- NOP
+   ----------------------------------------------------------------------------
+   procedure NOP is
+   begin
+      Asm (
+           Template => " nop",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end NOP;
+
+   ----------------------------------------------------------------------------
+   -- Asm_Call
+   ----------------------------------------------------------------------------
+   procedure Asm_Call (Target_Address : in Address) is
+   begin
+      Asm (
+           Template => " jalr x1,%0,0",
+           Outputs  => No_Output_Operands,
+           Inputs   => Address'Asm_Input ("r", Target_Address),
+           Clobber  => "",
+           Volatile => True
+          );
+   end Asm_Call;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
+   MSTATUS_USMIE : constant MSTATUS_Type := (
+                                             UIE       => True,
+                                             SIE       => True,
+                                             Reserved1 => 0,
+                                             MIE       => True,
+                                             UPIE      => False,
+                                             SPIE      => False,
+                                             Reserved2 => 0,
+                                             MPIE      => False,
+                                             SPP       => False,
+                                             Reserved3 => 0,
+                                             MPP       => 0,
+                                             FS        => 0,
+                                             XS        => 0,
+                                             MPRIV     => False,
+                                             SUM       => False,
+                                             MXR       => False,
+                                             TVM       => False,
+                                             TW        => False,
+                                             TSR       => False,
+                                             Reserved4 => 0,
+                                             SD        => False
+                                            );
+
    procedure Irq_Enable is
    begin
-      null; -- __TBD__
+      Asm (
+           Template => " csrrs t1,mstatus,%0" & CRLF &
+                       " csrrs t1,mie,%1",
+           Outputs  => No_Output_Operands,
+           Inputs   => (
+                        MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
+                        Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_00B0#)
+                       ),
+           Clobber  => "t1",
+           Volatile => True
+          );
    end Irq_Enable;
 
    procedure Irq_Disable is
    begin
-      null; -- __TBD__
+      Asm (
+           Template => " csrrc t1,mstatus,%0",
+           Outputs  => No_Output_Operands,
+           Inputs   => MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
+           Clobber  => "t1",
+           Volatile => True
+          );
    end Irq_Disable;
+
+   function Irq_State_Get return Irq_State_Type is
+   begin
+      return 0; -- __TBD__
+   end Irq_State_Get;
+
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   begin
+      null; -- __TBD__
+   end Irq_State_Set;
 
 end RISCV;

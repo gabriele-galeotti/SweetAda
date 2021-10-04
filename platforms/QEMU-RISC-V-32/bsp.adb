@@ -19,6 +19,7 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with MMIO;
+with RISCV;
 with Virt;
 with Console;
 
@@ -35,7 +36,7 @@ package body BSP is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
-   use Virt;
+   -- use Virt;
 
    --========================================================================--
    --                                                                        --
@@ -69,7 +70,7 @@ package body BSP is
       -- UART -----------------------------------------------------------------
       UART_Descriptor.Read_8        := MMIO.Read'Access;
       UART_Descriptor.Write_8       := MMIO.Write'Access;
-      UART_Descriptor.Base_Address  := To_Address (VIRT_UART0_BASEADDRESS);
+      UART_Descriptor.Base_Address  := To_Address (Virt.UART0_BASEADDRESS);
       UART_Descriptor.Scale_Address := 0;
       UART_Descriptor.Baud_Clock    := 1_843_200;
       UART16x50.Init (UART_Descriptor);
@@ -79,6 +80,10 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("RISC-V (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
+      Virt.mtimecmp := 16#0000_0000_0400_0000#;
+      -- Virt.mtime    := 16#0000_0000_0000_0000#;
+      RISCV.Irq_Enable;
       -------------------------------------------------------------------------
    end BSP_Setup;
 

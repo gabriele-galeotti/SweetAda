@@ -27,11 +27,17 @@ package CPU is
    --                                                                        --
    --========================================================================--
 
+   pragma Preelaborate;
+
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames RISCV.Irq_Enable;
-   procedure Irq_Disable renames RISCV.Irq_Disable;
+   subtype Irq_State_Type is RISCV.Irq_State_Type;
+
+   procedure Irq_Enable                                    renames RISCV.Irq_Enable;
+   procedure Irq_Disable                                   renames RISCV.Irq_Disable;
+   function Irq_State_Get return Irq_State_Type            renames RISCV.Irq_State_Get;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames RISCV.Irq_State_Set;
 
 end CPU;

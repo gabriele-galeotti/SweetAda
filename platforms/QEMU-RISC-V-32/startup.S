@@ -18,8 +18,15 @@
                 .global _start
 _start:
 
-                // setup stack
+                //
+                // Setup stack.
+                //
                 la      sp,kernel_stack
+
+                .extern vector
+                la      t1,vector
+                ori     t1,t1,1
+                csrrw   x0,mtvec,t1
 
                 //
                 // Call "adainit" procedure.

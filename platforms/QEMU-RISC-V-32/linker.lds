@@ -48,6 +48,8 @@ SECTIONS
                 _sbss = .;
                 *(.bss)
                 *(.bss.*)
+                *(.sbss)
+                *(.sbss.*)
                 *(COMMON)
                 _ebss = .;
         } > RAM

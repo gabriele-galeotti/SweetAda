@@ -2,6 +2,8 @@
 with System.Storage_Elements;
 with Interfaces;
 
+with RISCV;
+
 package body Application is
 
    --========================================================================--
@@ -13,6 +15,7 @@ package body Application is
    --========================================================================--
 
    use System.Storage_Elements;
+   use Interfaces;
 
    ----------------------------------------------------------------------------
    -- IOEMU
@@ -47,6 +50,10 @@ package body Application is
    procedure Run is
    begin
       -------------------------------------------------------------------------
+      if False then
+         RISCV.Asm_Call (System.Storage_Elements.To_Address (16#2000#));
+      end if;
+      -------------------------------------------------------------------------
       if True then
          declare
             Delay_Count : constant := 300_000_000;
@@ -59,7 +66,7 @@ package body Application is
                IOEMU_IO0 := 16#00#;
                IOEMU_IO1 := IOEMU_IO1 + 1;
                IOEMU_IO2 := IOEMU_IO2 + 1;
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+               for Delay_Loop_Count in 1 .. Delay_Count loop RISCV.NOP; end loop;
             end loop;
          end;
       end if;

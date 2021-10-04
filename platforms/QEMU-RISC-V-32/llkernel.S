@@ -14,3 +14,9 @@
 
                 .sect   .text,"ax"
 
+                .align  8
+
+                .global vector
+                .extern _start
+vector:         j       _start
+
