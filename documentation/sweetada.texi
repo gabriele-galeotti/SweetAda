@@ -837,16 +837,16 @@ a port for a new CPU, or experimentation.
 @node Platform descriptions
 @chapter Platform descriptions
 
-@section Altera10M50GHRD
-@cindex Altera10M50GHRD
+@section Altera 10M50GHRD
+@cindex Altera 10M50GHRD
 
-Altera10M50GHRD is a virtual platform in SweetAda, usable by means of the QEMU
+Altera 10M50GHRD is a virtual platform in SweetAda, usable by means of the QEMU
 emulator. This platform is based on a softcore Nios II processor, implemented in
 real world on an FPGA.
 
 QEMU instantiates a few peripherals for this platform:
 - 2 timers
-- 16550-style UART
+- 1 16550-style UART
 
 By using libioemu, there are also 8 32-bit I/O ports are available.
 
@@ -856,8 +856,119 @@ already wrapped in the platform's configuration.in.
 @section Amiga
 @cindex Amiga
 
-The Amiga platform is the well-known PC machine based on the M68k venerable class
+The Amiga platform is the well-known machine based on the M68k venerable class
 of CPU.
+
+@section Arduino Uno
+@cindex Arduino Uno
+
+@section Atlas
+@cindex Atlas
+
+@section Terasic DE10-Lite
+@cindex Terasic DE10-Lite
+
+@section DECstation 5000/133
+@cindex DECstation 5000/133
+
+@section Digi Connect ME
+@cindex Digi Connect ME
+
+@section Dreamcast
+@cindex Dreamcast
+
+@section FRDM-KL46Z
+@cindex FRDM-KL46Z
+
+@section GEMI
+@cindex GEMI
+
+@section SiFive HiFive1
+@cindex SiFive HiFive1
+
+@section Integrator/CP
+@cindex Integrator/CP
+
+@section LEON3
+@cindex LEON3
+
+@section M5235BCC
+@cindex M5235BCC
+
+@section ML605
+@cindex ML605
+
+@section MPC8306 SOM
+@cindex MPC8306 SOM
+
+@section MPC8306 Switch
+@cindex MPC8306 Switch
+
+@section MPC8315e
+@cindex MPC8315e
+
+@section MSP432P401R
+@cindex MSP432P401R
+
+@section MVME162-510A
+@cindex MVME162-510A
+
+@section Malta
+@cindex Malta
+
+@section Memec FX12
+@cindex Memec FX12
+
+@section PC-x86
+@cindex PC-x86
+
+@section PC-x86-64
+@cindex PC-x86-64
+
+@section QEMU AArch64
+@cindex QEMU AArch64
+
+@section QEMU AVR
+@cindex QEMU AVR
+
+@section QEMU MIPS
+@cindex QEMU MIPS
+
+@section QEMU RISC-V 32
+@cindex QEMU RISC-V 32
+
+@section Raspberry Pi 3
+@cindex Raspberry Pi 3
+
+@section SBC5206
+@cindex SBC5206
+
+@section SPARCstation 5
+@cindex SPARCstation 5
+
+@section STM32F769I
+@cindex STM32F769I
+
+@section Spartan 3A EK
+@cindex Spartan 3A EK
+
+@section Spartan 3E SK
+@cindex Spartan 3E SK
+
+@section Synergy S5D9
+@cindex Synergy S5D9
+
+@section IBM S/390
+@cindex IBM S/390
+
+@section Taihu
+@cindex Taihu
+
+@section Xilinx Zynq A9
+@cindex Xilinx Zynq A9
+
+@section ZOOM
+@cindex ZOOM
 
 @node Optimizations
 @chapter Optimizations
