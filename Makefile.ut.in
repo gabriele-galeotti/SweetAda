@@ -57,6 +57,6 @@ else
 RUNSWEETADA        := runsweetada$(EXEEXT)
 endif
 
-# needed by RTS Makefile in cmd/msys environments
+# needed by RTS Makefile
 export DOS2UNIX PROCESSCFG
 

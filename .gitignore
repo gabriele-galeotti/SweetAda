@@ -44,21 +44,24 @@ kernel.*
 # libutils                                                                     #
 ################################################################################
 toolchain_tools/*.o
+toolchain_tools/elftool
+toolchain_tools/elftool.exe
 toolchain_tools/gcc-wrapper
 toolchain_tools/gcc-wrapper.exe
 toolchain_tools/gnat-wrapper
 toolchain_tools/gnat-wrapper.exe
-toolchain_tools/elftool
-toolchain_tools/elftool.exe
+elftool
+elftool.exe
+elftool-osx
 gcc-wrapper
 gcc-wrapper.exe
 gcc-wrapper-osx
 gnat-wrapper
 gnat-wrapper.exe
 gnat-wrapper-osx
-elftool
-elftool.exe
-elftool-osx
+runsweetada
+runsweetada.exe
+runsweetada-osx
 libutils/stackusage.tcl
 
 ################################################################################

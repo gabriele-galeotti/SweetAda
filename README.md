@@ -4,7 +4,7 @@
 Latest news:
 
 02/10/2021
-- heavily changes in the Makefile build system: now you can build both SweetAda
+- heavi changes in the Makefile build system: now you can build both SweetAda
   and the RTS
 - Windos cmd.exe and MSYS environments are now independent, and do not require
   support (apart the make and sed utilities)
