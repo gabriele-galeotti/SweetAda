@@ -55,6 +55,7 @@ SECTIONS
                 _sbss = .;
                 *(.bss)
                 *(.bss.*)
+                *(.sbss)
                 *(COMMON)
                 /* *(.gnu.linkonce.b.*) */
                 . = ALIGN(0x10);

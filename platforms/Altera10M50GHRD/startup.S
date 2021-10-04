@@ -52,10 +52,6 @@ dead:           br      .
 
                 .size   _start,.-_start
 
-                // __FIX__ little quirk to force emission of .vectors section
-                .extern irq_entry
-                movhi   r2,%lo(irq_entry)
-
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .data

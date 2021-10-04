@@ -8,7 +8,7 @@
 CPU := NiosII
 
 GCC_SWITCHES_PLATFORM     +=
-LD_SWITCHES_PLATFORM      +=
+LD_SWITCHES_PLATFORM      += --undefined=irq_entry
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00

@@ -30,7 +30,6 @@
 
                 .global irq_entry
 irq_entry:
-                .extern irq_process
                 addi    sp,sp,-(15*4)
                 stw     r1,0(sp)
                 stw     r2,4(sp)
@@ -47,6 +46,7 @@ irq_entry:
                 stw     r13,48(sp)
                 stw     r14,52(sp)
                 stw     r15,56(sp)
+                .extern irq_process
                 call    irq_process
                 ldw     r15,56(sp)
                 ldw     r14,52(sp)
