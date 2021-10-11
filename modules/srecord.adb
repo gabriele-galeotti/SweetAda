@@ -15,8 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
 with Ada.Characters.Latin_1;
+with Interfaces;
 with Bits;
 with LLutils;
 with Memory_Functions;
@@ -31,8 +31,8 @@ package body Srecord is
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
    use Ada.Characters.Latin_1;
+   use Interfaces;
    use Bits;
    use LLutils;
 
@@ -85,6 +85,16 @@ package body Srecord is
       Checksum_Received : Unsigned_8 := 0;
       Checksum_Computed : Unsigned_8 := 0;
    begin
+      TX_Character.all ('S');
+      TX_Character.all ('-');
+      TX_Character.all ('r');
+      TX_Character.all ('e');
+      TX_Character.all ('c');
+      TX_Character.all ('o');
+      TX_Character.all ('r');
+      TX_Character.all ('d');
+      TX_Character.all (CR);
+      TX_Character.all (LF);
       Start_Address := 0;
       Srec := NONE;
       RX_Status := WAIT_S;
@@ -240,6 +250,8 @@ package body Srecord is
                end if;
          end case;
       end loop;
+      TX_Character.all (CR);
+      TX_Character.all (LF);
    end Receive;
 
    ----------------------------------------------------------------------------

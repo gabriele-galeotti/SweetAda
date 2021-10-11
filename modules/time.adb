@@ -58,7 +58,7 @@ package body Time is
       else
          M := M - 2;
       end if;
-      return ((((Y / 4 - Y / 100 + Y / 400 + 367 * M / 12 + Day) + Y * 365 - 719499) * 24 + Hour) * 60 + Minute) * 60 + Second;
+      return ((((Y / 4 - Y / 100 + Y / 400 + 367 * M / 12 + Day) + Y * 365 - 719_499) * 24 + Hour) * 60 + Minute) * 60 + Second;
    end Make_Time;
 
 end Time;
