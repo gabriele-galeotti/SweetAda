@@ -37,33 +37,17 @@ _start:
                 // .data ROM -> RAM relocation.
                 //
                 ldi     r17,hi8(_edata)
-                ldi     r26,lo8(_sdata)
+                ldi     r26,lo8(_sdata)         // X = _sdata
                 ldi     r27,hi8(_sdata)
-                ldi     r30,lo8(_etext)
+                ldi     r30,lo8(_etext)         // Z = _etext
                 ldi     r31,hi8(_etext)
-#if defined(__AVR_ENHANCED__)
                 ldi     r16,hh8(_etext)
-#else
-                ldi     r16,hh8(_etext-0x10000)
-1:
-                inc     r16
-#endif
-                rjmp    3f
-2:
-#if defined(__AVR_ENHANCED__)
-                elpm    r0,Z+
-#else
-                elpm
-#endif
+                rjmp    2f
+1:              lpm     r0,Z+
                 st      X+,r0
-#if !defined(__AVR_ENHANCED__)
-                adiw    r30,1
-                brcs    1b
-#endif
-3:
-                cpi     r26,lo8(_edata)
+2:              cpi     r26,lo8(_edata)
                 cpc     r27,r17                 // r17 = hi8(_edata)
-                brne    2b
+                brne    1b
 
                 //
                 // Call "adainit" procedure.

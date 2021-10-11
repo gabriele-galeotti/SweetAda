@@ -33,6 +33,24 @@ _start:
                 ldi     r16,hi8(RAMEND)         // load high byte of RAMEND into r16
                 out     SPH,r16                 // store r16 in stack pointer high
 
+#if __AVR_ENHANCED__ == 1
+                //
+                // .data ROM -> RAM relocation.
+                //
+                ldi     r17,hi8(_edata)
+                ldi     r26,lo8(_sdata)         // X = _sdata
+                ldi     r27,hi8(_sdata)
+                ldi     r30,lo8(_etext)         // Z = _etext
+                ldi     r31,hi8(_etext)
+                ldi     r16,hh8(_etext)
+                rjmp    2f
+1:              lpm     r0,Z+
+                st      X+,r0
+2:              cpi     r26,lo8(_edata)
+                cpc     r27,r17                 // r17 = hi8(_edata)
+                brne    1b
+#endif
+
                 //
                 // Call "adainit" procedure.
                 //

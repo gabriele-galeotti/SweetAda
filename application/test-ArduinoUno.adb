@@ -57,12 +57,7 @@ package body Application is
    procedure Run is
    begin
       -------------------------------------------------------------------------
-      if False then
-         AVR.Asm_Call (System.Storage_Elements.To_Address (16#400#));
-      end if;
-      -------------------------------------------------------------------------
-      -- GPIO PIN 13 blink test -----------------------------------------------
-      -- on-board LED is an output
+      -- GPIO PIN 13 startup blink test, to verify .data relocation -----------
       DDRB := (DDB5 => True, others => False);
       for N in 1 .. NBlinks loop
          PORTB.PORTB5 := True;
@@ -72,7 +67,7 @@ package body Application is
       end loop;
       Delay_Simple (32);
       NBlinks := 3;
-      -------------------------------------------------------------------------
+      -- blink test -----------------------------------------------------------
       if False then
          loop
             for N in 1 .. NBlinks loop
@@ -112,7 +107,7 @@ package body Application is
                end loop;
                UDR0 := Bits.To_U8 (Hello (Idx));
                if True then
-                  -- "alert" signal in case a terminal is not open (the MCU is
+                  -- "confirm" a TX in case a terminal is not open (the MCU is
                   -- sending characters, but the TX LED is stuck on)
                   PORTB.PORTB5 := True;
                   Delay_Simple (2);
