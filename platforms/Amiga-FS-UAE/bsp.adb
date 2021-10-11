@@ -96,12 +96,8 @@ package body BSP is
       OCS_Print (0, 1, "Press mouse-MB to un-grab the pointer.");
       OCS_Print (0, 3, "F12+D to activate the debugger.");
       OCS_Print (0, 2, "Close this window to shutdown the emulator.");
-      -- serial port ----------------------------------------------------------
-      -- bit    description
-      -- 15     defines serial receive as 9 bit word
-      -- 14..00 defines baud rate
-      CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC
-      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL
+      -- Serialport -----------------------------------------------------------
+      Serialport_Init;
       -- UARTs ----------------------------------------------------------------
       UART1_Descriptor.Base_Address  := To_Address (IOEMU_CIA_BASEADDRESS + 16#40#);
       UART1_Descriptor.Scale_Address := 2;

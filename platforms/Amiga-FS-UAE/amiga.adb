@@ -215,6 +215,42 @@ package body Amiga is
    end CIAA_ICR_SetBitMask;
 
    ----------------------------------------------------------------------------
+   -- Serialport
+   ----------------------------------------------------------------------------
+   -- SERPER
+   -- bit    description
+   -- 15     serial receive as 9 bit word
+   -- 14..00 baud rate
+   ----------------------------------------------------------------------------
+
+   procedure Serialport_Init is
+   begin
+      CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC
+      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL
+   end Serialport_Init;
+
+   procedure Serialport_RX (C : out Character) is
+      R : SERDATR_Type;
+   begin
+      loop
+         R := CUSTOM.SERDATR;
+         if R.RBF then
+            C := To_Ch (R.DB);
+            INTREQ_ClearBitMask (16#0800#);
+            exit;
+         end if;
+      end loop;
+   end Serialport_RX;
+
+   procedure Serialport_TX (C : in Character) is
+   begin
+      loop
+         exit when CUSTOM.SERDATR.TBE;
+      end loop;
+      CUSTOM.SERDAT := (D => To_U8 (C), S => 16#01#);
+   end Serialport_TX;
+
+   ----------------------------------------------------------------------------
    -- Tclk_Init
    ----------------------------------------------------------------------------
    procedure Tclk_Init is

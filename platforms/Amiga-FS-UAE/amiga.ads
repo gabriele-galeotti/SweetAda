@@ -450,6 +450,12 @@ package Amiga is
    procedure CIAA_ICR_SetBitMask (Value : in Unsigned_8) with
       Inline => True;
 
+   procedure Serialport_Init;
+
+   procedure Serialport_RX (C : out Character);
+
+   procedure Serialport_TX (C : in Character);
+
    procedure Tclk_Init;
 
    ----------------------------------------------------------------------------

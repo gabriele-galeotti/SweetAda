@@ -133,7 +133,7 @@ package body Application is
                   TC2 := Tick_Count;
                end if;
                if Tick_Count_Expired (TC3, 300) then
-                  CUSTOM.SERDAT := (D => 16#55#, S => 16#01#);
+                  Serialport_TX ('X');
                   TC3 := Tick_Count;
                end if;
             end loop;
