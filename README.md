@@ -3,6 +3,10 @@
 
 Latest news:
 
+12/10/2021
+- experimental Print_Float in Console unit; only print floats; you have to set
+  RTS := SFP and USE_LIBGCC := Y in configuration.in
+
 02/10/2021
 - heavy changes in the Makefile build system: now you can build both SweetAda
   and the RTS
