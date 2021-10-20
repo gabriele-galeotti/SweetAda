@@ -102,7 +102,7 @@ freeze@*
 test tool to compare two builds
 @item
 libutils@*
-script utilities
+scripts and support utilities
 @item
 modules@*
 various high-level libraries
@@ -114,7 +114,7 @@ platforms@*
 platform-dependent low-level library
 @item
 rts@*
-Ada run-time
+Ada Run-Time System
 @item
 share@*
 common auxiliary files
@@ -139,7 +139,7 @@ Hence, if you want to integrate SweetAda in a GUI, remember to change the workin
 performing an action.
 
 SweetAda requires some support from the OS environment. Apart the standard low-level utilities,
-like programs to copy files and usual filesystem operations, the GNU make and GNU sed utilities
+like programs to copy files and usual filesystem operations, the GNU Make and GNU sed utilities
 are required in order to perform basic activities. If you do not have them available, please
 install them from your package provider, or download them form the SweetAda SourceForge repository.
 Remember to put the executable path in the visible part of the PATH environment variable which
@@ -152,16 +152,16 @@ a system GCC compiler available online if you want to change their behaviour (wh
 recommended, though). However, a standard system are not expected to have them built from sources,
 because the SweetAda package already provide them as executable installed.
 
-The GCC wrapper is a small piece of code between the compiler driver and the compiler
-executable. It analyzes command line parameters, selects verbosity level and instructs
-the compiler executable to generate additional output files, like assembler listing and
-Ada expanded source code. There is a companion wrapper, the "GNAT wrapper", but its use
-is limited to print brief informations when GNATMAKE processes with'ed units.
+The GCC wrapper is a small piece of code that sits between the compiler driver and the
+compiler executable. It analyzes command line parameters, selects verbosity level and
+instructs the compiler executable to generate additional output files, like assembler
+listing and Ada expanded source code. There is a companion wrapper, the "GNAT wrapper",
+but its use is limited to print brief informations when GNATMAKE processes with'ed units.
 
 elftool is a small utility that dumps the output object code. It is used mainly for a
 clean visual output in order to easily parse ELF sections. elftool is anyway optional,
 and you can avoid its use by setting a variable in the top-level configuration.in file,
-so the stantdard "size" toolchain executable is thus used.
+so the standard "size" toolchain executable is thus used.
 
 runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets.
 
@@ -247,9 +247,12 @@ variable.
 
 SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
 
+NOTE: GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
+GNATPREP, GNATXREF executables.
+
 SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper, that could be
 built from sources if you have a C compiler available online. The current setup is for a
-system GCC compiler.
+system GCC C compiler.
 
 Go into the directory libutils/toolchain_tools and edit the Makefile by adjusting some
 variables:
@@ -294,7 +297,13 @@ System.
 The RTS is being built by means of a makefile target:
 
 @example
-$ CPU=<cpu> [TOOLCHAIN_NAME=<toolchain>] make rts
+$ make CPU=<cpu> [CPU_MODEL=<cpu_model>] RTS=<rts> [TOOLCHAIN_NAME=<toolchain_name>] rts
+@end example
+
+For example:
+
+@example
+$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-ing rts
 @end example
 
 This will build the RTS. If you do not specify the toolchain (e.g., "arm-unknown-eabi")
@@ -560,10 +569,11 @@ gnat.adc.in is a template for the system-wide Ada "gnat.adc" pragma profile. The
 profile is specified in the top-level directory configuration.in by means of the variable
 PROFILE.
 
-When you select a profile, say "zfp", the build machinery processes this file and outputs
-a gnat.adc that contains only the pragmas that carry the selected
-RTS PROFILE as dictated in the trailing comment. gnat.adc.in will be processed by the build system
-and a gnat.adc useable by the compiler will appear in top-level directory after a "make configure".
+When you select a profile, say "zfp", the build machinery processes this file and
+outputs a gnat.adc that contains only the pragmas that carry the selected RTS PROFILE
+as dictated in the trailing comment. gnat.adc.in will be processed by the build system
+and a gnat.adc useable by the compiler will appear in top-level directory after a
+"make configure".
 
 So, if you want to include/exclude a pragma, you have to add/remove that profile name in the
 trailing comment. As an example, let's say that you want to write something that forces the
@@ -842,13 +852,13 @@ a port for a new CPU, or experimentation.
 
 Altera 10M50GHRD is a virtual platform in SweetAda, usable by means of the QEMU
 emulator. This platform is based on a softcore Nios II processor, implemented in
-real world on an FPGA.
+real world in an FPGA.
 
 QEMU instantiates a few peripherals for this platform:
 - 2 timers
 - 1 16550-style UART
 
-By using libioemu, there are also 8 32-bit I/O ports are available.
+By using libioemu, there are also 8 32-bit I/O ports available as widgets.
 
 CPU parameters are fixed at some particular addresses, as dictated by QEMU, and
 already wrapped in the platform's configuration.in.
@@ -858,6 +868,17 @@ already wrapped in the platform's configuration.in.
 
 The Amiga platform is the well-known machine based on the M68k venerable class
 of CPU.
+
+The BSP is mostly based on an Amiga 2000 machine with OCS setup. Supported CPUs
+are 68010, 68020, 68030 and 68040.
+
+In SweetAda, Amiga code can be used both in a real machine and an emulated machine
+by means of the FS-UAE emulator. The output kernel is a binary image that should
+be used instead of the classic "Kickstart". Once you have burnt the kernel image
+in an EPROM, you can boot the Amiga with your Ada code.
+
+Currently, Amiga platform is able to use some peripherals, like the OCS video,
+the serialport and the A2065 network adapter (tested only in FS-UAE).
 
 @section Arduino Uno
 @cindex Arduino Uno

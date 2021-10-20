@@ -146,7 +146,7 @@ I/O and peripherals components
 </li><li> freeze<br>
 test tool to compare two builds
 </li><li> libutils<br>
-script utilities
+scripts and support utilities
 </li><li> modules<br>
 various high-level libraries
 </li><li> obj<br>
@@ -154,7 +154,7 @@ build system output files
 </li><li> platforms<br>
 platform-dependent low-level library
 </li><li> rts<br>
-Ada run-time
+Ada Run-Time System
 </li><li> share<br>
 common auxiliary files
 </li></ul>
@@ -184,7 +184,7 @@ be invalidated by an &quot;esotic&quot; environment setup.
 performing an action.
 </p>
 <p>SweetAda requires some support from the OS environment. Apart the standard low-level utilities,
-like programs to copy files and usual filesystem operations, the GNU make and GNU sed utilities
+like programs to copy files and usual filesystem operations, the GNU Make and GNU sed utilities
 are required in order to perform basic activities. If you do not have them available, please
 install them from your package provider, or download them form the SweetAda SourceForge repository.
 Remember to put the executable path in the visible part of the PATH environment variable which
@@ -197,16 +197,16 @@ a system GCC compiler available online if you want to change their behaviour (wh
 recommended, though). However, a standard system are not expected to have them built from sources,
 because the SweetAda package already provide them as executable installed.
 </p>
-<p>The GCC wrapper is a small piece of code between the compiler driver and the compiler
-executable. It analyzes command line parameters, selects verbosity level and instructs
-the compiler executable to generate additional output files, like assembler listing and
-Ada expanded source code. There is a companion wrapper, the &quot;GNAT wrapper&quot;, but its use
-is limited to print brief informations when GNATMAKE processes with&rsquo;ed units.
+<p>The GCC wrapper is a small piece of code that sits between the compiler driver and the
+compiler executable. It analyzes command line parameters, selects verbosity level and
+instructs the compiler executable to generate additional output files, like assembler
+listing and Ada expanded source code. There is a companion wrapper, the &quot;GNAT wrapper&quot;,
+but its use is limited to print brief informations when GNATMAKE processes with&rsquo;ed units.
 </p>
 <p>elftool is a small utility that dumps the output object code. It is used mainly for a
 clean visual output in order to easily parse ELF sections. elftool is anyway optional,
 and you can avoid its use by setting a variable in the top-level configuration.in file,
-so the stantdard &quot;size&quot; toolchain executable is thus used.
+so the standard &quot;size&quot; toolchain executable is thus used.
 </p>
 <p>runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets.
 </p>
@@ -306,9 +306,12 @@ Next: <a href="#Building-the-RTS" accesskey="n" rel="next">Building the RTS</a>,
 
 <p>SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
 </p>
+<p>NOTE: GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
+GNATPREP, GNATXREF executables.
+</p>
 <p>SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper, that could be
 built from sources if you have a C compiler available online. The current setup is for a
-system GCC compiler.
+system GCC C compiler.
 </p>
 <p>Go into the directory libutils/toolchain_tools and edit the Makefile by adjusting some
 variables:
@@ -357,7 +360,13 @@ System.
 <p>The RTS is being built by means of a makefile target:
 </p>
 <div class="example">
-<pre class="example">$ CPU=&lt;cpu&gt; [TOOLCHAIN_NAME=&lt;toolchain&gt;] make rts
+<pre class="example">$ make CPU=&lt;cpu&gt; [CPU_MODEL=&lt;cpu_model&gt;] RTS=&lt;rts&gt; [TOOLCHAIN_NAME=&lt;toolchain_name&gt;] rts
+</pre></div>
+
+<p>For example:
+</p>
+<div class="example">
+<pre class="example">$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-ing rts
 </pre></div>
 
 <p>This will build the RTS. If you do not specify the toolchain (e.g., &quot;arm-unknown-eabi&quot;)
@@ -637,10 +646,11 @@ the underlying logic behaviour.
 profile is specified in the top-level directory configuration.in by means of the variable
 PROFILE.
 </p>
-<p>When you select a profile, say &quot;zfp&quot;, the build machinery processes this file and outputs
-a gnat.adc that contains only the pragmas that carry the selected
-RTS PROFILE as dictated in the trailing comment. gnat.adc.in will be processed by the build system
-and a gnat.adc useable by the compiler will appear in top-level directory after a &quot;make configure&quot;.
+<p>When you select a profile, say &quot;zfp&quot;, the build machinery processes this file and
+outputs a gnat.adc that contains only the pragmas that carry the selected RTS PROFILE
+as dictated in the trailing comment. gnat.adc.in will be processed by the build system
+and a gnat.adc useable by the compiler will appear in top-level directory after a
+&quot;make configure&quot;.
 </p>
 <p>So, if you want to include/exclude a pragma, you have to add/remove that profile name in the
 trailing comment. As an example, let&rsquo;s say that you want to write something that forces the
@@ -951,13 +961,13 @@ Next: <a href="#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previ
 
 <p>Altera 10M50GHRD is a virtual platform in SweetAda, usable by means of the QEMU
 emulator. This platform is based on a softcore Nios II processor, implemented in
-real world on an FPGA.
+real world in an FPGA.
 </p>
 <p>QEMU instantiates a few peripherals for this platform:
 - 2 timers
 - 1 16550-style UART
 </p>
-<p>By using libioemu, there are also 8 32-bit I/O ports are available.
+<p>By using libioemu, there are also 8 32-bit I/O ports available as widgets.
 </p>
 <p>CPU parameters are fixed at some particular addresses, as dictated by QEMU, and
 already wrapped in the platform&rsquo;s configuration.in.
@@ -968,6 +978,17 @@ already wrapped in the platform&rsquo;s configuration.in.
 
 <p>The Amiga platform is the well-known machine based on the M68k venerable class
 of CPU.
+</p>
+<p>The BSP is mostly based on an Amiga 2000 machine with OCS setup. Supported CPUs
+are 68010, 68020, 68030 and 68040.
+</p>
+<p>In SweetAda, Amiga code can be used both in a real machine and an emulated machine
+by means of the FS-UAE emulator. The output kernel is a binary image that should
+be used instead of the classic &quot;Kickstart&quot;. Once you have burnt the kernel image
+in an EPROM, you can boot the Amiga with your Ada code.
+</p>
+<p>Currently, Amiga platform is able to use some peripherals, like the OCS video,
+the serialport and the A2065 network adapter (tested only in FS-UAE).
 </p>
 <a name="Arduino-Uno"></a>
 <h3 class="section">15.3 Arduino Uno</h3>
