@@ -34,7 +34,7 @@ package CPU is
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable renames  SH.Irq_Enable;
+   procedure Irq_Enable  renames SH.Irq_Enable;
    procedure Irq_Disable renames SH.Irq_Disable;
 
    ----------------------------------------------------------------------------

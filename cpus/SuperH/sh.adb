@@ -44,6 +44,20 @@ package body SH is
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- NOP
+   ----------------------------------------------------------------------------
+   procedure NOP is
+   begin
+      Asm (
+           Template => " nop",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end NOP;
+
+   ----------------------------------------------------------------------------
    -- Interrupts
    ----------------------------------------------------------------------------
 
@@ -56,6 +70,16 @@ package body SH is
    begin
       null; -- __TBD__
    end Irq_Disable;
+
+   function Irq_State_Get return Irq_State_Type is
+   begin
+      return 0; -- __TBD__
+   end Irq_State_Get;
+
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   begin
+      null; -- __TBD__
+   end Irq_State_Set;
 
    ----------------------------------------------------------------------------
    -- Locking subprograms

@@ -5,6 +5,8 @@ ifeq      ($(CPU_MODEL),SH7032)
 else ifeq ($(CPU_MODEL),SH7750)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_SH4)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/SH7750
+else
+  TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_SuperH)
 endif
 
 # override core MMIO

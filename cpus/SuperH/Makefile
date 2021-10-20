@@ -24,7 +24,7 @@ OBJECTS :=
 
 ifneq ($(USE_LIBGCC),Y)
 LIB1ASMSRC       := lib1funcs.S
-LIBGCC_FUNCTIONS := ashiftlt lshiftrt mulsi3 sdivsi3 udivsi3 div_table
+LIBGCC_FUNCTIONS := ashiftlt ashiftrt lshiftrt mulsi3 sdivsi3 udivsi3 div_table
 LIBGCC_SOURCES   := $(foreach f,$(LIBGCC_FUNCTIONS),L_$(f).S)
 OBJECTS          += $(foreach f,$(LIBGCC_FUNCTIONS),$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/L_$(f).o)
 $(LIBGCC_SOURCES) : %.S : $(LIB1ASMSRC)

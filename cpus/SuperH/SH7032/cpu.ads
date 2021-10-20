@@ -33,8 +33,12 @@ package CPU is
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames SH.Irq_Enable;
-   procedure Irq_Disable renames SH.Irq_Disable;
+   subtype Irq_State_Type is SH.Irq_State_Type;
+
+   procedure Irq_Enable                                    renames SH.Irq_Enable;
+   procedure Irq_Disable                                   renames SH.Irq_Disable;
+   function Irq_State_Get return Irq_State_Type            renames SH.Irq_State_Get;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames SH.Irq_State_Set;
 
    ----------------------------------------------------------------------------
    -- Locking

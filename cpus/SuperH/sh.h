@@ -18,6 +18,15 @@
  */
 
 /*
+ * Define variable label containing a value:
+ * output: "LABEL: VALUE"
+ */
+#define VARW(label, value)  \
+label:          .word value
+#define VARL(label, value)  \
+label:          .long value
+
+/*
  * Create a prefixed symbol name:
  * output: "p_SYMBOL"
  */

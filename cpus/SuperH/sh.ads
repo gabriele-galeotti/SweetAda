@@ -30,11 +30,26 @@ package SH is
    pragma Preelaborate;
 
    ----------------------------------------------------------------------------
+   -- Generic definitions
+   ----------------------------------------------------------------------------
+
+   procedure NOP with
+      Inline => True;
+
+   ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable;
-   procedure Irq_Disable;
+   type Irq_State_Type is new Integer;
+
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
+   function Irq_State_Get return Irq_State_Type with
+      Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
