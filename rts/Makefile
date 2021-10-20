@@ -46,13 +46,24 @@ MKDIR := mkdir -p
 RMDIR := rm -f -r
 endif
 
+ifeq ($(CPU),)
+$(error Error: no valid CPU)
+endif
 ifeq ($(TOOLCHAIN_NAME),)
 $(error Error: no valid TOOLCHAIN_NAME)
 endif
-
 ifeq ($(RTS),)
 $(error Error: no valid RTS)
 endif
+ifeq ($(MULTILIB),)
+$(error Error: no valid MULTILIB)
+endif
+#ifeq ($(ADAINCLUDE_PATH),)
+#$(error Error: no valid ADAINCLUDE_PATH)
+#endif
+#ifeq ($(ADALIB_PATH),)
+#$(error Error: no valid ADALIB_PATH)
+#endif
 
 TARGET := $(CPU)
 
@@ -67,8 +78,8 @@ endif
 # assemble RTS paths
 RTS_SOURCE_PATH            := ./src/$(RTS)
 RTS_SOURCE_PATH_TARGET     := ./src/targets/$(TARGET)
-ADALIB_PATH                := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adalib
 ADAINCLUDE_PATH            := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adainclude
+ADALIB_PATH                := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adalib
 ifeq ($(OSTYPE),cmd)
 RTS_SOURCE_PATH_CMD        := $(shell $(ECHO) $(RTS_SOURCE_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
 RTS_SOURCE_PATH_TARGET_CMD := $(shell $(ECHO) $(RTS_SOURCE_PATH_TARGET)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
@@ -150,6 +161,9 @@ CC_SWITCHES   += $(CC_SWITCHES_RTS)
 # Build targets.                                                               #
 #                                                                              #
 ################################################################################
+
+.PHONY : all
+all : configure-rts configure-rts-target multilib
 
 .PHONY : configure
 configure : createdirectories configure-rts configure-rts-target
