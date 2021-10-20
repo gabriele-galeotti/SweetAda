@@ -43,8 +43,10 @@ package MicroBlaze is
    BREAKPOINT_Instruction_Size : constant             := 4;
    BREAKPOINT_Asm_String       : constant String      := ".word 0xB9CC0060";
 
-   procedure NOP;
-   procedure BREAKPOINT;
+   procedure NOP with
+      Inline => True;
+   procedure BREAKPOINT with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- MicroBlaze registers
@@ -225,23 +227,9 @@ package MicroBlaze is
    -- IRQ handling
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable;
-   procedure Irq_Disable;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (NOP);
-   pragma Inline (BREAKPOINT);
-
-   pragma Inline (Irq_Enable);
-   pragma Inline (Irq_Disable);
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
 
 end MicroBlaze;

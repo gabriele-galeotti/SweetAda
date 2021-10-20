@@ -267,7 +267,7 @@ package body Amiga is
       -- A single timer count takes 10 clock cycles, so:
       -- 10 / 7093790 = 1.40968 us for 1 count
       -- for a 1 ms, then, the latch value should be:
-      -- 1000 / 1.40968 = 709.38 (0x2c5)
+      -- 1000 / 1.40968 = 709.38 (0x2C5)
       --
       -- CIAA uses interrupt on Level 2 (PORTS).
       --

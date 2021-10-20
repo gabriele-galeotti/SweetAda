@@ -138,18 +138,18 @@ package M68k is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP
-      with Inline => True;
-   procedure BREAKPOINT
-      with Inline => True;
-   function SR_Read return SR_Type
-      with Inline => True;
-   procedure SR_Write (Value : in SR_Type)
-      with Inline => True;
-   procedure VBR_Set (VBR_Address : in Address)
-      with Inline => True;
-   procedure Asm_Call (Target_Address : in Address)
-      with Inline => True;
+   procedure NOP with
+      Inline => True;
+   procedure BREAKPOINT with
+      Inline => True;
+   function SR_Read return SR_Type with
+      Inline => True;
+   procedure SR_Write (Value : in SR_Type) with
+      Inline => True;
+   procedure VBR_Set (VBR_Address : in Address) with
+      Inline => True;
+   procedure Asm_Call (Target_Address : in Address) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -420,14 +420,14 @@ package M68k is
 
    subtype Irq_State_Type is ILEVEL_Type;
 
-   procedure Irq_Enable
-      with Inline => True;
-   procedure Irq_Disable
-      with Inline => True;
-   function Irq_State_Get return Irq_State_Type
-      with Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type)
-      with Inline => True;
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
+   function Irq_State_Get return Irq_State_Type with
+      Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
@@ -442,11 +442,11 @@ package M68k is
    end record with
       Size => CPU_Unsigned'Size;
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean)
-      with Inline => True;
-   procedure Lock (Lock_Object : in out Lock_Type)
-      with Inline => True;
-   procedure Unlock (Lock_Object : out Lock_Type)
-      with Inline => True;
+   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) with
+      Inline => True;
+   procedure Lock (Lock_Object : in out Lock_Type) with
+      Inline => True;
+   procedure Unlock (Lock_Object : out Lock_Type) with
+      Inline => True;
 
 end M68k;
