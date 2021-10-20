@@ -31,9 +31,6 @@ INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/abort_library.ads
-
 .PHONY : configure
 configure :
 	@$(PROCESSCFG) configure.h.in configure.h
