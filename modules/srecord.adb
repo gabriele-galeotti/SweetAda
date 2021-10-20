@@ -85,6 +85,8 @@ package body Srecord is
       Checksum_Received : Unsigned_8 := 0;
       Checksum_Computed : Unsigned_8 := 0;
    begin
+      TX_Character.all (CR);
+      TX_Character.all (LF);
       TX_Character.all ('S');
       TX_Character.all ('-');
       TX_Character.all ('r');
