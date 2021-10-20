@@ -29,6 +29,8 @@ package GEMI is
    --                                                                        --
    --========================================================================--
 
+   pragma Preelaborate;
+
    use System;
    use System.Storage_Elements;
    use Interfaces;
@@ -38,5 +40,7 @@ package GEMI is
       Volatile   => True,
       Import     => True,
       Convention => Ada;
+
+   UART_BASEADDRESS : constant := 16#0600_2000#;
 
 end GEMI;

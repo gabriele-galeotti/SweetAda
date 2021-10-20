@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with UART16x50;
+
 package BSP is
 
    --========================================================================--
@@ -24,6 +26,11 @@ package BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use UART16x50;
+
+   UART_Descriptor : aliased Uart16x50_Descriptor_Type;
+   -- := Uart16x50_DESCRIPTOR_INVALID;
 
    -- procedure Console_Putchar (C : in Character);
    -- procedure Console_Getchar (C : out Character);

@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.adb                                                                                                   --
+-- __FLN__ last_chance_handler.ads                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,52 +16,33 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
-with MMIO;
-with GEMI;
 
-package body BSP is
+package Last_Chance_Handler is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
+   pragma Preelaborate;
+
+   -- Source_Location is a C NUL-terminated string
+   procedure Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer);
+
+private
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Package subprograms                          --
+   --                              Private part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   ----------------------------------------------------------------------------
-   -- Console wrappers
-   ----------------------------------------------------------------------------
+   pragma Export (C, Last_Chance_Handler, "__gnat_last_chance_handler");
+   pragma No_Return (Last_Chance_Handler);
 
-   -- procedure Console_Putchar (C : in Character) is null;
-   -- procedure Console_Getchar (C : out Character) is null;
-
-   ----------------------------------------------------------------------------
-   -- BSP_Setup
-   ----------------------------------------------------------------------------
-   procedure BSP_Setup is
-   begin
-      -- UART -----------------------------------------------------------------
-      UART_Descriptor.Base_Address  := To_Address (GEMI.UART_BASEADDRESS);
-      UART_Descriptor.Scale_Address := 4;
-      UART_Descriptor.Baud_Clock    := 1_843_200;
-      UART_Descriptor.Read_8        := MMIO.Read'Access;
-      UART_Descriptor.Write_8       := MMIO.Write'Access;
-      UART_Descriptor.Data_Queue    := ((others => 0), 0, 0, 0);
-      UART16x50.Init (UART_Descriptor);
-      -------------------------------------------------------------------------
-   end BSP_Setup;
-
-end BSP;
+end Last_Chance_Handler;

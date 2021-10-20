@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.adb                                                                                                   --
+-- __FLN__ last_chance_handler.adb                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,12 +15,11 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
-with MMIO;
+with Interfaces;
+with SH;
 with GEMI;
 
-package body BSP is
+package body Last_Chance_Handler is
 
    --========================================================================--
    --                                                                        --
@@ -30,8 +29,7 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
+   use Interfaces;
 
    --========================================================================--
    --                                                                        --
@@ -42,26 +40,21 @@ package body BSP is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Console wrappers
+   -- Last_Chance_Handler
    ----------------------------------------------------------------------------
-
-   -- procedure Console_Putchar (C : in Character) is null;
-   -- procedure Console_Getchar (C : out Character) is null;
-
-   ----------------------------------------------------------------------------
-   -- BSP_Setup
-   ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) is
+      pragma Unreferenced (Source_Location);
+      pragma Unreferenced (Line);
+      Delay_Count : constant := 30_000;
+      Value       : Unsigned_8 := 16#F0#;
    begin
-      -- UART -----------------------------------------------------------------
-      UART_Descriptor.Base_Address  := To_Address (GEMI.UART_BASEADDRESS);
-      UART_Descriptor.Scale_Address := 4;
-      UART_Descriptor.Baud_Clock    := 1_843_200;
-      UART_Descriptor.Read_8        := MMIO.Read'Access;
-      UART_Descriptor.Write_8       := MMIO.Write'Access;
-      UART_Descriptor.Data_Queue    := ((others => 0), 0, 0, 0);
-      UART16x50.Init (UART_Descriptor);
-      -------------------------------------------------------------------------
-   end BSP_Setup;
+      loop
+         Value := Value xor 16#10#;
+         GEMI.LEDPORT := Value;
+         for Delay_Loop_Count in 1 .. Delay_Count loop
+            SH.NOP;
+         end loop;
+      end loop;
+   end Last_Chance_Handler;
 
-end BSP;
+end Last_Chance_Handler;

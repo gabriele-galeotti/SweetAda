@@ -29,27 +29,46 @@ sp:             .long   0
                 .global _start
 _start:
 
-                nop
-
+                //
                 // Section 8 Bus State Controller (BSC)
                 // 8.1.4 Register Configuration
+                // Section 15 Pin Function Controller (PFC)
+                // 15.2 Register Configuration
+                //
+                mov.l   BCRA,r1
+                mov.w   BCRV,r0
+                mov.w   r0,@r1
+                mov.l   WCR1A,r1
+                mov.w   WCR1V,r0
+                mov.w   r0,@r1
+                mov.l   WCR3A,r1
+                mov.w   WCR3V,r0
+                mov.w   r0,@r1
+                mov.l   PACR1A,r1
+                mov.w   PACR1V,r0
+                mov.w   r0,@r1
+                mov.l   PACR2A,r1
+                mov.w   PACR2V,r0
+                mov.w   r0,@r1
 
                 //
                 // Setup stack pointer.
                 //
                 mov.l   REF(SVC_stack),r15
 
-                // perform static data relocation
-                //mov.l   REF(movdata),r0
-                //jsr     @r0
-                //nop
+                //
+                // Static data relocation.
+                //
+                mov.l   REF(movdata),r0
+                jsr     @r0
+                nop
 
                 //
                 // Call "adainit" procedure.
                 //
-                //mov.l   REF(adainit),r0
-                //jsr     @r0
-                //nop
+                mov.l   REF(adainit),r0
+                jsr     @r0
+                nop
 
                 //
                 // Jump to high-level code.
@@ -64,6 +83,21 @@ dead:           bra     .
                 .size   _start,.-_start
 
                 .align  4
+VARL(BCRA, 0x05FFFFA0)                                  // BCR
+VARW(BCRV, 0x0800)                                      // enable BAS
+                .align  4
+VARL(WCR1A, 0x05FFFFA2)                                 // WCR1
+VARW(WCR1V, 0xFFFF)                                     // default
+                .align  4
+VARL(WCR3A, 0x05FFFFA6)                                 // WCR3
+VARW(WCR3V, 0xF800)                                     // default
+                .align  4
+VARL(PACR1A, 0x05FFFFC8)                                // PACR1
+VARW(PACR1V, 0xFF06)                                    // enable /DREQ0, /DREQ1, /AH
+                .align  4
+VARL(PACR2A, 0x05FFFFCA)                                // PACR2
+VARW(PACR2V, 0xFF95)                                    // default
+                .align  4
 DEF_LREF(SVC_stack)
 DEF_LREF(movdata)
 DEF_EREF(adainit)
@@ -77,22 +111,13 @@ DEF_EREF(_ada_main)
 
                 .align  2
 movdata:
-                mov.l   REF(_sdata),r1                  // .L8
-                mov.l   REF(_edata),r3                  // .L9
+                mov.l   REF(_sdata),r1
+                mov.l   REF(_edata),r3
                 cmp/eq  r3,r1
                 bt      .L3
-                cmp/hs  r3,r1
-                bt      .L3
-                sett
-                mov.l   REF(_data_start),r2             // .L10
-                subc    r1,r3
-                mov     #-4,r7
-                and     r7,r3
-                add     #4,r3
-                add     r2,r3
-                .align  2
+                mov.l   REF(_etext),r2
 .L4:            mov.l   @r2+,r7
-                cmp/eq  r3,r2
+                cmp/eq  r3,r1
                 mov.l   r7,@r1
                 add     #4,r1
                 bf      .L4
@@ -100,7 +125,7 @@ movdata:
                 nop
 
                 .align  4
-DEF_EREF(_data_start)
+DEF_EREF(_etext)
 DEF_EREF(_sdata)
 DEF_EREF(_edata)
 
