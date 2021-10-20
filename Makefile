@@ -121,9 +121,11 @@ SHARE_DIRECTORY         := share
 ifeq ($(OSTYPE),cmd)
 PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) && $(LS_DIRS) * 2> nul)
 CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) && $(LS_DIRS) * 2> nul)
+RTSES     := $(filter-out targets,$(shell $(CD) $(RTS_DIRECTORY)\src && $(LS_DIRS) * 2> nul))
 else
 PLATFORMS := $(shell ($(CD) $(PLATFORM_BASE_DIRECTORY) && $(LS_DIRS) *) 2> /dev/null)
 CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) && $(LS_DIRS) *) 2> /dev/null)
+RTSES     := $(filter-out targets,$(shell ($(CD) $(RTS_DIRECTORY)/src && $(LS_DIRS) *) 2> /dev/null))
 endif
 
 # default filenames
@@ -433,6 +435,8 @@ ifneq ($(TCLSH),)
 export TCLSH
 endif
 
+export MAKE
+
 ################################################################################
 #                                                                              #
 # Private non-global definitions and variables.                                #
@@ -505,6 +509,8 @@ endif
 help :
 	@$(call echo-print,"make help (default)")
 	@$(call echo-print,"  Display an help about make targets.")
+	@$(call echo-print,"make CPU=<cpu> [CPU_MODEL=<cpu_model>] RTS=<rts> [TOOLCHAIN_NAME=<toolchain_name>] rts")
+	@$(call echo-print,"  Create RTS <rts> for CPU <cpu> with toolchain <toolchain_name>.")
 	@$(call echo-print,"make PLATFORM=<platform> [SUBPLATFORM=<subplatform>] createkernelcfg")
 	@$(call echo-print,"  Create the '$(KERNEL_CFGFILE)' main configuration file.")
 	@$(call echo-print,"make configure")
@@ -535,6 +541,9 @@ help :
 	@$(call echo-print,"  Clean object files and all configuration/support files.")
 	@$(call echo-print,"make probevariable PROBEVARIABLE=<variablename>")
 	@$(call echo-print,"  Obtain the value of a variable.")
+	@$(call echo-print,"Available CPUs: $(CPUS)")
+	@$(call echo-print,"Available RTSes: $(RTSES)")
+	@$(call echo-print,"Available Platforms: $(PLATFORMS)")
 
 #
 # Compile phase.
@@ -820,6 +829,9 @@ endif
 ifneq ($(CPU_MODEL),)
 	@$(call echo-print,"CPU MODEL:          $(CPU_MODEL)")
 endif
+ifneq ($(FPU_MODEL),)
+	@$(call echo-print,"FPU MODEL:          $(FPU_MODEL)")
+endif
 	@$(call echo-print,"OSTYPE:             $(OSTYPE)")
 	@$(call echo-print,"SWEETADA PATH:      $(SWEETADA_PATH)")
 	@$(call echo-print,"TOOLCHAIN PREFIX:   $(TOOLCHAIN_PREFIX)")
@@ -922,8 +934,8 @@ endif
 rts :
 ifeq ($(OSTYPE),cmd)
 	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO ( \
-          SET "MAKEFLAGS="                                  && \
-          $(MAKE_RTS) --eval="MULTILIB := %%M" configure    && \
+          SET "MAKEFLAGS="                               &&    \
+          $(MAKE_RTS) --eval="MULTILIB := %%M" configure &&    \
           $(MAKE_RTS) --eval="MULTILIB := %%M" multilib        \
           )
 else

@@ -28,6 +28,7 @@ FILEPATCH          := filepatch$(SCREXT_cmd)
 GCC_WRAPPER        := gcc-wrapper$(EXEEXT)
 GNAT_WRAPPER       := gnat-wrapper$(EXEEXT)
 PROCESSCFG         := processcfg$(SCREXT_cmd)
+RTSBUILD           := rtsbuild$(SCREXT_cmd)
 RUNSWEETADA        := runsweetada$(EXEEXT)
 else
 CREATECONFIGUREGPR := createconfiguregpr$(SCREXT)
@@ -50,11 +51,12 @@ GCC_WRAPPER        := gcc-wrapper$(EXEEXT)
 GNAT_WRAPPER       := gnat-wrapper$(EXEEXT)
 endif
 PROCESSCFG         := processcfg$(SCREXT)
-endif
+RTSBUILD           := rtsbuild$(SCREXT)
 ifeq ($(OSTYPE),darwin)
 RUNSWEETADA        := runsweetada-osx$(EXEEXT)
 else
 RUNSWEETADA        := runsweetada$(EXEEXT)
+endif
 endif
 
 # needed by RTS Makefile
