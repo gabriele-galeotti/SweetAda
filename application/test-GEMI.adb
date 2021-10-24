@@ -68,7 +68,7 @@ package body Application is
                if Value = 1 then
                   Value := 16#10#;
                end if;
-               -- UART16x50.TX (BSP.UART_Descriptor, 16#30#);
+               UART16x50.TX (BSP.UART_Descriptor, 16#30#);
             end loop;
          end;
       end if;
