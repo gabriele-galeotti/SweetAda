@@ -20,6 +20,7 @@ with Interfaces;
 with Bits;
 with LLutils;
 with Memory_Functions;
+-- with Console;
 
 package body Srecord is
 
@@ -129,8 +130,12 @@ package body Srecord is
                   when others => Srec := NONE;
                end case;
                case Srec is
-                  when S0 .. S9 => RX_Status := WAIT_BYTECOUNT1; Checksum_Computed := 0;
-                  when NONE     => RX_Status := WAIT_EOL;
+                  when S0 .. S9 =>
+                     RX_Status := WAIT_BYTECOUNT1;
+                     Checksum_Computed := 0;
+                  when NONE     =>
+                     TX_Character.all ('X');
+                     RX_Status := WAIT_EOL;
                end case;
             -----------------------
             when WAIT_BYTECOUNT1 =>
@@ -138,6 +143,7 @@ package body Srecord is
                if C_Is_HexDigit then
                   RX_Status := WAIT_BYTECOUNT2;
                else
+                  TX_Character.all ('X');
                   RX_Status := WAIT_EOL;
                end if;
             -----------------------
@@ -150,6 +156,7 @@ package body Srecord is
                   Addressvalue := 0;
                   RX_Status := WAIT_ADDRESS;
                else
+                  TX_Character.all ('X');
                   RX_Status := WAIT_EOL;
                end if;
             --------------------
@@ -178,6 +185,7 @@ package body Srecord is
                      end case;
                   end if;
                else
+                  TX_Character.all ('X');
                   RX_Status := WAIT_EOL;
                end if;
             ------------------
@@ -205,6 +213,7 @@ package body Srecord is
                      RX_Status := WAIT_CHECKSUM1;
                   end if;
                else
+                  TX_Character.all ('X');
                   RX_Status := WAIT_EOL;
                end if;
             ----------------------
@@ -213,6 +222,7 @@ package body Srecord is
                if C_Is_HexDigit then
                   RX_Status := WAIT_CHECKSUM2;
                else
+                  TX_Character.all ('X');
                   RX_Status := WAIT_EOL;
                end if;
             ----------------------
@@ -234,21 +244,30 @@ package body Srecord is
                                                    );
                         when S7 .. S9 =>
                            -- start address
+                           TX_Character.all ('R');
                            Start_Address := Addressvalue;
-                           exit;
                         when S4       =>
-                           exit;
+                           -- this record is reserved
+                           null;
                         when others   =>
                            null;
                      end case;
-                     RX_Status := WAIT_CHECKSUM1;
+                  else
+                     -- checksum error
+                     TX_Character.all ('C');
                   end if;
+               else
+                  TX_Character.all ('X');
                end if;
                RX_Status := WAIT_EOL;
             ----------------
             when WAIT_EOL =>
                if C = LF or else C = CR then
-                  RX_Status := WAIT_S;
+                  if Start_Address /= 0 then
+                     exit;
+                  else
+                     RX_Status := WAIT_S;
+                  end if;
                end if;
          end case;
       end loop;
