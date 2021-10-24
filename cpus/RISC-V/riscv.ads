@@ -102,10 +102,10 @@ package RISCV is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP
-      with Inline => True;
-   procedure Asm_Call (Target_Address : in Address)
-      with Inline => True;
+   procedure NOP with
+      Inline => True;
+   procedure Asm_Call (Target_Address : in Address) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -113,13 +113,13 @@ package RISCV is
 
    subtype Irq_State_Type is Integer;
 
-   procedure Irq_Enable
-      with Inline => True;
-   procedure Irq_Disable
-      with Inline => True;
-   function Irq_State_Get return Irq_State_Type
-      with Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type)
-      with Inline => True;
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
+   function Irq_State_Get return Irq_State_Type with
+      Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
+      Inline => True;
 
 end RISCV;
