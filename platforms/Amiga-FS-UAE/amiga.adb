@@ -225,8 +225,10 @@ package body Amiga is
 
    procedure Serialport_Init is
    begin
-      CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC
-      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL
+      -- CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC 9600 bps
+      CUSTOM.SERPER := (RATE => 16#005C#, LONG => False); -- NTSC 38400 bps
+      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL 9600 bps
+      -- CUSTOM.SERPER := (RATE => 16#005B#, LONG => False); -- PAL 38400 bps
    end Serialport_Init;
 
    procedure Serialport_RX (C : out Character) is

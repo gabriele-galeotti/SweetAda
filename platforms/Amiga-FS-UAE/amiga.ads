@@ -38,8 +38,8 @@ package Amiga is
 
    ----------------------------------------------------------------------------
    -- chipset clocks are 1/4 XTAL base frequency
-   -- NTSC 28.63636 MHz
-   -- PAL  28.37516 MHz
+   -- NTSC 28.63636 MHz --> CHIPSET_CLOCK = 28.63636 MHz / 4 = 7.15909 MHz
+   -- PAL  28.37516 MHz --> CHIPSET_CLOCK = 28.37516 MHz / 4 = 7.09379 MHz
    ----------------------------------------------------------------------------
 
    CHIPSET_CLOCK_NTSC : constant := 7_159_090; -- CHIPSET_CLOCK_NTSC / 2 = 3_579_545
