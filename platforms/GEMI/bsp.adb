@@ -17,8 +17,11 @@
 
 with System;
 with System.Storage_Elements;
+with Interfaces;
+with Bits;
 with MMIO;
 with GEMI;
+with Console;
 
 package body BSP is
 
@@ -32,6 +35,8 @@ package body BSP is
 
    use System;
    use System.Storage_Elements;
+   use Bits;
+   use Interfaces;
 
    --========================================================================--
    --                                                                        --
@@ -45,8 +50,18 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   -- procedure Console_Putchar (C : in Character) is null;
-   -- procedure Console_Getchar (C : out Character) is null;
+   procedure Console_Putchar (C : in Character) is
+   begin
+      UART16x50.TX (UART_Descriptor, To_U8 (C));
+   end Console_Putchar;
+
+   procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
+   begin
+      -- UART16x50.RX (UART_Descriptor, Data);
+      Data := 0;
+      C := To_Ch (Data);
+   end Console_Getchar;
 
    ----------------------------------------------------------------------------
    -- BSP_Setup
@@ -56,11 +71,18 @@ package body BSP is
       -- UART -----------------------------------------------------------------
       UART_Descriptor.Base_Address  := To_Address (GEMI.UART_BASEADDRESS);
       UART_Descriptor.Scale_Address := 4;
-      UART_Descriptor.Baud_Clock    := 1_843_200;
+      UART_Descriptor.Baud_Clock    := 7_372_800;  -- board #1
+      -- UART_Descriptor.Baud_Clock    := 16_000_000; -- board #2
       UART_Descriptor.Read_8        := MMIO.Read'Access;
       UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART_Descriptor.Data_Queue    := ((others => 0), 0, 0, 0);
       UART16x50.Init (UART_Descriptor);
+      -- Console --------------------------------------------------------------
+      Console.Console_Descriptor.Write := Console_Putchar'Access;
+      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.TTY_Setup;
+      -------------------------------------------------------------------------
+      Console.Print ("GEMI SH7032", NL => True);
       -------------------------------------------------------------------------
    end BSP_Setup;
 

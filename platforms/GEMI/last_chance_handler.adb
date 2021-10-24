@@ -49,11 +49,11 @@ package body Last_Chance_Handler is
       Value       : Unsigned_8 := 16#F0#;
    begin
       loop
-         Value := Value xor 16#10#;
          GEMI.LEDPORT := Value;
          for Delay_Loop_Count in 1 .. Delay_Count loop
             SH.NOP;
          end loop;
+         Value := Value xor 16#10#;
       end loop;
    end Last_Chance_Handler;
 

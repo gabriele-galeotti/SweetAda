@@ -29,11 +29,10 @@ package BSP is
 
    use UART16x50;
 
-   UART_Descriptor : aliased Uart16x50_Descriptor_Type;
-   -- := Uart16x50_DESCRIPTOR_INVALID;
+   UART_Descriptor : aliased Uart16x50_Descriptor_Type := Uart16x50_DESCRIPTOR_INVALID;
 
-   -- procedure Console_Putchar (C : in Character);
-   -- procedure Console_Getchar (C : out Character);
+   procedure Console_Putchar (C : in Character);
+   procedure Console_Getchar (C : out Character);
    procedure BSP_Setup;
 
 private

@@ -42,5 +42,6 @@ package GEMI is
       Convention => Ada;
 
    UART_BASEADDRESS : constant := 16#0600_2000#;
+   RTC_BASEADDRESS  : constant := 16#0600_7000#;
 
 end GEMI;
