@@ -1,0 +1,7 @@
+# volume statement
+# volser     devtype[-model] [cyls [ipltext]]
+SYSRES       3330            *     dloader.obj
+# dataset statement for each dataset to be created
+# dsname              method         units pri sec dir dsorg recfm lrecl blksize keylen
+SYSVTOC               vtoc           cyl   1
+SYS1.SWEETADA.OBJTEXT seq kernel.ipl trk   8   0   0   ps    fb    80    80
