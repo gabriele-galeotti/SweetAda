@@ -231,6 +231,51 @@ package body PC is
    end RTC_Handle;
 
    ----------------------------------------------------------------------------
+   -- RTC_Read_Clock
+   ----------------------------------------------------------------------------
+   procedure RTC_Read_Clock (T : in out Time.TM_Time) is
+      RTC_BCD    : Boolean;
+      RTC_Second : Unsigned_8;
+      RTC_Minute : Unsigned_8;
+      RTC_Hour   : Unsigned_8;
+      RTC_Mday   : Unsigned_8;
+      RTC_Month  : Unsigned_8;
+      RTC_Year   : Unsigned_8;
+      function Register_Read (Register : Unsigned_8) return Unsigned_8;
+      function Register_Read (Register : Unsigned_8) return Unsigned_8 is
+      begin
+         CPU.IO.PortOut (RTC_INDEX, RTC_NMI_DISABLE or Register);
+         return Unsigned_8'(CPU.IO.PortIn (RTC_DATA));
+      end Register_Read;
+      function Adjust_BCD (V : Unsigned_8; BCD : Boolean) return Unsigned_8;
+      function Adjust_BCD (V : Unsigned_8; BCD : Boolean) return Unsigned_8 is
+      begin
+         if BCD then
+            return (V and 16#0F#) + (V / 2**4) * 10;
+         else
+            return V;
+         end if;
+      end Adjust_BCD;
+   begin
+      RTC_BCD := not Bits.BitN (Register_Read (RTC_REGISTER_B), 2);
+      while True loop
+         RTC_Second := Register_Read (RTC_REGISTER_Seconds);
+         RTC_Minute := Register_Read (RTC_REGISTER_Minutes);
+         RTC_Hour   := Register_Read (RTC_REGISTER_Hours);
+         RTC_Mday   := Register_Read (RTC_REGISTER_Mday);
+         RTC_Month  := Register_Read (RTC_REGISTER_Month);
+         RTC_Year   := Register_Read (RTC_REGISTER_Year);
+         exit when Register_Read (RTC_REGISTER_Seconds) = RTC_Second;
+      end loop;
+      T.Second := Natural (Adjust_BCD (RTC_Second, RTC_BCD));
+      T.Minute := Natural (Adjust_BCD (RTC_Minute, RTC_BCD));
+      T.Hour   := Natural (Adjust_BCD (RTC_Hour, RTC_BCD));
+      T.Mday   := Natural (Adjust_BCD (RTC_Mday, RTC_BCD));
+      T.Month  := Natural (Adjust_BCD (RTC_Month - 1, RTC_BCD));
+      T.Year   := Natural (Adjust_BCD (RTC_Year, RTC_BCD));
+   end RTC_Read_Clock;
+
+   ----------------------------------------------------------------------------
    -- PPI_Init
    ----------------------------------------------------------------------------
    procedure PPI_Init is

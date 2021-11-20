@@ -25,6 +25,16 @@ package Time is
    --                                                                        --
    --========================================================================--
 
+   type TM_Time is
+   record
+      Second : Natural;
+      Minute : Natural;
+      Hour   : Natural;
+      Mday   : Natural;
+      Month  : Natural;
+      Year   : Natural;
+   end record;
+
    function Make_Time (
                        Year   : Positive;
                        Month  : Positive;
