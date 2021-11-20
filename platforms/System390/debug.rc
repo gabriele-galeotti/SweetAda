@@ -2,7 +2,6 @@
 # breakpoint on last instruction of loader.rdr
 #b 0x00A002E8
 # breakpoint in startup.S
-#b 0x00000804
+b 0x00010000
 # disassemble kernel
-#u 0x00000800
-#start
+u 0x00010000

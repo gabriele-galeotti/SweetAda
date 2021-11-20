@@ -3,8 +3,8 @@ ENTRY(_start)
 
 MEMORY
 {
-        RAM : ORIGIN = 0x00000800, LENGTH = 256M
-        /* RAM : ORIGIN = 0x00010000, LENGTH = 256M */
+        /* RAM : ORIGIN = 0x00000800, LENGTH = 256M */
+        RAM : ORIGIN = 0x00010000, LENGTH = 256M
 }
 
 SECTIONS

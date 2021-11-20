@@ -1,4 +1,8 @@
 sh @X3270@ -keypad localhost:1052 &
-sh echo "*** Repeatedly press 'Attn' key on the X3270 console."
+sh echo "*****************************************************"
+sh echo "*                                                   *"
+sh echo "* Repeatedly press 'Attn' key on the X3270 console. *"
+sh echo "*                                                   *"
+sh echo "*****************************************************"
 #script ./platforms/System390/debug.rc
 ipl @IPL_DEVNUM@

@@ -39,10 +39,10 @@ configure :
 .PHONY : postbuild
 postbuild :
 ifeq ($(IPL_MODE),CARD_READER)
-	@$(TCLSH) S360obj.tcl -a 0x800 -l loader.rdr $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
+	$(TCLSH) S360obj.tcl -a 0x10000 -p -l loader.rdr $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
 else ifeq ($(IPL_MODE),DASD)
 	@$(RM) SYSRES.DSD
-	@$(TCLSH) S360obj.tcl -a 0x800 $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
+	@$(TCLSH) S360obj.tcl -a 0x10000 -p $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
 	@$(call echo-print,"SYSRES 3390-1 * $(KERNEL_IPLFILE)")> dasd_ctlfile.txt
 	@$(HERCULES_PREFIX)/bin/dasdload -0 dasd_ctlfile.txt SYSRES.DSD 5
 endif

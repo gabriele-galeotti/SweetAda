@@ -18,19 +18,42 @@
                 .global _start
 _start:
 
-                larl    %r15,kernel_stack
+                //
+                // Extract entry point from PSW @ 0 (24-bit).
+                //
+                sr      %r11,%r11
+                sr      %r12,%r12
+                icm     %r12,0b111,5(%r11)
+
+                // setup the literal pool
+                bras    %r13,1f
+.Lstart:
+.Lkernel_stack: .long   kernel_stack
+                .extern adainit
+.Ladainit:      .long   adainit
+                .extern _ada_main
+.L_ada_main:    .long   _ada_main
+1:
+
+                //
+                // Setup stack pointer.
+                //
+                l       %r15,(.Lkernel_stack-.Lstart)(%r13)
+
+                // allocate a stack frame
+                ahi     %r15,-96
 
                 //
                 // Call "adainit" procedure.
                 //
-                .extern adainit
-                brasl   %r14,adainit
+                l       %r14,(.Ladainit-.Lstart)(%r13)
+                basr    %r14,%r14
 
                 //
                 // Jump to high-level code.
                 //
-                .extern _ada_main
-                brasl   %r14,_ada_main
+                l       %r14,(.L_ada_main-.Lstart)(%r13)
+                basr    %r14,%r14
 
 dead:           b       .
 
