@@ -216,6 +216,63 @@ proc write_txt_record {fp sequence address data} {
 }
 
 ################################################################################
+# write_rld_record                                                             #
+#                                                                              #
+################################################################################
+proc write_rld_record {fp sequence} {
+    global EBCDIC_SPACE
+    puts -nonewline $fp [binary format c1 0x02]                         ;# 01 constant
+    puts -nonewline $fp [binary format c1 [a2e "R"]]                    ;# 02 EBCDIC "R"
+    puts -nonewline $fp [binary format c1 [a2e "L"]]                    ;# 03 EBCDIC "L"
+    puts -nonewline $fp [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
+    for {set p 4} {$p < 72} {incr p} {                                  ;# pad with blanks
+        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+    }
+    set seqc [format "%08d" $sequence]                                  ;# 73 deck ID or sequence number
+    foreach c [s2e $seqc] {
+        puts -nonewline $fp [binary format c1 $c]
+    }
+}
+
+################################################################################
+# write_sym_record                                                             #
+#                                                                              #
+################################################################################
+proc write_rld_record {fp sequence} {
+    global EBCDIC_SPACE
+    puts -nonewline $fp [binary format c1 0x02]                         ;# 01 constant
+    puts -nonewline $fp [binary format c1 [a2e "S"]]                    ;# 02 EBCDIC "S"
+    puts -nonewline $fp [binary format c1 [a2e "Y"]]                    ;# 03 EBCDIC "Y"
+    puts -nonewline $fp [binary format c1 [a2e "M"]]                    ;# 04 EBCDIC "M"
+    for {set p 4} {$p < 72} {incr p} {                                  ;# pad with blanks
+        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+    }
+    set seqc [format "%08d" $sequence]                                  ;# 73 deck ID or sequence number
+    foreach c [s2e $seqc] {
+        puts -nonewline $fp [binary format c1 $c]
+    }
+}
+
+################################################################################
+# write_xsd_record                                                             #
+#                                                                              #
+################################################################################
+proc write_xsd_record {fp sequence} {
+    global EBCDIC_SPACE
+    puts -nonewline $fp [binary format c1 0x02]                         ;# 01 constant
+    puts -nonewline $fp [binary format c1 [a2e "X"]]                    ;# 02 EBCDIC "X"
+    puts -nonewline $fp [binary format c1 [a2e "S"]]                    ;# 03 EBCDIC "S"
+    puts -nonewline $fp [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
+    for {set p 4} {$p < 72} {incr p} {                                  ;# pad with blanks
+        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+    }
+    set seqc [format "%08d" $sequence]                                  ;# 73 deck ID or sequence number
+    foreach c [s2e $seqc] {
+        puts -nonewline $fp [binary format c1 $c]
+    }
+}
+
+################################################################################
 # write_end_record                                                             #
 #                                                                              #
 ################################################################################
@@ -225,7 +282,22 @@ proc write_end_record {fp sequence} {
     puts -nonewline $fp [binary format c1 [a2e "E"]]                    ;# 02 EBCDIC "E"
     puts -nonewline $fp [binary format c1 [a2e "N"]]                    ;# 03 EBCDIC "N"
     puts -nonewline $fp [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
-    for {set p 4} {$p < 72} {incr p} {                                  ;# pad with blanks
+    for {set p 4} {$p < 16} {incr p} {                                  ;# pad with blanks
+        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+    }
+    puts -nonewline $fp [binary format c1 [a2e "S"]]                    ;# 17 EBCDIC "S"
+    puts -nonewline $fp [binary format c1 [a2e "w"]]                    ;# 18 EBCDIC "w"
+    puts -nonewline $fp [binary format c1 [a2e "e"]]                    ;# 19 EBCDIC "e"
+    puts -nonewline $fp [binary format c1 [a2e "e"]]                    ;# 20 EBCDIC "e"
+    puts -nonewline $fp [binary format c1 [a2e "t"]]                    ;# 21 EBCDIC "t"
+    puts -nonewline $fp [binary format c1 [a2e "A"]]                    ;# 22 EBCDIC "A"
+    puts -nonewline $fp [binary format c1 [a2e "d"]]                    ;# 23 EBCDIC "d"
+    puts -nonewline $fp [binary format c1 [a2e "a"]]                    ;# 24 EBCDIC "a"
+    for {set p 24} {$p < 32} {incr p} {                                 ;# pad with blanks
+        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+    }
+    puts -nonewline $fp [binary format c1 [a2e "2"]]                    ;# 33 EBCDIC "2"
+    for {set p 33} {$p < 72} {incr p} {                                 ;# pad with blanks
         puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
     }
     set seqc [format "%08d" $sequence]                                  ;# 73 deck ID or sequence number
@@ -242,6 +314,7 @@ proc write_end_record {fp sequence} {
 source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
 set address 0x18
+set write_psw false
 set loader_filename ""
 set input_filename ""
 set output_filename ""
@@ -253,13 +326,15 @@ while {true} {
     if {$argc_index eq $argc_counter} {
         break
     }
-    set args [lindex $argv $argc_index]
-    if {$args eq "-a"} {
+    set arg [lindex $argv $argc_index]
+    if {$arg eq "-a"} {
         incr argc_index
         set address [lindex $argv $argc_index]
-    } elseif {$args eq "-l"} {
+    } elseif {$arg eq "-l"} {
         incr argc_index
         set loader_filename [lindex $argv $argc_index]
+    } elseif {$arg eq "-p"} {
+        set write_psw true
     } else {
         if {$input_filename eq ""} {
             set input_filename [lindex $argv $argc_index]
@@ -304,32 +379,39 @@ write_esd_record $fp_output $sequence $address [file size $input_filename]
 incr sequence
 
 # 2)
-# create a TXT record which contains a PSW
-# create a 24-bit address PSW
-set address_bytes [u32_to_bebytes $address]
-set psw {}
-lappend psw 0x00 0x0C 0x00 0x00
-lappend psw 0x00 [lindex $address_bytes 1] [lindex $address_bytes 2] [lindex $address_bytes 3]
-# create TXT record @ address 0
-write_txt_record $fp_output $sequence 0 $psw
-incr sequence
+# create TXT record which contains PSW @ 0
+# create S/390 31-bit PSW
+if {$write_psw} {
+    set address_bytes [u32_to_bebytes [expr $address | 0x80000000]]
+    set psw {}
+    lappend psw 0x00 0x0C 0x00 0x00
+    lappend psw [lindex $address_bytes 0] \
+                [lindex $address_bytes 1] \
+                [lindex $address_bytes 2] \
+                [lindex $address_bytes 3]
+    # create TXT record @ address 0
+    write_txt_record $fp_output $sequence 0 $psw
+    incr sequence
+}
 
 # 3)
 # create TXT data records from data
 while {true} {
     set data [read $fp_input 56]
     set data_length [string length $data]
-    set splitdata [split $data ""]
-    set hexdata {}
-    foreach byte $splitdata {
-        lappend hexdata [scan $byte %c]
+    if {$data_length > 0} {
+        set splitdata [split $data ""]
+        set hexdata {}
+        foreach byte $splitdata {
+            lappend hexdata [scan $byte %c]
+        }
+        write_txt_record $fp_output $sequence $address $hexdata
+        set address [expr $address + $data_length]
+        incr sequence
     }
-    write_txt_record $fp_output $sequence $address $hexdata
-    incr sequence
     if {$data_length < 56} {
         break
     }
-    set address [expr $address + 56]
 }
 
 # 4)
