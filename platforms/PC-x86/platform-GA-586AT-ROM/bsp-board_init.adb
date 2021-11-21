@@ -18,6 +18,5 @@
    separate (BSP)
    procedure Board_Init is
    begin
-      -- GA-586AT does not need SuperIO programming
       null;
    end Board_Init;
