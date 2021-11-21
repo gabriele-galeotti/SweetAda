@@ -21,6 +21,9 @@ POSTBUILD_ROMFILE         := Y
 # EPROM/FLASHEPROM content is 0xFF when empty, speed-up programming
 OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0xFF
 
+# add super_io directory
+INCLUDE_DIRECTORIES := $(PLATFORM_DIRECTORY)/super_io $(INCLUDE_DIRECTORIES)
+
 USE_APPLICATION := dummy
 
 SESSION_START_COMMAND :=
