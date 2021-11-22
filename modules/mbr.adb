@@ -18,8 +18,6 @@
 with System.Storage_Elements;
 with Bits;
 with LLutils;
-with Memory_Functions;
-with IDE;
 
 package body MBR is
 
@@ -43,10 +41,10 @@ package body MBR is
    type Block_IO_Descriptor_Type is
    record
       Read  : BlockDevices.IO_Read_Ptr;  -- block read procedure
-      Write : BlockDevices.IO_Write_Ptr; -- block write procedure
+      -- Write : BlockDevices.IO_Write_Ptr; -- block write procedure
    end record;
 
-   IO_Context : Block_IO_Descriptor_Type := (null, null);
+   IO_Context : Block_IO_Descriptor_Type := (Read => null);
 
    --========================================================================--
    --                                                                        --
@@ -59,10 +57,9 @@ package body MBR is
    ----------------------------------------------------------------------------
    -- Initialize
    ----------------------------------------------------------------------------
-   procedure Initialize is
+   procedure Initialize (Block_Read : BlockDevices.IO_Read_Ptr) is
    begin
-      -- defaults to IDE
-      IO_Context.Read := IDE.Read'Access;
+      IO_Context.Read := Block_Read;
    end Initialize;
 
    ----------------------------------------------------------------------------
@@ -79,32 +76,24 @@ package body MBR is
       Partition.LBA_Start := 0;
       IO_Context.Read (0, B, Success);
       if Success then
-         if B (510) = 16#55# and then B (511) = 16#AA# then
+         if B (16#01FE#) = 16#55# and then B (16#01FF#) = 16#AA# then
             case Partition_Number is
                when PARTITION1 => Offset := 16#01BE#;
                when PARTITION2 => Offset := 16#01CE#;
                when PARTITION3 => Offset := 16#01DE#;
                when PARTITION4 => Offset := 16#01EE#;
             end case;
-            -- explicit assignment could cause misaligned access (e.g., MIPS)
-            Memory_Functions.Cpymem (
-                                     B'Address + Offset,
-                                     Partition'Address,
-                                     Partition_ENTRY_SIZE
-                                    );
+            -- 32-bit fields could cause misaligned access
+            declare
+               P : Partition_Entry_Type with
+                  Address => B'Address + Offset;
+            begin
+               Partition := P;
+            end;
             if BigEndian then
                Byte_Swap_32 (Partition.LBA_Start'Address);
                Byte_Swap_32 (Partition.LBA_Size'Address);
             end if;
-            -- DEBUG
-            -- Console.Print (P.CHS_First_Sector.CH * 256 + P.CHS_First_Sector.CL, Prefix => "CHS start C: ", NL => True);
-            -- Console.Print (P.CHS_First_Sector.H, Prefix => "CHS start H: ", NL => True);
-            -- Console.Print (P.CHS_First_Sector.S, Prefix => "CHS start S: ", NL => True);
-            -- Console.Print (P.CHS_Last_Sector.CH * 256 + P.CHS_First_Sector.CL, Prefix => "CHS end C: ", NL => True);
-            -- Console.Print (P.CHS_Last_Sector.H, Prefix => "CHS end H: ", NL => True);
-            -- Console.Print (P.CHS_Last_Sector.S, Prefix => "CHS end S: ", NL => True);
-            -- Console.Print (P.LBA_Start, Prefix => "LBA start: ", NL => True);
-            -- Console.Print (P.LBA_Size, Prefix => "LBA size: ", NL => True);
          end if;
       end if;
    end Read;

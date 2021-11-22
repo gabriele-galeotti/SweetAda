@@ -63,7 +63,7 @@ package MBR is
       LBA_Size         at 12 range 0 .. 31;
    end record;
 
-   procedure Initialize;
+   procedure Initialize (Block_Read : BlockDevices.IO_Read_Ptr);
    procedure Read (
                    Success          : out Boolean;
                    Partition_Number : in  Partition_Number_Type;
