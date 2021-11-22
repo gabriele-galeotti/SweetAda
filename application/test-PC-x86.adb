@@ -26,6 +26,7 @@ with Ethernet;
 with PCICAN;
 with PythonVM;
 with Console;
+with Time;
 
 package body Application is
 
@@ -94,6 +95,31 @@ package body Application is
    procedure Run is
    begin
       -------------------------------------------------------------------------
+      if True then
+         declare
+            T : Time.TM_Time;
+         begin
+            Console.Print ("Current date: ", NL => False);
+            RTC_Read_Clock (T);
+            if T.Year < 70 then
+               Console.Print (T.Year + 2000, NL => False);
+            else
+               Console.Print (T.Year + 1900, NL => False);
+            end if;
+            Console.Print ("-", NL => False);
+            Console.Print (T.Month + 1, NL => False);
+            Console.Print ("-", NL => False);
+            Console.Print (T.Mday, NL => False);
+            Console.Print (" ", NL => False);
+            Console.Print (T.Hour, NL => False);
+            Console.Print (":", NL => False);
+            Console.Print (T.Minute, NL => False);
+            Console.Print (":", NL => False);
+            Console.Print (T.Second, NL => False);
+            Console.Print_NewLine;
+         end;
+      end if;
+      -------------------------------------------------------------------------
       if False then
          Malloc.Init (Heap'Address, Heap'Size / Storage_Unit, False);
       end if;
@@ -117,7 +143,7 @@ package body Application is
             Success   : Boolean;
             Partition : MBR.Partition_Entry_Type;
          begin
-            MBR.Initialize;
+            MBR.Initialize (IDE.Read'Access);
             MBR.Read (Success, MBR.PARTITION1, Partition);
             FATFS.Register_BlockRead_Procedure (IDE.Read'Access);
             FATFS.Register_BlockWrite_Procedure (IDE.Write'Access);

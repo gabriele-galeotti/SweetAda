@@ -48,7 +48,7 @@ package body Application is
             Success   : Boolean;
             Partition : MBR.Partition_Entry_Type;
          begin
-            MBR.Initialize;
+            MBR.Initialize (IDE.Read'Access);
             MBR.Read (Success, MBR.PARTITION1, Partition);
             FATFS.Register_BlockRead_Procedure (IDE.Read'Access);
             FATFS.Register_BlockWrite_Procedure (IDE.Write'Access);
