@@ -462,6 +462,13 @@ package Bits is
    BITOFF  : constant Flag := 0;
    BITON   : constant Flag := 1;
 
+   subtype BEUnsigned_16 is Interfaces.Unsigned_16;
+   subtype BEUnsigned_32 is Interfaces.Unsigned_32;
+   subtype BEUnsigned_64 is Interfaces.Unsigned_64;
+   subtype LEUnsigned_16 is Interfaces.Unsigned_16;
+   subtype LEUnsigned_32 is Interfaces.Unsigned_32;
+   subtype LEUnsigned_64 is Interfaces.Unsigned_64;
+
    -- NOTE: System.Address'Size is non-static (System.Address is private), use
    -- static-equivalent Standard'Address_Size
    subtype Address_Bit_Number is Natural range 0 .. Standard'Address_Size - 1;
