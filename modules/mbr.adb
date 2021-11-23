@@ -17,7 +17,6 @@
 
 with System.Storage_Elements;
 with Bits;
-with LLutils;
 
 package body MBR is
 
@@ -32,7 +31,6 @@ package body MBR is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
-   use LLutils;
 
    ----------------------------------------------------------------------------
    -- filesystem I/O
@@ -70,13 +68,12 @@ package body MBR is
                    Partition_Number : in  Partition_Number_Type;
                    Partition        : out Partition_Entry_Type
                   ) is
-      B      : aliased BlockDevices.Block_Type (0 .. 511);
+      Block  : aliased BlockDevices.Block_Type (0 .. 16#01FF#);
       Offset : Storage_Offset;
    begin
-      Partition.LBA_Start := 0;
-      IO_Context.Read (0, B, Success);
+      IO_Context.Read (0, Block, Success);
       if Success then
-         if B (16#01FE#) = 16#55# and then B (16#01FF#) = 16#AA# then
+         if Block (16#01FE#) = 16#55# and then Block (16#01FF#) = 16#AA# then
             case Partition_Number is
                when PARTITION1 => Offset := 16#01BE#;
                when PARTITION2 => Offset := 16#01CE#;
@@ -85,15 +82,16 @@ package body MBR is
             end case;
             -- 32-bit fields could cause misaligned access
             declare
-               P : Partition_Entry_Type with
-                  Address => B'Address + Offset;
+               P : Partition_Entry_Type with Address => Block'Address + Offset;
             begin
                Partition := P;
             end;
             if BigEndian then
-               Byte_Swap_32 (Partition.LBA_Start'Address);
-               Byte_Swap_32 (Partition.LBA_Size'Address);
+               Partition.LBA_Start := Byte_Swap_32 (@);
+               Partition.LBA_Size  := Byte_Swap_32 (@);
             end if;
+         else
+            Success := False;
          end if;
       end if;
    end Read;
