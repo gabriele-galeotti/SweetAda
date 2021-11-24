@@ -37,7 +37,7 @@ package body UART16x50 is
    -- Register types
    ----------------------------------------------------------------------------
 
-   type Uart16x50_Register_Type is (RBR, THR, IER, IIR, LCR, MCR, LSR, MSR, SCR, DLL, DLM);
+   type Uart16x50_Register_Type is (RBR, IER, IIR, LCR, MCR, LSR, MSR, SCR, THR, DLL, DLM);
    for Uart16x50_Register_Type use (
                                     16#00#, -- RBR
                                     16#01#, -- IER
@@ -51,21 +51,6 @@ package body UART16x50 is
                                     16#20#, -- DLL
                                     16#21#  -- DLM
                                    );
-
-   Uart16x50_Register_Offset : constant array (Uart16x50_Register_Type) of Storage_Offset :=
-      (
-       RBR => 0,
-       THR => 0,
-       IER => 1,
-       IIR => 2,
-       LCR => 3,
-       MCR => 4,
-       LSR => 5,
-       MSR => 6,
-       SCR => 7,
-       DLL => 0,
-       DLM => 1
-      );
 
    -- 8.1 Line Control Register
 
@@ -102,6 +87,9 @@ package body UART16x50 is
       DLAB at 0 range 7 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (LCR_Type, Unsigned_8);
+   function To_LCR is new Ada.Unchecked_Conversion (Unsigned_8, LCR_Type);
+
    -- 8.4 Line Status Register
 
    -- THR = Transmit Holding Register
@@ -137,6 +125,9 @@ package body UART16x50 is
       Unused at 0 range 7 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (LSR_Type, Unsigned_8);
+   function To_LSR is new Ada.Unchecked_Conversion (Unsigned_8, LSR_Type);
+
    -- 8.5 Interrupt Identification Register
 
    type Interrupt_Priority_Type is new Bits_2;
@@ -161,6 +152,9 @@ package body UART16x50 is
       Unused at 0 range 3 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (IIR_Type, Unsigned_8);
+   function To_IIR is new Ada.Unchecked_Conversion (Unsigned_8, IIR_Type);
+
    -- 8.6 Interrupt Enable Register
 
    type IER_Type is
@@ -181,6 +175,9 @@ package body UART16x50 is
       MS     at 0 range 3 .. 3;
       Unused at 0 range 4 .. 7;
    end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (IER_Type, Unsigned_8);
+   function To_IER is new Ada.Unchecked_Conversion (Unsigned_8, IER_Type);
 
    -- 8.7 Modem Control Register
 
@@ -204,6 +201,9 @@ package body UART16x50 is
       LOOPBACK at 0 range 4 .. 4;
       Unused   at 0 range 5 .. 7;
    end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (MCR_Type, Unsigned_8);
+   function To_MCR is new Ada.Unchecked_Conversion (Unsigned_8, MCR_Type);
 
    -- 8.8 Modem Status Register
 
@@ -232,18 +232,23 @@ package body UART16x50 is
       DCD  at 0 range 7 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (MSR_Type, Unsigned_8);
+   function To_MSR is new Ada.Unchecked_Conversion (Unsigned_8, MSR_Type);
+
+   -- Register_Read/Write
+
    function Register_Read (
                            Descriptor : Uart16x50_Descriptor_Type;
                            Register   : Uart16x50_Register_Type
-                          ) return Unsigned_8;
-   -- not inlined to avoid code bloating
+                          ) return Unsigned_8 with
+      Inline => True;
 
    procedure Register_Write (
                              Descriptor : in Uart16x50_Descriptor_Type;
                              Register   : in Uart16x50_Register_Type;
                              Value      : in Unsigned_8
-                            );
-   -- not inlined to avoid code bloating
+                            ) with
+      Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -253,6 +258,11 @@ package body UART16x50 is
    --                                                                        --
    --========================================================================--
 
+   type Storage_Offset_Mod is mod 2**(Storage_Offset'Size - 1) with
+      Size => Storage_Offset'Size;
+
+   function To_SO is new Ada.Unchecked_Conversion (Storage_Offset_Mod, Storage_Offset);
+
    function Register_Read (
                            Descriptor : Uart16x50_Descriptor_Type;
                            Register   : Uart16x50_Register_Type
@@ -260,7 +270,7 @@ package body UART16x50 is
    begin
       return Descriptor.Read_8 (Build_Address (
                                                Descriptor.Base_Address,
-                                               Uart16x50_Register_Offset (Register),
+                                               To_SO (Uart16x50_Register_Type'Enum_Rep (Register) and 16#0F#),
                                                Descriptor.Scale_Address
                                               ));
    end Register_Read;
@@ -273,89 +283,10 @@ package body UART16x50 is
    begin
       Descriptor.Write_8 (Build_Address (
                                          Descriptor.Base_Address,
-                                         Uart16x50_Register_Offset (Register),
+                                         To_SO (Uart16x50_Register_Type'Enum_Rep (Register) and 16#0F#),
                                          Descriptor.Scale_Address
                                         ), Value);
    end Register_Write;
-
-   ----------------------------------------------------------------------------
-   -- Local Subprograms (generic)
-   ----------------------------------------------------------------------------
-
-   generic
-      Register_Type : Uart16x50_Register_Type;
-      type Output_Register_Type is private;
-   function Typed_Register_Read (
-                                 Descriptor : Uart16x50_Descriptor_Type
-                                ) return Output_Register_Type;
-   pragma Inline (Typed_Register_Read);
-   function Typed_Register_Read (
-                                 Descriptor : Uart16x50_Descriptor_Type
-                                ) return Output_Register_Type is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_8, Output_Register_Type);
-   begin
-      return Convert (Register_Read (Descriptor, Register_Type));
-   end Typed_Register_Read;
-
-   generic
-      Register_Type : in Uart16x50_Register_Type;
-      type Input_Register_Type is private;
-   procedure Typed_Register_Write (
-                                   Descriptor : in Uart16x50_Descriptor_Type;
-                                   Value      : in Input_Register_Type
-                                  );
-   pragma Inline (Typed_Register_Write);
-   procedure Typed_Register_Write (
-                                   Descriptor : in Uart16x50_Descriptor_Type;
-                                   Value      : in Input_Register_Type
-                                  ) is
-      function Convert is new Ada.Unchecked_Conversion (Input_Register_Type, Unsigned_8);
-   begin
-      Register_Write (Descriptor, Register_Type, Convert (Value));
-   end Typed_Register_Write;
-
-   ----------------------------------------------------------------------------
-   -- Registers Read/Write subprograms
-   ----------------------------------------------------------------------------
-
-   function RBR_Read (Descriptor : Uart16x50_Descriptor_Type) return Unsigned_8;
-   pragma Inline (RBR_Read);
-   function RBR_Read (Descriptor : Uart16x50_Descriptor_Type) return Unsigned_8 is
-   begin
-      return Register_Read (Descriptor, RBR);
-   end RBR_Read;
-   procedure THR_Write (Descriptor : in Uart16x50_Descriptor_Type; Value : in Unsigned_8);
-   pragma Inline (THR_Write);
-   procedure THR_Write (Descriptor : in Uart16x50_Descriptor_Type; Value : in Unsigned_8) is
-   begin
-      Register_Write (Descriptor, THR, Value);
-   end THR_Write;
-   function IER_Read is new Typed_Register_Read (IER, IER_Type);
-   pragma Inline (IER_Read);
-   procedure IER_Write is new Typed_Register_Write (IER, IER_Type);
-   pragma Inline (IER_Write);
-   function LCR_Read is new Typed_Register_Read (LCR, LCR_Type);
-   pragma Inline (LCR_Read);
-   procedure LCR_Write is new Typed_Register_Write (LCR, LCR_Type);
-   pragma Inline (LCR_Write);
-   function MCR_Read is new Typed_Register_Read (MCR, MCR_Type);
-   pragma Inline (MCR_Read);
-   procedure MCR_Write is new Typed_Register_Write (MCR, MCR_Type);
-   pragma Inline (MCR_Write);
-   function LSR_Read is new Typed_Register_Read (LSR, LSR_Type);
-   pragma Inline (LSR_Read);
-   procedure DLL_Write (Descriptor : in Uart16x50_Descriptor_Type; Value : in Unsigned_8);
-   pragma Inline (DLL_Write);
-   procedure DLL_Write (Descriptor : in Uart16x50_Descriptor_Type; Value : in Unsigned_8) is
-   begin
-      Register_Write (Descriptor, DLL, Value);
-   end DLL_Write;
-   procedure DLM_Write (Descriptor : in Uart16x50_Descriptor_Type; Value : in Unsigned_8);
-   pragma Inline (DLM_Write);
-   procedure DLM_Write (Descriptor : in Uart16x50_Descriptor_Type; Value : in Unsigned_8) is
-   begin
-      Register_Write (Descriptor, DLM, Value);
-   end DLM_Write;
 
    ----------------------------------------------------------------------------
    -- Set_Baud_Rate
@@ -377,7 +308,7 @@ package body UART16x50 is
       -- __FIX__
       -- a lock should be used here, because, once DLAB is set, no other
       -- threads should interfere with this statement sequence
-      LCR_Write (Descriptor, (
+      Register_Write (Descriptor, LCR, To_U8 (LCR_Type'(
                               WLS  => 0,
                               STB  => 0,
                               PEN  => False,
@@ -385,10 +316,10 @@ package body UART16x50 is
                               SP   => False,
                               SB   => False,
                               DLAB => True
-                             ));
-      DLL_Write (Descriptor, Unsigned_8 ((Descriptor.Baud_Clock / (BAUD_RATE * 16)) mod 2**8));
-      DLM_Write (Descriptor, Unsigned_8 ((Descriptor.Baud_Clock / (BAUD_RATE * 16)) / 2**8));
-      LCR_Write (Descriptor, (
+                             )));
+      Register_Write (Descriptor, DLL, Unsigned_8 ((Descriptor.Baud_Clock / (BAUD_RATE * 16)) mod 2**8));
+      Register_Write (Descriptor, DLM, Unsigned_8 ((Descriptor.Baud_Clock / (BAUD_RATE * 16)) / 2**8));
+      Register_Write (Descriptor, LCR, To_U8 (LCR_Type'(
                               WLS  => WORD_LENGTH_8,
                               STB  => STOP_BITS_1,
                               PEN  => False,
@@ -396,22 +327,22 @@ package body UART16x50 is
                               SP   => False,
                               SB   => False,
                               DLAB => False
-                             ));
-      IER_Write (Descriptor, (
+                             )));
+      Register_Write (Descriptor, IER, To_U8 (IER_Type'(
                               RDA    => True,
                               THRE   => False,
                               RLS    => False,
                               MS     => False,
                               Unused => 0
-                             ));
-      MCR_Write (Descriptor, (
+                             )));
+      Register_Write (Descriptor, MCR, To_U8 (MCR_Type'(
                               DTR      => True,
                               RTS      => True,
                               OUT1     => False,
                               OUT2     => True,
                               LOOPBACK => False,
                               Unused   => 0
-                             ));
+                             )));
    end Init;
 
    ----------------------------------------------------------------------------
@@ -429,8 +360,8 @@ package body UART16x50 is
                         ) is
    begin
       Success := False;
-      if LSR_Read (Descriptor).DR then
-         Result := RBR_Read (Descriptor);
+      if To_LSR (Register_Read (Descriptor, LSR)).DR then
+         Result := Register_Read (Descriptor, RBR);
          Success := True;
       end if;
    end Input_Poll;
@@ -442,9 +373,9 @@ package body UART16x50 is
    begin
       -- wait for transmitter buffer empty
       loop
-         exit when LSR_Read (Descriptor).TEMT;
+         exit when To_LSR (Register_Read (Descriptor, LSR)).TEMT;
       end loop;
-      THR_Write (Descriptor, Data);
+      Register_Write (Descriptor, THR, Data);
    end TX;
 
    ----------------------------------------------------------------------------
@@ -455,9 +386,9 @@ package body UART16x50 is
    begin
       -- wait for data available
       loop
-         exit when LSR_Read (Descriptor).DR;
+         exit when To_LSR (Register_Read (Descriptor, LSR)).DR;
       end loop;
-      Data := RBR_Read (Descriptor);
+      Data := Register_Read (Descriptor, RBR);
       FIFO.Put (Descriptor.Data_Queue'Access, Data, Success);
    end RX;
 
@@ -474,9 +405,9 @@ package body UART16x50 is
    begin
       -- wait for data available
       loop
-         exit when LSR_Read (Descriptor).DR;
+         exit when To_LSR (Register_Read (Descriptor, LSR)).DR;
       end loop;
-      Data := RBR_Read (Descriptor);
+      Data := Register_Read (Descriptor, RBR);
       FIFO.Put (Descriptor.Data_Queue'Access, Data, Success);
    end Receive;
 
