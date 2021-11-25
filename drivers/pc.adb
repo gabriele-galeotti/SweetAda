@@ -204,16 +204,16 @@ package body PC is
    begin
       CPU.Lock (RTC_Lock);
       -- operating time base = 32.768 kHz, periodic interrupt = 1024 Hz
-      CPU.IO.PortOut (RTC_INDEX, RTC_NMI_DISABLE or RTC_REGISTER_A);
+      CPU.IO.PortOut (RTC_INDEX, Unsigned_8'(RTC_NMI_DISABLE or RTC_REGISTER_A));
       CPU.IO.PortOut (RTC_DATA, Unsigned_8'(16#26#));
       -- clear pending interrupts
-      CPU.IO.PortOut (RTC_INDEX, RTC_NMI_DISABLE or RTC_REGISTER_C);
+      CPU.IO.PortOut (RTC_INDEX, Unsigned_8'(RTC_NMI_DISABLE or RTC_REGISTER_C));
       Data := CPU.IO.PortIn (RTC_DATA);
       -- read register B
-      CPU.IO.PortOut (RTC_INDEX, RTC_NMI_DISABLE or RTC_REGISTER_B);
+      CPU.IO.PortOut (RTC_INDEX, Unsigned_8'(RTC_NMI_DISABLE or RTC_REGISTER_B));
       Data := CPU.IO.PortIn (RTC_DATA);
       -- enable PIE interrupt in register B
-      CPU.IO.PortOut (RTC_INDEX, RTC_NMI_DISABLE or RTC_REGISTER_B);
+      CPU.IO.PortOut (RTC_INDEX, Unsigned_8'(RTC_NMI_DISABLE or RTC_REGISTER_B));
       CPU.IO.PortOut (RTC_DATA, Data or 16#40#);
       CPU.Unlock (RTC_Lock);
    end RTC_Init;
@@ -226,7 +226,7 @@ package body PC is
       Unused : Unsigned_8 with Unreferenced => True;
    begin
       -- reset RTC flag interrupt by reading register C
-      CPU.IO.PortOut (RTC_INDEX, RTC_NMI_DISABLE or RTC_REGISTER_C);
+      CPU.IO.PortOut (RTC_INDEX, Unsigned_8'(RTC_NMI_DISABLE or RTC_REGISTER_C));
       Unused := CPU.IO.PortIn (RTC_DATA);
    end RTC_Handle;
 

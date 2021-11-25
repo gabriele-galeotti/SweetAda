@@ -195,23 +195,22 @@ package PC is
 
    RTC_INDEX            : constant := RTC_BASEADDRESS + 0;
    RTC_DATA             : constant := RTC_BASEADDRESS + 1;
-   RTC_REGISTER_Seconds : constant Unsigned_8 := 16#00#;
-   RTC_REGISTER_Minutes : constant Unsigned_8 := 16#02#;
-   RTC_REGISTER_Hours   : constant Unsigned_8 := 16#04#;
-   RTC_REGISTER_Mday    : constant Unsigned_8 := 16#07#;
-   RTC_REGISTER_Month   : constant Unsigned_8 := 16#08#;
-   RTC_REGISTER_Year    : constant Unsigned_8 := 16#09#;
-   RTC_REGISTER_A       : constant Unsigned_8 := 16#0A#;
-   RTC_REGISTER_B       : constant Unsigned_8 := 16#0B#;
-   RTC_REGISTER_C       : constant Unsigned_8 := 16#0C#;
-   RTC_REGISTER_D       : constant Unsigned_8 := 16#0D#;
-   RTC_NMI_DISABLE      : constant Unsigned_8 := 16#80#;
+   RTC_REGISTER_Seconds : constant := 16#00#;
+   RTC_REGISTER_Minutes : constant := 16#02#;
+   RTC_REGISTER_Hours   : constant := 16#04#;
+   RTC_REGISTER_Mday    : constant := 16#07#;
+   RTC_REGISTER_Month   : constant := 16#08#;
+   RTC_REGISTER_Year    : constant := 16#09#;
+   RTC_REGISTER_A       : constant := 16#0A#;
+   RTC_REGISTER_B       : constant := 16#0B#;
+   RTC_REGISTER_C       : constant := 16#0C#;
+   RTC_REGISTER_D       : constant := 16#0D#;
+   RTC_NMI_DISABLE      : constant := 16#80#;
 
    RTC_Interrupt : constant CPU.Irq_Id_Type := PIC_Irq8;
 
    procedure RTC_Init;
    procedure RTC_Handle (Data_Address : in System.Address);
-
    procedure RTC_Read_Clock (T : in out Time.TM_Time);
 
    ----------------------------------------------------------------------------
