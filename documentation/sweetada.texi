@@ -303,7 +303,7 @@ $ make CPU=<cpu> [CPU_MODEL=<cpu_model>] RTS=<rts> [TOOLCHAIN_NAME=<toolchain_na
 For example:
 
 @example
-$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-ing rts
+$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
 @end example
 
 This will build the RTS. If you do not specify the toolchain (e.g., "arm-unknown-eabi")
@@ -1084,7 +1084,7 @@ Same as EXEC, but the executable is launched in the background, so script contro
 flow can proceed almost immediately.
 
 SLEEP@*
-Suspends the control flow execution for an amount of time.
+Suspends the control flow execution for an amount of time specified in ms.
 
 IOEMU objects@*
 

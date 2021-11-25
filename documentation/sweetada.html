@@ -366,7 +366,7 @@ System.
 <p>For example:
 </p>
 <div class="example">
-<pre class="example">$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-ing rts
+<pre class="example">$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
 </pre></div>
 
 <p>This will build the RTS. If you do not specify the toolchain (e.g., &quot;arm-unknown-eabi&quot;)
@@ -1238,7 +1238,7 @@ Same as EXEC, but the executable is launched in the background, so script contro
 flow can proceed almost immediately.
 </p>
 <p>SLEEP<br>
-Suspends the control flow execution for an amount of time.
+Suspends the control flow execution for an amount of time specified in ms.
 </p>
 <p>IOEMU objects<br>
 </p>
