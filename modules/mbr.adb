@@ -17,6 +17,7 @@
 
 with System.Storage_Elements;
 with Bits;
+with Memory_Functions;
 
 package body MBR is
 
@@ -80,12 +81,12 @@ package body MBR is
                when PARTITION3 => Offset := 16#01DE#;
                when PARTITION4 => Offset := 16#01EE#;
             end case;
-            -- 32-bit fields could cause misaligned access
-            declare
-               P : Partition_Entry_Type with Address => Block'Address + Offset;
-            begin
-               Partition := P;
-            end;
+            -- explicit assignment could cause misaligned access (e.g., MIPS)
+            Memory_Functions.Cpymem (
+                                     Block'Address + Offset,
+                                     Partition'Address,
+                                     Partition_ENTRY_SIZE
+                                    );
             if BigEndian then
                Partition.LBA_Start := Byte_Swap_32 (@);
                Partition.LBA_Size  := Byte_Swap_32 (@);
