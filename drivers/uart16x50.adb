@@ -237,32 +237,16 @@ package body UART16x50 is
 
    -- Register_Read/Write
 
-   function Register_Read (
-                           Descriptor : Uart16x50_Descriptor_Type;
-                           Register   : Uart16x50_Register_Type
-                          ) return Unsigned_8 with
-      Inline => True;
-
-   procedure Register_Write (
-                             Descriptor : in Uart16x50_Descriptor_Type;
-                             Register   : in Uart16x50_Register_Type;
-                             Value      : in Unsigned_8
-                            ) with
-      Inline => True;
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
    type Storage_Offset_Mod is mod 2**(Storage_Offset'Size - 1) with
       Size => Storage_Offset'Size;
 
    function To_SO is new Ada.Unchecked_Conversion (Storage_Offset_Mod, Storage_Offset);
 
+   function Register_Read (
+                           Descriptor : Uart16x50_Descriptor_Type;
+                           Register   : Uart16x50_Register_Type
+                          ) return Unsigned_8 with
+      Inline => True;
    function Register_Read (
                            Descriptor : Uart16x50_Descriptor_Type;
                            Register   : Uart16x50_Register_Type
@@ -279,6 +263,12 @@ package body UART16x50 is
                              Descriptor : in Uart16x50_Descriptor_Type;
                              Register   : in Uart16x50_Register_Type;
                              Value      : in Unsigned_8
+                            ) with
+      Inline => True;
+   procedure Register_Write (
+                             Descriptor : in Uart16x50_Descriptor_Type;
+                             Register   : in Uart16x50_Register_Type;
+                             Value      : in Unsigned_8
                             ) is
    begin
       Descriptor.Write_8 (Build_Address (
@@ -287,6 +277,14 @@ package body UART16x50 is
                                          Descriptor.Scale_Address
                                         ), Value);
    end Register_Write;
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Package subprograms                          --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
 
    ----------------------------------------------------------------------------
    -- Set_Baud_Rate
