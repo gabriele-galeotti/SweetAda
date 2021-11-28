@@ -63,13 +63,13 @@ package Definitions is
    GB4    : constant := 2**32;
 
    -- common known clock rates in Hz
-   RTC32_CLK    : constant := 32_768;
-   UART18_CLK   : constant := 1_843_200;
-   UART24_CLK   : constant := 2_457_600;
-   NTSC_CLK     : constant := 3_579_545;
-   PAL_CLK      : constant := 4_433_619;
-   NTSC_CLK4    : constant := 14_318_182;
-   UART18_CLK10 : constant := UART18_CLK * 10;
+   RTC32k_CLK  : constant := 32_768;
+   UART1M8_CLK : constant := 1_843_200;
+   UART2M4_CLK : constant := 2_457_600;
+   NTSC_CLK    : constant := 3_579_545;
+   PAL_CLK     : constant := 4_433_619;
+   NTSC_CLK4   : constant := 14_318_182;
+   UART18M     : constant := UART1M8_CLK * 10;
 
    -- serial port bit rates
    type Baud_Rate_Type is (
