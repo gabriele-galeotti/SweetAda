@@ -259,14 +259,15 @@ package body PC is
    begin
       RTC_BCD := not Bits.BitN (Register_Read (RTC_REGISTER_B), 2);
       while True loop
-         RTC_Second := Register_Read (RTC_REGISTER_Seconds);
-         RTC_Minute := Register_Read (RTC_REGISTER_Minutes);
-         RTC_Hour   := Register_Read (RTC_REGISTER_Hours);
-         RTC_Mday   := Register_Read (RTC_REGISTER_Mday);
-         RTC_Month  := Register_Read (RTC_REGISTER_Month);
-         RTC_Year   := Register_Read (RTC_REGISTER_Year);
-         exit when Register_Read (RTC_REGISTER_Seconds) = RTC_Second;
+         exit when not To_RTC_RegisterA (Register_Read (RTC_REGISTER_A)).UIP;
       end loop;
+      -- register read within 244 us
+      RTC_Second := Register_Read (RTC_REGISTER_Seconds);
+      RTC_Minute := Register_Read (RTC_REGISTER_Minutes);
+      RTC_Hour   := Register_Read (RTC_REGISTER_Hours);
+      RTC_Mday   := Register_Read (RTC_REGISTER_Mday);
+      RTC_Month  := Register_Read (RTC_REGISTER_Month);
+      RTC_Year   := Register_Read (RTC_REGISTER_Year);
       T.Second := Natural (Adjust_BCD (RTC_Second, RTC_BCD));
       T.Minute := Natural (Adjust_BCD (RTC_Minute, RTC_BCD));
       T.Hour   := Natural (Adjust_BCD (RTC_Hour, RTC_BCD));

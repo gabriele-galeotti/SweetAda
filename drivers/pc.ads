@@ -18,6 +18,7 @@
 with System;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Definitions;
 with Bits;
 with CPU;
 with Time;
@@ -107,7 +108,7 @@ package PC is
    -- https://wiki2.org/en/Colorburst
    -- MASTER_CLK is four times the NTSC color burst frequency:
    -- 4 * (315 / 88) = 4 * 3.579(54) = 14.318182 MHz, T = 69.84 ns
-   MASTER_CLK : constant := 14_318_182;
+   MASTER_CLK : constant := Definitions.NTSC_CLK4;
    -- PIT clock is derived from MASTER clock; initially it is divided by 3,
    -- then is divided further by 4.
    PIT_CLK    : constant := (MASTER_CLK + (12 / 2)) / 12; -- 1.193182 MHz, T = 0.838 us
@@ -188,10 +189,10 @@ package PC is
    PIT_Interrupt : constant CPU.Irq_Id_Type := PIC_Irq0;
 
    ----------------------------------------------------------------------------
-   -- MC146818 RTC
+   -- MC146818A RTC
    ----------------------------------------------------------------------------
 
-   RTC_CLK : constant := 32_768;
+   RTC_CLK : constant := Definitions.RTC32k_CLK; -- 32.768 kHz
 
    RTC_INDEX            : constant := RTC_BASEADDRESS + 0;
    RTC_DATA             : constant := RTC_BASEADDRESS + 1;
@@ -206,6 +207,23 @@ package PC is
    RTC_REGISTER_C       : constant := 16#0C#;
    RTC_REGISTER_D       : constant := 16#0D#;
    RTC_NMI_DISABLE      : constant := 16#80#;
+
+   type RTC_RegisterA_Type is
+   record
+      RS  : Bits.Bits_4;
+      DIV : Bits.Bits_3;
+      UIP : Boolean;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for RTC_RegisterA_Type use
+   record
+      RS  at 0 range 0 .. 3;
+      DIV at 0 range 4 .. 6;
+      UIP at 0 range 7 .. 7;
+   end record;
+
+   function To_RTC_RegisterA is new Ada.Unchecked_Conversion (Unsigned_8, RTC_RegisterA_Type);
 
    RTC_Interrupt : constant CPU.Irq_Id_Type := PIC_Irq8;
 
