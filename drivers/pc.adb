@@ -257,11 +257,11 @@ package body PC is
          end if;
       end Adjust_BCD;
    begin
-      RTC_BCD := not Bits.BitN (Register_Read (RTC_REGISTER_B), 2);
+      RTC_BCD := not To_RTC_RegisterB (Register_Read (RTC_REGISTER_B)).DM;
       while True loop
          exit when not To_RTC_RegisterA (Register_Read (RTC_REGISTER_A)).UIP;
       end loop;
-      -- register read within 244 us
+      -- register reads within 244 us
       RTC_Second := Register_Read (RTC_REGISTER_Seconds);
       RTC_Minute := Register_Read (RTC_REGISTER_Minutes);
       RTC_Hour   := Register_Read (RTC_REGISTER_Hours);

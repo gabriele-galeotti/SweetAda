@@ -225,6 +225,33 @@ package PC is
 
    function To_RTC_RegisterA is new Ada.Unchecked_Conversion (Unsigned_8, RTC_RegisterA_Type);
 
+   type RTC_RegisterB_Type is
+   record
+      DSE    : Boolean;
+      Hour24 : Boolean;
+      DM     : Boolean;
+      SQWE   : Boolean;
+      UIE    : Boolean;
+      AIE    : Boolean;
+      PIE    : Boolean;
+      SET    : Boolean;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for RTC_RegisterB_Type use
+   record
+      DSE    at 0 range 0 .. 0;
+      Hour24 at 0 range 1 .. 1;
+      DM     at 0 range 2 .. 2;
+      SQWE   at 0 range 3 .. 3;
+      UIE    at 0 range 4 .. 4;
+      AIE    at 0 range 5 .. 5;
+      PIE    at 0 range 6 .. 6;
+      SET    at 0 range 7 .. 7;
+   end record;
+
+   function To_RTC_RegisterB is new Ada.Unchecked_Conversion (Unsigned_8, RTC_RegisterB_Type);
+
    RTC_Interrupt : constant CPU.Irq_Id_Type := PIC_Irq8;
 
    procedure RTC_Init;
