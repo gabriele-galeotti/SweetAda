@@ -13,5 +13,9 @@ configure-subplatform :
 .PHONY : postbuild-subplatform
 postbuild-subplatform :
 	$(FILEPAD) $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) 512
-	$(TCLSH) "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/pc-x86-boothd.tcl $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) 0x4000 +pcboothd.dsk
+	$(TCLSH)                                                  \
+          "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/pc-x86-boothd.tcl \
+          $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE)                 \
+          0x4000                                                  \
+          +pcboothd.dsk
 
