@@ -11,21 +11,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #if defined(FLOPPYDISK)
-# define MEDIA_TYPE 0xF0
-# define CYLINDERS 80
-# define HEADS 2
-# define SPT 18
-# define ROOT_ENTRIES 0x00E0
+# define MEDIA_TYPE              0xF0
+# define CYLINDERS               80
+# define HEADS                   2
+# define SPT                     18
+# define ROOT_ENTRIES            0x00E0
 # define PARTITION_SECTORS_SSIZE 2880
-# define PARTITION_SECTOR_START 0
+# define PARTITION_SECTOR_START  0
 # define PARTITION_SECTORS_LSIZE 0
-# define DRIVE_NUMBER 0
-# define FAT_NAME "FAT12   "
+# define DRIVE_NUMBER            0
+# define FAT_NAME                "FAT12   "
 #else
-# define MEDIA_TYPE 0xF8
-# define ROOT_ENTRIES 0x0200
-# define DRIVE_NUMBER 0x80
-# define FAT_NAME "FAT16   "
+# define MEDIA_TYPE              0xF8
+# define ROOT_ENTRIES            0x0200
+# define DRIVE_NUMBER            0x80
+# define FAT_NAME                "FAT16   "
 #endif
 
 // BIOS loads the boot sector @ 0000:7C00.
@@ -123,7 +123,7 @@ read:           movw    nsectorslo,%ax
 boot:
 #if defined(FLOPPYDISK)
                 // shutdown floppy disk motor
-                movw    $0x3F2,%dx
+                movw    $0x03F2,%dx
                 xorb    %al,%al
                 outb    %al,%dx
 #endif
@@ -246,7 +246,7 @@ error:          movb    $0x0E,%ah
                 //
                 // Delay routine.
                 //
-delay:          movl    $0x100000,%ecx
+delay:          movl    $0x00100000,%ecx
 1:       addr32 loop    1b
                 ret
 
