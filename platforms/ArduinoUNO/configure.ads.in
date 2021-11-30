@@ -4,7 +4,7 @@ package Configure is
    pragma Pure;
 
    -- PLATFORM and CPU definitions
-   PLATFORM : constant String := "ArduinoUno";
+   PLATFORM : constant String := "ArduinoUNO";
    CPU      : constant String := "@CPU@";
 
    -- basic configuration parameters

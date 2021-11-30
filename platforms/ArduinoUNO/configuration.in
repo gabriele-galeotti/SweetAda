@@ -1,6 +1,6 @@
 
 #
-# Arduino Uno
+# Arduino UNO
 #
 # AVR ATmega328P
 #
@@ -29,7 +29,7 @@ OBJCOPY_SWITCHES_PLATFORM += -O ihex -R .eeprom
 IMPLICIT_CORE_UNITS := $(filter-out core,$(IMPLICIT_CORE_UNITS))
 export IMPLICIT_CORE_UNITS
 
-USE_APPLICATION := test-ArduinoUno
+USE_APPLICATION := test-ArduinoUNO
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
