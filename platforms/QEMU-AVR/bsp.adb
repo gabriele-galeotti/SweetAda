@@ -17,6 +17,7 @@
 
 with System.Storage_Elements;
 with AVR;
+-- with ATmega128A;
 with ATmega328P;
 
 package body BSP is
@@ -30,6 +31,7 @@ package body BSP is
    --========================================================================--
 
    use System.Storage_Elements;
+   -- use ATmega128A;
    use ATmega328P;
 
    procedure Delay_Simple (NLoops : in Natural);
@@ -84,33 +86,7 @@ package body BSP is
             Delay_Simple (32);
          end loop;
       end if;
-
---      DDRB.Dir5 := True;
---      loop
---         PORTB.Pin5 := True;
---         Delay_Simple (1);
---         PORTB.Pin5 := False;
---         Delay_Simple (1);
---      end loop;
---      if False then
---         -- on-board LED is an output
---         DDRB := (Dir5 => True, others => False);
---         for N in 1 .. NBlinks loop
---            PORTB.Pin5 := True;
---            Delay_Simple (4);
---            PORTB.Pin5 := False;
---            Delay_Simple (8);
---         end loop;
---         NBlinks := 3;
---         Delay_Simple (32);
---         for N in 1 .. NBlinks loop
---            PORTB.Pin5 := True;
---            Delay_Simple (4);
---            PORTB.Pin5 := False;
---            Delay_Simple (8);
---         end loop;
---      end if;
-
+      -------------------------------------------------------------------------
    end BSP_Setup;
 
 end BSP;
