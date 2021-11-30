@@ -11,7 +11,7 @@
 
 #
 # Arguments:
-# [-a hex_address] [-l loader] <input_filename> <output_filename>
+# [-a hex_address] [-l loader] [-p] <input_filename> <output_filename>
 #
 # Environment variables:
 # SWEETADA_PATH
