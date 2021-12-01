@@ -30,6 +30,7 @@
 # RTS
 # ADA_MODE
 # MULTILIB
+# DISABLE_STACK_USAGE
 #
 
 ################################################################################
@@ -121,7 +122,6 @@ ADAC_SWITCHES += -gnatp     # Suppress all checks.
 ADAC_SWITCHES += -gnatyN    # Turn off all style checks.
 ADAC_SWITCHES += -Wextra
 ADAC_SWITCHES += -Wall
-
 CC_SWITCHES :=
 CC_SWITCHES += $(MULTILIB_SWITCHES)
 CC_SWITCHES += -ffreestanding
@@ -155,6 +155,11 @@ LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.ali))
 -include $(RTS_SOURCE_PATH_TARGET)/Makefile.rts.in
 ADAC_SWITCHES += $(ADAC_SWITCHES_RTS)
 CC_SWITCHES   += $(CC_SWITCHES_RTS)
+
+# process per-target compiler switches
+ifneq ($(DISABLE_STACK_USAGE),Y)
+ADAC_SWITCHES += -fstack-usage
+endif
 
 ################################################################################
 #                                                                              #
