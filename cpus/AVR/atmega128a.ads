@@ -408,7 +408,7 @@ package ATmega128A is
 
    PORTD_ADDRESS : constant := 16#32#;
 
-   PORTD : PORTB_Type with
+   PORTD : PORTD_Type with
       Address              => To_Address (PORTD_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
