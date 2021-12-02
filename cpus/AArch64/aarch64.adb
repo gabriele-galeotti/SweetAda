@@ -32,6 +32,20 @@ package body AArch64 is
 
    CRLF : String renames Definitions.CRLF;
 
-   procedure Dummy is null;
+   ----------------------------------------------------------------------------
+   -- Irq_Enable
+   ----------------------------------------------------------------------------
+   procedure Irq_Enable is
+   begin
+      null;
+   end Irq_Enable;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Disable
+   ----------------------------------------------------------------------------
+   procedure Irq_Disable is
+   begin
+      null;
+   end Irq_Disable;
 
 end AArch64;

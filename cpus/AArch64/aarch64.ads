@@ -27,6 +27,11 @@ package AArch64 is
 
    pragma Preelaborate;
 
-   procedure Dummy;
+   ----------------------------------------------------------------------------
+   -- Exceptions and interrupts
+   ----------------------------------------------------------------------------
+
+   procedure Irq_Enable;
+   procedure Irq_Disable;
 
 end AArch64;
