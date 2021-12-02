@@ -34,6 +34,8 @@ set SCRIPT_FILENAME [file tail $argv0]
 
 source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
+set BAUD_RATE 19200
+
 if {[llength $argv] < 1} {
     puts stderr "$SCRIPT_FILENAME: *** Error: invalid number of arguments."
     exit 1
@@ -47,7 +49,7 @@ fconfigure $serialport_fp \
     -blocking 0 \
     -buffering none \
     -eofchar {} \
-    -mode 19200,n,8,1 \
+    -mode $BAUD_RATE,n,8,1 \
     -translation binary
 flush $serialport_fp
 set sp_data [read $serialport_fp 256]
@@ -82,7 +84,8 @@ puts stderr ""
 close $kernel_fp
 
 # execute
-puts $serialport_fp "GO $START_ADDRESS\x0D\x0A"
+after 30
+puts -nonewline $serialport_fp "GO $START_ADDRESS\x0D\x0A"
 
 close $serialport_fp
 
