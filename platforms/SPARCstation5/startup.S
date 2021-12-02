@@ -135,7 +135,7 @@ bm:
                 bne     1f
                 nop
                 lduba   [%g5]CFG_ASI,%g2
-                cmp     %g2, 'U'
+                cmp     %g2,'U'
                 bne     1f
                 nop
                 or      %g1,1,%g1
