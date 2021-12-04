@@ -28,10 +28,10 @@ package X3270 is
    procedure Clear_Screen;
    procedure Line_Feed;
    procedure Write_Message_RC (
-                               A_String : in String;
-                               Row      : in Natural;
-                               Column   : in Natural
+                               Message : in String;
+                               Row     : in Natural;
+                               Column  : in Natural
                               );
-   procedure Write_Message (A_String : in String);
+   procedure Write_Message (Message : in String);
 
 end X3270;

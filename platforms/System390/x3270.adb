@@ -133,8 +133,8 @@ pragma Warnings (On, "size is not a multiple of alignment");
    ----------------------------------------------------------------------------
    -- Write_Message_RC
    ----------------------------------------------------------------------------
-   procedure Write_Message_RC (A_String : in String; Row : in Natural; Column : in Natural) is
-      subtype Work_Area is Byte_A4Array (1 .. MSG_HDR_SIZE + A_String'Length);
+   procedure Write_Message_RC (Message : in String; Row : in Natural; Column : in Natural) is
+      subtype Work_Area is Byte_A4Array (1 .. MSG_HDR_SIZE + Message'Length);
       package Work_Area_Ops is new System.Address_To_Access_Conversions (Work_Area);
       use type Work_Area_Ops.Object_Pointer;
       subtype Work_Area_Ptr is Work_Area_Ops.Object_Pointer;
@@ -144,12 +144,12 @@ pragma Warnings (On, "size is not a multiple of alignment");
          Address    => Work_Area_Ops.To_Address (Message_Ptr),
          Import     => True,
          Convention => Ada;
-      E_String       : aliased EBCDIC_String (A_String'Range) with
+      E_String       : aliased EBCDIC_String (Message'Range) with
          Address    => Message_Header'Address + MSG_HDR_SIZE,
          Import     => True,
          Convention => Ada;
       Cursor_Address : Unsigned_16;
-      procedure WRITE (A : Address; L : Natural) with
+      procedure Write (A : Address; L : Natural) with
          Import        => True,
          Convention    => Asm,
          External_Name => "x3270_write";
@@ -161,8 +161,8 @@ pragma Warnings (On, "size is not a multiple of alignment");
       Message_Header.Command_SBA   := 16#11#; -- command: SET BUFFER ADDRESS
       Message_Header.SBA_AddressH  := HByte (Cursor_Address);
       Message_Header.SBA_AddressL  := LByte (Cursor_Address);
-      To_EBCDIC (A_String, E_String);
-      WRITE (Message_Header'Address, MSG_HDR_SIZE + E_String'Length);
+      To_EBCDIC (Message, E_String);
+      Write (Message_Header'Address, MSG_HDR_SIZE + E_String'Length);
       if Message_Ptr /= null then
          Free (Message_Ptr);
       end if;
@@ -171,11 +171,11 @@ pragma Warnings (On, "size is not a multiple of alignment");
    ----------------------------------------------------------------------------
    -- Write_Message
    ----------------------------------------------------------------------------
-   procedure Write_Message (A_String : in String) is
+   procedure Write_Message (Message : in String) is
    begin
-      Write_Message_RC (A_String, Current_Row, Current_Column);
+      Write_Message_RC (Message, Current_Row, Current_Column);
       Line_Feed;
-      -- Current_Column := Current_Column + A_String'Length;
+      -- Current_Column := Current_Column + Message'Length;
    end Write_Message;
 
 end X3270;
