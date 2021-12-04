@@ -280,7 +280,7 @@ package FATFS is
    -- Open/Close filesystem API
    ----------------------------------------------------------------------------
 
-   procedure Open (Success : out Boolean; Partition_Start : in Sector_Type);
+   procedure Open (Partition_Start : in Sector_Type; Success : out Boolean);
    procedure Close;
 
 private

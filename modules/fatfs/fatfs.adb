@@ -250,7 +250,7 @@ package body FATFS is
    ----------------------------------------------------------------------------
    -- Open FAT filesystem.
    ----------------------------------------------------------------------------
-   procedure Open (Success : out Boolean; Partition_Start : in Sector_Type) is
+   procedure Open (Partition_Start : in Sector_Type; Success : out Boolean) is
       Bootrecord             : Bootrecord_Type;
       Tmp_Sector_Size        : Unsigned_16;
       Tmp_FAT_Copies         : FAT_Copies_Type;

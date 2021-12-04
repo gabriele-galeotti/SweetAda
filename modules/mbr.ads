@@ -65,9 +65,9 @@ package MBR is
 
    procedure Initialize (Block_Read : BlockDevices.IO_Read_Ptr);
    procedure Read (
-                   Success          : out Boolean;
                    Partition_Number : in  Partition_Number_Type;
-                   Partition        : out Partition_Entry_Type
+                   Partition        : out Partition_Entry_Type;
+                   Success          : out Boolean
                   );
 
 end MBR;

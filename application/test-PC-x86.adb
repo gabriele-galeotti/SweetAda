@@ -144,15 +144,17 @@ package body Application is
             Partition : MBR.Partition_Entry_Type;
          begin
             MBR.Initialize (IDE.Read'Access);
-            MBR.Read (Success, MBR.PARTITION1, Partition);
-            FATFS.Register_BlockRead_Procedure (IDE.Read'Access);
-            FATFS.Register_BlockWrite_Procedure (IDE.Write'Access);
-            FATFS.Open (Success, BlockDevices.Sector_Type (Partition.LBA_Start));
+            MBR.Read (MBR.PARTITION1, Partition, Success);
             if Success then
-               FATFS.Applications.Test;
-               FATFS.Applications.Load_AUTOEXECBAT;
-               FATFS.Applications.Load_PROVA02PYC (PythonVM.Python_Code'Address);
-               -- PythonVM.Run;
+               FATFS.Register_BlockRead_Procedure (IDE.Read'Access);
+               FATFS.Register_BlockWrite_Procedure (IDE.Write'Access);
+               FATFS.Open (BlockDevices.Sector_Type (Partition.LBA_Start), Success);
+               if Success then
+                  FATFS.Applications.Test;
+                  FATFS.Applications.Load_AUTOEXECBAT;
+                  FATFS.Applications.Load_PROVA02PYC (PythonVM.Python_Code'Address);
+                  -- PythonVM.Run;
+               end if;
             end if;
          end;
       end if;

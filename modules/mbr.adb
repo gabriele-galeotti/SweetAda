@@ -65,9 +65,9 @@ package body MBR is
    -- Read
    ----------------------------------------------------------------------------
    procedure Read (
-                   Success          : out Boolean;
                    Partition_Number : in  Partition_Number_Type;
-                   Partition        : out Partition_Entry_Type
+                   Partition        : out Partition_Entry_Type;
+                   Success          : out Boolean
                   ) is
       Block  : aliased BlockDevices.Block_Type (0 .. 16#01FF#);
       Offset : Storage_Offset;
