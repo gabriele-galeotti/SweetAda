@@ -29,6 +29,8 @@ _start16:
                 //
                 cli                             // disable interrupts
                 movl    %eax,%ebx               // save BIST
+                pushw   %cs                     // DS = CS
+                popw    %ds
 #if defined(__i586__)
                 movl    %cr0,%eax
                 orl     $(CR0_CD|CR0_NW),%eax   // disable cache memory and write-through logic
@@ -40,18 +42,7 @@ _start16:
                 movl    %eax,%cr0
                 xorl    %eax,%eax               // invalidate TLB
                 movl    %eax,%cr3
-                //
-                // Intel 80386 Reference Programmer''s Manual
-                // 17.2 Instruction Format "m16 & 32"
-                // LGDT/LIDT -- Load Global/Interrupt Descriptor Table Register
-                // LGDT, prefixed with 0x66, specifies a 32-bit operand, where
-                // "operand" is the structure pointed to (the GDT), not the
-                // address encoded in the instruction. Note that LGDT supports
-                // only "m16 & 32" addressing, so it is not possible to load
-                // the GDT by means of a relative address, or an address
-                // specified in a register.
-                //
-                lgdtl   %cs:((gdtdsc32-_start16)&0xFFFF)  // avoid problems with 16-bit relocations
+                lgdt    gdtdsc32-_start16
                 movl    %cr0,%eax
                 orl     $CR0_PE,%eax            // turn on protected mode
                 movl    %eax,%cr0
