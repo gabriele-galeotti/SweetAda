@@ -26,7 +26,7 @@ ccs::write_reg 0 msr 0x00002000
 ################################################################################
 
 # Local Bus Local Access Windows
-# WINDOW 1 - NAND Flash
+# WINDOW 1 - NAND Flash EPROM
 ccs::write_mem 0 0xFF400020 4 0 0xC0000000 ;# LBLAWBAR1  - begining at 0xC0000000
 ccs::write_mem 0 0xFF400024 4 0 0x8000001B ;# LBLAWAR1   - enable, size = 256MB
 
@@ -113,7 +113,7 @@ ccs::write_mem 0 0xFF402110 4 0 0xC3100000
 # Local Bus Interface (LBIU) Configuration                                     #
 ################################################################################
 
-# CS0 - 256MB NAND FLASH - Large Page
+# CS0 - 256MB NAND Flash EPROM - Large Page
 ccs::write_mem 0 0xFF405000 4 0 0xC0000C21 ;# BR0 base address at 0xC0000000, port size 8 bit, FCM, valid
 ccs::write_mem 0 0xFF405004 4 0 0xFFFC0796 ;# OR0 256kB Bank size, Large page Relax Timing
 
@@ -126,7 +126,7 @@ ccs::write_mem 0 0xFF4050D0 4 0 0x00000000
 ccs::write_mem 0 0xFF4050D4 4 0 0x00030002
 
 ################################################################################
-# NAND Flash settings                                                          #
+# NAND Flash EPROM settings                                                    #
 ################################################################################
 
 # FMR

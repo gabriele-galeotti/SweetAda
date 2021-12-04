@@ -155,7 +155,7 @@ package KL46Z is
    PORTD_PCR_BASEADRESS : constant := PORTx_MUX_BASEADDRESS + 16#3000#;
    PORTE_PCR_BASEADRESS : constant := PORTx_MUX_BASEADDRESS + 16#4000#;
 
-   pragma Style_Checks (Off);
+pragma Style_Checks (Off);
    -- PORT A
    PORTA_PCR00 : aliased PORTx_PCRn_Type with Address => To_Address (PORTA_PCR_BASEADRESS + 4 * 00), Volatile => True, Import => True, Convention => Ada;
    PORTA_PCR01 : aliased PORTx_PCRn_Type with Address => To_Address (PORTA_PCR_BASEADRESS + 4 * 01), Volatile => True, Import => True, Convention => Ada;
@@ -321,7 +321,7 @@ package KL46Z is
    PORTE_PCR29 : aliased PORTx_PCRn_Type with Address => To_Address (PORTE_PCR_BASEADRESS + 4 * 29), Volatile => True, Import => True, Convention => Ada; -- LED2 (RED)
    PORTE_PCR30 : aliased PORTx_PCRn_Type with Address => To_Address (PORTE_PCR_BASEADRESS + 4 * 30), Volatile => True, Import => True, Convention => Ada;
    PORTE_PCR31 : aliased PORTx_PCRn_Type with Address => To_Address (PORTE_PCR_BASEADRESS + 4 * 31), Volatile => True, Import => True, Convention => Ada;
-   pragma Style_Checks (On);
+pragma Style_Checks (On);
 
    -- 42.2.1 Port Data Output Register
 

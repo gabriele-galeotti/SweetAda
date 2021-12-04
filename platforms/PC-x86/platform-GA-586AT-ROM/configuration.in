@@ -15,7 +15,7 @@ GCC_SWITCHES_PLATFORM     += -march=i586 -Wa,-march=i586
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
-# EPROM/FLASHEPROM content is 0xFF when empty, speed-up programming
+# EPROM/FlashEPROM content is 0xFF when empty, speed-up programming
 OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0xFF
 
 USE_APPLICATION := dummy
