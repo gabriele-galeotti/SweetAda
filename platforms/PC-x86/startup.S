@@ -12,6 +12,7 @@
 
 #include <i386.h>
 #include <selectors.h>
+#include <configure.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -243,6 +244,6 @@ delay:          movw    $0x43,%dx               // CONTROL_WORD_REGISTER
                 .sect   .bss
 
                 .align  8
-                .space  4096
+                .space  KERNEL_STACK_SIZE
 kernel_stack:
 

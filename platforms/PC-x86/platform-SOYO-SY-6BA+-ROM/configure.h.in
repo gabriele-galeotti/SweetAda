@@ -2,9 +2,10 @@
 #ifndef _CONFIGURE_H
 #define _CONFIGURE_H 1
 
-#define PLATFORM    "PC-x86"
-#define SUBPLATFORM "SOYO-SY-6BA+-ROM"
-#define CPU         "@CPU@"
-#define CPU_MODEL   "@CPU_MODEL@"
+#define PLATFORM          "PC-x86"
+#define SUBPLATFORM       "SOYO-SY-6BA+-ROM"
+#define CPU               "@CPU@"
+#define CPU_MODEL         "@CPU_MODEL@"
+#define KERNEL_STACK_SIZE @KERNEL_STACK_SIZE@
 
 #endif /* _CONFIGURE_H */

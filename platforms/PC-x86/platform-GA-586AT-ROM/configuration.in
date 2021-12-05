@@ -18,6 +18,8 @@ POSTBUILD_ROMFILE         := Y
 # EPROM/FlashEPROM content is 0xFF when empty, speed-up programming
 OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0xFF
 
+export KERNEL_STACK_SIZE := 4096
+
 USE_APPLICATION := dummy
 
 SESSION_START_COMMAND :=
