@@ -98,8 +98,10 @@ package PC is
    procedure PIC_Init (Vector_Offset_Master : in Unsigned_8; Vector_Offset_Slave : in Unsigned_8);
    procedure PIC_Irq_Enable (Irq : in CPU.Irq_Id_Type);
    procedure PIC_Irq_Disable (Irq : in CPU.Irq_Id_Type);
-   procedure PIC1_EOI;
-   procedure PIC2_EOI;
+   procedure PIC1_EOI with
+      Inline => True;
+   procedure PIC2_EOI with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- i8254 PIT
@@ -194,19 +196,46 @@ package PC is
 
    RTC_CLK : constant := Definitions.RTC32k_CLK; -- 32.768 kHz
 
-   RTC_INDEX            : constant := RTC_BASEADDRESS + 0;
-   RTC_DATA             : constant := RTC_BASEADDRESS + 1;
-   RTC_REGISTER_Seconds : constant := 16#00#;
-   RTC_REGISTER_Minutes : constant := 16#02#;
-   RTC_REGISTER_Hours   : constant := 16#04#;
-   RTC_REGISTER_Mday    : constant := 16#07#;
-   RTC_REGISTER_Month   : constant := 16#08#;
-   RTC_REGISTER_Year    : constant := 16#09#;
-   RTC_REGISTER_A       : constant := 16#0A#;
-   RTC_REGISTER_B       : constant := 16#0B#;
-   RTC_REGISTER_C       : constant := 16#0C#;
-   RTC_REGISTER_D       : constant := 16#0D#;
-   RTC_NMI_DISABLE      : constant := 16#80#;
+   RTC_INDEX : constant := RTC_BASEADDRESS + 0;
+   RTC_DATA  : constant := RTC_BASEADDRESS + 1;
+
+   RTC_REGISTER_Seconds       : constant := 16#00#;
+   RTC_REGISTER_Seconds_Alarm : constant := 16#01#;
+   RTC_REGISTER_Minutes       : constant := 16#02#;
+   RTC_REGISTER_Minutes_Alarm : constant := 16#03#;
+   RTC_REGISTER_Hours         : constant := 16#04#;
+   RTC_REGISTER_Hours_Alarm   : constant := 16#05#;
+   RTC_REGISTER_DayOfWeek     : constant := 16#06#;
+   RTC_REGISTER_Mday          : constant := 16#07#;
+   RTC_REGISTER_Month         : constant := 16#08#;
+   RTC_REGISTER_Year          : constant := 16#09#;
+   RTC_REGISTER_A             : constant := 16#0A#;
+   RTC_REGISTER_B             : constant := 16#0B#;
+   RTC_REGISTER_C             : constant := 16#0C#;
+   RTC_REGISTER_D             : constant := 16#0D#;
+
+   RS_None  : constant := 2#0000#; -- N/A
+   RS_256   : constant := 2#0001#; -- PIR = 3.90625 ms, SQW f = 256 Hz
+   RS_128   : constant := 2#0010#; -- PIR = 7.8125 ms, SQW f = 128 Hz
+   RS_8k192 : constant := 2#0011#; -- PIR = 122.070 us, SQW f = 8.192 kHz
+   RS_4k096 : constant := 2#0100#; -- PIR = 244.141 us, SQW f = 4.096 kHz
+   RS_2k048 : constant := 2#0101#; -- PIR = 488.281 us, SQW f = 2.048 kHz
+   RS_1k024 : constant := 2#0110#; -- PIR = 976.562 us, SQW f = 1.024 kHz
+   RS_512   : constant := 2#0111#; -- PIR = 1.953125 ms, SQW f = 512 Hz
+   RS_256_2 : constant := 2#1000#; -- PIR = 3.90625 ms, SQW f = 256 Hz
+   RS_128_2 : constant := 2#1001#; -- PIR = 7.8125 ms, SQW f = 128 Hz
+   RS_64    : constant := 2#1010#; -- PIR = 15.625 ms, SQW f = 64 Hz
+   RS_32    : constant := 2#1011#; -- PIR = 31.25 ms, SQW f = 32 Hz
+   RS_16    : constant := 2#1100#; -- PIR = 62.5 ms, SQW f = 16 Hz
+   RS_8     : constant := 2#1101#; -- PIR = 125 ms, SQW f = 8 Hz
+   RS_4     : constant := 2#1110#; -- PIR = 250 ms, SQW f = 4 Hz
+   RS_2     : constant := 2#1111#; -- PIR = 500 ms, SQW f = 2 Hz
+
+   DIV_4M   : constant := 2#000#; -- Time Base Frequency = 4.194304 MHz, Operation Mode = Yes, N = 0
+   DIV_1M   : constant := 2#001#; -- Time Base Frequency = 1.048576 MHz, Operation Mode = Yes, N = 2
+   DIV_32k  : constant := 2#010#; -- Time Base Frequency = 32.768 kHz, Operation Mode = Yes, N = 7
+   DIV_Any1 : constant := 2#110#; -- Time Base Frequency = Any, Operation Mode = No
+   DIV_Any2 : constant := 2#111#; -- Time Base Frequency = Any, Operation Mode = No
 
    type RTC_RegisterA_Type is
    record
@@ -252,7 +281,44 @@ package PC is
 
    function To_RTC_RegisterB is new Ada.Unchecked_Conversion (Unsigned_8, RTC_RegisterB_Type);
 
-   RTC_Interrupt : constant CPU.Irq_Id_Type := PIC_Irq8;
+   type RTC_RegisterC_Type is
+   record
+      Unused : Bits.Bits_4;
+      UF     : Boolean;
+      AF     : Boolean;
+      PF     : Boolean;
+      IRQF   : Boolean;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for RTC_RegisterC_Type use
+   record
+      Unused at 0 range 0 .. 3;
+      UF     at 0 range 4 .. 4;
+      AF     at 0 range 5 .. 5;
+      PF     at 0 range 6 .. 6;
+      IRQF   at 0 range 7 .. 7;
+   end record;
+
+   function To_RTC_RegisterC is new Ada.Unchecked_Conversion (Unsigned_8, RTC_RegisterC_Type);
+
+   type RTC_RegisterD_Type is
+   record
+      Unused : Bits.Bits_7;
+      VRT    : Boolean;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for RTC_RegisterD_Type use
+   record
+      Unused at 0 range 0 .. 6;
+      VRT    at 0 range 7 .. 7;
+   end record;
+
+   function To_RTC_RegisterD is new Ada.Unchecked_Conversion (Unsigned_8, RTC_RegisterD_Type);
+
+   RTC_NMI_DISABLE : constant := 16#80#;
+   RTC_Interrupt   : constant CPU.Irq_Id_Type := PIC_Irq8;
 
    procedure RTC_Init;
    procedure RTC_Handle (Data_Address : in System.Address);
@@ -270,18 +336,5 @@ package PC is
    procedure PPI_DataOut (Value : in Unsigned_8);
    procedure PPI_StatusOut (Value : in Unsigned_8);
    procedure PPI_ControlOut (Value : in Unsigned_8);
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (PIC1_EOI);
-   pragma Inline (PIC2_EOI);
 
 end PC;
