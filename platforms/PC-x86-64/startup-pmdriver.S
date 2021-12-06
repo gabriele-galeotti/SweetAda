@@ -29,8 +29,8 @@ _start16:
                 //
                 cli                             // disable interrupts
                 movl    %eax,%ebx               // save BIST
-                pushw   %cs                     // DS = CS
-                popw    %ds
+                movl    %cs,%eax                // DS = CS
+                movl    %eax,%ds
 #if 1
                 movl    %cr0,%eax
                 orl     $(CR0_CD|CR0_NW),%eax   // disable cache memory and write-through logic
