@@ -28,10 +28,20 @@ package CPU is
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- CPU helper subprograms
+   ----------------------------------------------------------------------------
+
+   procedure NOP renames MicroBlaze.NOP;
+
+   ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames MicroBlaze.Irq_Enable;
-   procedure Irq_Disable renames MicroBlaze.Irq_Disable;
+   subtype Irq_State_Type is MicroBlaze.Irq_State_Type;
+
+   procedure Irq_Enable                                    renames MicroBlaze.Irq_Enable;
+   procedure Irq_Disable                                   renames MicroBlaze.Irq_Disable;
+   function Irq_State_Get return Irq_State_Type            renames MicroBlaze.Irq_State_Get;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames MicroBlaze.Irq_State_Set;
 
 end CPU;

@@ -224,12 +224,18 @@ package MicroBlaze is
    end record;
 
    ----------------------------------------------------------------------------
-   -- IRQ handling
+   -- Exceptions and interrupts
    ----------------------------------------------------------------------------
+
+   subtype Irq_State_Type is Integer; -- __FIX__
 
    procedure Irq_Enable with
       Inline => True;
    procedure Irq_Disable with
+      Inline => True;
+   function Irq_State_Get return Irq_State_Type with
+      Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
       Inline => True;
 
 end MicroBlaze;

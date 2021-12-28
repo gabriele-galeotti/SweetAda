@@ -92,4 +92,14 @@ package body MicroBlaze is
       null;
    end Irq_Disable;
 
+   function Irq_State_Get return Irq_State_Type is
+   begin
+      return 0;
+   end Irq_State_Get;
+
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   begin
+      null;
+   end Irq_State_Set;
+
 end MicroBlaze;
