@@ -30,24 +30,13 @@ package CRC16 is
 
    pragma Pure;
 
-   function Initialize return Interfaces.Unsigned_16;
-   function Update (Value : Interfaces.Unsigned_16; Item : Interfaces.Unsigned_8) return Interfaces.Unsigned_16;
-   function Compute (Value : Interfaces.Unsigned_16; Data : Bits.Byte_Array) return Interfaces.Unsigned_16;
-   function Finalize (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (Initialize);
-   pragma Inline (Update);
-   pragma Inline (Compute);
-   pragma Inline (Finalize);
+   function Initialize return Interfaces.Unsigned_16 with
+      Inline => True;
+   function Update (Value : Interfaces.Unsigned_16; Item : Interfaces.Unsigned_8) return Interfaces.Unsigned_16 with
+      Inline => True;
+   function Compute (Value : Interfaces.Unsigned_16; Data : Bits.Byte_Array) return Interfaces.Unsigned_16 with
+      Inline => True;
+   function Finalize (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 with
+      Inline => True;
 
 end CRC16;

@@ -141,7 +141,7 @@ package body CRC32 is
       Crc : Unsigned_32 := Value;
    begin
       for Index in Data'Range loop
-         Crc := Update (Crc, Data (Index));
+         Crc := Update (@, Data (Index));
       end loop;
       return Crc;
    end Compute;
