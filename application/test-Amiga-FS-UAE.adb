@@ -16,6 +16,7 @@ with BlockDevices;
 with MBR;
 with FATFS;
 with FATFS.Applications;
+with IOEMU;
 with PythonVM;
 with Console;
 
@@ -57,8 +58,8 @@ package body Application is
       P       : PBUF.Pbuf_Ptr;
       Success : Boolean;
    begin
-      IOEMU_CIA_IO1 := (Unsigned_8 (Ethernet.Nqueue (Ethernet.Packet_Queue'Access))); -- # of items in queue
-      IOEMU_CIA_IO2 := (Unsigned_8 (PBUF.Nalloc));                                    -- # of PBUFs allocated
+      IOEMU.IOEMU_CIA_IO1 := (Unsigned_8 (Ethernet.Nqueue (Ethernet.Packet_Queue'Access))); -- # of items in queue
+      IOEMU.IOEMU_CIA_IO2 := (Unsigned_8 (PBUF.Nalloc));                                    -- # of PBUFs allocated
       Ethernet.Dequeue (Ethernet.Packet_Queue'Access, P, Success);
       if Success then
          Ethernet.Packet_Handler (P);
@@ -93,7 +94,7 @@ package body Application is
             Success   : Boolean;
             Partition : MBR.Partition_Entry_Type;
          begin
-            MBR.Initialize (IDE.Read'Access);
+            MBR.Init (IDE.Read'Access);
             MBR.Read (MBR.PARTITION1, Partition, Success);
             if Success then
                FATFS.Register_BlockRead_Procedure (IDE.Read'Access);
@@ -130,8 +131,8 @@ package body Application is
                   TC1 := Tick_Count;
                end if;
                if Tick_Count_Expired (TC2, 300) then
-                  IOEMU_CIA_IO5 := Value;
-                  Value := Value + 1;
+                  IOEMU.IOEMU_CIA_IO5 := Value;
+                  Value := @ + 1;
                   TC2 := Tick_Count;
                end if;
                if Tick_Count_Expired (TC3, 300) then

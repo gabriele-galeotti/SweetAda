@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ a2091.adb                                                                                                 --
+-- __FLN__ zorroii.adb                                                                                               --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,27 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with MMIO;
-with LLutils;
-with Memory_Functions;
-with Amiga;
-with ZorroII;
-with Console;
 
-package body A2091 is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use System.Storage_Elements;
-   use Amiga;
+package body ZorroII is
 
    --========================================================================--
    --                                                                        --
@@ -46,45 +29,29 @@ package body A2091 is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Probe
+   -- Signature_Read
    ----------------------------------------------------------------------------
-   procedure Probe (Success : out Boolean) is
-      type Offset_Byte is
-      record
-         Offset : Storage_Offset;
-         Value  : Unsigned_8;
-      end record;
-      -- A2091 Zorro II signature
-      A2091_Pattern : constant array (Natural range <>) of Offset_Byte :=
-         (
-          (16#00#,     16#C1#), -- Type
-          (16#04#, not 16#03#), -- Product
-          (16#10#, not 16#02#), -- Manufacturer (HIGH)
-          (16#14#, not 16#02#)  -- Manufacturer (LOW)
-         );
+   function Signature_Read (Offset : Storage_Offset) return Unsigned_8 is
+      Value : Unsigned_8;
    begin
-      -- check for A2091 signature
-      for Index in A2091_Pattern'Range loop
-         if ZorroII.Signature_Read (A2091_Pattern (Index).Offset) /= A2091_Pattern (Index).Value then
-            Success := False;
-            return;
-         end if;
-      end loop;
-      -- log informations
-      Console.Print (Unsigned_32'(0), Prefix => "A2091: SCSI card @ ", NL => True);
---       Console.Print (Unsigned_32'(A2065_BASEADDRESS), Prefix => "A2091: SCSI card @ ", NL => True);
---       -- configure A2065 address
---       MMIO.Write (ZorroII.Cfg_Space'Address + 16#48#, NByte (Unsigned_32'(A2065_BASEADDRESS)));
---       MMIO.Write (ZorroII.Cfg_Space'Address + 16#44#, HByte (Unsigned_32'(A2065_BASEADDRESS)));
-      Success := True;
-   end Probe;
+      Value := (MMIO.Read (Cfg_Space'Address + Offset)          and 16#F0#) or
+               (MMIO.Read (Cfg_Space'Address + Offset + 16#02#) and 16#F0#) / 2**4;
+      if Offset /= 16#00# and then Offset /= 16#40# then
+         Value := not @;
+      end if;
+      return Value;
+   end Signature_Read;
 
    ----------------------------------------------------------------------------
-   -- Init
+   -- Read
    ----------------------------------------------------------------------------
-   procedure Init is
+   function Read return PIC_Type is
+      PIC : PIC_Type;
    begin
-      null;
-   end Init;
+      PIC.Board           := Signature_Read (16#00#);
+      PIC.ID_Product      := Signature_Read (16#04#);
+      PIC.ID_Manufacturer := Bits.Make_Word (Signature_Read (16#10#), Signature_Read (16#14#));
+      return PIC;
+   end Read;
 
-end A2091;
+end ZorroII;

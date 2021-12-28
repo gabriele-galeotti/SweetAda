@@ -358,14 +358,14 @@ package Amiga is
       DPB7 at 0 range 7 .. 7;
    end record;
 
---   type CIA_ICR_Type is
---   record
---   end record with
---      Bit_Order => Low_Order_First,
---      Size      => 8;
---   for CIA_ICR_Type use
---   record
---   end record;
+   -- type CIA_ICR_Type is
+   -- record
+   -- end record with
+   --    Bit_Order => Low_Order_First,
+   --    Size      => 8;
+   -- for CIA_ICR_Type use
+   -- record
+   -- end record;
 
    type CIA_Type is
    record
@@ -406,7 +406,27 @@ package Amiga is
       CRB      at 16#0F00# range 0 .. 7;
    end record;
 
-   CIAA_BASEADDRESS : constant := 16#00BF_E001#; -- wired on D16..D23
+   -- CIA A U300, wired on D0..D7
+   -- PRA
+   -- 0 OVL   - Gary OVL
+   -- 1 LED   - Power LED output
+   -- 2 CHNG  - floppy disk change
+   -- 3 WPROT - floppy disk write protection
+   -- 4 TRK0  - floppy disk TRK 0
+   -- 5 RDY   - floppy disk RDY
+   -- 6 FIR0  - joystick 0 FIRE
+   -- 7 FIR1  - joystick 1 FIRE
+   -- PRB
+   -- 0 D0    - Centronics DATA0
+   -- 1 D1    - Centronics DATA1
+   -- 2 D2    - Centronics DATA2
+   -- 3 D3    - Centronics DATA3
+   -- 4 D4    - Centronics DATA4
+   -- 5 D5    - Centronics DATA5
+   -- 6 D6    - Centronics DATA6
+   -- 7 D7    - Centronics DATA7
+
+   CIAA_BASEADDRESS : constant := 16#00BF_E001#;
 
    CIAA : aliased CIA_Type with
       Address    => To_Address (CIAA_BASEADDRESS),
@@ -414,7 +434,8 @@ package Amiga is
       Import     => True,
       Convention => Ada;
 
-   -- CIA B PRA
+   -- CIA B U301, wired on D8..D15
+   -- PRA
    -- 0 BUSY - Centronics busy (parallel port pin 11)
    -- 1 POUT - Centronics paper out (pin 12)
    -- 2 SEL  - Centronics select (pin 13)
@@ -423,17 +444,17 @@ package Amiga is
    -- 5 DCD  - RS232 carrier detect (pin 8)
    -- 6 RTS  - RS232 request to send (pin 4)
    -- 7 DTR  - RS232 data terminal ready (pin 20)
-   -- CIA B PRB
-   -- 0 STEP - Move drive head by one track in direction specified by the DIR bit
-   -- 1 DIR  - Direction to move drive head (1 = out to 0, 0 = in to track 79+)
-   -- 2 SIDE - Select drive head (1 = bottom, 0 = top)
-   -- 3 SEL0 - 0 = Select DF0:  1 = not selected
-   -- 4 SEL1 - 0 = Select DF1:
-   -- 5 SEL2 - 0 = Select DF2:
-   -- 6 SEL3 - 0 = Select DF3:
-   -- 7 MTR  - Motor on/off status (1 = motor off, 0 = motor on)
+   -- PRB
+   -- 0 STEP - move drive head by one track in direction specified by the DIR bit
+   -- 1 DIR  - direction to move drive head (1 = out to 0, 0 = in to track 79+)
+   -- 2 SIDE - select drive head (1 = bottom, 0 = top)
+   -- 3 SEL0 - 0 = select DF0:  1 = not selected
+   -- 4 SEL1 - 0 = select DF1:
+   -- 5 SEL2 - 0 = select DF2:
+   -- 6 SEL3 - 0 = select DF3:
+   -- 7 MTR  - motor on/off status (1 = motor off, 0 = motor on)
 
-   CIAB_BASEADDRESS : constant := 16#00BF_D000#; -- wired on D24..D31
+   CIAB_BASEADDRESS : constant := 16#00BF_D000#;
 
    CIAB : aliased CIA_Type with
       Address    => To_Address (CIAB_BASEADDRESS),
@@ -459,80 +480,28 @@ package Amiga is
    procedure Tclk_Init;
 
    ----------------------------------------------------------------------------
-   -- RTC
+   -- MSM6242 RTC
    ----------------------------------------------------------------------------
 
-   RTC_BASEADDRESS : constant := 16#00D8_0001#; -- wired on D16..D23
+   type MSM6242_Type is
+   record
+      S1   : Unsigned_8 with Volatile_Full_Access => True; -- 1-second digit register
+      S10  : Unsigned_8 with Volatile_Full_Access => True; -- 10-second digit register
+      MI1  : Unsigned_8 with Volatile_Full_Access => True; -- 1-minute digit register
+      MI10 : Unsigned_8 with Volatile_Full_Access => True; -- 10-minute digit register
+   end record;
+   for MSM6242_Type use
+   record
+      S1   at 16#0000# range 0 .. 7;
+      S10  at 16#0002# range 0 .. 7;
+      MI1  at 16#0004# range 0 .. 7;
+      MI10 at 16#0006# range 0 .. 7;
+   end record;
 
-   ----------------------------------------------------------------------------
-   -- Zorro II
-   ----------------------------------------------------------------------------
+   MSM6242_BASEADDRESS : constant := 16#00DC_0001#; -- wired on D0..D7
 
-   ZORROII_CFGSPACE_BASEADDRESS : constant := 16#00E8_0000#;
-
-   -- Zorro II memory space = 64k (32k 16-bit words)
-   ZorroII_Cfg_Space : aliased U16_Array (0 .. 2**15 - 1) with
-      Address    => To_Address (ZORROII_CFGSPACE_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-
-   function ZorroII_Signature_Read (Offset : Storage_Offset) return Unsigned_8 with
-      Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- IOEMU
-   ----------------------------------------------------------------------------
-
-   IOEMU_CIA_BASEADDRESS         : constant := CIAB_BASEADDRESS + 16#80#;
-   IOEMU_SERIALPORT1_BASEADDRESS : constant := CIAB_BASEADDRESS + 16#C0#;
-   IOEMU_SERIALPORT2_BASEADDRESS : constant := CIAB_BASEADDRESS + 16#E0#;
-
-   -- IO0 @ 0x00BFD080
-   IOEMU_CIA_IO0 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#00#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   -- IO1 @ 0x00BFD084
-   IOEMU_CIA_IO1 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#04#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   -- IO2 @ 0x00BFD088
-   IOEMU_CIA_IO2 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#08#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   -- IO3 @ 0x00BFD08C
-   IOEMU_CIA_IO3 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#0C#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   -- IO4 @ 0x00BFD090
-   IOEMU_CIA_IO4 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#10#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   -- IO5 @ 0x00BFD094
-   IOEMU_CIA_IO5 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#14#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   -- IO6 @ 0x00BFD098
-   IOEMU_CIA_IO6 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#18#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   -- IO7 @ 0x00BFD09C
-   IOEMU_CIA_IO7 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#1C#),
+   MSM6242 : aliased MSM6242_Type with
+      Address    => To_Address (MSM6242_BASEADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;

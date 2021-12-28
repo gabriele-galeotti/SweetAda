@@ -21,6 +21,7 @@ with MMIO;
 with LLutils;
 with Memory_Functions;
 with Amiga;
+with ZorroII;
 with Console;
 
 package body A2065 is
@@ -185,7 +186,7 @@ package body A2065 is
    begin
       -- check for A2065 signature
       for Index in A2065_Pattern'Range loop
-         if ZorroII_Signature_Read (A2065_Pattern (Index).Offset) /= A2065_Pattern (Index).Value then
+         if ZorroII.Signature_Read (A2065_Pattern (Index).Offset) /= A2065_Pattern (Index).Value then
             Success := False;
             return;
          end if;
@@ -197,15 +198,15 @@ package body A2065 is
       A2065_MAC (0) := 16#02#;
       A2065_MAC (1) := 16#80#;
       A2065_MAC (2) := 16#10#;
-      A2065_MAC (3) := not ZorroII_Signature_Read (16#1C#);
-      A2065_MAC (4) := not ZorroII_Signature_Read (16#20#);
-      A2065_MAC (5) := not ZorroII_Signature_Read (16#24#);
+      A2065_MAC (3) := not ZorroII.Signature_Read (16#1C#);
+      A2065_MAC (4) := not ZorroII.Signature_Read (16#20#);
+      A2065_MAC (5) := not ZorroII.Signature_Read (16#24#);
       -- log informations
       Console.Print (Unsigned_32'(A2065_BASEADDRESS), Prefix => "A2065: Ethernet card @ ", NL => True);
       Console.Print (Byte_Array (A2065_MAC), Prefix => "A2065: MAC address ", Separator => ':', NL => True);
       -- configure A2065 address
-      MMIO.Write (ZorroII_Cfg_Space'Address + 16#48#, NByte (Unsigned_32'(A2065_BASEADDRESS)));
-      MMIO.Write (ZorroII_Cfg_Space'Address + 16#44#, HByte (Unsigned_32'(A2065_BASEADDRESS)));
+      MMIO.Write (ZorroII.Cfg_Space'Address + 16#48#, NByte (Unsigned_32'(A2065_BASEADDRESS)));
+      MMIO.Write (ZorroII.Cfg_Space'Address + 16#44#, HByte (Unsigned_32'(A2065_BASEADDRESS)));
       Success := True;
    end Probe;
 

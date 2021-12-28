@@ -78,8 +78,10 @@ _start:
                 // perform code relocation
                 fjsr    movcode
 #endif
+#if 1
                 // perform static data relocation
                 fjsr    movdata
+#endif
                 // zero the bss section
                 fjsr    zerobss
 

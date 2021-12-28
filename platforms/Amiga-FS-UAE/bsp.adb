@@ -24,9 +24,11 @@ with Bits;
 with MMIO;
 with M68k;
 with Amiga;
+with ZorroII;
 with A2091;
 with A2065;
 with Gayle;
+with IOEMU;
 with Exceptions;
 with Linker;
 with Gdbstub;
@@ -76,8 +78,8 @@ package body BSP is
          C := Character'Val (0);
       else
          -- pulse RX LED
-         IOEMU_CIA_IO3 := 1;
-         IOEMU_CIA_IO3 := 0;
+         IOEMU.IOEMU_CIA_IO3 := 1;
+         IOEMU.IOEMU_CIA_IO3 := 0;
          C := To_Ch (Data);
       end if;
    end Console_Getchar;
@@ -98,29 +100,73 @@ package body BSP is
       OCS_Print (0, 2, "Close this window to shutdown the emulator.");
       -- Serialport -----------------------------------------------------------
       Serialport_Init;
-      -- UARTs ----------------------------------------------------------------
-      UART1_Descriptor.Base_Address  := To_Address (IOEMU_CIA_BASEADDRESS + 16#40#);
-      UART1_Descriptor.Scale_Address := 2;
-      UART1_Descriptor.Irq           := 1; -- enabled if /= 0
-      UART1_Descriptor.Read          := MMIO.Read'Access;
-      UART1_Descriptor.Write         := MMIO.Write'Access;
-      UARTIOEMU.Init (UART1_Descriptor);
-      UART2_Descriptor.Base_Address  := To_Address (IOEMU_CIA_BASEADDRESS + 16#60#);
-      UART2_Descriptor.Scale_Address := 2;
-      UART2_Descriptor.Irq           := 1; -- enabled if /= 0
-      UART2_Descriptor.Read          := MMIO.Read'Access;
-      UART2_Descriptor.Write         := MMIO.Write'Access;
-      UARTIOEMU.Init (UART2_Descriptor);
+      -- IOEMU UARTs ----------------------------------------------------------
+      if True then
+         UART1_Descriptor.Base_Address  := To_Address (IOEMU.IOEMU_CIA_BASEADDRESS + 16#40#);
+         UART1_Descriptor.Scale_Address := 2;
+         UART1_Descriptor.Irq           := 1; -- enabled if /= 0
+         UART1_Descriptor.Read          := MMIO.Read'Access;
+         UART1_Descriptor.Write         := MMIO.Write'Access;
+         UARTIOEMU.Init (UART1_Descriptor);
+         UART2_Descriptor.Base_Address  := To_Address (IOEMU.IOEMU_CIA_BASEADDRESS + 16#60#);
+         UART2_Descriptor.Scale_Address := 2;
+         UART2_Descriptor.Irq           := 1; -- enabled if /= 0
+         UART2_Descriptor.Read          := MMIO.Read'Access;
+         UART2_Descriptor.Write         := MMIO.Write'Access;
+         UARTIOEMU.Init (UART2_Descriptor);
+      end if;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
       Console.TTY_Setup;
+      -------------------------------------------------------------------------
+      -- Console.Print ("Amiga", NL => True);
+      -- Console.Print (Linker.SText'Address, Prefix => "SText: ", NL => True);
+      -- Console.Print (Linker.SData'Address, Prefix => "SData: ", NL => True);
+      -- Console.Print (Linker.SBss'Address, Prefix => "SBss:  ", NL => True);
+      -------------------------------------------------------------------------
+      if True then
+         declare
+            PIC : ZorroII.PIC_Type;
+         begin
+            loop
+               PIC := ZorroII.Read;
+               if PIC.Board /= 0 then
+                  Console.Print (PIC.Board, Prefix => "Board: ", NL => True);
+                  Console.Print (PIC.ID_Product, Prefix => "ID:    ", NL => True);
+                  Console.Print (PIC.ID_Manufacturer, Prefix => "Manu:  ", NL => True);
+                  if PIC.Board = 16#E7# then
+                     -- A2630 E7 51 07DB (??? perché 0x07DB)
+                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#48#, NByte (Unsigned_32'(16#0020_0000#)));
+                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#44#, HByte (Unsigned_32'(16#0020_0000#)));
+                  end if;
+                  if PIC.Board = 16#C1# then
+                     -- A2065 C1 70 0202
+                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#48#, NByte (Unsigned_32'(16#00EA_0000#)));
+                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#44#, HByte (Unsigned_32'(16#00EA_0000#)));
+                  end if;
+                  if PIC.Board = 16#11# then
+                     -- ??? 11 EF EFEF
+                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#48#, NByte (Unsigned_32'(16#0080_0000#)));
+                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#44#, HByte (Unsigned_32'(16#0080_0000#)));
+                     -- loop
+                     --    null;
+                     -- end loop;
+                  end if;
+               else
+                  exit;
+               end if;
+            end loop;
+         end;
+      end if;
       -- A2091 ----------------------------------------------------------------
-      declare
-         Success : Boolean with Unreferenced => True;
-      begin
-         A2091.Probe (Success);
-      end;
+      if False then
+         declare
+            Success : Boolean with Unreferenced => True;
+         begin
+            A2091.Probe (Success);
+         end;
+      end if;
       -- Gayle IDE ------------------------------------------------------------
       if False then
          IDE_Descriptor.Base_Address  := To_Address (Gayle.GAYLE_IDE_BASEADDRESS);
@@ -133,11 +179,6 @@ package body BSP is
          -- disable IDE interrupts
          Gayle.IDE_Devcon.IRQDISABLE := True;
       end if;
-      -------------------------------------------------------------------------
-      Console.Print ("Amiga FS-UAE emulator", NL => True);
-      Console.Print (Linker.SText'Address, Prefix => "SText: ", NL => True);
-      Console.Print (Linker.SData'Address, Prefix => "SData: ", NL => True);
-      Console.Print (Linker.SBss'Address, Prefix => "SBss:  ", NL => True);
       -- system timer initialization ------------------------------------------
       Tclk_Init;
       -- GDB stub -------------------------------------------------------------

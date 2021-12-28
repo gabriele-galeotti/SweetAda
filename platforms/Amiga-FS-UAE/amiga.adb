@@ -218,17 +218,17 @@ package body Amiga is
    -- Serialport
    ----------------------------------------------------------------------------
    -- SERPER
-   -- bit    description
+   -- bit#   description
    -- 15     serial receive as 9 bit word
    -- 14..00 baud rate
    ----------------------------------------------------------------------------
 
    procedure Serialport_Init is
    begin
-      -- CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC 9600 bps
-      CUSTOM.SERPER := (RATE => 16#005C#, LONG => False); -- NTSC 38400 bps
-      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL 9600 bps
-      -- CUSTOM.SERPER := (RATE => 16#005B#, LONG => False); -- PAL 38400 bps
+      -- CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC clock, 9600 bps
+      CUSTOM.SERPER := (RATE => 16#005C#, LONG => False); -- NTSC clock, 38400 bps
+      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL clock, 9600 bps
+      -- CUSTOM.SERPER := (RATE => 16#005B#, LONG => False); -- PAL clock, 38400 bps
    end Serialport_Init;
 
    procedure Serialport_RX (C : out Character) is
@@ -277,18 +277,5 @@ package body Amiga is
       CIAA.TAHI := Unsigned_8 (Tclk_Value / 2**8);
       CIAA.CRA  := CIAA.CRA or 1; -- start Timer A
    end Tclk_Init;
-
-   ----------------------------------------------------------------------------
-   -- ZorroII_Signature_Read
-   ----------------------------------------------------------------------------
-   -- __REF__ http://wiki.amigaos.net/wiki/Expansion_Library
-   -- __REF__ http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node02C8.html
-   -- __REF__ http://www.theflatnet.de/pub/cbm/amiga/AmigaDevDocs/hard_k.html
-   ----------------------------------------------------------------------------
-   function ZorroII_Signature_Read (Offset : Storage_Offset) return Unsigned_8 is
-   begin
-      return (MMIO.Read (ZorroII_Cfg_Space'Address + Offset)          and 16#F0#) or
-             (MMIO.Read (ZorroII_Cfg_Space'Address + Offset + 16#02#) and 16#F0#) / 2**4;
-   end ZorroII_Signature_Read;
 
 end Amiga;

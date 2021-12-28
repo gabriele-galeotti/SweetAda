@@ -3,11 +3,7 @@ ENTRY(_start)
 
 MEMORY
 {
-        /* RAM: 1 MiB total ("chip memory") */
-        RAM   : ORIGIN = 0x00000000, LENGTH = 512K
-        VIDEO : ORIGIN = 0x00080000, LENGTH = 512K
-        ROM   : ORIGIN = 0x00FC0000, LENGTH = 256K - 16
-        ROMAV : ORIGIN = 0x00FFFFF0, LENGTH = 16
+        RAM : ORIGIN = 0x00200000, LENGTH = 1M
 }
 
 SECTIONS
@@ -24,26 +20,13 @@ SECTIONS
                 *(.startup)
                 . = ALIGN(0x10);
                 _eromstartup = .;
-        } > ROM
-        /**********************************************************************
-         * IACK CYCLE for 68010                                               *
-         **********************************************************************/
-        .autovectors :
-        {
-                BYTE(0x00); BYTE(0x00);
-                BYTE(0x00); BYTE(0x19);
-                BYTE(0x00); BYTE(0x1A);
-                BYTE(0x00); BYTE(0x1B);
-                BYTE(0x00); BYTE(0x1C);
-                BYTE(0x00); BYTE(0x1D);
-                BYTE(0x00); BYTE(0x1E);
-                BYTE(0x00); BYTE(0x1F);
-        } > ROMAV
+        } > RAM
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
         _text_start = _eromstartup;
-        .text : AT(_text_start)
+        /* .text : AT(_text_start) */
+        .text :
         {
                 _stext = .;
                 *(.text)
@@ -59,7 +42,8 @@ SECTIONS
          *                                                                    *
          **********************************************************************/
         _data_start = _text_start + SIZEOF(.text);
-        .data : AT(_data_start)
+        /* .data : AT(_data_start) */
+        .data :
         {
                 _sdata = .;
                 *(.data)
