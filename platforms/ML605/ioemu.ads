@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ exceptions.adb                                                                                            --
+-- __FLN__ ioemu.ads                                                                                                 --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,61 +15,43 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
 with System.Storage_Elements;
-with Core;
-with Linker;
-with Memory_Functions;
-with ML605;
-with IOEMU;
+with Interfaces;
 
-package body Exceptions is
+package IOEMU is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use ML605;
+   use System.Storage_Elements;
+   use Interfaces;
 
-   package SSE renames System.Storage_Elements;
+   IOEMU_BASEADDRESS : constant := 16#83F0_0000#;
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
+   IOEMU_IO0 : aliased Unsigned_8 with
+      Address    => To_Address (IOEMU_BASEADDRESS + 0),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   IOEMU_IO1 : aliased Unsigned_8 with
+      Address    => To_Address (IOEMU_BASEADDRESS + 1),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   IOEMU_IO2 : aliased Unsigned_8 with
+      Address    => To_Address (IOEMU_BASEADDRESS + 2),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   IOEMU_IO3 : aliased Unsigned_8 with
+      Address    => To_Address (IOEMU_BASEADDRESS + 3),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
 
-   ----------------------------------------------------------------------------
-   -- Process
-   ----------------------------------------------------------------------------
-   procedure Process (Exception_Number : in Interfaces.Unsigned_32) is
-      pragma Unreferenced (Exception_Number);
-   begin
-      Timer.TCSR0.T0INT := 0;    -- clear Timer flag
-      INTC.IAR := 16#FFFF_FFFF#; -- clear INTC flag
-      if True then
-         -- pulse "TIMER" LED
-         IOEMU.IOEMU_IO0 := 1;
-         IOEMU.IOEMU_IO0 := 0;
-      end if;
-   end Process;
-
-   ----------------------------------------------------------------------------
-   -- Init
-   ----------------------------------------------------------------------------
-   procedure Init is
-   begin
-      Memory_Functions.Cpymem (
-                               Linker.EText'Address, -- .vectors section
-                               SSE.To_Address (0),   -- LMB RAM @ 0
-                               256
-                              );
-   end Init;
-
-end Exceptions;
+end IOEMU;

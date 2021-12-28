@@ -46,7 +46,6 @@ package ML605 is
    UART16550_BASEADDRESS : constant := 16#83E0_0000# + 16#0000_1000#;
    AXIENET_BASEADDRESS   : constant := 16#8278_0000#;
    AXIDMA_BASEADDRESS    : constant := 16#8460_0000#;
-   IOEMU_BASEADDRESS     : constant := 16#83F0_0000#;
 
    Timer : XPS_Timer_Type with
       Address    => To_Address (TIMER_BASEADDRESS),
@@ -65,30 +64,5 @@ package ML605 is
       Convention => Ada;
 
    procedure INTC_Init;
-
-   ----------------------------------------------------------------------------
-   -- IOEMU
-   ----------------------------------------------------------------------------
-
-   IOEMU_IO0 : aliased Unsigned_8 with
-      Address    => To_Address (IOEMU_BASEADDRESS + 0),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   IOEMU_IO1 : aliased Unsigned_8 with
-      Address    => To_Address (IOEMU_BASEADDRESS + 1),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   IOEMU_IO2 : aliased Unsigned_8 with
-      Address    => To_Address (IOEMU_BASEADDRESS + 2),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   IOEMU_IO3 : aliased Unsigned_8 with
-      Address    => To_Address (IOEMU_BASEADDRESS + 3),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
 
 end ML605;
