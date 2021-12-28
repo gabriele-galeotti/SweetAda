@@ -19,6 +19,7 @@
                 .type   _start,@function
                 .global _start
 _start:
+
                 //
                 // Disable interrupts.
                 //

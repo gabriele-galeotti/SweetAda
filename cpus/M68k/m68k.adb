@@ -46,7 +46,7 @@ package body M68k is
    procedure NOP is
    begin
       Asm (
-           Template => " nop",
+           Template => "        nop",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -60,7 +60,7 @@ package body M68k is
    procedure BREAKPOINT is
    begin
       Asm (
-           Template => " " & BREAKPOINT_Asm_String,
+           Template => "        " & BREAKPOINT_Asm_String,
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -76,7 +76,7 @@ package body M68k is
       Value : SR_Type;
    begin
       Asm (
-           Template => " move.w %%sr,%0",
+           Template => "        move.w %%sr,%0",
            Outputs  => SR_Type'Asm_Output ("=d", Value),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -88,7 +88,7 @@ package body M68k is
    procedure SR_Write (Value : in SR_Type) is
    begin
       Asm (
-           Template => " move.w %0,%%sr",
+           Template => "        move.w %0,%%sr",
            Outputs  => No_Output_Operands,
            Inputs   => SR_Type'Asm_Input ("d", Value),
            Clobber  => "",
@@ -102,7 +102,7 @@ package body M68k is
    procedure VBR_Set (VBR_Address : in Address) is
    begin
       Asm (
-           Template => " movec %0,%%vbr",
+           Template => "        movec %0,%%vbr",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("d", VBR_Address),
            Clobber  => "",
@@ -116,7 +116,7 @@ package body M68k is
    procedure Asm_Call (Target_Address : in Address) is
    begin
       Asm (
-           Template => " jsr %0@",
+           Template => "        jsr %0@",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("a", Target_Address),
            Clobber  => "",
@@ -131,7 +131,7 @@ package body M68k is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => " andi.w #0xF8FF,%%sr",
+           Template => "        andi.w #0xF8FF,%%sr",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -142,7 +142,7 @@ package body M68k is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => " ori.w #0x0700,%%sr",
+           Template => "        ori.w #0x0700,%%sr",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",

@@ -194,8 +194,6 @@ package PC is
    -- MC146818A RTC
    ----------------------------------------------------------------------------
 
-   RTC_CLK : constant := Definitions.RTC32k_CLK; -- 32.768 kHz
-
    RTC_INDEX : constant := RTC_BASEADDRESS + 0;
    RTC_DATA  : constant := RTC_BASEADDRESS + 1;
 
@@ -213,6 +211,8 @@ package PC is
    RTC_REGISTER_B             : constant := 16#0B#;
    RTC_REGISTER_C             : constant := 16#0C#;
    RTC_REGISTER_D             : constant := 16#0D#;
+
+   RTC_CLK : constant := Definitions.RTC32k_CLK; -- 32.768 kHz
 
    RS_None  : constant := 2#0000#; -- N/A
    RS_256   : constant := 2#0001#; -- PIR = 3.90625 ms, SQW f = 256 Hz
