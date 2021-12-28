@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ dreamcast.ads                                                                                             --
+-- __FLN__ ioemu.ads                                                                                                 --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,11 +15,11 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
+-- with System;
 with System.Storage_Elements;
 with Interfaces;
 
-package Dreamcast is
+package IOEMU is
 
    --========================================================================--
    --                                                                        --
@@ -29,13 +29,9 @@ package Dreamcast is
    --                                                                        --
    --========================================================================--
 
-   use System;
+   -- use System;
    use System.Storage_Elements;
    use Interfaces;
-
-   ----------------------------------------------------------------------------
-   -- IOEMU
-   ----------------------------------------------------------------------------
 
    IOEMU_ASIC_BASEADDRESS : constant := 16#005F_6900#;
 
@@ -64,4 +60,4 @@ package Dreamcast is
    -- RX/TX = 0x005F69F0, control = 0x005F69F4, status = 0x005F69F8
    IOEMU_SERIALPORT1_BASEADDRESS : constant := IOEMU_ASIC_BASEADDRESS + 16#F0#;
 
-end Dreamcast;
+end IOEMU;

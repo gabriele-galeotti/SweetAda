@@ -22,9 +22,9 @@ with Interfaces;
 with Configure;
 with Bits;
 with SH7750;
-with Dreamcast;
 with MMIO;
 with Exceptions;
+with IOEMU;
 with Console;
 
 package body BSP is
@@ -42,7 +42,6 @@ package body BSP is
    use Interfaces;
    use Bits;
    use SH7750;
-   use Dreamcast;
    use Exceptions;
 
    function SCIF_SCFDR2_Read return Unsigned_16 with
@@ -88,7 +87,7 @@ package body BSP is
    begin
       -- enable SCIF transmitter ----------------------------------------------
       SCIF.SCSCR2.TE := True;
-      UART1_Descriptor.Base_Address  := To_Address (IOEMU_SERIALPORT1_BASEADDRESS);
+      UART1_Descriptor.Base_Address  := To_Address (IOEMU.IOEMU_SERIALPORT1_BASEADDRESS);
       UART1_Descriptor.Scale_Address := 2;
       UART1_Descriptor.Irq           := 0; -- enable if /= 0
       UART1_Descriptor.Read          := MMIO.Read'Access;

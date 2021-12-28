@@ -2,8 +2,8 @@
 with Interfaces;
 with Configure;
 with SH7750;
-with Dreamcast;
 with BSP;
+with IOEMU;
 with Console;
 
 package body Application is
@@ -18,7 +18,6 @@ package body Application is
 
    use Interfaces;
    use SH7750;
-   use Dreamcast;
    use BSP;
 
    --========================================================================--
@@ -57,11 +56,11 @@ package body Application is
             Value := 0;
             loop
                -- pulse LED
-               IOEMU_IO0 := 1;
-               IOEMU_IO0 := 0;
+               IOEMU.IOEMU_IO0 := 1;
+               IOEMU.IOEMU_IO0 := 0;
                -- display values
-               IOEMU_IO1 := Value;
-               IOEMU_IO2 := Unsigned_32 (Value);
+               IOEMU.IOEMU_IO1 := Value;
+               IOEMU.IOEMU_IO2 := Unsigned_32 (Value);
                Value := Value + 1;
                -- emit an OK message
                Console.Print ("OK", NL => True);
