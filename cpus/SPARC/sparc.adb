@@ -49,7 +49,7 @@ package body SPARC is
    procedure NOP is
    begin
       Asm (
-           Template => " nop",
+           Template => "        nop",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -58,17 +58,13 @@ package body SPARC is
    end NOP;
 
    ----------------------------------------------------------------------------
-   -- BREAKPOINT
-   ----------------------------------------------------------------------------
-
-   ----------------------------------------------------------------------------
    -- TBR
    ----------------------------------------------------------------------------
    procedure TBR_Set (TBR_Address : in System.Address) is
       function To_U32 is new Ada.Unchecked_Conversion (System.Address, Interfaces.Unsigned_32);
    begin
       Asm (
-           Template => " wr %0,0,%%tbr",
+           Template => "        wr %0,0,%%tbr",
            Outputs  => No_Output_Operands,
            Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", To_U32 (TBR_Address) and 16#FFFF_FFF0#),
            Clobber  => "",

@@ -34,12 +34,12 @@ package SPARC is
    -- Generic definitions
    ----------------------------------------------------------------------------
 
+   procedure NOP with
+      Inline => True;
+
    -- BREAKPOINT_Instruction : constant := 16#7FE0_0008#;
    -- 0x30800000 is Branch Always with annul, 22-displacement address (4x, sign-extended)
    BRANCH_ALWAYS_Instruction : constant := 16#3080_0000#;
-
-   procedure NOP;
-   -- procedure BREAKPOINT;
 
    ----------------------------------------------------------------------------
    -- SPARC registers
@@ -101,10 +101,11 @@ package SPARC is
    end record;
 
    ----------------------------------------------------------------------------
-   --
+   -- TBR
    ----------------------------------------------------------------------------
 
-   procedure TBR_Set (TBR_Address : in System.Address);
+   procedure TBR_Set (TBR_Address : in System.Address) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -116,19 +117,5 @@ package SPARC is
    procedure Irq_Disable;
    function Irq_State_Get return Irq_State_Type;
    procedure Irq_State_Set (Irq_State : in Irq_State_Type);
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (NOP);
-
-   pragma Inline (TBR_Set);
 
 end SPARC;
