@@ -2,6 +2,7 @@
 with Interfaces;
 with Core;
 with GHRD;
+with IOEMU;
 
 package body Application is
 
@@ -36,14 +37,14 @@ package body Application is
          declare
             TC : Unsigned_32;
          begin
-            GHRD.IOEMU_IO0 := 0;
+            IOEMU.IOEMU_IO0 := 0;
             TC := Core.Tick_Count;
             loop
                if Tick_Count_Expired (TC, 1_000) then
                   TC := Core.Tick_Count;
                   -- blink IOEMU LED
-                  GHRD.IOEMU_IO0 := 1;
-                  GHRD.IOEMU_IO0 := 0;
+                  IOEMU.IOEMU_IO0 := 1;
+                  IOEMU.IOEMU_IO0 := 0;
                end if;
             end loop;
          end;
