@@ -143,7 +143,7 @@ package body Application is
             Success   : Boolean;
             Partition : MBR.Partition_Entry_Type;
          begin
-            MBR.Initialize (IDE.Read'Access);
+            MBR.Init (IDE.Read'Access);
             MBR.Read (MBR.PARTITION1, Partition, Success);
             if Success then
                FATFS.Register_BlockRead_Procedure (IDE.Read'Access);

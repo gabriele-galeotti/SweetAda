@@ -38,13 +38,13 @@ package body FATFS.Directory is
 
    function Is_End (DE : Directory_Entry_Type) return Boolean;
 
-   procedure Initialize_Entry (DE : out Directory_Entry_Type; Last : in Boolean);
+   procedure Init_Entry (DE : out Directory_Entry_Type; Last : in Boolean);
 
-   procedure Initialize_Cluster (
-                                 B       : out Block_Type;
-                                 C       : in  Cluster_Type;
-                                 Success : out Boolean
-                                );
+   procedure Init_Cluster (
+                           B       : out Block_Type;
+                           C       : in  Cluster_Type;
+                           Success : out Boolean
+                          );
 
    procedure Allocate_Entry (
                              DCB     : in out DCB_Type;
@@ -312,11 +312,11 @@ package body FATFS.Directory is
    end Search;
 
    ----------------------------------------------------------------------------
-   -- Initialize_Entry
+   -- Init_Entry
    ----------------------------------------------------------------------------
    -- Initialize a new directory entry.
    ----------------------------------------------------------------------------
-   procedure Initialize_Entry (DE : out Directory_Entry_Type; Last : in Boolean) is
+   procedure Init_Entry (DE : out Directory_Entry_Type; Last : in Boolean) is
    begin
       DE.Filename        := (others => ' ');
       DE.Extension       := (others => ' ');
@@ -333,14 +333,14 @@ package body FATFS.Directory is
       if Last then
          DE.Filename (1) := Character'Val (0); -- end of directory marker
       end if;
-   end Initialize_Entry;
+   end Init_Entry;
 
    ----------------------------------------------------------------------------
-   -- Initialize_Cluster
+   -- Init_Cluster
    ----------------------------------------------------------------------------
    -- Initialize a directory block to be full of end entries.
    ----------------------------------------------------------------------------
-   procedure Initialize_Cluster (
+   procedure Init_Cluster (
                                  B       : out Block_Type;
                                  C       : in  Cluster_Type;
                                  Success : out Boolean
@@ -356,7 +356,7 @@ package body FATFS.Directory is
          exit when not Success;
          S := S + 1;
       end loop;
-   end Initialize_Cluster;
+   end Init_Cluster;
 
    ----------------------------------------------------------------------------
    -- Allocate_Entry
@@ -381,7 +381,7 @@ package body FATFS.Directory is
       end loop;
       if Success then
          -- reuse a deleted entry
-         Initialize_Entry (DE, False);
+         Init_Entry (DE, False);
          Update_Entry (
                        DCB.CCB.Current_Sector,
                        DE,
@@ -391,7 +391,7 @@ package body FATFS.Directory is
          return;
       end if;
       -- must allocate a new directory entry
-      Initialize_Entry (DE, True);
+      Init_Entry (DE, True);
       if not Is_End (DCB) and then Is_End (DE) then
          Success := True;
          return; -- use end marker entry
@@ -407,7 +407,7 @@ package body FATFS.Directory is
          if not Success then
             return;
          end if;
-         Initialize_Cluster (B, New_Cluster, Success); -- init as new directory cluster
+         Init_Cluster (B, New_Cluster, Success); -- init as new directory cluster
          if Success then
             Cluster.Claim (B, DCB.CCB.Cluster, Success, New_Cluster); -- link current cluster to next
          end if;
@@ -521,7 +521,7 @@ package body FATFS.Directory is
          Cluster.Claim (B, New_Cluster, Success);          -- mark it as in use with fff8 entry
          if Success then
             Cluster.Prelocate (B);                         -- replace free cluster, that we used
-            Initialize_Cluster (B, New_Cluster, Success);  -- initialize with "end dir" entries
+            Init_Cluster (B, New_Cluster, Success);        -- initialize with "end dir" entries
             if Success then
                DE.File_Attributes.Subdirectory := True;
                Update_Entry (

@@ -54,12 +54,12 @@ package body MBR is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Initialize
+   -- Init
    ----------------------------------------------------------------------------
-   procedure Initialize (Block_Read : BlockDevices.IO_Read_Ptr) is
+   procedure Init (Block_Read : BlockDevices.IO_Read_Ptr) is
    begin
       IO_Context.Read := Block_Read;
-   end Initialize;
+   end Init;
 
    ----------------------------------------------------------------------------
    -- Read
