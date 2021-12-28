@@ -2,6 +2,8 @@
 with System.Storage_Elements;
 with Interfaces;
 with BSP;
+with CPU;
+with IOEMU;
 
 package body Application is
 
@@ -15,18 +17,6 @@ package body Application is
 
    use System.Storage_Elements;
    use Interfaces;
-
-   -- IOEMU GPIO 0x80000800
-   IOEMU_IO0 : Unsigned_8 with
-      Address    => To_Address (16#8000_0400#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   IOEMU_IO1 : Unsigned_8 with
-      Address    => To_Address (16#8000_0401#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
 
    --========================================================================--
    --                                                                        --
@@ -49,9 +39,9 @@ package body Application is
             loop
                BSP.Console_Putchar ('*');
                -- IOEMU GPIO test
-               Value := Value + 1;
-               IOEMU_IO1 := Value;
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+               Value := @ + 1;
+               IOEMU.IOEMU_IO1 := Value;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
       end if;
