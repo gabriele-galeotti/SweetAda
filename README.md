@@ -3,6 +3,16 @@
 
 Latest news:
 
+28/12/2021
+- many changes to Amiga-FS-UAE configuration; ZorroII package, still to be
+  completed
+- segregate apart IOEMU in various targets; this will simplify sectioning out
+  this part for a physical board
+- exposed some NOPs assembly
+- unfortunately, the QEMU LEON3 IOEMU panel does not work due to a bad patch;
+  this will be corrected in the next QEMU release
+- cosmetics, cleanups and other changes
+
 12/10/2021
 - experimental Print_Float in Console unit; only print floats; you have to set
   RTS := SFP and USE_LIBGCC := Y in configuration.in
