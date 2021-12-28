@@ -10,6 +10,7 @@ with MBR;
 with FATFS;
 with FATFS.Applications;
 with PythonVM;
+with IOEMU;
 with Console;
 
 package body Application is
@@ -66,16 +67,15 @@ package body Application is
       if True then
          declare
             Delay_Count : constant := 100_000_000;
-            Dummy       : Unsigned_32 with Volatile => True;
             Value       : Unsigned_8;
          begin
             Value := 0;
             loop
                LEDBAR := Byte_Reverse (Value);
                -- IOEMU GPIO test
-               IOEMU_IO1 := Value;
-               Value := Value + 1;
-               for Delay_Loop_Count in 1 .. Delay_Count loop Dummy := Dummy + 1; end loop;
+               IOEMU.IOEMU_IO1 := Value;
+               Value := @ + 1;
+               for Delay_Loop_Count in 1 .. Delay_Count loop MIPS.NOP; end loop;
             end loop;
          end;
       end if;

@@ -102,31 +102,6 @@ package Malta is
    PIIX4_IDE_Descriptor   : IDE_Descriptor_Type := IDE_DESCRIPTOR_INVALID;
 
    ----------------------------------------------------------------------------
-   -- IOEMU GPIO 0x1F100000..0x1F100003
-   ----------------------------------------------------------------------------
-
-   IOEMU_IO0 : Unsigned_8 with
-      Address    => To_Address (KSEG1_ADDRESS + 16#1F10_0000#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   IOEMU_IO1 : Unsigned_8 with
-      Address    => To_Address (KSEG1_ADDRESS + 16#1F10_0001#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   IOEMU_IO2 : Unsigned_8 with
-      Address    => To_Address (KSEG1_ADDRESS + 16#1F10_0002#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   IOEMU_IO3 : Unsigned_8 with
-      Address    => To_Address (KSEG1_ADDRESS + 16#1F10_0003#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-
-   ----------------------------------------------------------------------------
    -- Timer functions
    ----------------------------------------------------------------------------
 
