@@ -61,7 +61,7 @@ package body Application is
                -- display values
                IOEMU.IOEMU_IO1 := Value;
                IOEMU.IOEMU_IO2 := Unsigned_32 (Value);
-               Value := Value + 1;
+               Value := @ + 1;
                -- emit an OK message
                Console.Print ("OK", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
