@@ -1,6 +1,7 @@
 
 with Interfaces;
 with Bits;
+with CPU;
 with PC;
 with VGA;
 with BSP;
@@ -40,8 +41,8 @@ package body Application is
             loop
                PC.PPI_DataOut (Value);
                VGA.Print (0, 5, To_Ch (32 + (Value and 16#1F#)));
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
-               Value := Value + 1;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+               Value := @ + 1;
                PC.PPI_ControlOut (16#FF#);
                PC.PPI_ControlOut (16#00#);
             end loop;
