@@ -154,28 +154,19 @@ package ARM is
    IRQ                   : constant := 16#18#;
    FIQ                   : constant := 16#1C#;
 
-   procedure Irq_Enable;
-   procedure Irq_Disable;
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
    ----------------------------------------------------------------------------
 
-   procedure Memory_Synchronization;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (Irq_Enable);
-
-   pragma Inline (Memory_Synchronization);
-   pragma Export (C, Memory_Synchronization, "__sync_synchronize");
+   procedure Memory_Synchronization with
+      Inline        => True,
+      Export        => True,
+      Convention    => C,
+      External_Name => "__sync_synchronize";
 
 end ARM;
