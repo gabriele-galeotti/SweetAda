@@ -101,8 +101,8 @@ package body BSP is
       Console.Print (NETARM.CSOR1B,       Prefix => "CSOR1B:        ", NL => True);
       -------------------------------------------------------------------------
       declare
-         Data32 : Unsigned_32;
-         Data8  : Unsigned_8;
+         Data32 : Unsigned_32 with Unreferenced => True;
+         Data8  : Unsigned_8 with Unreferenced => True;
       begin
          -- unlock Flash memory WP
          NETARM.CSBAR0 := NETARM.CSBAR0 and 16#FFFF_FFFD#;
