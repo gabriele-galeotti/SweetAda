@@ -23,10 +23,11 @@ with FATFS.Applications;
 with UART16x50;
 with PBUF;
 with Ethernet;
+with Time;
 with PCICAN;
 with PythonVM;
+with IOEMU;
 with Console;
-with Time;
 
 package body Application is
 
@@ -57,12 +58,6 @@ package body Application is
    Heap : aliased Storage_Array (0 .. Definitions.kB64 - 1) with
        Alignment               => 16#1000#,
        Suppress_Initialization => True; -- pragma Initialize_Scalars
-
-   -- IOEMU GPIO IO0..IO3 0x0270..0x0273
-   IO0_ADDRESS : constant := 16#0270#;
-   IO1_ADDRESS : constant := 16#0271#;
-   IO2_ADDRESS : constant := 16#0272#;
-   IO3_ADDRESS : constant := 16#0273#;
 
    --========================================================================--
    --                                                                        --
@@ -133,7 +128,7 @@ package body Application is
             Value := 0;
             for Index in Video'Range loop
                Video (Index) := Value;
-               Value := Value + 1;
+               Value := @ + 1;
             end loop;
          end;
       end if;
@@ -176,11 +171,11 @@ package body Application is
                end if;
                if Tick_Count_Expired (TC2, 300) then
                   -- IOEMU GPIO test
-                  PortOut (IO0_ADDRESS, Unsigned_8'(Value * 1));
-                  PortOut (IO1_ADDRESS, Unsigned_8'(Value * 2));
-                  PortOut (IO2_ADDRESS, Unsigned_8'(Value * 3));
-                  PortOut (IO3_ADDRESS, Unsigned_8'(Value * 4));
-                  Value := Value + 1;
+                  PortOut (IOEMU.IO0_ADDRESS, Unsigned_8'(Value * 1));
+                  PortOut (IOEMU.IO1_ADDRESS, Unsigned_8'(Value * 2));
+                  PortOut (IOEMU.IO2_ADDRESS, Unsigned_8'(Value * 3));
+                  PortOut (IOEMU.IO3_ADDRESS, Unsigned_8'(Value * 4));
+                  Value := @ + 1;
                   TC2 := Tick_Count;
                end if;
             end loop;
