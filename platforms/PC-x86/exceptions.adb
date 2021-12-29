@@ -212,7 +212,7 @@ package body Exceptions is
             Tick_Count := Tick_Count + 1;
             -- LED ignition QEMU/IOEMU or physical PC
             if QEMU then
-               -- with IOEMU, you can see the LED pulsing
+               -- with IOEMU, you can see the LED blinking
                if Tick_Count mod 1000 = 0 then
                   PC.PPI_ControlOut (16#FF#);
                   PC.PPI_ControlOut (16#00#);
