@@ -32,6 +32,12 @@ package CPU is
 
    package x86 renames CPU_x86;
 
+   ----------------------------------------------------------------------------
+   -- CPU helper subprograms
+   ----------------------------------------------------------------------------
+
+   procedure NOP renames x86.NOP;
+
    procedure Asm_Call (Target_Address : in System.Address) renames x86.Asm_Call;
 
    ----------------------------------------------------------------------------

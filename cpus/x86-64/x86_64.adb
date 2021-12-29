@@ -41,13 +41,27 @@ package body x86_64 is
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- NOP
+   ----------------------------------------------------------------------------
+   procedure NOP is
+   begin
+      Asm (
+           Template => "        nop",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end NOP;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
    procedure Irq_Enable is
    begin
       Asm (
-           Template => " sti",
+           Template => "        sti",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
@@ -58,7 +72,7 @@ package body x86_64 is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => " cli",
+           Template => "        cli",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
@@ -70,7 +84,7 @@ package body x86_64 is
       Irq_State : Irq_State_Type;
    begin
       Asm (
-           Template => " nop", -- __TBD__
+           Template => "        nop", -- __TBD__
            Outputs  => Irq_State_Type'Asm_Output ("=g", Irq_State),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
@@ -82,7 +96,7 @@ package body x86_64 is
    procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
    begin
       Asm (
-           Template => " nop", -- __TBD__
+           Template => "        nop", -- __TBD__
            Outputs  => No_Output_Operands,
            Inputs   => Irq_State_Type'Asm_Input ("g", Irq_State),
            Clobber  => "memory",
@@ -98,7 +112,7 @@ package body x86_64 is
       Value : Lock_Type := (Lock => LOCK_LOCK);
    begin
       Asm (
-           Template => " xchgq %0,%1",
+           Template => "        xchgq %0,%1",
            Outputs  => (
                         CPU_Unsigned'Asm_Output ("+r", Value.Lock),
                         CPU_Unsigned'Asm_Output ("+m", Lock_Object.Lock)
