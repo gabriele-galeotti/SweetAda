@@ -1,4 +1,5 @@
 
+with CPU;
 with Console;
 
 package body Application is
@@ -28,7 +29,7 @@ package body Application is
          begin
             loop
                Console.Print ("hello, SweetAda", NL => True);
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
       end if;
