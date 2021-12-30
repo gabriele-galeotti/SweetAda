@@ -687,6 +687,12 @@ package Bits is
    function HWord (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_32;
 
    function Make_Word (Value_H : Interfaces.Unsigned_8; Value_L : Interfaces.Unsigned_8) return Interfaces.Unsigned_16;
+   function Make_Word (
+                       Value_H : Interfaces.Unsigned_8;
+                       Value_N : Interfaces.Unsigned_8;
+                       Value_M : Interfaces.Unsigned_8;
+                       Value_L : Interfaces.Unsigned_8
+                      ) return Interfaces.Unsigned_32;
    function Make_Word (Value_H : Interfaces.Unsigned_16; Value_L : Interfaces.Unsigned_16) return Interfaces.Unsigned_32;
    function Make_Word (Value_H : Interfaces.Unsigned_32; Value_L : Interfaces.Unsigned_32) return Interfaces.Unsigned_64;
 

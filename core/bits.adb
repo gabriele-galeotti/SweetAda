@@ -516,6 +516,19 @@ package body Bits is
    end Make_Word;
 
    function Make_Word (
+                       Value_H : Interfaces.Unsigned_8;
+                       Value_N : Interfaces.Unsigned_8;
+                       Value_M : Interfaces.Unsigned_8;
+                       Value_L : Interfaces.Unsigned_8
+                      ) return Interfaces.Unsigned_32 is
+   begin
+      return ShL (Interfaces.Unsigned_32 (Value_H), 24) or
+             ShL (Interfaces.Unsigned_32 (Value_N), 16) or
+             ShL (Interfaces.Unsigned_32 (Value_M),  8) or
+                  Interfaces.Unsigned_32 (Value_L);
+   end Make_Word;
+
+   function Make_Word (
                        Value_H : Interfaces.Unsigned_16;
                        Value_L : Interfaces.Unsigned_16
                       ) return Interfaces.Unsigned_32 is
