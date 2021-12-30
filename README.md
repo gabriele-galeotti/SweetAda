@@ -3,6 +3,11 @@
 
 Latest news:
 
+30/12/2021
+- completed IOEMU module segregation
+- exposed some NOP assembly
+- cosmetics, cleanups and other adjustments
+
 28/12/2021
 - many changes to Amiga-FS-UAE configuration; ZorroII package, still to be
   completed
