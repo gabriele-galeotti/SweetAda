@@ -1,9 +1,11 @@
 
 with System.Storage_Elements;
 with Interfaces;
-with PowerPC;
-with PPC405;
+-- with PowerPC;
+-- with PPC405;
+with CPU;
 with Taihu;
+with IOEMU;
 with Console;
 
 package body Application is
@@ -18,8 +20,8 @@ package body Application is
 
    use System.Storage_Elements;
    use Interfaces;
-   use PowerPC;
-   use PPC405;
+   -- use PowerPC;
+   -- use PPC405;
    use Taihu;
 
    --========================================================================--
@@ -40,11 +42,11 @@ package body Application is
          begin
             Value := 0;
             loop
-               IOEMU_IO1 := Value;
+               IOEMU.IOEMU_IO1 := Value;
                Value := @ + 1;
                Console.Print ("hello, SweetAda", NL => True);
                -- Console.Print (Tick_Count, NL => True);
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
       end if;

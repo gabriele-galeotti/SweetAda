@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ taihu.ads                                                                                                 --
+-- __FLN__ ioemu.ads                                                                                                 --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,7 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package Taihu is
+with System.Storage_Elements;
+with Interfaces;
+
+package IOEMU is
 
    --========================================================================--
    --                                                                        --
@@ -25,10 +28,25 @@ package Taihu is
    --                                                                        --
    --========================================================================--
 
-   CPLD_BASEADDRESS  : constant := 16#5010_0000#;
-   UART1_BASEADDRESS : constant := 16#EF60_0300#;
-   UART2_BASEADDRESS : constant := 16#EF60_0400#;
+   use System.Storage_Elements;
+   use Interfaces;
 
-   procedure Tclk_Init;
+   IOEMU_BASEADDRESS : constant := 16#5010_0800#;
 
-end Taihu;
+   IOEMU_IO0 : aliased Unsigned_8 with
+      Address    => To_Address (IOEMU_BASEADDRESS + 0),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   IOEMU_IO1 : aliased Unsigned_8 with
+      Address    => To_Address (IOEMU_BASEADDRESS + 1),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   IOEMU_IO2 : aliased Unsigned_8 with
+      Address    => To_Address (IOEMU_BASEADDRESS + 2),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+end IOEMU;

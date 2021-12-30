@@ -19,6 +19,7 @@ with System.Machine_Code;
 with Definitions;
 with Core;
 with Taihu;
+with IOEMU;
 with Console;
 
 package body Exceptions is
@@ -57,9 +58,9 @@ package body Exceptions is
             --    exit when (MFSPR_TSR and PIS) = 0;
             -- end loop;
             -- Console.Print ("PIT interrupt", NL => True);
-            -- pulse "TIMER" LED
-            IOEMU_IO0 := 1;
-            IOEMU_IO0 := 0;
+            -- "TIMER" LED blinking
+            IOEMU.IOEMU_IO0 := 1;
+            IOEMU.IOEMU_IO0 := 0;
          end if;
       end if;
       if Identifier = FIT_IRQ_ID then
