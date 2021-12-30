@@ -65,16 +65,16 @@ ECHO Usage:
 ECHO menu.bat ^<action^>
 ECHO.
 ECHO ^<action^> is one of:
-ECHO createkernelcfg - create a project configuration
-ECHO configure       - project configure
-ECHO all             - project build
-ECHO postbuild       - project postbuild
+ECHO createkernelcfg - create a kernel.cfg file
+ECHO configure       - configure the system for a build
+ECHO all             - build target
+ECHO postbuild       - auxiliary post-processing
 ECHO session-start   - perform session start activities
 ECHO session-end     - perform session end activities
-ECHO run             - run the project
-ECHO debug           - debug the project
-ECHO clean           - project clean
-ECHO distclean       - project clean, configuration clean
+ECHO run             - run the target
+ECHO debug           - debug the target
+ECHO clean           - cleanup a build
+ECHO distclean       - cleanup and reset the build system
 ECHO.
 ECHO Specify PLATFORM=^<platform^> (and optionally SUBPLATFORM) in the
 ECHO environment variable space before executing a createkernelcfg action.
