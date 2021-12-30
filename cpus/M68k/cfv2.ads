@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ coldfire.adb                                                                                              --
+-- __FLN__ cfv2.ads                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,71 +15,46 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Machine_Code;
-with Definitions;
+with System;
 
-package body ColdFire is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use System.Machine_Code;
-
-   CRLF : String renames Definitions.CRLF;
+package CFv2 is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Package subprograms                          --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   ----------------------------------------------------------------------------
-   -- PAUSE
-   ----------------------------------------------------------------------------
-   procedure PAUSE is
-   begin
-      Asm (
-           Template => " stop #0x2000",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end PAUSE;
+   pragma Preelaborate;
+
+   use System;
 
    ----------------------------------------------------------------------------
-   -- BREAKPOINT
+   -- CPU helper subprograms
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
-   begin
-      Asm (
-           Template => " trap #1",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end BREAKPOINT;
+
+   procedure NOP with
+      Inline => True;
+   procedure PAUSE with
+      Inline => True;
+   procedure BREAKPOINT with
+      Inline => True;
 
    ----------------------------------------------------------------------------
-   -- VBR_Set
+   -- Exceptions and interrupts
    ----------------------------------------------------------------------------
-   procedure VBR_Set (VBR_Address : in Address) is
-   begin
-      Asm (
-           Template => " movec %0,%%vbr",
-           Outputs  => No_Output_Operands,
-           Inputs   => System.Address'Asm_Input ("d", VBR_Address),
-           Clobber  => "",
-           Volatile => True
-          );
-   end VBR_Set;
 
-end ColdFire;
+   subtype Vector_Type is Address;
+
+   subtype Vector_Number_Type is Natural range 0 .. 255;
+
+   IVT : aliased array (Vector_Number_Type) of Vector_Type with
+      Import     => True,
+      Convention => Ada;
+
+   procedure VBR_Set (VBR_Address : in Address) with
+      Inline => True;
+
+end CFv2;
