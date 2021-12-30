@@ -1,8 +1,8 @@
 [config]
 logs_dir = .
 console_debugger = 1
-amiga_model = A1000
-#amiga_model = A4000/040
+#amiga_model = A1000
+amiga_model = A4000/040
 kickstart_file = @SWEETADA_PATH@/@KERNEL_ROMFILE@
 cpu = 68020
 fpu = 68881
