@@ -83,7 +83,7 @@ _start:
                 // 6.2.1 SRAM Base Address Register (RAMBAR)
                 //
                 move.l  #(ISRAM_ADDRESS+0x221),%d0      // BDE (BackDoor Enable) + Valid
-                movec.l %d0,#RAMBAR
+                movec.l %d0,#0xC05
                 //
                 // Clear internal SRAM (6.3.1 SRAM Initialization Code).
                 //
