@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
 with RISCV;
 
 package CPU is
@@ -28,6 +29,16 @@ package CPU is
    --========================================================================--
 
    pragma Preelaborate;
+
+   use System;
+
+   ----------------------------------------------------------------------------
+   -- CPU helper subprograms
+   ----------------------------------------------------------------------------
+
+   procedure NOP renames RISCV.NOP;
+
+   procedure Asm_Call (Target_Address : in Address) renames RISCV.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
