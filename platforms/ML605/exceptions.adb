@@ -54,7 +54,7 @@ package body Exceptions is
       Timer.TCSR0.T0INT := 0;    -- clear Timer flag
       INTC.IAR := 16#FFFF_FFFF#; -- clear INTC flag
       if True then
-         -- pulse "TIMER" LED
+         -- "TIMER" LED blinking
          IOEMU.IOEMU_IO0 := 1;
          IOEMU.IOEMU_IO0 := 0;
       end if;
