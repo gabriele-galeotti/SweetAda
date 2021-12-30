@@ -43,8 +43,10 @@ package PowerPC is
    BREAKPOINT_Instruction_Size : constant             := 4;
    BREAKPOINT_Asm_String       : constant String      := ".long 0x7D821008";
 
-   procedure NOP;
-   procedure BREAKPOINT;
+   procedure NOP with
+      Inline => True;
+   procedure BREAKPOINT with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- PowerPC registers
@@ -243,9 +245,6 @@ private
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Inline (NOP);
-   pragma Inline (BREAKPOINT);
 
    pragma Inline (MSR_Read);
    pragma Inline (MSR_Write);
