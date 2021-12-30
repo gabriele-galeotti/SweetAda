@@ -43,8 +43,8 @@ package body FIFO is
          Success := False;
       else
          Q.all.Queue (Natural (Q.all.Head)) := Data;
-         Q.all.Head := Q.all.Head + 1;
-         Q.all.Count := Q.all.Count + 1;
+         Q.all.Head := @ + 1;
+         Q.all.Count := @ + 1;
          Success := True;
       end if;
       CPU.Irq_State_Set (Irq_State);
@@ -67,8 +67,8 @@ package body FIFO is
          Success := False;
       else
          Data := Q.all.Queue (Natural (Q.all.Tail));
-         Q.all.Tail := Q.all.Tail + 1;
-         Q.all.Count := Q.all.Count - 1;
+         Q.all.Tail := @ + 1;
+         Q.all.Count := @ - 1;
          Success := True;
       end if;
       CPU.Irq_State_Set (Irq_State);

@@ -53,10 +53,10 @@ package body Time is
       M : Natural := Month;
    begin
       if M <= 2 then
-         M := M + 10;
-         Y := Y - 1;
+         M := @ + 10;
+         Y := @ - 1;
       else
-         M := M - 2;
+         M := @ - 2;
       end if;
       return ((((Y / 4 - Y / 100 + Y / 400 + 367 * M / 12 + Day) + Y * 365 - 719_499) * 24 + Hour) * 60 + Minute) * 60 + Second;
    end Make_Time;
