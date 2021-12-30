@@ -25,7 +25,6 @@ with MMIO;
 with M68k;
 with Amiga;
 with ZorroII;
-with A2091;
 with A2065;
 with Gayle;
 with IOEMU;
@@ -77,7 +76,7 @@ package body BSP is
       if Data = 0 then
          C := Character'Val (0);
       else
-         -- pulse RX LED
+         -- RX LED blinking
          IOEMU.IOEMU_CIA_IO3 := 1;
          IOEMU.IOEMU_CIA_IO3 := 0;
          C := To_Ch (Data);
@@ -127,7 +126,8 @@ package body BSP is
       -------------------------------------------------------------------------
       if True then
          declare
-            PIC : ZorroII.PIC_Type;
+            Success : Boolean;
+            PIC     : ZorroII.PIC_Type;
          begin
             loop
                PIC := ZorroII.Read;
@@ -135,23 +135,15 @@ package body BSP is
                   Console.Print (PIC.Board, Prefix => "Board: ", NL => True);
                   Console.Print (PIC.ID_Product, Prefix => "ID:    ", NL => True);
                   Console.Print (PIC.ID_Manufacturer, Prefix => "Manu:  ", NL => True);
-                  if PIC.Board = 16#E7# then
-                     -- A2630 E7 51 07DB (??? perché 0x07DB)
-                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#48#, NByte (Unsigned_32'(16#0020_0000#)));
-                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#44#, HByte (Unsigned_32'(16#0020_0000#)));
+                  if (PIC.Board and 16#F8#) = 16#E0# then
+                     -- A2630 (FS-UAE) E7 51 07DB (???)
+                     ZorroII.Setup (16#0020_0000#);
                   end if;
                   if PIC.Board = 16#C1# then
                      -- A2065 C1 70 0202
-                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#48#, NByte (Unsigned_32'(16#00EA_0000#)));
-                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#44#, HByte (Unsigned_32'(16#00EA_0000#)));
-                  end if;
-                  if PIC.Board = 16#11# then
-                     -- ??? 11 EF EFEF
-                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#48#, NByte (Unsigned_32'(16#0080_0000#)));
-                     MMIO.Write (ZorroII.Cfg_Space'Address + 16#44#, HByte (Unsigned_32'(16#0080_0000#)));
-                     -- loop
-                     --    null;
-                     -- end loop;
+                     ZorroII.Setup (16#00EA_0000#);
+                     A2065.Probe (PIC, Success);
+                     exit;
                   end if;
                else
                   exit;
@@ -159,16 +151,8 @@ package body BSP is
             end loop;
          end;
       end if;
-      -- A2091 ----------------------------------------------------------------
-      if False then
-         declare
-            Success : Boolean with Unreferenced => True;
-         begin
-            A2091.Probe (Success);
-         end;
-      end if;
       -- Gayle IDE ------------------------------------------------------------
-      if False then
+      if True then
          IDE_Descriptor.Base_Address  := To_Address (Gayle.GAYLE_IDE_BASEADDRESS);
          IDE_Descriptor.Scale_Address := 2;
          IDE_Descriptor.Read_8        := MMIO.Read'Access;

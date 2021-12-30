@@ -18,6 +18,7 @@
 with System;
 with Interfaces;
 with Bits;
+with ZorroII;
 with Ethernet;
 with PBUF;
 
@@ -425,7 +426,7 @@ package A2065 is
    -- Subprograms
    ----------------------------------------------------------------------------
 
-   procedure Probe (Success : out Boolean);
+   procedure Probe (PIC : in ZorroII.PIC_Type; Success : out Boolean);
    procedure Init;
    function Receive return Boolean;
    procedure Transmit (Data_Address : in System.Address; P : in PBUF.Pbuf_Ptr);

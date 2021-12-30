@@ -15,10 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with Interfaces;
-with Bits;
-
 package A2091 is
 
    --========================================================================--
@@ -29,15 +25,11 @@ package A2091 is
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use Interfaces;
-   use Bits;
-
    ----------------------------------------------------------------------------
    -- Subprograms
    ----------------------------------------------------------------------------
 
-   procedure Probe (Success : out Boolean);
+   procedure Probe (PIC : in ZorroII.PIC_Type; Success : out Boolean);
    procedure Init;
 
 end A2091;

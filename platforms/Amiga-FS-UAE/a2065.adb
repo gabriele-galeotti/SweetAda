@@ -21,7 +21,6 @@ with MMIO;
 with LLutils;
 with Memory_Functions;
 with Amiga;
-with ZorroII;
 with Console;
 
 package body A2065 is
@@ -167,30 +166,8 @@ package body A2065 is
    ----------------------------------------------------------------------------
    -- Probe
    ----------------------------------------------------------------------------
-   -- __REF__ INSTALLING THE A2065.pdf
-   ----------------------------------------------------------------------------
-   procedure Probe (Success : out Boolean) is
-      type Offset_Byte is
-      record
-         Offset : Storage_Offset;
-         Value  : Unsigned_8;
-      end record;
-      -- A2065 Zorro II signature
-      A2065_Pattern : constant array (Natural range <>) of Offset_Byte :=
-         (
-          (16#00#,     16#C1#), -- Type
-          (16#04#, not 16#70#), -- Product
-          (16#10#, not 16#02#), -- Manufacturer (HIGH)
-          (16#14#, not 16#02#)  -- Manufacturer (LOW)
-         );
+   procedure Probe (PIC : in ZorroII.PIC_Type; Success : out Boolean) is
    begin
-      -- check for A2065 signature
-      for Index in A2065_Pattern'Range loop
-         if ZorroII.Signature_Read (A2065_Pattern (Index).Offset) /= A2065_Pattern (Index).Value then
-            Success := False;
-            return;
-         end if;
-      end loop;
       -- MAC = 02-80-10 (Commodore OUI, locally administered) + last 24 bits of
       -- the board S/N offsets
       -- offsets 0x18/0x1A contain the first 8 bits of the board S/N and so are
@@ -198,15 +175,14 @@ package body A2065 is
       A2065_MAC (0) := 16#02#;
       A2065_MAC (1) := 16#80#;
       A2065_MAC (2) := 16#10#;
-      A2065_MAC (3) := not ZorroII.Signature_Read (16#1C#);
-      A2065_MAC (4) := not ZorroII.Signature_Read (16#20#);
-      A2065_MAC (5) := not ZorroII.Signature_Read (16#24#);
+      A2065_MAC (3) := NByte (PIC.Serial_Number);
+      A2065_MAC (4) := MByte (PIC.Serial_Number);
+      A2065_MAC (5) := LByte (PIC.Serial_Number);
+      -- configure A2065 address
+      ZorroII.Setup (A2065_BASEADDRESS);
       -- log informations
       Console.Print (Unsigned_32'(A2065_BASEADDRESS), Prefix => "A2065: Ethernet card @ ", NL => True);
       Console.Print (Byte_Array (A2065_MAC), Prefix => "A2065: MAC address ", Separator => ':', NL => True);
-      -- configure A2065 address
-      MMIO.Write (ZorroII.Cfg_Space'Address + 16#48#, NByte (Unsigned_32'(A2065_BASEADDRESS)));
-      MMIO.Write (ZorroII.Cfg_Space'Address + 16#44#, HByte (Unsigned_32'(A2065_BASEADDRESS)));
       Success := True;
    end Probe;
 

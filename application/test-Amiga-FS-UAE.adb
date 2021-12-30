@@ -72,24 +72,20 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            Success             : Boolean;
             Ethernet_Descriptor : Ethernet.Ethernet_Descriptor_Type;
          begin
-            A2065.Probe (Success);
-            if Success then
-               -- Ethernet module initialization ------------------------------
-               Ethernet_Descriptor.Haddress := A2065.A2065_MAC;
-               Ethernet_Descriptor.Paddress := (192, 168, 3, 2);
-               Ethernet_Descriptor.RX       := null;
-               Ethernet_Descriptor.TX       := A2065.Transmit'Access;
-               Ethernet.Init (Ethernet_Descriptor);
-               -- A2065 initialization ----------------------------------------
-               A2065.Init;
-            end if;
+            -- Ethernet module initialization ------------------------------
+            Ethernet_Descriptor.Haddress := A2065.A2065_MAC;
+            Ethernet_Descriptor.Paddress := (192, 168, 3, 2);
+            Ethernet_Descriptor.RX       := null;
+            Ethernet_Descriptor.TX       := A2065.Transmit'Access;
+            Ethernet.Init (Ethernet_Descriptor);
+            -- A2065 initialization ----------------------------------------
+            A2065.Init;
          end;
       end if;
       -------------------------------------------------------------------------
-      if False then
+      if True then
          declare
             Success   : Boolean;
             Partition : MBR.Partition_Entry_Type;

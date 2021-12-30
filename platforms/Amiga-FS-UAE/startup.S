@@ -78,10 +78,10 @@ _start:
                 // perform code relocation
                 fjsr    movcode
 #endif
-#if 1
+
                 // perform static data relocation
                 fjsr    movdata
-#endif
+
                 // zero the bss section
                 fjsr    zerobss
 
@@ -152,6 +152,8 @@ movdata:
                 move.l  #_data_start,%a0
                 move.l  #_sdata,%a1
                 move.l  #_edata,%a2
+                cmp.l   %a0,%a1
+                beq.s   2f
 1:              cmp.l   %a1,%a2
                 beq.s   2f
                 move.b  %a0@+,%a1@+
