@@ -2,6 +2,7 @@
 with System.Storage_Elements;
 with Interfaces;
 with CPU;
+with Virt;
 with IOEMU;
 
 package body Application is
@@ -30,6 +31,11 @@ package body Application is
       -------------------------------------------------------------------------
       if False then
          CPU.Asm_Call (System.Storage_Elements.To_Address (16#2000#));
+      end if;
+      -------------------------------------------------------------------------
+      if True then
+         Virt.mtimecmp := 16#0000_0000_0400_0000#;
+         -- Virt.mtime    := 16#0000_0000_0000_0000#;
       end if;
       -------------------------------------------------------------------------
       if True then
