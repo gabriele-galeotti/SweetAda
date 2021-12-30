@@ -47,7 +47,7 @@ package body RISCV is
    procedure NOP is
    begin
       Asm (
-           Template => " nop",
+           Template => "        nop",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -61,7 +61,7 @@ package body RISCV is
    procedure Asm_Call (Target_Address : in Address) is
    begin
       Asm (
-           Template => " jalr x1,%0,0",
+           Template => "        jalr x1,%0,0",
            Outputs  => No_Output_Operands,
            Inputs   => Address'Asm_Input ("r", Target_Address),
            Clobber  => "",
@@ -100,8 +100,8 @@ package body RISCV is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => " csrrs t1,mstatus,%0" & CRLF &
-                       " csrrs t1,mie,%1",
+           Template => "        csrrs t1,mstatus,%0" & CRLF &
+                       "        csrrs t1,mie,%1",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
@@ -115,7 +115,7 @@ package body RISCV is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => " csrrc t1,mstatus,%0",
+           Template => "        csrrc t1,mstatus,%0",
            Outputs  => No_Output_Operands,
            Inputs   => MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
            Clobber  => "t1",

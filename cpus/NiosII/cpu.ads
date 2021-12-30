@@ -30,11 +30,13 @@ package CPU is
 
    pragma Preelaborate;
 
+   use System;
+
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure Asm_Call (Target_Address : in System.Address) renames NiosII.Asm_Call;
+   procedure Asm_Call (Target_Address : in Address) renames NiosII.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
