@@ -223,7 +223,7 @@ package Sun4m is
 pragma Warnings (Off, "volatile actual passed by copy");
    function To_U32 is new Ada.Unchecked_Conversion (E_CSR_Type, Unsigned_32);
    function To_E_CSR is new Ada.Unchecked_Conversion (Unsigned_32, E_CSR_Type);
-pragma Warnings (On, "***");
+pragma Warnings (On, "volatile actual passed by copy");
 
    -- Test Control/Status Reg
 

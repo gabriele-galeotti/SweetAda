@@ -117,8 +117,8 @@ package body Am7990 is
    -- Init
    ----------------------------------------------------------------------------
    procedure Init is
-      RDRA                : Ring_Descriptor_Pointer_Type;
-      TDRA                : Ring_Descriptor_Pointer_Type;
+      RDRA                : Ring_Descriptor_Pointer_Type with Unreferenced => True;
+      TDRA                : Ring_Descriptor_Pointer_Type with Unreferenced => True;
       Ethernet_Descriptor : Ethernet_Descriptor_Type := Ethernet_DESCRIPTOR_INVALID;
       function To_RDP is new Ada.Unchecked_Conversion (Unsigned_32, Ring_Descriptor_Pointer_Type);
       function To_U32 is new Ada.Unchecked_Conversion (Ring_Descriptor_Pointer_Type, Unsigned_32);
