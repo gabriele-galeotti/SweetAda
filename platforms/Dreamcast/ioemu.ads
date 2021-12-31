@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
--- with System;
 with System.Storage_Elements;
 with Interfaces;
 
@@ -29,7 +28,6 @@ package IOEMU is
    --                                                                        --
    --========================================================================--
 
-   -- use System;
    use System.Storage_Elements;
    use Interfaces;
 

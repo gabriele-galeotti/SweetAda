@@ -1,8 +1,7 @@
 
 with Interfaces;
 with Configure;
-with SH7750;
-with BSP;
+with CPU;
 with IOEMU;
 with Console;
 
@@ -17,8 +16,6 @@ package body Application is
    --========================================================================--
 
    use Interfaces;
-   use SH7750;
-   use BSP;
 
    --========================================================================--
    --                                                                        --
@@ -64,7 +61,7 @@ package body Application is
                Value := @ + 1;
                -- emit an OK message
                Console.Print ("OK", NL => True);
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
       end if;
