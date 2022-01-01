@@ -79,7 +79,7 @@ system and big, complex, OS-based multitasked environment.
 @node Overall structure
 @chapter Overall structure
 
-The SweetAda system is composed of a top-level directory which hold various directories
+The SweetAda system is composed of a top-level directory which holds other directories
 and software components. They are:
 @itemize @bullet
 @item
@@ -140,10 +140,16 @@ performing an action.
 
 SweetAda requires some support from the OS environment. Apart the standard low-level utilities,
 like programs to copy files and usual filesystem operations, the GNU Make and GNU sed utilities
-are required in order to perform basic activities. If you do not have them available, please
-install them from your package provider, or download them form the SweetAda SourceForge repository.
-Remember to put the executable path in the visible part of the PATH environment variable which
-is parsed by the shell.
+are required in order to perform basic activities.
+
+While in some environments (Linux, and, if properly configured, OS X) the make utility is
+normally visible in a shell and there is no need to specify its location in the filesystem,
+in Windows and in an OS X without system development features installed, the make executable
+is missing.
+
+If you do not have these utilities available, please install them from your package provider,
+or download them form the SweetAda SourceForge repository. Remember to put the executable path
+in the visible part of the PATH environment variable which is then parsed by the shell.
 
 SweetAda requires (although they are not really strictly necessary from a system standpoint)
 three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility. They are
@@ -163,12 +169,8 @@ clean visual output in order to easily parse ELF sections. elftool is anyway opt
 and you can avoid its use by setting a variable in the top-level configuration.in file,
 so the standard "size" toolchain executable is thus used.
 
-runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets.
-
-While in some environments (Linux, and, if properly configured, OS X) the make utility is
-normally visible in a shell and there is no need to specify its location in the filesystem,
-in Windows and in an OS X without system development features installed, the make executable
-is missing.
+runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets
+together with an emulator like QEMU.
 
 In order to perform actions, the make utility should be invoked, followed by the
 target, like in:
