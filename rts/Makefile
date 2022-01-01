@@ -151,7 +151,7 @@ LIBGNARL_ADS  := $(filter-out %.adb,$(LIBGNARL_SRCS))
 LIBGNARL_OBJS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.o))
 LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.ali))
 
-# this include file could define additional target-dependent switches
+# this include file defines additional target-dependent switches
 -include $(RTS_SOURCE_PATH_TARGET)/Makefile.rts.in
 ADAC_SWITCHES += $(ADAC_SWITCHES_RTS)
 CC_SWITCHES   += $(CC_SWITCHES_RTS)
