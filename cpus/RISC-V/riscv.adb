@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
-with Interfaces;
 with Definitions;
 
 package body RISCV is
@@ -56,12 +55,58 @@ package body RISCV is
    end NOP;
 
    ----------------------------------------------------------------------------
+   -- MCAUSE_Read
+   ----------------------------------------------------------------------------
+   function MCAUSE_Read return Unsigned_32 is
+      MCAUSE : Unsigned_32;
+   begin
+      Asm (
+           Template => "        csrr    %0,mcause",
+           Outputs  => Unsigned_32'Asm_Output ("=r", MCAUSE),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return MCAUSE;
+   end MCAUSE_Read;
+
+   ----------------------------------------------------------------------------
+   -- MEPC_Read
+   ----------------------------------------------------------------------------
+   function MEPC_Read return Unsigned_32 is
+      MEPC : Unsigned_32;
+   begin
+      Asm (
+           Template => "        csrr    %0,mepc",
+           Outputs  => Unsigned_32'Asm_Output ("=r", MEPC),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return MEPC;
+   end MEPC_Read;
+
+   ----------------------------------------------------------------------------
+   -- MTVEC_Write
+   ----------------------------------------------------------------------------
+   procedure MTVEC_Write (Mtvec : in MTVEC_Type) is
+   begin
+      Asm (
+           Template => "        csrw    mtvec,%0",
+           Outputs  => No_Output_Operands,
+           Inputs   => MTVEC_Type'Asm_Input ("r", Mtvec),
+           Clobber  => "",
+           Volatile => True
+          );
+   end MTVEC_Write;
+
+   ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
    procedure Asm_Call (Target_Address : in Address) is
    begin
       Asm (
-           Template => "        jalr x1,%0,0",
+           Template => "        jalr    x1,%0,0",
            Outputs  => No_Output_Operands,
            Inputs   => Address'Asm_Input ("r", Target_Address),
            Clobber  => "",
@@ -100,8 +145,8 @@ package body RISCV is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => "        csrrs t1,mstatus,%0" & CRLF &
-                       "        csrrs t1,mie,%1",
+           Template => "        csrrs   t1,mstatus,%0" & CRLF &
+                       "        csrrs   t1,mie,%1",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
@@ -115,7 +160,7 @@ package body RISCV is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => "        csrrc t1,mstatus,%0",
+           Template => "        csrrc   t1,mstatus,%0",
            Outputs  => No_Output_Operands,
            Inputs   => MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
            Clobber  => "t1",

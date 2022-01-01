@@ -16,6 +16,8 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with System.Storage_Elements;
+with Interfaces;
 with Bits;
 
 package RISCV is
@@ -31,6 +33,10 @@ package RISCV is
    pragma Preelaborate;
 
    use System;
+   use System.Storage_Elements;
+   use Interfaces;
+
+   -- Machine Status (mstatus)
 
    type MSTATUS_Type is
    record
@@ -83,6 +89,8 @@ package RISCV is
       SD        at 0 range 31 .. 31;
    end record;
 
+   -- Machine Trap Vector CSR (mtvec)
+
    type MTVEC_Type is
    record
       MODE     : Bits.Bits_2;
@@ -98,11 +106,35 @@ package RISCV is
       BASE     at 0 range 6 .. 31;
    end record;
 
+   MODE_Direct   : constant := 2#00#;
+   MODE_Vectored : constant := 2#01#;
+
+   procedure MTVEC_Write (Mtvec : in MTVEC_Type) with
+      Inline => True;
+
+   -- Timer CSRs
+
+   MTimeCmp : Unsigned_64 with
+      Address    => To_Address (16#0200_4000#),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   MTime : Unsigned_64 with
+      Address    => To_Address (16#0200_BFF8#),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
    procedure NOP with
+      Inline => True;
+   function MCAUSE_Read return Unsigned_32 with
+      Inline => True;
+   function MEPC_Read return Unsigned_32 with
       Inline => True;
    procedure Asm_Call (Target_Address : in Address) with
       Inline => True;
