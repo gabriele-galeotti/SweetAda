@@ -31,18 +31,6 @@ package Virt is
    use System.Storage_Elements;
    use Interfaces;
 
-   mtimecmp : Unsigned_64 with
-      Address    => To_Address (16#0200_4000#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-
-   mtime    : Unsigned_64 with
-      Address    => To_Address (16#0200_BFF8#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-
    UART0_BASEADDRESS : constant := 16#1000_0000#;
 
    ----------------------------------------------------------------------------

@@ -19,14 +19,27 @@
 _start:
 
                 //
+                // Set Previous Privilege Mode.
+                // S: 1 << 11
+                // M: 3 << 11
+                //
+                li      t1,0x3                  // "M" mode
+                sll     t1,t1,11
+                csrr    t0,mstatus
+                or      t0,t0,t1
+                csrw    mstatus,t0
+                li      t0,0xFFFF
+                csrw    medeleg,t0
+                csrw    mideleg,t0
+                lla     t0,1f
+                csrw    mepc,t0
+                mret
+1:
+
+                //
                 // Setup stack.
                 //
                 la      sp,kernel_stack
-
-                .extern vector
-                la      t1,vector
-                ori     t1,t1,1
-                csrrw   x0,mtvec,t1
 
                 //
                 // Call "adainit" procedure.

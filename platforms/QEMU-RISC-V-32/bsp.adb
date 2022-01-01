@@ -20,6 +20,7 @@ with Interfaces;
 with Bits;
 with MMIO;
 with RISCV;
+with Exceptions;
 with Virt;
 with Console;
 
@@ -80,6 +81,19 @@ package body BSP is
       -------------------------------------------------------------------------
       Console.Print ("RISC-V (QEMU emulator)", NL => True);
       -------------------------------------------------------------------------
+      Exceptions.Init;
+      -------------------------------------------------------------------------
+      declare
+         Vectors      : aliased Asm_Entry_Point with
+            Import        => True,
+            Convention    => Asm,
+            External_Name => "vectors";
+         Base_Address : Bits_26;
+      begin
+         Base_Address := Bits_26 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)) and 16#FFFF_FFFC#, 6));
+         RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, Reserved => 0, BASE => Base_Address));
+      end;
+      RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
       RISCV.Irq_Enable;
       -------------------------------------------------------------------------
    end BSP_Setup;
