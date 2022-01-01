@@ -18,9 +18,11 @@
                 .global _start
 _start:
 
-                // disable all interrupts (the default program, which runs
+                //
+                // Disable all interrupts (the default program, which runs
                 // with interrupts enabled, will be stopped due to halt
-                // command in OpenOCD)
+                // command in OpenOCD).
+                //
                 li      t0,0x000B
                 csrrc   t1,mstatus,t0
 
