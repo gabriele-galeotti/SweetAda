@@ -90,7 +90,7 @@ exec >@stdout 2>@stderr ifconfig -v eth0 $HOST_IP_ADDRESS
 exec >@stdout 2>@stderr arp -s $DREAMCAST_IP_ADDRESS $BBA_MAC_ADDRESS
 
 # *** NOTE ***
-# previously this utility was used to download a binary image
+# previously the dc-tool-ip utility was used to download a binary image
 # *** NOTE ***
 #exec >@stdout 2>@stderr dc-tool-ip -t $DREAMCAST_IP_ADDRESS -x $KERNEL_OUTFILE -a $START_ADDRESS
 #exit 0
