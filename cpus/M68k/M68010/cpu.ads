@@ -30,11 +30,15 @@ package CPU is
 
    pragma Preelaborate;
 
+   use System;
+
    ----------------------------------------------------------------------------
-   -- Standard subprograms
+   -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure Asm_Call (Target_Address : in System.Address) renames M68k.Asm_Call;
+   procedure NOP renames M68k.NOP;
+
+   procedure Asm_Call (Target_Address : in Address) renames M68k.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts

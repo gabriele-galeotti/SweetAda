@@ -41,6 +41,8 @@ package NiosII is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
+   procedure NOP with
+      Inline => True;
    function CPUID return Unsigned_32 with
       Inline => True;
    procedure Asm_Call (Target_Address : in Address) with

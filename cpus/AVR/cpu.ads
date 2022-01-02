@@ -36,6 +36,8 @@ package CPU is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
+   procedure NOP renames AVR.NOP;
+
    procedure Asm_Call (Target_Address : in Address) renames AVR.Asm_Call;
 
    ----------------------------------------------------------------------------
