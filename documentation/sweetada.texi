@@ -852,9 +852,9 @@ a port for a new CPU, or experimentation.
 @section Altera 10M50GHRD
 @cindex Altera 10M50GHRD
 
-Altera 10M50GHRD is a virtual platform in SweetAda, usable by means of the QEMU
-emulator. This platform is based on a softcore Nios II processor, implemented in
-real world in an FPGA.
+Altera@registeredsymbol{} 10M50GHRD is a virtual platform in SweetAda, usable by
+means of the QEMU emulator. This platform is based on a softcore Nios II@registeredsymbol{}
+processor, implemented in real world in an FPGA.
 
 QEMU instantiates a few peripherals for this platform:
 - 2 timers
@@ -872,15 +872,18 @@ The Amiga platform is the well-known machine based on the M68k venerable class
 of CPU.
 
 The BSP is mostly based on an Amiga 2000 machine with OCS setup. Supported CPUs
-are 68010, 68020, 68030 and 68040.
+are MC68010, MC68020, MC68030 and MC68040. The MC68000 is not supported due to the
+lack of the VBR instructions, which does not allow to relocate exception and
+interrupt vectors.
 
-In SweetAda, Amiga code can be used both in a real machine and an emulated machine
-by means of the FS-UAE emulator. The output kernel is a binary image that should
-be used instead of the classic "Kickstart". Once you have burnt the kernel image
-in an EPROM, you can boot the Amiga with your Ada code.
+In the context of SweetAda, Amiga code can be used both in a real machine and an
+emulated machine by means of the FS-UAE emulator. The output kernel is a binary
+image that should be used instead of the classic "Kickstart" ROM binary image.
+Once you have burnt the kernel image in an EPROM, you can boot the Amiga with
+your Ada code.
 
 Currently, Amiga platform is able to use some peripherals, like the OCS video,
-the serialport and the A2065 network adapter (tested only in FS-UAE).
+the serial port and the A2065 network adapter (tested only in FS-UAE so far).
 
 @section Arduino Uno
 @cindex Arduino Uno
@@ -906,8 +909,50 @@ the serialport and the A2065 network adapter (tested only in FS-UAE).
 @section GEMI
 @cindex GEMI
 
-@section SiFive HiFive1
-@cindex SiFive HiFive1
+The GEMI is a proprietary embedded board based on the Hitachi SH7032 CPU.
+This platform is only used as a template, in order to work with this kind
+of CPU and test SweetAda in the maximum possible range of physical hardware.
+
+SweetAda code runs in a Flash EPROM without problems, and is able to perform
+various activities, like talking over a serial line, toggle memory-mapped I/Os
+and manage the on-board RTC.
+
+@section SiFive HiFive 1
+@cindex SiFive HiFive 1
+
+The SiFive@sup{TM} HiFive 1 is an embedded board based on a RISC-V@registeredsymbol{}
+32-bit CPU.
+
+Following example is for a Rev B board and a Linux machine with OpenOCD.
+
+Once the target is configured, the "session-start" target activates an OpenOCD
+session. This OpenOCD instance could remain active through the entire development
+cycle.
+
+@example
+$ make session-start
+@end example
+
+If OpenOCD is correctly installed, with proper settings in configuration.in, the
+following terminal window should appear:
+
+@image{hifive1-openocd_server}
+
+OpenOCD will halt the CPU and will be sitting idle, waiting for a connection.
+By issuing a "make run" shell command, the script (which is also used for the
+previous command) will instruct OpenOCD to download the SweetAda code in the board
+RAM, executing it from the low-level assembly start entry point. It is essential
+to deactivate interrupts as fast as possible in the startup code, because the
+halted program is most likely a default application which runs with interrupts
+enabled, else when a timer IRQ is triggered an invalid program counter will be called.
+
+@example
+$ make run
+@end example
+
+@image{hifive1-openocd_server-run}
+
+You should see the board cycling the multi-color LED through the R, G and B blinks.
 
 @section Integrator/CP
 @cindex Integrator/CP

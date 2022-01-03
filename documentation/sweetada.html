@@ -2,7 +2,7 @@
 <html>
 <!-- This manual is for SweetAda.
 
-Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+Copyright (C) 2020, 2021 Gabriele Galeotti
  -->
 <!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
 <head>
@@ -961,9 +961,9 @@ Next: <a href="#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previ
 <h3 class="section">15.1 Altera 10M50GHRD</h3>
 <a name="index-Altera-10M50GHRD"></a>
 
-<p>Altera 10M50GHRD is a virtual platform in SweetAda, usable by means of the QEMU
-emulator. This platform is based on a softcore Nios II processor, implemented in
-real world in an FPGA.
+<p>Altera&reg; 10M50GHRD is a virtual platform in SweetAda, usable by
+means of the QEMU emulator. This platform is based on a softcore Nios II&reg;
+processor, implemented in real world in an FPGA.
 </p>
 <p>QEMU instantiates a few peripherals for this platform:
 - 2 timers
@@ -982,15 +982,18 @@ already wrapped in the platform&rsquo;s configuration.in.
 of CPU.
 </p>
 <p>The BSP is mostly based on an Amiga 2000 machine with OCS setup. Supported CPUs
-are 68010, 68020, 68030 and 68040.
+are MC68010, MC68020, MC68030 and MC68040. The MC68000 is not supported due to the
+lack of the VBR instructions, which does not allow to relocate exception and
+interrupt vectors.
 </p>
-<p>In SweetAda, Amiga code can be used both in a real machine and an emulated machine
-by means of the FS-UAE emulator. The output kernel is a binary image that should
-be used instead of the classic &quot;Kickstart&quot;. Once you have burnt the kernel image
-in an EPROM, you can boot the Amiga with your Ada code.
+<p>In the context of SweetAda, Amiga code can be used both in a real machine and an
+emulated machine by means of the FS-UAE emulator. The output kernel is a binary
+image that should be used instead of the classic &quot;Kickstart&quot; ROM binary image.
+Once you have burnt the kernel image in an EPROM, you can boot the Amiga with
+your Ada code.
 </p>
 <p>Currently, Amiga platform is able to use some peripherals, like the OCS video,
-the serialport and the A2065 network adapter (tested only in FS-UAE).
+the serial port and the A2065 network adapter (tested only in FS-UAE so far).
 </p>
 <a name="Arduino-Uno"></a>
 <h3 class="section">15.3 Arduino Uno</h3>
@@ -1024,10 +1027,52 @@ the serialport and the A2065 network adapter (tested only in FS-UAE).
 <h3 class="section">15.10 GEMI</h3>
 <a name="index-GEMI"></a>
 
-<a name="SiFive-HiFive1"></a>
-<h3 class="section">15.11 SiFive HiFive1</h3>
-<a name="index-SiFive-HiFive1"></a>
+<p>The GEMI is a proprietary embedded board based on the Hitachi SH7032 CPU.
+This platform is only used as a template, in order to work with this kind
+of CPU and test SweetAda in the maximum possible range of physical hardware.
+</p>
+<p>SweetAda code runs in a Flash EPROM without problems, and is able to perform
+various activities, like talking over a serial line, toggle memory-mapped I/Os
+and manage the on-board RTC.
+</p>
+<a name="SiFive-HiFive-1"></a>
+<h3 class="section">15.11 SiFive HiFive 1</h3>
+<a name="index-SiFive-HiFive-1"></a>
 
+<p>The SiFive<sup>TM</sup> HiFive 1 is an embedded board based on a RISC-V&reg;
+32-bit CPU.
+</p>
+<p>Following example is for a Rev B board and a Linux machine with OpenOCD.
+</p>
+<p>Once the target is configured, the &quot;session-start&quot; target activates an OpenOCD
+session. This OpenOCD instance could remain active through the entire development
+cycle.
+</p>
+<div class="example">
+<pre class="example">$ make session-start
+</pre></div>
+
+<p>If OpenOCD is correctly installed, with proper settings in configuration.in, the
+following terminal window should appear:
+</p>
+<img src="hifive1-openocd_server.png" alt="hifive1-openocd_server">
+
+<p>OpenOCD will halt the CPU and will be sitting idle, waiting for a connection.
+By issuing a &quot;make run&quot; shell command, the script (which is also used for the
+previous command) will instruct OpenOCD to download the SweetAda code in the board
+RAM, executing it from the low-level assembly start entry point. It is essential
+to deactivate interrupts as fast as possible in the startup code, because the
+halted program is most likely a default application which runs with interrupts
+enabled, else when a timer IRQ is triggered an invalid program counter will be called.
+</p>
+<div class="example">
+<pre class="example">$ make run
+</pre></div>
+
+<img src="hifive1-openocd_server-run.png" alt="hifive1-openocd_server-run">
+
+<p>You should see the board cycling the multi-color LED through the R, G and B blinks.
+</p>
 <a name="Integrator_002fCP"></a>
 <h3 class="section">15.12 Integrator/CP</h3>
 <a name="index-Integrator_002fCP"></a>
@@ -1398,7 +1443,7 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Index_cp_letter-S">S</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SBC5206">SBC5206</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-SiFive-HiFive1">SiFive HiFive1</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-SiFive-HiFive-1">SiFive HiFive 1</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SPARCstation-5">SPARCstation 5</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Spartan-3A-EK">Spartan 3A EK</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Spartan-3E-SK">Spartan 3E SK</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
