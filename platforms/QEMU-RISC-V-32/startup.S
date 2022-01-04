@@ -23,15 +23,12 @@ _start:
                 // S: 1 << 11
                 // M: 3 << 11
                 //
-                li      t1,0x3                  // "M" mode
-                sll     t1,t1,11
-                csrr    t0,mstatus
-                or      t0,t0,t1
+                li      t0,0x3<<11                      // "M" mode
                 csrw    mstatus,t0
                 li      t0,0xFFFF
                 csrw    medeleg,t0
                 csrw    mideleg,t0
-                lla     t0,1f
+                la      t0,1f
                 csrw    mepc,t0
                 mret
 1:
