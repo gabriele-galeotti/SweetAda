@@ -1,20 +1,18 @@
 
 \input texinfo
 @setfilename sweetada.texi
-
+@set AUTHOR Gabriele Galeotti
 @c $ makeinfo --html --no-split -o ./ sweetada.texi
 
 @c -- header -------------------------------------------------------------------
 @settitle SweetAda
 @c -----------------------------------------------------------------------------
 
-@set AUTHOR Gabriele Galeotti
-
 @c -- copying ------------------------------------------------------------------
 @copying
 This manual is for SweetAda.
 
-Copyright @copyright{} 2020, 2021 @value{AUTHOR}
+Copyright @copyright{} 2020, 2021, 2022 @value{AUTHOR}
 
 @quotation
 @end quotation
@@ -170,7 +168,7 @@ and you can avoid its use by setting a variable in the top-level configuration.i
 so the standard "size" toolchain executable is thus used.
 
 runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets
-together with an emulator like QEMU.
+with an emulator like QEMU.
 
 In order to perform actions, the make utility should be invoked, followed by the
 target, like in:
@@ -394,9 +392,6 @@ which erases every configuration file and objects from last compilation.
 NOTE: Issuing a new configuration erases the old one by executing an implicit "all-clean"
 Makefile target.
 
-At this point, you should build the RTS.
-@xref{Building the RTS}
-
 After the top-level configuration file is loaded, and thus Makefile knows the platform,
 the configuration.in found in that directory is loaded (e.g., ./platforms/ML605/configuration.in).
 Here you can specify nearly everything about the target machine, like the CPU model,
@@ -507,9 +502,13 @@ to the Makefile so the output is not cluttered with other non-interesting output
 @cindex Makefile targets
 
 Following a "make createkernelcfg" and "make configure", the build system is ready
-to build SweetAda. The next phases will be a "make all" (or "make kernel") and,
-optionally, "make postbuild". Then SweetAda could be executed by means of the "make run"
-or "make debug" commands.
+to build SweetAda.
+
+At this point, you should have available the RTS to further proceed with the build.
+@xref{Building the RTS}
+
+The next phases will be a "make all" (or "make kernel") and, optionally, "make postbuild".
+Then SweetAda could be executed by means of the "make run" or "make debug" commands.
 
 Putting it all together, we can summarize the following fundamental steps:
 
@@ -1067,7 +1066,7 @@ actions in a very basic script-like sequence of assignments and statements.
 
 IOEMU configuration files are structured in declarations and sections.
 
-Declarations (ENV and SET) must come first, and their purposes is to declare
+Declarations (ENV and SET) must come first, and their purposes are to declare
 environment variables globally (ENV) or local to the file or a section (SET).
 
 Sections are directives, either to runsweetada utility or the underlying target emulator
@@ -1114,7 +1113,7 @@ sections.
 ARGS@*
 ARGS is a special directive. When you declare an ARGS directive, strings are
 added sequentially to the array that carries arguments for the next EXEC/EXEA
-command. So you can add arguments to the desired executable at various points
+command. You can add arguments to the desired executable at various points
 of a section, and decided which arguments must be selected. Once the EXEC/EXEA
 instruction is processed, the ARGS array is reset to empty.
 
@@ -1156,7 +1155,7 @@ IOEMU creates some implicit variables during its execution.
 @itemize @bullet
 @item
 __THISFILE__@*
-Carries the name of the configuration file being processed. So you can export
+Carries the name of the configuration file being processed. This way, you can export
 this variable and pass it to a emulator, that thus could use this same configuration
 file. Note that this is quite mandatory, because SweetAda emulators loads the
 IOEMU shared library and the configuration file using environment variables.
