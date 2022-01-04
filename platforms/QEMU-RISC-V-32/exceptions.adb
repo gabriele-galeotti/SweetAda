@@ -21,7 +21,6 @@ with Definitions;
 with Core;
 with RISCV;
 with IOEMU;
-with Console;
 
 package body Exceptions is
 
