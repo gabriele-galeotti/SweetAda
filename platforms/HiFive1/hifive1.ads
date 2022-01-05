@@ -34,9 +34,33 @@ package HiFive1 is
    use System.Storage_Elements;
    use Interfaces;
 
-   -- PRCI
+   -- 6 Clock Generation (PRCI)
+
+   type PRCI_Type is
+   record
+      hfrosccfg  : Unsigned_32;
+      hfxosccfg  : Unsigned_32;
+      pllcfg     : Unsigned_32;
+      plloutdiv  : Unsigned_32;
+      -- procmoncfg : Unsigned_32;
+   end record with
+      Size => 4 * 32;
+   for PRCI_Type use
+   record
+      hfrosccfg  at 16#00# range 0 .. 31;
+      hfxosccfg  at 16#04# range 0 .. 31;
+      pllcfg     at 16#08# range 0 .. 31;
+      plloutdiv  at 16#0C# range 0 .. 31;
+      -- procmoncfg at 16#F0# range 0 .. 31;
+   end record;
 
    PRCI_BASEADDRESS : constant := 16#1000_8000#;
+
+   PRCI : aliased PRCI_Type with
+      Address    => To_Address (PRCI_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
 
    -- 17 General Purpose Input/Output Controller (GPIO)
 

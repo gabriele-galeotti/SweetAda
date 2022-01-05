@@ -66,15 +66,18 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
    begin
+      -- Clock ----------------------------------------------------------------
+      HiFive1.PRCI.pllcfg    := 16#0007_0000#;
+      HiFive1.PRCI.hfrosccfg := 16#0010_0004#;
       -- UARTs ----------------------------------------------------------------
       HiFive1.GPIO_IOFSEL := @ and 16#FF78_FFFF#;
       HiFive1.GPIO_IOFEN  := @ or 16#0087_0000#;
       HiFive1.GPIO_OEN    := @ or 16#0087_0000#;
-      HiFive1.UART0.div          := 16#A9#; -- 115200 bps without clk adjusting
+      HiFive1.UART0.div          := 16#89#; -- 115200 bps @ 16 MHz
       HiFive1.UART0.txctrl.txen  := True;
       HiFive1.UART0.txctrl.nstop := 0;
       HiFive1.UART0.txctrl.txcnt := 1;
-      HiFive1.UART1.div          := 16#A9#; -- 115200 bps without clk adjusting
+      HiFive1.UART1.div          := 16#89#; -- 115200 bps @ 16 MHz
       HiFive1.UART1.txctrl.txen  := True;
       HiFive1.UART1.txctrl.nstop := 0;
       HiFive1.UART1.txctrl.txcnt := 1;

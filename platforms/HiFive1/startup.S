@@ -28,7 +28,7 @@ _start:
                 //li      t0,0xFFFF
                 //csrw    medeleg,t0
                 //csrw    mideleg,t0
-                lla     t0,1f
+                la      t0,1f
                 csrw    mepc,t0
                 mret
 1:
