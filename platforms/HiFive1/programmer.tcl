@@ -78,7 +78,7 @@ if {[catch {exec $ELFTOOL -c findsymbol=$START_SYMBOL $KERNEL_OUTFILE} result] e
     exit 1
 }
 
-openocd_rpc_tx "halt"
+openocd_rpc_tx "reset halt"
 openocd_rpc_rx
 sleep 1000
 openocd_rpc_tx "load_image $KERNEL_OUTFILE"

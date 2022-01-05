@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.adb                                                                                                   --
+-- __FLN__ exceptions.adb                                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,16 +15,16 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with System.Machine_Code;
 with Interfaces;
+with Definitions;
 with Bits;
+with Core;
 with RISCV;
-with CPU;
 with HiFive1;
-with Exceptions;
 with Console;
 
-package body BSP is
+package body Exceptions is
 
    --========================================================================--
    --                                                                        --
@@ -34,9 +34,17 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
+   use System.Machine_Code;
    use Interfaces;
    use Bits;
+   use Core;
+
+   CRLF : String renames Definitions.CRLF;
+
+   procedure Timer_Process with
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "timer_process";
 
    --========================================================================--
    --                                                                        --
@@ -47,59 +55,26 @@ package body BSP is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Console wrappers
+   -- Timer_Process
    ----------------------------------------------------------------------------
-
-   procedure Console_Putchar (C : in Character) is
+   procedure Timer_Process is
    begin
-      HiFive1.UART0.txdata.txdata := To_U8 (C);
-      for Delay_Loop_Count in 1 .. 10_000 loop CPU.NOP; end loop;
-   end Console_Putchar;
-
-   procedure Console_Getchar (C : out Character) is
-   begin
-      C := Character'Val (0);
-   end Console_Getchar;
+      if (RISCV.MCAUSE_Read and 16#8000_0000#) = 0 then
+         Console.Print (RISCV.MCAUSE_Read, NL => True);
+         loop null; end loop;
+      else
+         Tick_Count := @ + 1;
+         HiFive1.UART0.txdata.txdata := To_U8 ('T');
+         RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
+      end if;
+   end Timer_Process;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Init
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Init is
    begin
-      -- UARTs ----------------------------------------------------------------
-      HiFive1.GPIO_IOFSEL := @ and 16#FF78_FFFF#;
-      HiFive1.GPIO_IOFEN  := @ or 16#0087_0000#;
-      HiFive1.GPIO_OEN    := @ or 16#0087_0000#;
-      HiFive1.UART0.div          := 16#A9#; -- 115200 bps without clk adjusting
-      HiFive1.UART0.txctrl.txen  := True;
-      HiFive1.UART0.txctrl.nstop := 0;
-      HiFive1.UART0.txctrl.txcnt := 1;
-      HiFive1.UART1.div          := 16#A9#; -- 115200 bps without clk adjusting
-      HiFive1.UART1.txctrl.txen  := True;
-      HiFive1.UART1.txctrl.nstop := 0;
-      HiFive1.UART1.txctrl.txcnt := 1;
-      -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
-      -------------------------------------------------------------------------
-      Console.Print ("SiFive HiFive 1", NL => True);
-      -------------------------------------------------------------------------
-      Exceptions.Init;
-      -------------------------------------------------------------------------
-      declare
-         Vectors      : aliased Asm_Entry_Point with
-            Import        => True,
-            Convention    => Asm,
-            External_Name => "vectors";
-         Base_Address : Bits_26;
-      begin
-         Base_Address := Bits_26 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)) and 16#FFFF_FFFC#, 6));
-         RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, Reserved => 0, BASE => Base_Address));
-      end;
-      RISCV.Irq_Enable;
-      RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
-      -------------------------------------------------------------------------
-   end BSP_Setup;
+      null;
+   end Init;
 
-end BSP;
+end Exceptions;
