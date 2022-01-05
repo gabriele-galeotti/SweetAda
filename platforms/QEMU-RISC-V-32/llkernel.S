@@ -21,7 +21,7 @@ vectors:
 
                 addi    sp,sp,-256
                 sw      ra,0(sp)
-                sw      sp,4(sp)
+                //sw      sp,4(sp)
                 sw      gp,8(sp)
                 sw      tp,12(sp)
                 sw      t0,16(sp)
@@ -39,10 +39,12 @@ vectors:
                 sw      a5,64(sp)
                 sw      a6,68(sp)
                 sw      a7,72(sp)
+
                 .extern timer_process
-                jal     timer_process
+                call    timer_process
+
                 lw      ra,0(sp)
-                lw      sp,4(sp)
+                //lw      sp,4(sp)
                 lw      gp,8(sp)
                 lw      tp,12(sp)
                 lw      t0,16(sp)
@@ -59,7 +61,7 @@ vectors:
                 lw      a4,60(sp)
                 lw      a5,64(sp)
                 lw      a6,68(sp)
-                lw      a6,72(sp)
+                lw      a7,72(sp)
                 addi    sp,sp,256
                 mret
 

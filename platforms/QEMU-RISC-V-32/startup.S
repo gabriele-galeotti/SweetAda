@@ -25,13 +25,19 @@ _start:
                 //
                 li      t0,0x3<<11                      // "M" mode
                 csrw    mstatus,t0
-                li      t0,0xFFFF
-                csrw    medeleg,t0
-                csrw    mideleg,t0
+                //li      t0,0xFFFF
+                //csrw    medeleg,t0
+                //csrw    mideleg,t0
                 la      t0,1f
                 csrw    mepc,t0
                 mret
 1:
+
+                //
+                // Allow only hart #0.
+                //
+                csrr    t0,mhartid
+                bnez    t0,hart_idle
 
                 //
                 // Setup stack.
@@ -51,6 +57,10 @@ _start:
                 call    _ada_main
 
 dead:           j       .
+
+hart_idle:
+                wfi
+                j       hart_idle
 
                 .size   _start,.-_start
 

@@ -2,7 +2,7 @@
 #
 # QEMU-RISC-V (QEMU emulator)
 #
-# RISC-V
+# RISC-V RV32IMAC
 #
 
 CPU       := RISC-V
