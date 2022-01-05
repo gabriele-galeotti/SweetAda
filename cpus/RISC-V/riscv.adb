@@ -119,8 +119,8 @@ package body RISCV is
    ----------------------------------------------------------------------------
 
    MSTATUS_USMIE : constant MSTATUS_Type := (
-                                             UIE       => True,
-                                             SIE       => True,
+                                             UIE       => False,
+                                             SIE       => False,
                                              Reserved1 => 0,
                                              MIE       => True,
                                              UPIE      => False,
@@ -145,14 +145,14 @@ package body RISCV is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => "        csrrs   t1,mstatus,%0" & CRLF &
-                       "        csrrs   t1,mie,%1",
+           Template => "        csrrs   x0,mstatus,%0" & CRLF &
+                       "        csrrs   x0,mie,%1",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
-                        Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_00B0#)
+                        Interfaces.Unsigned_32'Asm_Input ("r", 16#0000_0080#)
                        ),
-           Clobber  => "t1",
+           Clobber  => "",
            Volatile => True
           );
    end Irq_Enable;
@@ -160,10 +160,10 @@ package body RISCV is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => "        csrrc   t1,mstatus,%0",
+           Template => "        csrrc   x0,mstatus,%0",
            Outputs  => No_Output_Operands,
            Inputs   => MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
-           Clobber  => "t1",
+           Clobber  => "",
            Volatile => True
           );
    end Irq_Disable;
