@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Machine_Code;
+with System.Storage_Elements;
 with Interfaces;
 with Definitions;
 with Bits;
@@ -34,12 +34,10 @@ package body Exceptions is
    --                                                                        --
    --========================================================================--
 
-   use System.Machine_Code;
+   use System.Storage_Elements;
    use Interfaces;
    use Bits;
    use Core;
-
-   CRLF : String renames Definitions.CRLF;
 
    procedure Timer_Process with
       Export        => True,
@@ -58,9 +56,11 @@ package body Exceptions is
    -- Timer_Process
    ----------------------------------------------------------------------------
    procedure Timer_Process is
+      Cause : Unsigned_32;
    begin
-      if (RISCV.MCAUSE_Read and 16#8000_0000#) = 0 then
-         Console.Print (RISCV.MCAUSE_Read, NL => True);
+      Cause := RISCV.MCAUSE_Read;
+      if (Cause and 16#8000_0000#) = 0 then
+         Console.Print (Cause, NL => True);
          loop null; end loop;
       else
          Tick_Count := @ + 1;
@@ -73,8 +73,14 @@ package body Exceptions is
    -- Init
    ----------------------------------------------------------------------------
    procedure Init is
+      Vectors      : aliased Asm_Entry_Point with
+         Import        => True,
+         Convention    => Asm,
+         External_Name => "vectors";
+      Base_Address : Bits_26;
    begin
-      null;
+      Base_Address := Bits_26 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)) and 16#FFFF_FFFC#, 6));
+      RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, Reserved => 0, BASE => Base_Address));
    end Init;
 
 end Exceptions;

@@ -15,11 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with RISCV;
-with CPU;
 with HiFive1;
 with Exceptions;
 with Console;
@@ -34,7 +32,6 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -53,7 +50,7 @@ package body BSP is
    procedure Console_Putchar (C : in Character) is
    begin
       HiFive1.UART0.txdata.txdata := To_U8 (C);
-      for Delay_Loop_Count in 1 .. 10_000 loop CPU.NOP; end loop;
+      for Delay_Loop_Count in 1 .. 10_000 loop RISCV.NOP; end loop;
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
@@ -90,16 +87,6 @@ package body BSP is
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
-      declare
-         Vectors      : aliased Asm_Entry_Point with
-            Import        => True,
-            Convention    => Asm,
-            External_Name => "vectors";
-         Base_Address : Bits_26;
-      begin
-         Base_Address := Bits_26 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)) and 16#FFFF_FFFC#, 6));
-         RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, Reserved => 0, BASE => Base_Address));
-      end;
       RISCV.Irq_Enable;
       RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
       -------------------------------------------------------------------------

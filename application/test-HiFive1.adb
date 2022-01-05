@@ -31,7 +31,7 @@ package body Application is
       HiFive1.GPIO_PORT   := @ or 16#0068_0000#;
       HiFive1.GPIO_OEN    := @ or 16#0068_0000#;
       declare
-         Delay_Count : constant := 1_000_000;
+         Delay_Count : constant := 3_000_000;
       begin
          while True loop
             -- turn on RED (GPIO #22)
