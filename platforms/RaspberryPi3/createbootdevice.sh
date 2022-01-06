@@ -16,7 +16,7 @@
 # Environment variables:
 # SWEETADA_PATH
 # KERNEL_ROMFILE
-# MSDCARD_MOUNTPOINT
+# USDCARD_MOUNTPOINT
 #
 
 ################################################################################
@@ -33,14 +33,29 @@ SCRIPT_FILENAME=$(basename "$0")
 ################################################################################
 
 cat > config.txt << EOF
-disable_commandline_tags=1      # prevent filling low memory with ATAGS
-arm_control=0x200               # ARMv8 mode
-kernel=kernel.rom               # kernel filename
-kernel_old=1                    # load kernel at address 0
+# prevent filling low memory with ATAGS
+disable_commandline_tags=1
+# core clock frequency
+core_freq=250
+# ARM clock frequency
+arm_freq=250
+# ARMv8 mode
+arm_control=0x200
+#arm_64bit=1
+# kernel filename
+kernel=kernel.rom
+# load kernel at address 0
+kernel_old=1
 #kernel_address=0
+# enable JTAG (GPIO22..27)
+enable_jtag_gpio=1
+# enable UART (GPIO14,15)
+enable_uart=1
 EOF
 
-cp -f config.txt ${SWEETADA_PATH}/${KERNEL_ROMFILE} ${MSDCARD_MOUNTPOINT}/
+cp -f -v config.txt ${SWEETADA_PATH}/${KERNEL_ROMFILE} ${USDCARD_MOUNTPOINT}/ || exit 1
+
+sync ; sync
 
 exit 0
 
