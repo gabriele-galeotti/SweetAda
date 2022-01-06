@@ -3,6 +3,11 @@
 
 Latest news:
 
+06/01/2022
+- SiFive HiFive 1 minimal timer handling and I/O outputs
+- Raspberry Pi 3 now outputs characters on the mini-UART (TXD0/GPIO#14 on the
+  GPIO connector)
+
 30/12/2021
 - completed IOEMU module segregation
 - exposed some NOP assembly
