@@ -33,33 +33,57 @@ package RPI3 is
    use System.Storage_Elements;
    use Interfaces;
 
-   CORE0_MBOX3_SET_BASEADDRESS : constant := 16#4000_008C#;
-
    PERIPHERALS_BASEADDRESS : constant := 16#3F00_0000#;
-   GPIO_BASEADDRESS        : constant := 16#3F00_0000# + 16#0020_0000#;
+   GPIO_BASEADDRESS        : constant := PERIPHERALS_BASEADDRESS + 16#0020_0000#;
+   AUX_BASEADDRESS         : constant := PERIPHERALS_BASEADDRESS + 16#0021_5000#;
 
-   GPIO0 : Unsigned_32 with
+   GPFSEL0 : Unsigned_32 with
       Address    => To_Address (GPIO_BASEADDRESS + 16#00#),
-      Volatile   => True,
+      Volatile_Full_Access   => True,
       Import     => True,
       Convention => Ada;
-
-   GPIO1 : Unsigned_32 with
+   GPFSEL1 : Unsigned_32 with
       Address    => To_Address (GPIO_BASEADDRESS + 16#04#),
-      Volatile   => True,
+      Volatile_Full_Access   => True,
       Import     => True,
       Convention => Ada;
 
    LEDON : Unsigned_32 with
       Address    => To_Address (GPIO_BASEADDRESS + 16#1C#),
-      Volatile   => True,
+      Volatile_Full_Access   => True,
       Import     => True,
       Convention => Ada;
 
    LEDOFF : Unsigned_32 with
       Address    => To_Address (GPIO_BASEADDRESS + 16#28#),
-      Volatile   => True,
+      Volatile_Full_Access   => True,
       Import     => True,
       Convention => Ada;
+
+   AUXENB : Unsigned_32 with
+      Address              => To_Address (AUX_BASEADDRESS + 16#04#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   AUX_MU_IO_REG : Unsigned_32 with
+      Address              => To_Address (AUX_BASEADDRESS + 16#40#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   AUX_MU_LCR_REG : Unsigned_32 with
+      Address              => To_Address (AUX_BASEADDRESS + 16#4C#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   AUX_MU_CNTL_REG : Unsigned_32 with
+      Address              => To_Address (AUX_BASEADDRESS + 16#60#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   AUX_MU_BAUD : Unsigned_32 with
+      Address              => To_Address (AUX_BASEADDRESS + 16#68#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
 end RPI3;

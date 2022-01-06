@@ -14,11 +14,11 @@ OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
 
-USE_APPLICATION := dummy
+USE_APPLICATION := test-RaspberryPi3
 
 # path to FAT32 1st partition on a micro-SD memory card
-MSDCARD_MOUNTPOINT := /mnt/hd
-export MSDCARD_MOUNTPOINT
+USDCARD_MOUNTPOINT := /mnt/hd
+export USDCARD_MOUNTPOINT
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
