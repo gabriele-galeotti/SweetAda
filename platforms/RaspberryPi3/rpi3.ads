@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Bits;
 
 package RPI3 is
 
@@ -32,45 +33,50 @@ package RPI3 is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
-   PERIPHERALS_BASEADDRESS : constant := 16#3F00_0000#;
-   GPIO_BASEADDRESS        : constant := PERIPHERALS_BASEADDRESS + 16#0020_0000#;
-   AUX_BASEADDRESS         : constant := PERIPHERALS_BASEADDRESS + 16#0021_5000#;
+   PERIPHERALS_BASEADDRESS  : constant := 16#3F00_0000#;
+   SYSTEM_TIMER_BASEADDRESS : constant := PERIPHERALS_BASEADDRESS + 16#0000_3000#;
+   INTERRUPTS_BASEADDRESS   : constant := PERIPHERALS_BASEADDRESS + 16#0000_B000#;
+   MAILBOX_BASEADDRESS      : constant := PERIPHERALS_BASEADDRESS + 16#0000_B880#;
+   GPIO_BASEADDRESS         : constant := PERIPHERALS_BASEADDRESS + 16#0020_0000#;
+   AUX_BASEADDRESS          : constant := PERIPHERALS_BASEADDRESS + 16#0021_5000#;
+   EMMC_BASEADDRESS         : constant := PERIPHERALS_BASEADDRESS + 16#0030_0000#;
 
    GPFSEL0 : Unsigned_32 with
-      Address    => To_Address (GPIO_BASEADDRESS + 16#00#),
-      Volatile_Full_Access   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (GPIO_BASEADDRESS + 16#00#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
    GPFSEL1 : Unsigned_32 with
-      Address    => To_Address (GPIO_BASEADDRESS + 16#04#),
-      Volatile_Full_Access   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (GPIO_BASEADDRESS + 16#04#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    LEDON : Unsigned_32 with
-      Address    => To_Address (GPIO_BASEADDRESS + 16#1C#),
-      Volatile_Full_Access   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (GPIO_BASEADDRESS + 16#1C#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    LEDOFF : Unsigned_32 with
-      Address    => To_Address (GPIO_BASEADDRESS + 16#28#),
-      Volatile_Full_Access   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (GPIO_BASEADDRESS + 16#28#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
-   AUXENB : Unsigned_32 with
+   AUXENB          : Unsigned_32 with
       Address              => To_Address (AUX_BASEADDRESS + 16#04#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   AUX_MU_IO_REG : Unsigned_32 with
+   AUX_MU_IO_REG   : Unsigned_32 with
       Address              => To_Address (AUX_BASEADDRESS + 16#40#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   AUX_MU_LCR_REG : Unsigned_32 with
+   AUX_MU_LCR_REG  : Unsigned_32 with
       Address              => To_Address (AUX_BASEADDRESS + 16#4C#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -80,8 +86,36 @@ package RPI3 is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   AUX_MU_BAUD : Unsigned_32 with
+   AUX_MU_BAUD     : Unsigned_32 with
       Address              => To_Address (AUX_BASEADDRESS + 16#68#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   type Message_Type is
+   record
+      Channel : Bits.Bits_4;
+      Data    : Bits.Bits_28;
+   end record with
+      Size => 32;
+   for Message_Type use
+   record
+      Channel at 0 range 0 .. 3;
+      Data    at 0 range 4 .. 31;
+   end record;
+
+   MAIL0_Read   : Message_Type with
+      Address              => To_Address (MAILBOX_BASEADDRESS + 16#00#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   MAIL0_Status : Message_Type with
+      Address              => To_Address (MAILBOX_BASEADDRESS + 16#18#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   MAIL0_Write  : Message_Type with
+      Address              => To_Address (MAILBOX_BASEADDRESS + 16#20#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;

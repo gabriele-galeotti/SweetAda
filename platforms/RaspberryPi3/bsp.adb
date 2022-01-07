@@ -39,14 +39,6 @@ package body BSP is
    use Interfaces;
    use Bits;
 
-   -- CORE0_MBOX3_SET_BASEADDRESS : constant := 16#4000_008C#;
-   -- procedure Core_Enable (CoreN : Integer; Start_Address : Integer_Address);
-   -- procedure Core_Enable (CoreN : Integer; Start_Address : Integer_Address) is
-   --    C : constant Integer_Address := 16#10# * Integer_Address (CoreN);
-   -- begin
-   --    MMIO.Write (To_Address (RPI3.CORE0_MBOX3_SET_BASEADDRESS + C), Unsigned_32 (Start_Address));
-   -- end Core_Enable;
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -75,7 +67,7 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
    begin
-      -- mini-UART ------------------------------------------------------------
+      -- mini-UART (UART1) ----------------------------------------------------
       -- GPIO Pin 14 takes alternate function 5
       RPI3.GPFSEL1         := (@ and 16#FFFF_8FFF#) or 16#0000_2000#;
       RPI3.AUXENB          := 16#0000_0001#;
