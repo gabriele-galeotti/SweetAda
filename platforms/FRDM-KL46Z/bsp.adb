@@ -15,21 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with KL46Z;
-
 package body BSP is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use Interfaces;
-   use KL46Z;
 
    --========================================================================--
    --                                                                        --
@@ -63,25 +49,7 @@ package body BSP is
       -- Console.Console_Descriptor.Read  := Console_Getchar'Access;
       -- Console.TTY_Setup;
       -------------------------------------------------------------------------
-      -- blink on-board LED
-      declare
-         Delay_Count : constant := 1_000_000;
-      begin
-         SIM_SCGC5.PORTD := True;
-         SIM_SCGC5.PORTE := True;
-         -- LED1 (GREEN)
-         PORTD_PCR05.MUX := MUX_ALT1_GPIO;
-         GPIOD_PDDR.PDD05 := True;
-         -- LED2 (RED)
-         PORTE_PCR29.MUX := MUX_ALT1_GPIO;
-         GPIOE_PDDR.PDD29 := True;
-         while True loop
-            GPIOD_PTOR.PTTO05 := True;
-            GPIOE_PTOR.PTTO29 := True;
-            for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
-         end loop;
-      end;
-      -------------------------------------------------------------------------
+      null;
    end BSP_Setup;
 
 end BSP;
