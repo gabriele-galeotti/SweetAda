@@ -33,24 +33,13 @@ SCRIPT_FILENAME=$(basename "$0")
 ################################################################################
 
 cat > config.txt << EOF
-# prevent filling low memory with ATAGS
-disable_commandline_tags=1
-# core clock frequency
-core_freq=250
-# ARM clock frequency
-arm_freq=250
-# ARMv8 mode
-arm_control=0x200
-#arm_64bit=1
-# kernel filename
+arm_64bit=1                     # ARMv8 mode
+core_freq=250                   # core clock frequency
+arm_freq=250                    # ARM clock frequency
+disable_commandline_tags=1      # prevent filling low memory with ATAGS
+kernel_old=1                    # load kernel at address 0
 kernel=kernel.rom
-# load kernel at address 0
-kernel_old=1
-#kernel_address=0
-# enable JTAG (GPIO22..27)
-enable_jtag_gpio=1
-# enable UART (GPIO14,15)
-enable_uart=1
+enable_jtag_gpio=1              # enable JTAG (GPIO22..27)
 EOF
 
 cp -f -v config.txt ${SWEETADA_PATH}/${KERNEL_ROMFILE} ${USDCARD_MOUNTPOINT}/ || exit 1
