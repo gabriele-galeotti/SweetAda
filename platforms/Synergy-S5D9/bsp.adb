@@ -47,7 +47,7 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Serial_Console_Init
    ----------------------------------------------------------------------------
-   -- UART on J7 UART_RXD3 port P706 UART_TXD3 port P707
+   -- UART on J7: UART_RXD3 port P706, UART_TXD3 port P707
    ----------------------------------------------------------------------------
    procedure Serial_Console_Init is
    begin
@@ -91,8 +91,10 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
+      loop
+         exit when SCI (3).SSR.NORMAL.TDRE;
+      end loop;
       SCI (3).TDR := To_U8 (C);
-      for Delay_Loop_Count in 1 .. 500_000 loop null; end loop;
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
@@ -123,7 +125,11 @@ package body BSP is
       Console.Print ("Synergy S5D9", NL => True);
       -------------------------------------------------------------------------
       Console.Print (CortexM4.CPUID, Prefix => "CPUID: ", NL => True);
-      -- Console.Print (CortexM4.ACTLR, Prefix => "ACTLR: ", NL => True);
+      Console.Print (CortexM4.ACTLR.DISMCYCINT, Prefix => "ACTLR: DISMCYCINT: ", NL => True);
+      Console.Print (CortexM4.ACTLR.DISDEFWBUF, Prefix => "ACTLR: DISDEFWBUF: ", NL => True);
+      Console.Print (CortexM4.ACTLR.DISFOLD,    Prefix => "ACTLR: DISFOLD:    ", NL => True);
+      Console.Print (CortexM4.ACTLR.DISFPCA,    Prefix => "ACTLR: DISFPCA:    ", NL => True);
+      Console.Print (CortexM4.ACTLR.DISOOFP,    Prefix => "ACTLR: DISOOFP:    ", NL => True);
       -------------------------------------------------------------------------
    end BSP_Setup;
 

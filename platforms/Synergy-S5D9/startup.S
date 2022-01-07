@@ -18,13 +18,18 @@
                 .global _start
 _start:
 
-                // disable all exceptions of configurable priority (the
+                //
+                // Disable all exceptions of configurable priority (the
                 // default program, which runs with interrupts enabled, will
-                // be stopped due to halt command in OpenOCD)
+                // be stopped due to halt command in OpenOCD).
+                //
                 movs    r0,#1
                 msr     primask,r0
 
-                ldr     r0,=stack
+                //
+                // Setup stack.
+                //
+                ldr     r0,=kernel_stack
                 mov     sp,r0
 
                 //
@@ -49,5 +54,5 @@ dead:           b       .
 
                 .align  8
                 .space  1024
-stack:
+kernel_stack:
 
