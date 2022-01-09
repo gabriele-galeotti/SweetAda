@@ -86,8 +86,14 @@ if {[catch {exec $ELFTOOL -c findsymbol=$START_SYMBOL $KERNEL_OUTFILE} result] e
 }
 
 # setup network connection
-exec >@stdout 2>@stderr ifconfig -v eth0 $HOST_IP_ADDRESS
-exec >@stdout 2>@stderr arp -s $DREAMCAST_IP_ADDRESS $BBA_MAC_ADDRESS
+if {[catch {exec >@stdout 2>@stderr ifconfig -v eth0 $HOST_IP_ADDRESS} result] ne 0} {
+    puts stderr "$SCRIPT_FILENAME: *** Error: ifconfig failed."
+    exit 1
+}
+if {[catch {exec >@stdout 2>@stderr arp -s $DREAMCAST_IP_ADDRESS $BBA_MAC_ADDRESS} result] ne 0} {
+    puts stderr "$SCRIPT_FILENAME: *** Error: arp failed."
+    exit 1
+}
 
 # *** NOTE ***
 # previously the dc-tool-ip utility was used to download a binary image
