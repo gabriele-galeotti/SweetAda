@@ -20,6 +20,8 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
+                . = ALIGN(0x1000);
+                *(.traptable)
                 . = ALIGN(0x10);
                 _etext = .;
         } > RAM
@@ -61,10 +63,6 @@ SECTIONS
                 *(.comment)             /* deleted for a.out */
                 *(.debug*)              /* deleted for a.out */
                 *(.gnu.attributes)      /* deleted for a.out */
-                /* *(.eh_frame) */
-                /* *(.got) */
-                /* *(.got1) */
-                /* *(.got.plt) */
         }
 }
 

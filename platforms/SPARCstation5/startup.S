@@ -105,9 +105,8 @@ bm:
                 sethi   %hi(nwindows),%g2
                 or      %g2,%lo(nwindows),%g2
                 sta     %g1,[%g2]ASI_SCRATCHPAD
-                // initialize WIM
-                sethi   %hi(0xFFFFFF00),%g1
-                or      %g1,%lo(0xFFFFFF00),%g1
+                //
+                set     0xFFFFFF00,%g1
                 mov     %g1,%wim
                 NOP3
 
@@ -152,13 +151,16 @@ bm:
 #endif
 
                 //
-                // Setup kernel stack.
+                // Setup stack.
                 //
                 sethi   %hi(kernel_stack),%sp
                 or      %sp,%lo(kernel_stack),%sp
+
+                //
+                // Setup environment.
+                //
                 mov     %sp,%fp
                 add     %sp,-96,%sp
-
                 clr     %g1
                 clr     %g2
                 clr     %g3
@@ -217,15 +219,15 @@ movdata:
 
                 .sect   .data
 
-////////////////////////////////////////////////////////////////////////////////
-
-                .sect   .bss
-
                 .align  4
                 .global nwindows
 nwindows:       .space  4
                 .global qemu
 qemu:           .space  1
+
+////////////////////////////////////////////////////////////////////////////////
+
+                .sect   .bss
 
                 .align  4
                 .space  4096

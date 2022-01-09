@@ -14,36 +14,96 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#define ASI_MMUREGS    0x04
+#define ASI_BYPASS     0x20
+#define ASI_SCRATCHPAD 0x20
+
+////////////////////////////////////////////////////////////////////////////////
+
                 .sect   .startup,"ax"
 
                 .type   _start,@function
                 .global _start
 _start:
 
-                // disable traps
+                //
+                // Disable traps.
+                //
                 mov     %psr,%l0
                 and     %l0,0xFFFFFFDF,%l4
                 mov     %l4,%psr
                 NOP3
 
                 //
-                // Initialize Y.
+                // The SPARC Architecture Manual Version 8
+                // 4.2. IU Control/Status Registers
                 //
+                // https://lists.rtems.org/pipermail/users/2006-August/014931.html
+                // https://github.com/MISTLab/trap-gen/blob/master/BSP_and_Compiler/sparc
+                //
+#define PSR_INIT (PSR_EF|PSR_PIL(0xF)|PSR_S|PSR_PS|PSR_ET|PSR_CWP(0))
+                mov     %psr,%g1
+                sethi   %hi(0xFF000000|PSR_S),%g2       // preserve impl, ver
+                or      %g2,%lo(0xFF000000|PSR_S),%g2
+                sethi   %hi(PSR_INIT),%g3
+                or      %g3,%lo(PSR_INIT),%g3
+                and     %g1,%g2,%g1
+                or      %g1,%g3,%g1
+                mov     %g1,%psr
+                NOP3
+                // setup TBR
+                sethi   %hi(trap_table),%g1
+                or      %g1,%lo(trap_table),%g1
+                mov     %g1,%tbr
+                NOP3
+                // initialize Y
                 mov     %g0,%y
                 NOP3
 
-                // https://github.com/openbios/openbios/blob/master/arch/sparc32/entry.S
-
+                //
+                // Detect # of CPU windows implemented.
+                // A WRWIM with all bits set to 1, followed by a RDWIM, yields
+                // a bit vector in which the implemented windows (and only the
+                // implemented windows) are indicated by 1?s.
+                //
+                sethi   %hi(0xFFFFFFFF),%g3
+                or      %g3,%lo(0xFFFFFFFF),%g3
+                mov     %g3,%wim
+                NOP3
+                mov     %wim,%g3                        // now g3 contains a mask of all windows
+                mov     %g0,%g1                         // clear # of windows
+                mov     %g0,%g2                         // g2 will add to g1
+1:              and     %g3,1,%g2                       // check if this window is implemented
+                add     %g1,%g2,%g1                     // add result to g1
+                tst     %g2                             // was it 0?
+                bne     1b                              // if yes, windows exahusted, else ...
+                srl     %g3,1,%g3                       // shift g3 in the delay slot and cycle
+                sethi   %hi(nwindows),%g2
+                or      %g2,%lo(nwindows),%g2
+                sta     %g1,[%g2]ASI_SCRATCHPAD
+                //
                 set     0xFFFFFF00,%g1
                 mov     %g1,%wim
                 NOP3
 
-                //ba      _start
-                nop
-                set     kernel_stack,%sp
+                //
+                // Setup stack.
+                //
+                sethi   %hi(kernel_stack),%sp
+                or      %sp,%lo(kernel_stack),%sp
 
+                //
+                // Setup environment.
+                //
                 mov     %sp,%fp
                 add     %sp,-96,%sp
+                clr     %g1
+                clr     %g2
+                clr     %g3
+                clr     %g4
+                clr     %g5
+                clr     %g6
+                clr     %g7
 
                 //
                 // Call "adainit" procedure.
@@ -59,15 +119,6 @@ _start:
                 call    _ada_main
                 nop
 
-                //set     _a,%l0
-                ld      [%l0],%l1       // load _a into %l1
-                add     %l1,1,%l1       // _a = _a + 1
-                st      %l1,[%l0]       // write value back into _a
-                //set     str,%o0
-                ld      [%l0],%o1
-                //call    _printf         // nop       ! printf("%d\n", _a);
-                ret                     // restore
-
 dead:           b       .
                 nop
 
@@ -76,6 +127,10 @@ dead:           b       .
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .data
+
+                .align  4
+                .global nwindows
+nwindows:       .space  4
 
 ////////////////////////////////////////////////////////////////////////////////
 

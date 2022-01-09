@@ -12,11 +12,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .sect   .text,"ax"
+                .sect   .traptable,"ax"
+
+                //
+                // TBR should be aligned on a 4096-byte boundary (bits 0..11
+                // cleared).
+                //
 
                 .global trap_table
 trap_table:
-                .align  4096                            // bits 0..11 cleared
                 b       trap_table                      // trap 0x00
                 nop
                 .align  16

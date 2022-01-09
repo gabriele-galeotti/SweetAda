@@ -18,7 +18,6 @@
 with System;
 with Interfaces;
 with Configure;
-with Bits;
 with Console;
 
 package body BSP is
@@ -33,7 +32,6 @@ package body BSP is
 
    use System;
    use Interfaces;
-   use Bits;
 
    --========================================================================--
    --                                                                        --
@@ -91,6 +89,7 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("LEON3 (QEMU emulator)", NL => True);
+      Console.Print (Integer (Nwindows), Prefix => "Nwindows: ", NL => True);
       -------------------------------------------------------------------------
    end BSP_Setup;
 

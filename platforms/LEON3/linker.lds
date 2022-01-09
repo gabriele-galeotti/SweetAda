@@ -20,6 +20,9 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
+                . = ALIGN(0x1000);
+                *(.traptable)
+                . = ALIGN(0x10);
                 *(.eh_frame)
                 *(.got)
                 *(.got1)

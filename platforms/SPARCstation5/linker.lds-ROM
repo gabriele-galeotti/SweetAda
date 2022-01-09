@@ -4,10 +4,10 @@ ENTRY(_start)
 MEMORY
 {
         /* ROM-based system */
-        /* ROMBM : ORIGIN = 0xFFD00000, LENGTH = 0x1000 */
-        ROMBM : ORIGIN = 0x00000000, LENGTH = 0x1000
-        ROM   : ORIGIN = 0x70001000, LENGTH = 1M - 0x1000
-        RAM   : ORIGIN = 0x00001000, LENGTH = 64M - 0x1000
+        ZERO  : ORIGIN = 0x00000000, LENGTH = 0x20
+        ROMBM : ORIGIN = 0x70000000, LENGTH = 0x20
+        ROM   : ORIGIN = 0x70000020, LENGTH = 1M - 0x20
+        RAM   : ORIGIN = 0x00000000, LENGTH = 64M
 }
 
 SECTIONS
@@ -15,11 +15,10 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
-        .reset : AT(0x70000000)
+        .reset : AT(ORIGIN(ROMBM))
         {
                 *(.startup)
-                . = 0x1000;
-        } > ROMBM
+        } > ZERO
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
@@ -30,6 +29,8 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
+                . = ALIGN(0x1000);
+                *(.traptable)
                 . = ALIGN(0x10);
                 _etext = .;
         } > ROM
@@ -69,10 +70,7 @@ SECTIONS
         /DISCARD/ :
         {
                 *(.comment)
-                /* *(.eh_frame) */
-                /* *(.got) */
-                /* *(.got1) */
-                /* *(.got.plt) */
+                *(.eh_frame)
         }
 }
 

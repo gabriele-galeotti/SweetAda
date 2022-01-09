@@ -24,8 +24,6 @@ with Sun4m;
 with Exceptions;
 with Console;
 
-with Am7990;
-
 package body BSP is
 
    --========================================================================--
@@ -41,8 +39,6 @@ package body BSP is
    use Interfaces;
    use Bits;
    use Sun4m;
-
-   use Am7990;
 
    --========================================================================--
    --                                                                        --

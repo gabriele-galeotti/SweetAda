@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Storage_Elements;
+with Bits;
 with LEON3;
 
 package BSP is
@@ -29,7 +30,13 @@ package BSP is
    --========================================================================--
 
    use System.Storage_Elements;
+   use Bits;
    use LEON3;
+
+   Nwindows : aliased Bits.CPU_Integer with
+      Import        => True,
+      Convention    => Asm,
+      External_Name => "nwindows";
 
    GPTIMER : aliased GPTimer_Type with
       Address    => To_Address (GPTIMER_BASEADDRESS),
