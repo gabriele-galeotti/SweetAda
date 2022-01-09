@@ -3,6 +3,7 @@ with Interfaces;
 with Core;
 with GHRD;
 with IOEMU;
+with Console;
 
 package body Application is
 
@@ -45,6 +46,7 @@ package body Application is
                   -- blink IOEMU LED
                   IOEMU.IOEMU_IO0 := 1;
                   IOEMU.IOEMU_IO0 := 0;
+                  Console.Print ("hello, SweetAda", NL => True);
                end if;
             end loop;
          end;
