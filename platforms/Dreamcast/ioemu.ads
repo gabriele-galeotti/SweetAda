@@ -47,8 +47,8 @@ package IOEMU is
       Import     => True,
       Convention => Ada;
 
-   -- IO2 0x005F6948 32-bit wide port
-   IOEMU_IO2 : Unsigned_32 with
+   -- IO2 0x005F6948 8-bit wide port
+   IOEMU_IO2 : Unsigned_8 with
       Address    => To_Address (IOEMU_ASIC_BASEADDRESS + 16#48#),
       Volatile   => True,
       Import     => True,

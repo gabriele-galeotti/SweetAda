@@ -178,7 +178,9 @@ recv:           mov     #-24,r2
                 ! wait for serial input
                 !
                 ! returns character
-recvw:          sts     pr,r3
+                .global recvw
+recvw:
+                sts     pr,r3
 .rcvlp:         bsr     recv
                 nop
                 cmp/pz  r0

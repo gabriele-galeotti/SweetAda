@@ -1,8 +1,8 @@
 
-!
-! This file is not covered by SweetAda copyright, see:
-! http://www.boob.co.uk/files/roto.zip
-!
+//
+// This file is not covered by SweetAda copyright, see:
+// http://www.boob.co.uk/files/roto.zip
+//
 
 #define __ASSEMBLER__ 1
 
@@ -10,16 +10,32 @@
 
                 .sect   .text,"ax"
 
-                .set    CLRSCR,1
-                !.set    DEBUG,1
-
                 .align  2
 
                 .global roto
 roto:
 
-.ifdef CLRSCR
-                ! clear screen
+                mov.l   r14,@-r15
+                sts     pr,r14
+                mov.l   r14,@-r15
+                mov.l   r0,@-r15
+                mov.l   r1,@-r15
+                mov.l   r2,@-r15
+                mov.l   r3,@-r15
+                mov.l   r4,@-r15
+                mov.l   r5,@-r15
+                mov.l   r6,@-r15
+                mov.l   r7,@-r15
+                mov.l   r8,@-r15
+                mov.l   r9,@-r15
+                mov.l   r10,@-r15
+                mov.l   r11,@-r15
+                mov.l   r12,@-r15
+                mov.l   r13,@-r15
+#if 1
+                //
+                // Clear screen.
+                //
                 mov.l   VIDEO_BASE,r0
                 mov     #0,r1
                 mov.l   CLRCOUNT,r2
@@ -27,9 +43,10 @@ roto:
                 dt      r2
                 bf/s    1b
                 add     #4,r0
-.endif
-
-                ! generate xor-texture
+#endif
+                //
+                // Generate xor-texture.
+                //
                 mov.l   TEXTURE,r1
                 mov.l   TWIDTH,r2
 xory:           mov     r2,r5
@@ -44,11 +61,14 @@ xorx:           mov     r3,r4
                 bf      xorx
                 dt      r2
                 bf      xory
-
+                //
+                // Graphics.
+                //
                 mov     #1,r12
-.ifdef DEBUG
+#if 0
+                // DEBUG
                 mov     #127,r13
-.endif
+#endif
 loop:           lds     r12,fpul
                 float   fpul,fr4
                 mov     #20,r14
@@ -98,10 +118,10 @@ loop:           lds     r12,fpul
                 mov.l   HEIGHT,r5
 yloop:
                 mov.l   WIDTH,r6
-                mov     r3,r7           ! sin
-                mov     r4,r8           ! cos
+                mov     r3,r7                   // sin
+                mov     r4,r8                   // cos
 xloop:
-!               mov.l   VIDEO_RAM,r0
+                //mov.l   VIDEO_RAM,r0
                 mov.l   TEXTURE,r9
                 mov     #0xFF,r11
                 extu.b  r11,r11
@@ -128,7 +148,8 @@ xloop:
                 dt      r5
                 bf      yloop
                 add     #1,r12
-.ifdef DEBUG
+#if 0
+                // DEBUG
                 cmp/hi  r13,r12
                 bf      loop
                 mov.l   dcload_syscall,r0
@@ -137,10 +158,28 @@ xloop:
                 mov     #15,r4
                 .align  4
 dcload_syscall: .long   0x8C004008
-.else
-                bra     loop
-                nop
-.endif
+#else
+                //bra     loop
+                //nop
+                mov.l   @r15+,r13
+                mov.l   @r15+,r12
+                mov.l   @r15+,r11
+                mov.l   @r15+,r10
+                mov.l   @r15+,r9
+                mov.l   @r15+,r8
+                mov.l   @r15+,r7
+                mov.l   @r15+,r6
+                mov.l   @r15+,r5
+                mov.l   @r15+,r4
+                mov.l   @r15+,r3
+                mov.l   @r15+,r2
+                mov.l   @r15+,r1
+                mov.l   @r15+,r0
+                mov.l   @r15+,r14
+                lds     r14,pr
+                rts
+                mov.l   @r15+,r14
+#endif
 
                 .align  4
 CLRCOUNT:       .long   640*480/2
@@ -149,9 +188,9 @@ TWIDTH:         .long   256
 LINEADD:        .long   (640-320)*2
 WIDTH:          .long   320
 HEIGHT:         .long   240
-VIDEO_RAM:      .long   VIDEO_BASE+(640-320)+240*640
+VIDEO_RAM:      .long   0xA5000000+(640-320)+240*640
 TEXTURE:        .long   0x0CF00000
-PI_SCALE:       .float  10430.37835     ! 32768 / PI
+PI_SCALE:       .float  10430.37835             // 32768 / PI
 FP_SCALE:       .float  65536.0
 FP_SCALE2:      .float  16384.0
 

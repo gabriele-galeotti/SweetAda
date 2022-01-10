@@ -42,7 +42,6 @@ package body BSP is
    use Interfaces;
    use Bits;
    use SH7750;
-   use Exceptions;
 
    function SCIF_SCFDR2_Read return Unsigned_16 with
       Inline => True;
@@ -97,6 +96,8 @@ package body BSP is
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
       Console.TTY_Setup;
+      -------------------------------------------------------------------------
+      Exceptions.Init;
       -------------------------------------------------------------------------
       if Configure.GXEMUL = "Y" then
          Console.Print ("Dreamcast (GXemul emulator)", NL => True);

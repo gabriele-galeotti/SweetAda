@@ -22,16 +22,22 @@ OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --pad-to=0x00200000 --gap-fi
 ADDITIONAL_OBJECTS += roto serial video
 
 #ROM_BOOT := Y
-#export ROM_BOOT
 CDROM_BOOT := Y
-export CDROM_BOOT
 #NETWORK_BOOT := Y
-#export NETWORK_BOOT
 
-ifeq ($(NETWORK_BOOT),Y)
-GXEMUL := N
-else
+export ROM_BOOT
+export CDROM_BOOT
+export NETWORK_BOOT
+
+ifeq ($(ROM_BOOT),Y)
+LD_SCRIPT := linker.lds-ROM
 GXEMUL := Y
+else ifeq ($(CDROM_BOOT),Y)
+LD_SCRIPT := linker.lds-CD-ROM
+GXEMUL := Y
+else ifeq ($(NETWORK_BOOT),Y)
+LD_SCRIPT := linker.lds-networkboot
+GXEMUL := N
 endif
 export GXEMUL
 
