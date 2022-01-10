@@ -36,22 +36,19 @@ package Malloc is
                    Size           : in Bits.Bytesize;
                    Debug_Flag     : in Boolean
                   );
-   function Malloc (Size : Interfaces.C.size_t) return System.Address;
-   procedure Free (Memory_Address : in System.Address);
+
+   function Malloc (Size : Interfaces.C.size_t) return System.Address with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_malloc";
+
+   procedure Free (Memory_Address : in System.Address) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_free";
+
    function Calloc (Nmemb : Interfaces.C.size_t; Size : Interfaces.C.size_t) return System.Address;
+
    function Realloc (Memory_Address : System.Address; Size : Interfaces.C.size_t) return System.Address;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Export (C, Malloc, "__gnat_malloc");
-   pragma Export (C, Free, "__gnat_free");
 
 end Malloc;
