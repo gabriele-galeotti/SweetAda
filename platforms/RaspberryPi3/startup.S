@@ -37,7 +37,7 @@ hold:           b       .
 
 bootcore:
                 //
-                // Setup stack.
+                // Setup stack pointer.
                 //
                 ldr     w0,=SVC_stack
                 mov     wsp,w0

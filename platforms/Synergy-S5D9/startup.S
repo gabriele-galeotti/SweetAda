@@ -27,7 +27,7 @@ _start:
                 msr     primask,r0
 
                 //
-                // Setup stack.
+                // Setup stack pointer.
                 //
                 ldr     r0,=kernel_stack
                 mov     sp,r0

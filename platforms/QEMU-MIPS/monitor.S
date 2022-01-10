@@ -1079,7 +1079,7 @@ banner:         .byte   13,10
                 .ascii  "Copyright 1996, 2003 Eric Smith <eric@brouhaha.com>"
                 .byte   13,10
                 .byte   0
-#                .ascii  "$Id$"
+#                .ascii "$Id$"
 crlf_msg:       .byte   13,10,0
 
 help_msg:       .ascii  "Commands:"

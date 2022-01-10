@@ -151,7 +151,7 @@ bm:
 #endif
 
                 //
-                // Setup stack.
+                // Setup stack pointer.
                 //
                 sethi   %hi(kernel_stack),%sp
                 or      %sp,%lo(kernel_stack),%sp

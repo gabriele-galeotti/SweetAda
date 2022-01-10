@@ -40,7 +40,7 @@ _start:
                 bnez    t0,hart_idle
 
                 //
-                // Setup stack.
+                // Setup stack pointer.
                 //
                 la      sp,kernel_stack
 
