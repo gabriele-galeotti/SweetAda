@@ -85,32 +85,6 @@ package body SPARC is
    -- Traps
    ----------------------------------------------------------------------------
 
---    procedure Traps_Enable is
---    begin
---       Asm (
---            Template => "        mov     %%psr,%%g1"   & CRLF &
---                        "        or      %%g1,%%g1,%0" & CRLF &
---                        "        mov     %%g1,%%psr",
---            Outputs  => No_Output_Operands,
---            Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", 16#0000_0040#),
---            Clobber  => "g1",
---            Volatile => True
---           );
---    end Traps_Enable;
---
---    procedure Traps_Disable is
---    begin
---       Asm (
---            Template => "        mov     %%psr,%%g1"   & CRLF &
---                        "        and     %%g1,%%g1,%0" & CRLF &
---                        "        mov     %%g1,%%psr",
---            Outputs  => No_Output_Operands,
---            Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_FFDF#),
---            Clobber  => "g1",
---            Volatile => True
---           );
---    end Traps_Disable;
-
    procedure TBR_Set (TBR_Address : in Address) is
       function To_U32 is new Ada.Unchecked_Conversion (Address, Interfaces.Unsigned_32);
    begin
