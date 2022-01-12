@@ -20,6 +20,7 @@ with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with MMIO;
+with SPARC;
 with Sun4m;
 with Exceptions;
 with Console;
@@ -84,13 +85,11 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("SPARCstation 5", NL => True);
-      Console.Print (Integer (Nwindows), Prefix => "Nwindows: ", NL => True);
+      Console.Print (Natural (Nwindows), Prefix => "Nwindows: ", NL => True);
       Console.Print (QEMU, Prefix => "QEMU: ", NL => True);
       -------------------------------------------------------------------------
       Tclk_Init;
       -------------------------------------------------------------------------
-      Console.Print (Unsigned_32'(0), Prefix => "E_CSR: ", NL => True);
-      -- CSRX_Write (0, 20);
    end BSP_Setup;
 
 end BSP;
