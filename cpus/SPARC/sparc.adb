@@ -57,14 +57,65 @@ package body SPARC is
           );
    end NOP;
 
-   ----------------------------------------------------------------------------
-   -- TBR
-   ----------------------------------------------------------------------------
-   procedure TBR_Set (TBR_Address : in System.Address) is
-      function To_U32 is new Ada.Unchecked_Conversion (System.Address, Interfaces.Unsigned_32);
+   function PSR_Read return PSR_Type is
+      PSR : PSR_Type;
    begin
       Asm (
-           Template => "        wr %0,0,%%tbr",
+           Template => "        mov     %%psr,%0",
+           Outputs  => PSR_Type'Asm_Output ("=r", PSR),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return PSR;
+   end PSR_Read;
+
+   procedure PSR_Write (PSR : in PSR_Type) is
+   begin
+      Asm (
+           Template => "        mov     %0,%%psr",
+           Outputs  => No_Output_Operands,
+           Inputs   => PSR_Type'Asm_Input ("r", PSR),
+           Clobber  => "",
+           Volatile => True
+          );
+   end PSR_Write;
+
+   ----------------------------------------------------------------------------
+   -- Traps
+   ----------------------------------------------------------------------------
+
+--    procedure Traps_Enable is
+--    begin
+--       Asm (
+--            Template => "        mov     %%psr,%%g1"   & CRLF &
+--                        "        or      %%g1,%%g1,%0" & CRLF &
+--                        "        mov     %%g1,%%psr",
+--            Outputs  => No_Output_Operands,
+--            Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", 16#0000_0040#),
+--            Clobber  => "g1",
+--            Volatile => True
+--           );
+--    end Traps_Enable;
+--
+--    procedure Traps_Disable is
+--    begin
+--       Asm (
+--            Template => "        mov     %%psr,%%g1"   & CRLF &
+--                        "        and     %%g1,%%g1,%0" & CRLF &
+--                        "        mov     %%g1,%%psr",
+--            Outputs  => No_Output_Operands,
+--            Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_FFDF#),
+--            Clobber  => "g1",
+--            Volatile => True
+--           );
+--    end Traps_Disable;
+
+   procedure TBR_Set (TBR_Address : in Address) is
+      function To_U32 is new Ada.Unchecked_Conversion (Address, Interfaces.Unsigned_32);
+   begin
+      Asm (
+           Template => "        wr      %0,0,%%tbr",
            Outputs  => No_Output_Operands,
            Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", To_U32 (TBR_Address) and 16#FFFF_FFF0#),
            Clobber  => "",
@@ -78,7 +129,15 @@ package body SPARC is
 
    procedure Irq_Enable is
    begin
-      null;
+      Asm (
+           Template => "        mov     %%psr,%%g1"   & CRLF &
+                       "        and     %%g1,%%g1,%0" & CRLF &
+                       "        mov     %%g1,%%psr",
+           Outputs  => No_Output_Operands,
+           Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_F0FF#),
+           Clobber  => "g1",
+           Volatile => True
+          );
    end Irq_Enable;
 
    procedure Irq_Disable is
