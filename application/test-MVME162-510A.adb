@@ -1,5 +1,6 @@
 
 with Interfaces;
+with CPU;
 with MVME162FX;
 with Console;
 
@@ -25,7 +26,7 @@ package body Application is
             loop
                Console.Print ("MVME162-510A", NL => True);
                MVME162FX.RESET_SCR := MVME162FX.RESET_SCR xor 16#02#;
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
       end if;
