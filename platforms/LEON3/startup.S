@@ -27,14 +27,6 @@
 _start:
 
                 //
-                // Disable traps.
-                //
-                mov     %psr,%l0
-                and     %l0,0xFFFFFFDF,%l4
-                mov     %l4,%psr
-                NOP3
-
-                //
                 // The SPARC Architecture Manual Version 8
                 // 4.2. IU Control/Status Registers
                 //
