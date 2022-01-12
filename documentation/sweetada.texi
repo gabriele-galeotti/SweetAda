@@ -638,6 +638,10 @@ $ make all
 The final product of the build will be the file "kernel.o", which contains an ELF object
 image of the system code.
 
+The obj directory contains all object files, assembler listing, expanded Ada code and
+.ali libraries produced by the build machinery, together with some support report files,
+like .dot and .graph files.
+
 After the final ELF object is created, you can execute the "postbuild" Makefile target,
 which extracts code/data sections from kernel.o, and produces a binary file suitable for
 ROM programming, JTAG download, and so on. This target uses the "objcopy" Binutils utility,
@@ -645,12 +649,13 @@ so appropriate configuration switches could be selected by means of the OBJCOPY_
 variable in the platform's configuration.in file.
 
 NOTE: The postbuild target is a two-phase process. The first phase creates a binary
-files full of informations, then the postbuild target specified in the platform's Makefile
+file full of informations, then the postbuild target specified in the platform's Makefile
 is executed. This way you can customize the final binary file or take other actions,
 like add custom data, place the output file in a server?s TFTP directory, and so on.
 
-NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is no
-need to execute the postbuild target, because the emulator could use directly the kernel.o file.
+NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is
+no need to execute the postbuild target, because the emulator could use directly the
+kernel.o file.
 
 @node Anatomy of a platform
 @chapter Anatomy of a platform
@@ -671,8 +676,8 @@ them) to tune the build environment and specify actions. Those variables will be
 processed by the master Makefile and will be available in the platform's own Makefile.
 
 A platform should naturally contain program code files. In SweetAda, some standard
-names exist, but you are free to have whatever naming scheme you need. Nearly all
-platforms have the following files:
+names exist, but you are free to define whatever naming scheme you want. Nearly all
+platforms define the following files:
 
 @itemize @bullet
 @item
@@ -1025,8 +1030,29 @@ You should see the board cycling the multi-color LED through the R, G and B blin
 @section Synergy S5D9
 @cindex Synergy S5D9
 
+The Synergy PS5D9 is an embedded board from Renesas@registeredsymbol{}, equipped
+with a ARM Cortex-M4 SoC.
+
+This platform can be directly programmed by means of OpenOCD support.
+
 @section IBM S/390
 @cindex IBM S/390
+
+S/390@registeredsymbol{} is the well-known family of mainframes produced by IBM@registeredsymbol{}.
+
+This platform has no practical use, because a casual user could find difficult
+to have access to use such a machine. Despite that, it is fascinating
+to do some form of Ada development, testing the quality of SweetAda with this
+kind of computing device.
+
+Indeed, SweetAda use the Hercules emulator as a target. As well as all other
+platforms, SweetAda does not rely on pre-existing software, and take the machine
+out of reset (known in IBM jargon as IPL, "Initial Program Loading") in order to
+perform something from the scratch. There are two bootstrap options, an IPL from
+tape and an IPL from hard disk ("DASD").
+
+The application is limited to show some messages on an X3270 terminal. However,
+this is done also with the aid of a minimal interrupt context.
 
 @section Taihu
 @cindex Taihu

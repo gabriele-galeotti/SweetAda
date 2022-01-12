@@ -727,6 +727,10 @@ perform the build of the system:
 <p>The final product of the build will be the file &quot;kernel.o&quot;, which contains an ELF object
 image of the system code.
 </p>
+<p>The obj directory contains all object files, assembler listing, expanded Ada code and
+.ali libraries produced by the build machinery, together with some support report files,
+like .dot and .graph files.
+</p>
 <p>After the final ELF object is created, you can execute the &quot;postbuild&quot; Makefile target,
 which extracts code/data sections from kernel.o, and produces a binary file suitable for
 ROM programming, JTAG download, and so on. This target uses the &quot;objcopy&quot; Binutils utility,
@@ -734,12 +738,13 @@ so appropriate configuration switches could be selected by means of the OBJCOPY_
 variable in the platform&rsquo;s configuration.in file.
 </p>
 <p>NOTE: The postbuild target is a two-phase process. The first phase creates a binary
-files full of informations, then the postbuild target specified in the platform&rsquo;s Makefile
+file full of informations, then the postbuild target specified in the platform&rsquo;s Makefile
 is executed. This way you can customize the final binary file or take other actions,
 like add custom data, place the output file in a server?s TFTP directory, and so on.
 </p>
-<p>NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is no
-need to execute the postbuild target, because the emulator could use directly the kernel.o file.
+<p>NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is
+no need to execute the postbuild target, because the emulator could use directly the
+kernel.o file.
 </p>
 <hr>
 <a name="Anatomy-of-a-platform"></a>
@@ -766,8 +771,8 @@ them) to tune the build environment and specify actions. Those variables will be
 processed by the master Makefile and will be available in the platform&rsquo;s own Makefile.
 </p>
 <p>A platform should naturally contain program code files. In SweetAda, some standard
-names exist, but you are free to have whatever naming scheme you need. Nearly all
-platforms have the following files:
+names exist, but you are free to define whatever naming scheme you want. Nearly all
+platforms define the following files:
 </p>
 <ul>
 <li> configuration.in<br>
@@ -1168,10 +1173,31 @@ enabled, else when a timer IRQ is triggered an invalid program counter will be c
 <h3 class="section">15.35 Synergy S5D9</h3>
 <a name="index-Synergy-S5D9"></a>
 
+<p>The Synergy PS5D9 is an embedded board from Renesas&reg;, equipped
+with a ARM Cortex-M4 SoC.
+</p>
+<p>This platform can be directly programmed by means of OpenOCD support.
+</p>
 <a name="IBM-S_002f390"></a>
 <h3 class="section">15.36 IBM S/390</h3>
 <a name="index-IBM-S_002f390"></a>
 
+<p>S/390&reg; is the well-known family of mainframes produced by IBM&reg;.
+</p>
+<p>This platform has no practical use, because a casual user could find difficult
+to have access to use such a machine. Despite that, it is fascinating
+to do some form of Ada development, testing the quality of SweetAda with this
+kind of computing device.
+</p>
+<p>Indeed, SweetAda use the Hercules emulator as a target. As well as all other
+platforms, SweetAda does not rely on pre-existing software, and take the machine
+out of reset (known in IBM jargon as IPL, &quot;Initial Program Loading&quot;) in order to
+perform something from the scratch. There are two bootstrap options, an IPL from
+tape and an IPL from hard disk (&quot;DASD&quot;).
+</p>
+<p>The application is limited to show some messages on an X3270 terminal. However,
+this is done also with the aid of a minimal interrupt context.
+</p>
 <a name="Taihu"></a>
 <h3 class="section">15.37 Taihu</h3>
 <a name="index-Taihu"></a>
