@@ -91,7 +91,7 @@ package BlockDevices is
 
    type LBA_Type is mod 2**28;
 
-   function CHS_to_LBA (CHS : CHS_Type; CHS_Geometry : CHS_Type) return LBA_Type;
+   function CHS_To_LBA (CHS : CHS_Type; CHS_Geometry : CHS_Type) return LBA_Type;
    function LBA_To_CHS (Sector_Number : LBA_Type; CHS_Geometry : CHS_Type) return CHS_Type;
 
 end BlockDevices;

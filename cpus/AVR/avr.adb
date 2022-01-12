@@ -43,7 +43,7 @@ package body AVR is
    procedure NOP is
    begin
       Asm (
-           Template => " nop",
+           Template => "        nop",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -57,7 +57,7 @@ package body AVR is
    procedure RET is
    begin
       Asm (
-           Template => " ret",
+           Template => "        ret",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -71,7 +71,7 @@ package body AVR is
    procedure Asm_Call (Target_Address : in Address) is
    begin
       Asm (
-           Template => " icall",
+           Template => "        icall",
            Outputs  => No_Output_Operands,
            Inputs   => Address'Asm_Input ("z", Target_Address),
            Clobber  => "",
@@ -86,7 +86,7 @@ package body AVR is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => " sei",
+           Template => "        sei",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
@@ -97,7 +97,7 @@ package body AVR is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => " cli",
+           Template => "        cli",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "memory",

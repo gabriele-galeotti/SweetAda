@@ -85,7 +85,7 @@ package body CPU is
                         Address'Asm_Input ("a", Lock_Object'Address),
                         CPU_Unsigned'Asm_Input ("d", 1)
                        ),
-           Clobber  => "memory, cc",
+           Clobber  => "memory,cc",
            Volatile => True
           );
       Success := Lock_Flag /= 0;

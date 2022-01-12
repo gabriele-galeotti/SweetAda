@@ -176,7 +176,7 @@ package MIPS is
    KSEG1_ADDRESS : constant := 16#A000_0000#;
 
    ----------------------------------------------------------------------------
-   -- Generic definitions
+   -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
    procedure NOP with

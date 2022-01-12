@@ -46,10 +46,10 @@ package body BlockDevices is
    --------------------------------------------------------------------------
    -- LBA = (C × HPC + H) × SPT + (S - 1)
    --------------------------------------------------------------------------
-   function CHS_to_LBA (CHS : CHS_Type; CHS_Geometry : CHS_Type) return LBA_Type is
+   function CHS_To_LBA (CHS : CHS_Type; CHS_Geometry : CHS_Type) return LBA_Type is
    begin
       return LBA_Type ((CHS.C * CHS_Geometry.H + CHS.H) * CHS_Geometry.S + (CHS.S - 1));
-   end CHS_to_LBA;
+   end CHS_To_LBA;
 
    --------------------------------------------------------------------------
    -- LBA_To_CHS

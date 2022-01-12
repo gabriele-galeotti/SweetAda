@@ -30,7 +30,7 @@ package Srecord is
    use System.Storage_Elements;
 
    type Getchar_Ptr is access procedure (C : out Character);
-   type Putchar_Ptr is access procedure (C : in Character);
+   type Putchar_Ptr is access procedure (C : in  Character);
 
    Start_Address : Integer_Address := 0;
 

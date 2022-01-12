@@ -28,7 +28,7 @@
                         Lock_Type'Asm_Output ("+m", Lock_Object)
                        ),
            Inputs   => No_Input_Operands,
-           Clobber  => "memory, cc",
+           Clobber  => "memory,cc",
            Volatile => True
           );
       Success := Lock_Flag = 0;

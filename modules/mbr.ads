@@ -42,7 +42,7 @@ package MBR is
 
    type Partition_Number_Type is (PARTITION1, PARTITION2, PARTITION3, PARTITION4);
 
-   Partition_ENTRY_SIZE : constant := 16;
+   PARTITION_ENTRY_SIZE : constant := 16;
 
    type Partition_Entry_Type is
    record
@@ -53,7 +53,7 @@ package MBR is
       LBA_Start        : Interfaces.Unsigned_32;
       LBA_Size         : Interfaces.Unsigned_32;
    end record with
-      Size => Partition_ENTRY_SIZE * Storage_Unit;
+      Size => PARTITION_ENTRY_SIZE * Storage_Unit;
    for Partition_Entry_Type use record
       Status           at  0 range 0 .. 7;
       CHS_First_Sector at  1 range 0 .. 23;
