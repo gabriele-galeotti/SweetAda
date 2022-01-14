@@ -108,18 +108,7 @@ package KN02BA is
       Convention => Ada;
 
    -- ROM code use a NOP when operating with I/O ports
-   function Read32_NOP (Memory_Address : Address) return Unsigned_32;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (Read32_NOP);
+   function Read32_NOP (Memory_Address : Address) return Unsigned_32 with
+      Inline => True;
 
 end KN02BA;

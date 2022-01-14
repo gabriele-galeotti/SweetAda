@@ -18,6 +18,7 @@
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Definitions;
 with Bits;
 with MMIO;
 with MIPS;
@@ -76,7 +77,7 @@ package body BSP is
       SCC_Descriptor1.Base_Address            := To_Address (KSEG1_ADDRESS + SCC0_BASEADDRESS);
       SCC_Descriptor1.AB_Address_Bit          := 3;
       SCC_Descriptor1.CD_Address_Bit          := 2;
-      SCC_Descriptor1.Baud_Clock              := 7_372_800;
+      SCC_Descriptor1.Baud_Clock              := Definitions.UART7M3_CLK;
       SCC_Descriptor1.Flags.DECstation5000133 := True;
       SCC_Descriptor1.Read_8                  := MMIO.Read'Access;
       SCC_Descriptor1.Write_8                 := MMIO.Write'Access;
@@ -85,7 +86,7 @@ package body BSP is
       SCC_Descriptor2.Base_Address            := To_Address (KSEG1_ADDRESS + SCC1_BASEADDRESS);
       SCC_Descriptor2.AB_Address_Bit          := 3;
       SCC_Descriptor2.CD_Address_Bit          := 2;
-      SCC_Descriptor2.Baud_Clock              := 7_372_800;
+      SCC_Descriptor2.Baud_Clock              := Definitions.UART7M3_CLK;
       SCC_Descriptor2.Flags.DECstation5000133 := True;
       SCC_Descriptor2.Read_8                  := MMIO.Read'Access;
       SCC_Descriptor2.Write_8                 := MMIO.Write'Access;

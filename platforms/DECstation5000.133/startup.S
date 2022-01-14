@@ -35,7 +35,9 @@
                 .global _start
 _start:
 
-                // setup stack
+                //
+                // Setup stack pointer.
+                //
                 lui     $sp,%hi(kernel_stack)
                 ori     $sp,%lo(kernel_stack)
 
