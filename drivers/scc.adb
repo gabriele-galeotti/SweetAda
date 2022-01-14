@@ -70,6 +70,9 @@ package body SCC is
       Unused2 at 0 range 3 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (RR0_Type, Unsigned_8);
+   function To_RR0 is new Ada.Unchecked_Conversion (Unsigned_8, RR0_Type);
+
    ----------------------------------------------------------------------------
    -- Write Register 0 (Command Register)
    ----------------------------------------------------------------------------
@@ -103,6 +106,9 @@ package body SCC is
       CRC_Reset at 0 range 6 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (WR0_Type, Unsigned_8);
+   function To_WR0 is new Ada.Unchecked_Conversion (Unsigned_8, WR0_Type);
+
    ----------------------------------------------------------------------------
    -- Write Register 1 (Transmit/Receive Interrupt and Data Transfer Mode Definition)
    ----------------------------------------------------------------------------
@@ -135,11 +141,8 @@ package body SCC is
       WT_RDY_ENAB  at 0 range 7 .. 7;
    end record;
 
-   ----------------------------------------------------------------------------
-   -- Write Register 2 (Interrupt Vector)
-   ----------------------------------------------------------------------------
-
-   -- register type is Unsigned_8
+   function To_U8 is new Ada.Unchecked_Conversion (WR1_Type, Unsigned_8);
+   function To_WR1 is new Ada.Unchecked_Conversion (Unsigned_8, WR1_Type);
 
    ----------------------------------------------------------------------------
    -- Write Register 3 (Receive Parameters and Control)
@@ -172,6 +175,9 @@ package body SCC is
       Auto_Enables  at 0 range 5 .. 5;
       RxN           at 0 range 6 .. 7;
    end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (WR3_Type, Unsigned_8);
+   function To_WR3 is new Ada.Unchecked_Conversion (Unsigned_8, WR3_Type);
 
    ----------------------------------------------------------------------------
    -- Write Register 4 (Transmit/Receive Miscellaneous Parameters and Modes)
@@ -211,6 +217,9 @@ package body SCC is
       XCLK_RATE  at 0 range 6 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (WR4_Type, Unsigned_8);
+   function To_WR4 is new Ada.Unchecked_Conversion (Unsigned_8, WR4_Type);
+
    ----------------------------------------------------------------------------
    -- Write Register 5 (Transmit Parameters and Controls)
    ----------------------------------------------------------------------------
@@ -243,10 +252,30 @@ package body SCC is
       DTR           at 0 range 7 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (WR5_Type, Unsigned_8);
+   function To_WR5 is new Ada.Unchecked_Conversion (Unsigned_8, WR5_Type);
+
+   -- Local subprograms
+
    procedure SCCZ8530_Create_Ports (
                                     Descriptor : in out SCCZ8530_Descriptor_Type;
                                     Channel    : in     SCCZ8530_Channel_Type
                                    );
+
+   function Register_Read (
+                           Descriptor : SCCZ8530_Descriptor_Type;
+                           Channel    : SCCZ8530_Channel_Type;
+                           Register   : SCCZ8530_Register_Type
+                          ) return Unsigned_8 with
+      Inline => True;
+
+   procedure Register_Write (
+                             Descriptor : in SCCZ8530_Descriptor_Type;
+                             Channel    : in SCCZ8530_Channel_Type;
+                             Register   : in SCCZ8530_Register_Type;
+                             Value      : in Unsigned_8
+                            ) with
+      Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -255,69 +284,6 @@ package body SCC is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Local Subprograms (generic)
-   ----------------------------------------------------------------------------
-
-   generic
-      Register_Type : in SCCZ8530_Register_Type;
-      type Output_Register_Type is private;
-   function Typed_Register_Read (
-                                 Descriptor : SCCZ8530_Descriptor_Type;
-                                 Channel    : SCCZ8530_Channel_Type
-                                ) return Output_Register_Type;
-   pragma Inline (Typed_Register_Read);
-   function Typed_Register_Read (
-                                 Descriptor : SCCZ8530_Descriptor_Type;
-                                 Channel    : SCCZ8530_Channel_Type
-                                ) return Output_Register_Type is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_8, Output_Register_Type);
-   begin
-      Descriptor.Write_8 (Descriptor.Control_Port (Channel), SCCZ8530_Register_ID (Register_Type));
-      return Convert (Descriptor.Read_8 (Descriptor.Control_Port (Channel)));
-   end Typed_Register_Read;
-
-   generic
-      Register_Type : in SCCZ8530_Register_Type;
-      type Input_Register_Type is private;
-   procedure Typed_Register_Write (
-                                   Descriptor : in SCCZ8530_Descriptor_Type;
-                                   Channel    : in SCCZ8530_Channel_Type;
-                                   Value      : in Input_Register_Type
-                                  );
-   pragma Inline (Typed_Register_Write);
-   procedure Typed_Register_Write (
-                                   Descriptor : in SCCZ8530_Descriptor_Type;
-                                   Channel    : in SCCZ8530_Channel_Type;
-                                   Value      : in Input_Register_Type
-                                  ) is
-      function Convert is new Ada.Unchecked_Conversion (Input_Register_Type, Unsigned_8);
-   begin
-      Descriptor.Write_8 (Descriptor.Control_Port (Channel), SCCZ8530_Register_ID (Register_Type));
-      Descriptor.Write_8 (Descriptor.Control_Port (Channel), Convert (Value));
-   end Typed_Register_Write;
-
-   ----------------------------------------------------------------------------
-   -- Instantiation of generics
-   ----------------------------------------------------------------------------
-
-   function RR0_Read is new Typed_Register_Read (RR0, RR0_Type);
-   pragma Inline (RR0_Read);
-   procedure WR3_Write is new Typed_Register_Write (WR3, WR3_Type);
-   pragma Inline (WR3_Write);
-   procedure WR4_Write is new Typed_Register_Write (WR4, WR4_Type);
-   pragma Inline (WR4_Write);
-   procedure WR5_Write is new Typed_Register_Write (WR5, WR5_Type);
-   pragma Inline (WR5_Write);
-   procedure WR11_Write is new Typed_Register_Write (WR11, Unsigned_8);
-   pragma Inline (WR11_Write);
-   procedure WR12_Write is new Typed_Register_Write (WR12, Unsigned_8);
-   pragma Inline (WR12_Write);
-   procedure WR13_Write is new Typed_Register_Write (WR13, Unsigned_8);
-   pragma Inline (WR13_Write);
-   procedure WR14_Write is new Typed_Register_Write (WR14, Unsigned_8);
-   pragma Inline (WR14_Write);
 
    ----------------------------------------------------------------------------
    -- SCCZ8530_Create_Ports
@@ -340,14 +306,41 @@ package body SCC is
       Base_Address : Address := Descriptor.Base_Address;
    begin
       if Descriptor.Flags.DECstation5000133 then
-         Base_Address := Base_Address + 1;
+         Base_Address := @ + 1;
       end if;
       if Channel = CHANNELA then
-         Base_Address := Base_Address + 2**Descriptor.AB_Address_Bit;
+         Base_Address := @ + 2**Descriptor.AB_Address_Bit;
       end if;
       Descriptor.Control_Port (Channel) := Base_Address;
       Descriptor.Data_Port (Channel)    := Base_Address + 2**Descriptor.CD_Address_Bit;
    end SCCZ8530_Create_Ports;
+
+   ----------------------------------------------------------------------------
+   -- Register_Read
+   ----------------------------------------------------------------------------
+   function Register_Read (
+                           Descriptor : SCCZ8530_Descriptor_Type;
+                           Channel    : SCCZ8530_Channel_Type;
+                           Register   : SCCZ8530_Register_Type
+                          ) return Unsigned_8 is
+   begin
+      Descriptor.Write_8 (Descriptor.Control_Port (Channel), SCCZ8530_Register_ID (Register));
+      return Descriptor.Read_8 (Descriptor.Control_Port (Channel));
+   end Register_Read;
+
+   ----------------------------------------------------------------------------
+   -- Register_Write
+   ----------------------------------------------------------------------------
+   procedure Register_Write (
+                             Descriptor : in SCCZ8530_Descriptor_Type;
+                             Channel    : in SCCZ8530_Channel_Type;
+                             Register   : in SCCZ8530_Register_Type;
+                             Value      : in Unsigned_8
+                            ) is
+   begin
+      Descriptor.Write_8 (Descriptor.Control_Port (Channel), SCCZ8530_Register_ID (Register));
+      Descriptor.Write_8 (Descriptor.Control_Port (Channel), Value);
+   end Register_Write;
 
    ----------------------------------------------------------------------------
    -- Set_Baud_Rate
@@ -370,11 +363,11 @@ package body SCC is
       Unused := Descriptor.Read_8 (Descriptor.Control_Port (Channel));
       -- compute time constant
       Time_Constant := Unsigned_16 ((Descriptor.Baud_Clock + BR * 16) / (2 * BR * 16) - 2);
-      WR12_Write (Descriptor, Channel, LByte (Time_Constant));
-      WR13_Write (Descriptor, Channel, HByte (Time_Constant));
+      Register_Write (Descriptor, Channel, WR12, LByte (Time_Constant));
+      Register_Write (Descriptor, Channel, WR13, HByte (Time_Constant));
       -- enable BRG
-      WR14_Write (Descriptor, Channel, Unsigned_8'(2#00000010#));
-      WR14_Write (Descriptor, Channel, Unsigned_8'(2#00000010#) or 1);
+      Register_Write (Descriptor, Channel, WR14, Unsigned_8'(2#00000010#));
+      Register_Write (Descriptor, Channel, WR14, Unsigned_8'(2#00000010#) or 1);
    end Set_Baud_Rate;
 
    ----------------------------------------------------------------------------
@@ -390,37 +383,37 @@ package body SCC is
       -- reset register pointer
       Unused := Descriptor.Read_8 (Descriptor.Control_Port (Channel));
       -- select BR Generator Output source = PCLK
-      WR11_Write (Descriptor, Channel, Unsigned_8'(2#01010010#));
+      Register_Write (Descriptor, Channel, WR11, Unsigned_8'(2#01010010#));
       Set_Baud_Rate (Descriptor, Channel, Definitions.BR_9600);
       -- X16 Clock Mode, External Sync Mode, 1 Stop Bit/Character, Parity
       -- EVEN, Parity not Enable
-      WR4_Write (Descriptor, Channel, (
-                                       PAR_ENAB   => False,
-                                       PAR_EVEN   => True,
-                                       STOP_BITS  => SB1,
-                                       SYNC_MODES => EXTSYNC,
-                                       XCLK_RATE  => X16CLK
-                                      ));
+      Register_Write (Descriptor, Channel, WR4, To_U8 (WR4_Type'(
+                                                                 PAR_ENAB   => False,
+                                                                 PAR_EVEN   => True,
+                                                                 STOP_BITS  => SB1,
+                                                                 SYNC_MODES => EXTSYNC,
+                                                                 XCLK_RATE  => X16CLK
+                                                                )));
       -- Rx 8 Bits/Character, Rx Enable
-      WR3_Write (Descriptor, Channel, (
-                                       Rx_Enable     => True,
-                                       SYNC_L_INH    => False,
-                                       ADD_SM        => False,
-                                       Rx_CRC_Enable => False,
-                                       ENT_HM        => False,
-                                       Auto_Enables  => False,
-                                       RxN           => Rx_LENGTH_8
-                                      ));
+      Register_Write (Descriptor, Channel, WR3, To_U8 (WR3_Type'(
+                                                                 Rx_Enable     => True,
+                                                                 SYNC_L_INH    => False,
+                                                                 ADD_SM        => False,
+                                                                 Rx_CRC_Enable => False,
+                                                                 ENT_HM        => False,
+                                                                 Auto_Enables  => False,
+                                                                 RxN           => Rx_LENGTH_8
+                                                                )));
       -- Tx 8 Bits/Character, Tx Enable
-      WR5_Write (Descriptor, Channel, (
-                                       Tx_CRC_Enable => False,
-                                       RTS           => False,
-                                       nSDLC_CRC16   => False,
-                                       Tx_Enable     => True,
-                                       Send_Break    => False,
-                                       TxN           => Tx_LENGTH_8,
-                                       DTR           => False
-                                      ));
+      Register_Write (Descriptor, Channel, WR5, To_U8 (WR5_Type'(
+                                                                 Tx_CRC_Enable => False,
+                                                                 RTS           => False,
+                                                                 nSDLC_CRC16   => False,
+                                                                 Tx_Enable     => True,
+                                                                 Send_Break    => False,
+                                                                 TxN           => Tx_LENGTH_8,
+                                                                 DTR           => False
+                                                                )));
    end Init;
 
    ----------------------------------------------------------------------------
@@ -434,7 +427,7 @@ package body SCC is
    begin
       -- wait for TX Buffer Empty
       loop
-         exit when RR0_Read (Descriptor, Channel).TXBE;
+         exit when To_RR0 (Register_Read (Descriptor, Channel, RR0)).TXBE;
       end loop;
       if Descriptor.Flags.MVME162FX_TX_Quirk then
          -- MVME162FX MC2 revision 1 bug
