@@ -68,6 +68,7 @@ package Definitions is
    UART2M4_CLK : constant := 2_457_600;
    NTSC_CLK    : constant := 3_579_545;
    PAL_CLK     : constant := 4_433_619;
+   UART7M3_CLK : constant := 7_372_800;
    NTSC_CLK4   : constant := 14_318_182;
    UART18M     : constant := UART1M8_CLK * 10;
 
