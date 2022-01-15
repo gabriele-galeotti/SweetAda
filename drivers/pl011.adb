@@ -31,16 +31,16 @@ package body PL011 is
    -- Register types
    ----------------------------------------------------------------------------
 
-   type PL011_Register_Type is (UARTDR, UARTRSR, UARTFR);
+   type PL011_Register_Type is (DR, RSR, FR);
 
    PL011_Register_Offset : constant array (PL011_Register_Type) of Storage_Offset :=
       (
-       UARTDR  => 0,
-       UARTRSR => 16#04#,
-       UARTFR  => 16#18#
+       DR  => 0,
+       RSR => 16#04#,
+       FR  => 16#18#
       );
 
-   type UARTDR_RX_Register_Type is
+   type DR_RX_Type is
    record
       DATA   : Unsigned_8;
       FE     : Boolean;
@@ -51,7 +51,7 @@ package body PL011 is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
-   for UARTDR_RX_Register_Type use
+   for DR_RX_Type use
    record
       DATA   at 0 range 0 .. 7;
       FE     at 1 range 0 .. 0;
@@ -61,7 +61,10 @@ package body PL011 is
       Unused at 1 range 4 .. 7;
    end record;
 
-   type UARTFR_Register_Type is
+   function To_U16 is new Ada.Unchecked_Conversion (DR_RX_Type, Unsigned_16);
+   function To_DR_RX is new Ada.Unchecked_Conversion (Unsigned_16, DR_RX_Type);
+
+   type FR_Type is
    record
       CTS    : Boolean;
       DSR    : Boolean;
@@ -76,7 +79,7 @@ package body PL011 is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
-   for UARTFR_Register_Type use
+   for FR_Type use
    record
       CTS    at 0 range 0 .. 0;
       DSR    at 0 range 1 .. 1;
@@ -90,28 +93,33 @@ package body PL011 is
       Unused at 1 range 1 .. 7;
    end record;
 
-   function Register_Read_8 (
-                             Descriptor : PL011_Descriptor_Type;
-                             Register   : PL011_Register_Type
-                            ) return Unsigned_8;
-   -- pragma Inline (Register_Read_8);
-   procedure Register_Write_8 (
-                               Descriptor : in PL011_Descriptor_Type;
-                               Register   : in PL011_Register_Type;
-                               Value      : in Unsigned_8
-                              );
-   -- pragma Inline (Register_Write_8);
-   function Register_Read_16 (
-                              Descriptor : PL011_Descriptor_Type;
-                              Register   : PL011_Register_Type
-                             ) return Unsigned_16;
-   -- pragma Inline (Register_Read_16);
-   procedure Register_Write_16 (
-                                Descriptor : in PL011_Descriptor_Type;
-                                Register   : in PL011_Register_Type;
-                                Value      : in Unsigned_16
-                               );
-   -- pragma Inline (Register_Write_16);
+   function To_U16 is new Ada.Unchecked_Conversion (FR_Type, Unsigned_16);
+   function To_FR is new Ada.Unchecked_Conversion (Unsigned_16, FR_Type);
+
+   -- Local subprograms
+
+   function Register_Read (
+                           Descriptor : PL011_Descriptor_Type;
+                           Register   : PL011_Register_Type
+                          ) return Unsigned_8 with
+      Inline => True;
+   procedure Register_Write (
+                             Descriptor : in PL011_Descriptor_Type;
+                             Register   : in PL011_Register_Type;
+                             Value      : in Unsigned_8
+                            ) with
+      Inline => True;
+   function Register_Read (
+                           Descriptor : PL011_Descriptor_Type;
+                           Register   : PL011_Register_Type
+                          ) return Unsigned_16 with
+      Inline => True;
+   procedure Register_Write (
+                             Descriptor : in PL011_Descriptor_Type;
+                             Register   : in PL011_Register_Type;
+                             Value      : in Unsigned_16
+                            ) with
+      Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -121,95 +129,51 @@ package body PL011 is
    --                                                                        --
    --========================================================================--
 
-   function Register_Read_8 (
-                             Descriptor : PL011_Descriptor_Type;
-                             Register   : PL011_Register_Type
-                            ) return Unsigned_8 is
+   ----------------------------------------------------------------------------
+   -- Register_Read (8-bit)
+   ----------------------------------------------------------------------------
+   function Register_Read (
+                           Descriptor : PL011_Descriptor_Type;
+                           Register   : PL011_Register_Type
+                          ) return Unsigned_8 is
    begin
       return Descriptor.Read_8 (Descriptor.Base_Address + PL011_Register_Offset (Register));
-   end Register_Read_8;
+   end Register_Read;
 
-   procedure Register_Write_8 (
-                               Descriptor : in PL011_Descriptor_Type;
-                               Register   : in PL011_Register_Type;
-                               Value      : in Unsigned_8
-                              ) is
+   ----------------------------------------------------------------------------
+   -- Register_Write (8-bit)
+   ----------------------------------------------------------------------------
+   procedure Register_Write (
+                             Descriptor : in PL011_Descriptor_Type;
+                             Register   : in PL011_Register_Type;
+                             Value      : in Unsigned_8
+                            ) is
    begin
       Descriptor.Write_8 (Descriptor.Base_Address + PL011_Register_Offset (Register), Value);
-   end Register_Write_8;
+   end Register_Write;
 
-   function Register_Read_16 (
-                              Descriptor : PL011_Descriptor_Type;
-                              Register   : PL011_Register_Type
-                             ) return Unsigned_16 is
+   ----------------------------------------------------------------------------
+   -- Register_Read (16-bit)
+   ----------------------------------------------------------------------------
+   function Register_Read (
+                           Descriptor : PL011_Descriptor_Type;
+                           Register   : PL011_Register_Type
+                          ) return Unsigned_16 is
    begin
       return Descriptor.Read_16 (Descriptor.Base_Address + PL011_Register_Offset (Register));
-   end Register_Read_16;
+   end Register_Read;
 
-   procedure Register_Write_16 (
-                                Descriptor : in PL011_Descriptor_Type;
-                                Register   : in PL011_Register_Type;
-                                Value      : in Unsigned_16
-                               ) is
+   ----------------------------------------------------------------------------
+   -- Register_Write (16-bit)
+   ----------------------------------------------------------------------------
+   procedure Register_Write (
+                             Descriptor : in PL011_Descriptor_Type;
+                             Register   : in PL011_Register_Type;
+                             Value      : in Unsigned_16
+                            ) is
    begin
       Descriptor.Write_16 (Descriptor.Base_Address + PL011_Register_Offset (Register), Value);
-   end Register_Write_16;
-
-   ----------------------------------------------------------------------------
-   -- Local Subprograms (generic)
-   ----------------------------------------------------------------------------
-
-   generic
-      Register_Type : in PL011_Register_Type;
-      type Output_Register_Type is private;
-      type Unsigned_Size_Type is private;
-      with function Register_Read (
-                                   P1 : PL011_Descriptor_Type;
-                                   P2 : PL011_Register_Type
-                                  ) return Unsigned_Size_Type;
-   function Typed_Register_Read (
-                                 Descriptor : PL011_Descriptor_Type
-                                ) return Output_Register_Type;
-   pragma Inline (Typed_Register_Read);
-   function Typed_Register_Read (
-                                 Descriptor : PL011_Descriptor_Type
-                                ) return Output_Register_Type is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_Size_Type, Output_Register_Type);
-   begin
-      return Convert (Register_Read (Descriptor, Register_Type));
-   end Typed_Register_Read;
-
-   generic
-      Register_Type : in PL011_Register_Type;
-      type Input_Register_Type is private;
-      type Unsigned_Size_Type is private;
-      with procedure Register_Write (
-                                     P1 : in PL011_Descriptor_Type;
-                                     P2 : in PL011_Register_Type;
-                                     P3 : in Unsigned_Size_Type
-                                    );
-   procedure Typed_Register_Write (
-                                   Descriptor : in PL011_Descriptor_Type;
-                                   Value      : in Input_Register_Type
-                                  );
-   pragma Inline (Typed_Register_Write);
-   procedure Typed_Register_Write (
-                                   Descriptor : in PL011_Descriptor_Type;
-                                   Value      : in Input_Register_Type
-                                  ) is
-      function Convert is new Ada.Unchecked_Conversion (Input_Register_Type, Unsigned_Size_Type);
-   begin
-      Register_Write (Descriptor, Register_Type, Convert (Value));
-   end Typed_Register_Write;
-
-   ----------------------------------------------------------------------------
-   -- Instantiation of generics
-   ----------------------------------------------------------------------------
-
-   procedure UARTDR_Write is new Typed_Register_Write (UARTDR, Unsigned_8, Unsigned_8, Register_Write_8);
-   pragma Inline (UARTDR_Write);
-   function UARTFR_Read is new Typed_Register_Read (UARTFR, UARTFR_Register_Type, Unsigned_16, Register_Read_16);
-   pragma Inline (UARTFR_Read);
+   end Register_Write;
 
    ----------------------------------------------------------------------------
    -- Init
@@ -225,9 +189,9 @@ package body PL011 is
    procedure TX (Descriptor : in PL011_Descriptor_Type; Value : in Unsigned_8) is
    begin
       loop
-         exit when not UARTFR_Read (Descriptor).TXFF;
+         exit when not To_FR (Register_Read (Descriptor, FR)).TXFF;
       end loop;
-      UARTDR_Write (Descriptor, Value);
+      Register_Write (Descriptor, DR, Value);
    end TX;
 
 end PL011;
