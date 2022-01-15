@@ -48,7 +48,7 @@ package body IDE is
                               16#0005#, -- CM               LBA #2
                               16#0006#, -- HEAD
                               16#0007#, -- STATUS    R
-                              16#0011#, -- FEATURE   W      ST506, WPC: CYL/4
+                              16#0011#, -- FEATURE   W      ST506: WPC = CYL/4
                               16#0017#, -- COMMAND   W
                               16#2206#  -- CONTROL   W      16#0206#
                              );
@@ -154,7 +154,8 @@ package body IDE is
 
    -- Local declarations
 
-   CMD_PIO_READ : constant := 16#20#;
+   CMD_PIO_READ  : constant := 16#20#;
+   CMD_PIO_WRITE : constant := 16#30#;
 
    D : IDE_Descriptor_Type with
       Suppress_Initialization => True;
@@ -189,9 +190,11 @@ package body IDE is
 
    function DATA_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_16 with
       Inline => True;
+   procedure DATA_Write (Descriptor : IDE_Descriptor_Type; Value : in Unsigned_16) with
+      Inline => True;
    function ERROR_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
       Inline => True;
-   procedure ERROR_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
+   procedure FEATURE_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
       Inline => True;
    function SC_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
       Inline => True;
@@ -312,15 +315,20 @@ package body IDE is
       return Register_Read (Descriptor, DATA);
    end DATA_Read;
 
+   procedure DATA_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_16) is
+   begin
+      Register_Write (Descriptor, DATA, Value);
+   end DATA_Write;
+
    function ERROR_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
    begin
       return Register_Read (Descriptor, ERROR);
    end ERROR_Read;
 
-   procedure ERROR_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
+   procedure FEATURE_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
    begin
-      Register_Write (Descriptor, ERROR, Value);
-   end ERROR_Write;
+      Register_Write (Descriptor, FEATURE, Value);
+   end FEATURE_Write;
 
    function SC_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
    begin
@@ -449,8 +457,8 @@ package body IDE is
       Buffer : HD_Buffer_Type with
          Address => B (0)'Address;
    begin
-      DRIVE_Set (D, MASTER);
       ----------------------------------------------------
+      DRIVE_Set (D, MASTER);
       if not Is_Drive_Ready (D) then
          Console.Print ("Drive not ready.", NL => True);
          Success := False;
@@ -458,23 +466,18 @@ package body IDE is
       end if;
       -- perform read ------------------------------------
       SN_Write (D, Unsigned_8 (S mod 2**8));
-      CL_Write (D, Unsigned_8 ((S / 256) mod 2**8));
-      CM_Write (D, Unsigned_8 ((S / 65536) mod 2**8));
+      CL_Write (D, Unsigned_8 ((S / 2**8) mod 2**8));
+      CM_Write (D, Unsigned_8 ((S / 2**16) mod 2**8));
       HEAD_Write (D, 0);
-      ERROR_Write (D, 0);
-      SC_Write (D, 1); -- read 1 sector
+      FEATURE_Write (D, 0);
+      SC_Write (D, 1);
       COMMAND_Write (D, CMD_PIO_READ);
-      -- wait for DRQ active -----------------------------
-      if not Is_DRQ_Active (D) then
-         Console.Print ("Drive not active.", NL => True);
-         Success := False;
-         return;
-      end if;
       ----------------------------------------------------
       for Index in Buffer'Range loop
+         exit when not Is_DRQ_Active (D);
          Buffer (Index) := DATA_Read (D);
       end loop;
-      -- Console.Print_Memory (Buffer'Address, 512, 16);
+      ----------------------------------------------------
       Success := True;
    end Read;
 
@@ -486,9 +489,32 @@ package body IDE is
                     B       : in  Block_Type;
                     Success : out Boolean
                    ) is
-      pragma Unreferenced (S);
-      pragma Unreferenced (B);
+      type HD_Buffer_Type is array (0 .. 255) of Unsigned_16 with
+         Pack => True;
+      Buffer : HD_Buffer_Type with
+         Address => B (0)'Address;
    begin
+      ----------------------------------------------------
+      DRIVE_Set (D, MASTER);
+      if not Is_Drive_Ready (D) then
+         Console.Print ("Drive not ready.", NL => True);
+         Success := False;
+         return;
+      end if;
+      -- perform write -----------------------------------
+      SN_Write (D, Unsigned_8 (S mod 2**8));
+      CL_Write (D, Unsigned_8 ((S / 2**8) mod 2**8));
+      CM_Write (D, Unsigned_8 ((S / 2**16) mod 2**8));
+      HEAD_Write (D, 0);
+      FEATURE_Write (D, 0);
+      SC_Write (D, 1);
+      COMMAND_Write (D, CMD_PIO_WRITE);
+      ----------------------------------------------------
+      for Index in Buffer'Range loop
+         exit when not Is_DRQ_Active (D);
+         DATA_Write (D, Buffer (Index));
+      end loop;
+      ----------------------------------------------------
       Success := True;
    end Write;
 
