@@ -37,37 +37,94 @@ package body IDE is
    -- Register types
    ----------------------------------------------------------------------------
 
-   type IDE_Register_Type is (DATA, WPC, SC, SN, CL, CM, HEAD, STATUS, COMMAND, CONTROL);
+   type IDE_Register_Type is (DATA, ERROR, SC, SN, CL, CM, HEAD, STATUS, FEATURE, COMMAND, CONTROL);
    for IDE_Register_Type use (
-                              16#0000#, -- DATA
-                              16#0001#, -- WPC
+                              --           name      access notes
+                              16#0000#, -- DATA      R/W
+                              16#0001#, -- ERROR     R
                               16#0002#, -- SC
-                              16#0003#, -- SN (LBA0)
-                              16#0004#, -- CL (LBA1)
-                              16#0005#, -- CM (LBA2)
+                              16#0003#, -- SN               LBA #0
+                              16#0004#, -- CL               LBA #1
+                              16#0005#, -- CM               LBA #2
                               16#0006#, -- HEAD
-                              16#0007#, -- STATUS
-                              16#1007#, -- COMMAND
-                              16#2206#  -- CONTROL 16#0206#
+                              16#0007#, -- STATUS    R
+                              16#0011#, -- FEATURE   W      ST506, WPC: CYL/4
+                              16#0017#, -- COMMAND   W
+                              16#2206#  -- CONTROL   W      16#0206#
                              );
 
    IDE_Register_Offset : constant array (IDE_Register_Type) of Storage_Offset :=
       (
        DATA    => 0,
-       WPC     => 1,
+       ERROR   => 1,
+       FEATURE => 1,
        SC      => 2,
-       SN      => 3,       -- LBA0
-       CL      => 4,       -- LBA1
-       CM      => 5,       -- LBA2
+       SN      => 3,
+       CL      => 4,
+       CM      => 5,
        HEAD    => 6,
        STATUS  => 7,
        COMMAND => 7,
        CONTROL => 16#0206#
       );
 
-   -- Status Register
+   -- ERROR Register
 
-   type IDE_Status_Type is
+   type ERROR_Type is
+   record
+      AMNF  : Boolean; -- Address Mark Not Found
+      TK0NF : Boolean; -- TracK 0 Not Found
+      ABRT  : Boolean; -- ABoRTed command
+      MCR   : Boolean; -- Media Change Requested
+      IDNF  : Boolean; -- ID Not Found
+      MC    : Boolean; -- Media Change
+      UNC   : Boolean; -- UNCorrectable data error
+      BBK   : Boolean; -- Bad Block Detected
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for ERROR_Type use
+   record
+      AMNF  at 0 range 0 .. 0;
+      TK0NF at 0 range 1 .. 1;
+      ABRT  at 0 range 2 .. 2;
+      MCR   at 0 range 3 .. 3;
+      IDNF  at 0 range 4 .. 4;
+      MC    at 0 range 5 .. 5;
+      UNC   at 0 range 6 .. 6;
+      BBK   at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (ERROR_Type, Unsigned_8);
+   function To_ERROR_Type is new Ada.Unchecked_Conversion (Unsigned_8, ERROR_Type);
+
+   -- HEAD Register
+
+   type HEAD_Type is
+   record
+      HS      : Natural range 0 .. 15; -- Head Select
+      DRV     : Drive_Type;            -- MASTER/SLAVE
+      Unused1 : Bits.Bits_1;
+      L       : Boolean;               -- LBA mode
+      Unused2 : Bits.Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for HEAD_Type use
+   record
+      HS      at 0 range 0 .. 3;
+      DRV     at 0 range 4 .. 4;
+      Unused1 at 0 range 5 .. 5;
+      L       at 0 range 6 .. 6;
+      Unused2 at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (HEAD_Type, Unsigned_8);
+   function To_HEAD_Type is new Ada.Unchecked_Conversion (Unsigned_8, HEAD_Type);
+
+   -- STATUS Register
+
+   type STATUS_Type is
    record
       ERR  : Boolean;
       IDX  : Boolean;
@@ -80,7 +137,7 @@ package body IDE is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
-   for IDE_Status_Type use
+   for STATUS_Type use
    record
       ERR  at 0 range 0 .. 0;
       IDX  at 0 range 1 .. 1;
@@ -92,29 +149,77 @@ package body IDE is
       BSY  at 0 range 7 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (STATUS_Type, Unsigned_8);
+   function To_STATUS_Type is new Ada.Unchecked_Conversion (Unsigned_8, STATUS_Type);
+
+   -- Local declarations
+
    CMD_PIO_READ : constant := 16#20#;
 
    D : IDE_Descriptor_Type with
       Suppress_Initialization => True;
 
+   -- Local subprograms
+
    function Register_Read (
                            Descriptor : IDE_Descriptor_Type;
                            Register   : IDE_Register_Type
-                          ) return Unsigned_8;
+                          ) return Unsigned_8 with
+      Inline => True;
+
    procedure Register_Write (
                              Descriptor : in IDE_Descriptor_Type;
                              Register   : in IDE_Register_Type;
                              Value      : in Unsigned_8
-                            );
+                            ) with
+      Inline => True;
+
    function Register_Read (
                            Descriptor : IDE_Descriptor_Type;
                            Register   : IDE_Register_Type
-                          ) return Unsigned_16;
+                          ) return Unsigned_16 with
+      Inline => True;
+
    procedure Register_Write (
                              Descriptor : in IDE_Descriptor_Type;
                              Register   : in IDE_Register_Type;
                              Value      : in Unsigned_16
-                            );
+                            ) with
+      Inline => True;
+
+   function DATA_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_16 with
+      Inline => True;
+   function ERROR_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
+      Inline => True;
+   procedure ERROR_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
+      Inline => True;
+   function SC_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
+      Inline => True;
+   procedure SC_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
+      Inline => True;
+   function SN_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
+      Inline => True;
+   procedure SN_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
+      Inline => True;
+   function CL_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
+      Inline => True;
+   procedure CL_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
+      Inline => True;
+   function CM_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
+      Inline => True;
+   procedure CM_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
+      Inline => True;
+   function HEAD_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
+      Inline => True;
+   procedure HEAD_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
+      Inline => True;
+   procedure DRIVE_Set (Descriptor : in IDE_Descriptor_Type; Drive_Number : in Drive_Type) with
+      Inline => True;
+   function STATUS_Read (Descriptor : in IDE_Descriptor_Type) return STATUS_Type with
+      Inline => True;
+   procedure COMMAND_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
+      Inline => True;
+
    function Is_Drive_Ready (Descriptor : IDE_Descriptor_Type) return Boolean;
    function Is_DRQ_Active (Descriptor : IDE_Descriptor_Type) return Boolean;
 
@@ -127,7 +232,7 @@ package body IDE is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Register_Read
+   -- Register_Read (8-bit)
    ----------------------------------------------------------------------------
    function Register_Read (
                            Descriptor : IDE_Descriptor_Type;
@@ -144,7 +249,7 @@ package body IDE is
    end Register_Read;
 
    ----------------------------------------------------------------------------
-   -- Register_Write
+   -- Register_Write (8-bit)
    ----------------------------------------------------------------------------
    procedure Register_Write (
                              Descriptor : in IDE_Descriptor_Type;
@@ -163,7 +268,7 @@ package body IDE is
    end Register_Write;
 
    ----------------------------------------------------------------------------
-   -- Register_Read
+   -- Register_Read (16-bit)
    ----------------------------------------------------------------------------
    function Register_Read (
                            Descriptor : IDE_Descriptor_Type;
@@ -180,7 +285,7 @@ package body IDE is
    end Register_Read;
 
    ----------------------------------------------------------------------------
-   -- Register_Write
+   -- Register_Write (16-bit)
    ----------------------------------------------------------------------------
    procedure Register_Write (
                              Descriptor : in IDE_Descriptor_Type;
@@ -199,139 +304,74 @@ package body IDE is
    end Register_Write;
 
    ----------------------------------------------------------------------------
-   -- Local subprograms (generic)
+   -- ???_Read/Write
    ----------------------------------------------------------------------------
 
-   generic
-      Register_Type : in IDE_Register_Type;
-      type Output_Register_Type is private;
-   function Typed_Register_Read (
-                                 Descriptor : IDE_Descriptor_Type
-                                ) return Output_Register_Type;
-   pragma Inline (Typed_Register_Read);
-   function Typed_Register_Read (
-                                 Descriptor : IDE_Descriptor_Type
-                                ) return Output_Register_Type is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_8, Output_Register_Type);
-   begin
-      return Convert (Register_Read (Descriptor, Register_Type));
-   end Typed_Register_Read;
-
-   generic
-      Register_Type : in IDE_Register_Type;
-      type Input_Register_Type is private;
-   procedure Typed_Register_Write (
-                                   Descriptor : in IDE_Descriptor_Type;
-                                   Value      : in Input_Register_Type
-                                  );
-   pragma Inline (Typed_Register_Write);
-   pragma Unreferenced (Typed_Register_Write); -- __FIX__
-   procedure Typed_Register_Write (
-                                   Descriptor : in IDE_Descriptor_Type;
-                                   Value      : in Input_Register_Type
-                                  ) is
-      function Convert is new Ada.Unchecked_Conversion (Input_Register_Type, Unsigned_8);
-   begin
-      Register_Write (Descriptor, Register_Type, Convert (Value));
-   end Typed_Register_Write;
-
-   ----------------------------------------------------------------------------
-   --
-   ----------------------------------------------------------------------------
-
-   function DATA_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_16;
-   pragma Inline (DATA_Read);
    function DATA_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_16 is
    begin
       return Register_Read (Descriptor, DATA);
    end DATA_Read;
 
-   function WPC_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8;
-   pragma Inline (WPC_Read);
-   function WPC_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
+   function ERROR_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
    begin
-      return Register_Read (Descriptor, WPC);
-   end WPC_Read;
+      return Register_Read (Descriptor, ERROR);
+   end ERROR_Read;
 
-   procedure WPC_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8);
-   pragma Inline (WPC_Write);
-   procedure WPC_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
+   procedure ERROR_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
    begin
-      Register_Write (Descriptor, WPC, Value);
-   end WPC_Write;
+      Register_Write (Descriptor, ERROR, Value);
+   end ERROR_Write;
 
-   function SC_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8;
-   pragma Inline (SC_Read);
    function SC_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
    begin
       return Register_Read (Descriptor, SC);
    end SC_Read;
 
-   procedure SC_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8);
-   pragma Inline (SC_Write);
    procedure SC_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
    begin
       Register_Write (Descriptor, SC, Value);
    end SC_Write;
 
-   function SN_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8;
-   pragma Inline (SN_Read);
    function SN_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
    begin
       return Register_Read (Descriptor, SN);
    end SN_Read;
 
-   procedure SN_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8);
-   pragma Inline (SN_Write);
    procedure SN_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
    begin
       Register_Write (Descriptor, SN, Value);
    end SN_Write;
 
-   function CL_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8;
-   pragma Inline (CL_Read);
    function CL_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
    begin
       return Register_Read (Descriptor, CL);
    end CL_Read;
 
-   procedure CL_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8);
-   pragma Inline (CL_Write);
    procedure CL_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
    begin
       Register_Write (Descriptor, CL, Value);
    end CL_Write;
 
-   function CM_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8;
-   pragma Inline (CM_Read);
    function CM_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
    begin
       return Register_Read (Descriptor, CM);
    end CM_Read;
 
-   procedure CM_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8);
-   pragma Inline (CM_Write);
    procedure CM_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
    begin
       Register_Write (Descriptor, CM, Value);
    end CM_Write;
 
-   function HEAD_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8;
-   pragma Inline (HEAD_Read);
    function HEAD_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
    begin
       return Register_Read (Descriptor, HEAD);
    end HEAD_Read;
 
-   procedure HEAD_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8);
-   pragma Inline (HEAD_Write);
    procedure HEAD_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
    begin
       Register_Write (Descriptor, HEAD, (Value and 16#0F#) or 16#E0#);
    end HEAD_Write;
 
-   procedure DRIVE_Set (Descriptor : in IDE_Descriptor_Type; Drive_Number : in Drive_Type);
-   pragma Inline (DRIVE_Set);
    procedure DRIVE_Set (Descriptor : in IDE_Descriptor_Type; Drive_Number : in Drive_Type) is
       Drive_Value : Unsigned_8;
    begin
@@ -342,11 +382,11 @@ package body IDE is
       Register_Write (Descriptor, HEAD, (HEAD_Read (Descriptor) and 16#EF#) or Drive_Value);
    end DRIVE_Set;
 
-   function STATUS_Read is new Typed_Register_Read (STATUS, IDE_Status_Type);
-   pragma Inline (STATUS_Read);
+   function STATUS_Read (Descriptor : IDE_Descriptor_Type) return STATUS_Type is
+   begin
+      return To_STATUS_Type (Register_Read (Descriptor, STATUS));
+   end STATUS_Read;
 
-   procedure COMMAND_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8);
-   pragma Inline (COMMAND_Write);
    procedure COMMAND_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
    begin
       Register_Write (Descriptor, COMMAND, Value);
@@ -368,7 +408,7 @@ package body IDE is
    begin
       for Loop_Count in 1 .. 100_000 loop
          declare
-            Drive_Status : IDE_Status_Type;
+            Drive_Status : STATUS_Type;
          begin
             Drive_Status := STATUS_Read (Descriptor);
             -- if BSY is set, no other bits are valid
@@ -421,7 +461,7 @@ package body IDE is
       CL_Write (D, Unsigned_8 ((S / 256) mod 2**8));
       CM_Write (D, Unsigned_8 ((S / 65536) mod 2**8));
       HEAD_Write (D, 0);
-      WPC_Write (D, 0);
+      ERROR_Write (D, 0);
       SC_Write (D, 1); -- read 1 sector
       COMMAND_Write (D, CMD_PIO_READ);
       -- wait for DRQ active -----------------------------

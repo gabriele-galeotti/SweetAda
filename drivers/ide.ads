@@ -35,7 +35,9 @@ package IDE is
    use Bits;
    use BlockDevices;
 
-   type Drive_Type is (MASTER, SLAVE);
+   type Drive_Type is (MASTER, SLAVE) with
+      Size => 1;
+   for Drive_Type use (0, 1);
 
    -- I/O subprograms access
    type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;
