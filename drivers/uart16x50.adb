@@ -235,12 +235,14 @@ package body UART16x50 is
    function To_U8 is new Ada.Unchecked_Conversion (MSR_Type, Unsigned_8);
    function To_MSR is new Ada.Unchecked_Conversion (Unsigned_8, MSR_Type);
 
-   -- Local subprograms
+   -- Local declarations
 
    type Storage_Offset_Mod is mod 2**(Storage_Offset'Size - 1) with
       Size => Storage_Offset'Size;
 
    function To_SO is new Ada.Unchecked_Conversion (Storage_Offset_Mod, Storage_Offset);
+
+   -- Local subprograms
 
    function Register_Read (
                            Descriptor : Uart16x50_Descriptor_Type;

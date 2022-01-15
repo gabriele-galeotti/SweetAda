@@ -42,7 +42,7 @@ package M68k is
    -- TRAP #15
    BREAKPOINT_Instruction      : constant Unsigned_16 := 16#4E4F#;
    BREAKPOINT_Instruction_Size : constant             := 2;
-   BREAKPOINT_Asm_String       : constant String      := ".word 0x4E4F";
+   BREAKPOINT_Asm_String       : constant String      := ".word   0x4E4F";
 
    ----------------------------------------------------------------------------
    -- M680X0 registers

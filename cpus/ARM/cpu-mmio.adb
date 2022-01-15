@@ -44,7 +44,7 @@ package body CPU.MMIO is
       Result : Interfaces.Unsigned_8;
    begin
       Asm (
-           Template => " ldrb %0,[%1]",
+           Template => "        ldrb    %0,[%1]",
            Outputs  => Interfaces.Unsigned_8'Asm_Output ("=r", Result),
            Inputs   => System.Address'Asm_Input ("r", Memory_Address),
            Clobber  => "",
@@ -57,7 +57,7 @@ package body CPU.MMIO is
       Result : Interfaces.Unsigned_16;
    begin
       Asm (
-           Template => " ldrh %0,[%1]",
+           Template => "        ldrh    %0,[%1]",
            Outputs  => Interfaces.Unsigned_16'Asm_Output ("=r", Result),
            Inputs   => System.Address'Asm_Input ("r", Memory_Address),
            Clobber  => "",
@@ -70,7 +70,7 @@ package body CPU.MMIO is
       Result : Interfaces.Unsigned_32;
    begin
       Asm (
-           Template => " ldr %0,[%1]",
+           Template => "        ldr     %0,[%1]",
            Outputs  => Interfaces.Unsigned_32'Asm_Output ("=r", Result),
            Inputs   => System.Address'Asm_Input ("r", Memory_Address),
            Clobber  => "",
@@ -82,7 +82,7 @@ package body CPU.MMIO is
    procedure Write_U8 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_8) is
    begin
       Asm (
-           Template => " strb %0,[%1]",
+           Template => "        strb    %0,[%1]",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         Interfaces.Unsigned_8'Asm_Input ("r", Value),
@@ -96,7 +96,7 @@ package body CPU.MMIO is
    procedure Write_U16 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_16) is
    begin
       Asm (
-           Template => " strh %0,[%1]",
+           Template => "        strh    %0,[%1]",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         Interfaces.Unsigned_16'Asm_Input ("r", Value),
@@ -110,7 +110,7 @@ package body CPU.MMIO is
    procedure Write_U32 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_32) is
    begin
       Asm (
-           Template => " str %0,[%1]",
+           Template => "        str     %0,[%1]",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         Interfaces.Unsigned_32'Asm_Input ("r", Value),

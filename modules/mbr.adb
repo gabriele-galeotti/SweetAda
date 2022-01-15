@@ -85,7 +85,7 @@ package body MBR is
             Memory_Functions.Cpymem (
                                      Block'Address + Offset,
                                      Partition'Address,
-                                     Partition_ENTRY_SIZE
+                                     PARTITION_ENTRY_SIZE
                                     );
             if BigEndian then
                Partition.LBA_Start := Byte_Swap_32 (@);

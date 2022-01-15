@@ -20,7 +20,7 @@
       Locked_Item : Lock_Type := (Lock => LOCK_UNLOCK);
    begin
       Asm (
-           Template => " casl %0,%2,%1",
+           Template => "        casl    %0,%2,%1",
            Outputs  => (
                         CPU_Unsigned'Asm_Output ("+r", Locked_Item.Lock),
                         CPU_Unsigned'Asm_Output ("+m", Lock_Object.Lock)

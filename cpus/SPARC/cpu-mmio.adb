@@ -44,7 +44,7 @@ package body CPU.MMIO is
       Result : Interfaces.Unsigned_8;
    begin
       Asm (
-           Template => " ldub [%1],%0",
+           Template => "        ldub    [%1],%0",
            Outputs  => Interfaces.Unsigned_8'Asm_Output ("=r", Result),
            Inputs   => System.Address'Asm_Input ("r", Memory_Address),
            Clobber  => "",
@@ -57,7 +57,7 @@ package body CPU.MMIO is
       Result : Interfaces.Unsigned_16;
    begin
       Asm (
-           Template => " lduh [%1],%0",
+           Template => "        lduh    [%1],%0",
            Outputs  => Interfaces.Unsigned_16'Asm_Output ("=r", Result),
            Inputs   => System.Address'Asm_Input ("r", Memory_Address),
            Clobber  => "",
@@ -70,7 +70,7 @@ package body CPU.MMIO is
       Result : Interfaces.Unsigned_32;
    begin
       Asm (
-           Template => " ld [%1],%0",
+           Template => "        ld      [%1],%0",
            Outputs  => Interfaces.Unsigned_32'Asm_Output ("=r", Result),
            Inputs   => System.Address'Asm_Input ("r", Memory_Address),
            Clobber  => "",

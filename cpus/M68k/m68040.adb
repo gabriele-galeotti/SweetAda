@@ -46,7 +46,7 @@ package body M68040 is
    procedure URP_Set (URP_Address : in Address) is
    begin
       Asm (
-           Template => "        movec %0,%%urp",
+           Template => "        movec   %0,%%urp",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("d", URP_Address),
            Clobber  => "",
@@ -60,7 +60,7 @@ package body M68040 is
    procedure SRP_Set (SRP_Address : in Address) is
    begin
       Asm (
-           Template => "        movec %0,%%srp",
+           Template => "        movec   %0,%%srp",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("d", SRP_Address),
            Clobber  => "",
@@ -74,7 +74,7 @@ package body M68040 is
    procedure TCR_Set (Value : in TCR_Register_Type) is
    begin
       Asm (
-           Template => "        movec %0,%%tcr",
+           Template => "        movec   %0,%%tcr",
            Outputs  => No_Output_Operands,
            Inputs   => TCR_Register_Type'Asm_Input ("d", Value),
            Clobber  => "",

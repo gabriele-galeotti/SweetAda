@@ -42,7 +42,7 @@ package ARM is
 
    BREAKPOINT_Instruction      : constant Unsigned_32 := 16#E7FF_DEFE#;
    BREAKPOINT_Instruction_Size : constant             := 4;
-   BREAKPOINT_Asm_String       : constant String      := ".word 0xE7FFDEFE";
+   BREAKPOINT_Asm_String       : constant String      := ".word   0xE7FFDEFE";
 
    procedure NOP with
       Inline => True;
