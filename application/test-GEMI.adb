@@ -36,8 +36,8 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            A : Address := To_Address (16#0A00_0000#);
-            B : Address := To_Address (16#0A00_8000#);
+            A : constant Address := To_Address (16#0A00_0000#);
+            B : constant Address := To_Address (16#0A00_8000#);
             V1 : Unsigned_32 with
                Volatile => True,
                Address  => A;
