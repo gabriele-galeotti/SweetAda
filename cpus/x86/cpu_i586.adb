@@ -48,7 +48,9 @@ package body CPU_i586 is
       Result : Register_Type;
    begin
       Asm (
-           Template => " rdmsr",
+           Template => ""              & CRLF &
+                       "        rdmsr" & CRLF &
+                       "",
            Outputs  => Register_Type'Asm_Output ("=A", Result),
            Inputs   => MSR_Type'Asm_Input ("c", MSR_Register_Number),
            Clobber  => "",
@@ -60,7 +62,9 @@ package body CPU_i586 is
    procedure MSR_Write (Value : in Register_Type) is
    begin
       Asm (
-           Template => " wrmsr",
+           Template => ""              & CRLF &
+                       "        wrmsr" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         Register_Type'Asm_Input ("A", Value),
@@ -79,7 +83,9 @@ package body CPU_i586 is
       Result : Unsigned_64;
    begin
       Asm (
-           Template => " rdmsr",
+           Template => ""              & CRLF &
+                       "        rdmsr" & CRLF &
+                       "",
            Outputs  => Unsigned_64'Asm_Output ("=A", Result),
            Inputs   => MSR_Type'Asm_Input ("c", MSR_Register_Number),
            Clobber  => "",
@@ -91,7 +97,9 @@ package body CPU_i586 is
    procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64) is
    begin
       Asm (
-           Template => " wrmsr",
+           Template => ""              & CRLF &
+                       "        wrmsr" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         Unsigned_64'Asm_Input ("A", Value),
@@ -112,7 +120,9 @@ package body CPU_i586 is
       Result : Unsigned_64;
    begin
       Asm (
-           Template => " rdtsc",
+           Template => ""              & CRLF &
+                       "        rdtsc" & CRLF &
+                       "",
            Outputs  => Unsigned_64'Asm_Output ("=A", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",

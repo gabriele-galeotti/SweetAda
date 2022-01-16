@@ -49,7 +49,9 @@ package body SPARC is
    procedure NOP is
    begin
       Asm (
-           Template => "        nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -61,7 +63,9 @@ package body SPARC is
       PSR : PSR_Type;
    begin
       Asm (
-           Template => "        mov     %%psr,%0",
+           Template => ""                         & CRLF &
+                       "        mov     %%psr,%0" & CRLF &
+                       "",
            Outputs  => PSR_Type'Asm_Output ("=r", PSR),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -73,7 +77,9 @@ package body SPARC is
    procedure PSR_Write (PSR : in PSR_Type) is
    begin
       Asm (
-           Template => "        mov     %0,%%psr",
+           Template => ""                         & CRLF &
+                       "        mov     %0,%%psr" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => PSR_Type'Asm_Input ("r", PSR),
            Clobber  => "",
@@ -89,7 +95,9 @@ package body SPARC is
       function To_U32 is new Ada.Unchecked_Conversion (Address, Interfaces.Unsigned_32);
    begin
       Asm (
-           Template => "        wr      %0,0,%%tbr",
+           Template => ""                           & CRLF &
+                       "        wr      %0,0,%%tbr" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", To_U32 (TBR_Address) and 16#FFFF_FFF0#),
            Clobber  => "",
@@ -104,9 +112,11 @@ package body SPARC is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => "        mov     %%psr,%%g1"   & CRLF &
+           Template => ""                             & CRLF &
+                       "        mov     %%psr,%%g1  " & CRLF &
                        "        and     %%g1,%%g1,%0" & CRLF &
-                       "        mov     %%g1,%%psr",
+                       "        mov     %%g1,%%psr  " & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_F0FF#),
            Clobber  => "g1",

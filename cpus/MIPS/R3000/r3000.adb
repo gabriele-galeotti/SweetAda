@@ -57,8 +57,10 @@ package body R3000 is
       Result : Unsigned_32;
    begin
       Asm (
-           Template => " mfc0 %0,$%1" & CRLF &
-                       " nop",
+           Template => ""                       & CRLF &
+                       "        mfc0    %0,$%1" & CRLF &
+                       "        nop           " & CRLF &
+                       "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Result),
            Inputs   => (
                         CP0_Register_Type'Asm_Input ("i", Register)
@@ -76,8 +78,10 @@ package body R3000 is
    procedure MTC0 (Register_Value : in Unsigned_32) is
    begin
       Asm (
-           Template => " mtc0 %0,$%1" & CRLF &
-                       " nop",
+           Template => ""                       & CRLF &
+                       "        mtc0    %0,$%1" & CRLF &
+                       "        nop           " & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         Unsigned_32'Asm_Input ("r", Register_Value),

@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Definitions;
 
 package body AVR is
 
@@ -28,6 +29,8 @@ package body AVR is
    --========================================================================--
 
    use System.Machine_Code;
+
+   CRLF : String renames Definitions.CRLF;
 
    --========================================================================--
    --                                                                        --
@@ -43,7 +46,9 @@ package body AVR is
    procedure NOP is
    begin
       Asm (
-           Template => "        nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -57,7 +62,9 @@ package body AVR is
    procedure RET is
    begin
       Asm (
-           Template => "        ret",
+           Template => ""            & CRLF &
+                       "        ret" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -71,7 +78,9 @@ package body AVR is
    procedure Asm_Call (Target_Address : in Address) is
    begin
       Asm (
-           Template => "        icall",
+           Template => ""              & CRLF &
+                       "        icall" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => Address'Asm_Input ("z", Target_Address),
            Clobber  => "",
@@ -86,7 +95,9 @@ package body AVR is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => "        sei",
+           Template => ""            & CRLF &
+                       "        sei" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
@@ -97,7 +108,9 @@ package body AVR is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => "        cli",
+           Template => ""            & CRLF &
+                       "        cli" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "memory",

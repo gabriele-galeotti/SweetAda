@@ -32,8 +32,10 @@ with Definitions;
       Result : System.Address;
    begin
       Asm (
-           Template => " shlq %%cl,%%rbx"  & CRLF &
-                       " addq %%rbx,%%rax",
+           Template => ""                            & CRLF &
+                       "        shlq    %%cl,%%rbx " & CRLF &
+                       "        addq    %%rbx,%%rax" & CRLF &
+                       "",
            Outputs  => System.Address'Asm_Output ("=a", Result),
            Inputs   => (
                         System.Address'Asm_Input ("a", Base_Address),

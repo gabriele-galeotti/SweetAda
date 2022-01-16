@@ -48,7 +48,9 @@ package body M68030 is
    begin
       CRP_Value := CRP_Address;
       Asm (
-           Template => "        pmove   %0,%%crp",
+           Template => ""                         & CRLF &
+                       "        pmove   %0,%%crp" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("m", CRP_Value),
            Clobber  => "",
@@ -64,7 +66,9 @@ package body M68030 is
    begin
       SRP_Value := SRP_Address;
       Asm (
-           Template => "        pmove   %0,%%srp",
+           Template => ""                         & CRLF &
+                       "        pmove   %0,%%srp" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("m", SRP_Value),
            Clobber  => "",
@@ -78,7 +82,9 @@ package body M68030 is
    procedure TCR_Set (Value : in TCR_Register_Type) is
    begin
       Asm (
-           Template => "        pmove   %0,%%tcr",
+           Template => ""                         & CRLF &
+                       "        pmove   %0,%%tcr" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => TCR_Register_Type'Asm_Input ("d", Value),
            Clobber  => "",

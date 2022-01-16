@@ -86,9 +86,11 @@ package body Exceptions is
    procedure Init is
    begin
       Asm (
-           Template => " lis r0,exception_stack@ha"   & CRLF &
-                       " ori r0,r0,exception_stack@l" & CRLF &
-                       " mtsprg0 r0",
+           Template => ""                                        & CRLF &
+                       "        lis     r0,exception_stack@ha  " & CRLF &
+                       "        ori     r0,r0,exception_stack@l" & CRLF &
+                       "        mtsprg0 r0                     " & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "r0",

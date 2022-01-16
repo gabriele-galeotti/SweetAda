@@ -46,7 +46,9 @@ package body CPU is
    procedure NOP is
    begin
       Asm (
-           Template => "        nopr",
+           Template => ""             & CRLF &
+                       "        nopr" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -76,7 +78,9 @@ package body CPU is
       Lock_Flag : CPU_Unsigned := 0;
    begin
       Asm (
-           Template => "        cs      %0,%3,0(%2)",
+           Template => ""                            & CRLF &
+                       "        cs      %0,%3,0(%2)" & CRLF &
+                       "",
            Outputs  => (
                         CPU_Unsigned'Asm_Output ("+d", Lock_Flag),
                         Lock_Type'Asm_Output ("+m", Lock_Object)

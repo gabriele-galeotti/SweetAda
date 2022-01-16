@@ -47,7 +47,9 @@ package body CPU_x86 is
    procedure NOP is
    begin
       Asm (
-           Template => " nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -61,7 +63,9 @@ package body CPU_x86 is
    procedure BREAKPOINT is
    begin
       Asm (
-           Template => " " & BREAKPOINT_Asm_String,
+           Template => ""                                 & CRLF &
+                       "        " & BREAKPOINT_Asm_String & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -77,7 +81,9 @@ package body CPU_x86 is
       Result : Address;
    begin
       Asm (
-           Template => " movl %%esp,%0",
+           Template => ""                         & CRLF &
+                       "        movl    %%esp,%0" & CRLF &
+                       "",
            Outputs  => Address'Asm_Output ("=a", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -94,7 +100,9 @@ package body CPU_x86 is
       Result : CR0_Register_Type;
    begin
       Asm (
-           Template => " movl %%cr0,%0",
+           Template => ""                         & CRLF &
+                       "        movl    %%cr0,%0" & CRLF &
+                       "",
            Outputs  => CR0_Register_Type'Asm_Output ("=a", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -106,7 +114,9 @@ package body CPU_x86 is
    procedure CR0_Write (Value : in CR0_Register_Type) is
    begin
       Asm (
-           Template => " movl %0,%%cr0",
+           Template => ""                         & CRLF &
+                       "        movl    %0,%%cr0" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => CR0_Register_Type'Asm_Input ("a", Value),
            Clobber  => "",
@@ -118,7 +128,9 @@ package body CPU_x86 is
       Result : Address;
    begin
       Asm (
-           Template => " movl %%cr2,%0",
+           Template => ""                         & CRLF &
+                       "        movl    %%cr2,%0" & CRLF &
+                       "",
            Outputs  => Address'Asm_Output ("=a", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -131,7 +143,9 @@ package body CPU_x86 is
       Result : CR3_Register_Type;
    begin
       Asm (
-           Template => " movl %%cr3,%0",
+           Template => ""                         & CRLF &
+                       "        movl    %%cr3,%0" & CRLF &
+                       "",
            Outputs  => CR3_Register_Type'Asm_Output ("=a", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -143,7 +157,9 @@ package body CPU_x86 is
    procedure CR3_Write (Value : in CR3_Register_Type) is
    begin
       Asm (
-           Template => " movl %0,%%cr3",
+           Template => ""                         & CRLF &
+                       "        movl    %0,%%cr3" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => CR3_Register_Type'Asm_Input ("a", Value),
            Clobber  => "",
@@ -165,10 +181,12 @@ package body CPU_x86 is
                                            Index => Selector_Index_Type (GDT_Code_Selector_Index)
                                           );
       Asm (
-           Template => "  lgdtl %0"    & CRLF &
-                       "  movl $1f,%2" & CRLF &
-                       "  jmpl *%1"    & CRLF &
-                       "1:",
+           Template => ""                       & CRLF &
+                       "        lgdtl   %0    " & CRLF &
+                       "        movl    $1f,%2" & CRLF &
+                       "        jmpl    *%1   " & CRLF &
+                       "1:                    " & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         GDT_Descriptor_Type'Asm_Input ("m", GDT_Descriptor),
@@ -186,7 +204,9 @@ package body CPU_x86 is
    procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type) is
    begin
       Asm (
-           Template => " lidt %0",
+           Template => ""                   & CRLF &
+                       "        lidt    %0" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => IDT_Descriptor_Type'Asm_Input ("m", IDT_Descriptor),
            Clobber  => "",
@@ -324,7 +344,9 @@ package body CPU_x86 is
    procedure Asm_Call (Target_Address : in Address) is
    begin
       Asm (
-           Template => " call *%0",
+           Template => ""                    & CRLF &
+                       "        call    *%0" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => Address'Asm_Input ("r", Target_Address),
            Clobber  => "",
@@ -339,7 +361,9 @@ package body CPU_x86 is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => " sti",
+           Template => ""            & CRLF &
+                       "        sti" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
@@ -350,7 +374,9 @@ package body CPU_x86 is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => " cli",
+           Template => ""            & CRLF &
+                       "        cli" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
@@ -362,8 +388,10 @@ package body CPU_x86 is
       Irq_State : Irq_State_Type;
    begin
       Asm (
-           Template => " pushfl"  & CRLF &
-                       " popl %0",
+           Template => ""                   & CRLF &
+                       "        pushfl    " & CRLF &
+                       "        popl    %0" & CRLF &
+                       "",
            Outputs  => Irq_State_Type'Asm_Output ("=a", Irq_State),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
@@ -375,8 +403,10 @@ package body CPU_x86 is
    procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
    begin
       Asm (
-           Template => " pushl %0" & CRLF &
-                       " popfl",
+           Template => ""                   & CRLF &
+                       "        pushl   %0" & CRLF &
+                       "        popfl     " & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => Irq_State_Type'Asm_Input ("a", Irq_State),
            Clobber  => "memory",
@@ -392,7 +422,9 @@ package body CPU_x86 is
       Locked_Item : Lock_Type := (Lock => LOCK_LOCK);
    begin
       Asm (
-           Template => " xchgl %0,%1",
+           Template => ""                      & CRLF &
+                       "        xchgl   %0,%1" & CRLF &
+                       "",
            Outputs  => (
                         CPU_Unsigned'Asm_Output ("+r", Locked_Item.Lock),
                         CPU_Unsigned'Asm_Output ("+m", Lock_Object.Lock)

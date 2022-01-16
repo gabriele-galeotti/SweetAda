@@ -47,7 +47,9 @@ package body CPU.MMIO is
       Result : Interfaces.Unsigned_8;
    begin
       Asm (
-           Template => " mov.b @%1,%0",
+           Template => ""                       & CRLF &
+                       "        mov.b   @%1,%0" & CRLF &
+                       "",
            Outputs  => Interfaces.Unsigned_8'Asm_Output ("=r", Result),
            Inputs   => System.Address'Asm_Input ("r", Memory_Address),
            Clobber  => "",
@@ -60,7 +62,9 @@ package body CPU.MMIO is
       Result : Interfaces.Unsigned_16;
    begin
       Asm (
-           Template => " mov.w @%1,%0",
+           Template => ""                       & CRLF &
+                       "        mov.w   @%1,%0" & CRLF &
+                       "",
            Outputs  => Interfaces.Unsigned_16'Asm_Output ("=r", Result),
            Inputs   => System.Address'Asm_Input ("r", Memory_Address),
            Clobber  => "",
@@ -73,7 +77,9 @@ package body CPU.MMIO is
       Result : Interfaces.Unsigned_32;
    begin
       Asm (
-           Template => " mov.l @%1,%0",
+           Template => ""                       & CRLF &
+                       "        mov.l   @%1,%0" & CRLF &
+                       "",
            Outputs  => Interfaces.Unsigned_32'Asm_Output ("=r", Result),
            Inputs   => System.Address'Asm_Input ("r", Memory_Address),
            Clobber  => "",

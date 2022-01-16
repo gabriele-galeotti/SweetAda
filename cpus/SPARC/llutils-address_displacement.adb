@@ -32,8 +32,10 @@ with Definitions;
       Result : SSE.Storage_Offset;
    begin
       Asm (
-           Template => " sub %1,%2,%0" & CRLF &
-                       " sra %0,%3,%0",
+           Template => ""                         & CRLF &
+                       "        sub     %1,%2,%0" & CRLF &
+                       "        sra     %0,%3,%0" & CRLF &
+                       "",
            Outputs  => SSE.Storage_Offset'Asm_Output ("=r", Result),
            Inputs   => (
                         System.Address'Asm_Input ("r", Target_Address),

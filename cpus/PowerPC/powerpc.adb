@@ -48,7 +48,9 @@ package body PowerPC is
    procedure NOP is
    begin
       Asm (
-           Template => " nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -62,7 +64,9 @@ package body PowerPC is
    procedure BREAKPOINT is
    begin
       Asm (
-           Template => " " & BREAKPOINT_Asm_String,
+           Template => ""                                 & CRLF &
+                       "        " & BREAKPOINT_Asm_String & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -78,7 +82,9 @@ package body PowerPC is
       Result : MSR_Register_Type;
    begin
       Asm (
-           Template => " mfmsr %0",
+           Template => ""                   & CRLF &
+                       "        mfmsr   %0" & CRLF &
+                       "",
            Outputs  => MSR_Register_Type'Asm_Output ("=r", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -89,7 +95,9 @@ package body PowerPC is
    procedure MSR_Write (Value : in MSR_Register_Type) is
    begin
       Asm (
-           Template => " mtmsr %0",
+           Template => ""                   & CRLF &
+                       "        mtmsr   %0" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => MSR_Register_Type'Asm_Input ("r", Value),
            Clobber  => "",
@@ -105,7 +113,9 @@ package body PowerPC is
       Result : Register_Type;
    begin
       Asm (
-           Template => " mfspr %0,%1",
+           Template => ""                      & CRLF &
+                       "        mfspr   %0,%1" & CRLF &
+                       "",
            Outputs  => Register_Type'Asm_Output ("=r", Result),
            Inputs   => SPR_Type'Asm_Input ("i", SPR),
            Clobber  => "",
@@ -117,7 +127,9 @@ package body PowerPC is
    procedure MTSPR (Value : in Register_Type) is
    begin
       Asm (
-           Template => " mtspr %0,%1",
+           Template => ""                      & CRLF &
+                       "        mtspr   %0,%1" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         SPR_Type'Asm_Input ("i", SPR),
@@ -151,8 +163,10 @@ package body PowerPC is
    procedure Setup_Exception_Stack is
    begin
       Asm (
-           Template => " lis r1,exception_stack@ha"    & CRLF &
-                       " ori r1,r1,exception_stack@l",
+           Template => ""                                        & CRLF &
+                       "        lis     r1,exception_stack@ha  " & CRLF &
+                       "        ori     r1,r1,exception_stack@l" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",

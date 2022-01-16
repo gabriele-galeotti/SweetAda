@@ -46,7 +46,9 @@ package body MIPS is
    procedure NOP is
    begin
       Asm (
-           Template => "        nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",

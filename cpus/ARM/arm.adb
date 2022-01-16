@@ -46,7 +46,9 @@ package body ARM is
    procedure NOP is
    begin
       Asm (
-           Template => "        nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -60,7 +62,9 @@ package body ARM is
    procedure BREAKPOINT is
    begin
       Asm (
-           Template => "        " & BREAKPOINT_Asm_String,
+           Template => ""                                 & CRLF &
+                       "        " & BREAKPOINT_Asm_String & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -74,7 +78,10 @@ package body ARM is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => "        nop", -- __TBD__
+           -- __TBD__
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -88,7 +95,10 @@ package body ARM is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => "        nop", -- __TBD__
+           -- __TBD__
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -105,7 +115,10 @@ package body ARM is
    procedure Memory_Synchronization is
    begin
       Asm (
-           Template => "        nop",
+           -- __TBD__
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "memory",

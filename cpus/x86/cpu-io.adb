@@ -49,7 +49,9 @@ package body CPU.IO is
       Result : Unsigned_8;
    begin
       Asm (
-           Template => " inb %w1,%b0",
+           Template => ""                        & CRLF &
+                       "        inb     %w1,%b0" & CRLF &
+                       "",
            Outputs  => Unsigned_8'Asm_Output ("=a", Result),
            Inputs   => Unsigned_16'Asm_Input ("d", Port),
            Clobber  => "",
@@ -62,7 +64,9 @@ package body CPU.IO is
       Result : Unsigned_16;
    begin
       Asm (
-           Template => " inw %w1,%w0",
+           Template => ""                        & CRLF &
+                       "        inw     %w1,%w0" & CRLF &
+                       "",
            Outputs  => Unsigned_16'Asm_Output ("=a", Result),
            Inputs   => Unsigned_16'Asm_Input ("d", Port),
            Clobber  => "",
@@ -75,7 +79,9 @@ package body CPU.IO is
       Result : Unsigned_32;
    begin
       Asm (
-           Template => " inl %w1,%0",
+           Template => ""                       & CRLF &
+                       "        inl     %w1,%0" & CRLF &
+                       "",
            Outputs  => Unsigned_32'Asm_Output ("=a", Result),
            Inputs   => Unsigned_16'Asm_Input ("d", Port),
            Clobber  => "",
@@ -87,7 +93,9 @@ package body CPU.IO is
    procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_8) is
    begin
       Asm (
-           Template => " outb %b0,%w1",
+           Template => ""                        & CRLF &
+                       "        outb    %b0,%w1" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         Unsigned_8'Asm_Input ("a", Value),
@@ -101,7 +109,9 @@ package body CPU.IO is
    procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_16) is
    begin
       Asm (
-           Template => " outw %w0,%w1",
+           Template => ""                        & CRLF &
+                       "        outw    %w0,%w1" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         Unsigned_16'Asm_Input ("a", Value),
@@ -115,7 +125,9 @@ package body CPU.IO is
    procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_32) is
    begin
       Asm (
-           Template => " outl %0,%w1",
+           Template => ""                       & CRLF &
+                       "        outl    %0,%w1" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         Unsigned_32'Asm_Input ("a", Value),

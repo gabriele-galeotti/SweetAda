@@ -20,9 +20,11 @@
       Lock_Flag : CPU_Unsigned;
    begin
       Asm (
-           Template => "        clrl    %0" & CRLF &
+           Template => ""                   & CRLF &
+                       "        clrl    %0" & CRLF &
                        "        tas     %1" & CRLF &
-                       "        sne     %0",
+                       "        sne     %0" & CRLF &
+                       "",
            Outputs  => (
                         CPU_Unsigned'Asm_Output ("=d", Lock_Flag),
                         Lock_Type'Asm_Output ("+m", Lock_Object)

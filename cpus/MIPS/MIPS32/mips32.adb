@@ -57,8 +57,10 @@ package body MIPS32 is
       Result : Unsigned_32;
    begin
       Asm (
-           Template => " mfc0 %0,$%1,%2" & CRLF &
-                       " nop",
+           Template => ""                          & CRLF &
+                       "        mfc0    %0,$%1,%2" & CRLF &
+                       "        nop              " & CRLF &
+                       "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Result),
            Inputs   => (
                         CP0_Register_Type'Asm_Input ("i", Register),
@@ -78,8 +80,10 @@ package body MIPS32 is
    procedure MTC0 (Register_Value : in Unsigned_32) is
    begin
       Asm (
-           Template => " mtc0 %0,$%1,%2" & CRLF &
-                       " nop",
+           Template => ""                          & CRLF &
+                       "        mtc0    %0,$%1,%2" & CRLF &
+                       "        nop              " & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         Unsigned_32'Asm_Input ("r", Register_Value),
@@ -239,13 +243,15 @@ package body MIPS32 is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => " mfc0 $t0,$12,0"     & CRLF &
-                       " nop"                & CRLF &
-                       " lui $t1,0"          & CRLF &
-                       " ori $t1,$t1,0xFC01" & CRLF & -- IM7..IM2 all enabled
-                       " or $t0,$t1"         & CRLF &
-                       " mtc0 $t0,$12,0"     & CRLF &
-                       " nop",
+           Template => ""                               & CRLF &
+                       "        mfc0    $t0,$12,0     " & CRLF &
+                       "        nop                   " & CRLF &
+                       "        lui     $t1,0         " & CRLF &
+                       "        ori     $t1,$t1,0xFC01" & CRLF & -- IM7..IM2 all enabled
+                       "        or      $t0,$t1       " & CRLF &
+                       "        mtc0    $t0,$12,0     " & CRLF &
+                       "        nop                   " & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "$t0,$t1",
@@ -281,14 +287,16 @@ package body MIPS32 is
       Locked_Item : Lock_Type := (Lock => LOCK_LOCK);
       T_lock      : Lock_Type;
    begin
+      -- ll/sc locking implementation
+      -- current value of the lock is loaded in T_lock; if sc succeeded (so a
+      -- write of Locked_Item in the lock occured), then a 1 is written back in
+      -- Locked_Item); if sc fails (because memory was updated in the middle) a
+      -- 0 is written back in Locked_Item
       Asm (
-           -- ll/sc locking implementation
-           -- current value of the lock is loaded in T_lock; if sc succeeded
-           -- (so a write of Locked_Item in the lock occured), then a 1 is
-           -- written back in Locked_Item); if sc fails (because memory was
-           -- updated in the middle) a 0 is written back in Locked_Item
-           Template => " ll %0,0(%2)"  & CRLF &
-                       " sc %1,0(%2)",
+           Template => ""                         & CRLF &
+                       "        ll      %0,0(%2)" & CRLF &
+                       "        sc      %1,0(%2)" & CRLF &
+                       "",
            Outputs  => (
                         CPU_Unsigned'Asm_Output ("=&r", T_lock.Lock),
                         CPU_Unsigned'Asm_Output ("+r", Locked_Item.Lock)

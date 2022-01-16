@@ -47,7 +47,9 @@ package body SH7750 is
    procedure NOP is
    begin
       Asm (
-           Template => " nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -61,7 +63,9 @@ package body SH7750 is
    procedure BREAKPOINT is
    begin
       Asm (
-           Template => " " & BREAKPOINT_Asm_String,
+           Template => ""                                 & CRLF &
+                       "        " & BREAKPOINT_Asm_String & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -78,7 +82,9 @@ package body SH7750 is
       function To_SR is new Ada.Unchecked_Conversion (Unsigned_32, Status_Register_Type);
    begin
       Asm (
-           Template => " stc sr,%0",
+           Template => ""                      & CRLF &
+                       "        stc     sr,%0" & CRLF &
+                       "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Value),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -91,7 +97,9 @@ package body SH7750 is
       function To_U32 is new Ada.Unchecked_Conversion (Status_Register_Type, Unsigned_32);
    begin
       Asm (
-           Template => " ldc %0,sr",
+           Template => ""                      & CRLF &
+                       "        ldc     %0,sr" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => Unsigned_32'Asm_Input ("r", To_U32 (Value)),
            Clobber  => "",

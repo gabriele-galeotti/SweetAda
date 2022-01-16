@@ -48,7 +48,9 @@ package body PPC405 is
       Result : Register_Type;
    begin
       Asm (
-           Template => " mfdcr %0,%1",
+           Template => ""                      & CRLF &
+                       "        mfdcr   %0,%1" & CRLF &
+                       "",
            Outputs  => Register_Type'Asm_Output ("=r", Result),
            Inputs   => DCR_Type'Asm_Input ("i", DCR),
            Clobber  => "",
@@ -60,7 +62,9 @@ package body PPC405 is
    procedure MTDCR (Register_Value : in Register_Type) is
    begin
       Asm (
-           Template => " mtdcr %0,%1",
+           Template => ""                      & CRLF &
+                       "        mtdcr   %0,%1" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         DCR_Type'Asm_Input ("i", DCR),
@@ -130,7 +134,9 @@ package body PPC405 is
    procedure MSREE_Set is
    begin
       Asm (
-           Template => " wrteei 1",
+           Template => ""                  & CRLF &
+                       "        wrteei  1" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -141,7 +147,9 @@ package body PPC405 is
    procedure MSREE_Clear is
    begin
       Asm (
-           Template => " wrteei 0",
+           Template => ""                  & CRLF &
+                       "        wrteei  0" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",

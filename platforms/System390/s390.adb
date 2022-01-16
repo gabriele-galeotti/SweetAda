@@ -55,9 +55,11 @@ package body S390 is
    begin
       -- TOD clock
       Asm (
-           Template => " stck %1"   & CRLF &
-                       " ipm %0"    & CRLF &
-                       " srl %0,28",
+           Template => ""                      & CRLF &
+                       "        stck    %1   " & CRLF &
+                       "        ipm     %0   " & CRLF &
+                       "        srl     %0,28" & CRLF &
+                       "",
            Outputs  => Unsigned_32'Asm_Output ("=r", cc),
            Inputs   => Unsigned_64'Asm_Input ("m", init_timer_cc),
            Clobber  => "memory",

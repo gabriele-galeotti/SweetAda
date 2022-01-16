@@ -46,7 +46,9 @@ package body NiosII is
    procedure NOP is
    begin
       Asm (
-           Template => "        nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -61,7 +63,9 @@ package body NiosII is
       Value : Unsigned_32;
    begin
       Asm (
-           Template => "        rdctl   %0,cpuid",
+           Template => ""                         & CRLF &
+                       "        rdctl   %0,cpuid" & CRLF &
+                       "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Value),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -76,7 +80,9 @@ package body NiosII is
    procedure Asm_Call (Target_Address : in Address) is
    begin
       Asm (
-           Template => "        callr   %0",
+           Template => ""                   & CRLF &
+                       "        callr   %0" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => Address'Asm_Input ("r", Target_Address),
            Clobber  => "",
@@ -91,9 +97,11 @@ package body NiosII is
    procedure Irq_Enable (Irq_Line : in Natural) is
    begin
       Asm (
-           Template => "        rdctl   r2,ienable"  & CRLF &
-                       "        or      r2,r2,%0"    & CRLF &
-                       "        wrctl   ienable,r2",
+           Template => ""                           & CRLF &
+                       "        rdctl   r2,ienable" & CRLF &
+                       "        or      r2,r2,%0  " & CRLF &
+                       "        wrctl   ienable,r2" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => Unsigned_32'Asm_Input ("r", 2**Irq_Line),
            Clobber  => "r2",
@@ -104,9 +112,11 @@ package body NiosII is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => "        rdctl   r2,status"  & CRLF &
-                       "        ori     r2,r2,1"    & CRLF &
-                       "        wrctl   status,r2",
+           Template => ""                          & CRLF &
+                       "        rdctl   r2,status" & CRLF &
+                       "        ori     r2,r2,1  " & CRLF &
+                       "        wrctl   status,r2" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "r2",
@@ -117,9 +127,11 @@ package body NiosII is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => "        rdctl   r2,status"    & CRLF &
+           Template => ""                             & CRLF &
+                       "        rdctl   r2,status   " & CRLF &
                        "        andi    r2,r2,0xFFFE" & CRLF &
-                       "        wrctl   status,r2",
+                       "        wrctl   status,r2   " & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "r2",
@@ -131,7 +143,9 @@ package body NiosII is
       Value : Unsigned_32;
    begin
       Asm (
-           Template => "        rdctl   %0,status",
+           Template => ""                          & CRLF &
+                       "        rdctl   %0,status" & CRLF &
+                       "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Value),
            Inputs   => No_Input_Operands,
            Clobber  => "",

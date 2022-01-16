@@ -46,7 +46,9 @@ package body CFv2 is
    procedure NOP is
    begin
       Asm (
-           Template => "        nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -60,7 +62,9 @@ package body CFv2 is
    procedure PAUSE is
    begin
       Asm (
-           Template => "        stop    #0x2000",
+           Template => ""                        & CRLF &
+                       "        stop    #0x2000" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -74,7 +78,9 @@ package body CFv2 is
    procedure BREAKPOINT is
    begin
       Asm (
-           Template => "        trap    #1",
+           Template => ""                   & CRLF &
+                       "        trap    #1" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -88,7 +94,9 @@ package body CFv2 is
    procedure VBR_Set (VBR_Address : in Address) is
    begin
       Asm (
-           Template => "        movec   %0,%%vbr",
+           Template => ""                         & CRLF &
+                       "        movec   %0,%%vbr" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("d", VBR_Address),
            Clobber  => "",

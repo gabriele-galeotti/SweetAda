@@ -49,7 +49,9 @@ package body SH is
    procedure NOP is
    begin
       Asm (
-           Template => "        nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -89,9 +91,11 @@ package body SH is
       Lock_Flag : CPU_Integer;
    begin
       Asm (
-           Template => "        tas.b   @%2"   & CRLF &
-                       "        movt    %0"    & CRLF &
-                       "        xor     #1,%0",
+           Template => ""                      & CRLF &
+                       "        tas.b   @%2  " & CRLF &
+                       "        movt    %0   " & CRLF &
+                       "        xor     #1,%0" & CRLF &
+                       "",
            Outputs  => (
                         CPU_Integer'Asm_Output ("=z", Lock_Flag),
                         Lock_Type'Asm_Output ("+m", Lock_Object)

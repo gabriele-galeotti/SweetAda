@@ -47,8 +47,10 @@ package body KN02BA is
       Result : Unsigned_32;
    begin
       Asm (
-           Template => "        lw      %0,0(%1)" & CRLF &
-                       "        nop",
+           Template => ""                         & CRLF &
+                       "        lw      %0,0(%1)" & CRLF &
+                       "        nop             " & CRLF &
+                       "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Result),
            Inputs   => Address'Asm_Input ("r", Memory_Address),
            Clobber  => "",

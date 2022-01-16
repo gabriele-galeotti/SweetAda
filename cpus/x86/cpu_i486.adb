@@ -48,7 +48,9 @@ package body CPU_i486 is
       Result : CR4_Register_Type;
    begin
       Asm (
-           Template => " movl %%cr4,%0",
+           Template => ""                         & CRLF &
+                       "        movl    %%cr4,%0" & CRLF &
+                       "",
            Outputs  => CR4_Register_Type'Asm_Output ("=a", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -60,7 +62,9 @@ package body CPU_i486 is
    procedure CR4_Write (Value : in CR4_Register_Type) is
    begin
       Asm (
-           Template => " movl %0,%%cr4",
+           Template => ""                         & CRLF &
+                       "        movl    %0,%%cr4" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => CR4_Register_Type'Asm_Input ("a", Value),
            Clobber  => "",
@@ -75,15 +79,17 @@ package body CPU_i486 is
       Result : Unsigned_32;
    begin
       Asm (
-           Template => " pushfl"                   & CRLF & -- save EFLAGS
-                       " pushfl"                   & CRLF & -- store EFLAGS
-                       " xorl $0x00200000,(%%esp)" & CRLF & -- invert ID in stored EFLAGS
-                       " popfl"                    & CRLF & -- load stored EFLAGS (with ID inverted)
-                       " pushfl"                   & CRLF & -- store EFLAGS again (ID may or may not be inverted)
-                       " popl %%eax"               & CRLF & -- EAX = changed EFLAGS (ID may or may not be inverted)
-                       " xorl (%%esp),%%eax"       & CRLF & -- EAX = whichever bits were changed
-                       " popfl"                    & CRLF & -- restore original EFLAGS
-                       " andl $0x00200000,%%eax",           -- EAX = zero if ID cannot be changed, else non-zero
+           Template => ""                                    & CRLF &
+                       "        pushfl                     " & CRLF & -- save EFLAGS
+                       "        pushfl                     " & CRLF & -- store EFLAGS
+                       "        xorl    $0x00200000,(%%esp)" & CRLF & -- invert ID in stored EFLAGS
+                       "        popfl                      " & CRLF & -- load stored EFLAGS (with ID inverted)
+                       "        pushfl                     " & CRLF & -- store EFLAGS again (ID may or may not be inverted)
+                       "        popl    %%eax              " & CRLF & -- EAX = changed EFLAGS (ID may or may not be inverted)
+                       "        xorl    (%%esp),%%eax      " & CRLF & -- EAX = whichever bits were changed
+                       "        popfl                      " & CRLF & -- restore original EFLAGS
+                       "        andl    $0x00200000,%%eax  " & CRLF & -- EAX = zero if ID cannot be changed, else non-zero
+                       "",
            Outputs  => Unsigned_32'Asm_Output ("=a", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -109,7 +115,9 @@ package body CPU_i486 is
       for ECX_Register'Address use Result (9)'Address;
    begin
       Asm (
-           Template => " cpuid",
+           Template => ""              & CRLF &
+                       "        cpuid" & CRLF &
+                       "",
            Outputs  => (
                         Unsigned_32'Asm_Output ("=b", EBX_Register),
                         Unsigned_32'Asm_Output ("=d", EDX_Register),
@@ -132,7 +140,9 @@ package body CPU_i486 is
       Result : CPU_Features_Type;
    begin
       Asm (
-           Template => " cpuid",
+           Template => ""              & CRLF &
+                       "        cpuid" & CRLF &
+                       "",
            Outputs  => CPU_Features_Type'Asm_Output ("=d", Result),
            Inputs   => Unsigned_32'Asm_Input ("a", 1), -- CPUID request #1
            Clobber  => "ebx,ecx",

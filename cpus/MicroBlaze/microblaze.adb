@@ -46,7 +46,9 @@ package body MicroBlaze is
    procedure NOP is
    begin
       Asm (
-           Template => " nop",
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -60,7 +62,9 @@ package body MicroBlaze is
    procedure BREAKPOINT is
    begin
       Asm (
-           Template => " " & BREAKPOINT_Asm_String,
+           Template => ""                                 & CRLF &
+                       "        " & BREAKPOINT_Asm_String & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
@@ -75,11 +79,13 @@ package body MicroBlaze is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => " mfs r11,rmsr"  & CRLF &
-                       " ori r11,r11,2" & CRLF &
-                       " mts rmsr,r11"  & CRLF &
---                       " rtsd r15,8"    & CRLF &
-                       " nop",
+           Template => ""                          & CRLF &
+                       "        mfs     r11,rmsr " & CRLF &
+                       "        ori     r11,r11,2" & CRLF &
+                       "        mts     rmsr,r11 " & CRLF &
+                       -- "        rtsd    r15,8    " & CRLF &
+                       "        nop              " & CRLF &
+                       "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
