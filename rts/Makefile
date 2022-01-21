@@ -17,7 +17,9 @@
 # CAT
 # CP
 # ECHO
+# MKDIR
 # RM
+# RMDIR
 # SED
 # CPU
 # CPU_MODEL
@@ -38,14 +40,6 @@
 # Initialize basic variables and paths.                                        #
 #                                                                              #
 ################################################################################
-
-ifeq ($(OSTYPE),cmd)
-MKDIR := MD
-RMDIR := RD /Q /S 2> nul
-else
-MKDIR := mkdir -p
-RMDIR := rm -f -r
-endif
 
 ifeq ($(CPU),)
 $(error Error: no valid CPU)

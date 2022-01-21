@@ -61,9 +61,11 @@ CP      := COPY /B /Y 1> nul
 ECHO    := ECHO
 LS      := DIR /B
 LS_DIRS := $(LS) /A:D
+MKDIR   := MKDIR
 MV      := MOVE /Y 1> nul
 REM     := REM
 RM      := DEL /F /Q 2> nul __dummyfile__
+RMDIR   := RMDIR /Q /S 2> nul
 SED     := sed$(EXEEXT)
 TOUCH   := TYPE nul >
 else
@@ -81,13 +83,15 @@ CP      := cp -f
 ECHO    := printf "%s\n"
 LS      := ls -A
 LS_DIRS := $(LS) -d
+MKDIR   := mkdir -p
 MV      := mv -f
 REM     := \#
 RM      := rm -f
+RMDIR   := $(RM) -r
 SED     := sed
 TOUCH   := touch
 endif
-export TMPDIR EXEEXT SCREXT CAT CD CP ECHO LS LS_DIRS MV REM RM SED TOUCH
+export TMPDIR EXEEXT SCREXT CAT CD CP ECHO LS LS_DIRS MKDIR MV REM RM RMDIR SED TOUCH
 
 # generate SWEETADA_PATH
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
@@ -699,6 +703,14 @@ endif
 # Auxiliary targets.
 #
 
+.PHONY : kernel_objdir
+kernel_objdir:
+ifneq ($(OSTYPE),cmd)
+	@$(MKDIR) $(OBJECT_DIRECTORY)
+else
+	@IF NOT EXIST $(OBJECT_DIRECTORY)\ $(MKDIR) $(OBJECT_DIRECTORY)
+endif
+
 .PHONY : kernel_start
 kernel_start :
 ifeq ($(GCC_VERSION),)
@@ -770,6 +782,7 @@ $(KERNEL_BASENAME) : $(KERNEL_OUTFILE)
 
 .PHONY : all
 all : kernel_start       \
+      kernel_objdir      \
       $(KERNEL_BASENAME) \
       kernel_end         \
       kernel_info
@@ -965,7 +978,7 @@ endif
 ifneq ($(PLATFORM),)
 	-$(MAKE_PLATFORM) clean
 endif
-	$(RM) $(CLEAN_OBJECTS_COMMON) $(CLEAN_OBJECTS)
+	-$(RM) $(CLEAN_OBJECTS_COMMON) $(CLEAN_OBJECTS)
 
 .PHONY : distclean
 distclean : clean
