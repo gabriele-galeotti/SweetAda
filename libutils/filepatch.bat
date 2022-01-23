@@ -20,7 +20,7 @@ REM SWEETADA_PATH
 REM LIBUTILS_DIRECTORY
 REM
 
-powershell -ExecutionPolicy unrestricted -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/filepatch.ps1 %1 %2 ""%3""
+powershell -ExecutionPolicy unrestricted -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/filepatch.ps1 ""%*""
 
 EXIT /B %ERRORLEVEL%
 
