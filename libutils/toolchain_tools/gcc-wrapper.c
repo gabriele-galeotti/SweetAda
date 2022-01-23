@@ -252,7 +252,7 @@ main(int argc, char **argv)
                                                         ++idx;
                                                 }
                                                 break;
-                                        case 'G':
+                                        case 'G': /* -G <number> */
                                                 if (strcmp(&argv[idx][1], "G") == 0)
                                                 {
                                                         --number_of_arguments;
