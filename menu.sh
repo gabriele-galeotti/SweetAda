@@ -115,9 +115,14 @@ printf "%s\n" "run             - run the target"
 printf "%s\n" "debug           - debug the target"
 printf "%s\n" "clean           - cleanup a build"
 printf "%s\n" "distclean       - cleanup and reset the build system"
+printf "%s\n" "rts             - build an RTS"
 printf "%s\n" ""
 printf "%s\n" "Specify PLATFORM=<platform> (and optionally SUBPLATFORM) in the"
-printf "%s\n" "environment variable space before executing a createkernelcfg action."
+printf "%s\n" "environment variable space before executing the \"createkernelcfg\" action."
+printf "%s\n" ""
+printf "%s\n" "Specify CPU=<cpu> TOOLCHAIN_NAME=<toolchain_name> RTS=<rts> (and"
+printf "%s\n" "optionally CPU_MODEL=<cpu_model>) in the environment variable space"
+printf "%s\n" "before executing the \"rts\" action."
 printf "%s\n" ""
 printf "%s\n" "OSTYPE:              ${OSTYPE}"
 printf "%s\n" "MAKE:                ${MAKE}"
@@ -192,6 +197,9 @@ case $1 in
     ;;
   distclean)
     "${MAKE}" distclean
+    ;;
+  rts)
+    "${MAKE}" rts
     ;;
   *)
     usage

@@ -241,6 +241,11 @@ case $1 in
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
+  "rts")
+    "${MAKE}" ${MAKE_DEBUG_OPTIONS} rts 2> make.errors.log | tee make.log
+    exit_status=${PIPESTATUS[0]}
+    log_build_errors
+    ;;
   *)
     usage
     exit_status=1
@@ -270,6 +275,7 @@ printf "%s\n" " run"
 printf "%s\n" " debug"
 printf "%s\n" " clean"
 printf "%s\n" " distclean"
+printf "%s\n" " rts"
 return 0
 }
 
@@ -307,7 +313,7 @@ PLATFORM=
 SUBPLATFORM=
 CPU=
 
-ACTIONS="createkernelcfg configure all kernel postbuild session-start session-end run debug clean distclean"
+ACTIONS="createkernelcfg configure all kernel postbuild session-start session-end run debug clean distclean rts"
 ACTION=""
 PAUSE=""
 

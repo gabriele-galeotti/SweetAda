@@ -34,6 +34,7 @@ IF "%1"=="run" SET "ACTION_VALID=Y" & %MAKEEXE% run
 IF "%1"=="debug" SET "ACTION_VALID=Y" & %MAKEEXE% debug
 IF "%1"=="clean" SET "ACTION_VALID=Y" & %MAKEEXE% clean
 IF "%1"=="distclean" SET "ACTION_VALID=Y" & %MAKEEXE% distclean
+IF "%1"=="rts" SET "ACTION_VALID=Y" & %MAKEEXE% rts
 IF NOT "%ACTION_VALID%"=="Y" CALL :usage
 SET ACTION_VALID=
 
@@ -75,9 +76,14 @@ ECHO run             - run the target
 ECHO debug           - debug the target
 ECHO clean           - cleanup a build
 ECHO distclean       - cleanup and reset the build system
+ECHO rts             - build an RTS
 ECHO.
 ECHO Specify PLATFORM=^<platform^> (and optionally SUBPLATFORM) in the
-ECHO environment variable space before executing a createkernelcfg action.
+ECHO environment variable space before executing the "createkernelcfg" action.
+ECHO.
+ECHO Specify CPU=^<cpu^> TOOLCHAIN_NAME=^<toolchain_name^> RTS=^<rts^> (and
+ECHO optionally CPU_MODEL=^<cpu_model^>) in the environment variable space
+ECHO before executing the "rts" action.
 ECHO.
 ECHO MAKE:                %MAKEEXE%
 ECHO default PLATFORM:    %PLATFORM%
