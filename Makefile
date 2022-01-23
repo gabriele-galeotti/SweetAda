@@ -41,6 +41,7 @@ OSTYPE := cmd
 endif
 else
 # detect OSTYPE and normalize it to a simple all-alphabetic lowercase name
+# assume "sed", "tr", "uname" utilities always visible in a non-cmd context
 OSTYPE := $(shell uname -s 2> /dev/null | tr "[:upper:]" "[:lower:]" | sed -e "s|[^a-z].*||" -e "s|mingw|msys|")
 endif
 ifeq ($(OSTYPE),)
@@ -48,61 +49,95 @@ $(error Error: no valid OSTYPE)
 endif
 export OSTYPE
 
-# define OS commands
+# define a minimum set of variables that are required for functions and
+# various utilities
+# cmd should have a "sed" utility online
+# msys should have "printf" and "sed" utilities online
 SCREXT_cmd := .bat
 ifeq ($(OSTYPE),cmd)
-TMPDIR  := $(TEMP)
-EXEEXT  := .exe
-SCREXT  := $(SCREXT_cmd)
-# cmd.exe OS commands
-CAT     := TYPE
-CD      := CD
-CP      := COPY /B /Y 1> nul
-ECHO    := ECHO
-LS      := DIR /B
-LS_DIRS := $(LS) /A:D
-MKDIR   := MKDIR
-MV      := MOVE /Y 1> nul
-REM     := REM
-RM      := DEL /F /Q 2> nul __dummyfile__
-RMDIR   := RMDIR /Q /S 2> nul
-SED     := sed$(EXEEXT)
-TOUCH   := TYPE nul >
+TMPDIR := $(TEMP)
+EXEEXT := .exe
+SCREXT := $(SCREXT_cmd)
+ECHO   := ECHO
+REM    := REM
+SED    := sed$(EXEEXT)
 else
 ifeq ($(OSTYPE),msys)
-EXEEXT  := .exe
-SCREXT  := .sh
+EXEEXT := .exe
+SCREXT := .sh
 else
-EXEEXT  :=
-SCREXT  := .sh
+EXEEXT :=
+SCREXT := .sh
 endif
-# POSIX OS commands
-CAT     := cat
-CD      := cd
-CP      := cp -f
-ECHO    := printf "%s\n"
-LS      := ls -A
-LS_DIRS := $(LS) -d
-MKDIR   := mkdir -p
-MV      := mv -f
-REM     := \#
-RM      := rm -f
-RMDIR   := $(RM) -r
-SED     := sed
-TOUCH   := touch
+ECHO   := printf "%s\n"
+REM    := \#
+SED    := sed
 endif
-export TMPDIR EXEEXT SCREXT CAT CD CP ECHO LS LS_DIRS MKDIR MV REM RM RMDIR SED TOUCH
+export TMPDIR EXEEXT SCREXT ECHO REM SED
 
 # generate SWEETADA_PATH
+# msys should have "cygpath" and "sed" utilities online
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 ifeq ($(OSTYPE),msys)
-MSYS_INSTALL_PATH := $(shell echo "$(SHELL)" | sed -e "s|/usr/bin/sh.exe||")
-# process SWEETADA_PATH through "cygpath" utility
+# try to extract installation path
+MSYS_INSTALL_PATH := $(shell $(ECHO) "$(SHELL)" | $(SED) -e "s|/usr/bin/sh.exe||")
 SWEETADA_PATH ?= $(MSYS_INSTALL_PATH)$(shell cygpath.exe -u "$(MAKEFILEDIR)" 2> /dev/null)
 else
 SWEETADA_PATH ?= $(MAKEFILEDIR)
 endif
 export SWEETADA_PATH
+
+# include the utilities
+LIBUTILS_DIRECTORY := libutils
+export LIBUTILS_DIRECTORY
+# add LIBUTILS_DIRECTORY to PATH
+ifeq ($(OSTYPE),cmd)
+PATH := $(SWEETADA_PATH)\$(LIBUTILS_DIRECTORY);$(PATH)
+else
+PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
+endif
+export PATH
+include Makefile.ut.in
+
+# verbose output, "Y/y/1" = enabled
+VERBOSE ?=
+# normalize VERBOSE
+ifeq ($(OSTYPE),cmd)
+VERBOSE := $(shell $(ECHO) $(VERBOSE)| $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
+else
+VERBOSE := $(shell $(ECHO) "$(VERBOSE)" | $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
+endif
+export VERBOSE
+
+# load complex functions
+include Makefile.fn.in
+
+# define every other OS command
+ifeq ($(OSTYPE),cmd)
+CAT     := TYPE
+CD      := CD
+CP      := COPY /B /Y 1> nul
+LS      := DIR /B
+LS_DIRS := $(LS) /A:D
+MKDIR   := MKDIR
+MV      := MOVE /Y 1> nul
+RM      := DEL /F /Q 2> nul __dummyfile__
+RMDIR   := RMDIR /Q /S 2> nul
+TOUCH   := TYPE nul >
+else
+# POSIX
+CAT     := cat
+CD      := cd
+CP      := cp -f
+LS      := ls -A
+LS_DIRS := $(LS) -d
+MKDIR   := mkdir -p
+MV      := mv -f
+RM      := rm -f
+RMDIR   := $(RM) -r
+TOUCH   := touch
+endif
+export CAT CD CP LS LS_DIRS MKDIR MV RM RMDIR TOUCH
 
 ################################################################################
 #                                                                              #
@@ -119,7 +154,6 @@ DRIVERS_DIRECTORY       := drivers
 MODULES_DIRECTORY       := modules
 OBJECT_DIRECTORY        := obj
 RTS_DIRECTORY           := rts
-LIBUTILS_DIRECTORY      := libutils
 SHARE_DIRECTORY         := share
 
 ifeq ($(OSTYPE),cmd)
@@ -172,6 +206,7 @@ USE_APPLICATION    :=
 USE_CLIBRARY       :=
 OPTIMIZATION_LEVEL :=
 STACK_LIMIT        := 4096
+LD_SCRIPT          := linker.lds
 POSTBUILD_ROMFILE  :=
 
 IMPLICIT_ALI_UNITS :=
@@ -195,25 +230,15 @@ endif
 # add TOOLCHAIN_PREFIX to PATH
 ifneq ($(TOOLCHAIN_PREFIX),)
 ifeq ($(OSTYPE),cmd)
-PATH := $(TOOLCHAIN_PREFIX)\bin;$(SWEETADA_PATH)\$(LIBUTILS_DIRECTORY);$(PATH)
+PATH := $(TOOLCHAIN_PREFIX)\bin;$(PATH)
 else ifeq ($(OSTYPE),msys)
 TOOLCHAIN_PREFIX_MSYS := $(shell cygpath.exe -u "$(TOOLCHAIN_PREFIX)" 2> /dev/null)
-PATH := $(TOOLCHAIN_PREFIX_MSYS)/bin:$(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
+PATH := $(TOOLCHAIN_PREFIX_MSYS)/bin:$(PATH)
 else
-PATH := $(TOOLCHAIN_PREFIX)/bin:$(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
+PATH := $(TOOLCHAIN_PREFIX)/bin:$(PATH)
 endif
 export PATH
 endif
-
-# verbose output, "Y/y/1" = enabled
-VERBOSE ?=
-# normalize VERBOSE
-ifeq ($(OSTYPE),cmd)
-VERBOSE := $(shell $(ECHO) $(VERBOSE)| $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
-else
-VERBOSE := $(shell $(ECHO) "$(VERBOSE)" | $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
-endif
-export VERBOSE
 
 ifeq ($(VERBOSE),Y)
 ifeq ($(OSTYPE),cmd)
@@ -227,12 +252,6 @@ else
 MAKEFLAGS += s
 GNUMAKEFLAGS += --no-print-directory
 endif
-
-# load complex functions
-include Makefile.fn.in
-
-# include the utilities
-include Makefile.ut.in
 
 ################################################################################
 #                                                                              #
@@ -321,7 +340,6 @@ CPU_INCLUDE_DIRECTORIES :=
 #
 # Various features.
 #
-LD_SCRIPT           := linker.lds
 ENABLE_SPLIT_DWARF  :=
 DISABLE_STACK_USAGE :=
 
@@ -401,8 +419,8 @@ endif
 
 export PLATFORM_BASE_DIRECTORY PLATFORM_DIRECTORY
 export CPU_BASE_DIRECTORY CPU_DIRECTORY CPU_MODEL_DIRECTORY
-export APPLICATION_DIRECTORY CLIBRARY_DIRECTORY CORE_DIRECTORY DRIVERS_DIRECTORY MODULES_DIRECTORY
-export OBJECT_DIRECTORY RTS_DIRECTORY LIBUTILS_DIRECTORY SHARE_DIRECTORY
+export APPLICATION_DIRECTORY CLIBRARY_DIRECTORY CORE_DIRECTORY DRIVERS_DIRECTORY
+export MODULES_DIRECTORY OBJECT_DIRECTORY RTS_DIRECTORY SHARE_DIRECTORY
 export KERNEL_BASENAME KERNEL_CFGFILE KERNEL_DEPFILE KERNEL_OUTFILE KERNEL_ROMFILE
 export INCLUDE_DIRECTORIES
 export IMPLICIT_ALI_UNITS
@@ -881,7 +899,8 @@ configure : configure-aux infodump
 #
 
 .PHONY : gdbstub_enable
-gdbstub_enable : $(KERNEL_OUTFILE)
+gdbstub_enable :
+#gdbstub_enable : $(KERNEL_OUTFILE)
 #ifeq ($(DEBUG_GDBSTUB),Y)
 #	@$(REM) patch GDB stub "enable flag" --> enabled
 #	@$(ELFTOOL) -c setgdbstubflag=0xFF $(KERNEL_OUTFILE)
@@ -891,7 +910,8 @@ gdbstub_enable : $(KERNEL_OUTFILE)
 #endif
 
 .PHONY : gdbstub_disable
-gdbstub_disable : $(KERNEL_OUTFILE)
+gdbstub_disable :
+#gdbstub_disable : $(KERNEL_OUTFILE)
 #	@$(REM) perhaps flag is active due to a previous debug session
 #	@$(REM) patch GDB stub "enable flag" --> disabled
 #	@$(ELFTOOL) -c setgdbstubflag=0x00 $(KERNEL_OUTFILE)
