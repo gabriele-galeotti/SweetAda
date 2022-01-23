@@ -32,7 +32,7 @@ SCRIPT_FILENAME=$(basename "$0")
 ################################################################################
 
 AVRDUDE_PREFIX=/opt/avrdude
-AVRDUDE_EXECUTABLE=${AVRDUDE_PREFIX}/bin/avrdude
+AVRDUDE_EXEC=${AVRDUDE_PREFIX}/bin/avrdude
 
 AVRDUDE_ARGS=()
 AVRDUDE_ARGS+=("-v" "-v" "-V")
@@ -44,7 +44,7 @@ AVRDUDE_ARGS+=("-U" "flash:w:${SWEETADA_PATH}/${KERNEL_ROMFILE}:i")
 
 read -p "Press RESET on board and press <ENTER> ... "
 
-"${AVRDUDE_EXECUTABLE}" "${AVRDUDE_ARGS[@]}"
+"${AVRDUDE_EXEC}" "${AVRDUDE_ARGS[@]}"
 
 exit $?
 

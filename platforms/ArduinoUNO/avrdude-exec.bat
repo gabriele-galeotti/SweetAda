@@ -19,12 +19,12 @@ REM KERNEL_ROMFILE
 REM
 
 SET "AVRDUDE_PATH=C:\Program Files\avrdude"
-SET "AVRDUDE_EXECUTABLE=%AVRDUDE_PATH%\bin\avrdude.exe"
+SET "AVRDUDE_EXEC=%AVRDUDE_PATH%\bin\avrdude.exe"
 
 ECHO Press RESET on board and press <ENTER> ...
 PAUSE > nul
 
-"%AVRDUDE_EXECUTABLE%" -v -v -V -p atmega328p -P USB -c arduino -D -U flash:w:"%SWEETADA_PATH%"\%KERNEL_ROMFILE%:i
+"%AVRDUDE_EXEC%" -v -v -V -p atmega328p -P USB -c arduino -D -U flash:w:"%SWEETADA_PATH%"\%KERNEL_ROMFILE%:i
 
 EXIT /B %ERRORLEVEL%
 
