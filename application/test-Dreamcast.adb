@@ -17,6 +17,11 @@ package body Application is
 
    use Interfaces;
 
+   procedure Serial with Import => True, Convention => Asm, External_Name => "serial";
+   procedure Recvw with Import => True, Convention => Asm, External_Name => "recvw";
+   procedure Video with Import => True, Convention => Asm, External_Name => "video";
+   procedure Roto with Import => True, Convention => Asm, External_Name => "roto";
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -25,11 +30,9 @@ package body Application is
    --                                                                        --
    --========================================================================--
 
-   procedure Serial with Import => True, Convention => Asm, External_Name => "serial";
-   procedure Recvw with Import => True, Convention => Asm, External_Name => "recvw";
-   procedure Video with Import => True, Convention => Asm, External_Name => "video";
-   procedure Roto with Import => True, Convention => Asm, External_Name => "roto";
-
+   ----------------------------------------------------------------------------
+   -- Run
+   ----------------------------------------------------------------------------
    procedure Run is
    begin
       -------------------------------------------------------------------------

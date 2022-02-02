@@ -59,6 +59,9 @@ package body Application is
        Alignment               => 16#1000#,
        Suppress_Initialization => True; -- pragma Initialize_Scalars
 
+   function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean;
+   procedure Handle_Ethernet;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -67,13 +70,17 @@ package body Application is
    --                                                                        --
    --========================================================================--
 
-   function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean;
+   ----------------------------------------------------------------------------
+   -- Tick_Count_Expired
+   ----------------------------------------------------------------------------
    function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean is
    begin
       return (Tick_Count - Flash_Count) > Timeout;
    end Tick_Count_Expired;
 
-   procedure Handle_Ethernet;
+   ----------------------------------------------------------------------------
+   -- Handle_Ethernet
+   ----------------------------------------------------------------------------
    procedure Handle_Ethernet is
       P       : PBUF.Pbuf_Ptr;
       Success : Boolean;
@@ -87,6 +94,9 @@ package body Application is
       end if;
    end Handle_Ethernet;
 
+   ----------------------------------------------------------------------------
+   -- Run
+   ----------------------------------------------------------------------------
    procedure Run is
    begin
       -------------------------------------------------------------------------

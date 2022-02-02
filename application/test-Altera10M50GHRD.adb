@@ -17,6 +17,8 @@ package body Application is
 
    use Interfaces;
 
+   function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -25,12 +27,17 @@ package body Application is
    --                                                                        --
    --========================================================================--
 
-   function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean;
+   ----------------------------------------------------------------------------
+   -- Tick_Count_Expired
+   ----------------------------------------------------------------------------
    function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean is
    begin
       return (Core.Tick_Count - Flash_Count) > Timeout;
    end Tick_Count_Expired;
 
+   ----------------------------------------------------------------------------
+   -- Run
+   ----------------------------------------------------------------------------
    procedure Run is
    begin
       -------------------------------------------------------------------------

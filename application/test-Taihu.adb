@@ -1,8 +1,6 @@
 
 with System.Storage_Elements;
 with Interfaces;
--- with PowerPC;
--- with PPC405;
 with CPU;
 with Taihu;
 with IOEMU;
@@ -20,8 +18,6 @@ package body Application is
 
    use System.Storage_Elements;
    use Interfaces;
-   -- use PowerPC;
-   -- use PPC405;
    use Taihu;
 
    --========================================================================--
@@ -32,6 +28,9 @@ package body Application is
    --                                                                        --
    --========================================================================--
 
+   ----------------------------------------------------------------------------
+   -- Run
+   ----------------------------------------------------------------------------
    procedure Run is
    begin
       -------------------------------------------------------------------------

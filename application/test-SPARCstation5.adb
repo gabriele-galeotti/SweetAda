@@ -34,6 +34,9 @@ package body Application is
    --                                                                        --
    --========================================================================--
 
+   ----------------------------------------------------------------------------
+   -- Run
+   ----------------------------------------------------------------------------
    procedure Run is
       procedure CHANNELB_Putchar (C : in Character);
       procedure CHANNELB_Putchar (C : in Character) is
