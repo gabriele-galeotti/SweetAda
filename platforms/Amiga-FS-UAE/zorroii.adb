@@ -85,10 +85,12 @@ package body ZorroII is
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup (Base_Address : in Integer_Address) is
+      E_Byte : Unsigned_8;
       function To_U32 is new Ada.Unchecked_Conversion (Integer_Address, Unsigned_32);
    begin
-      MMIO.Write (Cfg_Space'Address + 16#48#, Bits.NByte (To_U32 (Base_Address)));
-      MMIO.Write (Cfg_Space'Address + 16#44#, Bits.HByte (To_U32 (Base_Address)));
+      E_Byte := Bits.NByte (To_U32 (Base_Address));
+      MMIO.Write (Cfg_Space'Address + 16#4A#, Shift_Left (E_Byte, 4));
+      MMIO.Write (Cfg_Space'Address + 16#48#, E_Byte);
    end Setup;
 
    ----------------------------------------------------------------------------

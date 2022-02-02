@@ -136,7 +136,7 @@ package body BSP is
                   Console.Print (PIC.ID_Product, Prefix => "ID:    ", NL => True);
                   Console.Print (PIC.ID_Manufacturer, Prefix => "Manu:  ", NL => True);
                   if (PIC.Board and 16#F8#) = 16#E0# then
-                     -- A2630 (FS-UAE) E7 51 07DB (???)
+                     -- A2630 FS-UAE hackers_id E7 51 07DB
                      ZorroII.Setup (16#0020_0000#);
                   end if;
                   if PIC.Board = 16#C1# then
@@ -152,7 +152,7 @@ package body BSP is
          end;
       end if;
       -- Gayle IDE ------------------------------------------------------------
-      if True then
+      if False then
          IDE_Descriptor.Base_Address  := To_Address (Gayle.GAYLE_IDE_BASEADDRESS);
          IDE_Descriptor.Scale_Address := 2;
          IDE_Descriptor.Read_8        := MMIO.Read'Access;
