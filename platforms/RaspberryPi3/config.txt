@@ -1,0 +1,7 @@
+arm_64bit=1                     # ARMv8 mode
+core_freq=250                   # core clock frequency
+arm_freq=250                    # ARM clock frequency
+disable_commandline_tags=1      # prevent filling low memory with ATAGS
+kernel_old=1                    # load kernel at address 0
+kernel=kernel.rom
+enable_jtag_gpio=1              # enable JTAG (GPIO22..27)

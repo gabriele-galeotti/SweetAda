@@ -16,6 +16,7 @@
 # Environment variables:
 # SWEETADA_PATH
 # KERNEL_ROMFILE
+# USDCARD_DEVICE
 # USDCARD_MOUNTPOINT
 #
 
@@ -42,9 +43,10 @@ kernel=kernel.rom
 enable_jtag_gpio=1              # enable JTAG (GPIO22..27)
 EOF
 
+mount ${USDCARD_DEVICE} ${USDCARD_MOUNTPOINT}
 cp -f -v config.txt ${SWEETADA_PATH}/${KERNEL_ROMFILE} ${USDCARD_MOUNTPOINT}/ || exit 1
-
 sync ; sync
+umount ${USDCARD_MOUNTPOINT}
 
 exit 0
 
