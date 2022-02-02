@@ -97,11 +97,27 @@ package RPI3 is
       Channel : Bits.Bits_4;
       Data    : Bits.Bits_28;
    end record with
-      Size => 32;
+      Bit_Order => Low_Order_First,
+      Size      => 32;
    for Message_Type use
    record
       Channel at 0 range 0 .. 3;
       Data    at 0 range 4 .. 31;
+   end record;
+
+   type Message_Status_Type is
+   record
+      Reserved : Bits.Bits_30;
+      Empty    : Boolean;
+      Full     : Boolean;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for Message_Status_Type use
+   record
+      Reserved at 0 range 0 .. 29;
+      Empty    at 0 range 30 .. 30;
+      Full     at 0 range 31 .. 31;
    end record;
 
    MAIL0_Read   : Message_Type with
@@ -109,7 +125,7 @@ package RPI3 is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   MAIL0_Status : Message_Type with
+   MAIL0_Status : Message_Status_Type with
       Address              => To_Address (MAILBOX_BASEADDRESS + 16#18#),
       Volatile_Full_Access => True,
       Import               => True,
