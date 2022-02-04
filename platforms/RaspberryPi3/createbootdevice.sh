@@ -16,7 +16,7 @@
 # Environment variables:
 # SWEETADA_PATH
 # KERNEL_ROMFILE
-# USDCARD_DEVICE
+# USDCARD_UUID
 # USDCARD_MOUNTPOINT
 #
 
@@ -37,11 +37,15 @@ cat > config.txt << EOF
 arm_64bit=1                     # ARMv8 mode
 core_freq=250                   # core clock frequency
 arm_freq=250                    # ARM clock frequency
-disable_commandline_tags=1      # prevent filling low memory with ATAGS
-kernel_old=1                    # load kernel at address 0
 kernel=kernel.rom
 enable_jtag_gpio=1              # enable JTAG (GPIO22..27)
 EOF
+
+USDCARD_DEVICE=$(blkid | grep UUID=\"${USDCARD_UUID}\" | sed -e "s|^\(/dev/.*\)\(:.*\)\$|\1|")
+if [ "x${USDCARD_DEVICE}" = "x" ] ; then
+  echo "*** Error: UUID=${USDCARD_UUID}: no device found."
+  exit 1
+fi
 
 mount ${USDCARD_DEVICE} ${USDCARD_MOUNTPOINT}
 cp -f -v config.txt ${SWEETADA_PATH}/${KERNEL_ROMFILE} ${USDCARD_MOUNTPOINT}/ || exit 1

@@ -1,6 +1,6 @@
 
 //
-// startup.S - RaspberryPI3 startup.
+// startup.S - Raspberry Pi 3 startup.
 //
 // Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
 //

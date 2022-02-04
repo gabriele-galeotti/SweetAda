@@ -17,7 +17,7 @@ OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
 USE_APPLICATION := test-RaspberryPi3
 
 # path to FAT32 1st partition on a micro-SD memory card
-export USDCARD_DEVICE := /dev/sdb1
+export USDCARD_UUID       := 0F5F-3CD8
 export USDCARD_MOUNTPOINT := /mnt/hd
 
 SESSION_START_COMMAND :=
