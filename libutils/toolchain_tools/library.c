@@ -238,15 +238,16 @@ lib_strdup(const char *s)
  * __REF__ PUTENV(3) for a discussion about memory leaking
  * __REF__ https://wiki.sei.cmu.edu/confluence/display/c/POS34-C.+Do+not+call+putenv%28%29+with+a+pointer+to+an+automatic+variable+as+the+argument
  *
- * Regola valevole in ogni OS:
- * - la env_get() restituisce una string allocata sullo heap; una volta che il
- *   caller ha terminato l'utilizzo, può liberarla con lib_free()
- * - la env_put():
- *   in Windows, non è necessario che venga alimentata con string statiche;
- *   in Linux, necessità di strings statiche
+ * Rules valid in every OS:
+ * - env_get():
+ *   returns a heap-allocated string; once the caller has finished, it can
+ *   free the string by means of lib_free()
+ * - env_put():
+ *   Windows: does not need a static string as input
+ *   Linux: does need a static string as input
  *
- * NOTE: in Windows non è ammesso inserire nell'environment una variable con
- * value empty, deve essere una string di length > 0
+ * NOTE: Windows refuses to put in the environment space an empty variable
+ * (it should have length > 0)
  */
 
 /******************************************************************************
@@ -905,23 +906,26 @@ log_close(void)
 /******************************************************************************
  * log_init()                                                                 *
  *                                                                            *
- * log_init() può essere chiamata ripetutamente:                              *
- * - se logprogramname esisteva già, viene cambiato                           *
- * - logfilename = NULL   --> mantiene quello attuale                         *
- * - logfilename = ""     --> viene chiuso l'attuale                          *
- * - logfilename = <name> --> viene aperto un nuovo file                      *
- * LOG_STDERR è abilitato di default; così facendo si può evidenziare un      *
- * errore in fase di inizializzazione; per disabilitare, effettuare una       *
- * log_setmode() esplicita subito dopo la log_init().                         *
+ * log_init() can be called more than once:                                   *
+ * - if logprogramname does exist, it gets changed                            *
+ * - logfilename = NULL   --> keep the current one                            *
+ * - logfilename = ""     --> current gets closed                             *
+ * - logfilename = <name> --> a new file will be opened                       *
+ * LOG_STDERR defaults to enable; thus we could detect an error in the        *
+ * initialization phase; in order to disable it, call log_setmode() at once   *
+ * after log_init().                                                          *
  ******************************************************************************/
 int
 log_init(const char *logprogramname, const char *logfilename, const char *logfilemode)
 {
         log_buffer[0] = '\0';
 
-        /* non si usa LOG_FILE: */
-        /* - se si verifica un errore, inutile scrivere, non esiste il file */
-        /* - se è tutto OK, niente da scrivere */
+        /*
+         * We do not use LOG_FILE:
+         * - if an error shows up, it is useless to write something since the
+         *   file does not exist
+         * - if everything went OK, we have nothing to write
+         */
         log_mode_set(LOG_STDERR);
 
         if (logprogramname != NULL)
@@ -1407,11 +1411,11 @@ execute_exec(execute_t this)
         }
 
         /*
-         * NOTE: in caso di "fork", non liberiamo la memory di lpCommandLine e
-         * lpEnvironment, poiché sembra che il child process ne può fare uso
-         * fino a che non si è correttamente inizializzato; purtroppo non è
-         * semplice capire quando è possibile farlo, perciò soffriamo un
-         * memory leak a discapito di ciò
+         * NOTE: if a "fork" is being performed we do not free memory linked
+         * with lpCommandLine and lpEnvironment, since the child process seems
+         * to possibly reference it until it will be completely initialized;
+         * it is not simple to detect this case, so we suffer a memory leak
+         * here.
          */
 
         CloseHandle(ProcessInformation.hProcess);
@@ -1468,9 +1472,8 @@ execute_exec(execute_t this)
                  */
                 this->child_pid = pid;
                 /*
-                 * Effettua l'output del PID per consentire un'eventuale
-                 * parsing dell'output da parte di tools esterni che
-                 * potrebbero necessitano di informazioni sull'executable.
+                 * Print out the PID in order to allow a parsing of external
+                 * tools.
                  */
                 if ((this->flags & EXEC_PRINT_CPID) != 0)
                 {
@@ -1542,10 +1545,10 @@ execute_exec(execute_t this)
                 if (WIFEXITED(wstatus))
                 {
                         /*
-                         * Il child ha terminato normalmente tramite chiamata
-                         * alla exit()/_exit() o con return dal main() (ma può
-                         * darsi che esso abbia riscontrato degli errori e il
-                         * suo exit status non è 0).
+                         * Child terminated normally by means of either a call
+                         * to exit()/_exit() or a return from main() (but
+                         * maybe it could have detected some error and its
+                         * exit status is not 0).
                          */
                         this->child_exit_status = WEXITSTATUS(wstatus);
                         switch (this->child_exit_status)
@@ -1605,12 +1608,11 @@ execute_exec(execute_t this)
         /*
          * Child continues.
          *
-         * NOTE: SYSTEM(3) consiglia l'utilizzo delle functions della famiglia
-         * EXEC(3), ma ad un rapido colpo d'occhio sembra ok usare la execve()
-         * (che è la base comune di queste functions anche se non menzionata)
+         * NOTE: SYSTEM(3) advises the use of EXEC(3) functions, but it seems
+         * OK to use execve(), which is the base of all these functions.
          *
-         * Se viene specificato "*" come prima stringa dell'array envp, allora
-         * viene usato l'intero environment del current process.
+         * If we have specified a "*" as the first string of the envp argument
+         * array, then use the whole environment of the current process.
          */
 
         /*
@@ -1644,21 +1646,6 @@ execute_exec(execute_t this)
         /*
          * http://stackoverflow.com/questions/3776859/how-can-i-get-the-return-value-of-a-program-executed-by-exec
          * http://stackoverflow.com/questions/5422831/what-is-the-difference-between-using-exit-exit-in-a-conventional-linux-fo
-         *
-         * execve() error.
-         * Se proseguiamo in questo ramo di codice (child), abbiamo che il
-         * parent process sta aspettando la terminazione (e questo è ok), più
-         * questo ramo di codice (child) che, se non si effettuasse la
-         * _exit(), ritornerebbe al chiamante di questa function (ma questo
-         * avverrebbe nel child process, poiché siamo sotto fork()) e darebbe
-         * una indicazione spuria di errore come se avesse fallito la fork()
-         * invece che la execve(); quindi dobbiamo uscire con la _exit() onde
-         * evitare ambiguità comunicando al parent lo exit status del child.
-         * NOTE: si usa _exit() poiché, se execve() fallisce, questo ramo
-         * viene eseguito nel child che condivide file descriptors, atexit()
-         * functions, etc, con il parent, ed interferirebbe con questi
-         * NOTE: uscendo con _exit() la WIFEXITED() ritorna true
-         * NOTE: return values >= 128 sono reserved
          */
         _exit(127); /* 127 is "command not found" */
 
