@@ -53,13 +53,14 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
+      while (RPI3.AUX_MU_LSR_REG and 16#0000_0020#) = 0 loop null; end loop;
       RPI3.AUX_MU_IO_REG := Unsigned_32 (Bits.To_U8 (C));
-      for Delay_Loop_Count in 1 .. 10_000 loop CPU.NOP; end loop;
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
    begin
-      C := Character'Val (0);
+      while (RPI3.AUX_MU_LSR_REG and 16#0000_0001#) = 0 loop null; end loop;
+      C := Character'Val (Unsigned_8 (RPI3.AUX_MU_IO_REG));
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -68,8 +69,8 @@ package body BSP is
    procedure BSP_Setup is
    begin
       -- mini-UART (UART1) ----------------------------------------------------
-      -- GPIO Pin 14 takes alternate function 5
-      RPI3.GPFSEL1         := (@ and 16#FFFF_8FFF#) or 16#0000_2000#;
+      -- GPIO Pins 14/15 takes alternate function 5
+      RPI3.GPFSEL1         := (@ and 16#FFFC_0FFF#) or 16#0000_2000# or 16#0001_0000#;
       RPI3.AUXENB          := 16#0000_0001#;
       RPI3.AUX_MU_BAUD     := 16#0000_0CB6#; -- 9600 bps @ 250 MHz
       RPI3.AUX_MU_LCR_REG  := 16#0000_0003#;
