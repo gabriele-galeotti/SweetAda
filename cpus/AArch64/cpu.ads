@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
 with AArch64;
 
 package CPU is
@@ -29,11 +30,15 @@ package CPU is
 
    pragma Preelaborate;
 
+   use System;
+
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
    procedure NOP renames AArch64.NOP;
+
+   procedure Asm_Call (Target_Address : in Address) renames AArch64.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts

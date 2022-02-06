@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+
 package AArch64 is
 
    --========================================================================--
@@ -27,11 +29,15 @@ package AArch64 is
 
    pragma Preelaborate;
 
+   use System;
+
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
    procedure NOP with
+      Inline => True;
+   procedure Asm_Call (Target_Address : in Address) with
       Inline => True;
 
    ----------------------------------------------------------------------------

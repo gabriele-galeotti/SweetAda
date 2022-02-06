@@ -57,6 +57,22 @@ package body AArch64 is
    end NOP;
 
    ----------------------------------------------------------------------------
+   -- Asm_Call
+   ----------------------------------------------------------------------------
+   procedure Asm_Call (Target_Address : in Address) is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        blr     %0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => System.Address'Asm_Input ("r", Target_Address),
+           Clobber  => "x30",
+           Volatile => True
+          );
+   end Asm_Call;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable is
