@@ -23,14 +23,22 @@ _start:
                 b       startcode
 
 startcode:
-                // allow only master core to prosecute
+                //
+                // Allow only master core to execute code.
+                //
                 mrs     x0,mpidr_el1
                 mov     x1,#0xC1000000
                 bic     x0,x0,x1
-                cbz     x0,master
-hold:           b       hold
-master:
+                cbz     x0,bootcore
+hold:           b       .
 
+                //mrc     p15,0,x0,c0,c0,5
+                // x0 & 0x3 contains core ID
+
+bootcore:
+                //
+                // Setup stack pointer.
+                //
                 ldr     w0,=SVC_stack
                 mov     wsp,w0
 

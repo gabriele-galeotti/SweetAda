@@ -28,7 +28,7 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            Delay_Count : constant := 50_000_000;
+            Delay_Count : constant := 100_000_000;
          begin
             loop
                Console.Print ("hello, SweetAda", NL => True);
