@@ -81,6 +81,11 @@ package RPI3 is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+   AUX_MU_LSR_REG  : Unsigned_32 with
+      Address              => To_Address (AUX_BASEADDRESS + 16#54#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
    AUX_MU_CNTL_REG : Unsigned_32 with
       Address              => To_Address (AUX_BASEADDRESS + 16#60#),
       Volatile_Full_Access => True,
@@ -120,6 +125,9 @@ package RPI3 is
       Full     at 0 range 31 .. 31;
    end record;
 
+   -- POLL   @ 0x10
+   -- SENDER @ 0x14
+   -- CONFIG @ 0x1C
    MAIL0_Read   : Message_Type with
       Address              => To_Address (MAILBOX_BASEADDRESS + 16#00#),
       Volatile_Full_Access => True,
