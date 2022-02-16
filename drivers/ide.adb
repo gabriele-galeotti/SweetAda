@@ -48,7 +48,7 @@ package body IDE is
                               16#0005#, -- CM               LBA #2
                               16#0006#, -- HEAD
                               16#0007#, -- STATUS    R
-                              16#0011#, -- FEATURE   W      ST506: WPC = CYL/4
+                              16#0011#, -- FEATURE   W
                               16#0017#, -- COMMAND   W
                               16#2206#  -- CONTROL   W      16#0206#
                              );

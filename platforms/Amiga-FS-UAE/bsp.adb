@@ -136,7 +136,7 @@ package body BSP is
                   Console.Print (PIC.ID_Product, Prefix => "ID:    ", NL => True);
                   Console.Print (PIC.ID_Manufacturer, Prefix => "Manu:  ", NL => True);
                   if (PIC.Board and 16#F8#) = 16#E0# then
-                     -- A2630 FS-UAE hackers_id E7 51 07DB
+                     -- A2630 "FS-UAE hackers_id" E7 51 07DB
                      ZorroII.Setup (16#0020_0000#);
                   end if;
                   if PIC.Board = 16#C1# then

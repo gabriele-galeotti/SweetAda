@@ -69,7 +69,7 @@ package body BSP is
    procedure BSP_Setup is
    begin
       -- mini-UART (UART1) ----------------------------------------------------
-      -- GPIO Pins 14/15 takes alternate function 5
+      -- GPIO pins 14/15 take alternate function 5
       RPI3.GPFSEL1         := (@ and 16#FFFC_0FFF#) or 16#0000_2000# or 16#0001_0000#;
       RPI3.AUXENB          := 16#0000_0001#;
       RPI3.AUX_MU_BAUD     := 16#0000_0CB6#; -- 9600 bps @ 250 MHz
