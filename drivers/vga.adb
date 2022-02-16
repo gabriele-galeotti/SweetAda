@@ -70,7 +70,7 @@ package body VGA is
        16#00#, -- 01 Clocking Mode: bit0 = 0 --> 9 dots, bit0 = 1 --> 8 dots
        16#03#, -- 02 Map Mask:
        16#00#, -- 03 Character Map Select:
-       16#07#  -- 04 Sequencer Memory Mode:
+       16#02#  -- 04 Sequencer Memory Mode:
       );
 
    SEQUENCER_Register_Values_MODE12H : constant array (SEQUENCER_Register_Type range <>) of Unsigned_8 :=
@@ -553,20 +553,17 @@ package body VGA is
          when MODE3H  => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE3H (1));
          when MODE12H => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE12H (1));
       end case;
-      -- switch to graphic mode -----------------------------------------------
-      GC_Register_Write (16#05#, 16#00#); -- clear 16/8 bit mode
-      case Mode is
-         when MODE3H  => GC_Register_Write (6, 16#04#); -- map VGA memory to 0xA0000, 64 kB, enable A/N mode
-         when MODE12H => GC_Register_Write (6, 16#05#); -- map VGA memory to 0xA0000, 64 kB, disable A/N mode
-      end case;
       -- text font installation -----------------------------------------------
       if Mode = MODE3H then
+         -- switch to graphic mode -----------------------------------------------
+         GC_Register_Write (5, 16#00#); -- clear 16/8 bit mode
+         GC_Register_Write (6, 16#04#); -- map VGA memory to 0xA0000, 64 kB, enable A/N mode
          SEQUENCER_Register_Write (2, 16#04#); -- set bitplane 2
          SEQUENCER_Register_Write (4, 16#06#); -- character map access, sequential memory
          Load_Font;
          -- restore values and switch to text mode
-         GC_Register_Write (16#05#, GC_Register_Values_MODE3H (16#05#));
-         GC_Register_Write (16#06#, GC_Register_Values_MODE3H (16#06#));
+         GC_Register_Write (5, GC_Register_Values_MODE3H (16#05#));
+         GC_Register_Write (6, GC_Register_Values_MODE3H (16#06#));
          SEQUENCER_Register_Write (2, SEQUENCER_Register_Values_MODE3H (16#02#));
          SEQUENCER_Register_Write (4, SEQUENCER_Register_Values_MODE3H (16#04#));
       end if;
