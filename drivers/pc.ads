@@ -328,13 +328,66 @@ package PC is
    -- Parallel Port Interface PPI
    ----------------------------------------------------------------------------
 
+   type PPI_Status_Type is
+   record
+      Unused   : Bits.Bits_2;
+      IRQ      : Boolean;
+      Error    : Boolean;
+      SelectIn : Boolean;
+      PaperOut : Boolean;
+      ACK      : Boolean;
+      Busy     : Boolean;     -- negated
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for PPI_Status_Type use
+   record
+      Unused   at 0 range 0 .. 1;
+      IRQ      at 0 range 2 .. 2;
+      Error    at 0 range 3 .. 3;
+      SelectIn at 0 range 4 .. 4;
+      PaperOut at 0 range 5 .. 5;
+      ACK      at 0 range 6 .. 6;
+      Busy     at 0 range 7 .. 7;
+   end record;
+
+   function To_PPIST is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Status_Type);
+
+   type PPI_Control_Type is
+   record
+      Strobe    : Boolean;     -- negated
+      AUTOLF    : Boolean;     -- negated
+      INIT      : Boolean;
+      SelectOut : Boolean;     -- negated
+      IRQEN     : Boolean;
+      BIDIR     : Boolean;
+      Unused    : Bits.Bits_2;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for PPI_Control_Type use
+   record
+      Strobe    at 0 range 0 .. 0;
+      AUTOLF    at 0 range 1 .. 1;
+      INIT      at 0 range 2 .. 2;
+      SelectOut at 0 range 3 .. 3;
+      IRQEN     at 0 range 4 .. 4;
+      BIDIR     at 0 range 5 .. 5;
+      Unused    at 0 range 6 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (PPI_Control_Type, Unsigned_8);
+   function To_PPICT is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Control_Type);
+
    PPI_DATA    : constant := PPI_BASEADDRESS + 16#00#;
    PPI_STATUS  : constant := PPI_BASEADDRESS + 16#01#;
    PPI_CONTROL : constant := PPI_BASEADDRESS + 16#02#;
 
-   procedure PPI_Init;
+   procedure PPI_DataIn (Value : out Unsigned_8);
    procedure PPI_DataOut (Value : in Unsigned_8);
-   procedure PPI_StatusOut (Value : in Unsigned_8);
-   procedure PPI_ControlOut (Value : in Unsigned_8);
+   procedure PPI_StatusIn (Value : out PPI_Status_Type);
+   procedure PPI_ControlIn (Value : out PPI_Control_Type);
+   procedure PPI_ControlOut (Value : in PPI_Control_Type);
+   procedure PPI_Init;
 
 end PC;

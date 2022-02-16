@@ -277,13 +277,12 @@ package body PC is
    end RTC_Read_Clock;
 
    ----------------------------------------------------------------------------
-   -- PPI_Init
+   -- PPI_DataIn
    ----------------------------------------------------------------------------
-   procedure PPI_Init is
+   procedure PPI_DataIn (Value : out Unsigned_8) is
    begin
-      PPI_ControlOut (16#0B#); -- float output pins
-      PPI_DataOut (0);
-   end PPI_Init;
+      Value := CPU.IO.PortIn (PPI_DATA);
+   end PPI_DataIn;
 
    ----------------------------------------------------------------------------
    -- PPI_DataOut
@@ -294,19 +293,44 @@ package body PC is
    end PPI_DataOut;
 
    ----------------------------------------------------------------------------
-   -- PPI_StatusOut
+   -- PPI_StatusIn
    ----------------------------------------------------------------------------
-   procedure PPI_StatusOut (Value : in Unsigned_8) is
+   procedure PPI_StatusIn (Value : out PPI_Status_Type) is
    begin
-      CPU.IO.PortOut (PPI_STATUS, Value);
-   end PPI_StatusOut;
+      Value := To_PPIST (CPU.IO.PortIn (PPI_STATUS));
+   end PPI_StatusIn;
+
+   ----------------------------------------------------------------------------
+   -- PPI_ControlIn
+   ----------------------------------------------------------------------------
+   procedure PPI_ControlIn (Value : out PPI_Control_Type) is
+   begin
+      Value := To_PPICT (CPU.IO.PortIn (PPI_CONTROL));
+   end PPI_ControlIn;
 
    ----------------------------------------------------------------------------
    -- PPI_ControlOut
    ----------------------------------------------------------------------------
-   procedure PPI_ControlOut (Value : in Unsigned_8) is
+   procedure PPI_ControlOut (Value : in PPI_Control_Type) is
    begin
-      CPU.IO.PortOut (PPI_CONTROL, Value);
+      CPU.IO.PortOut (PPI_CONTROL, To_U8 (Value));
    end PPI_ControlOut;
+
+   ----------------------------------------------------------------------------
+   -- PPI_Init
+   ----------------------------------------------------------------------------
+   procedure PPI_Init is
+   begin
+      PPI_ControlOut ((
+                       Strobe    => True,
+                       AUTOLF    => True,
+                       INIT      => False,
+                       SelectOut => True,
+                       IRQEN     => False,
+                       BIDIR     => False,
+                       Unused    => 0
+                      ));
+      PPI_DataOut (0);
+   end PPI_Init;
 
 end PC;
