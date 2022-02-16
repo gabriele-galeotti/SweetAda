@@ -57,17 +57,19 @@ package body SCC is
 
    type RR0_Type is
    record
-      Unused1 : Bits_2;
-      TXBE    : Boolean;
-      Unused2 : Bits_5;
+      RXCA       : Boolean;
+      Zero_Count : Boolean;
+      TXBE       : Boolean;
+      Unused     : Bits_5;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
    for RR0_Type use
    record
-      Unused1 at 0 range 0 .. 1;
-      TXBE    at 0 range 2 .. 2;
-      Unused2 at 0 range 3 .. 7;
+      RXCA       at 0 range 0 .. 0;
+      Zero_Count at 0 range 1 .. 1;
+      TXBE       at 0 range 2 .. 2;
+      Unused     at 0 range 3 .. 7;
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (RR0_Type, Unsigned_8);
@@ -343,14 +345,14 @@ package body SCC is
    end Register_Write;
 
    ----------------------------------------------------------------------------
-   -- Set_Baud_Rate
+   -- Baud_Rate_Set
    ----------------------------------------------------------------------------
    -- Initializing the BRG is done in three steps. First, the time constant is
    -- determined and loaded into WR12 and WR13. Next, the processor must
    -- select the clock source for the BRG by setting bit D1 of WR14. Finally,
    -- the BRG is enabled by setting bit D0 of WR14 to 1.
    ----------------------------------------------------------------------------
-   procedure Set_Baud_Rate (
+   procedure Baud_Rate_Set (
                             Descriptor : in SCCZ8530_Descriptor_Type;
                             Channel    : in SCCZ8530_Channel_Type;
                             Baud_Rate  : in Definitions.Baud_Rate_Type
@@ -368,7 +370,7 @@ package body SCC is
       -- enable BRG
       Register_Write (Descriptor, Channel, WR14, Unsigned_8'(2#00000010#));
       Register_Write (Descriptor, Channel, WR14, Unsigned_8'(2#00000010#) or 1);
-   end Set_Baud_Rate;
+   end Baud_Rate_Set;
 
    ----------------------------------------------------------------------------
    -- Init
@@ -384,7 +386,7 @@ package body SCC is
       Unused := Descriptor.Read_8 (Descriptor.Control_Port (Channel));
       -- select BR Generator Output source = PCLK
       Register_Write (Descriptor, Channel, WR11, Unsigned_8'(2#01010010#));
-      Set_Baud_Rate (Descriptor, Channel, Definitions.BR_9600);
+      Baud_Rate_Set (Descriptor, Channel, Definitions.BR_9600);
       -- X16 Clock Mode, External Sync Mode, 1 Stop Bit/Character, Parity
       -- EVEN, Parity not Enable
       Register_Write (Descriptor, Channel, WR4, To_U8 (WR4_Type'(
@@ -425,7 +427,7 @@ package body SCC is
                  Data       : in Unsigned_8
                 ) is
    begin
-      -- wait for TX Buffer Empty
+      -- wait for Tx Buffer Empty
       loop
          exit when To_RR0 (Register_Read (Descriptor, Channel, RR0)).TXBE;
       end loop;
@@ -446,11 +448,12 @@ package body SCC is
                  Channel    : in  SCCZ8530_Channel_Type;
                  Data       : out Unsigned_8
                 ) is
-      pragma Unreferenced (Descriptor);
-      pragma Unreferenced (Channel);
    begin
-      -- __TBD__
-      Data := 0;
+      -- wait for Rx Character Available
+      loop
+         exit when To_RR0 (Register_Read (Descriptor, Channel, RR0)).RXCA;
+      end loop;
+      Data := Descriptor.Read_8 (Descriptor.Data_Port (Channel));
    end RX;
 
 end SCC;

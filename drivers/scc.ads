@@ -73,7 +73,7 @@ package SCC is
        Data_Port      => (Null_Address, Null_Address)
       );
 
-   procedure Set_Baud_Rate (
+   procedure Baud_Rate_Set (
                             Descriptor : in SCCZ8530_Descriptor_Type;
                             Channel    : in SCCZ8530_Channel_Type;
                             Baud_Rate  : in Definitions.Baud_Rate_Type
