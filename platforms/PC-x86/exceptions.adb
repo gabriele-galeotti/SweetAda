@@ -214,17 +214,17 @@ package body Exceptions is
             if QEMU then
                -- with IOEMU, you can see the LED blinking
                if Tick_Count mod 1000 = 0 then
-                  PC.PPI_ControlOut (16#FF#);
-                  PC.PPI_ControlOut (16#00#);
+                  PC.PPI_ControlOut (PC.To_PPICT (16#FF#));
+                  PC.PPI_ControlOut (PC.To_PPICT (16#00#));
                end if;
             else
                -- with a physical machine, we have to turn on/off the LED at a
                -- "human" rate
                if Tick_Count mod 1000 = 0 then
-                  PC.PPI_ControlOut (16#04#);
+                  PC.PPI_ControlOut (PC.To_PPICT (16#04#)); -- PPI INIT signal
                end if;
                if (Tick_Count + 500) mod 1000 = 0 then
-                  PC.PPI_ControlOut (0);
+                  PC.PPI_ControlOut (PC.To_PPICT (0));
                end if;
             end if;
             PC.PIC1_EOI;
