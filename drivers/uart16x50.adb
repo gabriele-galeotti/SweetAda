@@ -297,60 +297,56 @@ package body UART16x50 is
    end Register_Write;
 
    ----------------------------------------------------------------------------
-   -- Set_Baud_Rate
+   -- Baud_Rate_Set
    ----------------------------------------------------------------------------
-   procedure Set_Baud_Rate (Descriptor : in Uart16x50_Descriptor_Type);
-   procedure Set_Baud_Rate (Descriptor : in Uart16x50_Descriptor_Type) is
-   begin
-      null; -- __TBD__
-   end Set_Baud_Rate;
-
-   ----------------------------------------------------------------------------
-   -- Init
-   ----------------------------------------------------------------------------
-   procedure Init (Descriptor : in out Uart16x50_Descriptor_Type) is
-      -- __FIX__ stuck @ 9600
-      BAUD_RATE : constant := Definitions.Baud_Rate_Type'Enum_Rep (Definitions.BR_9600);
-      -- BAUD_RATE : constant := Definitions.Baud_Rate_Type'Enum_Rep (Definitions.BR_115200);
+   procedure Baud_Rate_Set (Descriptor : in Uart16x50_Descriptor_Type; Baud_Rate : in Integer) is
    begin
       -- __FIX__
       -- a lock should be used here, because, once DLAB is set, no other
       -- threads should interfere with this statement sequence
       Register_Write (Descriptor, LCR, To_U8 (LCR_Type'(
-                              WLS  => 0,
-                              STB  => 0,
-                              PEN  => False,
-                              EPS  => False,
-                              SP   => False,
-                              SB   => False,
-                              DLAB => True
-                             )));
-      Register_Write (Descriptor, DLL, Unsigned_8 ((Descriptor.Baud_Clock / (BAUD_RATE * 16)) mod 2**8));
-      Register_Write (Descriptor, DLM, Unsigned_8 ((Descriptor.Baud_Clock / (BAUD_RATE * 16)) / 2**8));
+                                                        WLS  => 0,
+                                                        STB  => 0,
+                                                        PEN  => False,
+                                                        EPS  => False,
+                                                        SP   => False,
+                                                        SB   => False,
+                                                        DLAB => True
+                                                       )));
+      Register_Write (Descriptor, DLL, Unsigned_8 ((Descriptor.Baud_Clock / (Baud_Rate * 16)) mod 2**8));
+      Register_Write (Descriptor, DLM, Unsigned_8 ((Descriptor.Baud_Clock / (Baud_Rate * 16)) / 2**8));
       Register_Write (Descriptor, LCR, To_U8 (LCR_Type'(
-                              WLS  => WORD_LENGTH_8,
-                              STB  => STOP_BITS_1,
-                              PEN  => False,
-                              EPS  => False,
-                              SP   => False,
-                              SB   => False,
-                              DLAB => False
-                             )));
+                                                        WLS  => WORD_LENGTH_8,
+                                                        STB  => STOP_BITS_1,
+                                                        PEN  => False,
+                                                        EPS  => False,
+                                                        SP   => False,
+                                                        SB   => False,
+                                                        DLAB => False
+                                                       )));
+   end Baud_Rate_Set;
+
+   ----------------------------------------------------------------------------
+   -- Init
+   ----------------------------------------------------------------------------
+   procedure Init (Descriptor : in out Uart16x50_Descriptor_Type) is
+   begin
+      Baud_Rate_Set (Descriptor, Definitions.Baud_Rate_Type'Enum_Rep (Definitions.BR_9600));
       Register_Write (Descriptor, IER, To_U8 (IER_Type'(
-                              RDA    => True,
-                              THRE   => False,
-                              RLS    => False,
-                              MS     => False,
-                              Unused => 0
-                             )));
+                                                        RDA    => True,
+                                                        THRE   => False,
+                                                        RLS    => False,
+                                                        MS     => False,
+                                                        Unused => 0
+                                                       )));
       Register_Write (Descriptor, MCR, To_U8 (MCR_Type'(
-                              DTR      => True,
-                              RTS      => True,
-                              OUT1     => False,
-                              OUT2     => True,
-                              LOOPBACK => False,
-                              Unused   => 0
-                             )));
+                                                        DTR      => True,
+                                                        RTS      => True,
+                                                        OUT1     => False,
+                                                        OUT2     => True,
+                                                        LOOPBACK => False,
+                                                        Unused   => 0
+                                                       )));
    end Init;
 
    ----------------------------------------------------------------------------
@@ -397,7 +393,7 @@ package body UART16x50 is
          exit when To_LSR (Register_Read (Descriptor, LSR)).DR;
       end loop;
       Data := Register_Read (Descriptor, RBR);
-      FIFO.Put (Descriptor.Data_Queue'Access, Data, Success);
+      -- FIFO.Put (Descriptor.Data_Queue'Access, Data, Success);
    end RX;
 
    ----------------------------------------------------------------------------

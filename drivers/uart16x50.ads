@@ -70,6 +70,7 @@ package UART16x50 is
        Data_Queue    => ((others => 0), 0, 0, 0)
       );
 
+   procedure Baud_Rate_Set (Descriptor : in Uart16x50_Descriptor_Type; Baud_Rate : in Integer);
    procedure Init (Descriptor : in out Uart16x50_Descriptor_Type);
    procedure TX (Descriptor : in out Uart16x50_Descriptor_Type; Data : in Unsigned_8);
    procedure RX (Descriptor : in out Uart16x50_Descriptor_Type; Data : out Unsigned_8);
