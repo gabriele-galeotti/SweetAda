@@ -94,7 +94,15 @@ for _s in $2 ; do
   _dialog_items_string+=" \"${_s}\" \"\" off"
   let _nitems++
 done
-printf "%s\n" "--radiolist" "\"$1\"" ${_dialog_height} ${_dialog_width} ${_nitems} "${_dialog_items_string}" | xargs dialog 2> "${TMPDIR}"/dialog_result
+printf "%s\n" "${_dialog_items_string}" | xargs \
+  dialog              \
+    --erase-on-exit   \
+    --radiolist       \
+    "\"$1\""          \
+    ${_dialog_height} \
+    ${_dialog_width}  \
+    ${_nitems}        \
+    2> "${TMPDIR}"/dialog_result
 if [ ${PIPESTATUS[1]} -eq 0 ] ; then
   _dialog_result=$(cat "${TMPDIR}"/dialog_result)
 else
