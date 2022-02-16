@@ -85,8 +85,8 @@ package body Application is
       P       : PBUF.Pbuf_Ptr;
       Success : Boolean;
    begin
-      PPI_DataOut (Unsigned_8 (PBUF.Nalloc));                                      -- # of PBUFs allocated
-      PPI_StatusOut (Unsigned_8 (Ethernet.Nqueue (Ethernet.Packet_Queue'Access))); -- # of items in queue
+      -- PPI_DataOut (Unsigned_8 (PBUF.Nalloc));                                      -- # of PBUFs allocated
+      -- PPI_StatusOut (Unsigned_8 (Ethernet.Nqueue (Ethernet.Packet_Queue'Access))); -- # of items in queue
       Ethernet.Dequeue (Ethernet.Packet_Queue'Access, P, Success);
       if Success then
          Ethernet.Packet_Handler (P);

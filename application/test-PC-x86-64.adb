@@ -2,9 +2,11 @@
 with Interfaces;
 with Bits;
 with CPU;
+with CPU.IO;
 with PC;
 with VGA;
 with BSP;
+with IOEMU;
 
 package body Application is
 
@@ -18,6 +20,7 @@ package body Application is
 
    use Interfaces;
    use Bits;
+   use CPU.IO;
    use BSP;
 
    --========================================================================--
@@ -42,12 +45,13 @@ package body Application is
             Delay_Count := 500_000_000; -- QEMU
             Value := 0;
             loop
-               PC.PPI_DataOut (Value);
                VGA.Print (0, 5, To_Ch (32 + (Value and 16#1F#)));
-               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+               -- IOEMU GPIO test
+               PortOut (IOEMU.IO0_ADDRESS, Unsigned_8'(Value * 1));
                Value := @ + 1;
-               PC.PPI_ControlOut (16#FF#);
-               PC.PPI_ControlOut (16#00#);
+               PC.PPI_ControlOut (PC.To_PPICT (16#FF#));
+               PC.PPI_ControlOut (PC.To_PPICT (16#00#));
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
       end if;
