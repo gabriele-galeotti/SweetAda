@@ -14,7 +14,7 @@ SECTIONS
          **********************************************************************/
         .text :
         {
-                FILL(0xff);
+                FILL(0xFF);
                 _stext = .;
                 . = 0x10000;
                 . = ALIGN(0x10000); /* .init16 must be placed on 64k-boundary */
