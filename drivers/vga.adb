@@ -301,7 +301,7 @@ package body VGA is
    end record;
 
    ----------------------------------------------------------------------------
-   -- local subprograms
+   -- Local subprograms
    ----------------------------------------------------------------------------
 
    procedure SEQUENCER_Register_Write (R : in SEQUENCER_Register_Type; Value : in Unsigned_8);
@@ -636,10 +636,10 @@ package body VGA is
             if Y1 = Video_Y_Coordinate_Type'Last then
                Y1 := 0;
             else
-               Y1 := Y1 + 1;
+               Y1 := @ + 1;
             end if;
          else
-            X1 := X1 + 1;
+            X1 := @ + 1;
          end if;
       end loop;
    end Print;
@@ -687,7 +687,7 @@ package body VGA is
       for Y in 0 .. 479 loop
          for X in 0 .. 639 loop
             Draw_Pixel (X, Y, To_U8 (Picture (Pixel_Idx)));
-            Pixel_Idx := Pixel_Idx + 1;
+            Pixel_Idx := @ + 1;
          end loop;
       end loop;
    end Draw_Picture;
