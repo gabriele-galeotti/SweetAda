@@ -63,15 +63,15 @@ package body Exceptions is
             IOEMU.IOEMU_IO0 := 0;
          end if;
       end if;
-      if Identifier = FIT_IRQ_ID then
-         Console.Print ("FIT interrupt", NL => True);
-      end if;
-      if Identifier = UART0_IRQ_ID then
-         Console.Print ("UART0 external interrupt", NL => True);
-      end if;
-      if Identifier = GPT0_IRQ_ID then
-         Console.Print ("GPT0 external interrupt", NL => True);
-      end if;
+      -- if Identifier = FIT_IRQ_ID then
+      --    Console.Print ("FIT interrupt", NL => True);
+      -- end if;
+      -- if Identifier = UART0_IRQ_ID then
+      --    Console.Print ("UART0 external interrupt", NL => True);
+      -- end if;
+      -- if Identifier = GPT0_IRQ_ID then
+      --    Console.Print ("GPT0 external interrupt", NL => True);
+      -- end if;
       if Identifier = 16#0000_0700# then
          Console.Print ("BREAKPOINT", NL => True);
       end if;

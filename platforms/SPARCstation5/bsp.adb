@@ -53,14 +53,18 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
+   -- serial port "A"
+
    procedure Console_Putchar (C : in Character) is
    begin
-      SCC.TX (SCC_Descriptor, SCC.CHANNELA, To_U8 (C)); -- serial port "A"
+      SCC.TX (SCC_Descriptor, SCC.CHANNELA, To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      SCC.RX (SCC_Descriptor, SCC.CHANNELA, Data);
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------

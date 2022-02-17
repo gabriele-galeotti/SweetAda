@@ -68,13 +68,13 @@ package body BSP is
    procedure Console_Putchar (C : in Character) is
    begin
       UART16x50.TX (PIIX4_UART1_Descriptor, To_U8 (C));
-      -- NOTE: CBUS UART requires a patch in mips_malta.c
-      -- UART16x50.TX (CBUS_UART_Descriptor, To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      UART16x50.RX (PIIX4_UART1_Descriptor, Data);
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -150,6 +150,7 @@ package body BSP is
       CBUS_UART_Descriptor.Read_8        := MMIO.Read'Access;
       CBUS_UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (CBUS_UART_Descriptor);
+      -------------------------------------------------------------------------
       PIIX4_IDE_Descriptor.Base_Address  := To_Address (PIIX4_BASEADDRESS + 16#0000_01F0#);
       PIIX4_IDE_Descriptor.Scale_Address := 0;
       PIIX4_IDE_Descriptor.Read_8        := MMIO.Read'Access;

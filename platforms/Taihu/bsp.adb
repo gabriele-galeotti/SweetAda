@@ -63,8 +63,10 @@ package body BSP is
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      UART16x50.RX (UART1_Descriptor, Data);
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
