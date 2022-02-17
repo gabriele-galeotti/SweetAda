@@ -99,8 +99,7 @@ package body BSP is
    procedure Console_Getchar (C : out Character) is
       Data : Unsigned_8;
    begin
-      -- UART16x50.RX (UART_Descriptors (1), Data);
-      Data := 0;
+      UART16x50.RX (UART_Descriptors (1), Data);
       C := To_Ch (Data);
    end Console_Getchar;
 
