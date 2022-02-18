@@ -20,6 +20,7 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with MicroBlaze;
+with XPS;
 
 package ML605 is
 
@@ -36,13 +37,13 @@ package ML605 is
    use Interfaces;
    use Bits;
    use MicroBlaze;
+   use XPS;
 
    SPI_BASEADDRESS       : constant := 16#40A0_0000#;
    MEMORY_BASEADDRESS    : constant := 16#5000_0000#;
    FLASH_BASEADDRESS     : constant := 16#8600_0000#;
    INTC_BASEADDRESS      : constant := 16#8180_0000#;
    TIMER_BASEADDRESS     : constant := 16#83C0_0000#;
-   -- __FIX__ serial_mm_init() in petalogix_ml605_mmu.c:petalogix_ml605_init()
    UART16550_BASEADDRESS : constant := 16#83E0_0000# + 16#0000_1000#;
    AXIENET_BASEADDRESS   : constant := 16#8278_0000#;
    AXIDMA_BASEADDRESS    : constant := 16#8460_0000#;
