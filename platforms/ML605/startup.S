@@ -18,8 +18,9 @@
                 .global _start
 _start:
 
-                //addi    r1,r0,0x00004000
-                //addi    r15,r0,0x50000000
+                //
+                // Setup stack pointer.
+                //
                 addik   r1,r0,kernel_stack
 
                 //
