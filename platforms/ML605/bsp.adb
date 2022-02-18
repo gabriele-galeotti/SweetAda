@@ -84,6 +84,7 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("MicroBlaze ML605 (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
       Tclk_Init;
       INTC_Init;
       Irq_Enable;

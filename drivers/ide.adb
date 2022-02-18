@@ -96,7 +96,7 @@ package body IDE is
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (ERROR_Type, Unsigned_8);
-   function To_ERROR_Type is new Ada.Unchecked_Conversion (Unsigned_8, ERROR_Type);
+   function To_ERROR is new Ada.Unchecked_Conversion (Unsigned_8, ERROR_Type);
 
    -- HEAD Register
 
@@ -120,7 +120,7 @@ package body IDE is
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (HEAD_Type, Unsigned_8);
-   function To_HEAD_Type is new Ada.Unchecked_Conversion (Unsigned_8, HEAD_Type);
+   function To_HEAD is new Ada.Unchecked_Conversion (Unsigned_8, HEAD_Type);
 
    -- STATUS Register
 
@@ -150,7 +150,7 @@ package body IDE is
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (STATUS_Type, Unsigned_8);
-   function To_STATUS_Type is new Ada.Unchecked_Conversion (Unsigned_8, STATUS_Type);
+   function To_STATUS is new Ada.Unchecked_Conversion (Unsigned_8, STATUS_Type);
 
    -- Local declarations
 
@@ -242,13 +242,11 @@ package body IDE is
                            Register   : IDE_Register_Type
                           ) return Unsigned_8 is
    begin
-      return Descriptor.Read_8 (
-                                Build_Address (
+      return Descriptor.Read_8 (Build_Address (
                                                Descriptor.Base_Address,
                                                IDE_Register_Offset (Register),
                                                Descriptor.Scale_Address
-                                              )
-                               );
+                                              ));
    end Register_Read;
 
    ----------------------------------------------------------------------------
@@ -260,14 +258,11 @@ package body IDE is
                              Value      : in Unsigned_8
                             ) is
    begin
-      Descriptor.Write_8 (
-                          Build_Address (
+      Descriptor.Write_8 (Build_Address (
                                          Descriptor.Base_Address,
                                          IDE_Register_Offset (Register),
                                          Descriptor.Scale_Address
-                                        ),
-                          Value
-                         );
+                                        ), Value);
    end Register_Write;
 
    ----------------------------------------------------------------------------
@@ -278,13 +273,11 @@ package body IDE is
                            Register   : IDE_Register_Type
                           ) return Unsigned_16 is
    begin
-      return Descriptor.Read_16 (
-                                 Build_Address (
+      return Descriptor.Read_16 (Build_Address (
                                                 Descriptor.Base_Address,
                                                 IDE_Register_Offset (Register),
                                                 Descriptor.Scale_Address
-                                               )
-                                );
+                                               ));
    end Register_Read;
 
    ----------------------------------------------------------------------------
@@ -296,14 +289,11 @@ package body IDE is
                              Value      : in Unsigned_16
                             ) is
    begin
-      Descriptor.Write_16 (
-                           Build_Address (
+      Descriptor.Write_16 (Build_Address (
                                           Descriptor.Base_Address,
                                           IDE_Register_Offset (Register),
                                           Descriptor.Scale_Address
-                                         ),
-                           Value
-                          );
+                                         ), Value);
    end Register_Write;
 
    ----------------------------------------------------------------------------
@@ -392,7 +382,7 @@ package body IDE is
 
    function STATUS_Read (Descriptor : IDE_Descriptor_Type) return STATUS_Type is
    begin
-      return To_STATUS_Type (Register_Read (Descriptor, STATUS));
+      return To_STATUS (Register_Read (Descriptor, STATUS));
    end STATUS_Read;
 
    procedure COMMAND_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
@@ -435,7 +425,7 @@ package body IDE is
    function Is_DRQ_Active (Descriptor : IDE_Descriptor_Type) return Boolean is
       Success : Boolean := False;
    begin
-      for Loop_Count in 1 .. 10_0000 loop
+      for Loop_Count in 1 .. 100_000 loop
          if STATUS_Read (Descriptor).DRQ then
             Success := True;
             exit;
