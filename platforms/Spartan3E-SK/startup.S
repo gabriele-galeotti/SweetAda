@@ -24,6 +24,9 @@ reset:          brai    _start
                 .global _start
 _start:
 
+                //
+                // Setup stack pointer.
+                //
                 addik   r1,r0,kernel_stack
 
                 //
