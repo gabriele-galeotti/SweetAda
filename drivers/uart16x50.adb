@@ -386,14 +386,12 @@ package body UART16x50 is
    -- RX
    ----------------------------------------------------------------------------
    procedure RX (Descriptor : in out Uart16x50_Descriptor_Type; Data : out Unsigned_8) is
-      Success : Boolean with Unreferenced => True;
    begin
       -- wait for data available
       loop
          exit when To_LSR (Register_Read (Descriptor, LSR)).DR;
       end loop;
       Data := Register_Read (Descriptor, RBR);
-      -- FIFO.Put (Descriptor.Data_Queue'Access, Data, Success);
    end RX;
 
    ----------------------------------------------------------------------------

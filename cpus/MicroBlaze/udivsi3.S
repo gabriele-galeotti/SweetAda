@@ -78,6 +78,5 @@ return_here:
                 addik   r1,r1,12
 
                 .size   __udivsi3,.-__udivsi3
-
                 .end    __udivsi3
 
