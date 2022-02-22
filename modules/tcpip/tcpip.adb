@@ -54,6 +54,7 @@ package body TCPIP is
    -- Checksum_Core_U32
    ----------------------------------------------------------------------------
    -- Basic network-order 16-bit data checksum computation.
+   -- __REF__ RFC 1071
    ----------------------------------------------------------------------------
    function Checksum_Core_U32 (Data : Byte_A2Array) return Unsigned_32 is
       Sum    : Unsigned_32 := 0;
@@ -63,12 +64,12 @@ package body TCPIP is
          Address => Data'Address;
    begin
       while Length > 1 loop
-         Sum := Sum + Unsigned_32 (N2H (Data16 (Index)));
-         Index := Index + 1;
-         Length := Length - 2;
+         Sum := @ + Unsigned_32 (Data16 (Index));
+         Index := @ + 1;
+         Length := @ - 2;
       end loop;
       if Length /= 0 then
-         Sum := Sum + Unsigned_32 (Data (Data'Last)) * 2**8;
+         Sum := @ + Unsigned_32 (Data (Data'Last));
       end if;
       return Sum;
    end Checksum_Core_U32;
@@ -77,6 +78,7 @@ package body TCPIP is
    -- Checksum
    ----------------------------------------------------------------------------
    -- Compute 1's-complement 16-bit IP checksum using Checksum_Core_U32.
+   -- __REF__ RFC 1071
    ----------------------------------------------------------------------------
    function Checksum (Data : Byte_A2Array; Sum_Initial : Unsigned_32 := 0) return Unsigned_16 is
       Sum  : Unsigned_32;
@@ -86,7 +88,7 @@ package body TCPIP is
       loop
          HSum := HWord (Sum);
          if HSum /= 0 then
-            Sum := Unsigned_32 (HSum) + Unsigned_32 (LWord (Sum));
+            Sum := Unsigned_32 (HSum) + Unsigned_32 (LWord (@));
          else
             exit;
          end if;
@@ -114,7 +116,7 @@ package body TCPIP is
             ICMP_Header.Typ      := ICMP_ECHO_REPLY;
             ICMP_Header.Code     := 0;
             ICMP_Header.Checksum := 0;
-            ICMP_Header.Checksum := H2N (Checksum (P.all.Payload (P.all.Offset .. P.all.Offset + P.all.Total_Size - 1)));
+            ICMP_Header.Checksum := Checksum (P.all.Payload (P.all.Offset .. P.all.Offset + P.all.Total_Size - 1));
             -- __FIX__ exploit received packet: change src/dst IP, compute checksum
             Payload_Rewind (P);
             declare
@@ -128,7 +130,7 @@ package body TCPIP is
                IPv4_Header.Src_Address     := Ethernet.Descriptor_Get.Paddress;
                IPv4_Header.Header_Checksum := 0;
                Header_Length := Natural (IPv4_Header.IHL) * 4;
-               IPv4_Header.Header_Checksum := H2N (Checksum (P.all.Payload (P.all.Offset .. P.all.Offset + Header_Length - 1)));
+               IPv4_Header.Header_Checksum := Checksum (P.all.Payload (P.all.Offset .. P.all.Offset + Header_Length - 1));
             end;
             Payload_Adjust (P, +Ethernet.ETH_HDR_SIZE);
             P.all.Payload (0 .. 5)  := P.all.Payload (6 .. 11);          -- target MAC is sender MAC
@@ -211,7 +213,7 @@ package body TCPIP is
          IPv4_Header.Src_Address     := Ethernet.Descriptor_Get.Paddress;
          IPv4_Header.Header_Checksum := 0;
          IP_Header_Length := Natural (IPv4_Header.IHL) * 4;
-         IPv4_Header.Header_Checksum := H2N (Checksum (P.all.Payload (P.all.Offset .. P.all.Offset + IP_Header_Length - 1)));
+         IPv4_Header.Header_Checksum := Checksum (P.all.Payload (P.all.Offset .. P.all.Offset + IP_Header_Length - 1));
          Pseudo_Header.Src_Address := IPv4_Header.Src_Address;
          Pseudo_Header.Dst_Address := IPv4_Header.Dst_Address;
          Pseudo_Header.Zeroes      := 0;
@@ -225,7 +227,7 @@ package body TCPIP is
                                   P.all.Payload (P.all.Offset .. P.all.Offset + P.all.Total_Size - 1),
                                   Checksum_Header
                                  );
-      UDP_Header.Checksum := H2N (Checksum_Total);
+      UDP_Header.Checksum := Checksum_Total;
       Payload_Rewind (P);                                          -- uncover IP header
       Payload_Adjust (P, +Ethernet.ETH_HDR_SIZE);
       P.all.Payload (0 .. 5)  := P.all.Payload (6 .. 11);          -- target MAC is sender MAC
