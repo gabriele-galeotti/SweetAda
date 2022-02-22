@@ -14,7 +14,9 @@ OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
 
-USE_APPLICATION := test-RaspberryPi3
+#USE_APPLICATION := test-RaspberryPi3
+# RAM  : ORIGIN = 0x00100000, LENGTH = 1M
+USE_APPLICATION := test-srecord
 
 # path to FAT32 1st partition on a micro-SD memory card
 export USDCARD_UUID       := 0F5F-3CD8
