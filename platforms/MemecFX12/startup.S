@@ -56,7 +56,7 @@ _start:
                 //mtmsr   r0                      // MSR = R0
                 //sync
                 //
-                // Initialize stack pointer.
+                // Setup stack pointer.
                 //
                 lis     r1,kernel_stack@ha
                 addi    r1,r1,kernel_stack@l

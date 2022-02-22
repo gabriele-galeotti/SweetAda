@@ -131,7 +131,9 @@ _init:
                 //jal     zerobss
                 //nop
 
-                // setup stack pointer
+                //
+                // Setup stack pointer.
+                //
                 la      $sp,kernel_stack
 
                 //

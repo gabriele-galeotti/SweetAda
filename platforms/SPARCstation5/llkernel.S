@@ -20,8 +20,12 @@
                 //
 
                 .global trap_table
+                .align  16
 trap_table:
-                b       trap_table                      // trap 0x00
+                .extern _start
+                sethi   %hi(_start),%g1
+                or      %g1,%lo(_start),%g1
+                jmp     _start                          // trap 0x00
                 nop
                 .align  16
                 b       trap_table                      // trap 0x01

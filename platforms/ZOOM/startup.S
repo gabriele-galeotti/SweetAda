@@ -72,7 +72,7 @@ _start:
                 move.l  #vector_table,%d0               // VBR setting -- see MCF5200 PRM Section 5, "Supervisor (privileged) instructions"
                 movec.l %d0,%vbr
                 //
-                // Initialize stack pointer.
+                // Setup stack pointer.
                 //
                 lea.l   kernel_stack,%sp
 #if defined(PLATFORM_DBUG)

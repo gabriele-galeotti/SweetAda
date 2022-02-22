@@ -56,6 +56,9 @@ _start:
                 bra.s   1b
 2:
 
+                //
+                // Setup stack pointer.
+                //
                 lea.l   kernel_stack,%sp
 
                 //

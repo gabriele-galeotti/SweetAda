@@ -99,7 +99,7 @@ _start:
                 nop
 
                 //
-                // Set up stack.
+                // Setup stack pointer.
                 //
                 la      $sp,STACK_INIT
 
