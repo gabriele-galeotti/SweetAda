@@ -33,7 +33,6 @@ package body BSP is
 
    use Interfaces;
    use Bits;
-   use SBC5206;
 
    --========================================================================--
    --                                                                        --
@@ -49,13 +48,14 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
-      -- Uart0.UTB := Character'Pos (C);
-      Uart0tx := To_U8 (C);
+      SBC5206.TX (To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      SBC5206.RX (Data);
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -65,7 +65,7 @@ package body BSP is
    begin
       -------------------------------------------------------------------------
       Exceptions.Init;
-      UART_Init;
+      SBC5206.Init;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read := Console_Getchar'Access;

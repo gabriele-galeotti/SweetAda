@@ -15,7 +15,36 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
+with LLutils;
+with MMIO;
+with CFPeripherals;
+
 package body SBC5206 is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use System;
+   use System.Storage_Elements;
+   use CFPeripherals;
+
+   -- Local subprograms
+
+   function Register_Read (
+                           Register   : UART_Register_Type
+                          ) return Unsigned_8;
+   procedure Register_Write (
+                             Register   : in UART_Register_Type;
+                             Value      : in Unsigned_8
+                            );
 
    --========================================================================--
    --                                                                        --
@@ -25,21 +54,68 @@ package body SBC5206 is
    --                                                                        --
    --========================================================================--
 
-   procedure UART_Init is
+   ----------------------------------------------------------------------------
+   -- Register_Read
+   ----------------------------------------------------------------------------
+   function Register_Read (
+                           Register   : UART_Register_Type
+                          ) return Unsigned_8 is
    begin
-      -- Uart0 := (Mode => READ, UMR_Selector => UMR1);
-      -- Uart0.UCR   := 16#10#; -- reset mode register pointer
-      -- Uart0.UCR   := 16#20#; -- reset receiver
-      -- Uart0.UCR   := 16#30#; -- reset transmitter
-      -- Uart0.UCR   := 16#05#; -- enable tx&rx
-      -- Uart0.UCSR  := 16#DD#; -- TIMER
-      -- Uart0.UMRW1 := 16#13#;
-      -- Uart0.UMRW2 := 16#00#;
-      Uart0cr := 16#10#; -- reset mode register pointer
-      Uart0cr := 16#20#; -- reset receiver
-      Uart0cr := 16#30#; -- reset transmitter
-      Uart0cr := 16#05#; -- enable tx&rx
-      null;
-   end UART_Init;
+      return MMIO.Read_U8 (LLutils.Build_Address (
+                                               To_Address (MBAR_VALUE),
+                                               UART_Register_Offset (Register),
+                                               0
+                                              ));
+   end Register_Read;
+
+   ----------------------------------------------------------------------------
+   -- Register_Write
+   ----------------------------------------------------------------------------
+   procedure Register_Write (
+                             Register   : in UART_Register_Type;
+                             Value      : in Unsigned_8
+                            ) is
+   begin
+      MMIO.Write_U8 (LLutils.Build_Address (
+                                         To_Address (MBAR_VALUE),
+                                         UART_Register_Offset (Register),
+                                         0
+                                        ), Value);
+   end Register_Write;
+
+   ----------------------------------------------------------------------------
+   -- Init
+   ----------------------------------------------------------------------------
+   procedure Init is
+   begin
+      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_RESET, others => 0)));
+      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_RxRESET, others => 0)));
+      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_TxRESET, others => 0)));
+      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_ENABLE, TC => TC_ENABLE, MISC => MISC_NONE, others => 0)));
+   end Init;
+
+   ----------------------------------------------------------------------------
+   -- TX
+   ----------------------------------------------------------------------------
+   procedure TX (Data : in Unsigned_8) is
+   begin
+      -- wait for transmitter buffer empty
+      loop
+         exit when To_USR (Register_Read (USR)).TxRDY;
+      end loop;
+      Register_Write (UTB, Data);
+   end TX;
+
+   ----------------------------------------------------------------------------
+   -- RX
+   ----------------------------------------------------------------------------
+   procedure RX (Data : out Unsigned_8) is
+   begin
+      -- wait for data available
+      loop
+         exit when To_USR (Register_Read (USR)).RxRDY;
+      end loop;
+      Data := Register_Read (URB);
+   end RX;
 
 end SBC5206;

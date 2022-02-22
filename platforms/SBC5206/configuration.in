@@ -4,7 +4,7 @@
 #
 
 CPU       := M68k
-CPU_MODEL := CFv2
+CPU_MODEL := CF5206
 
 # -Wa,--bitwise-or
 GCC_SWITCHES_PLATFORM     += -mcpu=5206 -Wa,-mcpu=5206
