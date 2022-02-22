@@ -44,24 +44,14 @@ package BSP is
 
    QEMU : Boolean := False;
 
-   function Number_Of_CPUs return Interfaces.C.int;
+   function Number_Of_CPUs return Interfaces.C.int with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_number_of_cpus";
    procedure Tclk_Init;
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);
    procedure BSP_Setup;
    procedure BSP_Reset;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Export (C, Number_Of_CPUs, "__gnat_number_of_cpus");
-   pragma Export (Asm, BSP_Setup, "bsp_setup");
 
 end BSP;

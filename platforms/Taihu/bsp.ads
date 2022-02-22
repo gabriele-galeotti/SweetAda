@@ -34,16 +34,4 @@ package BSP is
    procedure Console_Getchar (C : out Character);
    procedure BSP_Setup;
 
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Export (Asm, BSP_Setup, "bsp_setup");
-
 end BSP;
