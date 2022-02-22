@@ -15,9 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with CPU;
-with Spartan3A;
-
 package body BSP is
 
    --========================================================================--
@@ -34,17 +31,7 @@ package body BSP is
    procedure BSP_Setup is
    begin
       -------------------------------------------------------------------------
-      declare
-         Delay_Count : constant := 10_000_000;
-      begin
-         Spartan3A.LEDs_TS := 16#0F#;
-         loop
-            Spartan3A.LEDs_IO := 16#0F#;
-            for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            Spartan3A.LEDs_IO := 16#0#;
-            for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-         end loop;
-      end;
+      null;
       -------------------------------------------------------------------------
    end BSP_Setup;
 
