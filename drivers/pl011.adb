@@ -31,16 +31,16 @@ package body PL011 is
    -- Register types
    ----------------------------------------------------------------------------
 
-   type PL011_Register_Type is (DR, RSR, FR);
+   type PL011_Register_Type is (UARTDR, UARTRSR, UARTFR);
 
    PL011_Register_Offset : constant array (PL011_Register_Type) of Storage_Offset :=
       (
-       DR  => 0,
-       RSR => 16#04#,
-       FR  => 16#18#
+       UARTDR  => 0,
+       UARTRSR => 16#04#,
+       UARTFR  => 16#18#
       );
 
-   type DR_RX_Type is
+   type UARTDR_Type is
    record
       DATA   : Unsigned_8;
       FE     : Boolean;
@@ -51,7 +51,7 @@ package body PL011 is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
-   for DR_RX_Type use
+   for UARTDR_Type use
    record
       DATA   at 0 range 0 .. 7;
       FE     at 1 range 0 .. 0;
@@ -61,10 +61,10 @@ package body PL011 is
       Unused at 1 range 4 .. 7;
    end record;
 
-   function To_U16 is new Ada.Unchecked_Conversion (DR_RX_Type, Unsigned_16);
-   function To_DR_RX is new Ada.Unchecked_Conversion (Unsigned_16, DR_RX_Type);
+   function To_U16 is new Ada.Unchecked_Conversion (UARTDR_Type, Unsigned_16);
+   function To_UARTDR is new Ada.Unchecked_Conversion (Unsigned_16, UARTDR_Type);
 
-   type FR_Type is
+   type UARTFR_Type is
    record
       CTS    : Boolean;
       DSR    : Boolean;
@@ -79,7 +79,7 @@ package body PL011 is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
-   for FR_Type use
+   for UARTFR_Type use
    record
       CTS    at 0 range 0 .. 0;
       DSR    at 0 range 1 .. 1;
@@ -93,8 +93,8 @@ package body PL011 is
       Unused at 1 range 1 .. 7;
    end record;
 
-   function To_U16 is new Ada.Unchecked_Conversion (FR_Type, Unsigned_16);
-   function To_FR is new Ada.Unchecked_Conversion (Unsigned_16, FR_Type);
+   function To_U16 is new Ada.Unchecked_Conversion (UARTFR_Type, Unsigned_16);
+   function To_UARTFR is new Ada.Unchecked_Conversion (Unsigned_16, UARTFR_Type);
 
    -- Local subprograms
 
@@ -186,12 +186,25 @@ package body PL011 is
    ----------------------------------------------------------------------------
    -- TX
    ----------------------------------------------------------------------------
-   procedure TX (Descriptor : in PL011_Descriptor_Type; Value : in Unsigned_8) is
+   procedure TX (Descriptor : in PL011_Descriptor_Type; Data : in Unsigned_8) is
    begin
+      -- wait for transmitter available
       loop
-         exit when not To_FR (Register_Read (Descriptor, FR)).TXFF;
+         exit when not To_UARTFR (Register_Read (Descriptor, UARTFR)).TXFF;
       end loop;
-      Register_Write (Descriptor, DR, Value);
+      Register_Write (Descriptor, UARTDR, Data);
    end TX;
+
+   ----------------------------------------------------------------------------
+   -- RX
+   ----------------------------------------------------------------------------
+   procedure RX (Descriptor : in PL011_Descriptor_Type; Data : out Unsigned_8) is
+   begin
+      -- wait for receiver available
+      loop
+         exit when To_UARTFR (Register_Read (Descriptor, UARTFR)).RXFF;
+      end loop;
+      Data := To_UARTDR (Register_Read (Descriptor, UARTDR)).DATA;
+   end RX;
 
 end PL011;

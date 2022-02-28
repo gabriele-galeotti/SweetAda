@@ -61,6 +61,7 @@ package PL011 is
       );
 
    procedure Init (Descriptor : in PL011_Descriptor_Type);
-   procedure TX (Descriptor : in PL011_Descriptor_Type; Value : in Unsigned_8);
+   procedure TX (Descriptor : in PL011_Descriptor_Type; Data : in Unsigned_8);
+   procedure RX (Descriptor : in PL011_Descriptor_Type; Data : out Unsigned_8);
 
 end PL011;
