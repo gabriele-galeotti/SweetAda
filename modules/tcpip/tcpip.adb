@@ -69,7 +69,7 @@ package body TCPIP is
          Length := @ - 2;
       end loop;
       if Length /= 0 then
-         Sum := @ + Unsigned_32 (Data (Data'Last));
+         Sum := @ + Unsigned_32 (H2N (Unsigned_16 (Data (Data'Last)) * 2**8));
       end if;
       return Sum;
    end Checksum_Core_U32;
