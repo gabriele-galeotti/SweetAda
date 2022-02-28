@@ -17,6 +17,7 @@
 
 with System;
 with System.Storage_Elements;
+with Interfaces;
 with Bits;
 with MMIO;
 with Virt;
@@ -34,6 +35,7 @@ package body BSP is
 
    use System;
    use System.Storage_Elements;
+   use Interfaces;
    use Bits;
    use Virt;
 
@@ -55,8 +57,10 @@ package body BSP is
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      PL011.RX (PL011_Descriptor, Data);
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
