@@ -18,6 +18,7 @@
 with System;
 with Interfaces;
 with Configure;
+with LEON3;
 with Console;
 
 package body BSP is
@@ -32,6 +33,7 @@ package body BSP is
 
    use System;
    use Interfaces;
+   use LEON3;
 
    --========================================================================--
    --                                                                        --
@@ -47,12 +49,14 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
-      UART1.Data_Register := Unsigned_32 (To_U8 (C));
+      LEON3.UART1_TX (To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      LEON3.UART1_RX (Data);
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -82,7 +86,7 @@ package body BSP is
       GPTIMER.Control_Register_1.LD := True;
       GPTIMER.Control_Register_1.IE := True;
       GPTIMER.Control_Register_1.EN := True;
-      UART1.Control_Register.TE := True;
+      UART1_Init;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;

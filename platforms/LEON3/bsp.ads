@@ -15,9 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
 with Bits;
-with LEON3;
 
 package BSP is
 
@@ -29,26 +27,12 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Bits;
-   use LEON3;
 
-   Nwindows : aliased Bits.CPU_Integer with
+   Nwindows : aliased CPU_Integer with
       Import        => True,
       Convention    => Asm,
       External_Name => "nwindows";
-
-   GPTIMER : aliased GPTimer_Type with
-      Address    => To_Address (GPTIMER_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-
-   UART1 : aliased APB_UART_Type with
-      Address    => To_Address (APB_UART1_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

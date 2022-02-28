@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -30,11 +31,9 @@ package LEON3 is
    --========================================================================--
 
    use System;
+   use System.Storage_Elements;
    use Interfaces;
    use Bits;
-
-   GPTIMER_BASEADDRESS   : constant := 16#8000_0300#;
-   APB_UART1_BASEADDRESS : constant := 16#8000_0100#;
 
    ----------------------------------------------------------------------------
    -- Timer
@@ -143,72 +142,94 @@ package LEON3 is
       Control_Register_4  at 16#48# range 0 .. 31;
    end record;
 
+   GPTIMER_BASEADDRESS   : constant := 16#8000_0300#;
+
+   GPTIMER : aliased GPTimer_Type with
+      Address    => To_Address (GPTIMER_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   procedure Tclk_Init;
+
    ----------------------------------------------------------------------------
    -- APB UART
    ----------------------------------------------------------------------------
 
-   type UART_Control_Register_Type is
-   record
-      FA       : Boolean;
-      Reserved : Bits_18;
-      Unused1  : Bits_1;
-      DB       : Boolean;
-      RF       : Boolean;
-      TF       : Boolean;
-      Unused2  : Bits_1;
-      LB       : Boolean;
-      Unused3  : Bits_1;
-      PE       : Boolean;
-      PS       : Bits_1;
-      TI       : Boolean;
-      RI       : Boolean;
-      TE       : Boolean;
-      RE       : Boolean;
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 32;
-   for UART_Control_Register_Type use
-   record
-      FA       at 0 range 0 .. 0;
-      Reserved at 0 range 1 .. 18;
-      Unused1  at 2 range 3 .. 3;
-      DB       at 2 range 4 .. 4;
-      RF       at 2 range 5 .. 5;
-      TF       at 2 range 6 .. 6;
-      Unused2  at 2 range 7 .. 7;
-      LB       at 3 range 0 .. 0;
-      Unused3  at 3 range 1 .. 1;
-      PE       at 3 range 2 .. 2;
-      PS       at 3 range 3 .. 3;
-      TI       at 3 range 4 .. 4;
-      RI       at 3 range 5 .. 5;
-      TE       at 3 range 6 .. 6;
-      RE       at 3 range 7 .. 7;
-   end record;
-
    type UART_Status_Register_Type is
    record
-      Reserved : Bits_25;
-      FE       : Boolean;
-      PE       : Boolean;
-      OV       : Boolean;
-      BR       : Boolean;
-      TH       : Boolean;
-      TS       : Boolean;
       DR       : Boolean;
+      TS       : Boolean;
+      TE       : Boolean;
+      BR       : Boolean;
+      OV       : Boolean;
+      PE       : Boolean;
+      FE       : Boolean;
+      TH       : Boolean;
+      RH       : Boolean;
+      TF       : Boolean;
+      RF       : Boolean;
+      Reserved : Bits_9;
+      TCNT     : Bits_6;
+      RCNT     : Bits_6;
    end record with
-      Bit_Order => High_Order_First,
+      Bit_Order => Low_Order_First,
       Size      => 32;
    for UART_Status_Register_Type use
    record
-      Reserved at 0 range 0 .. 24;
-      FE       at 3 range 1 .. 1;
-      PE       at 3 range 2 .. 2;
-      OV       at 3 range 3 .. 3;
-      BR       at 3 range 4 .. 4;
-      TH       at 3 range 5 .. 5;
-      TS       at 3 range 6 .. 6;
-      DR       at 3 range 7 .. 7;
+      DR       at 0 range 0 .. 0;
+      TS       at 0 range 1 .. 1;
+      TE       at 0 range 2 .. 2;
+      BR       at 0 range 3 .. 3;
+      OV       at 0 range 4 .. 4;
+      PE       at 0 range 5 .. 5;
+      FE       at 0 range 6 .. 6;
+      TH       at 0 range 7 .. 7;
+      RH       at 0 range 8 .. 8;
+      TF       at 0 range 9 .. 9;
+      RF       at 0 range 10 .. 10;
+      Reserved at 0 range 11 .. 19;
+      TCNT     at 0 range 20 .. 25;
+      RCNT     at 0 range 26 .. 31;
+   end record;
+
+   type UART_Control_Register_Type is
+   record
+      RE       : Boolean;
+      TE       : Boolean;
+      RI       : Boolean;
+      TI       : Boolean;
+      PS       : Bits_1;
+      PE       : Boolean;
+      Unused3  : Bits_1;
+      LB       : Boolean;
+      Unused2  : Bits_1;
+      TF       : Boolean;
+      RF       : Boolean;
+      DB       : Boolean;
+      Unused1  : Bits_1;
+      Reserved : Bits_18;
+      FA       : Boolean;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for UART_Control_Register_Type use
+   record
+      RE       at 0 range 0 .. 0;
+      TE       at 0 range 1 .. 1;
+      RI       at 0 range 2 .. 2;
+      TI       at 0 range 3 .. 3;
+      PS       at 0 range 4 .. 4;
+      PE       at 0 range 5 .. 5;
+      Unused3  at 0 range 6 .. 6;
+      LB       at 0 range 7 .. 7;
+      Unused2  at 0 range 8 .. 8;
+      TF       at 0 range 9 .. 9;
+      RF       at 0 range 10 .. 10;
+      DB       at 0 range 11 .. 11;
+      Unused1  at 0 range 12 .. 12;
+      Reserved at 0 range 13 .. 30;
+      FA       at 0 range 31 .. 31;
    end record;
 
    type APB_UART_Type is
@@ -231,6 +252,16 @@ package LEON3 is
       FIFO_Debug_Register at 16#10# range 0 .. 31;
    end record;
 
-   procedure Tclk_Init;
+   APB_UART1_BASEADDRESS : constant := 16#8000_0100#;
+
+   UART1 : aliased APB_UART_Type with
+      Address    => To_Address (APB_UART1_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   procedure UART1_Init;
+   procedure UART1_TX (Data : in Unsigned_8);
+   procedure UART1_RX (Data : out Unsigned_8);
 
 end LEON3;
