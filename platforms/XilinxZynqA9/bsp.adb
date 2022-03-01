@@ -48,12 +48,14 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
-      Uart0.R_TX_RX := Unsigned_32 (To_U8 (C));
+      UART_TX (To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      UART_RX (Data);
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
