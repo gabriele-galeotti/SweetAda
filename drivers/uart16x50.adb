@@ -375,7 +375,7 @@ package body UART16x50 is
    ----------------------------------------------------------------------------
    procedure TX (Descriptor : in out Uart16x50_Descriptor_Type; Data : in Unsigned_8) is
    begin
-      -- wait for transmitter buffer empty
+      -- wait for transmitter available
       loop
          exit when To_LSR (Register_Read (Descriptor, LSR)).TEMT;
       end loop;
@@ -387,7 +387,7 @@ package body UART16x50 is
    ----------------------------------------------------------------------------
    procedure RX (Descriptor : in out Uart16x50_Descriptor_Type; Data : out Unsigned_8) is
    begin
-      -- wait for data available
+      -- wait for receiver available
       loop
          exit when To_LSR (Register_Read (Descriptor, LSR)).DR;
       end loop;

@@ -39,6 +39,30 @@ package body Bits is
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- P/NBooleans
+   ----------------------------------------------------------------------------
+
+   function Inactive (Value : PBoolean) return Boolean is
+   begin
+      return Value = PFalse;
+   end Inactive;
+
+   function Active (Value : PBoolean) return Boolean is
+   begin
+      return Value = PTrue;
+   end Active;
+
+   function Inactive (Value : NBoolean) return Boolean is
+   begin
+      return Value = NFalse;
+   end Inactive;
+
+   function Active (Value : NBoolean) return Boolean is
+   begin
+      return Value = NTrue;
+   end Active;
+
+   ----------------------------------------------------------------------------
    -- Map_Bitsize
    ----------------------------------------------------------------------------
    function Map_Bitsize (Size : Positive) return Bitsize is
@@ -400,6 +424,98 @@ package body Bits is
    end BitN;
 
    ----------------------------------------------------------------------------
+   -- Bit_Extend
+   ----------------------------------------------------------------------------
+
+   -- Unsigned_8
+   function Bit_Extend (Value : Interfaces.Unsigned_8; Bit : Natural) return Interfaces.Unsigned_8 is
+      Sign   : Interfaces.Unsigned_8;
+      Mask   : Interfaces.Unsigned_8;
+      Result : Interfaces.Unsigned_8 := 0;
+   begin
+      if Bit <= 7 then
+         if BigEndian then
+            Sign := 2**(7 - Bit);
+         else
+            Sign := 2**Bit;
+         end if;
+         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
+         Sign := Value and Sign; -- Sign is now conditionally asserted
+         Result := Value and Mask;
+         if Sign /= 0 then
+            Result := Result or (not Mask);
+         end if;
+      end if;
+      return Result;
+   end Bit_Extend;
+
+   -- Unsigned_16
+   function Bit_Extend (Value : Interfaces.Unsigned_16; Bit : Natural) return Interfaces.Unsigned_16 is
+      Sign   : Interfaces.Unsigned_16;
+      Mask   : Interfaces.Unsigned_16;
+      Result : Interfaces.Unsigned_16 := 0;
+   begin
+      if Bit <= 15 then
+         if BigEndian then
+            Sign := 2**(15 - Bit);
+         else
+            Sign := 2**Bit;
+         end if;
+         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
+         Sign := Value and Sign; -- Sign is now conditionally asserted
+         Result := Value and Mask;
+         if Sign /= 0 then
+            Result := Result or (not Mask);
+         end if;
+      end if;
+      return Result;
+   end Bit_Extend;
+
+   -- Unsigned_32
+   function Bit_Extend (Value : Interfaces.Unsigned_32; Bit : Natural) return Interfaces.Unsigned_32 is
+      Sign   : Interfaces.Unsigned_32;
+      Mask   : Interfaces.Unsigned_32;
+      Result : Interfaces.Unsigned_32 := 0;
+   begin
+      if Bit <= 31 then
+         if BigEndian then
+            Sign := 2**(31 - Bit);
+         else
+            Sign := 2**Bit;
+         end if;
+         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
+         Sign := Value and Sign; -- Sign is now conditionally asserted
+         Result := Value and Mask;
+         if Sign /= 0 then
+            Result := Result or (not Mask);
+         end if;
+      end if;
+      return Result;
+   end Bit_Extend;
+
+   -- Unsigned_64
+   function Bit_Extend (Value : Interfaces.Unsigned_64; Bit : Natural) return Interfaces.Unsigned_64 is
+      Sign   : Interfaces.Unsigned_64;
+      Mask   : Interfaces.Unsigned_64;
+      Result : Interfaces.Unsigned_64 := 0;
+   begin
+      if Bit <= 63 then
+         if BigEndian then
+            Sign := 2**(63 - Bit);
+         else
+            Sign := 2**Bit;
+         end if;
+         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
+         Sign := Value and Sign; -- Sign is now conditionally asserted
+         Result := Value and Mask;
+         if Sign /= 0 then
+            Result := Result or (not Mask);
+         end if;
+      end if;
+      return Result;
+   end Bit_Extend;
+
+   ----------------------------------------------------------------------------
    -- L/M/N/O/P/Q/R/HByte
    ----------------------------------------------------------------------------
    -- Extract an Unsigned_8-component from a word.
@@ -733,97 +849,5 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end NetworkToHost;
-
-   ----------------------------------------------------------------------------
-   -- Bit_Extend
-   ----------------------------------------------------------------------------
-
-   -- Unsigned_8
-   function Bit_Extend (Value : Interfaces.Unsigned_8; Bit : Natural) return Interfaces.Unsigned_8 is
-      Sign   : Interfaces.Unsigned_8;
-      Mask   : Interfaces.Unsigned_8;
-      Result : Interfaces.Unsigned_8 := 0;
-   begin
-      if Bit <= 7 then
-         if BigEndian then
-            Sign := 2**(7 - Bit);
-         else
-            Sign := 2**Bit;
-         end if;
-         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
-         Sign := Value and Sign; -- Sign is now conditionally asserted
-         Result := Value and Mask;
-         if Sign /= 0 then
-            Result := Result or (not Mask);
-         end if;
-      end if;
-      return Result;
-   end Bit_Extend;
-
-   -- Unsigned_16
-   function Bit_Extend (Value : Interfaces.Unsigned_16; Bit : Natural) return Interfaces.Unsigned_16 is
-      Sign   : Interfaces.Unsigned_16;
-      Mask   : Interfaces.Unsigned_16;
-      Result : Interfaces.Unsigned_16 := 0;
-   begin
-      if Bit <= 15 then
-         if BigEndian then
-            Sign := 2**(15 - Bit);
-         else
-            Sign := 2**Bit;
-         end if;
-         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
-         Sign := Value and Sign; -- Sign is now conditionally asserted
-         Result := Value and Mask;
-         if Sign /= 0 then
-            Result := Result or (not Mask);
-         end if;
-      end if;
-      return Result;
-   end Bit_Extend;
-
-   -- Unsigned_32
-   function Bit_Extend (Value : Interfaces.Unsigned_32; Bit : Natural) return Interfaces.Unsigned_32 is
-      Sign   : Interfaces.Unsigned_32;
-      Mask   : Interfaces.Unsigned_32;
-      Result : Interfaces.Unsigned_32 := 0;
-   begin
-      if Bit <= 31 then
-         if BigEndian then
-            Sign := 2**(31 - Bit);
-         else
-            Sign := 2**Bit;
-         end if;
-         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
-         Sign := Value and Sign; -- Sign is now conditionally asserted
-         Result := Value and Mask;
-         if Sign /= 0 then
-            Result := Result or (not Mask);
-         end if;
-      end if;
-      return Result;
-   end Bit_Extend;
-
-   -- Unsigned_64
-   function Bit_Extend (Value : Interfaces.Unsigned_64; Bit : Natural) return Interfaces.Unsigned_64 is
-      Sign   : Interfaces.Unsigned_64;
-      Mask   : Interfaces.Unsigned_64;
-      Result : Interfaces.Unsigned_64 := 0;
-   begin
-      if Bit <= 63 then
-         if BigEndian then
-            Sign := 2**(63 - Bit);
-         else
-            Sign := 2**Bit;
-         end if;
-         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
-         Sign := Value and Sign; -- Sign is now conditionally asserted
-         Result := Value and Mask;
-         if Sign /= 0 then
-            Result := Result or (not Mask);
-         end if;
-      end if;
-      return Result;
-   end Bit_Extend;
 
 end Bits;
