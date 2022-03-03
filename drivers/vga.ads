@@ -30,8 +30,8 @@ package VGA is
    use System.Storage_Elements;
 
    type Mode_Type is (
-                      MODE3H, -- TEXT
-                      MODE12H -- GRAPHIC
+                      MODE03H, -- TEXT 80x25
+                      MODE12H  -- GRAPHIC 640x480x4
                      );
 
    VIDEO_TEXT_WIDTH  : constant := 80;

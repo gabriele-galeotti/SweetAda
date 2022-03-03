@@ -64,7 +64,7 @@ package body VGA is
 
    type SEQUENCER_Register_Type is range 0 .. 16#04#;
 
-   SEQUENCER_Register_Values_MODE3H : constant array (SEQUENCER_Register_Type range <>) of Unsigned_8 :=
+   SEQUENCER_Register_Values_MODE03H : constant array (SEQUENCER_Register_Type range <>) of Unsigned_8 :=
       (
        16#03#, -- 00 Reset:
        16#00#, -- 01 Clocking Mode: bit0 = 0 --> 9 dots, bit0 = 1 --> 8 dots
@@ -88,7 +88,7 @@ package body VGA is
 
    type CRTC6845_Register_Type is range 0 .. 16#18#;
 
-   CRTC6845_Register_Values_MODE3H : constant array (CRTC6845_Register_Type range <>) of Unsigned_8 :=
+   CRTC6845_Register_Values_MODE03H : constant array (CRTC6845_Register_Type range <>) of Unsigned_8 :=
       (
        16#5F#, -- 00 Horizontal Total:
        16#4F#, -- 01 End Horizontal Display:
@@ -152,7 +152,7 @@ package body VGA is
 
    type GC_Register_Type is range 0 .. 16#08#;
 
-   GC_Register_Values_MODE3H : constant array (GC_Register_Type range <>) of Unsigned_8 :=
+   GC_Register_Values_MODE03H : constant array (GC_Register_Type range <>) of Unsigned_8 :=
       (
        16#00#, -- 00 Set/Reset:
        16#00#, -- 01 Enable Set/Reset:
@@ -187,7 +187,7 @@ package body VGA is
 
    type ATC_Register_Type is range 0 .. 16#20#;
 
-   ATC_Register_Values_MODE3H : constant array (ATC_Register_Type range 0 .. 16#14#) of Unsigned_8 :=
+   ATC_Register_Values_MODE03H : constant array (ATC_Register_Type range 0 .. 16#14#) of Unsigned_8 :=
       (
        -- 16-color palette mapping:
        -- the (input) index of this array is the attribute
@@ -475,17 +475,22 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- Set_Mode
    ----------------------------------------------------------------------------
-   -- 80x25 text mode (03h), standard CGA color values, no interrupt
-   -- resolution: 720x400 pixels
-   -- colors:     16
-   -- font WxH:   9x16 pixels
-   -- clock:      28.322 MHz
-   -- hsync:      31.469 kHz (negative polarity)
-   -- vsync:      70.087 Hz (positive polarity)
-   ----------------------------------------------------------------------------
    -- __REF__ http://www.brokenthorn.com/Resources/OSDevVid2.html
    -- __REF__ https://en.wikipedia.org/wiki/Video_Graphics_Array
    -- __REF__ https://pdos.csail.mit.edu/6.828/2006/readings/hardware/vgadoc/VGAREGS.TXT
+   ----------------------------------------------------------------------------
+   -- text mode 03h, 80x25 cell size, 9x16 WxH font, no interrupt
+   -- resolution: 720x400 pixels
+   -- colors:     16 (standard CGA color values)
+   -- clock:      28.322 MHz
+   -- hsync:      31.469 kHz (negative polarity)
+   -- vsync:      70.087 Hz (positive polarity)
+   -- graphic mode 12h
+   -- resolution: 640x480 pixels
+   -- colors:     16
+   -- clock:      25.175 MHz
+   -- hsync:      31.469 kHz (negative polarity)
+   -- vsync:      59.940 Hz (negative polarity)
    ----------------------------------------------------------------------------
    procedure Set_Mode (Mode : in Mode_Type) is
    begin
@@ -505,13 +510,13 @@ package body VGA is
       -- bit6 = 1           --> HSYNC=negative
       -- bit7 = 1           --> VSYNC=negative
       case Mode is
-         when MODE3H  => CPU.IO.PortOut (MISCELLANEOUS_OUTPUT, Unsigned_8'(16#67#));
+         when MODE03H => CPU.IO.PortOut (MISCELLANEOUS_OUTPUT, Unsigned_8'(16#67#));
          when MODE12H => CPU.IO.PortOut (MISCELLANEOUS_OUTPUT, Unsigned_8'(16#E3#));
       end case;
       -- Sequencer registers programming --------------------------------------
       for R in SEQUENCER_Register_Type'Range loop
          case Mode is
-            when MODE3H  => SEQUENCER_Register_Write (R, SEQUENCER_Register_Values_MODE3H (R));
+            when MODE03H => SEQUENCER_Register_Write (R, SEQUENCER_Register_Values_MODE03H (R));
             when MODE12H => SEQUENCER_Register_Write (R, SEQUENCER_Register_Values_MODE12H (R));
          end case;
       end loop;
@@ -520,7 +525,7 @@ package body VGA is
       CRTC6845_Register_Write (16#11#, 0);
       for R in CRTC6845_Register_Type'Range loop
          case Mode is
-            when MODE3H  => CRTC6845_Register_Write (R, CRTC6845_Register_Values_MODE3H (R));
+            when MODE03H => CRTC6845_Register_Write (R, CRTC6845_Register_Values_MODE03H (R));
             when MODE12H => CRTC6845_Register_Write (R, CRTC6845_Register_Values_MODE12H (R));
          end case;
       end loop;
@@ -528,14 +533,14 @@ package body VGA is
       -- Graphic Controller registers programming -----------------------------
       for R in GC_Register_Type'Range loop
          case Mode is
-            when MODE3H  => GC_Register_Write (R, GC_Register_Values_MODE3H (R));
+            when MODE03H => GC_Register_Write (R, GC_Register_Values_MODE03H (R));
             when MODE12H => GC_Register_Write (R, GC_Register_Values_MODE12H (R));
          end case;
       end loop;
       -- Attribute Controller registers programming ---------------------------
       for R in ATC_Register_Type range 0 .. 16#14# loop
          case Mode is
-            when MODE3H  => ATC_Register_Write (R, ATC_Register_Values_MODE3H (R));
+            when MODE03H => ATC_Register_Write (R, ATC_Register_Values_MODE03H (R));
             when MODE12H => ATC_Register_Write (R, ATC_Register_Values_MODE12H (R));
          end case;
       end loop;
@@ -543,18 +548,18 @@ package body VGA is
       -- DAC programming ------------------------------------------------------
       -- disable video (prevents memory access during DAC programming)
       case Mode is
-         when MODE3H  => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE3H (1) or 16#20#);
+         when MODE03H => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE03H (1) or 16#20#);
          when MODE12H => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE12H (1) or 16#20#);
       end case;
       -- DAC programming
       DAC_Init;
       -- re-enable video
       case Mode is
-         when MODE3H  => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE3H (1));
+         when MODE03H => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE03H (1));
          when MODE12H => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE12H (1));
       end case;
       -- text font installation -----------------------------------------------
-      if Mode = MODE3H then
+      if Mode = MODE03H then
          -- switch to graphic mode -----------------------------------------------
          GC_Register_Write (5, 16#00#); -- clear 16/8 bit mode
          GC_Register_Write (6, 16#04#); -- map VGA memory to 0xA0000, 64 kB, enable A/N mode
@@ -562,10 +567,10 @@ package body VGA is
          SEQUENCER_Register_Write (4, 16#06#); -- character map access, sequential memory
          Load_Font;
          -- restore values and switch to text mode
-         GC_Register_Write (5, GC_Register_Values_MODE3H (16#05#));
-         GC_Register_Write (6, GC_Register_Values_MODE3H (16#06#));
-         SEQUENCER_Register_Write (2, SEQUENCER_Register_Values_MODE3H (16#02#));
-         SEQUENCER_Register_Write (4, SEQUENCER_Register_Values_MODE3H (16#04#));
+         GC_Register_Write (5, GC_Register_Values_MODE03H (16#05#));
+         GC_Register_Write (6, GC_Register_Values_MODE03H (16#06#));
+         SEQUENCER_Register_Write (2, SEQUENCER_Register_Values_MODE03H (16#02#));
+         SEQUENCER_Register_Write (4, SEQUENCER_Register_Values_MODE03H (16#04#));
       end if;
       -------------------------------------------------------------------------
    end Set_Mode;

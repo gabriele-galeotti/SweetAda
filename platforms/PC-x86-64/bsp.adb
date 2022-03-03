@@ -130,7 +130,7 @@ package body BSP is
       end;
       -- VGA ------------------------------------------------------------------
       VGA.Init (0, 0);
-      VGA.Set_Mode (VGA.MODE3H);
+      VGA.Set_Mode (VGA.MODE03H);
       VGA.Clear_Screen;
       VGA.Print (0, 0, KERNEL_NAME & ": initializing");
       if QEMU then
