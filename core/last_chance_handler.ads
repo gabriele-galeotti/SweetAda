@@ -30,19 +30,10 @@ package Last_Chance_Handler is
    pragma Preelaborate;
 
    -- Source_Location is a C NUL-terminated string
-   procedure Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer);
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Export (C, Last_Chance_Handler, "__gnat_last_chance_handler");
-   pragma No_Return (Last_Chance_Handler);
+   procedure Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) with
+      No_Return     => True,
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_last_chance_handler";
 
 end Last_Chance_Handler;

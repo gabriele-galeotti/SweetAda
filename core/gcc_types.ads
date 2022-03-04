@@ -66,20 +66,11 @@ package GCC_Types is
    --    Alignment => Interfaces.Unsigned_128'Alignment,
    --    Size      => System.Storage_Unit * 16;
 
-   function Shift_Left (Value : USI_Type; Amount : Natural) return USI_Type;
-   function Shift_Right (Value : USI_Type; Amount : Natural) return USI_Type;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Import (Intrinsic, Shift_Left);
-   pragma Import (Intrinsic, Shift_Right);
+   function Shift_Left (Value : USI_Type; Amount : Natural) return USI_Type with
+      Import     => True,
+      Convention => Intrinsic;
+   function Shift_Right (Value : USI_Type; Amount : Natural) return USI_Type with
+      Import     => True,
+      Convention => Intrinsic;
 
 end GCC_Types;

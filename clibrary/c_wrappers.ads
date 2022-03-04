@@ -31,40 +31,64 @@ package C_Wrappers is
 
    pragma Preelaborate;
 
-   procedure Ada_Print_Character (c : in Interfaces.C.char);
-   procedure Ada_Print_NewLine;
-   procedure Ada_Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8);
-   procedure Ada_Print_UnsignedHex16 (Value : in Interfaces.Unsigned_16);
-   procedure Ada_Print_UnsignedHex32 (Value : in Interfaces.Unsigned_32);
-   procedure Ada_Print_UnsignedHex64 (Value : in Interfaces.Unsigned_64);
-   procedure Ada_Print_AddressHex (Value : in System.Address);
-   procedure Ada_Print_BitImage (Value : in Interfaces.Unsigned_8);
-   function Ada_Malloc (S : Interfaces.C.size_t) return System.Address;
-   procedure Ada_Free (A : in System.Address);
-   function Ada_Calloc (N : Interfaces.C.size_t; S : Interfaces.C.size_t) return System.Address;
-   function Ada_Realloc (A : System.Address; S : Interfaces.C.size_t) return System.Address;
+   procedure Ada_Print_Character (c : in Interfaces.C.char) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_print_character";
 
-private
+   procedure Ada_Print_NewLine with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_print_newline";
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
+   procedure Ada_Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_print_hexunsigned8";
 
-   pragma Export (C, Ada_Print_Character, "ada_print_character");
-   pragma Export (C, Ada_Print_NewLine, "ada_print_newline");
-   pragma Export (C, Ada_Print_UnsignedHex8, "ada_print_hexunsigned8");
-   pragma Export (C, Ada_Print_UnsignedHex16, "ada_print_hexunsigned16");
-   pragma Export (C, Ada_Print_UnsignedHex32, "ada_print_hexunsigned32");
-   pragma Export (C, Ada_Print_UnsignedHex64, "ada_print_hexunsigned64");
-   pragma Export (C, Ada_Print_AddressHex, "ada_print_hexaddress");
-   pragma Export (C, Ada_Print_BitImage, "ada_print_bitimage");
-   pragma Export (C, Ada_Malloc, "ada_malloc");
-   pragma Export (C, Ada_Free, "ada_free");
-   pragma Export (C, Ada_Calloc, "ada_calloc");
-   pragma Export (C, Ada_Realloc, "ada_realloc");
+   procedure Ada_Print_UnsignedHex16 (Value : in Interfaces.Unsigned_16) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_print_hexunsigned16";
+
+   procedure Ada_Print_UnsignedHex32 (Value : in Interfaces.Unsigned_32) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_print_hexunsigned32";
+
+   procedure Ada_Print_UnsignedHex64 (Value : in Interfaces.Unsigned_64) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_print_hexunsigned64";
+
+   procedure Ada_Print_AddressHex (Value : in System.Address) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_print_hexaddress";
+
+   procedure Ada_Print_BitImage (Value : in Interfaces.Unsigned_8) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_print_bitimage";
+
+   function Ada_Malloc (S : Interfaces.C.size_t) return System.Address with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_malloc";
+
+   procedure Ada_Free (A : in System.Address) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_free";
+
+   function Ada_Calloc (N : Interfaces.C.size_t; S : Interfaces.C.size_t) return System.Address with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_calloc";
+
+   function Ada_Realloc (A : System.Address; S : Interfaces.C.size_t) return System.Address with
+      Export        => True,
+      Convention    => C,
+      External_Name => "ada_realloc";
 
 end C_Wrappers;

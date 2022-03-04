@@ -32,65 +32,72 @@ package LibGCC is
    function AddDI3 (
                     A1 : GCC_Types.UDI_Type;
                     A2 : GCC_Types.UDI_Type
-                   ) return GCC_Types.UDI_Type;
+                   ) return GCC_Types.UDI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__adddi3";
 
    function SubDI3 (
                     A1 : GCC_Types.UDI_Type;
                     A2 : GCC_Types.UDI_Type
-                   ) return GCC_Types.UDI_Type;
+                   ) return GCC_Types.UDI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__subdi3";
 
    function NegDI2 (
                     Value : GCC_Types.UDI_Type
-                   ) return GCC_Types.UDI_Type;
+                   ) return GCC_Types.UDI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__negdi2";
 
    function MulSI3 (
                     M1 : GCC_Types.USI_Type;
                     M2 : GCC_Types.USI_Type
-                   ) return GCC_Types.USI_Type;
+                   ) return GCC_Types.USI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__mulsi3";
 
    function MulDI3 (
                     M1 : GCC_Types.UDI_Type;
                     M2 : GCC_Types.UDI_Type
-                   ) return GCC_Types.UDI_Type;
+                   ) return GCC_Types.UDI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__muldi3";
 
    function DivSI3 (
                     N : GCC_Types.SI_Type;
                     D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type;
+                   ) return GCC_Types.SI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__divsi3";
 
    function ModSI3 (
                     N : GCC_Types.SI_Type;
                     D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type;
+                   ) return GCC_Types.SI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__modsi3";
 
    function UDivSI3 (
                      N : GCC_Types.USI_Type;
                      D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type;
+                    ) return GCC_Types.USI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__udivsi3";
 
    function UModSI3 (
                      N : GCC_Types.USI_Type;
                      D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Export (C, AddDI3, "__adddi3");
-   pragma Export (C, SubDI3, "__subdi3");
-   pragma Export (C, NegDI2, "__negdi2");
-   pragma Export (C, MulSI3, "__mulsi3");
-   pragma Export (C, MulDI3, "__muldi3");
-   pragma Export (C, DivSI3, "__divsi3");
-   pragma Export (C, ModSI3, "__modsi3");
-   pragma Export (C, UDivSI3, "__udivsi3");
-   pragma Export (C, UModSI3, "__umodsi3");
+                    ) return GCC_Types.USI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__umodsi3";
 
 end LibGCC;

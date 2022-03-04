@@ -35,48 +35,54 @@ package Memory_Functions is
                     S1 : System.Address;
                     S2 : System.Address;
                     N  : Interfaces.C.size_t
-                   ) return Interfaces.C.int;
+                   ) return Interfaces.C.int with
+      Export        => True,
+      Convention    => C,
+      External_Name => "memcmp";
+
    function Memcpy (
                     S1 : System.Address;
                     S2 : System.Address;
                     N  : Interfaces.C.size_t
-                   ) return System.Address;
+                   ) return System.Address with
+      Export        => True,
+      Convention    => C,
+      External_Name => "memcpy";
+
    function Memmove (
                      S1 : System.Address;
                      S2 : System.Address;
                      N  : Interfaces.C.size_t
-                    ) return System.Address;
+                    ) return System.Address with
+      Export        => True,
+      Convention    => C,
+      External_Name => "memmove";
+
    function Memset (
                     S : System.Address;
                     C : Interfaces.C.int;
                     N : Interfaces.C.size_t
-                   ) return System.Address;
+                   ) return System.Address with
+      Export        => True,
+      Convention    => C,
+      External_Name => "memset";
+
    procedure Bcopy (
                     S1 : in System.Address;
                     S2 : in System.Address;
                     N  : in Interfaces.C.size_t
-                   );
+                   ) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "bcopy";
+
    procedure Cpymem (
                      S1 : System.Address; -- source
                      S2 : System.Address; -- destination
                      N  : Bits.Bytesize
-                    );
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Export (C, Memcmp, "memcmp");
-   pragma Export (C, Memcpy, "memcpy");
-   pragma Export (C, Memmove, "memmove");
-   pragma Export (C, Memset, "memset");
-   pragma Export (C, Bcopy, "bcopy");
-   pragma Export (C, Cpymem, "cpymem");
+                    ) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "cpymem";
 
 end Memory_Functions;
