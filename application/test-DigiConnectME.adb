@@ -44,9 +44,9 @@ package body Application is
          begin
             loop
                NETARM.PORTC := NETARM.PORTC and 16#FFFF_FFBF#;
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
                NETARM.PORTC := NETARM.PORTC or 16#0000_0040#;
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
       end if;
@@ -56,7 +56,7 @@ package body Application is
             Delay_Count : constant := 500_000;
          begin
             loop
-               for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
                MMIO.Write_U8 (To_Address (NETARM.SERTX), Bits.To_U8 ('.'));
             end loop;
          end;
