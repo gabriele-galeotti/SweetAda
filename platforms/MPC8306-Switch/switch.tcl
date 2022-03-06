@@ -121,7 +121,7 @@ ccs::write_mem 0 0xFF405004 4 0 0xFFFC0796 ;# OR0 256kB Bank size, Large page Re
 ccs::write_mem 0 0xFF4050D0 4 0 0x00000000
 
 # LCRR
-# bit 14 - 15 = 0b11 - EADC - 3 external address delay cycles 
+# bit 14 - 15 = 0b11 - EADC - 3 external address delay cycles
 # bit 28 - 31 = 0b0010 - CLKDIV - system clock:memory bus clock = 2
 ccs::write_mem 0 0xFF4050D4 4 0 0x00030002
 

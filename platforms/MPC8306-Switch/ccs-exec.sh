@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# CCS wrapper.
+# CCS front-end.
 #
 
 #
@@ -30,8 +30,7 @@ CCS_PREFIX=/root/project/hardware/PowerPC/USBTAP
 
 cp -f ${SWEETADA_PATH}/${PLATFORM_DIRECTORY}/autoexec.tcl ${CCS_PREFIX}/bin/
 cd ${CCS_PREFIX}/bin
-./ccs -console
-#./startccs.sh &
+./ccs -console &
 
 exit 0
 

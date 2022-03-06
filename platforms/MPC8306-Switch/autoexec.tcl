@@ -9,8 +9,8 @@
 
 puts "Executing autoexec.tcl ..."
 
-set COMESA_SWITCH_PATH "/root/project/technical/devices/COMESA_Switch"
 set SWEETADA_PATH "/root/project/sweetada"
+set MPC8306_SWITCH_PATH [file join $SWEETADA_PATH "platforms" "MPC8306-Switch"]
 
 puts "Loading utilities.tcl ..."
 source utilities.tcl
@@ -23,7 +23,7 @@ config cc utap:12022069
 show cc
 
 puts "Loading switch.tcl ..."
-source [file join $COMESA_SWITCH_PATH switch.tcl]
+source [file join $MPC8306_SWITCH_PATH switch.tcl]
 puts "Loading kernel.rom ..."
 loadbinaryfile [file join $SWEETADA_PATH kernel.rom]
 

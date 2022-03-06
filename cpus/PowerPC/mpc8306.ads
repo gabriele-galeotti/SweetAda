@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.adb                                                                                                   --
+-- __FLN__ mpc8306.ads                                                                                               --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,36 +15,50 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with MPC8306;
-with Switch;
+with System;
+with System.Storage_Elements;
+with Interfaces;
 
-package body BSP is
+package MPC8306 is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Package subprograms                          --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   ----------------------------------------------------------------------------
-   -- Console wrappers
-   ----------------------------------------------------------------------------
+   use System;
+   use System.Storage_Elements;
+   use Interfaces;
 
-   -- procedure Console_Putchar (C : in Character) is null;
-   -- procedure Console_Getchar (C : out Character) is null;
+   IMMRBAR : constant := 16#FF40_0000#;
 
-   ----------------------------------------------------------------------------
-   -- BSP_Setup
-   ----------------------------------------------------------------------------
-   procedure BSP_Setup is
-   begin
-      -- 6.3.2.6 System I/O Configuration Register 2 (SICR_2)
-      MPC8306.SICR_1 := 16#0001_165F#; -- UART1A mapped on I/O pads
-      MPC8306.SICR_2 := 16#A005_0475#; -- GPIO22 function
-      MPC8306.GP1DIR := 16#0000_0200#; -- GPIO22 = output
-      MPC8306.GP1ODR := 16#FFFF_FDFF#; -- GPIO22 = actively driven
-   end BSP_Setup;
+   SICR_1 : Unsigned_32 with
+      Address              => To_Address (IMMRBAR + 16#0114#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   SICR_2 : Unsigned_32 with
+      Address              => To_Address (IMMRBAR + 16#0118#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   GP1DIR : Unsigned_32 with
+      Address              => To_Address (IMMRBAR + 16#0C00#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   GP1ODR : Unsigned_32 with
+      Address              => To_Address (IMMRBAR + 16#0C04#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   GP1DAT : Unsigned_32 with
+      Address              => To_Address (IMMRBAR + 16#0C08#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
-end BSP;
+end MPC8306;

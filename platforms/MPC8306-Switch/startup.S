@@ -153,7 +153,7 @@ _start:
 #endif
 
                 //
-                // Initialize stack pointer.
+                // Setup stack pointer.
                 //
                 lis     r1,kernel_stack@h
                 ori     r1,r1,kernel_stack@l
@@ -170,19 +170,17 @@ _start:
                 //lis     r13,_SDA_BASE_@h
                 //ori     r13,r13,_SDA_BASE_@l
 
-                bl      toggle_led
-
                 //
                 // Call "adainit" procedure.
                 //
-                //.extern adainit
-                //bl      adainit
+                .extern adainit
+                bl      adainit
 
                 //
                 // Jump to high-level code.
                 //
-                //.extern _ada_main
-                //b       _ada_main
+                .extern _ada_main
+                b       _ada_main
 
 dead:           b       .
 
@@ -317,62 +315,6 @@ icache_enable:
 //                mtspr   HID0,r3
 //                sync
                 blr
-
-//
-// Toggle the onboard LED.
-//
-// Does not use memory or stack.
-//
-
-toggle_led:
-                // LED output driving I/O setup
-                lis     r0,0xA0050475@h
-                ori     r0,r0,0xA0050475@l
-                lis     r3,SICR_2@h
-                ori     r3,r3,SICR_2@l
-                stw     r0,0(r3)
-                lis     r0,0x00000200@h
-                ori     r0,r0,0x00000200@l
-                lis     r3,GP1DIR@h
-                ori     r3,r3,GP1DIR@l
-                stw     r0,0(r3)
-                lis     r0,0xFFFFFDFF@h
-                ori     r0,r0,0xFFFFFDFF@l
-                lis     r3,GP1ODR@h
-                ori     r3,r3,GP1ODR@l
-                stw     r0,0(r3)
-tl1:            // first delay loop
-                li      r3,0
-1:              lis     r0,0x000F0000@h
-                mr      r9,r3
-                cmp     cr7,0,r9,r0
-                bgt     cr7,2f
-                addi    r9,r9,1
-                addi    r3,r3,1
-                b       1b
-2:              // drive LED on
-                lis     r0,0x00000200@h
-                ori     r0,r0,0x00000200@l
-                lis     r3,GP1DAT@h
-                ori     r3,r3,GP1DAT@l
-                stw     r0,0(r3)
-                // second delay loop
-                li      r3,0
-1:              lis     r0,0x000F0000@h
-                mr      r9,r3
-                cmp     cr7,0,r9,r0
-                bgt     cr7,2f
-                addi    r9,r9,1
-                addi    r3,r3,1
-                b       1b
-2:              // drive LED off
-                lis     r0,0x00000000@h
-                ori     r0,r0,0x00000000@l
-                lis     r3,GP1DAT@h
-                ori     r3,r3,GP1DAT@l
-                stw     r0,0(r3)
-                // forever
-                b       tl1
 
 ////////////////////////////////////////////////////////////////////////////////
 
