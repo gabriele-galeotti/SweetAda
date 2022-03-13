@@ -45,6 +45,7 @@ package MPC8306 is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
    GP1DIR : Unsigned_32 with
       Address              => To_Address (IMMRBAR + 16#0C00#),
       Volatile_Full_Access => True,
@@ -57,6 +58,47 @@ package MPC8306 is
       Convention           => Ada;
    GP1DAT : Unsigned_32 with
       Address              => To_Address (IMMRBAR + 16#0C08#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   UART1_URBR : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4500#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART1_UTHR : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4500#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART1_UDLB : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4500#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART1_UIER : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4501#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART1_UDMB : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4501#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART1_ULCR : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4503#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART1_UMCR : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4504#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART1_ULSR : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4505#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
