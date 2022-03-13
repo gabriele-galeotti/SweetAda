@@ -5,10 +5,6 @@
 # usage: source switch.tcl
 #
 
-ccs::config_chain mpc83xx
-ccs::display_get_config_chain
-ccs::reset_to_debug
-
 ################################################################################
 # Generic setup                                                                #
 ################################################################################

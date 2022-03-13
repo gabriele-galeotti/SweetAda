@@ -69,10 +69,12 @@ case "x$1" in
     if [ $? -ne 0 ] ; then
       exit 1
     fi
-    cat << EOF | nc -q 0 localhost $CCS_NETSERVER_PORT
+    cat << EOF | nc -q 0 localhost ${CCS_NETSERVER_PORT}
 #findcc utaps
 config cc utap:${USBTAP_SN}
 show cc
+ccs::config_chain mpc83xx
+ccs::display_get_config_chain
 EOF
     ;;
   "x-shutdown")
