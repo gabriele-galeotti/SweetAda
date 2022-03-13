@@ -55,16 +55,18 @@ package body BSP is
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
-      Data : Unsigned_8;
    begin
-      Data := 0;
+      loop
+         exit when (MPC8306.UART1_ULSR and 16#01#) /= 0;
+      end loop;
+      C := To_Ch (MPC8306.UART1_URBR);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
-      BAUDRATE : constant := 9600;
+      BAUDRATE         : constant := 9600;
       BAUDRATE_DIVISOR : constant := Switch.SYSTEM_CLOCK / (BAUDRATE * 16);
    begin
       -- 6.3.2.6 System I/O Configuration Register 2 (SICR_2) -----------------
