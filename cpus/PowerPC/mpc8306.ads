@@ -103,4 +103,45 @@ package MPC8306 is
       Import               => True,
       Convention           => Ada;
 
+   UART2_URBR : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4600#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART2_UTHR : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4600#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART2_UDLB : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4600#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART2_UIER : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4601#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART2_UDMB : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4601#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART2_ULCR : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4603#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART2_UMCR : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4604#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   UART2_ULSR : Unsigned_8 with
+      Address              => To_Address (IMMRBAR + 16#4605#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
 end MPC8306;
