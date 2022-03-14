@@ -14,6 +14,7 @@
 # PLATFORM_DIRECTORY
 # CCS_PREFIX
 # CCS_NETSERVER_PORT
+# USBTAP_SN
 #
 
 ################################################################################
@@ -57,11 +58,6 @@ return 0
 #                                                                              #
 ################################################################################
 
-# USB TAPs
-#USBTAP_SN=11070407
-#USBTAP_SN=12022034
-USBTAP_SN=12022069
-
 case "x$1" in
   "x-server")
     ${CCS_PREFIX}/bin/ccs -file ${SWEETADA_PATH}/${LIBUTILS_DIRECTORY}/ccs-utils.tcl
@@ -82,14 +78,15 @@ EOF
     ;;
   "x-run"|"x-debug")
     cat << EOF | nc -q 0 localhost ${CCS_NETSERVER_PORT}
+ccs::stop_core 0
 ccs::reset_to_debug
+ccs::display_core_run_mode 0
+ccs::stat
 puts "Loading switch.tcl ..."
 source [file join ${SWEETADA_PATH} ${PLATFORM_DIRECTORY} switch.tcl]
 puts "Loading kernel.rom ..."
 loadbinaryfile [file join ${SWEETADA_PATH} kernel.rom]
 #ccs::display_mem 0 0x0 4 4 0x20
-ccs::display_core_run_mode 0
-ccs::stat
 ccs::write_reg 0 iar 0
 ccs::write_reg 0 iabr 0
 ccs::run_core 0

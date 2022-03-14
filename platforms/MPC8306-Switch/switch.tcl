@@ -1,8 +1,6 @@
 
 #
-# COMESA "Switch" MPC8306 CCS configuration.
-#
-# usage: source switch.tcl
+# MPC8306 COMESA "Switch" CCS configuration.
 #
 
 ################################################################################
@@ -23,12 +21,12 @@ ccs::write_reg 0 msr 0x00002000
 
 # Local Bus Local Access Windows
 # WINDOW 1 - NAND Flash EPROM
-ccs::write_mem 0 0xFF400020 4 0 0xC0000000 ;# LBLAWBAR1  - begining at 0xC0000000
+ccs::write_mem 0 0xFF400020 4 0 0xC0000000 ;# LBLAWBAR1  - beginning at 0xC0000000
 ccs::write_mem 0 0xFF400024 4 0 0x8000001B ;# LBLAWAR1   - enable, size = 256MB
 
 # DDR Local Access Windows
 # WINDOW 0 - 1st DDR SODIMM
-ccs::write_mem 0 0xFF4000A0 4 0 0x00000000 ;# DDRLAWBAR0 - begining at 0x00000000
+ccs::write_mem 0 0xFF4000A0 4 0 0x00000000 ;# DDRLAWBAR0 - beginning at 0x00000000
 ccs::write_mem 0 0xFF4000A4 4 0 0x8000001A ;# DDRLAWAR0  - enable, size = 128MB
 
 ################################################################################
@@ -65,10 +63,6 @@ ccs::write_mem 0 0xFF402000 4 0 0x00000007
 # 10 column bits
 ccs::write_mem 0 0xFF402080 4 0 0x80840102
 
-# TIMING_CONFIG_3 - offset 0x0100 from 0x0_2000
-# Extended refresh recovery time (tRFC) = 0 clocks
-ccs::write_mem 0 0xFF402100 4 0 0x00000000
-
 # TIMING_CONFIG_0
 ccs::write_mem 0 0xFF402104 4 0 0x00220802
 
@@ -78,7 +72,11 @@ ccs::write_mem 0 0xFF402108 4 0 0x26256222
 # TIMING_CONFIG_2
 ccs::write_mem 0 0xFF40210C 4 0 0x0F9028C7
 
-# DDR_SDRAM_CFG - offset 0x0100 from 0x0_2000
+# TIMING_CONFIG_3 - offset 0x0100 from 0x0_2000
+# Extended refresh recovery time (tRFC) = 0 clocks
+ccs::write_mem 0 0xFF402100 4 0 0x00000000
+
+# DDR_SDRAM_CFG - offset 0x0100 from 0x2000
 # SDRAM self refresh is enabled during sleep
 # Indicates unbuffered DRAM modules
 # Type of SDRAM device to be used
@@ -97,10 +95,7 @@ ccs::write_mem 0 0xFF40211C 4 0 0x8000C000
 # DDR_SDRAM_INTERVAL
 ccs::write_mem 0 0xFF402124 4 0 0x03200064
 
-# delay before enable
-sleep 300
-
-# DDR_SDRAM_CFG - offset 0x0100 from 0x0_2000
+# DDR_SDRAM_CFG - offset 0x0100 from 0x2000
 # previous configuration +
 # SDRAM interface logic is enabled
 ccs::write_mem 0 0xFF402110 4 0 0xC3100000

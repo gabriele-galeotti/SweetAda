@@ -16,6 +16,7 @@ USE_APPLICATION := test-MPC8306-Switch
 
 export CCS_PREFIX=/root/project/hardware/PowerPC/USBTAP
 export CCS_NETSERVER_PORT=41476
+export USBTAP_SN=12022069
 
 SESSION_START_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/ccs-exec.sh -server
 SESSION_END_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/ccs-exec.sh -shutdown

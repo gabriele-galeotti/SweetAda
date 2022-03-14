@@ -69,15 +69,18 @@ package body BSP is
       BAUDRATE         : constant := 9600;
       BAUDRATE_DIVISOR : constant := Switch.SYSTEM_CLOCK / (BAUDRATE * 16);
    begin
+      -- 6.3.2.5 System I/O Configuration Register 1 (SICR_1) -----------------
+      MPC8306.SICR_1 := 16#0001_165F#; -- UART1 mapped on I/O pads
       -- 6.3.2.6 System I/O Configuration Register 2 (SICR_2) -----------------
-      MPC8306.SICR_1 := 16#0001_165F#; -- UART1A mapped on I/O pads
       MPC8306.SICR_2 := 16#A005_0475#; -- GPIO22 function
+      -- 21.3.1 GPIOn Direction Register (GP1DIR–GP2DIR) ----------------------
       MPC8306.GP1DIR := 16#0000_0200#; -- GPIO22 = output
+      -- 21.3.2 GPIOn Open Drain Register (GP1ODR–GP2ODR) ---------------------
       MPC8306.GP1ODR := 16#FFFF_FDFF#; -- GPIO22 = actively driven
       -- UART1 ----------------------------------------------------------------
       MPC8306.UART1_ULCR := 16#83#;                                 -- access UDLB, UDMB
-      MPC8306.UART1_UDLB := Unsigned_8 (BAUDRATE_DIVISOR mod 2**8); -- 0x64
-      MPC8306.UART1_UDMB := Unsigned_8 (BAUDRATE_DIVISOR / 2**8);   -- 0x03
+      MPC8306.UART1_UDLB := Unsigned_8 (BAUDRATE_DIVISOR mod 2**8);
+      MPC8306.UART1_UDMB := Unsigned_8 (BAUDRATE_DIVISOR / 2**8);
       MPC8306.UART1_ULCR := 16#03#;                                 -- 8-bit
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;

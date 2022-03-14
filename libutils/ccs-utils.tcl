@@ -25,17 +25,17 @@ proc loadbinaryfile {fname {channel stdout}} {
     }
     # open the file, and set up to process it in binary mode
     set f [open $fname r]
-    fconfigure $f           \
-        -buffering full     \
-        -buffersize 16384   \
-        -encoding binary    \
+    fconfigure $f \
+        -buffering full \
+        -buffersize 16384 \
+        -encoding binary \
         -translation binary
     while {true} {
         # record the seek address
         set offset [tell $f]
         # read 4 bytes from the file
         set s [read $f 4]
-        # stop if we've reached end of file
+        # stop if we have reached end of file
         if {[string length $s] == 0} {
             break
         }
