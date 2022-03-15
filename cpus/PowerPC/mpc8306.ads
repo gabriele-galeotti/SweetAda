@@ -35,6 +35,17 @@ package MPC8306 is
 
    IMMRBAR : constant := 16#FF40_0000#;
 
+   RCWLR : Unsigned_32 with
+      Address              => To_Address (IMMRBAR + 16#0900#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   RCWHR : Unsigned_32 with
+      Address              => To_Address (IMMRBAR + 16#0904#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    SICR_1 : Unsigned_32 with
       Address              => To_Address (IMMRBAR + 16#0114#),
       Volatile_Full_Access => True,
