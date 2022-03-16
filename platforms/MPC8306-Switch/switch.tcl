@@ -48,12 +48,12 @@ ccs::write_mem 0 0xFF400128 4 0 0x73000002
 # Clock is launched 1/2 applied cycle after address/command
 ccs::write_mem 0 0xFF402130 4 0 0x02000000
 
-# CS0_BNDS - offset 0x0000 from 0x0_2000
+# CS0_BNDS
 # Starting address for chip select (bank) 0 = 0x00000000
 # Ending address for chip select (bank) 0 = 0x07xxxxxx = 128MB size
 ccs::write_mem 0 0xFF402000 4 0 0x00000007
 
-# CS0_CONFIG - offset 0x0080 from 0x0_2000
+# CS0_CONFIG
 # Chip select 0 is active and assumes the state set in CSn_BNDS
 # Chip select 0 always issues an auto-precharge for read and write transactions
 # Never assert ODT for reads
@@ -72,11 +72,11 @@ ccs::write_mem 0 0xFF402108 4 0 0x26256222
 # TIMING_CONFIG_2
 ccs::write_mem 0 0xFF40210C 4 0 0x0F9028C7
 
-# TIMING_CONFIG_3 - offset 0x0100 from 0x0_2000
+# TIMING_CONFIG_3
 # Extended refresh recovery time (tRFC) = 0 clocks
 ccs::write_mem 0 0xFF402100 4 0 0x00000000
 
-# DDR_SDRAM_CFG - offset 0x0100 from 0x2000
+# DDR_SDRAM_CFG
 # SDRAM self refresh is enabled during sleep
 # Indicates unbuffered DRAM modules
 # Type of SDRAM device to be used
@@ -95,7 +95,7 @@ ccs::write_mem 0 0xFF40211C 4 0 0x8000C000
 # DDR_SDRAM_INTERVAL
 ccs::write_mem 0 0xFF402124 4 0 0x03200064
 
-# DDR_SDRAM_CFG - offset 0x0100 from 0x2000
+# DDR_SDRAM_CFG
 # previous configuration +
 # SDRAM interface logic is enabled
 ccs::write_mem 0 0xFF402110 4 0 0xC3100000

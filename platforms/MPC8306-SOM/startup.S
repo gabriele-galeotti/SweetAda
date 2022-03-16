@@ -180,7 +180,7 @@ _start:
                 // Jump to high-level code.
                 //
                 .extern _ada_main
-                b       _ada_main
+                bl      _ada_main
 
 dead:           b       .
 
