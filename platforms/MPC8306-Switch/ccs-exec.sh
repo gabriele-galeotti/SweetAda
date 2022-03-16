@@ -3,6 +3,11 @@
 #
 # CCS front-end.
 #
+# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
 
 #
 # Arguments:
@@ -71,6 +76,7 @@ config cc utap:${USBTAP_SN}
 show cc
 ccs::config_chain mpc83xx
 ccs::display_get_config_chain
+ccs::display_core_run_mode 0
 EOF
     ;;
   "x-shutdown")
@@ -79,14 +85,12 @@ EOF
   "x-run"|"x-debug")
     cat << EOF | nc -q 0 localhost ${CCS_NETSERVER_PORT}
 ccs::stop_core 0
-ccs::reset_to_debug
-ccs::display_core_run_mode 0
 ccs::stat
+ccs::reset_to_debug
 puts "Loading switch.tcl ..."
 source [file join ${SWEETADA_PATH} ${PLATFORM_DIRECTORY} switch.tcl]
 puts "Loading kernel.rom ..."
 loadbinaryfile [file join ${SWEETADA_PATH} kernel.rom]
-#ccs::display_mem 0 0x0 4 4 0x20
 ccs::write_reg 0 iar 0
 ccs::write_reg 0 iabr 0
 ccs::run_core 0
