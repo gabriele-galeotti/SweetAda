@@ -1,11 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- This manual is for SweetAda.
 
 Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
  -->
-<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
-<head>
 <title>SweetAda</title>
 
 <meta name="description" content="SweetAda">
@@ -13,34 +14,27 @@ Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
 <link href="#Top" rel="start" title="Top">
 <link href="#Index" rel="index" title="Index">
-<link href="dir.html#Top" rel="up" title="(dir)">
+<link href="#Overview" rel="next" title="Overview">
 <style type="text/css">
 <!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
 a.summary-letter {text-decoration: none}
 blockquote.indentedblock {margin-right: 0em}
-blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
-blockquote.smallquotation {font-size: smaller}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smalllisp {margin-left: 3.2em}
 kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
 span.nolinebreak {white-space: nowrap}
 span.roman {font-family: initial; font-weight: normal}
 span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -55,62 +49,42 @@ ul.no-bullet {list-style: none}
 
 
 
-<a name="Top"></a>
+<div class="top" id="Top">
 <div class="header">
 <p>
-Next: <a href="#Overview" accesskey="n" rel="next">Overview</a>, Up: <a href="dir.html#Top" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Overview" accesskey="n" rel="next">Overview</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="SweetAda"></a>
-<h1 class="top">SweetAda</h1>
+<span id="SweetAda"></span><h1 class="top">SweetAda</h1>
 
-<table class="menu" border="0" cellspacing="0">
-<tr><td align="left" valign="top">&bull; <a href="#Overview" accesskey="1">Overview</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Overall-structure" accesskey="2">Overall structure</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Host-environment" accesskey="3">Host environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Toolchains" accesskey="4">Toolchains</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Toolchain-tools" accesskey="5">Toolchain tools</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Building-the-RTS" accesskey="6">Building the RTS</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Configuration" accesskey="7">Configuration</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Makefile-targets" accesskey="8">Makefile targets</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Ada-environment" accesskey="9">Ada environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#GPRbuild-mode">GPRbuild mode</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Building-SweetAda">Building SweetAda</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Anatomy-of-a-platform">Anatomy of a platform</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#The-core-complex">The core complex</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#LibGCC">LibGCC</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Platform-descriptions">Platform descriptions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Optimizations">Optimizations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#IOEMU-scripting">IOEMU scripting</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Index">Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
-</td></tr>
-</table>
 
+<ul class="section-toc">
+<li><a href="#Overview" accesskey="1">Overview</a></li>
+<li><a href="#Overall-structure" accesskey="2">Overall structure</a></li>
+<li><a href="#Host-environment" accesskey="3">Host environment</a></li>
+<li><a href="#Toolchains" accesskey="4">Toolchains</a></li>
+<li><a href="#Toolchain-tools" accesskey="5">Toolchain tools</a></li>
+<li><a href="#Building-the-RTS" accesskey="6">Building the RTS</a></li>
+<li><a href="#Configuration" accesskey="7">Configuration</a></li>
+<li><a href="#Makefile-targets" accesskey="8">Makefile targets</a></li>
+<li><a href="#Ada-environment" accesskey="9">Ada environment</a></li>
+<li><a href="#GPRbuild-mode">GPRbuild mode</a></li>
+<li><a href="#Building-SweetAda">Building SweetAda</a></li>
+<li><a href="#Anatomy-of-a-platform">Anatomy of a platform</a></li>
+<li><a href="#The-core-complex">The core complex</a></li>
+<li><a href="#LibGCC">LibGCC</a></li>
+<li><a href="#Platform-descriptions">Platform descriptions</a></li>
+<li><a href="#Optimizations">Optimizations</a></li>
+<li><a href="#IOEMU-scripting">IOEMU scripting</a></li>
+<li><a href="#Index">Index</a></li>
+</ul>
 <hr>
-<a name="Overview"></a>
+<div class="chapter" id="Overview">
 <div class="header">
 <p>
-Next: <a href="#Overall-structure" accesskey="n" rel="next">Overall structure</a>, Previous: <a href="#Top" accesskey="p" rel="prev">Top</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Overall-structure" accesskey="n" rel="next">Overall structure</a>, Previous: <a href="#Top" accesskey="p" rel="prev">SweetAda</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Overview-1"></a>
-<h2 class="chapter">1 Overview</h2>
-<a name="index-Overview"></a>
+<span id="Overview-1"></span><h2 class="chapter">1 Overview</h2>
+<span id="index-Overview"></span>
 
 <p>Welcome to SweetAda.
 </p>
@@ -120,13 +94,13 @@ SweetAda tries to fill the gap between a simple, yet reliable, software/firmware
 system and big, complex, OS-based multitasked environment.
 </p>
 <hr>
-<a name="Overall-structure"></a>
+</div>
+<div class="chapter" id="Overall-structure">
 <div class="header">
 <p>
-Next: <a href="#Host-environment" accesskey="n" rel="next">Host environment</a>, Previous: <a href="#Overview" accesskey="p" rel="prev">Overview</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Host-environment" accesskey="n" rel="next">Host environment</a>, Previous: <a href="#Overview" accesskey="p" rel="prev">Overview</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Overall-structure-1"></a>
-<h2 class="chapter">2 Overall structure</h2>
+<span id="Overall-structure-1"></span><h2 class="chapter">2 Overall structure</h2>
 
 <p>The SweetAda system is composed of a top-level directory which holds other directories
 and software components. They are:
@@ -158,14 +132,14 @@ common auxiliary files
 </li></ul>
 
 <hr>
-<a name="Host-environment"></a>
+</div>
+<div class="chapter" id="Host-environment">
 <div class="header">
 <p>
-Next: <a href="#Toolchains" accesskey="n" rel="next">Toolchains</a>, Previous: <a href="#Overall-structure" accesskey="p" rel="prev">Overall structure</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Toolchains" accesskey="n" rel="next">Toolchains</a>, Previous: <a href="#Overall-structure" accesskey="p" rel="prev">Overall structure</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Host-environment-1"></a>
-<h2 class="chapter">3 Host environment</h2>
-<a name="index-Host-environment"></a>
+<span id="Host-environment-1"></span><h2 class="chapter">3 Host environment</h2>
+<span id="index-Host-environment"></span>
 
 <p>SweetAda is meant to run on major mainstream environments, i.e., POSIX/Linux, Windows, or OS X.
 The host machine should be able to execute 64-bit executables. SweetAda also supports whitespaces
@@ -265,18 +239,18 @@ action, like as a Makefile invocation:
 available.
 </p>
 <hr>
-<a name="Toolchains"></a>
+</div>
+<div class="chapter" id="Toolchains">
 <div class="header">
 <p>
-Next: <a href="#Toolchain-tools" accesskey="n" rel="next">Toolchain tools</a>, Previous: <a href="#Host-environment" accesskey="p" rel="prev">Host environment</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Toolchain-tools" accesskey="n" rel="next">Toolchain tools</a>, Previous: <a href="#Host-environment" accesskey="p" rel="prev">Host environment</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Toolchains-1"></a>
-<h2 class="chapter">4 Toolchains</h2>
-<a name="index-toolchains"></a>
-<a name="index-elftool"></a>
-<a name="index-GCC-wrapper"></a>
-<a name="index-GNAT-wrapper"></a>
-<a name="index-runsweetada"></a>
+<span id="Toolchains-1"></span><h2 class="chapter">4 Toolchains</h2>
+<span id="index-toolchains"></span>
+<span id="index-elftool"></span>
+<span id="index-GCC-wrapper"></span>
+<span id="index-GNAT-wrapper"></span>
+<span id="index-runsweetada"></span>
 
 <p>The SweetAda system is distributed with GNU toolchains for every CPUs it can handle.
 Altough toolchains are quite generic, SweetAda does not employ neither the whole standard
@@ -294,15 +268,15 @@ source files inclusion. Anyway, the standard LibGCC could be selected with a con
 variable.
 </p>
 <hr>
-<a name="Toolchain-tools"></a>
+</div>
+<div class="chapter" id="Toolchain-tools">
 <div class="header">
 <p>
-Next: <a href="#Building-the-RTS" accesskey="n" rel="next">Building the RTS</a>, Previous: <a href="#Toolchains" accesskey="p" rel="prev">Toolchains</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Building-the-RTS" accesskey="n" rel="next">Building the RTS</a>, Previous: <a href="#Toolchains" accesskey="p" rel="prev">Toolchains</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Toolchain-tools-1"></a>
-<h2 class="chapter">5 Toolchain tools</h2>
-<a name="index-toolchain-wrappers"></a>
-<a name="index-elftool-1"></a>
+<span id="Toolchain-tools-1"></span><h2 class="chapter">5 Toolchain tools</h2>
+<span id="index-toolchain-wrappers"></span>
+<span id="index-elftool-1"></span>
 
 <p>SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
 </p>
@@ -345,14 +319,14 @@ $ make install
 utility available online.
 </p>
 <hr>
-<a name="Building-the-RTS"></a>
+</div>
+<div class="chapter" id="Building-the-RTS">
 <div class="header">
 <p>
-Next: <a href="#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="#Toolchain-tools" accesskey="p" rel="prev">Toolchain tools</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="#Toolchain-tools" accesskey="p" rel="prev">Toolchain tools</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Building-the-RTS-1"></a>
-<h2 class="chapter">6 Building the RTS</h2>
-<a name="index-RTS"></a>
+<span id="Building-the-RTS-1"></span><h2 class="chapter">6 Building the RTS</h2>
+<span id="index-RTS"></span>
 
 <p>The very first action to perform after an installation is to build the Ada Run-Time
 System.
@@ -387,14 +361,14 @@ coupled along the RTS type, which configures system-wide pragmas (wich are in tu
 configurable by means of the gnat.adc.in configuration template).
 </p>
 <hr>
-<a name="Configuration"></a>
+</div>
+<div class="chapter" id="Configuration">
 <div class="header">
 <p>
-Next: <a href="#Makefile-targets" accesskey="n" rel="next">Makefile targets</a>, Previous: <a href="#Building-the-RTS" accesskey="p" rel="prev">Building the RTS</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Makefile-targets" accesskey="n" rel="next">Makefile targets</a>, Previous: <a href="#Building-the-RTS" accesskey="p" rel="prev">Building the RTS</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Configuration-1"></a>
-<h2 class="chapter">7 Configuration</h2>
-<a name="index-configuration"></a>
+<span id="Configuration-1"></span><h2 class="chapter">7 Configuration</h2>
+<span id="index-configuration"></span>
 
 <p>SweetAda configuration is managed by a central Makefile, which loads configuration files
 in sequential steps.
@@ -567,14 +541,14 @@ Note that the VERBOSE variable is set empty and the the &quot;-s&quot; option is
 to the Makefile so the output is not cluttered with other non-interesting output.
 </p>
 <hr>
-<a name="Makefile-targets"></a>
+</div>
+<div class="chapter" id="Makefile-targets">
 <div class="header">
 <p>
-Next: <a href="#Ada-environment" accesskey="n" rel="next">Ada environment</a>, Previous: <a href="#Configuration" accesskey="p" rel="prev">Configuration</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Ada-environment" accesskey="n" rel="next">Ada environment</a>, Previous: <a href="#Configuration" accesskey="p" rel="prev">Configuration</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Makefile-targets-1"></a>
-<h2 class="chapter">8 Makefile targets</h2>
-<a name="index-Makefile-targets"></a>
+<span id="Makefile-targets-1"></span><h2 class="chapter">8 Makefile targets</h2>
+<span id="index-Makefile-targets"></span>
 
 <p>Following a &quot;make createkernelcfg&quot; and &quot;make configure&quot;, the build system is ready
 to build SweetAda.
@@ -617,13 +591,13 @@ rule. But a non-intrusive method like calling a script in the RUN_COMMAND specif
 of the platform&rsquo;s configuration.in file could be better.
 </p>
 <hr>
-<a name="Ada-environment"></a>
+</div>
+<div class="chapter" id="Ada-environment">
 <div class="header">
 <p>
-Next: <a href="#GPRbuild-mode" accesskey="n" rel="next">GPRbuild mode</a>, Previous: <a href="#Makefile-targets" accesskey="p" rel="prev">Makefile targets</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#GPRbuild-mode" accesskey="n" rel="next">GPRbuild mode</a>, Previous: <a href="#Makefile-targets" accesskey="p" rel="prev">Makefile targets</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Ada-environment-1"></a>
-<h2 class="chapter">9 Ada environment</h2>
+<span id="Ada-environment-1"></span><h2 class="chapter">9 Ada environment</h2>
 
 <p>The SweetAda build system try to supply a complete environment to build system code for
 a target. In order to instruct the compiler, the linker, the binder, and all accompanying
@@ -680,14 +654,14 @@ rebuild to make the new pragmas take effect), but the old pragma configuration w
 reinstated if you perform a &quot;make configure&quot; action.
 </p>
 <hr>
-<a name="GPRbuild-mode"></a>
+</div>
+<div class="chapter" id="GPRbuild-mode">
 <div class="header">
 <p>
-Next: <a href="#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a>, Previous: <a href="#Ada-environment" accesskey="p" rel="prev">Ada environment</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a>, Previous: <a href="#Ada-environment" accesskey="p" rel="prev">Ada environment</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="GPRbuild-mode-1"></a>
-<h2 class="chapter">10 GPRbuild mode</h2>
-<a name="index-GPRbuild"></a>
+<span id="GPRbuild-mode-1"></span><h2 class="chapter">10 GPRbuild mode</h2>
+<span id="index-GPRbuild"></span>
 
 <p>The SweetAda build system has two different ways to manage the compilation of the final
 executable object; the standard, default one is entirely contained in the various Makefile
@@ -709,13 +683,13 @@ so you have to provide exactly the same sequence of make commands in order to bu
 SweetAda executable.
 </p>
 <hr>
-<a name="Building-SweetAda"></a>
+</div>
+<div class="chapter" id="Building-SweetAda">
 <div class="header">
 <p>
-Next: <a href="#Anatomy-of-a-platform" accesskey="n" rel="next">Anatomy of a platform</a>, Previous: <a href="#GPRbuild-mode" accesskey="p" rel="prev">GPRbuild mode</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Anatomy-of-a-platform" accesskey="n" rel="next">Anatomy of a platform</a>, Previous: <a href="#GPRbuild-mode" accesskey="p" rel="prev">GPRbuild mode</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Building-SweetAda-1"></a>
-<h2 class="chapter">11 Building SweetAda</h2>
+<span id="Building-SweetAda-1"></span><h2 class="chapter">11 Building SweetAda</h2>
 
 <p>Once that SweetAda is properly configured and your platform target is known, you can
 perform the build of the system:
@@ -747,14 +721,14 @@ no need to execute the postbuild target, because the emulator could use directly
 kernel.o file.
 </p>
 <hr>
-<a name="Anatomy-of-a-platform"></a>
+</div>
+<div class="chapter" id="Anatomy-of-a-platform">
 <div class="header">
 <p>
-Next: <a href="#The-core-complex" accesskey="n" rel="next">The core complex</a>, Previous: <a href="#Building-SweetAda" accesskey="p" rel="prev">Building SweetAda</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#The-core-complex" accesskey="n" rel="next">The core complex</a>, Previous: <a href="#Building-SweetAda" accesskey="p" rel="prev">Building SweetAda</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Anatomy-of-a-platform-1"></a>
-<h2 class="chapter">12 Anatomy of a platform</h2>
-<a name="index-platform"></a>
+<span id="Anatomy-of-a-platform-1"></span><h2 class="chapter">12 Anatomy of a platform</h2>
+<span id="index-platform"></span>
 
 <p>In SweetAda a platform is a subdirectory. The platform contains all the files
 that are necessary for a target to produce an executable.
@@ -838,14 +812,14 @@ master Makefile, because libplatform files are assembler files that generally do
 contribute to Ada binding phase processing.
 </p>
 <hr>
-<a name="The-core-complex"></a>
+</div>
+<div class="chapter" id="The-core-complex">
 <div class="header">
 <p>
-Next: <a href="#LibGCC" accesskey="n" rel="next">LibGCC</a>, Previous: <a href="#Anatomy-of-a-platform" accesskey="p" rel="prev">Anatomy of a platform</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#LibGCC" accesskey="n" rel="next">LibGCC</a>, Previous: <a href="#Anatomy-of-a-platform" accesskey="p" rel="prev">Anatomy of a platform</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="The-core-complex-1"></a>
-<h2 class="chapter">13 The core complex</h2>
-<a name="index-core"></a>
+<span id="The-core-complex-1"></span><h2 class="chapter">13 The core complex</h2>
+<span id="index-core"></span>
 
 <p>The core complex is a set of packages that forms the base of subprograms used by
 higher level constructs.
@@ -926,14 +900,14 @@ coded in native machine language). MMIO have versions for flat, atomic, swapping
 and atomic-swapping operations.
 </p>
 <hr>
-<a name="LibGCC"></a>
+</div>
+<div class="chapter" id="LibGCC">
 <div class="header">
 <p>
-Next: <a href="#Platform-descriptions" accesskey="n" rel="next">Platform descriptions</a>, Previous: <a href="#The-core-complex" accesskey="p" rel="prev">The core complex</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Platform-descriptions" accesskey="n" rel="next">Platform descriptions</a>, Previous: <a href="#The-core-complex" accesskey="p" rel="prev">The core complex</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="LibGCC-1"></a>
-<h2 class="chapter">14 LibGCC</h2>
-<a name="index-LibGCC"></a>
+<span id="LibGCC-1"></span><h2 class="chapter">14 LibGCC</h2>
+<span id="index-LibGCC"></span>
 
 <p>Nearly every compiler provides an underlying library for low-level handling
 of features which are too expensive to emit code for.
@@ -953,17 +927,58 @@ In SweetAda the LibGCC package is thus more or less a placeholder, in the case o
 a port for a new CPU, or experimentation.
 </p>
 <hr>
-<a name="Platform-descriptions"></a>
+</div>
+<div class="chapter" id="Platform-descriptions">
 <div class="header">
 <p>
-Next: <a href="#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="#LibGCC" accesskey="p" rel="prev">LibGCC</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="#LibGCC" accesskey="p" rel="prev">LibGCC</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Platform-descriptions-1"></a>
-<h2 class="chapter">15 Platform descriptions</h2>
+<span id="Platform-descriptions-1"></span><h2 class="chapter">15 Platform descriptions</h2>
 
-<a name="Altera-10M50GHRD"></a>
+<ul class="section-toc">
+<li><a href="#Altera-10M50GHRD" accesskey="1">Altera 10M50GHRD</a></li>
+<li><a href="#Amiga" accesskey="2">Amiga</a></li>
+<li><a href="#Arduino-Uno" accesskey="3">Arduino Uno</a></li>
+<li><a href="#Atlas" accesskey="4">Atlas</a></li>
+<li><a href="#Terasic-DE10_002dLite" accesskey="5">Terasic DE10-Lite</a></li>
+<li><a href="#DECstation-5000_002f133" accesskey="6">DECstation 5000/133</a></li>
+<li><a href="#Digi-Connect-ME" accesskey="7">Digi Connect ME</a></li>
+<li><a href="#Dreamcast" accesskey="8">Dreamcast</a></li>
+<li><a href="#FRDM_002dKL46Z" accesskey="9">FRDM-KL46Z</a></li>
+<li><a href="#GEMI">GEMI</a></li>
+<li><a href="#SiFive-HiFive-1">SiFive HiFive 1</a></li>
+<li><a href="#Integrator_002fCP">Integrator/CP</a></li>
+<li><a href="#LEON3">LEON3</a></li>
+<li><a href="#M5235BCC">M5235BCC</a></li>
+<li><a href="#ML605">ML605</a></li>
+<li><a href="#MPC8306-SOM">MPC8306 SOM</a></li>
+<li><a href="#MPC8306-Switch">MPC8306 Switch</a></li>
+<li><a href="#MPC8315e">MPC8315e</a></li>
+<li><a href="#MSP432P401R">MSP432P401R</a></li>
+<li><a href="#MVME162_002d510A">MVME162-510A</a></li>
+<li><a href="#Malta">Malta</a></li>
+<li><a href="#Memec-FX12">Memec FX12</a></li>
+<li><a href="#PC_002dx86">PC-x86</a></li>
+<li><a href="#PC_002dx86_002d64">PC-x86-64</a></li>
+<li><a href="#QEMU-AArch64">QEMU AArch64</a></li>
+<li><a href="#QEMU-AVR">QEMU AVR</a></li>
+<li><a href="#QEMU-MIPS">QEMU MIPS</a></li>
+<li><a href="#QEMU-RISC_002dV-32">QEMU RISC-V 32</a></li>
+<li><a href="#Raspberry-Pi-3">Raspberry Pi 3</a></li>
+<li><a href="#SBC5206">SBC5206</a></li>
+<li><a href="#SPARCstation-5">SPARCstation 5</a></li>
+<li><a href="#STM32F769I">STM32F769I</a></li>
+<li><a href="#Spartan-3A-EK">Spartan 3A EK</a></li>
+<li><a href="#Spartan-3E-SK">Spartan 3E SK</a></li>
+<li><a href="#Synergy-S5D9">Synergy S5D9</a></li>
+<li><a href="#IBM-S_002f390">IBM S/390</a></li>
+<li><a href="#Taihu">Taihu</a></li>
+<li><a href="#Xilinx-Zynq-A9">Xilinx Zynq A9</a></li>
+<li><a href="#ZOOM">ZOOM</a></li>
+</ul>
+<div class="section" id="Altera-10M50GHRD">
 <h3 class="section">15.1 Altera 10M50GHRD</h3>
-<a name="index-Altera-10M50GHRD"></a>
+<span id="index-Altera-10M50GHRD"></span>
 
 <p>Altera&reg; 10M50GHRD is a virtual platform in SweetAda, usable by
 means of the QEMU emulator. This platform is based on a softcore Nios II&reg;
@@ -978,9 +993,10 @@ processor, implemented in real world in an FPGA.
 <p>CPU parameters are fixed at some particular addresses, as dictated by QEMU, and
 already wrapped in the platform&rsquo;s configuration.in.
 </p>
-<a name="Amiga"></a>
+</div>
+<div class="section" id="Amiga">
 <h3 class="section">15.2 Amiga</h3>
-<a name="index-Amiga"></a>
+<span id="index-Amiga"></span>
 
 <p>The Amiga platform is the well-known machine based on the M68k venerable class
 of CPU.
@@ -999,49 +1015,74 @@ your Ada code.
 <p>Currently, Amiga platform is able to use some peripherals, like the OCS video,
 the serial port and the A2065 network adapter (tested only in FS-UAE so far).
 </p>
-<a name="Arduino-Uno"></a>
+</div>
+<div class="section" id="Arduino-Uno">
 <h3 class="section">15.3 Arduino Uno</h3>
-<a name="index-Arduino-Uno"></a>
+<span id="index-Arduino-Uno"></span>
 
-<a name="Atlas"></a>
+</div>
+<div class="section" id="Atlas">
 <h3 class="section">15.4 Atlas</h3>
-<a name="index-Atlas"></a>
+<span id="index-Atlas"></span>
 
-<a name="Terasic-DE10_002dLite"></a>
+</div>
+<div class="section" id="Terasic-DE10_002dLite">
 <h3 class="section">15.5 Terasic DE10-Lite</h3>
-<a name="index-Terasic-DE10_002dLite"></a>
+<span id="index-Terasic-DE10_002dLite"></span>
 
-<a name="DECstation-5000_002f133"></a>
+</div>
+<div class="section" id="DECstation-5000_002f133">
 <h3 class="section">15.6 DECstation 5000/133</h3>
-<a name="index-DECstation-5000_002f133"></a>
+<span id="index-DECstation-5000_002f133"></span>
 
-<a name="Digi-Connect-ME"></a>
+</div>
+<div class="section" id="Digi-Connect-ME">
 <h3 class="section">15.7 Digi Connect ME</h3>
-<a name="index-Digi-Connect-ME"></a>
+<span id="index-Digi-Connect-ME"></span>
 
-<a name="Dreamcast"></a>
+</div>
+<div class="section" id="Dreamcast">
 <h3 class="section">15.8 Dreamcast</h3>
-<a name="index-Dreamcast"></a>
+<span id="index-Dreamcast"></span>
 
-<a name="FRDM_002dKL46Z"></a>
-<h3 class="section">15.9 FRDM-KL46Z</h3>
-<a name="index-FRDM_002dKL46Z"></a>
-
-<a name="GEMI"></a>
-<h3 class="section">15.10 GEMI</h3>
-<a name="index-GEMI"></a>
-
-<p>The GEMI is a proprietary embedded board based on the Hitachi SH7032 CPU.
-This platform is only used as a template, in order to work with this kind
+<p>SEGA&reg; Dreamcast is a home video game console based on an
+Hitachi SH-4 CPU.
+</p>
+<p>This platform is only used as a template, in order to work with this kind
 of CPU and test SweetAda in the maximum possible range of physical hardware.
 </p>
-<p>SweetAda code runs in a Flash EPROM without problems, and is able to perform
-various activities, like talking over a serial line, toggle memory-mapped I/Os
-and manage the on-board RTC.
+<p>There are two ways to work with SweetAda on Dreamcast. One is to use the
+true physical console, the other is by using the GXemul emulator.
 </p>
-<a name="SiFive-HiFive-1"></a>
+<p>In order to work with the physical hardware, you need to create a CD-ROM
+and to have the availability of a BBA Ethernet Adapter. The CD-ROM should be
+burned with a little application that contains a minimal driver for the
+BBA. This driver sits and waits for a program that should be downloaded
+from your development host. Once you have a SweetAda kernel, the bba.tcl
+utility provides a way to send the kernel to the console.
+</p>
+</div>
+<div class="section" id="FRDM_002dKL46Z">
+<h3 class="section">15.9 FRDM-KL46Z</h3>
+<span id="index-FRDM_002dKL46Z"></span>
+
+</div>
+<div class="section" id="GEMI">
+<h3 class="section">15.10 GEMI</h3>
+<span id="index-GEMI"></span>
+
+<p>&quot;GEMI&quot; is a proprietary embedded board based on the Hitachi SH7032 CPU, available only
+to the author of SweetAda, and thus is used solely as a template in order to work with
+this kind of CPU and test SweetAda in the maximum possible range of physical hardware.
+</p>
+<p>SweetAda code runs in a Flash EPROM and is able to perform various activities,
+like talking over a serial line, toggle memory-mapped I/Os and manage the
+on-board RTC.
+</p>
+</div>
+<div class="section" id="SiFive-HiFive-1">
 <h3 class="section">15.11 SiFive HiFive 1</h3>
-<a name="index-SiFive-HiFive-1"></a>
+<span id="index-SiFive-HiFive-1"></span>
 
 <p>The SiFive<sup>TM</sup> HiFive 1 is an embedded board based on a RISC-V&reg;
 32-bit CPU.
@@ -1077,110 +1118,179 @@ enabled, else when a timer IRQ is triggered an invalid program counter will be c
 
 <p>You should see the board cycling the multi-color LED through the R, G and B blinks.
 </p>
-<a name="Integrator_002fCP"></a>
+</div>
+<div class="section" id="Integrator_002fCP">
 <h3 class="section">15.12 Integrator/CP</h3>
-<a name="index-Integrator_002fCP"></a>
+<span id="index-Integrator_002fCP"></span>
 
-<a name="LEON3"></a>
+<p>The Integrator/CP is a virtual platform provided by QEMU, which mimics the real one.
+</p>
+</div>
+<div class="section" id="LEON3">
 <h3 class="section">15.13 LEON3</h3>
-<a name="index-LEON3"></a>
+<span id="index-LEON3"></span>
 
-<a name="M5235BCC"></a>
+<p>The LEON3 is a virtual platform provided by QEMU, which mimics a generic machine based
+on the LEON3&reg; processor.
+</p>
+</div>
+<div class="section" id="M5235BCC">
 <h3 class="section">15.14 M5235BCC</h3>
-<a name="index-M5235BCC"></a>
+<span id="index-M5235BCC"></span>
 
-<a name="ML605"></a>
+<p>M5235BCC is an embedded board based on the MCF5235 ColdFire processor.
+</p>
+</div>
+<div class="section" id="ML605">
 <h3 class="section">15.15 ML605</h3>
-<a name="index-ML605"></a>
+<span id="index-ML605"></span>
 
-<a name="MPC8306-SOM"></a>
+<p>ML605 is a virtual platform provided by QEMU, which mimics the real one.
+</p>
+</div>
+<div class="section" id="MPC8306-SOM">
 <h3 class="section">15.16 MPC8306 SOM</h3>
-<a name="index-MPC8306-SOM"></a>
+<span id="index-MPC8306-SOM"></span>
 
-<a name="MPC8306-Switch"></a>
+<p>MPC830x SOM (System on Module) is an embedded development board based on a
+Freescale MPC830x CPU, produced by eInfochips. In this setup the MPC8306 is
+the target CPU used.
+</p>
+<p>In order to use the SOM, you need CCS (CodeWarrior Connection Server). CCS is
+part of CodeWarrior, so the installation of this software is highly recommended.
+Note that you don&rsquo;t need to make CodeWarrior operative, you need just the installation
+of the software to connect to the board via JTAG by using an USB TAP device.
+</p>
+<p>To proper setup CCS, the configuration.in provides some environment variables:
+</p><ul>
+<li> CCS_PREFIX: the path towards the installation of CCS (not including the &quot;bin&quot; subdirectory)
+</li><li> CCS_NETSERVER_PORT: the TCP port used by ccs-utils.tcl script library to connect to CCS via
+a telnet session
+</li><li> USBTAP_SN: the serial number of the CodeWarrior USB TAP JTAG device
+</li></ul>
+
+</div>
+<div class="section" id="MPC8306-Switch">
 <h3 class="section">15.17 MPC8306 Switch</h3>
-<a name="index-MPC8306-Switch"></a>
+<span id="index-MPC8306-Switch"></span>
 
-<a name="MPC8315e"></a>
+<p>&quot;Switch&quot; is a proprietary embedded board based on the MPC8306 CPU, available only
+to the author of SweetAda, and thus is used solely as a template in order to work with
+this kind of CPU and test SweetAda in the maximum possible range of physical hardware.
+</p>
+<p>Prerequisites like those of MPC8306 SOM apply here, i.e. the CCS installation.
+</p>
+</div>
+<div class="section" id="MPC8315e">
 <h3 class="section">15.18 MPC8315e</h3>
-<a name="index-MPC8315e"></a>
+<span id="index-MPC8315e"></span>
 
-<a name="MSP432P401R"></a>
+</div>
+<div class="section" id="MSP432P401R">
 <h3 class="section">15.19 MSP432P401R</h3>
-<a name="index-MSP432P401R"></a>
+<span id="index-MSP432P401R"></span>
 
-<a name="MVME162_002d510A"></a>
+</div>
+<div class="section" id="MVME162_002d510A">
 <h3 class="section">15.20 MVME162-510A</h3>
-<a name="index-MVME162_002d510A"></a>
+<span id="index-MVME162_002d510A"></span>
 
-<a name="Malta"></a>
+</div>
+<div class="section" id="Malta">
 <h3 class="section">15.21 Malta</h3>
-<a name="index-Malta"></a>
+<span id="index-Malta"></span>
 
-<a name="Memec-FX12"></a>
+<p>&quot;Malta&quot; is a virtual platform provided by QEMU, which mimics the real one.
+</p>
+</div>
+<div class="section" id="Memec-FX12">
 <h3 class="section">15.22 Memec FX12</h3>
-<a name="index-Memec-FX12"></a>
+<span id="index-Memec-FX12"></span>
 
-<a name="PC_002dx86"></a>
+</div>
+<div class="section" id="PC_002dx86">
 <h3 class="section">15.23 PC-x86</h3>
-<a name="index-PC_002dx86"></a>
+<span id="index-PC_002dx86"></span>
 
-<a name="PC_002dx86_002d64"></a>
+<p>PC-x86 is a family of platforms based on the Intel x86-class 32-bit processor.
+</p>
+</div>
+<div class="section" id="PC_002dx86_002d64">
 <h3 class="section">15.24 PC-x86-64</h3>
-<a name="index-PC_002dx86_002d64"></a>
+<span id="index-PC_002dx86_002d64"></span>
 
-<a name="QEMU-AArch64"></a>
+<p>PC-x86-64 is a family of platforms based on Intel/AMD x86-64-class 64-bit processors.
+</p>
+</div>
+<div class="section" id="QEMU-AArch64">
 <h3 class="section">15.25 QEMU AArch64</h3>
-<a name="index-QEMU-AArch64"></a>
+<span id="index-QEMU-AArch64"></span>
 
-<a name="QEMU-AVR"></a>
+</div>
+<div class="section" id="QEMU-AVR">
 <h3 class="section">15.26 QEMU AVR</h3>
-<a name="index-QEMU-AVR"></a>
+<span id="index-QEMU-AVR"></span>
 
-<a name="QEMU-MIPS"></a>
+</div>
+<div class="section" id="QEMU-MIPS">
 <h3 class="section">15.27 QEMU MIPS</h3>
-<a name="index-QEMU-MIPS"></a>
+<span id="index-QEMU-MIPS"></span>
 
-<a name="QEMU-RISC_002dV-32"></a>
+</div>
+<div class="section" id="QEMU-RISC_002dV-32">
 <h3 class="section">15.28 QEMU RISC-V 32</h3>
-<a name="index-QEMU-RISC_002dV-32"></a>
+<span id="index-QEMU-RISC_002dV-32"></span>
 
-<a name="Raspberry-Pi-3"></a>
+</div>
+<div class="section" id="Raspberry-Pi-3">
 <h3 class="section">15.29 Raspberry Pi 3</h3>
-<a name="index-Raspberry-Pi-3"></a>
+<span id="index-Raspberry-Pi-3"></span>
 
-<a name="SBC5206"></a>
+</div>
+<div class="section" id="SBC5206">
 <h3 class="section">15.30 SBC5206</h3>
-<a name="index-SBC5206"></a>
+<span id="index-SBC5206"></span>
 
-<a name="SPARCstation-5"></a>
+<p>The SBC5206 is a virtual platform provided by QEMU, which mimics an Arnewsh 5206
+embedded board, which is based on a MCF5206 ColdFire processor.
+</p>
+</div>
+<div class="section" id="SPARCstation-5">
 <h3 class="section">15.31 SPARCstation 5</h3>
-<a name="index-SPARCstation-5"></a>
+<span id="index-SPARCstation-5"></span>
 
-<a name="STM32F769I"></a>
+<p>SPARCstation 5 is a famed workstation made by Sun&reg;. Beyond the
+real hardware machine, SPARCstation 5 is also a machine emulated by QEMU.
+</p>
+</div>
+<div class="section" id="STM32F769I">
 <h3 class="section">15.32 STM32F769I</h3>
-<a name="index-STM32F769I"></a>
+<span id="index-STM32F769I"></span>
 
-<a name="Spartan-3A-EK"></a>
+</div>
+<div class="section" id="Spartan-3A-EK">
 <h3 class="section">15.33 Spartan 3A EK</h3>
-<a name="index-Spartan-3A-EK"></a>
+<span id="index-Spartan-3A-EK"></span>
 
-<a name="Spartan-3E-SK"></a>
+</div>
+<div class="section" id="Spartan-3E-SK">
 <h3 class="section">15.34 Spartan 3E SK</h3>
-<a name="index-Spartan-3E-SK"></a>
+<span id="index-Spartan-3E-SK"></span>
 
-<a name="Synergy-S5D9"></a>
+</div>
+<div class="section" id="Synergy-S5D9">
 <h3 class="section">15.35 Synergy S5D9</h3>
-<a name="index-Synergy-S5D9"></a>
+<span id="index-Synergy-S5D9"></span>
 
 <p>The Synergy PS5D9 is an embedded board from Renesas&reg;, equipped
 with a ARM Cortex-M4 SoC.
 </p>
 <p>This platform can be directly programmed by means of OpenOCD support.
 </p>
-<a name="IBM-S_002f390"></a>
+</div>
+<div class="section" id="IBM-S_002f390">
 <h3 class="section">15.36 IBM S/390</h3>
-<a name="index-IBM-S_002f390"></a>
+<span id="index-IBM-S_002f390"></span>
 
 <p>S/390&reg; is the well-known family of mainframes produced by IBM&reg;.
 </p>
@@ -1198,27 +1308,37 @@ tape and an IPL from hard disk (&quot;DASD&quot;).
 <p>The application is limited to show some messages on an X3270 terminal. However,
 this is done also with the aid of a minimal interrupt context.
 </p>
-<a name="Taihu"></a>
+</div>
+<div class="section" id="Taihu">
 <h3 class="section">15.37 Taihu</h3>
-<a name="index-Taihu"></a>
+<span id="index-Taihu"></span>
 
-<a name="Xilinx-Zynq-A9"></a>
+<p>The Taihu is a virtual platform provided by QEMU, which mimics the real one.
+</p>
+</div>
+<div class="section" id="Xilinx-Zynq-A9">
 <h3 class="section">15.38 Xilinx Zynq A9</h3>
-<a name="index-Xilinx-Zynq-A9"></a>
+<span id="index-Xilinx-Zynq-A9"></span>
 
-<a name="ZOOM"></a>
+<p>The Xilinx Zynq A9 is a virtual platform provided by QEMU, which mimics the real one.
+</p>
+</div>
+<div class="section" id="ZOOM">
 <h3 class="section">15.39 ZOOM</h3>
-<a name="index-ZOOM"></a>
+<span id="index-ZOOM"></span>
 
+<p>ZOOM is a family of embedded platforms based on the MCF5373 ColdFire processor.
+</p>
 <hr>
-<a name="Optimizations"></a>
+</div>
+</div>
+<div class="chapter" id="Optimizations">
 <div class="header">
 <p>
-Next: <a href="#IOEMU-scripting" accesskey="n" rel="next">IOEMU scripting</a>, Previous: <a href="#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#IOEMU-scripting" accesskey="n" rel="next">IOEMU scripting</a>, Previous: <a href="#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Optimizations-1"></a>
-<h2 class="chapter">16 Optimizations</h2>
-<a name="index-optimizations"></a>
+<span id="Optimizations-1"></span><h2 class="chapter">16 Optimizations</h2>
+<span id="index-optimizations"></span>
 
 <p>SweetAda provides a mechanism to allow user-defined implementations. Standard subprograms
 available in the core complex (but not limited to) could be bypassed by reimplement them.
@@ -1237,14 +1357,14 @@ speed increase could be easily obtained.
 already written. With&rsquo;ing CPU.MMIO instead of MMIO lets the user directly use them.
 </p>
 <hr>
-<a name="IOEMU-scripting"></a>
+</div>
+<div class="chapter" id="IOEMU-scripting">
 <div class="header">
 <p>
-Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#Optimizations" accesskey="p" rel="prev">Optimizations</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#Optimizations" accesskey="p" rel="prev">Optimizations</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="IOEMU-scripting-1"></a>
-<h2 class="chapter">17 IOEMU scripting</h2>
-<a name="index-IOEMU"></a>
+<span id="IOEMU-scripting-1"></span><h2 class="chapter">17 IOEMU scripting</h2>
+<span id="index-IOEMU"></span>
 
 <p>The IOEMU facility allows configuration of a target emulator machine by specifying
 actions in a very basic script-like sequence of assignments and statements.
@@ -1347,13 +1467,13 @@ that cannot be known before the execution.
 </li></ul>
 
 <hr>
-<a name="Index"></a>
+</div>
+<div class="unnumbered" id="Index">
 <div class="header">
 <p>
-Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Index-1"></a>
-<h2 class="unnumbered">Index</h2>
+<span id="Index-1"></span><h2 class="unnumbered">Index</h2>
 <table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Index_cp_letter-A"><b>A</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Index_cp_letter-C"><b>C</b></a>
@@ -1394,47 +1514,47 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 <table class="index-cp" border="0">
 <tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-A">A</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-A">A</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Altera-10M50GHRD">Altera 10M50GHRD</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Amiga">Amiga</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Arduino-Uno">Arduino Uno</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Atlas">Atlas</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-C">C</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-C">C</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-configuration">configuration</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Configuration">Configuration</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-core">core</a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-core-complex">The core complex</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-D">D</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-D">D</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-DECstation-5000_002f133">DECstation 5000/133</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Digi-Connect-ME">Digi Connect ME</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Dreamcast">Dreamcast</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-E">E</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-E">E</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-elftool">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-elftool-1">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-F">F</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-F">F</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-FRDM_002dKL46Z">FRDM-KL46Z</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-G">G</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-G">G</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GCC-wrapper">GCC wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GEMI">GEMI</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GNAT-wrapper">GNAT wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GPRbuild">GPRbuild</a>:</td><td>&nbsp;</td><td valign="top"><a href="#GPRbuild-mode">GPRbuild mode</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-H">H</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-H">H</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Host-environment">Host environment</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-I">I</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-I">I</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-IBM-S_002f390">IBM S/390</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Integrator_002fCP">Integrator/CP</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-IOEMU">IOEMU</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-L">L</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-L">L</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-LEON3">LEON3</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-LibGCC">LibGCC</a>:</td><td>&nbsp;</td><td valign="top"><a href="#LibGCC">LibGCC</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-M">M</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-M">M</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-M5235BCC">M5235BCC</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Makefile-targets">Makefile targets</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Makefile-targets">Makefile targets</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Malta">Malta</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
@@ -1446,27 +1566,27 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 <tr><td></td><td valign="top"><a href="#index-MSP432P401R">MSP432P401R</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-MVME162_002d510A">MVME162-510A</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-O">O</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-O">O</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-optimizations">optimizations</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Optimizations">Optimizations</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Overview">Overview</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Overview">Overview</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-P">P</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-P">P</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-PC_002dx86">PC-x86</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-PC_002dx86_002d64">PC-x86-64</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-platform">platform</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Anatomy-of-a-platform">Anatomy of a platform</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-Q">Q</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-Q">Q</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-QEMU-AArch64">QEMU AArch64</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-QEMU-AVR">QEMU AVR</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-QEMU-MIPS">QEMU MIPS</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-QEMU-RISC_002dV-32">QEMU RISC-V 32</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-R">R</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-R">R</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Raspberry-Pi-3">Raspberry Pi 3</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-RTS">RTS</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Building-the-RTS">Building the RTS</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-runsweetada">runsweetada</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-S">S</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-S">S</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SBC5206">SBC5206</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SiFive-HiFive-1">SiFive HiFive 1</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SPARCstation-5">SPARCstation 5</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
@@ -1475,16 +1595,16 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 <tr><td></td><td valign="top"><a href="#index-STM32F769I">STM32F769I</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Synergy-S5D9">Synergy S5D9</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-T">T</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-T">T</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Taihu">Taihu</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Terasic-DE10_002dLite">Terasic DE10-Lite</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-toolchain-wrappers">toolchain wrappers</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-toolchains">toolchains</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-X">X</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-X">X</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Xilinx-Zynq-A9">Xilinx Zynq A9</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th><a name="Index_cp_letter-Z">Z</a></th><td></td><td></td></tr>
+<tr><th id="Index_cp_letter-Z">Z</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-ZOOM">ZOOM</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 </table>
@@ -1527,7 +1647,8 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 </td></tr></table>
 
 
-<hr>
+</div>
+</div>
 
 
 

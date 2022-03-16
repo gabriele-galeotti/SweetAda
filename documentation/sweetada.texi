@@ -907,19 +907,35 @@ the serial port and the A2065 network adapter (tested only in FS-UAE so far).
 @section Dreamcast
 @cindex Dreamcast
 
+SEGA@registeredsymbol{} Dreamcast is a home video game console based on an
+Hitachi SH-4 CPU.
+
+This platform is only used as a template, in order to work with this kind
+of CPU and test SweetAda in the maximum possible range of physical hardware.
+
+There are two ways to work with SweetAda on Dreamcast. One is to use the
+true physical console, the other is by using the GXemul emulator.
+
+In order to work with the physical hardware, you need to create a CD-ROM
+and to have the availability of a BBA Ethernet Adapter. The CD-ROM should be
+burned with a little application that contains a minimal driver for the
+BBA. This driver sits and waits for a program that should be downloaded
+from your development host. Once you have a SweetAda kernel, the bba.tcl
+utility provides a way to send the kernel to the console.
+
 @section FRDM-KL46Z
 @cindex FRDM-KL46Z
 
 @section GEMI
 @cindex GEMI
 
-The GEMI is a proprietary embedded board based on the Hitachi SH7032 CPU.
-This platform is only used as a template, in order to work with this kind
-of CPU and test SweetAda in the maximum possible range of physical hardware.
+"GEMI" is a proprietary embedded board based on the Hitachi SH7032 CPU, available only
+to the author of SweetAda, and thus is used solely as a template in order to work with
+this kind of CPU and test SweetAda in the maximum possible range of physical hardware.
 
-SweetAda code runs in a Flash EPROM without problems, and is able to perform
-various activities, like talking over a serial line, toggle memory-mapped I/Os
-and manage the on-board RTC.
+SweetAda code runs in a Flash EPROM and is able to perform various activities,
+like talking over a serial line, toggle memory-mapped I/Os and manage the
+on-board RTC.
 
 @section SiFive HiFive 1
 @cindex SiFive HiFive 1
@@ -961,20 +977,55 @@ You should see the board cycling the multi-color LED through the R, G and B blin
 @section Integrator/CP
 @cindex Integrator/CP
 
+The Integrator/CP is a virtual platform provided by QEMU, which mimics the real one.
+
 @section LEON3
 @cindex LEON3
+
+The LEON3 is a virtual platform provided by QEMU, which mimics a generic machine based
+on the LEON3@registeredsymbol{} processor.
 
 @section M5235BCC
 @cindex M5235BCC
 
+M5235BCC is an embedded board based on the MCF5235 ColdFire processor.
+
 @section ML605
 @cindex ML605
+
+ML605 is a virtual platform provided by QEMU, which mimics the real one.
 
 @section MPC8306 SOM
 @cindex MPC8306 SOM
 
+MPC830x SOM (System on Module) is an embedded development board based on a
+Freescale MPC830x CPU, produced by eInfochips. In this setup the MPC8306 is
+the target CPU used.
+
+In order to use the SOM, you need CCS (CodeWarrior Connection Server). CCS is
+part of CodeWarrior, so the installation of this software is highly recommended.
+Note that you don't need to make CodeWarrior operative, you need just the installation
+of the software to connect to the board via JTAG by using an USB TAP device.
+
+To proper setup CCS, the configuration.in provides some environment variables:
+@itemize @bullet
+@item
+CCS_PREFIX: the path towards the installation of CCS (not including the "bin" subdirectory)
+@item
+CCS_NETSERVER_PORT: the TCP port used by ccs-utils.tcl script library to connect to CCS via
+a telnet session
+@item
+USBTAP_SN: the serial number of the CodeWarrior USB TAP JTAG device
+@end itemize
+
 @section MPC8306 Switch
 @cindex MPC8306 Switch
+
+"Switch" is a proprietary embedded board based on the MPC8306 CPU, available only
+to the author of SweetAda, and thus is used solely as a template in order to work with
+this kind of CPU and test SweetAda in the maximum possible range of physical hardware.
+
+Prerequisites like those of MPC8306 SOM apply here, i.e. the CCS installation.
 
 @section MPC8315e
 @cindex MPC8315e
@@ -988,14 +1039,20 @@ You should see the board cycling the multi-color LED through the R, G and B blin
 @section Malta
 @cindex Malta
 
+"Malta" is a virtual platform provided by QEMU, which mimics the real one.
+
 @section Memec FX12
 @cindex Memec FX12
 
 @section PC-x86
 @cindex PC-x86
 
+PC-x86 is a family of platforms based on the Intel x86-class 32-bit processor.
+
 @section PC-x86-64
 @cindex PC-x86-64
+
+PC-x86-64 is a family of platforms based on Intel/AMD x86-64-class 64-bit processors.
 
 @section QEMU AArch64
 @cindex QEMU AArch64
@@ -1015,8 +1072,14 @@ You should see the board cycling the multi-color LED through the R, G and B blin
 @section SBC5206
 @cindex SBC5206
 
+The SBC5206 is a virtual platform provided by QEMU, which mimics an Arnewsh 5206
+embedded board, which is based on a MCF5206 ColdFire processor.
+
 @section SPARCstation 5
 @cindex SPARCstation 5
+
+SPARCstation 5 is a famed workstation made by Sun@registeredsymbol{}. Beyond the
+real hardware machine, SPARCstation 5 is also a machine emulated by QEMU.
 
 @section STM32F769I
 @cindex STM32F769I
@@ -1057,11 +1120,17 @@ this is done also with the aid of a minimal interrupt context.
 @section Taihu
 @cindex Taihu
 
+The Taihu is a virtual platform provided by QEMU, which mimics the real one.
+
 @section Xilinx Zynq A9
 @cindex Xilinx Zynq A9
 
+The Xilinx Zynq A9 is a virtual platform provided by QEMU, which mimics the real one.
+
 @section ZOOM
 @cindex ZOOM
+
+ZOOM is a family of embedded platforms based on the MCF5373 ColdFire processor.
 
 @node Optimizations
 @chapter Optimizations
