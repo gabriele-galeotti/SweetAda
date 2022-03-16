@@ -150,12 +150,6 @@ package body PowerPC is
       return SPR_Read;
    end PVR_Read;
 
-   function SVR_Read return Unsigned_32 is
-      function SPR_Read is new MFSPR (PVR, Unsigned_32);
-   begin
-      return SPR_Read;
-   end SVR_Read;
-
    ----------------------------------------------------------------------------
    -- Exceptions
    ----------------------------------------------------------------------------

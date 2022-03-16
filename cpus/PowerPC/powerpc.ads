@@ -176,8 +176,10 @@ package PowerPC is
       LE        at 0 range 31 .. 31;
    end record;
 
-   function MSR_Read return MSR_Register_Type;
-   procedure MSR_Write (Value : in MSR_Register_Type);
+   function MSR_Read return MSR_Register_Type with
+      Inline => True;
+   procedure MSR_Write (Value : in MSR_Register_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- SPRs subprogram templates
@@ -188,18 +190,20 @@ package PowerPC is
    generic
       SPR : in SPR_Type;
       type Register_Type is private;
-   function MFSPR return Register_Type;
+   function MFSPR return Register_Type with
+      Inline => True;
 
    generic
       SPR : in SPR_Type;
       type Register_Type is private;
-   procedure MTSPR (Value : in Register_Type);
+   procedure MTSPR (Value : in Register_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- SPRs types and access subprograms
    ----------------------------------------------------------------------------
 
-   PVR : constant SPR_Type := 287;
+   PVR : constant SPR_Type := 287; -- 0x11F
    type PVR_Register_Type is
    record
       Version  : Unsigned_16;
@@ -213,12 +217,6 @@ package PowerPC is
    end record;
    function PVR_Read return PVR_Register_Type;
 
-   -- SVR System Version Register
-   -- 603e/e300 core: SPR 286
-   -- EIS (Freescale extension): SPR 1023
-   SVR : constant SPR_Type := 1023;
-   function SVR_Read return Unsigned_32;
-
    ----------------------------------------------------------------------------
    -- Exceptions
    ----------------------------------------------------------------------------
@@ -231,30 +229,11 @@ package PowerPC is
 
    subtype Irq_State_Type is Integer;
 
-   procedure Irq_Enable;
-   procedure Irq_Disable;
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
    function Irq_State_Get return Irq_State_Type;
    procedure Irq_State_Set (Irq_State : in Irq_State_Type);
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (MSR_Read);
-   pragma Inline (MSR_Write);
-
-   pragma Inline (MFSPR);
-   pragma Inline (MTSPR);
-
-   pragma Inline (PVR_Read);
-
-   pragma Inline (Irq_Enable);
-   pragma Inline (Irq_Disable);
 
 end PowerPC;
