@@ -16,7 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Definitions;
 with Bits;
+with PowerPC;
+with e300;
 with MPC8306;
 with Switch;
 with Console;
@@ -66,8 +69,8 @@ package body BSP is
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
-      BAUDRATE         : constant := 9600;
-      BAUDRATE_DIVISOR : constant := Switch.SYSTEM_CLOCK / (BAUDRATE * 16);
+      BAUDRATE_DIVISOR : constant := Switch.SYSTEM_CLOCK / (Definitions.Baud_Rate_Type'Enum_Rep (Definitions.BR_115200) * 16);
+      CPU_PVR          : PowerPC.PVR_Register_Type;
    begin
       -- 6.3.2.5 System I/O Configuration Register 1 (SICR_1) -----------------
       MPC8306.SICR_1 := 16#0001_165F#; -- UART1 mapped on I/O pads
@@ -88,6 +91,13 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("MPC8306 Switch", NL => True);
+      -------------------------------------------------------------------------
+      CPU_PVR := PowerPC.PVR_Read;
+      Console.Print (CPU_PVR.Version, Prefix => "PVR (ver): ", NL => True);
+      Console.Print (CPU_PVR.Revision, Prefix => "PVR (rev): ", NL => True);
+      Console.Print (e300.SVR_Read, Prefix => "SVR: ", NL => True);
+      Console.Print (MPC8306.RCWLR, Prefix => "RCWLR: ", NL => True);
+      Console.Print (MPC8306.RCWHR, Prefix => "RCWHR: ", NL => True);
       -------------------------------------------------------------------------
    end BSP_Setup;
 

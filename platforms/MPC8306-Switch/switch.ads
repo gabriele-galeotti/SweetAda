@@ -25,8 +25,8 @@ package Switch is
    --                                                                        --
    --========================================================================--
 
-   -- SYSTEM_CLOCK : constant := 133_332_000;
-   SYSTEM_CLOCK : constant := 166_650_000;
+   SYSTEM_CLOCK : constant := 133_332_000; -- CFG_RESET_SOURCE[0:3] = 1001
+   -- SYSTEM_CLOCK : constant := 166_650_000; -- CFG_RESET_SOURCE[0:3] = 1000
 
    PCA9534DW_I2C_ADDRESS : constant := 16#42#;
    ADS1110_I2C_ADDRESS   : constant := 16#90#;
