@@ -13,7 +13,7 @@
 # arguments specified in .bat script
 #
 # Environment variables:
-# none
+# VERBOSE
 #
 
 ################################################################################
