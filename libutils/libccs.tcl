@@ -13,24 +13,26 @@
 # none
 #
 # Environment variables:
-# none
+# CCS_NETSERVER_PORT
 #
 
 ################################################################################
+# sleep                                                                        #
+#                                                                              #
 # sleep for ms milliseconds                                                    #
 ################################################################################
-
 proc sleep ms {
     after [expr {int($ms)}]
     return
 }
 
 ################################################################################
+# loadbinaryfile                                                               #
+#                                                                              #
 # load a binary file                                                           #
 # http://tmml.sourceforge.net/doc/tcl/scan.html                                #
 # http://wiki.tcl.tk/1599                                                      #
 ################################################################################
-
 proc loadbinaryfile {fname {channel stdout}} {
     if {![file exists $fname]} {
        puts stderr "*** Error: $fname not found."
@@ -66,21 +68,7 @@ proc loadbinaryfile {fname {channel stdout}} {
 }
 
 ################################################################################
-#                                                                              #
-################################################################################
-
-#for {set i 0} {$i < 10} {incr i} {
-#    puts "writing"
-#    ccs::write_mem 0 [expr $i * 4] 4 0 $i
-#}
-
-#for {set i 0} {$i < 10} {incr i} {
-#    puts "reading"
-#    ccs::display_mem 0 [expr $i * 4] 4 0 1
-#}
-
-################################################################################
-#                                                                              #
+# NetServer                                                                    #
 ################################################################################
 
 set NetServerPort 41476
