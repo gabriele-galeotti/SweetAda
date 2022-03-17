@@ -21,13 +21,13 @@ ccs::write_reg 0 msr 0x00002000
 
 # Local Bus Local Access Windows
 # WINDOW 1 - NAND Flash EPROM
-ccs::write_mem 0 0xFF400020 4 0 0xC0000000 ;# LBLAWBAR1  - beginning at 0xC0000000
-ccs::write_mem 0 0xFF400024 4 0 0x8000001B ;# LBLAWAR1   - enable, size = 256MB
+ccs::write_mem 0 0xFF400020 4 0 0xC0000000 ;# LBLAWBAR1 - beginning at 0xC0000000
+ccs::write_mem 0 0xFF400024 4 0 0x8000001B ;# LBLAWAR1 - enable, size = 256MB
 
 # DDR Local Access Windows
 # WINDOW 0 - 1st DDR SODIMM
 ccs::write_mem 0 0xFF4000A0 4 0 0x00000000 ;# DDRLAWBAR0 - beginning at 0x00000000
-ccs::write_mem 0 0xFF4000A4 4 0 0x8000001A ;# DDRLAWAR0  - enable, size = 128MB
+ccs::write_mem 0 0xFF4000A4 4 0 0x8000001A ;# DDRLAWAR0 - enable, size = 128MB
 
 ################################################################################
 # DDR2 Controller Registers                                                    #

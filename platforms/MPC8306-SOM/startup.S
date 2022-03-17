@@ -1,6 +1,6 @@
 
 //
-// startup.S - Switch startup.
+// startup.S - MPC8306-SOM startup.
 //
 // Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
 //
@@ -22,14 +22,6 @@
 _start:
 
                 //
-                // Configure HID2, enable BATs 4-7.
-                //
-                lis     r0,HBE@h
-                ori     r0,r0,HBE@l
-                mtspr   HID2,r0
-                isync
-
-                //
                 // e300 Power Architecture Core Family Reference Manual,
                 // 5.2.3 Steps for Interrupt Processing
                 //
@@ -45,98 +37,22 @@ _start:
                 mtmsr   r0
 
                 //
-                // Clear all BATs.
+                // Configure HID2, enable BATs 4-7.
                 //
-                lis     r0,0
-                mtspr   IBAT0U,r0
-                mtspr   IBAT1U,r0
-                mtspr   IBAT2U,r0
-                mtspr   IBAT3U,r0
-                mtspr   IBAT4U,r0
-                mtspr   IBAT5U,r0
-                mtspr   IBAT6U,r0
-                mtspr   IBAT7U,r0
-                mtspr   DBAT0U,r0
-                mtspr   DBAT1U,r0
-                mtspr   DBAT2U,r0
-                mtspr   DBAT3U,r0
-                mtspr   DBAT4U,r0
-                mtspr   DBAT5U,r0
-                mtspr   DBAT6U,r0
-                mtspr   DBAT7U,r0
+                lis     r0,HBE@h
+                ori     r0,r0,HBE@l
+                mtspr   HID2,r0
                 isync
 
-                li      r3,32
-                mtctr   r3
-                li      r3,0
-1:              tlbie   r3
-                addi    r3,r3,0x1000
-                bdnz    1b
-
-//1:              mfctr   r3
-//                andi.   r3,r3,0x1
-//                bne     1b
-
-                isync
-                sync
-
-//
-// Configuration registers
-// size = 2M 6.2 Local Memory Map Overview and Example
-//
-// IMMRBAR @ 0xE0000000, PCI IO @ 0xE2000000 & BCSR @ 0xE2400000
-#define CFG_IMMRBAR 0xFF400000
-
+                //
+                // BATs setup.
+                //
+                bl      bats_clear
+#define CFG_IMMRBAR        0xFF400000
 #define SDRAM_BASE_ADDRESS 0x00000000
-//#define NANDF_BASE_ADDRESS 0xC0000000
-#define NANDF_BASE_ADDRESS 0xFF800000
+#define NANDF_BASE_ADDRESS 0xC0000000
+#include "startup-memory.S"
 
-// BAT0 memory block SDRAM
-#define CFG_IBAT0L      (SDRAM_BASE_ADDRESS|BATL_PP_10|BATL_MEMCOHERENCE)
-#define CFG_IBAT0U      (SDRAM_BASE_ADDRESS|BATU_BL_128M|BATU_VS|BATU_VP)
-#define CFG_DBAT0L      (SDRAM_BASE_ADDRESS|BATL_PP_10|BATL_MEMCOHERENCE)
-#define CFG_DBAT0U      (SDRAM_BASE_ADDRESS|BATU_BL_128M|BATU_VS|BATU_VP)
-
-// BAT1 memory block NAND Flash
-#define CFG_IBAT1L      (NANDF_BASE_ADDRESS|BATL_PP_10|BATL_CACHEINHIBIT|BATL_GUARDEDSTORAGE)
-#define CFG_IBAT1U      (NANDF_BASE_ADDRESS|BATU_BL_1M|BATU_VS|BATU_VP)
-#define CFG_DBAT1L      (NANDF_BASE_ADDRESS|BATL_PP_10|BATL_CACHEINHIBIT|BATL_GUARDEDSTORAGE)
-#define CFG_DBAT1U      (NANDF_BASE_ADDRESS|BATU_BL_1M|BATU_VS|BATU_VP)
-
-// BAT5 configuration registers
-#define CFG_IBAT5L      (CFG_IMMRBAR|BATL_PP_10|BATL_CACHEINHIBIT|BATL_GUARDEDSTORAGE)
-#define CFG_IBAT5U      (CFG_IMMRBAR|BATU_BL_2M|BATU_VS|BATU_VP)
-#define CFG_DBAT5L      (CFG_IMMRBAR|BATL_PP_10|BATL_CACHEINHIBIT|BATL_GUARDEDSTORAGE)
-#define CFG_DBAT5U      (CFG_IMMRBAR|BATU_BL_2M|BATU_VS|BATU_VP)
-
-                bl      setup_bats
-                sync
-                bl      enable_address_translation
-                sync
-                bl      dcache_enable
-
-#if 0
-                //
-                // Setup IMMRBAR.
-                // 6.2.4.1.1 Updating IMMRBAR
-                //
-                lis     r1,IMMRBAR_DEFAULT@h
-                ori     r1,r1,IMMRBAR_DEFAULT@l
-                lwz     r0,0(r1)
-                lis     r0,IMMRBAR_VALUE@h
-                ori     r0,r0,IMMRBAR_VALUE@l
-                stw     r0,0(r1)
-                lis     r1,0xC0000000@h                 // __FIX__ default memory area
-                ori     r1,r1,0xC0000000@l
-                lwz     r0,0(r1)
-                isync
-                lis     r1,IMMRBAR_VALUE@h
-                ori     r1,r1,IMMRBAR_VALUE@l
-                lwz     r0,0(r1)
-                isync
-#endif
-
-#if 0
                 //
                 // Local Bus Window 0.
                 //
@@ -145,12 +61,17 @@ _start:
                 lis     r1,LBLAWBAR0@h
                 ori     r1,r1,LBLAWBAR0@l
                 stw     r0,0(r1)
-                lis     r0,0x8000000f@h
-                ori     r0,r0,0x8000000f@l
+                lis     r0,0x8000001B@h
+                ori     r0,r0,0x8000001B@l
                 lis     r1,LBLAWAR0@h
                 ori     r1,r1,LBLAWAR0@l
                 stw     r0,0(r1)
-#endif
+                sync
+
+                bl      tlb_invalidate
+                bl      enable_address_translation
+                //bl      dcache_enable
+                //bl      icache_enable
 
                 //
                 // Setup stack pointer.
@@ -158,7 +79,7 @@ _start:
                 lis     r1,kernel_stack@h
                 ori     r1,r1,kernel_stack@l
                 li      r0,0
-                stwu    r0,-64(r1)                      // __FIX__ -64 ???
+                stwu    r0,-64(r1)
 
                 //
                 // EABI SDA_BASEx setup.
@@ -188,78 +109,35 @@ dead:           b       .
 
 ////////////////////////////////////////////////////////////////////////////////
 
-setup_bats:
-                // IBAT 0
-                lis     r4,CFG_IBAT0L@h
-                ori     r4,r4,CFG_IBAT0L@l
-                lis     r3,CFG_IBAT0U@h
-                ori     r3,r3,CFG_IBAT0U@l
-                mtspr   IBAT0L,r4
-                mtspr   IBAT0U,r3
+//
+// Clear all BATs.
+//
+bats_clear:
+                lis     r0,0
+                mtspr   IBAT0U,r0
+                mtspr   IBAT1U,r0
+                mtspr   IBAT2U,r0
+                mtspr   IBAT3U,r0
+                mtspr   IBAT4U,r0
+                mtspr   IBAT5U,r0
+                mtspr   IBAT6U,r0
+                mtspr   IBAT7U,r0
+                mtspr   DBAT0U,r0
+                mtspr   DBAT1U,r0
+                mtspr   DBAT2U,r0
+                mtspr   DBAT3U,r0
+                mtspr   DBAT4U,r0
+                mtspr   DBAT5U,r0
+                mtspr   DBAT6U,r0
+                mtspr   DBAT7U,r0
                 isync
-                // DBAT 0
-                lis     r4,CFG_DBAT0L@h
-                ori     r4,r4,CFG_DBAT0L@l
-                lis     r3,CFG_DBAT0U@h
-                ori     r3,r3,CFG_DBAT0U@l
-                mtspr   DBAT0L,r4
-                mtspr   DBAT0U,r3
-                isync
-                // IBAT 1
-                lis     r4,CFG_IBAT1L@h
-                ori     r4,r4,CFG_IBAT1L@l
-                lis     r3,CFG_IBAT1U@h
-                ori     r3,r3,CFG_IBAT1U@l
-                mtspr   IBAT1L,r4
-                mtspr   IBAT1U,r3
-                isync
-                // DBAT 1
-                lis     r4,CFG_DBAT1L@h
-                ori     r4,r4,CFG_DBAT1L@l
-                lis     r3,CFG_DBAT1U@h
-                ori     r3,r3,CFG_DBAT1U@l
-                mtspr   DBAT1L,r4
-                mtspr   DBAT1U,r3
-                isync
-#if 0
-                // BATs 2-4
-                lis     r4,CFG_IBATxL@h
-                ori     r4,r4,CFG_IBATxL@l
-                lis     r3,CFG_IBATxU@h
-                ori     r3,r3,CFG_IBATxU@l
-                mtspr   IBAT2L,r4
-                mtspr   IBAT2U,r3
-                mtspr   DBAT2L,r4
-                mtspr   DBAT2U,r3
-                mtspr   IBAT3L,r4
-                mtspr   IBAT3U,r3
-                mtspr   DBAT3L,r4
-                mtspr   DBAT3U,r3
-                mtspr   IBAT4L,r4
-                mtspr   IBAT4U,r3
-                mtspr   DBAT4L,r4
-                mtspr   DBAT4U,r3
-                isync
-#endif
-                // IBAT 5
-                lis     r4,CFG_IBAT5L@h
-                ori     r4,r4,CFG_IBAT5L@l
-                lis     r3,CFG_IBAT5U@h
-                ori     r3,r3,CFG_IBAT5U@l
-                mtspr   IBAT5L,r4
-                mtspr   IBAT5U,r3
-                isync
-                // DBAT 5
-                lis     r4,CFG_DBAT5L@h
-                ori     r4,r4,CFG_DBAT5L@l
-                lis     r3,CFG_DBAT5U@h
-                ori     r3,r3,CFG_DBAT5U@l
-                mtspr   DBAT5L,r4
-                mtspr   DBAT5U,r3
-                isync
-                //
-                // Invalidate TLBs.
-                //
+                sync
+                blr
+
+//
+// Invalidate TLBs.
+//
+tlb_invalidate:
                 lis     r3,0
                 addis   r5,0,0x2
                 isync
@@ -268,17 +146,18 @@ setup_bats:
                 addi    r3,r3,0x1000
                 cmp     0,0,r3,r5
                 blt     1b
+                sync
                 blr
 
 //
 // Enable address translation.
 //
-
 enable_address_translation:
                 mfmsr   r5
                 ori     r5,r5,(MSR_IR|MSR_DR)
                 mtmsr   r5
                 isync
+                sync
                 blr
 
 //
@@ -291,29 +170,27 @@ enable_address_translation:
 // clear them with two consecutive mtspr operations."
 // "The data cache must be enabled for the invalidation to occur."
 //
-
 dcache_enable:
-//                mfspr   r3,HID0
-//                li      r5,(DCFI|DLOCK)                 // default condition
-//                andc    r3,r3,r5                        // r3 = r3 & ~r5
-//                mtspr   HID0,r3                         // no invalidate, unlock
-//                ori     r3,r3,DCE                       // r3 = DCE set
-//                ori     r5,r3,DCFI                      // r5 = DCE, DCFI set
-//                mtspr   HID0,r5                         // enable + invalidate
-//                mtspr   HID0,r3                         // enable
-//                sync
+                mfspr   r3,HID0
+                li      r5,(DCFI|DLOCK)                 // default condition
+                andc    r3,r3,r5                        // r3 = r3 & ~r5
+                mtspr   HID0,r3                         // no invalidate, unlock
+                ori     r3,r3,DCE                       // r3 = DCE set
+                ori     r5,r3,DCFI                      // r5 = DCE, DCFI set
+                mtspr   HID0,r5                         // enable + invalidate
+                mtspr   HID0,r3                         // enable
+                sync
                 blr
-
 icache_enable:
-//                mfspr   r3,HID0
-//                li      r5,(ICFI|ILOCK)
-//                andc    r3,r3,r5
-//                mtspr   HID0,r3
-//                ori     r3,r3,ICE
-//                ori     r5,r3,ICFI
-//                mtspr   HID0,r5
-//                mtspr   HID0,r3
-//                sync
+                mfspr   r3,HID0
+                li      r5,(ICFI|ILOCK)                 // default condition
+                andc    r3,r3,r5                        // r3 = r3 & ~r5
+                mtspr   HID0,r3                         // no invalidate, unlock
+                ori     r3,r3,ICE                       // r3 = ICE set
+                ori     r5,r3,ICFI                      // r5 = ICE, ICFI set
+                mtspr   HID0,r5                         // enable + invalidate
+                mtspr   HID0,r3                         // enable
+                sync
                 blr
 
 ////////////////////////////////////////////////////////////////////////////////

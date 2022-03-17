@@ -65,7 +65,7 @@ return 0
 
 case "x$1" in
   "x-server")
-    ${CCS_PREFIX}/bin/ccs -file ${SWEETADA_PATH}/${LIBUTILS_DIRECTORY}/ccs-utils.tcl
+    ${CCS_PREFIX}/bin/ccs -file ${SWEETADA_PATH}/${LIBUTILS_DIRECTORY}/libccs.tcl
     tcpport_is_listening ${CCS_NETSERVER_PORT} 3000 "*** Error"
     if [ $? -ne 0 ] ; then
       exit 1

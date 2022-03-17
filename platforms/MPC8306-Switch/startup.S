@@ -1,6 +1,6 @@
 
 //
-// startup.S - Switch startup.
+// startup.S - MPC8306-Switch startup.
 //
 // Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
 //

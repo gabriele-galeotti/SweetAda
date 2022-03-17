@@ -65,7 +65,7 @@ return 0
 
 case "x$1" in
   "x-server")
-    ${CCS_PREFIX}/bin/ccs -file ${SWEETADA_PATH}/${LIBUTILS_DIRECTORY}/ccs-utils.tcl
+    ${CCS_PREFIX}/bin/ccs -file ${SWEETADA_PATH}/${LIBUTILS_DIRECTORY}/libccs.tcl
     tcpport_is_listening ${CCS_NETSERVER_PORT} 3000 "*** Error"
     if [ $? -ne 0 ] ; then
       exit 1
@@ -86,9 +86,9 @@ EOF
     cat << EOF | nc -q 0 localhost ${CCS_NETSERVER_PORT}
 ccs::stop_core 0
 ccs::stat
-#ccs::reset_to_debug
-#puts "Loading som.tcl ..."
-#source [file join ${SWEETADA_PATH} ${PLATFORM_DIRECTORY} som.tcl]
+ccs::reset_to_debug
+puts "Loading som.tcl ..."
+source [file join ${SWEETADA_PATH} ${PLATFORM_DIRECTORY} som.tcl]
 puts "Loading kernel.rom ..."
 loadbinaryfile [file join ${SWEETADA_PATH} kernel.rom]
 ccs::write_reg 0 iar 0
