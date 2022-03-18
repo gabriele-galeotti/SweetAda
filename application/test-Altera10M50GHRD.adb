@@ -46,6 +46,8 @@ package body Application is
             TC : Unsigned_32;
          begin
             IOEMU.IOEMU_IO0 := 0;
+            IOEMU.IOEMU_IO1 := 0;
+            IOEMU.IOEMU_IO2 := 0;
             TC := Core.Tick_Count;
             loop
                if Tick_Count_Expired (TC, 1_000) then
@@ -53,6 +55,8 @@ package body Application is
                   -- blink IOEMU LED
                   IOEMU.IOEMU_IO0 := 1;
                   IOEMU.IOEMU_IO0 := 0;
+                  IOEMU.IOEMU_IO1 := @ + 1;
+                  IOEMU.IOEMU_IO2 := @ + 1;
                   Console.Print ("hello, SweetAda", NL => True);
                end if;
             end loop;
