@@ -38,7 +38,7 @@ $input_filename = $args[0]
 $output_filename = $args[1]
 
 $symbols = Select-String -Pattern "@[_A-Za-z][_A-Za-z0-9]*@" $input_filename | `
-  ForEach {$_.Matches} | Select-Object -ExpandProperty Value
+  foreach {$_.Matches} | Select-Object -ExpandProperty Value
 
 $pinfo = New-Object System.Diagnostics.ProcessStartInfo
 $pinfo.CreateNoWindow = $true
