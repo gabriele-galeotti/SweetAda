@@ -56,6 +56,9 @@ _start:
                 // __REF__ http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.faqs/ka3761.html
                 //
 
+                //
+                // Setup stack pointer.
+                //
                 ldr     r0,=SVC_stack
                 mov     sp,r0
 

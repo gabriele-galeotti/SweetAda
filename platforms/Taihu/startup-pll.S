@@ -26,6 +26,6 @@ pll_wait:       bdnz    pll_wait
                 // reset CPU core to guarantee external timings are OK
                 // CPU core reset will not alter cpc0_pllmr values
                 addis   r3,0,0x1000                     // bit28 = core reset
-                mtspr   DBCR0,r3                        // this causes a CPU core reset; execution continues from the poweron vector of 0xfffffffc
+                mtspr   DBCR0,r3                        // this causes a CPU core reset; execution continues from the poweron vector of 0xFFFFFFFC
 pll_done:       // CPU PLL setting completed
 

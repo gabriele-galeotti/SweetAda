@@ -126,7 +126,7 @@ _start:
                 bl      zerobss
 
                 //
-                // Initialize the stack pointer.
+                // Setup stack pointer.
                 //
                 lis     r1,kernel_stack@ha
                 ori     r1,r1,kernel_stack@l
