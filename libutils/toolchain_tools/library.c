@@ -1104,7 +1104,7 @@ execute_create(void)
         int       idx;
 
         /*
-         * Alloca il descriptor dell'execute.
+         * Allocate an execute descriptor.
          */
         execute = (execute_t)lib_malloc(sizeof(struct _execute));
         if (execute == NULL)
