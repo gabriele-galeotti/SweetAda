@@ -25,10 +25,14 @@ package IOEMU is
    --                                                                        --
    --========================================================================--
 
-   -- GPIO IO0..IO3 0x0270..0x0273
+   -- GPIO IO0..IO7 0x0270..0x0277
    IO0_ADDRESS : constant := 16#0270#;
    IO1_ADDRESS : constant := 16#0271#;
    IO2_ADDRESS : constant := 16#0272#;
    IO3_ADDRESS : constant := 16#0273#;
+   IO4_ADDRESS : constant := 16#0274#;
+   IO5_ADDRESS : constant := 16#0275#;
+   IO6_ADDRESS : constant := 16#0276#;
+   IO7_ADDRESS : constant := 16#0277#;
 
 end IOEMU;

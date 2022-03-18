@@ -31,15 +31,47 @@ package IOEMU is
    use System.Storage_Elements;
    use Interfaces;
 
-   IOEMU_IO0 : Unsigned_8 with
-      Address    => To_Address (16#1B00_0000#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   IOEMU_IO1 : Unsigned_8 with
-      Address    => To_Address (16#1B00_0001#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   IOEMU_BASEADDRESS : constant := 16#1B00_0000#;
+
+   IOEMU_IO0 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 0),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO1 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 1),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO2 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 2),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO3 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 3),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO4 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 4),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO5 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 5),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO6 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 6),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO7 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 7),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
 end IOEMU;
