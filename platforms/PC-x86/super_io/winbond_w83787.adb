@@ -32,7 +32,7 @@ package body Winbond_W83787 is
       W83787_InitData : constant array (Natural range <>) of W83787_Type :=
          (
           (16#00#, 16#04#), -- CR0: enable PRN mode
-          (16#01#, 16#2C#), -- CR1: PRN=0x378, COM1=0x3f8, COM2=0x2f8
+          (16#01#, 16#2C#), -- CR1: PRN=0x378, COM1=0x3F8, COM2=0x2F8
           (16#02#, 16#FF#), -- CR2:
           (16#03#, 16#90#), -- CR3:
           (16#04#, 16#00#), -- CR4:
