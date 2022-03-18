@@ -70,22 +70,11 @@ package M68040 is
       Enable    at 0 range 15 .. 15;
    end record;
 
-   procedure URP_Set (URP_Address : in Address);
-   procedure SRP_Set (SRP_Address : in Address);
-   procedure TCR_Set (Value : in TCR_Register_Type);
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (URP_Set);
-   pragma Inline (SRP_Set);
-   pragma Inline (TCR_Set);
+   procedure URP_Set (URP_Address : in Address) with
+      Inline => True;
+   procedure SRP_Set (SRP_Address : in Address) with
+      Inline => True;
+   procedure TCR_Set (Value : in TCR_Register_Type) with
+      Inline => True;
 
 end M68040;

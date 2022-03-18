@@ -48,8 +48,10 @@ package SH7750 is
    BREAKPOINT_Instruction_Size : constant             := 2;
    BREAKPOINT_Asm_String       : constant String      := ".word 0xC3C3";
 
-   procedure NOP;
-   procedure BREAKPOINT;
+   procedure NOP with
+      Inline => True;
+   procedure BREAKPOINT with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- SH4 registers
@@ -131,8 +133,10 @@ package SH7750 is
       Unused4 at 0 range 31 .. 31;
    end record;
 
-   function Status_Register_Read return Status_Register_Type;
-   procedure Status_Register_Write (Value : in Status_Register_Type);
+   function Status_Register_Read return Status_Register_Type with
+      Inline => True;
+   procedure Status_Register_Write (Value : in Status_Register_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- SCIF
@@ -239,21 +243,5 @@ pragma Warnings (On, "size is not a multiple of alignment");
       Volatile   => True,
       Import     => True,
       Convention => Ada;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (NOP);
-   pragma Inline (BREAKPOINT);
-
-   pragma Inline (Status_Register_Read);
-   pragma Inline (Status_Register_Write);
 
 end SH7750;
