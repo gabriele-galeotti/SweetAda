@@ -88,8 +88,10 @@ package R3000 is
       Unused4 at 0 range 30 .. 31;
    end record;
 
-   function CP0_SR_Read return Status_Register_Type;
-   procedure CP0_SR_Write (Value : in Status_Register_Type);
+   function CP0_SR_Read return Status_Register_Type with
+      Inline => True;
+   procedure CP0_SR_Write (Value : in Status_Register_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- PRId register (CP0 register 15)
@@ -110,21 +112,7 @@ package R3000 is
       Unused at 0 range 16 .. 31;
    end record;
 
-   function CP0_PRId_Read return PRId_Register_Type;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (CP0_SR_Read);
-   pragma Inline (CP0_SR_Write);
-
-   pragma Inline (CP0_PRId_Read);
+   function CP0_PRId_Read return PRId_Register_Type with
+      Inline => True;
 
 end R3000;

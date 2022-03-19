@@ -67,27 +67,4 @@ package CPU_i686 is
 
    function RDTSC return Unsigned_64 renames CPU_i586.RDTSC;
 
-   procedure Dummy;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (CR4_Read);
-   pragma Inline (CR4_Write);
-
-   pragma Inline (CPUID_Enabled);
-   pragma Inline (CPU_Features_Read);
-   pragma Inline (CPU_VendorID_Read);
-
-   pragma Inline (RDMSR);
-   pragma Inline (WRMSR);
-   pragma Inline (RDTSC);
-
 end CPU_i686;

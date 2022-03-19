@@ -41,8 +41,10 @@ package MIPS32 is
    -- __REF__ acroread /a "page=157" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
    ----------------------------------------------------------------------------
 
-   function CP0_Count_Read return Unsigned_32;
-   procedure CP0_Count_Write (Value : in Unsigned_32);
+   function CP0_Count_Read return Unsigned_32 with
+      Inline => True;
+   procedure CP0_Count_Write (Value : in Unsigned_32) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Compare register (CP0 register 11, Select 0)
@@ -50,8 +52,10 @@ package MIPS32 is
    -- __REF__ acroread /a "page=158" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
    ----------------------------------------------------------------------------
 
-   function CP0_Compare_Read return Unsigned_32;
-   procedure CP0_Compare_Write (Value : in Unsigned_32);
+   function CP0_Compare_Read return Unsigned_32 with
+      Inline => True;
+   procedure CP0_Compare_Write (Value : in Unsigned_32) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Status Register (CP0 register 12, Select 0)
@@ -96,8 +100,10 @@ package MIPS32 is
       CU3     at 0 range 31 .. 31;
    end record;
 
-   function CP0_SR_Read return Status_Register_Type;
-   procedure CP0_SR_Write (Value : in Status_Register_Type);
+   function CP0_SR_Read return Status_Register_Type with
+      Inline => True;
+   procedure CP0_SR_Write (Value : in Status_Register_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Cause register (CP0 register 13, Select 0)
@@ -105,8 +111,10 @@ package MIPS32 is
    -- __REF__ acroread /a "page=168" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
    ----------------------------------------------------------------------------
 
-   function CP0_Cause_Read return Unsigned_32;
-   procedure CP0_Cause_Write (Value : in Unsigned_32);
+   function CP0_Cause_Read return Unsigned_32 with
+      Inline => True;
+   procedure CP0_Cause_Write (Value : in Unsigned_32) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exception Program Counter register (CP0 register 14, Select 0)
@@ -114,8 +122,10 @@ package MIPS32 is
    -- __REF__ acroread /a "page=172" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
    ----------------------------------------------------------------------------
 
-   function CP0_EPC_Read return Unsigned_32;
-   procedure CP0_EPC_Write (Value : in Unsigned_32);
+   function CP0_EPC_Read return Unsigned_32 with
+      Inline => True;
+   procedure CP0_EPC_Write (Value : in Unsigned_32) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- PRId register (CP0 register 15, Select 0)
@@ -138,7 +148,8 @@ package MIPS32 is
       Company_Options at 0 range 24 .. 31;
    end record;
 
-   function CP0_PRId_Read return PRId_Register_Type;
+   function CP0_PRId_Read return PRId_Register_Type with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Config register (CP0 register 16, Select 0)
@@ -146,8 +157,10 @@ package MIPS32 is
    -- __REF__ acroread /a "page=174" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
    ----------------------------------------------------------------------------
 
-   function CP0_Config_Read return Unsigned_32;
-   procedure CP0_Config_Write (Value : in Unsigned_32);
+   function CP0_Config_Read return Unsigned_32 with
+      Inline => True;
+   procedure CP0_Config_Write (Value : in Unsigned_32) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Config1 register (CP0 register 16, Select 1)
@@ -155,8 +168,10 @@ package MIPS32 is
    -- __REF__ acroread /a "page=176" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
    ----------------------------------------------------------------------------
 
-   function CP0_Config1_Read return Unsigned_32;
-   procedure CP0_Config1_Write (Value : in Unsigned_32);
+   function CP0_Config1_Read return Unsigned_32 with
+      Inline => True;
+   procedure CP0_Config1_Write (Value : in Unsigned_32) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Debug register (CP0 register 23, Select 0)
@@ -164,8 +179,10 @@ package MIPS32 is
    -- __REF__ acroread /a "page=185" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
    ----------------------------------------------------------------------------
 
-   function CP0_Debug_Read return Unsigned_32;
-   procedure CP0_Debug_Write (Value : in Unsigned_32);
+   function CP0_Debug_Read return Unsigned_32 with
+      Inline => True;
+   procedure CP0_Debug_Write (Value : in Unsigned_32) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Interrupts
@@ -174,57 +191,24 @@ package MIPS32 is
    type Irq_State_Type is new Natural;
    type Irq_Id_Type is new Natural;
 
-   procedure Irq_Enable;
-   procedure Irq_Disable;
-   function Irq_State_Get return Irq_State_Type;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type);
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
+   function Irq_State_Get return Irq_State_Type with
+      Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
    ----------------------------------------------------------------------------
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean);
-   procedure Lock (Lock_Object : in out Lock_Type);
-   procedure Unlock (Lock_Object : out Lock_Type);
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (CP0_Count_Read);
-   pragma Inline (CP0_Count_Write);
-
-   pragma Inline (CP0_Compare_Read);
-   pragma Inline (CP0_Compare_Write);
-
-   pragma Inline (CP0_SR_Read);
-   pragma Inline (CP0_SR_Write);
-
-   pragma Inline (CP0_Cause_Read);
-   pragma Inline (CP0_Cause_Write);
-
-   pragma Inline (CP0_EPC_Read);
-   pragma Inline (CP0_EPC_Write);
-
-   pragma Inline (CP0_PRId_Read);
-
-   pragma Inline (CP0_Config_Read);
-   pragma Inline (CP0_Config_Write);
-
-   pragma Inline (CP0_Config1_Read);
-   pragma Inline (CP0_Config1_Write);
-
-   pragma Inline (CP0_Debug_Read);
-   pragma Inline (CP0_Debug_Write);
-
-   pragma Inline (Lock_Try);
-   pragma Inline (Lock);
-   pragma Inline (Unlock);
+   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) with
+      Inline => True;
+   procedure Lock (Lock_Object : in out Lock_Type) with
+      Inline => True;
+   procedure Unlock (Lock_Object : out Lock_Type) with
+      Inline => True;
 
 end MIPS32;

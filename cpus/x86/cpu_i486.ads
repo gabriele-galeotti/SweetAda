@@ -94,20 +94,24 @@ package CPU_i486 is
       Reserved4  at 0 range 23 .. 31;
    end record;
 
-   function CR4_Read return CR4_Register_Type;
-   procedure CR4_Write (Value : in CR4_Register_Type);
+   function CR4_Read return CR4_Register_Type with
+      Inline => True;
+   procedure CR4_Write (Value : in CR4_Register_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- CPUID
    ----------------------------------------------------------------------------
 
-   function CPUID_Enabled return Boolean;
+   function CPUID_Enabled return Boolean with
+      Inline => True;
 
    type CPUID_VendorID_String_Type is new String (1 .. 12) with
       Alignment => Unsigned_32'Alignment,
       Size      => Unsigned_32'Size * 3;
 
-   function CPU_VendorID_Read return CPUID_VendorID_String_Type;
+   function CPU_VendorID_Read return CPUID_VendorID_String_Type with
+      Inline => True;
 
    type CPU_Features_Type is
    record
@@ -182,23 +186,7 @@ package CPU_i486 is
       PBE     at 0 range 31 .. 31;
    end record;
 
-   function CPU_Features_Read return CPU_Features_Type;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (CR4_Read);
-   pragma Inline (CR4_Write);
-
-   pragma Inline (CPUID_Enabled);
-   pragma Inline (CPU_Features_Read);
-   pragma Inline (CPU_VendorID_Read);
+   function CPU_Features_Read return CPU_Features_Type with
+      Inline => True;
 
 end CPU_i486;

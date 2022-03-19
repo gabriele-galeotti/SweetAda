@@ -94,8 +94,10 @@ package PPC405 is
       Reserved at 0 range 6 .. 31;
    end record;
 
-   function TSR_Read return TSR_Register_Type;
-   procedure TSR_Write (Value : in TSR_Register_Type);
+   function TSR_Read return TSR_Register_Type with
+      Inline => True;
+   procedure TSR_Write (Value : in TSR_Register_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- TCR Timer Control Register
@@ -139,8 +141,10 @@ package PPC405 is
       Reserved at 0 range 10 .. 31;
    end record;
 
-   function TCR_Read return TCR_Register_Type;
-   procedure TCR_Write (Value : in TCR_Register_Type);
+   function TCR_Read return TCR_Register_Type with
+      Inline => True;
+   procedure TCR_Write (Value : in TCR_Register_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- PIT Programmable Interval Timer
@@ -148,8 +152,10 @@ package PPC405 is
 
    PIT : constant SPR_Type := 987; -- 0x3db
 
-   function PIT_Read return Unsigned_32;
-   procedure PIT_Write (Value : in Unsigned_32);
+   function PIT_Read return Unsigned_32 with
+      Inline => True;
+   procedure PIT_Write (Value : in Unsigned_32) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- UIC Universal Interrupt Controller
@@ -227,33 +233,14 @@ package PPC405 is
       EIR6E     at 0 range 31 .. 31;
    end record;
 
-   function UIC0_ER_Read return UIC0_ER_Register_Type;
-   procedure UIC0_ER_Write (Value : in UIC0_ER_Register_Type);
+   function UIC0_ER_Read return UIC0_ER_Register_Type with
+      Inline => True;
+   procedure UIC0_ER_Write (Value : in UIC0_ER_Register_Type) with
+      Inline => True;
 
-   procedure MSREE_Set;
-   procedure MSREE_Clear;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (TSR_Read);
-   pragma Inline (TSR_Write);
-   pragma Inline (TCR_Read);
-   pragma Inline (TCR_Write);
-   pragma Inline (PIT_Read);
-   pragma Inline (PIT_Write);
-
-   pragma Inline (UIC0_ER_Read);
-   pragma Inline (UIC0_ER_Write);
-
-   pragma Inline (MSREE_Set);
-   pragma Inline (MSREE_Clear);
+   procedure MSREE_Set with
+      Inline => True;
+   procedure MSREE_Clear with
+      Inline => True;
 
 end PPC405;

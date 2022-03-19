@@ -48,8 +48,10 @@ package CPU_x86 is
    BREAKPOINT_Instruction_Size : constant            := 1;
    BREAKPOINT_Asm_String       : constant String     := ".byte 0xCC";
 
-   procedure NOP;
-   procedure BREAKPOINT;
+   procedure NOP with
+      Inline => True;
+   procedure BREAKPOINT with
+      Inline => True;
 
    -- Privilege Levels
    type PL_Type is new Bits_2;
@@ -212,12 +214,18 @@ package CPU_x86 is
 
    -- 386s do not have CR4
 
-   function ESP_Read return Address;
-   function CR0_Read return CR0_Register_Type;
-   procedure CR0_Write (Value : in CR0_Register_Type);
-   function CR2_Read return Address;
-   function CR3_Read return CR3_Register_Type;
-   procedure CR3_Write (Value : in CR3_Register_Type);
+   function ESP_Read return Address with
+      Inline => True;
+   function CR0_Read return CR0_Register_Type with
+      Inline => True;
+   procedure CR0_Write (Value : in CR0_Register_Type) with
+      Inline => True;
+   function CR2_Read return Address with
+      Inline => True;
+   function CR3_Read return CR3_Register_Type with
+      Inline => True;
+   procedure CR3_Write (Value : in CR3_Register_Type) with
+      Inline => True;
 
    -- ST0 .. ST7 registers
    ST_REGISTER_SIZE : constant := 10;
@@ -475,13 +483,15 @@ pragma Warnings (On, "size is not a multiple of alignment");
    type GDT_Type is array (GDT_Index_Type range <>) of GDT_Entry_Descriptor_Type with
       Pack => True;
 
-   procedure LGDTR (GDT_Descriptor : in GDT_Descriptor_Type; GDT_Code_Selector_Index : in GDT_Index_Type);
+   procedure LGDTR (GDT_Descriptor : in GDT_Descriptor_Type; GDT_Code_Selector_Index : in GDT_Index_Type) with
+      Inline => True;
    procedure GDT_Set (
                       GDT_Descriptor          : in out GDT_Descriptor_Type;
                       GDT_Address             : in     Address;
                       GDT_Length              : in     GDT_Index_Type;
                       GDT_Code_Selector_Index : in     GDT_Index_Type
-                     );
+                     ) with
+      Inline => True;
    procedure GDT_Set_Entry (
                             GDT_Entry   : in out GDT_Entry_Descriptor_Type;
                             Base        : in     Address;
@@ -550,12 +560,14 @@ pragma Warnings (On, "size is not a multiple of alignment");
 
    subtype IDT_Length_Type is Positive range 1 .. EXCEPTION_ITEMS;
 
-   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type);
+   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type) with
+      Inline => True;
    procedure IDT_Set (
                       IDT_Descriptor : in out IDT_Descriptor_Type;
                       IDT_Address    : in     Address;
                       IDT_Length     : in     IDT_Length_Type
-                     );
+                     ) with
+      Inline => True;
    procedure IDT_Set_Handler (
                               IDT_Entry         : in out IDT_Exception_Descriptor_Type;
                               Exception_Handler : in     Address;
@@ -577,13 +589,17 @@ pragma Warnings (On, "size is not a multiple of alignment");
    PAGESELECT4M : constant Page_Select_Type := 1;
 
    -- offset in a 4-KiB page
-   function Select_Address_Bits_OFS (CPU_Address : Address) return Bits_12;
+   function Select_Address_Bits_OFS (CPU_Address : Address) return Bits_12 with
+      Inline => True;
    -- 4-KiB page
-   function Select_Address_Bits_PFA (CPU_Address : Address) return Bits_20;
+   function Select_Address_Bits_PFA (CPU_Address : Address) return Bits_20 with
+      Inline => True;
    -- page table entry for 4-MiB page
-   function Select_Address_Bits_PTE (CPU_Address : Address) return Bits_10;
+   function Select_Address_Bits_PTE (CPU_Address : Address) return Bits_10 with
+      Inline => True;
    -- page directory entry
-   function Select_Address_Bits_PDE (CPU_Address : Address) return Bits_10;
+   function Select_Address_Bits_PDE (CPU_Address : Address) return Bits_10 with
+      Inline => True;
 
    -- Page Table Entry
    type PTEntry_Type is
@@ -682,10 +698,14 @@ pragma Warnings (On, "size is not a multiple of alignment");
    -- Irq handling
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable;
-   procedure Irq_Disable;
-   function Irq_State_Get return Irq_State_Type;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type);
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
+   function Irq_State_Get return Irq_State_Type with
+      Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
@@ -700,48 +720,11 @@ pragma Warnings (On, "size is not a multiple of alignment");
    end record with
       Size => CPU_Unsigned'Size;
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean);
-   procedure Lock (Lock_Object : in out Lock_Type);
-   procedure Unlock (Lock_Object : out Lock_Type);
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (NOP);
-   pragma Inline (BREAKPOINT);
-
-   pragma Inline (Select_Address_Bits_OFS);
-   pragma Inline (Select_Address_Bits_PFA);
-   pragma Inline (Select_Address_Bits_PTE);
-   pragma Inline (Select_Address_Bits_PDE);
-
-   pragma Inline (ESP_Read);
-   pragma Inline (CR0_Read);
-   pragma Inline (CR0_Write);
-   pragma Inline (CR2_Read);
-   pragma Inline (CR3_Read);
-   pragma Inline (CR3_Write);
-
-   pragma Inline (LGDTR);
-   pragma Inline (GDT_Set);
-
-   pragma Inline (LIDTR);
-   pragma Inline (IDT_Set);
-
-   pragma Inline (Irq_Enable);
-   pragma Inline (Irq_Disable);
-   pragma Inline (Irq_State_Get);
-   pragma Inline (Irq_State_Set);
-
-   pragma Inline (Lock_Try);
-   pragma Inline (Lock);
-   pragma Inline (Unlock);
+   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) with
+      Inline => True;
+   procedure Lock (Lock_Object : in out Lock_Type) with
+      Inline => True;
+   procedure Unlock (Lock_Object : out Lock_Type) with
+      Inline => True;
 
 end CPU_x86;

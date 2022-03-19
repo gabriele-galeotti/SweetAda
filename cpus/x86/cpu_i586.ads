@@ -108,30 +108,12 @@ package CPU_i586 is
       type Register_Type is private;
    procedure MSR_Write (Value : in Register_Type);
 
-   function RDMSR (MSR_Register_Number : MSR_Type) return Unsigned_64;
-   procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64);
+   function RDMSR (MSR_Register_Number : MSR_Type) return Unsigned_64 with
+      Inline => True;
+   procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64) with
+      Inline => True;
 
-   function RDTSC return Unsigned_64;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (CR4_Read);
-   pragma Inline (CR4_Write);
-
-   pragma Inline (CPUID_Enabled);
-   pragma Inline (CPU_Features_Read);
-   pragma Inline (CPU_VendorID_Read);
-
-   pragma Inline (RDMSR);
-   pragma Inline (WRMSR);
-   pragma Inline (RDTSC);
+   function RDTSC return Unsigned_64 with
+      Inline => True;
 
 end CPU_i586;

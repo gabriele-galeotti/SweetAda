@@ -37,37 +37,34 @@ package CPU.IO is
    -- PortIn/PortOut
    ----------------------------------------------------------------------------
 
-   function PortIn (Port : Unsigned_16) return Unsigned_8;
-   function PortIn (Port : Unsigned_16) return Unsigned_16;
-   function PortIn (Port : Unsigned_16) return Unsigned_32;
-   procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_8);
-   procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_16);
-   procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_32);
+   function PortIn (Port : Unsigned_16) return Unsigned_8 with
+      Inline => True;
+   function PortIn (Port : Unsigned_16) return Unsigned_16 with
+      Inline => True;
+   function PortIn (Port : Unsigned_16) return Unsigned_32 with
+      Inline => True;
+   procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_8) with
+      Inline => True;
+   procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_16) with
+      Inline => True;
+   procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_32) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- I/O operations referenced by addresses
    ----------------------------------------------------------------------------
 
-   function IO_Read (Port_Address : Address) return Unsigned_8;
-   function IO_Read (Port_Address : Address) return Unsigned_16;
-   function IO_Read (Port_Address : Address) return Unsigned_32;
-   procedure IO_Write (Port_Address : in Address; Value : in Unsigned_8);
-   procedure IO_Write (Port_Address : in Address; Value : in Unsigned_16);
-   procedure IO_Write (Port_Address : in Address; Value : in Unsigned_32);
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (PortIn);
-   pragma Inline (PortOut);
-   pragma Inline (IO_Read);
-   pragma Inline (IO_Write);
+   function IO_Read (Port_Address : Address) return Unsigned_8 with
+      Inline => True;
+   function IO_Read (Port_Address : Address) return Unsigned_16 with
+      Inline => True;
+   function IO_Read (Port_Address : Address) return Unsigned_32 with
+      Inline => True;
+   procedure IO_Write (Port_Address : in Address; Value : in Unsigned_8) with
+      Inline => True;
+   procedure IO_Write (Port_Address : in Address; Value : in Unsigned_16) with
+      Inline => True;
+   procedure IO_Write (Port_Address : in Address; Value : in Unsigned_32) with
+      Inline => True;
 
 end CPU.IO;
