@@ -15,21 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with DE10Lite;
-
 package body BSP is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use Interfaces;
-   use DE10Lite;
 
    --========================================================================--
    --                                                                        --
@@ -59,18 +45,7 @@ package body BSP is
    procedure BSP_Setup is
    begin
       -------------------------------------------------------------------------
-      declare
-         Value       : Unsigned_32;
-         Delay_Count : constant := 300_000;
-      begin
-         Value := 0;
-         LEDs_Dir := 16#FFFF_FFFF#;
-         loop
-            LEDs_IO := Value;
-            for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
-            Value := Value + 1;
-         end loop;
-      end;
+      null;
       -------------------------------------------------------------------------
    end BSP_Setup;
 
