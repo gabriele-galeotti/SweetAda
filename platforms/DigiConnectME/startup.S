@@ -18,6 +18,9 @@
                 .global _start
 _start:
 
+                //
+                // Setup stack pointer.
+                //
                 ldr     r0,=SVC_stack
                 mov     sp,r0
 

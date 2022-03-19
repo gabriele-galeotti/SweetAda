@@ -32,13 +32,10 @@ package CPU.MMIO is
 
    function Read_U8 (Memory_Address : System.Address) return Interfaces.Unsigned_8 with
       Inline_Always => True;
-
    function Read_U16 (Memory_Address : System.Address) return Interfaces.Unsigned_16 with
       Inline_Always => True;
-
    function Read_U32 (Memory_Address : System.Address) return Interfaces.Unsigned_32 with
       Inline_Always => True;
-
    function Read_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 with
       Inline_Always => True;
 
