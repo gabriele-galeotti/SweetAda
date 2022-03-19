@@ -43,20 +43,21 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            TC : Unsigned_32;
+            TC1 : Unsigned_32;
+            TC2 : Unsigned_32;
          begin
-            IOEMU.IOEMU_IO0 := 0;
+            TC1 := Core.Tick_Count;
+            TC2 := Core.Tick_Count;
             IOEMU.IOEMU_IO1 := 0;
             IOEMU.IOEMU_IO2 := 0;
-            TC := Core.Tick_Count;
             loop
-               if Tick_Count_Expired (TC, 1_000) then
-                  TC := Core.Tick_Count;
-                  -- blink IOEMU LED
-                  IOEMU.IOEMU_IO0 := 1;
-                  IOEMU.IOEMU_IO0 := 0;
+               if Tick_Count_Expired (TC1, 2_000) then
+                  TC1 := Core.Tick_Count;
                   IOEMU.IOEMU_IO1 := @ + 1;
                   IOEMU.IOEMU_IO2 := @ + 1;
+               end if;
+               if Tick_Count_Expired (TC2, 3_000) then
+                  TC2 := Core.Tick_Count;
                   Console.Print ("hello, SweetAda", NL => True);
                end if;
             end loop;
