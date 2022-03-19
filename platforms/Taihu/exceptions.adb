@@ -58,7 +58,7 @@ package body Exceptions is
             --    exit when (MFSPR_TSR and PIS) = 0;
             -- end loop;
             -- Console.Print ("PIT interrupt", NL => True);
-            -- "TIMER" LED blinking
+            -- IOEMU "TIMER" LED blinking
             IOEMU.IOEMU_IO0 := 1;
             IOEMU.IOEMU_IO0 := 0;
          end if;

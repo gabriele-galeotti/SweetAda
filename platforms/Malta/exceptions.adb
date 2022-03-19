@@ -38,7 +38,7 @@ package body Exceptions is
    begin
       -- Console.Print (MIPS32.CP0_Count_Read, NL => True);
       if True then
-         -- "TIMER" LED blinking
+         -- IOEMU "TIMER" LED blinking
          IOEMU.IOEMU_IO0 := 1;
          IOEMU.IOEMU_IO0 := 0;
       end if;
