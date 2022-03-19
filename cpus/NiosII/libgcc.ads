@@ -32,36 +32,33 @@ package LibGCC is
    function DivSI3 (
                     N : GCC_Types.SI_Type;
                     D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type;
+                   ) return GCC_Types.SI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__divsi3";
 
    function ModSI3 (
                     N : GCC_Types.SI_Type;
                     D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type;
+                   ) return GCC_Types.SI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__modsi3";
 
    function UDivSI3 (
                      N : GCC_Types.USI_Type;
                      D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type;
+                    ) return GCC_Types.USI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__udivsi3";
 
    function UModSI3 (
                      N : GCC_Types.USI_Type;
                      D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Export (C, DivSI3, "__divsi3");
-   pragma Export (C, ModSI3, "__modsi3");
-   pragma Export (C, UDivSI3, "__udivsi3");
-   pragma Export (C, UModSI3, "__umodsi3");
+                    ) return GCC_Types.USI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__umodsi3";
 
 end LibGCC;

@@ -189,14 +189,16 @@ package PCI is
                       Device_Number   : Device_Number_Type;
                       Function_Number : Function_Number_Type;
                       Register_Number : Register_Number_Type
-                     ) return Unsigned_8;
+                     ) return Unsigned_8 with
+      Inline => True;
    procedure Cfg_Write (
                         Bus_Number      : in Bus_Number_Type;
                         Device_Number   : in Device_Number_Type;
                         Function_Number : in Function_Number_Type;
                         Register_Number : in Register_Number_Type;
                         Value           : in Unsigned_8
-                       );
+                       ) with
+      Inline => True;
 
    -- Unsigned_16
    function Cfg_Read (
@@ -204,14 +206,16 @@ package PCI is
                       Device_Number   : Device_Number_Type;
                       Function_Number : Function_Number_Type;
                       Register_Number : Register_Number_Type
-                     ) return Unsigned_16;
+                     ) return Unsigned_16 with
+      Inline => True;
    procedure Cfg_Write (
                         Bus_Number      : in Bus_Number_Type;
                         Device_Number   : in Device_Number_Type;
                         Function_Number : in Function_Number_Type;
                         Register_Number : in Register_Number_Type;
                         Value           : in Unsigned_16
-                       );
+                       ) with
+      Inline => True;
 
    -- Unsigned_32
    function Cfg_Read (
@@ -219,14 +223,16 @@ package PCI is
                       Device_Number   : Device_Number_Type;
                       Function_Number : Function_Number_Type;
                       Register_Number : Register_Number_Type
-                     ) return Unsigned_32;
+                     ) return Unsigned_32 with
+      Inline => True;
    procedure Cfg_Write (
                         Bus_Number      : in Bus_Number_Type;
                         Device_Number   : in Device_Number_Type;
                         Function_Number : in Function_Number_Type;
                         Register_Number : in Register_Number_Type;
                         Value           : in Unsigned_32
-                       );
+                       ) with
+      Inline => True;
 
    procedure Cfg_Detect_Device (
                                 Bus_Number    : in  Bus_Number_Type;
@@ -255,18 +261,5 @@ package PCI is
                         Device_Number   : in Device_Number_Type;
                         Function_Number : in Function_Number_Type
                        );
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (Cfg_Read);
-   pragma Inline (Cfg_Write);
 
 end PCI;
