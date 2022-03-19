@@ -33,45 +33,45 @@ package IOEMU is
    use Interfaces;
    use MIPS;
 
-   IOEMU_BASEADDRESS : constant := 16#1F10_0000#;
+   IOEMU_BASEADDRESS : constant := KSEG1_ADDRESS + 16#1F10_0000#;
 
    IOEMU_IO0 : aliased Unsigned_8 with
-      Address              => To_Address (KSEG1_ADDRESS + IOEMU_BASEADDRESS + 0),
+      Address              => To_Address (IOEMU_BASEADDRESS + 0),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
    IOEMU_IO1 : aliased Unsigned_8 with
-      Address              => To_Address (KSEG1_ADDRESS + IOEMU_BASEADDRESS + 1),
+      Address              => To_Address (IOEMU_BASEADDRESS + 1),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
    IOEMU_IO2 : aliased Unsigned_8 with
-      Address              => To_Address (KSEG1_ADDRESS + IOEMU_BASEADDRESS + 2),
+      Address              => To_Address (IOEMU_BASEADDRESS + 2),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
    IOEMU_IO3 : aliased Unsigned_8 with
-      Address              => To_Address (KSEG1_ADDRESS + IOEMU_BASEADDRESS + 3),
+      Address              => To_Address (IOEMU_BASEADDRESS + 3),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
    IOEMU_IO4 : aliased Unsigned_8 with
-      Address              => To_Address (KSEG1_ADDRESS + IOEMU_BASEADDRESS + 4),
+      Address              => To_Address (IOEMU_BASEADDRESS + 4),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
    IOEMU_IO5 : aliased Unsigned_8 with
-      Address              => To_Address (KSEG1_ADDRESS + IOEMU_BASEADDRESS + 5),
+      Address              => To_Address (IOEMU_BASEADDRESS + 5),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
    IOEMU_IO6 : aliased Unsigned_8 with
-      Address              => To_Address (KSEG1_ADDRESS + IOEMU_BASEADDRESS + 6),
+      Address              => To_Address (IOEMU_BASEADDRESS + 6),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
    IOEMU_IO7 : aliased Unsigned_8 with
-      Address              => To_Address (KSEG1_ADDRESS + IOEMU_BASEADDRESS + 7),
+      Address              => To_Address (IOEMU_BASEADDRESS + 7),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
