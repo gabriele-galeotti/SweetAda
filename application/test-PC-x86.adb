@@ -107,9 +107,9 @@ package body Application is
             Console.Print ("Current date: ", NL => False);
             RTC_Read_Clock (T);
             if T.Year < 70 then
-               Console.Print (T.Year + 2000, NL => False);
+               Console.Print (T.Year + 2_000, NL => False);
             else
-               Console.Print (T.Year + 1900, NL => False);
+               Console.Print (T.Year + 1_900, NL => False);
             end if;
             Console.Print ("-", NL => False);
             Console.Print (T.Month + 1, NL => False);

@@ -63,9 +63,9 @@ package body BSP is
       LCD_Line (To_Address (XPAR_LCD_CONTROLLER_0_BASEADDR), 1);
       loop
          LED_IO := LED_IO or 16#0000_0002#;
-         Wait (500000);
+         Wait (500_000);
          LED_IO := LED_IO and 16#FFFF_FFFD#;
-         Wait (500000);
+         Wait (500_000);
       end loop;
       -------------------------------------------------------------------------
    end BSP_Setup;

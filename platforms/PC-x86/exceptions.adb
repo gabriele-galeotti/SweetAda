@@ -209,21 +209,21 @@ package body Exceptions is
       case Irq_Identifier is
          when PC.PIT_Interrupt =>
             -- increment system tick counter
-            Tick_Count := Tick_Count + 1;
+            Tick_Count := @ + 1;
             -- LED ignition QEMU/IOEMU or physical PC
             if QEMU then
                -- IOEMU "TIMER" LED blinking
-               if Tick_Count mod 1000 = 0 then
+               if Tick_Count mod 1_000 = 0 then
                   PC.PPI_ControlOut (PC.To_PPICT (16#FF#));
                   PC.PPI_ControlOut (PC.To_PPICT (16#00#));
                end if;
             else
                -- with a physical machine, we have to turn on/off the LED at a
                -- "human" rate
-               if Tick_Count mod 1000 = 0 then
+               if Tick_Count mod 1_000 = 0 then
                   PC.PPI_ControlOut (PC.To_PPICT (16#04#)); -- PPI INIT signal
                end if;
-               if (Tick_Count + 500) mod 1000 = 0 then
+               if (Tick_Count + 500) mod 1_000 = 0 then
                   PC.PPI_ControlOut (PC.To_PPICT (0));
                end if;
             end if;

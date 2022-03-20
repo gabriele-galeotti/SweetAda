@@ -57,7 +57,7 @@ package body Exceptions is
    procedure Timer_Process is
    begin
       Tick_Count := @ + 1;
-      if Tick_Count mod 1000 = 0 then
+      if Tick_Count mod 1_000 = 0 then
          -- IOEMU "TIMER" LED blinking
          IOEMU.IOEMU_IO0 := 16#FF#;
          IOEMU.IOEMU_IO0 := 16#00#;

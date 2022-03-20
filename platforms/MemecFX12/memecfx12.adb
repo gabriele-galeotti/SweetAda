@@ -35,7 +35,7 @@ package body MemecFX12 is
          Volatile => True;
    begin
       Value := 0;
-      for Delay_Loop_Count in 1 .. Loops loop Value := Value + 1; end loop;
+      for Delay_Loop_Count in 1 .. Loops loop Value := @ + 1; end loop;
    end Wait;
 
    ----------------------------------------------------------------------------
@@ -74,7 +74,7 @@ package body MemecFX12 is
       Extended_Data := Unsigned_32 (Data);
       Control_Data := Extended_Mode or Extended_Data;
       LCD_Port := Control_Data;
-      Wait (5000);
+      Wait (5_000);
    end LCD_Display_Update;
 
    ----------------------------------------------------------------------------
@@ -123,12 +123,12 @@ package body MemecFX12 is
    procedure LCD_Init is
       LCD_Data : constant array (Natural range <>) of Unsigned_8 := (16#38#, 16#06#, 16#0E#, 16#01#, 16#80#, 16#0C#);
    begin
-      Wait (150000);
+      Wait (150_000);
       for Index in LCD_Data'Range loop
          LCD_Display_Update (LCD'Address, LCD_Data (Index), 0);
-         Wait (500000);
+         Wait (500_000);
       end loop;
-      Wait (500000);
+      Wait (500_000);
    end LCD_Init;
 
 end MemecFX12;

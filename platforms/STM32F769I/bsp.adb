@@ -58,7 +58,7 @@ package body BSP is
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
-      Delay_Count : constant := 50000000;
+      Delay_Count : constant := 50_000_000;
       dummy       : Unsigned_32;
    begin
       --                           15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0

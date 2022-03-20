@@ -95,7 +95,7 @@ package body Exceptions is
          -- check if A2065 interrupt
          if not A2065.Receive then
             Tick_Count := @ + 1;
-            if Tick_Count mod 1000 = 0 then
+            if Tick_Count mod 1_000 = 0 then
                -- IOEMU "TIMER" LED blinking
                IOEMU.IOEMU_CIA_IO0 := 1;
                IOEMU.IOEMU_CIA_IO0 := 0;

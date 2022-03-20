@@ -46,7 +46,7 @@ package body Taihu is
    ----------------------------------------------------------------------------
    procedure Tclk_Init is
       -- TIMER_SYSCLK / TICK_FREQUENCY
-      -- Tclk_Value : constant Unsigned_32 := 33000;
+      -- Tclk_Value : constant Unsigned_32 := 33_000;
       Tclk_Value : constant := (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) / Configure.TICK_FREQUENCY;
       TCR_Value  : TCR_Register_Type;
    begin
