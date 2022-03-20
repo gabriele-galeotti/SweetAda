@@ -46,9 +46,11 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o : ada_interface.h clibrary.h
 
 # manually-inferred dependency logic
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o :    \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/bits.ads    \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/console.ads
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o :          \
+        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/abort_library.ads \
+        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/bits.ads          \
+        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/console.ads       \
+        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/malloc.ads
 
 .PHONY : configure
 configure :
