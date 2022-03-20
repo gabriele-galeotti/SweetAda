@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Abort_Library;
 with Malloc;
 with Console;
 
@@ -27,6 +28,11 @@ package body C_Wrappers is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   procedure Ada_Abort is
+   begin
+      Abort_Library.System_Abort;
+   end Ada_Abort;
 
    procedure Ada_Print_Character (c : in Interfaces.C.char) is
    begin

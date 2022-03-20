@@ -31,6 +31,11 @@ package C_Wrappers is
 
    pragma Preelaborate;
 
+   procedure Ada_Abort with
+      Export        => True,
+      Convention    => C,
+      External_Name => "abort";
+
    procedure Ada_Print_Character (c : in Interfaces.C.char) with
       Export        => True,
       Convention    => C,

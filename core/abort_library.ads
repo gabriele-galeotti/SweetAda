@@ -29,36 +29,15 @@ package Abort_Library is
 
    pragma Preelaborate;
 
-   procedure System_Abort;
+   procedure System_Abort with
+      No_Return => True;
 
    procedure System_Abort (
                            File    : in System.Address;
                            Line    : in Integer;
                            Column  : in Integer;
                            Message : in System.Address
-                          );
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma No_Return (System_Abort);
-
-   procedure Export_Abort renames System_Abort;
-   pragma Export (C, Export_Abort, "abort");
-
-   procedure Export_Abort_P (
-                             File    : in System.Address;
-                             Line    : in Integer;
-                             Column  : in Integer;
-                             Message : in System.Address
-                            ) renames System_Abort;
-   pragma Export (C, Export_Abort_P, "system_abort");
+                          ) with
+      No_Return => True;
 
 end Abort_Library;
