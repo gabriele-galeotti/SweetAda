@@ -58,7 +58,7 @@ package body Exceptions is
    begin
       Tick_Count := @ + 1;
       if Tick_Count mod 1000 = 0 then
-         -- "TIMER" LED blinking
+         -- IOEMU "TIMER" LED blinking
          IOEMU.IOEMU_IO0 := 16#FF#;
          IOEMU.IOEMU_IO0 := 16#00#;
       end if;
