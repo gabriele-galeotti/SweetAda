@@ -264,6 +264,8 @@ package body GNAT_Exceptions is
       Abort_Library.System_Abort (File, Line, 0, Message'Address);
    end Rcheck_SE_Object_Too_Large;
 
+   -- activated by -gnateE compiler switch
+
    procedure Rcheck_CE_Access_Check_Ext (File : in System.Address; Line, Column : in Integer) is
       pragma Unreferenced (File);
       pragma Unreferenced (Line);
