@@ -359,7 +359,6 @@ DISABLE_STACK_USAGE :=
 -include $(APPLICATION_DIRECTORY)/configuration.in
 -include $(DRIVERS_DIRECTORY)/configuration.in
 -include $(MODULES_DIRECTORY)/configuration.in
--include $(CLIBRARY_DIRECTORY)/configuration.in
 -include $(CORE_DIRECTORY)/configuration.in
 
 # try to read PLATFORM from configuration file
@@ -384,6 +383,8 @@ ifneq ($(CPU),)
 CPU_DIRECTORY := $(CPU_BASE_DIRECTORY)/$(CPU)
 -include $(CPU_DIRECTORY)/configuration.in
 endif
+
+-include $(CLIBRARY_DIRECTORY)/configuration.in
 
 ifeq ($(MAKECMDGOALS),rts)
 ifeq ($(CPU),)
