@@ -19,7 +19,6 @@ OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
 
 export KERNEL_STACK_SIZE := 4096
 
-USE_CLIBRARY    := Y
 USE_APPLICATION := dummy
 
 SESSION_START_COMMAND :=
