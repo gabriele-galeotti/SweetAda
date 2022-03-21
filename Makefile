@@ -872,6 +872,10 @@ endif
 	@$(call echo-print,"RTS:                 $(RTS)")
 	@$(call echo-print,"PROFILE:             $(PROFILE)")
 	@$(call echo-print,"USE LIBADA:          $(USE_LIBADA)")
+	@$(call echo-print,"USE C LIBRARY:       $(USE_CLIBRARY)")
+ifneq ($(ADDITIONAL_OBJECTS),)
+	@$(call echo-print,"ADDITIONAL OBJECTS:  $(ADDITIONAL_OBJECTS)")
+endif
 ifeq ($(USE_LIBGCC),Y)
 	@$(call echo-print,"LIBGCC FILENAME:     $(LIBGCC_FILENAME)")
 endif
