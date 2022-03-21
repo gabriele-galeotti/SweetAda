@@ -24,15 +24,15 @@ OBJECTS :=
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/llkernel.o
 # override standard core unit, see configuration.in
+# 1) add the unit to the library
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/core.o
+# 2) state the dependencies, that could be in turn overriden
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/core.o : $(KERNEL_PARENT_PATH)/$(SPEC_BITS)
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/core.o : \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/bits.ads
 
 .PHONY : installfiles
 installfiles :

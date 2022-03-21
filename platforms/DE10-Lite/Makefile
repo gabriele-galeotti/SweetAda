@@ -24,7 +24,10 @@ OBJECTS :=
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/llkernel.o
 # override standard last_chance_handler unit, see configuration.in
+# 1) add the unit to the library
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o
+# 2) state the dependencies, that could be in turn overriden
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 

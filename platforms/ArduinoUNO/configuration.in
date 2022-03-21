@@ -26,8 +26,8 @@ KERNEL_ROMFILE            := $(KERNEL_BASENAME).hex
 OBJCOPY_SWITCHES_PLATFORM += -O ihex -R .eeprom
 
 # override standard core unit
-IMPLICIT_CORE_UNITS := $(filter-out core,$(IMPLICIT_CORE_UNITS))
-export IMPLICIT_CORE_UNITS
+export IMPLICIT_CORE_UNITS := $(filter-out core,$(IMPLICIT_CORE_UNITS))
+export SPEC_CORE := $(PLATFORM_DIRECTORY)/core.ads
 
 USE_APPLICATION := test-ArduinoUNO
 

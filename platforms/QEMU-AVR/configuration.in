@@ -26,8 +26,8 @@ POSTBUILD_ROMFILE         := N
 OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
 
 # override standard core unit
-IMPLICIT_CORE_UNITS := $(filter-out core,$(IMPLICIT_CORE_UNITS))
-export IMPLICIT_CORE_UNITS
+export IMPLICIT_CORE_UNITS := $(filter-out core,$(IMPLICIT_CORE_UNITS))
+export SPEC_CORE := $(CORE_DIRECTORY)/core.ads
 
 USE_APPLICATION := dummy
 
