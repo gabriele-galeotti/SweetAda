@@ -57,8 +57,8 @@ Copyright @copyright{} 2020, 2021, 2022 @value{AUTHOR}
 * Anatomy of a platform::
 * The core complex::
 * LibGCC::
-* Platform descriptions::
 * Optimizations::
+* Platform descriptions::
 * IOEMU scripting::
 * Index::
 @end menu
@@ -357,7 +357,7 @@ the build model, RTS type, profile, and so on.
 One important aspect is that configuration variables could be introduced (and could
 override pre-defined ones) at various stages of the configuration. Obviously, further
 and more specific configuration files are loaded in sequence from the very few basic
-information found in the top-level configuration.in. 
+information found in the top-level configuration.in.
 
 Then, if it exists, a "kernel.cfg" file from the top-level directory is loaded.
 kernel.cfg contains the hardware platform which will be the build target. If kernel.cfg
@@ -850,6 +850,187 @@ It is of rare use, because normally every CPU has its own set of routines.
 In SweetAda the LibGCC package is thus more or less a placeholder, in the case of
 a port for a new CPU, or experimentation.
 
+@node Optimizations
+@chapter Optimizations
+@cindex optimizations
+
+SweetAda provides two mechanisms in order to allow user-defined implementations and
+optimizations. The first is to create an alternate piece of code that is going to
+replace a standard implementation of some subprograms, the other is to completely override
+a unit in the core complex (but not limited to).
+
+By making some bodies separate and segregate them in a subdirectory creates a first
+level of this kind of optimization.
+
+In a similar way, some package and subprograms can be selected when speed is a priority.
+The package MMIO, as an example, exposes a complete range of procedures and functions to
+allow low-level I/O, like reading an Unsigned_32 value at a specific address. These
+subprograms are written in Ada and are not optimized. Furthermore, they cannot be
+inlined and thus can be used as access subprograms to be designated in drivers when you
+are configuring the methods to deal with I/O. But some CPU have a subset of MMIO that
+overrides the standard one. By rewriting the subprograms with inline assembler instructions,
+speed increase could be easily obtained.
+
+In order to understand those mechanisms, a little bit of knowledge about the dynamic
+of the build system will be described.
+
+When the build system is in action, it computes include directories by assembling strings
+of paths, and those paths are read by sequentially including configuration files in the
+various subdirectories of the SweetAda system. The order of such reads states the priority
+about which units will be processed, since the compiler will pick up the first unit available.
+Core SweetAda directories are generally read first, and increasingly low-level directories
+are read last, and they could change the previous order, so that, e.g., the target platform
+directory will take precedence over the starting one.
+
+The reading sequence of configuration files is:
+
+@itemize @bullet
+@item
+application/configuration.in
+@item
+drivers/configuration.in
+@item
+modules/configuration.in
+@item
+core/configuration.in
+@item
+platforms/<PLATFORM>/configuration.in
+@item
+cpus/<CPU>/configuration.in
+@item
+clibrary/configuration.in
+@end itemize
+
+Every configuration file will add its own directory to the list of include directories,
+either by head-insertion or tail-insertion (using standard Makefile-syntax variable
+assignments), so the precedence schema will be built at each step.
+
+By default, SweetAda uses the following schema, in order of descending priority:
+
+@itemize @bullet
+@item
+platforms/<PLATFORM>
+@item
+cpus/<CPU>
+@item
+application
+@item
+drivers
+@item
+modules and its subdirectories
+@item
+core and its subdirectories
+@item
+clibrary
+@end itemize
+
+This way, a user-supplied body unit can override a standard one, being the latter a
+separate subprograms.
+
+As an example, a reimplementation of some MMIO subprograms is provided in the
+cpus/SPARC directory. The overriding of some standard MMIO subprograms (and only those
+explicitly implemented as an optimization) will happen because the cpus/SPARC/configuration.in
+specifies the "mmio" subdirectory as an higher-precedence directory search path that
+will be head-inserted into the list.
+
+Another mechanism of optimization is to completely replace the standard SweetAda units.
+In order to take gain of this mechanism, the user should take care of implicit units.
+
+Implicit units, like previously stated, are units that are incorporated in the final
+executable regardless of being used. They are a collection of subprograms that are
+called by the complier front-end in order to perform low-level activities. Implicit
+units are those dealing with:
+
+@itemize @bullet
+@item
+memory move/copy subprograms
+@item
+memory allocation
+@item
+exception processing
+@end itemize
+
+Great care should be taken in managing those units. Since the user source code
+could not referencing this units, the build system have to be aware of the compilation
+of those units and theirs dependencies.
+
+Let's suppose, for example, that you want to do a specific manual handling of
+critical activities instead of using the standard last_chance_handler unit. In this
+case, you have to rewrite a new unit with the same name and place it in, say,
+the platform directory (so that it can take precedence over the core one).
+The mandatory steps to perform this overriding are:
+
+@itemize @bullet
+@item
+1) specify that you want to override the standard last_chance_handler unit; this
+will happen by remove the unit from the list of implicit units in the platform
+configuration.in file; this way, the build system will not compile the standard
+unit anymore:
+
+export IMPLICIT_CORE_UNITS := $(filter-out last_chance_handler,$(IMPLICIT_CORE_UNITS))
+
+@item
+2) still in the platform configuration.in file, reassign the SPEC_* identifier
+to the new unit:
+
+export SPEC_CORE := $(PLATFORM_DIRECTORY)/last_chance_handler.ads
+
+@item
+3) add the new unit object file to the list of object files in the platform Makefile
+(by adding the file to the OBJECTS variable); this way, the build system will
+incorporate the new unit in the platform library
+
+OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o
+
+@item
+4) still in the platform Makefile, specify the dependencies of the new unit with
+standard Makefile syntax, i.e., by enumerating the filenames; implicit units
+should be specified in terms of SPEC_* identifiers; this way, the build system will
+be triggered by changes in other units
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
+
+(in this example the new unit is with'ing Abort_Library, an implicit unit)
+@end itemize
+
+The steps 2) and 3) are worth some additional detail:
+
+@itemize @bullet
+@item
+only non-RTS units should be specified, because RTS units are supposed to be fixed
+in time
+@item
+it is necessary to do so because, if the new unit is with'ing other implicit units
+that are in turn overriden, they could not be detected by the build system
+@item
+whether another implicit unit is being with'ed, it is mandatory to use the appropriate
+identifier rather than the explicit specification filename; in every case, prepend
+the KERNEL_PARENT_PATH path component before the specification
+@end itemize
+
+The identifiers of the implicit units and other dependency units are the followings:
+
+@itemize @bullet
+@item
+SPEC_ABORT_LIBRARY -> core/abort_library.ads
+@item
+SPEC_BITS -> core/bits.ads
+@item
+SPEC_CONSOLE -> core/console.ads
+@item
+SPEC_CORE -> core/core.ads
+@item
+SPEC_INTEGER_MATH -> core/integer_math.ads
+@item
+SPEC_LAST_CHANCE_HANDLER core/last_chance_handler.ads
+@item
+SPEC_LLUTILS -> core/llutils.ads
+@item
+SPEC_MALLOC -> core/malloc.ads
+@item
+SPEC_MEMORY_FUNCTIONS -> core/memory_functions.ads
+@end itemize
+
 @node Platform descriptions
 @chapter Platform descriptions
 
@@ -892,17 +1073,30 @@ the serial port and the A2065 network adapter (tested only in FS-UAE so far).
 @section Arduino Uno
 @cindex Arduino Uno
 
+Arduino@registeredsymbol{} UNO is a very popular embedded board based on the
+AVR class of MCU.
+
 @section Atlas
 @cindex Atlas
+
+Atlas is a PC-style board based on a PowerPC PPC604 CPU.
 
 @section Terasic DE10-Lite
 @cindex Terasic DE10-Lite
 
+The DE10-Lite is an embedded board preoduced by Terasic, based on an Altera@registeredsymbol{}
+FPGA, which runs a softcore Nios II@registeredsymbol{} processor.
+
 @section DECstation 5000/133
 @cindex DECstation 5000/133
 
+DECstation 5000/133 is a famed workstation made by Digital@registeredsymbol{}.
+
 @section Digi Connect ME
 @cindex Digi Connect ME
+
+The Digi Connect ME is a little embedded module produced by Digi, containing
+a NET+ARM CPU.
 
 @section Dreamcast
 @cindex Dreamcast
@@ -925,6 +1119,8 @@ utility provides a way to send the kernel to the console.
 
 @section FRDM-KL46Z
 @cindex FRDM-KL46Z
+
+FRDM-KL46Z ("Freedom") is a little embedded board based on an ARM CPU.
 
 @section GEMI
 @cindex GEMI
@@ -1012,7 +1208,7 @@ To proper setup CCS, the configuration.in provides some environment variables:
 @item
 CCS_PREFIX: the path towards the installation of CCS (not including the "bin" subdirectory)
 @item
-CCS_NETSERVER_PORT: the TCP port used by ccs-utils.tcl script library to connect to CCS via
+CCS_NETSERVER_PORT: the TCP port used by libccs.tcl script library to connect to CCS via
 a telnet session
 @item
 USBTAP_SN: the serial number of the CodeWarrior USB TAP JTAG device
@@ -1030,11 +1226,19 @@ Prerequisites like those of MPC8306 SOM apply here, i.e. the CCS installation.
 @section MPC8315e
 @cindex MPC8315e
 
+MPC8315e is a proprietary embedded board based on the homonym PowerPC CPU, available only
+to the author of SweetAda, and thus is used solely as a template in order to work with
+this kind of CPU and test SweetAda in the maximum possible range of physical hardware.
+
 @section MSP432P401R
 @cindex MSP432P401R
 
+The MSP432P401R is a litlle embedded board based on an ARM CPU.
+
 @section MVME162-510A
 @cindex MVME162-510A
+
+The MVME162-510A is a VME board based on an MC68040 CPU.
 
 @section Malta
 @cindex Malta
@@ -1043,6 +1247,9 @@ Prerequisites like those of MPC8306 SOM apply here, i.e. the CCS installation.
 
 @section Memec FX12
 @cindex Memec FX12
+
+The Memec FX12 is a little embedded module based on Xilinx@registeredsymbol{} Virtex-4
+FPGA equipped with an hard-PPC405 core.
 
 @section PC-x86
 @cindex PC-x86
@@ -1057,23 +1264,38 @@ PC-x86-64 is a family of platforms based on Intel/AMD x86-64-class 64-bit proces
 @section QEMU AArch64
 @cindex QEMU AArch64
 
+The QEMU AArch64 is a virtual platform provided by QEMU, which is based on an
+ARM AArch64-class CPU.
+
 @section QEMU AVR
 @cindex QEMU AVR
+
+The QEMU AVR is a virtual platform provided by QEMU, which is based on an
+AVR-class CPU.
 
 @section QEMU MIPS
 @cindex QEMU MIPS
 
+The QEMU MIPS is a virtual platform provided by QEMU, which is based on an
+MIPS-class CPU.
+
 @section QEMU RISC-V 32
 @cindex QEMU RISC-V 32
 
+The QEMU RISC-V 32 is a virtual platform provided by QEMU, which is based on an
+32-bit RISC-V-class CPU.
+
 @section Raspberry Pi 3
 @cindex Raspberry Pi 3
+
+The Raspberry Pi 3 is a popular embedded board based on a BCM2387 64-bit
+ARM-class CPU.
 
 @section SBC5206
 @cindex SBC5206
 
 The SBC5206 is a virtual platform provided by QEMU, which mimics an Arnewsh 5206
-embedded board, which is based on a MCF5206 ColdFire processor.
+embedded board, which is based on the MCF5206 ColdFire processor.
 
 @section SPARCstation 5
 @cindex SPARCstation 5
@@ -1084,11 +1306,17 @@ real hardware machine, SPARCstation 5 is also a machine emulated by QEMU.
 @section STM32F769I
 @cindex STM32F769I
 
+The STM32F769I is a popular embedded board based on an ARM-class CPU.
+
 @section Spartan 3A EK
 @cindex Spartan 3A EK
 
+The Spartan 3A EK is an embedded board based on a Xilinx@registeredsymbol{} Spartan-3A FPGA.
+
 @section Spartan 3E SK
 @cindex Spartan 3E SK
+
+The Spartan 3E SK is an embedded board based on a Xilinx@registeredsymbol{} Spartan-3E FPGA.
 
 @section Synergy S5D9
 @cindex Synergy S5D9
@@ -1120,37 +1348,19 @@ this is done also with the aid of a minimal interrupt context.
 @section Taihu
 @cindex Taihu
 
-The Taihu is a virtual platform provided by QEMU, which mimics the real one.
+The Taihu is a virtual platform provided by QEMU, which mimics the real one,
+wich is based on a PowerPC PPC405 device.
 
 @section Xilinx Zynq A9
 @cindex Xilinx Zynq A9
 
-The Xilinx Zynq A9 is a virtual platform provided by QEMU, which mimics the real one.
+The Xilinx@registeredsymbol{} Zynq A9 is a virtual platform provided by QEMU,
+which mimics the real one.
 
 @section ZOOM
 @cindex ZOOM
 
 ZOOM is a family of embedded platforms based on the MCF5373 ColdFire processor.
-
-@node Optimizations
-@chapter Optimizations
-@cindex optimizations
-
-SweetAda provides a mechanism to allow user-defined implementations. Standard subprograms
-available in the core complex (but not limited to) could be bypassed by reimplement them.
-
-In a similar way, some package and subprograms can be selected when speed is a priority.
-The package MMIO, as an example, exposes a complete range of procedures and functions to
-allow low-level I/O, like reading an Unsigned_32 value at a specific address.
-
-These subprograms are written in Ada and are not optimized. Furthermore, they cannot be
-inlined and thus can be used as access subprograms to be designated in drivers when you
-are configuring the methods to deal with I/O. But some CPU have a subset of MMIO that
-overrides the standard one. By rewriting the subprograms with inline assembler instructions,
-speed increase could be easily obtained.
-
-Beyond that, some CPU have a second package CPU.MMIO with these inline assembler fragments
-already written. With'ing CPU.MMIO instead of MMIO lets the user directly use them.
 
 @node IOEMU scripting
 @chapter IOEMU scripting

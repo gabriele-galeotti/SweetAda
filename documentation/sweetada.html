@@ -72,8 +72,8 @@ Next: <a href="#Overview" accesskey="n" rel="next">Overview</a> &nbsp; [<a href=
 <li><a href="#Anatomy-of-a-platform">Anatomy of a platform</a></li>
 <li><a href="#The-core-complex">The core complex</a></li>
 <li><a href="#LibGCC">LibGCC</a></li>
-<li><a href="#Platform-descriptions">Platform descriptions</a></li>
 <li><a href="#Optimizations">Optimizations</a></li>
+<li><a href="#Platform-descriptions">Platform descriptions</a></li>
 <li><a href="#IOEMU-scripting">IOEMU scripting</a></li>
 <li><a href="#Index">Index</a></li>
 </ul>
@@ -400,7 +400,7 @@ the build model, RTS type, profile, and so on.
 <p>One important aspect is that configuration variables could be introduced (and could
 override pre-defined ones) at various stages of the configuration. Obviously, further
 and more specific configuration files are loaded in sequence from the very few basic
-information found in the top-level configuration.in. 
+information found in the top-level configuration.in.
 </p>
 <p>Then, if it exists, a &quot;kernel.cfg&quot; file from the top-level directory is loaded.
 kernel.cfg contains the hardware platform which will be the build target. If kernel.cfg
@@ -904,7 +904,7 @@ and atomic-swapping operations.
 <div class="chapter" id="LibGCC">
 <div class="header">
 <p>
-Next: <a href="#Platform-descriptions" accesskey="n" rel="next">Platform descriptions</a>, Previous: <a href="#The-core-complex" accesskey="p" rel="prev">The core complex</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="#The-core-complex" accesskey="p" rel="prev">The core complex</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <span id="LibGCC-1"></span><h2 class="chapter">14 LibGCC</h2>
 <span id="index-LibGCC"></span>
@@ -928,12 +928,166 @@ a port for a new CPU, or experimentation.
 </p>
 <hr>
 </div>
+<div class="chapter" id="Optimizations">
+<div class="header">
+<p>
+Next: <a href="#Platform-descriptions" accesskey="n" rel="next">Platform descriptions</a>, Previous: <a href="#LibGCC" accesskey="p" rel="prev">LibGCC</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Optimizations-1"></span><h2 class="chapter">15 Optimizations</h2>
+<span id="index-optimizations"></span>
+
+<p>SweetAda provides two mechanisms in order to allow user-defined implementations and
+optimizations. The first is to create an alternate piece of code that is going to
+replace a standard implementation of some subprograms, the other is to completely override
+a unit in the core complex (but not limited to).
+</p>
+<p>By making some bodies separate and segregate them in a subdirectory creates a first
+level of this kind of optimization.
+</p>
+<p>In a similar way, some package and subprograms can be selected when speed is a priority.
+The package MMIO, as an example, exposes a complete range of procedures and functions to
+allow low-level I/O, like reading an Unsigned_32 value at a specific address. These
+subprograms are written in Ada and are not optimized. Furthermore, they cannot be
+inlined and thus can be used as access subprograms to be designated in drivers when you
+are configuring the methods to deal with I/O. But some CPU have a subset of MMIO that
+overrides the standard one. By rewriting the subprograms with inline assembler instructions,
+speed increase could be easily obtained.
+</p>
+<p>In order to understand those mechanisms, a little bit of knowledge about the dynamic
+of the build system will be described.
+</p>
+<p>When the build system is in action, it computes include directories by assembling strings
+of paths, and those paths are read by sequentially including configuration files in the
+various subdirectories of the SweetAda system. The order of such reads states the priority
+about which units will be processed, since the compiler will pick up the first unit available.
+Core SweetAda directories are generally read first, and increasingly low-level directories
+are read last, and they could change the previous order, so that, e.g., the target platform
+directory will take precedence over the starting one.
+</p>
+<p>The reading sequence of configuration files is:
+</p>
+<ul>
+<li> application/configuration.in
+</li><li> drivers/configuration.in
+</li><li> modules/configuration.in
+</li><li> core/configuration.in
+</li><li> platforms/&lt;PLATFORM&gt;/configuration.in
+</li><li> cpus/&lt;CPU&gt;/configuration.in
+</li><li> clibrary/configuration.in
+</li></ul>
+
+<p>Every configuration file will add its own directory to the list of include directories,
+either by head-insertion or tail-insertion (using standard Makefile-syntax variable
+assignments), so the precedence schema will be built at each step.
+</p>
+<p>By default, SweetAda uses the following schema, in order of descending priority:
+</p>
+<ul>
+<li> platforms/&lt;PLATFORM&gt;
+</li><li> cpus/&lt;CPU&gt;
+</li><li> application
+</li><li> drivers
+</li><li> modules and its subdirectories
+</li><li> core and its subdirectories
+</li><li> clibrary
+</li></ul>
+
+<p>This way, a user-supplied body unit can override a standard one, being the latter a
+separate subprograms.
+</p>
+<p>As an example, a reimplementation of some MMIO subprograms is provided in the
+cpus/SPARC directory. The overriding of some standard MMIO subprograms (and only those
+explicitly implemented as an optimization) will happen because the cpus/SPARC/configuration.in
+specifies the &quot;mmio&quot; subdirectory as an higher-precedence directory search path that
+will be head-inserted into the list.
+</p>
+<p>Another mechanism of optimization is to completely replace the standard SweetAda units.
+In order to take gain of this mechanism, the user should take care of implicit units.
+</p>
+<p>Implicit units, like previously stated, are units that are incorporated in the final
+executable regardless of being used. They are a collection of subprograms that are
+called by the complier front-end in order to perform low-level activities. Implicit
+units are those dealing with:
+</p>
+<ul>
+<li> memory move/copy subprograms
+</li><li> memory allocation
+</li><li> exception processing
+</li></ul>
+
+<p>Great care should be taken in managing those units. Since the user source code
+could not referencing this units, the build system have to be aware of the compilation
+of those units and theirs dependencies.
+</p>
+<p>Let&rsquo;s suppose, for example, that you want to do a specific manual handling of
+critical activities instead of using the standard last_chance_handler unit. In this
+case, you have to rewrite a new unit with the same name and place it in, say,
+the platform directory (so that it can take precedence over the core one).
+The mandatory steps to perform this overriding are:
+</p>
+<ul>
+<li> 1) specify that you want to override the standard last_chance_handler unit; this
+will happen by remove the unit from the list of implicit units in the platform
+configuration.in file; this way, the build system will not compile the standard
+unit anymore:
+
+<p>export IMPLICIT_CORE_UNITS := $(filter-out last_chance_handler,$(IMPLICIT_CORE_UNITS))
+</p>
+</li><li> 2) still in the platform configuration.in file, reassign the SPEC_* identifier
+to the new unit:
+
+<p>export SPEC_CORE := $(PLATFORM_DIRECTORY)/last_chance_handler.ads
+</p>
+</li><li> 3) add the new unit object file to the list of object files in the platform Makefile
+(by adding the file to the OBJECTS variable); this way, the build system will
+incorporate the new unit in the platform library
+
+<p>OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o
+</p>
+</li><li> 4) still in the platform Makefile, specify the dependencies of the new unit with
+standard Makefile syntax, i.e., by enumerating the filenames; implicit units
+should be specified in terms of SPEC_* identifiers; this way, the build system will
+be triggered by changes in other units
+
+<p>$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
+</p>
+<p>(in this example the new unit is with&rsquo;ing Abort_Library, an implicit unit)
+</p></li></ul>
+
+<p>The steps 2) and 3) are worth some additional detail:
+</p>
+<ul>
+<li> only non-RTS units should be specified, because RTS units are supposed to be fixed
+in time
+</li><li> it is necessary to do so because, if the new unit is with&rsquo;ing other implicit units
+that are in turn overriden, they could not be detected by the build system
+</li><li> whether another implicit unit is being with&rsquo;ed, it is mandatory to use the appropriate
+identifier rather than the explicit specification filename; in every case, prepend
+the KERNEL_PARENT_PATH path component before the specification
+</li></ul>
+
+<p>The identifiers of the implicit units and other dependency units are the followings:
+</p>
+<ul>
+<li> SPEC_ABORT_LIBRARY -&gt; core/abort_library.ads
+</li><li> SPEC_BITS -&gt; core/bits.ads
+</li><li> SPEC_CONSOLE -&gt; core/console.ads
+</li><li> SPEC_CORE -&gt; core/core.ads
+</li><li> SPEC_INTEGER_MATH -&gt; core/integer_math.ads
+</li><li> SPEC_LAST_CHANCE_HANDLER core/last_chance_handler.ads
+</li><li> SPEC_LLUTILS -&gt; core/llutils.ads
+</li><li> SPEC_MALLOC -&gt; core/malloc.ads
+</li><li> SPEC_MEMORY_FUNCTIONS -&gt; core/memory_functions.ads
+</li></ul>
+
+<hr>
+</div>
 <div class="chapter" id="Platform-descriptions">
 <div class="header">
 <p>
-Next: <a href="#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="#LibGCC" accesskey="p" rel="prev">LibGCC</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#IOEMU-scripting" accesskey="n" rel="next">IOEMU scripting</a>, Previous: <a href="#Optimizations" accesskey="p" rel="prev">Optimizations</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Platform-descriptions-1"></span><h2 class="chapter">15 Platform descriptions</h2>
+<span id="Platform-descriptions-1"></span><h2 class="chapter">16 Platform descriptions</h2>
 
 <ul class="section-toc">
 <li><a href="#Altera-10M50GHRD" accesskey="1">Altera 10M50GHRD</a></li>
@@ -977,7 +1131,7 @@ Next: <a href="#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previ
 <li><a href="#ZOOM">ZOOM</a></li>
 </ul>
 <div class="section" id="Altera-10M50GHRD">
-<h3 class="section">15.1 Altera 10M50GHRD</h3>
+<h3 class="section">16.1 Altera 10M50GHRD</h3>
 <span id="index-Altera-10M50GHRD"></span>
 
 <p>Altera&reg; 10M50GHRD is a virtual platform in SweetAda, usable by
@@ -995,7 +1149,7 @@ already wrapped in the platform&rsquo;s configuration.in.
 </p>
 </div>
 <div class="section" id="Amiga">
-<h3 class="section">15.2 Amiga</h3>
+<h3 class="section">16.2 Amiga</h3>
 <span id="index-Amiga"></span>
 
 <p>The Amiga platform is the well-known machine based on the M68k venerable class
@@ -1017,32 +1171,45 @@ the serial port and the A2065 network adapter (tested only in FS-UAE so far).
 </p>
 </div>
 <div class="section" id="Arduino-Uno">
-<h3 class="section">15.3 Arduino Uno</h3>
+<h3 class="section">16.3 Arduino Uno</h3>
 <span id="index-Arduino-Uno"></span>
 
+<p>Arduino&reg; UNO is a very popular embedded board based on the
+AVR class of MCU.
+</p>
 </div>
 <div class="section" id="Atlas">
-<h3 class="section">15.4 Atlas</h3>
+<h3 class="section">16.4 Atlas</h3>
 <span id="index-Atlas"></span>
 
+<p>Atlas is a PC-style board based on a PowerPC PPC604 CPU.
+</p>
 </div>
 <div class="section" id="Terasic-DE10_002dLite">
-<h3 class="section">15.5 Terasic DE10-Lite</h3>
+<h3 class="section">16.5 Terasic DE10-Lite</h3>
 <span id="index-Terasic-DE10_002dLite"></span>
 
+<p>The DE10-Lite is an embedded board preoduced by Terasic, based on an Altera&reg;
+FPGA, which runs a softcore Nios II&reg; processor.
+</p>
 </div>
 <div class="section" id="DECstation-5000_002f133">
-<h3 class="section">15.6 DECstation 5000/133</h3>
+<h3 class="section">16.6 DECstation 5000/133</h3>
 <span id="index-DECstation-5000_002f133"></span>
 
+<p>DECstation 5000/133 is a famed workstation made by Digital&reg;.
+</p>
 </div>
 <div class="section" id="Digi-Connect-ME">
-<h3 class="section">15.7 Digi Connect ME</h3>
+<h3 class="section">16.7 Digi Connect ME</h3>
 <span id="index-Digi-Connect-ME"></span>
 
+<p>The Digi Connect ME is a little embedded module produced by Digi, containing
+a NET+ARM CPU.
+</p>
 </div>
 <div class="section" id="Dreamcast">
-<h3 class="section">15.8 Dreamcast</h3>
+<h3 class="section">16.8 Dreamcast</h3>
 <span id="index-Dreamcast"></span>
 
 <p>SEGA&reg; Dreamcast is a home video game console based on an
@@ -1063,12 +1230,14 @@ utility provides a way to send the kernel to the console.
 </p>
 </div>
 <div class="section" id="FRDM_002dKL46Z">
-<h3 class="section">15.9 FRDM-KL46Z</h3>
+<h3 class="section">16.9 FRDM-KL46Z</h3>
 <span id="index-FRDM_002dKL46Z"></span>
 
+<p>FRDM-KL46Z (&quot;Freedom&quot;) is a little embedded board based on an ARM CPU.
+</p>
 </div>
 <div class="section" id="GEMI">
-<h3 class="section">15.10 GEMI</h3>
+<h3 class="section">16.10 GEMI</h3>
 <span id="index-GEMI"></span>
 
 <p>&quot;GEMI&quot; is a proprietary embedded board based on the Hitachi SH7032 CPU, available only
@@ -1081,7 +1250,7 @@ on-board RTC.
 </p>
 </div>
 <div class="section" id="SiFive-HiFive-1">
-<h3 class="section">15.11 SiFive HiFive 1</h3>
+<h3 class="section">16.11 SiFive HiFive 1</h3>
 <span id="index-SiFive-HiFive-1"></span>
 
 <p>The SiFive<sup>TM</sup> HiFive 1 is an embedded board based on a RISC-V&reg;
@@ -1120,14 +1289,14 @@ enabled, else when a timer IRQ is triggered an invalid program counter will be c
 </p>
 </div>
 <div class="section" id="Integrator_002fCP">
-<h3 class="section">15.12 Integrator/CP</h3>
+<h3 class="section">16.12 Integrator/CP</h3>
 <span id="index-Integrator_002fCP"></span>
 
 <p>The Integrator/CP is a virtual platform provided by QEMU, which mimics the real one.
 </p>
 </div>
 <div class="section" id="LEON3">
-<h3 class="section">15.13 LEON3</h3>
+<h3 class="section">16.13 LEON3</h3>
 <span id="index-LEON3"></span>
 
 <p>The LEON3 is a virtual platform provided by QEMU, which mimics a generic machine based
@@ -1135,21 +1304,21 @@ on the LEON3&reg; processor.
 </p>
 </div>
 <div class="section" id="M5235BCC">
-<h3 class="section">15.14 M5235BCC</h3>
+<h3 class="section">16.14 M5235BCC</h3>
 <span id="index-M5235BCC"></span>
 
 <p>M5235BCC is an embedded board based on the MCF5235 ColdFire processor.
 </p>
 </div>
 <div class="section" id="ML605">
-<h3 class="section">15.15 ML605</h3>
+<h3 class="section">16.15 ML605</h3>
 <span id="index-ML605"></span>
 
 <p>ML605 is a virtual platform provided by QEMU, which mimics the real one.
 </p>
 </div>
 <div class="section" id="MPC8306-SOM">
-<h3 class="section">15.16 MPC8306 SOM</h3>
+<h3 class="section">16.16 MPC8306 SOM</h3>
 <span id="index-MPC8306-SOM"></span>
 
 <p>MPC830x SOM (System on Module) is an embedded development board based on a
@@ -1164,14 +1333,14 @@ of the software to connect to the board via JTAG by using an USB TAP device.
 <p>To proper setup CCS, the configuration.in provides some environment variables:
 </p><ul>
 <li> CCS_PREFIX: the path towards the installation of CCS (not including the &quot;bin&quot; subdirectory)
-</li><li> CCS_NETSERVER_PORT: the TCP port used by ccs-utils.tcl script library to connect to CCS via
+</li><li> CCS_NETSERVER_PORT: the TCP port used by libccs.tcl script library to connect to CCS via
 a telnet session
 </li><li> USBTAP_SN: the serial number of the CodeWarrior USB TAP JTAG device
 </li></ul>
 
 </div>
 <div class="section" id="MPC8306-Switch">
-<h3 class="section">15.17 MPC8306 Switch</h3>
+<h3 class="section">16.17 MPC8306 Switch</h3>
 <span id="index-MPC8306-Switch"></span>
 
 <p>&quot;Switch&quot; is a proprietary embedded board based on the MPC8306 CPU, available only
@@ -1182,81 +1351,107 @@ this kind of CPU and test SweetAda in the maximum possible range of physical har
 </p>
 </div>
 <div class="section" id="MPC8315e">
-<h3 class="section">15.18 MPC8315e</h3>
+<h3 class="section">16.18 MPC8315e</h3>
 <span id="index-MPC8315e"></span>
 
+<p>MPC8315e is a proprietary embedded board based on the homonym PowerPC CPU, available only
+to the author of SweetAda, and thus is used solely as a template in order to work with
+this kind of CPU and test SweetAda in the maximum possible range of physical hardware.
+</p>
 </div>
 <div class="section" id="MSP432P401R">
-<h3 class="section">15.19 MSP432P401R</h3>
+<h3 class="section">16.19 MSP432P401R</h3>
 <span id="index-MSP432P401R"></span>
 
+<p>The MSP432P401R is a litlle embedded board based on an ARM CPU.
+</p>
 </div>
 <div class="section" id="MVME162_002d510A">
-<h3 class="section">15.20 MVME162-510A</h3>
+<h3 class="section">16.20 MVME162-510A</h3>
 <span id="index-MVME162_002d510A"></span>
 
+<p>The MVME162-510A is a VME board based on an MC68040 CPU.
+</p>
 </div>
 <div class="section" id="Malta">
-<h3 class="section">15.21 Malta</h3>
+<h3 class="section">16.21 Malta</h3>
 <span id="index-Malta"></span>
 
 <p>&quot;Malta&quot; is a virtual platform provided by QEMU, which mimics the real one.
 </p>
 </div>
 <div class="section" id="Memec-FX12">
-<h3 class="section">15.22 Memec FX12</h3>
+<h3 class="section">16.22 Memec FX12</h3>
 <span id="index-Memec-FX12"></span>
 
+<p>The Memec FX12 is a little embedded module based on Xilinx&reg; Virtex-4
+FPGA equipped with an hard-PPC405 core.
+</p>
 </div>
 <div class="section" id="PC_002dx86">
-<h3 class="section">15.23 PC-x86</h3>
+<h3 class="section">16.23 PC-x86</h3>
 <span id="index-PC_002dx86"></span>
 
 <p>PC-x86 is a family of platforms based on the Intel x86-class 32-bit processor.
 </p>
 </div>
 <div class="section" id="PC_002dx86_002d64">
-<h3 class="section">15.24 PC-x86-64</h3>
+<h3 class="section">16.24 PC-x86-64</h3>
 <span id="index-PC_002dx86_002d64"></span>
 
 <p>PC-x86-64 is a family of platforms based on Intel/AMD x86-64-class 64-bit processors.
 </p>
 </div>
 <div class="section" id="QEMU-AArch64">
-<h3 class="section">15.25 QEMU AArch64</h3>
+<h3 class="section">16.25 QEMU AArch64</h3>
 <span id="index-QEMU-AArch64"></span>
 
+<p>The QEMU AArch64 is a virtual platform provided by QEMU, which is based on an
+ARM AArch64-class CPU.
+</p>
 </div>
 <div class="section" id="QEMU-AVR">
-<h3 class="section">15.26 QEMU AVR</h3>
+<h3 class="section">16.26 QEMU AVR</h3>
 <span id="index-QEMU-AVR"></span>
 
+<p>The QEMU AVR is a virtual platform provided by QEMU, which is based on an
+AVR-class CPU.
+</p>
 </div>
 <div class="section" id="QEMU-MIPS">
-<h3 class="section">15.27 QEMU MIPS</h3>
+<h3 class="section">16.27 QEMU MIPS</h3>
 <span id="index-QEMU-MIPS"></span>
 
+<p>The QEMU MIPS is a virtual platform provided by QEMU, which is based on an
+MIPS-class CPU.
+</p>
 </div>
 <div class="section" id="QEMU-RISC_002dV-32">
-<h3 class="section">15.28 QEMU RISC-V 32</h3>
+<h3 class="section">16.28 QEMU RISC-V 32</h3>
 <span id="index-QEMU-RISC_002dV-32"></span>
 
+<p>The QEMU RISC-V 32 is a virtual platform provided by QEMU, which is based on an
+32-bit RISC-V-class CPU.
+</p>
 </div>
 <div class="section" id="Raspberry-Pi-3">
-<h3 class="section">15.29 Raspberry Pi 3</h3>
+<h3 class="section">16.29 Raspberry Pi 3</h3>
 <span id="index-Raspberry-Pi-3"></span>
 
+<p>The Raspberry Pi 3 is a popular embedded board based on a BCM2387 64-bit
+ARM-class CPU.
+</p>
 </div>
 <div class="section" id="SBC5206">
-<h3 class="section">15.30 SBC5206</h3>
+<h3 class="section">16.30 SBC5206</h3>
 <span id="index-SBC5206"></span>
 
 <p>The SBC5206 is a virtual platform provided by QEMU, which mimics an Arnewsh 5206
-embedded board, which is based on a MCF5206 ColdFire processor.
+embedded board, which is based on the MCF5206 ColdFire processor.
 </p>
 </div>
 <div class="section" id="SPARCstation-5">
-<h3 class="section">15.31 SPARCstation 5</h3>
+<h3 class="section">16.31 SPARCstation 5</h3>
 <span id="index-SPARCstation-5"></span>
 
 <p>SPARCstation 5 is a famed workstation made by Sun&reg;. Beyond the
@@ -1264,22 +1459,28 @@ real hardware machine, SPARCstation 5 is also a machine emulated by QEMU.
 </p>
 </div>
 <div class="section" id="STM32F769I">
-<h3 class="section">15.32 STM32F769I</h3>
+<h3 class="section">16.32 STM32F769I</h3>
 <span id="index-STM32F769I"></span>
 
+<p>The STM32F769I is a popular embedded board based on an ARM-class CPU.
+</p>
 </div>
 <div class="section" id="Spartan-3A-EK">
-<h3 class="section">15.33 Spartan 3A EK</h3>
+<h3 class="section">16.33 Spartan 3A EK</h3>
 <span id="index-Spartan-3A-EK"></span>
 
+<p>The Spartan 3A EK is an embedded board based on a Xilinx&reg; Spartan-3A FPGA.
+</p>
 </div>
 <div class="section" id="Spartan-3E-SK">
-<h3 class="section">15.34 Spartan 3E SK</h3>
+<h3 class="section">16.34 Spartan 3E SK</h3>
 <span id="index-Spartan-3E-SK"></span>
 
+<p>The Spartan 3E SK is an embedded board based on a Xilinx&reg; Spartan-3E FPGA.
+</p>
 </div>
 <div class="section" id="Synergy-S5D9">
-<h3 class="section">15.35 Synergy S5D9</h3>
+<h3 class="section">16.35 Synergy S5D9</h3>
 <span id="index-Synergy-S5D9"></span>
 
 <p>The Synergy PS5D9 is an embedded board from Renesas&reg;, equipped
@@ -1289,7 +1490,7 @@ with a ARM Cortex-M4 SoC.
 </p>
 </div>
 <div class="section" id="IBM-S_002f390">
-<h3 class="section">15.36 IBM S/390</h3>
+<h3 class="section">16.36 IBM S/390</h3>
 <span id="index-IBM-S_002f390"></span>
 
 <p>S/390&reg; is the well-known family of mainframes produced by IBM&reg;.
@@ -1310,21 +1511,23 @@ this is done also with the aid of a minimal interrupt context.
 </p>
 </div>
 <div class="section" id="Taihu">
-<h3 class="section">15.37 Taihu</h3>
+<h3 class="section">16.37 Taihu</h3>
 <span id="index-Taihu"></span>
 
-<p>The Taihu is a virtual platform provided by QEMU, which mimics the real one.
+<p>The Taihu is a virtual platform provided by QEMU, which mimics the real one,
+wich is based on a PowerPC PPC405 device.
 </p>
 </div>
 <div class="section" id="Xilinx-Zynq-A9">
-<h3 class="section">15.38 Xilinx Zynq A9</h3>
+<h3 class="section">16.38 Xilinx Zynq A9</h3>
 <span id="index-Xilinx-Zynq-A9"></span>
 
-<p>The Xilinx Zynq A9 is a virtual platform provided by QEMU, which mimics the real one.
+<p>The Xilinx&reg; Zynq A9 is a virtual platform provided by QEMU,
+which mimics the real one.
 </p>
 </div>
 <div class="section" id="ZOOM">
-<h3 class="section">15.39 ZOOM</h3>
+<h3 class="section">16.39 ZOOM</h3>
 <span id="index-ZOOM"></span>
 
 <p>ZOOM is a family of embedded platforms based on the MCF5373 ColdFire processor.
@@ -1332,36 +1535,10 @@ this is done also with the aid of a minimal interrupt context.
 <hr>
 </div>
 </div>
-<div class="chapter" id="Optimizations">
-<div class="header">
-<p>
-Next: <a href="#IOEMU-scripting" accesskey="n" rel="next">IOEMU scripting</a>, Previous: <a href="#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
-<span id="Optimizations-1"></span><h2 class="chapter">16 Optimizations</h2>
-<span id="index-optimizations"></span>
-
-<p>SweetAda provides a mechanism to allow user-defined implementations. Standard subprograms
-available in the core complex (but not limited to) could be bypassed by reimplement them.
-</p>
-<p>In a similar way, some package and subprograms can be selected when speed is a priority.
-The package MMIO, as an example, exposes a complete range of procedures and functions to
-allow low-level I/O, like reading an Unsigned_32 value at a specific address.
-</p>
-<p>These subprograms are written in Ada and are not optimized. Furthermore, they cannot be
-inlined and thus can be used as access subprograms to be designated in drivers when you
-are configuring the methods to deal with I/O. But some CPU have a subset of MMIO that
-overrides the standard one. By rewriting the subprograms with inline assembler instructions,
-speed increase could be easily obtained.
-</p>
-<p>Beyond that, some CPU have a second package CPU.MMIO with these inline assembler fragments
-already written. With&rsquo;ing CPU.MMIO instead of MMIO lets the user directly use them.
-</p>
-<hr>
-</div>
 <div class="chapter" id="IOEMU-scripting">
 <div class="header">
 <p>
-Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#Optimizations" accesskey="p" rel="prev">Optimizations</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <span id="IOEMU-scripting-1"></span><h2 class="chapter">17 IOEMU scripting</h2>
 <span id="index-IOEMU"></span>
