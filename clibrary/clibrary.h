@@ -18,7 +18,5 @@
 #define PRINTF_BUFFER_SIZE         1024
 #define LF_DOES_CR                 1
 
-#include "ada_interface.h"
-
 #endif /* _CLIBRARY_H */
 

@@ -8,7 +8,9 @@
  * Please consult the LICENSE.txt file located in the top-level directory.
  */
 
+#include <ada_interface.h>
 #include <clibrary.h>
+
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>

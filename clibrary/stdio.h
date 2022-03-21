@@ -13,8 +13,8 @@
 #ifndef _STDIO_H
 #define _STDIO_H 1
 
-#include <stddef.h>
 #include <stdarg.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -8,12 +8,14 @@
  * Please consult the LICENSE.txt file located in the top-level directory.
  */
 
+#include <ada_interface.h>
 #include <clibrary.h>
+
 #include <ctype.h>
 #include <limits.h>
 #include <stdarg.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 /******************************************************************************

@@ -8,8 +8,8 @@
  * Please consult the LICENSE.txt file located in the top-level directory.
  */
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 /******************************************************************************
  * __assert()                                                                 *
