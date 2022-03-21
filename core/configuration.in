@@ -39,3 +39,17 @@ export IMPLICIT_CORE_UNITS
 
 IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)
 
+#
+# Standard locations of implicit units and dependencies.
+#
+
+export SPEC_ABORT_LIBRARY       := $(CORE_DIRECTORY)/abort_library.ads
+export SPEC_BITS                := $(CORE_DIRECTORY)/bits.ads
+export SPEC_CONSOLE             := $(CORE_DIRECTORY)/console.ads
+export SPEC_CORE                := $(CORE_DIRECTORY)/core.ads
+export SPEC_INTEGER_MATH        := $(CORE_DIRECTORY)/integer_math.ads
+export SPEC_LAST_CHANCE_HANDLER := $(CORE_DIRECTORY)/last_chance_handler.ads
+export SPEC_LLUTILS             := $(CORE_DIRECTORY)/llutils.ads
+export SPEC_MALLOC              := $(CORE_DIRECTORY)/malloc.ads
+export SPEC_MEMORY_FUNCTIONS    := $(CORE_DIRECTORY)/memory_functions.ads
+

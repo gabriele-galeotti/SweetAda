@@ -34,23 +34,20 @@ INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-# dependencies of .c
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/assert.o  : stdio.h stdlib.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/ctype.o   : ctype.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/errno.o   :
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdio.o   : ada_interface.h clibrary.h ctype.h stdio.h stdlib.h string.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdlib.o  : ada_interface.h clibrary.h ctype.h errno.h stdlib.h string.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/string.o  : ada_interface.h clibrary.h ctype.h string.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o : ada_interface.h clibrary.h strings.h
-
 # manually-inferred dependency logic
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o :          \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/abort_library.ads \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/bits.ads          \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/console.ads       \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/malloc.ads
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/assert.o  : stdlib.h stdio.h
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/ctype.o   : ctype.h
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/errno.o   :
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdio.o   : ada_interface.h clibrary.h ctype.h stdlib.h stdio.h string.h
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdlib.o  : ada_interface.h clibrary.h ctype.h errno.h stdlib.h string.h
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/string.o  : clibrary.h ctype.h string.h
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o : clibrary.h strings.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o : \
+        $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY) \
+        $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)       \
+        $(KERNEL_PARENT_PATH)/$(SPEC_MALLOC)
 
 .PHONY : configure
 configure :

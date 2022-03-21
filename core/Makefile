@@ -31,31 +31,25 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 # manually-inferred dependency logic
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/abort_library.o : \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/bits.ads    \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/console.ads
-
+        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)    \
+        $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/console.o : \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/bits.ads    \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/llutils.ads
-
+        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)    \
+        $(KERNEL_PARENT_PATH)/$(SPEC_LLUTILS)
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/core.o : \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/bits.ads    \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/console.ads
-
+        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)    \
+        $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/gnat_exceptions.o : \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/abort_library.ads
-
+        $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/abort_library.ads
-
+        $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/malloc.o : \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/bits.ads             \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/console.ads          \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/integer_math.ads     \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/memory_functions.ads
-
+        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)             \
+        $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)          \
+        $(KERNEL_PARENT_PATH)/$(SPEC_INTEGER_MATH)     \
+        $(KERNEL_PARENT_PATH)/$(SPEC_MEMORY_FUNCTIONS)
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/memory_functions.o : \
-        $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/bits.ads
+        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)
 
 .PHONY : configure
 configure :
