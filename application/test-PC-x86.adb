@@ -145,6 +145,17 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
+            procedure Ctest with
+               Import        => True,
+               Convention    => C,
+               External_Name => "ctest";
+         begin
+            Ctest;
+         end;
+      end if;
+      -------------------------------------------------------------------------
+      if True then
+         declare
             Success   : Boolean;
             Partition : MBR.Partition_Entry_Type;
          begin
