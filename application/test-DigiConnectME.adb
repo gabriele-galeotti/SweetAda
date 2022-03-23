@@ -3,6 +3,7 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with MMIO;
+with CPU;
 with NETARM;
 with Console;
 
