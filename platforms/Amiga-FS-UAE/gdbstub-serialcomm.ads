@@ -28,14 +28,4 @@ package Gdbstub.SerialComm is
    procedure Putchar (C : in Character);
    procedure Getchar (C : out Character);
 
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
 end Gdbstub.SerialComm;
