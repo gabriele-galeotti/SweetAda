@@ -96,7 +96,7 @@ for _s in $2 ; do
 done
 printf "%s\n" "${_dialog_items_string}" | xargs \
   dialog              \
-    --erase-on-exit   \
+    ${ERASE_ON_EXIT}  \
     --radiolist       \
     "\"$1\""          \
     ${_dialog_height} \
@@ -291,6 +291,12 @@ return 0
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
+
+#
+# Some ancient versions of dialog do not have this option.
+#
+#ERASE_ON_EXIT="--erase-on-exit"
+ERASE_ON_EXIT=""
 
 case ${OSTYPE} in
   darwin)
