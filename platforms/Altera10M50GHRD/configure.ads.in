@@ -8,6 +8,8 @@ package Configure is
    CPU      : constant String := "@CPU@";
 
    -- basic configuration parameters
+   TIMER_SYSCLK          : constant := 75_000_000;
+   TICK_FREQUENCY        : constant := 1_000;
    RESET_ADDRESS         : constant := @RESET_ADDRESS@;
    EXCEPTION_ADDRESS     : constant := @EXCEPTION_ADDRESS@;
    FAST_TLB_MISS_ADDRESS : constant := @FAST_TLB_MISS_ADDRESS@;
