@@ -3,6 +3,8 @@
 // linux-4.4.14/arch/microblaze/lib/modsi3.S
 //
 
+#define __ASSEMBLER__ 1
+
 #
 # modulo operation for 32 bit integers
 #

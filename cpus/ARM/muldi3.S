@@ -5,6 +5,8 @@
 // __INF__ changed: ret lr --> bx lr
 //
 
+#define __ASSEMBLER__ 1
+
 #if defined(__ARMEB__)
 # define xh r0
 # define xl r1

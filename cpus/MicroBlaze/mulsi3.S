@@ -3,6 +3,8 @@
 // linux-4.4.14/arch/microblaze/lib/mulsi3.S
 //
 
+#define __ASSEMBLER__ 1
+
 #
 # multiply operation for 32-bit integers
 #

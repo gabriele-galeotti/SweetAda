@@ -3,6 +3,7 @@
 // linux-4.4.14/arch/microblaze/lib/divsi3.S
 //
 
+#define __ASSEMBLER__ 1
 
 #
 # divide operation for 32 bit integers

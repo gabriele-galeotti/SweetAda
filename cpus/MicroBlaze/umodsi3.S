@@ -3,6 +3,8 @@
 // linux-4.4.14/arch/microblaze/lib/umodsi3.S
 //
 
+#define __ASSEMBLER__ 1
+
 #
 # unsigned modulo operation for 32 bit integers
 #

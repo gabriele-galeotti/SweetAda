@@ -3,6 +3,8 @@
 // linux-4.4.14/arch/microblaze/lib/udivsi3.S
 //
 
+#define __ASSEMBLER__ 1
+
 #
 # unsigned divide operation
 #
