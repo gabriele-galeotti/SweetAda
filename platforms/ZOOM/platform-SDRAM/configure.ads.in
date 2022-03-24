@@ -16,7 +16,7 @@ package Configure is
    -- master clock = 180 MHz
    CLOCK_MULTIPLIER : Integer := 16#5A#;
    SYSTEM_CLOCK     : Integer := 60;
-   FSYS_3           : Integer := 60000000;
+   FSYS_3           : Integer := 60_000_000;
    PHY_ADDRESS      : Integer := 2;
 
 end Configure;

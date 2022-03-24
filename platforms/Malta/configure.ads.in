@@ -9,6 +9,6 @@ package Configure is
    CPU_MODEL   : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   TICK_FREQUENCY : constant := 1000;
+   TICK_FREQUENCY : constant := 1_000;
 
 end Configure;

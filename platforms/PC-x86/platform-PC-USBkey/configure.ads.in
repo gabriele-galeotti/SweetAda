@@ -11,7 +11,7 @@ package Configure is
 
    -- basic configuration parameters
    PC              : constant Boolean := True;
-   TICK_FREQUENCY  : constant := 1000;
+   TICK_FREQUENCY  : constant := 1_000;
    RAM_BASEADDRESS : constant := 16#0000_0000#;
    RAM_SIZE        : constant := 16#1000_0000#;
    USE_APIC        : constant Boolean := True;
