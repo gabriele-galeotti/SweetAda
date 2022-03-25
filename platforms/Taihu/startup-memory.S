@@ -23,25 +23,34 @@
 #define SDRAM0_B0CR    0x40 // R/W Memory Bank 0 Configuration Register
 #define SDRAM0_B1CR    0x44 // R/W Memory Bank 1 Configuration Register
 #define SDRAM0_TR      0x80 // R/W SDRAM Timing Register
+// SDRAM_CFG register
+#define DCE     0x80000000
+#define BRPF_16 0x00800000
+// SDRAM_BXCR
+#define SIZE_64 0x00080000
+#define BE      0x00000001
+// bank addresses
+#define BANK0_ADDRESS 0x00000000
+#define BANK1_ADDRESS 0x04000000
 
-                // enable SDRAM, DCE = 1, SRE = 1, BRPF = 16 bytes
+                // enable SDRAM, DCE = 1, BRPF = 16 bytes
                 li      r0,SDRAM0_CFG
                 mtdcr   SDRAM0_CFGADDR,r0
-                lis     r0,0x80800000@ha
-                ori     r0,r0,0x80800000@l
+                lis     r0,(DCE|BRPF_16)@ha
+                ori     r0,r0,(DCE|BRPF_16)@l
                 mtdcr   SDRAM0_CFGDATA,r0
 
                 // 1st SDRAM memory bank, 64 MB @ 0x00000000
                 li      r0,SDRAM0_B0CR
                 mtdcr   SDRAM0_CFGADDR,r0
-                lis     r0,0x00080001@ha
-                ori     r0,r0,0x00080001@l
+                lis     r0,(BANK0_ADDRESS|SIZE_64|BE)@ha
+                ori     r0,r0,(BANK0_ADDRESS|SIZE_64|BE)@l
                 mtdcr   SDRAM0_CFGDATA,r0
 
                 // 2nd SDRAM memory bank, 64 MB @ 0x04000000
                 li      r0,SDRAM0_B1CR
                 mtdcr   SDRAM0_CFGADDR,r0
-                lis     r0,0x04080001@ha
-                ori     r0,r0,0x04080001@l
+                lis     r0,(BANK1_ADDRESS|SIZE_64|BE)@ha
+                ori     r0,r0,(BANK1_ADDRESS|SIZE_64|BE)@l
                 mtdcr   SDRAM0_CFGDATA,r0
 
