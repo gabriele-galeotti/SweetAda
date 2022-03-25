@@ -45,15 +45,13 @@ package body Taihu is
    -- Tclk_Init
    ----------------------------------------------------------------------------
    procedure Tclk_Init is
-      -- TIMER_SYSCLK / TICK_FREQUENCY
-      -- Tclk_Value : constant Unsigned_32 := 33_000;
-      Tclk_Value : constant := (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) / Configure.TICK_FREQUENCY;
-      TCR_Value  : TCR_Register_Type;
+      Period    : constant := (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) / Configure.TICK_FREQUENCY;
+      TCR_Value : TCR_Register_Type;
    begin
       TCR_Value.PIE := True;
       TCR_Value.ARE := True;
       TCR_Write (TCR_Value);
-      PIT_Write (Tclk_Value);
+      PIT_Write (Period);
    end Tclk_Init;
 
 end Taihu;

@@ -9,7 +9,8 @@ package Configure is
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   TIMER_SYSCLK   : constant := 33_000_000;
+   -- TIMER_SYSCLK   : constant := 33_000_000;
+   TIMER_SYSCLK   : constant := 200_000_000;
    TICK_FREQUENCY : constant := 1_000;
 
 end Configure;
