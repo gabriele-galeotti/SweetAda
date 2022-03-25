@@ -24,11 +24,10 @@
 #define SDRAM0_B1CR    0x44 // R/W Memory Bank 1 Configuration Register
 #define SDRAM0_TR      0x80 // R/W SDRAM Timing Register
 
-                // enable SDRAM, DCE = 1, SRE = 1, BRPF = 16 bytes
+                // disable SDRAM
                 li      r0,SDRAM0_CFG
                 mtdcr   SDRAM0_CFGADDR,r0
-                lis     r0,0x80800000@ha
-                ori     r0,r0,0x80800000@l
+                li      r0,0
                 mtdcr   SDRAM0_CFGDATA,r0
 
                 // 1st SDRAM memory bank, 64 MB @ 0x00000000
@@ -43,5 +42,12 @@
                 mtdcr   SDRAM0_CFGADDR,r0
                 lis     r0,0x04080001@ha
                 ori     r0,r0,0x04080001@l
+                mtdcr   SDRAM0_CFGDATA,r0
+
+                // enable SDRAM, DCE = 1, SRE = 1, BRPF = 16 bytes
+                li      r0,SDRAM0_CFG
+                mtdcr   SDRAM0_CFGADDR,r0
+                lis     r0,0x80800000@ha
+                ori     r0,r0,0x80800000@l
                 mtdcr   SDRAM0_CFGDATA,r0
 
