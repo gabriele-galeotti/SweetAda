@@ -107,12 +107,17 @@ package body Application is
       declare
          Delay_Count : constant := 1_000_000;
       begin
-         -- GPIO16 pin #36 is an output
-         RPI3.GPFSEL1 := (@ and 16#FFE3_FFFF#) or 16#0004_0000#;
+         -- GPIO 5/6 (29/31) are output
+         RPI3.GPFSEL0.FSEL5 := RPI3.GPIO_OUTPUT;
+         RPI3.GPFSEL0.FSEL6 := RPI3.GPIO_OUTPUT;
          while True loop
-            RPI3.LEDON := 16#0001_0000#;
+            -- GPIO05 ON, GPIO06 OFF
+            RPI3.GPSET0 := (SET5 => True, others => False);
+            RPI3.GPCLR0 := (CLR6 => True, others => False);
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            RPI3.LEDOFF := 16#0001_0000#;
+            -- GPIO05 OFF, GPIO06 ON
+            RPI3.GPCLR0 := (CLR5 => True, others => False);
+            RPI3.GPSET0 := (SET6 => True, others => False);
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             -- Console.Print ("hello, SweetAda", NL => True);
             Console.Print (Voltage, Prefix => "Voltage: ", NL => True);
