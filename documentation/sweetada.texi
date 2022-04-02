@@ -1288,8 +1288,19 @@ The QEMU RISC-V 32 is a virtual platform provided by QEMU, which is based on an
 @section Raspberry Pi 3
 @cindex Raspberry Pi 3
 
-The Raspberry Pi 3 is a popular embedded board based on a BCM2387 64-bit
+The Raspberry Pi 3 is a popular embedded board based on a Broadcom@registeredsymbol{} BCM2387 64-bit
 ARM-class CPU.
+
+@image{rpi3-board}
+
+To work with SweetAda code, you should format an SDHC memory card, placing the
+SweetAda kernel in the first FAT32 partition. A Bash shell script in the platform
+directory, named "createbootdevice.sh", will create the files in the memory card
+once it knows the UUID (USDCARD_UUID) and the filesystem location (USDCARD_MOUNTPOINT),
+which you have to specify in the configuration.in file.
+
+The SoC of the RaspBerry will boot the memory card by parsing the "config.txt"
+file, and then start the kernel just loaded in SDRAM.
 
 @section SBC5206
 @cindex SBC5206

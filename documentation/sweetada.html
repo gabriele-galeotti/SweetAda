@@ -1438,8 +1438,19 @@ MIPS-class CPU.
 <h3 class="section">16.29 Raspberry Pi 3</h3>
 <span id="index-Raspberry-Pi-3"></span>
 
-<p>The Raspberry Pi 3 is a popular embedded board based on a BCM2387 64-bit
+<p>The Raspberry Pi 3 is a popular embedded board based on a Broadcom&reg; BCM2387 64-bit
 ARM-class CPU.
+</p>
+<img src="rpi3-board.png" alt="rpi3-board">
+
+<p>To work with SweetAda code, you should format an SDHC memory card, placing the
+SweetAda kernel in the first FAT32 partition. A Bash shell script in the platform
+directory, named &quot;createbootdevice.sh&quot;, will create the files in the memory card
+once it knows the UUID (USDCARD_UUID) and the filesystem location (USDCARD_MOUNTPOINT),
+which you have to specify in the configuration.in file.
+</p>
+<p>The SoC of the RaspBerry will boot the memory card by parsing the &quot;config.txt&quot;
+file, and then start the kernel just loaded in SDRAM.
 </p>
 </div>
 <div class="section" id="SBC5206">
