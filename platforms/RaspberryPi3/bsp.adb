@@ -70,7 +70,6 @@ package body BSP is
    begin
       -- mini-UART (UART1) ----------------------------------------------------
       -- GPIO pins 14/15 (8/10) take alternate function 5
-      -- RPI3.GPFSEL1         := (@ and 16#FFFC_0FFF#) or 16#0000_2000# or 16#0001_0000#;
       RPI3.GPFSEL1.FSEL14  := RPI3.GPIO_ALT5;
       RPI3.GPFSEL1.FSEL15  := RPI3.GPIO_ALT5;
       RPI3.AUXENB          := 16#0000_0001#;
