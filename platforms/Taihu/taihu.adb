@@ -29,7 +29,6 @@ package body Taihu is
    --                                                                        --
    --========================================================================--
 
-   use Configure;
    use PowerPC;
    use PPC405;
 

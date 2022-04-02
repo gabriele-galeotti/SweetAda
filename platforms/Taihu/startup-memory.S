@@ -23,7 +23,7 @@
 #define SDRAM0_B0CR    0x40 // R/W Memory Bank 0 Configuration Register
 #define SDRAM0_B1CR    0x44 // R/W Memory Bank 1 Configuration Register
 #define SDRAM0_TR      0x80 // R/W SDRAM Timing Register
-// SDRAM_CFG register
+// SDRAM_CFG
 #define DCE     0x80000000
 #define BRPF_16 0x00800000
 // SDRAM_BXCR
