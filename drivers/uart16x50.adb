@@ -405,7 +405,7 @@ package body UART16x50 is
       Data       : Unsigned_8;
       Success    : Boolean with Unreferenced => True;
    begin
-      -- wait for data available
+      -- wait for receiver available
       loop
          exit when To_LSR (Register_Read (Descriptor, LSR)).DR;
       end loop;

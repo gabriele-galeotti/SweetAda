@@ -107,7 +107,7 @@ package body Application is
       declare
          Delay_Count : constant := 1_000_000;
       begin
-         -- GPIO 5/6 (29/31) are output
+         -- GPIOs 5/6 (header pins 29/31) are output
          RPI3.GPFSEL0.FSEL5 := RPI3.GPIO_OUTPUT;
          RPI3.GPFSEL0.FSEL6 := RPI3.GPIO_OUTPUT;
          while True loop
