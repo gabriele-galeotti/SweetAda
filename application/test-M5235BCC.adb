@@ -1,6 +1,6 @@
 
 with CPU;
-with M5235BCC;
+with Console;
 
 package body Application is
 
@@ -11,8 +11,6 @@ package body Application is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   use M5235BCC;
 
    --========================================================================--
    --                                                                        --
@@ -30,11 +28,11 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            Delay_Count : constant := 50_000;
+            Delay_Count : constant := 3_000_000;
          begin
             loop
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-               TX := 16#33#;
+               Console.Print ("hello, SweetAda", NL => True);
             end loop;
          end;
       end if;

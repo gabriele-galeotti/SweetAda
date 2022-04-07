@@ -15,9 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
-with Interfaces;
-
 package M5235BCC is
 
    --========================================================================--
@@ -27,13 +24,5 @@ package M5235BCC is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   package SSE renames System.Storage_Elements;
-
-   TX : aliased Interfaces.Unsigned_8 with
-      Address    => SSE.To_Address (16#4000_020C#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
 
 end M5235BCC;

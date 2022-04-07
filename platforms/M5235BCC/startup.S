@@ -55,8 +55,8 @@ _start:
                 //
                 // Setup VBR.
                 //
-//                move.l  #vector_table,%d0                       // MCF5200 PRM Section 5, "Supervisor (privileged) instructions"
-//                movec.l %d0,%vbr
+                //move.l  #vector_table,%d0                       // MCF5200 PRM Section 5, "Supervisor (privileged) instructions"
+                //movec.l %d0,%vbr
 
                 //
                 // IPSBAR initialization.
@@ -67,21 +67,21 @@ _start:
                 //
                 // Disable watchdog and test logic safeguard (9.3.2).
                 //
-//                clr.w   MCF_WTM_WCR
-//                clr.l   (0x40000000 + 0x0011000C)
+                //clr.w   MCF_WTM_WCR
+                //clr.l   (0x40000000 + 0x0011000C)
 
                 //
                 // Core/SCM RAMBAR initialization, see RM 6.2.1
                 //
-//                move.l  #(RAMBAR_BASE_ADDRESS+0x0201),%d0       // bit9 = SPV --> DMA access OK
-//                movec.l %d0,#0xC05                              // store in CPU-dependent core RAMBAR register
-//                move.l  #(RAMBAR_BASE_ADDRESS+0x0200),%d0       // 11.2.1.2 Memory Base Address Register (RAMBAR)
-//                move.l  %d0,MCF_SCM_RAMBAR
+                //move.l  #(RAMBAR_BASE_ADDRESS+0x0201),%d0       // bit9 = SPV --> DMA access OK
+                //movec.l %d0,#0xC05                              // store in CPU-dependent core RAMBAR register
+                //move.l  #(RAMBAR_BASE_ADDRESS+0x0200),%d0       // 11.2.1.2 Memory Base Address Register (RAMBAR)
+                //move.l  %d0,MCF_SCM_RAMBAR
 
                 //
                 // Initialize stack pointer.
                 //
-                lea.l   stack,%sp
+                lea.l   kernel_stack,%sp
 
                 //
                 // Initialize the cache subsystem.
@@ -130,5 +130,5 @@ dead:           jmp     .
 
                 .align  8
                 .space  4096
-stack:
+kernel_stack:
 
