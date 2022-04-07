@@ -118,7 +118,7 @@ package MCF523x is
    PLLREF_XTAL : constant := 1; -- Crystal clock reference
 
    PLLSEL_11  : constant := 0; -- 1:1 PLL mode
-   PLLSEL_PLL : constant := 1; --  Normal PLL mode (see Table 7-7)
+   PLLSEL_PLL : constant := 1; -- Normal PLL mode (see Table 7-7)
 
    PLLMODE_EXT : constant := 0; -- External clock mode
    PLLMODE_PLL : constant := 1; -- PLL clock mode
@@ -189,7 +189,7 @@ package MCF523x is
       Convention => Ada;
 
    function To_U32 is new Ada.Unchecked_Conversion (IPSBAR_Type, Unsigned_32);
-   function To_CR is new Ada.Unchecked_Conversion (Unsigned_32, IPSBAR_Type);
+   function To_IPSBAR is new Ada.Unchecked_Conversion (Unsigned_32, IPSBAR_Type);
 
    -- 26.3.3 UART Status Registers (USRn)
 
