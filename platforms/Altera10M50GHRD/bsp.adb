@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Storage_Elements;
+with Interfaces;
 with Bits;
 with MMIO;
 with CPU;
@@ -35,6 +36,7 @@ package body BSP is
    --========================================================================--
 
    use System.Storage_Elements;
+   use Interfaces;
    use Bits;
    use GHRD;
 
@@ -56,8 +58,10 @@ package body BSP is
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      UART16x50.RX (UART_Descriptor, Data);
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -69,8 +73,8 @@ package body BSP is
       UART_Descriptor.Base_Address  := To_Address (UART_BASEADDRESS);
       UART_Descriptor.Scale_Address := 2;
       UART_Descriptor.Baud_Clock    := 1_843_200;
-      UART_Descriptor.Read_8        := MMIO.Read'Access;
-      UART_Descriptor.Write_8       := MMIO.Write'Access;
+      UART_Descriptor.Read_8        := MMIO.Read_U8'Access;
+      UART_Descriptor.Write_8       := MMIO.Write_U8'Access;
       UART16x50.Init (UART_Descriptor);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;

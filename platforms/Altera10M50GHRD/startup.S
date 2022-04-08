@@ -27,26 +27,50 @@ _start:
                 wrctl   ienable,r0
 
                 //
+                // Invalidate instruction cache.
+                //
+#define NIOS2_ICACHE_SIZE      4096
+#define NIOS2_ICACHE_LINE_SIZE 32
+                mov     r2,r0
+                movhi   r3,%hi(NIOS2_ICACHE_SIZE)
+                ori     r3,r3,%lo(NIOS2_ICACHE_SIZE)
+1:              initi   r2
+                addi    r2,r2,NIOS2_ICACHE_LINE_SIZE
+                bltu    r2,r3,1b
+
+                //
+                // Invalidate data cache.
+                //
+#define NIOS2_DCACHE_SIZE      0
+#define NIOS2_DCACHE_LINE_SIZE 4
+                mov     r2,r0
+                movhi   r3,%hi(NIOS2_DCACHE_SIZE)
+                ori     r3,r3,%lo(NIOS2_DCACHE_SIZE)
+1:              initd   0(r2)
+                addi    r2,r2,NIOS2_DCACHE_LINE_SIZE
+                bltu    r2,r3,1b
+
+                //
                 // Setup stack pointer.
                 //
-                movhi   sp,%hiadj(kernel_stack)
-                addi    sp,sp,%lo(kernel_stack)
+                movhi   sp,%hi(kernel_stack)
+                ori     sp,sp,%lo(kernel_stack)
                 mov     fp,sp
 
                 //
                 // Call "adainit" procedure.
                 //
                 .extern adainit
-                movhi   r2,%hiadj(adainit)
-                addi    r2,r2,%lo(adainit)
+                movhi   r2,%hi(adainit)
+                ori     r2,r2,%lo(adainit)
                 callr   r2
 
                 //
                 // Jump to high-level code.
                 //
                 .extern _ada_main
-                movhi   r2,%hiadj(_ada_main)
-                addi    r2,r2,%lo(_ada_main)
+                movhi   r2,%hi(_ada_main)
+                ori     r2,r2,%lo(_ada_main)
                 callr   r2
 
 dead:           br      .
