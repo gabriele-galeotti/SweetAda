@@ -38,19 +38,20 @@ _start:
                 move.w  #0x2700,%sr                             // supervisor mode, disable interrupts
 
                 //
-                // Invalidate the cache and disable it.
-                //
-                move.l  #0x01000000,%d0
-                movec.l %d0,%cacr
-                jmp     1f
-1:
-
-                //
                 // Disable the ACRs.
                 //
                 moveq.l #0,%d0
                 movec.l %d0,%acr0
                 movec.l %d0,%acr1
+
+                //
+                // Invalidate the cache and disable it.
+                //
+                //move.l  #0x01000000,%d0
+                move.l  #0x00C00200,%d0
+                movec.l %d0,%cacr
+                jmp     1f
+1:
 
                 //
                 // Setup VBR.
@@ -79,7 +80,7 @@ _start:
                 //move.l  %d0,MCF_SCM_RAMBAR
 
                 //
-                // Initialize stack pointer.
+                // Setup stack pointer.
                 //
                 lea.l   kernel_stack,%sp
 

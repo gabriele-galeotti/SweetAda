@@ -73,18 +73,18 @@ package MCF523x is
 
    type SYNCR_Type is
    record
-      EXP       : Bits_10;
-      DEPTH     : Bits_2;
-      RATE      : Bits_1;
-      LOCIRQ    : Boolean;
-      LOLIRQ    : Boolean;
-      DISCLK    : Boolean;
-      LOCRE     : Boolean;
-      LOLRE     : Boolean;
-      LOCEN     : Boolean;
-      RFD       : Bits_3;
+      EXP       : Bits_10; -- Expected difference value
+      DEPTH     : Bits_2;  -- Frequency modulation depth and enable
+      RATE      : Bits_1;  -- Modulation rate
+      LOCIRQ    : Boolean; -- Loss-of-clock interrupt request
+      LOLIRQ    : Boolean; -- Loss-of-lock interrupt request
+      DISCLK    : Boolean; -- Disable CLKOUT
+      LOCRE     : Boolean; -- Loss-of-clock reset enable
+      LOLRE     : Boolean; -- Loss-of-lock reset enable
+      LOCEN     : Boolean; -- Enables the loss-of-clock function
+      RFD       : Bits_3;  -- Reduced frequency divider field
       Reserved1 : Bits_2;
-      MFD       : Bits_3;
+      MFD       : Bits_3;  -- Multiplication factor divider
       Reserved2 : Bits_5;
    end record with
       Bit_Order => Low_Order_First,
@@ -125,16 +125,16 @@ package MCF523x is
 
    type SYNSR_Type is
    record
-      CALPASS  : Boolean;
-      CALDONE  : Boolean;
-      LOCF     : Boolean;
-      LOCK     : Boolean;
-      LOCKS    : Boolean;
-      PLLREF   : Bits_1;
-      PLLSEL   : Bits_1;
-      PLLMODE  : Bits_1;
-      LOC      : Boolean;
-      LOLF     : Boolean;
+      CALPASS  : Boolean; -- Calibration passed
+      CALDONE  : Boolean; -- Calibration complete
+      LOCF     : Boolean; -- Loss-of-clock flag
+      LOCK     : Boolean; -- PLL lock status bit
+      LOCKS    : Boolean; -- Sticky indication of PLL lock status
+      PLLREF   : Bits_1;  -- PLL clock reference source
+      PLLSEL   : Bits_1;  -- PLL mode select
+      PLLMODE  : Bits_1;  -- Clock mode
+      LOC      : Boolean; -- Loss-of-clock status
+      LOLF     : Boolean; -- Loss-of-lock flag
       Reserved : Bits_22;
    end record with
       Bit_Order => Low_Order_First,
@@ -160,6 +160,27 @@ package MCF523x is
       Import     => True,
       Convention => Ada;
 
+   -- 9.3.3.3 Chip Identification Register (CIR)
+
+   type CIR_Type is
+   record
+      PRN : Bits_6;  -- Part revision number
+      PIN : Bits_10; -- Part identification number
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for CIR_Type use
+   record
+      PRN at 0 range 0 .. 5;
+      PIN at 0 range 6 .. 15;
+   end record;
+
+   CIR : aliased CIR_Type with
+      Address    => To_Address (IPSBAR_BASEADDRESS + 16#0011_000A#),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
    -- 11.2.1.1 Internal Peripheral System Base Address Register (IPSBAR)
 
    BA_0 : constant := 2#00#; -- internal peripherals @ 0x0000_0000
@@ -169,9 +190,9 @@ package MCF523x is
 
    type IPSBAR_Type is
    record
-      V        : Boolean;
+      V        : Boolean; -- Valid
       Reserved : Bits_29;
-      BA       : Bits_2;
+      BA       : Bits_2;  -- Base address
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -195,14 +216,14 @@ package MCF523x is
 
    type USR_Type is
    record
-      RXRDY : Boolean;
-      FFULL : Boolean;
-      TXRDY : Boolean;
-      TXEMP : Boolean;
-      OE    : Boolean;
-      PE    : Boolean;
-      FE    : Boolean;
-      RB    : Boolean;
+      RXRDY : Boolean; -- Receiver ready
+      FFULL : Boolean; -- FIFO full
+      TXRDY : Boolean; -- Transmitter ready
+      TXEMP : Boolean; -- Transmitter empty
+      OE    : Boolean; -- Overrun error
+      PE    : Boolean; -- Parity error
+      FE    : Boolean; -- Framing error
+      RB    : Boolean; -- Received break
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
