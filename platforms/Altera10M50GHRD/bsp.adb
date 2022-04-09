@@ -73,8 +73,8 @@ package body BSP is
       UART_Descriptor.Base_Address  := To_Address (UART_BASEADDRESS);
       UART_Descriptor.Scale_Address := 2;
       UART_Descriptor.Baud_Clock    := 1_843_200;
-      UART_Descriptor.Read_8        := MMIO.Read_U8'Access;
-      UART_Descriptor.Write_8       := MMIO.Write_U8'Access;
+      UART_Descriptor.Read_8        := MMIO.Read'Access;
+      UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (UART_Descriptor);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
