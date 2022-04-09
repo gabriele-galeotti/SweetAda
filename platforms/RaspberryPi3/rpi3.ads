@@ -87,7 +87,7 @@ package RPI3 is
       Reserved at 0 range 30 .. 31;
    end record;
 
-   GPFSEL0 : GPFSEL0_Type with
+   GPFSEL0 : aliased GPFSEL0_Type with
       Address              => To_Address (GPIO_BASEADDRESS + 16#00#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -124,7 +124,7 @@ package RPI3 is
       Reserved at 0 range 30 .. 31;
    end record;
 
-   GPFSEL1 : GPFSEL1_Type with
+   GPFSEL1 : aliased GPFSEL1_Type with
       Address              => To_Address (GPIO_BASEADDRESS + 16#04#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -161,7 +161,7 @@ package RPI3 is
       Reserved at 0 range 30 .. 31;
    end record;
 
-   GPFSEL2 : GPFSEL2_Type with
+   GPFSEL2 : aliased GPFSEL2_Type with
       Address              => To_Address (GPIO_BASEADDRESS + 16#08#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -198,7 +198,7 @@ package RPI3 is
       Reserved at 0 range 30 .. 31;
    end record;
 
-   GPFSEL3 : GPFSEL3_Type with
+   GPFSEL3 : aliased GPFSEL3_Type with
       Address              => To_Address (GPIO_BASEADDRESS + 16#0C#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -235,7 +235,7 @@ package RPI3 is
       Reserved at 0 range 30 .. 31;
    end record;
 
-   GPFSEL4 : GPFSEL4_Type with
+   GPFSEL4 : aliased GPFSEL4_Type with
       Address              => To_Address (GPIO_BASEADDRESS + 16#10#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -260,7 +260,7 @@ package RPI3 is
       Reserved at 0 range 12 .. 31;
    end record;
 
-   GPFSEL5 : GPFSEL5_Type with
+   GPFSEL5 : aliased GPFSEL5_Type with
       Address              => To_Address (GPIO_BASEADDRESS + 16#14#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -339,7 +339,7 @@ package RPI3 is
       SET31 at 0 range 31 .. 31;
    end record;
 
-   GPSET0 : GPSET0_Type with
+   GPSET0 : aliased GPSET0_Type with
       Address              => To_Address (GPIO_BASEADDRESS + 16#1C#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -400,7 +400,7 @@ package RPI3 is
       Reserved at 0 range 22 .. 31;
    end record;
 
-   GPSET1 : GPSET1_Type with
+   GPSET1 : aliased GPSET1_Type with
       Address              => To_Address (GPIO_BASEADDRESS + 16#20#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -479,7 +479,7 @@ package RPI3 is
       CLR31 at 0 range 31 .. 31;
    end record;
 
-   GPCLR0 : GPCLR0_Type with
+   GPCLR0 : aliased GPCLR0_Type with
       Address              => To_Address (GPIO_BASEADDRESS + 16#28#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -540,7 +540,7 @@ package RPI3 is
       Reserved at 0 range 22 .. 31;
    end record;
 
-   GPCLR1 : GPCLR1_Type with
+   GPCLR1 : aliased GPCLR1_Type with
       Address              => To_Address (GPIO_BASEADDRESS + 16#2C#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -567,7 +567,7 @@ package RPI3 is
       Reserved        at 0 range 3 .. 31;
    end record;
 
-   AUXENB : AUXENB_Type with
+   AUXENB : aliased AUXENB_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#04#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -586,7 +586,7 @@ package RPI3 is
       Reserved at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_IO_REG : AUX_MU_IO_Type with
+   AUX_MU_IO_REG : aliased AUX_MU_IO_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#40#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -614,7 +614,7 @@ package RPI3 is
       Reserved2   at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_LCR_REG : AUX_MU_LCR_Type with
+   AUX_MU_LCR_REG : aliased AUX_MU_LCR_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#4C#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -643,7 +643,7 @@ package RPI3 is
       Reserved3         at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_LSR_REG : AUX_MU_LSR_Type with
+   AUX_MU_LSR_REG : aliased AUX_MU_LSR_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#54#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -666,7 +666,7 @@ package RPI3 is
       Reserved3  at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_MSR_REG : AUX_MU_MSR_Type with
+   AUX_MU_MSR_REG : aliased AUX_MU_MSR_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#58#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -708,7 +708,7 @@ package RPI3 is
       Reserved           at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_CNTL_REG : AUX_MU_CNTL_Type with
+   AUX_MU_CNTL_REG : aliased AUX_MU_CNTL_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#60#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -727,7 +727,7 @@ package RPI3 is
       Reserved at 0 range 16 .. 31;
    end record;
 
-   AUX_MU_BAUD : AUX_MU_BAUD_Type with
+   AUX_MU_BAUD : aliased AUX_MU_BAUD_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#68#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -768,17 +768,17 @@ package RPI3 is
    -- POLL   @ 0x10
    -- SENDER @ 0x14
    -- CONFIG @ 0x1C
-   MAIL0_Read   : Message_Type with
+   MAIL0_Read   : aliased Message_Type with
       Address              => To_Address (MAILBOX_BASEADDRESS + 16#00#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   MAIL0_Status : Message_Status_Type with
+   MAIL0_Status : aliased Message_Status_Type with
       Address              => To_Address (MAILBOX_BASEADDRESS + 16#18#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   MAIL0_Write  : Message_Type with
+   MAIL0_Write  : aliased Message_Type with
       Address              => To_Address (MAILBOX_BASEADDRESS + 16#20#),
       Volatile_Full_Access => True,
       Import               => True,
