@@ -1,7 +1,7 @@
 #!/usr/bin/env tclsh
 
 #
-# M5235BCC S-record download.
+# M5235BCC dBUG S-record download.
 #
 # Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
 #
@@ -11,13 +11,13 @@
 
 #
 # Arguments:
+# KERNEL_SRECFILE
 # SERIALPORT_DEVICE
+# BAUD_RATE
 #
 # Environment variables:
 # SWEETADA_PATH
 # LIBUTILS_DIRECTORY
-# PLATFORM_DIRECTORY
-# KERNEL_BASENAME
 #
 
 ################################################################################
@@ -34,15 +34,14 @@ set SCRIPT_FILENAME [file tail $argv0]
 
 source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
-set BAUD_RATE 19200
-
-if {[llength $argv] < 1} {
+if {[llength $argv] < 3} {
     puts stderr "$SCRIPT_FILENAME: *** Error: invalid number of arguments."
     exit 1
 }
 
-set KERNEL_SRECFILE   [file join $::env(SWEETADA_PATH) $::env(KERNEL_BASENAME).srec]
-set SERIALPORT_DEVICE [lindex $argv 0]
+set KERNEL_SRECFILE   [lindex $argv 0]
+set SERIALPORT_DEVICE [lindex $argv 1]
+set BAUD_RATE         [lindex $argv 2]
 
 set serialport_fp [open $SERIALPORT_DEVICE "r+"]
 fconfigure $serialport_fp \
@@ -52,7 +51,6 @@ fconfigure $serialport_fp \
     -mode $BAUD_RATE,n,8,1 \
     -translation binary
 flush $serialport_fp
-set sp_data [read $serialport_fp 256]
 
 # download an S19 executable on console port (with echoing)
 puts -nonewline $serialport_fp "dl\x0D\x0A"
