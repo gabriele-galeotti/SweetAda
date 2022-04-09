@@ -24,7 +24,7 @@ package body Application is
    use Bits;
 
    function Clock_Get (Clock_ID : Unsigned_32) return Integer;
-   procedure Clock_Set (Clock_ID : Unsigned_32; Value : Unsigned_32);
+   procedure Clock_Set (Clock_ID : in Unsigned_32; Value : in Unsigned_32);
    function Voltage_Get (Voltage_ID : Unsigned_32) return Integer;
    function Temperature_Get (Temperature_ID : Unsigned_32) return Integer;
 
@@ -70,7 +70,7 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Clock_Set
    ----------------------------------------------------------------------------
-   procedure Clock_Set (Clock_ID : Unsigned_32; Value : Unsigned_32) is
+   procedure Clock_Set (Clock_ID : in Unsigned_32; Value : in Unsigned_32) is
       type Message_Data_Type is array (0 .. 11) of Unsigned_32 with
          Alignment => 16,
          Size      => 12 * 32;
