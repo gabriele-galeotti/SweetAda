@@ -15,12 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
-with MMIO;
-with CPU;
 with RPI3;
 with Exceptions;
 with Console;
@@ -35,7 +31,6 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
