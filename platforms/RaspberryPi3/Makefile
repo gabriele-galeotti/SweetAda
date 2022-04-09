@@ -36,7 +36,15 @@ configure :
 
 .PHONY : postbuild
 postbuild :
-	./createbootdevice.sh
+	$(call brief-command, \
+        $(OBJCOPY)                                                                                       \
+                   -j .romstartup -j .text -j .data                                                      \
+                   -O srec                                                                               \
+                   $(KERNEL_PARENT_PATH)/$(KERNEL_OUTFILE) $(KERNEL_PARENT_PATH)/$(KERNEL_BASENAME).srec \
+        ,[OBJCOPY],$(KERNEL_BASENAME).srec)
+ifneq ($(OSTYPE),cmd)
+	@chmod a-x $(KERNEL_PARENT_PATH)/$(KERNEL_BASENAME).srec
+endif
 
 .PHONY : clean
 clean :
