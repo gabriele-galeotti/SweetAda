@@ -53,14 +53,20 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
-      while (RPI3.AUX_MU_LSR_REG and 16#0000_0020#) = 0 loop null; end loop;
-      RPI3.AUX_MU_IO_REG := Unsigned_32 (Bits.To_U8 (C));
+      -- wait for transmitter available
+      loop
+         exit when RPI3.AUX_MU_LSR_REG.Transmitter_Empty;
+      end loop;
+      RPI3.AUX_MU_IO_REG.DATA := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
    begin
-      while (RPI3.AUX_MU_LSR_REG and 16#0000_0001#) = 0 loop null; end loop;
-      C := Character'Val (Unsigned_8 (RPI3.AUX_MU_IO_REG));
+      -- wait for receiver available
+      loop
+         exit when RPI3.AUX_MU_LSR_REG.Data_Ready;
+      end loop;
+      C := To_Ch (RPI3.AUX_MU_IO_REG.DATA);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -68,14 +74,23 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
    begin
-      -- mini-UART (UART1) ----------------------------------------------------
-      -- GPIO pins 14/15 (8/10) take alternate function 5
+      -- GPIO pins 14/15 (8/10) take alternate function 5 ---------------------
       RPI3.GPFSEL1.FSEL14  := RPI3.GPIO_ALT5;
       RPI3.GPFSEL1.FSEL15  := RPI3.GPIO_ALT5;
-      RPI3.AUXENB          := 16#0000_0001#;
-      RPI3.AUX_MU_BAUD     := 16#0000_0CB6#; -- 9600 bps @ 250 MHz
-      RPI3.AUX_MU_LCR_REG  := 16#0000_0003#;
-      RPI3.AUX_MU_CNTL_REG := 16#0000_0003#;
+      -- mini-UART (UART1) ----------------------------------------------------
+      RPI3.AUXENB.MiniUART_Enable   := True;
+      RPI3.AUX_MU_BAUD.Baudrate     := 16#0CB6#; -- 9600 bps @ 250 MHz
+      RPI3.AUX_MU_LCR_REG.Data_Size := RPI3.UART_8BIT;
+      RPI3.AUX_MU_CNTL_REG          := (
+                                        Receiver_Enable    => True,
+                                        Transmitter_Enable => True,
+                                        RTS_RX_Autoflow    => False,
+                                        CTS_TX_Autoflow    => False,
+                                        RTS_Autoflow_Level => RPI3.RTS_Autoflow1,
+                                        RTS_Assert_Level   => RPI3.RTS_AutoflowP,
+                                        CTS_Assert_Level   => RPI3.CTS_AutoflowP,
+                                        others             => 0
+                                       );
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;

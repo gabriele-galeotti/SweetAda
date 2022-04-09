@@ -44,7 +44,7 @@ package RPI3 is
    EMMC_BASEADDRESS         : constant := PERIPHERALS_BASEADDRESS + 16#0030_0000#;
 
    ----------------------------------------------------------------------------
-   -- GPIO registers
+   -- 6 General Purpose I/O (GPIO)
    ----------------------------------------------------------------------------
 
    GPIO_INPUT  : constant := 2#000#;
@@ -547,35 +547,187 @@ package RPI3 is
       Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- AUX registers
+   -- 2.1.1 AUX registers
    ----------------------------------------------------------------------------
 
-   AUXENB          : Unsigned_32 with
+   type AUXENB_Type is
+   record
+      MiniUART_Enable : Boolean; -- If set the mini UART is enabled.
+      SPI1_Enable     : Boolean; -- If set the SPI 1 module is enabled.
+      SPI2_Enable     : Boolean; -- If set the SPI 2 module is enabled.
+      Reserved        : Bits_29;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUXENB_Type use
+   record
+      MiniUART_Enable at 0 range 0 .. 0;
+      SPI1_Enable     at 0 range 1 .. 1;
+      SPI2_Enable     at 0 range 2 .. 2;
+      Reserved        at 0 range 3 .. 31;
+   end record;
+
+   AUXENB : AUXENB_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#04#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   AUX_MU_IO_REG   : Unsigned_32 with
+
+   type AUX_MU_IO_Type is
+   record
+      DATA     : Unsigned_8; -- RX DATA, TX DATA or baud rate LSB (DLAB = 1)
+      Reserved : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_IO_Type use
+   record
+      DATA     at 0 range 0 .. 7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   AUX_MU_IO_REG : AUX_MU_IO_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#40#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   AUX_MU_LCR_REG  : Unsigned_32 with
+
+   UART_7BIT : constant := 2#00#; -- the UART works in 7-bit mode
+   UART_8BIT : constant := 2#11#; -- the UART works in 8-bit mode
+
+   type AUX_MU_LCR_Type is
+   record
+      Data_Size   : Bits_2;  -- UART data size
+      Reserved1   : Bits_4;
+      Break       : Boolean; -- If set high the UART1_TX line is pulled low continuously.
+      DLAB_Access : Boolean; -- If set the first to Mini UART register give access the the Baudrate register.
+      Reserved2   : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_LCR_Type use
+   record
+      Data_Size   at 0 range 0 .. 1;
+      Reserved1   at 0 range 2 .. 5;
+      Break       at 0 range 6 .. 6;
+      DLAB_Access at 0 range 7 .. 7;
+      Reserved2   at 0 range 8 .. 31;
+   end record;
+
+   AUX_MU_LCR_REG : AUX_MU_LCR_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#4C#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   AUX_MU_LSR_REG  : Unsigned_32 with
+
+   type AUX_MU_LSR_Type is
+   record
+      Data_Ready        : Boolean; -- This bit is set if the receive FIFO holds at least 1 symbol.
+      Receiver_Overrun  : Boolean; -- This bit is set if there was a receiver overrun.
+      Reserved1         : Bits_3;
+      Transmitter_Empty : Boolean; -- This bit is set if the transmit FIFO can accept at least one byte.
+      Transmitter_Idle  : Boolean; -- This bit is set if the transmit FIFO is empty and the transmitter is idle.
+      Reserved2         : Bits_1;
+      Reserved3         : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_LSR_Type use
+   record
+      Data_Ready        at 0 range 0 .. 0;
+      Receiver_Overrun  at 0 range 1 .. 1;
+      Reserved1         at 0 range 2 .. 4;
+      Transmitter_Empty at 0 range 5 .. 5;
+      Transmitter_Idle  at 0 range 6 .. 6;
+      Reserved2         at 0 range 7 .. 7;
+      Reserved3         at 0 range 8 .. 31;
+   end record;
+
+   AUX_MU_LSR_REG : AUX_MU_LSR_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#54#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   AUX_MU_CNTL_REG : Unsigned_32 with
+
+   type AUX_MU_MSR_Type is
+   record
+      Reserved1  : Bits_4;
+      CTS_Status : Boolean; -- This bit is the inverse of the UART1_CTS input
+      Reserved2  : Bits_3;
+      Reserved3  : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_MSR_Type use
+   record
+      Reserved1  at 0 range 0 .. 3;
+      CTS_Status at 0 range 4 .. 4;
+      Reserved2  at 0 range 5 .. 7;
+      Reserved3  at 0 range 8 .. 31;
+   end record;
+
+   AUX_MU_MSR_REG : AUX_MU_MSR_Type with
+      Address              => To_Address (AUX_BASEADDRESS + 16#58#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   RTS_Autoflow3 : constant := 2#00#; -- De-assert RTS when the receive FIFO has 3 empty spaces left.
+   RTS_Autoflow2 : constant := 2#01#; -- De-assert RTS when the receive FIFO has 2 empty spaces left.
+   RTS_Autoflow1 : constant := 2#10#; -- De-assert RTS when the receive FIFO has 1 empty space left.
+   RTS_Autoflow4 : constant := 2#11#; -- De-assert RTS when the receive FIFO has 4 empty spaces left.
+
+   RTS_AutoflowP : constant := 0; -- If clear the RTS auto flow assert level is high
+   RTS_AutoflowN : constant := 1; -- If set the RTS auto flow assert level is low
+
+   CTS_AutoflowP : constant := 0; -- If clear the CTS auto flow assert level is high
+   CTS_AutoflowN : constant := 1; -- If set the CTS auto flow assert level is low
+
+   type AUX_MU_CNTL_Type is
+   record
+      Receiver_Enable    : Boolean; -- If this bit is set the mini UART receiver is enabled.
+      Transmitter_Enable : Boolean; -- If this bit is set the mini UART transmitter is enabled.
+      RTS_RX_Autoflow    : Boolean; -- If ... the RTS line will de-assert if thereceive FIFO reaches it 'auto flow' level.
+      CTS_TX_Autoflow    : Boolean; -- If this bit is set the transmitter will stop if the CTS line is de-asserted.
+      RTS_Autoflow_Level : Bits_2;  -- These ..  at what receiver FIFO level the RTS line is de-asserted in auto-flow mode.
+      RTS_Assert_Level   : Bits_1;  -- This bit allows one to invert the RTS auto flow operation polarity.
+      CTS_Assert_Level   : Bits_1;  -- This bit allows one to invert the CTS auto flow operation polarity.
+      Reserved           : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_CNTL_Type use
+   record
+      Receiver_Enable    at 0 range 0 .. 0;
+      Transmitter_Enable at 0 range 1 .. 1;
+      RTS_RX_Autoflow    at 0 range 2 .. 2;
+      CTS_TX_Autoflow    at 0 range 3 .. 3;
+      RTS_Autoflow_Level at 0 range 4 .. 5;
+      RTS_Assert_Level   at 0 range 6 .. 6;
+      CTS_Assert_Level   at 0 range 7 .. 7;
+      Reserved           at 0 range 8 .. 31;
+   end record;
+
+   AUX_MU_CNTL_REG : AUX_MU_CNTL_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#60#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   AUX_MU_BAUD     : Unsigned_32 with
+
+   type AUX_MU_BAUD_Type is
+   record
+      Baudrate : Unsigned_16; -- mini UART baudrate counter
+      Reserved : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_BAUD_Type use
+   record
+      Baudrate at 0 range 0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   AUX_MU_BAUD : AUX_MU_BAUD_Type with
       Address              => To_Address (AUX_BASEADDRESS + 16#68#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -631,5 +783,42 @@ package RPI3 is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   PROPERTY_CHANNEL_ID : constant := 8;
+
+   TAG_HW          : constant := 16#0003_0_000#;
+   TAG_GET         : constant := 16#0000_0_000#;
+   TAG_TEST        : constant := 16#0000_4_000#;
+   TAG_SET         : constant := 16#0000_8_000#;
+   TAG_CLOCK       : constant := 16#0000_0_002#;
+   TAG_VOLTAGE     : constant := 16#0000_0_003#;
+   TAG_TEMPERATURE : constant := 16#0000_0_006#;
+
+   -- CLOCK
+   TAG_GET_CLOCK       : constant := TAG_HW + TAG_GET + TAG_CLOCK;
+   TAG_SET_CLOCK       : constant := TAG_HW + TAG_SET + TAG_CLOCK;
+   CLOCK_EMMC_ID       : constant := 16#1#;
+   CLOCK_UART_ID       : constant := 16#2#;
+   CLOCK_ARM_ID        : constant := 16#3#;
+   CLOCK_CORE_ID       : constant := 16#4#;
+   CLOCK_V3D_ID        : constant := 16#5#;
+   CLOCK_H264_ID       : constant := 16#6#;
+   CLOCK_ISP_ID        : constant := 16#7#;
+   CLOCK_SDRAM_ID      : constant := 16#8#;
+   CLOCK_PIXEL_ID      : constant := 16#9#;
+   CLOCK_PWM_ID        : constant := 16#A#;
+   CLOCK_HEVC_ID       : constant := 16#B#;
+   CLOCK_EMMC2_ID      : constant := 16#C#;
+   CLOCK_M2MC_ID       : constant := 16#D#;
+   CLOCK_PIXEL_BVB_ID  : constant := 16#E#;
+   -- VOLTAGE
+   TAG_GET_VOLTAGE     : constant := TAG_HW + TAG_GET + TAG_VOLTAGE;
+   VOLTAGE_CORE_ID     : constant := 16#1#;
+   VOLTAGE_SDRAMC_ID   : constant := 16#2#;
+   VOLTAGE_SDRAMP_ID   : constant := 16#3#;
+   VOLTAGE_SDRAMI_ID   : constant := 16#4#;
+   -- TEMPERATURE
+   TAG_GET_TEMPERATURE : constant := TAG_HW + TAG_GET + TAG_TEMPERATURE;
+   TEMPERATURE_ID      : constant := 16#0#;
 
 end RPI3;
