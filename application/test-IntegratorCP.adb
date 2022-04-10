@@ -1,7 +1,6 @@
 
-with System.Storage_Elements;
 with Interfaces;
-with CPU;
+with IntegratorCP;
 with IOEMU;
 
 package body Application is
@@ -14,7 +13,6 @@ package body Application is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
 
    --========================================================================--
@@ -32,18 +30,15 @@ package body Application is
    begin
       -------------------------------------------------------------------------
       if True then
-         declare
-            Delay_Count : constant := 300_000_000;
-         begin
-            IOEMU.IOEMU_IO1 := 16#00#;
-            loop
-               -- IOEMU GPIO test
-               IOEMU.IOEMU_IO1 := @ + 1;
-               IOEMU.IOEMU_IO0 := 16#FF#;
-               IOEMU.IOEMU_IO0 := 16#00#;
-               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            end loop;
-         end;
+         IOEMU.IOEMU_IO1 := 16#00#;
+         loop
+            while IntegratorCP.Timer (0).RIS.RTI = False loop null; end loop;
+            IntegratorCP.Timer (0).IntClr := 0;
+            -- IOEMU GPIO test
+            IOEMU.IOEMU_IO1 := @ + 1;
+            IOEMU.IOEMU_IO0 := 16#FF#;
+            IOEMU.IOEMU_IO0 := 16#00#;
+         end loop;
       end if;
       -------------------------------------------------------------------------
       loop null; end loop;

@@ -14,3 +14,7 @@
 
                 .sect   .text,"ax"
 
+                .type   irq_handler,%function
+                .global irq_handler
+irq_handler:
+

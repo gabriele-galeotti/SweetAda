@@ -86,6 +86,17 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("Integrator/CP (QEMU emulator)", NL => True);
+      -- Timer0 ---------------------------------------------------------------
+      Timer (0).Load    := 16#0020_0000#;
+      Timer (0).Control := (
+                            ONESHOT    => False,
+                            TIMER_SIZE => TIMER_SIZE_32,
+                            PRESCALE   => PRESCALE_16,
+                            IE         => True,
+                            MODE       => MODE_PERIODIC,
+                            ENABLE     => True,
+                            others     => <>
+                           );
       -------------------------------------------------------------------------
    end BSP_Setup;
 

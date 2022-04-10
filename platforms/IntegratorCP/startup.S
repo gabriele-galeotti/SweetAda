@@ -10,6 +10,8 @@
 
 #define __ASSEMBLER__ 1
 
+#include <arm.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .startup,"ax"
@@ -39,13 +41,13 @@
                 ldr     pc,V_IRQ                        // 0x18 IRQ
                 ldr     pc,V_FIQ                        // 0x1C FIQ
 V_Reset:        .word   _start
-V_UndInstr:     //.word   undinstr_handler
-V_SWI:          //.word   swi_handler
-V_AbortP:       //.word   abortp_handler
-V_AbortD:       //.word   abortd_handler
-V_AddrExc:      //.word   addrexc_handler
-V_IRQ:          //.word   irq_handler
-V_FIQ:          //.word   fiq_handler
+V_UndInstr:     .long   0                               //.word   undinstr_handler
+V_SWI:          .long   0                               //.word   swi_handler
+V_AbortP:       .long   0                               //.word   abortp_handler
+V_AbortD:       .long   0                               //.word   abortd_handler
+V_AddrExc:      .long   0                               //.word   addrexc_handler
+V_IRQ:          .word   irq_handler
+V_FIQ:          .long   0                               //.word   fiq_handler
 
                 .type   _start,%function
                 .global _start
@@ -57,10 +59,33 @@ _start:
                 //
 
                 //
+                // CPU modes setup:
+                // enter each mode one at the time, setting stack and IRQ/FIRQ
+                // flags. Note that CPSR R0 defaults to IRQ&FIRQ disabled.
+                //
+                mrs     r0,cpsr
+                bic     r0,r0,#Mode_MASK
+                orr     r1,r0,#Mode_FIQ
+                msr     cpsr,r1
+                ldr     sp,=FIQ_stack
+                orr     r1,r0,#Mode_IRQ
+                msr     cpsr,r1
+                ldr     sp,=IRQ_stack
+                orr     r1,r0,#Mode_ABT
+                msr     cpsr,r1
+                ldr     sp,=ABT_stack
+                orr     r1,r0,#Mode_UND
+                msr     cpsr,r1
+                ldr     sp,=UND_stack
+                orr     r1,r0,#Mode_SVC
+                msr     cpsr,r1
+                ldr     sp,=SVC_stack
+
+                //
                 // Setup stack pointer.
                 //
-                ldr     r0,=SVC_stack
-                mov     sp,r0
+                //ldr     r0,=SVC_stack
+                //mov     sp,r0
 
                 //
                 // Call "adainit" procedure.
