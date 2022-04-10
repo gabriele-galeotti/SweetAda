@@ -1,5 +1,6 @@
 
 with Interfaces;
+with CPU;
 with IntegratorCP;
 with IOEMU;
 
@@ -31,14 +32,15 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          IOEMU.IOEMU_IO1 := 16#00#;
-         loop
-            while IntegratorCP.Timer (1).RIS.RTI = False loop null; end loop;
-            IntegratorCP.Timer (1).IntClr := 0;
-            -- IOEMU GPIO test
-            IOEMU.IOEMU_IO1 := @ + 1;
-            IOEMU.IOEMU_IO0 := 16#FF#;
-            IOEMU.IOEMU_IO0 := 16#00#;
-         end loop;
+         declare
+            Delay_Count : constant := 100_000_000;
+         begin
+            loop
+               -- IOEMU GPIO test
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+               IOEMU.IOEMU_IO1 := @ + 1;
+            end loop;
+         end;
       end if;
       -------------------------------------------------------------------------
       loop null; end loop;

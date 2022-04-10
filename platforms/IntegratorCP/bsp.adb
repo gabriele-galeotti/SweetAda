@@ -20,6 +20,8 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with MMIO;
+with Exceptions;
+with ARM;
 with IntegratorCP;
 with Console;
 
@@ -68,6 +70,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
    begin
+      -------------------------------------------------------------------------
+      Exceptions.Init;
       -- PL011 UART0 ----------------------------------------------------------
       PL011_Descriptor.Base_Address := To_Address (PL011_UART0_BASEADDRESS);
       PL011_Descriptor.Baud_Clock   := 14_745_600;
@@ -88,10 +92,9 @@ package body BSP is
       Console.Print ("Integrator/CP (QEMU emulator)", NL => True);
       -- Timer ----------------------------------------------------------------
       -- Timer0 runs @ 40 MHz
-      -- Timer (0).Load    := 16#0020_0000#;
       -- Timer1/2 run @ 1 MHz
-      Timer (1).Load    := 16#0001_0000#;
-      Timer (1).Control := (
+      Timer (0).Load    := 16#0020_0000#; -- Timer1/2: 16#0001_0000#;
+      Timer (0).Control := (
                             ONESHOT    => False,
                             TIMER_SIZE => TIMER_SIZE_32,
                             PRESCALE   => PRESCALE_16,
@@ -100,6 +103,8 @@ package body BSP is
                             ENABLE     => True,
                             others     => <>
                            );
+      PIC_IRQ_ENABLESET.TIMERINT0 := True;
+      ARM.Irq_Enable;
       -------------------------------------------------------------------------
    end BSP_Setup;
 

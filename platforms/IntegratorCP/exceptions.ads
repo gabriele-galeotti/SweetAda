@@ -25,6 +25,11 @@ package Exceptions is
    --                                                                        --
    --========================================================================--
 
+   procedure Irq_Process with
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "irq_process";
+
    procedure Init;
 
 end Exceptions;

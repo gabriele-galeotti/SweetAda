@@ -54,14 +54,10 @@ V_FIQ:          .long   0                               //.word   fiq_handler
 _start:
 
                 //
-                // After reset, CPU is in supervisor mode.
-                // __REF__ http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.faqs/ka3761.html
-                //
-
-                //
+                // CPU is in supervisor mode.
                 // CPU modes setup:
                 // enter each mode one at the time, setting stack and IRQ/FIRQ
-                // flags. Note that CPSR R0 defaults to IRQ&FIRQ disabled.
+                // flags. Note that CPSR defaults to IRQ&FIRQ disabled.
                 //
                 mrs     r0,cpsr
                 bic     r0,r0,#Mode_MASK
@@ -80,12 +76,6 @@ _start:
                 orr     r1,r0,#Mode_SVC
                 msr     cpsr,r1
                 ldr     sp,=SVC_stack
-
-                //
-                // Setup stack pointer.
-                //
-                //ldr     r0,=SVC_stack
-                //mov     sp,r0
 
                 //
                 // Call "adainit" procedure.
