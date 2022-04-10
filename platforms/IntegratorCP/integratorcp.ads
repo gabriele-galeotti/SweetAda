@@ -36,10 +36,86 @@ package IntegratorCP is
    use Bits;
 
    COUNTERTIMER_BASEADDRESS : constant := 16#1300_0000#;
+   PIC_PRIMARY_BASEADDRESS  : constant := 16#1400_0000#;
    PL011_UART0_BASEADDRESS  : constant := 16#1600_0000#;
    PL011_UART1_BASEADDRESS  : constant := 16#1700_0000#;
    PL110_BASEADDRESS        : constant := 16#C000_0000#;
    LAN91C111_BASEADDRESS    : constant := 16#C800_0000#;
+
+   -- 3.6.1 Primary interrupt controller
+
+   type PIC_IRQ_ITEMS_Type is
+   record
+      SOFTINT   : Boolean;
+      UARTINT0  : Boolean;
+      UARTINT1  : Boolean;
+      KBDINT    : Boolean;
+      MOUSEINT  : Boolean;
+      TIMERINT0 : Boolean;
+      TIMERINT1 : Boolean;
+      TIMERINT2 : Boolean;
+      RTCINT    : Boolean;
+      LM_LLINT0 : Boolean; -- IRQ0
+      LM_LLINT1 : Boolean; -- FIQ0
+      Reserved1 : Bits_11;
+      CLCDCINT  : Boolean;
+      MMCIINT0  : Boolean;
+      MMCIINT1  : Boolean;
+      AACINT    : Boolean;
+      CPPLDINT  : Boolean;
+      ETHINT    : Boolean;
+      TSPENINT  : Boolean;
+      Reserved2 : Bits_3;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for PIC_IRQ_ITEMS_Type use
+   record
+      SOFTINT   at 0 range 0 .. 0;
+      UARTINT0  at 0 range 1 .. 1;
+      UARTINT1  at 0 range 2 .. 2;
+      KBDINT    at 0 range 3 .. 3;
+      MOUSEINT  at 0 range 4 .. 4;
+      TIMERINT0 at 0 range 5 .. 5;
+      TIMERINT1 at 0 range 6 .. 6;
+      TIMERINT2 at 0 range 7 .. 7;
+      RTCINT    at 0 range 8 .. 8;
+      LM_LLINT0 at 0 range 9 .. 9;
+      LM_LLINT1 at 0 range 10 .. 10;
+      Reserved1 at 0 range 11 .. 21;
+      CLCDCINT  at 0 range 22 .. 22;
+      MMCIINT0  at 0 range 23 .. 23;
+      MMCIINT1  at 0 range 24 .. 24;
+      AACINT    at 0 range 25 .. 25;
+      CPPLDINT  at 0 range 26 .. 26;
+      ETHINT    at 0 range 27 .. 27;
+      TSPENINT  at 0 range 28 .. 28;
+      Reserved2 at 0 range 29 .. 31;
+   end record;
+
+   PIC_IRQ_STATUS    : aliased PIC_IRQ_ITEMS_Type with
+      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#00#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   PIC_IRQ_RAWSTAT   : aliased PIC_IRQ_ITEMS_Type with
+      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#04#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   PIC_IRQ_ENABLESET : aliased PIC_IRQ_ITEMS_Type with
+      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#08#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   PIC_IRQ_ENABLECLR : aliased PIC_IRQ_ITEMS_Type with
+      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#0C#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    -- 4.9.2 Counter/timer registers
 
