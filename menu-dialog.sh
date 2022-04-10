@@ -186,9 +186,9 @@ return 0
 action_execute()
 {
 local exit_status
-rm -f make.log make.errors.log
 case $1 in
   "createkernelcfg")
+    rm -f make.log make.errors.log
     createkernelcfg
     if [ $? -eq 0 ] ; then
       PLATFORM=${PLATFORM} SUBPLATFORM=${SUBPLATFORM} "${MAKE}" createkernelcfg 2> make.errors.log | tee make.log
@@ -200,56 +200,67 @@ case $1 in
     SUBPLATFORM=
     ;;
   "configure")
+    rm -f make.log make.errors.log
     "${MAKE}" ${MAKE_DEBUG_OPTIONS} configure 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
   "all")
+    rm -f make.log make.errors.log
     "${MAKE}" ${MAKE_DEBUG_OPTIONS} all 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
   "kernel")
+    rm -f make.log make.errors.log
     "${MAKE}" ${MAKE_DEBUG_OPTIONS} kernel 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
   "postbuild")
+    rm -f make.log make.errors.log
     "${MAKE}" ${MAKE_DEBUG_OPTIONS} postbuild 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
   "session-start")
+    rm -f make.log make.errors.log
     "${MAKE}" ${MAKE_DEBUG_OPTIONS} session-start 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
   "session-end")
+    rm -f make.log make.errors.log
     "${MAKE}" ${MAKE_DEBUG_OPTIONS} session-end 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
   "run")
+    rm -f make.log make.errors.log
     "${MAKE}" run
     exit_status=$?
     log_build_errors
     ;;
   "debug")
+    rm -f make.log make.errors.log
     "${MAKE}" debug
     exit_status=$?
     log_build_errors
     ;;
   "clean")
+    rm -f make.log make.errors.log
     "${MAKE}" ${MAKE_DEBUG_OPTIONS} clean 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
   "distclean")
+    rm -f make.log make.errors.log
     "${MAKE}" ${MAKE_DEBUG_OPTIONS} distclean 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
   "rts")
+    rm -f make.log make.errors.log
     "${MAKE}" ${MAKE_DEBUG_OPTIONS} rts 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
