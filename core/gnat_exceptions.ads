@@ -214,22 +214,47 @@ package GNAT_Exceptions is
       Export        => True,
       Convention    => C,
       External_Name => "__gnat_rcheck_SE_Object_Too_Large";
-   procedure Rcheck_CE_Access_Check_Ext (File : in System.Address; Line, Column : in Integer) with
+   procedure Rcheck_CE_Access_Check_Ext (
+                                         File   : in System.Address;
+                                         Line   : in Integer;
+                                         Column : in Integer
+                                        ) with
       No_Return     => True,
       Export        => True,
       Convention    => C,
       External_Name => "__gnat_rcheck_CE_Access_Check_ext";
-   procedure Rcheck_CE_Index_Check_Ext (File : in System.Address; Line, Column, Index, First, Last : in Integer) with
+   procedure Rcheck_CE_Index_Check_Ext (
+                                        File   : in System.Address;
+                                        Line   : in Integer;
+                                        Column : in Integer;
+                                        Index  : in Integer;
+                                        First  : in Integer;
+                                        Last   : in Integer
+                                       ) with
       No_Return     => True,
       Export        => True,
       Convention    => C,
       External_Name => "__gnat_rcheck_CE_Index_Check_ext";
-   procedure Rcheck_CE_Invalid_Data_Ext (File : in System.Address; Line, Column, Index, First, Last : in Integer) with
+   procedure Rcheck_CE_Invalid_Data_Ext (
+                                         File   : in System.Address;
+                                         Line   : in Integer;
+                                         Column : in Integer;
+                                         Index  : in Integer;
+                                         First  : in Integer;
+                                         Last   : in Integer
+                                        ) with
       No_Return     => True,
       Export        => True,
       Convention    => C,
       External_Name => "__gnat_rcheck_CE_Invalid_Data_ext";
-   procedure Rcheck_CE_Range_Check_Ext (File : in System.Address; Line, Column, Index, First, Last : in Integer) with
+   procedure Rcheck_CE_Range_Check_Ext (
+                                        File   : in System.Address;
+                                        Line   : in Integer;
+                                        Column : in Integer;
+                                        Index  : in Integer;
+                                        First  : in Integer;
+                                        Last   : in Integer
+                                       ) with
       No_Return     => True,
       Export        => True,
       Convention    => C,

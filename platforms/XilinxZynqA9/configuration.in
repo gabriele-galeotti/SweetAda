@@ -1,6 +1,6 @@
 
 #
-# Xilinx® ZynqA9 board (QEMU emulator)
+# XilinxÂ® Zynq A9 board (QEMU emulator)
 #
 
 CPU       := ARM

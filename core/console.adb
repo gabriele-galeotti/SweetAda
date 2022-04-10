@@ -74,7 +74,7 @@ package body Console is
 
    procedure Console_Null_Read (C : out Character) is
    begin
-      C := Ada.Characters.Latin_1.NUL;
+      C := ISO88591.NUL;
    end Console_Null_Read;
 
    ----------------------------------------------------------------------------
@@ -572,15 +572,15 @@ package body Console is
    ----------------------------------------------------------------------------
    -- __REF__ http://www.termsys.demon.co.uk/vtansi.htm
    -- __REF__ https://www.csie.ntu.edu.tw/~r92094/c++/VT100.html
+   -- __INF__ xterm does not seem to correctly recognize a CSI sequence
    ----------------------------------------------------------------------------
    procedure TTY_Setup is
+      -- ESC_CSI : constant String := ISO88591.CSI;
+      ESC_CSI : constant String := ISO88591.ESC & "[";
    begin
-      -- Print (ISO88591.CSI & "7h");   -- enable line wrap
-      -- Print (ISO88591.CSI & "2J");   -- clear terminal screen
-      -- Print (ISO88591.CSI & "1;1H"); -- reset cursor position at (1,1)
-      Print (ISO88591.ESC & "[7h");   -- enable line wrap
-      Print (ISO88591.ESC & "[2J");   -- clear terminal screen
-      Print (ISO88591.ESC & "[1;1H"); -- reset cursor position at (1,1)
+      Print (ESC_CSI & "7h");   -- enable line wrap
+      Print (ESC_CSI & "2J");   -- clear terminal screen
+      Print (ESC_CSI & "1;1H"); -- reset cursor position at (1,1)
    end TTY_Setup;
 
 end Console;

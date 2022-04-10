@@ -55,9 +55,9 @@ _start:
 
                 //
                 // CPU is in supervisor mode.
-                // CPU modes setup:
-                // enter each mode one at the time, setting stack and IRQ/FIRQ
-                // flags. Note that CPSR defaults to IRQ&FIRQ disabled.
+                // CPSR defaults to IRQ&FIRQ disabled.
+                // CPU modes setup: enter each mode one at the time, setting
+                // stack and IRQ/FIRQ flags.
                 //
                 mrs     r0,cpsr
                 bic     r0,r0,#Mode_MASK

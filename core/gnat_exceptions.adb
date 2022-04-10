@@ -266,7 +266,11 @@ package body GNAT_Exceptions is
 
    -- activated by -gnateE compiler switch
 
-   procedure Rcheck_CE_Access_Check_Ext (File : in System.Address; Line, Column : in Integer) is
+   procedure Rcheck_CE_Access_Check_Ext (
+                                         File   : in System.Address;
+                                         Line   : in Integer;
+                                         Column : in Integer
+                                        ) is
       pragma Unreferenced (File);
       pragma Unreferenced (Line);
       pragma Unreferenced (Column);
@@ -274,7 +278,14 @@ package body GNAT_Exceptions is
       Abort_Library.System_Abort;
    end Rcheck_CE_Access_Check_Ext;
 
-   procedure Rcheck_CE_Index_Check_Ext (File : in System.Address; Line, Column, Index, First, Last : in Integer) is
+   procedure Rcheck_CE_Index_Check_Ext (
+                                        File   : in System.Address;
+                                        Line   : in Integer;
+                                        Column : in Integer;
+                                        Index  : in Integer;
+                                        First  : in Integer;
+                                        Last   : in Integer
+                                       ) is
       pragma Unreferenced (File);
       pragma Unreferenced (Line);
       pragma Unreferenced (Column);
@@ -285,7 +296,14 @@ package body GNAT_Exceptions is
       Abort_Library.System_Abort;
    end Rcheck_CE_Index_Check_Ext;
 
-   procedure Rcheck_CE_Invalid_Data_Ext (File : in System.Address; Line, Column, Index, First, Last : in Integer) is
+   procedure Rcheck_CE_Invalid_Data_Ext (
+                                         File   : in System.Address;
+                                         Line   : in Integer;
+                                         Column : in Integer;
+                                         Index  : in Integer;
+                                         First  : in Integer;
+                                         Last   : in Integer
+                                        ) is
       pragma Unreferenced (File);
       pragma Unreferenced (Line);
       pragma Unreferenced (Column);
@@ -296,7 +314,14 @@ package body GNAT_Exceptions is
       Abort_Library.System_Abort;
    end Rcheck_CE_Invalid_Data_Ext;
 
-   procedure Rcheck_CE_Range_Check_Ext (File : in System.Address; Line, Column, Index, First, Last : in Integer) is
+   procedure Rcheck_CE_Range_Check_Ext (
+                                        File   : in System.Address;
+                                        Line   : in Integer;
+                                        Column : in Integer;
+                                        Index  : in Integer;
+                                        First  : in Integer;
+                                        Last   : in Integer
+                                       ) is
       pragma Unreferenced (File);
       pragma Unreferenced (Line);
       pragma Unreferenced (Column);
