@@ -104,7 +104,6 @@ package IntegratorCP is
       Reserved at 0 range 1 .. 31;
    end record;
 
-pragma Warnings (Off, "bits of * unused");
    type Timer_Type is
    record
       Load    : Unsigned_32        with Volatile_Full_Access => True;
@@ -115,9 +114,17 @@ pragma Warnings (Off, "bits of * unused");
       MIS     : TimerXMIS_Type     with Volatile_Full_Access => True;
       BGLoad  : Unsigned_32        with Volatile_Full_Access => True;
    end record with
-      Size        => 8 * 32,
-      Object_Size => 16#100#;
-pragma Warnings (On, "bits of * unused");
+      Alignment => 16#100#;
+   for Timer_Type use
+   record
+      Load    at 16#00# range 0 .. 31;
+      Value   at 16#04# range 0 .. 31;
+      Control at 16#08# range 0 .. 31;
+      IntClr  at 16#0C# range 0 .. 31;
+      RIS     at 16#10# range 0 .. 31;
+      MIS     at 16#14# range 0 .. 31;
+      BGLoad  at 16#18# range 0 .. 31;
+   end record;
 
    Timer : aliased array (0 .. 2) of Timer_Type with
       Address    => To_Address (COUNTERTIMER_BASEADDRESS),

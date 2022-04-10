@@ -32,8 +32,8 @@ package body Application is
       if True then
          IOEMU.IOEMU_IO1 := 16#00#;
          loop
-            while IntegratorCP.Timer (0).RIS.RTI = False loop null; end loop;
-            IntegratorCP.Timer (0).IntClr := 0;
+            while IntegratorCP.Timer (1).RIS.RTI = False loop null; end loop;
+            IntegratorCP.Timer (1).IntClr := 0;
             -- IOEMU GPIO test
             IOEMU.IOEMU_IO1 := @ + 1;
             IOEMU.IOEMU_IO0 := 16#FF#;
