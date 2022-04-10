@@ -20,7 +20,7 @@ OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
 
 # override standard last_chance_handler unit
 export IMPLICIT_CORE_UNITS := $(filter-out last_chance_handler,$(IMPLICIT_CORE_UNITS))
-export SPEC_LAST_CHANCE_HANDLER := $(CORE_DIRECTORY)/last_chance_handler.ads
+export SPEC_LAST_CHANCE_HANDLER := $(PLATFORM_DIRECTORY)/last_chance_handler.ads
 
 USE_APPLICATION := dummy
 
