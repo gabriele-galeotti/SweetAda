@@ -15,8 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with CPU.MMIO;
-
 package body Sun4m is
 
    --========================================================================--
@@ -27,12 +25,17 @@ package body Sun4m is
    --                                                                        --
    --========================================================================--
 
+   ----------------------------------------------------------------------------
+   -- System_Timer_ClearLR
+   ----------------------------------------------------------------------------
+   -- pp. 6-41 Counter-Timers
+   -- "The interrupt is cleared and the limit bits reset by reading the
+   -- appropriate limit register."
+   ----------------------------------------------------------------------------
    procedure System_Timer_ClearLR is
-      Unused : Unsigned_32 with Unreferenced => True;
-      -- Unused : Slavio_Timer_Limit_Type with Unreferenced => True;
+      Unused : Slavio_Timer_Limit_Type with Unreferenced => True;
    begin
-      Unused := CPU.MMIO.Read_U32 (System_Timer.Limit'Address);
-      -- Unused := System_Timer.Limit;
+      Unused := System_Timer.Limit;
    end System_Timer_ClearLR;
 
    ----------------------------------------------------------------------------

@@ -36,11 +36,23 @@ package Sun4m is
    use Interfaces;
    use Bits;
 
+   SCC_BASEADDRESS               : constant := 16#7110_0000#;
+   SLAVIO_TIMER_PROC_BASEADDRESS : constant := 16#71D0_0000#;
+   SLAVIO_TIMER_SYS_BASEADDRESS  : constant := 16#71D1_0000#;
+   SLAVIO_INTC_BASEADDRESS       : constant := 16#71E0_0000#;
+   SLAVIO_SS_SCR_BASEADDRESS     : constant := 16#71F0_0000#;
+
+   DMA2_ETHERNET_BASEADDRESS     : constant := 16#7840_0010#;
+   DMA2_INTERNAL_ID_ADDRESS      : constant := 16#0800_0000#;
+   DMA2_ESP_ADDRESS              : constant := 16#0840_0000#;
+   DMA2_PARALLEL_PORT_ADDRESS    : constant := 16#0C80_0010#;
+   SCSI_ADDRESS                  : constant := 16#0880_0010#;
+   ETHERNET_CONTROLLER_ADDRESS   : constant := 16#08C0_0000#;
+   -- LANCE_BASEADDRESS : constant := 16#78C0_0000#;
+
    ----------------------------------------------------------------------------
    -- 89C105 SLAVIO System Status and System Control Register
    ----------------------------------------------------------------------------
-
-   SLAVIO_SS_SCR_BASEADDRESS : constant := 16#71F0_0000#;
 
    type Slavio_SS_SC_Type is
    record
@@ -62,23 +74,94 @@ package Sun4m is
    end record;
 
    System_Status_Control : aliased Slavio_SS_SC_Type with
-      Address    => To_Address (SLAVIO_SS_SCR_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (SLAVIO_SS_SCR_BASEADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 89C105 SLAVIO Interrupt Controller
    ----------------------------------------------------------------------------
 
-   SLAVIO_INTC_BASEADDRESS : constant := 16#71E1_0000#;
+   -- pp. 6-39 System Interrupt Pending Register
+
+   type SI_Type is
+   record
+      Reserved1 : Bits_7 := 0;
+      SBusIrq   : Bits_7;      -- Gives a direct indication of which SBus level interrupts are active.
+      K         : Boolean;     -- Keyboard/Mouse interrupt
+      S         : Boolean;     -- Serial Port interrupt
+      E         : Boolean;     -- Ethernet interrupt
+      Reserved2 : Bits_1 := 0;
+      SC        : Boolean;     -- SCSI interrupt
+      T         : Boolean;     -- Level 10 Counter/Timer
+      V         : Boolean;     -- Video interrupt
+      Reserved3 : Bits_1 := 0;
+      F         : Boolean;     -- Floppy interrupt
+      Reserved4 : Bits_5 := 0;
+      M         : Boolean;     -- EMC (ECC Memory Controller) interrupt
+      I         : Boolean;     -- MSI (MBus-SBus Interface) interrupt
+      ME        : Boolean;     -- Module Error (asynchronous fault)
+      MA        : Boolean;     -- Mask All interrupts.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SI_Type use
+   record
+      Reserved1 at 0 range 0 .. 6;
+      SBusIrq   at 0 range 7 .. 13;
+      K         at 0 range 14 .. 14;
+      S         at 0 range 15 .. 15;
+      E         at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 17;
+      SC        at 0 range 18 .. 18;
+      T         at 0 range 19 .. 19;
+      V         at 0 range 20 .. 20;
+      Reserved3 at 0 range 21 .. 21;
+      F         at 0 range 22 .. 22;
+      Reserved4 at 0 range 23 .. 27;
+      M         at 0 range 28 .. 28;
+      I         at 0 range 29 .. 29;
+      ME        at 0 range 30 .. 30;
+      MA        at 0 range 31 .. 31;
+   end record;
+
+   -- pp. 6-39 System Interrupt Pending Register
+   -- pp. 6-39 System Interrupt Target Mask Register (Read Only), and Mask Set and Mask Clear Registers (Write Only)
+
+   -- Pending
+   SIPR : aliased SI_Type with
+      Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0000#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- Target Mask Read
+   SITM  : aliased SI_Type with
+      Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0004#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- Target Mask Set
+   SITMS : aliased SI_Type with
+      Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0008#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- Target Mask Clear
+   SITMC : aliased SI_Type with
+      Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_000C#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 89C105 SLAVIO Timers
    ----------------------------------------------------------------------------
 
-   SLAVIO_TIMER_PROC_BASEADDRESS : constant := 16#71D0_0000#;
-   SLAVIO_TIMER_SYS_BASEADDRESS  : constant := 16#71D1_0000#;
+   -- pp. 6-43 Counter/Timer Limit Register
 
    type Slavio_Timer_Limit_Type is
    record
@@ -95,9 +178,11 @@ package Sun4m is
       Reserved2 at 0 range 23 .. 31;
    end record;
 
+   -- pp. 6-44 User Timer Count Register Field Definitions
+
    type Slavio_Timer_Counter_Type is
    record
-      LR       : Bits_1;
+      L        : Bits_1;
       Count    : Bits_22;
       Reserved : Bits_9;
    end record with
@@ -105,16 +190,16 @@ package Sun4m is
       Size      => 32;
    for Slavio_Timer_Counter_Type use
    record
-      LR       at 0 range 0 .. 0;
+      L        at 0 range 0 .. 0;
       Count    at 0 range 1 .. 22;
       Reserved at 0 range 23 .. 31;
    end record;
 
    type Slavio_Timer_Type is
    record
-      Limit      : Slavio_Timer_Limit_Type with Atomic => True;
-      Counter    : Slavio_Timer_Counter_Type with Atomic => True;
-      Counter_NR : Slavio_Timer_Limit_Type with Atomic => True;
+      Limit      : Slavio_Timer_Limit_Type   with Volatile_Full_Access => True;
+      Counter    : Slavio_Timer_Counter_Type with Volatile_Full_Access => True;
+      Counter_NR : Slavio_Timer_Limit_Type   with Volatile_Full_Access => True;
    end record with
       Size => 3 * 32;
    for Slavio_Timer_Type use
@@ -142,22 +227,9 @@ package Sun4m is
    -- CHANNEL B @ 0x7110_0000
    ----------------------------------------------------------------------------
 
-   SCC_BASEADDRESS : constant := 16#7110_0000#;
-
-   ----------------------------------------------------------------------------
-   -- DMA
-   ----------------------------------------------------------------------------
-
-   DMA2_INTERNAL_ID_ADDRESS    : constant := 16#0800_0000#;
-   DMA2_ESP_ADDRESS            : constant := 16#0840_0000#;
-   DMA2_PARALLEL_PORT_ADDRESS  : constant := 16#0C80_0010#;
-   SCSI_ADDRESS                : constant := 16#0880_0010#;
-
    ----------------------------------------------------------------------------
    -- DMA (Ethernet)
    ----------------------------------------------------------------------------
-
-   DMA2_ETHERNET_BASEADDRESS : constant := 16#7840_0010#;
 
    -- Control/Status Register
 
@@ -255,12 +327,5 @@ pragma Warnings (On, "volatile actual passed by copy");
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-
-   ----------------------------------------------------------------------------
-   -- Am7990 LANCE
-   ----------------------------------------------------------------------------
-
-   ETHERNET_CONTROLLER_ADDRESS : constant := 16#08C0_0000#;
-   -- LANCE_BASEADDRESS : constant := 16#78C0_0000#;
 
 end Sun4m;
