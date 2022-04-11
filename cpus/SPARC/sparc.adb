@@ -114,11 +114,16 @@ package body SPARC is
       Asm (
            Template => ""                             & CRLF &
                        "        mov     %%psr,%%g1  " & CRLF &
-                       "        and     %%g1,%%g1,%0" & CRLF &
+                       "        and     %%g1,%0,%%g1" & CRLF &
+                       "        or      %%g1,%1,%%g1" & CRLF &
                        "        mov     %%g1,%%psr  " & CRLF &
+                       "        nop ; nop ; nop     " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_F0FF#),
+           Inputs   => (
+                        Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_F0FF#),
+                        Interfaces.Unsigned_32'Asm_Input ("r", 16#0000_0020#)
+                       ),
            Clobber  => "g1",
            Volatile => True
           );
@@ -126,7 +131,19 @@ package body SPARC is
 
    procedure Irq_Disable is
    begin
-      null;
+      Asm (
+           Template => ""                             & CRLF &
+                       "        mov     %%psr,%%g1  " & CRLF &
+                       "        and     %%g1,%0,%%g1" & CRLF &
+                       "        mov     %%g1,%%psr  " & CRLF &
+                       "        nop ; nop ; nop     " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_FFDF#),
+           Clobber  => "g1",
+           Volatile => True
+          );
+
    end Irq_Disable;
 
    function Irq_State_Get return Irq_State_Type is
