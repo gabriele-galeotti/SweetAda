@@ -16,6 +16,9 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Bits;
+with MCF5373;
+with Console;
 
 package body BSP is
 
@@ -28,20 +31,46 @@ package body BSP is
    --========================================================================--
 
    use Interfaces;
+   use Bits;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   -- procedure Console_Putchar (C : in Character) is null;
-   -- procedure Console_Getchar (C : out Character) is null;
+   procedure Console_Putchar (C : in Character) is
+   begin
+      -- wait for transmitter available
+      loop
+         exit when MCF5373.USR0.TXRDY;
+      end loop;
+      MCF5373.UTB0 := To_U8 (C);
+   end Console_Putchar;
+
+   procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
+   begin
+      -- wait for receiver available
+      loop
+         exit when MCF5373.USR0.RXRDY;
+      end loop;
+      Data := MCF5373.URB0;
+      C := To_Ch (Data);
+   end Console_Getchar;
 
    ----------------------------------------------------------------------------
    -- BSP_Setup.
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
    begin
-      null;
+      -- Console --------------------------------------------------------------
+      Console.Console_Descriptor.Write := Console_Putchar'Access;
+      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.TTY_Setup;
+      -------------------------------------------------------------------------
+      Console.Print ("ZOOM (MCF373)", NL => True);
+      Console.Print (Unsigned_32 (MCF5373.CIR.PIN), Prefix => "PIN:    ", NL => True);
+      Console.Print (Unsigned_32 (MCF5373.CIR.PRN), Prefix => "PRN:    ", NL => True);
+      -------------------------------------------------------------------------
    end BSP_Setup;
 
 end BSP;

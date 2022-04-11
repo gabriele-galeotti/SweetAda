@@ -10,21 +10,39 @@
 
 #define __ASSEMBLER__ 1
 
-#include <configure.h>
+////////////////////////////////////////////////////////////////////////////////
+
+                .sect   .vectors,"ax"
+
+//
+// 14.2.9.1 Interrupt Sources
+// 14.3.1.3 Interrupt Vector Determination
+//
+
+                .global vector_table
+vector_table:
+reset_sp:       .long   0
+reset_pc:       .long   _start
+                .space  (64-2)*4
+                // Table 14-15. Interrupt Source Assignment For INTC0
+                .space  (64)*4                          // INTC0 vectors 0..63 (+64)
+                // Table 14-16. Interrupt Source Assignment for INTC1
+                .space  (40)*4                          // INTC1 vectors 0..39 (+128) Not Used
+                .long   0                               // INTC1 vector 40 (+128) RNG
+                .long   0                               // INTC1 vector 41 (+128) SKHA
+                .long   0                               // INTC1 vector 42 (+128) MDHA
+                .long   pit0_handler                    // INTC1 vector 43 (+128) PIT0
 
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .text,"ax"
 
-                .global pit0_handler
 pit0_handler:
                 //pea     PIT0_IRQID
                 jmp     irq_entry
-
-// __FIX__ original instructions
-// movem.l %d0-%d1/%a0-%a1,%sp@-
-// movem.l %sp@+,%d0-%d1/%a0-%a1
-
+                // __FIX__ original instructions
+                // movem.l %d0-%d1/%a0-%a1,%sp@-
+                // movem.l %sp@+,%d0-%d1/%a0-%a1
 irq_entry:
                 // stack frame handling - init
                 lea     -16(%sp),%sp                    // 4 regs x 4 bytes/reg = 16 bytes
