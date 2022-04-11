@@ -1,7 +1,7 @@
 #!/usr/bin/env tclsh
 
 #
-# M5235BCC dBUG S-record download.
+# dBUG S-record download.
 #
 # Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
 #
