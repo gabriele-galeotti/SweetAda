@@ -54,6 +54,12 @@ _start:
 1:
 
                 //
+                // Disable watchdog and test logic safeguard (9.3.2).
+                //
+                //clr.w   MCF_WTM_WCR
+                //clr.l   (0x40000000 + 0x0011000C)
+
+                //
                 // Setup VBR.
                 //
                 //move.l  #vector_table,%d0                       // MCF5200 PRM Section 5, "Supervisor (privileged) instructions"
@@ -64,12 +70,6 @@ _start:
                 //
                 //move.l  #(__IPSBAR + 1),%d0                     // bit0 = 1 --> mark as valid
                 //move.l  %d0,0x40000000                          // store in IPSBAR power-on configuration register
-
-                //
-                // Disable watchdog and test logic safeguard (9.3.2).
-                //
-                //clr.w   MCF_WTM_WCR
-                //clr.l   (0x40000000 + 0x0011000C)
 
                 //
                 // Core/SCM RAMBAR initialization, see RM 6.2.1
