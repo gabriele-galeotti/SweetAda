@@ -19,8 +19,11 @@ with System;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Core;
 with LLutils;
 with SPARC;
+with Sun4m;
+with IOEMU;
 
 package body Exceptions is
 
@@ -47,6 +50,18 @@ package body Exceptions is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Irq_Process
+   ----------------------------------------------------------------------------
+   procedure Irq_Process is
+   begin
+      Core.Tick_Count := @ + 1;
+      Sun4m.System_Timer_ClearLR;
+      -- IOEMU "TIMER" LED blinking
+      IOEMU.IOEMU_IO0 := 16#FF#;
+      IOEMU.IOEMU_IO0 := 16#00#;
+   end Irq_Process;
 
    ----------------------------------------------------------------------------
    -- Init

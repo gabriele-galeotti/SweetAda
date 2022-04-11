@@ -75,6 +75,7 @@ bm:
                 or      %g1,%g3,%g1
                 mov     %g1,%psr
                 NOP3
+
                 // setup TBR
                 sethi   %hi(trap_table),%g1
                 or      %g1,%lo(trap_table),%g1

@@ -92,6 +92,37 @@ package body BSP is
       Console.Print (Natural (Nwindows), Prefix => "Nwindows: ", NL => True);
       Console.Print (QEMU, Prefix => "QEMU: ", NL => True);
       -------------------------------------------------------------------------
+      SITMS := (
+                SBusIrq => 0,
+                K       => False,
+                S       => False,
+                E       => False,
+                SC      => False,
+                T       => True,
+                V       => False,
+                F       => False,
+                M       => False,
+                I       => False,
+                ME      => False,
+                MA      => True,
+                others  => <>
+               );
+--      SITMC := (
+--                SBusIrq => 0,
+--                K       => False,
+--                S       => False,
+--                E       => False,
+--                SC      => False,
+--                T       => True,
+--                V       => False,
+--                F       => False,
+--                M       => False,
+--                I       => False,
+--                ME      => False,
+--                MA      => True,
+--                others  => <>
+--               );
+      SPARC.Irq_Enable;
       Tclk_Init;
       -------------------------------------------------------------------------
    end BSP_Setup;
