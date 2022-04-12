@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.adb                                                                                                   --
+-- __FLN__ zoom.ads                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,62 +15,35 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with System.Storage_Elements;
 with Interfaces;
-with Bits;
-with MCF5373;
-with Console;
 
-package body BSP is
+package ZOOM is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Package subprograms                          --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
+   use System;
+   use System.Storage_Elements;
    use Interfaces;
-   use Bits;
 
    ----------------------------------------------------------------------------
-   -- Console wrappers
+   -- The MCF5373-10 CARD ENGINE has a latch (U7) connected to CS1 @
+   -- 0x1000_0000, activated by addressing the offset 0x0008_0000.
+   -- In order to use the LEDs on the ZOOM, it must be enabled (/2OE active
+   -- low) by lowering the MFP9 - TIN3/TOUT3 pin on the GPIO module, which is
+   -- normally assigned to the DMA timers.
    ----------------------------------------------------------------------------
+   LED : aliased Unsigned_16 with
+      Address    => To_Address (16#1008_0000#),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
 
-   procedure Console_Putchar (C : in Character) is
-   begin
-      -- wait for transmitter available
-      loop
-         exit when MCF5373.USR0.TXRDY;
-      end loop;
-      MCF5373.UTB0 := To_U8 (C);
-   end Console_Putchar;
-
-   procedure Console_Getchar (C : out Character) is
-      Data : Unsigned_8;
-   begin
-      -- wait for receiver available
-      loop
-         exit when MCF5373.USR0.RXRDY;
-      end loop;
-      Data := MCF5373.URB0;
-      C := To_Ch (Data);
-   end Console_Getchar;
-
-   ----------------------------------------------------------------------------
-   -- BSP_Setup.
-   ----------------------------------------------------------------------------
-   procedure BSP_Setup is
-   begin
-      -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
-      -------------------------------------------------------------------------
-      Console.Print ("ZOOM (MCF5373)", NL => True);
-      Console.Print (Unsigned_32 (MCF5373.CIR.PIN), Prefix => "PIN:    ", NL => True);
-      Console.Print (Unsigned_32 (MCF5373.CIR.PRN), Prefix => "PRN:    ", NL => True);
-      -------------------------------------------------------------------------
-   end BSP_Setup;
-
-end BSP;
+end ZOOM;
