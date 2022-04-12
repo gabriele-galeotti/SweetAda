@@ -107,21 +107,6 @@ package body BSP is
                 MA      => True,
                 others  => <>
                );
---      SITMC := (
---                SBusIrq => 0,
---                K       => False,
---                S       => False,
---                E       => False,
---                SC      => False,
---                T       => True,
---                V       => False,
---                F       => False,
---                M       => False,
---                I       => False,
---                ME      => False,
---                MA      => True,
---                others  => <>
---               );
       SPARC.Irq_Enable;
       Tclk_Init;
       -------------------------------------------------------------------------
