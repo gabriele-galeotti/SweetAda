@@ -150,6 +150,32 @@ package MCF5373 is
       Import     => True,
       Convention => Ada;
 
+   -- 13.3.5.6 Timer Pin Assignment Registers (PAR_TIMER)
+
+   PAR_TIMER    : aliased Unsigned_8 with
+      Address              => To_Address (16#FC0A_405C#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   PODR_TIMER   : aliased Unsigned_8 with
+      Address              => To_Address (16#FC0A_400B#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   PDDR_TIMER   : aliased Unsigned_8 with
+      Address              => To_Address (16#FC0A_401F#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   PPDSDR_TIMER : aliased Unsigned_8 with
+      Address              => To_Address (16#FC0A_4033#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- 26.2.1 Watchdog Control Register (WCR)
 
    type WCR_Type is
