@@ -18,7 +18,6 @@
 # Environment variables:
 # OS
 # MSYSTEM
-# TMPDIR
 # PLATFORM
 # SUBPLATFORM
 #
@@ -94,21 +93,16 @@ for _s in $2 ; do
   _dialog_items_string+=" \"${_s}\" \"\" off"
   let _nitems++
 done
-printf "%s\n" "${_dialog_items_string}" | xargs \
+_dialog_result=$(printf "%s\n" "${_dialog_items_string}" | xargs \
   dialog              \
+    --stdout          \
     ${ERASE_ON_EXIT}  \
     --radiolist       \
     "\"$1\""          \
     ${_dialog_height} \
     ${_dialog_width}  \
     ${_nitems}        \
-    2> "${TMPDIR}"/dialog_result
-if [ ${PIPESTATUS[1]} -eq 0 ] ; then
-  _dialog_result=$(cat "${TMPDIR}"/dialog_result)
-else
-  _dialog_result=""
-fi
-rm -f "${TMPDIR}"/dialog_result
+    2> /dev/null)
 printf "%s\n" ""
 eval $3=${_dialog_result}
 return 0
