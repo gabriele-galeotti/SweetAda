@@ -362,6 +362,122 @@ package S5D9 is
       Import               => True,
       Convention           => Ada;
 
+   -- 11.2.4 Module Stop Control Register C (MSTPCRC)
+
+   type MSTPCRC_Type is
+   record
+      MSTPC0    : Boolean;      -- Clock Frequency Accuracy Measurement Circuit Module Stop
+      MSTPC1    : Boolean;      -- Cyclic Redundancy Check Calculator Module Stop
+      MSTPC2    : Boolean;      -- Parallel Data Capture Module Stop
+      MSTPC3    : Boolean;      -- Capacitive Touch Sensing Unit Module Stop
+      MSTPC4    : Boolean;      -- Graphics LCD Controller Module Stop
+      MSTPC5    : Boolean;      -- JPEG Codec Engine Module Stop
+      MSTPC6    : Boolean;      -- 2D Drawing Engine Module Stop
+      MSTPC7    : Boolean;      -- Serial Sound Interface Enhanced (channel 1) Module Stop
+      MSTPC8    : Boolean;      -- Serial Sound Interface Enhanced (channel 0) Module Stop
+      MSTPC9    : Boolean;      -- Sampling Rate Converter Module Stop
+      Reserved1 : Bits.Bits_1;
+      MSTPC11   : Boolean;      -- Secure Digital Host IF/MultiMediaCard 1 Module Stop
+      MSTPC12   : Boolean;      -- Secure Digital Host IF/MultiMediaCard 0 Module Stop
+      MSTPC13   : Boolean;      -- Data Operation Circuit Module Stop
+      MSTPC14   : Boolean;      -- Event Link Controller Module Stop
+      Reserved2 : Bits.Bits_1;
+      Reserved3 : Bits.Bits_15;
+      MSTPC31   : Boolean;      -- SCE7 Module Stop
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for MSTPCRC_Type use
+   record
+      MSTPC0    at 0 range 0 .. 0;
+      MSTPC1    at 0 range 1 .. 1;
+      MSTPC2    at 0 range 2 .. 2;
+      MSTPC3    at 0 range 3 .. 3;
+      MSTPC4    at 0 range 4 .. 4;
+      MSTPC5    at 0 range 5 .. 5;
+      MSTPC6    at 0 range 6 .. 6;
+      MSTPC7    at 0 range 7 .. 7;
+      MSTPC8    at 0 range 8 .. 8;
+      MSTPC9    at 0 range 9 .. 9;
+      Reserved1 at 0 range 10 .. 10;
+      MSTPC11   at 0 range 11 .. 11;
+      MSTPC12   at 0 range 12 .. 12;
+      MSTPC13   at 0 range 13 .. 13;
+      MSTPC14   at 0 range 14 .. 14;
+      Reserved2 at 0 range 15 .. 15;
+      Reserved3 at 0 range 16 .. 30;
+      MSTPC31   at 0 range 31 .. 31;
+   end record;
+
+   MSTPCRC_ADDRESS : constant := 16#4004_7004#;
+
+   MSTPCRC : aliased MSTPCRC_Type with
+      Address              => To_Address (MSTPCRC_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 11.2.5 Module Stop Control Register D (MSTPCRD)
+
+   type MSTPCRD_Type is
+   record
+      Reserved1 : Bits.Bits_2;
+      MSTPD2    : Boolean;      -- Asynchronous General Purpose Timer 1 Module Stop
+      MSTPD3    : Boolean;      -- Asynchronous General Purpose Timer 0 Module Stop
+      Reserved2 : Bits.Bits_1;
+      MSTPD5    : Boolean;      -- General PWM Timer 32EH0 to 32EH3 and 32E4 to 32E7 and PWM Delay Generation Circuit Module Stop
+      MSTPD6    : Boolean;      -- General PWM Timer 328 to 3213 Module Stop
+      Reserved3 : Bits.Bits_7;
+      MSTPD14   : Boolean;      -- Port Output Enable for GPT Module Stop
+      MSTPD15   : Boolean;      -- 12-Bit A/D Converter 1 Module Stop
+      MSTPD16   : Boolean;      -- 12-Bit A/D Converter 0 Module Stop
+      Reserved4 : Bits.Bits_3;
+      MSTPD20   : Boolean;      -- 12-Bit D/A Converter Module Stop
+      Reserved5 : Bits.Bits_1;
+      MSTPD22   : Boolean;      -- Temperature Sensor Module Stop
+      MSTPD23   : Boolean;      -- High-Speed Analog Comparator 5 Module Stop
+      MSTPD24   : Boolean;      -- High-Speed Analog Comparator 4 Module Stop
+      MSTPD25   : Boolean;      -- High-Speed Analog Comparator 3 Module Stop
+      MSTPD26   : Boolean;      -- High-Speed Analog Comparator 2 Module Stop
+      MSTPD27   : Boolean;      -- High-Speed Analog Comparator 1 Module Stop
+      MSTPD28   : Boolean;      -- High-Speed Analog Comparator 0 Module Stop
+      Reserved6 : Bits.Bits_3;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for MSTPCRD_Type use
+   record
+      Reserved1 at 0 range 0 .. 1;
+      MSTPD2    at 0 range 2 .. 2;
+      MSTPD3    at 0 range 3 .. 3;
+      Reserved2 at 0 range 4 .. 4;
+      MSTPD5    at 0 range 5 .. 5;
+      MSTPD6    at 0 range 6 .. 6;
+      Reserved3 at 0 range 7 .. 13;
+      MSTPD14   at 0 range 14 .. 14;
+      MSTPD15   at 0 range 15 .. 15;
+      MSTPD16   at 0 range 16 .. 16;
+      Reserved4 at 0 range 17 .. 19;
+      MSTPD20   at 0 range 20 .. 20;
+      Reserved5 at 0 range 21 .. 21;
+      MSTPD22   at 0 range 22 .. 22;
+      MSTPD23   at 0 range 23 .. 23;
+      MSTPD24   at 0 range 24 .. 24;
+      MSTPD25   at 0 range 25 .. 25;
+      MSTPD26   at 0 range 26 .. 26;
+      MSTPD27   at 0 range 27 .. 27;
+      MSTPD28   at 0 range 28 .. 28;
+      Reserved6 at 0 range 29 .. 31;
+   end record;
+
+   MSTPCRD_ADDRESS : constant := 16#4004_7008#;
+
+   MSTPCRD : aliased MSTPCRD_Type with
+      Address              => To_Address (MSTPCRD_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    ----------------------------------------------------------------------------
    -- 13. Register Write Protection
    ----------------------------------------------------------------------------
@@ -681,6 +797,14 @@ pragma Warnings (On, "bits of * unused");
    -- PB12 : constant := 188; PB13 : constant := 189; PB14 : constant := 190; PB15 : constant := 191;
 
    PFSR_ADDRESS : constant := 16#4004_0800#;
+
+--   type PFSR_Array_Type is array (Natural range <>) of PFSR_Type with
+--      Pack => True;
+--   PFSR : aliased PFSR_Array_Type (0 .. 191) with
+--      Address    => To_Address (PFSR_ADDRESS),
+--      Volatile   => True,
+--      Import     => True,
+--      Convention => Ada;
 
    PFSR : aliased array (0 .. 191) of PFSR_Type with
       Address    => To_Address (PFSR_ADDRESS),
@@ -1817,6 +1941,119 @@ pragma Warnings (On, "bits of * unused");
       WUSEN    at 0 range 0 .. 0;
       WUASYF   at 0 range 1 .. 1;
       WUSYF    at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   -- 38.2.1 SPI Control Register (SPCR)
+
+   type SPCR_Type is
+   record
+      SPMS   : Bits.Bits_1; -- SPI Mode Select
+      TXMD   : Bits.Bits_1; -- Communications Operating Mode Select
+      MODFEN : Boolean;     -- Mode Fault Error Detection Enable
+      MSTR   : Bits.Bits_1; -- SPI Master/Slave Mode Select
+      SPEIE  : Boolean;     -- SPI Error Interrupt Enable
+      SPTIE  : Boolean;     -- Transmit Buffer Empty Interrupt Enable
+      SPE    : Boolean;     -- SPI Function Enable
+      SPRIE  : Boolean;     -- SPI Receive Buffer Full Interrupt Enable
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SPCR_Type use
+   record
+      SPMS   at 0 range 0 .. 0;
+      TXMD   at 0 range 1 .. 1;
+      MODFEN at 0 range 2 .. 2;
+      MSTR   at 0 range 3 .. 3;
+      SPEIE  at 0 range 4 .. 4;
+      SPTIE  at 0 range 5 .. 5;
+      SPE    at 0 range 6 .. 6;
+      SPRIE  at 0 range 7 .. 7;
+   end record;
+
+   -- 38.2.2 SPI Slave Select Polarity Register (SSLP)
+
+   type SSLP_Type is
+   record
+      SSL0P    : Bits.Bits_1; -- SSL0 Signal Polarity Setting
+      SSL1P    : Bits.Bits_1; -- SSL1 Signal Polarity Setting
+      SSL2P    : Bits.Bits_1; -- SSL2 Signal Polarity Setting
+      SSL3P    : Bits.Bits_1; -- SSL3 Signal Polarity Setting
+      Reserved : Bits.Bits_4;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SSLP_Type use
+   record
+      SSL0P    at 0 range 0 .. 0;
+      SSL1P    at 0 range 1 .. 1;
+      SSL2P    at 0 range 2 .. 2;
+      SSL3P    at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 7;
+   end record;
+
+   -- 38.2.3 SPI Pin Control Register (SPPCR)
+
+   type SPPCR_Type is
+   record
+      SPLP      : Bits.Bits_1; -- SPI Loopback
+      SPLP2     : Bits.Bits_1; -- SPI Loopback 2
+      Reserved1 : Bits.Bits_2;
+      MOIFV     : Bits.Bits_1; -- MOSI Idle Fixed Value
+      MOIFE     : Bits.Bits_1; -- MOSI Idle Value Fixing Enable
+      Reserved2 : Bits.Bits_2;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SPPCR_Type use
+   record
+      SPLP      at 0 range 0 .. 0;
+      SPLP2     at 0 range 1 .. 1;
+      Reserved1 at 0 range 2 .. 3;
+      MOIFV     at 0 range 4 .. 4;
+      MOIFE     at 0 range 5 .. 5;
+      Reserved2 at 0 range 6 .. 7;
+   end record;
+
+   -- 38.2.4 SPI Status Register (SPSR)
+
+   type SPSR_Type is
+   record
+      OVRF     : Boolean;     -- Overrun Error Flag
+      IDLNF    : Boolean;     -- SPI Idle Flag
+      MODF     : Boolean;     -- Mode Fault Error Flag
+      PERF     : Boolean;     -- Parity Error Flag
+      UDRF     : Boolean;     -- Underrun Error Flag
+      SPTEF    : Boolean;     -- SPI Transmit Buffer Empty Flag
+      Reserved : Bits.Bits_1;
+      SPRF     : Boolean;     -- SPI Receive Buffer Full Flag
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SPSR_Type use
+   record
+      OVRF     at 0 range 0 .. 0;
+      IDLNF    at 0 range 1 .. 1;
+      MODF     at 0 range 2 .. 2;
+      PERF     at 0 range 3 .. 3;
+      UDRF     at 0 range 4 .. 4;
+      SPTEF    at 0 range 5 .. 5;
+      Reserved at 0 range 6 .. 6;
+      SPRF     at 0 range 7 .. 7;
+   end record;
+
+   -- 38.2.6 SPI Sequence Control Register (SPSCR)
+
+   type SPSCR_Type is
+   record
+      SPSLN    : Bits.Bits_3; -- SPI Sequence Length Specification
+      Reserved : Bits.Bits_5;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SPSCR_Type use
+   record
+      SPSLN    at 0 range 0 .. 2;
       Reserved at 0 range 3 .. 7;
    end record;
 

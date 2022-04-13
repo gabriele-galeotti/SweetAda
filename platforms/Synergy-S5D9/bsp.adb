@@ -15,10 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
 with Bits;
 with CortexM4;
 with S5D9;
-with Touchscreen;
 with Console;
 
 package body BSP is
@@ -31,6 +31,7 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
+   use Interfaces;
    use Bits;
    use S5D9;
 
@@ -91,6 +92,7 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
+      -- wait for transmitter available
       loop
          exit when SCI (3).SSR.NORMAL.TDRE;
       end loop;
@@ -98,8 +100,14 @@ package body BSP is
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      -- wait for receiver available
+      loop
+         exit when SCI (3).SSR.NORMAL.RDRF;
+      end loop;
+      Data := SCI (3).RDR;
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -115,6 +123,9 @@ package body BSP is
       -- enable writing to the PmnPFS register
       PWPR.B0WI  := False;
       PWPR.PFSWE := True;
+      -- power-on peripherals
+      MSTPCRB.MSTPB31 := False; -- SCI0 on
+      MSTPCRB.MSTPB28 := False; -- SCI3 on
       -------------------------------------------------------------------------
       Serial_Console_Init;
       -- Console --------------------------------------------------------------
