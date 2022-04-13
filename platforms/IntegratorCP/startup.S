@@ -158,7 +158,7 @@ ABT_stack:
                 .space  1024
 UND_stack:
                 .align  8
-                .space  2048
+                .space  4096
 SVC_stack:
                 .align  8
                 .space  4096

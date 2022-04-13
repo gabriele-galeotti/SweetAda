@@ -69,6 +69,6 @@ hart_idle:
                 .sect   .bss
 
                 .align  8
-                .space  1024
+                .space  4096
 kernel_stack:
 
