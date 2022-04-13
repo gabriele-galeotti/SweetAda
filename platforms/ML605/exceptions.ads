@@ -27,10 +27,11 @@ package Exceptions is
    --                                                                        --
    --========================================================================--
 
-   procedure Init;
    procedure Process (Exception_Number : in Interfaces.Unsigned_32) with
       Export         => True,
       Convention     => Asm,
       External_Name  => "exception_process";
+
+   procedure Init;
 
 end Exceptions;
