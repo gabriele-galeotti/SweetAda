@@ -300,8 +300,12 @@ return 0
 #
 # Some ancient versions of dialog do not have this option.
 #
-#ERASE_ON_EXIT="--erase-on-exit"
-ERASE_ON_EXIT=""
+DIALOG_VERSION=$(dialog --version | sed -e "s|Version: \([0-9]*[.]*\)*-||")
+if [ $((${DIALOG_VERSION})) -ge 20201126 ] ; then
+  ERASE_ON_EXIT="--erase-on-exit"
+else
+  ERASE_ON_EXIT=""
+fi
 
 case ${OSTYPE} in
   darwin)
