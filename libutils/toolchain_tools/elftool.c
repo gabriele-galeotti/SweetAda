@@ -31,8 +31,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <libelf/libelf.h>
-#include <libelf/gelf.h>
+#if defined(_WIN32)
+# include <libelf/libelf.h>
+# include <libelf/gelf.h>
+#else
+# include <libelf.h>
+# include <gelf.h>
+#endif
 #include "elftool.h"
 
 /******************************************************************************
