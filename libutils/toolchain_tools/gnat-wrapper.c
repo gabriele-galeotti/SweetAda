@@ -80,6 +80,7 @@ main(int argc, char **argv)
         }
         strcpy(gcc_executable, gcc_executable_env);
         lib_free((void *)gcc_executable_env);
+        gcc_executable_env = NULL;
 
         /*
          * Argument parsing.
