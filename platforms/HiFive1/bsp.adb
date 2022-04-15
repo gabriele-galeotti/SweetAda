@@ -49,13 +49,22 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
+      -- wait for transmitter available
+      loop
+         exit when not HiFive1.UART0.txdata.full;
+      end loop;
       HiFive1.UART0.txdata.txdata := To_U8 (C);
-      for Delay_Loop_Count in 1 .. 10_000 loop RISCV.NOP; end loop;
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      -- wait for receiver available
+      loop
+         exit when not HiFive1.UART0.rxdata.empty;
+      end loop;
+      Data := HiFive1.UART0.rxdata.rxdata;
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -72,12 +81,16 @@ package body BSP is
       HiFive1.GPIO_OEN    := @ or 16#0087_0000#;
       HiFive1.UART0.div          := 16#89#; -- 115200 bps @ 16 MHz
       HiFive1.UART0.txctrl.txen  := True;
-      HiFive1.UART0.txctrl.nstop := 0;
-      HiFive1.UART0.txctrl.txcnt := 1;
+      -- HiFive1.UART0.txctrl.nstop := 0;
+      -- HiFive1.UART0.txctrl.txcnt := 0;
+      HiFive1.UART0.rxctrl.rxen  := True;
+      -- HiFive1.UART0.rxctrl.rxcnt := 0;
       HiFive1.UART1.div          := 16#89#; -- 115200 bps @ 16 MHz
       HiFive1.UART1.txctrl.txen  := True;
-      HiFive1.UART1.txctrl.nstop := 0;
-      HiFive1.UART1.txctrl.txcnt := 1;
+      -- HiFive1.UART1.txctrl.nstop := 0;
+      -- HiFive1.UART1.txctrl.txcnt := 0;
+      HiFive1.UART1.rxctrl.rxen  := True;
+      -- HiFive1.UART1.rxctrl.rxcnt := 0;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;

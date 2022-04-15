@@ -37,7 +37,6 @@ package body Exceptions is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
-   use Core;
 
    procedure Timer_Process with
       Export        => True,
@@ -63,8 +62,7 @@ package body Exceptions is
          Console.Print (Cause, NL => True);
          loop null; end loop;
       else
-         Tick_Count := @ + 1;
-         HiFive1.UART0.txdata.txdata := To_U8 ('T');
+         Core.Tick_Count := @ + 1;
          RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
       end if;
    end Timer_Process;
