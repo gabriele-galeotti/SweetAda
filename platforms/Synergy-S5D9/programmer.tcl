@@ -54,7 +54,7 @@ if {[lindex $argv 0] eq "-server"} {
         # seems to wait on an inherited stdout file descriptor, which is kept
         # opened by the xterm sub-process; have we to re-open it?
         close stdout
-        exec xterm -e "$OPENOCD_EXECUTABLE" -f "$OPENOCD_CFGFILE" &
+        exec xterm -hold -e "$OPENOCD_EXECUTABLE" -f "$OPENOCD_CFGFILE" &
     } else {
         puts stderr "$SCRIPT_FILENAME: *** Error: platform not recognized."
         exit 1

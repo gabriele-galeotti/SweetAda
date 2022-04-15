@@ -37,7 +37,7 @@ OPENOCD_ARGS=()
 #OPENOCD_ARGS+=("-d3")
 OPENOCD_ARGS+=("-f" "${OPENOCD_PREFIX}/share/openocd/scripts/board/stm32f769i-disco.cfg")
 
-xterm -e "${OPENOCD_EXECUTABLE}" "${OPENOCD_ARGS[@]}" &
+xterm -hold -e "${OPENOCD_EXECUTABLE}" "${OPENOCD_ARGS[@]}" &
 
 exit $?
 
