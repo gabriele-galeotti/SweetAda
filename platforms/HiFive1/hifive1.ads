@@ -34,6 +34,8 @@ package HiFive1 is
    use System.Storage_Elements;
    use Interfaces;
 
+   -- __REF__ SiFive FE310-G002 Manual v1p0
+
    -- 6 Clock Generation (PRCI)
 
    type PRCI_Type is
@@ -112,7 +114,7 @@ package HiFive1 is
    record
       rxdata   : Unsigned_8;
       Reserved : Bits.Bits_23;
-      full     : Boolean;
+      empty    : Boolean;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -120,7 +122,7 @@ package HiFive1 is
    record
       rxdata   at 0 range 0 .. 7;
       Reserved at 0 range 8 .. 30;
-      full     at 0 range 31 .. 31;
+      empty    at 0 range 31 .. 31;
    end record;
 
    type TXCTRL_Type is
