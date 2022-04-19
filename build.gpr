@@ -52,12 +52,20 @@ project Build is
       when others          => Builder_Switches := Builder_Switches & ("-q");
    end case;
 
+   case Configure.Ada_Mode is
+      when "ADA95" => Builder_Switches := Builder_Switches & ("-gnat95");
+      when "ADA05" => Builder_Switches := Builder_Switches & ("-gnat2005");
+      when "ADA12" => Builder_Switches := Builder_Switches & ("-gnat2012");
+      when "ADA20" => Builder_Switches := Builder_Switches & ("-gnat2020");
+      when others  => null;
+   end case;
+
    package Builder is
       for Global_Configuration_Pragmas use "gnat.adc";
       for Switches ("Ada") use (
-                                "-gnat2012",
-                                "--RTS=" & Configure.RTS_Path,
-                                "-nostdinc", "-nostdlib"
+                                "-nostdinc",
+                                "-nostdlib",
+                                "--RTS=" & Configure.RTS_Path
                                ) & Builder_Switches;
    end Builder;
 
@@ -84,10 +92,13 @@ project Build is
                                 "-gnatef",
                                 "-gnatf",
                                 "-gnatU",
-                                "-eL", "-eS",
+                                "-eL",
+                                "-eS",
                                 "-gnatn",
-                                "-ffunction-sections", "-fdata-sections",
-                                "-g3", "-gdwarf-4", "-fno-omit-frame-pointer",
+                                "-ffunction-sections",
+                                "-fdata-sections",
+                                "-g3", "-gdwarf-4",
+                                "-fno-omit-frame-pointer",
                                 "-gnatE",
                                 "-gnato1",
                                 "-fstack-usage",
@@ -112,10 +123,13 @@ project Build is
       for Driver ("Ada") use Configure.Toolchain_Prefix & "/libexec/gprbuild/gprbind";
       for Objects_Path_File ("Ada") use Configure.Object_Directory;
       for Switches ("Ada") use (
-                                "-nostdinc", "-nostdlib",
+                                "-nostdinc",
+                                "-nostdlib",
                                 "-F",
-                                -- "-e", "-l",
-                                "-n", "-s",
+                                -- "-e",
+                                -- "-l",
+                                "-n",
+                                "-s",
                                 "-A=gnatbind_alis.lst",
                                 "-O=gnatbind_objs.lst"
                                ) & Binder_Switches & Configure.Implicit_ALI_Units;
