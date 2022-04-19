@@ -31,8 +31,6 @@ package body Integer_Math is
    ----------------------------------------------------------------------------
    -- Log2
    ----------------------------------------------------------------------------
-   -- https://janmr.com/blog/2010/09/computing-the-integer-binary-logarithm/
-   ----------------------------------------------------------------------------
    function Log2 (Value : Positive) return Log_Integer is
       Modulo : Positive := Value;
       Result : Log_Integer;

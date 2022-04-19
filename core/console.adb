@@ -460,8 +460,6 @@ package body Console is
    ----------------------------------------------------------------------------
    -- Print_ASCIIZ_String
    ----------------------------------------------------------------------------
-   -- __REF__ http://www.adapower.com/index.php?Command=Class&ClassID=Advanced&CID=213
-   ----------------------------------------------------------------------------
    procedure Print_ASCIIZ_String (
                                   String_Ptr : in System.Address;
                                   NL         : in Boolean := False;
@@ -570,8 +568,6 @@ package body Console is
    ----------------------------------------------------------------------------
    -- TTY_Setup
    ----------------------------------------------------------------------------
-   -- __REF__ http://www.termsys.demon.co.uk/vtansi.htm
-   -- __REF__ https://www.csie.ntu.edu.tw/~r92094/c++/VT100.html
    -- __INF__ xterm does not seem to correctly recognize a CSI sequence
    ----------------------------------------------------------------------------
    procedure TTY_Setup is

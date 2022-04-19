@@ -213,8 +213,14 @@ package body A2065 is
          Receive_Ring (Index).RMD1 :=
             (
              HADR => Bits_8 (LLutils.Select_Address_Bits (Receive_Buffers (Index)'Address, 8, 15)),
-             ENP => False, STP => False, BUFF => False, CRC => False,
-             OFLO => False, FRAM => False, ERR => False, OWN => False
+             ENP  => False,
+             STP  => False,
+             BUFF => False,
+             CRC  => False,
+             OFLO => False,
+             FRAM => False,
+             ERR  => False,
+             OWN  => False
             );
          Receive_Ring (Index).RMD2 :=
             (
