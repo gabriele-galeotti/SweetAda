@@ -18,6 +18,7 @@
 with Core;
 with Bits;
 with SCC;
+with Am7990;
 
 package BSP is
 
@@ -41,6 +42,8 @@ package BSP is
       External_Name => "qemu";
 
    SCC_Descriptor : aliased SCC.SCCZ8530_Descriptor_Type := SCC.SCCZ8530_DESCRIPTOR_INVALID;
+
+   Am7990_Descriptor : aliased Am7990.Am7990_Descriptor_Type := Am7990.Am7990_DESCRIPTOR_INVALID;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

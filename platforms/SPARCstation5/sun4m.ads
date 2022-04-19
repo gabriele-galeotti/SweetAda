@@ -328,7 +328,7 @@ pragma Warnings (On, "volatile actual passed by copy");
       Convention           => Ada;
 
    -- Base Address Reg
-   -- High Order 8 bits of address for Ethernet DMA transfers (defaults to 0xff).
+   -- High Order 8 bits of address for Ethernet DMA transfers (defaults to 0xFF).
 
    E_BASE_ADDR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#C#;
 

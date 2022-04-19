@@ -75,6 +75,7 @@ package body BSP is
       -------------------------------------------------------------------------
       -- Exceptions.Init;
       -- TBR_Set (To_Address (0));
+      -- SCC ------------------------------------------------------------------
       SCC_Descriptor.Base_Address   := To_Address (SCC_BASEADDRESS);
       SCC_Descriptor.AB_Address_Bit := 2;
       SCC_Descriptor.CD_Address_Bit := 1;
@@ -92,6 +93,11 @@ package body BSP is
       Console.Print (Natural (Nwindows), Prefix => "Nwindows: ", NL => True);
       Console.Print (QEMU, Prefix => "QEMU: ", NL => True);
       Console.Print (DMA2_INTERNAL_IDREGISTER, Prefix => "DMA2 ID Register: ", NL => True);
+      -- Am7990 ---------------------------------------------------------------
+      Am7990_Descriptor.Base_Address  := To_Address (ETHERNET_CONTROLLER_REGISTERS_BASEADDRESS);
+      Am7990_Descriptor.Scale_Address := 0;
+      Am7990_Descriptor.Read_16       := MMIO.ReadA'Access;
+      Am7990_Descriptor.Write_16      := MMIO.WriteA'Access;
       -------------------------------------------------------------------------
       SITMS := (
                 SBusIrq => 0,
