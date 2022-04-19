@@ -115,4 +115,20 @@ package R3000 is
    function CP0_PRId_Read return PRId_Register_Type with
       Inline => True;
 
+   ----------------------------------------------------------------------------
+   -- Interrupts
+   ----------------------------------------------------------------------------
+
+   type Irq_State_Type is new Natural;
+   type Irq_Id_Type is new Natural;
+
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
+   function Irq_State_Get return Irq_State_Type with
+      Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
+      Inline => True;
+
 end R3000;

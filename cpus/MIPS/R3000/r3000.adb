@@ -121,4 +121,28 @@ package body R3000 is
       return U32_To_PRId (CP0_Read);
    end CP0_PRId_Read;
 
+   ----------------------------------------------------------------------------
+   -- Interrupts
+   ----------------------------------------------------------------------------
+
+   procedure Irq_Enable is
+   begin
+      null;
+   end Irq_Enable;
+
+   procedure Irq_Disable is
+   begin
+      null;
+   end Irq_Disable;
+
+   function Irq_State_Get return Irq_State_Type is
+   begin
+      return 0;
+   end Irq_State_Get;
+
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   begin
+      null;
+   end Irq_State_Set;
+
 end R3000;

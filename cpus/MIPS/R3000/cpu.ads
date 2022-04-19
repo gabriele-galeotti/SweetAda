@@ -34,4 +34,16 @@ package CPU is
 
    procedure NOP renames MIPS.NOP;
 
+   ----------------------------------------------------------------------------
+   -- Exceptions and interrupts
+   ----------------------------------------------------------------------------
+
+   subtype Irq_State_Type is R3000.Irq_State_Type;
+   subtype Irq_Id_Type    is R3000.Irq_Id_Type;
+
+   procedure Irq_Enable                                    renames R3000.Irq_Enable;
+   procedure Irq_Disable                                   renames R3000.Irq_Disable;
+   function Irq_State_Get return Irq_State_Type            renames R3000.Irq_State_Get;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames R3000.Irq_State_Set;
+
 end CPU;
