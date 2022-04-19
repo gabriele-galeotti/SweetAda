@@ -35,16 +35,24 @@ package body A2065 is
 
    use System.Storage_Elements;
    use Amiga;
-   use PBUF;
 
-   Initialization_Block : Initialization_Block_Type with
-      Address    => To_Address (A2065_BASEADDRESS + A2065_RAM_OFFSET),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   ----------------------------------------------------------------------------
+   -- The Am7990 LANCE chip in Amiga's A2065 is wrapped with D0..D15 data lines
+   -- (internally LE) connected to the D16..D31 data lines of the M68k
+   -- processor (BE). The 16-bit halves of 32-bit values have to be swapped
+   -- because memory is read differently on the two sides.
+   ----------------------------------------------------------------------------
 
    Initialization_Done : Boolean := False with
       Atomic => True;
+
+   ----------------------------------------------------------------------------
+   -- Packet buffer
+   ----------------------------------------------------------------------------
+
+   PACKET_BUFFER_SIZE : constant := 2048; -- __FIX__
+
+   subtype Packet_Buffer_Type is Byte_Array (0 .. PACKET_BUFFER_SIZE - 1);
 
    ----------------------------------------------------------------------------
    -- Receive ring
@@ -85,11 +93,17 @@ package body A2065 is
       Convention => Ada;
 
    ----------------------------------------------------------------------------
-   -- Local subprograms
+   -- Initialization block
    ----------------------------------------------------------------------------
 
-   function CSRX_Read (Register_Number : Unsigned_16) return Unsigned_16;
-   procedure CSRX_Write (Register_Number : in Unsigned_16; Value : in Unsigned_16);
+   Initialization_Block : Initialization_Block_Type with
+      Address    => To_Address (A2065_BASEADDRESS + A2065_RAM_OFFSET),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   -- starting RX buffer
+   RX_Buffer_Index : Natural := 0;
 
    --========================================================================--
    --                                                                        --
@@ -98,70 +112,6 @@ package body A2065 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Am7990 register read/write
-   ----------------------------------------------------------------------------
-
-   function CSRX_Read (Register_Number : Unsigned_16) return Unsigned_16 is
-      Result : Unsigned_16;
-   begin
-      -- __FIX__ lock
-      MMIO.WriteA (To_Address (RAP), Register_Number);
-      Result := MMIO.ReadA (To_Address (RDP));
-      -- __FIX__ unlock
-      return Result;
-   end CSRX_Read;
-
-   procedure CSRX_Write (Register_Number : in Unsigned_16; Value : in Unsigned_16) is
-   begin
-      -- __FIX__ lock
-      MMIO.WriteA (To_Address (RAP), Register_Number);
-      MMIO.WriteA (To_Address (RDP), Value);
-      -- __FIX__ unlock
-   end CSRX_Write;
-
-   generic
-      Register_Number : Unsigned_16;
-      type Output_Register_Type is private;
-   function CSR_Read return Output_Register_Type;
-   pragma Inline (CSR_Read);
-   function CSR_Read return Output_Register_Type is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_16, Output_Register_Type);
-   begin
-      return Convert (CSRX_Read (Register_Number));
-   end CSR_Read;
-
-   generic
-      Register_Number : in Unsigned_16;
-      type Input_Register_Type is private;
-   procedure CSR_Write (Value : in Input_Register_Type);
-   pragma Inline (CSR_Write);
-   procedure CSR_Write (Value : in Input_Register_Type) is
-      function Convert is new Ada.Unchecked_Conversion (Input_Register_Type, Unsigned_16);
-   begin
-      CSRX_Write (Register_Number, Convert (Value));
-   end CSR_Write;
-
-   function CSR0_Read is new CSR_Read (CSR0, CSR0_Type);
-   pragma Inline (CSR0_Read);
-   procedure CSR0_Write is new CSR_Write (CSR0, CSR0_Type);
-   pragma Inline (CSR0_Write);
-
-   function CSR1_Read is new CSR_Read (CSR1, Unsigned_16);
-   pragma Inline (CSR1_Read);
-   procedure CSR1_Write is new CSR_Write (CSR1, Unsigned_16);
-   pragma Inline (CSR1_Write);
-
-   function CSR2_Read is new CSR_Read (CSR2, Unsigned_16);
-   pragma Inline (CSR2_Read);
-   procedure CSR2_Write is new CSR_Write (CSR2, Unsigned_16);
-   pragma Inline (CSR2_Write);
-
-   function CSR3_Read is new CSR_Read (CSR3, CSR3_Type);
-   pragma Inline (CSR3_Read);
-   procedure CSR3_Write is new CSR_Write (CSR3, CSR3_Type);
-   pragma Inline (CSR3_Write);
 
    ----------------------------------------------------------------------------
    -- Probe
@@ -193,17 +143,47 @@ package body A2065 is
       RDRA                : Ring_Descriptor_Pointer_Type;
       TDRA                : Ring_Descriptor_Pointer_Type;
       Ethernet_Descriptor : Ethernet_Descriptor_Type := Ethernet_DESCRIPTOR_INVALID;
-      function To_RDP is new Ada.Unchecked_Conversion (Unsigned_32, Ring_Descriptor_Pointer_Type);
+      function To_R_RDP is new Ada.Unchecked_Conversion (Unsigned_32, Ring_Descriptor_Pointer_Type);
       function To_U32 is new Ada.Unchecked_Conversion (Ring_Descriptor_Pointer_Type, Unsigned_32);
    begin
+      -- Am7990 ---------------------------------------------------------------
+      Am7990_Descriptor.Base_Address  := To_Address (A2065_BASEADDRESS + A2065_CHIP_OFFSET);
+      Am7990_Descriptor.Scale_Address := 0;
+      Am7990_Descriptor.Read_16       := MMIO.ReadA'Access;
+      Am7990_Descriptor.Write_16      := MMIO.WriteA'Access;
+      Am7990_Descriptor_Initialized := True;
       -- begin initialization sequence by setting STOP bit
-      CSR0_Write ((STOP => True, others => False));
+      Register_Write (
+                      Am7990_Descriptor,
+                      CSR0,
+                      To_U16 (CSR0_Type'(
+                                         STOP   => True,
+                                         others => False
+                                        ))
+                     );
       -- once the STOP bit is set, other registers can be accessed
       -- setup Initialization Block address in CSR1,2
-      CSR1_Write (LWord (Unsigned_32'(A2065_BASEADDRESS + A2065_RAM_OFFSET)) and 16#FFFE#);
-      CSR2_Write (HWord (Unsigned_32'(A2065_BASEADDRESS + A2065_RAM_OFFSET)) and 16#00FF#);
+      Register_Write (
+                      Am7990_Descriptor,
+                      CSR1,
+                      LWord (Unsigned_32'(A2065_BASEADDRESS + A2065_RAM_OFFSET)) and 16#FFFE#
+                     );
+      Register_Write (
+                      Am7990_Descriptor,
+                      CSR2,
+                      HWord (Unsigned_32'(A2065_BASEADDRESS + A2065_RAM_OFFSET)) and 16#00FF#
+                     );
       -- setup CSR3
-      CSR3_Write ((BCON => 0, ACON => 0, BSWP => 1, Reserved => 0));
+      Register_Write (
+                      Am7990_Descriptor,
+                      CSR3,
+                      To_U16 (CSR3_Type'(
+                                         BCON     => 0,
+                                         ACON     => 0,
+                                         BSWP     => 1,
+                                         Reserved => 0
+                                        ))
+                     );
       -- setup Receive Message Descriptors
       for Index in Receive_Ring'Range loop
          Receive_Ring (Index).RMD0 :=
@@ -277,23 +257,35 @@ package body A2065 is
       -- RDRA
       RDRA.Ring_Pointer := Bits_21 (LLutils.Select_Address_Bits (Receive_Ring'Address, 28, 8));
       RDRA.Length       := RDR_ORDER;
-      Initialization_Block.RDRA := To_RDP (Word_Swap (To_U32 (RDRA)));
+      Initialization_Block.RDRA := To_R_RDP (Word_Swap (To_U32 (RDRA)));
       -- TDRA
       TDRA.Ring_Pointer := Bits_21 (LLutils.Select_Address_Bits (Transmit_Ring'Address, 28, 8));
       TDRA.Length       := TDR_ORDER;
-      Initialization_Block.TDRA := To_RDP (Word_Swap (To_U32 (TDRA)));
+      Initialization_Block.TDRA := To_R_RDP (Word_Swap (To_U32 (TDRA)));
       -- set INIT, clear STOP
-      CSR0_Write ((INIT => True, INEA => True, others => False));
+      Register_Write (
+                      Am7990_Descriptor,
+                      CSR0,
+                      To_U16 (CSR0_Type'(
+                                         INIT   => True,
+                                         INEA   => True,
+                                         others => False
+                                        ))
+                     );
       -- wait for initialization done
       loop
          exit when Initialization_Done;
       end loop;
       -- enable LANCE to send and receive packets
-      CSR0_Write ((STRT => True, others => False));
+      Register_Write (
+                      Am7990_Descriptor,
+                      CSR0,
+                      To_U16 (CSR0_Type'(
+                                         STRT   => True,
+                                         others => False
+                                        ))
+                     );
    end Init;
-
-   -- starting RX buffer
-   RX_Buffer_Index : Natural := 0;
 
    ----------------------------------------------------------------------------
    -- Receive
@@ -304,11 +296,21 @@ package body A2065 is
       P            : Pbuf_Ptr;
    begin
       Result := False;
-      A2065_Status := CSR0_Read;
+      if not Am7990_Descriptor_Initialized then
+         return Result;
+      end if;
+      A2065_Status := To_CSR0 (Register_Read (Am7990_Descriptor, CSR0));
       if A2065_Status.INTR then
          if A2065_Status.IDON then
             -- initialization complete
-            CSR0_Write ((IDON => True, others => False)); -- clear IDON
+            Register_Write (
+                            Am7990_Descriptor,
+                            CSR0,
+                            To_U16 (CSR0_Type'(
+                                               IDON   => True,
+                                               others => False
+                                              ))
+                           );
             Initialization_Done := True;
             Result := True;
             -- Console.Print ("A2065: Initialization done.", NL => True);
@@ -318,16 +320,20 @@ package body A2065 is
                RX_Buffer_Index := (RX_Buffer_Index + 1) mod 2**RDR_ORDER;
             end loop;
             -- __FIX__ check for errors
-            CSR0_Write ((
-                         TXON   => True,
-                         RXON   => True,
-                         BABL   => True,
-                         MISS   => True,
-                         MERR   => True,
-                         TINT   => False,
-                         RINT   => True,
-                         others => False
-                       ));
+            Register_Write (
+                            Am7990_Descriptor,
+                            CSR0,
+                            To_U16 (CSR0_Type'(
+                                               TXON   => True,
+                                               RXON   => True,
+                                               BABL   => True,
+                                               MISS   => True,
+                                               MERR   => True,
+                                               TINT   => False,
+                                               RINT   => True,
+                                               others => False
+                                              ))
+                           );
             -- Console.Print (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT), Prefix => "RECEIVE = ", NL => True);
             P := Allocate (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT) - 4); -- discard FCS
             Memory_Functions.Cpymem (
@@ -344,16 +350,20 @@ package body A2065 is
             end;
             Result := True;
          elsif A2065_Status.TINT then
-            CSR0_Write ((
-                         TXON   => True,
-                         RXON   => True,
-                         BABL   => True,
-                         MISS   => True,
-                         MERR   => True,
-                         TINT   => True,
-                         RINT   => False,
-                         others => False
-                       ));
+            Register_Write (
+                            Am7990_Descriptor,
+                            CSR0,
+                            To_U16 (CSR0_Type'(
+                                               TXON   => True,
+                                               RXON   => True,
+                                               BABL   => True,
+                                               MISS   => True,
+                                               MERR   => True,
+                                               TINT   => True,
+                                               RINT   => False,
+                                               others => False
+                                              ))
+                           );
             Transmit_Ring (0).TMD1.OWN := False;
             Result := True;
          end if;
@@ -382,16 +392,20 @@ package body A2065 is
       Transmit_Ring (0).TMD1.ENP := True;
       Transmit_Ring (0).TMD1.STP := True;
       Transmit_Ring (0).TMD1.OWN := True;
-      CSR0_Write ((
-                   TXON   => True,
-                   RXON   => True,
-                   BABL   => True,
-                   MISS   => True,
-                   MERR   => True,
-                   TINT   => True,
-                   RINT   => True,
-                   others => False
-                 ));
+      Register_Write (
+                      Am7990_Descriptor,
+                      CSR0,
+                      To_U16 (CSR0_Type'(
+                                         TXON   => True,
+                                         RXON   => True,
+                                         BABL   => True,
+                                         MISS   => True,
+                                         MERR   => True,
+                                         TINT   => True,
+                                         RINT   => True,
+                                         others => False
+                                        ))
+                     );
    end Transmit;
 
 end A2065;
