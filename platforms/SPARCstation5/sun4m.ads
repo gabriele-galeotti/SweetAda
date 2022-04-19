@@ -36,19 +36,29 @@ package Sun4m is
    use Interfaces;
    use Bits;
 
-   SCC_BASEADDRESS               : constant := 16#7110_0000#;
-   SLAVIO_TIMER_PROC_BASEADDRESS : constant := 16#71D0_0000#;
-   SLAVIO_TIMER_SYS_BASEADDRESS  : constant := 16#71D1_0000#;
-   SLAVIO_INTC_BASEADDRESS       : constant := 16#71E0_0000#;
-   SLAVIO_SS_SCR_BASEADDRESS     : constant := 16#71F0_0000#;
+   SCC_BASEADDRESS                           : constant := 16#7110_0000#;
+   SLAVIO_TIMER_PROC_BASEADDRESS             : constant := 16#71D0_0000#;
+   SLAVIO_TIMER_SYS_BASEADDRESS              : constant := 16#71D1_0000#;
+   SLAVIO_INTC_BASEADDRESS                   : constant := 16#71E0_0000#;
+   SLAVIO_SS_SCR_BASEADDRESS                 : constant := 16#71F0_0000#;
 
-   DMA2_ETHERNET_BASEADDRESS     : constant := 16#7840_0010#;
-   DMA2_INTERNAL_ID_ADDRESS      : constant := 16#0800_0000#;
-   DMA2_ESP_ADDRESS              : constant := 16#0840_0000#;
-   DMA2_PARALLEL_PORT_ADDRESS    : constant := 16#0C80_0010#;
-   SCSI_ADDRESS                  : constant := 16#0880_0010#;
-   ETHERNET_CONTROLLER_ADDRESS   : constant := 16#08C0_0000#;
-   -- LANCE_BASEADDRESS : constant := 16#78C0_0000#;
+   DMA2_INTERNAL_IDREGISTER_ADDRESS          : constant := 16#7800_0000#;
+   DMA2_ESP_REGISTERS_BASEADDRESS            : constant := 16#7840_0000#;
+   DMA2_ETHERNET_REGISTERS_BASEADDRESS       : constant := 16#7840_0010#;
+   DMA2_PARALLEL_PORT_REGISTERS_BASEADDRESS  : constant := 16#7C80_0000#;
+
+   SCSI_CONTROLLER_REGISTERS_BASEADDRESS     : constant := 16#7880_0000#;
+   ETHERNET_CONTROLLER_REGISTERS_BASEADDRESS : constant := 16#78C0_0000#;
+
+   ----------------------------------------------------------------------------
+   -- pp. 2-25 DMA2 Internal ID Register
+   ----------------------------------------------------------------------------
+
+   DMA2_INTERNAL_IDREGISTER : aliased Unsigned_32 with
+      Address              => To_Address (DMA2_INTERNAL_IDREGISTER_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 89C105 SLAVIO System Status and System Control Register
@@ -284,7 +294,7 @@ package Sun4m is
       E_DEV_ID        at 0 range 28 .. 31;
    end record;
 
-   E_CSR_ADDRESS : constant := DMA2_ETHERNET_BASEADDRESS + 16#0#;
+   E_CSR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#0#;
 
    E_CSR : E_CSR_Type with
       Address              => To_Address (E_CSR_ADDRESS),
@@ -299,7 +309,7 @@ pragma Warnings (On, "volatile actual passed by copy");
 
    -- Test Control/Status Reg
 
-   E_TST_CSR_ADDRESS : constant := DMA2_ETHERNET_BASEADDRESS + 16#4#;
+   E_TST_CSR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#4#;
 
    E_TST_CSR : Unsigned_32 with
       Address              => To_Address (E_TST_CSR_ADDRESS),
@@ -309,7 +319,7 @@ pragma Warnings (On, "volatile actual passed by copy");
 
    -- Cache Valid Bits
 
-   E_VLD_ADDRESS : constant := DMA2_ETHERNET_BASEADDRESS + 16#8#;
+   E_VLD_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#8#;
 
    E_VLD : Unsigned_32 with
       Address              => To_Address (E_VLD_ADDRESS),
@@ -320,7 +330,7 @@ pragma Warnings (On, "volatile actual passed by copy");
    -- Base Address Reg
    -- High Order 8 bits of address for Ethernet DMA transfers (defaults to 0xff).
 
-   E_BASE_ADDR_ADDRESS : constant := DMA2_ETHERNET_BASEADDRESS + 16#C#;
+   E_BASE_ADDR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#C#;
 
    E_BASE_ADDR : Unsigned_8 with
       Address              => To_Address (E_BASE_ADDR_ADDRESS),

@@ -91,6 +91,7 @@ package body BSP is
       Console.Print ("SPARCstation 5", NL => True);
       Console.Print (Natural (Nwindows), Prefix => "Nwindows: ", NL => True);
       Console.Print (QEMU, Prefix => "QEMU: ", NL => True);
+      Console.Print (DMA2_INTERNAL_IDREGISTER, Prefix => "DMA2 ID Register: ", NL => True);
       -------------------------------------------------------------------------
       SITMS := (
                 SBusIrq => 0,
