@@ -70,17 +70,17 @@ monitor:
                 //
                 // Initialize UART baud rate, set to N,8,2.
                 //
-                la      $t0,UART_BASE
-                li      $t1,UART_MCR_ON_1               // turn on LED
-                sb      $t1,UART_MCR($t0)
-                li      $t1,UART_LCR_DLAB               // DLAB on
-                sb      $t1,UART_LCR($t0)               // write it out
-                li      $t1,UART_DIVISOR                // divisor
-                sb      $t1,UART_DLL($t0)               // write low order byte
-                srl     $t1,$t1,8
-                sb      $t1,UART_DLM($t0)               // write high order byte
-                li      $t1,UART_LCR_W                  // DLAB off
-                sb      $t1,UART_LCR($t0)               // write it out
+                //la      $t0,UART_BASE
+                //li      $t1,UART_MCR_ON_1               // turn on LED
+                //sb      $t1,UART_MCR($t0)
+                //li      $t1,UART_LCR_DLAB               // DLAB on
+                //sb      $t1,UART_LCR($t0)               // write it out
+                //li      $t1,UART_DIVISOR                // divisor
+                //sb      $t1,UART_DLL($t0)               // write low order byte
+                //srl     $t1,$t1,8
+                //sb      $t1,UART_DLM($t0)               // write high order byte
+                //li      $t1,UART_LCR_W                  // DLAB off
+                //sb      $t1,UART_LCR($t0)               // write it out
                 la      $a0,banner                      // write banner
                 jal     outstr
                 nop

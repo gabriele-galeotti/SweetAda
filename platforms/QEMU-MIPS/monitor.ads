@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.ads                                                                                                   --
+-- __FLN__ monitor.ads                                                                                               --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,9 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with UART16x50;
-
-package BSP is
+package Monitor is
 
    --========================================================================--
    --                                                                        --
@@ -27,12 +25,6 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   UART_BASEADDRESS : constant := 16#BFD0_03F8#;
+   procedure Monitor;
 
-   UART_Descriptor : aliased UART16x50.Uart16x50_Descriptor_Type := UART16x50.Uart16x50_DESCRIPTOR_INVALID;
-
-   procedure Console_Putchar (C : in Character);
-   procedure Console_Getchar (C : out Character);
-   procedure BSP_Setup;
-
-end BSP;
+end Monitor;
