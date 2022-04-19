@@ -142,7 +142,7 @@ package body Application is
                   TC2 := Tick_Count;
                end if;
                if Tick_Count_Expired (TC3, 300) then
-                  Serialport_TX ('X');
+                  Serialport_TX ('.');
                   TC3 := Tick_Count;
                end if;
             end loop;

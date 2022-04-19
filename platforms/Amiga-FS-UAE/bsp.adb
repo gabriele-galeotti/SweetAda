@@ -132,8 +132,8 @@ package body BSP is
             loop
                PIC := ZorroII.Read;
                if PIC.Board /= 0 then
-                  Console.Print (PIC.Board, Prefix => "Board: ", NL => True);
-                  Console.Print (PIC.ID_Product, Prefix => "ID:    ", NL => True);
+                  Console.Print (PIC.Board,           Prefix => "Board: ", NL => True);
+                  Console.Print (PIC.ID_Product,      Prefix => "ID:    ", NL => True);
                   Console.Print (PIC.ID_Manufacturer, Prefix => "Manu:  ", NL => True);
                   if (PIC.Board and 16#F8#) = 16#E0# then
                      -- A2630 "FS-UAE hackers_id" E7 51 07DB

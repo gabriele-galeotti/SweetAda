@@ -151,8 +151,16 @@ package body UARTIOEMU is
          RX_Irqenable := True;
          -- TX_Irqenable := True;  __FIX__
       end if;
-      Register_Write (Descriptor, CR, To_U8 (CR_Type'((RXIRQENABLE => RX_Irqenable, TXIRQENABLE => TX_Irqenable, others => 0))));
-      Register_Write (Descriptor, SR, To_U8 (SR_Type'((RXREADY => True, TXEMPTY => True, others => 0))));
+      Register_Write (Descriptor, CR, To_U8 (CR_Type'((
+                                                       RXIRQENABLE => RX_Irqenable,
+                                                       TXIRQENABLE => TX_Irqenable,
+                                                       others      => 0
+                                                      ))));
+      Register_Write (Descriptor, SR, To_U8 (SR_Type'((
+                                                       RXREADY => True,
+                                                       TXEMPTY => True,
+                                                       others  => 0
+                                                      ))));
    end Init;
 
    ----------------------------------------------------------------------------
