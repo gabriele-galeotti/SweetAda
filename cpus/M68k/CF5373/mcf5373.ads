@@ -145,33 +145,133 @@ package MCF5373 is
    end record;
 
    CIR : aliased CIR_Type with
-      Address    => To_Address (16#FC0A_000A#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-
-   -- 13.3.5.6 Timer Pin Assignment Registers (PAR_TIMER)
-
-   PAR_TIMER    : aliased Unsigned_8 with
-      Address              => To_Address (16#FC0A_405C#),
+      Address              => To_Address (16#FC0A_000A#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   PODR_TIMER   : aliased Unsigned_8 with
+   -- 13.3.1 Port Output Data Registers (PODR_x)
+
+   type PODR_TIMER_Type is
+   record
+      PODR_0   : Boolean;
+      PODR_1   : Boolean;
+      PODR_2   : Boolean;
+      PODR_3   : Boolean;
+      Reserved : Bits_4;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for PODR_TIMER_Type use
+   record
+      PODR_0   at 0 range 0 .. 0;
+      PODR_1   at 0 range 1 .. 1;
+      PODR_2   at 0 range 2 .. 2;
+      PODR_3   at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 7;
+   end record;
+
+   PODR_TIMER : aliased PODR_TIMER_Type with
       Address              => To_Address (16#FC0A_400B#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   PDDR_TIMER   : aliased Unsigned_8 with
+   -- 13.3.2 Port Data Direction Registers (PDDR_x)
+
+   type PDDR_TIMER_Type is
+   record
+      PDDR_0   : Boolean;
+      PDDR_1   : Boolean;
+      PDDR_2   : Boolean;
+      PDDR_3   : Boolean;
+      Reserved : Bits_4;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for PDDR_TIMER_Type use
+   record
+      PDDR_0   at 0 range 0 .. 0;
+      PDDR_1   at 0 range 1 .. 1;
+      PDDR_2   at 0 range 2 .. 2;
+      PDDR_3   at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 7;
+   end record;
+
+   PDDR_TIMER : aliased PDDR_TIMER_Type with
       Address              => To_Address (16#FC0A_401F#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   PPDSDR_TIMER : aliased Unsigned_8 with
+   -- 13.3.3 Port Pin Data/Set Data Registers (PPDSDR_x)
+
+   type PPDSDR_TIMER_Type is
+   record
+      PPDSDR_0 : Boolean;
+      PPDSDR_1 : Boolean;
+      PPDSDR_2 : Boolean;
+      PPDSDR_3 : Boolean;
+      Reserved : Bits_4;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for PPDSDR_TIMER_Type use
+   record
+      PPDSDR_0 at 0 range 0 .. 0;
+      PPDSDR_1 at 0 range 1 .. 1;
+      PPDSDR_2 at 0 range 2 .. 2;
+      PPDSDR_3 at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 7;
+   end record;
+
+   PPDSDR_TIMER : aliased PPDSDR_TIMER_Type with
       Address              => To_Address (16#FC0A_4033#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 13.3.5.6 Timer Pin Assignment Registers (PAR_TIMER)
+
+   PAR_T0IN_GPIO   : constant := 2#00#;
+   PAR_T0IN_nDREQ0 : constant := 2#01#;
+   PAR_T0IN_T0OUT  : constant := 2#10#;
+   PAR_T0IN_T0IN   : constant := 2#11#;
+
+   PAR_T1IN_GPIO   : constant := 2#00#;
+   PAR_T1IN_nDACK1 : constant := 2#01#;
+   PAR_T1IN_T1OUT  : constant := 2#10#;
+   PAR_T1IN_T1IN   : constant := 2#11#;
+
+   PAR_T2IN_GPIO   : constant := 2#00#;
+   PAR_T2IN_U2TXD  : constant := 2#01#;
+   PAR_T2IN_T2OUT  : constant := 2#10#;
+   PAR_T2IN_T2IN   : constant := 2#11#;
+
+   PAR_T3IN_GPIO   : constant := 2#00#;
+   PAR_T3IN_U2RXD  : constant := 2#01#;
+   PAR_T3IN_T3OUT  : constant := 2#10#;
+   PAR_T3IN_T3IN   : constant := 2#11#;
+
+   type PAR_TIMER_Type is
+   record
+      PAR_T0IN : Bits_2; -- DMA Timer 0 pin assignment
+      PAR_T1IN : Bits_2; -- DMA Timer 1 pin assignment
+      PAR_T2IN : Bits_2; -- DMA Timer 2 pin assignment
+      PAR_T3IN : Bits_2; -- DMA Timer 3 pin assignment
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for PAR_TIMER_Type use
+   record
+      PAR_T0IN at 0 range 0 .. 1;
+      PAR_T1IN at 0 range 2 .. 3;
+      PAR_T2IN at 0 range 4 .. 5;
+      PAR_T3IN at 0 range 6 .. 7;
+   end record;
+
+   PAR_TIMER : aliased PAR_TIMER_Type with
+      Address              => To_Address (16#FC0A_405C#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
@@ -198,10 +298,10 @@ package MCF5373 is
    end record;
 
    WCR : aliased WCR_Type with
-      Address    => To_Address (16#FC09_8000#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (16#FC09_8000#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    -- 30.3.3 UART Status Registers (USRn)
 
@@ -231,25 +331,25 @@ package MCF5373 is
    end record;
 
    USR0 : aliased USR_Type with
-      Address    => To_Address (16#FC06_0004#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (16#FC06_0004#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    -- 30.3.6 UART Receive Buffers (URBn)
 
    URB0 : aliased Unsigned_8 with
-      Address    => To_Address (16#FC06_000C#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (16#FC06_000C#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    -- 30.3.7 UART Transmit Buffers (UTBn)
 
    UTB0 : aliased Unsigned_8 with
-      Address    => To_Address (16#FC06_000C#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (16#FC06_000C#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
 end MCF5373;
