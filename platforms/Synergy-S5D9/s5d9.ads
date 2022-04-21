@@ -1108,7 +1108,7 @@ pragma Warnings (On, "bits of * unused");
          when SMIF          => SMIF   : SMR_SMIF_Type;
       end case;
    end record with
-      Size            => 8,
+      Pack            => True,
       Unchecked_Union => True;
 
    -- 34.2.11 Serial Control Register (SCR) for Non-Smart Card Interface Mode (SCMR.SMIF = 0)
@@ -1238,7 +1238,7 @@ pragma Warnings (On, "bits of * unused");
          when SMIF   => SMIF   : SSR_SMIF_Type;
       end case;
    end record with
-      Size            => 8,
+      Pack            => True,
       Unchecked_Union => True;
 
    -- 34.2.16 Smart Card Mode Register (SCMR)
