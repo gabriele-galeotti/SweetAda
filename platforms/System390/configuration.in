@@ -40,7 +40,7 @@ export HERCULES_PREFIX
 HERCULES_RC := $(SWEETADA_PATH)/$(PLATFORM_DIRECTORY)/hercules.rc
 export HERCULES_RC
 
-# X3270
+# X3270 executable
 X3270 := /opt/x3270/bin/x3270
 export X3270
 
