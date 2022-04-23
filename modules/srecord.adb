@@ -70,6 +70,7 @@ package body Srecord is
    -- Receive
    ----------------------------------------------------------------------------
    -- S/Type/ByteCount/Address/Data/Checksum
+   -- A quick exit from the loop could be obtained by typing "S70400000000FB".
    ----------------------------------------------------------------------------
    procedure Receive is
       RX_Status         : RX_Status_Type;
@@ -252,7 +253,7 @@ package body Srecord is
             ----------------
             when WAIT_EOL =>
                if C = LF or else C = CR then
-                  if Start_Address /= 0 then
+                  if Srec in S7 .. S9 then
                      exit;
                   else
                      RX_Status := WAIT_S;
