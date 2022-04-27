@@ -31,34 +31,50 @@ package body PL011 is
    -- Register types
    ----------------------------------------------------------------------------
 
-   type PL011_Register_Type is (UARTDR, UARTRSR, UARTFR);
+   type PL011_Register_Type is (
+                                UARTDR, UARTRSR, UARTECR, UARTFR, UARTILPR, UARTIBRD, UARTFBRD,
+                                UARTLCR_H, UARTCR, UARTIFLS, UARTIMSC, UARTRIS, UARTMIS, UARTICR,
+                                UARTDMACR
+                               );
 
    PL011_Register_Offset : constant array (PL011_Register_Type) of Storage_Offset :=
       (
-       UARTDR  => 0,
-       UARTRSR => 16#04#,
-       UARTFR  => 16#18#
+       UARTDR    => 16#00#,
+       UARTRSR   => 16#04#,
+       UARTECR   => 16#04#,
+       UARTFR    => 16#18#,
+       UARTILPR  => 16#20#,
+       UARTIBRD  => 16#24#,
+       UARTFBRD  => 16#28#,
+       UARTLCR_H => 16#2C#,
+       UARTCR    => 16#30#,
+       UARTIFLS  => 16#34#,
+       UARTIMSC  => 16#38#,
+       UARTRIS   => 16#3C#,
+       UARTMIS   => 16#40#,
+       UARTICR   => 16#44#,
+       UARTDMACR => 16#48#
       );
 
    type UARTDR_Type is
    record
-      DATA   : Unsigned_8;
-      FE     : Boolean;
-      PE     : Boolean;
-      BE     : Boolean;
-      OE     : Boolean;
-      Unused : Bits_4_Zeroes := Bits_4_0;
+      DATA     : Unsigned_8;                -- Receive (read) data character. Transmit (write) data character.
+      FE       : Boolean;                   -- Framing error.
+      PE       : Boolean;                   -- Parity error.
+      BE       : Boolean;                   -- Break error.
+      OE       : Boolean;                   -- Overrun error.
+      Reserved : Bits_4_Zeroes := Bits_4_0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
    for UARTDR_Type use
    record
-      DATA   at 0 range 0 .. 7;
-      FE     at 1 range 0 .. 0;
-      PE     at 1 range 1 .. 1;
-      BE     at 1 range 2 .. 2;
-      OE     at 1 range 3 .. 3;
-      Unused at 1 range 4 .. 7;
+      DATA     at 0 range 0 .. 7;
+      FE       at 0 range 8 .. 8;
+      PE       at 0 range 9 .. 9;
+      BE       at 0 range 10 .. 10;
+      OE       at 0 range 11 .. 11;
+      Reserved at 0 range 12 .. 15;
    end record;
 
    function To_U16 is new Ada.Unchecked_Conversion (UARTDR_Type, Unsigned_16);
@@ -66,35 +82,73 @@ package body PL011 is
 
    type UARTFR_Type is
    record
-      CTS    : Boolean;
-      DSR    : Boolean;
-      DCD    : Boolean;
-      BUSY   : Boolean;
-      RXFE   : Boolean;
-      TXFF   : Boolean;
-      RXFF   : Boolean;
-      TXFE   : Boolean;
-      RI     : Boolean;
-      Unused : Bits_7_Zeroes := Bits_7_0;
+      CTS      : Boolean;                   -- Clear to send.
+      DSR      : Boolean;                   -- Data set ready.
+      DCD      : Boolean;                   -- Data carrier detect.
+      BUSY     : Boolean;                   -- UART busy.
+      RXFE     : Boolean;                   -- Receive FIFO empty.
+      TXFF     : Boolean;                   -- Transmit FIFO full.
+      RXFF     : Boolean;                   -- Receive FIFO full.
+      TXFE     : Boolean;                   -- Transmit FIFO empty.
+      RI       : Boolean;                   -- Ring indicator.
+      Reserved : Bits_7_Zeroes := Bits_7_0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
    for UARTFR_Type use
    record
-      CTS    at 0 range 0 .. 0;
-      DSR    at 0 range 1 .. 1;
-      DCD    at 0 range 2 .. 2;
-      BUSY   at 0 range 3 .. 3;
-      RXFE   at 0 range 4 .. 4;
-      TXFF   at 0 range 5 .. 5;
-      RXFF   at 0 range 6 .. 6;
-      TXFE   at 0 range 7 .. 7;
-      RI     at 1 range 0 .. 0;
-      Unused at 1 range 1 .. 7;
+      CTS      at 0 range 0 .. 0;
+      DSR      at 0 range 1 .. 1;
+      DCD      at 0 range 2 .. 2;
+      BUSY     at 0 range 3 .. 3;
+      RXFE     at 0 range 4 .. 4;
+      TXFF     at 0 range 5 .. 5;
+      RXFF     at 0 range 6 .. 6;
+      TXFE     at 0 range 7 .. 7;
+      RI       at 0 range 8 .. 8;
+      Reserved at 0 range 9 .. 15;
    end record;
 
    function To_U16 is new Ada.Unchecked_Conversion (UARTFR_Type, Unsigned_16);
    function To_UARTFR is new Ada.Unchecked_Conversion (Unsigned_16, UARTFR_Type);
+
+   type UARTCR_Type is
+   record
+      UARTEN   : Boolean;     -- UART enable.
+      SIREN    : Boolean;     -- SIR enable.
+      SIRLP    : Boolean;     -- SIR low-power IrDA mode.
+      Reserved : Bits.Bits_4;
+      LBE      : Boolean;     -- Loopback enable.
+      TXE      : Boolean;     -- Transmit enable.
+      RXE      : Boolean;     -- Receive enable.
+      DTR      : Boolean;     -- Data transmit ready.
+      RTS      : Boolean;     -- Request to send.
+      Out1     : Boolean;     -- This bit is the complement of the UART Out1 (nUARTOut1) modem status output.
+      Out2     : Boolean;     -- This bit is the complement of the UART Out2 (nUARTOut2) modem status output.
+      RTSEn    : Boolean;     -- RTS hardware flow control enable
+      CTSEn    : Boolean;     -- CTS hardware flow control enable
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for UARTCR_Type use
+   record
+      UARTEN   at 0 range 0 .. 0;
+      SIREN    at 0 range 1 .. 1;
+      SIRLP    at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 6;
+      LBE      at 0 range 7 .. 7;
+      TXE      at 0 range 8 .. 8;
+      RXE      at 0 range 9 .. 9;
+      DTR      at 0 range 10 .. 10;
+      RTS      at 0 range 11 .. 11;
+      Out1     at 0 range 12 .. 12;
+      Out2     at 0 range 13 .. 13;
+      RTSEn    at 0 range 14 .. 14;
+      CTSEn    at 0 range 15 .. 15;
+   end record;
+
+   function To_U16 is new Ada.Unchecked_Conversion (UARTCR_Type, Unsigned_16);
+   function To_UARTCR is new Ada.Unchecked_Conversion (Unsigned_16, UARTCR_Type);
 
    -- Local subprograms
 
@@ -180,7 +234,21 @@ package body PL011 is
    ----------------------------------------------------------------------------
    procedure Init (Descriptor : in PL011_Descriptor_Type) is
    begin
-      null;
+      Register_Write (Descriptor, UARTCR, To_U16 (UARTCR_Type'(
+                                                               UARTEN => True,
+                                                               SIREN  => False,
+                                                               SIRLP  => False,
+                                                               LBE    => False,
+                                                               TXE    => True,
+                                                               RXE    => True,
+                                                               DTR    => False,
+                                                               RTS    => False,
+                                                               Out1   => False,
+                                                               Out2   => False,
+                                                               RTSEn  => False,
+                                                               CTSEn  => False,
+                                                               others => 0
+                                                              )));
    end Init;
 
    ----------------------------------------------------------------------------
