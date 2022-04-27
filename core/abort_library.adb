@@ -42,9 +42,7 @@ package body Abort_Library is
    ----------------------------------------------------------------------------
    procedure System_Abort is
    begin
-      loop
-         null;
-      end loop;
+      loop null; end loop;
    end System_Abort;
 
    ----------------------------------------------------------------------------

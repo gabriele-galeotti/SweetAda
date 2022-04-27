@@ -111,6 +111,19 @@ package body Memory_Functions is
    separate;
 
    ----------------------------------------------------------------------------
+   -- Cmpmem
+   ----------------------------------------------------------------------------
+   -- Ada procedure version of Memcmp.
+   ----------------------------------------------------------------------------
+   procedure Cmpmem (
+                     S1 : in     System.Address;
+                     S2 : in     System.Address;
+                     N  : in     Bits.Bytesize;
+                     R  : in out Integer
+                    ) is
+   separate;
+
+   ----------------------------------------------------------------------------
    -- Cpymem
    ----------------------------------------------------------------------------
    -- Ada procedure version of Memcpy.
@@ -119,6 +132,18 @@ package body Memory_Functions is
                      S1 : in System.Address;
                      S2 : in System.Address;
                      N  : in Bits.Bytesize
+                    ) is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Setmem
+   ----------------------------------------------------------------------------
+   -- Ada procedure version of Memset.
+   ----------------------------------------------------------------------------
+   procedure Setmem (
+                     S : in System.Address;
+                     V : in Interfaces.Unsigned_8;
+                     N : in Bits.Bytesize
                     ) is
    separate;
 

@@ -380,17 +380,17 @@ package Bits is
 
    -- Bitmaps
    type Bitmap_8 is array (0 .. 7) of Boolean with
-      Pack => True,
-      Size => 8;
+      Component_Size => 1,
+      Size           => 8;
    type Bitmap_16 is array (0 .. 15) of Boolean with
-      Pack => True,
-      Size => 16;
+      Component_Size => 1,
+      Size           => 16;
    type Bitmap_32 is array (0 .. 31) of Boolean with
-      Pack => True,
-      Size => 32;
+      Component_Size => 1,
+      Size           => 32;
    type Bitmap_64 is array (0 .. 63) of Boolean with
-      Pack => True,
-      Size => 64;
+      Component_Size => 1,
+      Size           => 64;
 
    ----------------------------------------------------------------------------
    -- Array types.

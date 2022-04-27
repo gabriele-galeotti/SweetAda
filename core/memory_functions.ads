@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Interfaces;
 with Interfaces.C;
 with Bits;
 
@@ -76,13 +77,32 @@ package Memory_Functions is
       Convention    => C,
       External_Name => "bcopy";
 
+   procedure Cmpmem (
+                     S1 : in     System.Address;
+                     S2 : in     System.Address;
+                     N  : in     Bits.Bytesize;
+                     R  : in out Integer
+                    ) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "cmpmem";
+
    procedure Cpymem (
-                     S1 : System.Address; -- source
-                     S2 : System.Address; -- destination
-                     N  : Bits.Bytesize
+                     S1 : in System.Address; -- source
+                     S2 : in System.Address; -- destination
+                     N  : in Bits.Bytesize
                     ) with
       Export        => True,
       Convention    => C,
       External_Name => "cpymem";
+
+   procedure Setmem (
+                     S : in System.Address;
+                     V : in Interfaces.Unsigned_8;
+                     N : in Bits.Bytesize
+                    ) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "setmem";
 
 end Memory_Functions;
