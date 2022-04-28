@@ -20,7 +20,6 @@ with System.Storage_Elements;
 with Interfaces;
 with Configure;
 with Bits;
-with MMIO;
 with NETARM;
 with Console;
 
@@ -37,6 +36,7 @@ package body BSP is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
    --========================================================================--
    --                                                                        --
@@ -51,15 +51,24 @@ package body BSP is
    ----------------------------------------------------------------------------
 
    procedure Console_Putchar (C : in Character) is
-      Delay_Count : constant := 30_000;
    begin
-      MMIO.Write_U8 (To_Address (NETARM.SERTX), Bits.To_U8 (C));
-      for Delay_Loop_Count in 1 .. Delay_Count loop null; end loop;
+      -- wait for transmitter available
+      loop
+         exit when NETARM.SCSR.TXRDY;
+      end loop;
+      NETARM.SCFIFOR.DATA (0) := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      NETARM.SCSR.RXBC := True;
+      -- wait for receiver available
+      loop
+         exit when NETARM.SCSR.RXRDY;
+      end loop;
+      Data := NETARM.SCFIFOR.DATA (0);
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -74,15 +83,17 @@ package body BSP is
       NETARM.SCBRGR.CLKMUX := NETARM.BRG_FXTALE;
       NETARM.SCBRGR.TMODE  := NETARM.TMODE_16X;
       NETARM.SCBRGR.NREG   := 11;
-      --- RJ45 LED port enable ------------------------------------------------
-      declare
-         Value : Unsigned_32;
-      begin
-         Value := NETARM.PORTC;
-         Value := Value and 16#BFFF_BFFF#; -- C6 CMODE = 0, C6 CSF = 0
-         Value := Value or 16#0040_0000#;  -- C6 CDIR = 1 (OUT)
-         NETARM.PORTC := Value;
-      end;
+      NETARM.SCCRA.ERXDSR  := False;
+      NETARM.SCCRA.ERXRI   := False;
+      NETARM.SCCRA.ERXDCD  := False;
+      NETARM.SCCRA.ERXDMA  := False;
+      NETARM.SCCRA.ERXBC   := False;
+      NETARM.SCCRA.ERXHALF := False;
+      NETARM.SCCRA.ERXDRDY := False;
+      NETARM.SCCRA.ERXORUN := False;
+      NETARM.SCCRA.ERXPE   := False;
+      NETARM.SCCRA.ERXFE   := False;
+      NETARM.SCCRA.ERXBRK  := False;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
@@ -100,14 +111,21 @@ package body BSP is
       Console.Print (NETARM.CSOR1A,       Prefix => "CSOR1A:        ", NL => True);
       Console.Print (NETARM.CSOR1B,       Prefix => "CSOR1B:        ", NL => True);
       -------------------------------------------------------------------------
+      Console.Print (NETARM.SCBRGR.EBIT,                 Prefix => "EBIT:   ", NL => True);
+      Console.Print (Unsigned_16 (NETARM.SCBRGR.TMODE),  Prefix => "TMODE:  ", NL => True);
+      Console.Print (Unsigned_16 (NETARM.SCBRGR.CLKMUX), Prefix => "CLKMUX: ", NL => True);
+      Console.Print (Unsigned_16 (NETARM.SCBRGR.NREG),   Prefix => "NREG:   ", NL => True);
+      --- RJ45 LED port enable ------------------------------------------------
       declare
-         Data32 : Unsigned_32 with Unreferenced => True;
-         Data8  : Unsigned_8 with Unreferenced => True;
+         Value : Unsigned_32;
       begin
-         -- unlock Flash memory WP
-         NETARM.CSBAR0 := NETARM.CSBAR0 and 16#FFFF_FFFD#;
+         Value := NETARM.PORTC;
+         Value := Value and 16#BFFF_BFFF#; -- C6 CMODE = 0, C6 CSF = 0
+         Value := Value or 16#0040_0000#;  -- C6 CDIR = 1 (OUT)
+         NETARM.PORTC := Value;
       end;
-      -------------------------------------------------------------------------
+      -- unlock Flash memory WP -----------------------------------------------
+      NETARM.CSBAR0 := NETARM.CSBAR0 and 16#FFFF_FFFD#;
    end BSP_Setup;
 
 end BSP;

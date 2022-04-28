@@ -229,6 +229,7 @@ package NETARM is
    -- SER_BASE registers ------------------------------------------------------
 
    -- Serial Channel Control Register A
+
    type SCCRA_Type is
    record
       ETXDMA   : Boolean;     -- Interrupt enable: Enables transmit DMA requests
@@ -300,7 +301,16 @@ package NETARM is
       CE      at 0 range 31 .. 31;
    end record;
 
+   SCCRA_ADDRESS : constant := SER_BASEADDRESS + 16#00#;
+
+   SCCRA : aliased SCCRA_Type with
+      Address              => To_Address (SCCRA_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- Serial Channel Control Register B
+
    type SCCRB_Type is
    record
       Reserved1 : Bits.Bits_17;
@@ -334,7 +344,16 @@ package NETARM is
       RDM1      at 0 range 31 .. 31;
    end record;
 
+   SCCRB_ADDRESS : constant := SER_BASEADDRESS + 16#04#;
+
+   SCCRB : aliased SCCRB_Type with
+      Address              => To_Address (SCCRB_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- Serial Channel Status Register
+
    type SCSR_Type is
    record
       TXEMPTY  : Boolean;
@@ -399,6 +418,14 @@ package NETARM is
       MATCH2   at 0 range 30 .. 30;
       MATCH1   at 0 range 31 .. 31;
    end record;
+
+   SCSR_ADDRESS : constant := SER_BASEADDRESS + 16#08#;
+
+   SCSR : aliased SCSR_Type with
+      Address              => To_Address (SCSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    -- Serial Channel Bit-Rate Generator Reg
 
@@ -465,7 +492,23 @@ package NETARM is
       Import               => True,
       Convention           => Ada;
 
-   SERTX : constant := SER_BASEADDRESS + 16#10#;
+   -- Serial Channel FIFO registers
+
+   type SCFIFOR_Type is
+   record
+      DATA : Bits.U8_Array (0 .. 3);
+   end record with
+      Size => 4 * 8;
+
+   SCFIFOR_ADDRESS : constant := SER_BASEADDRESS + 16#10#;
+
+   SCFIFOR : aliased SCFIFOR_Type with
+      Address    => To_Address (SCFIFOR_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   -- Subprograms
 
    procedure Tclk_Init;
 

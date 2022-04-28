@@ -36,9 +36,6 @@ package body NETARM is
    ----------------------------------------------------------------------------
    -- Tclk_Init
    ----------------------------------------------------------------------------
-   procedure Tclk_Init is
-   begin
-      null;
-   end Tclk_Init;
+   procedure Tclk_Init is null;
 
 end NETARM;
