@@ -1292,8 +1292,16 @@ enabled, else when a timer IRQ is triggered an invalid program counter will be c
 <h3 class="section">16.12 Integrator/CP</h3>
 <span id="index-Integrator_002fCP"></span>
 
-<p>The Integrator/CP is a virtual platform provided by QEMU, which mimics the real one.
+<p>The Integrator/CP is a virtual platform provided by QEMU, which mimics the real one,
+produced by ARM&reg;.
 </p>
+<p>It features an ARM926EJ-S (LE mode) coupled with the following components:
+</p><ul>
+<li> SoC FPGA with system peripherals
+</li><li> PL011 CLCD Controller
+</li><li> LAN91C111 Ethernet interface controller
+</li></ul>
+
 </div>
 <div class="section" id="LEON3">
 <h3 class="section">16.13 LEON3</h3>
@@ -1384,8 +1392,8 @@ this kind of CPU and test SweetAda in the maximum possible range of physical har
 <h3 class="section">16.22 Memec FX12</h3>
 <span id="index-Memec-FX12"></span>
 
-<p>The Memec FX12 is a little embedded module based on Xilinx&reg; Virtex-4
-FPGA equipped with an hard-PPC405 core.
+<p>The Memec FX12 is a little embedded module based on Xilinx&reg;
+Virtex-4 FPGA equipped with an hard PPC405 core.
 </p>
 </div>
 <div class="section" id="PC_002dx86">
@@ -1438,19 +1446,32 @@ MIPS-class CPU.
 <h3 class="section">16.29 Raspberry Pi 3</h3>
 <span id="index-Raspberry-Pi-3"></span>
 
-<p>The Raspberry Pi 3 is a popular embedded board based on a Broadcom&reg; BCM2387 64-bit
-ARM-class CPU.
+<p>The Raspberry Pi 3 is a popular embedded board based on a Broadcom&reg;
+BCM2387 64-bit ARM-class CPU.
 </p>
 <img src="rpi3-board.png" alt="rpi3-board">
 
-<p>To work with SweetAda code, you should format an SDHC memory card, placing the
-SweetAda kernel in the first FAT32 partition. A Bash shell script in the platform
-directory, named &quot;createbootdevice.sh&quot;, will create the files in the memory card
-once it knows the UUID (USDCARD_UUID) and the filesystem location (USDCARD_MOUNTPOINT),
-which you have to specify in the configuration.in file.
+<p>To work with SweetAda code, you should store the kernel binary in a bootable SDHC
+memory card with a recognized filesystem layout.
 </p>
-<p>The SoC of the RaspBerry will boot the memory card by parsing the &quot;config.txt&quot;
-file, and then start the kernel just loaded in SDRAM.
+<p>A working environment is formatting the SDHC and placing the SweetAda kernel in the
+first partition, which must be FAT32 (ID=0xC), along with the proprietary bootstrap
+files &quot;bootcode.bin&quot; and &quot;start.elf&quot; (which you can extract from one of the Linux
+distribution available). Newer versions of bootcode.bin does not need the &quot;start.elf&quot;
+file.
+</p>
+<p>The GPU of the SoC will boot the memory card by parsing the &quot;config.txt&quot; file, and
+then will start the &quot;kernel.rom&quot; just loaded in the SDRAM.
+</p>
+<p>NOTE: in SweetAda terminology, &quot;kernel.rom&quot; not necessarily indicates a flat binary
+memory image, in this case is an ELF executable ready to be loaded by the SoC bootloader
+</p>
+<p>A Bash shell script in the platform directory, named &quot;createbootdevice.sh&quot;, will store
+the files &quot;config.txt&quot; and &quot;kernel.rom&quot; in the memory card once it knows the UUID
+(USDCARD_UUID) and the filesystem location (USDCARD_MOUNTPOINT), which you have to
+specify in the configuration.in file (hence it is useful to format an SDHC and named it
+with that UUID). If you have a system other than Linux, just put in place those files
+with a manual file copy operation once you have visibility of the SDHC memory card.
 </p>
 </div>
 <div class="section" id="SBC5206">

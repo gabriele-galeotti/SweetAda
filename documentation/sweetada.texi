@@ -1173,7 +1173,18 @@ You should see the board cycling the multi-color LED through the R, G and B blin
 @section Integrator/CP
 @cindex Integrator/CP
 
-The Integrator/CP is a virtual platform provided by QEMU, which mimics the real one.
+The Integrator/CP is a virtual platform provided by QEMU, which mimics the real one,
+produced by ARM@registeredsymbol{}.
+
+It features an ARM926EJ-S (LE mode) coupled with the following components:
+@itemize @bullet
+@item
+SoC FPGA with system peripherals
+@item
+PL011 CLCD Controller
+@item
+LAN91C111 Ethernet interface controller
+@end itemize
 
 @section LEON3
 @cindex LEON3
@@ -1248,8 +1259,8 @@ The MVME162-510A is a VME board based on an MC68040 CPU.
 @section Memec FX12
 @cindex Memec FX12
 
-The Memec FX12 is a little embedded module based on Xilinx@registeredsymbol{} Virtex-4
-FPGA equipped with an hard-PPC405 core.
+The Memec FX12 is a little embedded module based on Xilinx@registeredsymbol{}
+Virtex-4 FPGA equipped with an hard PPC405 core.
 
 @section PC-x86
 @cindex PC-x86
@@ -1288,19 +1299,32 @@ The QEMU RISC-V 32 is a virtual platform provided by QEMU, which is based on an
 @section Raspberry Pi 3
 @cindex Raspberry Pi 3
 
-The Raspberry Pi 3 is a popular embedded board based on a Broadcom@registeredsymbol{} BCM2387 64-bit
-ARM-class CPU.
+The Raspberry Pi 3 is a popular embedded board based on a Broadcom@registeredsymbol{}
+BCM2387 64-bit ARM-class CPU.
 
 @image{rpi3-board}
 
-To work with SweetAda code, you should format an SDHC memory card, placing the
-SweetAda kernel in the first FAT32 partition. A Bash shell script in the platform
-directory, named "createbootdevice.sh", will create the files in the memory card
-once it knows the UUID (USDCARD_UUID) and the filesystem location (USDCARD_MOUNTPOINT),
-which you have to specify in the configuration.in file.
+To work with SweetAda code, you should store the kernel binary in a bootable SDHC
+memory card with a recognized filesystem layout.
 
-The SoC of the RaspBerry will boot the memory card by parsing the "config.txt"
-file, and then start the kernel just loaded in SDRAM.
+A working environment is formatting the SDHC and placing the SweetAda kernel in the
+first partition, which must be FAT32 (ID=0xC), along with the proprietary bootstrap
+files "bootcode.bin" and "start.elf" (which you can extract from one of the Linux
+distribution available). Newer versions of bootcode.bin does not need the "start.elf"
+file.
+
+The GPU of the SoC will boot the memory card by parsing the "config.txt" file, and
+then will start the "kernel.rom" just loaded in the SDRAM.
+
+NOTE: in SweetAda terminology, "kernel.rom" not necessarily indicates a flat binary
+memory image, in this case is an ELF executable ready to be loaded by the SoC bootloader
+
+A Bash shell script in the platform directory, named "createbootdevice.sh", will store
+the files "config.txt" and "kernel.rom" in the memory card once it knows the UUID
+(USDCARD_UUID) and the filesystem location (USDCARD_MOUNTPOINT), which you have to
+specify in the configuration.in file (hence it is useful to format an SDHC and named it
+with that UUID). If you have a system other than Linux, just put in place those files
+with a manual file copy operation once you have visibility of the SDHC memory card.
 
 @section SBC5206
 @cindex SBC5206
