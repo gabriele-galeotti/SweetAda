@@ -56,4 +56,21 @@ package body MIPS is
           );
    end NOP;
 
+   ----------------------------------------------------------------------------
+   -- Asm_Call
+   ----------------------------------------------------------------------------
+   procedure Asm_Call (Target_Address : in Address) is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        jal     %0" & CRLF &
+                       "        nop       " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => System.Address'Asm_Input ("r", Target_Address),
+           Clobber  => "",
+           Volatile => True
+          );
+   end Asm_Call;
+
 end MIPS;

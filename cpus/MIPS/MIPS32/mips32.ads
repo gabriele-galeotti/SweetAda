@@ -30,6 +30,8 @@ package MIPS32 is
    --                                                                        --
    --========================================================================--
 
+   pragma Preelaborate;
+
    use System;
    use Interfaces;
    use Bits;

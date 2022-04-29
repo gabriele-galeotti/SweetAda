@@ -29,6 +29,8 @@ package R3000 is
    --                                                                        --
    --========================================================================--
 
+   pragma Preelaborate;
+
    use System;
    use Interfaces;
    use Bits;

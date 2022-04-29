@@ -28,6 +28,8 @@ package MIPS is
    --                                                                        --
    --========================================================================--
 
+   pragma Preelaborate;
+
    use System;
    use Bits;
 
@@ -173,13 +175,18 @@ package MIPS is
    -- KSEGs
    ----------------------------------------------------------------------------
 
+   KUSEG_ADDRESS : constant := 16#0000_0000#;
+   KSEG0_ADDRESS : constant := 16#8000_0000#;
    KSEG1_ADDRESS : constant := 16#A000_0000#;
+   KSEG2_ADDRESS : constant := 16#C000_0000#;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
    procedure NOP with
+      Inline => True;
+   procedure Asm_Call (Target_Address : in Address) with
       Inline => True;
 
    ----------------------------------------------------------------------------
