@@ -28,9 +28,6 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
-   begin
-      null;
-   end Init;
+   procedure Init is null;
 
 end Exceptions;

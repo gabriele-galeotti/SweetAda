@@ -25,19 +25,11 @@ package Exceptions is
    --                                                                        --
    --========================================================================--
 
-   procedure Process;
+   procedure Process with
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "exception_process";
+
    procedure Init;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Export (Asm, Process, "exception_process");
 
 end Exceptions;

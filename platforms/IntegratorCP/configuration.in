@@ -6,9 +6,9 @@
 #
 
 CPU       := ARM
-CPU_MODEL := ARMv5
+CPU_MODEL := ARMv5TEJ
 
-GCC_SWITCHES_PLATFORM     += -mcpu=arm926ej-s -Wa,-mcpu=arm926ej-s -mabi=aapcs
+GCC_SWITCHES_PLATFORM     += -mcpu=arm926ej-s -mabi=aapcs
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y

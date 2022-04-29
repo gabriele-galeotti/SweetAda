@@ -10,7 +10,7 @@ CPU_MODEL      := ARM7TDMI
 # override cpus/ARM/configuration.in
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_ARMeb)
 
-GCC_SWITCHES_PLATFORM     += -mcpu=arm7tdmi -Wa,-mcpu=arm7tdmi -mabi=aapcs
+GCC_SWITCHES_PLATFORM     += -mcpu=arm7tdmi -mabi=aapcs
 LD_SWITCHES_PLATFORM      += --undefined=reset
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y

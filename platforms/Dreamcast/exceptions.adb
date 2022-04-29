@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Core;
 with Console;
 
 package body Exceptions is
@@ -39,9 +38,6 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
-   begin
-      null;
-   end Init;
+   procedure Init is null;
 
 end Exceptions;
