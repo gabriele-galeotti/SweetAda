@@ -240,8 +240,8 @@ package body Bits is
    ----------------------------------------------------------------------------
    generic
       type Modular_Type is mod <>;
-   function g_LSBitOn (V : Modular_Type) return Boolean;
-   pragma Inline (g_LSBitOn);
+   function g_LSBitOn (V : Modular_Type) return Boolean with
+      Inline => True;
    function g_LSBitOn (V : Modular_Type) return Boolean is
    begin
       return (V and 1) /= 0;
@@ -252,8 +252,8 @@ package body Bits is
    ----------------------------------------------------------------------------
    generic
       type Modular_Type is mod <>;
-   function g_MSBitOn (V : Modular_Type) return Boolean;
-   pragma Inline (g_MSBitOn);
+   function g_MSBitOn (V : Modular_Type) return Boolean with
+      Inline => True;
    function g_MSBitOn (V : Modular_Type) return Boolean is
    begin
       return (V and 2**(Modular_Type'Size - 1)) /= 0;
