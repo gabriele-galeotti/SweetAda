@@ -35,6 +35,7 @@ package body Console is
    use type Interfaces.Unsigned_8;
    use type Interfaces.C.char;
    use type Interfaces.C.size_t;
+   use type Bits.Bits_1;
 
    package ISO88591 renames Ada.Characters.Latin_1;
 
@@ -146,6 +147,28 @@ package body Console is
          Print (Prefix);
       end if;
       Print (Character'(if Value then 'T' else 'F'));
+      if Suffix'Length /= 0 then
+         Print (Suffix);
+      end if;
+      if NL then
+         Print_NewLine;
+      end if;
+   end Print;
+
+   ----------------------------------------------------------------------------
+   -- Print (Bits_1)
+   ----------------------------------------------------------------------------
+   procedure Print (
+                    Value  : in Bits.Bits_1;
+                    NL     : in Boolean := False;
+                    Prefix : in String := "";
+                    Suffix : in String := ""
+                   ) is
+   begin
+      if Prefix'Length /= 0 then
+         Print (Prefix);
+      end if;
+      Print (Character'(if Value = 1 then '1' else '0'));
       if Suffix'Length /= 0 then
          Print (Suffix);
       end if;

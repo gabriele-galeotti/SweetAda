@@ -68,6 +68,12 @@ package Console is
                     Suffix : in String := ""
                    );
    procedure Print (
+                    Value  : in Bits.Bits_1;
+                    NL     : in Boolean := False;
+                    Prefix : in String := "";
+                    Suffix : in String := ""
+                   );
+   procedure Print (
                     Value  : in Interfaces.Unsigned_8;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
