@@ -62,8 +62,11 @@ package body BSP is
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      -- SCC.RX (SCC_Descriptor1, SCC.CHANNELB, Data); -- serial port "2"
+      SCC.RX (SCC_Descriptor2, SCC.CHANNELB, Data); -- serial port "3"
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------

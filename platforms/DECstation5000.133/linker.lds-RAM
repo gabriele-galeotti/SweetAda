@@ -3,8 +3,8 @@ ENTRY(_start)
 
 MEMORY
 {
-        /* boot from network */
-        ROM : ORIGIN = 0x80100000, LENGTH = 1M /* KSEG0, use RAM @ 0x00100000 */
+        /* RAM-based system */
+        ROM : ORIGIN = 0xA0100000, LENGTH = 1M /* KSEG1, use RAM @ 0x00100000 */
         RAM : ORIGIN = 0xA0200000, LENGTH = 1M /* KSEG1, use RAM @ 0x00200000 */
 }
 

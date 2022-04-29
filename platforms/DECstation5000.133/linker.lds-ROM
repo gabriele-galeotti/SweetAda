@@ -4,8 +4,8 @@ ENTRY(_start)
 MEMORY
 {
         /* ROM-based system */
-        RAM : ORIGIN = 0xA0000000, LENGTH = 1M /* KSEG1 + 0x00000000 */
-        ROM : ORIGIN = 0xBFC00000, LENGTH = 1M /* KSEG1 + 0x1FC00000 */
+        ROM : ORIGIN = 0xBFC00000, LENGTH = 1M /* KSEG1, use ROM @ 0x1FC00000 */
+        RAM : ORIGIN = 0xA0000000, LENGTH = 1M /* KSEG1, use RAM @ 0x00000000 */
 }
 
 SECTIONS

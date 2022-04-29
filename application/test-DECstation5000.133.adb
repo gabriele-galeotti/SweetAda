@@ -50,23 +50,21 @@ package body Application is
             if Configure.BOOT_FROM_NETWORK then
                Delay_Count := 5_000_000; -- network boot, with cache
             else
-               Delay_Count := 100_000;   -- ROM without cache
+               Delay_Count := 100_000; -- ROM without cache
             end if;
             loop
-               for Value in Unsigned_8'Range loop
-                  if Dummy = 16#AA55_AA55# then
-                     IOASIC_CSR.LED0 := False;
-                     for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-                     IOASIC_CSR.LED0 := True;
-                     for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-                     Console.Print ("OK", NL => True);
-                  else
-                     IOASIC_CSR.LED3 := False;
-                     for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-                     IOASIC_CSR.LED3 := True;
-                     for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-                  end if;
-               end loop;
+               if Dummy = 16#AA55_AA55# then
+                  IOASIC_CSR.LED0 := False;
+                  for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+                  IOASIC_CSR.LED0 := True;
+                  for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+                  Console.Print (".");
+               else
+                  IOASIC_CSR.LED3 := False;
+                  for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+                  IOASIC_CSR.LED3 := True;
+                  for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+               end if;
             end loop;
          end;
       end if;

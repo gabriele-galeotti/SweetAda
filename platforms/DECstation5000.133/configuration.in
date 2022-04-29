@@ -16,9 +16,10 @@ POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += --output-target=binary
 
 USE_APPLICATION := test-DECstation5000.133
+#USE_APPLICATION := test-srecord
 
-#NETWORK_BOOT := N
-NETWORK_BOOT := Y
+NETWORK_BOOT := N
+#NETWORK_BOOT := Y
 export NETWORK_BOOT
 
 ifeq ($(NETWORK_BOOT),Y)
@@ -28,16 +29,16 @@ TFTP_DIRECTORY := /home/public
 TFTP_FILENAME := 08002b32bd8f.SYS
 export TFTP_DIRECTORY TFTP_FILENAME
 else
-LD_SCRIPT := linker.lds-ROM
+#LD_SCRIPT := linker.lds-ROM
+LD_SCRIPT := linker.lds-RAM
 BOOT_FROM_NETWORK := False
 endif
 export BOOT_FROM_NETWORK
 
-MEMSIM2 := $(SWEETADA_PATH)/../hardware/memSIM2/runmemsim2.sh
-
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
-RUN_COMMAND   := $(MEMSIM2) -m 27020 -r -10 $(SWEETADA_PATH)/$(KERNEL_ROMFILE)
+RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord.tcl   \
+                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 9600
 DEBUG_COMMAND :=
 

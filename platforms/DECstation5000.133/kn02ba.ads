@@ -102,10 +102,10 @@ package KN02BA is
    IOASIC_CSR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0100#; -- = 0x1C040100
 
    IOASIC_CSR : IOASIC_CSR_Type with
-      Address    => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_CSR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_CSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    -- ROM code use a NOP when operating with I/O ports
    function Read32_NOP (Memory_Address : Address) return Unsigned_32 with
