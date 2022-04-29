@@ -19,7 +19,6 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with MMIO;
-with Monitor;
 with Console;
 
 package body BSP is
@@ -78,8 +77,6 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("QEMU-MIPS (QEMU emulator)", NL => True);
-      -------------------------------------------------------------------------
-      Monitor.Monitor;
       -------------------------------------------------------------------------
    end BSP_Setup;
 
