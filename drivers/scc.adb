@@ -427,7 +427,7 @@ package body SCC is
                  Data       : in Unsigned_8
                 ) is
    begin
-      -- wait for Tx Buffer Empty
+      -- wait for transmitter available
       loop
          exit when To_RR0 (Register_Read (Descriptor, Channel, RR0)).TXBE;
       end loop;
@@ -449,7 +449,7 @@ package body SCC is
                  Data       : out Unsigned_8
                 ) is
    begin
-      -- wait for Rx Character Available
+      -- wait for receiver available
       loop
          exit when To_RR0 (Register_Read (Descriptor, Channel, RR0)).RXCA;
       end loop;

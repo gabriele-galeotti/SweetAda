@@ -1,7 +1,7 @@
 #!/usr/bin/env tclsh
 
 #
-# Raspberry Pi 3 S-record download.
+# S-record download.
 #
 # Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
 #

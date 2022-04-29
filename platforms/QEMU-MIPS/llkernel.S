@@ -14,11 +14,12 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+                .sect   .vectors,"ax"
+
 //
 // Exception Vectors.
 //
 
-                .sect   .vectors,"ax"
                 .set    noreorder
 
                 //
@@ -31,28 +32,28 @@ reset:
                 move    $k0,$0
 
                 //
-                // BFC00200: R4000 tlbmiss
+                // 0xBFC00200: R4000 TLB Miss
                 //
                 .align  9
                 j       tlb_miss
                 nop
 
                 //
-                // BFC00280: R4000 xtlbmiss
+                // 0xBFC00280: R4000 xTLB Miss
                 //
                 .align  7
                 j       x_tlb_miss
                 nop
 
                 //
-                // BFC00300: R4000 cache error
+                // 0xBFC00300: R4000 Cache Error
                 //
                 .align  7
                 j       cache_err
                 nop
 
                 //
-                // BFC00380: R4000 general
+                // 0xBFC00380: R4000 General Exception
                 //
                 .align  7
                 j       gen_exc

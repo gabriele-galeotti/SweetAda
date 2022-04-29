@@ -4,7 +4,7 @@ package Configure is
    pragma Pure;
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "Digi NS9210";
+   PLATFORM  : constant String := "DigiNS9210";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
