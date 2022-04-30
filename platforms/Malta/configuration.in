@@ -10,12 +10,12 @@ CPU       := MIPS
 CPU_MODEL := MIPS64-5K
 
 ifeq ($(CPU_MODEL),MIPS32-24K)
-GCC_SWITCHES_PLATFORM     += -march=24kf -Wa,-march=24kf
+GCC_SWITCHES_PLATFORM     += -march=24kf
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM += --disassembler-options=hwr-names=mips32r2,msa=mips32r2
 endif
 ifeq ($(CPU_MODEL),MIPS64-5K)
-GCC_SWITCHES_PLATFORM     += -march=5kc -Wa,-march=5kc
+GCC_SWITCHES_PLATFORM     += -march=5kc
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 endif
