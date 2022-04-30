@@ -36,12 +36,13 @@ package SPARC is
    -- Generic definitions
    ----------------------------------------------------------------------------
 
+   Opcode_NOP           : constant := 16#0100_0000#;
+   -- Opcode_BREAKPOINT    : constant := 16#7FE0_0008#;
+   -- 0x30800000 is Branch Always with annul, 22-displacement address (4x, sign-extended)
+   Opcode_BRANCH_ALWAYS : constant := 16#3080_0000#;
+
    procedure NOP with
       Inline => True;
-
-   -- BREAKPOINT_Instruction : constant := 16#7FE0_0008#;
-   -- 0x30800000 is Branch Always with annul, 22-displacement address (4x, sign-extended)
-   BRANCH_ALWAYS_Instruction : constant := 16#3080_0000#;
 
    ----------------------------------------------------------------------------
    -- PSR

@@ -40,9 +40,10 @@ package ARM is
    -- Generic definitions
    ----------------------------------------------------------------------------
 
-   BREAKPOINT_Instruction      : constant Unsigned_32 := 16#E7FF_DEFE#;
-   BREAKPOINT_Instruction_Size : constant             := 4;
-   BREAKPOINT_Asm_String       : constant String      := ".word   0xE7FFDEFE";
+   Opcode_BREAKPOINT      : constant := 16#E7FF_DEFE#;
+   Opcode_BREAKPOINT_Size : constant := 4;
+
+   BREAKPOINT_Asm_String : constant String := ".word   0xE7FFDEFE";
 
    procedure NOP with
       Inline => True;

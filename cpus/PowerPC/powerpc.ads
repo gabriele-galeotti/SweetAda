@@ -37,11 +37,10 @@ package PowerPC is
    -- Generic definitions
    ----------------------------------------------------------------------------
 
-   -- __REF__ http://lxr.free-electrons.com/source/arch/ppc/kernel/ppc-stub.c?v=2.6.24 use "twge r2,r2"
-   -- BREAKPOINT_Instruction      : constant Unsigned_32 := 16#7FE0_0008#; -- tw (trap)
-   BREAKPOINT_Instruction      : constant Unsigned_32 := 16#7D82_1008#; -- twge r2,r2
-   BREAKPOINT_Instruction_Size : constant             := 4;
-   BREAKPOINT_Asm_String       : constant String      := ".long 0x7D821008";
+   Opcode_BREAKPOINT      : constant := 16#7D82_1008#; -- twge r2,r2
+   Opcode_BREAKPOINT_Size : constant := 4;
+
+   BREAKPOINT_Asm_String : constant String := ".long   0x7D821008";
 
    procedure NOP with
       Inline => True;
@@ -132,9 +131,9 @@ package PowerPC is
 
    type MSR_Register_Type is
    record
-      Reserved1 : Bits_13_Zeroes := Bits_13_0; -- bit #0 .. #12 reserved
+      Reserved1 : Bits_13_Zeroes := Bits_13_0;
       POW       : Bits_1;
-      Reserved2 : Bits_1_Zeroes := Bits_1_0; -- bit #14 reserved
+      Reserved2 : Bits_1_Zeroes := Bits_1_0;
       ILE       : Bits_1;
       EE        : Boolean;
       PR        : Bits_1;
@@ -144,11 +143,11 @@ package PowerPC is
       SE        : Bits_1;
       BE        : Bits_1;
       FE1       : Bits_1;
-      Reserved3 : Bits_1_Zeroes := Bits_1_0; -- bit #24 reserved
+      Reserved3 : Bits_1_Zeroes := Bits_1_0;
       IP        : Bits_1;
       IR        : Bits_1;
       DR        : Bits_1;
-      Reserved4 : Bits_2_Zeroes := Bits_2_0; -- bit #28, #29 reserved
+      Reserved4 : Bits_2_Zeroes := Bits_2_0;
       RI        : Bits_1;
       LE        : Bits_1;
    end record with

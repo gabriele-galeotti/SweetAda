@@ -97,9 +97,9 @@
 #define FLAG_T0       (1 << 14)
 #define FLAG_T1       (1 << 15)
 
-#define NOP_INSTRUCTION             0x4E71
-#define BREAKPOINT_INSTRUCTION      0x4E4F /* TRAP #15 */
-#define BREAKPOINT_INSTRUCTION_SIZE 2
+#define OPCODE_NOP             0x4E71
+#define OPCODE_BREAKPOINT      0x4E4F
+#define OPCODE_BREAKPOINT_SIZE 2
 
 #endif /* _M68K_H */
 

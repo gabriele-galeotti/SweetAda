@@ -44,9 +44,10 @@ package CPU_x86 is
    ----------------------------------------------------------------------------
 
    -- INT $3
-   BREAKPOINT_Instruction      : constant Unsigned_8 := 16#CC#;
-   BREAKPOINT_Instruction_Size : constant            := 1;
-   BREAKPOINT_Asm_String       : constant String     := ".byte 0xCC";
+   Opcode_BREAKPOINT      : constant := 16#CC#;
+   Opcode_BREAKPOINT_Size : constant := 1;
+
+   BREAKPOINT_Asm_String : constant String := ".byte   0xCC";
 
    procedure NOP with
       Inline => True;

@@ -109,9 +109,9 @@
  * Breakpoint.
  */
 
-#define NOP_INSTRUCTION             0x90
-#define BREAKPOINT_INSTRUCTION      0xCC
-#define BREAKPOINT_INSTRUCTION_SIZE 1
+#define OPCODE_NOP             0x90
+#define OPCODE_BREAKPOINT      0xCC
+#define OPCODE_BREAKPOINT_SIZE 1
 
 #endif /* _I386_H */
 

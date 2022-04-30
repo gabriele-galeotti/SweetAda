@@ -36,9 +36,9 @@
 #define IRQ_VECTOR_ADDRESS                   0x18
 #define FIQ_VECTOR_ADDRESS                   0x1C
 
-#define NOP_INSTRUCTION             0xE1A00000
-#define BREAKPOINT_INSTRUCTION      0xE7FFDEFE
-#define BREAKPOINT_INSTRUCTION_SIZE 4
+#define OPCODE_NOP             0xE1A00000
+#define OPCODE_BREAKPOINT      0xE7FFDEFE
+#define OPCODE_BREAKPOINT_SIZE 4
 
 #endif /* _ARM_H */
 
