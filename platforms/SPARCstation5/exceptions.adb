@@ -73,13 +73,13 @@ package body Exceptions is
       function To_U32 is new Ada.Unchecked_Conversion (Storage_Offset, Unsigned_32);
    begin
       -------------------------------------------------------------------------
-      Trap_Template.Code (1) := 16#0100_0000#; -- nop
-      Trap_Template.Code (2) := 16#0100_0000#; -- nop
-      Trap_Template.Code (3) := 16#0100_0000#; -- nop
+      Trap_Template.Code (1) := Opcode_NOP;
+      Trap_Template.Code (2) := Opcode_NOP;
+      Trap_Template.Code (3) := Opcode_NOP;
       for Index in Trap_Table'Range loop
          Vector_Address := To_Address (Integer_Address (16#100# + Index));
          Displacement := Address_Displacement (Vector_Address, Trap_Table (Index).Code (0)'Address, 2);
-         Trap_Template.Code (0) := BRANCH_ALWAYS_Instruction or (To_U32 (Displacement) and 16#003F_FFFF#);
+         Trap_Template.Code (0) := Opcode_BRANCH_ALWAYS or (To_U32 (Displacement) and 16#003F_FFFF#);
          Trap_Table (Index) := Trap_Template;
       end loop;
       -------------------------------------------------------------------------
