@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with CPU;
-with Console; -- __FIX__ debug
 
 package body PBUF is
 
@@ -62,7 +61,6 @@ package body PBUF is
    ----------------------------------------------------------------------------
    procedure Init is
    begin
-      Nalloc := 0; -- __FIX__ debug remove
       for Index in Pool_Memory'Range loop
          declare
             P : Pbuf_Ptr;
@@ -102,7 +100,6 @@ package body PBUF is
             T_Result.all.Next := null;                  -- invalidate Next pointer
             T_Result.all.Nref := T_Result.all.Nref + 1; -- increment reference count
          end;
-         Nalloc := Nalloc + 1; -- __FIX__ debug remove
       end if;
       CPU.Irq_State_Set (Irq_State);
       return Result;
@@ -120,8 +117,6 @@ package body PBUF is
       N              : Pbuf_Ptr; -- freshly allocated pbuf
       Remaining_Size : Natural;
    begin
-      -- Console.Print ("PBUF allocating ...", NL => True);
-      -- Console.Print (Nalloc, Prefix => "currently allocated: ", NL => True); -- __FIX__ debug remove
       P := Allocate_Simple;
       if P = null then
          return null;
@@ -167,8 +162,6 @@ package body PBUF is
       P         : Pbuf_Ptr;
       Q         : Pbuf_Ptr;
    begin
-      -- Console.Print ("PBUF freeing ...", NL => True);
-      -- Console.Print (Nalloc, Prefix => "currently allocated: ", NL => True); -- __FIX__ debug remove
       Irq_State := CPU.Irq_State_Get;
       CPU.Irq_Disable;
       P := Item;
@@ -184,7 +177,6 @@ package body PBUF is
             P.all.Next := Pool_Pointer; -- head-insert
             Pool_Pointer := P;          -- update global pointer
             P := Q;                     -- examine next pbuf
-            Nalloc := Nalloc - 1; -- __FIX__ debug remove
          else
             -- this pbuf (and so every remaining pbuf in chain) is still
             -- referenced, stop walking

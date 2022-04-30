@@ -58,6 +58,4 @@ package PBUF is
    function Payload_CurrentAddress (P : Pbuf_Ptr) return System.Address with
       Inline => True;
 
-   Nalloc : Integer; -- __FIX__ debug remove
-
 end PBUF;
