@@ -46,6 +46,8 @@ package PowerPC is
       Inline => True;
    procedure BREAKPOINT with
       Inline => True;
+   procedure SYNC with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- PowerPC registers
