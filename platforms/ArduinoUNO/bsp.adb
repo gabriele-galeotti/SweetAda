@@ -36,9 +36,6 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- BSP_Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
-   begin
-      null;
-   end BSP_Setup;
+   procedure BSP_Setup is null;
 
 end BSP;

@@ -96,8 +96,7 @@ ccs::write_mem 0 0xFF40211C 4 0 0x8000C000
 ccs::write_mem 0 0xFF402124 4 0 0x03200064
 
 # DDR_SDRAM_CFG
-# previous configuration +
-# SDRAM interface logic is enabled
+# previous configuration + SDRAM interface logic enabled
 ccs::write_mem 0 0xFF402110 4 0 0xC3100000
 
 ################################################################################
