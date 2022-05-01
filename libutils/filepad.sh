@@ -119,15 +119,21 @@ REQUESTEDSIZE=$(printf "%s\n" $2 | awk "${AWK_SCRIPT_FUNCTION}")
 #
 if [ ${REQUESTEDSIZE} -lt ${FILESIZE} ] ; then
   MODULOREM=$(printf "%s\n" "${FILESIZE}%${REQUESTEDSIZE}" | bc)
-  PADCOUNT=$(($2-${MODULOREM}))
+  if [ ${MODULOREM} -gt 0 ] ; then
+    PADCOUNT=$(($2-${MODULOREM}))
+  else
+    PADCOUNT=0
+  fi
 else
   PADCOUNT=$((${REQUESTEDSIZE}-${FILESIZE}))
 fi
 
-dd if=/dev/zero ibs=1 count="${PADCOUNT}" >> $1 2> /dev/null
-if [ $? -ne 0 ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: dd."
-  exit 1
+if [ ${PADCOUNT} -gt 0 ] ; then
+  dd if=/dev/zero ibs=1 count="${PADCOUNT}" >> $1 2> /dev/null
+  if [ $? -ne 0 ] ; then
+    log_print_error "${SCRIPT_FILENAME}: *** Error: dd."
+    exit 1
+  fi
 fi
 
 exit 0

@@ -52,7 +52,15 @@ $filelength = $filebytes.Length
 
 if ($padlength -lt $filelength)
 {
-  $padbytes = ,[byte]0 * ($padlength - $filelength % $padlength)
+  $modulo = $filelength % $padlength
+  if ($modulo -eq 0)
+  {
+    $padbytes = $null
+  }
+  else
+  {
+    $padbytes = ,[byte]0 * ($padlength - $modulo)
+  }
 }
 else
 {
