@@ -168,22 +168,22 @@ package SH7750 is
    type FPSCR_Type is
    record
       RM           : Bits.Bits_2;  -- Rounding mode
-      FL_Inexact   : Boolean;
-      FL_Underflow : Boolean;
-      FL_Overflow  : Boolean;
-      FL_DivZero   : Boolean;
-      FL_Invalid   : Boolean;
-      EN_Inexact   : Boolean;
-      EN_Underflow : Boolean;
-      EN_Overflow  : Boolean;
-      EN_DivZero   : Boolean;
-      EN_Invalid   : Boolean;
-      CA_Inexact   : Boolean;
-      CA_Underflow : Boolean;
-      CA_Overflow  : Boolean;
-      CA_DivZero   : Boolean;
-      CA_Invalid   : Boolean;
-      CA_FPUErr    : Boolean;
+      FL_Inexact   : Boolean;      -- FPU exception flag field
+      FL_Underflow : Boolean;      --
+      FL_Overflow  : Boolean;      --
+      FL_DivZero   : Boolean;      --
+      FL_Invalid   : Boolean;      --
+      EN_Inexact   : Boolean;      -- FPU exception enable field
+      EN_Underflow : Boolean;      --
+      EN_Overflow  : Boolean;      --
+      EN_DivZero   : Boolean;      --
+      EN_Invalid   : Boolean;      --
+      CA_Inexact   : Boolean;      -- FPU exception cause field
+      CA_Underflow : Boolean;      --
+      CA_Overflow  : Boolean;      --
+      CA_DivZero   : Boolean;      --
+      CA_Invalid   : Boolean;      --
+      CA_FPUErr    : Boolean;      --
       DN           : Bits.Bits_1;  -- Denormalization mode
       PR           : Bits.Bits_1;  -- Precision mode
       SZ           : Bits.Bits_1;  -- Transfer size mode
