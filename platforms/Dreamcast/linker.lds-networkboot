@@ -3,8 +3,8 @@ ENTRY(_start)
 
 MEMORY
 {
-        ROM : ORIGIN = 0x8C010000, LENGTH = 256k
-        RAM : ORIGIN = 0x0C000000, LENGTH = 16M
+        /* ROM : ORIGIN = 0x8C010000, LENGTH = 256k */
+        RAM : ORIGIN = 0x8C010000, LENGTH = 16M
 }
 
 SECTIONS
@@ -25,7 +25,7 @@ SECTIONS
                 *(.eh_frame)
                 . = ALIGN(0x10);
                 _etext = .;
-        } > ROM
+        } > RAM
         /**********************************************************************
          *                                                                    *
          **********************************************************************/

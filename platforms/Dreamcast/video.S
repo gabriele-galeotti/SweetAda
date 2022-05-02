@@ -13,6 +13,23 @@
                 .global video
 video:
 
+                mov.l   r14,@-r15
+                sts     pr,r14
+                mov.l   r14,@-r15
+                mov.l   r0,@-r15
+                mov.l   r1,@-r15
+                mov.l   r2,@-r15
+                mov.l   r3,@-r15
+                mov.l   r4,@-r15
+                mov.l   r5,@-r15
+                mov.l   r6,@-r15
+                mov.l   r7,@-r15
+                mov.l   r8,@-r15
+                mov.l   r9,@-r15
+                mov.l   r10,@-r15
+                mov.l   r11,@-r15
+                mov.l   r12,@-r15
+                mov.l   r13,@-r15
                 ! first, make sure to run in the P2 area
                 mov.l   set_cache_addr,r0
                 mov.l   p2_mask,r1
@@ -35,18 +52,13 @@ set_cache:      ! now that we are in P2, it's safe to enable the cache
                 nop                     ! 8
                 jmp     @r0
                 mov     r1,r0
-
                 .align  4
 p2_mask:        .long   0xA0000000
 set_cache_addr: .long   set_cache
 main_addr:      .long   main
 ccr_addr:       .long   0xFF00001C
 ccr_data:       .word   0x090D
-
-                ! real program starts here
 main:
-                mov.l   r14,@-r15
-                sts     pr,r14
                 ! set up video mode according to A/V cable
                 bsr     check_cable
                 nop
@@ -63,27 +75,35 @@ main:
                 mov     r0,r6
                 bsr     draw_string
                 mov     #-1,r7
+                mov.l   @r15+,r13
+                mov.l   @r15+,r12
+                mov.l   @r15+,r11
+                mov.l   @r15+,r10
+                mov.l   @r15+,r9
+                mov.l   @r15+,r8
+                mov.l   @r15+,r7
+                mov.l   @r15+,r6
+                mov.l   @r15+,r5
+                mov.l   @r15+,r4
+                mov.l   @r15+,r3
+                mov.l   @r15+,r2
+                mov.l   @r15+,r1
+                mov.l   @r15+,r0
+                mov.l   @r15+,r14
                 lds     r14,pr
                 rts
                 mov.l   @r15+,r14
-
                 .align  4
-message:
-                .ascii  "hello, SweetAda"
+message:        .ascii  "hello, SweetAda"
                 .byte   0
-
                 .align  2
-
                 ! draw a text string on screen
-                !
                 ! assumes a 640*480 screen with RGB555 or RGB565 pixels
-
                 ! r4 = x
                 ! r5 = y
                 ! r6 = string
                 ! r7 = colour
-draw_string:
-                mov.l   r14,@-r15
+draw_string:    mov.l   r14,@-r15
                 sts     pr,r14
                 mov.l   r13,@-r15
                 mov.l   r12,@-r15
@@ -110,17 +130,13 @@ ds_done:        mov.l   @r15+,r10
                 lds     r14,pr
                 rts
                 mov.l   @r15+,r14
-
                 ! draw a "narrow" character on screen
-                !
                 ! assumes a 640*480 screen with RGB555 or RGB565 pixels
-
                 ! r4 = x
                 ! r5 = y
                 ! r6 = char
                 ! r7 = colour
-draw_char12:
-                ! first get the address of the ROM font
+draw_char12:    ! first get the address of the ROM font
                 sts     pr,r3
                 mov.l   syscall_b4,r0
                 mov.l   @r0,r0
@@ -207,18 +223,13 @@ nopixel2:       bf/s    drawx2
                 add     r3,r0
                 rts
                 nop
-
                 .align  4
 syscall_b4:     .long   0x8C0000B4
 drawmod:        .word   2*(640-12)
-
                 ! clear screen
-                !
                 ! assumes a 640*480 screen with RGB555 or RGB565 pixels
-
                 ! r4 = pixel colour
-clrscr:
-                mov.l   vrambase,r0
+clrscr:         mov.l   vrambase,r0
                 mov.l   clrcount,r1
 clrloop:        mov.w   r4,@r0          ! clear one pixel
                 dt      r1
@@ -226,24 +237,18 @@ clrloop:        mov.w   r4,@r0          ! clear one pixel
                 add     #2,r0
                 rts
                 nop
-
                 .align  4
 vrambase:       .long   0xA5000000
 clrcount:       .long   640*480
-
                 ! set up video registers to the desired
                 ! video mode (only 640*480 supported right now)
-                !
                 ! note: this function does not currently initialize
                 !       all registers, but assume that the boot ROM
                 !       has set up reasonable defaults for syncs etc.
-                !
                 ! TODO: PAL
-
                 ! r4 = cabletype (0=VGA, 2=RGB, 3=Composite)
                 ! r5 = pixel mode (0=RGB555, 1=RGB565, 3=RGB888)
-init_video:
-                ! look up bytes per pixel as shift value
+init_video:     ! look up bytes per pixel as shift value
                 mov     #3,r1
                 and     r5,r1
                 mova    bppshifttab,r0
@@ -326,21 +331,17 @@ rgbmode:        shll8   r0
                 mov.l   r0,@r1
                 rts
                 nop
-
                 .align  4
 videobase:      .long   0xA05F8000
 cvbsbase:       .long   0xA0702C00
 bppshifttab:    .byte   1,1,0,2
 hpos:           .word   0xA4
-
                 ! check type of A/V cable connected
-                !
                 ! 0 = VGA
                 ! 1 = ---
                 ! 2 = RGB
                 ! 3 = Composite
-check_cable:
-                ! set PORT8 and PORT9 to input
+check_cable:    ! set PORT8 and PORT9 to input
                 mov.l   porta,r0
                 mov.l   pctra_clr,r2
                 mov.l   @r0,r1
@@ -353,11 +354,8 @@ check_cable:
                 shlr8   r0
                 rts
                 and     #3,r0
-
                 .align  4
 porta:          .long   0xFF80002C
 pctra_clr:      .long   0xFFF0FFFF
 pctra_set:      .long   0x000A0000
-
-                .end
 

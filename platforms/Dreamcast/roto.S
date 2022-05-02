@@ -32,7 +32,35 @@ roto:
                 mov.l   r11,@-r15
                 mov.l   r12,@-r15
                 mov.l   r13,@-r15
-#if 1
+                ! first, make sure to run in the P2 area
+                mov.l   set_cache_addr,r0
+                mov.l   p2_mask,r1
+                or      r1,r0
+                jmp     @r0
+                nop
+set_cache:      ! now that we are in P2, it's safe to enable the cache
+                mov.l   ccr_addr,r0
+                mov.w   ccr_data,r1
+                mov.l   r1,@r0
+                ! after changing CCR, eight instructions must be executed
+                ! before it's safe to enter a cached area such as P1
+                mov.l   main_addr,r0    ! 1
+                mov     #0,r1           ! 2
+                nop                     ! 3
+                nop                     ! 4
+                nop                     ! 5
+                nop                     ! 6
+                nop                     ! 7
+                nop                     ! 8
+                jmp     @r0
+                mov     r1,r0
+                .align  4
+p2_mask:        .long   0xA0000000
+set_cache_addr: .long   set_cache
+main_addr:      .long   main
+ccr_addr:       .long   0xFF00001C
+ccr_data:       .word   0x090D
+main:
                 //
                 // Clear screen.
                 //
@@ -43,7 +71,6 @@ roto:
                 dt      r2
                 bf/s    1b
                 add     #4,r0
-#endif
                 //
                 // Generate xor-texture.
                 //
@@ -65,10 +92,7 @@ xorx:           mov     r3,r4
                 // Graphics.
                 //
                 mov     #1,r12
-#if 0
-                // DEBUG
                 mov     #127,r13
-#endif
 loop:           lds     r12,fpul
                 float   fpul,fr4
                 mov     #20,r14
@@ -116,12 +140,10 @@ loop:           lds     r12,fpul
                 add     r5,r3
                 mov.l   VIDEO_RAM,r0
                 mov.l   HEIGHT,r5
-yloop:
-                mov.l   WIDTH,r6
+yloop:          mov.l   WIDTH,r6
                 mov     r3,r7                   // sin
                 mov     r4,r8                   // cos
-xloop:
-                //mov.l   VIDEO_RAM,r0
+xloop:          //mov.l   VIDEO_RAM,r0
                 mov.l   TEXTURE,r9
                 mov     #0xFF,r11
                 extu.b  r11,r11
@@ -148,19 +170,9 @@ xloop:
                 dt      r5
                 bf      yloop
                 add     #1,r12
-#if 0
-                // DEBUG
-                cmp/hi  r13,r12
-                bf      loop
-                mov.l   dcload_syscall,r0
-                mov.l   @r0,r0
-                jmp     @r0
-                mov     #15,r4
-                .align  4
-dcload_syscall: .long   0x8C004008
-#else
-                //bra     loop
-                //nop
+                dt      r13
+                bf/s    loop
+                nop
                 mov.l   @r15+,r13
                 mov.l   @r15+,r12
                 mov.l   @r15+,r11
@@ -179,8 +191,6 @@ dcload_syscall: .long   0x8C004008
                 lds     r14,pr
                 rts
                 mov.l   @r15+,r14
-#endif
-
                 .align  4
 CLRCOUNT:       .long   640*480/2
 VIDEO_BASE:     .long   0xA5000000

@@ -5,11 +5,6 @@
 # SH7750 LE
 #
 
-# force ZFP
-RTS := zfp
-PROFILE := zfp
-USE_LIBADA := N
-
 CPU       := SuperH
 CPU_MODEL := SH7750
 

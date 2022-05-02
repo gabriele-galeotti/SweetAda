@@ -23,6 +23,7 @@ with Configure;
 with Bits;
 with SH7750;
 with MMIO;
+with Dreamcast;
 with Exceptions;
 with IOEMU;
 with Console;
@@ -43,9 +44,6 @@ package body BSP is
    use Bits;
    use SH7750;
 
-   function SCIF_SCFDR2_Read return Unsigned_16 with
-      Inline => True;
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -55,19 +53,12 @@ package body BSP is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- SCIF_SCFDR2_Read
-   ----------------------------------------------------------------------------
-   function SCIF_SCFDR2_Read return Unsigned_16 is
-   begin
-      return MMIO.Read_U16 (SCIF.SCFDR2'Address);
-   end SCIF_SCFDR2_Read;
-
-   ----------------------------------------------------------------------------
    -- Console wrappers
    ----------------------------------------------------------------------------
 
    procedure Console_Putchar (C : in Character) is
    begin
+      -- wait for transmitter available
       loop
          exit when SCIF.SCFDR2.T < 16#10#;
       end loop;
@@ -75,8 +66,15 @@ package body BSP is
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      -- wait for receiver available
+      loop
+         exit when SCIF.SCFDR2.R > 0;
+      end loop;
+      Data := SCIF.SCFRDR2;
+      SCIF.SCFSR2.RDF := False;
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -84,14 +82,26 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
    begin
-      -- enable SCIF transmitter ----------------------------------------------
-      SCIF.SCSCR2.TE := True;
-      UART1_Descriptor.Base_Address  := To_Address (IOEMU.IOEMU_SERIALPORT1_BASEADDRESS);
-      UART1_Descriptor.Scale_Address := 2;
-      UART1_Descriptor.Irq           := 0; -- enable if /= 0
-      UART1_Descriptor.Read          := MMIO.Read'Access;
-      UART1_Descriptor.Write         := MMIO.Write'Access;
-      UARTIOEMU.Init (UART1_Descriptor);
+      -- enable SCIF RX/TX ----------------------------------------------------
+      SCIF.SCSCR2 := (
+                      CKE1   => CKE1_Internal,
+                      REIE   => False,
+                      RE     => True,
+                      TE     => True,
+                      RIE    => False,
+                      TIE    => False,
+                      others => <>
+                     );
+      SCIF.SCFCR2 := (
+                      LOOPBACK => False,
+                      RFRST    => False,
+                      TFRST    => False,
+                      MCE      => False,
+                      TTRG     => TTRG_1,
+                      RTRG     => RTRG_1,
+                      RSTRG    => 0,
+                      others   => 0
+                     );
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
@@ -103,6 +113,27 @@ package body BSP is
          Console.Print ("Dreamcast (GXemul emulator)", NL => True);
       else
          Console.Print ("Dreamcast", NL => True);
+      end if;
+      Console.Print (Dreamcast.Video_Font, Prefix => "ROM font @ ", NL => True);
+      -------------------------------------------------------------------------
+      if True then
+         declare
+            Cable       : constant Dreamcast.Video_Cable_Type := Dreamcast.Video_Cable;
+            S_VGA       : aliased constant String := "VGA";
+            S_NONE      : aliased constant String := "NONE";
+            S_RGB       : aliased constant String := "RGB";
+            S_COMPOSITE : aliased constant String := "COMPOSITE";
+            S           : access constant String;
+         begin
+            case Cable is
+               when Dreamcast.CABLE_VGA       => S := S_VGA'Access;
+               when Dreamcast.CABLE_NONE      => S := S_NONE'Access;
+               when Dreamcast.CABLE_RGB       => S := S_RGB'Access;
+               when Dreamcast.CABLE_COMPOSITE => S := S_COMPOSITE'Access;
+            end case;
+            Console.Print ("Video cable: ", NL => False);
+            Console.Print (S.all, NL => True);
+         end;
       end if;
       -------------------------------------------------------------------------
    end BSP_Setup;
