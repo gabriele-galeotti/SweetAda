@@ -76,7 +76,7 @@ package body PPC405 is
    end MTDCR;
 
    ----------------------------------------------------------------------------
-   -- PPC405 SPRs access subprograms
+   -- PPC405 SPRs subprograms
    ----------------------------------------------------------------------------
 
    function TSR_Read return TSR_Register_Type is
@@ -84,6 +84,7 @@ package body PPC405 is
    begin
       return SPR_Read;
    end TSR_Read;
+
    procedure TSR_Write (Value : in TSR_Register_Type) is
       procedure SPR_Write is new MTSPR (TSR, TSR_Register_Type);
    begin
@@ -95,6 +96,7 @@ package body PPC405 is
    begin
       return SPR_Read;
    end TCR_Read;
+
    procedure TCR_Write (Value : in TCR_Register_Type) is
       procedure SPR_Write is new MTSPR (TCR, TCR_Register_Type);
    begin
@@ -106,6 +108,7 @@ package body PPC405 is
    begin
       return SPR_Read;
    end PIT_Read;
+
    procedure PIT_Write (Value : in Unsigned_32) is
       procedure SPR_Write is new MTSPR (PIT, Unsigned_32);
    begin
@@ -113,7 +116,7 @@ package body PPC405 is
    end PIT_Write;
 
    ----------------------------------------------------------------------------
-   -- DCRs access subprograms
+   -- DCRs subprograms
    ----------------------------------------------------------------------------
 
    function UIC0_ER_Read return UIC0_ER_Register_Type is
@@ -121,6 +124,7 @@ package body PPC405 is
    begin
       return DCR_Read;
    end UIC0_ER_Read;
+
    procedure UIC0_ER_Write (Value : in UIC0_ER_Register_Type) is
       procedure DCR_Write is new MTDCR (UIC0_ER, UIC0_ER_Register_Type);
    begin

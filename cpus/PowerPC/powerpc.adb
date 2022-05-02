@@ -91,9 +91,24 @@ package body PowerPC is
    end SYNC;
 
    ----------------------------------------------------------------------------
-   -- MSR
+   -- ISYNC
    ----------------------------------------------------------------------------
+   procedure ISYNC is
+   begin
+      Asm (
+           Template => ""              & CRLF &
+                       "        isync" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end ISYNC;
 
+   ----------------------------------------------------------------------------
+   -- MSR_Read
+   ----------------------------------------------------------------------------
    function MSR_Read return MSR_Register_Type is
       Result : MSR_Register_Type;
    begin
@@ -108,6 +123,10 @@ package body PowerPC is
           );
       return Result;
    end MSR_Read;
+
+   ----------------------------------------------------------------------------
+   -- MSR_Write
+   ----------------------------------------------------------------------------
    procedure MSR_Write (Value : in MSR_Register_Type) is
    begin
       Asm (
@@ -122,7 +141,7 @@ package body PowerPC is
    end MSR_Write;
 
    ----------------------------------------------------------------------------
-   -- SPRs function templates
+   -- SPRs generics
    ----------------------------------------------------------------------------
 
    function MFSPR return Register_Type is
@@ -157,7 +176,7 @@ package body PowerPC is
    end MTSPR;
 
    ----------------------------------------------------------------------------
-   -- SPRs access subprograms
+   -- SPRs subprograms
    ----------------------------------------------------------------------------
 
    function PVR_Read return PVR_Register_Type is

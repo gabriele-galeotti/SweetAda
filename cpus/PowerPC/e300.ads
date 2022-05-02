@@ -38,6 +38,8 @@ package e300 is
    -- SVR System Version Register
    -- 603e/e300 core: SPR 286 (0x11E)
    SVR : constant SPR_Type := 286;
-   function SVR_Read return Unsigned_32;
+
+   function SVR_Read return Unsigned_32 with
+      Inline => True;
 
 end e300;

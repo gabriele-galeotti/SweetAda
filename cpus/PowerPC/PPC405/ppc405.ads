@@ -36,7 +36,7 @@ package PPC405 is
    use PowerPC;
 
    ----------------------------------------------------------------------------
-   -- DCRs function templates
+   -- DCRs generics
    ----------------------------------------------------------------------------
 
    type DCR_Type is mod 2**10; -- 0 .. 1023
@@ -103,7 +103,7 @@ package PPC405 is
    -- TCR Timer Control Register
    ----------------------------------------------------------------------------
 
-   TCR : constant SPR_Type := 986; -- 0x3da
+   TCR : constant SPR_Type := 986; -- 0x3DA
 
    type TCR_WP_Type is new Bits_2;
    TCR_WP_17 : constant TCR_WP_Type := 2#00#; -- 2^17 clocks
@@ -150,7 +150,7 @@ package PPC405 is
    -- PIT Programmable Interval Timer
    ----------------------------------------------------------------------------
 
-   PIT : constant SPR_Type := 987; -- 0x3db
+   PIT : constant SPR_Type := 987; -- 0x3DB
 
    function PIT_Read return Unsigned_32 with
       Inline => True;

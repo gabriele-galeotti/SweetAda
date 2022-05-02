@@ -48,6 +48,8 @@ package PowerPC is
       Inline => True;
    procedure SYNC with
       Inline => True;
+   procedure ISYNC with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- PowerPC registers
@@ -205,6 +207,7 @@ package PowerPC is
    ----------------------------------------------------------------------------
 
    PVR : constant SPR_Type := 287; -- 0x11F
+
    type PVR_Register_Type is
    record
       Version  : Unsigned_16;
@@ -216,7 +219,9 @@ package PowerPC is
       Version  at 0 range 0 .. 15;
       Revision at 0 range 16 .. 31;
    end record;
-   function PVR_Read return PVR_Register_Type;
+
+   function PVR_Read return PVR_Register_Type with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions
