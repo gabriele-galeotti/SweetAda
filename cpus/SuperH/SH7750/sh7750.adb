@@ -74,12 +74,29 @@ package body SH7750 is
    end BREAKPOINT;
 
    ----------------------------------------------------------------------------
+   -- Asm_Call
+   ----------------------------------------------------------------------------
+   procedure Asm_Call (Target_Address : in Address) is
+   begin
+      Asm (
+           Template => ""                    & CRLF &
+                       "        jsr     @%0" & CRLF &
+                       "        nop        " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => System.Address'Asm_Input ("r", Target_Address),
+           Clobber  => "pr",
+           Volatile => True
+          );
+   end Asm_Call;
+
+   ----------------------------------------------------------------------------
    -- Status Register Read/Write
    ----------------------------------------------------------------------------
 
-   function Status_Register_Read return Status_Register_Type is
+   function SR_Read return SR_Type is
       Value : Unsigned_32;
-      function To_SR is new Ada.Unchecked_Conversion (Unsigned_32, Status_Register_Type);
+      function To_SR is new Ada.Unchecked_Conversion (Unsigned_32, SR_Type);
    begin
       Asm (
            Template => ""                      & CRLF &
@@ -91,10 +108,10 @@ package body SH7750 is
            Volatile => True
           );
       return To_SR (Value);
-   end Status_Register_Read;
+   end SR_Read;
 
-   procedure Status_Register_Write (Value : in Status_Register_Type) is
-      function To_U32 is new Ada.Unchecked_Conversion (Status_Register_Type, Unsigned_32);
+   procedure SR_Write (Value : in SR_Type) is
+      function To_U32 is new Ada.Unchecked_Conversion (SR_Type, Unsigned_32);
    begin
       Asm (
            Template => ""                      & CRLF &
@@ -105,6 +122,6 @@ package body SH7750 is
            Clobber  => "",
            Volatile => True
           );
-   end Status_Register_Write;
+   end SR_Write;
 
 end SH7750;
