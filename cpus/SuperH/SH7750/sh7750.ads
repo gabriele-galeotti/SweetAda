@@ -167,28 +167,28 @@ package SH7750 is
 
    type FPSCR_Type is
    record
-      RM           : Bits.Bits_2;  -- Rounding mode
-      FL_Inexact   : Boolean;      -- FPU exception flag field
-      FL_Underflow : Boolean;      --
-      FL_Overflow  : Boolean;      --
-      FL_DivZero   : Boolean;      --
-      FL_Invalid   : Boolean;      --
-      EN_Inexact   : Boolean;      -- FPU exception enable field
-      EN_Underflow : Boolean;      --
-      EN_Overflow  : Boolean;      --
-      EN_DivZero   : Boolean;      --
-      EN_Invalid   : Boolean;      --
-      CA_Inexact   : Boolean;      -- FPU exception cause field
-      CA_Underflow : Boolean;      --
-      CA_Overflow  : Boolean;      --
-      CA_DivZero   : Boolean;      --
-      CA_Invalid   : Boolean;      --
-      CA_FPUErr    : Boolean;      --
-      DN           : Bits.Bits_1;  -- Denormalization mode
-      PR           : Bits.Bits_1;  -- Precision mode
-      SZ           : Bits.Bits_1;  -- Transfer size mode
-      FR           : Bits.Bits_1;  -- Floating-point register bank
-      Reserved     : Bits.Bits_10;
+      RM           : Bits_2;  -- Rounding mode
+      FL_Inexact   : Boolean; -- FPU exception flag fields
+      FL_Underflow : Boolean; --
+      FL_Overflow  : Boolean; --
+      FL_DivZero   : Boolean; --
+      FL_Invalid   : Boolean; --
+      EN_Inexact   : Boolean; -- FPU exception enable fields
+      EN_Underflow : Boolean; --
+      EN_Overflow  : Boolean; --
+      EN_DivZero   : Boolean; --
+      EN_Invalid   : Boolean; --
+      CA_Inexact   : Boolean; -- FPU exception cause fields
+      CA_Underflow : Boolean; --
+      CA_Overflow  : Boolean; --
+      CA_DivZero   : Boolean; --
+      CA_Invalid   : Boolean; --
+      CA_FPUErr    : Boolean; --
+      DN           : Bits_1;  -- Denormalization mode
+      PR           : Bits_1;  -- Precision mode
+      SZ           : Bits_1;  -- Transfer size mode
+      FR           : Bits_1;  -- Floating-point register bank
+      Reserved     : Bits_10;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -222,8 +222,6 @@ package SH7750 is
    -- Section 12 Timer Unit (TMU)
    ----------------------------------------------------------------------------
 
-   TMU_BASEADDRESS : constant := 16#FFD8_0000#; -- P4 area
-
    -- 12.2.1 Timer Output Control Register (TOCR)
 
    TCOE_External : constant := 0; -- Timer clock pin (TCLK) is used as ext clock in or in capture control in pin
@@ -231,8 +229,8 @@ package SH7750 is
 
    type TOCR_Type is
    record
-      TCOE     : Bits.Bits_1; -- Timer Clock Pin Control
-      Reserved : Bits.Bits_7;
+      TCOE     : Bits_1; -- Timer Clock Pin Control
+      Reserved : Bits_7;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -246,10 +244,10 @@ package SH7750 is
 
    type TSTR_Type is
    record
-      STR0     : Boolean;     -- Counter Start 0
-      STR1     : Boolean;     -- Counter Start 1
-      STR2     : Boolean;     -- Counter Start 2
-      Reserved : Bits.Bits_5;
+      STR0     : Boolean; -- Counter Start 0
+      STR1     : Boolean; -- Counter Start 1
+      STR2     : Boolean; -- Counter Start 2
+      Reserved : Bits_5;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -285,18 +283,18 @@ package SH7750 is
 
    type TCR_Type (T : TMU_Kind := CHANNEL_01) is
    record
-      TPSC : Bits.Bits_3; -- Timer Prescaler 2 to 0
-      CKEG : Bits.Bits_2; -- Clock Edge 1 and 0
-      UNIE : Boolean;     -- Underflow Interrupt Control
-      UNF  : Boolean;     -- Underflow Flag
+      TPSC : Bits_3;  -- Timer Prescaler 2 to 0
+      CKEG : Bits_2;  -- Clock Edge 1 and 0
+      UNIE : Boolean; -- Underflow Interrupt Control
+      UNF  : Boolean; -- Underflow Flag
       case T is
          when CHANNEL_01 =>
-            Reserved1 : Bits.Bits_2;
-            Reserved2 : Bits.Bits_7;
+            Reserved1 : Bits_2;
+            Reserved2 : Bits_7;
          when CHANNEL_2 =>
-            ICPE      : Bits.Bits_2; -- Input Capture Control
-            ICPF      : Boolean;     -- Input Capture Interrupt Flag
-            Reserved  : Bits.Bits_6;
+            ICPE      : Bits_2;  -- Input Capture Control
+            ICPF      : Boolean; -- Input Capture Interrupt Flag
+            Reserved  : Bits_6;
       end case;
    end record with
       Bit_Order       => Low_Order_First,
@@ -315,11 +313,93 @@ package SH7750 is
       Reserved  at 0 range 10 .. 15;
    end record;
 
+   -- 12.1.4 Register Configuration
+
+pragma Warnings (Off, "* bits of ""TMU_Type"" unused");
+   type TMU_Type is
+   record
+      TOCR  : TOCR_Type   with Volatile_Full_Access => True;
+      TSTR  : TSTR_Type   with Volatile_Full_Access => True;
+      TCOR0 : Unsigned_32 with Volatile_Full_Access => True;
+      TCNT0 : Unsigned_32 with Volatile_Full_Access => True;
+      TCR0  : TCR_Type    with Volatile_Full_Access => True;
+      TCOR1 : Unsigned_32 with Volatile_Full_Access => True;
+      TCNT1 : Unsigned_32 with Volatile_Full_Access => True;
+      TCR1  : TCR_Type    with Volatile_Full_Access => True;
+      TCOR2 : Unsigned_32 with Volatile_Full_Access => True;
+      TCNT2 : Unsigned_32 with Volatile_Full_Access => True;
+      TCR2  : TCR_Type    with Volatile_Full_Access => True;
+      TCPR2 : Unsigned_32 with Volatile_Full_Access => True;
+   end record with
+      Alignment => 4,
+      Size      => 16#30# * 8;
+   for TMU_Type use
+   record
+      TOCR  at 16#00# range 0 .. 7;
+      TSTR  at 16#04# range 0 .. 7;
+      TCOR0 at 16#08# range 0 .. 31;
+      TCNT0 at 16#0C# range 0 .. 31;
+      TCR0  at 16#10# range 0 .. 15;
+      TCOR1 at 16#14# range 0 .. 31;
+      TCNT1 at 16#18# range 0 .. 31;
+      TCR1  at 16#1C# range 0 .. 15;
+      TCOR2 at 16#20# range 0 .. 31;
+      TCNT2 at 16#24# range 0 .. 31;
+      TCR2  at 16#28# range 0 .. 15;
+      TCPR2 at 16#2C# range 0 .. 31;
+   end record;
+pragma Warnings (On, "* bits of ""TMU_Type"" unused");
+
+   TMU_BASEADDRESS : constant := 16#FFD8_0000#; -- P4 area
+
+   TMU : aliased TMU_Type with
+      Address    => To_Address (TMU_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- Section 16 Serial Communication Interface with FIFO (SCIF)
    ----------------------------------------------------------------------------
 
-   SCIF_BASEADDRESS : constant := 16#FFE8_0000#; -- P4 area
+   -- 16.2.5 Serial Mode Register (SCSMR2)
+
+   CKS_DIV1  : constant := 2#00#; -- Pφ clock
+   CKS_DIV4  : constant := 2#01#; -- Pφ/4 clock
+   CKS_DIV16 : constant := 2#10#; -- Pφ/16 clock
+   CKS_DIV64 : constant := 2#11#; -- Pφ/64 clock
+
+   STOP_1 : constant := 0; -- 1 stop bit
+   STOP_2 : constant := 1; -- 2 stop bits
+
+   OnE_EVEN : constant := 0; -- Even parity
+   OnE_ODD  : constant := 1; -- Odd parity
+
+   CHR_8 : constant := 0; -- 8-bit data
+   CHR_7 : constant := 1; -- 7-bit data
+
+   type SCSMR2_Type is
+   record
+      CKS       : Bits_2;  -- Clock Select 1 and 0
+      Reserved1 : Bits_1;
+      STOP      : Bits_1;  -- Stop Bit Length
+      OnE       : Bits_1;  -- Parity Mode
+      PE        : Boolean; -- Parity Enable
+      CHR       : Bits_1;  -- Character Length
+      Reserved2 : Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SCSMR2_Type use
+   record
+      CKS       at 0 range 0 .. 1;
+      Reserved1 at 0 range 2 .. 2;
+      STOP      at 0 range 3 .. 3;
+      OnE       at 0 range 4 .. 4;
+      PE        at 0 range 5 .. 5;
+      CHR       at 0 range 6 .. 6;
+      Reserved2 at 0 range 7 .. 7;
+   end record;
 
    -- 16.2.6 Serial Control Register (SCSCR2)
 
@@ -407,14 +487,14 @@ package SH7750 is
 
    type SCFCR2_Type is
    record
-      LOOPBACK : Boolean;     -- Loopback Test
-      RFRST    : Boolean;     -- Receive FIFO Data Register Reset
-      TFRST    : Boolean;     -- Transmit FIFO Data Register Reset
-      MCE      : Boolean;     -- Modem Control Enable
-      TTRG     : Bits.Bits_2; -- Transmit FIFO Data Number Trigger
-      RTRG     : Bits.Bits_2; -- Receive FIFO Data Number Trigger
-      RSTRG    : Bits.Bits_3; -- nRTS2 Output Active Trigger
-      Reserved : Bits.Bits_5;
+      LOOPBACK : Boolean; -- Loopback Test
+      RFRST    : Boolean; -- Receive FIFO Data Register Reset
+      TFRST    : Boolean; -- Transmit FIFO Data Register Reset
+      MCE      : Boolean; -- Modem Control Enable
+      TTRG     : Bits_2;  -- Transmit FIFO Data Number Trigger
+      RTRG     : Bits_2;  -- Receive FIFO Data Number Trigger
+      RSTRG    : Bits_3;  -- nRTS2 Output Active Trigger
+      Reserved : Bits_5;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -449,25 +529,78 @@ package SH7750 is
       Reserved2 at 0 range 13 .. 15;
    end record;
 
+   -- 16.2.11 Serial Port Register (SCSPTR2)
+
+   SPB2IO_N    : constant := 0; -- SPB2DT bit value is not output to the TxD2 pin
+   SPB2IO_TxD2 : constant := 1; -- SPB2DT bit value is output to the TxD2 pin
+
+   CTSIO_N     : constant := 0; -- CTSDT bit value is not output to nCTS2pin
+   CTSIO_nCTS2 : constant := 1; -- CTSDT bit value is output to nCTS2pin
+
+   RTSDT_N     : constant := 0; -- RTSDT bit value is not output to nRTS2pin
+   RTSDT_nRTS2 : constant := 1; -- RTSDT bit value is output to nRTS2pin
+
+   type SCSPTR2_Type is
+   record
+      SPB2DT    : Bits_1; -- Serial Port Break Data
+      SPB2IO    : Bits_1; -- Serial Port Break I/O
+      Reserved1 : Bits_2;
+      CTSDT     : Bits_1; -- Serial Port CTS Port Data
+      CTSIO     : Bits_1; -- Serial Port CTS Port I/O
+      RTSDT     : Bits_1; -- Serial Port RTS Port Data
+      RTSIO     : Bits_1; -- Serial Port RTS Port I/O
+      Reserved2 : Bits_8;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for SCSPTR2_Type use
+   record
+      SPB2DT    at 0 range 0 .. 0;
+      SPB2IO    at 0 range 1 .. 1;
+      Reserved1 at 0 range 2 .. 3;
+      CTSDT     at 0 range 4 .. 4;
+      CTSIO     at 0 range 5 .. 5;
+      RTSDT     at 0 range 6 .. 6;
+      RTSIO     at 0 range 7 .. 7;
+      Reserved2 at 0 range 8 .. 15;
+   end record;
+
+   -- 16.2.12 Line Status Register (SCLSR2)
+
+   type SCLSR2_Type is
+   record
+      ORER     : Boolean; -- Overrun Error
+      Reserved : Bits_15;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for SCLSR2_Type use
+   record
+      ORER     at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 15;
+   end record;
+
+   -- 16.1.4 Register Configuration
+
 pragma Warnings (Off, "* bits of ""SCIF_Type"" unused");
    type SCIF_Type is
    record
-      SCSMR2  : Unsigned_16 with Volatile_Full_Access => True;
-      SCBRR2  : Unsigned_8  with Volatile_Full_Access => True;
-      SCSCR2  : SCSCR2_Type with Volatile_Full_Access => True;
-      SCFTDR2 : Unsigned_8  with Volatile_Full_Access => True;
-      SCFSR2  : SCFSR2_Type with Volatile_Full_Access => True;
-      SCFRDR2 : Unsigned_8  with Volatile_Full_Access => True;
-      SCFCR2  : SCFCR2_Type with Volatile_Full_Access => True;
-      SCFDR2  : SCFDR2_Type with Volatile_Full_Access => True;
-      SCSPTR2 : Unsigned_16 with Volatile_Full_Access => True;
-      SCLSR2  : Unsigned_16 with Volatile_Full_Access => True;
+      SCSMR2  : SCSMR2_Type  with Volatile_Full_Access => True;
+      SCBRR2  : Unsigned_8   with Volatile_Full_Access => True;
+      SCSCR2  : SCSCR2_Type  with Volatile_Full_Access => True;
+      SCFTDR2 : Unsigned_8   with Volatile_Full_Access => True;
+      SCFSR2  : SCFSR2_Type  with Volatile_Full_Access => True;
+      SCFRDR2 : Unsigned_8   with Volatile_Full_Access => True;
+      SCFCR2  : SCFCR2_Type  with Volatile_Full_Access => True;
+      SCFDR2  : SCFDR2_Type  with Volatile_Full_Access => True;
+      SCSPTR2 : SCSPTR2_Type with Volatile_Full_Access => True;
+      SCLSR2  : SCLSR2_Type  with Volatile_Full_Access => True;
    end record with
       Alignment => 4,
       Size      => 16#28# * 8;
    for SCIF_Type use
    record
-      SCSMR2  at 16#00# range 0 .. 15;
+      SCSMR2  at 16#00# range 0 .. 7;
       SCBRR2  at 16#04# range 0 .. 7;
       SCSCR2  at 16#08# range 0 .. 15;
       SCFTDR2 at 16#0C# range 0 .. 7;
@@ -479,6 +612,8 @@ pragma Warnings (Off, "* bits of ""SCIF_Type"" unused");
       SCLSR2  at 16#24# range 0 .. 15;
    end record;
 pragma Warnings (On, "* bits of ""SCIF_Type"" unused");
+
+   SCIF_BASEADDRESS : constant := 16#FFE8_0000#; -- P4 area
 
    SCIF : aliased SCIF_Type with
       Address    => To_Address (SCIF_BASEADDRESS),
