@@ -34,13 +34,6 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 configure :
 	@$(PROCESSCFG) configure.h.in configure.h
 	@$(PROCESSCFG) configure.ads.in configure.ads
-ifeq ($(ROM_BOOT),Y)
-	@$(CREATESYMLINK) linker.lds-ROM linker.lds
-else ifeq ($(CDROM_BOOT),Y)
-	@$(CREATESYMLINK) linker.lds-CD-ROM linker.lds
-else ifeq ($(NETWORK_BOOT),Y)
-	@$(CREATESYMLINK) linker.lds-networkboot linker.lds
-endif
 
 .PHONY : postbuild
 postbuild :
@@ -63,7 +56,7 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-	$(RM) linker.lds configure.h configure.ads
+	$(RM) configure.h configure.ads
 
 .PHONY : dep
 dep :

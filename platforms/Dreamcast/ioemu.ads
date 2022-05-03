@@ -54,8 +54,4 @@ package IOEMU is
       Import     => True,
       Convention => Ada;
 
-   -- IOEMU serial port 1
-   -- RX/TX = 0x005F69F0, control = 0x005F69F4, status = 0x005F69F8
-   IOEMU_SERIALPORT1_BASEADDRESS : constant := IOEMU_ASIC_BASEADDRESS + 16#F0#;
-
 end IOEMU;

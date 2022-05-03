@@ -14,7 +14,7 @@ OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --pad-to=0x00200000 --gap-fill=0x00
 
-ADDITIONAL_OBJECTS += roto serial video
+ADDITIONAL_OBJECTS += roto video
 
 #ROM_BOOT := Y
 CDROM_BOOT := Y
