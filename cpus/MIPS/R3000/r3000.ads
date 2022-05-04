@@ -41,26 +41,26 @@ package R3000 is
 
    type Status_Register_Type is
    record
-      IEc     : Boolean;
-      KUc     : Boolean;
-      IEp     : Boolean;
-      KUp     : Boolean;
-      IEo     : Boolean;
-      KUo     : Boolean;
+      IEc     : Boolean;                   -- IEc is set 0 to prevent the CPU taking any interrupt, 1 to enable.
+      KUc     : Boolean;                   -- KUc is set 1 when running with kernel privileges, 0 for user mode.
+      IEp     : Boolean;                   -- IE previous
+      KUp     : Boolean;                   -- KU previous
+      IEo     : Boolean;                   -- IE old
+      KUo     : Boolean;                   -- KU old
       Unused1 : Bits_2_Zeroes := Bits_2_0;
-      IM      : Unsigned_8;
-      IsC     : Boolean;
-      SwC     : Boolean;
-      PZ      : Boolean;
-      CM      : Boolean;
-      PE      : Boolean;
-      TS      : Boolean;
-      BEV     : Boolean;
+      IM      : Unsigned_8;                -- interrupt mask
+      IsC     : Boolean;                   -- isolate (data) cache
+      SwC     : Boolean;                   -- swap caches
+      PZ      : Boolean;                   -- When set, cache parity bits are written as zero and not checked.
+      CM      : Boolean;                   -- shows the result of the last load operation performed with the D-cache isolated
+      PE      : Boolean;                   -- set if a cache parity error has occurred.
+      TS      : Boolean;                   -- TLB shutdown
+      BEV     : Boolean;                   -- boot exception vectors
       Unused2 : Bits_2_Zeroes := Bits_2_0;
-      RE      : Boolean;
+      RE      : Boolean;                   -- reverse endianness in user mode
       Unused3 : Bits_2_Zeroes := Bits_2_0;
-      CU0     : Boolean;
-      CU1     : Boolean;
+      CU0     : Boolean;                   -- co-processor 0 usable
+      CU1     : Boolean;                   -- co-processor 0 usable
       Unused4 : Bits_2_Zeroes := Bits_2_0;
    end record with
       Bit_Order => Low_Order_First,
