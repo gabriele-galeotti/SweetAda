@@ -8,12 +8,3 @@
 # every variable referenced in the filename list
 #
 
-#FILES_TO_BE_FREEZED += $(KERNEL_BASENAME).map
-#FILES_TO_BE_FREEZED += $(KERNEL_BASENAME).*lst
-#FILES_TO_BE_FREEZED += $(OBJECT_DIRECTORY)/libcore.a
-#FILES_TO_BE_FREEZED += $(OBJECT_DIRECTORY)/bits.ali
-#FILES_TO_BE_FREEZED += $(OBJECT_DIRECTORY)/integer_math.ali
-#FILES_TO_BE_FREEZED += $(OBJECT_DIRECTORY)/malloc.ali
-#FILES_TO_BE_FREEZED += $(OBJECT_DIRECTORY)/memory_functions.ali
-#FILES_TO_BE_FREEZED += $(OBJECT_DIRECTORY)/uart16x50.o
-
