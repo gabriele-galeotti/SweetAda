@@ -102,8 +102,11 @@ package Malta is
    PIIX4_IDE_Descriptor   : IDE_Descriptor_Type := IDE_DESCRIPTOR_INVALID;
 
    ----------------------------------------------------------------------------
-   -- Timer functions
+   -- Timer
    ----------------------------------------------------------------------------
+
+   -- CPU CLK = 320 MHz ---> 320000 = 0x4E200 ticks in 1 ms
+   CP0_TIMER_COUNT : constant := 16#0004_E200#;
 
    procedure Tclk_Init;
 

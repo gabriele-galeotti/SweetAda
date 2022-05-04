@@ -42,10 +42,13 @@ _start:
                 nop                             // +0x10 QEMU here patches the revision ID
                 .set    reorder
 
-                .extern exception_process
-
 ////////////////////////////////////////////////////////////////////////////////
 
+                .extern exception_process
+
+                //
+                //
+                //
                 .org    0x0180
                 la      $t0,exception_process
                 jalr    $t0
@@ -53,14 +56,14 @@ _start:
                 la      $t0,0x10000000          // clear interrupt
                 mtc0    $t0,CP0_Compare
                 nop
-                //
                 mfc0    $k0,CP0_EPC             // get CP0 EPC
                 nop
                 eret
                 nop
 
-////////////////////////////////////////////////////////////////////////////////
-
+                //
+                // TLB refill.
+                //
                 .org    0x0200
                 la      $t0,exception_process
                 jalr    $t0
@@ -68,14 +71,14 @@ _start:
                 la      $t0,0x10000000          // clear interrupt
                 mtc0    $t0,CP0_Compare
                 nop
-                //
                 mfc0    $k0,CP0_EPC             // get CP0 EPC
                 nop
                 eret
                 nop
 
-////////////////////////////////////////////////////////////////////////////////
-
+                //
+                // General exception.
+                //
                 .org    0x0380
                 // interrupts may be generated during the use of at register,
                 // we have to save it
@@ -105,24 +108,16 @@ _start:
                 sw      $s8,saves8
                 sw      $fp,savefp
                 sw      $ra,savera
-
                 // clear CP0_Count
                 mtc0    $0,CP0_Count
                 nop
-                // clear interrupt
-                la      $a0,0x08000000
-                mtc0    $a0,$11
-                nop
-
                 // high-level management
                 la      $k0,exception_process
                 jalr    $k0
                 nop
-
                 // clear CP0_Cause
                 mtc0    $0,CP0_Cause
                 nop
-
                 lw      $k1,saveat
                 lw      $v0,savev0
                 lw      $v1,savev1
@@ -148,13 +143,9 @@ _start:
                 .set    noat
                 move    $at,$k1
                 .set    at
-
                 // load return address
                 mfc0    $k0,$14
                 nop
-
-                // does not work
-                // rfe / jr $k0
                 eret
                 nop
 

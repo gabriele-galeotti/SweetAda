@@ -48,7 +48,7 @@ package body Malta is
    procedure Tclk_Init is
    begin
       MIPS32.CP0_Count_Write (16#0000_0000#);
-      MIPS32.CP0_Compare_Write (16#0800_0000#);
+      MIPS32.CP0_Compare_Write (CP0_TIMER_COUNT);
    end Tclk_Init;
 
    ----------------------------------------------------------------------------
