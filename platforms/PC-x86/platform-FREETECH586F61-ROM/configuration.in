@@ -19,7 +19,7 @@ LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 # EPROM/FlashEPROM content is 0xFF when empty, speed-up programming
-OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0xFF
+OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0xFF
 
 export KERNEL_STACK_SIZE := 4096
 

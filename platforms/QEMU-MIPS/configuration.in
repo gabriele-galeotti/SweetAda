@@ -13,7 +13,7 @@ LD_SWITCHES_PLATFORM      += -EL
 LD_SWITCHES_PLATFORM      += --undefined=reset
 OBJDUMP_SWITCHES_PLATFORM += --disassembler-options=hwr-names=r3000,reg-names=r3000
 POSTBUILD_ROMFILE         := Y
-OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00 -j .text -j .data
+OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00 -j .text -j .data
 
 USE_APPLICATION := test-QEMU-MIPS
 

@@ -21,7 +21,7 @@ OBJDUMP_SWITCHES_PLATFORM +=
 endif
 GCC_SWITCHES_PLATFORM     +=
 POSTBUILD_ROMFILE         := Y
-OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
 USE_APPLICATION := test-Malta
 

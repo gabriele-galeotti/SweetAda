@@ -23,7 +23,7 @@ GCC_SWITCHES_PLATFORM     += -mmcu=atmega328p -Wa,-mmcu=atmega328p
 LD_SWITCHES_PLATFORM      += -m avr5
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := N
-OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
+OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
 # override standard core unit
 export IMPLICIT_CORE_UNITS := $(filter-out core,$(IMPLICIT_CORE_UNITS))

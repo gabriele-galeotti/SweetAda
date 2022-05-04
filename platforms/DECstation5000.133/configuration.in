@@ -12,8 +12,8 @@ GCC_SWITCHES_PLATFORM     += -march=r3000 -mel -Wa,-march=r3000 -Wa,-EL
 LD_SWITCHES_PLATFORM      += -EL
 OBJDUMP_SWITCHES_PLATFORM += --disassembler-options=hwr-names=r3000,reg-names=r3000
 POSTBUILD_ROMFILE         := Y
-#OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --gap-fill=0x00
-OBJCOPY_SWITCHES_PLATFORM += --output-target=binary
+#OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
+OBJCOPY_SWITCHES_PLATFORM += -O binary
 
 USE_APPLICATION := test-DECstation5000.133
 #USE_APPLICATION := test-srecord
