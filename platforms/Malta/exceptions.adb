@@ -15,13 +15,22 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
 with Core;
-with MIPS32;
 with Malta;
 with IOEMU;
-with Console;
 
 package body Exceptions is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use Interfaces;
 
    --========================================================================--
    --                                                                        --
@@ -34,10 +43,9 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Process
    ----------------------------------------------------------------------------
-   procedure Process (Exception_Number : in Unsigned_32) is
-      pragma Unreferenced (Exception_Number);
+   procedure Process is
    begin
-      MIPS32.CP0_Compare_Write (Malta.CP0_TIMER_COUNT);
+      Malta.Tclk_Init;
       Core.Tick_Count := @ + 1;
       if Core.Tick_Count mod 1_000 = 0 then
          -- IOEMU "TIMER" LED blinking

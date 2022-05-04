@@ -47,34 +47,9 @@ _start:
                 .extern exception_process
 
                 //
-                //
-                //
-                .org    0x0180
-                la      $t0,exception_process
-                jalr    $t0
-                nop
-                la      $t0,0x10000000          // clear interrupt
-                mtc0    $t0,CP0_Compare
-                nop
-                mfc0    $k0,CP0_EPC             // get CP0 EPC
-                nop
-                eret
-                nop
-
-                //
                 // TLB refill.
                 //
                 .org    0x0200
-                la      $t0,exception_process
-                jalr    $t0
-                nop
-                la      $t0,0x10000000          // clear interrupt
-                mtc0    $t0,CP0_Compare
-                nop
-                mfc0    $k0,CP0_EPC             // get CP0 EPC
-                nop
-                eret
-                nop
 
                 //
                 // General exception.
@@ -108,15 +83,9 @@ _start:
                 sw      $s8,saves8
                 sw      $fp,savefp
                 sw      $ra,savera
-                // clear CP0_Count
-                mtc0    $0,CP0_Count
-                nop
                 // high-level management
                 la      $k0,exception_process
                 jalr    $k0
-                nop
-                // clear CP0_Cause
-                mtc0    $0,CP0_Cause
                 nop
                 lw      $k1,saveat
                 lw      $v0,savev0
@@ -145,6 +114,9 @@ _start:
                 .set    at
                 // load return address
                 mfc0    $k0,$14
+                nop
+                // clear CP0_Cause
+                mtc0    $0,CP0_Cause
                 nop
                 eret
                 nop
