@@ -60,7 +60,7 @@ package R3000 is
       RE      : Boolean;                   -- reverse endianness in user mode
       Unused3 : Bits_2_Zeroes := Bits_2_0;
       CU0     : Boolean;                   -- co-processor 0 usable
-      CU1     : Boolean;                   -- co-processor 0 usable
+      CU1     : Boolean;                   -- co-processor 1 usable
       Unused4 : Bits_2_Zeroes := Bits_2_0;
    end record with
       Bit_Order => Low_Order_First,
