@@ -16,21 +16,19 @@ OBJCOPY_SWITCHES_PLATFORM += --output-target=binary --pad-to=0x00200000 --gap-fi
 
 ADDITIONAL_OBJECTS += roto video
 
-#ROM_BOOT := Y
-CDROM_BOOT := Y
-#NETWORK_BOOT := Y
+#BOOTTYPE := ROM
+BOOTTYPE := CDROM
+#BOOTTYPE := NETWORK
 
-export ROM_BOOT
-export CDROM_BOOT
-export NETWORK_BOOT
+export BOOTTYPE
 
-ifeq ($(ROM_BOOT),Y)
+ifeq      ($(BOOTTYPE),ROM)
 LD_SCRIPT := linker.lds-ROM
 GXEMUL := Y
-else ifeq ($(CDROM_BOOT),Y)
+else ifeq ($(BOOTTYPE),CDROM)
 LD_SCRIPT := linker.lds-CD-ROM
 GXEMUL := Y
-else ifeq ($(NETWORK_BOOT),Y)
+else ifeq ($(BOOTTYPE),NETWORK)
 LD_SCRIPT := linker.lds-networkboot
 GXEMUL := N
 endif
@@ -41,11 +39,11 @@ USE_APPLICATION := test-Dreamcast
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
-ifeq ($(ROM_BOOT),Y)
+ifeq      ($(BOOTTYPE),ROM)
 RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f gxemul.cfg
-else ifeq ($(CDROM_BOOT),Y)
+else ifeq ($(BOOTTYPE),CDROM)
 RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f gxemul.cfg
-else ifeq ($(NETWORK_BOOT),Y)
+else ifeq ($(BOOTTYPE),NETWORK)
 RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/bba.tcl
 endif
 DEBUG_COMMAND := $(RUN_COMMAND)

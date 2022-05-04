@@ -36,13 +36,13 @@ package body Application is
    procedure Run is
    begin
       -------------------------------------------------------------------------
-      if Configure.ROM_BOOT = "Y" or else Configure.CDROM_BOOT = "Y" then
+      if Configure.BOOTTYPE = "ROM" or else Configure.BOOTTYPE = "CDROM" then
          Console.Print ("Starting ""video"" demo ...", NL => True);
          Video;
          for Delay_Loop_Count in 1 .. 30_000_000 loop CPU.NOP; end loop;
       end if;
       -------------------------------------------------------------------------
-      if Configure.ROM_BOOT = "Y" or else Configure.CDROM_BOOT = "Y" then
+      if Configure.BOOTTYPE = "ROM" or else Configure.BOOTTYPE = "CDROM" then
          Console.Print ("Starting ""roto"" demo ...", NL => True);
          Roto;
       end if;

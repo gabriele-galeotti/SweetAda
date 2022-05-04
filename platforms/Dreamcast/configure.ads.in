@@ -9,9 +9,7 @@ package Configure is
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   ROM_BOOT     : constant String := "@ROM_BOOT@";
-   CDROM_BOOT   : constant String := "@CDROM_BOOT@";
-   NETWORK_BOOT : constant String := "@NETWORK_BOOT@";
-   GXEMUL       : constant String := "@GXEMUL@";
+   BOOTTYPE  : constant String := "@BOOTTYPE@";
+   GXEMUL    : constant String := "@GXEMUL@";
 
 end Configure;

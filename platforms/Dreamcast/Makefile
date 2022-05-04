@@ -37,7 +37,7 @@ configure :
 
 .PHONY : postbuild
 postbuild :
-ifeq ($(CDROM_BOOT),Y)
+ifeq ($(BOOTTYPE),CDROM)
 	"$(TCLSH)" makecdrom.tcl IP.TMPL IP.TXT "$(SWEETADA_PATH)"/kernel.rom
 ifneq ($(OSTYPE),cmd)
 	@$(REM)mkisofs -r 1ST_READ.BIN | (cat IP.BIN ; dd bs=2048 skip=16) > sweetada.iso
