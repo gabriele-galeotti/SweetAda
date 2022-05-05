@@ -53,7 +53,7 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-	$(RM) linker.lds configure.h configure.ads
+	$(RM) configure.h configure.ads
 
 .PHONY : dep
 dep :
