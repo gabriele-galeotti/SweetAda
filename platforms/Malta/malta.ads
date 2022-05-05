@@ -19,7 +19,6 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with MIPS;
--- with MIPS.MIPS32;
 with PCI;
 with GT64120;
 with UART16x50;
@@ -39,7 +38,6 @@ package Malta is
    use System.Storage_Elements;
    use Interfaces;
    use MIPS;
-   -- use MIPS.MIPS32;
    use PCI;
    use GT64120;
    use UART16x50;
@@ -106,12 +104,13 @@ package Malta is
    ----------------------------------------------------------------------------
 
    -- CP0 Count runs at half the pipeline CPU clock
-   -- CPU CLK = 320 MHz ---> 320000 = 0x4E200 ticks in 1 ms
-   CP0_TIMER_COUNT : constant := 16#0004_E200# / 2;
-   -- CPU CLK = 320 MHz ---> 3200000 = 0x30D400 ticks in 10 ms
-   -- CP0_TIMER_COUNT : constant := 16#0030_D400# / 2;
-   -- CPU CLK = 320 MHz ---> 32000000 = 0x1E84800 ticks in 100 ms
-   -- CP0_TIMER_COUNT : constant := 16#01E8_4800# / 2;
+   -- QEMU CPU CLK = 320 MHz:
+   -- 0x4E200 ticks @ 1 KHz
+   -- 0x30D400 ticks @ 100 Hz
+   -- 0x1E84800 ticks @ 10 Hz
+   CP0_TIMER_COUNT : constant := 16#0030_D400# / 2;
+
+   Count_Expire : Unsigned_32;
 
    procedure Tclk_Init;
 

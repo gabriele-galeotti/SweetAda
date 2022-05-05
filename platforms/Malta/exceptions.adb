@@ -17,6 +17,7 @@
 
 with Interfaces;
 with Core;
+with MIPS32;
 with Malta;
 with IOEMU;
 
@@ -45,9 +46,21 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Process is
    begin
-      Malta.Tclk_Init;
+      declare
+         Count : Unsigned_32;
+      begin
+         Malta.Count_Expire := @ + Malta.CP0_TIMER_COUNT;
+         MIPS32.CP0_Compare_Write (Malta.Count_Expire);
+         Count := MIPS32.CP0_Count_Read;
+         -- check for missed any timer interrupts
+         if Count - Malta.Count_Expire < 16#7FFF_FFFF# then
+            -- increment a "missed timer count"
+            Malta.Count_Expire := Count + Malta.CP0_TIMER_COUNT;
+            MIPS32.CP0_Compare_Write (Malta.Count_Expire);
+         end if;
+      end;
       Core.Tick_Count := @ + 1;
-      if Core.Tick_Count mod 1_000 = 0 then
+      if Core.Tick_Count mod 100 = 0 then
          -- IOEMU "TIMER" LED blinking
          IOEMU.IOEMU_IO0 := 1;
          IOEMU.IOEMU_IO0 := 0;
