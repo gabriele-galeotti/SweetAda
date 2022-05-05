@@ -15,26 +15,20 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+                .sect   .vectors,"ax"
+
+                .set    noreorder
+
+                .global _start
+_start:
+
                 //
-                // MIPS32® 24K® Processor Core Family Software User?s Manual
-                // __REF__ acroread /a "page=96" "platforms/MIPS-Malta/doc/MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
-                // __REF__ acroread /a "page=129" "platforms/MIPS-Malta/doc/MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
-                // After reset:
                 // SR:TS = 0
                 // SR:BEV = 1
                 // SR:ERL = 1 (processor is in Kernel mode)
                 // PC = 0xBFC0_0000 (VA), PA = 0xBFC0_00000 & 0x1FFF_FFFF = 0x1FC0_0000 (KSEG1, unmapped, uncached)
                 //
-
-                .sect   .vectors,"ax"
-
-                .global _start
-_start:
-
-                .org    0x0000
-                // __REF__ acroread /a "page=13" "platforms/MIPS-Malta/doc/Malta? User?s Manual.pdf"
                 .extern _init
-                .set    noreorder
                 b       _init                   // +0x00
                 nop                             // +0x04
                 nop                             // +0x08
@@ -116,8 +110,8 @@ _start:
                 mfc0    $k0,$14
                 nop
                 // clear CP0_Cause
-                mtc0    $0,CP0_Cause
-                nop
+                //mtc0    $0,CP0_Cause
+                //nop
                 eret
                 nop
 

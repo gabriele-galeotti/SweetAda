@@ -105,8 +105,13 @@ package Malta is
    -- Timer
    ----------------------------------------------------------------------------
 
+   -- CP0 Count runs at half the pipeline CPU clock
    -- CPU CLK = 320 MHz ---> 320000 = 0x4E200 ticks in 1 ms
-   CP0_TIMER_COUNT : constant := 16#0004_E200#;
+   CP0_TIMER_COUNT : constant := 16#0004_E200# / 2;
+   -- CPU CLK = 320 MHz ---> 3200000 = 0x30D400 ticks in 10 ms
+   -- CP0_TIMER_COUNT : constant := 16#0030_D400# / 2;
+   -- CPU CLK = 320 MHz ---> 32000000 = 0x1E84800 ticks in 100 ms
+   -- CP0_TIMER_COUNT : constant := 16#01E8_4800# / 2;
 
    procedure Tclk_Init;
 
