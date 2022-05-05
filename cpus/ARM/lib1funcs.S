@@ -1,7 +1,7 @@
 @ libgcc routines for ARM cpu.
 @ Division routines, written by Richard Earnshaw, (rearnsha@armltd.co.uk)
 
-/* Copyright (C) 1995-2020 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2021 Free Software Foundation, Inc.
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -23,7 +23,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                  */
-/* __INF__ original: gcc-10.2.0/libgcc/config/arm/lib1funcs.S */
+/* __INF__ original: gcc-11.3.0/libgcc/config/arm/lib1funcs.S */
 
 /* Everything in this file should now use unified syntax.  */
 
@@ -1881,7 +1881,7 @@ ARM_FUNC_START ctzsi2
    arguments are passed in registers.
 
    The second, _interwork_r7_call_via_rN(), instead stores the return
-   address at [r7, #-4].  It is the caller's responsibility to ensure
+   address at [r7, #-4].  It is the caller''s responsibility to ensure
    that this address is valid and contains no useful data.
 
    The third, _interwork_r11_call_via_rN(), works in the same way but

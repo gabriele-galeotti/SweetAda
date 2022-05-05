@@ -1,5 +1,5 @@
 /* libgcc routines for 68000 w/o floating-point hardware.
-   Copyright (C) 1994-2020 Free Software Foundation, Inc.
+   Copyright (C) 1994-2021 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
@@ -23,7 +23,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                 */
-/* __INF__ original: gcc-10.2.0/libgcc/config/m68k/lb1sf68.S */
+/* __INF__ original: gcc-11.3.0/libgcc/config/m68k/lb1sf68.S */
 
 /* Use this one for any 680x0; assumes no floating point hardware.
    The trailing " '" appearing on some lines is for ANSI preprocessors.  Yuk.
@@ -2481,7 +2481,7 @@ Lround$to$nearest:
 #endif
 
 | Now check again bit #DBL_MANT_DIG-32 (rounding could have produced a
-| ''fraction overflow'' ...).
+| 'fraction overflow' ...).
                 btst    IMM (DBL_MANT_DIG-32),d0
                 beq     1f
 #if !defined(__mcoldfire__)
@@ -3867,7 +3867,7 @@ Lround$to$nearest:
 | Shift right once (because we used bit #FLT_MANT_DIG!).
 2:              lsrl    IMM (1),d0
 | Now check again bit #FLT_MANT_DIG (rounding could have produced a
-| ''fraction overflow'' ...).
+| 'fraction overflow' ...).
                 btst    IMM (FLT_MANT_DIG),d0
                 beq     1f
                 lsrl    IMM (1),d0

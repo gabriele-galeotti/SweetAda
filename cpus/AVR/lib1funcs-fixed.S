@@ -1,5 +1,5 @@
 /*  -*- Mode: Asm -*-  */
-;;    Copyright (C) 2012-2020 Free Software Foundation, Inc.
+;;    Copyright (C) 2012-2021 Free Software Foundation, Inc.
 ;;    Contributed by Sean D'Epagnier  (sean@depagnier.com)
 ;;                   Georg-Johann Lay (avr@gjlay.de)
 
@@ -28,7 +28,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 /* SweetAda version, reformatted and cleaned                        */
-/* __INF__ original: gcc-10.2.0/libgcc/config/avr/lib1funcs-fixed.S */
+/* __INF__ original: gcc-11.3.0/libgcc/config/avr/lib1funcs-fixed.S */
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Fixed point library routines for AVR

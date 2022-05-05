@@ -1,7 +1,7 @@
 /* Miscellaneous BPABI functions.  Thumb-1 implementation, suitable for ARMv4T,
    ARMv6-M and ARMv8-M Baseline like ISA variants.
 
-   Copyright (C) 2006-2020 Free Software Foundation, Inc.
+   Copyright (C) 2006-2021 Free Software Foundation, Inc.
    Contributed by CodeSourcery.
 
    This file is free software; you can redistribute it and/or modify it
@@ -24,7 +24,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                  */
-/* __INF__ original: gcc-10.2.0/libgcc/config/arm/bpabi-v6m.S */
+/* __INF__ original: gcc-11.3.0/libgcc/config/arm/bpabi-v6m.S */
 
 #if defined(__ARM_EABI__)
                 /* Some attributes that are common to all routines in this file.  */

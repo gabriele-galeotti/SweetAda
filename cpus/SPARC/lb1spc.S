@@ -6,7 +6,7 @@
    optimize them for our purposes.  */
 
 /* SweetAda version, reformatted and cleaned                 */
-/* __INF__ original: gcc-10.2.0/libgcc/config/sparc/lb1spc.S */
+/* __INF__ original: gcc-11.3.0/libgcc/config/sparc/lb1spc.S */
 
 /* An executable stack is *not* required for these functions. */
 

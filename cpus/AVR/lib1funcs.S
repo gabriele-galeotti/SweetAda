@@ -1,5 +1,5 @@
 /*  -*- Mode: Asm -*-  */
-/* Copyright (C) 1998-2019 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2021 Free Software Foundation, Inc.
    Contributed by Denis Chertykov <chertykov@gmail.com>
 
 This file is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                  */
-/* __INF__ original: gcc-10.2.0/libgcc/config/avr/lib1funcs.S */
+/* __INF__ original: gcc-11.3.0/libgcc/config/avr/lib1funcs.S */
 
 #if defined(__AVR_TINY__)
 # define __zero_reg__ r17
@@ -950,7 +950,6 @@ ENDF __muldi3
 #if defined(L_muldi3_6)
 ;; A helper for some 64-bit multiplications with MUL available
 DEFUN __muldi3_6
-;;__muldi3_6: __FIX__ redundant label
                 XCALL   __umulhisi3
                 add     C2,22
                 adc     C3,23
