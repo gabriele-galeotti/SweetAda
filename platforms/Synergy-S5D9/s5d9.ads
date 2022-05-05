@@ -1744,6 +1744,11 @@ pragma Warnings (On, "bits of * unused");
 
    -- 36.2.5 I2C Bus Mode Register 3 (ICMR3)
 
+   NF_1 : constant := 2#00#; -- Filter out noise of up to 1 IIC cycle (single-stage filter)
+   NF_2 : constant := 2#01#; -- Filter out noise of up to 2 IIC cycles (2-stage filter)
+   NF_3 : constant := 2#10#; -- Filter out noise of up to 3 IIC cycles (3-stage filter)
+   NF_4 : constant := 2#11#; -- Filter out noise of up to 4 IIC cycles (4-stage filter).
+
    type ICMR3_Type is
    record
       NF    : Bits.Bits_2; -- Noise Filter Stage Select
@@ -1944,7 +1949,20 @@ pragma Warnings (On, "bits of * unused");
       Reserved at 0 range 3 .. 7;
    end record;
 
+   ----------------------------------------------------------------------------
+   -- 38. Serial Peripheral Interface (SPI)
+   ----------------------------------------------------------------------------
+
    -- 38.2.1 SPI Control Register (SPCR)
+
+   SPMS_SPI4 : constant := 0; -- Select SPI operation (4-wire method)
+   SPMS_SPI3 : constant := 1; -- Select clock synchronous operation (3-wire method).
+
+   TXMD_FD : constant := 0; -- Select full-duplex synchronous serial communications
+   TXMD_TX : constant := 1; -- Select serial communications with transmit-only.
+
+   MSTR_SLAVE  : constant := 0; -- Select slave mode
+   MSTR_MASTER : constant := 1; -- Select master mode.
 
    type SPCR_Type is
    record
@@ -1973,6 +1991,18 @@ pragma Warnings (On, "bits of * unused");
 
    -- 38.2.2 SPI Slave Select Polarity Register (SSLP)
 
+   SSL0P_LOW  : constant := 0; -- Set SSL0 signal to active low
+   SSL0P_HIGH : constant := 1; -- Set SSL0 signal to active high.
+
+   SSL1P_LOW  : constant := 0; -- Set SSL1 signal to active low
+   SSL1P_HIGH : constant := 1; -- Set SSL1 signal to active high.
+
+   SSL2P_LOW  : constant := 0; -- Set SSL2 signal to active low
+   SSL2P_HIGH : constant := 1; -- Set SSL2 signal to active high.
+
+   SSL3P_LOW  : constant := 0; -- Set SSL3 signal to active low
+   SSL3P_HIGH : constant := 1; -- Set SSL3 signal to active high.
+
    type SSLP_Type is
    record
       SSL0P    : Bits.Bits_1; -- SSL0 Signal Polarity Setting
@@ -1993,6 +2023,18 @@ pragma Warnings (On, "bits of * unused");
    end record;
 
    -- 38.2.3 SPI Pin Control Register (SPPCR)
+
+   SPLP_NORMAL   : constant := 0; -- Normal mode
+   SPLP_LOOPBACK : constant := 1; -- Loopback mode
+
+   SPLP2_NORMAL   : constant := 0; -- Normal mode
+   SPLP2_LOOPBACK : constant := 1; -- Loopback mode
+
+   MOIFV_LOW  : constant := 0; -- Set level output on MOSIn pin during MOSI idling to correspond to low
+   MOIFV_HIGH : constant := 1; -- Set level output on MOSIn pin during MOSI idling to correspond to high.
+
+   MOIFE_PREVIOUS : constant := 0; -- Set MOSI output value to equal final data from previous transfer
+   MOIFE_MOIFV    : constant := 1; -- Set MOSI output value to equal value set in the MOIFV bit.
 
    type SPPCR_Type is
    record
@@ -2044,6 +2086,15 @@ pragma Warnings (On, "bits of * unused");
 
    -- 38.2.6 SPI Sequence Control Register (SPSCR)
 
+   SPSLN0 : constant := 2#000#; -- 0-->0
+   SPSLN1 : constant := 2#001#; -- 0-->1-->0
+   SPSLN2 : constant := 2#010#; -- 0-->1-->2-->0
+   SPSLN3 : constant := 2#011#; -- 0-->...>3-->0
+   SPSLN4 : constant := 2#100#; -- 0-->...>4-->0
+   SPSLN5 : constant := 2#101#; -- 0-->...>5-->0
+   SPSLN6 : constant := 2#110#; -- 0-->...>6-->0
+   SPSLN7 : constant := 2#111#; -- 0-->...>7-->0
+
    type SPSCR_Type is
    record
       SPSLN    : Bits.Bits_3; -- SPI Sequence Length Specification
@@ -2055,6 +2106,71 @@ pragma Warnings (On, "bits of * unused");
    record
       SPSLN    at 0 range 0 .. 2;
       Reserved at 0 range 3 .. 7;
+   end record;
+
+   -- 38.2.7 SPI Sequence Status Register (SPSSR)
+
+   SPCMD0 : constant := 2#000#;
+   SPCMD1 : constant := 2#001#;
+   SPCMD2 : constant := 2#010#;
+   SPCMD3 : constant := 2#011#;
+   SPCMD4 : constant := 2#100#;
+   SPCMD5 : constant := 2#101#;
+   SPCMD6 : constant := 2#110#;
+   SPCMD7 : constant := 2#111#;
+
+   type SPSSR_Type is
+   record
+      SPCP      : Bits.Bits_3; -- SPI Command Pointer
+      Reserved1 : Bits.Bits_1;
+      SPECM     : Bits.Bits_3; -- SPI Error Command
+      Reserved2 : Bits.Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SPSSR_Type use
+   record
+      SPCP      at 0 range 0 .. 2;
+      Reserved1 at 0 range 3 .. 3;
+      SPECM     at 0 range 4 .. 6;
+      Reserved2 at 0 range 7 .. 7;
+   end record;
+
+   -- 38.2.9 SPI Data Control Register (SPDCR)
+
+   SPFC_1 : constant := 2#00#; -- 1 frame
+   SPFC_2 : constant := 2#01#; -- 2 frames
+   SPFC_3 : constant := 2#10#; -- 3 frames
+   SPFC_4 : constant := 2#11#; -- 4 frames.
+
+   SPRDTD_RB : constant := 0; -- Read SPDR/SPDR_HA values from receive buffer
+   SPRDTD_TB : constant := 1; -- Read SPDR/SPDR_HA values from transmit buffer, but only if the transmit buffer is empty.
+
+   SPLW_HALFW : constant := 0; -- Set SPDR_HA to valid for halfword access
+   SPLW_FULLW : constant := 1; -- Set SPDR to valid for word access.
+
+   SPBYT_WORD : constant := 0; -- SPDR is accessed in halfword or word (SPLW is valid)
+   SPBYT_BYTE : constant := 1; -- SPDR is accessed in byte (SPLW is invalid).
+
+   type SPDCR_Type is
+   record
+      SPFC      : Bits.Bits_2; -- Number of Frames Specification
+      Reserved1 : Bits.Bits_2;
+      SPRDTD    : Bits.Bits_1; -- SPI Receive/Transmit Data Select
+      SPLW      : Bits.Bits_1; -- SPI Word Access/Halfword Access Specification
+      SPBYT     : Bits.Bits_1; -- SPI Byte Access Specification
+      Reserved2 : Bits.Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SPDCR_Type use
+   record
+      SPFC      at 0 range 0 .. 1;
+      Reserved1 at 0 range 2 .. 3;
+      SPRDTD    at 0 range 4 .. 4;
+      SPLW      at 0 range 5 .. 5;
+      SPBYT     at 0 range 6 .. 6;
+      Reserved2 at 0 range 7 .. 7;
    end record;
 
 end S5D9;
