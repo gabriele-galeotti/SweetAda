@@ -277,11 +277,6 @@ package body MIPS32 is
    ----------------------------------------------------------------------------
    -- Locking subprograms
    ----------------------------------------------------------------------------
-   -- http://somelab08.cci.fsu.edu/fje15/proj1/blob/46403f59c1df5b51a1f8479323cae1012d75dd5c/kern/arch/mips/include/
-   --  spinlock.h
-   -- http://www.cs.cornell.edu/courses/cs3410/2012sp/lecture/25-sync-w-g.pdf
-   -- https://stackoverflow.com/questions/33306741/mips-synchronization-with-locks
-   ----------------------------------------------------------------------------
 
    procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) is
       Locked_Item : Lock_Type := (Lock => LOCK_LOCK);

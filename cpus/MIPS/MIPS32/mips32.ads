@@ -38,9 +38,7 @@ package MIPS32 is
    use MIPS;
 
    ----------------------------------------------------------------------------
-   -- Count register (CP0 register 9, Select 0)
-   ----------------------------------------------------------------------------
-   -- __REF__ acroread /a "page=157" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
+   -- Count register (CP0 register 9, Select 0) (157)
    ----------------------------------------------------------------------------
 
    function CP0_Count_Read return Unsigned_32 with
@@ -49,9 +47,7 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Compare register (CP0 register 11, Select 0)
-   ----------------------------------------------------------------------------
-   -- __REF__ acroread /a "page=158" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
+   -- Compare register (CP0 register 11, Select 0) (158)
    ----------------------------------------------------------------------------
 
    function CP0_Compare_Read return Unsigned_32 with
@@ -60,9 +56,7 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Status Register (CP0 register 12, Select 0)
-   ----------------------------------------------------------------------------
-   -- __REF__ acroread /a "page=158" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
+   -- Status Register (CP0 register 12, Select 0) (158)
    ----------------------------------------------------------------------------
 
    type Status_Register_Type is
@@ -108,10 +102,33 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Cause register (CP0 register 13, Select 0)
+   -- Cause register (CP0 register 13, Select 0) (168)
    ----------------------------------------------------------------------------
-   -- __REF__ acroread /a "page=168" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
-   ----------------------------------------------------------------------------
+
+   type Cause_Type is
+   record
+      Reserved1 : Bits_2;
+      ExcCode   : Bits_5;  -- Exception Code
+      Reserved2 : Bits_1;
+      IP        : Bits_8;  -- Interrupt Pending
+      Reserved3 : Bits_12;
+      CE        : Bits_2;  -- Coprocessor Error
+      Reserved4 : Bits_1;
+      BD        : Boolean; -- Branch Delay
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for Cause_Type use
+   record
+      Reserved1 at 0 range 0 .. 1;
+      ExcCode   at 0 range 2 .. 6;
+      Reserved2 at 0 range 7 .. 7;
+      IP        at 0 range 8 .. 15;
+      Reserved3 at 0 range 16 .. 27;
+      CE        at 0 range 28 .. 29;
+      Reserved4 at 0 range 30 .. 30;
+      BD        at 0 range 31 .. 31;
+   end record;
 
    function CP0_Cause_Read return Unsigned_32 with
       Inline => True;
@@ -119,9 +136,7 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Exception Program Counter register (CP0 register 14, Select 0)
-   ----------------------------------------------------------------------------
-   -- __REF__ acroread /a "page=172" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
+   -- Exception Program Counter register (CP0 register 14, Select 0) (172)
    ----------------------------------------------------------------------------
 
    function CP0_EPC_Read return Unsigned_32 with
@@ -154,9 +169,7 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Config register (CP0 register 16, Select 0)
-   ----------------------------------------------------------------------------
-   -- __REF__ acroread /a "page=174" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
+   -- Config register (CP0 register 16, Select 0) (174)
    ----------------------------------------------------------------------------
 
    function CP0_Config_Read return Unsigned_32 with
@@ -165,9 +178,7 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Config1 register (CP0 register 16, Select 1)
-   ----------------------------------------------------------------------------
-   -- __REF__ acroread /a "page=176" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
+   -- Config1 register (CP0 register 16, Select 1) (176)
    ----------------------------------------------------------------------------
 
    function CP0_Config1_Read return Unsigned_32 with
@@ -176,9 +187,7 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Debug register (CP0 register 23, Select 0)
-   ----------------------------------------------------------------------------
-   -- __REF__ acroread /a "page=185" "MIPS32® 24K® Processor Core Family Software User?s Manual.pdf"
+   -- Debug register (CP0 register 23, Select 0) (185)
    ----------------------------------------------------------------------------
 
    function CP0_Debug_Read return Unsigned_32 with
