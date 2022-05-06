@@ -683,13 +683,13 @@ ifeq ($(BUILD_MODE),GPR)
 	-@$(RM) $(GCC_WRAPPER_TIMESTAMP_FILENAME)
 endif
 ifeq ($(OSTYPE),cmd)
-	@$(SED) --in-place -e "s|\\|/|g" -e "s| |\\ |g" gnatbind_objs.lst
+	@$(SED) -i -e "s|\\|/|g" -e "s| |\\ |g" gnatbind_objs.lst
 else ifeq ($(OSTYPE),msys)
-	@$(SED) --in-place -e "s|\\\\\|/|g" -e "s| |\\\\\ |g" gnatbind_objs.lst
+	@$(SED) -i -e "s|\\\\\|/|g" -e "s| |\\\\\ |g" gnatbind_objs.lst
 else ifeq ($(OSTYPE),darwin)
 	@$(SED) -i'' -e "s| |\\\\ |g" gnatbind_objs.lst
 else
-	@$(SED) --in-place -e "s| |\\\\ |g" gnatbind_objs.lst
+	@$(SED) -i -e "s| |\\\\ |g" gnatbind_objs.lst
 endif
 
 #
