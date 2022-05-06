@@ -35,10 +35,10 @@
       I1 := M2_LOW * M1_HIGH;
       I2 := M2_HIGH * M1_LOW;
       I3 := M2_HIGH * M1_HIGH;
-      I1 := I1 + (I0 / 2**16);
-      I1 := I1 + I2;
+      I1 := @ + (I0 / 2**16);
+      I1 := @ + I2;
       if I1 < I2 then
-         I3 := I3 + 2**16;
+         I3 := @ + 2**16;
       end if;
       RH := I3 + (I1 / 2**16);
       RL := ((I1 mod 2**16) * 2**16) + (I0 mod 2**16);

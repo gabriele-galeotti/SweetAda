@@ -40,7 +40,7 @@ with Bits;
       -- if the intermediate result is less than any one of the addends, this
       -- is an indication of overflow, so a carry bit must be propagated
       if R_LOW < A1_LOW then
-         R_HIGH := R_HIGH + 1;
+         R_HIGH := @ + 1;
       end if;
       return To_UDI (R);
    end AddDI3;

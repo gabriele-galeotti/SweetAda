@@ -36,6 +36,6 @@ with Bits;
       R_LOW   : GCC_Types.USI_Type renames R (Bits.L64_32_IDX);
    begin
       R := To_USI_2 (UMulSIDI3 (M1_LOW, M2_LOW));
-      R_HIGH := R_HIGH + M1_LOW * M2_HIGH + M1_HIGH * M2_LOW;
+      R_HIGH := @ + M1_LOW * M2_HIGH + M1_HIGH * M2_LOW;
       return To_UDI (R);
    end MulDI3;

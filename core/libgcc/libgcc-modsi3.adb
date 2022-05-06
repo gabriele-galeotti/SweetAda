@@ -32,14 +32,14 @@ with Ada.Unchecked_Conversion;
       Negative := False;
       if Num < 0 then
          Negative := True;
-         Num := -Num;
+         Num := -@;
       end if;
       if Den < 0 then
-         Den := -Den;
+         Den := -@;
       end if;
       Result := To_SI (UDivModSI4 (To_USI (Num), To_USI (Den), True));
       if Negative then
-         Result := -Result;
+         Result := -@;
       end if;
       return Result;
    end ModSI3;
