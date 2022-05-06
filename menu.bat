@@ -21,10 +21,8 @@ REM
 REM defaults to standard installation directory, see configuration.in
 SET MAKEEXE="C:\Program Files\SweetAda"\bin\make.exe
 
-IF "%PLATFORM%"=="" CALL :setplatform
-
 SET ACTION_VALID=
-IF "%1"=="createkernelcfg" SET "ACTION_VALID=Y" & SET "PLATFORM=%PLATFORM%" & SET "SUBPLATFORM=%SUBPLATFORM%" & %MAKEEXE% createkernelcfg
+IF "%1"=="createkernelcfg" SET "ACTION_VALID=Y" & CALL :setplatform & SET "PLATFORM=%PLATFORM%" & SET "SUBPLATFORM=%SUBPLATFORM%" & %MAKEEXE% createkernelcfg
 IF "%1"=="configure" SET "ACTION_VALID=Y" & %MAKEEXE% configure
 IF "%1"=="all" SET "ACTION_VALID=Y" & %MAKEEXE% all
 IF "%1"=="postbuild" SET "ACTION_VALID=Y" & %MAKEEXE% postbuild
@@ -44,6 +42,7 @@ EXIT /B %ERRORLEVEL%
 
 :setplatform
 REM select a platform
+IF NOT "%PLATFORM%"=="" GOTO :eof
 REM SET "PLATFORM=Altera10M50GHRD" & SET "SUBPLATFORM="
 REM SET "PLATFORM=ArduinoUno" & SET "SUBPLATFORM="
 REM SET "PLATFORM=DE10-Lite" & SET "SUBPLATFORM="
