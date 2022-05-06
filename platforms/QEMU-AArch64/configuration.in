@@ -6,8 +6,8 @@
 CPU       := AArch64
 CPU_MODEL := Cortex-A53
 
-#ABI := lp64
-ABI := ilp32
+ABI := lp64
+#ABI := ilp32
 
 ifeq ($(ABI),lp64)
 #
