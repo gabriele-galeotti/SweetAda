@@ -105,7 +105,7 @@ package Malta is
 
    -- CP0 Count runs at half the pipeline CPU clock
    -- QEMU CPU CLK = 320 MHz:
-   -- 0x4E200 ticks @ 1 KHz
+   -- 0x4E200 ticks @ 1 kHz
    -- 0x30D400 ticks @ 100 Hz
    -- 0x1E84800 ticks @ 10 Hz
    CP0_TIMER_COUNT : constant := 16#0030_D400# / 2;

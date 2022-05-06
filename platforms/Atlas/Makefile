@@ -29,9 +29,6 @@ INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : installfiles
-installfiles :
-
 .PHONY : configure
 configure :
 	@$(PROCESSCFG) configure.h.in configure.h
