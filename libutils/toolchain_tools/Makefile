@@ -17,24 +17,27 @@
 # MSYSTEM
 # COMPILE
 #
+# The following rules are suited (in the cases of window* and os* target
+# tools) for a cross-compiler; if the host is a real machine please change the
+# compiler executable (and the location of the libelf library for the elftool
+# build) to reflect correct paths in the host environment.
+#
 
 COMPILE ?= linux
 
-ifeq ($(COMPILE),linux)
+ifeq      ($(COMPILE),linux)
 CC            := gcc
 CC_SWITCHES   := -g -std=c99 -Wall
 LD_SWITCHES   := -g
 LIBELF        := /usr/local/lib/libelf.a
 LIBWINPTHREAD :=
-endif
-ifeq ($(COMPILE),windows)
+else ifeq ($(COMPILE),windows)
 CC            := /usr/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-gcc
 CC_SWITCHES   := -g -std=c99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
 LD_SWITCHES   := -g -mconsole
 LIBELF        := /usr/x86_64-w64-mingw32/mingw/lib/libelf.a
 LIBWINPTHREAD := -l:libwinpthread.a
-endif
-ifeq ($(COMPILE),osx)
+else ifeq ($(COMPILE),osx)
 CC            := /usr/x86_64-apple-darwin15/bin/x86_64-apple-darwin15-gcc
 CC_SWITCHES   := -g -std=c99 -Wall
 LD_SWITCHES   := -g -static-libgcc -static-libstdc++
