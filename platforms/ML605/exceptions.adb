@@ -51,7 +51,7 @@ package body Exceptions is
    procedure Process (Exception_Number : in Interfaces.Unsigned_32) is
       pragma Unreferenced (Exception_Number);
    begin
-      Timer.TCSR0.T0INT := 0;    -- clear Timer flag
+      Timer.TCSR0.T0INT := False;    -- clear Timer flag
       INTC.IAR := 16#FFFF_FFFF#; -- clear INTC flag
       if True then
          -- IOEMU "TIMER" LED blinking

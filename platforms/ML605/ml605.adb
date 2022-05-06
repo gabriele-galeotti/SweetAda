@@ -36,21 +36,30 @@ package body ML605 is
    ----------------------------------------------------------------------------
    -- Tclk_Init
    ----------------------------------------------------------------------------
+   -- Timers run @ 100 MHz.
+   ----------------------------------------------------------------------------
    procedure Tclk_Init is
    begin
-      Timer.TLR0        := 16#FC00_0000#;
-      Timer.TCSR0.PWMA0 := 0;
-      Timer.TCSR0.ENIT0 := 1;
-      Timer.TCSR0.ARHT0 := 1;
-      Timer.TCSR0.CAPT0 := 0;
-      Timer.TCSR0.GENT0 := 0;
-      Timer.TCSR0.UDT0  := 0;
-      Timer.TCSR0.MDT0  := 0;
+      Timer.TLR0 := 16#05F5_E100#;
+      Timer.TCSR0 := (
+                      ENALL  => False,
+                      PWMA0  => False,
+                      T0INT  => False,
+                      ENT0   => False,
+                      ENIT0  => True,
+                      LOAD0  => False,
+                      ARHT0  => True,
+                      CAPT0  => False,
+                      GENT0  => False,
+                      UDT0   => UDT0_DOWN,
+                      MDT0   => MDT0_GEN,
+                      others => 0
+                     );
       -- initial loading
-      Timer.TCSR0.LOAD0 := 1;
-      Timer.TCSR0.LOAD0 := 0;
+      Timer.TCSR0.LOAD0 := True;
+      Timer.TCSR0.LOAD0 := False;
       -- enable
-      Timer.TCSR0.ENT0  := 1;
+      Timer.TCSR0.ENT0  := True;
    end Tclk_Init;
 
    ----------------------------------------------------------------------------
