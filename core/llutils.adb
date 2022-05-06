@@ -93,21 +93,11 @@ package body LLutils is
                        ) is
    begin
       case Size is
-         when Bits.BIT8 =>
-            -- 8-bit no-swap
-            null;
-         when Bits.BIT16 =>
-            -- 16-bit swap
-            Byte_Swap_16 (Object_Address);
-         when Bits.BIT32 =>
-            --- 32-bit swap
-            Byte_Swap_32 (Object_Address);
-         when Bits.BIT64 =>
-            -- 64-bit swap
-            Byte_Swap_64 (Object_Address);
-         when Bits.BITNONE =>
-            --- undefined swap
-            null;
+         when Bits.BIT8    => null;                          -- 8-bit no-swap
+         when Bits.BIT16   => Byte_Swap_16 (Object_Address); -- 16-bit swap
+         when Bits.BIT32   => Byte_Swap_32 (Object_Address); -- 32-bit swap
+         when Bits.BIT64   => Byte_Swap_64 (Object_Address); -- 64-bit swap
+         when Bits.BITNONE => null;                          -- undefined swap
       end case;
    end Byte_Swap;
 
@@ -123,21 +113,11 @@ package body LLutils is
    begin
       Byte_Swap (Object_Address, Size);
       case Size is
-         when Bits.BIT8 =>
-            -- 8-bit no-swap
-            Object_Address := Object_Address + 1;
-         when Bits.BIT16 =>
-            -- 16-bit swap
-            Object_Address := Object_Address + 2;
-         when Bits.BIT32 =>
-            --- 32-bit swap
-            Object_Address := Object_Address + 4;
-         when Bits.BIT64 =>
-            -- 64-bit swap
-            Object_Address := Object_Address + 8;
-         when Bits.BITNONE =>
-            --- undefined swap
-            null;
+         when Bits.BIT8    => Object_Address := @ + 1; -- 8-bit no-swap
+         when Bits.BIT16   => Object_Address := @ + 2; -- 16-bit swap
+         when Bits.BIT32   => Object_Address := @ + 4; -- 32-bit swap
+         when Bits.BIT64   => Object_Address := @ + 8; -- 64-bit swap
+         when Bits.BITNONE => null;                    -- undefined swap
       end case;
    end Byte_Swap_Next;
 
@@ -216,11 +196,12 @@ package body LLutils is
          when 'a' .. 'f' => Digit := Character'Pos (C) - Character'Pos ('a') + 10;
          when others     => Success := False; return;
       end case;
-      if MSD then
-         Value := (Value and 16#0F#) or (Digit * 2**4);
-      else
-         Value := (Value and 16#F0#) or Digit;
-      end if;
+      Value := (if MSD then (@ and 16#0F#) or (Digit * 2**4) else (@ and 16#F0#) or Digit);
+--      if MSD then
+--         Value := (@ and 16#0F#) or (Digit * 2**4);
+--      else
+--         Value := (@ and 16#F0#) or Digit;
+--      end if;
       Success := True;
    end HexDigit_To_U8;
 
@@ -239,18 +220,19 @@ package body LLutils is
       Digit : Interfaces.Unsigned_8 := Value;
    begin
       if MSD then
-         Digit := Digit / 2**4;
+         Digit := @ / 2**4;
       end if;
-      Digit := Digit and 16#0F#;
+      Digit := @ and 16#0F#;
       if Digit > 9 then
          declare
             A_Pos : Interfaces.Unsigned_8;
          begin
-            if LCase then
-               A_Pos := Character'Pos ('a');
-            else
-               A_Pos := Character'Pos ('A');
-            end if;
+            A_Pos := (if LCase then Character'Pos ('a') else Character'Pos ('A'));
+--            if LCase then
+--               A_Pos := Character'Pos ('a');
+--            else
+--               A_Pos := Character'Pos ('A');
+--            end if;
             C := Character'Val (A_Pos + (Digit - 10));
          end;
       else
