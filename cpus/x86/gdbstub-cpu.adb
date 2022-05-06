@@ -252,7 +252,7 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    procedure Breakpoint_Adjust_PC_Backward is
    begin
-      PC_Write (PC_Read - BREAKPOINT_Instruction_Size);
+      PC_Write (PC_Read - Opcode_BREAKPOINT_Size);
    end Breakpoint_Adjust_PC_Backward;
 
    ----------------------------------------------------------------------------
@@ -260,7 +260,7 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    procedure Breakpoint_Adjust_PC_Forward is
    begin
-      PC_Write (PC_Read + BREAKPOINT_Instruction_Size);
+      PC_Write (PC_Read + Opcode_BREAKPOINT_Size);
    end Breakpoint_Adjust_PC_Forward;
 
    ----------------------------------------------------------------------------
