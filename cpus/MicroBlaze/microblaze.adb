@@ -73,6 +73,80 @@ package body MicroBlaze is
    end BREAKPOINT;
 
    ----------------------------------------------------------------------------
+   -- Cache management
+   ----------------------------------------------------------------------------
+
+   procedure ICache_Invalidate is
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       "        addik   r5,r0,1  " & CRLF &
+                       "        addik   r6,r5,2  " & CRLF &
+                       "1:      wic     r5,r0    " & CRLF &
+                       "        cmpu    r18,r5,r6" & CRLF &
+                       "        blei    r18,2f   " & CRLF &
+                       "        brid    1b       " & CRLF &
+                       "        addik   r5,r5,3  " & CRLF &
+                       "2:      nop              " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "r5,r6,r18",
+           Volatile => True
+          );
+   end ICache_Invalidate;
+
+   procedure ICache_Enable is
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        mfs     r8,rmsr   " & CRLF &
+                       "        ori     r8,r8,0x20" & CRLF &
+                       "        mts     rmsr,r8   " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "r8",
+           Volatile => True
+          );
+   end ICache_Enable;
+
+   procedure DCache_Invalidate is
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       "        addik   r5,r0,1  " & CRLF &
+                       "        addik   r6,r5,2  " & CRLF &
+                       "1:      wdc     r5,r0    " & CRLF &
+                       "        cmpu    r18,r5,r6" & CRLF &
+                       "        blei    r18,2f   " & CRLF &
+                       "        brid    1b       " & CRLF &
+                       "        addik   r5,r5,3  " & CRLF &
+                       "2:      nop              " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "r5,r6,r18",
+           Volatile => True
+          );
+   end DCache_Invalidate;
+
+   procedure DCache_Enable is
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        mfs     r8,rmsr   " & CRLF &
+                       "        ori     r8,r8,0x80" & CRLF &
+                       "        mts     rmsr,r8   " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "r8",
+           Volatile => True
+          );
+   end DCache_Enable;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
@@ -83,12 +157,10 @@ package body MicroBlaze is
                        "        mfs     r11,rmsr " & CRLF &
                        "        ori     r11,r11,2" & CRLF &
                        "        mts     rmsr,r11 " & CRLF &
-                       -- "        rtsd    r15,8    " & CRLF &
-                       "        nop              " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "r11",
            Volatile => True
           );
    end Irq_Enable;

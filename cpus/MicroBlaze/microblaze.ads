@@ -33,11 +33,10 @@ package MicroBlaze is
    -- Generic definitions
    ----------------------------------------------------------------------------
 
-   -- __REF__ https://www.xilinx.com/support/answers/53823.html
-   -- BRKI R14,0x60
-   BREAKPOINT_Instruction      : constant Unsigned_32 := 16#B9CC_0060#;
-   BREAKPOINT_Instruction_Size : constant             := 4;
-   BREAKPOINT_Asm_String       : constant String      := ".word 0xB9CC0060";
+   Opcode_BREAKPOINT      : constant := 16#B9CC_0060#; -- BRKI R14,0x60
+   Opcode_BREAKPOINT_Size : constant := 4;
+
+   BREAKPOINT_Asm_String : constant String := ".word   0xB9CC0060";
 
    procedure NOP with
       Inline => True;
@@ -124,6 +123,27 @@ package MicroBlaze is
       );
 
    Maximum_Register_Size : constant := 4;
+
+   ----------------------------------------------------------------------------
+   -- Cache management
+   ----------------------------------------------------------------------------
+
+   procedure ICache_Invalidate with
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "icache_invalidate";
+   procedure ICache_Enable with
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "icache_enable";
+   procedure DCache_Invalidate with
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "dcache_invalidate";
+   procedure DCache_Enable with
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "dcache_enable";
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
