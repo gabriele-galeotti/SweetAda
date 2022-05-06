@@ -37,20 +37,28 @@ package XPS is
    -- XPS Timer
    ----------------------------------------------------------------------------
 
+   -- Control/Status Register 0 (TCSR0) (12)
+
+   UDT0_UP   : constant := 0; -- Timer functions as up counter
+   UDT0_DOWN : constant := 1; -- Timer functions as down counter
+
+   MDT0_GEN : constant := 0; -- Timer mode is generate
+   MDT0_CAP : constant := 1; -- Timer mode is capture
+
    type XPS_Timer_CSR_Type is
    record
       Reserved : Bits_21;
-      ENALL    : Bits_1;
-      PWMA0    : Bits_1;
-      T0INT    : Bits_1;
-      ENT0     : Bits_1;
-      ENIT0    : Bits_1;
-      LOAD0    : Bits_1;
-      ARHT0    : Bits_1;
-      CAPT0    : Bits_1;
-      GENT0    : Bits_1;
-      UDT0     : Bits_1;
-      MDT0     : Bits_1;
+      ENALL    : Boolean; -- Enable All Timers
+      PWMA0    : Boolean; -- Enable Pulse Width Modulation for Timer0
+      T0INT    : Boolean; -- Timer0 Interrupt
+      ENT0     : Boolean; -- Enable Timer0
+      ENIT0    : Boolean; -- Enable Interrupt for Timer0
+      LOAD0    : Boolean; -- Load Timer0
+      ARHT0    : Boolean; -- Auto Reload/Hold Timer0
+      CAPT0    : Boolean; -- Enable External Capture Trigger Timer0
+      GENT0    : Boolean; -- Enable External Generate Signal Timer0
+      UDT0     : Bits_1;  -- Up/Down Count Timer0
+      MDT0     : Bits_1;  -- Timer0 Mode
    end record with
       Bit_Order => High_Order_First,
       Size      => 32;
@@ -72,9 +80,9 @@ package XPS is
 
    type XPS_Timer_Type is
    record
-      TCSR0 : XPS_Timer_CSR_Type;
-      TLR0  : Unsigned_32;
-      TCR0  : Unsigned_32;
+      TCSR0 : XPS_Timer_CSR_Type with Volatile_Full_Access => True;
+      TLR0  : Unsigned_32        with Volatile_Full_Access => True;
+      TCR0  : Unsigned_32        with Volatile_Full_Access => True;
    end record with
       Size => 3 * 32;
    for XPS_Timer_Type use
@@ -105,14 +113,14 @@ package XPS is
 
    type XPS_INTC_Type is
    record
-      ISR : Unsigned_32;
-      IPR : Unsigned_32;
-      IER : Unsigned_32;
-      IAR : Unsigned_32;
-      SIE : Unsigned_32;
-      CIE : Unsigned_32;
-      IVR : Unsigned_32;
-      MER : XPS_INTC_MER_Type;
+      ISR : Unsigned_32       with Volatile_Full_Access => True;
+      IPR : Unsigned_32       with Volatile_Full_Access => True;
+      IER : Unsigned_32       with Volatile_Full_Access => True;
+      IAR : Unsigned_32       with Volatile_Full_Access => True;
+      SIE : Unsigned_32       with Volatile_Full_Access => True;
+      CIE : Unsigned_32       with Volatile_Full_Access => True;
+      IVR : Unsigned_32       with Volatile_Full_Access => True;
+      MER : XPS_INTC_MER_Type with Volatile_Full_Access => True;
    end record with
       Size => 8 * 32;
    for XPS_INTC_Type use
