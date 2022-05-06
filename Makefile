@@ -826,7 +826,7 @@ endif
 	@$(call echo-print,"")
 ifneq ($(SUBPLATFORM),)
 	@$(REM) if SUBPLATFORM does exist, execute the "installfiles" target
-	@$(MAKE_PLATFORM) installfiles
+	-@$(MAKE_PLATFORM) installfiles
 endif
 else
 	$(error Error: no valid PLATFORM, configuration not created)
