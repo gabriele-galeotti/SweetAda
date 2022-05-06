@@ -37,8 +37,8 @@ package body Integer_Math is
    begin
       Result := 0;
       while Modulo > 255 loop
-         Modulo := Modulo / 2**8;
-         Result := Result + 8;
+         Modulo := @ / 2**8;
+         Result := @ + 8;
       end loop;
       return Result + Bits.FirstMSBit (Interfaces.Unsigned_8 (Modulo));
    end Log2;
@@ -53,7 +53,7 @@ package body Integer_Math is
       Result := Value;
       Remainder := Result mod Modulo;
       if Remainder /= 0 then
-         Result := Result + (Modulo - Remainder);
+         Result := @ + (Modulo - Remainder);
       end if;
       return Result;
    end Roundup;
@@ -68,7 +68,7 @@ package body Integer_Math is
       Result := Value;
       Remainder := Result mod Modulo;
       if Remainder /= 0 then
-         Result := Result - Remainder;
+         Result := @ - Remainder;
       end if;
       return Result;
    end Rounddown;
