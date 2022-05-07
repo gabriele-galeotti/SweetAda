@@ -75,6 +75,7 @@ Next: <a href="#Overview" accesskey="n" rel="next">Overview</a> &nbsp; [<a href=
 <li><a href="#Optimizations">Optimizations</a></li>
 <li><a href="#Platform-descriptions">Platform descriptions</a></li>
 <li><a href="#IOEMU-scripting">IOEMU scripting</a></li>
+<li><a href="#References">References</a></li>
 <li><a href="#Index">Index</a></li>
 </ul>
 <hr>
@@ -139,41 +140,62 @@ common auxiliary files
 Next: <a href="#Toolchains" accesskey="n" rel="next">Toolchains</a>, Previous: <a href="#Overall-structure" accesskey="p" rel="prev">Overall structure</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <span id="Host-environment-1"></span><h2 class="chapter">3 Host environment</h2>
-<span id="index-Host-environment"></span>
 
-<p>SweetAda is meant to run on major mainstream environments, i.e., POSIX/Linux, Windows, or OS X.
-The host machine should be able to execute 64-bit executables. SweetAda also supports whitespaces
-in filepaths although this is considered bad practice.
+<p>SweetAda is meant to run on major 64-bit mainstream environments, i.e., modern installation of
+POSIX/Linux, Windows, or OS X.
 </p>
-<p>In the following chapters, we will analyze operations in a POSIX machine.
+<p>In the following chapters, operations in a POSIX machine will be described when doing examples.
 </p>
+<ul class="section-toc">
+<li><a href="#General-advices" accesskey="1">General advices</a></li>
+<li><a href="#Installation-prerequisites" accesskey="2">Installation prerequisites</a></li>
+<li><a href="#Testing-the-installation" accesskey="3">Testing the installation</a></li>
+<li><a href="#Environment-notes" accesskey="4">Environment notes</a></li>
+</ul>
+<div class="section" id="General-advices">
+<h3 class="section">3.1 General advices</h3>
+<span id="index-General-advice"></span>
+
 <p>It is highly advisable to perform commands in the SweetAda top-level directory (which exists
 as a variable SWEETADA_PATH in the build system). The Makefile machinery is able to infer the
 SweetAda path from the context, but this feature relies on standard Makefile idioms which could
 be invalidated by an &quot;esotic&quot; environment setup.
 </p>
-<p>Hence, if you want to integrate SweetAda in a GUI, remember to change the working directory before
-performing an action.
+<p>Hence, if you want to integrate SweetAda in a GUI, the glue logic should change the working
+directory before performing an action.
 </p>
-<p>SweetAda requires some support from the OS environment. Apart the standard low-level utilities,
-like programs to copy files and usual filesystem operations, the GNU Make and GNU sed utilities
-are required in order to perform basic activities.
+</div>
+<div class="section" id="Installation-prerequisites">
+<h3 class="section">3.2 Installation prerequisites</h3>
+<span id="index-Installation-prerequisites"></span>
+
+<p>SweetAda requires some support from the OS environment. Apart the standard low-level
+utilities, like shell command/programs to copy or move files and other usual filesystem
+operations, the GNU Make is the fundamental component that drives the whole SweetAda
+build process.
 </p>
-<p>While in some environments (Linux, and, if properly configured, OS X) the make utility is
-normally visible in a shell and there is no need to specify its location in the filesystem,
-in Windows and in an OS X without system development features installed, the make executable
-is missing.
+<p>GNU sed is a small utility to perform simple textual processing, and it used to filter
+strings and files should the shell have not enough computational power to perform
+these basic activities.
 </p>
-<p>If you do not have these utilities available, please install them from your package provider,
-or download them form the SweetAda SourceForge repository. Remember to put the executable path
-in the visible part of the PATH environment variable which is then parsed by the shell.
+<p>While in some environments (Linux, and, if properly configured, also OS X) the
+make utility is normally visible in a shell and there is no need to install it or
+specify its location in the filesystem, in Windows is not deployed as a native
+application.
 </p>
-<p>SweetAda requires (although they are not really strictly necessary from a system standpoint)
-three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility. They are
-provided as source programs to be built in the libutils/toolchain_tools directory. You need
-a system GCC compiler available online if you want to change their behaviour (which is not
-recommended, though). However, a standard system are not expected to have them built from sources,
-because the SweetAda package already provide them as executable installed.
+<p>If you do not have these utilities available, please install them from your package
+provider, or download them from the SweetAda SourceForge repository. Remember, as a
+rule of thumb, to put the filesystem executable path in the visible part of the PATH
+environment variable which is then parsed by the shell. GNU make must be immediately
+available since there is no point in running a Makefile without the interpreter. The GNU
+sed utility could be installed directly in the &quot;libutils&quot; directory without the need to
+modify the environment setup.
+</p>
+<p>SweetAda also requires (although they are not really strictly necessary from a system
+standpoint) three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility.
+They are provided as source programs to be built in the libutils/toolchain_tools directory.
+You need a system GCC compiler available online if you want to change their behaviour
+(which is not recommended, though) See <a href="#Toolchain-tools">Toolchain tools</a>.
 </p>
 <p>The GCC wrapper is a small piece of code that sits between the compiler driver and the
 compiler executable. It analyzes command line parameters, selects verbosity level and
@@ -186,9 +208,20 @@ clean visual output in order to easily parse ELF sections. elftool is anyway opt
 and you can avoid its use by setting a variable in the top-level configuration.in file,
 so the standard &quot;size&quot; toolchain executable is thus used.
 </p>
-<p>runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets
-with an emulator like QEMU.
+<p>runsweetada is a small front-end scripting utility to ease the execution of a SweetAda,
+mostly used with virtual targets that use an emulator like QEMU.
 </p>
+<p>All these utilities can be downloaded as executables from the SweetAda SourceForge
+repository See <a href="#References">References</a>. Browse for the directory corresponding to your environment
+and select the last archive available. Except GNU Make, which should be installed in a
+PATH-visible directory, all other utilities could be installed in the &quot;libutils&quot;
+subdirectory of the SweetAda filesystem hierarchy.
+</p>
+</div>
+<div class="section" id="Testing-the-installation">
+<h3 class="section">3.3 Testing the installation</h3>
+<span id="index-Testing-the-installation"></span>
+
 <p>In order to perform actions, the make utility should be invoked, followed by the
 target, like in:
 </p>
@@ -226,19 +259,69 @@ SET MAKEEXE=&quot;C:\Program Files\SweetAda&quot;\bin\make.exe                  
 action, like as a Makefile invocation:
 </p>
 <div class="example">
-<pre class="example">$ ./menu.sh configure
+<pre class="example">$ ./menu.sh help
 </pre></div>
 
 <p>or:
 </p>
 <div class="example">
-<pre class="example">&gt; menu.bat configure
+<pre class="example">&gt; menu.bat help
 </pre></div>
 
-<p>menu-dialog.sh is a Bash shell front-end for machines which have the dialog utility
+<p>If everything is working fine, you should see the help from the master Makefile:
+</p>
+<div class="example">
+<pre class="example">make help (default)
+  Display an help about make targets.
+make CPU=&lt;cpu&gt; [CPU_MODEL=&lt;cpu_model&gt;] RTS=&lt;rts&gt; [TOOLCHAIN_NAME=&lt;toolchain_name&gt;] rts
+  Create RTS &lt;rts&gt; for CPU &lt;cpu&gt; with toolchain &lt;toolchain_name&gt;.
+make PLATFORM=&lt;platform&gt; [SUBPLATFORM=&lt;subplatform&gt;] createkernelcfg
+  Create the 'kernel.cfg' main configuration file.
+make configure
+  Create configuration/support files for this platform.
+make all
+  Perform the same as 'make kernel'.
+make kernel
+  Build the kernel binary output file 'kernel.o'.
+make postbuild
+  Perform platform-specific finalizations and create a physical kernel file 'kernel.rom'.
+make session-start
+  Perform session start activities.
+make session-end activities
+  Perform session end activities.
+make run
+  Run the kernel.
+make debug
+  Run the kernel with debugger active.
+make infodump
+  Dump essential informations.
+make kernel_libinfo
+  Generate library informations.
+make kernel_info
+  Generate kernel informations.
+make clean
+  Clean object files.
+make distclean
+  Clean object files and all configuration/support files.
+make probevariable PROBEVARIABLE=&lt;variablename&gt;
+  Obtain the value of a variable.
+Available CPUs: AArch64 ARM AVR M68k MIPS MicroBlaze NiosII PowerPC RISC-V SPARC SuperH System390 x86 x86-64
+Available RTSes: sfp zfp
+Available Platforms: ATmega128_MinimalDevelopmentBoard Altera10M50GHRD Amiga-FS-UAE ArduinoUNO Atlas CobaltRaQ2 DE10-Lite DECstation5000.133 DigiConnectME Dreamcast FRDM-KL46Z GEMI HiFive1 IntegratorCP LEON3 M5235BCC ML605 MPC8306-SOM MPC8306-Switch MPC8315e MSP432P401R MVME162-510A Malta MemecFX12 OPTi386WB PC-x86 PC-x86-64 QEMU-AArch64 QEMU-AVR QEMU-MIPS QEMU-RISC-V-32 QEMU-i486 RaspberryPi3 SBC5206 SPARCstation5 STM32F769I Spartan3A-EK Spartan3E-SK Synergy-S5D9 System390 Taihu Template TestPlatform XilinxZynqA9 ZOOM
+</pre></div>
+
+</div>
+<div class="section" id="Environment-notes">
+<h3 class="section">3.4 Environment notes</h3>
+<span id="index-Environment-notes"></span>
+
+<p>SweetAda supports whitespaces in filepaths although this is considered bad practice.
+</p>
+<p>&quot;menu-dialog.sh&quot; is a Bash shell front-end for machines which have the dialog utility
 available.
 </p>
 <hr>
+</div>
 </div>
 <div class="chapter" id="Toolchains">
 <div class="header">
@@ -267,6 +350,11 @@ Code output by the build system is thus coming directly from the compiler, witho
 source files inclusion. Anyway, the standard LibGCC could be selected with a configuration
 variable.
 </p>
+<p>GNU toolchains are referenced by a &quot;canonical triplet&quot;, e.g. &quot;i686-unknown-linux&quot;; since
+this name identifies also a working directory component of the toolchain, every time we
+refer to a toolchain this string should be used, like stating the current toolchain
+in the main configuration.in.
+</p>
 <hr>
 </div>
 <div class="chapter" id="Toolchain-tools">
@@ -283,7 +371,7 @@ Next: <a href="#Building-the-RTS" accesskey="n" rel="next">Building the RTS</a>,
 <p>NOTE: GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
 GNATPREP, GNATXREF executables.
 </p>
-<p>SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper, that could be
+<p>Anyway, SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper, that could be
 built from sources if you have a C compiler available online. The current setup is for a
 system GCC C compiler.
 </p>
@@ -315,7 +403,7 @@ $ make install
 
 <p>will build and install wrappers and elftool.
 </p>
-<p>This procedure should work also on a Windows cmd.exe shell, provided you have a Make
+<p>This procedure should work also on a Windows cmd.exe shell, provided you have the make
 utility available online.
 </p>
 <hr>
@@ -343,8 +431,13 @@ System.
 <pre class="example">$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
 </pre></div>
 
-<p>This will build the RTS. If you do not specify the toolchain (e.g., &quot;arm-unknown-eabi&quot;)
-then the toolchain found in the mapping of the top-level configuration.in will be used.
+<p>Note that:
+- both CPU name and RTS name are one of those listed in the help output from Makefile
+- the trailing &quot;rts&quot; token is the Makefile target just invoked
+</p>
+<p>This will build the RTS. If you do not specify the toolchain in the classic &quot;canonical
+triplet name form&quot; (e.g., &quot;arm-unknown-eabi&quot;), then the toolchain found in the mapping
+of the top-level configuration.in will be used.
 </p>
 <p>Once you have built the RTS, it is persistent, and you don&rsquo;t need to repeat this
 operation, unless you modify RTS source files.
@@ -1199,13 +1292,18 @@ FPGA, which runs a softcore Nios II&reg; processor.
 
 <p>DECstation 5000/133 is a famed workstation made by Digital&reg;.
 </p>
+<p>The output binary code is suitable to burn an EPROM, substituting the original one
+in the main board of the workstation.
+</p>
 </div>
 <div class="section" id="Digi-Connect-ME">
 <h3 class="section">16.7 Digi Connect ME</h3>
 <span id="index-Digi-Connect-ME"></span>
 
-<p>The Digi Connect ME is a little embedded module produced by Digi, containing
+<p>The Digi Connect ME is a embedded networking module produced by Digi, containing
 a NET+ARM CPU.
+</p>
+<p>The development is performed by using the JTAG port, and by using OpenOCD.
 </p>
 </div>
 <div class="section" id="Dreamcast">
@@ -1469,7 +1567,7 @@ memory image, in this case is an ELF executable ready to be loaded by the SoC bo
 <p>A Bash shell script in the platform directory, named &quot;createbootdevice.sh&quot;, will store
 the files &quot;config.txt&quot; and &quot;kernel.rom&quot; in the memory card once it knows the UUID
 (USDCARD_UUID) and the filesystem location (USDCARD_MOUNTPOINT), which you have to
-specify in the configuration.in file (hence it is useful to format an SDHC and named it
+specify in the configuration.in file (hence it is useful to format an SDHC and name it
 with that UUID). If you have a system other than Linux, just put in place those files
 with a manual file copy operation once you have visibility of the SDHC memory card.
 </p>
@@ -1479,7 +1577,7 @@ with a manual file copy operation once you have visibility of the SDHC memory ca
 <span id="index-SBC5206"></span>
 
 <p>The SBC5206 is a virtual platform provided by QEMU, which mimics an Arnewsh 5206
-embedded board, which is based on the MCF5206 ColdFire processor.
+embedded board, based on the MCF5206 ColdFire processor.
 </p>
 </div>
 <div class="section" id="SPARCstation-5">
@@ -1488,6 +1586,9 @@ embedded board, which is based on the MCF5206 ColdFire processor.
 
 <p>SPARCstation 5 is a famed workstation made by Sun&reg;. Beyond the
 real hardware machine, SPARCstation 5 is also a machine emulated by QEMU.
+</p>
+<p>The output binary code is suitable to burn an EPROM, substituting the original one
+in the main board of the workstation.
 </p>
 </div>
 <div class="section" id="STM32F769I">
@@ -1547,7 +1648,7 @@ this is done also with the aid of a minimal interrupt context.
 <span id="index-Taihu"></span>
 
 <p>The Taihu is a virtual platform provided by QEMU, which mimics the real one,
-wich is based on a PowerPC PPC405 device.
+based on a PowerPC PPC405 device.
 </p>
 </div>
 <div class="section" id="Xilinx-Zynq-A9">
@@ -1562,7 +1663,7 @@ which mimics the real one.
 <h3 class="section">16.39 ZOOM</h3>
 <span id="index-ZOOM"></span>
 
-<p>ZOOM is a family of embedded platforms based on the MCF5373 ColdFire processor.
+<p>ZOOM is a family of embedded board based on the MCF5373 ColdFire processor.
 </p>
 <hr>
 </div>
@@ -1570,7 +1671,7 @@ which mimics the real one.
 <div class="chapter" id="IOEMU-scripting">
 <div class="header">
 <p>
-Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#References" accesskey="n" rel="next">References</a>, Previous: <a href="#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <span id="IOEMU-scripting-1"></span><h2 class="chapter">17 IOEMU scripting</h2>
 <span id="index-IOEMU"></span>
@@ -1583,17 +1684,18 @@ actions in a very basic script-like sequence of assignments and statements.
 <p>Declarations (ENV and SET) must come first, and their purposes are to declare
 environment variables globally (ENV) or local to the file or a section (SET).
 </p>
-<p>Sections are directives, either to runsweetada utility or the underlying target emulator
-(QEMU/FS-UAE/GXemul).
+<p>Sections are directives, either to runsweetada utility or the underlying target
+emulator (QEMU/FS-UAE/GXemul).
 </p>
 <p>The START section is processed by the runsweetada utility, which can be instructed
 to execute the selected emulator (maybe under the control of the GDB debugger).
 </p>
-<p>The configuration file is then processed by the emulator, once started. The IOEMU
+<p>The configuration file is then processed again by the emulator. The IOEMU
 section is used to configure the coordinates of the IOEMU window. Other sections
 are interpreted as specifications of the I/O features exposed by the target emulator,
-in terms of serial ports or IOEMU graphical I/O ports. Every I/O port has a specific
-name and you can see its mapping in the Ada code platform description.
+in terms of serial ports or IOEMU virtual I/O ports that show up as widgets. Every
+I/O port has a specific name and you can see its mapping in the Ada code platform
+description (&quot;ioemu.ads&quot;).
 </p>
 <p>Inside the I/O port you can set the type of widget used (a LED, a LEDBAR, an hex
 DISPLAY), its color and its size.
@@ -1677,10 +1779,29 @@ that cannot be known before the execution.
 
 <hr>
 </div>
+<div class="chapter" id="References">
+<div class="header">
+<p>
+Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="References-1"></span><h2 class="chapter">18 References</h2>
+<span id="index-References"></span>
+
+<p>Home page
+https://sweetada.org
+</p>
+<p>SourceForge repository
+https://sourceforge.net/projects/sweetada/
+</p>
+<p>GitHub repository
+https://github.com/gabriele-galeotti/SweetAda
+</p>
+<hr>
+</div>
 <div class="unnumbered" id="Index">
 <div class="header">
 <p>
-Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <span id="Index-1"></span><h2 class="unnumbered">Index</h2>
 <table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Index_cp_letter-A"><b>A</b></a>
@@ -1694,8 +1815,6 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 <a class="summary-letter" href="#Index_cp_letter-F"><b>F</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Index_cp_letter-G"><b>G</b></a>
- &nbsp; 
-<a class="summary-letter" href="#Index_cp_letter-H"><b>H</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Index_cp_letter-I"><b>I</b></a>
  &nbsp; 
@@ -1741,6 +1860,7 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 <tr><th id="Index_cp_letter-E">E</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-elftool">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-elftool-1">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Environment-notes">Environment notes</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-F">F</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-FRDM_002dKL46Z">FRDM-KL46Z</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
@@ -1748,14 +1868,13 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 <tr><th id="Index_cp_letter-G">G</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GCC-wrapper">GCC wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GEMI">GEMI</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-General-advice">General advice</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GNAT-wrapper">GNAT wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GPRbuild">GPRbuild</a>:</td><td>&nbsp;</td><td valign="top"><a href="#GPRbuild-mode">GPRbuild mode</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-H">H</th><td></td><td></td></tr>
-<tr><td></td><td valign="top"><a href="#index-Host-environment">Host environment</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-I">I</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-IBM-S_002f390">IBM S/390</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Installation-prerequisites">Installation prerequisites</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Integrator_002fCP">Integrator/CP</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-IOEMU">IOEMU</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
@@ -1792,6 +1911,7 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-R">R</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Raspberry-Pi-3">Raspberry Pi 3</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-References">References</a>:</td><td>&nbsp;</td><td valign="top"><a href="#References">References</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-RTS">RTS</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Building-the-RTS">Building the RTS</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-runsweetada">runsweetada</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
@@ -1807,6 +1927,7 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 <tr><th id="Index_cp_letter-T">T</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Taihu">Taihu</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Terasic-DE10_002dLite">Terasic DE10-Lite</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Testing-the-installation">Testing the installation</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-toolchain-wrappers">toolchain wrappers</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-toolchains">toolchains</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
@@ -1828,8 +1949,6 @@ Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a
 <a class="summary-letter" href="#Index_cp_letter-F"><b>F</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Index_cp_letter-G"><b>G</b></a>
- &nbsp; 
-<a class="summary-letter" href="#Index_cp_letter-H"><b>H</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Index_cp_letter-I"><b>I</b></a>
  &nbsp; 

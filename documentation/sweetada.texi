@@ -48,6 +48,8 @@ Copyright @copyright{} 2020, 2021, 2022 @value{AUTHOR}
 * Host environment::
 * Toolchains::
 * Toolchain tools::
+
+
 * Building the RTS::
 * Configuration::
 * Makefile targets::
@@ -60,6 +62,7 @@ Copyright @copyright{} 2020, 2021, 2022 @value{AUTHOR}
 * Optimizations::
 * Platform descriptions::
 * IOEMU scripting::
+* References::
 * Index::
 @end menu
 
@@ -120,41 +123,53 @@ common auxiliary files
 
 @node Host environment
 @chapter Host environment
-@cindex Host environment
 
-SweetAda is meant to run on major mainstream environments, i.e., POSIX/Linux, Windows, or OS X.
-The host machine should be able to execute 64-bit executables. SweetAda also supports whitespaces
-in filepaths although this is considered bad practice.
+SweetAda is meant to run on major 64-bit mainstream environments, i.e., modern installation of
+POSIX/Linux, Windows, or OS X.
 
-In the following chapters, we will analyze operations in a POSIX machine.
+In the following chapters, operations in a POSIX machine will be described when doing examples.
+
+@section General advices
+@cindex General advice
 
 It is highly advisable to perform commands in the SweetAda top-level directory (which exists
 as a variable SWEETADA_PATH in the build system). The Makefile machinery is able to infer the
 SweetAda path from the context, but this feature relies on standard Makefile idioms which could
 be invalidated by an "esotic" environment setup.
 
-Hence, if you want to integrate SweetAda in a GUI, remember to change the working directory before
-performing an action.
+Hence, if you want to integrate SweetAda in a GUI, the glue logic should change the working
+directory before performing an action.
 
-SweetAda requires some support from the OS environment. Apart the standard low-level utilities,
-like programs to copy files and usual filesystem operations, the GNU Make and GNU sed utilities
-are required in order to perform basic activities.
+@section Installation prerequisites
+@cindex Installation prerequisites
 
-While in some environments (Linux, and, if properly configured, OS X) the make utility is
-normally visible in a shell and there is no need to specify its location in the filesystem,
-in Windows and in an OS X without system development features installed, the make executable
-is missing.
+SweetAda requires some support from the OS environment. Apart the standard low-level
+utilities, like shell command/programs to copy or move files and other usual filesystem
+operations, the GNU Make is the fundamental component that drives the whole SweetAda
+build process.
 
-If you do not have these utilities available, please install them from your package provider,
-or download them form the SweetAda SourceForge repository. Remember to put the executable path
-in the visible part of the PATH environment variable which is then parsed by the shell.
+GNU sed is a small utility to perform simple textual processing, and it used to filter
+strings and files should the shell have not enough computational power to perform
+these basic activities.
 
-SweetAda requires (although they are not really strictly necessary from a system standpoint)
-three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility. They are
-provided as source programs to be built in the libutils/toolchain_tools directory. You need
-a system GCC compiler available online if you want to change their behaviour (which is not
-recommended, though). However, a standard system are not expected to have them built from sources,
-because the SweetAda package already provide them as executable installed.
+While in some environments (Linux, and, if properly configured, also OS X) the
+make utility is normally visible in a shell and there is no need to install it or
+specify its location in the filesystem, in Windows is not deployed as a native
+application.
+
+If you do not have these utilities available, please install them from your package
+provider, or download them from the SweetAda SourceForge repository. Remember, as a
+rule of thumb, to put the filesystem executable path in the visible part of the PATH
+environment variable which is then parsed by the shell. GNU make must be immediately
+available since there is no point in running a Makefile without the interpreter. The GNU
+sed utility could be installed directly in the "libutils" directory without the need to
+modify the environment setup.
+
+SweetAda also requires (although they are not really strictly necessary from a system
+standpoint) three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility.
+They are provided as source programs to be built in the libutils/toolchain_tools directory.
+You need a system GCC compiler available online if you want to change their behaviour
+(which is not recommended, though) @xref{Toolchain tools}.
 
 The GCC wrapper is a small piece of code that sits between the compiler driver and the
 compiler executable. It analyzes command line parameters, selects verbosity level and
@@ -167,8 +182,17 @@ clean visual output in order to easily parse ELF sections. elftool is anyway opt
 and you can avoid its use by setting a variable in the top-level configuration.in file,
 so the standard "size" toolchain executable is thus used.
 
-runsweetada is a small utility to ease the execution of SweetAda, mostly used in virtual targets
-with an emulator like QEMU.
+runsweetada is a small front-end scripting utility to ease the execution of a SweetAda,
+mostly used with virtual targets that use an emulator like QEMU.
+
+All these utilities can be downloaded as executables from the SweetAda SourceForge
+repository @xref{References}. Browse for the directory corresponding to your environment
+and select the last archive available. Except GNU Make, which should be installed in a
+PATH-visible directory, all other utilities could be installed in the "libutils"
+subdirectory of the SweetAda filesystem hierarchy.
+
+@section Testing the installation
+@cindex Testing the installation
 
 In order to perform actions, the make utility should be invoked, followed by the
 target, like in:
@@ -205,16 +229,63 @@ Once the script is properly adjusted, just execute the script by specifying the 
 action, like as a Makefile invocation:
 
 @example
-$ ./menu.sh configure
+$ ./menu.sh help
 @end example
 
 or:
 
 @example
-> menu.bat configure
+> menu.bat help
 @end example
 
-menu-dialog.sh is a Bash shell front-end for machines which have the dialog utility
+If everything is working fine, you should see the help from the master Makefile:
+
+@example
+make help (default)
+  Display an help about make targets.
+make CPU=<cpu> [CPU_MODEL=<cpu_model>] RTS=<rts> [TOOLCHAIN_NAME=<toolchain_name>] rts
+  Create RTS <rts> for CPU <cpu> with toolchain <toolchain_name>.
+make PLATFORM=<platform> [SUBPLATFORM=<subplatform>] createkernelcfg
+  Create the 'kernel.cfg' main configuration file.
+make configure
+  Create configuration/support files for this platform.
+make all
+  Perform the same as 'make kernel'.
+make kernel
+  Build the kernel binary output file 'kernel.o'.
+make postbuild
+  Perform platform-specific finalizations and create a physical kernel file 'kernel.rom'.
+make session-start
+  Perform session start activities.
+make session-end activities
+  Perform session end activities.
+make run
+  Run the kernel.
+make debug
+  Run the kernel with debugger active.
+make infodump
+  Dump essential informations.
+make kernel_libinfo
+  Generate library informations.
+make kernel_info
+  Generate kernel informations.
+make clean
+  Clean object files.
+make distclean
+  Clean object files and all configuration/support files.
+make probevariable PROBEVARIABLE=<variablename>
+  Obtain the value of a variable.
+Available CPUs: AArch64 ARM AVR M68k MIPS MicroBlaze NiosII PowerPC RISC-V SPARC SuperH System390 x86 x86-64
+Available RTSes: sfp zfp
+Available Platforms: ATmega128_MinimalDevelopmentBoard Altera10M50GHRD Amiga-FS-UAE ArduinoUNO Atlas CobaltRaQ2 DE10-Lite DECstation5000.133 DigiConnectME Dreamcast FRDM-KL46Z GEMI HiFive1 IntegratorCP LEON3 M5235BCC ML605 MPC8306-SOM MPC8306-Switch MPC8315e MSP432P401R MVME162-510A Malta MemecFX12 OPTi386WB PC-x86 PC-x86-64 QEMU-AArch64 QEMU-AVR QEMU-MIPS QEMU-RISC-V-32 QEMU-i486 RaspberryPi3 SBC5206 SPARCstation5 STM32F769I Spartan3A-EK Spartan3E-SK Synergy-S5D9 System390 Taihu Template TestPlatform XilinxZynqA9 ZOOM
+@end example
+
+@section Environment notes
+@cindex Environment notes
+
+SweetAda supports whitespaces in filepaths although this is considered bad practice.
+
+"menu-dialog.sh" is a Bash shell front-end for machines which have the dialog utility
 available.
 
 @node Toolchains
@@ -240,6 +311,11 @@ Code output by the build system is thus coming directly from the compiler, witho
 source files inclusion. Anyway, the standard LibGCC could be selected with a configuration
 variable.
 
+GNU toolchains are referenced by a "canonical triplet", e.g. "i686-unknown-linux"; since
+this name identifies also a working directory component of the toolchain, every time we
+refer to a toolchain this string should be used, like stating the current toolchain
+in the main configuration.in.
+
 @node Toolchain tools
 @chapter Toolchain tools
 @cindex toolchain wrappers
@@ -250,7 +326,7 @@ SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU t
 NOTE: GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
 GNATPREP, GNATXREF executables.
 
-SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper, that could be
+Anyway, SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper, that could be
 built from sources if you have a C compiler available online. The current setup is for a
 system GCC C compiler.
 
@@ -284,7 +360,7 @@ $ make install
 
 will build and install wrappers and elftool.
 
-This procedure should work also on a Windows cmd.exe shell, provided you have a Make
+This procedure should work also on a Windows cmd.exe shell, provided you have the make
 utility available online.
 
 @node Building the RTS
@@ -306,8 +382,13 @@ For example:
 $ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
 @end example
 
-This will build the RTS. If you do not specify the toolchain (e.g., "arm-unknown-eabi")
-then the toolchain found in the mapping of the top-level configuration.in will be used.
+Note that:
+- both CPU name and RTS name are one of those listed in the help output from Makefile
+- the trailing "rts" token is the Makefile target just invoked
+
+This will build the RTS. If you do not specify the toolchain in the classic "canonical
+triplet name form" (e.g., "arm-unknown-eabi"), then the toolchain found in the mapping
+of the top-level configuration.in will be used.
 
 Once you have built the RTS, it is persistent, and you don't need to repeat this
 operation, unless you modify RTS source files.
@@ -1092,11 +1173,16 @@ FPGA, which runs a softcore Nios II@registeredsymbol{} processor.
 
 DECstation 5000/133 is a famed workstation made by Digital@registeredsymbol{}.
 
+The output binary code is suitable to burn an EPROM, substituting the original one
+in the main board of the workstation.
+
 @section Digi Connect ME
 @cindex Digi Connect ME
 
-The Digi Connect ME is a little embedded module produced by Digi, containing
+The Digi Connect ME is a embedded networking module produced by Digi, containing
 a NET+ARM CPU.
+
+The development is performed by using the JTAG port, and by using OpenOCD.
 
 @section Dreamcast
 @cindex Dreamcast
@@ -1322,7 +1408,7 @@ memory image, in this case is an ELF executable ready to be loaded by the SoC bo
 A Bash shell script in the platform directory, named "createbootdevice.sh", will store
 the files "config.txt" and "kernel.rom" in the memory card once it knows the UUID
 (USDCARD_UUID) and the filesystem location (USDCARD_MOUNTPOINT), which you have to
-specify in the configuration.in file (hence it is useful to format an SDHC and named it
+specify in the configuration.in file (hence it is useful to format an SDHC and name it
 with that UUID). If you have a system other than Linux, just put in place those files
 with a manual file copy operation once you have visibility of the SDHC memory card.
 
@@ -1330,13 +1416,16 @@ with a manual file copy operation once you have visibility of the SDHC memory ca
 @cindex SBC5206
 
 The SBC5206 is a virtual platform provided by QEMU, which mimics an Arnewsh 5206
-embedded board, which is based on the MCF5206 ColdFire processor.
+embedded board, based on the MCF5206 ColdFire processor.
 
 @section SPARCstation 5
 @cindex SPARCstation 5
 
 SPARCstation 5 is a famed workstation made by Sun@registeredsymbol{}. Beyond the
 real hardware machine, SPARCstation 5 is also a machine emulated by QEMU.
+
+The output binary code is suitable to burn an EPROM, substituting the original one
+in the main board of the workstation.
 
 @section STM32F769I
 @cindex STM32F769I
@@ -1384,7 +1473,7 @@ this is done also with the aid of a minimal interrupt context.
 @cindex Taihu
 
 The Taihu is a virtual platform provided by QEMU, which mimics the real one,
-wich is based on a PowerPC PPC405 device.
+based on a PowerPC PPC405 device.
 
 @section Xilinx Zynq A9
 @cindex Xilinx Zynq A9
@@ -1395,7 +1484,7 @@ which mimics the real one.
 @section ZOOM
 @cindex ZOOM
 
-ZOOM is a family of embedded platforms based on the MCF5373 ColdFire processor.
+ZOOM is a family of embedded board based on the MCF5373 ColdFire processor.
 
 @node IOEMU scripting
 @chapter IOEMU scripting
@@ -1409,17 +1498,18 @@ IOEMU configuration files are structured in declarations and sections.
 Declarations (ENV and SET) must come first, and their purposes are to declare
 environment variables globally (ENV) or local to the file or a section (SET).
 
-Sections are directives, either to runsweetada utility or the underlying target emulator
-(QEMU/FS-UAE/GXemul).
+Sections are directives, either to runsweetada utility or the underlying target
+emulator (QEMU/FS-UAE/GXemul).
 
 The START section is processed by the runsweetada utility, which can be instructed
 to execute the selected emulator (maybe under the control of the GDB debugger).
 
-The configuration file is then processed by the emulator, once started. The IOEMU
+The configuration file is then processed again by the emulator. The IOEMU
 section is used to configure the coordinates of the IOEMU window. Other sections
 are interpreted as specifications of the I/O features exposed by the target emulator,
-in terms of serial ports or IOEMU graphical I/O ports. Every I/O port has a specific
-name and you can see its mapping in the Ada code platform description.
+in terms of serial ports or IOEMU virtual I/O ports that show up as widgets. Every
+I/O port has a specific name and you can see its mapping in the Ada code platform
+description ("ioemu.ads").
 
 Inside the I/O port you can set the type of widget used (a LED, a LEDBAR, an hex
 DISPLAY), its color and its size.
@@ -1507,6 +1597,19 @@ maps physical serial ports to known TCP ports declared within command line argum
 whereas the FS-UAE emulator the IOEMU layer creates on-the-fly a virtual serial port
 that cannot be known before the execution.
 @end itemize
+
+@node References
+@chapter References
+@cindex References
+
+Home page
+https://sweetada.org
+
+SourceForge repository
+https://sourceforge.net/projects/sweetada/
+
+GitHub repository
+https://github.com/gabriele-galeotti/SweetAda
 
 @node Index
 @unnumbered Index
