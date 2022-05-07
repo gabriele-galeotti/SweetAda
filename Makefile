@@ -99,6 +99,13 @@ endif
 export PATH
 include Makefile.ut.in
 
+# sed is mandatory
+ifeq ($(OSTYPE),cmd)
+ifeq ($(shell $(SED) --version 2> nul),)
+$(error Error: no sed executable found)
+endif
+endif
+
 # verbose output, "Y/y/1" = enabled
 VERBOSE ?=
 # normalize VERBOSE
