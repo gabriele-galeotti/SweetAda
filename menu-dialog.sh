@@ -218,40 +218,28 @@ case $1 in
     log_build_errors
     ;;
   "session-start")
-    rm -f make.log make.errors.log
-    "${MAKE}" ${MAKE_DEBUG_OPTIONS} session-start 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
-    log_build_errors
+    "${MAKE}" session-start
+    exit_status=$?
     ;;
   "session-end")
-    rm -f make.log make.errors.log
-    "${MAKE}" ${MAKE_DEBUG_OPTIONS} session-end 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
-    log_build_errors
+    "${MAKE}" session-end
+    exit_status=$?
     ;;
   "run")
-    rm -f make.log make.errors.log
     "${MAKE}" run
     exit_status=$?
-    log_build_errors
     ;;
   "debug")
-    rm -f make.log make.errors.log
     "${MAKE}" debug
     exit_status=$?
-    log_build_errors
     ;;
   "clean")
-    rm -f make.log make.errors.log
-    "${MAKE}" ${MAKE_DEBUG_OPTIONS} clean 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
-    log_build_errors
+    "${MAKE}" clean
+    exit_status=$?
     ;;
   "distclean")
-    rm -f make.log make.errors.log
-    "${MAKE}" ${MAKE_DEBUG_OPTIONS} distclean 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
-    log_build_errors
+    "${MAKE}" distclean
+    exit_status=$?
     ;;
   "rts")
     rm -f make.log make.errors.log

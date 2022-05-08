@@ -97,6 +97,21 @@ return 0
 }
 
 ################################################################################
+# log_build_errors()                                                           #
+#                                                                              #
+################################################################################
+log_build_errors()
+{
+if [ -s make.errors.log ] ; then
+  printf "%s\n" ""
+  printf "%s\n" "Detected errors and/or warnings:"
+  printf "%s\n" "--------------------------------"
+  cat make.errors.log
+fi
+return 0
+}
+
+################################################################################
 # usage()                                                                      #
 #                                                                              #
 ################################################################################
@@ -162,49 +177,77 @@ case ${OSTYPE} in
     ;;
 esac
 
-if [ "x${PLATFORM}" = "x" ] ; then
-  setplatform
-fi
-
-rm -f make.log make.errors.log
 case $1 in
-  createkernelcfg)
-    PLATFORM=${PLATFORM} SUBPLATFORM=${SUBPLATFORM} "${MAKE}" createkernelcfg
+  "createkernelcfg")
+    rm -f make.log make.errors.log
+    if [ "x${PLATFORM}" = "x" ] ; then
+      setplatform
+    fi
+    if [ $? -eq 0 ] ; then
+      PLATFORM=${PLATFORM} SUBPLATFORM=${SUBPLATFORM} "${MAKE}" createkernelcfg 2> make.errors.log | tee make.log
+      exit_status=${PIPESTATUS[0]}
+      log_build_errors
+    fi
     ;;
-  configure)
-    "${MAKE}" configure
+  "configure")
+    rm -f make.log make.errors.log
+    "${MAKE}" ${MAKE_DEBUG_OPTIONS} configure 2> make.errors.log | tee make.log
+    exit_status=${PIPESTATUS[0]}
+    log_build_errors
     ;;
-  all)
-    "${MAKE}" all
+  "all")
+    rm -f make.log make.errors.log
+    "${MAKE}" ${MAKE_DEBUG_OPTIONS} all 2> make.errors.log | tee make.log
+    exit_status=${PIPESTATUS[0]}
+    log_build_errors
     ;;
-  postbuild)
-    "${MAKE}" postbuild
+  "kernel")
+    rm -f make.log make.errors.log
+    "${MAKE}" ${MAKE_DEBUG_OPTIONS} kernel 2> make.errors.log | tee make.log
+    exit_status=${PIPESTATUS[0]}
+    log_build_errors
     ;;
-  session-start)
+  "postbuild")
+    rm -f make.log make.errors.log
+    "${MAKE}" ${MAKE_DEBUG_OPTIONS} postbuild 2> make.errors.log | tee make.log
+    exit_status=${PIPESTATUS[0]}
+    log_build_errors
+    ;;
+  "session-start")
     "${MAKE}" session-start
+    exit_status=$?
     ;;
-  session-end)
+  "session-end")
     "${MAKE}" session-end
+    exit_status=$?
     ;;
-  run)
+  "run")
     "${MAKE}" run
+    exit_status=$?
     ;;
-  debug)
+  "debug")
     "${MAKE}" debug
+    exit_status=$?
     ;;
-  clean)
+  "clean")
     "${MAKE}" clean
+    exit_status=$?
     ;;
-  distclean)
+  "distclean")
     "${MAKE}" distclean
+    exit_status=$?
     ;;
-  rts)
-    "${MAKE}" rts
+  "rts")
+    rm -f make.log make.errors.log
+    "${MAKE}" ${MAKE_DEBUG_OPTIONS} rts 2> make.errors.log | tee make.log
+    exit_status=${PIPESTATUS[0]}
+    log_build_errors
     ;;
   *)
     usage
+    exit_status=1
     ;;
 esac
 
-exit 0
+exit ${exit_status}
 
