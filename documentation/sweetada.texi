@@ -48,8 +48,8 @@ Copyright @copyright{} 2020, 2021, 2022 @value{AUTHOR}
 * Host environment::
 * Toolchains::
 * Toolchain tools::
-
-
+* Emulators::
+* Menu front-ends::
 * Building the RTS::
 * Configuration::
 * Makefile targets::
@@ -169,7 +169,7 @@ SweetAda also requires (although they are not really strictly necessary from a s
 standpoint) three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility.
 They are provided as source programs to be built in the libutils/toolchain_tools directory.
 You need a system GCC compiler available online if you want to change their behaviour
-(which is not recommended, though) @xref{Toolchain tools}.
+(which is not recommended, though). @xref{Toolchain tools}.
 
 The GCC wrapper is a small piece of code that sits between the compiler driver and the
 compiler executable. It analyzes command line parameters, selects verbosity level and
@@ -186,7 +186,7 @@ runsweetada is a small front-end scripting utility to ease the execution of a Sw
 mostly used with virtual targets that use an emulator like QEMU.
 
 All these utilities can be downloaded as executables from the SweetAda SourceForge
-repository @xref{References}. Browse for the directory corresponding to your environment
+repository. @xref{References}. Browse for the directory corresponding to your environment
 and select the last archive available. Except GNU Make, which should be installed in a
 PATH-visible directory, all other utilities could be installed in the "libutils"
 subdirectory of the SweetAda filesystem hierarchy.
@@ -210,7 +210,7 @@ adjust the script near the "Main loop" entry point, as shown in the next lines:
 @example
 menu.bat:@*
 REM defaults to standard installation directory, see configuration.in
-SET MAKEEXE="C:\Program Files\SweetAda"\bin\make.exe                  <--
+SET MAKEEXE="C:\Program Files\SweetAda"\bin\make.exe                  <---
 @end example
 
 @example
@@ -218,11 +218,11 @@ menu.sh:@*
 ...
   darwin)
     # use SweetAda make (try a standard installation prefix)
-    SWEETADA_MAKE=/opt/sweetada/bin/make                     <--
+    SWEETADA_MAKE=/opt/sweetada/bin/make                     <---
 ...
   msys)
     # use SweetAda make (try a standard installation prefix)
-    SWEETADA_MAKE="/c/Program Files/SweetAda/bin/make.exe"   <--
+    SWEETADA_MAKE="/c/Program Files/SweetAda/bin/make.exe"   <---
 @end example
 
 Once the script is properly adjusted, just execute the script by specifying the desired
@@ -285,9 +285,6 @@ Available Platforms: ATmega128_MinimalDevelopmentBoard Altera10M50GHRD Amiga-FS-
 
 SweetAda supports whitespaces in filepaths although this is considered bad practice.
 
-"menu-dialog.sh" is a Bash shell front-end for machines which have the dialog utility
-available.
-
 @node Toolchains
 @chapter Toolchains
 @cindex toolchains
@@ -326,9 +323,9 @@ SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU t
 NOTE: GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
 GNATPREP, GNATXREF executables.
 
-Anyway, SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper, that could be
-built from sources if you have a C compiler available online. The current setup is for a
-system GCC C compiler.
+Anyway, SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper,
+that could be built from sources if you have a C compiler available online. The current
+setup is for a system GCC C compiler.
 
 Go into the directory libutils/toolchain_tools and edit the Makefile by adjusting some
 variables:
@@ -363,6 +360,40 @@ will build and install wrappers and elftool.
 This procedure should work also on a Windows cmd.exe shell, provided you have the make
 utility available online.
 
+@node Emulators
+@chapter Emulators
+@cindex Emulators
+
+SweetAda does use emulators in order to test the code without the need of physical
+hardware. Three emulators are being provided at least on a Linux machine: QEMU (generic
+for nearly all targets), GXemul (for the Dreamcast console) and FS-UAE (for Amiga
+machines). The last two are not available for a Windows or a OS X machines).
+
+When installing an emulator package, pay attention to the top-level directory hierarchy
+of the archive, because it refers to the root directory of the machine filesystem. Hence,
+unpack them referring to, say, "C:" or "/".
+
+@node Menu front-ends
+@chapter Menu front-ends
+@cindex Menu front-ends
+
+SweetAda has three shell utilities to ease invoking GNU Make.
+
+"menu.sh" is a pure Bash script.
+
+"menu-dialog.sh" is a Bash script for machines which have the dialog utility
+available.
+
+"menu.bat" is a cmd.exe Windows script.
+
+Bash menus are able to produce logfiles of a SweetAda build, just set VERBOSE=1
+before running them if you want a detailed description of the operations performed
+by the build engine.
+
+Note that only kernel build actions are logged, so, if you give directly a "run"
+action instead of the more correct sequence "all, run", then no log files will be
+produced.
+
 @node Building the RTS
 @chapter Building the RTS
 @cindex RTS
@@ -382,9 +413,13 @@ For example:
 $ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
 @end example
 
-Note that:
-- both CPU name and RTS name are one of those listed in the help output from Makefile
-- the trailing "rts" token is the Makefile target just invoked
+Please note that:
+@itemize @bullet
+@item
+both CPU name and RTS name are one of those listed in the help output from Makefile@*
+@item
+the trailing "rts" token is the Makefile target just invoked@*
+@end itemize
 
 This will build the RTS. If you do not specify the toolchain in the classic "canonical
 triplet name form" (e.g., "arm-unknown-eabi"), then the toolchain found in the mapping
@@ -401,7 +436,7 @@ global features, like, e.g., use of global pointers or object symbol naming.
 
 SweetAda comes with two RTSes, a ZFP and an SFP. The RTS which will be used is
 configurable in the top-level configuration.in file. A proper profile should be
-coupled along the RTS type, which configures system-wide pragmas (wich are in turn
+coupled along the RTS type, which configures system-wide pragmas (which are in turn
 configurable by means of the gnat.adc.in configuration template).
 
 @node Configuration
@@ -586,7 +621,7 @@ Following a "make createkernelcfg" and "make configure", the build system is rea
 to build SweetAda.
 
 At this point, you should have available the RTS to further proceed with the build.
-@xref{Building the RTS}
+@xref{Building the RTS}.
 
 The next phases will be a "make all" (or "make kernel") and, optionally, "make postbuild".
 Then SweetAda could be executed by means of the "make run" or "make debug" commands.
@@ -1602,14 +1637,14 @@ that cannot be known before the execution.
 @chapter References
 @cindex References
 
-Home page
-https://sweetada.org
+Home page@*
+@url{https://www.sweetada.org}
 
-SourceForge repository
-https://sourceforge.net/projects/sweetada/
+SourceForge repository@*
+@url{https://sourceforge.net/projects/sweetada/}
 
-GitHub repository
-https://github.com/gabriele-galeotti/SweetAda
+GitHub repository@*
+@url{https://github.com/gabriele-galeotti/SweetAda}
 
 @node Index
 @unnumbered Index

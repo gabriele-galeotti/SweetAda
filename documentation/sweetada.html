@@ -63,10 +63,12 @@ Next: <a href="#Overview" accesskey="n" rel="next">Overview</a> &nbsp; [<a href=
 <li><a href="#Host-environment" accesskey="3">Host environment</a></li>
 <li><a href="#Toolchains" accesskey="4">Toolchains</a></li>
 <li><a href="#Toolchain-tools" accesskey="5">Toolchain tools</a></li>
-<li><a href="#Building-the-RTS" accesskey="6">Building the RTS</a></li>
-<li><a href="#Configuration" accesskey="7">Configuration</a></li>
-<li><a href="#Makefile-targets" accesskey="8">Makefile targets</a></li>
-<li><a href="#Ada-environment" accesskey="9">Ada environment</a></li>
+<li><a href="#Emulators" accesskey="6">Emulators</a></li>
+<li><a href="#Menu-front_002dends" accesskey="7">Menu front-ends</a></li>
+<li><a href="#Building-the-RTS" accesskey="8">Building the RTS</a></li>
+<li><a href="#Configuration" accesskey="9">Configuration</a></li>
+<li><a href="#Makefile-targets">Makefile targets</a></li>
+<li><a href="#Ada-environment">Ada environment</a></li>
 <li><a href="#GPRbuild-mode">GPRbuild mode</a></li>
 <li><a href="#Building-SweetAda">Building SweetAda</a></li>
 <li><a href="#Anatomy-of-a-platform">Anatomy of a platform</a></li>
@@ -195,7 +197,7 @@ modify the environment setup.
 standpoint) three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility.
 They are provided as source programs to be built in the libutils/toolchain_tools directory.
 You need a system GCC compiler available online if you want to change their behaviour
-(which is not recommended, though) See <a href="#Toolchain-tools">Toolchain tools</a>.
+(which is not recommended, though). See <a href="#Toolchain-tools">Toolchain tools</a>.
 </p>
 <p>The GCC wrapper is a small piece of code that sits between the compiler driver and the
 compiler executable. It analyzes command line parameters, selects verbosity level and
@@ -212,7 +214,7 @@ so the standard &quot;size&quot; toolchain executable is thus used.
 mostly used with virtual targets that use an emulator like QEMU.
 </p>
 <p>All these utilities can be downloaded as executables from the SweetAda SourceForge
-repository See <a href="#References">References</a>. Browse for the directory corresponding to your environment
+repository. See <a href="#References">References</a>. Browse for the directory corresponding to your environment
 and select the last archive available. Except GNU Make, which should be installed in a
 PATH-visible directory, all other utilities could be installed in the &quot;libutils&quot;
 subdirectory of the SweetAda filesystem hierarchy.
@@ -239,7 +241,7 @@ adjust the script near the &quot;Main loop&quot; entry point, as shown in the ne
 <pre class="example">menu.bat:
 
 REM defaults to standard installation directory, see configuration.in
-SET MAKEEXE=&quot;C:\Program Files\SweetAda&quot;\bin\make.exe                  &lt;--
+SET MAKEEXE=&quot;C:\Program Files\SweetAda&quot;\bin\make.exe                  &lt;---
 </pre></div>
 
 <div class="example">
@@ -248,11 +250,11 @@ SET MAKEEXE=&quot;C:\Program Files\SweetAda&quot;\bin\make.exe                  
 ...
   darwin)
     # use SweetAda make (try a standard installation prefix)
-    SWEETADA_MAKE=/opt/sweetada/bin/make                     &lt;--
+    SWEETADA_MAKE=/opt/sweetada/bin/make                     &lt;---
 ...
   msys)
     # use SweetAda make (try a standard installation prefix)
-    SWEETADA_MAKE=&quot;/c/Program Files/SweetAda/bin/make.exe&quot;   &lt;--
+    SWEETADA_MAKE=&quot;/c/Program Files/SweetAda/bin/make.exe&quot;   &lt;---
 </pre></div>
 
 <p>Once the script is properly adjusted, just execute the script by specifying the desired
@@ -317,9 +319,6 @@ Available Platforms: ATmega128_MinimalDevelopmentBoard Altera10M50GHRD Amiga-FS-
 
 <p>SweetAda supports whitespaces in filepaths although this is considered bad practice.
 </p>
-<p>&quot;menu-dialog.sh&quot; is a Bash shell front-end for machines which have the dialog utility
-available.
-</p>
 <hr>
 </div>
 </div>
@@ -360,7 +359,7 @@ in the main configuration.in.
 <div class="chapter" id="Toolchain-tools">
 <div class="header">
 <p>
-Next: <a href="#Building-the-RTS" accesskey="n" rel="next">Building the RTS</a>, Previous: <a href="#Toolchains" accesskey="p" rel="prev">Toolchains</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Emulators" accesskey="n" rel="next">Emulators</a>, Previous: <a href="#Toolchains" accesskey="p" rel="prev">Toolchains</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <span id="Toolchain-tools-1"></span><h2 class="chapter">5 Toolchain tools</h2>
 <span id="index-toolchain-wrappers"></span>
@@ -371,9 +370,9 @@ Next: <a href="#Building-the-RTS" accesskey="n" rel="next">Building the RTS</a>,
 <p>NOTE: GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
 GNATPREP, GNATXREF executables.
 </p>
-<p>Anyway, SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper, that could be
-built from sources if you have a C compiler available online. The current setup is for a
-system GCC C compiler.
+<p>Anyway, SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper,
+that could be built from sources if you have a C compiler available online. The current
+setup is for a system GCC C compiler.
 </p>
 <p>Go into the directory libutils/toolchain_tools and edit the Makefile by adjusting some
 variables:
@@ -408,12 +407,58 @@ utility available online.
 </p>
 <hr>
 </div>
+<div class="chapter" id="Emulators">
+<div class="header">
+<p>
+Next: <a href="#Menu-front_002dends" accesskey="n" rel="next">Menu front-ends</a>, Previous: <a href="#Toolchain-tools" accesskey="p" rel="prev">Toolchain tools</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Emulators-1"></span><h2 class="chapter">6 Emulators</h2>
+<span id="index-Emulators"></span>
+
+<p>SweetAda does use emulators in order to test the code without the need of physical
+hardware. Three emulators are being provided at least on a Linux machine: QEMU (generic
+for nearly all targets), GXemul (for the Dreamcast console) and FS-UAE (for Amiga
+machines). The last two are not available for a Windows or a OS X machines).
+</p>
+<p>When installing an emulator package, pay attention to the top-level directory hierarchy
+of the archive, because it refers to the root directory of the machine filesystem. Hence,
+unpack them referring to, say, &quot;C:&quot; or &quot;/&quot;.
+</p>
+<hr>
+</div>
+<div class="chapter" id="Menu-front_002dends">
+<div class="header">
+<p>
+Next: <a href="#Building-the-RTS" accesskey="n" rel="next">Building the RTS</a>, Previous: <a href="#Emulators" accesskey="p" rel="prev">Emulators</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Menu-front_002dends-1"></span><h2 class="chapter">7 Menu front-ends</h2>
+<span id="index-Menu-front_002dends"></span>
+
+<p>SweetAda has three shell utilities to ease invoking GNU Make.
+</p>
+<p>&quot;menu.sh&quot; is a pure Bash script.
+</p>
+<p>&quot;menu-dialog.sh&quot; is a Bash script for machines which have the dialog utility
+available.
+</p>
+<p>&quot;menu.bat&quot; is a cmd.exe Windows script.
+</p>
+<p>Bash menus are able to produce logfiles of a SweetAda build, just set VERBOSE=1
+before running them if you want a detailed description of the operations performed
+by the build engine.
+</p>
+<p>Note that only kernel build actions are logged, so, if you give directly a &quot;run&quot;
+action instead of the more correct sequence &quot;all, run&quot;, then no log files will be
+produced.
+</p>
+<hr>
+</div>
 <div class="chapter" id="Building-the-RTS">
 <div class="header">
 <p>
-Next: <a href="#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="#Toolchain-tools" accesskey="p" rel="prev">Toolchain tools</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="#Menu-front_002dends" accesskey="p" rel="prev">Menu front-ends</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Building-the-RTS-1"></span><h2 class="chapter">6 Building the RTS</h2>
+<span id="Building-the-RTS-1"></span><h2 class="chapter">8 Building the RTS</h2>
 <span id="index-RTS"></span>
 
 <p>The very first action to perform after an installation is to build the Ada Run-Time
@@ -431,10 +476,12 @@ System.
 <pre class="example">$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
 </pre></div>
 
-<p>Note that:
-- both CPU name and RTS name are one of those listed in the help output from Makefile
-- the trailing &quot;rts&quot; token is the Makefile target just invoked
-</p>
+<p>Please note that:
+</p><ul>
+<li> both CPU name and RTS name are one of those listed in the help output from Makefile<br>
+</li><li> the trailing &quot;rts&quot; token is the Makefile target just invoked<br>
+</li></ul>
+
 <p>This will build the RTS. If you do not specify the toolchain in the classic &quot;canonical
 triplet name form&quot; (e.g., &quot;arm-unknown-eabi&quot;), then the toolchain found in the mapping
 of the top-level configuration.in will be used.
@@ -450,7 +497,7 @@ global features, like, e.g., use of global pointers or object symbol naming.
 </p>
 <p>SweetAda comes with two RTSes, a ZFP and an SFP. The RTS which will be used is
 configurable in the top-level configuration.in file. A proper profile should be
-coupled along the RTS type, which configures system-wide pragmas (wich are in turn
+coupled along the RTS type, which configures system-wide pragmas (which are in turn
 configurable by means of the gnat.adc.in configuration template).
 </p>
 <hr>
@@ -460,7 +507,7 @@ configurable by means of the gnat.adc.in configuration template).
 <p>
 Next: <a href="#Makefile-targets" accesskey="n" rel="next">Makefile targets</a>, Previous: <a href="#Building-the-RTS" accesskey="p" rel="prev">Building the RTS</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Configuration-1"></span><h2 class="chapter">7 Configuration</h2>
+<span id="Configuration-1"></span><h2 class="chapter">9 Configuration</h2>
 <span id="index-configuration"></span>
 
 <p>SweetAda configuration is managed by a central Makefile, which loads configuration files
@@ -640,14 +687,14 @@ to the Makefile so the output is not cluttered with other non-interesting output
 <p>
 Next: <a href="#Ada-environment" accesskey="n" rel="next">Ada environment</a>, Previous: <a href="#Configuration" accesskey="p" rel="prev">Configuration</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Makefile-targets-1"></span><h2 class="chapter">8 Makefile targets</h2>
+<span id="Makefile-targets-1"></span><h2 class="chapter">10 Makefile targets</h2>
 <span id="index-Makefile-targets"></span>
 
 <p>Following a &quot;make createkernelcfg&quot; and &quot;make configure&quot;, the build system is ready
 to build SweetAda.
 </p>
 <p>At this point, you should have available the RTS to further proceed with the build.
-See <a href="#Building-the-RTS">Building the RTS</a>
+See <a href="#Building-the-RTS">Building the RTS</a>.
 </p>
 <p>The next phases will be a &quot;make all&quot; (or &quot;make kernel&quot;) and, optionally, &quot;make postbuild&quot;.
 Then SweetAda could be executed by means of the &quot;make run&quot; or &quot;make debug&quot; commands.
@@ -690,7 +737,7 @@ of the platform&rsquo;s configuration.in file could be better.
 <p>
 Next: <a href="#GPRbuild-mode" accesskey="n" rel="next">GPRbuild mode</a>, Previous: <a href="#Makefile-targets" accesskey="p" rel="prev">Makefile targets</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Ada-environment-1"></span><h2 class="chapter">9 Ada environment</h2>
+<span id="Ada-environment-1"></span><h2 class="chapter">11 Ada environment</h2>
 
 <p>The SweetAda build system try to supply a complete environment to build system code for
 a target. In order to instruct the compiler, the linker, the binder, and all accompanying
@@ -753,7 +800,7 @@ reinstated if you perform a &quot;make configure&quot; action.
 <p>
 Next: <a href="#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a>, Previous: <a href="#Ada-environment" accesskey="p" rel="prev">Ada environment</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="GPRbuild-mode-1"></span><h2 class="chapter">10 GPRbuild mode</h2>
+<span id="GPRbuild-mode-1"></span><h2 class="chapter">12 GPRbuild mode</h2>
 <span id="index-GPRbuild"></span>
 
 <p>The SweetAda build system has two different ways to manage the compilation of the final
@@ -782,7 +829,7 @@ SweetAda executable.
 <p>
 Next: <a href="#Anatomy-of-a-platform" accesskey="n" rel="next">Anatomy of a platform</a>, Previous: <a href="#GPRbuild-mode" accesskey="p" rel="prev">GPRbuild mode</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Building-SweetAda-1"></span><h2 class="chapter">11 Building SweetAda</h2>
+<span id="Building-SweetAda-1"></span><h2 class="chapter">13 Building SweetAda</h2>
 
 <p>Once that SweetAda is properly configured and your platform target is known, you can
 perform the build of the system:
@@ -820,7 +867,7 @@ kernel.o file.
 <p>
 Next: <a href="#The-core-complex" accesskey="n" rel="next">The core complex</a>, Previous: <a href="#Building-SweetAda" accesskey="p" rel="prev">Building SweetAda</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Anatomy-of-a-platform-1"></span><h2 class="chapter">12 Anatomy of a platform</h2>
+<span id="Anatomy-of-a-platform-1"></span><h2 class="chapter">14 Anatomy of a platform</h2>
 <span id="index-platform"></span>
 
 <p>In SweetAda a platform is a subdirectory. The platform contains all the files
@@ -911,7 +958,7 @@ contribute to Ada binding phase processing.
 <p>
 Next: <a href="#LibGCC" accesskey="n" rel="next">LibGCC</a>, Previous: <a href="#Anatomy-of-a-platform" accesskey="p" rel="prev">Anatomy of a platform</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="The-core-complex-1"></span><h2 class="chapter">13 The core complex</h2>
+<span id="The-core-complex-1"></span><h2 class="chapter">15 The core complex</h2>
 <span id="index-core"></span>
 
 <p>The core complex is a set of packages that forms the base of subprograms used by
@@ -999,7 +1046,7 @@ and atomic-swapping operations.
 <p>
 Next: <a href="#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="#The-core-complex" accesskey="p" rel="prev">The core complex</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="LibGCC-1"></span><h2 class="chapter">14 LibGCC</h2>
+<span id="LibGCC-1"></span><h2 class="chapter">16 LibGCC</h2>
 <span id="index-LibGCC"></span>
 
 <p>Nearly every compiler provides an underlying library for low-level handling
@@ -1026,7 +1073,7 @@ a port for a new CPU, or experimentation.
 <p>
 Next: <a href="#Platform-descriptions" accesskey="n" rel="next">Platform descriptions</a>, Previous: <a href="#LibGCC" accesskey="p" rel="prev">LibGCC</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Optimizations-1"></span><h2 class="chapter">15 Optimizations</h2>
+<span id="Optimizations-1"></span><h2 class="chapter">17 Optimizations</h2>
 <span id="index-optimizations"></span>
 
 <p>SweetAda provides two mechanisms in order to allow user-defined implementations and
@@ -1180,7 +1227,7 @@ the KERNEL_PARENT_PATH path component before the specification
 <p>
 Next: <a href="#IOEMU-scripting" accesskey="n" rel="next">IOEMU scripting</a>, Previous: <a href="#Optimizations" accesskey="p" rel="prev">Optimizations</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Platform-descriptions-1"></span><h2 class="chapter">16 Platform descriptions</h2>
+<span id="Platform-descriptions-1"></span><h2 class="chapter">18 Platform descriptions</h2>
 
 <ul class="section-toc">
 <li><a href="#Altera-10M50GHRD" accesskey="1">Altera 10M50GHRD</a></li>
@@ -1224,7 +1271,7 @@ Next: <a href="#IOEMU-scripting" accesskey="n" rel="next">IOEMU scripting</a>, P
 <li><a href="#ZOOM">ZOOM</a></li>
 </ul>
 <div class="section" id="Altera-10M50GHRD">
-<h3 class="section">16.1 Altera 10M50GHRD</h3>
+<h3 class="section">18.1 Altera 10M50GHRD</h3>
 <span id="index-Altera-10M50GHRD"></span>
 
 <p>Altera&reg; 10M50GHRD is a virtual platform in SweetAda, usable by
@@ -1242,7 +1289,7 @@ already wrapped in the platform&rsquo;s configuration.in.
 </p>
 </div>
 <div class="section" id="Amiga">
-<h3 class="section">16.2 Amiga</h3>
+<h3 class="section">18.2 Amiga</h3>
 <span id="index-Amiga"></span>
 
 <p>The Amiga platform is the well-known machine based on the M68k venerable class
@@ -1264,7 +1311,7 @@ the serial port and the A2065 network adapter (tested only in FS-UAE so far).
 </p>
 </div>
 <div class="section" id="Arduino-Uno">
-<h3 class="section">16.3 Arduino Uno</h3>
+<h3 class="section">18.3 Arduino Uno</h3>
 <span id="index-Arduino-Uno"></span>
 
 <p>Arduino&reg; UNO is a very popular embedded board based on the
@@ -1272,14 +1319,14 @@ AVR class of MCU.
 </p>
 </div>
 <div class="section" id="Atlas">
-<h3 class="section">16.4 Atlas</h3>
+<h3 class="section">18.4 Atlas</h3>
 <span id="index-Atlas"></span>
 
 <p>Atlas is a PC-style board based on a PowerPC PPC604 CPU.
 </p>
 </div>
 <div class="section" id="Terasic-DE10_002dLite">
-<h3 class="section">16.5 Terasic DE10-Lite</h3>
+<h3 class="section">18.5 Terasic DE10-Lite</h3>
 <span id="index-Terasic-DE10_002dLite"></span>
 
 <p>The DE10-Lite is an embedded board preoduced by Terasic, based on an Altera&reg;
@@ -1287,7 +1334,7 @@ FPGA, which runs a softcore Nios II&reg; processor.
 </p>
 </div>
 <div class="section" id="DECstation-5000_002f133">
-<h3 class="section">16.6 DECstation 5000/133</h3>
+<h3 class="section">18.6 DECstation 5000/133</h3>
 <span id="index-DECstation-5000_002f133"></span>
 
 <p>DECstation 5000/133 is a famed workstation made by Digital&reg;.
@@ -1297,7 +1344,7 @@ in the main board of the workstation.
 </p>
 </div>
 <div class="section" id="Digi-Connect-ME">
-<h3 class="section">16.7 Digi Connect ME</h3>
+<h3 class="section">18.7 Digi Connect ME</h3>
 <span id="index-Digi-Connect-ME"></span>
 
 <p>The Digi Connect ME is a embedded networking module produced by Digi, containing
@@ -1307,7 +1354,7 @@ a NET+ARM CPU.
 </p>
 </div>
 <div class="section" id="Dreamcast">
-<h3 class="section">16.8 Dreamcast</h3>
+<h3 class="section">18.8 Dreamcast</h3>
 <span id="index-Dreamcast"></span>
 
 <p>SEGA&reg; Dreamcast is a home video game console based on an
@@ -1328,14 +1375,14 @@ utility provides a way to send the kernel to the console.
 </p>
 </div>
 <div class="section" id="FRDM_002dKL46Z">
-<h3 class="section">16.9 FRDM-KL46Z</h3>
+<h3 class="section">18.9 FRDM-KL46Z</h3>
 <span id="index-FRDM_002dKL46Z"></span>
 
 <p>FRDM-KL46Z (&quot;Freedom&quot;) is a little embedded board based on an ARM CPU.
 </p>
 </div>
 <div class="section" id="GEMI">
-<h3 class="section">16.10 GEMI</h3>
+<h3 class="section">18.10 GEMI</h3>
 <span id="index-GEMI"></span>
 
 <p>&quot;GEMI&quot; is a proprietary embedded board based on the Hitachi SH7032 CPU, available only
@@ -1348,7 +1395,7 @@ on-board RTC.
 </p>
 </div>
 <div class="section" id="SiFive-HiFive-1">
-<h3 class="section">16.11 SiFive HiFive 1</h3>
+<h3 class="section">18.11 SiFive HiFive 1</h3>
 <span id="index-SiFive-HiFive-1"></span>
 
 <p>The SiFive<sup>TM</sup> HiFive 1 is an embedded board based on a RISC-V&reg;
@@ -1387,7 +1434,7 @@ enabled, else when a timer IRQ is triggered an invalid program counter will be c
 </p>
 </div>
 <div class="section" id="Integrator_002fCP">
-<h3 class="section">16.12 Integrator/CP</h3>
+<h3 class="section">18.12 Integrator/CP</h3>
 <span id="index-Integrator_002fCP"></span>
 
 <p>The Integrator/CP is a virtual platform provided by QEMU, which mimics the real one,
@@ -1402,7 +1449,7 @@ produced by ARM&reg;.
 
 </div>
 <div class="section" id="LEON3">
-<h3 class="section">16.13 LEON3</h3>
+<h3 class="section">18.13 LEON3</h3>
 <span id="index-LEON3"></span>
 
 <p>The LEON3 is a virtual platform provided by QEMU, which mimics a generic machine based
@@ -1410,21 +1457,21 @@ on the LEON3&reg; processor.
 </p>
 </div>
 <div class="section" id="M5235BCC">
-<h3 class="section">16.14 M5235BCC</h3>
+<h3 class="section">18.14 M5235BCC</h3>
 <span id="index-M5235BCC"></span>
 
 <p>M5235BCC is an embedded board based on the MCF5235 ColdFire processor.
 </p>
 </div>
 <div class="section" id="ML605">
-<h3 class="section">16.15 ML605</h3>
+<h3 class="section">18.15 ML605</h3>
 <span id="index-ML605"></span>
 
 <p>ML605 is a virtual platform provided by QEMU, which mimics the real one.
 </p>
 </div>
 <div class="section" id="MPC8306-SOM">
-<h3 class="section">16.16 MPC8306 SOM</h3>
+<h3 class="section">18.16 MPC8306 SOM</h3>
 <span id="index-MPC8306-SOM"></span>
 
 <p>MPC830x SOM (System on Module) is an embedded development board based on a
@@ -1446,7 +1493,7 @@ a telnet session
 
 </div>
 <div class="section" id="MPC8306-Switch">
-<h3 class="section">16.17 MPC8306 Switch</h3>
+<h3 class="section">18.17 MPC8306 Switch</h3>
 <span id="index-MPC8306-Switch"></span>
 
 <p>&quot;Switch&quot; is a proprietary embedded board based on the MPC8306 CPU, available only
@@ -1457,7 +1504,7 @@ this kind of CPU and test SweetAda in the maximum possible range of physical har
 </p>
 </div>
 <div class="section" id="MPC8315e">
-<h3 class="section">16.18 MPC8315e</h3>
+<h3 class="section">18.18 MPC8315e</h3>
 <span id="index-MPC8315e"></span>
 
 <p>MPC8315e is a proprietary embedded board based on the homonym PowerPC CPU, available only
@@ -1466,28 +1513,28 @@ this kind of CPU and test SweetAda in the maximum possible range of physical har
 </p>
 </div>
 <div class="section" id="MSP432P401R">
-<h3 class="section">16.19 MSP432P401R</h3>
+<h3 class="section">18.19 MSP432P401R</h3>
 <span id="index-MSP432P401R"></span>
 
 <p>The MSP432P401R is a litlle embedded board based on an ARM CPU.
 </p>
 </div>
 <div class="section" id="MVME162_002d510A">
-<h3 class="section">16.20 MVME162-510A</h3>
+<h3 class="section">18.20 MVME162-510A</h3>
 <span id="index-MVME162_002d510A"></span>
 
 <p>The MVME162-510A is a VME board based on an MC68040 CPU.
 </p>
 </div>
 <div class="section" id="Malta">
-<h3 class="section">16.21 Malta</h3>
+<h3 class="section">18.21 Malta</h3>
 <span id="index-Malta"></span>
 
 <p>&quot;Malta&quot; is a virtual platform provided by QEMU, which mimics the real one.
 </p>
 </div>
 <div class="section" id="Memec-FX12">
-<h3 class="section">16.22 Memec FX12</h3>
+<h3 class="section">18.22 Memec FX12</h3>
 <span id="index-Memec-FX12"></span>
 
 <p>The Memec FX12 is a little embedded module based on Xilinx&reg;
@@ -1495,21 +1542,21 @@ Virtex-4 FPGA equipped with an hard PPC405 core.
 </p>
 </div>
 <div class="section" id="PC_002dx86">
-<h3 class="section">16.23 PC-x86</h3>
+<h3 class="section">18.23 PC-x86</h3>
 <span id="index-PC_002dx86"></span>
 
 <p>PC-x86 is a family of platforms based on the Intel x86-class 32-bit processor.
 </p>
 </div>
 <div class="section" id="PC_002dx86_002d64">
-<h3 class="section">16.24 PC-x86-64</h3>
+<h3 class="section">18.24 PC-x86-64</h3>
 <span id="index-PC_002dx86_002d64"></span>
 
 <p>PC-x86-64 is a family of platforms based on Intel/AMD x86-64-class 64-bit processors.
 </p>
 </div>
 <div class="section" id="QEMU-AArch64">
-<h3 class="section">16.25 QEMU AArch64</h3>
+<h3 class="section">18.25 QEMU AArch64</h3>
 <span id="index-QEMU-AArch64"></span>
 
 <p>The QEMU AArch64 is a virtual platform provided by QEMU, which is based on an
@@ -1517,7 +1564,7 @@ ARM AArch64-class CPU.
 </p>
 </div>
 <div class="section" id="QEMU-AVR">
-<h3 class="section">16.26 QEMU AVR</h3>
+<h3 class="section">18.26 QEMU AVR</h3>
 <span id="index-QEMU-AVR"></span>
 
 <p>The QEMU AVR is a virtual platform provided by QEMU, which is based on an
@@ -1525,7 +1572,7 @@ AVR-class CPU.
 </p>
 </div>
 <div class="section" id="QEMU-MIPS">
-<h3 class="section">16.27 QEMU MIPS</h3>
+<h3 class="section">18.27 QEMU MIPS</h3>
 <span id="index-QEMU-MIPS"></span>
 
 <p>The QEMU MIPS is a virtual platform provided by QEMU, which is based on an
@@ -1533,7 +1580,7 @@ MIPS-class CPU.
 </p>
 </div>
 <div class="section" id="QEMU-RISC_002dV-32">
-<h3 class="section">16.28 QEMU RISC-V 32</h3>
+<h3 class="section">18.28 QEMU RISC-V 32</h3>
 <span id="index-QEMU-RISC_002dV-32"></span>
 
 <p>The QEMU RISC-V 32 is a virtual platform provided by QEMU, which is based on an
@@ -1541,7 +1588,7 @@ MIPS-class CPU.
 </p>
 </div>
 <div class="section" id="Raspberry-Pi-3">
-<h3 class="section">16.29 Raspberry Pi 3</h3>
+<h3 class="section">18.29 Raspberry Pi 3</h3>
 <span id="index-Raspberry-Pi-3"></span>
 
 <p>The Raspberry Pi 3 is a popular embedded board based on a Broadcom&reg;
@@ -1573,7 +1620,7 @@ with a manual file copy operation once you have visibility of the SDHC memory ca
 </p>
 </div>
 <div class="section" id="SBC5206">
-<h3 class="section">16.30 SBC5206</h3>
+<h3 class="section">18.30 SBC5206</h3>
 <span id="index-SBC5206"></span>
 
 <p>The SBC5206 is a virtual platform provided by QEMU, which mimics an Arnewsh 5206
@@ -1581,7 +1628,7 @@ embedded board, based on the MCF5206 ColdFire processor.
 </p>
 </div>
 <div class="section" id="SPARCstation-5">
-<h3 class="section">16.31 SPARCstation 5</h3>
+<h3 class="section">18.31 SPARCstation 5</h3>
 <span id="index-SPARCstation-5"></span>
 
 <p>SPARCstation 5 is a famed workstation made by Sun&reg;. Beyond the
@@ -1592,28 +1639,28 @@ in the main board of the workstation.
 </p>
 </div>
 <div class="section" id="STM32F769I">
-<h3 class="section">16.32 STM32F769I</h3>
+<h3 class="section">18.32 STM32F769I</h3>
 <span id="index-STM32F769I"></span>
 
 <p>The STM32F769I is a popular embedded board based on an ARM-class CPU.
 </p>
 </div>
 <div class="section" id="Spartan-3A-EK">
-<h3 class="section">16.33 Spartan 3A EK</h3>
+<h3 class="section">18.33 Spartan 3A EK</h3>
 <span id="index-Spartan-3A-EK"></span>
 
 <p>The Spartan 3A EK is an embedded board based on a Xilinx&reg; Spartan-3A FPGA.
 </p>
 </div>
 <div class="section" id="Spartan-3E-SK">
-<h3 class="section">16.34 Spartan 3E SK</h3>
+<h3 class="section">18.34 Spartan 3E SK</h3>
 <span id="index-Spartan-3E-SK"></span>
 
 <p>The Spartan 3E SK is an embedded board based on a Xilinx&reg; Spartan-3E FPGA.
 </p>
 </div>
 <div class="section" id="Synergy-S5D9">
-<h3 class="section">16.35 Synergy S5D9</h3>
+<h3 class="section">18.35 Synergy S5D9</h3>
 <span id="index-Synergy-S5D9"></span>
 
 <p>The Synergy PS5D9 is an embedded board from Renesas&reg;, equipped
@@ -1623,7 +1670,7 @@ with a ARM Cortex-M4 SoC.
 </p>
 </div>
 <div class="section" id="IBM-S_002f390">
-<h3 class="section">16.36 IBM S/390</h3>
+<h3 class="section">18.36 IBM S/390</h3>
 <span id="index-IBM-S_002f390"></span>
 
 <p>S/390&reg; is the well-known family of mainframes produced by IBM&reg;.
@@ -1644,7 +1691,7 @@ this is done also with the aid of a minimal interrupt context.
 </p>
 </div>
 <div class="section" id="Taihu">
-<h3 class="section">16.37 Taihu</h3>
+<h3 class="section">18.37 Taihu</h3>
 <span id="index-Taihu"></span>
 
 <p>The Taihu is a virtual platform provided by QEMU, which mimics the real one,
@@ -1652,7 +1699,7 @@ based on a PowerPC PPC405 device.
 </p>
 </div>
 <div class="section" id="Xilinx-Zynq-A9">
-<h3 class="section">16.38 Xilinx Zynq A9</h3>
+<h3 class="section">18.38 Xilinx Zynq A9</h3>
 <span id="index-Xilinx-Zynq-A9"></span>
 
 <p>The Xilinx&reg; Zynq A9 is a virtual platform provided by QEMU,
@@ -1660,7 +1707,7 @@ which mimics the real one.
 </p>
 </div>
 <div class="section" id="ZOOM">
-<h3 class="section">16.39 ZOOM</h3>
+<h3 class="section">18.39 ZOOM</h3>
 <span id="index-ZOOM"></span>
 
 <p>ZOOM is a family of embedded board based on the MCF5373 ColdFire processor.
@@ -1673,7 +1720,7 @@ which mimics the real one.
 <p>
 Next: <a href="#References" accesskey="n" rel="next">References</a>, Previous: <a href="#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="IOEMU-scripting-1"></span><h2 class="chapter">17 IOEMU scripting</h2>
+<span id="IOEMU-scripting-1"></span><h2 class="chapter">19 IOEMU scripting</h2>
 <span id="index-IOEMU"></span>
 
 <p>The IOEMU facility allows configuration of a target emulator machine by specifying
@@ -1784,17 +1831,17 @@ that cannot be known before the execution.
 <p>
 Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="References-1"></span><h2 class="chapter">18 References</h2>
+<span id="References-1"></span><h2 class="chapter">20 References</h2>
 <span id="index-References"></span>
 
-<p>Home page
-https://sweetada.org
+<p>Home page<br>
+<a href="https://www.sweetada.org">https://www.sweetada.org</a>
 </p>
-<p>SourceForge repository
-https://sourceforge.net/projects/sweetada/
+<p>SourceForge repository<br>
+<a href="https://sourceforge.net/projects/sweetada/">https://sourceforge.net/projects/sweetada/</a>
 </p>
-<p>GitHub repository
-https://github.com/gabriele-galeotti/SweetAda
+<p>GitHub repository<br>
+<a href="https://github.com/gabriele-galeotti/SweetAda">https://github.com/gabriele-galeotti/SweetAda</a>
 </p>
 <hr>
 </div>
@@ -1860,6 +1907,7 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><th id="Index_cp_letter-E">E</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-elftool">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-elftool-1">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Emulators">Emulators</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Emulators">Emulators</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Environment-notes">Environment notes</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-F">F</th><td></td><td></td></tr>
@@ -1887,6 +1935,7 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td></td><td valign="top"><a href="#index-Makefile-targets">Makefile targets</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Makefile-targets">Makefile targets</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Malta">Malta</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Memec-FX12">Memec FX12</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Menu-front_002dends">Menu front-ends</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Menu-front_002dends">Menu front-ends</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-ML605">ML605</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-MPC8306-SOM">MPC8306 SOM</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-MPC8306-Switch">MPC8306 Switch</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
