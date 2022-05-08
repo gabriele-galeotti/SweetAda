@@ -33,10 +33,6 @@
 #                                                                              #
 ################################################################################
 
-# NOTE: not surrounding $(PATH) with double quotes in cmd environment
-# __REF__ https://ss64.com/nt/set.html
-# "Values with Spaces - using Double Quotes"
-
 ifeq ($(TOOLCHAIN_PREFIX),)
 $(error Error: no valid TOOLCHAIN_PREFIX)
 endif
@@ -56,7 +52,7 @@ endif
 
 ifeq ($(GCC_VERSION),)
 # no valid toolchain found, output a warning message
-ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 $(warning *** Warning: no valid toolchain.)
 endif
 endif
@@ -259,7 +255,7 @@ endif
 #
 # Ada Run-Time Checks switches.
 #
-# https://gcc.gnu.org/onlinedocs/gnat_ugn/Run-Time-Checks.html
+# __REF__ https://gcc.gnu.org/onlinedocs/gnat_ugn/Run-Time-Checks.html
 # NOTE: -gnato and -gnatE are switches required in order to be a "conforming compiler"
 # NOTE: -gnatE is not necessary, because GNAT ensure statically that the checks would not fail
 # NOTE: -gnato = -gnato1

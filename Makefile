@@ -193,13 +193,19 @@ CLEAN_OBJECTS        :=
 CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst *.map *.o *.out *.srec *.tmp
 DISTCLEAN_OBJECTS    :=
 
-PLATFORM_GOALS := infodump rts configure all $(KERNEL_BASENAME) postbuild session-start session-end run debug
+RTS_GOAL       := rts
+PLATFORM_GOALS := infodump configure all $(KERNEL_BASENAME) postbuild session-start session-end run debug
 
 ################################################################################
 #                                                                              #
 # Read configuration setup.                                                    #
 #                                                                              #
 ################################################################################
+
+# before loading configuration.in (which defines the RTS type used by the
+# platform), save the RTS variable from the environment in order to correctly
+# build the RTS specified when issuing the "rts" target
+RTS_RTS := $(RTS)
 
 # default build system parameters
 TOOLCHAIN_PREFIX   ?=
@@ -222,7 +228,7 @@ ADDITIONAL_OBJECTS :=
 # master configuration file
 include configuration.in
 
-ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(TOOLCHAIN_PREFIX),)
 $(error Error: no valid TOOLCHAIN_PREFIX)
 endif
@@ -995,16 +1001,19 @@ endif
 
 .PHONY : rts
 rts :
+ifeq ($(GCC_VERSION),)
+	$(error Error: no valid toolchain)
+endif
 ifeq ($(OSTYPE),cmd)
 	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO (        \
-          SET "MAKEFLAGS="                                         && \
+          SET "MAKEFLAGS=" && SET "RTS=$(RTS_RTS)"                 && \
           "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" configure && \
           "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" multilib     \
           )
 else
-	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                       \
-          MAKEFLAGS= "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" configure && \
-          MAKEFLAGS= "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" multilib  ;  \
+	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                                      \
+          MAKEFLAGS= RTS=$(RTS_RTS) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" configure && \
+          MAKEFLAGS= RTS=$(RTS_RTS) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" multilib  ;  \
         done
 endif
 
