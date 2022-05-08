@@ -11,6 +11,7 @@
 
 #
 # Arguments:
+# -r (optional) = invert the meaning of following arguments
 # $1 = filename (target) or directory
 # $2 = filename (link name)
 #
