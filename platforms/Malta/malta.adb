@@ -48,7 +48,6 @@ package body Malta is
    procedure Tclk_Init is
    begin
       Count_Expire := MIPS32.CP0_Count_Read + CP0_TIMER_COUNT;
-      -- MIPS32.CP0_Count_Write (MIPS32.CP0_Count_Read + CP0_TIMER_COUNT);
       MIPS32.CP0_Compare_Write (Count_Expire);
    end Tclk_Init;
 

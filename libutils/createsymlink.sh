@@ -75,15 +75,24 @@ else
   VERBOSE_OPTION=""
 fi
 
-if [ -d "$1" ] ; then
-  for f in $(ls -A "$1"/) ; do
-    rm -f "${f}"
-    ln -s ${VERBOSE_OPTION} "$1"/"${f}" "${f}"
-  done
+if [ "x$1" = "x-r" ] ; then
+  shift
+  target="$2"
+  link_name="$1"
 else
-  rm -f "$2"
-  ln -s ${VERBOSE_OPTION} "$1" "$2"
+  target="$1"
+  link_name="$2"
 fi
 
-exit $?
+if [ -d "${target}" ] ; then
+  for f in $(ls -A "${target}"/) ; do
+    rm -f "${f}"
+    ln -s ${VERBOSE_OPTION} "${target}"/"${f}" "${f}" || exit $?
+  done
+else
+  rm -f "${link_name}"
+  ln -s ${VERBOSE_OPTION} "${target}" "${link_name}" || exit $?
+fi
+
+exit 0
 

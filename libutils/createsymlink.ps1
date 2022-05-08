@@ -37,7 +37,7 @@ $scriptname = $MyInvocation.MyCommand.Name
 $verbose = $env:VERBOSE
 
 $filename_target = $args[0]
-$filename_linkname = $args[1]
+$filename_link_name = $args[1]
 
 $isfolder = (Test-Path -Path $filename_target -PathType Container)
 if ($isfolder)
@@ -55,11 +55,11 @@ if ($isfolder)
 }
 else
 {
-  Remove-Item -Path $filename_linkname -Force -ErrorAction Ignore
-  New-Item -ItemType SymbolicLink -Path $filename_linkname -Target $filename_target | Out-Null
+  Remove-Item -Path $filename_link_name -Force -ErrorAction Ignore
+  New-Item -ItemType SymbolicLink -Path $filename_link_name -Target $filename_target | Out-Null
   if ($verbose -eq "Y")
   {
-    Write-Host "${filename_linkname} -> ${filename_target}"
+    Write-Host "${filename_link_name} -> ${filename_target}"
   }
 }
 
