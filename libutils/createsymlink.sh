@@ -11,7 +11,6 @@
 
 #
 # Arguments:
-# -r (optional) = invert the meaning of following arguments
 # $1 = filename (target) or directory
 # $2 = filename (link name)
 #
@@ -76,14 +75,8 @@ else
   VERBOSE_OPTION=""
 fi
 
-if [ "x$1" = "x-r" ] ; then
-  shift
-  target="$2"
-  link_name="$1"
-else
-  target="$1"
-  link_name="$2"
-fi
+target="$1"
+link_name="$2"
 
 if [ -d "${target}" ] ; then
   for f in $(ls -A "${target}"/) ; do

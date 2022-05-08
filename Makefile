@@ -128,7 +128,7 @@ LS      := DIR /B
 LS_DIRS := $(LS) /A:D
 MKDIR   := MKDIR
 MV      := MOVE /Y 1> nul
-RM      := DEL /F /Q 2> nul __dummyfile__
+RM      := DEL /F /Q 2> nul
 RMDIR   := RMDIR /Q /S 2> nul
 TOUCH   := TYPE nul >
 else
@@ -1013,7 +1013,7 @@ ifeq ($(OSTYPE),cmd)
 else
 	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                                      \
           MAKEFLAGS= RTS=$(RTS_RTS) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" configure && \
-          MAKEFLAGS= RTS=$(RTS_RTS) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" multilib  ;  \
+          MAKEFLAGS= RTS=$(RTS_RTS) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" multilib ;   \
         done
 endif
 
