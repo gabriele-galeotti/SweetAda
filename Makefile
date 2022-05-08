@@ -193,7 +193,7 @@ CLEAN_OBJECTS        :=
 CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst *.map *.o *.out *.srec *.tmp
 DISTCLEAN_OBJECTS    :=
 
-PLATFORM_GOALS := infodump configure all $(KERNEL_BASENAME) postbuild session-start session-end run debug
+PLATFORM_GOALS := infodump rts configure all $(KERNEL_BASENAME) postbuild session-start session-end run debug
 
 ################################################################################
 #                                                                              #
@@ -479,16 +479,16 @@ ifeq ($(BUILD_MODE),MAKEFILE)
 IMPLICIT_ALI_UNITS_MAKEFILE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT_ALI_UNITS))
 endif
 
-MAKE_APPLICATION := "$(MAKE)" KERNEL_PARENT_PATH=..    -C $(APPLICATION_DIRECTORY)
-MAKE_CLIBRARY    := "$(MAKE)" KERNEL_PARENT_PATH=..    -C $(CLIBRARY_DIRECTORY)
-MAKE_CORE        := "$(MAKE)" KERNEL_PARENT_PATH=..    -C $(CORE_DIRECTORY)
-MAKE_CPUS        := "$(MAKE)" KERNEL_PARENT_PATH=../.. -C $(CPU_BASE_DIRECTORY)
+MAKE_APPLICATION := KERNEL_PARENT_PATH=..    -C $(APPLICATION_DIRECTORY)
+MAKE_CLIBRARY    := KERNEL_PARENT_PATH=..    -C $(CLIBRARY_DIRECTORY)
+MAKE_CORE        := KERNEL_PARENT_PATH=..    -C $(CORE_DIRECTORY)
+MAKE_CPUS        := KERNEL_PARENT_PATH=../.. -C $(CPU_BASE_DIRECTORY)
 MAKE_CPU         := $(MAKE_CPUS)/$(CPU)
-MAKE_DRIVERS     := "$(MAKE)" KERNEL_PARENT_PATH=..    -C $(DRIVERS_DIRECTORY)
-MAKE_MODULES     := "$(MAKE)" KERNEL_PARENT_PATH=..    -C $(MODULES_DIRECTORY)
-MAKE_PLATFORMS   := "$(MAKE)" KERNEL_PARENT_PATH=../.. -C $(PLATFORM_BASE_DIRECTORY)
+MAKE_DRIVERS     := KERNEL_PARENT_PATH=..    -C $(DRIVERS_DIRECTORY)
+MAKE_MODULES     := KERNEL_PARENT_PATH=..    -C $(MODULES_DIRECTORY)
+MAKE_PLATFORMS   := KERNEL_PARENT_PATH=../.. -C $(PLATFORM_BASE_DIRECTORY)
 MAKE_PLATFORM    := $(MAKE_PLATFORMS)/$(PLATFORM)
-MAKE_RTS         := "$(MAKE)" KERNEL_PARENT_PATH=..    -C $(RTS_DIRECTORY)
+MAKE_RTS         := KERNEL_PARENT_PATH=..    -C $(RTS_DIRECTORY)
 
 CLEAN_OBJECTS += $(KERNEL_OBJFILE) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE)
 ifeq ($(OSTYPE),cmd)
@@ -511,10 +511,10 @@ LIBGCC_OBJECT :=
 endif
 
 ifeq ($(USE_LIBADA),Y)
-LIBGNARL_OBJECT := "$(RTS_PATH)"/adalib/libgnarl.a
 LIBGNAT_OBJECT  := "$(RTS_PATH)"/adalib/libgnat.a
-LIBADA_OBJECTS  += $(LIBGNARL_OBJECT)
+LIBGNARL_OBJECT := "$(RTS_PATH)"/adalib/libgnarl.a
 LIBADA_OBJECTS  += $(LIBGNAT_OBJECT)
+LIBADA_OBJECTS  += $(LIBGNARL_OBJECT)
 else
 LIBADA_OBJECTS  :=
 endif
@@ -584,17 +584,17 @@ FORCE :
 
 $(CLIBRARY_OBJECT) : FORCE
 ifeq ($(USE_CLIBRARY),Y)
-	$(MAKE_CLIBRARY) all
+	$(MAKE) $(MAKE_CLIBRARY) all
 endif
 
 $(OBJECT_DIRECTORY)/libcore.a : FORCE
-	$(MAKE_CORE) all
+	$(MAKE) $(MAKE_CORE) all
 
 $(OBJECT_DIRECTORY)/libcpu.a : FORCE
-	$(MAKE_CPU) all
+	$(MAKE) $(MAKE_CPU) all
 
 $(OBJECT_DIRECTORY)/libplatform.a : FORCE
-	$(MAKE_PLATFORM) all
+	$(MAKE) $(MAKE_PLATFORM) all
 
 $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME) : FORCE
 ifeq ($(BUILD_MODE),MAKEFILE)
@@ -764,21 +764,9 @@ kernel_dependencies :
                     > $(KERNEL_DEPFILE)    \
         ,[GNATMAKE-M],$(KERNEL_DEPFILE))
 
-.PHONY : kernel_libinfo
-kernel_libinfo :
-ifeq ($(USE_LIBADA),Y)
-	@$(OBJDUMP) -Sdx $(LIBGNARL_OBJECT) > libgnarl.lst
-	@$(READELF) $(LIBGNARL_OBJECT) > libgnarl.elf.lst
-	@$(OBJDUMP) -Sdx $(LIBGNAT_OBJECT) > libgnat.lst
-	@$(READELF) $(LIBGNAT_OBJECT) > libgnat.elf.lst
-endif
-ifeq ($(USE_LIBGCC),Y)
-	@$(OBJDUMP) -Sdx $(LIBGCC_OBJECT) > libgcc.lst
-	@$(READELF) $(LIBGCC_OBJECT) > libgcc.elf.lst
-endif
-
-.PHONY : kernel_info
-kernel_info : kernel_libinfo
+$(KERNEL_BASENAME).lst     \
+$(KERNEL_BASENAME).src.lst \
+$(KERNEL_BASENAME).elf.lst : $(KERNEL_OUTFILE)
 	$(call brief-command, \
         $(OBJDUMP) -dx $(KERNEL_OUTFILE) > $(KERNEL_BASENAME).lst \
         ,[OBJDUMP],$(KERNEL_BASENAME).lst)
@@ -798,6 +786,32 @@ else
 	@$(SIZE) $(KERNEL_OUTFILE)
 endif
 	@$(call echo-print,"")
+
+libgnat.lst      \
+libgnat.elf.lst  \
+libgnarl.lst     \
+libgnarl.elf.lst : $(KERNEL_OUTFILE)
+	@$(OBJDUMP) -Sdx $(LIBGNAT_OBJECT) > libgnat.lst
+	@$(READELF) $(LIBGNAT_OBJECT) > libgnat.elf.lst
+	@$(OBJDUMP) -Sdx $(LIBGNARL_OBJECT) > libgnarl.lst
+	@$(READELF) $(LIBGNARL_OBJECT) > libgnarl.elf.lst
+
+libgcc.lst     \
+libgcc.elf.lst : $(KERNEL_OUTFILE)
+	@$(OBJDUMP) -Sdx $(LIBGCC_OBJECT) > libgcc.lst
+	@$(READELF) $(LIBGCC_OBJECT) > libgcc.elf.lst
+
+.PHONY : kernel_libinfo
+kernel_libinfo :
+ifeq ($(USE_LIBADA),Y)
+kernel_libinfo : libgnat.lst libgnat.elf.lst libgnarl.lst libgnarl.elf.lst
+endif
+ifeq ($(USE_LIBGCC),Y)
+kernel_libinfo : libgcc.lst libgcc.elf.lst
+endif
+
+.PHONY : kernel_info
+kernel_info : kernel_libinfo $(KERNEL_BASENAME).lst $(KERNEL_BASENAME).src.lst $(KERNEL_BASENAME).elf.lst
 
 #
 # Main targets.
@@ -833,7 +847,7 @@ endif
 	@$(call echo-print,"")
 ifneq ($(SUBPLATFORM),)
 	@$(REM) if SUBPLATFORM does exist, execute the "installfiles" target
-	-@$(MAKE_PLATFORM) installfiles
+	-@$(MAKE) $(MAKE_PLATFORM) installfiles
 endif
 else
 	$(error Error: no valid PLATFORM, configuration not created)
@@ -844,13 +858,13 @@ configure-aux : clean
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): start configuration.")
 	@$(call echo-print,"")
-	@$(MAKE_APPLICATION) configure
-	@$(MAKE_CLIBRARY) configure
-	@$(MAKE_CORE) configure
-	@$(MAKE_CPU) configure
-	@$(MAKE_DRIVERS) configure
-	@$(MAKE_MODULES) configure
-	@$(MAKE_PLATFORM) configure
+	@$(MAKE) $(MAKE_APPLICATION) configure
+	@$(MAKE) $(MAKE_CLIBRARY) configure
+	@$(MAKE) $(MAKE_CORE) configure
+	@$(MAKE) $(MAKE_CPU) configure
+	@$(MAKE) $(MAKE_DRIVERS) configure
+	@$(MAKE) $(MAKE_MODULES) configure
+	@$(MAKE) $(MAKE_PLATFORM) configure
 	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
 	$(CREATECONFIGUREGPR) Configure configure.gpr
 	@$(call echo-print,"")
@@ -941,7 +955,7 @@ endif
 
 .PHONY : postbuild
 postbuild : $(KERNEL_ROMFILE)
-	@$(MAKE_PLATFORM) postbuild
+	@$(MAKE) $(MAKE_PLATFORM) postbuild
 
 .PHONY : session-start
 session-start :
@@ -982,15 +996,15 @@ endif
 .PHONY : rts
 rts :
 ifeq ($(OSTYPE),cmd)
-	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO ( \
-          SET "MAKEFLAGS="                               &&    \
-          $(MAKE_RTS) --eval="MULTILIB := %%M" configure &&    \
-          $(MAKE_RTS) --eval="MULTILIB := %%M" multilib        \
+	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO (        \
+          SET "MAKEFLAGS="                                         && \
+          "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" configure && \
+          "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" multilib     \
           )
 else
-	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do             \
-          MAKEFLAGS= $(MAKE_RTS) --eval="MULTILIB := $$m" configure && \
-          MAKEFLAGS= $(MAKE_RTS) --eval="MULTILIB := $$m" multilib  ;  \
+	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                       \
+          MAKEFLAGS= "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" configure && \
+          MAKEFLAGS= "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" multilib  ;  \
         done
 endif
 
@@ -1000,35 +1014,35 @@ endif
 
 .PHONY : clean
 clean :
-	$(MAKE_APPLICATION) clean
-	$(MAKE_CLIBRARY) clean
-	$(MAKE_CORE) clean
+	$(MAKE) $(MAKE_APPLICATION) clean
+	$(MAKE) $(MAKE_CLIBRARY) clean
+	$(MAKE) $(MAKE_CORE) clean
 ifneq ($(CPU),)
-	$(MAKE_CPU) clean
+	$(MAKE) $(MAKE_CPU) clean
 endif
-	$(MAKE_DRIVERS) clean
-	$(MAKE_MODULES) clean
+	$(MAKE) $(MAKE_DRIVERS) clean
+	$(MAKE) $(MAKE_MODULES) clean
 ifneq ($(PLATFORM),)
-	-$(MAKE_PLATFORM) clean
+	-$(MAKE) $(MAKE_PLATFORM) clean
 endif
 	-$(RM) $(CLEAN_OBJECTS_COMMON) $(CLEAN_OBJECTS)
 
 .PHONY : distclean
 distclean : clean
-	$(MAKE_APPLICATION) distclean
-	$(MAKE_CLIBRARY) distclean
-	$(MAKE_CORE) distclean
+	$(MAKE) $(MAKE_APPLICATION) distclean
+	$(MAKE) $(MAKE_CLIBRARY) distclean
+	$(MAKE) $(MAKE_CORE) distclean
 ifeq ($(OSTYPE),cmd)
-	FOR %%C IN ($(CPUS)) DO $(MAKE_CPUS)/%%C distclean
+	FOR %%C IN ($(CPUS)) DO "$(MAKE)" $(MAKE_CPUS)/%%C distclean
 else
-	for c in $(CPUS) ; do $(MAKE_CPUS)/$$c distclean ; done
+	for c in $(CPUS) ; do "$(MAKE)" $(MAKE_CPUS)/$$c distclean ; done
 endif
-	$(MAKE_DRIVERS) distclean
-	$(MAKE_MODULES) distclean
+	$(MAKE) $(MAKE_DRIVERS) distclean
+	$(MAKE) $(MAKE_MODULES) distclean
 ifeq ($(OSTYPE),cmd)
-	FOR %%P IN ($(PLATFORMS)) DO $(MAKE_PLATFORMS)/%%P distclean
+	FOR %%P IN ($(PLATFORMS)) DO "$(MAKE)" $(MAKE_PLATFORMS)/%%P distclean
 else
-	for p in $(PLATFORMS) ; do $(MAKE_PLATFORMS)/$$p distclean ; done
+	for p in $(PLATFORMS) ; do "$(MAKE)" $(MAKE_PLATFORMS)/$$p distclean ; done
 endif
 	$(RM) $(DISTCLEAN_OBJECTS)
 
