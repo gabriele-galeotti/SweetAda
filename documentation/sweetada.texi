@@ -1525,33 +1525,40 @@ ZOOM is a family of embedded board based on the MCF5373 ColdFire processor.
 @chapter IOEMU scripting
 @cindex IOEMU
 
-The IOEMU facility allows configuration of a target emulator machine by specifying
-actions in a very basic script-like sequence of assignments and statements.
+The IOEMU facility allows configuration of a target emulator machine (but not
+limited to) by specifying actions in a very basic script-like sequence of
+assignments and statements. The same result could be obtained by execute a
+shell script (perhaps specified in the RUN_COMMAND specifier of the platform
+configuration.in file, but IOEMU scripting, coupled with runsweetada, is special
+because it also defines the interface behaviour of the virtual I/Os.
 
 IOEMU configuration files are structured in declarations and sections.
 
 Declarations (ENV and SET) must come first, and their purposes are to declare
 environment variables globally (ENV) or local to the file or a section (SET).
 
-Sections are directives, either to runsweetada utility or the underlying target
-emulator (QEMU/FS-UAE/GXemul).
+Sections are directives, processed either by the runsweetada utility or the IOEMU
+layer of the target emulator (QEMU/FS-UAE/GXemul).
 
-The START section is processed by the runsweetada utility, which can be instructed
-to execute the selected emulator (maybe under the control of the GDB debugger).
+The START section is processed only by the runsweetada utility, which can be
+instructed to execute the selected emulator (maybe under the control of the GDB
+debugger).
 
 The configuration file is then processed again by the emulator. The IOEMU
 section is used to configure the coordinates of the IOEMU window. Other sections
 are interpreted as specifications of the I/O features exposed by the target emulator,
 in terms of serial ports or IOEMU virtual I/O ports that show up as widgets. Every
 I/O port has a specific name and you can see its mapping in the Ada code platform
-description ("ioemu.ads").
+description ("ioemu.ads"). When the emulator starts, it advertises the virtual I/Os
+in terms of port names, addresses and sizes.
 
-Inside the I/O port you can set the type of widget used (a LED, a LEDBAR, an hex
-DISPLAY), its color and its size.
+Inside the I/O port section you can thus set the type of widget used (a LED, a LEDBAR,
+an hex DISPLAY), its color and its size.
 
-SECTION@*
-Introduces a section. Section names could be "IOEMU" (to configure the IOEMU layer) or an
-I/O port or communication peripheral exported by the target machine being emulated.
+SECTION <name>@*
+Introduces a section. Section names could be "START", "IOEMU" (to configure generic
+properties of the IOEMU layer, like window positioning and size) or an I/O port or
+communication peripheral exported by the target machine being emulated.
 
 ENDSECT@*
 Declares the end of a section.
@@ -1575,27 +1582,80 @@ Classic decision structure. The test condition must be a boolean expression.
 IF structures can be nested. Note that IF structures can be used only inside
 sections.
 
-ARGS@*
+ARGS arg[,arg...]@*
 ARGS is a special directive. When you declare an ARGS directive, strings are
 added sequentially to the array that carries arguments for the next EXEC/EXEA
 command. You can add arguments to the desired executable at various points
 of a section, and decided which arguments must be selected. Once the EXEC/EXEA
 instruction is processed, the ARGS array is reset to empty.
 
-CHDIR@*
-Change the working directory.
+CHDIR <directory_path>@*
+Change the working directory. Note that this command is available only inside
+the START section.
 
-EXEC@*
+EXEC <executable>@*
 Executes an executable. The arguments are those accumulated by means of previously
 processed ARGS commands. The script control flow does not proceed further until
 the executable returns.
 
-EXEA@*
+EXEA <executable>@*
 Same as EXEC, but the executable is launched in the background, so script control
 flow can proceed almost immediately.
 
-SLEEP@*
+SLEEP <ms>@*
 Suspends the control flow execution for an amount of time specified in ms.
+
+SYSTEM <command>@*
+Executes a generic system command.
+
+WIDGET <widget_type> @@x,y NAME <name>@*
+Associates a graphic widget with the I/O port declared in the section just
+introduced, displaying it at coordinates x,y, with label <name>. Available
+widgets are
+@itemize @bullet
+@item
+LED
+@item
+LEDBAR
+@item
+DISPLAY[8|16|32|64]
+@item
+BUTTON
+@item
+SWITCH, SWITCH8
+@end itemize
+
+LED and LEDBARs widgets have COLOR_x attributes:
+
+@itemize @bullet
+@item
+COLOR_RED
+@item
+COLOR_GREEN
+@item
+COLOR_BLUE
+@item
+COLOR_YELLOW
+@item
+COLOR_WHITE
+@end itemize
+
+LED widgets have also:
+
+@itemize @bullet
+@item
+@verbatim
+LED_SMALL      draw a small rectangle instead of an icon
+@end verbatim
+@item
+@verbatim
+LED_PULSE      make the LED persistent for a small amount of time
+@end verbatim
+@item
+@verbatim
+LED_PULSE_FAST the same as LED_PULSE, but with a very limited persistence
+@end verbatim
+@end itemize
 
 IOEMU objects@*
 
@@ -1629,8 +1689,8 @@ __SERIALPORTDEVICE__ (Linux only)@*
 Carries the name of the virtual device associated with an emulator physical serial port.
 When you are using QEMU there is no need to use this variable, because the emulator
 maps physical serial ports to known TCP ports declared within command line arguments,
-whereas the FS-UAE emulator the IOEMU layer creates on-the-fly a virtual serial port
-that cannot be known before the execution.
+whereas the FS-UAE emulator creates on-the-fly a virtual serial port that cannot be
+known before execution.
 @end itemize
 
 @node References
