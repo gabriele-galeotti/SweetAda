@@ -17,7 +17,6 @@
 
 with System;
 with Interfaces;
-with Configure;
 with LEON3;
 with Console;
 
@@ -63,29 +62,8 @@ package body BSP is
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
-      -- CR : aliased GPTimer_Control_Register_Type with Volatile => True;
    begin
-      -------------------------------------------------------------------------
-      -- timer tick = 40 MHz / 40 = 1 MHz
-      GPTIMER.Scaler_Reload_Value := (Configure.TIMER_SYSCLK / 1000) - 1;
-      -- CR.RS := True;
-      -- CR.CH := False;
-      -- GPTIMER.Control_Register_1 := CR;
-      -- GPTIMER.Control_Register_2 := CR;
-      -- GPTIMER.Control_Register_3 := CR;
-      -- GPTIMER.Control_Register_4 := CR;
-      -- GPTIMER.Reload_1           := 16#0000_0800#;
-      -- CR := GPTIMER.Control_Register_1;
-      -- CR.LD := True;
-      -- CR.IE := True;
-      -- CR.EN := True;
-      -- GPTIMER.Control_Register_1 := CR;
-      GPTIMER.Control_Register_1.RS := True;
-      GPTIMER.Control_Register_1.CH := False;
-      GPTIMER.Reload_1              := 1000;
-      GPTIMER.Control_Register_1.LD := True;
-      GPTIMER.Control_Register_1.IE := True;
-      GPTIMER.Control_Register_1.EN := True;
+      -- UART1 ----------------------------------------------------------------
       UART1_Init;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
@@ -94,6 +72,8 @@ package body BSP is
       -------------------------------------------------------------------------
       Console.Print ("LEON3 (QEMU emulator)", NL => True);
       Console.Print (Integer (Nwindows), Prefix => "Nwindows: ", NL => True);
+      -------------------------------------------------------------------------
+      Tclk_Init;
       -------------------------------------------------------------------------
    end BSP_Setup;
 

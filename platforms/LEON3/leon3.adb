@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Configure;
+
 package body LEON3 is
 
    --========================================================================--
@@ -28,15 +30,49 @@ package body LEON3 is
    ----------------------------------------------------------------------------
    -- Tclk_Init
    ----------------------------------------------------------------------------
-   procedure Tclk_Init is null;
+   procedure Tclk_Init is
+   begin
+      -- timer tick = 40 MHz / 40 = 1 MHz
+      GPTIMER.Scaler_Reload_Value := (Configure.TIMER_SYSCLK / 1000) - 1;
+      GPTIMER.Reload_1            := 16#0000_0800#;
+      GPTIMER.Reload_2            := 16#0000_0800#;
+      GPTIMER.Reload_3            := 16#0000_0800#;
+      GPTIMER.Reload_4            := 16#0000_0800#;
+      GPTIMER.Control_Register_1 := (
+                                     EN     => False,
+                                     RS     => True,
+                                     LD     => False,
+                                     IE     => True,
+                                     IP     => False,
+                                     CH     => False,
+                                     DH     => False,
+                                     others => 0
+                                    );
+      GPTIMER.Control_Register_1.EN := True;
+   end Tclk_Init;
 
    ----------------------------------------------------------------------------
    -- UART1_Init
    ----------------------------------------------------------------------------
    procedure UART1_Init is
    begin
-      UART1.Control_Register.RE := True;
-      UART1.Control_Register.TE := True;
+      UART1.Control_Register := (
+                                 RE       => True,
+                                 TE       => True,
+                                 RI       => False,
+                                 TI       => False,
+                                 PS       => PS_EVEN,
+                                 PE       => False,
+                                 LB       => False,
+                                 TF       => False,
+                                 RF       => False,
+                                 DB       => False,
+                                 FA       => False,
+                                 Unused1  => 0,
+                                 Unused2  => 0,
+                                 Unused3  => 0,
+                                 Reserved => 0
+                                );
    end UART1_Init;
 
    ----------------------------------------------------------------------------

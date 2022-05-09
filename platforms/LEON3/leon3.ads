@@ -36,86 +36,74 @@ package LEON3 is
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- Timer
+   -- 11 General Purpose Timer Unit
    ----------------------------------------------------------------------------
 
    type GPTimer_Configuration_Type is
    record
-      Timers    : Natural range 0 .. 7;
-      IRQ       : Natural range 0 .. 31;
-      SI        : Boolean;
-      DF        : Boolean;
-      Reserved1 : Bits_6;
-      -- avoid "multi-byte field specified with non-standard Bit_Order"
-      Reserved2 : Bits_8;
-      Reserved3 : Bits_8;
+      Timers   : Natural range 0 .. 7;  -- Number of implemented timers.
+      IRQ      : Natural range 0 .. 31; -- Interrupt ID of first timer.
+      SI       : Boolean;               -- Separate interrupts
+      DF       : Boolean;               -- Disable timer freeze
+      Reserved : Bits_22;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for GPTimer_Configuration_Type use
    record
-      Timers    at 3 range 0 .. 2;
-      IRQ       at 3 range 3 .. 7;
-      SI        at 2 range 0 .. 0;
-      DF        at 2 range 1 .. 1;
-      Reserved1 at 2 range 2 .. 7;
-      Reserved2 at 1 range 0 .. 7;
-      Reserved3 at 0 range 0 .. 7;
+      Timers   at 0 range 0 .. 2;
+      IRQ      at 0 range 3 .. 7;
+      SI       at 0 range 8 .. 8;
+      DF       at 0 range 9 .. 9;
+      Reserved at 0 range 10 .. 31;
    end record;
 
    type GPTimer_Control_Register_Type is
    record
-      EN        : Boolean;
-      RS        : Boolean;
-      LD        : Boolean;
-      IE        : Boolean;
-      IP        : Boolean;
-      CH        : Boolean;
-      DH        : Boolean;
-      Reserved1 : Bits_1;
-      -- avoid "multi-byte field specified with non-standard Bit_Order"
-      Reserved2 : Bits_8;
-      Reserved3 : Bits_8;
-      Reserved4 : Bits_8;
+      EN       : Boolean; -- Enable
+      RS       : Boolean; -- Restart
+      LD       : Boolean; -- Load
+      IE       : Boolean; -- Interrupt Enable
+      IP       : Boolean; -- Interrupt Pending
+      CH       : Boolean; -- Chain
+      DH       : Boolean; -- Debug Halt
+      Reserved : Bits_25;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for GPTimer_Control_Register_Type use
    record
-      EN        at 3 range 0 .. 0;
-      RS        at 3 range 1 .. 1;
-      LD        at 3 range 2 .. 2;
-      IE        at 3 range 3 .. 3;
-      IP        at 3 range 4 .. 4;
-      CH        at 3 range 5 .. 5;
-      DH        at 3 range 6 .. 6;
-      Reserved1 at 3 range 7 .. 7;
-      Reserved2 at 2 range 0 .. 7;
-      Reserved3 at 1 range 0 .. 7;
-      Reserved4 at 0 range 0 .. 7;
+      EN       at 0 range 0 .. 0;
+      RS       at 0 range 1 .. 1;
+      LD       at 0 range 2 .. 2;
+      IE       at 0 range 3 .. 3;
+      IP       at 0 range 4 .. 4;
+      CH       at 0 range 5 .. 5;
+      DH       at 0 range 6 .. 6;
+      Reserved at 0 range 7 .. 31;
    end record;
 
    type GPTimer_Type is
    record
-      Scaler_Value        : Unsigned_32 range 0 .. 2**16 - 1;
-      Scaler_Reload_Value : Unsigned_32 range 0 .. 2**16 - 1;
-      Configuration       : Unsigned_32;
+      Scaler_Value        : Unsigned_32 range 0 .. 2**16 - 1 with Volatile_Full_Access => True;
+      Scaler_Reload_Value : Unsigned_32 range 0 .. 2**16 - 1 with Volatile_Full_Access => True;
+      Configuration       : Unsigned_32                      with Volatile_Full_Access => True;
       Unused1             : Unsigned_32;
-      Counter_1           : Unsigned_32;
-      Reload_1            : Unsigned_32;
-      Control_Register_1  : GPTimer_Control_Register_Type;
+      Counter_1           : Unsigned_32                      with Volatile_Full_Access => True;
+      Reload_1            : Unsigned_32                      with Volatile_Full_Access => True;
+      Control_Register_1  : GPTimer_Control_Register_Type    with Volatile_Full_Access => True;
       Unused2             : Unsigned_32;
-      Counter_2           : Unsigned_32;
-      Reload_2            : Unsigned_32;
-      Control_Register_2  : GPTimer_Control_Register_Type;
+      Counter_2           : Unsigned_32                      with Volatile_Full_Access => True;
+      Reload_2            : Unsigned_32                      with Volatile_Full_Access => True;
+      Control_Register_2  : GPTimer_Control_Register_Type    with Volatile_Full_Access => True;
       Unused3             : Unsigned_32;
-      Counter_3           : Unsigned_32;
-      Reload_3            : Unsigned_32;
-      Control_Register_3  : GPTimer_Control_Register_Type;
+      Counter_3           : Unsigned_32                      with Volatile_Full_Access => True;
+      Reload_3            : Unsigned_32                      with Volatile_Full_Access => True;
+      Control_Register_3  : GPTimer_Control_Register_Type    with Volatile_Full_Access => True;
       Unused4             : Unsigned_32;
-      Counter_4           : Unsigned_32;
-      Reload_4            : Unsigned_32;
-      Control_Register_4  : GPTimer_Control_Register_Type;
+      Counter_4           : Unsigned_32                      with Volatile_Full_Access => True;
+      Reload_4            : Unsigned_32                      with Volatile_Full_Access => True;
+      Control_Register_4  : GPTimer_Control_Register_Type    with Volatile_Full_Access => True;
    end record with
       Alignment => 4,
       Size      => 19 * 32;
@@ -153,25 +141,27 @@ package LEON3 is
    procedure Tclk_Init;
 
    ----------------------------------------------------------------------------
-   -- APB UART
+   -- 15 UART Serial Interface
    ----------------------------------------------------------------------------
+
+   -- 15.7.2 UART Status Register
 
    type UART_Status_Register_Type is
    record
-      DR       : Boolean;
-      TS       : Boolean;
-      TE       : Boolean;
-      BR       : Boolean;
-      OV       : Boolean;
-      PE       : Boolean;
-      FE       : Boolean;
-      TH       : Boolean;
-      RH       : Boolean;
-      TF       : Boolean;
-      RF       : Boolean;
+      DR       : Boolean; -- Data ready
+      TS       : Boolean; -- Transmitter shift register empty
+      TE       : Boolean; -- Transmitter FIFO empty
+      BR       : Boolean; -- Break received
+      OV       : Boolean; -- Overrun
+      PE       : Boolean; -- Parity error
+      FE       : Boolean; -- Framing error
+      TH       : Boolean; -- Transmitter FIFO half-full
+      RH       : Boolean; -- Receiver FIFO half-full
+      TF       : Boolean; -- Transmitter FIFO full
+      RF       : Boolean; -- Receiver FIFO full
       Reserved : Bits_9;
-      TCNT     : Bits_6;
-      RCNT     : Bits_6;
+      TCNT     : Bits_6;  -- Transmitter FIFO count
+      RCNT     : Bits_6;  -- Receiver FIFO count
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -193,23 +183,28 @@ package LEON3 is
       RCNT     at 0 range 26 .. 31;
    end record;
 
+   -- 15.7.3 UART Control Register
+
+   PS_EVEN : constant := 0;
+   PS_ODD  : constant := 1;
+
    type UART_Control_Register_Type is
    record
-      RE       : Boolean;
-      TE       : Boolean;
-      RI       : Boolean;
-      TI       : Boolean;
-      PS       : Bits_1;
-      PE       : Boolean;
-      Unused3  : Bits_1;
-      LB       : Boolean;
-      Unused2  : Bits_1;
-      TF       : Boolean;
-      RF       : Boolean;
-      DB       : Boolean;
+      RE       : Boolean; -- Receiver enable
+      TE       : Boolean; -- Transmitter enable
+      RI       : Boolean; -- Receiver interrupt enable
+      TI       : Boolean; -- Transmitter interrupt enable
+      PS       : Bits_1;  -- Parity select
+      PE       : Boolean; -- Parity enable
       Unused1  : Bits_1;
+      LB       : Boolean; -- Loop back
+      Unused2  : Bits_1;
+      TF       : Boolean; -- Transmitter FIFO interrupt enable
+      RF       : Boolean; -- Receiver FIFO interrupt enable
+      DB       : Boolean; -- FIFO debug mode enable
+      Unused3  : Bits_1;
       Reserved : Bits_18;
-      FA       : Boolean;
+      FA       : Boolean; -- FIFOs available
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -221,27 +216,26 @@ package LEON3 is
       TI       at 0 range 3 .. 3;
       PS       at 0 range 4 .. 4;
       PE       at 0 range 5 .. 5;
-      Unused3  at 0 range 6 .. 6;
+      Unused1  at 0 range 6 .. 6;
       LB       at 0 range 7 .. 7;
       Unused2  at 0 range 8 .. 8;
       TF       at 0 range 9 .. 9;
       RF       at 0 range 10 .. 10;
       DB       at 0 range 11 .. 11;
-      Unused1  at 0 range 12 .. 12;
+      Unused3  at 0 range 12 .. 12;
       Reserved at 0 range 13 .. 30;
       FA       at 0 range 31 .. 31;
    end record;
 
    type APB_UART_Type is
    record
-      Data_Register       : Unsigned_32;
-      Status_Register     : UART_Status_Register_Type;
-      Control_Register    : UART_Control_Register_Type;
-      Scaler_Register     : Unsigned_32;
-      FIFO_Debug_Register : Unsigned_32;
+      Data_Register       : Unsigned_32                with Volatile_Full_Access => True;
+      Status_Register     : UART_Status_Register_Type  with Volatile_Full_Access => True;
+      Control_Register    : UART_Control_Register_Type with Volatile_Full_Access => True;
+      Scaler_Register     : Unsigned_32                with Volatile_Full_Access => True;
+      FIFO_Debug_Register : Unsigned_32                with Volatile_Full_Access => True;
    end record with
       Alignment => 4,
-      Bit_Order => High_Order_First,
       Size      => 5 * 32;
    for APB_UART_Type use
    record

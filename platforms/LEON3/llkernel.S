@@ -21,29 +21,33 @@
 
                 .global trap_table
 trap_table:
-                                                        // Table 7-1
-                                                        // TRAP#        PRIORITY        DESCRIPTION
-                b       trap_table                      // 0x00         -               ???
+                                                // Table 7-1
+                                                // TRAP#        PRIORITY        DESCRIPTION
+                b       trap_entry              // 0x00         -               ???
                 nop
                 .align  16
-                b       trap_table                      // 0x01         5               instruction_access_exception
+                b       trap_entry              // 0x01         5               instruction_access_exception
                 nop
                 .align  16
-                b       trap_table                      // 0x02         7               illegal_instruction
+                b       trap_entry              // 0x02         7               illegal_instruction
                 nop
                 .align  16
-                b       trap_table                      // 0x03         6               privileged_instruction
+                b       trap_entry              // 0x03         6               privileged_instruction
                 nop
                 .align  16
-                b       trap_table                      // 0x04         8               fp_disabled
+                b       trap_entry              // 0x04         8               fp_disabled
                 nop
                 .align  16
-                b       trap_table                      // 0x05         9               window_overflow
+                b       trap_entry              // 0x05         9               window_overflow
                 nop
                 .align  16
-                b       trap_table                      // 0x06         9               window_underflow
+                b       trap_entry              // 0x06         9               window_underflow
                 nop
                 .align  16
-                b       trap_table                      // 0x07         10              mem_address_not_aligned
+                b       trap_entry              // 0x07         10              mem_address_not_aligned
                 nop
+
+trap_entry:
+                jmpl    %r17,%r0                // old PC
+                rett    %r18                    // old nPC
 
