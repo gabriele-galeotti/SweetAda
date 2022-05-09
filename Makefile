@@ -144,6 +144,20 @@ RM      := rm -f
 RMDIR   := $(RM) -r
 TOUCH   := touch
 endif
+
+ifeq ($(VERBOSE),Y)
+ifeq ($(OSTYPE),cmd)
+# no verbosity
+else
+CP += -v
+MV += -v
+RM += -v
+endif
+else
+MAKEFLAGS += s
+GNUMAKEFLAGS += --no-print-directory
+endif
+
 export CAT CD CP LS LS_DIRS MKDIR MV RM RMDIR TOUCH
 
 ################################################################################
@@ -180,14 +194,14 @@ KERNEL_DEPFILE   := $(KERNEL_BASENAME).d
 KERNEL_OBJFILE   := $(KERNEL_BASENAME).obj
 KERNEL_OUTFILE   := $(KERNEL_BASENAME).o
 KERNEL_ROMFILE   := $(KERNEL_BASENAME).rom
-KERNEL_GPRFILE   := build.gpr
 GNATADC_FILENAME := gnat.adc
+
+# GPRbuild
+KERNEL_GPRFILE        := build.gpr
+CONFIGUREGPR_FILENAME := configure.gpr
 
 # RTS_BASE_PATH: where all RTSes live
 RTS_BASE_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)
-
-# platform-owned files
-CONFIGURE_FILES := configure.gpr
 
 CLEAN_OBJECTS        :=
 CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst *.map *.o *.out *.srec *.tmp
@@ -234,12 +248,6 @@ $(error Error: no valid TOOLCHAIN_PREFIX)
 endif
 endif
 
-################################################################################
-#                                                                              #
-# Finalize build system initialization.                                        #
-#                                                                              #
-################################################################################
-
 # add TOOLCHAIN_PREFIX to PATH
 ifneq ($(TOOLCHAIN_PREFIX),)
 ifeq ($(OSTYPE),cmd)
@@ -251,19 +259,6 @@ else
 PATH := $(TOOLCHAIN_PREFIX)/bin:$(PATH)
 endif
 export PATH
-endif
-
-ifeq ($(VERBOSE),Y)
-ifeq ($(OSTYPE),cmd)
-# no verbosity
-else
-CP += -v
-MV += -v
-RM += -v
-endif
-else
-MAKEFLAGS += s
-GNUMAKEFLAGS += --no-print-directory
 endif
 
 ################################################################################
@@ -502,7 +497,7 @@ CLEAN_OBJECTS += $(OBJECT_DIRECTORY)\*.*
 else
 CLEAN_OBJECTS += $(OBJECT_DIRECTORY)/*
 endif
-DISTCLEAN_OBJECTS += $(KERNEL_CFGFILE) $(GNATADC_FILENAME) $(CONFIGURE_FILES)
+DISTCLEAN_OBJECTS += $(KERNEL_CFGFILE) $(GNATADC_FILENAME) $(CONFIGUREGPR_FILENAME)
 
 ################################################################################
 #                                                                              #
@@ -714,7 +709,6 @@ $(KERNEL_OUTFILE) : $(OBJECT_DIRECTORY)/b__main.o $(PLATFORM_DIRECTORY)/$(LD_SCR
 	$(call brief-command, \
         $(LD)                                       \
               -T $(PLATFORM_DIRECTORY)/$(LD_SCRIPT) \
-              -Map $(KERNEL_BASENAME).map --cref    \
               -o $(KERNEL_OUTFILE)                  \
               --start-group                         \
               @gnatbind_objs.lst                    \
@@ -872,7 +866,7 @@ configure-aux : clean
 	@$(MAKE) $(MAKE_MODULES) configure
 	@$(MAKE) $(MAKE_PLATFORM) configure
 	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
-	$(CREATECONFIGUREGPR) Configure configure.gpr
+	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): configuration completed.")
 	@$(call echo-print,"")

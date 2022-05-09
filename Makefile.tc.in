@@ -197,8 +197,11 @@ GNATXREF_SWITCHES_DEFAULT +=
 AR_SWITCHES_DEFAULT       +=
 
 # LD
+LD_SWITCHES_DEFAULT       += -Map $(KERNEL_BASENAME).map
+LD_SWITCHES_DEFAULT       += --cref
 LD_SWITCHES_DEFAULT       += --warn-common
 LD_SWITCHES_DEFAULT       += --warn-section-align
+LD_SWITCHES_DEFAULT       += --print-memory-usage
 
 # NM
 NM_SWITCHES_DEFAULT       +=
