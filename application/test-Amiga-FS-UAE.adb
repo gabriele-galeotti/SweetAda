@@ -66,7 +66,7 @@ package body Application is
       Success : Boolean;
    begin
       IOEMU.IOEMU_CIA_IO1 := (Unsigned_8 (Ethernet.Nqueue (Ethernet.Packet_Queue'Access))); -- # of items in queue
-      IOEMU.IOEMU_CIA_IO2 := (Unsigned_8 (PBUF.Nalloc));                                    -- # of PBUFs allocated
+      -- IOEMU.IOEMU_CIA_IO2 := (Unsigned_8 (PBUF.Nalloc));                                    -- # of PBUFs allocated
       Ethernet.Dequeue (Ethernet.Packet_Queue'Access, P, Success);
       if Success then
          Ethernet.Packet_Handler (P);
