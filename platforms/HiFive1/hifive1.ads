@@ -53,7 +53,8 @@ package HiFive1 is
       hfroscen   : Boolean;           -- Ring Oscillator Enable
       hfroscrdy  : Boolean := False;  -- Ring Oscillator Ready
    end record with
-      Size => 32;
+      Bit_Order => Low_Order_First,
+      Size      => 32;
    for hfrosccfg_Type use
    record
       hfroscdiv  at 0 range 0 .. 5;
@@ -72,7 +73,8 @@ package HiFive1 is
       hfxoscen  : Boolean;           -- Crystal Oscillator Enable
       hfxoscrdy : Boolean := False;  -- Crystal Oscillator Ready
    end record with
-      Size => 32;
+      Bit_Order => Low_Order_First,
+      Size      => 32;
    for hfxosccfg_Type use
    record
       Reserved  at 0 range 0 .. 29;
@@ -95,7 +97,8 @@ package HiFive1 is
       Reserved3 : Bits.Bits_12 := 0;
       plllock   : Boolean := False;  -- PLL Lock
    end record with
-      Size => 32;
+      Bit_Order => Low_Order_First,
+      Size      => 32;
    for pllcfg_Type use
    record
       pllr      at 0 range 0 .. 2;
@@ -119,7 +122,8 @@ package HiFive1 is
       plloutdivby1 : Bits.Bits_6;       -- PLL Final Divide By 1
       Reserved2    : Bits.Bits_18 := 0;
    end record with
-      Size => 32;
+      Bit_Order => Low_Order_First,
+      Size      => 32;
    for plloutdiv_Type use
    record
       plloutdiv    at 0 range 0 .. 5;
