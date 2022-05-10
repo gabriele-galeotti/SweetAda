@@ -261,8 +261,6 @@ package CPU_x86 is
    -- Segment/Gate descriptor type
    type Segment_Gate_Type is new Bits_4;
    -- CODE/DATA SEGMENT
-   -- __REF__ http://wiki.osdev.org/Interrupt_Descriptor_Table#I386_Interrupt_Gate
-   -- __REF__ http://wiki.osdev.org/Interrupt_Descriptor_Table#I386_Trap_Gate
    SEGMENT_DATA_RO       : constant Segment_Gate_Type := 16#0#; -- Read-Only
    SEGMENT_DATA_ROA      : constant Segment_Gate_Type := 16#1#; -- Read-Only                  Accessed
    SEGMENT_DATA_RW       : constant Segment_Gate_Type := 16#2#; -- Read-Write
@@ -405,8 +403,6 @@ package CPU_x86 is
    -- GDT
    ----------------------------------------------------------------------------
 
-   -- __REF__ acroread /a "page=95" "Intel 64 and IA-32 Architectures Volume 3: System Programming Guide.pdf"
-   -- __REF__ acroread /a "page=223" "64-ia-32-architectures-software-developer-system-programming-manual-325384.pdf"
    GDT_Alignment : constant := 8;
 
    type GDT_Entry_Descriptor_Type is
@@ -508,10 +504,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
    ----------------------------------------------------------------------------
    -- IDT
    ----------------------------------------------------------------------------
-   -- __REF__ acroread /a "page=157" "cpus/doc/x86/INTEL 80386 PROGRAMMERS REFERENCE MANUAL 1986.pdf"
-   ----------------------------------------------------------------------------
 
-   -- __REF__ acroread /a "page=223" "64-ia-32-architectures-software-developer-system-programming-manual-325384.pdf"
    IDT_Alignment : constant := 8;
 
    type IDT_Exception_Descriptor_Type is

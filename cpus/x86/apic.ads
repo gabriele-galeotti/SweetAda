@@ -34,19 +34,6 @@ package APIC is
    ----------------------------------------------------------------------------
    -- x86 "local" APIC
    ----------------------------------------------------------------------------
-   -- __REF__ http://www.osdever.net/tutorials/view/advanced-programming-interrupt-controller
-   -- __REF__ http://www.o3one.org/tutorials/apicarticle.txt
-   -- __REF__ http://f.osdev.org/viewtopic.php?f=1&t=26658
-   ----------------------------------------------------------------------------
-
-   -- #define IRQ_OFFSET      32      // IRQ 0 corresponds to int IRQ_OFFSET
-   -- // Hardware IRQ numbers. We receive these as (IRQ_OFFSET+IRQ_WHATEVER)
-   -- #define IRQ_TIMER        0
-   -- #define IRQ_KBD          1
-   -- #define IRQ_SERIAL       4
-   -- #define IRQ_SPURIOUS     7
-   -- #define IRQ_IDE         14
-   -- #define IRQ_ERROR       19
 
    LAPIC_BASEADDRESS : constant := 16#FEE0_0000#;
 

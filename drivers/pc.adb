@@ -44,8 +44,6 @@ package body PC is
    ----------------------------------------------------------------------------
    -- PIC_Init
    ----------------------------------------------------------------------------
-   -- __REF__ http://wiki.osdev.org/8259_PIC#Protected_Mode
-   -- __REF__ "remapping the PIC", "IBM PC design vs protected mode": CPU
    -- NOTE: PIC1 = master and PIC2 = slave are set at the hardware level:
    -- pin 16 (SP/EN) is HIGH for PIC1 and LOW for PIC2
    -- ICW1 = 0x19 for level triggered mode
