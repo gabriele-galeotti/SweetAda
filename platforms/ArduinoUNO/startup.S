@@ -50,12 +50,6 @@ _start:
                 brne    1b
 
                 //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                call    adainit
-
-                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

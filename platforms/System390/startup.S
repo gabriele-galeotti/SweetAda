@@ -44,12 +44,6 @@ _start:
                 ahi     %r15,-96
 
                 //
-                // Call "adainit" procedure.
-                //
-                l       %r14,(.Ladainit-.Lstart)(%r13)
-                basr    %r14,%r14
-
-                //
                 // Jump to high-level code.
                 //
                 l       %r14,(.L_ada_main-.Lstart)(%r13)

@@ -171,13 +171,6 @@ bm:
                 clr     %g7
 
                 //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                call    adainit
-                nop
-
-                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

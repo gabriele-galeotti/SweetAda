@@ -145,12 +145,6 @@ _start:
                 ori     r2,r2,_sdata2@l
 
                 //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                bl      adainit
-
-                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

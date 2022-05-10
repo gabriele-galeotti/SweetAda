@@ -38,14 +38,6 @@ _start:
                 la      $sp,kernel_stack
 
                 //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                la      $t0,adainit
-                jalr    $t0
-                nop
-
-                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

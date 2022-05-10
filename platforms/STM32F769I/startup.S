@@ -18,14 +18,11 @@
                 .global _start
 _start:
 
+                //
+                // Setup stack pointer.
+                //
                 ldr     r0,=stack
                 mov     sp,r0
-
-                //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                bl      adainit
 
                 //
                 // Jump to high-level code.

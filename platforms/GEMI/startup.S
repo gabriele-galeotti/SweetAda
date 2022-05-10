@@ -64,13 +64,6 @@ _start:
                 nop
 
                 //
-                // Call "adainit" procedure.
-                //
-                mov.l   REF(adainit),r0
-                jsr     @r0
-                nop
-
-                //
                 // Jump to high-level code.
                 //
                 mov.l   REF(_ada_main),r0

@@ -43,12 +43,6 @@ bootcore:
                 mov     wsp,w0
 
                 //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                bl      adainit
-
-                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

@@ -24,14 +24,10 @@ reset:          brai    _start
                 .global _start
 _start:
 
+                //
+                // Setup stack pointer.
+                //
                 addik   r1,r0,kernel_stack
-
-                //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                brlid   r15,adainit
-                nop
 
                 //
                 // Jump to high-level code.

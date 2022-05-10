@@ -36,17 +36,12 @@ hold:           b       .
                 // x0 & 0x3 contains core ID
 
 bootcore:
+
                 //
                 // Setup stack pointer.
                 //
                 ldr     w0,=SVC_stack
                 mov     wsp,w0
-
-                //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                bl      adainit
 
                 //
                 // Jump to high-level code.

@@ -59,13 +59,6 @@ _start:
                 nop
 
                 //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                jal     adainit
-                nop
-
-                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

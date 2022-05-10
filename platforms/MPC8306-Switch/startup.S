@@ -92,12 +92,6 @@ _start:
                 //ori     r13,r13,_SDA_BASE_@l
 
                 //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                bl      adainit
-
-                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

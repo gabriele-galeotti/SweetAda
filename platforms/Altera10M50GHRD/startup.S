@@ -58,14 +58,6 @@ _start:
                 mov     fp,sp
 
                 //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                movhi   r2,%hi(adainit)
-                ori     r2,r2,%lo(adainit)
-                callr   r2
-
-                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

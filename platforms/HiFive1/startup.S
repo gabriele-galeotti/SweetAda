@@ -45,12 +45,6 @@ _start:
                 la      sp,kernel_stack
 
                 //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                call    adainit
-
-                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

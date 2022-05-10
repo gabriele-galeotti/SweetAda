@@ -62,12 +62,6 @@ _start:
                 lea.l   kernel_stack,%sp
 
                 //
-                // Call "adainit" procedure.
-                //
-                .extern adainit
-                jsr     adainit
-
-                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main
