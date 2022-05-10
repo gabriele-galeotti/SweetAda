@@ -1649,11 +1649,11 @@ LED_SMALL      draw a small rectangle instead of an icon
 @end verbatim
 @item
 @verbatim
-LED_PULSE      make the LED persistent for a small amount of time
+LED_PULSE      make the LED persistent for a small amount of time when turned off
 @end verbatim
 @item
 @verbatim
-LED_PULSE_FAST the same as LED_PULSE, but with a very limited persistence
+LED_PULSE_FAST the same as LED_PULSE, but with a very short persistence
 @end verbatim
 @end itemize
 
