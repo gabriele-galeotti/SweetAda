@@ -197,11 +197,6 @@ package body LLutils is
          when others     => Success := False; return;
       end case;
       Value := (if MSD then (@ and 16#0F#) or (Digit * 2**4) else (@ and 16#F0#) or Digit);
---      if MSD then
---         Value := (@ and 16#0F#) or (Digit * 2**4);
---      else
---         Value := (@ and 16#F0#) or Digit;
---      end if;
       Success := True;
    end HexDigit_To_U8;
 
@@ -228,11 +223,6 @@ package body LLutils is
             A_Pos : Interfaces.Unsigned_8;
          begin
             A_Pos := (if LCase then Character'Pos ('a') else Character'Pos ('A'));
---            if LCase then
---               A_Pos := Character'Pos ('a');
---            else
---               A_Pos := Character'Pos ('A');
---            end if;
             C := Character'Val (A_Pos + (Digit - 10));
          end;
       else
