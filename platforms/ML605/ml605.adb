@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Definitions;
+
 package body ML605 is
 
    --========================================================================--
@@ -24,6 +26,9 @@ package body ML605 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   -- Timers run @ 100 MHz
+   TIMER_CLK : constant := 100 * Definitions.MHz;
 
    --========================================================================--
    --                                                                        --
@@ -36,11 +41,9 @@ package body ML605 is
    ----------------------------------------------------------------------------
    -- Tclk_Init
    ----------------------------------------------------------------------------
-   -- Timers run @ 100 MHz.
-   ----------------------------------------------------------------------------
    procedure Tclk_Init is
    begin
-      Timer.TLR0 := 16#05F5_E100#;
+      Timer.TLR0 := TIMER_CLK / 1_000;
       Timer.TCSR0 := (
                       ENALL  => False,
                       PWMA0  => False,
@@ -67,15 +70,18 @@ package body ML605 is
    ----------------------------------------------------------------------------
    procedure INTC_Init is
    begin
-      INTC.ISR     := 0;
-      INTC.IPR     := 0;
-      INTC.IER     := TIMER_IRQ;
-      INTC.IAR     := 0;
-      INTC.SIE     := 0;
-      INTC.CIE     := 0;
-      INTC.IVR     := 0;
-      INTC.MER.HIE := 1;
-      INTC.MER.ME  := 1;
+      INTC.ISR := (others => False);
+      INTC.IPR := (others => False);
+      INTC.IER := (others => False);
+      INTC.IAR := (others => False);
+      INTC.SIE := (others => False);
+      INTC.CIE := (others => False);
+      INTC.IVR := 0;
+      INTC.MER := (
+                   HIE    => True,
+                   ME     => True,
+                   others => 0
+                  );
    end INTC_Init;
 
 end ML605;

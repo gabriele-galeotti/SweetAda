@@ -12,17 +12,35 @@
 
                 .sect   .vectors,"ax"
 
-                .org    0x00
+                // Reset
+                //.org    0x00
+                .extern _start
+                brid    _start
+                nop
 
-                // interrupt vector
-                .org    0x10
+                // User Vector (Exception)
+                //.org    0x08
+                nop
+                nop
+
+                // Interrupt
+                //.org    0x10
                 .extern timerirq
                 brid    timerirq
                 nop
 
-                // coming from "brki r14,0x60"
-                .org    0x60
-                .extern exception_process
-                brid    exception_process
+                // Break
+                //.org    0x18
                 nop
+                nop
+
+                // Hardware Exception
+                //.org    0x20
+                nop
+                nop
+
+                //
+                // Reserved for future use
+                //
+                .space  0x28
 

@@ -15,8 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-
 package Exceptions is
 
    --========================================================================--
@@ -27,7 +25,7 @@ package Exceptions is
    --                                                                        --
    --========================================================================--
 
-   procedure Process (Exception_Number : in Interfaces.Unsigned_32) with
+   procedure Process with
       Export         => True,
       Convention     => Asm,
       External_Name  => "exception_process";

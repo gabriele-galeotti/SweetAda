@@ -54,15 +54,15 @@ package ML605 is
       Import     => True,
       Convention => Ada;
 
-   procedure Tclk_Init;
-
-   TIMER_IRQ : constant := 16#0000_0004#;
-
    INTC : XPS_INTC_Type with
       Address    => To_Address (INTC_BASEADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
+
+   TIMER_IRQ : constant := 29;
+
+   procedure Tclk_Init;
 
    procedure INTC_Init;
 

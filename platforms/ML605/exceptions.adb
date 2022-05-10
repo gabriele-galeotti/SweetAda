@@ -15,8 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
 with System.Storage_Elements;
+with Interfaces;
 with Core;
 with Linker;
 with Memory_Functions;
@@ -33,6 +33,7 @@ package body Exceptions is
    --                                                                        --
    --========================================================================--
 
+   use Interfaces;
    use ML605;
 
    package SSE renames System.Storage_Elements;
@@ -48,16 +49,16 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Process
    ----------------------------------------------------------------------------
-   procedure Process (Exception_Number : in Interfaces.Unsigned_32) is
-      pragma Unreferenced (Exception_Number);
+   procedure Process is
    begin
-      Timer.TCSR0.T0INT := False;    -- clear Timer flag
-      INTC.IAR := 16#FFFF_FFFF#; -- clear INTC flag
-      if True then
+      Timer.TCSR0.T0INT := False; -- clear Timer flag
+      Core.Tick_Count := @ + 1;
+      if Core.Tick_Count mod 1_000 = 0 then
          -- IOEMU "TIMER" LED blinking
          IOEMU.IOEMU_IO0 := 1;
          IOEMU.IOEMU_IO0 := 0;
       end if;
+      INTC.IAR (TIMER_IRQ) := True; -- clear INTC flag
    end Process;
 
    ----------------------------------------------------------------------------

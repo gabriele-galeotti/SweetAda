@@ -1,6 +1,7 @@
 
 with System.Storage_Elements;
 with Interfaces;
+with Core;
 with ML605;
 with CPU;
 with IOEMU;
@@ -34,25 +35,10 @@ package body Application is
    procedure Run is
    begin
       -------------------------------------------------------------------------
-      if True then
-         declare
-            -- X : Integer := 33434334;
-            Y : Integer;
-         begin
-            if IOEMU.IOEMU_IO1 = 16#01# then
-               Y := Integer (IOEMU.IOEMU_IO0) / 6;
-               IOEMU.IOEMU_IO0 := Unsigned_8 (Y);
-            end if;
-         end;
-      end if;
-      -------------------------------------------------------------------------
       if False then
          Console.Print ("*** SWITCH TEST IN PROGRESS ***", NL => True);
          loop
             IOEMU.IOEMU_IO1 := IOEMU.IOEMU_IO3;
-            -- Console.Print (IOEMU.IOEMU_IO3, NL => True);
-            -- IOEMU.IOEMU_IO1 := 16#55#;
-            -- IOEMU.IOEMU_IO3 := IOEMU.IOEMU_IO1;
          end loop;
       end if;
       -------------------------------------------------------------------------
@@ -67,6 +53,7 @@ package body Application is
             loop
                if (Value mod 10) = 0 then
                   Console.Print ("hello, SweetAda", NL => True);
+                  Console.Print (Core.Tick_Count, NL => True);
                end if;
                Value := @ + 1;
                IOEMU.IOEMU_IO1 := @ + 1;
