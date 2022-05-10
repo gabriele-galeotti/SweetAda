@@ -73,8 +73,21 @@ package body BSP is
    procedure BSP_Setup is
    begin
       -- Clock ----------------------------------------------------------------
-      HiFive1.PRCI.pllcfg    := 16#0007_0000#;
-      HiFive1.PRCI.hfrosccfg := 16#0010_0004#;
+      HiFive1.PRCI.pllcfg    := (
+                                 pllr      => 0,
+                                 pllf      => 0,
+                                 pllq      => 0,
+                                 pllsel    => True,
+                                 pllrefsel => True,
+                                 pllbypass => True,
+                                 others    => <>
+                                );
+      HiFive1.PRCI.hfrosccfg := (
+                                 hfroscdiv  => 4,
+                                 hfrosctrim => 16#10#,
+                                 hfroscen   => False,
+                                 others     => <>
+                                );
       -- UARTs ----------------------------------------------------------------
       HiFive1.GPIO_IOFSEL := @ and 16#FF78_FFFF#;
       HiFive1.GPIO_IOFEN  := @ or 16#0087_0000#;
