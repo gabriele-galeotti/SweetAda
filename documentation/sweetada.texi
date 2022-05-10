@@ -1594,16 +1594,16 @@ Change the working directory. Note that this command is available only inside
 the START section.
 
 EXEC <executable>@*
-Executes an executable. The arguments are those accumulated by means of previously
-processed ARGS commands. The script control flow does not proceed further until
-the executable returns.
+Executes an executable. Strings collected with the ARGS directive will be passed
+as arguments. The script control flow does not proceed further until the executable
+returns.
 
 EXEA <executable>@*
 Same as EXEC, but the executable is launched in the background, so script control
 flow can proceed almost immediately.
 
 SLEEP <ms>@*
-Suspends the control flow execution for an amount of time specified in ms.
+Suspends the control flow execution for the amount of time specified in ms.
 
 SYSTEM <command>@*
 Executes a generic system command.

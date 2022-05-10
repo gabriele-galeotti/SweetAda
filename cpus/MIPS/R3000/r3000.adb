@@ -127,7 +127,10 @@ package body R3000 is
 
    procedure Irq_Enable is null;
    procedure Irq_Disable is null;
-   function Irq_State_Get return Irq_State_Type is null;
+   function Irq_State_Get return Irq_State_Type is
+   begin
+      return 0;
+   end Irq_State_Get;
    procedure Irq_State_Set (Irq_State : in Irq_State_Type) is null;
 
 end R3000;
