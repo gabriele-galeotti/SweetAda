@@ -97,7 +97,7 @@ package body Malloc is
       Heap_Block.Pointer_Next := null;
       if Debug then
          Console.Print (Heap_Block.Size, Prefix => "Initializing: ", NL => True);
-         Console.Print (Integer'(MEMORYBLOCKTYPE_SIZE), Prefix => "MEMORYBLOCKTYPE_SIZE:  ", NL => True);
+         Console.Print (Integer'(MEMORYBLOCKTYPE_SIZE), Prefix => "MEMORYBLOCKTYPE_SIZE: ", NL => True);
       end if;
       Free (Heap_Block'Address + MEMORYBLOCKTYPE_SIZE);
    end Init;
@@ -192,7 +192,7 @@ package body Malloc is
          begin
             -- check if they are the same (no hole in between)
             if Next_Block'Address = Q.all'Address then
-               Memory_Block.Size         := Memory_Block.Size + Next_Block.Size;
+               Memory_Block.Size         := @ + Next_Block.Size;
                Memory_Block.Pointer_Next := Next_Block.Pointer_Next;
             else
                Memory_Block.Pointer_Next := Q;
@@ -211,7 +211,7 @@ package body Malloc is
                Convention => Ada;
          begin
             if Previous_Block'Address = Memory_Block'Address then
-               P.all.Size         := P.all.Size + Memory_Block.Size;
+               P.all.Size         := @ + Memory_Block.Size;
                P.all.Pointer_Next := Memory_Block.Pointer_Next;
             else
                P.all.Pointer_Next := Memory_Block'Unchecked_Access;

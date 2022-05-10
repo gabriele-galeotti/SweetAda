@@ -107,25 +107,6 @@ package body Malta is
       end Print_Device;
    begin
       -- Galileo GT-64120A - VID/DID/Devnum = 0x11AB/0x4620/0
-      -- special handling exists because it responds with BE data, so we must
-      -- swap ALL 4 bytes of the Vendor/Device artifact (the Vendor field
-      -- becomes the Device, and vice-versa; then we swap every 2-byte field)
-      -- __REF__ http://lxr.free-electrons.com/source/arch/mips/gt64120/common/pci.c?v=2.4.37
-      -- 79         if (PCI_SLOT(device->devfn) == SELF)    /* This board */
-      -- 80                 return GT_READ(GT_PCI0_CFGDATA_OFS);
-      -- 81         else            /* PCI is little endian so swap the Data. */
-      -- 82                 return __GT_READ(GT_PCI0_CFGDATA_OFS);
-      -- __REF__ http://lxr.free-electrons.com/source/include/asm-mips/gt64120/gt64120.h?v=2.4.37
-      -- 444 /*
-      -- 445  * Because of an error/peculiarity in the Galileo chip, we need to swap the
-      -- 446  * bytes when running bigendian.  We also provide non-swapping versions.
-      -- 447  */
-      -- 448 #define __GT_READ(ofs)                                                  \
-      -- 449         (*(volatile u32 *)(GT64120_BASE+(ofs)))
-      -- 450 #define __GT_WRITE(ofs, data)                                           \
-      -- 451         do { *(volatile u32 *)(GT64120_BASE+(ofs)) = (data); } while (0)
-      -- 452 #define GT_READ(ofs)            le32_to_cpu(__GT_READ(ofs))
-      -- 453 #define GT_WRITE(ofs, data)     __GT_WRITE(ofs, cpu_to_le32(data))
       Cfg_Find_Device_By_Id (
                              GT64120_BUS_NUMBER,
                              Vendor_Id_Type (Byte_Swap (Unsigned_16 (DEVICE_ID_GT64120))),
