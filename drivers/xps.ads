@@ -96,11 +96,13 @@ package XPS is
    -- XPS Interrupt Controller
    ----------------------------------------------------------------------------
 
+   -- Master Enable Register (MER) (15)
+
    type XPS_INTC_MER_Type is
    record
       Reserved : Bits_30;
-      HIE      : Bits_1;
-      ME       : Bits_1;
+      HIE      : Boolean; -- Hardware Interrupt Enable
+      ME       : Boolean; -- Master IRQ Enable
    end record with
       Bit_Order => High_Order_First,
       Size      => 32;
@@ -113,12 +115,12 @@ package XPS is
 
    type XPS_INTC_Type is
    record
-      ISR : Unsigned_32       with Volatile_Full_Access => True;
-      IPR : Unsigned_32       with Volatile_Full_Access => True;
-      IER : Unsigned_32       with Volatile_Full_Access => True;
-      IAR : Unsigned_32       with Volatile_Full_Access => True;
-      SIE : Unsigned_32       with Volatile_Full_Access => True;
-      CIE : Unsigned_32       with Volatile_Full_Access => True;
+      ISR : Bitmap_32         with Volatile_Full_Access => True;
+      IPR : Bitmap_32         with Volatile_Full_Access => True;
+      IER : Bitmap_32         with Volatile_Full_Access => True;
+      IAR : Bitmap_32         with Volatile_Full_Access => True;
+      SIE : Bitmap_32         with Volatile_Full_Access => True;
+      CIE : Bitmap_32         with Volatile_Full_Access => True;
       IVR : Unsigned_32       with Volatile_Full_Access => True;
       MER : XPS_INTC_MER_Type with Volatile_Full_Access => True;
    end record with
