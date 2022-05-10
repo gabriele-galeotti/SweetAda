@@ -34,17 +34,108 @@ package HiFive1 is
    use System.Storage_Elements;
    use Interfaces;
 
+   ----------------------------------------------------------------------------
    -- __REF__ SiFive FE310-G002 Manual v1p0
+   ----------------------------------------------------------------------------
 
+   ----------------------------------------------------------------------------
    -- 6 Clock Generation (PRCI)
+   ----------------------------------------------------------------------------
+
+   -- hfrosccfg: Ring Oscillator Configuration and Status (hfrosccfg)
+
+   type hfrosccfg_Type is
+   record
+      hfroscdiv  : Bits.Bits_6;       -- Ring Oscillator Divider Register
+      Reserved1  : Bits.Bits_10 := 0;
+      hfrosctrim : Bits.Bits_5;       -- Ring Oscillator Trim Register
+      Reserved2  : Bits.Bits_9 := 0;
+      hfroscen   : Boolean;           -- Ring Oscillator Enable
+      hfroscrdy  : Boolean := False;  -- Ring Oscillator Ready
+   end record with
+      Size => 32;
+   for hfrosccfg_Type use
+   record
+      hfroscdiv  at 0 range 0 .. 5;
+      Reserved1  at 0 range 6 .. 15;
+      hfrosctrim at 0 range 16 .. 20;
+      Reserved2  at 0 range 21 .. 29;
+      hfroscen   at 0 range 30 .. 30;
+      hfroscrdy  at 0 range 31 .. 31;
+   end record;
+
+   -- hfxosccfg: Crystal Oscillator Configuration and Status (hfxosccfg)
+
+   type hfxosccfg_Type is
+   record
+      Reserved  : Bits.Bits_30 := 0;
+      hfxoscen  : Boolean;           -- Crystal Oscillator Enable
+      hfxoscrdy : Boolean := False;  -- Crystal Oscillator Ready
+   end record with
+      Size => 32;
+   for hfxosccfg_Type use
+   record
+      Reserved  at 0 range 0 .. 29;
+      hfxoscen  at 0 range 30 .. 30;
+      hfxoscrdy at 0 range 31 .. 31;
+   end record;
+
+   -- pllcfg: PLL Configuration and Status (pllcfg)
+
+   type pllcfg_Type is
+   record
+      pllr      : Bits.Bits_3;       -- PLL R Value
+      Reserved1 : Bits.Bits_1 := 0;
+      pllf      : Bits.Bits_6;       -- PLL F Value
+      pllq      : Bits.Bits_2;       -- PLL Q Value
+      Reserved2 : Bits.Bits_4 := 0;
+      pllsel    : Boolean;           -- PLL Select
+      pllrefsel : Boolean;           -- PLL Reference Select
+      pllbypass : Boolean;           -- PLL Bypass
+      Reserved3 : Bits.Bits_12 := 0;
+      plllock   : Boolean := False;  -- PLL Lock
+   end record with
+      Size => 32;
+   for pllcfg_Type use
+   record
+      pllr      at 0 range 0 .. 2;
+      Reserved1 at 0 range 3 .. 3;
+      pllf      at 0 range 4 .. 9;
+      pllq      at 0 range 10 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+      pllsel    at 0 range 16 .. 16;
+      pllrefsel at 0 range 17 .. 17;
+      pllbypass at 0 range 18 .. 18;
+      Reserved3 at 0 range 19 .. 30;
+      plllock   at 0 range 31 .. 31;
+   end record;
+
+   -- plloutdiv: PLL Final Divide Configuration (plloutdiv)
+
+   type plloutdiv_Type is
+   record
+      plloutdiv    : Bits.Bits_6;       -- PLL Final Divider Value
+      Reserved1    : Bits.Bits_2 := 0;
+      plloutdivby1 : Bits.Bits_6;       -- PLL Final Divide By 1
+      Reserved2    : Bits.Bits_18 := 0;
+   end record with
+      Size => 32;
+   for plloutdiv_Type use
+   record
+      plloutdiv    at 0 range 0 .. 5;
+      Reserved1    at 0 range 6 .. 7;
+      plloutdivby1 at 0 range 8 .. 13;
+      Reserved2    at 0 range 14 .. 31;
+   end record;
+
+   -- 6.2 PRCI Address Space Usage
 
    type PRCI_Type is
    record
-      hfrosccfg  : Unsigned_32;
-      hfxosccfg  : Unsigned_32;
-      pllcfg     : Unsigned_32;
-      plloutdiv  : Unsigned_32;
-      -- procmoncfg : Unsigned_32;
+      hfrosccfg  : hfrosccfg_Type with Volatile_Full_Access => True;
+      hfxosccfg  : hfxosccfg_Type with Volatile_Full_Access => True;
+      pllcfg     : pllcfg_Type    with Volatile_Full_Access => True;
+      plloutdiv  : plloutdiv_Type with Volatile_Full_Access => True;
    end record with
       Size => 4 * 32;
    for PRCI_Type use
@@ -53,7 +144,6 @@ package HiFive1 is
       hfxosccfg  at 16#04# range 0 .. 31;
       pllcfg     at 16#08# range 0 .. 31;
       plloutdiv  at 16#0C# range 0 .. 31;
-      -- procmoncfg at 16#F0# range 0 .. 31;
    end record;
 
    PRCI_BASEADDRESS : constant := 16#1000_8000#;
@@ -100,8 +190,8 @@ package HiFive1 is
       Reserved : Bits.Bits_23;
       full     : Boolean;
    end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32,
+      Bit_Order            => Low_Order_First,
+      Size                 => 32,
       Volatile_Full_Access => True;
    for TXDATA_Type use
    record
