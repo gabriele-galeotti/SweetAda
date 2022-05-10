@@ -62,6 +62,10 @@ package Definitions is
    GB2    : constant := 2**31;
    GB4    : constant := 2**32;
 
+   -- various constants
+   kHz : constant := 1_000;
+   MHz : constant := 1_000 * kHz;
+
    -- common known clock rates in Hz
    RTC32k_CLK  : constant := 32_768;
    UART1M8_CLK : constant := 1_843_200;
