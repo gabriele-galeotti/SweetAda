@@ -62,7 +62,7 @@ puts(const char *s)
         return 1;
 }
 
-#if defined(VSPRINTF_USE_INTERNAL_ATOI)
+#if defined(VSNPRINTF_USE_INTERNAL_ATOI)
 /******************************************************************************
  * internal_atoi()                                                            *
  *                                                                            *
@@ -289,37 +289,6 @@ number_to_literal(char *string, char *string_end, unsigned long number, int base
  *                                                                            *
  * "variable-arguments string print-formatted"                                *
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/vfprintf.html    *
- *                                                                            *
- *----------------------------------------------------------------------------*
- * format qualifier type              sign base notes                         *
- *----------------------------------------------------------------------------*
- * d/i              S int             Y    10                                 *
- * d/i    h         S short int       Y    10                                 *
- * d/i    l         S long int        Y    10                                 *
- * d/i    ll, L     S long long int   Y    10   not supported                 *
- *----------------------------------------------------------------------------*
- * u                S/U int           N    10                                 *
- * u      h         S/U short int     N    10                                 *
- * u      l         S/U long int      N    10                                 *
- * u      ll, L     S/U long long int N    10   not supported                 *
- *----------------------------------------------------------------------------*
- * o                S/U int           N    8    no leading 0                  *
- * o      h         S/U short int     N    8    no leading 0                  *
- * o      l         S/U long int      N    8    no leading 0                  *
- * o      ll, L     S/U long long int N    8    not supported                 *
- *----------------------------------------------------------------------------*
- * x/X              S/U int           N    16   without leading 0x            *
- * x/X    h         S/U short int     N    16   without leading 0x            *
- * x/X    l         S/U long int      N    16   without leading 0x            *
- * x/X    ll, L     S/U long long int N    16   not supported                 *
- *----------------------------------------------------------------------------*
- * c                int               N         cast to unsigned char         *
- * s                char *            N                                       *
- * p                void *            N                                       *
- *----------------------------------------------------------------------------*
- * n                int *             N                                       *
- * n      l         long int *        N                                       *
- * n      Z         size_t *          N                                       *
  ******************************************************************************/
 int
 vsnprintf(char *s, size_t n, const char *format, va_list ap)
@@ -369,7 +338,7 @@ repeat:
                 field_width = -1;
                 if (isdigit(*format) != 0)
                 {
-#if defined(VSPRINTF_USE_INTERNAL_ATOI)
+#if defined(VSNPRINTF_USE_INTERNAL_ATOI)
                         field_width = internal_atoi(&format);
 #else
                         field_width = strtol(format, (char **)&format, 10);
@@ -393,7 +362,7 @@ repeat:
                         ++format;
                         if (isdigit(*format) != 0)
                         {
-#if defined(VSPRINTF_USE_INTERNAL_ATOI)
+#if defined(VSNPRINTF_USE_INTERNAL_ATOI)
                                 precision = internal_atoi(&format);
 #else
                                 precision = strtol(format, (char **)&format, 10);

@@ -71,10 +71,11 @@ package Definitions is
    UART1M8_CLK : constant := 1_843_200;
    UART2M4_CLK : constant := 2_457_600;
    NTSC_CLK    : constant := 3_579_545;
+   UART3M6_CLK : constant := UART1M8_CLK * 2;
    PAL_CLK     : constant := 4_433_619;
    UART7M3_CLK : constant := 7_372_800;
    NTSC_CLK4   : constant := 14_318_182;
-   UART18M     : constant := UART1M8_CLK * 10;
+   UART18M_CLK : constant := UART1M8_CLK * 10;
 
    -- serial port bit rates
    type Baud_Rate_Type is (
