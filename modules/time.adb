@@ -25,6 +25,14 @@ package body Time is
    --                                                                        --
    --========================================================================--
 
+   NSECONDS_1970_2000 : constant := 946_684_800; -- Sat Jan 1 00:00:00 UTC 2000
+
+   function Date2Days (
+                       D : Natural;
+                       M : Natural;
+                       Y : Natural
+                      ) return Natural;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -60,5 +68,95 @@ package body Time is
       end if;
       return ((((Y / 4 - Y / 100 + Y / 400 + 367 * M / 12 + Day) + Y * 365 - 719_499) * 24 + Hour) * 60 + Minute) * 60 + Second;
    end Make_Time;
+
+   ----------------------------------------------------------------------------
+   -- Make_Time
+   ----------------------------------------------------------------------------
+   procedure Make_Time (
+                        T  : in  Unsigned_32;
+                        SS : out Natural;
+                        MM : out Natural;
+                        HH : out Natural;
+                        D  : out Natural;
+                        M  : out Natural;
+                        Y  : out Natural
+                       ) is
+      TT       : Unsigned_32 := T;
+      Y_Offset : Natural;
+      Y_Leap   : Boolean;
+      DPM      : Natural;
+   begin
+      TT := @ - NSECONDS_1970_2000;
+      SS := Natural (TT mod 60);
+      TT := @ / 60;
+      MM := Natural (TT mod 60);
+      TT := @ / 60;
+      HH := Natural (TT mod 24);
+      D  := Natural (TT / 24);
+      Y_Offset := 0;
+      while True loop
+         Y_Leap := (Y_Offset mod 4) = 0;
+         if D < (365 + 1) then
+            exit;
+         end if;
+         D := @ - 365;
+         if Y_Leap then
+            D := @ - 1;
+         end if;
+         Y_Offset := @ + 1;
+      end loop;
+      M := 0;
+      for M_Idx in 1 .. 12 loop
+         DPM := Days_Per_Month (M_Idx);
+         if Y_Leap and then M_Idx = 2 then
+            DPM := @ + 1;
+         end if;
+         if D < DPM then
+            M := M_Idx;
+            exit;
+         end if;
+         D := @ - DPM;
+      end loop;
+      D := @ + 1;
+      Y := 2_000 + Y_Offset;
+   end Make_Time;
+
+   ----------------------------------------------------------------------------
+   -- Date2Days
+   ----------------------------------------------------------------------------
+   function Date2Days (
+                       D : Natural;
+                       M : Natural;
+                       Y : Natural
+                      ) return Natural is
+      DD : Natural := D;
+      YY : Natural := Y;
+   begin
+      if YY >= 2000 then
+         YY := @ - 2000;
+      end if;
+      for M_Idx in 1 .. M - 1 loop
+         DD := @ + Days_Per_Month (M_Idx);
+      end loop;
+      if M > 2 and then YY mod 4 = 0 then
+         DD := @ + 1;
+      end if;
+      DD := @ + 365 * YY + (YY + 3) / 4 - 1;
+      return DD;
+   end Date2Days;
+
+   ----------------------------------------------------------------------------
+   -- NDay_Of_Week
+   ----------------------------------------------------------------------------
+   function NDay_Of_Week (
+                          D : Natural;
+                          M : Natural;
+                          Y : Natural
+                         ) return Natural is
+      NDay : Natural;
+   begin
+      NDay := Date2Days (D, M, Y);
+      return (NDay + 6) mod 7;
+   end NDay_Of_Week;
 
 end Time;
