@@ -92,13 +92,13 @@ package body BSP is
       HiFive1.GPIO_IOFSEL := @ and 16#FF78_FFFF#;
       HiFive1.GPIO_IOFEN  := @ or 16#0087_0000#;
       HiFive1.GPIO_OEN    := @ or 16#0087_0000#;
-      HiFive1.UART0.div          := 16#89#; -- 115200 bps @ 16 MHz
+      HiFive1.UART0.div.div      := 16#89#; -- 115200 bps @ 16 MHz
       HiFive1.UART0.txctrl.txen  := True;
       -- HiFive1.UART0.txctrl.nstop := 0;
       -- HiFive1.UART0.txctrl.txcnt := 0;
       HiFive1.UART0.rxctrl.rxen  := True;
       -- HiFive1.UART0.rxctrl.rxcnt := 0;
-      HiFive1.UART1.div          := 16#89#; -- 115200 bps @ 16 MHz
+      HiFive1.UART1.div.div      := 16#89#; -- 115200 bps @ 16 MHz
       HiFive1.UART1.txctrl.txen  := True;
       -- HiFive1.UART1.txctrl.nstop := 0;
       -- HiFive1.UART1.txctrl.txcnt := 0;
