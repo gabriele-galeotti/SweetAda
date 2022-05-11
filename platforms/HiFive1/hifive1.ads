@@ -158,7 +158,43 @@ package HiFive1 is
       Import     => True,
       Convention => Ada;
 
+   ----------------------------------------------------------------------------
+   -- 9 Core-Local Interruptor (CLINT)
+   ----------------------------------------------------------------------------
+
+   -- msip for hart 0 MSIP Registers (1 bit wide)
+
+   MSIP_ADDRESS : constant := 16#0200_0000#;
+
+   MSIP : aliased Unsigned_32 with
+      Address    => To_Address (MSIP_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   -- mtimecmp for hart 0 MTIMECMP Registers
+
+   MTIMECMP_ADDRESS : constant := 16#0200_4000#;
+
+   MTIMECMP : aliased Unsigned_64 with
+      Address    => To_Address (MTIMECMP_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   -- mtime Timer Register
+
+   Timer_ADDRESS : constant := 16#0200_BFF8#;
+
+   Timer : aliased Unsigned_64 with
+      Address    => To_Address (Timer_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   ----------------------------------------------------------------------------
    -- 17 General Purpose Input/Output Controller (GPIO)
+   ----------------------------------------------------------------------------
 
    GPIO_ADDRESS : constant := 16#1001_2000#;
 
@@ -186,50 +222,60 @@ package HiFive1 is
       Import               => True,
       Convention           => Ada;
 
+   ----------------------------------------------------------------------------
    -- 18 Universal Asynchronous Receiver/Transmitter (UART)
+   ----------------------------------------------------------------------------
 
-   type TXDATA_Type is
+   -- 18.4 Transmit Data Register (txdata)
+
+   type txdata_Type is
    record
-      txdata   : Unsigned_8;
-      Reserved : Bits.Bits_23;
-      full     : Boolean;
+      txdata   : Unsigned_8;        -- Transmit data
+      Reserved : Bits.Bits_23 := 0;
+      full     : Boolean;           -- Transmit FIFO full
    end record with
-      Bit_Order            => Low_Order_First,
-      Size                 => 32,
-      Volatile_Full_Access => True;
-   for TXDATA_Type use
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for txdata_Type use
    record
       txdata   at 0 range 0 .. 7;
       Reserved at 0 range 8 .. 30;
       full     at 0 range 31 .. 31;
    end record;
 
-   type RXDATA_Type is
+   -- 18.5 Receive Data Register (rxdata)
+
+   type rxdata_Type is
    record
-      rxdata   : Unsigned_8;
-      Reserved : Bits.Bits_23;
-      empty    : Boolean;
+      rxdata   : Unsigned_8;        -- Received data
+      Reserved : Bits.Bits_23 := 0;
+      empty    : Boolean;           -- Receive FIFO empty
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for RXDATA_Type use
+   for rxdata_Type use
    record
       rxdata   at 0 range 0 .. 7;
       Reserved at 0 range 8 .. 30;
       empty    at 0 range 31 .. 31;
    end record;
 
-   type TXCTRL_Type is
+   -- 18.6 Transmit Control Register (txctrl)
+
+   nstop_1 : constant := 0; -- one stop bit
+   nstop_2 : constant := 1; -- two stop bits
+
+   type txctrl_Type is
    record
-      txen      : Boolean;
-      nstop     : Bits.Bits_1;
-      Reserved1 : Bits.Bits_14;
-      txcnt     : Bits.Bits_3;
-      Reserved2 : Bits.Bits_13;
+      txen      : Boolean;           -- Transmit enable
+      nstop     : Bits.Bits_1;       -- Number of stop bits
+      Reserved1 : Bits.Bits_14 := 0;
+      txcnt     : Bits.Bits_3;       -- Transmit watermark level
+      Reserved2 : Bits.Bits_13 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for TXCTRL_Type use
+   for txctrl_Type use
    record
       txen      at 0 range 0 .. 0;
       nstop     at 0 range 1 .. 1;
@@ -238,16 +284,18 @@ package HiFive1 is
       Reserved2 at 0 range 19 .. 31;
    end record;
 
-   type RXCTRL_Type is
+   -- 18.7 Receive Control Register (rxctrl)
+
+   type rxctrl_Type is
    record
-      rxen      : Boolean;
-      Reserved1 : Bits.Bits_15;
-      rxcnt     : Bits.Bits_3;
-      Reserved2 : Bits.Bits_13;
+      rxen      : Boolean;           -- Receive enable
+      Reserved1 : Bits.Bits_15 := 0;
+      rxcnt     : Bits.Bits_3;       -- Receive watermark level
+      Reserved2 : Bits.Bits_13 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for RXCTRL_Type use
+   for rxctrl_Type use
    record
       rxen      at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 15;
@@ -255,15 +303,64 @@ package HiFive1 is
       Reserved2 at 0 range 19 .. 31;
    end record;
 
+   -- 18.8 Interrupt Registers (ip and ie)
+
+   type ie_Type is
+   record
+      txwm     : Boolean;           -- Transmit watermark interrupt enable
+      rxwm     : Boolean;           -- Receive watermark interrupt enable
+      Reserved : Bits.Bits_30 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for ie_Type use
+   record
+      txwm     at 0 range 0 .. 0;
+      rxwm     at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
+   type ip_Type is
+   record
+      txwm     : Boolean;           -- Transmit watermark interrupt pending
+      rxwm     : Boolean;           -- Receive watermark interrupt pending
+      Reserved : Bits.Bits_30 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for ip_Type use
+   record
+      txwm     at 0 range 0 .. 0;
+      rxwm     at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
+   -- 18.9 Baud Rate Divisor Register (div)
+
+   type div_Type is
+   record
+      div      : Unsigned_16;       -- Baud rate divisor.
+      Reserved : Bits.Bits_16 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for div_Type use
+   record
+      div      at 0 range 0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 18.3 Memory Map
+
    type UART_Type is
    record
-      txdata : TXDATA_Type;
-      rxdata : RXDATA_Type;
-      txctrl : TXCTRL_Type;
-      rxctrl : RXCTRL_Type;
-      ie     : Unsigned_32;
-      ip     : Unsigned_32;
-      div    : Unsigned_32;
+      txdata : txdata_Type with Volatile_Full_Access => True;
+      rxdata : rxdata_Type with Volatile_Full_Access => True;
+      txctrl : txctrl_Type with Volatile_Full_Access => True;
+      rxctrl : rxctrl_Type with Volatile_Full_Access => True;
+      ie     : ie_Type     with Volatile_Full_Access => True;
+      ip     : ip_Type     with Volatile_Full_Access => True;
+      div    : div_Type    with Volatile_Full_Access => True;
    end record with
       Size => 7 * 32;
    for UART_Type use
