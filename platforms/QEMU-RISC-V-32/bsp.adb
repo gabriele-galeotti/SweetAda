@@ -73,7 +73,7 @@ package body BSP is
       UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART_Descriptor.Base_Address  := To_Address (Virt.UART0_BASEADDRESS);
       UART_Descriptor.Scale_Address := 0;
-      UART_Descriptor.Baud_Clock    := Definitions.UART1M8_CLK;
+      UART_Descriptor.Baud_Clock    := Definitions.UART3M6_CLK;
       UART16x50.Init (UART_Descriptor);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
@@ -94,7 +94,7 @@ package body BSP is
          Base_Address := Bits_26 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)) and 16#FFFF_FFFC#, 6));
          RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, Reserved => 0, BASE => Base_Address));
       end;
-      RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
+      RISCV.MTimeCmp := RISCV.MTime + Virt.Timer_Constant;
       RISCV.Irq_Enable;
       -------------------------------------------------------------------------
    end BSP_Setup;

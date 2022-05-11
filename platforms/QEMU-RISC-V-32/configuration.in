@@ -5,6 +5,9 @@
 # RISC-V RV32IMAC
 #
 
+# force LibGCC
+USE_LIBGCC := Y
+
 CPU       := RISC-V
 CPU_MODEL := ?
 

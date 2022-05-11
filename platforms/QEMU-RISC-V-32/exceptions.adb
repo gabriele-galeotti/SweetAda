@@ -20,6 +20,7 @@ with Interfaces;
 with Definitions;
 with Core;
 with RISCV;
+with Virt;
 with IOEMU;
 
 package body Exceptions is
@@ -34,7 +35,6 @@ package body Exceptions is
 
    use System.Machine_Code;
    use Interfaces;
-   use Core;
 
    CRLF : String renames Definitions.CRLF;
 
@@ -56,13 +56,13 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Timer_Process is
    begin
-      Tick_Count := @ + 1;
-      if Tick_Count mod 1_000 = 0 then
+      Core.Tick_Count := @ + 1;
+      if Core.Tick_Count mod 1_000 = 0 then
          -- IOEMU "TIMER" LED blinking
-         IOEMU.IOEMU_IO0 := 16#FF#;
-         IOEMU.IOEMU_IO0 := 16#00#;
+         IOEMU.IOEMU_IO0 := 1;
+         IOEMU.IOEMU_IO0 := 0;
       end if;
-      RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
+      RISCV.MTimeCmp := RISCV.MTime + Virt.Timer_Constant;
    end Timer_Process;
 
    ----------------------------------------------------------------------------
