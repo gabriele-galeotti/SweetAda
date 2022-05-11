@@ -330,12 +330,10 @@ setup is for a system GCC C compiler.
 Go into the directory libutils/toolchain_tools and edit the Makefile by adjusting some
 variables:
 
-@itemize @bullet
-@item
-CC               := gcc # C compiler
-@item
-LIBELF           := /usr/local/lib/libelf.a # location of libelf library
-@end itemize
+@example
+CC      := gcc # C compiler
+LIBELF  := /usr/local/lib/libelf.a # location of libelf library
+@end example
 
 For elftool, you sould have libelf installed in your environment setup, but it is not
 strictly needed. Remember that GNU toolchain installation prefix refers to the whole
@@ -1128,23 +1126,41 @@ The identifiers of the implicit units and other dependency units are the followi
 
 @itemize @bullet
 @item
-SPEC_ABORT_LIBRARY -> core/abort_library.ads
+@verbatim
+SPEC_ABORT_LIBRARY              core/abort_library.ads
+@end verbatim
 @item
-SPEC_BITS -> core/bits.ads
+@verbatim
+SPEC_BITS                       core/bits.ads
+@end verbatim
 @item
-SPEC_CONSOLE -> core/console.ads
+@verbatim
+SPEC_CONSOLE                    core/console.ads
+@end verbatim
 @item
-SPEC_CORE -> core/core.ads
+@verbatim
+SPEC_CORE                       core/core.ads
+@end verbatim
 @item
-SPEC_INTEGER_MATH -> core/integer_math.ads
+@verbatim
+SPEC_INTEGER_MATH               core/integer_math.ads
+@end verbatim
 @item
-SPEC_LAST_CHANCE_HANDLER core/last_chance_handler.ads
+@verbatim
+SPEC_LAST_CHANCE_HANDLER        core/last_chance_handler.ads
+@end verbatim
 @item
-SPEC_LLUTILS -> core/llutils.ads
+@verbatim
+SPEC_LLUTILS                    core/llutils.ads
+@end verbatim
 @item
-SPEC_MALLOC -> core/malloc.ads
+@verbatim
+SPEC_MALLOC                     core/malloc.ads
+@end verbatim
 @item
-SPEC_MEMORY_FUNCTIONS -> core/memory_functions.ads
+@verbatim
+SPEC_MEMORY_FUNCTIONS           core/memory_functions.ads
+@end verbatim
 @end itemize
 
 @node Platform descriptions
@@ -1545,12 +1561,36 @@ instructed to execute the selected emulator (maybe under the control of the GDB
 debugger).
 
 The configuration file is then processed again by the emulator. The IOEMU
-section is used to configure the coordinates of the IOEMU window. Other sections
-are interpreted as specifications of the I/O features exposed by the target emulator,
-in terms of serial ports or IOEMU virtual I/O ports that show up as widgets. Every
-I/O port has a specific name and you can see its mapping in the Ada code platform
-description ("ioemu.ads"). When the emulator starts, it advertises the virtual I/Os
-in terms of port names, addresses and sizes.
+section is used to configure the coordinates of the IOEMU window. When the
+parser encounters the end of this section, it evaluates only these variables:
+
+@itemize @bullet
+@item
+@verbatim
+PANELX          window x-coordinate
+@end verbatim
+@item
+@verbatim
+PANELY          window y-coordinate
+@end verbatim
+@item
+@verbatim
+PANELWIDTH      window width in pixels
+@end verbatim
+@item
+@verbatim
+PANELHEIGHT     window height in pixels
+@end verbatim
+@end itemize
+
+So, the only useful actions are to set these variables in order to accomodate
+the window.
+
+All other sections are interpreted as specifications of the I/O features exposed by
+the target emulator, in terms of serial ports or IOEMU virtual I/O ports that show
+up as widgets. Every I/O port has a specific name and you can see its mapping in the
+Ada code platform description ("ioemu.ads"). When the emulator starts, it advertises
+the virtual I/Os in terms of port names, addresses and sizes.
 
 Inside the I/O port section you can thus set the type of widget used (a LED, a LEDBAR,
 an hex DISPLAY), its color and its size.
@@ -1616,7 +1656,7 @@ widgets are
 @item
 LED
 @item
-LEDBAR
+LEDBAR[8|16|32|64]
 @item
 DISPLAY[8|16|32|64]
 @item
