@@ -17,6 +17,8 @@
 
 with System.Storage_Elements;
 with Interfaces;
+with Definitions;
+with Goldfish;
 
 package Virt is
 
@@ -31,40 +33,21 @@ package Virt is
    use System.Storage_Elements;
    use Interfaces;
 
+   -- Timer
+
+   Timer_Frequency : constant := 10 * Definitions.MHz;
+   Timer_Constant  : constant := Timer_Frequency / 1_000;
+
+   -- UART 16x50-style
+
    UART0_BASEADDRESS : constant := 16#1000_0000#;
 
-   ----------------------------------------------------------------------------
    -- Goldfish RTC
-   ----------------------------------------------------------------------------
 
-   type Goldfish_Type is
-   record
-      RTC_TIME_LOW        : Unsigned_32 with Volatile_Full_Access => True;
-      RTC_TIME_HIGH       : Unsigned_32 with Volatile_Full_Access => True;
-      RTC_ALARM_LOW       : Unsigned_32 with Volatile_Full_Access => True;
-      RTC_ALARM_HIGH      : Unsigned_32 with Volatile_Full_Access => True;
-      RTC_IRQ_ENABLED     : Unsigned_32 with Volatile_Full_Access => True;
-      RTC_CLEAR_ALARM     : Unsigned_32 with Volatile_Full_Access => True;
-      RTC_ALARM_STATUS    : Unsigned_32 with Volatile_Full_Access => True;
-      RTC_CLEAR_INTERRUPT : Unsigned_32 with Volatile_Full_Access => True;
-   end record with
-      Size => 8 * 32;
-   for Goldfish_Type use
-   record
-      RTC_TIME_LOW        at 16#00# range 0 .. 31;
-      RTC_TIME_HIGH       at 16#04# range 0 .. 31;
-      RTC_ALARM_LOW       at 16#08# range 0 .. 31;
-      RTC_ALARM_HIGH      at 16#0C# range 0 .. 31;
-      RTC_IRQ_ENABLED     at 16#10# range 0 .. 31;
-      RTC_CLEAR_ALARM     at 16#14# range 0 .. 31;
-      RTC_ALARM_STATUS    at 16#18# range 0 .. 31;
-      RTC_CLEAR_INTERRUPT at 16#1C# range 0 .. 31;
-   end record;
+   Goldfish_RTC_BASEADDRESS : constant := 16#0010_1000#;
 
-   GOLDFISH_ADDRESS : constant := 16#0010_1000#;
-
-   GOLDFISH : aliased Goldfish_Type with
-      Address    => To_Address (GOLDFISH_ADDRESS),
+   Goldfish_RTC : aliased Goldfish.RTC_Type with
+      Address    => To_Address (Goldfish_RTC_BASEADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
