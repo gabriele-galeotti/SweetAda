@@ -30,9 +30,18 @@ package FATFS.Rawfile is
 
    -- READ
 
-   procedure Open (File : out FCB_Type; DE : in Directory_Entry_Type; Success : out Boolean);
+   procedure Open (
+                   File    : out FCB_Type;
+                   DE      : in  Directory_Entry_Type;
+                   Success : out Boolean
+                  );
 
-   procedure Open (File : out FCB_Type; Dir : in out DCB_Type; File_Name : in String; Success : out Boolean);
+   procedure Open (
+                   File      : out    FCB_Type;
+                   Dir       : in out DCB_Type;
+                   File_Name : in     String;
+                   Success   : out    Boolean
+                  );
 
    procedure Rewind (File : in out FCB_Type);
 
