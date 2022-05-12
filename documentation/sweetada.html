@@ -334,7 +334,7 @@ Next: <a href="#Toolchain-tools" accesskey="n" rel="next">Toolchain tools</a>, P
 <span id="index-GNAT-wrapper"></span>
 <span id="index-runsweetada"></span>
 
-<p>The SweetAda system is distributed with GNU toolchains for every CPUs it can handle.
+<p>The SweetAda system is distributed with GNU toolchains for every CPU it can handle.
 Altough toolchains are quite generic, SweetAda does not employ neither the whole standard
 GNU FSF RTS source package nor the LibGCC library.
 </p>
@@ -343,11 +343,11 @@ implementation, which is quite big and requires an underneath operating system.
 </p>
 <p>The LibGCC library, which is present like in every other standard toolchain, is bypassed
 and partially reimplemented in Ada. Only some low-level machine-language files are required,
-which are distributed in a separate package. This way, you have a system which is under
+carefully extracted from the LibGCC sources. This way, you have a system which is under
 your complete control at the source level, and every bit of information is known.
 Code output by the build system is thus coming directly from the compiler, without extra
-source files inclusion. Anyway, the standard LibGCC could be selected with a configuration
-variable.
+source files inclusion. Anyway, the standard LibGCC binaries can be selected with a
+configuration variable.
 </p>
 <p>GNU toolchains are referenced by a &quot;canonical triplet&quot;, e.g. &quot;i686-unknown-linux&quot;; since
 this name identifies also a working directory component of the toolchain, every time we
@@ -386,7 +386,7 @@ LIBELF  := /usr/local/lib/libelf.a # location of libelf library
 </pre></div>
 
 <p>For elftool, you sould have libelf installed in your environment setup, but it is not
-strictly needed. Remember that GNU toolchain installation prefix refers to the whole
+strictly needed. Remember that GNU toolchain installation prefixes refers to the whole
 hierarchy, so do not add a trailing &quot;/bin&quot;.
 </p>
 <p>Then, after a proper Makefile setup:
@@ -581,12 +581,12 @@ SUBPLATFORM := QEMU-ROM
 You can create the kernel.cfg by hand and skip the createkernelcfg Makefile target.
 </p></td></tr></table>
 
-<p>Once kernel.cfg does exist, it will be used until you issue a &quot;make all-clean&quot; command,
+<p>Once kernel.cfg does exist, it will be used until you issue a &quot;make distclean&quot; command,
 which erases every configuration file and objects from last compilation.
 </p>
 <table class="cartouche" border="1"><tr><td>
 <p>NOTE:<br>
-Issuing a new configuration erases the old one by executing an implicit &quot;all-clean&quot;
+Issuing a new configuration erases the old one by executing an implicit &quot;distclean&quot;
 Makefile target.
 </p></td></tr></table>
 
@@ -879,7 +879,7 @@ variable in the platform&rsquo;s configuration.in file.
 The postbuild target is a two-phase process. The first phase creates a binary
 file full of informations, then the postbuild target specified in the platform&rsquo;s Makefile
 is executed. This way you can customize the final binary file or take other actions,
-like add custom data, place the output file in a server?s TFTP directory, and so on.
+like add custom data, place the output file in a server TFTP directory, and so on.
 </p></td></tr></table>
 
 <table class="cartouche" border="1"><tr><td>
@@ -1000,13 +1000,14 @@ higher level constructs.
 <p>Note that fundamental packages like Bits, LLutils, Memory_Functions, etc, are pragma
 Preelaborate, with Bits being pragma Pure.
 </p>
-<p>Bits
-</p>
+<ul>
+<li> Bits
+
 <p>Bits is the fundamental package for low-level manipulation. Here you can find many
 type declarations and subprograms to handle low-level object.
 </p>
-<p>C library
-</p>
+</li><li> C library
+
 <p>SweetAda has a very minimalistic C library. This C library takes no active part in
 SweetAda. Contrarily to all other environments, where Ada code runs on top of another
 piece of software (almost invariably a C-coded OS), in SweetAda even various low-level
@@ -1015,8 +1016,8 @@ library exists for reference purposes, and as an aid in porting foreign C user c
 Note that only very basic functions in ctype/stdlib/stdio/string hierarchies are
 implemented.
 </p>
-<p>Console
-</p>
+</li><li> Console
+
 <p>The console package provides basic subprograms to output fundamental
 type values on a character-oriented device, like a serial port.
 </p>
@@ -1029,33 +1030,33 @@ of a with clause.
 <p>Besides fundamental types output, you can find a Print_Memory subprogram
 that is useful to dump a memory section for diagnostic purposes.
 </p>
-<p>GCC_Types
-</p>
+</li><li> GCC_Types
+
 <p>This package implements useful types to handle LibGCC numeric subprograms.
 </p>
-<p>LibGCC
-</p>
+</li><li> LibGCC
+
 <p>LibGCC package implements pure Ada computation subprograms that are normally
 found in the compiler library. They exist mostly as useful references.
 </p>
-<p>LLutils
-</p>
+</li><li> LLutils
+
 <p>LLutils package contains useful low-level subprograms that are too much convoluted
 to place them in the Bits unit. Besides, this would lead to make Bits non-pure.
 </p>
 <p>Multibyte swap subprograms are declared here, with Build_Address and its
 inverse, Address_Displacement.
 </p>
-<p>Malloc
-</p>
+</li><li> Malloc
+
 <p>This package implements a simple memory allocator, and is implicitly used by the
 compiler to allocate memory on a pool, e.g., when you call the &quot;new&quot; operator.
 BSPs should call the initialization subprogram to reserve memory for the allocator
 before the Ada code has a chance to use it. But this could be made automatic by
 writing initialization code in the elaboration block of the package.
 </p>
-<p>Memory_Functions
-</p>
+</li><li> Memory_Functions
+
 <p>Memory_Functions is a package that provides a pure Ada implementation of the
 classical C functions to manipulate memory areas: Memcmp, Memcpy, Memmove,
 Memset, Bcopy, Cpymem.
@@ -1063,15 +1064,16 @@ Memset, Bcopy, Cpymem.
 <p>These subprograms are not optimized, but they are made separate and thus could be
 optimized by hand-crafted assembly routines.
 </p>
-<p>MMIO
-</p>
+</li><li> MMIO
+
 <p>MMIO package provides unrestricted access to memory with a simple modular-valued
 load/store model, thus facilitating handling of low-level objects. Unsigned types
 of sizes 8, 16, 32, 64 bits are supported. MMIO standard subprogram bodies are separated,
 and can thus be overriden and optimized by instantiating a custom copy (perhaps
 coded in native machine language). MMIO have versions for flat, atomic, swapping
 and atomic-swapping operations.
-</p>
+</p></li></ul>
+
 <hr>
 </div>
 <div class="chapter" id="LibGCC">
@@ -1166,13 +1168,13 @@ assignments), so the precedence schema will be built at each step.
 </li></ul>
 
 <p>This way, a user-supplied body unit can override a standard one, being the latter a
-separate subprograms.
+separate subprogram.
 </p>
 <p>As an example, a reimplementation of some MMIO subprograms is provided in the
-cpus/SPARC directory. The overriding of some standard MMIO subprograms (and only those
-explicitly implemented as an optimization) will happen because the cpus/SPARC/configuration.in
-specifies the &quot;mmio&quot; subdirectory as an higher-precedence directory search path that
-will be head-inserted into the list.
+cpus/SPARC directory. The overriding of some standard MMIO subprograms (and only
+those explicitly implemented as an optimization) will happen because the
+cpus/SPARC/configuration.in specifies the &quot;mmio&quot; subdirectory as an higher-precedence
+directory search path that will be head-inserted into the list.
 </p>
 <p>Another mechanism of optimization is to completely replace the standard SweetAda units.
 In order to take gain of this mechanism, the user should take care of implicit units.
@@ -1204,26 +1206,34 @@ will happen by remove the unit from the list of implicit units in the platform
 configuration.in file; this way, the build system will not compile the standard
 unit anymore:
 
-<p>export IMPLICIT_CORE_UNITS := $(filter-out last_chance_handler,$(IMPLICIT_CORE_UNITS))
-</p>
+<div class="example">
+<pre class="example">export IMPLICIT_CORE_UNITS := $(filter-out last_chance_handler,$(IMPLICIT_CORE_UNITS))
+</pre></div>
+
 </li><li> 2) still in the platform configuration.in file, reassign the SPEC_* identifier
 to the new unit:
 
-<p>export SPEC_CORE := $(PLATFORM_DIRECTORY)/last_chance_handler.ads
-</p>
+<div class="example">
+<pre class="example">export SPEC_CORE := $(PLATFORM_DIRECTORY)/last_chance_handler.ads
+</pre></div>
+
 </li><li> 3) add the new unit object file to the list of object files in the platform Makefile
 (by adding the file to the OBJECTS variable); this way, the build system will
 incorporate the new unit in the platform library
 
-<p>OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o
-</p>
+<div class="example">
+<pre class="example">OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o
+</pre></div>
+
 </li><li> 4) still in the platform Makefile, specify the dependencies of the new unit with
 standard Makefile syntax, i.e., by enumerating the filenames; implicit units
 should be specified in terms of SPEC_* identifiers; this way, the build system will
 be triggered by changes in other units
 
-<p>$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
-</p>
+<div class="example">
+<pre class="example">$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
+</pre></div>
+
 <p>(in this example the new unit is with&rsquo;ing Abort_Library, an implicit unit)
 </p></li></ul>
 
@@ -1757,7 +1767,6 @@ which mimics the real one.
 Next: <a href="#References" accesskey="n" rel="next">References</a>, Previous: <a href="#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <span id="IOEMU-scripting-1"></span><h2 class="chapter">19 IOEMU scripting</h2>
-<span id="index-IOEMU"></span>
 
 <p>The IOEMU facility allows configuration of a target emulator machine (but not
 limited to) by specifying actions in a very basic script-like sequence of
@@ -1781,7 +1790,7 @@ debugger.
 <table class="cartouche" border="1"><tr><td>
 <p>NOTE:<br>
 When QEMU is running under heavy debugging output, it slows down noticeably.
-This is why there are multiple assignment in some loop concerning the variable
+This is why there are multiple assignments in some loops concerning the variable
 &quot;Delay_Loop_Count&quot;.
 </p></td></tr></table>
 
@@ -1789,7 +1798,7 @@ This is why there are multiple assignment in some loop concerning the variable
 <p>NOTE:<br>
 Occasionally, if QEMU starts not so quickly, chances are that GDB is ready to
 communicate with the remote target when the emulator has not finished initialization.
-In this case you could experience message of this type:
+In this case you could experience messages like:
 </p>
 <div class="example">
 <pre class="example">Remote replied unexpectedly to 'vMustReplyEmpty': PacketSize=1000;qXfer:features: ...
@@ -1823,6 +1832,58 @@ the virtual I/Os in terms of port names, addresses and sizes.
 <p>Inside the I/O port section you can thus set the type of widget used (a LED, a LEDBAR,
 an hex DISPLAY), its color and its size.
 </p>
+<ul class="section-toc">
+<li><a href="#IOEMU-objects" accesskey="1">IOEMU objects</a></li>
+<li><a href="#IOEMU-keywords" accesskey="2">IOEMU keywords</a></li>
+<li><a href="#IOEMU-automatic-variables" accesskey="3">IOEMU automatic variables</a></li>
+</ul>
+<div class="section" id="IOEMU-objects">
+<h3 class="section">19.1 IOEMU objects</h3>
+<span id="index-IOEMU-objects"></span>
+
+<p>Strings<br>
+</p>
+<p>String exists when you write literals inside double-quotes. Use a backslash
+to enter a special characters.
+</p>
+<p>Variables<br>
+</p>
+<p>Variables are strings. Numeric values are converted to string. If you want
+to dereference a variable, use a &quot;$&quot; prefix followed by the name of the variable.
+Use braces to isolate variables when concatenating them with literals, like in
+&quot;${PORT1}&quot;. Note that dereferencing takes place only within double-quotes.
+There are three types of variable in IOEMU scripting: environment, global and local.
+Environment variables are available all the times, and are automatically imported.
+You can create an environment variable (being passed to child executable) with the
+ENV &lt;variable&gt; &lt;value&gt; directive. Global variables are created with the
+SET &lt;variable&gt; &lt;value&gt; directive. Variables declared within sections are local
+to that scope and ceased to exist when the parser leave the section.
+</p>
+<p>Boolean expressions<br>
+</p>
+<ul>
+<li> <pre class="verbatim">FALSE | TRUE
+</pre></li><li> <pre class="verbatim">NOT &lt;expr&gt;
+</pre></li><li> <pre class="verbatim">&lt;expr&gt; AND &lt;expr&gt;
+</pre></li><li> <pre class="verbatim">&lt;expr&gt; OR &lt;expr&gt;
+</pre></li><li> <pre class="verbatim">&lt;string&gt; = &lt;string&gt;
+</pre></li><li> <pre class="verbatim">DEFINED(&lt;string&gt;)
+</pre></li></ul>
+
+<p>Parens &rsquo;(&rsquo; and &rsquo;)&rsquo; state the priority of expression grouping.
+</p>
+</div>
+<div class="section" id="IOEMU-keywords">
+<h3 class="section">19.2 IOEMU keywords</h3>
+<span id="index-IOEMU-keywords"></span>
+
+<p>ENV &lt;variable_name&gt; &lt;variable_value&gt;
+Defines a variable to be added to the environment.
+</p>
+<p>SET &lt;variable_name&gt; &lt;variable_value&gt;
+Defines a variable in the current scope (global in the script if outer of any
+section, or local to a section).
+</p>
 <p>SECTION &lt;name&gt;<br>
 Introduces a section. Section names could be &quot;START&quot;, &quot;IOEMU&quot; (to configure generic
 properties of the IOEMU layer, like window positioning and size) or an I/O port or
@@ -1831,15 +1892,6 @@ communication peripheral exported by the target machine being emulated.
 <p>ENDSECT<br>
 Declares the end of a section.
 </p>
-<p>Boolean expressions:<br>
-</p><ul>
-<li> NOT
-</li><li> AND
-</li><li> OR
-</li><li> ==
-</li><li> DEFINED()
-</li></ul>
-
 <p>IF-THEN-ELSE-ELIF-ENDIF<br>
 Classic decision structure. The test condition must be a boolean expression.
 IF structures can be nested. Note that IF structures can be used only inside
@@ -1876,22 +1928,22 @@ Associates a graphic widget with the I/O port declared in the section just
 introduced, displaying it at coordinates x,y, with label &lt;name&gt;. Available
 widgets are
 </p><ul>
-<li> LED
-</li><li> LEDBAR[8|16|32|64]
-</li><li> DISPLAY[8|16|32|64]
-</li><li> BUTTON
-</li><li> SWITCH, SWITCH8
-</li></ul>
+<li> <pre class="verbatim">LED
+</pre></li><li> <pre class="verbatim">LEDBAR[8|16|32|64]
+</pre></li><li> <pre class="verbatim">DISPLAY[8|16|32|64]
+</pre></li><li> <pre class="verbatim">BUTTON
+</pre></li><li> <pre class="verbatim">SWITCH, SWITCH8
+</pre></li></ul>
 
 <p>LED and LEDBARs widgets have COLOR_x attributes:
 </p>
 <ul>
-<li> COLOR_RED
-</li><li> COLOR_GREEN
-</li><li> COLOR_BLUE
-</li><li> COLOR_YELLOW
-</li><li> COLOR_WHITE
-</li></ul>
+<li> <pre class="verbatim">COLOR_RED
+</pre></li><li> <pre class="verbatim">COLOR_GREEN
+</pre></li><li> <pre class="verbatim">COLOR_BLUE
+</pre></li><li> <pre class="verbatim">COLOR_YELLOW
+</pre></li><li> <pre class="verbatim">COLOR_WHITE
+</pre></li></ul>
 
 <p>LED widgets have also:
 </p>
@@ -1901,25 +1953,12 @@ widgets are
 </pre></li><li> <pre class="verbatim">LED_PULSE_FAST the same as LED_PULSE, but with a very short persistence
 </pre></li></ul>
 
-<p>IOEMU objects<br>
-</p>
-<p>Strings<br>
-String exists when you write literals inside double-quotes. Use a backslash
-to enter a special characters.
-</p>
-<p>Variables<br>
-Variables are strings. Numeric values are converted to string. If you want
-to dereference a variable, use a &quot;$&quot; prefix followed by the name of the variable.
-Use braces to isolate variables when concatenating them with literals, like in
-&quot;${PORT1}&quot;. Note that dereferencing takes place only within double-quotes.
-There are three types of variable in IOEMU scripting: environment, global and local.
-Environment variables are available all the times, and are automatically imported.
-You can create an environment variable (being passed to child executable) with the
-ENV &lt;variable&gt; &lt;value&gt; directive. Global variables are created with the
-SET &lt;variable&gt; &lt;value&gt; directive. Variables declared within sections are local
-to that scope and ceased to exist when the parser leave the section.
-</p>
-<p>IOEMU creates some implicit variables during its execution.
+</div>
+<div class="section" id="IOEMU-automatic-variables">
+<h3 class="section">19.3 IOEMU automatic variables</h3>
+<span id="index-IOEMU-automatic-variables"></span>
+
+<p>IOEMU creates some implicit variables during its execution:
 </p>
 <ul>
 <li> __THISFILE__<br>
@@ -1936,6 +1975,7 @@ known before execution.
 </li></ul>
 
 <hr>
+</div>
 </div>
 <div class="chapter" id="References">
 <div class="header">
@@ -2035,7 +2075,9 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td></td><td valign="top"><a href="#index-IBM-S_002f390">IBM S/390</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Installation-prerequisites">Installation prerequisites</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Integrator_002fCP">Integrator/CP</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-IOEMU">IOEMU</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-IOEMU-automatic-variables">IOEMU automatic variables</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-IOEMU-keywords">IOEMU keywords</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-IOEMU-objects">IOEMU objects</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-L">L</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-LEON3">LEON3</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>

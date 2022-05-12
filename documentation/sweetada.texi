@@ -293,7 +293,7 @@ SweetAda supports whitespaces in filepaths although this is considered bad pract
 @cindex GNAT wrapper
 @cindex runsweetada
 
-The SweetAda system is distributed with GNU toolchains for every CPUs it can handle.
+The SweetAda system is distributed with GNU toolchains for every CPU it can handle.
 Altough toolchains are quite generic, SweetAda does not employ neither the whole standard
 GNU FSF RTS source package nor the LibGCC library.
 
@@ -302,11 +302,11 @@ implementation, which is quite big and requires an underneath operating system.
 
 The LibGCC library, which is present like in every other standard toolchain, is bypassed
 and partially reimplemented in Ada. Only some low-level machine-language files are required,
-which are distributed in a separate package. This way, you have a system which is under
+carefully extracted from the LibGCC sources. This way, you have a system which is under
 your complete control at the source level, and every bit of information is known.
 Code output by the build system is thus coming directly from the compiler, without extra
-source files inclusion. Anyway, the standard LibGCC could be selected with a configuration
-variable.
+source files inclusion. Anyway, the standard LibGCC binaries can be selected with a
+configuration variable.
 
 GNU toolchains are referenced by a "canonical triplet", e.g. "i686-unknown-linux"; since
 this name identifies also a working directory component of the toolchain, every time we
@@ -339,7 +339,7 @@ LIBELF  := /usr/local/lib/libelf.a # location of libelf library
 @end example
 
 For elftool, you sould have libelf installed in your environment setup, but it is not
-strictly needed. Remember that GNU toolchain installation prefix refers to the whole
+strictly needed. Remember that GNU toolchain installation prefixes refers to the whole
 hierarchy, so do not add a trailing "/bin".
 
 Then, after a proper Makefile setup:
@@ -512,12 +512,12 @@ NOTE:@*
 You can create the kernel.cfg by hand and skip the createkernelcfg Makefile target.
 @end cartouche
 
-Once kernel.cfg does exist, it will be used until you issue a "make all-clean" command,
+Once kernel.cfg does exist, it will be used until you issue a "make distclean" command,
 which erases every configuration file and objects from last compilation.
 
 @cartouche
 NOTE:@*
-Issuing a new configuration erases the old one by executing an implicit "all-clean"
+Issuing a new configuration erases the old one by executing an implicit "distclean"
 Makefile target.
 @end cartouche
 
@@ -904,11 +904,14 @@ higher level constructs.
 Note that fundamental packages like Bits, LLutils, Memory_Functions, etc, are pragma
 Preelaborate, with Bits being pragma Pure.
 
+@itemize @bullet
+@item
 Bits
 
 Bits is the fundamental package for low-level manipulation. Here you can find many
 type declarations and subprograms to handle low-level object.
 
+@item
 C library
 
 SweetAda has a very minimalistic C library. This C library takes no active part in
@@ -919,6 +922,7 @@ library exists for reference purposes, and as an aid in porting foreign C user c
 Note that only very basic functions in ctype/stdlib/stdio/string hierarchies are
 implemented.
 
+@item
 Console
 
 The console package provides basic subprograms to output fundamental
@@ -933,15 +937,18 @@ of a with clause.
 Besides fundamental types output, you can find a Print_Memory subprogram
 that is useful to dump a memory section for diagnostic purposes.
 
+@item
 GCC_Types
 
 This package implements useful types to handle LibGCC numeric subprograms.
 
+@item
 LibGCC
 
 LibGCC package implements pure Ada computation subprograms that are normally
 found in the compiler library. They exist mostly as useful references.
 
+@item
 LLutils
 
 LLutils package contains useful low-level subprograms that are too much convoluted
@@ -950,6 +957,7 @@ to place them in the Bits unit. Besides, this would lead to make Bits non-pure.
 Multibyte swap subprograms are declared here, with Build_Address and its
 inverse, Address_Displacement.
 
+@item
 Malloc
 
 This package implements a simple memory allocator, and is implicitly used by the
@@ -958,6 +966,7 @@ BSPs should call the initialization subprogram to reserve memory for the allocat
 before the Ada code has a chance to use it. But this could be made automatic by
 writing initialization code in the elaboration block of the package.
 
+@item
 Memory_Functions
 
 Memory_Functions is a package that provides a pure Ada implementation of the
@@ -967,6 +976,7 @@ Memset, Bcopy, Cpymem.
 These subprograms are not optimized, but they are made separate and thus could be
 optimized by hand-crafted assembly routines.
 
+@item
 MMIO
 
 MMIO package provides unrestricted access to memory with a simple modular-valued
@@ -975,6 +985,7 @@ of sizes 8, 16, 32, 64 bits are supported. MMIO standard subprogram bodies are s
 and can thus be overriden and optimized by instantiating a custom copy (perhaps
 coded in native machine language). MMIO have versions for flat, atomic, swapping
 and atomic-swapping operations.
+@end itemize
 
 @node LibGCC
 @chapter LibGCC
@@ -1072,13 +1083,13 @@ clibrary
 @end itemize
 
 This way, a user-supplied body unit can override a standard one, being the latter a
-separate subprograms.
+separate subprogram.
 
 As an example, a reimplementation of some MMIO subprograms is provided in the
-cpus/SPARC directory. The overriding of some standard MMIO subprograms (and only those
-explicitly implemented as an optimization) will happen because the cpus/SPARC/configuration.in
-specifies the "mmio" subdirectory as an higher-precedence directory search path that
-will be head-inserted into the list.
+cpus/SPARC directory. The overriding of some standard MMIO subprograms (and only
+those explicitly implemented as an optimization) will happen because the
+cpus/SPARC/configuration.in specifies the "mmio" subdirectory as an higher-precedence
+directory search path that will be head-inserted into the list.
 
 Another mechanism of optimization is to completely replace the standard SweetAda units.
 In order to take gain of this mechanism, the user should take care of implicit units.
@@ -1114,20 +1125,26 @@ will happen by remove the unit from the list of implicit units in the platform
 configuration.in file; this way, the build system will not compile the standard
 unit anymore:
 
+@example
 export IMPLICIT_CORE_UNITS := $(filter-out last_chance_handler,$(IMPLICIT_CORE_UNITS))
+@end example
 
 @item
 2) still in the platform configuration.in file, reassign the SPEC_* identifier
 to the new unit:
 
+@example
 export SPEC_CORE := $(PLATFORM_DIRECTORY)/last_chance_handler.ads
+@end example
 
 @item
 3) add the new unit object file to the list of object files in the platform Makefile
 (by adding the file to the OBJECTS variable); this way, the build system will
 incorporate the new unit in the platform library
 
+@example
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o
+@end example
 
 @item
 4) still in the platform Makefile, specify the dependencies of the new unit with
@@ -1135,7 +1152,9 @@ standard Makefile syntax, i.e., by enumerating the filenames; implicit units
 should be specified in terms of SPEC_* identifiers; this way, the build system will
 be triggered by changes in other units
 
+@example
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
+@end example
 
 (in this example the new unit is with'ing Abort_Library, an implicit unit)
 @end itemize
@@ -1575,7 +1594,6 @@ ZOOM is a family of embedded board based on the MCF5373 ColdFire processor.
 
 @node IOEMU scripting
 @chapter IOEMU scripting
-@cindex IOEMU
 
 The IOEMU facility allows configuration of a target emulator machine (but not
 limited to) by specifying actions in a very basic script-like sequence of
@@ -1599,7 +1617,7 @@ debugger.
 @cartouche
 NOTE:@*
 When QEMU is running under heavy debugging output, it slows down noticeably.
-This is why there are multiple assignment in some loops concerning the variable
+This is why there are multiple assignments in some loops concerning the variable
 "Delay_Loop_Count".
 @end cartouche
 
@@ -1607,7 +1625,7 @@ This is why there are multiple assignment in some loops concerning the variable
 NOTE:@*
 Occasionally, if QEMU starts not so quickly, chances are that GDB is ready to
 communicate with the remote target when the emulator has not finished initialization.
-In this case you could experience message of this type:
+In this case you could experience messages like:
 
 @example
 Remote replied unexpectedly to 'vMustReplyEmpty': PacketSize=1000;qXfer:features: ...
@@ -1653,6 +1671,68 @@ the virtual I/Os in terms of port names, addresses and sizes.
 Inside the I/O port section you can thus set the type of widget used (a LED, a LEDBAR,
 an hex DISPLAY), its color and its size.
 
+@section IOEMU objects
+@cindex IOEMU objects
+
+Strings@*
+
+String exists when you write literals inside double-quotes. Use a backslash
+to enter a special characters.
+
+Variables@*
+
+Variables are strings. Numeric values are converted to string. If you want
+to dereference a variable, use a "$" prefix followed by the name of the variable.
+Use braces to isolate variables when concatenating them with literals, like in
+"$@{PORT1@}". Note that dereferencing takes place only within double-quotes.
+There are three types of variable in IOEMU scripting: environment, global and local.
+Environment variables are available all the times, and are automatically imported.
+You can create an environment variable (being passed to child executable) with the
+ENV <variable> <value> directive. Global variables are created with the
+SET <variable> <value> directive. Variables declared within sections are local
+to that scope and ceased to exist when the parser leave the section.
+
+Boolean expressions@*
+
+@itemize @bullet
+@item
+@verbatim
+FALSE | TRUE
+@end verbatim
+@item
+@verbatim
+NOT <expr>
+@end verbatim
+@item
+@verbatim
+<expr> AND <expr>
+@end verbatim
+@item
+@verbatim
+<expr> OR <expr>
+@end verbatim
+@item
+@verbatim
+<string> = <string>
+@end verbatim
+@item
+@verbatim
+DEFINED(<string>)
+@end verbatim
+@end itemize
+
+Parens '(' and ')' state the priority of expression grouping.
+
+@section IOEMU keywords
+@cindex IOEMU keywords
+
+ENV <variable_name> <variable_value>
+Defines a variable to be added to the environment.
+
+SET <variable_name> <variable_value>
+Defines a variable in the current scope (global in the script if outer of any
+section, or local to a section).
+
 SECTION <name>@*
 Introduces a section. Section names could be "START", "IOEMU" (to configure generic
 properties of the IOEMU layer, like window positioning and size) or an I/O port or
@@ -1660,20 +1740,6 @@ communication peripheral exported by the target machine being emulated.
 
 ENDSECT@*
 Declares the end of a section.
-
-Boolean expressions:@*
-@itemize @bullet
-@item
-NOT
-@item
-AND
-@item
-OR
-@item
-==
-@item
-DEFINED()
-@end itemize
 
 IF-THEN-ELSE-ELIF-ENDIF@*
 Classic decision structure. The test condition must be a boolean expression.
@@ -1712,30 +1778,50 @@ introduced, displaying it at coordinates x,y, with label <name>. Available
 widgets are
 @itemize @bullet
 @item
+@verbatim
 LED
+@end verbatim
 @item
+@verbatim
 LEDBAR[8|16|32|64]
+@end verbatim
 @item
+@verbatim
 DISPLAY[8|16|32|64]
+@end verbatim
 @item
+@verbatim
 BUTTON
+@end verbatim
 @item
+@verbatim
 SWITCH, SWITCH8
+@end verbatim
 @end itemize
 
 LED and LEDBARs widgets have COLOR_x attributes:
 
 @itemize @bullet
 @item
+@verbatim
 COLOR_RED
+@end verbatim
 @item
+@verbatim
 COLOR_GREEN
+@end verbatim
 @item
+@verbatim
 COLOR_BLUE
+@end verbatim
 @item
+@verbatim
 COLOR_YELLOW
+@end verbatim
 @item
+@verbatim
 COLOR_WHITE
+@end verbatim
 @end itemize
 
 LED widgets have also:
@@ -1755,25 +1841,10 @@ LED_PULSE_FAST the same as LED_PULSE, but with a very short persistence
 @end verbatim
 @end itemize
 
-IOEMU objects@*
+@section IOEMU automatic variables
+@cindex IOEMU automatic variables
 
-Strings@*
-String exists when you write literals inside double-quotes. Use a backslash
-to enter a special characters.
-
-Variables@*
-Variables are strings. Numeric values are converted to string. If you want
-to dereference a variable, use a "$" prefix followed by the name of the variable.
-Use braces to isolate variables when concatenating them with literals, like in
-"$@{PORT1@}". Note that dereferencing takes place only within double-quotes.
-There are three types of variable in IOEMU scripting: environment, global and local.
-Environment variables are available all the times, and are automatically imported.
-You can create an environment variable (being passed to child executable) with the
-ENV <variable> <value> directive. Global variables are created with the
-SET <variable> <value> directive. Variables declared within sections are local
-to that scope and ceased to exist when the parser leave the section.
-
-IOEMU creates some implicit variables during its execution.
+IOEMU creates some implicit variables during its execution:
 
 @itemize @bullet
 @item
