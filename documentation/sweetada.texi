@@ -320,8 +320,11 @@ in the main configuration.in.
 
 SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
 
-NOTE: GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
+@cartouche
+NOTE:@*
+GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
 GNATPREP, GNATXREF executables.
+@end cartouche
 
 Anyway, SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper,
 that could be built from sources if you have a C compiler available online. The current
@@ -459,8 +462,11 @@ configuration items can be made modular and easily changeable.
 The final output product of SweetAda compilation is the file "kernel.o". Its format depends
 on the type of toolchain used, but it is almost exclusively an ELF-class object file.
 
-NOTE: The SweetAda build machinery is Makefile-based, but you can also use an alternate
+@cartouche
+NOTE:@*
+The SweetAda build machinery is Makefile-based, but you can also use an alternate
 GPR-style build model -- this is enabled by a configuration variable.
+@end cartouche
 
 The master Makefile try to detect the type of machine it is running on, and configuration
 of SweetAda begins by reading the system configuration file "configuration.in".
@@ -485,7 +491,10 @@ named "platform-<SUBPLATFORM>".
 $ PLATFORM=PC-x86 SUBPLATFORM=QEMU-ROM make createkernelcfg
 @end example
 
-NOTE: for a cmd.exe shell you have to use a "SET" command.
+@cartouche
+NOTE:@*
+In a "cmd.exe" shell you have to use a "SET" command.
+@end cartouche
 
 Once you choose a platform, you can create the kernel.cfg with the Makefile auxiliary
 target "createkernelcfg".
@@ -498,13 +507,19 @@ PLATFORM := PC-x86
 SUBPLATFORM := QEMU-ROM
 @end example
 
-NOTE: You can create the kernel.cfg by hand and skip the createkernelcfg Makefile target.
+@cartouche
+NOTE:@*
+You can create the kernel.cfg by hand and skip the createkernelcfg Makefile target.
+@end cartouche
 
 Once kernel.cfg does exist, it will be used until you issue a "make all-clean" command,
 which erases every configuration file and objects from last compilation.
 
-NOTE: Issuing a new configuration erases the old one by executing an implicit "all-clean"
+@cartouche
+NOTE:@*
+Issuing a new configuration erases the old one by executing an implicit "all-clean"
 Makefile target.
+@end cartouche
 
 After the top-level configuration file is loaded, and thus Makefile knows the platform,
 the configuration.in found in that directory is loaded (e.g., ./platforms/ML605/configuration.in).
@@ -539,15 +554,21 @@ DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
 export WIRESHARK := /usr/bin/wireshark
 @end example
 
-NOTE: In the example above, we create and export the variable WIRESHARK, which will be used
+@cartouche
+NOTE:@*
+In the example above, we create and export the variable WIRESHARK, which will be used
 by the launch script in order to do monitoring of network activity.
+@end cartouche
 
 Having knowledge of the hardware configuration, then the configuration.in in the
 appropriate CPU hierarchy is loaded (e.g., cpus/MIPS/configuration.in).
 
-NOTE: Once the CPU is well defined, the right files can be taken into account. The standard
+@cartouche
+NOTE:@*
+Once the CPU is well defined, the right files can be taken into account. The standard
 toolchain is selected by default, but you can pick another one by, e.g., overriding
 the variable TOOLCHAIN_NAME_<CPU> in the configuration.in of the platform directory.
+@end cartouche
 
 Then, the top-level "Makefile.tc.in" file is taken into account. This a very
 important part of the global configuration scenario, since it is responsible of the
@@ -711,10 +732,12 @@ pragma Restrictions (No_Implicit_Dynamic_Code);                         -- zfp
 This way, the gnat.adc output by the build machinery will not contain the pragma, and the
 compiler will not complain when it will hit the offending fragment of code.
 
-Note:
+@cartouche
+NOTE:@*
 You could edit directly the gnat.adc file output by the build system (be sure to clean and
 rebuild to make the new pragmas take effect), but the old pragma configuration will be
 reinstated if you perform a "make configure" action.
+@end cartouche
 
 @node GPRbuild mode
 @chapter GPRbuild mode
@@ -762,14 +785,20 @@ ROM programming, JTAG download, and so on. This target uses the "objcopy" Binuti
 so appropriate configuration switches could be selected by means of the OBJCOPY_SWITCHES
 variable in the platform's configuration.in file.
 
-NOTE: The postbuild target is a two-phase process. The first phase creates a binary
+@cartouche
+NOTE:@*
+The postbuild target is a two-phase process. The first phase creates a binary
 file full of informations, then the postbuild target specified in the platform's Makefile
 is executed. This way you can customize the final binary file or take other actions,
-like add custom data, place the output file in a server?s TFTP directory, and so on.
+like add custom data, place the output file in a server TFTP directory, and so on.
+@end cartouche
 
-NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is
+@cartouche
+NOTE:@*
+Some platforms are virtual, i.e., they use an emulator, and in some cases there is
 no need to execute the postbuild target, because the emulator could use directly the
 kernel.o file.
+@end cartouche
 
 @node Anatomy of a platform
 @chapter Anatomy of a platform
@@ -853,13 +882,17 @@ Obviously, if you want to write a unit that will be used after that Ada has took
 control, then there's no need to specify it in the Makefile, because GNATMAKE will
 automatically compile it during the main Ada code translation due to the with clause.
 
-Note:
-libplatform objects are, in SweetAda terms, the so-called "implicit units", i.e.,
-objects that the Ada compilation system cannot compute during the build, by analyzing
-other compilation units. Being an implicit unit, however, does not necessarily make a
-file eligible for inclusion in the variable "IMPLICIT_ALI_UNITS", which exists in the
-master Makefile, because libplatform files are assembler files that generally do not
-contribute to Ada binding phase processing.
+@cartouche
+NOTE:@*
+libplatform (together with libcore and libcpu) objects are, in SweetAda terms, the
+so-called "implicit units", i.e., objects that the Ada compilation system cannot
+compute during the build, by analyzing other compilation units.
+
+Being an implicit unit, however, does not necessarily make a file eligible for
+inclusion in the variable "IMPLICIT_ALI_UNITS", which exists in the master Makefile,
+because libplatform files are assembler files that generally do not contribute to
+Ada binding phase processing.
+@end cartouche
 
 @node The core complex
 @chapter The core complex
@@ -1453,8 +1486,11 @@ file.
 The GPU of the SoC will boot the memory card by parsing the "config.txt" file, and
 then will start the "kernel.rom" just loaded in the SDRAM.
 
-NOTE: in SweetAda terminology, "kernel.rom" not necessarily indicates a flat binary
+@cartouche
+NOTE:@*
+In SweetAda terminology, "kernel.rom" not necessarily indicates a flat binary
 memory image, in this case is an ELF executable ready to be loaded by the SoC bootloader
+@end cartouche
 
 A Bash shell script in the platform directory, named "createbootdevice.sh", will store
 the files "config.txt" and "kernel.rom" in the memory card once it knows the UUID
@@ -1557,8 +1593,30 @@ Sections are directives, processed either by the runsweetada utility or the IOEM
 layer of the target emulator (QEMU/FS-UAE/GXemul).
 
 The START section is processed only by the runsweetada utility, which can be
-instructed to execute the selected emulator (maybe under the control of the GDB
-debugger).
+instructed to execute the selected emulator, perhaps under the control of the GDB
+debugger.
+
+@cartouche
+NOTE:@*
+When QEMU is running under heavy debugging output, it slows down noticeably.
+This is why there are multiple assignment in some loops concerning the variable
+"Delay_Loop_Count".
+@end cartouche
+
+@cartouche
+NOTE:@*
+Occasionally, if QEMU starts not so quickly, chances are that GDB is ready to
+communicate with the remote target when the emulator has not finished initialization.
+In this case you could experience message of this type:
+
+@example
+Remote replied unexpectedly to 'vMustReplyEmpty': PacketSize=1000;qXfer:features: ...
+@end example
+
+Either restart everything from scratch (next time maybe the library loader will
+pick thing from cache faster), or insert a SLEEP in the IOEMU script before start
+GDB.
+@end cartouche
 
 The configuration file is then processed again by the emulator. The IOEMU
 section is used to configure the coordinates of the IOEMU window. When the

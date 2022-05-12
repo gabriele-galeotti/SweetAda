@@ -367,9 +367,12 @@ Next: <a href="#Emulators" accesskey="n" rel="next">Emulators</a>, Previous: <a 
 
 <p>SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
 </p>
-<p>NOTE: GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
 GNATPREP, GNATXREF executables.
-</p>
+</p></td></tr></table>
+
 <p>Anyway, SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper,
 that could be built from sources if you have a C compiler available online. The current
 setup is for a system GCC C compiler.
@@ -528,9 +531,12 @@ configuration items can be made modular and easily changeable.
 <p>The final output product of SweetAda compilation is the file &quot;kernel.o&quot;. Its format depends
 on the type of toolchain used, but it is almost exclusively an ELF-class object file.
 </p>
-<p>NOTE: The SweetAda build machinery is Makefile-based, but you can also use an alternate
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+The SweetAda build machinery is Makefile-based, but you can also use an alternate
 GPR-style build model &ndash; this is enabled by a configuration variable.
-</p>
+</p></td></tr></table>
+
 <p>The master Makefile try to detect the type of machine it is running on, and configuration
 of SweetAda begins by reading the system configuration file &quot;configuration.in&quot;.
 </p>
@@ -554,8 +560,11 @@ named &quot;platform-&lt;SUBPLATFORM&gt;&quot;.
 <pre class="example">$ PLATFORM=PC-x86 SUBPLATFORM=QEMU-ROM make createkernelcfg
 </pre></div>
 
-<p>NOTE: for a cmd.exe shell you have to use a &quot;SET&quot; command.
-</p>
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+In a &quot;cmd.exe&quot; shell you have to use a &quot;SET&quot; command.
+</p></td></tr></table>
+
 <p>Once you choose a platform, you can create the kernel.cfg with the Makefile auxiliary
 target &quot;createkernelcfg&quot;.
 </p>
@@ -567,14 +576,20 @@ The contents of kernel.cfg will be something like:
 SUBPLATFORM := QEMU-ROM
 </pre></div>
 
-<p>NOTE: You can create the kernel.cfg by hand and skip the createkernelcfg Makefile target.
-</p>
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+You can create the kernel.cfg by hand and skip the createkernelcfg Makefile target.
+</p></td></tr></table>
+
 <p>Once kernel.cfg does exist, it will be used until you issue a &quot;make all-clean&quot; command,
 which erases every configuration file and objects from last compilation.
 </p>
-<p>NOTE: Issuing a new configuration erases the old one by executing an implicit &quot;all-clean&quot;
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+Issuing a new configuration erases the old one by executing an implicit &quot;all-clean&quot;
 Makefile target.
-</p>
+</p></td></tr></table>
+
 <p>After the top-level configuration file is loaded, and thus Makefile knows the platform,
 the configuration.in found in that directory is loaded (e.g., ./platforms/ML605/configuration.in).
 Here you can specify nearly everything about the target machine, like the CPU model,
@@ -608,16 +623,22 @@ DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
 export WIRESHARK := /usr/bin/wireshark
 </pre></div>
 
-<p>NOTE: In the example above, we create and export the variable WIRESHARK, which will be used
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+In the example above, we create and export the variable WIRESHARK, which will be used
 by the launch script in order to do monitoring of network activity.
-</p>
+</p></td></tr></table>
+
 <p>Having knowledge of the hardware configuration, then the configuration.in in the
 appropriate CPU hierarchy is loaded (e.g., cpus/MIPS/configuration.in).
 </p>
-<p>NOTE: Once the CPU is well defined, the right files can be taken into account. The standard
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+Once the CPU is well defined, the right files can be taken into account. The standard
 toolchain is selected by default, but you can pick another one by, e.g., overriding
 the variable TOOLCHAIN_NAME_&lt;CPU&gt; in the configuration.in of the platform directory.
-</p>
+</p></td></tr></table>
+
 <p>Then, the top-level &quot;Makefile.tc.in&quot; file is taken into account. This a very
 important part of the global configuration scenario, since it is responsible of the
 setup parameters for the compiler toolchain, compilation switches, warning switches
@@ -788,11 +809,13 @@ in technical jargon). Let&rsquo;s say that you choose the &quot;sfp&quot; profil
 <p>This way, the gnat.adc output by the build machinery will not contain the pragma, and the
 compiler will not complain when it will hit the offending fragment of code.
 </p>
-<p>Note:
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
 You could edit directly the gnat.adc file output by the build system (be sure to clean and
 rebuild to make the new pragmas take effect), but the old pragma configuration will be
 reinstated if you perform a &quot;make configure&quot; action.
-</p>
+</p></td></tr></table>
+
 <hr>
 </div>
 <div class="chapter" id="GPRbuild-mode">
@@ -851,15 +874,21 @@ ROM programming, JTAG download, and so on. This target uses the &quot;objcopy&qu
 so appropriate configuration switches could be selected by means of the OBJCOPY_SWITCHES
 variable in the platform&rsquo;s configuration.in file.
 </p>
-<p>NOTE: The postbuild target is a two-phase process. The first phase creates a binary
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+The postbuild target is a two-phase process. The first phase creates a binary
 file full of informations, then the postbuild target specified in the platform&rsquo;s Makefile
 is executed. This way you can customize the final binary file or take other actions,
 like add custom data, place the output file in a server?s TFTP directory, and so on.
-</p>
-<p>NOTE: Some platforms are virtual, i.e., they use an emulator, and in some cases there is
+</p></td></tr></table>
+
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+Some platforms are virtual, i.e., they use an emulator, and in some cases there is
 no need to execute the postbuild target, because the emulator could use directly the
 kernel.o file.
-</p>
+</p></td></tr></table>
+
 <hr>
 </div>
 <div class="chapter" id="Anatomy-of-a-platform">
@@ -943,14 +972,18 @@ logic cannot have knowledge of.
 control, then there&rsquo;s no need to specify it in the Makefile, because GNATMAKE will
 automatically compile it during the main Ada code translation due to the with clause.
 </p>
-<p>Note:
-libplatform objects are, in SweetAda terms, the so-called &quot;implicit units&quot;, i.e.,
-objects that the Ada compilation system cannot compute during the build, by analyzing
-other compilation units. Being an implicit unit, however, does not necessarily make a
-file eligible for inclusion in the variable &quot;IMPLICIT_ALI_UNITS&quot;, which exists in the
-master Makefile, because libplatform files are assembler files that generally do not
-contribute to Ada binding phase processing.
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+libplatform (together with libcore and libcpu) objects are, in SweetAda terms, the
+so-called &quot;implicit units&quot;, i.e., objects that the Ada compilation system cannot
+compute during the build, by analyzing other compilation units.
 </p>
+<p>Being an implicit unit, however, does not necessarily make a file eligible for
+inclusion in the variable &quot;IMPLICIT_ALI_UNITS&quot;, which exists in the master Makefile,
+because libplatform files are assembler files that generally do not contribute to
+Ada binding phase processing.
+</p></td></tr></table>
+
 <hr>
 </div>
 <div class="chapter" id="The-core-complex">
@@ -1608,9 +1641,12 @@ file.
 <p>The GPU of the SoC will boot the memory card by parsing the &quot;config.txt&quot; file, and
 then will start the &quot;kernel.rom&quot; just loaded in the SDRAM.
 </p>
-<p>NOTE: in SweetAda terminology, &quot;kernel.rom&quot; not necessarily indicates a flat binary
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+In SweetAda terminology, &quot;kernel.rom&quot; not necessarily indicates a flat binary
 memory image, in this case is an ELF executable ready to be loaded by the SoC bootloader
-</p>
+</p></td></tr></table>
+
 <p>A Bash shell script in the platform directory, named &quot;createbootdevice.sh&quot;, will store
 the files &quot;config.txt&quot; and &quot;kernel.rom&quot; in the memory card once it knows the UUID
 (USDCARD_UUID) and the filesystem location (USDCARD_MOUNTPOINT), which you have to
@@ -1739,9 +1775,31 @@ environment variables globally (ENV) or local to the file or a section (SET).
 layer of the target emulator (QEMU/FS-UAE/GXemul).
 </p>
 <p>The START section is processed only by the runsweetada utility, which can be
-instructed to execute the selected emulator (maybe under the control of the GDB
-debugger).
+instructed to execute the selected emulator, perhaps under the control of the GDB
+debugger.
 </p>
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+When QEMU is running under heavy debugging output, it slows down noticeably.
+This is why there are multiple assignment in some loop concerning the variable
+&quot;Delay_Loop_Count&quot;.
+</p></td></tr></table>
+
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+Occasionally, if QEMU starts not so quickly, chances are that GDB is ready to
+communicate with the remote target when the emulator has not finished initialization.
+In this case you could experience message of this type:
+</p>
+<div class="example">
+<pre class="example">Remote replied unexpectedly to 'vMustReplyEmpty': PacketSize=1000;qXfer:features: ...
+</pre></div>
+
+<p>Either restart everything from scratch (next time maybe the library loader will
+pick thing from cache faster), or insert a SLEEP in the IOEMU script before start
+GDB.
+</p></td></tr></table>
+
 <p>The configuration file is then processed again by the emulator. The IOEMU
 section is used to configure the coordinates of the IOEMU window. When the
 parser encounters the end of this section, it evaluates only these variables:
