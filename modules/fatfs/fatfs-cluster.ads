@@ -69,8 +69,8 @@ package FATFS.Cluster is
    procedure Claim (
                     B       : out Block_Type;
                     C       : in  Cluster_Type;
-                    Success : out Boolean;
-                    Chain   : in  Cluster_Type := File_EOF
+                    Chain   : in  Cluster_Type;
+                    Success : out Boolean
                    );
 
    procedure Read (

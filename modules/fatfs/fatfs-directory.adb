@@ -398,18 +398,18 @@ package body FATFS.Directory is
       end if;
       -- see if there is a next cluster, or extend if necessary
       if DCB.CCB.First_Cluster >= 2 then
-         New_Cluster := Next_Writable_Cluster;       -- claim reserved cluster
+         New_Cluster := Next_Writable_Cluster;                         -- claim reserved cluster
          if New_Cluster >= 2 then
-            Cluster.Claim (B, New_Cluster, Success); -- put EOF marker in FAT to claim it
+            Cluster.Claim (B, New_Cluster, Cluster.File_EOF, Success); -- put EOF marker in FAT to claim it
          else
-            Success := False;                        -- no space left
+            Success := False;                                          -- no space left
          end if;
          if not Success then
             return;
          end if;
          Init_Cluster (B, New_Cluster, Success); -- init as new directory cluster
          if Success then
-            Cluster.Claim (B, DCB.CCB.Cluster, Success, New_Cluster); -- link current cluster to next
+            Cluster.Claim (B, DCB.CCB.Cluster, New_Cluster, Success); -- link current cluster to next
          end if;
          if not Success then
             return;
@@ -511,17 +511,17 @@ package body FATFS.Directory is
       declare
          B : Block_Type (0 .. 511) with Unreferenced => True;
       begin
-         Cluster.Prelocate (B);                            -- get a free cluster for subdirectory
+         Cluster.Prelocate (B);            -- get a free cluster for subdirectory
          if Next_Writable_Cluster = 0 then
-            Success := False;                              -- no space
+            Success := False;              -- no space
             return;
          end if;
          New_Cluster := Next_Writable_Cluster;
-         Cluster.Put_First (DE, Next_Writable_Cluster);    -- assign cluster to subdirectory entry
-         Cluster.Claim (B, New_Cluster, Success);          -- mark it as in use with fff8 entry
+         Cluster.Put_First (DE, Next_Writable_Cluster);             -- assign cluster to subdirectory entry
+         Cluster.Claim (B, New_Cluster, Cluster.File_EOF, Success); -- mark it as in use with FFF8 entry
          if Success then
-            Cluster.Prelocate (B);                         -- replace free cluster, that we used
-            Init_Cluster (B, New_Cluster, Success);        -- initialize with "end dir" entries
+            Cluster.Prelocate (B);                                  -- replace free cluster, that we used
+            Init_Cluster (B, New_Cluster, Success);                 -- initialize with "end dir" entries
             if Success then
                DE.File_Attributes.Subdirectory := True;
                Update_Entry (

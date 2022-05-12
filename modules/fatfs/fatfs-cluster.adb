@@ -371,13 +371,12 @@ package body FATFS.Cluster is
    -- Claim
    ----------------------------------------------------------------------------
    -- Claim the cluster by marking it as last in cluster chain.
-   -- __FIX__ try to avoid default parameter
    ----------------------------------------------------------------------------
    procedure Claim (
-                    B       : out Block_Type;              -- I/O buffer to use
-                    C       : in  Cluster_Type;            -- cluster to mark
-                    Success : out Boolean;                 -- result of operation
-                    Chain   : in  Cluster_Type := File_EOF -- by default, end of chain (EOF)
+                    B       : out Block_Type;   -- I/O buffer to use
+                    C       : in  Cluster_Type; -- cluster to mark
+                    Chain   : in  Cluster_Type; -- cluster or File_EOF (end of chain)
+                    Success : out Boolean       -- result of operation
                    ) is
       Sector : constant Sector_Type := FAT_Sector (C);
    begin
@@ -490,7 +489,7 @@ package body FATFS.Cluster is
             return; -- I/O error
          end if;
          -- tell filesystem that we've claimed this cluster
-         Claim (B, New_Cluster, Success);
+         Claim (B, New_Cluster, File_EOF, Success);
          if not Success then
             return;
          end if;
@@ -519,7 +518,7 @@ package body FATFS.Cluster is
             end if;
          else
             -- otherwise add a cluster to this file's chain
-            Claim (B, File.CCB.Cluster, Success, New_Cluster); -- link current cluster to next
+            Claim (B, File.CCB.Cluster, New_Cluster, Success); -- link current cluster to next
             if Success then
                Open (File.CCB, New_Cluster, Keep_First => True);
             else
