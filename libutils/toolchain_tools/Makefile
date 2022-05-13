@@ -29,7 +29,7 @@ ifeq      ($(COMPILE),linux)
 CC            := gcc
 CC_SWITCHES   := -g -std=c99 -Wall
 LD_SWITCHES   := -g
-LIBELF        := /usr/local/lib/libelf.a
+LIBELF        := /usr/lib64/libelf.a -lz
 LIBWINPTHREAD :=
 else ifeq ($(COMPILE),windows)
 CC            := /usr/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-gcc
@@ -69,7 +69,7 @@ EXEEXT := .exe
 CP     := COPY /B /Y 1> nul
 MV     := MOVE /Y 1> nul
 REM    := REM
-RM     := DEL /F /Q 2> nul __dummyfile__
+RM     := DEL /F /Q 2> nul
 else
 ifeq ($(OSTYPE),msys)
 EXEEXT := .exe
@@ -107,14 +107,6 @@ elftool.o : elftool.c
 library.o : library.c
 	$(CC) -o $@ -c -DNO_DLL_HANDLING=1 $(CC_SWITCHES) $<
 
-.PHONY : install
-install : install-wrappers
-ifeq ($(OSTYPE),darwin)
-	$(CP) elftool$(EXEEXT) ../elftool-osx$(EXEEXT)
-else
-	$(CP) elftool$(EXEEXT) ../
-endif
-
 .PHONY : install-wrappers
 install-wrappers :
 ifeq ($(OSTYPE),darwin)
@@ -123,6 +115,14 @@ ifeq ($(OSTYPE),darwin)
 else
 	$(CP) gcc-wrapper$(EXEEXT) ../
 	$(CP) gnat-wrapper$(EXEEXT) ../
+endif
+
+.PHONY : install
+install : install-wrappers
+ifeq ($(OSTYPE),darwin)
+	-$(CP) elftool$(EXEEXT) ../elftool-osx$(EXEEXT)
+else
+	-$(CP) elftool$(EXEEXT) ../
 endif
 
 .PHONY : clean
