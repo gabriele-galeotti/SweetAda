@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.ads                                                                                                   --
+-- __FLN__ ioemu.ads                                                                                                 --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,9 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with PL011;
+with System.Storage_Elements;
+with Interfaces;
 
-package BSP is
+package IOEMU is
 
    --========================================================================--
    --                                                                        --
@@ -27,15 +28,50 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   Debug_Flag : constant Boolean with
-      Size          => 8,
-      Import        => True,
-      External_Name => "_debug_flag";
+   use System.Storage_Elements;
+   use Interfaces;
 
-   PL011_Descriptor : PL011.PL011_Descriptor_Type := PL011.PL011_DESCRIPTOR_INVALID;
+   IOEMU_BASEADDRESS : constant := 16#090B_1000#;
 
-   procedure Console_Putchar (C : in Character);
-   procedure Console_Getchar (C : out Character);
-   procedure BSP_Setup;
+   IOEMU_IO0 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 0),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO1 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 1),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO2 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 2),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO3 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 3),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO4 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 4),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO5 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 5),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO6 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 6),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+   IOEMU_IO7 : aliased Unsigned_8 with
+      Address              => To_Address (IOEMU_BASEADDRESS + 7),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
-end BSP;
+end IOEMU;

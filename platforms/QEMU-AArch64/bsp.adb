@@ -20,6 +20,7 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with MMIO;
+with AArch64;
 with Virt;
 with Console;
 
@@ -82,6 +83,9 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("AArch64 Cortex-A53 (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
+      Console.Print (AArch64.CNTFRQ_EL0_Read, Prefix => "CNTFRQ_EL0: ", NL => True);
+      Console.Print (Debug_Flag, Prefix => "Debug_Flag: ", NL => True);
       -------------------------------------------------------------------------
    end BSP_Setup;
 

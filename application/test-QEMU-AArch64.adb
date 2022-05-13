@@ -1,5 +1,8 @@
 
+with Interfaces;
 with CPU;
+with BSP;
+with IOEMU;
 with Console;
 
 package body Application is
@@ -11,6 +14,8 @@ package body Application is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use Interfaces;
 
    --========================================================================--
    --                                                                        --
@@ -28,10 +33,15 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            Delay_Count : constant := 100_000_000;
+            Delay_Count : Integer;
          begin
+            Delay_Count := (if BSP.Debug_Flag then 1_000_000 else 500_000_000);
+            IOEMU.IOEMU_IO1 := 0;
+            IOEMU.IOEMU_IO2 := 0;
             loop
-               Console.Print ("hello, SweetAda", NL => True);
+               IOEMU.IOEMU_IO1 := @ + 1;
+               IOEMU.IOEMU_IO2 := @ + 1;
+               -- Console.Print ("hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;

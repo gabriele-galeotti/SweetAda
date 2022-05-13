@@ -13,8 +13,8 @@ ifeq ($(ABI),lp64)
 #
 # -mabi=lp64 (default)
 #
-#GCC_SWITCHES_PLATFORM     += -mcpu=cortex-a53 -mabi=lp64
-#LD_SWITCHES_PLATFORM      += --undefined=el_table
+GCC_SWITCHES_PLATFORM     += -mcpu=cortex-a53 -mabi=lp64
+LD_SWITCHES_PLATFORM      += --undefined=el_table
 else ifeq ($(ABI),ilp32)
 #
 # -mabi=ilp32
