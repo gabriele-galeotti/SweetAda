@@ -23,21 +23,21 @@
 # build) to reflect correct paths in the host environment.
 #
 
-COMPILE ?= linux
+COMPILE ?= Linux
 
-ifeq      ($(COMPILE),linux)
+ifeq      ($(COMPILE),Linux)
 CC            := gcc
 CC_SWITCHES   := -g -std=c99 -Wall
 LD_SWITCHES   := -g
 LIBELF        := /usr/lib64/libelf.a -lz
 LIBWINPTHREAD :=
-else ifeq ($(COMPILE),windows)
+else ifeq ($(COMPILE),Windows)
 CC            := /usr/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-gcc
 CC_SWITCHES   := -g -std=c99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
 LD_SWITCHES   := -g -mconsole
 LIBELF        := /usr/x86_64-w64-mingw32/mingw/lib/libelf.a
 LIBWINPTHREAD := -l:libwinpthread.a
-else ifeq ($(COMPILE),osx)
+else ifeq ($(COMPILE),OSX)
 CC            := /usr/x86_64-apple-darwin15/bin/x86_64-apple-darwin15-gcc
 CC_SWITCHES   := -g -std=c99 -Wall
 LD_SWITCHES   := -g -static-libgcc -static-libstdc++
