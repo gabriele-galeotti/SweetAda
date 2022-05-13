@@ -44,6 +44,193 @@ package RPI3 is
    EMMC_BASEADDRESS         : constant := PERIPHERALS_BASEADDRESS + 16#0030_0000#;
 
    ----------------------------------------------------------------------------
+   -- 2.1.1 AUX registers
+   ----------------------------------------------------------------------------
+
+   type AUXENB_Type is
+   record
+      MiniUART_Enable : Boolean; -- If set the mini UART is enabled.
+      SPI1_Enable     : Boolean; -- If set the SPI 1 module is enabled.
+      SPI2_Enable     : Boolean; -- If set the SPI 2 module is enabled.
+      Reserved        : Bits_29;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUXENB_Type use
+   record
+      MiniUART_Enable at 0 range 0 .. 0;
+      SPI1_Enable     at 0 range 1 .. 1;
+      SPI2_Enable     at 0 range 2 .. 2;
+      Reserved        at 0 range 3 .. 31;
+   end record;
+
+   AUXENB : aliased AUXENB_Type with
+      Address              => To_Address (AUX_BASEADDRESS + 16#04#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   type AUX_MU_IO_Type is
+   record
+      DATA     : Unsigned_8; -- RX DATA, TX DATA or baud rate LSB (DLAB = 1)
+      Reserved : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_IO_Type use
+   record
+      DATA     at 0 range 0 .. 7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   AUX_MU_IO_REG : aliased AUX_MU_IO_Type with
+      Address              => To_Address (AUX_BASEADDRESS + 16#40#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   UART_7BIT : constant := 2#00#; -- the UART works in 7-bit mode
+   UART_8BIT : constant := 2#11#; -- the UART works in 8-bit mode
+
+   type AUX_MU_LCR_Type is
+   record
+      Data_Size   : Bits_2;  -- UART data size
+      Reserved1   : Bits_4;
+      Break       : Boolean; -- If set high the UART1_TX line is pulled low continuously.
+      DLAB_Access : Boolean; -- If set the first to Mini UART register give access the the Baudrate register.
+      Reserved2   : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_LCR_Type use
+   record
+      Data_Size   at 0 range 0 .. 1;
+      Reserved1   at 0 range 2 .. 5;
+      Break       at 0 range 6 .. 6;
+      DLAB_Access at 0 range 7 .. 7;
+      Reserved2   at 0 range 8 .. 31;
+   end record;
+
+   AUX_MU_LCR_REG : aliased AUX_MU_LCR_Type with
+      Address              => To_Address (AUX_BASEADDRESS + 16#4C#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   type AUX_MU_LSR_Type is
+   record
+      Data_Ready        : Boolean; -- This bit is set if the receive FIFO holds at least 1 symbol.
+      Receiver_Overrun  : Boolean; -- This bit is set if there was a receiver overrun.
+      Reserved1         : Bits_3;
+      Transmitter_Empty : Boolean; -- This bit is set if the transmit FIFO can accept at least one byte.
+      Transmitter_Idle  : Boolean; -- This bit is set if the transmit FIFO is empty and the transmitter is idle.
+      Reserved2         : Bits_1;
+      Reserved3         : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_LSR_Type use
+   record
+      Data_Ready        at 0 range 0 .. 0;
+      Receiver_Overrun  at 0 range 1 .. 1;
+      Reserved1         at 0 range 2 .. 4;
+      Transmitter_Empty at 0 range 5 .. 5;
+      Transmitter_Idle  at 0 range 6 .. 6;
+      Reserved2         at 0 range 7 .. 7;
+      Reserved3         at 0 range 8 .. 31;
+   end record;
+
+   AUX_MU_LSR_REG : aliased AUX_MU_LSR_Type with
+      Address              => To_Address (AUX_BASEADDRESS + 16#54#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   type AUX_MU_MSR_Type is
+   record
+      Reserved1  : Bits_4;
+      CTS_Status : Boolean; -- This bit is the inverse of the UART1_CTS input
+      Reserved2  : Bits_3;
+      Reserved3  : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_MSR_Type use
+   record
+      Reserved1  at 0 range 0 .. 3;
+      CTS_Status at 0 range 4 .. 4;
+      Reserved2  at 0 range 5 .. 7;
+      Reserved3  at 0 range 8 .. 31;
+   end record;
+
+   AUX_MU_MSR_REG : aliased AUX_MU_MSR_Type with
+      Address              => To_Address (AUX_BASEADDRESS + 16#58#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   RTS_Autoflow3 : constant := 2#00#; -- De-assert RTS when the receive FIFO has 3 empty spaces left.
+   RTS_Autoflow2 : constant := 2#01#; -- De-assert RTS when the receive FIFO has 2 empty spaces left.
+   RTS_Autoflow1 : constant := 2#10#; -- De-assert RTS when the receive FIFO has 1 empty space left.
+   RTS_Autoflow4 : constant := 2#11#; -- De-assert RTS when the receive FIFO has 4 empty spaces left.
+
+   RTS_AutoflowP : constant := 0; -- If clear the RTS auto flow assert level is high
+   RTS_AutoflowN : constant := 1; -- If set the RTS auto flow assert level is low
+
+   CTS_AutoflowP : constant := 0; -- If clear the CTS auto flow assert level is high
+   CTS_AutoflowN : constant := 1; -- If set the CTS auto flow assert level is low
+
+   type AUX_MU_CNTL_Type is
+   record
+      Receiver_Enable    : Boolean; -- If this bit is set the mini UART receiver is enabled.
+      Transmitter_Enable : Boolean; -- If this bit is set the mini UART transmitter is enabled.
+      RTS_RX_Autoflow    : Boolean; -- If ... the RTS line will de-assert if thereceive FIFO reaches it 'auto flow' level.
+      CTS_TX_Autoflow    : Boolean; -- If this bit is set the transmitter will stop if the CTS line is de-asserted.
+      RTS_Autoflow_Level : Bits_2;  -- These ..  at what receiver FIFO level the RTS line is de-asserted in auto-flow mode.
+      RTS_Assert_Level   : Bits_1;  -- This bit allows one to invert the RTS auto flow operation polarity.
+      CTS_Assert_Level   : Bits_1;  -- This bit allows one to invert the CTS auto flow operation polarity.
+      Reserved           : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_CNTL_Type use
+   record
+      Receiver_Enable    at 0 range 0 .. 0;
+      Transmitter_Enable at 0 range 1 .. 1;
+      RTS_RX_Autoflow    at 0 range 2 .. 2;
+      CTS_TX_Autoflow    at 0 range 3 .. 3;
+      RTS_Autoflow_Level at 0 range 4 .. 5;
+      RTS_Assert_Level   at 0 range 6 .. 6;
+      CTS_Assert_Level   at 0 range 7 .. 7;
+      Reserved           at 0 range 8 .. 31;
+   end record;
+
+   AUX_MU_CNTL_REG : aliased AUX_MU_CNTL_Type with
+      Address              => To_Address (AUX_BASEADDRESS + 16#60#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   type AUX_MU_BAUD_Type is
+   record
+      Baudrate : Unsigned_16; -- mini UART baudrate counter
+      Reserved : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AUX_MU_BAUD_Type use
+   record
+      Baudrate at 0 range 0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   AUX_MU_BAUD : aliased AUX_MU_BAUD_Type with
+      Address              => To_Address (AUX_BASEADDRESS + 16#68#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 6 General Purpose I/O (GPIO)
    ----------------------------------------------------------------------------
 
@@ -547,191 +734,55 @@ package RPI3 is
       Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 2.1.1 AUX registers
+   -- 12.1 System Timer Registers
    ----------------------------------------------------------------------------
 
-   type AUXENB_Type is
+   type CS_Type is
    record
-      MiniUART_Enable : Boolean; -- If set the mini UART is enabled.
-      SPI1_Enable     : Boolean; -- If set the SPI 1 module is enabled.
-      SPI2_Enable     : Boolean; -- If set the SPI 2 module is enabled.
-      Reserved        : Bits_29;
+      M0       : Boolean; -- System Timer Match 0
+      M1       : Boolean; -- System Timer Match 1
+      M2       : Boolean; -- System Timer Match 2
+      M3       : Boolean; -- System Timer Match 3
+      Reserved : Bits_28;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for AUXENB_Type use
+   for CS_Type use
    record
-      MiniUART_Enable at 0 range 0 .. 0;
-      SPI1_Enable     at 0 range 1 .. 1;
-      SPI2_Enable     at 0 range 2 .. 2;
-      Reserved        at 0 range 3 .. 31;
+      M0       at 0 range 0 .. 0;
+      M1       at 0 range 1 .. 1;
+      M2       at 0 range 2 .. 2;
+      M3       at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 31;
    end record;
 
-   AUXENB : aliased AUXENB_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#04#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   type AUX_MU_IO_Type is
+   type System_Timer_Type is
    record
-      DATA     : Unsigned_8; -- RX DATA, TX DATA or baud rate LSB (DLAB = 1)
-      Reserved : Bits_24;
+      CS  : CS_Type     with Volatile_Full_Access => True; -- System Timer Control/Status
+      CLO : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Counter Lower 32 bits
+      CHI : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Counter Higher 32 bits
+      C0  : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Compare 0
+      C1  : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Compare 1
+      C2  : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Compare 2
+      C3  : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Compare 3
    end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_IO_Type use
+      Size => 7 * 32;
+   for System_Timer_Type use
    record
-      DATA     at 0 range 0 .. 7;
-      Reserved at 0 range 8 .. 31;
+      CS  at 16#00# range 0 .. 31;
+      CLO at 16#04# range 0 .. 31;
+      CHI at 16#08# range 0 .. 31;
+      C0  at 16#0C# range 0 .. 31;
+      C1  at 16#10# range 0 .. 31;
+      C2  at 16#14# range 0 .. 31;
+      C3  at 16#18# range 0 .. 31;
    end record;
 
-   AUX_MU_IO_REG : aliased AUX_MU_IO_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#40#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   UART_7BIT : constant := 2#00#; -- the UART works in 7-bit mode
-   UART_8BIT : constant := 2#11#; -- the UART works in 8-bit mode
-
-   type AUX_MU_LCR_Type is
-   record
-      Data_Size   : Bits_2;  -- UART data size
-      Reserved1   : Bits_4;
-      Break       : Boolean; -- If set high the UART1_TX line is pulled low continuously.
-      DLAB_Access : Boolean; -- If set the first to Mini UART register give access the the Baudrate register.
-      Reserved2   : Bits_24;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_LCR_Type use
-   record
-      Data_Size   at 0 range 0 .. 1;
-      Reserved1   at 0 range 2 .. 5;
-      Break       at 0 range 6 .. 6;
-      DLAB_Access at 0 range 7 .. 7;
-      Reserved2   at 0 range 8 .. 31;
-   end record;
-
-   AUX_MU_LCR_REG : aliased AUX_MU_LCR_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#4C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   type AUX_MU_LSR_Type is
-   record
-      Data_Ready        : Boolean; -- This bit is set if the receive FIFO holds at least 1 symbol.
-      Receiver_Overrun  : Boolean; -- This bit is set if there was a receiver overrun.
-      Reserved1         : Bits_3;
-      Transmitter_Empty : Boolean; -- This bit is set if the transmit FIFO can accept at least one byte.
-      Transmitter_Idle  : Boolean; -- This bit is set if the transmit FIFO is empty and the transmitter is idle.
-      Reserved2         : Bits_1;
-      Reserved3         : Bits_24;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_LSR_Type use
-   record
-      Data_Ready        at 0 range 0 .. 0;
-      Receiver_Overrun  at 0 range 1 .. 1;
-      Reserved1         at 0 range 2 .. 4;
-      Transmitter_Empty at 0 range 5 .. 5;
-      Transmitter_Idle  at 0 range 6 .. 6;
-      Reserved2         at 0 range 7 .. 7;
-      Reserved3         at 0 range 8 .. 31;
-   end record;
-
-   AUX_MU_LSR_REG : aliased AUX_MU_LSR_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#54#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   type AUX_MU_MSR_Type is
-   record
-      Reserved1  : Bits_4;
-      CTS_Status : Boolean; -- This bit is the inverse of the UART1_CTS input
-      Reserved2  : Bits_3;
-      Reserved3  : Bits_24;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_MSR_Type use
-   record
-      Reserved1  at 0 range 0 .. 3;
-      CTS_Status at 0 range 4 .. 4;
-      Reserved2  at 0 range 5 .. 7;
-      Reserved3  at 0 range 8 .. 31;
-   end record;
-
-   AUX_MU_MSR_REG : aliased AUX_MU_MSR_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#58#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   RTS_Autoflow3 : constant := 2#00#; -- De-assert RTS when the receive FIFO has 3 empty spaces left.
-   RTS_Autoflow2 : constant := 2#01#; -- De-assert RTS when the receive FIFO has 2 empty spaces left.
-   RTS_Autoflow1 : constant := 2#10#; -- De-assert RTS when the receive FIFO has 1 empty space left.
-   RTS_Autoflow4 : constant := 2#11#; -- De-assert RTS when the receive FIFO has 4 empty spaces left.
-
-   RTS_AutoflowP : constant := 0; -- If clear the RTS auto flow assert level is high
-   RTS_AutoflowN : constant := 1; -- If set the RTS auto flow assert level is low
-
-   CTS_AutoflowP : constant := 0; -- If clear the CTS auto flow assert level is high
-   CTS_AutoflowN : constant := 1; -- If set the CTS auto flow assert level is low
-
-   type AUX_MU_CNTL_Type is
-   record
-      Receiver_Enable    : Boolean; -- If this bit is set the mini UART receiver is enabled.
-      Transmitter_Enable : Boolean; -- If this bit is set the mini UART transmitter is enabled.
-      RTS_RX_Autoflow    : Boolean; -- If ... the RTS line will de-assert if thereceive FIFO reaches it 'auto flow' level.
-      CTS_TX_Autoflow    : Boolean; -- If this bit is set the transmitter will stop if the CTS line is de-asserted.
-      RTS_Autoflow_Level : Bits_2;  -- These ..  at what receiver FIFO level the RTS line is de-asserted in auto-flow mode.
-      RTS_Assert_Level   : Bits_1;  -- This bit allows one to invert the RTS auto flow operation polarity.
-      CTS_Assert_Level   : Bits_1;  -- This bit allows one to invert the CTS auto flow operation polarity.
-      Reserved           : Bits_24;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_CNTL_Type use
-   record
-      Receiver_Enable    at 0 range 0 .. 0;
-      Transmitter_Enable at 0 range 1 .. 1;
-      RTS_RX_Autoflow    at 0 range 2 .. 2;
-      CTS_TX_Autoflow    at 0 range 3 .. 3;
-      RTS_Autoflow_Level at 0 range 4 .. 5;
-      RTS_Assert_Level   at 0 range 6 .. 6;
-      CTS_Assert_Level   at 0 range 7 .. 7;
-      Reserved           at 0 range 8 .. 31;
-   end record;
-
-   AUX_MU_CNTL_REG : aliased AUX_MU_CNTL_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#60#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   type AUX_MU_BAUD_Type is
-   record
-      Baudrate : Unsigned_16; -- mini UART baudrate counter
-      Reserved : Bits_16;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_BAUD_Type use
-   record
-      Baudrate at 0 range 0 .. 15;
-      Reserved at 0 range 16 .. 31;
-   end record;
-
-   AUX_MU_BAUD : aliased AUX_MU_BAUD_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#68#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYSTEM_TIMER : System_Timer_Type with
+      Address    => To_Address (SYSTEM_TIMER_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- MAILBOX
