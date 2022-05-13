@@ -925,23 +925,21 @@ configure : configure-aux infodump
 # Commands are executed with current directory = SWEETADA_PATH.
 #
 
-.PHONY : gdbstub_enable
-gdbstub_enable :
-#gdbstub_enable : $(KERNEL_OUTFILE)
-#ifeq ($(DEBUG_GDBSTUB),Y)
-#	@$(REM) patch GDB stub "enable flag" --> enabled
-#	@$(ELFTOOL) -c setgdbstubflag=0xFF $(KERNEL_OUTFILE)
-#else
-#	@$(REM) patch GDB stub "enable flag" --> disabled
-#	@$(ELFTOOL) -c setgdbstubflag=0x00 $(KERNEL_OUTFILE)
-#endif
+.PHONY : debug_notify_off
+debug_notify_off :
+ifeq ($(USE_ELFTOOL),Y)
+debug_notify_off : $(KERNEL_OUTFILE)
+	@$(REM) patch Debug_Flag := False
+	@$(ELFTOOL) -c setdebugflag=0 $(KERNEL_OUTFILE)
+endif
 
-.PHONY : gdbstub_disable
-gdbstub_disable :
-#gdbstub_disable : $(KERNEL_OUTFILE)
-#	@$(REM) perhaps flag is active due to a previous debug session
-#	@$(REM) patch GDB stub "enable flag" --> disabled
-#	@$(ELFTOOL) -c setgdbstubflag=0x00 $(KERNEL_OUTFILE)
+.PHONY : debug_notify_on
+debug_notify_on :
+ifeq ($(USE_ELFTOOL),Y)
+debug_notify_on : $(KERNEL_OUTFILE)
+	@$(REM) patch Debug_Flag := True
+	@$(ELFTOOL) -c setdebugflag=1 $(KERNEL_OUTFILE)
+endif
 
 $(KERNEL_ROMFILE) : all
 ifeq ($(POSTBUILD_ROMFILE),Y)
@@ -974,7 +972,7 @@ else
 endif
 
 .PHONY : run
-run : gdbstub_disable postbuild
+run : debug_notify_off postbuild
 ifneq ($(RUN_COMMAND),)
 	-$(RUN_COMMAND)
 else
@@ -982,7 +980,7 @@ else
 endif
 
 .PHONY : debug
-debug : gdbstub_enable postbuild
+debug : debug_notify_on postbuild
 ifneq ($(DEBUG_COMMAND),)
 	-$(DEBUG_COMMAND)
 else
