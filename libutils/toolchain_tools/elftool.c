@@ -17,7 +17,7 @@
  * dumpsections
  * objectsizes
  * findsymbol=<symbol>
- * setgdbstubflag=<value>
+ * setdebugflag=<value>
  *
  * Environment variables:
  * VERBOSE
@@ -334,21 +334,15 @@ command_objectsizes(void)
         /* work on .symtab */
         pscn = elf_getscn(application.pelf, application.index_symtab);
         gelf_getshdr(pscn, &shdr);
-        //fprintf(stdout, ".symtab size:    %u\n", shdr.sh_size);
-        //fprintf(stdout, ".symtab address: %lX\n", shdr.sh_addr);
 
         symtab_nentries = shdr.sh_size / shdr.sh_entsize;
 
         pdata = NULL;
         pdata = elf_getdata(pscn, pdata);
-        //fprintf(stdout, ".symtab data size: 0x%lX\n", pdata->d_size);
 
         n = 0;
         while (n < symtab_nentries)
         {
-                // compute manually
-                //psymbol = (GElf_Sym *)((char *)pdata->d_buf + sizeof(GElf_Sym) * n);
-                // with libelf appropriate function
                 psymbol = gelf_getsym(pdata, n, &symbol);
                 if (psymbol->st_name != 0)
                 {
@@ -367,10 +361,6 @@ command_objectsizes(void)
                                 psymbol->st_info,
                                 strtab_getname(psymbol->st_name)
                                 );
-                }
-                else
-                {
-                        //fprintf(stdout, "name: -\n");
                 }
                 ++n;
         }
@@ -404,31 +394,20 @@ command_findsymbol(void)
                 size_t n;
                 GElf_Sym symbol;
                 GElf_Sym *psymbol;
-                //fprintf(stdout, ".symtab size:    %u\n", shdr.sh_size);
-                //fprintf(stdout, ".symtab address: %lX\n", shdr.sh_addr);
                 symtab_nentries = shdr.sh_size / shdr.sh_entsize;
                 pdata = NULL;
                 pdata = elf_getdata(pscn, pdata);
-                //fprintf(stdout, ".symtab data size: 0x%lX\n", pdata->d_size);
                 n = 0;
                 while (n < symtab_nentries)
                 {
-                        // compute manually
-                        //psymbol = (GElf_Sym *)((char *)pdata->d_buf + sizeof(GElf_Sym) * n);
-                        // with libelf specific function
                         psymbol = gelf_getsym(pdata, n, &symbol);
                         if (psymbol->st_name != 0)
                         {
-                                //fprintf(stdout, "value: 0x%08lX name: %s\n", psymbol->st_value, strtab_getname(psymbol->st_name));
                                 if (strcmp(application.symbol_name, strtab_getname(psymbol->st_name)) == 0)
                                 {
                                         application.symbol_value = (uint64_t)psymbol->st_value;
                                         return 0;
                                 }
-                        }
-                        else
-                        {
-                                //fprintf(stdout, "name: -\n");
                         }
                         ++n;
                 }
@@ -438,12 +417,12 @@ command_findsymbol(void)
 }
 
 /******************************************************************************
- * find_gdbstub_flag()                                                        *
+ * find_debug_flag()                                                          *
  *                                                                            *
- * Helper function for command_setgdbstubflag().                              *
+ * Helper function for command_setdebugflag().                                *
  ******************************************************************************/
 static bool
-find_gdbstub_flag(uint64_t *pgdbstub_flag)
+find_debug_flag(uint64_t *pdebug_flag)
 {
         Elf_Scn   *pscn;
         GElf_Shdr  shdr;
@@ -453,7 +432,7 @@ find_gdbstub_flag(uint64_t *pgdbstub_flag)
         if (application.index_symtab == (size_t)-1)
         {
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: no .symtab section found.");
-                goto find_gdbstub_flag_exit;
+                goto find_debug_flag_exit;
         }
 
         pscn = elf_getscn(application.pelf, application.index_symtab);
@@ -464,55 +443,44 @@ find_gdbstub_flag(uint64_t *pgdbstub_flag)
                 size_t n;
                 GElf_Sym symbol;
                 GElf_Sym *psymbol;
-                //fprintf(stdout, ".symtab size:    %u\n", shdr.sh_size);
-                //fprintf(stdout, ".symtab address: %lX\n", shdr.sh_addr);
                 symtab_nentries = shdr.sh_size / shdr.sh_entsize;
                 pdata = NULL;
                 pdata = elf_getdata(pscn, pdata);
-                //fprintf(stdout, ".symtab data size: 0x%lX\n", pdata->d_size);
                 n = 0;
                 while (n < symtab_nentries)
                 {
-                        // compute manually
-                        //psymbol = (GElf_Sym *)((char *)pdata->d_buf + sizeof(GElf_Sym) * n);
-                        // with libelf specific function
                         psymbol = gelf_getsym(pdata, n, &symbol);
                         if (psymbol->st_name != 0)
                         {
-                                //fprintf(stdout, "value: 0x%08lX name: %s\n", psymbol->st_value, strtab_getname(psymbol->st_name));
-                                if (strcmp("_gdbstub_enable_flag", strtab_getname(psymbol->st_name)) == 0)
+                                if (strcmp("_debug_flag", strtab_getname(psymbol->st_name)) == 0)
                                 {
-                                        *pgdbstub_flag = (uint64_t)psymbol->st_value;
+                                        *pdebug_flag = (uint64_t)psymbol->st_value;
                                         return true;
                                 }
-                        }
-                        else
-                        {
-                                //fprintf(stdout, "name: -\n");
                         }
                         ++n;
                 }
         }
 
-find_gdbstub_flag_exit:
+find_debug_flag_exit:
 
         return false;
 }
 
 /******************************************************************************
- * command_setgdbstubflag()                                                   *
+ * command_setdebugflag()                                                     *
  *                                                                            *
  ******************************************************************************/
 static int
-command_setgdbstubflag(void)
+command_setdebugflag(void)
 {
         Elf_Scn   *pscn;
         GElf_Shdr  shdr;
-        uint64_t   gdbstub_flag; /* offset into text section */
+        uint64_t   debug_flag; /* offset into text section */
 
-        if (find_gdbstub_flag(&gdbstub_flag))
+        if (find_debug_flag(&debug_flag))
         {
-                /* _gdbstub_flag is always resident in the .text section */
+                /* _debug_flag is always resident in the .text section */
                 pscn = elf_getscn(application.pelf, application.index_text);
                 if (gelf_getshdr(pscn, &shdr) != &shdr)
                 {
@@ -525,19 +493,15 @@ command_setgdbstubflag(void)
                         size_t object_text_offset;
                         uint8_t *pobject;
                         uint8_t object_value;
-                        //uint8_t given_value;
                         pdata = elf_getdata(pscn, NULL);
                         if (pdata != NULL)
                         {
-                                object_text_offset = (size_t)(gdbstub_flag - shdr.sh_addr);
+                                object_text_offset = (size_t)(debug_flag - shdr.sh_addr);
                                 pobject = (uint8_t *)pdata->d_buf + object_text_offset;
                                 object_value = *pobject;
-                                //fprintf(stdout, "0x%lX: 0x%02X\n", object_text_offset, object_value);
-                                //given_value = strtoul(argv[3], NULL, 16);
-                                //if (object_value != given_value)
-                                if (object_value != application.gdbstub_flag_value)
+                                if (object_value != application.debug_flag_value)
                                 {
-                                        *pobject = application.gdbstub_flag_value;
+                                        *pobject = application.debug_flag_value;
                                         elf_flagscn(pscn, ELF_C_SET, ELF_F_DIRTY);
                                         application.flag_update = true;
                                 }
@@ -555,7 +519,7 @@ command_setgdbstubflag(void)
                 /* without the definition of this symbol, so exit cleanly */
                 if (application.flag_verbose)
                 {
-                        log_printf(LOG_STDOUT | LOG_FILE, "symbol \"_gdbstub_enable_flag\" not found, skipping.");
+                        log_printf(LOG_STDOUT | LOG_FILE, "symbol \"_debug_flag\" not found, skipping.");
                 }
         }
 
@@ -611,6 +575,12 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                 if (argv[idx][0] == '-')
                 {
                         char c;
+                        const char *dumpsections_option = "dumpsections";
+                        const char *objectsizes_option = "objectsizes";
+                        const char *findsymbol_option = "findsymbol=";
+                        const char *setdebugflag_option = "setdebugflag=";
+                        size_t findsymbol_optionlength = strlen(findsymbol_option);
+                        size_t setdebugflag_optionlength = strlen(setdebugflag_option);
                         if (strlen(argv[idx]) != 2)
                         {
                                 error_flag = true;
@@ -625,25 +595,23 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                                 case 'c':
                                         --number_of_arguments;
                                         ++idx;
-                                        if (strcmp(argv[idx], "dumpsections") == 0)
+                                        if (strcmp(argv[idx], dumpsections_option) == 0)
                                         {
                                                 p->command = COMMAND_DUMPSECTIONS;
                                         }
-                                        else if (strcmp(argv[idx], "objectsizes") == 0)
+                                        else if (strcmp(argv[idx], objectsizes_option) == 0)
                                         {
                                                 p->command = COMMAND_OBJECTSIZES;
                                         }
-                                        /* strlen("findsymbol=") = 11 */
-                                        else if (strncmp(argv[idx], "findsymbol=", 11) == 0)
+                                        else if (strncmp(argv[idx], findsymbol_option, findsymbol_optionlength) == 0)
                                         {
                                                 p->command = COMMAND_FINDSYMBOL;
-                                                p->symbol_name = argv[idx] + 11;
+                                                p->symbol_name = argv[idx] + findsymbol_optionlength;
                                         }
-                                        /* strlen("setgdbstubflag=") = 15 */
-                                        else if (strncmp(argv[idx], "setgdbstubflag=", 15) == 0)
+                                        else if (strncmp(argv[idx], setdebugflag_option, setdebugflag_optionlength) == 0)
                                         {
-                                                p->command = COMMAND_SETGDBSTUBFLAG;
-                                                p->gdbstub_flag_value = (uint8_t)strtoul(argv[idx] + 15, NULL, 16);
+                                                p->command = COMMAND_SETDEBUGFLAG;
+                                                p->debug_flag_value = (uint8_t)strtoul(argv[idx] + setdebugflag_optionlength, NULL, 16);
                                         }
                                         else
                                         {
@@ -830,7 +798,6 @@ main(int argc, char **argv)
                         log_printf(LOG_STDERR | LOG_FILE, "*** Error: shstrtab_getname(): %s.", elf_errmsg(-1));
                         goto main_exit;
                 }
-                //fprintf(stdout, "Section: %d %s\n", elf_ndxscn(pscn), name);
                 /* ok, interesting section indexes are memorized */
                 if (strcmp(name, ".text") == 0)
                 {
@@ -901,8 +868,8 @@ main(int argc, char **argv)
                                         break;
                         }
                         break;
-                case COMMAND_SETGDBSTUBFLAG:
-                        if (command_setgdbstubflag() < 0)
+                case COMMAND_SETDEBUGFLAG:
+                        if (command_setdebugflag() < 0)
                         {
                                 goto main_exit;
                         }

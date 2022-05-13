@@ -32,14 +32,14 @@ typedef struct {
         bool        flag_update;
         const char *symbol_name;
         uint64_t    symbol_value;
-        uint8_t     gdbstub_flag_value;
+        uint8_t     debug_flag_value;
         } Application_t;
 
-#define COMMAND_NONE           0
-#define COMMAND_DUMPSECTIONS   1
-#define COMMAND_OBJECTSIZES    2
-#define COMMAND_FINDSYMBOL     3
-#define COMMAND_SETGDBSTUBFLAG 4
+#define COMMAND_NONE         0
+#define COMMAND_DUMPSECTIONS 1
+#define COMMAND_OBJECTSIZES  2
+#define COMMAND_FINDSYMBOL   3
+#define COMMAND_SETDEBUGFLAG 4
 
 #endif /* _ELFTOOL_H */
 
