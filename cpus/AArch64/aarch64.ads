@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Interfaces;
 
 package AArch64 is
 
@@ -30,6 +31,7 @@ package AArch64 is
    pragma Preelaborate;
 
    use System;
+   use Interfaces;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
@@ -39,6 +41,8 @@ package AArch64 is
       Inline => True;
    procedure Asm_Call (Target_Address : in Address) with
       Inline => True;
+
+   function CNTFRQ_EL0_Read return Unsigned_32;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts

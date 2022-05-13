@@ -73,6 +73,24 @@ package body AArch64 is
    end Asm_Call;
 
    ----------------------------------------------------------------------------
+   -- CNTFRQ_EL0_Read
+   ----------------------------------------------------------------------------
+   function CNTFRQ_EL0_Read return Unsigned_32 is
+      Value : Unsigned_32;
+   begin
+      Asm (
+           Template => ""                              & CRLF &
+                       "        mrs     %0,cntfrq_el0" & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end CNTFRQ_EL0_Read;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable is
