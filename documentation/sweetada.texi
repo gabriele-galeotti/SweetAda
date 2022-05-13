@@ -127,7 +127,11 @@ common auxiliary files
 SweetAda is meant to run on major 64-bit mainstream environments, i.e., modern installation of
 POSIX/Linux, Windows, or OS X.
 
-In the following chapters, operations in a POSIX machine will be described when doing examples.
+SweetAda requires installation of GNU toolchains, and is based on GNU Make, plus some little
+utilities. The OS should be able to create symbolic links.
+
+In the following chapters, operations in a POSIX machine will be described when doing examples,
+unless otherwise noted.
 
 @section General advices
 @cindex General advice
@@ -139,6 +143,16 @@ be invalidated by an "esotic" environment setup.
 
 Hence, if you want to integrate SweetAda in a GUI, the glue logic should change the working
 directory before performing an action.
+
+Note for Windows users:
+Many operations in SweetAda could need variables inherited from the environment; pay
+attention when setting variables in the command line shell, i.e. when you are concatenating
+many assignments use always double-quotes to protect arguments:
+
+> SET "<variable_name>=<variable_value>" && SET "...
+
+Also be sure to run commands in a shell with Administrator privileges, because some
+operations (like creating symbolic links) require elevation rights.
 
 @section Installation prerequisites
 @cindex Installation prerequisites

@@ -120,6 +120,7 @@ usage()
 printf "%s\n" "Usage: ${SCRIPT_FILENAME} <action>"
 printf "%s\n" ""
 printf "%s\n" "<action> is one of:"
+printf "%s\n" "help            - build system help"
 printf "%s\n" "createkernelcfg - create a kernel.cfg file"
 printf "%s\n" "configure       - configure the system for a build"
 printf "%s\n" "all             - build target"
@@ -178,6 +179,9 @@ case ${OSTYPE} in
 esac
 
 case $1 in
+  "help")
+    "${MAKE}" help
+    ;;
   "createkernelcfg")
     rm -f make.log make.errors.log
     if [ "x${PLATFORM}" = "x" ] ; then

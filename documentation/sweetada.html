@@ -146,7 +146,11 @@ Next: <a href="#Toolchains" accesskey="n" rel="next">Toolchains</a>, Previous: <
 <p>SweetAda is meant to run on major 64-bit mainstream environments, i.e., modern installation of
 POSIX/Linux, Windows, or OS X.
 </p>
-<p>In the following chapters, operations in a POSIX machine will be described when doing examples.
+<p>SweetAda requires installation of GNU toolchains, and is based on GNU Make, plus some little
+utilities. The OS should be able to create symbolic links.
+</p>
+<p>In the following chapters, operations in a POSIX machine will be described when doing examples,
+unless otherwise noted.
 </p>
 <ul class="section-toc">
 <li><a href="#General-advices" accesskey="1">General advices</a></li>
@@ -165,6 +169,16 @@ be invalidated by an &quot;esotic&quot; environment setup.
 </p>
 <p>Hence, if you want to integrate SweetAda in a GUI, the glue logic should change the working
 directory before performing an action.
+</p>
+<p>Note for Windows users:
+Many operations in SweetAda could need variables inherited from the environment; pay
+attention when setting variables in the command line shell, i.e. when you are concatenating
+many assignments use always double-quotes to protect arguments:
+</p>
+<p>&gt; SET &quot;&lt;variable_name&gt;=&lt;variable_value&gt;&quot; &amp;&amp; SET &quot;...
+</p>
+<p>Also be sure to run commands in a shell with Administrator privileges, because some
+operations (like creating symbolic links) require elevation rights.
 </p>
 </div>
 <div class="section" id="Installation-prerequisites">

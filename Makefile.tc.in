@@ -44,7 +44,7 @@ TOOLCHAIN_PROGRAM_PREFIX := $(TOOLCHAIN_NAME)-
 # files
 TOOLCHAIN_GCC := $(TOOLCHAIN_PROGRAM_PREFIX)gcc$(EXEEXT)
 ifeq ($(OSTYPE),cmd)
-GCC_VERSION   := $(shell SET PATH=$(PATH) && $(TOOLCHAIN_GCC) -dumpversion 2> nul)
+GCC_VERSION   := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -dumpversion 2> nul)
 else
 GCC_VERSION   := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) -dumpversion 2> /dev/null)
 endif
@@ -62,9 +62,9 @@ endif
 # GCC_MULTIDIR is the multilib directory inside the library search directory
 # NOTE: this is different from "-print-multi-lib", which prints all multilibs
 ifeq ($(OSTYPE),cmd)
-GCC_MULTILIBS   := $(shell SET PATH=$(PATH) & $(TOOLCHAIN_GCC) -print-multi-lib 2> nul)
-GCC_MULTIDIR    := $(shell SET PATH=$(PATH) & $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-multi-directory 2> nul)
-LIBGCC_FILENAME := $(shell SET PATH=$(PATH) & $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-libgcc-file-name 2> nul)
+GCC_MULTILIBS   := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -print-multi-lib 2> nul)
+GCC_MULTIDIR    := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-multi-directory 2> nul)
+LIBGCC_FILENAME := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-libgcc-file-name 2> nul)
 else
 GCC_MULTILIBS   := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) -print-multi-lib 2> /dev/null)
 GCC_MULTIDIR    := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-multi-directory 2> /dev/null)
@@ -370,7 +370,7 @@ MLL := 132
 
 ################################################################################
 #                                                                              #
-# Assembler/Compiler warning & style switches.                                 #
+# Assembler/Compiler warning and style switches.                               #
 #                                                                              #
 ################################################################################
 

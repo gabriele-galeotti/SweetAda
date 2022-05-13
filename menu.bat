@@ -24,17 +24,18 @@ REM defaults to standard installation directory, see configuration.in
 SET MAKEEXE="C:\Program Files\SweetAda"\bin\make.exe
 
 SET ACTION_VALID=
-IF "%1"=="createkernelcfg" SET "ACTION_VALID=Y" & CALL :setplatform & SET "PLATFORM=!PLATFORM!" & SET "SUBPLATFORM=!SUBPLATFORM!" & %MAKEEXE% createkernelcfg
-IF "%1"=="configure" SET "ACTION_VALID=Y" & %MAKEEXE% configure
-IF "%1"=="all" SET "ACTION_VALID=Y" & %MAKEEXE% all
-IF "%1"=="postbuild" SET "ACTION_VALID=Y" & %MAKEEXE% postbuild
-IF "%1"=="session-start" SET "ACTION_VALID=Y" & %MAKEEXE% session-start
-IF "%1"=="session-end" SET "ACTION_VALID=Y" & %MAKEEXE% session-end
-IF "%1"=="run" SET "ACTION_VALID=Y" & %MAKEEXE% run
-IF "%1"=="debug" SET "ACTION_VALID=Y" & %MAKEEXE% debug
-IF "%1"=="clean" SET "ACTION_VALID=Y" & %MAKEEXE% clean
-IF "%1"=="distclean" SET "ACTION_VALID=Y" & %MAKEEXE% distclean
-IF "%1"=="rts" SET "ACTION_VALID=Y" & %MAKEEXE% rts
+IF "%1"=="help" SET "ACTION_VALID=Y" && %MAKEEXE% help
+IF "%1"=="createkernelcfg" SET "ACTION_VALID=Y" && CALL :setplatform && SET "PLATFORM=!PLATFORM!" && SET "SUBPLATFORM=!SUBPLATFORM!" && %MAKEEXE% createkernelcfg
+IF "%1"=="configure" SET "ACTION_VALID=Y" && %MAKEEXE% configure
+IF "%1"=="all" SET "ACTION_VALID=Y" && %MAKEEXE% all
+IF "%1"=="postbuild" SET "ACTION_VALID=Y" && %MAKEEXE% postbuild
+IF "%1"=="session-start" SET "ACTION_VALID=Y" && %MAKEEXE% session-start
+IF "%1"=="session-end" SET "ACTION_VALID=Y" && %MAKEEXE% session-end
+IF "%1"=="run" SET "ACTION_VALID=Y" && %MAKEEXE% run
+IF "%1"=="debug" SET "ACTION_VALID=Y" && %MAKEEXE% debug
+IF "%1"=="clean" SET "ACTION_VALID=Y" && %MAKEEXE% clean
+IF "%1"=="distclean" SET "ACTION_VALID=Y" && %MAKEEXE% distclean
+IF "%1"=="rts" SET "ACTION_VALID=Y" && %MAKEEXE% rts
 IF NOT "%ACTION_VALID%"=="Y" CALL :usage
 SET ACTION_VALID=
 
@@ -45,21 +46,21 @@ EXIT /B %ERRORLEVEL%
 :setplatform
 REM select a platform
 IF NOT "%PLATFORM%"=="" GOTO :eof
-REM SET "PLATFORM=Altera10M50GHRD" & SET "SUBPLATFORM="
-REM SET "PLATFORM=ArduinoUNO" & SET "SUBPLATFORM="
-REM SET "PLATFORM=DE10-Lite" & SET "SUBPLATFORM="
-REM SET "PLATFORM=IntegratorCP" & SET "SUBPLATFORM="
-REM SET "PLATFORM=LEON3" & SET "SUBPLATFORM="
-REM SET "PLATFORM=ML605" & SET "SUBPLATFORM="
-REM SET "PLATFORM=Malta" & SET "SUBPLATFORM="
-SET "PLATFORM=PC-x86" & SET "SUBPLATFORM=QEMU-ROM"
-REM SET "PLATFORM=PC-x86-64" & SET "SUBPLATFORM=QEMU-ROM"
-REM SET "PLATFORM=QEMU-RISC-V" & SET "SUBPLATFORM="
-REM SET "PLATFORM=SBC5206" & SET "SUBPLATFORM="
-REM SET "PLATFORM=SPARCstation5" & SET "SUBPLATFORM="
-REM SET "PLATFORM=System390" & SET "SUBPLATFORM="
-REM SET "PLATFORM=Taihu" & SET "SUBPLATFORM="
-REM SET "PLATFORM=XilinxZynqA9" & SET "SUBPLATFORM="
+REM SET "PLATFORM=Altera10M50GHRD" && SET "SUBPLATFORM="
+REM SET "PLATFORM=ArduinoUNO" && SET "SUBPLATFORM="
+REM SET "PLATFORM=DE10-Lite" && SET "SUBPLATFORM="
+REM SET "PLATFORM=IntegratorCP" && SET "SUBPLATFORM="
+REM SET "PLATFORM=LEON3" && SET "SUBPLATFORM="
+REM SET "PLATFORM=ML605" && SET "SUBPLATFORM="
+REM SET "PLATFORM=Malta" && SET "SUBPLATFORM="
+SET "PLATFORM=PC-x86" && SET "SUBPLATFORM=QEMU-ROM"
+REM SET "PLATFORM=PC-x86-64" && SET "SUBPLATFORM=QEMU-ROM"
+REM SET "PLATFORM=QEMU-RISC-V" && SET "SUBPLATFORM="
+REM SET "PLATFORM=SBC5206" && SET "SUBPLATFORM="
+REM SET "PLATFORM=SPARCstation5" && SET "SUBPLATFORM="
+REM SET "PLATFORM=System390" && SET "SUBPLATFORM="
+REM SET "PLATFORM=Taihu" && SET "SUBPLATFORM="
+REM SET "PLATFORM=XilinxZynqA9" && SET "SUBPLATFORM="
 GOTO :eof
 
 :usage
@@ -67,6 +68,7 @@ ECHO Usage:
 ECHO menu.bat ^<action^>
 ECHO.
 ECHO ^<action^> is one of:
+ECHO help            - build system help
 ECHO createkernelcfg - create a kernel.cfg file
 ECHO configure       - configure the system for a build
 ECHO all             - build target

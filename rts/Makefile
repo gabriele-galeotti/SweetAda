@@ -53,12 +53,6 @@ endif
 ifeq ($(MULTILIB),)
 $(error Error: no valid MULTILIB)
 endif
-#ifeq ($(ADAINCLUDE_PATH),)
-#$(error Error: no valid ADAINCLUDE_PATH)
-#endif
-#ifeq ($(ADALIB_PATH),)
-#$(error Error: no valid ADALIB_PATH)
-#endif
 
 TARGET := $(CPU)
 
