@@ -208,13 +208,13 @@ the invocation of the make executable provided in the toolchain package. Thus, e
 adjust the script near the "Main loop" entry point, as shown in the next lines:
 
 @example
-menu.bat:@*
+menu.bat:
 REM defaults to standard installation directory, see configuration.in
 SET MAKEEXE="C:\Program Files\SweetAda"\bin\make.exe                  <---
 @end example
 
 @example
-menu.sh:@*
+menu.sh:
 ...
   darwin)
     # use SweetAda make (try a standard installation prefix)
@@ -288,10 +288,6 @@ SweetAda supports whitespaces in filepaths although this is considered bad pract
 @node Toolchains
 @chapter Toolchains
 @cindex toolchains
-@cindex elftool
-@cindex GCC wrapper
-@cindex GNAT wrapper
-@cindex runsweetada
 
 The SweetAda system is distributed with GNU toolchains for every CPU it can handle.
 Altough toolchains are quite generic, SweetAda does not employ neither the whole standard
@@ -315,8 +311,10 @@ in the main configuration.in.
 
 @node Toolchain tools
 @chapter Toolchain tools
-@cindex toolchain wrappers
+@cindex GCC wrapper
+@cindex GNAT wrapper
 @cindex elftool
+@cindex runsweetada
 
 SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
 
@@ -361,14 +359,46 @@ will build and install wrappers and elftool.
 This procedure should work also on a Windows cmd.exe shell, provided you have the make
 utility available online.
 
+runsweetada is a scripting utility coupled with the IOEMU I/O emulator, which is an
+extension to QEMU, FS-UAE or GXemul. @xref{IOEMU scripting}. Its purpose is to
+centralize the startup of executables so to not have multiple scripts laying around
+in the filesystem. When your target platform is an emulator, it is the perfect
+place to put filesystem operations and options, but it does work also as a generic
+execution front-end. runsweetada has a few command line parameters:
+
+@example
+-d <variable>[=value]
+define an environment variable
+
+-f <filename>
+read configuration file name <filename> (default = "sweetada.cfg")
+
+-k <path>
+define SWEETADA_PATH=<path> (default = current directory)
+
+-p <directory>
+define PLATFORM_DIRECTORY=<directory> (default = ".")
+
+Currently there is no source code for runsweetada because it is under heavy
+redesign.
+@end example
+
+@cartouche
+NOTE:@*
+The Makefile that drives all SweetAda operations executes user commands (e.g.,
+"run") in the top-level directory, so if you want to perform operations in the
+platform directory, remember to change the working directory in the runsweetada
+script with a "CHDIR" command placed in the "START" section.
+@end cartouche
+
 @node Emulators
 @chapter Emulators
 @cindex Emulators
 
 SweetAda does use emulators in order to test the code without the need of physical
 hardware. Three emulators are being provided at least on a Linux machine: QEMU (generic
-for nearly all targets), GXemul (for the Dreamcast console) and FS-UAE (for Amiga
-machines). The last two are not available for a Windows or a OS X machines).
+for nearly all targets), FS-UAE (for Amiga machines) and GXemul (for the Dreamcast
+console). Note that FS-UAE and GXemul are only provided for Linux machines.
 
 When installing an emulator package, pay attention to the top-level directory hierarchy
 of the archive, because it refers to the root directory of the machine filesystem. Hence,
@@ -411,15 +441,24 @@ $ make CPU=<cpu> [CPU_MODEL=<cpu_model>] RTS=<rts> [TOOLCHAIN_NAME=<toolchain_na
 For example:
 
 @example
+$ make CPU=x86 RTS=sfp TOOLCHAIN_NAME=i686-sweetada-elf rts
 $ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
 @end example
 
 Please note that:
 @itemize @bullet
 @item
-both CPU name and RTS name are one of those listed in the help output from Makefile@*
+both CPU name and RTS name are one of those listed in the help output from Makefile
 @item
-the trailing "rts" token is the Makefile target just invoked@*
+the trailing "rts" token is the Makefile target just invoked
+@item
+TOOLCHAIN_NAME (the classical triplet name of a toolchain) is mandatory because the
+RTS hierarchy should be partitioned in case more than one target CPU should be employed;
+this name has to be exactly the same as the toolchain prefix of the executables also
+specified in the top-level configuration.in
+@item
+"CPU_MODEL" has meaning only for Hitachi SuperH CPUs, current choices are "SH7032" or
+"SH7750"; the CPU_MODEL specification is ignored for every other CPU
 @end itemize
 
 This will build the RTS. If you do not specify the toolchain in the classic "canonical

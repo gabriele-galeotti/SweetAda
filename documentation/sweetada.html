@@ -239,14 +239,12 @@ adjust the script near the &quot;Main loop&quot; entry point, as shown in the ne
 </p>
 <div class="example">
 <pre class="example">menu.bat:
-
 REM defaults to standard installation directory, see configuration.in
 SET MAKEEXE=&quot;C:\Program Files\SweetAda&quot;\bin\make.exe                  &lt;---
 </pre></div>
 
 <div class="example">
 <pre class="example">menu.sh:
-
 ...
   darwin)
     # use SweetAda make (try a standard installation prefix)
@@ -329,10 +327,6 @@ Next: <a href="#Toolchain-tools" accesskey="n" rel="next">Toolchain tools</a>, P
 </div>
 <span id="Toolchains-1"></span><h2 class="chapter">4 Toolchains</h2>
 <span id="index-toolchains"></span>
-<span id="index-elftool"></span>
-<span id="index-GCC-wrapper"></span>
-<span id="index-GNAT-wrapper"></span>
-<span id="index-runsweetada"></span>
 
 <p>The SweetAda system is distributed with GNU toolchains for every CPU it can handle.
 Altough toolchains are quite generic, SweetAda does not employ neither the whole standard
@@ -362,8 +356,10 @@ in the main configuration.in.
 Next: <a href="#Emulators" accesskey="n" rel="next">Emulators</a>, Previous: <a href="#Toolchains" accesskey="p" rel="prev">Toolchains</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <span id="Toolchain-tools-1"></span><h2 class="chapter">5 Toolchain tools</h2>
-<span id="index-toolchain-wrappers"></span>
-<span id="index-elftool-1"></span>
+<span id="index-GCC-wrapper"></span>
+<span id="index-GNAT-wrapper"></span>
+<span id="index-elftool"></span>
+<span id="index-runsweetada"></span>
 
 <p>SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
 </p>
@@ -408,6 +404,38 @@ $ make install
 <p>This procedure should work also on a Windows cmd.exe shell, provided you have the make
 utility available online.
 </p>
+<p>runsweetada is a scripting utility coupled with the IOEMU I/O emulator, which is an
+extension to QEMU, FS-UAE or GXemul. See <a href="#IOEMU-scripting">IOEMU scripting</a>. Its purpose is to
+centralize the startup of executables so to not have multiple scripts laying around
+in the filesystem. When your target platform is an emulator, it is the perfect
+place to put filesystem operations and options, but it does work also as a generic
+execution front-end. runsweetada has a few command line parameters:
+</p>
+<div class="example">
+<pre class="example">-d &lt;variable&gt;[=value]
+define an environment variable
+
+-f &lt;filename&gt;
+read configuration file name &lt;filename&gt; (default = &quot;sweetada.cfg&quot;)
+
+-k &lt;path&gt;
+define SWEETADA_PATH=&lt;path&gt; (default = current directory)
+
+-p &lt;directory&gt;
+define PLATFORM_DIRECTORY=&lt;directory&gt; (default = &quot;.&quot;)
+
+Currently there is no source code for runsweetada because it is under heavy
+redesign.
+</pre></div>
+
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+The Makefile that drives all SweetAda operations executes user commands (e.g.,
+&quot;run&quot;) in the top-level directory, so if you want to perform operations in the
+platform directory, remember to change the working directory in the runsweetada
+script with a &quot;CHDIR&quot; command placed in the &quot;START&quot; section.
+</p></td></tr></table>
+
 <hr>
 </div>
 <div class="chapter" id="Emulators">
@@ -420,8 +448,8 @@ Next: <a href="#Menu-front_002dends" accesskey="n" rel="next">Menu front-ends</a
 
 <p>SweetAda does use emulators in order to test the code without the need of physical
 hardware. Three emulators are being provided at least on a Linux machine: QEMU (generic
-for nearly all targets), GXemul (for the Dreamcast console) and FS-UAE (for Amiga
-machines). The last two are not available for a Windows or a OS X machines).
+for nearly all targets), FS-UAE (for Amiga machines) and GXemul (for the Dreamcast
+console). Note that FS-UAE and GXemul are only provided for Linux machines.
 </p>
 <p>When installing an emulator package, pay attention to the top-level directory hierarchy
 of the archive, because it refers to the root directory of the machine filesystem. Hence,
@@ -476,13 +504,20 @@ System.
 <p>For example:
 </p>
 <div class="example">
-<pre class="example">$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
+<pre class="example">$ make CPU=x86 RTS=sfp TOOLCHAIN_NAME=i686-sweetada-elf rts
+$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
 </pre></div>
 
 <p>Please note that:
 </p><ul>
-<li> both CPU name and RTS name are one of those listed in the help output from Makefile<br>
-</li><li> the trailing &quot;rts&quot; token is the Makefile target just invoked<br>
+<li> both CPU name and RTS name are one of those listed in the help output from Makefile
+</li><li> the trailing &quot;rts&quot; token is the Makefile target just invoked
+</li><li> TOOLCHAIN_NAME (the classical triplet name of a toolchain) is mandatory because the
+RTS hierarchy should be partitioned in case more than one target CPU should be employed;
+this name has to be exactly the same as the toolchain prefix of the executables also
+specified in the top-level configuration.in
+</li><li> &quot;CPU_MODEL&quot; has meaning only for Hitachi SuperH CPUs, current choices are &quot;SH7032&quot; or
+&quot;SH7750&quot;; the CPU_MODEL specification is ignored for every other CPU
 </li></ul>
 
 <p>This will build the RTS. If you do not specify the toolchain in the classic &quot;canonical
@@ -2056,8 +2091,7 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td></td><td valign="top"><a href="#index-Dreamcast">Dreamcast</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-E">E</th><td></td><td></td></tr>
-<tr><td></td><td valign="top"><a href="#index-elftool">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-elftool-1">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-elftool">elftool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Emulators">Emulators</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Emulators">Emulators</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Environment-notes">Environment notes</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
@@ -2065,10 +2099,10 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td></td><td valign="top"><a href="#index-FRDM_002dKL46Z">FRDM-KL46Z</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-G">G</th><td></td><td></td></tr>
-<tr><td></td><td valign="top"><a href="#index-GCC-wrapper">GCC wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-GCC-wrapper">GCC wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GEMI">GEMI</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-General-advice">General advice</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-GNAT-wrapper">GNAT wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-GNAT-wrapper">GNAT wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GPRbuild">GPRbuild</a>:</td><td>&nbsp;</td><td valign="top"><a href="#GPRbuild-mode">GPRbuild mode</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-I">I</th><td></td><td></td></tr>
@@ -2115,7 +2149,7 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td></td><td valign="top"><a href="#index-Raspberry-Pi-3">Raspberry Pi 3</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-References">References</a>:</td><td>&nbsp;</td><td valign="top"><a href="#References">References</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-RTS">RTS</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Building-the-RTS">Building the RTS</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-runsweetada">runsweetada</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-runsweetada">runsweetada</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-S">S</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SBC5206">SBC5206</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
@@ -2130,7 +2164,6 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td></td><td valign="top"><a href="#index-Taihu">Taihu</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Terasic-DE10_002dLite">Terasic DE10-Lite</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Testing-the-installation">Testing the installation</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-toolchain-wrappers">toolchain wrappers</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-toolchains">toolchains</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchains">Toolchains</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-X">X</th><td></td><td></td></tr>
