@@ -42,7 +42,8 @@ package AArch64 is
    procedure Asm_Call (Target_Address : in Address) with
       Inline => True;
 
-   function CNTFRQ_EL0_Read return Unsigned_32;
+   function CNTFRQ_EL0_Read return Unsigned_32 with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
