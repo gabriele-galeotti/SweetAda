@@ -27,4 +27,6 @@ package Virt is
 
    PL011_UART0_BASEADDRESS : constant := 16#0900_0000#;
 
+   procedure Timer_Reload;
+
 end Virt;

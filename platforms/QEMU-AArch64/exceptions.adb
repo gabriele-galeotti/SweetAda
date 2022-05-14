@@ -15,7 +15,28 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with Ada.Unchecked_Conversion;
+with Interfaces;
+with Bits;
+with AArch64;
+with Core;
+with Virt;
+with IOEMU;
+
 package body Exceptions is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use System;
+   use Interfaces;
+   use Bits;
 
    --========================================================================--
    --                                                                        --
@@ -30,12 +51,27 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Exception_Process is
    begin
-      loop null; end loop;
+      Core.Tick_Count := @ + 1;
+      if Core.Tick_Count mod 1_000 = 0 then
+         -- IOEMU "TIMER" LED blinking
+         IOEMU.IOEMU_IO0 := 1;
+         IOEMU.IOEMU_IO0 := 0;
+      end if;
+      AArch64.GICD_ICPENDR := 16#4000_0000#;
+      Virt.Timer_Reload;
    end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is null;
+   procedure Init is
+      EL1_Table : aliased Asm_Entry_Point with
+         Import        => True,
+         Convention    => Asm,
+         External_Name => "el1_table";
+      function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
+   begin
+      AArch64.VBAR_EL1_Write (To_U64 (EL1_Table'Address));
+   end Init;
 
 end Exceptions;

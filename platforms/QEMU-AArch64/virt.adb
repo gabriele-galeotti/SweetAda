@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.adb                                                                                                   --
+-- __FLN__ virt.adb                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,17 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
 with Interfaces;
-with Bits;
-with MMIO;
 with AArch64;
-with Virt;
-with Exceptions;
-with Console;
 
-package body BSP is
+package body Virt is
 
    --========================================================================--
    --                                                                        --
@@ -35,11 +28,7 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
    use Interfaces;
-   use Bits;
-   use Virt;
 
    --========================================================================--
    --                                                                        --
@@ -50,57 +39,14 @@ package body BSP is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Console wrappers
+   -- Timer_Reload
    ----------------------------------------------------------------------------
-
-   procedure Console_Putchar (C : in Character) is
+   procedure Timer_Reload is
    begin
-      PL011.TX (PL011_Descriptor, To_U8 (C));
-   end Console_Putchar;
+      AArch64.CNTP_TVAL_EL0_Write ((
+                                    TimerValue => AArch64.CNTFRQ_EL0_Read.Clock_frequency / 1_000,
+                                    others     => <>
+                                   ));
+   end Timer_Reload;
 
-   procedure Console_Getchar (C : out Character) is
-      Data : Unsigned_8;
-   begin
-      PL011.RX (PL011_Descriptor, Data);
-      C := To_Ch (Data);
-   end Console_Getchar;
-
-   ----------------------------------------------------------------------------
-   -- BSP_Setup
-   ----------------------------------------------------------------------------
-   procedure BSP_Setup is
-   begin
-      -------------------------------------------------------------------------
-      Exceptions.Init;
-      -- PL011 hardware initialization ----------------------------------------
-      PL011_Descriptor.Read_8       := MMIO.Read'Access;
-      PL011_Descriptor.Write_8      := MMIO.Write'Access;
-      PL011_Descriptor.Read_16      := MMIO.Read'Access;
-      PL011_Descriptor.Write_16     := MMIO.Write'Access;
-      PL011_Descriptor.Base_Address := To_Address (PL011_UART0_BASEADDRESS);
-      PL011_Descriptor.Baud_Clock   := 14_745_600;
-      PL011.Init (PL011_Descriptor);
-      -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
-      -------------------------------------------------------------------------
-      Console.Print ("AArch64 Cortex-A53 (QEMU emulator)", NL => True);
-      Console.Print (AArch64.CNTFRQ_EL0_Read.Clock_frequency, Prefix => "CNTFRQ_EL0: ", NL => True);
-      -------------------------------------------------------------------------
-      AArch64.GICD_CTLR := 1;
-      AArch64.GICC_CTLR := 1;
-      AArch64.GICC_PMR := 16#FF#;
-      AArch64.GICD_ISENABLER := 16#4000_0000#;
-      Virt.Timer_Reload;
-      AArch64.CNTP_CTL_EL0_Write ((
-                                   ENABLE  => True,
-                                   IMASK   => False,
-                                   ISTATUS => False,
-                                   others  => <>
-                                  ));
-      AArch64.Irq_Enable;
-      -------------------------------------------------------------------------
-   end BSP_Setup;
-
-end BSP;
+end Virt;
