@@ -73,16 +73,145 @@ package body AArch64 is
    end Asm_Call;
 
    ----------------------------------------------------------------------------
+   -- VBAR_EL1_Read/Write
+   ----------------------------------------------------------------------------
+
+   function VBAR_EL1_Read return Unsigned_64 is
+      Value : Unsigned_64;
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        mrs     %0,vbar_el1" & CRLF &
+                       "",
+           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end VBAR_EL1_Read;
+
+   procedure VBAR_EL1_Write (Value : in Unsigned_64) is
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        msr     vbar_el1,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Unsigned_64'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end VBAR_EL1_Write;
+
+   ----------------------------------------------------------------------------
+   -- CNTP_CTL_EL0_Read/Write
+   ----------------------------------------------------------------------------
+
+   function CNTP_CTL_EL0_Read return CNTP_CTL_EL0_Type is
+      Value : CNTP_CTL_EL0_Type;
+   begin
+      Asm (
+           Template => ""                                & CRLF &
+                       "        mrs     %0,cntp_ctl_el0" & CRLF &
+                       "",
+           Outputs  => CNTP_CTL_EL0_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end CNTP_CTL_EL0_Read;
+
+   procedure CNTP_CTL_EL0_Write (Value : in CNTP_CTL_EL0_Type) is
+   begin
+      Asm (
+           Template => ""                                & CRLF &
+                       "        msr     cntp_ctl_el0,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => CNTP_CTL_EL0_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end CNTP_CTL_EL0_Write;
+
+   ----------------------------------------------------------------------------
+   -- CNTP_CVAL_EL0_Read/Write
+   ----------------------------------------------------------------------------
+
+   function CNTP_CVAL_EL0_Read return Unsigned_64 is
+      Value : Unsigned_64;
+   begin
+      Asm (
+           Template => ""                                 & CRLF &
+                       "        mrs     %0,cntp_cval_el0" & CRLF &
+                       "",
+           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end CNTP_CVAL_EL0_Read;
+
+   procedure CNTP_CVAL_EL0_Write (Value : in Unsigned_64) is
+   begin
+      Asm (
+           Template => ""                                 & CRLF &
+                       "        msr     cntp_cval_el0,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Unsigned_64'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end CNTP_CVAL_EL0_Write;
+
+   ----------------------------------------------------------------------------
+   -- CNTP_TVAL_EL0_Read/Write
+   ----------------------------------------------------------------------------
+
+   function CNTP_TVAL_EL0_Read return CNTP_TVAL_EL0_Type is
+      Value : CNTP_TVAL_EL0_Type;
+   begin
+      Asm (
+           Template => ""                                 & CRLF &
+                       "        mrs     %0,cntp_tval_el0" & CRLF &
+                       "",
+           Outputs  => CNTP_TVAL_EL0_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end CNTP_TVAL_EL0_Read;
+
+   procedure CNTP_TVAL_EL0_Write (Value : in CNTP_TVAL_EL0_Type) is
+   begin
+      Asm (
+           Template => ""                                 & CRLF &
+                       "        msr     cntp_tval_el0,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => CNTP_TVAL_EL0_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end CNTP_TVAL_EL0_Write;
+
+   ----------------------------------------------------------------------------
    -- CNTFRQ_EL0_Read
    ----------------------------------------------------------------------------
-   function CNTFRQ_EL0_Read return Unsigned_32 is
-      Value : Unsigned_32;
+
+   function CNTFRQ_EL0_Read return CNTFRQ_EL0_Type is
+      Value : CNTFRQ_EL0_Type;
    begin
       Asm (
            Template => ""                              & CRLF &
                        "        mrs     %0,cntfrq_el0" & CRLF &
                        "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", Value),
+           Outputs  => CNTFRQ_EL0_Type'Asm_Output ("=r", Value),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
@@ -95,7 +224,15 @@ package body AArch64 is
    ----------------------------------------------------------------------------
    procedure Irq_Enable is
    begin
-      null;
+      Asm (
+           Template => ""                           & CRLF &
+                       "        msr     daifclr,#2" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
    end Irq_Enable;
 
    ----------------------------------------------------------------------------
@@ -103,7 +240,15 @@ package body AArch64 is
    ----------------------------------------------------------------------------
    procedure Irq_Disable is
    begin
-      null;
+      Asm (
+           Template => ""                           & CRLF &
+                       "        msr     daifset,#2" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
    end Irq_Disable;
 
 end AArch64;
