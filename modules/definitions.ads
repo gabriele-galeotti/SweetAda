@@ -65,17 +65,18 @@ package Definitions is
    -- various constants
    kHz : constant := 1_000;
    MHz : constant := 1_000 * kHz;
+   GHz : constant := 1_000 * MHz;
 
    -- common known clock rates in Hz
-   RTC32k_CLK  : constant := 32_768;
-   UART1M8_CLK : constant := 1_843_200;
-   UART2M4_CLK : constant := 2_457_600;
-   NTSC_CLK    : constant := 3_579_545;
-   UART3M6_CLK : constant := UART1M8_CLK * 2;
-   PAL_CLK     : constant := 4_433_619;
-   UART7M3_CLK : constant := 7_372_800;
-   NTSC_CLK4   : constant := 14_318_182;
-   UART18M_CLK : constant := UART1M8_CLK * 10;
+   CLK_RTC32k  : constant :=     32_768;
+   CLK_UART1M8 : constant :=  1_843_200;
+   CLK_UART2M4 : constant :=  2_457_600; -- CLK_UART1M8 * 4/3
+   CLK_NTSC    : constant :=  3_579_545;
+   CLK_UART3M6 : constant :=  3_686_400; -- CLK_UART1M8 * 2
+   CLK_PAL     : constant :=  4_433_619;
+   CLK_UART7M3 : constant :=  7_372_800; -- CLK_UART1M8 * 4
+   CLK_NTSC4   : constant := 14_318_182; -- CLK_NTSC * 4
+   CLK_UART18M : constant := 18_432_000; -- CLK_UART1M8 * 10;
 
    -- serial port bit rates
    type Baud_Rate_Type is (
