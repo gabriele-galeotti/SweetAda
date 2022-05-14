@@ -160,10 +160,8 @@ package body Time is
                           M : Natural;
                           Y : Natural
                          ) return Natural is
-      NDay : Natural;
    begin
-      NDay := Date2Days (D, M, Y);
-      return (NDay + 6) mod 7;
+      return (Date2Days (D, M, Y) + 6) mod 7;
    end NDay_Of_Week;
 
 end Time;
