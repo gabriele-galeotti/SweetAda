@@ -110,7 +110,7 @@ package PC is
    -- https://wiki2.org/en/Colorburst
    -- MASTER_CLK is four times the NTSC color burst frequency:
    -- 4 * (315 / 88) = 4 * 3.579(54) = 14.318182 MHz, T = 69.84 ns
-   MASTER_CLK : constant := Definitions.NTSC_CLK4;
+   MASTER_CLK : constant := Definitions.CLK_NTSC4;
    -- PIT clock is derived from MASTER clock; initially it is divided by 3,
    -- then is divided further by 4.
    PIT_CLK    : constant := (MASTER_CLK + (12 / 2)) / 12; -- 1.193182 MHz, T = 0.838 us
@@ -212,7 +212,7 @@ package PC is
    RTC_REGISTER_C             : constant := 16#0C#;
    RTC_REGISTER_D             : constant := 16#0D#;
 
-   RTC_CLK : constant := Definitions.RTC32k_CLK; -- 32.768 kHz
+   RTC_CLK : constant := Definitions.CLK_RTC32k; -- 32.768 kHz
 
    RS_None  : constant := 2#0000#; -- N/A
    RS_256   : constant := 2#0001#; -- PIR = 3.90625 ms, SQW f = 256 Hz
