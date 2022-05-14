@@ -76,6 +76,7 @@ package Definitions is
    CLK_PAL     : constant :=  4_433_619;
    CLK_UART7M3 : constant :=  7_372_800; -- CLK_UART1M8 * 4
    CLK_NTSC4   : constant := 14_318_182; -- CLK_NTSC * 4
+   CLK_UART14M : constant := 14_745_600; -- CLK_UART1M8 * 8
    CLK_UART18M : constant := 18_432_000; -- CLK_UART1M8 * 10;
 
    -- serial port bit rates

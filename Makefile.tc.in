@@ -25,6 +25,14 @@
 # ADA_MODE
 # STACK_LIMIT
 # BUILD_MODE
+# OPTIMIZATION_LEVEL
+# OBJECT_DIRECTORY
+# KERNEL_BASENAME
+# GNATADC_FILENAME
+# GCC_WRAPPER
+# GNAT_WRAPPER
+# ENABLE_SPLIT_DWARF
+# DISABLE_STACK_USAGE
 #
 
 ################################################################################

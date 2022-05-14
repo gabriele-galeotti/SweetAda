@@ -87,8 +87,6 @@ package body Amiga is
       --
       -- Basic video hardware setup.
       -- PAL non-interlaced: 640 x 256, 16 KiB video memory.
-      -- __REF__ http://palbo.dk/dataskolen/maskinsprog/english/letter_04.pdf
-      -- __REF__ http://cyberpingui.free.fr/tuto_graphics.htm
       --
       CUSTOM.BPLCON0 := HRES or NBITPLANES1; -- two hi-res colors (monochrome), non-interlaced
       CUSTOM.BPLCON1 := 16#0000#;            -- horizontal scroll
@@ -111,7 +109,6 @@ package body Amiga is
                      16#FFFE#
                     );
       --
-      -- __REF__ acroread /a "page=29" "platforms/M68k-UAE/doc/AmigaHardRefManual.pdf"
       -- "... when the end of  vertical blanking  occurs, the Copper is
       -- automatically forced to restart its operations at the address
       -- contained in COP1LC."
@@ -260,11 +257,9 @@ package body Amiga is
                                (Configure.TICK_FREQUENCY * 10);
    begin
       --
-      -- __REF__ kate -l 147 "cia.txt"
-      --
       -- Time = Latch Value / Count Speed
-      -- Where Latch Value is the value written to the low and high timer
-      -- registers, and Count Speed is 7159090 for NTSC, and 7093790 for PAL.
+      -- Latch Value is the value written to the low and high timer registers
+      -- Count Speed is 7159090 for NTSC, and 7093790 for PAL
       --
       -- A single timer count takes 10 clock cycles, so:
       -- 10 / 7093790 = 1.40968 us for 1 count
