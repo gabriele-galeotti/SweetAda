@@ -11,7 +11,8 @@
 
 #
 # Arguments:
-# none
+# -server   start OpenOCD server
+# -shutdown shutdown OpenOCD server
 #
 # Environment variables:
 # SWEETADA_PATH
