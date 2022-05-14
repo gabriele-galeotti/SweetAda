@@ -22,6 +22,7 @@ with Bits;
 with MMIO;
 with AArch64;
 with Virt;
+with Exceptions;
 with Console;
 
 package body BSP is
@@ -69,6 +70,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
    begin
+      -------------------------------------------------------------------------
+      Exceptions.Init;
       -- basic hardware initialization ----------------------------------------
       PL011_Descriptor.Read_8       := MMIO.Read'Access;
       PL011_Descriptor.Write_8      := MMIO.Write'Access;
