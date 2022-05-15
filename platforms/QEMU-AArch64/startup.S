@@ -36,8 +36,8 @@ bootcore:
                 //
                 // Setup stack pointer.
                 //
-                ldr     w0,=SVC_stack
-                mov     wsp,w0
+                ldr     x0,=SVC_stack
+                mov     sp,x0
 
                 //
                 // Jump to high-level code.
