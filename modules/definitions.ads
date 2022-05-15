@@ -74,6 +74,7 @@ package Definitions is
    CLK_NTSC    : constant :=  3_579_545;
    CLK_UART3M6 : constant :=  3_686_400; -- CLK_UART1M8 * 2
    CLK_PAL     : constant :=  4_433_619;
+   CLK_UART4M9 : constant :=  4_915_200; -- CLK_UART1M8 * 8/3
    CLK_UART7M3 : constant :=  7_372_800; -- CLK_UART1M8 * 4
    CLK_NTSC4   : constant := 14_318_182; -- CLK_NTSC * 4
    CLK_UART14M : constant := 14_745_600; -- CLK_UART1M8 * 8
