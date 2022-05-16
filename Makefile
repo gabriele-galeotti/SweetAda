@@ -1024,7 +1024,7 @@ endif
 	$(MAKE) $(MAKE_DRIVERS) clean
 	$(MAKE) $(MAKE_MODULES) clean
 ifneq ($(PLATFORM),)
-	-$(MAKE) $(MAKE_PLATFORM) clean
+	$(MAKE) $(MAKE_PLATFORM) clean
 endif
 	-$(RM) $(CLEAN_OBJECTS_COMMON) $(CLEAN_OBJECTS)
 
