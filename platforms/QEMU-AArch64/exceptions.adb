@@ -57,7 +57,7 @@ package body Exceptions is
          IOEMU.IOEMU_IO0 := 1;
          IOEMU.IOEMU_IO0 := 0;
       end if;
-      AArch64.GICD_ICPENDR := 16#4000_0000#;
+      AArch64.GICD_ICPENDR (30) := True;
       Virt.Timer_Reload;
    end Exception_Process;
 

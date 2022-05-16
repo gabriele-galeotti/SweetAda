@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Definitions;
 with Bits;
 with MMIO;
 with AArch64;
@@ -38,6 +39,7 @@ package body BSP is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use Bits;
    use Virt;
 
@@ -78,7 +80,7 @@ package body BSP is
       PL011_Descriptor.Read_16      := MMIO.Read'Access;
       PL011_Descriptor.Write_16     := MMIO.Write'Access;
       PL011_Descriptor.Base_Address := To_Address (PL011_UART0_BASEADDRESS);
-      PL011_Descriptor.Baud_Clock   := 14_745_600;
+      PL011_Descriptor.Baud_Clock   := CLK_UART14M;
       PL011.Init (PL011_Descriptor);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
@@ -88,10 +90,10 @@ package body BSP is
       Console.Print ("AArch64 Cortex-A53 (QEMU emulator)", NL => True);
       Console.Print (AArch64.CNTFRQ_EL0_Read.Clock_frequency, Prefix => "CNTFRQ_EL0: ", NL => True);
       -------------------------------------------------------------------------
-      AArch64.GICD_CTLR := 1;
-      AArch64.GICC_CTLR := 1;
-      AArch64.GICC_PMR := 16#FF#;
-      AArch64.GICD_ISENABLER := 16#4000_0000#;
+      AArch64.GICD_CTLR.EnableGrp1 := True;
+      AArch64.GICD_ISENABLER (30)  := True;
+      AArch64.GICC_CTLR.EnableGrp1 := True;
+      AArch64.GICC_PMR.Priority    := 16#FF#;
       Virt.Timer_Reload;
       AArch64.CNTP_CTL_EL0_Write ((
                                    ENABLE  => True,
