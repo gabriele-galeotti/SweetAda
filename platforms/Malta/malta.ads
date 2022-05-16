@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Definitions;
 with MIPS;
 with PCI;
 with GT64120;
@@ -37,6 +38,7 @@ package Malta is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use MIPS;
    use PCI;
    use GT64120;
@@ -103,12 +105,8 @@ package Malta is
    -- Timer
    ----------------------------------------------------------------------------
 
-   -- CP0 Count runs at half the pipeline CPU clock
-   -- QEMU CPU CLK = 320 MHz:
-   -- 0x4E200 ticks @ 1 kHz
-   -- 0x30D400 ticks @ 100 Hz
-   -- 0x1E84800 ticks @ 10 Hz
-   CP0_TIMER_COUNT : constant := 16#0030_D400# / 2;
+   -- CP0 Count runs at half the pipeline CPU clock (QEMU CPU CLK = 320 MHz)
+   CP0_TIMER_COUNT : constant := (320 * MHz / 100) / 2;
 
    Count_Expire : Unsigned_32;
 
