@@ -59,6 +59,27 @@ package body SPARC is
           );
    end NOP;
 
+   ----------------------------------------------------------------------------
+   -- Asm_Call
+   ----------------------------------------------------------------------------
+   procedure Asm_Call (Target_Address : in Address) is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        call    %0" & CRLF &
+                       "        nop       " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Address'Asm_Input ("r", Target_Address),
+           Clobber  => "",
+           Volatile => True
+          );
+   end Asm_Call;
+
+   ----------------------------------------------------------------------------
+   -- PSR_Read/Write
+   ----------------------------------------------------------------------------
+
    function PSR_Read return PSR_Type is
       PSR : PSR_Type;
    begin

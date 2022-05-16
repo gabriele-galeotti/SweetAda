@@ -43,6 +43,8 @@ package SPARC is
 
    procedure NOP with
       Inline => True;
+   procedure Asm_Call (Target_Address : in Address) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- PSR
