@@ -185,8 +185,8 @@ case $1 in
     rm -f make.log make.errors.log
     createkernelcfg
     if [ $? -eq 0 ] ; then
-      PLATFORM=${PLATFORM} SUBPLATFORM=${SUBPLATFORM} "${MAKE}" createkernelcfg 2> make.errors.log | tee make.log
-      exit_status=${PIPESTATUS[0]}
+      PLATFORM=${PLATFORM} SUBPLATFORM=${SUBPLATFORM} "${MAKE}" createkernelcfg
+      exit_status=$?
       log_build_errors
     fi
     # invalidate PLATFORM and SUBPLATFORM
@@ -195,25 +195,25 @@ case $1 in
     ;;
   "configure")
     rm -f make.log make.errors.log
-    "${MAKE}" ${MAKE_DEBUG_OPTIONS} configure 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    "${MAKE}" configure
+    exit_status=$?
     log_build_errors
     ;;
   "all")
     rm -f make.log make.errors.log
-    "${MAKE}" ${MAKE_DEBUG_OPTIONS} all 2> make.errors.log | tee make.log
+    "${MAKE}" all 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
   "kernel")
     rm -f make.log make.errors.log
-    "${MAKE}" ${MAKE_DEBUG_OPTIONS} kernel 2> make.errors.log | tee make.log
+    "${MAKE}" kernel 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
   "postbuild")
     rm -f make.log make.errors.log
-    "${MAKE}" ${MAKE_DEBUG_OPTIONS} postbuild 2> make.errors.log | tee make.log
+    "${MAKE}" postbuild 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
@@ -243,7 +243,7 @@ case $1 in
     ;;
   "rts")
     rm -f make.log make.errors.log
-    "${MAKE}" ${MAKE_DEBUG_OPTIONS} rts 2> make.errors.log | tee make.log
+    "${MAKE}" rts 2> make.errors.log | tee make.log
     exit_status=${PIPESTATUS[0]}
     log_build_errors
     ;;
