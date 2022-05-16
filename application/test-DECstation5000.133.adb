@@ -45,18 +45,11 @@ package body Application is
          begin
             Delay_Count := (if Configure.BOOT_FROM_NETWORK then 5_000_000 else 100_000);
             loop
-               if Dummy = 16#AA55_AA55# then
-                  IOASIC_CSR.LED0 := False;
-                  for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-                  IOASIC_CSR.LED0 := True;
-                  for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-                  Console.Print ("hello, SweetAda", NL => True);
-               else
-                  IOASIC_CSR.LED3 := False;
-                  for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-                  IOASIC_CSR.LED3 := True;
-                  for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-               end if;
+               IOASIC_CSR.LED0 := False;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+               IOASIC_CSR.LED0 := True;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+               Console.Print ("hello, SweetAda", NL => True);
             end loop;
          end;
       end if;
