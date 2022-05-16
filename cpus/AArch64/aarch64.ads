@@ -115,6 +115,15 @@ package AArch64 is
       Inline => True;
 
    ----------------------------------------------------------------------------
+   -- CNTPCT_EL0
+   ----------------------------------------------------------------------------
+
+   -- Holds the 64-bit physical count value.
+
+   function CNTPCT_EL0_Read return Unsigned_64 with
+      Inline => True;
+
+   ----------------------------------------------------------------------------
    -- CNTFRQ_EL0
    ----------------------------------------------------------------------------
 
@@ -134,33 +143,89 @@ package AArch64 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- GIC registers __FIX__ not properly encoded
+   -- GIC registers
    ----------------------------------------------------------------------------
+
+   type GICD_CTLR_Type is
+   record
+      EnableGrp1  : Boolean;
+      EnableGrp1A : Boolean;
+      Reserved1   : Bits_2 := 0;
+      ARE_NS      : Boolean;
+      Reserved2   : Bits_26 := 0;
+      RWP         : Boolean;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for GICD_CTLR_Type use record
+      EnableGrp1  at 0 range 0 .. 0;
+      EnableGrp1A at 0 range 1 .. 1;
+      Reserved1   at 0 range 2 .. 3;
+      ARE_NS      at 0 range 4 .. 4;
+      Reserved2   at 0 range 5 .. 30;
+      RWP         at 0 range 31 .. 31;
+   end record;
+
+   EOImodeNS_ALL      : constant := 0;
+   EOImodeNS_PRIORITY : constant := 1;
+
+   type GICC_CTLR_Type is
+   record
+      EnableGrp1    : Boolean;
+      Reserved1     : Bits_4 := 0;
+      FIQBypDisGrp1 : Boolean;
+      IRQBypDisGrp1 : Boolean;
+      Reserved2     : Bits_2 := 0;
+      EOImodeNS     : Bits_1;
+      Reserved3     : Bits_13 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for GICC_CTLR_Type use record
+      EnableGrp1    at 0 range 0 .. 0;
+      Reserved1     at 0 range 1 .. 4;
+      FIQBypDisGrp1 at 0 range 5 .. 5;
+      IRQBypDisGrp1 at 0 range 6 .. 6;
+      Reserved2     at 0 range 7 .. 8;
+      EOImodeNS     at 0 range 9 .. 9;
+      Reserved3     at 0 range 19 .. 31;
+   end record;
+
+   type GICC_PMR_Type is
+   record
+      Priority : Unsigned_8;
+      Reserved : Bits_24 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for GICC_PMR_Type use record
+      Priority at 0 range 0 .. 7;
+      Reserved at 0 range 8 .. 31;
+   end record;
 
    GIC_BASEADDRESS : constant := 16#0800_0000#;
 
-   GICD_CTLR      : aliased Unsigned_32 with
+   GICD_CTLR      : aliased GICD_CTLR_Type with
       Address              => To_Address (GIC_BASEADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   GICD_ISENABLER : aliased Unsigned_32 with
+   GICD_ISENABLER : aliased Bitmap_32 with
       Address              => To_Address (GIC_BASEADDRESS + 16#0000_0100#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   GICD_ICPENDR   : aliased Unsigned_32 with
+   GICD_ICPENDR   : aliased Bitmap_32 with
       Address              => To_Address (GIC_BASEADDRESS + 16#0000_0280#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-
-   GICC_CTLR      : aliased Unsigned_32 with
+   GICC_CTLR      : aliased GICC_CTLR_Type with
       Address              => To_Address (GIC_BASEADDRESS + 16#0001_0000#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   GICC_PMR       : aliased Unsigned_32 with
+   GICC_PMR       : aliased GICC_PMR_Type with
       Address              => To_Address (GIC_BASEADDRESS + 16#0001_0004#),
       Volatile_Full_Access => True,
       Import               => True,

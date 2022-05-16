@@ -201,6 +201,25 @@ package body AArch64 is
    end CNTP_TVAL_EL0_Write;
 
    ----------------------------------------------------------------------------
+   -- CNTPCT_EL0_Read
+   ----------------------------------------------------------------------------
+
+   function CNTPCT_EL0_Read return Unsigned_64 is
+      Value : Unsigned_64;
+   begin
+      Asm (
+           Template => ""                              & CRLF &
+                       "        mrs     %0,cntpct_el0" & CRLF &
+                       "",
+           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end CNTPCT_EL0_Read;
+
+   ----------------------------------------------------------------------------
    -- CNTFRQ_EL0_Read
    ----------------------------------------------------------------------------
 
