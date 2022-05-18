@@ -88,12 +88,13 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("AArch64 Cortex-A53 (QEMU emulator)", NL => True);
+      Console.Print (Natural (AArch64.CurrentEL_Read.EL),     Prefix => "Current EL: ", NL => True);
       Console.Print (AArch64.CNTFRQ_EL0_Read.Clock_frequency, Prefix => "CNTFRQ_EL0: ", NL => True);
       -------------------------------------------------------------------------
-      AArch64.GICD_CTLR.EnableGrp1 := True;
-      AArch64.GICD_ISENABLER (30)  := True;
-      AArch64.GICC_CTLR.EnableGrp1 := True;
-      AArch64.GICC_PMR.Priority    := 16#FF#;
+      Virt.GICD_CTLR.EnableGrp1 := True;
+      Virt.GICD_ISENABLER (30)  := True;
+      Virt.GICC_CTLR.EnableGrp1 := True;
+      Virt.GICC_PMR.Priority    := 16#FF#;
       Virt.Timer_Reload;
       AArch64.CNTP_CTL_EL0_Write ((
                                    ENABLE  => True,

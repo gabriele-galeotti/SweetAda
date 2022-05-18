@@ -18,9 +18,9 @@
 with System;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Core;
 with Bits;
 with AArch64;
-with Core;
 with Virt;
 with IOEMU;
 
@@ -57,7 +57,7 @@ package body Exceptions is
          IOEMU.IOEMU_IO0 := 1;
          IOEMU.IOEMU_IO0 := 0;
       end if;
-      AArch64.GICD_ICPENDR (30) := True;
+      Virt.GICD_ICPENDR (30) := True;
       Virt.Timer_Reload;
    end Exception_Process;
 
