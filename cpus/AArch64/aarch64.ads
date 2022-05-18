@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package AArch64 is
    pragma Preelaborate;
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -47,12 +45,48 @@ package AArch64 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- VBAR_EL1
+   -- CurrentEL
+   ----------------------------------------------------------------------------
+
+   EL0 : constant := 2#00#;
+   EL1 : constant := 2#01#;
+   EL2 : constant := 2#10#;
+   EL3 : constant := 2#11#;
+
+   type EL_Type is
+   record
+      Reserved1 : Bits_2;
+      EL        : Bits_2;  -- Current Exception level.
+      Reserved2 : Bits_28;
+      Reserved3 : Bits_32;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for EL_Type use record
+      Reserved1 at 0 range 0 .. 1;
+      EL        at 0 range 2 .. 3;
+      Reserved2 at 0 range 4 .. 31;
+      Reserved3 at 0 range 32 .. 63;
+   end record;
+
+   function CurrentEL_Read return EL_Type with
+      Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- VBAR_ELx
    ----------------------------------------------------------------------------
 
    function VBAR_EL1_Read return Unsigned_64 with
       Inline => True;
    procedure VBAR_EL1_Write (Value : in Unsigned_64) with
+      Inline => True;
+   function VBAR_EL2_Read return Unsigned_64 with
+      Inline => True;
+   procedure VBAR_EL2_Write (Value : in Unsigned_64) with
+      Inline => True;
+   function VBAR_EL3_Read return Unsigned_64 with
+      Inline => True;
+   procedure VBAR_EL3_Write (Value : in Unsigned_64) with
       Inline => True;
 
    ----------------------------------------------------------------------------
@@ -141,95 +175,6 @@ package AArch64 is
 
    function CNTFRQ_EL0_Read return CNTFRQ_EL0_Type with
       Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- GIC registers
-   ----------------------------------------------------------------------------
-
-   type GICD_CTLR_Type is
-   record
-      EnableGrp1  : Boolean;
-      EnableGrp1A : Boolean;
-      Reserved1   : Bits_2 := 0;
-      ARE_NS      : Boolean;
-      Reserved2   : Bits_26 := 0;
-      RWP         : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GICD_CTLR_Type use record
-      EnableGrp1  at 0 range 0 .. 0;
-      EnableGrp1A at 0 range 1 .. 1;
-      Reserved1   at 0 range 2 .. 3;
-      ARE_NS      at 0 range 4 .. 4;
-      Reserved2   at 0 range 5 .. 30;
-      RWP         at 0 range 31 .. 31;
-   end record;
-
-   EOImodeNS_ALL      : constant := 0;
-   EOImodeNS_PRIORITY : constant := 1;
-
-   type GICC_CTLR_Type is
-   record
-      EnableGrp1    : Boolean;
-      Reserved1     : Bits_4 := 0;
-      FIQBypDisGrp1 : Boolean;
-      IRQBypDisGrp1 : Boolean;
-      Reserved2     : Bits_2 := 0;
-      EOImodeNS     : Bits_1;
-      Reserved3     : Bits_13 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GICC_CTLR_Type use record
-      EnableGrp1    at 0 range 0 .. 0;
-      Reserved1     at 0 range 1 .. 4;
-      FIQBypDisGrp1 at 0 range 5 .. 5;
-      IRQBypDisGrp1 at 0 range 6 .. 6;
-      Reserved2     at 0 range 7 .. 8;
-      EOImodeNS     at 0 range 9 .. 9;
-      Reserved3     at 0 range 19 .. 31;
-   end record;
-
-   type GICC_PMR_Type is
-   record
-      Priority : Unsigned_8;
-      Reserved : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GICC_PMR_Type use record
-      Priority at 0 range 0 .. 7;
-      Reserved at 0 range 8 .. 31;
-   end record;
-
-   GIC_BASEADDRESS : constant := 16#0800_0000#;
-
-   GICD_CTLR      : aliased GICD_CTLR_Type with
-      Address              => To_Address (GIC_BASEADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   GICD_ISENABLER : aliased Bitmap_32 with
-      Address              => To_Address (GIC_BASEADDRESS + 16#0000_0100#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   GICD_ICPENDR   : aliased Bitmap_32 with
-      Address              => To_Address (GIC_BASEADDRESS + 16#0000_0280#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   GICC_CTLR      : aliased GICC_CTLR_Type with
-      Address              => To_Address (GIC_BASEADDRESS + 16#0001_0000#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   GICC_PMR       : aliased GICC_PMR_Type with
-      Address              => To_Address (GIC_BASEADDRESS + 16#0001_0004#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts

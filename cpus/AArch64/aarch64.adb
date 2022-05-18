@@ -73,7 +73,25 @@ package body AArch64 is
    end Asm_Call;
 
    ----------------------------------------------------------------------------
-   -- VBAR_EL1_Read/Write
+   -- CurrentEL_Read
+   ----------------------------------------------------------------------------
+   function CurrentEL_Read return EL_Type is
+      Value : EL_Type;
+   begin
+      Asm (
+           Template => ""                             & CRLF &
+                       "        mrs     %0,currentel" & CRLF &
+                       "",
+           Outputs  => EL_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end CurrentEL_Read;
+
+   ----------------------------------------------------------------------------
+   -- VBAR_ELx_Read/Write
    ----------------------------------------------------------------------------
 
    function VBAR_EL1_Read return Unsigned_64 is
@@ -103,6 +121,62 @@ package body AArch64 is
            Volatile => True
           );
    end VBAR_EL1_Write;
+
+   function VBAR_EL2_Read return Unsigned_64 is
+      Value : Unsigned_64;
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        mrs     %0,vbar_el2" & CRLF &
+                       "",
+           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end VBAR_EL2_Read;
+
+   procedure VBAR_EL2_Write (Value : in Unsigned_64) is
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        msr     vbar_el2,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Unsigned_64'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end VBAR_EL2_Write;
+
+   function VBAR_EL3_Read return Unsigned_64 is
+      Value : Unsigned_64;
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        mrs     %0,vbar_el3" & CRLF &
+                       "",
+           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end VBAR_EL3_Read;
+
+   procedure VBAR_EL3_Write (Value : in Unsigned_64) is
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        msr     vbar_el3,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Unsigned_64'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end VBAR_EL3_Write;
 
    ----------------------------------------------------------------------------
    -- CNTP_CTL_EL0_Read/Write
