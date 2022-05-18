@@ -55,12 +55,16 @@ flush $serialport_fp
 # read kernel file and write to serial port
 set kernel_fp [open $KERNEL_SRECFILE r]
 fconfigure $kernel_fp -buffering line
+# delay for processing of data on remote side
+switch $BAUD_RATE {
+    "115200" {set delay 10}
+    default  {set delay 50}
+}
 while {[gets $kernel_fp data] >= 0} {
     puts -nonewline $serialport_fp "$data\x0D\x0A"
     puts -nonewline stderr "*"
     #puts stderr $data
-    # allow processing of data on remote side
-    after 50
+    after $delay
     set srec_type [string range $data 0 1]
     if {$srec_type eq "S7"} {
         set START_ADDRESS [string range $data 4 11]
