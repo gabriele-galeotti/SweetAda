@@ -16,7 +16,9 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Definitions;
 with Bits;
+with AArch64;
 with RPI3;
 with Exceptions;
 with Console;
@@ -32,6 +34,7 @@ package body BSP is
    --========================================================================--
 
    use Interfaces;
+   use Definitions;
    use Bits;
 
    --========================================================================--
@@ -68,32 +71,50 @@ package body BSP is
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
+      System_Clock : constant := 250 * MHz;
+      Baud_Rate    : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
+      -------------------------------------------------------------------------
+      Exceptions.Init;
       -- GPIO pins 14/15 (8/10) take alternate function 5 ---------------------
-      RPI3.GPFSEL1.FSEL14  := RPI3.GPIO_ALT5;
-      RPI3.GPFSEL1.FSEL15  := RPI3.GPIO_ALT5;
+      RPI3.GPFSEL1.FSEL14 := RPI3.GPIO_ALT5;
+      RPI3.GPFSEL1.FSEL15 := RPI3.GPIO_ALT5;
       -- mini-UART (UART1) ----------------------------------------------------
-      RPI3.AUXENB.MiniUART_Enable   := True;
-      RPI3.AUX_MU_BAUD.Baudrate     := 16#0CB6#; -- 9600 bps @ 250 MHz
-      RPI3.AUX_MU_LCR_REG.Data_Size := RPI3.UART_8BIT;
-      RPI3.AUX_MU_CNTL_REG          := (
-                                        Receiver_Enable    => True,
-                                        Transmitter_Enable => True,
-                                        RTS_RX_Autoflow    => False,
-                                        CTS_TX_Autoflow    => False,
-                                        RTS_Autoflow_Level => RPI3.RTS_Autoflow1,
-                                        RTS_Assert_Level   => RPI3.RTS_AutoflowP,
-                                        CTS_Assert_Level   => RPI3.CTS_AutoflowP,
-                                        others             => 0
-                                       );
+      RPI3.AUXENB.MiniUART_Enable := True;
+      -- baud_rate_reg = SYSTEM_CLK / 8 * baud_rate - 1
+      RPI3.AUX_MU_BAUD.Baudrate   := Unsigned_16 ((System_Clock + (Baud_Rate * 8 / 2)) / (Baud_Rate * 8) - 1);
+      RPI3.AUX_MU_LCR_REG         := (
+                                      Data_Size   => RPI3.UART_8BIT,
+                                      Break       => False,
+                                      DLAB_Access => False,
+                                      others      => <>
+                                     );
+      RPI3.AUX_MU_CNTL_REG        := (
+                                      Receiver_Enable    => True,
+                                      Transmitter_Enable => True,
+                                      RTS_RX_Autoflow    => False,
+                                      CTS_TX_Autoflow    => False,
+                                      RTS_Autoflow_Level => RPI3.RTS_Autoflow1,
+                                      RTS_Assert_Level   => RPI3.RTS_AutoflowP,
+                                      CTS_Assert_Level   => RPI3.CTS_AutoflowP,
+                                      others             => <>
+                                     );
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("Raspberry Pi 3", NL => True);
-      -------------------------------------------------------------------------
-      Exceptions.Init;
+      Console.Print (Natural (AArch64.CurrentEL_Read.EL), Prefix => "Current EL:   ", NL => True);
+      Console.Print (RPI3.ARMTIMER_IRQ_ClrAck,            Prefix => "ARM Timer ID: ", NL => True);
+      -- GPIOs 5/6 (header pins 29/31) are output -----------------------------
+      RPI3.GPFSEL0.FSEL5 := RPI3.GPIO_OUTPUT;
+      RPI3.GPFSEL0.FSEL6 := RPI3.GPIO_OUTPUT;
+      -- Timer IRQ ------------------------------------------------------------
+      RPI3.Timer_Init;
+      RPI3.Timer_Reload;
+      RPI3.Enable_IRQs_1 (RPI3.system_timer_match_1) := True;
+      AArch64.Irq_Enable;
       -------------------------------------------------------------------------
    end BSP_Setup;
 

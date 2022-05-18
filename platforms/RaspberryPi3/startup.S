@@ -27,12 +27,26 @@ startcode:
                 // Allow only master core to execute code.
                 //
                 mrs     x0,mpidr_el1
-                mov     x1,#0xC1000000
-                bic     x0,x0,x1
+                and     x0,x0,#0xFF
                 cbz     x0,bootcore
-hold:           b       .
+hold:           wfe
+                b       hold
 
 bootcore:
+
+                //
+                // EL2 ---> EL1
+                //
+                ldr     x0,=(3<<28|3<<22|1<<20|1<<11)
+                msr     sctlr_el1,x0
+                ldr     x0,=(1<<31)
+                msr     hcr_el2,x0
+                ldr     x0,=(7<<6|5<<0)
+                msr     spsr_el2,x0
+                adr     x0,1f
+                msr     elr_el2,x0
+                eret
+1:
 
                 //
                 // Setup stack pointer.

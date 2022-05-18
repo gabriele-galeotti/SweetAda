@@ -16,11 +16,15 @@ OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
 DISABLE_STACK_USAGE := Y
 
-#USE_APPLICATION := test-srecord ; LD_SCRIPT := linker.lds-srecord
+# S-record server
+#USE_APPLICATION := test-srecord
+#LD_SCRIPT := linker.lds-srecord
+# normal application
 USE_APPLICATION := test-RaspberryPi3
+LD_SCRIPT := linker.lds
 
 # path to FAT32 1st partition on a micro-SD memory card
-export USDCARD_UUID       := 0F5F-3CD8
+export USDCARD_UUID       := 3FFC-F14C
 export USDCARD_MOUNTPOINT := /mnt/hd
 
 SESSION_START_COMMAND :=
@@ -28,6 +32,6 @@ SESSION_END_COMMAND   :=
 
 #RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/createbootdevice.sh
 RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord.tcl   \
-                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 9600
+                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 115200
 DEBUG_COMMAND := $(RUN_COMMAND)
 

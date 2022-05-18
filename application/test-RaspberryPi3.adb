@@ -1,8 +1,9 @@
 
-with Ada.Unchecked_Conversion;
 with System;
 with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
 with Interfaces;
+with Core;
 with Bits;
 with CPU;
 with RPI3;
@@ -170,23 +171,20 @@ package body Application is
    begin
       -------------------------------------------------------------------------
       declare
-         Delay_Count : constant := 1_000_000;
+         Delay_Count : constant := 3_000_000;
       begin
-         Clock_Set (RPI3.CLOCK_CORE_ID, 125_000_000);
-         RPI3.AUX_MU_BAUD.Baudrate := 16#0CB6# / 2; -- 9600 bps @ 125 MHz
-         -- GPIOs 5/6 (header pins 29/31) are output
-         RPI3.GPFSEL0.FSEL5 := RPI3.GPIO_OUTPUT;
-         RPI3.GPFSEL0.FSEL6 := RPI3.GPIO_OUTPUT;
+         -- test: change core frequency
+         -- Clock_Set (RPI3.CLOCK_CORE_ID, 125_000_000);
+         -- RPI3.AUX_MU_BAUD.Baudrate := 16#0CB6# / 2; -- 9600 bps @ 125 MHz
          while True loop
-            -- GPIO05 ON, GPIO06 OFF
-            RPI3.GPSET0 := (SET5 => True, others => False);
-            RPI3.GPCLR0 := (CLR6 => True, others => False);
-            for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            -- GPIO05 OFF, GPIO06 ON
-            RPI3.GPCLR0 := (CLR5 => True, others => False);
+            -- GPIO06 ON
             RPI3.GPSET0 := (SET6 => True, others => False);
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            -- Console.Print ("hello, SweetAda", NL => True);
+            -- GPIO06 OFF
+            RPI3.GPCLR0 := (CLR6 => True, others => False);
+            for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+            -- dump informations from GPU side
+            Console.Print ("--------------------------------", NL => True);
             Console.Print (Clock_Get (RPI3.CLOCK_CORE_ID),        Prefix => "Clock (CORE):     ", NL => True);
             Console.Print (Clock_Get (RPI3.CLOCK_ARM_ID),         Prefix => "Clock (ARM):      ", NL => True);
             Console.Print (Clock_Get (RPI3.CLOCK_UART_ID),        Prefix => "Clock (UART):     ", NL => True);
