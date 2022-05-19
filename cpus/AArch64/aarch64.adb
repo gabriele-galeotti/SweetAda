@@ -91,6 +91,70 @@ package body AArch64 is
    end CurrentEL_Read;
 
    ----------------------------------------------------------------------------
+   -- HCR_EL2_Read/Write
+   ----------------------------------------------------------------------------
+
+   function HCR_EL2_Read return HCR_EL2_Type is
+      Value : HCR_EL2_Type;
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        mrs     %0,hcr_el2" & CRLF &
+                       "",
+           Outputs  => HCR_EL2_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end HCR_EL2_Read;
+
+   procedure HCR_EL2_Write (Value : in HCR_EL2_Type) is
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        msr     hcr_el2,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => HCR_EL2_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end HCR_EL2_Write;
+
+   ----------------------------------------------------------------------------
+   -- SCTLR_EL1_Read/Write
+   ----------------------------------------------------------------------------
+
+   function SCTLR_EL1_Read return SCTLR_EL1_Type is
+      Value : SCTLR_EL1_Type;
+   begin
+      Asm (
+           Template => ""                             & CRLF &
+                       "        mrs     %0,sctlr_el1" & CRLF &
+                       "",
+           Outputs  => SCTLR_EL1_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end SCTLR_EL1_Read;
+
+   procedure SCTLR_EL1_Write (Value : in SCTLR_EL1_Type) is
+   begin
+      Asm (
+           Template => ""                             & CRLF &
+                       "        msr     sctlr_el1,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => SCTLR_EL1_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end SCTLR_EL1_Write;
+
+   ----------------------------------------------------------------------------
    -- VBAR_ELx_Read/Write
    ----------------------------------------------------------------------------
 
