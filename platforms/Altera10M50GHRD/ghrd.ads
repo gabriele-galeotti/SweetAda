@@ -34,20 +34,30 @@ package GHRD is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
-   -- system addresses
+   ----------------------------------------------------------------------------
+   -- system definitions
+   ----------------------------------------------------------------------------
+
+   Timer_Frequency   renames Configure.TIMER_SYSCLK;
+   Timer_1_Frequency renames Configure.TIMER_1_SYSCLK;
 
    RESET_ADDRESS         renames Configure.RESET_ADDRESS;
    EXCEPTION_ADDRESS     renames Configure.RESET_ADDRESS;
    FAST_TLB_MISS_ADDRESS renames Configure.FAST_TLB_MISS_ADDRESS;
 
+   UART_BASEADDRESS : constant := 16#F800_1600#;
+
+   ----------------------------------------------------------------------------
    -- Timer
+   ----------------------------------------------------------------------------
 
    type Timer_Status_Type is
    record
       TO       : Boolean := False;
       RUN      : Boolean := False;
-      Reserved : Bits.Bits_30 := 0;
+      Reserved : Bits_30 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -64,7 +74,7 @@ package GHRD is
       CONT     : Boolean := False;
       START    : Boolean := False;
       STOP     : Boolean := False;
-      Reserved : Bits.Bits_28 := 0;
+      Reserved : Bits_28 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -113,11 +123,9 @@ package GHRD is
       Import     => True,
       Convention => Ada;
 
-   -- UART
-
-   UART_BASEADDRESS : constant := 16#F800_1600#;
-
+   ----------------------------------------------------------------------------
    -- Subprograms
+   ----------------------------------------------------------------------------
 
    procedure Tclk_Init;
 

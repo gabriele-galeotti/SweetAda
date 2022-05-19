@@ -82,12 +82,15 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("Altera 10M50GHRD (QEMU emulator)", NL => True);
-      Console.Print (NiosII.CPUID, Prefix => "CPUID: ", NL => True);
+      Console.Print (NiosII.cpuid_Read, Prefix => "CPUID: ", NL => True);
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
       Tclk_Init;
-      NiosII.Irq_Enable (0); -- enable timer irq
+      NiosII.ienable_Write (Bitmap_32'(
+                                       NiosII.IRQ0 => True, -- enable timer irq
+                                       others      => False
+                                      ));
       CPU.Irq_Enable;
       -------------------------------------------------------------------------
    end BSP_Setup;

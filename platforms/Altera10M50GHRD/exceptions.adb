@@ -39,12 +39,12 @@ package body Exceptions is
    begin
       if GHRD.Timer.Status.TO then
          Core.Tick_Count := @ + 1;
-         GHRD.Timer.Status.TO := False;
          if Core.Tick_Count mod 1_000 = 0 then
             -- IOEMU "TIMER" LED blinking
             IOEMU.IOEMU_IO0 := 1;
             IOEMU.IOEMU_IO0 := 0;
          end if;
+         GHRD.Timer.Status.TO := False;
       end if;
    end Irq_Process;
 

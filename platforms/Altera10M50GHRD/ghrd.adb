@@ -29,9 +29,14 @@ package body GHRD is
    -- Tclk_Init
    ----------------------------------------------------------------------------
    procedure Tclk_Init is
-      Period : constant Unsigned_32 := Configure.TIMER_SYSCLK / Configure.TICK_FREQUENCY - 1;
+      Period : constant Unsigned_32 := (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) /
+                                       Configure.TICK_FREQUENCY
+                                       - 1;
    begin
-      GHRD.Timer.Control := (STOP => True, others => <>);
+      GHRD.Timer.Control := (
+                             STOP   => True,
+                             others => <>
+                            );
       GHRD.Timer.PeriodH := Period / 2**16;
       GHRD.Timer.PeriodL := Period mod 2**16;
       GHRD.Timer.Control := (
