@@ -41,6 +41,188 @@ package body NiosII is
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- status_Read/Write
+   ----------------------------------------------------------------------------
+
+   function status_Read return status_Type is
+      Value : status_Type;
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       "        rdctl   %0,status" & CRLF &
+                       "",
+           Outputs  => status_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end status_Read;
+
+   procedure status_Write (Value : in status_Type) is
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       "        wrctl   status,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => status_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end status_Write;
+
+   ----------------------------------------------------------------------------
+   -- estatus_Read/Write
+   ----------------------------------------------------------------------------
+
+   function estatus_Read return status_Type is
+      Value : status_Type;
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        rdctl   %0,estatus" & CRLF &
+                       "",
+           Outputs  => status_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end estatus_Read;
+
+   procedure estatus_Write (Value : in status_Type) is
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        wrctl   estatus,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => status_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end estatus_Write;
+
+   ----------------------------------------------------------------------------
+   -- bstatus_Read/Write
+   ----------------------------------------------------------------------------
+
+   function bstatus_Read return status_Type is
+      Value : status_Type;
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        rdctl   %0,bstatus" & CRLF &
+                       "",
+           Outputs  => status_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end bstatus_Read;
+
+   procedure bstatus_Write (Value : in status_Type) is
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        wrctl   bstatus,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => status_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end bstatus_Write;
+
+   ----------------------------------------------------------------------------
+   -- ienable_Read/Write
+   ----------------------------------------------------------------------------
+
+   function ienable_Read return Bitmap_32 is
+      Value : Bitmap_32;
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        rdctl   %0,ienable" & CRLF &
+                       "",
+           Outputs  => Bitmap_32'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end ienable_Read;
+
+   procedure ienable_Write (Value : in Bitmap_32) is
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        wrctl   ienable,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Bitmap_32'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end ienable_Write;
+
+   ----------------------------------------------------------------------------
+   -- ipending_Read
+   ----------------------------------------------------------------------------
+   function ipending_Read return Bitmap_32 is
+      Value : Bitmap_32;
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        rdctl   %0,ipending" & CRLF &
+                       "",
+           Outputs  => Bitmap_32'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end ipending_Read;
+
+   ----------------------------------------------------------------------------
+   -- cpuid_Read
+   ----------------------------------------------------------------------------
+   function cpuid_Read return Unsigned_32 is
+      Value : Unsigned_32;
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        rdctl   %0,cpuid" & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end cpuid_Read;
+
+   ----------------------------------------------------------------------------
+   -- exception_control_Read
+   ----------------------------------------------------------------------------
+   function exception_control_Read return exception_control_Type is
+      Value : exception_control_Type;
+   begin
+      Asm (
+           Template => ""                             & CRLF &
+                       "        rdctl   %0,exception" & CRLF &
+                       "",
+           Outputs  => exception_control_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end exception_control_Read;
+
+   ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP is
@@ -55,24 +237,6 @@ package body NiosII is
            Volatile => True
           );
    end NOP;
-
-   ----------------------------------------------------------------------------
-   -- CPUID
-   ----------------------------------------------------------------------------
-   function CPUID return Unsigned_32 is
-      Value : Unsigned_32;
-   begin
-      Asm (
-           Template => ""                         & CRLF &
-                       "        rdctl   %0,cpuid" & CRLF &
-                       "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end CPUID;
 
    ----------------------------------------------------------------------------
    -- Asm_Call
@@ -94,73 +258,32 @@ package body NiosII is
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable (Irq_Line : in Natural) is
+   procedure PIE_Set (PIE : in Boolean) is
+      status : status_Type;
    begin
-      Asm (
-           Template => ""                           & CRLF &
-                       "        rdctl   r2,ienable" & CRLF &
-                       "        or      r2,r2,%0  " & CRLF &
-                       "        wrctl   ienable,r2" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_32'Asm_Input ("r", 2**Irq_Line),
-           Clobber  => "r2",
-           Volatile => True
-          );
-   end Irq_Enable;
+      status := status_Read;
+      status.PIE := PIE;
+      status_Write (status);
+   end PIE_Set;
 
    procedure Irq_Enable is
    begin
-      Asm (
-           Template => ""                          & CRLF &
-                       "        rdctl   r2,status" & CRLF &
-                       "        ori     r2,r2,1  " & CRLF &
-                       "        wrctl   status,r2" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "r2",
-           Volatile => True
-          );
+      PIE_Set (True);
    end Irq_Enable;
 
    procedure Irq_Disable is
    begin
-      Asm (
-           Template => ""                             & CRLF &
-                       "        rdctl   r2,status   " & CRLF &
-                       "        andi    r2,r2,0xFFFE" & CRLF &
-                       "        wrctl   status,r2   " & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "r2",
-           Volatile => True
-          );
+      PIE_Set (False);
    end Irq_Disable;
 
    function Irq_State_Get return Irq_State_Type is
-      Value : Unsigned_32;
    begin
-      Asm (
-           Template => ""                          & CRLF &
-                       "        rdctl   %0,status" & CRLF &
-                       "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return (Value and PIE) /= 0;
+      return status_Read.PIE;
    end Irq_State_Get;
 
    procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
    begin
-      if Irq_State then
-         Irq_Enable;
-      else
-         Irq_Disable;
-      end if;
+      PIE_Set (Irq_State);
    end Irq_State_Set;
 
 end NiosII;
