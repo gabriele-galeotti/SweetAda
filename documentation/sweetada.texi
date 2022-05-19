@@ -740,19 +740,25 @@ The SweetAda build system try to supply a complete environment to build system c
 a target. In order to instruct the compiler, the linker, the binder, and all accompanying
 tools, various files exist.
 
-Two of the most important are Makefile.tc.in and gnat.adc.in.
+These files are Makefile.tc.in, Makefile.st.in, Makefile.wr.in and gnat.adc.in.
 
-Makefile.tc.in is a Makefile fragment that is loaded by the master Makefile and contains
-all compilation switches for a toolchain, i.e., warning switches, style switches and many
-others. You can selectively comment/uncomment a toolchain switch to suite your needs.
+Makefile.tc.in is a Makefile fragment that is loaded by the master Makefile and
+contains all compilation switches for a toolchain. It, in turn, loads Makefile.st.in
+and Makefile.wr.in, other Makefile fragments which contain style switches and warning
+switches. There you can selectively comment/uncomment a toolchain switch to suite your
+needs.
 
-Makefile.tc.in really should not be seen as a configuration file. Be aware that not
-all the assignments/switches are freely changeable, and many assignments are more or
-less critical to make the toolchain environment working fine. You should change only
-switches that not destroy the build flow, e.g., it is fine to comment/uncomment a warning
-switch like "-gnatwz" (in case you do not want messages for unchecked conversions),
-but it is not recommended to change the "GCC_MULTIDIR" variable, unless you known exactly
-the underlying logic behaviour.
+For example, if you want to optimize code and reduce the size of the executable, you could
+turn off the "-gnatE" switch that enables dynamic checks for access-before-elaboration on
+subprogram calls and generic instantiations.
+
+Anyway, pay attention that these files really should not be seen as configuration files
+at will. Be aware that not all the assignments/switches are freely changeable, and some
+variables and/or switches are more or less critical to make the toolchain environment
+working fine. You should change only switches that not destroy the build flow, e.g.,
+it is fine to comment/uncomment a switch like described before, but it is not recommended
+to change the "GCC_MULTIDIR" variable, unless you known exactly the underlying logic
+behaviour, and thus those variables should be regarded as constants.
 
 gnat.adc.in is a template for the system-wide Ada "gnat.adc" pragma profile. The pragma
 profile is specified in the top-level directory configuration.in by means of the variable
@@ -1541,8 +1547,8 @@ The QEMU RISC-V 32 is a virtual platform provided by QEMU, which is based on an
 @section Raspberry Pi 3
 @cindex Raspberry Pi 3
 
-The Raspberry Pi 3 is a popular embedded board based on a Broadcom@registeredsymbol{}
-BCM2387 64-bit ARM-class CPU.
+The Raspberry Pi 3 Model B is a popular embedded board based on a Broadcom@registeredsymbol{}
+BCM2387 64-bit quad-core ARM-class CPU.
 
 @image{rpi3-board}
 
@@ -1557,6 +1563,8 @@ file.
 
 The GPU of the SoC will boot the memory card by parsing the "config.txt" file, and
 then will start the "kernel.rom" just loaded in the SDRAM.
+
+Then SweetAda takes control, running on the first core at EL1.
 
 @cartouche
 NOTE:@*

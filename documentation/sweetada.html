@@ -813,19 +813,25 @@ Next: <a href="#GPRbuild-mode" accesskey="n" rel="next">GPRbuild mode</a>, Previ
 a target. In order to instruct the compiler, the linker, the binder, and all accompanying
 tools, various files exist.
 </p>
-<p>Two of the most important are Makefile.tc.in and gnat.adc.in.
+<p>These files are Makefile.tc.in, Makefile.st.in, Makefile.wr.in and gnat.adc.in.
 </p>
-<p>Makefile.tc.in is a Makefile fragment that is loaded by the master Makefile and contains
-all compilation switches for a toolchain, i.e., warning switches, style switches and many
-others. You can selectively comment/uncomment a toolchain switch to suite your needs.
+<p>Makefile.tc.in is a Makefile fragment that is loaded by the master Makefile and
+contains all compilation switches for a toolchain. It, in turn, loads Makefile.st.in
+and Makefile.wr.in, other Makefile fragments which contain style switches and warning
+switches. There you can selectively comment/uncomment a toolchain switch to suite your
+needs.
 </p>
-<p>Makefile.tc.in really should not be seen as a configuration file. Be aware that not
-all the assignments/switches are freely changeable, and many assignments are more or
-less critical to make the toolchain environment working fine. You should change only
-switches that not destroy the build flow, e.g., it is fine to comment/uncomment a warning
-switch like &quot;-gnatwz&quot; (in case you do not want messages for unchecked conversions),
-but it is not recommended to change the &quot;GCC_MULTIDIR&quot; variable, unless you known exactly
-the underlying logic behaviour.
+<p>For example, if you want to optimize code and reduce the size of the executable, you could
+turn off the &quot;-gnatE&quot; switch that enables dynamic checks for access-before-elaboration on
+subprogram calls and generic instantiations.
+</p>
+<p>Anyway, pay attention that these files really should not be seen as configuration files
+at will. Be aware that not all the assignments/switches are freely changeable, and some
+variables and/or switches are more or less critical to make the toolchain environment
+working fine. You should change only switches that not destroy the build flow, e.g.,
+it is fine to comment/uncomment a switch like described before, but it is not recommended
+to change the &quot;GCC_MULTIDIR&quot; variable, unless you known exactly the underlying logic
+behaviour, and thus those variables should be regarded as constants.
 </p>
 <p>gnat.adc.in is a template for the system-wide Ada &quot;gnat.adc&quot; pragma profile. The pragma
 profile is specified in the top-level directory configuration.in by means of the variable
@@ -1683,8 +1689,8 @@ MIPS-class CPU.
 <h3 class="section">18.29 Raspberry Pi 3</h3>
 <span id="index-Raspberry-Pi-3"></span>
 
-<p>The Raspberry Pi 3 is a popular embedded board based on a Broadcom&reg;
-BCM2387 64-bit ARM-class CPU.
+<p>The Raspberry Pi 3 Model B is a popular embedded board based on a Broadcom&reg;
+BCM2387 64-bit quad-core ARM-class CPU.
 </p>
 <img src="rpi3-board.png" alt="rpi3-board">
 
@@ -1699,6 +1705,8 @@ file.
 </p>
 <p>The GPU of the SoC will boot the memory card by parsing the &quot;config.txt&quot; file, and
 then will start the &quot;kernel.rom&quot; just loaded in the SDRAM.
+</p>
+<p>Then SweetAda takes control, running on the first core at EL1.
 </p>
 <table class="cartouche" border="1"><tr><td>
 <p>NOTE:<br>
