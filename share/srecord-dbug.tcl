@@ -61,7 +61,7 @@ set kernel_fp [open $KERNEL_SRECFILE r]
 fconfigure $kernel_fp -buffering line
 while {[gets $kernel_fp data] >= 0} {
     puts -nonewline $serialport_fp "$data\x0D\x0A"
-    puts -nonewline stderr "*"
+    puts -nonewline stderr "."
     #puts stderr $data
     # allow processing of data on remote side
     after 30

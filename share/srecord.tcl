@@ -58,11 +58,12 @@ fconfigure $kernel_fp -buffering line
 # delay for processing of data on remote side
 switch $BAUD_RATE {
     "115200" {set delay 10}
+    "38400"  {set delay 30}
     default  {set delay 50}
 }
 while {[gets $kernel_fp data] >= 0} {
     puts -nonewline $serialport_fp "$data\x0D\x0A"
-    puts -nonewline stderr "*"
+    puts -nonewline stderr "."
     #puts stderr $data
     after $delay
     set srec_type [string range $data 0 1]
