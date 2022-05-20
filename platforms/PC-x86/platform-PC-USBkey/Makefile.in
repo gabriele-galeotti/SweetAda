@@ -1,6 +1,4 @@
 
-SUBPLATFORM := PC-USBkey
-
 CLEAN_OBJECTS_EXTRA := mbr* bootsector*
 
 DISTCLEAN_OBJECTS_EXTRA := $(shell $(LS) platform-$(SUBPLATFORM))

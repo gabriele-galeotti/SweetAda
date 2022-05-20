@@ -1,6 +1,4 @@
 
-SUBPLATFORM := 68010
-
 DISTCLEAN_OBJECTS_EXTRA := $(shell $(LS) platform-$(SUBPLATFORM))
 
 .PHONY : configure-subplatform

@@ -1,6 +1,4 @@
 
-SUBPLATFORM := QEMU-FD
-
 CLEAN_OBJECTS_EXTRA := pcbootfd.dsk
 
 DISTCLEAN_OBJECTS_EXTRA := $(shell $(LS) platform-$(SUBPLATFORM))

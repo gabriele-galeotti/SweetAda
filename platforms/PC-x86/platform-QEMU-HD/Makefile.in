@@ -1,6 +1,4 @@
 
-SUBPLATFORM := QEMU-HD
-
 CLEAN_OBJECTS_EXTRA := pcboothd.dsk
 
 DISTCLEAN_OBJECTS_EXTRA := $(shell $(LS) platform-$(SUBPLATFORM))

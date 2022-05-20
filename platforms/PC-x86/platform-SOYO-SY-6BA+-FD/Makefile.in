@@ -1,6 +1,4 @@
 
-SUBPLATFORM := SOYO-SY-6BA+-FD
-
 CLEAN_OBJECTS_EXTRA := bootsector*
 
 DISTCLEAN_OBJECTS_EXTRA := $(shell $(LS) platform-$(SUBPLATFORM))
