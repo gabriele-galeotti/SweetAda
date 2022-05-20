@@ -66,7 +66,6 @@ _start:
 
                 //
                 // Enable A20 line.
-                // __REF__ http://stanislavs.org/helppc/8042.html
                 //
                 fcall   reset_8042
                 movb    $0xD1,%al               // Write Output Port: next byte written to port 60h is placed in the 8042 output port

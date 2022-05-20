@@ -76,7 +76,6 @@ _start:
 #if 0
                 //
                 // Enable A20 line.
-                // __REF__ http://stanislavs.org/helppc/8042.html
                 //
                 fcall   reset_8042
                 movb    $0xD1,%al               // Write Output Port: next byte written to port 60h is placed in the 8042 output port
@@ -96,12 +95,6 @@ _start:
                 cmpl    %eax,0x100000
                 je      1b
 #endif
-
-////////////////////////////////////////////////////////////////////////////////
-
-#include "startup-memory.S"
-
-////////////////////////////////////////////////////////////////////////////////
 
                 // perform code relocation
                 //fcall   movcode
