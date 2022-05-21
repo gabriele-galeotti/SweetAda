@@ -14,6 +14,7 @@
 # EXEEXT
 # SCREXT
 # SCREXT_cmd
+# SCREXT_unx
 #
 
 ifeq ($(OSTYPE),msys)
@@ -27,7 +28,7 @@ FILEPAD            := filepad$(SCREXT_cmd)
 FILEPATCH          := filepatch$(SCREXT_cmd)
 GCC_WRAPPER        := gcc-wrapper$(EXEEXT)
 GNAT_WRAPPER       := gnat-wrapper$(EXEEXT)
-PROCESSCFG         := processcfg$(SCREXT_cmd)
+PROCESSCFG         := "processcfg$(SCREXT_unx)"
 RTSBUILD           := rtsbuild$(SCREXT_cmd)
 RUNSWEETADA        := runsweetada$(EXEEXT)
 else

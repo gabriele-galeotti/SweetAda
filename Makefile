@@ -54,6 +54,7 @@ export OSTYPE
 # cmd should have a "sed" utility online
 # msys should have "printf" and "sed" utilities online
 SCREXT_cmd := .bat
+SCREXT_unx := .sh
 ifeq ($(OSTYPE),cmd)
 TMPDIR := $(TEMP)
 EXEEXT := .exe
@@ -64,16 +65,16 @@ SED    := sed$(EXEEXT)
 else
 ifeq ($(OSTYPE),msys)
 EXEEXT := .exe
-SCREXT := .sh
+SCREXT := $(SCREXT_unx)
 else
 EXEEXT :=
-SCREXT := .sh
+SCREXT := $(SCREXT_unx)
 endif
 ECHO   := printf "%s\n"
 REM    := \#
 SED    := sed
 endif
-export TMPDIR EXEEXT SCREXT ECHO REM SED
+export TMPDIR EXEEXT SCREXT SCREXT_cmd SCREXT_unx ECHO REM SED
 
 # generate SWEETADA_PATH
 # msys should have "cygpath" and "sed" utilities online
@@ -121,28 +122,26 @@ include Makefile.fn.in
 
 # define every other OS command
 ifeq ($(OSTYPE),cmd)
-CAT     := TYPE
-CD      := CD
-CP      := COPY /B /Y 1> nul
-LS      := DIR /B
-LS_DIRS := $(LS) /A:D
-MKDIR   := MKDIR
-MV      := MOVE /Y 1> nul
-RM      := DEL /F /Q 2> nul
-RMDIR   := RMDIR /Q /S 2> nul
-TOUCH   := TYPE nul >
+CAT   := TYPE
+CD    := CD
+CP    := COPY /B /Y 1> nul
+LS    := DIR /B
+MKDIR := MKDIR
+MV    := MOVE /Y 1> nul
+RM    := DEL /F /Q 2> nul
+RMDIR := RMDIR /Q /S 2> nul
+TOUCH := TYPE nul >
 else
 # POSIX
-CAT     := cat
-CD      := cd
-CP      := cp -f
-LS      := ls -A
-LS_DIRS := $(LS) -d
-MKDIR   := mkdir -p
-MV      := mv -f
-RM      := rm -f
-RMDIR   := $(RM) -r
-TOUCH   := touch
+CAT   := cat
+CD    := cd
+CP    := cp -f
+LS    := ls -A
+MKDIR := mkdir -p
+MV    := mv -f
+RM    := rm -f
+RMDIR := $(RM) -r
+TOUCH := touch
 endif
 
 ifeq ($(VERBOSE),Y)
@@ -158,7 +157,7 @@ MAKEFLAGS += s
 GNUMAKEFLAGS += --no-print-directory
 endif
 
-export CAT CD CP LS LS_DIRS MKDIR MV RM RMDIR TOUCH
+export CAT CD CP LS MKDIR MV RM RMDIR TOUCH
 
 ################################################################################
 #                                                                              #
@@ -178,13 +177,13 @@ RTS_DIRECTORY           := rts
 SHARE_DIRECTORY         := share
 
 ifeq ($(OSTYPE),cmd)
-PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) && $(LS_DIRS) * 2> nul)
-CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) && $(LS_DIRS) * 2> nul)
-RTSES     := $(filter-out targets,$(shell $(CD) $(RTS_DIRECTORY)\src && $(LS_DIRS) * 2> nul))
+PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2> nul)
+CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2> nul)
+RTSES     := $(filter-out targets,$(shell $(CD) $(RTS_DIRECTORY)\src && $(call ls-dirs) 2> nul))
 else
-PLATFORMS := $(shell ($(CD) $(PLATFORM_BASE_DIRECTORY) && $(LS_DIRS) *) 2> /dev/null)
-CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) && $(LS_DIRS) *) 2> /dev/null)
-RTSES     := $(filter-out targets,$(shell ($(CD) $(RTS_DIRECTORY)/src && $(LS_DIRS) *) 2> /dev/null))
+PLATFORMS := $(shell ($(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
+CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
+RTSES     := $(filter-out targets,$(shell ($(CD) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null))
 endif
 
 # default filenames

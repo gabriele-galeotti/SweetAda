@@ -72,3 +72,17 @@ else
 brief-command = $(if $(findstring Y,$(VERBOSE)),$1,$(if $(2),$(call brief-text,$2,$3);$1,@$1))
 endif
 
+#
+# ls-dirs
+#
+# Usage:
+# $(call ls-dirs)
+#
+# Print all directories in the current working directory.
+#
+ifeq ($(OSTYPE),cmd)
+ls-dirs = DIR /A:D /B *
+else
+ls-dirs = ls -A -d */ | $(SED) -e "s|/$$||"
+endif
+
