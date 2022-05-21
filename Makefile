@@ -105,6 +105,10 @@ ifeq ($(OSTYPE),cmd)
 ifeq ($(shell $(SED) --version 2> nul),)
 $(error Error: no sed executable found)
 endif
+else
+ifeq ($(shell $(SED) --version 2> /dev/null),)
+$(error Error: no sed executable found)
+endif
 endif
 
 # verbose output, "Y/y/1" = enabled
@@ -228,8 +232,8 @@ RTS                ?=
 PROFILE            :=
 USE_LIBGCC         :=
 USE_LIBADA         :=
-USE_APPLICATION    :=
 USE_CLIBRARY       :=
+USE_APPLICATION    :=
 OPTIMIZATION_LEVEL :=
 STACK_LIMIT        := 4096
 LD_SCRIPT          := linker.lds
