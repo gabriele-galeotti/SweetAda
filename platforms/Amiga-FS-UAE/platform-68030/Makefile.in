@@ -1,5 +1,9 @@
 
-DISTCLEAN_OBJECTS_EXTRA := $(shell $(LS) platform-$(SUBPLATFORM))
+DISTCLEAN_OBJECTS_EXTRA := Makefile.in      \
+                           configuration.in \
+                           configure.ads.in \
+                           configure.h.in   \
+                           fs-uae.conf.in
 
 .PHONY : configure-subplatform
 configure-subplatform :

@@ -1,5 +1,10 @@
 
-DISTCLEAN_OBJECTS_EXTRA := $(shell $(LS) platform-$(SUBPLATFORM))
+DISTCLEAN_OBJECTS_EXTRA := Makefile.in      \
+                           ZOOM-SDRAM.cfg   \
+                           configuration.in \
+                           configure.ads.in \
+                           configure.h.in   \
+                           linker.lds
 
 .PHONY : configure-subplatform
 configure-subplatform :
