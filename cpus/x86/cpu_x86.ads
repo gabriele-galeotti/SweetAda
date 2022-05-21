@@ -116,14 +116,14 @@ package CPU_x86 is
       OVERFLOW    : Boolean;
       IOPL        : PL_Type;
       NESTEDTASK  : Boolean;
-      Reserved5   : Bits_1_Zeroes := Bits_1_0;
+      Reserved4   : Bits_1_Zeroes := Bits_1_0;
       RESUME      : Boolean;
       VMODE86     : Boolean;
       ALIGNCHK    : Boolean;
       VIRTINT     : Boolean;
       VIRTINTPEND : Boolean;
       CPUID       : Boolean;
-      Reserved6   : Bits_10_Zeroes := Bits_10_0;
+      Reserved5   : Bits_10_Zeroes := Bits_10_0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -143,14 +143,14 @@ package CPU_x86 is
       OVERFLOW    at 0 range 11 .. 11;
       IOPL        at 0 range 12 .. 13;
       NESTEDTASK  at 0 range 14 .. 14;
-      Reserved5   at 0 range 15 .. 15;
+      Reserved4   at 0 range 15 .. 15;
       RESUME      at 0 range 16 .. 16;
       VMODE86     at 0 range 17 .. 17;
       ALIGNCHK    at 0 range 18 .. 18;
       VIRTINT     at 0 range 19 .. 19;
       VIRTINTPEND at 0 range 20 .. 20;
       CPUID       at 0 range 21 .. 21;
-      Reserved6   at 0 range 22 .. 31;
+      Reserved5   at 0 range 22 .. 31;
    end record;
 
    type CR0_Register_Type is

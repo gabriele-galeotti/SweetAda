@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
 with Interfaces;
 with Bits;
 
@@ -28,8 +29,79 @@ package x86_64 is
    --                                                                        --
    --========================================================================--
 
+   use System;
    use Interfaces;
    use Bits;
+
+   ----------------------------------------------------------------------------
+   -- Basic definitions
+   ----------------------------------------------------------------------------
+
+   -- Privilege Levels
+   type PL_Type is new Bits_2;
+   PL0 : constant PL_Type := 0; -- RING0
+   PL1 : constant PL_Type := 1; -- RING1
+   PL2 : constant PL_Type := 2; -- RING2
+   PL3 : constant PL_Type := 3; -- RING3
+
+   ----------------------------------------------------------------------------
+   -- Registers
+   ----------------------------------------------------------------------------
+
+   type RFLAGS_Type is
+   record
+      CF        : Boolean;
+      Reserved1 : Bits_1;
+      PF        : Boolean;
+      Reserved2 : Bits_1;
+      AF        : Boolean;
+      Reserved3 : Bits_1;
+      ZF        : Boolean;
+      SF        : Boolean;
+      TF        : Boolean;
+      IFlag     : Boolean;
+      DF        : Boolean;
+      OFlag     : Boolean;
+      IOPL      : PL_Type;
+      NT        : Boolean;
+      Reserved4 : Bits_1;
+      RF        : Boolean;
+      VM        : Boolean;
+      AC        : Boolean;
+      VIF       : Boolean;
+      VIP       : Boolean;
+      ID        : Boolean;
+      Reserved5 : Bits_10;
+      Reserved6 : Bits_32;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for RFLAGS_Type use
+   record
+      CF        at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 1;
+      PF        at 0 range 2 .. 2;
+      Reserved2 at 0 range 3 .. 3;
+      AF        at 0 range 4 .. 4;
+      Reserved3 at 0 range 5 .. 5;
+      ZF        at 0 range 6 .. 6;
+      SF        at 0 range 7 .. 7;
+      TF        at 0 range 8 .. 8;
+      IFlag     at 0 range 9 .. 9;
+      DF        at 0 range 10 .. 10;
+      OFlag     at 0 range 11 .. 11;
+      IOPL      at 0 range 12 .. 13;
+      NT        at 0 range 14 .. 14;
+      Reserved4 at 0 range 15 .. 15;
+      RF        at 0 range 16 .. 16;
+      VM        at 0 range 17 .. 17;
+      AC        at 0 range 18 .. 18;
+      VIF       at 0 range 19 .. 19;
+      VIP       at 0 range 20 .. 20;
+      ID        at 0 range 21 .. 21;
+      Reserved5 at 0 range 22 .. 31;
+      Reserved6 at 0 range 32 .. 63;
+   end record;
 
    ----------------------------------------------------------------------------
    -- Generic definitions
