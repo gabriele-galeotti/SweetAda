@@ -11,7 +11,7 @@ MEMORY
          * dBUG> go 100400
          */
         SDRAM  : ORIGIN = 0x00100000, LENGTH = (16M - 1M)
-        RAMBAR : ORIGIN = 0x80000000, LENGTH = 32K
+        RAMBAR : ORIGIN = 0x80000000, LENGTH = 32k
         ROM    : ORIGIN = 0xFFE00000, LENGTH = 2M
 }
 

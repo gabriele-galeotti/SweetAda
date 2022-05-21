@@ -6,7 +6,7 @@ MEMORY
         vectorarea (RWX) : ORIGIN = 0x40000000, LENGTH = 0x00000400
         /* code       (RWX) : ORIGIN = 0x40000400, LENGTH = 0x00003C00 */
         SDRAM      (RWX) : ORIGIN = 0x40000400, LENGTH = 0x00100000 /* 32M - 0x400 */
-        RAMBAR     (RWX) : ORIGIN = 0x80000000, LENGTH = 32K
+        RAMBAR     (RWX) : ORIGIN = 0x80000000, LENGTH = 32k
 }
 
 SECTIONS

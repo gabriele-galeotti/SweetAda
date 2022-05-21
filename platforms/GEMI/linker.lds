@@ -3,9 +3,9 @@ ENTRY(_start)
 
 MEMORY
 {
-        ROM : ORIGIN = 0x00000000, LENGTH = 128K
-        /* RAM : ORIGIN = 0x0FFFE000 LENGTH = 8K */ /* internal RAM */
-        RAM : ORIGIN = 0x0A000000, LENGTH = 256K /* external RAM */
+        ROM : ORIGIN = 0x00000000, LENGTH = 128k
+        /* RAM : ORIGIN = 0x0FFFE000 LENGTH = 8k */ /* internal RAM */
+        RAM : ORIGIN = 0x0A000000, LENGTH = 256k /* external RAM */
 }
 
 SECTIONS

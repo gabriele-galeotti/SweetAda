@@ -4,7 +4,7 @@ ENTRY(_start)
 MEMORY
 {
         SDRAM : ORIGIN = 0x00000000, LENGTH = 64M
-        BRAM  : ORIGIN = 0xFFFFE000, LENGTH = 8K /* xps_bram_if_cntlr_1 */
+        BRAM  : ORIGIN = 0xFFFFE000, LENGTH = 8k /* xps_bram_if_cntlr_1 */
 }
 
 PROVIDE(_brk_end = 16K) ;

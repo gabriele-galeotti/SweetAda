@@ -3,7 +3,7 @@ ENTRY(_start)
 
 MEMORY
 {
-        LMB : ORIGIN = 0,          LENGTH = 128K
+        LMB : ORIGIN = 0,          LENGTH = 128k
         RAM : ORIGIN = 0x50000000, LENGTH = 1M
 }
 
