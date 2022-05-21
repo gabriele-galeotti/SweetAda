@@ -26,12 +26,13 @@ OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/llkernel.o
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
+-include Makefile.in
+
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 # dependencies of startup.S
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-vectors.S \
-                                                      startup-memory.S
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-vectors.S
 
 .PHONY : installfiles
 installfiles :
@@ -56,8 +57,6 @@ distclean : clean
 
 .PHONY : dep
 dep :
-
--include Makefile.in
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
