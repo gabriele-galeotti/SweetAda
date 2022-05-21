@@ -1,7 +1,13 @@
 
 CLEAN_OBJECTS_EXTRA := pcbootfd.dsk
 
-DISTCLEAN_OBJECTS_EXTRA := $(shell $(LS) platform-$(SUBPLATFORM))
+DISTCLEAN_OBJECTS_EXTRA := Makefile.in        \
+                           bsp-board_init.adb \
+                           configuration.in   \
+                           configure.ads.in   \
+                           configure.h.in     \
+                           linker.lds         \
+                           qemu.cfg
 
 .PHONY : configure-subplatform
 configure-subplatform :

@@ -26,13 +26,28 @@ OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/llkernel.o
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
+-include Makefile.in
+
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-# dependencies of startup.S
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-pmdriver.S \
-                                                      startup-mode64.S   \
-                                                      startup-memory.S
+# startup.S processing
+ifeq ($(MODE32),Y)
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : mode32.S
+endif
+ifeq ($(MODE64),Y)
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : mode64.S
+endif
+ifeq ($(USE_STARTUP_MEMORY),Y)
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-memory.S
+endif
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup.S
+	$(call brief-command, \
+        $(CC) -o $@ -c $(INCLUDES) $(STARTUP_DEFINES) $< \
+        ,[CC/AS],$<)
+ifeq ($(MODE32),Y)
+	@$(OBJDUMP) -M i8086 -d -j .init16 $@ > init16.lst
+endif
 
 .PHONY : installfiles
 installfiles :
@@ -56,8 +71,6 @@ distclean : clean
 
 .PHONY : dep
 dep :
-
--include Makefile.in
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

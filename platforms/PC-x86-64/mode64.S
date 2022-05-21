@@ -1,6 +1,6 @@
 
 //
-// startup-mode64.S - Protected-mode x86 driver.
+// mode64.S - Protected-mode x86 64-bit driver.
 //
 // Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
 //
@@ -120,15 +120,16 @@
                 // Load GDT and jump to Long Mode code.
                 //
                 lgdtl   gdtdsc64
-                jmpl    $SELECTOR_KCODE_64,$longmode_start
+                .extern _longmode
+                ljmpl   $SELECTOR_KCODE_64,$_longmode
 
                 .align  GDT_ALIGNMENT,0
 gdtdsc64:       .word   3*8-1                   // bytes 0..1 GDT limit in bytes
                 .long   gdt64                   // bytes 2..5 GDT linear base address
                 .align  GDT_ALIGNMENT,0
 gdt64:          .quad   0x0000000000000000      // selector #0x00 invalid entry
-                .quad   0x00209A0000000000      // selector #0x08 DPL0 64-bit 4k code r/e
-                .quad   0x0020920000000000      // selector #0x10 DPL0 64-bit 4k data r/w
+                .quad   0x00209A0000000000      // selector #0x08 DPL0 64-bit 4k code RX
+                .quad   0x0020920000000000      // selector #0x10 DPL0 64-bit 4k data RW
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -147,8 +148,4 @@ pt:             .space  0x1000
                 .popsection
 
 ////////////////////////////////////////////////////////////////////////////////
-
-                .code64
-
-longmode_start:
 

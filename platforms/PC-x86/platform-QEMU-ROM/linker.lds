@@ -3,8 +3,8 @@ ENTRY(_start16)
 
 MEMORY
 {
-        RAM : ORIGIN = 0x00000000, LENGTH = 256K
-        ROM : ORIGIN = 0x000E0000, LENGTH = 128K /* PIIX XBCS 128K ROM expansion */
+        RAM : ORIGIN = 0x00000000, LENGTH = 256k
+        ROM : ORIGIN = 0x000E0000, LENGTH = 128k /* PIIX XBCS 128k ROM expansion */
 }
 
 SECTIONS

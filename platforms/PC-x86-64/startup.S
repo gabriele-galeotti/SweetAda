@@ -12,25 +12,27 @@
 
 #include <x86-64.h>
 #include <selectors.h>
+#include <configure.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                // macros for calling code without using the stack (which will
-                // be trashed by the memory wipeout performed by zerobss)
+                // macros for calling code without using the stack
 
                 .macro  fcall address
-                movq    $Lfcall\@,%rsp
+                movl    $Lfcall\@,%esp
                 jmp     \address
 Lfcall\@:       // next instruction
                 .endm
 
                 .macro  fret
-                jmp     *%rsp
+                jmp     *%esp
                 .endm
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "startup-pmdriver.S"
+#if defined(MODE32)
+# include "mode32.S"
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -42,38 +44,22 @@ Lfcall\@:       // next instruction
                 .global _start
 _start:
 
-////////////////////////////////////////////////////////////////////////////////
-
-#include "startup-mode64.S"
-
-////////////////////////////////////////////////////////////////////////////////
+                .code32
 
                 cli
                 cld
-                xorq    %rax,%rax
-                xorq    %rbx,%rbx
-                xorq    %rcx,%rcx
-                xorq    %rdx,%rdx
-                xorq    %rbp,%rbp
-                xorq    %rsi,%rsi
-                xorq    %rdi,%rdi
 
                 //
-                // Setup segments. In 64-bit Long Mode DS,ES,SS are not used.
+                // Setup segments.
                 //
-                movw    $SELECTOR_KDATA_64,%ax
+                movw    $SELECTOR_KDATA,%ax
+                movw    %ax,%ds                 // DS=ES=FS=GS=SS
+                movw    %ax,%es
                 movw    %ax,%fs
                 movw    %ax,%gs
+                movw    %ax,%ss
 
-                //
-                // Turn off PC speaker and enable GATE on timer counter 2.
-                //
-                inb     $0x61,%al               // get PORT_B settings
-                andb    $0b11111101,%al         // turn off PC speaker
-                orb     $0b00000001,%al         // turn on GATE2 input
-                outb    %al,$0x61               // output new settings
-
-#if 0
+#if defined(ENABLE_A20)
                 //
                 // Enable A20 line.
                 //
@@ -84,9 +70,11 @@ _start:
                 movb    $0xDF,%al               // A20 line on
                 outb    %al,$0x60
                 fcall   reset_8042
-                // check if enabled
+                // check if enabled:
+                // keep writing (different!) values in 0x000000, reading
+                // from 0x100000; when the value differs we are ok
                 xorl    %eax,%eax
-1:              movl    %eax,%ebx               // save EAX
+1:              movl    %eax,%ebx               // save EAX, fcall will clobber the register
                 movl    $100,%ecx               // 10 ms delay
                 fcall   delay
                 movl    %ebx,%eax               // restore EAX
@@ -96,43 +84,35 @@ _start:
                 je      1b
 #endif
 
-                // perform code relocation
-                //fcall   movcode
-                // perform static data relocation
+#if defined(STARTUP_MEMORY)
+# include "startup-memory.S"
+#endif
+#if defined(CODE_RELOC)
+                fcall   movcode
+#endif
+#if defined(DATA_RELOC)
                 fcall   movdata
-                // zero the bss section
+#endif
+
+                //
+                // Zero the bss section.
+                //
                 fcall   zerobss
 
                 //
-                // Setup stack pointer.
+                // Enter 64-bit mode setup.
                 //
-                movq    $kernel_stack,%rsp
-                movq    %rsp,%rbp
+                jmp     _start64
 
-                //
-                // FPU initialization.
-                //
-                finit
-
-                //
-                // Jump to high-level code.
-                //
-                .extern _ada_main
-                call    _ada_main
-
-dead:           jmp     .
-
-                .size   _start,.-_start
-
+#if defined(CODE_RELOC)
 ////////////////////////////////////////////////////////////////////////////////
 // movcode                                                                    //
 //                                                                            //
-// Perform code relocation.                                                   //
+// Perform .text section relocation.                                          //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
 movcode:
-#if 0
                 .extern _text_start
                 .extern _stext
                 .extern _etext
@@ -141,13 +121,14 @@ movcode:
                 subl    %edi,%ecx
                 movl    $_text_start,%esi
             rep movsb
-#endif
                 fret
+#endif
 
+#if defined(DATA_RELOC)
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// Perform high-level language data relocation.                               //
+// Perform .data section relocation.                                          //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -161,11 +142,12 @@ movdata:
                 movl    $_etext,%esi
             rep movsb
                 fret
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // zerobss                                                                    //
 //                                                                            //
-// Perform a cleanup of the .bss area.                                        //
+// Perform .bss section clear.                                                //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -179,6 +161,7 @@ zerobss:
             rep stosb
                 fret
 
+#if defined(ENABLE_A20)
 ////////////////////////////////////////////////////////////////////////////////
 // reset_8042                                                                 //
 //                                                                            //
@@ -198,6 +181,7 @@ reset_8042:     movl    %esp,%ebp               // save return address
                 jnz     1b                      // yes, loop again
                 movl    %ebp,%esp
                 fret
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // delay                                                                      //
@@ -205,8 +189,7 @@ reset_8042:     movl    %esp,%ebp               // save return address
 // 100 us delay * ECX                                                         //
 // PIT timer input frequency: 1.193182 MHz, t = 0.838 us                      //
 // 100 us --> count = 119.33 = 0x77 (0x76 because the timer counts N + 1)     //
-// MODE 0, INTERRUPT ON TERMINAL COUNT, monitor OUT pin                       //
-// if COUNTER2 should be used, enable GATE via KBD port 0x61 bit 0            //
+// COUNTER0, MODE 0, INTERRUPT ON TERMINAL COUNT, monitor OUT pin             //
 ////////////////////////////////////////////////////////////////////////////////
 
 delay:          movw    $0x43,%dx               // CONTROL_WORD_REGISTER
@@ -231,6 +214,60 @@ delay:          movw    $0x43,%dx               // CONTROL_WORD_REGISTER
 
 ////////////////////////////////////////////////////////////////////////////////
 
+_start64:
+
+////////////////////////////////////////////////////////////////////////////////
+
+#if defined(MODE64)
+# include "mode64.S"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
+                .code64
+
+_longmode:
+
+                cli
+                cld
+                xorq    %rax,%rax
+                xorq    %rbx,%rbx
+                xorq    %rcx,%rcx
+                xorq    %rdx,%rdx
+                xorq    %rbp,%rbp
+                xorq    %rsi,%rsi
+                xorq    %rdi,%rdi
+
+                //
+                // Setup segments. In 64-bit Long Mode DS,ES,SS are not used.
+                //
+                movw    $SELECTOR_KDATA_64,%ax
+                movw    %ax,%fs
+                movw    %ax,%gs
+
+                //
+                // Setup stack pointer.
+                //
+                movq    $kernel_stack,%rsp
+                movq    %rsp,%rbp
+
+                //
+                // FPU initialization.
+                //
+                finit
+
+                //
+                // Jump to high-level code.
+                //
+                .extern _ada_main
+                call    _ada_main
+
+dead:           jmp     .
+
+                .size   _start,.-_start
+
+////////////////////////////////////////////////////////////////////////////////
+
                 .sect   .data
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -238,6 +275,6 @@ delay:          movw    $0x43,%dx               // CONTROL_WORD_REGISTER
                 .sect   .bss
 
                 .align  8
-                .space  4096
+                .space  KERNEL_STACK_SIZE
 kernel_stack:
 

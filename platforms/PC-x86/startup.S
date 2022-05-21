@@ -16,8 +16,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                // macros for calling code without using the stack (which will
-                // be trashed by the memory wipeout performed by zerobss)
+                // macros for calling code without using the stack
 
                 .macro  fcall address
                 movl    $Lfcall\@,%esp
@@ -31,7 +30,9 @@ Lfcall\@:       // next instruction
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "startup-pmdriver.S"
+#if defined(MODE32)
+# include "mode32.S"
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -56,14 +57,7 @@ _start:
                 movw    %ax,%gs
                 movw    %ax,%ss
 
-                //
-                // Turn off PC speaker and enable GATE on timer counter 2.
-                //
-                inb     $0x61,%al               // get PORT_B settings
-                andb    $0b11111101,%al         // turn off PC speaker
-                orb     $0b00000001,%al         // turn on GATE2 input
-                outb    %al,$0x61               // output new settings
-
+#if defined(ENABLE_A20)
                 //
                 // Enable A20 line.
                 //
@@ -74,9 +68,11 @@ _start:
                 movb    $0xDF,%al               // A20 line on
                 outb    %al,$0x60
                 fcall   reset_8042
-                // check if enabled
+                // check if enabled:
+                // keep writing (different!) values in 0x000000, reading
+                // from 0x100000; when the value differs we are ok
                 xorl    %eax,%eax
-1:              movl    %eax,%ebx               // save EAX
+1:              movl    %eax,%ebx               // save EAX, fcall will clobber the register
                 movl    $100,%ecx               // 10 ms delay
                 fcall   delay
                 movl    %ebx,%eax               // restore EAX
@@ -84,18 +80,21 @@ _start:
                 movl    %eax,0x000000
                 cmpl    %eax,0x100000
                 je      1b
+#endif
 
-////////////////////////////////////////////////////////////////////////////////
-
-#include "startup-memory.S"
-
-////////////////////////////////////////////////////////////////////////////////
-
-                // perform code relocation
-                //fcall   movcode
-                // perform static data relocation
+#if defined(STARTUP_MEMORY)
+# include "startup-memory.S"
+#endif
+#if defined(CODE_RELOC)
+                fcall   movcode
+#endif
+#if defined(DATA_RELOC)
                 fcall   movdata
-                // zero the bss section
+#endif
+
+                //
+                // Zero the bss section.
+                //
                 fcall   zerobss
 
                 //
@@ -123,15 +122,15 @@ dead:           jmp     .
 
                 .size   _start,.-_start
 
+#if defined(CODE_RELOC)
 ////////////////////////////////////////////////////////////////////////////////
 // movcode                                                                    //
 //                                                                            //
-// Perform code relocation.                                                   //
+// Perform .text section relocation.                                          //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
 movcode:
-#if 0
                 .extern _text_start
                 .extern _stext
                 .extern _etext
@@ -140,13 +139,14 @@ movcode:
                 subl    %edi,%ecx
                 movl    $_text_start,%esi
             rep movsb
-#endif
                 fret
+#endif
 
+#if defined(DATA_RELOC)
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// Perform high-level language data relocation.                               //
+// Perform .data section relocation.                                          //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -160,11 +160,12 @@ movdata:
                 movl    $_etext,%esi
             rep movsb
                 fret
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // zerobss                                                                    //
 //                                                                            //
-// Perform a cleanup of the .bss area.                                        //
+// Perform .bss section clear.                                                //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -178,6 +179,7 @@ zerobss:
             rep stosb
                 fret
 
+#if defined(ENABLE_A20)
 ////////////////////////////////////////////////////////////////////////////////
 // reset_8042                                                                 //
 //                                                                            //
@@ -197,6 +199,7 @@ reset_8042:     movl    %esp,%ebp               // save return address
                 jnz     1b                      // yes, loop again
                 movl    %ebp,%esp
                 fret
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // delay                                                                      //
@@ -204,8 +207,7 @@ reset_8042:     movl    %esp,%ebp               // save return address
 // 100 us delay * ECX                                                         //
 // PIT timer input frequency: 1.193182 MHz, t = 0.838 us                      //
 // 100 us --> count = 119.33 = 0x77 (0x76 because the timer counts N + 1)     //
-// MODE 0, INTERRUPT ON TERMINAL COUNT, monitor OUT pin                       //
-// if COUNTER2 should be used, enable GATE via KBD port 0x61 bit 0            //
+// COUNTER0, MODE 0, INTERRUPT ON TERMINAL COUNT, monitor OUT pin             //
 ////////////////////////////////////////////////////////////////////////////////
 
 delay:          movw    $0x43,%dx               // CONTROL_WORD_REGISTER
