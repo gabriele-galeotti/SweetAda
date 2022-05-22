@@ -15,7 +15,9 @@
 # EXEEXT
 # SCREXT
 # VERBOSE
+# RTS_GOAL
 # PLATFORM_GOALS
+# MAKECMDGOALS
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
@@ -371,9 +373,9 @@ CC_SWITCHES_DEFAULT   += $(CC_SWITCHES_RTS)
 #                                                                              #
 ################################################################################
 
-# Ada Maximum Nesting Level
+# Maximum Nesting Level
 MNL := 9
-# Ada Maximum Line Length
+# Maximum Line Length
 MLL := 132
 
 ################################################################################

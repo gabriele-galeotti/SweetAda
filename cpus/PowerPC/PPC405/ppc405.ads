@@ -72,7 +72,7 @@ package PPC405 is
    TSR_CHIP   : constant TSR_TCR_WR_Type := 2#10#;
    TSR_SYSTEM : constant TSR_TCR_WR_Type := 2#11#;
 
-   TSR : constant SPR_Type := 984; -- 0x3d8
+   TSR : constant SPR_Type := 984; -- 0x3D8
 
    type TSR_Register_Type is
    record
