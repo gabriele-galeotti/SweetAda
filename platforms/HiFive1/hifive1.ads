@@ -33,6 +33,7 @@ package HiFive1 is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
    ----------------------------------------------------------------------------
    -- __REF__ SiFive FE310-G002 Manual v1p0
@@ -46,12 +47,12 @@ package HiFive1 is
 
    type hfrosccfg_Type is
    record
-      hfroscdiv  : Bits.Bits_6;       -- Ring Oscillator Divider Register
-      Reserved1  : Bits.Bits_10 := 0;
-      hfrosctrim : Bits.Bits_5;       -- Ring Oscillator Trim Register
-      Reserved2  : Bits.Bits_9 := 0;
-      hfroscen   : Boolean;           -- Ring Oscillator Enable
-      hfroscrdy  : Boolean := False;  -- Ring Oscillator Ready
+      hfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
+      Reserved1  : Bits_10 := 0;
+      hfrosctrim : Bits_5;           -- Ring Oscillator Trim Register
+      Reserved2  : Bits_9 := 0;
+      hfroscen   : Boolean;          -- Ring Oscillator Enable
+      hfroscrdy  : Boolean := False; -- Ring Oscillator Ready
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -69,9 +70,9 @@ package HiFive1 is
 
    type hfxosccfg_Type is
    record
-      Reserved  : Bits.Bits_30 := 0;
-      hfxoscen  : Boolean;           -- Crystal Oscillator Enable
-      hfxoscrdy : Boolean := False;  -- Crystal Oscillator Ready
+      Reserved  : Bits_30 := 0;
+      hfxoscen  : Boolean;          -- Crystal Oscillator Enable
+      hfxoscrdy : Boolean := False; -- Crystal Oscillator Ready
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -86,16 +87,16 @@ package HiFive1 is
 
    type pllcfg_Type is
    record
-      pllr      : Bits.Bits_3;       -- PLL R Value
-      Reserved1 : Bits.Bits_1 := 0;
-      pllf      : Bits.Bits_6;       -- PLL F Value
-      pllq      : Bits.Bits_2;       -- PLL Q Value
-      Reserved2 : Bits.Bits_4 := 0;
-      pllsel    : Boolean;           -- PLL Select
-      pllrefsel : Boolean;           -- PLL Reference Select
-      pllbypass : Boolean;           -- PLL Bypass
-      Reserved3 : Bits.Bits_12 := 0;
-      plllock   : Boolean := False;  -- PLL Lock
+      pllr      : Bits_3;           -- PLL R Value
+      Reserved1 : Bits_1 := 0;
+      pllf      : Bits_6;           -- PLL F Value
+      pllq      : Bits_2;           -- PLL Q Value
+      Reserved2 : Bits_4 := 0;
+      pllsel    : Boolean;          -- PLL Select
+      pllrefsel : Boolean;          -- PLL Reference Select
+      pllbypass : Boolean;          -- PLL Bypass
+      Reserved3 : Bits_12 := 0;
+      plllock   : Boolean := False; -- PLL Lock
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -117,10 +118,10 @@ package HiFive1 is
 
    type plloutdiv_Type is
    record
-      plloutdiv    : Bits.Bits_6;       -- PLL Final Divider Value
-      Reserved1    : Bits.Bits_2 := 0;
-      plloutdivby1 : Bits.Bits_6;       -- PLL Final Divide By 1
-      Reserved2    : Bits.Bits_18 := 0;
+      plloutdiv    : Bits_6;       -- PLL Final Divider Value
+      Reserved1    : Bits_2 := 0;
+      plloutdivby1 : Bits_6;       -- PLL Final Divide By 1
+      Reserved2    : Bits_18 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -230,9 +231,9 @@ package HiFive1 is
 
    type txdata_Type is
    record
-      txdata   : Unsigned_8;        -- Transmit data
-      Reserved : Bits.Bits_23 := 0;
-      full     : Boolean;           -- Transmit FIFO full
+      txdata   : Unsigned_8;   -- Transmit data
+      Reserved : Bits_23 := 0;
+      full     : Boolean;      -- Transmit FIFO full
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -247,9 +248,9 @@ package HiFive1 is
 
    type rxdata_Type is
    record
-      rxdata   : Unsigned_8;        -- Received data
-      Reserved : Bits.Bits_23 := 0;
-      empty    : Boolean;           -- Receive FIFO empty
+      rxdata   : Unsigned_8;   -- Received data
+      Reserved : Bits_23 := 0;
+      empty    : Boolean;      -- Receive FIFO empty
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -267,11 +268,11 @@ package HiFive1 is
 
    type txctrl_Type is
    record
-      txen      : Boolean;           -- Transmit enable
-      nstop     : Bits.Bits_1;       -- Number of stop bits
-      Reserved1 : Bits.Bits_14 := 0;
-      txcnt     : Bits.Bits_3;       -- Transmit watermark level
-      Reserved2 : Bits.Bits_13 := 0;
+      txen      : Boolean;      -- Transmit enable
+      nstop     : Bits_1;       -- Number of stop bits
+      Reserved1 : Bits_14 := 0;
+      txcnt     : Bits_3;       -- Transmit watermark level
+      Reserved2 : Bits_13 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -288,10 +289,10 @@ package HiFive1 is
 
    type rxctrl_Type is
    record
-      rxen      : Boolean;           -- Receive enable
-      Reserved1 : Bits.Bits_15 := 0;
-      rxcnt     : Bits.Bits_3;       -- Receive watermark level
-      Reserved2 : Bits.Bits_13 := 0;
+      rxen      : Boolean;      -- Receive enable
+      Reserved1 : Bits_15 := 0;
+      rxcnt     : Bits_3;       -- Receive watermark level
+      Reserved2 : Bits_13 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -307,9 +308,9 @@ package HiFive1 is
 
    type ie_Type is
    record
-      txwm     : Boolean;           -- Transmit watermark interrupt enable
-      rxwm     : Boolean;           -- Receive watermark interrupt enable
-      Reserved : Bits.Bits_30 := 0;
+      txwm     : Boolean;      -- Transmit watermark interrupt enable
+      rxwm     : Boolean;      -- Receive watermark interrupt enable
+      Reserved : Bits_30 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -322,9 +323,9 @@ package HiFive1 is
 
    type ip_Type is
    record
-      txwm     : Boolean;           -- Transmit watermark interrupt pending
-      rxwm     : Boolean;           -- Receive watermark interrupt pending
-      Reserved : Bits.Bits_30 := 0;
+      txwm     : Boolean;      -- Transmit watermark interrupt pending
+      rxwm     : Boolean;      -- Receive watermark interrupt pending
+      Reserved : Bits_30 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -339,8 +340,8 @@ package HiFive1 is
 
    type div_Type is
    record
-      div      : Unsigned_16;       -- Baud rate divisor.
-      Reserved : Bits.Bits_16 := 0;
+      div      : Unsigned_16;  -- Baud rate divisor.
+      Reserved : Bits_16 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;

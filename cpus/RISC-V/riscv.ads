@@ -35,32 +35,33 @@ package RISCV is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
    -- Machine Status (mstatus)
 
    type MSTATUS_Type is
    record
-      UIE       : Boolean;     -- User Interrupt Enable
-      SIE       : Boolean;     -- Supervisor Interrupt Enable
-      Reserved1 : Bits.Bits_1;
-      MIE       : Boolean;     -- Machine Interrupt Enable
-      UPIE      : Boolean;     -- User Previous Interrupt Enable
-      SPIE      : Boolean;     -- Supervisor Previous Interrupt Enable
-      Reserved2 : Bits.Bits_1;
-      MPIE      : Boolean;     -- Machine Previous Interrupt Enabler
-      SPP       : Boolean;     -- Supervisor Previous Privilege
-      Reserved3 : Bits.Bits_2;
-      MPP       : Bits.Bits_2; -- Machine Previous Privilege
-      FS        : Bits.Bits_2; -- Floating Point State
-      XS        : Bits.Bits_2; -- User Mode Extension State
-      MPRIV     : Boolean;     -- Modify Privilege (access memory as MPP)
-      SUM       : Boolean;     -- Permit Supervisor User Memory Access
-      MXR       : Boolean;     -- Make Executable Readable
-      TVM       : Boolean;     -- Trap Virtual memory
-      TW        : Boolean;     -- Timeout Wait (traps S-Mode wfi)
-      TSR       : Boolean;     -- Trap SRET
-      Reserved4 : Bits.Bits_8;
-      SD        : Boolean;     -- State Dirty (FS and XS summary bit)
+      UIE       : Boolean; -- User Interrupt Enable
+      SIE       : Boolean; -- Supervisor Interrupt Enable
+      Reserved1 : Bits_1;
+      MIE       : Boolean; -- Machine Interrupt Enable
+      UPIE      : Boolean; -- User Previous Interrupt Enable
+      SPIE      : Boolean; -- Supervisor Previous Interrupt Enable
+      Reserved2 : Bits_1;
+      MPIE      : Boolean; -- Machine Previous Interrupt Enabler
+      SPP       : Boolean; -- Supervisor Previous Privilege
+      Reserved3 : Bits_2;
+      MPP       : Bits_2;  -- Machine Previous Privilege
+      FS        : Bits_2;  -- Floating Point State
+      XS        : Bits_2;  -- User Mode Extension State
+      MPRIV     : Boolean; -- Modify Privilege (access memory as MPP)
+      SUM       : Boolean; -- Permit Supervisor User Memory Access
+      MXR       : Boolean; -- Make Executable Readable
+      TVM       : Boolean; -- Trap Virtual memory
+      TW        : Boolean; -- Timeout Wait (traps S-Mode wfi)
+      TSR       : Boolean; -- Trap SRET
+      Reserved4 : Bits_8;
+      SD        : Boolean; -- State Dirty (FS and XS summary bit)
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -93,9 +94,9 @@ package RISCV is
 
    type MTVEC_Type is
    record
-      MODE     : Bits.Bits_2;
-      Reserved : Bits.Bits_4;
-      BASE     : Bits.Bits_26;
+      MODE     : Bits_2;
+      Reserved : Bits_4;
+      BASE     : Bits_26;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
