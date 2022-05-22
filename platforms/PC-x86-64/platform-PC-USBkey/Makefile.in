@@ -1,11 +1,12 @@
 
-CLEAN_OBJECTS_EXTRA :=
+CLEAN_OBJECTS_EXTRA := pcbootusbkey.dsk
 
 DISTCLEAN_OBJECTS_EXTRA := Makefile.in      \
                            configuration.in \
                            configure.ads.in \
                            configure.h.in   \
-                           linker.lds
+                           linker.lds       \
+                           qemu.cfg
 
 .PHONY : configure-subplatform
 configure-subplatform :
@@ -19,5 +20,5 @@ postbuild-subplatform :
           "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/pc-x86-boothd.tcl \
           $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE)                 \
           0x4000                                                  \
-          ""
+          +pcbootusbkey.dsk
 

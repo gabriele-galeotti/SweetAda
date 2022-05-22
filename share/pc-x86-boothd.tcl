@@ -73,7 +73,8 @@ proc write_partition {f sector_start sector_size} {
     global HPC
     global SPT
     set fp [open $f "a+"]
-    seek $fp 0x1BE
+    fconfigure $fp -translation binary
+    seek $fp 0x1BE start
     # bootable flag
     puts -nonewline $fp [binary format c1 0x80]
     # CHS start
@@ -122,7 +123,8 @@ if {[string index $device_filename 0] eq "+"} {
     set device_type FILE
     set device_filename [string trimleft $device_filename "+"]
     set fp [open $device_filename "w"]
-    seek $fp [expr $SECTOR_COUNT * $BPS - 1]
+    fconfigure $fp -translation binary
+    seek $fp [expr $SECTOR_COUNT * $BPS - 1] start
     puts -nonewline $fp [binary format c1 0]
     close $fp
 } else {
@@ -157,7 +159,7 @@ set mbr [read $fp]
 close $fp
 set fp [open $device_filename "a+"]
 fconfigure $fp -translation binary
-seek $fp [expr 0 * $BPS]
+seek $fp 0 start
 puts -nonewline $fp $mbr
 close $fp
 
@@ -201,7 +203,7 @@ set bootrecord [read $fp]
 close $fp
 set fp [open $device_filename "a+"]
 fconfigure $fp -translation binary
-seek $fp [expr $SECTORS_PER_CYLINDER * $BPS]
+seek $fp [expr $SECTORS_PER_CYLINDER * $BPS] start
 puts -nonewline $fp $bootrecord
 close $fp
 
@@ -213,7 +215,7 @@ set kernel [read $fp]
 close $fp
 set fp [open $device_filename "a+"]
 fconfigure $fp -translation binary
-seek $fp [expr ($SECTORS_PER_CYLINDER + 1) * $BPS]
+seek $fp [expr ($SECTORS_PER_CYLINDER + 1) * $BPS] start
 puts -nonewline $fp $kernel
 close $fp
 
