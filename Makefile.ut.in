@@ -28,7 +28,7 @@ FILEPAD            := filepad$(SCREXT_cmd)
 FILEPATCH          := filepatch$(SCREXT_cmd)
 GCC_WRAPPER        := gcc-wrapper$(EXEEXT)
 GNAT_WRAPPER       := gnat-wrapper$(EXEEXT)
-PROCESSCFG         := "processcfg$(SCREXT_unx)"
+PROCESSCFG         := ""processcfg$(SCREXT_cmd)
 RTSBUILD           := rtsbuild$(SCREXT_cmd)
 RUNSWEETADA        := runsweetada$(EXEEXT)
 else
