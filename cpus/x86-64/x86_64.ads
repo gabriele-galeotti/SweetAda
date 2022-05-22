@@ -50,27 +50,27 @@ package x86_64 is
 
    type RFLAGS_Type is
    record
-      CF        : Boolean;
+      CF        : Boolean; -- Carry Flag
       Reserved1 : Bits_1;
-      PF        : Boolean;
+      PF        : Boolean; -- Parity Flag
       Reserved2 : Bits_1;
-      AF        : Boolean;
+      AF        : Boolean; -- Auxiliary Carry Flag
       Reserved3 : Bits_1;
-      ZF        : Boolean;
-      SF        : Boolean;
-      TF        : Boolean;
-      IFlag     : Boolean;
-      DF        : Boolean;
-      OFlag     : Boolean;
-      IOPL      : PL_Type;
-      NT        : Boolean;
+      ZF        : Boolean; -- Zero Flag
+      SF        : Boolean; -- Sign Flag
+      TF        : Boolean; -- Trap Flag
+      IFlag     : Boolean; -- Interrupt Enable Flag
+      DF        : Boolean; -- Direction Flag
+      OFlag     : Boolean; -- Overflow Flag
+      IOPL      : PL_Type; -- I/O Privilege Level
+      NT        : Boolean; -- Nested Task Flag
       Reserved4 : Bits_1;
-      RF        : Boolean;
-      VM        : Boolean;
-      AC        : Boolean;
-      VIF       : Boolean;
-      VIP       : Boolean;
-      ID        : Boolean;
+      RF        : Boolean; -- Resume Flag
+      VM        : Boolean; -- Virtual-8086 Mode
+      AC        : Boolean; -- Alignment Check / Access Control
+      VIF       : Boolean; -- Virtual Interrupt Flag
+      VIP       : Boolean; -- Virtual Interrupt Pending
+      ID        : Boolean; -- Identification Flag
       Reserved5 : Bits_10;
       Reserved6 : Bits_32;
    end record with
