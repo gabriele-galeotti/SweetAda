@@ -21,6 +21,7 @@ with Interfaces;
 with Configure;
 with Core;
 with Bits;
+with x86_64;
 with CPU;
 with CPU.IO;
 with PCI;
@@ -43,6 +44,7 @@ package body BSP is
    use Interfaces;
    use Core;
    use Bits;
+   use x86_64;
    use CPU;
    use CPU.IO;
 
@@ -96,6 +98,7 @@ package body BSP is
       Console.TTY_Setup;
       -- CPU ------------------------------------------------------------------
       Console.Print ("PC-x86-64", NL => True);
+      Console.Print (To_IA32_EFER (MSR_Read (IA32_EFER)).LMA, Prefix => "64-bit: ", NL => True);
       -- PCI ------------------------------------------------------------------
       PCI.Cfg_Access_Descriptor.Read_32 := CPU.IO.PortIn'Access;
       PCI.Cfg_Access_Descriptor.Write_32 := CPU.IO.PortOut'Access;
