@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
@@ -38,6 +39,7 @@ package x86_64 is
    ----------------------------------------------------------------------------
 
    -- Privilege Levels
+
    type PL_Type is new Bits_2;
    PL0 : constant PL_Type := 0; -- RING0
    PL1 : constant PL_Type := 1; -- RING1
@@ -47,6 +49,8 @@ package x86_64 is
    ----------------------------------------------------------------------------
    -- Registers
    ----------------------------------------------------------------------------
+
+   -- RFLAGS
 
    type RFLAGS_Type is
    record
@@ -102,6 +106,89 @@ package x86_64 is
       Reserved5 at 0 range 22 .. 31;
       Reserved6 at 0 range 32 .. 63;
    end record;
+
+   -- CR0
+
+   type CR0_Type is
+   record
+      PE        : Boolean;      -- Protected mode Enable
+      MP        : Boolean;      -- Monitor Co-processor
+      EM        : Boolean;      -- Emulation (no x87 FPU unit present)
+      TS        : Boolean;      -- Task Switched
+      ET        : Boolean;      -- Extension Type (287/387)
+      NE        : Boolean;      -- Numeric Error (x87 error reporting)
+      Reserved1 : Bits_10;
+      WP        : Boolean;      -- Write Protect (RO pages, CPL3)
+      Reserved2 : Bits_1;
+      AM        : Boolean;      -- Alignment Mask (EFLAGS[AC], CPL3)
+      Reserved3 : Bits_10;
+      NW        : Boolean;      -- Not Write through
+      CD        : Boolean;      -- Cache Disable
+      PG        : Boolean;      -- Paging enable
+      Reserved4 : Bits_32 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for CR0_Type use
+   record
+      PE        at 0 range 0 .. 0;
+      MP        at 0 range 1 .. 1;
+      EM        at 0 range 2 .. 2;
+      TS        at 0 range 3 .. 3;
+      ET        at 0 range 4 .. 4;
+      NE        at 0 range 5 .. 5;
+      Reserved1 at 0 range 6 .. 15;
+      WP        at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 17;
+      AM        at 0 range 18 .. 18;
+      Reserved3 at 0 range 19 .. 28;
+      NW        at 0 range 29 .. 29;
+      CD        at 0 range 30 .. 30;
+      PG        at 0 range 31 .. 31;
+      Reserved4 at 0 range 32 .. 63;
+   end record;
+
+   function To_CR0 is new Ada.Unchecked_Conversion (Unsigned_64, CR0_Type);
+   function To_U64 is new Ada.Unchecked_Conversion (CR0_Type, Unsigned_64);
+
+   -- IA32_EFER
+
+   IA32_EFER : constant := 16#C000_0080#;
+
+   type IA32_EFER_Type is
+   record
+      SCE       : Boolean; -- SYSCALL Enable
+      Reserved1 : Bits_7;
+      LME       : Boolean; -- IA-32e Mode Enable
+      Reserved2 : Bits_1;
+      LMA       : Boolean; -- IA-32e Mode Active
+      NXE       : Boolean; -- Execute Disable Bit Enable
+      Reserved3 : Bits_20;
+      Reserved4 : Bits_32;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for IA32_EFER_Type use
+   record
+      SCE       at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 7;
+      LME       at 0 range 8 .. 8;
+      Reserved2 at 0 range 9 .. 9;
+      LMA       at 0 range 10 .. 10;
+      NXE       at 0 range 11 .. 11;
+      Reserved3 at 0 range 12 .. 31;
+      Reserved4 at 0 range 32 .. 63;
+   end record;
+
+   function To_IA32_EFER is new Ada.Unchecked_Conversion (Unsigned_64, IA32_EFER_Type);
+   function To_U64 is new Ada.Unchecked_Conversion (IA32_EFER_Type, Unsigned_64);
+
+   ----------------------------------------------------------------------------
+   -- MSRs
+   ----------------------------------------------------------------------------
+
+   function MSR_Read (MSRn : Unsigned_32) return Unsigned_64 with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Generic definitions

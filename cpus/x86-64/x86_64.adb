@@ -56,6 +56,22 @@ package body x86_64 is
           );
    end NOP;
 
+   function MSR_Read (MSRn : Unsigned_32) return Unsigned_64 is
+      Result : Unsigned_64;
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movl    %1,%%ecx" & CRLF &
+                       "        rdmsr           " & CRLF &
+                       "",
+           Outputs  => Unsigned_64'Asm_Output ("=a", Result),
+           Inputs   => Unsigned_32'Asm_Input ("ecx", MSRn),
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end MSR_Read;
+
    ----------------------------------------------------------------------------
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
