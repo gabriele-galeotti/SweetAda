@@ -142,36 +142,36 @@ package body CPU.IO is
    -- I/O operations referenced by addresses
    ----------------------------------------------------------------------------
 
-   function A_To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
+   function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
 
    -- Unsigned_8
    function IO_Read (Port_Address : Address) return Unsigned_8 is
    begin
-      return PortIn (Unsigned_16 (A_To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#));
+      return PortIn (Unsigned_16 (To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#));
    end IO_Read;
    procedure IO_Write (Port_Address : in Address; Value : in Unsigned_8) is
    begin
-      PortOut (Unsigned_16 (A_To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#), Value);
+      PortOut (Unsigned_16 (To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#), Value);
    end IO_Write;
 
    -- Unsigned_16
    function IO_Read (Port_Address : Address) return Unsigned_16 is
    begin
-      return PortIn (Unsigned_16 (A_To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#));
+      return PortIn (Unsigned_16 (To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#));
    end IO_Read;
    procedure IO_Write (Port_Address : in Address; Value : in Unsigned_16) is
    begin
-      PortOut (Unsigned_16 (A_To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#), Value);
+      PortOut (Unsigned_16 (To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#), Value);
    end IO_Write;
 
    -- Unsigned_32
    function IO_Read (Port_Address : Address) return Unsigned_32 is
    begin
-      return PortIn (Unsigned_16 (A_To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#));
+      return PortIn (Unsigned_16 (To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#));
    end IO_Read;
    procedure IO_Write (Port_Address : in Address; Value : in Unsigned_32) is
    begin
-      PortOut (Unsigned_16 (A_To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#), Value);
+      PortOut (Unsigned_16 (To_U64 (Port_Address) and 16#0000_0000_0000_FFFF#), Value);
    end IO_Write;
 
 end CPU.IO;
