@@ -28,7 +28,7 @@
 # define FAT_NAME                "FAT16   "
 #endif
 
-// BIOS loads the boot sector @ 0000:7C00.
+// BIOS/MBR loads the boot sector @ 0000:7C00.
 #define BIOSSEGMENT 0x07C0
 
 // BOOTSEGMENT is the segment target address of the binary
@@ -40,94 +40,152 @@
                 .sect   .text,"ax"
                 .code16
 
-                .org    0x0000
-
                 .global _start
 _start:
                 //
                 // Hardwired MS-DOS header + BPB.
                 //
-                .byte   0xEB,0x3C,0x90          // +00 hardwired short JMP + NOP (jump @ offset 0x003E)
-                .ascii  "MSDOS5.0"              // +03 OEM signature
-                                                //     DOS 2.0 BPB
-                .word   0x0200                  // +0B sector size: bytes x sector
-                .byte   1                       // +0D sectors x cluster (must be a power of 2)
-                .word   1                       // +0E reserved sectors (at least 1)
-                .byte   2                       // +10 number of FATs
-                .word   ROOT_ENTRIES            // +11 root entries
-                .word   PARTITION_SECTORS_SSIZE // +13 small sectors (if <= 65535)
-                .byte   MEDIA_TYPE              // +15 0xF0 = 3.5'' 1.44 MB floppy disk, 0xF8 = hard disk
-                .word   0x0009                  // +16 sectors per FAT
-                                                //     DOS 3.31 BPB
-                .word   SPT                     // +18 sectors per track
-                .word   HEADS                   // +1A number of heads
-                .long   PARTITION_SECTOR_START  // +1C hidden sectors
-                .long   PARTITION_SECTORS_LSIZE // +20 large sectors (total # of sectors)
-                                                //     DOS 4.0 Extended BPB (only FAT12/FAT16/HPFS, no FAT32/NTFS)
-                .byte   DRIVE_NUMBER            // +24 physical drive number (0x00 = first floppy disk, 0x80 = first hard disk)
-                .byte   0                       // +25 flags (current head - for FAT always set to 0)
-                .byte   0x29                    // +26 extended BPB signature
-                .long   0x12345678              // +27 volume serial number
-                .ascii  "SweetAda   "           // +2B "           " volume label
-                .ascii  FAT_NAME                // +36 system ID
+                .byte   0xEB,0x3C,0x90                  // +00  3 hardwired short JMP + NOP (jump @ offset 0x003E)
+                .ascii  "MSDOS5.0"                      // +03  8 OEM signature
+                                                        // DOS 2.0 BPB
+                .word   0x0200                          // +0B  2 sector size: bytes x sector
+                .byte   1                               // +0D  1 sectors x cluster (must be a power of 2)
+                .word   1                               // +0E  2 reserved sectors (at least 1)
+                .byte   2                               // +10  1 number of FATs
+                .word   ROOT_ENTRIES                    // +11  2 root entries
+                .word   PARTITION_SECTORS_SSIZE         // +13  2 small sectors (if <= 65535)
+                .byte   MEDIA_TYPE                      // +15  1 0xF0 = 3.5'' 1.44 MB floppy disk, 0xF8 = hard disk
+                .word   0x0009                          // +16  2 sectors per FAT
+                                                        // DOS 3.31 BPB
+                .word   SPT                             // +18  2 sectors per track
+                .word   HEADS                           // +1A  2 number of heads
+                .long   PARTITION_SECTOR_START          // +1C  4 hidden sectors
+                .long   PARTITION_SECTORS_LSIZE         // +20  4 large sectors (total # of sectors)
+                                                        // DOS 4.0 Extended BPB (only FAT12/FAT16/HPFS, no FAT32/NTFS)
+                .byte   DRIVE_NUMBER                    // +24  1 physical drive number (0x00 = first floppy disk, 0x80 = first hard disk)
+                .byte   0                               // +25  1 flags (current head - for FAT always set to 0)
+                .byte   0x29                            // +26  1 extended BPB signature
+                .long   0x12345678                      // +27  4 volume serial number
+                .ascii  "SweetAda   "                   // +2B 11 "           " volume label
+                .ascii  FAT_NAME                        // +36  8 system ID
+                                                        // current offset = 0x003E
+                lbasectorlo = (0x7C00+0x1C)
+                lbasectorhi = (0x7C00+0x1E)
 
-                // offset = 0x003E
-
-                //
-                // Reset CS:IP so that the start of this code appears to live
-                // @ 0x07C0:0000. This way, we know possibly how to arrange a
-                // GDT without complicate offset calculations and relocations.
-                //
-                nop                             // sync disassembly
-                nop
-                nop
-                ljmp    $BIOSSEGMENT,$(start1-_start)
-
-                //
-                // GDT descriptors could be placed here.
-                //
-
-start1:
                 clc
                 cld
-                // DS = CS
-                movw    %cs,%ax
+                movw    %cs,%ax                         // SS = DS = CS
                 movw    %ax,%ds
-                // setup ES:DX buffer
-                movw    $BOOTSEGMENT,%ax
+                movw    %ax,%ss
+                movw    $0x7C00,%sp
+                movw    $BOOTSEGMENT,%ax                // ES = BOOTSEGMENT
                 movw    %ax,%es
-                xorw    %bx,%bx
+                //xorw    %bx,%bx
                 movw    $NSECTORS,%si
+                incw    lbasectorlo
+                jne     1f
+                incw    lbasectorhi
+1:
 
-read:           movw    nsectorslo,%ax
-                movw    nsectorshi,%dx
-                call    dump
-#if defined(DELAY)
-                call    delay
-#endif
-                call    ls2chs
-                jc      error
-                movb    $0x01,%al
-                call    biosread
-                jc      error
+READ:           movw    lbasectorlo,%ax
+                movw    lbasectorhi,%dx
+                call    DUMP
+                //call    LS2CHS
+                //jc      ERROR
+                //call    BIOSREAD
+                call    EXTENDED
+                jc      ERROR
                 decw    %si
-                je      boot
-                movw    %es,%ax
-                addw    $0x20,%ax               // bump buffer by 1 sector = 0x200 bytes
+                je      BOOT
+#if defined(DELAY)
+                movl    $0x00100000,%ecx
+1:       addr32 loop    1b
+#endif
+                movw    %es,%ax                         // ES = ES + 0x200 >> 8
+                addw    $0x20,%ax
                 movw    %ax,%es
-                incw    nsectorslo
-                jne     read
-                incw    nsectorshi
-                jmp     read
+                incw    lbasectorlo
+                jne     READ
+                incw    lbasectorhi
+                jmp     READ
 
-boot:
+                //
+                // Issue read one sector request.
+                // INT 13H AH=02H READ SECTORS FROM DRIVE
+                //
+                // input: sctnum = [0x7DE8]
+                // input: head = [0x7DE9]
+                // input: trk = [0x7DEA]
+                //
+BIOSREAD:       movb    $0x01,%al
+                movb    $0x02,%ah
+                movw    trk,%dx
+                movb    $0x06,%cl
+                shlb    %cl,%dh
+                orb     sctnum,%dh
+                movw    %dx,%cx
+                xchgb   %cl,%ch
+                movb    $DRIVE_NUMBER,%dl               // physical drive number
+                movb    head,%dh                        // current head
+                int     $0x13
+                ret
+
+                //
+                // Extended read.
+                // LBA sector = DX:AX
+                //
+EXTENDED:       pusha                                   // push all registers onto stack
+                movb    $DRIVE_NUMBER,%dl               // DL = drive number
+                movw    $0x55AA,%bx                     // BX must be set to 55AAh
+                movb    $0x41,%ah                       // INT 0x13 function 41h "INSTALLATION CHECK"
+                int     $0x13                           // "check for INT 0x13 extensions"
+                jc      EXTENDEDFAIL                    // was operation successful? if not, return (with carry flag set)
+                cmpw    $0xAA55,%bx                     // the contents of BX are changed into AA55h if exts installed
+                jnz     EXTENDEDFAIL                    // are they installed? if not, return (with carry flag set)
+                testb   $0x01,%cl                       // function 42h supported?
+                jz      EXTENDEDFAIL                    // return (with carry flag set)
+                popa                                    // pop all registers from stack
+                movw    $5,%di                          // 5 retries
+EXTENDEDRETRY:  pusha                                   // push all registers onto stack
+                pushw   $0
+                pushw   $0
+
+                pushw   %dx                             // LBA starting sector MSB bytes
+                pushw   %ax                             // LBA starting sector LSB bytes
+                pushw   %es                             // transfer buffer segment
+                pushw   $0                              // transfer buffer offset
+
+                pushw   $0x01                           // number of sectors to transfer = 1
+                pushw   $0x10                           // packet size = 10h
+                movb    $DRIVE_NUMBER,%dl               // DL = drive number
+                movb    $0x42,%ah                       // INT 0x13 function 42h "EXTENDED READ"
+                movw    %sp,%si                         // (DS):SI = disk address packet which was pushed onto stack
+                int     $0x13                           // extended read of drive sectors
+                popa                                    // pop packet values from stack
+                popa                                    // pop all registers from stack
+                jnb     READRETURN                      // return without reset of disks
+                decw    %di                             // decrement # of retries
+                jz      READRETURN                      // return without reset of disks
+                // INT 0x13 function 00h "RESET DISK SYSTEM"
+                movb    $DRIVE_NUMBER,%dl               // DL = drive number
+                xorb    %ah,%ah                         // INT 0x13 function 0
+                int     $0x13
+                jmp     EXTENDEDRETRY                   // retry
+EXTENDEDFAIL:   popa
+                stc                                     // set carry flag
+READRETURN:     ret
+
+                //
+                // Final bootstrap phase.
+                //
+BOOT:
 #if defined(FLOPPYDISK)
                 // shutdown floppy disk motor
                 movw    $0x03F2,%dx
                 xorb    %al,%al
                 outb    %al,%dx
 #endif
-                ljmp    $BOOTSEGMENT,$0         // jump to code
+                ljmp    $BOOTSEGMENT,$0
 
                 //
                 // Convert a logical sector into CHS.
@@ -142,44 +200,24 @@ boot:
                 // output: head = [0x7DE9]
                 // output: trk = [0x7DEA]
                 //
-ls2chs:         cmpw    spt,%dx                 // compare with spt (overflow)
-                jnc     1f                      // error
-                divw    spt                     // divisor = spt
-                incb    %dl                     // sector number is 1-based, limited to 63
-                movb    %dl,sctnum              // sector #
+LS2CHS:         cmpw    spt,%dx                         // compare with spt (overflow)
+                jnc     1f                              // error
+                divw    spt                             // divisor = spt
+                incb    %dl                             // sector number is 1-based, limited to 63
+                movb    %dl,sctnum                      // sector #
                 xorw    %dx,%dx
-                divw    heads                   // divisor = heads
-                movb    %dl,head                // head #, limited to 254
-                movw    %ax,trk                 // trk #
+                divw    heads                           // divisor = heads
+                movb    %dl,head                        // head #, limited to 254
+                movw    %ax,trk                         // trk #
                 clc
                 ret
 1:              stc
                 ret
 
                 //
-                // Issue one read request.
-                //
-                // input: sector count = AL
-                // input: sctnum = [0x7DE8]
-                // input: head = [0x7DE9]
-                // input: trk = [0x7DEA]
-                //
-biosread:       movb    $0x02,%ah               // INT 13H AH=02H READ SECTORS FROM DRIVE
-                movw    trk,%dx
-                movb    $0x06,%cl
-                shlb    %cl,%dh
-                orb     sctnum,%dh
-                movw    %dx,%cx
-                xchgb   %cl,%ch
-                movb    $DRIVE_NUMBER,%dl       // physical drive number
-                movb    head,%dh                // current head
-                int     $0x13
-                ret
-
-                //
                 // Write a "." for every sector loaded.
                 //
-dump:           pushw   %ax
+DUMP:           pushw   %ax
                 pushw   %bx
                 movb    $0x0E,%ah
                 movw    $0x0007,%bx
@@ -189,45 +227,10 @@ dump:           pushw   %ax
                 popw    %ax
                 ret
 
-#if 0
-                //
-                // Write logical sector # to the screen.
-                //
-dump:           pushw   %ax
-                pushw   %bx
-                movw    %ax,%cx
-                movb    $0x0E,%ah
-                movb    $0x07,%bl
-                movb    $'S',%al
-                int     $0x10
-                movb    $':',%al
-                int     $0x10
-                movb    %cl,%al
-                shrb    $4,%al
-                andb    $0x0F,%al
-                cmpb    $0x09,%al
-                jle     1f
-                addb    $0x07,%al
-1:              addb    $0x30,%al
-                int     $0x10
-                movb    %cl,%al
-                andb    $0x0F,%al
-                cmpb    $0x09,%al
-                jle     2f
-                addb    $0x07,%al
-2:              addb    $0x30,%al
-                int     $0x10
-                movb    $0x0D,%al
-                int     $0x10
-                popw    %bx
-                popw    %ax
-                ret
-#endif
-
                 //
                 // Write "ERR" to the screen.
                 //
-error:          movb    $0x0E,%ah
+ERROR:          movb    $0x0E,%ah
                 movw    $0x0007,%bx
                 movb    $'*',%al
                 int     $0x10
@@ -243,39 +246,19 @@ error:          movb    $0x0E,%ah
                 int     $0x10
 1:              jmp     1b
 
-                //
-                // Delay routine.
-                //
-delay:          movl    $0x00100000,%ecx
-1:       addr32 loop    1b
-                ret
 
                 .org    0x01E0
-
-// logical starting sector HI
-nsectorshi:     .word   0
-
-// logical starting sector LO
+nsectorshi:     .word   0                               // logical starting sector HI
 #if defined(FLOPPYDISK)
-nsectorslo:     .word   1
+nsectorslo:     .word   1                               // logical starting sector LO
 #else
-nsectorslo:     .word   HEADS*SPT+1             // CHS(1,0,2)
+nsectorslo:     .word   HEADS*SPT+1                     // logical starting sector LO = CHS(1,0,2)
 #endif
-
-// sectors per track
-spt:            .word   SPT
-
-// heads per cylinder
-heads:          .word   HEADS
-
-// S output from ls2chs
-sctnum:         .byte   0
-
-// H output from ls2chs
-head:           .byte   0
-
-// C output from ls2chs
-trk:            .word   0
+spt:            .word   SPT                             // sectors per track
+heads:          .word   HEADS                           // heads per cylinder
+sctnum:         .byte   0                               // S output from ls2chs
+head:           .byte   0                               // H output from ls2chs
+trk:            .word   0                               // C output from ls2chs
 
                 // 0xAA55 signature
                 .org    0x01FE

@@ -112,9 +112,26 @@ set device_filename [lindex $argv 2]
 puts "$SCRIPT_FILENAME: creating hard disk ..."
 
 set BPS 512
-set CYL 820
-set HPC 6
-set SPT 17
+# Seagate 40 MB
+#set CYL 820
+#set HPC 6
+#set SPT 17
+# X/16/63 geometry
+set CYL 4
+set HPC 16
+set SPT 63
+# standard X/255/63 geometry
+#set CYL 4
+#set HPC 255
+#set SPT 63
+# USB-ZIP 100 MB, partition #4
+#set CYL 96
+#set HPC 64
+#set SPT 32
+# USB-ZIP 250 MB, partition #4
+#set CYL 239
+#set HPC 64
+#set SPT 32
 
 set SECTORS_PER_CYLINDER [expr $HPC * $SPT]
 set SECTOR_COUNT [expr $CYL * $SECTORS_PER_CYLINDER]
