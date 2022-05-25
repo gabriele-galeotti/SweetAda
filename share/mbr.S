@@ -1,6 +1,13 @@
 
 //
-// Windows 2000/XP/2003 MBR
+// mbr.S
+//
+// Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+//
+// This work is licensed under the terms of the MIT License.
+// Please consult the LICENSE.txt file located in the top-level directory.
+//
+
 //
 // MBR CHS mapping = 0,0,1
 // MBR loaded @ 0000:7C00
@@ -46,8 +53,8 @@ _start:
                 // Partitions should be:
                 // 0x80 (bootable)
                 // 0x00 (not-bootable)
-                // any other value is refused. Only one partition should be bootable. If no
-                // partition is bootable, exit to INT 0x18.
+                // any other value is refused. Only one partition should be
+                // bootable. If no partition is bootable, exit to INT 0x18.
                 //
 CHECKP:         movw    $(PTABLE+0x0600),%bp            // start of partition table
                 movb    $04,%cl                         // 4 partitions
@@ -70,8 +77,8 @@ INVP:           movb    $(ERR_INVALID-0x0100),%al       // "Invalid partition ta
                 //
                 // Print error routine.
                 //
-                // Warning: movb $0x07,%ah instruction is needed for error messages being located
-                // at address 0x7xx.
+                // Warning: movb $0x07,%ah instruction is needed for error
+                // messages being located at address 0x7xx.
                 //
 ERROR:          movb    $0x07,%ah                       // high-byte of the offset of error messages, MSB(0x600+0x100)
                 movw    %ax,%si
@@ -230,11 +237,6 @@ EXTENDEDFAIL:   popa
 READRETURN:     ret
 
                 //
-                // Boot the operating system.
-                //
-GOBOOT:         jmp     GOBOOT2
-
-                //
                 // Error messages.
                 //
                 .org    0x012C
@@ -243,16 +245,12 @@ ERROR2:         .asciz  "Error loading operating system"
 ERROR3:         .asciz  "Missing operating system"
 
                 //
-                // free space
+                // Boot the operating system bootrecord.
                 //
-
-                //
-                // Original "GOBOOT" code.
-                //
-GOBOOT2:        movw    %sp,%di
+GOBOOT:         movw    %sp,%di
                 pushw   %ds                             // DS is 0 at this time
-                pushw   %di                             // SP --> DI (now 0x7C00)
-                movw    %bp,%si                         // BP (still 07BE) -> SI for use by boot record
+                pushw   %di                             // SP -> DI (now 0x7C00)
+                movw    %bp,%si                         // BP (still 0x07BE) -> SI for use by boot record
                 retf                                    // simulated jump to 0000:7C00
 
                 //
@@ -264,7 +262,7 @@ ERR_LOADING:    .byte   ERROR2-0x0100                   // 0x1B6: 0x44
 ERR_MISSING:    .byte   ERROR3-0x0100                   // 0x1B7: 0x63
 
                 //
-                // Windows disk serial number.
+                // Disk serial number.
                 //
                 .org    0x01B8
 DISKSN:         .byte   0x00,0x00,0x00,0x00
@@ -272,49 +270,44 @@ DISKSN:         .byte   0x00,0x00,0x00,0x00
                 //
                 // Partition table.
                 //
-                // +00  80 -- -- --  boot indicator
-                // +01  01 01 00 --  starting encoded CHS (INT 0x13 format)
-                // +04  07 -- -- --  partition type
-                // +05  01 E0 27 --  ending encoded CHS (INT 0x13 format)
-                // +08  20 00 00 00  starting sector (0-based, LBA)
-                // +0C  E0 F9 00 00  partition size in sectors
-                //
                 // CHS bytes    +0       +1       +2
                 //           76543210 76543210 76543210
                 //           HHHHHHHH CCSSSSSS cccccccc
                 // INT 0x13     DH       CL       CH
                 // C = cylinder MSB, c = cylinder LSB
                 //
+                // starting sector is LBA 0-based
+                //
                 .org    0x01BE
 PTABLE:
 PARTITION1:     // 0x01BE
-                .byte   0x00                            // boot indicator
-                .byte   0x00,0x00,0x00                  // starting encoded CHS
-                .byte   0x00                            // partition type
-                .byte   0x00,0x00,0x00                  // ending encoded CHS
-                .byte   0x00,0x00,0x00,0x00             // starting sector
-                .byte   0x00,0x00,0x00,0x00             // partition size
+                .byte   0x00                            // +00 boot indicator
+                .byte   0x00,0x00,0x00                  // +01 starting encoded CHS
+                .byte   0x00                            // +04 partition type
+                .byte   0x00,0x00,0x00                  // +05 ending encoded CHS
+                .byte   0x00,0x00,0x00,0x00             // +08 starting sector
+                .byte   0x00,0x00,0x00,0x00             // +0C partition size
 PARTITION2:     // 0x01CE
-                .byte   0x00                            // boot indicator
-                .byte   0x00,0x00,0x00                  // starting encoded CHS
-                .byte   0x00                            // partition type
-                .byte   0x00,0x00,0x00                  // ending encoded
-                .byte   0x00,0x00,0x00,0x00             // starting sector
-                .byte   0x00,0x00,0x00,0x00             // partition size
+                .byte   0x00                            // +00 boot indicator
+                .byte   0x00,0x00,0x00                  // +01 starting encoded CHS
+                .byte   0x00                            // +04 partition type
+                .byte   0x00,0x00,0x00                  // +05 ending encoded
+                .byte   0x00,0x00,0x00,0x00             // +08 starting sector
+                .byte   0x00,0x00,0x00,0x00             // +0C partition size
 PARTITION3:     // 0x01DE
-                .byte   0x00                            // boot indicator
-                .byte   0x00,0x00,0x00                  // starting encoded CHS
-                .byte   0x00                            // partition type
-                .byte   0x00,0x00,0x00                  // ending encoded CHS
-                .byte   0x00,0x00,0x00,0x00             // starting sector
-                .byte   0x00,0x00,0x00,0x00             // partition size
+                .byte   0x00                            // +00 boot indicator
+                .byte   0x00,0x00,0x00                  // +01 starting encoded CHS
+                .byte   0x00                            // +04 partition type
+                .byte   0x00,0x00,0x00                  // +05 ending encoded CHS
+                .byte   0x00,0x00,0x00,0x00             // +08 starting sector
+                .byte   0x00,0x00,0x00,0x00             // +0C partition size
 PARTITION4:     // 0x01EE
-                .byte   0x00                            // boot indicator
-                .byte   0x00,0x00,0x00                  // starting encoded CHS
-                .byte   0x00                            // partition type
-                .byte   0x00,0x00,0x00                  // ending encoded CHS
-                .byte   0x00,0x00,0x00,0x00             // starting sector
-                .byte   0x00,0x00,0x00,0x00             // partition size
+                .byte   0x00                            // +00 boot indicator
+                .byte   0x00,0x00,0x00                  // +01 starting encoded CHS
+                .byte   0x00                            // +04 partition type
+                .byte   0x00,0x00,0x00                  // +05 ending encoded CHS
+                .byte   0x00,0x00,0x00,0x00             // +08 starting sector
+                .byte   0x00,0x00,0x00,0x00             // +0C partition size
 
                 // 0xAA55 signature
                 .org    0x01FE
