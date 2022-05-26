@@ -66,21 +66,21 @@ package Sun4m is
 
    type Slavio_SS_SC_Type is
    record
-      Reserved1 : Bits_27;
-      WD        : Boolean;
-      Reserved2 : Bits_2;
-      RS        : Boolean;
       SR        : Boolean;
+      RS        : Boolean;
+      Reserved1 : Bits_2;
+      WD        : Boolean;
+      Reserved2 : Bits_27;
    end record with
-      Bit_Order => High_Order_First,
+      Bit_Order => Low_Order_First,
       Size      => 32;
    for Slavio_SS_SC_Type use
    record
-      Reserved1 at 0 range 0 .. 26;
-      WD        at 0 range 27 .. 27;
-      Reserved2 at 0 range 28 .. 29;
-      RS        at 0 range 30 .. 30;
-      SR        at 0 range 31 .. 31;
+      SR        at 0 range 0 .. 0;
+      RS        at 0 range 1 .. 1;
+      Reserved1 at 0 range 2 .. 3;
+      WD        at 0 range 4 .. 4;
+      Reserved2 at 0 range 5 .. 31;
    end record;
 
    System_Status_Control : aliased Slavio_SS_SC_Type with
