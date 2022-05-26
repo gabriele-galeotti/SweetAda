@@ -57,10 +57,14 @@ package body SCC is
 
    type RR0_Type is
    record
-      RXCA       : Boolean;
-      Zero_Count : Boolean;
-      TXBE       : Boolean;
-      Unused     : Bits_5;
+      RXCA       : Boolean; -- Receive Character Available
+      Zero_Count : Boolean; -- Zero Count status
+      TXBE       : Boolean; -- TX Buffer Empty status
+      DCD        : Boolean; -- Data Carrier Detect status
+      SyncHunt   : Boolean; -- Sync/Hunt status
+      CTS        : Boolean; -- Clear to Send pin status
+      TXUR_EOM   : Boolean; -- Transmit Underrun/EOM status
+      BreakAbort : Boolean; -- Break/Abort status
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -69,7 +73,11 @@ package body SCC is
       RXCA       at 0 range 0 .. 0;
       Zero_Count at 0 range 1 .. 1;
       TXBE       at 0 range 2 .. 2;
-      Unused     at 0 range 3 .. 7;
+      DCD        at 0 range 3 .. 3;
+      SyncHunt   at 0 range 4 .. 4;
+      CTS        at 0 range 5 .. 5;
+      TXUR_EOM   at 0 range 6 .. 6;
+      BreakAbort at 0 range 7 .. 7;
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (RR0_Type, Unsigned_8);
@@ -233,13 +241,13 @@ package body SCC is
 
    type WR5_Type is
    record
-      Tx_CRC_Enable : Boolean;
-      RTS           : Boolean;
-      nSDLC_CRC16   : Boolean;
-      Tx_Enable     : Boolean;
-      Send_Break    : Boolean;
-      TxN           : Bits_2;
-      DTR           : Boolean;
+      Tx_CRC_Enable : Boolean; -- Transmit CRC Enable
+      RTS           : Boolean; -- Request To Send control bit
+      nSDLC_CRC16   : Boolean; -- /SDLC/CRC-16
+      Tx_Enable     : Boolean; -- Transmit Enable
+      Send_Break    : Boolean; -- Send Break control bit
+      TxN           : Bits_2;  -- Transmit Bits/Character select bits 1 and 0
+      DTR           : Boolean; -- Data Terminal Ready control bit
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
