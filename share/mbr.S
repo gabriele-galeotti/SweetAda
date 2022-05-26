@@ -26,7 +26,7 @@ _start:
                 //
                 // On entry, CS:IP = 0000:7C00.
                 //
-                // The relocation stub is 0x1B bytes length.
+                // The relocation stub is 0x1B bytes long.
                 //
                 xorw    %ax,%ax                         // SS = 0
                 movw    %ax,%ss
@@ -78,7 +78,7 @@ INVP:           movb    $(ERR_INVALID-0x0100),%al       // "Invalid partition ta
                 // Print error routine.
                 //
                 // Warning: movb $0x07,%ah instruction is needed for error
-                // messages being located at address 0x7xx.
+                // messages being located at address 0x7??.
                 //
 ERROR:          movb    $0x07,%ah                       // high-byte of the offset of error messages, MSB(0x600+0x100)
                 movw    %ax,%si

@@ -18,7 +18,7 @@
 //
 
 #define STARTIP   0x7C00
-#define OFFSET(x) (STARTIP+x)
+#define OFFSET(x) (STARTIP + x)
 
 #if defined(FLOPPYDISK)
 # define MEDIA_TYPE              0xF0

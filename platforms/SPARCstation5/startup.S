@@ -27,8 +27,8 @@ _start:
                 //
                 // Boot ROM is located @ 0xFFD00000, temporarily mapped @
                 // 0x00000000 when the machine is powered-up. Disabling BM
-                // will make the translation disapper. The ROM is also aliased
-                // @ 0x70000000.
+                // will make the translation disappear. The ROM is also
+                // aliased @ 0x70000000.
                 //
                 lda     [%g0]ASI_N,%g2
                 sethi   %hi(~(MMU_CR_BM|MMU_CR_E)),%g3
