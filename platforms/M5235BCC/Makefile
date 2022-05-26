@@ -42,7 +42,7 @@ configure : configure-subplatform
 
 .PHONY : postbuild
 postbuild :
-	@# dBUG S-record download
+	$(REM) dBUG S-record download
 	$(call brief-command, \
         $(OBJCOPY) -O srec $(SWEETADA_PATH)/$(KERNEL_OUTFILE) $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec \
         ,[OBJCOPY],$(KERNEL_BASENAME).srec)

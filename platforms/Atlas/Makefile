@@ -36,7 +36,7 @@ configure :
 
 .PHONY : postbuild
 postbuild :
-	@# pROBE+ S-record download
+	$(REM) pROBE+ S-record download
 	$(call brief-command, \
         $(OBJCOPY) -O srec $(SWEETADA_PATH)/$(KERNEL_OUTFILE) $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec \
         ,[OBJCOPY],$(KERNEL_BASENAME).srec)
