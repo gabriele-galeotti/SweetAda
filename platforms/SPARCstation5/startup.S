@@ -15,20 +15,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define ASI_MMUREGS    0x04
-#define ASI_BYPASS     0x20
-#define ASI_SCRATCHPAD 0x20
-
-////////////////////////////////////////////////////////////////////////////////
-
                 .sect   .startup,"ax"
-
-                //
-                // The SPARC Architecture Manual Version 8
-                // Chapter 7 - Traps pg. 75 "Reset Trap"
-                //
-                // Boot ROM (0xFFD00000) is remapped @ 0x00000000.
-                //
 
                 .type   _start,@function
                 .global _start
@@ -36,20 +23,21 @@
 _start:
 
                 //
-                // Disable "Boot mode" and MMU.
+                // Disable MMU and "Boot mode".
                 //
-                // When in ROM mode, disabling the "Boot mode" bit will make
-                // the address translation disappear, so we need to explicitly
-                // perform a jump in the 0x70000000 ROM area.
+                // Boot ROM is located @ 0xFFD00000, temporarily mapped @
+                // 0x00000000 when the machine is powered-up. Disabling BM
+                // will make the translation disapper. The ROM is also aliased
+                // @ 0x70000000.
                 //
-                lda     [%g0]ASI_MMUREGS,%g2
-                sethi   %hi(0xFFFFBFFE),%g3             // ~MMU_CR_BM, ~MMU_CR_E
-                or      %g3,%lo(0xFFFFBFFE),%g3
+                lda     [%g0]ASI_N,%g2
+                sethi   %hi(~(MMU_CR_BM|MMU_CR_E)),%g3
+                or      %g3,%lo(~(MMU_CR_BM|MMU_CR_E)),%g3
                 and     %g2,%g3,%g2
-                sethi   %hi(bm),%g1
-                or      %g1,%lo(bm),%g1
+                sethi   %hi(initcpu),%g1
+                or      %g1,%lo(initcpu),%g1
                 jmp     %g1
-                sta     %g2,[%g0]ASI_MMUREGS
+                sta     %g2,[%g0]ASI_N
 
                 .size   _start,.-_start
 
@@ -57,36 +45,45 @@ _start:
 
                 .sect   .text,"ax"
 
-bm:
+initcpu:
                 //
                 // The SPARC Architecture Manual Version 8
                 // 4.2. IU Control/Status Registers
                 //
-                // https://lists.rtems.org/pipermail/users/2006-August/014931.html
-                // https://github.com/MISTLab/trap-gen/blob/master/BSP_and_Compiler/sparc
-                //
 #define PSR_INIT (PSR_EF|PSR_PIL(0xF)|PSR_S|PSR_PS|PSR_ET|PSR_CWP(0))
                 mov     %psr,%g1
-                sethi   %hi(0xFF000000|PSR_S),%g2       // preserve impl, ver
-                or      %g2,%lo(0xFF000000|PSR_S),%g2
+                sethi   %hi(PSR_impl|PSR_ver|PSR_S),%g2       // preserve ver, impl
+                or      %g2,%lo(PSR_impl|PSR_ver|PSR_S),%g2
                 sethi   %hi(PSR_INIT),%g3
                 or      %g3,%lo(PSR_INIT),%g3
                 and     %g1,%g2,%g1
                 or      %g1,%g3,%g1
                 mov     %g1,%psr
                 NOP3
-
-                // setup TBR
+                //
+                // Setup TBR.
+                //
                 sethi   %hi(trap_table),%g1
                 or      %g1,%lo(trap_table),%g1
                 mov     %g1,%tbr
                 NOP3
-                // initialize Y
+                //
+                // Initialize Y.
+                //
                 mov     %g0,%y
                 NOP3
 
+#if RELOCATE_DATA == 1
                 //
-                // Detect # of CPU windows implemented.
+                // Perform static data relocation.
+                //
+                call    movdata
+                nop
+#endif
+
+                //
+                // Detect # of implemented CPU windows.
+                //
                 // A WRWIM with all bits set to 1, followed by a RDWIM, yields
                 // a bit vector in which the implemented windows (and only the
                 // implemented windows) are indicated by 1?s.
@@ -106,35 +103,38 @@ bm:
                 sethi   %hi(nwindows),%g2
                 or      %g2,%lo(nwindows),%g2
                 sta     %g1,[%g2]ASI_SCRATCHPAD
-                //
+                // force 8 windows
                 set     0xFFFFFF00,%g1
                 mov     %g1,%wim
                 NOP3
 
+#if defined(QEMU)
                 //
                 // Check if we are running under QEMU.
                 //
+                // QEMU creates a configuration signature @ 0x2D00000510.
+                //
 #define CFG_ADDR         0x00000510
-#define FW_CFG_SIGNATURE 0x0000
 #define CFG_ASI          0x2D
+#define FW_CFG_SIGNATURE 0x0000
                 clr     %g1
-                set     CFG_ADDR,%g5
                 mov     FW_CFG_SIGNATURE,%g2
-                stha    %g2,[%g5]CFG_ASI
-                add     %g5,2,%g5
-                lduba   [%g5]CFG_ASI,%g2
+                set     CFG_ADDR,%g3
+                stha    %g2,[%g3]CFG_ASI
+                add     %g3,2,%g3
+                lduba   [%g3]CFG_ASI,%g2
                 cmp     %g2,'Q'
                 bne     1f
                 nop
-                lduba   [%g5]CFG_ASI,%g2
+                lduba   [%g3]CFG_ASI,%g2
                 cmp     %g2,'E'
                 bne     1f
                 nop
-                lduba   [%g5]CFG_ASI,%g2
+                lduba   [%g3]CFG_ASI,%g2
                 cmp     %g2,'M'
                 bne     1f
                 nop
-                lduba   [%g5]CFG_ASI,%g2
+                lduba   [%g3]CFG_ASI,%g2
                 cmp     %g2,'U'
                 bne     1f
                 nop
@@ -142,14 +142,18 @@ bm:
 1:              sethi   %hi(qemu),%g2
                 or      %g2,%lo(qemu),%g2
                 stuba   %g1,[%g2]ASI_SCRATCHPAD
-
-#if RELOCATE_DATA == 1
-                //
-                // Perform static data relocation.
-                //
-                call    movdata
-                nop
 #endif
+
+                //
+                // Clear registers.
+                //
+                clr     %g1
+                clr     %g2
+                clr     %g3
+                clr     %g4
+                clr     %g5
+                clr     %g6
+                clr     %g7
 
                 //
                 // Setup stack pointer.
@@ -158,17 +162,10 @@ bm:
                 or      %sp,%lo(kernel_stack),%sp
 
                 //
-                // Setup environment.
+                // Create a stack frame.
                 //
                 mov     %sp,%fp
                 add     %sp,-96,%sp
-                clr     %g1
-                clr     %g2
-                clr     %g3
-                clr     %g4
-                clr     %g5
-                clr     %g6
-                clr     %g7
 
                 //
                 // Jump to high-level code.
@@ -184,28 +181,24 @@ dead:           b       .
 // movdata                                                                    //
 //                                                                            //
 // Perform high-level language data relocation.                               //
-// This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
 movdata:
-                //.extern _etext
-                //.extern _sdata
-                //.extern _edata
-                set     (0xFFD00000+_etext),%g1
-                //set     (0xFFD00000+_sdata),%g2
-                //set     (0xFFD00000+_edata),%g3
-                //set     _etext,%g1
+                .extern _etext
+                .extern _sdata
+                .extern _edata
+                set     _etext,%g1
                 set     _sdata,%g2
                 set     _edata,%g3
                 cmp     %g2,%g3
                 be      2f
                 nop
-1:              //ldda    [%g1]ASI_SCRATCHPAD,%g4
-                //stda    %g4,[%g2]ASI_SCRATCHPAD
-                add     %g2,4,%g2                       // ++_sdata
-                cmp     %g2,%g3                         // _sdata = _edata ?
+1:              lda     [%g1]ASI_SCRATCHPAD,%g4
+                sta     %g4,[%g2]ASI_SCRATCHPAD
+                add     %g2,4,%g2
+                cmp     %g2,%g3
                 blu     1b
-                add     %g1,4,%g1                       // ++_etext, executed in delay slot
+                add     %g1,4,%g1
 2:              retl
                 nop
 

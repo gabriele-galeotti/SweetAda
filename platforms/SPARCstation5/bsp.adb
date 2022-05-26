@@ -19,6 +19,7 @@ with System;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Definitions;
 with MMIO;
 with SPARC;
 with Sun4m;
@@ -38,6 +39,7 @@ package body BSP is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use Bits;
    use Sun4m;
 
@@ -84,14 +86,16 @@ package body BSP is
       SCC_Descriptor.Write_8        := MMIO.Write'Access;
       SCC.Init (SCC_Descriptor, SCC.CHANNELA);
       SCC.Init (SCC_Descriptor, SCC.CHANNELB);
+      SCC.Baud_Rate_Set (SCC_Descriptor, SCC.CHANNELA, BR_38400);
+      SCC.Baud_Rate_Set (SCC_Descriptor, SCC.CHANNELB, BR_38400);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read := Console_Getchar'Access;
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("SPARCstation 5", NL => True);
-      Console.Print (Natural (Nwindows), Prefix => "Nwindows: ", NL => True);
-      Console.Print (QEMU, Prefix => "QEMU: ", NL => True);
+      Console.Print (Natural (Nwindows),       Prefix => "Nwindows:         ", NL => True);
+      Console.Print (QEMU,                     Prefix => "QEMU:             ", NL => True);
       Console.Print (DMA2_INTERNAL_IDREGISTER, Prefix => "DMA2 ID Register: ", NL => True);
       -- Am7990 ---------------------------------------------------------------
       Am7990_Descriptor.Base_Address  := To_Address (ETHERNET_CONTROLLER_REGISTERS_BASEADDRESS);
