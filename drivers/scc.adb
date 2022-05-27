@@ -35,14 +35,15 @@ package body SCC is
    -- Zilog SCC/ESCC User Manual UM010903-0515
    ----------------------------------------------------------------------------
 
-   type SCCZ8530_Register_Type is (RR0, WR3, WR4, WR5, WR11, RR12, WR12, RR13, WR13, WR14);
+   type SCCZ8530_Register_Type is (RR0, WR3, WR4, WR5, WR9, WR11, RR12, WR12, RR13, WR13, WR14);
 
    SCCZ8530_Register_ID : constant array (SCCZ8530_Register_Type) of Unsigned_8 :=
       (
-       RR0  => 0,  -- STATUS
-       WR3  => 3,  -- W_RXCTRL
+       RR0  => 0,
+       WR3  => 3,
        WR4  => 4,
-       WR5  => 5,  -- W_TXCTRL2
+       WR5  => 5,
+       WR9  => 9,
        WR11 => 11,
        RR12 => 12,
        WR12 => 12,
@@ -265,7 +266,131 @@ package body SCC is
    function To_U8 is new Ada.Unchecked_Conversion (WR5_Type, Unsigned_8);
    function To_WR5 is new Ada.Unchecked_Conversion (Unsigned_8, WR5_Type);
 
+   ----------------------------------------------------------------------------
+   -- Write Register 9 (Master Interrupt Control)
+   ----------------------------------------------------------------------------
+
+   RESCMD_NONE : constant := 2#00#; -- No Reset
+   RESCMD_CHB  : constant := 2#01#; -- Channel Reset B
+   RESCMD_CHA  : constant := 2#10#; -- Channel Reset A
+   RESCMD_RES  : constant := 2#11#; -- Force Hardware Reset
+
+   type WR9_Type is
+   record
+      VIS    : Boolean; -- Vector Includes Status control bit
+      NV     : Boolean; -- No Vector select bit
+      DLC    : Boolean; -- Disable Lower Chain control bit
+      MIE    : Boolean; -- Master Interrupt Enable
+      SHnSL  : Boolean; -- Status High//Status Low control bit
+      INTACK : Boolean; -- Software Interrupt Acknowledge control bit
+      RESCMD : Bits_2;  --  Reset Command Bits
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for WR9_Type use
+   record
+      VIS    at 0 range 0 .. 0;
+      NV     at 0 range 1 .. 1;
+      DLC    at 0 range 2 .. 2;
+      MIE    at 0 range 3 .. 3;
+      SHnSL  at 0 range 4 .. 4;
+      INTACK at 0 range 5 .. 5;
+      RESCMD at 0 range 6 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (WR9_Type, Unsigned_8);
+   function To_WR9 is new Ada.Unchecked_Conversion (Unsigned_8, WR9_Type);
+
+   ----------------------------------------------------------------------------
+   -- Write Register 11 (Clock Mode Control)
+   ----------------------------------------------------------------------------
+
+   nTRxC_XTAL : constant := 2#00#; -- XTAL Oscillator Output
+   nTRxC_Tx   : constant := 2#01#; -- Transmit Clock
+   nTRxC_BR   : constant := 2#10#; -- BR Output
+   nTRxC_DPLL : constant := 2#11#; -- DPLL Output (receive)
+
+   TRxC_IO_IN  : constant := 0; -- /TRxC pin is also an input if this bit is set to 0.
+   TRxC_IO_OUT : constant := 1; -- /TRxC pin is an output and carries the signal selected by D1 and D0 of this register.
+
+   TxCLK_nRTxC : constant := 2#00#; -- /RTxC Pin
+   TxCLK_nTRxC : constant := 2#01#; -- /TRxC Pin
+   TxCLK_BR    : constant := 2#10#; -- BR Output
+   TxCLK_DPLL  : constant := 2#11#; -- DPLL Output
+
+   RxCLK_nRTxC : constant := 2#00#; -- /RTxC Pin
+   RxCLK_nTRxC : constant := 2#01#; -- /TRxC Pin
+   RxCLK_BR    : constant := 2#10#; -- BR Output
+   RxCLK_DPLL  : constant := 2#11#; -- DPLL Output
+
+   RTxC_XTAL_TTL  : constant := 0; -- SCC expects a TTL-compatible signal as an input to this pin.
+   RTxC_XTAL_XTAL : constant := 1; -- SCC connects a HGA between the /RTxC and /SYNC pins in expectation of a XTAL.
+
+   type WR11_Type is
+   record
+      nTRxC     : Bits_2; -- /TRxC Output Source select bits 1 and 0
+      TRxC_IO   : Bits_1; -- TRxC Pin I/O control bit
+      TxCLK     : Bits_2; -- Transmit Clock select bits 1 and 0.
+      RxCLK     : Bits_2; -- Receiver Clock select bits 1 and 0
+      RTxC_XTAL : Bits_1; -- RTxC-XTAL//NO XTAL select bit
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for WR11_Type use
+   record
+      nTRxC     at 0 range 0 .. 1;
+      TRxC_IO   at 0 range 2 .. 2;
+      TxCLK     at 0 range 3 .. 4;
+      RxCLK     at 0 range 5 .. 6;
+      RTxC_XTAL at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (WR11_Type, Unsigned_8);
+   function To_WR11 is new Ada.Unchecked_Conversion (Unsigned_8, WR11_Type);
+
+   ----------------------------------------------------------------------------
+   -- Write Register 14 (Miscellaneous Control Bits)
+   ----------------------------------------------------------------------------
+
+   BRSOURCE_nRTxC_XTAL : constant := 0; -- The BRG clock comes from either the /RTxC pin or the XTAL oscillator. *(XTAL//no XTAL)
+   BRSOURCE_PCLK       : constant := 1; -- The clock for the BRG is the SCC’s PCLK input.
+
+   DPLL_CMD_NULL    : constant := 2#000#; -- Null Command
+   DPLL_CMD_SEARCH  : constant := 2#001#; -- Enter Search Mode
+   DPLL_CMD_RMC     : constant := 2#010#; -- Reset Missing Clock
+   DPLL_CMD_DISABLE : constant := 2#011#; -- Disable DPLL
+   DPLL_CMD_BR      : constant := 2#100#; -- Set Source = BR Generator
+   DPLL_CMD_nRTxC   : constant := 2#101#; -- Set Source = /RTxC
+   DPLL_CMD_FM      : constant := 2#110#; -- Set FM Mode
+   DPLL_CMD_NRZI    : constant := 2#111#; -- Set NRZI Mode
+
+   type WR14_Type is
+   record
+      BREN         : Boolean; -- Baud Rate Generator Enable
+      BRSOURCE     : Bits_1;  -- Baud Rate Generator Source select bit
+      DTR_Function : Boolean; -- DTR/Request Function select bit
+      AUTOECHO     : Boolean; -- Auto Echo select bit
+      Loc_LOOPBACK : Boolean; -- Local Loopback select bit
+      DPLL_CMD     : Bits_3;  -- Digital Phase-Locked Loop Command Bits.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for WR14_Type use
+   record
+      BREN         at 0 range 0 .. 0;
+      BRSOURCE     at 0 range 1 .. 1;
+      DTR_Function at 0 range 2 .. 2;
+      AUTOECHO     at 0 range 3 .. 3;
+      Loc_LOOPBACK at 0 range 4 .. 4;
+      DPLL_CMD     at 0 range 5 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (WR14_Type, Unsigned_8);
+   function To_WR14 is new Ada.Unchecked_Conversion (Unsigned_8, WR14_Type);
+
+   ----------------------------------------------------------------------------
    -- Local subprograms
+   ----------------------------------------------------------------------------
 
    procedure SCCZ8530_Create_Ports (
                                     Descriptor : in out SCCZ8530_Descriptor_Type;
@@ -368,6 +493,7 @@ package body SCC is
       Unused        : Unsigned_8 with Unreferenced => True;
       BR            : constant Integer := Definitions.Baud_Rate_Type'Enum_Rep (Baud_Rate);
       Time_Constant : Unsigned_16;
+      R             : WR14_Type;
    begin
       -- reset register pointer
       Unused := Descriptor.Read_8 (Descriptor.Control_Port (Channel));
@@ -375,9 +501,19 @@ package body SCC is
       Time_Constant := Unsigned_16 ((Descriptor.Baud_Clock + BR * 16) / (2 * BR * 16) - 2);
       Register_Write (Descriptor, Channel, WR12, LByte (Time_Constant));
       Register_Write (Descriptor, Channel, WR13, HByte (Time_Constant));
+      -- initialize WR14
+      R := (
+            BREN         => False,
+            BRSOURCE     => BRSOURCE_PCLK,
+            DTR_Function => False,
+            AUTOECHO     => False,
+            Loc_LOOPBACK => False,
+            DPLL_CMD     => DPLL_CMD_NULL
+           );
+      Register_Write (Descriptor, Channel, WR14, To_U8 (R));
       -- enable BRG
-      Register_Write (Descriptor, Channel, WR14, Unsigned_8'(2#00000010#));
-      Register_Write (Descriptor, Channel, WR14, Unsigned_8'(2#00000010#) or 1);
+      R.BREN := True;
+      Register_Write (Descriptor, Channel, WR14, To_U8 (R));
    end Baud_Rate_Set;
 
    ----------------------------------------------------------------------------
@@ -393,7 +529,13 @@ package body SCC is
       -- reset register pointer
       Unused := Descriptor.Read_8 (Descriptor.Control_Port (Channel));
       -- select BR Generator Output source = PCLK
-      Register_Write (Descriptor, Channel, WR11, Unsigned_8'(2#01010010#));
+      Register_Write (Descriptor, Channel, WR11, To_U8 (WR11_Type'(
+                                                                   nTRxC     => nTRxC_BR,
+                                                                   TRxC_IO   => TRxC_IO_IN,
+                                                                   TxCLK     => TxCLK_BR,
+                                                                   RxCLK     => RxCLK_BR,
+                                                                   RTxC_XTAL => RTxC_XTAL_TTL
+                                                                  )));
       Baud_Rate_Set (Descriptor, Channel, Definitions.BR_9600);
       -- X16 Clock Mode, External Sync Mode, 1 Stop Bit/Character, Parity
       -- EVEN, Parity not Enable
@@ -401,7 +543,7 @@ package body SCC is
                                                                  PAR_ENAB   => False,
                                                                  PAR_EVEN   => True,
                                                                  STOP_BITS  => SB1,
-                                                                 SYNC_MODES => EXTSYNC,
+                                                                 SYNC_MODES => MONOSYNC,
                                                                  XCLK_RATE  => X16CLK
                                                                 )));
       -- Rx 8 Bits/Character, Rx Enable
