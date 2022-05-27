@@ -108,42 +108,6 @@ initcpu:
                 mov     %g1,%wim
                 NOP3
 
-#if defined(QEMU)
-                //
-                // Check if we are running under QEMU.
-                //
-                // QEMU creates a configuration signature @ 0x2D00000510.
-                //
-#define CFG_ADDR         0x00000510
-#define CFG_ASI          0x2D
-#define FW_CFG_SIGNATURE 0x0000
-                clr     %g1
-                mov     FW_CFG_SIGNATURE,%g2
-                set     CFG_ADDR,%g3
-                stha    %g2,[%g3]CFG_ASI
-                add     %g3,2,%g3
-                lduba   [%g3]CFG_ASI,%g2
-                cmp     %g2,'Q'
-                bne     1f
-                nop
-                lduba   [%g3]CFG_ASI,%g2
-                cmp     %g2,'E'
-                bne     1f
-                nop
-                lduba   [%g3]CFG_ASI,%g2
-                cmp     %g2,'M'
-                bne     1f
-                nop
-                lduba   [%g3]CFG_ASI,%g2
-                cmp     %g2,'U'
-                bne     1f
-                nop
-                or      %g1,1,%g1
-1:              sethi   %hi(qemu),%g2
-                or      %g2,%lo(qemu),%g2
-                stuba   %g1,[%g2]ASI_SCRATCHPAD
-#endif
-
                 //
                 // Clear registers.
                 //
@@ -177,10 +141,11 @@ initcpu:
 dead:           b       .
                 nop
 
+#if RELOCATE_DATA == 1
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// Perform high-level language data relocation.                               //
+// Perform .data section relocation.                                          //
 ////////////////////////////////////////////////////////////////////////////////
 
 movdata:
@@ -201,6 +166,7 @@ movdata:
                 add     %g1,4,%g1
 2:              retl
                 nop
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with System.Machine_Code;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
@@ -37,11 +38,14 @@ package body BSP is
    --========================================================================--
 
    use System;
+   use System.Machine_Code;
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
    use Sun4m;
+
+   function QEMU_Detect return Boolean;
 
    --========================================================================--
    --                                                                        --
@@ -50,6 +54,50 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Check if we are running under QEMU.
+   -- QEMU creates a configuration signature @ 0x2D00000510.
+   ----------------------------------------------------------------------------
+   function QEMU_Detect return Boolean is
+      Result : Unsigned_32;
+   begin
+      Asm (
+           Template => ""                                        & CRLF &
+                       "        .equ    CFG_ADDR,0x00000510    " & CRLF &
+                       "        .equ    CFG_ASI,0x2D           " & CRLF &
+                       "        .equ    FW_CFG_SIGNATURE,0x0000" & CRLF &
+                       "        clr     %0                     " & CRLF &
+                       "        mov     FW_CFG_SIGNATURE,%%g1  " & CRLF &
+                       "        set     CFG_ADDR,%%g2          " & CRLF &
+                       "        stha    %%g1,[%%g2]CFG_ASI     " & CRLF &
+                       "        add     %%g2,2,%%g2            " & CRLF &
+                       "        lduba   [%%g2]CFG_ASI,%%g1     " & CRLF &
+                       "        cmp     %%g1,'Q'               " & CRLF &
+                       "        bne     1f                     " & CRLF &
+                       "        nop                            " & CRLF &
+                       "        lduba   [%%g2]CFG_ASI,%%g1     " & CRLF &
+                       "        cmp     %%g1,'E'               " & CRLF &
+                       "        bne     1f                     " & CRLF &
+                       "        nop                            " & CRLF &
+                       "        lduba   [%%g2]CFG_ASI,%%g1     " & CRLF &
+                       "        cmp     %%g1,'M'               " & CRLF &
+                       "        bne     1f                     " & CRLF &
+                       "        nop                            " & CRLF &
+                       "        lduba   [%%g2]CFG_ASI,%%g1     " & CRLF &
+                       "        cmp     %%g1,'U'               " & CRLF &
+                       "        bne     1f                     " & CRLF &
+                       "        nop                            " & CRLF &
+                       "        or      %0,1,%0                " & CRLF &
+                       "1:                                     " & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", Result),
+           Inputs   => No_Input_Operands,
+           Clobber  => "g1,g2",
+           Volatile => True
+          );
+      return Result /= 0;
+   end QEMU_Detect;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -77,6 +125,7 @@ package body BSP is
       -------------------------------------------------------------------------
       -- Exceptions.Init;
       -- TBR_Set (To_Address (0));
+      QEMU := QEMU_Detect;
       -- SCC ------------------------------------------------------------------
       SCC_Descriptor.Base_Address   := To_Address (SCC_BASEADDRESS);
       SCC_Descriptor.AB_Address_Bit := 2;
@@ -86,8 +135,8 @@ package body BSP is
       SCC_Descriptor.Write_8        := MMIO.Write'Access;
       SCC.Init (SCC_Descriptor, SCC.CHANNELA);
       SCC.Init (SCC_Descriptor, SCC.CHANNELB);
-      SCC.Baud_Rate_Set (SCC_Descriptor, SCC.CHANNELA, BR_38400);
-      SCC.Baud_Rate_Set (SCC_Descriptor, SCC.CHANNELB, BR_38400);
+      SCC.Baud_Rate_Set (SCC_Descriptor, SCC.CHANNELA, BR_9600);
+      SCC.Baud_Rate_Set (SCC_Descriptor, SCC.CHANNELB, BR_9600);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read := Console_Getchar'Access;

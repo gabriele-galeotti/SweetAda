@@ -35,11 +35,7 @@ package BSP is
       Convention    => Asm,
       External_Name => "nwindows";
 
-   QEMU : aliased Boolean with
-      Size          => 8,
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "qemu";
+   QEMU : Boolean := False;
 
    SCC_Descriptor : aliased SCC.SCCZ8530_Descriptor_Type := SCC.SCCZ8530_DESCRIPTOR_INVALID;
 
