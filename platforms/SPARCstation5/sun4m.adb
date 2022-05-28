@@ -40,10 +40,11 @@ package body Sun4m is
 
    ----------------------------------------------------------------------------
    -- Tclk_Init
+   -- The 31-bit counter is incremented every 500ns.
    ----------------------------------------------------------------------------
    procedure Tclk_Init is
    begin
-      System_Timer.Limit.Limit := 16#0020_0000#;
+      System_Timer.Limit.Limit := 2000; -- 1 ms
    end Tclk_Init;
 
 end Sun4m;

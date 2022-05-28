@@ -57,10 +57,12 @@ package body Exceptions is
    procedure Irq_Process is
    begin
       Core.Tick_Count := @ + 1;
+      if Core.Tick_Count mod 1_000 = 0 then
+         -- IOEMU "TIMER" LED blinking
+         IOEMU.IOEMU_IO0 := 1;
+         IOEMU.IOEMU_IO0 := 0;
+      end if;
       Sun4m.System_Timer_ClearLR;
-      -- IOEMU "TIMER" LED blinking
-      IOEMU.IOEMU_IO0 := 16#FF#;
-      IOEMU.IOEMU_IO0 := 16#00#;
    end Irq_Process;
 
    ----------------------------------------------------------------------------

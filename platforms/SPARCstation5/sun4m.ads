@@ -175,34 +175,34 @@ package Sun4m is
 
    type Slavio_Timer_Limit_Type is
    record
-      Reserved1 : Bits_1;
+      Reserved1 : Bits_9;
       Limit     : Bits_22;
-      Reserved2 : Bits_9;
+      Reserved2 : Bits_1;
    end record with
-      Bit_Order => High_Order_First,
+      Bit_Order => Low_Order_First,
       Size      => 32;
    for Slavio_Timer_Limit_Type use
    record
-      Reserved1 at 0 range 0 .. 0;
-      Limit     at 0 range 1 .. 22;
-      Reserved2 at 0 range 23 .. 31;
+      Reserved1 at 0 range 0 .. 8;
+      Limit     at 0 range 9 .. 30;
+      Reserved2 at 0 range 31 .. 31;
    end record;
 
    -- pp. 6-44 User Timer Count Register Field Definitions
 
    type Slavio_Timer_Counter_Type is
    record
-      L        : Bits_1;
-      Count    : Bits_22;
       Reserved : Bits_9;
+      Count    : Bits_22;
+      L        : Bits_1;
    end record with
-      Bit_Order => High_Order_First,
+      Bit_Order => Low_Order_First,
       Size      => 32;
    for Slavio_Timer_Counter_Type use
    record
-      L        at 0 range 0 .. 0;
-      Count    at 0 range 1 .. 22;
-      Reserved at 0 range 23 .. 31;
+      Reserved at 0 range 0 .. 8;
+      Count    at 0 range 9 .. 30;
+      L        at 0 range 31 .. 31;
    end record;
 
    type Slavio_Timer_Type is
