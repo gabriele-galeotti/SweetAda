@@ -99,7 +99,7 @@ DEF_EREF(_ada_main)
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// Perform high-level language data relocation.                               //
+// Perform .data section relocation.                                          //
 ////////////////////////////////////////////////////////////////////////////////
 
                 .align  2

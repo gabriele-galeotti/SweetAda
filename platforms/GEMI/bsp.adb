@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Definitions;
 with Bits;
 with MMIO;
 with GEMI;
@@ -35,6 +36,7 @@ package body BSP is
 
    use System;
    use System.Storage_Elements;
+   use Definitions;
    use Bits;
    use Interfaces;
 
@@ -70,8 +72,8 @@ package body BSP is
       -- UART -----------------------------------------------------------------
       UART_Descriptor.Base_Address  := To_Address (GEMI.UART_BASEADDRESS);
       UART_Descriptor.Scale_Address := 4;
-      UART_Descriptor.Baud_Clock    := 7_372_800;  -- board #1
-      -- UART_Descriptor.Baud_Clock    := 16_000_000; -- board #2
+      UART_Descriptor.Baud_Clock    := CLK_UART7M3; -- board #1
+      -- UART_Descriptor.Baud_Clock    := 16 * MHz;    -- board #2
       UART_Descriptor.Read_8        := MMIO.Read'Access;
       UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART_Descriptor.Data_Queue    := ((others => 0), 0, 0, 0);

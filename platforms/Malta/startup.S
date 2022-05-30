@@ -162,14 +162,14 @@ dead:           b       .
 
                 .size   _init,.-_init
 
+#if 0
 ////////////////////////////////////////////////////////////////////////////////
 // movcode                                                                    //
 //                                                                            //
-// Perform code relocation.                                                   //
+// Perform .text section relocation.                                          //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
-#if 0
 movcode:
                 .extern _text_start
                 .extern _stext
@@ -199,7 +199,7 @@ movcode:
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// Perform high-level language data relocation.                               //
+// Perform .data section relocation.                                          //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 

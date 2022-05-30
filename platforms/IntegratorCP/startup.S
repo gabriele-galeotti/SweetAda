@@ -90,7 +90,7 @@ dead:           b       .
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// Perform high-level language data relocation.                               //
+// Perform .data section relocation.                                          //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
