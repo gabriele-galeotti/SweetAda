@@ -35,9 +35,272 @@ package LEON3 is
    use Interfaces;
    use Bits;
 
+   type Bitmap_15 is array (1 .. 15) of Boolean with
+      Component_Size => 1,
+      Size           => 15;
+
+   ----------------------------------------------------------------------------
+   -- 8 Multiprocessor Interrupt Controller
+   ----------------------------------------------------------------------------
+
+   -- 8.3.1 Interrupt level register
+
+   type INTC_LEVEL_Type is
+   record
+      Reserved1 : Bits_1;
+      IL        : Bitmap_15; -- Interrupt Level n (IL[n]): Interrupt level for interrupt n.
+      Reserved2 : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for INTC_LEVEL_Type use
+   record
+      Reserved1 at 0 range 0 .. 0;
+      IL        at 0 range 1 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   INTC_LEVEL_ADDRESS : constant := 16#8000_0200#;
+
+   INTC_LEVEL : aliased INTC_LEVEL_Type with
+      Address              => To_Address (INTC_LEVEL_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 8.3.2 Interrupt pending register
+
+   type INTC_PENDING_Type is
+   record
+      Reserved : Bits_1;
+      IP       : Bitmap_15; -- Interrupt Pending n (IP[n]): Interrupt pending for interrupt n.
+      EIP      : Bitmap_16; -- Extended Interrupt Pending n (EIP[n]).
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for INTC_PENDING_Type use
+   record
+      Reserved at 0 range 0 .. 0;
+      IP       at 0 range 1 .. 15;
+      EIP      at 0 range 16 .. 31;
+   end record;
+
+   INTC_PENDING_ADDRESS : constant := 16#8000_0204#;
+
+   INTC_PENDING : aliased INTC_PENDING_Type with
+      Address              => To_Address (INTC_PENDING_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 8.3.3 Interrupt force register, processor 0
+
+   type INTC_P0FORCE_Type is
+   record
+      Reserved1 : Bits_1;
+      IForce    : Bitmap_15; -- Interrupt Force n (IF[n]): Force interrupt no. n.
+      Reserved2 : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for INTC_P0FORCE_Type use
+   record
+      Reserved1 at 0 range 0 .. 0;
+      IForce    at 0 range 1 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   INTC_P0FORCE_ADDRESS : constant := 16#8000_0208#;
+
+   INTC_P0FORCE : aliased INTC_P0FORCE_Type with
+      Address              => To_Address (INTC_P0FORCE_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 8.3.4 Interrupt clear register
+
+   type INTC_CLEAR_Type is
+   record
+      Reserved1 : Bits_1;
+      IC        : Bitmap_15; -- Interrupt Clear n (IC[n])
+      Reserved2 : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for INTC_CLEAR_Type use
+   record
+      Reserved1 at 0 range 0 .. 0;
+      IC        at 0 range 1 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   INTC_CLEAR_ADDRESS : constant := 16#8000_020C#;
+
+   INTC_CLEAR : aliased INTC_CLEAR_Type with
+      Address              => To_Address (INTC_CLEAR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 8.3.5 Multiprocessor status register
+
+   type MULTIPROC_STATUS_Type is
+   record
+      PowerDown : Bitmap_16;             -- Power-down status of CPU [n]
+      EIRQ      : Natural range 1 .. 15; -- EIRQ. Interrupt number (1 - 15) used for extended interrupts.
+      Reserved  : Bits_7;
+      BA        : Boolean;               -- Broadcast Available (BA).
+      NCPU      : Natural range 0 .. 15; -- NCPU. Number of CPU’s in the system -1.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for MULTIPROC_STATUS_Type use
+   record
+      PowerDown at 0 range 0 .. 15;
+      EIRQ      at 0 range 16 .. 19;
+      Reserved  at 0 range 20 .. 26;
+      BA        at 0 range 27 .. 27;
+      NCPU      at 0 range 28 .. 31;
+   end record;
+
+   MULTIPROC_STATUS_ADDRESS : constant := 16#8000_0210#;
+
+   MULTIPROC_STATUS : aliased MULTIPROC_STATUS_Type with
+      Address              => To_Address (MULTIPROC_STATUS_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 8.3.6 Processor interrupt mask register
+
+   type INTC_PROCMASK_Type is
+   record
+      Reserved : Bits_1;
+      IM       : Bitmap_15; -- Interrupt Mask n (IM[n])
+      EIM      : Bitmap_16; -- Interrupt mask for extended interrupts
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for INTC_PROCMASK_Type use
+   record
+      Reserved at 0 range 0 .. 0;
+      IM       at 0 range 1 .. 15;
+      EIM      at 0 range 16 .. 31;
+   end record;
+
+   INTC_PROCMASK0_ADDRESS : constant := 16#8000_0240#;
+
+   INTC_PROCMASK0 : aliased INTC_PROCMASK_Type with
+      Address              => To_Address (INTC_PROCMASK0_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   INTC_PROCMASK1_ADDRESS : constant := 16#8000_0244#;
+
+   INTC_PROCMASK1 : aliased INTC_PROCMASK_Type with
+      Address              => To_Address (INTC_PROCMASK1_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 8.3.7 Broadcast register
+
+   type INTC_BROADCAST_Type is
+   record
+      Reserved1 : Bits_1;
+      IM        : Bitmap_15; -- Broadcast Mask n (BM[n])
+      Reserved2 : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for INTC_BROADCAST_Type use
+   record
+      Reserved1 at 0 range 0 .. 0;
+      IM        at 0 range 1 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   INTC_BROADCAST_ADDRESS : constant := 16#8000_0214#;
+
+   INTC_BROADCAST : aliased INTC_BROADCAST_Type with
+      Address              => To_Address (INTC_BROADCAST_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 8.3.8 Processor interrupt force register
+
+   type INTC_FORCE_Type is
+   record
+      Reserved1   : Bits_1;
+      IForce      : Bitmap_15; -- Interrupt Force n (IF[n])
+      Reserved2   : Bits_1;
+      IForceClear : Bitmap_15; -- Interrupt Force Clear n (IFC[n])
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for INTC_FORCE_Type use
+   record
+      Reserved1   at 0 range 0 .. 0;
+      IForce      at 0 range 1 .. 15;
+      Reserved2   at 0 range 16 .. 16;
+      IForceClear at 0 range 17 .. 31;
+   end record;
+
+   INTC_FORCE0_ADDRESS : constant := 16#8000_0280#;
+
+   INTC_FORCE0 : aliased INTC_FORCE_Type with
+      Address              => To_Address (INTC_FORCE0_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   INTC_FORCE1_ADDRESS : constant := 16#8000_0284#;
+
+   INTC_FORCE1 : aliased INTC_FORCE_Type with
+      Address              => To_Address (INTC_FORCE1_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 8.3.9 Extended interrupt identification register
+
+   type INTC_EXTINTID_Type is
+   record
+      EID      : Natural range 16 .. 31; -- ID (16 - 31) of the acknowledged extended interrupt.
+      Reserved : Bits_27;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for INTC_EXTINTID_Type use
+   record
+      EID      at 0 range 0 .. 4;
+      Reserved at 0 range 5 .. 31;
+   end record;
+
+   INTC_EXTINTID0_ADDRESS : constant := 16#8000_02C0#;
+
+   INTC_EXTINTID0 : aliased INTC_EXTINTID_Type with
+      Address              => To_Address (INTC_EXTINTID0_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   INTC_EXTINTID1_ADDRESS : constant := 16#8000_02C4#;
+
+   INTC_EXTINTID1 : aliased INTC_EXTINTID_Type with
+      Address              => To_Address (INTC_EXTINTID1_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    ----------------------------------------------------------------------------
    -- 11 General Purpose Timer Unit
    ----------------------------------------------------------------------------
+
+   -- 11.3 Registers
 
    type GPTimer_Configuration_Type is
    record
@@ -130,7 +393,7 @@ package LEON3 is
       Control_Register_4  at 16#48# range 0 .. 31;
    end record;
 
-   GPTIMER_BASEADDRESS   : constant := 16#8000_0300#;
+   GPTIMER_BASEADDRESS : constant := 16#8000_0300#;
 
    GPTIMER : aliased GPTimer_Type with
       Address    => To_Address (GPTIMER_BASEADDRESS),
