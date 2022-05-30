@@ -30,30 +30,33 @@ _start:
                 // The SPARC Architecture Manual Version 8
                 // 4.2. IU Control/Status Registers
                 //
-                // https://lists.rtems.org/pipermail/users/2006-August/014931.html
-                // https://github.com/MISTLab/trap-gen/blob/master/BSP_and_Compiler/sparc
-                //
 #define PSR_INIT (PSR_EF|PSR_PIL(0xF)|PSR_S|PSR_PS|PSR_ET|PSR_CWP(0))
                 mov     %psr,%g1
-                sethi   %hi(0xFF000000|PSR_S),%g2       // preserve impl, ver
-                or      %g2,%lo(0xFF000000|PSR_S),%g2
+                sethi   %hi(PSR_impl|PSR_ver|PSR_S),%g2       // preserve ver, impl
+                or      %g2,%lo(PSR_impl|PSR_ver|PSR_S),%g2
                 sethi   %hi(PSR_INIT),%g3
                 or      %g3,%lo(PSR_INIT),%g3
                 and     %g1,%g2,%g1
                 or      %g1,%g3,%g1
                 mov     %g1,%psr
                 NOP3
-                // setup TBR
+                //
+                // Setup TBR.
+                //
+                .extern trap_table
                 sethi   %hi(trap_table),%g1
                 or      %g1,%lo(trap_table),%g1
                 mov     %g1,%tbr
                 NOP3
-                // initialize Y
+                //
+                // Initialize Y.
+                //
                 mov     %g0,%y
                 NOP3
 
                 //
                 // Detect # of CPU windows implemented.
+                //
                 // A WRWIM with all bits set to 1, followed by a RDWIM, yields
                 // a bit vector in which the implemented windows (and only the
                 // implemented windows) are indicated by 1?s.
@@ -73,10 +76,21 @@ _start:
                 sethi   %hi(nwindows),%g2
                 or      %g2,%lo(nwindows),%g2
                 sta     %g1,[%g2]ASI_SCRATCHPAD
-                //
+                // force 8 windows
                 set     0xFFFFFF00,%g1
                 mov     %g1,%wim
                 NOP3
+
+                //
+                // Clear registers.
+                //
+                clr     %g1
+                clr     %g2
+                clr     %g3
+                clr     %g4
+                clr     %g5
+                clr     %g6
+                clr     %g7
 
                 //
                 // Setup stack pointer.
@@ -85,17 +99,10 @@ _start:
                 or      %sp,%lo(kernel_stack),%sp
 
                 //
-                // Setup environment.
+                // Create a stack frame.
                 //
                 mov     %sp,%fp
                 add     %sp,-96,%sp
-                clr     %g1
-                clr     %g2
-                clr     %g3
-                clr     %g4
-                clr     %g5
-                clr     %g6
-                clr     %g7
 
                 //
                 // Jump to high-level code.

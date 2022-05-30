@@ -17,7 +17,9 @@
 
 with System;
 with Interfaces;
+with SPARC;
 with LEON3;
+with Exceptions;
 with Console;
 
 package body BSP is
@@ -63,6 +65,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
    begin
+      -------------------------------------------------------------------------
+      -- Exceptions.Init;
       -- UART1 ----------------------------------------------------------------
       UART1_Init;
       -- Console --------------------------------------------------------------
@@ -73,6 +77,9 @@ package body BSP is
       Console.Print ("LEON3 (QEMU emulator)", NL => True);
       Console.Print (Integer (Nwindows), Prefix => "Nwindows: ", NL => True);
       -------------------------------------------------------------------------
+      INTC_LEVEL.IL (10)    := True;
+      INTC_PROCMASK0.IM (10) := True;
+      -- SPARC.Irq_Enable;
       Tclk_Init;
       -------------------------------------------------------------------------
    end BSP_Setup;

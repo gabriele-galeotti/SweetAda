@@ -35,21 +35,16 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            Value : Unsigned_8;
+            Delay_Count : constant := 50_000_000;
+            Value       : Unsigned_8;
          begin
             Value := 0;
             loop
-               loop
-                  exit when LEON3.GPTIMER.Control_Register_1.IP;
-               end loop;
-               LEON3.GPTIMER.Control_Register_1.IP := False;
-               -- IOEMU "TIMER" LED blinking
-               IOEMU.IOEMU_IO0 := 1;
-               IOEMU.IOEMU_IO0 := 0;
                -- IOEMU GPIO test
                Value := @ + 1;
                IOEMU.IOEMU_IO1 := Value;
                Console.Print ("hello, SweetAda", NL => True);
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
       end if;
