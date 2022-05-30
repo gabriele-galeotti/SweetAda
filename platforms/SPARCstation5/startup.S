@@ -63,6 +63,7 @@ initcpu:
                 //
                 // Setup TBR.
                 //
+                .extern trap_table
                 sethi   %hi(trap_table),%g1
                 or      %g1,%lo(trap_table),%g1
                 mov     %g1,%tbr
