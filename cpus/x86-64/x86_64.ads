@@ -79,10 +79,10 @@ package x86_64 is
    DATA_RA   : constant := 2#0001#; -- Data Read-Only, accessed
    DATA_RW   : constant := 2#0010#; -- Data Read/Write
    DATA_RWA  : constant := 2#0011#; -- Data Read/Write, accessed
-   DATA_RD   : constant := 2#0100#; -- Data Read-Only, expand-down
-   DATA_RDA  : constant := 2#0101#; -- Data Read-Only, expand-down, accessed
-   DATA_RWD  : constant := 2#0110#; -- Data Read/Write, expand-down
-   DATA_RWDA : constant := 2#0111#; -- Data Read/Write, expand-down, accessed
+   DATA_RE   : constant := 2#0100#; -- Data Read-Only, expand-down
+   DATA_REA  : constant := 2#0101#; -- Data Read-Only, expand-down, accessed
+   DATA_RWE  : constant := 2#0110#; -- Data Read/Write, expand-down
+   DATA_RWEA : constant := 2#0111#; -- Data Read/Write, expand-down, accessed
    --                         CRA
    CODE_E    : constant := 2#1000#; -- Code Execute-Only
    CODE_EA   : constant := 2#1001#; -- Code Execute-Only, accessed

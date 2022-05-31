@@ -263,20 +263,20 @@ package CPU_x86 is
    -- Segment/Gate descriptor type
    type Segment_Gate_Type is new Bits_4;
    -- CODE/DATA SEGMENT
-   SEGMENT_DATA_RO       : constant Segment_Gate_Type := 16#0#; -- Read-Only
-   SEGMENT_DATA_ROA      : constant Segment_Gate_Type := 16#1#; -- Read-Only                  Accessed
+   SEGMENT_DATA_R        : constant Segment_Gate_Type := 16#0#; -- Read-Only
+   SEGMENT_DATA_RA       : constant Segment_Gate_Type := 16#1#; -- Read-Only                  Accessed
    SEGMENT_DATA_RW       : constant Segment_Gate_Type := 16#2#; -- Read-Write
    SEGMENT_DATA_RWA      : constant Segment_Gate_Type := 16#3#; -- Read-Write                 Accessed
-   SEGMENT_DATA_ROE      : constant Segment_Gate_Type := 16#4#; -- Read-Only     Expand-down
-   SEGMENT_DATA_ROEA     : constant Segment_Gate_Type := 16#5#; -- Read-Only     Expand-down  Accessed
+   SEGMENT_DATA_RE       : constant Segment_Gate_Type := 16#4#; -- Read-Only     Expand-down
+   SEGMENT_DATA_REA      : constant Segment_Gate_Type := 16#5#; -- Read-Only     Expand-down  Accessed
    SEGMENT_DATA_RWE      : constant Segment_Gate_Type := 16#6#; -- Read-Write    Expand-down
    SEGMENT_DATA_RWEA     : constant Segment_Gate_Type := 16#7#; -- Read-Write    Expand-down  Accessed
-   SEGMENT_CODE_EO       : constant Segment_Gate_Type := 16#8#; -- Execute-Only
-   SEGMENT_CODE_EOA      : constant Segment_Gate_Type := 16#9#; -- Execute-Only               Accessed
+   SEGMENT_CODE_E        : constant Segment_Gate_Type := 16#8#; -- Execute-Only
+   SEGMENT_CODE_EA       : constant Segment_Gate_Type := 16#9#; -- Execute-Only               Accessed
    SEGMENT_CODE_ER       : constant Segment_Gate_Type := 16#A#; -- Execute-Read
    SEGMENT_CODE_ERA      : constant Segment_Gate_Type := 16#B#; -- Execute-Read               Accessed
-   SEGMENT_CODE_EOC      : constant Segment_Gate_Type := 16#C#; -- Execute-Only  Conforming
-   SEGMENT_CODE_EOCA     : constant Segment_Gate_Type := 16#D#; -- Execute-Only  Conforming   Accessed
+   SEGMENT_CODE_EC       : constant Segment_Gate_Type := 16#C#; -- Execute-Only  Conforming
+   SEGMENT_CODE_ECA      : constant Segment_Gate_Type := 16#D#; -- Execute-Only  Conforming   Accessed
    SEGMENT_CODE_ERC      : constant Segment_Gate_Type := 16#E#; -- Execute-Read  Conforming
    SEGMENT_CODE_ERCA     : constant Segment_Gate_Type := 16#F#; -- Execute-Read  Conforming   Accessed
    -- SYSTEM SEGMENT (GATE)
