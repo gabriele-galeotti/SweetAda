@@ -38,11 +38,11 @@
 #define GATE_TRAP      0x0F
 
 /* 1st/2nd byte of a segment descriptor */
-#define LIMITL(x)     (x & 0xFFFF)
+#define LIMITL(x)     ((x) & 0xFFFF)
 /* 3rd/4th byte of a segment descriptor */
-#define BASEL(x)      (x & 0xFFFF)
+#define BASEL(x)      ((x) & 0xFFFF)
 /* 5th byte of a segment descriptor */
-#define BASEM(x)      ((x >> 16) & 0xFF)
+#define BASEM(x)      (((x) >> 16) & 0xFF)
 /* 6th byte of a segment descriptor */
 #define SEG_SYSTEM    0
 #define SEG_CODE_DATA (1 << 4)
@@ -52,7 +52,7 @@
 #define SEG_PL3       (PL3 << 5)
 #define SEG_PRESENT   (1 << 7)
 /* 7th byte of a segment descriptor */
-#define LIMITH(x)     ((x >> 16) & 0xFF)
+#define LIMITH(x)     (((x) >> 16) & 0xFF)
 #define SEG_AVL       (1 << 4)
 #define SEG_32        0
 #define SEG_64        (1 << 5)
@@ -61,7 +61,7 @@
 #define SEG_GRANBYTE  0
 #define SEG_GRAN4k    (1 << 7)
 /* 8th byte of a segment descriptor */
-#define BASEH(x)      ((x >> 24) & 0xFF)
+#define BASEH(x)      (((x) >> 24) & 0xFF)
 
 /*
  * EFLAGS.
