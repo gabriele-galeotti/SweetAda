@@ -46,6 +46,72 @@ package x86_64 is
    PL2 : constant PL_Type := 2; -- RING2
    PL3 : constant PL_Type := 3; -- RING3
 
+   -- Table Indicator
+
+   type TI_Type is new Bits_1;
+   TI_GDT : constant TI_Type := 0; -- GDT
+   TI_LDT : constant TI_Type := 1; -- current LDT
+
+   -- Segment Selectors
+
+   type Selector_Index_Type is new Bits_13; -- theoretically GDT could have 8192 entries
+
+   type Selector_Type is
+   record
+      RPL   : PL_Type;             -- requested Privilege Level
+      TI    : TI_Type;             -- GDT or LDT
+      Index : Selector_Index_Type; -- index into table
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for Selector_Type use
+   record
+      RPL   at 0 range 0 .. 1;
+      TI    at 0 range 2 .. 2;
+      Index at 0 range 3 .. 15;
+   end record;
+
+   NULL_Segment : constant Selector_Type := (PL0, TI_GDT, 0);
+
+   -- Code- and Data-Segment Types
+   --                         EWA
+   DATA_R    : constant := 2#0000#; -- Data Read-Only
+   DATA_RA   : constant := 2#0001#; -- Data Read-Only, accessed
+   DATA_RW   : constant := 2#0010#; -- Data Read/Write
+   DATA_RWA  : constant := 2#0011#; -- Data Read/Write, accessed
+   DATA_RD   : constant := 2#0100#; -- Data Read-Only, expand-down
+   DATA_RDA  : constant := 2#0101#; -- Data Read-Only, expand-down, accessed
+   DATA_RWD  : constant := 2#0110#; -- Data Read/Write, expand-down
+   DATA_RWDA : constant := 2#0111#; -- Data Read/Write, expand-down, accessed
+   --                         CRA
+   CODE_E    : constant := 2#1000#; -- Code Execute-Only
+   CODE_EA   : constant := 2#1001#; -- Code Execute-Only, accessed
+   CODE_ER   : constant := 2#1010#; -- Code Execute/Read
+   CODE_ERA  : constant := 2#1011#; -- Code Execute/Read, accessed
+   CODE_EC   : constant := 2#1100#; -- Code Execute-Only, conforming
+   CODE_ECA  : constant := 2#1101#; -- Code Execute-Only, conforming, accessed
+   CODE_ERC  : constant := 2#1110#; -- Code Execute/Read, conforming
+   CODE_ERCA : constant := 2#1111#; -- Code Execute/Read, conforming, accessed
+
+   -- System-Segment and Gate-Descriptor Types
+   --                                     32-Bit Mode            IA-32e Mode
+   SYSGATE_16   : constant := 2#0000#; -- Reserved               Upper 8 byte of an 16-byte descriptor
+   SYSGATE_RES1 : constant := 2#0001#; -- 16-bit TSS (Available) Reserved
+   SYSGATE_LDT  : constant := 2#0010#; -- LDT                    LDT
+   SYSGATE_RES2 : constant := 2#0011#; -- 16-bit TSS (Busy)      Reserved
+   SYSGATE_RES3 : constant := 2#0100#; -- 16-bit Call Gate       Reserved
+   SYSGATE_RES4 : constant := 2#0101#; -- Task Gate              Reserved
+   SYSGATE_RES5 : constant := 2#0110#; -- 16-bit Interrupt Gate  Reserved
+   SYSGATE_RES6 : constant := 2#0111#; -- 16-bit Trap Gate       Reserved
+   SYSGATE_RES7 : constant := 2#1000#; -- Reserved               Reserved
+   SYSGATE_TSSA : constant := 2#1001#; -- 32-bit TSS (Available) 64-bit TSS (Available)
+   SYSGATE_RES8 : constant := 2#1010#; -- Reserved               Reserved
+   SYSGATE_TSSB : constant := 2#1011#; -- 32-bit TSS (Busy)      64-bit TSS (Busy)
+   SYSGATE_CALL : constant := 2#1100#; -- 32-bit Call Gate       64-bit Call Gate
+   SYSGATE_RES9 : constant := 2#1101#; -- Reserved               Reserved
+   SYSGATE_INT  : constant := 2#1110#; -- 32-bit Interrupt Gate  64-bit Interrupt Gate
+   SYSGATE_TRAP : constant := 2#1111#; -- 32-bit Trap Gate       64-bit Trap Gate
+
    ----------------------------------------------------------------------------
    -- Registers
    ----------------------------------------------------------------------------
@@ -150,6 +216,92 @@ package x86_64 is
 
    function To_CR0 is new Ada.Unchecked_Conversion (Unsigned_64, CR0_Type);
    function To_U64 is new Ada.Unchecked_Conversion (CR0_Type, Unsigned_64);
+
+   -- CR3
+
+   type CR3_Type is
+   record
+      Reserved1 : Bits_3;
+      PWT       : Boolean; -- Page-level Write-Through
+      PCD       : Boolean; -- Page-level Cache Disable
+      Reserved2 : Bits_7;
+      PDB       : Bits_52; -- Page-Directory Base
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for CR3_Type use
+   record
+      Reserved1 at 0 range 0 .. 2;
+      PWT       at 0 range 3 .. 3;
+      PCD       at 0 range 4 .. 4;
+      Reserved2 at 0 range 5 .. 11;
+      PDB       at 0 range 12 .. 63;
+   end record;
+
+   function To_CR3 is new Ada.Unchecked_Conversion (Unsigned_64, CR3_Type);
+   function To_U64 is new Ada.Unchecked_Conversion (CR3_Type, Unsigned_64);
+
+   -- CR4
+
+   type CR4_Type is
+   record
+      VME        : Boolean;      -- Virtual-8086 Mode Extensions
+      PVI        : Boolean;      -- Protected-Mode Virtual Interrupts
+      TSD        : Boolean;      -- Time Stamp Disable
+      DE         : Boolean;      -- Debugging Extensions
+      PSE        : Boolean;      -- Page Size Extensions
+      PAE        : Boolean;      -- Physical Address Extension
+      MCE        : Boolean;      -- Machine-Check Enable
+      PGE        : Boolean;      -- Page Global Enable
+      PCE        : Boolean;      -- Performance-Monitoring Counter Enable
+      OSFXSR     : Boolean;      -- Operating System Support for FXSAVE and FXRSTOR instructions
+      OSXMMEXCPT : Boolean;      -- Operating System Support for Unmasked SIMD Floating-Point Exceptions
+      Reserved1  : Bits_2;
+      VMXE       : Boolean;      -- VMX-Enable Bit
+      SMXE       : Boolean;      -- SMX-Enable Bit
+      Reserved2  : Bits_1;
+      FSGSBASE   : Boolean;      -- FSGSBASE-Enable Bit
+      PCIDE      : Boolean;      -- PCID-Enable Bit
+      OSXSAVE    : Boolean;      -- XSAVE and Processor Extended States-Enable Bit
+      Reserved3  : Bits_1;
+      SMEP       : Boolean;      -- SMEP-Enable Bit
+      SMAP       : Boolean;      -- SMAP-Enable Bit
+      PKE        : Boolean;      -- Protection-Key-Enable Bit
+      Reserved4  : Bits_9;
+      Reserved5  : Bits_32 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for CR4_Type use
+   record
+      VME        at 0 range 0 .. 0;
+      PVI        at 0 range 1 .. 1;
+      TSD        at 0 range 2 .. 2;
+      DE         at 0 range 3 .. 3;
+      PSE        at 0 range 4 .. 4;
+      PAE        at 0 range 5 .. 5;
+      MCE        at 0 range 6 .. 6;
+      PGE        at 0 range 7 .. 7;
+      PCE        at 0 range 8 .. 8;
+      OSFXSR     at 0 range 9 .. 9;
+      OSXMMEXCPT at 0 range 10 .. 10;
+      Reserved1  at 0 range 11 .. 12;
+      VMXE       at 0 range 13 .. 13;
+      SMXE       at 0 range 14 .. 14;
+      Reserved2  at 0 range 15 .. 15;
+      FSGSBASE   at 0 range 16 .. 16;
+      PCIDE      at 0 range 17 .. 17;
+      OSXSAVE    at 0 range 18 .. 18;
+      Reserved3  at 0 range 19 .. 19;
+      SMEP       at 0 range 20 .. 20;
+      SMAP       at 0 range 21 .. 21;
+      PKE        at 0 range 22 .. 22;
+      Reserved4  at 0 range 23 .. 31;
+      Reserved5  at 0 range 32 .. 63;
+   end record;
+
+   function To_CR4 is new Ada.Unchecked_Conversion (Unsigned_64, CR4_Type);
+   function To_U64 is new Ada.Unchecked_Conversion (CR4_Type, Unsigned_64);
 
    -- IA32_EFER
 

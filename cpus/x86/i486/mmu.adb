@@ -101,9 +101,9 @@ package body MMU is
       PD (0).Present := True;
       -- writing to CR3 does a TLB flush
       CR3 := CR3_Read;
-      CR3.PWT                    := False;
-      CR3.PCD                    := False;
-      CR3.Page_Directory_Address := Select_Address_Bits_PFA (PD'Address);
+      CR3.PWT := False;
+      CR3.PCD := False;
+      CR3.PDB := Select_Address_Bits_PFA (PD'Address);
       CR3_Write (CR3);
       -- enable paging
       CR0 := CR0_Read;

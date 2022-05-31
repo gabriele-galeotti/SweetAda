@@ -62,8 +62,10 @@ package CPU_x86 is
    PL3 : constant PL_Type := 2#11#; -- RING3
 
    ----------------------------------------------------------------------------
-   -- X86 registers
+   -- Registers
    ----------------------------------------------------------------------------
+
+   -- EFLAGS
 
    EAX    : constant := 16#00#; -- 0
    EBX    : constant := 16#01#; -- 1
@@ -100,117 +102,117 @@ package CPU_x86 is
 
    subtype Register_Number_Type is Natural range EAX .. FOP;
 
-   type EFLAGS_Register_Type is
+   type EFLAGS_Type is
    record
-      CARRY       : Boolean;
-      Reserved1   : Bits_1_Ones := Bits_1_1;
-      PARITY      : Boolean;
-      Reserved2   : Bits_1_Zeroes := Bits_1_0;
-      AUXCARRY    : Boolean;
-      Reserved3   : Bits_1_Zeroes := Bits_1_0;
-      ZERO        : Boolean;
-      SIGN        : Boolean;
-      TRAP        : Boolean;
-      INTERRUPT   : Boolean;
-      DIRECTION   : Boolean;
-      OVERFLOW    : Boolean;
-      IOPL        : PL_Type;
-      NESTEDTASK  : Boolean;
-      Reserved4   : Bits_1_Zeroes := Bits_1_0;
-      RESUME      : Boolean;
-      VMODE86     : Boolean;
-      ALIGNCHK    : Boolean;
-      VIRTINT     : Boolean;
-      VIRTINTPEND : Boolean;
-      CPUID       : Boolean;
-      Reserved5   : Bits_10_Zeroes := Bits_10_0;
+      CF        : Boolean; -- Carry Flag
+      Reserved1 : Bits_1;
+      PF        : Boolean; -- Parity Flag
+      Reserved2 : Bits_1;
+      AF        : Boolean; -- Auxiliary Carry Flag
+      Reserved3 : Bits_1;
+      ZF        : Boolean; -- Zero Flag
+      SF        : Boolean; -- Sign Flag
+      TF        : Boolean; -- Trap Flag
+      IFlag     : Boolean; -- Interrupt Enable Flag
+      DF        : Boolean; -- Direction Flag
+      OFlag     : Boolean; -- Overflow Flag
+      IOPL      : PL_Type; -- I/O Privilege Level
+      NT        : Boolean; -- Nested Task Flag
+      Reserved4 : Bits_1;
+      RF        : Boolean; -- Resume Flag
+      VM        : Boolean; -- Virtual-8086 Mode
+      AC        : Boolean; -- Alignment Check / Access Control
+      VIF       : Boolean; -- Virtual Interrupt Flag
+      VIP       : Boolean; -- Virtual Interrupt Pending
+      ID        : Boolean; -- Identification Flag
+      Reserved5 : Bits_10;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for EFLAGS_Register_Type use
+   for EFLAGS_Type use
    record
-      CARRY       at 0 range 0 .. 0;
-      Reserved1   at 0 range 1 .. 1;
-      PARITY      at 0 range 2 .. 2;
-      Reserved2   at 0 range 3 .. 3;
-      AUXCARRY    at 0 range 4 .. 4;
-      Reserved3   at 0 range 5 .. 5;
-      ZERO        at 0 range 6 .. 6;
-      SIGN        at 0 range 7 .. 7;
-      TRAP        at 0 range 8 .. 8;
-      INTERRUPT   at 0 range 9 .. 9;
-      DIRECTION   at 0 range 10 .. 10;
-      OVERFLOW    at 0 range 11 .. 11;
-      IOPL        at 0 range 12 .. 13;
-      NESTEDTASK  at 0 range 14 .. 14;
-      Reserved4   at 0 range 15 .. 15;
-      RESUME      at 0 range 16 .. 16;
-      VMODE86     at 0 range 17 .. 17;
-      ALIGNCHK    at 0 range 18 .. 18;
-      VIRTINT     at 0 range 19 .. 19;
-      VIRTINTPEND at 0 range 20 .. 20;
-      CPUID       at 0 range 21 .. 21;
-      Reserved5   at 0 range 22 .. 31;
+      CF        at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 1;
+      PF        at 0 range 2 .. 2;
+      Reserved2 at 0 range 3 .. 3;
+      AF        at 0 range 4 .. 4;
+      Reserved3 at 0 range 5 .. 5;
+      ZF        at 0 range 6 .. 6;
+      SF        at 0 range 7 .. 7;
+      TF        at 0 range 8 .. 8;
+      IFlag     at 0 range 9 .. 9;
+      DF        at 0 range 10 .. 10;
+      OFlag     at 0 range 11 .. 11;
+      IOPL      at 0 range 12 .. 13;
+      NT        at 0 range 14 .. 14;
+      Reserved4 at 0 range 15 .. 15;
+      RF        at 0 range 16 .. 16;
+      VM        at 0 range 17 .. 17;
+      AC        at 0 range 18 .. 18;
+      VIF       at 0 range 19 .. 19;
+      VIP       at 0 range 20 .. 20;
+      ID        at 0 range 21 .. 21;
+      Reserved5 at 0 range 22 .. 31;
    end record;
+
+   -- CR0
 
    type CR0_Register_Type is
    record
-      PE      : Boolean;                     -- Protected mode Enable
-      MP      : Boolean;                     -- Monitor Co-processor
-      EM      : Boolean;                     -- Emulation (no x87 FPU unit present)
-      TS      : Boolean;                     -- Task Switched
-      ET      : Boolean;                     -- Extension Type (287/387)
-      NE      : Boolean;                     -- Numeric Error (x87 error reporting)
-      Unused1 : Bits_10_Zeroes := Bits_10_0;
-      WP      : Boolean;                     -- Write Protect (RO pages, CPL3)
-      Unused2 : Bits_1_Zeroes := Bits_1_0;
-      AM      : Boolean;                     -- Alignment Mask (EFLAGS[AC], CPL3)
-      Unused3 : Bits_10_Zeroes := Bits_10_0;
-      NW      : Boolean;                     -- Not Write through
-      CD      : Boolean;                     -- Cache Disable
-      PG      : Boolean;                     -- Paging enable
+      PE        : Boolean; -- Protected mode Enable
+      MP        : Boolean; -- Monitor Co-processor
+      EM        : Boolean; -- Emulation (no x87 FPU unit present)
+      TS        : Boolean; -- Task Switched
+      ET        : Boolean; -- Extension Type (287/387)
+      NE        : Boolean; -- Numeric Error (x87 error reporting)
+      Reserved1 : Bits_10;
+      WP        : Boolean; -- Write Protect (RO pages, CPL3)
+      Reserved2 : Bits_1;
+      AM        : Boolean; -- Alignment Mask (EFLAGS[AC], CPL3)
+      Reserved3 : Bits_10;
+      NW        : Boolean; -- Not Write through
+      CD        : Boolean; -- Cache Disable
+      PG        : Boolean; -- Paging enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for CR0_Register_Type use
    record
-      PE      at 0 range 0 .. 0;
-      MP      at 0 range 1 .. 1;
-      EM      at 0 range 2 .. 2;
-      TS      at 0 range 3 .. 3;
-      ET      at 0 range 4 .. 4;
-      NE      at 0 range 5 .. 5;
-      Unused1 at 0 range 6 .. 15;
-      WP      at 0 range 16 .. 16;
-      Unused2 at 0 range 17 .. 17;
-      AM      at 0 range 18 .. 18;
-      Unused3 at 0 range 19 .. 28;
-      NW      at 0 range 29 .. 29;
-      CD      at 0 range 30 .. 30;
-      PG      at 0 range 31 .. 31;
+      PE        at 0 range 0 .. 0;
+      MP        at 0 range 1 .. 1;
+      EM        at 0 range 2 .. 2;
+      TS        at 0 range 3 .. 3;
+      ET        at 0 range 4 .. 4;
+      NE        at 0 range 5 .. 5;
+      Reserved1 at 0 range 6 .. 15;
+      WP        at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 17;
+      AM        at 0 range 18 .. 18;
+      Reserved3 at 0 range 19 .. 28;
+      NW        at 0 range 29 .. 29;
+      CD        at 0 range 30 .. 30;
+      PG        at 0 range 31 .. 31;
    end record;
 
-   -- CR1 is reserved
-
-   -- CR2 is a read-only address register
+   -- CR3
 
    type CR3_Register_Type is
    record
-      Unused1                : Bits_3;
-      PWT                    : Boolean; -- Page-level write-through
-      PCD                    : Boolean; -- Page-level cache disable
-      Unused2                : Bits_7;
-      Page_Directory_Address : Bits_20; -- Physical address of the 4-KiB aligned page directory
+      Reserved1 : Bits_3;
+      PWT       : Boolean; -- Page-level write-through
+      PCD       : Boolean; -- Page-level cache disable
+      Reserved2 : Bits_7;
+      PDB       : Bits_20; -- Physical address of the 4-KiB aligned page directory
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for CR3_Register_Type use
    record
-      Unused1                at 0 range 0 .. 2;
-      PWT                    at 0 range 3 .. 3;
-      PCD                    at 0 range 4 .. 4;
-      Unused2                at 0 range 5 .. 11;
-      Page_Directory_Address at 0 range 12 .. 31;
+      Reserved1 at 0 range 0 .. 2;
+      PWT       at 0 range 3 .. 3;
+      PCD       at 0 range 4 .. 4;
+      Reserved2 at 0 range 5 .. 11;
+      PDB       at 0 range 12 .. 31;
    end record;
 
    -- 386s do not have CR4
@@ -388,7 +390,7 @@ package CPU_x86 is
       EIP    : Address;
       CS     : Selector_Type;
       Unused : Bits_16;
-      EFLAGS : EFLAGS_Register_Type;
+      EFLAGS : EFLAGS_Type;
    end record with
       Size => 96;
    for Exception_Stack_Frame_Type use

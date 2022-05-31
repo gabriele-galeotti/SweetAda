@@ -49,7 +49,7 @@ package body Gdbstub.CPU is
       ESI    : Unsigned_32;
       EDI    : Unsigned_32;
       EIP    : Unsigned_32;
-      EFLAGS : EFLAGS_Register_Type;
+      EFLAGS : EFLAGS_Type;
       CS     : Unsigned_32;
       SS     : Unsigned_32;
       DS     : Unsigned_32;
@@ -292,7 +292,7 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    function Step_Execute return Boolean is
    begin
-      Gdbstub_Data_Area.EFLAGS.TRAP := True;
+      Gdbstub_Data_Area.EFLAGS.TF := True;
       return True;
    end Step_Execute;
 
@@ -301,7 +301,7 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    procedure Step_Resume is
    begin
-      Gdbstub_Data_Area.EFLAGS.TRAP := False;
+      Gdbstub_Data_Area.EFLAGS.TF := False;
    end Step_Resume;
 
 end Gdbstub.CPU;

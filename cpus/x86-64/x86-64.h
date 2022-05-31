@@ -12,39 +12,76 @@
 #define _x86_64_H 1
 
 /*
- * Status register (EFLAGS).
- */
-
-#define FLAG_CARRY      (1 << 0)
-#define FLAG_PARITY     (1 << 2)
-#define FLAG_AUXCARRY   (1 << 4)
-#define FLAG_ZERO       (1 << 6)
-#define FLAG_SIGN       (1 << 7)
-#define FLAG_TRAP       (1 << 8)
-#define FLAG_INTERRUPT  (1 << 9)
-#define FLAG_DIRECTION  (1 << 10)
-#define FLAG_OVERFLOW   (1 << 11)
-#define FLAG_NESTEDTASK (1 << 14)
-#define FLAG_RESUME     (1 << 16)
-#define FLAG_VMODE86    (1 << 17)
-
-/*
- * Exception descriptor types.
- */
-
-#define GATE_TASK      0x05
-#define GATE_INTERRUPT 0x0E
-#define GATE_TRAP      0x0F
-
-/*
- * LGDT/LIDT macros.
+ * Basic definitions.
  */
 
 #define GDT_ALIGNMENT 4
 #define IDT_ALIGNMENT 4
 
+#define PL0 0
+#define PL1 1
+#define PL2 2
+#define PL3 3
+
 /*
- * Segmented and paged memory management
+ * Segment selectors and descriptors.
+ */
+
+#define TI_GDT 0
+#define TI_LDT 1
+
+#define DATA_RW 0x2
+#define CODE_ER 0xA
+
+#define GATE_TASK      0x05
+#define GATE_INTERRUPT 0x0E
+#define GATE_TRAP      0x0F
+
+/* 1st/2nd byte of a segment descriptor */
+#define LIMITL(x)     (x & 0xFFFF)
+/* 3rd/4th byte of a segment descriptor */
+#define BASEL(x)      (x & 0xFFFF)
+/* 5th byte of a segment descriptor */
+#define BASEM(x)      ((x >> 16) & 0xFF)
+/* 6th byte of a segment descriptor */
+#define SEG_SYSTEM    0
+#define SEG_CODE_DATA (1 << 4)
+#define SEG_PL0       (PL0 << 5)
+#define SEG_PL1       (PL1 << 5)
+#define SEG_PL2       (PL2 << 5)
+#define SEG_PL3       (PL3 << 5)
+#define SEG_PRESENT   (1 << 7)
+/* 7th byte of a segment descriptor */
+#define LIMITH(x)     ((x >> 16) & 0xFF)
+#define SEG_AVL       (1 << 4)
+#define SEG_32        0
+#define SEG_64        (1 << 5)
+#define SEG_OP16      0
+#define SEG_OP32      (1 << 6)
+#define SEG_GRANBYTE  0
+#define SEG_GRAN4k    (1 << 7)
+/* 8th byte of a segment descriptor */
+#define BASEH(x)      ((x >> 24) & 0xFF)
+
+/*
+ * RFLAGS.
+ */
+
+#define RFLAGS_CF (1 << 0)
+#define RFLAGS_PF (1 << 2)
+#define RFLAGS_AF (1 << 4)
+#define RFLAGS_ZF (1 << 6)
+#define RFLAGS_SF (1 << 7)
+#define RFLAGS_TF (1 << 8)
+#define RFLAGS_IF (1 << 9)
+#define RFLAGS_DF (1 << 10)
+#define RFLAGS_OF (1 << 11)
+#define RFLAGS_NT (1 << 14)
+#define RFLAGS_RF (1 << 16)
+#define RFLAGS_VM (1 << 17)
+
+/*
+ * Segmented and paged memory management.
  */
 
 #define CR0_PE       (1 << 0)
