@@ -18,8 +18,6 @@
 #define SELECTOR_KDATA_LIMIT 0xFFFFF
 #define SELECTOR_KDATA       ((SELECTOR_KDATA_IDX << 3) | (TI_GDT << 2) | PL0)
 
-//#define SELECTOR_KCODE64 (0x08 | 0x00)
-//#define SELECTOR_KDATA64 (0x10 | 0x00)
 /*
  * 64-bit
  */
