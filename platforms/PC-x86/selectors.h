@@ -2,8 +2,17 @@
 #ifndef _SELECTORS_H
 #define _SELECTORS_H 1
 
-#define SELECTOR_KCODE (0x08 | 0x00)
-#define SELECTOR_KDATA (0x10 | 0x00)
+#include <i386.h>
+
+#define SELECTOR_KCODE_IDX   1
+#define SELECTOR_KCODE_BASE  0
+#define SELECTOR_KCODE_LIMIT 0xFFFFF
+#define SELECTOR_KCODE       ((SELECTOR_KCODE_IDX << 3) | (TI_GDT << 2) | PL0)
+
+#define SELECTOR_KDATA_IDX   2
+#define SELECTOR_KDATA_BASE  0
+#define SELECTOR_KDATA_LIMIT 0xFFFFF
+#define SELECTOR_KDATA       ((SELECTOR_KDATA_IDX << 3) | (TI_GDT << 2) | PL0)
 
 #endif /* _SELECTORS_H */
 

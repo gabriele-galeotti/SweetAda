@@ -2,11 +2,37 @@
 #ifndef _SELECTORS_H
 #define _SELECTORS_H 1
 
-#define SELECTOR_KCODE (0x08 | 0x00)
-#define SELECTOR_KDATA (0x10 | 0x00)
+#include <x86-64.h>
 
-#define SELECTOR_KCODE_64 (0x08 | 0x00)
-#define SELECTOR_KDATA_64 (0x10 | 0x00)
+/*
+ * 32-bit
+ */
+
+#define SELECTOR_KCODE_IDX   1
+#define SELECTOR_KCODE_BASE  0
+#define SELECTOR_KCODE_LIMIT 0xFFFFF
+#define SELECTOR_KCODE       ((SELECTOR_KCODE_IDX << 3) | (TI_GDT << 2) | PL0)
+
+#define SELECTOR_KDATA_IDX   2
+#define SELECTOR_KDATA_BASE  0
+#define SELECTOR_KDATA_LIMIT 0xFFFFF
+#define SELECTOR_KDATA       ((SELECTOR_KDATA_IDX << 3) | (TI_GDT << 2) | PL0)
+
+//#define SELECTOR_KCODE64 (0x08 | 0x00)
+//#define SELECTOR_KDATA64 (0x10 | 0x00)
+/*
+ * 64-bit
+ */
+
+#define SELECTOR_KCODE64_IDX   1
+#define SELECTOR_KCODE64_BASE  0
+#define SELECTOR_KCODE64_LIMIT 0
+#define SELECTOR_KCODE64       ((SELECTOR_KCODE64_IDX << 3) | (TI_GDT << 2) | PL0)
+
+#define SELECTOR_KDATA64_IDX   2
+#define SELECTOR_KDATA64_BASE  0
+#define SELECTOR_KDATA64_LIMIT 0
+#define SELECTOR_KDATA64       ((SELECTOR_KDATA64_IDX << 3) | (TI_GDT << 2) | PL0)
 
 #endif /* _SELECTORS_H */
 

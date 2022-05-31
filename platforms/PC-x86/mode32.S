@@ -53,8 +53,23 @@ _start16:
                 .align  GDT_ALIGNMENT,0
 gdtdsc32:       .word   3*8-1                   // bytes 0..1 GDT limit in bytes
                 .long   gdt32                   // bytes 2..5 GDT linear base address
+
                 .align  GDT_ALIGNMENT,0
-gdt32:          .quad   0x0000000000000000      // selector #0x00 invalid entry
-                .quad   0x00CF9A000000FFFF      // selector #0x08 DPL0 32-bit 4GB 4k code RX @ 0x0
-                .quad   0x00CF92000000FFFF      // selector #0x10 DPL0 32-bit 4GB 4k data RW @ 0x0
+gdt32:
+                // selector index #0x00 invalid entry
+                .quad   0
+                // selector index #0x08 DPL0 32-bit 4GB 4k code RX @ 0x0
+                .word   LIMITL(SELECTOR_KCODE_LIMIT)
+                .word   BASEL(SELECTOR_KCODE_BASE)
+                .byte   BASEM(SELECTOR_KCODE_BASE)
+                .byte   SEG_PRESENT|SEG_PL0|SEG_CODE_DATA|CODE_ER
+                .byte   SEG_GRAN4k|SEG_OP32|SEG_32|LIMITH(SELECTOR_KCODE_LIMIT)
+                .byte   BASEH(SELECTOR_KCODE_BASE)
+                // selector index #0x10 DPL0 32-bit 4GB 4k data RW @ 0x0
+                .word   LIMITL(SELECTOR_KDATA_LIMIT)
+                .word   BASEL(SELECTOR_KDATA_BASE)
+                .byte   BASEM(SELECTOR_KDATA_BASE)
+                .byte   SEG_PRESENT|SEG_PL0|SEG_CODE_DATA|DATA_RW
+                .byte   SEG_GRAN4k|SEG_OP32|SEG_32|LIMITH(SELECTOR_KDATA_LIMIT)
+                .byte   BASEH(SELECTOR_KDATA_BASE)
 

@@ -121,15 +121,30 @@
                 //
                 lgdtl   gdtdsc64
                 .extern _longmode
-                ljmpl   $SELECTOR_KCODE_64,$_longmode
+                ljmpl   $SELECTOR_KCODE64,$_longmode
 
                 .align  GDT_ALIGNMENT,0
 gdtdsc64:       .word   3*8-1                   // bytes 0..1 GDT limit in bytes
                 .long   gdt64                   // bytes 2..5 GDT linear base address
+
                 .align  GDT_ALIGNMENT,0
-gdt64:          .quad   0x0000000000000000      // selector #0x00 invalid entry
-                .quad   0x00209A0000000000      // selector #0x08 DPL0 64-bit 4k code RX
-                .quad   0x0020920000000000      // selector #0x10 DPL0 64-bit 4k data RW
+gdt64:
+                // selector #0x00 invalid entry
+                .quad   0
+                // selector #0x08 DPL0 64-bit 4k code RX
+                .word   LIMITL(SELECTOR_KCODE64_LIMIT)
+                .word   BASEL(SELECTOR_KCODE64_BASE)
+                .byte   BASEM(SELECTOR_KCODE64_BASE)
+                .byte   SEG_PRESENT|SEG_PL0|SEG_CODE_DATA|CODE_ER
+                .byte   SEG_GRAN4k|SEG_64|LIMITH(SELECTOR_KCODE64_LIMIT)
+                .byte   BASEH(SELECTOR_KCODE64_BASE)
+                // selector #0x10 DPL0 64-bit 4k data RW
+                .word   LIMITL(SELECTOR_KDATA64_LIMIT)
+                .word   BASEL(SELECTOR_KDATA64_BASE)
+                .byte   BASEM(SELECTOR_KDATA64_BASE)
+                .byte   SEG_PRESENT|SEG_PL0|SEG_CODE_DATA|DATA_RW
+                .byte   SEG_GRAN4k|SEG_64|LIMITH(SELECTOR_KDATA64_LIMIT)
+                .byte   BASEH(SELECTOR_KDATA64_BASE)
 
 ////////////////////////////////////////////////////////////////////////////////
 

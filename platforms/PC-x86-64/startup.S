@@ -241,7 +241,7 @@ _longmode:
                 //
                 // Setup segments. In 64-bit Long Mode DS,ES,SS are not used.
                 //
-                movw    $SELECTOR_KDATA_64,%ax
+                movw    $SELECTOR_KDATA64,%ax
                 movw    %ax,%fs
                 movw    %ax,%gs
 
