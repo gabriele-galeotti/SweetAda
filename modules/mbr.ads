@@ -30,8 +30,10 @@ package MBR is
    --========================================================================--
 
    use System;
+   use Interfaces;
+   use BlockDevices;
 
-   type Partition_Type is new Interfaces.Unsigned_8;
+   type Partition_Type is new Unsigned_8;
 
    Partition_NULL      : constant := 16#00#;
    Partition_FAT12     : constant := 16#01#;
@@ -46,12 +48,12 @@ package MBR is
 
    type Partition_Entry_Type is
    record
-      Status           : Interfaces.Unsigned_8;
-      CHS_First_Sector : BlockDevices.CHS_Layout_Type;
+      Status           : Unsigned_8;
+      CHS_First_Sector : CHS_Layout_Type;
       Partition        : Partition_Type;
-      CHS_Last_Sector  : BlockDevices.CHS_Layout_Type;
-      LBA_Start        : Interfaces.Unsigned_32;
-      LBA_Size         : Interfaces.Unsigned_32;
+      CHS_Last_Sector  : CHS_Layout_Type;
+      LBA_Start        : Unsigned_32;
+      LBA_Size         : Unsigned_32;
    end record with
       Size => PARTITION_ENTRY_SIZE * Storage_Unit;
    for Partition_Entry_Type use record
@@ -63,7 +65,7 @@ package MBR is
       LBA_Size         at 12 range 0 .. 31;
    end record;
 
-   procedure Init (Block_Read : BlockDevices.IO_Read_Ptr);
+   procedure Init (Block_Read : IO_Read_Ptr);
    procedure Read (
                    Partition_Number : in  Partition_Number_Type;
                    Partition        : out Partition_Entry_Type;

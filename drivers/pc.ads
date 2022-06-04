@@ -40,15 +40,21 @@ package PC is
    -- I/O peripheral base addresses
    ----------------------------------------------------------------------------
 
-   RTC_BASEADDRESS   : constant := 16#0070#;
    PIC1_BASEADDRESS  : constant := 16#0020#;
-   PIC2_BASEADDRESS  : constant := 16#00A0#;
    PIT_BASEADDRESS   : constant := 16#0040#;
+   RTC_BASEADDRESS   : constant := 16#0070#;
+   PIC2_BASEADDRESS  : constant := 16#00A0#;
    UART1_BASEADDRESS : constant := 16#03F8#;
    UART2_BASEADDRESS : constant := 16#02F8#;
    PPI_BASEADDRESS   : constant := 16#0378#;
    IDE1_BASEADDRESS  : constant := 16#01F0#;
    IDE2_BASEADDRESS  : constant := 16#0170#;
+
+   ----------------------------------------------------------------------------
+   -- i8042 and i8255 ports
+   ----------------------------------------------------------------------------
+
+   PORTB_ADDRESS : constant := 16#0061#;
 
    ----------------------------------------------------------------------------
    -- i8259 PIC
@@ -107,7 +113,6 @@ package PC is
    -- i8254 PIT
    ----------------------------------------------------------------------------
 
-   -- https://wiki2.org/en/Colorburst
    -- MASTER_CLK is four times the NTSC color burst frequency:
    -- 4 * (315 / 88) = 4 * 3.579(54) = 14.318182 MHz, T = 69.84 ns
    MASTER_CLK : constant := Definitions.CLK_NTSC4;
@@ -178,7 +183,7 @@ package PC is
       OUT_Pin    at 0 range 7 .. 7;
    end record;
 
-   function To_PIT_Status_Type is new Ada.Unchecked_Conversion (Unsigned_8, PIT_Status_Type);
+   function To_PIT_Status is new Ada.Unchecked_Conversion (Unsigned_8, PIT_Status_Type);
 
    COUNTER0     : constant := PIT_BASEADDRESS + 16#00#;
    COUNTER1     : constant := PIT_BASEADDRESS + 16#01#;
@@ -351,7 +356,7 @@ package PC is
       Busy     at 0 range 7 .. 7;
    end record;
 
-   function To_PPIST is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Status_Type);
+   function To_PPI_Status is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Status_Type);
 
    type PPI_Control_Type is
    record
@@ -377,7 +382,7 @@ package PC is
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (PPI_Control_Type, Unsigned_8);
-   function To_PPICT is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Control_Type);
+   function To_PPI_Control is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Control_Type);
 
    PPI_DATA    : constant := PPI_BASEADDRESS + 16#00#;
    PPI_STATUS  : constant := PPI_BASEADDRESS + 16#01#;

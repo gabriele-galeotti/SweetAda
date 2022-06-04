@@ -30,7 +30,6 @@ package body MBR is
    --========================================================================--
 
    use System.Storage_Elements;
-   use Interfaces;
    use Bits;
 
    ----------------------------------------------------------------------------
@@ -39,8 +38,8 @@ package body MBR is
 
    type Block_IO_Descriptor_Type is
    record
-      Read  : BlockDevices.IO_Read_Ptr;  -- block read procedure
-      -- Write : BlockDevices.IO_Write_Ptr; -- block write procedure
+      Read  : IO_Read_Ptr;  -- block read procedure
+      -- Write : IO_Write_Ptr; -- block write procedure
    end record;
 
    IO_Context : Block_IO_Descriptor_Type := (Read => null);
@@ -56,7 +55,7 @@ package body MBR is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init (Block_Read : BlockDevices.IO_Read_Ptr) is
+   procedure Init (Block_Read : IO_Read_Ptr) is
    begin
       IO_Context.Read := Block_Read;
    end Init;
@@ -69,12 +68,12 @@ package body MBR is
                    Partition        : out Partition_Entry_Type;
                    Success          : out Boolean
                   ) is
-      Block  : aliased BlockDevices.Block_Type (0 .. 16#01FF#);
+      Block  : aliased Block_Type (0 .. 16#01FF#);
       Offset : Storage_Offset;
    begin
       IO_Context.Read (0, Block, Success);
       if Success then
-         if Block (16#01FE#) = 16#55# and then Block (16#01FF#) = 16#AA# then
+         if Block (16#01FE# .. 16#01FF#) = (16#55#, 16#AA#) then
             case Partition_Number is
                when PARTITION1 => Offset := 16#01BE#;
                when PARTITION2 => Offset := 16#01CE#;

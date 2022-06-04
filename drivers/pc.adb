@@ -188,7 +188,7 @@ package body PC is
                                                                        )));
 
             -- read STATUS from COUNTER1 and test if OUT is high
-            exit when To_PIT_Status_Type (Unsigned_8'(CPU.IO.PortIn (COUNTER1))).OUT_Pin;
+            exit when To_PIT_Status (Unsigned_8'(CPU.IO.PortIn (COUNTER1))).OUT_Pin;
          end loop;
       end loop;
       CPU.Unlock (PIT_Lock);
@@ -295,7 +295,7 @@ package body PC is
    ----------------------------------------------------------------------------
    procedure PPI_StatusIn (Value : out PPI_Status_Type) is
    begin
-      Value := To_PPIST (CPU.IO.PortIn (PPI_STATUS));
+      Value := To_PPI_Status (CPU.IO.PortIn (PPI_STATUS));
    end PPI_StatusIn;
 
    ----------------------------------------------------------------------------
@@ -303,7 +303,7 @@ package body PC is
    ----------------------------------------------------------------------------
    procedure PPI_ControlIn (Value : out PPI_Control_Type) is
    begin
-      Value := To_PPICT (CPU.IO.PortIn (PPI_CONTROL));
+      Value := To_PPI_Control (CPU.IO.PortIn (PPI_CONTROL));
    end PPI_ControlIn;
 
    ----------------------------------------------------------------------------

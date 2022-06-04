@@ -50,8 +50,8 @@ package body Application is
                -- IOEMU GPIO test
                PortOut (IOEMU.IO0_ADDRESS, Value);
                Value := @ + 1;
-               PC.PPI_ControlOut (PC.To_PPICT (16#FF#));
-               PC.PPI_ControlOut (PC.To_PPICT (16#00#));
+               PC.PPI_ControlOut (PC.To_PPI_Control (16#FF#));
+               PC.PPI_ControlOut (PC.To_PPI_Control (16#00#));
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;

@@ -27,6 +27,16 @@ package body FATFS.Applications is
    --========================================================================--
    --                                                                        --
    --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use FATFS;
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
    --                           Package subprograms                          --
    --                                                                        --
    --                                                                        --
@@ -36,11 +46,11 @@ package body FATFS.Applications is
    -- Test
    ----------------------------------------------------------------------------
    procedure Test is
-      DCB     : FATFS.DCB_Type;
-      DE      : FATFS.Directory_Entry_Type;
+      DCB     : DCB_Type;
+      DE      : Directory_Entry_Type;
       Success : Boolean;
-      procedure Print_File_Name (F : FATFS.Directory_Entry_Type);
-      procedure Print_File_Name (F : FATFS.Directory_Entry_Type) is
+      procedure Print_File_Name (F : Directory_Entry_Type);
+      procedure Print_File_Name (F : Directory_Entry_Type) is
       begin
          Console.Print (F.Filename);
          Console.Print (".");
@@ -66,15 +76,15 @@ package body FATFS.Applications is
          Console.Print_NewLine;
       end Print_File_Name;
    begin
-      FATFS.Directory.Open_Root (DCB, Success);
+      Directory.Open_Root (DCB, Success);
       if Success then
-         FATFS.Directory.Get_Entry (DCB, DE, Success);
+         Directory.Get_Entry (DCB, DE, Success);
          if Success then
             Print_File_Name (DE);
          end if;
          -------------------------------------------
          loop
-            FATFS.Directory.Next_Entry (DCB, DE, Success);
+            Directory.Next_Entry (DCB, DE, Success);
             if Success then
                Print_File_Name (DE);
             else
@@ -89,43 +99,40 @@ package body FATFS.Applications is
    -- Load_AUTOEXECBAT
    ----------------------------------------------------------------------------
    procedure Load_AUTOEXECBAT is
-      DCB     : FATFS.DCB_Type;
-      DE      : FATFS.Directory_Entry_Type;
+      DCB     : DCB_Type;
+      DE      : Directory_Entry_Type;
       Success : Boolean;
    begin
-      FATFS.Directory.Open_Root (DCB, Success);
+      Directory.Open_Root (DCB, Success);
       if not Success then
          return;
       end if;
       loop
-         FATFS.Directory.Next_Entry (DCB, DE, Success);
-         if Success then
-            if DE.Filename = "AUTOEXEC" and then DE.Extension = "BAT" then
-               declare
-                  F    : TFCB_Type;
-                  L    : Natural;
-                  Line : String (1 .. 80);
-               begin
-                  Console.Print ("Loading AUTOEXEC.BAT ...", NL => True);
-                  FATFS.Textfile.Open (F, DE, Success);
-                  if Success then
-                     Line := (others => ' ');
-                     FATFS.Textfile.Read_Line (F, Line, L, Success);
-                     Console.Print (Line);
-                     Console.Print_NewLine;
-                     Line := (others => ' ');
-                     FATFS.Textfile.Read_Line (F, Line, L, Success);
-                     Console.Print (Line);
-                     Console.Print_NewLine;
-                     Line := (others => ' ');
-                     FATFS.Textfile.Read_Line (F, Line, L, Success);
-                     Console.Print (Line);
-                     Console.Print_NewLine;
-                  end if;
-               end;
-            end if;
-         else
-            exit;
+         Directory.Next_Entry (DCB, DE, Success);
+         exit when not Success;
+         if DE.Filename = "AUTOEXEC" and then DE.Extension = "BAT" then
+            declare
+               F    : TFCB_Type;
+               L    : Natural;
+               Line : String (1 .. 80);
+            begin
+               Console.Print ("Loading AUTOEXEC.BAT ...", NL => True);
+               Textfile.Open (F, DE, Success);
+               if Success then
+                  Line := (others => ' ');
+                  Textfile.Read_Line (F, Line, L, Success);
+                  Console.Print (Line);
+                  Console.Print_NewLine;
+                  Line := (others => ' ');
+                  Textfile.Read_Line (F, Line, L, Success);
+                  Console.Print (Line);
+                  Console.Print_NewLine;
+                  Line := (others => ' ');
+                  Textfile.Read_Line (F, Line, L, Success);
+                  Console.Print (Line);
+                  Console.Print_NewLine;
+               end if;
+            end;
          end if;
       end loop;
    end Load_AUTOEXECBAT;
@@ -136,34 +143,31 @@ package body FATFS.Applications is
    -- Load PROVA.PYC in the Python code array.
    ----------------------------------------------------------------------------
    procedure Load_PROVA02PYC (Destination_Address : System.Address) is
-      DCB     : FATFS.DCB_Type;
-      DE      : FATFS.Directory_Entry_Type;
+      DCB     : DCB_Type;
+      DE      : Directory_Entry_Type;
       Success : Boolean;
    begin
-      FATFS.Directory.Open_Root (DCB, Success);
+      Directory.Open_Root (DCB, Success);
       if not Success then
          return;
       end if;
       loop
-         FATFS.Directory.Next_Entry (DCB, DE, Success);
-         if Success then
-            if DE.Filename = "PROVA02 " and then DE.Extension = "PYC" then
-               declare
-                  F : FCB_Type;
-                  B : Block_Type (0 .. 511);
-                  C : Unsigned_16;
-               begin
-                  Console.Print ("Loading PROVA02.PYC ...", NL => True);
-                  FATFS.Rawfile.Open (F, DE, Success);
-                  if Success then
-                     FATFS.Rawfile.Read (F, B, C, Success);
-                     Console.Print (C, Prefix => "Size: ", NL => True);
-                     Memory_Functions.Cpymem (B'Address, Destination_Address, Bytesize (C));
-                  end if;
-               end;
-            end if;
-         else
-            exit;
+         Directory.Next_Entry (DCB, DE, Success);
+         exit when not Success;
+         if DE.Filename = "PROVA02 " and then DE.Extension = "PYC" then
+            declare
+               F : FCB_Type;
+               B : Block_Type (0 .. 511);
+               C : Unsigned_16;
+            begin
+               Console.Print ("Loading PROVA02.PYC ...", NL => True);
+               Rawfile.Open (F, DE, Success);
+               if Success then
+                  Rawfile.Read (F, B, C, Success);
+                  Console.Print (C, Prefix => "Size: ", NL => True);
+                  Memory_Functions.Cpymem (B'Address, Destination_Address, Bytesize (C));
+               end if;
+            end;
          end if;
       end loop;
    end Load_PROVA02PYC;
