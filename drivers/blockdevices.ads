@@ -29,6 +29,8 @@ package BlockDevices is
    --                                                                        --
    --========================================================================--
 
+   pragma Pure;
+
    use System;
 
    type Sector_Type is new Interfaces.Unsigned_32;
