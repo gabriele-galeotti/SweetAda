@@ -35,9 +35,10 @@ package PC is
 
    use System;
    use Interfaces;
+   use Bits;
 
    ----------------------------------------------------------------------------
-   -- I/O peripheral base addresses
+   -- I/O peripheral addresses
    ----------------------------------------------------------------------------
 
    PIC1_BASEADDRESS  : constant := 16#0020#;
@@ -50,11 +51,72 @@ package PC is
    IDE1_BASEADDRESS  : constant := 16#01F0#;
    IDE2_BASEADDRESS  : constant := 16#0170#;
 
+   --                                     -- R                          W
+   PORT60_ADDRESS : constant := 16#0060#; -- i8042 output port          i8042 data register
+   PORT64_ADDRESS : constant := 16#0064#; -- i8042 status register      i8042 command register
+   PORTB_ADDRESS  : constant := 16#0061#; -- port B register            port B register
+
    ----------------------------------------------------------------------------
    -- i8042 and i8255 ports
    ----------------------------------------------------------------------------
 
-   PORTB_ADDRESS : constant := 16#0061#;
+   -- i8042 command register commands
+   i8042_OUTPORT_RD_CMD : constant := 16#D0#; -- data is read from i8042 output port and placed in data register
+   i8042_OUTPORT_WR_CMD : constant := 16#D1#; -- next byte written to port 60h is placed in i8042 output port
+
+   type i8042_OUTPORT_Type is
+   record
+      SYSRES    : Boolean; -- system reset line
+      GATEA20   : Boolean; -- gate A20
+      Unused    : Bits_2;
+      OBUFFULL  : Boolean; -- output buffer full
+      IBUFEMPTY : Boolean; -- input buffer empty
+      KBDCLK    : Boolean; -- keyboard clock (output)
+      KDBDATA   : Boolean; -- keyboard data (output)
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for i8042_OUTPORT_Type use
+   record
+      SYSRES    at 0 range 0 .. 0;
+      GATEA20   at 0 range 1 .. 1;
+      Unused    at 0 range 2 .. 3;
+      OBUFFULL  at 0 range 4 .. 4;
+      IBUFEMPTY at 0 range 5 .. 5;
+      KBDCLK    at 0 range 6 .. 6;
+      KDBDATA   at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (i8042_OUTPORT_Type, Unsigned_8);
+   function To_i8042_OUTPORT is new Ada.Unchecked_Conversion (Unsigned_8, i8042_OUTPORT_Type);
+
+   type PORTB_Type is
+   record
+      TIM2GATESPK : Boolean; -- RW
+      SPKRDATA    : Boolean; -- RW
+      ENBRAMPCK   : Boolean; -- RW
+      ENAIOCK     : Boolean; -- RW
+      REFDET      : Boolean; -- RO
+      OUT2        : Boolean; -- RO
+      IOCHCK      : Boolean; -- RO
+      PCK         : Boolean; -- RO
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for PORTB_Type use
+   record
+      TIM2GATESPK at 0 range 0 .. 0;
+      SPKRDATA    at 0 range 1 .. 1;
+      ENBRAMPCK   at 0 range 2 .. 2;
+      ENAIOCK     at 0 range 3 .. 3;
+      REFDET      at 0 range 4 .. 4;
+      OUT2        at 0 range 5 .. 5;
+      IOCHCK      at 0 range 6 .. 6;
+      PCK         at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (PORTB_Type, Unsigned_8);
+   function To_PORTB is new Ada.Unchecked_Conversion (Unsigned_8, PORTB_Type);
 
    ----------------------------------------------------------------------------
    -- i8259 PIC
@@ -148,9 +210,9 @@ package PC is
    type PIT_Control_Word_Type is
    record
       BCD  : Boolean;
-      MODE : Bits.Bits_3;
-      RW   : Bits.Bits_2;
-      SC   : Bits.Bits_2;
+      MODE : Bits_3;
+      RW   : Bits_2;
+      SC   : Bits_2;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -167,8 +229,8 @@ package PC is
    type PIT_Status_Type is
    record
       BCD        : Boolean;
-      MODE       : Bits.Bits_3;
-      RW         : Bits.Bits_2;
+      MODE       : Bits_3;
+      RW         : Bits_2;
       Null_Count : Boolean;
       OUT_Pin    : Boolean;
    end record with
@@ -244,9 +306,9 @@ package PC is
 
    type RTC_RegisterA_Type is
    record
-      RS  : Bits.Bits_4;
-      DIV : Bits.Bits_3;
-      UIP : Boolean;
+      RS  : Bits_4;  -- rate selection
+      DIV : Bits_3;  -- divider chain
+      UIP : Boolean; -- update in progress
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -261,14 +323,14 @@ package PC is
 
    type RTC_RegisterB_Type is
    record
-      DSE    : Boolean;
-      Hour24 : Boolean;
-      DM     : Boolean;
-      SQWE   : Boolean;
-      UIE    : Boolean;
-      AIE    : Boolean;
-      PIE    : Boolean;
-      SET    : Boolean;
+      DSE    : Boolean; -- daylight savings enable
+      Hour24 : Boolean; -- format of the hours bytes
+      DM     : Boolean; -- data mode
+      SQWE   : Boolean; -- square-wave enable
+      UIE    : Boolean; -- update-ended interrupt enable)
+      AIE    : Boolean; -- alarm interrupt enable
+      PIE    : Boolean; -- periodic interrupt enable
+      SET    : Boolean; -- initialize the time and calendar bytes
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -288,11 +350,11 @@ package PC is
 
    type RTC_RegisterC_Type is
    record
-      Unused : Bits.Bits_4;
-      UF     : Boolean;
-      AF     : Boolean;
-      PF     : Boolean;
-      IRQF   : Boolean;
+      Unused : Bits_4;
+      UF     : Boolean; -- update-ended interrupt flag
+      AF     : Boolean; -- alarm interrupt flag
+      PF     : Boolean; -- periodic interrupt flag
+      IRQF   : Boolean; -- interrupt request flag
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -309,8 +371,8 @@ package PC is
 
    type RTC_RegisterD_Type is
    record
-      Unused : Bits.Bits_7;
-      VRT    : Boolean;
+      Unused : Bits_7;
+      VRT    : Boolean; -- valid RAM and time
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -335,13 +397,13 @@ package PC is
 
    type PPI_Status_Type is
    record
-      Unused   : Bits.Bits_2;
+      Unused   : Bits_2;
       IRQ      : Boolean;
       Error    : Boolean;
       SelectIn : Boolean;
       PaperOut : Boolean;
       ACK      : Boolean;
-      Busy     : Boolean;     -- negated
+      Busy     : Boolean; -- negated
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -360,13 +422,13 @@ package PC is
 
    type PPI_Control_Type is
    record
-      Strobe    : Boolean;     -- negated
-      AUTOLF    : Boolean;     -- negated
+      Strobe    : Boolean; -- negated
+      AUTOLF    : Boolean; -- negated
       INIT      : Boolean;
-      SelectOut : Boolean;     -- negated
+      SelectOut : Boolean; -- negated
       IRQEN     : Boolean;
       BIDIR     : Boolean;
-      Unused    : Bits.Bits_2;
+      Unused    : Bits_2;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
