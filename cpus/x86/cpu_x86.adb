@@ -248,8 +248,8 @@ package body CPU_x86 is
                             Descriptor  : in     Descriptor_Type;
                             DPL         : in     PL_Type;
                             Present     : in     Boolean;
-                            D_B         : in     Default_Operand_Size_Type;
-                            Granularity : in     Descriptor_Granularity_Type
+                            D_B         : in     Default_OpSize_Type;
+                            Granularity : in     Granularity_Type
                            ) is
    begin
       GDT_Entry.Base_Low    := Unsigned_16 (Select_Address_Bits (Base, 0, 15));
@@ -261,8 +261,8 @@ package body CPU_x86 is
       GDT_Entry.Descriptor  := Descriptor;
       GDT_Entry.DPL         := DPL;
       GDT_Entry.Present     := Present;
-      GDT_Entry.AVL         := 0; -- available for use by system software
-      GDT_Entry.L           := 0; -- no 64-bit
+      GDT_Entry.AVL         := 0;
+      GDT_Entry.L           := False;
       GDT_Entry.D_B         := D_B;
       GDT_Entry.Granularity := Granularity;
    end GDT_Set_Entry;

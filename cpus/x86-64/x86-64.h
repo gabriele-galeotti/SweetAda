@@ -15,8 +15,8 @@
  * Basic definitions.
  */
 
-#define GDT_ALIGNMENT 4
-#define IDT_ALIGNMENT 4
+#define GDT_ALIGNMENT 8
+#define IDT_ALIGNMENT 8
 
 #define PL0 0
 #define PL1 1

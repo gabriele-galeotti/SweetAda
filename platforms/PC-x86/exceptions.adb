@@ -52,7 +52,7 @@ package body Exceptions is
 
    IDT_DESCRIPTOR_EXCEPTION_INVALID : constant IDT_Exception_Descriptor_Type :=
       (
-       0, SELECTOR_DEFAULT, 0, GATE_RESERVED_1, DESCRIPTOR_SYSTEM, PL0, False, 0
+       0, NULL_Segment, 0, SYSGATE_RES1, DESCRIPTOR_SYSTEM, PL0, False, 0
       );
 
    IDT_Descriptor : aliased IDT_Descriptor_Type := IDT_DESCRIPTOR_INVALID;
@@ -67,54 +67,54 @@ package body Exceptions is
 
    Exception_Vectors : constant array (Exception_DE .. PC.PIC_Irq15) of Exception_Vector_Type :=
       (
-       (Div_By_0_Handler'Address,        SELECTOR_KCODE, GATE_32_Trap),      -- Exception_DE
-       (Debug_Exception_Handler'Address, SELECTOR_KCODE, GATE_32_Interrupt), -- Exception_DB
-       (Nmi_Interrupt_Handler'Address,   SELECTOR_KCODE, GATE_32_Trap),      -- Exception_NN
-       (One_Byte_Int_Handler'Address,    SELECTOR_KCODE, GATE_32_Interrupt), -- Exception_BP
-       (Int_On_Overflow_Handler'Address, SELECTOR_KCODE, GATE_32_Trap),      -- Exception_OF
-       (Array_Bounds_Handler'Address,    SELECTOR_KCODE, GATE_32_Trap),      -- Exception_BR
-       (Invalid_Opcode_Handler'Address,  SELECTOR_KCODE, GATE_32_Trap),      -- Exception_UD
-       (Device_Not_Avl_Handler'Address,  SELECTOR_KCODE, GATE_32_Trap),      -- Exception_NM
-       (Double_Fault_Handler'Address,    SELECTOR_KCODE, GATE_32_Trap),      -- Exception_DF
-       (Cp_Seg_Ovr_Handler'Address,      SELECTOR_KCODE, GATE_32_Trap),      -- Exception_CS
-       (Invalid_Tss_Handler'Address,     SELECTOR_KCODE, GATE_32_Trap),      -- Exception_TS
-       (Seg_Not_Prsnt_Handler'Address,   SELECTOR_KCODE, GATE_32_Trap),      -- Exception_NP
-       (Stack_Fault_Handler'Address,     SELECTOR_KCODE, GATE_32_Trap),      -- Exception_SS
-       (Gen_Prot_Fault_Handler'Address,  SELECTOR_KCODE, GATE_32_Trap),      -- Exception_GP
-       (Page_Fault_Handler'Address,      SELECTOR_KCODE, GATE_32_Trap),      -- Exception_PF
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved0f
-       (Coproc_Error_Handler'Address,    SELECTOR_KCODE, GATE_32_Trap),      -- Exception_MF
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Exception_AC
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Exception_MC
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Exception_XM
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Exception_VE
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved15
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved16
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved17
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved18
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved19
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved1a
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved1b
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved1c
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved1d
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved1e
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Trap),      -- Reserved1f
-       (Irq0_Handler'Address,            SELECTOR_KCODE, GATE_32_Interrupt), -- Irq0
-       (Irq1_Handler'Address,            SELECTOR_KCODE, GATE_32_Interrupt), -- Irq1
-       (Null_Address,                    SELECTOR_KCODE, GATE_32_Interrupt), -- Irq2
-       (Irq3_Handler'Address,            SELECTOR_KCODE, GATE_32_Interrupt), -- Irq3
-       (Irq4_Handler'Address,            SELECTOR_KCODE, GATE_32_Interrupt), -- Irq4
-       (Irq5_Handler'Address,            SELECTOR_KCODE, GATE_32_Interrupt), -- Irq5
-       (Irq6_Handler'Address,            SELECTOR_KCODE, GATE_32_Interrupt), -- Irq6
-       (Irq7_Handler'Address,            SELECTOR_KCODE, GATE_32_Interrupt), -- Irq7
-       (Irq8_Handler'Address,            SELECTOR_KCODE, GATE_32_Interrupt), -- Irq8
-       (Irq9_Handler'Address,            SELECTOR_KCODE, GATE_32_Interrupt), -- Irq9
-       (Irq10_Handler'Address,           SELECTOR_KCODE, GATE_32_Interrupt), -- Irq10
-       (Irq11_Handler'Address,           SELECTOR_KCODE, GATE_32_Interrupt), -- Irq11
-       (Irq12_Handler'Address,           SELECTOR_KCODE, GATE_32_Interrupt), -- Irq12
-       (Irq13_Handler'Address,           SELECTOR_KCODE, GATE_32_Interrupt), -- Irq13
-       (Irq14_Handler'Address,           SELECTOR_KCODE, GATE_32_Interrupt), -- Irq14
-       (Irq15_Handler'Address,           SELECTOR_KCODE, GATE_32_Interrupt)  -- Irq15
+       (Div_By_0_Handler'Address,        SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_DE
+       (Debug_Exception_Handler'Address, SELECTOR_KCODE, SYSGATE_INT),  -- Exception_DB
+       (Nmi_Interrupt_Handler'Address,   SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_NN
+       (One_Byte_Int_Handler'Address,    SELECTOR_KCODE, SYSGATE_INT),  -- Exception_BP
+       (Int_On_Overflow_Handler'Address, SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_OF
+       (Array_Bounds_Handler'Address,    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_BR
+       (Invalid_Opcode_Handler'Address,  SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_UD
+       (Device_Not_Avl_Handler'Address,  SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_NM
+       (Double_Fault_Handler'Address,    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_DF
+       (Cp_Seg_Ovr_Handler'Address,      SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_CS
+       (Invalid_Tss_Handler'Address,     SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_TS
+       (Seg_Not_Prsnt_Handler'Address,   SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_NP
+       (Stack_Fault_Handler'Address,     SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_SS
+       (Gen_Prot_Fault_Handler'Address,  SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_GP
+       (Page_Fault_Handler'Address,      SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_PF
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved0f
+       (Coproc_Error_Handler'Address,    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_MF
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_AC
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_MC
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_XM
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_VE
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved15
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved16
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved17
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved18
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved19
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1a
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1b
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1c
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1d
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1e
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1f
+       (Irq0_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq0
+       (Irq1_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq1
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_INT),  -- Irq2
+       (Irq3_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq3
+       (Irq4_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq4
+       (Irq5_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq5
+       (Irq6_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq6
+       (Irq7_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq7
+       (Irq8_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq8
+       (Irq9_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq9
+       (Irq10_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq10
+       (Irq11_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq11
+       (Irq12_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq12
+       (Irq13_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq13
+       (Irq14_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq14
+       (Irq15_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT)   -- Irq15
       );
 
    String_DIVISION_BY_0        : aliased constant String := "division by 0";

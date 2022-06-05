@@ -52,11 +52,11 @@ package body GDT_Simple is
                      GDT_Entry   => GDT (1),
                      Base        => To_Address (0),
                      Limit       => 16#000F_FFFF#,
-                     Segment     => SEGMENT_CODE_ER,
+                     Segment     => CODE_ER,
                      Descriptor  => DESCRIPTOR_CODEDATA,
                      DPL         => PL0,
                      Present     => True,
-                     D_B         => DEFAULTOPERANDSIZE_32,
+                     D_B         => DEFAULT_OPSIZE32,
                      Granularity => GRANULARITY_4k
                     );
       -- index2: DPL0 DATA
@@ -64,11 +64,11 @@ package body GDT_Simple is
                      GDT_Entry   => GDT (2),
                      Base        => To_Address (0),
                      Limit       => 16#000F_FFFF#,
-                     Segment     => SEGMENT_DATA_RW,
+                     Segment     => DATA_RW,
                      Descriptor  => DESCRIPTOR_CODEDATA,
                      DPL         => PL0,
                      Present     => True,
-                     D_B         => DEFAULTOPERANDSIZE_32,
+                     D_B         => DEFAULT_OPSIZE32,
                      Granularity => GRANULARITY_4k
                     );
       GDT_Set (GDT_Descriptor, GDT'Address, GDT'Length, 1);

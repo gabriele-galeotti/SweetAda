@@ -40,26 +40,338 @@ package CPU_x86 is
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- Generic definitions and utility subprograms
+   -- Basic definitions
    ----------------------------------------------------------------------------
 
-   -- INT $3
-   Opcode_BREAKPOINT      : constant := 16#CC#;
-   Opcode_BREAKPOINT_Size : constant := 1;
-
-   BREAKPOINT_Asm_String : constant String := ".byte   0xCC";
-
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
-
    -- Privilege Levels
+
    type PL_Type is new Bits_2;
    PL0 : constant PL_Type := 2#00#; -- RING0
    PL1 : constant PL_Type := 2#01#; -- RING1
    PL2 : constant PL_Type := 2#10#; -- RING2
    PL3 : constant PL_Type := 2#11#; -- RING3
+
+   -- Table Indicator
+
+   type TI_Type is new Bits_1;
+   TI_GDT : constant TI_Type := 0; -- GDT
+   TI_LDT : constant TI_Type := 1; -- current LDT
+
+   -- Segment Selectors
+
+   type Selector_Index_Type is new Bits_13; -- theoretically GDT could have 8192 entries
+
+   type Selector_Type is
+   record
+      RPL   : PL_Type;             -- requested Privilege Level
+      TI    : TI_Type;             -- GDT or LDT
+      Index : Selector_Index_Type; -- index into table
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for Selector_Type use
+   record
+      RPL   at 0 range 0 .. 1;
+      TI    at 0 range 2 .. 2;
+      Index at 0 range 3 .. 15;
+   end record;
+
+   NULL_Segment : constant Selector_Type := (PL0, TI_GDT, 0);
+
+   function To_U16 is new Ada.Unchecked_Conversion (Selector_Type, Unsigned_16);
+   function To_Selector_Type is new Ada.Unchecked_Conversion (Unsigned_16, Selector_Type);
+
+   -- Descriptor type
+
+   type Descriptor_Type is new Bits_1;
+   DESCRIPTOR_SYSTEM   : constant := 0; -- "system" TSS/GATE segment (system objects)
+   DESCRIPTOR_CODEDATA : constant := 1; -- "storage application" code/data segment (memory objects)
+
+   -- Segment/Gate descriptor type
+
+   type Segment_Gate_Type is new Bits_4;
+   -- Code- and Data-Segment Types
+   --                         EWA
+   DATA_R    : constant := 2#0000#; -- Data Read-Only
+   DATA_RA   : constant := 2#0001#; -- Data Read-Only, accessed
+   DATA_RW   : constant := 2#0010#; -- Data Read/Write
+   DATA_RWA  : constant := 2#0011#; -- Data Read/Write, accessed
+   DATA_RE   : constant := 2#0100#; -- Data Read-Only, expand-down
+   DATA_REA  : constant := 2#0101#; -- Data Read-Only, expand-down, accessed
+   DATA_RWE  : constant := 2#0110#; -- Data Read/Write, expand-down
+   DATA_RWEA : constant := 2#0111#; -- Data Read/Write, expand-down, accessed
+   --                         CRA
+   CODE_E    : constant := 2#1000#; -- Code Execute-Only
+   CODE_EA   : constant := 2#1001#; -- Code Execute-Only, accessed
+   CODE_ER   : constant := 2#1010#; -- Code Execute/Read
+   CODE_ERA  : constant := 2#1011#; -- Code Execute/Read, accessed
+   CODE_EC   : constant := 2#1100#; -- Code Execute-Only, conforming
+   CODE_ECA  : constant := 2#1101#; -- Code Execute-Only, conforming, accessed
+   CODE_ERC  : constant := 2#1110#; -- Code Execute/Read, conforming
+   CODE_ERCA : constant := 2#1111#; -- Code Execute/Read, conforming, accessed
+   -- System-Segment and Gate-Descriptor Types
+   --                                       32-Bit Mode            IA-32e Mode
+   SYSGATE_DSCBIG : constant := 2#0000#; -- Reserved               Upper 8 byte of an 16-byte descriptor
+   SYSGATE_TSSA16 : constant := 2#0001#; -- 16-bit TSS (Available) Reserved
+   SYSGATE_LDT    : constant := 2#0010#; -- LDT                    LDT
+   SYSGATE_TSSB16 : constant := 2#0011#; -- 16-bit TSS (Busy)      Reserved
+   SYSGATE_CALL16 : constant := 2#0100#; -- 16-bit Call Gate       Reserved
+   SYSGATE_TASK   : constant := 2#0101#; -- Task Gate              Reserved
+   SYSGATE_INT16  : constant := 2#0110#; -- 16-bit Interrupt Gate  Reserved
+   SYSGATE_TRAP16 : constant := 2#0111#; -- 16-bit Trap Gate       Reserved
+   SYSGATE_RES1   : constant := 2#1000#; -- Reserved               Reserved
+   SYSGATE_TSSA   : constant := 2#1001#; -- 32-bit TSS (Available) 64-bit TSS (Available)
+   SYSGATE_RES2   : constant := 2#1010#; -- Reserved               Reserved
+   SYSGATE_TSSB   : constant := 2#1011#; -- 32-bit TSS (Busy)      64-bit TSS (Busy)
+   SYSGATE_CALL   : constant := 2#1100#; -- 32-bit Call Gate       64-bit Call Gate
+   SYSGATE_RES3   : constant := 2#1101#; -- Reserved               Reserved
+   SYSGATE_INT    : constant := 2#1110#; -- 32-bit Interrupt Gate  64-bit Interrupt Gate
+   SYSGATE_TRAP   : constant := 2#1111#; -- 32-bit Trap Gate       64-bit Trap Gate
+
+   -- Default Operand Size
+
+   type Default_OpSize_Type is new Bits_1;
+   DEFAULT_OPSIZE16 : constant := 0;
+   DEFAULT_OPSIZE32 : constant := 1;
+
+   -- Segment Granularity
+
+   type Granularity_Type is new Bits_1;
+   GRANULARITY_BYTE : constant := 0;
+   GRANULARITY_4k   : constant := 1;
+
+   ----------------------------------------------------------------------------
+   -- Segment descriptor
+   ----------------------------------------------------------------------------
+
+   GDT_Alignment : constant := 8;
+
+   type GDT_Entry_Descriptor_Type is
+   record
+      Limit_Low   : Unsigned_16;
+      Base_Low    : Unsigned_16;         -- base address 0 .. 15
+      Base_Mid    : Unsigned_8;          -- base address 16 .. 23
+      Segment     : Segment_Gate_Type;
+      Descriptor  : Descriptor_Type;
+      DPL         : PL_Type;
+      Present     : Boolean;
+      Limit_High  : Bits_4;
+      AVL         : Bits_1;              -- available for use by system software
+      L           : Boolean;             -- 64-bit code segment (IA-32e mode only)
+      D_B         : Default_OpSize_Type;
+      Granularity : Granularity_Type;
+      Base_High   : Unsigned_8;          -- base address 24 .. 31
+   end record with
+      Alignment => GDT_Alignment,
+      Size      => 64;
+   for GDT_Entry_Descriptor_Type use
+   record
+      Limit_Low   at 0 range 0 .. 15;
+      Base_Low    at 2 range 0 .. 15;
+      Base_Mid    at 4 range 0 .. 7;
+      Segment     at 5 range 0 .. 3;
+      Descriptor  at 5 range 4 .. 4;
+      DPL         at 5 range 5 .. 6;
+      Present     at 5 range 7 .. 7;
+      Limit_High  at 6 range 0 .. 3;
+      AVL         at 6 range 4 .. 4;
+      L           at 6 range 5 .. 5;
+      D_B         at 6 range 6 .. 6;
+      Granularity at 6 range 7 .. 7;
+      Base_High   at 7 range 0 .. 7;
+   end record;
+
+   GDT_ENTRY_DESCRIPTOR_INVALID : constant GDT_Entry_Descriptor_Type :=
+      (
+       Base_Low    => 0,
+       Base_Mid    => 0,
+       Base_High   => 0,
+       Limit_Low   => 0,
+       Limit_High  => 0,
+       Segment     => SYSGATE_RES1,
+       Descriptor  => DESCRIPTOR_SYSTEM,
+       DPL         => PL0,
+       Present     => False,
+       AVL         => 0,
+       L           => False,
+       D_B         => 0,
+       Granularity => 0
+      );
+
+   ----------------------------------------------------------------------------
+   -- GDT
+   ----------------------------------------------------------------------------
+
+pragma Warnings (Off, "size is not a multiple of alignment");
+   type GDT_Descriptor_Type is
+   record
+      Limit     : Unsigned_16;
+      Base_Low  : Unsigned_16;
+      Base_High : Unsigned_16;
+   end record with
+      Alignment => GDT_Alignment,
+      Size      => 48;
+   for GDT_Descriptor_Type use
+   record
+      Limit     at 0 range 0 .. 15;
+      Base_Low  at 2 range 0 .. 15;
+      Base_High at 4 range 0 .. 15;
+   end record;
+pragma Warnings (On, "size is not a multiple of alignment");
+
+   GDT_DESCRIPTOR_INVALID : constant GDT_Descriptor_Type := (0, 0, 0);
+
+   subtype GDT_Index_Type is Natural range 0 .. 2**Selector_Index_Type'Size - 1;
+   type GDT_Type is array (GDT_Index_Type range <>) of GDT_Entry_Descriptor_Type with
+      Pack => True;
+
+   procedure LGDTR (GDT_Descriptor : in GDT_Descriptor_Type; GDT_Code_Selector_Index : in GDT_Index_Type) with
+      Inline => True;
+   procedure GDT_Set (
+                      GDT_Descriptor          : in out GDT_Descriptor_Type;
+                      GDT_Address             : in     Address;
+                      GDT_Length              : in     GDT_Index_Type;
+                      GDT_Code_Selector_Index : in     GDT_Index_Type
+                     ) with
+      Inline => True;
+   procedure GDT_Set_Entry (
+                            GDT_Entry   : in out GDT_Entry_Descriptor_Type;
+                            Base        : in     Address;
+                            Limit       : in     Storage_Offset;
+                            Segment     : in     Segment_Gate_Type;
+                            Descriptor  : in     Descriptor_Type;
+                            DPL         : in     PL_Type;
+                            Present     : in     Boolean;
+                            D_B         : in     Default_OpSize_Type;
+                            Granularity : in     Granularity_Type
+                           );
+
+   -- this is a memory artifact used as a jump target when reloading GDT (see LGDTR procedure)
+   type Selector_Address_Target_Type is
+   record
+      Offset   : Address;
+      Selector : Selector_Type;
+   end record with
+      Size => 48;
+   for Selector_Address_Target_Type use
+   record
+      Offset   at 0 range 0 .. 31;
+      Selector at 4 range 0 .. 15;
+   end record;
+
+   ----------------------------------------------------------------------------
+   -- Paging
+   ----------------------------------------------------------------------------
+   -- 386s and 486 have only 4-KiB page size.
+   ----------------------------------------------------------------------------
+
+   PAGESIZE4k : constant := Definitions.kB4;
+   PAGESIZE4M : constant := Definitions.MB4;
+
+   type Page_Select_Type is new Bits_1;
+   PAGESELECT4k : constant Page_Select_Type := 0;
+   PAGESELECT4M : constant Page_Select_Type := 1;
+
+   -- offset in a 4-KiB page
+   function Select_Address_Bits_OFS (CPU_Address : Address) return Bits_12 with
+      Inline => True;
+   -- 4-KiB page
+   function Select_Address_Bits_PFA (CPU_Address : Address) return Bits_20 with
+      Inline => True;
+   -- page table entry for 4-MiB page
+   function Select_Address_Bits_PTE (CPU_Address : Address) return Bits_10 with
+      Inline => True;
+   -- page directory entry
+   function Select_Address_Bits_PDE (CPU_Address : Address) return Bits_10 with
+      Inline => True;
+
+   -- Page Table Entry
+
+   type PTEntry_Type is
+   record
+      Present            : Boolean;
+      RW                 : Bits_1;
+      US                 : Bits_1;  -- 0 = Supervisor level, 1 = User level
+      PWT                : Bits_1;
+      PCD                : Bits_1;
+      A                  : Bits_1;
+      D                  : Bits_1;
+      PAT                : Bits_1;
+      G                  : Bits_1;
+      Page_Frame_Address : Bits_20;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for PTEntry_Type use
+   record
+      Present            at 0 range 0 .. 0;
+      RW                 at 0 range 1 .. 1;
+      US                 at 0 range 2 .. 2;
+      PWT                at 0 range 3 .. 3;
+      PCD                at 0 range 4 .. 4;
+      A                  at 0 range 5 .. 5;
+      D                  at 0 range 6 .. 6;
+      PAT                at 0 range 7 .. 7;
+      G                  at 0 range 8 .. 8;
+      Page_Frame_Address at 0 range 12 .. 31;
+   end record;
+
+   -- Page table: 1024 entries aligned on 4k boundary
+
+   type PT_Type is array (0 .. 2**10 - 1) of PTEntry_Type with
+      Alignment => PAGESIZE4k,
+      Pack      => True;
+
+   ----------------------------------------------------------------------------
+   -- Page Directory Entry
+   ----------------------------------------------------------------------------
+
+   type PDEntry_Type (PS : Page_Select_Type) is
+   record
+      Present : Boolean;
+      RW      : Bits_1;                      -- Read/Write
+      US      : Bits_1;                      -- User/Supervisor
+      PWT     : Bits_1;                      -- Page-level write-through
+      PCD     : Bits_1;                      -- Page-level cache disable
+      A       : Bits_1;                      -- Accessed
+      case PS is
+         when PAGESELECT4k =>
+            Page_Table_Address    : Bits_20;
+         when PAGESELECT4M =>
+            D                     : Bits_1;  -- Dirty
+            G                     : Bits_1;  -- Global
+            PAT                   : Bits_1;  -- Page Attribute Table
+            Page_Frame_Address_36 : Bits_4;
+            Page_Frame_Address    : Bits_10;
+      end case;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for PDEntry_Type use
+   record
+      Present               at 0 range 0 .. 0;
+      RW                    at 0 range 1 .. 1;
+      US                    at 0 range 2 .. 2;
+      PWT                   at 0 range 3 .. 3;
+      PCD                   at 0 range 4 .. 4;
+      A                     at 0 range 5 .. 5;
+      D                     at 0 range 6 .. 6;
+      PS                    at 0 range 7 .. 7;
+      G                     at 0 range 8 .. 8;
+      PAT                   at 0 range 12 .. 12;
+      Page_Frame_Address_36 at 0 range 13 .. 16;
+      Page_Frame_Address    at 0 range 22 .. 31;
+      Page_Table_Address    at 0 range 12 .. 31;
+   end record;
+
+   PDENTRY_4k_INVALID : constant PDEntry_Type := (PAGESELECT4k, False, 0, 0, 0, 0, 0, 0);
+   PDENTRY_4M_INVALID : constant PDEntry_Type := (PAGESELECT4M, False, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+   -- Page directory (4k): 1024 entries aligned on 4k boundary
+   type PD4k_Type is array (0 .. 2**10 - 1) of PDEntry_Type (PAGESELECT4k) with
+      Alignment               => PAGESIZE4k,
+      Pack                    => True,
+      Suppress_Initialization => True;
 
    ----------------------------------------------------------------------------
    -- Registers
@@ -235,106 +547,21 @@ package CPU_x86 is
    subtype ST_Register_Type is Byte_Array (0 .. ST_REGISTER_SIZE - 1);
 
    ----------------------------------------------------------------------------
-   -- Selectors/Descriptors constants and subtypes
+   -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   -- Descriptor type
-   type Descriptor_Type is new Bits_1;
-   DESCRIPTOR_SYSTEM   : constant Descriptor_Type := 0; -- "system" TSS/GATE segment (system objects)
-   DESCRIPTOR_CODEDATA : constant Descriptor_Type := 1; -- "storage application" code/data segment (memory objects)
+   -- INT $3
+   Opcode_BREAKPOINT      : constant := 16#CC#;
+   Opcode_BREAKPOINT_Size : constant := 1;
 
-   -- Selector Table Index
-   -- Specifies to which descriptor table the selector refers. A zero
-   -- indicates the GDT; a one indicates the current LDT.
-   type Table_Index_Type is new Bits_1;
-   TI_GDT : constant Table_Index_Type := 0;
-   TI_LDT : constant Table_Index_Type := 1;
+   BREAKPOINT_Asm_String : constant String := ".byte   0xCC";
 
-   -- Default Operand Size
-   type Default_Operand_Size_Type is new Bits_1;
-   DEFAULTOPERANDSIZE_16 : constant Default_Operand_Size_Type := 0;
-   DEFAULTOPERANDSIZE_32 : constant Default_Operand_Size_Type := 1;
-
-   -- Descriptor Granularity
-   type Descriptor_Granularity_Type is new Bits_1;
-   GRANULARITY_BYTE : constant Descriptor_Granularity_Type := 0;
-   GRANULARITY_4k   : constant Descriptor_Granularity_Type := 1;
-
-   -- Segment/Gate descriptor type
-   type Segment_Gate_Type is new Bits_4;
-   -- CODE/DATA SEGMENT
-   SEGMENT_DATA_R        : constant Segment_Gate_Type := 16#0#; -- Read-Only
-   SEGMENT_DATA_RA       : constant Segment_Gate_Type := 16#1#; -- Read-Only                  Accessed
-   SEGMENT_DATA_RW       : constant Segment_Gate_Type := 16#2#; -- Read-Write
-   SEGMENT_DATA_RWA      : constant Segment_Gate_Type := 16#3#; -- Read-Write                 Accessed
-   SEGMENT_DATA_RE       : constant Segment_Gate_Type := 16#4#; -- Read-Only     Expand-down
-   SEGMENT_DATA_REA      : constant Segment_Gate_Type := 16#5#; -- Read-Only     Expand-down  Accessed
-   SEGMENT_DATA_RWE      : constant Segment_Gate_Type := 16#6#; -- Read-Write    Expand-down
-   SEGMENT_DATA_RWEA     : constant Segment_Gate_Type := 16#7#; -- Read-Write    Expand-down  Accessed
-   SEGMENT_CODE_E        : constant Segment_Gate_Type := 16#8#; -- Execute-Only
-   SEGMENT_CODE_EA       : constant Segment_Gate_Type := 16#9#; -- Execute-Only               Accessed
-   SEGMENT_CODE_ER       : constant Segment_Gate_Type := 16#A#; -- Execute-Read
-   SEGMENT_CODE_ERA      : constant Segment_Gate_Type := 16#B#; -- Execute-Read               Accessed
-   SEGMENT_CODE_EC       : constant Segment_Gate_Type := 16#C#; -- Execute-Only  Conforming
-   SEGMENT_CODE_ECA      : constant Segment_Gate_Type := 16#D#; -- Execute-Only  Conforming   Accessed
-   SEGMENT_CODE_ERC      : constant Segment_Gate_Type := 16#E#; -- Execute-Read  Conforming
-   SEGMENT_CODE_ERCA     : constant Segment_Gate_Type := 16#F#; -- Execute-Read  Conforming   Accessed
-   -- SYSTEM SEGMENT (GATE)
-   GATE_RESERVED_1       : constant Segment_Gate_Type := 16#0#;
-   GATE_16_TSS_Available : constant Segment_Gate_Type := 16#1#; -- 80286
-   GATE_LDT              : constant Segment_Gate_Type := 16#2#;
-   GATE_16_TSS_Busy      : constant Segment_Gate_Type := 16#3#; -- 80286
-   GATE_16_Call          : constant Segment_Gate_Type := 16#4#; -- 80286
-   GATE_Task             : constant Segment_Gate_Type := 16#5#;
-   GATE_16_Interrupt     : constant Segment_Gate_Type := 16#6#; -- 80286
-   GATE_16_Trap          : constant Segment_Gate_Type := 16#7#; -- 80286
-   GATE_RESERVERD_8      : constant Segment_Gate_Type := 16#8#;
-   GATE_32_TSS_Available : constant Segment_Gate_Type := 16#9#;
-   GATE_RESERVED_A       : constant Segment_Gate_Type := 16#A#;
-   GATE_32_TSS_Busy      : constant Segment_Gate_Type := 16#B#;
-   GATE_32_Call          : constant Segment_Gate_Type := 16#C#;
-   GATE_RESERVED_D       : constant Segment_Gate_Type := 16#D#;
-   GATE_32_Interrupt     : constant Segment_Gate_Type := 16#E#;
-   GATE_32_Trap          : constant Segment_Gate_Type := 16#F#;
-
-   ----------------------------------------------------------------------------
-   -- Selectors
-   ----------------------------------------------------------------------------
-
-   -- theoretically GDT could have 2**13 entries
-   type Selector_Index_Type is new Bits_13;
-
-   type Selector_Type is
-   record
-      RPL   : PL_Type;             -- requested Privilege Level
-      TI    : Table_Index_Type;    -- GDT or LDT
-      Index : Selector_Index_Type; -- index into table
-   end record with
-      Size => 16;
-   for Selector_Type use
-   record
-      RPL   at 0 range 0 .. 1;
-      TI    at 0 range 2 .. 2;
-      Index at 0 range 3 .. 15;
-   end record;
-
-   SELECTOR_DEFAULT : constant Selector_Type := (PL0, TI_GDT, 0);
-
-   function To_U16 is new Ada.Unchecked_Conversion (Selector_Type, Unsigned_16);
-   function To_Selector_Type is new Ada.Unchecked_Conversion (Unsigned_16, Selector_Type);
-
-   -- this is a memory artifact used as a jump target when reloading GDT (see LGDTR procedure)
-   type Selector_Address_Target_Type is
-   record
-      Offset   : Address;
-      Selector : Selector_Type;
-   end record with
-      Size => 48;
-   for Selector_Address_Target_Type use
-   record
-      Offset   at 0 range 0 .. 31;
-      Selector at 4 range 0 .. 15;
-   end record;
+   procedure NOP with
+      Inline => True;
+   procedure BREAKPOINT with
+      Inline => True;
+   procedure Asm_Call (Target_Address : in Address) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -400,108 +627,6 @@ package CPU_x86 is
       Unused at 4 range 16 .. 31;
       EFLAGS at 8 range 0 .. 31;
    end record;
-
-   ----------------------------------------------------------------------------
-   -- GDT
-   ----------------------------------------------------------------------------
-
-   GDT_Alignment : constant := 8;
-
-   type GDT_Entry_Descriptor_Type is
-   record
-      Limit_Low   : Unsigned_16;
-      Base_Low    : Unsigned_16;                 -- base address 0 .. 15
-      Base_Mid    : Unsigned_8;                  -- base address 16 .. 23
-      Segment     : Segment_Gate_Type;
-      Descriptor  : Descriptor_Type;
-      DPL         : PL_Type;
-      Present     : Boolean;
-      Limit_High  : Bits_4;
-      AVL         : Bits_1;                      -- available for use by system software
-      L           : Bits_1;                      -- 64-bit code segment (IA-32e mode only)
-      D_B         : Default_Operand_Size_Type;
-      Granularity : Descriptor_Granularity_Type;
-      Base_High   : Unsigned_8;                  -- base address 24 .. 31
-   end record with
-      Alignment => GDT_Alignment,
-      Size      => 64;
-   for GDT_Entry_Descriptor_Type use
-   record
-      Limit_Low   at 0 range 0 .. 15;
-      Base_Low    at 2 range 0 .. 15;
-      Base_Mid    at 4 range 0 .. 7;
-      Segment     at 5 range 0 .. 3;
-      Descriptor  at 5 range 4 .. 4;
-      DPL         at 5 range 5 .. 6;
-      Present     at 5 range 7 .. 7;
-      Limit_High  at 6 range 0 .. 3;
-      AVL         at 6 range 4 .. 4;
-      L           at 6 range 5 .. 5;
-      D_B         at 6 range 6 .. 6;
-      Granularity at 6 range 7 .. 7;
-      Base_High   at 7 range 0 .. 7;
-   end record;
-
-   GDT_ENTRY_DESCRIPTOR_INVALID : constant GDT_Entry_Descriptor_Type :=
-      (
-       Base_Low    => 0,
-       Base_Mid    => 0,
-       Base_High   => 0,
-       Limit_Low   => 0,
-       Limit_High  => 0,
-       Segment     => GATE_RESERVED_1,
-       Descriptor  => DESCRIPTOR_SYSTEM,
-       DPL         => PL0,
-       Present     => False,
-       AVL         => 0,
-       L           => 0,
-       D_B         => 0,
-       Granularity => 0
-      );
-
-pragma Warnings (Off, "size is not a multiple of alignment");
-   type GDT_Descriptor_Type is
-   record
-      Limit     : Unsigned_16;
-      Base_Low  : Unsigned_16;
-      Base_High : Unsigned_16;
-   end record with
-      Alignment => GDT_Alignment,
-      Size      => 48;
-   for GDT_Descriptor_Type use
-   record
-      Limit     at 0 range 0 .. 15;
-      Base_Low  at 2 range 0 .. 15;
-      Base_High at 4 range 0 .. 15;
-   end record;
-pragma Warnings (On, "size is not a multiple of alignment");
-
-   GDT_DESCRIPTOR_INVALID : constant GDT_Descriptor_Type := (0, 0, 0);
-
-   subtype GDT_Index_Type is Natural range 0 .. 2**Selector_Index_Type'Size - 1;
-   type GDT_Type is array (GDT_Index_Type range <>) of GDT_Entry_Descriptor_Type with
-      Pack => True;
-
-   procedure LGDTR (GDT_Descriptor : in GDT_Descriptor_Type; GDT_Code_Selector_Index : in GDT_Index_Type) with
-      Inline => True;
-   procedure GDT_Set (
-                      GDT_Descriptor          : in out GDT_Descriptor_Type;
-                      GDT_Address             : in     Address;
-                      GDT_Length              : in     GDT_Index_Type;
-                      GDT_Code_Selector_Index : in     GDT_Index_Type
-                     ) with
-      Inline => True;
-   procedure GDT_Set_Entry (
-                            GDT_Entry   : in out GDT_Entry_Descriptor_Type;
-                            Base        : in     Address;
-                            Limit       : in     Storage_Offset;
-                            Segment     : in     Segment_Gate_Type;
-                            Descriptor  : in     Descriptor_Type;
-                            DPL         : in     PL_Type;
-                            Present     : in     Boolean;
-                            D_B         : in     Default_Operand_Size_Type;
-                            Granularity : in     Descriptor_Granularity_Type
-                           );
 
    ----------------------------------------------------------------------------
    -- IDT
@@ -570,125 +695,6 @@ pragma Warnings (On, "size is not a multiple of alignment");
                               Selector          : in     Selector_Type;
                               Gate              : in     Segment_Gate_Type
                              );
-
-   ----------------------------------------------------------------------------
-   -- Paging
-   ----------------------------------------------------------------------------
-   -- 386s and 486 have only 4-KiB page size.
-   ----------------------------------------------------------------------------
-
-   PAGESIZE4k : constant := Definitions.kB4;
-   PAGESIZE4M : constant := Definitions.MB4;
-
-   type Page_Select_Type is new Bits_1;
-   PAGESELECT4k : constant Page_Select_Type := 0;
-   PAGESELECT4M : constant Page_Select_Type := 1;
-
-   -- offset in a 4-KiB page
-   function Select_Address_Bits_OFS (CPU_Address : Address) return Bits_12 with
-      Inline => True;
-   -- 4-KiB page
-   function Select_Address_Bits_PFA (CPU_Address : Address) return Bits_20 with
-      Inline => True;
-   -- page table entry for 4-MiB page
-   function Select_Address_Bits_PTE (CPU_Address : Address) return Bits_10 with
-      Inline => True;
-   -- page directory entry
-   function Select_Address_Bits_PDE (CPU_Address : Address) return Bits_10 with
-      Inline => True;
-
-   -- Page Table Entry
-   type PTEntry_Type is
-   record
-      Present            : Boolean;
-      RW                 : Bits_1;
-      US                 : Bits_1;  -- 0 = Supervisor level, 1 = User level
-      PWT                : Bits_1;
-      PCD                : Bits_1;
-      A                  : Bits_1;
-      D                  : Bits_1;
-      PAT                : Bits_1;
-      G                  : Bits_1;
-      Page_Frame_Address : Bits_20;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PTEntry_Type use
-   record
-      Present            at 0 range 0 .. 0;
-      RW                 at 0 range 1 .. 1;
-      US                 at 0 range 2 .. 2;
-      PWT                at 0 range 3 .. 3;
-      PCD                at 0 range 4 .. 4;
-      A                  at 0 range 5 .. 5;
-      D                  at 0 range 6 .. 6;
-      PAT                at 0 range 7 .. 7;
-      G                  at 0 range 8 .. 8;
-      Page_Frame_Address at 0 range 12 .. 31;
-   end record;
-
-   -- Page table: 1024 entries aligned on 4k boundary
-   type PT_Type is array (0 .. 2**10 - 1) of PTEntry_Type with
-      Alignment => PAGESIZE4k,
-      Pack      => True;
-
-   ----------------------------------------------------------------------------
-   -- Page Directory Entry
-   ----------------------------------------------------------------------------
-
-   type PDEntry_Type (PS : Page_Select_Type) is
-   record
-      Present : Boolean;
-      RW      : Bits_1;                      -- Read/Write
-      US      : Bits_1;                      -- User/Supervisor
-      PWT     : Bits_1;                      -- Page-level write-through
-      PCD     : Bits_1;                      -- Page-level cache disable
-      A       : Bits_1;                      -- Accessed
-      case PS is
-         when PAGESELECT4k =>
-            Page_Table_Address    : Bits_20;
-         when PAGESELECT4M =>
-            D                     : Bits_1;  -- Dirty
-            G                     : Bits_1;  -- Global
-            PAT                   : Bits_1;  -- Page Attribute Table
-            Page_Frame_Address_36 : Bits_4;
-            Page_Frame_Address    : Bits_10;
-      end case;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PDEntry_Type use
-   record
-      Present               at 0 range 0 .. 0;
-      RW                    at 0 range 1 .. 1;
-      US                    at 0 range 2 .. 2;
-      PWT                   at 0 range 3 .. 3;
-      PCD                   at 0 range 4 .. 4;
-      A                     at 0 range 5 .. 5;
-      D                     at 0 range 6 .. 6;
-      PS                    at 0 range 7 .. 7;
-      G                     at 0 range 8 .. 8;
-      PAT                   at 0 range 12 .. 12;
-      Page_Frame_Address_36 at 0 range 13 .. 16;
-      Page_Frame_Address    at 0 range 22 .. 31;
-      Page_Table_Address    at 0 range 12 .. 31;
-   end record;
-
-   PDENTRY_4k_INVALID : constant PDEntry_Type := (PAGESELECT4k, False, 0, 0, 0, 0, 0, 0);
-   PDENTRY_4M_INVALID : constant PDEntry_Type := (PAGESELECT4M, False, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
-   -- Page directory (4k): 1024 entries aligned on 4k boundary
-   type PD4k_Type is array (0 .. 2**10 - 1) of PDEntry_Type (PAGESELECT4k) with
-      Alignment               => PAGESIZE4k,
-      Pack                    => True,
-      Suppress_Initialization => True;
-
-   ----------------------------------------------------------------------------
-   -- CPU helper subprograms
-   ----------------------------------------------------------------------------
-
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Irq handling
