@@ -578,6 +578,12 @@ help :
 	@$(call echo-print,"Available CPUs: $(CPUS)")
 	@$(call echo-print,"Available RTSes: $(RTSES)")
 	@$(call echo-print,"Available Platforms: $(PLATFORMS)")
+ifneq ($(PLATFORM),)
+	@$(call echo-print,"Current PLATFORM:    $(PLATFORM)")
+ifneq ($(SUBPLATFORM),)
+	@$(call echo-print,"Current SUBPLATFORM: $(SUBPLATFORM)")
+endif
+endif
 
 #
 # Compile phase.
