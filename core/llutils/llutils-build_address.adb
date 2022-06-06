@@ -15,12 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (LLutils)
-   function Build_Address (
-                           Base_Address  : System.Address;
-                           Offset        : SSE.Storage_Offset;
-                           Scale_Address : Bits.Address_Shift
-                          ) return System.Address is
-   begin
-      return Base_Address + (Offset * 2**Scale_Address);
-   end Build_Address;
+separate (LLutils)
+function Build_Address (
+                        Base_Address  : System.Address;
+                        Offset        : SSE.Storage_Offset;
+                        Scale_Address : Bits.Address_Shift
+                       ) return System.Address is
+begin
+   return Base_Address + (Offset * 2**Scale_Address);
+end Build_Address;

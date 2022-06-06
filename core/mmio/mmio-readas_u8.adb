@@ -15,8 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (MMIO)
-   function ReadAS_U8 (Memory_Address : System.Address) return Interfaces.Unsigned_8 is
-   begin
-      return ReadA_U8 (Memory_Address);
-   end ReadAS_U8;
+separate (MMIO)
+function ReadAS_U8 (Memory_Address : System.Address) return Interfaces.Unsigned_8 is
+begin
+   return ReadA_U8 (Memory_Address);
+end ReadAS_U8;

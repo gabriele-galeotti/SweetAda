@@ -15,10 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (LibGCC)
-   function NegDI2 (
-                    Value : GCC_Types.UDI_Type
-                   ) return GCC_Types.UDI_Type is
-   begin
-      return SubDI3 (0, Value);
-   end NegDI2;
+separate (LibGCC)
+function NegDI2 (
+                 Value : GCC_Types.UDI_Type
+                ) return GCC_Types.UDI_Type is
+begin
+   return SubDI3 (0, Value);
+end NegDI2;

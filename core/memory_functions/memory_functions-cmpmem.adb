@@ -15,15 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (Memory_Functions)
-   procedure Cmpmem (
-                     S1 : in     System.Address;
-                     S2 : in     System.Address;
-                     N  : in     Bits.Bytesize;
-                     R  : in out Integer
-                    ) is
-      Src  : constant System.Address := S1;
-      Dest : constant System.Address := S2;
-   begin
-      R := Integer (Memcmp (Dest, Src, N));
-   end Cmpmem;
+separate (Memory_Functions)
+procedure Cmpmem (
+                  S1 : in     System.Address;
+                  S2 : in     System.Address;
+                  N  : in     Bits.Bytesize;
+                  R  : in out Integer
+                 ) is
+   Src  : constant System.Address := S1;
+   Dest : constant System.Address := S2;
+begin
+   R := Integer (Memcmp (Dest, Src, N));
+end Cmpmem;

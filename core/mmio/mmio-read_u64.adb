@@ -15,13 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (MMIO)
-   function Read_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 is
-      Result : aliased Interfaces.Unsigned_64 with
-         Address    => Memory_Address,
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
-   begin
-      return Result;
-   end Read_U64;
+separate (MMIO)
+function Read_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 is
+   Result : aliased Interfaces.Unsigned_64 with
+      Address    => Memory_Address,
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+begin
+   return Result;
+end Read_U64;

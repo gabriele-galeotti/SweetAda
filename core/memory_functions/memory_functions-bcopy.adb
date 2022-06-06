@@ -15,15 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (Memory_Functions)
-   procedure Bcopy (
-                    S1 : in System.Address;
-                    S2 : in System.Address;
-                    N  : in Interfaces.C.size_t
-                   ) is
-      Src    : constant System.Address := S1;
-      Dest   : constant System.Address := S2;
-      Unused : System.Address with Unreferenced => True;
-   begin
-      Unused := Memmove (Dest, Src, N);
-   end Bcopy;
+separate (Memory_Functions)
+procedure Bcopy (
+                 S1 : in System.Address;
+                 S2 : in System.Address;
+                 N  : in Interfaces.C.size_t
+                ) is
+   Src    : constant System.Address := S1;
+   Dest   : constant System.Address := S2;
+   Unused : System.Address with Unreferenced => True;
+begin
+   Unused := Memmove (Dest, Src, N);
+end Bcopy;

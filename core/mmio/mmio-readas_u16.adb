@@ -17,8 +17,8 @@
 
 with Bits;
 
-   separate (MMIO)
-   function ReadAS_U16 (Memory_Address : System.Address) return Interfaces.Unsigned_16 is
-   begin
-      return Bits.Byte_Swap (ReadA_U16 (Memory_Address));
-   end ReadAS_U16;
+separate (MMIO)
+function ReadAS_U16 (Memory_Address : System.Address) return Interfaces.Unsigned_16 is
+begin
+   return Bits.Byte_Swap (ReadA_U16 (Memory_Address));
+end ReadAS_U16;

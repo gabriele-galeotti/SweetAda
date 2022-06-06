@@ -17,13 +17,13 @@
 
 with Bits;
 
-   separate (MMIO)
-   function ReadS_U16 (Memory_Address : System.Address) return Interfaces.Unsigned_16 is
-      Content : aliased Interfaces.Unsigned_16 with
-         Address    => Memory_Address,
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
-   begin
-      return Bits.Byte_Swap (Content);
-   end ReadS_U16;
+separate (MMIO)
+function ReadS_U16 (Memory_Address : System.Address) return Interfaces.Unsigned_16 is
+   Content : aliased Interfaces.Unsigned_16 with
+      Address    => Memory_Address,
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+begin
+   return Bits.Byte_Swap (Content);
+end ReadS_U16;

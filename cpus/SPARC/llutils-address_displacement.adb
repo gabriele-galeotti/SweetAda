@@ -18,32 +18,29 @@
 with System.Machine_Code;
 with Definitions;
 
-   ----------------------------------------------------------------------------
-   -- Address_Displacement
-   ----------------------------------------------------------------------------
-   separate (LLutils)
-   function Address_Displacement (
-                                  Local_Address  : System.Address;
-                                  Target_Address : System.Address;
-                                  Scale_Address  : Bits.Address_Shift
-                                 ) return SSE.Storage_Offset is
-      use System.Machine_Code;
-      CRLF   : String renames Definitions.CRLF;
-      Result : SSE.Storage_Offset;
-   begin
-      Asm (
-           Template => ""                         & CRLF &
-                       "        sub     %1,%2,%0" & CRLF &
-                       "        sra     %0,%3,%0" & CRLF &
-                       "",
-           Outputs  => SSE.Storage_Offset'Asm_Output ("=r", Result),
-           Inputs   => (
-                        System.Address'Asm_Input ("r", Target_Address),
-                        System.Address'Asm_Input ("r", Local_Address),
-                        Bits.Address_Shift'Asm_Input ("r", Scale_Address)
-                       ),
-           Clobber  => "",
-           Volatile => True
-          );
-      return Result;
-   end Address_Displacement;
+separate (LLutils)
+function Address_Displacement (
+                               Local_Address  : System.Address;
+                               Target_Address : System.Address;
+                               Scale_Address  : Bits.Address_Shift
+                              ) return SSE.Storage_Offset is
+   use System.Machine_Code;
+   CRLF   : String renames Definitions.CRLF;
+   Result : SSE.Storage_Offset;
+begin
+   Asm (
+        Template => ""                         & CRLF &
+                    "        sub     %1,%2,%0" & CRLF &
+                    "        sra     %0,%3,%0" & CRLF &
+                    "",
+        Outputs  => SSE.Storage_Offset'Asm_Output ("=r", Result),
+        Inputs   => (
+                     System.Address'Asm_Input ("r", Target_Address),
+                     System.Address'Asm_Input ("r", Local_Address),
+                     Bits.Address_Shift'Asm_Input ("r", Scale_Address)
+                    ),
+        Clobber  => "",
+        Volatile => True
+       );
+   return Result;
+end Address_Displacement;

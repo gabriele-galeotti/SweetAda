@@ -15,10 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (MMIO)
-   procedure WriteN_U64 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_64) is
-      pragma Unreferenced (Memory_Address);
-      pragma Unreferenced (Value);
-   begin
-      null;
-   end WriteN_U64;
+separate (MMIO)
+procedure WriteN_U64 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_64) is
+   pragma Unreferenced (Memory_Address);
+   pragma Unreferenced (Value);
+begin
+   null;
+end WriteN_U64;

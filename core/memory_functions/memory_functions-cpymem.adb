@@ -15,15 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (Memory_Functions)
-   procedure Cpymem (
-                     S1 : in System.Address;
-                     S2 : in System.Address;
-                     N  : in Bits.Bytesize
-                    ) is
-      Src    : constant System.Address := S1;
-      Dest   : constant System.Address := S2;
-      Unused : System.Address with Unreferenced => True;
-   begin
-      Unused := Memmove (Dest, Src, N);
-   end Cpymem;
+separate (Memory_Functions)
+procedure Cpymem (
+                  S1 : in System.Address;
+                  S2 : in System.Address;
+                  N  : in Bits.Bytesize
+                 ) is
+   Src    : constant System.Address := S1;
+   Dest   : constant System.Address := S2;
+   Unused : System.Address with Unreferenced => True;
+begin
+   Unused := Memmove (Dest, Src, N);
+end Cpymem;

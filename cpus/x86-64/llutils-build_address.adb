@@ -18,32 +18,29 @@
 with System.Machine_Code;
 with Definitions;
 
-   ----------------------------------------------------------------------------
-   -- Build_Address
-   ----------------------------------------------------------------------------
-   separate (LLutils)
-   function Build_Address (
-                           Base_Address  : System.Address;
-                           Offset        : SSE.Storage_Offset;
-                           Scale_Address : Bits.Address_Shift
-                          ) return System.Address is
-      use System.Machine_Code;
-      CRLF   : String renames Definitions.CRLF;
-      Result : System.Address;
-   begin
-      Asm (
-           Template => ""                            & CRLF &
-                       "        shlq    %%cl,%%rbx " & CRLF &
-                       "        addq    %%rbx,%%rax" & CRLF &
-                       "",
-           Outputs  => System.Address'Asm_Output ("=a", Result),
-           Inputs   => (
-                        System.Address'Asm_Input ("a", Base_Address),
-                        SSE.Storage_Offset'Asm_Input ("b", Offset),
-                        Bits.Address_Shift'Asm_Input ("c", Scale_Address)
-                       ),
-           Clobber  => "",
-           Volatile => True
-          );
-      return Result;
-   end Build_Address;
+separate (LLutils)
+function Build_Address (
+                        Base_Address  : System.Address;
+                        Offset        : SSE.Storage_Offset;
+                        Scale_Address : Bits.Address_Shift
+                       ) return System.Address is
+   use System.Machine_Code;
+   CRLF   : String renames Definitions.CRLF;
+   Result : System.Address;
+begin
+   Asm (
+        Template => ""                            & CRLF &
+                    "        shlq    %%cl,%%rbx " & CRLF &
+                    "        addq    %%rbx,%%rax" & CRLF &
+                    "",
+        Outputs  => System.Address'Asm_Output ("=a", Result),
+        Inputs   => (
+                     System.Address'Asm_Input ("a", Base_Address),
+                     SSE.Storage_Offset'Asm_Input ("b", Offset),
+                     Bits.Address_Shift'Asm_Input ("c", Scale_Address)
+                    ),
+        Clobber  => "",
+        Volatile => True
+       );
+   return Result;
+end Build_Address;

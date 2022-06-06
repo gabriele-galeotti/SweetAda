@@ -17,8 +17,8 @@
 
 with CPU.MMIO;
 
-   separate (MMIO)
-   function Read_U8 (Memory_Address : System.Address) return Interfaces.Unsigned_8 is
-   begin
-      return CPU.MMIO.Read_U8 (Memory_Address);
-   end Read_U8;
+separate (MMIO)
+function Read_U8 (Memory_Address : System.Address) return Interfaces.Unsigned_8 is
+begin
+   return CPU.MMIO.Read_U8 (Memory_Address);
+end Read_U8;

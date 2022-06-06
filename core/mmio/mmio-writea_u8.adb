@@ -15,13 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (MMIO)
-   procedure WriteA_U8 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_8) is
-      Content : aliased Interfaces.Unsigned_8 with
-         Address    => Memory_Address,
-         Atomic     => True,
-         Import     => True,
-         Convention => Ada;
-   begin
-      Content := Value;
-   end WriteA_U8;
+separate (MMIO)
+procedure WriteA_U8 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_8) is
+   Content : aliased Interfaces.Unsigned_8 with
+      Address    => Memory_Address,
+      Atomic     => True,
+      Import     => True,
+      Convention => Ada;
+begin
+   Content := Value;
+end WriteA_U8;

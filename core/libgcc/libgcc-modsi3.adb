@@ -17,29 +17,29 @@
 
 with Ada.Unchecked_Conversion;
 
-   separate (LibGCC)
-   function ModSI3 (
-                    N : GCC_Types.SI_Type;
-                    D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type is
-      function To_USI is new Ada.Unchecked_Conversion (GCC_Types.SI_Type, GCC_Types.USI_Type);
-      function To_SI is new Ada.Unchecked_Conversion (GCC_Types.USI_Type, GCC_Types.SI_Type);
-      Num      : GCC_Types.SI_Type := N;
-      Den      : GCC_Types.SI_Type := D;
-      Negative : Boolean;
-      Result   : GCC_Types.SI_Type;
-   begin
-      Negative := False;
-      if Num < 0 then
-         Negative := True;
-         Num := -@;
-      end if;
-      if Den < 0 then
-         Den := -@;
-      end if;
-      Result := To_SI (UDivModSI4 (To_USI (Num), To_USI (Den), True));
-      if Negative then
-         Result := -@;
-      end if;
-      return Result;
-   end ModSI3;
+separate (LibGCC)
+function ModSI3 (
+                 N : GCC_Types.SI_Type;
+                 D : GCC_Types.SI_Type
+                ) return GCC_Types.SI_Type is
+   function To_USI is new Ada.Unchecked_Conversion (GCC_Types.SI_Type, GCC_Types.USI_Type);
+   function To_SI is new Ada.Unchecked_Conversion (GCC_Types.USI_Type, GCC_Types.SI_Type);
+   Num      : GCC_Types.SI_Type := N;
+   Den      : GCC_Types.SI_Type := D;
+   Negative : Boolean;
+   Result   : GCC_Types.SI_Type;
+begin
+   Negative := False;
+   if Num < 0 then
+      Negative := True;
+      Num := -@;
+   end if;
+   if Den < 0 then
+      Den := -@;
+   end if;
+   Result := To_SI (UDivModSI4 (To_USI (Num), To_USI (Den), True));
+   if Negative then
+      Result := -@;
+   end if;
+   return Result;
+end ModSI3;

@@ -17,8 +17,8 @@
 
 with Bits;
 
-   separate (MMIO)
-   procedure WriteS_U32 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_32) is
-   begin
-      Write_U32 (Memory_Address, Bits.Byte_Swap (Value));
-   end WriteS_U32;
+separate (MMIO)
+procedure WriteS_U32 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_32) is
+begin
+   Write_U32 (Memory_Address, Bits.Byte_Swap (Value));
+end WriteS_U32;

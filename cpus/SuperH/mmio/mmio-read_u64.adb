@@ -17,8 +17,8 @@
 
 with CPU.MMIO;
 
-   separate (MMIO)
-   function Read_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 is
-   begin
-      return CPU.MMIO.Read_U64 (Memory_Address);
-   end Read_U64;
+separate (MMIO)
+function Read_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 is
+begin
+   return CPU.MMIO.Read_U64 (Memory_Address);
+end Read_U64;

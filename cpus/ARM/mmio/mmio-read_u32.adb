@@ -17,8 +17,8 @@
 
 with CPU.MMIO;
 
-   separate (MMIO)
-   function Read_U32 (Memory_Address : System.Address) return Interfaces.Unsigned_32 is
-   begin
-      return CPU.MMIO.Read_U32 (Memory_Address);
-   end Read_U32;
+separate (MMIO)
+function Read_U32 (Memory_Address : System.Address) return Interfaces.Unsigned_32 is
+begin
+   return CPU.MMIO.Read_U32 (Memory_Address);
+end Read_U32;

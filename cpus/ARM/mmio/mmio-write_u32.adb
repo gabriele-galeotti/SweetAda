@@ -17,8 +17,8 @@
 
 with CPU.MMIO;
 
-   separate (MMIO)
-   procedure Write_U32 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_32) is
-   begin
-      CPU.MMIO.Write_U32 (Memory_Address, Value);
-   end Write_U32;
+separate (MMIO)
+procedure Write_U32 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_32) is
+begin
+   CPU.MMIO.Write_U32 (Memory_Address, Value);
+end Write_U32;

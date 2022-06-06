@@ -15,13 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (MMIO)
-   function ReadS_U8 (Memory_Address : System.Address) return Interfaces.Unsigned_8 is
-      Content : aliased Interfaces.Unsigned_8 with
-         Address    => Memory_Address,
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
-   begin
-      return Content;
-   end ReadS_U8;
+separate (MMIO)
+function ReadS_U8 (Memory_Address : System.Address) return Interfaces.Unsigned_8 is
+   Content : aliased Interfaces.Unsigned_8 with
+      Address    => Memory_Address,
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+begin
+   return Content;
+end ReadS_U8;

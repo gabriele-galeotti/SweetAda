@@ -15,14 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (LLutils)
-   function BE_To_CPUE_16 (Object_Address : System.Address) return Interfaces.Unsigned_16 is
-      Value : aliased Interfaces.Unsigned_16 with
-         Address => Object_Address;
-   begin
-      if LittleEndian then
-         return Bits.Word_Swap (Value);
-      else
-         return Value;
-      end if;
-   end BE_To_CPUE_16;
+separate (LLutils)
+function BE_To_CPUE_16 (Object_Address : System.Address) return Interfaces.Unsigned_16 is
+   Value : aliased Interfaces.Unsigned_16 with
+      Address => Object_Address;
+begin
+   if LittleEndian then
+      return Bits.Word_Swap (Value);
+   else
+      return Value;
+   end if;
+end BE_To_CPUE_16;

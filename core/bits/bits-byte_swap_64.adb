@@ -15,15 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (Bits)
-   function Byte_Swap_64 (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_64 is
-   begin
-      return ShR (Value and 16#FF00_0000_0000_0000#, 56) or
-             ShR (Value and 16#00FF_0000_0000_0000#, 40) or
-             ShR (Value and 16#0000_FF00_0000_0000#, 24) or
-             ShR (Value and 16#0000_00FF_0000_0000#, 8) or
-             ShL (Value and 16#0000_0000_FF00_0000#, 8) or
-             ShL (Value and 16#0000_0000_00FF_0000#, 24) or
-             ShL (Value and 16#0000_0000_0000_FF00#, 40) or
-             ShL (Value and 16#0000_0000_0000_00FF#, 56);
-   end Byte_Swap_64;
+separate (Bits)
+function Byte_Swap_64 (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_64 is
+begin
+   return ShR (Value and 16#FF00_0000_0000_0000#, 56) or
+          ShR (Value and 16#00FF_0000_0000_0000#, 40) or
+          ShR (Value and 16#0000_FF00_0000_0000#, 24) or
+          ShR (Value and 16#0000_00FF_0000_0000#, 8) or
+          ShL (Value and 16#0000_0000_FF00_0000#, 8) or
+          ShL (Value and 16#0000_0000_00FF_0000#, 24) or
+          ShL (Value and 16#0000_0000_0000_FF00#, 40) or
+          ShL (Value and 16#0000_0000_0000_00FF#, 56);
+end Byte_Swap_64;

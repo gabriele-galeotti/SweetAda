@@ -15,9 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (MMIO)
-   function ReadA_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 is
-   begin
-      raise Program_Error;
-      return 0;
-   end ReadA_U64;
+separate (MMIO)
+function ReadA_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 is
+begin
+   raise Program_Error;
+   return 0;
+end ReadA_U64;

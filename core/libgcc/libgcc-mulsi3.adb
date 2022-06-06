@@ -15,21 +15,21 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (LibGCC)
-   function MulSI3 (
-                    M1 : GCC_Types.USI_Type;
-                    M2 : GCC_Types.USI_Type
-                   ) return GCC_Types.USI_Type is
-      T_M1 : GCC_Types.USI_Type := M1;
-      T_M2 : GCC_Types.USI_Type := M2;
-      R    : GCC_Types.USI_Type := 0;
-   begin
-      while T_M1 /= 0 loop
-         if (T_M1 and 1) /= 0 then
-            R := @ + T_M2;
-         end if;
-         T_M1 := GCC_Types.Shift_Right (@, 1);
-         T_M2 := GCC_Types.Shift_Left (@, 1);
-      end loop;
-      return R;
-   end MulSI3;
+separate (LibGCC)
+function MulSI3 (
+                 M1 : GCC_Types.USI_Type;
+                 M2 : GCC_Types.USI_Type
+                ) return GCC_Types.USI_Type is
+   T_M1 : GCC_Types.USI_Type := M1;
+   T_M2 : GCC_Types.USI_Type := M2;
+   R    : GCC_Types.USI_Type := 0;
+begin
+   while T_M1 /= 0 loop
+      if (T_M1 and 1) /= 0 then
+         R := @ + T_M2;
+      end if;
+      T_M1 := GCC_Types.Shift_Right (@, 1);
+      T_M2 := GCC_Types.Shift_Left (@, 1);
+   end loop;
+   return R;
+end MulSI3;

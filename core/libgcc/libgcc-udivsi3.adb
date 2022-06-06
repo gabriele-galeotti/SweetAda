@@ -15,11 +15,11 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (LibGCC)
-   function UDivSI3 (
-                     N : GCC_Types.USI_Type;
-                     D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type is
-   begin
-      return UDivModSI4 (N, D, False);
-   end UDivSI3;
+separate (LibGCC)
+function UDivSI3 (
+                  N : GCC_Types.USI_Type;
+                  D : GCC_Types.USI_Type
+                 ) return GCC_Types.USI_Type is
+begin
+   return UDivModSI4 (N, D, False);
+end UDivSI3;

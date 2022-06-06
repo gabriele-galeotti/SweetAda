@@ -15,8 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (MMIO)
-   procedure WriteA_U64 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_64) is
-   begin
-      raise Program_Error;
-   end WriteA_U64;
+separate (MMIO)
+procedure WriteA_U64 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_64) is
+begin
+   raise Program_Error;
+end WriteA_U64;

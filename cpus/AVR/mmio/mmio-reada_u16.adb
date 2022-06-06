@@ -15,9 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (MMIO)
-   function ReadA_U16 (Memory_Address : System.Address) return Interfaces.Unsigned_16 is
-   begin
-      raise Program_Error;
-      return 0;
-   end ReadA_U16;
+separate (MMIO)
+function ReadA_U16 (Memory_Address : System.Address) return Interfaces.Unsigned_16 is
+begin
+   raise Program_Error;
+   return 0;
+end ReadA_U16;

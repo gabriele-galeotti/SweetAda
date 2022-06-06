@@ -15,8 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (Bits)
-   function Byte_Swap_8 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_8 is
-   begin
-      return Value;
-   end Byte_Swap_8;
+separate (Bits)
+function Byte_Swap_8 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_8 is
+begin
+   return Value;
+end Byte_Swap_8;

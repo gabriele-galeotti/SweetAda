@@ -15,13 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (Memory_Functions)
-   procedure Setmem (
-                     S : System.Address;
-                     V : Interfaces.Unsigned_8;
-                     N : Bits.Bytesize
-                    ) is
-      Unused : System.Address with Unreferenced => True;
-   begin
-      Unused := Memset (S, Interfaces.C.int (V), N);
-   end Setmem;
+separate (Memory_Functions)
+procedure Setmem (
+                  S : System.Address;
+                  V : Interfaces.Unsigned_8;
+                  N : Bits.Bytesize
+                 ) is
+   Unused : System.Address with Unreferenced => True;
+begin
+   Unused := Memset (S, Interfaces.C.int (V), N);
+end Setmem;

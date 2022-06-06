@@ -15,21 +15,21 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (M68k)
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) is
-      Locked_Item : Lock_Type := (Lock => LOCK_UNLOCK);
-   begin
-      Asm (
-           Template => ""                         & CRLF &
-                       "        casl    %0,%2,%1" & CRLF &
-                       "",
-           Outputs  => (
-                        CPU_Unsigned'Asm_Output ("+r", Locked_Item.Lock),
-                        CPU_Unsigned'Asm_Output ("+m", Lock_Object.Lock)
-                       ),
-           Inputs   => CPU_Unsigned'Asm_Input ("r", LOCK_LOCK),
-           Clobber  => "",
-           Volatile => True
-          );
-      Success := Locked_Item.Lock = LOCK_UNLOCK;
-   end Lock_Try;
+separate (M68k)
+procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) is
+   Locked_Item : Lock_Type := (Lock => LOCK_UNLOCK);
+begin
+   Asm (
+        Template => ""                         & CRLF &
+                    "        casl    %0,%2,%1" & CRLF &
+                    "",
+        Outputs  => (
+                     CPU_Unsigned'Asm_Output ("+r", Locked_Item.Lock),
+                     CPU_Unsigned'Asm_Output ("+m", Lock_Object.Lock)
+                    ),
+        Inputs   => CPU_Unsigned'Asm_Input ("r", LOCK_LOCK),
+        Clobber  => "",
+        Volatile => True
+       );
+   Success := Locked_Item.Lock = LOCK_UNLOCK;
+end Lock_Try;

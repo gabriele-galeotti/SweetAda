@@ -15,13 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (MMIO)
-   procedure Write_U64 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_64) is
-      Content : aliased Interfaces.Unsigned_64 with
-         Address    => Memory_Address,
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
-   begin
-      Content := Value;
-   end Write_U64;
+separate (MMIO)
+procedure Write_U64 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_64) is
+   Content : aliased Interfaces.Unsigned_64 with
+      Address    => Memory_Address,
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+begin
+   Content := Value;
+end Write_U64;

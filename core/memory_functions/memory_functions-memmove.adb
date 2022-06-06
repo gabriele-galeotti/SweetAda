@@ -15,30 +15,30 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (Memory_Functions)
-   function Memmove (
-                     S1 : System.Address;
-                     S2 : System.Address;
-                     N  : Interfaces.C.size_t
-                    ) return System.Address is
-      pragma Suppress (Access_Check);
-      function To_MAP is new Ada.Unchecked_Conversion (System.Address, Memory_Area_Ptr);
-      P_S1 : constant Memory_Area_Ptr := To_MAP (S1);
-      P_S2 : constant Memory_Area_Ptr := To_MAP (S2);
-   begin
-      -- avoid underflow since size_t is a modular type
-      if N > 0 then
-         if S1 <= S2 then
-            -- ascending addresses
-            for Index in 0 .. N - 1 loop
-               P_S1.all (Index) := P_S2.all (Index);
-            end loop;
-         else
-            -- descending addresses
-            for Index in reverse 0 .. N - 1 loop
-               P_S1.all (Index) := P_S2.all (Index);
-            end loop;
-         end if;
+separate (Memory_Functions)
+function Memmove (
+                  S1 : System.Address;
+                  S2 : System.Address;
+                  N  : Interfaces.C.size_t
+                 ) return System.Address is
+   pragma Suppress (Access_Check);
+   function To_MAP is new Ada.Unchecked_Conversion (System.Address, Memory_Area_Ptr);
+   P_S1 : constant Memory_Area_Ptr := To_MAP (S1);
+   P_S2 : constant Memory_Area_Ptr := To_MAP (S2);
+begin
+   -- avoid underflow since size_t is a modular type
+   if N > 0 then
+      if S1 <= S2 then
+         -- ascending addresses
+         for Index in 0 .. N - 1 loop
+            P_S1.all (Index) := P_S2.all (Index);
+         end loop;
+      else
+         -- descending addresses
+         for Index in reverse 0 .. N - 1 loop
+            P_S1.all (Index) := P_S2.all (Index);
+         end loop;
       end if;
-      return S1;
-   end Memmove;
+   end if;
+   return S1;
+end Memmove;

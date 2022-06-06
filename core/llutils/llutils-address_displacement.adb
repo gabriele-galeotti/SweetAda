@@ -15,12 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (LLutils)
-   function Address_Displacement (
-                                  Local_Address  : System.Address;
-                                  Target_Address : System.Address;
-                                  Scale_Address  : Bits.Address_Shift
-                                 ) return SSE.Storage_Offset is
-   begin
-      return (Target_Address - Local_Address) / 2**Scale_Address;
-   end Address_Displacement;
+separate (LLutils)
+function Address_Displacement (
+                               Local_Address  : System.Address;
+                               Target_Address : System.Address;
+                               Scale_Address  : Bits.Address_Shift
+                              ) return SSE.Storage_Offset is
+begin
+   return (Target_Address - Local_Address) / 2**Scale_Address;
+end Address_Displacement;
