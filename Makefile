@@ -575,13 +575,19 @@ help :
 	@$(call echo-print,"  Clean object files and all configuration/support files.")
 	@$(call echo-print,"make probevariable PROBEVARIABLE=<variablename>")
 	@$(call echo-print,"  Obtain the value of a variable.")
+	@$(call echo-print,"")
 	@$(call echo-print,"Available CPUs: $(CPUS)")
+	@$(call echo-print,"")
 	@$(call echo-print,"Available RTSes: $(RTSES)")
+	@$(call echo-print,"")
 	@$(call echo-print,"Available Platforms: $(PLATFORMS)")
+	@$(call echo-print,"")
 ifneq ($(PLATFORM),)
 	@$(call echo-print,"Current PLATFORM:    $(PLATFORM)")
+	@$(call echo-print,"")
 ifneq ($(SUBPLATFORM),)
 	@$(call echo-print,"Current SUBPLATFORM: $(SUBPLATFORM)")
+	@$(call echo-print,"")
 endif
 endif
 
