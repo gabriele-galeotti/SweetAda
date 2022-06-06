@@ -377,6 +377,50 @@ package CPU_x86 is
    Reserved1E   : constant := 16#1E#;
    Reserved1F   : constant := 16#1F#;
 
+   String_DIVISION_BY_0        : aliased constant String := "Divide Error";
+   String_DEBUG                : aliased constant String := "Debug";
+   String_NMI_INTERRUPT        : aliased constant String := "NMI Interrupt";
+   String_BREAKPOINT           : aliased constant String := "Breakpoint";
+   String_OVERFLOW             : aliased constant String := "Overflow";
+   String_ARRAY_BOUNDS         : aliased constant String := "BOUND Range Exceeded";
+   String_INVALID_OPCODE       : aliased constant String := "Invalid Opcode";
+   String_DEVICE_NOT_AVAILABLE : aliased constant String := "Device Not Available";
+   String_DOUBLE_FAULT         : aliased constant String := "Double Fault";
+   String_CP_SEGMENT_OVERRUN   : aliased constant String := "Coprocessor Segment Overrun";
+   String_INVALID_TSS          : aliased constant String := "Invalid TSS";
+   String_SEGMENT_NOT_PRESENT  : aliased constant String := "Segment Not Present";
+   String_STACK_FAULT          : aliased constant String := "Stack Fault";
+   String_GENERAL_PROTECTION   : aliased constant String := "General Protection";
+   String_PAGE_FAULT           : aliased constant String := "Page-Fault";
+   String_CP_ERROR             : aliased constant String := "x87 FPU Floating-Point Error";
+   String_ALIGN_CHECK          : aliased constant String := "Alignment Check";
+   String_MACHINE_CHECK        : aliased constant String := "Machine Check";
+   String_SIMD_FP              : aliased constant String := "SIMD Floating-Point";
+   String_VIRTUALIZATION       : aliased constant String := "Virtualization";
+   String_UNKNOWN              : aliased constant String := "UNKNOWN";
+
+   MsgPtr_DIVISION_BY_0        : constant access constant String := String_DIVISION_BY_0'Access;
+   MsgPtr_DEBUG                : constant access constant String := String_DEBUG'Access;
+   MsgPtr_NMI_INTERRUPT        : constant access constant String := String_NMI_INTERRUPT'Access;
+   MsgPtr_BREAKPOINT           : constant access constant String := String_BREAKPOINT'Access;
+   MsgPtr_OVERFLOW             : constant access constant String := String_OVERFLOW'Access;
+   MsgPtr_ARRAY_BOUNDS         : constant access constant String := String_ARRAY_BOUNDS'Access;
+   MsgPtr_INVALID_OPCODE       : constant access constant String := String_INVALID_OPCODE'Access;
+   MsgPtr_DEVICE_NOT_AVAILABLE : constant access constant String := String_DEVICE_NOT_AVAILABLE'Access;
+   MsgPtr_DOUBLE_FAULT         : constant access constant String := String_DOUBLE_FAULT'Access;
+   MsgPtr_CP_SEGMENT_OVERRUN   : constant access constant String := String_CP_SEGMENT_OVERRUN'Access;
+   MsgPtr_INVALID_TSS          : constant access constant String := String_INVALID_TSS'Access;
+   MsgPtr_SEGMENT_NOT_PRESENT  : constant access constant String := String_SEGMENT_NOT_PRESENT'Access;
+   MsgPtr_STACK_FAULT          : constant access constant String := String_STACK_FAULT'Access;
+   MsgPtr_GENERAL_PROTECTION   : constant access constant String := String_GENERAL_PROTECTION'Access;
+   MsgPtr_PAGE_FAULT           : constant access constant String := String_PAGE_FAULT'Access;
+   MsgPtr_CP_ERROR             : constant access constant String := String_CP_ERROR'Access;
+   MsgPtr_ALIGN_CHECK          : constant access constant String := String_ALIGN_CHECK'Access;
+   MsgPtr_MACHINE_CHECK        : constant access constant String := String_MACHINE_CHECK'Access;
+   MsgPtr_SIMD_FP              : constant access constant String := String_SIMD_FP'Access;
+   MsgPtr_VIRTUALIZATION       : constant access constant String := String_VIRTUALIZATION'Access;
+   MsgPtr_UNKNOWN              : constant access constant String := String_UNKNOWN'Access;
+
    type IDT_Type is array (Exception_Id_Type range <>) of Exception_Descriptor_Type with
       Pack => True;
 
