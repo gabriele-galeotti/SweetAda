@@ -60,8 +60,8 @@ package body MMU is
    ----------------------------------------------------------------------------
 
    procedure Init is
-      CR0                      : CR0_Register_Type;
-      CR3                      : CR3_Register_Type;
+      CR0                      : CR0_Type;
+      CR3                      : CR3_Type;
       Page_Frame_Address_Start : Address;
       Page_Frame_Address_End   : Address;
    begin

@@ -56,6 +56,26 @@ package body x86_64 is
           );
    end NOP;
 
+   ----------------------------------------------------------------------------
+   -- BREAKPOINT
+   ----------------------------------------------------------------------------
+   procedure BREAKPOINT is
+   begin
+      Asm (
+           Template => ""                                 & CRLF &
+                       "        " & BREAKPOINT_Asm_String & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end BREAKPOINT;
+
+   ----------------------------------------------------------------------------
+   -- MSR
+   ----------------------------------------------------------------------------
+
    function MSR_Read (MSRn : Unsigned_32) return Unsigned_64 is
       Result : Unsigned_64;
    begin

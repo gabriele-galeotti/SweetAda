@@ -73,7 +73,7 @@ package x86_64 is
       Index at 0 range 3 .. 15;
    end record;
 
-   NULL_Segment : constant Selector_Type := (PL0, TI_GDT, 0);
+   NULL_Selector : constant Selector_Type := (PL0, TI_GDT, 0);
 
    -- Descriptor type
 
@@ -187,13 +187,16 @@ package x86_64 is
        P        => False,
        Limit_HI => 0,
        AVL      => 0,
-       L        => True,
+       L        => False,
        D_B      => DEFAULT_OPSIZE16,
        G        => GRANULARITY_4k,
        Base_HI  => 0
       );
 
--- pragma Warnings (Off, "size is not a multiple of alignment");
+   ----------------------------------------------------------------------------
+   -- GDT
+   ----------------------------------------------------------------------------
+
    type GDT_Descriptor_Type is
    record
       Limit   : Unsigned_16;
@@ -209,7 +212,96 @@ package x86_64 is
       Base_LO at 2 range 0 .. 15;
       Base_HI at 4 range 0 .. 15;
    end record;
--- pragma Warnings (On, "size is not a multiple of alignment");
+
+   ----------------------------------------------------------------------------
+   -- Exception descriptor
+   ----------------------------------------------------------------------------
+
+   EXCEPTION_DESCRIPTOR_ALIGNMENT : constant := 8;
+
+   type Exception_Descriptor_Type is
+   record
+      Offset_LO  : Unsigned_16;       -- Offset to procedure entry point 0 .. 15
+      Selector   : Selector_Type;     -- Segment Selector for destination code segment
+      Reserved1  : Bits_5 := 0;
+      Reserved2  : Bits_3 := 0;
+      SegType    : Segment_Gate_Type; -- (D is implicit)
+      Reserved3  : Bits_1 := 0;       -- (Descriptor_Type := DESCRIPTOR_SYSTEM)
+      DPL        : PL_Type;           -- Descriptor Privilege Level
+      P          : Boolean;           -- Segment Present flag
+      Offset_HI  : Unsigned_16;       -- Offset to procedure entry point 16 .. 31
+   end record with
+      Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for Exception_Descriptor_Type use
+   record
+      Offset_LO  at 0 range 0 .. 15;
+      Selector   at 2 range 0 .. 15;
+      Reserved1  at 4 range 0 .. 4;
+      Reserved2  at 4 range 5 .. 7;
+      SegType    at 5 range 0 .. 3;
+      Reserved3  at 5 range 4 .. 4;
+      DPL        at 5 range 5 .. 6;
+      P          at 5 range 7 .. 7;
+      Offset_HI  at 6 range 0 .. 15;
+   end record;
+
+   EXCEPTION_DESCRIPTOR_INVALID : constant Exception_Descriptor_Type :=
+      (
+       Offset_LO => 0,
+       Selector  => (PL0, TI_GDT, 0),
+       SegType   => SYSGATE_RES1,
+       DPL       => PL0,
+       P         => False,
+       Offset_HI => 0,
+       others    => <>
+      );
+
+   ----------------------------------------------------------------------------
+   -- IDT
+   ----------------------------------------------------------------------------
+
+   EXCEPTION_ITEMS : constant := 256;
+
+   type Irq_State_Type is new CPU_Unsigned;
+   -- Exception_Id_Type is a subtype of Unsigned_32, allowing handlers to
+   -- accept the 32-bit parameter code from low-level exception frames
+   subtype Exception_Id_Type is Unsigned_32 range 0 .. EXCEPTION_ITEMS - 1;
+   subtype Irq_Id_Type is Exception_Id_Type range 16#20# .. Exception_Id_Type'Last;
+
+   Exception_DE : constant := 16#00#; -- Divide Error
+   Exception_DB : constant := 16#01#; -- Debug Exception
+   Exception_NN : constant := 16#02#; -- NMI Interrupt
+   Exception_BP : constant := 16#03#; -- Breakpoint (One Byte Interrupt)
+   Exception_OF : constant := 16#04#; -- Overflow
+   Exception_BR : constant := 16#05#; -- BOUND Range Exceeded
+   Exception_UD : constant := 16#06#; -- Invalid Opcode (Undefined Opcode)
+   Exception_NM : constant := 16#07#; -- Device Not Available (No Math Coprocessor)
+   Exception_DF : constant := 16#08#; -- Double Fault
+   Exception_CS : constant := 16#09#; -- Coprocessor Segment Overrun (reserved)
+   Exception_TS : constant := 16#0A#; -- Invalid TSS
+   Exception_NP : constant := 16#0B#; -- Segment Not Present
+   Exception_SS : constant := 16#0C#; -- Stack-Segment Fault
+   Exception_GP : constant := 16#0D#; -- General Protection
+   Exception_PF : constant := 16#0E#; -- Page Fault
+   Reserved0F   : constant := 16#0F#;
+   Exception_MF : constant := 16#10#; -- x87 FPU Floating-Point Error (Math Fault)
+   Exception_AC : constant := 16#11#; -- Alignment Check
+   Exception_MC : constant := 16#12#; -- Machine Check
+   Exception_XM : constant := 16#13#; -- SIMD Floating-Point Exception
+   Exception_VE : constant := 16#14#; -- Virtualization Exception
+   Reserved15   : constant := 16#15#;
+   Reserved16   : constant := 16#16#;
+   Reserved17   : constant := 16#17#;
+   Reserved18   : constant := 16#18#;
+   Reserved19   : constant := 16#19#;
+   Reserved1A   : constant := 16#1A#;
+   Reserved1B   : constant := 16#1B#;
+   Reserved1C   : constant := 16#1C#;
+   Reserved1D   : constant := 16#1D#;
+   Reserved1E   : constant := 16#1E#;
+   Reserved1F   : constant := 16#1F#;
 
    ----------------------------------------------------------------------------
    -- Registers
@@ -442,28 +534,32 @@ package x86_64 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Generic definitions
+   -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
+   -- INT $3
+   Opcode_BREAKPOINT      : constant := 16#CC#;
+   Opcode_BREAKPOINT_Size : constant := 1;
+
+   BREAKPOINT_Asm_String : constant String := ".byte   0xCC";
+
    procedure NOP with
+      Inline => True;
+   procedure BREAKPOINT with
       Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   EXCEPTION_ITEMS : constant := 256;
-
-   type Irq_State_Type is new CPU_Unsigned;
-   -- Exception_Id_Type is a subtype of Unsigned_32, allowing handlers to
-   -- accept the 32-bit parameter code from low-level exception frames
-   subtype Exception_Id_Type is Unsigned_32 range 0 .. EXCEPTION_ITEMS - 1;
-   subtype Irq_Id_Type is Exception_Id_Type range 16#20# .. Exception_Id_Type'Last;
-
-   procedure Irq_Enable;
-   procedure Irq_Disable;
-   function Irq_State_Get return Irq_State_Type;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type);
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
+   function Irq_State_Get return Irq_State_Type with
+      Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking

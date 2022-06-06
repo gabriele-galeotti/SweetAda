@@ -57,9 +57,9 @@ package body MMU is
    -- 4-MiB page version (PSE)
    ----------------------------------------------------------------------------
    procedure Init is
-      CR0                      : CR0_Register_Type;
-      CR3                      : CR3_Register_Type;
-      CR4                      : CR4_Register_Type;
+      CR0                      : CR0_Type;
+      CR3                      : CR3_Type;
+      CR4                      : CR4_Type;
       Page_Frame_Address_Start : Address;
    begin
       -- clear page directory to prevent false mappings

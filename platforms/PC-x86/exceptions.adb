@@ -48,15 +48,8 @@ package body Exceptions is
    use GDT_Simple;
    use BSP;
 
-   IDT_DESCRIPTOR_INVALID : constant IDT_Descriptor_Type := (0, 0, 0);
-
-   IDT_DESCRIPTOR_EXCEPTION_INVALID : constant IDT_Exception_Descriptor_Type :=
-      (
-       0, NULL_Segment, 0, SYSGATE_RES1, DESCRIPTOR_SYSTEM, PL0, False, 0
-      );
-
    IDT_Descriptor : aliased IDT_Descriptor_Type := IDT_DESCRIPTOR_INVALID;
-   IDT            : aliased IDT_Type (Exception_DE .. PC.PIC_Irq15) := (others => IDT_DESCRIPTOR_EXCEPTION_INVALID);
+   IDT            : aliased IDT_Type (0 .. EXCEPTION_ITEMS - 1) := (others => EXCEPTION_DESCRIPTOR_INVALID);
 
    type Exception_Vector_Type is
    record

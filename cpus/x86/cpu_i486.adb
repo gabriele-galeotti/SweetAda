@@ -44,14 +44,14 @@ package body CPU_i486 is
    -- CR4 register handling
    ----------------------------------------------------------------------------
 
-   function CR4_Read return CR4_Register_Type is
-      Result : CR4_Register_Type;
+   function CR4_Read return CR4_Type is
+      Result : CR4_Type;
    begin
       Asm (
            Template => ""                         & CRLF &
                        "        movl    %%cr4,%0" & CRLF &
                        "",
-           Outputs  => CR4_Register_Type'Asm_Output ("=a", Result),
+           Outputs  => CR4_Type'Asm_Output ("=a", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
@@ -59,14 +59,14 @@ package body CPU_i486 is
       return Result;
    end CR4_Read;
 
-   procedure CR4_Write (Value : in CR4_Register_Type) is
+   procedure CR4_Write (Value : in CR4_Type) is
    begin
       Asm (
            Template => ""                         & CRLF &
                        "        movl    %0,%%cr4" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => CR4_Register_Type'Asm_Input ("a", Value),
+           Inputs   => CR4_Type'Asm_Input ("a", Value),
            Clobber  => "",
            Volatile => True
           );

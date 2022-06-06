@@ -95,14 +95,14 @@ package body CPU_x86 is
    -- CRX registers
    ----------------------------------------------------------------------------
 
-   function CR0_Read return CR0_Register_Type is
-      Result : CR0_Register_Type;
+   function CR0_Read return CR0_Type is
+      Result : CR0_Type;
    begin
       Asm (
            Template => ""                         & CRLF &
                        "        movl    %%cr0,%0" & CRLF &
                        "",
-           Outputs  => CR0_Register_Type'Asm_Output ("=a", Result),
+           Outputs  => CR0_Type'Asm_Output ("=a", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
@@ -110,14 +110,14 @@ package body CPU_x86 is
       return Result;
    end CR0_Read;
 
-   procedure CR0_Write (Value : in CR0_Register_Type) is
+   procedure CR0_Write (Value : in CR0_Type) is
    begin
       Asm (
            Template => ""                         & CRLF &
                        "        movl    %0,%%cr0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => CR0_Register_Type'Asm_Input ("a", Value),
+           Inputs   => CR0_Type'Asm_Input ("a", Value),
            Clobber  => "",
            Volatile => True
           );
@@ -138,14 +138,14 @@ package body CPU_x86 is
       return Result;
    end CR2_Read;
 
-   function CR3_Read return CR3_Register_Type is
-      Result : CR3_Register_Type;
+   function CR3_Read return CR3_Type is
+      Result : CR3_Type;
    begin
       Asm (
            Template => ""                         & CRLF &
                        "        movl    %%cr3,%0" & CRLF &
                        "",
-           Outputs  => CR3_Register_Type'Asm_Output ("=a", Result),
+           Outputs  => CR3_Type'Asm_Output ("=a", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
@@ -153,14 +153,14 @@ package body CPU_x86 is
       return Result;
    end CR3_Read;
 
-   procedure CR3_Write (Value : in CR3_Register_Type) is
+   procedure CR3_Write (Value : in CR3_Type) is
    begin
       Asm (
            Template => ""                         & CRLF &
                        "        movl    %0,%%cr3" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => CR3_Register_Type'Asm_Input ("a", Value),
+           Inputs   => CR3_Type'Asm_Input ("a", Value),
            Clobber  => "",
            Volatile => True
           );
@@ -229,9 +229,9 @@ package body CPU_x86 is
                      ) is
       Irq_State : Irq_State_Type;
    begin
-      GDT_Descriptor.Base_Low  := Unsigned_16 (Select_Address_Bits (GDT_Address, 0, 15));
-      GDT_Descriptor.Base_High := Unsigned_16 (Select_Address_Bits (GDT_Address, 16, 31));
-      GDT_Descriptor.Limit     := Unsigned_16 (GDT_Length * (GDT_Descriptor'Size / Storage_Unit) - 1);
+      GDT_Descriptor.Base_LO := Unsigned_16 (Select_Address_Bits (GDT_Address, 0, 15));
+      GDT_Descriptor.Base_HI := Unsigned_16 (Select_Address_Bits (GDT_Address, 16, 31));
+      GDT_Descriptor.Limit   := Unsigned_16 (GDT_Length * (GDT_Descriptor'Size / Storage_Unit) - 1);
       Irq_State := Irq_State_Get;
       LGDTR (GDT_Descriptor, GDT_Code_Selector_Index);
       Irq_State_Set (Irq_State);
@@ -241,30 +241,30 @@ package body CPU_x86 is
    -- GDT_Set_Entry
    ----------------------------------------------------------------------------
    procedure GDT_Set_Entry (
-                            GDT_Entry   : in out GDT_Entry_Descriptor_Type;
-                            Base        : in     Address;
-                            Limit       : in     Storage_Offset;
-                            Segment     : in     Segment_Gate_Type;
-                            Descriptor  : in     Descriptor_Type;
-                            DPL         : in     PL_Type;
-                            Present     : in     Boolean;
-                            D_B         : in     Default_OpSize_Type;
-                            Granularity : in     Granularity_Type
+                            GDT_Entry : in out Segment_Descriptor_Type;
+                            Base      : in     Address;
+                            Limit     : in     Storage_Offset;
+                            SegType   : in     Segment_Gate_Type;
+                            S         : in     Descriptor_Type;
+                            DPL       : in     PL_Type;
+                            P         : in     Boolean;
+                            D_B       : in     Default_OpSize_Type;
+                            G         : in     Granularity_Type
                            ) is
    begin
-      GDT_Entry.Base_Low    := Unsigned_16 (Select_Address_Bits (Base, 0, 15));
-      GDT_Entry.Base_Mid    := Unsigned_8 (Select_Address_Bits (Base, 16, 23));
-      GDT_Entry.Base_High   := Unsigned_8 (Select_Address_Bits (Base, 24, 31));
-      GDT_Entry.Limit_Low   := Unsigned_16 (Unsigned_32 (Limit) and Unsigned_16_Mask);
-      GDT_Entry.Limit_High  := Bits_4 (Shift_Right (Unsigned_32 (Limit), 16) and Bits_4_Mask);
-      GDT_Entry.Segment     := Segment;
-      GDT_Entry.Descriptor  := Descriptor;
-      GDT_Entry.DPL         := DPL;
-      GDT_Entry.Present     := Present;
-      GDT_Entry.AVL         := 0;
-      GDT_Entry.L           := False;
-      GDT_Entry.D_B         := D_B;
-      GDT_Entry.Granularity := Granularity;
+      GDT_Entry.Limit_LO := Unsigned_16 (Unsigned_32 (Limit) and Unsigned_16_Mask);
+      GDT_Entry.Base_LO  := Unsigned_16 (Select_Address_Bits (Base, 0, 15));
+      GDT_Entry.Base_MI  := Unsigned_8 (Select_Address_Bits (Base, 16, 23));
+      GDT_Entry.SegType  := SegType;
+      GDT_Entry.S        := S;
+      GDT_Entry.DPL      := DPL;
+      GDT_Entry.P        := P;
+      GDT_Entry.Limit_HI := Bits_4 (Shift_Right (Unsigned_32 (Limit), 16) and Bits_4_Mask);
+      GDT_Entry.AVL      := 0;
+      GDT_Entry.L        := False;
+      GDT_Entry.D_B      := D_B;
+      GDT_Entry.G        := G;
+      GDT_Entry.Base_HI  := Unsigned_8 (Select_Address_Bits (Base, 24, 31));
    end GDT_Set_Entry;
 
    ----------------------------------------------------------------------------
@@ -281,9 +281,9 @@ package body CPU_x86 is
                      ) is
       Irq_State : Irq_State_Type;
    begin
-      IDT_Descriptor.Base_Low  := Unsigned_16 (Select_Address_Bits (IDT_Address, 0, 15));
-      IDT_Descriptor.Base_High := Unsigned_16 (Select_Address_Bits (IDT_Address, 16, 31));
-      IDT_Descriptor.Limit     := Unsigned_16 (IDT_Length * (IDT_Descriptor'Size / Storage_Unit) - 1);
+      IDT_Descriptor.Base_LO := Unsigned_16 (Select_Address_Bits (IDT_Address, 0, 15));
+      IDT_Descriptor.Base_HI := Unsigned_16 (Select_Address_Bits (IDT_Address, 16, 31));
+      IDT_Descriptor.Limit   := Unsigned_16 (IDT_Length * (IDT_Descriptor'Size / Storage_Unit) - 1);
       Irq_State := Irq_State_Get;
       LIDTR (IDT_Descriptor);
       Irq_State_Set (Irq_State);
@@ -293,20 +293,18 @@ package body CPU_x86 is
    -- IDT_Set_Handler
    ----------------------------------------------------------------------------
    procedure IDT_Set_Handler (
-                              IDT_Entry         : in out IDT_Exception_Descriptor_Type;
+                              IDT_Entry         : in out Exception_Descriptor_Type;
                               Exception_Handler : in     Address;
                               Selector          : in     Selector_Type;
-                              Gate              : in     Segment_Gate_Type
+                              SegType           : in     Segment_Gate_Type
                              ) is
    begin
-      IDT_Entry.Offset_Low  := Unsigned_16 (Select_Address_Bits (Exception_Handler, 0, 15));
-      IDT_Entry.Offset_High := Unsigned_16 (Select_Address_Bits (Exception_Handler, 16, 31));
-      IDT_Entry.Selector    := Selector;
-      IDT_Entry.Reserved    := 0;
-      IDT_Entry.Gate        := Gate;
-      IDT_Entry.Descriptor  := DESCRIPTOR_SYSTEM;
-      IDT_Entry.DPL         := PL0;
-      IDT_Entry.Present     := True;
+      IDT_Entry.Offset_LO  := Unsigned_16 (Select_Address_Bits (Exception_Handler, 0, 15));
+      IDT_Entry.Selector   := Selector;
+      IDT_Entry.SegType    := SegType;
+      IDT_Entry.DPL        := PL0;
+      IDT_Entry.P          := True;
+      IDT_Entry.Offset_HI  := Unsigned_16 (Select_Address_Bits (Exception_Handler, 16, 31));
    end IDT_Set_Handler;
 
    ----------------------------------------------------------------------------

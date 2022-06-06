@@ -39,7 +39,7 @@ package CPU_i486 is
    -- CR4 register
    ----------------------------------------------------------------------------
 
-   type CR4_Register_Type is
+   type CR4_Type is
    record
       VME        : Boolean;
       PVI        : Boolean;
@@ -67,7 +67,7 @@ package CPU_i486 is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for CR4_Register_Type use
+   for CR4_Type use
    record
       VME        at 0 range 0 .. 0;
       PVI        at 0 range 1 .. 1;
@@ -94,9 +94,9 @@ package CPU_i486 is
       Reserved4  at 0 range 23 .. 31;
    end record;
 
-   function CR4_Read return CR4_Register_Type with
+   function CR4_Read return CR4_Type with
       Inline => True;
-   procedure CR4_Write (Value : in CR4_Register_Type) with
+   procedure CR4_Write (Value : in CR4_Type) with
       Inline => True;
 
    ----------------------------------------------------------------------------

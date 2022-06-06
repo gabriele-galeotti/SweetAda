@@ -42,10 +42,10 @@ package CPU_i586 is
    -- import i486 items
    ----------------------------------------------------------------------------
 
-   subtype CR4_Register_Type is CPU_i486.CR4_Register_Type;
+   subtype CR4_Type is CPU_i486.CR4_Type;
 
-   function CR4_Read return CR4_Register_Type         renames CPU_i486.CR4_Read;
-   procedure CR4_Write (Value : in CR4_Register_Type) renames CPU_i486.CR4_Write;
+   function CR4_Read return CR4_Type         renames CPU_i486.CR4_Read;
+   procedure CR4_Write (Value : in CR4_Type) renames CPU_i486.CR4_Write;
 
    function CPUID_Enabled return Boolean renames CPU_i486.CPUID_Enabled;
 

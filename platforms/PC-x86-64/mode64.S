@@ -123,7 +123,7 @@
                 .extern _longmode
                 ljmpl   $SELECTOR_KCODE64,$_longmode
 
-                .align  GDT_ALIGNMENT,0
+                .align  2,0
 gdtdsc64:       .word   3*8-1                   // bytes 0..1 GDT limit in bytes
                 .long   gdt64                   // bytes 2..5 GDT linear base address
 

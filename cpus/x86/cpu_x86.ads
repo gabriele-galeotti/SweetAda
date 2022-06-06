@@ -76,10 +76,10 @@ package CPU_x86 is
       Index at 0 range 3 .. 15;
    end record;
 
-   NULL_Segment : constant Selector_Type := (PL0, TI_GDT, 0);
+   NULL_Selector : constant Selector_Type := (PL0, TI_GDT, 0);
 
    function To_U16 is new Ada.Unchecked_Conversion (Selector_Type, Unsigned_16);
-   function To_Selector_Type is new Ada.Unchecked_Conversion (Unsigned_16, Selector_Type);
+   function To_Selector is new Ada.Unchecked_Conversion (Unsigned_16, Selector_Type);
 
    -- Descriptor type
 
@@ -144,85 +144,90 @@ package CPU_x86 is
    -- Segment descriptor
    ----------------------------------------------------------------------------
 
-   GDT_Alignment : constant := 8;
+   SEGMENT_DESCRIPTOR_ALIGNMENT : constant := 8;
 
-   type GDT_Entry_Descriptor_Type is
+   type Segment_Descriptor_Type is
    record
-      Limit_Low   : Unsigned_16;
-      Base_Low    : Unsigned_16;         -- base address 0 .. 15
-      Base_Mid    : Unsigned_8;          -- base address 16 .. 23
-      Segment     : Segment_Gate_Type;
-      Descriptor  : Descriptor_Type;
-      DPL         : PL_Type;
-      Present     : Boolean;
-      Limit_High  : Bits_4;
-      AVL         : Bits_1;              -- available for use by system software
-      L           : Boolean;             -- 64-bit code segment (IA-32e mode only)
-      D_B         : Default_OpSize_Type;
-      Granularity : Granularity_Type;
-      Base_High   : Unsigned_8;          -- base address 24 .. 31
+      Limit_LO : Unsigned_16;         -- Segment Limit 0 .. 15
+      Base_LO  : Unsigned_16;         -- Segment base address 0 .. 15
+      Base_MI  : Unsigned_8;          -- Segment base address 16 .. 23
+      SegType  : Segment_Gate_Type;   -- Segment type
+      S        : Descriptor_Type;     -- Descriptor type
+      DPL      : PL_Type;             -- Descriptor privilege level
+      P        : Boolean;             -- Segment present
+      Limit_HI : Bits_4;              -- Segment Limit 16 .. 19
+      AVL      : Bits_1;              -- Available for use by system software
+      L        : Boolean;             -- 64-bit code segment (IA-32e mode only)
+      D_B      : Default_OpSize_Type; -- Default operation size
+      G        : Granularity_Type;    -- Granularity
+      Base_HI  : Unsigned_8;          -- Segment base address 24 .. 31
    end record with
-      Alignment => GDT_Alignment,
+      Alignment => SEGMENT_DESCRIPTOR_ALIGNMENT,
+      Bit_Order => Low_Order_First,
       Size      => 64;
-   for GDT_Entry_Descriptor_Type use
+   for Segment_Descriptor_Type use
    record
-      Limit_Low   at 0 range 0 .. 15;
-      Base_Low    at 2 range 0 .. 15;
-      Base_Mid    at 4 range 0 .. 7;
-      Segment     at 5 range 0 .. 3;
-      Descriptor  at 5 range 4 .. 4;
-      DPL         at 5 range 5 .. 6;
-      Present     at 5 range 7 .. 7;
-      Limit_High  at 6 range 0 .. 3;
-      AVL         at 6 range 4 .. 4;
-      L           at 6 range 5 .. 5;
-      D_B         at 6 range 6 .. 6;
-      Granularity at 6 range 7 .. 7;
-      Base_High   at 7 range 0 .. 7;
+      Limit_LO at 0 range 0 .. 15;
+      Base_LO  at 2 range 0 .. 15;
+      Base_MI  at 4 range 0 .. 7;
+      SegType  at 5 range 0 .. 3;
+      S        at 5 range 4 .. 4;
+      DPL      at 5 range 5 .. 6;
+      P        at 5 range 7 .. 7;
+      Limit_HI at 6 range 0 .. 3;
+      AVL      at 6 range 4 .. 4;
+      L        at 6 range 5 .. 5;
+      D_B      at 6 range 6 .. 6;
+      G        at 6 range 7 .. 7;
+      Base_HI  at 7 range 0 .. 7;
    end record;
 
-   GDT_ENTRY_DESCRIPTOR_INVALID : constant GDT_Entry_Descriptor_Type :=
+   SEGMENT_DESCRIPTOR_INVALID : constant Segment_Descriptor_Type :=
       (
-       Base_Low    => 0,
-       Base_Mid    => 0,
-       Base_High   => 0,
-       Limit_Low   => 0,
-       Limit_High  => 0,
-       Segment     => SYSGATE_RES1,
-       Descriptor  => DESCRIPTOR_SYSTEM,
-       DPL         => PL0,
-       Present     => False,
-       AVL         => 0,
-       L           => False,
-       D_B         => 0,
-       Granularity => 0
+       Limit_LO => 0,
+       Base_LO  => 0,
+       Base_MI  => 0,
+       SegType  => SYSGATE_RES1,
+       S        => DESCRIPTOR_SYSTEM,
+       DPL      => PL0,
+       P        => False,
+       Limit_HI => 0,
+       AVL      => 0,
+       L        => False,
+       D_B      => DEFAULT_OPSIZE16,
+       G        => GRANULARITY_4k,
+       Base_HI  => 0
       );
 
    ----------------------------------------------------------------------------
    -- GDT
    ----------------------------------------------------------------------------
 
-pragma Warnings (Off, "size is not a multiple of alignment");
    type GDT_Descriptor_Type is
    record
-      Limit     : Unsigned_16;
-      Base_Low  : Unsigned_16;
-      Base_High : Unsigned_16;
+      Limit   : Unsigned_16;
+      Base_LO : Unsigned_16;
+      Base_HI : Unsigned_16;
    end record with
-      Alignment => GDT_Alignment,
+      Alignment => 2,
+      Bit_Order => Low_Order_First,
       Size      => 48;
    for GDT_Descriptor_Type use
    record
-      Limit     at 0 range 0 .. 15;
-      Base_Low  at 2 range 0 .. 15;
-      Base_High at 4 range 0 .. 15;
+      Limit   at 0 range 0 .. 15;
+      Base_LO at 2 range 0 .. 15;
+      Base_HI at 4 range 0 .. 15;
    end record;
-pragma Warnings (On, "size is not a multiple of alignment");
 
-   GDT_DESCRIPTOR_INVALID : constant GDT_Descriptor_Type := (0, 0, 0);
+   GDT_DESCRIPTOR_INVALID : constant GDT_Descriptor_Type :=
+      (
+       Limit   => 0,
+       Base_LO => 0,
+       Base_HI => 0
+      );
 
    subtype GDT_Index_Type is Natural range 0 .. 2**Selector_Index_Type'Size - 1;
-   type GDT_Type is array (GDT_Index_Type range <>) of GDT_Entry_Descriptor_Type with
+   type GDT_Type is array (GDT_Index_Type range <>) of Segment_Descriptor_Type with
       Pack => True;
 
    procedure LGDTR (GDT_Descriptor : in GDT_Descriptor_Type; GDT_Code_Selector_Index : in GDT_Index_Type) with
@@ -235,15 +240,15 @@ pragma Warnings (On, "size is not a multiple of alignment");
                      ) with
       Inline => True;
    procedure GDT_Set_Entry (
-                            GDT_Entry   : in out GDT_Entry_Descriptor_Type;
+                            GDT_Entry   : in out Segment_Descriptor_Type;
                             Base        : in     Address;
                             Limit       : in     Storage_Offset;
-                            Segment     : in     Segment_Gate_Type;
-                            Descriptor  : in     Descriptor_Type;
+                            SegType     : in     Segment_Gate_Type;
+                            S           : in     Descriptor_Type;
                             DPL         : in     PL_Type;
-                            Present     : in     Boolean;
+                            P           : in     Boolean;
                             D_B         : in     Default_OpSize_Type;
-                            Granularity : in     Granularity_Type
+                            G           : in     Granularity_Type
                            );
 
    -- this is a memory artifact used as a jump target when reloading GDT (see LGDTR procedure)
@@ -258,6 +263,139 @@ pragma Warnings (On, "size is not a multiple of alignment");
       Offset   at 0 range 0 .. 31;
       Selector at 4 range 0 .. 15;
    end record;
+
+   ----------------------------------------------------------------------------
+   -- Exception descriptor
+   ----------------------------------------------------------------------------
+
+   EXCEPTION_DESCRIPTOR_ALIGNMENT : constant := 8;
+
+   type Exception_Descriptor_Type is
+   record
+      Offset_LO  : Unsigned_16;       -- Offset to procedure entry point 0 .. 15
+      Selector   : Selector_Type;     -- Segment Selector for destination code segment
+      Reserved1  : Bits_5 := 0;
+      Reserved2  : Bits_3 := 0;
+      SegType    : Segment_Gate_Type; -- (D is implicit)
+      Reserved3  : Bits_1 := 0;       -- (Descriptor_Type := DESCRIPTOR_SYSTEM)
+      DPL        : PL_Type;           -- Descriptor Privilege Level
+      P          : Boolean;           -- Segment Present flag
+      Offset_HI  : Unsigned_16;       -- Offset to procedure entry point 16 .. 31
+   end record with
+      Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for Exception_Descriptor_Type use
+   record
+      Offset_LO  at 0 range 0 .. 15;
+      Selector   at 2 range 0 .. 15;
+      Reserved1  at 4 range 0 .. 4;
+      Reserved2  at 4 range 5 .. 7;
+      SegType    at 5 range 0 .. 3;
+      Reserved3  at 5 range 4 .. 4;
+      DPL        at 5 range 5 .. 6;
+      P          at 5 range 7 .. 7;
+      Offset_HI  at 6 range 0 .. 15;
+   end record;
+
+   EXCEPTION_DESCRIPTOR_INVALID : constant Exception_Descriptor_Type :=
+      (
+       Offset_LO => 0,
+       Selector  => (PL0, TI_GDT, 0),
+       SegType   => SYSGATE_RES1,
+       DPL       => PL0,
+       P         => False,
+       Offset_HI => 0,
+       others    => <>
+      );
+
+   ----------------------------------------------------------------------------
+   -- IDT
+   ----------------------------------------------------------------------------
+
+   type IDT_Descriptor_Type is
+   record
+      Limit   : Unsigned_16;
+      Base_LO : Unsigned_16;
+      Base_HI : Unsigned_16;
+   end record with
+      Alignment => 2,
+      Bit_Order => Low_Order_First,
+      Size      => 48;
+   for IDT_Descriptor_Type use
+   record
+      Limit   at 0 range 0 .. 15;
+      Base_LO at 2 range 0 .. 15;
+      Base_HI at 4 range 0 .. 15;
+   end record;
+
+   IDT_DESCRIPTOR_INVALID : constant IDT_Descriptor_Type :=
+      (
+       Limit   => 0,
+       Base_LO => 0,
+       Base_HI => 0
+      );
+
+   EXCEPTION_ITEMS : constant := 256;
+
+   type Irq_State_Type is new CPU_Unsigned;
+   -- Exception_Id_Type is a subtype of Unsigned_32, allowing handlers to
+   -- accept the 32-bit parameter code from low-level exception frames
+   subtype Exception_Id_Type is Unsigned_32 range 0 .. EXCEPTION_ITEMS - 1;
+   subtype Irq_Id_Type is Exception_Id_Type range 16#20# .. Exception_Id_Type'Last;
+
+   Exception_DE : constant := 16#00#; -- Divide Error
+   Exception_DB : constant := 16#01#; -- Debug Exception
+   Exception_NN : constant := 16#02#; -- NMI Interrupt
+   Exception_BP : constant := 16#03#; -- Breakpoint (One Byte Interrupt)
+   Exception_OF : constant := 16#04#; -- Overflow
+   Exception_BR : constant := 16#05#; -- BOUND Range Exceeded
+   Exception_UD : constant := 16#06#; -- Invalid Opcode (Undefined Opcode)
+   Exception_NM : constant := 16#07#; -- Device Not Available (No Math Coprocessor)
+   Exception_DF : constant := 16#08#; -- Double Fault
+   Exception_CS : constant := 16#09#; -- Coprocessor Segment Overrun (reserved)
+   Exception_TS : constant := 16#0A#; -- Invalid TSS
+   Exception_NP : constant := 16#0B#; -- Segment Not Present
+   Exception_SS : constant := 16#0C#; -- Stack-Segment Fault
+   Exception_GP : constant := 16#0D#; -- General Protection
+   Exception_PF : constant := 16#0E#; -- Page Fault
+   Reserved0F   : constant := 16#0F#;
+   Exception_MF : constant := 16#10#; -- x87 FPU Floating-Point Error (Math Fault)
+   Exception_AC : constant := 16#11#; -- Alignment Check
+   Exception_MC : constant := 16#12#; -- Machine Check
+   Exception_XM : constant := 16#13#; -- SIMD Floating-Point Exception
+   Exception_VE : constant := 16#14#; -- Virtualization Exception
+   Reserved15   : constant := 16#15#;
+   Reserved16   : constant := 16#16#;
+   Reserved17   : constant := 16#17#;
+   Reserved18   : constant := 16#18#;
+   Reserved19   : constant := 16#19#;
+   Reserved1A   : constant := 16#1A#;
+   Reserved1B   : constant := 16#1B#;
+   Reserved1C   : constant := 16#1C#;
+   Reserved1D   : constant := 16#1D#;
+   Reserved1E   : constant := 16#1E#;
+   Reserved1F   : constant := 16#1F#;
+
+   type IDT_Type is array (Exception_Id_Type range <>) of Exception_Descriptor_Type with
+      Pack => True;
+
+   subtype IDT_Length_Type is Positive range 1 .. EXCEPTION_ITEMS;
+
+   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type) with
+      Inline => True;
+   procedure IDT_Set (
+                      IDT_Descriptor : in out IDT_Descriptor_Type;
+                      IDT_Address    : in     Address;
+                      IDT_Length     : in     IDT_Length_Type
+                     ) with
+      Inline => True;
+   procedure IDT_Set_Handler (
+                              IDT_Entry         : in out Exception_Descriptor_Type;
+                              Exception_Handler : in     Address;
+                              Selector          : in     Selector_Type;
+                              SegType           : in     Segment_Gate_Type
+                             );
 
    ----------------------------------------------------------------------------
    -- Paging
@@ -322,9 +460,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
       Alignment => PAGESIZE4k,
       Pack      => True;
 
-   ----------------------------------------------------------------------------
    -- Page Directory Entry
-   ----------------------------------------------------------------------------
 
    type PDEntry_Type (PS : Page_Select_Type) is
    record
@@ -414,6 +550,10 @@ pragma Warnings (On, "size is not a multiple of alignment");
 
    subtype Register_Number_Type is Natural range EAX .. FOP;
 
+   -- ST0 .. ST7 registers
+   ST_REGISTER_SIZE : constant := 10;
+   subtype ST_Register_Type is Byte_Array (0 .. ST_REGISTER_SIZE - 1);
+
    type EFLAGS_Type is
    record
       CF        : Boolean; -- Carry Flag
@@ -469,7 +609,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
 
    -- CR0
 
-   type CR0_Register_Type is
+   type CR0_Type is
    record
       PE        : Boolean; -- Protected mode Enable
       MP        : Boolean; -- Monitor Co-processor
@@ -488,7 +628,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for CR0_Register_Type use
+   for CR0_Type use
    record
       PE        at 0 range 0 .. 0;
       MP        at 0 range 1 .. 1;
@@ -508,17 +648,17 @@ pragma Warnings (On, "size is not a multiple of alignment");
 
    -- CR3
 
-   type CR3_Register_Type is
+   type CR3_Type is
    record
       Reserved1 : Bits_3;
-      PWT       : Boolean; -- Page-level write-through
-      PCD       : Boolean; -- Page-level cache disable
+      PWT       : Boolean; -- Page-level Write-Through
+      PCD       : Boolean; -- Page-level Cache Disable
       Reserved2 : Bits_7;
-      PDB       : Bits_20; -- Physical address of the 4-KiB aligned page directory
+      PDB       : Bits_20; -- Page-Directory Base
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for CR3_Register_Type use
+   for CR3_Type use
    record
       Reserved1 at 0 range 0 .. 2;
       PWT       at 0 range 3 .. 3;
@@ -529,22 +669,20 @@ pragma Warnings (On, "size is not a multiple of alignment");
 
    -- 386s do not have CR4
 
+   -- subprograms
+
    function ESP_Read return Address with
       Inline => True;
-   function CR0_Read return CR0_Register_Type with
+   function CR0_Read return CR0_Type with
       Inline => True;
-   procedure CR0_Write (Value : in CR0_Register_Type) with
+   procedure CR0_Write (Value : in CR0_Type) with
       Inline => True;
    function CR2_Read return Address with
       Inline => True;
-   function CR3_Read return CR3_Register_Type with
+   function CR3_Read return CR3_Type with
       Inline => True;
-   procedure CR3_Write (Value : in CR3_Register_Type) with
+   procedure CR3_Write (Value : in CR3_Type) with
       Inline => True;
-
-   -- ST0 .. ST7 registers
-   ST_REGISTER_SIZE : constant := 10;
-   subtype ST_Register_Type is Byte_Array (0 .. ST_REGISTER_SIZE - 1);
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
@@ -567,51 +705,6 @@ pragma Warnings (On, "size is not a multiple of alignment");
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   EXCEPTION_ITEMS : constant := 256;
-
-   type Irq_State_Type is new CPU_Unsigned;
-   -- Exception_Id_Type is a subtype of Unsigned_32, allowing handlers to
-   -- accept the 32-bit parameter code from low-level exception frames
-   subtype Exception_Id_Type is Unsigned_32 range 0 .. EXCEPTION_ITEMS - 1;
-   subtype Irq_Id_Type is Exception_Id_Type range 16#20# .. Exception_Id_Type'Last;
-
-   Exception_DE : constant Exception_Id_Type := 16#00#; -- Divide Error
-   Exception_DB : constant Exception_Id_Type := 16#01#; -- Debug Exception
-   Exception_NN : constant Exception_Id_Type := 16#02#; -- NMI Interrupt
-   Exception_BP : constant Exception_Id_Type := 16#03#; -- Breakpoint (One Byte Interrupt)
-   Exception_OF : constant Exception_Id_Type := 16#04#; -- Overflow
-   Exception_BR : constant Exception_Id_Type := 16#05#; -- Bound Range Exceeded
-   Exception_UD : constant Exception_Id_Type := 16#06#; -- Invalid Opcode
-   Exception_NM : constant Exception_Id_Type := 16#07#; -- Device Not Available
-   Exception_DF : constant Exception_Id_Type := 16#08#; -- Double Fault
-   Exception_CS : constant Exception_Id_Type := 16#09#; -- Coprocessor Segment Overrun
-   Exception_TS : constant Exception_Id_Type := 16#0A#; -- Invalid TSS
-   Exception_NP : constant Exception_Id_Type := 16#0B#; -- Segment Not Present
-   Exception_SS : constant Exception_Id_Type := 16#0C#; -- Stack-Segment Fault
-   Exception_GP : constant Exception_Id_Type := 16#0D#; -- General Protection
-   Exception_PF : constant Exception_Id_Type := 16#0E#; -- Page Fault
-   Reserved0f   : constant Exception_Id_Type := 16#0F#;
-   Exception_MF : constant Exception_Id_Type := 16#10#; -- x87 FPU Floating-Point Error
-   Reserved11   : constant Exception_Id_Type := 16#11#;
-   Reserved12   : constant Exception_Id_Type := 16#12#;
-   Reserved13   : constant Exception_Id_Type := 16#13#;
-   Reserved14   : constant Exception_Id_Type := 16#14#;
-   Exception_AC : constant Exception_Id_Type := 16#11#; -- Alignment Check
-   Exception_MC : constant Exception_Id_Type := 16#12#; -- Machine Check
-   Exception_XM : constant Exception_Id_Type := 16#13#; -- SIMD Floating-Point Exception
-   Exception_VE : constant Exception_Id_Type := 16#14#; -- Virtualization Exception
-   Reserved15   : constant Exception_Id_Type := 16#15#;
-   Reserved16   : constant Exception_Id_Type := 16#16#;
-   Reserved17   : constant Exception_Id_Type := 16#17#;
-   Reserved18   : constant Exception_Id_Type := 16#18#;
-   Reserved19   : constant Exception_Id_Type := 16#19#;
-   Reserved1a   : constant Exception_Id_Type := 16#1A#;
-   Reserved1b   : constant Exception_Id_Type := 16#1B#;
-   Reserved1c   : constant Exception_Id_Type := 16#1C#;
-   Reserved1d   : constant Exception_Id_Type := 16#1D#;
-   Reserved1e   : constant Exception_Id_Type := 16#1E#;
-   Reserved1f   : constant Exception_Id_Type := 16#1F#;
-
    type Exception_Stack_Frame_Type is
    record
       EIP    : Address;
@@ -627,78 +720,6 @@ pragma Warnings (On, "size is not a multiple of alignment");
       Unused at 4 range 16 .. 31;
       EFLAGS at 8 range 0 .. 31;
    end record;
-
-   ----------------------------------------------------------------------------
-   -- IDT
-   ----------------------------------------------------------------------------
-
-   IDT_Alignment : constant := 8;
-
-   type IDT_Exception_Descriptor_Type is
-   record
-      Offset_Low  : Unsigned_16;
-      Selector    : Selector_Type;
-      Reserved    : Bits_8;
-      Gate        : Segment_Gate_Type;
-      Descriptor  : Descriptor_Type;
-      DPL         : PL_Type;
-      Present     : Boolean;
-      Offset_High : Unsigned_16;
-   end record with
-      Alignment => IDT_Alignment,
-      Size      => 64;
-   for IDT_Exception_Descriptor_Type use
-   record
-      Offset_Low  at 0 range 0 .. 15;
-      Selector    at 2 range 0 .. 15;
-      Reserved    at 4 range 0 .. 7;
-      Gate        at 5 range 0 .. 3;
-      Descriptor  at 5 range 4 .. 4;
-      DPL         at 5 range 5 .. 6;
-      Present     at 5 range 7 .. 7;
-      Offset_High at 6 range 0 .. 15;
-   end record;
-
-pragma Warnings (Off, "size is not a multiple of alignment");
-   type IDT_Descriptor_Type is
-   record
-      Limit     : Unsigned_16;
-      Base_Low  : Unsigned_16;
-      Base_High : Unsigned_16;
-   end record with
-      Alignment => IDT_Alignment,
-      Size      => 48;
-   for IDT_Descriptor_Type use
-   record
-      Limit     at 0 range 0 .. 15;
-      Base_Low  at 2 range 0 .. 15;
-      Base_High at 4 range 0 .. 15;
-   end record;
-pragma Warnings (On, "size is not a multiple of alignment");
-
-   type IDT_Type is array (Exception_Id_Type range <>) of IDT_Exception_Descriptor_Type with
-      Pack => True;
-
-   subtype IDT_Length_Type is Positive range 1 .. EXCEPTION_ITEMS;
-
-   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type) with
-      Inline => True;
-   procedure IDT_Set (
-                      IDT_Descriptor : in out IDT_Descriptor_Type;
-                      IDT_Address    : in     Address;
-                      IDT_Length     : in     IDT_Length_Type
-                     ) with
-      Inline => True;
-   procedure IDT_Set_Handler (
-                              IDT_Entry         : in out IDT_Exception_Descriptor_Type;
-                              Exception_Handler : in     Address;
-                              Selector          : in     Selector_Type;
-                              Gate              : in     Segment_Gate_Type
-                             );
-
-   ----------------------------------------------------------------------------
-   -- Irq handling
-   ----------------------------------------------------------------------------
 
    procedure Irq_Enable with
       Inline => True;
