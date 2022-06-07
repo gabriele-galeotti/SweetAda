@@ -283,7 +283,7 @@ package body CPU_x86 is
    begin
       IDT_Descriptor.Base_LO := Unsigned_16 (Select_Address_Bits (IDT_Address, 0, 15));
       IDT_Descriptor.Base_HI := Unsigned_16 (Select_Address_Bits (IDT_Address, 16, 31));
-      IDT_Descriptor.Limit   := Unsigned_16 (IDT_Length * Exception_Descriptor_Type'Size - 1);
+      IDT_Descriptor.Limit   := Unsigned_16 (IDT_Length * (Exception_Descriptor_Type'Size / Storage_Unit) - 1);
       Irq_State := Irq_State_Get;
       LIDTR (IDT_Descriptor);
       Irq_State_Set (Irq_State);
