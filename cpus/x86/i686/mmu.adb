@@ -65,26 +65,26 @@ package body MMU is
       -- clear page directory to prevent false mappings
       Page_Frame_Address_Start := To_Address (16#0000_0000#);
       for Index in PD'Range loop
-         PD (Index) := PDENTRY_4M_INVALID;
-         PD (Index).Page_Frame_Address := Select_Address_Bits_PDE (Page_Frame_Address_Start);
-         Page_Frame_Address_Start := Page_Frame_Address_Start + PAGESIZE4M;
+         PD (Index)     := PDENTRY_4M_INVALID;
+         PD (Index).PFA := Select_Address_Bits_PDE (Page_Frame_Address_Start);
+         Page_Frame_Address_Start := @ + PAGESIZE4M;
       end loop;
-      -- map 1-1
-      PD (16#000#).Present := True; -- 0x00000000-0x003FFFFF 1st 4 MiB
-      PD (16#3FB#).Present := True; -- IOAPIC_BASEADDRESS 0xFEC00000, LAPIC_BASEADDRESS 0xFEE00000
+      -- 1-1 map
+      PD (16#000#).P := True; -- 0x00000000-0x003FFFFF 1st 4 MiB
+      PD (16#3FB#).P := True; -- IOAPIC_BASEADDRESS 0xFEC00000, LAPIC_BASEADDRESS 0xFEE00000
       -- enable 4-MiB paging by setting PSE
-      CR4 := CR4_Read;
+      CR4     := CR4_Read;
       CR4.PSE := True;
       CR4.PAE := False;
       CR4_Write (CR4);
       -- writing to CR3 does a TLB flush
-      CR3 := CR3_Read;
+      CR3     := CR3_Read;
       CR3.PWT := False;
       CR3.PCD := False;
       CR3.PDB := Select_Address_Bits_PFA (PD'Address);
       CR3_Write (CR3);
       -- enable paging
-      CR0 := CR0_Read;
+      CR0    := CR0_Read;
       CR0.PG := True;
       CR0_Write (CR0);
    end Init;

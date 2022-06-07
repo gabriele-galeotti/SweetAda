@@ -68,14 +68,14 @@ package body MMU is
       -- clear page directory to prevent false mappings
       for Index in PD'Range loop
          PD (Index) := (
-                        PS                 => PAGESELECT4k,
-                        Present            => False,
-                        RW                 => 1,
-                        US                 => 1,
-                        PWT                => 0,
-                        PCD                => 0,
-                        A                  => 0,
-                        Page_Table_Address => 0
+                        PS  => PAGESELECT4k,
+                        P   => False,
+                        RW  => PAGE_RW,
+                        US  => PAGE_U,
+                        PWT => False,
+                        PCD => False,
+                        A   => False,
+                        PTA => 0
                        );
       end loop;
       Page_Frame_Address_Start := To_Address (16#0000_0000#);
@@ -83,30 +83,30 @@ package body MMU is
       for Index in PTE0'Range loop
          Page_Frame_Address_End := Page_Frame_Address_Start + PAGESIZE4k;
          PTE0 (Index) := (
-                          Present            => True,
-                          RW                 => 1,
-                          US                 => 1,
-                          PWT                => 0,
-                          PCD                => 0,
-                          A                  => 0,
-                          D                  => 0,
-                          PAT                => 0,
-                          G                  => 0,
-                          Page_Frame_Address => Select_Address_Bits_PFA (Page_Frame_Address_Start)
+                          P   => True,
+                          RW  => PAGE_RW,
+                          US  => PAGE_U,
+                          PWT => False,
+                          PCD => False,
+                          A   => False,
+                          D   => False,
+                          PAT => False,
+                          G   => False,
+                          PFA => Select_Address_Bits_PFA (Page_Frame_Address_Start)
                          );
          Page_Frame_Address_Start := Page_Frame_Address_End;
       end loop;
       -- enable PTE #0 in page directory
-      PD (0).Page_Table_Address := Select_Address_Bits_PFA (PTE0'Address);
-      PD (0).Present := True;
+      PD (0).PTA := Select_Address_Bits_PFA (PTE0'Address);
+      PD (0).P   := True;
       -- writing to CR3 does a TLB flush
-      CR3 := CR3_Read;
+      CR3     := CR3_Read;
       CR3.PWT := False;
       CR3.PCD := False;
       CR3.PDB := Select_Address_Bits_PFA (PD'Address);
       CR3_Write (CR3);
       -- enable paging
-      CR0 := CR0_Read;
+      CR0    := CR0_Read;
       CR0.PG := True;
       CR0_Write (CR0);
    end Init;

@@ -69,8 +69,6 @@ package CPU_i586 is
    ----------------------------------------------------------------------------
    -- RDMSR/WRMSR/RDTSC
    ----------------------------------------------------------------------------
-   -- http://www.cs.inf.ethz.ch/stricker/lab/doc/intel-part4.pdf
-   ----------------------------------------------------------------------------
 
    type MSR_Type is new Unsigned_32;
 
@@ -79,9 +77,9 @@ package CPU_i586 is
 
    type APICBASE_Type is
    record
-      Reserved1 : Bits_8_Zeroes;
+      Reserved1 : Bits_8;
       BSP       : Boolean;
-      Reserved2 : Bits_1_Zeroes;
+      Reserved2 : Bits_2;
       ENABLE    : Boolean;
       Unused1   : Bits_48;
       Unused2   : Bits_4;

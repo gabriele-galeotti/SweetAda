@@ -113,9 +113,6 @@ package body CPU_i586 is
    ----------------------------------------------------------------------------
    -- RDTSC
    ----------------------------------------------------------------------------
-   -- Time Stamp Counter
-   -- __INF__ usr/local/src/rtems-4.10.2/c/src/lib/libcpu/i386/cpuModel.h
-   ----------------------------------------------------------------------------
    function RDTSC return Unsigned_64 is
       Result : Unsigned_64;
    begin
@@ -130,15 +127,5 @@ package body CPU_i586 is
           );
       return Result;
    end RDTSC;
-
-   ----------------------------------------------------------------------------
-   -- TLB_Entry_Invalidate
-   ----------------------------------------------------------------------------
-   -- __INF__ http://x86.renejeschke.de/html/file_module_x86_id_144.html
-   ----------------------------------------------------------------------------
-   -- procedure TLB_Entry_Invalidate is
-   -- begin
-   --    null;
-   -- end TLB_Entry_Invalidate;
 
 end CPU_i586;

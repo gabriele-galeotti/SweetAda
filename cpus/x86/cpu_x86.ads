@@ -272,30 +272,30 @@ package CPU_x86 is
 
    type Exception_Descriptor_Type is
    record
-      Offset_LO  : Unsigned_16;       -- Offset to procedure entry point 0 .. 15
-      Selector   : Selector_Type;     -- Segment Selector for destination code segment
-      Reserved1  : Bits_5 := 0;
-      Reserved2  : Bits_3 := 0;
-      SegType    : Segment_Gate_Type; -- (D is implicit)
-      Reserved3  : Bits_1 := 0;       -- (Descriptor_Type := DESCRIPTOR_SYSTEM)
-      DPL        : PL_Type;           -- Descriptor Privilege Level
-      P          : Boolean;           -- Segment Present flag
-      Offset_HI  : Unsigned_16;       -- Offset to procedure entry point 16 .. 31
+      Offset_LO : Unsigned_16;       -- Offset to procedure entry point 0 .. 15
+      Selector  : Selector_Type;     -- Segment Selector for destination code segment
+      Reserved1 : Bits_5 := 0;
+      Reserved2 : Bits_3 := 0;
+      SegType   : Segment_Gate_Type; -- (D is implicit)
+      Reserved3 : Bits_1 := 0;       -- (Descriptor_Type := DESCRIPTOR_SYSTEM)
+      DPL       : PL_Type;           -- Descriptor Privilege Level
+      P         : Boolean;           -- Segment Present flag
+      Offset_HI : Unsigned_16;       -- Offset to procedure entry point 16 .. 31
    end record with
       Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
       Bit_Order => Low_Order_First,
       Size      => 64;
    for Exception_Descriptor_Type use
    record
-      Offset_LO  at 0 range 0 .. 15;
-      Selector   at 2 range 0 .. 15;
-      Reserved1  at 4 range 0 .. 4;
-      Reserved2  at 4 range 5 .. 7;
-      SegType    at 5 range 0 .. 3;
-      Reserved3  at 5 range 4 .. 4;
-      DPL        at 5 range 5 .. 6;
-      P          at 5 range 7 .. 7;
-      Offset_HI  at 6 range 0 .. 15;
+      Offset_LO at 0 range 0 .. 15;
+      Selector  at 2 range 0 .. 15;
+      Reserved1 at 4 range 0 .. 4;
+      Reserved2 at 4 range 5 .. 7;
+      SegType   at 5 range 0 .. 3;
+      Reserved3 at 5 range 4 .. 4;
+      DPL       at 5 range 5 .. 6;
+      P         at 5 range 7 .. 7;
+      Offset_HI at 6 range 0 .. 15;
    end record;
 
    EXCEPTION_DESCRIPTOR_INVALID : constant Exception_Descriptor_Type :=
@@ -454,48 +454,40 @@ package CPU_x86 is
    PAGESELECT4k : constant Page_Select_Type := 0;
    PAGESELECT4M : constant Page_Select_Type := 1;
 
-   -- offset in a 4-KiB page
-   function Select_Address_Bits_OFS (CPU_Address : Address) return Bits_12 with
-      Inline => True;
-   -- 4-KiB page
-   function Select_Address_Bits_PFA (CPU_Address : Address) return Bits_20 with
-      Inline => True;
-   -- page table entry for 4-MiB page
-   function Select_Address_Bits_PTE (CPU_Address : Address) return Bits_10 with
-      Inline => True;
-   -- page directory entry
-   function Select_Address_Bits_PDE (CPU_Address : Address) return Bits_10 with
-      Inline => True;
+   PAGE_RO : constant := 0;
+   PAGE_RW : constant := 1;
+   PAGE_S  : constant := 0;
+   PAGE_U  : constant := 1;
 
    -- Page Table Entry
 
    type PTEntry_Type is
    record
-      Present            : Boolean;
-      RW                 : Bits_1;
-      US                 : Bits_1;  -- 0 = Supervisor level, 1 = User level
-      PWT                : Bits_1;
-      PCD                : Bits_1;
-      A                  : Bits_1;
-      D                  : Bits_1;
-      PAT                : Bits_1;
-      G                  : Bits_1;
-      Page_Frame_Address : Bits_20;
+      P   : Boolean; -- Present
+      RW  : Bits_1;  -- Read/write
+      US  : Bits_1;  -- User/supervisor
+      PWT : Boolean; -- Page-level write-through
+      PCD : Boolean; -- Page-level cache disable
+      A   : Boolean; -- Accessed
+      D   : Boolean; -- Dirty
+      PAT : Boolean; -- Page Attribute Table
+      G   : Boolean; -- Global
+      PFA : Bits_20; -- Address of 4KB page frame
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for PTEntry_Type use
    record
-      Present            at 0 range 0 .. 0;
-      RW                 at 0 range 1 .. 1;
-      US                 at 0 range 2 .. 2;
-      PWT                at 0 range 3 .. 3;
-      PCD                at 0 range 4 .. 4;
-      A                  at 0 range 5 .. 5;
-      D                  at 0 range 6 .. 6;
-      PAT                at 0 range 7 .. 7;
-      G                  at 0 range 8 .. 8;
-      Page_Frame_Address at 0 range 12 .. 31;
+      P   at 0 range 0 .. 0;
+      RW  at 0 range 1 .. 1;
+      US  at 0 range 2 .. 2;
+      PWT at 0 range 3 .. 3;
+      PCD at 0 range 4 .. 4;
+      A   at 0 range 5 .. 5;
+      D   at 0 range 6 .. 6;
+      PAT at 0 range 7 .. 7;
+      G   at 0 range 8 .. 8;
+      PFA at 0 range 12 .. 31;
    end record;
 
    -- Page table: 1024 entries aligned on 4k boundary
@@ -508,50 +500,87 @@ package CPU_x86 is
 
    type PDEntry_Type (PS : Page_Select_Type) is
    record
-      Present : Boolean;
-      RW      : Bits_1;                      -- Read/Write
-      US      : Bits_1;                      -- User/Supervisor
-      PWT     : Bits_1;                      -- Page-level write-through
-      PCD     : Bits_1;                      -- Page-level cache disable
-      A       : Bits_1;                      -- Accessed
+      P   : Boolean;         -- Present
+      RW  : Bits_1;          -- Read/write
+      US  : Bits_1;          -- User/supervisor
+      PWT : Boolean;         -- Page-level write-through
+      PCD : Boolean;         -- Page-level cache disable
+      A   : Boolean;         -- Accessed
       case PS is
          when PAGESELECT4k =>
-            Page_Table_Address    : Bits_20;
+            PTA   : Bits_20; -- Address of page table
          when PAGESELECT4M =>
-            D                     : Bits_1;  -- Dirty
-            G                     : Bits_1;  -- Global
-            PAT                   : Bits_1;  -- Page Attribute Table
-            Page_Frame_Address_36 : Bits_4;
-            Page_Frame_Address    : Bits_10;
+            D     : Boolean; -- Dirty
+            G     : Boolean; -- Global
+            PAT   : Boolean; -- Page Attribute Table
+            PFA36 : Bits_4;  -- 36-bit address
+            PFA   : Bits_10; -- Address of 4MB page frame
       end case;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for PDEntry_Type use
    record
-      Present               at 0 range 0 .. 0;
-      RW                    at 0 range 1 .. 1;
-      US                    at 0 range 2 .. 2;
-      PWT                   at 0 range 3 .. 3;
-      PCD                   at 0 range 4 .. 4;
-      A                     at 0 range 5 .. 5;
-      D                     at 0 range 6 .. 6;
-      PS                    at 0 range 7 .. 7;
-      G                     at 0 range 8 .. 8;
-      PAT                   at 0 range 12 .. 12;
-      Page_Frame_Address_36 at 0 range 13 .. 16;
-      Page_Frame_Address    at 0 range 22 .. 31;
-      Page_Table_Address    at 0 range 12 .. 31;
+      P     at 0 range 0 .. 0;
+      RW    at 0 range 1 .. 1;
+      US    at 0 range 2 .. 2;
+      PWT   at 0 range 3 .. 3;
+      PCD   at 0 range 4 .. 4;
+      A     at 0 range 5 .. 5;
+      D     at 0 range 6 .. 6;
+      PS    at 0 range 7 .. 7;
+      G     at 0 range 8 .. 8;
+      PAT   at 0 range 12 .. 12;
+      PFA36 at 0 range 13 .. 16;
+      PFA   at 0 range 22 .. 31;
+      PTA   at 0 range 12 .. 31;
    end record;
 
-   PDENTRY_4k_INVALID : constant PDEntry_Type := (PAGESELECT4k, False, 0, 0, 0, 0, 0, 0);
-   PDENTRY_4M_INVALID : constant PDEntry_Type := (PAGESELECT4M, False, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+   PDENTRY_4k_INVALID : constant PDEntry_Type :=
+      (
+       PS  => PAGESELECT4k,
+       P   => False,
+       RW  => PAGE_RO,
+       US  => PAGE_S,
+       PWT => False,
+       PCD => False,
+       A   => False,
+       PTA => 0
+      );
+   PDENTRY_4M_INVALID : constant PDEntry_Type :=
+      (
+       PS    => PAGESELECT4M,
+       P     => False,
+       RW    => PAGE_RO,
+       US    => PAGE_S,
+       PWT   => False,
+       PCD   => False,
+       A     => False,
+       D     => False,
+       G     => False,
+       PAT   => False,
+       PFA36 => 0,
+       PFA   => 0
+      );
 
    -- Page directory (4k): 1024 entries aligned on 4k boundary
    type PD4k_Type is array (0 .. 2**10 - 1) of PDEntry_Type (PAGESELECT4k) with
       Alignment               => PAGESIZE4k,
       Pack                    => True,
       Suppress_Initialization => True;
+
+   -- offset in a 4-KiB page
+   function Select_Address_Bits_OFS (CPU_Address : Address) return Bits_12 with
+      Inline => True;
+   -- 4-KiB page
+   function Select_Address_Bits_PFA (CPU_Address : Address) return Bits_20 with
+      Inline => True;
+   -- page table entry for 4-MiB page
+   function Select_Address_Bits_PTE (CPU_Address : Address) return Bits_10 with
+      Inline => True;
+   -- page directory entry
+   function Select_Address_Bits_PDE (CPU_Address : Address) return Bits_10 with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Registers
