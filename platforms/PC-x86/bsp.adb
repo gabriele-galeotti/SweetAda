@@ -283,14 +283,17 @@ package body BSP is
       PC.PIC_Init (Unsigned_8 (PC.PIC_Irq0), Unsigned_8 (PC.PIC_Irq8));
       Tclk_Init;
       PC.PIC_Irq_Enable (PC.PIT_Interrupt);
+      -- RTC
       PC.PIC_Irq_Enable (PC.RTC_Interrupt);
       Interrupts.Install (PC.RTC_Interrupt, PC.RTC_Handle'Access, Null_Address);
-      PC.PIC_Irq_Enable (PC.PIC_Irq4); -- UART1
+      -- UART1
+      PC.PIC_Irq_Enable (PC.PIC_Irq4);
       Interrupts.Install (PC.PIC_Irq4, UART16x50.Receive'Access, UART_Descriptors (1)'Address);
-      PC.PIC_Irq_Enable (PC.PIC_Irq3); -- UART2
+      -- UART2
+      PC.PIC_Irq_Enable (PC.PIC_Irq3);
       Interrupts.Install (PC.PIC_Irq3, UART16x50.Receive'Access, UART_Descriptors (2)'Address);
-      PC.PIC_Irq_Enable (PC.PIC_Irq5); -- NE2000
-      -- Interrupts.Install (PC.PIC_Irq5, NE2000.Receive'Access, NE2000_Descriptors (1)'Address);
+      -- NE2000
+      PC.PIC_Irq_Enable (PC.PIC_Irq5);
       Interrupts.Install (PC.PIC_Irq5, NE2000.Interrupt_Handler'Access, NE2000_Descriptors (1)'Address);
       Irq_Enable;
       -- GDB stub -------------------------------------------------------------

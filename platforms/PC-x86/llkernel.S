@@ -15,9 +15,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                // __REF__ acroread /a "page=37" "abi386-4.pdf"
-                // EAX, ECX, EDX are scratch registers
-
 #define SAVE_REGISTERS        \
                 pushl   %eax; \
                 pushl   %ecx; \

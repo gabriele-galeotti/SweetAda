@@ -556,13 +556,13 @@ package body VGA is
       end case;
       -- text font installation -----------------------------------------------
       if Mode = MODE03H then
-         -- switch to graphic mode -----------------------------------------------
+         -- switch to graphic mode
          GC_Register_Write (5, 16#00#); -- clear 16/8 bit mode
          GC_Register_Write (6, 16#04#); -- map VGA memory to 0xA0000, 64 kB, enable A/N mode
          SEQUENCER_Register_Write (2, 16#04#); -- set bitplane 2
          SEQUENCER_Register_Write (4, 16#06#); -- character map access, sequential memory
          Load_Font;
-         -- restore values and switch to text mode
+         -- restore values and switch back to text mode
          GC_Register_Write (5, GC_Register_Values_MODE03H (16#05#));
          GC_Register_Write (6, GC_Register_Values_MODE03H (16#06#));
          SEQUENCER_Register_Write (2, SEQUENCER_Register_Values_MODE03H (16#02#));
