@@ -49,7 +49,7 @@ package body Exceptions is
    use BSP;
 
    IDT_Descriptor : aliased IDT_Descriptor_Type := IDT_DESCRIPTOR_INVALID;
-   IDT            : aliased IDT_Type (0 .. EXCEPTION_ITEMS - 1) := (others => EXCEPTION_DESCRIPTOR_INVALID);
+   IDT            : aliased IDT_Type (Exception_DE .. PC.PIC_Irq15) := (others => EXCEPTION_DESCRIPTOR_INVALID);
 
    type Exception_Vector_Type is
    record
