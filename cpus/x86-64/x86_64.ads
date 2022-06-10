@@ -217,43 +217,51 @@ package x86_64 is
    -- Exception descriptor
    ----------------------------------------------------------------------------
 
-   EXCEPTION_DESCRIPTOR_ALIGNMENT : constant := 8;
+   EXCEPTION_DESCRIPTOR_ALIGNMENT : constant := 16;
 
    type Exception_Descriptor_Type is
    record
-      Offset_LO  : Unsigned_16;       -- Offset to procedure entry point 0 .. 15
-      Selector   : Selector_Type;     -- Segment Selector for destination code segment
-      Reserved1  : Bits_5 := 0;
-      Reserved2  : Bits_3 := 0;
-      SegType    : Segment_Gate_Type; -- (D is implicit)
-      Reserved3  : Bits_1 := 0;       -- (Descriptor_Type := DESCRIPTOR_SYSTEM)
-      DPL        : PL_Type;           -- Descriptor Privilege Level
-      P          : Boolean;           -- Segment Present flag
-      Offset_HI  : Unsigned_16;       -- Offset to procedure entry point 16 .. 31
+      Offset_LO : Unsigned_16;       -- Offset to procedure entry point 0 .. 15
+      Selector  : Selector_Type;     -- Segment Selector for destination code segment
+      IST       : Bits_3 := 0;       -- Interrupt Stack Table
+      Reserved1 : Bits_2 := 0;
+      Reserved2 : Bits_3 := 0;
+      SegType   : Segment_Gate_Type; -- (D is implicit)
+      Reserved3 : Bits_1 := 0;       -- (Descriptor_Type := DESCRIPTOR_SYSTEM)
+      DPL       : PL_Type;           -- Descriptor Privilege Level
+      P         : Boolean;           -- Segment Present flag
+      Offset_MI : Unsigned_16;       -- Offset to procedure entry point 16 .. 31
+      Offset_HI : Unsigned_32;       -- Offset to procedure entry point 32 .. 63
+      Reserved4 : Unsigned_32;
    end record with
       Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
       Bit_Order => Low_Order_First,
-      Size      => 64;
+      Size      => 128;
    for Exception_Descriptor_Type use
    record
-      Offset_LO  at 0 range 0 .. 15;
-      Selector   at 2 range 0 .. 15;
-      Reserved1  at 4 range 0 .. 4;
-      Reserved2  at 4 range 5 .. 7;
-      SegType    at 5 range 0 .. 3;
-      Reserved3  at 5 range 4 .. 4;
-      DPL        at 5 range 5 .. 6;
-      P          at 5 range 7 .. 7;
-      Offset_HI  at 6 range 0 .. 15;
+      Offset_LO at 0  range 0 .. 15;
+      Selector  at 2  range 0 .. 15;
+      IST       at 4  range 0 .. 2;
+      Reserved1 at 4  range 3 .. 4;
+      Reserved2 at 4  range 5 .. 7;
+      SegType   at 5  range 0 .. 3;
+      Reserved3 at 5  range 4 .. 4;
+      DPL       at 5  range 5 .. 6;
+      P         at 5  range 7 .. 7;
+      Offset_MI at 6  range 0 .. 15;
+      Offset_HI at 8  range 0 .. 31;
+      Reserved4 at 12 range 0 .. 31;
    end record;
 
    EXCEPTION_DESCRIPTOR_INVALID : constant Exception_Descriptor_Type :=
       (
        Offset_LO => 0,
        Selector  => (PL0, TI_GDT, 0),
+       IST       => 0,
        SegType   => SYSGATE_RES1,
        DPL       => PL0,
        P         => False,
+       Offset_MI => 0,
        Offset_HI => 0,
        others    => <>
       );
@@ -261,6 +269,32 @@ package x86_64 is
    ----------------------------------------------------------------------------
    -- IDT
    ----------------------------------------------------------------------------
+
+   type IDT_Descriptor_Type is
+   record
+      Limit   : Unsigned_16;
+      Base_LO : Unsigned_16;
+      Base_MI : Unsigned_16;
+      Base_HI : Unsigned_32;
+   end record with
+      Alignment => 2,
+      Bit_Order => Low_Order_First,
+      Size      => 80;
+   for IDT_Descriptor_Type use
+   record
+      Limit   at 0 range 0 .. 15;
+      Base_LO at 2 range 0 .. 15;
+      Base_MI at 4 range 0 .. 15;
+      Base_HI at 6 range 0 .. 31;
+   end record;
+
+   IDT_DESCRIPTOR_INVALID : constant IDT_Descriptor_Type :=
+      (
+       Limit   => 0,
+       Base_LO => 0,
+       Base_MI => 0,
+       Base_HI => 0
+      );
 
    EXCEPTION_ITEMS : constant := 256;
 
@@ -302,6 +336,70 @@ package x86_64 is
    Reserved1D   : constant := 16#1D#;
    Reserved1E   : constant := 16#1E#;
    Reserved1F   : constant := 16#1F#;
+
+   String_DIVISION_BY_0        : aliased constant String := "Divide Error";
+   String_DEBUG                : aliased constant String := "Debug";
+   String_NMI_INTERRUPT        : aliased constant String := "NMI Interrupt";
+   String_BREAKPOINT           : aliased constant String := "Breakpoint";
+   String_OVERFLOW             : aliased constant String := "Overflow";
+   String_ARRAY_BOUNDS         : aliased constant String := "BOUND Range Exceeded";
+   String_INVALID_OPCODE       : aliased constant String := "Invalid Opcode";
+   String_DEVICE_NOT_AVAILABLE : aliased constant String := "Device Not Available";
+   String_DOUBLE_FAULT         : aliased constant String := "Double Fault";
+   String_CP_SEGMENT_OVERRUN   : aliased constant String := "Coprocessor Segment Overrun";
+   String_INVALID_TSS          : aliased constant String := "Invalid TSS";
+   String_SEGMENT_NOT_PRESENT  : aliased constant String := "Segment Not Present";
+   String_STACK_FAULT          : aliased constant String := "Stack Fault";
+   String_GENERAL_PROTECTION   : aliased constant String := "General Protection";
+   String_PAGE_FAULT           : aliased constant String := "Page-Fault";
+   String_CP_ERROR             : aliased constant String := "x87 FPU Floating-Point Error";
+   String_ALIGN_CHECK          : aliased constant String := "Alignment Check";
+   String_MACHINE_CHECK        : aliased constant String := "Machine Check";
+   String_SIMD_FP              : aliased constant String := "SIMD Floating-Point";
+   String_VIRTUALIZATION       : aliased constant String := "Virtualization";
+   String_UNKNOWN              : aliased constant String := "UNKNOWN";
+
+   MsgPtr_DIVISION_BY_0        : constant access constant String := String_DIVISION_BY_0'Access;
+   MsgPtr_DEBUG                : constant access constant String := String_DEBUG'Access;
+   MsgPtr_NMI_INTERRUPT        : constant access constant String := String_NMI_INTERRUPT'Access;
+   MsgPtr_BREAKPOINT           : constant access constant String := String_BREAKPOINT'Access;
+   MsgPtr_OVERFLOW             : constant access constant String := String_OVERFLOW'Access;
+   MsgPtr_ARRAY_BOUNDS         : constant access constant String := String_ARRAY_BOUNDS'Access;
+   MsgPtr_INVALID_OPCODE       : constant access constant String := String_INVALID_OPCODE'Access;
+   MsgPtr_DEVICE_NOT_AVAILABLE : constant access constant String := String_DEVICE_NOT_AVAILABLE'Access;
+   MsgPtr_DOUBLE_FAULT         : constant access constant String := String_DOUBLE_FAULT'Access;
+   MsgPtr_CP_SEGMENT_OVERRUN   : constant access constant String := String_CP_SEGMENT_OVERRUN'Access;
+   MsgPtr_INVALID_TSS          : constant access constant String := String_INVALID_TSS'Access;
+   MsgPtr_SEGMENT_NOT_PRESENT  : constant access constant String := String_SEGMENT_NOT_PRESENT'Access;
+   MsgPtr_STACK_FAULT          : constant access constant String := String_STACK_FAULT'Access;
+   MsgPtr_GENERAL_PROTECTION   : constant access constant String := String_GENERAL_PROTECTION'Access;
+   MsgPtr_PAGE_FAULT           : constant access constant String := String_PAGE_FAULT'Access;
+   MsgPtr_CP_ERROR             : constant access constant String := String_CP_ERROR'Access;
+   MsgPtr_ALIGN_CHECK          : constant access constant String := String_ALIGN_CHECK'Access;
+   MsgPtr_MACHINE_CHECK        : constant access constant String := String_MACHINE_CHECK'Access;
+   MsgPtr_SIMD_FP              : constant access constant String := String_SIMD_FP'Access;
+   MsgPtr_VIRTUALIZATION       : constant access constant String := String_VIRTUALIZATION'Access;
+   MsgPtr_UNKNOWN              : constant access constant String := String_UNKNOWN'Access;
+
+   type IDT_Type is array (Exception_Id_Type range <>) of Exception_Descriptor_Type with
+      Pack => True;
+
+   subtype IDT_Length_Type is Positive range 1 .. EXCEPTION_ITEMS;
+
+   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type) with
+      Inline => True;
+   procedure IDT_Set (
+                      IDT_Descriptor : in out IDT_Descriptor_Type;
+                      IDT_Address    : in     Address;
+                      IDT_Length     : in     IDT_Length_Type
+                     ) with
+      Inline => True;
+   procedure IDT_Set_Handler (
+                              IDT_Entry         : in out Exception_Descriptor_Type;
+                              Exception_Handler : in     Address;
+                              Selector          : in     Selector_Type;
+                              SegType           : in     Segment_Gate_Type
+                             );
 
    ----------------------------------------------------------------------------
    -- Registers
@@ -405,8 +503,8 @@ package x86_64 is
       Reserved4 at 0 range 32 .. 63;
    end record;
 
-   function To_CR0 is new Ada.Unchecked_Conversion (Unsigned_64, CR0_Type);
    function To_U64 is new Ada.Unchecked_Conversion (CR0_Type, Unsigned_64);
+   function To_CR0 is new Ada.Unchecked_Conversion (Unsigned_64, CR0_Type);
 
    -- CR3
 
@@ -429,8 +527,8 @@ package x86_64 is
       PDB       at 0 range 12 .. 63;
    end record;
 
-   function To_CR3 is new Ada.Unchecked_Conversion (Unsigned_64, CR3_Type);
    function To_U64 is new Ada.Unchecked_Conversion (CR3_Type, Unsigned_64);
+   function To_CR3 is new Ada.Unchecked_Conversion (Unsigned_64, CR3_Type);
 
    -- CR4
 
@@ -491,12 +589,48 @@ package x86_64 is
       Reserved5  at 0 range 32 .. 63;
    end record;
 
-   function To_CR4 is new Ada.Unchecked_Conversion (Unsigned_64, CR4_Type);
    function To_U64 is new Ada.Unchecked_Conversion (CR4_Type, Unsigned_64);
+   function To_CR4 is new Ada.Unchecked_Conversion (Unsigned_64, CR4_Type);
+
+   ----------------------------------------------------------------------------
+   -- MSRs
+   ----------------------------------------------------------------------------
+
+   type MSR_Type is new Unsigned_32;
+
+   IA32_TIME_STAMP_COUNTER : constant MSR_Type := 16#0000_0010#;
+   IA32_APIC_BASE          : constant MSR_Type := 16#0000_001B#;
+   IA32_EFER               : constant MSR_Type := 16#C000_0080#;
+
+   -- IA32_APIC_BASE
+
+   type IA32_APIC_BASE_Type is
+   record
+      Reserved1          : Bits_8;
+      BSP                : Boolean; -- Indicates if the processor is the bootstrap processor (BSP).
+      Reserved2          : Bits_1;
+      Enable_x2APIC_mode : Boolean;
+      APIC_Global_Enable : Boolean; -- Enables or disables the local APIC
+      APIC_Base          : Bits_24; -- Specifies the base address of the APIC registers.
+      Reserved3          : Bits_28;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for IA32_APIC_BASE_Type use
+   record
+      Reserved1          at 0 range 0 .. 7;
+      BSP                at 0 range 8 .. 8;
+      Reserved2          at 0 range 9 .. 9;
+      Enable_x2APIC_mode at 0 range 10 .. 10;
+      APIC_Global_Enable at 0 range 11 .. 11;
+      APIC_Base          at 0 range 12 .. 35;
+      Reserved3          at 0 range 36 .. 63;
+   end record;
+
+   function To_U64 is new Ada.Unchecked_Conversion (IA32_APIC_BASE_Type, Unsigned_64);
+   function To_IA32_APIC_BASE is new Ada.Unchecked_Conversion (Unsigned_64, IA32_APIC_BASE_Type);
 
    -- IA32_EFER
-
-   IA32_EFER : constant := 16#C000_0080#;
 
    type IA32_EFER_Type is
    record
@@ -523,14 +657,14 @@ package x86_64 is
       Reserved4 at 0 range 32 .. 63;
    end record;
 
-   function To_IA32_EFER is new Ada.Unchecked_Conversion (Unsigned_64, IA32_EFER_Type);
    function To_U64 is new Ada.Unchecked_Conversion (IA32_EFER_Type, Unsigned_64);
+   function To_IA32_EFER is new Ada.Unchecked_Conversion (Unsigned_64, IA32_EFER_Type);
 
-   ----------------------------------------------------------------------------
-   -- MSRs
-   ----------------------------------------------------------------------------
+   -- subprograms
 
-   function MSR_Read (MSRn : Unsigned_32) return Unsigned_64 with
+   function RDMSR (MSR_Register_Number : MSR_Type) return Unsigned_64 with
+      Inline => True;
+   procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64) with
       Inline => True;
 
    ----------------------------------------------------------------------------

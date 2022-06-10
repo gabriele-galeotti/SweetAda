@@ -37,7 +37,6 @@
                 // FAULTS: CS:EIP points to the faulting instruction
                 // TRAPS : CS:EIP points to the following instruction
                 // ABORTS: CS:EIP N/A
-                // __REF__ acroread /a "page=161" "INTEL 80386 PROGRAMMERS REFERENCE MANUAL 1986.pdf"
                 //
                 // NOTE:
                 // the code must be pulled from the stack before perform iret
@@ -51,71 +50,22 @@
 div_by_0_handler:
                 // number: 0
                 // type  : FAULT
-                // CS:EIP: points to the faulting instruction
-                // code  : N
-                // notes : interrupts enabled
                 pushl   $DIVISION_BY_0
-                xchgl   %eax,(%esp)             // save EAX and make new EAX = error code
-                pushl   %ecx
-                pushl   %edx
-                pushl   %ebx
-                pushl   $0                      // fake ESP
-                pushl   %ebp
-                pushl   %esi
-                pushl   %edi
-                push    %ds
-                push    %es
-                push    %fs
-                push    %gs
-                //
-                lea     48(%esp),%ebx           // EBX = pointer to exception frame
-                pushl   %ebx                    // 2nd argument = exception frame pointer
-                pushl   %eax                    // 1st argument = error code
-                //
-                movl    $SELECTOR_KDATA,%eax
-                movl    %eax,%ds
-                movl    %eax,%es
-                //
-                call    exception_process
-                addl    $8,%esp                 // unstack arguments
-                //
-                pop     %gs
-                pop     %fs
-                pop     %es
-                pop     %ds
-                popl    %edi
-                popl    %esi
-                popl    %ebp
-                addl    $4,%esp                 // fake ESP
-                popl    %ebx
-                popl    %edx
-                popl    %ecx
-                popl    %eax
-                iret
+                jmp     exception_handler
 
                 .align  4
                 .global debug_exception_handler
 debug_exception_handler:
                 // number: 1
                 // type  : FAULT/TRAP
-                // CS:EIP: ?
-                // code  : N
-                // notes : interrupts enabled; check DR6 register
-                //pushl   $DEBUG_EXCEPTION
-                //jmp     exception_handler
-                jmp     one_byte_int_handler
+                pushl   $DEBUG_EXCEPTION
+                jmp     exception_handler
 
                 .align  4
                 .global nmi_interrupt_handler
 nmi_interrupt_handler:
                 // number: 2
                 // type  : TRAP
-                // CS:EIP: points to the following instruction
-                // code  : ? (N)
-                // notes : interrupts enabled
-                // "While an NMI handler is executing, the processor ignores"
-                // "further interrupt signals at the NMI pin until the next"
-                // "IRET instruction is executed."
                 pushl   $NMI_INTERRUPT
                 jmp     exception_handler
 
@@ -124,78 +74,14 @@ nmi_interrupt_handler:
 one_byte_int_handler:
                 // number: 3
                 // type  : TRAP
-                // CS:EIP: points to the following instruction
-                // code  : N
-                // notes : interrupts enabled
-                // __REF__ acroread /a "page=230" "i486_Processor_Programmers_Reference_Manual_1990.pdf"
-                // __REF__ kate -l 197 "/usr/local/src/rtems-4.10.2/c/src/lib/libbsp/i386/shared/comm/i386-stub.c"
-                // __FIX__ switch DS/ES/etc to kernel context
-                .extern gdbstub_data_area
-                movl    %eax,gdbstub_data_area+0
-                movl    %ecx,gdbstub_data_area+4
-                movl    %edx,gdbstub_data_area+8
-                movl    %ebx,gdbstub_data_area+12
-                // ESP (gdbstub_data_area+16) saved later
-                movl    %ebp,gdbstub_data_area+20
-                movl    %esi,gdbstub_data_area+24
-                movl    %edi,gdbstub_data_area+28
-                xorw    %ax,%ax                         // clear AX
-                movw    %ds,gdbstub_data_area+48        // DS
-                movw    %ax,gdbstub_data_area+50        // extend (clear) to 32-bit
-                movw    %es,gdbstub_data_area+52        // ES
-                movw    %ax,gdbstub_data_area+54        // extend (clear) to 32-bit
-                movw    %fs,gdbstub_data_area+56        // FS
-                movw    %ax,gdbstub_data_area+58        // extend (clear) to 32-bit
-                movw    %gs,gdbstub_data_area+60        // GS
-                movw    %ax,gdbstub_data_area+62        // extend (clear) to 32-bit
-                // unstack the exception frame; use EBX the preserve EAX (it contains filling zeros)
-                popl    %ebx                            // pull EIP
-                movl    %ebx,gdbstub_data_area+32
-                popl    %ebx                            // pull CS
-                movl    %ebx,gdbstub_data_area+40
-                movw    %ax,gdbstub_data_area+42        // extend (clear) to 32-bit
-                popl    %ebx                            // pull EFLAGS
-                movl    %ebx,gdbstub_data_area+36
-                // now the stack pointer is in the state before exception occurred
-                movw    %ss,gdbstub_data_area+44        // SS
-                movw    %ax,gdbstub_data_area+46        // extend (clear) to 32-bit
-                movl    %esp,gdbstub_data_area+16       // ESP
-                //
                 pushl   $ONE_BYTE_INTERRUPT
-                call    exception_process
-                addl    $4,%esp                         // unstack exception code
-                //
-                movw    gdbstub_data_area+44,%ss        // select lower 16-bit
-                movl    gdbstub_data_area+16,%esp
-                movl    gdbstub_data_area+4,%ecx
-                movl    gdbstub_data_area+8,%edx
-                movl    gdbstub_data_area+12,%ebx
-                movl    gdbstub_data_area+20,%ebp
-                movl    gdbstub_data_area+24,%esi
-                movl    gdbstub_data_area+28,%edi
-                movw    gdbstub_data_area+48,%ds        // select lower 16-bit
-                movw    gdbstub_data_area+52,%es        // select lower 16-bit
-                movw    gdbstub_data_area+56,%fs        // select lower 16-bit
-                movw    gdbstub_data_area+60,%gs        // select lower 16-bit
-                // use iret to restore pc and flags together so that trace flag works right
-                movl    gdbstub_data_area+36,%eax
-                pushl   %eax                            // EFLAGS
-                movl    gdbstub_data_area+40,%eax
-                pushl   %eax                            // CS
-                movl    gdbstub_data_area+32,%eax
-                pushl   %eax                            // EIP
-                // restore EAX
-                movl    gdbstub_data_area+0,%eax
-                iret
+                jmp     exception_handler
 
                 .align  4
                 .global int_on_overflow_handler
 int_on_overflow_handler:
                 // number: 4
                 // type  : TRAP
-                // CS:EIP: ?
-                // code  : N
-                // notes : interrupts enabled
                 pushl   $INT_ON_OVERFLOW
                 jmp     exception_handler
 
@@ -204,9 +90,6 @@ int_on_overflow_handler:
 array_bounds_handler:
                 // number: 5
                 // type  : FAULT
-                // CS:EIP: ?
-                // code  : N
-                // notes : interrupts enabled
                 pushl   $ARRAY_BOUNDS
                 jmp     exception_handler
 
@@ -215,9 +98,6 @@ array_bounds_handler:
 invalid_opcode_handler:
                 // number: 6
                 // type  : FAULT
-                // CS:EIP: ?
-                // code  : N
-                // notes : interrupts enabled
                 pushl   $INVALID_OPCODE
                 jmp     exception_handler
 
@@ -226,9 +106,6 @@ invalid_opcode_handler:
 device_not_avl_handler:
                 // number: 7
                 // type  : FAULT
-                // CS:EIP: ?
-                // code  : N
-                // notes : interrupts enabled
                 pushl   $DEVICE_NOT_AVAILABLE
                 jmp     exception_handler
 
@@ -237,9 +114,6 @@ device_not_avl_handler:
 double_fault_handler:
                 // number: 8
                 // type  : ABORT
-                // CS:EIP: ?
-                // code  : Y
-                // notes : interrupts enabled
                 pushl   $DOUBLE_FAULT
                 jmp     exception_handler
 
@@ -248,10 +122,6 @@ double_fault_handler:
 cp_seg_ovr_handler:
                 // number: 9
                 // type  : ABORT
-                // CS:EIP: ?
-                // code  : N
-                // notes : interrupts enabled
-                // __REF__ acroread /a "page=233" "i486_Processor_Programmers_Reference_Manual_1990.pdf"
                 pushl   $CP_SEGMENT_OVERRUN
                 jmp     exception_handler
 
@@ -260,9 +130,6 @@ cp_seg_ovr_handler:
 invalid_tss_handler:
                 // number: 10
                 // type  : FAULT
-                // CS:EIP: ?
-                // code  : Y
-                // notes : interrupts enabled
                 pushl   $INVALID_TSS
                 jmp     exception_handler
 
@@ -271,9 +138,6 @@ invalid_tss_handler:
 seg_not_prsnt_handler:
                 // number: 11
                 // type  : FAULT
-                // CS:EIP: ?
-                // code  : Y
-                // notes : interrupts enabled
                 pushl   $SEGMENT_NOT_PRESENT
                 jmp     exception_handler
 
@@ -282,9 +146,6 @@ seg_not_prsnt_handler:
 stack_fault_handler:
                 // number: 12
                 // type  : FAULT
-                // CS:EIP: ?
-                // code  : Y
-                // notes : interrupts enabled
                 pushl   $STACK_FAULT
                 jmp     exception_handler
 
@@ -293,9 +154,6 @@ stack_fault_handler:
 gen_prot_fault_handler:
                 // number: 13
                 // type  : FAULT/TRAP
-                // CS:EIP: ?
-                // code  : Y
-                // notes : interrupts enabled
                 pushl   $GENERAL_PROTECTION
                 jmp     exception_handler
 
@@ -304,9 +162,6 @@ gen_prot_fault_handler:
 page_fault_handler:
                 // number: 14
                 // type  : FAULT
-                // CS:EIP: ?
-                // code  : Y
-                // notes : interrupts enabled; code format is different
                 pushl   $PAGE_FAULT
                 jmp     exception_handler
 
@@ -315,9 +170,6 @@ page_fault_handler:
 coproc_error_handler:
                 // number: 16
                 // typr  : FAULT
-                // CS:EIP: ?
-                // code  : N
-                // notes : interrupts enabled
                 pushl   $COPROCESSOR_ERROR
                 jmp     exception_handler
 

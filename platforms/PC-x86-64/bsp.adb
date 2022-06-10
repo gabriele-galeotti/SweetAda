@@ -22,11 +22,13 @@ with Configure;
 with Core;
 with Bits;
 with x86_64;
-with CPU;
 with CPU.IO;
 with PCI;
+with PIIX;
 with PC;
 with VGA;
+with Exceptions;
+with APIC;
 with Console;
 
 package body BSP is
@@ -45,7 +47,6 @@ package body BSP is
    use Core;
    use Bits;
    use x86_64;
-   use CPU;
    use CPU.IO;
 
    --========================================================================--
@@ -55,6 +56,16 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Tclk_Init
+   ----------------------------------------------------------------------------
+   procedure Tclk_Init is
+      Count : Unsigned_16;
+   begin
+      Count := Unsigned_16 ((PC.PIT_CLK + Configure.TICK_FREQUENCY / 2) / Configure.TICK_FREQUENCY);
+      PC.PIT_Counter0_Init (Count);
+   end Tclk_Init;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -77,6 +88,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
    begin
+      -------------------------------------------------------------------------
+      Exceptions.Init;
       -- UARTs ----------------------------------------------------------------
       UART_Descriptors (1).Base_Address  := To_Address (PC.UART1_BASEADDRESS);
       UART_Descriptors (1).Scale_Address := 0;
@@ -98,7 +111,18 @@ package body BSP is
       Console.TTY_Setup;
       -- CPU ------------------------------------------------------------------
       Console.Print ("PC-x86-64", NL => True);
-      Console.Print (To_IA32_EFER (MSR_Read (IA32_EFER)).LMA, Prefix => "64-bit: ", NL => True);
+      Console.Print (
+                     To_IA32_EFER (RDMSR (IA32_EFER)).LMA,
+                     Prefix => "64-bit mode:        ", NL => True
+                    );
+      Console.Print (
+                     To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Global_Enable,
+                     Prefix => "APIC_Global_Enable: ", NL => True
+                    );
+      Console.Print (
+                     Shift_Left (Unsigned_32 (To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Base), 12),
+                     Prefix => "APIC_Base:          ", NL => True
+                    );
       -- PCI ------------------------------------------------------------------
       PCI.Cfg_Access_Descriptor.Read_32 := CPU.IO.PortIn'Access;
       PCI.Cfg_Access_Descriptor.Write_32 := CPU.IO.PortOut'Access;
@@ -121,6 +145,11 @@ package body BSP is
             end loop;
          end;
       end if;
+      -- PIIX3 ----------------------------------------------------------------
+      if PIIX.Probe then
+         Console.Print ("PIIX3 detected", NL => True);
+         PIIX.Init;
+      end if;
       -- detect if running under QEMU -----------------------------------------
       declare
          Success       : Boolean;
@@ -140,6 +169,12 @@ package body BSP is
          VGA.Print (0, 1, "Press CTRL-ALT-G to un-grab the mouse cursor.");
          VGA.Print (0, 2, "Close this window to shutdown the emulator.");
       end if;
+      -------------------------------------------------------------------------
+      APIC.LAPIC_Init;
+      PC.PIC_Init (Unsigned_8 (PC.PIC_Irq0), Unsigned_8 (PC.PIC_Irq8));
+      Tclk_Init;
+      PC.PIC_Irq_Enable (PC.PIT_Interrupt);
+      Irq_Enable;
       -------------------------------------------------------------------------
    end BSP_Setup;
 

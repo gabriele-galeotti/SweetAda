@@ -25,7 +25,6 @@ with CPU.IO;
 with BSP;
 with GDT_Simple;
 with PC;
-with Gdbstub;
 with Ethernet;
 with PBUF;
 with NE2000;
@@ -42,7 +41,6 @@ package body Exceptions is
    --========================================================================--
 
    use Interfaces;
-   use Abort_Library;
    use Core;
    use CPU.IO;
    use GDT_Simple;
@@ -119,48 +117,45 @@ package body Exceptions is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Process
+   -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Process (
-                      Exception_Identifier          : in Exception_Id_Type;
-                      Exception_Stack_Frame_Address : in Address
-                     ) is
+   procedure Exception_Process (
+                                Exception_Identifier          : in Exception_Id_Type;
+                                Exception_Stack_Frame_Address : in Address
+                               ) is
       Exception_Frame : aliased Exception_Stack_Frame_Type with
          Address    => Exception_Stack_Frame_Address,
          Import     => True,
          Convention => Ada;
       MsgPtr          : access constant String;
    begin
-      if Exception_Identifier = Exception_BP then
-         -- Console.Print ("BREAKPOINT", NL => True);
-         Gdbstub.Enter_Stub (Gdbstub.TARGET_BREAKPOINT, KERNEL_THREAD_ID);
-      else
-         Console.Print_NewLine;
-         Console.Print ("*** EXCEPTION: ");
-         case Exception_Identifier is
-            when Exception_DE => MsgPtr := MsgPtr_DIVISION_BY_0;
-            when Exception_NN => MsgPtr := MsgPtr_NMI_INTERRUPT;
-            when Exception_OF => MsgPtr := MsgPtr_OVERFLOW;
-            when Exception_BR => MsgPtr := MsgPtr_ARRAY_BOUNDS;
-            when Exception_UD => MsgPtr := MsgPtr_INVALID_OPCODE;
-            when Exception_NM => MsgPtr := MsgPtr_DEVICE_NOT_AVAILABLE;
-            when Exception_DF => MsgPtr := MsgPtr_DOUBLE_FAULT;
-            when Exception_CS => MsgPtr := MsgPtr_CP_SEGMENT_OVERRUN;
-            when Exception_TS => MsgPtr := MsgPtr_INVALID_TSS;
-            when Exception_NP => MsgPtr := MsgPtr_SEGMENT_NOT_PRESENT;
-            when Exception_SS => MsgPtr := MsgPtr_STACK_FAULT;
-            when Exception_GP => MsgPtr := MsgPtr_GENERAL_PROTECTION;
-            when Exception_PF => MsgPtr := MsgPtr_PAGE_FAULT;
-            when Exception_MF => MsgPtr := MsgPtr_CP_ERROR;
-            when others       => MsgPtr := MsgPtr_UNKNOWN;
-         end case;
-         Console.Print (MsgPtr.all);
-         Console.Print_NewLine;
-         Console.Print (To_U16 (Exception_Frame.CS), Prefix => "CS:  ", NL => True);
-         Console.Print (Exception_Frame.EIP,         Prefix => "EIP: ", NL => True);
-         System_Abort;
-      end if;
-   end Process;
+      Console.Print_NewLine;
+      Console.Print ("*** EXCEPTION: ");
+      case Exception_Identifier is
+         when Exception_DE => MsgPtr := MsgPtr_DIVISION_BY_0;
+         when Exception_DB => MsgPtr := MsgPtr_DEBUG;
+         when Exception_NN => MsgPtr := MsgPtr_NMI_INTERRUPT;
+         when Exception_BP => MsgPtr := MsgPtr_BREAKPOINT;
+         when Exception_OF => MsgPtr := MsgPtr_OVERFLOW;
+         when Exception_BR => MsgPtr := MsgPtr_ARRAY_BOUNDS;
+         when Exception_UD => MsgPtr := MsgPtr_INVALID_OPCODE;
+         when Exception_NM => MsgPtr := MsgPtr_DEVICE_NOT_AVAILABLE;
+         when Exception_DF => MsgPtr := MsgPtr_DOUBLE_FAULT;
+         when Exception_CS => MsgPtr := MsgPtr_CP_SEGMENT_OVERRUN;
+         when Exception_TS => MsgPtr := MsgPtr_INVALID_TSS;
+         when Exception_NP => MsgPtr := MsgPtr_SEGMENT_NOT_PRESENT;
+         when Exception_SS => MsgPtr := MsgPtr_STACK_FAULT;
+         when Exception_GP => MsgPtr := MsgPtr_GENERAL_PROTECTION;
+         when Exception_PF => MsgPtr := MsgPtr_PAGE_FAULT;
+         when Exception_MF => MsgPtr := MsgPtr_CP_ERROR;
+         when others       => MsgPtr := MsgPtr_UNKNOWN;
+      end case;
+      Console.Print (MsgPtr.all);
+      Console.Print_NewLine;
+      Console.Print (To_U16 (Exception_Frame.CS), Prefix => "CS:  ", NL => True);
+      Console.Print (Exception_Frame.EIP,         Prefix => "EIP: ", NL => True);
+      Abort_Library.System_Abort;
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Irq_Process

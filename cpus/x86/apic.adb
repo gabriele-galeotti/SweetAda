@@ -45,11 +45,26 @@ package body APIC is
    procedure LAPIC_Init is
    begin
       -- enable APIC in MSR
-      WRMSR (MSR_APICBASE, RDMSR (MSR_APICBASE) or 16#0000_0000_0000_0800#);
+      declare
+         Value : IA32_APIC_BASE_Type;
+      begin
+         Value := To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE));
+         Value.APIC_Global_Enable := True;
+         WRMSR (IA32_APIC_BASE, To_U64 (Value));
+      end;
       -- set Spurious Interrupt Vector Register bit 8 to start receiving interrupts
-      LAPIC.SVR   := LAPIC.SVR or 16#100# or 16#20#;
+      LAPIC.SVR   := LAPIC.SVR or 16#1FF#;
       LAPIC.TPR   := 0;
-      LAPIC.LINT0 := 16#0000_0700# or 16#0000_0020#; -- DM_EXTINT, vector offset 32
+      LAPIC.LINT0 := (
+                      V      => 16#20#, -- vector offset 32
+                      DM     => 2#111#, -- ExtINT
+                      DS     => 0,
+                      IIPP   => 0,
+                      RIRR   => 0,
+                      TM     => 0,
+                      Mask   => False,
+                      others => <>
+                     );
    end LAPIC_Init;
 
    ----------------------------------------------------------------------------

@@ -2,6 +2,19 @@
 #
 # PC-x86-64 configuration file (ROM version)
 #
+# QEMU "pc" machine
+# PCI Device #0000 8086:1237 82441FX i440FX (Natoma)
+# PCI Device #0001 8086:7000 82371SB (PIIX3)
+# PCI Device #0002 1234:1111 QEMU VGA
+# PCI Device #0003 8086:100E 82540EM Gigabit Ethernet Controller
+#
+# QEMU "q35" machine
+# PCI Device #0000 8086:29C0 82G33/G31/P35/P31 Express DRAM Controller
+# PCI Device #0001 1234:1111 QEMU VGA
+# PCI Device #0002 8086:10D3 82574L Gigabit Network Connection
+# PCI Device #001D 8086:2934 82801I (ICH9 Family) USB UHCI Controller #1
+# PCI Device #001F 8086:2918 82801IB (ICH9) LPC Interface Controller
+#
 
 CPU       := x86-64
 CPU_MODEL := ???

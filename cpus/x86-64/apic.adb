@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu_i586.adb                                                                                              --
+-- __FLN__ apic.adb                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,10 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Machine_Code;
-with Definitions;
+with x86_64;
+with MMIO;
 
-package body CPU_i586 is
+package body APIC is
 
    --========================================================================--
    --                                                                        --
@@ -28,9 +28,7 @@ package body CPU_i586 is
    --                                                                        --
    --========================================================================--
 
-   use System.Machine_Code;
-
-   CRLF : String renames Definitions.CRLF;
+   use x86_64;
 
    --========================================================================--
    --                                                                        --
@@ -41,56 +39,48 @@ package body CPU_i586 is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- RDMSR/WRMSR
+   -- Local APIC
    ----------------------------------------------------------------------------
 
-   function RDMSR (MSR_Register_Number : MSR_Type) return Unsigned_64 is
-      Result : Unsigned_64;
+   procedure LAPIC_Init is
    begin
-      Asm (
-           Template => ""              & CRLF &
-                       "        rdmsr" & CRLF &
-                       "",
-           Outputs  => Unsigned_64'Asm_Output ("=A", Result),
-           Inputs   => MSR_Type'Asm_Input ("c", MSR_Register_Number),
-           Clobber  => "",
-           Volatile => True
-          );
-      return Result;
-   end RDMSR;
-
-   procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64) is
-   begin
-      Asm (
-           Template => ""              & CRLF &
-                       "        wrmsr" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => (
-                        Unsigned_64'Asm_Input ("A", Value),
-                        MSR_Type'Asm_Input ("c", MSR_Register_Number)
-                       ),
-           Clobber  => "",
-           Volatile => True
-          );
-   end WRMSR;
+      -- enable APIC in MSR
+      declare
+         Value : IA32_APIC_BASE_Type;
+      begin
+         Value := To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE));
+         Value.APIC_Global_Enable := True;
+         WRMSR (IA32_APIC_BASE, To_U64 (Value));
+      end;
+      -- set Spurious Interrupt Vector Register bit 8 to start receiving interrupts
+      LAPIC.SVR   := LAPIC.SVR or 16#1FF#;
+      LAPIC.TPR   := 0;
+      LAPIC.LINT0 := (
+                      V      => 16#20#,
+                      DM     => 2#111#, -- ExtINT
+                      DS     => 0,
+                      IIPP   => 0,
+                      RIRR   => 0,
+                      TM     => 0,
+                      Mask   => False,
+                      others => <>
+                     );
+   end LAPIC_Init;
 
    ----------------------------------------------------------------------------
-   -- RDTSC
+   -- 82093AA I/O ADVANCED PROGRAMMABLE INTERRUPT CONTROLLER (IOAPIC)
    ----------------------------------------------------------------------------
-   function RDTSC return Unsigned_64 is
-      Result : Unsigned_64;
-   begin
-      Asm (
-           Template => ""              & CRLF &
-                       "        rdtsc" & CRLF &
-                       "",
-           Outputs  => Unsigned_64'Asm_Output ("=A", Result),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Result;
-   end RDTSC;
 
-end CPU_i586;
+   function IOAPIC_Read (Register_Number : Natural) return Unsigned_32 is
+   begin
+      MMIO.Write (To_Address (IOAPIC_BASEADDRESS) + IOREGSEL, Unsigned_32 (Register_Number));
+      return MMIO.Read (To_Address (IOAPIC_BASEADDRESS) + IOWIN);
+   end IOAPIC_Read;
+
+   procedure IOAPIC_Write (Register_Number : in Natural; Value : in Unsigned_32) is
+   begin
+      MMIO.Write (To_Address (IOAPIC_BASEADDRESS) + IOREGSEL, Unsigned_32 (Register_Number));
+      MMIO.Write (To_Address (IOAPIC_BASEADDRESS) + IOWIN, Value);
+   end IOAPIC_Write;
+
+end APIC;

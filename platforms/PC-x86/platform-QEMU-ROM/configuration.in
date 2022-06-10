@@ -2,10 +2,10 @@
 #
 # PC-x86 configuration file (ROM version)
 #
-# Device #0000 8086:1237 82441FX i440FX (Natoma)
-# Device #0001 8086:7000 82371SB (PIIX3)
-# Device #0002 1234:1111 QEMU VGA
-# Device #0003 8086:100E 82540EM Gigabit Ethernet Controller
+# PCI Device #0000 8086:1237 82441FX i440FX (Natoma)
+# PCI Device #0001 8086:7000 82371SB (PIIX3)
+# PCI Device #0002 1234:1111 QEMU VGA
+# PCI Device #0003 8086:100E 82540EM Gigabit Ethernet Controller
 #
 
 CPU       := x86

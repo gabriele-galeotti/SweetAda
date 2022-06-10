@@ -46,12 +46,10 @@ package body Application is
             Value := 0;
             loop
                -- roll characters on VGA since modern machines do not have I/O
-               VGA.Print (0, 5, To_Ch (32 + (Value and 16#1F#)));
+               -- VGA.Print (0, 5, To_Ch (32 + (Value and 16#1F#)));
                -- IOEMU GPIO test
                PortOut (IOEMU.IO0_ADDRESS, Value);
                Value := @ + 1;
-               PC.PPI_ControlOut (PC.To_PPI_Control (16#FF#));
-               PC.PPI_ControlOut (PC.To_PPI_Control (16#00#));
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;

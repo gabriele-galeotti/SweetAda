@@ -162,10 +162,10 @@ package Exceptions is
       Convention    => Asm,
       External_Name => "irq15_handler";
 
-   procedure Process (
-                      Exception_Identifier          : in Exception_Id_Type;
-                      Exception_Stack_Frame_Address : in Address
-                     ) with
+   procedure Exception_Process (
+                                Exception_Identifier          : in Exception_Id_Type;
+                                Exception_Stack_Frame_Address : in Address
+                               ) with
       Export        => True,
       Convention    => Asm,
       External_Name => "exception_process";

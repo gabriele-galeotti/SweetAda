@@ -64,6 +64,26 @@
 #define BASEH(x)      ((x) >> 24 & 0xFF)
 
 /*
+ * Segmented and paged memory management.
+ */
+
+#define CR0_PE (1 << 0)
+#define CR0_NE (1 << 5)
+#define CR0_NW (1 << 29)
+#define CR0_CD (1 << 30)
+#define CR0_PG (1 << 31)
+
+#define PAGE_ENTRIES 1024
+#define PAGE_SIZE    4096
+
+#define PG_VALID (1 << 0)
+#define PG_WRITE (1 << 1)
+#define PG_USER  (1 << 2)
+
+#define PAGE2ADDRESS(x) ((x) << 12)
+#define ADDRESS2PAGE(x) ((unsigned long)(x) >> 12)
+
+/*
  * EFLAGS.
  */
 
@@ -79,26 +99,6 @@
 #define EFLAGS_NT (1 << 14)
 #define EFLAGS_RF (1 << 16)
 #define EFLAGS_VM (1 << 17)
-
-/*
- * Segmented and paged memory management.
- */
-
-#define CR0_PE       (1 << 0)
-#define CR0_NE       (1 << 5)
-#define CR0_NW       (1 << 29)
-#define CR0_CD       (1 << 30)
-#define CR0_PG       (1 << 31)
-
-#define PAGE_ENTRIES 1024
-#define PAGE_SIZE    4096
-
-#define PG_VALID     (1 << 0)
-#define PG_WRITE     (1 << 1)
-#define PG_USER      (1 << 2)
-
-#define PAGE2ADDRESS(x) ((x) << 12)
-#define ADDRESS2PAGE(x) ((unsigned long)(x) >> 12)
 
 /*
  * Exceptions.

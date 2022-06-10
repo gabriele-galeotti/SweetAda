@@ -32,6 +32,7 @@ package BSP is
 
    QEMU : Boolean := False;
 
+   procedure Tclk_Init;
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);
    procedure BSP_Setup;

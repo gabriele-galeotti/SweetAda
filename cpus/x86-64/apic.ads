@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu_i586.ads                                                                                              --
+-- __FLN__ apic.ads                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,13 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Ada.Unchecked_Conversion;
+with System.Storage_Elements;
 with Interfaces;
 with Bits;
-with CPU_x86;
-with CPU_i486;
 
-package CPU_i586 is
+package APIC is
 
    --========================================================================--
    --                                                                        --
@@ -32,85 +30,83 @@ package CPU_i586 is
    --                                                                        --
    --========================================================================--
 
-   pragma Preelaborate;
-
    use System;
+   use System.Storage_Elements;
    use Interfaces;
    use Bits;
-   use CPU_x86;
 
    ----------------------------------------------------------------------------
-   -- import i486 items
+   -- x86 "local" APIC
    ----------------------------------------------------------------------------
 
-   subtype CR4_Type is CPU_i486.CR4_Type;
+   LAPIC_BASEADDRESS : constant := 16#0000_0000_FEE0_0000#;
 
-   function CR4_Read return CR4_Type         renames CPU_i486.CR4_Read;
-   procedure CR4_Write (Value : in CR4_Type) renames CPU_i486.CR4_Write;
-
-   function CPUID_Enabled return Boolean renames CPU_i486.CPUID_Enabled;
-
-   subtype CPUID_VendorID_String_Type is CPU_i486.CPUID_VendorID_String_Type;
-
-   function CPU_VendorID_Read return CPUID_VendorID_String_Type renames CPU_i486.CPU_VendorID_Read;
-
-   subtype CPU_Features_Type is CPU_i486.CPU_Features_Type;
-
-   function CPU_Features_Read return CPU_Features_Type renames CPU_i486.CPU_Features_Read;
-
-   ----------------------------------------------------------------------------
-   -- Page directory (4M)
-   ----------------------------------------------------------------------------
-
-   type PD4M_Type is array (0 .. 2**10 - 1) of PDEntry_Type (PAGESELECT4M) with
-      Pack                    => True,
-      Alignment               => PAGESIZE4k,
-      Suppress_Initialization => True;
-
-   ----------------------------------------------------------------------------
-   -- MSRs
-   ----------------------------------------------------------------------------
-
-   type MSR_Type is new Unsigned_32;
-
-   IA32_TIME_STAMP_COUNTER : constant MSR_Type := 16#0000_0010#;
-   IA32_APIC_BASE          : constant MSR_Type := 16#0000_001B#;
-
-   -- IA32_APIC_BASE
-
-   type IA32_APIC_BASE_Type is
+   type LINT0_Type is
    record
-      Reserved1          : Bits_8;
-      BSP                : Boolean; -- Indicates if the processor is the bootstrap processor (BSP).
-      Reserved2          : Bits_1;
-      Enable_x2APIC_mode : Boolean;
-      APIC_Global_Enable : Boolean; -- Enables or disables the local APIC
-      APIC_Base          : Bits_24; -- Specifies the base address of the APIC registers.
-      Reserved3          : Bits_28;
+      V         : Bits_8;       -- Vector
+      DM        : Bits_3;       -- Delivery Mode
+      Reserved1 : Bits_1 := 0;
+      DS        : Bits_1;       -- Delivery Status
+      IIPP      : Bits_1;       -- Interrupt Input Pin Polarity
+      RIRR      : Bits_1;       -- Remote IRR Flag
+      TM        : Bits_1;       -- Trigger Mode
+      Mask      : Boolean;      -- Mask
+      Reserved2 : Bits_15 := 0;
    end record with
       Bit_Order => Low_Order_First,
-      Size      => 64;
-   for IA32_APIC_BASE_Type use
+      Size      => 32;
+   for LINT0_Type use
    record
-      Reserved1          at 0 range 0 .. 7;
-      BSP                at 0 range 8 .. 8;
-      Reserved2          at 0 range 9 .. 9;
-      Enable_x2APIC_mode at 0 range 10 .. 10;
-      APIC_Global_Enable at 0 range 11 .. 11;
-      APIC_Base          at 0 range 12 .. 35;
-      Reserved3          at 0 range 36 .. 63;
+      V         at 0 range 0 .. 7;
+      DM        at 0 range 8 .. 10;
+      Reserved1 at 0 range 11 .. 11;
+      DS        at 0 range 12 .. 12;
+      IIPP      at 0 range 13 .. 13;
+      RIRR      at 0 range 14 .. 14;
+      TM        at 0 range 15 .. 15;
+      Mask      at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 31;
    end record;
 
-   function To_U64 is new Ada.Unchecked_Conversion (IA32_APIC_BASE_Type, Unsigned_64);
-   function To_IA32_APIC_BASE is new Ada.Unchecked_Conversion (Unsigned_64, IA32_APIC_BASE_Type);
+   type LAPIC_Type is
+   record
+      TPR   : Unsigned_32 with Volatile_Full_Access => True; -- Task Priority Register
+      SVR   : Unsigned_32 with Volatile_Full_Access => True; -- Spurious Interrupt Vector Register
+      LINT0 : LINT0_Type  with Volatile_Full_Access => True;
+      LINT1 : Unsigned_32 with Volatile_Full_Access => True;
+   end record;
+   for LAPIC_Type use
+   record
+      TPR   at 16#080# range 0 .. 31;
+      SVR   at 16#0F0# range 0 .. 31;
+      LINT0 at 16#350# range 0 .. 31;
+      LINT1 at 16#360# range 0 .. 31;
+   end record;
 
-   -- subprograms
+   LAPIC : aliased LAPIC_Type with
+      Address    => To_Address (LAPIC_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
 
-   function RDMSR (MSR_Register_Number : MSR_Type) return Unsigned_64 with
-      Inline => True;
-   procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64) with
-      Inline => True;
-   function RDTSC return Unsigned_64 with
-      Inline => True;
+   procedure LAPIC_Init;
 
-end CPU_i586;
+   ----------------------------------------------------------------------------
+   -- 82093AA I/O ADVANCED PROGRAMMABLE INTERRUPT CONTROLLER (IOAPIC)
+   ----------------------------------------------------------------------------
+   -- IOAPIC_QEMU_ID: 0
+   ----------------------------------------------------------------------------
+
+   IOAPIC_BASEADDRESS : constant := 16#0000_0000_FEC0_0000#;
+
+   IOREGSEL  : constant := 0;
+   IOWIN     : constant := 16#10#;
+   IOAPICID  : constant := 0;
+   IOAPICVER : constant := 1;
+   IOAPICARB : constant := 2;
+   IOREDTBL  : constant := 1;
+
+   function IOAPIC_Read (Register_Number : Natural) return Unsigned_32;
+   procedure IOAPIC_Write (Register_Number : in Natural; Value : in Unsigned_32);
+
+end APIC;

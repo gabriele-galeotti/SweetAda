@@ -586,8 +586,6 @@ package CPU_x86 is
    -- Registers
    ----------------------------------------------------------------------------
 
-   -- EFLAGS
-
    EAX    : constant := 16#00#; -- 0
    EBX    : constant := 16#01#; -- 1
    ECX    : constant := 16#02#; -- 2
@@ -626,6 +624,8 @@ package CPU_x86 is
    -- ST0 .. ST7 registers
    ST_REGISTER_SIZE : constant := 10;
    subtype ST_Register_Type is Byte_Array (0 .. ST_REGISTER_SIZE - 1);
+
+   -- EFLAGS
 
    type EFLAGS_Type is
    record

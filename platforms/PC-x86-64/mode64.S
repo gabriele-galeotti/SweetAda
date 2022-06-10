@@ -8,6 +8,8 @@
 // Please consult the LICENSE.txt file located in the top-level directory.
 //
 
+#include <x86-64.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 
                 .code32
@@ -30,13 +32,14 @@
 
                 //
                 // PML4T
-                // Clear table and make first entry points to a PDPT page.
                 //
+                // clear table
                 movl    $pml4t,%edx
                 movl    %edx,%edi               // EDI --> PML4T
-                movl    $0x0400,%ecx            // clear 0x1000 bytes = 0x400 32-bit words
+                movl    $(512*8>>2),%ecx        // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
                 xorl    %eax,%eax
             rep stosl
+                // make first entry points to a PDPT page
                 movl    %edx,%edi               // EDI --> PML4T
                 movl    $pdpt,%eax
                 andl    $0xFFFFF000,%eax
@@ -45,13 +48,14 @@
 
                 //
                 // PDPT
-                // Clear table and make first entry points to a PDT page.
                 //
+                // clear table
                 movl    $pdpt,%edx
                 movl    %edx,%edi               // EDI --> PDPT
-                movl    $0x0400,%ecx            // clear 0x1000 bytes = 0x400 32-bit words
+                movl    $(512*8>>2),%ecx        // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
                 xorl    %eax,%eax
             rep stosl
+                // make first entry points to a PDT page
                 movl    %edx,%edi               // EDI --> PDPT
                 movl    $pdt,%eax
                 andl    $0xFFFFF000,%eax
@@ -60,13 +64,14 @@
 
                 //
                 // PDT
-                // Clear table and make first entry points to a PT page.
                 //
+                // clear table
                 movl    $pdt,%edx
                 movl    %edx,%edi               // EDI --> PDT
-                movl    $0x0400,%ecx            // clear 0x1000 bytes = 0x400 32-bit words
+                movl    $(512*8>>2),%ecx        // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
                 xorl    %eax,%eax
             rep stosl
+                // make first entry points to a PT page
                 movl    %edx,%edi               // EDI --> PDT
                 movl    $pt,%eax
                 andl    $0xFFFFF000,%eax
@@ -75,18 +80,67 @@
 
                 //
                 // PT
-                // Clear table and map all 512 entries 1-1.
+                //
                 // 1 page entry = 4 k (0x1000) --> 512 entries = 2 MB
                 // PT size = 512 8-byte entries = 0x1000 bytes
                 //
+                // clear table
                 movl    $pt,%edx
                 movl    %edx,%edi               // EDI --> PT
-                movl    $0x0400,%ecx            // clear 0x1000 bytes = 0x400 32-bit words
+                movl    $(512*8>>2),%ecx        // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
                 xorl    %eax,%eax
             rep stosl
+                // map all 512 entries 1-1
                 movl    %edx,%edi               // EDI --> PT
                 movl    $512,%ecx               // 512 entries
-                movl    $0x3,%eax               // PAGE_PRESENT|PAGE_WRITE
+                movl    $00000000,%eax
+                orl     $0x3,%eax               // PAGE_PRESENT|PAGE_WRITE
+1:              movl    %eax,(%edi)
+                addl    $0x00001000,%eax        // next page address
+                addl    $8,%edi                 // next entry
+                loop    1b
+
+                //
+                // APIC mapping @ 0xFEE00000
+                //
+                // PDPT 31 .. 30 --> 0x3
+                // PDT  29 .. 21 --> 0x1F7
+                // PT   don''t care
+                //
+                // PDPT: add pdt_apic mapping
+                movl    $pdpt,%edx
+                movl    %edx,%edi               // EDI --> PDPT
+                addl    $(3*8),%edi
+                movl    $pdt_apic,%eax
+                andl    $0xFFFFF000,%eax
+                orl     $0x3,%eax               // PAGE_PRESENT|PAGE_WRITE
+                movl    %eax,(%edi)
+                // PDT
+                // clear table
+                movl    $pdt_apic,%edx
+                movl    %edx,%edi               // EDI --> PDT
+                movl    $(512*8>>2),%ecx        // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
+                xorl    %eax,%eax
+            rep stosl
+                // pt_apic entry
+                movl    %edx,%edi               // EDI --> PDT
+                addl    $(0x1F7*8),%edi
+                movl    $pt_apic,%eax
+                andl    $0xFFFFF000,%eax
+                orl     $0x3,%eax               // PAGE_PRESENT|PAGE_WRITE
+                movl    %eax,(%edi)
+                // PT
+                // clear table
+                movl    $pt_apic,%edx
+                movl    %edx,%edi               // EDI --> PT
+                movl    $(512*8>>2),%ecx        // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
+                xorl    %eax,%eax
+            rep stosl
+                // map all 512 entries 1-1
+                movl    %edx,%edi               // EDI --> PT
+                movl    $512,%ecx               // 512 entries
+                movl    $0xFEE00000,%eax
+                orl     $0x3,%eax               // PAGE_PRESENT|PAGE_WRITE
 1:              movl    %eax,(%edi)
                 addl    $0x00001000,%eax        // next page address
                 addl    $8,%edi                 // next entry
@@ -102,9 +156,9 @@
                 //
                 // Enable Long Mode.
                 //
-                movl    $0xC0000080,%ecx        // select EFER MSR
+                movl    $IA32_EFER,%ecx
                 rdmsr
-                orl     $(1<<8),%eax            // set LME
+                orl     $IA32_EFER_LME,%eax
                 wrmsr
 
                 //
@@ -152,13 +206,17 @@ gdt64:
 
                 .align  4096
 
-pml4t:          .space  0x1000
+pml4t:          .space  512*8
 
-pdpt:           .space  0x1000
+pdpt:           .space  512*8
 
-pdt:            .space  0x1000
+pdt:            .space  512*8
 
-pt:             .space  0x1000
+pt:             .space  512*8
+
+pdt_apic:       .space  512*8
+
+pt_apic:        .space  512*8
 
                 .popsection
 

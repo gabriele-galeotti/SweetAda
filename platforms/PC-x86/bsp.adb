@@ -35,7 +35,6 @@ with PCI;
 with PIIX;
 with PCICAN;
 with VGA;
-with Gdbstub;
 with Gdbstub.SerialComm;
 with Console;
 
@@ -157,13 +156,12 @@ package body BSP is
             end if;
             if CPU_Features.MSR then
                Console.Print (" MSR");
-               if Configure.USE_APIC then
-                  -- https://lists.gt.net/linux/kernel/151861
-                  -- if  BIOS disables APIC, the flag does not even appear in
-                  -- CPUID features, so re-read
-                  WRMSR (MSR_APICBASE, RDMSR (MSR_APICBASE) or 16#0000_0000_0000_0800#);
-                  CPU_Features := CPU_Features_Read;
-               end if;
+--               if Configure.USE_APIC then
+--                  -- if BIOS disables APIC, the flag does not even appear in
+--                  -- CPUID features, so re-enable
+--                  WRMSR (IA32_APIC_BASE, RDMSR (IA32_APIC_BASE) or 16#0000_0000_0000_0800#);
+--                  CPU_Features := CPU_Features_Read;
+--               end if;
             end if;
             if CPU_Features.APIC then
                Console.Print (" APIC");
@@ -173,11 +171,11 @@ package body BSP is
             end if;
             Console.Print_NewLine;
             if Configure.USE_APIC and then CPU_Features.APIC then
-               Console.Print (
-                              RDMSR (MSR_APICBASE) and 16#0000_0000_FFFF_F000#,
-                              Prefix => "Local APIC base address: ",
-                              NL => True
-                             );
+--               Console.Print (
+--                              RDMSR (IA32_APIC_BASE) and 16#0000_0000_FFFF_F000#,
+--                              Prefix => "Local APIC base address: ",
+--                              NL => True
+--                             );
                LAPIC_Init;
             end if;
          end;
@@ -296,18 +294,6 @@ package body BSP is
       PC.PIC_Irq_Enable (PC.PIC_Irq5);
       Interrupts.Install (PC.PIC_Irq5, NE2000.Interrupt_Handler'Access, NE2000_Descriptors (1)'Address);
       Irq_Enable;
-      -- GDB stub -------------------------------------------------------------
-      -- Gdbstub.Enable_Flag := 1;
-      if Gdbstub.Enable_Flag /= 0 then
-         Gdbstub.Init (
-                       Gdbstub.SerialComm.Getchar'Access,
-                       Gdbstub.SerialComm.Putchar'Access,
-                       -- Gdbstub.DEBUG_ERROR
-                       -- Gdbstub.DEBUG_COMMAND
-                       Gdbstub.DEBUG_COMMUNICATION
-                       -- Gdbstub.DEBUG_BYPASS
-                      );
-      end if;
       -------------------------------------------------------------------------
    end BSP_Setup;
 
