@@ -75,13 +75,12 @@
 
 #define PAGE_ENTRIES 1024
 #define PAGE_SIZE    4096
-
-#define PG_VALID (1 << 0)
-#define PG_WRITE (1 << 1)
-#define PG_USER  (1 << 2)
+#define PAGE_PRESENT (1 << 0)
+#define PAGE_WRITE   (1 << 1)
+#define PAGE_USER    (1 << 2)
 
 #define PAGE2ADDRESS(x) ((x) << 12)
-#define ADDRESS2PAGE(x) ((unsigned long)(x) >> 12)
+#define ADDRESS2PAGE(x) ((x) >> 12)
 
 /*
  * EFLAGS.
