@@ -15,23 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with Bits;
-with CPU.IO;
-
 package body PIIX is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use Interfaces;
-   use Bits;
-   use CPU.IO;
 
    --========================================================================--
    --                                                                        --
@@ -56,25 +40,17 @@ package body PIIX is
    -- Init
    ----------------------------------------------------------------------------
    procedure Init is
+      Pirqc : constant PIRQC_Type := (
+                                      IRQROUTE   => IRQROUTE_RESERVED1,
+                                      IRQROUTEEN => NFalse,
+                                      others     => <>
+                                     );
    begin
       -- Bus_Number, Device_Number, Function_Number, Register_Number, Value
-      Cfg_Write (BUS0, 1, 0, PIRQRCA, Unsigned_8'(16#80#));
-      Cfg_Write (BUS0, 1, 0, PIRQRCB, Unsigned_8'(16#80#));
-      Cfg_Write (BUS0, 1, 0, PIRQRCC, Unsigned_8'(16#80#));
-      Cfg_Write (BUS0, 1, 0, PIRQRCD, Unsigned_8'(16#80#));
-      -- PIC ELCR
-      CPU.IO.PortOut (16#04D0#, Unsigned_8'(16#20#)); -- RTL8029 bit5, Irq5
-      CPU.IO.PortOut (16#04D1#, Unsigned_8'(16#00#));
-      -- QEMU RTL8029 Irq5
-      Cfg_Write (BUS0, 1, 0, PIRQRCC, Unsigned_8'(16#05#));
+      Cfg_Write (BUS0, 1, 0, PIRQRCA, Unsigned_8'(To_U8 (Pirqc)));
+      Cfg_Write (BUS0, 1, 0, PIRQRCB, Unsigned_8'(To_U8 (Pirqc)));
+      Cfg_Write (BUS0, 1, 0, PIRQRCC, Unsigned_8'(To_U8 (Pirqc)));
+      Cfg_Write (BUS0, 1, 0, PIRQRCD, Unsigned_8'(To_U8 (Pirqc)));
    end Init;
-
-   ----------------------------------------------------------------------------
-   -- Interrupt_Set
-   ----------------------------------------------------------------------------
-   procedure Interrupt_Set is
-   begin
-      null;
-   end Interrupt_Set;
 
 end PIIX;
