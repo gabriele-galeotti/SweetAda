@@ -19,7 +19,7 @@
 CPU       := x86-64
 CPU_MODEL := ???
 
-GCC_SWITCHES_PLATFORM     += -m64 -mno-red-zone
+GCC_SWITCHES_PLATFORM     += -m64 -mno-red-zone -Wa,--divide
 # __FIX__ QEMU problems (movdqa instruction)
 GCC_SWITCHES_PLATFORM     += -mno-sse
 LD_SWITCHES_PLATFORM      +=
