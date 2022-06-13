@@ -16,19 +16,8 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with MMIO;
-with CPU_i586;
 
 package body APIC is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use CPU_i586;
 
    --========================================================================--
    --                                                                        --
@@ -42,27 +31,31 @@ package body APIC is
    -- Local APIC
    ----------------------------------------------------------------------------
 
+   ----------------------------------------------------------------------------
+   -- LAPIC_Init
+   ----------------------------------------------------------------------------
    procedure LAPIC_Init is
    begin
-      -- enable APIC in MSR
-      declare
-         Value : IA32_APIC_BASE_Type;
-      begin
-         Value := To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE));
-         Value.APIC_Global_Enable := True;
-         WRMSR (IA32_APIC_BASE, To_U64 (Value));
-      end;
-      -- set Spurious Interrupt Vector Register bit 8 to start receiving interrupts
-      LAPIC.SVR   := LAPIC.SVR or 16#1FF#;
-      LAPIC.TPR   := 0;
+      LAPIC.TPR   := (
+                      SubClass => 0,
+                      Class    => 0,
+                      others   => <>
+                     );
       LAPIC.LINT0 := (
-                      V      => 16#20#, -- vector offset 32
+                      VECTOR => 16#20#,
                       DM     => 2#111#, -- ExtINT
                       DS     => 0,
                       IIPP   => 0,
-                      RIRR   => 0,
+                      RIRR   => False,
                       TM     => 0,
                       Mask   => False,
+                      others => <>
+                     );
+      LAPIC.SVR   := (
+                      VECTOR => 16#FF#, -- Spurious Vector
+                      ENABLE => True,
+                      FPC    => False,
+                      EOIBS  => False,
                       others => <>
                      );
    end LAPIC_Init;
@@ -71,12 +64,18 @@ package body APIC is
    -- 82093AA I/O ADVANCED PROGRAMMABLE INTERRUPT CONTROLLER (IOAPIC)
    ----------------------------------------------------------------------------
 
+   ----------------------------------------------------------------------------
+   -- IOAPIC_Read
+   ----------------------------------------------------------------------------
    function IOAPIC_Read (Register_Number : Natural) return Unsigned_32 is
    begin
       MMIO.Write (To_Address (IOAPIC_BASEADDRESS) + IOREGSEL, Unsigned_32 (Register_Number));
       return MMIO.Read (To_Address (IOAPIC_BASEADDRESS) + IOWIN);
    end IOAPIC_Read;
 
+   ----------------------------------------------------------------------------
+   -- IOAPIC_Write
+   ----------------------------------------------------------------------------
    procedure IOAPIC_Write (Register_Number : in Natural; Value : in Unsigned_32) is
    begin
       MMIO.Write (To_Address (IOAPIC_BASEADDRESS) + IOREGSEL, Unsigned_32 (Register_Number));
