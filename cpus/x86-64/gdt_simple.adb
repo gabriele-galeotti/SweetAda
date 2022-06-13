@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ gdt_simple.ads                                                                                            --
+-- __FLN__ gdt_simple.adb                                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,23 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with x86_64;
+package body GDT_Simple is
 
-package GDT_Simple is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                               Public part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use x86_64;
-
-   SELECTOR_KCODE64 : constant Selector_Type := (RPL => PL0, TI => TI_GDT, Index => 1);
-   SELECTOR_KDATA64 : constant Selector_Type := (RPL => PL0, TI => TI_GDT, Index => 2);
-
-   procedure Null_Procedure;
+   procedure Null_Procedure is null;
 
 end GDT_Simple;
