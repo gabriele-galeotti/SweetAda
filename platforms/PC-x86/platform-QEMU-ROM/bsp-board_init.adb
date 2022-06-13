@@ -15,8 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-   separate (BSP)
-   procedure Board_Init is
-   begin
-      null;
-   end Board_Init;
+separate (BSP)
+procedure Board_Init is
+begin
+   null;
+end Board_Init;

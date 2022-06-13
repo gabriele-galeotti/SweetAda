@@ -58,6 +58,7 @@ package M68040 is
    PAGESIZE8k : constant Bits_1 := 1;
 
    -- Translation Control Register
+
    type TCR_Register_Type is
    record
       Page_Size : Bits_1;

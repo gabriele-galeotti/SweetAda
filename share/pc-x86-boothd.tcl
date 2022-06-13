@@ -25,7 +25,7 @@
 #
 
 #
-# bootsector.S differences from standard floppy disk bootrecord:
+# bootsector.S differences from standard floppy disk bootsector:
 # - physical disk number = 0x80
 # - nsectorshi, nsectorslo, spt, heads are configurable
 # - no floppy disk motor shutdown
@@ -112,15 +112,12 @@ set device_filename [lindex $argv 2]
 puts "$SCRIPT_FILENAME: creating hard disk ..."
 
 set BPS 512
-# Seagate 40 MB
-#set CYL 820
-#set HPC 6
-#set SPT 17
+
 # X/16/63 geometry
 set CYL 4
 set HPC 16
 set SPT 63
-# standard X/255/63 geometry
+# X/255/63 geometry
 #set CYL 4
 #set HPC 255
 #set SPT 63
@@ -184,7 +181,7 @@ close $fp
 puts "$SCRIPT_FILENAME: creating partition ..."
 write_partition $device_filename $PARTITION_SECTOR_START $PARTITION_SECTORS_SIZE
 
-# build bootrecord
+# build bootsector
 set kernel_size [file size $kernel_filename]
 # handle large partitions
 if {$PARTITION_SECTORS_SIZE > 65535} {
@@ -212,16 +209,16 @@ eval exec $::env(TOOLCHAIN_CC)                                           \
 eval exec $::env(TOOLCHAIN_LD) -o bootsector.bin -Ttext=0 --oformat=binary bootsector.o
 eval exec $::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary bootsector.bin > bootsector.lst
 
-# write bootrecord @ CHS(1,0,1)
-puts "$SCRIPT_FILENAME: creating bootrecord ..."
+# write bootsector @ CHS(1,0,1)
+puts "$SCRIPT_FILENAME: creating bootsector ..."
 set fp [open "bootsector.bin" "r"]
 fconfigure $fp -translation binary
-set bootrecord [read $fp]
+set bootsector [read $fp]
 close $fp
 set fp [open $device_filename "a+"]
 fconfigure $fp -translation binary
 seek $fp [expr $SECTORS_PER_CYLINDER * $BPS] start
-puts -nonewline $fp $bootrecord
+puts -nonewline $fp $bootsector
 close $fp
 
 # write kernel @ CHS(1,0,2)

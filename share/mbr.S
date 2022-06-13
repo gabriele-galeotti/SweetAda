@@ -245,7 +245,7 @@ ERROR2:         .asciz  "Error loading operating system"
 ERROR3:         .asciz  "Missing operating system"
 
                 //
-                // Boot the operating system bootrecord.
+                // Boot the operating system bootsector.
                 //
 GOBOOT:         movw    %sp,%di
                 pushw   %ds                             // DS is 0 at this time

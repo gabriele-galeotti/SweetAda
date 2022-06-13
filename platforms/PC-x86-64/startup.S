@@ -216,8 +216,6 @@ delay:          movw    $0x43,%dx               // CONTROL_WORD_REGISTER
 
 _start64:
 
-////////////////////////////////////////////////////////////////////////////////
-
 #if defined(MODE64)
 # include "mode64.S"
 #endif
@@ -226,6 +224,7 @@ _start64:
 
                 .code64
 
+                .global _longmode
 _longmode:
 
                 cli

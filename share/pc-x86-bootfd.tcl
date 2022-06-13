@@ -77,7 +77,7 @@ if {[string index $device_filename 0] eq "+"} {
     }
 }
 
-# build bootrecord
+# build bootsector
 set kernel_size [file size $kernel_filename]
 set NSECTORS [expr ($kernel_size + $BPS - 1) / $BPS]
 puts [format "kernel sector count: %d (0x%X)" $NSECTORS $NSECTORS]
@@ -92,16 +92,16 @@ eval exec $::env(TOOLCHAIN_CC)                                           \
 eval exec $::env(TOOLCHAIN_LD) -o bootsector.bin -Ttext=0 --oformat=binary bootsector.o
 eval exec $::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary bootsector.bin > bootsector.lst
 
-# write bootrecord @ CHS(0,0,1)
-puts "$SCRIPT_FILENAME: creating bootrecord ..."
+# write bootsector @ CHS(0,0,1)
+puts "$SCRIPT_FILENAME: creating bootsector ..."
 set fp [open bootsector.bin "r"]
 fconfigure $fp -translation binary
-set bootrecord [read $fp]
+set bootsector [read $fp]
 close $fp
 set fp [open $device_filename "a+"]
 fconfigure $fp -translation binary
 seek $fp [expr 0 * $BPS]
-puts -nonewline $fp $bootrecord
+puts -nonewline $fp $bootsector
 close $fp
 
 # write kernel @ CHS(0,0,2)
