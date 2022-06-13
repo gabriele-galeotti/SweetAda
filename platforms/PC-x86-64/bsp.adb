@@ -19,6 +19,7 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with Configure;
+with Definitions;
 with Core;
 with Bits;
 with x86_64;
@@ -44,6 +45,7 @@ package body BSP is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use Core;
    use Bits;
    use x86_64;
@@ -93,18 +95,20 @@ package body BSP is
       -- UARTs ----------------------------------------------------------------
       UART_Descriptors (1).Base_Address  := To_Address (PC.UART1_BASEADDRESS);
       UART_Descriptors (1).Scale_Address := 0;
-      UART_Descriptors (1).Baud_Clock    := 1_843_200;
+      UART_Descriptors (1).Baud_Clock    := CLK_UART1M8;
       UART_Descriptors (1).Read_8        := IO_Read'Access;
       UART_Descriptors (1).Write_8       := IO_Write'Access;
       UART_Descriptors (1).Data_Queue    := ((others => 0), 0, 0, 0);
       UART16x50.Init (UART_Descriptors (1));
+      UART16x50.Baud_Rate_Set (UART_Descriptors (1), Baud_Rate_Type'Enum_Rep (BR_19200));
       UART_Descriptors (2).Base_Address  := To_Address (PC.UART2_BASEADDRESS);
       UART_Descriptors (2).Scale_Address := 0;
-      UART_Descriptors (2).Baud_Clock    := 1_843_200;
+      UART_Descriptors (2).Baud_Clock    := CLK_UART1M8;
       UART_Descriptors (2).Read_8        := IO_Read'Access;
       UART_Descriptors (2).Write_8       := IO_Write'Access;
       UART_Descriptors (2).Data_Queue    := ((others => 0), 0, 0, 0);
       UART16x50.Init (UART_Descriptors (2));
+      UART16x50.Baud_Rate_Set (UART_Descriptors (2), Baud_Rate_Type'Enum_Rep (BR_19200));
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read := Console_Getchar'Access;
@@ -170,6 +174,13 @@ package body BSP is
          VGA.Print (0, 2, "Close this window to shutdown the emulator.");
       end if;
       -------------------------------------------------------------------------
+      declare
+         Value : IA32_APIC_BASE_Type;
+      begin
+         Value := To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE));
+         Value.APIC_Global_Enable := True;
+         WRMSR (IA32_APIC_BASE, To_U64 (Value));
+      end;
       APIC.LAPIC_Init;
       PC.PIC_Init (Unsigned_8 (PC.PIC_Irq0), Unsigned_8 (PC.PIC_Irq8));
       Tclk_Init;
