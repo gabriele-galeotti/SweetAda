@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
 with x86_64;
 
 package CPU is
@@ -32,6 +33,7 @@ package CPU is
    ----------------------------------------------------------------------------
 
    procedure NOP renames x86_64.NOP;
+   procedure Asm_Call (Target_Address : in System.Address) renames x86_64.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts

@@ -681,6 +681,8 @@ package x86_64 is
       Inline => True;
    procedure BREAKPOINT with
       Inline => True;
+   procedure Asm_Call (Target_Address : in Address) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts

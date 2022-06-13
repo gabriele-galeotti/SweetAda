@@ -43,38 +43,6 @@ package body x86_64 is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- NOP
-   ----------------------------------------------------------------------------
-   procedure NOP is
-   begin
-      Asm (
-           Template => ""            & CRLF &
-                       "        nop" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end NOP;
-
-   ----------------------------------------------------------------------------
-   -- BREAKPOINT
-   ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
-   begin
-      Asm (
-           Template => ""                                 & CRLF &
-                       "        " & BREAKPOINT_Asm_String & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end BREAKPOINT;
-
-   ----------------------------------------------------------------------------
    -- LIDTR
    ----------------------------------------------------------------------------
    procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type) is
@@ -168,6 +136,54 @@ package body x86_64 is
    end WRMSR;
 
    ----------------------------------------------------------------------------
+   -- NOP
+   ----------------------------------------------------------------------------
+   procedure NOP is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end NOP;
+
+   ----------------------------------------------------------------------------
+   -- BREAKPOINT
+   ----------------------------------------------------------------------------
+   procedure BREAKPOINT is
+   begin
+      Asm (
+           Template => ""                                 & CRLF &
+                       "        " & BREAKPOINT_Asm_String & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end BREAKPOINT;
+
+   ----------------------------------------------------------------------------
+   -- Asm_Call
+   ----------------------------------------------------------------------------
+   procedure Asm_Call (Target_Address : in Address) is
+   begin
+      Asm (
+           Template => ""                    & CRLF &
+                       "        call    *%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Address'Asm_Input ("r", Target_Address),
+           Clobber  => "",
+           Volatile => True
+          );
+   end Asm_Call;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
@@ -201,11 +217,11 @@ package body x86_64 is
       Irq_State : Irq_State_Type;
    begin
       Asm (
-           -- __TBD__
-           Template => ""            & CRLF &
-                       "        nop" & CRLF &
+           Template => ""                   & CRLF &
+                       "        pushfq    " & CRLF &
+                       "        popq    %0" & CRLF &
                        "",
-           Outputs  => Irq_State_Type'Asm_Output ("=g", Irq_State),
+           Outputs  => Irq_State_Type'Asm_Output ("=a", Irq_State),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True
@@ -216,12 +232,12 @@ package body x86_64 is
    procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
    begin
       Asm (
-           -- __TBD__
-           Template => ""            & CRLF &
-                       "        nop" & CRLF &
+           Template => ""                   & CRLF &
+                       "        pushq   %0" & CRLF &
+                       "        popfq     " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => Irq_State_Type'Asm_Input ("g", Irq_State),
+           Inputs   => Irq_State_Type'Asm_Input ("a", Irq_State),
            Clobber  => "memory",
            Volatile => True
           );
