@@ -58,7 +58,7 @@
 #define UIC0_VCR 0x0C8  /* UIC Vector Configuration Register */
 
 /*
- *
+ * Instructions.
  */
 #define NOP_INSTRUCTION             0x60000000
 #define BREAKPOINT_INSTRUCTION      0x7D821008
