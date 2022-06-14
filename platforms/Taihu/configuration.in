@@ -7,7 +7,7 @@ CPU       := PowerPC
 CPU_MODEL := PPC405
 
 # -msdata=eabi
-GCC_SWITCHES_PLATFORM     += -mcpu=405 -meabi -msoft-float -Wa,-a32 -Wa,-m405 -Wa,-mregnames
+GCC_SWITCHES_PLATFORM     += -mcpu=405 -meabi -msoft-float -Wa,-mregnames
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
