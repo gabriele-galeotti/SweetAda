@@ -44,31 +44,33 @@ package body PPC405 is
    -- DCRs subprogram templates
    ----------------------------------------------------------------------------
 
-   function MFDCR return Register_Type is
-      Result : Register_Type;
+   function MFDCR return DCR_Value_Type is
+      DCR_Value : DCR_Value_Type;
    begin
       Asm (
            Template => ""                      & CRLF &
-                       "        mfdcr   %0,%1" & CRLF &
+                       -- "        mfdcr   %0,%1" & CRLF &
+                       "        .long   0x7C000286|(%0<<21)|(%1<<11)" & CRLF &
                        "",
-           Outputs  => Register_Type'Asm_Output ("=r", Result),
+           Outputs  => DCR_Value_Type'Asm_Output ("=r", DCR_Value),
            Inputs   => DCR_Type'Asm_Input ("i", DCR),
            Clobber  => "",
            Volatile => True
           );
-      return Result;
+      return DCR_Value;
    end MFDCR;
 
-   procedure MTDCR (Register_Value : in Register_Type) is
+   procedure MTDCR (DCR_Value : in DCR_Value_Type) is
    begin
       Asm (
            Template => ""                      & CRLF &
-                       "        mtdcr   %0,%1" & CRLF &
+                       -- "        mtdcr   %0,%1" & CRLF &
+                       "        .long   0x7C000386|(%1<<21)|(%0<<11)" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => (
                         DCR_Type'Asm_Input ("i", DCR),
-                        Register_Type'Asm_Input ("r", Register_Value)
+                        DCR_Value_Type'Asm_Input ("r", DCR_Value)
                        ),
            Clobber  => "",
            Volatile => True
@@ -139,7 +141,8 @@ package body PPC405 is
    begin
       Asm (
            Template => ""                  & CRLF &
-                       "        wrteei  1" & CRLF &
+                       -- "        wrteei  1" & CRLF &
+                       "        .long   0x7C008146" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
@@ -152,7 +155,8 @@ package body PPC405 is
    begin
       Asm (
            Template => ""                  & CRLF &
-                       "        wrteei  0" & CRLF &
+                       -- "        wrteei  0" & CRLF &
+                       "        .long   0x7C000146" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,

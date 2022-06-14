@@ -42,24 +42,27 @@ package PPC405 is
    type DCR_Type is mod 2**10; -- 0 .. 1023
 
    -- DCR numbers
-   UIC0_SR  : constant DCR_Type := 16#00C0#; -- UIC Status Register
-   UIC0_ER  : constant DCR_Type := 16#00C2#; -- UIC Enable Register
-   UIC0_CR  : constant DCR_Type := 16#00C3#; -- UIC Critical Register
-   UIC0_PR  : constant DCR_Type := 16#00C4#; -- UIC Polarity Register
-   UIC0_TR  : constant DCR_Type := 16#00C5#; -- UIC Trigger Register
-   UIC0_MSR : constant DCR_Type := 16#00C6#; -- UIC Masked Status Register
-   UIC0_VR  : constant DCR_Type := 16#00C7#; -- UIC Vector Register
-   UIC0_VCR : constant DCR_Type := 16#00C8#; -- UIC Vector Configuration Register
+   -- DCRF:                        -- 5 .. 9 ---   -------- 0 .. 4 --------
+   UIC0_SR  : constant DCR_Type := 16#C0# / 2**5 + (16#C0# mod 2**5) * 2**5; -- UIC Status Register
+   UIC0_ER  : constant DCR_Type := 16#C2# / 2**5 + (16#C2# mod 2**5) * 2**5; -- UIC Enable Register
+   UIC0_CR  : constant DCR_Type := 16#C3# / 2**5 + (16#C3# mod 2**5) * 2**5; -- UIC Critical Register
+   UIC0_PR  : constant DCR_Type := 16#C4# / 2**5 + (16#C4# mod 2**5) * 2**5; -- UIC Polarity Register
+   UIC0_TR  : constant DCR_Type := 16#C5# / 2**5 + (16#C5# mod 2**5) * 2**5; -- UIC Trigger Register
+   UIC0_MSR : constant DCR_Type := 16#C6# / 2**5 + (16#C6# mod 2**5) * 2**5; -- UIC Masked Status Register
+   UIC0_VR  : constant DCR_Type := 16#C7# / 2**5 + (16#C7# mod 2**5) * 2**5; -- UIC Vector Register
+   UIC0_VCR : constant DCR_Type := 16#C8# / 2**5 + (16#C8# mod 2**5) * 2**5; -- UIC Vector Configuration Register
 
    generic
       DCR : in DCR_Type;
-      type Register_Type is private;
-   function MFDCR return Register_Type;
+      type DCR_Value_Type is private;
+   function MFDCR return DCR_Value_Type with
+      Inline => True;
 
    generic
       DCR : in DCR_Type;
-      type Register_Type is private;
-   procedure MTDCR (Register_Value : in Register_Type);
+      type DCR_Value_Type is private;
+   procedure MTDCR (DCR_Value : in DCR_Value_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- TSR Timer Status Register
