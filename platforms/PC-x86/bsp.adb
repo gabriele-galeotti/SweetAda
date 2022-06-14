@@ -156,12 +156,6 @@ package body BSP is
             end if;
             if CPU_Features.MSR then
                Console.Print (" MSR");
-               -- if Configure.USE_APIC then
-               --    -- if BIOS disables APIC, the flag does not even appear in
-               --    -- CPUID features, so re-enable
-               --    WRMSR (IA32_APIC_BASE, RDMSR (IA32_APIC_BASE) or 16#0000_0000_0000_0800#);
-               --    CPU_Features := CPU_Features_Read;
-               -- end if;
             end if;
             if CPU_Features.APIC then
                Console.Print (" APIC");
@@ -171,11 +165,6 @@ package body BSP is
             end if;
             Console.Print_NewLine;
             if Configure.USE_APIC and then CPU_Features.APIC then
-               -- Console.Print (
-               --                RDMSR (IA32_APIC_BASE) and 16#0000_0000_FFFF_F000#,
-               --                Prefix => "Local APIC base address: ",
-               --                NL => True
-               --               );
                declare
                   Value : IA32_APIC_BASE_Type;
                begin
