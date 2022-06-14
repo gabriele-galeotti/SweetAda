@@ -47,10 +47,10 @@ package body PIIX is
                                      );
    begin
       -- Bus_Number, Device_Number, Function_Number, Register_Number, Value
-      Cfg_Write (BUS0, 1, 0, PIRQRCA, Unsigned_8'(To_U8 (Pirqc)));
-      Cfg_Write (BUS0, 1, 0, PIRQRCB, Unsigned_8'(To_U8 (Pirqc)));
-      Cfg_Write (BUS0, 1, 0, PIRQRCC, Unsigned_8'(To_U8 (Pirqc)));
-      Cfg_Write (BUS0, 1, 0, PIRQRCD, Unsigned_8'(To_U8 (Pirqc)));
+      Cfg_Write (BUS0, 1, 0, PIRQRCA, To_U8 (Pirqc));
+      Cfg_Write (BUS0, 1, 0, PIRQRCB, To_U8 (Pirqc));
+      Cfg_Write (BUS0, 1, 0, PIRQRCC, To_U8 (Pirqc));
+      Cfg_Write (BUS0, 1, 0, PIRQRCD, To_U8 (Pirqc));
    end Init;
 
 end PIIX;
