@@ -133,30 +133,49 @@ package PowerPC is
    -- MSR
    ----------------------------------------------------------------------------
 
-   type MSR_Register_Type is
+   -- 2.3.1 Machine State Register (MSR)
+
+   PR_US : constant := 0; -- The processor can execute both user- and supervisor-level instructions.
+   PR_U  : constant := 1; -- The processor can only execute user-level instructions.
+
+   type FE_Type is
    record
-      Reserved1 : Bits_13_Zeroes := Bits_13_0;
-      POW       : Bits_1;
-      Reserved2 : Bits_1_Zeroes := Bits_1_0;
-      ILE       : Bits_1;
-      EE        : Boolean;
-      PR        : Bits_1;
-      FP        : Bits_1;
-      ME        : Bits_1;
-      FE0       : Bits_1;
-      SE        : Bits_1;
-      BE        : Bits_1;
-      FE1       : Bits_1;
-      Reserved3 : Bits_1_Zeroes := Bits_1_0;
-      IP        : Bits_1;
-      IR        : Bits_1;
-      DR        : Bits_1;
-      Reserved4 : Bits_2_Zeroes := Bits_2_0;
-      RI        : Bits_1;
-      LE        : Bits_1;
+      FE0 : Bits_1;
+      FE1 : Bits_1;
+   end record;
+
+   FE_DISABLED    : constant FE_Type := (0, 0); -- Floating-point exceptions disabled
+   FE_IMPRECISENR : constant FE_Type := (0, 1); -- Floating-point imprecise nonrecoverable
+   FE_IMPRECISE   : constant FE_Type := (1, 0); -- Floating-point imprecise recoverable
+   FE_PRECISE     : constant FE_Type := (1, 1); -- Floating-point precise mode
+
+   IP_LOW  : constant := 0; -- Interrupts are vectored to the physical address 0x000n_nnnn.
+   IP_HIGH : constant := 1; -- Interrupts are vectored to the physical address 0xFFFn_nnnn.
+
+   type MSR_Type is
+   record
+      Reserved1 : Bits_13 := 0;
+      POW       : Boolean;      -- Power management enable
+      Reserved2 : Bits_1 := 0;
+      ILE       : Boolean;      -- Interrupt little-endian mode.
+      EE        : Boolean;      -- External interrupt enable
+      PR        : Bits_1;       -- Privilege level
+      FP        : Boolean;      -- Floating-point available
+      ME        : Boolean;      -- Machine check enable
+      FE0       : Bits_1;       -- Floating-point exception mode 0
+      SE        : Boolean;      -- Single-step trace enable
+      BE        : Boolean;      -- Branch trace enable
+      FE1       : Bits_1;       -- Floating-point exception mode 1
+      Reserved3 : Bits_1 := 0;
+      IP        : Bits_1;       -- Interrupt prefix
+      IR        : Boolean;      -- Instruction address translation
+      DR        : Boolean;      -- Data address translation
+      Reserved4 : Bits_2 := 0;
+      RI        : Boolean;      -- Recoverable interrupt
+      LE        : Boolean;      -- Little-endian mode enable
    end record with
       Size => 32;
-   for MSR_Register_Type use
+   for MSR_Type use
    record
       Reserved1 at 0 range 0 .. 12;
       POW       at 0 range 13 .. 13;
@@ -179,9 +198,9 @@ package PowerPC is
       LE        at 0 range 31 .. 31;
    end record;
 
-   function MSR_Read return MSR_Register_Type with
+   function MSR_Read return MSR_Type with
       Inline => True;
-   procedure MSR_Write (Value : in MSR_Register_Type) with
+   procedure MSR_Write (Value : in MSR_Type) with
       Inline => True;
 
    ----------------------------------------------------------------------------
@@ -208,19 +227,19 @@ package PowerPC is
 
    PVR : constant SPR_Type := 287; -- 0x11F
 
-   type PVR_Register_Type is
+   type PVR_Type is
    record
       Version  : Unsigned_16;
       Revision : Unsigned_16;
    end record with
       Size => 32;
-   for PVR_Register_Type use
+   for PVR_Type use
    record
       Version  at 0 range 0 .. 15;
       Revision at 0 range 16 .. 31;
    end record;
 
-   function PVR_Read return PVR_Register_Type with
+   function PVR_Read return PVR_Type with
       Inline => True;
 
    ----------------------------------------------------------------------------

@@ -109,14 +109,14 @@ package body PowerPC is
    ----------------------------------------------------------------------------
    -- MSR_Read
    ----------------------------------------------------------------------------
-   function MSR_Read return MSR_Register_Type is
-      Result : MSR_Register_Type;
+   function MSR_Read return MSR_Type is
+      Result : MSR_Type;
    begin
       Asm (
            Template => ""                   & CRLF &
                        "        mfmsr   %0" & CRLF &
                        "",
-           Outputs  => MSR_Register_Type'Asm_Output ("=r", Result),
+           Outputs  => MSR_Type'Asm_Output ("=r", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
@@ -127,14 +127,14 @@ package body PowerPC is
    ----------------------------------------------------------------------------
    -- MSR_Write
    ----------------------------------------------------------------------------
-   procedure MSR_Write (Value : in MSR_Register_Type) is
+   procedure MSR_Write (Value : in MSR_Type) is
    begin
       Asm (
            Template => ""                   & CRLF &
                        "        mtmsr   %0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => MSR_Register_Type'Asm_Input ("r", Value),
+           Inputs   => MSR_Type'Asm_Input ("r", Value),
            Clobber  => "",
            Volatile => True
           );
@@ -179,8 +179,8 @@ package body PowerPC is
    -- SPRs subprograms
    ----------------------------------------------------------------------------
 
-   function PVR_Read return PVR_Register_Type is
-      function SPR_Read is new MFSPR (PVR, PVR_Register_Type);
+   function PVR_Read return PVR_Type is
+      function SPR_Read is new MFSPR (PVR, PVR_Type);
    begin
       return SPR_Read;
    end PVR_Read;
