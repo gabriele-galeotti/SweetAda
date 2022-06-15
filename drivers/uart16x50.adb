@@ -102,14 +102,14 @@ package body UART16x50 is
    --       is loaded into it from the THR.
    type LSR_Type is
    record
-      DR     : Boolean; -- Data Ready
-      OE     : Boolean; -- Overrun Error
-      PE     : Boolean; -- Parity Error
-      FE     : Boolean; -- Framing Error
-      BI     : Boolean; -- Break Interrupt
-      THRE   : Boolean; -- Transmitter Holding Register Empty
-      TEMT   : Boolean; -- Transmitter (Shift Register) Empty
-      Unused : Bits_1_Zeroes := Bits_1_0;
+      DR     : Boolean;     -- Data Ready
+      OE     : Boolean;     -- Overrun Error
+      PE     : Boolean;     -- Parity Error
+      FE     : Boolean;     -- Framing Error
+      BI     : Boolean;     -- Break Interrupt
+      THRE   : Boolean;     -- Transmitter Holding Register Empty
+      TEMT   : Boolean;     -- Transmitter (Shift Register) Empty
+      Unused : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -139,9 +139,9 @@ package body UART16x50 is
 
    type IIR_Type is
    record
-      IPn    : Boolean;                   -- negated: 0 if Interrupt Pending
+      IPn    : Boolean;                 -- negated: 0 if Interrupt Pending
       IPL    : Interrupt_Priority_Type;
-      Unused : Bits_5_Zeroes := Bits_5_0;
+      Unused : Bits_5 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -159,11 +159,11 @@ package body UART16x50 is
 
    type IER_Type is
    record
-      RDA    : Boolean;                   -- Received Data Available
-      THRE   : Boolean;                   -- Transmitter Holding Register Empty
-      RLS    : Boolean;                   -- Receiver Line Status
-      MS     : Boolean;                   -- MODEM Status
-      Unused : Bits_4_Zeroes := Bits_4_0;
+      RDA    : Boolean;     -- Received Data Available
+      THRE   : Boolean;     -- Transmitter Holding Register Empty
+      RLS    : Boolean;     -- Receiver Line Status
+      MS     : Boolean;     -- MODEM Status
+      Unused : Bits_4 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -183,12 +183,12 @@ package body UART16x50 is
 
    type MCR_Type is
    record
-      DTR      : Boolean;                   -- Data Terminal Ready
-      RTS      : Boolean;                   -- Request To Send
+      DTR      : Boolean;     -- Data Terminal Ready
+      RTS      : Boolean;     -- Request To Send
       OUT1     : Boolean;
       OUT2     : Boolean;
       LOOPBACK : Boolean;
-      Unused   : Bits_3_Zeroes := Bits_3_0;
+      Unused   : Bits_3 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
