@@ -164,82 +164,60 @@ package PPC405 is
    -- UIC Universal Interrupt Controller
    ----------------------------------------------------------------------------
 
-   type UIC0_ER_Register_Type is
-   record
-      U0IE      : Boolean;
-      U1IE      : Boolean;
-      IICIE     : Boolean;
-      PCIIE     : Boolean;
-      Reserved1 : Bits_1_Zeroes := Bits_1_0; -- bit #4 reserved
-      D0IE      : Boolean;
-      D1IE      : Boolean;
-      D2IE      : Boolean;
-      D3IE      : Boolean;
-      EWIE      : Boolean;
-      MSIE      : Boolean;
-      MTEIE     : Boolean;
-      MREIE     : Boolean;
-      MTDIE     : Boolean;
-      MRDIE     : Boolean;
-      EIE0      : Boolean;
-      EPSIE     : Boolean;
-      EIE1      : Boolean;
-      PPMI      : Boolean;
-      GTI0E     : Boolean;
-      GTI1E     : Boolean;
-      GTI2E     : Boolean;
-      GTI3E     : Boolean;
-      GTI4E     : Boolean;
-      Reserved2 : Bits_1_Zeroes := Bits_1_0; -- bit #24 reserved
-      EIR0E     : Boolean;
-      EIR1E     : Boolean;
-      EIR2E     : Boolean;
-      EIR3E     : Boolean;
-      EIR4E     : Boolean;
-      EIR5E     : Boolean;
-      EIR6E     : Boolean;
-   end record with
-      Size => 32;
-   for UIC0_ER_Register_Type use
-   record
-      U0IE      at 0 range 0 .. 0;
-      U1IE      at 0 range 1 .. 1;
-      IICIE     at 0 range 2 .. 2;
-      PCIIE     at 0 range 3 .. 3;
-      Reserved1 at 0 range 4 .. 4;
-      D0IE      at 0 range 5 .. 5;
-      D1IE      at 0 range 6 .. 6;
-      D2IE      at 0 range 7 .. 7;
-      D3IE      at 0 range 8 .. 8;
-      EWIE      at 0 range 9 .. 9;
-      MSIE      at 0 range 10 .. 10;
-      MTEIE     at 0 range 11 .. 11;
-      MREIE     at 0 range 12 .. 12;
-      MTDIE     at 0 range 13 .. 13;
-      MRDIE     at 0 range 14 .. 14;
-      EIE0      at 0 range 15 .. 15;
-      EPSIE     at 0 range 16 .. 16;
-      EIE1      at 0 range 17 .. 17;
-      PPMI      at 0 range 18 .. 18;
-      GTI0E     at 0 range 19 .. 19;
-      GTI1E     at 0 range 20 .. 20;
-      GTI2E     at 0 range 21 .. 21;
-      GTI3E     at 0 range 22 .. 22;
-      GTI4E     at 0 range 23 .. 23;
-      Reserved2 at 0 range 24 .. 24;
-      EIR0E     at 0 range 25 .. 25;
-      EIR1E     at 0 range 26 .. 26;
-      EIR2E     at 0 range 27 .. 27;
-      EIR3E     at 0 range 28 .. 28;
-      EIR4E     at 0 range 29 .. 29;
-      EIR5E     at 0 range 30 .. 30;
-      EIR6E     at 0 range 31 .. 31;
-   end record;
+   -- indexes into UIC0_SR/UIC0_ER arrays
 
-   function UIC0_ER_Read return UIC0_ER_Register_Type with
+   U0I  : constant := 0;  -- UART0 Interrupt
+   U1I  : constant := 1;  -- UART1 Interrupt
+   IICI : constant := 2;  -- IIC Interrupt
+   PCII : constant := 3;  -- PCI Interrupt
+   -- Reserved1
+   D0I  : constant := 5;  -- DMA Channel 0 Interrupt
+   D1I  : constant := 6;  -- DMA Channel 1 Interrupt
+   D2I  : constant := 7;  -- DMA Channel 2 Interrupt
+   D3I  : constant := 8;  -- DMA Channel 3 Interrupt
+   EWI  : constant := 9;  -- Ethernet Wake-up Interrupt
+   MSI  : constant := 10; -- MAL SERR Interrupt
+   MTEI : constant := 11; -- MAL TX EOB Interrupt
+   MREI : constant := 12; -- MAL RX EOB Interrupt
+   MTDI : constant := 13; -- MAL TX DE Interrupt
+   MRDI : constant := 14; -- MAL RX DE Interrupt
+   EI0  : constant := 15; -- EMAC0 Interrupt
+   EPSI : constant := 16; -- External PCI SERR Interrupt
+   EI1  : constant := 17; -- EMAC1 Interrupt
+   PPMI : constant := 18; -- PCI Power Management Interrupt
+   GTI0 : constant := 19; -- General Purpose Timer Interrupt 0
+   GTI1 : constant := 20; -- General Purpose Timer Interrupt 1
+   GTI2 : constant := 21; -- General Purpose Timer Interrupt 2
+   GTI3 : constant := 22; -- General Purpose Timer Interrupt 3
+   GTI4 : constant := 23; -- General Purpose Timer Interrupt 4
+   -- Reserved2
+   EIR0 : constant := 25; -- External IRQ 0
+   EIR1 : constant := 26; -- External IRQ 1
+   EIR2 : constant := 27; -- External IRQ 2
+   EIR3 : constant := 28; -- External IRQ 3
+   EIR4 : constant := 29; -- External IRQ 4
+   EIR5 : constant := 30; -- External IRQ 5
+   EIR6 : constant := 31; -- External IRQ 6
+
+   -- 10.5.1 UIC Status Register (UIC0_SR)
+
+   subtype UIC0_SR_Type is Bitmap_32;
+
+   function UIC0_SR_Read return UIC0_SR_Type with
       Inline => True;
-   procedure UIC0_ER_Write (Value : in UIC0_ER_Register_Type) with
+   procedure UIC0_SR_Write (Value : in UIC0_SR_Type) with
       Inline => True;
+
+   -- 10.5.2 UIC Enable Register (UIC0_ER)
+
+   subtype UIC0_ER_Type is Bitmap_32;
+
+   function UIC0_ER_Read return UIC0_ER_Type with
+      Inline => True;
+   procedure UIC0_ER_Write (Value : in UIC0_ER_Type) with
+      Inline => True;
+
+   -- MSREE_Set/Clear
 
    procedure MSREE_Set with
       Inline => True;

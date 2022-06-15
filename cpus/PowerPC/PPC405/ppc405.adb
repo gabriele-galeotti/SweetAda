@@ -121,14 +121,38 @@ package body PPC405 is
    -- DCRs subprograms
    ----------------------------------------------------------------------------
 
-   function UIC0_ER_Read return UIC0_ER_Register_Type is
-      function DCR_Read is new MFDCR (UIC0_ER, UIC0_ER_Register_Type);
+   function UIC0_SR_Read return UIC0_SR_Type is
+      function DCR_Read is new MFDCR (UIC0_SR, UIC0_SR_Type);
+   begin
+      return DCR_Read;
+   end UIC0_SR_Read;
+
+   procedure UIC0_SR_Write (Value : in UIC0_SR_Type) is
+      procedure DCR_Write is new MTDCR (UIC0_SR, UIC0_SR_Type);
+   begin
+      DCR_Write (Value);
+   end UIC0_SR_Write;
+
+--   function UIC0_ER_Read return UIC0_ER_Type is
+--      function DCR_Read is new MFDCR (UIC0_ER, UIC0_ER_Type);
+--   begin
+--      return DCR_Read;
+--   end UIC0_ER_Read;
+
+--   procedure UIC0_ER_Write (Value : in UIC0_ER_Type) is
+--      procedure DCR_Write is new MTDCR (UIC0_ER, UIC0_ER_Type);
+--   begin
+--      DCR_Write (Value);
+--   end UIC0_ER_Write;
+
+   function UIC0_ER_Read return Bitmap_32 is
+      function DCR_Read is new MFDCR (UIC0_ER, Bitmap_32);
    begin
       return DCR_Read;
    end UIC0_ER_Read;
 
-   procedure UIC0_ER_Write (Value : in UIC0_ER_Register_Type) is
-      procedure DCR_Write is new MTDCR (UIC0_ER, UIC0_ER_Register_Type);
+   procedure UIC0_ER_Write (Value : in Bitmap_32) is
+      procedure DCR_Write is new MTDCR (UIC0_ER, Bitmap_32);
    begin
       DCR_Write (Value);
    end UIC0_ER_Write;
