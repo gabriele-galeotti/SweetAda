@@ -16,8 +16,9 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Storage_Elements;
-with Configure;
 with Interfaces;
+with Definitions;
+with Configure;
 with Core;
 with Bits;
 with PowerPC;
@@ -39,6 +40,7 @@ package body BSP is
 
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use Core;
    use Bits;
    use PowerPC;
@@ -79,13 +81,13 @@ package body BSP is
       -- UARTs ----------------------------------------------------------------
       UART1_Descriptor.Base_Address  := To_Address (UART1_BASEADDRESS);
       UART1_Descriptor.Scale_Address := 0;
-      UART1_Descriptor.Baud_Clock    := 1_843_200;
+      UART1_Descriptor.Baud_Clock    := CLK_UART1M8;
       UART1_Descriptor.Read_8        := MMIO.Read'Access;
       UART1_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (UART1_Descriptor);
       UART2_Descriptor.Base_Address  := To_Address (UART2_BASEADDRESS);
       UART2_Descriptor.Scale_Address := 0;
-      UART2_Descriptor.Baud_Clock    := 1_843_200;
+      UART2_Descriptor.Baud_Clock    := CLK_UART1M8;
       UART2_Descriptor.Read_8        := MMIO.Read'Access;
       UART2_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (UART2_Descriptor);
@@ -98,17 +100,7 @@ package body BSP is
       Console.Print (PVR_Read.Version, Prefix => "PVR version:  ", NL => True);
       Console.Print (PVR_Read.Revision, Prefix => "PVR revision: ", NL => True);
       Tclk_Init;
-      -- enable UIC0 interrupts
-      declare
-         I : UIC0_ER_Register_Type;
-      begin
-         I := UIC0_ER_Read;
-         I.U0IE := True;
-         UIC0_ER_Write (I);
-      end;
       MSREE_Set;
-      -- Enable receiver interrupt.
-      -- Uart1.IER := 1;
       -------------------------------------------------------------------------
    end BSP_Setup;
 
