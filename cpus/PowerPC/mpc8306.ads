@@ -33,6 +33,7 @@ package MPC8306 is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
    IMMRBAR : constant := 16#FF40_0000#;
 
@@ -80,18 +81,18 @@ package MPC8306 is
 
    type PRSSTAT_Type is
    record
-      Reserved1 : Bits.Bits_4;
+      Reserved1 : Bits_4;
       DLSL_3    : Boolean;
       DLSL_2    : Boolean;
       DLSL_1    : Boolean;
       DLSL_0    : Boolean;
       CLSL      : Boolean;
-      Reserved2 : Bits.Bits_3;
+      Reserved2 : Bits_3;
       WPSPL     : Boolean;
       CDPL      : Boolean;
-      Reserved3 : Bits.Bits_1;
+      Reserved3 : Bits_1;
       CINS      : Boolean;
-      Reserved4 : Bits.Bits_4;
+      Reserved4 : Bits_4;
       BREN      : Boolean;
       BWEN      : Boolean;
       RTA       : Boolean;
@@ -147,8 +148,8 @@ package MPC8306 is
 
    type I2CnADR_Type is
    record
-      ADDR     : Bits.Bits_7; -- Slave address.
-      Reserved : Bits.Bits_1;
+      ADDR     : Bits_7; -- Slave address.
+      Reserved : Bits_1;
    end record with
       Bit_Order => High_Order_First,
       Size      => 8;
@@ -165,14 +166,14 @@ package MPC8306 is
 
    type I2CnCR_Type is
    record
-      MEN      : Boolean;     -- Module enable.
-      MIEN     : Boolean;     -- Module interrupt enable
-      MSTA     : Boolean;     -- Master/slave mode START
-      MTX      : Bits.Bits_1; -- Transmit/receive mode select.
-      TXAK     : Boolean;     -- Transfer acknowledge.
-      RSTA     : Boolean;     -- Repeated START.
-      Reserved : Bits.Bits_1;
-      BCST     : Boolean;     -- Broadcast
+      MEN      : Boolean; -- Module enable.
+      MIEN     : Boolean; -- Module interrupt enable
+      MSTA     : Boolean; -- Master/slave mode START
+      MTX      : Bits_1;  -- Transmit/receive mode select.
+      TXAK     : Boolean; -- Transfer acknowledge.
+      RSTA     : Boolean; -- Repeated START.
+      Reserved : Bits_1;
+      BCST     : Boolean; -- Broadcast
    end record with
       Bit_Order => High_Order_First,
       Size      => 8;
@@ -195,14 +196,14 @@ package MPC8306 is
 
    type I2CnSR_Type is
    record
-      MCF   : Boolean;     -- Data transfer.
-      MAAS  : Boolean;     -- Addressed as a slave.
-      MBB   : Boolean;     -- Bus busy.
-      MAL   : Boolean;     -- Arbitration lost.
-      BCSTM : Boolean;     -- Broadcast match.
-      SRW   : Bits.Bits_1; -- Slave read/write.
-      MIF   : Boolean;     -- Module interrupt.
-      RXAK  : Boolean;     -- Received acknowledge. (negated)
+      MCF   : Boolean; -- Data transfer.
+      MAAS  : Boolean; -- Addressed as a slave.
+      MBB   : Boolean; -- Bus busy.
+      MAL   : Boolean; -- Arbitration lost.
+      BCSTM : Boolean; -- Broadcast match.
+      SRW   : Bits_1;  -- Slave read/write.
+      MIF   : Boolean; -- Module interrupt.
+      RXAK  : Boolean; -- Received acknowledge. (negated)
    end record with
       Bit_Order => High_Order_First,
       Size      => 8;
@@ -221,15 +222,15 @@ package MPC8306 is
    type I2C_Type is
    record
       ADR   : I2CnADR_Type with Volatile_Full_Access => True;
-      Pad1  : Bits.Bits_24;
+      Pad1  : Bits_24;
       FDR   : Unsigned_8   with Volatile_Full_Access => True;
-      Pad2  : Bits.Bits_24;
+      Pad2  : Bits_24;
       CR    : I2CnCR_Type  with Volatile_Full_Access => True;
-      Pad3  : Bits.Bits_24;
+      Pad3  : Bits_24;
       SR    : I2CnSR_Type  with Volatile_Full_Access => True;
-      Pad4  : Bits.Bits_24;
+      Pad4  : Bits_24;
       DR    : Unsigned_8   with Volatile_Full_Access => True;
-      Pad5  : Bits.Bits_24;
+      Pad5  : Bits_24;
       DFSRR : Unsigned_8   with Volatile_Full_Access => True;
    end record with
       Size => 21 * 8;
