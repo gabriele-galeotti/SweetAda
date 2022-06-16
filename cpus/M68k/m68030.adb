@@ -79,14 +79,14 @@ package body M68030 is
    ----------------------------------------------------------------------------
    -- TCR_Set
    ----------------------------------------------------------------------------
-   procedure TCR_Set (Value : in TCR_Register_Type) is
+   procedure TCR_Set (Value : in TCR_Type) is
    begin
       Asm (
            Template => ""                         & CRLF &
                        "        pmove   %0,%%tcr" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => TCR_Register_Type'Asm_Input ("d", Value),
+           Inputs   => TCR_Type'Asm_Input ("d", Value),
            Clobber  => "",
            Volatile => True
           );
