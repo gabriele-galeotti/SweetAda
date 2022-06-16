@@ -107,10 +107,10 @@ package M68k is
       ZERO      : Boolean;
       NEGATIVE  : Boolean;
       EXTEND    : Boolean;
-      Reserved1 : Bits_3_Zeroes := Bits_3_0;
+      Reserved1 : Bits_3 := 0;
       -- supervisor
       ILEVEL    : ILEVEL_Type;
-      Reserved2 : Bits_1_Zeroes := Bits_1_0;
+      Reserved2 : Bits_1 := 0;
       MBIT      : Boolean;
       SBIT      : Boolean;
       T0        : Boolean;
