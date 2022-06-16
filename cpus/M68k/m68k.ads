@@ -102,34 +102,34 @@ package M68k is
    type SR_Type is
    record
       -- CCR
-      CARRY     : Boolean;
-      OVERFLOW  : Boolean;
-      ZERO      : Boolean;
-      NEGATIVE  : Boolean;
-      EXTEND    : Boolean;
+      C         : Boolean;     -- CARRY
+      V         : Boolean;     -- OVERFLOW
+      Z         : Boolean;     -- ZERO
+      N         : Boolean;     -- NEGATIVE
+      X         : Boolean;     -- EXTEND
       Reserved1 : Bits_3 := 0;
       -- supervisor
-      ILEVEL    : ILEVEL_Type;
+      ILEVEL    : ILEVEL_Type; -- INTERRUPT PRIORITY MASK
       Reserved2 : Bits_1 := 0;
-      MBIT      : Boolean;
-      SBIT      : Boolean;
-      T0        : Boolean;
-      T1        : Boolean;
+      M         : Boolean;     -- MASTER/INTERRUPT STATE
+      S         : Boolean;     -- SUPERVISOR/USER STATE
+      T0        : Boolean;     -- TRACE ENABLE 0
+      T1        : Boolean;     -- TRACE ENABLE 1
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
    for SR_Type use
    record
-      CARRY     at 0 range 0 .. 0;
-      OVERFLOW  at 0 range 1 .. 1;
-      ZERO      at 0 range 2 .. 2;
-      NEGATIVE  at 0 range 3 .. 3;
-      EXTEND    at 0 range 4 .. 4;
+      C         at 0 range 0 .. 0;
+      V         at 0 range 1 .. 1;
+      Z         at 0 range 2 .. 2;
+      N         at 0 range 3 .. 3;
+      X         at 0 range 4 .. 4;
       Reserved1 at 0 range 5 .. 7;
       ILEVEL    at 0 range 8 .. 10;
       Reserved2 at 0 range 11 .. 11;
-      MBIT      at 0 range 12 .. 12;
-      SBIT      at 0 range 13 .. 13;
+      M         at 0 range 12 .. 12;
+      S         at 0 range 13 .. 13;
       T0        at 0 range 14 .. 14;
       T1        at 0 range 15 .. 15;
    end record;
