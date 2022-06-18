@@ -33,6 +33,7 @@ package CortexM4 is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
    -- Auxiliary Control Register
 
@@ -41,10 +42,10 @@ package CortexM4 is
       DISMCYCINT : Boolean;      -- Disables interruption of multi-cycle instructions.
       DISDEFWBUF : Boolean;      -- Disables write buffer use during default memory map accesses.
       DISFOLD    : Boolean;      -- Disables folding of IT instructions.
-      Reserved1  : Bits.Bits_5;
+      Reserved1  : Bits_5 := 0;
       DISFPCA    : Boolean;      -- SBZP.
       DISOOFP    : Boolean;      -- Disables FP instructions completing out of order with respect to integer instructions.
-      Reserved2  : Bits.Bits_22;
+      Reserved2  : Bits_22 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
