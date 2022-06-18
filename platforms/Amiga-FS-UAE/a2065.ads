@@ -55,7 +55,7 @@ package A2065 is
    A2065_RAM_SIZE    : constant := 16#0000_8000#;
 
    ----------------------------------------------------------------------------
-   -- Subprograms
+   -- subprograms
    ----------------------------------------------------------------------------
 
    procedure Probe (PIC : in ZorroII.PIC_Type; Success : out Boolean);

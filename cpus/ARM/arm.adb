@@ -111,9 +111,6 @@ package body ARM is
    ----------------------------------------------------------------------------
    -- Memory synchronization
    ----------------------------------------------------------------------------
-   -- __REF__ libgcc/config/arm/freebsd-atomic.c
-   -- __REF__ libgcc/config/arm/linux-atomic.c
-   ----------------------------------------------------------------------------
    procedure Memory_Synchronization is
    begin
       Asm (

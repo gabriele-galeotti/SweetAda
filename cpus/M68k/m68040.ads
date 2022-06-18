@@ -263,6 +263,8 @@ package M68040 is
       PA       at 0 range 12 .. 31;
    end record;
 
+   -- subprograms
+
    procedure URP_Set (URP_Address : in Address) with
       Inline => True;
    procedure SRP_Set (SRP_Address : in Address) with

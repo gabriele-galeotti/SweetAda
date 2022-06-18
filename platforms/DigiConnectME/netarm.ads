@@ -508,7 +508,7 @@ package NETARM is
       Import     => True,
       Convention => Ada;
 
-   -- Subprograms
+   -- subprograms
 
    procedure Tclk_Init;
 

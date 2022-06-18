@@ -180,7 +180,7 @@ package PCI is
    Cfg_Access_Descriptor : Cfg_Access_Descriptor_Type := CFG_DESCRIPTOR_INVALID;
 
    ----------------------------------------------------------------------------
-   -- Subprograms
+   -- subprograms
    ----------------------------------------------------------------------------
 
    -- Unsigned_8

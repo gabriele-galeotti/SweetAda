@@ -89,7 +89,6 @@ package M68k is
    ----------------------------------------------------------------------------
 
    type ILEVEL_Type is new Bits_3;
-
    ILEVEL0 : constant ILEVEL_Type := 2#000#;
    ILEVEL1 : constant ILEVEL_Type := 2#001#;
    ILEVEL2 : constant ILEVEL_Type := 2#010#;
