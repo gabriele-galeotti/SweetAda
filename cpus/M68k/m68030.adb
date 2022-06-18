@@ -44,15 +44,13 @@ package body M68030 is
    -- CRP_Set
    ----------------------------------------------------------------------------
    procedure CRP_Set (CRP_Address : in Address) is
-      CRP_Value : aliased Address;
    begin
-      CRP_Value := CRP_Address;
       Asm (
-           Template => ""                         & CRLF &
-                       "        pmove   %0,%%crp" & CRLF &
+           Template => ""                           & CRLF &
+                       "        pmove   (%0),%%crp" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => System.Address'Asm_Input ("m", CRP_Value),
+           Inputs   => System.Address'Asm_Input ("a", CRP_Address),
            Clobber  => "",
            Volatile => True
           );
@@ -62,15 +60,13 @@ package body M68030 is
    -- SRP_Set
    ----------------------------------------------------------------------------
    procedure SRP_Set (SRP_Address : in Address) is
-      SRP_Value : aliased Address;
    begin
-      SRP_Value := SRP_Address;
       Asm (
-           Template => ""                         & CRLF &
-                       "        pmove   %0,%%srp" & CRLF &
+           Template => ""                           & CRLF &
+                       "        pmove   (%0),%%srp" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => System.Address'Asm_Input ("m", SRP_Value),
+           Inputs   => System.Address'Asm_Input ("a", SRP_Address),
            Clobber  => "",
            Volatile => True
           );
