@@ -36,6 +36,7 @@ package CFPeripherals is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
    ----------------------------------------------------------------------------
    -- UART
@@ -100,7 +101,7 @@ package CFPeripherals is
    PTPM_FLOW      : constant := 2#010#; -- Force Parity, Low Parity
    PTPM_FHIGH     : constant := 2#011#; -- Force Parity, High Parity
    PTPM_NOP       : constant := 2#100#; -- No Parity
-   -- PTPM_NOP       : constant := 2#101#; -- No Parity
+   PTPM_NOP2      : constant := 2#101#; -- No Parity
    PTPM_MDROPDATA : constant := 2#110#; -- Multidrop Mode, Data Character
    PTPM_MDROPADDR : constant := 2#111#; -- Multidrop Mode, Address Character
 
@@ -115,11 +116,11 @@ package CFPeripherals is
 
    type UMR1_Type is
    record
-      BC    : Bits.Bits_2; -- Bits per Character
-      PTPM  : Bits.Bits_3; -- Parity Type and Parity Mode
-      ERR   : Bits.Bits_1; -- Error Mode
-      RxIRQ : Bits.Bits_1; -- Receiver Interrupt Select
-      RxRTS : Bits.Bits_1; -- Receiver Request-to-Send Control
+      BC    : Bits_2; -- Bits per Character
+      PTPM  : Bits_3; -- Parity Type and Parity Mode
+      ERR   : Bits_1; -- Error Mode
+      RxIRQ : Bits_1; -- Receiver Interrupt Select
+      RxRTS : Bits_1; -- Receiver Request-to-Send Control
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -190,10 +191,10 @@ package CFPeripherals is
 
    type UCR_Type is
    record
-      RC     : Bits.Bits_2; -- Receiver Commands
-      TC     : Bits.Bits_2; -- Transmitter Commands
-      MISC   : Bits.Bits_3; -- Miscellaneous Commands
-      Unused : Bits.Bits_1;
+      RC     : Bits_2; -- Receiver Commands
+      TC     : Bits_2; -- Transmitter Commands
+      MISC   : Bits_3; -- Miscellaneous Commands
+      Unused : Bits_1;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
