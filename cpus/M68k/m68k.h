@@ -87,15 +87,15 @@
  * Status register.
  *
  */
-#define FLAG_CARRY    (1 << 0)
-#define FLAG_OVERFLOW (1 << 1)
-#define FLAG_ZERO     (1 << 2)
-#define FLAG_NEGATIVE (1 << 3)
-#define FLAG_EXTEND   (1 << 4)
-#define MBIT          (1 << 12)
-#define SBIT          (1 << 13)
-#define FLAG_T0       (1 << 14)
-#define FLAG_T1       (1 << 15)
+#define SR_C  (1 << 0)
+#define SR_V  (1 << 1)
+#define SR_Z  (1 << 2)
+#define SR_N  (1 << 3)
+#define SR_X  (1 << 4)
+#define SR_M  (1 << 12)
+#define SR_S  (1 << 13)
+#define SR_T0 (1 << 14)
+#define SR_T1 (1 << 15)
 
 #define OPCODE_NOP             0x4E71
 #define OPCODE_BREAKPOINT      0x4E4F
