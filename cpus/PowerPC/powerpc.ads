@@ -174,7 +174,8 @@ package PowerPC is
       RI        : Boolean;      -- Recoverable interrupt
       LE        : Boolean;      -- Little-endian mode enable
    end record with
-      Size => 32;
+      Bit_Order => High_Order_First,
+      Size      => 32;
    for MSR_Type use
    record
       Reserved1 at 0 range 0 .. 12;

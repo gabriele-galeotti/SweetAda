@@ -86,7 +86,8 @@ package PPC405 is
       FIS      : Boolean;
       Reserved : Bits_26_Zeroes;
    end record with
-      Size => 32;
+      Bit_Order => High_Order_First,
+      Size      => 32;
    for TSR_Register_Type use
    record
       ENW      at 0 range 0 .. 0;
@@ -131,7 +132,8 @@ package PPC405 is
       ARE      : Boolean;
       Reserved : Bits_22_Zeroes := Bits_22_0;
    end record with
-      Size => 32;
+      Bit_Order => High_Order_First,
+      Size      => 32;
    for TCR_Register_Type use
    record
       WP       at 0 range 0 .. 1;
