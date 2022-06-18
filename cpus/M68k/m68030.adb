@@ -46,8 +46,8 @@ package body M68030 is
    procedure CRP_Set (CRP_Address : in Address) is
    begin
       Asm (
-           Template => ""                           & CRLF &
-                       "        pmove   (%0),%%crp" & CRLF &
+           Template => ""                          & CRLF &
+                       "        pmove   %0@,%%crp" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("a", CRP_Address),
@@ -62,8 +62,8 @@ package body M68030 is
    procedure SRP_Set (SRP_Address : in Address) is
    begin
       Asm (
-           Template => ""                           & CRLF &
-                       "        pmove   (%0),%%srp" & CRLF &
+           Template => ""                          & CRLF &
+                       "        pmove   %0@,%%srp" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("a", SRP_Address),
