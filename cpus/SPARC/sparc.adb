@@ -100,6 +100,7 @@ package body SPARC is
       Asm (
            Template => ""                         & CRLF &
                        "        mov     %0,%%psr" & CRLF &
+                       "        nop ; nop ; nop " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => PSR_Type'Asm_Input ("r", PSR),
@@ -125,6 +126,14 @@ package body SPARC is
            Volatile => True
           );
    end TBR_Set;
+
+   procedure Traps_Enable (Enable : in Boolean) is
+      PSR : PSR_Type;
+   begin
+      PSR := PSR_Read;
+      PSR.ET := Enable;
+      PSR_Write (PSR);
+   end Traps_Enable;
 
    ----------------------------------------------------------------------------
    -- Irq_Enable/Disable
@@ -167,11 +176,13 @@ package body SPARC is
 
    end Irq_Disable;
 
+   -- __TBD__
    function Irq_State_Get return Irq_State_Type is
    begin
       return 0;
    end Irq_State_Get;
 
+   -- __TBD__
    procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
       pragma Unreferenced (Irq_State);
    begin

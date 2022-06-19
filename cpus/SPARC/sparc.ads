@@ -157,6 +157,8 @@ package SPARC is
 
    procedure TBR_Set (TBR_Address : in Address) with
       Inline => True;
+   procedure Traps_Enable (Enable : in Boolean) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
