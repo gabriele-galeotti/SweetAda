@@ -924,6 +924,7 @@ ifeq ($(DISABLE_STACK_USAGE),Y)
 endif
 	@$(call echo-print,"MAKE:                $(MAKE)")
 	@$(call echo-print,"GCC VERSION:         $(GCC_VERSION)")
+	@$(call echo-print,"GCC SWITCHES (RTS):  $(strip $(ADAC_SWITCHES_RTS))")
 	@$(call echo-print,"GCC SWITCHES:        $(strip $(GCC_SWITCHES_PLATFORM))")
 	@$(call echo-print,"GCC MULTIDIR:        $(GCC_MULTIDIR)")
 	@$(call echo-print,"LD SCRIPT:           $(LD_SCRIPT)")
