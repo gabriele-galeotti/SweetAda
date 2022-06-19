@@ -122,7 +122,7 @@ package ARM is
       T      : Boolean;
       F      : Boolean;
       I      : Boolean;
-      Unused : Bits_20_Zeroes;
+      Unused : Bits_20 := 0;
       V      : Boolean;
       C      : Boolean;
       Z      : Boolean;

@@ -68,9 +68,9 @@ package MIPS32 is
       UX      : Boolean;
       SX      : Boolean;
       KX      : Boolean;
-      Unused1 : Bits_8_Zeroes := Bits_8_0;
-      Unused2 : Bits_8_Zeroes := Bits_8_0;
-      Unused3 : Bits_4_Zeroes := Bits_4_0;
+      Unused1 : Bits_8 := 0;
+      Unused2 : Bits_8 := 0;
+      Unused3 : Bits_4 := 0;
       CU0     : Boolean;
       CU1     : Boolean;
       CU2     : Boolean;
