@@ -6,6 +6,7 @@ amiga_model = A4000/040
 kickstart_file = @SWEETADA_PATH@/@KERNEL_ROMFILE@
 cpu = 68030
 fpu = 68881
+uae_mmu_model = 68030
 uae_chipset = ocs
 chip_memory = 1024
 fast_memory = 4096
