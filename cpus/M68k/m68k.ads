@@ -88,6 +88,8 @@ package M68k is
    -- Basic types
    ----------------------------------------------------------------------------
 
+   -- 1.3.2 Status Register
+
    type ILEVEL_Type is new Bits_3;
    ILEVEL0 : constant ILEVEL_Type := 2#000#;
    ILEVEL1 : constant ILEVEL_Type := 2#001#;
@@ -131,6 +133,53 @@ package M68k is
       S         at 0 range 13 .. 13;
       T0        at 0 range 14 .. 14;
       T1        at 0 range 15 .. 15;
+   end record;
+
+   -- 1.2.2 Floating-Point Control Register (FPCR)
+
+   RND_RN : constant := 2#00#; -- To Nearest
+   RND_RZ : constant := 2#01#; -- Toward Zero
+   RND_RM : constant := 2#10#; -- Toward Minus Infinity
+   RND_RP : constant := 2#11#; -- Toward Plus Infinity
+
+   PREC_0 : constant := 2#00#;
+   PREC_1 : constant := 2#01#;
+   PREC_2 : constant := 2#10#;
+   PREC_3 : constant := 2#11#;
+
+   type FPCR_Type is
+   record
+      -- MODE CONTROL
+      Reserved1 : Bits_4;
+      RND       : Bits_2; -- ROUNDING MODE
+      PREC      : Bits_2; -- ROUNDING PRECISION
+      -- EXCEPTION ENABLE
+      INEX1     : Boolean; -- INEXACT DECIMAL INPUT
+      INEX2     : Boolean; -- INEXACT OPERATION
+      DZ        : Boolean; -- DIVIDE BY ZERO
+      UNFL      : Boolean; -- UNDERFLOW
+      OVFL      : Boolean; -- OVERFLOW
+      OPERR     : Boolean; -- OPERAND ERROR
+      SNAN      : Boolean; -- SIGNALING NOT-A-NUMBER
+      BSUN      : Boolean; -- BRANCH/SET ON UNORDERED
+      Reserved2 : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for FPCR_Type use
+   record
+      Reserved1 at 0 range 0 .. 3;
+      RND       at 0 range 4 .. 5;
+      PREC      at 0 range 6 .. 7;
+      INEX1     at 0 range 8 .. 8;
+      INEX2     at 0 range 9 .. 9;
+      DZ        at 0 range 10 .. 10;
+      UNFL      at 0 range 11 .. 11;
+      OVFL      at 0 range 12 .. 12;
+      OPERR     at 0 range 13 .. 13;
+      SNAN      at 0 range 14 .. 14;
+      BSUN      at 0 range 15 .. 15;
+      Reserved2 at 0 range 16 .. 31;
    end record;
 
    ----------------------------------------------------------------------------
