@@ -220,13 +220,54 @@ trap_entry:
                 // The trapped program counters are saved in local registers 1
                 // and 2 of the new window: r[17] ← PC, r[18] ← nPC
                 //
+                // The window has changed, so save overlapping registers.
+                //
+                add     %sp,-64,%sp
                 st      %g1,[%sp+0x00]
                 st      %g2,[%sp+0x04]
+                st      %g3,[%sp+0x08]
+                st      %g4,[%sp+0x0C]
+                st      %g5,[%sp+0x10]
+                st      %g6,[%sp+0x14]
+                st      %g7,[%sp+0x18]
+                st      %i0,[%sp+0x1C]
+                st      %i1,[%sp+0x20]
+                st      %i2,[%sp+0x24]
+                st      %i3,[%sp+0x28]
+                st      %i4,[%sp+0x2C]
+                st      %i5,[%sp+0x30]
+                st      %i6,[%sp+0x34]
+                st      %i7,[%sp+0x38]
+                add     %sp,-96,%sp
                 .extern irq_process
                 call    irq_process
                 nop
+                add     %sp,96,%sp
                 ld      [%sp+0x00],%g1
                 ld      [%sp+0x04],%g2
+                ld      [%sp+0x08],%g3
+                ld      [%sp+0x0c],%g4
+                ld      [%sp+0x10],%g5
+                ld      [%sp+0x14],%g6
+                ld      [%sp+0x18],%g7
+                ld      [%sp+0x1C],%i0
+                ld      [%sp+0x20],%i1
+                ld      [%sp+0x24],%i2
+                ld      [%sp+0x28],%i3
+                ld      [%sp+0x2C],%i4
+                ld      [%sp+0x30],%i5
+                ld      [%sp+0x34],%i6
+                ld      [%sp+0x38],%i7
+                add     %sp,64,%sp
                 jmpl    %r17,%r0                // old PC
                 rett    %r18                    // old nPC
+
+////////////////////////////////////////////////////////////////////////////////
+
+                .sect   .bss
+
+                .global trap_stack
+                .align  8
+                .space  4096
+trap_stack:
 
