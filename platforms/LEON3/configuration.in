@@ -8,7 +8,7 @@
 CPU       := SPARC
 CPU_MODEL := LEON3
 
-GCC_SWITCHES_PLATFORM     += -mflat -mcpu=leon3
+GCC_SWITCHES_PLATFORM     += -mcpu=leon3 -m32 -mflat
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y

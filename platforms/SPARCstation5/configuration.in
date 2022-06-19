@@ -7,7 +7,7 @@
 
 CPU := SPARC
 
-GCC_SWITCHES_PLATFORM     += -mflat -mcpu=v8 -m32 -Wa,-Av8
+GCC_SWITCHES_PLATFORM     += -mcpu=v8 -m32 -mflat
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
