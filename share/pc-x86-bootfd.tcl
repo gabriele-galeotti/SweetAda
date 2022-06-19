@@ -50,6 +50,8 @@ set kernel_filename [lindex $argv 0]
 set bootsegment [lindex $argv 1]
 set device_filename [lindex $argv 2]
 
+set kernel_size [file size $kernel_filename]
+
 puts "$SCRIPT_FILENAME: creating floppy disk ..."
 
 set BPS 512
@@ -57,14 +59,16 @@ set CYL 80
 set HPC 2
 set SPT 18
 
+# compute sectors per cylinder
 set SECTORS_PER_CYLINDER [expr $HPC * $SPT]
-set SECTOR_COUNT [expr $CYL * $SECTORS_PER_CYLINDER]
+# sector count of device
+set DEVICE_SECTORS [expr $CYL * $SECTORS_PER_CYLINDER]
 
 if {[string index $device_filename 0] eq "+"} {
     set device_type FILE
     set device_filename [string trimleft $device_filename "+"]
     set fp [open $device_filename "w"]
-    seek $fp [expr $SECTOR_COUNT * $BPS - 1]
+    seek $fp [expr $DEVICE_SECTORS * $BPS - 1]
     puts -nonewline $fp [binary format c1 0]
     close $fp
 } else {
@@ -78,14 +82,13 @@ if {[string index $device_filename 0] eq "+"} {
 }
 
 # build bootsector
-set kernel_size [file size $kernel_filename]
-set NSECTORS [expr ($kernel_size + $BPS - 1) / $BPS]
-puts [format "kernel sector count: %d (0x%X)" $NSECTORS $NSECTORS]
+set KERNEL_SECTORS [expr ($kernel_size + $BPS - 1) / $BPS]
+puts [format "kernel sector count: %d (0x%X)" $KERNEL_SECTORS $KERNEL_SECTORS]
 eval exec $::env(TOOLCHAIN_CC)                                           \
   -o bootsector.o                                                        \
   -c                                                                     \
   -DFLOPPYDISK                                                           \
-  -DNSECTORS=$NSECTORS                                                   \
+  -DNSECTORS=$KERNEL_SECTORS                                             \
   -DBOOTSEGMENT=$bootsegment                                             \
   -DDELAY                                                                \
   [file join $::env(SWEETADA_PATH) $::env(SHARE_DIRECTORY) bootsector.S]

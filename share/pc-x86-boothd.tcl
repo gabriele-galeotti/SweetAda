@@ -109,36 +109,38 @@ set kernel_filename [lindex $argv 0]
 set bootsegment [lindex $argv 1]
 set device_filename [lindex $argv 2]
 
+set kernel_size [file size $kernel_filename]
+
 puts "$SCRIPT_FILENAME: creating hard disk ..."
 
 set BPS 512
-
 # X/16/63 geometry
-set CYL 4
 set HPC 16
 set SPT 63
 # X/255/63 geometry
-#set CYL 4
 #set HPC 255
 #set SPT 63
-# USB-ZIP 100 MB, partition #4
-#set CYL 96
-#set HPC 64
-#set SPT 32
-# USB-ZIP 250 MB, partition #4
-#set CYL 239
-#set HPC 64
-#set SPT 32
 
+# compute sectors per cylinder
 set SECTORS_PER_CYLINDER [expr $HPC * $SPT]
-set SECTOR_COUNT [expr $CYL * $SECTORS_PER_CYLINDER]
+# MBR # of sectors, 1 full cylinder
+set MBR_SECTORS $SECTORS_PER_CYLINDER
+# compute # of sectors sufficient to contain the kernel
+set KERNEL_SECTORS [expr ($kernel_size + $BPS - 1) / $BPS]
+puts [format "kernel sector count: %d (0x%X)" $KERNEL_SECTORS $KERNEL_SECTORS]
+# compute # of cylinders sufficient to contain the kernel
+set CYL_PARTITION [expr ($KERNEL_SECTORS + $SECTORS_PER_CYLINDER - 1) / $SECTORS_PER_CYLINDER]
+# total device # of cylinders, +1 for full cylinder MBR
+set CYL [expr $CYL_PARTITION + 1]
+# sector count of device
+set DEVICE_SECTORS [expr $CYL * $SECTORS_PER_CYLINDER]
 
 if {[string index $device_filename 0] eq "+"} {
     set device_type FILE
     set device_filename [string trimleft $device_filename "+"]
     set fp [open $device_filename "w"]
     fconfigure $fp -translation binary
-    seek $fp [expr $SECTOR_COUNT * $BPS - 1] start
+    seek $fp [expr $DEVICE_SECTORS * $BPS - 1] start
     puts -nonewline $fp [binary format c1 0]
     close $fp
 } else {
@@ -153,7 +155,7 @@ if {[string index $device_filename 0] eq "+"} {
 
 # partiton starts on cylinder boundary (1st full cylinder reserved for MBR)
 set PARTITION_SECTOR_START $SECTORS_PER_CYLINDER
-set PARTITION_SECTORS_SIZE [expr $SECTOR_COUNT - $SECTORS_PER_CYLINDER]
+set PARTITION_SECTORS_SIZE [expr $CYL_PARTITION * $SECTORS_PER_CYLINDER]
 puts "partition sector start: $PARTITION_SECTOR_START"
 puts "partition sector size:  $PARTITION_SECTORS_SIZE"
 
@@ -182,7 +184,6 @@ puts "$SCRIPT_FILENAME: creating partition ..."
 write_partition $device_filename $PARTITION_SECTOR_START $PARTITION_SECTORS_SIZE
 
 # build bootsector
-set kernel_size [file size $kernel_filename]
 # handle large partitions
 if {$PARTITION_SECTORS_SIZE > 65535} {
     set PARTITION_SECTORS_SSIZE 0
@@ -191,8 +192,6 @@ if {$PARTITION_SECTORS_SIZE > 65535} {
     set PARTITION_SECTORS_SSIZE $PARTITION_SECTORS_SIZE
     set PARTITION_SECTORS_LSIZE 0
 }
-set NSECTORS [expr ($kernel_size + $BPS - 1) / $BPS]
-puts [format "kernel sector count: %d (0x%X)" $NSECTORS $NSECTORS]
 eval exec $::env(TOOLCHAIN_CC)                                           \
   -o bootsector.o                                                        \
   -c                                                                     \
@@ -202,7 +201,7 @@ eval exec $::env(TOOLCHAIN_CC)                                           \
   -DPARTITION_SECTOR_START=$PARTITION_SECTOR_START                       \
   -DPARTITION_SECTORS_SSIZE=$PARTITION_SECTORS_SSIZE                     \
   -DPARTITION_SECTORS_LSIZE=$PARTITION_SECTORS_LSIZE                     \
-  -DNSECTORS=$NSECTORS                                                   \
+  -DNSECTORS=$KERNEL_SECTORS                                             \
   -DBOOTSEGMENT=$bootsegment                                             \
   -DDELAY                                                                \
   [file join $::env(SWEETADA_PATH) $::env(SHARE_DIRECTORY) bootsector.S]
@@ -217,7 +216,7 @@ set bootsector [read $fp]
 close $fp
 set fp [open $device_filename "a+"]
 fconfigure $fp -translation binary
-seek $fp [expr $SECTORS_PER_CYLINDER * $BPS] start
+seek $fp [expr $MBR_SECTORS * $BPS] start
 puts -nonewline $fp $bootsector
 close $fp
 
@@ -229,7 +228,7 @@ set kernel [read $fp]
 close $fp
 set fp [open $device_filename "a+"]
 fconfigure $fp -translation binary
-seek $fp [expr ($SECTORS_PER_CYLINDER + 1) * $BPS] start
+seek $fp [expr ($MBR_SECTORS + 1) * $BPS] start
 puts -nonewline $fp $kernel
 close $fp
 
