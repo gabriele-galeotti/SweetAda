@@ -77,9 +77,9 @@ package body BSP is
       Console.Print ("LEON3 (QEMU emulator)", NL => True);
       Console.Print (Integer (Nwindows), Prefix => "Nwindows: ", NL => True);
       -------------------------------------------------------------------------
-      INTC_LEVEL.IL (10)    := True;
+      INTC_LEVEL.IL (10) := True;
       INTC_PROCMASK0.IM (10) := True;
-      -- SPARC.Irq_Enable;
+      SPARC.Irq_Enable;
       Tclk_Init;
       -------------------------------------------------------------------------
    end BSP_Setup;

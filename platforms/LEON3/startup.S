@@ -14,12 +14,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define ASI_MMUREGS    0x04
-#define ASI_BYPASS     0x20
-#define ASI_SCRATCHPAD 0x20
-
-////////////////////////////////////////////////////////////////////////////////
-
                 .sect   .startup,"ax"
 
                 .type   _start,@function
@@ -61,24 +55,43 @@ _start:
                 // a bit vector in which the implemented windows (and only the
                 // implemented windows) are indicated by 1?s.
                 //
-                sethi   %hi(0xFFFFFFFF),%g3
-                or      %g3,%lo(0xFFFFFFFF),%g3
-                mov     %g3,%wim
+                sethi   %hi(0xFFFFFFFF),%g5
+                or      %g3,%lo(0xFFFFFFFF),%g5
+                mov     %g5,%wim
                 NOP3
-                mov     %wim,%g3                        // now g3 contains a mask of all windows
-                mov     %g0,%g1                         // clear # of windows
+                mov     %wim,%g4                        // now g4 contains a mask of all windows
+                mov     %g4,%g3                         // use g3 for counting
+                mov     %g0,%g1                         // clear NWINDOWS
                 mov     %g0,%g2                         // g2 will add to g1
 1:              and     %g3,1,%g2                       // check if this window is implemented
                 add     %g1,%g2,%g1                     // add result to g1
-                tst     %g2                             // was it 0?
-                bne     1b                              // if yes, windows exahusted, else ...
+                tst     %g2                             // g2 == 0?
+                bne     1b                              // y -> windows exahusted
                 srl     %g3,1,%g3                       // shift g3 in the delay slot and cycle
+                // g1 contains NWINDOWS
                 sethi   %hi(nwindows),%g2
                 or      %g2,%lo(nwindows),%g2
                 sta     %g1,[%g2]ASI_SCRATCHPAD
-                // force 8 windows
-                set     0xFFFFFF00,%g1
-                mov     %g1,%wim
+                // invert the mask and write back to WIM
+                xor     %g4,%g5,%g3
+                mov     %g3,%wim
+                NOP3
+
+                //
+                // Setup stack pointer for CWP = NWINDOWS-1.
+                // g1 = NWINDOWS on entry
+                //
+                add     %g1,-1,%g2
+                mov     %psr,%g1
+                or      %g1,%g2,%g1
+                mov     %g1,%psr
+                NOP3
+                .extern trap_stack
+                sethi   %hi(trap_stack),%sp
+                or      %sp,%lo(trap_stack),%sp
+                // CWP = 0
+                xor     %g1,%g2,%g1
+                mov     %g1,%psr
                 NOP3
 
                 //

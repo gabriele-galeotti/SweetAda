@@ -401,6 +401,8 @@ package LEON3 is
       Import     => True,
       Convention => Ada;
 
+   -- subprograms
+
    procedure Tclk_Init;
 
    ----------------------------------------------------------------------------
@@ -516,6 +518,8 @@ package LEON3 is
       Volatile   => True,
       Import     => True,
       Convention => Ada;
+
+   -- subprograms
 
    procedure UART1_Init;
    procedure UART1_TX (Data : in Unsigned_8);
