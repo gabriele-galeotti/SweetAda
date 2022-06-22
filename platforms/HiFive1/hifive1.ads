@@ -39,11 +39,13 @@ package HiFive1 is
    -- __REF__ SiFive FE310-G002 Manual v1p0
    ----------------------------------------------------------------------------
 
+   AON_BASEADDRESS : constant := 16#1000_0000#;
+
    ----------------------------------------------------------------------------
    -- 6 Clock Generation (PRCI)
    ----------------------------------------------------------------------------
 
-   -- hfrosccfg: Ring Oscillator Configuration and Status (hfrosccfg)
+   -- 6.3 Internal Trimmable Programmable 72 MHz Oscillator (HFROSC)
 
    type hfrosccfg_Type is
    record
@@ -66,7 +68,7 @@ package HiFive1 is
       hfroscrdy  at 0 range 31 .. 31;
    end record;
 
-   -- hfxosccfg: Crystal Oscillator Configuration and Status (hfxosccfg)
+   -- 6.4 External 16 MHz Crystal Oscillator (HFXOSC)
 
    type hfxosccfg_Type is
    record
@@ -83,7 +85,7 @@ package HiFive1 is
       hfxoscrdy at 0 range 31 .. 31;
    end record;
 
-   -- pllcfg: PLL Configuration and Status (pllcfg)
+   -- 6.5 Internal High-Frequency PLL (HFPLL)
 
    type pllcfg_Type is
    record
@@ -114,7 +116,7 @@ package HiFive1 is
       plllock   at 0 range 31 .. 31;
    end record;
 
-   -- plloutdiv: PLL Final Divide Configuration (plloutdiv)
+   -- 6.6 PLL Output Divider
 
    type plloutdiv_Type is
    record
@@ -155,7 +157,7 @@ package HiFive1 is
 
    PRCI : aliased PRCI_Type with
       Address    => To_Address (PRCI_BASEADDRESS),
-      Volatile   => True,
+      -- Volatile   => True,
       Import     => True,
       Convention => Ada;
 
@@ -189,6 +191,87 @@ package HiFive1 is
 
    Timer : aliased Unsigned_64 with
       Address    => To_Address (Timer_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 14 Watchdog Timer (WDT)
+   ----------------------------------------------------------------------------
+
+   wdogkey_Value  : constant := 16#0051_F15E#;
+   wdogfeed_Value : constant := 16#0D09_F00D#;
+
+   -- 14.3 Watchdog Configuration Register (wdogcfg)
+
+   type wdogcfg_Type is
+   record
+      wdogscale     : Bits_4;       -- Counter scale value.
+      Reserved1     : Bits_4 := 0;
+      wdogrsten     : Boolean;      -- Controls whether the comp output can set the wdogrst bit and hence cause a full reset.
+      wdogzerocmp   : Boolean;
+      Reserved2     : Bits_2 := 0;
+      wdogenalways  : Boolean;      -- Enable Always - run continuously
+      wdogcoreawake : Boolean;      -- Increment the watchdog counter if the processor is not asleep
+      Reserved3     : Bits_14 := 0;
+      wdogip0       : Boolean;      -- Interrupt 0 Pending
+      Reserved4     : Bits_3 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for wdogcfg_Type use
+   record
+      wdogscale     at 0 range 0 .. 3;
+      Reserved1     at 0 range 4 .. 7;
+      wdogrsten     at 0 range 8 .. 8;
+      wdogzerocmp   at 0 range 9 .. 9;
+      Reserved2     at 0 range 10 .. 11;
+      wdogenalways  at 0 range 12 .. 12;
+      wdogcoreawake at 0 range 13 .. 13;
+      Reserved3     at 0 range 14 .. 27;
+      wdogip0       at 0 range 28 .. 28;
+      Reserved4     at 0 range 29 .. 31;
+   end record;
+
+   -- 14.4 Watchdog Compare Register (wdogcmp)
+
+   type wdogcmp_Type is
+   record
+      wdogcmp0 : Unsigned_16;      -- Comparator 0
+      Reserved : Unsigned_16 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for wdogcmp_Type use
+   record
+      wdogcmp0 at 0 range 0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   type WDT_Type is
+   record
+      wdogcfg   : wdogcfg_Type with Volatile_Full_Access => True;
+      wdogcount : Unsigned_32  with Volatile_Full_Access => True;
+      wdogs     : Unsigned_16  with Volatile_Full_Access => True;
+      wdogfeed  : Unsigned_32  with Volatile_Full_Access => True;
+      wdogkey   : Unsigned_32  with Volatile_Full_Access => True;
+      wdogcmp0  : wdogcmp_Type with Volatile_Full_Access => True;
+   end record with
+      Size => 16#24# * 8;
+   for WDT_Type use
+   record
+      wdogcfg   at 16#00# range 0 .. 31;
+      wdogcount at 16#08# range 0 .. 31;
+      wdogs     at 16#10# range 0 .. 15;
+      wdogfeed  at 16#18# range 0 .. 31;
+      wdogkey   at 16#1C# range 0 .. 31;
+      wdogcmp0  at 16#20# range 0 .. 31;
+   end record;
+
+   WDT_BASEADDRESS : constant := AON_BASEADDRESS;
+
+   WDT : aliased WDT_Type with
+      Address    => To_Address (WDT_BASEADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
