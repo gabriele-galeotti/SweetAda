@@ -51,7 +51,7 @@ package body M68030 is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("a", CRP_Address),
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end CRP_Set;
@@ -67,7 +67,7 @@ package body M68030 is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("a", SRP_Address),
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end SRP_Set;
@@ -76,14 +76,15 @@ package body M68030 is
    -- TCR_Set
    ----------------------------------------------------------------------------
    procedure TCR_Set (Value : in TCR_Type) is
+      TCR : aliased TCR_Type := Value;
    begin
       Asm (
-           Template => ""                         & CRLF &
-                       "        pmove   %0,%%tcr" & CRLF &
+           Template => ""                          & CRLF &
+                       "        pmove   %0@,%%tcr" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => TCR_Type'Asm_Input ("d", Value),
-           Clobber  => "",
+           Inputs   => Address'Asm_Input ("a", TCR'Address),
+           Clobber  => "memory",
            Volatile => True
           );
    end TCR_Set;

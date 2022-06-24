@@ -65,6 +65,7 @@ package M68040 is
 
    -- 3.2.2.1 TABLE DESCRIPTORS
 
+   -- ROOT TABLE DESCRIPTOR (ROOT LEVEL)
    type RTDSC_Type is
    record
       UDT      : UDT_Type;    -- Upper Level Descriptor Type
@@ -84,6 +85,7 @@ package M68040 is
       PTA      at 0 range 9 .. 31;
    end record;
 
+   -- 4K, 8K POINTER TABLE DESCRIPTOR (POINTER LEVEL)
    type PTDSC_Type (PAGESIZE : Bits_1) is
    record
       UDT : UDT_Type;                -- Upper Level Descriptor Type
@@ -112,11 +114,75 @@ package M68040 is
       PTA8      at 0 range 7 .. 31;
    end record;
 
-   type Root_Table_Type is array (0 .. 2**7 - 1) of RTDSC_Type with
-      Pack      => True,
-      Alignment => 2**9;
+   -- type Root_Table_Type is array (0 .. 2**7 - 1) of RTDSC_Type with
+   --    Pack      => True,
+   --    Alignment => 2**9;
 
    -- 3.2.2.2 PAGE DESCRIPTORS
+
+   type P4DSC_Type is
+   record
+      PDT : PDT_Type; -- Page Descriptor Type
+      W   : Boolean;  -- Write Protected
+      U   : Boolean;  -- Used
+      M   : Boolean;  -- Modified
+      CM  : Bits_2;   -- Cache Mode
+      S   : Boolean;  -- Supervisor Protected
+      U0  : Bits_1;   -- User Page Attributes
+      U1  : Bits_1;   -- User Page Attributes
+      G   : Boolean;  -- Global
+      UR0 : Bits_1;   -- User Reserved
+      PA4 : Bits_20;  -- Physical Address
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for P4DSC_Type use
+   record
+      PDT at 0 range 0 .. 1;
+      W   at 0 range 2 .. 2;
+      U   at 0 range 3 .. 3;
+      M   at 0 range 4 .. 4;
+      CM  at 0 range 5 .. 6;
+      S   at 0 range 7 .. 7;
+      U0  at 0 range 8 .. 8;
+      U1  at 0 range 9 .. 9;
+      G   at 0 range 10 .. 10;
+      UR0 at 0 range 11 .. 11;
+      PA4 at 0 range 12 .. 31;
+   end record;
+
+   type P8DSC_Type is
+   record
+      PDT : PDT_Type; -- Page Descriptor Type
+      W   : Boolean;  -- Write Protected
+      U   : Boolean;  -- Used
+      M   : Boolean;  -- Modified
+      CM  : Bits_2;   -- Cache Mode
+      S   : Boolean;  -- Supervisor Protected
+      U0  : Bits_1;   -- User Page Attributes
+      U1  : Bits_1;   -- User Page Attributes
+      G   : Boolean;  -- Global
+      UR0 : Bits_1;   -- User Reserved
+      UR1 : Bits_1;   -- User Reserved
+      PA8 : Bits_19;  -- Physical Address
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for P8DSC_Type use
+   record
+      PDT at 0 range 0 .. 1;
+      W   at 0 range 2 .. 2;
+      U   at 0 range 3 .. 3;
+      M   at 0 range 4 .. 4;
+      CM  at 0 range 5 .. 6;
+      S   at 0 range 7 .. 7;
+      U0  at 0 range 8 .. 8;
+      U1  at 0 range 9 .. 9;
+      G   at 0 range 10 .. 10;
+      UR0 at 0 range 11 .. 11;
+      UR1 at 0 range 12 .. 12;
+      PA8 at 0 range 13 .. 31;
+   end record;
 
    type P48DSC_Type (PAGESIZE : Bits_1) is
    record
@@ -125,17 +191,17 @@ package M68040 is
       U   : Boolean;       -- Used
       M   : Boolean;       -- Modified
       CM  : Bits_2;        -- Cache Mode
-      S   : Bits_1;        -- Supervisor Protected
+      S   : Boolean;       -- Supervisor Protected
       U0  : Bits_1;        -- User Page Attributes
       U1  : Bits_1;        -- User Page Attributes
       G   : Boolean;       -- Global
       UR0 : Bits_1;        -- User Reserved
       case PAGESIZE is
          when PAGESIZE4k =>
-            UR1 : Bits_1;  -- User Reserved
-            PA4 : Bits_19; -- Physical Address
+            PA4 : Bits_20; -- Physical Address
          when PAGESIZE8k =>
-            PA8 : Bits_20; -- Physical Address
+            UR1 : Bits_1;  -- User Reserved
+            PA8 : Bits_19; -- Physical Address
       end case;
    end record with
       Bit_Order       => Low_Order_First,
@@ -153,19 +219,19 @@ package M68040 is
       U1  at 0 range 9 .. 9;
       G   at 0 range 10 .. 10;
       UR0 at 0 range 11 .. 11;
+      PA4 at 0 range 12 .. 31;
       UR1 at 0 range 12 .. 12;
-      PA4 at 0 range 13 .. 31;
-      PA8 at 0 range 12 .. 31;
+      PA8 at 0 range 13 .. 31;
    end record;
 
-   type PIND_Type is
+   type PINDDSC_Type is
    record
       PDT : PDT_Type; -- Page Descriptor Type
       DA  : Bits_30;  -- Descriptor Address
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for PIND_Type use
+   for PINDDSC_Type use
    record
       PDT at 0 range 0 .. 1;
       DA  at 0 range 2 .. 31;
@@ -270,6 +336,8 @@ package M68040 is
    procedure SRP_Set (SRP_Address : in Address) with
       Inline => True;
    procedure TCR_Set (Value : in TCR_Type) with
+      Inline => True;
+   procedure PFLUSHA with
       Inline => True;
 
 end M68040;

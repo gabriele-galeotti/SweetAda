@@ -88,4 +88,20 @@ package body M68040 is
           );
    end TCR_Set;
 
+   ----------------------------------------------------------------------------
+   -- PFLUSHA
+   ----------------------------------------------------------------------------
+   procedure PFLUSHA is
+   begin
+      Asm (
+           Template => ""                & CRLF &
+                       "        pflusha" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end PFLUSHA;
+
 end M68040;
