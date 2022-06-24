@@ -128,23 +128,24 @@ package body LLutils is
    ----------------------------------------------------------------------------
    function Select_Address_Bits (
                                  Address_Pattern : System.Address;
-                                 Lsb_Bit         : Bits.Address_Bit_Number;
-                                 Msb_Bit         : Bits.Address_Bit_Number
+                                 LSBit           : Bits.Address_Bit_Number;
+                                 MSBit           : Bits.Address_Bit_Number;
+                                 BE_Layout       : Boolean := False
                                 ) return SSE.Integer_Address is
       Bit_Mask : SSE.Integer_Address;
    begin
-      if Bits.BigEndian then
-         if Msb_Bit > Lsb_Bit then
+      if Bits.LittleEndian or else (Bits.BigEndian and then not BE_Layout) then
+         if MSBit < LSBit then
             return 0;
          end if;
-         Bit_Mask := 2**(Lsb_Bit - Msb_Bit + 1) - 1;
-         return (SSE.To_Integer (Address_Pattern) / 2**(System.Address'Size - 1 - Lsb_Bit)) and Bit_Mask;
+         Bit_Mask := 2**(MSBit - LSBit + 1) - 1;
+         return (SSE.To_Integer (Address_Pattern) / 2**LSBit) and Bit_Mask;
       else
-         if Msb_Bit < Lsb_Bit then
+         if MSBit > LSBit then
             return 0;
          end if;
-         Bit_Mask := 2**(Msb_Bit - Lsb_Bit + 1) - 1;
-         return (SSE.To_Integer (Address_Pattern) / 2**Lsb_Bit) and Bit_Mask;
+         Bit_Mask := 2**(LSBit - MSBit + 1) - 1;
+         return (SSE.To_Integer (Address_Pattern) / 2**(System.Address'Size - 1 - LSBit)) and Bit_Mask;
       end if;
    end Select_Address_Bits;
 

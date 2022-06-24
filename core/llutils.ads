@@ -54,8 +54,9 @@ package LLutils is
 
    function Select_Address_Bits (
                                  Address_Pattern : System.Address;
-                                 Lsb_Bit         : Bits.Address_Bit_Number;
-                                 Msb_Bit         : Bits.Address_Bit_Number
+                                 LSBit           : Bits.Address_Bit_Number;
+                                 MSBit           : Bits.Address_Bit_Number;
+                                 BE_Layout       : Boolean := False
                                 ) return SSE.Integer_Address with
       Inline => True;
 
