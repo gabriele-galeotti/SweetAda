@@ -188,11 +188,11 @@ package body A2065 is
       for Index in Receive_Ring'Range loop
          Receive_Ring (Index).RMD0 :=
             (
-             LADR => Bits_16 (LLutils.Select_Address_Bits (Receive_Buffers (Index)'Address, 31, 16))
+             LADR => Bits_16 (LLutils.Select_Address_Bits (Receive_Buffers (Index)'Address, 0, 15))
             );
          Receive_Ring (Index).RMD1 :=
             (
-             HADR => Bits_8 (LLutils.Select_Address_Bits (Receive_Buffers (Index)'Address, 8, 15)),
+             HADR => Bits_8 (LLutils.Select_Address_Bits (Receive_Buffers (Index)'Address, 16, 23)),
              ENP  => False,
              STP  => False,
              BUFF => False,
@@ -216,11 +216,11 @@ package body A2065 is
       for Index in Transmit_Ring'Range loop
          Transmit_Ring (Index).TMD0 :=
             (
-             LADR => Bits_16 (LLutils.Select_Address_Bits (Transmit_Buffers (Index)'Address, 31, 16))
+             LADR => Bits_16 (LLutils.Select_Address_Bits (Transmit_Buffers (Index)'Address, 0, 15))
             );
          Transmit_Ring (Index).TMD1 :=
             (
-             HADR => Bits_8 (LLutils.Select_Address_Bits (Transmit_Buffers (Index)'Address, 8, 15)),
+             HADR => Bits_8 (LLutils.Select_Address_Bits (Transmit_Buffers (Index)'Address, 16, 23)),
              ENP => False, STP => False, DEF => False, ONE => False,
              MORE => False, ADD_FCS => False, ERR => False, OWN => False
             );
@@ -255,11 +255,11 @@ package body A2065 is
       Initialization_Block.PADR4 := A2065_MAC (4);
       Initialization_Block.PADR5 := A2065_MAC (5);
       -- RDRA
-      RDRA.Ring_Pointer := Bits_21 (LLutils.Select_Address_Bits (Receive_Ring'Address, 28, 8));
+      RDRA.Ring_Pointer := Bits_21 (LLutils.Select_Address_Bits (Receive_Ring'Address, 3, 23));
       RDRA.Length       := RDR_ORDER;
       Initialization_Block.RDRA := To_R_RDP (Word_Swap (To_U32 (RDRA)));
       -- TDRA
-      TDRA.Ring_Pointer := Bits_21 (LLutils.Select_Address_Bits (Transmit_Ring'Address, 28, 8));
+      TDRA.Ring_Pointer := Bits_21 (LLutils.Select_Address_Bits (Transmit_Ring'Address, 3, 23));
       TDRA.Length       := TDR_ORDER;
       Initialization_Block.TDRA := To_R_RDP (Word_Swap (To_U32 (TDRA)));
       -- set INIT, clear STOP
