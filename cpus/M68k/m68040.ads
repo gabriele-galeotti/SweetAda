@@ -114,10 +114,6 @@ package M68040 is
       PTA8      at 0 range 7 .. 31;
    end record;
 
-   -- type Root_Table_Type is array (0 .. 2**7 - 1) of RTDSC_Type with
-   --    Pack      => True,
-   --    Alignment => 2**9;
-
    -- 3.2.2.2 PAGE DESCRIPTORS
 
    type P4DSC_Type is
