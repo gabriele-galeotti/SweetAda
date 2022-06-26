@@ -17,7 +17,6 @@
 
 with System;
 with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with LLutils;
@@ -50,7 +49,7 @@ package body MMU is
       Volatile                => True,
       Suppress_Initialization => True;
 
-   -- PI: A24 .. A18, 128 * 256kByte blocks
+   -- PI: A24 .. A18, 128 * 256 kByte blocks
 
 pragma Warnings (Off, "pragma Pack affects convention ""C"" components");
    type Pointer_Table_4k_Type is array (Natural range <>) of PTDSC_Type (PAGESIZE => PAGESIZE4k) with
@@ -145,7 +144,6 @@ pragma Warnings (On, "pragma Pack affects convention ""C"" components");
    ----------------------------------------------------------------------------
    procedure Init is
       Page_Address : Integer_Address;
-      function To_U32 is new Ada.Unchecked_Conversion (Integer_Address, Unsigned_32);
    begin
       -- Root table cleanup
       for Idx in Root_Table'Range loop
