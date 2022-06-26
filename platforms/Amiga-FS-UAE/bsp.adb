@@ -34,6 +34,8 @@ with Gdbstub;
 with Gdbstub.SerialComm;
 with Console;
 
+with MMU;
+
 package body BSP is
 
    --========================================================================--
@@ -177,6 +179,7 @@ package body BSP is
                       );
       end if;
       -------------------------------------------------------------------------
+      MMU.Init;
       -- preliminary interrupt setup
       INTENA_ClearAll;
       INTREQ_ClearAll;
