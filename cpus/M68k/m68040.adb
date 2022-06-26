@@ -50,8 +50,8 @@ package body M68040 is
                        "        movec   %0,%%urp" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => System.Address'Asm_Input ("d", URP_Address),
-           Clobber  => "",
+           Inputs   => Address'Asm_Input ("d", URP_Address),
+           Clobber  => "memory",
            Volatile => True
           );
    end URP_Set;
@@ -66,8 +66,8 @@ package body M68040 is
                        "        movec   %0,%%srp" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => System.Address'Asm_Input ("d", SRP_Address),
-           Clobber  => "",
+           Inputs   => Address'Asm_Input ("d", SRP_Address),
+           Clobber  => "memory",
            Volatile => True
           );
    end SRP_Set;
