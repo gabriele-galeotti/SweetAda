@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with FATFS;
 with FATFS.Directory;
 with FATFS.Rawfile;
 with FATFS.Textfile;
@@ -23,16 +22,6 @@ with Memory_Functions;
 with Console;
 
 package body FATFS.Applications is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use FATFS;
 
    --========================================================================--
    --                                                                        --
