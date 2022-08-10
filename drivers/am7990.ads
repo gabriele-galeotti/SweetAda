@@ -425,16 +425,16 @@ package Am7990 is
       null;
    end record;
 
-   type Port_Read_16_Ptr is access not null function (Port : Address) return Unsigned_16;
-   type Port_Write_16_Ptr is access not null procedure (Port : in Address; Value : in Unsigned_16);
+   type Port_Read_16_Ptr is access function (Port : Address) return Unsigned_16;
+   type Port_Write_16_Ptr is access procedure (Port : in Address; Value : in Unsigned_16);
 
    type Am7990_Descriptor_Type is
    record
       Base_Address  : Address;
       Scale_Address : Address_Shift;
       Flags         : Am7990_Flags_Type;
-      Read_16       : Port_Read_16_Ptr;
-      Write_16      : Port_Write_16_Ptr;
+      Read_16       : not null Port_Read_16_Ptr := MMIO.ReadN_U16'Access;
+      Write_16      : not null Port_Write_16_Ptr := MMIO.WriteN_U16'Access;
    end record;
 
    Am7990_DESCRIPTOR_INVALID : constant Am7990_Descriptor_Type :=

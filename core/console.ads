@@ -39,13 +39,13 @@ package Console is
 
    type Row_Size_Type is range 1 .. 64;
 
-   type Console_Write_Ptr is access not null procedure (C : in Character);
-   type Console_Read_Ptr is access not null procedure (C : out Character);
+   type Console_Write_Ptr is access procedure (C : in Character);
+   type Console_Read_Ptr is access procedure (C : out Character);
 
    type Console_Descriptor_Type is
    record
-      Write : Console_Write_Ptr;
-      Read  : Console_Read_Ptr;
+      Write : not null Console_Write_Ptr;
+      Read  : not null Console_Read_Ptr;
    end record;
 
    procedure Console_Null_Write (C : in Character);
