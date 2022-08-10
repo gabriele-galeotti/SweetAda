@@ -75,6 +75,9 @@ package body MMU is
                             BA  : in Unsigned_32
                            ) is
       begin
+         -- the right shift is equivalent to mask off the first 8 bits of the
+         -- address, which are occupied by the flags; this way the address
+         -- (masked) appears "normally" laid out, with LSB in the 0 position
          Table_1 (Idx) := (
                            DT     => DT,
                            WP     => False,
