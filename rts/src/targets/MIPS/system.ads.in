@@ -5,8 +5,9 @@
 --                               S Y S T E M                                --
 --                                                                          --
 --                                 S p e c                                  --
+--                          (GNU-Linux/MIPS Version)                        --
 --                                                                          --
---          Copyright (C) 1992-2020, Free Software Foundation, Inc.         --
+--          Copyright (C) 1992-2022, Free Software Foundation, Inc.         --
 --                                                                          --
 -- This specification is derived from the Ada Reference Manual for use with --
 -- GNAT. The copyright notice above, and the license provisions that follow --
@@ -143,6 +144,6 @@ private
    Suppress_Standard_Library : constant Boolean := @SUPPRESS_STANDARD_LIBRARY@;
    Use_Ada_Main_Program_Name : constant Boolean := @USE_ADA_MAIN_PROGRAM_NAME@;
    Frontend_Exceptions       : constant Boolean := False;
-   ZCX_By_Default            : constant Boolean := False;
+   ZCX_By_Default            : constant Boolean := @ZCX_BY_DEFAULT@;
 
 end System;
