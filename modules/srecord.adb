@@ -120,14 +120,13 @@ package body Srecord is
                   when '9'    => Srec := S9; Addressdigits := 4;
                   when others => Srec := NONE;
                end case;
-               case Srec is
-                  when S0 .. S9 =>
-                     RX_Status := WAIT_BYTECOUNT1;
-                     Checksum_Computed := 0;
-                  when NONE     =>
-                     TX_Character.all ('X');
-                     RX_Status := WAIT_EOL;
-               end case;
+               if Srec = NONE then
+                  TX_Character.all ('X');
+                  RX_Status := WAIT_EOL;
+               else
+                  RX_Status := WAIT_BYTECOUNT1;
+                  Checksum_Computed := 0;
+               end if;
             -----------------------
             when WAIT_BYTECOUNT1 =>
                HexDigit_To_U8 (C => C, MSD => True, Value => Hex8, Success => C_Is_HexDigit);
