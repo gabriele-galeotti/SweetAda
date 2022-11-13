@@ -34,11 +34,11 @@ begin
                     "        sarl    %%cl,%%eax " & CRLF &
                     "",
         Outputs  => SSE.Storage_Offset'Asm_Output ("=a", Result),
-        Inputs   => (
+        Inputs   => [
                      System.Address'Asm_Input ("a", Target_Address),
                      System.Address'Asm_Input ("b", Local_Address),
                      Bits.Address_Shift'Asm_Input ("c", Scale_Address)
-                    ),
+                    ],
         Clobber  => "",
         Volatile => True
        );
