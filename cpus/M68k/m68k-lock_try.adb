@@ -23,10 +23,10 @@ begin
         Template => ""                         & CRLF &
                     "        casl    %0,%2,%1" & CRLF &
                     "",
-        Outputs  => (
+        Outputs  => [
                      CPU_Unsigned'Asm_Output ("+r", Locked_Item.Lock),
                      CPU_Unsigned'Asm_Output ("+m", Lock_Object.Lock)
-                    ),
+                    ],
         Inputs   => CPU_Unsigned'Asm_Input ("r", LOCK_LOCK),
         Clobber  => "",
         Volatile => True

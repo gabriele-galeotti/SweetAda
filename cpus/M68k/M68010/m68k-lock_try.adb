@@ -25,10 +25,10 @@ begin
                     "        tas     %1" & CRLF &
                     "        sne     %0" & CRLF &
                     "",
-        Outputs  => (
+        Outputs  => [
                      CPU_Unsigned'Asm_Output ("=d", Lock_Flag),
                      Lock_Type'Asm_Output ("+m", Lock_Object)
-                    ),
+                    ],
         Inputs   => No_Input_Operands,
         Clobber  => "memory,cc",
         Volatile => True

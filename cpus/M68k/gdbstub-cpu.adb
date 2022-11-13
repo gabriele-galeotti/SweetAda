@@ -41,7 +41,7 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
 
    Register_Size : constant array (D0 .. FPIADDR) of Positive :=
-      (
+      [
        D0        => 4,
        D1        => 4,
        D2        => 4,
@@ -71,7 +71,7 @@ package body Gdbstub.CPU is
        FPCONTROL => 4,
        FPSTATUS  => 4,
        FPIADDR   => 4
-      );
+      ];
 
    subtype FP_Register_Type is Byte_Array (0 .. Register_Size (FP0) - 1);
 
