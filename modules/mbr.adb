@@ -73,7 +73,7 @@ package body MBR is
    begin
       IO_Context.Read (0, Block, Success);
       if Success then
-         if Block (16#01FE# .. 16#01FF#) = (16#55#, 16#AA#) then
+         if Block (16#01FE# .. 16#01FF#) = [16#55#, 16#AA#] then
             case Partition_Number is
                when PARTITION1 => Offset := 16#01BE#;
                when PARTITION2 => Offset := 16#01CE#;

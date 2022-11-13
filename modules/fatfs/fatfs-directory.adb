@@ -318,10 +318,10 @@ package body FATFS.Directory is
    ----------------------------------------------------------------------------
    procedure Init_Entry (DE : out Directory_Entry_Type; Last : in Boolean) is
    begin
-      DE.Filename        := (others => ' ');
-      DE.Extension       := (others => ' ');
-      DE.File_Attributes := (others => False);
-      DE.Reserved        := (others => 0);
+      DE.Filename        := [others => ' '];
+      DE.Extension       := [others => ' '];
+      DE.File_Attributes := [others => False];
+      DE.Reserved        := [others => 0];
       DE.HMS.Hour        := FS_Time.Hour;
       DE.HMS.Minute      := FS_Time.Minute;
       DE.HMS.Second      := FS_Time.Second;
@@ -348,7 +348,7 @@ package body FATFS.Directory is
       S :          Sector_Type := Cluster.To_Sector (C);
       E : constant Sector_Type := S + Sector_Type (Sectors_Per_Cluster) - 1;
    begin
-      B := (others => 0);
+      B := [others => 0];
       Success := True;
       loop
          exit when S > E;

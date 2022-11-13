@@ -25,7 +25,7 @@ package body Interrupts is
    --                                                                        --
    --========================================================================--
 
-   Interrupt_Handlers : array (CPU.Irq_Id_Type) of Interrupt_Descriptor_Type := (others => INTERRUPT_DESCRIPTOR_INVALID);
+   Interrupt_Handlers : array (CPU.Irq_Id_Type) of Interrupt_Descriptor_Type := [others => INTERRUPT_DESCRIPTOR_INVALID];
 
    --========================================================================--
    --                                                                        --

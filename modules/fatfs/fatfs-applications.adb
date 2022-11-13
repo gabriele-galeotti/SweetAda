@@ -108,15 +108,15 @@ package body FATFS.Applications is
                Console.Print ("Loading AUTOEXEC.BAT ...", NL => True);
                Textfile.Open (F, DE, Success);
                if Success then
-                  Line := (others => ' ');
+                  Line := [others => ' '];
                   Textfile.Read_Line (F, Line, L, Success);
                   Console.Print (Line);
                   Console.Print_NewLine;
-                  Line := (others => ' ');
+                  Line := [others => ' '];
                   Textfile.Read_Line (F, Line, L, Success);
                   Console.Print (Line);
                   Console.Print_NewLine;
-                  Line := (others => ' ');
+                  Line := [others => ' '];
                   Textfile.Read_Line (F, Line, L, Success);
                   Console.Print (Line);
                   Console.Print_NewLine;

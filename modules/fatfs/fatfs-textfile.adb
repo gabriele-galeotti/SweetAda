@@ -363,7 +363,7 @@ package body FATFS.Textfile is
          if File.Byte_Offset > 0 then
             IO_Context.Read (Physical_Sector (File.WCB.CCB.Previous_Sector), B, Success);
          else
-            B := (others => 0);
+            B := [others => 0];
          end if;
       end if;
    end Get;

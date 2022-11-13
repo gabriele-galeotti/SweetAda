@@ -87,8 +87,8 @@ package body FATFS.Filename is
                    ) is
       Index : Natural;
    begin
-      Base := (others => ' ');
-      Ext  := (others => ' ');
+      Base := [others => ' '];
+      Ext  := [others => ' '];
       Index := FName'First;
       for I in Base'Range loop
          exit when Index > FName'Last;

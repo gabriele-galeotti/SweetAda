@@ -136,8 +136,8 @@ package Ethernet is
 
    Ethernet_DESCRIPTOR_INVALID : constant Ethernet_Descriptor_Type :=
       (
-       Haddress     => (0, 0, 0, 0, 0, 0),
-       Paddress     => (0, 0, 0, 0),
+       Haddress     => [0, 0, 0, 0, 0, 0],
+       Paddress     => [0, 0, 0, 0],
        RX           => null,
        TX           => null,
        Data_Address => Null_Address
@@ -172,7 +172,7 @@ package Ethernet is
    end record with
       Volatile => True;
 
-   Packet_Queue : aliased Queue_Type := ((others => null), 0, 0, 0);
+   Packet_Queue : aliased Queue_Type := [[others => null], 0, 0, 0];
 
    function Nqueue (Q : access Queue_Type) return Natural;
    procedure Enqueue (

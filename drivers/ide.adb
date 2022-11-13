@@ -54,7 +54,7 @@ package body IDE is
                              );
 
    IDE_Register_Offset : constant array (IDE_Register_Type) of Storage_Offset :=
-      (
+      [
        DATA    => 0,
        ERROR   => 1,
        FEATURE => 1,
@@ -66,7 +66,7 @@ package body IDE is
        STATUS  => 7,
        COMMAND => 7,
        CONTROL => 16#0206#
-      );
+      ];
 
    -- ERROR Register
 

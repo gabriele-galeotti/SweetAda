@@ -39,12 +39,12 @@ package body UARTIOEMU is
    type UartIOEMU_Register_Type is (RHR, THR, CR, SR);
 
    UartIOEMU_Register_Offset : constant array (UartIOEMU_Register_Type) of Storage_Offset :=
-      (
+      [
        RHR => 0,
        THR => 0,
        CR  => 1,
        SR  => 2
-      );
+      ];
 
    -- Control Register
 
