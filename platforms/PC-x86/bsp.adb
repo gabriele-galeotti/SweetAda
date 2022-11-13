@@ -125,14 +125,14 @@ package body BSP is
       UART_Descriptors (1).Baud_Clock    := 1_843_200;
       UART_Descriptors (1).Read_8        := IO_Read'Access;
       UART_Descriptors (1).Write_8       := IO_Write'Access;
-      UART_Descriptors (1).Data_Queue    := ((others => 0), 0, 0, 0);
+      UART_Descriptors (1).Data_Queue    := [[others => 0], 0, 0, 0];
       UART16x50.Init (UART_Descriptors (1));
       UART_Descriptors (2).Base_Address  := To_Address (PC.UART2_BASEADDRESS);
       UART_Descriptors (2).Scale_Address := 0;
       UART_Descriptors (2).Baud_Clock    := 1_843_200;
       UART_Descriptors (2).Read_8        := IO_Read'Access;
       UART_Descriptors (2).Write_8       := IO_Write'Access;
-      UART_Descriptors (2).Data_Queue    := ((others => 0), 0, 0, 0);
+      UART_Descriptors (2).Data_Queue    := [[others => 0], 0, 0, 0];
       UART16x50.Init (UART_Descriptors (2));
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
@@ -241,7 +241,7 @@ package body BSP is
             if Success then
                NE2000_Descriptors (1).NE2000PCI    := True;
                NE2000_Descriptors (1).Base_Address := 16#C000#;
-               NE2000_Descriptors (1).MAC          := (16#02#, 16#00#, 16#00#, 16#11#, 16#22#, 16#33#);
+               NE2000_Descriptors (1).MAC          := [16#02#, 16#00#, 16#00#, 16#11#, 16#22#, 16#33#];
                NE2000_Descriptors (1).Read_8       := PortIn'Access;
                NE2000_Descriptors (1).Write_8      := PortOut'Access;
                NE2000_Descriptors (1).Read_16      := PortIn'Access;
@@ -255,9 +255,9 @@ package body BSP is
       -- Ethernet module ------------------------------------------------------
       Ethernet_Descriptor.Haddress     := NE2000_Descriptors (1).MAC;
       if QEMU then
-         Ethernet_Descriptor.Paddress := (192, 168, 3, 2);
+         Ethernet_Descriptor.Paddress := [192, 168, 3, 2];
       else
-         Ethernet_Descriptor.Paddress := (192, 168, 2, 2);
+         Ethernet_Descriptor.Paddress := [192, 168, 2, 2];
       end if;
       -- Ethernet_Descriptor.RX           := NE2000.Receive'Access;
       Ethernet_Descriptor.TX           := NE2000.Transmit'Access;

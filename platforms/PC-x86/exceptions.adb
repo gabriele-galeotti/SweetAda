@@ -47,7 +47,7 @@ package body Exceptions is
    use BSP;
 
    IDT_Descriptor : aliased IDT_Descriptor_Type := IDT_DESCRIPTOR_INVALID;
-   IDT            : aliased IDT_Type (Exception_DE .. PC.PIC_Irq15) := (others => EXCEPTION_DESCRIPTOR_INVALID);
+   IDT            : aliased IDT_Type (Exception_DE .. PC.PIC_Irq15) := [others => EXCEPTION_DESCRIPTOR_INVALID];
 
    type Exception_Vector_Type is
    record
@@ -57,7 +57,7 @@ package body Exceptions is
    end record;
 
    Exception_Vectors : constant array (Exception_DE .. PC.PIC_Irq15) of Exception_Vector_Type :=
-      (
+      [
        (Div_By_0_Handler'Address,        SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_DE
        (Debug_Exception_Handler'Address, SELECTOR_KCODE, SYSGATE_INT),  -- Exception_DB
        (Nmi_Interrupt_Handler'Address,   SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_NN
@@ -106,7 +106,7 @@ package body Exceptions is
        (Irq13_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq13
        (Irq14_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq14
        (Irq15_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT)   -- Irq15
-      );
+      ];
 
    --========================================================================--
    --                                                                        --
