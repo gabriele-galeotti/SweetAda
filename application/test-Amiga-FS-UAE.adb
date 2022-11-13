@@ -86,7 +86,7 @@ package body Application is
          begin
             -- Ethernet module initialization ------------------------------
             Ethernet_Descriptor.Haddress := A2065.A2065_MAC;
-            Ethernet_Descriptor.Paddress := (192, 168, 3, 2);
+            Ethernet_Descriptor.Paddress := [192, 168, 3, 2];
             Ethernet_Descriptor.RX       := null;
             Ethernet_Descriptor.TX       := A2065.Transmit'Access;
             Ethernet.Init (Ethernet_Descriptor);
@@ -142,7 +142,7 @@ package body Application is
                   TC2 := Tick_Count;
                end if;
                if Tick_Count_Expired (TC3, 300) then
-                  Serialport_TX ('.');
+                  -- Serialport_TX ('.');
                   TC3 := Tick_Count;
                end if;
             end loop;

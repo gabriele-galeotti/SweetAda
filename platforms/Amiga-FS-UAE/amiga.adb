@@ -100,14 +100,14 @@ package body Amiga is
       --
       -- Setup Copper.
       --
-      Copperlist := (
+      Copperlist := [
                      BPL1PTH,
                      HWord (Unsigned_32'(FRAMEBUFFER_BASEADDRESS)),
                      BPL1PTL,
                      LWord (Unsigned_32'(FRAMEBUFFER_BASEADDRESS)),
                      16#FFFF#,
                      16#FFFE#
-                    );
+                    ];
       --
       -- "... when the end of  vertical blanking  occurs, the Copper is
       -- automatically forced to restart its operations at the address
