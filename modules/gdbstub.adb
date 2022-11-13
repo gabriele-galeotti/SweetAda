@@ -463,7 +463,7 @@ package body Gdbstub is
       type HMR_Status_Type is (PARSE_ADDRESS, CHECK_COMMA, PARSE_LENGTH);
       HMR_Status     : HMR_Status_Type;
       Success        : Boolean;
-      Memory_Address : Integer_Address;
+      Memory_Address : Integer_Address := 0;
       C              : Character;
       Memory_Length  : Natural;
    begin
