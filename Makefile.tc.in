@@ -119,6 +119,9 @@ TOOLCHAIN_GNATMAKE += -gnat2012
 else ifeq ($(ADA_MODE),ADA20)
 TOOLCHAIN_ADAC     += -gnat2020
 TOOLCHAIN_GNATMAKE += -gnat2020
+else ifeq ($(ADA_MODE),ADA22)
+TOOLCHAIN_ADAC     += -gnat2022
+TOOLCHAIN_GNATMAKE += -gnat2022
 else
 $(warning *** Warning: no valid ADA_MODE.)
 endif

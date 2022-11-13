@@ -226,7 +226,7 @@ RTS_RTS := $(RTS)
 
 # default build system parameters
 TOOLCHAIN_PREFIX   ?=
-ADA_MODE           := ADA20
+ADA_MODE           := ADA22
 BUILD_MODE         := MAKEFILE
 RTS                ?=
 PROFILE            :=
