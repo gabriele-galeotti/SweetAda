@@ -33,8 +33,7 @@
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
 ------------------------------------------------------------------------------
---  SweetAda version, original is:                                          --
---  GNU-Linux/x86                                                           --
+--  SweetAda version, original is GNU-Linux/x86                             --
 ------------------------------------------------------------------------------
 
 package System is

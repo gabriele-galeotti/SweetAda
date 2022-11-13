@@ -33,8 +33,7 @@
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
 ------------------------------------------------------------------------------
---  SweetAda version, original is:                                          --
---  QNX/Aarch64                                                             --
+--  SweetAda version, original is QNX/Aarch64                               --
 ------------------------------------------------------------------------------
 
 package System is

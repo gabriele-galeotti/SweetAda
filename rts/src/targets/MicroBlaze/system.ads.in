@@ -32,6 +32,8 @@
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
 ------------------------------------------------------------------------------
+--  SweetAda version, no equivalent does exist in GCC sources               --
+------------------------------------------------------------------------------
 
 package System is
    pragma Pure;

@@ -32,9 +32,9 @@
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
 ------------------------------------------------------------------------------
---  SweetAda version, original is:                                          --
---  avr-ada-1.2.2/gcc-4.7-rts/adainclude/system.ads                         --
+--  SweetAda version, original is in avr-ada-1.2.2/gcc-.../system.ads       --
 ------------------------------------------------------------------------------
+
 package System is
    pragma Pure;
    --  Note that we take advantage of the implementation permission to make

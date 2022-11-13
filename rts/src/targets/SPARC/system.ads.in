@@ -33,8 +33,7 @@
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
 ------------------------------------------------------------------------------
---  SweetAda version, original is:                                          --
---  GNU/Linux-SPARC                                                         --
+--  SweetAda version, original is GNU/Linux-SPARC                           --
 ------------------------------------------------------------------------------
 
 package System is

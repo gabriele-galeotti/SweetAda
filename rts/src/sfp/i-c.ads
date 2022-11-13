@@ -15,10 +15,30 @@
 -- SweetAda SFP cutted-down version                                         --
 ------------------------------------------------------------------------------
 
+--  Preconditions in this unit are meant for analysis only, not for run-time
+--  checking, so that the expected exceptions are raised. This is enforced by
+--  setting the corresponding assertion policy to Ignore. Postconditions and
+--  contract cases should not be executed at runtime as well, in order not to
+--  slow down the execution of these functions.
+
+pragma Assertion_Policy (Pre            => Ignore,
+                         Post           => Ignore,
+                         Contract_Cases => Ignore,
+                         Ghost          => Ignore);
+
 with System.Parameters;
 
-package Interfaces.C is
-   pragma Pure;
+package Interfaces.C
+  with SPARK_Mode, Pure
+is
+   --  Each of the types declared in Interfaces.C is C-compatible.
+
+   --  The types int, short, long, unsigned, ptrdiff_t, size_t, double,
+   --  char, wchar_t, char16_t, and char32_t correspond respectively to the
+   --  C types having the same names. The types signed_char, unsigned_short,
+   --  unsigned_long, unsigned_char, C_bool, C_float, and long_double
+   --  correspond respectively to the C types signed char, unsigned
+   --  short, unsigned long, unsigned char, bool, float, and long double.
 
    --  Declaration's based on C's <limits.h>
 
@@ -51,7 +71,11 @@ package Interfaces.C is
    type unsigned_char is mod (UCHAR_MAX + 1);
    for unsigned_char'Size use CHAR_BIT;
 
-   subtype plain_char is unsigned_char; -- ??? should be parameterized
+   --  Note: Ada RM states that the type of the subtype plain_char is either
+   --  signed_char or unsigned_char, depending on the C implementation. GNAT
+   --  instead choses unsigned_char always.
+
+   subtype plain_char is unsigned_char;
 
    --  Note: the Integer qualifications used in the declaration of ptrdiff_t
    --  avoid ambiguities when compiling in the presence of s-auxdec.ads and
@@ -62,6 +86,11 @@ package Interfaces.C is
            +(2 ** (System.Parameters.ptr_bits - Integer'(1)) - 1);
 
    type size_t is mod 2 ** System.Parameters.ptr_bits;
+
+   --  Boolean type
+
+   type C_bool is new Boolean;
+   pragma Convention (C, C_bool);
 
    --  Floating-Point
 
@@ -77,13 +106,37 @@ package Interfaces.C is
 
    nul : constant char := char'First;
 
-   function To_C   (Item : Character) return char;
-   function To_Ada (Item : char)      return Character;
+   --  The functions To_C and To_Ada map between the Ada type Character and the
+   --  C type char.
+
+   function To_C (Item : Character) return char
+   with
+     Post => To_C'Result = char'Val (Character'Pos (Item));
+
+   function To_Ada (Item : char) return Character
+   with
+     Post => To_Ada'Result = Character'Val (char'Pos (Item));
 
    type char_array is array (size_t range <>) of aliased char;
    for char_array'Component_Size use CHAR_BIT;
 
-   function Is_Nul_Terminated (Item : char_array) return Boolean;
+   function Is_Nul_Terminated (Item : char_array) return Boolean
+   with
+     Post => Is_Nul_Terminated'Result = (for some C of Item => C = nul);
+   --  The result of Is_Nul_Terminated is True if Item contains nul, and is
+   --  False otherwise.
+
+   function C_Length_Ghost (Item : char_array) return size_t
+   with
+     Ghost,
+     Pre  => Is_Nul_Terminated (Item),
+     Post => C_Length_Ghost'Result <= Item'Last - Item'First
+       and then Item (Item'First + C_Length_Ghost'Result) = nul
+       and then (for all J in Item'First .. Item'First + C_Length_Ghost'Result
+                   when J /= Item'First + C_Length_Ghost'Result =>
+                     Item (J) /= nul);
+   --  Ghost function to compute the length of a char_array up to the first nul
+   --  character.
 
    -- __INF__ requires secondary stack
    function To_C
@@ -168,6 +221,8 @@ package Interfaces.C is
 
    function Is_Nul_Terminated (Item : char16_array) return Boolean;
    pragma Ada_05 (Is_Nul_Terminated);
+   --  The result of Is_Nul_Terminated is True if Item contains char16_nul, and
+   --  is False otherwise.
 
    -- __INF__ requires secondary stack
    function To_C
@@ -212,6 +267,8 @@ package Interfaces.C is
 
    function Is_Nul_Terminated (Item : char32_array) return Boolean;
    pragma Ada_05 (Is_Nul_Terminated);
+   --  The result of Is_Nul_Terminated is True if Item contains char32_nul, and
+   --  is False otherwise.
 
    -- __INF__ requires secondary stack
    function To_C

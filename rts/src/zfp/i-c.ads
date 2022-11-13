@@ -15,8 +15,28 @@
 -- SweetAda ZFP cutted-down version                                         --
 ------------------------------------------------------------------------------
 
-package Interfaces.C is
-   pragma Pure;
+--  Preconditions in this unit are meant for analysis only, not for run-time
+--  checking, so that the expected exceptions are raised. This is enforced by
+--  setting the corresponding assertion policy to Ignore. Postconditions and
+--  contract cases should not be executed at runtime as well, in order not to
+--  slow down the execution of these functions.
+
+pragma Assertion_Policy (Pre            => Ignore,
+                         Post           => Ignore,
+                         Contract_Cases => Ignore,
+                         Ghost          => Ignore);
+
+package Interfaces.C
+  with SPARK_Mode, Pure
+is
+   --  Each of the types declared in Interfaces.C is C-compatible.
+
+   --  The types int, short, long, unsigned, ptrdiff_t, size_t, double,
+   --  char, wchar_t, char16_t, and char32_t correspond respectively to the
+   --  C types having the same names. The types signed_char, unsigned_short,
+   --  unsigned_long, unsigned_char, C_bool, C_float, and long_double
+   --  correspond respectively to the C types signed char, unsigned
+   --  short, unsigned long, unsigned char, bool, float, and long double.
 
    --  Declaration's based on C's <limits.h>
 
@@ -49,7 +69,11 @@ package Interfaces.C is
    type unsigned_char is mod (UCHAR_MAX + 1);
    for unsigned_char'Size use CHAR_BIT;
 
-   subtype plain_char is unsigned_char; -- ??? should be parameterized
+   --  Note: Ada RM states that the type of the subtype plain_char is either
+   --  signed_char or unsigned_char, depending on the C implementation. GNAT
+   --  instead choses unsigned_char always.
+
+   subtype plain_char is unsigned_char;
 
    --  Note: the Integer qualifications used in the declaration of ptrdiff_t
    --  avoid ambiguities when compiling in the presence of s-auxdec.ads and
@@ -60,6 +84,11 @@ package Interfaces.C is
            +(2 ** (Standard'Address_Size - Integer'(1)) - 1);
 
    type size_t is mod 2 ** Standard'Address_Size;
+
+   --  Boolean type
+
+   type C_bool is new Boolean;
+   pragma Convention (C, C_bool);
 
    --  Floating-Point
 
