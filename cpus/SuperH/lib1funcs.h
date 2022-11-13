@@ -1,5 +1,4 @@
-
-/* Copyright (C) 1994-2021 Free Software Foundation, Inc.
+/* Copyright (C) 1994-2022 Free Software Foundation, Inc.
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -21,7 +20,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                 */
-/* __INF__ original: gcc-11.3.0/libgcc/config/sh/lib1funcs.h */
+/* __INF__ original: gcc-12.2.0/libgcc/config/sh/lib1funcs.h */
 
 #if defined(__ELF__)
 #define LOCAL(X)          .L_##X
@@ -76,3 +75,4 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define SL1(branch, dest, in_slot) \
                 branch##/s dest; in_slot
 #endif /* !__sh1__ */
+

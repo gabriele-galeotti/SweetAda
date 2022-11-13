@@ -1,4 +1,4 @@
-/* Copyright (C) 1994-2021 Free Software Foundation, Inc.
+/* Copyright (C) 1994-2022 Free Software Foundation, Inc.
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 !! tm@netcom.com
 
 /* SweetAda version, reformatted and cleaned                 */
-/* __INF__ original: gcc-11.3.0/libgcc/config/sh/lib1funcs.S */
+/* __INF__ original: gcc-12.2.0/libgcc/config/sh/lib1funcs.S */
 
 #if defined(__ELF__) && defined(__linux__)
                 .sect   .note.GNU-stack,"",%progbits
@@ -141,6 +141,7 @@ GLOBAL(ashiftrt_r4_24):
                 shlr8   r4
                 rts
                 exts.b  r4,r4
+
 GLOBAL(ashiftrt_r4_23):
                 shar    r4
 GLOBAL(ashiftrt_r4_22):
@@ -159,6 +160,7 @@ GLOBAL(ashiftrt_r4_16):
                 shlr16  r4
                 rts
                 exts.w  r4,r4
+
 GLOBAL(ashiftrt_r4_15):
                 shar    r4
 GLOBAL(ashiftrt_r4_14):
@@ -190,6 +192,7 @@ GLOBAL(ashiftrt_r4_2):
 GLOBAL(ashiftrt_r4_1):
                 rts
                 shar    r4
+
 GLOBAL(ashiftrt_r4_0):
                 rts
                 nop
@@ -303,6 +306,7 @@ LOCAL(ashrsi3_31):
                 rotcl   r0
                 rts
                 subc    r0,r0
+
 LOCAL(ashrsi3_30):
                 shar    r0
 LOCAL(ashrsi3_29):
@@ -320,6 +324,7 @@ LOCAL(ashrsi3_24):
                 shlr8   r0
                 rts
                 exts.b  r0,r0
+
 LOCAL(ashrsi3_23):
                 shar    r0
 LOCAL(ashrsi3_22):
@@ -338,6 +343,7 @@ LOCAL(ashrsi3_16):
                 shlr16  r0
                 rts
                 exts.w  r0,r0
+
 LOCAL(ashrsi3_15):
                 shar    r0
 LOCAL(ashrsi3_14):
@@ -369,6 +375,7 @@ LOCAL(ashrsi3_2):
 LOCAL(ashrsi3_1):
                 rts
                 shar    r0
+
 LOCAL(ashrsi3_0):
                 rts
                 nop
@@ -404,7 +411,6 @@ LOCAL(ashrsi3_0):
 !
 ! Destroys:
 ! T bit
-!
 
                 .global GLOBAL(ashlsi3)
                 .global GLOBAL(ashlsi3_r0)
@@ -530,16 +536,19 @@ LOCAL(ashlsi_25):
                 shll16  r0
                 rts
                 shll8   r0
+
 LOCAL(ashlsi_22):
 LOCAL(ashlsi_14):
                 shlr2   r0
                 rts
                 shll8   r0
+
 LOCAL(ashlsi_23):
 LOCAL(ashlsi_15):
                 shlr    r0
                 rts
                 shll8   r0
+
 LOCAL(ashlsi_29):
                 shlr    r0
 LOCAL(ashlsi_30):
@@ -579,7 +588,6 @@ LOCAL(ashlsi_30):
 !
 ! Destroys:
 ! T bit
-!
 
                 .global GLOBAL(lshrsi3)
                 .global GLOBAL(lshrsi3_r0)
@@ -704,16 +712,19 @@ LOCAL(lshrsi_25):
                 shlr16  r0
                 rts
                 shlr8   r0
+
 LOCAL(lshrsi_22):
 LOCAL(lshrsi_14):
                 shll2   r0
                 rts
                 shlr8   r0
+
 LOCAL(lshrsi_23):
 LOCAL(lshrsi_15):
                 shll    r0
                 rts
                 shlr8   r0
+
 LOCAL(lshrsi_29):
                 shll    r0
 LOCAL(lshrsi_30):
@@ -889,9 +900,11 @@ GLOBAL(movmemSI4):
                 .global GLOBAL(movmem_i4_even)
                 .global GLOBAL(movmem_i4_odd)
                 .global GLOBAL(movmemSI12_i4)
+
                 HIDDEN_FUNC(GLOBAL(movmem_i4_even))
                 HIDDEN_FUNC(GLOBAL(movmem_i4_odd))
                 HIDDEN_FUNC(GLOBAL(movmemSI12_i4))
+
                 HIDDEN_ALIAS(movstr_i4_even,movmem_i4_even)
                 HIDDEN_ALIAS(movstr_i4_odd,movmem_i4_odd)
                 HIDDEN_ALIAS(movstrSI12_i4,movmemSI12_i4)
@@ -956,7 +969,6 @@ GLOBAL(movmemSI12_i4):
                 .global GLOBAL(mulsi3)
                 HIDDEN_FUNC(GLOBAL(mulsi3))
 
-!
 ! r4 =       aabb
 ! r5 =       ccdd
 ! r0 = aabb*ccdd  via partial products
@@ -1079,6 +1091,7 @@ GLOBAL(sdivsi3_i4):
 GLOBAL(sdivsi3):
                 mov     r4,r1
                 mov     r5,r0
+
                 tst     r0,r0
                 bt      div0
                 mov     #0,r2
@@ -1154,6 +1167,7 @@ GLOBAL(sdivsi3):
                 addc    r2,r1
                 rts
                 mov     r1,r0
+
 div0:           rts
                 mov     #0,r0
 
@@ -1197,6 +1211,7 @@ GLOBAL(udivsi3_i4):
                 fdiv    dr2,dr0
                 rts
                 ftrc    dr0,fpul
+
 trivial:
                 rts
                 lds     r4,fpul
@@ -1457,8 +1472,8 @@ LOCAL(set_fpscr_L1):
 LOCAL(set_fpscr_L1):
                 .long   GLOBAL(fpscr_values)
 #endif
-                ENDFUNC(GLOBAL(set_fpscr))
 
+                ENDFUNC(GLOBAL(set_fpscr))
 #if !defined(NO_FPSCR_VALUES)
 #if defined(__ELF__)
                 .comm   GLOBAL(fpscr_values),8,4
@@ -2033,7 +2048,6 @@ LOCAL(div_table_clz):
                 .byte   -6
                 .byte   -6
                 .byte   -6
-
 /* Lookup table translating positive divisor to index into table of
    normalized inverse.  N.B. the '0' entry is also the last entry of the
  previous table, and causes an unaligned access for division by zero.  */
@@ -2168,7 +2182,6 @@ LOCAL(div_table_ix):
                 .byte   124
                 .byte   -128
 /* 1/64 .. 1/127, normalized.  There is an implicit leading 1 in bit 32.  */
-
                 .balign 4
 LOCAL(zero_l):
                 .long   0x0

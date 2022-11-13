@@ -1,6 +1,6 @@
 /* ieee754-df.S double-precision floating point support for ARM
 
-   Copyright (C) 2003-2021 Free Software Foundation, Inc.
+   Copyright (C) 2003-2022 Free Software Foundation, Inc.
    Contributed by Nicolas Pitre (nico@fluxnic.net)
 
    This file is free software; you can redistribute it and/or modify it
@@ -23,7 +23,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                   */
-/* __INF__ original: gcc-11.3.0/libgcc/config/arm/ieee754-df.S */
+/* __INF__ original: gcc-12.2.0/libgcc/config/arm/ieee754-df.S */
 
 /*
  * Notes:
@@ -669,7 +669,6 @@ ARM_FUNC_ALIAS aeabi_dmul muldf3
                 orr     xh,xh,#0x00100000
                 orr     yh,yh,#0x00100000
                 beq     LSYM(Lml_1)
-
 
                 @ Here is the actual multiplication.
                 @ This code works on architecture versions >= 4
@@ -1495,3 +1494,4 @@ ARM_FUNC_ALIAS aeabi_d2f truncdfsf2
                 FUNC_END truncdfsf2
 
 #endif /* L_truncdfsf2 */
+

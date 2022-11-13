@@ -6,22 +6,19 @@
    optimize them for our purposes.  */
 
 /* SweetAda version, reformatted and cleaned                 */
-/* __INF__ original: gcc-11.3.0/libgcc/config/sparc/lb1spc.S */
+/* __INF__ original: gcc-12.2.0/libgcc/config/sparc/lb1spc.S */
 
 /* An executable stack is *not* required for these functions. */
-
 #if defined(__ELF__) && defined(__linux__)
                 .sect   .note.GNU-stack,"",%progbits
                 .previous
 #endif
 
 #if defined(L_mulsi3)
-
                 .text
                 .align  4
                 .global .umul
                 .proc   4
-
 .umul:
                 or      %o0,%o1,%o4                     ! logical or of multiplier and multiplicand
                 mov     %o0,%y                          ! multiplier to Y register
@@ -89,11 +86,9 @@ mul_shortway:
                 srl     %o5,20,%o5                      ! right shift partial product by 20 bits
                 retl
                 or      %o5,%o4,%o0                     ! merge for true product
-
 #endif
 
 #if defined(L_divsi3)
-
 /*
  * Division and remainder, from Appendix E of the SPARC Version 8
  * Architecture Manual, with fixes from Gordon Irlam.
@@ -129,12 +124,10 @@ mul_shortway:
  *  different path, as the upper bits of the quotient must be developed
  *  one bit at a time.
  */
-
                 .global .udiv
                 .align  4
                 .proc   4
                 .text
-
 .udiv:
                 b       ready_to_divide
                 mov     0,%g3                           ! result is always positive
@@ -143,7 +136,6 @@ mul_shortway:
                 .align  4
                 .proc   4
                 .text
-
 .div:
                 ! compute sign of result; if neither is negative, no problem
                 orcc    %o1,%o0,%g0                     ! either negative?
@@ -157,16 +149,20 @@ mul_shortway:
                 sub     %g0,%o1,%o1                     ! in any case, make %o1 nonneg
 1:              ! %o0 is negative, %o1 is nonnegative
                 sub     %g0,%o0,%o0                     ! make %o0 nonnegative
+
 ready_to_divide:
+
                 ! Ready to divide.  Compute size of quotient; scale comparand.
                 orcc    %o1,%g0,%o5
                 bne     1f
                 mov     %o0,%o3
+
                 ! Divide by zero trap.  If it returns, return 0 (about as
                 ! wrong as possible, but that is what SunOS does...).
                 ta      0x2                             ! ST_DIV0
                 retl
                 clr     %o0
+
 1:
                 cmp     %o3,%o5                         ! if %o1 exceeds %o0, done
                 blu     got_result                      ! (and algorithm fails otherwise)
@@ -175,6 +171,7 @@ ready_to_divide:
                 cmp     %o3,%g1
                 blu     not_really_big
                 clr     %o4
+
                 ! Here the dividend is >= 2**(31-N) or so.  We must be careful here,
                 ! as our usual N-at-a-shot divide step will cause overflow and havoc.
                 ! The number of bits in the result here is N*ITER+SC, where SC <= N.
@@ -187,10 +184,12 @@ ready_to_divide:
                 sll     %o5,4,%o5
                 b       1b
                 add     %o4,1,%o4
+
                 ! Now compute %g2.
 2:              addcc   %o5,%o5,%o5
                 bcc     not_too_big
                 add     %g2,1,%g2
+
                 ! We get here if the %o1 overflowed while shifting.
                 ! This means that %o3 has the high-order bit set.
                 ! Restore %o5 and subtract from %o3.
@@ -199,6 +198,7 @@ ready_to_divide:
                 add     %o5,%g1,%o5
                 b       do_single_div
                 sub     %g2,1,%g2
+
 not_too_big:
 3:              cmp     %o5,%o3
                 blu     2b
@@ -243,6 +243,7 @@ end_single_divloop:
                 bge     single_divloop
                 tst     %o3
                 b,a     end_regular_divide
+
 not_really_big:
 1:
                 sll     %o5,4,%o5
@@ -251,6 +252,7 @@ not_really_big:
                 addcc   %o4,1,%o4
                 be      got_result
                 sub     %o4,1,%o4
+
                 tst     %o3                             ! set up for initial iteration
 divloop:
                 sll     %o2,4,%o2
@@ -276,11 +278,13 @@ divloop:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(7*2+1),%o2
+
 L4.23:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(7*2-1),%o2
+
 L3.19:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -291,11 +295,13 @@ L3.19:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(5*2+1),%o2
+
 L4.21:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(5*2-1),%o2
+
 L2.17:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -311,11 +317,13 @@ L2.17:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(3*2+1),%o2
+
 L4.19:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(3*2-1),%o2
+
 L3.17:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -326,11 +334,13 @@ L3.17:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(1*2+1),%o2
+
 L4.17:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(1*2-1),%o2
+
 L1.16:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -351,11 +361,13 @@ L1.16:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-1*2+1),%o2
+
 L4.15:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-1*2-1),%o2
+
 L3.15:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -366,11 +378,13 @@ L3.15:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-3*2+1),%o2
+
 L4.13:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-3*2-1),%o2
+
 L2.15:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -386,11 +400,13 @@ L2.15:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-5*2+1),%o2
+
 L4.11:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-5*2-1),%o2
+
 L3.13:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -401,11 +417,13 @@ L3.13:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-7*2+1),%o2
+
 L4.9:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-7*2-1),%o2
+
 9:
 end_regular_divide:
                 subcc   %o4,1,%o4
@@ -414,6 +432,7 @@ end_regular_divide:
                 bl,a    got_result
                 ! non-restoring fixup here (one instruction only!)
                 sub     %o2,1,%o2
+
 got_result:
                 ! check to see if answer should be < 0
                 tst     %g3
@@ -422,11 +441,9 @@ got_result:
 1:
                 retl
                 mov     %o2,%o0
-
 #endif
 
 #if defined(L_modsi3)
-
 /* This implementation was taken from glibc:
  *
  * Input: dividend and divisor in %o0 and %o1 respectively.
@@ -453,12 +470,10 @@ got_result:
  *  different path, as the upper bits of the quotient must be developed
  *  one bit at a time.
  */
-
                 .text
                 .align  4
                 .global .urem
                 .proc   4
-
 .urem:
                 b       divide
                 mov     0,%g3                           ! result always positive
@@ -466,7 +481,6 @@ got_result:
                 .align  4
                 .global .rem
                 .proc   4
-
 .rem:
                 ! compute sign of result; if neither is negative, no problem
                 orcc    %o1,%o0,%g0                     ! either negative?
@@ -481,16 +495,19 @@ got_result:
 1:              ! %o0 is negative, %o1 is nonnegative
                 sub     %g0,%o0,%o0                     ! make %o0 nonnegative
 2:
+
                 ! Ready to divide.  Compute size of quotient; scale comparand.
 divide:
                 orcc    %o1,%g0,%o5
                 bne     1f
                 mov     %o0,%o3
+
                 ! Divide by zero trap.  If it returns, return 0 (about as
                 ! wrong as possible, but that is what SunOS does...).
                 ta      0x2   !ST_DIV0
                 retl
                 clr     %o0
+
 1:
                 cmp     %o3,%o5                         ! if %o1 exceeds %o0, done
                 blu     got_result                      ! (and algorithm fails otherwise)
@@ -499,6 +516,7 @@ divide:
                 cmp     %o3,%g1
                 blu     not_really_big
                 clr     %o4
+
                 ! Here the dividend is >= 2**(31-N) or so.  We must be careful here,
                 ! as our usual N-at-a-shot divide step will cause overflow and havoc.
                 ! The number of bits in the result here is N*ITER+SC, where SC <= N.
@@ -511,10 +529,12 @@ divide:
                 sll     %o5,4,%o5
                 b       1b
                 add     %o4,1,%o4
+
                 ! Now compute %g2.
 2:              addcc   %o5,%o5,%o5
                 bcc     not_too_big
                 add     %g2,1,%g2
+
                 ! We get here if the %o1 overflowed while shifting.
                 ! This means that %o3 has the high-order bit set.
                 ! Restore %o5 and subtract from %o3.
@@ -523,6 +543,7 @@ divide:
                 add     %o5,%g1,%o5
                 b       do_single_div
                 sub     %g2,1,%g2
+
 not_too_big:
 3:              cmp     %o5,%o3
                 blu     2b
@@ -567,6 +588,7 @@ end_single_divloop:
                 bge     single_divloop
                 tst     %o3
                 b,a     end_regular_divide
+
 not_really_big:
 1:
                 sll     %o5,4,%o5
@@ -575,6 +597,7 @@ not_really_big:
                 addcc   %o4,1,%o4
                 be      got_result
                 sub     %o4,1,%o4
+
                 tst     %o3                             ! set up for initial iteration
 divloop:
                 sll     %o2,4,%o2
@@ -605,6 +628,7 @@ L4.23:
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(7*2-1),%o2
+
 L3.19:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -615,11 +639,13 @@ L3.19:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(5*2+1),%o2
+
 L4.21:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(5*2-1),%o2
+
 L2.17:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -635,11 +661,13 @@ L2.17:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(3*2+1),%o2
+
 L4.19:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(3*2-1),%o2
+
 L3.17:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -650,11 +678,13 @@ L3.17:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(1*2+1),%o2
+
 L4.17:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(1*2-1),%o2
+
 L1.16:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -675,11 +705,13 @@ L1.16:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-1*2+1),%o2
+
 L4.15:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-1*2-1),%o2
+
 L3.15:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -690,11 +722,13 @@ L3.15:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-3*2+1),%o2
+
 L4.13:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-3*2-1),%o2
+
 L2.15:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -710,11 +744,13 @@ L2.15:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-5*2+1),%o2
+
 L4.11:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-5*2-1),%o2
+
 L3.13:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
@@ -725,11 +761,13 @@ L3.13:
                 subcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-7*2+1),%o2
+
 L4.9:
                 ! remainder is negative
                 addcc   %o3,%o5,%o3
                 b       9f
                 add     %o2,(-7*2-1),%o2
+
 9:
 end_regular_divide:
                 subcc   %o4,1,%o4
@@ -738,6 +776,7 @@ end_regular_divide:
                 bl,a    got_result
                 ! non-restoring fixup here (one instruction only!)
                 add     %o3,%o1,%o3
+
 got_result:
                 ! check to see if answer should be < 0
                 tst     %g3

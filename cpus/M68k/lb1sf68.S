@@ -1,5 +1,5 @@
 /* libgcc routines for 68000 w/o floating-point hardware.
-   Copyright (C) 1994-2021 Free Software Foundation, Inc.
+   Copyright (C) 1994-2022 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
@@ -23,7 +23,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                 */
-/* __INF__ original: gcc-11.3.0/libgcc/config/m68k/lb1sf68.S */
+/* __INF__ original: gcc-12.2.0/libgcc/config/m68k/lb1sf68.S */
 
 /* Use this one for any 680x0; assumes no floating point hardware.
    The trailing " '" appearing on some lines is for ANSI preprocessors.  Yuk.
@@ -438,7 +438,10 @@ $_exception_handler:
                 .text
                 FUNC(__mulsi3)
                 .global SYM (__mulsi3)
+                .global SYM (__mulsi3_internal)
+                .hidden SYM (__mulsi3_internal)
 SYM (__mulsi3):
+SYM (__mulsi3_internal):
                 movew   sp@(4),d0                       /* x0 -> d0 */
                 muluw   sp@(10),d0                      /* x0*y1 */
                 movew   sp@(6),d1                       /* x1 -> d1 */
@@ -453,6 +456,7 @@ SYM (__mulsi3):
                 movew   sp@(6),d1                       /* x1 -> d1 */
                 muluw   sp@(10),d1                      /* x1*y1 */
                 addl    d1,d0
+
                 rts
 #endif /* L_mulsi3 */
 
@@ -460,11 +464,15 @@ SYM (__mulsi3):
                 .text
                 FUNC(__udivsi3)
                 .global SYM (__udivsi3)
+                .global SYM (__udivsi3_internal)
+                .hidden SYM (__udivsi3_internal)
 SYM (__udivsi3):
+SYM (__udivsi3_internal):
 #if !defined(__mcoldfire__)
                 movel   d2,sp@-
                 movel   sp@(12),d1                      /* d1 = divisor */
                 movel   sp@(8),d0                       /* d0 = dividend */
+
                 cmpl    IMM (0x10000),d1                /* divisor >= 2 ^ 16 ?   */
                 jcc     L3                              /* then try next algorithm */
                 movel   d0,d2
@@ -477,6 +485,7 @@ SYM (__udivsi3):
                 divu    d1,d2                           /* low quotient */
                 movew   d2,d0
                 jra     L6
+
 L3:             movel   d1,d2                           /* use d2 as divisor backup */
 L4:             lsrl    IMM (1),d1                      /* shift divisor */
                 lsrl    IMM (1),d0                      /* shift dividend */
@@ -484,6 +493,7 @@ L4:             lsrl    IMM (1),d1                      /* shift divisor */
                 jcc     L4
                 divu    d1,d0                           /* now we have 16-bit divisor */
                 andl    IMM (0xffff),d0                 /* mask out divisor, ignore remainder */
+
 /* Multiply the 16-bit tentative quotient with the 32-bit divisor.  Because of
    the operand ranges, this might give a 33-bit product.  If this product is
    greater than the dividend, the tentative quotient was too large. */
@@ -499,9 +509,12 @@ L4:             lsrl    IMM (1),d1                      /* shift divisor */
                 cmpl    sp@(8),d1                       /* compare the sum with the dividend */
                 jls     L6                              /* if sum > dividend, quotient was too large */
 L5:             subql   IMM (1),d0                      /* adjust quotient */
+
 L6:             movel   sp@+,d2
                 rts
+
 #else /* __mcoldfire__ */
+
 /* ColdFire implementation of non-restoring division algorithm from
    Hennessy & Patterson, Appendix A. */
                 link    a6,IMM (-12)
@@ -530,8 +543,12 @@ L2:             subql   IMM (1),d4
                 .text
                 FUNC(__divsi3)
                 .global SYM (__divsi3)
+                .global SYM (__divsi3_internal)
+                .hidden SYM (__divsi3_internal)
 SYM (__divsi3):
+SYM (__divsi3_internal):
                 movel   d2,sp@-
+
                 moveq   IMM (1),d2                      /* sign of result stored in d2 (=1 or =-1) */
                 movel   sp@(12),d1                      /* d1 = divisor */
                 jpl     L1
@@ -554,9 +571,11 @@ L2:             movel   d1,sp@-
                 movel   d0,sp@-
                 PICCALL SYM (__udivsi3)                 /* divide abs(dividend) by abs(divisor) */
                 addql   IMM (8),sp
+
                 tstb    d2
                 jpl     L3
                 negl    d0
+
 L3:             movel   sp@+,d2
                 rts
 #endif /* L_divsi3 */
@@ -620,6 +639,7 @@ SYM (__modsi3):
                 .global $_exception_handler
 
 QUIET_NaN     = 0xffffffff
+
 D_MAX_EXP     = 0x07ff
 D_BIAS        = 1022
 DBL_MAX_EXP   = D_MAX_EXP - D_BIAS
@@ -736,7 +756,6 @@ Ld$div$0:
 SYM (__subdf3):
                 bchg    IMM (31),sp@(12)                | change sign of second operand
                                                         | and fall through, so we always add
-
 |=============================================================================
 |                              __adddf3
 |=============================================================================
@@ -755,14 +774,17 @@ SYM (__adddf3):
                 movel   a6@(12),d1                      |
                 movel   a6@(16),d2                      | get second operand
                 movel   a6@(20),d3                      |
+
                 movel   d0,d7                           | get d0''s sign bit in d7
                 addl    d1,d1                           | check and clear sign bit of a, and gain one
                 addxl   d0,d0                           | bit of extra precision
                 beq     Ladddf$b                        | if zero return second operand
+
                 movel   d2,d6                           | save sign in d6
                 addl    d3,d3                           | get rid of sign bit and gain one bit of
                 addxl   d2,d2                           | extra precision
                 beq     Ladddf$a                        | if zero return first operand
+
                 andl    IMM (0x80000000),d7             | isolate a''s sign bit
                 swap    d6                              | and also b''s sign bit
 #if !defined(__mcoldfire__)
@@ -781,6 +803,7 @@ SYM (__adddf3):
 
                 movel   IMM (0x001fffff),d6             | mask for the fraction
                 movel   IMM (0x00200000),d7             | mask to put hidden bit back
+
                 movel   d0,d4                           |
                 andl    d6,d0                           | get fraction in d0
                 notl    d6                              | make d6 into mask for the exponent
@@ -832,6 +855,7 @@ Ladddf$2:
 
                 movel   d4,a2                           | save the exponents
                 movel   d5,a3                           |
+
                 movel   IMM (0),d7                      | and move the numbers around
                 movel   d7,d6                           |
                 movel   d3,d5                           |
@@ -952,6 +976,7 @@ Ladddf$2:
                 subl    IMM (16),d2
 #endif
                 bra     3b
+
 9:
 #if !defined(__mcoldfire__)
                 exg     d4,d5
@@ -1100,6 +1125,7 @@ Ladddf$4:
                 addxl   d6,d2                           |
                 addxl   d5,d1                           |
                 addxl   d4,d0                           |
+
                 movel   a2,d4                           | return exponent to d4
                 movel   a0,d7                           |
                 andl    IMM (0x80000000),d7             | d7 now has the sign
@@ -1685,6 +1711,7 @@ Lmuldf$2:                                               |
 | Now round, check for over- and underflow, and exit.
                 movel   a0,d7                           | get sign bit back into d7
                 moveq   IMM (MULTIPLY),d5
+
                 btst    IMM (DBL_MANT_DIG+1-32),d0
                 beq     Lround$exit
 #if !defined(__mcoldfire__)
@@ -1704,12 +1731,14 @@ Lmuldf$2:                                               |
 Lmuldf$inop:
                 moveq   IMM (MULTIPLY),d5
                 bra     Ld$inop
+
 Lmuldf$b$nf:
                 moveq   IMM (MULTIPLY),d5
                 movel   a0,d7                           | get sign bit back into d7
                 tstl    d3                              | we know d2 == 0x7ff00000, so check d3
                 bne     Ld$inop                         | if d3 <> 0 b is NaN
                 bra     Ld$overflow                     | else we have overflow (since a is finite)
+
 Lmuldf$a$nf:
                 moveq   IMM (MULTIPLY),d5
                 movel   a0,d7                           | get sign bit back into d7
@@ -1768,6 +1797,7 @@ Lmuldf$a$den:
                 btst    IMM (20),d0                     |
                 bne     Lmuldf$1                        |
                 bra     1b
+
 Lmuldf$b$den:
                 movel   IMM (1),d5
                 andl    d6,d2
@@ -1877,7 +1907,9 @@ Ldivdf$2:                                               |
                 movel   IMM (0),d6                      | d6-d7 will hold the result
                 movel   d6,d7                           |
                 movel   IMM (0),a1                      | and a1 will hold the sticky bit
+
                 movel   IMM (DBL_MANT_DIG-32+1),d5
+
 1:              cmpl    d0,d2                           | is a < b?
                 bhi     3f                              | if b > a skip the following
                 beq     4f                              | if d0==d2 check d1 and d3
@@ -1899,6 +1931,7 @@ Ldivdf$2:                                               |
 5:
 | Here we have to start setting the bits in the second long.
                 movel   IMM (31),d5                     | again d5 is counter
+
 1:              cmpl    d0,d2                           | is a < b?
                 bhi     3f                              | if b > a skip the following
                 beq     4f                              | if d0==d2 check d1 and d3
@@ -2208,6 +2241,7 @@ Lround$0:
 #endif
                 swap    d0                              |
                 orl     d7,d0                           | and sign also
+
                 PICLEA  SYM (_fpCCR),a0
                 movew   IMM (0),a0@
 #if !defined(__mcoldfire__)
@@ -2632,7 +2666,6 @@ Lf$div$0:
 SYM (__subsf3):
                 bchg    IMM (31),sp@(8)                 | change sign of second operand
                                                         | and fall through
-
 |=============================================================================
 |                              __addsf3
 |=============================================================================
@@ -2660,6 +2693,7 @@ SYM (__addsf3):
 
                 movel   IMM (0x00ffffff),d4             | mask to get fraction
                 movel   IMM (0x01000000),d5             | mask to put hidden bit back
+
                 movel   d0,d6                           | save a to get exponent
                 andl    d4,d0                           | get fraction in d0
                 notl    d4                              | make d4 into a mask for the exponent
@@ -2923,6 +2957,7 @@ Lsubsf$0:
 | Here we do the subtraction.
                 movel   d6,d7                           | put sign in d7
                 andl    IMM (0x80000000),d7
+
                 subl    d3,d1                           | result in d0-d1
                 subxl   d2,d0                           |
                 beq     Laddsf$ret                      | if zero just exit
@@ -3111,6 +3146,7 @@ Laddsf$nf:
 | return NaN).
                 cmpl    d1,d0                           | are both infinite?
                 beq     Lf$inop                         | if so return NaN
+
                 andl    IMM (0x80000000),d7             | get a''s sign bit
                 cmpl    d4,d0                           | test now for infinity
                 beq     Lf$infty                        | if a is INFINITY return with this sign
@@ -3245,6 +3281,7 @@ Lmulsf$2:                                               |
 #endif
 
                 moveq   IMM (MULTIPLY),d5
+
                 btst    IMM (FLT_MANT_DIG+1),d0
                 beq     Lround$exit
 #if !defined(__mcoldfire__)
@@ -3411,6 +3448,7 @@ Ldivsf$2:                                               |
                 movel   d7,a0                           | d6-d7 will hold the ratio of the fractions
                 movel   IMM (0),d6                      |
                 movel   d6,d7
+
                 moveq   IMM (FLT_MANT_DIG+1),d3
 1:              cmpl    d0,d1                           | is a < b?
                 bhi     2f                              |
@@ -4087,3 +4125,4 @@ SYM (__lesf2):
                 /* make stack non-executable for ELF linux targets */
                 .sect   .note.GNU-stack,"",@progbits
 #endif
+

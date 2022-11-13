@@ -1,7 +1,7 @@
 /* Miscellaneous BPABI functions.  Thumb-1 implementation, suitable for ARMv4T,
    ARMv6-M and ARMv8-M Baseline like ISA variants.
 
-   Copyright (C) 2006-2021 Free Software Foundation, Inc.
+   Copyright (C) 2006-2022 Free Software Foundation, Inc.
    Contributed by CodeSourcery.
 
    This file is free software; you can redistribute it and/or modify it
@@ -24,7 +24,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                  */
-/* __INF__ original: gcc-11.3.0/libgcc/config/arm/bpabi-v6m.S */
+/* __INF__ original: gcc-12.2.0/libgcc/config/arm/bpabi-v6m.S */
 
 #if defined(__ARM_EABI__)
                 /* Some attributes that are common to all routines in this file.  */
@@ -129,8 +129,8 @@
 #if defined(L_aeabi_ldivmod)
 
                 FUNC_START aeabi_ldivmod
-
                 test_div_by_zero signed
+
                 push    {r0,r1}
                 mov     r0,sp
                 push    {r0,lr}
@@ -141,7 +141,6 @@
                 add     sp,sp,#8
                 pop     {r2,r3}
                 RET
-
                 FUNC_END aeabi_ldivmod
 
 #endif /* L_aeabi_ldivmod */
@@ -149,8 +148,8 @@
 #if defined(L_aeabi_uldivmod)
 
                 FUNC_START aeabi_uldivmod
-
                 test_div_by_zero unsigned
+
                 push    {r0,r1}
                 mov     r0,sp
                 push    {r0,lr}
@@ -161,7 +160,6 @@
                 add     sp,sp,#8
                 pop     {r2,r3}
                 RET
-
                 FUNC_END aeabi_uldivmod
 
 #endif /* L_aeabi_uldivmod */
@@ -324,3 +322,4 @@ COMPARISON gt, ge
 COMPARISON ge, ge
 
 #endif /* L_arm_cmpdf2 */
+

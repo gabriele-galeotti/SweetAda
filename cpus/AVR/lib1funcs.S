@@ -1,5 +1,5 @@
 /*  -*- Mode: Asm -*-  */
-/* Copyright (C) 1998-2021 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2022 Free Software Foundation, Inc.
    Contributed by Denis Chertykov <chertykov@gmail.com>
 
 This file is free software; you can redistribute it and/or modify it
@@ -213,9 +213,11 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
     Multiplication  8 x 8  without MUL
 *******************************************************/
 #if defined(L_mulqi3)
+
 #define r_arg2 r22        /* multiplicand */
 #define r_arg1 r24        /* multiplier */
 #define r_res __tmp_reg__ /* result */
+
 DEFUN __mulqi3
                 clr     r_res                   ; clear result
 __mulqi3_loop:
@@ -229,9 +231,11 @@ __mulqi3_exit:
                 mov     r_arg1,r_res            ; result to return register
                 ret
 ENDF __mulqi3
+
 #undef r_arg2
 #undef r_arg1
 #undef r_res
+
 #endif /* defined (L_mulqi3) */
 
 /*******************************************************
@@ -300,6 +304,7 @@ ENDF __mulqihi3
 ;;; (C1:C0) = (A1:A0) * (B1:B0)
 ;;; Clobbers: __tmp_reg__, R21..R23
 DEFUN __mulhi3
+
                 ;; Clear result
                 clr     CC0
                 clr     CC1
@@ -315,11 +320,13 @@ DEFUN __mulhi3
                 ;; If B == 0 we are ready
                 wsubi   B0, 0
                 breq    9f
+
                 ;; Carry = n-th bit of A
                 lsr     A1
                 ror     A0
                 ;; If bit n of A is set, then go add  B * 2^n  to  C
                 brcs    1b
+
                 ;; Carry = 0  -->  The ROR above acts like  CP A0, 0
                 ;; Thus, it is sufficient to CPC the high part to test A against 0
                 cpc     A1, __zero_reg__
@@ -439,19 +446,24 @@ DEFUN __mulsi3_helper
                 clr     CC0
                 clr     CC1
                 rjmp    3f
+
 1:              ;; If bit n of A is set, then add  B * 2^n  to the result in CC
                 ;; CC += B
                 add     CC0,B0  $  adc  CC1,B1  $  adc  CC2,B2  $  adc  CC3,B3
+
 2:              ;; B <<= 1
                 lsl     B0      $  rol  B1      $  rol  B2      $  rol  B3
+
 3:              ;; A >>= 1:  Carry = n-th bit of A
                 lsr     A3      $  ror  A2      $  ror  A1      $  ror  A0
+
                 brcs 1b
                 ;; Only continue if  A != 0
                 sbci    A1, 0
                 brne    2b
                 wsubi   A2, 0
                 brne    2b
+
                 ;; All bits of A are consumed:  Copy result to return register C
                 wmov    C0,CC0
                 wmov    C2,CC2
@@ -459,6 +471,7 @@ DEFUN __mulsi3_helper
                 pop     B1              ; restore callee saved regs
                 pop     B0
 #endif  /* defined(__AVR_TINY__) */
+
                 ret
 ENDF __mulsi3_helper
 #endif /* L_mulsi3 */
@@ -482,6 +495,7 @@ ENDF __mulsi3_helper
 
 #endif /* !defined(__AVR_HAVE_MUL__) */
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #if defined(__AVR_HAVE_MUL__)
 #define A0 26
@@ -950,6 +964,7 @@ ENDF __muldi3
 #if defined(L_muldi3_6)
 ;; A helper for some 64-bit multiplications with MUL available
 DEFUN __muldi3_6
+;;__muldi3_6: generates error
                 XCALL   __umulhisi3
                 add     C2,22
                 adc     C3,23
@@ -1173,6 +1188,7 @@ DEFUN __mulsidi3
                 bst     A3,7
                 sbrs    B3,7                    ; Enhanced core has no skip bug
                 XJMP    __umulsidi3_helper
+
                 ;; B needs sign-extension
                 push    A3
                 push    A2
@@ -1540,11 +1556,14 @@ DEFUN __divmodpsi4
                 ; Adjust divisor's sign
                 sbrc    B2,7
                 rcall   __divmodpsi4_negB
+
                 ; Do the unsigned div/mod
                 XCALL   __udivmodpsi4
+
                 ; Adjust quotient's sign
                 sbrc    __tmp_reg__,7
                 rcall   __divmodpsi4_negA
+
                 ; Adjust remainder's sign
                 brtc    __divmodpsi4_end
 
@@ -1810,6 +1829,7 @@ ENDF __udivdi3_umoddi3
 ;; T = 1: Compute Remainder in A[] and shift SS one Bit left
 
 DEFUN __udivmod64
+
                 ;; Clear Remainder (C6, C7 will follow)
                 clr     C0
                 clr     C1
@@ -1833,14 +1853,17 @@ DEFUN __udivmod64
                 CP      A7,B0  $  cpc C0,B1  $  cpc C1,B2  $  cpc C2,B3
                 cpc     C3,B4  $  cpc C4,B5  $  cpc C5,B6  $  cpc C6,B7
                 brcc    2f
+
                 ;; ...then we can subtract it.  Thus, it is legal to shift left
                                $  mov C6,C5  $  mov C5,C4  $  mov C4,C3
                 mov     C3,C2  $  mov C2,C1  $  mov C1,C0  $  mov C0,A7
                 mov     A7,A6  $  mov A6,A5  $  mov A5,A4  $  mov A4,A3
                 mov     A3,A2  $  mov A2,A1  $  mov A1,A0  $  clr A0
+
                 ;; 8 Bits are done
                 subi    C7,8
                 brne    1b
+
                 ;; Shifted 64 Bits:  A7 has traveled to C7
                 pop     C7
                 ;; Divisor is greater than Dividend. We have:
@@ -1848,8 +1871,10 @@ DEFUN __udivmod64
                 ;; A[] / B[] = 0
                 ;; Thus, we can return immediately
                 rjmp    5f
+
 2:              ;; Initialze Bit-Counter with Number of Bits still to be performed
                 mov     R_cnt,C7
+
                 ;; Push of A7 is not needed because C7 is still 0
                 pop     C7
                 clr     C7
@@ -1863,11 +1888,13 @@ DEFUN __udivmod64
                 cpc     C2,B6
                 cpc     C3,B7
                 brcc    2f
+
                 ;; Divisor is greater than shifted Dividen: We can shift the Dividend
                 ;; and it is still smaller than the Divisor --> Shift one 32-Bit Chunk
                 wmov    C2,A6  $  wmov C0,A4
                 wmov    A6,A2  $  wmov A4,A0
                 wmov    A2,C6  $  wmov A0,C4
+
                 ;; Set Bit Counter to 32
                 lsr     R_cnt
 2:
@@ -1880,16 +1907,21 @@ DEFUN __udivmod64
 3:              ;; Left-shift Dividend...
                 lsl     A0     $  rol A1     $  rol A2     $  rol A3
                 rol     A4     $  rol A5     $  rol A6     $  rol A7
+
                 ;; ...into Remainder
                 rol     C0     $  rol C1     $  rol C2     $  rol C3
                 rol     C4     $  rol C5     $  rol C6     $  rol C7
+
                 ;; Compare Remainder and Divisor
                 CP      C0,B0  $  cpc C1,B1  $  cpc C2,B2  $  cpc C3,B3
                 cpc     C4,B4  $  cpc C5,B5  $  cpc C6,B6  $  cpc C7,B7
+
                 brcs    4f
+
                 ;; Divisor fits into Remainder:  Subtract it from Remainder...
                 SUB     C0,B0  $  sbc C1,B1  $  sbc C2,B2  $  sbc C3,B3
                 sbc     C4,B4  $  sbc C5,B5  $  sbc C6,B6  $  sbc C7,B7
+
                 ;; ...and set according Bit in the upcoming Quotient
                 ;; The Bit will travel to its final Position
                 ori     A0,1
@@ -1898,6 +1930,7 @@ DEFUN __udivmod64
                 dec     R_cnt
                 brne    3b
                 ;; __zero_reg__ is 0 again
+
                 ;; T = 0: We are fine with the Quotient in A[]
                 ;; T = 1: Copy Remainder to A[]
 5:              brtc    6f
@@ -1907,6 +1940,7 @@ DEFUN __udivmod64
                 wmov    A6,C6
                 ;; Move the Sign of the Result to SS.7
                 lsl     SS
+
 6:              ret
 
 ENDF __udivmod64
@@ -1943,6 +1977,7 @@ DEFUN __divdi3_moddi3
                 ;; Save 12 Registers:  Y, 17...8
                 ;; No Frame needed
                 do_prologue_saves 12
+
                 ;; SS.7 will contain the Sign of the Quotient  (A.sign * B.sign)
                 ;; SS.6 will contain the Sign of the Remainder (A.sign)
                 mov     SS,A7
@@ -1963,6 +1998,7 @@ DEFUN __divdi3_moddi3
                 brpl    3f
 22:             ldi     NN,1<<7
                 eor     SS,NN
+
                 ldi     NN,-1
                 com     B4     $  com B5     $  com B6     $  com B7
                                $  com B1     $  com B2     $  com B3
@@ -3262,3 +3298,4 @@ ENDF __fmul
 #undef C1
 
 #include "lib1funcs-fixed.S"
+
