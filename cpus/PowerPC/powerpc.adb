@@ -166,10 +166,10 @@ package body PowerPC is
                        "        mtspr   %0,%1" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => (
+           Inputs   => [
                         SPR_Type'Asm_Input ("i", SPR),
                         Register_Type'Asm_Input ("r", Value)
-                       ),
+                       ],
            Clobber  => "",
            Volatile => True
           );

@@ -68,10 +68,10 @@ package body PPC405 is
                        "        .long   0x7C000386|(%1<<21)|(%0<<11)" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => (
+           Inputs   => [
                         DCR_Type'Asm_Input ("i", DCR),
                         DCR_Value_Type'Asm_Input ("r", DCR_Value)
-                       ),
+                       ],
            Clobber  => "",
            Volatile => True
           );
