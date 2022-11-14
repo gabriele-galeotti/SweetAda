@@ -18,7 +18,6 @@
 with System.Machine_Code;
 with Definitions;
 with Core;
-with Taihu;
 with IOEMU;
 with Console;
 
