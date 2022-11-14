@@ -34,7 +34,6 @@ package body Exceptions is
 
    use System.Machine_Code;
    use Core;
-   use Taihu;
 
    CRLF : String renames Definitions.CRLF;
 
