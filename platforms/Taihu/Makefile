@@ -30,8 +30,8 @@ INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 # dependencies of startup.S
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-pll.S    \
-                                                      startup-memory.S
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/PPC405/pll.S   \
+                                                      $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/PPC405/sdram.S
 
 .PHONY : configure
 configure :
