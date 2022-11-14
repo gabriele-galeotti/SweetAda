@@ -1,0 +1,23 @@
+
+#
+# REF405EP PPC405EP board (QEMU emulator)
+#
+
+CPU       := PowerPC
+CPU_MODEL := PPC405
+
+# -msdata=eabi
+GCC_SWITCHES_PLATFORM     += -mcpu=405 -meabi -msoft-float -Wa,-mregnames
+LD_SWITCHES_PLATFORM      +=
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
+
+USE_APPLICATION := test-REF405EP
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu.cfg
+DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
+
