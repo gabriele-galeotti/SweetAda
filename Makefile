@@ -465,11 +465,16 @@ export OPTIMIZATION_LEVEL
 export BUILD_MODE
 export USE_APPLICATION
 
+export MAKE
+
+export USE_PYTHON
+ifneq ($(PYTHON),)
+export PYTHON
+endif
+
 ifneq ($(TCLSH),)
 export TCLSH
 endif
-
-export MAKE
 
 ################################################################################
 #                                                                              #

@@ -13,24 +13,28 @@ ifeq ($(OSTYPE),cmd)
   # Windows
   #
   TOOLCHAIN_PREFIX := C:\Program Files\SweetAda
+  PYTHON           := C:\Python27\python.exe
   TCLSH            := $(TOOLCHAIN_PREFIX)\bin\tclsh86.exe
 else ifeq ($(OSTYPE),msys)
   #
   # MSYS2
   #
   TOOLCHAIN_PREFIX := C:/Program Files/SweetAda
+  PYTHON           := C:/Python27/python.exe
   TCLSH            := $(TOOLCHAIN_PREFIX)/bin/tclsh86.exe
 else ifeq ($(OSTYPE),darwin)
   #
   # OS X
   #
   TOOLCHAIN_PREFIX := /opt/sweetada
+  PYTHON           := python
   TCLSH            := tclsh
 else ifeq ($(OSTYPE),linux)
   #
   # Linux and other compliant environments
   #
   TOOLCHAIN_PREFIX := /opt/sweetada
+  PYTHON           := python
   TCLSH            := tclsh
 endif
 
@@ -73,4 +77,6 @@ endif
 OPTIMIZATION_LEVEL := 1
 
 USE_ELFTOOL := Y
+
+USE_PYTHON := Y
 
