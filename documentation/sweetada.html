@@ -1206,9 +1206,9 @@ directory will take precedence over the starting one.
 </li><li> clibrary/configuration.in
 </li></ul>
 
-<p>Every configuration file will add its own directory to the list of include directories,
+<p>Every configuration file could add its own directory to the list of include directories,
 either by head-insertion or tail-insertion (using standard Makefile-syntax variable
-assignments), so the precedence schema will be built at each step.
+assignments), so the precedence schema will be built step-by-step.
 </p>
 <p>By default, SweetAda uses the following schema, in order of descending priority:
 </p>
@@ -1295,8 +1295,7 @@ be triggered by changes in other units
 <p>The steps 2) and 3) are worth some additional detail:
 </p>
 <ul>
-<li> only non-RTS units should be specified, because RTS units are supposed to be fixed
-in time
+<li> only non-RTS units should be specified, because RTS units are supposed to be invariant
 </li><li> it is necessary to do so because, if the new unit is with&rsquo;ing other implicit units
 that are in turn overriden, they could not be detected by the build system
 </li><li> whether another implicit unit is being with&rsquo;ed, it is mandatory to use the appropriate
@@ -1356,6 +1355,7 @@ Next: <a href="#IOEMU-scripting" accesskey="n" rel="next">IOEMU scripting</a>, P
 <li><a href="#QEMU-AVR">QEMU AVR</a></li>
 <li><a href="#QEMU-MIPS">QEMU MIPS</a></li>
 <li><a href="#QEMU-RISC_002dV-32">QEMU RISC-V 32</a></li>
+<li><a href="#REF405EP">REF405EP</a></li>
 <li><a href="#Raspberry-Pi-3">Raspberry Pi 3</a></li>
 <li><a href="#SBC5206">SBC5206</a></li>
 <li><a href="#SPARCstation-5">SPARCstation 5</a></li>
@@ -1685,8 +1685,16 @@ MIPS-class CPU.
 32-bit RISC-V-class CPU.
 </p>
 </div>
+<div class="section" id="REF405EP">
+<h3 class="section">18.29 REF405EP</h3>
+<span id="index-REF405EP"></span>
+
+<p>The REF405EP is a PowerPC PPC405EP reference platform; current support is only
+for the emulated version provided in QEMU.
+</p>
+</div>
 <div class="section" id="Raspberry-Pi-3">
-<h3 class="section">18.29 Raspberry Pi 3</h3>
+<h3 class="section">18.30 Raspberry Pi 3</h3>
 <span id="index-Raspberry-Pi-3"></span>
 
 <p>The Raspberry Pi 3 Model B is a popular embedded board based on a Broadcom&reg;
@@ -1723,7 +1731,7 @@ with a manual file copy operation once you have visibility of the SDHC memory ca
 </p>
 </div>
 <div class="section" id="SBC5206">
-<h3 class="section">18.30 SBC5206</h3>
+<h3 class="section">18.31 SBC5206</h3>
 <span id="index-SBC5206"></span>
 
 <p>The SBC5206 is a virtual platform provided by QEMU, which mimics an Arnewsh 5206
@@ -1731,7 +1739,7 @@ embedded board, based on the MCF5206 ColdFire processor.
 </p>
 </div>
 <div class="section" id="SPARCstation-5">
-<h3 class="section">18.31 SPARCstation 5</h3>
+<h3 class="section">18.32 SPARCstation 5</h3>
 <span id="index-SPARCstation-5"></span>
 
 <p>SPARCstation 5 is a famed workstation made by Sun&reg;. Beyond the
@@ -1742,28 +1750,28 @@ in the main board of the workstation.
 </p>
 </div>
 <div class="section" id="STM32F769I">
-<h3 class="section">18.32 STM32F769I</h3>
+<h3 class="section">18.33 STM32F769I</h3>
 <span id="index-STM32F769I"></span>
 
 <p>The STM32F769I is a popular embedded board based on an ARM-class CPU.
 </p>
 </div>
 <div class="section" id="Spartan-3A-EK">
-<h3 class="section">18.33 Spartan 3A EK</h3>
+<h3 class="section">18.34 Spartan 3A EK</h3>
 <span id="index-Spartan-3A-EK"></span>
 
 <p>The Spartan 3A EK is an embedded board based on a Xilinx&reg; Spartan-3A FPGA.
 </p>
 </div>
 <div class="section" id="Spartan-3E-SK">
-<h3 class="section">18.34 Spartan 3E SK</h3>
+<h3 class="section">18.35 Spartan 3E SK</h3>
 <span id="index-Spartan-3E-SK"></span>
 
 <p>The Spartan 3E SK is an embedded board based on a Xilinx&reg; Spartan-3E FPGA.
 </p>
 </div>
 <div class="section" id="Synergy-S5D9">
-<h3 class="section">18.35 Synergy S5D9</h3>
+<h3 class="section">18.36 Synergy S5D9</h3>
 <span id="index-Synergy-S5D9"></span>
 
 <p>The Synergy PS5D9 is an embedded board from Renesas&reg;, equipped
@@ -1773,7 +1781,7 @@ with a ARM Cortex-M4 SoC.
 </p>
 </div>
 <div class="section" id="IBM-S_002f390">
-<h3 class="section">18.36 IBM S/390</h3>
+<h3 class="section">18.37 IBM S/390</h3>
 <span id="index-IBM-S_002f390"></span>
 
 <p>S/390&reg; is the well-known family of mainframes produced by IBM&reg;.
@@ -1794,7 +1802,7 @@ this is done also with the aid of a minimal interrupt context.
 </p>
 </div>
 <div class="section" id="Taihu">
-<h3 class="section">18.37 Taihu</h3>
+<h3 class="section">18.38 Taihu</h3>
 <span id="index-Taihu"></span>
 
 <p>The Taihu is a virtual platform provided by QEMU, which mimics the real one,
@@ -1802,7 +1810,7 @@ based on a PowerPC PPC405 device.
 </p>
 </div>
 <div class="section" id="Xilinx-Zynq-A9">
-<h3 class="section">18.38 Xilinx Zynq A9</h3>
+<h3 class="section">18.39 Xilinx Zynq A9</h3>
 <span id="index-Xilinx-Zynq-A9"></span>
 
 <p>The Xilinx&reg; Zynq A9 is a virtual platform provided by QEMU,
@@ -1810,7 +1818,7 @@ which mimics the real one.
 </p>
 </div>
 <div class="section" id="ZOOM">
-<h3 class="section">18.39 ZOOM</h3>
+<h3 class="section">18.40 ZOOM</h3>
 <span id="index-ZOOM"></span>
 
 <p>ZOOM is a family of embedded board based on the MCF5373 ColdFire processor.
@@ -2169,6 +2177,7 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-R">R</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Raspberry-Pi-3">Raspberry Pi 3</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-REF405EP">REF405EP</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-References">References</a>:</td><td>&nbsp;</td><td valign="top"><a href="#References">References</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-RTS">RTS</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Building-the-RTS">Building the RTS</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-runsweetada">runsweetada</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>

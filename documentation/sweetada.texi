@@ -1118,9 +1118,9 @@ cpus/<CPU>/configuration.in
 clibrary/configuration.in
 @end itemize
 
-Every configuration file will add its own directory to the list of include directories,
+Every configuration file could add its own directory to the list of include directories,
 either by head-insertion or tail-insertion (using standard Makefile-syntax variable
-assignments), so the precedence schema will be built at each step.
+assignments), so the precedence schema will be built step-by-step.
 
 By default, SweetAda uses the following schema, in order of descending priority:
 
@@ -1222,8 +1222,7 @@ The steps 2) and 3) are worth some additional detail:
 
 @itemize @bullet
 @item
-only non-RTS units should be specified, because RTS units are supposed to be fixed
-in time
+only non-RTS units should be specified, because RTS units are supposed to be invariant
 @item
 it is necessary to do so because, if the new unit is with'ing other implicit units
 that are in turn overriden, they could not be detected by the build system
@@ -1543,6 +1542,12 @@ MIPS-class CPU.
 
 The QEMU RISC-V 32 is a virtual platform provided by QEMU, which is based on an
 32-bit RISC-V-class CPU.
+
+@section REF405EP
+@cindex REF405EP
+
+The REF405EP is a PowerPC PPC405EP reference platform; current support is only
+for the emulated version provided in QEMU.
 
 @section Raspberry Pi 3
 @cindex Raspberry Pi 3
