@@ -11,9 +11,9 @@
 
 #
 # Arguments:
-# KERNEL_SRECFILE
-# SERIALPORT_DEVICE
-# BAUD_RATE
+# $1 = KERNEL_SRECFILE
+# $2 = SERIALPORT_DEVICE
+# $3 = BAUD_RATE
 #
 # Environment variables:
 # SWEETADA_PATH
