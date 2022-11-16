@@ -38,7 +38,7 @@ package body PL011 is
                                );
 
    PL011_Register_Offset : constant array (PL011_Register_Type) of Storage_Offset :=
-      (
+      [
        UARTDR    => 16#00#,
        UARTRSR   => 16#04#,
        UARTECR   => 16#04#,
@@ -54,7 +54,7 @@ package body PL011 is
        UARTMIS   => 16#40#,
        UARTICR   => 16#44#,
        UARTDMACR => 16#48#
-      );
+      ];
 
    type UARTDR_Type is
    record
