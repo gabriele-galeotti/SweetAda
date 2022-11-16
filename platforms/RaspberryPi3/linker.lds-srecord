@@ -4,7 +4,7 @@ ENTRY(_start)
 MEMORY
 {
         /* leave space for ATAGS */
-        RAM : ORIGIN = 0x00080000, LENGTH = 1M
+        RAM (rwx) : ORIGIN = 0x00080000, LENGTH = 1M
 }
 
 SECTIONS
