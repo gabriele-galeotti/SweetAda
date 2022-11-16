@@ -6,7 +6,7 @@
 CPU       := ARM
 CPU_MODEL := Cortex-A9
 
-GCC_SWITCHES_PLATFORM     += -mcpu=cortex-a9 -Wa,-mcpu=cortex-a9
+GCC_SWITCHES_PLATFORM     += -mcpu=cortex-a9
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y

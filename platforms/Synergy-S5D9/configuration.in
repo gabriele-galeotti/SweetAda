@@ -13,7 +13,7 @@ USE_LIBADA := N
 CPU       := ARM
 CPU_MODEL := CORTEXM4
 
-GCC_SWITCHES_PLATFORM     += -mcpu=cortex-m4 -Wa,-mcpu=cortex-m4
+GCC_SWITCHES_PLATFORM     += -mcpu=cortex-m4
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
