@@ -15,7 +15,7 @@
 
                 .sect   .text,"ax"
                 .global __divsi3
-                .type   __divsi3, @function
+                .type   __divsi3,@function
                 .ent    __divsi3
 
 __divsi3:
