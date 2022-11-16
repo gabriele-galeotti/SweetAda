@@ -214,6 +214,7 @@ LD_SWITCHES_DEFAULT       += -Map $(KERNEL_BASENAME).map
 LD_SWITCHES_DEFAULT       += --cref
 LD_SWITCHES_DEFAULT       += --warn-common
 LD_SWITCHES_DEFAULT       += --warn-section-align
+LD_SWITCHES_DEFAULT       += --no-warn-rwx-segments
 LD_SWITCHES_DEFAULT       += --print-memory-usage
 
 # NM
