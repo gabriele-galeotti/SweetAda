@@ -49,6 +49,7 @@ package body BSP is
       -- Console.Console_Descriptor.Read  := Console_Getchar'Access;
       -- Console.TTY_Setup;
       -------------------------------------------------------------------------
+      null;
    end BSP_Setup;
 
 end BSP;
