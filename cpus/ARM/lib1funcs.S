@@ -603,7 +603,7 @@ pc              .req    r15
                 orrhs   \result,\result,\curbit,  lsr #3
                 cmp     \dividend, #0                   @ Early termination?
                 do_it   ne, t
-                movnes  \curbit,\curbit,lsr #4          @ No, any more bits to do?
+                movsne  \curbit,\curbit,lsr #4          @ No, any more bits to do?
                 movne   \divisor,\divisor,lsr #4
                 bne     1b
 
@@ -705,7 +705,7 @@ pc              .req    r15
                 subhs   \dividend,\dividend,\divisor,lsr #3
                 cmp     \dividend,#1
                 mov     \divisor,\divisor,lsr #4
-                subges  \order,\order,#4
+                subsge  \order,\order,#4
                 bge     1b
 
                 tst     \order,#3
