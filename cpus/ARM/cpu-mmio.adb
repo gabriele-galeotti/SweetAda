@@ -92,10 +92,10 @@ package body CPU.MMIO is
                        "        strb    %0,[%1]" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => (
+           Inputs   => [
                         Interfaces.Unsigned_8'Asm_Input ("r", Value),
                         System.Address'Asm_Input ("r", Memory_Address)
-                       ),
+                       ],
            Clobber  => "memory",
            Volatile => True
           );
@@ -108,10 +108,10 @@ package body CPU.MMIO is
                        "        strh    %0,[%1]" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => (
+           Inputs   => [
                         Interfaces.Unsigned_16'Asm_Input ("r", Value),
                         System.Address'Asm_Input ("r", Memory_Address)
-                       ),
+                       ],
            Clobber  => "memory",
            Volatile => True
           );
@@ -124,10 +124,10 @@ package body CPU.MMIO is
                        "        str     %0,[%1]" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => (
+           Inputs   => [
                         Interfaces.Unsigned_32'Asm_Input ("r", Value),
                         System.Address'Asm_Input ("r", Memory_Address)
-                       ),
+                       ],
            Clobber  => "memory",
            Volatile => True
           );
