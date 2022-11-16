@@ -63,7 +63,7 @@ def u32_to_lebytes(n):
     return [byte0, byte1, byte2, byte3]
 
 ################################################################################
-# ls2chs                                                                       #
+# ls2chs()                                                                     #
 #                                                                              #
 # Convert a logical sector value to CHS format.                                #
 # CHS layout in MBR: [0]=HEAD, [1]=SECTOR|CYLINDERH, [3]=CYLINDERL             #
@@ -75,7 +75,7 @@ def ls2chs(sectorn, cyl, hpc, spt):
     return [(sectorn / spt) % hpc, ((sectorn % spt) + 1) + (ch * 64), cl]
 
 ################################################################################
-# write_partition                                                              #
+# write_partition()                                                            #
 #                                                                              #
 ################################################################################
 # manually create an MS-DOS partition
