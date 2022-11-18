@@ -90,8 +90,8 @@ else ifeq ($(ADA_MODE),ADA05)
 ADAC_SWITCHES += -gnat2005
 else ifeq ($(ADA_MODE),ADA12)
 ADAC_SWITCHES += -gnat2012
-else ifeq ($(ADA_MODE),ADA20)
-ADAC_SWITCHES += -gnat2020
+else ifeq ($(ADA_MODE),ADA22)
+ADAC_SWITCHES += -gnat2022
 else
 $(warning *** Warning: no valid ADA_MODE.)
 endif
