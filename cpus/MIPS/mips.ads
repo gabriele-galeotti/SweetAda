@@ -134,7 +134,7 @@ package MIPS is
    subtype Register_Number_Type is Natural range R0 .. R31;
 
    Register_Size : constant array (R0 .. R31) of Positive :=
-      (
+      [
        R0  => 4,
        R1  => 4,
        R2  => 4,
@@ -167,7 +167,7 @@ package MIPS is
        R29 => 4,
        R30 => 4,
        R31 => 4
-      );
+      ];
 
    Maximum_Register_Size : constant := 4;
 

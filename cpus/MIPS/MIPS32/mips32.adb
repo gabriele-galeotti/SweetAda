@@ -62,10 +62,10 @@ package body MIPS32 is
                        "        nop              " & CRLF &
                        "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Result),
-           Inputs   => (
+           Inputs   => [
                         CP0_Register_Type'Asm_Input ("i", Register),
                         CP0_Register_Select_Type'Asm_Input ("i", Register_Select)
-                       ),
+                       ],
            Clobber  => "",
            Volatile => True
           );
@@ -85,11 +85,11 @@ package body MIPS32 is
                        "        nop              " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => (
+           Inputs   => [
                         Unsigned_32'Asm_Input ("r", Register_Value),
                         CP0_Register_Type'Asm_Input ("i", Register),
                         CP0_Register_Select_Type'Asm_Input ("i", Register_Select)
-                       ),
+                       ],
            Clobber  => "",
            Volatile => True
           );
@@ -292,10 +292,10 @@ package body MIPS32 is
                        "        ll      %0,0(%2)" & CRLF &
                        "        sc      %1,0(%2)" & CRLF &
                        "",
-           Outputs  => (
+           Outputs  => [
                         CPU_Unsigned'Asm_Output ("=&r", T_lock.Lock),
                         CPU_Unsigned'Asm_Output ("+r", Locked_Item.Lock)
-                       ),
+                       ],
            Inputs   => Address'Asm_Input ("r", Lock_Object.Lock'Address),
            Clobber  => "",
            Volatile => True
