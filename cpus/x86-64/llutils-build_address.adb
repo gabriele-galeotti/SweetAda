@@ -34,11 +34,11 @@ begin
                     "        addq    %%rbx,%%rax" & CRLF &
                     "",
         Outputs  => System.Address'Asm_Output ("=a", Result),
-        Inputs   => (
+        Inputs   => [
                      System.Address'Asm_Input ("a", Base_Address),
                      SSE.Storage_Offset'Asm_Input ("b", Offset),
                      Bits.Address_Shift'Asm_Input ("c", Scale_Address)
-                    ),
+                    ],
         Clobber  => "",
         Volatile => True
        );

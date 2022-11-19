@@ -126,10 +126,10 @@ package body x86_64 is
                        "        wrmsr" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => (
+           Inputs   => [
                         Unsigned_64'Asm_Input ("A", Value),
                         MSR_Type'Asm_Input ("c", MSR_Register_Number)
-                       ),
+                       ],
            Clobber  => "",
            Volatile => True
           );
@@ -254,10 +254,10 @@ package body x86_64 is
            Template => ""                      & CRLF &
                        "        xchgq   %0,%1" & CRLF &
                        "",
-           Outputs  => (
+           Outputs  => [
                         CPU_Unsigned'Asm_Output ("+r", Value.Lock),
                         CPU_Unsigned'Asm_Output ("+m", Lock_Object.Lock)
-                       ),
+                       ],
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True

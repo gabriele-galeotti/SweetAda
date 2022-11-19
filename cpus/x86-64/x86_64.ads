@@ -598,9 +598,33 @@ package x86_64 is
 
    type MSR_Type is new Unsigned_32;
 
-   IA32_TIME_STAMP_COUNTER : constant MSR_Type := 16#0000_0010#;
-   IA32_APIC_BASE          : constant MSR_Type := 16#0000_001B#;
-   IA32_EFER               : constant MSR_Type := 16#C000_0080#;
+   IA32_P5_MC_ADDR          : constant MSR_Type := 16#0000_0000#;
+   IA32_P5_MC_TYPE          : constant MSR_Type := 16#0000_0001#;
+   IA32_MONITOR_FILTER_SIZE : constant MSR_Type := 16#0000_0006#;
+   IA32_TIME_STAMP_COUNTER  : constant MSR_Type := 16#0000_0010#;
+   IA32_PLATFORM_ID         : constant MSR_Type := 16#0000_0017#;
+   IA32_APIC_BASE           : constant MSR_Type := 16#0000_001B#;
+   IA32_FEATURE_CONTROL     : constant MSR_Type := 16#0000_003A#;
+   IA32_TSC_ADJUST          : constant MSR_Type := 16#0000_003B#;
+   IA32_BIOS_UPDT_TRIG      : constant MSR_Type := 16#0000_0079#;
+   IA32_BIOS_SIGN_ID        : constant MSR_Type := 16#0000_008B#;
+   IA32_SMM_MONITOR_CTL     : constant MSR_Type := 16#0000_009B#;
+   IA32_SMBASE              : constant MSR_Type := 16#0000_009E#;
+   IA32_PMC0                : constant MSR_Type := 16#0000_00C1#;
+   IA32_PMC1                : constant MSR_Type := 16#0000_00C2#;
+   IA32_PMC2                : constant MSR_Type := 16#0000_00C3#;
+   IA32_PMC3                : constant MSR_Type := 16#0000_00C4#;
+   IA32_PMC4                : constant MSR_Type := 16#0000_00C5#;
+   IA32_PMC5                : constant MSR_Type := 16#0000_00C6#;
+   IA32_PMC6                : constant MSR_Type := 16#0000_00C7#;
+   IA32_PMC7                : constant MSR_Type := 16#0000_00C8#;
+   IA32_MPERF               : constant MSR_Type := 16#0000_00E7#;
+   IA32_APERF               : constant MSR_Type := 16#0000_00E8#;
+   IA32_MTRRCAP             : constant MSR_Type := 16#0000_00FE#;
+   IA32_SYSENTER_CS         : constant MSR_Type := 16#0000_0174#;
+   IA32_SYSENTER_ESP        : constant MSR_Type := 16#0000_0175#;
+   IA32_SYSENTER_EIP        : constant MSR_Type := 16#0000_0176#;
+   IA32_EFER                : constant MSR_Type := 16#C000_0080#;
 
    -- IA32_APIC_BASE
 
