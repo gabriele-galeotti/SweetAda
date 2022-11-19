@@ -76,7 +76,7 @@ package body BSP is
       -- UART_Descriptor.Baud_Clock    := 16 * MHz;    -- board #2
       UART_Descriptor.Read_8        := MMIO.Read'Access;
       UART_Descriptor.Write_8       := MMIO.Write'Access;
-      UART_Descriptor.Data_Queue    := ((others => 0), 0, 0, 0);
+      UART_Descriptor.Data_Queue    := [[others => 0], 0, 0, 0];
       UART16x50.Init (UART_Descriptor);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
