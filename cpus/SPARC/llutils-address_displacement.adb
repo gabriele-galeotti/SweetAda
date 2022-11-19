@@ -34,11 +34,11 @@ begin
                     "        sra     %0,%3,%0" & CRLF &
                     "",
         Outputs  => SSE.Storage_Offset'Asm_Output ("=r", Result),
-        Inputs   => (
+        Inputs   => [
                      System.Address'Asm_Input ("r", Target_Address),
                      System.Address'Asm_Input ("r", Local_Address),
                      Bits.Address_Shift'Asm_Input ("r", Scale_Address)
-                    ),
+                    ],
         Clobber  => "",
         Volatile => True
        );
