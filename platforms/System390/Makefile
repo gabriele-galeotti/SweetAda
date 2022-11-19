@@ -42,9 +42,12 @@ ifeq ($(IPL_MODE),CARD_READER)
 	@$(TCLSH) S360obj.tcl -a 0x10000 -p -l loader.rdr $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
 else ifeq ($(IPL_MODE),DASD)
 	@$(RM) SYSRES.DSD
+ifeq ($(USE_PYTHON),Y)
+	@$(PYTHON) S360obj.py -a 0x10000 -p $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
+else
 	@$(TCLSH) S360obj.tcl -a 0x10000 -p $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
+endif
 	@$(HERCULES_PREFIX)/bin/dasdload -0 dasd_ctlfile.txt SYSRES.DSD 5
-
 endif
 
 .PHONY : clean

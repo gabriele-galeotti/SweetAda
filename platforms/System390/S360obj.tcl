@@ -417,6 +417,8 @@ while {true} {
 # 4)
 # create END record
 write_end_record $fp_output $sequence
+# write out number of records written
+puts stdout "$SCRIPT_FILENAME: number of records written: $sequence"
 incr sequence
 
 close $fp_input
