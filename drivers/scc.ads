@@ -69,8 +69,8 @@ package SCC is
        Flags          => (others => False),
        Read_8         => null,
        Write_8        => null,
-       Control_Port   => (Null_Address, Null_Address),
-       Data_Port      => (Null_Address, Null_Address)
+       Control_Port   => [Null_Address, Null_Address],
+       Data_Port      => [Null_Address, Null_Address]
       );
 
    procedure Baud_Rate_Set (

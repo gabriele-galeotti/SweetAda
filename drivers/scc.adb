@@ -38,7 +38,7 @@ package body SCC is
    type SCCZ8530_Register_Type is (RR0, WR3, WR4, WR5, WR9, WR11, RR12, WR12, RR13, WR13, WR14);
 
    SCCZ8530_Register_ID : constant array (SCCZ8530_Register_Type) of Unsigned_8 :=
-      (
+      [
        RR0  => 0,
        WR3  => 3,
        WR4  => 4,
@@ -50,7 +50,7 @@ package body SCC is
        RR13 => 13,
        WR13 => 13,
        WR14 => 14
-      );
+      ];
 
    ----------------------------------------------------------------------------
    -- Read Register 0 (Transmit/Receive Buffer Status and External Status)
@@ -178,7 +178,7 @@ package body SCC is
       Size      => 8;
    for WR3_Type use
    record
-      RX_Enable     at 0 range 0 .. 0;
+      Rx_Enable     at 0 range 0 .. 0;
       SYNC_L_INH    at 0 range 1 .. 1;
       ADD_SM        at 0 range 2 .. 2;
       Rx_CRC_Enable at 0 range 3 .. 3;
