@@ -39,7 +39,7 @@ package EBCDIC is
    ----------------------------------------------------------------------------
 
    ASCII2EBCDIC : constant array (0 .. 255) of SSE.Storage_Element :=
-      (
+      [
        -- NUL     SOH     STX     ETX     EOT     ENQ     ACK     BEL
        16#00#, 16#01#, 16#02#, 16#03#, 16#37#, 16#2D#, 16#2E#, 16#2F#,
        --  BS      HT      LF      VT      FF      CR      SO      SI
@@ -104,7 +104,7 @@ package EBCDIC is
        16#3F#, 16#3F#, 16#3F#, 16#3F#, 16#3F#, 16#3F#, 16#3F#, 16#3F#,
        --
        16#90#, 16#3F#, 16#3F#, 16#3F#, 16#3F#, 16#EA#, 16#3F#, 16#FF#
-      );
+      ];
 
    procedure To_EBCDIC (S1 : in String; S2 : out EBCDIC_String);
 
