@@ -150,10 +150,10 @@ package body SPARC is
                        "        nop ; nop ; nop     " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => (
+           Inputs   => [
                         Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_F0FF#),
                         Interfaces.Unsigned_32'Asm_Input ("r", 16#0000_0020#)
-                       ),
+                       ],
            Clobber  => "g1",
            Volatile => True
           );

@@ -103,7 +103,7 @@ package SPARC is
    subtype Register_Number_Type is Natural range 0 .. 31;
 
    Register_Size : constant array (0 .. 31) of Positive :=
-      (
+      [
        0  => 4,
        1  => 4,
        2  => 4,
@@ -136,7 +136,7 @@ package SPARC is
        29 => 4,
        30 => 4,
        31 => 4
-      );
+      ];
 
    Maximum_Register_Size : constant := 4;
 
