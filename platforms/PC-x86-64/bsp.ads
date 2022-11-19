@@ -28,7 +28,7 @@ package BSP is
    --========================================================================--
 
    UART_Descriptors : array (1 .. 2) of aliased UART16x50.Uart16x50_Descriptor_Type :=
-                      (others => UART16x50.Uart16x50_DESCRIPTOR_INVALID);
+                      [others => UART16x50.Uart16x50_DESCRIPTOR_INVALID];
 
    QEMU : Boolean := False;
 

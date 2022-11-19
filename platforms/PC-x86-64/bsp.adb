@@ -98,7 +98,7 @@ package body BSP is
       UART_Descriptors (1).Baud_Clock    := CLK_UART1M8;
       UART_Descriptors (1).Read_8        := IO_Read'Access;
       UART_Descriptors (1).Write_8       := IO_Write'Access;
-      UART_Descriptors (1).Data_Queue    := ((others => 0), 0, 0, 0);
+      UART_Descriptors (1).Data_Queue    := [[others => 0], 0, 0, 0];
       UART16x50.Init (UART_Descriptors (1));
       UART16x50.Baud_Rate_Set (UART_Descriptors (1), Baud_Rate_Type'Enum_Rep (BR_19200));
       UART_Descriptors (2).Base_Address  := To_Address (PC.UART2_BASEADDRESS);
@@ -106,7 +106,7 @@ package body BSP is
       UART_Descriptors (2).Baud_Clock    := CLK_UART1M8;
       UART_Descriptors (2).Read_8        := IO_Read'Access;
       UART_Descriptors (2).Write_8       := IO_Write'Access;
-      UART_Descriptors (2).Data_Queue    := ((others => 0), 0, 0, 0);
+      UART_Descriptors (2).Data_Queue    := [[others => 0], 0, 0, 0];
       UART16x50.Init (UART_Descriptors (2));
       UART16x50.Baud_Rate_Set (UART_Descriptors (2), Baud_Rate_Type'Enum_Rep (BR_19200));
       -- Console --------------------------------------------------------------
