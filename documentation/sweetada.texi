@@ -166,18 +166,16 @@ GNU sed is a small utility to perform simple textual processing, and it used to 
 strings and files should the shell have not enough computational power to perform
 these basic activities.
 
-While in some environments (Linux, and, if properly configured, also OS X) the
-make utility is normally visible in a shell and there is no need to install it or
-specify its location in the filesystem, in Windows is not deployed as a native
-application.
-
-If you do not have these utilities available, please install them from your package
-provider, or download them from the SweetAda SourceForge repository. Remember, as a
-rule of thumb, to put the filesystem executable path in the visible part of the PATH
-environment variable which is then parsed by the shell. GNU make must be immediately
-available since there is no point in running a Makefile without the interpreter. The GNU
-sed utility could be installed directly in the "libutils" directory without the need to
-modify the environment setup.
+In some environments (Linux, and, if properly configured, also OS X) the GNU Make and
+sed utilities are natively present and there is no need to install them or specify theirs
+location in the filesystem, but this is not true under Windows and thus should be
+installed by means of thirdy-party packages. If you do not have these utilities available,
+please install them from your package provider, or download them from the SweetAda
+SourceForge repository. Remember, as a rule of thumb, to put the filesystem executable
+path in the visible part of the PATH environment variable which is then parsed by the shell.
+GNU Make must be immediately available since there is no point in running a Makefile
+without the GNU Make interpreter. The GNU sed utility could be installed directly in the
+"libutils" directory without the need to modify the environment setup.
 
 SweetAda also requires (although they are not really strictly necessary from a system
 standpoint) three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility.
@@ -208,7 +206,7 @@ subdirectory of the SweetAda filesystem hierarchy.
 @section Testing the installation
 @cindex Testing the installation
 
-In order to perform actions, the make utility should be invoked, followed by the
+In order to perform actions, the GNU Make interpreter should be invoked, followed by the
 target, like in:
 
 @example
@@ -218,7 +216,7 @@ $ make configure
 (provided your working directory is the SweetAda top-level-directory).
 
 The two shell scripts menu.sh (Bash) and menu.bat (Windows cmd.exe) are useful to ease
-the invocation of the make executable provided in the toolchain package. Thus, eventually
+the invocation of the GNU Make executable provided in the toolchain package. Thus, eventually
 adjust the script near the "Main loop" entry point, as shown in the next lines:
 
 @example
@@ -231,11 +229,11 @@ SET MAKEEXE="C:\Program Files\SweetAda"\bin\make.exe                  <---
 menu.sh:
 ...
   darwin)
-    # use SweetAda make (try a standard installation prefix)
+    # use SweetAda GNU Make (try a standard installation prefix)
     SWEETADA_MAKE=/opt/sweetada/bin/make                     <---
 ...
   msys)
-    # use SweetAda make (try a standard installation prefix)
+    # use SweetAda GNU Make (try a standard installation prefix)
     SWEETADA_MAKE="/c/Program Files/SweetAda/bin/make.exe"   <---
 @end example
 
@@ -370,8 +368,8 @@ $ make install
 
 will build and install wrappers and elftool.
 
-This procedure should work also on a Windows cmd.exe shell, provided you have the make
-utility available online.
+This procedure should work also on a Windows cmd.exe shell, provided you have the
+GNU Make utility available online.
 
 runsweetada is a scripting utility coupled with the IOEMU I/O emulator, which is an
 extension to QEMU, FS-UAE or GXemul. @xref{IOEMU scripting}. Its purpose is to
@@ -422,7 +420,7 @@ unpack them referring to, say, "C:" or "/".
 @chapter Menu front-ends
 @cindex Menu front-ends
 
-SweetAda has three shell utilities to ease invoking GNU Make.
+SweetAda has three shell utilities to ease invoking the GNU Make interpreter.
 
 "menu.sh" is a pure Bash script.
 
@@ -446,7 +444,7 @@ produced.
 The very first action to perform after an installation is to build the Ada Run-Time
 System.
 
-The RTS is being built by means of a makefile target:
+The RTS is being built by means of a Makefile target:
 
 @example
 $ make CPU=<cpu> [CPU_MODEL=<cpu_model>] RTS=<rts> [TOOLCHAIN_NAME=<toolchain_name>] rts
@@ -483,7 +481,7 @@ Once you have built the RTS, it is persistent, and you don't need to repeat this
 operation, unless you modify RTS source files.
 
 Supported CPUs are in the rts/src/targets directory. Every CPU directory contains
-some makefile fragments, and the Makefile.rts.in, which is used to state GCC switches
+some Makefile fragments, and the Makefile.rts.in, which is used to state GCC switches
 used during the compilation. Remember that no CPU switches should be used, because the
 build system compiles the RTS for every CPU configuration, so you should specify only
 global features, like, e.g., use of global pointers or object symbol naming.
