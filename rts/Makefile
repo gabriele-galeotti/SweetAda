@@ -156,10 +156,20 @@ endif
 ################################################################################
 
 .PHONY : all
+ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_DIRECTORIES_SKIP)),)
+all :
+	$(info *** Skipping target "all" for multilib directory "$(MULTILIB_DIRECTORY)".)
+else
 all : configure-rts configure-rts-target multilib
+endif
 
 .PHONY : configure
+ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_DIRECTORIES_SKIP)),)
+configure :
+	$(info *** Skipping target "configure" for multilib directory "$(MULTILIB_DIRECTORY)".)
+else
 configure : createdirectories configure-rts configure-rts-target
+endif
 
 # configure-rts is in src/$(RTS)/Makefile.in
 .PHONY : configure-rts
@@ -184,7 +194,12 @@ else
 endif
 
 .PHONY : multilib
+ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_DIRECTORIES_SKIP)),)
+multilib :
+	$(info *** Skipping target "multilib" for multilib directory "$(MULTILIB_DIRECTORY)".)
+else
 multilib : $(LIBGNAT) $(LIBGNARL) clean-objs
+endif
 
 $(LIBGNAT) : $(LIBGNAT_OBJS)
 	$(AR) cr $@ $(LIBGNAT_OBJS)
