@@ -96,10 +96,10 @@ package body SH is
                        "        movt    %0   " & CRLF &
                        "        xor     #1,%0" & CRLF &
                        "",
-           Outputs  => (
+           Outputs  => [
                         CPU_Integer'Asm_Output ("=z", Lock_Flag),
                         Lock_Type'Asm_Output ("+m", Lock_Object)
-                       ),
+                       ],
            Inputs   => Address'Asm_Input ("r", Lock_Object'Address),
            Clobber  => "memory,t",
            Volatile => True
