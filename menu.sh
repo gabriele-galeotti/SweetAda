@@ -39,7 +39,15 @@ if [ "x${OS}" = "xWindows_NT" ] ; then
     OSTYPE=msys
   fi
 else
-  OSTYPE=$(uname -s 2> /dev/null | tr "[:upper:]" "[:lower:]" | sed -e "s|[^a-z].*||" -e "s|mingw|msys|")
+  OSTYPE_UNAME=$(uname -s 2> /dev/null)
+  if   [ "x${OSTYPE_UNAME}" = "xLinux" ] ; then
+    OSTYPE=linux
+  elif [ "x${OSTYPE_UNAME}" = "xDarwin" ] ; then
+    OSTYPE=darwin
+  else
+    log_print_error "${SCRIPT_FILENAME}: *** Error: no valid OSTYPE."
+    exit 1
+  fi
 fi
 
 ################################################################################

@@ -40,19 +40,19 @@ else
 OSTYPE := cmd
 endif
 else
-# detect OSTYPE and normalize it to a simple all-alphabetic lowercase name
-# assume "sed", "tr", "uname" utilities always visible in a non-cmd context
-OSTYPE := $(shell uname -s 2> /dev/null | tr "[:upper:]" "[:lower:]" | sed -e "s|[^a-z].*||" -e "s|mingw|msys|")
-endif
-ifeq ($(OSTYPE),)
+OSTYPE_UNAME := $(shell uname -s 2> /dev/null)
+ifeq      ($(OSTYPE_UNAME),Linux)
+OSTYPE := linux
+else ifeq ($(OSTYPE_UNAME),Darwin)
+OSTYPE := darwin
+else
 $(error Error: no valid OSTYPE)
+endif
 endif
 export OSTYPE
 
 # define a minimum set of variables that are required for functions and
 # various utilities
-# cmd should have a "sed" utility online
-# msys should have "printf" and "sed" utilities online
 SCREXT_cmd := .bat
 SCREXT_unx := .sh
 ifeq ($(OSTYPE),cmd)
@@ -77,11 +77,11 @@ endif
 export TMPDIR EXEEXT SCREXT SCREXT_cmd SCREXT_unx ECHO REM SED
 
 # generate SWEETADA_PATH
-# msys should have "cygpath" and "sed" utilities online
+# msys should have the "cygpath" utility online
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 ifeq ($(OSTYPE),msys)
 # try to extract installation path
-MSYS_INSTALL_PATH := $(shell $(ECHO) "$(SHELL)" | $(SED) -e "s|/usr/bin/sh.exe||")
+MSYS_INSTALL_PATH := $(subst /usr/bin/sh.exe,,$(shell $(ECHO) "$(SHELL)"))
 SWEETADA_PATH ?= $(MSYS_INSTALL_PATH)$(shell cygpath.exe -u "$(MAKEFILEDIR)" 2> /dev/null)
 else
 SWEETADA_PATH ?= $(MAKEFILEDIR)
@@ -799,12 +799,7 @@ $(KERNEL_BASENAME).elf.lst : $(KERNEL_OUTFILE)
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): ELF sections dump.")
 	@$(call echo-print,"")
-	@$(REM) readelf could be used if elftool is not available
-ifeq ($(USE_ELFTOOL),Y)
-	@$(ELFTOOL) -c dumpsections $(KERNEL_OUTFILE)
-else
 	@$(SIZE) $(KERNEL_OUTFILE)
-endif
 	@$(call echo-print,"")
 
 libgnat.lst      \
