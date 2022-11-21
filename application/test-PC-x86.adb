@@ -43,7 +43,6 @@ package body Application is
    use System.Storage_Elements;
    use System.Machine_Code;
    use Interfaces;
-   use Interfaces.C;
    use Core;
    use Bits;
    use CPU.IO;
@@ -51,6 +50,9 @@ package body Application is
    use Exceptions;
    use PCI;
    use PIIX;
+
+   use type Interfaces.C.size_t; -- directly useing this unit creates problem with
+                                 -- visibility of False/True due to C_bool
 
    CRLF : String renames Definitions.CRLF;
 
@@ -192,10 +194,12 @@ package body Application is
                end if;
                if Tick_Count_Expired (TC2, 300) then
                   -- IOEMU GPIO test
-                  PortOut (IOEMU.IO0_ADDRESS, Unsigned_8'(Value * 1));
-                  PortOut (IOEMU.IO1_ADDRESS, Unsigned_8'(Value * 2));
-                  PortOut (IOEMU.IO2_ADDRESS, Unsigned_8'(Value * 3));
-                  PortOut (IOEMU.IO3_ADDRESS, Unsigned_8'(Value * 4));
+                  if Core.Debug_Flag then
+                     PortOut (IOEMU.IO0_ADDRESS, Unsigned_8'(Value * 1));
+                     PortOut (IOEMU.IO1_ADDRESS, Unsigned_8'(Value * 2));
+                     PortOut (IOEMU.IO2_ADDRESS, Unsigned_8'(Value * 3));
+                     PortOut (IOEMU.IO3_ADDRESS, Unsigned_8'(Value * 4));
+                  end if;
                   Value := @ + 1;
                   TC2 := Tick_Count;
                end if;
