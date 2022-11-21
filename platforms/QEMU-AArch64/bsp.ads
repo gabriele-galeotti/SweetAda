@@ -27,11 +27,6 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   Debug_Flag : constant Boolean with
-      Size          => 8,
-      Import        => True,
-      External_Name => "_debug_flag";
-
    PL011_Descriptor : PL011.PL011_Descriptor_Type := PL011.PL011_DESCRIPTOR_INVALID;
 
    procedure Console_Putchar (C : in Character);
