@@ -25,14 +25,6 @@
  * System C headers.                                                          *
  ******************************************************************************/
 
-#if __START_IF_SELECTION__
-#elif defined(__APPLE__) || defined(__linux__)
-/* feature test macros need to be defined before the first use of any */
-/* standard library header */
-# define _XOPEN_SOURCE 700
-# define _GNU_SOURCE
-#endif
-
 /* standard includes */
 #include <inttypes.h>
 #include <stdarg.h>     /* va_list */
