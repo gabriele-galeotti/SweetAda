@@ -40,6 +40,12 @@ package Core is
       Convention    => Asm,
       External_Name => "tick_count";
 
+   Debug_Flag : constant Boolean with
+      Size          => 8,
+      Import        => True,
+      Convention    => Asm,
+      External_Name => "_debug_flag";
+
    procedure Parameters_Dump;
 
    ----------------------------------------------------------------------------
