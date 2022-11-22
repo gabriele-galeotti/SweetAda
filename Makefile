@@ -799,7 +799,11 @@ $(KERNEL_BASENAME).elf.lst : $(KERNEL_OUTFILE)
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): ELF sections dump.")
 	@$(call echo-print,"")
+ifeq ($(USE_ELFTOOL),Y)
+	@$(ELFTOOL) -c dumpsections $(KERNEL_OUTFILE)
+else
 	@$(SIZE) $(KERNEL_OUTFILE)
+endif
 	@$(call echo-print,"")
 
 libgnat.lst      \
