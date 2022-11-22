@@ -227,15 +227,15 @@ endif
 # use -O1 otherwise gdb isn't able to get a full backtrace on mips targets.
 #
 $(ADALIB_PATH)/a-except.o : $(ADAINCLUDE_PATH)/a-except.adb
-	$(ADAC) -o $@ -c $(ADAC_SWITCHES) -g -O1 -fno-inline -fno-toplevel-reorder $<
+	$(ADAC) -o $@ -c -g -O1 -fno-inline -fno-toplevel-reorder $(ADAC_SWITCHES) $<
 
 # Ada sources generic rules
 $(ADALIB_PATH)/%.o : $(ADAINCLUDE_PATH)/%.adb
-	$(ADAC) -o $@ -c $(ADAC_SWITCHES) -g -O2 $<
+	$(ADAC) -o $@ -c -g -O2 $(ADAC_SWITCHES) $<
 $(ADALIB_PATH)/%.o : $(ADAINCLUDE_PATH)/%.ads
-	$(ADAC) -o $@ -c $(ADAC_SWITCHES) -g -O2 $<
+	$(ADAC) -o $@ -c -g -O2 $(ADAC_SWITCHES) $<
 
 # C sources generic rules
 $(ADALIB_PATH)/%.o : $(ADAINCLUDE_PATH)/%.c
-	$(CC) -o $@ -c $(CC_SWITCHES) -g -O2 $<
+	$(CC) -o $@ -c -g -O2 $(CC_SWITCHES) $<
 
