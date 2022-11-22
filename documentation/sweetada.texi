@@ -178,10 +178,9 @@ without the GNU Make interpreter. The GNU sed utility could be installed directl
 "libutils" directory without the need to modify the environment setup.
 
 SweetAda also requires (although they are not really strictly necessary from a system
-standpoint) three auxiliary programs, i.e, the GCC/GNAT wrappers and the elftool utility.
-They are provided as source programs to be built in the libutils/toolchain_tools directory.
-You need a system GCC compiler available online if you want to change their behaviour
-(which is not recommended, though). @xref{Toolchain tools}.
+standpoint) three auxiliary programs, i.e, the GCC/GNAT wrappers and the ELFtool utility.
+They are provided as source programs to be built in the libutils/src directory.
+A system GCC compiler available online is needed in order to build them. @xref{Toolchain tools}.
 
 The GCC wrapper is a small piece of code that sits between the compiler driver and the
 compiler executable. It analyzes command line parameters, selects verbosity level and
@@ -189,10 +188,11 @@ instructs the compiler executable to generate additional output files, like asse
 listing and Ada expanded source code. There is a companion wrapper, the "GNAT wrapper",
 but its use is limited to print brief informations when GNATMAKE processes with'ed units.
 
-elftool is a small utility that dumps the output object code. It is used mainly for a
-clean visual output in order to easily parse ELF sections. elftool is anyway optional,
-and you can avoid its use by setting a variable in the top-level configuration.in file,
-so the standard "size" toolchain executable is thus used.
+ELFtool is a small utility that dumps the binary section from an ELF file in an aesthetic
+pleasant form, and is used to manipulate some features of the SweetAda object code for
+debugging purposes. If you do not use these features, you can avoid ELFtool by setting a
+variable in the top-level configuration.in file, so the standard "size" toolchain executable
+is thus used.
 
 runsweetada is a small front-end scripting utility to ease the execution of a SweetAda,
 mostly used with virtual targets that use an emulator like QEMU.
@@ -301,9 +301,39 @@ SweetAda supports whitespaces in filepaths although this is considered bad pract
 @chapter Toolchains
 @cindex toolchains
 
-The SweetAda system is distributed with GNU toolchains for every CPU it can handle.
-Altough toolchains are quite generic, SweetAda does not employ neither the whole standard
-GNU FSF RTS source package nor the LibGCC library.
+SweetAda can be used with every GNU toolchain which provides an Ada compiler front-end.
+
+@cartouche
+NOTE:@*
+GNU toolchains should provide:
+@itemize @bullet
+@item
+GNATMAKE, GNATBIND (mandatory)
+@item
+GNATLINK, GNATCHOP, GNATLS, GNATPREP, GNATXREF (advisable for future use, not strictly needed
+in the current version)
+@end itemize
+@end cartouche
+
+In order to use a toolchain, remember to specify the installation prefix and the toolchain
+triplet in the top-level directory configuration.in. This way the Makefile can make the
+installation prefix directly visible in the shell search path and so its execution will
+be successful.
+
+Canonical packages have generally a standard layout, but check that the following rules
+are respected:
+
+@itemize @bullet
+@item
+the toolchain prefix is the parent directory of the package, the one that contains
+"bin", "lib", "libexec" and a directory that match the target triplet
+@item
+executable filenames in the "bin" directory are prefixed with the target triplet
+("arm-somesystem-elf-gcc", "i686-gnu-elf-ld", etc)
+@end itemize
+
+SweetAda goal is to use generic GNU toolchains, but it has an internal implementation of
+the Ada RTS and the GNU LibGCC library.
 
 The SweetAda RTS is a ZFP/SFP run-time that avoid to include subprograms from the original
 implementation, which is quite big and requires an underneath operating system.
@@ -316,57 +346,36 @@ Code output by the build system is thus coming directly from the compiler, witho
 source files inclusion. Anyway, the standard LibGCC binaries can be selected with a
 configuration variable.
 
-GNU toolchains are referenced by a "canonical triplet", e.g. "i686-unknown-linux"; since
-this name identifies also a working directory component of the toolchain, every time we
-refer to a toolchain this string should be used, like stating the current toolchain
-in the main configuration.in.
-
 @node Toolchain tools
 @chapter Toolchain tools
 @cindex GCC wrapper
 @cindex GNAT wrapper
-@cindex elftool
+@cindex ELFtool
 @cindex runsweetada
 
-SweetAda is not tied to SweetAda toolchains, and can be used with your own GNU toolchain.
+In order to perform its purpose, SweetAda needs two small utilities, a GNATMAKE wrapper
+and a GCC wrapper, that could be built from sources if you have a C compiler available online.
+Also ELFtool is useful albeit not strictly needed. These utilities are written in plain C and
+do not depend on system features.
 
-@cartouche
-NOTE:@*
-GNU toolchains should provide GNATCHOP, GNATLS, GNATMAKE, GNATBIND, GNATLINK,
-GNATPREP, GNATXREF executables.
-@end cartouche
-
-Anyway, SweetAda needs two small utilities, a GNATMAKE wrapper and a GCC wrapper,
-that could be built from sources if you have a C compiler available online. The current
-setup is for a system GCC C compiler.
-
-Go into the directory libutils/toolchain_tools and edit the Makefile by adjusting some
-variables:
+Go into the directory libutils/src/[GCC-wrapper|GNAT-wrapper|ELFtool] and edit the
+Makefile if you want to change the location of the GCC compiler by adjusting its
+variable definition:
 
 @example
-CC      := gcc # C compiler
-LIBELF  := /usr/local/lib/libelf.a # location of libelf library
+CC := gcc
+CC := /usr/local/bin/mygcc
+CC := C:/msys64/...
 @end example
-
-For elftool, you sould have libelf installed in your environment setup, but it is not
-strictly needed. Remember that GNU toolchain installation prefixes refers to the whole
-hierarchy, so do not add a trailing "/bin".
 
 Then, after a proper Makefile setup:
 
 @example
-$ make wrappers
-$ make install-wrappers
-@end example
-
-will build and install wrappers,
-
-@example
-$ make all
+$ make
 $ make install
 @end example
 
-will build and install wrappers and elftool.
+will build and install the tool just built in the libutils subdirectory.
 
 This procedure should work also on a Windows cmd.exe shell, provided you have the
 GNU Make utility available online.
@@ -447,30 +456,30 @@ System.
 The RTS is being built by means of a Makefile target:
 
 @example
-$ make CPU=<cpu> [CPU_MODEL=<cpu_model>] RTS=<rts> [TOOLCHAIN_NAME=<toolchain_name>] rts
+$ make CPU=<cpu> [CPU_MODEL=<cpu_model>] RTS=<rts> TOOLCHAIN_NAME=<toolchain_name> rts
 @end example
 
 For example:
 
 @example
 $ make CPU=x86 RTS=sfp TOOLCHAIN_NAME=i686-sweetada-elf rts
-$ make CPU=SuperH CPU_MODEL=SH7032 RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
+$ make CPU=SuperH RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
 @end example
 
 Please note that:
 @itemize @bullet
 @item
 both CPU name and RTS name are one of those listed in the help output from Makefile
+and are the corrispondent subdirectories in the SweetAda filesystem
 @item
-the trailing "rts" token is the Makefile target just invoked
+"CPU_MODEL" is currently ignored
 @item
 TOOLCHAIN_NAME (the classical triplet name of a toolchain) is mandatory because the
 RTS hierarchy should be partitioned in case more than one target CPU should be employed;
 this name has to be exactly the same as the toolchain prefix of the executables also
 specified in the top-level configuration.in
 @item
-"CPU_MODEL" has meaning only for Hitachi SuperH CPUs, current choices are "SH7032" or
-"SH7750"; the CPU_MODEL specification is ignored for every other CPU
+the trailing "rts" token is the Makefile target just invoked
 @end itemize
 
 This will build the RTS. If you do not specify the toolchain in the classic "canonical
