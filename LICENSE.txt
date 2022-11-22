@@ -35,7 +35,7 @@ minor changes, and suitable for a compile-time build. These files are not
 strictly needed if you want to link the SweetAda executable with the binary
 form of the library normally present in the compiler toolchain package.
 
-All LibGCC assembly/C files have thair own license, i.e, GNU GENERAL PUBLIC
+All LibGCC assembly/C files have their own license, i.e, GNU GENERAL PUBLIC
 LICENSE Version 3, coupled with the GCC RUNTIME LIBRARY EXCEPTION Version 3.1.
 
 Please consult the LICENSE.COPYING3 and the LICENSE.COPYING3.RUNTIME files
