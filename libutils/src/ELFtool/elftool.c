@@ -1,6 +1,6 @@
 
 /*
- * elftool.c - Utility to work with ELF object files.
+ * elftool.c
  *
  * Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
  *
@@ -15,7 +15,6 @@
  * $3 = argument ...
  * commands:
  * dumpsections
- * objectsizes
  * findsymbol=<symbol>
  * setdebugflag=<value>
  *
@@ -26,6 +25,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -94,7 +94,7 @@ typedef struct _Elf {
         uint8_t      *ehdr;                     /* ELF header */
         off_t         phoff;
         off_t         shoff;
-        size_t        shnum;
+        size_t        shnum;                    /* number of section headers */
         size_t        shentsize;
         int           shstrndx;
         off_t         scn_shstrtab_offset;
@@ -125,27 +125,28 @@ typedef struct {
         const char *input_filename;
         int         command;
         Elf        *pelf;
-        bool        flag_verbose;       /* VERBOSE environment variable */
+        bool        flag_verbose;               /* VERBOSE environment variable */
+        bool        endianness_swap;
+        size_t      scn_max_string_length;
         const char *symbol_name;
         uint64_t    symbol_value;
         uint8_t     debug_flag_value;
         } Application_t;
 
-#define COMMAND_NONE         0
-#define COMMAND_DUMPSECTIONS 1
-#define COMMAND_OBJECTSIZES  2
-#define COMMAND_FINDSYMBOL   3
-#define COMMAND_SETDEBUGFLAG 4
-
-/******************************************************************************
- *                                                                            *
- ******************************************************************************/
-
 static Application_t application;
 
-#if 0
-
 #define TAB_SIZE 8
+static char tabspace[TAB_SIZE + 1];
+
+uint16_t SWAP16(uint16_t x) { if (application.endianness_swap) { return swap16(x); } return x; }
+uint32_t SWAP32(uint32_t x) { if (application.endianness_swap) { return swap32(x); } return x; }
+uint64_t SWAP64(uint64_t x) { if (application.endianness_swap) { return swap64(x); } return x; }
+
+#define COMMAND_NONE         0
+#define COMMAND_DUMPSECTIONS 1
+//#define COMMAND_OBJECTSIZES  2
+#define COMMAND_FINDSYMBOL   3
+#define COMMAND_SETDEBUGFLAG 4
 
 /******************************************************************************
  * compute_tabs()                                                             *
@@ -157,7 +158,7 @@ compute_tabs(const char *string, size_t maximum_string_length)
         int    ntabs;
         size_t string_length;
 
-        string_length = strlen(string);
+        string_length = STRING_LENGTH(string);
 
         if (string_length < maximum_string_length)
         {
@@ -183,43 +184,52 @@ compute_tabs(const char *string, size_t maximum_string_length)
 static void
 fprint_tabstospaces(FILE *fp, const char *input_string)
 {
-        char output_string[1024];
-        int  idx1;
-        int  idx2;
+        int  idx;
+        int  idx_out;
         char c;
 
-        idx1 = 0;
-        idx2 = 0;
-        do
+        idx = 0;
+        idx_out = 0;
+        while ((c = input_string[idx]) != '\0')
         {
-                c = input_string[idx1];
                 if (c == '\t')
                 {
                         int nspaces;
-                        int idx3;
-                        nspaces = TAB_SIZE - (idx2 % TAB_SIZE);
+                        nspaces = TAB_SIZE - (idx_out % TAB_SIZE);
                         if (nspaces == 0)
                         {
                                 nspaces = TAB_SIZE;
                         }
-                        for (idx3 = 0; idx3 < nspaces; ++idx3)
-                        {
-                                output_string[idx2] = ' ';
-                                ++idx2;
-                        }
+                        fprintf(fp, "%s", &tabspace[TAB_SIZE - nspaces]);
+                        idx++;
+                        idx_out += nspaces;
                 }
                 else
                 {
-                        output_string[idx2] = c;
-                        ++idx2;
+                        char *p;
+                        p = strchr(input_string + idx, '\t');
+                        if (p != NULL)
+                        {
+                                size_t ncharacters;
+                                /* ncharacters cannot be 0 because this is */
+                                /* a non-'\t' character */
+                                ncharacters = p - (input_string + idx);
+                                {
+                                        char tmp[ncharacters + 1];
+                                        snprintf(tmp, ncharacters + 1, "%s", input_string + idx);
+                                        fprintf(fp, "%s", tmp);
+                                        idx += ncharacters;
+                                        idx_out += ncharacters;
+                                }
+                        }
+                        else
+                        {
+                                fprintf(fp, "%s", input_string + idx);
+                                break;
+                        }
                 }
-                ++idx1;
-        } while (c != '\0');
-
-        fprintf(fp, output_string);
+        }
 }
-
-#endif
 
 /******************************************************************************
  * data_read()                                                                *
@@ -302,6 +312,7 @@ elf_begin(int fd)
         Elf    *pelf;
         off_t   fd_offset;
         size_t  size;
+        int     endian_detect;
 
         fd_offset = lseek(fd, (off_t)0, SEEK_END);
         if (fd_offset == (off_t)-1)
@@ -343,7 +354,7 @@ elf_begin(int fd)
         }
         //else if (size >= SARMAG && memcmp(pelf->data, ARMAG, SARMAG) == 0)
         //{
-        //        _elf_init_ar(elf);
+        //        __NOP__;
         //}
         else
         {
@@ -351,6 +362,19 @@ elf_begin(int fd)
                 pelf->data = NULL;
                 lib_free((void *)pelf);
                 pelf = NULL;
+        }
+
+        /*
+         * ELFDATA2LSB == 1 2's complement, little endian
+         * ELFDATA2MSB == 2 2's complement, big endian
+         */
+        endian_detect = endianness_detect();
+        if (
+             (pelf->encoding == ELFDATA2LSB && endian_detect == ENDIANNESS_BIG)    ||
+             (pelf->encoding == ELFDATA2MSB && endian_detect == ENDIANNESS_LITTLE)
+           )
+        {
+                application.endianness_swap = true;
         }
 
         return pelf;
@@ -396,40 +420,54 @@ elf_analyze(Elf *pelf)
          */
         if (pelf->class == ELFCLASS32)
         {
-                pelf->phoff               = ((Elf32_Ehdr *)pelf->ehdr)->e_phoff;
-                pelf->shoff               = ((Elf32_Ehdr *)pelf->ehdr)->e_shoff;
-                pelf->shnum               = ((Elf32_Ehdr *)pelf->ehdr)->e_shnum;
-                pelf->shentsize           = ((Elf32_Ehdr *)pelf->ehdr)->e_shentsize;
-                pelf->shstrndx            = ((Elf32_Ehdr *)pelf->ehdr)->e_shstrndx;
-                pelf->scn_shstrtab_offset = ((Elf32_Shdr *)(pelf->data + pelf->shoff + pelf->shstrndx * pelf->shentsize))->sh_offset;
+                Elf32_Ehdr *ehdr;
+                ehdr = (Elf32_Ehdr *)pelf->ehdr;
+                pelf->phoff               = SWAP32(ehdr->e_phoff);
+                pelf->shoff               = SWAP32(ehdr->e_shoff);
+                pelf->shnum               = SWAP16(ehdr->e_shnum);
+                pelf->shentsize           = SWAP16(ehdr->e_shentsize);
+                pelf->shstrndx            = SWAP16(ehdr->e_shstrndx);
+                pelf->scn_shstrtab_offset = SWAP32(((Elf32_Shdr *)(pelf->data + pelf->shoff + pelf->shstrndx * pelf->shentsize))->sh_offset);
         }
         else if (pelf->class == ELFCLASS64)
         {
-                pelf->phoff               = ((Elf64_Ehdr *)pelf->ehdr)->e_phoff;
-                pelf->shoff               = ((Elf64_Ehdr *)pelf->ehdr)->e_shoff;
-                pelf->shnum               = ((Elf64_Ehdr *)pelf->ehdr)->e_shnum;
-                pelf->shentsize           = ((Elf64_Ehdr *)pelf->ehdr)->e_shentsize;
-                pelf->shstrndx            = ((Elf64_Ehdr *)pelf->ehdr)->e_shstrndx;
-                pelf->scn_shstrtab_offset = ((Elf64_Shdr *)(pelf->data + pelf->shoff + pelf->shstrndx * pelf->shentsize))->sh_offset;
+                Elf64_Ehdr *ehdr;
+                ehdr = (Elf64_Ehdr *)pelf->ehdr;
+                pelf->phoff               = SWAP64(ehdr->e_phoff);
+                pelf->shoff               = SWAP64(ehdr->e_shoff);
+                pelf->shnum               = SWAP16(ehdr->e_shnum);
+                pelf->shentsize           = SWAP16(ehdr->e_shentsize);
+                pelf->shstrndx            = SWAP16(ehdr->e_shstrndx);
+                pelf->scn_shstrtab_offset = SWAP64(((Elf64_Shdr *)(pelf->data + pelf->shoff + pelf->shstrndx * pelf->shentsize))->sh_offset);
         }
-        for (idx = 1; idx < (int)pelf->shnum; idx++)
+        for (idx = 0; idx < (int)pelf->shnum; idx++)
         {
+                size_t scn_string_length;
                 if (pelf->class == ELFCLASS32)
                 {
-                        name   = ((Elf32_Shdr *)(pelf->data + pelf->shoff + idx * pelf->shentsize))->sh_name;
-                        offset = ((Elf32_Shdr *)(pelf->data + pelf->shoff + idx * pelf->shentsize))->sh_offset;
-                        size   = ((Elf32_Shdr *)(pelf->data + pelf->shoff + idx * pelf->shentsize))->sh_size;
-                        addr   = ((Elf32_Shdr *)(pelf->data + pelf->shoff + idx * pelf->shentsize))->sh_addr;
+                        Elf32_Shdr *shdr;
+                        shdr = (Elf32_Shdr *)(pelf->data + pelf->shoff + idx * pelf->shentsize);
+                        name   = SWAP32(shdr->sh_name);
+                        offset = SWAP32(shdr->sh_offset);
+                        size   = SWAP32(shdr->sh_size);
+                        addr   = SWAP32(shdr->sh_addr);
                 }
                 else if (pelf->class == ELFCLASS64)
                 {
-                        name   = ((Elf64_Shdr *)(pelf->data + pelf->shoff + idx * pelf->shentsize))->sh_name;
-                        offset = ((Elf64_Shdr *)(pelf->data + pelf->shoff + idx * pelf->shentsize))->sh_offset;
-                        size   = ((Elf64_Shdr *)(pelf->data + pelf->shoff + idx * pelf->shentsize))->sh_size;
-                        addr   = ((Elf64_Shdr *)(pelf->data + pelf->shoff + idx * pelf->shentsize))->sh_addr;
+                        Elf64_Shdr *shdr;
+                        shdr = (Elf64_Shdr *)(pelf->data + pelf->shoff + idx * pelf->shentsize);
+                        name   = SWAP32(shdr->sh_name);
+                        offset = SWAP64(shdr->sh_offset);
+                        size   = SWAP64(shdr->sh_size);
+                        addr   = SWAP64(shdr->sh_addr);
                 }
                 /* get section name */
                 scn_name = (const char *)(pelf->data + pelf->scn_shstrtab_offset + name);
+                scn_string_length = STRING_LENGTH(scn_name);
+                if (scn_string_length > application.scn_max_string_length)
+                {
+                        application.scn_max_string_length = scn_string_length;
+                }
                 if      (strcmp(scn_name, ".strtab") == 0)
                 {
                         pelf->scn_strtab_offset = offset;
@@ -470,21 +508,25 @@ elf_find_symbol(Elf *pelf, const char *symbol, uint64_t *pvalue)
         {
                 nsymbol = pelf->scn_symtab_size / sizeof(Elf64_Sym);
         }
-        for (idx = 1; idx < nsymbol; idx++)
+        for (idx = 0; idx < nsymbol; idx++)
         {
                 if (pelf->class == ELFCLASS32)
                 {
-                        name  = ((Elf32_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf32_Sym)))->st_name;
-                        shndx = ((Elf32_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf32_Sym)))->st_shndx;
-                        value = ((Elf32_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf32_Sym)))->st_value;
-                        size  = ((Elf32_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf32_Sym)))->st_size;
+                        Elf32_Sym *sym;
+                        sym = (Elf32_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf32_Sym));
+                        name  = SWAP32(sym->st_name);
+                        shndx = SWAP16(sym->st_shndx);
+                        value = SWAP32(sym->st_value);
+                        size  = SWAP32(sym->st_size);
                 }
                 else if (pelf->class == ELFCLASS64)
                 {
-                        name  = ((Elf64_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf64_Sym)))->st_name;
-                        shndx = ((Elf64_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf64_Sym)))->st_shndx;
-                        value = ((Elf64_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf64_Sym)))->st_value;
-                        size  = ((Elf64_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf64_Sym)))->st_size;
+                        Elf64_Sym *sym;
+                        sym = (Elf64_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf64_Sym));
+                        name  = SWAP32(sym->st_name);
+                        shndx = SWAP16(sym->st_shndx);
+                        value = SWAP64(sym->st_value);
+                        size  = SWAP64(sym->st_size);
                 }
                 (void)shndx;
                 (void)size;
@@ -497,6 +539,161 @@ elf_find_symbol(Elf *pelf, const char *symbol, uint64_t *pvalue)
         }
 
         return -1;
+}
+
+/******************************************************************************
+ * command_dumpsections()                                                     *
+ *                                                                            *
+ ******************************************************************************/
+static int
+command_dumpsections(void)
+{
+        const char *heading_name;
+        char        output_string_buffer[1024];
+        char        tmp_string_buffer[1024];
+        size_t      max_string_length;
+        int         ntabs;
+        int         nsections_ndigits;
+        char        printf_nsections_format[16];
+        int         idx;
+
+        elf_analyze(application.pelf);
+
+        heading_name = "Name";
+        output_string_buffer[0] = '\0';
+        max_string_length = MAX(application.scn_max_string_length, STRING_LENGTH(heading_name));
+        ntabs = compute_tabs(heading_name, max_string_length);
+
+        sprintf(tmp_string_buffer, "%s\t%s", "Index", heading_name);
+        strcat(output_string_buffer, tmp_string_buffer);
+        while (ntabs-- > 0)
+        {
+                sprintf(tmp_string_buffer, "\t");
+                strcat(output_string_buffer, tmp_string_buffer);
+        }
+        switch (application.pelf->class)
+        {
+                case ELFCLASS32:
+                        sprintf(tmp_string_buffer, "%s\t\t%s\n", "Address", "Size");
+                        strcat(output_string_buffer, tmp_string_buffer);
+                        break;
+                case ELFCLASS64:
+                        sprintf(tmp_string_buffer, "%s\t\t\t%s\n", "Address", "Size");
+                        strcat(output_string_buffer, tmp_string_buffer);
+                        break;
+                default:
+                        break;
+        }
+        fprint_tabstospaces(stdout, output_string_buffer);
+
+        /* synthesize the format string to print the section number */
+        if (application.pelf->shnum < 10)
+        {
+                nsections_ndigits = 1;
+        }
+        else if (application.pelf->shnum < 100)
+        {
+                nsections_ndigits = 2;
+        }
+        else if (application.pelf->shnum < 1000)
+        {
+                nsections_ndigits = 3;
+        }
+        else
+        {
+                nsections_ndigits = 6;
+        }
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+        /* e.g., 2 digits: "%02I64u:\t%s" */
+        sprintf(printf_nsections_format, "%%0%1dI64u:\t%%s", nsections_ndigits);
+#elif defined(__APPLE__)
+        /* e.g., 2 digits: "%02lu:\t%s" */
+        sprintf(printf_nsections_format, "%%0%1dlu:\t%%s", nsections_ndigits);
+#else
+        /* e.g., 2 digits: "%02lu:\t%s" */
+        sprintf(printf_nsections_format, "%%0%1dlu:\t%%s", nsections_ndigits);
+#endif
+
+        for (idx = 0; idx < (int)application.pelf->shnum; idx++)
+        {
+                off_t name;
+                size_t size;
+                uint64_t addr;
+                const char *scn_name;
+                if (application.pelf->class == ELFCLASS32)
+                {
+                        Elf32_Shdr *shdr;
+                        shdr = (Elf32_Shdr *)(application.pelf->data + application.pelf->shoff + idx * application.pelf->shentsize);
+                        name = SWAP32(shdr->sh_name);
+                        size = SWAP32(shdr->sh_size);
+                        addr = SWAP32(shdr->sh_addr);
+                }
+                else if (application.pelf->class == ELFCLASS64)
+                {
+                        Elf64_Shdr *shdr;
+                        shdr = (Elf64_Shdr *)(application.pelf->data + application.pelf->shoff + idx * application.pelf->shentsize);
+                        name = SWAP32(shdr->sh_name);
+                        size = SWAP64(shdr->sh_size);
+                        addr = SWAP64(shdr->sh_addr);
+                }
+                /* get section name */
+                scn_name = (const char *)(application.pelf->data + application.pelf->scn_shstrtab_offset + name);
+                if (STRING_LENGTH(scn_name) == 0)
+                {
+                        scn_name = "<NULL>";
+                }
+                output_string_buffer[0] = '\0';
+                sprintf(tmp_string_buffer, printf_nsections_format, idx, scn_name);
+                strcat(output_string_buffer, tmp_string_buffer);
+                ntabs = compute_tabs(scn_name, max_string_length);
+                while (ntabs-- > 0)
+                {
+                        sprintf(tmp_string_buffer, "\t");
+                        strcat(output_string_buffer, tmp_string_buffer);
+                }
+                switch (application.pelf->class)
+                {
+                        case ELFCLASS32:
+                                sprintf(
+                                        tmp_string_buffer,
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+                                        "0x%08I64X\t0x%08I64X\n",
+#elif defined(__APPLE__)
+                                        "0x%08llX\t0x%08lX\n",
+#else
+                                        "0x%08lX\t0x%08lX\n",
+#endif
+                                        addr,
+                                        size
+                                        );
+                                strcat(output_string_buffer, tmp_string_buffer);
+                                fprint_tabstospaces(stdout, output_string_buffer);
+                                break;
+                        case ELFCLASS64:
+                                sprintf(
+                                        tmp_string_buffer,
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+                                        "0x%016I64X\t0x%016I64X\n",
+#elif defined(__APPLE__)
+                                        "0x%016llX\t0x%016lX\n",
+#else
+                                        "0x%016lX\t0x%016lX\n",
+#endif
+                                        addr,
+                                        size
+                                        );
+                                strcat(output_string_buffer, tmp_string_buffer);
+                                fprint_tabstospaces(stdout, output_string_buffer);
+                                break;
+                        default:
+                                break;
+                }
+        }
+
+        return 0;
 }
 
 /******************************************************************************
@@ -569,12 +766,12 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                 {
                         char c;
                         const char *dumpsections_option = "dumpsections";
-                        const char *objectsizes_option = "objectsizes";
+                        //const char *objectsizes_option = "objectsizes";
                         const char *findsymbol_option = "findsymbol=";
                         const char *setdebugflag_option = "setdebugflag=";
-                        size_t findsymbol_optionlength = strlen(findsymbol_option);
-                        size_t setdebugflag_optionlength = strlen(setdebugflag_option);
-                        if (strlen(argv[idx]) != 2)
+                        size_t findsymbol_optionlength = STRING_LENGTH(findsymbol_option);
+                        size_t setdebugflag_optionlength = STRING_LENGTH(setdebugflag_option);
+                        if (STRING_LENGTH(argv[idx]) != 2)
                         {
                                 error_flag = true;
                                 if (error_message != NULL)
@@ -592,10 +789,10 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                                         {
                                                 p->command = COMMAND_DUMPSECTIONS;
                                         }
-                                        else if (strcmp(argv[idx], objectsizes_option) == 0)
-                                        {
-                                                p->command = COMMAND_OBJECTSIZES;
-                                        }
+                                        //else if (strcmp(argv[idx], objectsizes_option) == 0)
+                                        //{
+                                        //        p->command = COMMAND_OBJECTSIZES;
+                                        //}
                                         else if (strncmp(argv[idx], findsymbol_option, findsymbol_optionlength) == 0)
                                         {
                                                 p->command = COMMAND_FINDSYMBOL;
@@ -662,14 +859,18 @@ main(int argc, char **argv)
         int         fd;
         char       *verbose_string;
         const char *process_arguments_error_message;
+        int         idx;
 
         exit_status = EXIT_FAILURE;
         fd = -1;
 
-        application.input_filename = NULL;
-        application.command        = COMMAND_NONE;
-        application.pelf           = NULL;
-        application.flag_verbose   = false;
+        application.input_filename        = NULL;
+        application.command               = COMMAND_NONE;
+        application.pelf                  = NULL;
+        application.flag_verbose          = false;
+        application.endianness_swap       = false;
+        application.scn_max_string_length = 0;
+        application.symbol_name           = NULL;
 
         /*
          * Extract the program name.
@@ -742,16 +943,25 @@ main(int argc, char **argv)
         }
 
         /*
+         * Initialize TAB/SPACE array.
+         */
+        for (idx = 0; idx < TAB_SIZE; ++idx)
+        {
+                tabspace[idx] = ' ';
+        }
+        tabspace[idx] = '\0';
+
+        /*
          * Process command.
          */
         switch (application.command)
         {
-//                case COMMAND_DUMPSECTIONS:
-//                        if (command_dumpsections() < 0)
-//                        {
-//                                goto main_exit;
-//                        }
-//                        break;
+                case COMMAND_DUMPSECTIONS:
+                        if (command_dumpsections() < 0)
+                        {
+                                goto main_exit;
+                        }
+                        break;
 //                case COMMAND_OBJECTSIZES:
 //                        if (command_objectsizes() < 0)
 //                        {
@@ -797,10 +1007,10 @@ main(int argc, char **argv)
                         }
                         break;
                 case COMMAND_SETDEBUGFLAG:
-                        if (command_setdebugflag() < 0)
-                        {
-                                goto main_exit;
-                        }
+                        /* the kernel could be built without the definition */
+                        /* of this symbol, so exit cleanly without flag an */
+                        /* error */
+                        (void)command_setdebugflag();
                         break;
                 default:
                         /* __DNO__ */
