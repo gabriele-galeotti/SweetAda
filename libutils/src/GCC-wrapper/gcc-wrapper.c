@@ -31,6 +31,12 @@
 #include "library.h"
 
 /******************************************************************************
+ *                                                                            *
+ ******************************************************************************/
+
+#define GCC_WRAPPER_VERSION "1.0"
+
+/******************************************************************************
  * execute_setup()                                                            *
  *                                                                            *
  ******************************************************************************/
@@ -92,6 +98,21 @@ main(int argc, char **argv)
         strcpy(program_name, file_basename_simple(argv[0]));
 
         /*
+         * Check for "-v".
+         */
+        if (argc < 2)
+        {
+                fprintf(stderr, "%s: *** Error: no arguments.\n", program_name);
+                goto main_exit;
+        }
+        if (strcmp(argv[1], "-v") == 0)
+        {
+                fprintf(stdout, "%s: version %s\n", program_name, GCC_WRAPPER_VERSION);
+                exit_status = EXIT_SUCCESS;
+                goto main_exit;
+        }
+
+        /*
          * Check requested executable filename.
          */
 #if __START_IF_SELECTION__
@@ -135,6 +156,11 @@ main(int argc, char **argv)
 #endif
         {
                 objcopy = true;
+        }
+        else
+        {
+                fprintf(stderr, "%s: *** Error: executable not recognized.\n", program_name);
+                goto main_exit;
         }
 
         /*
@@ -435,6 +461,7 @@ no_parsing:
         }
         else
         {
+                /* __DNO__ */
                 fprintf(stderr, "%s: *** Error: executable not recognized.\n", program_name);
         }
 

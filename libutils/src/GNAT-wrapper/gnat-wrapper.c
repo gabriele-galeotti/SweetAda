@@ -31,6 +31,12 @@
 #include "library.h"
 
 /******************************************************************************
+ *                                                                            *
+ ******************************************************************************/
+
+#define GNAT_WRAPPER_VERSION "1.0"
+
+/******************************************************************************
  * main()                                                                     *
  *                                                                            *
  * Main loop.                                                                 *
@@ -70,6 +76,21 @@ main(int argc, char **argv)
          * Extract the program name.
          */
         strcpy(program_name, file_basename_simple(argv[0]));
+
+        /*
+         * Check for "-v".
+         */
+        if (argc < 2)
+        {
+                fprintf(stderr, "%s: *** Error: no arguments.\n", program_name);
+                goto main_exit;
+        }
+        if (strcmp(argv[1], "-v") == 0)
+        {
+                fprintf(stdout, "%s: version %s\n", program_name, GNAT_WRAPPER_VERSION);
+                exit_status = EXIT_SUCCESS;
+                goto main_exit;
+        }
 
         /*
          * GNAT_WRAPPER_GCC_EXECUTABLE.

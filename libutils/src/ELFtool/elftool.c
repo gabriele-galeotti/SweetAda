@@ -40,10 +40,6 @@
 
 #include <elf.h>
 
-/*
- * ar.h
- */
-
 /* ar archive magic and its length */
 #define ARMAG  "!<arch>\n"
 #define SARMAG 8
@@ -58,9 +54,6 @@ struct ar_hdr {
         char ar_fmag[2];
         };
 
-/*
- * File types.
- */
 typedef enum {
         ELF_K_NONE = 0,
         ELF_K_AR,
@@ -70,7 +63,6 @@ typedef enum {
         } Elf_Kind;
 
 typedef struct _Elf_Scn {
-        /* section header */
         union {
                 Elf64_Shdr u_shdr64;
                 Elf32_Shdr u_shdr32;
@@ -121,6 +113,8 @@ enum {
  * libelf - end                                                               *
  ******************************************************************************/
 
+#define ELFTOOL_VERSION "1.0"
+
 typedef struct {
         const char *input_filename;
         int         command;
@@ -136,17 +130,18 @@ typedef struct {
 static Application_t application;
 
 #define TAB_SIZE 8
-static char tabspace[TAB_SIZE + 1];
+static char tabspaces[TAB_SIZE + 1];
 
 uint16_t SWAP16(uint16_t x) { if (application.endianness_swap) { return swap16(x); } return x; }
 uint32_t SWAP32(uint32_t x) { if (application.endianness_swap) { return swap32(x); } return x; }
 uint64_t SWAP64(uint64_t x) { if (application.endianness_swap) { return swap64(x); } return x; }
 
 #define COMMAND_NONE         0
-#define COMMAND_DUMPSECTIONS 1
-//#define COMMAND_OBJECTSIZES  2
-#define COMMAND_FINDSYMBOL   3
-#define COMMAND_SETDEBUGFLAG 4
+#define COMMAND_VERSION      1
+#define COMMAND_DUMPSECTIONS 2
+//#define COMMAND_OBJECTSIZES  3
+#define COMMAND_FINDSYMBOL   4
+#define COMMAND_SETDEBUGFLAG 5
 
 /******************************************************************************
  * compute_tabs()                                                             *
@@ -178,11 +173,11 @@ compute_tabs(const char *string, size_t maximum_string_length)
 }
 
 /******************************************************************************
- * fprint_tabstospaces()                                                      *
+ * fprintf_tab2spaces()                                                       *
  *                                                                            *
  ******************************************************************************/
 static void
-fprint_tabstospaces(FILE *fp, const char *input_string)
+fprintf_tab2spaces(FILE *fp, const char *input_string)
 {
         int  idx;
         int  idx_out;
@@ -200,7 +195,7 @@ fprint_tabstospaces(FILE *fp, const char *input_string)
                         {
                                 nspaces = TAB_SIZE;
                         }
-                        fprintf(fp, "%s", &tabspace[TAB_SIZE - nspaces]);
+                        fprintf(fp, "%s", &tabspaces[TAB_SIZE - nspaces]);
                         idx++;
                         idx_out += nspaces;
                 }
@@ -557,6 +552,13 @@ command_dumpsections(void)
         char        printf_nsections_format[16];
         int         idx;
 
+        /* initialize TAB -> SPACES array */
+        for (idx = 0; idx < TAB_SIZE; ++idx)
+        {
+                tabspaces[idx] = ' ';
+        }
+        tabspaces[idx] = '\0';
+
         elf_analyze(application.pelf);
 
         heading_name = "Name";
@@ -584,7 +586,7 @@ command_dumpsections(void)
                 default:
                         break;
         }
-        fprint_tabstospaces(stdout, output_string_buffer);
+        fprintf_tab2spaces(stdout, output_string_buffer);
 
         /* synthesize the format string to print the section number */
         if (application.pelf->shnum < 10)
@@ -669,7 +671,7 @@ command_dumpsections(void)
                                         size
                                         );
                                 strcat(output_string_buffer, tmp_string_buffer);
-                                fprint_tabstospaces(stdout, output_string_buffer);
+                                fprintf_tab2spaces(stdout, output_string_buffer);
                                 break;
                         case ELFCLASS64:
                                 sprintf(
@@ -686,7 +688,7 @@ command_dumpsections(void)
                                         size
                                         );
                                 strcat(output_string_buffer, tmp_string_buffer);
-                                fprint_tabstospaces(stdout, output_string_buffer);
+                                fprintf_tab2spaces(stdout, output_string_buffer);
                                 break;
                         default:
                                 break;
@@ -783,34 +785,47 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                         switch (c)
                         {
                                 case 'c':
-                                        --number_of_arguments;
-                                        ++idx;
-                                        if (strcmp(argv[idx], dumpsections_option) == 0)
+                                        if (number_of_arguments-- > 0)
                                         {
-                                                p->command = COMMAND_DUMPSECTIONS;
-                                        }
-                                        //else if (strcmp(argv[idx], objectsizes_option) == 0)
-                                        //{
-                                        //        p->command = COMMAND_OBJECTSIZES;
-                                        //}
-                                        else if (strncmp(argv[idx], findsymbol_option, findsymbol_optionlength) == 0)
-                                        {
-                                                p->command = COMMAND_FINDSYMBOL;
-                                                p->symbol_name = argv[idx] + findsymbol_optionlength;
-                                        }
-                                        else if (strncmp(argv[idx], setdebugflag_option, setdebugflag_optionlength) == 0)
-                                        {
-                                                p->command = COMMAND_SETDEBUGFLAG;
-                                                p->debug_flag_value = (uint8_t)strtoul(argv[idx] + setdebugflag_optionlength, NULL, 16);
+                                                ++idx;
+                                                if (strcmp(argv[idx], dumpsections_option) == 0)
+                                                {
+                                                        p->command = COMMAND_DUMPSECTIONS;
+                                                }
+                                                //else if (strcmp(argv[idx], objectsizes_option) == 0)
+                                                //{
+                                                //        p->command = COMMAND_OBJECTSIZES;
+                                                //}
+                                                else if (strncmp(argv[idx], findsymbol_option, findsymbol_optionlength) == 0)
+                                                {
+                                                        p->command = COMMAND_FINDSYMBOL;
+                                                        p->symbol_name = argv[idx] + findsymbol_optionlength;
+                                                }
+                                                else if (strncmp(argv[idx], setdebugflag_option, setdebugflag_optionlength) == 0)
+                                                {
+                                                        p->command = COMMAND_SETDEBUGFLAG;
+                                                        p->debug_flag_value = (uint8_t)strtoul(argv[idx] + setdebugflag_optionlength, NULL, 16);
+                                                }
+                                                else
+                                                {
+                                                        error_flag = true;
+                                                        if (error_message != NULL)
+                                                        {
+                                                                        *error_message = "unknown command";
+                                                        }
+                                                }
                                         }
                                         else
                                         {
                                                 error_flag = true;
                                                 if (error_message != NULL)
                                                 {
-                                                        *error_message = "unknown command";
+                                                        *error_message = "no command supplied";
                                                 }
                                         }
+                                        break;
+                                case 'v':
+                                        p->command = COMMAND_VERSION;
                                         break;
                                 default:
                                         error_flag = true;
@@ -859,7 +874,6 @@ main(int argc, char **argv)
         int         fd;
         char       *verbose_string;
         const char *process_arguments_error_message;
-        int         idx;
 
         exit_status = EXIT_FAILURE;
         fd = -1;
@@ -905,14 +919,20 @@ main(int argc, char **argv)
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: %s.", process_arguments_error_message);
                 goto main_exit;
         }
-        if (application.input_filename == NULL)
-        {
-                log_printf(LOG_STDERR | LOG_FILE, "*** Error: no input file.");
-                goto main_exit;
-        }
         if (application.command == COMMAND_NONE)
         {
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: no command supplied.");
+                goto main_exit;
+        }
+        if (application.command == COMMAND_VERSION)
+        {
+                log_printf(LOG_STDOUT, "version %s", ELFTOOL_VERSION);
+                exit_status = EXIT_SUCCESS;
+                goto main_exit;
+        }
+        if (application.input_filename == NULL)
+        {
+                log_printf(LOG_STDERR | LOG_FILE, "*** Error: no input file.");
                 goto main_exit;
         }
 
@@ -941,15 +961,6 @@ main(int argc, char **argv)
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: elf_begin().");
                 goto main_exit;
         }
-
-        /*
-         * Initialize TAB/SPACE array.
-         */
-        for (idx = 0; idx < TAB_SIZE; ++idx)
-        {
-                tabspace[idx] = ' ';
-        }
-        tabspace[idx] = '\0';
 
         /*
          * Process command.
