@@ -222,7 +222,7 @@ PLATFORM_GOALS := infodump configure all $(KERNEL_BASENAME) postbuild session-st
 # before loading configuration.in (which defines the RTS type used by the
 # platform), save the RTS variable from the environment in order to correctly
 # build the RTS specified when issuing the "rts" target
-RTS_RTS := $(RTS)
+RTS_BUILD := $(RTS)
 
 # default build system parameters
 TOOLCHAIN_PREFIX   ?=
@@ -548,7 +548,7 @@ endif
 help :
 	@$(call echo-print,"make help (default)")
 	@$(call echo-print,"  Display an help about make targets.")
-	@$(call echo-print,"make CPU=<cpu> [CPU_MODEL=<cpu_model>] RTS=<rts> [TOOLCHAIN_NAME=<toolchain_name>] rts")
+	@$(call echo-print,"make RTS=<rts> CPU=<cpu> TOOLCHAIN_NAME=<toolchain_name> rts")
 	@$(call echo-print,"  Create RTS <rts> for CPU <cpu> with toolchain <toolchain_name>.")
 	@$(call echo-print,"make PLATFORM=<platform> [SUBPLATFORM=<subplatform>] createkernelcfg")
 	@$(call echo-print,"  Create the '$(KERNEL_CFGFILE)' main configuration file.")
@@ -1017,15 +1017,21 @@ ifeq ($(GCC_VERSION),)
 	$(error Error: no valid toolchain)
 endif
 ifeq ($(OSTYPE),cmd)
-	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO (        \
-          SET "MAKEFLAGS=" && SET "RTS=$(RTS_RTS)"                 && \
-          "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" configure && \
-          "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" multilib     \
+	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
+          (                                                                  \
+           ECHO.&& ECHO $(CPU): RTS = $(RTS_BUILD), multilib = %%M&& ECHO.&& \
+           SET "MAKEFLAGS=" && SET "RTS=$(RTS_BUILD)"                     && \
+           "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" configure       && \
+           "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" multilib           \
+           || EXIT /B ERRORLEVEL                                             \
           )
 else
-	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                                      \
-          MAKEFLAGS= RTS=$(RTS_RTS) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" configure && \
-          MAKEFLAGS= RTS=$(RTS_RTS) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" multilib ;   \
+	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                                         \
+          (                                                                                        \
+           echo "" && echo "$(CPU): RTS = $(RTS_BUILD), multilib = $$m" && echo ""              && \
+           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" configure && \
+           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" multilib     \
+          ) || exit $$? ;                                                                          \
         done
 endif
 
