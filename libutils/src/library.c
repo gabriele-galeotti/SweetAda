@@ -268,7 +268,7 @@ env_get(const char *envvarname)
                 {
                         const char *result;
                         /* allocate a buffer which will receives variable */
-                        result = (const char *)lib_malloc(STRING_LENGTH(string));
+                        result = (const char *)lib_malloc(STRING_MEMSIZE(string));
                         if (result != NULL)
                         {
                                 strcpy((char *)result, string);
@@ -344,7 +344,7 @@ env_put(const char *name, const char *value)
         }
 
         /* +1 "=", +1 terminating NUL */
-        env_entry = (char *)lib_malloc(STRING_MEMSIZE(name) + STRING_MEMSIZE(value));
+        env_entry = (char *)lib_malloc(STRING_LENGTH(name) + STRING_LENGTH(value) + 2);
         if (env_entry == NULL)
         {
                 log_printf(LOG_STDERR, "env_put(): lib_malloc().");
