@@ -72,22 +72,22 @@ proc write_partition {f sector_start sector_size} {
     global CYL
     global HPC
     global SPT
-    set fp [open $f "a+"]
-    fconfigure $fp -translation binary
-    seek $fp 0x1BE start
+    set fd [open $f "a+"]
+    fconfigure $fd -translation binary
+    seek $fd 0x1BE start
     # bootable flag
-    puts -nonewline $fp [binary format c1 0x80]
+    puts -nonewline $fd [binary format c1 0x80]
     # CHS start
-    puts -nonewline $fp [binary format c3 [ls2chs $sector_start $CYL $HPC $SPT]]
+    puts -nonewline $fd [binary format c3 [ls2chs $sector_start $CYL $HPC $SPT]]
     # partition type (FAT32 CHS mode)
-    puts -nonewline $fp [binary format c1 0x0B]
+    puts -nonewline $fd [binary format c1 0x0B]
     # CHS end; ending sector, not the following one
-    puts -nonewline $fp [binary format c3 [ls2chs [expr $sector_start + $sector_size - 1] $CYL $HPC $SPT]]
+    puts -nonewline $fd [binary format c3 [ls2chs [expr $sector_start + $sector_size - 1] $CYL $HPC $SPT]]
     # LBA sector start
-    puts -nonewline $fp [binary format c4 [u32_to_lebytes $sector_start]]
+    puts -nonewline $fd [binary format c4 [u32_to_lebytes $sector_start]]
     # LBA size in sectors
-    puts -nonewline $fp [binary format c4 [u32_to_lebytes $sector_size]]
-    close $fp
+    puts -nonewline $fd [binary format c4 [u32_to_lebytes $sector_size]]
+    close $fd
 }
 
 ################################################################################
@@ -138,11 +138,11 @@ set DEVICE_SECTORS [expr $CYL * $SECTORS_PER_CYLINDER]
 if {[string index $device_filename 0] eq "+"} {
     set device_type FILE
     set device_filename [string trimleft $device_filename "+"]
-    set fp [open $device_filename "w"]
-    fconfigure $fp -translation binary
-    seek $fp [expr $DEVICE_SECTORS * $BPS - 1] start
-    puts -nonewline $fp [binary format c1 0]
-    close $fp
+    set fd [open $device_filename "w"]
+    fconfigure $fd -translation binary
+    seek $fd [expr $DEVICE_SECTORS * $BPS - 1] start
+    puts -nonewline $fd [binary format c1 0]
+    close $fd
 } else {
     set device_type DEVICE
     while {$device_filename eq ""} {
@@ -169,15 +169,15 @@ eval exec $::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary mbr.bin > mbr
 
 # write MBR @ CHS(0,0,1)
 puts "$SCRIPT_FILENAME: creating MBR ..."
-set fp [open "mbr.bin" "r"]
-fconfigure $fp -translation binary
-set mbr [read $fp]
-close $fp
-set fp [open $device_filename "a+"]
-fconfigure $fp -translation binary
-seek $fp 0 start
-puts -nonewline $fp $mbr
-close $fp
+set fd [open "mbr.bin" "r"]
+fconfigure $fd -translation binary
+set mbr [read $fd]
+close $fd
+set fd [open $device_filename "a+"]
+fconfigure $fd -translation binary
+seek $fd 0 start
+puts -nonewline $fd $mbr
+close $fd
 
 # write partition
 puts "$SCRIPT_FILENAME: creating partition ..."
@@ -210,27 +210,27 @@ eval exec $::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary bootsector.bi
 
 # write bootsector @ CHS(1,0,1)
 puts "$SCRIPT_FILENAME: creating bootsector ..."
-set fp [open "bootsector.bin" "r"]
-fconfigure $fp -translation binary
-set bootsector [read $fp]
-close $fp
-set fp [open $device_filename "a+"]
-fconfigure $fp -translation binary
-seek $fp [expr $MBR_SECTORS * $BPS] start
-puts -nonewline $fp $bootsector
-close $fp
+set fd [open "bootsector.bin" "r"]
+fconfigure $fd -translation binary
+set bootsector [read $fd]
+close $fd
+set fd [open $device_filename "a+"]
+fconfigure $fd -translation binary
+seek $fd [expr $MBR_SECTORS * $BPS] start
+puts -nonewline $fd $bootsector
+close $fd
 
 # write kernel @ CHS(1,0,2)
 puts "$SCRIPT_FILENAME: writing input binary file ..."
-set fp [open $kernel_filename "r"]
-fconfigure $fp -translation binary
-set kernel [read $fp]
-close $fp
-set fp [open $device_filename "a+"]
-fconfigure $fp -translation binary
-seek $fp [expr ($MBR_SECTORS + 1) * $BPS] start
-puts -nonewline $fp $kernel
-close $fp
+set fd [open $kernel_filename "r"]
+fconfigure $fd -translation binary
+set kernel [read $fd]
+close $fd
+set fd [open $device_filename "a+"]
+fconfigure $fd -translation binary
+seek $fd [expr ($MBR_SECTORS + 1) * $BPS] start
+puts -nonewline $fd $kernel
+close $fd
 
 # flush disk buffers
 exec sync

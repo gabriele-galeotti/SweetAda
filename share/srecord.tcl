@@ -39,50 +39,50 @@ if {[llength $argv] < 3} {
     exit 1
 }
 
-set KERNEL_SRECFILE   [lindex $argv 0]
-set SERIALPORT_DEVICE [lindex $argv 1]
-set BAUD_RATE         [lindex $argv 2]
+set kernel_srecfile [lindex $argv 0]
+set serialport_device [lindex $argv 1]
+set baud_rate [lindex $argv 2]
 
-set serialport_fp [open $SERIALPORT_DEVICE "r+"]
-fconfigure $serialport_fp \
+set serialport_fd [open $serialport_device "r+"]
+fconfigure $serialport_fd \
     -blocking 0 \
     -buffering none \
     -eofchar {} \
-    -mode $BAUD_RATE,n,8,1 \
+    -mode $baud_rate,n,8,1 \
     -translation binary
-flush $serialport_fp
+flush $serialport_fd
 
 # read kernel file and write to serial port
-set kernel_fp [open $KERNEL_SRECFILE r]
-fconfigure $kernel_fp -buffering line
+set kernel_fd [open $kernel_srecfile r]
+fconfigure $kernel_fd -buffering line
 # delay for processing of data on remote side
-switch $BAUD_RATE {
+switch $baud_rate {
     "115200" {set delay 10}
     "38400"  {set delay 30}
     default  {set delay 50}
 }
-while {[gets $kernel_fp data] >= 0} {
-    puts -nonewline $serialport_fp "$data\x0D\x0A"
+while {[gets $kernel_fd data] >= 0} {
+    puts -nonewline $serialport_fd "$data\x0D\x0A"
     puts -nonewline stderr "."
     #puts stderr $data
     after $delay
     set srec_type [string range $data 0 1]
     if {$srec_type eq "S7"} {
-        set START_ADDRESS [string range $data 4 11]
+        set start_address [string range $data 4 11]
     }
     if {$srec_type eq "S8"} {
-        set START_ADDRESS [string range $data 4 9]
+        set start_address [string range $data 4 9]
     }
     if {$srec_type eq "S9"} {
-        set START_ADDRESS [string range $data 4 7]
+        set start_address [string range $data 4 7]
     }
 }
 # close download of S-record data
-puts -nonewline $serialport_fp "\x0D\x0A"
+puts -nonewline $serialport_fd "\x0D\x0A"
 puts stderr ""
-close $kernel_fp
+close $kernel_fd
 
-close $serialport_fp
+close $serialport_fd
 
 exit 0
 

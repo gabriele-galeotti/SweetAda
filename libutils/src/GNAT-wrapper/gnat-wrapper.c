@@ -78,13 +78,17 @@ main(int argc, char **argv)
         strcpy(program_name, file_basename_simple(argv[0]));
 
         /*
-         * Check for "-v".
+         * Check for enough arguments.
          */
         if (argc < 2)
         {
                 fprintf(stderr, "%s: *** Error: no arguments.\n", program_name);
                 goto main_exit;
         }
+        /*
+         * Check for "-v", which should be the first argument (usable only for
+         * diagnostics).
+         */
         if (strcmp(argv[1], "-v") == 0)
         {
                 fprintf(stdout, "%s: version %s\n", program_name, GNAT_WRAPPER_VERSION);
@@ -137,9 +141,9 @@ main(int argc, char **argv)
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
                                         case 'I': /* -I */
-                                                if (argv[idx][strlen(argv[idx]) - 1] == '\\')
+                                                if (argv[idx][STRING_LENGTH(argv[idx]) - 1] == '\\')
                                                 {
-                                                        argv[idx][strlen(argv[idx]) - 1] = '/';
+                                                        argv[idx][STRING_LENGTH(argv[idx]) - 1] = '/';
                                                 }
                                                 break;
 #endif

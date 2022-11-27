@@ -91,21 +91,21 @@ def write_partition(f, sector_start, sector_size):
     global CYL
     global HPC
     global SPT
-    fp = open(f, "rb+")
-    fp.seek(0x1BE, 0)
+    fd = open(f, "rb+")
+    fd.seek(0x1BE, 0)
     # bootable flag
-    fp.write(b'\x80')
+    fd.write(b'\x80')
     # CHS start
-    fp.write(bytearray(ls2chs(sector_start, CYL, HPC, SPT)))
+    fd.write(bytearray(ls2chs(sector_start, CYL, HPC, SPT)))
     # partition type (FAT32 CHS mode)
-    fp.write(b'\x0B')
+    fd.write(b'\x0B')
     # CHS end; ending sector, not the following one
-    fp.write(bytearray(ls2chs((sector_start + sector_size - 1), CYL, HPC, SPT)))
+    fd.write(bytearray(ls2chs((sector_start + sector_size - 1), CYL, HPC, SPT)))
     # LBA sector start
-    fp.write(bytearray(u32_to_lebytes(sector_start)))
+    fd.write(bytearray(u32_to_lebytes(sector_start)))
     # LBA size in sectors
-    fp.write(bytearray(u32_to_lebytes(sector_size)))
-    fp.close
+    fd.write(bytearray(u32_to_lebytes(sector_size)))
+    fd.close
 
 ################################################################################
 # Main loop.                                                                   #
@@ -124,7 +124,6 @@ bootsegment = sys.argv[2]
 device_filename = sys.argv[3]
 
 kernel_size = os.stat(kernel_filename).st_size
-#print(kernel_size)
 
 printf("%s: creating hard disk ...\n", SCRIPT_FILENAME)
 
@@ -153,10 +152,10 @@ DEVICE_SECTORS = CYL * SECTORS_PER_CYLINDER
 if len(device_filename) > 0 and device_filename[0] == "+":
     device_type = "FILE"
     device_filename = device_filename[1:]
-    fp = open(device_filename, "wb")
-    fp.seek(DEVICE_SECTORS * BPS - 1, 0)
-    fp.write(b'\x00')
-    fp.close()
+    fd = open(device_filename, "wb")
+    fd.seek(DEVICE_SECTORS * BPS - 1, 0)
+    fd.write(b'\x00')
+    fd.close()
     print(device_filename)
 else:
     device_type = "DEVICE"
@@ -183,13 +182,13 @@ os.system(os.getenv("TOOLCHAIN_OBJDUMP") + " " + "-m i8086 -D -M i8086 -b binary
 
 # write MBR @ CHS(0,0,1)
 printf("%s: creating MBR ...\n", SCRIPT_FILENAME)
-fp = open("mbr.bin", "rb")
-mbr = fp.read()
-fp.close()
-fp = open(device_filename, "rb+")
-fp.seek(0, 0)
-fp.write(mbr)
-fp.close()
+fd = open("mbr.bin", "rb")
+mbr = fd.read()
+fd.close()
+fd = open(device_filename, "rb+")
+fd.seek(0, 0)
+fd.write(mbr)
+fd.close()
 
 # write partition
 printf("%s: creating partition ...\n", SCRIPT_FILENAME)
@@ -223,23 +222,23 @@ os.system(os.getenv("TOOLCHAIN_OBJDUMP") + " " + "-m i8086 -D -M i8086 -b binary
 
 # write bootsector @ CHS(1,0,1)
 printf("%s: creating bootsector ...\n", SCRIPT_FILENAME)
-fp = open("bootsector.bin", "rb")
-bootsector = fp.read()
-fp.close()
-fp = open(device_filename, "rb+")
-fp.seek(MBR_SECTORS * BPS, 0)
-fp.write(bootsector)
-fp.close()
+fd = open("bootsector.bin", "rb")
+bootsector = fd.read()
+fd.close()
+fd = open(device_filename, "rb+")
+fd.seek(MBR_SECTORS * BPS, 0)
+fd.write(bootsector)
+fd.close()
 
 # write kernel @ CHS(1,0,2)
 printf("%s: writing input binary file ...\n", SCRIPT_FILENAME)
-fp = open(kernel_filename, "rb")
-kernel = fp.read()
-fp.close()
-fp = open(device_filename, "rb+")
-fp.seek((MBR_SECTORS + 1) * BPS, 0)
-fp.write(kernel)
-fp.close()
+fd = open(kernel_filename, "rb")
+kernel = fd.read()
+fd.close()
+fd = open(device_filename, "rb+")
+fd.seek((MBR_SECTORS + 1) * BPS, 0)
+fd.write(kernel)
+fd.close()
 
 # flush disk buffers
 os.system("sync")

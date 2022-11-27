@@ -146,164 +146,164 @@ def str2ebcdic(string):
 # write_esd_record()                                                           #
 #                                                                              #
 ################################################################################
-def write_esd_record(f, sequence, address, length):
+def write_esd_record(fd, sequence, address, length):
     address_bytes = u32_to_bebytes(address)
     nmodules = 1
     size_bytes = u16_to_bebytes(nmodules * 16)
-    file_write_byte(f, 0x02)                   # 01 constant
-    file_write_byte(f, ASCII2EBCDIC[ord("E")]) # 02 EBCDIC "E"
-    file_write_byte(f, ASCII2EBCDIC[ord("S")]) # 03 EBCDIC "S"
-    file_write_byte(f, ASCII2EBCDIC[ord("D")]) # 04 EBCDIC "D"
-    file_write_byte(f, EBCDIC_SPACE)           # 05 unused
-    file_write_byte(f, EBCDIC_SPACE)           # 06 unused
-    file_write_byte(f, EBCDIC_SPACE)           # 07 unused
-    file_write_byte(f, EBCDIC_SPACE)           # 08 unused
-    file_write_byte(f, EBCDIC_SPACE)           # 09 unused
-    file_write_byte(f, EBCDIC_SPACE)           # 10 unused
-    file_write_byte(f, size_bytes[0])          # 11 # of bytes, H
-    file_write_byte(f, size_bytes[1])          # 12 # of bytes, L
-    file_write_byte(f, EBCDIC_SPACE)           # 13 flag bits
-    file_write_byte(f, EBCDIC_SPACE)           # 14 flag bits
-    file_write_byte(f, 0x00)                   # 15 ESDID = 1
-    file_write_byte(f, 0x01)                   # 16 ESDID = 1
+    file_write_byte(fd, 0x02)                   # 01 constant
+    file_write_byte(fd, ASCII2EBCDIC[ord("E")]) # 02 EBCDIC "E"
+    file_write_byte(fd, ASCII2EBCDIC[ord("S")]) # 03 EBCDIC "S"
+    file_write_byte(fd, ASCII2EBCDIC[ord("D")]) # 04 EBCDIC "D"
+    file_write_byte(fd, EBCDIC_SPACE)           # 05 unused
+    file_write_byte(fd, EBCDIC_SPACE)           # 06 unused
+    file_write_byte(fd, EBCDIC_SPACE)           # 07 unused
+    file_write_byte(fd, EBCDIC_SPACE)           # 08 unused
+    file_write_byte(fd, EBCDIC_SPACE)           # 09 unused
+    file_write_byte(fd, EBCDIC_SPACE)           # 10 unused
+    file_write_byte(fd, size_bytes[0])          # 11 # of bytes, H
+    file_write_byte(fd, size_bytes[1])          # 12 # of bytes, L
+    file_write_byte(fd, EBCDIC_SPACE)           # 13 flag bits
+    file_write_byte(fd, EBCDIC_SPACE)           # 14 flag bits
+    file_write_byte(fd, 0x00)                   # 15 ESDID = 1
+    file_write_byte(fd, 0x01)                   # 16 ESDID = 1
     # 1st module, 16 bytes
-    for p in range (1, 9):                     # 1..8 name
-        file_write_byte(f, EBCDIC_SPACE)
-    file_write_byte(f, 0x04)                   # 9    type = PC
-    file_write_byte(f, address_bytes[1])       # 10   module starting address, byte N
-    file_write_byte(f, address_bytes[2])       # 11   module starting address, byte M
-    file_write_byte(f, address_bytes[3])       # 12   module starting address, byte L
-    file_write_byte(f, 0x00)                   # 13   flag
+    for p in range (1, 9):                      # 1..8 name
+        file_write_byte(fd, EBCDIC_SPACE)
+    file_write_byte(fd, 0x04)                   # 9    type = PC
+    file_write_byte(fd, address_bytes[1])       # 10   module starting address, byte N
+    file_write_byte(fd, address_bytes[2])       # 11   module starting address, byte M
+    file_write_byte(fd, address_bytes[3])       # 12   module starting address, byte L
+    file_write_byte(fd, 0x00)                   # 13   flag
     length_bytes = u32_to_bebytes(length)
-    file_write_byte(f, length_bytes[1])        # 14   binary length (PC), byte N
-    file_write_byte(f, length_bytes[2])        # 15   binary length (PC), byte M
-    file_write_byte(f, length_bytes[3])        # 16   binary length (PC), byte L
+    file_write_byte(fd, length_bytes[1])        # 14   binary length (PC), byte N
+    file_write_byte(fd, length_bytes[2])        # 15   binary length (PC), byte M
+    file_write_byte(fd, length_bytes[3])        # 16   binary length (PC), byte L
     # 2nd module, 16 bytes, none
     for p in range (1, 17):
-        file_write_byte(f, EBCDIC_SPACE)
+        file_write_byte(fd, EBCDIC_SPACE)
     # 3rd module, 16 bytes, none
     for p in range (1, 17):
-        file_write_byte(f, EBCDIC_SPACE)
-    for p in range (1, 9):                     # pad with blanks
-        file_write_byte(f, EBCDIC_SPACE)
-    seqstring = "%08d" % sequence              # 73 deck ID or sequence number
+        file_write_byte(fd, EBCDIC_SPACE)
+    for p in range (1, 9):                      # pad with blanks
+        file_write_byte(fd, EBCDIC_SPACE)
+    seqstring = "%08d" % sequence               # 73 deck ID or sequence number
     seqdata = str2ebcdic(seqstring)
     for s in seqdata:
-        file_write_byte(f, s)
+        file_write_byte(fd, s)
     return
 
 ################################################################################
 # write_txt_record()                                                           #
 #                                                                              #
 ################################################################################
-def write_txt_record(f, sequence, address, data):
+def write_txt_record(fd, sequence, address, data):
     address_bytes = u32_to_bebytes(address)
     size_bytes = u16_to_bebytes(len(data))
-    file_write_byte(f, 0x02)                   # 01 constant
-    file_write_byte(f, ASCII2EBCDIC[ord("T")]) # 02 EBCDIC "T"
-    file_write_byte(f, ASCII2EBCDIC[ord("X")]) # 03 EBCDIC "X"
-    file_write_byte(f, ASCII2EBCDIC[ord("T")]) # 04 EBCDIC "T"
-    file_write_byte(f, EBCDIC_SPACE)           # 05 unused
-    file_write_byte(f, address_bytes[1])       # 06 address of 1st byte, byte N
-    file_write_byte(f, address_bytes[2])       # 07 address of 1st byte, byte M
-    file_write_byte(f, address_bytes[3])       # 08 address of 1st byte, byte L
-    file_write_byte(f, EBCDIC_SPACE)           # 09 unused
-    file_write_byte(f, EBCDIC_SPACE)           # 10 unused
-    file_write_byte(f, size_bytes[0])          # 11 # of bytes, H
-    file_write_byte(f, size_bytes[1])          # 12 # of bytes, L
-    file_write_byte(f, EBCDIC_SPACE)           # 13 unused
-    file_write_byte(f, EBCDIC_SPACE)           # 14 unused
-    file_write_byte(f, 0x00)                   # 15 ESDID = 1
-    file_write_byte(f, 0x01)                   # 16 ESDID = 1
-    for byte in data:                          # 17 56 bytes of data
-        file_write_byte(f, byte)
-    for p in range (len(data), 56):            # pad with blanks
-        file_write_byte(f, EBCDIC_SPACE)
-    seqstring = "%08d" % sequence              # 73 deck ID or sequence number
+    file_write_byte(fd, 0x02)                   # 01 constant
+    file_write_byte(fd, ASCII2EBCDIC[ord("T")]) # 02 EBCDIC "T"
+    file_write_byte(fd, ASCII2EBCDIC[ord("X")]) # 03 EBCDIC "X"
+    file_write_byte(fd, ASCII2EBCDIC[ord("T")]) # 04 EBCDIC "T"
+    file_write_byte(fd, EBCDIC_SPACE)           # 05 unused
+    file_write_byte(fd, address_bytes[1])       # 06 address of 1st byte, byte N
+    file_write_byte(fd, address_bytes[2])       # 07 address of 1st byte, byte M
+    file_write_byte(fd, address_bytes[3])       # 08 address of 1st byte, byte L
+    file_write_byte(fd, EBCDIC_SPACE)           # 09 unused
+    file_write_byte(fd, EBCDIC_SPACE)           # 10 unused
+    file_write_byte(fd, size_bytes[0])          # 11 # of bytes, H
+    file_write_byte(fd, size_bytes[1])          # 12 # of bytes, L
+    file_write_byte(fd, EBCDIC_SPACE)           # 13 unused
+    file_write_byte(fd, EBCDIC_SPACE)           # 14 unused
+    file_write_byte(fd, 0x00)                   # 15 ESDID = 1
+    file_write_byte(fd, 0x01)                   # 16 ESDID = 1
+    for byte in data:                           # 17 56 bytes of data
+        file_write_byte(fd, byte)
+    for p in range (len(data), 56):             # pad with blanks
+        file_write_byte(fd, EBCDIC_SPACE)
+    seqstring = "%08d" % sequence               # 73 deck ID or sequence number
     seqdata = str2ebcdic(seqstring)
     for s in seqdata:
-        file_write_byte(f, s)
+        file_write_byte(fd, s)
     return
 
 ################################################################################
 # write_rld_record()                                                           #
 #                                                                              #
 ################################################################################
-def write_rld_record(f, sequence):
-    file_write_byte(f, 0x02)                   # 01 constant
-    file_write_byte(f, ASCII2EBCDIC[ord("R")]) # 02 EBCDIC "R"
-    file_write_byte(f, ASCII2EBCDIC[ord("L")]) # 03 EBCDIC "L"
-    file_write_byte(f, ASCII2EBCDIC[ord("D")]) # 04 EBCDIC "D"
-    for p in range (4, 72):                    # pad with blanks
-        file_write_byte(f, EBCDIC_SPACE)
-    seqstring = "%08d" % sequence              # 73 deck ID or sequence number
+def write_rld_record(fd, sequence):
+    file_write_byte(fd, 0x02)                   # 01 constant
+    file_write_byte(fd, ASCII2EBCDIC[ord("R")]) # 02 EBCDIC "R"
+    file_write_byte(fd, ASCII2EBCDIC[ord("L")]) # 03 EBCDIC "L"
+    file_write_byte(fd, ASCII2EBCDIC[ord("D")]) # 04 EBCDIC "D"
+    for p in range (4, 72):                     # pad with blanks
+        file_write_byte(fd, EBCDIC_SPACE)
+    seqstring = "%08d" % sequence               # 73 deck ID or sequence number
     seqdata = str2ebcdic(seqstring)
     for s in seqdata:
-        file_write_byte(f, s)
+        file_write_byte(fd, s)
     return
 
 ################################################################################
 # write_sym_record()                                                           #
 #                                                                              #
 ################################################################################
-def write_sym_record(f, sequence):
-    file_write_byte(f, 0x02)                   # 01 constant
-    file_write_byte(f, ASCII2EBCDIC[ord("S")]) # 02 EBCDIC "S"
-    file_write_byte(f, ASCII2EBCDIC[ord("Y")]) # 03 EBCDIC "Y"
-    file_write_byte(f, ASCII2EBCDIC[ord("M")]) # 04 EBCDIC "M"
-    for p in range (4, 72):                    # pad with blanks
-        file_write_byte(f, EBCDIC_SPACE)
-    seqstring = "%08d" % sequence              # 73 deck ID or sequence number
+def write_sym_record(fd, sequence):
+    file_write_byte(fd, 0x02)                   # 01 constant
+    file_write_byte(fd, ASCII2EBCDIC[ord("S")]) # 02 EBCDIC "S"
+    file_write_byte(fd, ASCII2EBCDIC[ord("Y")]) # 03 EBCDIC "Y"
+    file_write_byte(fd, ASCII2EBCDIC[ord("M")]) # 04 EBCDIC "M"
+    for p in range (4, 72):                     # pad with blanks
+        file_write_byte(fd, EBCDIC_SPACE)
+    seqstring = "%08d" % sequence               # 73 deck ID or sequence number
     seqdata = str2ebcdic(seqstring)
     for s in seqdata:
-        file_write_byte(f, s)
+        file_write_byte(fd, s)
     return
 
 ################################################################################
 # write_xsd_record()                                                           #
 #                                                                              #
 ################################################################################
-def write_xsd_record(f, sequence):
-    file_write_byte(f, 0x02)                   # 01 constant
-    file_write_byte(f, ASCII2EBCDIC[ord("X")]) # 02 EBCDIC "X"
-    file_write_byte(f, ASCII2EBCDIC[ord("S")]) # 03 EBCDIC "S"
-    file_write_byte(f, ASCII2EBCDIC[ord("D")]) # 04 EBCDIC "D"
-    for p in range (4, 72):                    # pad with blanks
-        file_write_byte(f, EBCDIC_SPACE)
-    seqstring = "%08d" % sequence              # 73 deck ID or sequence number
+def write_xsd_record(fd, sequence):
+    file_write_byte(fd, 0x02)                   # 01 constant
+    file_write_byte(fd, ASCII2EBCDIC[ord("X")]) # 02 EBCDIC "X"
+    file_write_byte(fd, ASCII2EBCDIC[ord("S")]) # 03 EBCDIC "S"
+    file_write_byte(fd, ASCII2EBCDIC[ord("D")]) # 04 EBCDIC "D"
+    for p in range (4, 72):                     # pad with blanks
+        file_write_byte(fd, EBCDIC_SPACE)
+    seqstring = "%08d" % sequence               # 73 deck ID or sequence number
     seqdata = str2ebcdic(seqstring)
     for s in seqdata:
-        file_write_byte(f, s)
+        file_write_byte(fd, s)
     return
 
 ################################################################################
 # write_end_record()                                                           #
 #                                                                              #
 ################################################################################
-def write_end_record(f, sequence):
-    file_write_byte(f, 0x02)                   # 01 constant
-    file_write_byte(f, ASCII2EBCDIC[ord("E")]) # 02 EBCDIC "E"
-    file_write_byte(f, ASCII2EBCDIC[ord("N")]) # 03 EBCDIC "N"
-    file_write_byte(f, ASCII2EBCDIC[ord("D")]) # 04 EBCDIC "D"
-    for p in range (4, 16):                    # pad with blanks
-        file_write_byte(f, EBCDIC_SPACE)
-    file_write_byte(f, ASCII2EBCDIC[ord("S")]) # 17 EBCDIC "S"
-    file_write_byte(f, ASCII2EBCDIC[ord("w")]) # 18 EBCDIC "w"
-    file_write_byte(f, ASCII2EBCDIC[ord("e")]) # 19 EBCDIC "e"
-    file_write_byte(f, ASCII2EBCDIC[ord("e")]) # 20 EBCDIC "e"
-    file_write_byte(f, ASCII2EBCDIC[ord("t")]) # 21 EBCDIC "t"
-    file_write_byte(f, ASCII2EBCDIC[ord("A")]) # 22 EBCDIC "A"
-    file_write_byte(f, ASCII2EBCDIC[ord("d")]) # 23 EBCDIC "d"
-    file_write_byte(f, ASCII2EBCDIC[ord("a")]) # 24 EBCDIC "a"
-    for p in range (24, 32):                   # pad with blanks
-        file_write_byte(f, EBCDIC_SPACE)
-    file_write_byte(f, ASCII2EBCDIC[ord("2")]) # 33 EBCDIC "2"
-    for p in range (33, 72):                   # pad with blanks
-        file_write_byte(f, EBCDIC_SPACE)
-    seqstring = "%08d" % sequence              # 73 deck ID or sequence number
+def write_end_record(fd, sequence):
+    file_write_byte(fd, 0x02)                   # 01 constant
+    file_write_byte(fd, ASCII2EBCDIC[ord("E")]) # 02 EBCDIC "E"
+    file_write_byte(fd, ASCII2EBCDIC[ord("N")]) # 03 EBCDIC "N"
+    file_write_byte(fd, ASCII2EBCDIC[ord("D")]) # 04 EBCDIC "D"
+    for p in range (4, 16):                     # pad with blanks
+        file_write_byte(fd, EBCDIC_SPACE)
+    file_write_byte(fd, ASCII2EBCDIC[ord("S")]) # 17 EBCDIC "S"
+    file_write_byte(fd, ASCII2EBCDIC[ord("w")]) # 18 EBCDIC "w"
+    file_write_byte(fd, ASCII2EBCDIC[ord("e")]) # 19 EBCDIC "e"
+    file_write_byte(fd, ASCII2EBCDIC[ord("e")]) # 20 EBCDIC "e"
+    file_write_byte(fd, ASCII2EBCDIC[ord("t")]) # 21 EBCDIC "t"
+    file_write_byte(fd, ASCII2EBCDIC[ord("A")]) # 22 EBCDIC "A"
+    file_write_byte(fd, ASCII2EBCDIC[ord("d")]) # 23 EBCDIC "d"
+    file_write_byte(fd, ASCII2EBCDIC[ord("a")]) # 24 EBCDIC "a"
+    for p in range (24, 32):                    # pad with blanks
+        file_write_byte(fd, EBCDIC_SPACE)
+    file_write_byte(fd, ASCII2EBCDIC[ord("2")]) # 33 EBCDIC "2"
+    for p in range (33, 72):                    # pad with blanks
+        file_write_byte(fd, EBCDIC_SPACE)
+    seqstring = "%08d" % sequence               # 73 deck ID or sequence number
     seqdata = str2ebcdic(seqstring)
     for s in seqdata:
-        file_write_byte(f, s)
+        file_write_byte(fd, s)
     return
 
 ################################################################################

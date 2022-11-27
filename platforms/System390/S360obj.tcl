@@ -128,54 +128,54 @@ proc s2e {s} {
 # write_esd_record                                                             #
 #                                                                              #
 ################################################################################
-proc write_esd_record {fp sequence address length} {
+proc write_esd_record {fd sequence address length} {
     global EBCDIC_SPACE
     set address_bytes [u32_to_bebytes $address]
     set nmodules 1
     set size_bytes [u16_to_bebytes [expr $nmodules * 16]]
-    puts -nonewline $fp [binary format c1 0x02]                         ;# 01 constant
-    puts -nonewline $fp [binary format c1 [a2e "E"]]                    ;# 02 EBCDIC "E"
-    puts -nonewline $fp [binary format c1 [a2e "S"]]                    ;# 03 EBCDIC "S"
-    puts -nonewline $fp [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 05 unused
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 06 unused
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 07 unused
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 08 unused
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 09 unused
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 10 unused
-    puts -nonewline $fp [binary format c1 [lindex $size_bytes 0]]       ;# 11 # of bytes, H
-    puts -nonewline $fp [binary format c1 [lindex $size_bytes 1]]       ;# 12 # of bytes, L
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 13 flag bits
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 14 flag bits
-    puts -nonewline $fp [binary format c1 0x00]                         ;# 15 ESDID = 1
-    puts -nonewline $fp [binary format c1 0x01]                         ;# 16 ESDID = 1
+    puts -nonewline $fd [binary format c1 0x02]                         ;# 01 constant
+    puts -nonewline $fd [binary format c1 [a2e "E"]]                    ;# 02 EBCDIC "E"
+    puts -nonewline $fd [binary format c1 [a2e "S"]]                    ;# 03 EBCDIC "S"
+    puts -nonewline $fd [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 05 unused
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 06 unused
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 07 unused
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 08 unused
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 09 unused
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 10 unused
+    puts -nonewline $fd [binary format c1 [lindex $size_bytes 0]]       ;# 11 # of bytes, H
+    puts -nonewline $fd [binary format c1 [lindex $size_bytes 1]]       ;# 12 # of bytes, L
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 13 flag bits
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 14 flag bits
+    puts -nonewline $fd [binary format c1 0x00]                         ;# 15 ESDID = 1
+    puts -nonewline $fd [binary format c1 0x01]                         ;# 16 ESDID = 1
     # 1st module, 16 bytes
     for {set p 0} {$p < 8} {incr p} {                                   ;# 1..8 name
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
-    puts -nonewline $fp [binary format c1 0x04]                         ;# 9    type = PC
-    puts -nonewline $fp [binary format c1 [lindex $address_bytes 1]]    ;# 10   module starting address, byte N
-    puts -nonewline $fp [binary format c1 [lindex $address_bytes 2]]    ;# 11   module starting address, byte M
-    puts -nonewline $fp [binary format c1 [lindex $address_bytes 3]]    ;# 12   module starting address, byte L
-    puts -nonewline $fp [binary format c1 0x00]                         ;# 13   flag
+    puts -nonewline $fd [binary format c1 0x04]                         ;# 9    type = PC
+    puts -nonewline $fd [binary format c1 [lindex $address_bytes 1]]    ;# 10   module starting address, byte N
+    puts -nonewline $fd [binary format c1 [lindex $address_bytes 2]]    ;# 11   module starting address, byte M
+    puts -nonewline $fd [binary format c1 [lindex $address_bytes 3]]    ;# 12   module starting address, byte L
+    puts -nonewline $fd [binary format c1 0x00]                         ;# 13   flag
     set length_bytes [u32_to_bebytes $length]
-    puts -nonewline $fp [binary format c1 [lindex $length_bytes 1]]     ;# 14   binary length (PC), byte N
-    puts -nonewline $fp [binary format c1 [lindex $length_bytes 2]]     ;# 15   binary length (PC), byte M
-    puts -nonewline $fp [binary format c1 [lindex $length_bytes 3]]     ;# 16   binary length (PC), byte L
+    puts -nonewline $fd [binary format c1 [lindex $length_bytes 1]]     ;# 14   binary length (PC), byte N
+    puts -nonewline $fd [binary format c1 [lindex $length_bytes 2]]     ;# 15   binary length (PC), byte M
+    puts -nonewline $fd [binary format c1 [lindex $length_bytes 3]]     ;# 16   binary length (PC), byte L
     # 2nd module, 16 bytes, none
     for {set p 0} {$p < 16} {incr p} {
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
     # 3rd module, 16 bytes, none
     for {set p 0} {$p < 16} {incr p} {
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
     for {set p 0} {$p < 8} {incr p} {                                   ;# pad with blanks
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
     set seqc [format "%08d" $sequence]                                  ;# 73 deck ID or sequence number
     foreach c [s2e $seqc] {
-        puts -nonewline $fp [binary format c1 $c]
+        puts -nonewline $fd [binary format c1 $c]
     }
 }
 
@@ -183,35 +183,35 @@ proc write_esd_record {fp sequence address length} {
 # write_txt_record                                                             #
 #                                                                              #
 ################################################################################
-proc write_txt_record {fp sequence address data} {
+proc write_txt_record {fd sequence address data} {
     global EBCDIC_SPACE
     set address_bytes [u32_to_bebytes $address]
     set size_bytes [u16_to_bebytes [llength $data]]
-    puts -nonewline $fp [binary format c1 0x02]                         ;# 01 constant
-    puts -nonewline $fp [binary format c1 [a2e "T"]]                    ;# 02 EBCDIC "T"
-    puts -nonewline $fp [binary format c1 [a2e "X"]]                    ;# 03 EBCDIC "X"
-    puts -nonewline $fp [binary format c1 [a2e "T"]]                    ;# 04 EBCDIC "T"
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 05 unused
-    puts -nonewline $fp [binary format c1 [lindex $address_bytes 1]]    ;# 06 address of 1st byte, byte N
-    puts -nonewline $fp [binary format c1 [lindex $address_bytes 2]]    ;# 07 address of 1st byte, byte M
-    puts -nonewline $fp [binary format c1 [lindex $address_bytes 3]]    ;# 08 address of 1st byte, byte L
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 09 unused
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 10 unused
-    puts -nonewline $fp [binary format c1 [lindex $size_bytes 0]]       ;# 11 # of bytes, H
-    puts -nonewline $fp [binary format c1 [lindex $size_bytes 1]]       ;# 12 # of bytes, L
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 13 unused
-    puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]                ;# 14 unused
-    puts -nonewline $fp [binary format c1 0x00]                         ;# 15 ESDID = 1
-    puts -nonewline $fp [binary format c1 0x01]                         ;# 16 ESDID = 1
+    puts -nonewline $fd [binary format c1 0x02]                         ;# 01 constant
+    puts -nonewline $fd [binary format c1 [a2e "T"]]                    ;# 02 EBCDIC "T"
+    puts -nonewline $fd [binary format c1 [a2e "X"]]                    ;# 03 EBCDIC "X"
+    puts -nonewline $fd [binary format c1 [a2e "T"]]                    ;# 04 EBCDIC "T"
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 05 unused
+    puts -nonewline $fd [binary format c1 [lindex $address_bytes 1]]    ;# 06 address of 1st byte, byte N
+    puts -nonewline $fd [binary format c1 [lindex $address_bytes 2]]    ;# 07 address of 1st byte, byte M
+    puts -nonewline $fd [binary format c1 [lindex $address_bytes 3]]    ;# 08 address of 1st byte, byte L
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 09 unused
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 10 unused
+    puts -nonewline $fd [binary format c1 [lindex $size_bytes 0]]       ;# 11 # of bytes, H
+    puts -nonewline $fd [binary format c1 [lindex $size_bytes 1]]       ;# 12 # of bytes, L
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 13 unused
+    puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]                ;# 14 unused
+    puts -nonewline $fd [binary format c1 0x00]                         ;# 15 ESDID = 1
+    puts -nonewline $fd [binary format c1 0x01]                         ;# 16 ESDID = 1
     foreach byte $data {                                                ;# 17 56 bytes of data
-        puts -nonewline $fp [binary format c1 $byte]
+        puts -nonewline $fd [binary format c1 $byte]
     }
     for {set p [llength $data]} {$p < 56} {incr p} {                    ;# pad with blanks
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
     set seqc [format "%08d" $sequence]                                  ;# 73 deck ID or sequence number
     foreach c [s2e $seqc] {
-        puts -nonewline $fp [binary format c1 $c]
+        puts -nonewline $fd [binary format c1 $c]
     }
 }
 
@@ -219,18 +219,18 @@ proc write_txt_record {fp sequence address data} {
 # write_rld_record                                                             #
 #                                                                              #
 ################################################################################
-proc write_rld_record {fp sequence} {
+proc write_rld_record {fd sequence} {
     global EBCDIC_SPACE
-    puts -nonewline $fp [binary format c1 0x02]                         ;# 01 constant
-    puts -nonewline $fp [binary format c1 [a2e "R"]]                    ;# 02 EBCDIC "R"
-    puts -nonewline $fp [binary format c1 [a2e "L"]]                    ;# 03 EBCDIC "L"
-    puts -nonewline $fp [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
+    puts -nonewline $fd [binary format c1 0x02]                         ;# 01 constant
+    puts -nonewline $fd [binary format c1 [a2e "R"]]                    ;# 02 EBCDIC "R"
+    puts -nonewline $fd [binary format c1 [a2e "L"]]                    ;# 03 EBCDIC "L"
+    puts -nonewline $fd [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
     for {set p 4} {$p < 72} {incr p} {                                  ;# pad with blanks
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
     set seqc [format "%08d" $sequence]                                  ;# 73 deck ID or sequence number
     foreach c [s2e $seqc] {
-        puts -nonewline $fp [binary format c1 $c]
+        puts -nonewline $fd [binary format c1 $c]
     }
 }
 
@@ -238,18 +238,18 @@ proc write_rld_record {fp sequence} {
 # write_sym_record                                                             #
 #                                                                              #
 ################################################################################
-proc write_rld_record {fp sequence} {
+proc write_rld_record {fd sequence} {
     global EBCDIC_SPACE
-    puts -nonewline $fp [binary format c1 0x02]                         ;# 01 constant
-    puts -nonewline $fp [binary format c1 [a2e "S"]]                    ;# 02 EBCDIC "S"
-    puts -nonewline $fp [binary format c1 [a2e "Y"]]                    ;# 03 EBCDIC "Y"
-    puts -nonewline $fp [binary format c1 [a2e "M"]]                    ;# 04 EBCDIC "M"
+    puts -nonewline $fd [binary format c1 0x02]                         ;# 01 constant
+    puts -nonewline $fd [binary format c1 [a2e "S"]]                    ;# 02 EBCDIC "S"
+    puts -nonewline $fd [binary format c1 [a2e "Y"]]                    ;# 03 EBCDIC "Y"
+    puts -nonewline $fd [binary format c1 [a2e "M"]]                    ;# 04 EBCDIC "M"
     for {set p 4} {$p < 72} {incr p} {                                  ;# pad with blanks
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
     set seqc [format "%08d" $sequence]                                  ;# 73 deck ID or sequence number
     foreach c [s2e $seqc] {
-        puts -nonewline $fp [binary format c1 $c]
+        puts -nonewline $fd [binary format c1 $c]
     }
 }
 
@@ -257,18 +257,18 @@ proc write_rld_record {fp sequence} {
 # write_xsd_record                                                             #
 #                                                                              #
 ################################################################################
-proc write_xsd_record {fp sequence} {
+proc write_xsd_record {fd sequence} {
     global EBCDIC_SPACE
-    puts -nonewline $fp [binary format c1 0x02]                         ;# 01 constant
-    puts -nonewline $fp [binary format c1 [a2e "X"]]                    ;# 02 EBCDIC "X"
-    puts -nonewline $fp [binary format c1 [a2e "S"]]                    ;# 03 EBCDIC "S"
-    puts -nonewline $fp [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
+    puts -nonewline $fd [binary format c1 0x02]                         ;# 01 constant
+    puts -nonewline $fd [binary format c1 [a2e "X"]]                    ;# 02 EBCDIC "X"
+    puts -nonewline $fd [binary format c1 [a2e "S"]]                    ;# 03 EBCDIC "S"
+    puts -nonewline $fd [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
     for {set p 4} {$p < 72} {incr p} {                                  ;# pad with blanks
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
     set seqc [format "%08d" $sequence]                                  ;# 73 deck ID or sequence number
     foreach c [s2e $seqc] {
-        puts -nonewline $fp [binary format c1 $c]
+        puts -nonewline $fd [binary format c1 $c]
     }
 }
 
@@ -276,33 +276,33 @@ proc write_xsd_record {fp sequence} {
 # write_end_record                                                             #
 #                                                                              #
 ################################################################################
-proc write_end_record {fp sequence} {
+proc write_end_record {fd sequence} {
     global EBCDIC_SPACE
-    puts -nonewline $fp [binary format c1 0x02]                         ;# 01 constant
-    puts -nonewline $fp [binary format c1 [a2e "E"]]                    ;# 02 EBCDIC "E"
-    puts -nonewline $fp [binary format c1 [a2e "N"]]                    ;# 03 EBCDIC "N"
-    puts -nonewline $fp [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
+    puts -nonewline $fd [binary format c1 0x02]                         ;# 01 constant
+    puts -nonewline $fd [binary format c1 [a2e "E"]]                    ;# 02 EBCDIC "E"
+    puts -nonewline $fd [binary format c1 [a2e "N"]]                    ;# 03 EBCDIC "N"
+    puts -nonewline $fd [binary format c1 [a2e "D"]]                    ;# 04 EBCDIC "D"
     for {set p 4} {$p < 16} {incr p} {                                  ;# pad with blanks
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
-    puts -nonewline $fp [binary format c1 [a2e "S"]]                    ;# 17 EBCDIC "S"
-    puts -nonewline $fp [binary format c1 [a2e "w"]]                    ;# 18 EBCDIC "w"
-    puts -nonewline $fp [binary format c1 [a2e "e"]]                    ;# 19 EBCDIC "e"
-    puts -nonewline $fp [binary format c1 [a2e "e"]]                    ;# 20 EBCDIC "e"
-    puts -nonewline $fp [binary format c1 [a2e "t"]]                    ;# 21 EBCDIC "t"
-    puts -nonewline $fp [binary format c1 [a2e "A"]]                    ;# 22 EBCDIC "A"
-    puts -nonewline $fp [binary format c1 [a2e "d"]]                    ;# 23 EBCDIC "d"
-    puts -nonewline $fp [binary format c1 [a2e "a"]]                    ;# 24 EBCDIC "a"
+    puts -nonewline $fd [binary format c1 [a2e "S"]]                    ;# 17 EBCDIC "S"
+    puts -nonewline $fd [binary format c1 [a2e "w"]]                    ;# 18 EBCDIC "w"
+    puts -nonewline $fd [binary format c1 [a2e "e"]]                    ;# 19 EBCDIC "e"
+    puts -nonewline $fd [binary format c1 [a2e "e"]]                    ;# 20 EBCDIC "e"
+    puts -nonewline $fd [binary format c1 [a2e "t"]]                    ;# 21 EBCDIC "t"
+    puts -nonewline $fd [binary format c1 [a2e "A"]]                    ;# 22 EBCDIC "A"
+    puts -nonewline $fd [binary format c1 [a2e "d"]]                    ;# 23 EBCDIC "d"
+    puts -nonewline $fd [binary format c1 [a2e "a"]]                    ;# 24 EBCDIC "a"
     for {set p 24} {$p < 32} {incr p} {                                 ;# pad with blanks
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
-    puts -nonewline $fp [binary format c1 [a2e "2"]]                    ;# 33 EBCDIC "2"
+    puts -nonewline $fd [binary format c1 [a2e "2"]]                    ;# 33 EBCDIC "2"
     for {set p 33} {$p < 72} {incr p} {                                 ;# pad with blanks
-        puts -nonewline $fp [binary format c1 $EBCDIC_SPACE]
+        puts -nonewline $fd [binary format c1 $EBCDIC_SPACE]
     }
     set seqc [format "%08d" $sequence]                                  ;# 73 deck ID or sequence number
     foreach c [s2e $seqc] {
-        puts -nonewline $fp [binary format c1 $c]
+        puts -nonewline $fd [binary format c1 $c]
     }
 }
 
@@ -350,32 +350,32 @@ if {($input_filename eq "") || ($output_filename eq "")} {
     exit 1
 }
 
-set fp_output [open $output_filename w]
-fconfigure $fp_output -encoding binary -translation binary
+set fd_output [open $output_filename w]
+fconfigure $fd_output -encoding binary -translation binary
 
 # prepend the loader
 if {$loader_filename ne ""} {
-    set fp_loader [open $loader_filename r]
-    fconfigure $fp_loader -encoding binary -translation binary
+    set fd_loader [open $loader_filename r]
+    fconfigure $fd_loader -encoding binary -translation binary
     while {true} {
-        set loader_data [read $fp_loader 256]
+        set loader_data [read $fd_loader 256]
         set data_length [string length $loader_data]
-        puts -nonewline $fp_output $loader_data
+        puts -nonewline $fd_output $loader_data
         if {$data_length ne 256} {
             break
         }
     }
-    close $fp_loader
+    close $fd_loader
 }
 
-set fp_input [open $input_filename r]
-fconfigure $fp_input -encoding binary -translation binary
+set fd_input [open $input_filename r]
+fconfigure $fd_input -encoding binary -translation binary
 
 # initialize sequence number
 set sequence 1
 
 # 1) create an ESD record
-write_esd_record $fp_output $sequence $address [file size $input_filename]
+write_esd_record $fd_output $sequence $address [file size $input_filename]
 incr sequence
 
 # 2)
@@ -390,14 +390,14 @@ if {$write_psw} {
                 [lindex $address_bytes 2] \
                 [lindex $address_bytes 3]
     # create TXT record @ address 0
-    write_txt_record $fp_output $sequence 0 $psw
+    write_txt_record $fd_output $sequence 0 $psw
     incr sequence
 }
 
 # 3)
 # create TXT data records from data
 while {true} {
-    set data [read $fp_input 56]
+    set data [read $fd_input 56]
     set data_length [string length $data]
     if {$data_length > 0} {
         set splitdata [split $data ""]
@@ -405,7 +405,7 @@ while {true} {
         foreach byte $splitdata {
             lappend hexdata [scan $byte %c]
         }
-        write_txt_record $fp_output $sequence $address $hexdata
+        write_txt_record $fd_output $sequence $address $hexdata
         set address [expr $address + $data_length]
         incr sequence
     }
@@ -416,13 +416,13 @@ while {true} {
 
 # 4)
 # create END record
-write_end_record $fp_output $sequence
+write_end_record $fd_output $sequence
 # write out number of records written
 puts stdout "$SCRIPT_FILENAME: number of records written: $sequence"
 incr sequence
 
-close $fp_input
-close $fp_output
+close $fd_input
+close $fd_output
 
 exit 0
 

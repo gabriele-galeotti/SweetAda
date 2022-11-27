@@ -268,7 +268,7 @@ env_get(const char *envvarname)
                 {
                         const char *result;
                         /* allocate a buffer which will receives variable */
-                        result = (const char *)lib_malloc(string_length + 1);
+                        result = (const char *)lib_malloc(STRING_LENGTH(string));
                         if (result != NULL)
                         {
                                 strcpy((char *)result, string);

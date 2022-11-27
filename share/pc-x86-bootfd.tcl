@@ -67,10 +67,10 @@ set DEVICE_SECTORS [expr $CYL * $SECTORS_PER_CYLINDER]
 if {[string index $device_filename 0] eq "+"} {
     set device_type FILE
     set device_filename [string trimleft $device_filename "+"]
-    set fp [open $device_filename "w"]
-    seek $fp [expr $DEVICE_SECTORS * $BPS - 1]
-    puts -nonewline $fp [binary format c1 0]
-    close $fp
+    set fd [open $device_filename "w"]
+    seek $fd [expr $DEVICE_SECTORS * $BPS - 1]
+    puts -nonewline $fd [binary format c1 0]
+    close $fd
 } else {
     set device_type DEVICE
     while {$device_filename eq ""} {
@@ -97,27 +97,27 @@ eval exec $::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary bootsector.bi
 
 # write bootsector @ CHS(0,0,1)
 puts "$SCRIPT_FILENAME: creating bootsector ..."
-set fp [open bootsector.bin "r"]
-fconfigure $fp -translation binary
-set bootsector [read $fp]
-close $fp
-set fp [open $device_filename "a+"]
-fconfigure $fp -translation binary
-seek $fp [expr 0 * $BPS]
-puts -nonewline $fp $bootsector
-close $fp
+set fd [open bootsector.bin "r"]
+fconfigure $fd -translation binary
+set bootsector [read $fd]
+close $fd
+set fd [open $device_filename "a+"]
+fconfigure $fd -translation binary
+seek $fd [expr 0 * $BPS]
+puts -nonewline $fd $bootsector
+close $fd
 
 # write kernel @ CHS(0,0,2)
 puts "$SCRIPT_FILENAME: writing input binary file ..."
-set fp [open $kernel_filename "r"]
-fconfigure $fp -translation binary
-set kernel [read $fp]
-close $fp
-set fp [open $device_filename "a+"]
-fconfigure $fp -translation binary
-seek $fp [expr 1 * $BPS]
-puts -nonewline $fp $kernel
-close $fp
+set fd [open $kernel_filename "r"]
+fconfigure $fd -translation binary
+set kernel [read $fd]
+close $fd
+set fd [open $device_filename "a+"]
+fconfigure $fd -translation binary
+seek $fd [expr 1 * $BPS]
+puts -nonewline $fd $kernel
+close $fd
 
 # flush disk buffers
 exec sync

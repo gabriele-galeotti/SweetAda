@@ -41,14 +41,14 @@
 #                                                                              #
 ################################################################################
 
+ifeq ($(RTS),)
+$(error Error: no valid RTS)
+endif
 ifeq ($(CPU),)
 $(error Error: no valid CPU)
 endif
 ifeq ($(TOOLCHAIN_NAME),)
 $(error Error: no valid TOOLCHAIN_NAME)
-endif
-ifeq ($(RTS),)
-$(error Error: no valid RTS)
 endif
 ifeq ($(MULTILIB),)
 $(error Error: no valid MULTILIB)

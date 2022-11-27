@@ -113,8 +113,8 @@ fconfigure stdout \
     -buffering none
 
 # open the binary file
-set fp_input [open $KERNEL_ROMFILE r]
-fconfigure $fp_input -encoding binary -translation binary
+set fd_input [open $KERNEL_ROMFILE r]
+fconfigure $fd_input -encoding binary -translation binary
 
 # we are uploading a binary file
 send_command $s $CMD_LOADBIN $LOAD_ADDRESS [file size $KERNEL_ROMFILE] ""
@@ -137,7 +137,7 @@ set chunk_length 1024
 set sequence 1
 puts -nonewline "sending"
 while {true} {
-    set data [read $fp_input $chunk_length]
+    set data [read $fd_input $chunk_length]
     set data_length [string length $data]
     if {$data_length eq 0} {
         break
@@ -168,7 +168,7 @@ while {true} {
 puts ""
 
 # close the binary file
-close $fp_input
+close $fd_input
 
 # execute
 send_command $s $CMD_EXECUTE $START_ADDRESS 0 ""

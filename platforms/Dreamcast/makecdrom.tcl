@@ -65,7 +65,7 @@ proc randomize {} {
 # save_chunk                                                                   #
 #                                                                              #
 ################################################################################
-proc save_chunk {fp data offset size} {
+proc save_chunk {fd data offset size} {
     set size [expr $size / 32]
     set table {}
     for {set i 0} {$i < $size} {incr i} {
@@ -80,7 +80,7 @@ proc save_chunk {fp data offset size} {
         # write a 32-byte chunk
         set start [expr $offset + 32 * [lindex $table $i]]
         set end [expr $start + 32 - 1]
-        puts -nonewline $fp [string range $data $start $end]
+        puts -nonewline $fd [string range $data $start $end]
     }
 }
 
@@ -125,16 +125,16 @@ set filein [lindex $argv 1]
 set fileout IP.BIN
 
 # read template file
-set fp_tmpl [open $filetmpl r]
-fconfigure $fp_tmpl -encoding binary -translation binary
-set tmpl_data [read $fp_tmpl 32768]
-close $fp_tmpl
+set fd_tmpl [open $filetmpl r]
+fconfigure $fd_tmpl -encoding binary -translation binary
+set tmpl_data [read $fd_tmpl 32768]
+close $fd_tmpl
 
 # read input file
-set fp_filein [open $filein r]
+set fd_filein [open $filein r]
 # avoid an extra empty line by trimming
-set filein_textlines [split [string trim [read $fp_filein] "\n"] "\n"]
-close $fp_filein
+set filein_textlines [split [string trim [read $fd_filein] "\n"] "\n"]
+close $fd_filein
 
 # parse tokens, perform processing
 foreach textline $filein_textlines {
@@ -198,10 +198,10 @@ if {[string compare -length 4 $crc_value_text $crc_value_text_old] ne 0} {
 }
 
 # generate output file
-set fp_fileout [open $fileout w]
-fconfigure $fp_fileout -encoding binary -translation binary
-puts -nonewline $fp_fileout $tmpl_data
-close $fp_fileout
+set fd_fileout [open $fileout w]
+fconfigure $fd_fileout -encoding binary -translation binary
+puts -nonewline $fd_fileout $tmpl_data
+close $fd_fileout
 
 #
 # 2nd part: "scramble" the kernel file and generate 1ST_READ.BIN.
@@ -218,10 +218,10 @@ set filein [lindex $argv 2]
 set fileout 1ST_READ.BIN
 
 # read input file
-set fp_filein [open $filein r]
-fconfigure $fp_filein -encoding binary -translation binary
-set filein_data [read $fp_filein]
-close $fp_filein
+set fd_filein [open $filein r]
+fconfigure $fd_filein -encoding binary -translation binary
+set filein_data [read $fd_filein]
+close $fd_filein
 
 # file size
 set filein_size [string length $filein_data]
@@ -230,14 +230,14 @@ set filein_size [string length $filein_data]
 set seed [expr $filein_size & 0xFFFF]
 
 # generate output file
-set fp_fileout [open $fileout w]
-fconfigure $fp_fileout -encoding binary -translation binary
+set fd_fileout [open $fileout w]
+fconfigure $fd_fileout -encoding binary -translation binary
 # descramble 2 M blocks for as long as possible, then gradually reduce the
 # window down to 32 bytes (1 slice)
 set offset 0
 for {set chunk_size $MAXCHUNK} {$chunk_size >= 32} {set chunk_size [expr $chunk_size >> 1]} {
     while {$filein_size >= $chunk_size} {
-        save_chunk $fp_fileout $filein_data $offset $chunk_size
+        save_chunk $fd_fileout $filein_data $offset $chunk_size
         set filein_size [expr $filein_size - $chunk_size]
         set offset [expr $offset + $chunk_size]
     }
@@ -246,9 +246,9 @@ for {set chunk_size $MAXCHUNK} {$chunk_size >= 32} {set chunk_size [expr $chunk_
 if {$filein_size > 0} {
     set start $offset
     set end [expr $start + $filein_size - 1]
-    puts -nonewline $fp_fileout [string range $filein_data $start $end]
+    puts -nonewline $fd_fileout [string range $filein_data $start $end]
 }
-close $fp_fileout
+close $fd_fileout
 
 exit 0
 
