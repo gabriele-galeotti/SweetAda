@@ -17,7 +17,12 @@ USE_APPLICATION := test-ZOOM
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
+ifeq ($(USE_PYTHON),Y)
+RUN_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord-dbug.py \
+                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 19200
+else
 RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord-dbug.tcl \
                    "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 19200
+endif
 DEBUG_COMMAND := $(RUN_COMMAND)
 
