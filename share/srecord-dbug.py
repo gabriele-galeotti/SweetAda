@@ -115,7 +115,6 @@ if serialport_fd.isOpen():
     # execute
     time.sleep(1)
     serialport_fd.write(str.encode("go " + start_address + "\r\n"))
-    errprintf("start_address: %s\n", start_address)
     serialport_fd.close()
 else:
     errprintf("%s: *** Error: open().\n", SCRIPT_FILENAME)
