@@ -38,10 +38,10 @@ package CPU_i686 is
    -- import i586 items
    ----------------------------------------------------------------------------
 
-   subtype CR4_Register_Type is CPU_i586.CR4_Register_Type;
+   subtype CR4_Type is CPU_i586.CR4_Type;
 
-   function CR4_Read return CR4_Register_Type         renames CPU_i586.CR4_Read;
-   procedure CR4_Write (Value : in CR4_Register_Type) renames CPU_i586.CR4_Write;
+   function CR4_Read return CR4_Type         renames CPU_i586.CR4_Read;
+   procedure CR4_Write (Value : in CR4_Type) renames CPU_i586.CR4_Write;
 
    function CPUID_Enabled return Boolean renames CPU_i586.CPUID_Enabled;
 
@@ -57,10 +57,8 @@ package CPU_i686 is
 
    subtype MSR_Type is CPU_i586.MSR_Type;
 
-   MSR_TSC      : constant MSR_Type := CPU_i586.MSR_TSC;
-   MSR_APICBASE : constant MSR_Type := CPU_i586.MSR_APICBASE;
-
-   subtype APICBASE_Type is CPU_i586.APICBASE_Type;
+   IA32_TIME_STAMP_COUNTER : MSR_Type renames CPU_i586.IA32_TIME_STAMP_COUNTER;
+   IA32_APIC_BASE          : MSR_Type renames CPU_i586.IA32_APIC_BASE;
 
    function RDMSR (MSR_Register_Number : MSR_Type) return Unsigned_64          renames CPU_i586.RDMSR;
    procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64) renames CPU_i586.WRMSR;
