@@ -911,8 +911,8 @@ endif
 	@$(call echo-print,"RTS ROOT PATH:       $(RTS_ROOT_PATH)")
 	@$(call echo-print,"RTS PATH:            $(RTS_PATH)")
 	@$(call echo-print,"RTS:                 $(RTS)")
-	@$(call echo-print,"ADA MODE:            $(ADA_MODE)")
 	@$(call echo-print,"PROFILE:             $(PROFILE)")
+	@$(call echo-print,"ADA MODE:            $(ADA_MODE)")
 	@$(call echo-print,"USE LIBADA:          $(USE_LIBADA)")
 	@$(call echo-print,"USE C LIBRARY:       $(USE_CLIBRARY)")
 ifneq ($(ADDITIONAL_OBJECTS),)
@@ -1023,7 +1023,7 @@ ifeq ($(OSTYPE),cmd)
            SET "MAKEFLAGS=" && SET "RTS=$(RTS_BUILD)"                     && \
            "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" configure       && \
            "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" multilib           \
-           || EXIT /B ERRORLEVEL                                             \
+           || EXIT /B %ERRORLEVEL%                                           \
           )
 else
 	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                                         \
