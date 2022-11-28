@@ -36,7 +36,7 @@
                 // clear table
                 movl    $pml4t,%edx
                 movl    %edx,%edi                       // EDI --> PML4T
-                movl    $(512*8/4),%ecx                 // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
+                movl    $(512*8>>2),%ecx                // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
                 xorl    %eax,%eax
             rep stosl
                 // make first entry points to a PDPT page
@@ -52,7 +52,7 @@
                 // clear table
                 movl    $pdpt,%edx
                 movl    %edx,%edi                       // EDI --> PDPT
-                movl    $(512*8/4),%ecx                 // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
+                movl    $(512*8>>2),%ecx                // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
                 xorl    %eax,%eax
             rep stosl
                 // make first entry points to a PDT page
@@ -68,7 +68,7 @@
                 // clear table
                 movl    $pdt,%edx
                 movl    %edx,%edi                       // EDI --> PDT
-                movl    $(512*8/4),%ecx                 // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
+                movl    $(512*8>>2),%ecx                // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
                 xorl    %eax,%eax
             rep stosl
                 // make first entry points to a PT page
@@ -87,7 +87,7 @@
                 // clear table
                 movl    $pt,%edx
                 movl    %edx,%edi                       // EDI --> PT
-                movl    $(512*8/4),%ecx                 // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
+                movl    $(512*8>>2),%ecx                // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
                 xorl    %eax,%eax
             rep stosl
                 // map all 512 entries 1-1
@@ -120,7 +120,7 @@
                 // clear table
                 movl    $pdt_apic,%edx
                 movl    %edx,%edi                       // EDI --> PDT
-                movl    $(512*8/4),%ecx                 // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
+                movl    $(512*8>>2),%ecx                // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
                 xorl    %eax,%eax
             rep stosl
                 // pt_apic entry
@@ -134,7 +134,7 @@
                 // clear table
                 movl    $pt_apic,%edx
                 movl    %edx,%edi                       // EDI --> PT
-                movl    $(512*8/4),%ecx                 // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
+                movl    $(512*8>>2),%ecx                // clear 512 * 8 = 0x1000 bytes = 0x400 32-bit words
                 xorl    %eax,%eax
             rep stosl
                 // map all 512 entries 1-1
