@@ -64,7 +64,6 @@ switch $baud_rate {
 while {[gets $kernel_fd data] >= 0} {
     puts -nonewline $serialport_fd "$data\x0D\x0A"
     puts -nonewline stderr "."
-    #puts stderr $data
     after $delay
     set srec_type [string range $data 0 1]
     if {$srec_type eq "S7"} {

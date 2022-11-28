@@ -62,7 +62,6 @@ fconfigure $kernel_fd -buffering line
 while {[gets $kernel_fd data] >= 0} {
     puts -nonewline $serialport_fd "$data\x0D\x0A"
     puts -nonewline stderr "."
-    #puts stderr $data
     # allow processing of data on remote side
     after 30
     set srec_type [string range $data 0 1]
@@ -82,7 +81,7 @@ puts stderr ""
 close $kernel_fd
 
 # execute
-after 30
+after 1000
 puts -nonewline $serialport_fd "go $start_address\x0D\x0A"
 
 close $serialport_fd
