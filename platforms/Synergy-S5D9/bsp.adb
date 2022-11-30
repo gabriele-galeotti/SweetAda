@@ -68,13 +68,11 @@ package body BSP is
                              CM    => SMR_CM_ASYNC
                             );
       SCI (3).SCMR := (
-                       SMIF      => False,
-                       Reserved1 => Bits.Bits_1_1,
-                       SINV      => SCMR_SINV_NO,
-                       SDIR      => SCMR_SDIR_LSB,
-                       CHR1      => CHR_8.CHR1,
-                       Reserved2 => Bits.Bits_2_1,
-                       BCP2      => 1
+                       SMIF   => False,
+                       SINV   => SCMR_SINV_NO,
+                       SDIR   => SCMR_SDIR_LSB,
+                       CHR1   => CHR_8.CHR1,
+                       others => <>
                       );
       -- pin 706 function = SCI2
       PFSR (P706).PSEL := PSEL_SCI2;
