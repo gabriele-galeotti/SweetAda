@@ -40,20 +40,6 @@
 
 #include <elf.h>
 
-/* ar archive magic and its length */
-#define ARMAG  "!<arch>\n"
-#define SARMAG 8
-
-struct ar_hdr {
-        char ar_name[16];
-        char ar_date[12];
-        char ar_uid[6];
-        char ar_gid[6];
-        char ar_mode[8];
-        char ar_size[10];
-        char ar_fmag[2];
-        };
-
 typedef enum {
         ELF_K_NONE = 0,
         ELF_K_AR,
@@ -139,9 +125,8 @@ uint64_t SWAP64(uint64_t x) { if (application.endianness_swap) { return swap64(x
 #define COMMAND_NONE         0
 #define COMMAND_VERSION      1
 #define COMMAND_DUMPSECTIONS 2
-//#define COMMAND_OBJECTSIZES  3
-#define COMMAND_FINDSYMBOL   4
-#define COMMAND_SETDEBUGFLAG 5
+#define COMMAND_FINDSYMBOL   3
+#define COMMAND_SETDEBUGFLAG 4
 
 /******************************************************************************
  * compute_tabs()                                                             *
@@ -273,15 +258,15 @@ elf_read(Elf *pelf, void *buffer, off_t offset, size_t length)
                 offset += pelf->base;
                 if (lseek(pelf->fd, offset, SEEK_SET) != offset)
                 {
-                        //seterror(ELF_E_IO);
+                        // ELF_E_IO
                 }
                 else if ((t_buffer = buffer) == NULL && (t_buffer = lib_malloc(length)) == NULL)
                 {
-                        //seterror(ELF_E_NOMEM);
+                        // ELF_E_NOMEM
                 }
                 else if (data_read(pelf->fd, t_buffer, length) < 0)
                 {
-                        //seterror(ELF_E_IO);
+                        // ELF_E_IO
                         if (t_buffer != buffer)
                         {
                                 lib_free((void *)t_buffer);
@@ -312,7 +297,7 @@ elf_begin(int fd)
         fd_offset = lseek(fd, (off_t)0, SEEK_END);
         if (fd_offset == (off_t)-1)
         {
-                //seterror(ELF_E_IO);
+                // ELF_E_IO
                 return NULL;
         }
         size = fd_offset;
@@ -320,7 +305,7 @@ elf_begin(int fd)
         pelf = (Elf *)lib_malloc(sizeof(Elf));
         if (pelf == NULL)
         {
-                //seterror(ELF_E_NOMEM);
+                // ELF_E_NOMEM
                 return NULL;
         }
         pelf->fd = fd;
@@ -329,6 +314,7 @@ elf_begin(int fd)
         pelf->data = elf_read(pelf, NULL, 0, size);
         if (pelf->data == NULL)
         {
+                // ELF_E_IO
                 lib_free((void *)pelf);
                 pelf = NULL;
                 return NULL;
@@ -347,10 +333,6 @@ elf_begin(int fd)
                 pelf->encoding = pelf->data[EI_DATA];
                 pelf->version = pelf->data[EI_VERSION];
         }
-        //else if (size >= SARMAG && memcmp(pelf->data, ARMAG, SARMAG) == 0)
-        //{
-        //        __NOP__;
-        //}
         else
         {
                 lib_free((void *)(pelf->data));
@@ -768,7 +750,6 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                 {
                         char c;
                         const char *dumpsections_option = "dumpsections";
-                        //const char *objectsizes_option = "objectsizes";
                         const char *findsymbol_option = "findsymbol=";
                         const char *setdebugflag_option = "setdebugflag=";
                         size_t findsymbol_optionlength = STRING_LENGTH(findsymbol_option);
@@ -792,10 +773,6 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                                                 {
                                                         p->command = COMMAND_DUMPSECTIONS;
                                                 }
-                                                //else if (strcmp(argv[idx], objectsizes_option) == 0)
-                                                //{
-                                                //        p->command = COMMAND_OBJECTSIZES;
-                                                //}
                                                 else if (strncmp(argv[idx], findsymbol_option, findsymbol_optionlength) == 0)
                                                 {
                                                         p->command = COMMAND_FINDSYMBOL;
@@ -957,7 +934,6 @@ main(int argc, char **argv)
         application.pelf = elf_begin(fd);
         if (application.pelf == NULL)
         {
-                //log_printf(LOG_STDERR | LOG_FILE, "*** Error: elf_begin(): %s.", elf_errmsg(-1));
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: elf_begin().");
                 goto main_exit;
         }
@@ -973,12 +949,6 @@ main(int argc, char **argv)
                                 goto main_exit;
                         }
                         break;
-//                case COMMAND_OBJECTSIZES:
-//                        if (command_objectsizes() < 0)
-//                        {
-//                                goto main_exit;
-//                        }
-//                        break;
                 case COMMAND_FINDSYMBOL:
                         if (command_findsymbol() < 0)
                         {

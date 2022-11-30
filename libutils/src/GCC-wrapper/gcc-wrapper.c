@@ -52,19 +52,19 @@ static struct switch_descriptor switches[] = {
         { "D",             EXACT_MATCH | HAS_ARGUMENT                   },
         { "G",             EXACT_MATCH | HAS_ARGUMENT                   },
         { "I",             EXACT_MATCH | HAS_ARGUMENT                   },
-        { "o",             EXACT_MATCH | HAS_ARGUMENT | OUTPUT_FILENAME },
         { "auxbase",       EXACT_MATCH | HAS_ARGUMENT                   },
         { "auxbase-strip", EXACT_MATCH | HAS_ARGUMENT                   },
-        { "dumpdir",       EXACT_MATCH | HAS_ARGUMENT | TRANSLATE_BS    },
         { "dumpbase",      EXACT_MATCH | HAS_ARGUMENT                   },
         { "dumpbase-ext",  EXACT_MATCH | HAS_ARGUMENT                   },
+        { "dumpdir",       EXACT_MATCH | HAS_ARGUMENT | TRANSLATE_BS    },
+        { "fRTS=",                                      TRANSLATE_BS    },
+        { "gnatG",         EXACT_MATCH                | GNAT_FLAG       },
+        { "gnatO",         EXACT_MATCH | HAS_ARGUMENT                   },
         { "imultilib",     EXACT_MATCH | HAS_ARGUMENT                   },
         { "iprefix",       EXACT_MATCH | HAS_ARGUMENT                   },
         { "isystem",       EXACT_MATCH | HAS_ARGUMENT                   },
-        { "gnatG",         EXACT_MATCH                | GNAT_FLAG       },
-        { "gnatO",         EXACT_MATCH | HAS_ARGUMENT                   },
+        { "o",             EXACT_MATCH | HAS_ARGUMENT | OUTPUT_FILENAME },
         { "plugin",        EXACT_MATCH | HAS_ARGUMENT                   },
-        { "fRTS=",                                      TRANSLATE_BS    },
         { NULL, 0 }
         };
 
@@ -246,7 +246,8 @@ main(int argc, char **argv)
                                 }
                                 if (match)
                                 {
-                                        int flags = switches[idx_switches].flags;
+                                        int flags;
+                                        flags = switches[idx_switches].flags;
                                         if ((flags & HAS_ARGUMENT) != 0)
                                         {
                                                 --number_of_arguments;
