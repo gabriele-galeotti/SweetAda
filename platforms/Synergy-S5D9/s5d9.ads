@@ -33,6 +33,7 @@ package S5D9 is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
    -- S5D9 Microcontroller Group User''s Manual
    -- Renesas Synergy(TM) Platform
@@ -50,7 +51,7 @@ package S5D9 is
       LVD0RF   : Boolean;     -- Voltage Monitor 0 Reset Detect Flag
       LVD1RF   : Boolean;     -- Voltage Monitor 1 Reset Detect Flag
       LVD2RF   : Boolean;     -- Voltage Monitor 2 Reset Detect Flag
-      Reserved : Bits.Bits_3;
+      Reserved : Bits_3 := 0;
       DPSRSTF  : Boolean;     -- Deep Software Standby Reset Flag
    end record with
       Bit_Order => Low_Order_First,
@@ -80,13 +81,13 @@ package S5D9 is
       IWDTRF    : Boolean;     -- Independent Watchdog Timer Reset Detect Flag
       WDTRF     : Boolean;     -- Watchdog Timer Reset Detect Flag
       SWRF      : Boolean;     -- Software Reset Detect Flag
-      Reserved1 : Bits.Bits_5;
+      Reserved1 : Bits_5 := 0;
       RPERF     : Boolean;     -- SRAM Parity Error Reset Detect Flag
       REERF     : Boolean;     -- SRAM ECC Error Reset Detect Flag
       BUSSRF    : Boolean;     -- Bus Slave MPU Error Reset Detect Flag
       BUSMRF    : Boolean;     -- Bus Master MPU Error Reset Detect Flag
       SPERF     : Boolean;     -- SP Error Reset Detect Flag
-      Reserved2 : Bits.Bits_3;
+      Reserved2 : Bits_3 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -117,7 +118,7 @@ package S5D9 is
    type RSTSR2_Type is
    record
       CWSF     : Boolean;     -- Cold/Warm Start Determination Flag
-      Reserved : Bits.Bits_7;
+      Reserved : Bits_7 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -192,12 +193,12 @@ package S5D9 is
 
    type PLLCCR_Type is
    record
-      PLIDIV    : Bits.Bits_2; -- PLL Input Frequency Division Ratio Select
-      Reserved1 : Bits.Bits_2;
-      PLSRCSEL  : Bits.Bits_1; -- PLL Clock Source Select
-      Reserved2 : Bits.Bits_3;
-      PLLMUL    : Bits.Bits_6; -- PLL Frequency Multiplication Factor Select
-      Reserved3 : Bits.Bits_2;
+      PLIDIV    : Bits_2;      -- PLL Input Frequency Division Ratio Select
+      Reserved1 : Bits_2 := 0;
+      PLSRCSEL  : Bits_1;      -- PLL Clock Source Select
+      Reserved2 : Bits_3 := 0;
+      PLLMUL    : Bits_6;      -- PLL Frequency Multiplication Factor Select
+      Reserved3 : Bits_2 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -227,7 +228,7 @@ package S5D9 is
 
    type SBYCR_Type is
    record
-      Reserved : Bits.Bits_14;
+      Reserved : Bits_14 := 0;
       OPE      : Boolean;      -- Output Port Enable
       SSBY     : Boolean;      -- Software Standby
    end record with
@@ -252,15 +253,15 @@ package S5D9 is
 
    type MSTPCRA_Type is
    record
-      MSTPA0    : Boolean;      -- SRAM0 Module Stop
-      MSTPA1    : Boolean;      -- SRAM1 Module Stop
-      Reserved1 : Bits.Bits_3;
-      MSTPA5    : Boolean;      -- High-Speed SRAM Module Stop
-      MSTPA6    : Boolean;      -- ECC SRAM Module Stop
-      MSTPA7    : Boolean;      -- Standby SRAM Module Stop
-      Reserved2 : Bits.Bits_14;
-      MSTPA22   : Boolean;      -- DMA Controller/Data Transfer Controller Module Stop
-      Reserved3 : Bits.Bits_9;
+      MSTPA0    : Boolean;             -- SRAM0 Module Stop
+      MSTPA1    : Boolean;             -- SRAM1 Module Stop
+      Reserved1 : Bits_3 := 16#07#;
+      MSTPA5    : Boolean;             -- High-Speed SRAM Module Stop
+      MSTPA6    : Boolean;             -- ECC SRAM Module Stop
+      MSTPA7    : Boolean;             -- Standby SRAM Module Stop
+      Reserved2 : Bits_14 := 16#3FFF#;
+      MSTPA22   : Boolean;             -- DMA Controller/Data Transfer Controller Module Stop
+      Reserved3 : Bits_9 := 16#1FF#;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -289,35 +290,35 @@ package S5D9 is
 
    type MSTPCRB_Type is
    record
-      Reserved1 : Bits.Bits_1;
-      MSTPB1    : Boolean;     -- Controller Area Network 1 Module Stop
-      MSTPB2    : Boolean;     -- Controller Area Network 0 Module Stop
-      Reserved2 : Bits.Bits_2;
-      MSTPB5    : Boolean;     -- IrDA Module Stop
-      MSTPB6    : Boolean;     -- Quad Serial Peripheral Interface Module Stop
-      MSTPB7    : Boolean;     -- I2C Bus Interface 2 Module Stop
-      MSTPB8    : Boolean;     -- I2C Bus Interface 1 Module Stop
-      MSTPB9    : Boolean;     -- I2C Bus Interface 0 Module Stop
-      Reserved3 : Bits.Bits_1;
-      MSTPB11   : Boolean;     -- Universal Serial Bus 2.0 FS Interface Module Stop
-      MSTPB12   : Boolean;     -- Universal Serial Bus 2.0 HS Interface Module Stop
-      MSTPB13   : Boolean;     -- EPTPC and PTPEDMAC Module Stop
-      Reserved4 : Bits.Bits_1;
-      MSTPB15   : Boolean;     -- ETHERC0 and EDMAC0 Controller Module Stop
-      Reserved5 : Bits.Bits_2;
-      MSTPB18   : Boolean;     -- Serial Peripheral Interface 1 Module Stop
-      MSTPB19   : Boolean;     -- Serial Peripheral Interface 0 Module Stop
-      Reserved6 : Bits.Bits_2;
-      MSTPB22   : Boolean;     -- Serial Communication Interface 9 Module Stop
-      MSTPB23   : Boolean;     -- Serial Communication Interface 8 Module Stop
-      MSTPB24   : Boolean;     -- Serial Communication Interface 7 Module Stop
-      MSTPB25   : Boolean;     -- Serial Communication Interface 6 Module Stop
-      MSTPB26   : Boolean;     -- Serial Communication Interface 5 Module Stop
-      MSTPB27   : Boolean;     -- Serial Communication Interface 4 Module Stop
-      MSTPB28   : Boolean;     -- Serial Communication Interface 3 Module Stop
-      MSTPB29   : Boolean;     -- Serial Communication Interface 2 Module Stop
-      MSTPB30   : Boolean;     -- Serial Communication Interface 1 Module Stop
-      MSTPB31   : Boolean;     -- Serial Communication Interface 0 Module Stop
+      Reserved1 : Bits_1 := 1;
+      MSTPB1    : Boolean;         -- Controller Area Network 1 Module Stop
+      MSTPB2    : Boolean;         -- Controller Area Network 0 Module Stop
+      Reserved2 : Bits_2 := 2#11#;
+      MSTPB5    : Boolean;         -- IrDA Module Stop
+      MSTPB6    : Boolean;         -- Quad Serial Peripheral Interface Module Stop
+      MSTPB7    : Boolean;         -- I2C Bus Interface 2 Module Stop
+      MSTPB8    : Boolean;         -- I2C Bus Interface 1 Module Stop
+      MSTPB9    : Boolean;         -- I2C Bus Interface 0 Module Stop
+      Reserved3 : Bits_1 := 1;
+      MSTPB11   : Boolean;         -- Universal Serial Bus 2.0 FS Interface Module Stop
+      MSTPB12   : Boolean;         -- Universal Serial Bus 2.0 HS Interface Module Stop
+      MSTPB13   : Boolean;         -- EPTPC and PTPEDMAC Module Stop
+      Reserved4 : Bits_1 := 1;
+      MSTPB15   : Boolean;         -- ETHERC0 and EDMAC0 Controller Module Stop
+      Reserved5 : Bits_2 := 2#11#;
+      MSTPB18   : Boolean;         -- Serial Peripheral Interface 1 Module Stop
+      MSTPB19   : Boolean;         -- Serial Peripheral Interface 0 Module Stop
+      Reserved6 : Bits_2 := 2#11#;
+      MSTPB22   : Boolean;         -- Serial Communication Interface 9 Module Stop
+      MSTPB23   : Boolean;         -- Serial Communication Interface 8 Module Stop
+      MSTPB24   : Boolean;         -- Serial Communication Interface 7 Module Stop
+      MSTPB25   : Boolean;         -- Serial Communication Interface 6 Module Stop
+      MSTPB26   : Boolean;         -- Serial Communication Interface 5 Module Stop
+      MSTPB27   : Boolean;         -- Serial Communication Interface 4 Module Stop
+      MSTPB28   : Boolean;         -- Serial Communication Interface 3 Module Stop
+      MSTPB29   : Boolean;         -- Serial Communication Interface 2 Module Stop
+      MSTPB30   : Boolean;         -- Serial Communication Interface 1 Module Stop
+      MSTPB31   : Boolean;         -- Serial Communication Interface 0 Module Stop
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -366,24 +367,24 @@ package S5D9 is
 
    type MSTPCRC_Type is
    record
-      MSTPC0    : Boolean;      -- Clock Frequency Accuracy Measurement Circuit Module Stop
-      MSTPC1    : Boolean;      -- Cyclic Redundancy Check Calculator Module Stop
-      MSTPC2    : Boolean;      -- Parallel Data Capture Module Stop
-      MSTPC3    : Boolean;      -- Capacitive Touch Sensing Unit Module Stop
-      MSTPC4    : Boolean;      -- Graphics LCD Controller Module Stop
-      MSTPC5    : Boolean;      -- JPEG Codec Engine Module Stop
-      MSTPC6    : Boolean;      -- 2D Drawing Engine Module Stop
-      MSTPC7    : Boolean;      -- Serial Sound Interface Enhanced (channel 1) Module Stop
-      MSTPC8    : Boolean;      -- Serial Sound Interface Enhanced (channel 0) Module Stop
-      MSTPC9    : Boolean;      -- Sampling Rate Converter Module Stop
-      Reserved1 : Bits.Bits_1;
-      MSTPC11   : Boolean;      -- Secure Digital Host IF/MultiMediaCard 1 Module Stop
-      MSTPC12   : Boolean;      -- Secure Digital Host IF/MultiMediaCard 0 Module Stop
-      MSTPC13   : Boolean;      -- Data Operation Circuit Module Stop
-      MSTPC14   : Boolean;      -- Event Link Controller Module Stop
-      Reserved2 : Bits.Bits_1;
-      Reserved3 : Bits.Bits_15;
-      MSTPC31   : Boolean;      -- SCE7 Module Stop
+      MSTPC0    : Boolean;             -- Clock Frequency Accuracy Measurement Circuit Module Stop
+      MSTPC1    : Boolean;             -- Cyclic Redundancy Check Calculator Module Stop
+      MSTPC2    : Boolean;             -- Parallel Data Capture Module Stop
+      MSTPC3    : Boolean;             -- Capacitive Touch Sensing Unit Module Stop
+      MSTPC4    : Boolean;             -- Graphics LCD Controller Module Stop
+      MSTPC5    : Boolean;             -- JPEG Codec Engine Module Stop
+      MSTPC6    : Boolean;             -- 2D Drawing Engine Module Stop
+      MSTPC7    : Boolean;             -- Serial Sound Interface Enhanced (channel 1) Module Stop
+      MSTPC8    : Boolean;             -- Serial Sound Interface Enhanced (channel 0) Module Stop
+      MSTPC9    : Boolean;             -- Sampling Rate Converter Module Stop
+      Reserved1 : Bits_1 := 1;
+      MSTPC11   : Boolean;             -- Secure Digital Host IF/MultiMediaCard 1 Module Stop
+      MSTPC12   : Boolean;             -- Secure Digital Host IF/MultiMediaCard 0 Module Stop
+      MSTPC13   : Boolean;             -- Data Operation Circuit Module Stop
+      MSTPC14   : Boolean;             -- Event Link Controller Module Stop
+      Reserved2 : Bits_1 := 1;
+      Reserved3 : Bits_15 := 16#7FFF#;
+      MSTPC31   : Boolean;             -- SCE7 Module Stop
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -421,27 +422,27 @@ package S5D9 is
 
    type MSTPCRD_Type is
    record
-      Reserved1 : Bits.Bits_2;
-      MSTPD2    : Boolean;      -- Asynchronous General Purpose Timer 1 Module Stop
-      MSTPD3    : Boolean;      -- Asynchronous General Purpose Timer 0 Module Stop
-      Reserved2 : Bits.Bits_1;
-      MSTPD5    : Boolean;      -- General PWM Timer 32EH0 to 32EH3 and 32E4 to 32E7 and PWM Delay Generation Circuit Module Stop
-      MSTPD6    : Boolean;      -- General PWM Timer 328 to 3213 Module Stop
-      Reserved3 : Bits.Bits_7;
-      MSTPD14   : Boolean;      -- Port Output Enable for GPT Module Stop
-      MSTPD15   : Boolean;      -- 12-Bit A/D Converter 1 Module Stop
-      MSTPD16   : Boolean;      -- 12-Bit A/D Converter 0 Module Stop
-      Reserved4 : Bits.Bits_3;
-      MSTPD20   : Boolean;      -- 12-Bit D/A Converter Module Stop
-      Reserved5 : Bits.Bits_1;
-      MSTPD22   : Boolean;      -- Temperature Sensor Module Stop
-      MSTPD23   : Boolean;      -- High-Speed Analog Comparator 5 Module Stop
-      MSTPD24   : Boolean;      -- High-Speed Analog Comparator 4 Module Stop
-      MSTPD25   : Boolean;      -- High-Speed Analog Comparator 3 Module Stop
-      MSTPD26   : Boolean;      -- High-Speed Analog Comparator 2 Module Stop
-      MSTPD27   : Boolean;      -- High-Speed Analog Comparator 1 Module Stop
-      MSTPD28   : Boolean;      -- High-Speed Analog Comparator 0 Module Stop
-      Reserved6 : Bits.Bits_3;
+      Reserved1 : Bits_2 := 2#11#;
+      MSTPD2    : Boolean;          -- Asynchronous General Purpose Timer 1 Module Stop
+      MSTPD3    : Boolean;          -- Asynchronous General Purpose Timer 0 Module Stop
+      Reserved2 : Bits_1 := 1;
+      MSTPD5    : Boolean;          -- General PWM Timer 32EH0 to 32EH3 and 32E4 to 32E7 and PWM Delay Gen Circuit Module Stop
+      MSTPD6    : Boolean;          -- General PWM Timer 328 to 3213 Module Stop
+      Reserved3 : Bits_7 := 16#7F#;
+      MSTPD14   : Boolean;          -- Port Output Enable for GPT Module Stop
+      MSTPD15   : Boolean;          -- 12-Bit A/D Converter 1 Module Stop
+      MSTPD16   : Boolean;          -- 12-Bit A/D Converter 0 Module Stop
+      Reserved4 : Bits_3 := 16#7#;
+      MSTPD20   : Boolean;          -- 12-Bit D/A Converter Module Stop
+      Reserved5 : Bits_1 := 1;
+      MSTPD22   : Boolean;          -- Temperature Sensor Module Stop
+      MSTPD23   : Boolean;          -- High-Speed Analog Comparator 5 Module Stop
+      MSTPD24   : Boolean;          -- High-Speed Analog Comparator 4 Module Stop
+      MSTPD25   : Boolean;          -- High-Speed Analog Comparator 3 Module Stop
+      MSTPD26   : Boolean;          -- High-Speed Analog Comparator 2 Module Stop
+      MSTPD27   : Boolean;          -- High-Speed Analog Comparator 1 Module Stop
+      MSTPD28   : Boolean;          -- High-Speed Analog Comparator 0 Module Stop
+      Reserved6 : Bits_3 := 16#7#;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -490,9 +491,9 @@ package S5D9 is
    record
       PRC0      : Boolean;     -- Protect Bit 0
       PRC1      : Boolean;     -- Protect Bit 1
-      Reserved1 : Bits.Bits_1;
+      Reserved1 : Bits_1 := 0;
       PRC3      : Boolean;     -- Protect Bit 3
-      Reserved2 : Bits.Bits_4;
+      Reserved2 : Bits_4 := 0;
       PRKEY     : Unsigned_8;  -- PRC Key Code
    end record with
       Bit_Order => Low_Order_First,
@@ -682,22 +683,23 @@ pragma Warnings (On, "bits of * unused");
       PODR      : Boolean;     -- Port Output Data
       PIDR      : Boolean;     -- Pmn State
       PDR       : Boolean;     -- Port Direction
-      Reserved1 : Bits.Bits_1;
+      Reserved1 : Bits_1 := 0;
       PCR       : Boolean;     -- Pull-up Control
-      Reserved2 : Bits.Bits_1;
+      Reserved2 : Bits_1 := 0;
       NCODR     : Boolean;     -- N-Channel Open-Drain Control
-      Reserved3 : Bits.Bits_3;
-      DSCR      : Bits.Bits_2; -- Port Drive Capability
-      EOFEOR    : Bits.Bits_2; -- Event on Falling/Event on Rising
+      Reserved3 : Bits_3 := 0;
+      DSCR      : Bits_2;      -- Port Drive Capability
+      EOFEOR    : Bits_2;      -- Event on Falling/Event on Rising
       ISEL      : Boolean;     -- IRQ Input Enable
       ASEL      : Boolean;     -- Analog Input Enable
       PMR       : Boolean;     -- Port Mode Control
-      Reserved4 : Bits.Bits_7;
-      PSEL      : Bits.Bits_5; -- Peripheral Select
-      Reserved5 : Bits.Bits_3;
+      Reserved4 : Bits_7 := 0;
+      PSEL      : Bits_5;      -- Peripheral Select
+      Reserved5 : Bits_3 := 0;
    end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
+      Bit_Order               => Low_Order_First,
+      Size                    => 32,
+      Suppress_Initialization => True;
    for PFSR_Type use
    record
       PODR      at 0 range 0 .. 0;
@@ -717,12 +719,6 @@ pragma Warnings (On, "bits of * unused");
       PSEL      at 0 range 24 .. 28;
       Reserved5 at 0 range 29 .. 31;
    end record;
-
-   type PFSR_HW_Type is
-   record
-      PFSR : PFSR_Type with Volatile_Full_Access => True;
-   end record with
-      Size => 32;
 
    -- PFS.P000PFS 4004 0800h to PFS.P015PFS 4004 083Ch
    P000 : constant := 000; P001 : constant := 001; P002 : constant := 002; P003 : constant := 003;
@@ -798,14 +794,6 @@ pragma Warnings (On, "bits of * unused");
 
    PFSR_ADDRESS : constant := 16#4004_0800#;
 
---   type PFSR_Array_Type is array (Natural range <>) of PFSR_Type with
---      Pack => True;
---   PFSR : aliased PFSR_Array_Type (0 .. 191) with
---      Address    => To_Address (PFSR_ADDRESS),
---      Volatile   => True,
---      Import     => True,
---      Convention => Ada;
-
    PFSR : aliased array (0 .. 191) of PFSR_Type with
       Address    => To_Address (PFSR_ADDRESS),
       Volatile   => True,
@@ -816,7 +804,7 @@ pragma Warnings (On, "bits of * unused");
 
    type PWPR_Type is
    record
-      Reserved : Bits.Bits_6;
+      Reserved : Bits_6 := 0;
       PFSWE    : Boolean;     -- PmnPFS Register Write Enable
       B0WI     : Boolean;     -- PFSWE Bit Write Disable
    end record with
@@ -854,14 +842,14 @@ pragma Warnings (On, "bits of * unused");
 
    type AGTCR_Type is
    record
-      TSTART   : Bits.Bits_1;        -- AGT Count Start
-      TCSTF    : Bits.Bits_1;        -- AGT Count Status Flag
-      TSTOP    : Bits.Bits_1;        -- AGT Count Forced Stop
-      Reserved : Bits.Bits_1_Zeroes;
-      TEDGF    : Boolean;            -- Active Edge Judgment Flag
-      TUNDF    : Boolean;            -- Underflow Flag
-      TCMAF    : Boolean;            -- Compare Match A Flag
-      TCMBF    : Boolean;            -- Compare Match B Flag
+      TSTART   : Bits_1;      -- AGT Count Start
+      TCSTF    : Bits_1;      -- AGT Count Status Flag
+      TSTOP    : Bits_1;      -- AGT Count Forced Stop
+      Reserved : Bits_1 := 0;
+      TEDGF    : Boolean;     -- Active Edge Judgment Flag
+      TUNDF    : Boolean;     -- Underflow Flag
+      TCMAF    : Boolean;     -- Compare Match A Flag
+      TCMBF    : Boolean;     -- Compare Match B Flag
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -897,10 +885,10 @@ pragma Warnings (On, "bits of * unused");
 
    type AGTMR1_Type is
    record
-      TMOD20   : Bits.Bits_3;        -- Operating Mode
-      TEDGPL   : Bits.Bits_1;        -- Edge Polarity
-      TCK20    : Bits.Bits_3;        -- Count Source
-      Reserved : Bits.Bits_1_Zeroes;
+      TMOD20   : Bits_3;      -- Operating Mode
+      TEDGPL   : Bits_1;      -- Edge Polarity
+      TCK20    : Bits_3;      -- Count Source
+      Reserved : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -925,9 +913,9 @@ pragma Warnings (On, "bits of * unused");
 
    type AGTMR2_Type is
    record
-      CKS20    : Bits.Bits_3;        -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
-      Reserved : Bits.Bits_4_Zeroes;
-      LPM      : Boolean;            -- Low Power Mode
+      CKS20    : Bits_3;      -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
+      Reserved : Bits_4 := 0;
+      LPM      : Boolean;     -- Low Power Mode
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -942,14 +930,14 @@ pragma Warnings (On, "bits of * unused");
 
    type AGTCMSR_Type is
    record
-      TCMEA     : Boolean;            -- Compare Match A Register Enable
-      TOEA      : Boolean;            -- AGTOAn Output Enable
-      TOPOLA    : Boolean;            -- AGTOAn Polarity Select
-      Reserved1 : Bits.Bits_1_Zeroes;
-      TCMEB     : Boolean;            -- Compare Match B Register Enable
-      TOEB      : Boolean;            -- AGTOBn Output Enable
-      TOPOLB    : Boolean;            -- AGTOBn Polarity Select
-      Reserved2 : Bits.Bits_1_Zeroes;
+      TCMEA     : Boolean;     -- Compare Match A Register Enable
+      TOEA      : Boolean;     -- AGTOAn Output Enable
+      TOPOLA    : Boolean;     -- AGTOAn Polarity Select
+      Reserved1 : Bits_1 := 0;
+      TCMEB     : Boolean;     -- Compare Match B Register Enable
+      TOEB      : Boolean;     -- AGTOBn Output Enable
+      TOPOLB    : Boolean;     -- AGTOBn Polarity Select
+      Reserved2 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -965,9 +953,8 @@ pragma Warnings (On, "bits of * unused");
       Reserved2 at 0 range 7 .. 7;
    end record;
 
-   -- AGT0 .. 1 memory-mapped array
+   -- AGT0 .. 1
 
-pragma Warnings (Off, "bits of * unused");
    type AGT_Type is
    record
       AGTC     : Unsigned_16;
@@ -983,7 +970,7 @@ pragma Warnings (Off, "bits of * unused");
       AGTCMSR  : AGTCMSR_Type;
       AGTIOSEL : Unsigned_8;
    end record with
-      Size => 16#100# * 8;
+      Size => 16 * 8;
    for AGT_Type use
    record
       AGTC     at 16#00# range 0 .. 15;
@@ -999,12 +986,17 @@ pragma Warnings (Off, "bits of * unused");
       AGTCMSR  at 16#0E# range 0 .. 7;
       AGTIOSEL at 16#0F# range 0 .. 7;
    end record;
-pragma Warnings (On, "bits of * unused");
 
    AGT_ADDRESS : constant := 16#4008_4000#;
 
-   AGT : aliased array (0 .. 1) of AGT_Type with
+   AGT0 : aliased AGT_Type with
       Address    => To_Address (AGT_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   AGT1 : aliased AGT_Type with
+      Address    => To_Address (AGT_ADDRESS + 16#0100#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
@@ -1017,8 +1009,8 @@ pragma Warnings (On, "bits of * unused");
 
    type CHR_Data_Length_Type is
    record
-      CHR  : Bits.Bits_1;
-      CHR1 : Bits.Bits_1;
+      CHR  : Bits_1;
+      CHR1 : Bits_1;
    end record;
 
    CHR_9 : constant CHR_Data_Length_Type := (0, 0); -- Transmit/receive in 9-bit data length (also (1, 0))
@@ -1027,8 +1019,8 @@ pragma Warnings (On, "bits of * unused");
 
    type BCP_Type is
    record
-      BCP10 : Bits.Bits_2;
-      BCP2  : Bits.Bits_1;
+      BCP10 : Bits_2;
+      BCP2  : Bits_1;
    end record;
 
    BCP_93  : constant BCP_Type := (2#00#, 0);
@@ -1059,13 +1051,13 @@ pragma Warnings (On, "bits of * unused");
 
    type SMR_NORMAL_Type is
    record
-      CKS10 : Bits.Bits_2; -- Clock Select
-      MP    : Boolean;     -- Multi-Processor Mode
-      STOP  : Bits.Bits_1; -- Stop Bit Length
-      PM    : Bits.Bits_1; -- Parity Mode
-      PE    : Boolean;     -- Parity Enable
-      CHR   : Bits.Bits_1; -- Character Length
-      CM    : Bits.Bits_1; -- Communication Mode
+      CKS10 : Bits_2;  -- Clock Select
+      MP    : Boolean; -- Multi-Processor Mode
+      STOP  : Bits_1;  -- Stop Bit Length
+      PM    : Bits_1;  -- Parity Mode
+      PE    : Boolean; -- Parity Enable
+      CHR   : Bits_1;  -- Character Length
+      CM    : Bits_1;  -- Communication Mode
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1082,12 +1074,12 @@ pragma Warnings (On, "bits of * unused");
 
    type SMR_SMIF_Type is
    record
-      CKS10 : Bits.Bits_2; -- Clock Select
-      BCP10 : Bits.Bits_2; -- Base Clock Pulse
-      PM    : Bits.Bits_1; -- Parity Mode
-      PE    : Boolean;     -- Parity Enable
-      BLK   : Boolean;     -- Block Transfer Mode
-      GM    : Boolean;     -- GSM Mode
+      CKS10 : Bits_2;                 -- Clock Select
+      BCP10 : Bits_2 := BCP_32.BCP10; -- Base Clock Pulse
+      PM    : Bits_1;                 -- Parity Mode
+      PE    : Boolean;                -- Parity Enable
+      BLK   : Boolean;                -- Block Transfer Mode
+      GM    : Boolean;                -- GSM Mode
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1122,13 +1114,13 @@ pragma Warnings (On, "bits of * unused");
 
    type SCR_Type is
    record
-      CKE10 : Bits.Bits_2; -- Clock Enable
-      TEIE  : Boolean;     -- Transmit End Interrupt Enable
-      MPIE  : Boolean;     -- Multi-Processor Interrupt Enable
-      RE    : Boolean;     -- Receive Enable
-      TE    : Boolean;     -- Transmit Enable
-      RIE   : Boolean;     -- Receive Interrupt Enable
-      TIE   : Boolean;     -- Transmit Interrupt Enable
+      CKE10 : Bits_2;  -- Clock Enable
+      TEIE  : Boolean; -- Transmit End Interrupt Enable
+      MPIE  : Boolean; -- Multi-Processor Interrupt Enable
+      RE    : Boolean; -- Receive Enable
+      TE    : Boolean; -- Transmit Enable
+      RIE   : Boolean; -- Receive Interrupt Enable
+      TIE   : Boolean; -- Transmit Interrupt Enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1153,14 +1145,14 @@ pragma Warnings (On, "bits of * unused");
 
    type SSR_NORMAL_Type is
    record
-      MPBT : Bits.Bits_1; -- Multi-Processor Bit Transfer
-      MPB  : Bits.Bits_1; -- Multi-Processor
-      TEND : Boolean;     -- Transmit End Flag
-      PER  : Boolean;     -- Parity Error Flag
-      FER  : Boolean;     -- Framing Error Flag
-      ORER : Boolean;     -- Overrun Error Flag
-      RDRF : Boolean;     -- Receive Data Full Flag
-      TDRE : Boolean;     -- Transmit Data Empty Flag
+      MPBT : Bits_1;  -- Multi-Processor Bit Transfer
+      MPB  : Bits_1;  -- Multi-Processor
+      TEND : Boolean; -- Transmit End Flag
+      PER  : Boolean; -- Parity Error Flag
+      FER  : Boolean; -- Framing Error Flag
+      ORER : Boolean; -- Overrun Error Flag
+      RDRF : Boolean; -- Receive Data Full Flag
+      TDRE : Boolean; -- Transmit Data Empty Flag
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1180,14 +1172,14 @@ pragma Warnings (On, "bits of * unused");
 
    type SSR_FIFO_Type is
    record
-      DR       : Boolean;          -- Receive Data Ready Flag
-      Reserved : Bits.Bits_1_Ones;
-      TEND     : Boolean;          -- Transmit End Flag
-      PER      : Boolean;          -- Parity Error Flag
-      FER      : Boolean;          -- Framing Error Flag
-      ORER     : Boolean;          -- Overrun Error Flag
-      RDF      : Boolean;          -- Receive FIFO Data Full Flag
-      TDFE     : Boolean;          -- Transmit FIFO Data Empty Flag
+      DR       : Boolean;     -- Receive Data Ready Flag
+      Reserved : Bits_1 := 1;
+      TEND     : Boolean;     -- Transmit End Flag
+      PER      : Boolean;     -- Parity Error Flag
+      FER      : Boolean;     -- Framing Error Flag
+      ORER     : Boolean;     -- Overrun Error Flag
+      RDF      : Boolean;     -- Receive FIFO Data Full Flag
+      TDFE     : Boolean;     -- Transmit FIFO Data Empty Flag
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1207,14 +1199,14 @@ pragma Warnings (On, "bits of * unused");
 
    type SSR_SMIF_Type is
    record
-      MPBT : Bits.Bits_1; -- Multi-Processor Bit Transfer
-      MPB  : Bits.Bits_1; -- Multi-Processor
-      TEND : Boolean;     -- Transmit End Flag
-      PER  : Boolean;     -- Parity Error Flag
-      ERS  : Boolean;     -- Error Signal Status Flag
-      ORER : Boolean;     -- Overrun Error Flag
-      RDRF : Boolean;     -- Receive Data Full Flag
-      TDRE : Boolean;     -- Transmit Data Empty Flag
+      MPBT : Bits_1;  -- Multi-Processor Bit Transfer
+      MPB  : Bits_1;  -- Multi-Processor
+      TEND : Boolean; -- Transmit End Flag
+      PER  : Boolean; -- Parity Error Flag
+      ERS  : Boolean; -- Error Signal Status Flag
+      ORER : Boolean; -- Overrun Error Flag
+      RDRF : Boolean; -- Receive Data Full Flag
+      TDRE : Boolean; -- Transmit Data Empty Flag
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1251,13 +1243,13 @@ pragma Warnings (On, "bits of * unused");
 
    type SCMR_Type is
    record
-      SMIF      : Boolean;          -- Smart Card Interface Mode Select
-      Reserved1 : Bits.Bits_1_Ones;
-      SINV      : Bits.Bits_1;      -- Transmitted/Received Data Invert
-      SDIR      : Bits.Bits_1;      -- Transmitted/Received Data Transfer Direction
-      CHR1      : Bits.Bits_1;      -- Character Length 1
-      Reserved2 : Bits.Bits_2_Ones;
-      BCP2      : Bits.Bits_1;      -- Base Clock Pulse 2
+      SMIF      : Boolean;               -- Smart Card Interface Mode Select
+      Reserved1 : Bits_1 := 1;
+      SINV      : Bits_1;                -- Transmitted/Received Data Invert
+      SDIR      : Bits_1;                -- Transmitted/Received Data Transfer Direction
+      CHR1      : Bits_1;                -- Character Length 1
+      Reserved2 : Bits_2 := 2#11#;
+      BCP2      : Bits_1 := BCP_32.BCP2; -- Base Clock Pulse 2
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1276,13 +1268,13 @@ pragma Warnings (On, "bits of * unused");
 
    type SEMR_Type is
    record
-      Reserved : Bits.Bits_2_Zeroes;
-      BRME     : Boolean;            -- Bit Rate Modulation Enable
-      ABCSE    : Boolean;            -- Asynchronous Mode Extended Base Clock Select 1
-      ABCS     : Boolean;            -- Asynchronous Mode Base Clock Select
-      NFEN     : Boolean;            -- Digital Noise Filter Function Enable
-      BGDM     : Boolean;            -- Baud Rate Generator Double-Speed Mode Select
-      RXDESEL  : Boolean;            -- Asynchronous Start Bit Edge Detection Select
+      Reserved : Bits_2 := 0;
+      BRME     : Boolean;     -- Bit Rate Modulation Enable
+      ABCSE    : Boolean;     -- Asynchronous Mode Extended Base Clock Select 1
+      ABCS     : Boolean;     -- Asynchronous Mode Base Clock Select
+      NFEN     : Boolean;     -- Digital Noise Filter Function Enable
+      BGDM     : Boolean;     -- Baud Rate Generator Double-Speed Mode Select
+      RXDESEL  : Boolean;     -- Asynchronous Start Bit Edge Detection Select
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1307,8 +1299,8 @@ pragma Warnings (On, "bits of * unused");
 
    type SNFR_Type is
    record
-      NFCS     : Bits.Bits_3;        -- Noise Filter Clock Select
-      Reserved : Bits.Bits_7_Zeroes;
+      NFCS     : Bits_3;      -- Noise Filter Clock Select
+      Reserved : Bits_5 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1322,9 +1314,9 @@ pragma Warnings (On, "bits of * unused");
 
    type SIMR1_Type is
    record
-      IICM     : Boolean;            -- Simple IIC Mode Select
-      Reserved : Bits.Bits_2_Zeroes;
-      IICDL    : Bits.Bits_5;        -- SDA Delay Output Select
+      IICM     : Boolean;     -- Simple IIC Mode Select
+      Reserved : Bits_2 := 0;
+      IICDL    : Bits_5;      -- SDA Delay Output Select
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1345,11 +1337,11 @@ pragma Warnings (On, "bits of * unused");
 
    type SIMR2_Type is
    record
-      IICINTM   : Bits.Bits_1;        -- IIC Interrupt Mode Select
-      IICCSC    : Boolean;            -- Clock Synchronization
-      Reserved1 : Bits.Bits_3_Zeroes;
-      IICACKT   : Bits.Bits_1;        -- ACK Transmission Data
-      Reserved2 : Bits.Bits_2_Zeroes;
+      IICINTM   : Bits_1;      -- IIC Interrupt Mode Select
+      IICCSC    : Boolean;     -- Clock Synchronization
+      Reserved1 : Bits_3 := 0;
+      IICACKT   : Bits_1;      -- ACK Transmission Data
+      Reserved2 : Bits_2 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1376,12 +1368,12 @@ pragma Warnings (On, "bits of * unused");
 
    type SIMR3_Type is
    record
-      IICSTAREQ  : Boolean;     -- Start Condition Generation
-      IICRSTAREQ : Boolean;     -- Restart Condition Generation
-      IICSTPREQ  : Boolean;     -- Stop Condition Generation
-      IICSTIF    : Boolean;     -- Issuing of Start, Restart, or Stop Condition Completed Flag
-      IICSDAS    : Bits.Bits_2; -- SDA Output Select
-      IICSCLS    : Bits.Bits_2; -- SCL Output Select
+      IICSTAREQ  : Boolean; -- Start Condition Generation
+      IICRSTAREQ : Boolean; -- Restart Condition Generation
+      IICSTPREQ  : Boolean; -- Stop Condition Generation
+      IICSTIF    : Boolean; -- Issuing of Start, Restart, or Stop Condition Completed Flag
+      IICSDAS    : Bits_2;  -- SDA Output Select
+      IICSCLS    : Bits_2;  -- SCL Output Select
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1399,8 +1391,8 @@ pragma Warnings (On, "bits of * unused");
 
    type SISR_Type is
    record
-      IICACKR  : Boolean;     -- ACK Reception Data Flag
-      Reserved : Bits.Bits_7;
+      IICACKR  : Boolean;          -- ACK Reception Data Flag
+      Reserved : Bits_7 := 16#7F#;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1423,14 +1415,14 @@ pragma Warnings (On, "bits of * unused");
 
    type SPMR_Type is
    record
-      SSE       : Boolean;            -- SSn Pin Function Enable
-      CTSE      : Boolean;            -- CTS Enable
-      MSS       : Bits.Bits_1;        -- Master Slave Select
-      Reserved1 : Bits.Bits_1_Zeroes;
-      MFF       : Boolean;            -- Mode Fault Flag
-      Reserved2 : Bits.Bits_1_Zeroes;
-      CKPOL     : Bits.Bits_1;        -- Clock Polarity Select
-      CKPH      : Bits.Bits_1;        -- Clock Phase Select
+      SSE       : Boolean;     -- SSn Pin Function Enable
+      CTSE      : Boolean;     -- CTS Enable
+      MSS       : Bits_1;      -- Master Slave Select
+      Reserved1 : Bits_1 := 0;
+      MFF       : Boolean;     -- Mode Fault Flag
+      Reserved2 : Bits_1 := 0;
+      CKPOL     : Bits_1;      -- Clock Polarity Select
+      CKPH      : Bits_1;      -- Clock Phase Select
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1450,13 +1442,13 @@ pragma Warnings (On, "bits of * unused");
 
    type FCR_Type is
    record
-      FM    : Boolean;     -- FIFO Mode Select
-      RFRST : Boolean;     -- Receive FIFO Data Register Reset
-      TFRST : Boolean;     -- Transmit FIFO Data Register Reset
-      DRES  : Boolean;     -- Receive Data Ready Error Select Bit
-      TTRG  : Bits.Bits_4; -- Transmit FIFO Data Trigger Number
-      RTRG  : Bits.Bits_4; -- Receive FIFO Data Trigger Number
-      RSTRG : Bits.Bits_4; -- RTS Output Active Trigger Number Select
+      FM    : Boolean; -- FIFO Mode Select
+      RFRST : Boolean; -- Receive FIFO Data Register Reset
+      TFRST : Boolean; -- Transmit FIFO Data Register Reset
+      DRES  : Boolean; -- Receive Data Ready Error Select Bit
+      TTRG  : Bits_4;  -- Transmit FIFO Data Trigger Number
+      RTRG  : Bits_4;  -- Receive FIFO Data Trigger Number
+      RSTRG : Bits_4;  -- RTS Output Active Trigger Number Select
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -1475,10 +1467,10 @@ pragma Warnings (On, "bits of * unused");
 
    type FDR_Type is
    record
-      R         : Bits.Bits_5; -- Receive FIFO Data Count
-      Reserved1 : Bits.Bits_3;
-      T         : Bits.Bits_5; -- Transmit FIFO Data Count
-      Reserved2 : Bits.Bits_3;
+      R         : Bits_5;      -- Receive FIFO Data Count
+      Reserved1 : Bits_3 := 0;
+      T         : Bits_5;      -- Transmit FIFO Data Count
+      Reserved2 : Bits_3 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -1495,11 +1487,11 @@ pragma Warnings (On, "bits of * unused");
    type LSR_Type is
    record
       ORER      : Boolean;     -- Overrun Error Flag
-      Reserved1 : Bits.Bits_1;
-      FNUM      : Bits.Bits_5; -- Framing Error Count
-      Reserved2 : Bits.Bits_1;
-      PNUM      : Bits.Bits_5; -- Parity Error Count
-      Reserved3 : Bits.Bits_3;
+      Reserved1 : Bits_1 := 0;
+      FNUM      : Bits_5;      -- Framing Error Count
+      Reserved2 : Bits_1 := 0;
+      PNUM      : Bits_5;      -- Parity Error Count
+      Reserved3 : Bits_3 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -1517,8 +1509,8 @@ pragma Warnings (On, "bits of * unused");
 
    type CDR_Type is
    record
-      CMPD     : Bits.Bits_9;        -- Compare Match Data
-      Reserved : Bits.Bits_7_Zeroes;
+      CMPD     : Bits_9;      -- Compare Match Data
+      Reserved : Bits_7 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -1535,13 +1527,13 @@ pragma Warnings (On, "bits of * unused");
 
    type DCCR_Type is
    record
-      DCMF      : Boolean;            -- Data Compare Match Flag
-      Reserved1 : Bits.Bits_2_Zeroes;
-      DPER      : Boolean;            -- Data Compare Match Parity Error Flag
-      DFER      : Boolean;            -- Data Compare Match Framing Error Flag
-      Reserved2 : Bits.Bits_1_Zeroes;
-      IDSEL     : Bits.Bits_1;        -- ID Frame Select
-      DCME      : Boolean;            -- Data Compare Match Enable
+      DCMF      : Boolean;     -- Data Compare Match Flag
+      Reserved1 : Bits_2 := 0;
+      DPER      : Boolean;     -- Data Compare Match Parity Error Flag
+      DFER      : Boolean;     -- Data Compare Match Framing Error Flag
+      Reserved2 : Bits_1 := 0;
+      IDSEL     : Bits_1;      -- ID Frame Select
+      DCME      : Boolean;     -- Data Compare Match Enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1560,10 +1552,10 @@ pragma Warnings (On, "bits of * unused");
 
    type SPTR_Type is
    record
-      RXDMON   : Boolean;            -- Serial Input Data Monitor
-      SPB2DT   : Boolean;            -- Serial Port Break Data Select
-      SPB2IO   : Boolean;            -- Serial Port Break I/O
-      Reserved : Bits.Bits_2_Zeroes;
+      RXDMON   : Boolean;     -- Serial Input Data Monitor
+      SPB2DT   : Boolean;     -- Serial Port Break Data Select
+      SPB2IO   : Boolean;     -- Serial Port Break I/O
+      Reserved : Bits_5 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1602,7 +1594,7 @@ pragma Warnings (On, "bits of * unused");
       LSR      : LSR_Type    with Volatile_Full_Access => True;
       CDR      : CDR_Type    with Volatile_Full_Access => True;
       SPTR     : SPTR_Type   with Volatile_Full_Access => True;
-      Reserved : Bits.Bits_24;
+      Reserved : Bits_24;
    end record with
       Size                    => 16#20# * 8,
       Suppress_Initialization => True;
@@ -1677,11 +1669,11 @@ pragma Warnings (On, "bits of * unused");
 
    type ICCR2_Type is
    record
-      Reserved1 : Bits.Bits_1;
+      Reserved1 : Bits_1 := 0;
       ST        : Boolean;     -- Start Condition Issuance Request
       RS        : Boolean;     -- Restart Condition Issuance Request
       SP        : Boolean;     -- Stop Condition Issuance Request
-      Reserved2 : Bits.Bits_1;
+      Reserved2 : Bits_1 := 0;
       TRS       : Boolean;     -- Transmit/Receive Mode
       MST       : Boolean;     -- Master/Slave Mode
       BBSY      : Boolean;     -- Bus Busy Detection Flag
@@ -1704,10 +1696,10 @@ pragma Warnings (On, "bits of * unused");
 
    type ICMR1_Type is
    record
-      BC   : Bits.Bits_3; -- Bit Counter
-      BCWP : Boolean;     -- BC Write Protect
-      CKS  : Bits.Bits_3; -- Internal Reference Clock Select
-      MTWP : Boolean;     -- MST/TRS Write Protect
+      BC   : Bits_3;  -- Bit Counter
+      BCWP : Boolean; -- BC Write Protect
+      CKS  : Bits_3;  -- Internal Reference Clock Select
+      MTWP : Boolean; -- MST/TRS Write Protect
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1726,8 +1718,8 @@ pragma Warnings (On, "bits of * unused");
       TMOS     : Boolean;     -- Timeout Detection Time Select
       TMOL     : Boolean;     -- Timeout L Count Control
       TMOH     : Boolean;     -- Timeout H Count Control
-      Reserved : Bits.Bits_1;
-      SDDL     : Bits.Bits_3; -- SDA Output Delay Counter
+      Reserved : Bits_1 := 0;
+      SDDL     : Bits_3;      -- SDA Output Delay Counter
       DLCS     : Boolean;     -- SDA Output Delay Clock Source Select
    end record with
       Bit_Order => Low_Order_First,
@@ -1751,13 +1743,13 @@ pragma Warnings (On, "bits of * unused");
 
    type ICMR3_Type is
    record
-      NF    : Bits.Bits_2; -- Noise Filter Stage Select
-      ACKBR : Boolean;     -- Receive Acknowledge
-      ACKBT : Boolean;     -- Transmit Acknowledge
-      ACKWP : Boolean;     -- ACKBT Write Protect
-      RDRFS : Boolean;     -- RDRF Flag Set Timing Select
-      WAIT  : Boolean;     -- WAIT
-      SMBS  : Boolean;     -- SMBus/IIC-Bus Select
+      NF    : Bits_2;  -- Noise Filter Stage Select
+      ACKBR : Boolean; -- Receive Acknowledge
+      ACKBT : Boolean; -- Transmit Acknowledge
+      ACKWP : Boolean; -- ACKBT Write Protect
+      RDRFS : Boolean; -- RDRF Flag Set Timing Select
+      WAIT  : Boolean; -- WAIT
+      SMBS  : Boolean; -- SMBus/IIC-Bus Select
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1807,9 +1799,9 @@ pragma Warnings (On, "bits of * unused");
       SAR1E     : Boolean;     -- Slave Address Register 1 Enable
       SAR2E     : Boolean;     -- Slave Address Register 2 Enable
       GCAE      : Boolean;     -- General Call Address Enable
-      Reserved1 : Bits.Bits_1;
+      Reserved1 : Bits_1 := 0;
       DIDE      : Boolean;     -- Device-ID Address Detection Enable
-      Reserved2 : Bits.Bits_1;
+      Reserved2 : Bits_1 := 0;
       HOAE      : Boolean;     -- Host Address Enable
    end record with
       Bit_Order => Low_Order_First,
@@ -1861,9 +1853,9 @@ pragma Warnings (On, "bits of * unused");
       AAS1      : Boolean;     -- Slave Address 1 Detection Flag
       AAS2      : Boolean;     -- Slave Address 2 Detection Flag
       GCA       : Boolean;     -- General Call Address Detection Flag
-      Reserved1 : Bits.Bits_1;
+      Reserved1 : Bits_1 := 0;
       DID       : Boolean;     -- Device-ID Address Detection Flag
-      Reserved2 : Bits.Bits_1;
+      Reserved2 : Bits_1 := 0;
       HOA       : Boolean;     -- Host Address Detection Flag
    end record with
       Bit_Order => Low_Order_First,
@@ -1912,7 +1904,7 @@ pragma Warnings (On, "bits of * unused");
    type ICWUR_Type is
    record
       WUAFA    : Boolean;     -- Wakeup Analog Filter Additional Selection
-      Reserved : Bits.Bits_3;
+      Reserved : Bits_3 := 0;
       WUACK    : Boolean;     -- ACK Bit for Wakeup Mode
       WUF      : Boolean;     -- Wakeup Event Occurrence Flag
       WUIE     : Boolean;     -- Wakeup Interrupt Request Enable
@@ -1934,10 +1926,10 @@ pragma Warnings (On, "bits of * unused");
 
    type ICWUR2_Type is
    record
-      WUSEN    : Boolean;     -- Wakeup Analog Filter Additional Selection
-      WUASYF   : Boolean;     -- Wakeup Analog Filter Additional Selection
-      WUSYF    : Boolean;     -- Wakeup Analog Filter Additional Selection
-      Reserved : Bits.Bits_5;
+      WUSEN    : Boolean;          -- Wakeup Analog Filter Additional Selection
+      WUASYF   : Boolean;          -- Wakeup Analog Filter Additional Selection
+      WUSYF    : Boolean;          -- Wakeup Analog Filter Additional Selection
+      Reserved : Bits_5 := 16#1F#;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1966,14 +1958,14 @@ pragma Warnings (On, "bits of * unused");
 
    type SPCR_Type is
    record
-      SPMS   : Bits.Bits_1; -- SPI Mode Select
-      TXMD   : Bits.Bits_1; -- Communications Operating Mode Select
-      MODFEN : Boolean;     -- Mode Fault Error Detection Enable
-      MSTR   : Bits.Bits_1; -- SPI Master/Slave Mode Select
-      SPEIE  : Boolean;     -- SPI Error Interrupt Enable
-      SPTIE  : Boolean;     -- Transmit Buffer Empty Interrupt Enable
-      SPE    : Boolean;     -- SPI Function Enable
-      SPRIE  : Boolean;     -- SPI Receive Buffer Full Interrupt Enable
+      SPMS   : Bits_1;  -- SPI Mode Select
+      TXMD   : Bits_1;  -- Communications Operating Mode Select
+      MODFEN : Boolean; -- Mode Fault Error Detection Enable
+      MSTR   : Bits_1;  -- SPI Master/Slave Mode Select
+      SPEIE  : Boolean; -- SPI Error Interrupt Enable
+      SPTIE  : Boolean; -- Transmit Buffer Empty Interrupt Enable
+      SPE    : Boolean; -- SPI Function Enable
+      SPRIE  : Boolean; -- SPI Receive Buffer Full Interrupt Enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -2005,11 +1997,11 @@ pragma Warnings (On, "bits of * unused");
 
    type SSLP_Type is
    record
-      SSL0P    : Bits.Bits_1; -- SSL0 Signal Polarity Setting
-      SSL1P    : Bits.Bits_1; -- SSL1 Signal Polarity Setting
-      SSL2P    : Bits.Bits_1; -- SSL2 Signal Polarity Setting
-      SSL3P    : Bits.Bits_1; -- SSL3 Signal Polarity Setting
-      Reserved : Bits.Bits_4;
+      SSL0P    : Bits_1;      -- SSL0 Signal Polarity Setting
+      SSL1P    : Bits_1;      -- SSL1 Signal Polarity Setting
+      SSL2P    : Bits_1;      -- SSL2 Signal Polarity Setting
+      SSL3P    : Bits_1;      -- SSL3 Signal Polarity Setting
+      Reserved : Bits_4 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -2038,12 +2030,12 @@ pragma Warnings (On, "bits of * unused");
 
    type SPPCR_Type is
    record
-      SPLP      : Bits.Bits_1; -- SPI Loopback
-      SPLP2     : Bits.Bits_1; -- SPI Loopback 2
-      Reserved1 : Bits.Bits_2;
-      MOIFV     : Bits.Bits_1; -- MOSI Idle Fixed Value
-      MOIFE     : Bits.Bits_1; -- MOSI Idle Value Fixing Enable
-      Reserved2 : Bits.Bits_2;
+      SPLP      : Bits_1;      -- SPI Loopback
+      SPLP2     : Bits_1;      -- SPI Loopback 2
+      Reserved1 : Bits_2 := 0;
+      MOIFV     : Bits_1;      -- MOSI Idle Fixed Value
+      MOIFE     : Bits_1;      -- MOSI Idle Value Fixing Enable
+      Reserved2 : Bits_2 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -2067,7 +2059,7 @@ pragma Warnings (On, "bits of * unused");
       PERF     : Boolean;     -- Parity Error Flag
       UDRF     : Boolean;     -- Underrun Error Flag
       SPTEF    : Boolean;     -- SPI Transmit Buffer Empty Flag
-      Reserved : Bits.Bits_1;
+      Reserved : Bits_1 := 0;
       SPRF     : Boolean;     -- SPI Receive Buffer Full Flag
    end record with
       Bit_Order => Low_Order_First,
@@ -2097,8 +2089,8 @@ pragma Warnings (On, "bits of * unused");
 
    type SPSCR_Type is
    record
-      SPSLN    : Bits.Bits_3; -- SPI Sequence Length Specification
-      Reserved : Bits.Bits_5;
+      SPSLN    : Bits_3;      -- SPI Sequence Length Specification
+      Reserved : Bits_5 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -2121,10 +2113,10 @@ pragma Warnings (On, "bits of * unused");
 
    type SPSSR_Type is
    record
-      SPCP      : Bits.Bits_3; -- SPI Command Pointer
-      Reserved1 : Bits.Bits_1;
-      SPECM     : Bits.Bits_3; -- SPI Error Command
-      Reserved2 : Bits.Bits_1;
+      SPCP      : Bits_3;      -- SPI Command Pointer
+      Reserved1 : Bits_1 := 0;
+      SPECM     : Bits_3;      -- SPI Error Command
+      Reserved2 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -2154,12 +2146,12 @@ pragma Warnings (On, "bits of * unused");
 
    type SPDCR_Type is
    record
-      SPFC      : Bits.Bits_2; -- Number of Frames Specification
-      Reserved1 : Bits.Bits_2;
-      SPRDTD    : Bits.Bits_1; -- SPI Receive/Transmit Data Select
-      SPLW      : Bits.Bits_1; -- SPI Word Access/Halfword Access Specification
-      SPBYT     : Bits.Bits_1; -- SPI Byte Access Specification
-      Reserved2 : Bits.Bits_1;
+      SPFC      : Bits_2;      -- Number of Frames Specification
+      Reserved1 : Bits_2 := 0;
+      SPRDTD    : Bits_1;      -- SPI Receive/Transmit Data Select
+      SPLW      : Bits_1;      -- SPI Word Access/Halfword Access Specification
+      SPBYT     : Bits_1;      -- SPI Byte Access Specification
+      Reserved2 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
