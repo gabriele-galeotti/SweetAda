@@ -20,6 +20,7 @@
 BRIEFTEXT_NSPACE := 12
 #                          123456789012
 BRIEFTEXT_SPACES := $(NULL)            $(NULL)
+BRIEFTEXT_CHRMSK :=        ............
 
 #
 # echo-print
@@ -49,8 +50,8 @@ endif
 # - 2nd argument
 #
 brief-text = $(call echo-print,"$1 $2")|$(SED)                            \
-               -e "s|^\(\[.*\]\)|\1$(BRIEFTEXT_SPACES)|"                  \
-               -e "s|^\(.\{$(BRIEFTEXT_NSPACE)\}\)\( *\)\([^ ]*\)|\1 \3|"
+               -e "s|^\([[:graph:]]*\)|\1$(BRIEFTEXT_SPACES)|"            \
+               -e "s|^\($(BRIEFTEXT_CHRMSK)\)[[:graph:]]* *\(.*\)|\1 \2|" \
 
 #
 # brief-command
