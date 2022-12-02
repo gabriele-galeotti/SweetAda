@@ -86,8 +86,6 @@ elftool.o : elftool.c
 	$(CC) -o $@ -c -I./ -I../ $(CC_SWITCHES) $<
 library.o : ../library.c
 	$(CC) -o $@ -c -DNO_DLL_HANDLING=1 $(CC_SWITCHES) $<
-.c.o :
-	$(CC) -o $@ -c -I./ $(CC_SWITCHES) $<
 
 .PHONY : install
 install :

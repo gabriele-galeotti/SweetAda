@@ -715,7 +715,7 @@ ifeq ($(OSTYPE),cmd)
 else ifeq ($(OSTYPE),msys)
 	@$(SED) -i -e "s|\\\\\|/|g" -e "s| |\\\\\ |g" gnatbind_objs.lst
 else ifeq ($(OSTYPE),darwin)
-	@$(SED) -i'' -e "s| |\\\\ |g" gnatbind_objs.lst
+	@$(SED) -i '' -e "s| |\\\\ |g" gnatbind_objs.lst
 else
 	@$(SED) -i -e "s| |\\\\ |g" gnatbind_objs.lst
 endif
