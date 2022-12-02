@@ -91,15 +91,15 @@ if {[file exists $DOWNLOAD_BIT]} {
 #
 set IMPACT_CMD [file join $::env(SWEETADA_PATH) $::env(PLATFORM_DIRECTORY) impact.cmd]
 set IMPACT_LOG [file join $::env(SWEETADA_PATH) $::env(PLATFORM_DIRECTORY) impact.log]
-set impact_cmd_fp [open $IMPACT_CMD w]
-puts $impact_cmd_fp "setLog -file $IMPACT_LOG"
-puts $impact_cmd_fp "setMode -bscan"
-puts $impact_cmd_fp "setCable -p auto"
-puts $impact_cmd_fp "identify"
-puts $impact_cmd_fp "assignfile -p 2 -file $DOWNLOAD_BIT"
-puts $impact_cmd_fp "program -p 2"
-puts $impact_cmd_fp "quit"
-close $impact_cmd_fp
+set impact_cmd_fd [open $IMPACT_CMD w]
+puts $impact_cmd_fd "setLog -file $IMPACT_LOG"
+puts $impact_cmd_fd "setMode -bscan"
+puts $impact_cmd_fd "setCable -p auto"
+puts $impact_cmd_fd "identify"
+puts $impact_cmd_fd "assignfile -p 2 -file $DOWNLOAD_BIT"
+puts $impact_cmd_fd "program -p 2"
+puts $impact_cmd_fd "quit"
+close $impact_cmd_fd
 
 #
 # Run iMPACT.
@@ -110,16 +110,16 @@ exec -ignorestderr >@stdout 2>@stderr sh -c "source $XILINX_PATH/settings64.sh ;
 # Create xmd.ini.
 #
 set XMD_INI [file join $::env(SWEETADA_PATH) $::env(PLATFORM_DIRECTORY) xmd.ini]
-set xmd_ini_fp [open $XMD_INI w]
-puts $xmd_ini_fp "connect ppc hw -debugdevice cpunr 1"
+set xmd_ini_fd [open $XMD_INI w]
+puts $xmd_ini_fd "connect ppc hw -debugdevice cpunr 1"
 # use SweetAda kernel
-puts $xmd_ini_fp "dow $SWEETADA_ELF_FILE"
+puts $xmd_ini_fd "dow $SWEETADA_ELF_FILE"
 # reset processor
-#puts $xmd_ini_fp "rst"
-puts $xmd_ini_fp "run"
+#puts $xmd_ini_fd "rst"
+puts $xmd_ini_fd "run"
 # do not exit from XMD
-#puts $xmd_ini_fp "exit"
-close $xmd_ini_fp
+#puts $xmd_ini_fd "exit"
+close $xmd_ini_fd
 
 #
 # Run XMD.

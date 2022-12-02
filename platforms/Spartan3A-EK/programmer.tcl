@@ -32,17 +32,17 @@ set SCRIPT_FILENAME [file tail $argv0]
 #                                                                              #
 # Download an FPGA bitstream.                                                  #
 ################################################################################
-proc download_bitstream {fp bitstream_filename} {
-    set fp_bitstream [open $bitstream_filename r]
-    fconfigure $fp_bitstream -encoding binary -translation binary
+proc download_bitstream {fd bitstream_filename} {
+    set fd_bitstream [open $bitstream_filename r]
+    fconfigure $fd_bitstream -encoding binary -translation binary
     while {true} {
-        set bitstream_data [read $fp_bitstream 64]
+        set bitstream_data [read $fd_bitstream 64]
         set data_length [string length $bitstream_data]
-        puts -nonewline $fp $bitstream_data
+        puts -nonewline $fd $bitstream_data
         after 2
-        set fp_data [read $fp 256]
+        set fd_data [read $fd 256]
         # check if reply string end with "ack" + NUL
-        set idx [string last ack\x00 $fp_data [expr [string length $fp_data] - 1]]
+        set idx [string last ack\x00 $fd_data [expr [string length $fd_data] - 1]]
         if {$idx < 0} {
             return -1
             break
@@ -52,7 +52,7 @@ proc download_bitstream {fp bitstream_filename} {
             break
         }
     }
-    close $fp_bitstream
+    close $fd_bitstream
     puts ""
     return 0
 }
@@ -62,22 +62,22 @@ proc download_bitstream {fp bitstream_filename} {
 #                                                                              #
 # Execute a command.                                                           #
 ################################################################################
-proc do_command {fp command_string} {
+proc do_command {fd command_string} {
     set return_value ""
-    puts -nonewline $fp $command_string\x00
+    puts -nonewline $fd $command_string\x00
     after 300
-    set fp_data [read $fp 256]
+    set fd_data [read $fd 256]
     # check if reply string end with "ack" + NUL
-    set idx [string last ack\x00 $fp_data [expr [string length $fp_data] - 1]]
+    set idx [string last ack\x00 $fd_data [expr [string length $fd_data] - 1]]
     if {$idx < 0} {
         puts "*** Error: no ack received."
     } else {
         set command [lindex [split $command_string " "] 0]
         if {$command eq "get_ver"} {
             incr idx -1
-            puts [string range $fp_data 0 $idx]
+            puts [string range $fd_data 0 $idx]
         } elseif {$command eq "get_config"} {
-            set response [string range $fp_data 0 0]
+            set response [string range $fd_data 0 0]
             if {$response eq "0"} {
                 puts "get_config: UART"
             } elseif {$response eq "1"} {
@@ -97,7 +97,7 @@ proc do_command {fp command_string} {
             puts "spi_mode ok"
         } elseif {$command eq "read_init"} {
             incr idx -1
-            set return_value [string range $fp_data $idx $idx]
+            set return_value [string range $fd_data $idx $idx]
             puts -nonewline "read_init: "
             if {$return_value eq "\x00"} {
                 puts "0"
@@ -106,7 +106,7 @@ proc do_command {fp command_string} {
             }
         } elseif {$command eq "read_done"} {
             incr idx -1
-            set return_value [string range $fp_data $idx $idx]
+            set return_value [string range $fd_data $idx $idx]
             puts -nonewline "read_done: "
             if {$return_value eq "\x00"} {
                 puts "0"
@@ -185,69 +185,69 @@ if {[file exists $DOWNLOAD_BIT]} {
 #
 # 3.1 Configure FPGA over Slave Serial
 #
-set fp [open $PSOC_DEVICE "r+"]
-fconfigure $fp \
+set fd [open $PSOC_DEVICE "r+"]
+fconfigure $fd \
     -blocking 0 \
     -buffering none \
     -eofchar {} \
     -mode 115200,n,8,1 \
     -translation binary
-flush $fp
-set sp_data [read $fp 256]
+flush $fd
+set sp_data [read $fd 256]
 puts "start programming ..."
 # 1. Load SPI configuration
-do_command $fp "load_config 1"
+do_command $fd "load_config 1"
 # 2. Drive PROG low
-do_command $fp "drive_prog 0"
+do_command $fd "drive_prog 0"
 # 3. Drive M[2:0] to 1:1:1
-do_command $fp "drive_mode 7"
+do_command $fd "drive_mode 7"
 # 4. Drive PSOC_SPI_MODE high
-do_command $fp "spi_mode 1"
+do_command $fd "spi_mode 1"
 # 5. Drive PROG high
-do_command $fp "drive_prog 1"
+do_command $fd "drive_prog 1"
 # 6. Wait for INIT to go high
 while {true} {
-    set response [do_command $fp "read_init"]
+    set response [do_command $fd "read_init"]
     if {$response eq "\x01"} {
         break
     }
 }
 # 7. Drive M[2:0] to tri-state
-do_command $fp "drive_mode 8"
+do_command $fd "drive_mode 8"
 # 8. Assert the FPGA reset to hold the FPGA application in reset until the
 #    PSoC has had time to switch configurations
-do_command $fp "fpga_rst 1"
+do_command $fd "fpga_rst 1"
 # 9. ss_program <# bytes in the .bit file>
 set bitstream_size [file size $DOWNLOAD_BIT]
-do_command $fp "ss_program $bitstream_size"
+do_command $fd "ss_program $bitstream_size"
 # 10. Send bytes from .bit file
-if {[download_bitstream $fp $DOWNLOAD_BIT] < 0} {
+if {[download_bitstream $fd $DOWNLOAD_BIT] < 0} {
     puts "*** Error: no successful download."
-    close $fp
+    close $fd
     exit 1
 }
 # 11. Check INIT is still high
-set response [do_command $fp "read_init"]
+set response [do_command $fd "read_init"]
 if {$response ne "\x01"} {
     puts "*** Error: INIT not high after programming."
-    close $fp
+    close $fd
     exit 1
 }
 # 12. Check DONE is high
-set response [do_command $fp "read_done"]
+set response [do_command $fd "read_done"]
 if {$response ne "\x01"} {
     puts "*** Error: DONE not high after programming."
-    close $fp
+    close $fd
     exit 1
 }
 # 13. Drive PSOC_SPI_MODE low
-do_command $fp "spi_mode 0"
+do_command $fd "spi_mode 0"
 # 14. Load UART configuration
-do_command $fp "load_config 0"
+do_command $fd "load_config 0"
 # 15. Deassert FPGA reset
-do_command $fp "fpga_rst 0"
+do_command $fd "fpga_rst 0"
 # done
-close $fp
+close $fd
 
 exit 0
 
