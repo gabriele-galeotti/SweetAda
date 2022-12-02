@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cortexm4.ads                                                                                              --
+-- __FLN__ armv7.ads                                                                                                 --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,12 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
 with Interfaces;
-with Bits;
+with ARMv6;
 
-package CortexM4 is
+package ARMv7 is
 
    --========================================================================--
    --                                                                        --
@@ -30,66 +28,43 @@ package CortexM4 is
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
+   pragma Preelaborate;
+
    use Interfaces;
-   use Bits;
 
    -- Auxiliary Control Register
+   -- IMPLEMENTATION DEFINED
 
-   type ACTLR_Type is
-   record
-      DISMCYCINT : Boolean;      -- Disables interruption of multi-cycle instructions.
-      DISDEFWBUF : Boolean;      -- Disables write buffer use during default memory map accesses.
-      DISFOLD    : Boolean;      -- Disables folding of IT instructions.
-      Reserved1  : Bits_5 := 0;
-      DISFPCA    : Boolean;      -- SBZP.
-      DISOOFP    : Boolean;      -- Disables FP instructions completing out of order with respect to integer instructions.
-      Reserved2  : Bits_22 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for ACTLR_Type use
-   record
-      DISMCYCINT at 0 range 0 .. 0;
-      DISDEFWBUF at 0 range 1 .. 1;
-      DISFOLD    at 0 range 2 .. 2;
-      Reserved1  at 0 range 3 .. 7;
-      DISFPCA    at 0 range 8 .. 8;
-      DISOOFP    at 0 range 9 .. 9;
-      Reserved2  at 0 range 10 .. 31;
-   end record;
+   subtype ACTLR_Type is ARMv6.ACTLR_Type;
+   ACTLR_ADDRESS renames ARMv6.ACTLR_ADDRESS;
 
-   ACTLR_ADDRESS : constant := 16#E000_E008#;
+   -- CPUID Base Register
 
-   ACTLR : aliased ACTLR_Type with
-      Address              => To_Address (ACTLR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   subtype CPUID_Type is ARMv6.CPUID_Type;
+   CPUID : CPUID_Type renames ARMv6.CPUID;
+   function To_U32 (S : CPUID_Type) return Unsigned_32 renames ARMv6.To_U32;
 
-   -- CPUID (410FC241)
+   -- Interrupt Control and State Register
 
-   CPUID : aliased Unsigned_32 with
-      Address              => To_Address (16#E000_ED00#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   subtype ICSR_Type is ARMv6.ICSR_Type;
+   ICSR : ICSR_Type renames ARMv6.ICSR;
 
-   -- ICSR
+   -- Vector Table Offset Register
 
-   ICSR : aliased Unsigned_32 with
-      Address              => To_Address (16#E000_ED04#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   subtype VTOR_Type is ARMv6.VTOR_Type;
+   VTOR : VTOR_Type renames ARMv6.VTOR;
 
-   -- VTOR
+   ----------------------------------------------------------------------------
+   -- CPU helper subprograms
+   ----------------------------------------------------------------------------
 
-   VTOR : aliased Unsigned_32 with
-      Address              => To_Address (16#E000_ED08#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   procedure NOP renames ARMv6.NOP;
 
-end CortexM4;
+   ----------------------------------------------------------------------------
+   -- Exceptions and interrupts
+   ----------------------------------------------------------------------------
+
+   procedure Irq_Enable  renames ARMv6.Irq_Enable;
+   procedure Irq_Disable renames ARMv6.Irq_Disable;
+
+end ARMv7;

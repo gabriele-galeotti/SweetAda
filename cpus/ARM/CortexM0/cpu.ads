@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cortexm0.ads                                                                                              --
+-- __FLN__ cpu.ads                                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,12 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
-with Interfaces;
-with Bits;
+with ARMv6;
 
-package CortexM0 is
+package CPU is
 
    --========================================================================--
    --                                                                        --
@@ -30,16 +27,19 @@ package CortexM0 is
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
-   use Interfaces;
+   pragma Preelaborate;
 
-   -- VTOR
+   ----------------------------------------------------------------------------
+   -- CPU helper subprograms
+   ----------------------------------------------------------------------------
 
-   VTOR : aliased Unsigned_32 with
-      Address              => To_Address (16#E000_ED08#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   procedure NOP renames ARMv6.NOP;
 
-end CortexM4;
+   ----------------------------------------------------------------------------
+   -- Exceptions and interrupts
+   ----------------------------------------------------------------------------
+
+   procedure Irq_Enable  renames ARMv6.Irq_Enable;
+   procedure Irq_Disable renames ARMv6.Irq_Disable;
+
+end CPU;

@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cortex.ads                                                                                                --
+-- __FLN__ cpu.ads                                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,12 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with Ada.Unchecked_Conversion;
-with Interfaces;
-with Bits;
+with ARMv7;
 
-package Cortex is
+package CPU is
 
    --========================================================================--
    --                                                                        --
@@ -32,36 +29,17 @@ package Cortex is
 
    pragma Preelaborate;
 
-   use System;
-   use Interfaces;
-   use Bits;
-
    ----------------------------------------------------------------------------
-   -- Generic definitions
+   -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
+   procedure NOP renames ARMv7.NOP;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
+   procedure Irq_Enable  renames ARMv7.Irq_Enable;
+   procedure Irq_Disable renames ARMv7.Irq_Disable;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   procedure Memory_Synchronization with
-      Inline        => True,
-      Export        => True,
-      Convention    => C,
-      External_Name => "__sync_synchronize";
-
-end Cortex;
+end CPU;
