@@ -6,7 +6,7 @@
 #
 
 CPU            := ARM
-CPU_MODEL      := ARMv5TEJ
+CPU_MODEL      := ARM926EJ-S
 # override cpus/ARM/configuration.in
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_ARMeb)
 

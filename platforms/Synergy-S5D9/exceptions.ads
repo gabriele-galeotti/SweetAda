@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ exceptions.adb                                                                                            --
+-- __FLN__ exceptions.ads                                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,74 +16,38 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Ada.Unchecked_Conversion;
-with Interfaces;
 with Bits;
-with Core;
-with ARMv8A;
-with RPI3;
+with CPU;
 
-package body Exceptions is
+package Exceptions is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
    use System;
-   use Interfaces;
    use Bits;
+   use CPU;
 
-   EL3_Table : aliased constant Asm_Entry_Point with
+   Div_By_0_Handler : aliased Asm_Entry_Point with
       Import        => True,
       Convention    => Asm,
-      External_Name => "el3_table";
-   EL2_Table : aliased constant Asm_Entry_Point with
-      Import        => True,
+      External_Name => "div_by_0_handler";
+
+   procedure Exception_Process with
+      Export        => True,
       Convention    => Asm,
-      External_Name => "el2_table";
-   EL1_Table : aliased constant Asm_Entry_Point with
-      Import        => True,
+      External_Name => "exception_process";
+
+   procedure Irq_Process with
+      Export        => True,
       Convention    => Asm,
-      External_Name => "el1_table";
+      External_Name => "irq_process";
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Exception_Process
-   ----------------------------------------------------------------------------
-   procedure Exception_Process is
-   begin
-      Core.Tick_Count := @ + 1;
-      if (Core.Tick_Count and 16#0000_0100#) = 0 then
-         -- GPIO05 ON
-         RPI3.GPSET0 := (SET5 => True, others => False);
-      else
-         -- GPIO05 OFF
-         RPI3.GPCLR0 := (CLR5 => True, others => False);
-      end if;
-      RPI3.Timer_Reload;
-      RPI3.SYSTEM_TIMER.CS.M1 := True;
-   end Exception_Process;
-
-   ----------------------------------------------------------------------------
-   -- Init
-   ----------------------------------------------------------------------------
-   procedure Init is
-      function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
-   begin
-      -- ARMv8A.VBAR_EL3_Write (To_U64 (EL3_Table'Address));
-      -- ARMv8A.VBAR_EL2_Write (To_U64 (EL2_Table'Address));
-      ARMv8A.VBAR_EL1_Write (To_U64 (EL1_Table'Address));
-   end Init;
+   procedure Init;
 
 end Exceptions;

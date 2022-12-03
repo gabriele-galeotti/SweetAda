@@ -17,6 +17,7 @@
 
 with Interfaces;
 with Bits;
+with ARMv7M;
 with CortexM4;
 with S5D9;
 with Console;
@@ -133,7 +134,9 @@ package body BSP is
       -------------------------------------------------------------------------
       Console.Print ("Synergy S5D9", NL => True);
       -------------------------------------------------------------------------
-      Console.Print (CortexM4.CPUID, Prefix => "CPUID: ", NL => True);
+      pragma Warnings (Off, "volatile actual passed by copy");
+      Console.Print (ARMv7M.To_U32 (ARMv7M.CPUID), Prefix => "CPUID: ", NL => True);
+      pragma Warnings (On, "volatile actual passed by copy");
       Console.Print (CortexM4.ACTLR.DISMCYCINT, Prefix => "ACTLR: DISMCYCINT: ", NL => True);
       Console.Print (CortexM4.ACTLR.DISDEFWBUF, Prefix => "ACTLR: DISDEFWBUF: ", NL => True);
       Console.Print (CortexM4.ACTLR.DISFOLD,    Prefix => "ACTLR: DISFOLD:    ", NL => True);

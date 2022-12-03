@@ -4,7 +4,7 @@
 #
 
 CPU       := ARM
-CPU_MODEL := Cortex-A9
+CPU_MODEL := CORTEXA9
 
 GCC_SWITCHES_PLATFORM     += -mcpu=cortex-a9
 LD_SWITCHES_PLATFORM      +=
