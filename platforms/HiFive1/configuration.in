@@ -11,9 +11,9 @@ PROFILE := zfp
 USE_LIBADA := N
 
 CPU       := RISC-V
-CPU_MODEL :=
+CPU_MODEL := RV32IMAC
 
-GCC_SWITCHES_PLATFORM     += -march=rv32imac -mabi=ilp32 -Wa,-march=rv32imac -Wa,-mabi=ilp32
+GCC_SWITCHES_PLATFORM     += -mabi=ilp32 -march=rv32imac_zicsr_zifencei
 LD_SWITCHES_PLATFORM      += -m elf32lriscv
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
