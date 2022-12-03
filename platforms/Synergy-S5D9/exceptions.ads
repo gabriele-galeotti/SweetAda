@@ -15,10 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with Bits;
-with CPU;
-
 package Exceptions is
 
    --========================================================================--
@@ -28,15 +24,6 @@ package Exceptions is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   use System;
-   use Bits;
-   use CPU;
-
-   Div_By_0_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "div_by_0_handler";
 
    procedure Exception_Process with
       Export        => True,
