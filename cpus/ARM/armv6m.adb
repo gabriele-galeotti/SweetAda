@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ armv7.ads                                                                                                 --
+-- __FLN__ armv6m.adb                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,56 +15,77 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with ARMv6;
+with System.Machine_Code;
+with Definitions;
 
-package ARMv7 is
+package body ARMv6M is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                               Public part                              --
+   --                           Local declarations                           --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   pragma Preelaborate;
+   use System.Machine_Code;
 
-   use Interfaces;
+   CRLF : String renames Definitions.CRLF;
 
-   -- Auxiliary Control Register
-   -- IMPLEMENTATION DEFINED
-
-   subtype ACTLR_Type is ARMv6.ACTLR_Type;
-   ACTLR_ADDRESS renames ARMv6.ACTLR_ADDRESS;
-
-   -- CPUID Base Register
-
-   subtype CPUID_Type is ARMv6.CPUID_Type;
-   CPUID : CPUID_Type renames ARMv6.CPUID;
-   function To_U32 (S : CPUID_Type) return Unsigned_32 renames ARMv6.To_U32;
-
-   -- Interrupt Control and State Register
-
-   subtype ICSR_Type is ARMv6.ICSR_Type;
-   ICSR : ICSR_Type renames ARMv6.ICSR;
-
-   -- Vector Table Offset Register
-
-   subtype VTOR_Type is ARMv6.VTOR_Type;
-   VTOR : VTOR_Type renames ARMv6.VTOR;
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Package subprograms                          --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- CPU helper subprograms
+   -- NOP
    ----------------------------------------------------------------------------
-
-   procedure NOP renames ARMv6.NOP;
+   procedure NOP is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end NOP;
 
    ----------------------------------------------------------------------------
-   -- Exceptions and interrupts
+   -- BREAKPOINT
    ----------------------------------------------------------------------------
+   procedure BREAKPOINT is
+   begin
+      null;
+   end BREAKPOINT;
 
-   procedure Irq_Enable  renames ARMv6.Irq_Enable;
-   procedure Irq_Disable renames ARMv6.Irq_Disable;
+   ----------------------------------------------------------------------------
+   -- Irq_Enable
+   ----------------------------------------------------------------------------
+   procedure Irq_Enable is
+   begin
+      null;
+   end Irq_Enable;
 
-end ARMv7;
+   ----------------------------------------------------------------------------
+   -- Irq_Disable
+   ----------------------------------------------------------------------------
+   procedure Irq_Disable is
+   begin
+      null;
+   end Irq_Disable;
+
+   ----------------------------------------------------------------------------
+   -- Memory synchronization
+   ----------------------------------------------------------------------------
+   procedure Memory_Synchronization is
+   begin
+      null;
+   end Memory_Synchronization;
+
+end ARMv6M;

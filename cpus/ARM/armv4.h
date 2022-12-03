@@ -1,6 +1,6 @@
 
 /*
- * arm.h - ARM architecture definitions.
+ * armv4.h - ARM architecture definitions.
  *
  * Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
  *
@@ -8,8 +8,8 @@
  * Please consult the LICENSE.txt file located in the top-level directory.
  */
 
-#ifndef _ARM_H
-#define _ARM_H 1
+#ifndef _ARMv4_H
+#define _ARMv4_H 1
 
 #define Mode_USR  0x10
 #define Mode_FIQ  0x11
@@ -40,5 +40,5 @@
 #define OPCODE_BREAKPOINT      0xE7FFDEFE
 #define OPCODE_BREAKPOINT_SIZE 4
 
-#endif /* _ARM_H */
+#endif /* _ARMv4_H */
 

@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ aarch64.adb                                                                                               --
+-- __FLN__ armv8a.adb                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -18,7 +18,7 @@
 with System.Machine_Code;
 with Definitions;
 
-package body AArch64 is
+package body ARMv8A is
 
    --========================================================================--
    --                                                                        --
@@ -408,4 +408,4 @@ package body AArch64 is
           );
    end Irq_Disable;
 
-end AArch64;
+end ARMv8A;

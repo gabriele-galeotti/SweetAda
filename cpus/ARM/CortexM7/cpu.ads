@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with ARMv7;
+with ARMv7M;
 
 package CPU is
 
@@ -33,13 +33,13 @@ package CPU is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames ARMv7.NOP;
+   procedure NOP renames ARMv7M.NOP;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames ARMv7.Irq_Enable;
-   procedure Irq_Disable renames ARMv7.Irq_Disable;
+   procedure Irq_Enable  renames ARMv7M.Irq_Enable;
+   procedure Irq_Disable renames ARMv7M.Irq_Disable;
 
 end CPU;

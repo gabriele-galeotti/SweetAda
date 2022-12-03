@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ armv6.ads                                                                                                 --
+-- __FLN__ armv6m.ads                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -21,7 +21,7 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
-package ARMv6 is
+package ARMv6M is
 
    --========================================================================--
    --                                                                        --
@@ -38,23 +38,7 @@ package ARMv6 is
    use Interfaces;
    use Bits;
 
-   -- Auxiliary Control Register
-   -- IMPLEMENTATION DEFINED
-
-   type ACTLR_Type is
-   record
-      Reserved : Bits_32;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for ACTLR_Type use
-   record
-      Reserved at 0 range 0 .. 31;
-   end record;
-
-   ACTLR_ADDRESS : constant := 16#E000_E008#;
-
-   -- CPUID Base Register
+   -- B3.2.3 CPUID Base Register
 
    type CPUID_Type is
    record
@@ -85,7 +69,7 @@ package ARMv6 is
 
    function To_U32 is new Ada.Unchecked_Conversion (CPUID_Type, Unsigned_32);
 
-   -- Interrupt Control and State Register
+   -- B3.2.4 Interrupt Control and State Register
 
    type ICSR_Type is
    record
@@ -132,7 +116,7 @@ package ARMv6 is
       Import               => True,
       Convention           => Ada;
 
-   -- Vector Table Offset Register
+   -- B3.2.5 Vector Table Offset Register
 
    type VTOR_Type is
    record
@@ -154,6 +138,84 @@ package ARMv6 is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   -- B3.2.6 Application Interrupt and Reset Control Register
+
+   -- B3.2.7 System Control Register
+
+   type SCR_Type is
+   record
+      Reserved1   : Bits_1;
+      SLEEPONEXIT : Boolean; -- Whether, on an exit from an ISR ..., the processor enters a sleep state.
+      SLEEPDEEP   : Boolean; -- Provides a qualifying hint indicating that waking from sleep might take longer.
+      Reserved2   : Bits_1;
+      SEVONPEND   : Boolean; -- Whether an interrupt transition from inactive state to pending state is a wakeup event.
+      Reserved3   : Bits_27;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SCR_Type use
+   record
+      Reserved1   at 0 range 0 .. 0;
+      SLEEPONEXIT at 0 range 1 .. 1;
+      SLEEPDEEP   at 0 range 2 .. 2;
+      Reserved2   at 0 range 3 .. 3;
+      SEVONPEND   at 0 range 4 .. 4;
+      Reserved3   at 0 range 5 .. 31;
+   end record;
+
+   SCR_ADDRESS : constant := 16#E000_ED10#;
+
+   SCR : aliased SCR_Type with
+      Address              => To_Address (SCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.2.8 Configuration and Control Register
+
+   type CCR_Type is
+   record
+      Reserved1   : Bits_3;
+      UNALIGN_TRP : Boolean; -- unaligned word and halfword accesses generate a HardFault exception
+      Reserved2   : Bits_5;
+      STKALIGN    : Boolean; -- On exception entry, the SP ... is adjusted to be 8-byte aligned.
+      Reserved3   : Bits_22;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for CCR_Type use
+   record
+      Reserved1   at 0 range 0 .. 2;
+      UNALIGN_TRP at 0 range 3 .. 3;
+      Reserved2   at 0 range 4 .. 8;
+      STKALIGN    at 0 range 9 .. 9;
+      Reserved3   at 0 range 10 .. 31;
+   end record;
+
+   CCR_ADDRESS : constant := 16#E000_ED14#;
+
+   CCR : aliased CCR_Type with
+      Address              => To_Address (CCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.2.12 The Auxiliary Control Register
+   -- IMPLEMENTATION DEFINED
+
+   type ACTLR_Type is
+   record
+      Reserved : Bits_32;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for ACTLR_Type use
+   record
+      Reserved at 0 range 0 .. 31;
+   end record;
+
+   ACTLR_ADDRESS : constant := 16#E000_E008#;
 
    ----------------------------------------------------------------------------
    -- Generic definitions
@@ -183,4 +245,4 @@ package ARMv6 is
       Convention    => C,
       External_Name => "__sync_synchronize";
 
-end ARMv6;
+end ARMv6M;

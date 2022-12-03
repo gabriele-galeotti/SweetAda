@@ -19,7 +19,7 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
-with ARMv7;
+with ARMv7M;
 
 package CortexM4 is
 
@@ -61,10 +61,10 @@ package CortexM4 is
       Reserved2  at 0 range 10 .. 31;
    end record;
 
-   ACTLR_ADDRESS renames ARMv7.ACTLR_ADDRESS;
+   ACTLR_ADDRESS renames ARMv7M.ACTLR_ADDRESS;
 
    ACTLR : aliased ACTLR_Type with
-      Address              => To_Address (ARMv7.ACTLR_ADDRESS),
+      Address              => To_Address (ARMv7M.ACTLR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;

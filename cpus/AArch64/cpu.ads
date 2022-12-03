@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with AArch64;
+with ARMv8A;
 
 package CPU is
 
@@ -36,15 +36,15 @@ package CPU is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames AArch64.NOP;
+   procedure NOP renames ARMv8A.NOP;
 
-   procedure Asm_Call (Target_Address : in Address) renames AArch64.Asm_Call;
+   procedure Asm_Call (Target_Address : in Address) renames ARMv8A.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames AArch64.Irq_Enable;
-   procedure Irq_Disable renames AArch64.Irq_Disable;
+   procedure Irq_Enable  renames ARMv8A.Irq_Enable;
+   procedure Irq_Disable renames ARMv8A.Irq_Disable;
 
 end CPU;

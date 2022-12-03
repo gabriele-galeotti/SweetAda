@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ armv6.adb                                                                                                 --
+-- __FLN__ cpu.ads                                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,77 +15,31 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Machine_Code;
-with Definitions;
+with ARMv5TE;
 
-package body ARMv6 is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use System.Machine_Code;
-
-   CRLF : String renames Definitions.CRLF;
+package CPU is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Package subprograms                          --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   ----------------------------------------------------------------------------
-   -- NOP
-   ----------------------------------------------------------------------------
-   procedure NOP is
-   begin
-      Asm (
-           Template => ""            & CRLF &
-                       "        nop" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end NOP;
+   pragma Preelaborate;
 
    ----------------------------------------------------------------------------
-   -- BREAKPOINT
+   -- CPU helper subprograms
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
-   begin
-      null;
-   end BREAKPOINT;
+
+   procedure NOP renames ARMv5TE.NOP;
 
    ----------------------------------------------------------------------------
-   -- Irq_Enable
+   -- Exceptions and interrupts
    ----------------------------------------------------------------------------
-   procedure Irq_Enable is
-   begin
-      null;
-   end Irq_Enable;
 
-   ----------------------------------------------------------------------------
-   -- Irq_Disable
-   ----------------------------------------------------------------------------
-   procedure Irq_Disable is
-   begin
-      null;
-   end Irq_Disable;
+   procedure Irq_Enable  renames ARMv5TE.Irq_Enable;
+   procedure Irq_Disable renames ARMv5TE.Irq_Disable;
 
-   ----------------------------------------------------------------------------
-   -- Memory synchronization
-   ----------------------------------------------------------------------------
-   procedure Memory_Synchronization is
-   begin
-      null;
-   end Memory_Synchronization;
-
-end ARMv6;
+end CPU;
