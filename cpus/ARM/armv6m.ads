@@ -235,6 +235,56 @@ package ARMv6M is
       Import               => True,
       Convention           => Ada;
 
+   -- B3.2.9 System Handler Priority Register 2
+
+   type SHPR2_Type is
+   record
+      Reserved : Bits_30;
+      PRI_11   : Bits_2;  -- Priority of system handler 11, SVCall
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SHPR2_Type use
+   record
+      Reserved at 0 range 0 .. 29;
+      PRI_11   at 0 range 30 .. 31;
+   end record;
+
+   SHPR2_ADDRESS : constant := 16#E000_ED1C#;
+
+   SHPR2 : aliased SHPR2_Type with
+      Address              => To_Address (SHPR2_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.2.10 System Handler Priority Register 3
+
+   type SHPR3_Type is
+   record
+      Reserved1 : Bits_22;
+      PRI_14    : Bits_2;  -- Priority of system handler 14, PendSV
+      Reserved2 : Bits_6;
+      PRI_15    : Bits_2;  -- Priority of system handler 15, SysTick
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SHPR3_Type use
+   record
+      Reserved1 at 0 range 0 .. 21;
+      PRI_14    at 0 range 22 .. 23;
+      Reserved2 at 0 range 24 .. 29;
+      PRI_15    at 0 range 30 .. 31;
+   end record;
+
+   SHPR3_ADDRESS : constant := 16#E000_ED20#;
+
+   SHPR3 : aliased SHPR3_Type with
+      Address              => To_Address (SHPR3_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- B3.2.12 The Auxiliary Control Register
    -- IMPLEMENTATION DEFINED
 

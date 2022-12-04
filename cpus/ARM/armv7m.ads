@@ -115,6 +115,87 @@ package ARMv7M is
       Import               => True,
       Convention           => Ada;
 
+   -- B3.2.9 System Handler Priority Register 1
+
+   type SHPR1_Type is
+   record
+      PRI_4 : Bits_8; -- Priority of system handler 4, MemManage.
+      PRI_5 : Bits_8; -- Priority of system handler 5, BusFault.
+      PRI_6 : Bits_8; -- Priority of system handler 6, UsageFault.
+      PRI_7 : Bits_8; -- Reserved for priority of system handler 7.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SHPR1_Type use
+   record
+      PRI_4 at 0 range 0 .. 7;
+      PRI_5 at 0 range 8 .. 15;
+      PRI_6 at 0 range 16 .. 23;
+      PRI_7 at 0 range 24 .. 31;
+   end record;
+
+   SHPR1_ADDRESS : constant := 16#E000_ED18#;
+
+   SHPR1 : aliased SHPR1_Type with
+      Address              => To_Address (SHPR1_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.2.11 System Handler Priority Register 2
+
+   type SHPR2_Type is
+   record
+      PRI_8  : Bits_8; -- Reserved for priority of system handler 8.
+      PRI_9  : Bits_8; -- Reserved for priority of system handler 9.
+      PRI_10 : Bits_8; -- Reserved for priority of system handler 10.
+      PRI_11 : Bits_8; -- Priority of system handler 11, SVCall.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SHPR2_Type use
+   record
+      PRI_8  at 0 range 0 .. 7;
+      PRI_9  at 0 range 8 .. 15;
+      PRI_10 at 0 range 16 .. 23;
+      PRI_11 at 0 range 24 .. 31;
+   end record;
+
+   SHPR2_ADDRESS : constant := 16#E000_ED1C#;
+
+   SHPR2 : aliased SHPR2_Type with
+      Address              => To_Address (SHPR2_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.2.12 System Handler Priority Register 3
+
+   type SHPR3_Type is
+   record
+      PRI_12 : Bits_8; -- Priority of system handler 12, DebugMonitor.
+      PRI_13 : Bits_8; -- Reserved for priority of system handler 13.
+      PRI_14 : Bits_8; -- Priority of system handler 14, PendSV.
+      PRI_15 : Bits_8; -- Priority of system handler 15, SysTick.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SHPR3_Type use
+   record
+      PRI_12 at 0 range 0 .. 7;
+      PRI_13 at 0 range 8 .. 15;
+      PRI_14 at 0 range 16 .. 23;
+      PRI_15 at 0 range 24 .. 31;
+   end record;
+
+   SHPR3_ADDRESS : constant := 16#E000_ED20#;
+
+   SHPR3 : aliased SHPR3_Type with
+      Address              => To_Address (SHPR3_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- B3.2.25 Auxiliary Control Register
    -- IMPLEMENTATION DEFINED
 
