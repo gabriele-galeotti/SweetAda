@@ -141,6 +141,40 @@ package ARMv6M is
 
    -- B3.2.6 Application Interrupt and Reset Control Register
 
+   ENDIANNESS_LITTLE : constant := 0;
+   ENDIANNESS_BIG    : constant := 1;
+
+   VECTKEY_KEY : constant := 16#05FA#;
+
+   type AIRCR_Type is
+   record
+      Reserved1     : Bits_1;
+      VECTCLRACTIVE : Boolean; -- Clears all active state information for fixed and configurable exceptions.
+      SYSRESETREQ   : Boolean; -- System Reset Request.
+      Reserved2     : Bits_12;
+      ENDIANNESS    : Bits_1;  -- Indicates the memory system data endianness.
+      VECTKEY_STAT  : Bits_16; -- Vector Key.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for AIRCR_Type use
+   record
+      Reserved1     at 0 range 0 .. 0;
+      VECTCLRACTIVE at 0 range 1 .. 1;
+      SYSRESETREQ   at 0 range 2 .. 2;
+      Reserved2     at 0 range 3 .. 14;
+      ENDIANNESS    at 0 range 15 .. 15;
+      VECTKEY_STAT  at 0 range 16 .. 31;
+   end record;
+
+   AIRCR_ADDRESS : constant := 16#E000_ED0C#;
+
+   AIRCR : aliased AIRCR_Type with
+      Address              => To_Address (AIRCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- B3.2.7 System Control Register
 
    type SCR_Type is

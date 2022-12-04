@@ -56,6 +56,12 @@ package ARMv7M is
 
    -- B3.2.6 Application Interrupt and Reset Control Register
 
+   ENDIANNESS_LITTLE renames ARMv6M.ENDIANNESS_LITTLE;
+   ENDIANNESS_BIG    renames ARMv6M.ENDIANNESS_BIG;
+   VECTKEY_KEY       renames ARMv6M.VECTKEY_KEY;
+   subtype AIRCR_Type is ARMv6M.AIRCR_Type;
+   AIRCR : AIRCR_Type renames ARMv6M.AIRCR;
+
    -- B3.2.7 System Control Register
 
    subtype SCR_Type is ARMv6M.SCR_Type;
