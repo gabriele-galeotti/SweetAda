@@ -578,6 +578,12 @@ help :
 	@$(call echo-print,"  Clean object files.")
 	@$(call echo-print,"make distclean")
 	@$(call echo-print,"  Clean object files and all configuration/support files.")
+	@$(call echo-print,"make libutils-elftool")
+	@$(call echo-print,"  Build ELFtool.")
+	@$(call echo-print,"make libutils-gcc-wrapper")
+	@$(call echo-print,"  Build GCC-wrapper.")
+	@$(call echo-print,"make libutils-gnat-wrapper")
+	@$(call echo-print,"  Build GNAT-wrapper.")
 	@$(call echo-print,"make probevariable PROBEVARIABLE=<variablename>")
 	@$(call echo-print,"  Obtain the value of a variable.")
 	@$(call echo-print,"")
@@ -1076,6 +1082,22 @@ endif
 #
 # Utility targets.
 #
+
+#
+# Libutils tools.
+#
+.PHONY : libutils-elftool
+libutils-elftool :
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool elftool
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool install
+.PHONY : libutils-gcc-wrapper
+libutils-gcc-wrapper :
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper gcc-wrapper
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper install
+.PHONY : libutils-gnat-wrapper
+libutils-gnat-wrapper :
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper gnat-wrapper
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper install
 
 #
 # Kernel "freezing".

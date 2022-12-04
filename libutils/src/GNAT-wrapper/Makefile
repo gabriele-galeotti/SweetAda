@@ -58,21 +58,21 @@ RM     := rm -f
 endif
 
 ifeq      ($(OSTYPE),linux)
-CC          := gcc
-CC_SWITCHES := -g -std=gnu99 -Wall
-LD_SWITCHES := -g
+CC          ?= gcc
+CC_SWITCHES ?= -g -std=gnu99 -Wall
+LD_SWITCHES ?= -g
 else ifeq ($(OSTYPE),cmd)
-CC          := gcc
-CC_SWITCHES := -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
-LD_SWITCHES := -g -mconsole
+CC          ?= gcc
+CC_SWITCHES ?= -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
+LD_SWITCHES ?= -g -mconsole
 else ifeq ($(OSTYPE),msys)
-CC          := gcc
-CC_SWITCHES := -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
-LD_SWITCHES := -g -mconsole
+CC          ?= gcc
+CC_SWITCHES ?= -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
+LD_SWITCHES ?= -g -mconsole
 else ifeq ($(OSTYPE),darwin)
-CC          := gcc
-CC_SWITCHES := -g -std=gnu99 -Wall
-LD_SWITCHES := -g -static-libgcc -static-libstdc++
+CC          ?= gcc
+CC_SWITCHES ?= -g -std=gnu99 -Wall
+LD_SWITCHES ?= -g -static-libgcc -static-libstdc++
 endif
 
 .PHONY : all
