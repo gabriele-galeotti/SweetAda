@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with ARM;
+with ARMv4;
 
 package CPU is
 
@@ -39,7 +39,7 @@ package CPU is
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames ARM.Irq_Enable;
-   procedure Irq_Disable renames ARM.Irq_Disable;
+   procedure Irq_Enable  renames ARMv4.Irq_Enable;
+   procedure Irq_Disable renames ARMv4.Irq_Disable;
 
 end CPU;
