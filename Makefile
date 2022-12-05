@@ -28,8 +28,34 @@
 #                                                                              #
 ################################################################################
 
+.DEFAULT_GOAL := help
+
 NULL  :=
 SPACE := $(NULL) $(NULL)
+
+KERNEL_BASENAME := kernel
+
+PLATFORM_GOALS := infodump           \
+                  configure          \
+                  all                \
+                  $(KERNEL_BASENAME) \
+                  kernel_libinfo     \
+                  kernel_info        \
+                  postbuild          \
+                  session-start      \
+                  session-end        \
+                  run                \
+                  debug
+RTS_GOAL       := rts
+SERVICE_GOALS  := help                  \
+                  libutils-elftool      \
+                  libutils-gcc-wrapper  \
+                  libutils-gnat-wrapper \
+                  createkernelcfg       \
+                  clean                 \
+                  distclean             \
+                  freeze                \
+                  probevariable
 
 # detect OS type
 # detected OS names: "linux"/"cmd"/"msys"/"darwin"
@@ -100,14 +126,33 @@ endif
 export PATH
 include Makefile.ut.in
 
-# sed is mandatory
+# check Makefile target and basic utilities
+ifneq ($(MAKECMDGOALS),)
+ifeq ($(filter $(RTS_GOAL) $(SERVICE_GOALS),$(MAKECMDGOALS)),)
+ifeq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+$(error Error: not a known Makefile target)
+endif
 ifeq ($(OSTYPE),cmd)
-ifeq ($(shell $(SED) --version 2> nul),)
-$(error Error: no sed executable found)
+ifeq ($(shell SET "PATH=$(PATH)" && $(SED) --version 2> nul),)
+$(error Error: no $(SED) executable found)
+endif
+ifeq ($(shell SET "PATH=$(PATH)" && $(GCC_WRAPPER) -v 2> nul),)
+$(error Error: no $(GCC_WRAPPER) executable found)
+endif
+ifeq ($(shell SET "PATH=$(PATH)" && $(GNAT_WRAPPER) -v 2> nul),)
+$(error Error: no $(GNAT_WRAPPER) executable found)
 endif
 else
-ifeq ($(shell $(SED) --version 2> /dev/null),)
-$(error Error: no sed executable found)
+ifeq ($(shell PATH="$(PATH)" $(SED) --version 2> /dev/null),)
+$(error Error: no $(SED) executable found)
+endif
+ifeq ($(shell PATH="$(PATH)" $(GCC_WRAPPER) -v 2> /dev/null),)
+$(error Error: no $(GCC_WRAPPER) executable found)
+endif
+ifeq ($(shell PATH="$(PATH)" $(GNAT_WRAPPER) -v 2> /dev/null),)
+$(error Error: no $(GNAT_WRAPPER) executable found)
+endif
+endif
 endif
 endif
 
@@ -169,6 +214,7 @@ export CAT CD CP LS MKDIR MV RM RMDIR TOUCH
 #                                                                              #
 ################################################################################
 
+# hierarchies
 PLATFORM_BASE_DIRECTORY := platforms
 CPU_BASE_DIRECTORY      := cpus
 APPLICATION_DIRECTORY   := application
@@ -180,6 +226,9 @@ OBJECT_DIRECTORY        := obj
 RTS_DIRECTORY           := rts
 SHARE_DIRECTORY         := share
 
+# RTS_BASE_PATH: where all RTSes live
+RTS_BASE_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)
+
 ifeq ($(OSTYPE),cmd)
 PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2> nul)
 CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2> nul)
@@ -190,28 +239,24 @@ CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/nu
 RTSES     := $(filter-out targets,$(shell ($(CD) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null))
 endif
 
-# default filenames
-KERNEL_BASENAME  := kernel
-KERNEL_CFGFILE   := $(KERNEL_BASENAME).cfg
-KERNEL_DEPFILE   := $(KERNEL_BASENAME).d
-KERNEL_OBJFILE   := $(KERNEL_BASENAME).obj
-KERNEL_OUTFILE   := $(KERNEL_BASENAME).o
-KERNEL_ROMFILE   := $(KERNEL_BASENAME).rom
+# default kernel filenames
+KERNEL_CFGFILE := $(KERNEL_BASENAME).cfg
+KERNEL_DEPFILE := $(KERNEL_BASENAME).d
+KERNEL_OBJFILE := $(KERNEL_BASENAME).obj
+KERNEL_OUTFILE := $(KERNEL_BASENAME).o
+KERNEL_ROMFILE := $(KERNEL_BASENAME).rom
+
+# GNAT .adc filename
 GNATADC_FILENAME := gnat.adc
 
-# GPRbuild
+# GPRbuild filenames
 KERNEL_GPRFILE        := build.gpr
 CONFIGUREGPR_FILENAME := configure.gpr
 
-# RTS_BASE_PATH: where all RTSes live
-RTS_BASE_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)
-
+# cleaning
 CLEAN_OBJECTS        :=
 CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst *.map *.o *.out *.srec *.tmp
 DISTCLEAN_OBJECTS    :=
-
-RTS_GOAL       := rts
-PLATFORM_GOALS := infodump configure all $(KERNEL_BASENAME) postbuild session-start session-end run debug
 
 ################################################################################
 #                                                                              #
@@ -429,43 +474,99 @@ endif
 #                                                                              #
 ################################################################################
 
-export PLATFORM_BASE_DIRECTORY PLATFORM_DIRECTORY
-export CPU_BASE_DIRECTORY CPU_DIRECTORY CPU_MODEL_DIRECTORY
-export APPLICATION_DIRECTORY CLIBRARY_DIRECTORY CORE_DIRECTORY DRIVERS_DIRECTORY
-export MODULES_DIRECTORY OBJECT_DIRECTORY RTS_DIRECTORY SHARE_DIRECTORY
-export KERNEL_BASENAME KERNEL_CFGFILE KERNEL_DEPFILE KERNEL_OUTFILE KERNEL_ROMFILE
-export INCLUDE_DIRECTORIES
-export IMPLICIT_ALI_UNITS
-export CLEAN_OBJECTS_COMMON
-export PLATFORM SUBPLATFORM CPU CPU_MODEL FPU_MODEL
-
-export TOOLCHAIN_PREFIX
-export TOOLCHAIN_NAME_AArch64 TOOLCHAIN_NAME_ARM TOOLCHAIN_NAME_M68k
-export TOOLCHAIN_NAME_MIPS TOOLCHAIN_NAME_MIPS64 TOOLCHAIN_NAME_MicroBlaze
-export TOOLCHAIN_NAME_NiosII TOOLCHAIN_NAME_PowerPC TOOLCHAIN_NAME_RISCV64
-export TOOLCHAIN_NAME_SPARC TOOLCHAIN_NAME_SuperH TOOLCHAIN_NAME_SH4
-export TOOLCHAIN_NAME_System390 TOOLCHAIN_NAME_x86 TOOLCHAIN_NAME_x86_64
-
-export TOOLCHAIN_NAME TOOLCHAIN_PROGRAM_PREFIX
-export TOOLCHAIN_GCC TOOLCHAIN_ADAC TOOLCHAIN_CC
-export TOOLCHAIN_AR TOOLCHAIN_GDB TOOLCHAIN_INSIGHT TOOLCHAIN_LD TOOLCHAIN_OBJDUMP TOOLCHAIN_RANLIB
-export GCC_VERSION GCC_SWITCHES_PLATFORM
-export AS ADAC CC CPP GNATBIND GNATCHOP GNATLINK GNATLS GNATMAKE GNATPREP GNATXREF
-export AR GDB INSIGHT LD NM OBJCOPY OBJDUMP RANLIB READELF SIZE STRIP
-export ELFTOOL
-export RTS_BASE_PATH RTS_ROOT_PATH RTS_PATH
-
-export ADAC_SWITCHES_WARNING
-
-export ADA_MODE RTS PROFILE
-export USE_LIBGCC USE_LIBADA USE_CLIBRARY
-export ADDITIONAL_OBJECTS
-export STACK_LIMIT
-export OPTIMIZATION_LEVEL
-export BUILD_MODE
-export USE_APPLICATION
-
-export MAKE
+export PLATFORM_BASE_DIRECTORY   \
+       PLATFORM_DIRECTORY        \
+       CPU_BASE_DIRECTORY        \
+       CPU_DIRECTORY             \
+       CPU_MODEL_DIRECTORY       \
+       APPLICATION_DIRECTORY     \
+       CLIBRARY_DIRECTORY        \
+       CORE_DIRECTORY            \
+       DRIVERS_DIRECTORY         \
+       MODULES_DIRECTORY         \
+       OBJECT_DIRECTORY          \
+       RTS_DIRECTORY             \
+       SHARE_DIRECTORY           \
+       KERNEL_BASENAME           \
+       KERNEL_CFGFILE            \
+       KERNEL_DEPFILE            \
+       KERNEL_OUTFILE            \
+       KERNEL_ROMFILE            \
+       INCLUDE_DIRECTORIES       \
+       IMPLICIT_ALI_UNITS        \
+       CLEAN_OBJECTS_COMMON      \
+       PLATFORM                  \
+       SUBPLATFORM               \
+       CPU                       \
+       CPU_MODEL                 \
+       FPU_MODEL                 \
+       TOOLCHAIN_PREFIX          \
+       TOOLCHAIN_NAME_AArch64    \
+       TOOLCHAIN_NAME_ARM        \
+       TOOLCHAIN_NAME_M68k       \
+       TOOLCHAIN_NAME_MIPS       \
+       TOOLCHAIN_NAME_MIPS64     \
+       TOOLCHAIN_NAME_MicroBlaze \
+       TOOLCHAIN_NAME_NiosII     \
+       TOOLCHAIN_NAME_PowerPC    \
+       TOOLCHAIN_NAME_RISCV64    \
+       TOOLCHAIN_NAME_SPARC      \
+       TOOLCHAIN_NAME_SuperH     \
+       TOOLCHAIN_NAME_SH4        \
+       TOOLCHAIN_NAME_System390  \
+       TOOLCHAIN_NAME_x86        \
+       TOOLCHAIN_NAME_x86_64     \
+       TOOLCHAIN_NAME            \
+       TOOLCHAIN_PROGRAM_PREFIX  \
+       TOOLCHAIN_GCC             \
+       TOOLCHAIN_ADAC            \
+       TOOLCHAIN_CC              \
+       TOOLCHAIN_AR              \
+       TOOLCHAIN_GDB             \
+       TOOLCHAIN_INSIGHT         \
+       TOOLCHAIN_LD              \
+       TOOLCHAIN_OBJDUMP         \
+       TOOLCHAIN_RANLIB          \
+       GCC_VERSION               \
+       GCC_SWITCHES_PLATFORM     \
+       AS                        \
+       ADAC                      \
+       CC                        \
+       CPP                       \
+       AR                        \
+       GDB                       \
+       GNATBIND                  \
+       GNATCHOP                  \
+       GNATLINK                  \
+       GNATLS                    \
+       GNATMAKE                  \
+       GNATPREP                  \
+       GNATXREF                  \
+       INSIGHT                   \
+       LD                        \
+       NM                        \
+       OBJCOPY                   \
+       OBJDUMP                   \
+       RANLIB                    \
+       READELF                   \
+       SIZE                      \
+       STRIP                     \
+       ELFTOOL                   \
+       RTS_BASE_PATH             \
+       RTS_ROOT_PATH             \
+       RTS_PATH                  \
+       ADAC_SWITCHES_WARNING     \
+       ADA_MODE                  \
+       RTS PROFILE               \
+       USE_LIBGCC                \
+       USE_LIBADA                \
+       USE_CLIBRARY              \
+       ADDITIONAL_OBJECTS        \
+       STACK_LIMIT               \
+       OPTIMIZATION_LEVEL        \
+       BUILD_MODE                \
+       USE_APPLICATION           \
+       MAKE
 
 export USE_PYTHON
 ifneq ($(PYTHON),)
