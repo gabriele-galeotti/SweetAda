@@ -58,21 +58,21 @@ RM     := rm -f
 endif
 
 ifeq      ($(OSTYPE),linux)
-CC          ?= gcc
-CC_SWITCHES ?= -g -std=gnu99 -Wall
-LD_SWITCHES ?= -g
+HOST_CC          ?= gcc
+HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall
+HOST_LD_SWITCHES ?= -g
 else ifeq ($(OSTYPE),cmd)
-CC          ?= gcc
-CC_SWITCHES ?= -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
-LD_SWITCHES ?= -g -mconsole
+HOST_CC          ?= gcc
+HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
+HOST_LD_SWITCHES ?= -g -mconsole
 else ifeq ($(OSTYPE),msys)
-CC          ?= gcc
-CC_SWITCHES ?= -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
-LD_SWITCHES ?= -g -mconsole
+HOST_CC          ?= gcc
+HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
+HOST_LD_SWITCHES ?= -g -mconsole
 else ifeq ($(OSTYPE),darwin)
-CC          ?= gcc
-CC_SWITCHES ?= -g -std=gnu99 -Wall
-LD_SWITCHES ?= -g -static-libgcc -static-libstdc++
+HOST_CC          ?= gcc
+HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall
+HOST_LD_SWITCHES ?= -g -static-libgcc -static-libstdc++
 endif
 
 OBJECTS :=
@@ -81,11 +81,11 @@ OBJECTS += library.o
 
 .PHONY : elftool
 elftool : $(OBJECTS)
-	$(CC) -o $@ $(LD_SWITCHES) $^
+	$(HOST_CC) -o $@ $(HOST_LD_SWITCHES) $^
 elftool.o : elftool.c
-	$(CC) -o $@ -c -I./ -I../ $(CC_SWITCHES) $<
+	$(HOST_CC) -o $@ -c -I./ -I../ $(HOST_CC_SWITCHES) $<
 library.o : ../library.c
-	$(CC) -o $@ -c -DNO_DLL_HANDLING=1 $(CC_SWITCHES) $<
+	$(HOST_CC) -o $@ -c -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
 .PHONY : install
 install :
