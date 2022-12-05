@@ -58,7 +58,9 @@ package ARMv7M is
 
    ENDIANNESS_LITTLE renames ARMv6M.ENDIANNESS_LITTLE;
    ENDIANNESS_BIG    renames ARMv6M.ENDIANNESS_BIG;
-   VECTKEY_KEY       renames ARMv6M.VECTKEY_KEY;
+
+   VECTKEY_KEY renames ARMv6M.VECTKEY_KEY;
+
    subtype AIRCR_Type is ARMv6M.AIRCR_Type;
    AIRCR : AIRCR_Type renames ARMv6M.AIRCR;
 
@@ -201,6 +203,50 @@ package ARMv7M is
 
    subtype ACTLR_Type is ARMv6M.ACTLR_Type;
    ACTLR_ADDRESS renames ARMv6M.ACTLR_ADDRESS;
+
+   -- B3.3.3 SysTick Control and Status Register
+
+   CLKSOURCE_EXT renames ARMv6M.CLKSOURCE_EXT;
+   CLKSOURCE_CPU renames ARMv6M.CLKSOURCE_CPU;
+
+   subtype SYST_CSR_Type is ARMv6M.SYST_CSR_Type;
+   SYST_CSR : SYST_CSR_Type renames ARMv6M.SYST_CSR;
+
+   -- B3.3.4 SysTick Reload Value Register
+
+   subtype SYST_RVR_Type is ARMv6M.SYST_RVR_Type;
+   SYST_RVR : SYST_RVR_Type renames ARMv6M.SYST_RVR;
+
+   -- B3.3.5 SysTick Current Value Register
+
+   type SYST_CVR_Type is
+   record
+      CURRENT : Bits_32; -- Current counter value.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SYST_CVR_Type use
+   record
+      CURRENT at 0 range 0 .. 31;
+   end record;
+
+   SYST_CVR_ADDRESS renames ARMv6M.SYST_CVR_ADDRESS;
+
+   SYST_CVR : aliased SYST_CVR_Type with
+      Address              => To_Address (SYST_CVR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.3.6 SysTick Calibration Value Register
+
+   subtype SYST_CALIB_Type is ARMv6M.SYST_CALIB_Type;
+   SYST_CALIB : SYST_CALIB_Type renames ARMv6M.SYST_CALIB;
+
+   -- C1.6.1 Debug Fault Status Register
+
+   subtype DFSR_Type is ARMv6M.DFSR_Type;
+   DFSR : DFSR_Type renames ARMv6M.DFSR;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
