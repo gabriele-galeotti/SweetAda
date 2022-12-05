@@ -17,20 +17,20 @@
                 .global vectors
 vectors:
 
-initial_SP:     .long   0
-RESET:          .long   0
+SP_Main:        .long   0
+Reset:          .long   0
 NMI:            .long   0
-Hard_Fault:     .long   0
-MemManage_Fault:.long   0
-Bus_Fault:      .long   0
-Usage_Fault:    .long   0
-Reserved_7:     .long   0
-Reserved_8:     .long   0
-Reserved_9:     .long   0
-Reserved_A:     .long   0
-SVI_Call:       .long   0
-Debug_Monitor:  .long   0
-Reserved_D:     .long   0
-Pending_SV:     .long   0
+HardFault:      .long   0
+MemManage:      .long   0
+BusFault:       .long   0
+UsageFault:     .long   0
+ReservedExc7:   .long   0
+ReservedExc8:   .long   0
+ReservedExc9:   .long   0
+ReservedExcA:   .long   0
+SVCall:         .long   0
+DebugMonitor:   .long   0
+ReservedExcD:   .long   0
+PendSV:         .long   0
 SysTick:        .long   0
 
