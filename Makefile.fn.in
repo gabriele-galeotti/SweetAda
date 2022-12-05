@@ -20,7 +20,7 @@
 BRIEFTEXT_NSPACE := 12
 #                          123456789012
 BRIEFTEXT_SPACES := $(NULL)            $(NULL)
-BRIEFTEXT_CHRMSK :=        ............
+BRIEFTEXT_CHRMSK := $(NULL)............$(NULL)
 
 #
 # echo-print
