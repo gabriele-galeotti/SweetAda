@@ -84,7 +84,7 @@ package PPC405 is
       WRS      : TSR_TCR_WR_Type;
       PIS      : Boolean;
       FIS      : Boolean;
-      Reserved : Bits_26_Zeroes;
+      Reserved : Bits_26;
    end record with
       Bit_Order => High_Order_First,
       Size      => 32;
@@ -130,7 +130,7 @@ package PPC405 is
       FP       : FIT_Period_Type;
       FIE      : Boolean;
       ARE      : Boolean;
-      Reserved : Bits_22_Zeroes := Bits_22_0;
+      Reserved : Bits_22;
    end record with
       Bit_Order => High_Order_First,
       Size      => 32;

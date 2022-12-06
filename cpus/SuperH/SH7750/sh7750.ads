@@ -108,19 +108,19 @@ package SH7750 is
 
    type SR_Type is
    record
-      T         : Boolean;                     -- True/false condition or carry/borrow bit
-      S         : Boolean;                     -- Specifies a saturation operation for a MAC instruction.
-      Reserved1 : Bits_2_Zeroes := Bits_2_0;
-      IMASK     : Bits_4;                      -- Interrupt mask level
-      Q         : Bits_1;                      -- Used by the DIV0S, DIV0U, and DIV1 instructions.
-      M         : Bits_1;                      -- Used by the DIV0S, DIV0U, and DIV1 instructions.
-      Reserved2 : Bits_5_Zeroes := Bits_5_0;
-      FD        : Boolean;                     -- FPU disable bit
-      Reserved3 : Bits_12_Zeroes := Bits_12_0;
-      BL        : Boolean;                     -- Exception/interrupt block bit
-      RB        : Bits_1;                      -- General register bank specifier in privileged mode
-      MD        : Bits_1;                      -- Processor mode
-      Reserved4 : Bits_1_Zeroes := Bits_1_0;
+      T         : Boolean;      -- True/false condition or carry/borrow bit
+      S         : Boolean;      -- Specifies a saturation operation for a MAC instruction.
+      Reserved1 : Bits_2 := 0;
+      IMASK     : Bits_4;       -- Interrupt mask level
+      Q         : Bits_1;       -- Used by the DIV0S, DIV0U, and DIV1 instructions.
+      M         : Bits_1;       -- Used by the DIV0S, DIV0U, and DIV1 instructions.
+      Reserved2 : Bits_5 := 0;
+      FD        : Boolean;      -- FPU disable bit
+      Reserved3 : Bits_12 := 0;
+      BL        : Boolean;      -- Exception/interrupt block bit
+      RB        : Bits_1;       -- General register bank specifier in privileged mode
+      MD        : Bits_1;       -- Processor mode
+      Reserved4 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -408,15 +408,15 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
 
    type SCSCR2_Type is
    record
-      Reserved1 : Bits_1_Zeroes := Bits_1_0;
-      CKE1      : Bits_1;                    -- Clock Enable 1
-      Reserved2 : Bits_1_Zeroes := Bits_1_0;
-      REIE      : Boolean;                   -- Receive Error Interrupt Enable
-      RE        : Boolean;                   -- Receive Enable
-      TE        : Boolean;                   -- Transmit Enable
-      RIE       : Boolean;                   -- Receive Interrupt Enable
-      TIE       : Boolean;                   -- Transmit Interrupt Enable
-      Reserved3 : Bits_8_Zeroes := Bits_8_0;
+      Reserved1 : Bits_1 := 0;
+      CKE1      : Bits_1;      -- Clock Enable 1
+      Reserved2 : Bits_1 := 0;
+      REIE      : Boolean;     -- Receive Error Interrupt Enable
+      RE        : Boolean;     -- Receive Enable
+      TE        : Boolean;     -- Transmit Enable
+      RIE       : Boolean;     -- Receive Interrupt Enable
+      TIE       : Boolean;     -- Transmit Interrupt Enable
+      Reserved3 : Bits_8 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -514,10 +514,10 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
 
    type SCFDR2_Type is
    record
-      R         : Bits_5;                    -- number of receive data bytes in SCFRDR2
-      Reserved1 : Bits_3_Zeroes := Bits_3_0;
-      T         : Bits_5;                    -- number of transmit data bytes in SCFTDR2
-      Reserved2 : Bits_3_Zeroes := Bits_3_0;
+      R         : Bits_5; -- number of receive data bytes in SCFRDR2
+      Reserved1 : Bits_3;
+      T         : Bits_5; -- number of transmit data bytes in SCFTDR2
+      Reserved2 : Bits_3;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
