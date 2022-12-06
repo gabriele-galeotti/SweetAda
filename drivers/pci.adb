@@ -23,6 +23,16 @@ package body PCI is
    --========================================================================--
    --                                                                        --
    --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   function To_U32 is new Ada.Unchecked_Conversion (Confadd_Type, Unsigned_32);
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
    --                           Package subprograms                          --
    --                                                                        --
    --                                                                        --
@@ -124,7 +134,6 @@ package body PCI is
                       Function_Number : Function_Number_Type;
                       Register_Number : Register_Number_Type
                      ) return Unsigned_32 is
-      function To_U32 is new Ada.Unchecked_Conversion (Confadd_Type, Unsigned_32);
       Confadd_Value : Confadd_Type;
    begin
       Confadd_Value.REGNUM  := Register_Number and 16#FC#;
@@ -142,7 +151,6 @@ package body PCI is
                         Register_Number : in Register_Number_Type;
                         Value           : in Unsigned_32
                        ) is
-      function To_U32 is new Ada.Unchecked_Conversion (Confadd_Type, Unsigned_32);
       Confadd_Value : Confadd_Type;
    begin
       Confadd_Value.REGNUM  := Register_Number and 16#FC#;
