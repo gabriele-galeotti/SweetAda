@@ -555,7 +555,6 @@ export PLATFORM_BASE_DIRECTORY   \
        RTS_BASE_PATH             \
        RTS_ROOT_PATH             \
        RTS_PATH                  \
-       ADAC_SWITCHES_WARNING     \
        ADA_MODE                  \
        RTS PROFILE               \
        USE_LIBGCC                \
