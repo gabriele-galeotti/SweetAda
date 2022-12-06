@@ -114,7 +114,7 @@ package Am7990 is
       BCON     : Bits_1;
       ACON     : Bits_1;
       BSWP     : Bits_1;
-      Reserved : Bits_13_Zeroes := Bits_13_0;
+      Reserved : Bits_13;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -174,7 +174,7 @@ package Am7990 is
    type RMD2_Type is
    record
       BCNT : Bits_12;
-      ONES : Bits_4_Ones;
+      ONES : Bits_4;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -187,7 +187,7 @@ package Am7990 is
    type RMD3_Type is
    record
       MCNT     : Bits_12;
-      Reserved : Bits_4_Zeroes;
+      Reserved : Bits_4;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -265,7 +265,7 @@ package Am7990 is
    type TMD2_Type is
    record
       BCNT : Bits_12;
-      ONES : Bits_4_Ones;
+      ONES : Bits_4;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -334,7 +334,7 @@ package Am7990 is
       COLL     : Boolean;
       DRTY     : Boolean;
       INTL     : Boolean;
-      Reserved : Bits_8_Zeroes := Bits_8_0;
+      Reserved : Bits_8;
       PROM     : Boolean;
    end record with
       Alignment => 2,
@@ -355,9 +355,9 @@ package Am7990 is
 
    type Ring_Descriptor_Pointer_Type is
    record
-      Reserved1    : Bits_3_Zeroes := Bits_3_0;
+      Reserved1    : Bits_3;
       Ring_Pointer : Bits_21;
-      Reserved2    : Bits_5_Zeroes := Bits_5_0;
+      Reserved2    : Bits_5;
       Length       : Bits_3;
    end record with
       Bit_Order => Low_Order_First,
