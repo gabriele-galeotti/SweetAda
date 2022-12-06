@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
+with Bits;
 
 package body PL011 is
 
@@ -26,6 +27,8 @@ package body PL011 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use Bits;
 
    ----------------------------------------------------------------------------
    -- Register types
@@ -58,12 +61,12 @@ package body PL011 is
 
    type UARTDR_Type is
    record
-      DATA     : Unsigned_8;                -- Receive (read) data character. Transmit (write) data character.
-      FE       : Boolean;                   -- Framing error.
-      PE       : Boolean;                   -- Parity error.
-      BE       : Boolean;                   -- Break error.
-      OE       : Boolean;                   -- Overrun error.
-      Reserved : Bits_4_Zeroes := Bits_4_0;
+      DATA     : Unsigned_8; -- Receive (read) data character. Transmit (write) data character.
+      FE       : Boolean;    -- Framing error.
+      PE       : Boolean;    -- Parity error.
+      BE       : Boolean;    -- Break error.
+      OE       : Boolean;    -- Overrun error.
+      Reserved : Bits_4;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -82,16 +85,16 @@ package body PL011 is
 
    type UARTFR_Type is
    record
-      CTS      : Boolean;                   -- Clear to send.
-      DSR      : Boolean;                   -- Data set ready.
-      DCD      : Boolean;                   -- Data carrier detect.
-      BUSY     : Boolean;                   -- UART busy.
-      RXFE     : Boolean;                   -- Receive FIFO empty.
-      TXFF     : Boolean;                   -- Transmit FIFO full.
-      RXFF     : Boolean;                   -- Receive FIFO full.
-      TXFE     : Boolean;                   -- Transmit FIFO empty.
-      RI       : Boolean;                   -- Ring indicator.
-      Reserved : Bits_7_Zeroes := Bits_7_0;
+      CTS      : Boolean; -- Clear to send.
+      DSR      : Boolean; -- Data set ready.
+      DCD      : Boolean; -- Data carrier detect.
+      BUSY     : Boolean; -- UART busy.
+      RXFE     : Boolean; -- Receive FIFO empty.
+      TXFF     : Boolean; -- Transmit FIFO full.
+      RXFF     : Boolean; -- Receive FIFO full.
+      TXFE     : Boolean; -- Transmit FIFO empty.
+      RI       : Boolean; -- Ring indicator.
+      Reserved : Bits_7;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -114,19 +117,19 @@ package body PL011 is
 
    type UARTCR_Type is
    record
-      UARTEN   : Boolean;     -- UART enable.
-      SIREN    : Boolean;     -- SIR enable.
-      SIRLP    : Boolean;     -- SIR low-power IrDA mode.
-      Reserved : Bits.Bits_4;
-      LBE      : Boolean;     -- Loopback enable.
-      TXE      : Boolean;     -- Transmit enable.
-      RXE      : Boolean;     -- Receive enable.
-      DTR      : Boolean;     -- Data transmit ready.
-      RTS      : Boolean;     -- Request to send.
-      Out1     : Boolean;     -- This bit is the complement of the UART Out1 (nUARTOut1) modem status output.
-      Out2     : Boolean;     -- This bit is the complement of the UART Out2 (nUARTOut2) modem status output.
-      RTSEn    : Boolean;     -- RTS hardware flow control enable
-      CTSEn    : Boolean;     -- CTS hardware flow control enable
+      UARTEN   : Boolean; -- UART enable.
+      SIREN    : Boolean; -- SIR enable.
+      SIRLP    : Boolean; -- SIR low-power IrDA mode.
+      Reserved : Bits_4;
+      LBE      : Boolean; -- Loopback enable.
+      TXE      : Boolean; -- Transmit enable.
+      RXE      : Boolean; -- Receive enable.
+      DTR      : Boolean; -- Data transmit ready.
+      RTS      : Boolean; -- Request to send.
+      Out1     : Boolean; -- This bit is the complement of the UART Out1 (nUARTOut1) modem status output.
+      Out2     : Boolean; -- This bit is the complement of the UART Out2 (nUARTOut2) modem status output.
+      RTSEn    : Boolean; -- RTS hardware flow control enable
+      CTSEn    : Boolean; -- CTS hardware flow control enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
