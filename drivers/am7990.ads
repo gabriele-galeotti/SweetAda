@@ -174,7 +174,7 @@ package Am7990 is
    type RMD2_Type is
    record
       BCNT : Bits_12;
-      ONES : Bits_4;
+      ONES : Bits_4 := 2#1111#;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -265,7 +265,7 @@ package Am7990 is
    type TMD2_Type is
    record
       BCNT : Bits_12;
-      ONES : Bits_4;
+      ONES : Bits_4 := 2#1111#;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
