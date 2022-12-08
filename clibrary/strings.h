@@ -6,9 +6,9 @@
  *
  * This work is licensed under the terms of the MIT License.
  * Please consult the LICENSE.txt file located in the top-level directory.
- *
- * __REF__ http://pubs.opengroup.org/onlinepubs/7908799/xsh/strings.h.html
  */
+
+/* __REF__ http://pubs.opengroup.org/onlinepubs/7908799/xsh/strings.h.html */
 
 #ifndef _STRINGS_H
 #define _STRINGS_H 1

@@ -6,9 +6,9 @@
  *
  * This work is licensed under the terms of the MIT License.
  * Please consult the LICENSE.txt file located in the top-level directory.
- *
- * __REF__ http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/string.h.html
  */
+
+/* __REF__ http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/string.h.html */
 
 #ifndef _STRING_H
 #define _STRING_H 1

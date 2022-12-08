@@ -6,9 +6,9 @@
  *
  * This work is licensed under the terms of the MIT License.
  * Please consult the LICENSE.txt file located in the top-level directory.
- *
- * __REF__ http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdio.h.html
  */
+
+/* __REF__ http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdio.h.html */
 
 #ifndef _STDIO_H
 #define _STDIO_H 1
