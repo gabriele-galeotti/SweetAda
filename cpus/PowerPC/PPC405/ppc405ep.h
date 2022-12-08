@@ -16,7 +16,7 @@
 #define IR (1 << 5)                     /* MSR Instruction Relocate */
 #define EE (1 << 15)                    /* MSR enable interrupts */
 
-//#define LR              0x008           /* Link Register */
+#define LR              0x008           /* Link Register */
 #define CPC0_PLLMR0     0x0F0           /* R/W PLL Mode Register 0 */
 #define CPC0_PLLMR1     0x0F4           /* R/W PLL Mode Register 1 */
 #define TBL             0x11C           /* Time Base Lower */
@@ -26,7 +26,9 @@
 #define SGR             0x3B9           /* Storage Guarded Register */
 #define DCWR            0x3BA           /* Data Cache Write-through Register */
 #define SLER            0x3BB           /* Storage Little Endian Register */
-#define EVPR            0x3D6           /* Exception Vector Prefix Register __FIX__ */
+#define ESR             0x3D4           /* Exception Syndrome Register */
+#define DEAR            0x3D5           /* Data Exception Address Register */
+#define EVPR            0x3D6           /* Exception Vector Prefix Register */
 #define TSR             0x3D8           /* Timer Status Register */
 #define  PIS            (1 << 27)       /* PIT Interrupt Status */
 #define  FIS            (1 << 26)       /* FIT Interrupt Status */
