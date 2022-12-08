@@ -140,13 +140,127 @@ package S5D9 is
    -- 9. Clock Generation Circuit
    ----------------------------------------------------------------------------
 
+   -- 9.2.1 System Clock Division Control Register (SCKDIVCR)
+
+   CLOCK_NODIV  : constant := 2#000#; -- ×1/1
+   CLOCK_DIV_2  : constant := 2#001#; -- ×1/2
+   CLOCK_DIV_4  : constant := 2#010#; -- ×1/4
+   CLOCK_DIV_8  : constant := 2#011#; -- ×1/8
+   CLOCK_DIV_16 : constant := 2#100#; -- ×1/16
+   CLOCK_DIV_32 : constant := 2#101#; -- ×1/32
+   CLOCK_DIV_64 : constant := 2#110#; -- ×1/64.
+
+   type SCKDIVCR_Type is
+   record
+      PCKD      : Bits_3;      -- Peripheral Module Clock D
+      Reserved1 : Bits_1 := 0;
+      PCKC      : Bits_3;      -- Peripheral Module Clock C
+      Reserved2 : Bits_1 := 0;
+      PCKB      : Bits_3;      -- Peripheral Module Clock B
+      Reserved3 : Bits_1 := 0;
+      PCKA      : Bits_3;      -- Peripheral Module Clock A
+      Reserved4 : Bits_1 := 0;
+      BCK       : Bits_3;      -- External Bus Clock
+      Reserved5 : Bits_5 := 0;
+      ICK       : Bits_3;      -- System Clock
+      Reserved6 : Bits_1 := 0;
+      FCK       : Bits_3;      -- Flash Interface Clock
+      Reserved7 : Bits_1 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SCKDIVCR_Type use
+   record
+      PCKD      at 0 range 0 .. 2;
+      Reserved1 at 0 range 3 .. 3;
+      PCKC      at 0 range 4 .. 6;
+      Reserved2 at 0 range 7 .. 7;
+      PCKB      at 0 range 8 .. 10;
+      Reserved3 at 0 range 11 .. 11;
+      PCKA      at 0 range 12 .. 14;
+      Reserved4 at 0 range 15 .. 15;
+      BCK       at 0 range 16 .. 18;
+      Reserved5 at 0 range 19 .. 23;
+      ICK       at 0 range 24 .. 26;
+      Reserved6 at 0 range 27 .. 27;
+      FCK       at 0 range 28 .. 30;
+      Reserved7 at 0 range 31 .. 31;
+   end record;
+
+   SCKDIVCR_ADDRESS : constant := 16#4001_E020#;
+
+   SCKDIVCR : aliased SCKDIVCR_Type with
+      Address              => To_Address (SCKDIVCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 9.2.2 System Clock Division Control Register 2 (SCKDIVCR2)
+
+   UCK_DIV3 : constant := 2#010#; -- ×1/3
+   UCK_DIV4 : constant := 2#011#; -- ×1/4
+   UCK_DIV5 : constant := 2#100#; -- ×1/5.
+
+   type SCKDIVCR2_Type is
+   record
+      Reserved1 : Bits_4 := 0;
+      UCK       : Bits_3;      -- USB Clock (UCLK) Select
+      Reserved2 : Bits_1 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SCKDIVCR2_Type use
+   record
+      Reserved1 at 0 range 0 .. 3;
+      UCK       at 0 range 4 .. 6;
+      Reserved2 at 0 range 7 .. 7;
+   end record;
+
+   SCKDIVCR2_ADDRESS : constant := 16#4001_E024#;
+
+   SCKDIVCR2 : aliased SCKDIVCR2_Type with
+      Address              => To_Address (SCKDIVCR2_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 9.2.3 System Clock Source Control Register (SCKSCR)
+
+   CLK_HOCO : constant := 2#000#; -- High-speed on-chip oscillator
+   CLK_MOCO : constant := 2#001#; -- Middle-speed on-chip oscillator
+   CLK_LOCO : constant := 2#010#; -- Low-speed on-chip oscillator
+   CLK_MOSC : constant := 2#011#; -- Main clock oscillator
+   CLK_SOSC : constant := 2#100#; -- Sub-clock oscillator
+   CLK_PLL  : constant := 2#101#; -- PLL
+
+   type SCKSCR_Type is
+   record
+      CKSEL     : Bits_3;      -- Clock Source Select
+      Reserved1 : Bits_5 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SCKSCR_Type use
+   record
+      CKSEL     at 0 range 0 .. 2;
+      Reserved1 at 0 range 3 .. 7;
+   end record;
+
+   SCKSCR_ADDRESS : constant := 16#4001_E026#;
+
+   SCKSCR : aliased SCKSCR_Type with
+      Address              => To_Address (SCKSCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- 9.2.4 PLL Clock Control Register (PLLCCR)
 
    PLIDIV_1 : constant := 2#00#;
    PLIDIV_2 : constant := 2#01#;
    PLIDIV_3 : constant := 2#10#;
 
-   PLSRCSEL_Main : constant := 2#0#;
+   PLSRCSEL_MOSC : constant := 2#0#;
    PLSRCSEL_HOCO : constant := 2#1#;
 
    PLLMUL_x_10_0 : constant := 2#010011#;
@@ -216,6 +330,221 @@ package S5D9 is
 
    PLLCCR : aliased PLLCCR_Type with
       Address              => To_Address (PLLCCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 9.2.5 PLL Control Register (PLLCR)
+
+   type PLLCR_Type is
+   record
+      PLLSTP   : Boolean;     -- PLL Stop Control
+      Reserved : Bits_7 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for PLLCR_Type use
+   record
+      PLLSTP   at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   PLLCR_ADDRESS : constant := 16#4001_E02A#;
+
+   PLLCR : aliased PLLCR_Type with
+      Address              => To_Address (PLLCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 9.2.7 Main Clock Oscillator Control Register (MOSCCR)
+
+   type MOSCCR_Type is
+   record
+      MOSTP    : Boolean;     -- Main Clock Oscillator Stop
+      Reserved : Bits_7 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for MOSCCR_Type use
+   record
+      MOSTP    at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   MOSCCR_ADDRESS : constant := 16#4001_E032#;
+
+   MOSCCR : aliased MOSCCR_Type with
+      Address              => To_Address (MOSCCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 9.2.8 Subclock Oscillator Control Register (SOSCCR)
+
+   type SOSCCR_Type is
+   record
+      SOSTP    : Boolean;     -- Sub-Clock Oscillator Stop
+      Reserved : Bits_7 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SOSCCR_Type use
+   record
+      SOSTP    at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   SOSCCR_ADDRESS : constant := 16#4001_E480#;
+
+   SOSCCR : aliased SOSCCR_Type with
+      Address              => To_Address (SOSCCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 9.2.9 Low-Speed On-Chip Oscillator Control Register (LOCOCR)
+
+   type LOCOCR_Type is
+   record
+      LCSTP    : Boolean;     -- LOCO Stop
+      Reserved : Bits_7 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for LOCOCR_Type use
+   record
+      LCSTP    at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   LOCOCR_ADDRESS : constant := 16#4001_E490#;
+
+   LOCOCR : aliased LOCOCR_Type with
+      Address              => To_Address (LOCOCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 9.2.10 High-Speed On-Chip Oscillator Control Register (HOCOCR)
+
+   type HOCOCR_Type is
+   record
+      HCSTP    : Boolean;     -- HOCO Stop
+      Reserved : Bits_7 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for HOCOCR_Type use
+   record
+      HCSTP    at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   HOCOCR_ADDRESS : constant := 16#4001_E036#;
+
+   HOCOCR : aliased HOCOCR_Type with
+      Address              => To_Address (HOCOCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 9.2.15 Oscillation Stabilization Flag Register (OSCSF)
+
+   type OSCSF_Type is
+   record
+      HOCOSF    : Boolean;     -- HOCO Clock Oscillation Stabilization Flag
+      Reserved1 : Bits_2 := 0;
+      MOSCSF    : Boolean;     -- Main Clock Oscillation Stabilization Flag
+      Reserved2 : Bits_1 := 0;
+      PLLSF     : Boolean;     -- PLL Clock Oscillation Stabilization Flag
+      Reserved3 : Bits_2 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for OSCSF_Type use
+      record
+      HOCOSF    at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 2;
+      MOSCSF    at 0 range 3 .. 3;
+      Reserved2 at 0 range 4 .. 4;
+      PLLSF     at 0 range 5 .. 5;
+      Reserved3 at 0 range 6 .. 7;
+   end record;
+
+   OSCSF_ADDRESS : constant := 16#4001_E03C#;
+
+   OSCSF : aliased OSCSF_Type with
+      Address              => To_Address (OSCSF_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 9.2.18 Main Clock Oscillator Wait Control Register (MOSCWTCR)
+
+   --                                           MOMCR.AUTODRVEN = 0        MOMCR.AUTODRVEN
+   MSTS_1 : constant := 2#0001#; -- Wait time = 35 cycles (133.5 μs)       36 cycles (137.3 μs)
+   MSTS_2 : constant := 2#0010#; -- Wait time = 67 cycles (255.6 μs)       68 cycles (259.4 μs)
+   MSTS_3 : constant := 2#0011#; -- Wait time = 131 cycles (499.7 μs)      132 cycles (503.5 μs)
+   MSTS_4 : constant := 2#0100#; -- Wait time = 259 cycles (988.0 μs)      260 cycles (991.8 μs)
+   MSTS_5 : constant := 2#0101#; -- Wait time = 547 cycles (2086.6 μs)     548 cycles (2090.5 μs)
+   MSTS_6 : constant := 2#0110#; -- Wait time = 1059 cycles (4039.8 μs)    1060 cycles (4043.6 μs)
+   MSTS_7 : constant := 2#0111#; -- Wait time = 2147 cycles (8190.2 μs)    2148 cycles (8194.0 μs)
+   MSTS_8 : constant := 2#1000#; -- Wait time = 4291 cycles (16368.9 μs)   4292 cycles (16372.7 μs)
+   MSTS_9 : constant := 2#1001#; -- Wait time = 8163 cycles (31139.4 μs).  8164 cycles (31143.2 μs).
+
+   type MOSCWTCR_Type is
+   record
+      MSTS      : Bits_4;      -- Main Clock Oscillator Wait Time Setting
+      Reserved  : Bits_4 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for MOSCWTCR_Type use
+   record
+      MSTS      at 0 range 0 .. 3;
+      Reserved  at 0 range 4 .. 7;
+   end record;
+
+   MOSCWTCR_ADDRESS : constant := 16#4001_E0A2#;
+
+   MOSCWTCR : aliased MOSCWTCR_Type with
+      Address              => To_Address (MOSCWTCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 9.2.19 Main Clock Oscillator Mode Oscillation Control Register (MOMCR)
+
+   MODRV_20_24 : constant := 2#00#; -- 20 to 24 MHz
+   MODRV_16_20 : constant := 2#01#; -- 16 to 20 MHz
+   MODRV_8_16  : constant := 2#10#; -- 8 to 16 MHz
+   MODRV_8     : constant := 2#11#; -- 8 MHz
+
+   MOSEL_RES : constant := 0; -- Resonator
+   MOSEL_EXT : constant := 1; -- External clock input.
+
+   type MOMCR_Type is
+   record
+      Reserved  : Bits_4 := 0;
+      MODRV     : Bits_2;      -- Main Clock Oscillator Drive Capability 0 Switching
+      MOSEL     : Bits_1;      -- Main Clock Oscillator Switching
+      AUTODRVEN : Boolean;     -- PLL Clock Oscillation Stabilization Flag
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for MOMCR_Type use
+   record
+      Reserved  at 0 range 0 .. 3;
+      MODRV     at 0 range 4 .. 5;
+      MOSEL     at 0 range 6 .. 6;
+      AUTODRVEN at 0 range 7 .. 7;
+   end record;
+
+   MOMCR_ADDRESS : constant := 16#4001_E413#;
+
+   MOMCR : aliased MOMCR_Type with
+      Address              => To_Address (MOMCR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
