@@ -358,7 +358,8 @@ CC_SWITCHES_DEFAULT   += $(OPTIMIZATION_SWITCHES)
 
 ################################################################################
 #                                                                              #
-# Import RTS switches.                                                         #
+# Import RTS switches, assembler/compiler warning and style switches,          #
+# verbosity.                                                                   #
 #                                                                              #
 ################################################################################
 
@@ -368,31 +369,13 @@ export ADAC_SWITCHES_RTS
 ADAC_SWITCHES_DEFAULT += $(ADAC_SWITCHES_RTS)
 CC_SWITCHES_DEFAULT   += $(CC_SWITCHES_RTS)
 
-################################################################################
-#                                                                              #
-# Parameters.                                                                  #
-#                                                                              #
-################################################################################
-
 # Maximum Nesting Level
 MNL := 9
 # Maximum Line Length
 MLL := 132
 
-################################################################################
-#                                                                              #
-# Assembler/Compiler warning and style switches.                               #
-#                                                                              #
-################################################################################
-
 -include Makefile.wr.in
 -include Makefile.st.in
-
-################################################################################
-#                                                                              #
-# Verbosity.                                                                   #
-#                                                                              #
-################################################################################
 
 ifeq ($(VERBOSE),Y)
 ADAC_SWITCHES_DEFAULT     += -gnatb -gnatv
@@ -408,43 +391,71 @@ endif
 ################################################################################
 
 ifeq ($(BUILD_MODE),MAKEFILE)
-AS       += $(AS_SWITCHES_DEFAULT) $(AS_SWITCHES_PLATFORM)
-ADAC     += $(ADAC_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM) $(ADAC_SWITCHES_WARNING) $(ADAC_SWITCHES_STYLE)
-CC       += $(CC_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM) $(CC_SWITCHES_WARNING)
-CPP      += $(CPP_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM)
+AS       += $(AS_SWITCHES_DEFAULT)  \
+            $(AS_SWITCHES_PLATFORM)
+ADAC     += $(ADAC_SWITCHES_DEFAULT) \
+            $(ADAC_SWITCHES_WARNING) \
+            $(ADAC_SWITCHES_STYLE)   \
+            $(GCC_SWITCHES_PLATFORM)
+CC       += $(CC_SWITCHES_DEFAULT)   \
+            $(CC_SWITCHES_WARNING)   \
+            $(GCC_SWITCHES_PLATFORM)
+CPP      += $(CPP_SWITCHES_DEFAULT)  \
+            $(GCC_SWITCHES_PLATFORM)
 GNATBIND += $(GNATBIND_SWITCHES_DEFAULT)
 GNATCHOP +=
 GNATLINK += $(GNATLINK_SWITCHES_DEFAULT)
 GNATLS   +=
-GNATMAKE += $(GNATMAKE_SWITCHES_DEFAULT) $(ADAC_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM) $(ADAC_SWITCHES_WARNING) $(ADAC_SWITCHES_STYLE)
+GNATMAKE += $(GNATMAKE_SWITCHES_DEFAULT) \
+            $(ADAC_SWITCHES_DEFAULT)     \
+            $(ADAC_SWITCHES_WARNING)     \
+            $(ADAC_SWITCHES_STYLE)       \
+            $(GCC_SWITCHES_PLATFORM)
 GNATPREP += $(GNATPREP_SWITCHES_DEFAULT)
 GNATXREF += $(GNATXREF_SWITCHES_DEFAULT)
 AR       += $(AR_SWITCHES_DEFAULT)
-LD       += $(LD_SWITCHES_DEFAULT) $(LD_SWITCHES_PLATFORM)
+LD       += $(LD_SWITCHES_DEFAULT)  \
+            $(LD_SWITCHES_PLATFORM)
 NM       += $(NM_SWITCHES_DEFAULT)
-OBJCOPY  += $(OBJCOPY_SWITCHES_DEFAULT) $(OBJCOPY_SWITCHES_PLATFORM)
-OBJDUMP  += $(OBJDUMP_SWITCHES_DEFAULT) $(OBJDUMP_SWITCHES_PLATFORM)
+OBJCOPY  += $(OBJCOPY_SWITCHES_DEFAULT)  \
+            $(OBJCOPY_SWITCHES_PLATFORM)
+OBJDUMP  += $(OBJDUMP_SWITCHES_DEFAULT)  \
+            $(OBJDUMP_SWITCHES_PLATFORM)
 RANLIB   += $(RANLIB_SWITCHES_DEFAULT)
 READELF  += $(READELF_SWITCHES_DEFAULT)
 SIZE     += $(SIZE_SWITCHES_DEFAULT)
 STRIP    += $(STRIP_SWITCHES_DEFAULT)
 else ifeq ($(BUILD_MODE),GPR)
-AS       += $(AS_SWITCHES_DEFAULT) $(AS_SWITCHES_PLATFORM)
-ADAC     += $(ADAC_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM) $(ADAC_SWITCHES_WARNING) $(ADAC_SWITCHES_STYLE)
-CC       += $(CC_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM) $(CC_SWITCHES_WARNING)
-CPP      += $(CPP_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM)
+AS       += $(AS_SWITCHES_DEFAULT)  \
+            $(AS_SWITCHES_PLATFORM)
+ADAC     += $(ADAC_SWITCHES_DEFAULT) \
+            $(ADAC_SWITCHES_WARNING) \
+            $(ADAC_SWITCHES_STYLE)   \
+            $(GCC_SWITCHES_PLATFORM)
+CC       += $(CC_SWITCHES_DEFAULT)   \
+            $(CC_SWITCHES_WARNING)   \
+            $(GCC_SWITCHES_PLATFORM)
+CPP      += $(CPP_SWITCHES_DEFAULT)  \
+            $(GCC_SWITCHES_PLATFORM)
 GNATBIND += $(GNATBIND_SWITCHES_DEFAULT)
 GNATCHOP +=
 GNATLINK += $(GNATLINK_SWITCHES_DEFAULT)
 GNATLS   +=
-GNATMAKE += $(GNATMAKE_SWITCHES_DEFAULT) $(ADAC_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM) $(ADAC_SWITCHES_WARNING) $(ADAC_SWITCHES_STYLE)
+GNATMAKE += $(GNATMAKE_SWITCHES_DEFAULT) \
+            $(ADAC_SWITCHES_DEFAULT)     \
+            $(ADAC_SWITCHES_WARNING)     \
+            $(ADAC_SWITCHES_STYLE)       \
+            $(GCC_SWITCHES_PLATFORM)
 GNATPREP += $(GNATPREP_SWITCHES_DEFAULT)
 GNATXREF += $(GNATXREF_SWITCHES_DEFAULT)
 AR       += $(AR_SWITCHES_DEFAULT)
-LD       += $(LD_SWITCHES_DEFAULT) $(LD_SWITCHES_PLATFORM)
+LD       += $(LD_SWITCHES_DEFAULT)  \
+            $(LD_SWITCHES_PLATFORM)
 NM       += $(NM_SWITCHES_DEFAULT)
-OBJCOPY  += $(OBJCOPY_SWITCHES_PLATFORM) $(OBJCOPY_SWITCHES_PLATFORM)
-OBJDUMP  += $(OBJDUMP_SWITCHES_PLATFORM) $(OBJDUMP_SWITCHES_PLATFORM)
+OBJCOPY  += $(OBJCOPY_SWITCHES_DEFAULT)  \
+            $(OBJCOPY_SWITCHES_PLATFORM)
+OBJDUMP  += $(OBJDUMP_SWITCHES_DEFAULT)  \
+            $(OBJDUMP_SWITCHES_PLATFORM)
 RANLIB   += $(RANLIB_SWITCHES_DEFAULT)
 READELF  += $(READELF_SWITCHES_DEFAULT)
 SIZE     += $(SIZE_SWITCHES_DEFAULT)
@@ -455,58 +466,61 @@ endif
 
 ################################################################################
 #                                                                              #
-# Add wrappers to front-end compiler executables.                              #
+# GCC-wrapper.                                                                 #
+# Required for output of assembler listings, expanded Ada code and Makefile    #
+# timestamps to trigger Ada binding.                                           #
 #                                                                              #
 ################################################################################
 
-#
-# GCC wrapper.
-# Required for output of assembler listings and expanded Ada code.
-#
-
-# enable verbose assembler output in GCC wrappers (should begin with "-a")
+# enable verbose assembler output in GCC wrapper (should begin with "-a")
 GCC_WRAPPER_ASSEMBLER_OUTPUT := -adghlmns
 export GCC_WRAPPER_ASSEMBLER_OUTPUT
 
 ADAC += -wrapper "$(GCC_WRAPPER)"
 CC   += -wrapper "$(GCC_WRAPPER)"
 
-#
-# GNAT wrapper.
-# Required for "brief-mode" echoed commands and Makefile timestamps to trigger
-# Ada binding.
-#
-
-# VERBOSE for GNAT wrapper
-GNAT_WRAPPER_VERBOSE := $(VERBOSE)
-export GNAT_WRAPPER_VERBOSE
+################################################################################
+#                                                                              #
+# GNAT-wrapper.                                                                #
+# Required for "brief-mode" echoed commands and Makefile timestamps to trigger #
+# Ada binding.                                                                 #
+#                                                                              #
+################################################################################
 
 # brief command name label (see brief-command function in Makefile.fn.in)
 #                             123456789012_...
 GNAT_WRAPPER_GCC_BRIEFTEXT := [GCC-WRAP]   (+)
 export GNAT_WRAPPER_GCC_BRIEFTEXT
 
-# filenames to check for compile or bind phase triggering (generated by
-# the GCC or GNAT wrapper)
-ifeq ($(BUILD_MODE),MAKEFILE)
-GCC_WRAPPER_TIMESTAMP_FILENAME  :=
-GNAT_WRAPPER_TIMESTAMP_FILENAME := $(OBJECT_DIRECTORY)/gnatmake.tmp
-GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME := $(GNAT_WRAPPER_TIMESTAMP_FILENAME)
-else ifeq ($(BUILD_MODE),GPR)
-GCC_WRAPPER_TIMESTAMP_FILENAME  := gccmake.tmp
-GNAT_WRAPPER_TIMESTAMP_FILENAME :=
-GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME := $(OBJECT_DIRECTORY)/$(GCC_WRAPPER_TIMESTAMP_FILENAME)
-endif
-export GCC_WRAPPER_TIMESTAMP_FILENAME
-export GNAT_WRAPPER_TIMESTAMP_FILENAME
+# VERBOSE for GNAT-wrapper
+GNAT_WRAPPER_VERBOSE := $(VERBOSE)
+export GNAT_WRAPPER_VERBOSE
 
+# GNAT-wrapper is not toolchain-specific, it needs to know the GCC executable
 GNAT_WRAPPER_GCC_EXECUTABLE := $(TOOLCHAIN_PREFIX)/bin/$(TOOLCHAIN_GCC)
 export GNAT_WRAPPER_GCC_EXECUTABLE
 
 GNATMAKE += --GCC="$(GNAT_WRAPPER)" -cargs -wrapper "$(GCC_WRAPPER)" -margs
 
-# compilation debugging
--include Makefile.db.in
+################################################################################
+#                                                                              #
+# Filenames to check for compile or bind phase triggering (generated by the    #
+# GCC- or GNAT-wrapper). They end up nearly the same, but the object directory #
+# is not implicitly prefixed when processing files in MAKEFILE/GNATMAKE mode.  #
+#                                                                              #
+################################################################################
+
+ifeq ($(BUILD_MODE),MAKEFILE)
+GCC_WRAPPER_TIMESTAMP_FILENAME      :=
+GNAT_WRAPPER_TIMESTAMP_FILENAME     := $(OBJECT_DIRECTORY)/gnatmake.tmp
+GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME := $(GNAT_WRAPPER_TIMESTAMP_FILENAME)
+else ifeq ($(BUILD_MODE),GPR)
+GCC_WRAPPER_TIMESTAMP_FILENAME      := gccmake.tmp
+GNAT_WRAPPER_TIMESTAMP_FILENAME     :=
+GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME := $(OBJECT_DIRECTORY)/$(GCC_WRAPPER_TIMESTAMP_FILENAME)
+endif
+export GCC_WRAPPER_TIMESTAMP_FILENAME
+export GNAT_WRAPPER_TIMESTAMP_FILENAME
 
 ################################################################################
 #                                                                              #
