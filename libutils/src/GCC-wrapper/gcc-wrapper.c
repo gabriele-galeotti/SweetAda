@@ -362,7 +362,7 @@ no_parsing:
                         stdout_fd = open(stdout_filename, O_RDWR | O_CREAT, 0644);
                         if (stdout_fd < 0)
                         {
-                                log_printf(LOG_STDERR, "error open()ing \"%s\".", stdout_filename);
+                                fprintf(stderr, "%s: *** Error: open()ing \"%s\".", program_name, stdout_filename);
                                 stdout_redirect = false;
                         }
                         else
@@ -474,11 +474,6 @@ no_parsing:
         execute = NULL;
 
 main_exit:
-
-        /*
-         * Close logging.
-         */
-        log_close();
 
         /*
          * Cleanup.

@@ -232,11 +232,7 @@ main(int argc, char **argv)
          * Check for GNAT_WRAPPER_VERBOSE and GNAT_WRAPPER_GCC_BRIEFTEXT.
          */
         verbose = env_get("GNAT_WRAPPER_VERBOSE");
-        if (verbose != NULL && strcmp(verbose, "Y") == 0)
-        {
-                /* __NOP__ */
-        }
-        else
+        if (verbose == NULL || (verbose != NULL && strcmp(verbose, "Y") != 0))
         {
                 /*
                  * No verbosity, use GNAT_WRAPPER_GCC_BRIEFTEXT.
