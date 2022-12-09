@@ -46,6 +46,7 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o : clibrary.h strings.h
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY) \
+        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)          \
         $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)       \
         $(KERNEL_PARENT_PATH)/$(SPEC_MALLOC)
 
