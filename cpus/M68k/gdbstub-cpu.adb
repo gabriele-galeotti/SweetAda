@@ -144,7 +144,7 @@ package body Gdbstub.CPU is
 
    Gdbstub_Data_Area : aliased CPU_Context_Type with
       Volatile                => True,
-      Suppress_Initialization => True, -- pragma Initialize_Scalars
+      Suppress_Initialization => True,
       Export                  => True,
       Convention              => Asm,
       External_Name           => "gdbstub_data_area";
