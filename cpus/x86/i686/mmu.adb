@@ -40,8 +40,7 @@ package body MMU is
    use CPU_i686;
 
    PD : aliased PD4M_Type with
-      Volatile                => True,
-      Suppress_Initialization => True;
+      Volatile => True;
 
    --========================================================================--
    --                                                                        --

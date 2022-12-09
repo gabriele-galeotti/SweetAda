@@ -38,8 +38,7 @@ package body MMU is
    use CPU_x86;
 
    PD : aliased PD4k_Type with
-      Volatile                => True,
-      Suppress_Initialization => True;
+      Volatile => True;
 
    -- first page table
    PTE0 : aliased PT_Type with

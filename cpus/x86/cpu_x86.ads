@@ -422,7 +422,8 @@ package CPU_x86 is
    MsgPtr_UNKNOWN              : constant access constant String := String_UNKNOWN'Access;
 
    type IDT_Type is array (Exception_Id_Type range <>) of Exception_Descriptor_Type with
-      Pack => True;
+      Pack                    => True,
+      Suppress_Initialization => True;
 
    subtype IDT_Length_Type is Positive range 1 .. EXCEPTION_ITEMS;
 
@@ -493,8 +494,9 @@ package CPU_x86 is
    -- Page table: 1024 entries aligned on 4k boundary
 
    type PT_Type is array (0 .. 2**10 - 1) of PTEntry_Type with
-      Alignment => PAGESIZE4k,
-      Pack      => True;
+      Alignment               => PAGESIZE4k,
+      Pack                    => True,
+      Suppress_Initialization => True;
 
    -- Page Directory Entry
 

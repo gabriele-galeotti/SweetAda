@@ -206,9 +206,8 @@ package Am7990 is
       RMD2 : RMD2_Type;
       RMD3 : RMD3_Type;
    end record with
-      Alignment               => 2**3,
-      Size                    => 16 * 4,
-      Suppress_Initialization => True;
+      Alignment => 2**3,
+      Size      => 16 * 4;
    for Receive_Message_Descriptor_Type use
    record
       RMD0 at 0 range 0 .. 15;
@@ -218,7 +217,8 @@ package Am7990 is
    end record;
 
    type Receive_Ring_Type is array (Natural range <>) of Receive_Message_Descriptor_Type with
-      Pack => True;
+      Pack                    => True,
+      Suppress_Initialization => True;
 
    ----------------------------------------------------------------------------
    -- Transmit Message Descriptor
@@ -307,9 +307,8 @@ package Am7990 is
       TMD2 : TMD2_Type;
       TMD3 : TMD3_Type;
    end record with
-      Alignment               => 2**3,
-      Size                    => 16 * 4,
-      Suppress_Initialization => True;
+      Alignment => 2**3,
+      Size      => 16 * 4;
    for Transmit_Message_Descriptor_Type use
    record
       TMD0 at 0 range 0 .. 15;
@@ -319,7 +318,8 @@ package Am7990 is
    end record;
 
    type Transmit_Ring_Type is array (Natural range <>) of Transmit_Message_Descriptor_Type with
-      Pack => True;
+      Pack                    => True,
+      Suppress_Initialization => True;
 
    ----------------------------------------------------------------------------
    -- Initialization Block

@@ -157,8 +157,7 @@ package body IDE is
    CMD_PIO_READ  : constant := 16#20#;
    CMD_PIO_WRITE : constant := 16#30#;
 
-   D : IDE_Descriptor_Type with
-      Suppress_Initialization => True;
+   D : IDE_Descriptor_Type;
 
    -- Local subprograms
 
