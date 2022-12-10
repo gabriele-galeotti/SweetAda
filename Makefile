@@ -112,15 +112,8 @@ endif
 export TMPDIR EXEEXT SCREXT SCREXT_cmd SCREXT_unx ECHO REM SED
 
 # generate SWEETADA_PATH
-# msys should have the "cygpath" utility online
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
-ifeq ($(OSTYPE),msys)
-# try to extract installation path
-MSYS_INSTALL_PATH := $(subst /usr/bin/sh.exe,,$(shell $(ECHO) "$(SHELL)"))
-SWEETADA_PATH ?= $(MSYS_INSTALL_PATH)$(shell cygpath.exe -u "$(MAKEFILEDIR)" 2> /dev/null)
-else
 SWEETADA_PATH ?= $(MAKEFILEDIR)
-endif
 export SWEETADA_PATH
 
 # include the utilities
@@ -608,16 +601,16 @@ endif
 #                                                                              #
 ################################################################################
 
-MAKE_APPLICATION := KERNEL_PARENT_PATH=..    -C $(APPLICATION_DIRECTORY)
-MAKE_CLIBRARY    := KERNEL_PARENT_PATH=..    -C $(CLIBRARY_DIRECTORY)
-MAKE_CORE        := KERNEL_PARENT_PATH=..    -C $(CORE_DIRECTORY)
-MAKE_CPUS        := KERNEL_PARENT_PATH=../.. -C $(CPU_BASE_DIRECTORY)
+MAKE_APPLICATION := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(APPLICATION_DIRECTORY)
+MAKE_CLIBRARY    := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(CLIBRARY_DIRECTORY)
+MAKE_CORE        := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(CORE_DIRECTORY)
+MAKE_CPUS        := SHELL="$(SHELL)" KERNEL_PARENT_PATH=../.. -C $(CPU_BASE_DIRECTORY)
 MAKE_CPU         := $(MAKE_CPUS)/$(CPU)
-MAKE_DRIVERS     := KERNEL_PARENT_PATH=..    -C $(DRIVERS_DIRECTORY)
-MAKE_MODULES     := KERNEL_PARENT_PATH=..    -C $(MODULES_DIRECTORY)
-MAKE_PLATFORMS   := KERNEL_PARENT_PATH=../.. -C $(PLATFORM_BASE_DIRECTORY)
+MAKE_DRIVERS     := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(DRIVERS_DIRECTORY)
+MAKE_MODULES     := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(MODULES_DIRECTORY)
+MAKE_PLATFORMS   := SHELL="$(SHELL)" KERNEL_PARENT_PATH=../.. -C $(PLATFORM_BASE_DIRECTORY)
 MAKE_PLATFORM    := $(MAKE_PLATFORMS)/$(PLATFORM)
-MAKE_RTS         := KERNEL_PARENT_PATH=..    -C $(RTS_DIRECTORY)
+MAKE_RTS         := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(RTS_DIRECTORY)
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(d))
 
@@ -845,7 +838,7 @@ endif
 ifeq ($(OSTYPE),cmd)
 	@$(SED) -i -e "s|\\|/|g" -e "s| |\\ |g" gnatbind_objs.lst
 else ifeq ($(OSTYPE),msys)
-	@$(SED) -i -e "s|\\\\\|/|g" -e "s| |\\\\\ |g" gnatbind_objs.lst
+	@$(SED) -i -e "s|\\\\|/|g" -e "s| |\\\\ |g" gnatbind_objs.lst
 else ifeq ($(OSTYPE),darwin)
 	@$(SED) -i '' -e "s| |\\\\ |g" gnatbind_objs.lst
 else
@@ -1245,9 +1238,5 @@ endif
 #
 .PHONY : probevariable
 probevariable :
-ifeq ($(OSTYPE),cmd)
-	@$(ECHO) $($(PROBEVARIABLE))
-else
-	@$(ECHO) "$($(PROBEVARIABLE))"
-endif
+	@$(call echo-print,"$($(PROBEVARIABLE))")
 
