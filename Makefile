@@ -482,7 +482,14 @@ endif
 #                                                                              #
 ################################################################################
 
-export PLATFORM_BASE_DIRECTORY   \
+export                           \
+       MAKE                      \
+       KERNEL_BASENAME           \
+       KERNEL_CFGFILE            \
+       KERNEL_DEPFILE            \
+       KERNEL_OUTFILE            \
+       KERNEL_ROMFILE            \
+       PLATFORM_BASE_DIRECTORY   \
        PLATFORM_DIRECTORY        \
        CPU_BASE_DIRECTORY        \
        CPU_DIRECTORY             \
@@ -495,19 +502,30 @@ export PLATFORM_BASE_DIRECTORY   \
        OBJECT_DIRECTORY          \
        RTS_DIRECTORY             \
        SHARE_DIRECTORY           \
-       KERNEL_BASENAME           \
-       KERNEL_CFGFILE            \
-       KERNEL_DEPFILE            \
-       KERNEL_OUTFILE            \
-       KERNEL_ROMFILE            \
+       RTS_BASE_PATH             \
        INCLUDE_DIRECTORIES       \
        IMPLICIT_ALI_UNITS        \
-       CLEAN_OBJECTS_COMMON      \
+       CLEAN_OBJECTS_COMMON
+
+export                           \
        PLATFORM                  \
        SUBPLATFORM               \
        CPU                       \
        CPU_MODEL                 \
        FPU_MODEL                 \
+       ADA_MODE                  \
+       RTS                       \
+       PROFILE                   \
+       USE_LIBGCC                \
+       USE_LIBADA                \
+       USE_CLIBRARY              \
+       BUILD_MODE                \
+       OPTIMIZATION_LEVEL        \
+       ADDITIONAL_OBJECTS        \
+       STACK_LIMIT               \
+       USE_APPLICATION
+
+export                           \
        TOOLCHAIN_PREFIX          \
        TOOLCHAIN_NAME_AArch64    \
        TOOLCHAIN_NAME_ARM        \
@@ -517,8 +535,9 @@ export PLATFORM_BASE_DIRECTORY   \
        TOOLCHAIN_NAME_MicroBlaze \
        TOOLCHAIN_NAME_NiosII     \
        TOOLCHAIN_NAME_PowerPC    \
-       TOOLCHAIN_NAME_RISCV64    \
+       TOOLCHAIN_NAME_RISCV      \
        TOOLCHAIN_NAME_SPARC      \
+       TOOLCHAIN_NAME_SPARC64    \
        TOOLCHAIN_NAME_SuperH     \
        TOOLCHAIN_NAME_SH4        \
        TOOLCHAIN_NAME_System390  \
@@ -531,12 +550,13 @@ export PLATFORM_BASE_DIRECTORY   \
        TOOLCHAIN_CC              \
        TOOLCHAIN_AR              \
        TOOLCHAIN_GDB             \
-       TOOLCHAIN_INSIGHT         \
        TOOLCHAIN_LD              \
        TOOLCHAIN_OBJDUMP         \
        TOOLCHAIN_RANLIB          \
        GCC_VERSION               \
        GCC_SWITCHES_PLATFORM     \
+       RTS_ROOT_PATH             \
+       RTS_PATH                  \
        AS                        \
        ADAC                      \
        CC                        \
@@ -550,7 +570,6 @@ export PLATFORM_BASE_DIRECTORY   \
        GNATMAKE                  \
        GNATPREP                  \
        GNATXREF                  \
-       INSIGHT                   \
        LD                        \
        NM                        \
        OBJCOPY                   \
@@ -558,30 +577,20 @@ export PLATFORM_BASE_DIRECTORY   \
        RANLIB                    \
        READELF                   \
        SIZE                      \
-       STRIP                     \
-       ELFTOOL                   \
-       RTS_BASE_PATH             \
-       RTS_ROOT_PATH             \
-       RTS_PATH                  \
-       ADA_MODE                  \
-       RTS PROFILE               \
-       USE_LIBGCC                \
-       USE_LIBADA                \
-       USE_CLIBRARY              \
-       ADDITIONAL_OBJECTS        \
-       STACK_LIMIT               \
-       OPTIMIZATION_LEVEL        \
-       BUILD_MODE                \
-       USE_APPLICATION           \
-       MAKE
+       STRIP
 
-export USE_PYTHON
-ifneq ($(PYTHON),)
-export PYTHON
+export USE_ELFTOOL
+ifneq ($(USE_ELFTOOL),)
+export ELFTOOL
 endif
 
 ifneq ($(TCLSH),)
 export TCLSH
+endif
+
+export USE_PYTHON
+ifneq ($(PYTHON),)
+export PYTHON
 endif
 
 ################################################################################
@@ -589,12 +598,6 @@ endif
 # Private non-global definitions and variables.                                #
 #                                                                              #
 ################################################################################
-
-INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(d))
-
-ifeq ($(BUILD_MODE),MAKEFILE)
-IMPLICIT_ALI_UNITS_MAKEFILE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT_ALI_UNITS))
-endif
 
 MAKE_APPLICATION := KERNEL_PARENT_PATH=..    -C $(APPLICATION_DIRECTORY)
 MAKE_CLIBRARY    := KERNEL_PARENT_PATH=..    -C $(CLIBRARY_DIRECTORY)
@@ -606,6 +609,12 @@ MAKE_MODULES     := KERNEL_PARENT_PATH=..    -C $(MODULES_DIRECTORY)
 MAKE_PLATFORMS   := KERNEL_PARENT_PATH=../.. -C $(PLATFORM_BASE_DIRECTORY)
 MAKE_PLATFORM    := $(MAKE_PLATFORMS)/$(PLATFORM)
 MAKE_RTS         := KERNEL_PARENT_PATH=..    -C $(RTS_DIRECTORY)
+
+INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(d))
+
+ifeq ($(BUILD_MODE),MAKEFILE)
+IMPLICIT_ALI_UNITS_MAKEFILE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT_ALI_UNITS))
+endif
 
 CLEAN_OBJECTS += $(KERNEL_OBJFILE) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE)
 ifeq ($(OSTYPE),cmd)
@@ -692,7 +701,7 @@ help :
 	@$(call echo-print,"  Build GCC-wrapper.")
 	@$(call echo-print,"make libutils-gnat-wrapper")
 	@$(call echo-print,"  Build GNAT-wrapper.")
-	@$(call echo-print,"make probevariable PROBEVARIABLE=<variablename>")
+	@$(call echo-print,"make PROBEVARIABLE=<variablename> probevariable")
 	@$(call echo-print,"  Obtain the value of a variable.")
 	@$(call echo-print,"")
 	@$(call echo-print,"Available CPUs: $(CPUS)")
@@ -1227,5 +1236,9 @@ endif
 #
 .PHONY : probevariable
 probevariable :
+ifeq ($(OSTYPE),cmd)
+	@$(ECHO) $($(PROBEVARIABLE))
+else
 	@$(ECHO) "$($(PROBEVARIABLE))"
+endif
 

@@ -15,6 +15,9 @@
 # Environment variables:
 # OS
 # MSYSTEM
+# HOST_CC
+# HOST_CC_SWITCHES
+# HOST_LD_SWITCHES
 #
 
 # detect OS type

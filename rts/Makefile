@@ -30,8 +30,8 @@
 # TOOLCHAIN_RANLIB
 # RTS_PATH
 # RTS
-# ADA_MODE
 # MULTILIB
+# MLL
 # DISABLE_STACK_USAGE
 #
 
@@ -84,32 +84,22 @@ RANLIB := $(TOOLCHAIN_RANLIB)
 ADAC_SWITCHES :=
 ADAC_SWITCHES += --RTS="$(SWEETADA_PATH)"/rts/$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)
 ADAC_SWITCHES += $(MULTILIB_SWITCHES)
-ifeq      ($(ADA_MODE),ADA95)
-ADAC_SWITCHES += -gnat95
-else ifeq ($(ADA_MODE),ADA05)
-ADAC_SWITCHES += -gnat2005
-else ifeq ($(ADA_MODE),ADA12)
-ADAC_SWITCHES += -gnat2012
-else ifeq ($(ADA_MODE),ADA22)
-ADAC_SWITCHES += -gnat2022
-else
-$(warning *** Warning: no valid ADA_MODE.)
-endif
 # we are building a static library, so no PIC
 #ADAC_SWITCHES += -fPIC
 ADAC_SWITCHES += -nostdinc
 ADAC_SWITCHES += -gnatwa
-#ADAC_SWITCHES += -gnata     # Assertions enabled.
+#ADAC_SWITCHES += -gnata       # Assertions enabled.
 # -gnatg implies -gnatwae and -gnatyg
-ADAC_SWITCHES += -gnatg     # Internal GNAT implementation mode.
-#ADAC_SWITCHES += -gnatn     # Activate inlining for subprograms for which pragma inline is specified.
-ADAC_SWITCHES += -gnatp     # Suppress all checks.
+ADAC_SWITCHES += -gnatg       # Internal GNAT implementation mode.
+#ADAC_SWITCHES += -gnatn       # Activate inlining for subprograms for which pragma inline is specified.
+ADAC_SWITCHES += -gnatp       # Suppress all checks.
 # turn off some style checks (which are turned on by -gnatg)
-#ADAC_SWITCHES += -gnatyC    # Check comments, single space.
-#ADAC_SWITCHES += -gnatyM132 # Set maximum line length.
-ADAC_SWITCHES += -gnatyN    # Turn off all style checks.
+#ADAC_SWITCHES += -gnatyC      # Check comments, single space.
+#ADAC_SWITCHES += -gnaty$(MLL) # Set maximum line length.
+ADAC_SWITCHES += -gnatyN      # Turn off all style checks.
 ADAC_SWITCHES += -Wextra
 ADAC_SWITCHES += -Wall
+
 CC_SWITCHES :=
 CC_SWITCHES += $(MULTILIB_SWITCHES)
 CC_SWITCHES += -ffreestanding
