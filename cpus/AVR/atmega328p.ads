@@ -32,6 +32,8 @@ package ATmega328P is
 
    use System;
    use System.Storage_Elements;
+   use Interfaces;
+   use Bits;
 
    ----------------------------------------------------------------------------
    -- CPU control
@@ -48,9 +50,9 @@ package ATmega328P is
 
    type SMCR_Type is
    record
-      SE     : Boolean;     -- Sleep Enable
-      SM     : Bits.Bits_3; -- Sleep Mode Select
-      Unused : Bits.Bits_4;
+      SE     : Boolean; -- Sleep Enable
+      SM     : Bits_3;  -- Sleep Mode Select
+      Unused : Bits_4;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -73,11 +75,11 @@ package ATmega328P is
 
    type MCUSR_Type is
    record
-      PORF   : Boolean;     -- Power-on reset flag
-      EXTRF  : Boolean;     -- External Reset flag
-      BORF   : Boolean;     -- Brown-out Reset flag
-      WDRF   : Boolean;     -- Watchdog Reset flag
-      Unused : Bits.Bits_4;
+      PORF   : Boolean; -- Power-on reset flag
+      EXTRF  : Boolean; -- External Reset flag
+      BORF   : Boolean; -- Brown-out Reset flag
+      WDRF   : Boolean; -- Watchdog Reset flag
+      Unused : Bits_4;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -104,11 +106,11 @@ package ATmega328P is
    record
       IVCE    : Boolean;
       IVSEL   : Boolean;
-      Unused1 : Bits.Bits_2;
+      Unused1 : Bits_2;
       PUD     : Boolean;
-      BODSE   : Boolean;     -- BOD Sleep Enable
-      BODS    : Boolean;     -- BOD Sleep
-      Unused2 : Bits.Bits_1;
+      BODSE   : Boolean; -- BOD Sleep Enable
+      BODS    : Boolean; -- BOD Sleep
+      Unused2 : Bits_1;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -170,8 +172,8 @@ package ATmega328P is
 
    type WDT_Prescaler_Type is
    record
-      WDP012 : Bits.Bits_3; -- Watchdog Timer Prescaler bit 0 .. 2
-      WDP3   : Bits.Bits_1; -- Watchdog Timer Prescaler bit 3
+      WDP012 : Bits_3; -- Watchdog Timer Prescaler bit 0 .. 2
+      WDP3   : Bits_1; -- Watchdog Timer Prescaler bit 3
    end record;
 
    WDT_2K    : constant WDT_Prescaler_Type := (2#000#, 0);
@@ -187,12 +189,12 @@ package ATmega328P is
 
    type WDTCSR_Type is
    record
-      WDP012 : Bits.Bits_3; -- Watchdog Timer Prescaler bit 0 .. 2
-      WDE    : Boolean;     -- Watchdog Enable
-      WDCE   : Boolean;     -- Watchdog Change Enable
-      WDP3   : Bits.Bits_1; -- Watchdog Timer Prescaler bit 3
-      WDIE   : Boolean;     -- Watchdog Timeout Interrupt Enable
-      WDIF   : Boolean;     -- Watchdog Timeout Interrupt flag
+      WDP012 : Bits_3;  -- Watchdog Timer Prescaler bit 0 .. 2
+      WDE    : Boolean; -- Watchdog Enable
+      WDCE   : Boolean; -- Watchdog Change Enable
+      WDP3   : Bits_1;  -- Watchdog Timer Prescaler bit 3
+      WDIE   : Boolean; -- Watchdog Timeout Interrupt Enable
+      WDIF   : Boolean; -- Watchdog Timeout Interrupt flag
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -218,7 +220,7 @@ package ATmega328P is
 
    OSCCAL_ADDRESS : constant := 16#66#;
 
-   OSCCAL : Interfaces.Unsigned_8 with
+   OSCCAL : Unsigned_8 with
       Address              => To_Address (OSCCAL_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -238,9 +240,9 @@ package ATmega328P is
 
    type CLKPR_Type is
    record
-      CLKPS  : Bits.Bits_4; -- Clock Prescaler Select bit 0 .. 3
-      Unused : Bits.Bits_3;
-      CLKPCE : Boolean;     -- Clock Prescaler Change Enable
+      CLKPS  : Bits_4;  -- Clock Prescaler Select bit 0 .. 3
+      Unused : Bits_3;
+      CLKPCE : Boolean; -- Clock Prescaler Change Enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -263,14 +265,14 @@ package ATmega328P is
 
    type PRR_Type is
    record
-      PRADC    : Boolean;     -- Power Reduction ADC
-      PRUSART0 : Boolean;     -- Power Reduction USART
-      PRSPI    : Boolean;     -- Power Reduction Serial Peripheral Interface
-      PRTIM1   : Boolean;     -- Power Reduction Timer/Counter1
-      Unused   : Bits.Bits_1;
-      PRTIM0   : Boolean;     -- Power Reduction Timer/Counter0
-      PRTIM2   : Boolean;     -- Power Reduction Timer/Counter2
-      PRTWI    : Boolean;     -- Power Reduction TWI
+      PRADC    : Boolean; -- Power Reduction ADC
+      PRUSART0 : Boolean; -- Power Reduction USART
+      PRSPI    : Boolean; -- Power Reduction Serial Peripheral Interface
+      PRTIM1   : Boolean; -- Power Reduction Timer/Counter1
+      Unused   : Bits_1;
+      PRTIM0   : Boolean; -- Power Reduction Timer/Counter0
+      PRTIM2   : Boolean; -- Power Reduction Timer/Counter2
+      PRTWI    : Boolean; -- Power Reduction TWI
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -302,12 +304,12 @@ package ATmega328P is
 
    type EECR_Type is
    record
-      EERE   : Boolean;     -- EEPROM Read Enable
-      EEPE   : Boolean;     -- EEPROM Write Enable
-      EEMPE  : Boolean;     -- EEPROM Master Write Enable
-      EERIE  : Boolean;     -- EEPROM Ready Interrupt Enable
-      EEPM01 : Boolean;     -- EEPROM Programming Mode Bits
-      Unused : Bits.Bits_2;
+      EERE   : Boolean; -- EEPROM Read Enable
+      EEPE   : Boolean; -- EEPROM Write Enable
+      EEMPE  : Boolean; -- EEPROM Master Write Enable
+      EERIE  : Boolean; -- EEPROM Ready Interrupt Enable
+      EEPM01 : Boolean; -- EEPROM Programming Mode Bits
+      Unused : Bits_2;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -333,7 +335,7 @@ package ATmega328P is
 
    EEDR_ADDRESS : constant := 16#40#;
 
-   EEDR : Interfaces.Unsigned_8 with
+   EEDR : Unsigned_8 with
       Address              => To_Address (EEDR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -343,7 +345,7 @@ package ATmega328P is
 
    EEARL_ADDRESS : constant := 16#41#;
 
-   EEARL : Interfaces.Unsigned_8 with
+   EEARL : Unsigned_8 with
       Address              => To_Address (EEARL_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -351,7 +353,7 @@ package ATmega328P is
 
    EEARH_ADDRESS : constant := 16#42#;
 
-   EEARH : Interfaces.Unsigned_8 with
+   EEARH : Unsigned_8 with
       Address              => To_Address (EEARH_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -365,7 +367,7 @@ package ATmega328P is
 
    GPIOR0_ADDRESS : constant := 16#3E#;
 
-   GPIOR0 : Interfaces.Unsigned_8 with
+   GPIOR0 : Unsigned_8 with
       Address              => To_Address (GPIOR0_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -375,7 +377,7 @@ package ATmega328P is
 
    GPIOR1_ADDRESS : constant := 16#4A#;
 
-   GPIOR1 : Interfaces.Unsigned_8 with
+   GPIOR1 : Unsigned_8 with
       Address              => To_Address (GPIOR1_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -385,7 +387,7 @@ package ATmega328P is
 
    GPIOR2_ADDRESS : constant := 16#4B#;
 
-   GPIOR2 : Interfaces.Unsigned_8 with
+   GPIOR2 : Unsigned_8 with
       Address              => To_Address (GPIOR2_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -399,8 +401,8 @@ package ATmega328P is
 
    type TC0_WGM_Type is
    record
-      WGM01 : Bits.Bits_2; -- Waveform Generation Mode bit 0 .. 1
-      WGM2  : Bits.Bits_1; -- Waveform Generation Mode bit 2
+      WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
+      WGM2  : Bits_1; -- Waveform Generation Mode bit 2
    end record;
 
    TC0_WGM_Normal       : constant TC0_WGM_Type := (2#00#, 0);
@@ -412,12 +414,12 @@ package ATmega328P is
 
    type TCCR0A_Type is
    record
-      WGM01  : Bits.Bits_2; -- Waveform Generation Mode bit 0 .. 1
-      Unused : Bits.Bits_2;
-      COM0B0 : Boolean;     -- Compare Match Output B Mode bit 0
-      COM0B1 : Boolean;     -- Compare Match Output B Mode bit 1
-      COM0A0 : Boolean;     -- Compare Match Output A Mode bit 0
-      COM0A1 : Boolean;     -- Compare Match Output A Mode bit 1
+      WGM01  : Bits_2;  -- Waveform Generation Mode bit 0 .. 1
+      Unused : Bits_2;
+      COM0B0 : Boolean; -- Compare Match Output B Mode bit 0
+      COM0B1 : Boolean; -- Compare Match Output B Mode bit 1
+      COM0A0 : Boolean; -- Compare Match Output A Mode bit 0
+      COM0A1 : Boolean; -- Compare Match Output A Mode bit 1
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -452,11 +454,11 @@ package ATmega328P is
 
    type TCCR0B_Type is
    record
-      CS0    : Bits.Bits_3; -- Clock Select
-      WGM2   : Bits.Bits_1; -- Waveform Generation Mode bit 2
-      Unused : Bits.Bits_2;
-      FOC0B  : Boolean;     -- Force Output Compare B
-      FOC0A  : Boolean;     -- Force Output Compare A
+      CS0    : Bits_3;  -- Clock Select
+      WGM2   : Bits_1;  -- Waveform Generation Mode bit 2
+      Unused : Bits_2;
+      FOC0B  : Boolean; -- Force Output Compare B
+      FOC0A  : Boolean; -- Force Output Compare A
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -481,7 +483,7 @@ package ATmega328P is
 
    TCNT0_ADDRESS : constant := 16#46#;
 
-   TCNT0 : Interfaces.Unsigned_8 with
+   TCNT0 : Unsigned_8 with
       Address              => To_Address (TCNT0_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -491,7 +493,7 @@ package ATmega328P is
 
    OCR0A_ADDRESS : constant := 16#47#;
 
-   OCR0A : Interfaces.Unsigned_8 with
+   OCR0A : Unsigned_8 with
       Address              => To_Address (OCR0A_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -501,7 +503,7 @@ package ATmega328P is
 
    OCR0B_ADDRESS : constant := 16#48#;
 
-   OCR0B : Interfaces.Unsigned_8 with
+   OCR0B : Unsigned_8 with
       Address              => To_Address (OCR0B_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -511,10 +513,10 @@ package ATmega328P is
 
    type TIMSK0_Type is
    record
-      TOIE0  : Boolean;     -- Timer/Counter0 Overflow Interrupt Enable
-      OCIE0A : Boolean;     -- Timer/Counter0 Output Compare Match A Interrupt Enable
-      OCIE0B : Boolean;     -- Timer/Counter0 Output Compare Match B Interrupt Enable
-      Unused : Bits.Bits_5;
+      TOIE0  : Boolean; -- Timer/Counter0 Overflow Interrupt Enable
+      OCIE0A : Boolean; -- Timer/Counter0 Output Compare Match A Interrupt Enable
+      OCIE0B : Boolean; -- Timer/Counter0 Output Compare Match B Interrupt Enable
+      Unused : Bits_5;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -538,10 +540,10 @@ package ATmega328P is
 
    type TIFR0_Type is
    record
-      TOV0   : Boolean;     -- Timer/Counter0 Overflow Flag
-      OCF0A  : Boolean;     -- Timer/Counter0 Output Compare A Match Flag
-      OCF0B  : Boolean;     -- Timer/Counter0 Output Compare B Match Flag
-      Unused : Bits.Bits_5;
+      TOV0   : Boolean; -- Timer/Counter0 Overflow Flag
+      OCF0A  : Boolean; -- Timer/Counter0 Output Compare A Match Flag
+      OCF0B  : Boolean; -- Timer/Counter0 Output Compare B Match Flag
+      Unused : Bits_5;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -569,8 +571,8 @@ package ATmega328P is
 
    type TC1_WGM_Type is
    record
-      WGM01 : Bits.Bits_2; -- Waveform Generation Mode bit 0 .. 1
-      WGM23 : Bits.Bits_2; -- Waveform Generation Mode bit 2
+      WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
+      WGM23 : Bits_2; -- Waveform Generation Mode bit 2
    end record;
 
    TC1_WGM_Normal            : constant TC1_WGM_Type := (2#00#, 2#00#);
@@ -591,12 +593,12 @@ package ATmega328P is
 
    type TCCR1A_Type is
    record
-      WGM01  : Bits.Bits_2; -- Waveform Generation Mode bit 0 .. 1
-      Unused : Bits.Bits_2;
-      COM1B0 : Boolean;     -- Compare Match Output B Mode bit 0
-      COM1B1 : Boolean;     -- Compare Match Output B Mode bit 1
-      COM1A0 : Boolean;     -- Compare Match Output A Mode bit 0
-      COM1A1 : Boolean;     -- Compare Match Output A Mode bit 1
+      WGM01  : Bits_2;  -- Waveform Generation Mode bit 0 .. 1
+      Unused : Bits_2;
+      COM1B0 : Boolean; -- Compare Match Output B Mode bit 0
+      COM1B1 : Boolean; -- Compare Match Output B Mode bit 1
+      COM1A0 : Boolean; -- Compare Match Output A Mode bit 0
+      COM1A1 : Boolean; -- Compare Match Output A Mode bit 1
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -631,11 +633,11 @@ package ATmega328P is
 
    type TCCR1B_Type is
    record
-      CS1    : Bits.Bits_3; -- Clock Select
-      WGM23  : Bits.Bits_2; -- Waveform Generation Mode bit 2 .. 3
-      Unused : Bits.Bits_1;
-      ICES1  : Boolean;     -- Force Output Compare B
-      ICNC1  : Boolean;     -- Force Output Compare A
+      CS1    : Bits_3;  -- Clock Select
+      WGM23  : Bits_2;  -- Waveform Generation Mode bit 2 .. 3
+      Unused : Bits_1;
+      ICES1  : Boolean; -- Force Output Compare B
+      ICNC1  : Boolean; -- Force Output Compare A
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -660,9 +662,9 @@ package ATmega328P is
 
    type TCCR1C_Type is
    record
-      Unused : Bits.Bits_6;
-      FOC1B  : Boolean;     -- Force Output Compare B
-      FOC1A  : Boolean;     -- Force Output Compare A
+      Unused : Bits_6;
+      FOC1B  : Boolean; -- Force Output Compare B
+      FOC1A  : Boolean; -- Force Output Compare A
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -685,7 +687,7 @@ package ATmega328P is
 
    TCNT1L_ADDRESS : constant := 16#84#;
 
-   TCNT1L : Interfaces.Unsigned_8 with
+   TCNT1L : Unsigned_8 with
       Address              => To_Address (TCNT1L_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -693,7 +695,7 @@ package ATmega328P is
 
    TCNT1H_ADDRESS : constant := 16#85#;
 
-   TCNT1H : Interfaces.Unsigned_8 with
+   TCNT1H : Unsigned_8 with
       Address              => To_Address (TCNT1H_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -703,7 +705,7 @@ package ATmega328P is
 
    OCR1AL_ADDRESS : constant := 16#88#;
 
-   OCR1AL : Interfaces.Unsigned_8 with
+   OCR1AL : Unsigned_8 with
       Address              => To_Address (OCR1AL_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -711,7 +713,7 @@ package ATmega328P is
 
    OCR1AH_ADDRESS : constant := 16#89#;
 
-   OCR1AH : Interfaces.Unsigned_8 with
+   OCR1AH : Unsigned_8 with
       Address              => To_Address (OCR1AH_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -721,7 +723,7 @@ package ATmega328P is
 
    OCR1BL_ADDRESS : constant := 16#8A#;
 
-   OCR1BL : Interfaces.Unsigned_8 with
+   OCR1BL : Unsigned_8 with
       Address              => To_Address (OCR1BL_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -729,7 +731,7 @@ package ATmega328P is
 
    OCR1BH_ADDRESS : constant := 16#8B#;
 
-   OCR1BH : Interfaces.Unsigned_8 with
+   OCR1BH : Unsigned_8 with
       Address              => To_Address (OCR1BH_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -739,7 +741,7 @@ package ATmega328P is
 
    ICR1L_ADDRESS : constant := 16#86#;
 
-   ICR1L : Interfaces.Unsigned_8 with
+   ICR1L : Unsigned_8 with
       Address              => To_Address (ICR1L_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -747,7 +749,7 @@ package ATmega328P is
 
    ICR1H_ADDRESS : constant := 16#87#;
 
-   ICR1H : Interfaces.Unsigned_8 with
+   ICR1H : Unsigned_8 with
       Address              => To_Address (ICR1H_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -757,12 +759,12 @@ package ATmega328P is
 
    type TIMSK1_Type is
    record
-      TOIE1   : Boolean;     -- Timer/Counter1 Overflow Interrupt Enable
-      OCIE1A  : Boolean;     -- Timer/Counter1 Output Compare Match A Interrupt Enable
-      OCIE1B  : Boolean;     -- Timer/Counter1 Output Compare Match B Interrupt Enable
-      Unused1 : Bits.Bits_2;
-      ICIE1   : Boolean;     -- Timer/Counter1 Input Capture Interrupt Enable
-      Unused2 : Bits.Bits_2;
+      TOIE1   : Boolean; -- Timer/Counter1 Overflow Interrupt Enable
+      OCIE1A  : Boolean; -- Timer/Counter1 Output Compare Match A Interrupt Enable
+      OCIE1B  : Boolean; -- Timer/Counter1 Output Compare Match B Interrupt Enable
+      Unused1 : Bits_2;
+      ICIE1   : Boolean; -- Timer/Counter1 Input Capture Interrupt Enable
+      Unused2 : Bits_2;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -788,12 +790,12 @@ package ATmega328P is
 
    type TIFR1_Type is
    record
-      TOV1    : Boolean;     -- Timer/Counter1 Overflow Flag
-      OCF1A   : Boolean;     -- Timer/Counter1 Output Compare A Match Flag
-      OCF1B   : Boolean;     -- Timer/Counter1 Output Compare B Match Flag
-      Unused1 : Bits.Bits_2;
-      ICF1    : Boolean;     -- Timer/Counter1 Input Capture Flag
-      Unused2 : Bits.Bits_2;
+      TOV1    : Boolean; -- Timer/Counter1 Overflow Flag
+      OCF1A   : Boolean; -- Timer/Counter1 Output Compare A Match Flag
+      OCF1B   : Boolean; -- Timer/Counter1 Output Compare B Match Flag
+      Unused1 : Bits_2;
+      ICF1    : Boolean; -- Timer/Counter1 Input Capture Flag
+      Unused2 : Bits_2;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -823,8 +825,8 @@ package ATmega328P is
 
    type TC2_WGM_Type is
    record
-      WGM01 : Bits.Bits_2; -- Waveform Generation Mode bit 0 .. 1
-      WGM2  : Bits.Bits_1; -- Waveform Generation Mode bit 2
+      WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
+      WGM2  : Bits_1; -- Waveform Generation Mode bit 2
    end record;
 
    TC2_WGM2_Normal       : constant TC2_WGM_Type := (2#00#, 0);
@@ -836,12 +838,12 @@ package ATmega328P is
 
    type TCCR2A_Type is
    record
-      WGM01  : Bits.Bits_2; -- Waveform Generation Mode bit 0 .. 1
-      Unused : Bits.Bits_2;
-      COM2B0 : Boolean;     -- Compare Match Output B Mode bit 0
-      COM2B1 : Boolean;     -- Compare Match Output B Mode bit 1
-      COM2A0 : Boolean;     -- Compare Match Output A Mode bit 0
-      COM2A1 : Boolean;     -- Compare Match Output A Mode bit 1
+      WGM01  : Bits_2;  -- Waveform Generation Mode bit 0 .. 1
+      Unused : Bits_2;
+      COM2B0 : Boolean; -- Compare Match Output B Mode bit 0
+      COM2B1 : Boolean; -- Compare Match Output B Mode bit 1
+      COM2A0 : Boolean; -- Compare Match Output A Mode bit 0
+      COM2A1 : Boolean; -- Compare Match Output A Mode bit 1
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -876,11 +878,11 @@ package ATmega328P is
 
    type TCCR2B_Type is
    record
-      CS2    : Bits.Bits_3; -- Clock Select
-      WGM2   : Bits.Bits_1; -- Waveform Generation Mode bit 2
-      Unused : Bits.Bits_2;
-      FOC2B  : Boolean;     -- Force Output Compare B
-      FOC2A  : Boolean;     -- Force Output Compare A
+      CS2    : Bits_3;  -- Clock Select
+      WGM2   : Bits_1;  -- Waveform Generation Mode bit 2
+      Unused : Bits_2;
+      FOC2B  : Boolean; -- Force Output Compare B
+      FOC2A  : Boolean; -- Force Output Compare A
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -905,7 +907,7 @@ package ATmega328P is
 
    TCNT2_ADDRESS : constant := 16#B2#;
 
-   TCNT2 : Interfaces.Unsigned_8 with
+   TCNT2 : Unsigned_8 with
       Address              => To_Address (TCNT2_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -915,7 +917,7 @@ package ATmega328P is
 
    OCR2A_ADDRESS : constant := 16#B3#;
 
-   OCR2A : Interfaces.Unsigned_8 with
+   OCR2A : Unsigned_8 with
       Address              => To_Address (OCR2A_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -925,7 +927,7 @@ package ATmega328P is
 
    OCR2B_ADDRESS : constant := 16#B4#;
 
-   OCR2B : Interfaces.Unsigned_8 with
+   OCR2B : Unsigned_8 with
       Address              => To_Address (OCR2B_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -935,10 +937,10 @@ package ATmega328P is
 
    type TIMSK2_Type is
    record
-      TOIE2  : Boolean;     -- Timer/Counter2 Overflow Interrupt Enable
-      OCIE2A : Boolean;     -- Timer/Counter2 Output Compare Match A Interrupt Enable
-      OCIE2B : Boolean;     -- Timer/Counter2 Output Compare Match B Interrupt Enable
-      Unused : Bits.Bits_5;
+      TOIE2  : Boolean; -- Timer/Counter2 Overflow Interrupt Enable
+      OCIE2A : Boolean; -- Timer/Counter2 Output Compare Match A Interrupt Enable
+      OCIE2B : Boolean; -- Timer/Counter2 Output Compare Match B Interrupt Enable
+      Unused : Bits_5;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -962,10 +964,10 @@ package ATmega328P is
 
    type TIFR2_Type is
    record
-      TOV2   : Boolean;     -- Timer/Counter2 Overflow Flag
-      OCF2A  : Boolean;     -- Timer/Counter2 Output Compare A Match Flag
-      OCF2B  : Boolean;     -- Timer/Counter2 Output Compare B Match Flag
-      Unused : Bits.Bits_5;
+      TOV2   : Boolean; -- Timer/Counter2 Overflow Flag
+      OCF2A  : Boolean; -- Timer/Counter2 Output Compare A Match Flag
+      OCF2B  : Boolean; -- Timer/Counter2 Output Compare B Match Flag
+      Unused : Bits_5;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -989,14 +991,14 @@ package ATmega328P is
 
    type ASSR_Type is
    record
-      TCR2BUB : Boolean;     -- Timer/Counter Control Register2 Update Busy
-      TCR2AUB : Boolean;     -- Timer/Counter Control Register2 Update Busy
-      OCR2BUB : Boolean;     -- Output Compare Register2 Update Busy
-      OCR2AUB : Boolean;     -- Output Compare Register2 Update Busy
-      TCN2UB  : Boolean;     -- Timer/Counter2 Update Busy
-      AS2     : Boolean;     -- Asynchronous Timer/Counter2
-      EXCLK   : Boolean;     -- Enable External Clock Input
-      Unused  : Bits.Bits_1;
+      TCR2BUB : Boolean; -- Timer/Counter Control Register2 Update Busy
+      TCR2AUB : Boolean; -- Timer/Counter Control Register2 Update Busy
+      OCR2BUB : Boolean; -- Output Compare Register2 Update Busy
+      OCR2AUB : Boolean; -- Output Compare Register2 Update Busy
+      TCN2UB  : Boolean; -- Timer/Counter2 Update Busy
+      AS2     : Boolean; -- Asynchronous Timer/Counter2
+      EXCLK   : Boolean; -- Enable External Clock Input
+      Unused  : Bits_1;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1024,10 +1026,10 @@ package ATmega328P is
 
    type GTCCR_Type is
    record
-      PSRSYNC : Boolean;     -- Prescaler Reset Timer/Counter1 and Timer/Counter0
-      PSRASY  : Boolean;     -- Prescaler Reset Timer/Counter2
-      Unused  : Bits.Bits_5;
-      TSM     : Boolean;     -- Timer/Counter Synchronization Mode
+      PSRSYNC : Boolean; -- Prescaler Reset Timer/Counter1 and Timer/Counter0
+      PSRASY  : Boolean; -- Prescaler Reset Timer/Counter2
+      Unused  : Bits_5;
+      TSM     : Boolean; -- Timer/Counter Synchronization Mode
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1397,14 +1399,14 @@ package ATmega328P is
 
    type UCSR0B_Type is
    record
-      TXB80   : Bits.Bits_1; -- Transmit Data bit 8
-      RXB80   : Bits.Bits_1; -- Receive Data bit 8
-      UCSZ0_2 : Bits.Bits_1; -- Character Size bit 2
-      TXEN0   : Boolean;     -- Transmitter Enable
-      RXEN0   : Boolean;     -- Receiver Enable
-      UDRIE0  : Boolean;     -- USART Data register Empty Interrupt Enable
-      TXCIE0  : Boolean;     -- TX Complete Interrupt Enable
-      RXCIE0  : Boolean;     -- RX Complete Interrupt Enable
+      TXB80   : Bits_1;  -- Transmit Data bit 8
+      RXB80   : Bits_1;  -- Receive Data bit 8
+      UCSZ0_2 : Bits_1;  -- Character Size bit 2
+      TXEN0   : Boolean; -- Transmitter Enable
+      RXEN0   : Boolean; -- Receiver Enable
+      UDRIE0  : Boolean; -- USART Data register Empty Interrupt Enable
+      TXCIE0  : Boolean; -- TX Complete Interrupt Enable
+      RXCIE0  : Boolean; -- RX Complete Interrupt Enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1443,8 +1445,8 @@ package ATmega328P is
 
    type USART_Character_Size_Type is
    record
-      UCSZ0_01 : Bits.Bits_2; -- Character Size bit 0 .. 1
-      UCSZ0_2  : Bits.Bits_1; -- Character Size bit 2
+      UCSZ0_01 : Bits_2; -- Character Size bit 0 .. 1
+      UCSZ0_2  : Bits_1; -- Character Size bit 2
    end record;
 
    Character_Size_5 : constant USART_Character_Size_Type := (2#00#, 0);
@@ -1458,11 +1460,11 @@ package ATmega328P is
 
    type UCSR0C_Type is
    record
-      UCPOL0   : Bits.Bits_1; -- Clock Polarity
-      UCSZ0_01 : Bits.Bits_2; -- Character Size bit 0 .. 1
-      USBS0    : Bits.Bits_1; -- Stop Bit Select
-      UPM0     : Bits.Bits_2; -- Parity Mode
-      UMSEL0   : Bits.Bits_2; -- USART Mode Select
+      UCPOL0   : Bits_1; -- Clock Polarity
+      UCSZ0_01 : Bits_2; -- Character Size bit 0 .. 1
+      USBS0    : Bits_1; -- Stop Bit Select
+      UPM0     : Bits_2; -- Parity Mode
+      UMSEL0   : Bits_2; -- USART Mode Select
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1512,7 +1514,7 @@ package ATmega328P is
 
    UBRR0L_ADDRESS : constant := 16#C4#;
 
-   UBRR0L : Interfaces.Unsigned_8 with
+   UBRR0L : Unsigned_8 with
       Address              => To_Address (UBRR0L_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -1526,7 +1528,7 @@ package ATmega328P is
 --       UBRR9  : Boolean; -- USART Baud Rate Register bit 9
 --       UBRR10 : Boolean; -- USART Baud Rate Register bit 10
 --       UBRR11 : Boolean; -- USART Baud Rate Register bit 11
---       Unused : Bits.Bits_4;
+--       Unused : Bits_4;
 --    end record with
 --       Bit_Order => Low_Order_First,
 --       Size      => 8;
@@ -1541,7 +1543,7 @@ package ATmega328P is
 
    UBRR0H_ADDRESS : constant := 16#C5#;
 
-   UBRR0H : Interfaces.Unsigned_8 with
+   UBRR0H : Unsigned_8 with
       Address              => To_Address (UBRR0H_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -1551,7 +1553,7 @@ package ATmega328P is
 
    UDR0_ADDRESS : constant := 16#C6#;
 
-   UDR0 : Interfaces.Unsigned_8 with
+   UDR0 : Unsigned_8 with
       Address              => To_Address (UDR0_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -1563,16 +1565,32 @@ package ATmega328P is
 
    -- SPI Control Register
 
+   SPR_DIV4   : constant := 2#00#; -- fOSC/4
+   SPR_DIV16  : constant := 2#01#; -- fOSC/16
+   SPR_DIV64  : constant := 2#10#; -- fOSC/64
+   SPR_DIV128 : constant := 2#11#; -- fOSC/128
+
+   CPHA_LSAMPLE_TSETUP : constant := 0; -- Leading Edge = Sample, Trailing Edge = Setup
+   CPHA_LSETUP_TSAMPLE : constant := 1; -- Leading Edge = Setup, Trailing Edge = Sample
+
+   CPOL_LRAISING_TFALLING : constant := 0; -- Leading Edge = Raising, Trailing Edge = Falling
+   CPOL_LFALLING_TRAISING : constant := 1; -- Leading Edge = Falling, Trailing Edge = Raising
+
+   MSTR_SLAVE  : constant := 0; -- SPI Slave
+   MSTR_MASTER : constant := 1; -- SPI Master
+
+   DORD_MSB : constant := 0; -- MSB first
+   DORD_LSB : constant := 1; -- LSB first
+
    type SPCR_Type is
    record
-      SPR0 : Boolean;
-      SPR1 : Boolean;
-      CPHA : Boolean;
-      CPOL : Boolean;
-      MSTR : Boolean;
-      DORD : Boolean;
-      SPE  : Boolean;
-      SPIE : Boolean;
+      SPR  : Bits_2;  -- SPI Clock Rate Select 1 and 0
+      CPHA : Bits_1;  -- Clock Phase
+      CPOL : Bits_1;  -- Clock Polarity
+      MSTR : Bits_1;  -- Master/Slave Select
+      DORD : Bits_1;  -- Data Order
+      SPE  : Boolean; -- SPI Enable
+      SPIE : Boolean; -- SPI Interrupt Enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1600,19 +1618,19 @@ package ATmega328P is
 
    type SPSR_Type is
    record
-      SPI2X  : Boolean;
-      Unused : Bits.Bits_5;
-      WCOL   : Boolean;
-      SPIF   : Boolean;
+      SPI2X    : Boolean;     -- Double SPI Speed Bit
+      Reserved : Bits_5 := 0;
+      WCOL     : Boolean;     -- Write COLlision Flag
+      SPIF     : Boolean;     -- SPI Interrupt Flag
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
    for SPSR_Type use
    record
-      SPI2X  at 0 range 0 .. 0;
-      Unused at 0 range 1 .. 5;
-      WCOL   at 0 range 6 .. 6;
-      SPIF   at 0 range 7 .. 7;
+      SPI2X    at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 5;
+      WCOL     at 0 range 6 .. 6;
+      SPIF     at 0 range 7 .. 7;
    end record;
 
    SPSR_ADDRESS : constant := 16#4D#;
@@ -1627,7 +1645,7 @@ package ATmega328P is
 
    SPDR_ADDRESS : constant := 16#4E#;
 
-   SPDR : Interfaces.Unsigned_8 with
+   SPDR : Unsigned_8 with
       Address              => To_Address (SPDR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
