@@ -91,10 +91,14 @@ library.o : ../library.c
 
 .PHONY : install
 install :
-ifeq ($(OSTYPE),darwin)
-	$(CP) gnat-wrapper$(EXEEXT) ../../gnat-wrapper-osx$(EXEEXT)
-else
+ifeq      ($(OSTYPE),linux)
 	$(CP) gnat-wrapper$(EXEEXT) ../../
+else ifeq ($(OSTYPE),cmd)
+	$(CP) gnat-wrapper$(EXEEXT) ..\..\gnat-wrapper$(EXEEXT)
+else ifeq ($(OSTYPE),msys)
+	$(CP) gnat-wrapper$(EXEEXT) ../../
+else ifeq ($(OSTYPE),darwin)
+	$(CP) gnat-wrapper$(EXEEXT) ../../gnat-wrapper-osx$(EXEEXT)
 endif
 
 .PHONY : clean

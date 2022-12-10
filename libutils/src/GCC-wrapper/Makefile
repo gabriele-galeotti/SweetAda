@@ -91,10 +91,14 @@ library.o : ../library.c
 
 .PHONY : install
 install :
-ifeq ($(OSTYPE),darwin)
-	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-osx$(EXEEXT)
-else
+ifeq      ($(OSTYPE),linux)
 	$(CP) gcc-wrapper$(EXEEXT) ../../
+else ifeq ($(OSTYPE),cmd)
+	$(CP) gcc-wrapper$(EXEEXT) ..\..\gcc-wrapper$(EXEEXT)
+else ifeq ($(OSTYPE),msys)
+	$(CP) gcc-wrapper$(EXEEXT) ../../
+else ifeq ($(OSTYPE),darwin)
+	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-osx$(EXEEXT)
 endif
 
 .PHONY : clean

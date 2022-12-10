@@ -92,10 +92,14 @@ library.o : ../library.c
 
 .PHONY : install
 install :
-ifeq ($(OSTYPE),darwin)
-	$(CP) elftool$(EXEEXT) ../../elftool-osx$(EXEEXT)
-else
+ifeq      ($(OSTYPE),linux)
 	$(CP) elftool$(EXEEXT) ../../
+else ifeq ($(OSTYPE),cmd)
+	$(CP) elftool$(EXEEXT) ..\..\elftool$(EXEEXT)
+else ifeq ($(OSTYPE),msys)
+	$(CP) elftool$(EXEEXT) ../../
+else ifeq ($(OSTYPE),darwin)
+	$(CP) elftool$(EXEEXT) ../../elftool-osx$(EXEEXT)
 endif
 
 .PHONY : clean
