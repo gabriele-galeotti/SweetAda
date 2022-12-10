@@ -105,10 +105,10 @@ print_I $configure_filename "Ada_Mode              := `"$env:ADA_MODE`";"
 print_I $configure_filename "Platform              := `"$env:PLATFORM`";"
 print_I $configure_filename "Cpu                   := `"$env:CPU`";"
 print_I $configure_filename "ADAC_Switches_RTS     := ("
-$adac_switches_rts = $env:ADAC_SWITCHES_RTS.Trim(" ")
+$adac_switches_rts = $env:ADAC_SWITCHES_RTS
 if ($adac_switches_rts.Length -gt 0)
 {
-  $adac_switches_rts_array = $adac_switches_rts -split "\s+"
+  $adac_switches_rts_array = $adac_switches_rts.Trim(" ") -split "\s+"
   $count = 0
   foreach ($s in $adac_switches_rts_array)
   {
