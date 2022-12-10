@@ -162,7 +162,7 @@ package body RISCV is
            Outputs  => No_Output_Operands,
            Inputs   => [
                         MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
-                        Interfaces.Unsigned_32'Asm_Input ("r", 16#0000_0080#)
+                        Unsigned_32'Asm_Input ("r", 16#0000_0080#)
                        ],
            Clobber  => "",
            Volatile => True

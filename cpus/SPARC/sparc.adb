@@ -31,7 +31,7 @@ package body SPARC is
    --========================================================================--
 
    use System.Machine_Code;
-   use type Interfaces.Unsigned_32;
+   use Interfaces;
 
    CRLF : String renames Definitions.CRLF;
 
@@ -114,14 +114,14 @@ package body SPARC is
    ----------------------------------------------------------------------------
 
    procedure TBR_Set (TBR_Address : in Address) is
-      function To_U32 is new Ada.Unchecked_Conversion (Address, Interfaces.Unsigned_32);
+      function To_U32 is new Ada.Unchecked_Conversion (Address, Unsigned_32);
    begin
       Asm (
            Template => ""                           & CRLF &
                        "        wr      %0,0,%%tbr" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", To_U32 (TBR_Address) and 16#FFFF_FFF0#),
+           Inputs   => Unsigned_32'Asm_Input ("r", To_U32 (TBR_Address) and 16#FFFF_FFF0#),
            Clobber  => "",
            Volatile => True
           );
@@ -151,8 +151,8 @@ package body SPARC is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => [
-                        Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_F0FF#),
-                        Interfaces.Unsigned_32'Asm_Input ("r", 16#0000_0020#)
+                        Unsigned_32'Asm_Input ("r", 16#FFFF_F0FF#),
+                        Unsigned_32'Asm_Input ("r", 16#0000_0020#)
                        ],
            Clobber  => "g1",
            Volatile => True
@@ -169,7 +169,7 @@ package body SPARC is
                        "        nop ; nop ; nop     " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => Interfaces.Unsigned_32'Asm_Input ("r", 16#FFFF_FFDF#),
+           Inputs   => Unsigned_32'Asm_Input ("r", 16#FFFF_FFDF#),
            Clobber  => "g1",
            Volatile => True
           );

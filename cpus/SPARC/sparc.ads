@@ -31,6 +31,7 @@ package SPARC is
    pragma Preelaborate;
 
    use System;
+   use Bits;
 
    ----------------------------------------------------------------------------
    -- Generic definitions
@@ -69,10 +70,10 @@ package SPARC is
       PIL      : Natural range 0 .. 15; -- proc_interrupt_level
       EF       : Boolean;               -- enable_floating-point
       EC       : Boolean;               -- enable_coprocessor
-      Reserved : Bits.Bits_6;           --
+      Reserved : Bits_6;                --
       icc      : icc_Type;              -- integer_cond_codes
-      ver      : Bits.Bits_4;           -- version
-      impl     : Bits.Bits_4;           -- implementation
+      ver      : Bits_4;                -- version
+      impl     : Bits_4;                -- implementation
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -146,7 +147,7 @@ package SPARC is
 
    type TrapTable_Item_Type is
    record
-      Code : Bits.U32_Array (0 .. 3);
+      Code : U32_Array (0 .. 3);
    end record with
       Alignment => 16,
       Size      => 4 * 32;

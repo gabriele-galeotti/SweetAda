@@ -29,6 +29,8 @@ package SH is
 
    pragma Preelaborate;
 
+   use Bits;
+
    ----------------------------------------------------------------------------
    -- Generic definitions
    ----------------------------------------------------------------------------
@@ -55,14 +57,14 @@ package SH is
    -- Locking
    ----------------------------------------------------------------------------
 
-   LOCK_UNLOCK : constant Bits.CPU_Unsigned := 0;
-   LOCK_LOCK   : constant Bits.CPU_Unsigned := 1;
+   LOCK_UNLOCK : constant CPU_Unsigned := 0;
+   LOCK_LOCK   : constant CPU_Unsigned := 1;
 
    type Lock_Type is
    record
-      Lock : aliased Bits.CPU_Unsigned := LOCK_UNLOCK with Atomic => True;
+      Lock : aliased CPU_Unsigned := LOCK_UNLOCK with Atomic => True;
    end record with
-      Size => Bits.CPU_Unsigned'Size;
+      Size => CPU_Unsigned'Size;
 
    procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean);
    procedure Lock (Lock_Object : in out Lock_Type);
