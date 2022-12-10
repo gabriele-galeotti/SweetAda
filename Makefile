@@ -77,6 +77,15 @@ endif
 endif
 export OSTYPE
 
+# even in a Windows cmd shell, if MSYS2 is present in path, then mingw32-make
+# will use the MSYS2 Bash shell; avoid this problem by setting explicitly the
+# native shell
+ifeq ($(OSTYPE),cmd)
+ifeq ($(MAKE),mingw32-make)
+SHELL := cmd
+endif
+endif
+
 # define a minimum set of variables that are required for functions and
 # various utilities
 SCREXT_cmd := .bat
