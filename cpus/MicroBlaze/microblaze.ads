@@ -149,7 +149,7 @@ package MicroBlaze is
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is Integer; -- __FIX__
+   subtype Irq_State_Type is Integer;
 
    procedure Irq_Enable with
       Inline => True;
