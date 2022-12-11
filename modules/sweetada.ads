@@ -3,6 +3,8 @@ with System.Storage_Elements;
 
 package SweetAda is
 
+   pragma Pure;
+
    package SSE renames System.Storage_Elements;
 
    -- VGA 640 * 480 4 bpp (LSB) per pixel
