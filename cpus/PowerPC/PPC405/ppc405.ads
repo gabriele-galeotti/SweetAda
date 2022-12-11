@@ -36,6 +36,34 @@ package PPC405 is
    use PowerPC;
 
    ----------------------------------------------------------------------------
+   -- SPRs
+   ----------------------------------------------------------------------------
+
+   PID    : constant SPR_Type := 945;  -- 0x3B1
+   CCR0   : constant SPR_Type := 947;  -- 0x3B3
+   IAC3   : constant SPR_Type := 948;  -- 0x3B4
+   IAC4   : constant SPR_Type := 949;  -- 0x3B5
+   DVC1   : constant SPR_Type := 950;  -- 0x3B6
+   DVC2   : constant SPR_Type := 951;  -- 0x3B7
+   DCWR   : constant SPR_Type := 954;  -- 0x3BA
+   DBCR1  : constant SPR_Type := 957;  -- 0x3BD
+   ICDBDR : constant SPR_Type := 979;  -- 0x3D3
+   ESR    : constant SPR_Type := 980;  -- 0x3D4
+   DEAR   : constant SPR_Type := 981;  -- 0x3D5
+   EVPR   : constant SPR_Type := 982;  -- 0x3D6
+   TSR    : constant SPR_Type := 984;  -- 0x3D8
+   TCR    : constant SPR_Type := 986;  -- 0x3DA
+   PIT    : constant SPR_Type := 987;  -- 0x3DB
+   DBSR   : constant SPR_Type := 1008; -- 0x3F0
+   DBCR0  : constant SPR_Type := 1010; -- 0x3F2
+   IAC1   : constant SPR_Type := 1012; -- 0x3F4
+   IAC2   : constant SPR_Type := 1013; -- 0x3F5
+   DAC1   : constant SPR_Type := 1014; -- 0x3F6
+   DAC2   : constant SPR_Type := 1015; -- 0x3F7
+   DCCR   : constant SPR_Type := 1018; -- 0x3FA
+   ICCR   : constant SPR_Type := 1019; -- 0x3FB
+
+   ----------------------------------------------------------------------------
    -- DCRs generics
    ----------------------------------------------------------------------------
 
@@ -75,8 +103,6 @@ package PPC405 is
    TSR_CHIP   : constant TSR_TCR_WR_Type := 2#10#;
    TSR_SYSTEM : constant TSR_TCR_WR_Type := 2#11#;
 
-   TSR : constant SPR_Type := 984; -- 0x3D8
-
    type TSR_Register_Type is
    record
       ENW      : Boolean;
@@ -106,8 +132,6 @@ package PPC405 is
    ----------------------------------------------------------------------------
    -- TCR Timer Control Register
    ----------------------------------------------------------------------------
-
-   TCR : constant SPR_Type := 986; -- 0x3DA
 
    type TCR_WP_Type is new Bits_2;
    TCR_WP_17 : constant TCR_WP_Type := 2#00#; -- 2^17 clocks
@@ -154,8 +178,6 @@ package PPC405 is
    ----------------------------------------------------------------------------
    -- PIT Programmable Interval Timer
    ----------------------------------------------------------------------------
-
-   PIT : constant SPR_Type := 987; -- 0x3DB
 
    function PIT_Read return Unsigned_32 with
       Inline => True;
