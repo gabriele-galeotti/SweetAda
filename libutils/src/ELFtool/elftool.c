@@ -197,6 +197,7 @@ fprintf_tab2spaces(FILE *fp, const char *input_string)
                                 {
                                         char tmp[ncharacters + 1];
                                         snprintf(tmp, ncharacters + 1, "%s", input_string + idx);
+                                        tmp[ncharacters] = '\0';
                                         fprintf(fp, "%s", tmp);
                                         idx += ncharacters;
                                         idx_out += ncharacters;
