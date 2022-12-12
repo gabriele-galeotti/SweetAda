@@ -62,6 +62,8 @@ SERVICE_GOALS  := help                  \
 ifeq ($(OS),Windows_NT)
 ifneq ($(MSYSTEM),)
 OSTYPE := msys
+export temp :=
+export tmp :=
 else
 OSTYPE := cmd
 endif
