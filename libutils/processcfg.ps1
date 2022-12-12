@@ -47,19 +47,27 @@ $pinfo.RedirectStandardError = $true
 $pinfo.RedirectStandardOutput = $true
 $pinfo.FileName = "sed.exe"
 $pinfo.Arguments = ""
-foreach ($symbol in $symbols)
+if ($symbols.Count -gt 0)
 {
-  $variable = $symbol.Trim("@")
-  $value = (Get-Item env:$variable).Value.Trim("`"")
-  if ($value -eq $null)
+  foreach ($symbol in $symbols)
   {
-    Write-Host "*** Warning: variable `"$variable`" has no value."
+    $variable = $symbol.Trim("@")
+    $value = (Get-Item env:$variable).Value.Trim("`"")
+    if ($value -eq $null)
+    {
+      Write-Host "*** Warning: variable `"$variable`" has no value."
+    }
+    else
+    {
+      $pinfo.Arguments += " -e"
+      $pinfo.Arguments += " `"s|$symbol|$value|`""
+    }
   }
-  else
-  {
-    $pinfo.Arguments += " -e"
-    $pinfo.Arguments += " `"s|$symbol|$value|`""
-  }
+}
+else
+{
+  $pinfo.Arguments += " -e"
+  $pinfo.Arguments += " `"`""
 }
 $pinfo.Arguments += " $input_filename"
 $p = New-Object System.Diagnostics.Process
@@ -81,7 +89,6 @@ catch
   Write-Host "${scriptname}: *** Error: executing sed.exe."
   ExitWithCode 1
 }
-
 Set-Content -Path $output_filename -Value $stdout -NoNewLine -Force
 
 Write-Host "${scriptname}: ${output_filename}: done."
