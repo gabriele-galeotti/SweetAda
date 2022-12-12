@@ -234,9 +234,11 @@ main(int argc, char **argv)
                         idx_switches = 0;
                         while ((switch_name = switches[idx_switches].name) != NULL)
                         {
+                                int flags;
                                 bool match;
+                                flags = switches[idx_switches].flags;
                                 match = false;
-                                if ((switches[idx_switches].flags & EXACT_MATCH) != 0)
+                                if ((flags & EXACT_MATCH) != 0)
                                 {
                                         match = strcmp(&argv[idx][1], switch_name) == 0;
                                 }
@@ -246,8 +248,6 @@ main(int argc, char **argv)
                                 }
                                 if (match)
                                 {
-                                        int flags;
-                                        flags = switches[idx_switches].flags;
                                         if ((flags & HAS_ARGUMENT) != 0)
                                         {
                                                 --number_of_arguments;
@@ -277,7 +277,7 @@ main(int argc, char **argv)
                 }
                 else
                 {
-                        /* an option without "-" is a token */
+                        /* an argument without "-" is a token */
                         if (plain_token_flag == false)
                         {
                                 /* if only one token accepted */

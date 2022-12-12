@@ -36,6 +36,30 @@
 
 #define GNAT_WRAPPER_VERSION "1.0"
 
+struct switch_descriptor {
+        const char *name;
+        int         flags;
+        };
+
+#define EXACT_MATCH     (1 << 0)
+#define HAS_ARGUMENT    (1 << 1)
+#define TRANSLATE_BS    (1 << 2)
+#define OUTPUT_FILENAME (1 << 3)
+#define COMPILER_MODE   (1 << 4)
+#define BINDER_MODE     (1 << 5)
+#define LINKER_MODE     (1 << 6)
+
+static struct switch_descriptor switches[] = {
+        { "I",                                    TRANSLATE_BS    },
+        { "b",       EXACT_MATCH                | BINDER_MODE     },
+        { "c",       EXACT_MATCH                | COMPILER_MODE   },
+        { "l",       EXACT_MATCH                | LINKER_MODE     },
+        { "o",       EXACT_MATCH | HAS_ARGUMENT | OUTPUT_FILENAME },
+        { "wrapper", EXACT_MATCH | HAS_ARGUMENT                   },
+        { "x",       EXACT_MATCH | HAS_ARGUMENT                   },
+        { NULL, 0 }
+        };
+
 /******************************************************************************
  * main()                                                                     *
  *                                                                            *
@@ -49,9 +73,9 @@ main(int argc, char **argv)
         const char *gcc_executable_env;
         char        gcc_executable[PATH_MAX + 1];
         bool        error_flag;
-        bool        compile_only;
-        bool        bind_only;
-        bool        link_only;
+        bool        compile_mode;
+        bool        bind_mode;
+        bool        link_mode;
         const char *input_filename;
         const char *output_filename;
         int         number_of_arguments; /* avoid modifying argc */
@@ -63,9 +87,9 @@ main(int argc, char **argv)
         const char *timestamp_filename;
 
         exit_status = EXIT_FAILURE;
-        compile_only = false;
-        bind_only = false;
-        link_only = false;
+        compile_mode = false;
+        bind_mode = false;
+        link_mode = false;
         input_filename = NULL;
         output_filename = NULL;
         verbose = NULL;
@@ -127,52 +151,63 @@ main(int argc, char **argv)
                 --number_of_arguments;
                 if (argv[idx][0] == '-')
                 {
-                        if (strcmp(&argv[idx][1], "wrapper") == 0)
+                        int idx_switches;
+                        const char *switch_name;
+                        idx_switches = 0;
+                        while ((switch_name = switches[idx_switches].name) != NULL)
                         {
-                                --number_of_arguments;
-                                ++idx;
-                        }
-                        else
-                        {
-                                char c;
-                                c = argv[idx][1];
-                                switch (c)
+                                int flags;
+                                bool match;
+                                flags = switches[idx_switches].flags;
+                                match = false;
+                                if ((flags & EXACT_MATCH) != 0)
                                 {
+                                        match = strcmp(&argv[idx][1], switch_name) == 0;
+                                }
+                                else
+                                {
+                                        match = strncmp(&argv[idx][1], switch_name, STRING_LENGTH(switch_name)) == 0;
+                                }
+                                if (match)
+                                {
+                                        if ((flags & HAS_ARGUMENT) != 0)
+                                        {
+                                                --number_of_arguments;
+                                                ++idx;
+                                        }
+                                        if ((flags & TRANSLATE_BS) != 0)
+                                        {
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
-                                        case 'I': /* -I */
                                                 if (argv[idx][STRING_LENGTH(argv[idx]) - 1] == '\\')
                                                 {
                                                         argv[idx][STRING_LENGTH(argv[idx]) - 1] = '/';
                                                 }
-                                                break;
 #endif
-                                        case 'b': /* -b */
-                                                bind_only = true;
-                                                break;
-                                        case 'c': /* -c */
-                                                compile_only = true;
-                                                break;
-                                        case 'l': /* -l */
-                                                link_only = true;
-                                                break;
-                                        case 'o': /* -o <output_filename> */
-                                                --number_of_arguments;
-                                                ++idx;
+                                        }
+                                        if ((flags & OUTPUT_FILENAME) != 0)
+                                        {
                                                 output_filename = argv[idx];
-                                                break;
-                                        case 'x': /* -x <language_specification> */
-                                                --number_of_arguments;
-                                                ++idx;
-                                                break;
-                                        default:
-                                                break;
+                                        }
+                                        if ((flags & BINDER_MODE) != 0)
+                                        {
+                                                bind_mode = true;
+                                        }
+                                        if ((flags & COMPILER_MODE) != 0)
+                                        {
+                                                compile_mode = true;
+                                        }
+                                        if ((flags & LINKER_MODE) != 0)
+                                        {
+                                                link_mode = true;
+                                        }
                                 }
+                                ++idx_switches;
                         }
                 }
                 else
                 {
-                        /* an option without "-" is a token */
+                        /* an argument without "-" is a token */
                         if (plain_token_flag == false)
                         {
                                 /* if only one token accepted */
@@ -201,14 +236,14 @@ main(int argc, char **argv)
 
         /* avoid warnings */
         (void)output_filename;
-        (void)bind_only;
-        (void)link_only;
-        (void)compile_only;
+        (void)bind_mode;
+        (void)link_mode;
+        (void)compile_mode;
 
         /*
          * We specified --GCC and no --GNATBIND/--GNATLINK.
          */
-        if (!compile_only)
+        if (!compile_mode || bind_mode || link_mode)
         {
                 fprintf(stderr, "%s: *** Error: gnat-wrapper needs GCC mode ('-c' switch).\n", program_name);
                 goto main_exit;
