@@ -39,6 +39,12 @@
 set SCRIPT_FILENAME [file tail $argv0]
 
 ################################################################################
+#                                                                              #
+################################################################################
+
+source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
+
+################################################################################
 # ls2chs                                                                       #
 #                                                                              #
 # Convert a logical sector value to CHS format.                                #
@@ -94,8 +100,6 @@ proc write_partition {f sector_start sector_size} {
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
-
-source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
 #
 # Basic input parameters check.

@@ -29,6 +29,15 @@
 set SCRIPT_FILENAME [file tail $argv0]
 
 ################################################################################
+#                                                                              #
+################################################################################
+
+# communication takes place on a UDP socket
+package require udp
+
+source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
+
+################################################################################
 # send_command                                                                 #
 #                                                                              #
 ################################################################################
@@ -53,11 +62,6 @@ proc send_command {s command address size data} {
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
-
-# communication takes place on a UDP socket
-package require udp
-
-source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
 set ELFTOOL              $::env(ELFTOOL)
 set KERNEL_OUTFILE       [file join $::env(SWEETADA_PATH) $::env(KERNEL_OUTFILE)]
@@ -162,7 +166,7 @@ while {true} {
     }
     set LOAD_ADDRESS [expr $LOAD_ADDRESS + $data_length]
     incr sequence
-    sleep 30
+    msleep 30
     puts -nonewline "."
 }
 puts ""

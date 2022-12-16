@@ -28,6 +28,12 @@
 set SCRIPT_FILENAME [file tail $argv0]
 
 ################################################################################
+#                                                                              #
+################################################################################
+
+source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
+
+################################################################################
 # crc16                                                                        #
 #                                                                              #
 ################################################################################
@@ -88,8 +94,6 @@ proc save_chunk {fd data offset size} {
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
-
-source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
 #
 # 1st part: generate IP.BIN suitable to be stored in a CD-ROM.

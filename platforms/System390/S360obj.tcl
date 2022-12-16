@@ -29,6 +29,8 @@ set SCRIPT_FILENAME [file tail $argv0]
 #                                                                              #
 ################################################################################
 
+source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
+
 #
 # ASCII (IBM® PC 437) -> EBCDIC 037
 #
@@ -310,8 +312,6 @@ proc write_end_record {fd sequence} {
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
-
-source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
 set address 0x18
 set write_psw false

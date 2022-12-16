@@ -28,12 +28,19 @@
 set SCRIPT_FILENAME [file tail $argv0]
 
 ################################################################################
-# Main loop.                                                                   #
 #                                                                              #
 ################################################################################
 
 source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
+################################################################################
+# Main loop.                                                                   #
+#                                                                              #
+################################################################################
+
+#
+# Basic input parameters check.
+#
 if {[llength $argv] < 3} {
     puts stderr "$SCRIPT_FILENAME: *** Error: invalid number of arguments."
     exit 1
