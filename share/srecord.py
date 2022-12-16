@@ -29,9 +29,13 @@ import sys
 # avoid generation of *.pyc
 sys.dont_write_bytecode = True
 
-import os
-
 SCRIPT_FILENAME = sys.argv[0]
+
+################################################################################
+#                                                                              #
+################################################################################
+
+import os
 
 # helper function
 def printf(format, *args):

@@ -31,6 +31,10 @@ set SCRIPT_FILENAME [file tail $argv0]
 
 source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
+################################################################################
+#                                                                              #
+################################################################################
+
 #
 # ASCII (IBM® PC 437) -> EBCDIC 037
 #
