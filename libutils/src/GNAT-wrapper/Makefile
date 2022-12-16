@@ -90,7 +90,7 @@ library.o : ../library.c
 	$(HOST_CC) -o $@ -c -I.. -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
 .PHONY : install
-install :
+install : gnat-wrapper
 ifeq      ($(OSTYPE),linux)
 	$(CP) gnat-wrapper$(EXEEXT) ../../
 else ifeq ($(OSTYPE),cmd)

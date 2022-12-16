@@ -91,7 +91,7 @@ library.o : ../library.c
 	$(HOST_CC) -o $@ -c -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
 .PHONY : install
-install :
+install : elftool
 ifeq      ($(OSTYPE),linux)
 	$(CP) elftool$(EXEEXT) ../../
 else ifeq ($(OSTYPE),cmd)
