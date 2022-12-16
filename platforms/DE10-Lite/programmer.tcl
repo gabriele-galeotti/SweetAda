@@ -28,13 +28,17 @@
 set SCRIPT_FILENAME [file tail $argv0]
 
 ################################################################################
-# Main loop.                                                                   #
 #                                                                              #
 ################################################################################
 
 source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
-if {[get_platform] ne "unix"} {
+################################################################################
+# Main loop.                                                                   #
+#                                                                              #
+################################################################################
+
+if {[platform_get] ne "unix"} {
     puts stderr "$SCRIPT_FILENAME: *** Error: platform not recognized."
     exit 1
 }

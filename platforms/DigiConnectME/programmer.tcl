@@ -29,11 +29,16 @@
 set SCRIPT_FILENAME [file tail $argv0]
 
 ################################################################################
-# Main loop.                                                                   #
 #                                                                              #
 ################################################################################
 
 source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
+source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) libopenocd.tcl]
+
+################################################################################
+# Main loop.                                                                   #
+#                                                                              #
+################################################################################
 
 set OPENOCD_PREFIX  $::env(OPENOCD_PREFIX)
 set OPENOCD_CFGFILE [file join $::env(SWEETADA_PATH) $::env(PLATFORM_DIRECTORY) openocd.cfg]
@@ -42,10 +47,11 @@ set KERNEL_OUTFILE  [file join $::env(SWEETADA_PATH) $::env(KERNEL_OUTFILE)]
 set START_SYMBOL    _start
 
 if {[lindex $argv 0] eq "-server"} {
-    if {[get_platform] eq "windows"} {
+    set platform [platform_get]
+    if {$platform eq "windows"} {
         set OPENOCD_EXECUTABLE [file join $OPENOCD_PREFIX bin openocd.exe]
         exec cmd.exe /C START "" "$OPENOCD_EXECUTABLE" -f "$OPENOCD_CFGFILE" &
-    } elseif {[get_platform] eq "unix"} {
+    } elseif {$platform eq "unix"} {
         set OPENOCD_EXECUTABLE [file join $OPENOCD_PREFIX bin openocd]
         # __FIX__
         # if this script is called from Makefile, and the output is redirected
@@ -81,14 +87,13 @@ if {[lindex $argv 0] eq "-shutdown"} {
 
 openocd_rpc_tx "soft_reset_halt"
 openocd_rpc_rx
-sleep 1000
+msleep 1000
 openocd_rpc_tx "load_image $KERNEL_OUTFILE"
 openocd_rpc_rx
 openocd_rpc_tx "verify_image $KERNEL_OUTFILE 0\n"
 openocd_rpc_rx
 openocd_rpc_tx "resume 0"
 openocd_rpc_rx
-sleep 1000
 
 openocd_rpc_disconnect
 

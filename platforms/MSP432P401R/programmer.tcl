@@ -27,11 +27,16 @@
 set SCRIPT_FILENAME [file tail $argv0]
 
 ################################################################################
-# Main loop.                                                                   #
 #                                                                              #
 ################################################################################
 
 source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
+source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) libopenocd.tcl]
+
+################################################################################
+# Main loop.                                                                   #
+#                                                                              #
+################################################################################
 
 set KERNEL_OUTFILE [file join $::env(SWEETADA_PATH) $::env(KERNEL_OUTFILE)]
 
@@ -45,12 +50,11 @@ if {[lindex $argv 0] eq "-shutdown"} {
 
 openocd_rpc_tx "reset halt"
 openocd_rpc_rx
-sleep 1000
+msleep 1000
 openocd_rpc_tx "load_image $KERNEL_OUTFILE"
 openocd_rpc_rx
 openocd_rpc_tx "resume 0x01000000"
 openocd_rpc_rx
-sleep 1000
 
 openocd_rpc_disconnect
 

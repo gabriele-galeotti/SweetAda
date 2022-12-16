@@ -28,6 +28,12 @@
 set SCRIPT_FILENAME [file tail $argv0]
 
 ################################################################################
+#                                                                              #
+################################################################################
+
+source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
+
+################################################################################
 # download_bitstream                                                           #
 #                                                                              #
 # Download an FPGA bitstream.                                                  #
@@ -39,7 +45,7 @@ proc download_bitstream {fd bitstream_filename} {
         set bitstream_data [read $fd_bitstream 64]
         set data_length [string length $bitstream_data]
         puts -nonewline $fd $bitstream_data
-        after 2
+        msleep 2
         set fd_data [read $fd 256]
         # check if reply string end with "ack" + NUL
         set idx [string last ack\x00 $fd_data [expr [string length $fd_data] - 1]]
@@ -65,7 +71,7 @@ proc download_bitstream {fd bitstream_filename} {
 proc do_command {fd command_string} {
     set return_value ""
     puts -nonewline $fd $command_string\x00
-    after 300
+    msleep 300
     set fd_data [read $fd 256]
     # check if reply string end with "ack" + NUL
     set idx [string last ack\x00 $fd_data [expr [string length $fd_data] - 1]]
@@ -129,9 +135,7 @@ proc do_command {fd command_string} {
 #                                                                              #
 ################################################################################
 
-source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
-
-if {[get_platform] ne "unix"} {
+if {[platform_get] ne "unix"} {
     puts stderr "$SCRIPT_FILENAME: *** Error: platform not recognized."
     exit 1
 }
