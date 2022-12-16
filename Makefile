@@ -57,13 +57,20 @@ SERVICE_GOALS  := help                  \
                   freeze                \
                   probevariable
 
+# check Makefile target
+ifneq ($(MAKECMDGOALS),)
+ifeq ($(filter $(RTS_GOAL) $(SERVICE_GOALS),$(MAKECMDGOALS)),)
+ifeq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+$(error Error: not a known Makefile target)
+endif
+endif
+endif
+
 # detect OS type
 # detected OS names: "linux"/"cmd"/"msys"/"darwin"
 ifeq ($(OS),Windows_NT)
 ifneq ($(MSYSTEM),)
 OSTYPE := msys
-export temp :=
-export tmp :=
 else
 OSTYPE := cmd
 endif
@@ -79,13 +86,18 @@ endif
 endif
 export OSTYPE
 
+# workarounds for some environments
+ifeq      ($(OSTYPE),cmd)
+ifeq ($(MAKE),mingw32-make)
 # even in a Windows cmd shell, if MSYS2 is present in path, then mingw32-make
 # will use the MSYS2 Bash shell; avoid this problem by setting explicitly the
 # native shell
-ifeq ($(OSTYPE),cmd)
-ifeq ($(MAKE),mingw32-make)
 SHELL := cmd
 endif
+else ifeq ($(OSTYPE),msys)
+# Powershell complains about variable names
+export temp :=
+export tmp :=
 endif
 
 # define a minimum set of variables that are required for functions and
@@ -127,15 +139,68 @@ PATH := $(SWEETADA_PATH)\$(LIBUTILS_DIRECTORY);$(PATH)
 else
 PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
-export PATH
 include Makefile.ut.in
 
-# check Makefile target and basic utilities
-ifneq ($(MAKECMDGOALS),)
-ifeq ($(filter $(RTS_GOAL) $(SERVICE_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
-$(error Error: not a known Makefile target)
+# check for RTS build
+ifeq ($(MAKECMDGOALS),rts)
+ifeq ($(CPU),)
+$(error Error: no valid CPU)
 endif
+ifeq ($(TOOLCHAIN_NAME),)
+$(error Error: no valid TOOLCHAIN_NAME)
+endif
+ifeq ($(RTS),)
+$(error Error: no valid RTS)
+endif
+# before loading configuration.in (which defines the RTS type used by the
+# platform), save the RTS variable from the environment in order to correctly
+# build the RTS specified when issuing the "rts" target
+RTS_BUILD := $(RTS)
+endif
+
+# default system parameters
+TOOLCHAIN_PREFIX   ?=
+ADA_MODE           := ADA22
+BUILD_MODE         := MAKEFILE
+RTS                ?=
+PROFILE            :=
+USE_LIBGCC         :=
+USE_LIBADA         :=
+USE_CLIBRARY       :=
+USE_APPLICATION    :=
+OPTIMIZATION_LEVEL :=
+STACK_LIMIT        := 4096
+LD_SCRIPT          := linker.lds
+POSTBUILD_ROMFILE  :=
+
+IMPLICIT_ALI_UNITS :=
+ADDITIONAL_OBJECTS :=
+
+# read the master configuration file
+include configuration.in
+
+ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifeq ($(TOOLCHAIN_PREFIX),)
+$(error Error: no valid TOOLCHAIN_PREFIX)
+endif
+endif
+
+# add TOOLCHAIN_PREFIX to PATH
+ifneq ($(TOOLCHAIN_PREFIX),)
+ifeq      ($(OSTYPE),cmd)
+PATH := $(TOOLCHAIN_PREFIX)\bin;$(PATH)
+else ifeq ($(OSTYPE),msys)
+TOOLCHAIN_PREFIX_MSYS := $(shell cygpath.exe -u "$(TOOLCHAIN_PREFIX)" 2> /dev/null)
+PATH := $(TOOLCHAIN_PREFIX_MSYS)/bin:$(PATH)
+else
+PATH := $(TOOLCHAIN_PREFIX)/bin:$(PATH)
+endif
+endif
+
+# export PATH so that we can use everything
+export PATH
+
+# check basic utilities
 ifeq ($(OSTYPE),cmd)
 ifeq ($(shell SET "PATH=$(PATH)" && $(SED) --version 2> nul),)
 $(error Error: no $(SED) executable found)
@@ -157,8 +222,12 @@ ifeq ($(shell PATH="$(PATH)" $(GNAT_WRAPPER) -v 2> /dev/null),)
 $(error Error: no $(GNAT_WRAPPER) executable found)
 endif
 endif
-endif
-endif
+
+################################################################################
+#                                                                              #
+# Setup finalization.                                                          #
+#                                                                              #
+################################################################################
 
 # verbose output, "Y/y/1" = enabled
 VERBOSE ?=
@@ -261,57 +330,6 @@ CONFIGUREGPR_FILENAME := configure.gpr
 CLEAN_OBJECTS        :=
 CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst *.map *.o *.out *.srec *.tmp
 DISTCLEAN_OBJECTS    :=
-
-################################################################################
-#                                                                              #
-# Read configuration setup.                                                    #
-#                                                                              #
-################################################################################
-
-# before loading configuration.in (which defines the RTS type used by the
-# platform), save the RTS variable from the environment in order to correctly
-# build the RTS specified when issuing the "rts" target
-RTS_BUILD := $(RTS)
-
-# default build system parameters
-TOOLCHAIN_PREFIX   ?=
-ADA_MODE           := ADA22
-BUILD_MODE         := MAKEFILE
-RTS                ?=
-PROFILE            :=
-USE_LIBGCC         :=
-USE_LIBADA         :=
-USE_CLIBRARY       :=
-USE_APPLICATION    :=
-OPTIMIZATION_LEVEL :=
-STACK_LIMIT        := 4096
-LD_SCRIPT          := linker.lds
-POSTBUILD_ROMFILE  :=
-
-IMPLICIT_ALI_UNITS :=
-ADDITIONAL_OBJECTS :=
-
-# master configuration file
-include configuration.in
-
-ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(TOOLCHAIN_PREFIX),)
-$(error Error: no valid TOOLCHAIN_PREFIX)
-endif
-endif
-
-# add TOOLCHAIN_PREFIX to PATH
-ifneq ($(TOOLCHAIN_PREFIX),)
-ifeq ($(OSTYPE),cmd)
-PATH := $(TOOLCHAIN_PREFIX)\bin;$(PATH)
-else ifeq ($(OSTYPE),msys)
-TOOLCHAIN_PREFIX_MSYS := $(shell cygpath.exe -u "$(TOOLCHAIN_PREFIX)" 2> /dev/null)
-PATH := $(TOOLCHAIN_PREFIX_MSYS)/bin:$(PATH)
-else
-PATH := $(TOOLCHAIN_PREFIX)/bin:$(PATH)
-endif
-export PATH
-endif
 
 ################################################################################
 #                                                                              #
@@ -446,12 +464,6 @@ endif
 
 -include $(CLIBRARY_DIRECTORY)/configuration.in
 
-ifeq ($(MAKECMDGOALS),rts)
-ifeq ($(CPU),)
-$(error Error: no valid CPU)
-endif
-endif
-
 -include Makefile.tc.in
 
 # high-precedence include directories
@@ -486,29 +498,29 @@ endif
 #                                                                              #
 ################################################################################
 
-export                           \
-       MAKE                      \
-       KERNEL_BASENAME           \
-       KERNEL_CFGFILE            \
-       KERNEL_DEPFILE            \
-       KERNEL_OUTFILE            \
-       KERNEL_ROMFILE            \
-       PLATFORM_BASE_DIRECTORY   \
-       PLATFORM_DIRECTORY        \
-       CPU_BASE_DIRECTORY        \
-       CPU_DIRECTORY             \
-       CPU_MODEL_DIRECTORY       \
-       APPLICATION_DIRECTORY     \
-       CLIBRARY_DIRECTORY        \
-       CORE_DIRECTORY            \
-       DRIVERS_DIRECTORY         \
-       MODULES_DIRECTORY         \
-       OBJECT_DIRECTORY          \
-       RTS_DIRECTORY             \
-       SHARE_DIRECTORY           \
-       RTS_BASE_PATH             \
-       INCLUDE_DIRECTORIES       \
-       IMPLICIT_ALI_UNITS        \
+export                         \
+       MAKE                    \
+       KERNEL_BASENAME         \
+       KERNEL_CFGFILE          \
+       KERNEL_DEPFILE          \
+       KERNEL_OUTFILE          \
+       KERNEL_ROMFILE          \
+       PLATFORM_BASE_DIRECTORY \
+       PLATFORM_DIRECTORY      \
+       CPU_BASE_DIRECTORY      \
+       CPU_DIRECTORY           \
+       CPU_MODEL_DIRECTORY     \
+       APPLICATION_DIRECTORY   \
+       CLIBRARY_DIRECTORY      \
+       CORE_DIRECTORY          \
+       DRIVERS_DIRECTORY       \
+       MODULES_DIRECTORY       \
+       OBJECT_DIRECTORY        \
+       RTS_DIRECTORY           \
+       SHARE_DIRECTORY         \
+       RTS_BASE_PATH           \
+       INCLUDE_DIRECTORIES     \
+       IMPLICIT_ALI_UNITS      \
        CLEAN_OBJECTS_COMMON
 
 export                           \
