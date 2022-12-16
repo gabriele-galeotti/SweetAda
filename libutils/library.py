@@ -25,6 +25,9 @@ import sys
 # avoid generation of *.pyc
 sys.dont_write_bytecode = True
 
+import os
+import time
+
 ################################################################################
 # is_python3()                                                                 #
 #                                                                              #
@@ -33,6 +36,47 @@ def is_python3():
     if sys.version_info > (3, 0):
         return True
     return False
+
+################################################################################
+# platform_get()                                                               #
+#                                                                              #
+################################################################################
+def platform_get():
+    name = os.name
+    if   os.name == 'Linux':
+        return 'unix'
+    elif os.name == 'Darwin':
+        return 'unix'
+    elif os.name == 'Windows':
+        return 'windows'
+    else:
+        return ''
+
+################################################################################
+# platform_bigendian                                                           #
+#                                                                              #
+################################################################################
+def platform_bigendian():
+    if sys.byteorder == 'big':
+        return True
+    return False
+
+################################################################################
+# platform_littleendian                                                        #
+#                                                                              #
+################################################################################
+def platform_littleendian():
+    if sys.byteorder == 'little':
+        return True
+    return False
+
+################################################################################
+# msleep                                                                       #
+#                                                                              #
+# Sleep for ms milliseconds.                                                   #
+################################################################################
+def msleep(ms):
+    time.sleep(ms / 1000)
 
 ################################################################################
 # uXX_to_XXbytes()                                                             #
