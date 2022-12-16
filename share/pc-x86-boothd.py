@@ -39,9 +39,15 @@ import sys
 # avoid generation of *.pyc
 sys.dont_write_bytecode = True
 
-import os
-
 SCRIPT_FILENAME = sys.argv[0]
+
+################################################################################
+#                                                                              #
+################################################################################
+
+import os
+sys.path.append(os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('LIBUTILS_DIRECTORY')))
+import library
 
 # helper function
 def printf(format, *args):
@@ -49,18 +55,6 @@ def printf(format, *args):
 # helper function
 def errprintf(format, *args):
     sys.stderr.write(format % args)
-
-################################################################################
-# u32_to_lebytes()                                                             #
-#                                                                              #
-# Creates a list of byte values with LE layout from a 32-bit value.            #
-################################################################################
-def u32_to_lebytes(n):
-    byte0 = n % 0x100
-    byte1 = (n / 0x100) % 0x100
-    byte2 = (n / 0x10000) % 0x100
-    byte3 = (n / 0x1000000) % 0x100
-    return [byte0, byte1, byte2, byte3]
 
 ################################################################################
 # ls2chs()                                                                     #
@@ -102,9 +96,9 @@ def write_partition(f, sector_start, sector_size):
     # CHS end; ending sector, not the following one
     fd.write(bytearray(ls2chs((sector_start + sector_size - 1), CYL, HPC, SPT)))
     # LBA sector start
-    fd.write(bytearray(u32_to_lebytes(sector_start)))
+    fd.write(bytearray(library.u32_to_lebytes(sector_start)))
     # LBA size in sectors
-    fd.write(bytearray(u32_to_lebytes(sector_size)))
+    fd.write(bytearray(library.u32_to_lebytes(sector_size)))
     fd.close
 
 ################################################################################
