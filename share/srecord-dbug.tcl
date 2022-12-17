@@ -61,7 +61,7 @@ flush $serialport_fd
 
 # download an S19 executable on console port (with echoing)
 puts -nonewline $serialport_fd "dl\x0D\x0A"
-after 1000
+msleep 1000
 
 # read kernel file and write to serial port
 set kernel_fd [open $kernel_srecfile r]
@@ -70,7 +70,7 @@ while {[gets $kernel_fd data] >= 0} {
     puts -nonewline $serialport_fd "$data\x0D\x0A"
     puts -nonewline stderr "."
     # allow processing of data on remote side
-    after 30
+    msleep 30
     set srec_type [string range $data 0 1]
     if {$srec_type eq "S7"} {
         set start_address [string range $data 4 11]
@@ -88,7 +88,7 @@ puts stderr ""
 close $kernel_fd
 
 # execute
-after 1000
+msleep 1000
 puts -nonewline $serialport_fd "go $start_address\x0D\x0A"
 
 close $serialport_fd

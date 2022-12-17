@@ -60,7 +60,7 @@ import serial
 # Basic input parameters check.
 #
 if len(sys.argv) < 4:
-    errprintf("%s: *** Error: invalid number of arguments.\n", SCRIPT_FILENAME)
+    errprintf('%s: *** Error: invalid number of arguments.\n', SCRIPT_FILENAME)
     exit(1)
 
 kernel_srecfile = sys.argv[1]
@@ -82,7 +82,7 @@ serialport_fd.dsrdtr       = False                 # disable hardware (DSR/DTR) 
 try:
     serialport_fd.open()
 except:
-    errprintf("%s: *** Error: open().\n", SCRIPT_FILENAME)
+    errprintf('%s: *** Error: open().\n', SCRIPT_FILENAME)
     exit(1)
 if serialport_fd.isOpen():
     # delay for processing of data on remote side
@@ -96,26 +96,26 @@ if serialport_fd.isOpen():
     serialport_fd.flushInput()
     # flush output buffer, aborting current output
     serialport_fd.flushOutput()
-    kernel_fd = open(kernel_srecfile, "r")
+    kernel_fd = open(kernel_srecfile, 'r')
     srecs = kernel_fd.readlines()
     kernel_fd.close()
     for srec in srecs:
         serialport_fd.write(str.encode(srec).strip())
-        serialport_fd.write(str.encode("\r\n"))
-        errprintf(".")
+        serialport_fd.write(str.encode('\r\n'))
+        errprintf('.')
         time.sleep(delay / 1000)
         srec_type = srec[0:2]
-        if   srec_type == "S7":
+        if   srec_type == 'S7':
             start_address = srec[4:12]
-        elif srec_type == "S8":
+        elif srec_type == 'S8':
             start_address = srec[4:10]
-        elif srec_type == "S9":
+        elif srec_type == 'S9':
             start_address = srec[4:8]
-    serialport_fd.write(str.encode("\r\n"))
-    errprintf("\n")
+    serialport_fd.write(str.encode('\r\n'))
+    errprintf('\n')
     serialport_fd.close()
 else:
-    errprintf("%s: *** Error: open().\n", SCRIPT_FILENAME)
+    errprintf('%s: *** Error: open().\n', SCRIPT_FILENAME)
     exit(1)
 
 exit(0)

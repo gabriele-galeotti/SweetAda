@@ -56,7 +56,7 @@ def errprintf(format, *args):
 # Basic input parameters check.
 #
 if len(sys.argv) < 4:
-    errprintf("%s: *** Error: invalid number of arguments.\n", SCRIPT_FILENAME)
+    errprintf('%s: *** Error: invalid number of arguments.\n', SCRIPT_FILENAME)
     exit(1)
 
 kernel_filename = sys.argv[1]
@@ -65,7 +65,7 @@ device_filename = sys.argv[3]
 
 kernel_size = os.stat(kernel_filename).st_size
 
-printf("%s: creating floppy disk ...\n", SCRIPT_FILENAME)
+printf('%s: creating floppy disk ...\n', SCRIPT_FILENAME)
 
 BPS = 512
 CYL = 80
@@ -77,61 +77,61 @@ SECTORS_PER_CYLINDER = HPC * SPT
 # sector count of device
 DEVICE_SECTORS = CYL * SECTORS_PER_CYLINDER
 
-if len(device_filename) > 0 and device_filename[0] == "+":
-    device_type = "FILE"
+if len(device_filename) > 0 and device_filename[0] == '+':
+    device_type = 'FILE'
     device_filename = device_filename[1:]
-    fd = open(device_filename, "wb")
+    fd = open(device_filename, 'wb')
     fd.seek(DEVICE_SECTORS * BPS - 1, 0)
     fd.write(b'\x00')
     fd.close()
     print(device_filename)
 else:
-    device_type = "DEVICE"
-    while device_filename == "":
-        printf("No device was specified.\n")
-        printf("Enter device (e.g., /dev/sdf, <ENTER> to retry): ")
+    device_type = 'DEVICE'
+    while device_filename == '':
+        printf('No device was specified.\n')
+        printf('Enter device (e.g., /dev/sdf, <ENTER> to retry): ')
         sys.stdout.flush()
         device_filename = sys.stdin.readline().rstrip()
 
 # build bootsector
 KERNEL_SECTORS = (kernel_size + BPS - 1) / BPS
-printf("kernel sector count: %d (0x%X)\n", KERNEL_SECTORS, KERNEL_SECTORS)
+printf('kernel sector count: %d (0x%X)\n', KERNEL_SECTORS, KERNEL_SECTORS)
 os.system(
-    os.getenv("TOOLCHAIN_CC")           + " " +
-    "-o bootsector.o"                   + " " +
-    "-c"                                + " " +
-    "-DFLOPPYDISK"                      + " " +
-    "-DNSECTORS=" + str(KERNEL_SECTORS) + " " +
-    "-DBOOTSEGMENT=" + bootsegment      + " " +
-    "-DDELAY"                           + " " +
-    os.path.join(os.getenv("SWEETADA_PATH"), os.getenv("SHARE_DIRECTORY"), "bootsector.S")
+    os.getenv('TOOLCHAIN_CC')           + ' ' +
+    '-o bootsector.o'                   + ' ' +
+    '-c'                                + ' ' +
+    '-DFLOPPYDISK'                      + ' ' +
+    '-DNSECTORS=' + str(KERNEL_SECTORS) + ' ' +
+    '-DBOOTSEGMENT=' + bootsegment      + ' ' +
+    '-DDELAY'                           + ' ' +
+    os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('SHARE_DIRECTORY'), 'bootsector.S')
     )
-os.system(os.getenv("TOOLCHAIN_LD")      + " " + "-o bootsector.bin -Ttext=0 --oformat=binary bootsector.o")
-os.system(os.getenv("TOOLCHAIN_OBJDUMP") + " " + "-m i8086 -D -M i8086 -b binary bootsector.bin > bootsector.lst")
+os.system(os.getenv('TOOLCHAIN_LD')      + ' ' + '-o bootsector.bin -Ttext=0 --oformat=binary bootsector.o')
+os.system(os.getenv('TOOLCHAIN_OBJDUMP') + ' ' + '-m i8086 -D -M i8086 -b binary bootsector.bin > bootsector.lst')
 
 # write bootsector @ CHS(0,0,1)
-printf("%s: creating bootsector ...\n", SCRIPT_FILENAME)
-fd = open("bootsector.bin", "rb")
+printf('%s: creating bootsector ...\n', SCRIPT_FILENAME)
+fd = open('bootsector.bin', 'rb')
 bootsector = fd.read()
 fd.close()
-fd = open(device_filename, "rb+")
+fd = open(device_filename, 'rb+')
 fd.seek(0 * BPS, 0)
 fd.write(bootsector)
 fd.close()
 
 # write kernel @ CHS(0,0,2)
-printf("%s: writing input binary file ...\n", SCRIPT_FILENAME)
-fd = open(kernel_filename, "rb")
+printf('%s: writing input binary file ...\n', SCRIPT_FILENAME)
+fd = open(kernel_filename, 'rb')
 kernel = fd.read()
 fd.close()
-fd = open(device_filename, "rb+")
+fd = open(device_filename, 'rb+')
 fd.seek(1 * BPS, 0)
 fd.write(kernel)
 fd.close()
 
 # flush disk buffers
-os.system("sync")
-os.system("sync")
+os.system('sync')
+os.system('sync')
 
 exit(0)
 
