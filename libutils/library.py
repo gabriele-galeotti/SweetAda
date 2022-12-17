@@ -43,11 +43,9 @@ def is_python3():
 ################################################################################
 def platform_get():
     name = os.name
-    if   os.name == 'Linux':
+    if   name == 'posix':
         return 'unix'
-    elif os.name == 'Darwin':
-        return 'unix'
-    elif os.name == 'Windows':
+    elif name == 'nt':
         return 'windows'
     else:
         return ''
