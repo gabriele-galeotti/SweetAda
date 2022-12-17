@@ -130,5 +130,5 @@ ccs::write_mem 0 0xFF4050E0 4 0 0x0000E000
 ccs::write_mem 0 0xFF405084 4 0 0x20000000
 
 # delay
-sleep 1000
+msleep 1000
 

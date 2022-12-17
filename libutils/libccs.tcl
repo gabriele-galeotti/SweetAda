@@ -1,6 +1,6 @@
 
 #
-# CCS utilities.
+# CCS NetServer module.
 #
 # Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
 #
@@ -17,13 +17,12 @@
 #
 
 ################################################################################
-# sleep                                                                        #
+# msleep                                                                       #
 #                                                                              #
-# sleep for ms milliseconds                                                    #
+# Sleep for ms milliseconds.                                                   #
 ################################################################################
-proc sleep ms {
+proc msleep {ms} {
     after [expr {int($ms)}]
-    return
 }
 
 ################################################################################
@@ -64,7 +63,6 @@ proc loadbinaryfile {fname {channel stdout}} {
     }
     # when we are done, close the file
     close $f
-    return
 }
 
 ################################################################################
