@@ -498,6 +498,7 @@ endif
 #                                                                              #
 ################################################################################
 
+# build system
 export                         \
        MAKE                    \
        KERNEL_BASENAME         \
@@ -523,24 +524,26 @@ export                         \
        IMPLICIT_ALI_UNITS      \
        CLEAN_OBJECTS_COMMON
 
-export                           \
-       PLATFORM                  \
-       SUBPLATFORM               \
-       CPU                       \
-       CPU_MODEL                 \
-       FPU_MODEL                 \
-       ADA_MODE                  \
-       RTS                       \
-       PROFILE                   \
-       USE_LIBGCC                \
-       USE_LIBADA                \
-       USE_CLIBRARY              \
-       BUILD_MODE                \
-       OPTIMIZATION_LEVEL        \
-       ADDITIONAL_OBJECTS        \
-       STACK_LIMIT               \
+# configuration
+export                    \
+       PLATFORM           \
+       SUBPLATFORM        \
+       CPU                \
+       CPU_MODEL          \
+       FPU_MODEL          \
+       ADA_MODE           \
+       RTS                \
+       PROFILE            \
+       USE_LIBGCC         \
+       USE_LIBADA         \
+       USE_CLIBRARY       \
+       BUILD_MODE         \
+       OPTIMIZATION_LEVEL \
+       ADDITIONAL_OBJECTS \
+       STACK_LIMIT        \
        USE_APPLICATION
 
+# toolchain
 export                           \
        TOOLCHAIN_PREFIX          \
        TOOLCHAIN_NAME_AArch64    \
@@ -563,8 +566,8 @@ export                           \
        TOOLCHAIN_PROGRAM_PREFIX  \
        TOOLCHAIN_GCC             \
        TOOLCHAIN_ADAC            \
-       TOOLCHAIN_CC              \
        TOOLCHAIN_AR              \
+       TOOLCHAIN_CC              \
        TOOLCHAIN_GDB             \
        TOOLCHAIN_LD              \
        TOOLCHAIN_OBJDUMP         \
@@ -573,11 +576,11 @@ export                           \
        GCC_SWITCHES_PLATFORM     \
        RTS_ROOT_PATH             \
        RTS_PATH                  \
-       AS                        \
        ADAC                      \
+       AR                        \
+       AS                        \
        CC                        \
        CPP                       \
-       AR                        \
        GDB                       \
        GNATBIND                  \
        GNATCHOP                  \
