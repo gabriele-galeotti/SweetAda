@@ -8,7 +8,6 @@
  * Please consult the LICENSE.txt file located in the top-level directory.
  */
 
-#include "library.h"
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
@@ -18,6 +17,13 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/stat.h>
+
+#include "library.h"
+
+/******************************************************************************
+ *                                                                            *
+ ******************************************************************************/
+
 #if __START_IF_SELECTION__
 #elif defined(__APPLE__) || defined(__linux__)
 # include <dlfcn.h>    /* dlopen() */
@@ -28,14 +34,6 @@
 #elif defined(__APPLE__)
 # include <signal.h>
 #endif
-
-/******************************************************************************
- *                                                                            *
- *                                                                            *
- * OS-dependent "private" functions.                                          *
- *                                                                            *
- *                                                                            *
- ******************************************************************************/
 
 /******************************************************************************
  *                                                                            *
@@ -856,13 +854,13 @@ log_argv_print(int mode, char **argv, const char *prefix)
         idx = 0;
         while ((p = argv[idx]) != NULL)
         {
-                /* EXEC_COMMAND_NARGV and EXEC_COMMAND_NENVP both have 256 */
-                /* items maximum, use 3 digits of padding */
+                /* EXEC_COMMAND_NARGV and EXEC_COMMAND_NENVP both have 1024 */
+                /* items maximum, use 4 digits of padding */
                 if (STRING_LENGTH(p) == 0)
                 {
                         p = "<EMPTY>";
                 }
-                (void)log_printf(mode, "%sargv[%3d] = %s", prefix, idx, p);
+                (void)log_printf(mode, "%sargv[%4d] = %s", prefix, idx, p);
                 ++idx;
         }
 }
@@ -1186,11 +1184,21 @@ execute_directory_get(execute_t this)
  * execute_argv_add()                                                         *
  *                                                                            *
  ******************************************************************************/
-void
+int
 execute_argv_add(execute_t this, const char *argument)
 {
-        // __FIX__ check for array overflow
+        if (this->current_argv_idx >= EXECUTE_NARGV - 1)
+        {
+                log_printf(
+                        LOG_STDERR | LOG_FILE,
+                        "execute_argv_add(): space exhausted."
+                        );
+                return -1;
+        }
+
         this->argv[this->current_argv_idx++] = argument;
+
+        return 0;
 }
 
 /******************************************************************************
@@ -1207,11 +1215,21 @@ execute_argv_get(execute_t this)
  * execute_envp_add()                                                         *
  *                                                                            *
  ******************************************************************************/
-void
+int
 execute_envp_add(execute_t this, const char *argument)
 {
-        // __FIX__ check for array overflow
+        if (this->current_argv_idx >= EXECUTE_NENVP - 1)
+        {
+                log_printf(
+                        LOG_STDERR | LOG_FILE,
+                        "execute_envp_add(): space exhausted."
+                        );
+                return -1;
+        }
+
         this->envp[this->current_envp_idx++] = argument;
+
+        return 0;
 }
 
 /******************************************************************************

@@ -12,6 +12,16 @@
 #define _LIBRARY_H 1
 
 /******************************************************************************
+ * Standard C headers.                                                        *
+ ******************************************************************************/
+
+#include <inttypes.h>
+#include <stdarg.h>     /* va_list */
+#include <stdbool.h>
+#include <stddef.h>     /* size_t */
+#include <sys/types.h>  /* pid_t */
+
+/******************************************************************************
  * Environment selection macros.                                              *
  ******************************************************************************/
 
@@ -20,17 +30,6 @@
 #else
 # define __START_IF_SELECTION__ 0
 #endif
-
-/******************************************************************************
- * System C headers.                                                          *
- ******************************************************************************/
-
-/* standard includes */
-#include <inttypes.h>
-#include <stdarg.h>     /* va_list */
-#include <stdbool.h>
-#include <stddef.h>     /* size_t */
-#include <sys/types.h>  /* pid_t */
 
 /******************************************************************************
  * Useful constants.                                                          *
@@ -357,9 +356,9 @@ extern void         execute_filename_set(execute_t, const char *);
 extern const char  *execute_filename_get(execute_t);
 extern void         execute_directory_set(execute_t, const char *);
 extern const char  *execute_directory_get(execute_t);
-extern void         execute_argv_add(execute_t, const char *);
+extern int          execute_argv_add(execute_t, const char *);
 extern const char **execute_argv_get(execute_t);
-extern void         execute_envp_add(execute_t, const char *);
+extern int          execute_envp_add(execute_t, const char *);
 extern const char **execute_envp_get(execute_t);
 extern void         execute_flags_set(execute_t, int);
 extern int          execute_flags_get(execute_t);
@@ -375,7 +374,7 @@ extern int          execute_child_exit_status(execute_t);
 extern void         execute_destroy(execute_t);
 
 #define EXEC_FORK           (1 << 0)
-/* do not log exit errors from the executable we have launched, they are    */
+/* do not log exit errors from the executable we just launched, they are */
 /* normal execution errors, and we do not want to add useless notifications */
 #define EXEC_NO_EXIT_ERRORS (1 << 1)
 #define EXEC_PRINT_CPID     (1 << 2)
