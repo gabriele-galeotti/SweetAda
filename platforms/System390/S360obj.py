@@ -304,7 +304,7 @@ def main():
     input_filename = None
     output_filename = None
     address = 0x18 # default
-    floader_filename = None
+    loader_filename = None
     write_psw = False
     # process arguments
     argc = len(sys.argv)
@@ -315,7 +315,7 @@ def main():
             address = int(sys.argv[argv_idx], 16)
         elif sys.argv[argv_idx] == '-l':
             argv_idx += 1
-            floader_filename = sys.argv[argv_idx]
+            loader_filename = sys.argv[argv_idx]
         elif sys.argv[argv_idx] == '-p':
             write_psw = True
         elif input_filename == None:
@@ -324,22 +324,22 @@ def main():
             output_filename = sys.argv[argv_idx]
         argv_idx += 1
     # open files
-    fin = open(input_filename, 'rb')
-    fout = open(output_filename, 'wb')
+    fd_input = open(input_filename, 'rb')
+    fd_output = open(output_filename, 'wb')
     # prepend the loader
-    if floader_filename != None:
-        floader = open(floader_filename, 'rb')
+    if loader_filename != None:
+        fd_loader = open(loader_filename, 'rb')
         while True:
-            data = floader.read(1)
+            data = fd_loader.read(1)
             if len(data) < 1:
                 break
-            file_write_byte(fout, data[0])
-        floader.close()
+            file_write_byte(fd_output, data[0])
+        fd_loader.close()
     # initialize sequence
     sequence = 1
     # create ESD record
     filesize = os.stat(input_filename).st_size
-    write_esd_record(fout, sequence, address, filesize)
+    write_esd_record(fd_output, sequence, address, filesize)
     sequence += 1
     # create TXT PSW record
     if write_psw:
@@ -351,24 +351,24 @@ def main():
         psw.append(address_bytes[1])
         psw.append(address_bytes[2])
         psw.append(address_bytes[3])
-        write_txt_record(fout, sequence, 0, psw)
+        write_txt_record(fd_output, sequence, 0, psw)
         sequence += 1
     # create TXT data records
     while True:
-        data = fin.read(56)
+        data = fd_input.read(56)
         data_length = len(data)
         if data_length > 0:
-            write_txt_record(fout, sequence, address, data)
+            write_txt_record(fd_output, sequence, address, data)
             address += data_length
             sequence += 1
         if data_length < 56:
             break
     # create END record
-    write_end_record(fout, sequence)
+    write_end_record(fd_output, sequence)
     # write out number of records written
     print('{0:s}: number of records written: {1:d}'.format(SCRIPT_FILENAME, sequence))
-    fin.close()
-    fout.close()
+    fd_input.close()
+    fd_output.close()
     return
 
 ################################################################################
