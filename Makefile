@@ -801,9 +801,8 @@ ifeq ($(BUILD_MODE),MAKEFILE)
                     > gnatbind_elab.lst            \
         ,[GNATBIND],b__main.adb)
 ifeq ($(OSTYPE),cmd)
-	@$(REM) repeat filename so the command does not end with a backslash
-	@$(MV) b__main.adb $(OBJECT_DIRECTORY)\b__main.adb
-	@$(MV) b__main.ads $(OBJECT_DIRECTORY)\b__main.ads
+	@$(MV) b__main.adb $(OBJECT_DIRECTORY)\ $(NULL)
+	@$(MV) b__main.ads $(OBJECT_DIRECTORY)\ $(NULL)
 else
 	@$(MV) b__main.adb $(OBJECT_DIRECTORY)/
 	@$(MV) b__main.ads $(OBJECT_DIRECTORY)/
@@ -821,8 +820,7 @@ endif
                     -P$(KERNEL_GPRFILE)  \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 ifeq ($(OSTYPE),cmd)
-	@$(REM) repeat filename so the command does not end with a backslash
-	-@$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\gnatbind_objs.lst
+	-@$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ $(NULL)
 else
 	-@$(MV) $(OBJECT_DIRECTORY)/gnatbind_objs.lst ./
 endif
@@ -1103,7 +1101,7 @@ debug_notify_on : $(KERNEL_OUTFILE)
 	@$(ELFTOOL) -c setdebugflag=1 $(KERNEL_OUTFILE)
 endif
 
-$(KERNEL_ROMFILE) : all
+$(KERNEL_ROMFILE) : $(KERNEL_OUTFILE)
 ifeq ($(POSTBUILD_ROMFILE),Y)
 	$(call brief-command, \
         $(OBJCOPY) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE) \
