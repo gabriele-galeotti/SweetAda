@@ -128,6 +128,9 @@ uint64_t SWAP64(uint64_t x) { if (application.endianness_swap) { return swap64(x
 #define COMMAND_FINDSYMBOL   3
 #define COMMAND_SETDEBUGFLAG 4
 
+#define ERROR_ERROR     -1
+#define ERROR_NO_SYMBOL -2
+
 /******************************************************************************
  * compute_tabs()                                                             *
  *                                                                            *
@@ -197,7 +200,11 @@ fprintf_tab2spaces(FILE *fp, const char *input_string)
                                 {
                                         char tmp[ncharacters + 1];
                                         snprintf(tmp, ncharacters + 1, "%s", input_string + idx);
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+                                        /* win/MinGW bug */
                                         tmp[ncharacters] = '\0';
+#endif
                                         fprintf(fp, "%s", tmp);
                                         idx += ncharacters;
                                         idx_out += ncharacters;
@@ -229,7 +236,7 @@ data_read(int fd, void *buffer, size_t length)
                 if (n == 0)
                 {
                         /* no data available */
-                        return -1;
+                        return ERROR_ERROR;
                 }
                 else if (n != (size_t)-1)
                 {
@@ -239,7 +246,7 @@ data_read(int fd, void *buffer, size_t length)
                 else if (errno != EAGAIN && errno != EINTR)
                 {
                         /* error */
-                        return -1;
+                        return ERROR_ERROR;
                 }
         }
 
@@ -516,7 +523,7 @@ elf_find_symbol(Elf *pelf, const char *symbol, uint64_t *pvalue)
                 }
         }
 
-        return -1;
+        return ERROR_NO_SYMBOL;
 }
 
 /******************************************************************************
@@ -690,12 +697,7 @@ command_findsymbol(void)
 {
         elf_analyze(application.pelf);
 
-        if (elf_find_symbol(application.pelf, application.symbol_name, &application.symbol_value) < 0)
-        {
-                return -1;
-        }
-
-        return 0;
+        return elf_find_symbol(application.pelf, application.symbol_name, &application.symbol_value);
 }
 
 /******************************************************************************
@@ -705,18 +707,41 @@ command_findsymbol(void)
 static int
 command_setdebugflag(void)
 {
-        off_t offset;
+        int     efs_status;
+        off_t   offset;
+        uint8_t value;
 
         elf_analyze(application.pelf);
 
-        if (elf_find_symbol(application.pelf, "_debug_flag", &application.symbol_value) < 0)
+        efs_status = elf_find_symbol(application.pelf, "_debug_flag", &application.symbol_value);
+        if (efs_status < 0)
         {
-                return -1;
+                if (efs_status == ERROR_NO_SYMBOL)
+                {
+                        return ERROR_NO_SYMBOL;
+                }
+                else
+                {
+                        return ERROR_ERROR;
+                }
         }
 
         offset = application.pelf->scn_text_offset + (application.symbol_value - application.pelf->scn_text_addr);
         lseek(application.pelf->fd, offset, SEEK_SET);
-        write(application.pelf->fd, (void *)&application.debug_flag_value, 1);
+        if (read(application.pelf->fd, (void *)&value, 1) != 1)
+        {
+                log_printf(LOG_STDERR | LOG_FILE, "*** Error: read()ing the input file.");
+                return ERROR_ERROR;
+        }
+        if (value != application.debug_flag_value)
+        {
+                lseek(application.pelf->fd, -1, SEEK_CUR);
+                if (write(application.pelf->fd, (void *)&application.debug_flag_value, 1) != 1)
+                {
+                        log_printf(LOG_STDERR | LOG_FILE, "*** Error: write()ing the input file.");
+                        return ERROR_ERROR;
+                }
+        }
 
         return 0;
 }
@@ -836,7 +861,7 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                 }
         }
 
-        return error_flag ? -1 : 0;
+        return error_flag ? ERROR_ERROR : 0;
 }
 
 /******************************************************************************
@@ -945,15 +970,12 @@ main(int argc, char **argv)
         switch (application.command)
         {
                 case COMMAND_DUMPSECTIONS:
-                        if (command_dumpsections() < 0)
-                        {
-                                goto main_exit;
-                        }
+                        exit_status = command_dumpsections() < 0 ? EXIT_FAILURE : EXIT_SUCCESS;
                         break;
                 case COMMAND_FINDSYMBOL:
                         if (command_findsymbol() < 0)
                         {
-                                goto main_exit;
+                                break;
                         }
                         switch (application.pelf->class)
                         {
@@ -987,19 +1009,22 @@ main(int argc, char **argv)
                                 default:
                                         break;
                         }
+                        exit_status = EXIT_SUCCESS;
                         break;
                 case COMMAND_SETDEBUGFLAG:
                         /* the kernel could be built without the definition */
                         /* of this symbol, so exit cleanly without flag an */
                         /* error */
-                        (void)command_setdebugflag();
-                        break;
+                        if (command_setdebugflag() == ERROR_ERROR)
+                        {
+                                break;
+                        }
+                        exit_status = EXIT_SUCCESS;
                 default:
                         /* __DNO__ */
+                        exit_status = EXIT_SUCCESS;
                         break;
         }
-
-        exit_status = EXIT_SUCCESS;
 
 main_exit:
 
