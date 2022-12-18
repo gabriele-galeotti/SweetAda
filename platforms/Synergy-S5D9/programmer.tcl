@@ -85,6 +85,7 @@ if {[catch {exec $ELFTOOL -c findsymbol=$START_SYMBOL $KERNEL_OUTFILE} result] e
     openocd_rpc_disconnect
     exit 1
 }
+puts "START ADDRESS = $START_ADDRESS"
 
 openocd_rpc_tx "halt"
 openocd_rpc_rx
