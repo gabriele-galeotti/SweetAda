@@ -61,6 +61,33 @@ static struct switch_descriptor switches[] = {
         };
 
 /******************************************************************************
+ * execute_setup()                                                            *
+ *                                                                            *
+ ******************************************************************************/
+static int
+execute_setup(execute_t execute, int argc, char **argv, char *executable)
+{
+        int idx;
+
+        execute_filename_set(execute, executable);
+
+        /* fill arguments (but not argv[0], which will be created by the */
+        /* execute_exec() function) */
+        for (idx = 1; idx < argc; ++idx)
+        {
+                execute_argv_add(execute, argv[idx]);
+        }
+
+        /* standard envp */
+        if (execute_envp_add(execute, "*") < 0)
+        {
+                return -1;
+        }
+
+        return 0;
+}
+
+/******************************************************************************
  * main()                                                                     *
  *                                                                            *
  * Main loop.                                                                 *
@@ -252,17 +279,17 @@ main(int argc, char **argv)
         /*
          * Setup GCC execution.
          */
-        execute = execute_create();
-        execute_flags_set(execute, EXEC_NO_EXIT_ERRORS);
-        execute_filename_set(execute, gcc_executable);
-        /* fill arguments (but not argv[0], which will be created by the */
-        /* execute_exec() function) */
-        for (idx = 1; idx < argc; ++idx)
+        if ((execute = execute_create()) == NULL)
         {
-                execute_argv_add(execute, argv[idx]);
+                fprintf(stderr, "%s: *** Error: execute_create().", program_name);
+                goto main_exit;
         }
-        execute_envp_add(execute, "*"); /* standard envp */
-
+        if (execute_setup(execute, argc, argv, gcc_executable) < 0)
+        {
+                fprintf(stderr, "%s: *** Error: execute_setup().", program_name);
+                goto exec_end;
+        }
+        execute_flags_set(execute, EXEC_NO_EXIT_ERRORS);
         /*
          * Check for GNAT_WRAPPER_VERBOSE and GNAT_WRAPPER_GCC_BRIEFTEXT.
          */
@@ -300,6 +327,7 @@ main(int argc, char **argv)
                         if (fp == NULL)
                         {
                                 fprintf(stderr, "%s: *** Error: unable to open \"%s\".\n", program_name, timestamp_filename);
+                                exit_status = EXIT_FAILURE;
                         }
                         else
                         {
@@ -311,6 +339,7 @@ main(int argc, char **argv)
                         }
                 }
         }
+exec_end:
 
         /*
          * Invalidate.

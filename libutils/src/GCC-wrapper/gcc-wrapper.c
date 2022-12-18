@@ -72,18 +72,31 @@ static struct switch_descriptor switches[] = {
  * execute_setup()                                                            *
  *                                                                            *
  ******************************************************************************/
-static void
+static int
 execute_setup(execute_t execute, int argc, char **argv)
 {
         int idx;
 
         execute_filename_set(execute, argv[1]);
+
         /* fill arguments (but not argv[0], which will be created by the */
         /* execute_exec() function) */
         for (idx = 1; idx < (argc - 1); ++idx) /* - 1 because argv[1] is discarded */
         {
-                execute_argv_add(execute, argv[idx + 1]); /* + 1 start from source argv[2] */
+                /* + 1 start from source argv[2] */
+                if (execute_argv_add(execute, argv[idx + 1]) < 0)
+                {
+                        return -1;
+                }
         }
+
+        /* standard envp */
+        if (execute_envp_add(execute, "*") < 0)
+        {
+                return -1;
+        }
+
+        return 0;
 }
 
 /******************************************************************************
@@ -308,16 +321,28 @@ no_parsing:
         /*
          * Setup execution.
          */
+        if (!(cc1_or_gnat1 || as || collect2 || objcopy))
+        {
+                fprintf(stderr, "%s: *** Error: executable not recognized.\n", program_name);
+                goto main_exit;
+        }
+        if ((execute = execute_create()) == NULL)
+        {
+                fprintf(stderr, "%s: *** Error: execute_create().", program_name);
+                goto main_exit;
+        }
+        if (execute_setup(execute, argc, argv) < 0)
+        {
+                fprintf(stderr, "%s: *** Error: execute_setup().", program_name);
+                goto exec_end;
+        }
+        execute_flags_set(execute, EXEC_NO_EXIT_ERRORS);
         if (cc1_or_gnat1)
         {
                 bool stdout_redirect;
                 int stdout_fd;
                 int stdout_current;
                 stdout_redirect = false;
-                execute = execute_create();
-                execute_flags_set(execute, EXEC_NO_EXIT_ERRORS);
-                execute_setup(execute, argc, argv);
-                execute_envp_add(execute, "*"); /* standard envp */
                 if (gcc_gnatg_flag)
                 {
                         stdout_redirect = true;
@@ -327,6 +352,7 @@ no_parsing:
                         const char *sweetada_path;
                         const char *object_directory;
                         char stdout_filename[PATH_MAX + 1];
+                        bool redirect_ok;
                         /* build filename */
                         stdout_filename[0] = '\0';
                         /* first, prefix with SWEETADA_PATH and OBJECT_DIRECTORY */
@@ -363,17 +389,32 @@ no_parsing:
                         if (stdout_fd < 0)
                         {
                                 fprintf(stderr, "%s: *** Error: open()ing \"%s\".", program_name, stdout_filename);
+                                redirect_ok = false;
                                 stdout_redirect = false;
                         }
                         else
                         {
                                 stdout_current = dup(fileno(stdout));
-                                dup2(stdout_fd, fileno(stdout));
+                                if (stdout_current < 0)
+                                {
+                                        fprintf(stderr, "%s: *** Error: dup().", program_name);
+                                        goto exec_end;
+                                }
+                                if (dup2(stdout_fd, fileno(stdout)) < 0)
+                                {
+                                        fprintf(stderr, "%s: *** Error: dup2().", program_name);
+                                        goto exec_end;
+                                }
+                                redirect_ok = true;
                         }
                         lib_free((void *)object_directory);
                         object_directory = NULL;
                         lib_free((void *)sweetada_path);
                         sweetada_path = NULL;
+                        if (!redirect_ok)
+                        {
+                                goto exec_end;
+                        }
                 }
                 /* execute */
                 exit_status = execute_exec(execute);
@@ -381,16 +422,16 @@ no_parsing:
                 {
                         fflush(stdout);
                         close(stdout_fd);
-                        dup2(stdout_current, fileno(stdout));
+                        if (dup2(stdout_current, fileno(stdout)) < 0)
+                        {
+                                fprintf(stderr, "%s: *** Error: dup2().", program_name);
+                                goto exec_end;
+                        }
                         close(stdout_current);
                 }
         }
         else if (as)
         {
-                execute = execute_create();
-                execute_flags_set(execute, EXEC_NO_EXIT_ERRORS);
-                execute_setup(execute, argc, argv);
-                execute_envp_add(execute, "*"); /* standard envp */
                 /*
                  * Check for GCC_WRAPPER_ASSEMBLER_OUTPUT specification.
                  */
@@ -410,33 +451,28 @@ no_parsing:
                         strcat(as_listing_string, "=");
                         strcat(as_listing_string, output_filename);
                         strcat(as_listing_string, ".lst");
-                        execute_argv_add(execute, as_listing_string);
+                        if (execute_argv_add(execute, as_listing_string) < 0)
+                        {
+                                fprintf(stderr, "%s: *** Error: execute_argv_add().\n", program_name);
+                                goto exec_end;
+                        }
                 }
                 /* execute */
                 exit_status = execute_exec(execute);
         }
         else if (collect2)
         {
-                execute = execute_create();
-                execute_flags_set(execute, EXEC_NO_EXIT_ERRORS);
-                execute_setup(execute, argc, argv);
-                execute_envp_add(execute, "*"); /* standard envp */
                 /* execute */
                 exit_status = execute_exec(execute);
         }
         else if (objcopy)
         {
-                execute = execute_create();
-                execute_flags_set(execute, EXEC_NO_EXIT_ERRORS);
-                execute_setup(execute, argc, argv);
-                execute_envp_add(execute, "*"); /* standard envp */
                 /* execute */
                 exit_status = execute_exec(execute);
         }
         else
         {
                 /* __DNO__ */
-                fprintf(stderr, "%s: *** Error: executable not recognized.\n", program_name);
         }
 
         /*
@@ -454,6 +490,7 @@ no_parsing:
                                 if (fp == NULL)
                                 {
                                         fprintf(stderr, "%s: *** Error: unable to open \"%s\".\n", program_name, timestamp_filename);
+                                        exit_status = EXIT_FAILURE;
                                 }
                                 else
                                 {
@@ -466,6 +503,7 @@ no_parsing:
                         }
                 }
         }
+exec_end:
 
         /*
          * Invalidate.
