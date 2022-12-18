@@ -131,6 +131,7 @@ printf "%s\n" "<action> is one of:"
 printf "%s\n" "help            - build system help"
 printf "%s\n" "createkernelcfg - create a kernel.cfg file"
 printf "%s\n" "configure       - configure the system for a build"
+printf "%s\n" "infodump        - dump essential informations"
 printf "%s\n" "all             - build target"
 printf "%s\n" "postbuild       - auxiliary post-processing"
 printf "%s\n" "session-start   - perform session start activities"
@@ -206,6 +207,10 @@ case $1 in
     "${MAKE}" configure
     exit_status=$?
     log_build_errors
+    ;;
+  "infodump")
+    "${MAKE}" infodump
+    exit_status=$?
     ;;
   "all")
     rm -f make.log make.errors.log
