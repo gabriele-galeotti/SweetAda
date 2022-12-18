@@ -14,32 +14,32 @@ REM Arguments:
 REM <action> = action to perform: "configure", "all", etc
 REM
 REM Environment variables:
+REM MAKE
 REM PLATFORM
 REM SUBPLATFORM
 REM
 
-SETLOCAL EnableDelayedExpansion
+SETLOCAL ENABLEEXTENSIONS
+SETLOCAL ENABLEDELAYEDEXPANSION
 
-REM defaults to standard installation directory, see configuration.in
-SET MAKEEXE="C:\Program Files\SweetAda"\bin\make.exe
+IF NOT DEFINED MAKE SET MAKE=make.exe
 
 SET ACTION_VALID=
-IF "%1"=="help" SET "ACTION_VALID=Y" && %MAKEEXE% help
-IF "%1"=="createkernelcfg" SET "ACTION_VALID=Y" && CALL :setplatform && SET "PLATFORM=!PLATFORM!" && SET "SUBPLATFORM=!SUBPLATFORM!" && %MAKEEXE% createkernelcfg
-IF "%1"=="configure" SET "ACTION_VALID=Y" && %MAKEEXE% configure
-IF "%1"=="all" SET "ACTION_VALID=Y" && %MAKEEXE% all
-IF "%1"=="postbuild" SET "ACTION_VALID=Y" && %MAKEEXE% postbuild
-IF "%1"=="session-start" SET "ACTION_VALID=Y" && %MAKEEXE% session-start
-IF "%1"=="session-end" SET "ACTION_VALID=Y" && %MAKEEXE% session-end
-IF "%1"=="run" SET "ACTION_VALID=Y" && %MAKEEXE% run
-IF "%1"=="debug" SET "ACTION_VALID=Y" && %MAKEEXE% debug
-IF "%1"=="clean" SET "ACTION_VALID=Y" && %MAKEEXE% clean
-IF "%1"=="distclean" SET "ACTION_VALID=Y" && %MAKEEXE% distclean
-IF "%1"=="rts" SET "ACTION_VALID=Y" && %MAKEEXE% rts
+IF "%1"=="help" SET "ACTION_VALID=Y" && %MAKE% help
+IF "%1"=="createkernelcfg" SET "ACTION_VALID=Y" && CALL :setplatform && SET "PLATFORM=!PLATFORM!" && SET "SUBPLATFORM=!SUBPLATFORM!" && %MAKE% createkernelcfg
+IF "%1"=="configure" SET "ACTION_VALID=Y" && %MAKE% configure
+IF "%1"=="infodump" SET "ACTION_VALID=Y" && %MAKE% infodump
+IF "%1"=="all" SET "ACTION_VALID=Y" && %MAKE% all
+IF "%1"=="postbuild" SET "ACTION_VALID=Y" && %MAKE% postbuild
+IF "%1"=="session-start" SET "ACTION_VALID=Y" && %MAKE% session-start
+IF "%1"=="session-end" SET "ACTION_VALID=Y" && %MAKE% session-end
+IF "%1"=="run" SET "ACTION_VALID=Y" && %MAKE% run
+IF "%1"=="debug" SET "ACTION_VALID=Y" && %MAKE% debug
+IF "%1"=="clean" SET "ACTION_VALID=Y" && %MAKE% clean
+IF "%1"=="distclean" SET "ACTION_VALID=Y" && %MAKE% distclean
+IF "%1"=="rts" SET "ACTION_VALID=Y" && %MAKE% rts
 IF NOT "%ACTION_VALID%"=="Y" CALL :usage
 SET ACTION_VALID=
-
-SET MAKEEXE=
 
 EXIT /B %ERRORLEVEL%
 
@@ -71,6 +71,7 @@ ECHO ^<action^> is one of:
 ECHO help            - build system help
 ECHO createkernelcfg - create a kernel.cfg file
 ECHO configure       - configure the system for a build
+ECHO infodump        - dump essential informations
 ECHO all             - build target
 ECHO postbuild       - auxiliary post-processing
 ECHO session-start   - perform session start activities
@@ -88,7 +89,7 @@ ECHO Specify CPU=^<cpu^> TOOLCHAIN_NAME=^<toolchain_name^> RTS=^<rts^> (and
 ECHO optionally CPU_MODEL=^<cpu_model^>) in the environment variable space
 ECHO before executing the "rts" action.
 ECHO.
-ECHO MAKE:                %MAKEEXE%
+ECHO MAKE:                %MAKE%
 ECHO default PLATFORM:    %PLATFORM%
 ECHO default SUBPLATFORM: %SUBPLATFORM%
 ECHO.
