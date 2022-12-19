@@ -35,7 +35,8 @@ SCRIPT_FILENAME = sys.argv[0]
 #                                                                              #
 ################################################################################
 
-import os
+import time
+import serial
 
 # helper function
 def printf(format, *args):
@@ -43,13 +44,6 @@ def printf(format, *args):
 # helper function
 def errprintf(format, *args):
     sys.stderr.write(format % args)
-
-################################################################################
-#                                                                              #
-################################################################################
-
-import time
-import serial
 
 ################################################################################
 # Main loop.                                                                   #

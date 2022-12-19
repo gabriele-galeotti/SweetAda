@@ -29,8 +29,6 @@ proc msleep {ms} {
 # loadbinaryfile                                                               #
 #                                                                              #
 # load a binary file                                                           #
-# http://tmml.sourceforge.net/doc/tcl/scan.html                                #
-# http://wiki.tcl.tk/1599                                                      #
 ################################################################################
 proc loadbinaryfile {fname {channel stdout}} {
     if {![file exists $fname]} {
