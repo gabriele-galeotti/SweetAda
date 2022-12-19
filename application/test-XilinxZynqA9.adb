@@ -32,7 +32,7 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            Delay_Count : constant := 100_000_000;
+            Delay_Count : constant := 1_000_000;
             Value       : Unsigned_8;
          begin
             Value := 0;
