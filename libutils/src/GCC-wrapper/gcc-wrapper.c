@@ -446,6 +446,11 @@ no_parsing:
                         as_listing_string_size += STRING_LENGTH(as_listing_options);
                         as_listing_string_size += STRING_LENGTH(output_filename);
                         as_listing_string = lib_malloc(as_listing_string_size);
+                        if (as_listing_string == NULL)
+                        {
+                                fprintf(stderr, "%s: *** Error: lib_malloc().\n", program_name);
+                                goto exec_end;
+                        }
                         as_listing_string[0] = '\0';
                         strcat(as_listing_string, as_listing_options);
                         strcat(as_listing_string, "=");
@@ -517,7 +522,7 @@ main_exit:
          * Cleanup.
          */
         lib_free((void *)as_listing_options);
-        as_listing_string = NULL;
+        as_listing_options = NULL;
         lib_free((void *)as_listing_string);
         as_listing_string = NULL;
         lib_free((void *)timestamp_filename);
