@@ -147,6 +147,9 @@ READELF  := $(TOOLCHAIN_READELF)
 SIZE     := $(TOOLCHAIN_SIZE)
 STRIP    := $(TOOLCHAIN_STRIP)
 
+# GPRbuild executable
+GPRBUILD := gprbuild$(EXEEXT)
+
 # RTS
 RTS_ROOT_PATH := $(RTS_BASE_PATH)/$(RTS)/$(TOOLCHAIN_NAME)
 RTS_PATH      := $(RTS_ROOT_PATH)/$(GCC_MULTIDIR)
@@ -446,6 +449,7 @@ GNATMAKE += $(GNATMAKE_SWITCHES_DEFAULT) \
             $(GCC_SWITCHES_PLATFORM)
 GNATPREP += $(GNATPREP_SWITCHES_DEFAULT)
 GNATXREF += $(GNATXREF_SWITCHES_DEFAULT)
+GPRBUILD += $(GPRBUILD_SWITCHES_DEFAULT)
 AR       += $(AR_SWITCHES_DEFAULT)
 LD       += $(LD_SWITCHES_DEFAULT)  \
             $(LD_SWITCHES_PLATFORM)
@@ -529,7 +533,4 @@ export GNAT_WRAPPER_TIMESTAMP_FILENAME
 # special back-end compiler for GNATBIND-generated Ada files without output
 # of spurious warnings
 ADAC_GNATBIND := $(filter-out -gnatwu -gnatya -gnatyb -gnatyM$(MLL) -gnatyu,$(ADAC))
-
-# GPRbuild executable
-GPRBUILD := gprbuild$(EXEEXT)
 
