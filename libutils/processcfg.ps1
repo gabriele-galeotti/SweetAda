@@ -13,6 +13,7 @@
 # arguments specified in .bat script
 #
 # Environment variables:
+# SED
 # every variable referenced in the input file
 #
 
@@ -34,6 +35,7 @@ function ExitWithCode
 
 $scriptname = $MyInvocation.MyCommand.Name
 
+$sed = (Get-Item env:SED).Value
 $input_filename = $args[0]
 $output_filename = $args[1]
 
@@ -45,7 +47,7 @@ $pinfo.CreateNoWindow = $true
 $pinfo.UseShellExecute = $false
 $pinfo.RedirectStandardError = $true
 $pinfo.RedirectStandardOutput = $true
-$pinfo.FileName = "sed.exe"
+$pinfo.FileName = "$sed"
 $pinfo.Arguments = ""
 if ($symbols.Count -gt 0)
 {
@@ -80,13 +82,13 @@ try
   $p.WaitForExit()
   if ($p.ExitCode -ne 0)
   {
-    Write-Host "${scriptname}: *** Error: executing sed.exe."
+    Write-Host "${scriptname}: *** Error: executing ${sed}."
     ExitWithCode $p.ExitCode
   }
 }
 catch
 {
-  Write-Host "${scriptname}: *** Error: executing sed.exe."
+  Write-Host "${scriptname}: *** Error: executing ${sed}."
   ExitWithCode 1
 }
 Set-Content -Path $output_filename -Value $stdout -NoNewLine -Force
