@@ -57,6 +57,7 @@ project Build is
       when "ADA05" => Builder_Switches := Builder_Switches & ("-gnat2005");
       when "ADA12" => Builder_Switches := Builder_Switches & ("-gnat2012");
       when "ADA20" => Builder_Switches := Builder_Switches & ("-gnat2020");
+      when "ADA22" => Builder_Switches := Builder_Switches & ("-gnat2022");
       when others  => null;
    end case;
 
@@ -81,7 +82,11 @@ project Build is
       for Driver ("Ada") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
       for Driver ("Asm_Cpp") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
       for Driver ("C") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
-      for Leading_Required_Switches ("Ada") use ("-c", "-x", "ada");
+      for Leading_Required_Switches ("Ada") use (
+                                                 "-c",
+                                                 "-x", "ada",
+                                                 "--RTS=" & Configure.RTS_Path
+                                                );
       for Multi_Unit_Object_Separator ("Ada") use "~";
       for Include_Switches ("Asm_Cpp") use ("-I");
       for Mapping_Spec_Suffix ("Ada") use "%s";
@@ -92,6 +97,7 @@ project Build is
                                 "-gnatef",
                                 "-gnatf",
                                 "-gnatU",
+                                "-fverbose-asm",
                                 "-eL",
                                 "-eS",
                                 "-gnatn",
@@ -99,7 +105,7 @@ project Build is
                                 "-fdata-sections",
                                 "-g3", "-gdwarf-4",
                                 "-fno-omit-frame-pointer",
-                                "-gnatE",
+                                -- "-gnatE",
                                 "-gnato1",
                                 "-fstack-usage",
                                 "-fdump-rtl-expand",
@@ -121,13 +127,14 @@ project Build is
 
    package Binder is
       for Driver ("Ada") use Configure.Toolchain_Prefix & "/libexec/gprbuild/gprbind";
+      for Required_Switches ("Ada") use ("--RTS=" & Configure.RTS_Path);
       for Objects_Path_File ("Ada") use Configure.Object_Directory;
       for Switches ("Ada") use (
                                 "-nostdinc",
                                 "-nostdlib",
                                 "-F",
-                                -- "-e",
-                                -- "-l",
+                                "-e",
+                                "-l",
                                 "-n",
                                 "-s",
                                 "-A=gnatbind_alis.lst",
