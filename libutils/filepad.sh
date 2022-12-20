@@ -15,8 +15,7 @@
 # $2 = final length or size modulo (allowed specification like "512k")
 #
 # Environment variables:
-# OS
-# MSYSTEM
+# OSTYPE
 #
 
 ################################################################################
@@ -30,15 +29,6 @@ LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
   rm -f "${LOG_FILENAME}"
   touch "${LOG_FILENAME}"
-fi
-if [ "x${OS}" = "xWindows_NT" ] ; then
-  if [ "x${MSYSTEM}" = "x" ] ; then
-    OSTYPE=cmd
-  else
-    OSTYPE=msys
-  fi
-else
-  OSTYPE=$(uname -s 2> /dev/null | tr "[:upper:]" "[:lower:]" | sed -e "s|[^a-z].*||" -e "s|mingw|msys|")
 fi
 
 ################################################################################
