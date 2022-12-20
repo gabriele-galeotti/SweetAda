@@ -233,9 +233,6 @@ lib_strdup(const char *s)
  ******************************************************************************/
 
 /*
- * __REF__ PUTENV(3) for a discussion about memory leaking
- * __REF__ https://wiki.sei.cmu.edu/confluence/display/c/POS34-C.+Do+not+call+putenv%28%29+with+a+pointer+to+an+automatic+variable+as+the+argument
- *
  * Rules valid in every OS:
  * - env_get():
  *   returns a heap-allocated string; once the caller has finished, it can
@@ -488,8 +485,6 @@ file_length(const char *filename)
  * file_basename_simple()                                                     *
  *                                                                            *
  ******************************************************************************/
-// http://www.nextcomputers.org/NeXTfiles/Software/OPENSTEP/Developer/NScompatlib/basename.c
-// https://msdn.microsoft.com/en-us/library/windows/desktop/aa365247(v=vs.85).aspx#paths
 const char *
 file_basename_simple(const char *path)
 {
@@ -573,7 +568,6 @@ file_extensionname(const char *filename)
  * file_dirname_simple()                                                      *
  *                                                                            *
  ******************************************************************************/
-// https://github.com/rtv/Stage/blob/master/replace/dirname.c
 char *
 file_dirname_simple(char *path)
 {
@@ -648,7 +642,7 @@ symlink_create(const char *target_filename, const char *link_filename)
         if (symlink(target_filename, link_filename) != 0)
         {
                 log_printf(
-                        LOG_STDERR | LOG_FILE,
+                        LOG_STDERR,
                         "error: %s symlink()ing file %s.",
                         link_filename,
                         target_filename
@@ -686,7 +680,7 @@ symlink_delete(const char *link_filename)
                 {
                         /* lstat() error */
                         log_printf(
-                                LOG_STDERR | LOG_FILE,
+                                LOG_STDERR,
                                 "error: stat()ing file %s.",
                                 link_filename
                                 );
@@ -703,7 +697,7 @@ symlink_delete(const char *link_filename)
                         {
                                 /* error in remove() */
                                 log_printf(
-                                        LOG_STDERR | LOG_FILE,
+                                        LOG_STDERR,
                                         "error: remove()ing file %s.",
                                         link_filename
                                         );
@@ -711,7 +705,7 @@ symlink_delete(const char *link_filename)
                         }
                         /* symlink removed */
                         log_printf(
-                                LOG_STDOUT | LOG_FILE,
+                                LOG_STDOUT,
                                 "symlink: %s removed",
                                 link_filename
                                 );
@@ -720,7 +714,7 @@ symlink_delete(const char *link_filename)
                 {
                         /* not a symlink */
                         log_printf(
-                                LOG_STDERR | LOG_FILE,
+                                LOG_STDERR,
                                 "error: %s is not a symlink.",
                                 link_filename
                                 );
@@ -937,6 +931,7 @@ log_init(const char *logprogramname, const char *logfilename, const char *logfil
                 {
                         /* close previously opened file */
                         fclose(log_file);
+                        log_file = NULL;
                 }
                 if (STRING_LENGTH(logfilename) > 0)
                 {
@@ -990,7 +985,6 @@ struct _execute {
  * blockstring memory once it is no longer required.                          *
  * flags: ARGV_SEPARATOR_NUL: build a NUL-terminated block of strings         *
  ******************************************************************************/
-// __REF__ https://stackoverflow.com/questions/4053241/windows-api-createprocess-path-with-space?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 #if defined(_WIN32)
 #define ARGS_NUL_BLOCK (1 << 0) /* make a "Windows-style" block of strings */
 static char *
@@ -1190,7 +1184,7 @@ execute_argv_add(execute_t this, const char *argument)
         if (this->current_argv_idx >= EXECUTE_NARGV - 1)
         {
                 log_printf(
-                        LOG_STDERR | LOG_FILE,
+                        LOG_STDERR,
                         "execute_argv_add(): space exhausted."
                         );
                 return -1;
@@ -1221,7 +1215,7 @@ execute_envp_add(execute_t this, const char *argument)
         if (this->current_argv_idx >= EXECUTE_NENVP - 1)
         {
                 log_printf(
-                        LOG_STDERR | LOG_FILE,
+                        LOG_STDERR,
                         "execute_envp_add(): space exhausted."
                         );
                 return -1;
@@ -1294,7 +1288,7 @@ execute_exec(execute_t this)
         if (this->filename == NULL)
         {
                 log_printf(
-                        LOG_STDERR | LOG_FILE,
+                        LOG_STDERR,
                         "execute_exec(): no executable filename supplied."
                         );
                 return -1;
@@ -1303,7 +1297,7 @@ execute_exec(execute_t this)
         if (!file_exists(this->filename))
         {
                 log_printf(
-                        LOG_STDERR | LOG_FILE,
+                        LOG_STDERR,
                         "execute_exec(): \"%s\" does not exist.",
                         this->filename
                         );
@@ -1384,7 +1378,7 @@ execute_exec(execute_t this)
                 lpEnvironment = NULL;
                 this->child_exit_status = GetLastError();
                 log_printf(
-                        LOG_STDERR | LOG_FILE,
+                        LOG_STDERR,
                         "execute_exec(): CreateProcess() error %"EXITSTATUS_FORMAT".",
                         this->child_exit_status
                         );
@@ -1408,7 +1402,7 @@ execute_exec(execute_t this)
                 if (WaitForSingleObject(ProcessInformation.hProcess, INFINITE) != WAIT_OBJECT_0)
                 {
                         log_printf(
-                                LOG_STDERR | LOG_FILE,
+                                LOG_STDERR,
                                 "execute_exec(): WaitForSingleObject() error."
                                 );
                         exit_status = -1;
@@ -1446,7 +1440,7 @@ execute_exec(execute_t this)
         if (this->filename == NULL)
         {
                 log_printf(
-                        LOG_STDERR | LOG_FILE,
+                        LOG_STDERR,
                         "execute_exec(): no executable filename supplied."
                         );
                 return -1;
@@ -1455,7 +1449,7 @@ execute_exec(execute_t this)
         if (!file_exists(this->filename))
         {
                 log_printf(
-                        LOG_STDERR | LOG_FILE,
+                        LOG_STDERR,
                         "execute_exec(): \"%s\" does not exist.",
                         this->filename
                         );
@@ -1473,7 +1467,7 @@ execute_exec(execute_t this)
         if (pid == (pid_t)-1)
         {
                 log_printf(
-                        LOG_STDERR | LOG_FILE,
+                        LOG_STDERR,
                         "execute_exec(): fork() error."
                         );
                 return -1;
@@ -1529,14 +1523,14 @@ execute_exec(execute_t this)
                                          * restart the waitpid() again.
                                          */
                                         //log_printf(
-                                        //        LOG_STDERR | LOG_FILE,
+                                        //        LOG_STDERR,
                                         //        "execute(): waitpid(): EINTR on PID %"PID_FORMAT".",
                                         //        pid
                                         //        );
                                         continue;
                                 }
                                 log_printf(
-                                        LOG_STDERR | LOG_FILE,
+                                        LOG_STDERR,
                                         "execute_exec(): waitpid() on PID %"PID_FORMAT" error: %s.",
                                         pid,
                                         strerror(errno)
@@ -1546,7 +1540,7 @@ execute_exec(execute_t this)
                         else if (waitpid_status != pid)
                         {
                                 log_printf(
-                                        LOG_STDERR | LOG_FILE,
+                                        LOG_STDERR,
                                         "execute_exec(): waitpid() on PID %"PID_FORMAT" returns erronueos value.",
                                         pid
                                         );
@@ -1578,7 +1572,7 @@ execute_exec(execute_t this)
                                 case 127:
                                         /* no executable found */
                                         log_printf(
-                                                LOG_STDERR | LOG_FILE,
+                                                LOG_STDERR,
                                                 "execute_exec(): command not found."
                                                 );
                                         return -1;
@@ -1588,7 +1582,7 @@ execute_exec(execute_t this)
                                         if ((this->flags & EXEC_NO_EXIT_ERRORS) == 0)
                                         {
                                                 log_printf(
-                                                        LOG_STDERR | LOG_FILE,
+                                                        LOG_STDERR,
                                                         "execute_exec(): child pid %"PID_FORMAT" exited with status: %"EXITSTATUS_FORMAT".",
                                                         pid,
                                                         this->child_exit_status
@@ -1606,7 +1600,7 @@ execute_exec(execute_t this)
                          */
                         this->child_exit_status = 128 + WTERMSIG(wstatus);
                         log_printf(
-                                LOG_STDERR | LOG_FILE,
+                                LOG_STDERR,
                                 "execute_exec(): child pid %"PID_FORMAT" got unhandled signal %d (%s).",
                                 pid,
                                 WTERMSIG(wstatus),
@@ -1616,7 +1610,7 @@ execute_exec(execute_t this)
                 }
                 /* CANNOTOCCUR */
                 log_printf(
-                        LOG_STDERR | LOG_FILE,
+                        LOG_STDERR,
                         "execute_exec(): child pid %"PID_FORMAT" anomalous exit, unknown reason.",
                         pid
                         );
@@ -1661,10 +1655,6 @@ execute_exec(execute_t this)
                 }
         }
 
-        /*
-         * http://stackoverflow.com/questions/3776859/how-can-i-get-the-return-value-of-a-program-executed-by-exec
-         * http://stackoverflow.com/questions/5422831/what-is-the-difference-between-using-exit-exit-in-a-conventional-linux-fo
-         */
         _exit(127); /* 127 is "command not found" */
 
         /*
@@ -1730,7 +1720,6 @@ execute_system(int argc, char **argv)
         strcpy(command_line, "");
 
         /*
-         * https://ss64.com/nt/syntax-esc.html
          * "To launch a batch script with spaces in the Program Path requiring
          * "quotes""
          */
