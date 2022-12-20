@@ -48,8 +48,8 @@ project Build is
    Builder_Switches := ();
 
    case Verbose is
-      when "Y" | "y" | "1" => null;
-      when others          => Builder_Switches := Builder_Switches & ("-q");
+      when "Y" | "y" | "1" => Builder_Switches := Builder_Switches & ("-v");
+      when others          => null;
    end case;
 
    case Configure.Ada_Mode is
