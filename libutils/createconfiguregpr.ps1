@@ -25,6 +25,8 @@
 # GCC_SWITCHES_PLATFORM
 # INCLUDE_DIRECTORIES
 # IMPLICIT_ALI_UNITS
+# ADAC_SWITCHES_WARNING
+# ADAC_SWITCHES_STYLE
 # OBJECT_DIRECTORY
 # OPTIMIZATION_LEVEL
 #
@@ -169,6 +171,42 @@ if ($implicit_ali_units.Length -gt 0)
     $count = $count + 1
     $s = "`"$s`""
     if ($count -ne $implicit_ali_units_array.Length)
+    {
+      $s += ","
+    }
+    print_I $configure_filename "                          $s"
+  }
+}
+print_I $configure_filename "                         );"
+print_I $configure_filename "ADAC_Switches_Warning := ("
+$adac_switches_warning = $env:ADAC_SWITCHES_WARNING.Trim(" ")
+if ($adac_switches_warning.Length -gt 0)
+{
+  $adac_switches_warning_array = $adac_switches_warning -split "\s+"
+  $count = 0
+  foreach ($s in $adac_switches_warning_array)
+  {
+    $count = $count + 1
+    $s = "`"$s`""
+    if ($count -ne $adac_switches_warning_array.Length)
+    {
+      $s += ","
+    }
+    print_I $configure_filename "                          $s"
+  }
+}
+print_I $configure_filename "                         );"
+print_I $configure_filename "ADAC_Switches_Style   := ("
+$adac_switches_style = $env:ADAC_SWITCHES_STYLE.Trim(" ")
+if ($adac_switches_style.Length -gt 0)
+{
+  $adac_switches_style_array = $adac_switches_style -split "\s+"
+  $count = 0
+  foreach ($s in $adac_switches_style_array)
+  {
+    $count = $count + 1
+    $s = "`"$s`""
+    if ($count -ne $adac_switches_style_array.Length)
     {
       $s += ","
     }

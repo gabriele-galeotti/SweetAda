@@ -578,6 +578,8 @@ export                           \
        RTS_ROOT_PATH             \
        RTS_PATH                  \
        ADAC                      \
+       ADAC_SWITCHES_WARNING     \
+       ADAC_SWITCHES_STYLE       \
        AR                        \
        AS                        \
        CC                        \

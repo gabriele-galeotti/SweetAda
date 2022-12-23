@@ -76,7 +76,11 @@ project Build is
 
    Compiler_Switches := (
                          "-wrapper", "gcc-wrapper"
-                        ) & Configure.ADAC_Switches_RTS & Configure.GCC_Platform_Switches;
+                        ) &
+                        Configure.ADAC_Switches_RTS &
+                        Configure.GCC_Platform_Switches &
+                        Configure.ADAC_Switches_Warning &
+                        Configure.ADAC_Switches_Style;
 
    package Compiler is
       for Driver ("Ada") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
@@ -108,8 +112,7 @@ project Build is
                                 "-gnato1",
                                 "-fstack-usage",
                                 "-fdump-rtl-expand",
-                                "-gnatVa",
-                                "-gnatw.V"
+                                "-gnatVa"
                                ) & Compiler_Switches;
       for Switches ("C") use (
                               "--freestanding",

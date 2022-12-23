@@ -27,6 +27,8 @@
 # GCC_SWITCHES_PLATFORM
 # INCLUDE_DIRECTORIES
 # IMPLICIT_ALI_UNITS
+# ADAC_SWITCHES_WARNING
+# ADAC_SWITCHES_STYLE
 # OBJECT_DIRECTORY
 # OPTIMIZATION_LEVEL
 #
@@ -199,6 +201,32 @@ imax=$((${#IMPLICIT_ALI_UNITS_ARRAY[@]}-1))
 if [ "${imax}" -ge "0" ] ; then
   for i in $(seq 0 $((${imax}))) ; do
     s="\"${IMPLICIT_ALI_UNITS_ARRAY[$i]}\""
+    if [ "${i}" -ne "${imax}" ] ; then
+      s+=","
+    fi
+    print_I "                          ${s}"
+  done
+fi
+print_I "                         );"
+print_I "ADAC_Switches_Warning := ("
+ADAC_SWITCHES_WARNING_ARRAY=(${ADAC_SWITCHES_WARNING})
+imax=$((${#ADAC_SWITCHES_WARNING_ARRAY[@]}-1))
+if [ "${imax}" -ge "0" ] ; then
+  for i in $(seq 0 $((${imax}))) ; do
+    s="\"${ADAC_SWITCHES_WARNING_ARRAY[$i]}\""
+    if [ "${i}" -ne "${imax}" ] ; then
+      s+=","
+    fi
+    print_I "                          ${s}"
+  done
+fi
+print_I "                         );"
+print_I "ADAC_Switches_Style   := ("
+ADAC_SWITCHES_STYLE_ARRAY=(${ADAC_SWITCHES_STYLE})
+imax=$((${#ADAC_SWITCHES_STYLE_ARRAY[@]}-1))
+if [ "${imax}" -ge "0" ] ; then
+  for i in $(seq 0 $((${imax}))) ; do
+    s="\"${ADAC_SWITCHES_STYLE_ARRAY[$i]}\""
     if [ "${i}" -ne "${imax}" ] ; then
       s+=","
     fi
