@@ -84,8 +84,7 @@ project Build is
       for Driver ("C") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
       for Leading_Required_Switches ("Ada") use (
                                                  "-c",
-                                                 "-x", "ada",
-                                                 "--RTS=" & Configure.RTS_Path
+                                                 "-x", "ada"
                                                 );
       for Multi_Unit_Object_Separator ("Ada") use "~";
       for Include_Switches ("Asm_Cpp") use ("-I");
@@ -105,11 +104,10 @@ project Build is
                                 "-fdata-sections",
                                 "-g3", "-gdwarf-4",
                                 "-fno-omit-frame-pointer",
-                                -- "-gnatE",
+                                "-gnatE",
                                 "-gnato1",
                                 "-fstack-usage",
                                 "-fdump-rtl-expand",
-                                "-gnatdu",
                                 "-gnatVa",
                                 "-gnatw.V"
                                ) & Compiler_Switches;
