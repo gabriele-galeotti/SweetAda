@@ -212,8 +212,14 @@ ifeq ($(shell SET "PATH=$(PATH)" && $(GNAT_WRAPPER) -v 2> nul),)
 $(error Error: no $(GNAT_WRAPPER) executable found)
 endif
 else
+ifeq ($(OSTYPE_UNAME),darwin)
+ifneq ($(shell PATH="$(PATH)" $(ECHO) "version" | $(SED) 2> /dev/null),version)
+$(error Error: no $(SED) executable found)
+endif
+else
 ifeq ($(shell PATH="$(PATH)" $(SED) --version 2> /dev/null),)
 $(error Error: no $(SED) executable found)
+endif
 endif
 ifeq ($(shell PATH="$(PATH)" $(GCC_WRAPPER) -v 2> /dev/null),)
 $(error Error: no $(GCC_WRAPPER) executable found)
