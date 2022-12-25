@@ -81,9 +81,9 @@ execute_setup(execute_t execute, int argc, char **argv)
 
         /* fill arguments (but not argv[0], which will be created by the */
         /* execute_exec() function) */
-        for (idx = 1; idx < (argc - 1); ++idx) /* - 1 because argv[1] is discarded */
+        for (idx = 1; idx < (argc - 1); ++idx) /* -1 because argv[1] is discarded */
         {
-                /* + 1 start from source argv[2] */
+                /* +1 start from source argv[2] */
                 if (execute_argv_add(execute, argv[idx + 1]) < 0)
                 {
                         return -1;
@@ -349,10 +349,11 @@ no_parsing:
                 }
                 if (stdout_redirect)
                 {
+                        bool redirect_ok;
                         const char *sweetada_path;
                         const char *object_directory;
                         char stdout_filename[PATH_MAX + 1];
-                        bool redirect_ok;
+                        redirect_ok = false;
                         /* build filename */
                         stdout_filename[0] = '\0';
                         /* first, prefix with SWEETADA_PATH and OBJECT_DIRECTORY */
@@ -389,8 +390,6 @@ no_parsing:
                         if (stdout_fd < 0)
                         {
                                 fprintf(stderr, "%s: *** Error: open()ing \"%s\".", program_name, stdout_filename);
-                                redirect_ok = false;
-                                stdout_redirect = false;
                         }
                         else
                         {
@@ -398,14 +397,15 @@ no_parsing:
                                 if (stdout_current < 0)
                                 {
                                         fprintf(stderr, "%s: *** Error: dup().", program_name);
-                                        goto exec_end;
                                 }
-                                if (dup2(stdout_fd, fileno(stdout)) < 0)
+                                else if (dup2(stdout_fd, fileno(stdout)) < 0)
                                 {
                                         fprintf(stderr, "%s: *** Error: dup2().", program_name);
-                                        goto exec_end;
                                 }
-                                redirect_ok = true;
+                                else
+                                {
+                                        redirect_ok = true;
+                                }
                         }
                         lib_free((void *)object_directory);
                         object_directory = NULL;
