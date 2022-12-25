@@ -455,7 +455,7 @@ endif
 ifneq ($(PLATFORM),)
 # platform known
 PLATFORM_DIRECTORY := $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
--include $(PLATFORM_DIRECTORY)/configuration.in
+include $(PLATFORM_DIRECTORY)/configuration.in
 else
 # platform not known, output an error message
 ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
