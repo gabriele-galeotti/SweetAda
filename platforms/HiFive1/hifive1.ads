@@ -47,6 +47,13 @@ package HiFive1 is
 
    -- 6.3 Internal Trimmable Programmable 72 MHz Oscillator (HFROSC)
 
+   -- sample values, range is div1 .. div64
+   hfroscdiv_div1 : constant := 0;
+   hfroscdiv_div2 : constant := 1;
+   hfroscdiv_div3 : constant := 2;
+   hfroscdiv_div4 : constant := 3;
+   hfroscdiv_div5 : constant := 4;
+
    type hfrosccfg_Type is
    record
       hfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
@@ -87,6 +94,30 @@ package HiFive1 is
 
    -- 6.5 Internal High-Frequency PLL (HFPLL)
 
+   pllr_div1 : constant := 2#00#;
+   pllr_div2 : constant := 2#01#;
+   pllr_div3 : constant := 2#10#;
+   pllr_div4 : constant := 2#11#;
+
+   -- sample values, range is x2 .. x128 in even steps
+   pllf_x2   : constant := 0;
+   pllf_x4   : constant := 1;
+   pllf_x8   : constant := 3;
+   pllf_x16  : constant := 7;
+   pllf_x32  : constant := 15;
+   pllf_x64  : constant := 33;
+   pllf_x128 : constant := 63;
+
+   pllq_div2 : constant := 2#01#;
+   pllq_div4 : constant := 2#10#;
+   pllq_div8 : constant := 2#11#;
+
+   pllsel_HFROSC : constant := 0; -- hfroscclk directly drives hfclk
+   pllsel_PLL    : constant := 1; -- PLL drives hfclk
+
+   pllrefsel_HFROSC : constant := 0; -- PLL driven by HFROSC
+   pllrefsel_HFXOSC : constant := 1; -- PLL driven by HFXOSC
+
    type pllcfg_Type is
    record
       pllr      : Bits_3;           -- PLL R Value
@@ -94,11 +125,11 @@ package HiFive1 is
       pllf      : Bits_6;           -- PLL F Value
       pllq      : Bits_2;           -- PLL Q Value
       Reserved2 : Bits_4 := 0;
-      pllsel    : Boolean;          -- PLL Select
-      pllrefsel : Boolean;          -- PLL Reference Select
+      pllsel    : Bits_1;           -- PLL Select
+      pllrefsel : Bits_1;           -- PLL Reference Select
       pllbypass : Boolean;          -- PLL Bypass
       Reserved3 : Bits_12 := 0;
-      plllock   : Boolean := False; -- PLL Lock
+      plllock   : Boolean := False; -- PLL Lock (RO)
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -118,9 +149,20 @@ package HiFive1 is
 
    -- 6.6 PLL Output Divider
 
+   -- sample values, range is div2 .. div128 in even steps
+   plloutdiv_div2   : constant := 0;
+   plloutdiv_div4   : constant := 1;
+   plloutdiv_div6   : constant := 2;
+   plloutdiv_div8   : constant := 3;
+   plloutdiv_div16  : constant := 7;
+   plloutdiv_div128 : constant := 63;
+
+   plloutdivby1_CLR : constant := 0; -- PLL Final Divide By plloutdiv_...
+   plloutdivby1_SET : constant := 1; -- PLL Final Divide By 1
+
    type plloutdiv_Type is
    record
-      plloutdiv    : Bits_6;       -- PLL Final Divider Value
+      plloutdiv    : Bits_6 := 0;  -- PLL Final Divider Value (default = divide by 2)
       Reserved1    : Bits_2 := 0;
       plloutdivby1 : Bits_6;       -- PLL Final Divide By 1
       Reserved2    : Bits_18 := 0;
@@ -135,6 +177,56 @@ package HiFive1 is
       Reserved2    at 0 range 14 .. 31;
    end record;
 
+   -- 6.7 Internal Programmable Low-Frequency Ring Oscillator (LFROSC)
+
+   -- sample values, range is div1 .. div64
+   lfroscdiv_div1 : constant := 0;
+   lfroscdiv_div2 : constant := 1;
+   lfroscdiv_div3 : constant := 2;
+   lfroscdiv_div4 : constant := 3;
+   lfroscdiv_div5 : constant := 4;
+
+   type lfrosccfg_Type is
+   record
+      lfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
+      Reserved1  : Bits_10 := 0;
+      lfrosctrim : Bits_5;           -- Ring Oscillator Trim Register
+      Reserved2  : Bits_9 := 0;
+      lfroscen   : Boolean;          -- Ring Oscillator Enable
+      lfroscrdy  : Boolean := False; -- Ring Oscillator Ready
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for lfrosccfg_Type use
+   record
+      lfroscdiv  at 0 range 0 .. 5;
+      Reserved1  at 0 range 6 .. 15;
+      lfrosctrim at 0 range 16 .. 20;
+      Reserved2  at 0 range 21 .. 29;
+      lfroscen   at 0 range 30 .. 30;
+      lfroscrdy  at 0 range 31 .. 31;
+   end record;
+
+   -- 6.8 Alternate Low-Frequency Clock (LFALTCLK)
+
+   lfextclk_sel_LFROSC : constant := 0; -- low-frequency clock source = LFROSC
+   lfextclk_sel_EXT    : constant := 1; -- low-frequency clock source = psdlfaltclk pad
+
+   type lfclkmux_Type is
+   record
+      lfextclk_sel        : Bits_1;           -- Low Frequency Clock Source Selector
+      Reserved            : Bits_30 := 0;
+      lfextclk_mux_status : Boolean := False; -- Setting of the aon_lfclksel pin (RO)
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for lfclkmux_Type use
+   record
+      lfextclk_sel        at 0 range 0 .. 0;
+      Reserved            at 0 range 1 .. 30;
+      lfextclk_mux_status at 0 range 31 .. 31;
+   end record;
+
    -- 6.2 PRCI Address Space Usage
 
    type PRCI_Type is
@@ -143,21 +235,24 @@ package HiFive1 is
       hfxosccfg  : hfxosccfg_Type with Volatile_Full_Access => True;
       pllcfg     : pllcfg_Type    with Volatile_Full_Access => True;
       plloutdiv  : plloutdiv_Type with Volatile_Full_Access => True;
+      lfrosccfg  : lfrosccfg_Type with Volatile_Full_Access => True;
+      lfclkmux   : lfclkmux_Type  with Volatile_Full_Access => True;
    end record with
-      Size => 4 * 32;
+      Size => 16#80# * 8;
    for PRCI_Type use
    record
       hfrosccfg  at 16#00# range 0 .. 31;
       hfxosccfg  at 16#04# range 0 .. 31;
       pllcfg     at 16#08# range 0 .. 31;
       plloutdiv  at 16#0C# range 0 .. 31;
+      lfrosccfg  at 16#70# range 0 .. 31;
+      lfclkmux   at 16#7C# range 0 .. 31;
    end record;
 
    PRCI_BASEADDRESS : constant := 16#1000_8000#;
 
    PRCI : aliased PRCI_Type with
       Address    => To_Address (PRCI_BASEADDRESS),
-      -- Volatile   => True,
       Import     => True,
       Convention => Ada;
 
@@ -314,9 +409,9 @@ package HiFive1 is
 
    type txdata_Type is
    record
-      txdata   : Unsigned_8;   -- Transmit data
+      txdata   : Unsigned_8;       -- Transmit data
       Reserved : Bits_23 := 0;
-      full     : Boolean;      -- Transmit FIFO full
+      full     : Boolean := False; -- Transmit FIFO full (RO)
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -331,9 +426,9 @@ package HiFive1 is
 
    type rxdata_Type is
    record
-      rxdata   : Unsigned_8;   -- Received data
+      rxdata   : Unsigned_8;       -- Received data (RO)
       Reserved : Bits_23 := 0;
-      empty    : Boolean;      -- Receive FIFO empty
+      empty    : Boolean := False; -- Receive FIFO empty (RO)
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
