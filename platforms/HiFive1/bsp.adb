@@ -17,6 +17,7 @@
 
 with Interfaces;
 with Bits;
+with CPU;
 with RISCV;
 with HiFive1;
 with Exceptions;
@@ -34,6 +35,9 @@ package body BSP is
 
    use Interfaces;
    use Bits;
+   use HiFive1;
+
+   procedure CLK_Init;
 
    --========================================================================--
    --                                                                        --
@@ -44,6 +48,32 @@ package body BSP is
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- CLK_Init
+   ----------------------------------------------------------------------------
+   procedure CLK_Init is
+   begin
+      -- external clock frequency = 16 MHz, output 128 MHz
+      PRCI.plloutdiv := (
+                         plloutdivby1 => plloutdivby1_SET, -- PLL Final Divide By 1
+                         others       => <>
+                        );
+      PRCI.pllcfg := (
+                      pllr      => pllr_div2,        -- divide by 2, PLL drive = 8 MHz
+                      pllf      => pllf_x64,         -- x64 multiply factor = 512 MHz
+                      pllq      => pllq_div4,        -- divide by 4 = 128 MHz
+                      pllsel    => pllsel_PLL,
+                      pllrefsel => pllrefsel_HFXOSC, -- PLL driven by external clock
+                      pllbypass => False,            -- enable PLL
+                      others    => <>
+                     );
+      -- wait for PLL to settle down
+      loop
+         for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
+         exit when PRCI.pllcfg.plllock;
+      end loop;
+   end CLK_Init;
+
+   ----------------------------------------------------------------------------
    -- Console wrappers
    ----------------------------------------------------------------------------
 
@@ -51,9 +81,9 @@ package body BSP is
    begin
       -- wait for transmitter available
       loop
-         exit when not HiFive1.UART0.txdata.full;
+         exit when not UART0.txdata.full;
       end loop;
-      HiFive1.UART0.txdata.txdata := To_U8 (C);
+      UART0.txdata.txdata := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
@@ -61,9 +91,9 @@ package body BSP is
    begin
       -- wait for receiver available
       loop
-         exit when not HiFive1.UART0.rxdata.empty;
+         exit when not UART0.rxdata.empty;
       end loop;
-      Data := HiFive1.UART0.rxdata.rxdata;
+      Data := UART0.rxdata.rxdata;
       C := To_Ch (Data);
    end Console_Getchar;
 
@@ -72,38 +102,20 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
    begin
-      -- Clock ----------------------------------------------------------------
-      HiFive1.PRCI.pllcfg    := (
-                                 pllr      => 0,
-                                 pllf      => 0,
-                                 pllq      => 0,
-                                 pllsel    => True,
-                                 pllrefsel => True,
-                                 pllbypass => True,
-                                 others    => <>
-                                );
-      HiFive1.PRCI.hfrosccfg := (
-                                 hfroscdiv  => 4,
-                                 hfrosctrim => 16#10#,
-                                 hfroscen   => False,
-                                 others     => <>
-                                );
+      -- CLK ------------------------------------------------------------------
+      CLK_Init;
       -- UARTs ----------------------------------------------------------------
-      HiFive1.GPIO_IOFSEL := @ and 16#FF78_FFFF#;
-      HiFive1.GPIO_IOFEN  := @ or 16#0087_0000#;
-      HiFive1.GPIO_OEN    := @ or 16#0087_0000#;
-      HiFive1.UART0.div.div      := 16#89#; -- 115200 bps @ 16 MHz
-      HiFive1.UART0.txctrl.txen  := True;
-      -- HiFive1.UART0.txctrl.nstop := 0;
-      -- HiFive1.UART0.txctrl.txcnt := 0;
-      HiFive1.UART0.rxctrl.rxen  := True;
-      -- HiFive1.UART0.rxctrl.rxcnt := 0;
-      HiFive1.UART1.div.div      := 16#89#; -- 115200 bps @ 16 MHz
-      HiFive1.UART1.txctrl.txen  := True;
-      -- HiFive1.UART1.txctrl.nstop := 0;
-      -- HiFive1.UART1.txctrl.txcnt := 0;
-      HiFive1.UART1.rxctrl.rxen  := True;
-      -- HiFive1.UART1.rxctrl.rxcnt := 0;
+      GPIO_IOFSEL := @ and 16#FF78_FFFF#;
+      GPIO_IOFEN  := @ or 16#0087_0000#;
+      GPIO_OEN    := @ or 16#0087_0000#;
+      -- UART0.div.div := 16#008A#; -- 115200 bps @ 16 MHz
+      UART0.div.div := 16#0456#; -- 115200 bps @ 128 MHz
+      UART0.txctrl  := (txen => True, nstop => 1, txcnt => 1, others => <>);
+      UART0.rxctrl  := (rxen => True, rxcnt => 1, others => <>);
+      -- UART1.div.div := 16#008A#; -- 115200 bps @ 16 MHz
+      UART1.div.div := 16#0456#; -- 115200 bps @ 128 MHz
+      UART1.txctrl  := (txen => True, nstop => 1, txcnt => 1, others => <>);
+      UART1.rxctrl  := (rxen => True, rxcnt => 1, others => <>);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
