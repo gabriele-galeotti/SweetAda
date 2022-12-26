@@ -41,27 +41,27 @@ package RISCV is
 
    type MSTATUS_Type is
    record
-      UIE       : Boolean; -- User Interrupt Enable
-      SIE       : Boolean; -- Supervisor Interrupt Enable
-      Reserved1 : Bits_1;
-      MIE       : Boolean; -- Machine Interrupt Enable
-      UPIE      : Boolean; -- User Previous Interrupt Enable
-      SPIE      : Boolean; -- Supervisor Previous Interrupt Enable
-      Reserved2 : Bits_1;
-      MPIE      : Boolean; -- Machine Previous Interrupt Enabler
-      SPP       : Boolean; -- Supervisor Previous Privilege
-      Reserved3 : Bits_2;
-      MPP       : Bits_2;  -- Machine Previous Privilege
-      FS        : Bits_2;  -- Floating Point State
-      XS        : Bits_2;  -- User Mode Extension State
-      MPRIV     : Boolean; -- Modify Privilege (access memory as MPP)
-      SUM       : Boolean; -- Permit Supervisor User Memory Access
-      MXR       : Boolean; -- Make Executable Readable
-      TVM       : Boolean; -- Trap Virtual memory
-      TW        : Boolean; -- Timeout Wait (traps S-Mode wfi)
-      TSR       : Boolean; -- Trap SRET
-      Reserved4 : Bits_8;
-      SD        : Boolean; -- State Dirty (FS and XS summary bit)
+      UIE       : Boolean;     -- User Interrupt Enable
+      SIE       : Boolean;     -- Supervisor Interrupt Enable
+      Reserved1 : Bits_1 := 0;
+      MIE       : Boolean;     -- Machine Interrupt Enable
+      UPIE      : Boolean;     -- User Previous Interrupt Enable
+      SPIE      : Boolean;     -- Supervisor Previous Interrupt Enable
+      Reserved2 : Bits_1 := 0;
+      MPIE      : Boolean;     -- Machine Previous Interrupt Enabler
+      SPP       : Boolean;     -- Supervisor Previous Privilege
+      Reserved3 : Bits_2 := 0;
+      MPP       : Bits_2;      -- Machine Previous Privilege
+      FS        : Bits_2;      -- Floating Point State
+      XS        : Bits_2;      -- User Mode Extension State
+      MPRIV     : Boolean;     -- Modify Privilege (access memory as MPP)
+      SUM       : Boolean;     -- Permit Supervisor User Memory Access
+      MXR       : Boolean;     -- Make Executable Readable
+      TVM       : Boolean;     -- Trap Virtual memory
+      TW        : Boolean;     -- Timeout Wait (traps S-Mode wfi)
+      TSR       : Boolean;     -- Trap SRET
+      Reserved4 : Bits_8 := 0;
+      SD        : Boolean;     -- State Dirty (FS and XS summary bit)
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -92,23 +92,21 @@ package RISCV is
 
    -- Machine Trap Vector CSR (mtvec)
 
+   MODE_Direct   : constant := 2#00#;
+   MODE_Vectored : constant := 2#01#;
+
    type MTVEC_Type is
    record
-      MODE     : Bits_2;
-      Reserved : Bits_4;
-      BASE     : Bits_26;
+      MODE : Bits_2;  -- MODE Sets the interrupt processing mode.
+      BASE : Bits_30; -- Interrupt Vector Base Address.
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for MTVEC_Type use
    record
-      MODE     at 0 range 0 .. 1;
-      Reserved at 0 range 2 .. 5;
-      BASE     at 0 range 6 .. 31;
+      MODE at 0 range 0 .. 1;
+      BASE at 0 range 2 .. 31;
    end record;
-
-   MODE_Direct   : constant := 2#00#;
-   MODE_Vectored : constant := 2#01#;
 
    procedure MTVEC_Write (Mtvec : in MTVEC_Type) with
       Inline => True;

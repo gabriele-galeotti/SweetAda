@@ -131,14 +131,11 @@ package body RISCV is
    MSTATUS_USMIE : constant MSTATUS_Type := (
                                              UIE       => False,
                                              SIE       => False,
-                                             Reserved1 => 0,
                                              MIE       => True,
                                              UPIE      => False,
                                              SPIE      => False,
-                                             Reserved2 => 0,
                                              MPIE      => False,
                                              SPP       => False,
-                                             Reserved3 => 0,
                                              MPP       => 0,
                                              FS        => 0,
                                              XS        => 0,
@@ -148,8 +145,8 @@ package body RISCV is
                                              TVM       => False,
                                              TW        => False,
                                              TSR       => False,
-                                             Reserved4 => 0,
-                                             SD        => False
+                                             SD        => False,
+                                             others    => <>
                                             );
 
    procedure Irq_Enable is
