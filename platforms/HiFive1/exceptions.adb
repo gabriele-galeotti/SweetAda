@@ -64,6 +64,7 @@ package body Exceptions is
       else
          Core.Tick_Count := @ + 1;
          RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
+         Console.Print ("T", NL => False);
       end if;
    end Timer_Process;
 
@@ -75,10 +76,10 @@ package body Exceptions is
          Import        => True,
          Convention    => Asm,
          External_Name => "vectors";
-      Base_Address : Bits_26;
+      Base_Address : Bits_30;
    begin
-      Base_Address := Bits_26 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)) and 16#FFFF_FFFC#, 6));
-      RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, Reserved => 0, BASE => Base_Address));
+      Base_Address := Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2));
+      RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, BASE => Base_Address));
    end Init;
 
 end Exceptions;
