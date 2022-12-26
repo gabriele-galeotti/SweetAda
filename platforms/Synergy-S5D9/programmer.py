@@ -81,7 +81,7 @@ libopenocd.openocd_rpc_init('127.0.0.1', 6666)
 
 if len(sys.argv) > 1:
     if sys.argv[1] == '-shutdown':
-        library.openocd_rpc_tx('shutdown')
+        libopenocd_rpc_tx('shutdown')
         exit(0)
 
 elftool_command = [ELFTOOL, '-c', 'findsymbol=' + START_SYMBOL, KERNEL_OUTFILE]

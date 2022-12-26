@@ -43,7 +43,7 @@ source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) libopenocd.tc
 ################################################################################
 
 set OPENOCD_PREFIX  $::env(OPENOCD_PREFIX)
-set OPENOCD_CFGFILE [file join $OPENOCD_PREFIX share openocd scripts board stm32f769i-disco.cfg]
+set OPENOCD_CFGFILE [file join $::env(SWEETADA_PATH) $::env(PLATFORM_DIRECTORY) openocd.cfg]
 set ELFTOOL         $::env(ELFTOOL)
 set KERNEL_OUTFILE  [file join $::env(SWEETADA_PATH) $::env(KERNEL_OUTFILE)]
 set START_SYMBOL    _start
