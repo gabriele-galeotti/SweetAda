@@ -81,7 +81,7 @@ libopenocd.openocd_rpc_init('127.0.0.1', 6666)
 
 if len(sys.argv) > 1:
     if sys.argv[1] == '-shutdown':
-        libopenocd_rpc_tx('shutdown')
+        libopenocd.openocd_rpc_tx('shutdown')
         exit(0)
 
 elftool_command = [ELFTOOL, '-c', 'findsymbol=' + START_SYMBOL, KERNEL_OUTFILE]
@@ -93,8 +93,7 @@ else:
 START_ADDRESS = '0x{:X}'.format(int(result, base=16) & 0xFFFFFFFE)
 printf('START ADDRESS = %s\n', START_ADDRESS)
 
-#libopenocd.openocd_rpc_tx('reset halt')
-libopenocd.openocd_rpc_tx('halt')
+libopenocd.openocd_rpc_tx('reset halt')
 libopenocd.openocd_rpc_rx('echo')
 library.msleep(1000)
 libopenocd.openocd_rpc_tx('load_image' + ' ' + KERNEL_OUTFILE)
