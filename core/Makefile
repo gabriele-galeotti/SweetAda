@@ -31,7 +31,6 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 # manually-inferred dependency logic
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/abort_library.o : \
-        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)    \
         $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/console.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_BITS)    \

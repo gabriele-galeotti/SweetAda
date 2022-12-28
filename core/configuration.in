@@ -18,20 +18,26 @@ INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                  \
 #
 # Units not automatically inferred as dependencies by the build system.
 #
-# abort                 may be called by exceptions and C library
-# console               called by abort
+# abort                 may be called by C library, with''ed by gnat_exceptions, last_chance_handler
+# bits                  with''ed by console, core, integer_math, malloc, memory_functions
+# console               with''ed by abort_library, core, malloc
 # core                  _gnat_stack_check and other parameters
 # gnat_exceptions       called by inline checks
+# integer_math          with''ed by malloc
 # last_chance_handler   called by inline checks
+# llutils               with''ed by console
 # malloc                called by allocator code
-# memory_functions      called by inline code
+# memory_functions      called by inline code, with''ed by malloc
 #
 
 IMPLICIT_CORE_UNITS := abort_library       \
+                       bits                \
                        console             \
                        core                \
                        gnat_exceptions     \
+                       integer_math        \
                        last_chance_handler \
+                       llutils             \
                        malloc              \
                        memory_functions
 # exported because needed by core Makefile
@@ -47,6 +53,7 @@ export SPEC_ABORT_LIBRARY       := $(CORE_DIRECTORY)/abort_library.ads
 export SPEC_BITS                := $(CORE_DIRECTORY)/bits.ads
 export SPEC_CONSOLE             := $(CORE_DIRECTORY)/console.ads
 export SPEC_CORE                := $(CORE_DIRECTORY)/core.ads
+export SPEC_GNAT_EXCEPTIONS     := $(CORE_DIRECTORY)/gnat_exceptions.ads
 export SPEC_INTEGER_MATH        := $(CORE_DIRECTORY)/integer_math.ads
 export SPEC_LAST_CHANCE_HANDLER := $(CORE_DIRECTORY)/last_chance_handler.ads
 export SPEC_LLUTILS             := $(CORE_DIRECTORY)/llutils.ads
