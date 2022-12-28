@@ -52,7 +52,7 @@ package body Application is
             PORT (6).PODR.PODR02 := True;
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             SCI (3).TDR := C;
-            C := C + 1;
+            C := @ + 1;
             if C > 16#7F# then
                C := 16#20#;
             end if;
