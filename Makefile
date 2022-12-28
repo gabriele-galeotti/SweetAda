@@ -329,7 +329,7 @@ KERNEL_ROMFILE := $(KERNEL_BASENAME).rom
 GNATADC_FILENAME := gnat.adc
 
 # GPRbuild filenames
-KERNEL_GPRFILE        := build.gpr
+KERNEL_GPRFILE        := sweetada.gpr
 CONFIGUREGPR_FILENAME := configure.gpr
 
 # cleaning

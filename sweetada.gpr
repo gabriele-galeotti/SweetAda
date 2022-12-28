@@ -10,7 +10,7 @@
 
 with "configure";
 
-project Build is
+project SweetAda is
 
    ----------------------------------------------------------------------------
    -- Types and variables
@@ -165,4 +165,4 @@ project Build is
    package Ide is
    end Ide;
 
-end Build;
+end SweetAda;
