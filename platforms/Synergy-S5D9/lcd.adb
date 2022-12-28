@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Bits;
 with S5D9;
 
 package body LCD is
@@ -61,25 +60,24 @@ package body LCD is
       -- configure simple SPI on SCI0
       -- 34.8 Operation in Simple SPI Mode
       -- Figure 34.32 Example flow of SCI initialization in clock synchronous mode with non-FIFO selected
-      SCI (0).SCR := (CKE10 => CKE_Sync_Int_CLK, others => False); -- disable TE/RE
+      SCI (0).SCR := (CKE => CKE_Sync_Int_CLK, others => False); -- disable TE/RE
       SCI (0).FCR.FM := False;
       SCI (0).SMR.NORMAL := (
-                             CKS10 => SMR_CKS_PCLKA4, -- n=1 -> CKS = 1
-                             MP    => False,
-                             STOP  => SMR_STOP_1,
-                             PM    => SMR_PM_EVEN,
-                             PE    => False,
-                             CHR   => CHR_8.CHR,
-                             CM    => SMR_CM_SYNC
+                             CKS  => SMR_CKS_PCLKA4, -- n=1 -> CKS = 1
+                             MP   => False,
+                             STOP => SMR_STOP_1,
+                             PM   => SMR_PM_EVEN,
+                             PE   => False,
+                             CHR  => CHR_8.CHR,
+                             CM   => SMR_CM_SYNC
                             );
       SCI (0).SCMR := (
-                       SMIF      => False,
-                       Reserved1 => Bits.Bits_1_1,
-                       SINV      => SCMR_SINV_NO,
-                       SDIR      => SCMR_SDIR_LSB,
-                       CHR1      => CHR_8.CHR1,
-                       Reserved2 => Bits.Bits_2_1,
-                       BCP2      => 1
+                       SMIF   => False,
+                       SINV   => SCMR_SINV_NO,
+                       SDIR   => SCMR_SDIR_LSB,
+                       CHR1   => CHR_8.CHR1,
+                       BCP2   => 1,
+                       others => <>
                       );
       -- simple SPI on port 1: SCI0: MISO0, MOSI0, SCK0
       PFSR (P100).PMR  := True;

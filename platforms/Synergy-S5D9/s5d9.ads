@@ -1214,18 +1214,18 @@ pragma Warnings (On, "bits of * unused");
 
    type AGTMR1_Type is
    record
-      TMOD20   : Bits_3;      -- Operating Mode
+      TMOD     : Bits_3;      -- Operating Mode
       TEDGPL   : Bits_1;      -- Edge Polarity
-      TCK20    : Bits_3;      -- Count Source
+      TCK      : Bits_3;      -- Count Source
       Reserved : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
    for AGTMR1_Type use
    record
-      TMOD20   at 0 range 0 .. 2;
+      TMOD     at 0 range 0 .. 2;
       TEDGPL   at 0 range 3 .. 3;
-      TCK20    at 0 range 4 .. 6;
+      TCK      at 0 range 4 .. 6;
       Reserved at 0 range 7 .. 7;
    end record;
 
@@ -1242,7 +1242,7 @@ pragma Warnings (On, "bits of * unused");
 
    type AGTMR2_Type is
    record
-      CKS20    : Bits_3;      -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
+      CKS      : Bits_3;      -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
       Reserved : Bits_4 := 0;
       LPM      : Boolean;     -- Low Power Mode
    end record with
@@ -1250,7 +1250,7 @@ pragma Warnings (On, "bits of * unused");
       Size      => 8;
    for AGTMR2_Type use
    record
-      CKS20    at 0 range 0 .. 2;
+      CKS      at 0 range 0 .. 2;
       Reserved at 0 range 3 .. 6;
       LPM      at 0 range 7 .. 7;
    end record;
@@ -1380,30 +1380,30 @@ pragma Warnings (On, "bits of * unused");
 
    type SMR_NORMAL_Type is
    record
-      CKS10 : Bits_2;  -- Clock Select
-      MP    : Boolean; -- Multi-Processor Mode
-      STOP  : Bits_1;  -- Stop Bit Length
-      PM    : Bits_1;  -- Parity Mode
-      PE    : Boolean; -- Parity Enable
-      CHR   : Bits_1;  -- Character Length
-      CM    : Bits_1;  -- Communication Mode
+      CKS  : Bits_2;  -- Clock Select
+      MP   : Boolean; -- Multi-Processor Mode
+      STOP : Bits_1;  -- Stop Bit Length
+      PM   : Bits_1;  -- Parity Mode
+      PE   : Boolean; -- Parity Enable
+      CHR  : Bits_1;  -- Character Length
+      CM   : Bits_1;  -- Communication Mode
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
    for SMR_NORMAL_Type use
    record
-      CKS10 at 0 range 0 .. 1;
-      MP    at 0 range 2 .. 2;
-      STOP  at 0 range 3 .. 3;
-      PM    at 0 range 4 .. 4;
-      PE    at 0 range 5 .. 5;
-      CHR   at 0 range 6 .. 6;
-      CM    at 0 range 7 .. 7;
+      CKS  at 0 range 0 .. 1;
+      MP   at 0 range 2 .. 2;
+      STOP at 0 range 3 .. 3;
+      PM   at 0 range 4 .. 4;
+      PE   at 0 range 5 .. 5;
+      CHR  at 0 range 6 .. 6;
+      CM   at 0 range 7 .. 7;
    end record;
 
    type SMR_SMIF_Type is
    record
-      CKS10 : Bits_2;                 -- Clock Select
+      CKS   : Bits_2;                 -- Clock Select
       BCP10 : Bits_2 := BCP_32.BCP10; -- Base Clock Pulse
       PM    : Bits_1;                 -- Parity Mode
       PE    : Boolean;                -- Parity Enable
@@ -1414,7 +1414,7 @@ pragma Warnings (On, "bits of * unused");
       Size      => 8;
    for SMR_SMIF_Type use
    record
-      CKS10 at 0 range 0 .. 1;
+      CKS   at 0 range 0 .. 1;
       BCP10 at 0 range 2 .. 3;
       PM    at 0 range 4 .. 4;
       PE    at 0 range 5 .. 5;
@@ -1443,25 +1443,25 @@ pragma Warnings (On, "bits of * unused");
 
    type SCR_Type is
    record
-      CKE10 : Bits_2;  -- Clock Enable
-      TEIE  : Boolean; -- Transmit End Interrupt Enable
-      MPIE  : Boolean; -- Multi-Processor Interrupt Enable
-      RE    : Boolean; -- Receive Enable
-      TE    : Boolean; -- Transmit Enable
-      RIE   : Boolean; -- Receive Interrupt Enable
-      TIE   : Boolean; -- Transmit Interrupt Enable
+      CKE  : Bits_2;           -- Clock Enable
+      TEIE : Boolean;          -- Transmit End Interrupt Enable
+      MPIE : Boolean := False; -- Multi-Processor Interrupt Enable
+      RE   : Boolean;          -- Receive Enable
+      TE   : Boolean;          -- Transmit Enable
+      RIE  : Boolean;          -- Receive Interrupt Enable
+      TIE  : Boolean;          -- Transmit Interrupt Enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
    for SCR_Type use
    record
-      CKE10 at 0 range 0 .. 1;
-      TEIE  at 0 range 2 .. 2;
-      MPIE  at 0 range 3 .. 3;
-      RE    at 0 range 4 .. 4;
-      TE    at 0 range 5 .. 5;
-      RIE   at 0 range 6 .. 6;
-      TIE   at 0 range 7 .. 7;
+      CKE  at 0 range 0 .. 1;
+      TEIE at 0 range 2 .. 2;
+      MPIE at 0 range 3 .. 3;
+      RE   at 0 range 4 .. 4;
+      TE   at 0 range 5 .. 5;
+      RIE  at 0 range 6 .. 6;
+      TIE  at 0 range 7 .. 7;
    end record;
 
    -- 34.2.13 Serial Status Register (SSR) for Non-Smart Card Interface and Non-FIFO Mode (SCMR.SMIF = 0 and FCR.FM = 0)
