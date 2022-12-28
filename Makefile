@@ -924,6 +924,7 @@ kernel_end :
 
 .PHONY : kernel_dependencies
 kernel_dependencies :
+ifeq ($(BUILD_MODE),MAKEFILE)
 	@$(REM) generates dependencies
 	$(call brief-command, \
         $(GNATMAKE)                        \
@@ -933,6 +934,7 @@ kernel_dependencies :
                     main.adb               \
                     > $(KERNEL_DEPFILE)    \
         ,[GNATMAKE-M],$(KERNEL_DEPFILE))
+endif
 
 $(KERNEL_BASENAME).lst     \
 $(KERNEL_BASENAME).src.lst \
@@ -1096,19 +1098,17 @@ configure : configure-aux infodump
 #
 
 .PHONY : debug_notify_off
-debug_notify_off :
-ifeq ($(USE_ELFTOOL),Y)
 debug_notify_off : $(KERNEL_OUTFILE)
+ifeq ($(USE_ELFTOOL),Y)
 	@$(REM) patch Debug_Flag := False
-	@$(ELFTOOL) -c setdebugflag=0 $(KERNEL_OUTFILE)
+	@$(ELFTOOL) -c setdebugflag=0x00 $(KERNEL_OUTFILE)
 endif
 
 .PHONY : debug_notify_on
-debug_notify_on :
-ifeq ($(USE_ELFTOOL),Y)
 debug_notify_on : $(KERNEL_OUTFILE)
+ifeq ($(USE_ELFTOOL),Y)
 	@$(REM) patch Debug_Flag := True
-	@$(ELFTOOL) -c setdebugflag=1 $(KERNEL_OUTFILE)
+	@$(ELFTOOL) -c setdebugflag=0x01 $(KERNEL_OUTFILE)
 endif
 
 $(KERNEL_ROMFILE) : $(KERNEL_OUTFILE)
@@ -1142,7 +1142,8 @@ else
 endif
 
 .PHONY : run
-run : debug_notify_off postbuild
+run : debug_notify_off
+	$(MAKE) postbuild
 ifneq ($(RUN_COMMAND),)
 	-$(RUN_COMMAND)
 else
@@ -1150,7 +1151,8 @@ else
 endif
 
 .PHONY : debug
-debug : debug_notify_on postbuild
+debug : debug_notify_on
+	$(MAKE) postbuild
 ifneq ($(DEBUG_COMMAND),)
 	-$(DEBUG_COMMAND)
 else
