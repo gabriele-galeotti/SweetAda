@@ -35,6 +35,8 @@
 # GNAT_WRAPPER
 # ENABLE_SPLIT_DWARF
 # DISABLE_STACK_USAGE
+# USE_UNPREFIXED_GNATMAKE
+# USE_LIBEXEC_LD
 #
 
 ################################################################################
