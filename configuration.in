@@ -39,6 +39,7 @@ else ifeq ($(OSTYPE),linux)
 endif
 
 # standard toolchain names
+# other toolchains my have names like "arm-eabi", "x86_64-pc-linux-gnu", etc
 TOOLCHAIN_NAME_AArch64    := aarch64-sweetada-elf
 TOOLCHAIN_NAME_ARM        := arm-sweetada-eabi
 TOOLCHAIN_NAME_ARMeb      := armeb-sweetada-eabi
@@ -73,6 +74,10 @@ endif
 #USE_CLIBRARY := Y
 
 #BUILD_MODE := GPR
+
+#USE_UNPREFIXED_GNATMAKE := Y
+
+#USE_LIBEXEC_LD := Y
 
 OPTIMIZATION_LEVEL := 1
 
