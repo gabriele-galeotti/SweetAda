@@ -51,6 +51,8 @@ SECTIONS
         /DISCARD/ :
         {
                 *(.comment)
+                *(.ARM.exidx*)
+                *(.ARM.extab*)
         }
 }
 
