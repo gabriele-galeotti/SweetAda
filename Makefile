@@ -201,32 +201,8 @@ endif
 export PATH
 
 # check basic utilities
-ifeq ($(OSTYPE),cmd)
-ifeq ($(shell SET "PATH=$(PATH)" && $(SED) --version 2> nul),)
-$(error Error: no $(SED) executable found)
-endif
-ifeq ($(shell SET "PATH=$(PATH)" && $(GCC_WRAPPER) -v 2> nul),)
-$(error Error: no $(GCC_WRAPPER) executable found)
-endif
-ifeq ($(shell SET "PATH=$(PATH)" && $(GNAT_WRAPPER) -v 2> nul),)
-$(error Error: no $(GNAT_WRAPPER) executable found)
-endif
-else
-ifeq ($(OSTYPE),darwin)
-ifneq ($(shell PATH="$(PATH)" $(ECHO) "version" | $(SED) 2> /dev/null),version)
-$(error Error: no $(SED) executable found)
-endif
-else
-ifeq ($(shell PATH="$(PATH)" $(SED) --version 2> /dev/null),)
-$(error Error: no $(SED) executable found)
-endif
-endif
-ifeq ($(shell PATH="$(PATH)" $(GCC_WRAPPER) -v 2> /dev/null),)
-$(error Error: no $(GCC_WRAPPER) executable found)
-endif
-ifeq ($(shell PATH="$(PATH)" $(GNAT_WRAPPER) -v 2> /dev/null),)
-$(error Error: no $(GNAT_WRAPPER) executable found)
-endif
+ifeq ($(TOOLS_CHECK),Y)
+-include Makefile.ck.in
 endif
 
 ################################################################################
@@ -334,7 +310,8 @@ CONFIGUREGPR_FILENAME := configure.gpr
 
 # cleaning
 CLEAN_OBJECTS        :=
-CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst *.map *.o *.out *.srec *.tmp
+CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
+                        *.map *.o *.out *.srec *.tmp
 DISTCLEAN_OBJECTS    :=
 
 ################################################################################
@@ -977,7 +954,10 @@ kernel_libinfo : libgcc.lst libgcc.elf.lst
 endif
 
 .PHONY : kernel_info
-kernel_info : kernel_libinfo $(KERNEL_BASENAME).lst $(KERNEL_BASENAME).src.lst $(KERNEL_BASENAME).elf.lst
+kernel_info : kernel_libinfo             \
+              $(KERNEL_BASENAME).lst     \
+              $(KERNEL_BASENAME).src.lst \
+              $(KERNEL_BASENAME).elf.lst
 
 #
 # Main targets.
