@@ -20,6 +20,8 @@
 # HOST_LD_SWITCHES
 #
 
+NULL  :=
+
 # detect OS type
 # detected OS names: "linux"/"cmd"/"msys"/"darwin"
 ifeq ($(OS),Windows_NT)
@@ -95,7 +97,7 @@ install : elftool
 ifeq      ($(OSTYPE),linux)
 	$(CP) elftool$(EXEEXT) ../../
 else ifeq ($(OSTYPE),cmd)
-	$(CP) elftool$(EXEEXT) ..\..\elftool$(EXEEXT)
+	$(CP) elftool$(EXEEXT) ..\..\ $(NULL)
 else ifeq ($(OSTYPE),msys)
 	$(CP) elftool$(EXEEXT) ../../
 else ifeq ($(OSTYPE),darwin)

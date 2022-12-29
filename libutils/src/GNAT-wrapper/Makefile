@@ -20,6 +20,8 @@
 # HOST_LD_SWITCHES
 #
 
+NULL  :=
+
 # detect OS type
 # detected OS names: "linux"/"cmd"/"msys"/"darwin"
 ifeq ($(OS),Windows_NT)
@@ -94,7 +96,7 @@ install : gnat-wrapper
 ifeq      ($(OSTYPE),linux)
 	$(CP) gnat-wrapper$(EXEEXT) ../../
 else ifeq ($(OSTYPE),cmd)
-	$(CP) gnat-wrapper$(EXEEXT) ..\..\gnat-wrapper$(EXEEXT)
+	$(CP) gnat-wrapper$(EXEEXT) ..\..\ $(NULL)
 else ifeq ($(OSTYPE),msys)
 	$(CP) gnat-wrapper$(EXEEXT) ../../
 else ifeq ($(OSTYPE),darwin)

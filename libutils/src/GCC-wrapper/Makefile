@@ -20,6 +20,8 @@
 # HOST_LD_SWITCHES
 #
 
+NULL  :=
+
 # detect OS type
 # detected OS names: "linux"/"cmd"/"msys"/"darwin"
 ifeq ($(OS),Windows_NT)
@@ -94,7 +96,7 @@ install : gcc-wrapper
 ifeq      ($(OSTYPE),linux)
 	$(CP) gcc-wrapper$(EXEEXT) ../../
 else ifeq ($(OSTYPE),cmd)
-	$(CP) gcc-wrapper$(EXEEXT) ..\..\gcc-wrapper$(EXEEXT)
+	$(CP) gcc-wrapper$(EXEEXT) ..\..\ $(NULL)
 else ifeq ($(OSTYPE),msys)
 	$(CP) gcc-wrapper$(EXEEXT) ../../
 else ifeq ($(OSTYPE),darwin)
