@@ -17,7 +17,7 @@ pragma Restrictions (No_Implicit_Aliasing);                             --
 pragma Restrictions (No_Implicit_Conditionals);                         --
 pragma Restrictions (No_Implicit_Dynamic_Code);                         -- zfp sfp
 pragma Restrictions (No_Implicit_Heap_Allocations);                     -- zfp sfp
-pragma Restrictions (No_Implicit_Loops);                                -- zfp
+pragma Restrictions (No_Implicit_Loops);                                --
 pragma Restrictions (No_Local_Protected_Objects);                       -- zfp sfp
 pragma Restrictions (No_Local_Timing_Events);                           -- zfp sfp
 pragma Restrictions (No_Obsolescent_Features);                          -- zfp sfp
