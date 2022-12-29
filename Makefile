@@ -88,7 +88,7 @@ export OSTYPE
 
 # workarounds for some environments
 ifeq      ($(OSTYPE),cmd)
-ifeq ($(MAKE),mingw32-make)
+ifeq ($(basename $(notdir $(MAKE))),mingw32-make)
 # even in a Windows cmd shell, if MSYS2 is present in path, then mingw32-make
 # will use the MSYS2 Bash shell; avoid this problem by setting explicitly the
 # native shell
@@ -644,12 +644,7 @@ ifeq ($(BUILD_MODE),MAKEFILE)
 IMPLICIT_ALI_UNITS_MAKEFILE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT_ALI_UNITS))
 endif
 
-CLEAN_OBJECTS += $(KERNEL_OBJFILE) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE)
-ifeq ($(OSTYPE),cmd)
-CLEAN_OBJECTS += $(OBJECT_DIRECTORY)\*.*
-else
-CLEAN_OBJECTS += $(OBJECT_DIRECTORY)/*
-endif
+CLEAN_OBJECTS     += $(KERNEL_OBJFILE) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE)
 DISTCLEAN_OBJECTS += $(KERNEL_CFGFILE) $(GNATADC_FILENAME) $(CONFIGUREGPR_FILENAME)
 
 ################################################################################
@@ -1203,6 +1198,11 @@ endif
 	$(MAKE) $(MAKE_MODULES) clean
 ifneq ($(PLATFORM),)
 	$(MAKE) $(MAKE_PLATFORM) clean
+endif
+ifeq ($(OSTYPE),cmd)
+	-$(CD) $(OBJECT_DIRECTORY) && $(RM) *.* && $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
+else
+	-$(RMDIR) $(OBJECT_DIRECTORY)/*
 endif
 	-$(RM) $(CLEAN_OBJECTS_COMMON) $(CLEAN_OBJECTS)
 
