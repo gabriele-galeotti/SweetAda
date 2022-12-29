@@ -22,22 +22,40 @@ REM
 SETLOCAL ENABLEEXTENSIONS
 SETLOCAL ENABLEDELAYEDEXPANSION
 
+REM hidden feature: if the script is called with -p <logfile>, it acts
+REM like a "tee"
+IF "%1"=="-p" SET LOGFILE=%2 && CALL :pipe && EXIT /B %ERRORLEVEL%
+
 IF NOT DEFINED MAKE SET MAKE=make.exe
 
 SET ACTION_VALID=
-IF "%1"=="help" SET "ACTION_VALID=Y" && %MAKE% help
-IF "%1"=="createkernelcfg" SET "ACTION_VALID=Y" && CALL :setplatform && SET "PLATFORM=!PLATFORM!" && SET "SUBPLATFORM=!SUBPLATFORM!" && %MAKE% createkernelcfg
-IF "%1"=="configure" SET "ACTION_VALID=Y" && %MAKE% configure
-IF "%1"=="infodump" SET "ACTION_VALID=Y" && %MAKE% infodump
-IF "%1"=="all" SET "ACTION_VALID=Y" && %MAKE% all
-IF "%1"=="postbuild" SET "ACTION_VALID=Y" && %MAKE% postbuild
-IF "%1"=="session-start" SET "ACTION_VALID=Y" && %MAKE% session-start
-IF "%1"=="session-end" SET "ACTION_VALID=Y" && %MAKE% session-end
-IF "%1"=="run" SET "ACTION_VALID=Y" && %MAKE% run
-IF "%1"=="debug" SET "ACTION_VALID=Y" && %MAKE% debug
-IF "%1"=="clean" SET "ACTION_VALID=Y" && %MAKE% clean
-IF "%1"=="distclean" SET "ACTION_VALID=Y" && %MAKE% distclean
-IF "%1"=="rts" SET "ACTION_VALID=Y" && %MAKE% rts
+IF "%1"=="help"            SET "ACTION_VALID=Y" && %MAKE% help
+IF "%1"=="createkernelcfg" (
+  SET "ACTION_VALID=Y"
+  CALL :setplatform
+  SET "PLATFORM=!PLATFORM!"
+  SET "SUBPLATFORM=!SUBPLATFORM!"
+  %MAKE% createkernelcfg
+  )
+IF "%1"=="configure"       SET "ACTION_VALID=Y" && %MAKE% configure
+IF "%1"=="infodump"        SET "ACTION_VALID=Y" && %MAKE% infodump
+IF "%1"=="all" (
+  SET "ACTION_VALID=Y"
+  %MAKE% all 2> make.errors.log| menu.bat -p make.log
+  CALL :showerrorlog
+  )
+IF "%1"=="postbuild" (
+  SET "ACTION_VALID=Y"
+  %MAKE% postbuild 2> make.errors.log| menu.bat -p make.log
+  CALL :showerrorlog
+  )
+IF "%1"=="session-start"   SET "ACTION_VALID=Y" && %MAKE% session-start
+IF "%1"=="session-end"     SET "ACTION_VALID=Y" && %MAKE% session-end
+IF "%1"=="run"             SET "ACTION_VALID=Y" && %MAKE% run
+IF "%1"=="debug"           SET "ACTION_VALID=Y" && %MAKE% debug
+IF "%1"=="clean"           SET "ACTION_VALID=Y" && %MAKE% clean
+IF "%1"=="distclean"       SET "ACTION_VALID=Y" && %MAKE% distclean
+IF "%1"=="rts"             SET "ACTION_VALID=Y" && %MAKE% rts
 IF NOT "%ACTION_VALID%"=="Y" CALL :usage
 SET ACTION_VALID=
 
@@ -61,6 +79,25 @@ REM SET "PLATFORM=SPARCstation5" && SET "SUBPLATFORM="
 REM SET "PLATFORM=System390" && SET "SUBPLATFORM="
 REM SET "PLATFORM=Taihu" && SET "SUBPLATFORM="
 REM SET "PLATFORM=XilinxZynqA9" && SET "SUBPLATFORM="
+GOTO :eof
+
+:pipe
+COPY /Y nul %LOGFILE% > nul 2>&1
+FOR /F "tokens=1* delims=]" %%A IN ('FIND /N /V ""') DO (
+  > con ECHO.%%B
+  >> %LOGFILE% ECHO.%%B
+  )
+GOTO :eof
+
+:showerrorlog
+FOR /F %%I IN ("make.errors.log") DO SET ERRORLOGSIZE=%%~zI
+IF %ERRORLOGSIZE% GTR 0 (
+  ECHO.
+  ECHO Detected errors and/or warnings:
+  ECHO --------------------------------
+  TYPE make.errors.log
+  ECHO.
+  )
 GOTO :eof
 
 :usage
