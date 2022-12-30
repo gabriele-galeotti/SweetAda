@@ -21,7 +21,7 @@ with Interfaces;
 with Definitions;
 with Bits;
 with MMIO;
-with AArch64;
+with ARMv8A;
 with Virt;
 with Exceptions;
 with Console;
@@ -88,21 +88,21 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("AArch64 Cortex-A53 (QEMU emulator)", NL => True);
-      Console.Print (Natural (AArch64.CurrentEL_Read.EL),     Prefix => "Current EL: ", NL => True);
-      Console.Print (AArch64.CNTFRQ_EL0_Read.Clock_frequency, Prefix => "CNTFRQ_EL0: ", NL => True);
+      Console.Print (Natural (ARMv8A.CurrentEL_Read.EL),     Prefix => "Current EL: ", NL => True);
+      Console.Print (ARMv8A.CNTFRQ_EL0_Read.Clock_frequency, Prefix => "CNTFRQ_EL0: ", NL => True);
       -------------------------------------------------------------------------
       Virt.GICD_CTLR.EnableGrp1 := True;
       Virt.GICD_ISENABLER (30)  := True;
       Virt.GICC_CTLR.EnableGrp1 := True;
       Virt.GICC_PMR.Priority    := 16#FF#;
       Virt.Timer_Reload;
-      AArch64.CNTP_CTL_EL0_Write ((
-                                   ENABLE  => True,
-                                   IMASK   => False,
-                                   ISTATUS => False,
-                                   others  => <>
-                                  ));
-      AArch64.Irq_Enable;
+      ARMv8A.CNTP_CTL_EL0_Write ((
+                                  ENABLE  => True,
+                                  IMASK   => False,
+                                  ISTATUS => False,
+                                  others  => <>
+                                 ));
+      ARMv8A.Irq_Enable;
       -------------------------------------------------------------------------
    end BSP_Setup;
 

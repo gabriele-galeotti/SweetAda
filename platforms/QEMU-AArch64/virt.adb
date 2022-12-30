@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
-with AArch64;
+with ARMv8A;
 
 package body Virt is
 
@@ -43,10 +43,10 @@ package body Virt is
    ----------------------------------------------------------------------------
    procedure Timer_Reload is
    begin
-      AArch64.CNTP_TVAL_EL0_Write ((
-                                    TimerValue => AArch64.CNTFRQ_EL0_Read.Clock_frequency / 1_000,
-                                    others     => <>
-                                   ));
+      ARMv8A.CNTP_TVAL_EL0_Write ((
+                                   TimerValue => ARMv8A.CNTFRQ_EL0_Read.Clock_frequency / 1_000,
+                                   others     => <>
+                                  ));
    end Timer_Reload;
 
 end Virt;

@@ -20,7 +20,7 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Core;
 with Bits;
-with AArch64;
+with ARMv8A;
 with Virt;
 with IOEMU;
 
@@ -71,7 +71,7 @@ package body Exceptions is
          External_Name => "el1_table";
       function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
    begin
-      AArch64.VBAR_EL1_Write (To_U64 (EL1_Table'Address));
+      ARMv8A.VBAR_EL1_Write (To_U64 (EL1_Table'Address));
    end Init;
 
 end Exceptions;
