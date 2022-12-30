@@ -50,6 +50,7 @@ endif
 installfiles :
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
 	@$(CREATESYMLINK) platform-$(SUBPLATFORM)
+	@$(call echo-print,"installfiles: done")
 	@$(call echo-print,"")
 
 .PHONY : configure

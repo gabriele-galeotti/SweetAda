@@ -38,6 +38,7 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-vectors.S
 installfiles :
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
 	@$(CREATESYMLINK) platform-$(SUBPLATFORM)
+	@$(call echo-print,"installfiles: done")
 	@$(call echo-print,"")
 	@$(PROCESSCFG) fs-uae.conf.in fs-uae.conf
 
