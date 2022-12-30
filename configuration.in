@@ -33,9 +33,9 @@ else ifeq ($(OSTYPE),linux)
   #
   # Linux and other compliant environments
   #
+  TOOLCHAIN_PREFIX := /opt/sweetada
   #TOOLCHAIN_PREFIX := /opt/GNAT/2021-arm-elf
   #TOOLCHAIN_PREFIX := /opt/GNAT/2021-riscv32-elf
-  TOOLCHAIN_PREFIX := /opt/sweetada
   PYTHON           := python
   TCLSH            := tclsh
 endif
@@ -44,6 +44,7 @@ endif
 # toolchains my have names like "arm-eabi", "riscv32-elf", "x86_64-pc-linux-gnu", etc
 TOOLCHAIN_NAME_AArch64    := aarch64-sweetada-elf
 TOOLCHAIN_NAME_ARM        := arm-sweetada-eabi
+#TOOLCHAIN_NAME_ARM        := arm-eabi
 TOOLCHAIN_NAME_ARMeb      := armeb-sweetada-eabi
 TOOLCHAIN_NAME_AVR        := avr-sweetada-elf
 TOOLCHAIN_NAME_M68k       := m68k-sweetada-elf
@@ -53,6 +54,7 @@ TOOLCHAIN_NAME_MicroBlaze := microblaze-sweetada-elf
 TOOLCHAIN_NAME_NiosII     := nios2-sweetada-elf
 TOOLCHAIN_NAME_PowerPC    := powerpc-sweetada-elf
 TOOLCHAIN_NAME_RISCV      := riscv-sweetada-elf
+#TOOLCHAIN_NAME_RISCV      := riscv32-elf
 TOOLCHAIN_NAME_SPARC      := sparc-sweetada-elf
 TOOLCHAIN_NAME_SPARC64    := sparc64-sweetada-elf
 TOOLCHAIN_NAME_SuperH     := sh-sweetada-elf
@@ -74,6 +76,8 @@ endif
 #USE_LIBGCC := Y
 
 #USE_CLIBRARY := Y
+
+ADA_MODE := ADA22
 
 OPTIMIZATION_LEVEL := 1
 

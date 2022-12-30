@@ -32,6 +32,7 @@
 
 NULL  :=
 SPACE := $(NULL) $(NULL)
+export NULL SPACE
 
 KERNEL_BASENAME := kernel
 
@@ -100,30 +101,43 @@ export temp :=
 export tmp :=
 endif
 
-# define a minimum set of variables that are required for functions and
-# various utilities
+# executables and scripts extensions
 SCREXT_cmd := .bat
 SCREXT_unx := .sh
 ifeq ($(OSTYPE),cmd)
-TMPDIR := $(TEMP)
-EXEEXT := .exe
-SCREXT := $(SCREXT_cmd)
-ECHO   := ECHO
-REM    := REM
-SED    := sed$(EXEEXT)
+EXEEXT     := .exe
+SCREXT     := $(SCREXT_cmd)
 else
 ifeq ($(OSTYPE),msys)
-EXEEXT := .exe
-SCREXT := $(SCREXT_unx)
+EXEEXT     := .exe
 else
-EXEEXT :=
-SCREXT := $(SCREXT_unx)
+EXEEXT     :=
 endif
-ECHO   := printf "%s\n"
-REM    := \#
-SED    := sed
+SCREXT     := $(SCREXT_unx)
 endif
-export TMPDIR EXEEXT SCREXT SCREXT_cmd SCREXT_unx ECHO REM SED
+export EXEEXT SCREXT_cmd SCREXT_unx SCREXT
+
+# define a minimum set of variables that are required for functions and
+# various utilities
+ifeq ($(OSTYPE),cmd)
+ECHO := ECHO
+REM  := REM
+else
+ECHO := printf "%s\n"
+REM  := \#
+endif
+SED  := sed$(EXEEXT)
+export ECHO REM SED
+
+# TMPDIR handling
+ifeq      ($(OSTYPE),cmd)
+TMPDIR := $(TEMP)
+else ifeq ($(OSTYPE),msys)
+TMPDIR := $(TEMP)
+else
+TMPDIR ?= /tmp
+endif
+export TMPDIR
 
 # generate SWEETADA_PATH
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
@@ -159,10 +173,10 @@ RTS_BUILD := $(RTS)
 endif
 
 # default system parameters
-TOOLCHAIN_PREFIX   ?=
+TOOLCHAIN_PREFIX   :=
 ADA_MODE           := ADA22
 BUILD_MODE         := MAKEFILE
-RTS                ?=
+RTS                :=
 PROFILE            :=
 USE_LIBGCC         :=
 USE_LIBADA         :=
@@ -846,7 +860,8 @@ endif
 # Link phase.
 #
 
-$(KERNEL_OUTFILE) : $(OBJECT_DIRECTORY)/b__main.o $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
+$(KERNEL_OUTFILE) : $(OBJECT_DIRECTORY)/b__main.o      \
+                    $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
 	@$(REM) link phase
 	$(call brief-command, \
         $(LD)                                       \
@@ -883,6 +898,9 @@ endif
 kernel_start :
 ifeq ($(GCC_VERSION),)
 	$(error Error: no valid toolchain)
+endif
+ifneq ($(RTS_INSTALLED),Y)
+	$(error Error: no RTS available)
 endif
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): start kernel build.")
