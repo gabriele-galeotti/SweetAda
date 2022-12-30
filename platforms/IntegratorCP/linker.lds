@@ -52,8 +52,8 @@ SECTIONS
         {
                 *(.comment)
                 *(.eh_frame)
-                *(.ARM.extab*)
                 *(.ARM.exidx*)
+                *(.ARM.extab*)
         }
 }
 
