@@ -89,14 +89,10 @@ package body BSP is
             Import        => True,
             Convention    => Asm,
             External_Name => "vectors";
-         Base_Address : Bits_26;
+         Base_Address : Bits_30;
       begin
-         Base_Address := Bits_26 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)) and 16#FFFF_FFFC#, 6));
-         RISCV.MTVEC_Write ((
-                             MODE     => RISCV.MODE_Direct,
-                             BASE     => Base_Address,
-                             Reserved => 0
-                            ));
+         Base_Address := Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2));
+         RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, BASE => Base_Address));
       end;
       RISCV.MTimeCmp := RISCV.MTime + Virt.Timer_Constant;
       RISCV.Irq_Enable;
