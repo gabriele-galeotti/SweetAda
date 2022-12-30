@@ -56,15 +56,15 @@ export SEC_STACK_DYNAMIC              := False
 
 configure-rts :
 ifeq ($(OSTYPE),cmd)
-	$(CP) $(RTS_SOURCE_PATH_CMD)\*.ads $(ADAINCLUDE_PATH_CMD)
-	$(CP) $(RTS_SOURCE_PATH_CMD)\*.adb $(ADAINCLUDE_PATH_CMD)
-	$(PROCESSCFG) $(RTS_SOURCE_PATH_CMD)/s-parame.ads.in $(ADAINCLUDE_PATH_CMD)/s-parame.ads
+	$(CP) $(RTS_SOURCE_PATH_CMD)\*.ads $(ADAINCLUDE_PATH_CMD)\ $(NULL)
+	$(CP) $(RTS_SOURCE_PATH_CMD)\*.adb $(ADAINCLUDE_PATH_CMD)\ $(NULL)
+	$(PROCESSCFG) $(RTS_SOURCE_PATH_CMD)\s-parame.ads.in $(ADAINCLUDE_PATH_CMD)\s-parame.ads
 else
 	$(CP) $(RTS_SOURCE_PATH)/*.ads $(ADAINCLUDE_PATH)/
 	$(CP) $(RTS_SOURCE_PATH)/*.adb $(ADAINCLUDE_PATH)/
 	$(PROCESSCFG) $(RTS_SOURCE_PATH)/s-parame.ads.in $(ADAINCLUDE_PATH)/s-parame.ads
 endif
 ifneq (,$(filter $(OSTYPE),cmd msys))
-	$(DOS2UNIX) $(ADAINCLUDE_PATH)/s-parame.ads $(ADAINCLUDE_PATH)/s-parame.ads
+	$(DOS2UNIX) $(ADAINCLUDE_PATH_CMD)\s-parame.ads $(ADAINCLUDE_PATH_CMD)\s-parame.ads
 endif
 
