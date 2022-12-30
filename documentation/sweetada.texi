@@ -124,30 +124,31 @@ common auxiliary files
 @node Host environment
 @chapter Host environment
 
-SweetAda is meant to run on major 64-bit mainstream environments, i.e., modern installation of
-POSIX/Linux, Windows, or OS X.
+SweetAda is meant to run on popular mainstream environments, i.e., POSIX/Linux,
+Windows, or OS X.
 
-SweetAda requires installation of GNU toolchains, and is based on GNU Make, plus some little
-utilities. The OS should be able to create symbolic links.
+SweetAda requires an installation of a GNU toolchains, and is based on GNU Make,
+plus some little utilities. The OS should be able to create symbolic links.
 
-In the following chapters, operations in a POSIX machine will be described when doing examples,
-unless otherwise noted.
+In the following chapters, operations in a POSIX machine will be described when
+doing examples, unless otherwise noted.
 
 @section General advices
 @cindex General advice
 
-It is highly advisable to perform commands in the SweetAda top-level directory (which exists
-as a variable SWEETADA_PATH in the build system). The Makefile machinery is able to infer the
-SweetAda path from the context, but this feature relies on standard Makefile idioms which could
-be invalidated by an "esotic" environment setup.
+It is highly advisable to perform commands in the SweetAda top-level directory
+(which exists as a variable SWEETADA_PATH inside the build system logic). The Makefile
+machinery is able to infer the SweetAda path from the context, but this feature relies
+on standard Makefile idioms which could be invalidated by an "esotic" environment setup.
 
-Hence, if you want to integrate SweetAda in a GUI, the glue logic should change the working
-directory before performing an action.
+Hence, if you want to integrate SweetAda in a GUI, the parent execution context should
+change the working directory before performing an action.
 
 Note for Windows users:
 Many operations in SweetAda could need variables inherited from the environment; pay
-attention when setting variables in the command line shell, i.e. when you are concatenating
-many assignments use always double-quotes to protect arguments:
+attention when setting variables in the command line shell, i.e. when you are
+concatenating many assignments use always double-quotes to protect arguments, otherwise
+the shell parser logic could lead to extraneous trailing blank characters:
 
 > SET "<variable_name>=<variable_value>" && SET "...
 
@@ -168,19 +169,22 @@ these basic activities.
 
 In some environments (Linux, and, if properly configured, also OS X) the GNU Make and
 sed utilities are natively present and there is no need to install them or specify theirs
-location in the filesystem, but this is not true under Windows and thus should be
-installed by means of thirdy-party packages. If you do not have these utilities available,
-please install them from your package provider, or download them from the SweetAda
-SourceForge repository. Remember, as a rule of thumb, to put the filesystem executable
-path in the visible part of the PATH environment variable which is then parsed by the shell.
-GNU Make must be immediately available since there is no point in running a Makefile
-without the GNU Make interpreter. The GNU sed utility could be installed directly in the
-"libutils" directory without the need to modify the environment setup.
+location in the filesystem, but this is not true under Windows and thus they should be
+installed by means of thirdy-party packages (e.g., MSYS2 or MinGW). If you do not have
+these utilities available, please install them from your package provider, or download
+them from the SweetAda SourceForge repository. Remember, as a rule of thumb, to put the
+filesystem executable path in the visible part of the PATH environment variable which is
+then parsed by the shell. GNU Make must be immediately available since there is no point
+in running a Makefile without the GNU Make interpreter. The GNU sed utility could be
+installed directly in the "libutils" directory without the need to modify the environment
+setup.
 
 SweetAda also requires (although they are not really strictly necessary from a system
 standpoint) three auxiliary programs, i.e, the GCC/GNAT wrappers and the ELFtool utility.
 They are provided as source programs to be built in the libutils/src directory.
 A system GCC compiler available online is needed in order to build them. @xref{Toolchain tools}.
+Otherwise, you could also download ready-made executables from the SweetAda GitHub
+repository.
 
 The GCC wrapper is a small piece of code that sits between the compiler driver and the
 compiler executable. It analyzes command line parameters, selects verbosity level and
@@ -188,14 +192,16 @@ instructs the compiler executable to generate additional output files, like asse
 listing and Ada expanded source code. There is a companion wrapper, the "GNAT wrapper",
 but its use is limited to print brief informations when GNATMAKE processes with'ed units.
 
-ELFtool is a small utility that dumps the binary section from an ELF file in an aesthetic
+ELFtool is a small utility that dumps the section contents from an ELF file in an aesthetic
 pleasant form, and is used to manipulate some features of the SweetAda object code for
 debugging purposes. If you do not use these features, you can avoid ELFtool by setting a
 variable in the top-level configuration.in file, so the standard "size" toolchain executable
-is thus used.
+is thus used. Anyway, ELFtool is needed when working with targets where OpenOCD is the
+communication agent, because the driving script needs to know the starting address of
+the binary image, that can be extracted by this tool.
 
-runsweetada is a small front-end scripting utility to ease the execution of a SweetAda,
-mostly used with virtual targets that use an emulator like QEMU.
+runsweetada is a small front-end scripting utility to ease the execution of a SweetAda
+executable, mostly used with virtual targets that use an emulator like QEMU.
 
 All these utilities can be downloaded as executables from the SweetAda SourceForge
 repository. @xref{References}. Browse for the directory corresponding to your environment
@@ -210,7 +216,7 @@ In order to perform actions, the GNU Make interpreter should be invoked, followe
 target, like in:
 
 @example
-$ make configure
+$ make help
 @end example
 
 (provided your working directory is the SweetAda top-level-directory).
@@ -289,13 +295,13 @@ make probevariable PROBEVARIABLE=<variablename>
   Obtain the value of a variable.
 Available CPUs: AArch64 ARM AVR M68k MIPS MicroBlaze NiosII PowerPC RISC-V SPARC SuperH System390 x86 x86-64
 Available RTSes: sfp zfp
-Available Platforms: ATmega128_MinimalDevelopmentBoard Altera10M50GHRD Amiga-FS-UAE ArduinoUNO Atlas CobaltRaQ2 DE10-Lite DECstation5000.133 DigiConnectME Dreamcast FRDM-KL46Z GEMI HiFive1 IntegratorCP LEON3 M5235BCC ML605 MPC8306-SOM MPC8306-Switch MPC8315e MSP432P401R MVME162-510A Malta MemecFX12 OPTi386WB PC-x86 PC-x86-64 QEMU-AArch64 QEMU-AVR QEMU-MIPS QEMU-RISC-V-32 QEMU-i486 RaspberryPi3 SBC5206 SPARCstation5 STM32F769I Spartan3A-EK Spartan3E-SK Synergy-S5D9 System390 Taihu Template TestPlatform XilinxZynqA9 ZOOM
+Available Platforms: ATmega128_MinimalDevelopmentBoard Altera10M50GHRD Amiga-FS-UAE ArduinoUNO Atlas CobaltRaQ2 DE10-Lite DECstation5000.133 DigiConnectME Dreamcast FRDM-KL46Z GEMI HiFive1 IntegratorCP LEON3 M5235BCC ML605 MPC8306-SOM MPC8306-Switch MPC8315e MSP432P401R MVME162-510A Malta MemecFX12 OPTi386WB PC-x86 PC-x86-64 PK-S5D9 QEMU-AArch64 QEMU-AVR QEMU-MIPS QEMU-RISC-V-32 QEMU-i486 RaspberryPi3 SBC5206 SPARCstation5 STM32F769I Spartan3A-EK Spartan3E-SK System390 Taihu Template TestPlatform XilinxZynqA9 ZOOM
 @end example
 
 @section Environment notes
 @cindex Environment notes
 
-SweetAda supports whitespaces in filepaths although this is considered bad practice.
+SweetAda supports whitespaces in filepaths although this is considered a bad practice.
 
 @node Toolchains
 @chapter Toolchains
@@ -456,14 +462,14 @@ System.
 The RTS is being built by means of a Makefile target:
 
 @example
-$ make CPU=<cpu> [CPU_MODEL=<cpu_model>] RTS=<rts> TOOLCHAIN_NAME=<toolchain_name> rts
+$ make CPU=<cpu> [CPU_MODEL=<cpu_model>] TOOLCHAIN_NAME=<toolchain_name> RTS=<rts> rts
 @end example
 
 For example:
 
 @example
-$ make CPU=x86 RTS=sfp TOOLCHAIN_NAME=i686-sweetada-elf rts
-$ make CPU=SuperH RTS=zfp TOOLCHAIN_NAME=sh-sweetada-elf rts
+$ make CPU=x86 TOOLCHAIN_NAME=i686-sweetada-elf RTS=sfp rts
+$ make CPU=SuperH TOOLCHAIN_NAME=sh-sweetada-elf RTS=zfp rts
 @end example
 
 Please note that:
@@ -762,10 +768,10 @@ subprogram calls and generic instantiations.
 Anyway, pay attention that these files really should not be seen as configuration files
 at will. Be aware that not all the assignments/switches are freely changeable, and some
 variables and/or switches are more or less critical to make the toolchain environment
-working fine. You should change only switches that not destroy the build flow, e.g.,
-it is fine to comment/uncomment a switch like described before, but it is not recommended
-to change the "GCC_MULTIDIR" variable, unless you known exactly the underlying logic
-behaviour, and thus those variables should be regarded as constants.
+working fine. You should change only switches that do not destroy the build flow, e.g.,
+it is fine to comment/uncomment a switch like those described before, but it is not
+recommended to change the "GCC_MULTIDIR" variable, unless you known exactly the underlying
+logic behaviour, and thus those variables should be regarded as constants.
 
 gnat.adc.in is a template for the system-wide Ada "gnat.adc" pragma profile. The pragma
 profile is specified in the top-level directory configuration.in by means of the variable
@@ -809,17 +815,17 @@ reinstated if you perform a "make configure" action.
 @chapter GPRbuild mode
 @cindex GPRbuild
 
-The SweetAda build system has two different ways to manage the compilation of the final
-executable object; the standard, default one is entirely contained in the various Makefile
-files; besides, a second option exists, i,e, using a GPRbuild project file.
+The SweetAda build system has two different ways to manage the compilation of the
+final executable object; the standard, default one is entirely contained in the various
+Makefile files; besides, a second option exists, i,e, using a GPRbuild project file.
 
 This behaviour is controlled by the variable BUILD_MODE in the top-level configuration.in.
 
 If you specify BUILD_MODE := GPR, then the Makefile will execute the gprbuild program
-(which is a SweetAda package) whilst taking care of system code compilation. In order to do
+whilst taking care of system code compilation. In order to do
 this, a build.gpr exists in the top-level directory, which will be completed by the
-configuration file configure.gpr. configure.gpr is emitted by the "make configure" command
-whichever the value of BUILD_MODE is.
+configuration file configure.gpr. configure.gpr is emitted by the "make configure"
+command.
 
 Please note that the GPRbuild mode deals only with Ada "explicit" files. Makefile still
 has to take care of low-level files, like assembly startup files and implicit Ada units
@@ -941,8 +947,8 @@ build the final libplatform.a archive.
 Please note that this scheme exists because the SweetAda compilation model is
 partially GNATMAKE-based, but this tool has no knowledge of which object files are
 mandatory to be linked into the final executable in order to startup the system.
-Briefly stated, everything before the main procedure is foreign code that GNATMAKE
-logic cannot have knowledge of.
+Briefly stated, everything before the main procedure is foreign code that the
+GNATMAKE logic cannot have knowledge of.
 
 Obviously, if you want to write a unit that will be used after that Ada has took
 control, then there's no need to specify it in the Makefile, because GNATMAKE will
@@ -1609,7 +1615,8 @@ in the main board of the workstation.
 @section STM32F769I
 @cindex STM32F769I
 
-The STM32F769I is a popular embedded board based on an ARM-class CPU.
+The STM32F769I is a popular embedded board based on an ARM-class CPU. This target
+uses OpenOCD JTAG programming.
 
 @section Spartan 3A EK
 @cindex Spartan 3A EK
@@ -1621,10 +1628,10 @@ The Spartan 3A EK is an embedded board based on a Xilinx@registeredsymbol{} Spar
 
 The Spartan 3E SK is an embedded board based on a Xilinx@registeredsymbol{} Spartan-3E FPGA.
 
-@section Synergy S5D9
-@cindex Synergy S5D9
+@section PK-S5D9
+@cindex PK-S5D9
 
-The Synergy PS5D9 is an embedded board from Renesas@registeredsymbol{}, equipped
+The PK-S5D9 ("Synergy") is an embedded board from Renesas@registeredsymbol{}, equipped
 with a ARM Cortex-M4 SoC.
 
 This platform can be directly programmed by means of OpenOCD support.
