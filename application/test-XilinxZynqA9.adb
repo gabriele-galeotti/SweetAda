@@ -41,8 +41,8 @@ package body Application is
                if (Value mod 10) = 0 then
                   Console.Print ("hello, SweetAda", NL => True);
                end if;
-               Value := @ + 1;
-               IOEMU.IOEMU_IO1 := @ + 1;
+               Value := Value + 1;
+               IOEMU.IOEMU_IO1 := IOEMU.IOEMU_IO1 + 1;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;

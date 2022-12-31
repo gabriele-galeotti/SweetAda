@@ -118,11 +118,11 @@ package body CPU_i486 is
            Template => ""              & CRLF &
                        "        cpuid" & CRLF &
                        "",
-           Outputs  => [
+           Outputs  => (
                         Unsigned_32'Asm_Output ("=b", EBX_Register),
                         Unsigned_32'Asm_Output ("=d", EDX_Register),
                         Unsigned_32'Asm_Output ("=c", ECX_Register)
-                       ],
+                       ),
            Inputs   => Unsigned_32'Asm_Input ("a", 0), -- CPUID request #0
            Clobber  => "",
            Volatile => True

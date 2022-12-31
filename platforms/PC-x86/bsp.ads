@@ -36,11 +36,11 @@ package BSP is
    use Ethernet;
 
    UART_Descriptors    : array (1 .. 2) of aliased Uart16x50_Descriptor_Type :=
-                         [others => Uart16x50_DESCRIPTOR_INVALID];
+                         (others => Uart16x50_DESCRIPTOR_INVALID);
    IDE_Descriptors     : array (1 .. 1) of aliased IDE.IDE_Descriptor_Type :=
-                         [others => IDE.IDE_DESCRIPTOR_INVALID];
+                         (others => IDE.IDE_DESCRIPTOR_INVALID);
    NE2000_Descriptors  : array (1 .. 1) of aliased NE2000_Descriptor_Type :=
-                         [others => NE2000_DESCRIPTOR_INVALID];
+                         (others => NE2000_DESCRIPTOR_INVALID);
    Ethernet_Descriptor : aliased Ethernet_Descriptor_Type := Ethernet_DESCRIPTOR_INVALID;
 
    QEMU : Boolean := False;

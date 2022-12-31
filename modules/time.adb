@@ -61,10 +61,10 @@ package body Time is
       M : Natural := Month;
    begin
       if M <= 2 then
-         M := @ + 10;
-         Y := @ - 1;
+         M := M + 10;
+         Y := Y - 1;
       else
-         M := @ - 2;
+         M := M - 2;
       end if;
       return ((((Y / 4 - Y / 100 + Y / 400 + 367 * M / 12 + Day) + Y * 365 - 719_499) * 24 + Hour) * 60 + Minute) * 60 + Second;
    end Make_Time;
@@ -88,11 +88,11 @@ package body Time is
       Y_Leap   : Boolean;
       DPM      : Natural;
    begin
-      TT := @ - NSECONDS_1970_2000;
+      TT := TT - NSECONDS_1970_2000;
       SS := Natural (TT mod 60);
-      TT := @ / 60;
+      TT := TT / 60;
       MM := Natural (TT mod 60);
-      TT := @ / 60;
+      TT := TT / 60;
       HH := Natural (TT mod 24);
       D  := Natural (TT / 24);
       Y_Offset := 0;
@@ -101,25 +101,25 @@ package body Time is
          if D < (365 + 1) then
             exit;
          end if;
-         D := @ - 365;
+         D := D - 365;
          if Y_Leap then
-            D := @ - 1;
+            D := D - 1;
          end if;
-         Y_Offset := @ + 1;
+         Y_Offset := Y_Offset + 1;
       end loop;
       M := 0;
       for M_Idx in 1 .. 12 loop
          DPM := Days_Per_Month (M_Idx);
          if Y_Leap and then M_Idx = 2 then
-            DPM := @ + 1;
+            DPM := DPM + 1;
          end if;
          if D < DPM then
             M := M_Idx;
             exit;
          end if;
-         D := @ - DPM;
+         D := D - DPM;
       end loop;
-      D := @ + 1;
+      D := D + 1;
       Y := 2_000 + Y_Offset;
    end Make_Time;
 
@@ -137,15 +137,15 @@ package body Time is
       YY : Natural := Y;
    begin
       if YY >= 2000 then
-         YY := @ - 2000;
+         YY := YY - 2000;
       end if;
       for M_Idx in 1 .. M - 1 loop
-         DD := @ + Days_Per_Month (M_Idx);
+         DD := DD + Days_Per_Month (M_Idx);
       end loop;
       if M > 2 and then YY mod 4 = 0 then
-         DD := @ + 1;
+         DD := DD + 1;
       end if;
-      DD := @ + 365 * YY + (YY + 3) / 4 - 1;
+      DD := DD + 365 * YY + (YY + 3) / 4 - 1;
       return DD;
    end Date2Days;
 

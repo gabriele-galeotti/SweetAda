@@ -187,11 +187,11 @@ package body CPU_x86 is
                        "1:                    " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => [
+           Inputs   => (
                         GDT_Descriptor_Type'Asm_Input ("m", GDT_Descriptor),
                         Selector_Address_Target_Type'Asm_Input ("m", Selector_Address_Target),
                         Address'Asm_Input ("m", Selector_Address_Target.Offset)
-                       ],
+                       ),
            Clobber  => "",
            Volatile => True
           );
@@ -422,10 +422,10 @@ package body CPU_x86 is
            Template => ""                      & CRLF &
                        "        xchgl   %0,%1" & CRLF &
                        "",
-           Outputs  => [
+           Outputs  => (
                         CPU_Unsigned'Asm_Output ("+r", Locked_Item.Lock),
                         CPU_Unsigned'Asm_Output ("+m", Lock_Object.Lock)
-                       ],
+                       ),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True

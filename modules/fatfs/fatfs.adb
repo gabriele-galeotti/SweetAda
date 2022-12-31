@@ -384,7 +384,7 @@ package body FATFS is
       for Index in FAT_Start'Range loop
          if Index <= FAT_Copies then
             FAT_Start (Index) := Sector;
-            Sector := @ + Sector_Type (Sectors_Per_FAT);
+            Sector := Sector + Sector_Type (Sectors_Per_FAT);
          else
             FAT_Start (Index) := 0; -- invalid
          end if;
@@ -403,7 +403,7 @@ package body FATFS is
          Root_Directory_Start := Sector;
          Root_Directory_Entries := Bootrecord.Root_Directory_Entries;
          -- compute the start of the data clusters
-         Sector := @ + Sector_Type (((Root_Directory_Entries * 32) + (Sector_Size - 1)) / Sector_Size);
+         Sector := Sector + Sector_Type (((Root_Directory_Entries * 32) + (Sector_Size - 1)) / Sector_Size);
          Cluster_Start := Sector;
       end if;
       -- other parameters

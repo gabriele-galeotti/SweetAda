@@ -65,22 +65,22 @@ package body VGA is
    type SEQUENCER_Register_Type is range 0 .. 16#04#;
 
    SEQUENCER_Register_Values_MODE03H : constant array (SEQUENCER_Register_Type range <>) of Unsigned_8 :=
-      [
+      (
        16#03#, -- 00 Reset:
        16#00#, -- 01 Clocking Mode: bit0 = 0 --> 9 dots, bit0 = 1 --> 8 dots
        16#03#, -- 02 Map Mask:
        16#00#, -- 03 Character Map Select:
        16#02#  -- 04 Sequencer Memory Mode:
-      ];
+      );
 
    SEQUENCER_Register_Values_MODE12H : constant array (SEQUENCER_Register_Type range <>) of Unsigned_8 :=
-      [
+      (
        16#03#, -- 00 Reset:
        16#01#, -- 01 Clocking Mode: bit0 = 0 --> 9 dots, bit0 = 1 --> 8 dots
        16#0F#, -- 02 Map Mask:
        16#00#, -- 03 Character Map Select:
        16#02#  -- 04 Sequencer Memory Mode:
-      ];
+      );
 
    ----------------------------------------------------------------------------
    -- CRTC
@@ -89,7 +89,7 @@ package body VGA is
    type CRTC6845_Register_Type is range 0 .. 16#18#;
 
    CRTC6845_Register_Values_MODE03H : constant array (CRTC6845_Register_Type range <>) of Unsigned_8 :=
-      [
+      (
        16#5F#, -- 00 Horizontal Total:
        16#4F#, -- 01 End Horizontal Display:
        16#50#, -- 02 Start Horizontal Blanking:
@@ -115,10 +115,10 @@ package body VGA is
        16#B9#, -- 16 End Vertical Blanking:
        16#A3#, -- 17 CRTC Mode Control:
        16#FF#  -- 18 Line Compare:
-      ];
+      );
 
    CRTC6845_Register_Values_MODE12H : constant array (CRTC6845_Register_Type range <>) of Unsigned_8 :=
-      [
+      (
        16#5F#, -- 00 Horizontal Total:
        16#4F#, -- 01 End Horizontal Display:
        16#50#, -- 02 Start Horizontal Blanking:
@@ -144,7 +144,7 @@ package body VGA is
        16#04#, -- 16 End Vertical Blanking:
        16#E3#, -- 17 CRTC Mode Control:
        16#FF#  -- 18 Line Compare:
-      ];
+      );
 
    ----------------------------------------------------------------------------
    -- GC
@@ -153,7 +153,7 @@ package body VGA is
    type GC_Register_Type is range 0 .. 16#08#;
 
    GC_Register_Values_MODE03H : constant array (GC_Register_Type range <>) of Unsigned_8 :=
-      [
+      (
        16#00#, -- 00 Set/Reset:
        16#00#, -- 01 Enable Set/Reset:
        16#00#, -- 02 Color Compare:
@@ -163,10 +163,10 @@ package body VGA is
        16#0E#, -- 06 Miscellaneous Graphics:
        16#0F#, -- 07 Color "don''t care":
        16#FF#  -- 08 Bit Mask:
-      ];
+      );
 
    GC_Register_Values_MODE12H : constant array (GC_Register_Type range <>) of Unsigned_8 :=
-      [
+      (
        16#00#, -- 00 Set/Reset:
        16#00#, -- 01 Enable Set/Reset:
        16#00#, -- 02 Color Compare:
@@ -176,7 +176,7 @@ package body VGA is
        16#05#, -- 06 Miscellaneous Graphics:
        16#0F#, -- 07 Color "don''t care":
        16#FF#  -- 08 Bit Mask:
-      ];
+      );
 
    ----------------------------------------------------------------------------
    -- ATC
@@ -188,7 +188,7 @@ package body VGA is
    type ATC_Register_Type is range 0 .. 16#20#;
 
    ATC_Register_Values_MODE03H : constant array (ATC_Register_Type range 0 .. 16#14#) of Unsigned_8 :=
-      [
+      (
        -- 16-color palette mapping:
        -- the (input) index of this array is the attribute
        -- the value is the (output) index into DAC array values
@@ -213,10 +213,10 @@ package body VGA is
        16#0F#, -- 12 Color Plane Enable:
        16#08#, -- 13 Horizontal PEL Panning:
        16#00#  -- 14 Color Select:
-      ];
+      );
 
    ATC_Register_Values_MODE12H : constant array (ATC_Register_Type range 0 .. 16#14#) of Unsigned_8 :=
-      [
+      (
        -- 16-color palette mapping:
        -- the (input) index of this array is the attribute
        -- the value is the (output) index into DAC array values
@@ -241,14 +241,14 @@ package body VGA is
        16#0F#, -- 12 Color Plane Enable:
        16#00#, -- 13 Horizontal PEL Panning:
        16#00#  -- 14 Color Select:
-      ];
+      );
 
    ----------------------------------------------------------------------------
    -- DAC
    ----------------------------------------------------------------------------
 
    DAC_Palette : constant array (Natural range <>) of Unsigned_32 :=
-      [
+      (
        -- ..RRGGBB      ..RRGGBB      ..RRGGBB      ..RRGGBB
        16#00000000#, 16#0000002A#, 16#00002A00#, 16#00002A2A#, -- 0x00 .. 0x03: BLACK, BLUE,     GREEN,  CYAN
        16#002A0000#, 16#002A002A#, 16#002A2A00#, 16#002A2A2A#, -- 0x04 .. 0x07: RED,   MAGENTA,  X,      GRAY
@@ -266,7 +266,7 @@ package body VGA is
        16#003F1500#, 16#003F152A#, 16#003F3F00#, 16#003F3F2A#, -- 0x34 .. 0x37: X,     X,        X,      X
        16#00151515#, 16#0015153F#, 16#00153F15#, 16#00153F3F#, -- 0x38 .. 0x3B: DGRAY, BBLUE,    BGREEN, BCYAN
        16#003F1515#, 16#003F153F#, 16#003F3F15#, 16#003F3F3F#  -- 0x3C .. 0x3F: BRED,  BMAGENTA, YELLOW, WHITE
-      ];
+      );
 
    ----------------------------------------------------------------------------
    -- Text mode
@@ -637,10 +637,10 @@ package body VGA is
             if Y1 = Video_Y_Coordinate_Type'Last then
                Y1 := 0;
             else
-               Y1 := @ + 1;
+               Y1 := Y1 + 1;
             end if;
          else
-            X1 := @ + 1;
+            X1 := X1 + 1;
          end if;
       end loop;
    end Print;
@@ -688,7 +688,7 @@ package body VGA is
       for Y in 0 .. 479 loop
          for X in 0 .. 639 loop
             Draw_Pixel (X, Y, To_U8 (Picture (Pixel_Idx)));
-            Pixel_Idx := @ + 1;
+            Pixel_Idx := Pixel_Idx + 1;
          end loop;
       end loop;
    end Draw_Picture;

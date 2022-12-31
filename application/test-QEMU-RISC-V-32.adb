@@ -51,8 +51,8 @@ package body Application is
             IOEMU.IOEMU_IO1 := 0;
             IOEMU.IOEMU_IO2 := 0;
             loop
-               IOEMU.IOEMU_IO1 := @ + 1;
-               IOEMU.IOEMU_IO2 := @ + 1;
+               IOEMU.IOEMU_IO1 := IOEMU.IOEMU_IO1 + 1;
+               IOEMU.IOEMU_IO2 := IOEMU.IOEMU_IO2 + 1;
                -- strictly adhere to Goldfish RTC specifications
                Time_L  := Virt.Goldfish_RTC.TIME_LOW;
                Time_H  := Virt.Goldfish_RTC.TIME_HIGH;

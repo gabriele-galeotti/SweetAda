@@ -97,10 +97,10 @@ package body CPU.IO is
                        "        outb    %b0,%w1" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => [
+           Inputs   => (
                         Unsigned_8'Asm_Input ("a", Value),
                         Unsigned_16'Asm_Input ("d", Port)
-                       ],
+                       ),
            Clobber  => "",
            Volatile => True
           );
@@ -113,10 +113,10 @@ package body CPU.IO is
                        "        outw    %w0,%w1" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => [
+           Inputs   => (
                         Unsigned_16'Asm_Input ("a", Value),
                         Unsigned_16'Asm_Input ("d", Port)
-                       ],
+                       ),
            Clobber  => "",
            Volatile => True
           );
@@ -129,10 +129,10 @@ package body CPU.IO is
                        "        outl    %0,%w1" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => [
+           Inputs   => (
                         Unsigned_32'Asm_Input ("a", Value),
                         Unsigned_16'Asm_Input ("d", Port)
-                       ],
+                       ),
            Clobber  => "",
            Volatile => True
           );

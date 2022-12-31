@@ -64,12 +64,12 @@ package body TCPIP is
          Address => Data'Address;
    begin
       while Length > 1 loop
-         Sum := @ + Unsigned_32 (Data16 (Index));
-         Index := @ + 1;
-         Length := @ - 2;
+         Sum := Sum + Unsigned_32 (Data16 (Index));
+         Index := Index + 1;
+         Length := Length - 2;
       end loop;
       if Length /= 0 then
-         Sum := @ + Unsigned_32 (H2N (Unsigned_16 (Data (Data'Last)) * 2**8));
+         Sum := Sum + Unsigned_32 (H2N (Unsigned_16 (Data (Data'Last)) * 2**8));
       end if;
       return Sum;
    end Checksum_Core_U32;
@@ -88,7 +88,7 @@ package body TCPIP is
       loop
          HSum := HWord (Sum);
          if HSum /= 0 then
-            Sum := Unsigned_32 (HSum) + Unsigned_32 (LWord (@));
+            Sum := Unsigned_32 (HSum) + Unsigned_32 (LWord (Sum));
          else
             exit;
          end if;

@@ -277,7 +277,7 @@ package body FATFS.Rawfile is
       end if;
       -- clear excess portion of block, if any
       if Count < B'Length then
-         B (Natural (Count) .. B'Last) := [others => 0];
+         B (Natural (Count) .. B'Last) := (others => 0);
       end if;
       Cluster.Write (File, B, Success);
       if Success then

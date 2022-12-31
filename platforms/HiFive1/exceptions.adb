@@ -62,7 +62,7 @@ package body Exceptions is
          Console.Print (Cause, NL => True);
          loop null; end loop;
       else
-         Core.Tick_Count := @ + 1;
+         Core.Tick_Count := Core.Tick_Count + 1;
          RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
          Console.Print ("T", NL => False);
       end if;

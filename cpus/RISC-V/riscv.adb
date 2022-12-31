@@ -157,10 +157,10 @@ package body RISCV is
                        "        csrrs   x0,mie,%1    " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => [
+           Inputs   => (
                         MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
                         Unsigned_32'Asm_Input ("r", 16#0000_0080#)
-                       ],
+                       ),
            Clobber  => "",
            Volatile => True
           );

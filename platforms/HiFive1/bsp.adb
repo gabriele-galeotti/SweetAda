@@ -105,9 +105,9 @@ package body BSP is
       -- CLK ------------------------------------------------------------------
       CLK_Init;
       -- UARTs ----------------------------------------------------------------
-      GPIO_IOFSEL := @ and 16#FF78_FFFF#;
-      GPIO_IOFEN  := @ or 16#0087_0000#;
-      GPIO_OEN    := @ or 16#0087_0000#;
+      GPIO_IOFSEL := GPIO_IOFSEL and 16#FF78_FFFF#;
+      GPIO_IOFEN  := GPIO_IOFEN or 16#0087_0000#;
+      GPIO_OEN    := GPIO_OEN or 16#0087_0000#;
       -- UART0.div.div := 16#008A#; -- 115200 bps @ 16 MHz
       UART0.div.div := 16#0456#; -- 115200 bps @ 128 MHz
       UART0.txctrl  := (txen => True, nstop => 1, txcnt => 1, others => <>);

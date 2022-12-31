@@ -140,7 +140,7 @@ package body Application is
             Value := 0;
             for Index in Video'Range loop
                Video (Index) := Value;
-               Value := @ + 1;
+               Value := Value + 1;
             end loop;
          end;
       end if;
@@ -200,7 +200,7 @@ package body Application is
                      PortOut (IOEMU.IO2_ADDRESS, Unsigned_8'(Value * 3));
                      PortOut (IOEMU.IO3_ADDRESS, Unsigned_8'(Value * 4));
                   end if;
-                  Value := @ + 1;
+                  Value := Value + 1;
                   TC2 := Tick_Count;
                end if;
             end loop;

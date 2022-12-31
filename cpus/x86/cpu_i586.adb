@@ -66,10 +66,10 @@ package body CPU_i586 is
                        "        wrmsr" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => [
+           Inputs   => (
                         Unsigned_64'Asm_Input ("A", Value),
                         MSR_Type'Asm_Input ("c", MSR_Register_Number)
-                       ],
+                       ),
            Clobber  => "",
            Volatile => True
           );

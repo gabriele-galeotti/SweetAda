@@ -38,7 +38,7 @@ package body Application is
             loop
                -- IOEMU GPIO test
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-               IOEMU.IOEMU_IO1 := @ + 1;
+               IOEMU.IOEMU_IO1 := IOEMU.IOEMU_IO1 + 1;
             end loop;
          end;
       end if;

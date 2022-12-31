@@ -213,7 +213,7 @@ package body Bits is
    function FirstMSBit (Value : Interfaces.Unsigned_8) return Integer is
       -- table of floor(Log2(x))
       MSBitArray : constant array (Interfaces.Unsigned_8 range <>) of Integer :=
-         [
+         (
           -1, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
            5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -230,7 +230,7 @@ package body Bits is
            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
-         ];
+         );
    begin
       return MSBitArray (Value);
    end FirstMSBit;

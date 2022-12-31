@@ -39,8 +39,8 @@ package body Application is
             IOEMU.IOEMU_IO1 := 0;
             IOEMU.IOEMU_IO2 := 0;
             loop
-               IOEMU.IOEMU_IO1 := @ + 1;
-               IOEMU.IOEMU_IO2 := @ + 1;
+               IOEMU.IOEMU_IO1 := IOEMU.IOEMU_IO1 + 1;
+               IOEMU.IOEMU_IO2 := IOEMU.IOEMU_IO2 + 1;
                -- Console.Print ("hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;

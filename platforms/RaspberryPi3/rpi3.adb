@@ -41,7 +41,7 @@ package body RPI3 is
    ----------------------------------------------------------------------------
    procedure Timer_Reload is
    begin
-      Timer_Count := @ + Timer_Constant;
+      Timer_Count := Timer_Count + Timer_Constant;
       SYSTEM_TIMER.C1 := Timer_Count;
    end Timer_Reload;
 

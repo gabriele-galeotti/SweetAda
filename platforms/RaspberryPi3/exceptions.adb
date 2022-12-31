@@ -63,7 +63,7 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Exception_Process is
    begin
-      Core.Tick_Count := @ + 1;
+      Core.Tick_Count := Core.Tick_Count + 1;
       if (Core.Tick_Count and 16#0000_0100#) = 0 then
          -- GPIO05 ON
          RPI3.GPSET0 := (SET5 => True, others => False);

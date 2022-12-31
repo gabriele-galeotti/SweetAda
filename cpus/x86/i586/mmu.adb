@@ -66,7 +66,7 @@ package body MMU is
       for Index in PD'Range loop
          PD (Index)     := PDENTRY_4M_INVALID;
          PD (Index).PFA := Select_Address_Bits_PDE (Page_Frame_Address_Start);
-         Page_Frame_Address_Start := @ + PAGESIZE4M;
+         Page_Frame_Address_Start := Page_Frame_Address_Start + PAGESIZE4M;
       end loop;
       -- 1-1 map
       PD (16#000#).P := True; -- 0x00000000-0x003FFFFF 1st 4 MiB

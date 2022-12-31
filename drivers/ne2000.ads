@@ -65,7 +65,7 @@ package NE2000 is
        NE2000PCI     => False,
        Device_Number => 0,
        Base_Address  => 0,
-       MAC           => [0, 0, 0, 0, 0, 0],
+       MAC           => (0, 0, 0, 0, 0, 0),
        Read_8        => null,
        Write_8       => null,
        Read_16       => null,

@@ -123,7 +123,7 @@ package body Gdbstub.CPU is
    end record;
 
    Registers_Layout : constant array (Register_Number_Type) of Register_Descriptor :=
-      [
+      (
        EAX    => (Gdbstub_Data_Area.EAX'Position, Gdbstub_Data_Area.EAX'Size / Storage_Unit),
        ECX    => (Gdbstub_Data_Area.ECX'Position, Gdbstub_Data_Area.ECX'Size / Storage_Unit),
        EDX    => (Gdbstub_Data_Area.EDX'Position, Gdbstub_Data_Area.EDX'Size / Storage_Unit),
@@ -156,7 +156,7 @@ package body Gdbstub.CPU is
        FOSEG  => (Gdbstub_Data_Area.FOSEG'Position, Gdbstub_Data_Area.FOSEG'Size / Storage_Unit),
        FOOFF  => (Gdbstub_Data_Area.FOOFF'Position, Gdbstub_Data_Area.FOOFF'Size / Storage_Unit),
        FOP    => (Gdbstub_Data_Area.FOP'Position, Gdbstub_Data_Area.FOP'Size / Storage_Unit)
-      ];
+      );
 
    --========================================================================--
    --                                                                        --

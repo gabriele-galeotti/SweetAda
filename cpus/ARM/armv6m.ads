@@ -141,10 +141,10 @@ package ARMv6M is
 
    -- B3.2.6 Application Interrupt and Reset Control Register
 
-   ENDIANNESS_LITTLE : constant := 0; -- memory system data endianness = LITTLE
-   ENDIANNESS_BIG    : constant := 1; -- memory system data endianness = BIG
+   ENDIANNESS_LITTLE : constant Bits_1 := 0; -- memory system data endianness = LITTLE
+   ENDIANNESS_BIG    : constant Bits_1 := 1; -- memory system data endianness = BIG
 
-   VECTKEY_KEY : constant := 16#05FA#; -- Vector Key
+   VECTKEY_KEY : constant Bits_16 := 16#05FA#; -- Vector Key
 
    type AIRCR_Type is
    record
@@ -299,12 +299,12 @@ package ARMv6M is
       Reserved at 0 range 0 .. 31;
    end record;
 
-   ACTLR_ADDRESS : constant := 16#E000_E008#;
+   ACTLR_ADDRESS : constant Integer_Address := 16#E000_E008#;
 
    -- B3.3.3 SysTick Control and Status Register
 
-   CLKSOURCE_EXT : constant := 0; -- SysTick uses the optional external reference clock.
-   CLKSOURCE_CPU : constant := 1; -- SysTick uses the processor clock.
+   CLKSOURCE_EXT : constant Bits_1 := 0; -- SysTick uses the optional external reference clock.
+   CLKSOURCE_CPU : constant Bits_1 := 1; -- SysTick uses the processor clock.
 
    type SYST_CSR_Type is
    record
@@ -373,7 +373,7 @@ package ARMv6M is
       Reserved at 0 range 24 .. 31;
    end record;
 
-   SYST_CVR_ADDRESS : constant := 16#E000_E018#;
+   SYST_CVR_ADDRESS : constant Integer_Address := 16#E000_E018#;
 
    SYST_CVR : aliased SYST_CVR_Type with
       Address              => To_Address (SYST_CVR_ADDRESS),

@@ -73,7 +73,7 @@ package body MBR is
    begin
       IO_Context.Read (0, Block, Success);
       if Success then
-         if Block (16#01FE# .. 16#01FF#) = [16#55#, 16#AA#] then
+         if Block (16#01FE# .. 16#01FF#) = (16#55#, 16#AA#) then
             case Partition_Number is
                when PARTITION1 => Offset := 16#01BE#;
                when PARTITION2 => Offset := 16#01CE#;
@@ -87,8 +87,8 @@ package body MBR is
                                      PARTITION_ENTRY_SIZE
                                     );
             if BigEndian then
-               Partition.LBA_Start := Byte_Swap_32 (@);
-               Partition.LBA_Size  := Byte_Swap_32 (@);
+               Partition.LBA_Start := Byte_Swap_32 (Partition.LBA_Start);
+               Partition.LBA_Size  := Byte_Swap_32 (Partition.LBA_Size);
             end if;
          else
             Success := False;
