@@ -35,16 +35,16 @@ begin
    Bit := 1;
    Result := 0;
    while Den < Num and then Bit /= 0 and then not Is_Negative (Den) loop
-      Den := GCC_Types.Shift_Left (@, 1);
-      Bit := GCC_Types.Shift_Left (@, 1);
+      Den := GCC_Types.Shift_Left (Den, 1);
+      Bit := GCC_Types.Shift_Left (Bit, 1);
    end loop;
    while Bit /= 0 loop
       if Num >= Den then
-         Num := @ - Den;
-         Result := @ or Bit;
+         Num := Num - Den;
+         Result := Result or Bit;
       end if;
-      Bit := GCC_Types.Shift_Right (@, 1);
-      Den := GCC_Types.Shift_Right (@, 1);
+      Bit := GCC_Types.Shift_Right (Bit, 1);
+      Den := GCC_Types.Shift_Right (Den, 1);
    end loop;
    if M then
       return Num;

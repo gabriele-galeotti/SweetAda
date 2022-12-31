@@ -31,16 +31,16 @@ function DivSI3 (
 begin
    Negative := False;
    if N < 0 then
-      Negative := not @;
+      Negative := not Negative;
       Num := -@;
    end if;
    if Den < 0 then
-      Negative := not @;
-      Den := -@;
+      Negative := not Negative;
+      Den := -Den;
    end if;
    Result := To_SI (UDivModSI4 (To_USI (Num), To_USI (Den), False));
    if Negative then
-      Result := -@;
+      Result := -Result;
    end if;
    return Result;
 end DivSI3;

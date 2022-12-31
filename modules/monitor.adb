@@ -61,7 +61,7 @@ package body Monitor is
          case C is
             when ISO88591.BS | ISO88591.DEL =>
                if Buffer_Idx > 1 then
-                  Buffer_Idx := @ - 1;
+                  Buffer_Idx := Buffer_Idx - 1;
                   BSP.Console_Putchar (ISO88591.BS);
                   BSP.Console_Putchar (ISO88591.Space);
                   BSP.Console_Putchar (ISO88591.BS);
@@ -77,7 +77,7 @@ package body Monitor is
                      C := Character'Val (Character'Pos (C) + 32);
                   end if;
                   Buffer (Buffer_Idx) := C;
-                  Buffer_Idx := @ + 1;
+                  Buffer_Idx := Buffer_Idx + 1;
                end if;
             when others =>
                null;

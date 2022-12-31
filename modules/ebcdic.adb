@@ -33,7 +33,7 @@ package body EBCDIC is
    begin
       for S1_Index in S1'Range loop
          S2 (S2_Index) := ASCII2EBCDIC (Character'Pos (S1 (S1_Index)));
-         S2_Index := @ + 1;
+         S2_Index := S2_Index + 1;
       end loop;
    end To_EBCDIC;
 

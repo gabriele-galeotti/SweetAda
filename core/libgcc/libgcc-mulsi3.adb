@@ -26,10 +26,10 @@ function MulSI3 (
 begin
    while T_M1 /= 0 loop
       if (T_M1 and 1) /= 0 then
-         R := @ + T_M2;
+         R := R + T_M2;
       end if;
-      T_M1 := GCC_Types.Shift_Right (@, 1);
-      T_M2 := GCC_Types.Shift_Left (@, 1);
+      T_M1 := GCC_Types.Shift_Right (T_M1, 1);
+      T_M2 := GCC_Types.Shift_Left (T_M2, 1);
    end loop;
    return R;
 end MulSI3;
