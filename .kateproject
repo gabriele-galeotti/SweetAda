@@ -1,0 +1,36 @@
+{
+  "name": "SweetAda",
+  "files": [ {
+               "filters": [
+                           "Makefile*",
+                           "configuration.in",
+                           "gnat.adc*",
+                           "kernel.cfg",
+                           "*.gpr",
+                           "*.adb", "*.ads", "*.adc", "*.apb", "*.aps",
+                           "*.S", "*.c", "*.h",
+                           "*.lds",
+                           "*.sh", "*.bat", "*.ps1",
+                           "*.py", "*.tcl"
+                          ],
+               "recursive": 1
+           } ],
+  "build": {
+            "directory": ".",
+            "targets": [
+                        { "name": "all", "build_cmd": "make all" },
+                        { "name": "menu", "build_cmd": "xterm -geometry 80x43 -e sh menu-dialog.sh -p" },
+                        { "name": "configure", "build_cmd": "make configure" },
+                        { "name": "romfile", "build_cmd": "make romfile" },
+                        { "name": "postbuild", "build_cmd": "make postbuild" },
+                        { "name": "session-start", "build_cmd": "make session-start" },
+                        { "name": "session-end", "build_cmd": "make session-end" },
+                        { "name": "run", "build_cmd": "make run" },
+                        { "name": "debug", "build_cmd": "make debug" },
+                        { "name": "clean", "build_cmd": "make clean" },
+                        { "name": "distclean", "build_cmd": "make distclean" }
+                       ],
+            "default_target": "all",
+            "clean_target": "clean"
+           }
+}
