@@ -53,8 +53,8 @@ package body Application is
             loop
                if Tick_Count_Expired (TC1, 2_000) then
                   TC1 := Core.Tick_Count;
-                  IOEMU.IOEMU_IO1 := @ + 1;
-                  IOEMU.IOEMU_IO2 := @ + 1;
+                  IOEMU.IOEMU_IO1 := IOEMU.IOEMU_IO1 + 1;
+                  IOEMU.IOEMU_IO2 := IOEMU.IOEMU_IO2 + 1;
                end if;
                if Tick_Count_Expired (TC2, 3_000) then
                   TC2 := Core.Tick_Count;

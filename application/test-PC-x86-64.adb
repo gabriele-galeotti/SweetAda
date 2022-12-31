@@ -49,7 +49,7 @@ package body Application is
                -- VGA.Print (0, 5, To_Ch (32 + (Value and 16#1F#)));
                -- IOEMU GPIO test
                PortOut (IOEMU.IO0_ADDRESS, Value);
-               Value := @ + 1;
+               Value := Value + 1;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;

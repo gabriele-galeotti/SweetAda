@@ -138,7 +138,7 @@ package body Application is
                end if;
                if Tick_Count_Expired (TC2, 300) then
                   IOEMU.IOEMU_CIA_IO5 := Value;
-                  Value := @ + 1;
+                  Value := Value + 1;
                   TC2 := Tick_Count;
                end if;
                if Tick_Count_Expired (TC3, 300) then

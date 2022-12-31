@@ -39,7 +39,7 @@ package body Application is
             Value := 0;
             loop
                IOEMU.IOEMU_IO1 := Value;
-               Value := @ + 1;
+               Value := Value + 1;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;

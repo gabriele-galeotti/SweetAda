@@ -55,8 +55,8 @@ package body Application is
                   Console.Print ("hello, SweetAda", NL => True);
                   Console.Print (Core.Tick_Count, NL => True);
                end if;
-               Value := @ + 1;
-               IOEMU.IOEMU_IO1 := @ + 1;
+               Value := Value + 1;
+               IOEMU.IOEMU_IO1 := IOEMU.IOEMU_IO1 + 1;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;

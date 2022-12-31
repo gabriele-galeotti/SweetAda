@@ -64,7 +64,7 @@ package body Application is
                IOEMU.IOEMU_IO2 := Value + 1;
                IOEMU.IOEMU_IO2 := Value + 2;
                IOEMU.IOEMU_IO2 := Value + 3;
-               Value := @ + 1;
+               Value := Value + 1;
                -- emit a message
                Console.Print ("hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;

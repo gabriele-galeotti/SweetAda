@@ -40,7 +40,7 @@ package body Application is
             loop
                LEDs_IO := Value;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-               Value := @ + 1;
+               Value := Value + 1;
             end loop;
          end;
       end if;

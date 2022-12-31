@@ -67,7 +67,7 @@ package body Application is
                CHANNELB_Putchar (Ada.Characters.Latin_1.CR);
                CHANNELB_Putchar (Ada.Characters.Latin_1.LF);
                -- IOEMU GPIO test
-               IOEMU.IOEMU_IO1 := @ + 1;
+               IOEMU.IOEMU_IO1 := IOEMU.IOEMU_IO1 + 1;
             end loop;
          end;
       end if;

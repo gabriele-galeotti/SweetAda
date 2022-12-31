@@ -77,7 +77,7 @@ package body Application is
                LEDBAR := Byte_Reverse (Value);
                -- IOEMU GPIO test
                IOEMU.IOEMU_IO1 := Value;
-               Value := @ + 1;
+               Value := Value + 1;
                for Delay_Loop_Count in 1 .. Delay_Count loop MIPS.NOP; end loop;
             end loop;
          end;
