@@ -167,7 +167,7 @@ ifeq ($(OSTYPE),cmd)
 RTS_PATH_CMD  := $(shell $(ECHO) $(RTS_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
 RTS_INSTALLED := $(shell IF EXIST "$(RTS_PATH_CMD)"\adainclude\system.ads (ECHO Y) ELSE (ECHO N))
 else
-RTS_INSTALLED := $(shell if [ -e "$(RTS_PATH)"/adainclude/system.ads ] ; then echo "Y"; else echo "N"; fi)
+RTS_INSTALLED := $(shell if [ -e "$(RTS_PATH)"/adainclude/system.ads ] ; then echo "Y" ; else echo "N" ; fi)
 endif
 ADAC          += --RTS="$(RTS_PATH)"
 GNATLS        += --RTS="$(RTS_PATH)"
