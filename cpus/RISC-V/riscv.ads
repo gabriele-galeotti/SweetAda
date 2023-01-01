@@ -19,6 +19,7 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
+with MTime_MTimeCmp;
 
 package RISCV is
 
@@ -36,6 +37,7 @@ package RISCV is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
+   use MTime_MTimeCmp;
 
    -- Machine Status (mstatus)
 
@@ -111,19 +113,12 @@ package RISCV is
    procedure MTVEC_Write (Mtvec : in MTVEC_Type) with
       Inline => True;
 
+   ----------------------------------------------------------------------------
    -- Timer CSRs
+   ----------------------------------------------------------------------------
 
-   MTimeCmp : Unsigned_64 with
-      Address    => To_Address (16#0200_4000#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-
-   MTime : Unsigned_64 with
-      Address    => To_Address (16#0200_BFF8#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   function MTIME_Read return Unsigned_64         renames MTime_MTimeCmp.MTIME_Read;
+   procedure MTIMECMP_Write (Value : Unsigned_64) renames MTime_MTimeCmp.MTIMECMP_Write;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
