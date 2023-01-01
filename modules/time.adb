@@ -70,7 +70,7 @@ package body Time is
    -- Date2Days
    ----------------------------------------------------------------------------
    -- Computes the number of days since 1970-01-01.
-   -- D, M, Y in standard format
+   -- D, M, Y in standard format.
    ----------------------------------------------------------------------------
    function Date2Days (
                        D : Natural;
@@ -91,9 +91,9 @@ package body Time is
    ----------------------------------------------------------------------------
    -- NDay_Of_Week
    ----------------------------------------------------------------------------
-   -- Given a date, outputs the day of the week as and index to be used with
+   -- Given a date, outputs the day of the week as an index to be used with
    -- Day_Of_Week array. Exploits 1970-01-01 = Thursday.
-   -- D, M, Y in standard format
+   -- D, M, Y in standard format.
    ----------------------------------------------------------------------------
    function NDay_Of_Week (
                           D : Natural;

@@ -37,7 +37,7 @@ package body MTime_MTimeCmp is
       return Make_Word (H, L);
    end MTIME_Read;
 
-   procedure MTIMECMP_Write (Value : Unsigned_64) is
+   procedure MTIMECMP_Write (Value : in Unsigned_64) is
    begin
       MTimeCmp.H := 16#FFFF_FFFF#;
       MTimeCmp.L := LWord (Value);

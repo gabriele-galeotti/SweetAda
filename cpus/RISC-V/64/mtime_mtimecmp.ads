@@ -64,6 +64,6 @@ package MTime_MTimeCmp is
       Convention => Ada;
 
    function MTIME_Read return Unsigned_64;
-   procedure MTIMECMP_Write (Value : Unsigned_64);
+   procedure MTIMECMP_Write (Value : in Unsigned_64);
 
 end MTime_MTimeCmp;

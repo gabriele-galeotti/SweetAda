@@ -117,8 +117,8 @@ package RISCV is
    -- Timer CSRs
    ----------------------------------------------------------------------------
 
-   function MTIME_Read return Unsigned_64         renames MTime_MTimeCmp.MTIME_Read;
-   procedure MTIMECMP_Write (Value : Unsigned_64) renames MTime_MTimeCmp.MTIMECMP_Write;
+   function MTIME_Read return Unsigned_64            renames MTime_MTimeCmp.MTIME_Read;
+   procedure MTIMECMP_Write (Value : in Unsigned_64) renames MTime_MTimeCmp.MTIMECMP_Write;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
