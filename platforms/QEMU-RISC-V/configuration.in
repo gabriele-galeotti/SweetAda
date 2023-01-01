@@ -2,22 +2,24 @@
 #
 # QEMU-RISC-V (QEMU emulator)
 #
-# RISC-V RV32IMAFC
+# RISC-V
 #
 
-# force LibGCC
+# force LibGCC (__divdi3)
 USE_LIBGCC := Y
 
-CPU       := RISC-V
-CPU_MODEL := RV32IMAFC
+CPU                   := RISC-V
+CPU_MODEL             := RV32IMAFC
+GCC_SWITCHES_PLATFORM += -march=rv32imafc -mabi=ilp32f
+#GCC_SWITCHES_PLATFORM += -march=rv32imafc_zicsr_zifencei -mabi=ilp32f
+LD_SWITCHES_PLATFORM  += -m elf32lriscv
+export RISCV32 := Y
 
-GCC_SWITCHES_PLATFORM     += -mabi=ilp32f -march=rv32imafc
-LD_SWITCHES_PLATFORM      += -m elf32lriscv
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
-USE_APPLICATION := test-QEMU-RISC-V-32
+USE_APPLICATION := test-QEMU-RISC-V
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

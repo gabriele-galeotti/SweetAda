@@ -62,7 +62,7 @@ package body Exceptions is
          IOEMU.IOEMU_IO0 := 1;
          IOEMU.IOEMU_IO0 := 0;
       end if;
-      RISCV.MTimeCmp := RISCV.MTime + Virt.Timer_Constant;
+      RISCV.MTIMECMP_Write (RISCV.MTIME_Read + Virt.Timer_Constant);
    end Timer_Process;
 
    ----------------------------------------------------------------------------

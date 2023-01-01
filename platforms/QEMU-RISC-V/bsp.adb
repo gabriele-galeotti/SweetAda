@@ -94,7 +94,7 @@ package body BSP is
          Base_Address := Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2));
          RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, BASE => Base_Address));
       end;
-      RISCV.MTimeCmp := RISCV.MTime + Virt.Timer_Constant;
+      RISCV.MTIMECMP_Write (RISCV.MTIME_Read + Virt.Timer_Constant);
       RISCV.Irq_Enable;
       -------------------------------------------------------------------------
    end BSP_Setup;
