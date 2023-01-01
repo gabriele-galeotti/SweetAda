@@ -63,7 +63,6 @@ package body Exceptions is
          loop null; end loop;
       else
          Core.Tick_Count := @ + 1;
-         -- RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
          RISCV.MTIMECMP_Write (RISCV.MTIME_Read + 16#3200#);
          Console.Print ("T", NL => False);
       end if;
