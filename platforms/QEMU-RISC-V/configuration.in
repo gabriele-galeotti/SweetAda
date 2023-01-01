@@ -13,6 +13,7 @@ CPU_MODEL             := RV32IMAFC
 GCC_SWITCHES_PLATFORM += -march=rv32imafc -mabi=ilp32f
 #GCC_SWITCHES_PLATFORM += -march=rv32imafc_zicsr_zifencei -mabi=ilp32f
 LD_SWITCHES_PLATFORM  += -m elf32lriscv
+# for runsweetada on QEMU
 export RISCV32 := Y
 
 OBJDUMP_SWITCHES_PLATFORM +=
