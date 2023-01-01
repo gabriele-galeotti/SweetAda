@@ -67,8 +67,8 @@ package body RISCV is
       if RISCV_TOOLCHAIN_WORKAROUND then
          Asm (
               Template => ""                           & CRLF &
-                          "        mv      a5,%0     " & CRLF &
                           "        .long   0x342027F3" & CRLF &
+                          "        mv      %0,a5     " & CRLF &
                           "",
               Outputs  => Unsigned_32'Asm_Output ("=r", MCAUSE),
               Inputs   => No_Input_Operands,
@@ -98,8 +98,8 @@ package body RISCV is
       if RISCV_TOOLCHAIN_WORKAROUND then
          Asm (
               Template => ""                           & CRLF &
-                          "        mv      a5,%0     " & CRLF &
                           "        .long   0x341027F3" & CRLF &
+                          "        mv      %0,a5     " & CRLF &
                           "",
               Outputs  => Unsigned_32'Asm_Output ("=r", MEPC),
               Inputs   => No_Input_Operands,
