@@ -125,8 +125,9 @@ package body BSP is
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
+      -- RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
+      RISCV.MTIMECMP_Write (RISCV.MTIME_Read + 16#3200#);
       RISCV.Irq_Enable;
-      RISCV.MTimeCmp := RISCV.MTime + 16#3200#;
       -------------------------------------------------------------------------
    end BSP_Setup;
 
