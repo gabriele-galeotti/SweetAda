@@ -29,46 +29,45 @@ package Time is
 
    use Interfaces;
 
-   Days_Per_Month : constant array (Natural range 1 .. 12) of Natural :=
-      [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-   Month_Name     : constant array (Natural range 1 .. 12) of String (1 .. 3) :=
-      ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-   Day_Of_Week    : constant array (Natural range 1 .. 7) of String (1 .. 3) :=
-      ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
    type TM_Time is
    record
-      Second : Natural;
-      Minute : Natural;
-      Hour   : Natural;
-      Mday   : Natural;
-      Month  : Natural;
-      Year   : Natural;
+      Sec   : Natural; -- Seconds (0-60)
+      Min   : Natural; -- Minutes (0-59)
+      Hour  : Natural; -- Hours (0-23)
+      MDay  : Natural; -- Day of the month (1-31)
+      Mon   : Natural; -- Month (0-11)
+      Year  : Natural; -- Year - 1900
+      WDay  : Natural; -- Day of the week (0-6, Sunday = 0)
+      YDay  : Natural; -- Day in the year (0-365, 1 Jan = 0)
+      IsDST : Integer; -- Daylight saving time
    end record;
 
-   function Make_Time (
-                       Year   : Positive;
-                       Month  : Positive;
-                       Day    : Positive;
-                       Hour   : Natural;
-                       Minute : Natural;
-                       Second : Natural
-                      ) return Natural;
+   Month_Name  : constant array (Natural range 1 .. 12) of String (1 .. 3) :=
+      ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+   Day_Of_Week : constant array (Natural range 1 .. 7) of String (1 .. 3) :=
+      ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-   procedure Make_Time (
-                        T  : in  Unsigned_32;
-                        SS : out Natural;
-                        MM : out Natural;
-                        HH : out Natural;
-                        D  : out Natural;
-                        M  : out Natural;
-                        Y  : out Natural
-                       );
+   function Date2Days (
+                       D : Natural;
+                       M : Natural;
+                       Y : Natural
+                      ) return Natural;
 
    function NDay_Of_Week (
                           D : Natural;
                           M : Natural;
                           Y : Natural
                          ) return Natural;
+
+   function Make_Time (
+                       Year : Positive;
+                       Mon  : Positive;
+                       Day  : Positive;
+                       Hour : Natural;
+                       Min  : Natural;
+                       Sec  : Natural
+                      ) return Natural;
+
+   procedure Make_Time (T : in Unsigned_32; TM : out TM_Time);
 
 end Time;
