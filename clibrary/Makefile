@@ -36,13 +36,39 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 # manually-inferred dependency logic
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/assert.o  : stdio.h stdlib.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/ctype.o   : ctype.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/errno.o   :
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdio.o   : ada_interface.h clibrary.h ctype.h stdio.h stdlib.h string.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdlib.o  : ada_interface.h clibrary.h ctype.h errno.h stdlib.h string.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/string.o  : clibrary.h ctype.h string.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o : clibrary.h strings.h
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/assert.o : \
+        stdio.h  \
+        stdlib.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/ctype.o : \
+        ctype.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/errno.o :
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdio.o : \
+        ada_interface.h \
+        clibrary.h      \
+        ctype.h         \
+        stdio.h         \
+        stdlib.h        \
+        string.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdlib.o : \
+        ada_interface.h \
+        clibrary.h      \
+        ctype.h         \
+        errno.h         \
+        stdlib.h        \
+        string.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/string.o : \
+        clibrary.h \
+        ctype.h    \
+        string.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o : \
+        clibrary.h \
+        strings.h
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY) \
