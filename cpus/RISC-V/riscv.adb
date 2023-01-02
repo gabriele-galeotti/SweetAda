@@ -34,6 +34,16 @@ package body RISCV is
 
    RISCV_TOOLCHAIN_WORKAROUND : constant Boolean := True;
 
+   Register_Equates : constant String :=
+      "        .equ    a0,0x0A" & CRLF &
+      "        .equ    a1,0x0B" & CRLF &
+      "        .equ    a2,0x0C" & CRLF &
+      "        .equ    a3,0x0D" & CRLF &
+      "        .equ    a4,0x0E" & CRLF &
+      "        .equ    a5,0x0F" & CRLF &
+      "        .equ    a6,0x10" & CRLF &
+      "        .equ    a7,0x11" & CRLF;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -66,13 +76,13 @@ package body RISCV is
    begin
       if RISCV_TOOLCHAIN_WORKAROUND then
          Asm (
-              Template => ""                           & CRLF &
-                          "        .long   0x342027F3" & CRLF &
-                          "        mv      %0,a5     " & CRLF &
+              Template => ""                                 & CRLF &
+                          Register_Equates                          &
+                          "        .long   0x34202073|%0<<7" & CRLF &
                           "",
               Outputs  => Unsigned_32'Asm_Output ("=r", MCAUSE),
               Inputs   => No_Input_Operands,
-              Clobber  => "a5",
+              Clobber  => "",
               Volatile => True
              );
       else
@@ -97,13 +107,13 @@ package body RISCV is
    begin
       if RISCV_TOOLCHAIN_WORKAROUND then
          Asm (
-              Template => ""                           & CRLF &
-                          "        .long   0x341027F3" & CRLF &
-                          "        mv      %0,a5     " & CRLF &
+              Template => ""                                 & CRLF &
+                          Register_Equates                          &
+                          "        .long   0x34102073|%0<<7" & CRLF &
                           "",
               Outputs  => Unsigned_32'Asm_Output ("=r", MEPC),
               Inputs   => No_Input_Operands,
-              Clobber  => "a5",
+              Clobber  => "",
               Volatile => True
              );
       else
@@ -127,13 +137,13 @@ package body RISCV is
    begin
       if RISCV_TOOLCHAIN_WORKAROUND then
          Asm (
-              Template => ""                           & CRLF &
-                          "        mv      a5,%0     " & CRLF &
-                          "        .long   0x30579073" & CRLF &
+              Template => ""                                  & CRLF &
+                          Register_Equates                           &
+                          "        .long   0x30501073|%0<<15" & CRLF &
                           "",
               Outputs  => No_Output_Operands,
               Inputs   => MTVEC_Type'Asm_Input ("r", Mtvec),
-              Clobber  => "a5",
+              Clobber  => "",
               Volatile => True
              );
       else
@@ -194,18 +204,17 @@ package body RISCV is
    begin
       if RISCV_TOOLCHAIN_WORKAROUND then
          Asm (
-              Template => ""                           & CRLF &
-                          "        mv      a5,%0     " & CRLF &
-                          "        .long   0x3007A073" & CRLF &
-                          "        mv      a5,%1     " & CRLF &
-                          "        .long   0x3047A073" & CRLF &
+              Template => ""                                  & CRLF &
+                          Register_Equates                           &
+                          "        .long   0x30002073|%0<<15" & CRLF &
+                          "        .long   0x30402073|%1<<15" & CRLF &
                           "",
               Outputs  => No_Output_Operands,
               Inputs   => [
                            MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
                            Unsigned_32'Asm_Input ("r", 16#0000_0080#)
                           ],
-              Clobber  => "a5",
+              Clobber  => "",
               Volatile => True
              );
       else
@@ -229,13 +238,13 @@ package body RISCV is
    begin
       if RISCV_TOOLCHAIN_WORKAROUND then
          Asm (
-              Template => ""                           & CRLF &
-                          "        mv      a5,%0     " & CRLF &
-                          "        .long   0x3007B073" & CRLF &
+              Template => ""                                  & CRLF &
+                          Register_Equates                           &
+                          "        .long   0x30003073|%0<<15" & CRLF &
                           "",
               Outputs  => No_Output_Operands,
               Inputs   => MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
-              Clobber  => "a5",
+              Clobber  => "",
               Volatile => True
              );
       else
