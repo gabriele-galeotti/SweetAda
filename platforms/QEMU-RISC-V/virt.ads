@@ -36,7 +36,7 @@ package Virt is
    -- Timer
 
    Timer_Frequency : constant := 10 * Definitions.MHz;
-   Timer_Constant  : constant := Timer_Frequency / 1_000;
+   Timer_Constant  : constant := (Timer_Frequency + 1_000 / 2) / 1_000;
 
    -- UART 16x50-style
 
