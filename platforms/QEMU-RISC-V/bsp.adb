@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020, 2021, 2022 Gabriele Galeotti                                                                  --
+-- Copyright (C) 2020-2023 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -67,6 +67,7 @@ package body BSP is
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
+      X : Unsigned_32 with Volatile => True;
    begin
       -- UART -----------------------------------------------------------------
       UART_Descriptor.Read_8        := MMIO.Read'Access;
@@ -83,6 +84,7 @@ package body BSP is
       Console.Print ("RISC-V (QEMU emulator)", NL => True);
       -------------------------------------------------------------------------
       Exceptions.Init;
+      X := RISCV.MEPC_Read;
       -------------------------------------------------------------------------
       declare
          Vectors      : aliased Asm_Entry_Point with

@@ -1,4 +1,3 @@
-
 \input texinfo
 @setfilename sweetada.texi
 @set AUTHOR Gabriele Galeotti
@@ -12,11 +11,9 @@
 @copying
 This manual is for SweetAda.
 
-Copyright @copyright{} 2020, 2021, 2022 @value{AUTHOR}
-
-@quotation
-@end quotation
+Copyright @copyright{} 2020-2023 @value{AUTHOR} @url{http://www.sweetada.org/}
 @end copying
+@insertcopying
 @c -----------------------------------------------------------------------------
 
 @iftex
@@ -55,6 +52,7 @@ Copyright @copyright{} 2020, 2021, 2022 @value{AUTHOR}
 * Makefile targets::
 * Ada environment::
 * GPRbuild mode::
+* Integration in an IDE::
 * Building SweetAda::
 * Anatomy of a platform::
 * The core complex::
@@ -164,7 +162,7 @@ operations, the GNU Make is the fundamental component that drives the whole Swee
 build process.
 
 GNU sed is a small utility to perform simple textual processing, and it used to filter
-strings and files should the shell have not enough computational power to perform
+strings and files where the shell does not have enough computational power to perform
 these basic activities.
 
 In some environments (Linux, and, if properly configured, also OS X) the GNU Make and
@@ -208,6 +206,8 @@ repository. @xref{References}. Browse for the directory corresponding to your en
 and select the last archive available. Except GNU Make, which should be installed in a
 PATH-visible directory, all other utilities could be installed in the "libutils"
 subdirectory of the SweetAda filesystem hierarchy.
+
+SweetAda supports both mingw32-make from a MinGW installation and MSYS2's make.
 
 @section Testing the installation
 @cindex Testing the installation
@@ -335,7 +335,7 @@ the toolchain prefix is the parent directory of the package, the one that contai
 "bin", "lib", "libexec" and a directory that match the target triplet
 @item
 executable filenames in the "bin" directory are prefixed with the target triplet
-("arm-somesystem-elf-gcc", "i686-gnu-elf-ld", etc)
+("arm-somesystem-eabi-gcc", "i686-gnu-elf-ld", etc, where "somesystem" could be absent)
 @end itemize
 
 SweetAda goal is to use generic GNU toolchains, but it has an internal implementation of
@@ -369,9 +369,9 @@ Makefile if you want to change the location of the GCC compiler by adjusting its
 variable definition:
 
 @example
-CC := gcc
-CC := /usr/local/bin/mygcc
-CC := C:/msys64/...
+HOST_CC := gcc
+HOST_CC := /usr/local/bin/mygcc
+HOST_CC := C:/msys64/...
 @end example
 
 Then, after a proper Makefile setup:
@@ -823,7 +823,7 @@ This behaviour is controlled by the variable BUILD_MODE in the top-level configu
 
 If you specify BUILD_MODE := GPR, then the Makefile will execute the gprbuild program
 whilst taking care of system code compilation. In order to do
-this, a build.gpr exists in the top-level directory, which will be completed by the
+this, a sweetada.gpr exists in the top-level directory, which will be completed by the
 configuration file configure.gpr. configure.gpr is emitted by the "make configure"
 command.
 
@@ -833,6 +833,14 @@ that could be not referenced by your code, like memory allocation routines and e
 handling. GPRbuild mode indeed manages only the major compilation and binding phase, and
 so you have to provide exactly the same sequence of make commands in order to build a
 SweetAda executable.
+
+@node Integration in an IDE
+@chapter Integration in an IDE
+@cindex IDE integration
+
+KDE Kate
+GNATstudio
+Eclipse
 
 @node Building SweetAda
 @chapter Building SweetAda
@@ -1964,4 +1972,3 @@ GitHub repository@*
 @end ifnothtml
 
 @bye
-

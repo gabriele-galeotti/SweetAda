@@ -5,8 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- This manual is for SweetAda.
 
-Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
- -->
+Copyright (C) 2020-2023 Gabriele Galeotti http://www.sweetada.org/ -->
 <title>SweetAda</title>
 
 <meta name="description" content="SweetAda">
@@ -46,7 +45,10 @@ ul.no-bullet {list-style: none}
 <h1 class="settitle" align="center">SweetAda</h1>
 
 
-
+<p>This manual is for SweetAda.
+</p>
+<p>Copyright &copy; 2020-2023 Gabriele Galeotti <a href="http://www.sweetada.org/">http://www.sweetada.org/</a>
+</p>
 
 
 <div class="top" id="Top">
@@ -70,6 +72,7 @@ Next: <a href="#Overview" accesskey="n" rel="next">Overview</a> &nbsp; [<a href=
 <li><a href="#Makefile-targets">Makefile targets</a></li>
 <li><a href="#Ada-environment">Ada environment</a></li>
 <li><a href="#GPRbuild-mode">GPRbuild mode</a></li>
+<li><a href="#Integration-in-an-IDE">Integration in an IDE</a></li>
 <li><a href="#Building-SweetAda">Building SweetAda</a></li>
 <li><a href="#Anatomy-of-a-platform">Anatomy of a platform</a></li>
 <li><a href="#The-core-complex">The core complex</a></li>
@@ -192,7 +195,7 @@ operations, the GNU Make is the fundamental component that drives the whole Swee
 build process.
 </p>
 <p>GNU sed is a small utility to perform simple textual processing, and it used to filter
-strings and files should the shell have not enough computational power to perform
+strings and files where the shell does not have enough computational power to perform
 these basic activities.
 </p>
 <p>In some environments (Linux, and, if properly configured, also OS X) the GNU Make and
@@ -236,6 +239,8 @@ repository. See <a href="#References">References</a>. Browse for the directory c
 and select the last archive available. Except GNU Make, which should be installed in a
 PATH-visible directory, all other utilities could be installed in the &quot;libutils&quot;
 subdirectory of the SweetAda filesystem hierarchy.
+</p>
+<p>SweetAda supports both mingw32-make from a MinGW installation and MSYS2&rsquo;s make.
 </p>
 </div>
 <div class="section" id="Testing-the-installation">
@@ -370,7 +375,7 @@ are respected:
 <li> the toolchain prefix is the parent directory of the package, the one that contains
 &quot;bin&quot;, &quot;lib&quot;, &quot;libexec&quot; and a directory that match the target triplet
 </li><li> executable filenames in the &quot;bin&quot; directory are prefixed with the target triplet
-(&quot;arm-somesystem-elf-gcc&quot;, &quot;i686-gnu-elf-ld&quot;, etc)
+(&quot;arm-somesystem-eabi-gcc&quot;, &quot;i686-gnu-elf-ld&quot;, etc, where &quot;somesystem&quot; could be absent)
 </li></ul>
 
 <p>SweetAda goal is to use generic GNU toolchains, but it has an internal implementation of
@@ -410,9 +415,9 @@ Makefile if you want to change the location of the GCC compiler by adjusting its
 variable definition:
 </p>
 <div class="example">
-<pre class="example">CC := gcc
-CC := /usr/local/bin/mygcc
-CC := C:/msys64/...
+<pre class="example">HOST_CC := gcc
+HOST_CC := /usr/local/bin/mygcc
+HOST_CC := C:/msys64/...
 </pre></div>
 
 <p>Then, after a proper Makefile setup:
@@ -885,7 +890,7 @@ reinstated if you perform a &quot;make configure&quot; action.
 <div class="chapter" id="GPRbuild-mode">
 <div class="header">
 <p>
-Next: <a href="#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a>, Previous: <a href="#Ada-environment" accesskey="p" rel="prev">Ada environment</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Integration-in-an-IDE" accesskey="n" rel="next">Integration in an IDE</a>, Previous: <a href="#Ada-environment" accesskey="p" rel="prev">Ada environment</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <span id="GPRbuild-mode-1"></span><h2 class="chapter">12 GPRbuild mode</h2>
 <span id="index-GPRbuild"></span>
@@ -898,7 +903,7 @@ Makefile files; besides, a second option exists, i,e, using a GPRbuild project f
 </p>
 <p>If you specify BUILD_MODE := GPR, then the Makefile will execute the gprbuild program
 whilst taking care of system code compilation. In order to do
-this, a build.gpr exists in the top-level directory, which will be completed by the
+this, a sweetada.gpr exists in the top-level directory, which will be completed by the
 configuration file configure.gpr. configure.gpr is emitted by the &quot;make configure&quot;
 command.
 </p>
@@ -911,12 +916,26 @@ SweetAda executable.
 </p>
 <hr>
 </div>
+<div class="chapter" id="Integration-in-an-IDE">
+<div class="header">
+<p>
+Next: <a href="#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a>, Previous: <a href="#GPRbuild-mode" accesskey="p" rel="prev">GPRbuild mode</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Integration-in-an-IDE-1"></span><h2 class="chapter">13 Integration in an IDE</h2>
+<span id="index-IDE-integration"></span>
+
+<p>KDE Kate
+GNATstudio
+Eclipse
+</p>
+<hr>
+</div>
 <div class="chapter" id="Building-SweetAda">
 <div class="header">
 <p>
-Next: <a href="#Anatomy-of-a-platform" accesskey="n" rel="next">Anatomy of a platform</a>, Previous: <a href="#GPRbuild-mode" accesskey="p" rel="prev">GPRbuild mode</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Anatomy-of-a-platform" accesskey="n" rel="next">Anatomy of a platform</a>, Previous: <a href="#Integration-in-an-IDE" accesskey="p" rel="prev">Integration in an IDE</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Building-SweetAda-1"></span><h2 class="chapter">13 Building SweetAda</h2>
+<span id="Building-SweetAda-1"></span><h2 class="chapter">14 Building SweetAda</h2>
 
 <p>Once that SweetAda is properly configured and your platform target is known, you can
 perform the build of the system:
@@ -960,7 +979,7 @@ kernel.o file.
 <p>
 Next: <a href="#The-core-complex" accesskey="n" rel="next">The core complex</a>, Previous: <a href="#Building-SweetAda" accesskey="p" rel="prev">Building SweetAda</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Anatomy-of-a-platform-1"></span><h2 class="chapter">14 Anatomy of a platform</h2>
+<span id="Anatomy-of-a-platform-1"></span><h2 class="chapter">15 Anatomy of a platform</h2>
 <span id="index-platform"></span>
 
 <p>In SweetAda a platform is a subdirectory. The platform contains all the files
@@ -1055,7 +1074,7 @@ Ada binding phase processing.
 <p>
 Next: <a href="#LibGCC" accesskey="n" rel="next">LibGCC</a>, Previous: <a href="#Anatomy-of-a-platform" accesskey="p" rel="prev">Anatomy of a platform</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="The-core-complex-1"></span><h2 class="chapter">15 The core complex</h2>
+<span id="The-core-complex-1"></span><h2 class="chapter">16 The core complex</h2>
 <span id="index-core"></span>
 
 <p>The core complex is a set of packages that forms the base of subprograms used by
@@ -1145,7 +1164,7 @@ and atomic-swapping operations.
 <p>
 Next: <a href="#Optimizations" accesskey="n" rel="next">Optimizations</a>, Previous: <a href="#The-core-complex" accesskey="p" rel="prev">The core complex</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="LibGCC-1"></span><h2 class="chapter">16 LibGCC</h2>
+<span id="LibGCC-1"></span><h2 class="chapter">17 LibGCC</h2>
 <span id="index-LibGCC"></span>
 
 <p>Nearly every compiler provides an underlying library for low-level handling
@@ -1172,7 +1191,7 @@ a port for a new CPU, or experimentation.
 <p>
 Next: <a href="#Platform-descriptions" accesskey="n" rel="next">Platform descriptions</a>, Previous: <a href="#LibGCC" accesskey="p" rel="prev">LibGCC</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Optimizations-1"></span><h2 class="chapter">17 Optimizations</h2>
+<span id="Optimizations-1"></span><h2 class="chapter">18 Optimizations</h2>
 <span id="index-optimizations"></span>
 
 <p>SweetAda provides two mechanisms in order to allow user-defined implementations and
@@ -1333,7 +1352,7 @@ the KERNEL_PARENT_PATH path component before the specification
 <p>
 Next: <a href="#IOEMU-scripting" accesskey="n" rel="next">IOEMU scripting</a>, Previous: <a href="#Optimizations" accesskey="p" rel="prev">Optimizations</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="Platform-descriptions-1"></span><h2 class="chapter">18 Platform descriptions</h2>
+<span id="Platform-descriptions-1"></span><h2 class="chapter">19 Platform descriptions</h2>
 
 <ul class="section-toc">
 <li><a href="#Altera-10M50GHRD" accesskey="1">Altera 10M50GHRD</a></li>
@@ -1378,7 +1397,7 @@ Next: <a href="#IOEMU-scripting" accesskey="n" rel="next">IOEMU scripting</a>, P
 <li><a href="#ZOOM">ZOOM</a></li>
 </ul>
 <div class="section" id="Altera-10M50GHRD">
-<h3 class="section">18.1 Altera 10M50GHRD</h3>
+<h3 class="section">19.1 Altera 10M50GHRD</h3>
 <span id="index-Altera-10M50GHRD"></span>
 
 <p>Altera&reg; 10M50GHRD is a virtual platform in SweetAda, usable by
@@ -1396,7 +1415,7 @@ already wrapped in the platform&rsquo;s configuration.in.
 </p>
 </div>
 <div class="section" id="Amiga">
-<h3 class="section">18.2 Amiga</h3>
+<h3 class="section">19.2 Amiga</h3>
 <span id="index-Amiga"></span>
 
 <p>The Amiga platform is the well-known machine based on the M68k venerable class
@@ -1418,7 +1437,7 @@ the serial port and the A2065 network adapter (tested only in FS-UAE so far).
 </p>
 </div>
 <div class="section" id="Arduino-Uno">
-<h3 class="section">18.3 Arduino Uno</h3>
+<h3 class="section">19.3 Arduino Uno</h3>
 <span id="index-Arduino-Uno"></span>
 
 <p>Arduino&reg; UNO is a very popular embedded board based on the
@@ -1426,14 +1445,14 @@ AVR class of MCU.
 </p>
 </div>
 <div class="section" id="Atlas">
-<h3 class="section">18.4 Atlas</h3>
+<h3 class="section">19.4 Atlas</h3>
 <span id="index-Atlas"></span>
 
 <p>Atlas is a PC-style board based on a PowerPC PPC604 CPU.
 </p>
 </div>
 <div class="section" id="Terasic-DE10_002dLite">
-<h3 class="section">18.5 Terasic DE10-Lite</h3>
+<h3 class="section">19.5 Terasic DE10-Lite</h3>
 <span id="index-Terasic-DE10_002dLite"></span>
 
 <p>The DE10-Lite is an embedded board preoduced by Terasic, based on an Altera&reg;
@@ -1441,7 +1460,7 @@ FPGA, which runs a softcore Nios II&reg; processor.
 </p>
 </div>
 <div class="section" id="DECstation-5000_002f133">
-<h3 class="section">18.6 DECstation 5000/133</h3>
+<h3 class="section">19.6 DECstation 5000/133</h3>
 <span id="index-DECstation-5000_002f133"></span>
 
 <p>DECstation 5000/133 is a famed workstation made by Digital&reg;.
@@ -1451,7 +1470,7 @@ in the main board of the workstation.
 </p>
 </div>
 <div class="section" id="Digi-Connect-ME">
-<h3 class="section">18.7 Digi Connect ME</h3>
+<h3 class="section">19.7 Digi Connect ME</h3>
 <span id="index-Digi-Connect-ME"></span>
 
 <p>The Digi Connect ME is a embedded networking module produced by Digi, containing
@@ -1461,7 +1480,7 @@ a NET+ARM CPU.
 </p>
 </div>
 <div class="section" id="Dreamcast">
-<h3 class="section">18.8 Dreamcast</h3>
+<h3 class="section">19.8 Dreamcast</h3>
 <span id="index-Dreamcast"></span>
 
 <p>SEGA&reg; Dreamcast is a home video game console based on an
@@ -1482,14 +1501,14 @@ utility provides a way to send the kernel to the console.
 </p>
 </div>
 <div class="section" id="FRDM_002dKL46Z">
-<h3 class="section">18.9 FRDM-KL46Z</h3>
+<h3 class="section">19.9 FRDM-KL46Z</h3>
 <span id="index-FRDM_002dKL46Z"></span>
 
 <p>FRDM-KL46Z (&quot;Freedom&quot;) is a little embedded board based on an ARM CPU.
 </p>
 </div>
 <div class="section" id="GEMI">
-<h3 class="section">18.10 GEMI</h3>
+<h3 class="section">19.10 GEMI</h3>
 <span id="index-GEMI"></span>
 
 <p>&quot;GEMI&quot; is a proprietary embedded board based on the Hitachi SH7032 CPU, available only
@@ -1502,7 +1521,7 @@ on-board RTC.
 </p>
 </div>
 <div class="section" id="SiFive-HiFive-1">
-<h3 class="section">18.11 SiFive HiFive 1</h3>
+<h3 class="section">19.11 SiFive HiFive 1</h3>
 <span id="index-SiFive-HiFive-1"></span>
 
 <p>The SiFive<sup>TM</sup> HiFive 1 is an embedded board based on a RISC-V&reg;
@@ -1541,7 +1560,7 @@ enabled, else when a timer IRQ is triggered an invalid program counter will be c
 </p>
 </div>
 <div class="section" id="Integrator_002fCP">
-<h3 class="section">18.12 Integrator/CP</h3>
+<h3 class="section">19.12 Integrator/CP</h3>
 <span id="index-Integrator_002fCP"></span>
 
 <p>The Integrator/CP is a virtual platform provided by QEMU, which mimics the real one,
@@ -1556,7 +1575,7 @@ produced by ARM&reg;.
 
 </div>
 <div class="section" id="LEON3">
-<h3 class="section">18.13 LEON3</h3>
+<h3 class="section">19.13 LEON3</h3>
 <span id="index-LEON3"></span>
 
 <p>The LEON3 is a virtual platform provided by QEMU, which mimics a generic machine based
@@ -1564,21 +1583,21 @@ on the LEON3&reg; processor.
 </p>
 </div>
 <div class="section" id="M5235BCC">
-<h3 class="section">18.14 M5235BCC</h3>
+<h3 class="section">19.14 M5235BCC</h3>
 <span id="index-M5235BCC"></span>
 
 <p>M5235BCC is an embedded board based on the MCF5235 ColdFire processor.
 </p>
 </div>
 <div class="section" id="ML605">
-<h3 class="section">18.15 ML605</h3>
+<h3 class="section">19.15 ML605</h3>
 <span id="index-ML605"></span>
 
 <p>ML605 is a virtual platform provided by QEMU, which mimics the real one.
 </p>
 </div>
 <div class="section" id="MPC8306-SOM">
-<h3 class="section">18.16 MPC8306 SOM</h3>
+<h3 class="section">19.16 MPC8306 SOM</h3>
 <span id="index-MPC8306-SOM"></span>
 
 <p>MPC830x SOM (System on Module) is an embedded development board based on a
@@ -1600,7 +1619,7 @@ a telnet session
 
 </div>
 <div class="section" id="MPC8306-Switch">
-<h3 class="section">18.17 MPC8306 Switch</h3>
+<h3 class="section">19.17 MPC8306 Switch</h3>
 <span id="index-MPC8306-Switch"></span>
 
 <p>&quot;Switch&quot; is a proprietary embedded board based on the MPC8306 CPU, available only
@@ -1611,7 +1630,7 @@ this kind of CPU and test SweetAda in the maximum possible range of physical har
 </p>
 </div>
 <div class="section" id="MPC8315e">
-<h3 class="section">18.18 MPC8315e</h3>
+<h3 class="section">19.18 MPC8315e</h3>
 <span id="index-MPC8315e"></span>
 
 <p>MPC8315e is a proprietary embedded board based on the homonym PowerPC CPU, available only
@@ -1620,28 +1639,28 @@ this kind of CPU and test SweetAda in the maximum possible range of physical har
 </p>
 </div>
 <div class="section" id="MSP432P401R">
-<h3 class="section">18.19 MSP432P401R</h3>
+<h3 class="section">19.19 MSP432P401R</h3>
 <span id="index-MSP432P401R"></span>
 
 <p>The MSP432P401R is a litlle embedded board based on an ARM CPU.
 </p>
 </div>
 <div class="section" id="MVME162_002d510A">
-<h3 class="section">18.20 MVME162-510A</h3>
+<h3 class="section">19.20 MVME162-510A</h3>
 <span id="index-MVME162_002d510A"></span>
 
 <p>The MVME162-510A is a VME board based on an MC68040 CPU.
 </p>
 </div>
 <div class="section" id="Malta">
-<h3 class="section">18.21 Malta</h3>
+<h3 class="section">19.21 Malta</h3>
 <span id="index-Malta"></span>
 
 <p>&quot;Malta&quot; is a virtual platform provided by QEMU, which mimics the real one.
 </p>
 </div>
 <div class="section" id="Memec-FX12">
-<h3 class="section">18.22 Memec FX12</h3>
+<h3 class="section">19.22 Memec FX12</h3>
 <span id="index-Memec-FX12"></span>
 
 <p>The Memec FX12 is a little embedded module based on Xilinx&reg;
@@ -1649,21 +1668,21 @@ Virtex-4 FPGA equipped with an hard PPC405 core.
 </p>
 </div>
 <div class="section" id="PC_002dx86">
-<h3 class="section">18.23 PC-x86</h3>
+<h3 class="section">19.23 PC-x86</h3>
 <span id="index-PC_002dx86"></span>
 
 <p>PC-x86 is a family of platforms based on the Intel x86-class 32-bit processor.
 </p>
 </div>
 <div class="section" id="PC_002dx86_002d64">
-<h3 class="section">18.24 PC-x86-64</h3>
+<h3 class="section">19.24 PC-x86-64</h3>
 <span id="index-PC_002dx86_002d64"></span>
 
 <p>PC-x86-64 is a family of platforms based on Intel/AMD x86-64-class 64-bit processors.
 </p>
 </div>
 <div class="section" id="QEMU-AArch64">
-<h3 class="section">18.25 QEMU AArch64</h3>
+<h3 class="section">19.25 QEMU AArch64</h3>
 <span id="index-QEMU-AArch64"></span>
 
 <p>The QEMU AArch64 is a virtual platform provided by QEMU, which is based on an
@@ -1671,7 +1690,7 @@ ARM AArch64-class CPU.
 </p>
 </div>
 <div class="section" id="QEMU-AVR">
-<h3 class="section">18.26 QEMU AVR</h3>
+<h3 class="section">19.26 QEMU AVR</h3>
 <span id="index-QEMU-AVR"></span>
 
 <p>The QEMU AVR is a virtual platform provided by QEMU, which is based on an
@@ -1679,7 +1698,7 @@ AVR-class CPU.
 </p>
 </div>
 <div class="section" id="QEMU-MIPS">
-<h3 class="section">18.27 QEMU MIPS</h3>
+<h3 class="section">19.27 QEMU MIPS</h3>
 <span id="index-QEMU-MIPS"></span>
 
 <p>The QEMU MIPS is a virtual platform provided by QEMU, which is based on an
@@ -1687,7 +1706,7 @@ MIPS-class CPU.
 </p>
 </div>
 <div class="section" id="QEMU-RISC_002dV-32">
-<h3 class="section">18.28 QEMU RISC-V 32</h3>
+<h3 class="section">19.28 QEMU RISC-V 32</h3>
 <span id="index-QEMU-RISC_002dV-32"></span>
 
 <p>The QEMU RISC-V 32 is a virtual platform provided by QEMU, which is based on an
@@ -1695,7 +1714,7 @@ MIPS-class CPU.
 </p>
 </div>
 <div class="section" id="REF405EP">
-<h3 class="section">18.29 REF405EP</h3>
+<h3 class="section">19.29 REF405EP</h3>
 <span id="index-REF405EP"></span>
 
 <p>The REF405EP is a PowerPC PPC405EP reference platform; current support is only
@@ -1703,7 +1722,7 @@ for the emulated version provided in QEMU.
 </p>
 </div>
 <div class="section" id="Raspberry-Pi-3">
-<h3 class="section">18.30 Raspberry Pi 3</h3>
+<h3 class="section">19.30 Raspberry Pi 3</h3>
 <span id="index-Raspberry-Pi-3"></span>
 
 <p>The Raspberry Pi 3 Model B is a popular embedded board based on a Broadcom&reg;
@@ -1740,7 +1759,7 @@ with a manual file copy operation once you have visibility of the SDHC memory ca
 </p>
 </div>
 <div class="section" id="SBC5206">
-<h3 class="section">18.31 SBC5206</h3>
+<h3 class="section">19.31 SBC5206</h3>
 <span id="index-SBC5206"></span>
 
 <p>The SBC5206 is a virtual platform provided by QEMU, which mimics an Arnewsh 5206
@@ -1748,7 +1767,7 @@ embedded board, based on the MCF5206 ColdFire processor.
 </p>
 </div>
 <div class="section" id="SPARCstation-5">
-<h3 class="section">18.32 SPARCstation 5</h3>
+<h3 class="section">19.32 SPARCstation 5</h3>
 <span id="index-SPARCstation-5"></span>
 
 <p>SPARCstation 5 is a famed workstation made by Sun&reg;. Beyond the
@@ -1759,7 +1778,7 @@ in the main board of the workstation.
 </p>
 </div>
 <div class="section" id="STM32F769I">
-<h3 class="section">18.33 STM32F769I</h3>
+<h3 class="section">19.33 STM32F769I</h3>
 <span id="index-STM32F769I"></span>
 
 <p>The STM32F769I is a popular embedded board based on an ARM-class CPU. This target
@@ -1767,21 +1786,21 @@ uses OpenOCD JTAG programming.
 </p>
 </div>
 <div class="section" id="Spartan-3A-EK">
-<h3 class="section">18.34 Spartan 3A EK</h3>
+<h3 class="section">19.34 Spartan 3A EK</h3>
 <span id="index-Spartan-3A-EK"></span>
 
 <p>The Spartan 3A EK is an embedded board based on a Xilinx&reg; Spartan-3A FPGA.
 </p>
 </div>
 <div class="section" id="Spartan-3E-SK">
-<h3 class="section">18.35 Spartan 3E SK</h3>
+<h3 class="section">19.35 Spartan 3E SK</h3>
 <span id="index-Spartan-3E-SK"></span>
 
 <p>The Spartan 3E SK is an embedded board based on a Xilinx&reg; Spartan-3E FPGA.
 </p>
 </div>
 <div class="section" id="PK_002dS5D9">
-<h3 class="section">18.36 PK-S5D9</h3>
+<h3 class="section">19.36 PK-S5D9</h3>
 <span id="index-PK_002dS5D9"></span>
 
 <p>The PK-S5D9 (&quot;Synergy&quot;) is an embedded board from Renesas&reg;, equipped
@@ -1791,7 +1810,7 @@ with a ARM Cortex-M4 SoC.
 </p>
 </div>
 <div class="section" id="IBM-S_002f390">
-<h3 class="section">18.37 IBM S/390</h3>
+<h3 class="section">19.37 IBM S/390</h3>
 <span id="index-IBM-S_002f390"></span>
 
 <p>S/390&reg; is the well-known family of mainframes produced by IBM&reg;.
@@ -1812,7 +1831,7 @@ this is done also with the aid of a minimal interrupt context.
 </p>
 </div>
 <div class="section" id="Taihu">
-<h3 class="section">18.38 Taihu</h3>
+<h3 class="section">19.38 Taihu</h3>
 <span id="index-Taihu"></span>
 
 <p>The Taihu is a virtual platform provided by QEMU, which mimics the real one,
@@ -1820,7 +1839,7 @@ based on a PowerPC PPC405 device.
 </p>
 </div>
 <div class="section" id="Xilinx-Zynq-A9">
-<h3 class="section">18.39 Xilinx Zynq A9</h3>
+<h3 class="section">19.39 Xilinx Zynq A9</h3>
 <span id="index-Xilinx-Zynq-A9"></span>
 
 <p>The Xilinx&reg; Zynq A9 is a virtual platform provided by QEMU,
@@ -1828,7 +1847,7 @@ which mimics the real one.
 </p>
 </div>
 <div class="section" id="ZOOM">
-<h3 class="section">18.40 ZOOM</h3>
+<h3 class="section">19.40 ZOOM</h3>
 <span id="index-ZOOM"></span>
 
 <p>ZOOM is a family of embedded board based on the MCF5373 ColdFire processor.
@@ -1841,7 +1860,7 @@ which mimics the real one.
 <p>
 Next: <a href="#References" accesskey="n" rel="next">References</a>, Previous: <a href="#Platform-descriptions" accesskey="p" rel="prev">Platform descriptions</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="IOEMU-scripting-1"></span><h2 class="chapter">19 IOEMU scripting</h2>
+<span id="IOEMU-scripting-1"></span><h2 class="chapter">20 IOEMU scripting</h2>
 
 <p>The IOEMU facility allows configuration of a target emulator machine (but not
 limited to) by specifying actions in a very basic script-like sequence of
@@ -1913,7 +1932,7 @@ an hex DISPLAY), its color and its size.
 <li><a href="#IOEMU-automatic-variables" accesskey="3">IOEMU automatic variables</a></li>
 </ul>
 <div class="section" id="IOEMU-objects">
-<h3 class="section">19.1 IOEMU objects</h3>
+<h3 class="section">20.1 IOEMU objects</h3>
 <span id="index-IOEMU-objects"></span>
 
 <p>Strings<br>
@@ -1949,7 +1968,7 @@ to that scope and ceased to exist when the parser leave the section.
 </p>
 </div>
 <div class="section" id="IOEMU-keywords">
-<h3 class="section">19.2 IOEMU keywords</h3>
+<h3 class="section">20.2 IOEMU keywords</h3>
 <span id="index-IOEMU-keywords"></span>
 
 <p>ENV &lt;variable_name&gt; &lt;variable_value&gt;
@@ -2030,7 +2049,7 @@ widgets are
 
 </div>
 <div class="section" id="IOEMU-automatic-variables">
-<h3 class="section">19.3 IOEMU automatic variables</h3>
+<h3 class="section">20.3 IOEMU automatic variables</h3>
 <span id="index-IOEMU-automatic-variables"></span>
 
 <p>IOEMU creates some implicit variables during its execution:
@@ -2057,7 +2076,7 @@ known before execution.
 <p>
 Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#IOEMU-scripting" accesskey="p" rel="prev">IOEMU scripting</a>, Up: <a href="#Top" accesskey="u" rel="up">SweetAda</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<span id="References-1"></span><h2 class="chapter">20 References</h2>
+<span id="References-1"></span><h2 class="chapter">21 References</h2>
 <span id="index-References"></span>
 
 <p>Home page<br>
@@ -2147,6 +2166,7 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-I">I</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-IBM-S_002f390">IBM S/390</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-IDE-integration">IDE integration</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Integration-in-an-IDE">Integration in an IDE</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Installation-prerequisites">Installation prerequisites</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Integrator_002fCP">Integrator/CP</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-IOEMU-automatic-variables">IOEMU automatic variables</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
