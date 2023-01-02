@@ -67,7 +67,6 @@ package body BSP is
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
-      X : Unsigned_32 with Volatile => True;
    begin
       -- UART -----------------------------------------------------------------
       UART_Descriptor.Read_8        := MMIO.Read'Access;
@@ -84,7 +83,6 @@ package body BSP is
       Console.Print ("RISC-V (QEMU emulator)", NL => True);
       -------------------------------------------------------------------------
       Exceptions.Init;
-      X := RISCV.MEPC_Read;
       -------------------------------------------------------------------------
       declare
          Vectors      : aliased Asm_Entry_Point with
