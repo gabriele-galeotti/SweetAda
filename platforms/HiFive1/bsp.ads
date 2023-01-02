@@ -27,7 +27,7 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   -- triggers once per second
+   -- clock triggers @ 1kHz
    MTIME_Offset : constant := (Definitions.CLK_RTC32k + 1_000 / 2) / 1_000;
 
    procedure Console_Putchar (C : in Character);
