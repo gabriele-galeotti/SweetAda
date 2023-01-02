@@ -41,12 +41,7 @@ package body Application is
             Time_L      : Unsigned_32;
             Time_H      : Unsigned_32;
             Time_ns     : Integer_64;
-            SS          : Natural;
-            MM          : Natural;
-            HH          : Natural;
-            D           : Natural;
-            M           : Natural;
-            Y           : Natural;
+            TM          : Time.TM_Time;
          begin
             IOEMU.IOEMU_IO1 := 0;
             IOEMU.IOEMU_IO2 := 0;
@@ -57,23 +52,20 @@ package body Application is
                Time_L  := Virt.Goldfish_RTC.TIME_LOW;
                Time_H  := Virt.Goldfish_RTC.TIME_HIGH;
                Time_ns := Integer_64 (Bits.Make_Word (Time_H, Time_L));
-               Time.Make_Time (
-                               Unsigned_32 (Time_ns / 10**9),
-                               SS, MM, HH, D, M, Y
-                              );
-               Console.Print (Time.Day_Of_Week (Time.NDay_Of_Week (D, M, Y)));
+               Time.Make_Time (Unsigned_32 (Time_ns / 10**9), TM);
+               Console.Print (Time.Day_Of_Week (Time.NDay_Of_Week (TM.MDay, TM.Mon + 1, TM.Year + 1900)));
                Console.Print (" ");
-               Console.Print (Time.Month_Name (M));
+               Console.Print (Time.Month_Name (TM.Mon + 1));
                Console.Print (" ");
-               Console.Print (D);
+               Console.Print (TM.MDay);
                Console.Print (" ");
-               Console.Print (Y);
+               Console.Print (TM.Year + 1900);
                Console.Print (" ");
-               Console.Print (HH);
+               Console.Print (TM.Hour);
                Console.Print (":");
-               Console.Print (MM);
+               Console.Print (TM.Min);
                Console.Print (":");
-               Console.Print (SS);
+               Console.Print (TM.Sec);
                Console.Print_NewLine;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
