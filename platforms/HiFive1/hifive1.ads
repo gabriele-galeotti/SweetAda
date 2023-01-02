@@ -105,7 +105,7 @@ package HiFive1 is
    pllf_x8   : constant := 3;
    pllf_x16  : constant := 7;
    pllf_x32  : constant := 15;
-   pllf_x64  : constant := 33;
+   pllf_x64  : constant := 31;
    pllf_x128 : constant := 63;
 
    pllq_div2 : constant := 2#01#;
@@ -377,25 +377,25 @@ package HiFive1 is
 
    GPIO_ADDRESS : constant := 16#1001_2000#;
 
-   GPIO_OEN : aliased Unsigned_32 with
+   GPIO_OEN : aliased Bitmap_32 with
       Address              => To_Address (GPIO_ADDRESS + 16#08#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   GPIO_PORT : aliased Unsigned_32 with
+   GPIO_PORT : aliased Bitmap_32 with
       Address              => To_Address (GPIO_ADDRESS + 16#0C#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   GPIO_IOFEN : aliased Unsigned_32 with
+   GPIO_IOFEN : aliased Bitmap_32 with
       Address              => To_Address (GPIO_ADDRESS + 16#38#),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   GPIO_IOFSEL : aliased Unsigned_32 with
+   GPIO_IOFSEL : aliased Bitmap_32 with
       Address              => To_Address (GPIO_ADDRESS + 16#3C#),
       Volatile_Full_Access => True,
       Import               => True,
