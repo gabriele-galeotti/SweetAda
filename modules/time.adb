@@ -153,7 +153,7 @@ package body Time is
       TM.Year := Year - 1900;
       TM.YDay := Days;
       TM.Mon := 0;
-      for Month in 1 .. 11 loop
+      for Month in 1 .. 12 loop
          declare
             TDays : Integer;
          begin
