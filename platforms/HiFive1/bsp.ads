@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Definitions;
+
 package BSP is
 
    --========================================================================--
@@ -24,6 +26,9 @@ package BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   -- triggers once per second
+   MTIME_Offset : constant := (Definitions.CLK_RTC32k + 1_000 / 2) / 1_000;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

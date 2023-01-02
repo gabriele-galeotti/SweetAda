@@ -23,6 +23,7 @@ with Core;
 with RISCV;
 with HiFive1;
 with Console;
+with BSP;
 
 package body Exceptions is
 
@@ -63,8 +64,10 @@ package body Exceptions is
          loop null; end loop;
       else
          Core.Tick_Count := @ + 1;
-         RISCV.MTIMECMP_Write (RISCV.MTIME_Read + 16#3200#);
-         Console.Print ("T", NL => False);
+         RISCV.MTIMECMP_Write (RISCV.MTIME_Read + BSP.MTIME_Offset);
+         if Core.Tick_Count mod 1_000 = 0 then
+            Console.Print ("T", NL => False);
+         end if;
       end if;
    end Timer_Process;
 
