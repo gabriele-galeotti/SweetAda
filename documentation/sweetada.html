@@ -924,17 +924,71 @@ Next: <a href="#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a
 <span id="Integration-in-an-IDE-1"></span><h2 class="chapter">13 Integration in an IDE</h2>
 <span id="index-IDE-integration"></span>
 
-<p>GNAT Programming Studio<br>
-SweetAda can be used inside GPS, once configured. By opening the sweetada.gpr file you
+<ul class="section-toc">
+<li><a href="#Eclipse" accesskey="1">Eclipse</a></li>
+<li><a href="#GNAT-Programming-Studio" accesskey="2">GNAT Programming Studio</a></li>
+<li><a href="#KDE-Kate" accesskey="3">KDE Kate</a></li>
+</ul>
+<div class="section" id="Eclipse">
+<h3 class="section">13.1 Eclipse</h3>
+<span id="index-Eclipse-IDE-integration"></span>
+
+<p>SweetAda can be used inside Eclipse by importing the project with the predefined
+configuration established in the .project file and the .externalToolBuilders
+directory supplied. The support is veru minimal but could be useful to work inside
+Eclipse due to its fine features.
+</p>
+<p>Open Eclipse and import the project as an existing project into the workspace, then
+select the SweetAda top-level directory (without enter into it).
+</p>
+<img src="eclipse-import.png" alt="eclipse-import">
+<img src="eclipse-import-existing-into-ws.png" alt="eclipse-import-existing-into-ws">
+<img src="eclipse-import-sweetada.png" alt="eclipse-import-sweetada">
+
+<p>Now the SweetAda filesystem should be opened and visibile, ready for use.
+</p>
+<p>By clicking &quot;Project&quot; -&gt; &quot;Build Project&quot;, a build should happen, visible in the
+console window. This is equivalent to perform a &quot;make all&quot; in the shell. By clicking
+&quot;Project -&gt; Clean&quot; a window should pop-up, asking whuch is the project to be cleaned,
+just select SweetAda. This is equivalent to perform &quot;make clean&quot; in the shell.
+</p>
+<img src="eclipse-project-build.png" alt="eclipse-project-build">
+<img src="eclipse-project-clean.png" alt="eclipse-project-clean">
+
+<p>Building the project does not perform a &quot;postbuild&quot; make target. If you want to
+perform such an action automatically, go into the &quot;Project&quot; -&gt; &quot;Properties&quot; -&gt;
+&quot;Builders&quot; and select the corrispondent item.
+</p>
+<img src="eclipse-project-builders.png" alt="eclipse-project-builders">
+
+<p>Note that these actions work if Eclipse can find a GNU make in the system. The
+project defaults to /usr/bin/make, so adjust the location of this executable if
+you do not have a standard filesystem layout. This can be achieved by editing the
+builder default executable: &quot;Project&quot; -&gt; &quot;Properties&quot; -&gt; &quot;Builders&quot;, select the
+builder you want to configure (maybe all of them) and then &quot;Edit...&quot;.
+</p>
+<img src="eclipse-builders-make.png" alt="eclipse-builders-make">
+
+</div>
+<div class="section" id="GNAT-Programming-Studio">
+<h3 class="section">13.2 GNAT Programming Studio</h3>
+<span id="index-GPS-IDE-integration"></span>
+
+<p>SweetAda can be used inside GPS, once configured. By opening the sweetada.gpr file you
 can work inside the IDE and use its functionalities. Note that GPS has an GNATMAKE
 executable without the toolchain prefix, and so you have to set USE_UNPREFIXED_GNATMAKE
 in your configuration.in before using it.
 </p>
-<p>KDE Kate<br>
-SweetAda provides a Kate project configuration file, named .kateproject. Just open a file
+</div>
+<div class="section" id="KDE-Kate">
+<h3 class="section">13.3 KDE Kate</h3>
+<span id="index-Kate-IDE-integration"></span>
+
+<p>SweetAda provides a Kate project configuration file, named .kateproject. Just open a file
 in the SweetAda filesystem and the Kate editor will open automatically the project outline.
 </p>
 <hr>
+</div>
 </div>
 <div class="chapter" id="Building-SweetAda">
 <div class="header">
@@ -2116,6 +2170,8 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
  &nbsp; 
 <a class="summary-letter" href="#Index_cp_letter-I"><b>I</b></a>
  &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-K"><b>K</b></a>
+ &nbsp; 
 <a class="summary-letter" href="#Index_cp_letter-L"><b>L</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Index_cp_letter-M"><b>M</b></a>
@@ -2156,6 +2212,7 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td></td><td valign="top"><a href="#index-Dreamcast">Dreamcast</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-E">E</th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Eclipse-IDE-integration">Eclipse IDE integration</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Integration-in-an-IDE">Integration in an IDE</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-ELFtool">ELFtool</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Emulators">Emulators</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Emulators">Emulators</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Environment-notes">Environment notes</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
@@ -2169,6 +2226,7 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td></td><td valign="top"><a href="#index-General-advice">General advice</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Host-environment">Host environment</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GNAT-wrapper">GNAT wrapper</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Toolchain-tools">Toolchain tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-GPRbuild">GPRbuild</a>:</td><td>&nbsp;</td><td valign="top"><a href="#GPRbuild-mode">GPRbuild mode</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-GPS-IDE-integration">GPS IDE integration</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Integration-in-an-IDE">Integration in an IDE</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-I">I</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-IBM-S_002f390">IBM S/390</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
@@ -2178,6 +2236,9 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <tr><td></td><td valign="top"><a href="#index-IOEMU-automatic-variables">IOEMU automatic variables</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-IOEMU-keywords">IOEMU keywords</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-IOEMU-objects">IOEMU objects</a>:</td><td>&nbsp;</td><td valign="top"><a href="#IOEMU-scripting">IOEMU scripting</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th id="Index_cp_letter-K">K</th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Kate-IDE-integration">Kate IDE integration</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Integration-in-an-IDE">Integration in an IDE</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th id="Index_cp_letter-L">L</th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-LEON3">LEON3</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Platform-descriptions">Platform descriptions</a></td></tr>
@@ -2253,6 +2314,8 @@ Previous: <a href="#References" accesskey="p" rel="prev">References</a>, Up: <a 
 <a class="summary-letter" href="#Index_cp_letter-G"><b>G</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Index_cp_letter-I"><b>I</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index_cp_letter-K"><b>K</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Index_cp_letter-L"><b>L</b></a>
  &nbsp; 

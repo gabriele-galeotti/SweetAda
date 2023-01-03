@@ -838,13 +838,56 @@ SweetAda executable.
 @chapter Integration in an IDE
 @cindex IDE integration
 
-GNAT Programming Studio@*
+@section Eclipse
+@cindex Eclipse IDE integration
+
+SweetAda can be used inside Eclipse by importing the project with the predefined
+configuration established in the .project file and the .externalToolBuilders
+directory supplied. The support is veru minimal but could be useful to work inside
+Eclipse due to its fine features.
+
+Open Eclipse and import the project as an existing project into the workspace, then
+select the SweetAda top-level directory (without enter into it).
+
+@image{eclipse-import}
+@image{eclipse-import-existing-into-ws}
+@image{eclipse-import-sweetada}
+
+Now the SweetAda filesystem should be opened and visibile, ready for use.
+
+By clicking "Project" -> "Build Project", a build should happen, visible in the
+console window. This is equivalent to perform a "make all" in the shell. By clicking
+"Project -> Clean" a window should pop-up, asking whuch is the project to be cleaned,
+just select SweetAda. This is equivalent to perform "make clean" in the shell.
+
+@image{eclipse-project-build}
+@image{eclipse-project-clean}
+
+Building the project does not perform a "postbuild" make target. If you want to
+perform such an action automatically, go into the "Project" -> "Properties" ->
+"Builders" and select the corrispondent item.
+
+@image{eclipse-project-builders}
+
+Note that these actions work if Eclipse can find a GNU make in the system. The
+project defaults to /usr/bin/make, so adjust the location of this executable if
+you do not have a standard filesystem layout. This can be achieved by editing the
+builder default executable: "Project" -> "Properties" -> "Builders", select the
+builder you want to configure (maybe all of them) and then "Edit...".
+
+@image{eclipse-builders-make}
+
+@section GNAT Programming Studio
+@cindex GPS IDE integration
+
 SweetAda can be used inside GPS, once configured. By opening the sweetada.gpr file you
 can work inside the IDE and use its functionalities. Note that GPS has an GNATMAKE
 executable without the toolchain prefix, and so you have to set USE_UNPREFIXED_GNATMAKE
 in your configuration.in before using it.
 
-KDE Kate@*
+@section KDE Kate
+@cindex Kate IDE integration
+
 SweetAda provides a Kate project configuration file, named .kateproject. Just open a file
 in the SweetAda filesystem and the Kate editor will open automatically the project outline.
 
