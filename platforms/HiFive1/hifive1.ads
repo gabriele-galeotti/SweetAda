@@ -45,528 +45,704 @@ package HiFive1 is
    -- 6 Clock Generation (PRCI)
    ----------------------------------------------------------------------------
 
-   -- 6.3 Internal Trimmable Programmable 72 MHz Oscillator (HFROSC)
+   package PRCI is
 
-   -- sample values, range is div1 .. div64
-   hfroscdiv_div1 : constant := 0;
-   hfroscdiv_div2 : constant := 1;
-   hfroscdiv_div3 : constant := 2;
-   hfroscdiv_div4 : constant := 3;
-   hfroscdiv_div5 : constant := 4;
+      -- 6.3 Internal Trimmable Programmable 72 MHz Oscillator (HFROSC)
 
-   type hfrosccfg_Type is
-   record
-      hfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
-      Reserved1  : Bits_10 := 0;
-      hfrosctrim : Bits_5;           -- Ring Oscillator Trim Register
-      Reserved2  : Bits_9 := 0;
-      hfroscen   : Boolean;          -- Ring Oscillator Enable
-      hfroscrdy  : Boolean := False; -- Ring Oscillator Ready
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for hfrosccfg_Type use
-   record
-      hfroscdiv  at 0 range 0 .. 5;
-      Reserved1  at 0 range 6 .. 15;
-      hfrosctrim at 0 range 16 .. 20;
-      Reserved2  at 0 range 21 .. 29;
-      hfroscen   at 0 range 30 .. 30;
-      hfroscrdy  at 0 range 31 .. 31;
-   end record;
+      -- sample values, range is div1 .. div64
+      hfroscdiv_div1 : constant := 0;
+      hfroscdiv_div2 : constant := 1;
+      hfroscdiv_div3 : constant := 2;
+      hfroscdiv_div4 : constant := 3;
+      hfroscdiv_div5 : constant := 4;
 
-   -- 6.4 External 16 MHz Crystal Oscillator (HFXOSC)
+      type hfrosccfg_Type is
+      record
+         hfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
+         Reserved1  : Bits_10 := 0;
+         hfrosctrim : Bits_5;           -- Ring Oscillator Trim Register
+         Reserved2  : Bits_9 := 0;
+         hfroscen   : Boolean;          -- Ring Oscillator Enable
+         hfroscrdy  : Boolean := False; -- Ring Oscillator Ready
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for hfrosccfg_Type use
+      record
+         hfroscdiv  at 0 range 0 .. 5;
+         Reserved1  at 0 range 6 .. 15;
+         hfrosctrim at 0 range 16 .. 20;
+         Reserved2  at 0 range 21 .. 29;
+         hfroscen   at 0 range 30 .. 30;
+         hfroscrdy  at 0 range 31 .. 31;
+      end record;
 
-   type hfxosccfg_Type is
-   record
-      Reserved  : Bits_30 := 0;
-      hfxoscen  : Boolean;          -- Crystal Oscillator Enable
-      hfxoscrdy : Boolean := False; -- Crystal Oscillator Ready
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for hfxosccfg_Type use
-   record
-      Reserved  at 0 range 0 .. 29;
-      hfxoscen  at 0 range 30 .. 30;
-      hfxoscrdy at 0 range 31 .. 31;
-   end record;
+      -- 6.4 External 16 MHz Crystal Oscillator (HFXOSC)
 
-   -- 6.5 Internal High-Frequency PLL (HFPLL)
+      type hfxosccfg_Type is
+      record
+         Reserved  : Bits_30 := 0;
+         hfxoscen  : Boolean;          -- Crystal Oscillator Enable
+         hfxoscrdy : Boolean := False; -- Crystal Oscillator Ready
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for hfxosccfg_Type use
+      record
+         Reserved  at 0 range 0 .. 29;
+         hfxoscen  at 0 range 30 .. 30;
+         hfxoscrdy at 0 range 31 .. 31;
+      end record;
 
-   pllr_div1 : constant := 2#00#;
-   pllr_div2 : constant := 2#01#;
-   pllr_div3 : constant := 2#10#;
-   pllr_div4 : constant := 2#11#;
+      -- 6.5 Internal High-Frequency PLL (HFPLL)
 
-   -- sample values, range is x2 .. x128 in even steps
-   pllf_x2   : constant := 0;
-   pllf_x4   : constant := 1;
-   pllf_x8   : constant := 3;
-   pllf_x16  : constant := 7;
-   pllf_x32  : constant := 15;
-   pllf_x64  : constant := 31;
-   pllf_x128 : constant := 63;
+      pllr_div1 : constant := 2#00#;
+      pllr_div2 : constant := 2#01#;
+      pllr_div3 : constant := 2#10#;
+      pllr_div4 : constant := 2#11#;
 
-   pllq_div2 : constant := 2#01#;
-   pllq_div4 : constant := 2#10#;
-   pllq_div8 : constant := 2#11#;
+      -- sample values, range is x2 .. x128 in even steps
+      pllf_x2   : constant := 0;
+      pllf_x4   : constant := 1;
+      pllf_x8   : constant := 3;
+      pllf_x16  : constant := 7;
+      pllf_x32  : constant := 15;
+      pllf_x64  : constant := 31;
+      pllf_x128 : constant := 63;
 
-   pllsel_HFROSC : constant := 0; -- hfroscclk directly drives hfclk
-   pllsel_PLL    : constant := 1; -- PLL drives hfclk
+      pllq_div2 : constant := 2#01#;
+      pllq_div4 : constant := 2#10#;
+      pllq_div8 : constant := 2#11#;
 
-   pllrefsel_HFROSC : constant := 0; -- PLL driven by HFROSC
-   pllrefsel_HFXOSC : constant := 1; -- PLL driven by HFXOSC
+      pllsel_HFROSC : constant := 0; -- hfroscclk directly drives hfclk
+      pllsel_PLL    : constant := 1; -- PLL drives hfclk
 
-   type pllcfg_Type is
-   record
-      pllr      : Bits_3;           -- PLL R Value
-      Reserved1 : Bits_1 := 0;
-      pllf      : Bits_6;           -- PLL F Value
-      pllq      : Bits_2;           -- PLL Q Value
-      Reserved2 : Bits_4 := 0;
-      pllsel    : Bits_1;           -- PLL Select
-      pllrefsel : Bits_1;           -- PLL Reference Select
-      pllbypass : Boolean;          -- PLL Bypass
-      Reserved3 : Bits_12 := 0;
-      plllock   : Boolean := False; -- PLL Lock (RO)
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for pllcfg_Type use
-   record
-      pllr      at 0 range 0 .. 2;
-      Reserved1 at 0 range 3 .. 3;
-      pllf      at 0 range 4 .. 9;
-      pllq      at 0 range 10 .. 11;
-      Reserved2 at 0 range 12 .. 15;
-      pllsel    at 0 range 16 .. 16;
-      pllrefsel at 0 range 17 .. 17;
-      pllbypass at 0 range 18 .. 18;
-      Reserved3 at 0 range 19 .. 30;
-      plllock   at 0 range 31 .. 31;
-   end record;
+      pllrefsel_HFROSC : constant := 0; -- PLL driven by HFROSC
+      pllrefsel_HFXOSC : constant := 1; -- PLL driven by HFXOSC
 
-   -- 6.6 PLL Output Divider
+      type pllcfg_Type is
+      record
+         pllr      : Bits_3;           -- PLL R Value
+         Reserved1 : Bits_1 := 0;
+         pllf      : Bits_6;           -- PLL F Value
+         pllq      : Bits_2;           -- PLL Q Value
+         Reserved2 : Bits_4 := 0;
+         pllsel    : Bits_1;           -- PLL Select
+         pllrefsel : Bits_1;           -- PLL Reference Select
+         pllbypass : Boolean;          -- PLL Bypass
+         Reserved3 : Bits_12 := 0;
+         plllock   : Boolean := False; -- PLL Lock (RO)
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for pllcfg_Type use
+      record
+         pllr      at 0 range 0 .. 2;
+         Reserved1 at 0 range 3 .. 3;
+         pllf      at 0 range 4 .. 9;
+         pllq      at 0 range 10 .. 11;
+         Reserved2 at 0 range 12 .. 15;
+         pllsel    at 0 range 16 .. 16;
+         pllrefsel at 0 range 17 .. 17;
+         pllbypass at 0 range 18 .. 18;
+         Reserved3 at 0 range 19 .. 30;
+         plllock   at 0 range 31 .. 31;
+      end record;
 
-   -- sample values, range is div2 .. div128 in even steps
-   plloutdiv_div2   : constant := 0;
-   plloutdiv_div4   : constant := 1;
-   plloutdiv_div6   : constant := 2;
-   plloutdiv_div8   : constant := 3;
-   plloutdiv_div16  : constant := 7;
-   plloutdiv_div128 : constant := 63;
+      -- 6.6 PLL Output Divider
 
-   plloutdivby1_CLR : constant := 0; -- PLL Final Divide By plloutdiv_...
-   plloutdivby1_SET : constant := 1; -- PLL Final Divide By 1
+      -- sample values, range is div2 .. div128 in even steps
+      plloutdiv_div2   : constant := 0;
+      plloutdiv_div4   : constant := 1;
+      plloutdiv_div6   : constant := 2;
+      plloutdiv_div8   : constant := 3;
+      plloutdiv_div16  : constant := 7;
+      plloutdiv_div128 : constant := 63;
 
-   type plloutdiv_Type is
-   record
-      plloutdiv    : Bits_6 := 0;  -- PLL Final Divider Value (default = divide by 2)
-      Reserved1    : Bits_2 := 0;
-      plloutdivby1 : Bits_6;       -- PLL Final Divide By 1
-      Reserved2    : Bits_18 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for plloutdiv_Type use
-   record
-      plloutdiv    at 0 range 0 .. 5;
-      Reserved1    at 0 range 6 .. 7;
-      plloutdivby1 at 0 range 8 .. 13;
-      Reserved2    at 0 range 14 .. 31;
-   end record;
+      plloutdivby1_CLR : constant := 0; -- PLL Final Divide By plloutdiv_...
+      plloutdivby1_SET : constant := 1; -- PLL Final Divide By 1
 
-   -- 6.7 Internal Programmable Low-Frequency Ring Oscillator (LFROSC)
+      type plloutdiv_Type is
+      record
+         plloutdiv    : Bits_6 := 0;  -- PLL Final Divider Value (default = divide by 2)
+         Reserved1    : Bits_2 := 0;
+         plloutdivby1 : Bits_6;       -- PLL Final Divide By 1
+         Reserved2    : Bits_18 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for plloutdiv_Type use
+      record
+         plloutdiv    at 0 range 0 .. 5;
+         Reserved1    at 0 range 6 .. 7;
+         plloutdivby1 at 0 range 8 .. 13;
+         Reserved2    at 0 range 14 .. 31;
+      end record;
 
-   -- sample values, range is div1 .. div64
-   lfroscdiv_div1 : constant := 0;
-   lfroscdiv_div2 : constant := 1;
-   lfroscdiv_div3 : constant := 2;
-   lfroscdiv_div4 : constant := 3;
-   lfroscdiv_div5 : constant := 4;
+      -- 6.7 Internal Programmable Low-Frequency Ring Oscillator (LFROSC)
 
-   type lfrosccfg_Type is
-   record
-      lfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
-      Reserved1  : Bits_10 := 0;
-      lfrosctrim : Bits_5;           -- Ring Oscillator Trim Register
-      Reserved2  : Bits_9 := 0;
-      lfroscen   : Boolean;          -- Ring Oscillator Enable
-      lfroscrdy  : Boolean := False; -- Ring Oscillator Ready
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for lfrosccfg_Type use
-   record
-      lfroscdiv  at 0 range 0 .. 5;
-      Reserved1  at 0 range 6 .. 15;
-      lfrosctrim at 0 range 16 .. 20;
-      Reserved2  at 0 range 21 .. 29;
-      lfroscen   at 0 range 30 .. 30;
-      lfroscrdy  at 0 range 31 .. 31;
-   end record;
+      -- sample values, range is div1 .. div64
+      lfroscdiv_div1 : constant := 0;
+      lfroscdiv_div2 : constant := 1;
+      lfroscdiv_div3 : constant := 2;
+      lfroscdiv_div4 : constant := 3;
+      lfroscdiv_div5 : constant := 4;
 
-   -- 6.8 Alternate Low-Frequency Clock (LFALTCLK)
+      type lfrosccfg_Type is
+      record
+         lfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
+         Reserved1  : Bits_10 := 0;
+         lfrosctrim : Bits_5;           -- Ring Oscillator Trim Register
+         Reserved2  : Bits_9 := 0;
+         lfroscen   : Boolean;          -- Ring Oscillator Enable
+         lfroscrdy  : Boolean := False; -- Ring Oscillator Ready
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for lfrosccfg_Type use
+      record
+         lfroscdiv  at 0 range 0 .. 5;
+         Reserved1  at 0 range 6 .. 15;
+         lfrosctrim at 0 range 16 .. 20;
+         Reserved2  at 0 range 21 .. 29;
+         lfroscen   at 0 range 30 .. 30;
+         lfroscrdy  at 0 range 31 .. 31;
+      end record;
 
-   lfextclk_sel_LFROSC : constant := 0; -- low-frequency clock source = LFROSC
-   lfextclk_sel_EXT    : constant := 1; -- low-frequency clock source = psdlfaltclk pad
+      -- 6.8 Alternate Low-Frequency Clock (LFALTCLK)
 
-   type lfclkmux_Type is
-   record
-      lfextclk_sel        : Bits_1;           -- Low Frequency Clock Source Selector
-      Reserved            : Bits_30 := 0;
-      lfextclk_mux_status : Boolean := False; -- Setting of the aon_lfclksel pin (RO)
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for lfclkmux_Type use
-   record
-      lfextclk_sel        at 0 range 0 .. 0;
-      Reserved            at 0 range 1 .. 30;
-      lfextclk_mux_status at 0 range 31 .. 31;
-   end record;
+      lfextclk_sel_LFROSC : constant := 0; -- low-frequency clock source = LFROSC
+      lfextclk_sel_EXT    : constant := 1; -- low-frequency clock source = psdlfaltclk pad
 
-   -- 6.2 PRCI Address Space Usage
+      type lfclkmux_Type is
+      record
+         lfextclk_sel        : Bits_1;           -- Low Frequency Clock Source Selector
+         Reserved            : Bits_30 := 0;
+         lfextclk_mux_status : Boolean := False; -- Setting of the aon_lfclksel pin (RO)
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for lfclkmux_Type use
+      record
+         lfextclk_sel        at 0 range 0 .. 0;
+         Reserved            at 0 range 1 .. 30;
+         lfextclk_mux_status at 0 range 31 .. 31;
+      end record;
 
-   type PRCI_Type is
-   record
-      hfrosccfg  : hfrosccfg_Type with Volatile_Full_Access => True;
-      hfxosccfg  : hfxosccfg_Type with Volatile_Full_Access => True;
-      pllcfg     : pllcfg_Type    with Volatile_Full_Access => True;
-      plloutdiv  : plloutdiv_Type with Volatile_Full_Access => True;
-      lfrosccfg  : lfrosccfg_Type with Volatile_Full_Access => True;
-      lfclkmux   : lfclkmux_Type  with Volatile_Full_Access => True;
-   end record with
-      Size => 16#80# * 8;
-   for PRCI_Type use
-   record
-      hfrosccfg  at 16#00# range 0 .. 31;
-      hfxosccfg  at 16#04# range 0 .. 31;
-      pllcfg     at 16#08# range 0 .. 31;
-      plloutdiv  at 16#0C# range 0 .. 31;
-      lfrosccfg  at 16#70# range 0 .. 31;
-      lfclkmux   at 16#7C# range 0 .. 31;
-   end record;
+      PRCI_BASEADDRESS : constant := 16#1000_8000#;
 
-   PRCI_BASEADDRESS : constant := 16#1000_8000#;
+      hfrosccfg : aliased hfrosccfg_Type with
+         Address              => To_Address (PRCI_BASEADDRESS + 16#00#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
 
-   PRCI : aliased PRCI_Type with
-      Address    => To_Address (PRCI_BASEADDRESS),
-      Import     => True,
-      Convention => Ada;
+      hfxosccfg : aliased hfxosccfg_Type with
+         Address              => To_Address (PRCI_BASEADDRESS + 16#04#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
 
-   ----------------------------------------------------------------------------
-   -- 9 Core-Local Interruptor (CLINT)
-   ----------------------------------------------------------------------------
+      pllcfg : aliased pllcfg_Type with
+         Address              => To_Address (PRCI_BASEADDRESS + 16#08#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
 
-   -- msip for hart 0 MSIP Registers (1 bit wide)
+      plloutdiv : aliased plloutdiv_Type with
+         Address              => To_Address (PRCI_BASEADDRESS + 16#0C#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
 
-   MSIP_ADDRESS : constant := 16#0200_0000#;
+      lfrosccfg : aliased lfrosccfg_Type with
+         Address              => To_Address (PRCI_BASEADDRESS + 16#70#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
 
-   MSIP : aliased Unsigned_32 with
-      Address    => To_Address (MSIP_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      lfclkmux : aliased lfclkmux_Type  with
+         Address              => To_Address (PRCI_BASEADDRESS + 16#7C#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
 
-   -- mtimecmp for hart 0 MTIMECMP Registers
-
-   MTIMECMP_ADDRESS : constant := 16#0200_4000#;
-
-   MTIMECMP : aliased Unsigned_64 with
-      Address    => To_Address (MTIMECMP_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-
-   -- mtime Timer Register
-
-   Timer_ADDRESS : constant := 16#0200_BFF8#;
-
-   Timer : aliased Unsigned_64 with
-      Address    => To_Address (Timer_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   end PRCI;
 
    ----------------------------------------------------------------------------
    -- 14 Watchdog Timer (WDT)
    ----------------------------------------------------------------------------
 
-   wdogkey_Value  : constant := 16#0051_F15E#;
-   wdogfeed_Value : constant := 16#0D09_F00D#;
+   package WDT is
 
-   -- 14.3 Watchdog Configuration Register (wdogcfg)
+      wdogkey_Value  : constant := 16#0051_F15E#;
+      wdogfeed_Value : constant := 16#0D09_F00D#;
 
-   type wdogcfg_Type is
-   record
-      wdogscale     : Bits_4;       -- Counter scale value.
-      Reserved1     : Bits_4 := 0;
-      wdogrsten     : Boolean;      -- Controls whether the comp output can set the wdogrst bit and hence cause a full reset.
-      wdogzerocmp   : Boolean;
-      Reserved2     : Bits_2 := 0;
-      wdogenalways  : Boolean;      -- Enable Always - run continuously
-      wdogcoreawake : Boolean;      -- Increment the watchdog counter if the processor is not asleep
-      Reserved3     : Bits_14 := 0;
-      wdogip0       : Boolean;      -- Interrupt 0 Pending
-      Reserved4     : Bits_3 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for wdogcfg_Type use
-   record
-      wdogscale     at 0 range 0 .. 3;
-      Reserved1     at 0 range 4 .. 7;
-      wdogrsten     at 0 range 8 .. 8;
-      wdogzerocmp   at 0 range 9 .. 9;
-      Reserved2     at 0 range 10 .. 11;
-      wdogenalways  at 0 range 12 .. 12;
-      wdogcoreawake at 0 range 13 .. 13;
-      Reserved3     at 0 range 14 .. 27;
-      wdogip0       at 0 range 28 .. 28;
-      Reserved4     at 0 range 29 .. 31;
-   end record;
+      -- 14.3 Watchdog Configuration Register (wdogcfg)
 
-   -- 14.4 Watchdog Compare Register (wdogcmp)
+      type wdogcfg_Type is
+      record
+         wdogscale     : Bits_4;       -- Counter scale value.
+         Reserved1     : Bits_4 := 0;
+         wdogrsten     : Boolean;      -- Controls whether the comp output can set the wdogrst bit and hence cause a full reset.
+         wdogzerocmp   : Boolean;
+         Reserved2     : Bits_2 := 0;
+         wdogenalways  : Boolean;      -- Enable Always - run continuously
+         wdogcoreawake : Boolean;      -- Increment the watchdog counter if the processor is not asleep
+         Reserved3     : Bits_14 := 0;
+         wdogip0       : Boolean;      -- Interrupt 0 Pending
+         Reserved4     : Bits_3 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for wdogcfg_Type use
+      record
+         wdogscale     at 0 range 0 .. 3;
+         Reserved1     at 0 range 4 .. 7;
+         wdogrsten     at 0 range 8 .. 8;
+         wdogzerocmp   at 0 range 9 .. 9;
+         Reserved2     at 0 range 10 .. 11;
+         wdogenalways  at 0 range 12 .. 12;
+         wdogcoreawake at 0 range 13 .. 13;
+         Reserved3     at 0 range 14 .. 27;
+         wdogip0       at 0 range 28 .. 28;
+         Reserved4     at 0 range 29 .. 31;
+      end record;
 
-   type wdogcmp_Type is
-   record
-      wdogcmp0 : Unsigned_16;      -- Comparator 0
-      Reserved : Unsigned_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for wdogcmp_Type use
-   record
-      wdogcmp0 at 0 range 0 .. 15;
-      Reserved at 0 range 16 .. 31;
-   end record;
+      -- 14.4 Watchdog Compare Register (wdogcmp)
 
-   type WDT_Type is
-   record
-      wdogcfg   : wdogcfg_Type with Volatile_Full_Access => True;
-      wdogcount : Unsigned_32  with Volatile_Full_Access => True;
-      wdogs     : Unsigned_16  with Volatile_Full_Access => True;
-      wdogfeed  : Unsigned_32  with Volatile_Full_Access => True;
-      wdogkey   : Unsigned_32  with Volatile_Full_Access => True;
-      wdogcmp0  : wdogcmp_Type with Volatile_Full_Access => True;
-   end record with
-      Size => 16#24# * 8;
-   for WDT_Type use
-   record
-      wdogcfg   at 16#00# range 0 .. 31;
-      wdogcount at 16#08# range 0 .. 31;
-      wdogs     at 16#10# range 0 .. 15;
-      wdogfeed  at 16#18# range 0 .. 31;
-      wdogkey   at 16#1C# range 0 .. 31;
-      wdogcmp0  at 16#20# range 0 .. 31;
-   end record;
+      type wdogcmp_Type is
+      record
+         wdogcmp0 : Unsigned_16;      -- Comparator 0
+         Reserved : Unsigned_16 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for wdogcmp_Type use
+      record
+         wdogcmp0 at 0 range 0 .. 15;
+         Reserved at 0 range 16 .. 31;
+      end record;
 
-   WDT_BASEADDRESS : constant := AON_BASEADDRESS;
+      WDT_BASEADDRESS : constant := AON_BASEADDRESS;
 
-   WDT : aliased WDT_Type with
-      Address    => To_Address (WDT_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      wdogcfg : aliased wdogcfg_Type with
+         Address              => To_Address (WDT_BASEADDRESS + 16#00#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      wdogcount : aliased Unsigned_32 with
+         Address              => To_Address (WDT_BASEADDRESS + 16#08#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      wdogs : aliased Unsigned_16 with
+         Address              => To_Address (WDT_BASEADDRESS + 16#10#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      wdogfeed : aliased Unsigned_32 with
+         Address              => To_Address (WDT_BASEADDRESS + 16#18#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      wdogkey : aliased Unsigned_32 with
+         Address              => To_Address (WDT_BASEADDRESS + 16#1C#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      wdogcmp0 : aliased wdogcmp_Type with
+         Address              => To_Address (WDT_BASEADDRESS + 16#20#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+   end WDT;
 
    ----------------------------------------------------------------------------
    -- 17 General Purpose Input/Output Controller (GPIO)
    ----------------------------------------------------------------------------
 
-   GPIO_ADDRESS : constant := 16#1001_2000#;
+   package GPIO is
 
-   GPIO_OEN : aliased Bitmap_32 with
-      Address              => To_Address (GPIO_ADDRESS + 16#08#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+      GPIO_BASEADDRESS : constant := 16#1001_2000#;
 
-   GPIO_PORT : aliased Bitmap_32 with
-      Address              => To_Address (GPIO_ADDRESS + 16#0C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+      OEN : aliased Bitmap_32 with
+         Address              => To_Address (GPIO_BASEADDRESS + 16#08#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
 
-   GPIO_IOFEN : aliased Bitmap_32 with
-      Address              => To_Address (GPIO_ADDRESS + 16#38#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+      PORT : aliased Bitmap_32 with
+         Address              => To_Address (GPIO_BASEADDRESS + 16#0C#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
 
-   GPIO_IOFSEL : aliased Bitmap_32 with
-      Address              => To_Address (GPIO_ADDRESS + 16#3C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+      IOFEN : aliased Bitmap_32 with
+         Address              => To_Address (GPIO_BASEADDRESS + 16#38#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      IOFSEL : aliased Bitmap_32 with
+         Address              => To_Address (GPIO_BASEADDRESS + 16#3C#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+   end GPIO;
 
    ----------------------------------------------------------------------------
    -- 18 Universal Asynchronous Receiver/Transmitter (UART)
    ----------------------------------------------------------------------------
 
-   -- 18.4 Transmit Data Register (txdata)
+   package UART is
 
-   type txdata_Type is
-   record
-      txdata   : Unsigned_8;       -- Transmit data
-      Reserved : Bits_23 := 0;
-      full     : Boolean := False; -- Transmit FIFO full (RO)
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for txdata_Type use
-   record
-      txdata   at 0 range 0 .. 7;
-      Reserved at 0 range 8 .. 30;
-      full     at 0 range 31 .. 31;
-   end record;
+      -- 18.4 Transmit Data Register (txdata)
 
-   -- 18.5 Receive Data Register (rxdata)
+      type txdata_Type is
+      record
+         txdata   : Unsigned_8;       -- Transmit data
+         Reserved : Bits_23 := 0;
+         full     : Boolean := False; -- Transmit FIFO full (RO)
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for txdata_Type use
+      record
+         txdata   at 0 range 0 .. 7;
+         Reserved at 0 range 8 .. 30;
+         full     at 0 range 31 .. 31;
+      end record;
 
-   type rxdata_Type is
-   record
-      rxdata   : Unsigned_8;       -- Received data (RO)
-      Reserved : Bits_23 := 0;
-      empty    : Boolean := False; -- Receive FIFO empty (RO)
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for rxdata_Type use
-   record
-      rxdata   at 0 range 0 .. 7;
-      Reserved at 0 range 8 .. 30;
-      empty    at 0 range 31 .. 31;
-   end record;
+      -- 18.5 Receive Data Register (rxdata)
 
-   -- 18.6 Transmit Control Register (txctrl)
+      type rxdata_Type is
+      record
+         rxdata   : Unsigned_8;       -- Received data (RO)
+         Reserved : Bits_23 := 0;
+         empty    : Boolean := False; -- Receive FIFO empty (RO)
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for rxdata_Type use
+      record
+         rxdata   at 0 range 0 .. 7;
+         Reserved at 0 range 8 .. 30;
+         empty    at 0 range 31 .. 31;
+      end record;
 
-   nstop_1 : constant := 0; -- one stop bit
-   nstop_2 : constant := 1; -- two stop bits
+      -- 18.6 Transmit Control Register (txctrl)
 
-   type txctrl_Type is
-   record
-      txen      : Boolean;      -- Transmit enable
-      nstop     : Bits_1;       -- Number of stop bits
-      Reserved1 : Bits_14 := 0;
-      txcnt     : Bits_3;       -- Transmit watermark level
-      Reserved2 : Bits_13 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for txctrl_Type use
-   record
-      txen      at 0 range 0 .. 0;
-      nstop     at 0 range 1 .. 1;
-      Reserved1 at 0 range 2 .. 15;
-      txcnt     at 0 range 16 .. 18;
-      Reserved2 at 0 range 19 .. 31;
-   end record;
+      nstop_1 : constant := 0; -- one stop bit
+      nstop_2 : constant := 1; -- two stop bits
 
-   -- 18.7 Receive Control Register (rxctrl)
+      type txctrl_Type is
+      record
+         txen      : Boolean;      -- Transmit enable
+         nstop     : Bits_1;       -- Number of stop bits
+         Reserved1 : Bits_14 := 0;
+         txcnt     : Bits_3;       -- Transmit watermark level
+         Reserved2 : Bits_13 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for txctrl_Type use
+      record
+         txen      at 0 range 0 .. 0;
+         nstop     at 0 range 1 .. 1;
+         Reserved1 at 0 range 2 .. 15;
+         txcnt     at 0 range 16 .. 18;
+         Reserved2 at 0 range 19 .. 31;
+      end record;
 
-   type rxctrl_Type is
-   record
-      rxen      : Boolean;      -- Receive enable
-      Reserved1 : Bits_15 := 0;
-      rxcnt     : Bits_3;       -- Receive watermark level
-      Reserved2 : Bits_13 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for rxctrl_Type use
-   record
-      rxen      at 0 range 0 .. 0;
-      Reserved1 at 0 range 1 .. 15;
-      rxcnt     at 0 range 16 .. 18;
-      Reserved2 at 0 range 19 .. 31;
-   end record;
+      -- 18.7 Receive Control Register (rxctrl)
 
-   -- 18.8 Interrupt Registers (ip and ie)
+      type rxctrl_Type is
+      record
+         rxen      : Boolean;      -- Receive enable
+         Reserved1 : Bits_15 := 0;
+         rxcnt     : Bits_3;       -- Receive watermark level
+         Reserved2 : Bits_13 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for rxctrl_Type use
+      record
+         rxen      at 0 range 0 .. 0;
+         Reserved1 at 0 range 1 .. 15;
+         rxcnt     at 0 range 16 .. 18;
+         Reserved2 at 0 range 19 .. 31;
+      end record;
 
-   type ie_Type is
-   record
-      txwm     : Boolean;      -- Transmit watermark interrupt enable
-      rxwm     : Boolean;      -- Receive watermark interrupt enable
-      Reserved : Bits_30 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for ie_Type use
-   record
-      txwm     at 0 range 0 .. 0;
-      rxwm     at 0 range 1 .. 1;
-      Reserved at 0 range 2 .. 31;
-   end record;
+      -- 18.8 Interrupt Registers (ip and ie)
 
-   type ip_Type is
-   record
-      txwm     : Boolean;      -- Transmit watermark interrupt pending
-      rxwm     : Boolean;      -- Receive watermark interrupt pending
-      Reserved : Bits_30 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for ip_Type use
-   record
-      txwm     at 0 range 0 .. 0;
-      rxwm     at 0 range 1 .. 1;
-      Reserved at 0 range 2 .. 31;
-   end record;
+      type ie_Type is
+      record
+         txwm     : Boolean;      -- Transmit watermark interrupt enable
+         rxwm     : Boolean;      -- Receive watermark interrupt enable
+         Reserved : Bits_30 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for ie_Type use
+      record
+         txwm     at 0 range 0 .. 0;
+         rxwm     at 0 range 1 .. 1;
+         Reserved at 0 range 2 .. 31;
+      end record;
 
-   -- 18.9 Baud Rate Divisor Register (div)
+      type ip_Type is
+      record
+         txwm     : Boolean;      -- Transmit watermark interrupt pending
+         rxwm     : Boolean;      -- Receive watermark interrupt pending
+         Reserved : Bits_30 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for ip_Type use
+      record
+         txwm     at 0 range 0 .. 0;
+         rxwm     at 0 range 1 .. 1;
+         Reserved at 0 range 2 .. 31;
+      end record;
 
-   type div_Type is
-   record
-      div      : Unsigned_16;  -- Baud rate divisor.
-      Reserved : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for div_Type use
-   record
-      div      at 0 range 0 .. 15;
-      Reserved at 0 range 16 .. 31;
-   end record;
+      -- 18.9 Baud Rate Divisor Register (div)
 
-   -- 18.3 Memory Map
+      type div_Type is
+      record
+         div      : Unsigned_16;  -- Baud rate divisor.
+         Reserved : Bits_16 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for div_Type use
+      record
+         div      at 0 range 0 .. 15;
+         Reserved at 0 range 16 .. 31;
+      end record;
 
-   type UART_Type is
-   record
-      txdata : txdata_Type with Volatile_Full_Access => True;
-      rxdata : rxdata_Type with Volatile_Full_Access => True;
-      txctrl : txctrl_Type with Volatile_Full_Access => True;
-      rxctrl : rxctrl_Type with Volatile_Full_Access => True;
-      ie     : ie_Type     with Volatile_Full_Access => True;
-      ip     : ip_Type     with Volatile_Full_Access => True;
-      div    : div_Type    with Volatile_Full_Access => True;
-   end record with
-      Size => 7 * 32;
-   for UART_Type use
-   record
-      txdata at 16#00# range 0 .. 31;
-      rxdata at 16#04# range 0 .. 31;
-      txctrl at 16#08# range 0 .. 31;
-      rxctrl at 16#0C# range 0 .. 31;
-      ie     at 16#10# range 0 .. 31;
-      ip     at 16#14# range 0 .. 31;
-      div    at 16#18# range 0 .. 31;
-   end record;
+      -- 18.3 Memory Map
 
-   UART0_BASEADDRESS : constant := 16#1001_3000#;
+      type UART_Type is
+      record
+         txdata : txdata_Type with Volatile_Full_Access => True;
+         rxdata : rxdata_Type with Volatile_Full_Access => True;
+         txctrl : txctrl_Type with Volatile_Full_Access => True;
+         rxctrl : rxctrl_Type with Volatile_Full_Access => True;
+         ie     : ie_Type     with Volatile_Full_Access => True;
+         ip     : ip_Type     with Volatile_Full_Access => True;
+         div    : div_Type    with Volatile_Full_Access => True;
+      end record with
+         Size => 7 * 32;
+      for UART_Type use
+      record
+         txdata at 16#00# range 0 .. 31;
+         rxdata at 16#04# range 0 .. 31;
+         txctrl at 16#08# range 0 .. 31;
+         rxctrl at 16#0C# range 0 .. 31;
+         ie     at 16#10# range 0 .. 31;
+         ip     at 16#14# range 0 .. 31;
+         div    at 16#18# range 0 .. 31;
+      end record;
 
-   UART0 : aliased UART_Type with
-      Address    => To_Address (UART0_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      UART0_BASEADDRESS : constant := 16#1001_3000#;
 
-   UART1_BASEADDRESS : constant := 16#1002_3000#;
+      UART0 : aliased UART_Type with
+         Address    => To_Address (UART0_BASEADDRESS),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
 
-   UART1 : aliased UART_Type with
-      Address    => To_Address (UART1_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      UART1_BASEADDRESS : constant := 16#1002_3000#;
+
+      UART1 : aliased UART_Type with
+         Address    => To_Address (UART1_BASEADDRESS),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+   end UART;
+
+   ----------------------------------------------------------------------------
+   -- 19 Serial Peripheral Interface (SPI)
+   ----------------------------------------------------------------------------
+
+   package SPI is
+
+      -- 19.4 Serial Clock Divisor Register (sckdiv)
+
+      -- sample values, range is div2 .. div8192 in even steps
+      sckdiv_div2  : constant := 0;
+      sckdiv_div4  : constant := 1;
+      sckdiv_div6  : constant := 2;
+      sckdiv_div8  : constant := 3;
+      sckdiv_div10 : constant := 4;
+
+      type sckdiv_Type is
+      record
+         div      : Bits_12 := 16#03#;
+         Reserved : Bits_20 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for sckdiv_Type use
+      record
+         div      at 0 range 0 .. 11;
+         Reserved at 0 range 12 .. 31;
+      end record;
+
+      -- 19.5 Serial Clock Mode Register (sckmode)
+
+      pha_SALSHT : constant := 0; -- Data is sampled on the leading edge of SCK and shifted on the trailing edge of SCK
+      pha_SHLSAT : constant := 1; -- Data is shifted on the leading edge of SCK and sampled on the trailing edge of SCK
+
+      pol_INACTIVE0 : constant := 0; -- Inactive state of SCK is logical 0
+      pol_INACTIVE1 : constant := 1; -- Inactive state of SCK is logical 1
+
+      type sckmode_Type is
+      record
+         pha      : Bits_1 := 0; -- Serial clock phase
+         pol      : Bits_1 := 0; -- Serial clock polarity
+         Reserved : Bits_30 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for sckmode_Type use
+      record
+         pha      at 0 range 0 .. 0;
+         pol      at 0 range 1 .. 1;
+         Reserved at 0 range 2 .. 31;
+      end record;
+
+      -- 19.8 Chip Select Mode Register (csmode)
+
+      mode_AUTO : constant := 2#00#; -- Assert/deassert CS at the beginning/end of each frame
+      mode_HOLD : constant := 2#10#; -- Keep CS continuously asserted after the initial frame
+      mode_OFF  : constant := 2#11#; -- Disable hardware control of the CS pin
+
+      type csmode_Type is
+      record
+         mode     : Bits_2 := 0;  -- Chip select mode
+         Reserved : Bits_30 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for csmode_Type use
+      record
+         mode     at 0 range 0 .. 1;
+         Reserved at 0 range 2 .. 31;
+      end record;
+
+      -- 19.9 Delay Control Registers (delay0 and delay1)
+
+      type delay0_Type is
+      record
+         cssck     : Unsigned_8 := 1; -- CS to SCK Delay
+         Reserved1 : Bits_8 := 0;
+         sckcs     : Unsigned_8 := 1; -- SCK to CS Delay
+         Reserved2 : Bits_8 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for delay0_Type use
+      record
+         cssck     at 0 range 0 .. 7;
+         Reserved1 at 0 range 8 .. 15;
+         sckcs     at 0 range 16 .. 23;
+         Reserved2 at 0 range 24 .. 31;
+      end record;
+
+      type delay1_Type is
+      record
+         intercs   : Unsigned_8 := 1; -- Minimum CS inactive time
+         Reserved1 : Bits_8 := 0;
+         interxfr  : Unsigned_8 := 0; -- Maximum interframe delay
+         Reserved2 : Bits_8 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for delay1_Type use
+      record
+         intercs   at 0 range 0 .. 7;
+         Reserved1 at 0 range 8 .. 15;
+         interxfr  at 0 range 16 .. 23;
+         Reserved2 at 0 range 24 .. 31;
+      end record;
+
+      -- 19.10 Frame Format Register (fmt)
+
+      proto_SINGLE : constant := 2#00#; -- DQ0 (MOSI), DQ1 (MISO)
+      proto_DUAL   : constant := 2#01#; -- DQ0, DQ1
+      proto_QUAD   : constant := 2#10#; -- DQ0, DQ1, DQ2, DQ3
+
+      endian_MSB : constant := 0; -- Transmit most-significant bit (MSB) first
+      endian_LSB : constant := 1; -- Transmit least-significant bit (LSB) first
+
+      dir_RX : constant := 0; -- dual, quad -> DQ tri-stated. single -> DQ0 transmit data.
+      dir_TX : constant := 1; -- The receive FIFO is not populated.
+
+      type fmt_Type is
+      record
+         proto     : Bits_2 := 0;  -- SPI protocol
+         endian    : Bits_1 := 0;  -- SPI endianness
+         dir       : Bits_1 := 0;  -- SPI I/O direction. This is reset to 1 for flash-enabled SPI controllers, 0 otherwise.
+         Reserved1 : Bits_12 := 0;
+         len       : Bits_4 := 8;  -- Number of bits per frame
+         Reserved2 : Bits_12 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for fmt_Type use
+      record
+         proto     at 0 range 0 .. 1;
+         endian    at 0 range 2 .. 2;
+         dir       at 0 range 3 .. 3;
+         Reserved1 at 0 range 4 .. 15;
+         len       at 0 range 16 .. 19;
+         Reserved2 at 0 range 20 .. 31;
+      end record;
+
+      -- 19.11 Transmit Data Register (txdata)
+
+      type txdata_Type is
+      record
+         txdata   : Unsigned_8;       -- Transmit data
+         Reserved : Bits_23 := 0;
+         full     : Boolean := False; -- FIFO full flag (RO)
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for txdata_Type use
+      record
+         txdata   at 0 range 0 .. 7;
+         Reserved at 0 range 8 .. 30;
+         full     at 0 range 31 .. 31;
+      end record;
+
+      -- 19.12 Receive Data Register (rxdata)
+
+      type rxdata_Type is
+      record
+         rxdata   : Unsigned_8;       -- Received data (RO)
+         Reserved : Bits_23 := 0;
+         empty    : Boolean := False; -- FIFO empty flag (RO)
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for rxdata_Type use
+      record
+         rxdata   at 0 range 0 .. 7;
+         Reserved at 0 range 8 .. 30;
+         empty    at 0 range 31 .. 31;
+      end record;
+
+   end SPI;
 
 end HiFive1;
