@@ -976,16 +976,23 @@ builder you want to configure (maybe all of them) and then &quot;Edit...&quot;.
 
 <p>SweetAda can be used inside GPS, once configured. By opening the sweetada.gpr file you
 can work inside the IDE and use its functionalities. Note that GPS has an GNATMAKE
-executable without the toolchain prefix, and so you have to set USE_UNPREFIXED_GNATMAKE
-in your configuration.in before using it.
+executable without the toolchain prefix, and so eventually you have to set the variable
+USE_UNPREFIXED_GNATMAKE :=Y in your configuration.in before using it.
 </p>
+<table class="cartouche" border="1"><tr><td>
+<p>NOTE:<br>
+SweetAda must be configured before being opened in GPS, i.e., the configure.gpr file
+must exist after a &quot;make configure&quot; action.
+</p></td></tr></table>
+
 </div>
 <div class="section" id="KDE-Kate">
 <h3 class="section">13.3 KDE Kate</h3>
 <span id="index-Kate-IDE-integration"></span>
 
-<p>SweetAda provides a Kate project configuration file, named .kateproject. Just open a file
-in the SweetAda filesystem and the Kate editor will open automatically the project outline.
+<p>SweetAda provides a Kate project configuration file, named .kateproject. Just open
+whichever file in the SweetAda hierarchy and the Kate editor will open automatically
+the whole project outline.
 </p>
 <hr>
 </div>
