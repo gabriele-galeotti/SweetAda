@@ -73,7 +73,7 @@ package body BSP is
       UART_Descriptor.Base_Address  := To_Address (GEMI.UART_BASEADDRESS);
       UART_Descriptor.Scale_Address := 4;
       UART_Descriptor.Baud_Clock    := CLK_UART7M3; -- board #1
-      -- UART_Descriptor.Baud_Clock    := 16 * MHz;    -- board #2
+      -- UART_Descriptor.Baud_Clock    := 16 * MHz1;   -- board #2
       UART_Descriptor.Read_8        := MMIO.Read'Access;
       UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART_Descriptor.Data_Queue    := [[others => 0], 0, 0, 0];

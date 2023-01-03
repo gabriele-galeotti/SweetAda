@@ -63,9 +63,9 @@ package Definitions is
    GB4    : constant := 2**32;
 
    -- various constants
-   kHz : constant := 1_000;
-   MHz : constant := 1_000 * kHz;
-   GHz : constant := 1_000 * MHz;
+   kHz1 : constant := 1_000;
+   MHz1 : constant := 1_000 * kHz1;
+   GHz1 : constant := 1_000 * MHz1;
 
    -- common known clock rates in Hz
    CLK_RTC32k  : constant :=     32_768;

@@ -71,7 +71,7 @@ package body BSP is
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
-      System_Clock : constant := 250 * MHz;
+      System_Clock : constant := 250 * MHz1;
       Baud_Rate    : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
       -------------------------------------------------------------------------
