@@ -924,9 +924,15 @@ Next: <a href="#Building-SweetAda" accesskey="n" rel="next">Building SweetAda</a
 <span id="Integration-in-an-IDE-1"></span><h2 class="chapter">13 Integration in an IDE</h2>
 <span id="index-IDE-integration"></span>
 
-<p>KDE Kate
-GNATstudio
-Eclipse
+<p>GNAT Programming Studio<br>
+SweetAda can be used inside GPS, once configured. By opening the sweetada.gpr file you
+can work inside the IDE and use its functionalities. Note that GPS has an GNATMAKE
+executable without the toolchain prefix, and so you have to set USE_UNPREFIXED_GNATMAKE
+in your configuration.in before using it.
+</p>
+<p>KDE Kate<br>
+SweetAda provides a Kate project configuration file, named .kateproject. Just open a file
+in the SweetAda filesystem and the Kate editor will open automatically the project outline.
 </p>
 <hr>
 </div>
