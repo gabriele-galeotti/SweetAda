@@ -52,7 +52,7 @@ package body UARTIOEMU is
    record
       RXIRQENABLE : Boolean;
       TXIRQENABLE : Boolean;
-      Unused      : Bits_6;
+      Unused      : Bits_6 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -72,7 +72,7 @@ package body UARTIOEMU is
    record
       RXREADY : Boolean;
       TXEMPTY : Boolean;
-      Unused  : Bits_6;
+      Unused  : Bits_6 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;

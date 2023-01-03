@@ -47,18 +47,18 @@ package XPS is
 
    type XPS_Timer_CSR_Type is
    record
-      Reserved : Bits_21;
-      ENALL    : Boolean; -- Enable All Timers
-      PWMA0    : Boolean; -- Enable Pulse Width Modulation for Timer0
-      T0INT    : Boolean; -- Timer0 Interrupt
-      ENT0     : Boolean; -- Enable Timer0
-      ENIT0    : Boolean; -- Enable Interrupt for Timer0
-      LOAD0    : Boolean; -- Load Timer0
-      ARHT0    : Boolean; -- Auto Reload/Hold Timer0
-      CAPT0    : Boolean; -- Enable External Capture Trigger Timer0
-      GENT0    : Boolean; -- Enable External Generate Signal Timer0
-      UDT0     : Bits_1;  -- Up/Down Count Timer0
-      MDT0     : Bits_1;  -- Timer0 Mode
+      Reserved : Bits_21 := 0;
+      ENALL    : Boolean;      -- Enable All Timers
+      PWMA0    : Boolean;      -- Enable Pulse Width Modulation for Timer0
+      T0INT    : Boolean;      -- Timer0 Interrupt
+      ENT0     : Boolean;      -- Enable Timer0
+      ENIT0    : Boolean;      -- Enable Interrupt for Timer0
+      LOAD0    : Boolean;      -- Load Timer0
+      ARHT0    : Boolean;      -- Auto Reload/Hold Timer0
+      CAPT0    : Boolean;      -- Enable External Capture Trigger Timer0
+      GENT0    : Boolean;      -- Enable External Generate Signal Timer0
+      UDT0     : Bits_1;       -- Up/Down Count Timer0
+      MDT0     : Bits_1;       -- Timer0 Mode
    end record with
       Bit_Order => High_Order_First,
       Size      => 32;
@@ -100,9 +100,9 @@ package XPS is
 
    type XPS_INTC_MER_Type is
    record
-      Reserved : Bits_30;
-      HIE      : Boolean; -- Hardware Interrupt Enable
-      ME       : Boolean; -- Master IRQ Enable
+      Reserved : Bits_30 := 0;
+      HIE      : Boolean;      -- Hardware Interrupt Enable
+      ME       : Boolean;      -- Master IRQ Enable
    end record with
       Bit_Order => High_Order_First,
       Size      => 32;
