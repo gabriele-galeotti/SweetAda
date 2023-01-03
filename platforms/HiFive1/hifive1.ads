@@ -608,8 +608,8 @@ package HiFive1 is
 
       type sckmode_Type is
       record
-         pha      : Bits_1 := 0; -- Serial clock phase
-         pol      : Bits_1 := 0; -- Serial clock polarity
+         pha      : Bits_1 := 0;  -- Serial clock phase
+         pol      : Bits_1 := 0;  -- Serial clock polarity
          Reserved : Bits_30 := 0;
       end record with
          Bit_Order => Low_Order_First,
