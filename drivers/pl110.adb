@@ -15,8 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
-
 package body PL110 is
 
    --========================================================================--
@@ -27,8 +25,6 @@ package body PL110 is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
-
    ----------------------------------------------------------------------------
    -- RGB565 encoding
    ----------------------------------------------------------------------------
@@ -38,19 +34,6 @@ package body PL110 is
    subtype B_Type is Natural range 0 .. 2**5 - 1;
 
    function RGB565 (R : R_Type; G : G_Type; B : B_Type) return Unsigned_16;
-
-   ----------------------------------------------------------------------------
-   -- Framebuffer
-   ----------------------------------------------------------------------------
-
-   -- __FIX__ hardwired
-   FRAMEBUFFER_BASEADDRESS : constant := 16#0020_0000#;
-
-   Framebuffer : aliased U16_Array (0 .. VIDEO_WIDTH * VIDEO_HEIGHT - 1) with
-      Address    => To_Address (FRAMEBUFFER_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
 
    --========================================================================--
    --                                                                        --

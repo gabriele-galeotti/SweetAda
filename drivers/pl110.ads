@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with Videofont8x16;
@@ -31,6 +32,7 @@ package PL110 is
    --========================================================================--
 
    use System;
+   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -40,7 +42,7 @@ package PL110 is
 
    type LCDTiming0_Type is
    record
-      Reserved : Bits_2;
+      Reserved : Bits_2 := 0;
       PPL      : Natural range 0 .. 2**6 - 1;
       HSW      : Natural range 0 .. 2**8 - 1;
       HFP      : Natural range 0 .. 2**8 - 1;
@@ -113,7 +115,7 @@ package PL110 is
       Reserved1   : Bits_1;
       LDmaFIFOTME : Bits_1;
       WATERMARK   : Bits_1;
-      Reserved2   : Bits_15;
+      Reserved2   : Bits_15 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -164,8 +166,24 @@ package PL110 is
       LCDInterrupt  at 16#24# range 0 .. 31;
    end record;
 
+   ----------------------------------------------------------------------------
+   -- Framebuffer & video parameters
+   ----------------------------------------------------------------------------
+
    VIDEO_WIDTH  : constant := 640;
    VIDEO_HEIGHT : constant := 480;
+
+   FRAMEBUFFER_BASEADDRESS : constant := 16#0020_0000#;
+
+   Framebuffer : aliased U16_Array (0 .. VIDEO_WIDTH * VIDEO_HEIGHT - 1) with
+      Address    => To_Address (FRAMEBUFFER_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Interface
+   ----------------------------------------------------------------------------
 
    subtype Video_X_Coordinate_Type is Natural range 0 .. VIDEO_WIDTH / Videofont8x16.Font_Width - 1;
    subtype Video_Y_Coordinate_Type is Natural range 0 .. VIDEO_HEIGHT / Videofont8x16.Font_Height - 1;
