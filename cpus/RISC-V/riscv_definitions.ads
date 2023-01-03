@@ -28,9 +28,10 @@ package RISCV_Definitions is
    pragma Pure;
 
    ----------------------------------------------------------------------------
-   -- Timer CSRs
+   -- CLIC/CLINT control registers
    ----------------------------------------------------------------------------
 
+   MSIP_ADDRESS     : constant := 16#0200_0000#;
    MTIMECMP_ADDRESS : constant := 16#0200_4000#;
    MTIME_ADDRESS    : constant := 16#0200_BFF8#;
 

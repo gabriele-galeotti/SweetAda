@@ -19,6 +19,7 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
+with RISCV_Definitions;
 with MTime_MTimeCmp;
 
 package RISCV is
@@ -37,6 +38,7 @@ package RISCV is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
+   use RISCV_Definitions;
    use MTime_MTimeCmp;
 
    -- Machine Status (mstatus)
@@ -114,8 +116,14 @@ package RISCV is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Timer CSRs
+   -- CLIC/CLINT
    ----------------------------------------------------------------------------
+
+   MSIP : aliased Unsigned_32 with
+      Address              => To_Address (MSIP_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    function MTIME_Read return Unsigned_64            renames MTime_MTimeCmp.MTIME_Read;
    procedure MTIMECMP_Write (Value : in Unsigned_64) renames MTime_MTimeCmp.MTIMECMP_Write;
