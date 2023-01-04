@@ -75,14 +75,21 @@ if {[lindex $argv 0] eq "-shutdown"} {
     exit 0
 }
 
+if {[catch {exec $ELFTOOL -c findsymbol=$START_SYMBOL $KERNEL_OUTFILE} result] eq 0} {
+    set START_ADDRESS [format "0x%08X" $result]
+} else {
+    puts stderr "$SCRIPT_FILENAME: *** Error: no symbol $START_SYMBOL or no $KERNEL_OUTFILE file available."
+    openocd_rpc_disconnect
+    exit 1
+}
+
 # 1) restart on-board firmware, hard reset (needs complete re-initialization)
 #reset init
 #resume 0
-
 # 2) download SweetAda, avoid resetting RAM
 #soft_reset_halt
-#load_image /root/project/sweetada/kernel.o
-#verify_image /root/project/sweetada/kernel.o 0
+#load_image .../kernel.o
+#verify_image .../kernel.o 0
 #resume 0
 
 openocd_rpc_tx "soft_reset_halt"
