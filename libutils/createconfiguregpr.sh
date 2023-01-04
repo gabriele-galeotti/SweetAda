@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # Create "configure.gpr" GNATMAKE project file.
@@ -38,7 +38,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
@@ -84,7 +83,7 @@ print_I()
 local _is
 local _il
 _is=""
-for ((_il=1 ; _il<=${INDENTATION_LEVEL} ; _il++)) ; do
+for ((_il=1 ; _il<=INDENTATION_LEVEL ; _il++)) ; do
   # Ada 3-space indentation style
   _is+="   "
 done
@@ -141,7 +140,7 @@ print_V
 # Declare project.
 #
 print_I "project ${CONFIGURE_PROJECT} is"
-let INDENTATION_LEVEL++
+((INDENTATION_LEVEL++))
 print_V
 
 #
@@ -160,7 +159,7 @@ print_I "ADAC_Switches_RTS     := ("
 ADAC_SWITCHES_RTS_ARRAY=(${ADAC_SWITCHES_RTS})
 imax=$((${#ADAC_SWITCHES_RTS_ARRAY[@]}-1))
 if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
+  for i in $(seq 0 $((imax))) ; do
     s="\"${ADAC_SWITCHES_RTS_ARRAY[$i]}\""
     if [ "${i}" -ne "${imax}" ] ; then
       s+=","
@@ -173,7 +172,7 @@ print_I "GCC_Platform_Switches := ("
 GCC_SWITCHES_PLATFORM_ARRAY=(${GCC_SWITCHES_PLATFORM})
 imax=$((${#GCC_SWITCHES_PLATFORM_ARRAY[@]}-1))
 if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
+  for i in $(seq 0 $((imax))) ; do
     s="\"${GCC_SWITCHES_PLATFORM_ARRAY[$i]}\""
     if [ "${i}" -ne "${imax}" ] ; then
       s+=","
@@ -186,7 +185,7 @@ print_I "Include_Directories   := ("
 INCLUDE_DIRECTORIES_ARRAY=(${INCLUDE_DIRECTORIES})
 imax=$((${#INCLUDE_DIRECTORIES_ARRAY[@]}-1))
 if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
+  for i in $(seq 0 $((imax))) ; do
     s="\"${INCLUDE_DIRECTORIES_ARRAY[$i]}\""
     if [ "${i}" -ne "${imax}" ] ; then
       s+=","
@@ -199,7 +198,7 @@ print_I "Implicit_ALI_Units    := ("
 IMPLICIT_ALI_UNITS_ARRAY=(${IMPLICIT_ALI_UNITS})
 imax=$((${#IMPLICIT_ALI_UNITS_ARRAY[@]}-1))
 if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
+  for i in $(seq 0 $((imax))) ; do
     s="\"${IMPLICIT_ALI_UNITS_ARRAY[$i]}\""
     if [ "${i}" -ne "${imax}" ] ; then
       s+=","
@@ -212,7 +211,7 @@ print_I "ADAC_Switches_Warning := ("
 ADAC_SWITCHES_WARNING_ARRAY=(${ADAC_SWITCHES_WARNING})
 imax=$((${#ADAC_SWITCHES_WARNING_ARRAY[@]}-1))
 if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
+  for i in $(seq 0 $((imax))) ; do
     s="\"${ADAC_SWITCHES_WARNING_ARRAY[$i]}\""
     if [ "${i}" -ne "${imax}" ] ; then
       s+=","
@@ -225,7 +224,7 @@ print_I "ADAC_Switches_Style   := ("
 ADAC_SWITCHES_STYLE_ARRAY=(${ADAC_SWITCHES_STYLE})
 imax=$((${#ADAC_SWITCHES_STYLE_ARRAY[@]}-1))
 if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
+  for i in $(seq 0 $((imax))) ; do
     s="\"${ADAC_SWITCHES_STYLE_ARRAY[$i]}\""
     if [ "${i}" -ne "${imax}" ] ; then
       s+=","
@@ -241,7 +240,7 @@ print_V
 #
 # Close project.
 #
-let INDENTATION_LEVEL--
+((INDENTATION_LEVEL--))
 print_I "end ${CONFIGURE_PROJECT};"
 
 log_print "${SCRIPT_FILENAME}: ${CONFIGURE_FILENAME}: done."

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # Create a filesystem symbolic/soft link.
@@ -28,7 +28,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then

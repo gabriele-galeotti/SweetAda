@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # Pad a file.
@@ -23,7 +23,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
@@ -79,9 +78,9 @@ fi
 log_print "${SCRIPT_FILENAME}: padding file \"$1\"."
 
 if [ "x${OSTYPE}" = "xdarwin" ] ; then
-  FILESIZE=$(stat -f "%z" $1 2> /dev/null)
+  FILESIZE=$(stat -f "%z" "$1" 2> /dev/null)
 else
-  FILESIZE=$(stat -c "%s" $1 2> /dev/null)
+  FILESIZE=$(stat -c "%s" "$1" 2> /dev/null)
 fi
 
 #
@@ -101,25 +100,25 @@ $1 ~ /^[0-9]+[k|K]?$/               \
         printf "%d\n", n            \
 }                                   \
 '
-REQUESTEDSIZE=$(printf "%s\n" $2 | awk "${AWK_SCRIPT_FUNCTION}")
+REQUESTEDSIZE=$(printf "%s\n" "$2" | awk "${AWK_SCRIPT_FUNCTION}")
 
 #
 # If the supplied file length is less than the current file size, it is
 # taken as a "modulo".
 #
-if [ ${REQUESTEDSIZE} -lt ${FILESIZE} ] ; then
+if [ "${REQUESTEDSIZE}" -lt "${FILESIZE}" ] ; then
   MODULOREM=$(printf "%s\n" "${FILESIZE}%${REQUESTEDSIZE}" | bc)
-  if [ ${MODULOREM} -gt 0 ] ; then
-    PADCOUNT=$(($2-${MODULOREM}))
+  if [ "${MODULOREM}" -gt 0 ] ; then
+    PADCOUNT=$(($2-MODULOREM))
   else
     PADCOUNT=0
   fi
 else
-  PADCOUNT=$((${REQUESTEDSIZE}-${FILESIZE}))
+  PADCOUNT=$((REQUESTEDSIZE-FILESIZE))
 fi
 
 if [ ${PADCOUNT} -gt 0 ] ; then
-  dd if=/dev/zero ibs=1 count="${PADCOUNT}" >> $1 2> /dev/null
+  dd if=/dev/zero ibs=1 count="${PADCOUNT}" >> "$1" 2> /dev/null
   if [ $? -ne 0 ] ; then
     log_print_error "${SCRIPT_FILENAME}: *** Error: dd."
     exit 1

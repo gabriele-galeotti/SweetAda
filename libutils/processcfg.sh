@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # Process a configuration template file.
@@ -23,7 +23,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
@@ -93,7 +92,7 @@ fi
 if [ "x${SYMBOLS}" != "x" ] ; then
   sed_command_string=()
   for symbol in ${SYMBOLS} ; do
-    variable=$(echo ${symbol} | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|")
+    variable=$(echo "${symbol}" | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|")
     value="${!variable}"
     if [ "x${value}" = "x" ] ; then
       log_print_error "${SCRIPT_FILENAME}: *** Warning: variable \"${variable}\" has no value."

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # Patch a file.
@@ -27,7 +27,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
@@ -84,14 +83,14 @@ if [ "x$3" = "x" ] ; then
   exit 1
 fi
 
-OFFSET=$(echo $((16#$2)))
+OFFSET=$((16#$2))
 
 BYTES_STRING=""
 for BYTE in $3 ; do
   BYTES_STRING+="\x${BYTE}"
 done
 
-printf "${BYTES_STRING}" | dd of="$1" bs=1 seek=${OFFSET} conv=notrunc 2> /dev/null
+printf "%s" "${BYTES_STRING}" | dd of="$1" bs=1 seek="${OFFSET}" conv=notrunc 2> /dev/null
 if [ ${PIPESTATUS[1]} -ne 0 ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: dd."
   exit 1

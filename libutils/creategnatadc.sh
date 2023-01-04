@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # Create "gnat.adc" file.
@@ -23,7 +23,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
@@ -93,7 +92,7 @@ while IFS= read -r textline ; do
   if [ "x${textline_woc}" != "x" ] ; then
     pragma=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*;\)\(.*\)|\1|")
     profiles=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*--\)\(.*\)|\2|")
-    printf "%s" "${profiles}" | grep -q -w ${PROFILE} 2> /dev/null
+    printf "%s" "${profiles}" | grep -q -w "${PROFILE}" 2> /dev/null
     [ ${PIPESTATUS[1]} -eq 0 ] && printf "%s\n" "${pragma}" >> "${GNATADC_FILENAME}"
   fi
 done < "${GNATADC_FILENAME}.in"
