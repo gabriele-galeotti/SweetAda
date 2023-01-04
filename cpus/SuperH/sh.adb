@@ -31,7 +31,6 @@ package body SH is
 
    use System;
    use System.Machine_Code;
-   use Bits;
 
    CRLF : String renames Definitions.CRLF;
 
