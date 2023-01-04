@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 #
 # SweetAda configuration and Makefile front-end.
@@ -25,7 +25,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
@@ -214,20 +213,20 @@ case $1 in
     ;;
   "all")
     rm -f make.log make.errors.log
-    "${MAKE}" all 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    ("${MAKE}" all 2> make.errors.log | tee make.log)
+    exit_status=$?
     log_build_errors
     ;;
   "kernel")
     rm -f make.log make.errors.log
-    "${MAKE}" kernel 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    ("${MAKE}" kernel 2> make.errors.log | tee make.log)
+    exit_status=$?
     log_build_errors
     ;;
   "postbuild")
     rm -f make.log make.errors.log
-    "${MAKE}" postbuild 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    ("${MAKE}" postbuild 2> make.errors.log | tee make.log)
+    exit_status=$?
     log_build_errors
     ;;
   "session-start")
@@ -256,8 +255,8 @@ case $1 in
     ;;
   "rts")
     rm -f make.log make.errors.log
-    "${MAKE}" rts 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    ("${MAKE}" rts 2> make.errors.log | tee make.log)
+    exit_status=$?
     log_build_errors
     ;;
   *)

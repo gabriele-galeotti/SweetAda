@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 #
 # Create "gnat.adc" file.
@@ -92,8 +92,10 @@ while IFS= read -r textline ; do
   if [ "x${textline_woc}" != "x" ] ; then
     pragma=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*;\)\(.*\)|\1|")
     profiles=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*--\)\(.*\)|\2|")
-    printf "%s" "${profiles}" | grep -q -w "${PROFILE}" 2> /dev/null
-    [ ${PIPESTATUS[1]} -eq 0 ] && printf "%s\n" "${pragma}" >> "${GNATADC_FILENAME}"
+    profile_check=$(printf "%s" "${profiles}" | grep -c -w "${PROFILE}" 2> /dev/null)
+    if [ "x${profile_check}" != "x0" ] ; then
+      printf "%s\n" "${pragma}" >> "${GNATADC_FILENAME}"
+    fi
   fi
 done < "${GNATADC_FILENAME}.in"
 

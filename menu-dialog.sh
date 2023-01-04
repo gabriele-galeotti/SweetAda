@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 #
 # SweetAda configuration and Makefile front-end (dialog version).
@@ -27,7 +27,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
@@ -97,9 +96,9 @@ _nitems=0
 _dialog_height=50
 _dialog_width=64
 for _s in $2 ; do
-  #                       tag       item status
-  _dialog_items_string+=" \"${_s}\" \"\" off"
-  let _nitems++
+  #                                             tag       item status
+  _dialog_items_string="${_dialog_items_string} \"${_s}\" \"\" off"
+  _nitems=$((_nitems+1))
 done
 _dialog_result=$(printf "%s\n" "${_dialog_items_string}" | xargs \
   dialog              \
@@ -209,20 +208,20 @@ case $1 in
     ;;
   "all")
     rm -f make.log make.errors.log
-    "${MAKE}" all 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    ("${MAKE}" all 2> make.errors.log | tee make.log)
+    exit_status=$?
     log_build_errors
     ;;
   "kernel")
     rm -f make.log make.errors.log
-    "${MAKE}" kernel 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    ("${MAKE}" kernel 2> make.errors.log | tee make.log)
+    exit_status=$?
     log_build_errors
     ;;
   "postbuild")
     rm -f make.log make.errors.log
-    "${MAKE}" postbuild 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    ("${MAKE}" postbuild 2> make.errors.log | tee make.log)
+    exit_status=$?
     log_build_errors
     ;;
   "session-start")
@@ -251,8 +250,8 @@ case $1 in
     ;;
   "rts")
     rm -f make.log make.errors.log
-    "${MAKE}" rts 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    ("${MAKE}" rts 2> make.errors.log | tee make.log)
+    exit_status=$?
     log_build_errors
     ;;
   *)
@@ -297,7 +296,7 @@ return 0
 # Some ancient versions of dialog do not have this option.
 #
 DIALOG_VERSION=$(dialog --version | sed -e "s|Version: \([0-9]*[.]*\)*-||")
-if [ $((${DIALOG_VERSION})) -ge 20201126 ] ; then
+if [ $((DIALOG_VERSION)) -ge 20201126 ] ; then
   ERASE_ON_EXIT="--erase-on-exit"
 else
   ERASE_ON_EXIT=""
@@ -336,17 +335,14 @@ ACTIONS="createkernelcfg configure all kernel postbuild session-start session-en
 ACTION=""
 PAUSE=""
 
-MAKE_DEBUG_OPTIONS=""
-#MAKE_DEBUG_OPTIONS="--debug=b" # basic
-
 #
 # Parse command line arguments.
 #
 token_seen=N
 while [ $# -gt 0 ] ; do
-  if [ "x${1:0:1}" = "x-" ] ; then
+  if [ "x${1%${1#?}}" = "x-" ] ; then
     # "-" option
-    argument=${1:1}
+    argument=${1#?}
     case ${argument} in
       "h")
         usage ; exit $?
@@ -385,7 +381,7 @@ if [ "x${ACTION}" = "x" ] ; then
     action_execute ${RESULT}
     exit_status=$?
     if [ ${exit_status} -eq 0 ] ; then
-      read -p "Press <ENTER> to continue: "
+      read -p "Press <ENTER> to continue: " answer
     else
       break
     fi
@@ -394,7 +390,7 @@ else
   action_execute ${ACTION}
   exit_status=$?
   if [ "x${PAUSE}" = "xY" ] ; then
-    read -p "Press <ENTER> to continue: "
+    read -p "Press <ENTER> to continue: " answer
   fi
 fi
 

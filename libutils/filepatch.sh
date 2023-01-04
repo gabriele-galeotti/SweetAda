@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 #
 # Patch a file.
@@ -87,11 +87,11 @@ OFFSET=$((16#$2))
 
 BYTES_STRING=""
 for BYTE in $3 ; do
-  BYTES_STRING+="\x${BYTE}"
+  BYTES_STRING="${BYTES_STRING}\x${BYTE}"
 done
 
-printf "%s" "${BYTES_STRING}" | dd of="$1" bs=1 seek="${OFFSET}" conv=notrunc 2> /dev/null
-if [ ${PIPESTATUS[1]} -ne 0 ] ; then
+(printf "%s" "${BYTES_STRING}" | dd of="$1" bs=1 seek="${OFFSET}" conv=notrunc 2> /dev/null)
+if [ $? -ne 0 ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: dd."
   exit 1
 fi

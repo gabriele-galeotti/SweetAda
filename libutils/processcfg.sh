@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 #
 # Process a configuration template file.
@@ -80,7 +80,7 @@ fi
 #
 # Gather "@"-delimited symbols from input file.
 #
-SYMBOLS=$(grep --binary -o "@[_A-Za-z][_A-Za-z0-9]*@" "${INPUT_FILENAME}" 2> /dev/null)
+SYMBOLS=$(grep -U -o "@[_A-Za-z][_A-Za-z0-9]*@" "${INPUT_FILENAME}" 2> /dev/null)
 if [ $? -eq 2 ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: in processing input file \"${INPUT_FILENAME}\"."
   exit 1
@@ -90,17 +90,16 @@ fi
 # Perform variable substitution.
 #
 if [ "x${SYMBOLS}" != "x" ] ; then
-  sed_command_string=()
+  sed_command_string="sed"
   for symbol in ${SYMBOLS} ; do
-    variable=$(echo "${symbol}" | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|")
-    value="${!variable}"
+    variable=$(printf "%s" "${symbol}" | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|")
+    value=$(eval printf "%s" "\$${variable}")
     if [ "x${value}" = "x" ] ; then
       log_print_error "${SCRIPT_FILENAME}: *** Warning: variable \"${variable}\" has no value."
     fi
-    sed_command_string+=("-e")
-    sed_command_string+=("s|${symbol}|${value}|")
+    sed_command_string="${sed_command_string} -e \"s|${symbol}|${value}|\""
   done
-  sed "${sed_command_string[@]}" "${INPUT_FILENAME}" > "${OUTPUT_FILENAME}" 2> /dev/null
+  eval $sed_command_string "${INPUT_FILENAME}" > "${OUTPUT_FILENAME}" 2> /dev/null
   if [ $? -ne 0 ] ; then
     log_print_error "${SCRIPT_FILENAME}: *** Error: in processing input file \"${INPUT_FILENAME}\"."
     exit 1
