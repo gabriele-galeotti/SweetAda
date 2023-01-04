@@ -104,25 +104,25 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            T : Time.TM_Time;
+            TM : Time.TM_Time;
          begin
             Console.Print ("Current date: ", NL => False);
-            RTC_Read_Clock (T);
-            if T.Year < 70 then
-               Console.Print (T.Year + 2_000, NL => False);
+            RTC_Read_Clock (TM);
+            if TM.Year < 70 then
+               Console.Print (TM.Year + 2_000, NL => False);
             else
-               Console.Print (T.Year + 1_900, NL => False);
+               Console.Print (TM.Year + 1_900, NL => False);
             end if;
             Console.Print ("-", NL => False);
-            Console.Print (T.Month + 1, NL => False);
+            Console.Print (TM.Mon + 1, NL => False);
             Console.Print ("-", NL => False);
-            Console.Print (T.Mday, NL => False);
+            Console.Print (TM.MDay, NL => False);
             Console.Print (" ", NL => False);
-            Console.Print (T.Hour, NL => False);
+            Console.Print (TM.Hour, NL => False);
             Console.Print (":", NL => False);
-            Console.Print (T.Minute, NL => False);
+            Console.Print (TM.Min, NL => False);
             Console.Print (":", NL => False);
-            Console.Print (T.Second, NL => False);
+            Console.Print (TM.Sec, NL => False);
             Console.Print_NewLine;
          end;
       end if;
