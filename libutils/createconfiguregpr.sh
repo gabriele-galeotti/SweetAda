@@ -108,7 +108,7 @@ return 0
 ################################################################################
 # print_list()                                                                 #
 #                                                                              #
-# Print a list of items item with indentation.                                 #
+# Print a list of items with indentation.                                      #
 ################################################################################
 print_list()
 {
