@@ -513,8 +513,7 @@ exec_end:
         /*
          * Invalidate.
          */
-        execute_destroy(execute);
-        execute = NULL;
+        execute = execute_destroy(execute);
 
 main_exit:
 

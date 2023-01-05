@@ -376,7 +376,7 @@ extern DWORD        execute_child_exit_status(execute_t);
 #elif defined(__APPLE__) || defined(__linux__)
 extern int          execute_child_exit_status(execute_t);
 #endif
-extern void         execute_destroy(execute_t);
+extern execute_t    execute_destroy(execute_t);
 
 #define EXEC_FORK           (1 << 0)
 /* do not log exit errors from the executable we just launched, they are */

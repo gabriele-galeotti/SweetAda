@@ -1695,13 +1695,15 @@ execute_child_exit_status(execute_t this)
  *                                                                            *
  * Destroy an execute_t object.                                               *
  ******************************************************************************/
-void
+execute_t
 execute_destroy(execute_t this)
 {
         lib_free((void *)this->argv[0]);
         this->argv[0] = NULL;
         lib_free(this);
         this = NULL;
+
+        return this;
 }
 
 /******************************************************************************
