@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 #
 # Create "configure.gpr" GNATMAKE project file.
 #
-# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+# Copyright (C) 2020-2023 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -15,6 +15,7 @@
 # $2 = configure filename
 #
 # Environment variables:
+# OSTYPE
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
@@ -38,7 +39,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
@@ -81,12 +81,11 @@ return 0
 ################################################################################
 print_I()
 {
-local _is
-local _il
+_il=${INDENTATION_LEVEL}
 _is=""
-for ((_il=1 ; _il<=${INDENTATION_LEVEL} ; _il++)) ; do
-  # Ada 3-space indentation style
-  _is+="   "
+while [ "$((_il))" -gt 0 ] ; do
+  _is="${_is}""${INDENTATION_ADA}"
+  _il=$((_il-1))
 done
 printf "%s\n" "${_is}$1" >> "${CONFIGURE_FILENAME}"
 return 0
@@ -100,6 +99,35 @@ return 0
 print_V()
 {
 printf "%s\n" "" >> "${CONFIGURE_FILENAME}"
+return 0
+}
+
+################################################################################
+# print_list()                                                                 #
+#                                                                              #
+# Print a list of items with indentation.                                      #
+################################################################################
+print_list()
+{
+AWK_SCRIPT_FUNCTION='\
+{                                                                        \
+        ii = "";                                                         \
+        for (i = 0; i < il; i++)                                         \
+        {                                                                \
+                ii = ii ia                                               \
+        }                                                                \
+        for (i = 1; i <= NF; i++)                                        \
+        {                                                                \
+                printf("%s%s\"%s\"%s\n", ii, is, $i, i != NF ? "," : "") \
+        }                                                                \
+}                                                                        \
+'
+printf "%s\n" "$1" |                  \
+awk                                   \
+  -v ia="${INDENTATION_ADA}"          \
+  -v il="$2"                          \
+  -v is="$3" "${AWK_SCRIPT_FUNCTION}" \
+  >> "${CONFIGURE_FILENAME}"
 return 0
 }
 
@@ -130,6 +158,8 @@ if [ "x${OSTYPE}" = "xmsys" ] ; then
   RTS_PATH=$(cygpath -m "${RTS_PATH}")
 fi
 
+INDENTATION_ADA="   " # Ada 3-space indentation style
+
 INDENTATION_LEVEL=0
 
 #
@@ -141,7 +171,7 @@ print_V
 # Declare project.
 #
 print_I "project ${CONFIGURE_PROJECT} is"
-let INDENTATION_LEVEL++
+INDENTATION_LEVEL=$((INDENTATION_LEVEL+1))
 print_V
 
 #
@@ -156,83 +186,24 @@ print_I "RTS_Path              := \"${RTS_PATH}\";"
 print_I "Ada_Mode              := \"${ADA_MODE}\";"
 print_I "Platform              := \"${PLATFORM}\";"
 print_I "Cpu                   := \"${CPU}\";"
+INDENTL="                          "
 print_I "ADAC_Switches_RTS     := ("
-ADAC_SWITCHES_RTS_ARRAY=(${ADAC_SWITCHES_RTS})
-imax=$((${#ADAC_SWITCHES_RTS_ARRAY[@]}-1))
-if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
-    s="\"${ADAC_SWITCHES_RTS_ARRAY[$i]}\""
-    if [ "${i}" -ne "${imax}" ] ; then
-      s+=","
-    fi
-    print_I "                          ${s}"
-  done
-fi
+print_list "${ADAC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "GCC_Platform_Switches := ("
-GCC_SWITCHES_PLATFORM_ARRAY=(${GCC_SWITCHES_PLATFORM})
-imax=$((${#GCC_SWITCHES_PLATFORM_ARRAY[@]}-1))
-if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
-    s="\"${GCC_SWITCHES_PLATFORM_ARRAY[$i]}\""
-    if [ "${i}" -ne "${imax}" ] ; then
-      s+=","
-    fi
-    print_I "                          ${s}"
-  done
-fi
+print_list "${GCC_SWITCHES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "Include_Directories   := ("
-INCLUDE_DIRECTORIES_ARRAY=(${INCLUDE_DIRECTORIES})
-imax=$((${#INCLUDE_DIRECTORIES_ARRAY[@]}-1))
-if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
-    s="\"${INCLUDE_DIRECTORIES_ARRAY[$i]}\""
-    if [ "${i}" -ne "${imax}" ] ; then
-      s+=","
-    fi
-    print_I "                          ${s}"
-  done
-fi
+print_list "${INCLUDE_DIRECTORIES}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "Implicit_ALI_Units    := ("
-IMPLICIT_ALI_UNITS_ARRAY=(${IMPLICIT_ALI_UNITS})
-imax=$((${#IMPLICIT_ALI_UNITS_ARRAY[@]}-1))
-if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
-    s="\"${IMPLICIT_ALI_UNITS_ARRAY[$i]}\""
-    if [ "${i}" -ne "${imax}" ] ; then
-      s+=","
-    fi
-    print_I "                          ${s}"
-  done
-fi
+print_list "${IMPLICIT_ALI_UNITS}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "ADAC_Switches_Warning := ("
-ADAC_SWITCHES_WARNING_ARRAY=(${ADAC_SWITCHES_WARNING})
-imax=$((${#ADAC_SWITCHES_WARNING_ARRAY[@]}-1))
-if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
-    s="\"${ADAC_SWITCHES_WARNING_ARRAY[$i]}\""
-    if [ "${i}" -ne "${imax}" ] ; then
-      s+=","
-    fi
-    print_I "                          ${s}"
-  done
-fi
+print_list "${ADAC_SWITCHES_WARNING}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "ADAC_Switches_Style   := ("
-ADAC_SWITCHES_STYLE_ARRAY=(${ADAC_SWITCHES_STYLE})
-imax=$((${#ADAC_SWITCHES_STYLE_ARRAY[@]}-1))
-if [ "${imax}" -ge "0" ] ; then
-  for i in $(seq 0 $((${imax}))) ; do
-    s="\"${ADAC_SWITCHES_STYLE_ARRAY[$i]}\""
-    if [ "${i}" -ne "${imax}" ] ; then
-      s+=","
-    fi
-    print_I "                          ${s}"
-  done
-fi
+print_list "${ADAC_SWITCHES_STYLE}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "Object_Directory      := \"${OBJECT_DIRECTORY}\";"
 print_I "Optimization_Level    := \"${OPTIMIZATION_LEVEL}\";"
@@ -241,7 +212,7 @@ print_V
 #
 # Close project.
 #
-let INDENTATION_LEVEL--
+INDENTATION_LEVEL=$((INDENTATION_LEVEL-1))
 print_I "end ${CONFIGURE_PROJECT};"
 
 log_print "${SCRIPT_FILENAME}: ${CONFIGURE_FILENAME}: done."

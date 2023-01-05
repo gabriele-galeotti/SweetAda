@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 #
 # Create "gnat.adc" file.
 #
-# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+# Copyright (C) 2020-2023 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -23,7 +23,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
@@ -93,8 +92,10 @@ while IFS= read -r textline ; do
   if [ "x${textline_woc}" != "x" ] ; then
     pragma=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*;\)\(.*\)|\1|")
     profiles=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*--\)\(.*\)|\2|")
-    printf "%s" "${profiles}" | grep -q -w ${PROFILE} 2> /dev/null
-    [ ${PIPESTATUS[1]} -eq 0 ] && printf "%s\n" "${pragma}" >> "${GNATADC_FILENAME}"
+    profile_check=$(printf "%s" "${profiles}" | grep -c -w "${PROFILE}" 2> /dev/null)
+    if [ "x${profile_check}" != "x0" ] ; then
+      printf "%s\n" "${pragma}" >> "${GNATADC_FILENAME}"
+    fi
   fi
 done < "${GNATADC_FILENAME}.in"
 

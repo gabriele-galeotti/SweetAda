@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 #
 # SweetAda configuration and Makefile front-end.
 #
-# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+# Copyright (C) 2020-2023 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -25,7 +25,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
@@ -105,6 +104,28 @@ return 0
 }
 
 ################################################################################
+# make_tee()                                                                   #
+#                                                                              #
+# $1 make target                                                               #
+# $2 make errors file                                                          #
+# $3 tee logfile                                                               #
+################################################################################
+make_tee()
+{
+exec 4>&1
+_exit_status=$(                                \
+               {                               \
+                 {                             \
+                   ${MAKE} "$1" 2> "$2" 3>&- ; \
+                   printf "%s" "$?" 1>&3     ; \
+                 } 4>&- | tee "$3" 1>&4      ; \
+               } 3>&1                          \
+              )
+exec 4>&-
+return ${_exit_status}
+}
+
+################################################################################
 # log_build_errors()                                                           #
 #                                                                              #
 ################################################################################
@@ -169,7 +190,7 @@ case ${OSTYPE} in
     if [ -e "${SWEETADA_MAKE}" ] ; then
       MAKE="${SWEETADA_MAKE}"
     else
-      MAKE=make
+      MAKE="make"
     fi
     ;;
   msys)
@@ -178,12 +199,12 @@ case ${OSTYPE} in
     if [ -e "${SWEETADA_MAKE}" ] ; then
       MAKE="${SWEETADA_MAKE}"
     else
-      MAKE=make
+      MAKE="make"
     fi
     ;;
   *)
     # defaults to system make
-    MAKE=make
+    MAKE="make"
     ;;
 esac
 
@@ -214,20 +235,20 @@ case $1 in
     ;;
   "all")
     rm -f make.log make.errors.log
-    "${MAKE}" all 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    make_tee all make.errors.log make.log
+    exit_status=$?
     log_build_errors
     ;;
   "kernel")
     rm -f make.log make.errors.log
-    "${MAKE}" kernel 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    make_tee kernel make.errors.log make.log
+    exit_status=$?
     log_build_errors
     ;;
   "postbuild")
     rm -f make.log make.errors.log
-    "${MAKE}" postbuild 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    make_tee postbuild make.errors.log make.log
+    exit_status=$?
     log_build_errors
     ;;
   "session-start")
@@ -256,8 +277,8 @@ case $1 in
     ;;
   "rts")
     rm -f make.log make.errors.log
-    "${MAKE}" rts 2> make.errors.log | tee make.log
-    exit_status=${PIPESTATUS[0]}
+    make_tee rts make.errors.log make.log
+    exit_status=$?
     log_build_errors
     ;;
   *)

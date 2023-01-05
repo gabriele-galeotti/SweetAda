@@ -2,7 +2,7 @@
 #
 # Master Makefile
 #
-# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+# Copyright (C) 2020-2023 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -1017,11 +1017,14 @@ else
 	$(error Error: no valid PLATFORM, configuration not created)
 endif
 
-.PHONY : configure-aux
-configure-aux : clean
+.PHONY : configure-start
+configure-start :
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): start configuration.")
 	@$(call echo-print,"")
+
+.PHONY : configure-subdirs
+configure-subdirs :
 	@$(MAKE) $(MAKE_APPLICATION) configure
 	@$(MAKE) $(MAKE_CLIBRARY) configure
 	@$(MAKE) $(MAKE_CORE) configure
@@ -1029,11 +1032,27 @@ configure-aux : clean
 	@$(MAKE) $(MAKE_DRIVERS) configure
 	@$(MAKE) $(MAKE_MODULES) configure
 	@$(MAKE) $(MAKE_PLATFORM) configure
+
+.PHONY : configure-gnatadc
+configure-gnatadc :
 	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
+
+.PHONY : configure-gpr
+configure-gpr :
 	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
+
+.PHONY : configure-end
+configure-end :
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): configuration completed.")
 	@$(call echo-print,"")
+
+.PHONY : configure-aux
+configure-aux : configure-start   \
+                configure-subdirs \
+                configure-gnatadc \
+                configure-gpr     \
+                configure-end
 
 .PHONY : infodump
 infodump :
@@ -1080,9 +1099,10 @@ endif
 	@$(call echo-print,"LD SWITCHES:         $(strip $(LD_SWITCHES_PLATFORM))")
 	@$(call echo-print,"OBJCOPY SWITCHES:    $(strip $(OBJCOPY_SWITCHES_PLATFORM))")
 	@$(call echo-print,"OBJDUMP SWITCHES:    $(strip $(OBJDUMP_SWITCHES_PLATFORM))")
+	@$(call echo-print,"")
 
 .PHONY : configure
-configure : configure-aux infodump
+configure : clean configure-aux infodump
 
 #
 # KERNEL_ROMFILE/postbuild/session-start/session-end/run/debug targets.
