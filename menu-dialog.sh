@@ -85,12 +85,6 @@ return 0
 ################################################################################
 dialog_menu()
 {
-local _s
-local _dialog_items_string
-local _nitems
-local _dialog_height
-local _dialog_width
-local _dialog_result
 _dialog_items_string=""
 _nitems=0
 _dialog_height=50
@@ -121,10 +115,6 @@ return 0
 ################################################################################
 createkernelcfg()
 {
-local _platforms
-local _platform_from_command_line
-local _subplatforms
-local _f
 if [ "x${PLATFORM}" = "x" ] ; then
   # discard SUBPLATFORM
   SUBPLATFORM=""
@@ -166,6 +156,28 @@ return 1
 }
 
 ################################################################################
+# make_tee()                                                                   #
+#                                                                              #
+# $1 make target                                                               #
+# $2 make errors file                                                          #
+# $3 tee logfile                                                               #
+################################################################################
+make_tee()
+{
+exec 4>&1
+_exit_status=$(                                \
+               {                               \
+                 {                             \
+                   ${MAKE} "$1" 2> "$2" 3>&- ; \
+                   printf "%s" "$?" 1>&3     ; \
+                 } 4>&- | tee "$3" 1>&4      ; \
+               } 3>&1                          \
+              )
+exec 4>&-
+return ${_exit_status}
+}
+
+################################################################################
 # log_build_errors()                                                           #
 #                                                                              #
 ################################################################################
@@ -186,14 +198,13 @@ return 0
 ################################################################################
 action_execute()
 {
-local exit_status
 case $1 in
   "createkernelcfg")
     rm -f make.log make.errors.log
     createkernelcfg
     if [ $? -eq 0 ] ; then
       PLATFORM=${PLATFORM} SUBPLATFORM=${SUBPLATFORM} "${MAKE}" createkernelcfg
-      exit_status=$?
+      _exit_status=$?
       log_build_errors
     fi
     # invalidate PLATFORM and SUBPLATFORM
@@ -203,63 +214,63 @@ case $1 in
   "configure")
     rm -f make.log make.errors.log
     "${MAKE}" configure
-    exit_status=$?
+    _exit_status=$?
     log_build_errors
     ;;
   "all")
     rm -f make.log make.errors.log
-    ("${MAKE}" all 2> make.errors.log | tee make.log)
-    exit_status=$?
+    make_tee all make.errors.log make.log
+    _exit_status=$?
     log_build_errors
     ;;
   "kernel")
     rm -f make.log make.errors.log
-    ("${MAKE}" kernel 2> make.errors.log | tee make.log)
-    exit_status=$?
+    make_tee kernel make.errors.log make.log
+    _exit_status=$?
     log_build_errors
     ;;
   "postbuild")
     rm -f make.log make.errors.log
-    ("${MAKE}" postbuild 2> make.errors.log | tee make.log)
-    exit_status=$?
+    make_tee postbuild make.errors.log make.log
+    _exit_status=$?
     log_build_errors
     ;;
   "session-start")
     "${MAKE}" session-start
-    exit_status=$?
+    _exit_status=$?
     ;;
   "session-end")
     "${MAKE}" session-end
-    exit_status=$?
+    _exit_status=$?
     ;;
   "run")
     "${MAKE}" run
-    exit_status=$?
+    _exit_status=$?
     ;;
   "debug")
     "${MAKE}" debug
-    exit_status=$?
+    _exit_status=$?
     ;;
   "clean")
     "${MAKE}" clean
-    exit_status=$?
+    _exit_status=$?
     ;;
   "distclean")
     "${MAKE}" distclean
-    exit_status=$?
+    _exit_status=$?
     ;;
   "rts")
     rm -f make.log make.errors.log
-    ("${MAKE}" rts 2> make.errors.log | tee make.log)
-    exit_status=$?
+    make_tee rts make.errors.log make.log
+    _exit_status=$?
     log_build_errors
     ;;
   *)
     usage
-    exit_status=1
+    _exit_status=1
     ;;
 esac
-return ${exit_status}
+return ${_exit_status}
 }
 
 ################################################################################
@@ -296,7 +307,7 @@ return 0
 # Some ancient versions of dialog do not have this option.
 #
 DIALOG_VERSION=$(dialog --version | sed -e "s|Version: \([0-9]*[.]*\)*-||")
-if [ $((DIALOG_VERSION)) -ge 20201126 ] ; then
+if [ "${DIALOG_VERSION}" -ge 20201126 ] ; then
   ERASE_ON_EXIT="--erase-on-exit"
 else
   ERASE_ON_EXIT=""
@@ -309,7 +320,7 @@ case ${OSTYPE} in
     if [ -e "${SWEETADA_MAKE}" ] ; then
       MAKE="${SWEETADA_MAKE}"
     else
-      MAKE=make
+      MAKE="make"
     fi
     ;;
   msys)
@@ -318,12 +329,12 @@ case ${OSTYPE} in
     if [ -e "${SWEETADA_MAKE}" ] ; then
       MAKE="${SWEETADA_MAKE}"
     else
-      MAKE=make
+      MAKE="make"
     fi
     ;;
   *)
     # defaults to system make
-    MAKE=make
+    MAKE="make"
     ;;
 esac
 
@@ -380,8 +391,9 @@ if [ "x${ACTION}" = "x" ] ; then
     fi
     action_execute ${RESULT}
     exit_status=$?
-    if [ ${exit_status} -eq 0 ] ; then
-      read -p "Press <ENTER> to continue: " answer
+    if [ "${exit_status}" -eq 0 ] ; then
+      printf "Press <ENTER> to continue: "
+      read answer
     else
       break
     fi
@@ -390,7 +402,8 @@ else
   action_execute ${ACTION}
   exit_status=$?
   if [ "x${PAUSE}" = "xY" ] ; then
-    read -p "Press <ENTER> to continue: " answer
+    printf "Press <ENTER> to continue: "
+    read answer
   fi
 fi
 

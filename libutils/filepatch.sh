@@ -90,7 +90,7 @@ for BYTE in $3 ; do
   BYTES_STRING="${BYTES_STRING}\x${BYTE}"
 done
 
-(printf "%s" "${BYTES_STRING}" | dd of="$1" bs=1 seek="${OFFSET}" conv=notrunc 2> /dev/null)
+printf "%s" "${BYTES_STRING}" | dd of="$1" bs=1 seek="${OFFSET}" conv=notrunc 2> /dev/null
 if [ $? -ne 0 ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: dd."
   exit 1

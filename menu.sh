@@ -104,6 +104,28 @@ return 0
 }
 
 ################################################################################
+# make_tee()                                                                   #
+#                                                                              #
+# $1 make target                                                               #
+# $2 make errors file                                                          #
+# $3 tee logfile                                                               #
+################################################################################
+make_tee()
+{
+exec 4>&1
+_exit_status=$(                                \
+               {                               \
+                 {                             \
+                   ${MAKE} "$1" 2> "$2" 3>&- ; \
+                   printf "%s" "$?" 1>&3     ; \
+                 } 4>&- | tee "$3" 1>&4      ; \
+               } 3>&1                          \
+              )
+exec 4>&-
+return ${_exit_status}
+}
+
+################################################################################
 # log_build_errors()                                                           #
 #                                                                              #
 ################################################################################
@@ -168,7 +190,7 @@ case ${OSTYPE} in
     if [ -e "${SWEETADA_MAKE}" ] ; then
       MAKE="${SWEETADA_MAKE}"
     else
-      MAKE=make
+      MAKE="make"
     fi
     ;;
   msys)
@@ -177,12 +199,12 @@ case ${OSTYPE} in
     if [ -e "${SWEETADA_MAKE}" ] ; then
       MAKE="${SWEETADA_MAKE}"
     else
-      MAKE=make
+      MAKE="make"
     fi
     ;;
   *)
     # defaults to system make
-    MAKE=make
+    MAKE="make"
     ;;
 esac
 
@@ -213,19 +235,19 @@ case $1 in
     ;;
   "all")
     rm -f make.log make.errors.log
-    ("${MAKE}" all 2> make.errors.log | tee make.log)
+    make_tee all make.errors.log make.log
     exit_status=$?
     log_build_errors
     ;;
   "kernel")
     rm -f make.log make.errors.log
-    ("${MAKE}" kernel 2> make.errors.log | tee make.log)
+    make_tee kernel make.errors.log make.log
     exit_status=$?
     log_build_errors
     ;;
   "postbuild")
     rm -f make.log make.errors.log
-    ("${MAKE}" postbuild 2> make.errors.log | tee make.log)
+    make_tee postbuild make.errors.log make.log
     exit_status=$?
     log_build_errors
     ;;
@@ -255,7 +277,7 @@ case $1 in
     ;;
   "rts")
     rm -f make.log make.errors.log
-    ("${MAKE}" rts 2> make.errors.log | tee make.log)
+    make_tee rts make.errors.log make.log
     exit_status=$?
     log_build_errors
     ;;

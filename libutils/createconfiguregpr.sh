@@ -81,13 +81,10 @@ return 0
 ################################################################################
 print_I()
 {
-local _il
-local _is
 _il=${INDENTATION_LEVEL}
 _is=""
 while [ "$((_il))" -gt 0 ] ; do
-  # Ada 3-space indentation style
-  _is="${_is}   "
+  _is="${_is}""${INDENTATION_ADA}"
   _il=$((_il-1))
 done
 printf "%s\n" "${_is}$1" >> "${CONFIGURE_FILENAME}"
@@ -117,7 +114,7 @@ AWK_SCRIPT_FUNCTION='\
         ii = "";                                                         \
         for (i = 0; i < il; i++)                                         \
         {                                                                \
-                ii = ii "   "                                            \
+                ii = ii ia                                               \
         }                                                                \
         for (i = 1; i <= NF; i++)                                        \
         {                                                                \
@@ -125,7 +122,12 @@ AWK_SCRIPT_FUNCTION='\
         }                                                                \
 }                                                                        \
 '
-printf "%s\n" "$1" | awk -v il="$2" -v is="$3" "${AWK_SCRIPT_FUNCTION}" >> "${CONFIGURE_FILENAME}"
+printf "%s\n" "$1" |                  \
+awk                                   \
+  -v ia="${INDENTATION_ADA}"          \
+  -v il="$2"                          \
+  -v is="$3" "${AWK_SCRIPT_FUNCTION}" \
+  >> "${CONFIGURE_FILENAME}"
 return 0
 }
 
@@ -156,6 +158,8 @@ if [ "x${OSTYPE}" = "xmsys" ] ; then
   RTS_PATH=$(cygpath -m "${RTS_PATH}")
 fi
 
+INDENTATION_ADA="   " # Ada 3-space indentation style
+
 INDENTATION_LEVEL=0
 
 #
@@ -182,29 +186,24 @@ print_I "RTS_Path              := \"${RTS_PATH}\";"
 print_I "Ada_Mode              := \"${ADA_MODE}\";"
 print_I "Platform              := \"${PLATFORM}\";"
 print_I "Cpu                   := \"${CPU}\";"
+INDENTL="                          "
 print_I "ADAC_Switches_RTS     := ("
-INDENTN="                          "
-print_list "${ADAC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTN}"
+print_list "${ADAC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "GCC_Platform_Switches := ("
-INDENTN="                          "
-print_list "${GCC_SWITCHES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTN}"
+print_list "${GCC_SWITCHES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "Include_Directories   := ("
-INDENTN="                          "
-print_list "${INCLUDE_DIRECTORIES}" "${INDENTATION_LEVEL}" "${INDENTN}"
+print_list "${INCLUDE_DIRECTORIES}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "Implicit_ALI_Units    := ("
-INDENTN="                          "
-print_list "${IMPLICIT_ALI_UNITS}" "${INDENTATION_LEVEL}" "${INDENTN}"
+print_list "${IMPLICIT_ALI_UNITS}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "ADAC_Switches_Warning := ("
-INDENTN="                          "
-print_list "${ADAC_SWITCHES_WARNING}" "${INDENTATION_LEVEL}" "${INDENTN}"
+print_list "${ADAC_SWITCHES_WARNING}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "ADAC_Switches_Style   := ("
-INDENTN="                          "
-print_list "${ADAC_SWITCHES_STYLE}" "${INDENTATION_LEVEL}" "${INDENTN}"
+print_list "${ADAC_SWITCHES_STYLE}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "Object_Directory      := \"${OBJECT_DIRECTORY}\";"
 print_I "Optimization_Level    := \"${OPTIMIZATION_LEVEL}\";"

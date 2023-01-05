@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 #
 # CCS front-end.
@@ -27,7 +27,6 @@
 #                                                                              #
 ################################################################################
 
-set -o posix
 SCRIPT_FILENAME=$(basename "$0")
 
 ################################################################################
@@ -37,19 +36,23 @@ SCRIPT_FILENAME=$(basename "$0")
 # $2 = timeout in 1 ms units                                                   #
 # $3 = error message prefix (empty = no message); example: "*** Error"         #
 ################################################################################
-function tcpport_is_listening()
+tcpport_is_listening()
 {
-local _time_start
-local _time_current
 _time_start=$(date +%s%3N)
 while true ; do
   netstat -l -t --numeric-ports | grep ":$1[^0-9]" > /dev/null
-  [ ${PIPESTATUS[1]} -eq 0 ] && break
+  _exit_status=$?
+  if   [ "${_exit_status}" -eq 0 ] ; then
+    break
+  elif [ "${_exit_status}" -eq 2 ] ; then
+    printf "$3: command error.\n"
+    return 1
+  fi
   # date +%s%3N = ms from Epoch
   _time_current=$(date +%s%3N)
   if [ $((_time_current-_time_start)) -gt $2 ] ; then
     if [ "x$3" != "x" ] ; then
-      echo "$3: timeout waiting for port $1."
+      printf "$3: timeout waiting for port $1.\n"
     fi
     return 1
   fi
