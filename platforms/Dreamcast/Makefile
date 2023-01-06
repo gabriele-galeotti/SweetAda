@@ -38,7 +38,11 @@ configure :
 .PHONY : postbuild
 postbuild :
 ifeq ($(BOOTTYPE),CDROM)
+ifeq ($(USE_PYTHON),Y)
+	"$(PYTHON)" makecdrom.py IP_TMPL IP_TXT "$(SWEETADA_PATH)"/kernel.rom
+else
 	"$(TCLSH)" makecdrom.tcl IP_TMPL IP_TXT "$(SWEETADA_PATH)"/kernel.rom
+endif
 ifneq ($(OSTYPE),cmd)
 	@$(REM)mkisofs -r 1ST_READ.BIN | (cat IP.BIN ; dd bs=2048 skip=16) > sweetada.iso
 	mkisofs -G IP.BIN -J -V SweetAda -l -r -o sweetada.iso 1ST_READ.BIN

@@ -28,12 +28,6 @@
 set SCRIPT_FILENAME [file tail $argv0]
 
 ################################################################################
-#                                                                              #
-################################################################################
-
-source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
-
-################################################################################
 # crc16                                                                        #
 #                                                                              #
 ################################################################################
@@ -146,9 +140,9 @@ foreach textline $filein_textlines {
     set tokens [split $textline ":"]
     set token_name [string trim [lindex $tokens 0]]
     set token_value [string trim [lindex $tokens 1]]
+    set found false
     for {set i 0} {$i < [llength $fields]} {incr i} {
         set field [lindex $fields $i]
-        set found false
         if {$token_name eq [lindex $field 0]} {
             set found true
             break
@@ -162,9 +156,29 @@ foreach textline $filein_textlines {
     set position [lindex $field 1]
     set length [lindex $field 2]
     set check [lindex $field 3]
-    # replace value
+    # check length
     if {[string length $token_value] > $length} {
         puts stderr "$SCRIPT_FILENAME: *** Warning: extra token length: $token_value."
+    }
+    # check memory areas
+    if {$check eq true} {
+        set J " "
+        set U " "
+        set E " "
+        foreach c [split $token_value ""] {
+            if       {$c eq "J"} {
+                set J "J"
+            } elseif {$c eq "U"} {
+                set U "U"
+            } elseif {$c eq "E"} {
+                set E "E"
+            } else {
+                puts stderr "$SCRIPT_FILENAME: *** Error: invalid symbol: $token_value."
+                exit 1
+            }
+        }
+        set token_value ""
+        append token_value $J $U $E
     }
     # create a maximum length space-padded string and write the value
     # left-justified
@@ -175,9 +189,6 @@ foreach textline $filein_textlines {
                       [expr $position + [string length $string_padded] - 1] \
                       $string_padded                                        \
                       ]
-    # check memory areas
-    if {$check eq true} {
-    }
     # flag as processed
     lset field 4 true
     lset fields $i $field
