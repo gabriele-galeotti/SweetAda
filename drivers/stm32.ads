@@ -109,7 +109,7 @@ package STM32 is
          WAKE      : Bits_1;       -- Receiver wakeup method
          M         : Bits_1;       -- Word length
          UE        : Boolean;      -- USART enable
-         Reserved1 : Bits_1 := 0;  -- Character match interrupt enable
+         Reserved1 : Bits_1 := 0;
          OVER8     : Bits_1;       -- Oversampling mode
          Reserved2 : Bits_16 := 0;
       end record with

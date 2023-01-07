@@ -1,6 +1,5 @@
 
 with CPU;
-with 
 with Console;
 
 package body Application is
@@ -17,13 +16,18 @@ package body Application is
    -- Run
    ----------------------------------------------------------------------------
    procedure Run is
-      Delay_Count : constant := 300_000;
    begin
       -------------------------------------------------------------------------
-      loop
-         Console_Putchar ('x');
-         for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-      end loop;
+      if True then
+         declare
+            Delay_Count : constant := 100_000_000;
+         begin
+            loop
+               Console.Print ("Hello, SweetAda", NL => True);
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+            end loop;
+         end;
+      end if;
       -------------------------------------------------------------------------
       loop null; end loop;
       -------------------------------------------------------------------------
