@@ -281,12 +281,12 @@ main(int argc, char **argv)
          */
         if ((execute = execute_create()) == NULL)
         {
-                fprintf(stderr, "%s: *** Error: execute_create().", program_name);
+                fprintf(stderr, "%s: *** Error: execute_create().\n", program_name);
                 goto main_exit;
         }
         if (execute_setup(execute, argc, argv, gcc_executable) < 0)
         {
-                fprintf(stderr, "%s: *** Error: execute_setup().", program_name);
+                fprintf(stderr, "%s: *** Error: execute_setup().\n", program_name);
                 goto exec_end;
         }
         execute_flags_set(execute, EXEC_NO_EXIT_ERRORS);
