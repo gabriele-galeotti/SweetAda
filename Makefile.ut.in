@@ -60,6 +60,8 @@ RUNSWEETADA        := runsweetada$(EXEEXT)
 endif
 endif
 
+# needed by GPR
+export GCC_WRAPPER
 # needed by RTS Makefile
 export DOS2UNIX PROCESSCFG
 

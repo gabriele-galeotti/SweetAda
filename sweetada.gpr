@@ -16,7 +16,9 @@ project SweetAda is
    -- Types and variables
    ----------------------------------------------------------------------------
 
-   Verbose := external ("VERBOSE", "");
+   OStype      := external ("OSTYPE", "");
+   Verbose     := external ("VERBOSE", "");
+   GCC_Wrapper := external ("GCC_WRAPPER", "");
 
    ----------------------------------------------------------------------------
    -- Definitions
@@ -75,7 +77,7 @@ project SweetAda is
    ----------------------------------------------------------------------------
 
    Compiler_Switches := (
-                         "-wrapper", "gcc-wrapper"
+                         "-wrapper", GCC_Wrapper
                         ) &
                         Configure.ADAC_Switches_RTS &
                         Configure.GCC_Platform_Switches &
