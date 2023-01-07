@@ -84,8 +84,10 @@ OBJECTS :=
 OBJECTS += elftool.o
 OBJECTS += library.o
 
-.PHONY : elftool
-elftool : $(OBJECTS)
+.PHONY : all
+all : elftool$(EXEEXT)
+
+elftool$(EXEEXT) : $(OBJECTS)
 	$(HOST_CC) -o $@ $(HOST_LD_SWITCHES) $^
 elftool.o : elftool.c
 	$(HOST_CC) -o $@ -c -I. -I.. $(HOST_CC_SWITCHES) $<
@@ -93,7 +95,7 @@ library.o : ../library.c
 	$(HOST_CC) -o $@ -c -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
 .PHONY : install
-install : elftool
+install : elftool$(EXEEXT)
 ifeq      ($(OSTYPE),linux)
 	$(CP) elftool$(EXEEXT) ../../
 else ifeq ($(OSTYPE),cmd)
@@ -106,5 +108,5 @@ endif
 
 .PHONY : clean
 clean :
-	$(RM) *.o elftool elftool.exe
+	$(RM) *.o elftool$(EXEEXT)
 

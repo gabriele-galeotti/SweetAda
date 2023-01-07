@@ -81,10 +81,9 @@ HOST_LD_SWITCHES ?= -g -static-libgcc -static-libstdc++
 endif
 
 .PHONY : all
-all : gcc-wrapper
+all : gcc-wrapper$(EXEEXT)
 
-.PHONY : gcc-wrapper
-gcc-wrapper : gcc-wrapper.o library.o
+gcc-wrapper$(EXEEXT) : gcc-wrapper.o library.o
 	$(HOST_CC) -o $@ $(HOST_LD_SWITCHES) $^
 gcc-wrapper.o : gcc-wrapper.c
 	$(HOST_CC) -o $@ -c -I.. $(HOST_CC_SWITCHES) $<
@@ -92,7 +91,7 @@ library.o : ../library.c
 	$(HOST_CC) -o $@ -c -I.. -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
 .PHONY : install
-install : gcc-wrapper
+install : gcc-wrapper$(EXEEXT)
 ifeq      ($(OSTYPE),linux)
 	$(CP) gcc-wrapper$(EXEEXT) ../../
 else ifeq ($(OSTYPE),cmd)
@@ -105,5 +104,5 @@ endif
 
 .PHONY : clean
 clean :
-	$(RM) *.o gcc-wrapper gcc-wrapper.exe
+	$(RM) *.o gcc-wrapper$(EXEEXT)
 

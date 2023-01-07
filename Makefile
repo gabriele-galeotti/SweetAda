@@ -48,14 +48,15 @@ PLATFORM_GOALS := infodump           \
                   run                \
                   debug
 RTS_GOAL       := rts
-SERVICE_GOALS  := help                  \
-                  libutils-elftool      \
+LIBUTILS_GOALS := libutils-elftool      \
                   libutils-gcc-wrapper  \
-                  libutils-gnat-wrapper \
-                  createkernelcfg       \
-                  clean                 \
-                  distclean             \
-                  freeze                \
+                  libutils-gnat-wrapper
+SERVICE_GOALS  := help              \
+                  $(LIBUTILS_GOALS) \
+                  createkernelcfg   \
+                  clean             \
+                  distclean         \
+                  freeze            \
                   probevariable
 
 # check Makefile target
@@ -271,7 +272,9 @@ MV += -v
 RM += -v
 endif
 else
+ifeq ($(filter $(MAKECMDGOALS),$(LIBUTILS_GOALS)),)
 MAKEFLAGS += s
+endif
 GNUMAKEFLAGS += --no-print-directory
 endif
 
@@ -1252,15 +1255,15 @@ endif
 #
 .PHONY : libutils-elftool
 libutils-elftool :
-	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool elftool
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool install
 .PHONY : libutils-gcc-wrapper
 libutils-gcc-wrapper :
-	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper gcc-wrapper
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper install
 .PHONY : libutils-gnat-wrapper
 libutils-gnat-wrapper :
-	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper gnat-wrapper
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper install
 
 #
