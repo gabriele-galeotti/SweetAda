@@ -2,7 +2,7 @@
 /*
  * gnat-wrapper.c
  *
- * Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+ * Copyright (C) 2020-2023 Gabriele Galeotti
  *
  * This work is licensed under the terms of the MIT License.
  * Please consult the LICENSE.txt file located in the top-level directory.
@@ -281,12 +281,12 @@ main(int argc, char **argv)
          */
         if ((execute = execute_create()) == NULL)
         {
-                fprintf(stderr, "%s: *** Error: execute_create().", program_name);
+                fprintf(stderr, "%s: *** Error: execute_create().\n", program_name);
                 goto main_exit;
         }
         if (execute_setup(execute, argc, argv, gcc_executable) < 0)
         {
-                fprintf(stderr, "%s: *** Error: execute_setup().", program_name);
+                fprintf(stderr, "%s: *** Error: execute_setup().\n", program_name);
                 goto exec_end;
         }
         execute_flags_set(execute, EXEC_NO_EXIT_ERRORS);
@@ -344,8 +344,7 @@ exec_end:
         /*
          * Invalidate.
          */
-        execute_destroy(execute);
-        execute = NULL;
+        execute = execute_destroy(execute);
 
 main_exit:
 

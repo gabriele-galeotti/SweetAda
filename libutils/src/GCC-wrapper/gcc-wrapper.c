@@ -2,7 +2,7 @@
 /*
  * gcc-wrapper.c
  *
- * Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+ * Copyright (C) 2020-2023 Gabriele Galeotti
  *
  * This work is licensed under the terms of the MIT License.
  * Please consult the LICENSE.txt file located in the top-level directory.
@@ -328,12 +328,12 @@ no_parsing:
         }
         if ((execute = execute_create()) == NULL)
         {
-                fprintf(stderr, "%s: *** Error: execute_create().", program_name);
+                fprintf(stderr, "%s: *** Error: execute_create().\n", program_name);
                 goto main_exit;
         }
         if (execute_setup(execute, argc, argv) < 0)
         {
-                fprintf(stderr, "%s: *** Error: execute_setup().", program_name);
+                fprintf(stderr, "%s: *** Error: execute_setup().\n", program_name);
                 goto exec_end;
         }
         execute_flags_set(execute, EXEC_NO_EXIT_ERRORS);
@@ -389,18 +389,18 @@ no_parsing:
                         stdout_fd = open(stdout_filename, O_RDWR | O_CREAT, 0644);
                         if (stdout_fd < 0)
                         {
-                                fprintf(stderr, "%s: *** Error: open()ing \"%s\".", program_name, stdout_filename);
+                                fprintf(stderr, "%s: *** Error: open()ing \"%s\".\n", program_name, stdout_filename);
                         }
                         else
                         {
                                 stdout_current = dup(fileno(stdout));
                                 if (stdout_current < 0)
                                 {
-                                        fprintf(stderr, "%s: *** Error: dup().", program_name);
+                                        fprintf(stderr, "%s: *** Error: dup().\n", program_name);
                                 }
                                 else if (dup2(stdout_fd, fileno(stdout)) < 0)
                                 {
-                                        fprintf(stderr, "%s: *** Error: dup2().", program_name);
+                                        fprintf(stderr, "%s: *** Error: dup2().\n", program_name);
                                 }
                                 else
                                 {
@@ -424,7 +424,7 @@ no_parsing:
                         close(stdout_fd);
                         if (dup2(stdout_current, fileno(stdout)) < 0)
                         {
-                                fprintf(stderr, "%s: *** Error: dup2().", program_name);
+                                fprintf(stderr, "%s: *** Error: dup2().\n", program_name);
                                 goto exec_end;
                         }
                         close(stdout_current);
@@ -513,8 +513,7 @@ exec_end:
         /*
          * Invalidate.
          */
-        execute_destroy(execute);
-        execute = NULL;
+        execute = execute_destroy(execute);
 
 main_exit:
 

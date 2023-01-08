@@ -2,7 +2,7 @@
 /*
  * library.c - C library functions.
  *
- * Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+ * Copyright (C) 2020-2023 Gabriele Galeotti
  *
  * This work is licensed under the terms of the MIT License.
  * Please consult the LICENSE.txt file located in the top-level directory.
@@ -1695,13 +1695,15 @@ execute_child_exit_status(execute_t this)
  *                                                                            *
  * Destroy an execute_t object.                                               *
  ******************************************************************************/
-void
+execute_t
 execute_destroy(execute_t this)
 {
         lib_free((void *)this->argv[0]);
         this->argv[0] = NULL;
         lib_free(this);
         this = NULL;
+
+        return this;
 }
 
 /******************************************************************************

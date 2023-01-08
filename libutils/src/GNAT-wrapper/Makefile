@@ -2,7 +2,7 @@
 #
 # Makefile to build GNAT-wrapper.
 #
-# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+# Copyright (C) 2020-2023 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -81,10 +81,9 @@ HOST_LD_SWITCHES ?= -g -static-libgcc -static-libstdc++
 endif
 
 .PHONY : all
-all : gnat-wrapper
+all : gnat-wrapper$(EXEEXT)
 
-.PHONY : gnat-wrapper
-gnat-wrapper : gnat-wrapper.o library.o
+gnat-wrapper$(EXEEXT) : gnat-wrapper.o library.o
 	$(HOST_CC) -o $@ $(HOST_LD_SWITCHES) $^
 gnat-wrapper.o : gnat-wrapper.c
 	$(HOST_CC) -o $@ -c -I.. $(HOST_CC_SWITCHES) $<
@@ -92,7 +91,7 @@ library.o : ../library.c
 	$(HOST_CC) -o $@ -c -I.. -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
 .PHONY : install
-install : gnat-wrapper
+install : gnat-wrapper$(EXEEXT)
 ifeq      ($(OSTYPE),linux)
 	$(CP) gnat-wrapper$(EXEEXT) ../../
 else ifeq ($(OSTYPE),cmd)
@@ -105,5 +104,5 @@ endif
 
 .PHONY : clean
 clean :
-	$(RM) *.o gnat-wrapper gnat-wrapper.exe
+	$(RM) *.o gnat-wrapper$(EXEEXT)
 
