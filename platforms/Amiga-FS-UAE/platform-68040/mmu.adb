@@ -135,7 +135,7 @@ pragma Warnings (On, "pragma Pack affects convention ""C"" components");
       for Idx in P.all'Range loop
          Page.PA4 := Bits_20 (Select_Address_Bits (Base_Address, 12, 31));
          P.all (Idx) := Page;
-         Base_Address := @ + 16#1000#;
+         Base_Address := Base_Address + 16#1000#;
       end loop;
    end Page_Setup;
 

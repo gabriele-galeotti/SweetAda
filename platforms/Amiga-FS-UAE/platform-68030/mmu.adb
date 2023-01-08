@@ -97,7 +97,7 @@ package body MMU is
       A := 0;
       for Idx in 0 .. 255 loop
          Page_Setup (Idx, DT_PAGEDSC, A);
-         A := @ + 16#1000#;
+         A := A + 16#1000#;
       end loop;
       -- CIAB
       Page_Setup (16#BFD#, DT_PAGEDSC, 16#00BF_D000#);
@@ -109,13 +109,13 @@ package body MMU is
       A := 16#00E8_0000#;
       for Idx in 16#E80# .. 16#EFF# loop
          Page_Setup (Idx, DT_PAGEDSC, A);
-         A := @ + 16#1000#;
+         A := A + 16#1000#;
       end loop;
       -- ROM
       A := 16#00FC_0000#;
       for Idx in 16#FC0# .. 16#FFF# loop
          Page_Setup (Idx, DT_PAGEDSC, A);
-         A := @ + 16#1000#;
+         A := A + 16#1000#;
       end loop;
       -- Enable MMU
       TA := To_U32 (To_Integer (Table_1 (0)'Address));

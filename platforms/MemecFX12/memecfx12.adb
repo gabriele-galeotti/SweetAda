@@ -35,7 +35,7 @@ package body MemecFX12 is
          Volatile => True;
    begin
       Value := 0;
-      for Delay_Loop_Count in 1 .. Loops loop Value := @ + 1; end loop;
+      for Delay_Loop_Count in 1 .. Loops loop Value := Value + 1; end loop;
    end Wait;
 
    ----------------------------------------------------------------------------

@@ -49,7 +49,7 @@ package body Exceptions is
       declare
          Count : Unsigned_32;
       begin
-         Malta.Count_Expire := @ + Malta.CP0_TIMER_COUNT;
+         Malta.Count_Expire := Malta.Count_Expire + Malta.CP0_TIMER_COUNT;
          MIPS32.CP0_Compare_Write (Malta.Count_Expire);
          Count := MIPS32.CP0_Count_Read;
          -- check for missed any timer interrupts
@@ -59,7 +59,7 @@ package body Exceptions is
             MIPS32.CP0_Compare_Write (Malta.Count_Expire);
          end if;
       end;
-      Core.Tick_Count := @ + 1;
+      Core.Tick_Count := Core.Tick_Count + 1;
       if Core.Tick_Count mod 100 = 0 then
          -- IOEMU "TIMER" LED blinking
          IOEMU.IOEMU_IO0 := 1;

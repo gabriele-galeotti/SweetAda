@@ -441,10 +441,10 @@ package body SCC is
       Base_Address : Address := Descriptor.Base_Address;
    begin
       if Descriptor.Flags.DECstation5000133 then
-         Base_Address := @ + 1;
+         Base_Address := Base_Address + 1;
       end if;
       if Channel = CHANNELA then
-         Base_Address := @ + 2**Descriptor.AB_Address_Bit;
+         Base_Address := Base_Address + 2**Descriptor.AB_Address_Bit;
       end if;
       Descriptor.Control_Port (Channel) := Base_Address;
       Descriptor.Data_Port (Channel)    := Base_Address + 2**Descriptor.CD_Address_Bit;

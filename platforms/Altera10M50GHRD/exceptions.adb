@@ -38,7 +38,7 @@ package body Exceptions is
    procedure Irq_Process is
    begin
       if GHRD.Timer.Status.TO then
-         Core.Tick_Count := @ + 1;
+         Core.Tick_Count := Core.Tick_Count + 1;
          if Core.Tick_Count mod 1_000 = 0 then
             -- IOEMU "TIMER" LED blinking
             IOEMU.IOEMU_IO0 := 1;

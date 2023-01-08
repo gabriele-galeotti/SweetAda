@@ -148,7 +148,7 @@ package body Exceptions is
    procedure Irq_Process is
    begin
       -- increment system tick counter
-      Tick_Count := @ + 1;
+      Tick_Count := Tick_Count + 1;
       -- LED ignition QEMU/IOEMU or physical PC
       if QEMU then
          -- IOEMU "TIMER" LED blinking

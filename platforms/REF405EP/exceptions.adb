@@ -50,7 +50,7 @@ package body Exceptions is
    procedure Process (Identifier : in Unsigned_32) is
    begin
       if Identifier = PIT_IRQ_ID then
-         Tick_Count := @ + 1;
+         Tick_Count := Tick_Count + 1;
          if Tick_Count mod 1_000 = 0 then
             -- loop
             --    exit when (MFSPR_TSR and PIS) = 0;
