@@ -90,16 +90,16 @@ fi
 # Perform variable substitution.
 #
 if [ "x${SYMBOLS}" != "x" ] ; then
-  sed_command_string="sed"
+  sed_command_string=""
   for symbol in ${SYMBOLS} ; do
     variable=$(printf "%s" "${symbol}" | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|")
-    value=$(eval printf "%s" "\$${variable}")
+    value=$(eval printf \"%s\" \"\$${variable}\")
     if [ "x${value}" = "x" ] ; then
       log_print_error "${SCRIPT_FILENAME}: *** Warning: variable \"${variable}\" has no value."
     fi
     sed_command_string="${sed_command_string} -e \"s|${symbol}|${value}|\""
   done
-  eval $sed_command_string "${INPUT_FILENAME}" > "${OUTPUT_FILENAME}" 2> /dev/null
+  printf "%s" "${sed_command_string} \"${INPUT_FILENAME}\"" | xargs sed > "${OUTPUT_FILENAME}" 2> /dev/null
   if [ $? -ne 0 ] ; then
     log_print_error "${SCRIPT_FILENAME}: *** Error: in processing input file \"${INPUT_FILENAME}\"."
     exit 1
