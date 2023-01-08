@@ -271,7 +271,7 @@ package PC is
    RTC_REGISTER_Hours         : constant := 16#04#;
    RTC_REGISTER_Hours_Alarm   : constant := 16#05#;
    RTC_REGISTER_DayOfWeek     : constant := 16#06#;
-   RTC_REGISTER_Mday          : constant := 16#07#;
+   RTC_REGISTER_DayOfMonth    : constant := 16#07#;
    RTC_REGISTER_Month         : constant := 16#08#;
    RTC_REGISTER_Year          : constant := 16#09#;
    RTC_REGISTER_A             : constant := 16#0A#;

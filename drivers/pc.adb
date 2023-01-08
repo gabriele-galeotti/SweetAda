@@ -236,7 +236,8 @@ package body PC is
       RTC_Second : Unsigned_8;
       RTC_Minute : Unsigned_8;
       RTC_Hour   : Unsigned_8;
-      RTC_Mday   : Unsigned_8;
+      RTC_DayOfWeek  : Unsigned_8;
+      RTC_DayOfMonth : Unsigned_8;
       RTC_Month  : Unsigned_8;
       RTC_Year   : Unsigned_8;
       function Register_Read (Register : Unsigned_8) return Unsigned_8;
@@ -263,15 +264,19 @@ package body PC is
       RTC_Second := Register_Read (RTC_REGISTER_Seconds);
       RTC_Minute := Register_Read (RTC_REGISTER_Minutes);
       RTC_Hour   := Register_Read (RTC_REGISTER_Hours);
-      RTC_Mday   := Register_Read (RTC_REGISTER_Mday);
+      RTC_DayOfWeek  := Register_Read (RTC_REGISTER_DayOfWeek);
+      RTC_DayOfMonth := Register_Read (RTC_REGISTER_DayOfMonth);
       RTC_Month  := Register_Read (RTC_REGISTER_Month);
       RTC_Year   := Register_Read (RTC_REGISTER_Year);
-      T.Second := Natural (Adjust_BCD (RTC_Second, RTC_BCD));
-      T.Minute := Natural (Adjust_BCD (RTC_Minute, RTC_BCD));
+      T.Sec   := Natural (Adjust_BCD (RTC_Second, RTC_BCD));
+      T.Min   := Natural (Adjust_BCD (RTC_Minute, RTC_BCD));
       T.Hour   := Natural (Adjust_BCD (RTC_Hour, RTC_BCD));
-      T.Mday   := Natural (Adjust_BCD (RTC_Mday, RTC_BCD));
-      T.Month  := Natural (Adjust_BCD (RTC_Month - 1, RTC_BCD));
+      T.WDay  := Natural (Adjust_BCD (RTC_DayOfWeek, RTC_BCD));
+      T.MDay  := Natural (Adjust_BCD (RTC_DayOfMonth, RTC_BCD));
+      T.Mon   := Natural (Adjust_BCD (RTC_Month - 1, RTC_BCD));
       T.Year   := Natural (Adjust_BCD (RTC_Year, RTC_BCD));
+      T.YDay  := 0;
+      T.IsDST := (if To_RTC_RegisterB (Register_Read (RTC_REGISTER_B)).DSE then 1 else 0);
    end RTC_Read_Clock;
 
    ----------------------------------------------------------------------------
