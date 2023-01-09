@@ -93,11 +93,11 @@ library.o : ../library.c
 .PHONY : install
 install : gcc-wrapper$(EXEEXT)
 ifeq      ($(OSTYPE),linux)
-	$(CP) gcc-wrapper$(EXEEXT) ../../
+	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-lnx$(EXEEXT)
 else ifeq ($(OSTYPE),cmd)
-	$(CP) gcc-wrapper$(EXEEXT) ..\..\ $(NULL)
+	$(CP) gcc-wrapper$(EXEEXT) ..\..\gcc-wrapper-win$(EXEEXT) $(NULL)
 else ifeq ($(OSTYPE),msys)
-	$(CP) gcc-wrapper$(EXEEXT) ../../
+	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-win$(EXEEXT)
 else ifeq ($(OSTYPE),darwin)
 	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-osx$(EXEEXT)
 endif

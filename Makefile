@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+.POSIX :
+
 .DEFAULT_GOAL := help
 
 NULL  :=
@@ -36,8 +38,24 @@ export NULL SPACE
 
 KERNEL_BASENAME := kernel
 
-PLATFORM_GOALS := infodump           \
-                  configure          \
+LIBUTILS_GOALS := libutils-elftool      \
+                  libutils-gcc-wrapper  \
+                  libutils-gnat-wrapper
+
+SERVICE_GOALS := help              \
+                 $(LIBUTILS_GOALS) \
+                 infodump          \
+                 createkernelcfg   \
+                 clean             \
+                 distclean         \
+                 freeze            \
+                 probevariable
+
+NON_PLATFORM_GOALS := $(LIBUTILS_GOALS) \
+                      $(SERVICE_GOALS)  \
+                      rts
+
+PLATFORM_GOALS := configure          \
                   all                \
                   $(KERNEL_BASENAME) \
                   kernel_libinfo     \
@@ -47,25 +65,14 @@ PLATFORM_GOALS := infodump           \
                   session-end        \
                   run                \
                   debug
-RTS_GOAL       := rts
-LIBUTILS_GOALS := libutils-elftool      \
-                  libutils-gcc-wrapper  \
-                  libutils-gnat-wrapper
-SERVICE_GOALS  := help                  \
-                  $(LIBUTILS_GOALS) \
-                  createkernelcfg       \
-                  clean                 \
-                  distclean             \
-                  freeze                \
-                  probevariable
+
+ALL_GOALS := $(NON_PLATFORM_GOALS) \
+             $(PLATFORM_GOALS)
 
 # check Makefile target
-ifneq ($(MAKECMDGOALS),)
-ifeq ($(filter $(RTS_GOAL) $(SERVICE_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
-$(error Error: not a known Makefile target)
-endif
-endif
+NON_MAKEFILE_TARGETS := $(filter-out $(ALL_GOALS),$(MAKECMDGOALS))
+ifneq ($(NON_MAKEFILE_TARGETS),)
+$(error Error: $(NON_MAKEFILE_TARGETS): no known Makefile target)
 endif
 
 # detect OS type
@@ -158,15 +165,6 @@ include Makefile.ut.in
 
 # check for RTS build
 ifeq ($(MAKECMDGOALS),rts)
-ifeq ($(CPU),)
-$(error Error: no valid CPU)
-endif
-ifeq ($(TOOLCHAIN_NAME),)
-$(error Error: no valid TOOLCHAIN_NAME)
-endif
-ifeq ($(RTS),)
-$(error Error: no valid RTS)
-endif
 # before loading configuration.in (which defines the RTS type used by the
 # platform), save the RTS variable from the environment in order to correctly
 # build the RTS specified when issuing the "rts" target
@@ -175,7 +173,7 @@ endif
 
 # default system parameters
 TOOLCHAIN_PREFIX   :=
-ADA_MODE           := ADA22
+ADA_MODE           := ADA12
 BUILD_MODE         := MAKEFILE
 RTS                :=
 PROFILE            :=
@@ -194,7 +192,7 @@ ADDITIONAL_OBJECTS :=
 # read the master configuration file
 include configuration.in
 
-ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifneq ($(filter rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(TOOLCHAIN_PREFIX),)
 $(error Error: no valid TOOLCHAIN_PREFIX)
 endif
@@ -218,6 +216,13 @@ export PATH
 # check basic utilities
 ifeq ($(TOOLS_CHECK),Y)
 -include Makefile.ck.in
+endif
+
+# detect Make version
+ifeq ($(OSTYPE),cmd)
+MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2> nul| $(SED) -e "2,$$d")
+else
+MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
 endif
 
 ################################################################################
@@ -419,8 +424,10 @@ CPU_INCLUDE_DIRECTORIES :=
 #
 # Various features.
 #
-ENABLE_SPLIT_DWARF  :=
-DISABLE_STACK_USAGE :=
+USE_UNPREFIXED_GNATMAKE :=
+USE_LIBEXEC_LD          :=
+ENABLE_SPLIT_DWARF      :=
+DISABLE_STACK_USAGE     :=
 
 ################################################################################
 #                                                                              #
@@ -441,7 +448,7 @@ DISABLE_STACK_USAGE :=
 -include $(CORE_DIRECTORY)/configuration.in
 
 # try to read PLATFORM from configuration file
-ifneq (,$(filter-out createkernelcfg rts,$(MAKECMDGOALS)))
+ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
 -include $(KERNEL_CFGFILE)
 endif
 
@@ -485,6 +492,12 @@ endif
 INCLUDE_DIRECTORIES := $(PLATFORM_DIRECTORY) $(INCLUDE_DIRECTORIES)
 endif
 
+ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifeq ($(filter MAKEFILE GPR,$(BUILD_MODE)),)
+$(warning *** Warning: no valid BUILD_MODE.)
+endif
+endif
+
 ################################################################################
 #                                                                              #
 # Compilation debugging.                                                       #
@@ -523,7 +536,9 @@ export                         \
        RTS_BASE_PATH           \
        INCLUDE_DIRECTORIES     \
        IMPLICIT_ALI_UNITS      \
-       CLEAN_OBJECTS_COMMON
+       CLEAN_OBJECTS_COMMON    \
+       CPUS                    \
+       RTSES
 
 # configuration
 export                    \
@@ -651,6 +666,10 @@ ifeq ($(USE_LIBGCC),Y)
 LIBGCC_OBJECT += $(LIBGCC_FILENAME)
 else
 LIBGCC_OBJECT :=
+endif
+
+ifneq ($(RTS),zfp)
+USE_LIBADA := Y
 endif
 
 ifeq ($(USE_LIBADA),Y)
@@ -1075,33 +1094,47 @@ endif
 	@$(call echo-print,"SWEETADA PATH:       $(SWEETADA_PATH)")
 	@$(call echo-print,"TOOLCHAIN PREFIX:    $(TOOLCHAIN_PREFIX)")
 	@$(call echo-print,"TOOLCHAIN NAME:      $(TOOLCHAIN_NAME)")
-	@$(call echo-print,"RTS ROOT PATH:       $(RTS_ROOT_PATH)")
-	@$(call echo-print,"RTS PATH:            $(RTS_PATH)")
-	@$(call echo-print,"RTS:                 $(RTS)")
-	@$(call echo-print,"PROFILE:             $(PROFILE)")
-	@$(call echo-print,"ADA MODE:            $(ADA_MODE)")
-	@$(call echo-print,"USE LIBADA:          $(USE_LIBADA)")
-	@$(call echo-print,"USE C LIBRARY:       $(USE_CLIBRARY)")
-ifneq ($(ADDITIONAL_OBJECTS),)
-	@$(call echo-print,"ADDITIONAL OBJECTS:  $(ADDITIONAL_OBJECTS)")
+	@$(call echo-print,"MAKE VERSION:        $(MAKE_VERSION)")
+	@$(call echo-print,"BUILD MODE:          $(BUILD_MODE)")
+ifneq ($(TOOLCHAIN_NAME),)
+	@$(call echo-print,"GCC VERSION:         $(GCC_VERSION)")
+	@$(call echo-print,"AS VERSION:          $(AS_VERSION)")
+	@$(call echo-print,"LD VERSION:          $(LD_VERSION)")
+	@$(call echo-print,"GNATMAKE VERSION:    $(GNATMAKE_VERSION)")
 endif
+ifeq ($(BUILD_MODE),GPR)
+	@$(call echo-print,"GPRBUILD VERSION:    $(GPRBUILD_VERSION)")
+endif
+	@$(call echo-print,"RTS:                 $(RTS)")
+ifneq ($(RTS),)
+	@$(call echo-print,"RTS ROOT PATH:       $(RTS_ROOT_PATH)")
+endif
+	@$(call echo-print,"GNAT.ADC PROFILE:    $(PROFILE)")
+	@$(call echo-print,"ADA MODE:            $(ADA_MODE)")
 ifeq ($(USE_LIBGCC),Y)
 	@$(call echo-print,"LIBGCC FILENAME:     $(LIBGCC_FILENAME)")
 endif
-	@$(call echo-print,"BUILD MODE:          $(BUILD_MODE)")
+	@$(call echo-print,"USE LIBADA:          $(USE_LIBADA)")
+	@$(call echo-print,"USE C LIBRARY:       $(USE_CLIBRARY)")
 	@$(call echo-print,"OPTIMIZATION LEVEL:  $(OPTIMIZATION_LEVEL)")
-ifeq ($(DISABLE_STACK_USAGE),Y)
-	@$(call echo-print,"DISABLE STACK USAGE: Y")
-endif
-	@$(call echo-print,"MAKE:                $(MAKE)")
-	@$(call echo-print,"GCC VERSION:         $(GCC_VERSION)")
+ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"GCC SWITCHES (RTS):  $(strip $(ADAC_SWITCHES_RTS))")
 	@$(call echo-print,"GCC SWITCHES:        $(strip $(GCC_SWITCHES_PLATFORM))")
 	@$(call echo-print,"GCC MULTIDIR:        $(GCC_MULTIDIR)")
+ifneq ($(RTS),)
+	@$(call echo-print,"RTS PATH:            $(RTS_PATH)")
+endif
 	@$(call echo-print,"LD SCRIPT:           $(LD_SCRIPT)")
 	@$(call echo-print,"LD SWITCHES:         $(strip $(LD_SWITCHES_PLATFORM))")
 	@$(call echo-print,"OBJCOPY SWITCHES:    $(strip $(OBJCOPY_SWITCHES_PLATFORM))")
 	@$(call echo-print,"OBJDUMP SWITCHES:    $(strip $(OBJDUMP_SWITCHES_PLATFORM))")
+endif
+ifneq ($(ADDITIONAL_OBJECTS),)
+	@$(call echo-print,"ADDITIONAL OBJECTS:  $(ADDITIONAL_OBJECTS)")
+endif
+ifeq ($(DISABLE_STACK_USAGE),Y)
+	@$(call echo-print,"DISABLE STACK USAGE: Y")
+endif
 	@$(call echo-print,"")
 
 .PHONY : configure
@@ -1181,9 +1214,6 @@ endif
 
 .PHONY : rts
 rts :
-ifeq ($(GCC_VERSION),)
-	$(error Error: no valid toolchain)
-endif
 ifeq ($(OSTYPE),cmd)
 	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
           (                                                                  \
@@ -1221,7 +1251,7 @@ ifneq ($(PLATFORM),)
 	$(MAKE) $(MAKE_PLATFORM) clean
 endif
 ifeq ($(OSTYPE),cmd)
-	-$(CD) $(OBJECT_DIRECTORY) && $(RM) *.* && $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
+	-IF EXIST $(OBJECT_DIRECTORY)\ $(CD) $(OBJECT_DIRECTORY) && $(RM) *.* && $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
 else
 	-$(RMDIR) $(OBJECT_DIRECTORY)/*
 endif
@@ -1255,14 +1285,17 @@ endif
 #
 .PHONY : libutils-elftool
 libutils-elftool :
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool install
 .PHONY : libutils-gcc-wrapper
 libutils-gcc-wrapper :
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper install
 .PHONY : libutils-gnat-wrapper
 libutils-gnat-wrapper :
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper install
 
@@ -1282,7 +1315,7 @@ endif
 # Probe a variable value.
 #
 # Example:
-# $ VERBOSE= PROBEVARIABLE="PLATFORMS" make -s probevariable 2> /dev/null
+# $ VERBOSE= PROBEVARIABLE="PLATFORMS" make probevariable 2> /dev/null
 #
 .PHONY : probevariable
 probevariable :

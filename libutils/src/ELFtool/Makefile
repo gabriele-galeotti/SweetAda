@@ -97,11 +97,11 @@ library.o : ../library.c
 .PHONY : install
 install : elftool$(EXEEXT)
 ifeq      ($(OSTYPE),linux)
-	$(CP) elftool$(EXEEXT) ../../
+	$(CP) elftool$(EXEEXT) ../../elftool-lnx$(EXEEXT)
 else ifeq ($(OSTYPE),cmd)
-	$(CP) elftool$(EXEEXT) ..\..\ $(NULL)
+	$(CP) elftool$(EXEEXT) ..\..\elftool-win$(EXEEXT) $(NULL)
 else ifeq ($(OSTYPE),msys)
-	$(CP) elftool$(EXEEXT) ../../
+	$(CP) elftool$(EXEEXT) ../../elftool-win$(EXEEXT)
 else ifeq ($(OSTYPE),darwin)
 	$(CP) elftool$(EXEEXT) ../../elftool-osx$(EXEEXT)
 endif
