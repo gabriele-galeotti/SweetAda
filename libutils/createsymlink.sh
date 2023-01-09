@@ -68,23 +68,36 @@ return 0
 #                                                                              #
 ################################################################################
 
+#
+# Basic input parameters check.
+#
+TARGET="$1"
+if [ "x${TARGET}" = "x" ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no symlink target specified."
+  exit 1
+fi
+if [ ! -d "${TARGET}" ] ; then
+  LINK_NAME="$2"
+  if [ "x${LINK_NAME}" = "x" ] ; then
+    log_print_error "${SCRIPT_FILENAME}: *** Error: no symlink link name specified."
+    exit 1
+  fi
+fi
+
 if [ "x${VERBOSE}" = "xY" ] ; then
   VERBOSE_OPTION="-v"
 else
   VERBOSE_OPTION=""
 fi
 
-target="$1"
-link_name="$2"
-
-if [ -d "${target}" ] ; then
-  for f in $(ls -A "${target}"/) ; do
+if [ -d "${TARGET}" ] ; then
+  for f in $(ls -A "${TARGET}"/) ; do
     rm -f "${f}"
-    ln -s ${VERBOSE_OPTION} "${target}"/"${f}" "${f}" || exit $?
+    ln -s ${VERBOSE_OPTION} "${TARGET}"/"${f}" "${f}" || exit $?
   done
 else
-  rm -f "${link_name}"
-  ln -s ${VERBOSE_OPTION} "${target}" "${link_name}" || exit $?
+  rm -f "${LINK_NAME}"
+  ln -s ${VERBOSE_OPTION} "${TARGET}" "${LINK_NAME}" || exit $?
 fi
 
 exit 0
