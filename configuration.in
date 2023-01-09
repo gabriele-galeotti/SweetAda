@@ -8,7 +8,7 @@
 # OSTYPE
 #
 
-ifeq ($(OSTYPE),cmd)
+ifeq      ($(OSTYPE),cmd)
   #
   # Windows
   #
@@ -69,10 +69,6 @@ RTS := sfp
 #PROFILE := zfp
 PROFILE := sfp
 
-ifneq ($(RTS),zfp)
-USE_LIBADA := Y
-endif
-
 #USE_LIBGCC := Y
 
 #USE_CLIBRARY := Y
@@ -82,8 +78,6 @@ ADA_MODE := ADA22
 OPTIMIZATION_LEVEL := 1
 
 BUILD_MODE := GPR
-
-#USE_UNPREFIXED_GNATMAKE := Y
 
 #USE_LIBEXEC_LD := Y
 
