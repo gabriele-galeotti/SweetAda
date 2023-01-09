@@ -17,51 +17,52 @@
 # SCREXT_unx
 #
 
+ifeq      ($(OSTYPE),msys)
+ELFTOOL      := elftool-win$(EXEEXT)
+GCC_WRAPPER  := gcc-wrapper-win$(EXEEXT)
+GNAT_WRAPPER := gnat-wrapper-win$(EXEEXT)
+RUNSWEETADA  := runsweetada-win$(EXEEXT)
+else ifeq ($(OSTYPE),cmd)
+ELFTOOL      := elftool-win$(EXEEXT)
+GCC_WRAPPER  := gcc-wrapper-win$(EXEEXT)
+GNAT_WRAPPER := gnat-wrapper-win$(EXEEXT)
+RUNSWEETADA  := runsweetada-win$(EXEEXT)
+else ifeq ($(OSTYPE),darwin)
+ELFTOOL      := elftool-osx$(EXEEXT)
+GCC_WRAPPER  := gcc-wrapper-osx$(EXEEXT)
+GNAT_WRAPPER := gnat-wrapper-osx$(EXEEXT)
+RUNSWEETADA  := runsweetada-osx$(EXEEXT)
+else  ifeq ($(OSTYPE),linux)
+ELFTOOL      := elftool-lnx$(EXEEXT)
+GCC_WRAPPER  := gcc-wrapper-lnx$(EXEEXT)
+GNAT_WRAPPER := gnat-wrapper-lnx$(EXEEXT)
+RUNSWEETADA  := runsweetada-lnx$(EXEEXT)
+endif
+
 ifeq ($(OSTYPE),msys)
 CREATECONFIGUREGPR := createconfiguregpr$(SCREXT_cmd)
 CREATEDEFINITIONS  := createdefinitions$(SCREXT_cmd)
 CREATEGNATADC      := creategnatadc$(SCREXT_cmd)
 CREATESYMLINK      := createsymlink$(SCREXT_cmd)
 DOS2UNIX           := dos2unix$(SCREXT_cmd)
-ELFTOOL            := elftool$(EXEEXT)
 FILEPAD            := filepad$(SCREXT_cmd)
 FILEPATCH          := filepatch$(SCREXT_cmd)
-GCC_WRAPPER        := gcc-wrapper$(EXEEXT)
-GNAT_WRAPPER       := gnat-wrapper$(EXEEXT)
 PROCESSCFG         := processcfg$(SCREXT_cmd)
-#RTSBUILD           := rtsbuild$(SCREXT_cmd)
-RUNSWEETADA        := runsweetada$(EXEEXT)
 else
 CREATECONFIGUREGPR := createconfiguregpr$(SCREXT)
 CREATEDEFINITIONS  := createdefinitions$(SCREXT)
 CREATEGNATADC      := creategnatadc$(SCREXT)
 CREATESYMLINK      := createsymlink$(SCREXT)
+ifeq ($(OSTYPE),cmd)
 DOS2UNIX           := dos2unix$(SCREXT)
-ifeq ($(OSTYPE),darwin)
-ELFTOOL            := elftool-osx$(EXEEXT)
-else
-ELFTOOL            := elftool$(EXEEXT)
 endif
 FILEPAD            := filepad$(SCREXT)
 FILEPATCH          := filepatch$(SCREXT)
-ifeq ($(OSTYPE),darwin)
-GCC_WRAPPER        := gcc-wrapper-osx$(EXEEXT)
-GNAT_WRAPPER       := gnat-wrapper-osx$(EXEEXT)
-else
-GCC_WRAPPER        := gcc-wrapper$(EXEEXT)
-GNAT_WRAPPER       := gnat-wrapper$(EXEEXT)
-endif
 PROCESSCFG         := processcfg$(SCREXT)
-#RTSBUILD           := rtsbuild$(SCREXT)
-ifeq ($(OSTYPE),darwin)
-RUNSWEETADA        := runsweetada-osx$(EXEEXT)
-else
-RUNSWEETADA        := runsweetada$(EXEEXT)
-endif
 endif
 
-# needed by GPR
-export GCC_WRAPPER
 # needed by RTS Makefile
 export DOS2UNIX PROCESSCFG
+# needed by GPR
+export GCC_WRAPPER
 

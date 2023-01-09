@@ -93,11 +93,11 @@ library.o : ../library.c
 .PHONY : install
 install : gnat-wrapper$(EXEEXT)
 ifeq      ($(OSTYPE),linux)
-	$(CP) gnat-wrapper$(EXEEXT) ../../
+	$(CP) gnat-wrapper$(EXEEXT) ../../gnat-wrapper-lnx$(EXEEXT)
 else ifeq ($(OSTYPE),cmd)
-	$(CP) gnat-wrapper$(EXEEXT) ..\..\ $(NULL)
+	$(CP) gnat-wrapper$(EXEEXT) ..\..\gnat-wrapper-win$(EXEEXT) $(NULL)
 else ifeq ($(OSTYPE),msys)
-	$(CP) gnat-wrapper$(EXEEXT) ../../
+	$(CP) gnat-wrapper$(EXEEXT) ../../gnat-wrapper-win$(EXEEXT)
 else ifeq ($(OSTYPE),darwin)
 	$(CP) gnat-wrapper$(EXEEXT) ../../gnat-wrapper-osx$(EXEEXT)
 endif
