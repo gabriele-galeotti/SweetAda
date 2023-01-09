@@ -41,10 +41,6 @@ package body Console is
 
    NewLine : constant String := ISO88591.CR & ISO88591.LF;
 
-   subtype Decimal_Digit_Type is Natural range 0 .. 9;
-
-   function To_Ch (Digit : Decimal_Digit_Type) return Character with
-      Inline => True;
    procedure Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8);
 
    --========================================================================--

@@ -117,7 +117,7 @@ package body Floating_Point is
       E     : Integer := 0;
       M     : Integer := 0;
       W     : Float;
-      D     : Decimal_Digit_Type;
+      D     : Console.Decimal_Digit_Type;
       Error : Boolean := False;
    begin
       if F < 0.0 then
@@ -152,8 +152,8 @@ package body Floating_Point is
                Buffer_Idx := @ + 1;
             end if;
             W := Exp10 (M); -- highest digit
-            D := Decimal_Digit_Type (Float'Floor (F / W));
-            Buffer (Buffer_Idx) := To_Ch (D);
+            D := Console.Decimal_Digit_Type (Float'Floor (F / W));
+            Buffer (Buffer_Idx) := Console.To_Ch (D);
             Buffer_Idx := @ + 1;
             F := @ - Float (D) * W;
             M := @ - 1;
@@ -169,20 +169,20 @@ package body Floating_Point is
             Buffer (Buffer_Idx) := '+';
          end if;
          Buffer_Idx := @ + 1;
-         Buffer (Buffer_Idx) := To_Ch (E / 10);
+         Buffer (Buffer_Idx) := Console.To_Ch (E / 10);
          Buffer_Idx := @ + 1;
-         Buffer (Buffer_Idx) := To_Ch (E rem 10);
+         Buffer (Buffer_Idx) := Console.To_Ch (E rem 10);
       end if;
       -- print
       if Prefix'Length /= 0 then
-         Print (Prefix);
+         Console.Print (Prefix);
       end if;
-      Print (Buffer (1 .. Buffer_Idx), NL => False);
+      Console.Print (Buffer (1 .. Buffer_Idx), NL => False);
       if Suffix'Length /= 0 then
-         Print (Suffix);
+         Console.Print (Suffix);
       end if;
       if NL then
-         Print_NewLine;
+         Console.Print_NewLine;
       end if;
    end Print_Float;
 
