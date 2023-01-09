@@ -23,14 +23,15 @@
 # RMDIR
 # SED
 # CPU
-# CPU_MODEL
+# CPUS
 # TOOLCHAIN_NAME
 # TOOLCHAIN_ADAC
 # TOOLCHAIN_CC
 # TOOLCHAIN_AR
 # TOOLCHAIN_RANLIB
-# RTS_PATH
 # RTS
+# RTSES
+# RTS_PATH
 # MULTILIB
 # MLL
 # DISABLE_STACK_USAGE
@@ -38,14 +39,14 @@
 
 ################################################################################
 #                                                                              #
-# Initialize basic variables and paths.                                        #
+# Parameter checks.                                                            #
 #                                                                              #
 ################################################################################
 
-ifeq ($(RTS),)
+ifeq ($(findstring $(RTS),$(RTSES)),)
 $(error Error: no valid RTS)
 endif
-ifeq ($(CPU),)
+ifeq ($(findstring $(CPU),$(CPUS)),)
 $(error Error: no valid CPU)
 endif
 ifeq ($(TOOLCHAIN_NAME),)
@@ -54,6 +55,12 @@ endif
 ifeq ($(MULTILIB),)
 $(error Error: no valid MULTILIB)
 endif
+
+################################################################################
+#                                                                              #
+# Initialize basic variables and paths.                                        #
+#                                                                              #
+################################################################################
 
 TARGET := $(CPU)
 

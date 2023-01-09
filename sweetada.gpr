@@ -89,8 +89,8 @@ project SweetAda is
       for Driver ("Asm_Cpp") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
       for Driver ("C") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
       for Leading_Required_Switches ("Ada") use (
-                                                 "-c",
-                                                 "-x", "ada"
+                                                 "-x", "ada",
+                                                 "-c"
                                                 );
       for Multi_Unit_Object_Separator ("Ada") use "~";
       for Include_Switches ("Asm_Cpp") use ("-I");
