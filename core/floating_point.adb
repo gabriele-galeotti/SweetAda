@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020, 2021, 2022 Gabriele Galeotti                                                                  --
+-- Copyright (C) 2020-2023 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -117,7 +117,7 @@ package body Floating_Point is
       E     : Integer := 0;
       M     : Integer := 0;
       W     : Float;
-      D     : Decimal_Digit_Type;
+      D     : Console.Decimal_Digit_Type;
       Error : Boolean := False;
    begin
       if F < 0.0 then
@@ -152,7 +152,7 @@ package body Floating_Point is
                Buffer_Idx := Buffer_Idx + 1;
             end if;
             W := Exp10 (M); -- highest digit
-            D := Decimal_Digit_Type (Float'Floor (F / W));
+            D := Console.Decimal_Digit_Type (Float'Floor (F / W));
             Buffer (Buffer_Idx) := To_Ch (D);
             Buffer_Idx := Buffer_Idx + 1;
             F := F - Float (D) * W;
@@ -175,14 +175,14 @@ package body Floating_Point is
       end if;
       -- print
       if Prefix'Length /= 0 then
-         Print (Prefix);
+         Console.Print (Prefix);
       end if;
-      Print (Buffer (1 .. Buffer_Idx), NL => False);
+      Console.Print (Buffer (1 .. Buffer_Idx), NL => False);
       if Suffix'Length /= 0 then
-         Print (Suffix);
+         Console.Print (Suffix);
       end if;
       if NL then
-         Print_NewLine;
+         Console.Print_NewLine;
       end if;
    end Print_Float;
 

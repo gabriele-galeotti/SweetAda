@@ -109,7 +109,7 @@ export temp :=
 export tmp :=
 endif
 
-# executables and scripts extensions
+# executable and script extensions
 SCREXT_cmd := .bat
 SCREXT_unx := .sh
 ifeq ($(OSTYPE),cmd)
@@ -534,11 +534,11 @@ export                         \
        RTS_DIRECTORY           \
        SHARE_DIRECTORY         \
        RTS_BASE_PATH           \
+       CPUS                    \
+       RTSES                   \
        INCLUDE_DIRECTORIES     \
        IMPLICIT_ALI_UNITS      \
-       CLEAN_OBJECTS_COMMON    \
-       CPUS                    \
-       RTSES
+       CLEAN_OBJECTS_COMMON
 
 # configuration
 export                    \
@@ -747,7 +747,7 @@ help :
 	@$(call echo-print,"Available Platforms: $(PLATFORMS)")
 	@$(call echo-print,"")
 ifneq ($(PLATFORM),)
-	@$(call echo-print,"Current PLATFORM:    $(PLATFORM)")
+	@$(call echo-print,"Current PLATFORM: $(PLATFORM)")
 	@$(call echo-print,"")
 ifneq ($(SUBPLATFORM),)
 	@$(call echo-print,"Current SUBPLATFORM: $(SUBPLATFORM)")
@@ -910,10 +910,10 @@ endif
 
 .PHONY : kernel_objdir
 kernel_objdir:
-ifneq ($(OSTYPE),cmd)
-	@$(MKDIR) $(OBJECT_DIRECTORY)
-else
+ifeq ($(OSTYPE),cmd)
 	@IF NOT EXIST $(OBJECT_DIRECTORY)\ $(MKDIR) $(OBJECT_DIRECTORY)
+else
+	@$(MKDIR) $(OBJECT_DIRECTORY)
 endif
 
 .PHONY : kernel_start
