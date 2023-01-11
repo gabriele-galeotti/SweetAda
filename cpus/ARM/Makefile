@@ -2,7 +2,7 @@
 #
 # CPU sub-Makefile
 #
-# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+# Copyright (C) 2020-2023 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -35,8 +35,6 @@ $(LIBGCC_SOURCES) : %.S : $(LIB1ASMSRC)
         $(CPP) -o $@ -x assembler-with-cpp -P -CC -D$* $(LIB1ASMSRC) \
         ,[CPP],$@)
 endif
-
-INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a

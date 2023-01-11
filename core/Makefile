@@ -2,7 +2,7 @@
 #
 # Core sub-Makefile
 #
-# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+# Copyright (C) 2020-2023 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -23,8 +23,6 @@ LIBRARY_NAME := core
 OBJECTS :=
 OBJECTS += $(patsubst %,$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o,$(IMPLICIT_CORE_UNITS))
 
-INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
-
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
@@ -32,21 +30,27 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/abort_library.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)
+
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/console.o : \
-        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)    \
+        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)            \
         $(KERNEL_PARENT_PATH)/$(SPEC_LLUTILS)
+
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/core.o : \
-        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)    \
+        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)         \
         $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)
+
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/gnat_exceptions.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
+
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/malloc.o : \
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/malloc.o :   \
         $(KERNEL_PARENT_PATH)/$(SPEC_BITS)             \
         $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)          \
         $(KERNEL_PARENT_PATH)/$(SPEC_INTEGER_MATH)     \
         $(KERNEL_PARENT_PATH)/$(SPEC_MEMORY_FUNCTIONS)
+
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/memory_functions.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_BITS)
 

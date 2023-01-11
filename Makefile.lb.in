@@ -14,11 +14,12 @@
 # OBJECT_DIRECTORY
 # LIBRARY_NAME
 # OBJECTS
-# INCLUDES
+# INCLUDE_DIRECTORIES
+# GNATADC_FILENAME
 # AR
 # RANLIB
-# GNATMAKE
 # CC
+# GNATMAKE
 # GCC_WRAPPER_TIMESTAMP_FILENAME
 # GNAT_WRAPPER_TIMESTAMP_FILENAME
 #
@@ -26,6 +27,8 @@
 # avoid generation of unuseful timestamps
 export GCC_WRAPPER_TIMESTAMP_FILENAME :=
 export GNAT_WRAPPER_TIMESTAMP_FILENAME :=
+
+INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
 	$(call brief-command, \
@@ -37,17 +40,26 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.adb %.ads
 	$(call brief-command, \
-        $(GNATMAKE) -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) -c $(INCLUDES) $< \
+        $(GNATMAKE)                                                   \
+                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
+                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)      \
+                    -c $(INCLUDES) $<                                 \
         ,[GNATMAKE],$<)
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.adb
 	$(call brief-command, \
-        $(GNATMAKE) -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) -c $(INCLUDES) $< \
+        $(GNATMAKE)                                                   \
+                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
+                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)      \
+                    -c $(INCLUDES) $<                                 \
         ,[GNATMAKE],$<)
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.ads
 	$(call brief-command, \
-        $(GNATMAKE) -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) -c $(INCLUDES) $< \
+        $(GNATMAKE)                                                   \
+                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
+                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)      \
+                    -c $(INCLUDES) $<                                 \
         ,[GNATMAKE],$<)
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.c

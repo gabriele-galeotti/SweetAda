@@ -61,6 +61,8 @@ FILEPATCH          := filepatch$(SCREXT)
 PROCESSCFG         := processcfg$(SCREXT)
 endif
 
+# needed by GPS
+export GCC_WRAPPER
 # needed by RTS Makefile
 export DOS2UNIX PROCESSCFG
 # needed by GPR

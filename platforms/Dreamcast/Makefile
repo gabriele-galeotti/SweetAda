@@ -2,7 +2,7 @@
 #
 # Platform sub-Makefile
 #
-# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+# Copyright (C) 2020-2023 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -25,8 +25,6 @@ OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/llkernel.o
 OBJECTS += $(patsubst %,$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o,$(ADDITIONAL_OBJECTS))
 
-INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
-
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
@@ -38,7 +36,11 @@ configure :
 .PHONY : postbuild
 postbuild :
 ifeq ($(BOOTTYPE),CDROM)
+ifeq ($(USE_PYTHON),Y)
+	"$(PYTHON)" makecdrom.py IP_TMPL IP_TXT "$(SWEETADA_PATH)"/kernel.rom
+else
 	"$(TCLSH)" makecdrom.tcl IP_TMPL IP_TXT "$(SWEETADA_PATH)"/kernel.rom
+endif
 ifneq ($(OSTYPE),cmd)
 	@$(REM)mkisofs -r 1ST_READ.BIN | (cat IP.BIN ; dd bs=2048 skip=16) > sweetada.iso
 	mkisofs -G IP.BIN -J -V SweetAda -l -r -o sweetada.iso 1ST_READ.BIN

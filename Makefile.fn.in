@@ -84,6 +84,6 @@ endif
 ifeq ($(OSTYPE),cmd)
 ls-dirs = DIR /A:D /B *
 else
-ls-dirs = ls -A -d */ | $(SED) -e "s|/$$||"
+ls-dirs = ls -A -d */ | $(SED) -e "s|/\$$||"
 endif
 

@@ -2,7 +2,7 @@
 #
 # C library sub-Makefile
 #
-# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+# Copyright (C) 2020-2023 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -29,20 +29,45 @@ OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdlib.o
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/string.o
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o
 OBJECTS += $(patsubst %,$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o,$(IMPLICIT_CLIBRARY_UNITS))
-INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 # manually-inferred dependency logic
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/assert.o  : stdio.h stdlib.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/ctype.o   : ctype.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/errno.o   :
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdio.o   : ada_interface.h clibrary.h ctype.h stdio.h stdlib.h string.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdlib.o  : ada_interface.h clibrary.h ctype.h errno.h stdlib.h string.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/string.o  : clibrary.h ctype.h string.h
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o : clibrary.h strings.h
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/assert.o : \
+        stdio.h  \
+        stdlib.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/ctype.o : \
+        ctype.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/errno.o :
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdio.o : \
+        ada_interface.h \
+        clibrary.h      \
+        ctype.h         \
+        stdio.h         \
+        stdlib.h        \
+        string.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdlib.o : \
+        ada_interface.h \
+        clibrary.h      \
+        ctype.h         \
+        errno.h         \
+        stdlib.h        \
+        string.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/string.o : \
+        clibrary.h \
+        ctype.h    \
+        string.h
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o : \
+        clibrary.h \
+        strings.h
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY) \

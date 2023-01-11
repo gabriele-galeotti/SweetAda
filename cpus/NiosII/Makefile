@@ -2,7 +2,7 @@
 #
 # CPU sub-Makefile
 #
-# Copyright (C) 2020, 2021, 2022 Gabriele Galeotti
+# Copyright (C) 2020-2023 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -25,8 +25,6 @@ ifneq ($(USE_LIBGCC),Y)
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/divsi3table.o
 OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/libgcc.o
 endif
-
-INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
