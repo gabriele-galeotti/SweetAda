@@ -298,6 +298,7 @@ CLIBRARY_DIRECTORY      := clibrary
 CORE_DIRECTORY          := core
 DRIVERS_DIRECTORY       := drivers
 MODULES_DIRECTORY       := modules
+LIBRARY_DIRECTORY       := lib
 OBJECT_DIRECTORY        := obj
 RTS_DIRECTORY           := rts
 SHARE_DIRECTORY         := share
@@ -529,6 +530,7 @@ export                         \
        CORE_DIRECTORY          \
        DRIVERS_DIRECTORY       \
        MODULES_DIRECTORY       \
+       LIBRARY_DIRECTORY       \
        OBJECT_DIRECTORY        \
        RTS_DIRECTORY           \
        SHARE_DIRECTORY         \
@@ -606,6 +608,7 @@ export                           \
        GNATMAKE                  \
        GNATPREP                  \
        GNATXREF                  \
+       GPRBUILD                  \
        LD                        \
        NM                        \
        OBJCOPY                   \
@@ -761,11 +764,6 @@ endif
 .PHONY : FORCE
 FORCE :
 
-$(CLIBRARY_OBJECT) : FORCE
-ifeq ($(USE_CLIBRARY),Y)
-	$(MAKE) $(MAKE_CLIBRARY) all
-endif
-
 $(OBJECT_DIRECTORY)/libcore.a : FORCE
 	$(MAKE) $(MAKE_CORE) all
 
@@ -774,6 +772,11 @@ $(OBJECT_DIRECTORY)/libcpu.a : FORCE
 
 $(OBJECT_DIRECTORY)/libplatform.a : FORCE
 	$(MAKE) $(MAKE_PLATFORM) all
+
+$(CLIBRARY_OBJECT) : FORCE
+ifeq ($(USE_CLIBRARY),Y)
+	$(MAKE) $(MAKE_CLIBRARY) all
+endif
 
 $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME) : FORCE
 ifeq ($(BUILD_MODE),MAKEFILE)
@@ -790,7 +793,7 @@ else ifeq ($(BUILD_MODE),GPR)
 	$(call brief-command, \
         $(GPRBUILD)                      \
                     -c -p                \
-                    -P$(KERNEL_GPRFILE)  \
+                    -P $(KERNEL_GPRFILE) \
         ,[GPRBUILD-C],$(KERNEL_GPRFILE))
 endif
 
@@ -798,10 +801,10 @@ endif
 # Bind phase.
 #
 
-$(OBJECT_DIRECTORY)/b__main.adb : $(CLIBRARY_OBJECT)                     \
-                                  $(OBJECT_DIRECTORY)/libcore.a          \
+$(OBJECT_DIRECTORY)/b__main.adb : $(OBJECT_DIRECTORY)/libcore.a          \
                                   $(OBJECT_DIRECTORY)/libcpu.a           \
                                   $(OBJECT_DIRECTORY)/libplatform.a      \
+                                  $(CLIBRARY_OBJECT)                     \
                                   $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME)
 	@$(REM) bind all units and generate b__main
 ifeq ($(BUILD_MODE),MAKEFILE)
@@ -833,7 +836,7 @@ endif
 	$(call brief-command, \
         $(GPRBUILD)                      \
                     -b                   \
-                    -P$(KERNEL_GPRFILE)  \
+                    -P $(KERNEL_GPRFILE) \
                     > gnatbind_elab.lst  \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 ifeq ($(OSTYPE),cmd)
@@ -852,15 +855,15 @@ $(OBJECT_DIRECTORY)/b__main.o : $(OBJECT_DIRECTORY)/b__main.adb
 ifeq ($(OSTYPE),cmd)
 	$(call brief-command, \
         $(ADAC_GNATBIND)                                  \
-                         -o $(OBJECT_DIRECTORY)\b__main.o \
                          -c                               \
+                         -o $(OBJECT_DIRECTORY)\b__main.o \
                          $(OBJECT_DIRECTORY)\b__main.adb  \
         ,[ADAC],b__main.adb)
 else
 	$(call brief-command, \
         $(ADAC_GNATBIND)                                  \
-                         -o $(OBJECT_DIRECTORY)/b__main.o \
                          -c                               \
+                         -o $(OBJECT_DIRECTORY)/b__main.o \
                          $(OBJECT_DIRECTORY)/b__main.adb  \
         ,[ADAC],b__main.adb)
 endif
@@ -907,11 +910,13 @@ endif
 # Auxiliary targets.
 #
 
-.PHONY : kernel_objdir
-kernel_objdir:
+.PHONY : kernel_lib_obj_dir
+kernel_lib_obj_dir:
 ifeq ($(OSTYPE),cmd)
+	@IF NOT EXIST $(LIBRARY_DIRECTORY)\ $(MKDIR) $(LIBRARY_DIRECTORY)
 	@IF NOT EXIST $(OBJECT_DIRECTORY)\ $(MKDIR) $(OBJECT_DIRECTORY)
 else
+	@$(MKDIR) $(LIBRARY_DIRECTORY)
 	@$(MKDIR) $(OBJECT_DIRECTORY)
 endif
 
@@ -1007,7 +1012,7 @@ $(KERNEL_BASENAME) : $(KERNEL_OUTFILE)
 
 .PHONY : all
 all : kernel_start       \
-      kernel_objdir      \
+      kernel_lib_obj_dir \
       $(KERNEL_BASENAME) \
       kernel_end         \
       kernel_info
@@ -1250,8 +1255,10 @@ ifneq ($(PLATFORM),)
 	$(MAKE) $(MAKE_PLATFORM) clean
 endif
 ifeq ($(OSTYPE),cmd)
+	-IF EXIST $(LIBRARY_DIRECTORY)\ $(CD) $(LIBRARY_DIRECTORY) && $(RM) *.*
 	-IF EXIST $(OBJECT_DIRECTORY)\ $(CD) $(OBJECT_DIRECTORY) && $(RM) *.* && $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
 else
+	-$(RM) $(LIBRARY_DIRECTORY)/*
 	-$(RMDIR) $(OBJECT_DIRECTORY)/*
 endif
 	-$(RM) $(CLEAN_OBJECTS_COMMON) $(CLEAN_OBJECTS)
@@ -1307,7 +1314,11 @@ FILES_TO_BE_FREEZED :=
 .PHONY : freeze
 freeze :
 ifneq ($(FILES_TO_BE_FREEZED),)
+ifeq ($(OSTYPE),cmd)
+	-$(CP) $(FILES_TO_BE_FREEZED) $(FREEZE_DIRECTORY)\ $(NULL)
+else
 	-$(CP) $(FILES_TO_BE_FREEZED) $(FREEZE_DIRECTORY)/
+endif
 endif
 
 #
