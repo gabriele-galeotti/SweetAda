@@ -212,7 +212,6 @@ endif
 AS_SWITCHES_DEFAULT       +=
 
 # ADAC
-ADAC_SWITCHES_DEFAULT     += -gnatec="$(SWEETADA_PATH)/$(GNATADC_FILENAME)" # Specify a configuration pragma file.
 ADAC_SWITCHES_DEFAULT     += -gnatef # Display full source path name in brief error messages.
 ADAC_SWITCHES_DEFAULT     += -gnatf  # Full error reporting.
 ADAC_SWITCHES_DEFAULT     += -gnatU  # Tag all error messages with the unique string "error:"

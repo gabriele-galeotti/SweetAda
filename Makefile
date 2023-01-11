@@ -535,6 +535,7 @@ export                         \
        RTS_DIRECTORY           \
        SHARE_DIRECTORY         \
        RTS_BASE_PATH           \
+       GNATADC_FILENAME        \
        CPUS                    \
        RTSES                   \
        INCLUDE_DIRECTORIES     \
@@ -782,11 +783,12 @@ $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME) : FORCE
 ifeq ($(BUILD_MODE),MAKEFILE)
 	@$(REM) perform makefile-driven procedure
 	$(call brief-command, \
-        $(GNATMAKE)                        \
-                    -c                     \
-                    -D $(OBJECT_DIRECTORY) \
-                    $(INCLUDES)            \
-                    main.adb               \
+        $(GNATMAKE)                             \
+                    -c                          \
+                    -gnatec=$(GNATADC_FILENAME) \
+                    -D $(OBJECT_DIRECTORY)      \
+                    $(INCLUDES)                 \
+                    main.adb                    \
         ,[GNATMAKE],main.adb)
 else ifeq ($(BUILD_MODE),GPR)
 	@$(REM) perform gpr-driven project build procedure
@@ -856,6 +858,7 @@ ifeq ($(OSTYPE),cmd)
 	$(call brief-command, \
         $(ADAC_GNATBIND)                                  \
                          -c                               \
+                         -gnatec=$(GNATADC_FILENAME)      \
                          -o $(OBJECT_DIRECTORY)\b__main.o \
                          $(OBJECT_DIRECTORY)\b__main.adb  \
         ,[ADAC],b__main.adb)
