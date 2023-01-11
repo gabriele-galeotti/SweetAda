@@ -33,8 +33,6 @@ $(LIBGCC_SOURCES) : %.S : $(LIB1ASMSRC)
         ,[CPP],$@)
 endif
 
-INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
-
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
