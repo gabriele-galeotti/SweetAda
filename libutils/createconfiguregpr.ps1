@@ -16,6 +16,7 @@
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
+# GCC_WRAPPER
 # OBJECT_DIRECTORY
 # TOOLCHAIN_NAME
 # RTS_PATH
@@ -90,18 +91,17 @@ print_V $configure_filename
 #
 # Declare project.
 #
-print_I $configure_filename "project $configure_project is"
+print_I $configure_filename "abstract project $configure_project is"
 $indentation_level++
 print_V $configure_filename
 
 #
 # Configuration declarations.
 #
-print_I $configure_filename "for Source_Files use ();"
-print_V $configure_filename
 print_I $configure_filename "SweetAda_Path         := `"$env:SWEETADA_PATH`";"
 print_I $configure_filename "Toolchain_Prefix      := `"$env:TOOLCHAIN_PREFIX`";"
 print_I $configure_filename "Toolchain_Name        := `"$env:TOOLCHAIN_NAME`";"
+print_I $configure_filename "GCC_Wrapper           := `"$env:GCC_WRAPPER`";"
 print_I $configure_filename "RTS_Path              := `"$env:RTS_PATH`";"
 print_I $configure_filename "Ada_Mode              := `"$env:ADA_MODE`";"
 print_I $configure_filename "Platform              := `"$env:PLATFORM`";"
@@ -214,8 +214,9 @@ if ($adac_switches_style.Length -gt 0)
   }
 }
 print_I $configure_filename "                         );"
-print_I $configure_filename "Object_Directory      := `"$env:OBJECT_DIRECTORY`";"
 print_I $configure_filename "Optimization_Level    := `"$env:OPTIMIZATION_LEVEL`";"
+print_I $configure_filename "Library_Directory     := `"$env:LIBRARY_DIRECTORY`";"
+print_I $configure_filename "Object_Directory      := `"$env:OBJECT_DIRECTORY`";"
 print_V $configure_filename
 
 #

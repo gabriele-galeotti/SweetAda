@@ -19,6 +19,7 @@
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
+# GCC_WRAPPER
 # OBJECT_DIRECTORY
 # TOOLCHAIN_NAME
 # RTS_PATH
@@ -170,18 +171,17 @@ print_V
 #
 # Declare project.
 #
-print_I "project ${CONFIGURE_PROJECT} is"
+print_I "abstract project ${CONFIGURE_PROJECT} is"
 INDENTATION_LEVEL=$((INDENTATION_LEVEL+1))
 print_V
 
 #
 # Configuration declarations.
 #
-print_I "for Source_Files use ();"
-print_V
 print_I "SweetAda_Path         := \"${SWEETADA_PATH}\";"
 print_I "Toolchain_Prefix      := \"${TOOLCHAIN_PREFIX}\";"
 print_I "Toolchain_Name        := \"${TOOLCHAIN_NAME}\";"
+print_I "GCC_Wrapper           := \"${GCC_WRAPPER}\";"
 print_I "RTS_Path              := \"${RTS_PATH}\";"
 print_I "Ada_Mode              := \"${ADA_MODE}\";"
 print_I "Platform              := \"${PLATFORM}\";"
@@ -205,8 +205,9 @@ print_I "                         );"
 print_I "ADAC_Switches_Style   := ("
 print_list "${ADAC_SWITCHES_STYLE}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
-print_I "Object_Directory      := \"${OBJECT_DIRECTORY}\";"
 print_I "Optimization_Level    := \"${OPTIMIZATION_LEVEL}\";"
+print_I "Library_Directory     := \"${LIBRARY_DIRECTORY}\";"
+print_I "Object_Directory      := \"${OBJECT_DIRECTORY}\";"
 print_V
 
 #
