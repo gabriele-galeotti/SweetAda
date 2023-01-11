@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020, 2021, 2022 Gabriele Galeotti                                                                  --
+-- Copyright (C) 2020-2023 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -41,10 +41,6 @@ package body Console is
 
    NewLine : constant String := ISO88591.CR & ISO88591.LF;
 
-   subtype Decimal_Digit_Type is Natural range 0 .. 9;
-
-   function To_Ch (Digit : Decimal_Digit_Type) return Character with
-      Inline => True;
    procedure Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8);
 
    --========================================================================--
