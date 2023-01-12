@@ -11,11 +11,12 @@
 #
 # Environment variables:
 # KERNEL_PARENT_PATH
+# BUILD_MODE
+# LIBRARY_DIRECTORY
 # OBJECT_DIRECTORY
 # LIBRARY_NAME
 # OBJECTS
-# INCLUDE_DIRECTORIES
-# GNATADC_FILENAME
+# INCLUDES
 # AR
 # RANLIB
 # CC
@@ -28,6 +29,12 @@
 export GCC_WRAPPER_TIMESTAMP_FILENAME :=
 export GNAT_WRAPPER_TIMESTAMP_FILENAME :=
 
+ifeq ($(BUILD_MODE),MAKEFILE)
+
+#
+# MAKEFILE
+#
+
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
@@ -38,28 +45,27 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
         $(RANLIB) $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a \
         ,[RANLIB],lib$(LIBRARY_NAME).a)
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.adb %.ads
-	$(call brief-command, \
-        $(GNATMAKE)                                                   \
-                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
-                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)      \
-                    -c $(INCLUDES) $<                                 \
-        ,[GNATMAKE],$<)
+#$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.adb %.ads
+#	$(call brief-command, \
+#        $(GNATMAKE)                                              \
+#                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) \
+#                    -c $(INCLUDES) $<                            \
+#        ,[GNATMAKE],$<)
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.adb
 	$(call brief-command, \
-        $(GNATMAKE)                                                   \
-                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
-                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)      \
-                    -c $(INCLUDES) $<                                 \
+        $(GNATMAKE)                                              \
+                    -gnatec=$(GNATADC_FILENAME)                  \
+                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) \
+                    -c $(INCLUDES) $<                            \
         ,[GNATMAKE],$<)
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.ads
 	$(call brief-command, \
-        $(GNATMAKE)                                                   \
-                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
-                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)      \
-                    -c $(INCLUDES) $<                                 \
+        $(GNATMAKE)                                              \
+                    -gnatec=$(GNATADC_FILENAME)                  \
+                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) \
+                    -c $(INCLUDES) $<                            \
         ,[GNATMAKE],$<)
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.c
@@ -71,4 +77,36 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.S
 	$(call brief-command, \
         $(CC) -o $@ -c $(INCLUDES) $< \
         ,[CC/AS],$<)
+
+else ifeq ($(BUILD_MODE),GPR)
+
+#
+# GPRbuild
+#
+
+GPR_INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
+export GPR_INCLUDES
+
+.PHONY : FORCE
+FORCE :
+
+.PHONY : gprbuild
+gprbuild : FORCE
+	$(GPRBUILD) -aP $(KERNEL_PARENT_PATH) -P $(LIBRARY_NAME).gpr
+
+$(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)/lib$(LIBRARY_NAME).a : gprbuild
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : \
+  $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)/lib$(LIBRARY_NAME).a
+ifeq ($(OSTYPE),cmd)
+	$(CP)                                                             \
+          $(KERNEL_PARENT_PATH)\$(LIBRARY_DIRECTORY)\lib$(LIBRARY_NAME).a \
+          $(KERNEL_PARENT_PATH)\$(OBJECT_DIRECTORY)\ $(NULL)
+else
+	$(CP)                                                             \
+          $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)/lib$(LIBRARY_NAME).a \
+          $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/
+endif
+
+endif
 

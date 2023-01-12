@@ -1,0 +1,114 @@
+
+-------------------------------------------------------------------------------
+-- SweetAda GPRbuild project file
+--
+-- Copyright (C) 2020-2023 Gabriele Galeotti
+--
+-- This work is licensed under the terms of the MIT License.
+-- Please consult the LICENSE.txt file located in the top-level directory.
+-------------------------------------------------------------------------------
+
+with "configure";
+with "basedefs";
+
+library project Core is
+
+   ----------------------------------------------------------------------------
+   -- Definitions
+   ----------------------------------------------------------------------------
+
+   Include_Directories := Split (external ("GPR_INCLUDES", ""), " ");
+
+   for Target use Configure.Toolchain_Name;
+   for Source_Dirs use (".") & Include_Directories;
+   for Default_Language use "Ada";
+
+   Abort_Library_Files := ("abort_library.adb", "abort_library.ads");
+
+   Bits_Files := (
+                  "bits.adb", "bits.ads",
+                  "bits-byte_reverse.adb",
+                  "bits-byte_swap_8.adb",
+                  "bits-byte_swap_16.adb",
+                  "bits-byte_swap_32.adb",
+                  "bits-byte_swap_64.adb"
+                 );
+   Console_Files := ("console.adb", "console.ads");
+
+   Core_Files := ("core.adb", "core.ads");
+
+   Gnat_Exceptions_Files := ("gnat_exceptions.adb", "gnat_exceptions.ads");
+
+   Integer_Math_Files := ("integer_math.adb", "integer_math.ads");
+
+   Last_Chance_Handler_Files := ("last_chance_handler.adb", "last_chance_handler.ads");
+
+   LLutils_Files := (
+                     "llutils.adb", "llutils.ads",
+                     "llutils-address_displacement.adb",
+                     "llutils-be_to_cpue_16.adb",
+                     "llutils-be_to_cpue_32.adb",
+                     "llutils-be_to_cpue_64.adb",
+                     "llutils-build_address.adb",
+                     "llutils-le_to_cpue_16.adb",
+                     "llutils-le_to_cpue_32.adb",
+                     "llutils-le_to_cpue_64.adb"
+                    );
+
+   Malloc_Files := ("malloc.adb", "malloc.ads");
+
+   Memory_Functions_Files :=(
+                             "memory_functions.adb", "memory_functions.ads",
+                             "memory_functions-bcopy.adb",
+                             "memory_functions-cmpmem.adb",
+                             "memory_functions-cpymem.adb",
+                             "memory_functions-memcmp.adb",
+                             "memory_functions-memcpy.adb",
+                             "memory_functions-memmove.adb",
+                             "memory_functions-memset.adb",
+                             "memory_functions-setmem.adb"
+                            );
+
+   for Source_Files use
+                        Abort_Library_Files       &
+                        Bits_Files                &
+                        Console_Files             &
+                        Core_Files                &
+                        Gnat_Exceptions_Files     &
+                        Integer_Math_Files        &
+                        Last_Chance_Handler_Files &
+                        LLutils_Files             &
+                        Malloc_Files              &
+                        Memory_Functions_Files;
+
+   ----------------------------------------------------------------------------
+   -- Naming
+   ----------------------------------------------------------------------------
+
+   package Naming renames Basedefs.Naming;
+
+   ----------------------------------------------------------------------------
+   -- Builder
+   ----------------------------------------------------------------------------
+
+   package Builder renames Basedefs.Builder;
+
+   ----------------------------------------------------------------------------
+   -- Compiler
+   ----------------------------------------------------------------------------
+
+   package Compiler renames Basedefs.Compiler;
+
+   ----------------------------------------------------------------------------
+   -- Library
+   ----------------------------------------------------------------------------
+
+   for Library_Kind use Basedefs.Library_Kind;
+   for Library_Support use Basedefs.Library_Support;
+   for Library_Builder use Basedefs.Library_Builder;
+   for Object_Dir use project'Project_Dir & "../" & Configure.Object_Directory;
+   for Library_Dir use project'Project_Dir & "../" & Configure.Library_Directory;
+
+   for Library_Name use "core";
+
+end Core;

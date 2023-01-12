@@ -9,16 +9,9 @@
 -------------------------------------------------------------------------------
 
 with "configure";
+with "basedefs";
 
 project SweetAda is
-
-   ----------------------------------------------------------------------------
-   -- Types and variables
-   ----------------------------------------------------------------------------
-
-   OStype      := external ("OSTYPE", "");
-   Verbose     := external ("VERBOSE", "");
-   GCC_Wrapper := external ("GCC_WRAPPER", "");
 
    ----------------------------------------------------------------------------
    -- Definitions
@@ -26,7 +19,7 @@ project SweetAda is
 
    for Target use Configure.Toolchain_Name;
    for Source_Dirs use Configure.Include_Directories;
-   for Object_Dir use Configure.Object_Directory;
+   for Object_Dir use project'Project_Dir & "/" & Configure.Object_Directory;
    for Default_Language use "Ada";
    for Main use ("main.adb");
 
@@ -34,93 +27,19 @@ project SweetAda is
    -- Naming
    ----------------------------------------------------------------------------
 
-   package Naming is
-      for Spec_Suffix ("Asm_Cpp") use ".h";
-      for Body_Suffix ("Asm_Cpp") use ".S";
-      for Spec_Suffix ("C")       use ".h";
-      for Body_Suffix ("C")       use ".c";
-      for Spec_Suffix ("Ada")     use ".ads";
-      for Body_Suffix ("Ada")     use ".adb";
-   end Naming;
+   package Naming renames Basedefs.Naming;
 
    ----------------------------------------------------------------------------
-   -- Builder - GNATMAKE and GPRbuild
+   -- Builder
    ----------------------------------------------------------------------------
 
-   Builder_Switches := ();
-
-   case Verbose is
-      when "Y" | "y" | "1" => Builder_Switches := Builder_Switches & ("-v");
-      when others          => null;
-   end case;
-
-   case Configure.Ada_Mode is
-      when "ADA95" => Builder_Switches := Builder_Switches & ("-gnat95");
-      when "ADA05" => Builder_Switches := Builder_Switches & ("-gnat2005");
-      when "ADA12" => Builder_Switches := Builder_Switches & ("-gnat2012");
-      when "ADA20" => Builder_Switches := Builder_Switches & ("-gnat2020");
-      when "ADA22" => Builder_Switches := Builder_Switches & ("-gnat2022");
-      when others  => null;
-   end case;
-
-   package Builder is
-      for Global_Configuration_Pragmas use "gnat.adc";
-      for Switches ("Ada") use (
-                                "-nostdinc",
-                                "-nostdlib",
-                                "--RTS=" & Configure.RTS_Path
-                               ) & Builder_Switches;
-   end Builder;
+   package Builder renames Basedefs.Builder;
 
    ----------------------------------------------------------------------------
    -- Compiler
    ----------------------------------------------------------------------------
 
-   Compiler_Switches := (
-                         "-wrapper", GCC_Wrapper
-                        ) &
-                        Configure.ADAC_Switches_RTS &
-                        Configure.GCC_Platform_Switches &
-                        Configure.ADAC_Switches_Warning &
-                        Configure.ADAC_Switches_Style;
-
-   package Compiler is
-      for Driver ("Ada") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
-      for Driver ("Asm_Cpp") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
-      for Driver ("C") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
-      for Leading_Required_Switches ("Ada") use (
-                                                 "-x", "ada",
-                                                 "-c"
-                                                );
-      for Multi_Unit_Object_Separator ("Ada") use "~";
-      for Include_Switches ("Asm_Cpp") use ("-I");
-      for Mapping_Spec_Suffix ("Ada") use "%s";
-      for Mapping_Body_Suffix ("Ada") use "%b";
-      for Dependency_Kind ("Ada") use "ALI_File";
-      for Switches ("Ada") use (
-                                "-O" & Configure.Optimization_Level,
-                                "-gnatef",
-                                "-gnatf",
-                                "-gnatU",
-                                "-fverbose-asm",
-                                "-eL",
-                                "-eS",
-                                "-gnatn",
-                                "-ffunction-sections",
-                                "-fdata-sections",
-                                "-g3", "-gdwarf-4",
-                                "-fno-omit-frame-pointer",
-                                "-gnatE",
-                                "-gnato1",
-                                "-fstack-usage",
-                                "-fdump-rtl-expand",
-                                "-gnatVa"
-                               ) & Compiler_Switches;
-      for Switches ("C") use (
-                              "--freestanding",
-                              "-I" & Configure.SweetAda_Path & "/clibrary"
-                             );
-   end Compiler;
+   package Compiler renames Basedefs.Compiler;
 
    ----------------------------------------------------------------------------
    -- Binder
@@ -129,9 +48,7 @@ project SweetAda is
    Binder_Switches := ();
 
    package Binder is
-      for Driver ("Ada") use Configure.Toolchain_Prefix & "/libexec/gprbuild/gprbind";
       for Required_Switches ("Ada") use ("--RTS=" & Configure.RTS_Path);
-      for Objects_Path_File ("Ada") use Configure.Object_Directory;
       for Switches ("Ada") use (
                                 "-nostdinc",
                                 "-nostdlib",
@@ -142,7 +59,9 @@ project SweetAda is
                                 "-s",
                                 "-A=gnatbind_alis.lst",
                                 "-O=gnatbind_objs.lst"
-                               ) & Binder_Switches & Configure.Implicit_ALI_Units;
+                               ) &
+                               Binder_Switches &
+                               Configure.Implicit_ALI_Units;
    end Binder;
 
    ----------------------------------------------------------------------------
@@ -150,8 +69,14 @@ project SweetAda is
    ----------------------------------------------------------------------------
 
    package Linker is
-      for Driver use Compiler'Driver ("Ada");
    end Linker;
+
+   ----------------------------------------------------------------------------
+   -- Gnatls (not used)
+   ----------------------------------------------------------------------------
+
+   package Gnatls is
+   end Gnatls;
 
    ----------------------------------------------------------------------------
    -- Clean (not used)
