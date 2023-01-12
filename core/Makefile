@@ -56,6 +56,7 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/memory_functions.o : \
 
 .PHONY : configure
 configure :
+	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
 .PHONY : clean
 clean :

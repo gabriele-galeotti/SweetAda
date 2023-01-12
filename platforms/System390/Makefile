@@ -29,6 +29,7 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
+	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 	@$(PROCESSCFG) s390.cnf.in s390.cnf
 	@$(PROCESSCFG) hercules.rc.in hercules.rc
 	@$(PROCESSCFG) configure.h.in configure.h

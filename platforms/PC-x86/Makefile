@@ -53,6 +53,7 @@ installfiles :
 
 .PHONY : configure
 configure : configure-subplatform
+	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
 .PHONY : postbuild
 postbuild : postbuild-subplatform

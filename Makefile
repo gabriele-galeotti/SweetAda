@@ -831,9 +831,9 @@ endif
 else ifeq ($(BUILD_MODE),GPR)
 	@$(REM) force rebind under GPRbuild
 ifeq ($(OSTYPE),cmd)
-	-@$(RM) $(OBJECT_DIRECTORY)\main.bexch
+	@$(REM)-$(RM) $(OBJECT_DIRECTORY)\main.bexch
 else
-	-@$(RM) $(OBJECT_DIRECTORY)/main.bexch
+	@$(REM)-$(RM) $(OBJECT_DIRECTORY)/main.bexch
 endif
 	$(call brief-command, \
         $(GPRBUILD)                      \
@@ -858,7 +858,6 @@ ifeq ($(OSTYPE),cmd)
 	$(call brief-command, \
         $(ADAC_GNATBIND)                                  \
                          -c                               \
-                         -gnatec=$(GNATADC_FILENAME)      \
                          -o $(OBJECT_DIRECTORY)\b__main.o \
                          $(OBJECT_DIRECTORY)\b__main.adb  \
         ,[ADAC],b__main.adb)

@@ -27,6 +27,7 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
+	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
 .PHONY : clean
 clean :
@@ -38,5 +39,6 @@ distclean : clean
 .PHONY : dep
 dep :
 
+BUILD_MODE := MAKEFILE
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

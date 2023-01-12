@@ -32,6 +32,7 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : vectors.S
 
 .PHONY : configure
 configure :
+	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 	@$(PROCESSCFG) configure.h.in configure.h
 	@$(PROCESSCFG) configure.ads.in configure.ads
 
