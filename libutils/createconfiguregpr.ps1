@@ -16,10 +16,12 @@
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
-# GCC_WRAPPER
-# OBJECT_DIRECTORY
-# TOOLCHAIN_NAME
 # RTS_PATH
+# GCC_WRAPPER
+# ADA_MODE
+# USE_LIBGCC
+# USE_LIBADA
+# USE_CLIBRARY
 # PLATFORM
 # CPU
 # ADAC_SWITCHES_RTS
@@ -28,8 +30,9 @@
 # IMPLICIT_ALI_UNITS
 # ADAC_SWITCHES_WARNING
 # ADAC_SWITCHES_STYLE
-# OBJECT_DIRECTORY
 # OPTIMIZATION_LEVEL
+# LIBRARY_DIRECTORY
+# OBJECT_DIRECTORY
 #
 
 ################################################################################
@@ -101,9 +104,12 @@ print_V $configure_filename
 print_I $configure_filename "SweetAda_Path         := `"$env:SWEETADA_PATH`";"
 print_I $configure_filename "Toolchain_Prefix      := `"$env:TOOLCHAIN_PREFIX`";"
 print_I $configure_filename "Toolchain_Name        := `"$env:TOOLCHAIN_NAME`";"
-print_I $configure_filename "GCC_Wrapper           := `"$env:GCC_WRAPPER`";"
 print_I $configure_filename "RTS_Path              := `"$env:RTS_PATH`";"
+print_I $configure_filename "GCC_Wrapper           := `"$env:GCC_WRAPPER`";"
 print_I $configure_filename "Ada_Mode              := `"$env:ADA_MODE`";"
+print_I $configure_filename "Use_LibGCC            := `"$env:USE_LIBGCC`";"
+print_I $configure_filename "Use_LibAda            := `"$env:USE_LIBADA`";"
+print_I $configure_filename "Use_CLibrary          := `"$env:USE_CLIBRARY`";"
 print_I $configure_filename "Platform              := `"$env:PLATFORM`";"
 print_I $configure_filename "Cpu                   := `"$env:CPU`";"
 print_I $configure_filename "ADAC_Switches_RTS     := ("

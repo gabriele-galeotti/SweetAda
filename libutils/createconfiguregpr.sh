@@ -19,10 +19,12 @@
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
-# GCC_WRAPPER
-# OBJECT_DIRECTORY
-# TOOLCHAIN_NAME
 # RTS_PATH
+# GCC_WRAPPER
+# ADA_MODE
+# USE_LIBGCC
+# USE_LIBADA
+# USE_CLIBRARY
 # PLATFORM
 # CPU
 # ADAC_SWITCHES_RTS
@@ -31,8 +33,9 @@
 # IMPLICIT_ALI_UNITS
 # ADAC_SWITCHES_WARNING
 # ADAC_SWITCHES_STYLE
-# OBJECT_DIRECTORY
 # OPTIMIZATION_LEVEL
+# LIBRARY_DIRECTORY
+# OBJECT_DIRECTORY
 #
 
 ################################################################################
@@ -181,9 +184,12 @@ print_V
 print_I "SweetAda_Path         := \"${SWEETADA_PATH}\";"
 print_I "Toolchain_Prefix      := \"${TOOLCHAIN_PREFIX}\";"
 print_I "Toolchain_Name        := \"${TOOLCHAIN_NAME}\";"
-print_I "GCC_Wrapper           := \"${GCC_WRAPPER}\";"
 print_I "RTS_Path              := \"${RTS_PATH}\";"
+print_I "GCC_Wrapper           := \"${GCC_WRAPPER}\";"
 print_I "Ada_Mode              := \"${ADA_MODE}\";"
+print_I "Use_LibGCC            := \"${USE_LIBGCC}\";"
+print_I "Use_LibAda            := \"${USE_LIBADA}\";"
+print_I "Use_CLibrary          := \"${USE_CLIBRARY}\";"
 print_I "Platform              := \"${PLATFORM}\";"
 print_I "Cpu                   := \"${CPU}\";"
 INDENTL="                          "
