@@ -20,7 +20,7 @@
 
 #
 # If $1 is a directory, all files contained in the directory are made targets
-# (with the same filename) of a correspondent symlink, regardless of $2.
+# of the correspondent symlinks (with the same filename), regardless of $2.
 #
 
 ################################################################################

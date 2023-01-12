@@ -16,6 +16,11 @@
 # VERBOSE
 #
 
+#
+# If $1 is a directory, all files contained in the directory are made targets
+# of the correspondent symlinks (with the same filename), regardless of $2.
+#
+
 ################################################################################
 # ExitWithCode()                                                               #
 #                                                                              #
