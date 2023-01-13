@@ -59,79 +59,97 @@ package Console is
    Console_Descriptor : Console_Descriptor_Type := (Console_Null_Write'Access, Console_Null_Read'Access);
 
    procedure Print (C : in Character);
-   procedure Print (c : in Interfaces.C.char);
+
+   procedure Print (c : in Interfaces.C.char) with
+      Export        => True,
+      Convention    => Ada,
+      External_Name => "console__print__cchar";
+
    procedure Print_NewLine;
+
    procedure Print (
                     S     : in String;
                     Limit : in Natural := Maximum_String_Length;
                     NL    : in Boolean := False
                    );
+
    procedure Print (
                     Value  : in Boolean;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
                    );
+
    procedure Print (
                     Value  : in Bits.Bits_1;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
                    );
+
    procedure Print (
                     Value  : in Interfaces.Unsigned_8;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
                    );
+
    procedure Print (
                     Value  : in Interfaces.Unsigned_16;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
                    );
+
    procedure Print (
                     Value  : in Interfaces.Unsigned_32;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
                    );
+
    procedure Print (
                     Value  : in Interfaces.Unsigned_64;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
                    );
+
    procedure Print (
                     Value  : in SSE.Integer_Address;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
                    );
+
    procedure Print (
                     Value  : in System.Address;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
                    );
+
    procedure Print (
                     Value  : in Integer;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
                    );
+
    procedure Print (
                     s      : in Interfaces.C.size_t;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
                    );
+
    procedure Print_BitImage (
                              Value  : in Interfaces.Unsigned_8;
                              NL     : in Boolean := False;
                              Prefix : in String := "";
                              Suffix : in String := ""
                             );
+
    procedure Print (
                     ByteArray : in Bits.Byte_Array;
                     Limit     : in Natural := 0;
@@ -139,17 +157,20 @@ package Console is
                     Prefix    : in String := "";
                     Separator : in Character := ' '
                    );
+
    procedure Print_ASCIIZ_String (
                                   String_Ptr : in System.Address;
                                   NL         : in Boolean := False;
                                   Prefix     : in String := "";
                                   Suffix     : in String := ""
                                  );
+
    procedure Print_Memory (
                            Start_Address : in System.Address;
                            Data_Size     : in Bits.Bytesize;
                            Row_Size      : in Row_Size_Type := 16
                           );
+
    procedure TTY_Setup;
 
 end Console;

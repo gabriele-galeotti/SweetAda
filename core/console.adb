@@ -30,7 +30,7 @@ package body Console is
    --========================================================================--
 
    use type System.Address;
-   use type System.Storage_Elements.Storage_Offset;
+   use type SSE.Storage_Offset;
    use type SSE.Integer_Address;
    use type Interfaces.Unsigned_8;
    use type Interfaces.C.char;
@@ -297,7 +297,7 @@ package body Console is
                                  LCase => False,
                                  C     => Address_Literal (Index)
                                 );
-         IAddress := IAddress / 2**4;
+         IAddress := @ / 2**4;
       end loop;
       Print (Address_Literal);
       if Suffix'Length /= 0 then
@@ -350,8 +350,8 @@ package body Console is
             -- by prescaling their values
             while NNumber < -Integer'Last loop
                Number_Literal (Literal_Index) := To_Ch (-(NNumber rem 10));
-               Literal_Index := Literal_Index - 1;
-               NNumber := NNumber / 10;
+               Literal_Index := @ - 1;
+               NNumber := @ / 10;
             end loop;
             -- now conversion to positive value is safe
             Number := -NNumber;
@@ -362,7 +362,7 @@ package body Console is
       -- build literal string
       for Index in reverse 2 .. Literal_Index loop
          Number_Literal (Index) := To_Ch (Number rem 10);
-         Number := Number / 10;
+         Number := @ / 10;
          if Number = 0 then
             Literal_Index := Index;
             exit;
@@ -370,7 +370,7 @@ package body Console is
       end loop;
       -- add negative sign
       if Negative_Sign then
-         Literal_Index := Literal_Index - 1;
+         Literal_Index := @ - 1;
          Number_Literal (Literal_Index) := '-';
       end if;
       Print (Number_Literal (Literal_Index .. Number_Literal'Last));
@@ -400,7 +400,7 @@ package body Console is
       end if;
       for Index in reverse Number_Literal'Range loop
          Number_Literal (Index) := To_Ch (Decimal_Digit_Type (Number mod 10));
-         Number := Number / 10;
+         Number := @ / 10;
          if Number = 0 then
             Literal_Index := Index;
             exit;
@@ -543,7 +543,7 @@ package body Console is
          end if;
          -- pad with spaces until start of data
          while Item_Count < Natural (IAddress_L) loop
-            Item_Count := Item_Count + 1;
+            Item_Count := @ + 1;
             Print ("   ");
             ASCII_Syms (Item_Count) := ' ';
          end loop;
@@ -554,7 +554,7 @@ package body Console is
                   Address  => SSE.To_Address (IAddress_H + Byte_Offset),
                   Volatile => True;
             begin
-               Item_Count := Item_Count + 1;
+               Item_Count := @ + 1;
                Print (Byte, Prefix => " ");
                if Byte in 16#20# .. 16#7F# then
                   ASCII_Syms (Item_Count) := Bits.To_Ch (Byte);
@@ -565,7 +565,7 @@ package body Console is
          end loop;
          -- pad with spaces until end of row
          while Item_Count < Natural (Row_Size) loop
-            Item_Count := Item_Count + 1;
+            Item_Count := @ + 1;
             Print ("   ");
             ASCII_Syms (Item_Count) := ' ';
          end loop;
@@ -575,10 +575,11 @@ package body Console is
          -- close row
          Print_NewLine;
          -- compute address of next block of bytes
+         -- IAddress_H := @ + SSE.Integer_Address (Row_Size);
          IAddress_H := IAddress_H + SSE.Integer_Address (Row_Size);
          exit when IAddress_H >= IAddress + SSE.Integer_Address (Data_Size);
          -- update # of bytes remaining
-         NBytes := NBytes - NBytes_Row;
+         NBytes := @ - NBytes_Row;
          -- re-start at offset 0
          IAddress_L := 0;
       end loop;
