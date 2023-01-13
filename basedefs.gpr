@@ -79,6 +79,7 @@ abstract project Basedefs is
       for Dependency_Kind ("Ada") use "ALI_File";
       for Multi_Unit_Object_Separator ("Ada") use "~";
       for Switches ("Ada") use (
+                                Ada_Mode,
                                 "-O" & Configure.Optimization_Level,
                                 "-gnatef",
                                 "-gnatf",
