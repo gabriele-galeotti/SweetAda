@@ -290,6 +290,10 @@ main(int argc, char **argv)
                                 ++idx_switches;
                         }
                 }
+                else if (argv[idx][0] == '@')
+                {
+                        /* temporary reference */
+                }
                 else
                 {
                         /* an argument without "-" is a token */
