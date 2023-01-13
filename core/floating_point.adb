@@ -127,7 +127,7 @@ package body Floating_Point is
          S := '+';
       end if;
       if F /= 0.0 then
-         F := @ + Exp10 (Log10 (F) - Precision) / 2.0; -- round (nearest)
+         F := @ + Exp10 (Log10 (@) - Precision) / 2.0; -- round (nearest)
          E := Log10 (F);
          if E > 99 or else Precision + 7 >= Buffer_Size then
             Error := True;
