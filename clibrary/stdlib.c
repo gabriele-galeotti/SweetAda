@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if defined(ENABLE_ABORT)
 /******************************************************************************
  * void abort(void)                                                           *
  *                                                                            *
@@ -28,12 +27,8 @@
 void
 abort(void)
 {
-        while (true)
-        {
-                /* __NOP__ */
-        }
+        ada_abort();
 }
-#endif
 
 #define UNSIGNED (1 << 0) /* use unsigned long version */
 #define NEGATIVE (1 << 1) /* "-" detected              */

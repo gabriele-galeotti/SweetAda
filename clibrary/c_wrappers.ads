@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Interfaces;
 with Interfaces.C;
 
 package C_Wrappers is
@@ -34,47 +33,13 @@ package C_Wrappers is
    procedure Ada_Abort with
       Export        => True,
       Convention    => C,
-      External_Name => "abort";
+      External_Name => "ada_abort",
+      No_Return     => True;
 
    procedure Ada_Print_Character (c : in Interfaces.C.char) with
       Export        => True,
       Convention    => C,
       External_Name => "ada_print_character";
-
-   procedure Ada_Print_NewLine with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_print_newline";
-
-   procedure Ada_Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_print_hexunsigned8";
-
-   procedure Ada_Print_UnsignedHex16 (Value : in Interfaces.Unsigned_16) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_print_hexunsigned16";
-
-   procedure Ada_Print_UnsignedHex32 (Value : in Interfaces.Unsigned_32) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_print_hexunsigned32";
-
-   procedure Ada_Print_UnsignedHex64 (Value : in Interfaces.Unsigned_64) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_print_hexunsigned64";
-
-   procedure Ada_Print_AddressHex (Value : in System.Address) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_print_hexaddress";
-
-   procedure Ada_Print_BitImage (Value : in Interfaces.Unsigned_8) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_print_bitimage";
 
    function Ada_Malloc (S : Interfaces.C.size_t) return System.Address with
       Export        => True,

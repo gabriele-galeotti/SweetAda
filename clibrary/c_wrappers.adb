@@ -15,10 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Abort_Library;
-with Malloc;
-with Console;
-
 package body C_Wrappers is
 
    --========================================================================--
@@ -30,68 +26,58 @@ package body C_Wrappers is
    --========================================================================--
 
    procedure Ada_Abort is
+      procedure System_Abort with
+         Import        => True,
+         Convention    => Ada,
+         External_Name => "abort_library__system_abort",
+         No_Return     => True;
    begin
-      Abort_Library.System_Abort;
+      System_Abort;
    end Ada_Abort;
 
    procedure Ada_Print_Character (c : in Interfaces.C.char) is
+      procedure Print (cc : in Interfaces.C.char) with
+         Import        => True,
+         Convention    => Ada,
+         External_Name => "console__print__cchar";
    begin
-      Console.Print (c);
+      Print (c);
    end Ada_Print_Character;
 
-   procedure Ada_Print_NewLine is
-   begin
-      Console.Print_NewLine;
-   end Ada_Print_NewLine;
-
-   procedure Ada_Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8) is
-   begin
-      Console.Print (Value);
-   end Ada_Print_UnsignedHex8;
-
-   procedure Ada_Print_UnsignedHex16 (Value : in Interfaces.Unsigned_16) is
-   begin
-      Console.Print (Value);
-   end Ada_Print_UnsignedHex16;
-
-   procedure Ada_Print_UnsignedHex32 (Value : in Interfaces.Unsigned_32) is
-   begin
-      Console.Print (Value);
-   end Ada_Print_UnsignedHex32;
-
-   procedure Ada_Print_UnsignedHex64 (Value : in Interfaces.Unsigned_64) is
-   begin
-      Console.Print (Value);
-   end Ada_Print_UnsignedHex64;
-
-   procedure Ada_Print_AddressHex (Value : in System.Address) is
-   begin
-      Console.Print (Value);
-   end Ada_Print_AddressHex;
-
-   procedure Ada_Print_BitImage (Value : in Interfaces.Unsigned_8) is
-   begin
-      Console.Print_BitImage (Value);
-   end Ada_Print_BitImage;
-
    function Ada_Malloc (S : Interfaces.C.size_t) return System.Address is
+      function Malloc (SS : Interfaces.C.size_t) return System.Address with
+         Import        => True,
+         Convention    => C,
+         External_Name => "__gnat_malloc";
    begin
-      return Malloc.Malloc (S);
+      return Malloc (S);
    end Ada_Malloc;
 
    procedure Ada_Free (A : in System.Address) is
+      procedure Free (AA : in System.Address) with
+         Import        => True,
+         Convention    => C,
+         External_Name => "__gnat_free";
    begin
-      Malloc.Free (A);
+      Free (A);
    end Ada_Free;
 
    function Ada_Calloc (N : Interfaces.C.size_t; S : Interfaces.C.size_t) return System.Address is
+      function Calloc (NN : Interfaces.C.size_t; SS : Interfaces.C.size_t) return System.Address with
+         Import        => True,
+         Convention    => Ada,
+         External_Name => "malloc__calloc";
    begin
-      return Malloc.Calloc (N, S);
+      return Calloc (N, S);
    end Ada_Calloc;
 
    function Ada_Realloc (A : System.Address; S : Interfaces.C.size_t) return System.Address is
+      function Realloc (AA : System.Address; SS : Interfaces.C.size_t) return System.Address with
+         Import        => True,
+         Convention    => Ada,
+         External_Name => "malloc__realloc";
    begin
-      return Malloc.Realloc (A, S);
+      return Realloc (A, S);
    end Ada_Realloc;
 
 end C_Wrappers;

@@ -77,6 +77,7 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o : \
 
 .PHONY : configure
 configure :
+	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
 .PHONY : clean
 clean :
