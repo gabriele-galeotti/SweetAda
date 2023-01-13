@@ -842,9 +842,9 @@ endif
                     > gnatbind_elab.lst  \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 ifeq ($(OSTYPE),cmd)
-	-@$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ $(NULL)
+	-@$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ 2> nul
 else
-	-@$(MV) $(OBJECT_DIRECTORY)/gnatbind_objs.lst ./
+	-@$(MV) $(OBJECT_DIRECTORY)/gnatbind_objs.lst ./ 2> /dev/null
 endif
 endif
 
