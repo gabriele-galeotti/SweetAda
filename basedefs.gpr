@@ -44,7 +44,7 @@ abstract project Basedefs is
    end case;
 
    package Builder is
-      for Global_Configuration_Pragmas use "gnat.adc";
+      for Global_Configuration_Pragmas use Configure.GnatAdc_Filename;
       for Switches ("Asm_Cpp") use Builder_Switches;
       for Switches ("Ada") use (
                                 Ada_Mode,
