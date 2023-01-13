@@ -20,6 +20,7 @@
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
 # RTS_PATH
+# GNATADC_FILENAME
 # GCC_WRAPPER
 # ADA_MODE
 # USE_LIBGCC
@@ -185,6 +186,7 @@ print_I "SweetAda_Path         := \"${SWEETADA_PATH}\";"
 print_I "Toolchain_Prefix      := \"${TOOLCHAIN_PREFIX}\";"
 print_I "Toolchain_Name        := \"${TOOLCHAIN_NAME}\";"
 print_I "RTS_Path              := \"${RTS_PATH}\";"
+print_I "GnatAdc_Filename      := \"${GNATADC_FILENAME}\";"
 print_I "GCC_Wrapper           := \"${GCC_WRAPPER}\";"
 print_I "Ada_Mode              := \"${ADA_MODE}\";"
 print_I "Use_LibGCC            := \"${USE_LIBGCC}\";"

@@ -17,6 +17,7 @@
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
 # RTS_PATH
+# GNATADC_FILENAME
 # GCC_WRAPPER
 # ADA_MODE
 # USE_LIBGCC
@@ -105,6 +106,7 @@ print_I $configure_filename "SweetAda_Path         := `"$env:SWEETADA_PATH`";"
 print_I $configure_filename "Toolchain_Prefix      := `"$env:TOOLCHAIN_PREFIX`";"
 print_I $configure_filename "Toolchain_Name        := `"$env:TOOLCHAIN_NAME`";"
 print_I $configure_filename "RTS_Path              := `"$env:RTS_PATH`";"
+print_I $configure_filename "GnatAdc_Filename      := `"$env:GNATADC_FILENAME`";"
 print_I $configure_filename "GCC_Wrapper           := `"$env:GCC_WRAPPER`";"
 print_I $configure_filename "Ada_Mode              := `"$env:ADA_MODE`";"
 print_I $configure_filename "Use_LibGCC            := `"$env:USE_LIBGCC`";"
