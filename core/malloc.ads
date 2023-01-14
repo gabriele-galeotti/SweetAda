@@ -47,8 +47,14 @@ package Malloc is
       Convention    => C,
       External_Name => "__gnat_free";
 
-   function Calloc (Nmemb : Interfaces.C.size_t; Size : Interfaces.C.size_t) return System.Address;
+   function Calloc (Nmemb : Interfaces.C.size_t; Size : Interfaces.C.size_t) return System.Address with
+      Export        => True,
+      Convention    => Ada,
+      External_Name => "malloc__calloc";
 
-   function Realloc (Memory_Address : System.Address; Size : Interfaces.C.size_t) return System.Address;
+   function Realloc (Memory_Address : System.Address; Size : Interfaces.C.size_t) return System.Address with
+      Export        => True,
+      Convention    => Ada,
+      External_Name => "malloc__realloc";
 
 end Malloc;
