@@ -11,6 +11,7 @@
 #
 # Environment variables:
 # KERNEL_PARENT_PATH
+# TOUCH
 # BUILD_MODE
 # LIBRARY_DIRECTORY
 # OBJECT_DIRECTORY
@@ -39,18 +40,11 @@ INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
 	$(call brief-command, \
-        $(AR) cr $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a $(OBJECTS) \
-        ,[AR],lib$(LIBRARY_NAME).a)
+        $(AR) cr $@ $(OBJECTS) \
+        ,[AR],$(notdir $@))
 	$(call brief-command, \
-        $(RANLIB) $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a \
-        ,[RANLIB],lib$(LIBRARY_NAME).a)
-
-#$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.adb %.ads
-#	$(call brief-command, \
-#        $(GNATMAKE)                                              \
-#                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) \
-#                    -c $(INCLUDES) $<                            \
-#        ,[GNATMAKE],$<)
+        $(RANLIB) $@ \
+        ,[RANLIB],$(notdir $@))
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.adb
 	$(call brief-command, \
@@ -68,11 +62,6 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.ads
                     -c $(INCLUDES) $<                            \
         ,[GNATMAKE],$<)
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.c
-	$(call brief-command, \
-        $(CC) -o $@ -c $(INCLUDES) $< \
-        ,[CC],$<)
-
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.S
 	$(call brief-command, \
         $(CC) -o $@ -c $(INCLUDES) $< \
@@ -80,9 +69,21 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.S
 
 else ifeq ($(BUILD_MODE),GPR)
 
+ifeq ($(OBJECTS),)
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a :
+	$(call brief-command, \
+        $(TOUCH) $@ \
+        ,[AR-NULL],$(notdir $@))
+
+else
+
 #
 # GPRbuild
 #
+
+# shorthand
+LIB_LIBRARY := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 GPR_INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
 export GPR_INCLUDES
@@ -90,22 +91,24 @@ export GPR_INCLUDES
 .PHONY : FORCE
 FORCE :
 
-.PHONY : gprbuild
-gprbuild : FORCE
-	$(GPRBUILD) -aP $(KERNEL_PARENT_PATH) -P $(LIBRARY_NAME).gpr
+$(LIB_LIBRARY) : FORCE
+	$(call brief-command, \
+        $(GPRBUILD)                           \
+                    -aP $(KERNEL_PARENT_PATH) \
+                    -P $(LIBRARY_NAME).gpr    \
+        ,[GPRBUILD-L],$(LIBRARY_NAME).gpr)
 
-$(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)/lib$(LIBRARY_NAME).a : gprbuild
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : \
-  $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)/lib$(LIBRARY_NAME).a
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : $(LIB_LIBRARY)
 ifeq ($(OSTYPE),cmd)
-	$(CP)                                                             \
-          $(KERNEL_PARENT_PATH)\$(LIBRARY_DIRECTORY)\lib$(LIBRARY_NAME).a \
-          $(KERNEL_PARENT_PATH)\$(OBJECT_DIRECTORY)\ $(NULL)
+	$(call brief-command, \
+        $(CP) $(LIB_LIBRARY) $(KERNEL_PARENT_PATH)\$(OBJECT_DIRECTORY)\ \
+        ,[COPYOBJLIB],$(notdir $@))
 else
-	$(CP)                                                             \
-          $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)/lib$(LIBRARY_NAME).a \
-          $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/
+	$(call brief-command, \
+        $(CP) $(LIB_LIBRARY) $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/ \
+        ,[COPYOBJLIB],$(notdir $@))
+endif
+
 endif
 
 endif
