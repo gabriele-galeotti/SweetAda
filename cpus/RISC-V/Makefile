@@ -39,6 +39,5 @@ distclean : clean
 .PHONY : dep
 dep :
 
-BUILD_MODE := MAKEFILE
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
