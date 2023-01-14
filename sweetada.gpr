@@ -60,8 +60,7 @@ project SweetAda is
                                 "-A=gnatbind_alis.lst",
                                 "-O=gnatbind_objs.lst"
                                ) &
-                               Binder_Switches &
-                               Configure.Implicit_ALI_Units;
+                               Binder_Switches;
    end Binder;
 
    ----------------------------------------------------------------------------
