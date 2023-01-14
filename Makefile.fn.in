@@ -33,7 +33,7 @@ BRIEFTEXT_CHRMSK := $(NULL)............$(NULL)
 #
 ifeq ($(OSTYPE),cmd)
 # discard delimiting double-quotes
-echo-print = $(ECHO) $1| $(SED) -e "s|^\x22||" -e "s|\x22$$||"
+echo-print = $(ECHO) $1| $(SED) -e "s|^""""\(.*\)""""$$|\1|"
 else
 echo-print = $(ECHO) $1
 endif

@@ -52,6 +52,8 @@ static struct switch_descriptor switches[] = {
         { "D",             EXACT_MATCH | HAS_ARGUMENT                   },
         { "G",             EXACT_MATCH | HAS_ARGUMENT                   },
         { "I",             EXACT_MATCH | HAS_ARGUMENT                   },
+        { "MF",            EXACT_MATCH | HAS_ARGUMENT                   },
+        { "MMD",           EXACT_MATCH | HAS_ARGUMENT                   },
         { "auxbase",       EXACT_MATCH | HAS_ARGUMENT                   },
         { "auxbase-strip", EXACT_MATCH | HAS_ARGUMENT                   },
         { "dumpbase",      EXACT_MATCH | HAS_ARGUMENT                   },
@@ -63,8 +65,6 @@ static struct switch_descriptor switches[] = {
         { "imultilib",     EXACT_MATCH | HAS_ARGUMENT                   },
         { "iprefix",       EXACT_MATCH | HAS_ARGUMENT                   },
         { "isystem",       EXACT_MATCH | HAS_ARGUMENT                   },
-        { "MF",            EXACT_MATCH | HAS_ARGUMENT                   },
-        { "MMD",           EXACT_MATCH | HAS_ARGUMENT                   },
         { "o",             EXACT_MATCH | HAS_ARGUMENT | OUTPUT_FILENAME },
         { "plugin",        EXACT_MATCH | HAS_ARGUMENT                   },
         { NULL, 0 }
@@ -293,6 +293,7 @@ main(int argc, char **argv)
                 else if (argv[idx][0] == '@')
                 {
                         /* temporary reference */
+                        /* __NOP__ */
                 }
                 else
                 {
