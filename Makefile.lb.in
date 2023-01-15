@@ -38,6 +38,12 @@ ifeq ($(BUILD_MODE),MAKEFILE)
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 
+ifeq ($(LIBRARY_NAME),platform)
+GCC_SWITCHES_LIBRARY := $(GCC_SWITCHES_STARTUP)
+else
+GCC_SWITCHES_LIBRARY :=
+endif
+
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
 	$(call brief-command, \
         $(AR) cr $@ $(OBJECTS) \
@@ -51,6 +57,7 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.adb
         $(GNATMAKE)                                              \
                     -gnatec=$(GNATADC_FILENAME)                  \
                     -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) \
+                    $(GCC_SWITCHES_LIBRARY)                      \
                     -c $(INCLUDES) $<                            \
         ,[GNATMAKE],$<)
 
@@ -59,12 +66,16 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.ads
         $(GNATMAKE)                                              \
                     -gnatec=$(GNATADC_FILENAME)                  \
                     -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) \
+                    $(GCC_SWITCHES_LIBRARY)                      \
                     -c $(INCLUDES) $<                            \
         ,[GNATMAKE],$<)
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.S
 	$(call brief-command, \
-        $(CC) -o $@ -c $(INCLUDES) $< \
+        $(CC)                         \
+              -o $@                   \
+              $(GCC_SWITCHES_LIBRARY) \
+              -c $(INCLUDES) $<       \
         ,[CC/AS],$<)
 
 else ifeq ($(BUILD_MODE),GPR)
