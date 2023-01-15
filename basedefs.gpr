@@ -64,12 +64,12 @@ abstract project Basedefs is
       -- Asm_Cpp
       for Driver ("Asm_Cpp") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
       for Include_Switches ("Asm_Cpp") use ("-I");
-      for Switches ("Asm_Cpp") use Configure.GCC_Platform_Switches &
+      for Switches ("Asm_Cpp") use Configure.GCC_Switches_Platform &
                                    GCC_Wrapper_Switch;
       -- C
       for Driver ("C") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
       for Leading_Required_Switches ("C") use ("--freestanding", "-std=c99");
-      for Switches ("C") use Configure.GCC_Platform_Switches &
+      for Switches ("C") use Configure.GCC_Switches_Platform &
                              GCC_Wrapper_Switch;
       -- Ada
       for Driver ("Ada") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
