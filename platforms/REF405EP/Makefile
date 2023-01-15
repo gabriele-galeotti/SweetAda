@@ -28,8 +28,8 @@ OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/llkernel.o
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 # dependencies of startup.S
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/PPC405/pll.S   \
-                                                      $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/PPC405/sdram.S
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/PPC405/pll.h   \
+                                                      $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/PPC405/sdram.h
 
 .PHONY : configure
 configure :

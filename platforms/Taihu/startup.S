@@ -95,8 +95,8 @@ _start:
                 ori     r0,r0,ivtable@l
                 mtspr   EVPR,r0
 
-#include "pll.S"
-#include "sdram.S"
+#include "pll.h"
+#include "sdram.h"
 
                 //
                 // Timer facilities.
