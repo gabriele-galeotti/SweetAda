@@ -36,10 +36,11 @@ configure :
 .PHONY : postbuild
 postbuild :
 	$(call brief-command, \
-        $(OBJCOPY)                                                                                       \
-                   -j .romstartup -j .text -j .data                                                      \
-                   -O srec                                                                               \
-                   $(KERNEL_PARENT_PATH)/$(KERNEL_OUTFILE) $(KERNEL_PARENT_PATH)/$(KERNEL_BASENAME).srec \
+        $(OBJCOPY)                                               \
+                   -j .romstartup -j .text -j .data              \
+                   -O srec                                       \
+                   $(KERNEL_PARENT_PATH)/$(KERNEL_OUTFILE)       \
+                   $(KERNEL_PARENT_PATH)/$(KERNEL_BASENAME).srec \
         ,[OBJCOPY],$(KERNEL_BASENAME).srec)
 ifneq ($(OSTYPE),cmd)
 	@chmod a-x $(KERNEL_PARENT_PATH)/$(KERNEL_BASENAME).srec
