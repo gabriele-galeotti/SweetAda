@@ -100,7 +100,7 @@ abstract project Basedefs is
                                ) &
                                GCC_Wrapper_Switch              &
                                Configure.ADAC_Switches_RTS     &
-                               Configure.GCC_Platform_Switches &
+                               Configure.GCC_Switches_Platform &
                                Configure.ADAC_Switches_Warning &
                                Configure.ADAC_Switches_Style;
    end Compiler;

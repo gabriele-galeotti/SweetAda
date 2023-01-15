@@ -132,17 +132,17 @@ if ($adac_switches_rts.Length -gt 0)
   }
 }
 print_I $configure_filename "                         );"
-print_I $configure_filename "GCC_Platform_Switches := ("
-$gcc_platform_switches = $env:GCC_SWITCHES_PLATFORM.Trim(" ")
-if ($gcc_platform_switches.Length -gt 0)
+print_I $configure_filename "GCC_Switches_Platform := ("
+$gcc_switches_platform = $env:GCC_SWITCHES_PLATFORM.Trim(" ")
+if ($gcc_switches_platform.Length -gt 0)
 {
-  $gcc_platform_switches_array = $gcc_platform_switches -split "\s+"
+  $gcc_switches_platform_array = $gcc_switches_platform -split "\s+"
   $count = 0
-  foreach ($s in $gcc_platform_switches_array)
+  foreach ($s in $gcc_switches_platform_array)
   {
     $count = $count + 1
     $s = "`"$s`""
-    if ($count -ne $gcc_platform_switches_array.Length)
+    if ($count -ne $gcc_switches_platform_array.Length)
     {
       $s += ","
     }
