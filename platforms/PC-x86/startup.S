@@ -31,7 +31,7 @@ Lfcall\@:       // next instruction
 ////////////////////////////////////////////////////////////////////////////////
 
 #if defined(MODE32)
-# include "mode32.S"
+# include "mode32.h"
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ _start:
 #endif
 
 #if defined(STARTUP_MEMORY)
-# include "startup-memory.S"
+# include "startup-memory.h"
 #endif
 #if defined(CODE_RELOC)
                 fcall   movcode

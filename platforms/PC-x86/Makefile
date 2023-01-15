@@ -31,17 +31,10 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 # startup.S processing
 ifeq ($(MODE32),Y)
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : mode32.S
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : mode32.h
 endif
 ifeq ($(USE_STARTUP_MEMORY),Y)
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-memory.S
-endif
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup.S
-	$(call brief-command, \
-        $(CC) -o $@ -c $(INCLUDES) $(STARTUP_DEFINES) $< \
-        ,[CC/AS],$<)
-ifeq ($(MODE32),Y)
-	@$(OBJDUMP) -M i8086 -d -j .init16 $@ > init16.lst
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-memory.h
 endif
 
 .PHONY : installfiles

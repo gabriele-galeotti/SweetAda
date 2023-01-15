@@ -1,6 +1,4 @@
 
-OBJECTS += $(patsubst %,$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o,$(ADDITIONAL_OBJECTS))
-
 DISTCLEAN_OBJECTS_EXTRA := Makefile.in        \
                            bsp-board_init.adb \
                            configuration.in   \
