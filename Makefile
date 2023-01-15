@@ -1138,10 +1138,10 @@ endif
 	@$(call echo-print,"OBJDUMP SWITCHES:       $(strip $(OBJDUMP_SWITCHES_PLATFORM))")
 endif
 ifneq ($(EXTERNAL_OBJECTS),)
-	@$(call echo-print,"EXTERNAL OBJECTS:    $(EXTERNAL_OBJECTS)")
+	@$(call echo-print,"EXTERNAL OBJECTS:       $(EXTERNAL_OBJECTS)")
 endif
 ifeq ($(DISABLE_STACK_USAGE),Y)
-	@$(call echo-print,"DISABLE STACK USAGE: Y")
+	@$(call echo-print,"DISABLE STACK USAGE:    $(DISABLE_STACK_USAGE)")
 endif
 	@$(call echo-print,"")
 
