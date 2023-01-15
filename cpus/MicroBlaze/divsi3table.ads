@@ -16,27 +16,27 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
-with Bits;
 
 package DivSI3Table is
 
-private
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                              Private part                              --
+   --                           Local declarations                           --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use type Interfaces.Unsigned_8;
+   use Interfaces;
+
+   type GCC_Table_Type is array (0 .. 255) of Unsigned_8 with
+      Pack => True;
 
    ----------------------------------------------------------------------------
    -- the address of divsi3_table is pre-loaded by the compiler in a register
    -- __REF__ gcc/config/microblaze/microblaze.c:microblaze_expand_divide()
    ----------------------------------------------------------------------------
-   Table : constant Bits.Byte_Array :=
+   Table : constant GCC_Table_Type :=
       [
        0,      0 / 1,  0 / 2,   0 / 3,   0 / 4,   0 / 5,   0 / 6,   0 / 7,
        0 / 8,  0 / 9,  0 / 10,  0 / 11,  0 / 12,  0 / 13,  0 / 14,  0 / 15,
