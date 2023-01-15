@@ -26,6 +26,8 @@ OBJECTS += $(patsubst %,$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o,$(IMPLICIT
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
+ifeq ($(BUILD_MODE),MAKEFILE)
+
 # manually-inferred dependency logic
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/abort_library.o : \
@@ -53,6 +55,8 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/malloc.o :   \
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/memory_functions.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_BITS)
+
+endif
 
 .PHONY : configure
 configure :

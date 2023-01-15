@@ -33,6 +33,8 @@ OBJECTS += $(patsubst %,$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o,$(IMPLICIT
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
+ifeq ($(BUILD_MODE),MAKEFILE)
+
 # manually-inferred dependency logic
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/assert.o : \
@@ -75,6 +77,8 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)       \
         $(KERNEL_PARENT_PATH)/$(SPEC_MALLOC)
 
+endif
+
 .PHONY : configure
 configure :
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
@@ -88,6 +92,11 @@ distclean : clean
 
 .PHONY : dep
 dep :
+
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.c
+	$(call brief-command, \
+        $(CC) -o $@ -c $(INCLUDES) $< \
+        ,[CC],$<)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
