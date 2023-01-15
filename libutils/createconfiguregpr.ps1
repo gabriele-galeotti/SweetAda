@@ -27,6 +27,7 @@
 # CPU
 # ADAC_SWITCHES_RTS
 # GCC_SWITCHES_PLATFORM
+# GCC_SWITCHES_STARTUP
 # INCLUDE_DIRECTORIES
 # IMPLICIT_ALI_UNITS
 # ADAC_SWITCHES_WARNING
@@ -65,11 +66,35 @@ function print_I
 {
   param([string]$f, [string]$t)
   $is = ""
-  for ($i=0 ; $i -lt $indentation_level ; $i++)
+  for ($i = 0 ; $i -lt $indentation_level ; $i++)
   {
     $is += "   "
   }
   Add-Content -Path $f -Value "$is$t"
+}
+
+################################################################################
+# print_list()                                                                 #
+#                                                                              #
+################################################################################
+function print_list
+{
+  param([string]$f, [string]$list, [int]$il, [string]$ispaces)
+  if ($list.Length -gt 0)
+  {
+    $list_array = $list -split "\s+"
+    $count = 0
+    foreach ($s in $list_array)
+    {
+      $count = $count + 1
+      $s = "`"$s`""
+      if ($count -ne $list_array.Length)
+      {
+        $s += ","
+      }
+      print_I $f "$ispaces$s"
+    }
+  }
 }
 
 ################################################################################
@@ -84,6 +109,8 @@ $configure_filename = $args[1]
 
 Remove-Item -Path $configure_filename -Force -ErrorAction Ignore
 New-Item -Name $configure_filename -ItemType File | Out-Null
+
+$indentation_Ada = "   " # Ada 3-space indentation style
 
 $indentation_level = 0
 
@@ -114,131 +141,27 @@ print_I $configure_filename "Use_LibAda            := `"$env:USE_LIBADA`";"
 print_I $configure_filename "Use_CLibrary          := `"$env:USE_CLIBRARY`";"
 print_I $configure_filename "Platform              := `"$env:PLATFORM`";"
 print_I $configure_filename "Cpu                   := `"$env:CPU`";"
+$indentl =                  "                          "
 print_I $configure_filename "ADAC_Switches_RTS     := ("
-$adac_switches_rts = $env:ADAC_SWITCHES_RTS
-if ($adac_switches_rts.Length -gt 0)
-{
-  $adac_switches_rts_array = $adac_switches_rts.Trim(" ") -split "\s+"
-  $count = 0
-  foreach ($s in $adac_switches_rts_array)
-  {
-    $count = $count + 1
-    $s = "`"$s`""
-    if ($count -ne $adac_switches_rts_array.Length)
-    {
-      $s += ","
-    }
-    print_I $configure_filename "                          $s"
-  }
-}
+print_list $configure_filename $env:ADAC_SWITCHES_RTS.Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
 print_I $configure_filename "GCC_Switches_Platform := ("
-$gcc_switches_platform = $env:GCC_SWITCHES_PLATFORM.Trim(" ")
-if ($gcc_switches_platform.Length -gt 0)
-{
-  $gcc_switches_platform_array = $gcc_switches_platform -split "\s+"
-  $count = 0
-  foreach ($s in $gcc_switches_platform_array)
-  {
-    $count = $count + 1
-    $s = "`"$s`""
-    if ($count -ne $gcc_switches_platform_array.Length)
-    {
-      $s += ","
-    }
-    print_I $configure_filename "                          $s"
-  }
-}
+print_list $configure_filename $env:GCC_SWITCHES_PLATFORM.Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
 print_I $configure_filename "GCC_Switches_Startup  := ("
-$gcc_switches_startup = $env:GCC_SWITCHES_STARTUP.Trim(" ")
-if ($gcc_switches_startup.Length -gt 0)
-{
-  $gcc_switches_startup_array = $gcc_switches_startup -split "\s+"
-  $count = 0
-  foreach ($s in $gcc_switches_startup_array)
-  {
-    $count = $count + 1
-    $s = "`"$s`""
-    if ($count -ne $gcc_switches_startup_array.Length)
-    {
-      $s += ","
-    }
-    print_I $configure_filename "                          $s"
-  }
-}
+print_list $configure_filename $env:GCC_SWITCHES_STARTUP.Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
 print_I $configure_filename "Include_Directories   := ("
-$include_directories = $env:INCLUDE_DIRECTORIES.Trim(" ")
-if ($include_directories.Length -gt 0)
-{
-  $include_directories_array = $include_directories -split "\s+"
-  $count = 0
-  foreach ($s in $include_directories_array)
-  {
-    $count = $count + 1
-    $s = "`"$s`""
-    if ($count -ne $include_directories_array.Length)
-    {
-      $s += ","
-    }
-    print_I $configure_filename "                          $s"
-  }
-}
+print_list $configure_filename $env:INCLUDE_DIRECTORIES.Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
 print_I $configure_filename "Implicit_ALI_Units    := ("
-$implicit_ali_units = $env:IMPLICIT_ALI_UNITS.Trim(" ")
-if ($implicit_ali_units.Length -gt 0)
-{
-  $implicit_ali_units_array = $implicit_ali_units -split "\s+"
-  $count = 0
-  foreach ($s in $implicit_ali_units_array)
-  {
-    $count = $count + 1
-    $s = "`"$s`""
-    if ($count -ne $implicit_ali_units_array.Length)
-    {
-      $s += ","
-    }
-    print_I $configure_filename "                          $s"
-  }
-}
+print_list $configure_filename $env:IMPLICIT_ALI_UNITS.Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
 print_I $configure_filename "ADAC_Switches_Warning := ("
-$adac_switches_warning = $env:ADAC_SWITCHES_WARNING.Trim(" ")
-if ($adac_switches_warning.Length -gt 0)
-{
-  $adac_switches_warning_array = $adac_switches_warning -split "\s+"
-  $count = 0
-  foreach ($s in $adac_switches_warning_array)
-  {
-    $count = $count + 1
-    $s = "`"$s`""
-    if ($count -ne $adac_switches_warning_array.Length)
-    {
-      $s += ","
-    }
-    print_I $configure_filename "                          $s"
-  }
-}
+print_list $configure_filename $env:ADAC_SWITCHES_WARNING.Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
 print_I $configure_filename "ADAC_Switches_Style   := ("
-$adac_switches_style = $env:ADAC_SWITCHES_STYLE.Trim(" ")
-if ($adac_switches_style.Length -gt 0)
-{
-  $adac_switches_style_array = $adac_switches_style -split "\s+"
-  $count = 0
-  foreach ($s in $adac_switches_style_array)
-  {
-    $count = $count + 1
-    $s = "`"$s`""
-    if ($count -ne $adac_switches_style_array.Length)
-    {
-      $s += ","
-    }
-    print_I $configure_filename "                          $s"
-  }
-}
+print_list $configure_filename $env:ADAC_SWITCHES_STYLE.Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
 print_I $configure_filename "Optimization_Level    := `"$env:OPTIMIZATION_LEVEL`";"
 print_I $configure_filename "Library_Directory     := `"$env:LIBRARY_DIRECTORY`";"
