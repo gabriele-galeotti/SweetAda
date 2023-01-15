@@ -68,7 +68,7 @@ function print_I
   $is = ""
   for ($i = 0 ; $i -lt $indentation_level ; $i++)
   {
-    $is += "   "
+    $is += $indentation_Ada
   }
   Add-Content -Path $f -Value "$is$t"
 }
