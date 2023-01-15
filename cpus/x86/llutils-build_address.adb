@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
-with Definitions;
+with Ada.Characters.Latin_1;
 
 separate (LLutils)
 function Build_Address (
@@ -25,7 +25,8 @@ function Build_Address (
                         Scale_Address : Bits.Address_Shift
                        ) return System.Address is
    use System.Machine_Code;
-   CRLF   : String renames Definitions.CRLF;
+   package ISO88591 renames Ada.Characters.Latin_1;
+   CRLF   : constant String := ISO88591.CR & ISO88591.LF;
    Result : System.Address;
 begin
    Asm (
