@@ -103,7 +103,6 @@ ifeq ($(basename $(notdir $(MAKE))),mingw32-make)
 SHELL := cmd
 endif
 else ifeq ($(OSTYPE),msys)
-# Powershell complains about variable names
 export temp :=
 export tmp :=
 endif
@@ -186,7 +185,7 @@ LD_SCRIPT          := linker.lds
 POSTBUILD_ROMFILE  :=
 
 IMPLICIT_ALI_UNITS :=
-ADDITIONAL_OBJECTS :=
+EXTERNAL_OBJECTS   :=
 
 # read the master configuration file
 include configuration.in
@@ -405,6 +404,7 @@ CXXC_SWITCHES_WARNING :=
 #
 AS_SWITCHES_PLATFORM      :=
 GCC_SWITCHES_PLATFORM     :=
+GCC_SWITCHES_STARTUP      :=
 LD_SWITCHES_PLATFORM      :=
 OBJCOPY_SWITCHES_PLATFORM :=
 OBJDUMP_SWITCHES_PLATFORM :=
@@ -557,7 +557,7 @@ export                    \
        USE_CLIBRARY       \
        BUILD_MODE         \
        OPTIMIZATION_LEVEL \
-       ADDITIONAL_OBJECTS \
+       EXTERNAL_OBJECTS   \
        STACK_LIMIT        \
        USE_APPLICATION
 
@@ -592,6 +592,7 @@ export                           \
        TOOLCHAIN_RANLIB          \
        GCC_VERSION               \
        GCC_SWITCHES_PLATFORM     \
+       GCC_SWITCHES_STARTUP      \
        RTS_ROOT_PATH             \
        RTS_PATH                  \
        ADAC                      \
@@ -1121,7 +1122,7 @@ ifeq ($(USE_LIBGCC),Y)
 	@$(call echo-print,"LIBGCC FILENAME:     $(LIBGCC_FILENAME)")
 endif
 	@$(call echo-print,"USE LIBADA:          $(USE_LIBADA)")
-	@$(call echo-print,"USE C LIBRARY:       $(USE_CLIBRARY)")
+	@$(call echo-print,"USE CLIBRARY:        $(USE_CLIBRARY)")
 	@$(call echo-print,"OPTIMIZATION LEVEL:  $(OPTIMIZATION_LEVEL)")
 ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"GCC SWITCHES (RTS):  $(strip $(ADAC_SWITCHES_RTS))")
@@ -1135,8 +1136,8 @@ endif
 	@$(call echo-print,"OBJCOPY SWITCHES:    $(strip $(OBJCOPY_SWITCHES_PLATFORM))")
 	@$(call echo-print,"OBJDUMP SWITCHES:    $(strip $(OBJDUMP_SWITCHES_PLATFORM))")
 endif
-ifneq ($(ADDITIONAL_OBJECTS),)
-	@$(call echo-print,"ADDITIONAL OBJECTS:  $(ADDITIONAL_OBJECTS)")
+ifneq ($(EXTERNAL_OBJECTS),)
+	@$(call echo-print,"EXTERNAL OBJECTS:    $(EXTERNAL_OBJECTS)")
 endif
 ifeq ($(DISABLE_STACK_USAGE),Y)
 	@$(call echo-print,"DISABLE STACK USAGE: Y")
