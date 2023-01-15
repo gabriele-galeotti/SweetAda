@@ -119,7 +119,7 @@ if [ "x${PLATFORM}" = "x" ] ; then
   # discard SUBPLATFORM
   SUBPLATFORM=""
   # no PLATFORM supplied, select from menu
-  _platforms=$(cd platforms ; ls -A -d * 2> /dev/null)
+  _platforms=$(cd platforms && ls -A -d * 2> /dev/null)
   dialog_menu "Select Platform" "${_platforms}" "PLATFORM"
   _platform_from_command_line="N"
 else
@@ -127,7 +127,7 @@ else
 fi
 # check whether PLATFORM is available, either from command line or the select menu
 if [ "x${PLATFORM}" != "x" ] ; then
-  _subplatforms=$(cd platforms/${PLATFORM} ; ls -A -d platform-* 2> /dev/null | sed -e "s|platform-||g" -e "s|/\$||g")
+  _subplatforms=$(cd platforms/${PLATFORM} && ls -A -d platform-* 2> /dev/null | sed -e "s|platform-||g" -e "s|/\$||g")
   if [ "x${_subplatforms}" != "x" ] ; then
     # subplatforms exist
     if [ "x${SUBPLATFORM}" = "x" ] ; then
