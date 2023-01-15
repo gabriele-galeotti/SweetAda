@@ -150,6 +150,24 @@ if ($gcc_switches_platform.Length -gt 0)
   }
 }
 print_I $configure_filename "                         );"
+print_I $configure_filename "GCC_Switches_Startup  := ("
+$gcc_switches_startup = $env:GCC_SWITCHES_STARTUP.Trim(" ")
+if ($gcc_switches_startup.Length -gt 0)
+{
+  $gcc_switches_startup_array = $gcc_switches_startup -split "\s+"
+  $count = 0
+  foreach ($s in $gcc_switches_startup_array)
+  {
+    $count = $count + 1
+    $s = "`"$s`""
+    if ($count -ne $gcc_switches_startup_array.Length)
+    {
+      $s += ","
+    }
+    print_I $configure_filename "                          $s"
+  }
+}
+print_I $configure_filename "                         );"
 print_I $configure_filename "Include_Directories   := ("
 $include_directories = $env:INCLUDE_DIRECTORIES.Trim(" ")
 if ($include_directories.Length -gt 0)
