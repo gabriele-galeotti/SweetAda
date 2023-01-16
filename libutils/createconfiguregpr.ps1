@@ -79,7 +79,7 @@ function print_I
 ################################################################################
 function print_list
 {
-  param([string]$f, [string]$list, [int]$il, [string]$ispaces)
+  param([string]$f, [string]$list, [int]$il, [string]$is)
   if ($list.Length -gt 0)
   {
     $list_array = $list -split "\s+"
@@ -92,7 +92,7 @@ function print_list
       {
         $s += ","
       }
-      print_I $f "$ispaces$s"
+      print_I $f "$is$s"
     }
   }
 }
