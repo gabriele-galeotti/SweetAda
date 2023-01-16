@@ -70,7 +70,11 @@ abstract project Basedefs is
       for Driver ("C") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
       for Leading_Required_Switches ("C") use ("--freestanding", "-std=c99");
       for Include_Switches ("C") use ("-I");
-      for Switches ("C") use Configure.GCC_Switches_Platform &
+      for Switches ("C") use (
+                              "-ffunction-sections",
+                              "-fdata-sections"
+                             ) &
+                             Configure.GCC_Switches_Platform &
                              GCC_Wrapper_Switch;
       -- Ada
       for Driver ("Ada") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
