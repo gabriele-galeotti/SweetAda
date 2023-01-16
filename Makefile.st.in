@@ -22,24 +22,24 @@
 ################################################################################
 
 ADAC_SWITCHES_STYLE += -gnaty3       # Specify indentation level.
-ADAC_SWITCHES_STYLE += -gnatya       # Check attribute casing.
 ADAC_SWITCHES_STYLE += -gnatyA       # Use of array index numbers in array attributes.
+ADAC_SWITCHES_STYLE += -gnatya       # Check attribute casing.
 ADAC_SWITCHES_STYLE += -gnatyb       # Blanks not allowed at statement end.
 ADAC_SWITCHES_STYLE += -gnatyB       # Check Boolean operators.
 #ADAC_SWITCHES_STYLE += -gnatyc       # Check comments, double space.
 ADAC_SWITCHES_STYLE += -gnatyC       # Check comments, single space.
-ifeq (,$(filter $(OSTYPE),cmd msys))
+ifeq ($(filter $(OSTYPE),cmd msys),)
 ADAC_SWITCHES_STYLE += -gnatyd       # Check no DOS line terminators present.
 endif
 ADAC_SWITCHES_STYLE += -gnatye       # Check end/exit labels.
 ADAC_SWITCHES_STYLE += -gnatyf       # No form feeds or vertical tabs.
 #ADAC_SWITCHES_STYLE += -gnatyg       # GNAT style mode.
 ADAC_SWITCHES_STYLE += -gnatyh       # No horizontal tabs.
-ADAC_SWITCHES_STYLE += -gnatyi       # Check if-then layout.
 #ADAC_SWITCHES_STYLE += -gnatyI       # check mode IN keywords.
+ADAC_SWITCHES_STYLE += -gnatyi       # Check if-then layout.
 ADAC_SWITCHES_STYLE += -gnatyk       # Check keyword casing.
-ADAC_SWITCHES_STYLE += -gnatyl       # Check layout.
 ADAC_SWITCHES_STYLE += -gnatyL$(MNL) # Set maximum nesting level.
+ADAC_SWITCHES_STYLE += -gnatyl       # Check layout.
 #ADAC_SWITCHES_STYLE += -gnatym       # Check maximum line length.
 ADAC_SWITCHES_STYLE += -gnatyM$(MLL) # Set maximum line length.
 ADAC_SWITCHES_STYLE += -gnatyn       # Check casing of entities in Standard.
