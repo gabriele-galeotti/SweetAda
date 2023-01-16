@@ -69,16 +69,16 @@ if {[file exists $DOWNLOAD_BIT]} {
     file rename -force $DOWNLOAD_BIT $DOWNLOAD_BIT.tmp
 }
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-source $XILINX_PATH/settings64.sh ;              \
-bitinit                                          \
-  $PROJECT_PATH/system.mhs                       \
-  -bm $PROJECT_PATH/implementation/system_bd.bmm \
-  -bt $PROJECT_PATH/implementation/system.bit    \
-  -o $DOWNLOAD_BIT                               \
-  -pe ppc405_0 $BOOTLOOP_ELF_FILE                \
-  -lp $PROJECT_PATH/..                           \
-  -log $BITINIT_LOG                              \
-  -p $DEVICE                                     \
+source $XILINX_PATH/settings64.sh &&               \
+bitinit                                            \
+  ${PROJECT_PATH}/system.mhs                       \
+  -bm ${PROJECT_PATH}/implementation/system_bd.bmm \
+  -bt ${PROJECT_PATH}/implementation/system.bit    \
+  -o ${DOWNLOAD_BIT}                               \
+  -pe ppc405_0 ${BOOTLOOP_ELF_FILE}                \
+  -lp ${PROJECT_PATH}/..                           \
+  -log ${BITINIT_LOG                               \
+  -p ${DEVICE}                                     \
 "
 if {[file exists $DOWNLOAD_BIT]} {
     file delete -force $DOWNLOAD_BIT.tmp
@@ -108,7 +108,10 @@ close $impact_cmd_fd
 #
 # Run iMPACT.
 #
-exec -ignorestderr >@stdout 2>@stderr sh -c "source $XILINX_PATH/settings64.sh ; impact -batch $IMPACT_CMD"
+exec -ignorestderr >@stdout 2>@stderr sh -c "\
+source ${XILINX_PATH}/settings64.sh && \
+impact -batch ${IMPACT_CMD}            \
+"
 
 #
 # Create xmd.ini.
@@ -128,7 +131,10 @@ close $xmd_ini_fd
 #
 # Run XMD.
 #
-exec -ignorestderr >@stdout 2>@stderr sh -c "source $XILINX_PATH/settings64.sh ; xmd -nx -opt $XMD_INI"
+exec -ignorestderr >@stdout 2>@stderr sh -c "\
+source ${XILINX_PATH}/settings64.sh && \
+xmd -nx -opt ${XMD_INI}                \
+"
 
 exit 0
 
