@@ -36,6 +36,7 @@ abstract project Basedefs is
    package Builder is
       for Global_Configuration_Pragmas use Configure.GnatAdc_Filename;
       for Switches ("Asm_Cpp") use Builder_Switches;
+      for Switches ("C") use Builder_Switches;
       for Switches ("Ada") use (
                                 "-nostdinc",
                                 "-nostdlib",
@@ -68,15 +69,16 @@ abstract project Basedefs is
       -- C
       for Driver ("C") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
       for Leading_Required_Switches ("C") use ("--freestanding", "-std=c99");
+      for Include_Switches ("C") use ("-I");
       for Switches ("C") use Configure.GCC_Switches_Platform &
                              GCC_Wrapper_Switch;
       -- Ada
       for Driver ("Ada") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
-      for Leading_Required_Switches ("Ada") use ("-x", "ada");
       for Mapping_Spec_Suffix ("Ada") use "%s";
       for Mapping_Body_Suffix ("Ada") use "%b";
       for Dependency_Kind ("Ada") use "ALI_File";
       for Multi_Unit_Object_Separator ("Ada") use "~";
+      for Leading_Required_Switches ("Ada") use ("-x", "ada");
       for Switches ("Ada") use (
                                 Ada_Mode,
                                 "-O" & Configure.Optimization_Level,
