@@ -25,9 +25,9 @@ extern void bcopy(const void *, void *, size_t);
 extern void bzero(void *, size_t);
 
 // http://pubs.opengroup.org/onlinepubs/009695399/functions/index.html
-#define index(a,b) strchr((a),(b))
+#define index(a, b) strchr((a), (b))
 // http://pubs.opengroup.org/onlinepubs/009695399/functions/rindex.html
-#define rindex(a,b) strrchr((a),(b))
+#define rindex(a, b) strrchr((a), (b))
 
 #ifdef __cplusplus
 }
