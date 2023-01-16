@@ -23,12 +23,17 @@ library project Cpu is
    for Source_Dirs use (".") & Include_Directories;
    for Default_Language use "Asm_Cpp";
 
-   for Source_Files use (
-                         "L_divsi3.S",
-                         "L_dvmd_tls.S",
-                         "L_udivsi3.S",
-                         "L_muldi3.S"
-                        );
+   case Configure.Use_LibGCC is
+      when "Y"    =>
+         for Source_Files use ();
+      when others =>
+         for Source_Files use (
+                               "L_divsi3.S",
+                               "L_dvmd_tls.S",
+                               "L_udivsi3.S",
+                               "L_muldi3.S"
+                              );
+   end case;
 
    ----------------------------------------------------------------------------
    -- Naming
