@@ -148,6 +148,9 @@ print_I $configure_filename "                         );"
 print_I $configure_filename "GCC_Switches_Platform := ("
 print_list $configure_filename $env:GCC_SWITCHES_PLATFORM.Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
+print_I $configure_filename "Startup_Objects       := ("
+print_list $configure_filename $env:STARTUP_OBJECTS.Trim(" ") $indentation_level $indentl
+print_I $configure_filename "                         );"
 print_I $configure_filename "GCC_Switches_Startup  := ("
 print_list $configure_filename $env:GCC_SWITCHES_STARTUP.Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
