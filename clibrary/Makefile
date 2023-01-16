@@ -37,40 +37,6 @@ ifeq ($(BUILD_MODE),MAKEFILE)
 
 # manually-inferred dependency logic
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/assert.o : \
-        stdio.h  \
-        stdlib.h
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/ctype.o : \
-        ctype.h
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/errno.o :
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdio.o : \
-        ada_interface.h \
-        clibrary.h      \
-        ctype.h         \
-        stdio.h         \
-        stdlib.h        \
-        string.h
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdlib.o : \
-        ada_interface.h \
-        clibrary.h      \
-        ctype.h         \
-        errno.h         \
-        stdlib.h        \
-        string.h
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/string.o : \
-        clibrary.h \
-        ctype.h    \
-        string.h
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o : \
-        clibrary.h \
-        strings.h
-
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o : \
         $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY) \
         $(KERNEL_PARENT_PATH)/$(SPEC_BITS)          \
@@ -93,10 +59,17 @@ distclean : clean
 .PHONY : dep
 dep :
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.c
-	$(call brief-command, \
-        $(CC) -o $@ -c $(INCLUDES) $< \
-        ,[CC],$<)
-
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
+
+# add rule for .c files because Makefile.lb.in has only Asm/Ada
+%.o : %.c
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.c $(DEP_DIRECTORY)/%.d | $(DEP_DIRECTORY)
+	$(call brief-command, \
+        $(CC)                           \
+              -o $@                     \
+              -MT $@ -MMD -MP           \
+              -MF $(DEP_DIRECTORY)/$*.d \
+              $(GCC_SWITCHES_LIBRARY)   \
+              -c $(INCLUDES) $<         \
+        ,[CC/AS],$<)
 
