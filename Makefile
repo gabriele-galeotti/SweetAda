@@ -404,6 +404,7 @@ CXXC_SWITCHES_WARNING :=
 #
 AS_SWITCHES_PLATFORM      :=
 GCC_SWITCHES_PLATFORM     :=
+STARTUP_OBJECTS           :=
 GCC_SWITCHES_STARTUP      :=
 LD_SWITCHES_PLATFORM      :=
 OBJCOPY_SWITCHES_PLATFORM :=
@@ -473,6 +474,11 @@ endif
 -include $(CLIBRARY_DIRECTORY)/configuration.in
 
 -include Makefile.tc.in
+
+# if RTS_BUILD is null, use the one read from configuration files
+ifeq ($(RTS_BUILD),)
+RTS_BUILD := $(RTS)
+endif
 
 # high-precedence include directories
 ifneq ($(PLATFORM),)
@@ -592,6 +598,7 @@ export                           \
        TOOLCHAIN_RANLIB          \
        GCC_VERSION               \
        GCC_SWITCHES_PLATFORM     \
+       STARTUP_OBJECTS           \
        GCC_SWITCHES_STARTUP      \
        RTS_ROOT_PATH             \
        RTS_PATH                  \
@@ -832,9 +839,9 @@ endif
 else ifeq ($(BUILD_MODE),GPR)
 	@$(REM) force rebind under GPRbuild
 ifeq ($(OSTYPE),cmd)
-	@$(REM)-$(RM) $(OBJECT_DIRECTORY)\main.bexch
+	-@$(RM) $(OBJECT_DIRECTORY)\main.bexch 2> nul
 else
-	@$(REM)-$(RM) $(OBJECT_DIRECTORY)/main.bexch
+	-@$(RM) $(OBJECT_DIRECTORY)/main.bexch 2> /dev/null
 endif
 	$(call brief-command, \
         $(GPRBUILD)                      \
@@ -887,8 +894,12 @@ endif
 # Link phase.
 #
 
+ifeq ($(NOBUILD),Y)
+$(KERNEL_OUTFILE) :
+else
 $(KERNEL_OUTFILE) : $(OBJECT_DIRECTORY)/b__main.o      \
                     $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
+endif
 	@$(REM) link phase
 	$(call brief-command, \
         $(LD)                                       \
@@ -941,6 +952,7 @@ kernel_end :
 	@$(call echo-print,"$(PLATFORM): kernel compiled successfully.")
 	@$(call echo-print,"")
 
+# not used
 .PHONY : kernel_dependencies
 kernel_dependencies :
 ifeq ($(BUILD_MODE),MAKEFILE)
@@ -1200,7 +1212,7 @@ endif
 
 .PHONY : run
 run : debug_notify_off
-	$(MAKE) postbuild
+	$(MAKE) NOBUILD=Y postbuild
 ifneq ($(RUN_COMMAND),)
 	-$(RUN_COMMAND)
 else
@@ -1209,7 +1221,7 @@ endif
 
 .PHONY : debug
 debug : debug_notify_on
-	$(MAKE) postbuild
+	$(MAKE) NOBUILD=Y postbuild
 ifneq ($(DEBUG_COMMAND),)
 	-$(DEBUG_COMMAND)
 else
