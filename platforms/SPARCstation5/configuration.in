@@ -8,6 +8,7 @@
 CPU := SPARC
 
 GCC_SWITCHES_PLATFORM     += -mcpu=v8 -m32 -mflat
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
@@ -22,11 +23,10 @@ APPLICATION_TYPE := QEMU
 ################################################################################
 ifeq ($(APPLICATION_TYPE),ROM)
 
-USE_APPLICATION := test-SPARCstation5
+GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=1
+USE_APPLICATION      := test-SPARCstation5
+LD_SCRIPT            := linker.lds-ROM
 
-LD_SCRIPT := linker.lds-ROM
-
-export RELOCATE_DATA := 1
 export BOOT_FROM_NETWORK := False
 
 SESSION_START_COMMAND :=
@@ -38,11 +38,10 @@ endif
 ################################################################################
 ifeq ($(APPLICATION_TYPE),RAM)
 
-USE_APPLICATION := test-SPARCstation5
+GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=0
+USE_APPLICATION      := test-SPARCstation5
+LD_SCRIPT            := linker.lds-RAM
 
-LD_SCRIPT := linker.lds-RAM
-
-export RELOCATE_DATA := 0
 export BOOT_FROM_NETWORK := False
 
 SESSION_START_COMMAND :=
@@ -55,11 +54,10 @@ endif
 ################################################################################
 ifeq ($(APPLICATION_TYPE),QEMU)
 
-USE_APPLICATION := test-SPARCstation5
+GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=1
+LD_SCRIPT            := linker.lds-ROM
+USE_APPLICATION      := test-SPARCstation5
 
-LD_SCRIPT := linker.lds-ROM
-
-export RELOCATE_DATA := 1
 export BOOT_FROM_NETWORK := False
 
 SESSION_START_COMMAND :=
@@ -71,11 +69,10 @@ endif
 ################################################################################
 ifeq ($(APPLICATION_TYPE),networkboot)
 
-USE_APPLICATION := test-SPARCstation5
+GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=0
+LD_SCRIPT            := linker.lds-networkboot
+USE_APPLICATION      := test-SPARCstation5
 
-LD_SCRIPT := linker.lds-networkboot
-
-export RELOCATE_DATA := 0
 export BOOT_FROM_NETWORK := True
 
 export ELFTOAOUT := /usr/local/bin/elftoaout
@@ -86,11 +83,10 @@ endif
 ################################################################################
 ifeq ($(APPLICATION_TYPE),srecord)
 
-USE_APPLICATION := test-srecord
+GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=1
+LD_SCRIPT            := linker.lds-srecord
+USE_APPLICATION      := test-srecord
 
-LD_SCRIPT := linker.lds-srecord
-
-export RELOCATE_DATA := 1
 export BOOT_FROM_NETWORK := False
 
 SESSION_START_COMMAND :=

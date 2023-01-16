@@ -5,6 +5,4 @@
 #define PLATFORM "@PLATFORM@"
 #define CPU      "@CPU@"
 
-#define RELOCATE_DATA @RELOCATE_DATA@
-
 #endif /* _CONFIGURE_H */
