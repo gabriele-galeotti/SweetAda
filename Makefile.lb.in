@@ -70,17 +70,32 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.ads
                     -c $(INCLUDES) $<                            \
         ,[GNATMAKE],$<)
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.S
+# shorthand
+DEP_DIRECTORY := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
+
+%.o : %.S
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.S $(DEP_DIRECTORY)/%.d | $(DEP_DIRECTORY)
 	$(call brief-command, \
-        $(CC)                         \
-              -o $@                   \
-              $(GCC_SWITCHES_LIBRARY) \
-              -c $(INCLUDES) $<       \
+        $(CC)                           \
+              -o $@                     \
+              -MT $@ -MMD -MP           \
+              -MF $(DEP_DIRECTORY)/$*.d \
+              $(GCC_SWITCHES_LIBRARY)   \
+              -c $(INCLUDES) $<         \
         ,[CC/AS],$<)
+
+DEP_FILES := $(OBJECTS:%.o=%.d)
+$(DEP_FILES) :
+
+include $(wildcard $(DEP_FILES))
 
 else ifeq ($(BUILD_MODE),GPR)
 
 ifeq ($(OBJECTS),)
+
+#
+# GPRbuild (no object files)
+#
 
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a :
 	$(call brief-command, \
