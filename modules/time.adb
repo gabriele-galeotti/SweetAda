@@ -107,7 +107,7 @@ package body Time is
    ----------------------------------------------------------------------------
    -- Make_Time
    ----------------------------------------------------------------------------
-   -- Converts Gregorian date to seconds since 1970-01-01 00:00:00.
+   -- Converts Gregorian date since 1970-01-01 00:00:00 to seconds.
    -- Assumes input in normal date format, i.e. 1980-12-31 23:59:59.
    ----------------------------------------------------------------------------
    function Make_Time (
