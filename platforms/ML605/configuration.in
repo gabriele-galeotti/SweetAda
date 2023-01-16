@@ -11,6 +11,7 @@
 CPU := MicroBlaze
 
 GCC_SWITCHES_PLATFORM     += -mcpu=v8.10.a
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
