@@ -48,10 +48,7 @@ project SweetAda is
    Binder_Switches := ();
 
    package Binder is
-      for Required_Switches ("Ada") use ("--RTS=" & Configure.RTS_Path);
       for Switches ("Ada") use (
-                                "-nostdinc",
-                                "-nostdlib",
                                 "-F",
                                 "-e",
                                 "-l",
