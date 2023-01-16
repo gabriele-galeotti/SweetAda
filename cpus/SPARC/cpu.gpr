@@ -1,0 +1,67 @@
+
+-------------------------------------------------------------------------------
+-- SweetAda GPRbuild project file
+--
+-- Copyright (C) 2020-2023 Gabriele Galeotti
+--
+-- This work is licensed under the terms of the MIT License.
+-- Please consult the LICENSE.txt file located in the top-level directory.
+-------------------------------------------------------------------------------
+
+with "configure";
+with "basedefs";
+
+library project Cpu is
+
+   ----------------------------------------------------------------------------
+   -- Definitions
+   ----------------------------------------------------------------------------
+
+   Include_Directories := Split (external ("GPR_INCLUDES", ""), " ");
+
+   for Target use Configure.Toolchain_Name;
+   for Source_Dirs use (".") & Include_Directories;
+   for Default_Language use "Asm_Cpp";
+
+   case Configure.Use_LibGCC is
+      when "Y"    =>
+         for Source_Files use ();
+      when others =>
+         for Source_Files use (
+                               "L_divsi3.S",
+                               "L_divsi3.S",
+                               "L_modsi3.S"
+                              );
+   end case;
+
+   ----------------------------------------------------------------------------
+   -- Naming
+   ----------------------------------------------------------------------------
+
+   package Naming renames Basedefs.Naming;
+
+   ----------------------------------------------------------------------------
+   -- Builder
+   ----------------------------------------------------------------------------
+
+   package Builder renames Basedefs.Builder;
+
+   ----------------------------------------------------------------------------
+   -- Compiler
+   ----------------------------------------------------------------------------
+
+   package Compiler renames Basedefs.Compiler;
+
+   ----------------------------------------------------------------------------
+   -- Library
+   ----------------------------------------------------------------------------
+
+   for Library_Kind use Basedefs.Library_Kind;
+   for Library_Support use Basedefs.Library_Support;
+   for Library_Builder use Basedefs.Library_Builder;
+   for Object_Dir use project'Project_Dir & "../../" & Configure.Object_Directory;
+   for Library_Dir use project'Project_Dir & "../../" & Configure.Library_Directory;
+
+   for Library_Name use "cpu";
+
+end Cpu;
