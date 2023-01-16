@@ -839,9 +839,9 @@ endif
 else ifeq ($(BUILD_MODE),GPR)
 	@$(REM) force rebind under GPRbuild
 ifeq ($(OSTYPE),cmd)
-	-@$(RM) $(OBJECT_DIRECTORY)\main.bexch 2> nul
+	-@$(RM) $(OBJECT_DIRECTORY)\main.bexch
 else
-	-@$(RM) $(OBJECT_DIRECTORY)/main.bexch 2> /dev/null
+	-@$(RM) $(OBJECT_DIRECTORY)/main.bexch
 endif
 	$(call brief-command, \
         $(GPRBUILD)                      \
@@ -1119,6 +1119,8 @@ ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"GCC VERSION:            $(GCC_VERSION)")
 	@$(call echo-print,"AS VERSION:             $(AS_VERSION)")
 	@$(call echo-print,"LD VERSION:             $(LD_VERSION)")
+endif
+ifeq ($(BUILD_MODE),MAKEFILE)
 	@$(call echo-print,"GNATMAKE VERSION:       $(GNATMAKE_VERSION)")
 endif
 ifeq ($(BUILD_MODE),GPR)
