@@ -1138,9 +1138,10 @@ endif
 	@$(call echo-print,"OPTIMIZATION LEVEL:     $(OPTIMIZATION_LEVEL)")
 ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"GCC SWITCHES (RTS):     $(strip $(ADAC_SWITCHES_RTS))")
-	@$(call echo-print,"GCC SWITCHES (STARTUP): $(strip $(GCC_SWITCHES_STARTUP))")
 	@$(call echo-print,"GCC SWITCHES:           $(strip $(GCC_SWITCHES_PLATFORM))")
 	@$(call echo-print,"GCC MULTIDIR:           $(GCC_MULTIDIR)")
+	@$(call echo-print,"STARTUP OBJECTS:        $(strip $(STARTUP_OBJECTS))")
+	@$(call echo-print,"GCC SWITCHES (STARTUP): $(strip $(GCC_SWITCHES_STARTUP))")
 ifneq ($(RTS),)
 	@$(call echo-print,"RTS PATH:               $(RTS_PATH)")
 endif
