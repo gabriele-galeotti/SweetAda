@@ -20,22 +20,12 @@ include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
 LIBRARY_NAME := platform
 
-OBJECTS :=
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/llkernel.o
+OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/$(f))
 
 -include Makefile.in
 
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
-
-# startup.S processing
-ifeq ($(MODE32),Y)
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : mode32.h
-endif
-ifeq ($(USE_STARTUP_MEMORY),Y)
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o : startup-memory.h
-endif
 
 .PHONY : installfiles
 installfiles :
