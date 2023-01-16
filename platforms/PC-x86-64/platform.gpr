@@ -23,10 +23,7 @@ library project Platform is
    for Source_Dirs use (".") & Include_Directories;
    for Default_Language use "Asm_Cpp";
 
-   for Source_Files use (
-                         "startup.S",
-                         "llkernel.S"
-                        );
+   for Source_Files use Configure.Startup_Objects;
 
    ----------------------------------------------------------------------------
    -- Naming

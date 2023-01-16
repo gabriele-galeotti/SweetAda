@@ -22,6 +22,7 @@ CPU_MODEL := ???
 GCC_SWITCHES_PLATFORM     += -m64 -mno-red-zone
 # __FIX__ QEMU problems (movdqa instruction)
 GCC_SWITCHES_PLATFORM     += -mno-sse
+STARTUP_OBJECTS           := startup.S llkernel.S
 GCC_SWITCHES_STARTUP      += -DMODE32 -DMODE64 -DENABLE_A20 -DDATA_RELOC
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
