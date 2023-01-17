@@ -162,9 +162,6 @@ package body BSP is
       -- assume PCI0M0 memory space @ 0
       VGA.Init (MIPS.KSEG1_ADDRESS + 16#000A_0000#, MIPS.KSEG1_ADDRESS + 16#000B_8000#);
       VGA.Set_Mode (VGA.MODE12H);
-      -- VGA.Clear_Screen;
-      -- VGA.Print (0, 0, "hello SweetAda ...");
-      VGA.Draw_Picture (SweetAda.SweetAda_Picture);
       -------------------------------------------------------------------------
       Tclk_Init;
       MIPS32.Irq_Enable;

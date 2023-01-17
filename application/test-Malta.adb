@@ -9,6 +9,8 @@ with BlockDevices;
 with MBR;
 with FATFS;
 with FATFS.Applications;
+with VGA;
+with SweetAda;
 with PythonVM;
 with IOEMU;
 with Console;
@@ -65,6 +67,13 @@ package body Application is
                end if;
             end if;
          end;
+      end if;
+      -------------------------------------------------------------------------
+      if True then
+         Console.Print ("Wait while drawing the screen ...", NL => True);
+         -- VGA.Clear_Screen;
+         -- VGA.Print (0, 0, "hello SweetAda ...");
+         VGA.Draw_Picture (SweetAda.SweetAda_Picture);
       end if;
       -------------------------------------------------------------------------
       if True then
