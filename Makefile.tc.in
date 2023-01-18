@@ -551,6 +551,8 @@ export GNAT_WRAPPER_TIMESTAMP_FILENAME
 #                                                                              #
 ################################################################################
 
+# avoid extraneous informations in .d files during VERBOSE mode
+GNATMAKE_DEPEND := $(filter-out -v,$(GNATMAKE))
 # special back-end compiler for GNATBIND-generated Ada files without output
 # of spurious warnings
 ADAC_GNATBIND := $(filter-out -gnatwu -gnatya -gnatyb -gnatyM$(MLL) -gnatyu,$(ADAC))
