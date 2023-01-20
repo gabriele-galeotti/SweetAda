@@ -45,6 +45,8 @@ $patchstring.Split(" ") | foreach {
   $offset++
 }
 
+Write-Host "${scriptname}: patching file `"$(Split-Path -Path $filename -Leaf -Resolve)`"."
+
 [System.IO.File]::WriteAllBytes($filename, $filebytes)
 
 ExitWithCode 0

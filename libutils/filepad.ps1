@@ -69,6 +69,8 @@ else
 
 $filebytes += $padbytes
 
+Write-Host "${scriptname}: padding file `"$(Split-Path -Path $filename -Leaf -Resolve)`"."
+
 [System.IO.File]::WriteAllBytes($filename, $filebytes)
 
 ExitWithCode 0

@@ -75,8 +75,6 @@ if [ "x$2" = "x" ] ; then
   exit 1
 fi
 
-log_print "${SCRIPT_FILENAME}: padding file \"$1\"."
-
 if [ "x${OSTYPE}" = "xdarwin" ] ; then
   FILESIZE=$(stat -f "%z" "$1" 2> /dev/null)
 else
@@ -116,6 +114,8 @@ if [ "${REQUESTEDSIZE}" -lt "${FILESIZE}" ] ; then
 else
   PADCOUNT=$((REQUESTEDSIZE-FILESIZE))
 fi
+
+log_print "${SCRIPT_FILENAME}: padding file \"$(basename $1)\"."
 
 if [ "${PADCOUNT}" -gt 0 ] ; then
   dd if=/dev/zero ibs=1 count="${PADCOUNT}" >> "$1" 2> /dev/null
