@@ -7,6 +7,7 @@ CPU       := ARM
 CPU_MODEL := CORTEXA9
 
 GCC_SWITCHES_PLATFORM     += -mcpu=cortex-a9
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
