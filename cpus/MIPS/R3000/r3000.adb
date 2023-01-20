@@ -62,9 +62,9 @@ package body R3000 is
                        "        nop           " & CRLF &
                        "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Result),
-           Inputs   => (
+           Inputs   => [
                         CP0_Register_Type'Asm_Input ("i", Register)
-                       ),
+                       ],
            Clobber  => "",
            Volatile => True
           );
@@ -83,10 +83,10 @@ package body R3000 is
                        "        nop           " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => (
+           Inputs   => [
                         Unsigned_32'Asm_Input ("r", Register_Value),
                         CP0_Register_Type'Asm_Input ("i", Register)
-                       ),
+                       ],
            Clobber  => "",
            Volatile => True
           );
