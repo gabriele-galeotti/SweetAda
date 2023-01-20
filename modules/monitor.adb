@@ -16,9 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Ada.Characters.Latin_1;
+with System.Storage_Elements;
+with CPU;
+with Core;
 with BSP;
 with Console;
-with Core;
 with Srecord;
 
 package body Monitor is
@@ -30,6 +32,8 @@ package body Monitor is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use System.Storage_Elements;
 
    package ISO88591 renames Ada.Characters.Latin_1;
 
