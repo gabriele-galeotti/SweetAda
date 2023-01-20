@@ -9,6 +9,7 @@ CPU       := ARM
 CPU_MODEL := ARM926EJ-S
 
 GCC_SWITCHES_PLATFORM     += -mcpu=arm926ej-s -mabi=aapcs
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
