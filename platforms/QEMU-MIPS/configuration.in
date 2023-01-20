@@ -9,6 +9,7 @@ CPU       := MIPS
 CPU_MODEL := R4300
 
 GCC_SWITCHES_PLATFORM     += -march=r4k -mel -mips3
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      += -EL
 LD_SWITCHES_PLATFORM      += --undefined=reset
 OBJDUMP_SWITCHES_PLATFORM += --disassembler-options=hwr-names=r3000,reg-names=r3000
