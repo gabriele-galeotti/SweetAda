@@ -330,10 +330,10 @@ KERNEL_GPRFILE        := sweetada.gpr
 CONFIGUREGPR_FILENAME := configure.gpr
 
 # cleaning
-CLEAN_OBJECTS        :=
-CLEAN_OBJECTS_COMMON := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
-                        *.map *.o *.out *.srec *.tmp
-DISTCLEAN_OBJECTS    :=
+CLEAN_OBJECTS            :=
+CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
+                            *.map *.o *.out *.srec *.tmp
+DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)
 
 ################################################################################
 #                                                                              #
@@ -519,34 +519,35 @@ endif
 ################################################################################
 
 # build system
-export                         \
-       MAKE                    \
-       KERNEL_BASENAME         \
-       KERNEL_CFGFILE          \
-       KERNEL_DEPFILE          \
-       KERNEL_OUTFILE          \
-       KERNEL_ROMFILE          \
-       PLATFORM_BASE_DIRECTORY \
-       PLATFORM_DIRECTORY      \
-       CPU_BASE_DIRECTORY      \
-       CPU_DIRECTORY           \
-       CPU_MODEL_DIRECTORY     \
-       APPLICATION_DIRECTORY   \
-       CLIBRARY_DIRECTORY      \
-       CORE_DIRECTORY          \
-       DRIVERS_DIRECTORY       \
-       MODULES_DIRECTORY       \
-       LIBRARY_DIRECTORY       \
-       OBJECT_DIRECTORY        \
-       RTS_DIRECTORY           \
-       SHARE_DIRECTORY         \
-       RTS_BASE_PATH           \
-       GNATADC_FILENAME        \
-       CPUS                    \
-       RTSES                   \
-       INCLUDE_DIRECTORIES     \
-       IMPLICIT_ALI_UNITS      \
-       CLEAN_OBJECTS_COMMON
+export                          \
+       MAKE                     \
+       KERNEL_BASENAME          \
+       KERNEL_CFGFILE           \
+       KERNEL_DEPFILE           \
+       KERNEL_OUTFILE           \
+       KERNEL_ROMFILE           \
+       PLATFORM_BASE_DIRECTORY  \
+       PLATFORM_DIRECTORY       \
+       CPU_BASE_DIRECTORY       \
+       CPU_DIRECTORY            \
+       CPU_MODEL_DIRECTORY      \
+       APPLICATION_DIRECTORY    \
+       CLIBRARY_DIRECTORY       \
+       CORE_DIRECTORY           \
+       DRIVERS_DIRECTORY        \
+       MODULES_DIRECTORY        \
+       LIBRARY_DIRECTORY        \
+       OBJECT_DIRECTORY         \
+       RTS_DIRECTORY            \
+       SHARE_DIRECTORY          \
+       RTS_BASE_PATH            \
+       GNATADC_FILENAME         \
+       CPUS                     \
+       RTSES                    \
+       INCLUDE_DIRECTORIES      \
+       IMPLICIT_ALI_UNITS       \
+       CLEAN_OBJECTS_COMMON     \
+       DISTCLEAN_OBJECTS_COMMON
 
 # configuration
 export                    \
@@ -615,6 +616,7 @@ export                           \
        GNATLINK                  \
        GNATLS                    \
        GNATMAKE                  \
+       GNATMAKE_DEPEND           \
        GNATPREP                  \
        GNATXREF                  \
        GPRBUILD                  \
@@ -665,7 +667,7 @@ IMPLICIT_ALI_UNITS_MAKEFILE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT
 endif
 
 CLEAN_OBJECTS     += $(KERNEL_OBJFILE) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE)
-DISTCLEAN_OBJECTS += $(KERNEL_CFGFILE) $(GNATADC_FILENAME) $(CONFIGUREGPR_FILENAME)
+DISTCLEAN_OBJECTS += $(CONFIGUREGPR_FILENAME) $(KERNEL_CFGFILE)
 
 ################################################################################
 #                                                                              #
@@ -952,21 +954,6 @@ kernel_end :
 	@$(call echo-print,"$(PLATFORM): kernel compiled successfully.")
 	@$(call echo-print,"")
 
-# not used
-.PHONY : kernel_dependencies
-kernel_dependencies :
-ifeq ($(BUILD_MODE),MAKEFILE)
-	@$(REM) generates dependencies
-	$(call brief-command, \
-        $(GNATMAKE)                        \
-                    -M                     \
-                    -D $(OBJECT_DIRECTORY) \
-                    $(INCLUDES)            \
-                    main.adb               \
-                    > $(KERNEL_DEPFILE)    \
-        ,[GNATMAKE-M],$(KERNEL_DEPFILE))
-endif
-
 $(KERNEL_BASENAME).lst     \
 $(KERNEL_BASENAME).src.lst \
 $(KERNEL_BASENAME).elf.lst : $(KERNEL_OUTFILE)
@@ -1090,9 +1077,9 @@ configure-end :
 
 .PHONY : configure-aux
 configure-aux : configure-start   \
-                configure-subdirs \
                 configure-gnatadc \
                 configure-gpr     \
+                configure-subdirs \
                 configure-end
 
 .PHONY : infodump

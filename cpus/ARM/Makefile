@@ -18,6 +18,10 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
+ifeq ($(OSTYPE),cmd)
+KERNEL_PARENT_PATH_CMD := $(shell $(ECHO) $(KERNEL_PARENT_PATH)| $(SED) -e "s|/|\\|g")
+endif
+
 LIBRARY_NAME := cpu
 
 OBJECTS :=
@@ -41,7 +45,11 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure : $(LIBGCC_SOURCES)
+ifeq ($(OSTYPE),cmd)
+	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+endif
 
 .PHONY : clean
 clean :
@@ -49,12 +57,10 @@ clean :
 
 .PHONY : distclean
 distclean : clean
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 ifneq ($(USE_LIBGCC),Y)
 	$(RM) $(LIBGCC_SOURCES)
 endif
-
-.PHONY : dep
-dep :
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

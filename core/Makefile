@@ -18,6 +18,10 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
+ifeq ($(OSTYPE),cmd)
+KERNEL_PARENT_PATH_CMD := $(shell $(ECHO) $(KERNEL_PARENT_PATH)| $(SED) -e "s|/|\\|g")
+endif
+
 LIBRARY_NAME := core
 
 OBJECTS :=
@@ -26,41 +30,13 @@ OBJECTS += $(patsubst %,$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o,$(IMPLICIT
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-ifeq ($(BUILD_MODE),MAKEFILE)
-
-# manually-inferred dependency logic
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/abort_library.o : \
-        $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/console.o : \
-        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)            \
-        $(KERNEL_PARENT_PATH)/$(SPEC_LLUTILS)
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/core.o : \
-        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)         \
-        $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/gnat_exceptions.o : \
-        $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : \
-        $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/malloc.o :   \
-        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)             \
-        $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)          \
-        $(KERNEL_PARENT_PATH)/$(SPEC_INTEGER_MATH)     \
-        $(KERNEL_PARENT_PATH)/$(SPEC_MEMORY_FUNCTIONS)
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/memory_functions.o : \
-        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)
-
-endif
-
 .PHONY : configure
 configure :
+ifeq ($(OSTYPE),cmd)
+	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+endif
 
 .PHONY : clean
 clean :
@@ -68,9 +44,7 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-
-.PHONY : dep
-dep :
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

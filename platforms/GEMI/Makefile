@@ -18,6 +18,10 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
+ifeq ($(OSTYPE),cmd)
+KERNEL_PARENT_PATH_CMD := $(shell $(ECHO) $(KERNEL_PARENT_PATH)| $(SED) -e "s|/|\\|g")
+endif
+
 LIBRARY_NAME := platform
 
 OBJECTS :=
@@ -34,16 +38,21 @@ OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o
 # on $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY), so it is just a placeholder
 $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o :
 # 3) states all other explicit dependencies
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/sh.ads \
-                                                                  $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/sh.adb \
-                                                                  gemi.ads
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : \
+  $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/sh.ads \
+  $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/sh.adb \
+  gemi.ads
 
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
+ifeq ($(OSTYPE),cmd)
+	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+endif
 	@$(PROCESSCFG) configure.h.in configure.h
 	@$(PROCESSCFG) configure.ads.in configure.ads
 
@@ -56,10 +65,7 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-	$(RM) configure.h configure.ads
-
-.PHONY : dep
-dep :
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON) configure.h configure.ads
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

@@ -10,9 +10,13 @@
 
 #
 # Environment variables:
-# KERNEL_PARENT_PATH
+# OSTYPE
+# ECHO
+# SED
 # TOUCH
+# UPDATETM
 # BUILD_MODE
+# KERNEL_PARENT_PATH
 # LIBRARY_DIRECTORY
 # OBJECT_DIRECTORY
 # LIBRARY_NAME
@@ -22,13 +26,48 @@
 # RANLIB
 # CC
 # GNATMAKE
+# GNATMAKE_DEPEND
 # GCC_WRAPPER_TIMESTAMP_FILENAME
 # GNAT_WRAPPER_TIMESTAMP_FILENAME
 #
 
+#
+# create-empty
+#
+# Usage:
+# $(call create-empty,filename)
+#
+ifeq ($(OSTYPE),cmd)
+create-empty = $(TOUCH) $1
+else
+create-empty = $(TOUCH) $1
+endif
+
+#
+# update-timestamp
+#
+# Usage:
+# $(call update-timestamp,filename)
+#
+ifeq ($(OSTYPE),cmd)
+update-timestamp = $(UPDATETM) $1
+else
+update-timestamp = $(TOUCH) $1
+endif
+
 # avoid generation of unuseful timestamps
 export GCC_WRAPPER_TIMESTAMP_FILENAME :=
 export GNAT_WRAPPER_TIMESTAMP_FILENAME :=
+
+# shorthands
+LIB_DIRECTORY     := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)
+OBJ_DIRECTORY     := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
+DEP_DIRECTORY     := $(OBJ_DIRECTORY)
+ifeq ($(OSTYPE),cmd)
+LIB_DIRECTORY_CMD := $(shell $(ECHO) $(LIB_DIRECTORY)| $(SED) -e "s|/|\\|g")
+OBJ_DIRECTORY_CMD := $(shell $(ECHO) $(OBJ_DIRECTORY)| $(SED) -e "s|/|\\|g")
+DEP_DIRECTORY_CMD := $(OBJ_DIRECTORY_CMD)
+endif
 
 ifeq ($(BUILD_MODE),MAKEFILE)
 
@@ -37,6 +76,7 @@ ifeq ($(BUILD_MODE),MAKEFILE)
 #
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
+VPATH    := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
 
 ifeq ($(LIBRARY_NAME),platform)
 GCC_SWITCHES_LIBRARY := $(GCC_SWITCHES_STARTUP)
@@ -44,38 +84,50 @@ else
 GCC_SWITCHES_LIBRARY :=
 endif
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
-	$(call brief-command, \
+$(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
+	$(call brief-command,\
         $(AR) cr $@ $(OBJECTS) \
         ,[AR],$(notdir $@))
-	$(call brief-command, \
+	$(call brief-command,\
         $(RANLIB) $@ \
         ,[RANLIB],$(notdir $@))
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.adb
-	$(call brief-command, \
-        $(GNATMAKE)                                              \
-                    -gnatec=$(GNATADC_FILENAME)                  \
-                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) \
-                    $(GCC_SWITCHES_LIBRARY)                      \
-                    -c $(INCLUDES) $<                            \
+ifeq ($(OSTYPE),cmd)
+%.o : %.adb %.ads
+$(OBJ_DIRECTORY)/%.o : %.adb %.ads $(DEP_DIRECTORY)/%.d
+else
+%.o : %.ad[bs]
+$(OBJ_DIRECTORY)/%.o : %.ad[bs] $(DEP_DIRECTORY)/%.d
+endif
+	$(call brief-command,\
+        $(GNATMAKE)                             \
+                    -gnatec=$(GNATADC_FILENAME) \
+                    -D $(OBJ_DIRECTORY)         \
+                    $(GCC_SWITCHES_LIBRARY)     \
+                    -c $(INCLUDES) $<           \
         ,[GNATMAKE],$<)
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.ads
-	$(call brief-command, \
-        $(GNATMAKE)                                              \
-                    -gnatec=$(GNATADC_FILENAME)                  \
-                    -D $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY) \
-                    $(GCC_SWITCHES_LIBRARY)                      \
-                    -c $(INCLUDES) $<                            \
-        ,[GNATMAKE],$<)
-
-# shorthand
-DEP_DIRECTORY := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
+	$(call brief-command,\
+        $(GNATMAKE_DEPEND)                             \
+                           -M                          \
+                           -gnatec=$(GNATADC_FILENAME) \
+                           -D $(OBJ_DIRECTORY)         \
+                           $(GCC_SWITCHES_LIBRARY)     \
+                           -c $(INCLUDES) $<           \
+                           > $(DEP_DIRECTORY)/$*.d     \
+        ,[GNATMAKE-D],$*.d)
+ifeq ($(OSTYPE),cmd)
+	@$(SED) -i -e "s|^\(.* : .*\)$$|$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY_CMD)\$*.d
+	@$(call update-timestamp,$(DEP_DIRECTORY_CMD)\$*.ali)
+	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
+else
+	@$(SED) -i -e "s|^\(.* : .*\)\$$|$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
+	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
+	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
+endif
 
 %.o : %.S
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.S $(DEP_DIRECTORY)/%.d | $(DEP_DIRECTORY)
-	$(call brief-command, \
+$(OBJ_DIRECTORY)/%.o : %.S $(DEP_DIRECTORY)/%.d
+	$(call brief-command,\
         $(CC)                           \
               -o $@                     \
               -MT $@ -MMD -MP           \
@@ -85,6 +137,7 @@ $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.S $(DEP_DIRECTORY)/%.d | $(DEP
         ,[CC/AS],$<)
 
 DEP_FILES := $(OBJECTS:%.o=%.d)
+
 $(DEP_FILES) :
 
 include $(wildcard $(DEP_FILES))
@@ -97,10 +150,16 @@ ifeq ($(OBJECTS),)
 # GPRbuild (no object files)
 #
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a :
-	$(call brief-command, \
-        $(TOUCH) $@ \
+$(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a :
+ifeq ($(OSTYPE),cmd)
+	$(call brief-command,\
+        $(call create-empty,$(OBJ_DIRECTORY_CMD)\lib$(LIBRARY_NAME).a) \
         ,[AR-NULL],$(notdir $@))
+else
+	$(call brief-command,\
+        $(call create-empty,$@) \
+        ,[AR-NULL],$(notdir $@))
+endif
 
 else
 
@@ -108,30 +167,26 @@ else
 # GPRbuild
 #
 
-# shorthand
-LIB_LIBRARY := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)/lib$(LIBRARY_NAME).a
-
-GPR_INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
-export GPR_INCLUDES
+export GPR_INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
 
 .PHONY : FORCE
 FORCE :
 
-$(LIB_LIBRARY) : FORCE
-	$(call brief-command, \
+$(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a : FORCE
+	$(call brief-command,\
         $(GPRBUILD)                           \
                     -aP $(KERNEL_PARENT_PATH) \
                     -P $(LIBRARY_NAME).gpr    \
         ,[GPRBUILD-L],$(LIBRARY_NAME).gpr)
 
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a : $(LIB_LIBRARY)
+$(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a : $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a
 ifeq ($(OSTYPE),cmd)
-	$(call brief-command, \
-        $(CP) $(LIB_LIBRARY) $(KERNEL_PARENT_PATH)\$(OBJECT_DIRECTORY)\ \
+	$(call brief-command,\
+        $(CP) $(LIB_DIRECTORY)\lib$(LIBRARY_NAME).a $(OBJ_DIRECTORY)\ \
         ,[COPYOBJLIB],$(notdir $@))
 else
-	$(call brief-command, \
-        $(CP) $(LIB_LIBRARY) $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/ \
+	$(call brief-command,\
+        $(CP) $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a $(OBJ_DIRECTORY)/ \
         ,[COPYOBJLIB],$(notdir $@))
 endif
 

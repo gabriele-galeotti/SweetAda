@@ -18,6 +18,10 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
+ifeq ($(OSTYPE),cmd)
+KERNEL_PARENT_PATH_CMD := $(shell $(ECHO) $(KERNEL_PARENT_PATH)| $(SED) -e "s|/|\\|g")
+endif
+
 LIBRARY_NAME := platform
 
 OBJECTS :=
@@ -42,7 +46,11 @@ installfiles :
 
 .PHONY : configure
 configure : configure-subplatform
+ifeq ($(OSTYPE),cmd)
+	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+endif
 
 .PHONY : postbuild
 postbuild : postbuild-subplatform
@@ -53,10 +61,7 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-	$(RM) fs-uae.conf configure.h configure.ads $(DISTCLEAN_OBJECTS_EXTRA)
-
-.PHONY : dep
-dep :
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON) fs-uae.conf configure.h configure.ads $(DISTCLEAN_OBJECTS_EXTRA)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

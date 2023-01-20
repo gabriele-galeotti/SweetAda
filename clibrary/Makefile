@@ -18,6 +18,10 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
+ifeq ($(OSTYPE),cmd)
+KERNEL_PARENT_PATH_CMD := $(shell $(ECHO) $(KERNEL_PARENT_PATH)| $(SED) -e "s|/|\\|g")
+endif
+
 LIBRARY_NAME := clibrary
 
 OBJECTS :=
@@ -33,21 +37,13 @@ OBJECTS += $(patsubst %,$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o,$(IMPLICIT
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-ifeq ($(BUILD_MODE),MAKEFILE)
-
-# manually-inferred dependency logic
-
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/c_wrappers.o : \
-        $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY) \
-        $(KERNEL_PARENT_PATH)/$(SPEC_BITS)          \
-        $(KERNEL_PARENT_PATH)/$(SPEC_CONSOLE)       \
-        $(KERNEL_PARENT_PATH)/$(SPEC_MALLOC)
-
-endif
-
 .PHONY : configure
 configure :
+ifeq ($(OSTYPE),cmd)
+	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+endif
 
 .PHONY : clean
 clean :
@@ -55,15 +51,13 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-
-.PHONY : dep
-dep :
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
 # add rule for .c files because Makefile.lb.in has only Asm/Ada
 %.o : %.c
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.c $(DEP_DIRECTORY)/%.d | $(DEP_DIRECTORY)
+$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.c $(DEP_DIRECTORY)/%.d
 	$(call brief-command, \
         $(CC)                           \
               -o $@                     \

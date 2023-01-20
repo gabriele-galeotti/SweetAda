@@ -34,9 +34,7 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-
-.PHONY : dep
-dep :
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

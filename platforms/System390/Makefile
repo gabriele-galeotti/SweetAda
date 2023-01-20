@@ -18,6 +18,10 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
+ifeq ($(OSTYPE),cmd)
+KERNEL_PARENT_PATH_CMD := $(shell $(ECHO) $(KERNEL_PARENT_PATH)| $(SED) -e "s|/|\\|g")
+endif
+
 LIBRARY_NAME := platform
 
 OBJECTS :=
@@ -29,7 +33,11 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
+ifeq ($(OSTYPE),cmd)
+	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+endif
 	@$(PROCESSCFG) s390.cnf.in s390.cnf
 	@$(PROCESSCFG) hercules.rc.in hercules.rc
 	@$(PROCESSCFG) configure.h.in configure.h
@@ -55,10 +63,8 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-	$(RM) s390.cnf hercules.rc configure.h configure.ads $(KERNEL_IPLFILE) SYSRES.DSD
-
-.PHONY : dep
-dep :
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON) configure.h configure.ads
+	$(RM) s390.cnf hercules.rc $(KERNEL_IPLFILE) SYSRES.DSD
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

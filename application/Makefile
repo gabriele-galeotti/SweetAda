@@ -18,8 +18,6 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
-DISTCLEAN_OBJECTS_EXTRA += application.ad*
-
 .PHONY : configure
 configure :
 ifneq ($(USE_APPLICATION),)
@@ -33,8 +31,5 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-	$(RM) $(DISTCLEAN_OBJECTS_EXTRA)
-
-.PHONY : dep
-dep :
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON) application.ad*
 
