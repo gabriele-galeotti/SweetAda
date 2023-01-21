@@ -3,6 +3,7 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with CPU;
+with Configure;
 with Virt;
 with IOEMU;
 with Time;
@@ -43,11 +44,15 @@ package body Application is
             Time_ns     : Integer_64;
             TM          : Time.TM_Time;
          begin
-            IOEMU.IOEMU_IO1 := 0;
-            IOEMU.IOEMU_IO2 := 0;
+            if Configure.USE_QEMU_IOEMU then
+               IOEMU.IOEMU_IO1 := 0;
+               IOEMU.IOEMU_IO2 := 0;
+            end if;
             loop
-               IOEMU.IOEMU_IO1 := @ + 1;
-               IOEMU.IOEMU_IO2 := @ + 1;
+               if Configure.USE_QEMU_IOEMU then
+                  IOEMU.IOEMU_IO1 := @ + 1;
+                  IOEMU.IOEMU_IO2 := @ + 1;
+               end if;
                -- strictly adhere to Goldfish RTC specifications
                Time_L  := Virt.Goldfish_RTC.TIME_LOW;
                Time_H  := Virt.Goldfish_RTC.TIME_HIGH;
