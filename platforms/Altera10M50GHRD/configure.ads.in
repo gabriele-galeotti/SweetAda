@@ -8,6 +8,7 @@ package Configure is
    CPU      : constant String := "@CPU@";
 
    -- basic configuration parameters
+   USE_QEMU_IOEMU        : constant Boolean := @USE_QEMU_IOEMU@;
    TIMER_SYSCLK          : constant := 75_000_000;
    TIMER_1_SYSCLK        : constant := 75_000_000;
    TICK_FREQUENCY        : constant := 1_000;

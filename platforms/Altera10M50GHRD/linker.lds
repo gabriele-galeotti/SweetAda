@@ -4,7 +4,7 @@ ENTRY(_start)
 MEMORY
 {
         /* RAM is @ 0x08000000, memory is aliased @ 0xC0000000 */
-        RAM : ORIGIN = 0xC8000000, LENGTH = 128M
+        RAM (RWX) : ORIGIN = 0xC8000000, LENGTH = 128M
 }
 
 SECTIONS
@@ -21,32 +21,23 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                /* *(.gnu.linkonce.t.*) */
-                /* *(.gnu.linkonce.r.*) */
-                *(.eh_frame)
                 . = ALIGN(0x10);
                 _etext = .;
         } > RAM
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
-        .data : AT(_etext)
+        .data :
         {
                 _sdata = .;
                 *(.data)
                 *(.data.*)
                 *(.sdata)
+                _gp = ALIGN(4) + 0x7FF0;
                 *(.sdata.*)
-                /* *(.gnu.linkonce.d.*) */
-                /* *(.gcc_except_table) */
                 . = ALIGN(0x10);
                 _edata = .;
         } > RAM
-        /* __FIX__ */
-        /*
-        _gp = ALIGN(16) + 0x7FF0;
-        PROVIDE(gp = _gp);
-        */
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
@@ -57,7 +48,6 @@ SECTIONS
                 *(.bss.*)
                 *(.sbss)
                 *(COMMON)
-                /* *(.gnu.linkonce.b.*) */
                 . = ALIGN(0x10);
                 _ebss = .;
         } > RAM
@@ -66,7 +56,7 @@ SECTIONS
          **********************************************************************/
         /DISCARD/ :
         {
-                *(.comment)
+                *(*)
         }
 }
 

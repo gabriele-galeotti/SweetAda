@@ -58,6 +58,13 @@ _start:
                 mov     fp,sp
 
                 //
+                // Setup global pointer.
+                //
+                .extern _gp
+                movhi   gp,%hi(_gp)
+                ori     gp,gp,%lo(_gp)
+
+                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

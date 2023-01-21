@@ -1,5 +1,6 @@
 
 with Interfaces;
+with Configure;
 with Core;
 with GHRD;
 with IOEMU;
@@ -48,13 +49,17 @@ package body Application is
          begin
             TC1 := Core.Tick_Count;
             TC2 := Core.Tick_Count;
-            IOEMU.IOEMU_IO1 := 0;
-            IOEMU.IOEMU_IO2 := 0;
+            if Configure.USE_QEMU_IOEMU then
+               IOEMU.IOEMU_IO1 := 0;
+               IOEMU.IOEMU_IO2 := 0;
+            end if;
             loop
                if Tick_Count_Expired (TC1, 2_000) then
                   TC1 := Core.Tick_Count;
-                  IOEMU.IOEMU_IO1 := @ + 1;
-                  IOEMU.IOEMU_IO2 := @ + 1;
+                  if Configure.USE_QEMU_IOEMU then
+                     IOEMU.IOEMU_IO1 := @ + 1;
+                     IOEMU.IOEMU_IO2 := @ + 1;
+                  end if;
                end if;
                if Tick_Count_Expired (TC2, 3_000) then
                   TC2 := Core.Tick_Count;
