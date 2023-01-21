@@ -68,17 +68,20 @@ package Definitions is
    GHz1 : constant := 1_000 * MHz1;
 
    -- common known clock rates in Hz
-   CLK_RTC32k  : constant :=     32_768;
-   CLK_UART1M8 : constant :=  1_843_200;
-   CLK_UART2M4 : constant :=  2_457_600; -- CLK_UART1M8 * 4/3
-   CLK_NTSC    : constant :=  3_579_545;
-   CLK_UART3M6 : constant :=  3_686_400; -- CLK_UART1M8 * 2
-   CLK_PAL     : constant :=  4_433_619;
-   CLK_UART4M9 : constant :=  4_915_200; -- CLK_UART1M8 * 8/3
-   CLK_UART7M3 : constant :=  7_372_800; -- CLK_UART1M8 * 4
-   CLK_NTSC4   : constant := 14_318_182; -- CLK_NTSC * 4
-   CLK_UART14M : constant := 14_745_600; -- CLK_UART1M8 * 8
-   CLK_UART18M : constant := 18_432_000; -- CLK_UART1M8 * 10;
+   CLK_RTC32k   : constant :=     32_768;
+   CLK_UART1M8  : constant :=  1_843_200;
+   CLK_UART2M4  : constant :=  2_457_600; -- CLK_UART1M8 * 4/3
+   CLK_NTSC     : constant :=  3_579_545;
+   CLK_UART3M6  : constant :=  3_686_400; -- CLK_UART1M8 * 2
+   CLK_PAL      : constant :=  4_433_619;
+   CLK_UART4M9  : constant :=  4_915_200; -- CLK_UART1M8 * 8/3
+   CLK_PALAmiga : constant :=  7_093_790; -- CLK_PAL28M / 4
+   CLK_NTSCx2   : constant :=  7_159_090;
+   CLK_UART7M3  : constant :=  7_372_800; -- CLK_UART1M8 * 4
+   CLK_NTSCx4   : constant := 14_318_182;
+   CLK_UART14M  : constant := 14_745_600; -- CLK_UART1M8 * 8
+   CLK_UART18M  : constant := 18_432_000; -- CLK_UART1M8 * 10
+   CLK_PAL28M   : constant := 28_375_160; -- CLK_PAL * 64/10
 
    -- serial port bit rates
    type Baud_Rate_Type is (

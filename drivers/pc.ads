@@ -177,7 +177,7 @@ package PC is
 
    -- MASTER_CLK is four times the NTSC color burst frequency:
    -- 4 * (315 / 88) = 4 * 3.579(54) = 14.318182 MHz, T = 69.84 ns
-   MASTER_CLK : constant := Definitions.CLK_NTSC4;
+   MASTER_CLK : constant := Definitions.CLK_NTSCx4;
    -- PIT clock is derived from MASTER clock; initially it is divided by 3,
    -- then is divided further by 4.
    PIT_CLK    : constant := (MASTER_CLK + (12 / 2)) / 12; -- 1.193182 MHz, T = 0.838 us
