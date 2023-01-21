@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# QEMU-AArch64 QEMU configuration file.
+# QEMU-STM32VLDISCOVERY QEMU configuration file.
 #
 
 # QEMU executable
