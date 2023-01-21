@@ -9,6 +9,7 @@ QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-aarch64"
 
 # telnet port numbers for serial ports
 SPPORT0=4446
+SPPORT1=4447
 
 # console for serial port
 /usr/bin/xterm \
