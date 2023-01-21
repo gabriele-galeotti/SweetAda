@@ -41,6 +41,9 @@ _start:
                 lui     $sp,%hi(kernel_stack)
                 ori     $sp,%lo(kernel_stack)
 
+                //
+                // .data section relocation.
+                //
                 .extern _sdata
                 .extern _edata
                 .extern _etext
