@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Configure;
 with IntegratorCP;
 with IOEMU;
 
@@ -34,9 +35,11 @@ package body Exceptions is
    procedure Irq_Process is
    begin
       IntegratorCP.Timer (0).IntClr := 0;
-      -- IOEMU "TIMER" LED blinking
-      IOEMU.IOEMU_IO0 := 16#FF#;
-      IOEMU.IOEMU_IO0 := 16#00#;
+      if Configure.USE_QEMU_IOEMU then
+         -- IOEMU "TIMER" LED blinking
+         IOEMU.IOEMU_IO0 := 16#FF#;
+         IOEMU.IOEMU_IO0 := 16#00#;
+      end if;
    end Irq_Process;
 
    ----------------------------------------------------------------------------

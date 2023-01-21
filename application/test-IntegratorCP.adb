@@ -1,7 +1,10 @@
 
 with Interfaces;
+with Configure;
 with CPU;
 with IntegratorCP;
+with PL110;
+with Console;
 with IOEMU;
 
 package body Application is
@@ -29,16 +32,24 @@ package body Application is
    ----------------------------------------------------------------------------
    procedure Run is
    begin
+      if True then
+         PL110.Print (0, 0, "hello SweetAda ...");
+      end if;
       -------------------------------------------------------------------------
       if True then
-         IOEMU.IOEMU_IO1 := 16#00#;
+         if Configure.USE_QEMU_IOEMU then
+            IOEMU.IOEMU_IO1 := 16#00#;
+         end if;
          declare
             Delay_Count : constant := 100_000_000;
          begin
             loop
-               -- IOEMU GPIO test
+               if Configure.USE_QEMU_IOEMU then
+                  -- IOEMU GPIO test
+                  IOEMU.IOEMU_IO1 := @ + 1;
+               end if;
+               Console.Print ("Hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-               IOEMU.IOEMU_IO1 := @ + 1;
             end loop;
          end;
       end if;

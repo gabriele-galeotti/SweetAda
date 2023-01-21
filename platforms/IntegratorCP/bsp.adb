@@ -80,16 +80,15 @@ package body BSP is
       PL011_Descriptor.Read_16      := MMIO.Read'Access;
       PL011_Descriptor.Write_16     := MMIO.Write'Access;
       PL011.Init (PL011_Descriptor);
-      -- PL110 LCD ------------------------------------------------------------
-      PL110_Descriptor.Base_Address := To_Address (PL110_BASEADDRESS);
-      PL110.Init (PL110_Descriptor);
-      PL110.Print (0, 0, "hello SweetAda ...");
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("Integrator/CP (QEMU emulator)", NL => True);
+      -- PL110 LCD ------------------------------------------------------------
+      PL110_Descriptor.Base_Address := To_Address (PL110_BASEADDRESS);
+      PL110.Init (PL110_Descriptor);
       -- Timer ----------------------------------------------------------------
       -- Timer0 runs @ 40 MHz
       -- Timer1/2 run @ 1 MHz
