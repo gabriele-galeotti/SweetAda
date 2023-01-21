@@ -18,6 +18,7 @@
 with System;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Configure;
 with Core;
 with Bits;
 with ARMv8A;
@@ -52,10 +53,12 @@ package body Exceptions is
    procedure Exception_Process is
    begin
       Core.Tick_Count := @ + 1;
-      if Core.Tick_Count mod 1_000 = 0 then
-         -- IOEMU "TIMER" LED blinking
-         IOEMU.IOEMU_IO0 := 1;
-         IOEMU.IOEMU_IO0 := 0;
+      if Configure.USE_QEMU_IOEMU then
+         if Core.Tick_Count mod 1_000 = 0 then
+            -- IOEMU "TIMER" LED blinking
+            IOEMU.IOEMU_IO0 := 1;
+            IOEMU.IOEMU_IO0 := 0;
+         end if;
       end if;
       Virt.GICD_ICPENDR (30) := True;
       Virt.Timer_Reload;
