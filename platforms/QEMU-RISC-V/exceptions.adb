@@ -20,6 +20,7 @@ with Interfaces;
 with Definitions;
 with Core;
 with RISCV;
+with Configure;
 with Virt;
 with IOEMU;
 
@@ -57,10 +58,12 @@ package body Exceptions is
    procedure Timer_Process is
    begin
       Core.Tick_Count := @ + 1;
-      if Core.Tick_Count mod 1_000 = 0 then
-         -- IOEMU "TIMER" LED blinking
-         IOEMU.IOEMU_IO0 := 1;
-         IOEMU.IOEMU_IO0 := 0;
+      if Configure.USE_QEMU_IOEMU then
+         if Core.Tick_Count mod 1_000 = 0 then
+            -- IOEMU "TIMER" LED blinking
+            IOEMU.IOEMU_IO0 := 1;
+            IOEMU.IOEMU_IO0 := 0;
+         end if;
       end if;
       RISCV.MTIMECMP_Write (RISCV.MTIME_Read + Virt.Timer_Constant);
    end Timer_Process;

@@ -14,8 +14,8 @@ CPU_MODEL             := RV32IMAFC
 # -march=rv32imafc_zicsr_zifencei -mabi=ilp32f
 GCC_SWITCHES_PLATFORM += -march=rv32imafc -mabi=ilp32f
 STARTUP_OBJECTS       := startup.S llkernel.S
-LD_SWITCHES_PLATFORM  += -m elf32lriscv
-# for runsweetada on QEMU
+LD_SWITCHES_PLATFORM  += -m elf32lriscv --no-warn-rwx-segments
+# QEMU executable type
 export RISCV32 := Y
 
 OBJDUMP_SWITCHES_PLATFORM +=
@@ -24,9 +24,15 @@ OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
 USE_APPLICATION := test-QEMU-RISC-V
 
+export USE_QEMU_IOEMU := False
+
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
-RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu-ioemu.cfg
-DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
+# plain QEMU
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT) -debug
+# runsweetada + QEMU-IOEMU
+#RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu-ioemu.cfg
+#DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
 
