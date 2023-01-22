@@ -1,0 +1,25 @@
+
+#
+# SAMSUNG Galaxy J1
+#
+# ARM Cortex-A7 (ARMv7-A)
+#
+
+CPU       := ARM
+CPU_MODEL := CortexA7
+
+GCC_SWITCHES_PLATFORM     += -mcpu=cortex-a7
+STARTUP_OBJECTS           := startup.S llkernel.S
+LD_SWITCHES_PLATFORM      += --no-warn-rwx-segments
+OBJDUMP_SWITCHES_PLATFORM +=
+POSTBUILD_ROMFILE         := N
+OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
+
+USE_APPLICATION := dummy
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/adb$(SCREXT)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/adb$(SCREXT) -debug
+
