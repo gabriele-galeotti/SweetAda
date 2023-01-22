@@ -4,11 +4,8 @@ package Configure is
    pragma Pure;
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "IntegratorCP";
+   PLATFORM  : constant String := "Android";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
-
-   -- basic configuration parameters
-   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
 
 end Configure;
