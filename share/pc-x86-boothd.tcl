@@ -131,7 +131,7 @@ set SECTORS_PER_CYLINDER [expr $HPC * $SPT]
 set MBR_SECTORS $SECTORS_PER_CYLINDER
 # compute # of sectors sufficient to contain the kernel
 set KERNEL_SECTORS [expr ($kernel_size + $BPS - 1) / $BPS]
-puts [format "kernel sector count: %d (0x%X)" $KERNEL_SECTORS $KERNEL_SECTORS]
+puts [format "%s: kernel sector count: %d (0x%X)" $SCRIPT_FILENAME $KERNEL_SECTORS $KERNEL_SECTORS]
 # compute # of cylinders sufficient to contain the kernel
 set CYL_PARTITION [expr ($KERNEL_SECTORS + $SECTORS_PER_CYLINDER - 1) / $SECTORS_PER_CYLINDER]
 # total device # of cylinders, +1 for full cylinder MBR
@@ -160,14 +160,18 @@ if {[string index $device_filename 0] eq "+"} {
 # partiton starts on cylinder boundary (1st full cylinder reserved for MBR)
 set PARTITION_SECTOR_START $SECTORS_PER_CYLINDER
 set PARTITION_SECTORS_SIZE [expr $CYL_PARTITION * $SECTORS_PER_CYLINDER]
-puts "partition sector start: $PARTITION_SECTOR_START"
-puts "partition sector size:  $PARTITION_SECTORS_SIZE"
+puts "$SCRIPT_FILENAME: partition sector start: $PARTITION_SECTOR_START"
+puts "$SCRIPT_FILENAME: partition sector size:  $PARTITION_SECTORS_SIZE"
 
 # build MBR (MS-DOS 6.22)
-eval exec $::env(TOOLCHAIN_CC)                                    \
-  -o mbr.o                                                        \
-  -c                                                              \
-  [file join $::env(SWEETADA_PATH) $::env(SHARE_DIRECTORY) mbr.S]
+eval exec $::env(TOOLCHAIN_CC)                 \
+  -o mbr.o                                     \
+  -c                                           \
+  \"[file join                                 \
+      [string cat \" $::env(SWEETADA_PATH) \"] \
+      $::env(SHARE_DIRECTORY)                  \
+      mbr.S                                    \
+  ]\"
 eval exec $::env(TOOLCHAIN_LD) -o mbr.bin -Ttext=0 --oformat=binary mbr.o
 eval exec $::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary mbr.bin > mbr.lst
 
@@ -196,19 +200,23 @@ if {$PARTITION_SECTORS_SIZE > 65535} {
     set PARTITION_SECTORS_SSIZE $PARTITION_SECTORS_SIZE
     set PARTITION_SECTORS_LSIZE 0
 }
-eval exec $::env(TOOLCHAIN_CC)                                           \
-  -o bootsector.o                                                        \
-  -c                                                                     \
-  -DCYLINDERS=$CYL                                                       \
-  -DHEADS=$HPC                                                           \
-  -DSPT=$SPT                                                             \
-  -DPARTITION_SECTOR_START=$PARTITION_SECTOR_START                       \
-  -DPARTITION_SECTORS_SSIZE=$PARTITION_SECTORS_SSIZE                     \
-  -DPARTITION_SECTORS_LSIZE=$PARTITION_SECTORS_LSIZE                     \
-  -DNSECTORS=$KERNEL_SECTORS                                             \
-  -DBOOTSEGMENT=$bootsegment                                             \
-  -DDELAY                                                                \
-  [file join $::env(SWEETADA_PATH) $::env(SHARE_DIRECTORY) bootsector.S]
+eval exec $::env(TOOLCHAIN_CC)                       \
+  -o bootsector.o                                    \
+  -c                                                 \
+  -DCYLINDERS=$CYL                                   \
+  -DHEADS=$HPC                                       \
+  -DSPT=$SPT                                         \
+  -DPARTITION_SECTOR_START=$PARTITION_SECTOR_START   \
+  -DPARTITION_SECTORS_SSIZE=$PARTITION_SECTORS_SSIZE \
+  -DPARTITION_SECTORS_LSIZE=$PARTITION_SECTORS_LSIZE \
+  -DNSECTORS=$KERNEL_SECTORS                         \
+  -DBOOTSEGMENT=$bootsegment                         \
+  -DDELAY                                            \
+  \"[file join                                       \
+      [string cat \" $::env(SWEETADA_PATH) \"]       \
+      $::env(SHARE_DIRECTORY)                        \
+      bootsector.S                                   \
+  ]\"
 eval exec $::env(TOOLCHAIN_LD) -o bootsector.bin -Ttext=0 --oformat=binary bootsector.o
 eval exec $::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary bootsector.bin > bootsector.lst
 
@@ -237,8 +245,13 @@ puts -nonewline $fd $kernel
 close $fd
 
 # flush disk buffers
-exec sync
-exec sync
+# flush disk buffers
+if {[platform_get] eq "unix"} {
+    exec sync
+    exec sync
+}
+
+puts "$SCRIPT_FILENAME: done."
 
 exit 0
 
