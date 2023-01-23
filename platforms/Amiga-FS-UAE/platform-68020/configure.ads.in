@@ -1,7 +1,11 @@
 
+with Definitions;
+
 package Configure is
 
    pragma Pure;
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM    : constant String := "Amiga-FS-UAE";
@@ -10,7 +14,7 @@ package Configure is
    CPU_MODEL   : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   TIMER_SYSCLK   : constant := 7_093_790;
-   TICK_FREQUENCY : constant := 1_000;
+   TIMER_SYSCLK   : constant := CLK_PALAmiga;
+   TICK_FREQUENCY : constant := 1 * kHz1;
 
 end Configure;

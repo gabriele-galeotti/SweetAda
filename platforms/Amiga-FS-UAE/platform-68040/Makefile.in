@@ -1,12 +1,4 @@
 
-DISTCLEAN_OBJECTS_EXTRA := Makefile.in      \
-                           configuration.in \
-                           configure.ads.in \
-                           configure.h.in   \
-                           fs-uae.conf.in   \
-                           mmu.adb          \
-                           mmu.ads
-
 .PHONY : configure-subplatform
 configure-subplatform :
 	@$(PROCESSCFG) configure.h.in configure.h
