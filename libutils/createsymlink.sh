@@ -12,8 +12,11 @@
 #
 # Arguments:
 # $1 = filename (target) or directory
+# if $1 is a normal file:
 # $2 = filename (link name)
-#
+# if $1 is a directory:
+# $2 = filename of a file describing the list of files symlinked, in a
+#      Makefile-style syntax
 # Environment variables:
 # VERBOSE
 #
@@ -82,6 +85,8 @@ if [ ! -d "${TARGET}" ] ; then
     log_print_error "${SCRIPT_FILENAME}: *** Error: no symlink link name specified."
     exit 1
   fi
+else
+  FILELIST_FILENAME="$2"
 fi
 
 if [ "x${VERBOSE}" = "xY" ] ; then
@@ -91,9 +96,15 @@ else
 fi
 
 if [ -d "${TARGET}" ] ; then
+  if [ "x${FILELIST_FILENAME}" != "x" ] ; then
+    printf "INSTALLED_FILENAMES :=\n" > ${FILELIST_FILENAME}
+  fi
   for f in $(ls -A "${TARGET}"/) ; do
     rm -f "${f}"
     ln -s ${VERBOSE_OPTION} "${TARGET}"/"${f}" "${f}" || exit $?
+    if [ "x${FILELIST_FILENAME}" != "x" ] ; then
+      printf "INSTALLED_FILENAMES += ${f}\n" >> ${FILELIST_FILENAME}
+    fi
   done
 else
   rm -f "${LINK_NAME}"

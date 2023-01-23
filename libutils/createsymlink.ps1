@@ -39,32 +39,47 @@ function ExitWithCode
 
 $scriptname = $MyInvocation.MyCommand.Name
 
-$verbose = $env:VERBOSE
-
-$filename_target = $args[0]
-$filename_link_name = $args[1]
-
-$isfolder = (Test-Path -Path $filename_target -PathType Container)
+$target = $args[0]
+$isfolder = (Test-Path -Path $target -PathType Container)
 if ($isfolder)
 {
-  $files = Get-ChildItem $filename_target
+  $filelist_filename = $args[1]
+}
+else
+{
+  $link_name = $args[1]
+}
+
+$verbose = $env:VERBOSE
+
+if ($isfolder)
+{
+  if (![string]::IsNullOrEmpty($filelist_filename))
+  {
+    "INSTALLED_FILENAMES :=" | Set-Content $filelist_filename
+  }
+  $files = Get-ChildItem $target
   foreach ($f in $files)
   {
     Remove-Item -Path $f -Force -ErrorAction Ignore
-    New-Item -ItemType SymbolicLink -Path $f -Target $filename_target\$f | Out-Null
+    New-Item -ItemType SymbolicLink -Path $f -Target $target\$f | Out-Null
     if ($verbose -eq "Y")
     {
-      Write-Host "${f} -> ${filename_target}\${f}"
+      Write-Host "${f} -> ${target}\${f}"
+    }
+    if (![string]::IsNullOrEmpty($filelist_filename))
+    {
+      "INSTALLED_FILENAMES += ${f}" | Add-Content $filelist_filename
     }
   }
 }
 else
 {
-  Remove-Item -Path $filename_link_name -Force -ErrorAction Ignore
-  New-Item -ItemType SymbolicLink -Path $filename_link_name -Target $filename_target | Out-Null
+  Remove-Item -Path $link_name -Force -ErrorAction Ignore
+  New-Item -ItemType SymbolicLink -Path $link_name -Target $target | Out-Null
   if ($verbose -eq "Y")
   {
-    Write-Host "${filename_link_name} -> ${filename_target}"
+    Write-Host "${link_name} -> ${target}"
   }
 }
 
