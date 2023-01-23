@@ -21,10 +21,8 @@
 ################################################################################
 
 import sys
-
 # avoid generation of *.pyc
 sys.dont_write_bytecode = True
-
 import socket
 import library
 

@@ -31,14 +31,14 @@
 import sys
 # avoid generation of *.pyc
 sys.dont_write_bytecode = True
+import os
 
-SCRIPT_FILENAME = sys.argv[0]
+SCRIPT_FILENAME = os.path.basename(sys.argv[0])
 
 ################################################################################
 #                                                                              #
 ################################################################################
 
-import os
 import subprocess
 sys.path.append(os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('LIBUTILS_DIRECTORY')))
 import library

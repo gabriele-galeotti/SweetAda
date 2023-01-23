@@ -38,14 +38,14 @@
 import sys
 # avoid generation of *.pyc
 sys.dont_write_bytecode = True
+import os
 
-SCRIPT_FILENAME = sys.argv[0]
+SCRIPT_FILENAME = os.path.basename(sys.argv[0])
 
 ################################################################################
 #                                                                              #
 ################################################################################
 
-import os
 sys.path.append(os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('LIBUTILS_DIRECTORY')))
 import library
 
@@ -135,7 +135,7 @@ SECTORS_PER_CYLINDER = HPC * SPT
 MBR_SECTORS = SECTORS_PER_CYLINDER
 # compute # of sectors sufficient to contain the kernel
 KERNEL_SECTORS = (kernel_size + BPS - 1) / BPS
-printf('kernel sector count: %d (0x%X)\n', KERNEL_SECTORS, KERNEL_SECTORS)
+printf('%s: kernel sector count: %d (0x%X)\n', SCRIPT_FILENAME, KERNEL_SECTORS, KERNEL_SECTORS)
 # compute # of cylinders sufficient to contain the kernel
 CYL_PARTITION = (KERNEL_SECTORS + SECTORS_PER_CYLINDER - 1) / SECTORS_PER_CYLINDER
 # total device # of cylinders, +1 for full cylinder MBR
@@ -150,7 +150,6 @@ if len(device_filename) > 0 and device_filename[0] == '+':
     fd.seek(DEVICE_SECTORS * BPS - 1, 0)
     fd.write(b'\x00')
     fd.close()
-    print(device_filename)
 else:
     device_type = 'DEVICE'
     while device_filename == '':
@@ -162,14 +161,18 @@ else:
 # partiton starts on cylinder boundary (1st full cylinder reserved for MBR)
 PARTITION_SECTOR_START = SECTORS_PER_CYLINDER
 PARTITION_SECTORS_SIZE = CYL_PARTITION * SECTORS_PER_CYLINDER
-printf('partition sector start: %d\n', PARTITION_SECTOR_START)
-printf('partition sector size:  %d\n', PARTITION_SECTORS_SIZE)
+printf('%s: partition sector start: %d\n', SCRIPT_FILENAME, PARTITION_SECTOR_START)
+printf('%s: partition sector size:  %d\n', SCRIPT_FILENAME, PARTITION_SECTORS_SIZE)
 
 # build MBR (MS-DOS 6.22)
 os.system(
     os.getenv('TOOLCHAIN_CC') + ' ' +
     '-o mbr.o -c'             + ' ' +
-    os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('SHARE_DIRECTORY'), 'mbr.S')
+    os.path.join(
+        '"' + os.getenv('SWEETADA_PATH') + '"',
+        os.getenv('SHARE_DIRECTORY'),
+        'mbr.S'
+        )
     )
 os.system(os.getenv('TOOLCHAIN_LD')      + ' ' + '-o mbr.bin -Ttext=0 --oformat=binary mbr.o')
 os.system(os.getenv('TOOLCHAIN_OBJDUMP') + ' ' + '-m i8086 -D -M i8086 -b binary mbr.bin > mbr.lst')
@@ -209,7 +212,11 @@ os.system(
     '-DNSECTORS=' + str(KERNEL_SECTORS)                         + ' ' +
     '-DBOOTSEGMENT=' + bootsegment                              + ' ' +
     '-DDELAY'                                                   + ' ' +
-    os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('SHARE_DIRECTORY'), 'bootsector.S')
+    os.path.join(
+        '"' + os.getenv('SWEETADA_PATH') + '"',
+        os.getenv('SHARE_DIRECTORY'),
+        'bootsector.S'
+        )
     )
 os.system(os.getenv('TOOLCHAIN_LD')      + ' ' + '-o bootsector.bin -Ttext=0 --oformat=binary bootsector.o')
 os.system(os.getenv('TOOLCHAIN_OBJDUMP') + ' ' + '-m i8086 -D -M i8086 -b binary bootsector.bin > bootsector.lst')
@@ -235,8 +242,11 @@ fd.write(kernel)
 fd.close()
 
 # flush disk buffers
-os.system('sync')
-os.system('sync')
+if library.platform_get() == "unix":
+    os.system('sync')
+    os.system('sync')
+
+printf('%s: done.\n', SCRIPT_FILENAME)
 
 exit(0)
 

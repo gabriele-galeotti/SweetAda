@@ -16,8 +16,7 @@
 # $3 = BAUD_RATE
 #
 # Environment variables:
-# SWEETADA_PATH
-# LIBUTILS_DIRECTORY
+# none
 #
 
 ################################################################################
@@ -28,8 +27,9 @@
 import sys
 # avoid generation of *.pyc
 sys.dont_write_bytecode = True
+import os
 
-SCRIPT_FILENAME = sys.argv[0]
+SCRIPT_FILENAME = os.path.basename(sys.argv[0])
 
 ################################################################################
 #                                                                              #

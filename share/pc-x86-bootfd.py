@@ -31,14 +31,16 @@
 import sys
 # avoid generation of *.pyc
 sys.dont_write_bytecode = True
+import os
 
-SCRIPT_FILENAME = sys.argv[0]
+SCRIPT_FILENAME = os.path.basename(sys.argv[0])
 
 ################################################################################
 #                                                                              #
 ################################################################################
 
-import os
+sys.path.append(os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('LIBUTILS_DIRECTORY')))
+import library
 
 # helper function
 def printf(format, *args):
@@ -84,7 +86,6 @@ if len(device_filename) > 0 and device_filename[0] == '+':
     fd.seek(DEVICE_SECTORS * BPS - 1, 0)
     fd.write(b'\x00')
     fd.close()
-    print(device_filename)
 else:
     device_type = 'DEVICE'
     while device_filename == '':
@@ -95,7 +96,7 @@ else:
 
 # build bootsector
 KERNEL_SECTORS = (kernel_size + BPS - 1) / BPS
-printf('kernel sector count: %d (0x%X)\n', KERNEL_SECTORS, KERNEL_SECTORS)
+printf('%s: kernel sector count: %d (0x%X)\n', SCRIPT_FILENAME, KERNEL_SECTORS, KERNEL_SECTORS)
 os.system(
     os.getenv('TOOLCHAIN_CC')           + ' ' +
     '-o bootsector.o'                   + ' ' +
@@ -104,7 +105,11 @@ os.system(
     '-DNSECTORS=' + str(KERNEL_SECTORS) + ' ' +
     '-DBOOTSEGMENT=' + bootsegment      + ' ' +
     '-DDELAY'                           + ' ' +
-    os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('SHARE_DIRECTORY'), 'bootsector.S')
+    os.path.join(
+        '"' + os.getenv('SWEETADA_PATH') + '"',
+        os.getenv('SHARE_DIRECTORY'),
+        'bootsector.S'
+        )
     )
 os.system(os.getenv('TOOLCHAIN_LD')      + ' ' + '-o bootsector.bin -Ttext=0 --oformat=binary bootsector.o')
 os.system(os.getenv('TOOLCHAIN_OBJDUMP') + ' ' + '-m i8086 -D -M i8086 -b binary bootsector.bin > bootsector.lst')
@@ -130,8 +135,11 @@ fd.write(kernel)
 fd.close()
 
 # flush disk buffers
-os.system('sync')
-os.system('sync')
+if library.platform_get() == 'unix':
+  os.system('sync')
+  os.system('sync')
+
+printf('%s: done.\n', SCRIPT_FILENAME)
 
 exit(0)
 
