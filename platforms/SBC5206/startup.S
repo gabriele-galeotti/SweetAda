@@ -19,7 +19,7 @@
 
 #define INITIALSP 0
 #define INITIALPC _start
-#include "startup-vectors.S"
+#include "startup-vectors.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

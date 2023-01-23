@@ -7,7 +7,8 @@ CPU       := M68k
 CPU_MODEL := CF5206
 
 # -Wa,--bitwise-or
-GCC_SWITCHES_PLATFORM     += -mcpu=5206 -Wa,-mcpu=5206
+GCC_SWITCHES_PLATFORM     += -mcpu=5206
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
