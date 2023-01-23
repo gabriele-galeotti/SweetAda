@@ -9,6 +9,7 @@ package Configure is
    CPU_MODEL   : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
+   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
    TICK_FREQUENCY : constant := 1_000;
 
 end Configure;

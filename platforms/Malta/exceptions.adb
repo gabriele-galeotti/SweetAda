@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Configure;
 with Core;
 with MIPS32;
 with Malta;
@@ -60,10 +61,12 @@ package body Exceptions is
          end if;
       end;
       Core.Tick_Count := @ + 1;
-      if Core.Tick_Count mod 100 = 0 then
-         -- IOEMU "TIMER" LED blinking
-         IOEMU.IOEMU_IO0 := 1;
-         IOEMU.IOEMU_IO0 := 0;
+      if Configure.USE_QEMU_IOEMU then
+         if Core.Tick_Count mod 100 = 0 then
+            -- IOEMU "TIMER" LED blinking
+            IOEMU.IOEMU_IO0 := 1;
+            IOEMU.IOEMU_IO0 := 0;
+         end if;
       end if;
    end Process;
 

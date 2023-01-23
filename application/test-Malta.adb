@@ -2,6 +2,7 @@
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
+with Configure;
 with MIPS;
 with Malta;
 with IDE;
@@ -84,8 +85,10 @@ package body Application is
             Value := 0;
             loop
                LEDBAR := Byte_Reverse (Value);
-               -- IOEMU GPIO test
-               IOEMU.IOEMU_IO1 := Value;
+               if Configure.USE_QEMU_IOEMU then
+                  -- IOEMU GPIO test
+                  IOEMU.IOEMU_IO1 := Value;
+               end if;
                Value := @ + 1;
                for Delay_Loop_Count in 1 .. Delay_Count loop MIPS.NOP; end loop;
             end loop;
