@@ -136,8 +136,8 @@ fd.close()
 
 # flush disk buffers
 if library.platform_get() == 'unix':
-  os.system('sync')
-  os.system('sync')
+    os.system('sync')
+    os.system('sync')
 
 printf('%s: done.\n', SCRIPT_FILENAME)
 
