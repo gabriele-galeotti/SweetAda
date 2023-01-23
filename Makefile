@@ -330,7 +330,6 @@ KERNEL_GPRFILE        := sweetada.gpr
 CONFIGUREGPR_FILENAME := configure.gpr
 
 # cleaning
-CLEAN_OBJECTS            :=
 CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
                             *.map *.o *.out *.srec *.tmp
 DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)
@@ -666,8 +665,8 @@ ifeq ($(BUILD_MODE),MAKEFILE)
 IMPLICIT_ALI_UNITS_MAKEFILE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT_ALI_UNITS))
 endif
 
-CLEAN_OBJECTS     += $(KERNEL_OBJFILE) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE)
-DISTCLEAN_OBJECTS += $(CONFIGUREGPR_FILENAME) $(KERNEL_CFGFILE)
+CLEAN_OBJECTS     := $(KERNEL_OBJFILE) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE)
+DISTCLEAN_OBJECTS := $(CONFIGUREGPR_FILENAME) $(KERNEL_CFGFILE)
 
 ################################################################################
 #                                                                              #
