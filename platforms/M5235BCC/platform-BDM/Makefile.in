@@ -1,11 +1,4 @@
 
-DISTCLEAN_OBJECTS_EXTRA := M5235BCC.cfg     \
-                           Makefile.in      \
-                           configuration.in \
-                           configure.ads.in \
-                           configure.h.in   \
-                           linker.lds
-
 .PHONY : configure-subplatform
 configure-subplatform :
 	@$(PROCESSCFG) configure.h.in configure.h
