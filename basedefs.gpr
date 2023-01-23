@@ -103,11 +103,11 @@ abstract project Basedefs is
                                 "-fdump-rtl-expand",
                                 "-gnatVa"
                                ) &
-                               GCC_Wrapper_Switch              &
                                Configure.ADAC_Switches_RTS     &
                                Configure.GCC_Switches_Platform &
                                Configure.ADAC_Switches_Warning &
-                               Configure.ADAC_Switches_Style;
+                               Configure.ADAC_Switches_Style   &
+                               GCC_Wrapper_Switch;
    end Compiler;
 
    ----------------------------------------------------------------------------
