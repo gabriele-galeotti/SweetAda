@@ -63,7 +63,7 @@ package CFPeripherals is
                               );
 
    UART_Register_Offset : constant array (UART_Register_Type) of Storage_Offset :=
-      (
+      [
        UMR1  => 16#0140#,
        UMR2  => 16#0140#,
        USR   => 16#0144#,
@@ -81,7 +81,7 @@ package CFPeripherals is
        UIP   => 16#0174#,
        UOP1  => 16#0178#,
        UOP0  => 16#017C#
-      );
+      ];
 
    type UART_Type is (UART1, UART2);
    for UART_Type use (
