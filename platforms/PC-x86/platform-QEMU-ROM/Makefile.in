@@ -1,12 +1,4 @@
 
-DISTCLEAN_OBJECTS_EXTRA := Makefile.in        \
-                           bsp-board_init.adb \
-                           configuration.in   \
-                           configure.ads.in   \
-                           configure.h.in     \
-                           linker.lds         \
-                           qemu.cfg
-
 .PHONY : configure-subplatform
 configure-subplatform :
 	@$(PROCESSCFG) configure.h.in configure.h

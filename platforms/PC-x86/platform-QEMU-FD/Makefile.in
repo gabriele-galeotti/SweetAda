@@ -1,14 +1,4 @@
 
-CLEAN_OBJECTS_EXTRA := pcbootfd.dsk
-
-DISTCLEAN_OBJECTS_EXTRA := Makefile.in        \
-                           bsp-board_init.adb \
-                           configuration.in   \
-                           configure.ads.in   \
-                           configure.h.in     \
-                           linker.lds         \
-                           qemu.cfg
-
 .PHONY : configure-subplatform
 configure-subplatform :
 	@$(PROCESSCFG) configure.h.in configure.h
@@ -16,18 +6,7 @@ configure-subplatform :
 
 .PHONY : postbuild-subplatform
 postbuild-subplatform :
-	$(FILEPAD) $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) 512
-ifeq ($(USE_PYTHON),Y)
-	$(PYTHON)                                                \
-          "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/pc-x86-bootfd.py \
-          $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE)                \
-          0x4000                                                 \
-          +pcbootfd.dsk
-else
-	$(TCLSH)                                                  \
-          "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/pc-x86-bootfd.tcl \
-          $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE)                 \
-          0x4000                                                  \
-          +pcbootfd.dsk
+ifneq ($(POSTBUILD_COMMAND),)
+	$(POSTBUILD_COMMAND)
 endif
 

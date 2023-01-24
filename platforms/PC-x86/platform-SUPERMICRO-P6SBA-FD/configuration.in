@@ -17,6 +17,8 @@ LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
+POSTBUILD_COMMAND         := $(SHELL) postbuild-fd.sh
+CLEAN_OBJECTS_COMMON      += pcbootfd.dsk
 
 export KERNEL_STACK_SIZE := 4096
 
