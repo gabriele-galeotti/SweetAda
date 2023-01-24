@@ -88,18 +88,18 @@ if {[string index $device_filename 0] eq "+"} {
 # build bootsector
 set KERNEL_SECTORS [expr ($kernel_size + $BPS - 1) / $BPS]
 puts [format "%s: kernel sector count: %d (0x%X)" $SCRIPT_FILENAME $KERNEL_SECTORS $KERNEL_SECTORS]
-eval exec $::env(TOOLCHAIN_CC) \
-  -o bootsector.o              \
-  -c                           \
-  -DFLOPPYDISK                 \
-  -DNSECTORS=$KERNEL_SECTORS   \
-  -DBOOTSEGMENT=$bootsegment   \
-  -DDELAY                      \
-  \"[file join                 \
-      $::env(SWEETADA_PATH)    \
-      $::env(SHARE_DIRECTORY)  \
-      bootsector.S             \
-  ]\"
+eval exec $::env(TOOLCHAIN_CC)  \
+    -o bootsector.o             \
+    -c                          \
+    -DFLOPPYDISK                \
+    -DNSECTORS=$KERNEL_SECTORS  \
+    -DBOOTSEGMENT=$bootsegment  \
+    -DDELAY                     \
+    \"[file join                \
+        $::env(SWEETADA_PATH)   \
+        $::env(SHARE_DIRECTORY) \
+        bootsector.S            \
+    ]\"
 eval exec $::env(TOOLCHAIN_LD) -o bootsector.bin -Ttext=0 --oformat=binary bootsector.o
 eval exec $::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary bootsector.bin > bootsector.lst
 
