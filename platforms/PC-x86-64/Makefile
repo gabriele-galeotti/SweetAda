@@ -27,6 +27,7 @@ LIBRARY_NAME := platform
 OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/$(f))
 
 -include Makefile.in
+-include Makefile.if.in
 
 .PHONY : all
 all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
@@ -34,7 +35,7 @@ all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 .PHONY : installfiles
 installfiles :
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
-	@$(CREATESYMLINK) platform-$(SUBPLATFORM)
+	@$(CREATESYMLINK) platform-$(SUBPLATFORM) Makefile.if.in
 	@$(call echo-print,"installfiles: done")
 	@$(call echo-print,"")
 
@@ -51,11 +52,13 @@ postbuild : postbuild-subplatform
 
 .PHONY : clean
 clean :
-	$(RM) $(CLEAN_OBJECTS_COMMON) $(CLEAN_OBJECTS_EXTRA)
+	$(RM) $(CLEAN_OBJECTS_COMMON)
 
 .PHONY : distclean
 distclean : clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) configure.h configure.ads $(DISTCLEAN_OBJECTS_EXTRA)
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)           \
+              configure.h configure.ads             \
+              $(INSTALLED_FILENAMES) Makefile.if.in
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

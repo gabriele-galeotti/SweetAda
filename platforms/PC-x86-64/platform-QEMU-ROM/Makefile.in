@@ -1,13 +1,4 @@
 
-CLEAN_OBJECTS_EXTRA :=
-
-DISTCLEAN_OBJECTS_EXTRA := Makefile.in      \
-                           configuration.in \
-                           configure.ads.in \
-                           configure.h.in   \
-                           linker.lds       \
-                           qemu.cfg
-
 .PHONY : configure-subplatform
 configure-subplatform :
 	@$(PROCESSCFG) configure.h.in configure.h
