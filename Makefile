@@ -545,6 +545,7 @@ export                          \
        RTSES                    \
        INCLUDE_DIRECTORIES      \
        IMPLICIT_ALI_UNITS       \
+       POSTBUILD_COMMAND        \
        CLEAN_OBJECTS_COMMON     \
        DISTCLEAN_OBJECTS_COMMON
 
