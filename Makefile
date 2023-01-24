@@ -96,12 +96,7 @@ export OSTYPE
 
 # workarounds for some environments
 ifeq      ($(OSTYPE),cmd)
-ifeq ($(basename $(notdir $(MAKE))),mingw32-make)
-# even in a Windows cmd shell, if MSYS2 is present in path, then mingw32-make
-# will use the MSYS2 Bash shell; avoid this problem by setting explicitly the
-# native shell
 SHELL := cmd
-endif
 else ifeq ($(OSTYPE),msys)
 export temp :=
 export tmp :=
