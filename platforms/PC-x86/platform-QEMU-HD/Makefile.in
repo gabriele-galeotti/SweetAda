@@ -7,6 +7,6 @@ configure-subplatform :
 .PHONY : postbuild-subplatform
 postbuild-subplatform :
 ifneq ($(POSTBUILD_COMMAND),)
-	sh $$(pwd)/$(POSTBUILD_COMMAND)
+	$(POSTBUILD_COMMAND)
 endif
 
