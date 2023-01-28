@@ -9,8 +9,10 @@ QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-nios2"
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
+  QEMU_SETSID="setsid"
   QEMU_DEBUG="-S -gdb tcp:localhost:1234,ipv4"
 else
+  QEMU_SETSID=
   QEMU_DEBUG=
 fi
 
@@ -25,7 +27,7 @@ setsid /usr/bin/xterm \
   &
 
 # QEMU machine
-setsid "${QEMU_EXECUTABLE}" \
+${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
   -M 10m50-ghrd \
   -kernel ${KERNEL_OUTFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
