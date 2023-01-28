@@ -76,6 +76,9 @@ abstract project Basedefs is
       for Leading_Required_Switches ("C") use ("--freestanding", "-std=c99");
       for Include_Switches ("C") use ("-I");
       for Switches ("C") use (
+                              "-O" & Configure.Optimization_Level,
+                              "-fno-omit-frame-pointer",
+                              "-fverbose-asm",
                               "-ffunction-sections",
                               "-fdata-sections",
                               "-g3", "-gdwarf-4"
@@ -92,22 +95,20 @@ abstract project Basedefs is
       for Switches ("Ada") use (
                                 Ada_Mode,
                                 "-O" & Configure.Optimization_Level,
-                                "-gnatef",
-                                "-gnatf",
-                                "-gnatU",
+                                "-fno-omit-frame-pointer",
                                 "-fverbose-asm",
-                                "-eL",
-                                "-eS",
-                                "-gnatn",
                                 "-ffunction-sections",
                                 "-fdata-sections",
                                 "-g3", "-gdwarf-4",
-                                "-fno-omit-frame-pointer",
+                                "-gnatef",
+                                "-gnatf",
+                                "-gnatU",
+                                "-gnatn",
                                 "-gnatE",
                                 "-gnato1",
+                                "-gnatVa",
                                 "-fstack-usage",
-                                "-fdump-rtl-expand",
-                                "-gnatVa"
+                                "-fdump-rtl-expand"
                                ) &
                                Configure.ADAC_Switches_RTS     &
                                Configure.GCC_Switches_Platform &
