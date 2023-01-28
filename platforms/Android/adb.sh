@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 ADB_EXECUTABLE=/opt/platform-tools/adb
 DEVICE_DIRECTORY=/sdcard
