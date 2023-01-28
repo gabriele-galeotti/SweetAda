@@ -18,6 +18,7 @@
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
+with Core;
 with MMIO;
 with CPU;
 with NiosII;
@@ -83,6 +84,10 @@ package body BSP is
       -------------------------------------------------------------------------
       Console.Print ("Altera 10M50GHRD (QEMU emulator)", NL => True);
       Console.Print (NiosII.cpuid_Read, Prefix => "CPUID: ", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
