@@ -8,6 +8,7 @@
 if [ "x${RISCV32}" = "xY" ] ; then
   QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-riscv32"
 fi
+
 # GDB executable
 GDB_EXECUTABLE="/opt/sweetada/bin/riscv-sweetada-elf-gdb"
 
