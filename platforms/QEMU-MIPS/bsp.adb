@@ -76,7 +76,7 @@ package body BSP is
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
       Console.TTY_Setup;
       -------------------------------------------------------------------------
-      Console.Print ("QEMU-MIPS (QEMU emulator)", NL => True);
+      Console.Print ("QEMU-MIPS", NL => True);
       -------------------------------------------------------------------------
    end BSP_Setup;
 
