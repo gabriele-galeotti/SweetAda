@@ -293,7 +293,7 @@ main(int argc, char **argv)
                 }
                 else if (argv[idx][0] == '@')
                 {
-                        /* temporary reference */
+                        /* reference */
                         /* __NOP__ */
                 }
                 else
