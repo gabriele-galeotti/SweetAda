@@ -916,6 +916,24 @@ endif
 ifneq ($(OSTYPE),cmd)
 	@chmod a-x $(KERNEL_OUTFILE)
 endif
+	$(call brief-command, \
+        $(OBJDUMP) -dx $(KERNEL_OUTFILE) > $(KERNEL_BASENAME).lst \
+        ,[OBJDUMP],$(KERNEL_BASENAME).lst)
+	$(call brief-command, \
+        $(OBJDUMP) -Sdx $(KERNEL_OUTFILE) > $(KERNEL_BASENAME).src.lst \
+        ,[OBJDUMP-S],$(KERNEL_BASENAME).src.lst)
+	$(call brief-command, \
+        $(READELF) $(KERNEL_OUTFILE) > $(KERNEL_BASENAME).elf.lst \
+        ,[READELF],$(KERNEL_BASENAME).elf.lst)
+	@$(call echo-print,"")
+	@$(call echo-print,"$(PLATFORM): ELF sections dump.")
+	@$(call echo-print,"")
+ifeq ($(USE_ELFTOOL),Y)
+	@$(ELFTOOL) -c dumpsections $(KERNEL_OUTFILE)
+else
+	@$(SIZE) $(KERNEL_OUTFILE)
+endif
+	@$(call echo-print,"")
 
 #
 # Auxiliary targets.
@@ -952,24 +970,6 @@ kernel_end :
 $(KERNEL_BASENAME).lst     \
 $(KERNEL_BASENAME).src.lst \
 $(KERNEL_BASENAME).elf.lst : $(KERNEL_OUTFILE)
-	$(call brief-command, \
-        $(OBJDUMP) -dx $(KERNEL_OUTFILE) > $(KERNEL_BASENAME).lst \
-        ,[OBJDUMP],$(KERNEL_BASENAME).lst)
-	$(call brief-command, \
-        $(OBJDUMP) -Sdx $(KERNEL_OUTFILE) > $(KERNEL_BASENAME).src.lst \
-        ,[OBJDUMP-S],$(KERNEL_BASENAME).src.lst)
-	$(call brief-command, \
-        $(READELF) $(KERNEL_OUTFILE) > $(KERNEL_BASENAME).elf.lst \
-        ,[READELF],$(KERNEL_BASENAME).elf.lst)
-	@$(call echo-print,"")
-	@$(call echo-print,"$(PLATFORM): ELF sections dump.")
-	@$(call echo-print,"")
-ifeq ($(USE_ELFTOOL),Y)
-	@$(ELFTOOL) -c dumpsections $(KERNEL_OUTFILE)
-else
-	@$(SIZE) $(KERNEL_OUTFILE)
-endif
-	@$(call echo-print,"")
 
 libgnat.lst      \
 libgnat.elf.lst  \
