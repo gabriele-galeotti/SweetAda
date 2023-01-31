@@ -11,6 +11,9 @@
 ifeq ($(KERNEL_PARENT_PATH),)
 $(error Error: invalid KERNEL_PARENT_PATH)
 endif
+ifeq ($(LIBRARY_DIRECTORY),)
+$(error Error: invalid LIBRARY_DIRECTORY)
+endif
 ifeq ($(OBJECT_DIRECTORY),)
 $(error Error: invalid OBJECT_DIRECTORY)
 endif
@@ -18,24 +21,31 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
+# shorthands
+LIB_DIRECTORY := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)
+OBJ_DIRECTORY := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
+DEP_DIRECTORY := $(OBJ_DIRECTORY)
 ifeq ($(OSTYPE),cmd)
 KERNEL_PARENT_PATH_CMD := $(shell $(ECHO) $(KERNEL_PARENT_PATH)| $(SED) -e "s|/|\\|g")
+LIB_DIRECTORY_CMD      := $(shell $(ECHO) $(LIB_DIRECTORY)| $(SED) -e "s|/|\\|g")
+OBJ_DIRECTORY_CMD      := $(shell $(ECHO) $(OBJ_DIRECTORY)| $(SED) -e "s|/|\\|g")
+DEP_DIRECTORY_CMD      := $(OBJ_DIRECTORY_CMD)
 endif
 
 LIBRARY_NAME := clibrary
 
 OBJECTS :=
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/assert.o
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/ctype.o
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/errno.o
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdio.o
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/stdlib.o
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/string.o
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/strings.o
-OBJECTS += $(patsubst %,$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o,$(IMPLICIT_CLIBRARY_UNITS))
+OBJECTS += $(OBJ_DIRECTORY)/assert.o
+OBJECTS += $(OBJ_DIRECTORY)/ctype.o
+OBJECTS += $(OBJ_DIRECTORY)/errno.o
+OBJECTS += $(OBJ_DIRECTORY)/stdio.o
+OBJECTS += $(OBJ_DIRECTORY)/stdlib.o
+OBJECTS += $(OBJ_DIRECTORY)/string.o
+OBJECTS += $(OBJ_DIRECTORY)/strings.o
+OBJECTS += $(patsubst %,$(OBJ_DIRECTORY)/%.o,$(IMPLICIT_CLIBRARY_UNITS))
 
 .PHONY : all
-all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
+all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
@@ -57,13 +67,20 @@ include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
 # add rule for .c files because Makefile.lb.in has only Asm/Ada
 %.o : %.c
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/%.o : %.c $(DEP_DIRECTORY)/%.d
+$(OBJ_DIRECTORY)/%.o : %.c $(DEP_DIRECTORY)/%.d
 	$(call brief-command, \
-        $(CC)                           \
-              -o $@                     \
-              -MT $@ -MMD -MP           \
-              -MF $(DEP_DIRECTORY)/$*.d \
-              $(GCC_SWITCHES_LIBRARY)   \
-              -c $(INCLUDES) $<         \
+        $(CC)                            \
+              -o $@                      \
+              -MT $@ -MMD -MP            \
+              -MF $(DEP_DIRECTORY)/$*.td \
+              $(GCC_SWITCHES_LIBRARY)    \
+              -c $(INCLUDES) $<          \
         ,[CC/AS],$<)
+ifeq ($(OSTYPE),cmd)
+	@$(MV) $(DEP_DIRECTORY)\$*.td $(DEP_DIRECTORY)\$*.d
+	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
+else
+	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
+	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
+endif
 

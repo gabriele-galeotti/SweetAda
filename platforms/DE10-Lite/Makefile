@@ -11,6 +11,9 @@
 ifeq ($(KERNEL_PARENT_PATH),)
 $(error Error: invalid KERNEL_PARENT_PATH)
 endif
+ifeq ($(LIBRARY_DIRECTORY),)
+$(error Error: invalid LIBRARY_DIRECTORY)
+endif
 ifeq ($(OBJECT_DIRECTORY),)
 $(error Error: invalid OBJECT_DIRECTORY)
 endif
@@ -18,29 +21,35 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
+# shorthands
+LIB_DIRECTORY := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)
+OBJ_DIRECTORY := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
+DEP_DIRECTORY := $(OBJ_DIRECTORY)
 ifeq ($(OSTYPE),cmd)
 KERNEL_PARENT_PATH_CMD := $(shell $(ECHO) $(KERNEL_PARENT_PATH)| $(SED) -e "s|/|\\|g")
+LIB_DIRECTORY_CMD      := $(shell $(ECHO) $(LIB_DIRECTORY)| $(SED) -e "s|/|\\|g")
+OBJ_DIRECTORY_CMD      := $(shell $(ECHO) $(OBJ_DIRECTORY)| $(SED) -e "s|/|\\|g")
+DEP_DIRECTORY_CMD      := $(OBJ_DIRECTORY_CMD)
 endif
 
 LIBRARY_NAME := platform
 
-OBJECTS :=
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/startup.o
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/llkernel.o
+OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
+
 # overriding standard last_chance_handler unit requires a little bit of care,
 # see configuration.in
 # 1) add the unit to the library
-OBJECTS += $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o
+#OBJECTS += $(OBJ_DIRECTORY)/last_chance_handler.o
 # 2) state the dependencies in terms of standard core units, that could be in
 # turn overriden
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o : $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
+#$(OBJ_DIRECTORY)/last_chance_handler.o : $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
 # 3) states all other explicit dependencies
 # NOTE: in this case the prerequisite is empty because there are no other
 # dependencies, so it is just a placeholder
-$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/last_chance_handler.o :
+#$(OBJ_DIRECTORY)/last_chance_handler.o :
 
 .PHONY : all
-all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
+all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :

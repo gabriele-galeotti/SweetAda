@@ -11,6 +11,9 @@
 ifeq ($(KERNEL_PARENT_PATH),)
 $(error Error: invalid KERNEL_PARENT_PATH)
 endif
+ifeq ($(LIBRARY_DIRECTORY),)
+$(error Error: invalid LIBRARY_DIRECTORY)
+endif
 ifeq ($(OBJECT_DIRECTORY),)
 $(error Error: invalid OBJECT_DIRECTORY)
 endif
@@ -18,8 +21,15 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
+# shorthands
+LIB_DIRECTORY := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)
+OBJ_DIRECTORY := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
+DEP_DIRECTORY := $(OBJ_DIRECTORY)
 ifeq ($(OSTYPE),cmd)
 KERNEL_PARENT_PATH_CMD := $(shell $(ECHO) $(KERNEL_PARENT_PATH)| $(SED) -e "s|/|\\|g")
+LIB_DIRECTORY_CMD      := $(shell $(ECHO) $(LIB_DIRECTORY)| $(SED) -e "s|/|\\|g")
+OBJ_DIRECTORY_CMD      := $(shell $(ECHO) $(OBJ_DIRECTORY)| $(SED) -e "s|/|\\|g")
+DEP_DIRECTORY_CMD      := $(OBJ_DIRECTORY_CMD)
 endif
 
 LIBRARY_NAME := cpu
@@ -32,7 +42,7 @@ LIBGCC_FUNCTIONS := adddi3_s8 cmpdi2 cmpdi2_s8 ashrdi3 negsi2 subdi3 mulsidi3   
                     umulsidi3 umulhisi3 muldi3_6 divmodsi4 udivmodsi4 divmodhi4 \
                     udivmodhi4
 LIBGCC_SOURCES   := $(foreach f,$(LIBGCC_FUNCTIONS),L_$(f).S)
-OBJECTS          += $(foreach f,$(LIBGCC_FUNCTIONS),$(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/L_$(f).o)
+OBJECTS          += $(foreach f,$(LIBGCC_FUNCTIONS),$(OBJ_DIRECTORY)/L_$(f).o)
 $(LIBGCC_SOURCES) : %.S : $(LIB1ASMSRC)
 	$(call brief-command, \
         $(CPP) -o $@ -x assembler-with-cpp -P -CC -D$* $(LIB1ASMSRC) \
@@ -40,7 +50,7 @@ $(LIBGCC_SOURCES) : %.S : $(LIB1ASMSRC)
 endif
 
 .PHONY : all
-all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
+all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure : $(LIBGCC_SOURCES)
