@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# Altera 10M50GHRD QEMU configuration file.
+# Altera 10M50GHRD QEMU.
 #
 
 # QEMU executable
