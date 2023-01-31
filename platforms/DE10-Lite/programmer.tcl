@@ -43,7 +43,8 @@ if {[platform_get] ne "unix"} {
     exit 1
 }
 
-set QUARTUS_PATH /opt/altera_lite/16.0
+#set QUARTUS_PATH /opt/altera_lite/16.0
+set QUARTUS_PATH /opt/intelFPGA_lite/22.1std
 # top-level directory of the project
 set PROJECT_PATH /root/project/hardware/Altera_DE10-Lite/DE10-Lite_base_design
 set SOF_FILE     [file join $PROJECT_PATH output_files/DE10-Lite.sof]
@@ -55,13 +56,13 @@ if {[lindex $argv 0] eq "-jtagd"} {
 }
 
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-cd $QUARTUS_PATH/nios2eds ; \
-./nios2_command_shell.sh    \
-nios2-configure-sof         \
-  --debug                   \
-  --cable \"USB-Blaster\"   \
-  --device 1                \
-  $SOF_FILE                 \
+cd ${QUARTUS_PATH}/nios2eds && \
+./nios2_command_shell.sh       \
+nios2-configure-sof            \
+  --debug                      \
+  --cable \"USB-Blaster\"      \
+  --device 1                   \
+  ${SOF_FILE}                  \
 "
 
 # NOTE: needs nios2-elf-objcopy (copy of nios2-sweetada-elf-objcopy)
@@ -70,7 +71,7 @@ nios2-configure-sof         \
 # --jdi ${JDI}
 # --reset-target
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-cd $QUARTUS_PATH/nios2eds ;                    \
+cd ${QUARTUS_PATH}/nios2eds &&                 \
 PATH=$::env(TOOLCHAIN_PROGRAM_PREFIX):\${PATH} \
 ./nios2_command_shell.sh                       \
 nios2-download                                 \
@@ -78,7 +79,7 @@ nios2-download                                 \
   --cable \"USB-Blaster\"                      \
   --device 1                                   \
   --go                                         \
-  $ELF_FILE                                    \
+  ${ELF_FILE}                                  \
 "
 
 exit 0
