@@ -59,16 +59,6 @@ endif
 export GCC_WRAPPER_TIMESTAMP_FILENAME :=
 export GNAT_WRAPPER_TIMESTAMP_FILENAME :=
 
-# shorthands
-LIB_DIRECTORY     := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)
-OBJ_DIRECTORY     := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
-DEP_DIRECTORY     := $(OBJ_DIRECTORY)
-ifeq ($(OSTYPE),cmd)
-LIB_DIRECTORY_CMD := $(shell $(ECHO) $(LIB_DIRECTORY)| $(SED) -e "s|/|\\|g")
-OBJ_DIRECTORY_CMD := $(shell $(ECHO) $(OBJ_DIRECTORY)| $(SED) -e "s|/|\\|g")
-DEP_DIRECTORY_CMD := $(OBJ_DIRECTORY_CMD)
-endif
-
 ifeq ($(BUILD_MODE),MAKEFILE)
 
 #
@@ -113,13 +103,15 @@ endif
                            -D $(OBJ_DIRECTORY)         \
                            $(GCC_SWITCHES_LIBRARY)     \
                            -c $(INCLUDES) $<           \
-                           > $(DEP_DIRECTORY)/$*.d     \
+                           > $(DEP_DIRECTORY)/$*.td    \
         ,[GNATMAKE-D],$*.d)
 ifeq ($(OSTYPE),cmd)
+	@$(MV) $(DEP_DIRECTORY)\$*.td $(DEP_DIRECTORY)\$*.d
 	@$(SED) -i -e "s|^\(.* : .*\)$$|$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY_CMD)\$*.d
 	@$(call update-timestamp,$(DEP_DIRECTORY_CMD)\$*.ali)
 	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
 else
+	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 	@$(SED) -i -e "s|^\(.* : .*\)\$$|$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
 	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
@@ -128,13 +120,20 @@ endif
 %.o : %.S
 $(OBJ_DIRECTORY)/%.o : %.S $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
-        $(CC)                           \
-              -o $@                     \
-              -MT $@ -MMD -MP           \
-              -MF $(DEP_DIRECTORY)/$*.d \
-              $(GCC_SWITCHES_LIBRARY)   \
-              -c $(INCLUDES) $<         \
+        $(CC)                            \
+              -o $@                      \
+              -MT $@ -MMD -MP            \
+              -MF $(DEP_DIRECTORY)/$*.td \
+              $(GCC_SWITCHES_LIBRARY)    \
+              -c $(INCLUDES) $<          \
         ,[CC/AS],$<)
+ifeq ($(OSTYPE),cmd)
+	@$(MV) $(DEP_DIRECTORY)\$*.td $(DEP_DIRECTORY)\$*.d
+	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
+else
+	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
+	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
+endif
 
 DEP_FILES := $(OBJECTS:%.o=%.d)
 
