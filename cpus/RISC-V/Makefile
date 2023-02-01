@@ -37,7 +37,7 @@ LIBRARY_NAME := cpu
 OBJECTS :=
 
 .PHONY : all
-all : $(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
+all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
