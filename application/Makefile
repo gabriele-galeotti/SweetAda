@@ -11,9 +11,6 @@
 ifeq ($(KERNEL_PARENT_PATH),)
 $(error Error: invalid KERNEL_PARENT_PATH)
 endif
-ifeq ($(OBJECT_DIRECTORY),)
-$(error Error: invalid OBJECT_DIRECTORY)
-endif
 
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
