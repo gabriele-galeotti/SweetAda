@@ -49,9 +49,10 @@ ifneq ($(TOOLCHAIN_NAME),)
 TOOLCHAIN_PROGRAM_PREFIX := $(TOOLCHAIN_NAME)-
 endif
 
-# generic command line compiler executable used to retrieve informations
-# NOTE: this is not the same as TOOLCHAIN_CC, which is used to compile source
-# files
+# raw compiler executable used for 1) retrieve informations, and 2) back-end
+# in the GNATMAKE wrapper
+# NOTE: this is not the same as TOOLCHAIN_CC, which is possibly used to
+# compile C source files
 TOOLCHAIN_GCC := $(TOOLCHAIN_PROGRAM_PREFIX)gcc$(EXEEXT)
 
 # these must be computed after configuration variables are set; different
