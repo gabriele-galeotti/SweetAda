@@ -326,7 +326,7 @@ CONFIGUREGPR_FILENAME := configure.gpr
 
 # cleaning
 CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
-                            *.map *.o *.out *.srec *.tmp
+                            *.map *.o *.out *.srec *.td *.tmp
 DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)
 
 ################################################################################
