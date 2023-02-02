@@ -77,7 +77,7 @@ $(OBJ_DIRECTORY)/%.o : %.c $(DEP_DIRECTORY)/%.d
               -c $(INCLUDES) $<          \
         ,[CC/AS],$<)
 ifeq ($(OSTYPE),cmd)
-	@$(MV) $(DEP_DIRECTORY)\$*.td $(DEP_DIRECTORY)\$*.d
+	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
