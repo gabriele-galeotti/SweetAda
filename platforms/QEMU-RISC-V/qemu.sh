@@ -51,6 +51,7 @@ QEMU_PID=$!
 if [ "x$1" != "x-debug" ] ; then
   wait ${QEMU_PID}
 else
+  # skip QEMU bootloader by forcing execution until CPU hits _start
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
