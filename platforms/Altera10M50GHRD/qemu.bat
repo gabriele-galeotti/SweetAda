@@ -22,7 +22,7 @@ SET MONITORPORT=4445
 SET SERIALPORT0=4446
 SET SERIALPORT1=4447
 
-REM console for serialports
+REM console for serial port
 START "" "C:\Program Files"\PuTTY\putty-w64.exe telnet://localhost:%SERIALPORT0%/
 
 REM QEMU machine
