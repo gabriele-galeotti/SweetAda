@@ -22,6 +22,9 @@ SECTIONS
                 *(.rodata.*)
                 *(.srodata)
                 *(.srodata.*)
+                . = ALIGN(0x4);
+                PROVIDE(_debug_flag = .);
+                BYTE(0x00);
                 *(.riscv.attributes)
                 . = ALIGN(0x10);
                 _etext = .;

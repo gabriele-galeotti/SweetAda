@@ -18,6 +18,7 @@
 with System.Storage_Elements;
 with Interfaces;
 with Definitions;
+with Core;
 with Bits;
 with MMIO;
 with RISCV;
@@ -81,6 +82,10 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("RISC-V (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
