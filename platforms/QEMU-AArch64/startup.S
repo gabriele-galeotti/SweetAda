@@ -16,7 +16,7 @@
 
                 .sect   .startup,"ax"
 
-                .type   _start,@function
+                .type   _start,%function
                 .global _start
 _start:
 

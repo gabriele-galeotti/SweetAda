@@ -19,6 +19,7 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with Definitions;
+with Core;
 with Bits;
 with MMIO;
 with ARMv8A;
@@ -90,6 +91,10 @@ package body BSP is
       Console.Print ("AArch64 Cortex-A53 (QEMU emulator)", NL => True);
       Console.Print (Natural (ARMv8A.CurrentEL_Read.EL),     Prefix => "Current EL: ", NL => True);
       Console.Print (ARMv8A.CNTFRQ_EL0_Read.Clock_frequency, Prefix => "CNTFRQ_EL0: ", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
       -------------------------------------------------------------------------
       Virt.GICD_CTLR.EnableGrp1 := True;
       Virt.GICD_ISENABLER (30)  := True;
