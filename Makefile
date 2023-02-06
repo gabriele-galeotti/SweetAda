@@ -108,6 +108,7 @@ SCREXT_unx := .sh
 ifeq ($(OSTYPE),cmd)
 EXEEXT     := .exe
 SCREXT     := $(SCREXT_cmd)
+SHELL_EXEC := $(SHELL) /C
 else
 ifeq ($(OSTYPE),msys)
 EXEEXT     := .exe
@@ -115,8 +116,9 @@ else
 EXEEXT     :=
 endif
 SCREXT     := $(SCREXT_unx)
+SHELL_EXEC := $(SHELL)
 endif
-export EXEEXT SCREXT_cmd SCREXT_unx SCREXT
+export EXEEXT SCREXT_cmd SCREXT_unx SCREXT SHELL_EXEC
 
 # define a minimum set of variables that are required for functions and
 # various utilities
@@ -450,7 +452,8 @@ endif
 # declare all toolchain-related informations
 ifneq ($(PLATFORM),)
 # platform known
-PLATFORM_DIRECTORY := $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
+PLATFORM_DIRECTORY     := $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
+PLATFORM_DIRECTORY_CMD := $(PLATFORM_BASE_DIRECTORY)\$(PLATFORM)
 -include $(PLATFORM_DIRECTORY)/configuration.in
 else
 # platform not known, output an error message
@@ -461,7 +464,8 @@ endif
 
 ifneq ($(CPU),)
 # CPU known
-CPU_DIRECTORY := $(CPU_BASE_DIRECTORY)/$(CPU)
+CPU_DIRECTORY     := $(CPU_BASE_DIRECTORY)/$(CPU)
+CPU_DIRECTORY_CMD := $(CPU_BASE_DIRECTORY)\$(CPU)
 -include $(CPU_DIRECTORY)/configuration.in
 endif
 
@@ -522,8 +526,10 @@ export                          \
        KERNEL_ROMFILE           \
        PLATFORM_BASE_DIRECTORY  \
        PLATFORM_DIRECTORY       \
+       PLATFORM_DIRECTORY_CMD   \
        CPU_BASE_DIRECTORY       \
        CPU_DIRECTORY            \
+       CPU_DIRECTORY_CMD        \
        CPU_MODEL_DIRECTORY      \
        APPLICATION_DIRECTORY    \
        CLIBRARY_DIRECTORY       \
