@@ -24,13 +24,12 @@ SET SERIALPORT1=4447
 REM QEMU machine
 START "" "%QEMU_EXECUTABLE%" ^
   -M pc -cpu pentium3 -m 256 -vga std ^
+  -bios %KERNEL_ROMFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
   -serial chardev:SERIALPORT0 ^
   -chardev socket,id=SERIALPORT1,port=%SERIALPORT1%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
   -serial chardev:SERIALPORT1 ^
-  -device ide-hd,drive=disk,bus=ide.0 ^
-  -drive "id=disk,if=none,format=raw,file=%PLATFORM_DIRECTORY%/pcboothd.dsk" -boot c ^
   %QEMU_DEBUG%
 
 REM console for serial port

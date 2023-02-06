@@ -29,8 +29,7 @@ START "" "%QEMU_EXECUTABLE%" ^
   -serial chardev:SERIALPORT0 ^
   -chardev socket,id=SERIALPORT1,port=%SERIALPORT1%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
   -serial chardev:SERIALPORT1 ^
-  -device ide-hd,drive=disk,bus=ide.0 ^
-  -drive "id=disk,if=none,format=raw,file=%PLATFORM_DIRECTORY%/pcboothd.dsk" -boot c ^
+  -drive "if=floppy,format=raw,file=%PLATFORM_DIRECTORY%/pcbootfd.dsk" -boot a ^
   %QEMU_DEBUG%
 
 REM console for serial port
