@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Core;
 with Bits;
 with MMIO;
 with Exceptions;
@@ -86,6 +87,10 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("Integrator/CP (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
       -- PL110 LCD ------------------------------------------------------------
       PL110_Descriptor.Base_Address := To_Address (PL110_BASEADDRESS);
       PL110.Init (PL110_Descriptor);
