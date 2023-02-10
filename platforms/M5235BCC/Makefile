@@ -47,7 +47,7 @@ all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 .PHONY : installfiles
 installfiles :
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
-	@"$(CREATESYMLINK)" platform-$(SUBPLATFORM) Makefile.if.in
+	@$(CREATESYMLINK) -v platform-$(SUBPLATFORM) Makefile.if.in
 	@$(call echo-print,"installfiles: done")
 	@$(call echo-print,"")
 
