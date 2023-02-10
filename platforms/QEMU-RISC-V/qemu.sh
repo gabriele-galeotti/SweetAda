@@ -87,9 +87,9 @@ setsid /usr/bin/xterm \
   &
 
 # normal execution or debug execution
-if [ "x$1" != "x-debug" ] ; then
+if [ "x$1" = "x" ] ; then
   wait ${QEMU_PID}
-else
+elif [ "x$1" = "x-debug" ] ; then
   # skip QEMU bootloader by forcing execution until CPU hits _start
   "${GDB}" \
     -q \
