@@ -82,13 +82,9 @@ $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
         $(RANLIB) $@ \
         ,[RANLIB],$(notdir $@))
 
-ifeq ($(OSTYPE),cmd)
-%.o : %.adb %.ads
-$(OBJ_DIRECTORY)/%.o : %.adb %.ads $(DEP_DIRECTORY)/%.d
-else
-%.o : %.ad[bs]
-$(OBJ_DIRECTORY)/%.o : %.ad[bs] $(DEP_DIRECTORY)/%.d
-endif
+%.o : %.adb
+%.o : %.ads
+$(OBJ_DIRECTORY)/%.o : %.adb $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
         $(GNATMAKE)                             \
                     -gnatec=$(GNATADC_FILENAME) \
@@ -106,13 +102,41 @@ endif
                            > $(DEP_DIRECTORY)/$*.td    \
         ,[GNATMAKE-D],$*.d)
 ifeq ($(OSTYPE),cmd)
-	@$(MV) $(DEP_DIRECTORY)\$*.td $(DEP_DIRECTORY)\$*.d
-	@$(SED) -i -e "s|^\(.* : .*\)$$|$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY_CMD)\$*.d
+	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
+	@$(SED) -i -e "s|^\(.* : .*\)$$|$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY_CMD)\$*.d
 	@$(call update-timestamp,$(DEP_DIRECTORY_CMD)\$*.ali)
 	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
-	@$(SED) -i -e "s|^\(.* : .*\)\$$|$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
+	@$(SED) -i -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
+	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
+	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
+endif
+$(OBJ_DIRECTORY)/%.o : %.ads $(DEP_DIRECTORY)/%.d
+	$(call brief-command,\
+        $(GNATMAKE)                             \
+                    -gnatec=$(GNATADC_FILENAME) \
+                    -D $(OBJ_DIRECTORY)         \
+                    $(GCC_SWITCHES_LIBRARY)     \
+                    -c $(INCLUDES) $<           \
+        ,[GNATMAKE],$<)
+	$(call brief-command,\
+        $(GNATMAKE_DEPEND)                             \
+                           -M                          \
+                           -gnatec=$(GNATADC_FILENAME) \
+                           -D $(OBJ_DIRECTORY)         \
+                           $(GCC_SWITCHES_LIBRARY)     \
+                           -c $(INCLUDES) $<           \
+                           > $(DEP_DIRECTORY)/$*.td    \
+        ,[GNATMAKE-D],$*.d)
+ifeq ($(OSTYPE),cmd)
+	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
+	@$(SED) -i -e "s|^\(.* : .*\)$$|$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY_CMD)\$*.d
+	@$(call update-timestamp,$(DEP_DIRECTORY_CMD)\$*.ali)
+	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
+else
+	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
+	@$(SED) -i -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
 	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
@@ -128,10 +152,12 @@ $(OBJ_DIRECTORY)/%.o : %.S $(DEP_DIRECTORY)/%.d
               -c $(INCLUDES) $<          \
         ,[CC/AS],$<)
 ifeq ($(OSTYPE),cmd)
-	@$(MV) $(DEP_DIRECTORY)\$*.td $(DEP_DIRECTORY)\$*.d
+	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
+	@$(SED) -i -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)$$|$$(OBJ_DIRECTORY)\1|" $(DEP_DIRECTORY_CMD)\$*.d
 	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
+	@$(SED) -i -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|" $(DEP_DIRECTORY)/$*.d
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
 
