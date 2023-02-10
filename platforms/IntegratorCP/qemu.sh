@@ -83,9 +83,9 @@ setsid /usr/bin/xterm \
   &
 
 # normal execution or debug execution
-if [ "x$1" != "x-debug" ] ; then
+if [ "x$1" = "x" ] ; then
   wait ${QEMU_PID}
-else
+elif [ "x$1" = "x-debug" ] ; then
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
