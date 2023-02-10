@@ -1,6 +1,7 @@
 
 with System.Storage_Elements;
 with Interfaces;
+with Configure;
 with CPU;
 with Taihu;
 with IOEMU;
@@ -41,7 +42,9 @@ package body Application is
          begin
             Value := 0;
             loop
-               IOEMU.IOEMU_IO1 := Value;
+               if Configure.USE_QEMU_IOEMU then
+                  IOEMU.IOEMU_IO1 := Value;
+               end if;
                Value := @ + 1;
                Console.Print ("hello, SweetAda", NL => True);
                -- Console.Print (Tick_Count, NL => True);
