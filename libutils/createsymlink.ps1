@@ -39,18 +39,26 @@ function ExitWithCode
 
 $scriptname = $MyInvocation.MyCommand.Name
 
-$target = $args[0]
+$verbose = $env:VERBOSE
+$args_idx = 0
+
+if ($args[$args_idx] -eq "-v")
+{
+  $verbose = "Y"
+  $args_idx++
+}
+
+$target = $args[$args_idx]
+$args_idx++
 $isfolder = (Test-Path -Path $target -PathType Container)
 if ($isfolder)
 {
-  $filelist_filename = $args[1]
+  $filelist_filename = $args[$args_idx]
 }
 else
 {
-  $link_name = $args[1]
+  $link_name = $args[$args_idx]
 }
-
-$verbose = $env:VERBOSE
 
 if ($isfolder)
 {

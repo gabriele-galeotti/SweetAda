@@ -11,12 +11,14 @@
 
 #
 # Arguments:
+# optional initial -v for verbosity
 # $1 = filename (target) or directory
 # if $1 is a normal file:
 # $2 = filename (link name)
 # if $1 is a directory:
 # $2 = filename of a file describing the list of files symlinked, in a
 #      Makefile-style syntax
+#
 # Environment variables:
 # VERBOSE
 #
@@ -74,6 +76,10 @@ return 0
 #
 # Basic input parameters check.
 #
+if [ "x$1" = "x-v" ] ; then
+  VERBOSE=Y
+  shift
+fi
 TARGET="$1"
 if [ "x${TARGET}" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no symlink target specified."
