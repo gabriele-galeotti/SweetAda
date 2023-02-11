@@ -20,7 +20,7 @@ library project Cpu is
    Include_Directories := Split (external ("GPR_INCLUDES", ""), " ");
 
    for Target use Configure.Toolchain_Name;
-   for Source_Dirs use (".") & Include_Directories;
+   for Source_Dirs use Include_Directories & (".");
    for Languages use ("Asm_Cpp", "Ada");
 
    case Configure.Use_LibGCC is
