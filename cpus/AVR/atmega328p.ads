@@ -1360,18 +1360,46 @@ package ATmega328P is
    -- USART
    ----------------------------------------------------------------------------
 
+   type USART_Character_Size_Type is
+   record
+      UCSZ0_01 : Bits_2; -- Character Size bit 0 .. 1
+      UCSZ0_2  : Bits_1; -- Character Size bit 2
+   end record;
+
+   UCSZ_5 : constant USART_Character_Size_Type := (2#00#, 0);
+   UCSZ_6 : constant USART_Character_Size_Type := (2#01#, 0);
+   UCSZ_7 : constant USART_Character_Size_Type := (2#10#, 0);
+   UCSZ_8 : constant USART_Character_Size_Type := (2#11#, 0);
+   UCSZ_9 : constant USART_Character_Size_Type := (2#11#, 1);
+
+   UCPOL_Rising  : constant := 0;
+   UCPOL_Falling : constant := 1;
+
+   USBS_1 : constant := 2#0#;
+   USBS_2 : constant := 2#1#;
+
+   UPM_Disabled : constant := 2#00#;
+   UPM_Reserved : constant := 2#01#;
+   UPM_Even     : constant := 2#10#;
+   UPM_Odd      : constant := 2#11#;
+
+   UMSEL_Asynchronous : constant := 2#00#;
+   UMSEL_Synchronous  : constant := 2#01#;
+   UMSEL_Reserved     : constant := 2#10#;
+   UMSEL_Master_SPI   : constant := 2#11#;
+
    -- USART Control and Status Register A
 
    type UCSR0A_Type is
    record
-      MPCM0 : Boolean; -- Multi-Processor Communication Mode
-      U2X0  : Boolean; -- Double the USART transmission speed
-      UPE0  : Boolean; -- Parity Error
-      DOR0  : Boolean; -- Data Overrun
-      FE0   : Boolean; -- Framing Error
-      UDRE0 : Boolean; -- USART Data Register Empty
-      TXC0  : Boolean; -- USART Transmitt Complete
-      RXC0  : Boolean; -- USART Receive Complete
+      MPCM0 : Boolean := False; -- Multi-Processor Communication Mode
+      U2X0  : Boolean := False; -- Double the USART transmission speed
+      UPE0  : Boolean := False; -- Parity Error
+      DOR0  : Boolean := False; -- Data Overrun
+      FE0   : Boolean := False; -- Framing Error
+      UDRE0 : Boolean := True;  -- USART Data Register Empty
+      TXC0  : Boolean := False; -- USART Transmitt Complete
+      RXC0  : Boolean := False; -- USART Receive Complete
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1399,14 +1427,14 @@ package ATmega328P is
 
    type UCSR0B_Type is
    record
-      TXB80   : Bits_1;  -- Transmit Data bit 8
-      RXB80   : Bits_1;  -- Receive Data bit 8
-      UCSZ0_2 : Bits_1;  -- Character Size bit 2
-      TXEN0   : Boolean; -- Transmitter Enable
-      RXEN0   : Boolean; -- Receiver Enable
-      UDRIE0  : Boolean; -- USART Data register Empty Interrupt Enable
-      TXCIE0  : Boolean; -- TX Complete Interrupt Enable
-      RXCIE0  : Boolean; -- RX Complete Interrupt Enable
+      TXB80   : Bits_1 := 0;              -- Transmit Data bit 8
+      RXB80   : Bits_1 := 0;              -- Receive Data bit 8
+      UCSZ0_2 : Bits_1 := UCSZ_8.UCSZ0_2; -- Character Size bit 2
+      TXEN0   : Boolean := False;         -- Transmitter Enable
+      RXEN0   : Boolean := False;         -- Receiver Enable
+      UDRIE0  : Boolean := False;         -- USART Data register Empty Interrupt Enable
+      TXCIE0  : Boolean := False;         -- TX Complete Interrupt Enable
+      RXCIE0  : Boolean := False;         -- RX Complete Interrupt Enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1432,39 +1460,13 @@ package ATmega328P is
 
    -- USART Control and Status Register C
 
-   USART_Mode_Asynchronous : constant := 2#00#;
-   USART_Mode_Synchronous  : constant := 2#01#;
-   USART_Mode_Master_SPI   : constant := 2#11#;
-
-   Parity_Disabled : constant := 2#00#;
-   Parity_Even     : constant := 2#10#;
-   Parity_Odd      : constant := 2#11#;
-
-   Stop_Bits_1 : constant := 2#0#;
-   Stop_Bits_2 : constant := 2#1#;
-
-   type USART_Character_Size_Type is
-   record
-      UCSZ0_01 : Bits_2; -- Character Size bit 0 .. 1
-      UCSZ0_2  : Bits_1; -- Character Size bit 2
-   end record;
-
-   Character_Size_5 : constant USART_Character_Size_Type := (2#00#, 0);
-   Character_Size_6 : constant USART_Character_Size_Type := (2#01#, 0);
-   Character_Size_7 : constant USART_Character_Size_Type := (2#10#, 0);
-   Character_Size_8 : constant USART_Character_Size_Type := (2#11#, 0);
-   Character_Size_9 : constant USART_Character_Size_Type := (2#11#, 1);
-
-   Clock_Polarity_Rising  : constant := 0;
-   Clock_Polarity_Falling : constant := 1;
-
    type UCSR0C_Type is
    record
-      UCPOL0   : Bits_1; -- Clock Polarity
-      UCSZ0_01 : Bits_2; -- Character Size bit 0 .. 1
-      USBS0    : Bits_1; -- Stop Bit Select
-      UPM0     : Bits_2; -- Parity Mode
-      UMSEL0   : Bits_2; -- USART Mode Select
+      UCPOL0   : Bits_1 := UCPOL_Rising;       -- Clock Polarity
+      UCSZ0_01 : Bits_2 := UCSZ_8.UCSZ0_01;    -- Character Size bit 0 .. 1
+      USBS0    : Bits_1 := USBS_1;             -- Stop Bit Select
+      UPM0     : Bits_2 := UPM_Even;           -- Parity Mode
+      UMSEL0   : Bits_2 := UMSEL_Asynchronous; -- USART Mode Select
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -1487,31 +1489,6 @@ package ATmega328P is
 
    -- USART Baud Rate Register low byte
 
---    type UBRR0L_Type is
---    record
---       UBRR0 : Boolean; -- USART Baud Rate Register bit 0
---       UBRR1 : Boolean; -- USART Baud Rate Register bit 1
---       UBRR2 : Boolean; -- USART Baud Rate Register bit 2
---       UBRR3 : Boolean; -- USART Baud Rate Register bit 3
---       UBRR4 : Boolean; -- USART Baud Rate Register bit 4
---       UBRR5 : Boolean; -- USART Baud Rate Register bit 5
---       UBRR6 : Boolean; -- USART Baud Rate Register bit 6
---       UBRR7 : Boolean; -- USART Baud Rate Register bit 7
---    end record with
---       Bit_Order => Low_Order_First,
---       Size      => 8;
---    for UBRR0L_Type use
---    record
---       UBRR0 at 0 range 0 .. 0;
---       UBRR1 at 0 range 1 .. 1;
---       UBRR2 at 0 range 2 .. 2;
---       UBRR3 at 0 range 3 .. 3;
---       UBRR4 at 0 range 4 .. 4;
---       UBRR5 at 0 range 5 .. 5;
---       UBRR6 at 0 range 6 .. 6;
---       UBRR7 at 0 range 7 .. 7;
---    end record;
-
    UBRR0L_ADDRESS : constant := 16#C4#;
 
    UBRR0L : Unsigned_8 with
@@ -1521,25 +1498,6 @@ package ATmega328P is
       Convention           => Ada;
 
    -- USART Baud Rate Register high byte
-
---    type UBRR0H_Type is
---    record
---       UBRR8  : Boolean; -- USART Baud Rate Register bit 8
---       UBRR9  : Boolean; -- USART Baud Rate Register bit 9
---       UBRR10 : Boolean; -- USART Baud Rate Register bit 10
---       UBRR11 : Boolean; -- USART Baud Rate Register bit 11
---       Unused : Bits_4;
---    end record with
---       Bit_Order => Low_Order_First,
---       Size      => 8;
---    for UBRR0H_Type use
---    record
---       UBRR8  at 0 range 0 .. 0;
---       UBRR9  at 0 range 1 .. 1;
---       UBRR10 at 0 range 2 .. 2;
---       UBRR11 at 0 range 3 .. 3;
---       Unused at 0 range 4 .. 7;
---    end record;
 
    UBRR0H_ADDRESS : constant := 16#C5#;
 
