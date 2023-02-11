@@ -8,6 +8,10 @@
  * Please consult the LICENSE.txt file located in the top-level directory.
  */
 
+/******************************************************************************
+ * Standard C headers.                                                        *
+ ******************************************************************************/
+
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
@@ -15,14 +19,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+/******************************************************************************
+ * System headers.                                                            *
+ ******************************************************************************/
+
 #include <unistd.h>
 #include <sys/stat.h>
 
-#include "library.h"
-
 /******************************************************************************
- *                                                                            *
+ * Private definitions.                                                       *
  ******************************************************************************/
+
+#include "library.h"
 
 #if __START_IF_SELECTION__
 #elif defined(__APPLE__) || defined(__linux__)
