@@ -56,6 +56,18 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
+        .debug_aranges  : { obj/startup.o(.debug_aranges) *(.debug_aranges) }
+        .debug_line     : { *(.debug_line) }
+        .debug_line_str : { *(.debug_line_str) }
+        .debug_info     : { *(.debug_info) }
+        .debug_abbrev   : { *(.debug_abbrev) }
+        .debug_str      : { *(.debug_str) }
+        .debug_loclists : { *(.debug_loclists) }
+        .debug_rnglists : { *(.debug_rnglists) }
+        .debug_frame    : { *(.debug_frame) }
+        /**********************************************************************
+         *                                                                    *
+         **********************************************************************/
         /DISCARD/ :
         {
                 *(.comment)

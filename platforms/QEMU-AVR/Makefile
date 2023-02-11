@@ -34,9 +34,7 @@ endif
 
 LIBRARY_NAME := platform
 
-OBJECTS :=
-OBJECTS += $(OBJ_DIRECTORY)/startup.o
-OBJECTS += $(OBJ_DIRECTORY)/llkernel.o
+OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
 # override standard core unit, see configuration.in
 # 1) add the unit to the library
 OBJECTS += $(OBJ_DIRECTORY)/core.o
