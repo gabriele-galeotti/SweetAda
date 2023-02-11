@@ -1,6 +1,7 @@
 
 with CPU;
 with ATmega328P;
+with Console;
 
 package body Application is
 
@@ -26,18 +27,16 @@ package body Application is
    -- Run
    ----------------------------------------------------------------------------
    procedure Run is
-      Delay_Count : constant := 3;
-      NBlinks     : constant := 6;
+      Delay_Count : constant Long_Integer := 1_000_000;
    begin
       -------------------------------------------------------------------------
       if True then
          loop
-            for N in 1 .. NBlinks loop
-               PORTB.PORTB5 := True;
-               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-               PORTB.PORTB5 := False;
-               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            end loop;
+            Console.Print ("hello, SweetAda", NL => True);
+            PORTB.PORTB5 := True;
+            for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+            PORTB.PORTB5 := False;
+            for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
          end loop;
       end if;
       -------------------------------------------------------------------------
