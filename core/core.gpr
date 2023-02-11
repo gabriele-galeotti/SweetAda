@@ -20,7 +20,7 @@ library project Core is
    Include_Directories := Split (external ("GPR_INCLUDES", ""), " ");
 
    for Target use Configure.Toolchain_Name;
-   for Source_Dirs use (".") & Include_Directories;
+   for Source_Dirs use Include_Directories & (".");
    for Default_Language use "Ada";
 
    Abort_Library_Files := ("abort_library.adb", "abort_library.ads");

@@ -20,7 +20,7 @@ library project CLibrary is
    Include_Directories := Split (external ("GPR_INCLUDES", ""), " ");
 
    for Target use Configure.Toolchain_Name;
-   for Source_Dirs use (".") & Include_Directories;
+   for Source_Dirs use Include_Directories & (".");
    for Languages use ("Ada", "C");
 
    Ada_Files := ("c_wrappers.adb", "c_wrappers.ads");
