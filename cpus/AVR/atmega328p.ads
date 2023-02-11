@@ -1596,8 +1596,7 @@ package ATmega328P is
       Size      => 8;
    for SPCR_Type use
    record
-      SPR0 at 0 range 0 .. 0;
-      SPR1 at 0 range 1 .. 1;
+      SPR  at 0 range 0 .. 1;
       CPHA at 0 range 2 .. 2;
       CPOL at 0 range 3 .. 3;
       MSTR at 0 range 4 .. 4;
