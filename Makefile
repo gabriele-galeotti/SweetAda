@@ -421,6 +421,8 @@ CPU_INCLUDE_DIRECTORIES :=
 #
 # Various features.
 #
+IMPLICIT_CORE_UNITS     :=
+IMPLICIT_CLIBRARY_UNITS :=
 USE_UNPREFIXED_GNATMAKE :=
 USE_LIBEXEC_LD          :=
 ENABLE_SPLIT_DWARF      :=
@@ -496,6 +498,10 @@ endif
 INCLUDE_DIRECTORIES := $(PLATFORM_DIRECTORY) $(INCLUDE_DIRECTORIES)
 endif
 
+# import implicit units
+IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)     \
+                      $(IMPLICIT_CLIBRARY_UNITS)
+
 ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(filter MAKEFILE GPR,$(BUILD_MODE)),)
 $(warning *** Warning: no valid BUILD_MODE.)
@@ -545,7 +551,8 @@ export                          \
        CPUS                     \
        RTSES                    \
        INCLUDE_DIRECTORIES      \
-       IMPLICIT_ALI_UNITS       \
+       IMPLICIT_CORE_UNITS      \
+       IMPLICIT_CLIBRARY_UNITS  \
        POSTBUILD_COMMAND        \
        CLEAN_OBJECTS_COMMON     \
        DISTCLEAN_OBJECTS_COMMON

@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ abort_library.adb                                                                                         --
+-- __FLN__ abort_library-system_abort.adb                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,33 +15,30 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body Abort_Library is
+with System;
+with Console;
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
+use type System.Address;
 
-   ----------------------------------------------------------------------------
-   -- System_Abort (parameterless)
-   ----------------------------------------------------------------------------
-   procedure System_Abort is
-   begin
-      loop null; end loop;
-   end System_Abort;
-
-   ----------------------------------------------------------------------------
-   -- System_Abort (parameterized)
-   ----------------------------------------------------------------------------
-   procedure System_Abort (
-                           File    : in System.Address;
-                           Line    : in Integer;
-                           Column  : in Integer;
-                           Message : in System.Address
-                          ) is
-   separate;
-
-end Abort_Library;
+separate (Abort_Library)
+procedure System_Abort (
+                        File    : in System.Address;
+                        Line    : in Integer;
+                        Column  : in Integer;
+                        Message : in System.Address
+                       ) is
+begin
+   Console.Print_NewLine;
+   Console.Print ("*** SYSTEM ABORT", NL => True);
+   if File /= System.Null_Address then
+      Console.Print ("File:    ", NL => False);
+      Console.Print_ASCIIZ_String (String_Ptr => File, NL => True);
+   end if;
+   if Line /= 0 then
+      Console.Print (Prefix => "Line:    ", Value => Line, NL => True);
+      Console.Print (Prefix => "Column:  ", Value => Column, NL => True);
+   end if;
+   Console.Print ("Message: ", NL => False);
+   Console.Print_ASCIIZ_String (String_Ptr => Message, NL => True);
+   System_Abort; -- default abort procedure
+end System_Abort;

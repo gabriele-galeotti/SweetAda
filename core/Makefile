@@ -34,8 +34,7 @@ endif
 
 LIBRARY_NAME := core
 
-OBJECTS :=
-OBJECTS += $(patsubst %,$(OBJ_DIRECTORY)/%.o,$(IMPLICIT_CORE_UNITS))
+OBJECTS := $(patsubst %,$(OBJ_DIRECTORY)/%.o,$(IMPLICIT_CORE_UNITS))
 
 .PHONY : all
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a

@@ -23,7 +23,10 @@ library project Core is
    for Source_Dirs use Include_Directories & (".");
    for Default_Language use "Ada";
 
-   Abort_Library_Files := ("abort_library.adb", "abort_library.ads");
+   Abort_Library_Files := (
+                           "abort_library.adb", "abort_library.ads",
+                           "abort_library-system_abort.adb"
+                          );
 
    Bits_Files := (
                   "bits.adb", "bits.ads",
