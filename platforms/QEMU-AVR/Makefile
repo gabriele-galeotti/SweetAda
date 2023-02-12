@@ -35,11 +35,7 @@ endif
 LIBRARY_NAME := platform
 
 OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
-# override standard core unit, see configuration.in
-# 1) add the unit to the library
-OBJECTS += $(OBJ_DIRECTORY)/core.o
-# 2) state the dependencies, that could be in turn overriden
-$(OBJ_DIRECTORY)/core.o : $(KERNEL_PARENT_PATH)/$(SPEC_BITS)
+OBJECTS += $(foreach f,$(ADDITIONAL_ADA_OBJECTS:=.o),$(OBJ_DIRECTORY)/$(f))
 
 .PHONY : all
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a

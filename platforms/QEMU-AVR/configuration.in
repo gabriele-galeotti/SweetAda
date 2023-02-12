@@ -27,8 +27,8 @@ POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
 # override standard core unit
-export IMPLICIT_CORE_UNITS := $(filter-out core,$(IMPLICIT_CORE_UNITS))
-export SPEC_CORE := $(PLATFORM_DIRECTORY)/core.ads
+IMPLICIT_CORE_UNITS := $(filter-out core,$(IMPLICIT_CORE_UNITS))
+export ADDITIONAL_ADA_OBJECTS := core
 
 USE_APPLICATION := test-QEMU-AVR
 
