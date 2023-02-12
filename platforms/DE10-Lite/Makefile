@@ -36,18 +36,6 @@ LIBRARY_NAME := platform
 
 OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
 
-# overriding standard last_chance_handler unit requires a little bit of care,
-# see configuration.in
-# 1) add the unit to the library
-#OBJECTS += $(OBJ_DIRECTORY)/last_chance_handler.o
-# 2) state the dependencies in terms of standard core units, that could be in
-# turn overriden
-#$(OBJ_DIRECTORY)/last_chance_handler.o : $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY)
-# 3) states all other explicit dependencies
-# NOTE: in this case the prerequisite is empty because there are no other
-# dependencies, so it is just a placeholder
-#$(OBJ_DIRECTORY)/last_chance_handler.o :
-
 .PHONY : all
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
