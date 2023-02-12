@@ -413,16 +413,16 @@ ADAC_SWITCHES_RTS :=
 CC_SWITCHES_RTS   :=
 
 #
-# Initialize include directories.
+# Initialize include directories and implicit units.
 #
 INCLUDE_DIRECTORIES     :=
 CPU_INCLUDE_DIRECTORIES :=
+IMPLICIT_CORE_UNITS     :=
+IMPLICIT_CLIBRARY_UNITS :=
 
 #
 # Various features.
 #
-IMPLICIT_CORE_UNITS     :=
-IMPLICIT_CLIBRARY_UNITS :=
 USE_UNPREFIXED_GNATMAKE :=
 USE_LIBEXEC_LD          :=
 ENABLE_SPLIT_DWARF      :=
