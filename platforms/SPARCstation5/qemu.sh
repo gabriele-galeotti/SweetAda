@@ -58,9 +58,6 @@ MONITORPORT=4445
 SERIALPORT0=4446
 SERIALPORT1=4447
 
-# IP address for qemu-ifup.sh
-export QEMU_IPADDRESS="192.168.3.1"
-
 # QEMU machine
 ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
   -M SS-5 -m 64 \
