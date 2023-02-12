@@ -51,22 +51,8 @@ endif
 
 .PHONY : postbuild
 postbuild :
-ifeq ($(BOOT_FROM_NETWORK),True)
-	$(REM) create an AMAGIC (OMAGIC) SPARC a.out executable
-	$(ELFTOAOUT) -o $(KERNEL_PARENT_PATH)/kernel.aout $(KERNEL_PARENT_PATH)/kernel.o
-ifneq ($(OSTYPE),cmd)
-	@chmod a-x $(KERNEL_PARENT_PATH)/kernel.aout
-endif
-	$(CP) $(KERNEL_PARENT_PATH)/kernel.aout $(TFTP_DIRECTORY)/$(TFTP_FILENAME)
-else
-	$(FILEPAD) $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) 256K
-endif
-	$(REM) S-record download
-	$(call brief-command, \
-        $(OBJCOPY) -O srec $(SWEETADA_PATH)/$(KERNEL_OUTFILE) $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec \
-        ,[OBJCOPY],$(KERNEL_BASENAME).srec)
-ifneq ($(OSTYPE),cmd)
-	@chmod a-x $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec
+ifneq ($(POSTBUILD_COMMAND),)
+	$(POSTBUILD_COMMAND)
 endif
 
 .PHONY : clean
@@ -75,7 +61,7 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) configure.h configure.ads linker.lds
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON) configure.h configure.ads
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

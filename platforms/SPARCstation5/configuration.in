@@ -16,9 +16,11 @@ OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
 #APPLICATION_TYPE := ROM
 #APPLICATION_TYPE := RAM
-APPLICATION_TYPE := QEMU
+#APPLICATION_TYPE := QEMU
 #APPLICATION_TYPE := networkboot
-#APPLICATION_TYPE := srecord
+APPLICATION_TYPE := srecord
+
+BOOT_FROM_NETWORK := False
 
 ################################################################################
 ifeq ($(APPLICATION_TYPE),ROM)
@@ -26,8 +28,6 @@ ifeq ($(APPLICATION_TYPE),ROM)
 GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=1
 USE_APPLICATION      := test-SPARCstation5
 LD_SCRIPT            := linker.lds-ROM
-
-export BOOT_FROM_NETWORK := False
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
@@ -41,8 +41,6 @@ ifeq ($(APPLICATION_TYPE),RAM)
 GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=0
 USE_APPLICATION      := test-SPARCstation5
 LD_SCRIPT            := linker.lds-RAM
-
-export BOOT_FROM_NETWORK := False
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
@@ -58,12 +56,15 @@ GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=1
 LD_SCRIPT            := linker.lds-ROM
 USE_APPLICATION      := test-SPARCstation5
 
-export BOOT_FROM_NETWORK := False
-
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
-RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu-ioemu.cfg
-DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
+
+# plain QEMU
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT) -debug
+# runsweetada + QEMU-IOEMU
+#RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu-ioemu.cfg
+#DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
 
 endif
 ################################################################################
@@ -73,7 +74,9 @@ GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=0
 LD_SCRIPT            := linker.lds-networkboot
 USE_APPLICATION      := test-SPARCstation5
 
-export BOOT_FROM_NETWORK := True
+POSTBUILD_COMMAND := $(SHELL_EXEC) postbuild-network$(SCREXT)
+
+BOOT_FROM_NETWORK := True
 
 export ELFTOAOUT := /usr/local/bin/elftoaout
 export TFTP_DIRECTORY := /home/tftpboot
@@ -87,13 +90,16 @@ GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=1
 LD_SCRIPT            := linker.lds-srecord
 USE_APPLICATION      := test-srecord
 
-export BOOT_FROM_NETWORK := False
+POSTBUILD_COMMAND := $(SHELL_EXEC) postbuild-srecord$(SCREXT)
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
+
 RUN_COMMAND   :=
 DEBUG_COMMAND :=
 
 endif
 ################################################################################
+
+export BOOT_FROM_NETWORK
 
