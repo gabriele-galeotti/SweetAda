@@ -153,11 +153,19 @@ $(OBJ_DIRECTORY)/%.o : %.S $(DEP_DIRECTORY)/%.d
         ,[CC/AS],$<)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@$(SED) -i -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)$$|$$(OBJ_DIRECTORY)\1|" $(DEP_DIRECTORY_CMD)\$*.d
+	@$(SED)                                                                \
+                -i                                                             \
+                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)$$|$$(OBJ_DIRECTORY)\1|"    \
+                -e "s|$(KERNEL_PARENT_PATH)\(/.*\)|$$(KERNEL_PARENT_PATH)\1|g" \
+                $(DEP_DIRECTORY_CMD)\$*.d
 	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
-	@$(SED) -i -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|" $(DEP_DIRECTORY)/$*.d
+	@$(SED)                                                                 \
+                -i                                                              \
+                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"   \
+                -e "s|$(KERNEL_PARENT_PATH)\(/.*\)|\$$(KERNEL_PARENT_PATH)\1|g" \
+                $(DEP_DIRECTORY)/$*.d
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
 

@@ -19,6 +19,7 @@
 # VERBOSE
 # PLATFORM
 # SUBPLATFORM
+# NOBUILD
 # PROBEVARIABLE
 #
 
@@ -553,6 +554,7 @@ export                          \
        INCLUDE_DIRECTORIES      \
        IMPLICIT_CORE_UNITS      \
        IMPLICIT_CLIBRARY_UNITS  \
+       IMPLICIT_ALI_UNITS       \
        POSTBUILD_COMMAND        \
        CLEAN_OBJECTS_COMMON     \
        DISTCLEAN_OBJECTS_COMMON
@@ -656,6 +658,8 @@ endif
 # Private non-global definitions and variables.                                #
 #                                                                              #
 ################################################################################
+
+KERNEL_PARENT_PATH := .
 
 MAKE_APPLICATION := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(APPLICATION_DIRECTORY)
 MAKE_CLIBRARY    := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(CLIBRARY_DIRECTORY)
@@ -976,7 +980,6 @@ endif
 
 .PHONY : kernel_end
 kernel_end :
-	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): kernel compiled successfully.")
 	@$(call echo-print,"")
 
