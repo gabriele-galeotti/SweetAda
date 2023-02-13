@@ -36,7 +36,6 @@ LIBRARY_NAME := cpu
 
 OBJECTS :=
 # force inclusion of not-explicit-referenced subprograms
-#OBJECTS += $(OBJ_DIRECTORY)/arm.o
 OBJECTS += $(OBJ_DIRECTORY)/unwind.o
 
 ifneq ($(USE_LIBGCC),Y)

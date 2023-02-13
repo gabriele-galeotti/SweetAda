@@ -35,7 +35,6 @@ endif
 LIBRARY_NAME := cpu
 
 OBJECTS :=
-
 ifneq ($(USE_LIBGCC),Y)
 OBJECTS += $(OBJ_DIRECTORY)/divsi3.o
 OBJECTS += $(OBJ_DIRECTORY)/modsi3.o
