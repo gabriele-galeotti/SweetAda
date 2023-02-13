@@ -34,7 +34,11 @@ endif
 
 LIBRARY_NAME := cpu
 
-OBJECTS :=
+OBJECTS        :=
+ifneq ($(USE_LIBGCC),Y)
+LIBGCC_SOURCES := div.S
+OBJECTS        += $(LIBGCC_SOURCES:%.S=$(OBJ_DIRECTORY)/%.o)
+endif
 
 .PHONY : all
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
