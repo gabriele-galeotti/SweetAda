@@ -59,8 +59,8 @@ package body Exceptions is
                -- end loop;
                -- Console.Print ("PIT interrupt", NL => True);
                -- IOEMU "TIMER" LED blinking
-               IOEMU.IOEMU_IO0 := 1;
-               IOEMU.IOEMU_IO0 := 0;
+               IOEMU.IO0 := 1;
+               IOEMU.IO0 := 0;
             end if;
          end if;
       end if;

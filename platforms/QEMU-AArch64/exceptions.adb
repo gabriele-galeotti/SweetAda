@@ -56,8 +56,8 @@ package body Exceptions is
       if Configure.USE_QEMU_IOEMU then
          if Core.Tick_Count mod 1_000 = 0 then
             -- IOEMU "TIMER" LED blinking
-            IOEMU.IOEMU_IO0 := 1;
-            IOEMU.IOEMU_IO0 := 0;
+            IOEMU.IO0 := 1;
+            IOEMU.IO0 := 0;
          end if;
       end if;
       Virt.GICD_ICPENDR (30) := True;

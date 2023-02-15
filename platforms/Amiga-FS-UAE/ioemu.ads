@@ -37,49 +37,49 @@ package IOEMU is
    IOEMU_SERIALPORT2_BASEADDRESS : constant := Amiga.CIAB_BASEADDRESS + 16#E0#;
 
    -- IO0 @ 0x00BFD080
-   IOEMU_CIA_IO0 : Unsigned_8 with
+   CIA_IO0 : Unsigned_8 with
       Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#00#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO1 @ 0x00BFD084
-   IOEMU_CIA_IO1 : Unsigned_8 with
+   CIA_IO1 : Unsigned_8 with
       Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#04#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO2 @ 0x00BFD088
-   IOEMU_CIA_IO2 : Unsigned_8 with
+   CIA_IO2 : Unsigned_8 with
       Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#08#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO3 @ 0x00BFD08C
-   IOEMU_CIA_IO3 : Unsigned_8 with
+   CIA_IO3 : Unsigned_8 with
       Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#0C#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO4 @ 0x00BFD090
-   IOEMU_CIA_IO4 : Unsigned_8 with
+   CIA_IO4 : Unsigned_8 with
       Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#10#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO5 @ 0x00BFD094
-   IOEMU_CIA_IO5 : Unsigned_8 with
+   CIA_IO5 : Unsigned_8 with
       Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#14#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO6 @ 0x00BFD098
-   IOEMU_CIA_IO6 : Unsigned_8 with
+   CIA_IO6 : Unsigned_8 with
       Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#18#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO7 @ 0x00BFD09C
-   IOEMU_CIA_IO7 : Unsigned_8 with
+   CIA_IO7 : Unsigned_8 with
       Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#1C#),
       Volatile   => True,
       Import     => True,

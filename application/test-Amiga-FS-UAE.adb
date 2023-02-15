@@ -65,8 +65,8 @@ package body Application is
       P       : PBUF.Pbuf_Ptr;
       Success : Boolean;
    begin
-      IOEMU.IOEMU_CIA_IO1 := (Unsigned_8 (Ethernet.Nqueue (Ethernet.Packet_Queue'Access))); -- # of items in queue
-      -- IOEMU.IOEMU_CIA_IO2 := (Unsigned_8 (PBUF.Nalloc));                                    -- # of PBUFs allocated
+      IOEMU.CIA_IO1 := (Unsigned_8 (Ethernet.Nqueue (Ethernet.Packet_Queue'Access))); -- # of items in queue
+      -- IOEMU.CIA_IO2 := (Unsigned_8 (PBUF.Nalloc));                                    -- # of PBUFs allocated
       Ethernet.Dequeue (Ethernet.Packet_Queue'Access, P, Success);
       if Success then
          Ethernet.Packet_Handler (P);
@@ -137,7 +137,7 @@ package body Application is
                   TC1 := Tick_Count;
                end if;
                if Tick_Count_Expired (TC2, 300) then
-                  IOEMU.IOEMU_CIA_IO5 := Value;
+                  IOEMU.CIA_IO5 := Value;
                   Value := @ + 1;
                   TC2 := Tick_Count;
                end if;

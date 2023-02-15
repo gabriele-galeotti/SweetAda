@@ -38,14 +38,14 @@ package body Application is
          declare
             Delay_Count : constant := 100_000_000;
          begin
-            IOEMU.IOEMU_IO0 := 0;
-            IOEMU.IOEMU_IO1 := 0;
+            IOEMU.IO0 := 0;
+            IOEMU.IO1 := 0;
             loop
                Console.Print ("hello, SweetAda", NL => True);
                -- IOEMU GPIO test
-               IOEMU.IOEMU_IO0 := 1;
-               IOEMU.IOEMU_IO0 := 0;
-               IOEMU.IOEMU_IO1 := @ + 1;
+               IOEMU.IO0 := 1;
+               IOEMU.IO0 := 0;
+               IOEMU.IO1 := @ + 1;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;

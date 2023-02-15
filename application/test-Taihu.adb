@@ -43,7 +43,7 @@ package body Application is
             Value := 0;
             loop
                if Configure.USE_QEMU_IOEMU then
-                  IOEMU.IOEMU_IO1 := Value;
+                  IOEMU.IO1 := Value;
                end if;
                Value := @ + 1;
                Console.Print ("hello, SweetAda", NL => True);

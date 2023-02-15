@@ -97,8 +97,8 @@ package body Exceptions is
             Tick_Count := @ + 1;
             if Tick_Count mod 1_000 = 0 then
                -- IOEMU "TIMER" LED blinking
-               IOEMU.IOEMU_CIA_IO0 := 1;
-               IOEMU.IOEMU_CIA_IO0 := 0;
+               IOEMU.CIA_IO0 := 1;
+               IOEMU.CIA_IO0 := 0;
             end if;
             -- clear pending interrupt
             Unused := CIAA.ICR;
@@ -122,16 +122,16 @@ package body Exceptions is
             UARTIOEMU.RXClearIrq (UART1_Descriptor);
             INTREQ_ClearBitMask (EXTER); -- acknowledge interrupt
             -- LED blining
-            IOEMU.IOEMU_CIA_IO3 := 1;
-            IOEMU.IOEMU_CIA_IO3 := 0;
+            IOEMU.CIA_IO3 := 1;
+            IOEMU.CIA_IO3 := 0;
          end if;
          if UARTIOEMU.RXIrqActive (UART2_Descriptor) then
             UARTIOEMU.RX (UART2_Descriptor, Unused);
             UARTIOEMU.RXClearIrq (UART2_Descriptor);
             INTREQ_ClearBitMask (EXTER); -- acknowledge interrupt
             -- LED blining
-            IOEMU.IOEMU_CIA_IO4 := 1;
-            IOEMU.IOEMU_CIA_IO4 := 0;
+            IOEMU.CIA_IO4 := 1;
+            IOEMU.CIA_IO4 := 0;
          end if;
       end if;
       if Irq_Identifier = Level_7_Interrupt_Autovector then

@@ -38,7 +38,7 @@ package body Application is
          begin
             Value := 0;
             if Configure.USE_QEMU_IOEMU then
-               IOEMU.IOEMU_IO1 := 0;
+               IOEMU.IO1 := 0;
             end if;
             loop
                if (Value mod 10) = 0 then
@@ -46,7 +46,7 @@ package body Application is
                end if;
                Value := @ + 1;
                if Configure.USE_QEMU_IOEMU then
-                  IOEMU.IOEMU_IO1 := @ + 1;
+                  IOEMU.IO1 := @ + 1;
                end if;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;

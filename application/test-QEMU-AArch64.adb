@@ -38,13 +38,13 @@ package body Application is
          begin
             Delay_Count := (if Core.Debug_Flag then 500_000_000 else 500_000_000);
             if Configure.USE_QEMU_IOEMU then
-               IOEMU.IOEMU_IO1 := 0;
-               IOEMU.IOEMU_IO2 := 0;
+               IOEMU.IO1 := 0;
+               IOEMU.IO2 := 0;
             end if;
             loop
                if Configure.USE_QEMU_IOEMU then
-                  IOEMU.IOEMU_IO1 := @ + 1;
-                  IOEMU.IOEMU_IO2 := @ + 1;
+                  IOEMU.IO1 := @ + 1;
+                  IOEMU.IO2 := @ + 1;
                end if;
                Console.Print ("hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;

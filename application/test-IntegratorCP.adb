@@ -38,7 +38,7 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          if Configure.USE_QEMU_IOEMU then
-            IOEMU.IOEMU_IO1 := 16#00#;
+            IOEMU.IO1 := 16#00#;
          end if;
          declare
             Delay_Count : constant := 100_000_000;
@@ -46,7 +46,7 @@ package body Application is
             loop
                if Configure.USE_QEMU_IOEMU then
                   -- IOEMU GPIO test
-                  IOEMU.IOEMU_IO1 := @ + 1;
+                  IOEMU.IO1 := @ + 1;
                end if;
                Console.Print ("Hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;

@@ -37,8 +37,8 @@ package body Exceptions is
       IntegratorCP.Timer (0).IntClr := 0;
       if Configure.USE_QEMU_IOEMU then
          -- IOEMU "TIMER" LED blinking
-         IOEMU.IOEMU_IO0 := 16#FF#;
-         IOEMU.IOEMU_IO0 := 16#00#;
+         IOEMU.IO0 := 16#FF#;
+         IOEMU.IO0 := 16#00#;
       end if;
    end Irq_Process;
 

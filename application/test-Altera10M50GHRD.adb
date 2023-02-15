@@ -50,15 +50,15 @@ package body Application is
             TC1 := Core.Tick_Count;
             TC2 := Core.Tick_Count;
             if Configure.USE_QEMU_IOEMU then
-               IOEMU.IOEMU_IO1 := 0;
-               IOEMU.IOEMU_IO2 := 0;
+               IOEMU.IO1 := 0;
+               IOEMU.IO2 := 0;
             end if;
             loop
                if Tick_Count_Expired (TC1, 2_000) then
                   TC1 := Core.Tick_Count;
                   if Configure.USE_QEMU_IOEMU then
-                     IOEMU.IOEMU_IO1 := @ + 1;
-                     IOEMU.IOEMU_IO2 := @ + 1;
+                     IOEMU.IO1 := @ + 1;
+                     IOEMU.IO2 := @ + 1;
                   end if;
                end if;
                if Tick_Count_Expired (TC2, 3_000) then

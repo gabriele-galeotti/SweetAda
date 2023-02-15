@@ -56,14 +56,14 @@ package body Application is
             Value := 0;
             loop
                -- IOEMU "TIMER" LED blinking
-               IOEMU.IOEMU_IO0 := 1;
-               IOEMU.IOEMU_IO0 := 0;
+               IOEMU.IO0 := 1;
+               IOEMU.IO0 := 0;
                -- display values
-               IOEMU.IOEMU_IO1 := Value;
-               IOEMU.IOEMU_IO2 := Value + 0;
-               IOEMU.IOEMU_IO2 := Value + 1;
-               IOEMU.IOEMU_IO2 := Value + 2;
-               IOEMU.IOEMU_IO2 := Value + 3;
+               IOEMU.IO1 := Value;
+               IOEMU.IO2 := Value + 0;
+               IOEMU.IO2 := Value + 1;
+               IOEMU.IO2 := Value + 2;
+               IOEMU.IO2 := Value + 3;
                Value := @ + 1;
                -- emit a message
                Console.Print ("hello, SweetAda", NL => True);

@@ -42,7 +42,7 @@ package body Application is
             loop
                -- IOEMU GPIO test
                Value := @ + 1;
-               IOEMU.IOEMU_IO1 := Value;
+               IOEMU.IO1 := Value;
                Console.Print ("hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;

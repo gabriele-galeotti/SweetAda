@@ -55,8 +55,8 @@ package body Exceptions is
       Core.Tick_Count := @ + 1;
       if Core.Tick_Count mod 1_000 = 0 then
          -- IOEMU "TIMER" LED blinking
-         IOEMU.IOEMU_IO0 := 1;
-         IOEMU.IOEMU_IO0 := 0;
+         IOEMU.IO0 := 1;
+         IOEMU.IO0 := 0;
       end if;
       INTC.IAR (TIMER_IRQ) := True; -- clear INTC flag
    end Process;

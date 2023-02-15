@@ -59,8 +59,8 @@ package body Exceptions is
       Core.Tick_Count := @ + 1;
       if Core.Tick_Count mod 1_000 = 0 then
          -- IOEMU "TIMER" LED blinking
-         IOEMU.IOEMU_IO0 := 1;
-         IOEMU.IOEMU_IO0 := 0;
+         IOEMU.IO0 := 1;
+         IOEMU.IO0 := 0;
       end if;
       LEON3.GPTIMER.Control_Register_1.IP := False;
       LEON3.INTC_CLEAR.IC (10) := False;

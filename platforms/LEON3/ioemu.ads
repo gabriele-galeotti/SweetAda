@@ -33,42 +33,42 @@ package IOEMU is
 
    IOEMU_BASEADDRESS : constant := 16#8000_0400#;
 
-   IOEMU_IO0 : aliased Unsigned_8 with
+   IO0 : aliased Unsigned_8 with
       Address              => To_Address (IOEMU_BASEADDRESS + 0),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   IOEMU_IO1 : aliased Unsigned_8 with
+   IO1 : aliased Unsigned_8 with
       Address              => To_Address (IOEMU_BASEADDRESS + 1),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   IOEMU_IO2 : aliased Unsigned_8 with
+   IO2 : aliased Unsigned_8 with
       Address              => To_Address (IOEMU_BASEADDRESS + 2),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   IOEMU_IO3 : aliased Unsigned_8 with
+   IO3 : aliased Unsigned_8 with
       Address              => To_Address (IOEMU_BASEADDRESS + 3),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   IOEMU_IO4 : aliased Unsigned_8 with
+   IO4 : aliased Unsigned_8 with
       Address              => To_Address (IOEMU_BASEADDRESS + 4),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   IOEMU_IO5 : aliased Unsigned_8 with
+   IO5 : aliased Unsigned_8 with
       Address              => To_Address (IOEMU_BASEADDRESS + 5),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   IOEMU_IO6 : aliased Unsigned_8 with
+   IO6 : aliased Unsigned_8 with
       Address              => To_Address (IOEMU_BASEADDRESS + 6),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
-   IOEMU_IO7 : aliased Unsigned_8 with
+   IO7 : aliased Unsigned_8 with
       Address              => To_Address (IOEMU_BASEADDRESS + 7),
       Volatile_Full_Access => True,
       Import               => True,

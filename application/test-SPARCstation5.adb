@@ -58,7 +58,7 @@ package body Application is
                   Delay_Count := 50_000;
                end if;
             end if;
-            IOEMU.IOEMU_IO1 := 0;
+            IOEMU.IO1 := 0;
             loop
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
                Console.Print ("hello, SweetAda", NL => True);
@@ -67,7 +67,7 @@ package body Application is
                CHANNELB_Putchar (Ada.Characters.Latin_1.CR);
                CHANNELB_Putchar (Ada.Characters.Latin_1.LF);
                -- IOEMU GPIO test
-               IOEMU.IOEMU_IO1 := @ + 1;
+               IOEMU.IO1 := @ + 1;
             end loop;
          end;
       end if;
