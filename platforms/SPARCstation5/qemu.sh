@@ -22,7 +22,10 @@ tcpport_is_listening()
 {
 _time_start=$(date +%s)
 while true ; do
-  _port_listening=$(netstat -l -t --numeric-ports | grep -c "^tcp.*localhost:$1.*LISTEN.*\$")
+  case ${OSTYPE} in
+    darwin) _port_listening=$(netstat -a -n -t | grep -c "^tcp4.*127.0.0.1.$1.*LISTEN.*\$") ;;
+    *)      _port_listening=$(netstat -l -t --numeric-ports | grep -c "^tcp.*localhost:$1.*LISTEN.*\$") ;;
+  esac
   [ "${_port_listening}" -eq 1 ] && break
   _time_current=$(date +%s)
   if [ $((_time_current-_time_start)) -gt $2 ] ; then
@@ -46,7 +49,10 @@ QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-sparc"
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
-  QEMU_SETSID="setsid"
+  case ${OSTYPE} in
+    darwin) QEMU_SETSID= ;;
+    *)      QEMU_SETSID="setsid" ;;
+  esac
   QEMU_DEBUG="-S -gdb tcp:localhost:1234,ipv4"
 else
   QEMU_SETSID=
@@ -74,16 +80,38 @@ QEMU_PID=$!
 
 # console for serial port
 tcpport_is_listening ${SERIALPORT0} 3 "*** Error"
-setsid /usr/bin/xterm \
-  -T "QEMU-1" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
-  /bin/telnet localhost ${SERIALPORT0} \
-  &
+case ${OSTYPE} in
+  darwin)
+    /usr/bin/osascript \
+      -e "tell application \"Terminal\"" \
+      -e "do script \"telnet 127.0.0.1 ${SERIALPORT0}\"" \
+      -e "end tell" \
+      &
+    ;;
+  *)
+    setsid /usr/bin/xterm \
+      -T "QEMU-1" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
+      /bin/telnet localhost ${SERIALPORT0} \
+      &
+    ;;
+esac
 # console for serial port
 tcpport_is_listening ${SERIALPORT1} 3 "*** Error"
-setsid /usr/bin/xterm \
-  -T "QEMU-2" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
-  /bin/telnet localhost ${SERIALPORT1} \
-  &
+case ${OSTYPE} in
+  darwin)
+    /usr/bin/osascript \
+      -e "tell application \"Terminal\"" \
+      -e "do script \"telnet 127.0.0.1 ${SERIALPORT1}\"" \
+      -e "end tell" \
+      &
+    ;;
+  *)
+    setsid /usr/bin/xterm \
+      -T "QEMU-2" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
+      /bin/telnet localhost ${SERIALPORT1} \
+      &
+    ;;
+esac
 
 # normal execution or debug execution
 if [ "x$1" = "x" ] ; then
