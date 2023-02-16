@@ -17,7 +17,7 @@
 
 with System;
 with Bits;
-with CPU;
+with x86;
 
 package Exceptions is
 
@@ -31,7 +31,7 @@ package Exceptions is
 
    use System;
    use Bits;
-   use CPU.x86;
+   use x86;
 
    Div_By_0_Handler : aliased Asm_Entry_Point with
       Import        => True,

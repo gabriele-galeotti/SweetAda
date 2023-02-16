@@ -24,7 +24,7 @@ with Core;
 with Bits;
 with CPU;
 with CPU.IO;
-with CPU_i586;
+with i586;
 with GDT_Simple;
 with APIC;
 with MMU;
@@ -55,7 +55,7 @@ package body BSP is
    use Bits;
    use CPU;
    use CPU.IO;
-   use CPU_i586;
+   use i586;
    use APIC;
 
    procedure Board_Init;
