@@ -16,4 +16,7 @@ package Configure is
    RAM_SIZE        : constant := 16#1000_0000#;
    USE_APIC        : constant Boolean := True;
 
+   -- IOEMU
+   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
+
 end Configure;

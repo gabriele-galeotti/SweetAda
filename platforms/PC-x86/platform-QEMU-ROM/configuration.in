@@ -43,5 +43,3 @@ endif
 #RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu-ioemu.cfg
 #DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
 
-export WIRESHARK := /usr/bin/wireshark
-
