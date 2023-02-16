@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu_i586.ads                                                                                              --
+-- __FLN__ i586.ads                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -19,10 +19,10 @@ with System;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
-with CPU_x86;
-with CPU_i486;
+with x86;
+with i486;
 
-package CPU_i586 is
+package i586 is
 
    --========================================================================--
    --                                                                        --
@@ -37,26 +37,26 @@ package CPU_i586 is
    use System;
    use Interfaces;
    use Bits;
-   use CPU_x86;
+   use x86;
 
    ----------------------------------------------------------------------------
    -- import i486 items
    ----------------------------------------------------------------------------
 
-   subtype CR4_Type is CPU_i486.CR4_Type;
+   subtype CR4_Type is i486.CR4_Type;
 
-   function CR4_Read return CR4_Type         renames CPU_i486.CR4_Read;
-   procedure CR4_Write (Value : in CR4_Type) renames CPU_i486.CR4_Write;
+   function CR4_Read return CR4_Type         renames i486.CR4_Read;
+   procedure CR4_Write (Value : in CR4_Type) renames i486.CR4_Write;
 
-   function CPUID_Enabled return Boolean renames CPU_i486.CPUID_Enabled;
+   function CPUID_Enabled return Boolean renames i486.CPUID_Enabled;
 
-   subtype CPUID_VendorID_String_Type is CPU_i486.CPUID_VendorID_String_Type;
+   subtype CPUID_VendorID_String_Type is i486.CPUID_VendorID_String_Type;
 
-   function CPU_VendorID_Read return CPUID_VendorID_String_Type renames CPU_i486.CPU_VendorID_Read;
+   function CPU_VendorID_Read return CPUID_VendorID_String_Type renames i486.CPU_VendorID_Read;
 
-   subtype CPU_Features_Type is CPU_i486.CPU_Features_Type;
+   subtype CPU_Features_Type is i486.CPU_Features_Type;
 
-   function CPU_Features_Read return CPU_Features_Type renames CPU_i486.CPU_Features_Read;
+   function CPU_Features_Read return CPU_Features_Type renames i486.CPU_Features_Read;
 
    ----------------------------------------------------------------------------
    -- Page directory (4M)
@@ -113,4 +113,4 @@ package CPU_i586 is
    function RDTSC return Unsigned_64 with
       Inline => True;
 
-end CPU_i586;
+end i586;

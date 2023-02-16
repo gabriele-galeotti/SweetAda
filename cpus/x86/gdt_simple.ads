@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with CPU;
+with x86;
 
 package GDT_Simple is
 
@@ -27,7 +27,7 @@ package GDT_Simple is
    --                                                                        --
    --========================================================================--
 
-   use CPU.x86;
+   use x86;
 
    SELECTOR_KCODE : constant Selector_Type := (RPL => PL0, TI => TI_GDT, Index => 1);
    SELECTOR_KDATA : constant Selector_Type := (RPL => PL0, TI => TI_GDT, Index => 2);

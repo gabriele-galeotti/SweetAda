@@ -19,8 +19,8 @@ with System;
 with System.Storage_Elements;
 with Bits;
 with CPU;
-with CPU_x86;
-with CPU_i586;
+with x86;
+with i586;
 
 package body MMU is
 
@@ -36,8 +36,8 @@ package body MMU is
    use System.Storage_Elements;
    use Bits;
    use CPU;
-   use CPU_x86;
-   use CPU_i586;
+   use x86;
+   use i586;
 
    PD : aliased PD4M_Type with
       Volatile => True;

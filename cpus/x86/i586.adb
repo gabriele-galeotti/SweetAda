@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu_i586.adb                                                                                              --
+-- __FLN__ i586.adb                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -18,7 +18,7 @@
 with System.Machine_Code;
 with Definitions;
 
-package body CPU_i586 is
+package body i586 is
 
    --========================================================================--
    --                                                                        --
@@ -93,4 +93,4 @@ package body CPU_i586 is
       return Result;
    end RDTSC;
 
-end CPU_i586;
+end i586;

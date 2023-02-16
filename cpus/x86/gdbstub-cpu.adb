@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Storage_Elements;
-with CPU_x86;
+with x86;
 
 package body Gdbstub.CPU is
 
@@ -32,7 +32,7 @@ package body Gdbstub.CPU is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
-   use CPU_x86;
+   use x86;
 
    ----------------------------------------------------------------------------
    -- Register memory mapping

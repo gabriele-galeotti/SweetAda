@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu_x86.adb                                                                                               --
+-- __FLN__ x86.adb                                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -18,7 +18,7 @@
 with System.Machine_Code;
 with LLutils;
 
-package body CPU_x86 is
+package body x86 is
 
    --========================================================================--
    --                                                                        --
@@ -447,4 +447,4 @@ package body CPU_x86 is
       Lock_Object.Lock := LOCK_UNLOCK;
    end Unlock;
 
-end CPU_x86;
+end x86;

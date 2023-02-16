@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu_x86.ads                                                                                               --
+-- __FLN__ x86.ads                                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -22,7 +22,7 @@ with Interfaces;
 with Definitions;
 with Bits;
 
-package CPU_x86 is
+package x86 is
 
    --========================================================================--
    --                                                                        --
@@ -825,4 +825,4 @@ package CPU_x86 is
    procedure Unlock (Lock_Object : out Lock_Type) with
       Inline => True;
 
-end CPU_x86;
+end x86;

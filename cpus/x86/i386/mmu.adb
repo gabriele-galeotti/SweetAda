@@ -19,7 +19,7 @@ with System;
 with System.Storage_Elements;
 with Bits;
 with CPU;
-with CPU_x86;
+with x86;
 
 package body MMU is
 
@@ -35,7 +35,7 @@ package body MMU is
    use System.Storage_Elements;
    use Bits;
    use CPU;
-   use CPU_x86;
+   use x86;
 
    PD : aliased PD4k_Type with
       Volatile => True;

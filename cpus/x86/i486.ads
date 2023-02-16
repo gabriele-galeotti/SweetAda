@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu_i486.ads                                                                                              --
+-- __FLN__ i486.ads                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -19,7 +19,7 @@ with System;
 with Interfaces;
 with Bits;
 
-package CPU_i486 is
+package i486 is
 
    --========================================================================--
    --                                                                        --
@@ -189,4 +189,4 @@ package CPU_i486 is
    function CPU_Features_Read return CPU_Features_Type with
       Inline => True;
 
-end CPU_i486;
+end i486;
