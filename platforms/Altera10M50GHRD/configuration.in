@@ -15,9 +15,9 @@ POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
 # qemu-6.0.0-ioemu/hw/nios2/10m50_devboard.c
-export RESET_ADDRESS=16\#D400_0000\#
-export EXCEPTION_ADDRESS=16\#C800_0120\#
-export FAST_TLB_MISS_ADDRESS=16\#C000_0100\#
+export RESET_ADDRESS         := 16\#D400_0000\#
+export EXCEPTION_ADDRESS     := 16\#C800_0120\#
+export FAST_TLB_MISS_ADDRESS := 16\#C000_0100\#
 
 export USE_QEMU_IOEMU := False
 
