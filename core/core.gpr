@@ -17,6 +17,7 @@ library project Core is
    -- Definitions
    ----------------------------------------------------------------------------
 
+   Kernel_Parent_Path := external ("KERNEL_PARENT_PATH", ".");
    Include_Directories := Split (external ("GPR_INCLUDES", ""), " ");
 
    for Target use Configure.Toolchain_Name;
@@ -109,8 +110,8 @@ library project Core is
    for Library_Kind use Basedefs.Library_Kind;
    for Library_Support use Basedefs.Library_Support;
    for Library_Builder use Basedefs.Library_Builder;
-   for Object_Dir use project'Project_Dir & "../" & Configure.Object_Directory;
-   for Library_Dir use project'Project_Dir & "../" & Configure.Library_Directory;
+   for Object_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Object_Directory;
+   for Library_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Library_Directory;
 
    for Library_Name use "core";
 
