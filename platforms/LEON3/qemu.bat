@@ -28,6 +28,8 @@ START "" "%QEMU_EXECUTABLE%" ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
   -serial chardev:SERIALPORT0 ^
+  -chardev socket,id=SERIALPORT1,port=%SERIALPORT1%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
+  -serial chardev:SERIALPORT1 ^
   %QEMU_DEBUG%
 
 REM console for serial port
