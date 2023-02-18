@@ -37,7 +37,6 @@ LIBRARY_NAME := cpu
 OBJECTS :=
 # force inclusion of not-explicit-referenced subprograms
 OBJECTS += $(OBJ_DIRECTORY)/unwind.o
-
 ifneq ($(USE_LIBGCC),Y)
 LIB1ASMSRC       := lib1funcs.S
 LIBGCC_FUNCTIONS := divsi3 dvmd_tls udivsi3 muldi3

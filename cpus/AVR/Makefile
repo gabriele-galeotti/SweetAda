@@ -35,7 +35,6 @@ endif
 LIBRARY_NAME := cpu
 
 OBJECTS :=
-
 ifneq ($(USE_LIBGCC),Y)
 LIB1ASMSRC       := lib1funcs.S
 LIBGCC_FUNCTIONS := adddi3_s8 cmpdi2 cmpdi2_s8 ashrdi3 negsi2 subdi3 mulsidi3   \
