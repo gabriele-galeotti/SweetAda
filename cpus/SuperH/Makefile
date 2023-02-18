@@ -50,7 +50,7 @@ endif
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
-configure :
+configure : $(LIBGCC_SOURCES)
 ifeq ($(OSTYPE),cmd)
 	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 else
