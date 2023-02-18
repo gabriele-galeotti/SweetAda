@@ -45,15 +45,18 @@ return 0
 ################################################################################
 
 # QEMU executable
-if [ "x${CPU_MODEL}" = "xMIPS32-24K" ] ; then
-  QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-mips"
-  QEMU_CPU=24Kf
-  GDB_ARCH="mips:isa32"
-else
-  QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-mips64"
-  QEMU_CPU=5Kc
-  GDB_ARCH="mips:isa64"
-fi
+case ${CPU_MODEL} in
+  MIPS32-24K)
+    QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-mips"
+    QEMU_CPU=24Kf
+    GDB_ARCH="mips:isa32"
+    ;;
+  MIPS64-5K)
+    QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-mips64"
+    QEMU_CPU=5Kc
+    GDB_ARCH="mips:isa64"
+    ;;
+esac
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
@@ -130,9 +133,7 @@ elif [ "x$1" = "x-debug" ] ; then
     -iex "set architecture ${GDB_ARCH}" \
     -iex "set language ada" \
     ${KERNEL_OUTFILE} \
-    -ex "target remote tcp:localhost:1234" \
-    -ex "break *0x80000000" \
-    -ex "continue"
+    -ex "target remote tcp:localhost:1234"
 fi
 
 exit $?
