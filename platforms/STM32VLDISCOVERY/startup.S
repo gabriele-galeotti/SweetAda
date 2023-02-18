@@ -42,6 +42,9 @@ SysTick:        .long   0
                 .global _start
 _start:
 
+                // perform static data relocation
+                bl      movdata
+
                 //
                 // Setup stack pointer.
                 //
@@ -57,6 +60,32 @@ _start:
 dead:           b       .
 
                 .size   _start,.-_start
+
+////////////////////////////////////////////////////////////////////////////////
+// movdata                                                                    //
+//                                                                            //
+// Perform .data section relocation.                                          //
+// This function does not need a stack.                                       //
+////////////////////////////////////////////////////////////////////////////////
+
+movdata:
+                // registers used: r0-r4
+                .extern _etext
+                .extern _sdata
+                .extern _edata
+                ldr     r1,=_etext
+                ldr     r2,=_sdata
+                ldr     r3,=_edata
+                cmp     r2,r3
+                beq     2f
+                sub     r3,r3,r2
+                mov     r4,#0
+1:              ldr     r0,[r1,r4]
+                str     r0,[r2,r4]
+                add     r4,#4
+                cmp     r4,r3
+                blt     1b
+2:              bx      lr
 
 ////////////////////////////////////////////////////////////////////////////////
 
