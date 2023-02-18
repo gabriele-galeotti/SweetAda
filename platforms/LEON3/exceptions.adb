@@ -19,6 +19,7 @@ with System;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Configure;
 with Core;
 with LLutils;
 with SPARC;
@@ -57,10 +58,12 @@ package body Exceptions is
    procedure Irq_Process is
    begin
       Core.Tick_Count := @ + 1;
-      if Core.Tick_Count mod 1_000 = 0 then
-         -- IOEMU "TIMER" LED blinking
-         IOEMU.IO0 := 1;
-         IOEMU.IO0 := 0;
+      if Configure.USE_QEMU_IOEMU then
+         if Core.Tick_Count mod 1_000 = 0 then
+            -- IOEMU "TIMER" LED blinking
+            IOEMU.IO0 := 1;
+            IOEMU.IO0 := 0;
+         end if;
       end if;
       LEON3.GPTIMER.Control_Register_1.IP := False;
       LEON3.INTC_CLEAR.IC (10) := False;

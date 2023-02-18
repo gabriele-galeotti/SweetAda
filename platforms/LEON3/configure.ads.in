@@ -11,4 +11,7 @@ package Configure is
    -- basic configuration parameters
    TIMER_SYSCLK : constant := 40_000_000;
 
+   -- IOEMU
+   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
+
 end Configure;
