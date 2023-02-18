@@ -7,4 +7,7 @@ package Configure is
    PLATFORM : constant String := "ML605";
    CPU      : constant String := "@CPU@";
 
+   -- IOEMU
+   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
+
 end Configure;
