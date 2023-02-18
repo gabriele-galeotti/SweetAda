@@ -170,7 +170,7 @@ endif
 # default system parameters
 TOOLCHAIN_PREFIX   :=
 ADA_MODE           := ADA22
-BUILD_MODE         := MAKEFILE
+BUILD_MODE         := GNATMAKE
 RTS                :=
 PROFILE            :=
 USE_LIBGCC         :=
@@ -504,7 +504,7 @@ IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)     \
                       $(IMPLICIT_CLIBRARY_UNITS)
 
 ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(filter MAKEFILE GPR,$(BUILD_MODE)),)
+ifeq ($(filter GNATMAKE GPR,$(BUILD_MODE)),)
 $(warning *** Warning: no valid BUILD_MODE.)
 endif
 endif
@@ -674,7 +674,7 @@ MAKE_RTS         := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(RTS_DIRECTORY
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(d))
 
-ifeq ($(BUILD_MODE),MAKEFILE)
+ifeq ($(BUILD_MODE),GNATMAKE)
 IMPLICIT_ALI_UNITS_MAKEFILE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT_ALI_UNITS))
 endif
 
@@ -802,8 +802,8 @@ ifeq ($(USE_CLIBRARY),Y)
 endif
 
 $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME) : FORCE
-ifeq ($(BUILD_MODE),MAKEFILE)
-	@$(REM) perform makefile-driven procedure
+ifeq ($(BUILD_MODE),GNATMAKE)
+	@$(REM) perform GNATMAKE-driven procedure
 	$(call brief-command, \
         $(GNATMAKE)                             \
                     -c                          \
@@ -813,7 +813,7 @@ ifeq ($(BUILD_MODE),MAKEFILE)
                     main.adb                    \
         ,[GNATMAKE],main.adb)
 else ifeq ($(BUILD_MODE),GPR)
-	@$(REM) perform gpr-driven project build procedure
+	@$(REM) perform GPRbuild-driven procedure
 	$(call brief-command, \
         $(GPRBUILD)                      \
                     -c -p                \
@@ -831,7 +831,7 @@ $(OBJECT_DIRECTORY)/b__main.adb : $(OBJECT_DIRECTORY)/libcore.a          \
                                   $(CLIBRARY_OBJECT)                     \
                                   $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME)
 	@$(REM) bind all units and generate b__main
-ifeq ($(BUILD_MODE),MAKEFILE)
+ifeq ($(BUILD_MODE),GNATMAKE)
 	$(call brief-command, \
         $(GNATBIND)                                \
                     -F -e -l -n -s                 \
@@ -1118,7 +1118,7 @@ ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"AS VERSION:             $(AS_VERSION)")
 	@$(call echo-print,"LD VERSION:             $(LD_VERSION)")
 endif
-ifeq ($(BUILD_MODE),MAKEFILE)
+ifeq ($(BUILD_MODE),GNATMAKE)
 	@$(call echo-print,"GNATMAKE VERSION:       $(GNATMAKE_VERSION)")
 endif
 ifeq ($(BUILD_MODE),GPR)

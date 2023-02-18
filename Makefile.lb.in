@@ -55,14 +55,17 @@ else
 update-timestamp = $(TOUCH) $1
 endif
 
+# export top-level directory reference
+export KERNEL_PARENT_PATH
+
 # avoid generation of unuseful timestamps
 export GCC_WRAPPER_TIMESTAMP_FILENAME :=
 export GNAT_WRAPPER_TIMESTAMP_FILENAME :=
 
-ifeq ($(BUILD_MODE),MAKEFILE)
+ifeq ($(BUILD_MODE),GNATMAKE)
 
 #
-# MAKEFILE
+# GNATMAKE
 #
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
