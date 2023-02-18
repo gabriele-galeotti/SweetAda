@@ -302,9 +302,9 @@ LD_SWITCHES_DEFAULT   += --gc-sections
 #
 # Debugging switches.
 #
-AS_SWITCHES_DEFAULT   += -g3 -gdwarf-4
-ADAC_SWITCHES_DEFAULT += -g3 -gdwarf-4 -fno-omit-frame-pointer
-CC_SWITCHES_DEFAULT   += -g3 -gdwarf-4 -fno-omit-frame-pointer
+AS_SWITCHES_DEFAULT   += -g3 -gdwarf-5
+ADAC_SWITCHES_DEFAULT += -g3 -gdwarf-5 -fno-omit-frame-pointer
+CC_SWITCHES_DEFAULT   += -g3 -gdwarf-5 -fno-omit-frame-pointer
 LD_SWITCHES_DEFAULT   += -g
 ifeq ($(ENABLE_SPLIT_DWARF),Y)
 ADAC_SWITCHES_DEFAULT += -gsplit-dwarf
@@ -534,7 +534,7 @@ GNATMAKE += --GCC="$(GNAT_WRAPPER)" -cargs -wrapper "$(GCC_WRAPPER)" -margs
 #                                                                              #
 ################################################################################
 
-ifeq ($(BUILD_MODE),MAKEFILE)
+ifeq ($(BUILD_MODE),GNATMAKE)
 GCC_WRAPPER_TIMESTAMP_FILENAME      :=
 GNAT_WRAPPER_TIMESTAMP_FILENAME     := $(OBJECT_DIRECTORY)/gnatmake.tmp
 GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME := $(GNAT_WRAPPER_TIMESTAMP_FILENAME)
