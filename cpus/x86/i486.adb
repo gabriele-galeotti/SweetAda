@@ -107,12 +107,12 @@ package body i486 is
    ----------------------------------------------------------------------------
    function CPU_VendorID_Read return CPUID_VendorID_String_Type is
       Result       : aliased CPUID_VendorID_String_Type;
-      EBX_Register : aliased Unsigned_32;
-      for EBX_Register'Address use Result (1)'Address;
-      EDX_Register : aliased Unsigned_32;
-      for EDX_Register'Address use Result (5)'Address;
-      ECX_Register : aliased Unsigned_32;
-      for ECX_Register'Address use Result (9)'Address;
+      EBX_Register : aliased Unsigned_32 with
+         Address => Result (1)'Address;
+      EDX_Register : aliased Unsigned_32 with
+         Address => Result (5)'Address;
+      ECX_Register : aliased Unsigned_32 with
+         Address => Result (9)'Address;
    begin
       Asm (
            Template => ""              & CRLF &
