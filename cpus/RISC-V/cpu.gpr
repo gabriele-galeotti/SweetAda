@@ -24,7 +24,14 @@ library project Cpu is
    for Source_Dirs use Include_Directories & (".");
    for Default_Language use "Asm_Cpp";
 
-   for Source_Files use ("div.S");
+   case Configure.Use_LibGCC is
+      when "Y"    =>
+         for Source_Files use ();
+      when others =>
+         for Source_Files use (
+                               "div.S"
+                              );
+   end case;
 
    ----------------------------------------------------------------------------
    -- Naming
