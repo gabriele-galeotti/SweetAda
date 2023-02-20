@@ -3,10 +3,10 @@ ENTRY(_start)
 
 MEMORY
 {
+        ROM : ORIGIN = 0xBFC00000, LENGTH = 1M
+        RAM : ORIGIN = 0x80000000, LENGTH = 16M
         /* RAM : ORIGIN = 0x00000000, LENGTH = 16M */
         /* RAM : ORIGIN = 0x18000000, LENGTH = 16M */
-        RAM : ORIGIN = 0x80000000, LENGTH = 16M
-        ROM : ORIGIN = 0xBFC00000, LENGTH = 1M
 }
 
 SECTIONS
@@ -53,6 +53,7 @@ SECTIONS
                 . = ALIGN(0x10);
                 _edata = .;
         } > RAM
+        _gp = ALIGN(16);
         /**********************************************************************
          *                                                                    *
          **********************************************************************/

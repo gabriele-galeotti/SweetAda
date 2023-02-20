@@ -143,6 +143,13 @@ _init:
                 move    $fp,$sp
                 move    $ra,$0
 
+                //
+                // Setup global pointer.
+                //
+                .extern _gp
+                lui     $gp,%hi(_gp)
+                ori     $gp,%lo(_gp)
+
                 //lui     $gp,%hi(__global_pointer$)
                 //addi    $gp,$gp,%lo(__global_pointer$)
                 //add     $s0,$sp,$zero
