@@ -343,11 +343,10 @@ ADAC_SWITCHES_DEFAULT += -fdump-tree-optimized-graph # .231t.optimized[.dot]
 ifneq ($(DISABLE_STACK_USAGE),Y)
 ADAC_SWITCHES_DEFAULT += -fstack-usage               # Static Stack Usage Analysis.
 endif
-#ADAC_SWITCHES_DEFAULT += -gnatD                      # Create expanded source files for source level debugging.
+ADAC_SWITCHES_DEFAULT += -gnatD                      # Create expanded source files for source level debugging.
 ADAC_SWITCHES_DEFAULT += -gnatG -gnatL               # List generated expanded code in source form.
-ADAC_SWITCHES_DEFAULT += -gnatR                      # Output representation information for declared types and objects.
-#ADAC_SWITCHES_DEFAULT += -gnatt                      # Generate tree output file.
-# gnat1 debug switches
+# -gnatR is mutually exclusive with -gnatD
+#ADAC_SWITCHES_DEFAULT += -gnatR                      # Output representation information for declared types and objects.
 #ADAC_SWITCHES_DEFAULT += -gnatdp                     # Generate messages for parser scope stack push/pops
 ADAC_SWITCHES_DEFAULT += -gnatdt                     # Print full tree.
 ADAC_SWITCHES_DEFAULT += -gnatd.b                    # Dump backend types
