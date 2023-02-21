@@ -32,6 +32,10 @@ SCRIPT_FILENAME=$(basename "$0")
 #                                                                              #
 ################################################################################
 
+# path to FAT32 1st partition on a micro-SD memory card
+USDCARD_UUID=3FFC-F14C
+USDCARD_MOUNTPOINT=/mnt/hd
+
 cat > config.txt << EOF
 arm_64bit=1                     # ARMv8 mode
 core_freq=250                   # core clock frequency
