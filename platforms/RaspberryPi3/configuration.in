@@ -9,29 +9,25 @@ CPU       := AArch64
 CPU_MODEL := Cortex-A53
 
 GCC_SWITCHES_PLATFORM     += -mcpu=cortex-a53 -mabi=lp64 -mlittle-endian -Wa,-EL
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      += --undefined=el_table
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
-DISABLE_STACK_USAGE := Y
-
-# S-record server
-#USE_APPLICATION := test-srecord
-#LD_SCRIPT := linker.lds-srecord
-# normal application
 USE_APPLICATION := test-RaspberryPi3
-LD_SCRIPT := linker.lds
 
-# path to FAT32 1st partition on a micro-SD memory card
-export USDCARD_UUID       := 3FFC-F14C
-export USDCARD_MOUNTPOINT := /mnt/hd
+export OPENOCD_PREFIX := /usr/local
 
-SESSION_START_COMMAND :=
-SESSION_END_COMMAND   :=
-
-#RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/createbootdevice.sh
-RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord.tcl     \
-                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 115200
-DEBUG_COMMAND := $(RUN_COMMAND)
+ifeq ($(USE_PYTHON),Y)
+SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py -server
+SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py -shutdown
+RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py
+DEBUG_COMMAND         := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py
+else
+SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -server
+SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -shutdown
+RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
+DEBUG_COMMAND         := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
+endif
 
