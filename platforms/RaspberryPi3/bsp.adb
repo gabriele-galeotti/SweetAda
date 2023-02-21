@@ -106,7 +106,7 @@ package body BSP is
       -------------------------------------------------------------------------
       Console.Print ("Raspberry Pi 3", NL => True);
       Console.Print (Natural (ARMv8A.CurrentEL_Read.EL), Prefix => "Current EL:   ", NL => True);
-      Console.Print (RPI3.ARMTIMER_IRQ_ClrAck,           Prefix => "ARM Timer ID: ", NL => True);
+      Console.Print (RPI3.ARMTIMER_IRQ_ClrAck,           Prefix => "ARM Timer ID: ", NL => True); -- "TMRA"
       -- GPIOs 5/6 (header pins 29/31) are output -----------------------------
       RPI3.GPFSEL0.FSEL5 := RPI3.GPIO_OUTPUT;
       RPI3.GPFSEL0.FSEL6 := RPI3.GPIO_OUTPUT;
