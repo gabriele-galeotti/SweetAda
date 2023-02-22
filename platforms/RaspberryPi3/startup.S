@@ -35,6 +35,13 @@ hold:           wfe
 bootcore:
 
                 //
+                // Check current level = EL1.
+                //
+                mrs     x0,currentel
+                ubfx    x1,x0,2,2
+                cmp     x1,1
+                beq     1f
+                //
                 // EL2 ---> EL1
                 //
                 ldr     x0,=(3<<28|3<<22|1<<20|1<<11)
