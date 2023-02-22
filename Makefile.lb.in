@@ -197,7 +197,7 @@ ifeq ($(OSTYPE),cmd)
         ,[AR-NULL],$(notdir $@))
 else
 	$(call brief-command,\
-        $(call create-empty,$@) \
+        $(call create-empty,$(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a) \
         ,[AR-NULL],$(notdir $@))
 endif
 
