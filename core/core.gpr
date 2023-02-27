@@ -37,7 +37,18 @@ library project Core is
                   "bits-byte_swap_32.adb",
                   "bits-byte_swap_64.adb"
                  );
-   Console_Files := ("console.adb", "console.ads");
+
+   Console_Files := (
+                     "console.adb", "console.ads",
+                     "console-print_asciiz_string.adb",
+                     "console-print_bitimage.adb",
+                     "console-print_byte_array.adb",
+                     "console-print_integer.adb",
+                     "console-print_integer_address.adb",
+                     "console-print_memory.adb",
+                     "console-print_sizet.adb",
+                     "console-print_string.adb"
+                    );
 
    Core_Files := ("core.adb", "core.ads");
 

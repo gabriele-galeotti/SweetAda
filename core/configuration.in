@@ -11,6 +11,7 @@
 INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                  \
                        $(CORE_DIRECTORY)/abort_library    \
                        $(CORE_DIRECTORY)/bits             \
+                       $(CORE_DIRECTORY)/console          \
                        $(CORE_DIRECTORY)/libgcc           \
                        $(CORE_DIRECTORY)/llutils          \
                        $(CORE_DIRECTORY)/memory_functions \

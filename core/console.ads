@@ -58,8 +58,10 @@ package Console is
 
    Console_Descriptor : Console_Descriptor_Type := (Console_Null_Write'Access, Console_Null_Read'Access);
 
+   -- Print (Character)
    procedure Print (C : in Character);
 
+   -- Print (cchar)
    procedure Print (c : in Interfaces.C.char) with
       Export        => True,
       Convention    => Ada,
@@ -67,12 +69,19 @@ package Console is
 
    procedure Print_NewLine;
 
+   -- Print[_String]
+   procedure Print_String (
+                           S     : in String;
+                           Limit : in Natural := Maximum_String_Length;
+                           NL    : in Boolean := False
+                          );
    procedure Print (
                     S     : in String;
                     Limit : in Natural := Maximum_String_Length;
                     NL    : in Boolean := False
-                   );
+                   ) renames Print_String;
 
+   -- Print (Boolean)
    procedure Print (
                     Value  : in Boolean;
                     NL     : in Boolean := False;
@@ -80,6 +89,7 @@ package Console is
                     Suffix : in String := ""
                    );
 
+   -- Print (Bits_1)
    procedure Print (
                     Value  : in Bits.Bits_1;
                     NL     : in Boolean := False;
@@ -87,6 +97,7 @@ package Console is
                     Suffix : in String := ""
                    );
 
+   -- Print (Unsigned_8)
    procedure Print (
                     Value  : in Interfaces.Unsigned_8;
                     NL     : in Boolean := False;
@@ -94,6 +105,7 @@ package Console is
                     Suffix : in String := ""
                    );
 
+   -- Print (Unsigned_16)
    procedure Print (
                     Value  : in Interfaces.Unsigned_16;
                     NL     : in Boolean := False;
@@ -101,6 +113,7 @@ package Console is
                     Suffix : in String := ""
                    );
 
+   -- Print (Unsigned_32)
    procedure Print (
                     Value  : in Interfaces.Unsigned_32;
                     NL     : in Boolean := False;
@@ -108,6 +121,7 @@ package Console is
                     Suffix : in String := ""
                    );
 
+   -- Print (Unsigned_64)
    procedure Print (
                     Value  : in Interfaces.Unsigned_64;
                     NL     : in Boolean := False;
@@ -115,13 +129,21 @@ package Console is
                     Suffix : in String := ""
                    );
 
+   -- Print[_Integer_Address]
+   procedure Print_Integer_Address (
+                                    Value  : in SSE.Integer_Address;
+                                    NL     : in Boolean := False;
+                                    Prefix : in String := "";
+                                    Suffix : in String := ""
+                                   );
    procedure Print (
                     Value  : in SSE.Integer_Address;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
-                   );
+                   ) renames Print_Integer_Address;
 
+   -- Print (Address)
    procedure Print (
                     Value  : in System.Address;
                     NL     : in Boolean := False;
@@ -129,20 +151,35 @@ package Console is
                     Suffix : in String := ""
                    );
 
+   -- Print[_Integer]
+   procedure Print_Integer (
+                            Value  : in Integer;
+                            NL     : in Boolean := False;
+                            Prefix : in String := "";
+                            Suffix : in String := ""
+                           );
    procedure Print (
                     Value  : in Integer;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
-                   );
+                   ) renames Print_Integer;
 
+   -- Print[_sizet]
+   procedure Print_sizet (
+                          s      : in Interfaces.C.size_t;
+                          NL     : in Boolean := False;
+                          Prefix : in String := "";
+                          Suffix : in String := ""
+                         );
    procedure Print (
                     s      : in Interfaces.C.size_t;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
-                   );
+                   ) renames Print_sizet;
 
+   -- Print_BitImage
    procedure Print_BitImage (
                              Value  : in Interfaces.Unsigned_8;
                              NL     : in Boolean := False;
@@ -150,14 +187,23 @@ package Console is
                              Suffix : in String := ""
                             );
 
+   -- Print[_Byte_Array]
+   procedure Print_Byte_Array (
+                               ByteArray : in Bits.Byte_Array;
+                               Limit     : in Natural := 0;
+                               NL        : in Boolean := False;
+                               Prefix    : in String := "";
+                               Separator : in Character := ' '
+                              );
    procedure Print (
                     ByteArray : in Bits.Byte_Array;
                     Limit     : in Natural := 0;
                     NL        : in Boolean := False;
                     Prefix    : in String := "";
                     Separator : in Character := ' '
-                   );
+                   ) renames Print_Byte_Array;
 
+   -- Print_ASCIIZ_String
    procedure Print_ASCIIZ_String (
                                   String_Ptr : in System.Address;
                                   NL         : in Boolean := False;
@@ -165,12 +211,14 @@ package Console is
                                   Suffix     : in String := ""
                                  );
 
+   -- Print_Memory
    procedure Print_Memory (
                            Start_Address : in System.Address;
                            Data_Size     : in Bits.Bytesize;
                            Row_Size      : in Row_Size_Type := 16
                           );
 
+   -- TTY_Setup
    procedure TTY_Setup;
 
 end Console;
