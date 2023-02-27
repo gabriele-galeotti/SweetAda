@@ -32,57 +32,59 @@ package IOEMU is
    use System.Storage_Elements;
    use Interfaces;
 
-   IOEMU_CIA_BASEADDRESS         : constant := Amiga.CIAB_BASEADDRESS + 16#80#;
-   IOEMU_SERIALPORT1_BASEADDRESS : constant := Amiga.CIAB_BASEADDRESS + 16#C0#;
-   IOEMU_SERIALPORT2_BASEADDRESS : constant := Amiga.CIAB_BASEADDRESS + 16#E0#;
+   CIA_BASEADDRESS : constant := Amiga.CIAB_BASEADDRESS + 16#80#;
 
    -- IO0 @ 0x00BFD080
    CIA_IO0 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#00#),
+      Address    => To_Address (CIA_BASEADDRESS + 16#00#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO1 @ 0x00BFD084
    CIA_IO1 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#04#),
+      Address    => To_Address (CIA_BASEADDRESS + 16#04#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO2 @ 0x00BFD088
    CIA_IO2 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#08#),
+      Address    => To_Address (CIA_BASEADDRESS + 16#08#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO3 @ 0x00BFD08C
    CIA_IO3 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#0C#),
+      Address    => To_Address (CIA_BASEADDRESS + 16#0C#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO4 @ 0x00BFD090
    CIA_IO4 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#10#),
+      Address    => To_Address (CIA_BASEADDRESS + 16#10#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO5 @ 0x00BFD094
    CIA_IO5 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#14#),
+      Address    => To_Address (CIA_BASEADDRESS + 16#14#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO6 @ 0x00BFD098
    CIA_IO6 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#18#),
+      Address    => To_Address (CIA_BASEADDRESS + 16#18#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    -- IO7 @ 0x00BFD09C
    CIA_IO7 : Unsigned_8 with
-      Address    => To_Address (IOEMU_CIA_BASEADDRESS + 16#1C#),
+      Address    => To_Address (CIA_BASEADDRESS + 16#1C#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
+
+   -- IOEMU serial ports
+   SERIALPORT1_BASEADDRESS : constant := CIA_BASEADDRESS + 16#40#;
+   SERIALPORT2_BASEADDRESS : constant := CIA_BASEADDRESS + 16#60#;
 
 end IOEMU;

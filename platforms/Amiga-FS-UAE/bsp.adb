@@ -103,13 +103,13 @@ package body BSP is
       Serialport_Init;
       -- IOEMU UARTs ----------------------------------------------------------
       if True then
-         UART1_Descriptor.Base_Address  := To_Address (IOEMU.CIA_BASEADDRESS + 16#40#);
+         UART1_Descriptor.Base_Address  := To_Address (IOEMU.SERIALPORT1_BASEADDRESS);
          UART1_Descriptor.Scale_Address := 2;
          UART1_Descriptor.Irq           := 1; -- enabled if /= 0
          UART1_Descriptor.Read          := MMIO.Read'Access;
          UART1_Descriptor.Write         := MMIO.Write'Access;
          UARTIOEMU.Init (UART1_Descriptor);
-         UART2_Descriptor.Base_Address  := To_Address (IOEMU.CIA_BASEADDRESS + 16#60#);
+         UART2_Descriptor.Base_Address  := To_Address (IOEMU.SERIALPORT2_BASEADDRESS);
          UART2_Descriptor.Scale_Address := 2;
          UART2_Descriptor.Irq           := 1; -- enabled if /= 0
          UART2_Descriptor.Read          := MMIO.Read'Access;
