@@ -52,9 +52,9 @@ package body Exceptions is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Process
+   -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Process (Exception_Number : in Unsigned_32; Frame_Address : in Address) is
+   procedure Exception_Process (Exception_Number : in Unsigned_32; Frame_Address : in Address) is
    begin
       case Exception_Number is
          when Illegal_Instruction =>
@@ -79,7 +79,7 @@ package body Exceptions is
             Console.Print (Exception_Number, Prefix => "Exception: 0x", NL => True);
             System_Abort;
       end case;
-   end Process;
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Irq_Process

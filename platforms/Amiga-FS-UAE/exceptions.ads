@@ -167,14 +167,16 @@ package Exceptions is
       Convention    => Asm,
       External_Name => "trap15_handler";
 
-   procedure Process (Exception_Number : in Unsigned_32; Frame_Address : in Address) with
+   procedure Exception_Process (Exception_Number : in Unsigned_32; Frame_Address : in Address) with
       Export        => True,
       Convention    => Asm,
       External_Name => "exception_process";
+
    procedure Irq_Process (Irq_Identifier : in Exception_Vector_Id_Type) with
       Export        => True,
       Convention    => Asm,
       External_Name => "irq_process";
+
    procedure Init;
 
 end Exceptions;
