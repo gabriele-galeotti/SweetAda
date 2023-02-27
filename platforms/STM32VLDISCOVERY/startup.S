@@ -42,7 +42,9 @@ SysTick:        .long   0
                 .global _start
 _start:
 
-                // perform static data relocation
+                //
+                // .data section relocation.
+                //
                 bl      movdata
 
                 //

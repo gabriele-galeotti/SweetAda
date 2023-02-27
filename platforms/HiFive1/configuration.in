@@ -23,8 +23,7 @@ OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
 USE_APPLICATION := test-HiFive1
 
-OPENOCD_PREFIX := /usr/local
-export OPENOCD_PREFIX
+export OPENOCD_PREFIX := /usr/local
 
 ifeq ($(USE_PYTHON),Y)
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py -server

@@ -147,11 +147,11 @@ package body PC is
    begin
       -- MODE2 = Rate Generator
       CPU.IO.PortOut (CONTROL_WORD, To_U8 (PIT_Control_Word_Type'(
-                                                                  BCD  => False,
-                                                                  MODE => MODE2,
-                                                                  RW   => RW_BOTH_BYTE,
-                                                                  SC   => SELECT_COUNTER0
-                                                                 )));
+         BCD  => False,
+         MODE => MODE2,
+         RW   => RW_BOTH_BYTE,
+         SC   => SELECT_COUNTER0
+         )));
       CPU.IO.PortOut (COUNTER0, Bits.LByte (Count));
       CPU.IO.PortOut (COUNTER0, Bits.HByte (Count));
    end PIT_Counter0_Init;
@@ -171,22 +171,21 @@ package body PC is
       for Index in 1 .. Delay100us_Units loop
          -- MODE0: INTERRUPT ON TERMINAL COUNT, two bytes of counting,
          CPU.IO.PortOut (CONTROL_WORD, To_U8 (PIT_Control_Word_Type'(
-                                                                     BCD  => False,
-                                                                     MODE => MODE0,
-                                                                     RW   => RW_BOTH_BYTE,
-                                                                     SC   => SELECT_COUNTER1
-                                                                    )));
+            BCD  => False,
+            MODE => MODE0,
+            RW   => RW_BOTH_BYTE,
+            SC   => SELECT_COUNTER1
+            )));
          CPU.IO.PortOut (COUNTER1, Bits.LByte (Unsigned_16 (US100_count)));
          CPU.IO.PortOut (COUNTER1, Bits.HByte (Unsigned_16 (US100_count)));
          loop
             -- latch STATUS
             CPU.IO.PortOut (CONTROL_WORD, To_U8 (PIT_Control_Word_Type'(
-                                                                        BCD  => False,
-                                                                        MODE => READBACK_COUNTER1,
-                                                                        RW   => READBACK_LATCH_STATUS,
-                                                                        SC   => READBACK
-                                                                       )));
-
+               BCD  => False,
+               MODE => READBACK_COUNTER1,
+               RW   => READBACK_LATCH_STATUS,
+               SC   => READBACK
+               )));
             -- read STATUS from COUNTER1 and test if OUT is high
             exit when To_PIT_Status (Unsigned_8'(CPU.IO.PortIn (COUNTER1))).OUT_Pin;
          end loop;
@@ -325,14 +324,14 @@ package body PC is
    procedure PPI_Init is
    begin
       PPI_ControlOut ((
-                       Strobe    => True,
-                       AUTOLF    => True,
-                       INIT      => False,
-                       SelectOut => True,
-                       IRQEN     => False,
-                       BIDIR     => False,
-                       Unused    => 0
-                      ));
+         Strobe    => True,
+         AUTOLF    => True,
+         INIT      => False,
+         SelectOut => True,
+         IRQEN     => False,
+         BIDIR     => False,
+         Unused    => 0
+         ));
       PPI_DataOut (0);
    end PPI_Init;
 
