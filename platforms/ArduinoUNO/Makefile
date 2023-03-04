@@ -64,7 +64,7 @@ postbuild :
 
 .PHONY : clean
 clean :
-	$(RM) $(CLEAN_OBJECTS_COMMON) *.vcd
+	$(RM) $(CLEAN_OBJECTS_COMMON)
 
 .PHONY : distclean
 distclean : clean
