@@ -36,7 +36,6 @@ LIBRARY_NAME := platform
 
 OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
 
--include Makefile.in
 -include Makefile.if.in
 
 .PHONY : all
@@ -50,15 +49,20 @@ installfiles :
 	@$(call echo-print,"")
 
 .PHONY : configure
-configure : configure-subplatform
+configure :
 ifeq ($(OSTYPE),cmd)
 	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 endif
+	@$(PROCESSCFG) configure.h.in configure.h
+	@$(PROCESSCFG) configure.ads.in configure.ads
 
 .PHONY : postbuild
-postbuild : postbuild-subplatform
+postbuild :
+ifneq ($(POSTBUILD_COMMAND),)
+	$(POSTBUILD_COMMAND)
+endif
 
 .PHONY : clean
 clean :

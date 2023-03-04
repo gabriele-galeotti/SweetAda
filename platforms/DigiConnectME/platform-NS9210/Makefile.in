@@ -1,6 +1,0 @@
-
-.PHONY : configure-subplatform
-configure-subplatform :
-	@"$(PROCESSCFG)" configure.h.in configure.h
-	@"$(PROCESSCFG)" configure.ads.in configure.ads
-
