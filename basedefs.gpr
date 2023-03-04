@@ -67,7 +67,7 @@ abstract project Basedefs is
       for Switches ("Asm_Cpp") use (
                                     "-ffunction-sections",
                                     "-fdata-sections",
-                                    "-g3", "-gdwarf-4"
+                                    "-g3", "-gdwarf-5"
                                    ) &
                                    Configure.GCC_Switches_Platform &
                                    GCC_Wrapper_Switch;
@@ -81,7 +81,7 @@ abstract project Basedefs is
                               "-fverbose-asm",
                               "-ffunction-sections",
                               "-fdata-sections",
-                              "-g3", "-gdwarf-4"
+                              "-g3", "-gdwarf-5"
                              ) &
                              Configure.GCC_Switches_Platform &
                              GCC_Wrapper_Switch;
@@ -99,7 +99,7 @@ abstract project Basedefs is
                                 "-fverbose-asm",
                                 "-ffunction-sections",
                                 "-fdata-sections",
-                                "-g3", "-gdwarf-4",
+                                "-g3", "-gdwarf-5",
                                 "-gnatef",
                                 "-gnatf",
                                 "-gnatU",
