@@ -21,6 +21,10 @@
 _start:
 
                 //
+                // Register #4 contains 0x534F494E "SOIN".
+                //
+
+                //
                 // Disable interrupts.
                 //
                 wrctl   status,r0
@@ -31,24 +35,37 @@ _start:
                 //
 #define NIOS2_ICACHE_SIZE      4096
 #define NIOS2_ICACHE_LINE_SIZE 32
-                mov     r2,r0
-                movhi   r3,%hi(NIOS2_ICACHE_SIZE)
-                ori     r3,r3,%lo(NIOS2_ICACHE_SIZE)
-1:              initi   r2
-                addi    r2,r2,NIOS2_ICACHE_LINE_SIZE
-                bltu    r2,r3,1b
+                mov     r1,r0
+                movhi   r2,%hi(NIOS2_ICACHE_SIZE)
+                ori     r2,r2,%lo(NIOS2_ICACHE_SIZE)
+1:              initi   r1
+                addi    r1,r1,NIOS2_ICACHE_LINE_SIZE
+                bltu    r1,r2,1b
 
                 //
                 // Invalidate data cache.
                 //
 #define NIOS2_DCACHE_SIZE      0
 #define NIOS2_DCACHE_LINE_SIZE 4
-                mov     r2,r0
-                movhi   r3,%hi(NIOS2_DCACHE_SIZE)
-                ori     r3,r3,%lo(NIOS2_DCACHE_SIZE)
-1:              initd   0(r2)
-                addi    r2,r2,NIOS2_DCACHE_LINE_SIZE
-                bltu    r2,r3,1b
+                mov     r1,r0
+                movhi   r2,%hi(NIOS2_DCACHE_SIZE)
+                ori     r2,r2,%lo(NIOS2_DCACHE_SIZE)
+1:              initd   0(r1)
+                addi    r1,r1,NIOS2_DCACHE_LINE_SIZE
+                bltu    r1,r2,1b
+
+                //
+                // Clear .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                movhi   r1,%hi(_sbss)
+                ori     r1,r1,%lo(_sbss)
+                movhi   r2,%hi(_ebss)
+                ori     r2,r2,%lo(_ebss)
+1:              stb     r0,0(r1)
+                addi    r1,r1,1
+                bne     r1,r2,1b
 
                 //
                 // Setup stack pointer.
@@ -72,7 +89,7 @@ _start:
                 ori     r2,r2,%lo(_ada_main)
                 callr   r2
 
-dead:           br      .
+dead:           break
 
                 .size   _start,.-_start
 
