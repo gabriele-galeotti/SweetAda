@@ -140,6 +140,10 @@ package body BSP is
       Console.TTY_Setup;
       -- CPU ------------------------------------------------------------------
       Console.Print ("PC-x86", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
       -- CPU feautures --------------------------------------------------------
       if CPUID_Enabled then
          declare
