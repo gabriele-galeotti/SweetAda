@@ -45,7 +45,7 @@ return 0
 ################################################################################
 
 # QEMU executable
-QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-sparc"
+QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-sparc"
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then

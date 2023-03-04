@@ -47,12 +47,12 @@ return 0
 # QEMU executable
 case ${CPU_MODEL} in
   MIPS32-24K)
-    QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-mips"
+    QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-mips"
     QEMU_CPU=24Kf
     GDB_ARCH="mips:isa32"
     ;;
   MIPS64-5K)
-    QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-mips64"
+    QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-mips64"
     QEMU_CPU=5Kc
     GDB_ARCH="mips:isa64"
     ;;

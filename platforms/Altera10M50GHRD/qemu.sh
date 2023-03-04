@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# Altera 10M50GHRD QEMU.
+# Altera 10M50GHRD (QEMU emulator).
 #
 
 ################################################################################
@@ -45,7 +45,7 @@ return 0
 ################################################################################
 
 # QEMU executable
-QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-nios2"
+QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-nios2"
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
@@ -100,7 +100,6 @@ elif [ "x$1" = "x-debug" ] ; then
     -q \
     -iex "set basenames-may-differ" \
     -iex "set architecture nios2" \
-    -iex "set language ada" \
     ${KERNEL_OUTFILE} \
     -ex "target remote tcp:localhost:1234"
 fi
