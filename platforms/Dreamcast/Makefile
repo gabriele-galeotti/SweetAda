@@ -34,10 +34,10 @@ endif
 
 LIBRARY_NAME := platform
 
-OBJECTS :=
-OBJECTS += $(OBJ_DIRECTORY)/startup.o
-OBJECTS += $(OBJ_DIRECTORY)/llkernel.o
-OBJECTS += $(patsubst %,$(OBJ_DIRECTORY)/%.o,$(EXTERNAL_OBJECTS))
+OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
+OBJECTS += $(foreach f,$(ADDITIONAL_S_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
+OBJECTS += $(foreach f,$(ADDITIONAL_ADB_OBJECTS:.adb=.o),$(OBJ_DIRECTORY)/$(f))
+OBJECTS += $(foreach f,$(ADDITIONAL_ADS_OBJECTS:.ads=.o),$(OBJ_DIRECTORY)/$(f))
 
 .PHONY : all
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
@@ -54,26 +54,13 @@ endif
 
 .PHONY : postbuild
 postbuild :
-ifeq ($(BOOTTYPE),CDROM)
-ifeq ($(USE_PYTHON),Y)
-	"$(PYTHON)" makecdrom.py IP_TMPL IP_TXT "$(SWEETADA_PATH)"/kernel.rom
-else
-	"$(TCLSH)" makecdrom.tcl IP_TMPL IP_TXT "$(SWEETADA_PATH)"/kernel.rom
-endif
-ifneq ($(OSTYPE),cmd)
-	@$(REM)mkisofs -r 1ST_READ.BIN | (cat IP.BIN ; dd bs=2048 skip=16) > sweetada.iso
-	mkisofs -G IP.BIN -J -V SweetAda -l -r -o sweetada.iso 1ST_READ.BIN
-	@$(REM) transform .iso into a .cdi
-	@$(REM)mkisofs -C 0,11702 -G IP.BIN -J -V SweetAda -l -r -o sweetada.iso 1ST_READ.BIN
-	@$(REM)cdi4dc sweetada.iso sweetada.cdi
-else
-	@$(call echo-print,"Please build a CD image with an mkisofs-style application.")
-endif
+ifneq ($(POSTBUILD_COMMAND),)
+	$(POSTBUILD_COMMAND)
 endif
 
 .PHONY : clean
 clean :
-	$(RM) $(CLEAN_OBJECTS_COMMON) gxemullog.txt IP.BIN 1ST_READ.BIN sweetada.iso
+	$(RM) $(CLEAN_OBJECTS_COMMON)
 
 .PHONY : distclean
 distclean : clean

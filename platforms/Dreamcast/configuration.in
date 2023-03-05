@@ -9,30 +9,30 @@ CPU       := SuperH
 CPU_MODEL := SH7750
 
 GCC_SWITCHES_PLATFORM     += -m4 -Wa,--isa=sh4
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += -O binary --pad-to=0x00200000 --gap-fill=0x00
+CLEAN_OBJECTS_COMMON      += gxemullog.txt IP.BIN 1ST_READ.BIN sweetada.iso
 
-EXTERNAL_OBJECTS += roto video
+export ADDITIONAL_S_OBJECTS := roto.S video.S
 
-#BOOTTYPE := ROM
-BOOTTYPE := CDROM
-#BOOTTYPE := NETWORK
-
-export BOOTTYPE
+#export BOOTTYPE := ROM
+export BOOTTYPE := CDROM
+#export BOOTTYPE := NETWORK
 
 ifeq      ($(BOOTTYPE),ROM)
 LD_SCRIPT := linker.lds-ROM
-GXEMUL := Y
+export GXEMUL := Y
 else ifeq ($(BOOTTYPE),CDROM)
 LD_SCRIPT := linker.lds-CD-ROM
-GXEMUL := Y
+POSTBUILD_COMMAND := $(SHELL_EXEC) postbuild-cdrom$(SCREXT)
+export GXEMUL := Y
 else ifeq ($(BOOTTYPE),NETWORK)
 LD_SCRIPT := linker.lds-networkboot
-GXEMUL := N
+export GXEMUL := N
 endif
-export GXEMUL
 
 USE_APPLICATION := test-Dreamcast
 
@@ -40,11 +40,11 @@ SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
 ifeq      ($(BOOTTYPE),ROM)
-RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f gxemul-ioemu.cfg
+RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul$(SCREXT)
 else ifeq ($(BOOTTYPE),CDROM)
-RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f gxemul-ioemu.cfg
+RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul$(SCREXT)
 else ifeq ($(BOOTTYPE),NETWORK)
 RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/bba.tcl
 endif
-DEBUG_COMMAND := $(RUN_COMMAND)
+DEBUG_COMMAND := $(RUN_COMMAND) -debug
 

@@ -9,7 +9,7 @@ package Configure is
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   BOOTTYPE  : constant String := "@BOOTTYPE@";
-   GXEMUL    : constant String := "@GXEMUL@";
+   BOOTTYPE : constant String := "@BOOTTYPE@";
+   GXEMUL   : constant String := "@GXEMUL@";
 
 end Configure;
