@@ -1,6 +1,7 @@
 
 with System.Storage_Elements;
 with Interfaces;
+with Configure;
 with CPU;
 with IOEMU;
 
@@ -38,7 +39,9 @@ package body Application is
          begin
             Value := 0;
             loop
-               IOEMU.IO1 := Value;
+               if Configure.USE_QEMU_IOEMU then
+                  IOEMU.IO1 := Value;
+               end if;
                Value := @ + 1;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
