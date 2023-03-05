@@ -27,7 +27,7 @@ package body Application is
    -- Run
    ----------------------------------------------------------------------------
    procedure Run is
-      Delay_Count : constant Long_Integer := 1_000_000;
+      Delay_Count : constant Long_Integer := 5_000_000;
    begin
       -------------------------------------------------------------------------
       if True then
