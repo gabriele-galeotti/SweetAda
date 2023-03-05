@@ -51,8 +51,8 @@ package body R3000 is
 
    generic
       Register : CP0_Register_Type;
-   function MFC0 return Unsigned_32;
-   pragma Inline (MFC0);
+   function MFC0 return Unsigned_32 with
+      Inline => True;
    function MFC0 return Unsigned_32 is
       Result : Unsigned_32;
    begin
@@ -62,9 +62,7 @@ package body R3000 is
                        "        nop           " & CRLF &
                        "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Result),
-           Inputs   => [
-                        CP0_Register_Type'Asm_Input ("i", Register)
-                       ],
+           Inputs   => CP0_Register_Type'Asm_Input ("i", Register),
            Clobber  => "",
            Volatile => True
           );
@@ -73,8 +71,8 @@ package body R3000 is
 
    generic
       Register : CP0_Register_Type;
-   procedure MTC0 (Register_Value : in Unsigned_32);
-   pragma Inline (MTC0);
+   procedure MTC0 (Register_Value : in Unsigned_32) with
+      Inline => True;
    procedure MTC0 (Register_Value : in Unsigned_32) is
    begin
       Asm (
@@ -125,12 +123,47 @@ package body R3000 is
    -- Interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable is null;
-   procedure Irq_Disable is null;
+   procedure Irq_Enable is
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        mfc0    $t0,$12" & CRLF &
+                       "        nop            " & CRLF &
+                       "        ori     $t0,0xFF01  " & CRLF &
+                       "        mtc0    $t0,$12" & CRLF &
+                       "        nop            " & CRLF &
+                       "        nop            " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "$t0",
+           Volatile => True
+          );
+   end Irq_Enable;
+
+   procedure Irq_Disable is
+   begin
+      Asm (
+           Template => ""                               & CRLF &
+                       "        mfc0    $t0,$12       " & CRLF &
+                       "        nop                   " & CRLF &
+                       "        and     $t0,0xFFFFFFFE" & CRLF &
+                       "        mtc0    $t0,$12       " & CRLF &
+                       "        nop                   " & CRLF &
+                       "        nop                   " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "$t0",
+           Volatile => True
+          );
+   end Irq_Disable;
+
    function Irq_State_Get return Irq_State_Type is
    begin
       return 0;
    end Irq_State_Get;
+
    procedure Irq_State_Set (Irq_State : in Irq_State_Type) is null;
 
 end R3000;
