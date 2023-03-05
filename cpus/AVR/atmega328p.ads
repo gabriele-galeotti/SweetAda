@@ -1528,11 +1528,11 @@ package ATmega328P is
    SPR_DIV64  : constant := 2#10#; -- fOSC/64
    SPR_DIV128 : constant := 2#11#; -- fOSC/128
 
-   CPHA_LSAMPLE_TSETUP : constant := 0; -- Leading Edge = Sample, Trailing Edge = Setup
-   CPHA_LSETUP_TSAMPLE : constant := 1; -- Leading Edge = Setup, Trailing Edge = Sample
+   CPHA_LSample_TSetup : constant := 0; -- Leading Edge = Sample, Trailing Edge = Setup
+   CPHA_LSetup_TSample : constant := 1; -- Leading Edge = Setup, Trailing Edge = Sample
 
-   CPOL_LRAISING_TFALLING : constant := 0; -- Leading Edge = Raising, Trailing Edge = Falling
-   CPOL_LFALLING_TRAISING : constant := 1; -- Leading Edge = Falling, Trailing Edge = Raising
+   CPOL_LRaising_TFalling : constant := 0; -- Leading Edge = Raising, Trailing Edge = Falling
+   CPOL_LFalling_TRaising : constant := 1; -- Leading Edge = Falling, Trailing Edge = Raising
 
    MSTR_SLAVE  : constant := 0; -- SPI Slave
    MSTR_MASTER : constant := 1; -- SPI Master
