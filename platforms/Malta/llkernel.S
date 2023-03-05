@@ -15,9 +15,55 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .sect   .vectors,"ax"
+#define SAVE_REGS                        \
+                sw      $v0,savev0      ;\
+                sw      $v1,savev1      ;\
+                sw      $a0,savea0      ;\
+                sw      $a1,savea1      ;\
+                sw      $a2,savea2      ;\
+                sw      $a3,savea3      ;\
+                sw      $t0,savet0      ;\
+                sw      $t1,savet1      ;\
+                sw      $t2,savet2      ;\
+                sw      $t3,savet3      ;\
+                sw      $t4,savet4      ;\
+                sw      $t5,savet5      ;\
+                sw      $t6,savet6      ;\
+                sw      $t7,savet7      ;\
+                sw      $t8,savet8      ;\
+                sw      $t9,savet9      ;\
+                sw      $gp,savegp      ;\
+                sw      $sp,savesp      ;\
+                sw      $s8,saves8      ;\
+                sw      $fp,savefp      ;\
+                sw      $ra,savera
 
-                .set    noreorder
+#define RESTORE_REGS                     \
+                lw      $v0,savev0      ;\
+                lw      $v1,savev1      ;\
+                lw      $a0,savea0      ;\
+                lw      $a1,savea1      ;\
+                lw      $a2,savea2      ;\
+                lw      $a3,savea3      ;\
+                lw      $t0,savet0      ;\
+                lw      $t1,savet1      ;\
+                lw      $t2,savet2      ;\
+                lw      $t3,savet3      ;\
+                lw      $t4,savet4      ;\
+                lw      $t5,savet5      ;\
+                lw      $t6,savet6      ;\
+                lw      $t7,savet7      ;\
+                lw      $t8,savet8      ;\
+                lw      $t9,savet9      ;\
+                lw      $gp,savegp      ;\
+                lw      $sp,savesp      ;\
+                lw      $s8,saves8      ;\
+                lw      $fp,savefp      ;\
+                lw      $ra,savera
+
+////////////////////////////////////////////////////////////////////////////////
+
+                .sect   .vectors,"ax"
 
                 .global _start
 _start:
@@ -26,8 +72,9 @@ _start:
                 // SR:TS = 0
                 // SR:BEV = 1
                 // SR:ERL = 1 (processor is in Kernel mode)
-                // PC = 0xBFC0_0000 (VA), PA = 0xBFC0_00000 & 0x1FFF_FFFF = 0x1FC0_0000 (KSEG1, unmapped, uncached)
+                // PC = 0xBFC0_0000 (KSEG1, unmapped, uncached)
                 //
+                .set    noreorder
                 .extern _init
                 b       _init                   // +0x00
                 nop                             // +0x04
@@ -49,71 +96,26 @@ _start:
                 // General exception.
                 //
                 .org    0x0380
-                // interrupts may be generated during the use of at register,
-                // we have to save it
+                b       exception0380
+                nop
+
+exception0380:
                 .set    noat
                 move    $k1,$at
                 .set    at
-                // temporary registers; not preserved across function calls
                 sw      $k1,saveat
-                sw      $v0,savev0
-                sw      $v1,savev1
-                sw      $a0,savea0
-                sw      $a1,savea1
-                sw      $a2,savea2
-                sw      $a3,savea3
-                sw      $t0,savet0
-                sw      $t1,savet1
-                sw      $t2,savet2
-                sw      $t3,savet3
-                sw      $t4,savet4
-                sw      $t5,savet5
-                sw      $t6,savet6
-                sw      $t7,savet7
-                sw      $t8,savet8
-                sw      $t9,savet9
-                sw      $gp,savegp
-                sw      $sp,savesp
-                sw      $s8,saves8
-                sw      $fp,savefp
-                sw      $ra,savera
-                // high-level management
+                SAVE_REGS
                 la      $k0,exception_process
                 jalr    $k0
                 nop
+                RESTORE_REGS
                 lw      $k1,saveat
-                lw      $v0,savev0
-                lw      $v1,savev1
-                lw      $a0,savea0
-                lw      $a1,savea1
-                lw      $a2,savea2
-                lw      $a3,savea3
-                lw      $t0,savet0
-                lw      $t1,savet1
-                lw      $t2,savet2
-                lw      $t3,savet3
-                lw      $t4,savet4
-                lw      $t5,savet5
-                lw      $t6,savet6
-                lw      $t7,savet7
-                lw      $t8,savet8
-                lw      $t9,savet9
-                lw      $gp,savegp
-                lw      $sp,savesp
-                lw      $s8,saves8
-                lw      $fp,savefp
-                lw      $ra,savera
                 .set    noat
                 move    $at,$k1
                 .set    at
-                // load return address
-                mfc0    $k0,$14
-                nop
                 // clear CP0_Cause
-                //mtc0    $0,CP0_Cause
-                //nop
+                mtc0    $0,CP0_Cause
                 eret
-                nop
 
 ////////////////////////////////////////////////////////////////////////////////
 
