@@ -71,7 +71,6 @@ package body BSP is
       UBRR0L := 16#67#;
       UBRR0H := 0;
       UCSR0B := (
-                 TXB80   => 0,              -- Transmit Data bit 8
                  UCSZ0_2 => UCSZ_8.UCSZ0_2, -- Character Size bit 2
                  TXEN0   => True,           -- Transmitter Enable
                  RXEN0   => True,           -- Receiver Enable
