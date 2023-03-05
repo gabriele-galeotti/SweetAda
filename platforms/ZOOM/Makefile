@@ -38,7 +38,6 @@ OBJECTS :=
 OBJECTS += $(OBJ_DIRECTORY)/startup.o
 OBJECTS += $(OBJ_DIRECTORY)/llkernel.o
 
--include Makefile.in
 -include Makefile.if.in
 
 .PHONY : all
@@ -52,12 +51,14 @@ installfiles :
 	@$(call echo-print,"")
 
 .PHONY : configure
-configure : configure-subplatform
+configure :
 ifeq ($(OSTYPE),cmd)
 	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 endif
+	@$(PROCESSCFG) configure.h.in configure.h
+	@$(PROCESSCFG) configure.ads.in configure.ads
 
 .PHONY : postbuild
 postbuild :
