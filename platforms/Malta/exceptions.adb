@@ -43,9 +43,9 @@ package body Exceptions is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Process
+   -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Process is
+   procedure Exception_Process is
    begin
       declare
          Count : Unsigned_32;
@@ -68,7 +68,7 @@ package body Exceptions is
             IOEMU.IO0 := 0;
          end if;
       end if;
-   end Process;
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Init
