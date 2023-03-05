@@ -72,17 +72,17 @@ library project Core is
 
    Malloc_Files := ("malloc.adb", "malloc.ads");
 
-   Memory_Functions_Files :=(
-                             "memory_functions.adb", "memory_functions.ads",
-                             "memory_functions-bcopy.adb",
-                             "memory_functions-cmpmem.adb",
-                             "memory_functions-cpymem.adb",
-                             "memory_functions-memcmp.adb",
-                             "memory_functions-memcpy.adb",
-                             "memory_functions-memmove.adb",
-                             "memory_functions-memset.adb",
-                             "memory_functions-setmem.adb"
-                            );
+   Memory_Functions_Files := (
+                              "memory_functions.adb", "memory_functions.ads",
+                              "memory_functions-bcopy.adb",
+                              "memory_functions-cmpmem.adb",
+                              "memory_functions-cpymem.adb",
+                              "memory_functions-memcmp.adb",
+                              "memory_functions-memcpy.adb",
+                              "memory_functions-memmove.adb",
+                              "memory_functions-memset.adb",
+                              "memory_functions-setmem.adb"
+                             );
 
    for Source_Files use
                         Abort_Library_Files       &
