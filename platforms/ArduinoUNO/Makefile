@@ -34,14 +34,9 @@ endif
 
 LIBRARY_NAME := platform
 
-OBJECTS :=
-OBJECTS += $(OBJ_DIRECTORY)/startup.o
-OBJECTS += $(OBJ_DIRECTORY)/llkernel.o
-# override standard core unit, see configuration.in
-# 1) add the unit to the library
-OBJECTS += $(OBJ_DIRECTORY)/core.o
-# 2) state the dependencies, that could be in turn overriden
-$(OBJ_DIRECTORY)/core.o : $(KERNEL_PARENT_PATH)/$(SPEC_BITS)
+OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
+OBJECTS += $(foreach f,$(ADDITIONAL_ADB_OBJECTS:.adb=.o),$(OBJ_DIRECTORY)/$(f))
+OBJECTS += $(foreach f,$(ADDITIONAL_ADS_OBJECTS:.ads=.o),$(OBJ_DIRECTORY)/$(f))
 
 .PHONY : all
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
