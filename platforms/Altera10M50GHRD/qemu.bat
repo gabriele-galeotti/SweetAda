@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM Altera 10M50GHRD QEMU.
+REM Altera 10M50GHRD (QEMU emulator).
 REM
 
 REM QEMU executable

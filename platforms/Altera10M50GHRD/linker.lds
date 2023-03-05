@@ -3,7 +3,7 @@ ENTRY(_start)
 
 MEMORY
 {
-        /* RAM is @ 0x08000000, memory is aliased @ 0xC0000000 */
+        /* RAM @ 0x08000000, memory aliased @ 0xC0000000 */
         RAM (RWX) : ORIGIN = 0xC8000000, LENGTH = 128M
 }
 
@@ -36,7 +36,7 @@ SECTIONS
                 *(.data)
                 *(.data.*)
                 *(.sdata)
-                _gp = ALIGN(4) + 0x7FF0;
+                PROVIDE(_gp = ALIGN(4) + 0x7FF0);
                 *(.sdata.*)
                 . = ALIGN(16);
                 _edata = .;

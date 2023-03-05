@@ -43,10 +43,6 @@ package GHRD is
    Timer_Frequency   renames Configure.TIMER_SYSCLK;
    Timer_1_Frequency renames Configure.TIMER_1_SYSCLK;
 
-   RESET_ADDRESS         renames Configure.RESET_ADDRESS;
-   EXCEPTION_ADDRESS     renames Configure.RESET_ADDRESS;
-   FAST_TLB_MISS_ADDRESS renames Configure.FAST_TLB_MISS_ADDRESS;
-
    UART_BASEADDRESS : constant := 16#F800_1600#;
 
    ----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM LEON3 QEMU.
+REM LEON3 (QEMU emulator).
 REM
 
 REM QEMU executable

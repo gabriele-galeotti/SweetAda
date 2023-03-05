@@ -1,8 +1,8 @@
 
-!
-! This file is not covered by SweetAda copyright, see:
-! https://mc.pp.se/dc/files/video.s
-!
+//
+// This file is not covered by SweetAda copyright, see:
+// https://mc.pp.se/dc/files/video.s
+//
 
 #define __ASSEMBLER__ 1
 
