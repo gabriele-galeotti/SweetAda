@@ -85,18 +85,18 @@ _init:
                 nop
 
                 // BEV, set Boot Exceptions
-                mfc0    $v0,$12
+                mfc0    $v0,CP0_SR
                 nop
                 and     $v0,0xF
-                or      $v0,0x00400000
-                mtc0    $v0,$12
+                or      $v0,SR_BEV
+                mtc0    $v0,CP0_SR
                 nop
 
                 // CP0_WatchLo, CP0_WatchHi, CP0_Cause = 0
-                mtc0    $0,$18
-                mtc0    $0,$19
+                mtc0    $0,CP0_WatchLo
+                mtc0    $0,CP0_WatchHi
                 nop
-                mtc0    $0,$13
+                mtc0    $0,CP0_Cause
                 nop
 
                 // disable cacheability in kseg2/kseg3, kuseg/useg, kseg0
@@ -128,8 +128,8 @@ _init:
                 jal     movdata
                 nop
                 // zero the bss section
-                //jal     zerobss
-                //nop
+                jal     zerobss
+                nop
 
                 //
                 // Setup stack pointer.
@@ -178,10 +178,10 @@ dead:           b       .
 ////////////////////////////////////////////////////////////////////////////////
 
 movcode:
+                .set    noreorder
                 .extern _text_start
                 .extern _stext
                 .extern _etext
-                .set    noreorder
                 la      $t0,_text_start
                 la      $t1,_stext
                 la      $t2,_etext
@@ -211,10 +211,10 @@ movcode:
 ////////////////////////////////////////////////////////////////////////////////
 
 movdata:
+                .set    noreorder
                 .extern _etext
                 .extern _sdata
                 .extern _edata
-                .set    noreorder
                 la      $t0,_etext
                 la      $t1,_sdata
                 la      $t2,_edata
@@ -243,10 +243,14 @@ movdata:
 ////////////////////////////////////////////////////////////////////////////////
 
 zerobss:
+                .set    noreorder
                 .extern _sbss
                 .extern _ebss
-                .set    noreorder
-                // __FIX__ implement
+                la      $t0,_sbss
+                la      $t1,_ebss-4
+1:              sw      $0,($t0)
+                bne     $t0,$t1,1b
+                addiu   $t0,4                   // delay slot
                 jr      $ra
                 nop
                 .set    reorder
