@@ -89,7 +89,7 @@ case ${OSTYPE} in
     ;;
   *)
     setsid /usr/bin/xterm \
-      -T "QEMU-2" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
+      -T "QEMU-1" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
       /bin/telnet localhost ${SERIALPORT0} \
       &
     ;;
@@ -106,7 +106,7 @@ case ${OSTYPE} in
     ;;
   *)
     setsid /usr/bin/xterm \
-      -T "QEMU-1" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
+      -T "QEMU-2" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
       /bin/telnet localhost ${SERIALPORT1} \
       &
     ;;
@@ -119,7 +119,6 @@ elif [ "x$1" = "x-debug" ] ; then
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
-    -iex "set language ada" \
     ${KERNEL_OUTFILE} \
     -ex "target remote tcp:localhost:1234"
 fi
