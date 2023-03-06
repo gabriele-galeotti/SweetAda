@@ -62,6 +62,7 @@ fi
 # telnet ports
 MONITORPORT=4445
 SERIALPORT0=4446
+SERIALPORT1=4447
 
 # QEMU machine
 ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
@@ -70,6 +71,8 @@ ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -chardev "socket,id=SERIALPORT0,port=${SERIALPORT0},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \
   -serial "chardev:SERIALPORT0" \
+  -chardev "socket,id=SERIALPORT1,port=${SERIALPORT1},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \
+  -serial "chardev:SERIALPORT1" \
   ${QEMU_DEBUG} \
   &
 QEMU_PID=$!
@@ -91,6 +94,23 @@ case ${OSTYPE} in
       &
     ;;
 esac
+# console for serial port
+tcpport_is_listening ${SERIALPORT1} 3 "*** Error"
+case ${OSTYPE} in
+  darwin)
+    /usr/bin/osascript \
+      -e "tell application \"Terminal\"" \
+      -e "do script \"telnet 127.0.0.1 ${SERIALPORT1}\"" \
+      -e "end tell" \
+      &
+    ;;
+  *)
+    setsid /usr/bin/xterm \
+      -T "QEMU-2" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
+      /bin/telnet localhost ${SERIALPORT1} \
+      &
+    ;;
+esac
 
 # normal execution or debug execution
 if [ "x$1" = "x" ] ; then
@@ -103,5 +123,5 @@ elif [ "x$1" = "x-debug" ] ; then
     -ex "target remote tcp:localhost:1234"
 fi
 
-exit 0
+exit $?
 

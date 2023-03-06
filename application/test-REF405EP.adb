@@ -4,6 +4,7 @@ with Interfaces;
 with Configure;
 with CPU;
 with IOEMU;
+with Console;
 
 package body Application is
 
@@ -43,6 +44,7 @@ package body Application is
                   IOEMU.IO1 := Value;
                end if;
                Value := @ + 1;
+               Console.Print ("hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;

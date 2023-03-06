@@ -25,7 +25,9 @@ package REF405EP is
    --                                                                        --
    --========================================================================--
 
-   FPGA_BASEADDRESS : constant := 16#F030_0000#;
+   UART1_BASEADDRESS : constant := 16#EF60_0300#;
+   UART2_BASEADDRESS : constant := 16#EF60_0400#;
+   FPGA_BASEADDRESS  : constant := 16#F030_0000#;
 
    procedure Tclk_Init;
 
