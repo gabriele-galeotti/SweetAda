@@ -45,7 +45,7 @@ return 0
 ################################################################################
 
 # QEMU executable
-QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-aarch64"
+QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-aarch64"
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
@@ -120,10 +120,9 @@ elif [ "x$1" = "x-debug" ] ; then
     -q \
     -iex "set basenames-may-differ" \
     -iex "set architecture aarch64" \
-    -iex "set language ada" \
     ${KERNEL_OUTFILE} \
     -ex "target remote tcp:localhost:1234"
 fi
 
-exit 0
+exit $?
 

@@ -119,7 +119,6 @@ elif [ "x$1" = "x-debug" ] ; then
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
-    -iex "set language ada" \
     ${KERNEL_OUTFILE} \
     -ex "target remote tcp:localhost:1234"
 fi

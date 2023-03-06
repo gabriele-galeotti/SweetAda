@@ -45,7 +45,7 @@ return 0
 ################################################################################
 
 # QEMU executable
-QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-ppc"
+QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-ppc"
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
@@ -119,10 +119,9 @@ elif [ "x$1" = "x-debug" ] ; then
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
-    -iex "set language ada" \
     ${KERNEL_OUTFILE} \
     -ex "target remote tcp:localhost:1234"
 fi
 
-exit 0
+exit $?
 

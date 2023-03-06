@@ -45,7 +45,7 @@ return 0
 ################################################################################
 
 # QEMU executable
-QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-arm"
+QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-arm"
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
@@ -123,5 +123,5 @@ elif [ "x$1" = "x-debug" ] ; then
     -ex "target remote tcp:localhost:1234"
 fi
 
-exit 0
+exit $?
 

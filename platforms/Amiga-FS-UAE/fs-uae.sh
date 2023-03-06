@@ -26,5 +26,5 @@ FSUAE_EXECUTABLE="/opt/FS-UAE/bin/fs-uae"
 "${FSUAE_EXECUTABLE}" \
   fs-uae.conf
 
-exit 0
+exit $?
 

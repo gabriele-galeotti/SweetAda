@@ -35,5 +35,5 @@ esac
   -X -E dreamcast \
   ${GXEMUL_BOOT}
 
-exit 0
+exit $?
 

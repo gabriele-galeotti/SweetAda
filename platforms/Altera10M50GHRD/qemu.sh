@@ -104,5 +104,5 @@ elif [ "x$1" = "x-debug" ] ; then
     -ex "target remote tcp:localhost:1234"
 fi
 
-exit 0
+exit $?
 

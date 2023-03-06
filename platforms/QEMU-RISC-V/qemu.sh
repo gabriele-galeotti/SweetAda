@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# QEMU-RISC-V QEMU configuration file.
+# QEMU-RISC-V QEMU.
 #
 
 ################################################################################
@@ -46,7 +46,7 @@ return 0
 
 # QEMU executable
 if [ "x${RISCV32}" = "xY" ] ; then
-  QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-riscv32"
+  QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-riscv32"
 fi
 
 # debug options
@@ -123,7 +123,6 @@ elif [ "x$1" = "x-debug" ] ; then
     -q \
     -iex "set basenames-may-differ" \
     -iex "set architecture riscv" \
-    -iex "set language ada" \
     ${KERNEL_OUTFILE} \
     -ex "target remote tcp:localhost:1234" \
     -ex "break *0x80000000" \

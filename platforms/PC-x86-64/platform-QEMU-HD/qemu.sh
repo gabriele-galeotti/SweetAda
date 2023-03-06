@@ -45,7 +45,7 @@ return 0
 ################################################################################
 
 # QEMU executable
-QEMU_EXECUTABLE="/opt/sweetada/bin/qemu-system-x86_64"
+QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-x86_64"
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
@@ -121,11 +121,10 @@ elif [ "x$1" = "x-debug" ] ; then
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
-    -iex "set language ada" \
     ${KERNEL_OUTFILE} \
     -ex "target remote tcp:localhost:1234" \
     -ex "break bsp_setup" -ex "continue"
 fi
 
-exit 0
+exit $?
 
