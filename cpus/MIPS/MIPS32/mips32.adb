@@ -33,6 +33,24 @@ package body MIPS32 is
 
    CRLF : String renames Definitions.CRLF;
 
+   Register_Equates : constant String :=
+      "        .equ    CP0_Index,   $0 " & CRLF & -- TLB entry index register
+      "        .equ    CP0_EntryLo, $2 " & CRLF & -- TLB entry contents (low-order half)
+      "        .equ    CP0_Context, $4 " & CRLF &
+      "        .equ    CP0_BadAddr, $8 " & CRLF &
+      "        .equ    CP0_Count,   $9 " & CRLF &
+      "        .equ    CP0_EntryHi, $10" & CRLF & -- TLB entry contents (high-order half)
+      "        .equ    CP0_Compare, $11" & CRLF &
+      "        .equ    CP0_SR,      $12" & CRLF &
+      "        .equ    CP0_Cause,   $13" & CRLF &
+      "        .equ    CP0_EPC,     $14" & CRLF &
+      "        .equ    CP0_PRId,    $15" & CRLF & -- Processor Revision Indentifier
+      "        .equ    CP0_Config,  $16" & CRLF &
+      "        .equ    CP0_WatchLo, $18" & CRLF & -- WatchpointLo
+      "        .equ    CP0_WatchHi, $19" & CRLF & -- WatchpointHi
+      "        .equ    CP0_XContext,$20" & CRLF & -- XContext
+      "        .equ    CP0_Debug,   $23" & CRLF;
+
    type CP0_Register_Type is range 16#00# .. 16#1F#;        -- 32 CP0 registers
    type CP0_Register_Select_Type is range 2#000# .. 2#111#; -- 3-bit select field
 
@@ -244,12 +262,13 @@ package body MIPS32 is
    begin
       Asm (
            Template => ""                               & CRLF &
-                       "        mfc0    $t0,$12,0     " & CRLF &
+                       Register_Equates                        &
+                       "        mfc0    $t0,CP0_SR,0  " & CRLF &
                        "        nop                   " & CRLF &
                        "        lui     $t1,0         " & CRLF &
                        "        ori     $t1,$t1,0xFC01" & CRLF & -- IM7..IM2 all enabled
                        "        or      $t0,$t1       " & CRLF &
-                       "        mtc0    $t0,$12,0     " & CRLF &
+                       "        mtc0    $t0,CP0_SR,0  " & CRLF &
                        "        nop                   " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
