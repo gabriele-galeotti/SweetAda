@@ -101,7 +101,6 @@ elif [ "x$1" = "x-debug" ] ; then
     -q \
     -iex "set basenames-may-differ" \
     ${KERNEL_OUTFILE} \
-    -ex "set endian little" \
     -ex "target remote tcp:localhost:1234"
 fi
 
