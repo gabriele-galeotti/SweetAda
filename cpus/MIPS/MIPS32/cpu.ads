@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
 with MIPS;
 with MIPS32;
 
@@ -30,11 +31,15 @@ package CPU is
 
    pragma Preelaborate;
 
+   use System;
+
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
    procedure NOP renames MIPS.NOP;
+
+   procedure Asm_Call (Target_Address : in Address) renames MIPS.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
