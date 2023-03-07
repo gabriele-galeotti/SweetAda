@@ -33,19 +33,7 @@ _start:
                 nop
 
                 //
-                // Setup stack pointer.
-                //
-                la      $sp,kernel_stack
-
-                //
-                // Setup global pointer.
-                //
-                .extern _gp
-                lui     $gp,%hi(_gp)
-                ori     $gp,%lo(_gp)
-
-                //
-                // .data section relocation.
+                // Static data relocation.
                 //
                 .extern _sdata
                 .extern _edata
@@ -63,6 +51,18 @@ _start:
                 addiu   $t2,$t2,1
                 bne     $t0,$t1,1b
                 nop
+
+                //
+                // Setup stack pointer.
+                //
+                la      $sp,kernel_stack
+
+                //
+                // Setup global pointer.
+                //
+                .extern _gp
+                lui     $gp,%hi(_gp)
+                ori     $gp,%lo(_gp)
 
                 //
                 // Jump to high-level code.
