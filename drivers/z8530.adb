@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ scc.adb                                                                                                   --
+-- __FLN__ z8530.adb                                                                                                 --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -17,9 +17,8 @@
 
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
-with Console;
 
-package body SCC is
+package body Z8530 is
 
    --========================================================================--
    --                                                                        --
@@ -35,57 +34,33 @@ package body SCC is
    -- Zilog SCC/ESCC User Manual UM010903-0515
    ----------------------------------------------------------------------------
 
-   type SCCZ8530_Register_Type is (RR0, WR3, WR4, WR5, WR9, WR11, RR12, WR12, RR13, WR13, WR14);
+   type Register_Type is
+      (
+       WR0, WR1, WR2, WR3, WR4, WR5, WR6, WR7, WR8, WR9, WR10, WR11, WR12, WR13, WR14,
+       RR0, RR12, RR13
+      );
 
-   SCCZ8530_Register_ID : constant array (SCCZ8530_Register_Type) of Unsigned_8 :=
+   Register_ID : constant array (Register_Type) of Unsigned_8 :=
       [
-       RR0  => 0,
+       WR0  => 0,  RR0  => 0,
+       WR1  => 1,
+       WR2  => 2,
        WR3  => 3,
        WR4  => 4,
        WR5  => 5,
+       WR6  => 6,
+       WR7  => 7,
+       WR8  => 7,
        WR9  => 9,
+       WR10 => 10,
        WR11 => 11,
-       RR12 => 12,
-       WR12 => 12,
-       RR13 => 13,
-       WR13 => 13,
+       WR12 => 12, RR12 => 12,
+       WR13 => 13, RR13 => 13,
        WR14 => 14
       ];
 
    ----------------------------------------------------------------------------
-   -- Read Register 0 (Transmit/Receive Buffer Status and External Status)
-   ----------------------------------------------------------------------------
-
-   type RR0_Type is
-   record
-      RXCA       : Boolean; -- Receive Character Available
-      Zero_Count : Boolean; -- Zero Count status
-      TXBE       : Boolean; -- TX Buffer Empty status
-      DCD        : Boolean; -- Data Carrier Detect status
-      SyncHunt   : Boolean; -- Sync/Hunt status
-      CTS        : Boolean; -- Clear to Send pin status
-      TXUR_EOM   : Boolean; -- Transmit Underrun/EOM status
-      BreakAbort : Boolean; -- Break/Abort status
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RR0_Type use
-   record
-      RXCA       at 0 range 0 .. 0;
-      Zero_Count at 0 range 1 .. 1;
-      TXBE       at 0 range 2 .. 2;
-      DCD        at 0 range 3 .. 3;
-      SyncHunt   at 0 range 4 .. 4;
-      CTS        at 0 range 5 .. 5;
-      TXUR_EOM   at 0 range 6 .. 6;
-      BreakAbort at 0 range 7 .. 7;
-   end record;
-
-   function To_U8 is new Ada.Unchecked_Conversion (RR0_Type, Unsigned_8);
-   function To_RR0 is new Ada.Unchecked_Conversion (Unsigned_8, RR0_Type);
-
-   ----------------------------------------------------------------------------
-   -- Write Register 0 (Command Register)
+   -- 5.2.1 Write Register 0 (Command Register)
    ----------------------------------------------------------------------------
 
    CRC_RESET_NULL : constant := 2#00#;
@@ -121,7 +96,7 @@ package body SCC is
    function To_WR0 is new Ada.Unchecked_Conversion (Unsigned_8, WR0_Type);
 
    ----------------------------------------------------------------------------
-   -- Write Register 1 (Transmit/Receive Interrupt and Data Transfer Mode Definition)
+   -- 5.2.2 Write Register 1 (Transmit/Receive Interrupt and Data Transfer Mode Definition)
    ----------------------------------------------------------------------------
 
    RxINT_DISAB : constant := 2#00#; -- Receive Interrupts Disabled
@@ -156,7 +131,16 @@ package body SCC is
    function To_WR1 is new Ada.Unchecked_Conversion (Unsigned_8, WR1_Type);
 
    ----------------------------------------------------------------------------
-   -- Write Register 3 (Receive Parameters and Control)
+   -- 5.2.3 Write Register 2 (Interrupt Vector)
+   ----------------------------------------------------------------------------
+
+   type WR2_Type is new Unsigned_8;
+
+   function To_U8 is new Ada.Unchecked_Conversion (WR2_Type, Unsigned_8);
+   function To_WR2 is new Ada.Unchecked_Conversion (Unsigned_8, WR2_Type);
+
+   ----------------------------------------------------------------------------
+   -- 5.2.4 Write Register 3 (Receive Parameters and Control)
    ----------------------------------------------------------------------------
 
    Rx_LENGTH_5 : constant := 2#00#;
@@ -191,7 +175,7 @@ package body SCC is
    function To_WR3 is new Ada.Unchecked_Conversion (Unsigned_8, WR3_Type);
 
    ----------------------------------------------------------------------------
-   -- Write Register 4 (Transmit/Receive Miscellaneous Parameters and Modes)
+   -- 5.2.5 Write Register 4 (Transmit/Receive Miscellaneous Parameters and Modes)
    ----------------------------------------------------------------------------
 
    SYNC_ENAB : constant := 2#00#; -- Sync Modes Enable
@@ -232,7 +216,7 @@ package body SCC is
    function To_WR4 is new Ada.Unchecked_Conversion (Unsigned_8, WR4_Type);
 
    ----------------------------------------------------------------------------
-   -- Write Register 5 (Transmit Parameters and Controls)
+   -- 5.2.6 Write Register 5 (Transmit Parameters and Controls)
    ----------------------------------------------------------------------------
 
    Tx_LENGTH_5 : constant := 2#00#;
@@ -267,7 +251,27 @@ package body SCC is
    function To_WR5 is new Ada.Unchecked_Conversion (Unsigned_8, WR5_Type);
 
    ----------------------------------------------------------------------------
-   -- Write Register 9 (Master Interrupt Control)
+   -- 5.2.7 Write Register 6 (Sync Characters or SDLC Address Field)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.2.8 Write Register 7 (Sync Character or SDLC Flag)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.2.9 Write Register 7 Prime (ESCC only)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.2.10 Write Register 7 Prime (85C30 only)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.2.11 Write Register 8 (Transmit Buffer)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.2.12 Write Register 9 (Master Interrupt Control)
    ----------------------------------------------------------------------------
 
    RESCMD_NONE : constant := 2#00#; -- No Reset
@@ -283,7 +287,7 @@ package body SCC is
       MIE    : Boolean; -- Master Interrupt Enable
       SHnSL  : Boolean; -- Status High//Status Low control bit
       INTACK : Boolean; -- Software Interrupt Acknowledge control bit
-      RESCMD : Bits_2;  --  Reset Command Bits
+      RESCMD : Bits_2;  -- Reset Command Bits
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -302,7 +306,42 @@ package body SCC is
    function To_WR9 is new Ada.Unchecked_Conversion (Unsigned_8, WR9_Type);
 
    ----------------------------------------------------------------------------
-   -- Write Register 11 (Clock Mode Control)
+   -- 5.2.13 Write Register 10 (Miscellaneous Transmitter/Receiver Control Bits)
+   ----------------------------------------------------------------------------
+
+   DataEncoding_NRZ  : constant := 2#00#; -- NRZ
+   DataEncoding_NRZI : constant := 2#01#; -- NRZI
+   DataEncoding_FM1  : constant := 2#10#; -- FM1 (transition = 1)
+   DataEncoding_FM0  : constant := 2#11#; -- FM0 (transition = 0)
+
+   type WR10_Type is
+   record
+      SYNC6OR8           : Boolean; -- 6-Bit/8-Bit SYNC select bit
+      Loop_Mode          : Boolean; -- Loop Mode control bit
+      AbortFlag_Underrun : Boolean; -- Abort//Flag On Underrun select bit
+      MarkFlag_Idle      : Boolean; -- Mark//Flag Idle line control bit
+      GoActiveOnPoll     : Boolean; -- Go-Active-On-Poll control bit
+      DataEncoding       : Bits_2;  -- Data Encoding select bits.
+      CRCPreset          : Boolean; -- CRC Presets I/O select bit
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for WR10_Type use
+   record
+      SYNC6OR8           at 0 range 0 .. 0;
+      Loop_Mode          at 0 range 1 .. 1;
+      AbortFlag_Underrun at 0 range 2 .. 2;
+      MarkFlag_Idle      at 0 range 3 .. 3;
+      GoActiveOnPoll     at 0 range 4 .. 4;
+      DataEncoding       at 0 range 5 .. 6;
+      CRCPreset          at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (WR10_Type, Unsigned_8);
+   function To_WR10 is new Ada.Unchecked_Conversion (Unsigned_8, WR10_Type);
+
+   ----------------------------------------------------------------------------
+   -- 5.2.14 Write Register 11 (Clock Mode Control)
    ----------------------------------------------------------------------------
 
    nTRxC_XTAL : constant := 2#00#; -- XTAL Oscillator Output
@@ -349,7 +388,15 @@ package body SCC is
    function To_WR11 is new Ada.Unchecked_Conversion (Unsigned_8, WR11_Type);
 
    ----------------------------------------------------------------------------
-   -- Write Register 14 (Miscellaneous Control Bits)
+   -- 5.2.15 Write Register 12 (Lower Byte of Baud Rate Generator Time Constant)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.2.16 Write Register 13 (Upper Byte of Baud Rate Generator Time Constant)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.2.17 Write Register 14 (Miscellaneous Control Bits)
    ----------------------------------------------------------------------------
 
    BRSOURCE_nRTxC_XTAL : constant := 0; -- The BRG clock comes from either the /RTxC pin or the XTAL oscillator. *(XTAL//no XTAL)
@@ -389,25 +436,57 @@ package body SCC is
    function To_WR14 is new Ada.Unchecked_Conversion (Unsigned_8, WR14_Type);
 
    ----------------------------------------------------------------------------
+   -- Read Register 0 (Transmit/Receive Buffer Status and External Status)
+   ----------------------------------------------------------------------------
+
+   type RR0_Type is
+   record
+      RXCA       : Boolean; -- Receive Character Available
+      Zero_Count : Boolean; -- Zero Count status
+      TXBE       : Boolean; -- TX Buffer Empty status
+      DCD        : Boolean; -- Data Carrier Detect status
+      SyncHunt   : Boolean; -- Sync/Hunt status
+      CTS        : Boolean; -- Clear to Send pin status
+      TXUR_EOM   : Boolean; -- Transmit Underrun/EOM status
+      BreakAbort : Boolean; -- Break/Abort status
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for RR0_Type use
+   record
+      RXCA       at 0 range 0 .. 0;
+      Zero_Count at 0 range 1 .. 1;
+      TXBE       at 0 range 2 .. 2;
+      DCD        at 0 range 3 .. 3;
+      SyncHunt   at 0 range 4 .. 4;
+      CTS        at 0 range 5 .. 5;
+      TXUR_EOM   at 0 range 6 .. 6;
+      BreakAbort at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (RR0_Type, Unsigned_8);
+   function To_RR0 is new Ada.Unchecked_Conversion (Unsigned_8, RR0_Type);
+
+   ----------------------------------------------------------------------------
    -- Local subprograms
    ----------------------------------------------------------------------------
 
-   procedure SCCZ8530_Create_Ports (
-                                    Descriptor : in out SCCZ8530_Descriptor_Type;
-                                    Channel    : in     SCCZ8530_Channel_Type
-                                   );
+   procedure Create_Ports (
+                           Descriptor : in out Descriptor_Type;
+                           Channel    : in     Channel_Type
+                          );
 
    function Register_Read (
-                           Descriptor : SCCZ8530_Descriptor_Type;
-                           Channel    : SCCZ8530_Channel_Type;
-                           Register   : SCCZ8530_Register_Type
+                           Descriptor : Descriptor_Type;
+                           Channel    : Channel_Type;
+                           Register   : Register_Type
                           ) return Unsigned_8 with
       Inline => True;
 
    procedure Register_Write (
-                             Descriptor : in SCCZ8530_Descriptor_Type;
-                             Channel    : in SCCZ8530_Channel_Type;
-                             Register   : in SCCZ8530_Register_Type;
+                             Descriptor : in Descriptor_Type;
+                             Channel    : in Channel_Type;
+                             Register   : in Register_Type;
                              Value      : in Unsigned_8
                             ) with
       Inline => True;
@@ -421,7 +500,7 @@ package body SCC is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- SCCZ8530_Create_Ports
+   -- Create_Ports
    ----------------------------------------------------------------------------
    -- There exist various hardware decoding styles when using the Z8530, e.g.:
    -- 1) COMPUTER LOGICS PC/XT ISA board
@@ -434,10 +513,10 @@ package body SCC is
    --   A2 --> D//C
    --   A3 --> A//B
    ----------------------------------------------------------------------------
-   procedure SCCZ8530_Create_Ports (
-                                    Descriptor : in out SCCZ8530_Descriptor_Type;
-                                    Channel    : in     SCCZ8530_Channel_Type
-                                   ) is
+   procedure Create_Ports (
+                           Descriptor : in out Descriptor_Type;
+                           Channel    : in     Channel_Type
+                          ) is
       Base_Address : Address := Descriptor.Base_Address;
    begin
       if Descriptor.Flags.DECstation5000133 then
@@ -448,18 +527,18 @@ package body SCC is
       end if;
       Descriptor.Control_Port (Channel) := Base_Address;
       Descriptor.Data_Port (Channel)    := Base_Address + 2**Descriptor.CD_Address_Bit;
-   end SCCZ8530_Create_Ports;
+   end Create_Ports;
 
    ----------------------------------------------------------------------------
    -- Register_Read
    ----------------------------------------------------------------------------
    function Register_Read (
-                           Descriptor : SCCZ8530_Descriptor_Type;
-                           Channel    : SCCZ8530_Channel_Type;
-                           Register   : SCCZ8530_Register_Type
+                           Descriptor : Descriptor_Type;
+                           Channel    : Channel_Type;
+                           Register   : Register_Type
                           ) return Unsigned_8 is
    begin
-      Descriptor.Write_8 (Descriptor.Control_Port (Channel), SCCZ8530_Register_ID (Register));
+      Descriptor.Write_8 (Descriptor.Control_Port (Channel), Register_ID (Register));
       return Descriptor.Read_8 (Descriptor.Control_Port (Channel));
    end Register_Read;
 
@@ -467,13 +546,13 @@ package body SCC is
    -- Register_Write
    ----------------------------------------------------------------------------
    procedure Register_Write (
-                             Descriptor : in SCCZ8530_Descriptor_Type;
-                             Channel    : in SCCZ8530_Channel_Type;
-                             Register   : in SCCZ8530_Register_Type;
+                             Descriptor : in Descriptor_Type;
+                             Channel    : in Channel_Type;
+                             Register   : in Register_Type;
                              Value      : in Unsigned_8
                             ) is
    begin
-      Descriptor.Write_8 (Descriptor.Control_Port (Channel), SCCZ8530_Register_ID (Register));
+      Descriptor.Write_8 (Descriptor.Control_Port (Channel), Register_ID (Register));
       Descriptor.Write_8 (Descriptor.Control_Port (Channel), Value);
    end Register_Write;
 
@@ -486,8 +565,8 @@ package body SCC is
    -- the BRG is enabled by setting bit D0 of WR14 to 1.
    ----------------------------------------------------------------------------
    procedure Baud_Rate_Set (
-                            Descriptor : in SCCZ8530_Descriptor_Type;
-                            Channel    : in SCCZ8530_Channel_Type;
+                            Descriptor : in Descriptor_Type;
+                            Channel    : in Channel_Type;
                             Baud_Rate  : in Definitions.Baud_Rate_Type
                            ) is
       Unused        : Unsigned_8 with Unreferenced => True;
@@ -503,13 +582,13 @@ package body SCC is
       Register_Write (Descriptor, Channel, WR13, HByte (Time_Constant));
       -- initialize WR14
       R := (
-            BREN         => False,
-            BRSOURCE     => BRSOURCE_PCLK,
-            DTR_Function => False,
-            AUTOECHO     => False,
-            Loc_LOOPBACK => False,
-            DPLL_CMD     => DPLL_CMD_NULL
-           );
+         BREN         => False,
+         BRSOURCE     => BRSOURCE_PCLK,
+         DTR_Function => False,
+         AUTOECHO     => False,
+         Loc_LOOPBACK => False,
+         DPLL_CMD     => DPLL_CMD_NULL
+         );
       Register_Write (Descriptor, Channel, WR14, To_U8 (R));
       -- enable BRG
       R.BREN := True;
@@ -520,60 +599,80 @@ package body SCC is
    -- Init
    ----------------------------------------------------------------------------
    procedure Init (
-                   Descriptor : in out SCCZ8530_Descriptor_Type;
-                   Channel    : in     SCCZ8530_Channel_Type
+                   Descriptor : in out Descriptor_Type;
+                   Channel    : in     Channel_Type
                   ) is
       Unused : Unsigned_8 with Unreferenced => True;
    begin
-      SCCZ8530_Create_Ports (Descriptor, Channel);
+      Create_Ports (Descriptor, Channel);
       -- reset register pointer
       Unused := Descriptor.Read_8 (Descriptor.Control_Port (Channel));
       -- select BR Generator Output source = PCLK
       Register_Write (Descriptor, Channel, WR11, To_U8 (WR11_Type'(
-                                                                   nTRxC     => nTRxC_BR,
-                                                                   TRxC_IO   => TRxC_IO_IN,
-                                                                   TxCLK     => TxCLK_BR,
-                                                                   RxCLK     => RxCLK_BR,
-                                                                   RTxC_XTAL => RTxC_XTAL_TTL
-                                                                  )));
+         nTRxC     => nTRxC_BR,
+         TRxC_IO   => TRxC_IO_IN,
+         TxCLK     => TxCLK_BR,
+         RxCLK     => RxCLK_BR,
+         RTxC_XTAL => RTxC_XTAL_TTL
+         )));
       Baud_Rate_Set (Descriptor, Channel, Definitions.BR_9600);
       -- X16 Clock Mode, External Sync Mode, 1 Stop Bit/Character, Parity
       -- EVEN, Parity not Enable
       Register_Write (Descriptor, Channel, WR4, To_U8 (WR4_Type'(
-                                                                 PAR_ENAB   => False,
-                                                                 PAR_EVEN   => True,
-                                                                 STOP_BITS  => SB1,
-                                                                 SYNC_MODES => MONOSYNC,
-                                                                 XCLK_RATE  => X16CLK
-                                                                )));
+         PAR_ENAB   => False,
+         PAR_EVEN   => True,
+         STOP_BITS  => SB1,
+         SYNC_MODES => MONOSYNC,
+         XCLK_RATE  => X16CLK
+         )));
       -- Rx 8 Bits/Character, Rx Enable
       Register_Write (Descriptor, Channel, WR3, To_U8 (WR3_Type'(
-                                                                 Rx_Enable     => True,
-                                                                 SYNC_L_INH    => False,
-                                                                 ADD_SM        => False,
-                                                                 Rx_CRC_Enable => False,
-                                                                 ENT_HM        => False,
-                                                                 Auto_Enables  => False,
-                                                                 RxN           => Rx_LENGTH_8
-                                                                )));
+         Rx_Enable     => True,
+         SYNC_L_INH    => False,
+         ADD_SM        => False,
+         Rx_CRC_Enable => False,
+         ENT_HM        => False,
+         Auto_Enables  => False,
+         RxN           => Rx_LENGTH_8
+         )));
       -- Tx 8 Bits/Character, Tx Enable
       Register_Write (Descriptor, Channel, WR5, To_U8 (WR5_Type'(
-                                                                 Tx_CRC_Enable => False,
-                                                                 RTS           => False,
-                                                                 nSDLC_CRC16   => False,
-                                                                 Tx_Enable     => True,
-                                                                 Send_Break    => False,
-                                                                 TxN           => Tx_LENGTH_8,
-                                                                 DTR           => False
-                                                                )));
+         Tx_CRC_Enable => False,
+         RTS           => False,
+         nSDLC_CRC16   => False,
+         Tx_Enable     => True,
+         Send_Break    => False,
+         TxN           => Tx_LENGTH_8,
+         DTR           => False
+         )));
+      -- WR1 enable RX interrupt
+      Register_Write (Descriptor, Channel, WR1, To_U8 (WR1_Type'(
+         EXT_INT_ENAB => False,
+         Tx_INT_ENAB  => False,
+         PAR_SPEC     => False,
+         Rx_INT_Modes => INT_ALL_Rx,
+         WT_RDY_RT    => False,
+         WT_FN_RDYFN  => False,
+         WT_RDY_ENAB  => False
+         )));
+      -- WR9
+      Register_Write (Descriptor, Channel, WR9, To_U8 (WR9_Type'(
+         VIS    => False,      -- Vector Includes Status control bit
+         NV     => True,       -- No Vector select bit
+         DLC    => False,      -- Disable Lower Chain control bit
+         MIE    => True,       -- Master Interrupt Enable
+         SHnSL  => False,      -- Status High//Status Low control bit
+         INTACK => False,      -- Software Interrupt Acknowledge control bit
+         RESCMD => RESCMD_NONE -- Reset Command Bits
+         )));
    end Init;
 
    ----------------------------------------------------------------------------
    -- TX
    ----------------------------------------------------------------------------
    procedure TX (
-                 Descriptor : in SCCZ8530_Descriptor_Type;
-                 Channel    : in SCCZ8530_Channel_Type;
+                 Descriptor : in Descriptor_Type;
+                 Channel    : in Channel_Type;
                  Data       : in Unsigned_8
                 ) is
    begin
@@ -594,8 +693,8 @@ package body SCC is
    -- RX
    ----------------------------------------------------------------------------
    procedure RX (
-                 Descriptor : in  SCCZ8530_Descriptor_Type;
-                 Channel    : in  SCCZ8530_Channel_Type;
+                 Descriptor : in  Descriptor_Type;
+                 Channel    : in  Channel_Type;
                  Data       : out Unsigned_8
                 ) is
    begin
@@ -606,4 +705,4 @@ package body SCC is
       Data := Descriptor.Read_8 (Descriptor.Data_Port (Channel));
    end RX;
 
-end SCC;
+end Z8530;
