@@ -43,7 +43,7 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
-      SCC.TX (SCC_Descriptor, SCC.CHANNELA, To_U8 (C));
+      Z8530.TX (SCC_Descriptor, Z8530.CHANNELA, To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
@@ -64,8 +64,8 @@ package body BSP is
       SCC_Descriptor.Flags.MVME162FX_TX_Quirk := True;
       SCC_Descriptor.Read_8                   := MMIO.Read'Access;
       SCC_Descriptor.Write_8                  := MMIO.Write'Access;
-      SCC.Init (SCC_Descriptor, SCC.CHANNELA);
-      SCC.Init (SCC_Descriptor, SCC.CHANNELB);
+      Z8530.Init (SCC_Descriptor, Z8530.CHANNELA);
+      Z8530.Init (SCC_Descriptor, Z8530.CHANNELB);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read := Console_Getchar'Access;
