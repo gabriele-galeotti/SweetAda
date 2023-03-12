@@ -250,9 +250,19 @@ private
                                 + DT_Predef_Prims_Size;
    --  Offset from Prims_Ptr to Predef_Prims component
 
-   Max_Predef_Prims : constant Positive := 9;
-   --  Number of reserved slots for predefined ada primitives: Size, Read,
-   --  Write, Input, Output, "=", assignment, deep adjust, and deep finalize.
+   Max_Predef_Prims : constant Positive := 10;
+   --  Number of reserved slots for the following predefined ada primitives:
+   --
+   --    1. Size
+   --    2. Read
+   --    3. Write
+   --    4. Input
+   --    5. Output
+   --    6. "="
+   --    7. assignment
+   --    8. deep adjust
+   --    9. deep finalize
+   --   10. Put_Image
    --  The compiler checks that this value is correct.
 
    subtype Predef_Prims_Table  is Address_Array (1 .. Max_Predef_Prims);
