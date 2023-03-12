@@ -121,6 +121,111 @@ package body M68k is
    end VBR_Set;
 
    ----------------------------------------------------------------------------
+   -- MoveSByte
+   ----------------------------------------------------------------------------
+
+   function MoveSByte (A : Address) return Unsigned_8 is
+      B : Unsigned_8;
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.b %1@,%0" & CRLF &
+                       "",
+           Outputs  => Unsigned_8'Asm_Output ("=d", B),
+           Inputs   => Address'Asm_Input ("a", A),
+           Clobber  => "",
+           Volatile => True
+          );
+      return B;
+   end MoveSByte;
+
+   procedure MoveSByte (A : in Address; B : in Unsigned_8) is
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.b %0,%1@" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Unsigned_8'Asm_Input ("d", B),
+                        Address'Asm_Input ("a", A)
+                       ],
+           Clobber  => "",
+           Volatile => True
+          );
+   end MoveSByte;
+
+   ----------------------------------------------------------------------------
+   -- MoveSWord
+   ----------------------------------------------------------------------------
+
+   function MoveSWord (A : in Address) return Unsigned_16 is
+      W : Unsigned_16;
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.w %1@,%0" & CRLF &
+                       "",
+           Outputs  => Unsigned_16'Asm_Output ("=d", W),
+           Inputs   => Address'Asm_Input ("a", A),
+           Clobber  => "",
+           Volatile => True
+          );
+      return W;
+   end MoveSWord;
+
+   procedure MoveSWord (A : in Address; W : in Unsigned_16) is
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.w %0,%1@" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Unsigned_16'Asm_Input ("d", W),
+                        Address'Asm_Input ("a", A)
+                       ],
+           Clobber  => "",
+           Volatile => True
+          );
+   end MoveSWord;
+
+   ----------------------------------------------------------------------------
+   -- MoveSLong
+   ----------------------------------------------------------------------------
+
+   function MoveSLong (A : in Address) return Unsigned_32 is
+      L : Unsigned_32;
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.l %1@,%0" & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=d", L),
+           Inputs   => Address'Asm_Input ("a", A),
+           Clobber  => "",
+           Volatile => True
+          );
+      return L;
+   end MoveSLong;
+
+   procedure MoveSLong (A : in Address; L : in Unsigned_32) is
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.l %0,%1@" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Unsigned_32'Asm_Input ("d", L),
+                        Address'Asm_Input ("a", A)
+                       ],
+           Clobber  => "",
+           Volatile => True
+          );
+   end MoveSLong;
+
+   ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
    procedure Asm_Call (Target_Address : in Address) is

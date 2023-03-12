@@ -188,14 +188,34 @@ package M68k is
 
    procedure NOP with
       Inline => True;
+
    procedure BREAKPOINT with
       Inline => True;
+
    function SR_Read return SR_Type with
       Inline => True;
+
    procedure SR_Write (Value : in SR_Type) with
       Inline => True;
+
    procedure VBR_Set (VBR_Address : in Address) with
       Inline => True;
+
+   function MoveSByte (A : in Address) return Unsigned_8 with
+      Inline => True;
+   procedure MoveSByte (A : in Address; B : in Unsigned_8) with
+      Inline => True;
+
+   function MoveSWord (A : in Address) return Unsigned_16 with
+      Inline => True;
+   procedure MoveSWord (A : in Address; W : in Unsigned_16) with
+      Inline => True;
+
+   function MoveSLong (A : in Address) return Unsigned_32 with
+      Inline => True;
+   procedure MoveSLong (A : in Address; L : in Unsigned_32) with
+      Inline => True;
+
    procedure Asm_Call (Target_Address : in Address) with
       Inline => True;
 
