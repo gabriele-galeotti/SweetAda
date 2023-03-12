@@ -19,6 +19,7 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with Configure;
+with Definitions;
 with Core;
 with Bits;
 with MMIO;
@@ -27,7 +28,6 @@ with Amiga;
 with ZorroII;
 with A2065;
 with Gayle;
-with IOEMU;
 with Exceptions;
 with Linker;
 with Gdbstub;
@@ -49,6 +49,7 @@ package body BSP is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use Core;
    use Bits;
    use M68k;
@@ -68,21 +69,12 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
-      UARTIOEMU.TX (UART1_Descriptor, To_U8 (C));
+      Serialport_TX (C);
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
-      Data : Unsigned_8;
    begin
-      UARTIOEMU.RX (UART1_Descriptor, Data);
-      if Data = 0 then
-         C := Character'Val (0);
-      else
-         -- RX LED blinking
-         IOEMU.CIA_IO3 := 1;
-         IOEMU.CIA_IO3 := 0;
-         C := To_Ch (Data);
-      end if;
+      Serialport_RX (C);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -94,43 +86,25 @@ package body BSP is
       Exceptions.Init;
       -- basic hardware initialization ----------------------------------------
       OCS_Setup;
-      OCS_Clear_Screen;
-      OCS_Print (0, 0, KERNEL_NAME & ": initializing");
-      OCS_Print (0, 1, "Press mouse-MB to un-grab the pointer.");
-      OCS_Print (0, 3, "F12+D to activate the debugger.");
-      OCS_Print (0, 2, "Close this window to shutdown the emulator.");
+      OCS_Print (KERNEL_NAME & ": initializing" & CRLF);
+      OCS_Print ("Press mouse-MB to un-grab the pointer." & CRLF);
+      OCS_Print ("F12+D to activate the debugger." & CRLF);
+      OCS_Print ("Close this window to shutdown the emulator." & CRLF);
       -- Serialport -----------------------------------------------------------
       Serialport_Init;
-      -- IOEMU UARTs ----------------------------------------------------------
-      if True then
-         UART1_Descriptor.Base_Address  := To_Address (IOEMU.SERIALPORT1_BASEADDRESS);
-         UART1_Descriptor.Scale_Address := 2;
-         UART1_Descriptor.Irq           := 1; -- enabled if /= 0
-         UART1_Descriptor.Read          := MMIO.Read'Access;
-         UART1_Descriptor.Write         := MMIO.Write'Access;
-         UARTIOEMU.Init (UART1_Descriptor);
-         UART2_Descriptor.Base_Address  := To_Address (IOEMU.SERIALPORT2_BASEADDRESS);
-         UART2_Descriptor.Scale_Address := 2;
-         UART2_Descriptor.Irq           := 1; -- enabled if /= 0
-         UART2_Descriptor.Read          := MMIO.Read'Access;
-         UART2_Descriptor.Write         := MMIO.Write'Access;
-         UARTIOEMU.Init (UART2_Descriptor);
-      end if;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
       Console.TTY_Setup;
       -------------------------------------------------------------------------
-      -- Console.Print ("Amiga", NL => True);
-      -- Console.Print (Linker.SText'Address, Prefix => "SText: ", NL => True);
-      -- Console.Print (Linker.SData'Address, Prefix => "SData: ", NL => True);
-      -- Console.Print (Linker.SBss'Address, Prefix => "SBss:  ", NL => True);
+      Console.Print ("Amiga", NL => True);
       -------------------------------------------------------------------------
       if True then
          declare
             Success : Boolean;
             PIC     : ZorroII.PIC_Type;
          begin
+            Console.Print ("Zorro II scan:", NL => True);
             loop
                PIC := ZorroII.Read;
                if PIC.Board /= 0 then
@@ -167,18 +141,6 @@ package body BSP is
       end if;
       -- system timer initialization ------------------------------------------
       Tclk_Init;
-      -- GDB stub -------------------------------------------------------------
-      if False then
-         Gdbstub.Init (
-                       Gdbstub.SerialComm.Getchar'Access,
-                       Gdbstub.SerialComm.Putchar'Access,
-                       Gdbstub.DEBUG_ERROR
-                       -- Gdbstub.DEBUG_COMMAND
-                       -- Gdbstub.DEBUG_COMMUNICATION
-                       -- Gdbstub.DEBUG_BYPASS
-                      );
-      end if;
-      -------------------------------------------------------------------------
       MMU.Init;
       -- preliminary interrupt setup
       INTENA_ClearAll;
@@ -187,8 +149,6 @@ package body BSP is
       -- enable CIAA TimerA interrupt
       CIAA_ICR_SetBitMask (1);
       INTENA_SetBitMask (PORTS);
-      -- enable IOEMU serial port interrupts
-      INTENA_SetBitMask (EXTER);
       -- enable CPU interrupts
       Irq_Enable;
       -------------------------------------------------------------------------

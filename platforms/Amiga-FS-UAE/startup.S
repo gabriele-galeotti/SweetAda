@@ -78,14 +78,20 @@ _start:
                 move.b  #0x2,CIAA_PRA                   // CIAA: PWR LED on, disable aliased ROM and make RAM appears @ 0x00000000
 
 #if (CODE_RAM == 1)
-                // perform code relocation
+                //
+                // Code relocation.
+                //
                 fjsr    movcode
 #endif
 
-                // perform static data relocation
+                //
+                // Static data relocation.
+                //
                 fjsr    movdata
 
-                // zero the bss section
+                //
+                // Initialize .bss section.
+                //
                 fjsr    zerobss
 
                 //
@@ -118,7 +124,6 @@ dead:           jmp     .
 ////////////////////////////////////////////////////////////////////////////////
 // movcode                                                                    //
 //                                                                            //
-// Perform code relocation.                                                   //
 // A6 = return address                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -138,7 +143,6 @@ movcode:
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// Perform high-level language data relocation.                               //
 // A6 = return address                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -160,7 +164,6 @@ movdata:
 ////////////////////////////////////////////////////////////////////////////////
 // zerobss                                                                    //
 //                                                                            //
-// Perform a cleanup of the .bss area.                                        //
 // A6 = return address                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 

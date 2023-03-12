@@ -15,24 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with Bits;
-with UARTIOEMU;
-with BSP;
-
 package body Gdbstub.SerialComm is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use Interfaces;
-   use Bits;
-   use BSP;
 
    --========================================================================--
    --                                                                        --
@@ -44,18 +27,12 @@ package body Gdbstub.SerialComm is
 
    procedure Putchar (C : in Character) is
    begin
-      UARTIOEMU.TX (UART2_Descriptor, To_U8 (C));
+      null;
    end Putchar;
 
    procedure Getchar (C : out Character) is
-      Data : Unsigned_8;
    begin
-      UARTIOEMU.RX (UART2_Descriptor, Data);
-      if Data = 0 then
-         C := Character'Val (0);
-      else
-         C := To_Ch (Data);
-      end if;
+      C := Character'Val (0);
    end Getchar;
 
 end Gdbstub.SerialComm;

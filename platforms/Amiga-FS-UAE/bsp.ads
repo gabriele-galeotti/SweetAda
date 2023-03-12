@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with UARTIOEMU;
 with IDE;
 
 package BSP is
@@ -28,9 +27,7 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   UART1_Descriptor : aliased UARTIOEMU.UartIOEMU_Descriptor_Type := UARTIOEMU.UartIOEMU_DESCRIPTOR_INVALID;
-   UART2_Descriptor : aliased UARTIOEMU.UartIOEMU_Descriptor_Type := UARTIOEMU.UartIOEMU_DESCRIPTOR_INVALID;
-   IDE_Descriptor   : aliased IDE.IDE_Descriptor_Type := IDE.IDE_DESCRIPTOR_INVALID;
+   IDE_Descriptor : aliased IDE.IDE_Descriptor_Type := IDE.IDE_DESCRIPTOR_INVALID;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

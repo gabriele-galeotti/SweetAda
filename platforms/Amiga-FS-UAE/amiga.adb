@@ -15,11 +15,36 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Characters.Latin_1;
 with Ada.Unchecked_Conversion;
+with Interfaces.C;
 with Configure;
+with Memory_Functions;
 with MMIO;
 
 package body Amiga is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   package ISO88591 renames Ada.Characters.Latin_1;
+
+   use type Interfaces.C.size_t;
+
+   BYTES_PER_RASTER   : constant := 80;
+   BYTES_PER_TEXTLINE : constant := BYTES_PER_RASTER * 8;
+
+   procedure OCS_Scroll;
+   procedure OCS_Print (
+                        X : in Video_X_Coordinate_Type;
+                        Y : in Video_Y_Coordinate_Type;
+                        C : in Character
+                       );
 
    --========================================================================--
    --                                                                        --
@@ -66,6 +91,101 @@ package body Amiga is
    begin
       CUSTOM.INTREQ := Value or 16#8000#;
    end INTREQ_SetBitMask;
+
+   ----------------------------------------------------------------------------
+   -- OCS_Print (Character)
+   ----------------------------------------------------------------------------
+   -- Print character C @ X, Y.
+   ----------------------------------------------------------------------------
+   procedure OCS_Print (
+                        X : in Video_X_Coordinate_Type;
+                        Y : in Video_Y_Coordinate_Type;
+                        C : in Character
+                       ) is
+      Framebuffer_Offset : Natural;
+      Pattern_Offset     : Natural;
+   begin
+      Framebuffer_Offset := X + Y * BYTES_PER_TEXTLINE;
+      for Index in Storage_Offset range 0 .. Videofont8x8.Font_Height - 1 loop
+         Pattern_Offset := BYTES_PER_RASTER * Natural (Index);
+         Framebuffer (Framebuffer_Offset + Pattern_Offset) := To_U8 (Videofont8x8.Font (Character'Pos (C)) (Index));
+      end loop;
+   end OCS_Print;
+
+   ----------------------------------------------------------------------------
+   -- OCS_Scroll
+   ----------------------------------------------------------------------------
+   -- Scroll a line of text.
+   ----------------------------------------------------------------------------
+   procedure OCS_Scroll is
+   begin
+      Memory_Functions.Cpymem (
+         Framebuffer'Address + BYTES_PER_TEXTLINE,
+         Framebuffer'Address,
+         (VIDEO_WIDTH * VIDEO_HEIGHT) / 8 - BYTES_PER_TEXTLINE
+         );
+      for X in Video_X_Coordinate_Type'Range loop
+         OCS_Print (X, Video_Y_Coordinate_Type'Last, ' ');
+      end loop;
+   end OCS_Scroll;
+
+   ----------------------------------------------------------------------------
+   -- OCS_Clear_Screen
+   ----------------------------------------------------------------------------
+   procedure OCS_Clear_Screen is
+   begin
+      for Y in Video_Y_Coordinate_Type'Range loop
+         for X in Video_X_Coordinate_Type'Range loop
+            OCS_Print (X, Y, ' ');
+         end loop;
+      end loop;
+      -- initialize the cursor
+      Cursor := (0, 0);
+   end OCS_Clear_Screen;
+
+   ----------------------------------------------------------------------------
+   -- OCS_Print (Character)
+   ----------------------------------------------------------------------------
+   -- Print character C @ Cursor.
+   ----------------------------------------------------------------------------
+   procedure OCS_Print (C : in Character) is
+      procedure Y_Increment;
+      procedure Y_Increment is
+      begin
+         if Cursor.Y = Video_Y_Coordinate_Type'Last then
+            OCS_Scroll;
+         else
+            Cursor.Y := @ + 1;
+         end if;
+      end Y_Increment;
+   begin
+      if C = ISO88591.CR then
+         Cursor.X := 0;
+         return;
+      elsif C = ISO88591.LF then
+         Y_Increment;
+         return;
+      end if;
+      OCS_Print (Cursor.X, Cursor.Y, C);
+      if Cursor.X = Video_X_Coordinate_Type'Last then
+         Cursor.X := 0;
+         Y_Increment;
+      else
+         Cursor.X := @ + 1;
+      end if;
+   end OCS_Print;
+
+   ----------------------------------------------------------------------------
+   -- OCS_Print (String)
+   ----------------------------------------------------------------------------
+   -- Print string S.
+   ----------------------------------------------------------------------------
+   procedure OCS_Print (S : in String) is
+   begin
+      for Index in S'Range loop
+         OCS_Print (S (Index));
+      end loop;
+   end OCS_Print;
 
    ----------------------------------------------------------------------------
    -- OCS_Setup
@@ -125,72 +245,9 @@ package body Amiga is
                        DMAF_MASTER or
                        DMAF_RASTER or
                        DMAF_COPPER;
+      -- initialize the screen
+      OCS_Clear_Screen;
    end OCS_Setup;
-
-   ----------------------------------------------------------------------------
-   -- OCS_Print (Character)
-   ----------------------------------------------------------------------------
-   -- Print character C @ X, Y.
-   ----------------------------------------------------------------------------
-   procedure OCS_Print (
-                        X : in Video_X_Coordinate_Type;
-                        Y : in Video_Y_Coordinate_Type;
-                        C : in Character
-                       ) is
-      BYTESPERRASTER     : constant := 80;
-      Framebuffer_Offset : Natural;
-      Pattern_Offset     : Natural;
-   begin
-      Framebuffer_Offset := X + Y * 8 * BYTESPERRASTER;
-      for Index in Storage_Offset range 0 .. Videofont8x8.Font_Height - 1 loop
-         Pattern_Offset := BYTESPERRASTER * Natural (Index);
-         Framebuffer (Framebuffer_Offset + Pattern_Offset) := To_U8 (Videofont8x8.Font (Character'Pos (C)) (Index));
-      end loop;
-   end OCS_Print;
-
-   ----------------------------------------------------------------------------
-   -- OCS_Clear_Screen
-   ----------------------------------------------------------------------------
-   procedure OCS_Clear_Screen is
-   begin
-      for Y in Video_Y_Coordinate_Type'Range loop
-         for X in Video_X_Coordinate_Type'Range loop
-            OCS_Print (X, Y, ' ');
-         end loop;
-      end loop;
-   end OCS_Clear_Screen;
-
-   ----------------------------------------------------------------------------
-   -- OCS_Print (String)
-   ----------------------------------------------------------------------------
-   -- Print string S @ X, Y.
-   ----------------------------------------------------------------------------
-   procedure OCS_Print (
-                        X : in Video_X_Coordinate_Type;
-                        Y : in Video_Y_Coordinate_Type;
-                        S : in String
-                       ) is
-      X1 : Video_X_Coordinate_Type;
-      Y1 : Video_Y_Coordinate_Type;
-      C  : Character;
-   begin
-      X1 := X;
-      Y1 := Y;
-      for Index in S'Range loop
-         C := S (Index);
-         OCS_Print (X1, Y1, C);
-         if X1 = Video_X_Coordinate_Type'Last then
-            X1 := 0;
-            if Y1 = Video_Y_Coordinate_Type'Last then
-               Y1 := 0;
-            else
-               Y1 := Y1 + 1;
-            end if;
-         else
-            X1 := X1 + 1;
-         end if;
-      end loop;
-   end OCS_Print;
 
    ----------------------------------------------------------------------------
    -- CIAA ICR
@@ -270,7 +327,7 @@ package body Amiga is
       --
       CIAA.TALO := Unsigned_8 (Tclk_Value mod 2**8);
       CIAA.TAHI := Unsigned_8 (Tclk_Value / 2**8);
-      CIAA.CRA  := CIAA.CRA or 1; -- start Timer A
+      CIAA.CRA  := @ or 1; -- start Timer A
    end Tclk_Init;
 
 end Amiga;

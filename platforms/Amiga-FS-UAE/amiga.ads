@@ -242,18 +242,18 @@ package Amiga is
    subtype Video_X_Coordinate_Type is Natural range 0 .. VIDEO_WIDTH / Videofont8x8.Font_Width - 1;
    subtype Video_Y_Coordinate_Type is Natural range 0 .. VIDEO_HEIGHT / Videofont8x8.Font_Height - 1;
 
-   procedure OCS_Setup;
-   procedure OCS_Print (
-                        X : in Video_X_Coordinate_Type;
-                        Y : in Video_Y_Coordinate_Type;
-                        C : in Character
-                       );
+   type Cursor_Type is
+   record
+      X : Video_X_Coordinate_Type;
+      Y : Video_Y_Coordinate_Type;
+   end record;
+
+   Cursor : Cursor_Type;
+
    procedure OCS_Clear_Screen;
-   procedure OCS_Print (
-                        X : in Video_X_Coordinate_Type;
-                        Y : in Video_Y_Coordinate_Type;
-                        S : in String
-                       );
+   procedure OCS_Print (C : in Character);
+   procedure OCS_Print (S : in String);
+   procedure OCS_Setup;
 
    ----------------------------------------------------------------------------
    -- CIAs

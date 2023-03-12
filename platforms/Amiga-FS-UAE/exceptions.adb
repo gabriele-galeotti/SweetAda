@@ -23,7 +23,6 @@ with Amiga;
 with BSP;
 with Gdbstub;
 with IOEMU;
-with UARTIOEMU;
 with A2065;
 with Console;
 
@@ -116,23 +115,7 @@ package body Exceptions is
          Console.Print ("Level 5 IRQ", NL => True);
       end if;
       if Irq_Identifier = Level_6_Interrupt_Autovector then
-         -- Console.Print ("Level 6 IRQ", NL => True);
-         if UARTIOEMU.RXIrqActive (UART1_Descriptor) then
-            UARTIOEMU.RX (UART1_Descriptor, Unused);
-            UARTIOEMU.RXClearIrq (UART1_Descriptor);
-            INTREQ_ClearBitMask (EXTER); -- acknowledge interrupt
-            -- LED blining
-            IOEMU.CIA_IO3 := 1;
-            IOEMU.CIA_IO3 := 0;
-         end if;
-         if UARTIOEMU.RXIrqActive (UART2_Descriptor) then
-            UARTIOEMU.RX (UART2_Descriptor, Unused);
-            UARTIOEMU.RXClearIrq (UART2_Descriptor);
-            INTREQ_ClearBitMask (EXTER); -- acknowledge interrupt
-            -- LED blining
-            IOEMU.CIA_IO4 := 1;
-            IOEMU.CIA_IO4 := 0;
-         end if;
+         Console.Print ("Level 6 IRQ", NL => True);
       end if;
       if Irq_Identifier = Level_7_Interrupt_Autovector then
          Console.Print ("Level 7 IRQ", NL => True);
