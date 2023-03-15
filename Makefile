@@ -353,7 +353,7 @@ DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)
 # PLATFORM_DIRECTORY: directory of the configured platform
 # CPU_DIRECTORY: directory of the configured CPU
 #
-TOOLCHAIN_NAME           ?=
+TOOLCHAIN_NAME           :=
 TOOLCHAIN_PROGRAM_PREFIX :=
 GCC_VERSION              :=
 LIBGCC_FILENAME          :=
