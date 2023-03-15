@@ -38,7 +38,7 @@ begin
             exit when c = Interfaces.C.nul;
             Print (c);
          end;
-         String_Address := String_Address + 1;
+         String_Address := @ + 1;
       end loop;
    end if;
    if Suffix'Length /= 0 then
