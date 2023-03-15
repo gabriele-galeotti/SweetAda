@@ -44,7 +44,10 @@ library project Platform is
    -- Compiler
    ----------------------------------------------------------------------------
 
-   package Compiler renames Basedefs.Compiler;
+   package Compiler extends Basedefs.Compiler is
+      -- Asm_Cpp
+      for Switches ("Asm_Cpp") use Compiler'Switches ("Asm_Cpp") & Configure.GCC_Switches_Startup;
+   end Compiler;
 
    ----------------------------------------------------------------------------
    -- Library
