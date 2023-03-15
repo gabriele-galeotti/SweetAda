@@ -48,9 +48,9 @@ package body Exceptions is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Process
+   -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Process is
+   procedure Exception_Process is
    begin
       Timer.TCSR0.T0INT := False; -- clear Timer flag
       Core.Tick_Count := @ + 1;
@@ -62,7 +62,7 @@ package body Exceptions is
          end if;
       end if;
       INTC.IAR (TIMER_IRQ) := True; -- clear INTC flag
-   end Process;
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Init
