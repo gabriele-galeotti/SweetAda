@@ -43,7 +43,7 @@ SysTick:        .long   0
 _start:
 
                 //
-                // .data section relocation.
+                // Static data relocation.
                 //
                 bl      movdata
 
@@ -66,7 +66,6 @@ dead:           b       .
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// Perform .data section relocation.                                          //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
