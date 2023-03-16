@@ -41,7 +41,8 @@ abstract project Basedefs is
                                 "-nostdinc",
                                 "-nostdlib",
                                 "--RTS=" & Configure.RTS_Path
-                               ) & Builder_Switches;
+                               ) &
+                               Builder_Switches;
    end Builder;
 
    ----------------------------------------------------------------------------
@@ -124,6 +125,5 @@ abstract project Basedefs is
    Library_Kind    := "static";
    Library_Support := "static_only";
    Library_Builder := Configure.Toolchain_Prefix & "/libexec/gprbuild/gprlib";
-   -- Library_Builder := "/usr/libexec/gprbuild/gprlib";
 
 end Basedefs;
