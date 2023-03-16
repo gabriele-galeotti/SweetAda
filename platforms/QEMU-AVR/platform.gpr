@@ -17,8 +17,8 @@ library project Platform is
    -- Definitions
    ----------------------------------------------------------------------------
 
-   Kernel_Parent_Path := external ("KERNEL_PARENT_PATH", ".");
-   Include_Directories := Split (external ("GPR_INCLUDES", ""), " ");
+   Kernel_Parent_Path := External ("KERNEL_PARENT_PATH", ".");
+   Include_Directories := Split (External ("GPR_INCLUDES", ""), " ");
 
    for Target use Configure.Toolchain_Name;
    for Source_Dirs use (".") & Include_Directories;

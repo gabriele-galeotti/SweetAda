@@ -7,7 +7,7 @@ abstract project Basedefs is
    -- Types and variables
    ----------------------------------------------------------------------------
 
-   Verbose := external ("VERBOSE", "");
+   Verbose := External ("VERBOSE", "");
 
    ----------------------------------------------------------------------------
    -- Naming
