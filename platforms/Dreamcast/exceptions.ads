@@ -25,7 +25,7 @@ package Exceptions is
    --                                                                        --
    --========================================================================--
 
-   procedure Process with
+   procedure Exception_Process with
       Export        => True,
       Convention    => Asm,
       External_Name => "exception_process";

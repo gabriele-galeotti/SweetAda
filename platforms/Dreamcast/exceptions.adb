@@ -28,12 +28,12 @@ package body Exceptions is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Process
+   -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Process is
+   procedure Exception_Process is
    begin
       Console.Print ("Exception", NL => True);
-   end Process;
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Init

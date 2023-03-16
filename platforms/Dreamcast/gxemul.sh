@@ -27,9 +27,9 @@ GXEMUL_EXECUTABLE="/opt/GXemul/bin/gxemul"
 # print executed instructions (-i) and dump registers (-r) on stdout
 # -i -r
 #
-case ${BOOTTYPE} in
-  "ROM")   GXEMUL_BOOT="0xa0000000:\"${SWEETADA_PATH}\"/${KERNEL_ROMFILE}" ;;
-  "CDROM") GXEMUL_BOOT="-d ${PLATFORM_DIRECTORY}/sweetada.iso" ;;
+case ${BOOT_TYPE} in
+  "ROM")    GXEMUL_BOOT="0xa0000000:\"${SWEETADA_PATH}\"/${KERNEL_ROMFILE}" ;;
+  "CD-ROM") GXEMUL_BOOT="-d ${PLATFORM_DIRECTORY}/sweetada.iso" ;;
 esac
 "${GXEMUL_EXECUTABLE}" \
   -X -E dreamcast \

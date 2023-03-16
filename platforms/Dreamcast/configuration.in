@@ -18,32 +18,34 @@ CLEAN_OBJECTS_COMMON      += gxemullog.txt IP.BIN 1ST_READ.BIN sweetada.iso
 
 export ADDITIONAL_S_OBJECTS := roto.S video.S
 
-#export BOOTTYPE := ROM
-export BOOTTYPE := CDROM
-#export BOOTTYPE := NETWORK
+#export BOOT_TYPE := ROM
+export BOOT_TYPE := CD-ROM
+#export BOOT_TYPE := NETWORK
 
-ifeq      ($(BOOTTYPE),ROM)
+ifeq      ($(BOOT_TYPE),ROM)
 LD_SCRIPT := linker.lds-ROM
 export GXEMUL := Y
-else ifeq ($(BOOTTYPE),CDROM)
+else ifeq ($(BOOT_TYPE),CD-ROM)
 LD_SCRIPT := linker.lds-CD-ROM
 POSTBUILD_COMMAND := $(SHELL_EXEC) postbuild-cdrom$(SCREXT)
 export GXEMUL := Y
-else ifeq ($(BOOTTYPE),NETWORK)
+else ifeq ($(BOOT_TYPE),NETWORK)
 LD_SCRIPT := linker.lds-networkboot
 export GXEMUL := N
 endif
+
+export USE_GXEMUL_IOEMU := False
 
 USE_APPLICATION := test-Dreamcast
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
-ifeq      ($(BOOTTYPE),ROM)
+ifeq      ($(BOOT_TYPE),ROM)
 RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul$(SCREXT)
-else ifeq ($(BOOTTYPE),CDROM)
+else ifeq ($(BOOT_TYPE),CD-ROM)
 RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul$(SCREXT)
-else ifeq ($(BOOTTYPE),NETWORK)
+else ifeq ($(BOOT_TYPE),NETWORK)
 RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/bba.tcl
 endif
 DEBUG_COMMAND := $(RUN_COMMAND) -debug

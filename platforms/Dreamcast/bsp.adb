@@ -131,7 +131,7 @@ package body BSP is
                when Dreamcast.CABLE_RGB       => S := S_RGB'Access;
                when Dreamcast.CABLE_COMPOSITE => S := S_COMPOSITE'Access;
             end case;
-            Console.Print ("Video cable: ", NL => False);
+            Console.Print ("Video cable: ");
             Console.Print (S.all, NL => True);
          end;
       end if;
