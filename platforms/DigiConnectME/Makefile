@@ -34,9 +34,7 @@ endif
 
 LIBRARY_NAME := platform
 
-OBJECTS :=
-OBJECTS += $(OBJECT_DIRECTORY)/startup.o
-OBJECTS += $(OBJECT_DIRECTORY)/llkernel.o
+OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
 
 -include Makefile.if.in
 

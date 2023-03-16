@@ -11,6 +11,7 @@ CPU_MODEL      := ARM7TDMI
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_ARMeb)
 
 GCC_SWITCHES_PLATFORM     += -mcpu=arm7tdmi -mabi=aapcs
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      += --undefined=reset
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
