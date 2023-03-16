@@ -122,7 +122,6 @@ elif [ "x$1" = "x-debug" ] ; then
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
-    -iex "set architecture riscv" \
     ${KERNEL_OUTFILE} \
     -ex "target remote tcp:localhost:1234" \
     -ex "break *0x80000000" \
