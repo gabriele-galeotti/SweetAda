@@ -49,15 +49,15 @@ return 0
 cd ${PLATFORM_DIRECTORY}
 
 # FS-UAE executable
-FSUAE_EXECUTABLE="/opt/FS-UAE/bin/fs-uae"
+FS_UAE_EXECUTABLE="/opt/FS-UAE/bin/fs-uae"
 
 # TCP port for serial port
 SERIALPORT=1235
 
-"${FSUAE_EXECUTABLE}" \
+"${FS_UAE_EXECUTABLE}" \
   fs-uae.conf \
   &
-FSUAE_PID=$!
+FS_UAE_PID=$!
 
 # console for serial port
 tcpport_is_listening ${SERIALPORT} 3 "*** Error"
@@ -66,7 +66,7 @@ setsid /usr/bin/xterm \
   "stty -icanon -echo ; nc localhost ${SERIALPORT}" \
   &
 
-wait ${FSUAE_PID}
+wait ${FS_UAE_PID}
 
 exit $?
 

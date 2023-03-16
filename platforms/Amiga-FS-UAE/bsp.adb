@@ -28,13 +28,9 @@ with Amiga;
 with ZorroII;
 with A2065;
 with Gayle;
-with Exceptions;
-with Linker;
-with Gdbstub;
-with Gdbstub.SerialComm;
-with Console;
-
 with MMU;
+with Exceptions;
+with Console;
 
 package body BSP is
 
@@ -97,7 +93,7 @@ package body BSP is
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
       Console.TTY_Setup;
       -------------------------------------------------------------------------
-      Console.Print ("Amiga", NL => True);
+      Console.Print ("Amiga/FS-UAE", NL => True);
       -------------------------------------------------------------------------
       if True then
          declare

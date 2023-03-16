@@ -83,8 +83,4 @@ package IOEMU is
       Import     => True,
       Convention => Ada;
 
-   -- IOEMU serial ports
-   SERIALPORT1_BASEADDRESS : constant := CIA_BASEADDRESS + 16#40#;
-   SERIALPORT2_BASEADDRESS : constant := CIA_BASEADDRESS + 16#60#;
-
 end IOEMU;

@@ -20,6 +20,8 @@ LD_SCRIPT := linker.lds-rom
 #LD_SCRIPT := linker.lds-chipram # S-record download
 #LD_SCRIPT := linker.lds-fastram # S-record download
 
+export USE_FS_UAE_IOEMU := False
+
 USE_APPLICATION := test-Amiga-FS-UAE
 
 SESSION_START_COMMAND :=
