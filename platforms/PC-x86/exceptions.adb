@@ -18,6 +18,7 @@
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Configure;
 with Core;
 with Abort_Library;
 with Interrupts;
@@ -168,10 +169,12 @@ package body Exceptions is
             Tick_Count := @ + 1;
             -- LED ignition QEMU/IOEMU or physical PC
             if QEMU then
-               -- IOEMU "TIMER" LED blinking
-               if Tick_Count mod 1_000 = 0 then
-                  PC.PPI_ControlOut (PC.To_PPI_Control (16#FF#));
-                  PC.PPI_ControlOut (PC.To_PPI_Control (16#00#));
+               if Configure.USE_QEMU_IOEMU then
+                  -- IOEMU "TIMER" LED blinking
+                  if Tick_Count mod 1_000 = 0 then
+                     PC.PPI_ControlOut (PC.To_PPI_Control (16#FF#));
+                     PC.PPI_ControlOut (PC.To_PPI_Control (16#00#));
+                  end if;
                end if;
             else
                -- with a physical machine, we have to turn on/off the LED at a
