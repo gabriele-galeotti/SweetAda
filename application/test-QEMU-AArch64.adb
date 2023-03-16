@@ -1,6 +1,5 @@
 
 with Interfaces;
-with Core;
 with Configure;
 with CPU;
 with IOEMU;
@@ -36,7 +35,7 @@ package body Application is
          declare
             Delay_Count : Integer;
          begin
-            Delay_Count := (if Core.Debug_Flag then 500_000_000 else 500_000_000);
+            Delay_Count := 500_000_000;
             if Configure.USE_QEMU_IOEMU then
                IOEMU.IO1 := 0;
                IOEMU.IO2 := 0;
