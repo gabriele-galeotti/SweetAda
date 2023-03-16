@@ -7,7 +7,7 @@ with Core;
 with Bits;
 with BSP;
 with CPU;
-with SCC;
+with Z8530;
 with Sun4m;
 with IOEMU;
 with Console;
@@ -41,7 +41,7 @@ package body Application is
       procedure CHANNELB_Putchar (C : in Character);
       procedure CHANNELB_Putchar (C : in Character) is
       begin
-         SCC.TX (BSP.SCC_Descriptor, SCC.CHANNELB, To_U8 (C));
+         Z8530.TX (BSP.SCC_Descriptor, Z8530.CHANNELB, To_U8 (C));
       end CHANNELB_Putchar;
    begin
       -------------------------------------------------------------------------
