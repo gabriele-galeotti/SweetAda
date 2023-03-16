@@ -36,13 +36,13 @@ package body Application is
    procedure Run is
    begin
       -------------------------------------------------------------------------
-      if Configure.BOOTTYPE = "ROM" or else Configure.BOOTTYPE = "CDROM" then
+      if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then
          Console.Print ("Starting ""video"" demo ...", NL => True);
          Video;
          for Delay_Loop_Count in 1 .. 30_000_000 loop CPU.NOP; end loop;
       end if;
       -------------------------------------------------------------------------
-      if Configure.BOOTTYPE = "ROM" or else Configure.BOOTTYPE = "CDROM" then
+      if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then
          Console.Print ("Starting ""roto"" demo ...", NL => True);
          Roto;
       end if;
@@ -55,15 +55,17 @@ package body Application is
          begin
             Value := 0;
             loop
-               -- IOEMU "TIMER" LED blinking
-               IOEMU.IO0 := 1;
-               IOEMU.IO0 := 0;
-               -- display values
-               IOEMU.IO1 := Value;
-               IOEMU.IO2 := Value + 0;
-               IOEMU.IO2 := Value + 1;
-               IOEMU.IO2 := Value + 2;
-               IOEMU.IO2 := Value + 3;
+               if Configure.USE_GXEMUL_IOEMU then
+                  -- IOEMU "TIMER" LED blinking
+                  IOEMU.IO0 := 1;
+                  IOEMU.IO0 := 0;
+                  -- display values
+                  IOEMU.IO1 := Value;
+                  IOEMU.IO2 := Value + 0;
+                  IOEMU.IO2 := Value + 1;
+                  IOEMU.IO2 := Value + 2;
+                  IOEMU.IO2 := Value + 3;
+               end if;
                Value := @ + 1;
                -- emit a message
                Console.Print ("hello, SweetAda", NL => True);
