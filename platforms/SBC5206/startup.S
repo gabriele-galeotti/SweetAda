@@ -42,7 +42,9 @@ _start:
                 movec.l %d0,#MBAR                       // CFPRM 1.5.10
 #endif
 
-                // perform static data relocation
+                //
+                // Static data relocation.
+                //
                 .extern _etext
                 .extern _sdata
                 .extern _edata

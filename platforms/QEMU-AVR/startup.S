@@ -35,7 +35,7 @@ _start:
 
 #if __AVR_ENHANCED__ == 1
                 //
-                // .data ROM -> RAM relocation.
+                // Static data relocation.
                 //
                 ldi     r17,hi8(_edata)
                 ldi     r26,lo8(_sdata)         // X = _sdata

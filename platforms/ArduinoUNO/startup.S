@@ -34,7 +34,7 @@ _start:
                 out     SPH,r16                 // store r16 in stack pointer high
 
                 //
-                // .data ROM -> RAM relocation.
+                // Static data relocation.
                 //
                 ldi     r17,hi8(_edata)
                 ldi     r26,lo8(_sdata)         // X = _sdata
