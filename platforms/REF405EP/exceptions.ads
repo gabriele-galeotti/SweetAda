@@ -34,7 +34,7 @@ package Exceptions is
    PIT_IRQ_ID   : constant := 16#1000#;
    FIT_IRQ_ID   : constant := 16#1010#;
 
-   procedure Process (Identifier : in Unsigned_32) with
+   procedure Exception_Process (Identifier : in Unsigned_32) with
       Export        => True,
       Convention    => Asm,
       External_Name => "exception_process";

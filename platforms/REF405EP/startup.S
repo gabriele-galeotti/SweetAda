@@ -118,11 +118,19 @@ _start:
                 // set time base, low
                 mtspr   TBL,r0
 
-                // perform code relocation
+                //
+                // Code relocation.
+                //
                 bl      movcode
-                // perform static data relocation
+
+                //
+                // Static data relocation.
+                //
                 bl      movdata
-                // zero the bss section
+
+                //
+                // Initialize .bss section.
+                //
                 bl      zerobss
 
                 //

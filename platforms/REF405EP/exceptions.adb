@@ -46,9 +46,9 @@ package body Exceptions is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Process
+   -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Process (Identifier : in Unsigned_32) is
+   procedure Exception_Process (Identifier : in Unsigned_32) is
    begin
       if Identifier = PIT_IRQ_ID then
          Tick_Count := @ + 1;
@@ -79,7 +79,7 @@ package body Exceptions is
       -- if Identifier >= 10 and then Identifier <= 19 then
       --    Console.Print (Identifier, Prefix => "Exception : ", NL => True);
       -- end if;
-   end Process;
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Init
