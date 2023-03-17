@@ -12,9 +12,14 @@
 #define _MIPS_H 1
 
 #define CP0_Index    $0         // TLB entry index register
+#define CP0_Random   $1
 #define CP0_EntryLo  $2         // TLB entry contents (low-order half)
+#define CP0_EntryLo0 $2         // TLB entry contents (low-order half) 0
+#define CP0_EntryLo1 $3         // TLB entry contents (low-order half) 1
 #define CP0_Context  $4
-#define CP0_BadAddr  $8
+#define CP0_PageMask $5
+#define CP0_Wired    $6
+#define CP0_BadVAddr $8
 #define CP0_Count    $9
 #define CP0_EntryHi  $10        // TLB entry contents (high-order half)
 #define CP0_Compare  $11
