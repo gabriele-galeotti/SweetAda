@@ -10,6 +10,8 @@ package Configure is
 
    -- basic configuration parameters
    TICK_FREQUENCY : constant := 1_000;
+
+   -- IOEMU
    USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
 
 end Configure;
