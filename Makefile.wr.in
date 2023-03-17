@@ -27,7 +27,7 @@
 ADAC_SWITCHES_WARNING += -gnatw.a # Activate warnings on failing assertions.
 ADAC_SWITCHES_WARNING += -gnatwb  # Activate warnings on bad fixed values.
 ADAC_SWITCHES_WARNING += -gnatw.b # Activate warnings on biased representation.
-ADAC_SWITCHES_WARNING += -gnatwC  # Activate warnings on conditionals. __INF__ warning not generated for values that are known at compile time
+ADAC_SWITCHES_WARNING += -gnatwC  # Activate warnings on conditionals.
 #ADAC_SWITCHES_WARNING += -gnatw.c # Activate warnings on missing component clauses.
 ADAC_SWITCHES_WARNING += -gnatwd  # Activate warnings on implicit dereferencing.
 ADAC_SWITCHES_WARNING += -gnatw.d # Activate tagging of warning and info messages.
