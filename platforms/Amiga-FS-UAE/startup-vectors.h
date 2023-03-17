@@ -1,6 +1,4 @@
 
-                // __REF__ acroread /a "page=152" "MC68020UM.pdf"
-
                 .global interrupt_vector_table
 interrupt_vector_table:
                                                 // #   offset
