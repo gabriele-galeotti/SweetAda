@@ -17,6 +17,7 @@
 
 with Interfaces;
 with Bits;
+with Core;
 with ZynqA9;
 with Console;
 
@@ -71,6 +72,10 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("Zynq7000 (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
       -------------------------------------------------------------------------
    end BSP_Setup;
 
