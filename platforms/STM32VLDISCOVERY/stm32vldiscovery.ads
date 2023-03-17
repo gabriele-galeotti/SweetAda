@@ -35,6 +35,7 @@ package STM32VLDISCOVERY is
    use Interfaces;
    use STM32;
 
+pragma Warnings (Off, "bits of * unused");
    type USART_Type is
    record
       USART_SR  : USART.USART_SR_Type       with Volatile_Full_Access => True;
@@ -49,6 +50,7 @@ package STM32VLDISCOVERY is
       USART_DR  at 16#04# range 0 .. 31;
       USART_CR1 at 16#0C# range 0 .. 31;
    end record;
+pragma Warnings (On, "bits of * unused");
 
    USART1_BASEADDRESS : constant := 16#4001_3800#;
 

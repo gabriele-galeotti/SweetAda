@@ -22,6 +22,9 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
+                . = ALIGN(4);
+                PROVIDE(_debug_flag = .);
+                BYTE(0x00);
                 . = ALIGN(0x10);
                 _etext = .;
         } > ROM
@@ -51,11 +54,20 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
+        .debug_info     : { *(.debug_info) }
+        .debug_abbrev   : { *(.debug_abbrev) }
+        .debug_aranges  : { obj/startup.o(.debug_aranges) *(.debug_aranges) }
+        .debug_line     : { *(.debug_line) }
+        .debug_line_str : { *(.debug_line_str) }
+        .debug_ranges   : { *(.debug_ranges) }
+        .debug_rnglists : { *(.debug_rnglists) }
+        .debug_str      : { *(.debug_str) }
+        /**********************************************************************
+         *                                                                    *
+         **********************************************************************/
         /DISCARD/ :
         {
-                *(.comment)
-                *(.ARM.exidx*)
-                *(.ARM.extab*)
+                *(*)
         }
 }
 
