@@ -36,13 +36,15 @@ LIBRARY_NAME := platform
 
 OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
 
-.PHONY: all
-all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+.PHONY : all
+all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
-ifeq ($(OSTYPE),cmd)
+ifeq      ($(OSTYPE),cmd)
 	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+else ifeq ($(OSTYPE),msys)
+	@$(CP) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 endif

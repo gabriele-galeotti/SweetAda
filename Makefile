@@ -263,6 +263,9 @@ RM    := rm -f
 RMDIR := $(RM) -r
 TOUCH := touch
 endif
+ifeq ($(OSTYPE),msys)
+CP += --preserve=all
+endif
 
 ifeq ($(VERBOSE),Y)
 ifeq ($(OSTYPE),cmd)

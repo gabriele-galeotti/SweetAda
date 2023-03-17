@@ -41,13 +41,16 @@ all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
-ifeq ($(OSTYPE),cmd)
+ifeq      ($(OSTYPE),cmd)
 	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+else ifeq ($(OSTYPE),msys)
+	@$(CP) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 endif
 	@$(PROCESSCFG) configure.h.in configure.h
 	@$(PROCESSCFG) configure.ads.in configure.ads
+	@$(PYTHON) design_parser.py $(QSYS_FILENAME) Quartus $(QSYS_IO_LIST)
 
 .PHONY : postbuild
 postbuild :

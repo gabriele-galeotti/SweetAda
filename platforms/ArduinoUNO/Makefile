@@ -41,13 +41,12 @@ OBJECTS += $(foreach f,$(ADDITIONAL_ADS_OBJECTS:.ads=.o),$(OBJ_DIRECTORY)/$(f))
 .PHONY : all
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : installfiles
-installfiles :
-
 .PHONY : configure
 configure :
-ifeq ($(OSTYPE),cmd)
+ifeq      ($(OSTYPE),cmd)
 	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+else ifeq ($(OSTYPE),msys)
+	@$(CP) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 endif
