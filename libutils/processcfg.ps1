@@ -29,6 +29,23 @@ function ExitWithCode
 }
 
 ################################################################################
+# GetEnvVar()                                                                  #
+#                                                                              #
+################################################################################
+function GetEnvVar
+{
+  param([string]$varname)
+  if (-not (Test-Path env:$varname))
+  {
+    return $null
+  }
+  else
+  {
+    return (Get-Item env:$varname).Value.Trim("`"")
+  }
+}
+
+################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
@@ -54,7 +71,7 @@ if ($symbols.Count -gt 0)
   foreach ($symbol in $symbols)
   {
     $variable = $symbol.Trim("@")
-    $value = (Get-Item env:$variable).Value.Trim("`"")
+    $value = $(GetEnvVar $variable)
     if ($value -eq $null)
     {
       Write-Host "*** Warning: variable `"$variable`" has no value."
