@@ -18,6 +18,7 @@
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
+with Core;
 with MicroBlaze;
 with ML605;
 with MMIO;
@@ -84,6 +85,10 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("MicroBlaze ML605 (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
       -------------------------------------------------------------------------
       INTC_Init;
       Tclk_Init;

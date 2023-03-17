@@ -20,8 +20,9 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                *(.gnu.linkonce.t.*)
-                *(.gnu.linkonce.r.*)
+                . = ALIGN(4);
+                PROVIDE(_debug_flag = .);
+                BYTE(0x00);
                 . = ALIGN(0x10);
                 _etext = .;
         } > RAM
@@ -40,7 +41,6 @@ SECTIONS
                 _sdata = .;
                 *(.data)
                 *(.data.*)
-                *(.gnu.linkonce.d.*)
                 . = ALIGN(0x10);
                 _edata = .;
         } > RAM
@@ -53,16 +53,26 @@ SECTIONS
                 *(.bss)
                 *(.bss.*)
                 *(COMMON)
-                *(.gnu.linkonce.b.*)
                 . = ALIGN(0x10);
                 _ebss = .;
         } > RAM
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
+        .debug_info     : { *(.debug_info) }
+        .debug_abbrev   : { *(.debug_abbrev) }
+        .debug_aranges  : { *(.debug_aranges) }
+        .debug_line     : { *(.debug_line) }
+        .debug_line_str : { *(.debug_line_str) }
+        .debug_ranges   : { *(.debug_ranges) }
+        .debug_rnglists : { *(.debug_rnglists) }
+        .debug_str      : { *(.debug_str) }
+        /**********************************************************************
+         *                                                                    *
+         **********************************************************************/
         /DISCARD/ :
         {
-                *(.comment)
+                *(*)
         }
 }
 
