@@ -52,7 +52,7 @@ package Z8530 is
       Base_Address   : Address;
       AB_Address_Bit : Address_Bit_Number;
       CD_Address_Bit : Address_Bit_Number;
-      Baud_Clock     : Positive;           -- PCLK source
+      Baud_Clock     : Positive;
       Flags          : Flags_Type;
       Read_8         : Port_Read_8_Ptr;
       Write_8        : Port_Write_8_Ptr;

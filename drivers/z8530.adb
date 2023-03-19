@@ -645,7 +645,7 @@ package body Z8530 is
          TxN           => Tx_LENGTH_8,
          DTR           => False
          )));
-      -- WR1 enable RX interrupt
+      -- enable RX interrupt
       Register_Write (Descriptor, Channel, WR1, To_U8 (WR1_Type'(
          EXT_INT_ENAB => False,
          Tx_INT_ENAB  => False,
@@ -655,15 +655,15 @@ package body Z8530 is
          WT_FN_RDYFN  => False,
          WT_RDY_ENAB  => False
          )));
-      -- WR9
+      -- Master Interrupt Enable
       Register_Write (Descriptor, Channel, WR9, To_U8 (WR9_Type'(
-         VIS    => False,      -- Vector Includes Status control bit
-         NV     => True,       -- No Vector select bit
-         DLC    => False,      -- Disable Lower Chain control bit
-         MIE    => True,       -- Master Interrupt Enable
-         SHnSL  => False,      -- Status High//Status Low control bit
-         INTACK => False,      -- Software Interrupt Acknowledge control bit
-         RESCMD => RESCMD_NONE -- Reset Command Bits
+         VIS    => False,
+         NV     => True,
+         DLC    => False,
+         MIE    => True,
+         SHnSL  => False,
+         INTACK => False,
+         RESCMD => RESCMD_NONE
          )));
    end Init;
 
