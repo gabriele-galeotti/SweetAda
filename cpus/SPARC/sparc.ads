@@ -70,7 +70,7 @@ package SPARC is
       PIL      : Natural range 0 .. 15; -- proc_interrupt_level
       EF       : Boolean;               -- enable_floating-point
       EC       : Boolean;               -- enable_coprocessor
-      Reserved : Bits_6;                --
+      Reserved : Bits_6 := 0;
       icc      : icc_Type;              -- integer_cond_codes
       ver      : Bits_4;                -- version
       impl     : Bits_4;                -- implementation
