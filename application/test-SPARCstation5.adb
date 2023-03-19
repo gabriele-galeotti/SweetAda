@@ -53,12 +53,16 @@ package body Application is
                Delay_Count := 5_000_000;
             else
                if BSP.QEMU then
-                  Delay_Count := 100_000_000;
+                  -- QEMU machine
+                  Delay_Count := 300_000_000;
                else
+                  -- physical machine
                   Delay_Count := 50_000;
                end if;
             end if;
-            IOEMU.IO1 := 0;
+            if Configure.USE_QEMU_IOEMU then
+               IOEMU.IO1 := 0;
+            end if;
             loop
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
                Console.Print ("hello, SweetAda", NL => True);
@@ -66,8 +70,10 @@ package body Application is
                CHANNELB_Putchar ('K');
                CHANNELB_Putchar (Ada.Characters.Latin_1.CR);
                CHANNELB_Putchar (Ada.Characters.Latin_1.LF);
-               -- IOEMU GPIO test
-               IOEMU.IO1 := @ + 1;
+               if Configure.USE_QEMU_IOEMU then
+                  -- IOEMU GPIO test
+                  IOEMU.IO1 := @ + 1;
+               end if;
             end loop;
          end;
       end if;
