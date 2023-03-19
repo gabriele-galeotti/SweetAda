@@ -1,6 +1,7 @@
 
 with System.Storage_Elements;
 with Interfaces;
+with Configure;
 with CPU;
 with LEON3;
 with IOEMU;
@@ -40,9 +41,11 @@ package body Application is
          begin
             Value := 0;
             loop
-               -- IOEMU GPIO test
+               if Configure.USE_QEMU_IOEMU then
+                  -- IOEMU GPIO test
+                  IOEMU.IO1 := Value;
+               end if;
                Value := @ + 1;
-               IOEMU.IO1 := Value;
                Console.Print ("hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;

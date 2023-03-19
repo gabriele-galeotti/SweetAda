@@ -21,6 +21,7 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Configure;
 with Core;
+with Abort_Library;
 with LLutils;
 with SPARC;
 with LEON3;
@@ -39,6 +40,7 @@ package body Exceptions is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Abort_Library;
    use LLutils;
    use SPARC;
 
@@ -51,6 +53,14 @@ package body Exceptions is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Exception_Process
+   ----------------------------------------------------------------------------
+   procedure Exception_Process is
+   begin
+      System_Abort;
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Irq_Process

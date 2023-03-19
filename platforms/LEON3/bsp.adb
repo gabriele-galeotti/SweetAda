@@ -17,6 +17,7 @@
 
 with System;
 with Interfaces;
+with Core;
 with SPARC;
 with LEON3;
 with Exceptions;
@@ -75,6 +76,11 @@ package body BSP is
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("LEON3 (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
+      -------------------------------------------------------------------------
       Console.Print (Integer (Nwindows), Prefix => "Nwindows: ", NL => True);
       -------------------------------------------------------------------------
       INTC_LEVEL.IL (10) := True;
