@@ -21,6 +21,8 @@ with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Definitions;
+with Configure;
+with Core;
 with MMIO;
 with SPARC;
 with Sun4m;
@@ -93,7 +95,7 @@ package body BSP is
                        "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Result),
            Inputs   => No_Input_Operands,
-           Clobber  => "g1,g2",
+           Clobber  => "g1,g2,icc",
            Volatile => True
           );
       return Result /= 0;
@@ -107,13 +109,13 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
-      SCC.TX (SCC_Descriptor, SCC.CHANNELA, To_U8 (C));
+      Z8530.TX (SCC_Descriptor, Z8530.CHANNELA, To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
       Data : Unsigned_8;
    begin
-      SCC.RX (SCC_Descriptor, SCC.CHANNELA, Data);
+      Z8530.RX (SCC_Descriptor, Z8530.CHANNELA, Data);
       C := To_Ch (Data);
    end Console_Getchar;
 
@@ -124,8 +126,7 @@ package body BSP is
    begin
       -------------------------------------------------------------------------
       -- Exceptions.Init;
-      -- TBR_Set (To_Address (0));
-      QEMU := QEMU_Detect;
+      -- SPARC.TBR_Set (To_Address (0));
       -- SCC ------------------------------------------------------------------
       SCC_Descriptor.Base_Address   := To_Address (SCC_BASEADDRESS);
       SCC_Descriptor.AB_Address_Bit := 2;
@@ -133,19 +134,27 @@ package body BSP is
       SCC_Descriptor.Baud_Clock     := 4_915_200;
       SCC_Descriptor.Read_8         := MMIO.Read'Access;
       SCC_Descriptor.Write_8        := MMIO.Write'Access;
-      SCC.Init (SCC_Descriptor, SCC.CHANNELA);
-      SCC.Init (SCC_Descriptor, SCC.CHANNELB);
-      SCC.Baud_Rate_Set (SCC_Descriptor, SCC.CHANNELA, BR_9600);
-      SCC.Baud_Rate_Set (SCC_Descriptor, SCC.CHANNELB, BR_9600);
+      Z8530.Init (SCC_Descriptor, Z8530.CHANNELA);
+      Z8530.Init (SCC_Descriptor, Z8530.CHANNELB);
+      Z8530.Baud_Rate_Set (SCC_Descriptor, Z8530.CHANNELA, BR_9600);
+      Z8530.Baud_Rate_Set (SCC_Descriptor, Z8530.CHANNELB, BR_9600);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read := Console_Getchar'Access;
       Console.TTY_Setup;
       -------------------------------------------------------------------------
       Console.Print ("SPARCstation 5", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
+      -------------------------------------------------------------------------
       Console.Print (Natural (Nwindows),       Prefix => "Nwindows:         ", NL => True);
-      Console.Print (QEMU,                     Prefix => "QEMU:             ", NL => True);
       Console.Print (DMA2_INTERNAL_IDREGISTER, Prefix => "DMA2 ID Register: ", NL => True);
+      if Configure.USE_QEMU then
+         QEMU := QEMU_Detect;
+         Console.Print (QEMU,                     Prefix => "QEMU:             ", NL => True);
+      end if;
       -- Am7990 ---------------------------------------------------------------
       Am7990_Descriptor.Base_Address  := To_Address (ETHERNET_CONTROLLER_REGISTERS_BASEADDRESS);
       Am7990_Descriptor.Scale_Address := 0;

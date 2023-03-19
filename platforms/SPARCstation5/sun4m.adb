@@ -41,6 +41,7 @@ package body Sun4m is
    ----------------------------------------------------------------------------
    -- Tclk_Init
    -- The 31-bit counter is incremented every 500ns.
+   -- interrupt_level_10 22 0x1A
    ----------------------------------------------------------------------------
    procedure Tclk_Init is
    begin

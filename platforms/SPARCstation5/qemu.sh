@@ -121,8 +121,7 @@ elif [ "x$1" = "x-debug" ] ; then
     -q \
     -iex "set basenames-may-differ" \
     ${KERNEL_OUTFILE} \
-    -ex "target remote tcp:localhost:1234" \
-    -ex "break bsp_setup" -ex "continue"
+    -ex "target remote tcp:localhost:1234"
 fi
 
 exit $?

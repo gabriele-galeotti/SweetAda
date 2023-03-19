@@ -34,8 +34,8 @@ _start:
                 sethi   %hi(~(MMU_CR_BM|MMU_CR_E)),%g3
                 or      %g3,%lo(~(MMU_CR_BM|MMU_CR_E)),%g3
                 and     %g2,%g3,%g2
-                sethi   %hi(initcpu),%g1
-                or      %g1,%lo(initcpu),%g1
+                sethi   %hi(_init),%g1
+                or      %g1,%lo(_init),%g1
                 jmp     %g1
                 sta     %g2,[%g0]ASI_N
 
@@ -45,20 +45,22 @@ _start:
 
                 .sect   .text,"ax"
 
-initcpu:
+                .global _init
+_init:
+
                 //
                 // The SPARC Architecture Manual Version 8
                 // 4.2. IU Control/Status Registers
                 //
 #define PSR_INIT (PSR_EF|PSR_PIL(0xF)|PSR_S|PSR_PS|PSR_ET|PSR_CWP(0))
-                mov     %psr,%g1
+                rd      %psr,%g1
                 sethi   %hi(PSR_impl|PSR_ver|PSR_S),%g2       // preserve ver, impl
                 or      %g2,%lo(PSR_impl|PSR_ver|PSR_S),%g2
                 sethi   %hi(PSR_INIT),%g3
                 or      %g3,%lo(PSR_INIT),%g3
                 and     %g1,%g2,%g1
                 or      %g1,%g3,%g1
-                mov     %g1,%psr
+                wr      %g1,%psr
                 NOP3
                 //
                 // Setup TBR.
@@ -66,17 +68,17 @@ initcpu:
                 .extern trap_table
                 sethi   %hi(trap_table),%g1
                 or      %g1,%lo(trap_table),%g1
-                mov     %g1,%tbr
+                wr      %g1,%tbr
                 NOP3
                 //
                 // Initialize Y.
                 //
-                mov     %g0,%y
+                wr      %g0,%y
                 NOP3
 
 #if RELOCATE_DATA == 1
                 //
-                // Perform static data relocation.
+                // Static data relocation.
                 //
                 call    movdata
                 nop
@@ -97,9 +99,9 @@ initcpu:
                 //
                 sethi   %hi(0xFFFFFFFF),%g5
                 or      %g3,%lo(0xFFFFFFFF),%g5
-                mov     %g5,%wim
+                wr      %g5,%wim
                 NOP3
-                mov     %wim,%g4                        // now g4 contains a mask of all windows
+                rd      %wim,%g4                        // now g4 contains a mask of all windows
                 mov     %g4,%g3                         // use g3 for counting
                 mov     %g0,%g1                         // clear NWINDOWS
                 mov     %g0,%g2                         // g2 will add to g1
@@ -114,7 +116,7 @@ initcpu:
                 sta     %g1,[%g2]ASI_SCRATCHPAD
                 // invert the mask and write back to WIM
                 xor     %g4,%g5,%g3
-                mov     %g3,%wim
+                wr      %g3,%wim
                 NOP3
 
                 //
@@ -122,16 +124,16 @@ initcpu:
                 // g1 = NWINDOWS on entry
                 //
                 add     %g1,-1,%g2
-                mov     %psr,%g1
+                rd      %psr,%g1
                 or      %g1,%g2,%g1
-                mov     %g1,%psr
+                wr      %g1,%psr
                 NOP3
                 .extern trap_stack
                 sethi   %hi(trap_stack),%sp
                 or      %sp,%lo(trap_stack),%sp
                 // CWP = 0
                 xor     %g1,%g2,%g1
-                mov     %g1,%psr
+                wr      %g1,%psr
                 NOP3
 
                 //
@@ -171,7 +173,6 @@ dead:           b       .
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// Perform .data section relocation.                                          //
 ////////////////////////////////////////////////////////////////////////////////
 
 movdata:

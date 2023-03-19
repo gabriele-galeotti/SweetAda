@@ -14,13 +14,16 @@ OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
 
-#APPLICATION_TYPE := ROM
+# default parameters
+export BOOT_FROM_NETWORK := False
+export USE_QEMU := False
+export USE_QEMU_IOEMU := False
+
+APPLICATION_TYPE := ROM
 #APPLICATION_TYPE := RAM
-APPLICATION_TYPE := QEMU
+#APPLICATION_TYPE := QEMU
 #APPLICATION_TYPE := networkboot
 #APPLICATION_TYPE := srecord
-
-BOOT_FROM_NETWORK := False
 
 ################################################################################
 ifeq ($(APPLICATION_TYPE),ROM)
@@ -31,8 +34,9 @@ LD_SCRIPT            := linker.lds-ROM
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
-RUN_COMMAND   :=
-DEBUG_COMMAND :=
+
+RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/boot-rom.sh
+DEBUG_COMMAND := $(RUN_COMMAND)
 
 endif
 ################################################################################
@@ -44,6 +48,7 @@ LD_SCRIPT            := linker.lds-RAM
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
+
 RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord.tcl   \
                    "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 9600
 DEBUG_COMMAND :=
@@ -56,15 +61,14 @@ GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=1
 LD_SCRIPT            := linker.lds-ROM
 USE_APPLICATION      := test-SPARCstation5
 
+export USE_QEMU := True
+export USE_QEMU_IOEMU := False
+
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
-# plain QEMU
 RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT)
 DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT) -debug
-# runsweetada + QEMU-IOEMU
-#RUN_COMMAND   := $(RUNSWEETADA) -k "$(SWEETADA_PATH)" -p "$(PLATFORM_DIRECTORY)" -f qemu-ioemu.cfg
-#DEBUG_COMMAND := $(RUN_COMMAND) -d DEBUG_QEMU
 
 endif
 ################################################################################
@@ -76,7 +80,7 @@ USE_APPLICATION      := test-SPARCstation5
 
 POSTBUILD_COMMAND := $(SHELL_EXEC) postbuild-network$(SCREXT)
 
-BOOT_FROM_NETWORK := True
+export BOOT_FROM_NETWORK := True
 
 export ELFTOAOUT := /usr/local/bin/elftoaout
 export TFTP_DIRECTORY := /home/tftpboot
@@ -100,6 +104,4 @@ DEBUG_COMMAND :=
 
 endif
 ################################################################################
-
-export BOOT_FROM_NETWORK
 

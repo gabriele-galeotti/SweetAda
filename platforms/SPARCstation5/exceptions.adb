@@ -19,7 +19,9 @@ with System;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Configure;
 with Core;
+with Abort_Library;
 with LLutils;
 with SPARC;
 with Sun4m;
@@ -38,6 +40,7 @@ package body Exceptions is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Abort_Library;
    use LLutils;
    use SPARC;
 
@@ -52,15 +55,25 @@ package body Exceptions is
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- Exception_Process
+   ----------------------------------------------------------------------------
+   procedure Exception_Process is
+   begin
+      System_Abort;
+   end Exception_Process;
+
+   ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
    procedure Irq_Process is
    begin
       Core.Tick_Count := @ + 1;
-      if Core.Tick_Count mod 1_000 = 0 then
-         -- IOEMU "TIMER" LED blinking
-         IOEMU.IO0 := 1;
-         IOEMU.IO0 := 0;
+      if Configure.USE_QEMU_IOEMU then
+         if Core.Tick_Count mod 1_000 = 0 then
+            -- IOEMU "TIMER" LED blinking
+            IOEMU.IO0 := 1;
+            IOEMU.IO0 := 0;
+         end if;
       end if;
       Sun4m.System_Timer_ClearLR;
    end Irq_Process;
