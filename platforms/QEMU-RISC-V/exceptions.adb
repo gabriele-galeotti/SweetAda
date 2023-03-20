@@ -17,7 +17,6 @@
 
 with System.Machine_Code;
 with Interfaces;
-with Definitions;
 with Core;
 with RISCV;
 with Configure;
@@ -36,8 +35,6 @@ package body Exceptions is
 
    use System.Machine_Code;
    use Interfaces;
-
-   CRLF : String renames Definitions.CRLF;
 
    procedure Timer_Process with
       Export        => True,

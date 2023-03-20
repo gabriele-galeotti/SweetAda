@@ -32,10 +32,11 @@ package Virt is
 
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
 
    -- Timer
 
-   Timer_Frequency : constant := 10 * Definitions.MHz1;
+   Timer_Frequency : constant := 10 * MHz1;
    Timer_Constant  : constant := (Timer_Frequency + 1_000 / 2) / 1_000;
 
    -- UART 16x50-style
