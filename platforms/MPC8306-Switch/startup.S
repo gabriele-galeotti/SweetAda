@@ -51,7 +51,7 @@ _start:
 #define CFG_IMMRBAR        0xFF400000
 #define SDRAM_BASE_ADDRESS 0x00000000
 #define NANDF_BASE_ADDRESS 0xC0000000
-#include "startup-memory.S"
+#include "startup-memory.h"
 
                 //
                 // Local Bus Window 0.
