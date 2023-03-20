@@ -17,6 +17,12 @@ package body Application is
 
    use Interfaces;
 
+   procedure SETR;
+   procedure SETW;
+   procedure SETACK;
+   procedure SETNOACK;
+   procedure TX (Code : in Unsigned_8);
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -78,7 +84,7 @@ package body Application is
       -- LM75 test ------------------------------------------------------------
       if True then
          declare
-            Data  : Unsigned_8;
+            Data  : Unsigned_8 with Unreferenced => True;
             Data1 : Unsigned_8;
             Data2 : Unsigned_8;
          begin
