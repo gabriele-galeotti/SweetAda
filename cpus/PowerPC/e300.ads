@@ -37,10 +37,6 @@ package e300 is
 
    CSRR0  : constant SPR_Type := 58;
    CSRR1  : constant SPR_Type := 59;
-   SPRG0  : constant SPR_Type := 272;
-   SPRG1  : constant SPR_Type := 273;
-   SPRG2  : constant SPR_Type := 274;
-   SPRG3  : constant SPR_Type := 275;
    SPRG4  : constant SPR_Type := 276;
    SPRG5  : constant SPR_Type := 277;
    SPRG6  : constant SPR_Type := 278;
