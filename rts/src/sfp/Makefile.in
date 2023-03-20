@@ -64,7 +64,7 @@ else
 	$(CP) $(RTS_SOURCE_PATH)/*.adb $(ADAINCLUDE_PATH)/
 	$(PROCESSCFG) $(RTS_SOURCE_PATH)/s-parame.ads.in $(ADAINCLUDE_PATH)/s-parame.ads
 endif
-ifneq (,$(filter $(OSTYPE),cmd msys))
+ifneq ($(filter $(OSTYPE),cmd msys),)
 	$(DOS2UNIX) $(ADAINCLUDE_PATH_CMD)\s-parame.ads $(ADAINCLUDE_PATH_CMD)\s-parame.ads
 endif
 
