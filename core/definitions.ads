@@ -32,8 +32,14 @@ package Definitions is
    package ISO88591 renames Ada.Characters.Latin_1;
 
    -- common character/string constants
-   CRLF     : constant String := ISO88591.CR & ISO88591.LF;
-   ANSI_CLS : constant String := ISO88591.CSI & "2J";       -- clear terminal screen
+   CRLF : constant String := ISO88591.CR & ISO88591.LF;
+
+   -- ANSI sequences
+   ANSI_CLS     : constant String := ISO88591.CSI & "2J";   -- clear terminal screen
+   ANSI_CUPHOME : constant String := ISO88591.CSI & "1;1H"; -- reset cursor position at (1,1)
+
+   -- VT100 sequences
+   VT100_LINEWRAP : constant String := ISO88591.CSI & "7h"; -- enable line wrap
 
    -- memory sizes as powers of 2
    kB1    : constant := 2**10;
