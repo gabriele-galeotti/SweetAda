@@ -102,7 +102,7 @@ package body BSP is
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Raspberry Pi 3", NL => True);
       Console.Print (Natural (ARMv8A.CurrentEL_Read.EL), Prefix => "Current EL:   ", NL => True);

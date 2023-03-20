@@ -32,6 +32,7 @@ package body BSP is
    --========================================================================--
 
    use Interfaces;
+   use Definitions;
    use Bits;
 
    --========================================================================--
@@ -64,9 +65,9 @@ package body BSP is
    procedure BSP_Setup is
    begin
       -------------------------------------------------------------------------
-      Android.Print_Message ("*******************" & Definitions.CRLF);
-      Android.Print_Message ("* Hello, SweetAda *" & Definitions.CRLF);
-      Android.Print_Message ("*******************" & Definitions.CRLF);
+      Android.Print_Message ("*******************" & CRLF);
+      Android.Print_Message ("* Hello, SweetAda *" & CRLF);
+      Android.Print_Message ("*******************" & CRLF);
       Android.System_Exit (0);
       -------------------------------------------------------------------------
    end BSP_Setup;

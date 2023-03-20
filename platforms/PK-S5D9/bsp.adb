@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Definitions;
 with Bits;
 with ARMv7M;
 with CortexM4;
@@ -33,6 +34,7 @@ package body BSP is
    --========================================================================--
 
    use Interfaces;
+   use Definitions;
    use Bits;
    use S5D9;
 
@@ -235,7 +237,7 @@ package body BSP is
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Synergy S5D9", NL => True);
       -------------------------------------------------------------------------

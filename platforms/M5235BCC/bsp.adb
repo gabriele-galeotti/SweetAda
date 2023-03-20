@@ -17,6 +17,7 @@
 
 with System.Storage_Elements;
 with Interfaces;
+with Definitions;
 with Bits;
 with MMIO;
 with CPU;
@@ -36,6 +37,7 @@ package body BSP is
 
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use Bits;
 
    Flash_ROM_Address : constant Integer_Address := 16#FFE0_0000#;
@@ -81,7 +83,7 @@ pragma Warnings (Off, "volatile actual passed by copy");
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("M5235BCC", NL => True);
       Console.Print (Unsigned_32 (MCF523x.CIR.PIN), Prefix => "PIN:    ", NL => True);

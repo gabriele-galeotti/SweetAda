@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Definitions;
 with Bits;
 with ATmega328P;
 with Console;
@@ -31,6 +32,7 @@ package body BSP is
    --========================================================================--
 
    use Interfaces;
+   use Definitions;
    use Bits;
    use ATmega328P;
 
@@ -89,7 +91,7 @@ package body BSP is
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("AVR ATmega328P (QEMU emulator)", NL => True);
       -- setup GPIO PIN 13 ----------------------------------------------------

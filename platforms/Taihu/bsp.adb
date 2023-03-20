@@ -94,7 +94,7 @@ package body BSP is
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read := Console_Getchar'Access;
-      Console.TTY_Setup;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Taihu405EP (QEMU emulator)", NL => True);
       Console.Print (PVR_Read.Version, Prefix => "PVR version:  ", NL => True);

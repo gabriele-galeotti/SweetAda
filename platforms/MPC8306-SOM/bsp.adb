@@ -38,6 +38,7 @@ package body BSP is
 
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use Bits;
 
    --========================================================================--
@@ -68,8 +69,8 @@ package body BSP is
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
-      BAUDRATE_DIVISOR : constant := SOM.SYSTEM_CLOCK / (Definitions.Baud_Rate_Type'Enum_Rep (Definitions.BR_115200) * 16);
-      CPU_PVR          : PowerPC.PVR_Register_Type;
+      BAUDRATE_DIVISOR : constant := SOM.SYSTEM_CLOCK / (Baud_Rate_Type'Enum_Rep (BR_115200) * 16);
+      CPU_PVR          : PowerPC.PVR_Type;
    begin
       -- 6.3.2.5 System I/O Configuration Register 1 (SICR_1) -----------------
       -- MPC8306.SICR_1 := 16#2A81_5657#; -- UART2 mapped on I/O pads
@@ -80,21 +81,21 @@ package body BSP is
       UART1_Descriptor.Baud_Clock    := SOM.SYSTEM_CLOCK;
       UART1_Descriptor.Read_8        := MMIO.Read'Access;
       UART1_Descriptor.Write_8       := MMIO.Write'Access;
-      UART1_Descriptor.Data_Queue    := ((others => 0), 0, 0, 0);
+      UART1_Descriptor.Data_Queue    := [[others => 0], 0, 0, 0];
       UART16x50.Init (UART1_Descriptor);
-      UART16x50.Baud_Rate_Set (UART1_Descriptor, Definitions.Baud_Rate_Type'Enum_Rep (Definitions.BR_115200));
+      UART16x50.Baud_Rate_Set (UART1_Descriptor, Baud_Rate_Type'Enum_Rep (BR_115200));
       UART2_Descriptor.Base_Address  := To_Address (MPC8306.UART2_BASEADDRESS);
       UART2_Descriptor.Scale_Address := 0;
       UART2_Descriptor.Baud_Clock    := SOM.SYSTEM_CLOCK;
       UART2_Descriptor.Read_8        := MMIO.Read'Access;
       UART2_Descriptor.Write_8       := MMIO.Write'Access;
-      UART2_Descriptor.Data_Queue    := ((others => 0), 0, 0, 0);
+      UART2_Descriptor.Data_Queue    := [[others => 0], 0, 0, 0];
       UART16x50.Init (UART2_Descriptor);
-      UART16x50.Baud_Rate_Set (UART2_Descriptor, Definitions.Baud_Rate_Type'Enum_Rep (Definitions.BR_115200));
+      UART16x50.Baud_Rate_Set (UART2_Descriptor, Baud_Rate_Type'Enum_Rep (BR_115200));
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("MPC8306 SOM", NL => True);
       -------------------------------------------------------------------------

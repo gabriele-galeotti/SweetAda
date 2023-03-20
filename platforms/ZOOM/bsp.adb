@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Definitions;
 with Bits;
 with MCF5373;
 with Console;
@@ -31,6 +32,7 @@ package body BSP is
    --========================================================================--
 
    use Interfaces;
+   use Definitions;
    use Bits;
 
    ----------------------------------------------------------------------------
@@ -65,7 +67,7 @@ package body BSP is
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("ZOOM (MCF5373)", NL => True);
       Console.Print (Unsigned_32 (MCF5373.CIR.PIN), Prefix => "PIN:    ", NL => True);

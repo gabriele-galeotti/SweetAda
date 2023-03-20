@@ -49,6 +49,7 @@ package BSP is
       Export        => True,
       Convention    => C,
       External_Name => "__gnat_number_of_cpus";
+
    procedure Tclk_Init;
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

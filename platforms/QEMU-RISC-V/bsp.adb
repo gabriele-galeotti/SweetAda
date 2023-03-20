@@ -38,6 +38,7 @@ package body BSP is
 
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use Bits;
 
    --========================================================================--
@@ -74,12 +75,12 @@ package body BSP is
       UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART_Descriptor.Base_Address  := To_Address (Virt.UART0_BASEADDRESS);
       UART_Descriptor.Scale_Address := 0;
-      UART_Descriptor.Baud_Clock    := Definitions.CLK_UART3M6;
+      UART_Descriptor.Baud_Clock    := CLK_UART3M6;
       UART16x50.Init (UART_Descriptor);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("RISC-V (QEMU emulator)", NL => True);
       -------------------------------------------------------------------------

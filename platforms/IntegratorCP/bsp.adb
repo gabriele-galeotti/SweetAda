@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Definitions;
 with Core;
 with Bits;
 with MMIO;
@@ -39,6 +40,7 @@ package body BSP is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use Bits;
    use IntegratorCP;
 
@@ -84,7 +86,7 @@ package body BSP is
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.TTY_Setup;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Integrator/CP (QEMU emulator)", NL => True);
       -------------------------------------------------------------------------

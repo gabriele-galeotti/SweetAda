@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Definitions;
 with Bits;
 with MMIO;
 with MVME162FX;
@@ -34,6 +35,7 @@ package body BSP is
    --========================================================================--
 
    use System.Storage_Elements;
+   use Definitions;
    use Bits;
    use MVME162FX;
 
@@ -69,7 +71,7 @@ package body BSP is
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read := Console_Getchar'Access;
-      Console.TTY_Setup;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("MVME162-510A", NL => True);
       Console.Print (MMIO.Read_U8 (MC2.ID'Address), Prefix => "MC2 ID      : ", NL => True);
