@@ -35,8 +35,7 @@ package body S390 is
 
    use System.Machine_Code;
    use Interfaces;
-
-   CRLF : String renames Definitions.CRLF;
+   use Definitions;
 
    --========================================================================--
    --                                                                        --
