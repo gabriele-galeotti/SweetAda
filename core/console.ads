@@ -218,7 +218,4 @@ package Console is
                            Row_Size      : in Row_Size_Type := 16
                           );
 
-   -- TTY_Setup
-   procedure TTY_Setup;
-
 end Console;

@@ -17,6 +17,7 @@
 
 with Ada.Characters.Latin_1;
 with Ada.Unchecked_Conversion;
+with Definitions;
 with LLutils;
 
 package body Console is
@@ -35,11 +36,8 @@ package body Console is
    use type Interfaces.Unsigned_8;
    use type Interfaces.C.char;
    use type Interfaces.C.size_t;
+   use Definitions;
    use type Bits.Bits_1;
-
-   package ISO88591 renames Ada.Characters.Latin_1;
-
-   NewLine : constant String := ISO88591.CR & ISO88591.LF;
 
    procedure Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8);
 
@@ -101,8 +99,8 @@ package body Console is
    ----------------------------------------------------------------------------
    procedure Print_NewLine is
    begin
-      for Index in NewLine'Range loop
-         Print (NewLine (Index));
+      for Index in CRLF'Range loop
+         Print (CRLF (Index));
       end loop;
    end Print_NewLine;
 
@@ -350,19 +348,5 @@ package body Console is
                            Row_Size      : in Row_Size_Type := 16
                           ) is
    separate;
-
-   ----------------------------------------------------------------------------
-   -- TTY_Setup
-   ----------------------------------------------------------------------------
-   -- __INF__ xterm does not seem to correctly recognize a CSI sequence
-   ----------------------------------------------------------------------------
-   procedure TTY_Setup is
-      -- ESC_CSI : constant String := ISO88591.CSI;
-      ESC_CSI : constant String := ISO88591.ESC & "[";
-   begin
-      Print (ESC_CSI & "7h");   -- enable line wrap
-      Print (ESC_CSI & "2J");   -- clear terminal screen
-      Print (ESC_CSI & "1;1H"); -- reset cursor position at (1,1)
-   end TTY_Setup;
 
 end Console;
