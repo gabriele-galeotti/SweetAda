@@ -26,7 +26,7 @@ procedure Print_Integer (
    subtype Positive_Integer is Integer range 0 .. Integer'Last;
    Negative_Sign  : Boolean := False;
    Number         : Positive_Integer;
-   Number_Literal : String (1 .. 16) := (others => ' ');
+   Number_Literal : String (1 .. 16) := [others => ' '];
    Literal_Index  : Natural;
 begin
    if Prefix'Length /= 0 then
