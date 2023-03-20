@@ -31,8 +31,7 @@ package body Android is
 
    use System;
    use System.Machine_Code;
-
-   CRLF : String renames Definitions.CRLF;
+   use Definitions;
 
    --========================================================================--
    --                                                                        --
