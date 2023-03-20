@@ -34,9 +34,7 @@ endif
 
 LIBRARY_NAME := platform
 
-OBJECTS :=
-OBJECTS += $(OBJ_DIRECTORY)/startup.o
-OBJECTS += $(OBJ_DIRECTORY)/llkernel.o
+OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
 
 .PHONY : all
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a

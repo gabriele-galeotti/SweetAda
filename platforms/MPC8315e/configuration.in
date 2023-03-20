@@ -7,6 +7,7 @@ CPU := PowerPC
 
 # -meabi -msdata=eabi
 GCC_SWITCHES_PLATFORM     += -mcpu=e300c3 -meabi -msoft-float -Wa,-me300 -Wa,-mregnames
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      +=
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y

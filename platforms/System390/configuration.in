@@ -7,6 +7,7 @@ CPU       := System390
 CPU_MODEL := ESA/390
 
 GCC_SWITCHES_PLATFORM     += -m31
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      += -m elf_s390
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
@@ -37,12 +38,9 @@ HERCULES_PREFIX := "/opt/Hercules"
 export HERCULES_PREFIX
 
 # allow hercules.rc commands
-HERCULES_RC := $(SWEETADA_PATH)/$(PLATFORM_DIRECTORY)/hercules.rc
-export HERCULES_RC
-
+export HERCULES_RC := $(SWEETADA_PATH)/$(PLATFORM_DIRECTORY)/hercules.rc
 # X3270 executable
-X3270 := /opt/x3270/bin/x3270
-export X3270
+export X3270 := /opt/x3270/bin/x3270
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
