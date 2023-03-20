@@ -33,9 +33,8 @@ package body Exceptions is
    --========================================================================--
 
    use System.Machine_Code;
+   use Definitions;
    use Core;
-
-   CRLF : String renames Definitions.CRLF;
 
    --========================================================================--
    --                                                                        --
