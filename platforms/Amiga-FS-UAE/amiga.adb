@@ -32,8 +32,6 @@ package body Amiga is
    --                                                                        --
    --========================================================================--
 
-   package ISO88591 renames Ada.Characters.Latin_1;
-
    use type Interfaces.C.size_t;
 
    BYTES_PER_RASTER   : constant := 80;

@@ -35,6 +35,7 @@ package Amiga is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use Bits;
 
    ----------------------------------------------------------------------------
@@ -43,8 +44,8 @@ package Amiga is
    -- PAL  28.37516 MHz --> CHIPSET_CLOCK = 28.37516 MHz / 4 = 7.09379 MHz
    ----------------------------------------------------------------------------
 
-   CHIPSET_CLOCK_NTSC : constant := Definitions.CLK_NTSCx2;
-   CHIPSET_CLOCK_PAL  : constant := Definitions.CLK_PALAmiga;
+   CHIPSET_CLOCK_NTSC : constant := CLK_NTSCx2;
+   CHIPSET_CLOCK_PAL  : constant := CLK_PALAmiga;
 
    ----------------------------------------------------------------------------
    -- CUSTOM
