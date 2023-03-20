@@ -52,6 +52,8 @@ library project Core is
 
    Core_Files := ("core.adb", "core.ads");
 
+   Definitions_Files := ("definitions.ads");
+
    Gnat_Exceptions_Files := ("gnat_exceptions.adb", "gnat_exceptions.ads");
 
    Integer_Math_Files := ("integer_math.adb", "integer_math.ads");
@@ -89,6 +91,7 @@ library project Core is
                         Bits_Files                &
                         Console_Files             &
                         Core_Files                &
+                        Definitions_Files         &
                         Gnat_Exceptions_Files     &
                         Integer_Math_Files        &
                         Last_Chance_Handler_Files &
