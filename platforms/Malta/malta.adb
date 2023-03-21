@@ -69,27 +69,24 @@ package body Malta is
    -- PCI_Init
    ----------------------------------------------------------------------------
    procedure PCI_Init is
-      CPU_Interface_Configuration : Unsigned_32;
+      CPUIC : CPU_Interface_Configuration_Type;
    begin
       Cfg_Access_Descriptor.Read_32 := PCI_PortIn'Access;
       Cfg_Access_Descriptor.Write_32 := PCI_PortOut'Access;
       -- 4.5 CPU Interface Endianess, pg 47
-      -- CPU Interface Configuration, Offset: 0x000
-      -- read/write to this register defaults to BE (swap) at reset
-      CPU_Interface_Configuration := MMIO.ReadAS (To_Address (GT64120_BASEADDRESS + 0));
-      -- enforce BE (swap) operation
-      CPU_Interface_Configuration := CPU_Interface_Configuration and 16#FFFF_EFFF#;
-      MMIO.WriteAS (To_Address (GT64120_BASEADDRESS), CPU_Interface_Configuration);
+      CPUIC_Read (GT_64120.CPU_Interface_Configuration'Address, CPUIC);
+      CPUIC.Endianness := Endianness_BIG;
+      CPUIC_Write (GT_64120.CPU_Interface_Configuration'Address, CPUIC);
       -- 3.6 Address Remapping
-      -- remap PCI0 memory @ 0x00000000
-      GT_64120.PCI0M0LD := Byte_Swap (GT64120.Make_LD (16#0000_0000#));
-      GT_64120.PCI0M0HD := Byte_Swap (GT64120.Make_HD (16#0000_0000#, 16#0200_0000#));
-      -- remap PCI1 memory @ 0x18200000
-      GT_64120.PCI0M1LD := Byte_Swap (GT64120.Make_LD (16#1820_0000#));
-      GT_64120.PCI0M1HD := Byte_Swap (GT64120.Make_HD (16#1820_0000#, 16#0020_0000#));
-      -- remap PCI0 I/O @ 0x18000000
-      GT_64120.PCI0IOLD := Byte_Swap (GT64120.Make_LD (16#1800_0000#));
-      GT_64120.PCI0IOHD := Byte_Swap (GT64120.Make_HD (16#1800_0000#, 16#0020_0000#));
+      -- remap PCI0MEM0 memory @ 0x00000000
+      GT_64120.PCI_0_MEM0_Low_Decode_Address  := Make_PCILD (16#0000_0000#);
+      GT_64120.PCI_0_MEM0_High_Decode_Address := Make_PCIHD (16#0000_0000#, 16#0200_0000#);
+      -- remap PCI0MEM1 memory @ 0x18200000
+      GT_64120.PCI_0_MEM1_Low_Decode_Address  := Make_PCILD (16#1820_0000#);
+      GT_64120.PCI_0_MEM1_High_Decode_Address := Make_PCIHD (16#1820_0000#, 16#0020_0000#);
+      -- remap PCI0IO @ 0x18000000
+      GT_64120.PCI_0_IO_Low_Decode_Address  := Make_PCILD (16#1800_0000#);
+      GT_64120.PCI_0_IO_High_Decode_Address := Make_PCIHD (16#1800_0000#, 16#0020_0000#);
    end PCI_Init;
 
    ----------------------------------------------------------------------------

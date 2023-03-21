@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with MMIO;
+
 package body GT64120 is
 
    --========================================================================--
@@ -26,19 +28,53 @@ package body GT64120 is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Make_LD
+   -- CPU Interface Configuration Read/Write
    ----------------------------------------------------------------------------
-   function Make_LD (Start_Address : Unsigned_64) return Unsigned_32 is
+
+   procedure CPUIC_Read (A : in Address; CPUIC : out CPU_Interface_Configuration_Type) is
    begin
-      return Unsigned_32 (Shift_Right (Start_Address, 21));
-   end Make_LD;
+      if Bits.BigEndian then
+         CPUIC := To_CPUIC (MMIO.ReadAS (A));
+      else
+         CPUIC := To_CPUIC (MMIO.ReadA (A));
+      end if;
+   end CPUIC_Read;
+
+   procedure CPUIC_Write (A : in Address; CPUIC : in CPU_Interface_Configuration_Type) is
+   begin
+      if Bits.BigEndian then
+         MMIO.WriteAS (A, To_U32 (CPUIC));
+      else
+         MMIO.WriteA (A, To_U32 (CPUIC));
+      end if;
+   end CPUIC_Write;
 
    ----------------------------------------------------------------------------
-   -- Make_HD
+   -- Make_PCILD
    ----------------------------------------------------------------------------
-   function Make_HD (Start_Address : Unsigned_64; Size : Unsigned_64) return Unsigned_32 is
+   function Make_PCILD (Start_Address : Unsigned_64) return PCI_Low_Decode_Address_Type is
+      PCILD : PCI_Low_Decode_Address_Type;
    begin
-      return Unsigned_32 (Shift_Right (Start_Address + Size - 1, 21) and 16#7F#);
-   end Make_HD;
+      PCILD.Low  := Bits_15 (Shift_Right (Start_Address, 21));
+      if Bits.BigEndian then
+         return To_PCILD (Byte_Swap (To_U32 (PCILD)));
+      else
+         return PCILD;
+      end if;
+   end Make_PCILD;
+
+   ----------------------------------------------------------------------------
+   -- Make_PCIHD
+   ----------------------------------------------------------------------------
+   function Make_PCIHD (Start_Address : Unsigned_64; Size : Unsigned_64) return PCI_High_Decode_Address_Type is
+      PCIHD : PCI_High_Decode_Address_Type;
+   begin
+      PCIHD.High := Bits_7 (Shift_Right (Start_Address + Size - 1, 21) and 16#7F#);
+      if Bits.BigEndian then
+         return To_PCIHD (Byte_Swap (To_U32 (PCIHD)));
+      else
+         return PCIHD;
+      end if;
+   end Make_PCIHD;
 
 end GT64120;

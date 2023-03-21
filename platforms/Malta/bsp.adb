@@ -83,8 +83,8 @@ package body BSP is
    -- BSP_Setup
    ----------------------------------------------------------------------------
    procedure BSP_Setup is
-      Status : Status_Register_Type;
-      PRId   : PRId_Register_Type;
+      Status : Status_Type;
+      PRId   : PRId_Type;
    begin
       -------------------------------------------------------------------------
       HEX_DISPLAY := BOARD_REVISION;
@@ -93,13 +93,13 @@ package body BSP is
       -- PIIX4 UARTs ----------------------------------------------------------
       PIIX4_UART1_Descriptor.Base_Address  := To_Address (PIIX4_BASEADDRESS + 16#0000_03F8#);
       PIIX4_UART1_Descriptor.Scale_Address := 0;
-      PIIX4_UART1_Descriptor.Baud_Clock    := 1_843_200;
+      PIIX4_UART1_Descriptor.Baud_Clock    := CLK_UART1M8;
       PIIX4_UART1_Descriptor.Read_8        := MMIO.Read'Access;
       PIIX4_UART1_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (PIIX4_UART1_Descriptor);
       PIIX4_UART2_Descriptor.Base_Address  := To_Address (PIIX4_BASEADDRESS + 16#0000_02F8#);
       PIIX4_UART2_Descriptor.Scale_Address := 0;
-      PIIX4_UART2_Descriptor.Baud_Clock    := 1_843_200;
+      PIIX4_UART2_Descriptor.Baud_Clock    := CLK_UART1M8;
       PIIX4_UART2_Descriptor.Read_8        := MMIO.Read'Access;
       PIIX4_UART2_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (PIIX4_UART2_Descriptor);
@@ -109,6 +109,11 @@ package body BSP is
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("MIPS Malta (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
+      -------------------------------------------------------------------------
       Core.Parameters_Dump;
       PRId := CP0_PRId_Read;
       Console.Print ("CPU ID         : ");
@@ -137,7 +142,7 @@ package body BSP is
       Status.CU2 := True;
       CP0_SR_Write (Status);
       declare
-         S : aliased Status_Register_Type;
+         S : aliased Status_Type;
          X : aliased Unsigned_32 with
             Address => S'Address;
       begin
@@ -145,14 +150,14 @@ package body BSP is
          Console.Print (X, Prefix => "Status: ", NL => True);
       end;
       Console.Print (CP0_Config_Read, Prefix => "Config: ", NL => True);
-      -------------------------------------------------------------------------
+      -- CBUS UART ------------------------------------------------------------
       CBUS_UART_Descriptor.Base_Address  := To_Address (CBUS_UART_BASEADDRESS);
       CBUS_UART_Descriptor.Scale_Address := 3;
       CBUS_UART_Descriptor.Baud_Clock    := 3_686_400;
       CBUS_UART_Descriptor.Read_8        := MMIO.Read'Access;
       CBUS_UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (CBUS_UART_Descriptor);
-      -------------------------------------------------------------------------
+      -- PIIX4 IDE ------------------------------------------------------------
       PIIX4_IDE_Descriptor.Base_Address  := To_Address (PIIX4_BASEADDRESS + 16#0000_01F0#);
       PIIX4_IDE_Descriptor.Scale_Address := 0;
       PIIX4_IDE_Descriptor.Read_8        := MMIO.Read'Access;
@@ -160,13 +165,13 @@ package body BSP is
       PIIX4_IDE_Descriptor.Read_16       := MMIO.ReadA'Access;
       PIIX4_IDE_Descriptor.Write_16      := MMIO.WriteA'Access;
       IDE.Init (PIIX4_IDE_Descriptor);
-      -------------------------------------------------------------------------
-      -- assume PCI0M0 memory space @ 0
+      -- VGA ------------------------------------------------------------------
+      -- assume PCI0MEM0 memory space @ 0
       VGA.Init (MIPS.KSEG1_ADDRESS + 16#000A_0000#, MIPS.KSEG1_ADDRESS + 16#000B_8000#);
       VGA.Set_Mode (VGA.MODE12H);
       -------------------------------------------------------------------------
-      Tclk_Init;
       MIPS32.Irq_Enable;
+      Tclk_Init;
       -------------------------------------------------------------------------
    end BSP_Setup;
 

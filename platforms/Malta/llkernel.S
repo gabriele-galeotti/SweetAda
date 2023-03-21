@@ -16,50 +16,50 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #define SAVE_REGS                        \
-                sw      $v0,savev0      ;\
-                sw      $v1,savev1      ;\
-                sw      $a0,savea0      ;\
-                sw      $a1,savea1      ;\
-                sw      $a2,savea2      ;\
-                sw      $a3,savea3      ;\
-                sw      $t0,savet0      ;\
-                sw      $t1,savet1      ;\
-                sw      $t2,savet2      ;\
-                sw      $t3,savet3      ;\
-                sw      $t4,savet4      ;\
-                sw      $t5,savet5      ;\
-                sw      $t6,savet6      ;\
-                sw      $t7,savet7      ;\
-                sw      $t8,savet8      ;\
-                sw      $t9,savet9      ;\
-                sw      $gp,savegp      ;\
-                sw      $sp,savesp      ;\
-                sw      $s8,saves8      ;\
-                sw      $fp,savefp      ;\
-                sw      $ra,savera
+                sw      $k0,0($t0)      ;\
+                sw      $v0,4($t0)      ;\
+                sw      $v1,8($t0)      ;\
+                sw      $a0,12($t0)     ;\
+                sw      $a1,16($t0)     ;\
+                sw      $a2,20($t0)     ;\
+                sw      $a3,24($t0)     ;\
+                sw      $k1,28($t0)     ;\
+                sw      $t1,32($t0)     ;\
+                sw      $t2,36($t0)     ;\
+                sw      $t3,40($t0)     ;\
+                sw      $t4,44($t0)     ;\
+                sw      $t5,48($t0)     ;\
+                sw      $t6,52($t0)     ;\
+                sw      $t7,56($t0)     ;\
+                sw      $t8,60($t0)     ;\
+                sw      $t9,64($t0)     ;\
+                sw      $gp,68($t0)     ;\
+                sw      $sp,72($t0)     ;\
+                sw      $fp,76($t0)     ;\
+                sw      $ra,80($t0)
 
 #define RESTORE_REGS                     \
-                lw      $v0,savev0      ;\
-                lw      $v1,savev1      ;\
-                lw      $a0,savea0      ;\
-                lw      $a1,savea1      ;\
-                lw      $a2,savea2      ;\
-                lw      $a3,savea3      ;\
-                lw      $t0,savet0      ;\
-                lw      $t1,savet1      ;\
-                lw      $t2,savet2      ;\
-                lw      $t3,savet3      ;\
-                lw      $t4,savet4      ;\
-                lw      $t5,savet5      ;\
-                lw      $t6,savet6      ;\
-                lw      $t7,savet7      ;\
-                lw      $t8,savet8      ;\
-                lw      $t9,savet9      ;\
-                lw      $gp,savegp      ;\
-                lw      $sp,savesp      ;\
-                lw      $s8,saves8      ;\
-                lw      $fp,savefp      ;\
-                lw      $ra,savera
+                lw      $k0,0($t0)      ;\
+                lw      $v0,4($t0)      ;\
+                lw      $v1,8($t0)      ;\
+                lw      $a0,12($t0)     ;\
+                lw      $a1,16($t0)     ;\
+                lw      $a2,20($t0)     ;\
+                lw      $a3,24($t0)     ;\
+                lw      $k1,28($t0)     ;\
+                lw      $t1,32($t0)     ;\
+                lw      $t2,36($t0)     ;\
+                lw      $t3,40($t0)     ;\
+                lw      $t4,44($t0)     ;\
+                lw      $t5,48($t0)     ;\
+                lw      $t6,52($t0)     ;\
+                lw      $t7,56($t0)     ;\
+                lw      $t8,60($t0)     ;\
+                lw      $t9,64($t0)     ;\
+                lw      $gp,68($t0)     ;\
+                lw      $sp,72($t0)     ;\
+                lw      $fp,76($t0)     ;\
+                lw      $ra,80($t0)
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -68,79 +68,72 @@
                 .global _start
 _start:
 
+                .set    noreorder
                 //
+                // Reset
                 // SR:TS = 0
                 // SR:BEV = 1
                 // SR:ERL = 1 (processor is in Kernel mode)
                 // PC = 0xBFC0_0000 (KSEG1, unmapped, uncached)
                 //
-                .set    noreorder
                 .extern _init
                 b       _init                   // +0x00
                 nop                             // +0x04
                 nop                             // +0x08
                 nop                             // +0x0C
-                nop                             // +0x10 QEMU here patches the revision ID
-                .set    reorder
-
-////////////////////////////////////////////////////////////////////////////////
-
-                .extern exception_process
-
+                nop                             // +0x10 QEMU patches the revision ID here
                 //
                 // TLB refill.
                 //
                 .org    0x0200
-
+exception0200:  b       tlbmiss
+                nop
                 //
                 // General exception.
                 //
                 .org    0x0380
-                b       exception0380
+exception0380:  b       irqhandle
                 nop
+                .set    reorder
 
-exception0380:
+tlbmiss:
+                .set    noreorder
+                mfc0    $k1,CP0_Context
+                lw      $k0,0($k1)              // EntryLo0
+                lw      $k1,8($k1)              // EntryLo1
+                mtc0    $k0,CP0_EntryLo0
+                mtc0    $k1,CP0_EntryLo1
+                ehb
+                tlbwr
+                eret
+                .set    reorder
+
+irqhandle:
+                .set    noreorder
                 .set    noat
-                move    $k1,$at
+                move    $k0,$at
                 .set    at
-                sw      $k1,saveat
+                move    $k1,$t0
+                la      $t0,savearea
                 SAVE_REGS
-                la      $k0,exception_process
-                jalr    $k0
+                .extern exception_process
+                la      $t0,exception_process
+                jalr    $t0
                 nop
+                la      $t0,savearea
                 RESTORE_REGS
-                lw      $k1,saveat
                 .set    noat
-                move    $at,$k1
+                move    $at,$k0
                 .set    at
+                move    $t0,$k1
                 // clear CP0_Cause
                 mtc0    $0,CP0_Cause
                 eret
+                .set    reorder
 
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .bss
 
-saveat:         .long 0
-savev0:         .long 0
-savev1:         .long 0
-savea0:         .long 0
-savea1:         .long 0
-savea2:         .long 0
-savea3:         .long 0
-savet0:         .long 0
-savet1:         .long 0
-savet2:         .long 0
-savet3:         .long 0
-savet4:         .long 0
-savet5:         .long 0
-savet6:         .long 0
-savet7:         .long 0
-savet8:         .long 0
-savet9:         .long 0
-savegp:         .long 0
-savesp:         .long 0
-saves8:         .long 0
-savefp:         .long 0
-savera:         .long 0
+savearea:       .space  21*4
 

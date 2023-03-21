@@ -47,19 +47,6 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Exception_Process is
    begin
-      declare
-         Count : Unsigned_32;
-      begin
-         Malta.Count_Expire := @ + Malta.CP0_TIMER_COUNT;
-         MIPS32.CP0_Compare_Write (Malta.Count_Expire);
-         Count := MIPS32.CP0_Count_Read;
-         -- check for missed any timer interrupts
-         if Count - Malta.Count_Expire < 16#7FFF_FFFF# then
-            -- increment a "missed timer count"
-            Malta.Count_Expire := Count + Malta.CP0_TIMER_COUNT;
-            MIPS32.CP0_Compare_Write (Malta.Count_Expire);
-         end if;
-      end;
       Core.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
          if Core.Tick_Count mod 100 = 0 then
@@ -68,6 +55,18 @@ package body Exceptions is
             IOEMU.IO0 := 0;
          end if;
       end if;
+      declare
+         Count : Unsigned_32;
+      begin
+         Malta.Count_Expire := @ + Malta.CP0_TIMER_COUNT;
+         Count := MIPS32.CP0_Count_Read;
+         -- check for missed any timer interrupts
+         if Count - Malta.Count_Expire < 16#7FFF_FFFF# then
+            -- increment a "missed timer count"
+            Malta.Count_Expire := Count + Malta.CP0_TIMER_COUNT;
+         end if;
+         MIPS32.CP0_Compare_Write (Malta.Count_Expire);
+      end;
    end Exception_Process;
 
    ----------------------------------------------------------------------------

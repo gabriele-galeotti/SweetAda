@@ -68,35 +68,18 @@ _init:
                 move    $30,$0
                 move    $31,$0
 
-                // KSU = 0
+                // KSU=0, ERL=0, EXL=0
                 mfc0    $t0,CP0_SR
                 nop
-                la      $t1,~0x18
+                la      $t1,~(0x18|0x6)
                 and     $t0,$t1
                 mtc0    $t0,CP0_SR
                 nop
 
-                // ERL, EXL = 0
-                mfc0    $t0,CP0_SR
-                nop
-                la      $t1,~0x6
-                and     $t0,$t1
-                mtc0    $t0,CP0_SR
-                nop
-
-                // BEV, set Boot Exceptions
-                mfc0    $v0,CP0_SR
-                nop
-                and     $v0,0xF
-                or      $v0,SR_BEV
-                mtc0    $v0,CP0_SR
-                nop
-
-                // CP0_WatchLo, CP0_WatchHi, CP0_Cause = 0
+                // clear CP0_Cause, CP0_WatchLo, CP0_WatchHi
+                mtc0    $0,CP0_Cause
                 mtc0    $0,CP0_WatchLo
                 mtc0    $0,CP0_WatchHi
-                nop
-                mtc0    $0,CP0_Cause
                 nop
 
                 // disable cacheability in kseg2/kseg3, kuseg/useg, kseg0
@@ -109,7 +92,7 @@ _init:
                 mtc0    $t0,CP0_Config
                 nop
 
-                // IV = 0 --> Use the general exception vector (16#180)
+                // IV=0, use the general exception vector (0x0180)
                 mfc0    $t0,CP0_Cause
                 nop
                 la      $t1,~(0x00800000)
@@ -118,16 +101,24 @@ _init:
                 nop
 
                 // TLB initialization
-                jal     tlb_reset
-                nop
+                //jal     tlb_reset
+                //nop
 
-                // perform code relocation
+                //
+                // Code relocation.
+                //
                 //jal     movcode
                 //nop
-                // perform static data relocation
+
+                //
+                // Static data relocation.
+                //
                 jal     movdata
                 nop
-                // zero the bss section
+
+                //
+                // Initialize .bss section.
+                //
                 jal     zerobss
                 nop
 
@@ -150,12 +141,6 @@ _init:
                 lui     $gp,%hi(_gp)
                 ori     $gp,%lo(_gp)
 
-                //lui     $gp,%hi(__global_pointer$)
-                //addi    $gp,$gp,%lo(__global_pointer$)
-                //add     $s0,$sp,$zero
-                //add     $sp,$sp,-8
-                //sw      $ra,4($sp)
-
                 //
                 // Jump to high-level code.
                 //
@@ -173,7 +158,6 @@ dead:           b       .
 ////////////////////////////////////////////////////////////////////////////////
 // movcode                                                                    //
 //                                                                            //
-// Perform .text section relocation.                                          //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -206,7 +190,6 @@ movcode:
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// Perform .data section relocation.                                          //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -238,7 +221,6 @@ movdata:
 ////////////////////////////////////////////////////////////////////////////////
 // zerobss                                                                    //
 //                                                                            //
-// Perform a cleanup of the .bss area.                                        //
 // This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 

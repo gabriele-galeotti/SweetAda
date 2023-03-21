@@ -4,9 +4,7 @@ ENTRY(_start)
 MEMORY
 {
         ROM : ORIGIN = 0xBFC00000, LENGTH = 1M
-        RAM : ORIGIN = 0x80000000, LENGTH = 16M
-        /* RAM : ORIGIN = 0x00000000, LENGTH = 16M */
-        /* RAM : ORIGIN = 0x18000000, LENGTH = 16M */
+        RAM : ORIGIN = 0xA0000000, LENGTH = 4M
 }
 
 SECTIONS
@@ -14,25 +12,18 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
-        .romstartup :
-        {
-                _sromstartup = .;
-                /*KEEP(*(.vectors))*/
-                *(.vectors)
-                . = ALIGN(0x10);
-                _eromstartup = .;
-        } > ROM
-        /**********************************************************************
-         *                                                                    *
-         **********************************************************************/
         .text :
         {
                 _stext = .;
+                *(.vectors)
                 *(.text)
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                /* *(.got1) */
+                *(.MIPS.abiflags)
+                . = ALIGN(0x4);
+                PROVIDE(_debug_flag = .);
+                BYTE(0x00);
                 . = ALIGN(0x10);
                 _etext = .;
         } > ROM
@@ -46,10 +37,6 @@ SECTIONS
                 *(.data.*)
                 *(.sdata)
                 *(.sdata.*)
-                _sdata2 = .;
-                *(.sdata2)
-                *(.got.plt)
-                *(.got)
                 . = ALIGN(0x10);
                 _edata = .;
         } > RAM
@@ -66,28 +53,26 @@ SECTIONS
                 *(.sbss)
                 *(.sbss.*)
                 *(.scommon)
-                *(.dynbss)
                 . = ALIGN(0x10);
                 _ebss = .;
         } > RAM
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
-        .debug_info    0 : { *(.debug_info) }
-        .debug_abbrev  0 : { *(.debug_abbrev) }
-        .debug_loc     0 : { *(.debug_loc) }
-        .debug_aranges 0 : { *(.debug_aranges) }
-        .debug_ranges  0 : { *(.debug_ranges) }
-        .debug_line    0 : { *(.debug_line) }
-        .debug_str     0 : { *(.debug_str) }
+        .debug_info     0 : { *(.debug_info) }
+        .debug_abbrev   0 : { *(.debug_abbrev) }
+        .debug_aranges  0 : { *(.debug_aranges) }
+        .debug_ranges   0 : { *(.debug_ranges) }
+        .debug_line     0 : { *(.debug_line) }
+        .debug_str      0 : { *(.debug_str) }
+        .debug_line_str 0 : { *(.debug_line_str) }
+        .debug_rnglists 0 : { *(.debug_rnglists) }
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
         /DISCARD/ :
         {
-                *(.comment)
-                /* *(.eh_frame) */
-                *(.MIPS.abiflags)
+                *(*)
         }
 }
 
