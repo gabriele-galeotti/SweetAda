@@ -38,7 +38,7 @@ package MIPS32 is
    use MIPS;
 
    ----------------------------------------------------------------------------
-   -- Count register (CP0 register 9, Select 0) (157)
+   -- 6.2.10 Count Register (CP0 Register 9, Select 0)
    ----------------------------------------------------------------------------
 
    function CP0_Count_Read return Unsigned_32 with
@@ -47,7 +47,7 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Compare register (CP0 register 11, Select 0) (158)
+   -- 6.2.12 Compare Register (CP0 Register 11, Select 0)
    ----------------------------------------------------------------------------
 
    function CP0_Compare_Read return Unsigned_32 with
@@ -56,7 +56,7 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Status Register (CP0 register 12, Select 0) (158)
+   -- 6.2.13 Status Register (CP0 Register 12, Select 0)
    ----------------------------------------------------------------------------
 
    KSU_Kernel     : constant := 2#00#; -- Base mode is Kernel Mode
@@ -67,7 +67,7 @@ package MIPS32 is
    FR_32  : constant := 0; -- FP registers can contain any 32-bit datatype. 64-bit in even-odd pairs of registers
    FR_ANY : constant := 1; -- FP registers can contain any datatype
 
-   type Status_Register_Type is
+   type Status_Type is
    record
       IE        : Boolean;     -- Interrupt Enable
       EXL       : Boolean;     -- Exception Level
@@ -96,7 +96,7 @@ package MIPS32 is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for Status_Register_Type use
+   for Status_Type use
    record
       IE        at 0 range 0 .. 0;
       EXL       at 0 range 1 .. 1;
@@ -124,13 +124,13 @@ package MIPS32 is
       CU3       at 0 range 31 .. 31;
    end record;
 
-   function CP0_SR_Read return Status_Register_Type with
+   function CP0_SR_Read return Status_Type with
       Inline => True;
-   procedure CP0_SR_Write (Value : in Status_Register_Type) with
+   procedure CP0_SR_Write (Value : in Status_Type) with
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Cause register (CP0 register 13, Select 0) (168)
+   -- 6.2.17 Cause Register (CP0 Register 13, Select 0)
    ----------------------------------------------------------------------------
 
    ExcCode_Int        : constant := 16#00#; -- Interrupt
@@ -210,7 +210,7 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Exception Program Counter register (CP0 register 14, Select 0) (172)
+   -- 6.2.18 Exception Program Counter (CP0 Register 14, Select 0)
    ----------------------------------------------------------------------------
 
    function CP0_EPC_Read return Unsigned_32 with
@@ -219,10 +219,10 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- PRId register (CP0 register 15, Select 0)
+   -- 6.2.19 Processor Identification (CP0 Register 15, Select 0)
    ----------------------------------------------------------------------------
 
-   type PRId_Register_Type is
+   type PRId_Type is
    record
       Revision        : Unsigned_8; -- Rev
       CPU_ID          : Unsigned_8; -- Imp
@@ -231,7 +231,7 @@ package MIPS32 is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for PRId_Register_Type use
+   for PRId_Type use
    record
       Revision        at 0 range 0 .. 7;
       CPU_ID          at 0 range 8 .. 15;
@@ -239,11 +239,11 @@ package MIPS32 is
       Company_Options at 0 range 24 .. 31;
    end record;
 
-   function CP0_PRId_Read return PRId_Register_Type with
+   function CP0_PRId_Read return PRId_Type with
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Config register (CP0 register 16, Select 0) (174)
+   -- 6.2.21 Config Register (CP0 Register 16, Select 0)
    ----------------------------------------------------------------------------
 
    function CP0_Config_Read return Unsigned_32 with
@@ -252,8 +252,47 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Config1 register (CP0 register 16, Select 1) (176)
+   -- 6.2.22 Config1 Register (CP0 Register 16, Select 1)
    ----------------------------------------------------------------------------
+
+   type Config1_Type is
+   record
+      FP       : Boolean; -- FPU implemented.
+      EP       : Boolean; -- EJTAG present
+      CA       : Boolean; -- Code compression (MIPS16) implemented.
+      WR       : Boolean; -- Watch registers implemented.
+      PC       : Boolean; -- Performance Counter registers implemented.
+      MD       : Boolean; -- MDMX implemented.
+      C2       : Boolean; -- Coprocessor 2 present.
+      DA       : Bits_3;  -- This field contains the type of set associativity for the data cache
+      DL       : Bits_3;  -- This field contains the data cache line size.
+      DS       : Bits_3;  -- This field contains the number of data cache sets per way.
+      IcA      : Bits_3;  -- This field contains the level of instruction cache associativity
+      IcL      : Bits_3;  -- This field contains the instruction cache line size
+      IcS      : Bits_3;  -- This field contains the number of instruction cache sets per way.
+      MMU_Size : Bits_6;  -- This field contains the number of entries in the TLB minus one.
+      M        : Bits_1;  -- This bit is hardwired to ‘1’ to indicate the presence of the Config2 register.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for Config1_Type use
+   record
+      FP       at 0 range 0 .. 0;
+      EP       at 0 range 1 .. 1;
+      CA       at 0 range 2 .. 2;
+      WR       at 0 range 3 .. 3;
+      PC       at 0 range 4 .. 4;
+      MD       at 0 range 5 .. 5;
+      C2       at 0 range 6 .. 6;
+      DA       at 0 range 7 .. 9;
+      DL       at 0 range 10 .. 12;
+      DS       at 0 range 13 .. 15;
+      IcA      at 0 range 16 .. 18;
+      IcL      at 0 range 19 .. 21;
+      IcS      at 0 range 22 .. 24;
+      MMU_Size at 0 range 25 .. 30;
+      M        at 0 range 31 .. 31;
+   end record;
 
    function CP0_Config1_Read return Unsigned_32 with
       Inline => True;
@@ -261,7 +300,7 @@ package MIPS32 is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Debug register (CP0 register 23, Select 0) (185)
+   -- 6.2.28 Debug Register (CP0 Register 23, Select 0)
    ----------------------------------------------------------------------------
 
    function CP0_Debug_Read return Unsigned_32 with

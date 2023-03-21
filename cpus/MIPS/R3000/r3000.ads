@@ -39,7 +39,7 @@ package R3000 is
    -- Status Register (CP0 register 12)
    ----------------------------------------------------------------------------
 
-   type Status_Register_Type is
+   type Status_Type is
    record
       IEc     : Boolean;     -- IEc is set 0 to prevent the CPU taking any interrupt, 1 to enable.
       KUc     : Boolean;     -- KUc is set 1 when running with kernel privileges, 0 for user mode.
@@ -65,7 +65,7 @@ package R3000 is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for Status_Register_Type use
+   for Status_Type use
    record
       IEc     at 0 range 0 .. 0;
       KUc     at 0 range 1 .. 1;
@@ -90,16 +90,16 @@ package R3000 is
       Unused4 at 0 range 30 .. 31;
    end record;
 
-   function CP0_SR_Read return Status_Register_Type with
+   function CP0_SR_Read return Status_Type with
       Inline => True;
-   procedure CP0_SR_Write (Value : in Status_Register_Type) with
+   procedure CP0_SR_Write (Value : in Status_Type) with
       Inline => True;
 
    ----------------------------------------------------------------------------
    -- PRId register (CP0 register 15)
    ----------------------------------------------------------------------------
 
-   type PRId_Register_Type is
+   type PRId_Type is
    record
       Rev    : Unsigned_8;
       Imp    : Unsigned_8;
@@ -107,14 +107,14 @@ package R3000 is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for PRId_Register_Type use
+   for PRId_Type use
    record
       Rev    at 0 range 0 .. 7;
       Imp    at 0 range 8 .. 15;
       Unused at 0 range 16 .. 31;
    end record;
 
-   function CP0_PRId_Read return PRId_Register_Type with
+   function CP0_PRId_Read return PRId_Type with
       Inline => True;
 
    ----------------------------------------------------------------------------

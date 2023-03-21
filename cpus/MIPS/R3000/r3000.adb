@@ -94,15 +94,15 @@ package body R3000 is
    -- Status Register (CP0 register 12)
    ----------------------------------------------------------------------------
 
-   function CP0_SR_Read return Status_Register_Type is
-      function U32_To_SRT is new Ada.Unchecked_Conversion (Unsigned_32, Status_Register_Type);
+   function CP0_SR_Read return Status_Type is
+      function U32_To_SRT is new Ada.Unchecked_Conversion (Unsigned_32, Status_Type);
       function CP0_Read is new MFC0 (12);
    begin
       return U32_To_SRT (CP0_Read);
    end CP0_SR_Read;
 
-   procedure CP0_SR_Write (Value : in Status_Register_Type) is
-      function SRT_To_U32 is new Ada.Unchecked_Conversion (Status_Register_Type, Unsigned_32);
+   procedure CP0_SR_Write (Value : in Status_Type) is
+      function SRT_To_U32 is new Ada.Unchecked_Conversion (Status_Type, Unsigned_32);
       procedure CP0_Write is new MTC0 (12);
    begin
       CP0_Write (SRT_To_U32 (Value));
@@ -112,8 +112,8 @@ package body R3000 is
    -- PRId register (CP0 register 15)
    ----------------------------------------------------------------------------
 
-   function CP0_PRId_Read return PRId_Register_Type is
-      function U32_To_PRId is new Ada.Unchecked_Conversion (Unsigned_32, PRId_Register_Type);
+   function CP0_PRId_Read return PRId_Type is
+      function U32_To_PRId is new Ada.Unchecked_Conversion (Unsigned_32, PRId_Type);
       function CP0_Read is new MFC0 (15);
    begin
       return U32_To_PRId (CP0_Read);
