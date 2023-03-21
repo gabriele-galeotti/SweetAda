@@ -35,11 +35,11 @@ package Definitions is
    CRLF : constant String := ISO88591.CR & ISO88591.LF;
 
    -- ANSI sequences
-   ANSI_CLS     : constant String := ISO88591.CSI & "2J";   -- clear terminal screen
-   ANSI_CUPHOME : constant String := ISO88591.CSI & "1;1H"; -- reset cursor position at (1,1)
+   ANSI_CLS     : constant String := ISO88591.ESC & "[" & "2J";   -- clear terminal screen
+   ANSI_CUPHOME : constant String := ISO88591.ESC & "[" & "1;1H"; -- reset cursor position at (1,1)
 
    -- VT100 sequences
-   VT100_LINEWRAP : constant String := ISO88591.CSI & "7h"; -- enable line wrap
+   VT100_LINEWRAP : constant String := ISO88591.ESC & "[" & "7h"; -- enable line wrap
 
    -- memory sizes as powers of 2
    kB1    : constant := 2**10;
