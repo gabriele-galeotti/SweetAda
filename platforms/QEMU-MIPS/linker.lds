@@ -3,8 +3,8 @@ ENTRY(_start)
 
 MEMORY
 {
-        RAM : ORIGIN = 0xA0000000, LENGTH = 16M
         ROM : ORIGIN = 0xBFC00000, LENGTH = 1M
+        RAM : ORIGIN = 0xA0000000, LENGTH = 16M
 }
 
 SECTIONS
@@ -20,10 +20,12 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                *(.gnu.warning)
+                *(.MIPS.abiflags)
+                . = ALIGN(0x4);
+                PROVIDE(_debug_flag = .);
+                BYTE(0x00);
+                _etext = .;
         } > ROM
-        _etext = .;
-        PROVIDE (etext = .);
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
@@ -51,20 +53,25 @@ SECTIONS
                 *(.sbss)
                 *(.sbss.*)
                 *(.scommon)
-                *(.dynbss)
                 _ebss = .;
         } > RAM
-        _end = . ;
-        PROVIDE (end = .);
+        /**********************************************************************
+         *                                                                    *
+         **********************************************************************/
+        .debug_info     0 : { *(.debug_info) }
+        .debug_abbrev   0 : { *(.debug_abbrev) }
+        .debug_aranges  0 : { *(.debug_aranges) }
+        .debug_ranges   0 : { *(.debug_ranges) }
+        .debug_line     0 : { *(.debug_line) }
+        .debug_str      0 : { *(.debug_str) }
+        .debug_line_str 0 : { *(.debug_line_str) }
+        .debug_rnglists 0 : { *(.debug_rnglists) }
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
         /DISCARD/ :
         {
-                *(.comment)
-                /* *(.eh_frame) */
-                *(.rel.dyn)
-                *(.MIPS.abiflags)
+                *(*)
         }
 }
 

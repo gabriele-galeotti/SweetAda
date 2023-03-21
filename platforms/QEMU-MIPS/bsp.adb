@@ -18,6 +18,7 @@
 with System.Storage_Elements;
 with Interfaces;
 with Definitions;
+with Core;
 with Bits;
 with MMIO;
 with Console;
@@ -79,6 +80,10 @@ package body BSP is
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("QEMU-MIPS", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
       -------------------------------------------------------------------------
    end BSP_Setup;
 
