@@ -24,6 +24,7 @@ INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                  \
 # bits                  with''ed by console, core, integer_math, malloc, memory_functions
 # console               with''ed by abort_library, core, malloc
 # core                  _gnat_stack_check and other parameters
+# definitions           with''ed by console
 # gnat_exceptions       called by inline checks
 # integer_math          with''ed by malloc
 # last_chance_handler   called by inline checks
@@ -35,6 +36,7 @@ IMPLICIT_CORE_UNITS += abort_library       \
                        bits                \
                        console             \
                        core                \
+                       definitions         \
                        gnat_exceptions     \
                        integer_math        \
                        last_chance_handler \
