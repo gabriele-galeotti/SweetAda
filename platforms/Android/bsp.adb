@@ -60,9 +60,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -------------------------------------------------------------------------
       Android.Print_Message ("*******************" & CRLF);
@@ -70,6 +70,6 @@ package body BSP is
       Android.Print_Message ("*******************" & CRLF);
       Android.System_Exit (0);
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

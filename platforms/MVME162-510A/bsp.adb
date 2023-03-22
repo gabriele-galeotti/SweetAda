@@ -54,9 +54,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- SCC ------------------------------------------------------------------
       SCC_Descriptor.Base_Address             := To_Address (SCC_BASEADDRESS);
@@ -77,6 +77,6 @@ package body BSP is
       Console.Print (MMIO.Read_U8 (MC2.ID'Address), Prefix => "MC2 ID      : ", NL => True);
       Console.Print (MMIO.Read_U8 (MC2.Revision'Address), Prefix => "MC2 Revision: ", NL => True);
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

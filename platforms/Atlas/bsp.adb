@@ -64,9 +64,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- UART1 ----------------------------------------------------------------
       UART1_Descriptor.Base_Address  := To_Address (UART1_BASEADDRESS);
@@ -90,6 +90,6 @@ package body BSP is
          end loop;
       end;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

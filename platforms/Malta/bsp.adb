@@ -80,9 +80,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
       Status : Status_Type;
       PRId   : PRId_Type;
    begin
@@ -173,6 +173,6 @@ package body BSP is
       MIPS32.Irq_Enable;
       Tclk_Init;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

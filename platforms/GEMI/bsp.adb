@@ -65,9 +65,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- UART -----------------------------------------------------------------
       UART_Descriptor.Base_Address  := To_Address (GEMI.UART_BASEADDRESS);
@@ -85,6 +85,6 @@ package body BSP is
       -------------------------------------------------------------------------
       Console.Print ("GEMI SH7032", NL => True);
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

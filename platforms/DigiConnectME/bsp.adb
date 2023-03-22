@@ -74,9 +74,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       --- Serial Channel A ----------------------------------------------------
       -- FXTAL = 18.432 MHz/ 5 = 3.6864 MHz
@@ -128,6 +128,6 @@ package body BSP is
       end;
       -- unlock Flash memory WP -----------------------------------------------
       NETARM.CSBAR0 := NETARM.CSBAR0 and 16#FFFF_FFFD#;
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

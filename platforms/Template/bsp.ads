@@ -25,6 +25,6 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   procedure BSP_Setup;
+   procedure Setup;
 
 end BSP;

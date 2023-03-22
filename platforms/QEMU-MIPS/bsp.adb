@@ -63,9 +63,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- UART -----------------------------------------------------------------
       UART_Descriptor.Read_8        := MMIO.Read'Access;
@@ -85,6 +85,6 @@ package body BSP is
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

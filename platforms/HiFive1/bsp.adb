@@ -104,9 +104,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
       use GPIO;
       use UART;
    begin
@@ -141,6 +141,6 @@ package body BSP is
       MTIMECMP_Write (MTIME_Read + MTIME_Offset);
       Irq_Enable;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

@@ -42,6 +42,6 @@ package BSP is
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);
-   procedure BSP_Setup;
+   procedure Setup;
 
 end BSP;

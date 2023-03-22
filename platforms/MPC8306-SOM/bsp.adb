@@ -66,9 +66,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
       BAUDRATE_DIVISOR : constant := SOM.SYSTEM_CLOCK / (Baud_Rate_Type'Enum_Rep (BR_115200) * 16);
       CPU_PVR          : PowerPC.PVR_Type;
    begin
@@ -106,6 +106,6 @@ package body BSP is
       Console.Print (MPC8306.RCWLR, Prefix => "RCWLR: ", NL => True);
       Console.Print (MPC8306.RCWHR, Prefix => "RCWHR: ", NL => True);
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

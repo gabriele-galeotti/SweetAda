@@ -33,11 +33,11 @@ package body BSP is
    -- procedure Console_Getchar (C : out Character) is null;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       null;
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

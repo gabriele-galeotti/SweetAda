@@ -110,11 +110,11 @@ package body BSP is
    procedure Board_Init is separate;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
    -- System is in protected-mode, DPL0 flat linear address space.
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -------------------------------------------------------------------------
       GDT_Simple.Setup;
@@ -311,14 +311,14 @@ package body BSP is
       -- final IRQ enable
       Irq_Enable;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
    ----------------------------------------------------------------------------
-   -- BSP_Reset
+   -- Reset
    ----------------------------------------------------------------------------
-   procedure BSP_Reset is
+   procedure Reset is
    begin
       null;
-   end BSP_Reset;
+   end Reset;
 
 end BSP;

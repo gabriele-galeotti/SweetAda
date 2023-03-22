@@ -212,9 +212,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- unlock registers -----------------------------------------------------
       PRCR := (
@@ -250,6 +250,6 @@ package body BSP is
       Console.Print (CortexM4.ACTLR.DISFPCA,    Prefix => "ACTLR: DISFPCA:    ", NL => True);
       Console.Print (CortexM4.ACTLR.DISOOFP,    Prefix => "ACTLR: DISOOFP:    ", NL => True);
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

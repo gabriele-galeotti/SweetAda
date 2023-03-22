@@ -68,9 +68,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
       System_Clock : constant := 250 * MHz1;
       Baud_Rate    : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
@@ -116,6 +116,6 @@ package body BSP is
       RPI3.Enable_IRQs_1 (RPI3.system_timer_match_1) := True;
       ARMv8A.Irq_Enable;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

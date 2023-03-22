@@ -120,9 +120,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -------------------------------------------------------------------------
       -- Exceptions.Init;
@@ -179,6 +179,6 @@ package body BSP is
       SPARC.Irq_Enable;
       Tclk_Init;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

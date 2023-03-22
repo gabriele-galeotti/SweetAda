@@ -80,9 +80,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- enable SCIF RX/TX ----------------------------------------------------
       SCIF.SCSCR2 := (
@@ -138,6 +138,6 @@ package body BSP is
          end;
       end if;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

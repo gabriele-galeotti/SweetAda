@@ -71,9 +71,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
@@ -86,6 +86,6 @@ package body BSP is
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

@@ -60,9 +60,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup.
+   -- Setup.
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
@@ -73,6 +73,6 @@ package body BSP is
       Console.Print (Unsigned_32 (MCF5373.CIR.PIN), Prefix => "PIN:    ", NL => True);
       Console.Print (Unsigned_32 (MCF5373.CIR.PRN), Prefix => "PRN:    ", NL => True);
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

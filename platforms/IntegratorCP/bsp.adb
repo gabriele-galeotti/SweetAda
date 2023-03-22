@@ -69,9 +69,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -------------------------------------------------------------------------
       Exceptions.Init;
@@ -112,6 +112,6 @@ package body BSP is
       PIC_IRQ_ENABLESET.TIMERINT0 := True;
       CPU.Irq_Enable;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

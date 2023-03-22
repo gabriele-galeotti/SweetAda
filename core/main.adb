@@ -33,6 +33,6 @@ procedure Main is
       External_Name => "adainit";
 begin
    Ada_Init;
-   BSP.BSP_Setup;
+   BSP.Setup;
    Application.Run;
 end Main;

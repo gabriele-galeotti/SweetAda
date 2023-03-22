@@ -40,15 +40,15 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- Console --------------------------------------------------------------
       -- Console.Console_Descriptor.Write := Console_Putchar'Access;
       -- Console.Console_Descriptor.Read  := Console_Getchar'Access;
       -------------------------------------------------------------------------
       null;
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

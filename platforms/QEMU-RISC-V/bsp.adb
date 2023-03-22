@@ -66,9 +66,9 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- UART -----------------------------------------------------------------
       UART_Descriptor.Read_8        := MMIO.Read'Access;
@@ -103,6 +103,6 @@ package body BSP is
       RISCV.MTIMECMP_Write (RISCV.MTIME_Read + Virt.Timer_Constant);
       RISCV.Irq_Enable;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 
 end BSP;

@@ -75,10 +75,10 @@ package body BSP is
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
-   -- BSP_Setup
+   -- Setup
    ----------------------------------------------------------------------------
 pragma Warnings (Off, "volatile actual passed by copy");
-   procedure BSP_Setup is
+   procedure Setup is
    begin
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
@@ -115,7 +115,7 @@ pragma Warnings (Off, "volatile actual passed by copy");
          MMIO.Write_U16 (To_Address (Flash_ROM_Address), 16#F0#);
       end;
       -------------------------------------------------------------------------
-   end BSP_Setup;
+   end Setup;
 pragma Warnings (On, "volatile actual passed by copy");
 
 end BSP;
