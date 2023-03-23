@@ -50,9 +50,6 @@ package Console is
       Read  : not null Console_Read_Ptr;
    end record;
 
-   function To_Ch (Digit : Decimal_Digit_Type) return Character with
-      Inline => True;
-
    procedure Console_Null_Write (C : in Character);
    procedure Console_Null_Read (C : out Character);
 
@@ -67,6 +64,7 @@ package Console is
       Convention    => Ada,
       External_Name => "console__print__cchar";
 
+   -- Print_NewLine
    procedure Print_NewLine;
 
    -- Print[_String]
@@ -81,53 +79,89 @@ package Console is
                     NL    : in Boolean := False
                    ) renames Print_String;
 
-   -- Print (Boolean)
+   -- Print[_Boolean]
+   procedure Print_Boolean (
+                            Value  : in Boolean;
+                            NL     : in Boolean := False;
+                            Prefix : in String := "";
+                            Suffix : in String := ""
+                           );
    procedure Print (
                     Value  : in Boolean;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
-                   );
+                   ) renames Print_Boolean;
 
-   -- Print (Bits_1)
+   -- Print[_Bits1]
+   procedure Print_Bits1 (
+                          Value  : in Bits.Bits_1;
+                          NL     : in Boolean := False;
+                          Prefix : in String := "";
+                          Suffix : in String := ""
+                         );
    procedure Print (
                     Value  : in Bits.Bits_1;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
-                   );
+                   ) renames Print_Bits1;
 
-   -- Print (Unsigned_8)
+   -- Print[_Unsigned8]
+   procedure Print_Unsigned8 (
+                              Value  : in Interfaces.Unsigned_8;
+                              NL     : in Boolean := False;
+                              Prefix : in String := "";
+                              Suffix : in String := ""
+                             );
    procedure Print (
                     Value  : in Interfaces.Unsigned_8;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
-                   );
+                   ) renames Print_Unsigned8;
 
-   -- Print (Unsigned_16)
+   -- Print[_Unsigned16]
+   procedure Print_Unsigned16 (
+                               Value  : in Interfaces.Unsigned_16;
+                               NL     : in Boolean := False;
+                               Prefix : in String := "";
+                               Suffix : in String := ""
+                              );
    procedure Print (
                     Value  : in Interfaces.Unsigned_16;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
-                   );
+                   ) renames Print_Unsigned16;
 
-   -- Print (Unsigned_32)
+   -- Print[_Unsigned32]
+   procedure Print_Unsigned32 (
+                               Value  : in Interfaces.Unsigned_32;
+                               NL     : in Boolean := False;
+                               Prefix : in String := "";
+                               Suffix : in String := ""
+                              );
    procedure Print (
                     Value  : in Interfaces.Unsigned_32;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
-                   );
+                   ) renames Print_Unsigned32;
 
-   -- Print (Unsigned_64)
+   -- Print[_Unsigned64]
+   procedure Print_Unsigned64 (
+                               Value  : in Interfaces.Unsigned_64;
+                               NL     : in Boolean := False;
+                               Prefix : in String := "";
+                               Suffix : in String := ""
+                              );
    procedure Print (
                     Value  : in Interfaces.Unsigned_64;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
-                   );
+                   ) renames Print_Unsigned64;
 
    -- Print[_Integer_Address]
    procedure Print_Integer_Address (
@@ -143,13 +177,19 @@ package Console is
                     Suffix : in String := ""
                    ) renames Print_Integer_Address;
 
-   -- Print (Address)
+   -- Print[_Address]
+   procedure Print_Address (
+                            Value  : in System.Address;
+                            NL     : in Boolean := False;
+                            Prefix : in String := "";
+                            Suffix : in String := ""
+                           );
    procedure Print (
                     Value  : in System.Address;
                     NL     : in Boolean := False;
                     Prefix : in String := "";
                     Suffix : in String := ""
-                   );
+                   ) renames Print_Address;
 
    -- Print[_Integer]
    procedure Print_Integer (

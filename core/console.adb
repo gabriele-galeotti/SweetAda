@@ -15,10 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Ada.Characters.Latin_1;
-with Ada.Unchecked_Conversion;
 with Definitions;
-with LLutils;
 
 package body Console is
 
@@ -39,6 +36,8 @@ package body Console is
    use Definitions;
    use type Bits.Bits_1;
 
+   function To_Ch (Digit : Decimal_Digit_Type) return Character with
+      Inline => True;
    procedure Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8);
 
    --========================================================================--
@@ -48,14 +47,6 @@ package body Console is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- To_Ch
-   ----------------------------------------------------------------------------
-   function To_Ch (Digit : Decimal_Digit_Type) return Character is
-   begin
-      return Character'Val (Character'Pos ('0') + Digit);
-   end To_Ch;
 
    ----------------------------------------------------------------------------
    -- Console "null" functions
@@ -71,6 +62,14 @@ package body Console is
    begin
       C := ISO88591.NUL;
    end Console_Null_Read;
+
+   ----------------------------------------------------------------------------
+   -- To_Ch (helper subprogram)
+   ----------------------------------------------------------------------------
+   function To_Ch (Digit : Decimal_Digit_Type) return Character is
+   begin
+      return Character'Val (Character'Pos ('0') + Digit);
+   end To_Ch;
 
    ----------------------------------------------------------------------------
    -- Print (Character)
@@ -98,11 +97,7 @@ package body Console is
    -- Print_NewLine
    ----------------------------------------------------------------------------
    procedure Print_NewLine is
-   begin
-      for Index in CRLF'Range loop
-         Print (CRLF (Index));
-      end loop;
-   end Print_NewLine;
+   separate;
 
    ----------------------------------------------------------------------------
    -- Print_String
@@ -117,145 +112,74 @@ package body Console is
    ----------------------------------------------------------------------------
    -- Print (Boolean)
    ----------------------------------------------------------------------------
-   procedure Print (
-                    Value  : in Boolean;
-                    NL     : in Boolean := False;
-                    Prefix : in String := "";
-                    Suffix : in String := ""
-                   ) is
-   begin
-      if Prefix'Length /= 0 then
-         Print (Prefix);
-      end if;
-      Print (Character'(if Value then 'T' else 'F'));
-      if Suffix'Length /= 0 then
-         Print (Suffix);
-      end if;
-      if NL then
-         Print_NewLine;
-      end if;
-   end Print;
+   procedure Print_Boolean (
+                            Value  : in Boolean;
+                            NL     : in Boolean := False;
+                            Prefix : in String := "";
+                            Suffix : in String := ""
+                           ) is
+   separate;
 
    ----------------------------------------------------------------------------
    -- Print (Bits_1)
    ----------------------------------------------------------------------------
-   procedure Print (
-                    Value  : in Bits.Bits_1;
-                    NL     : in Boolean := False;
-                    Prefix : in String := "";
-                    Suffix : in String := ""
-                   ) is
-   begin
-      if Prefix'Length /= 0 then
-         Print (Prefix);
-      end if;
-      Print (Character'(if Value = 1 then '1' else '0'));
-      if Suffix'Length /= 0 then
-         Print (Suffix);
-      end if;
-      if NL then
-         Print_NewLine;
-      end if;
-   end Print;
+   procedure Print_Bits1 (
+                          Value  : in Bits.Bits_1;
+                          NL     : in Boolean := False;
+                          Prefix : in String := "";
+                          Suffix : in String := ""
+                         ) is
+   separate;
 
    ----------------------------------------------------------------------------
    -- Print_UnsignedHex8 (helper subprogram)
    ----------------------------------------------------------------------------
    procedure Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8) is
-      C : Character;
-   begin
-      LLutils.U8_To_HexDigit (Value => Value, MSD => True, LCase => False, C => C);
-      Print (C);
-      LLutils.U8_To_HexDigit (Value => Value, MSD => False, LCase => False, C => C);
-      Print (C);
-   end Print_UnsignedHex8;
+   separate;
 
    ----------------------------------------------------------------------------
-   -- Print (Unsigned_XX)
+   -- Print_Unsigned8
    ----------------------------------------------------------------------------
+   procedure Print_Unsigned8 (
+                              Value  : in Interfaces.Unsigned_8;
+                              NL     : in Boolean := False;
+                              Prefix : in String := "";
+                              Suffix : in String := ""
+                             ) is
+   separate;
 
-   -- Unsigned_8
-   procedure Print (
-                    Value  : in Interfaces.Unsigned_8;
-                    NL     : in Boolean := False;
-                    Prefix : in String := "";
-                    Suffix : in String := ""
-                   ) is
-   begin
-      if Prefix'Length /= 0 then
-         Print (Prefix);
-      end if;
-      Print_UnsignedHex8 (Value);
-      if Suffix'Length /= 0 then
-         Print (Suffix);
-      end if;
-      if NL then
-         Print_NewLine;
-      end if;
-   end Print;
+   ----------------------------------------------------------------------------
+   -- Print_Unsigned16
+   ----------------------------------------------------------------------------
+   procedure Print_Unsigned16 (
+                               Value  : in Interfaces.Unsigned_16;
+                               NL     : in Boolean := False;
+                               Prefix : in String := "";
+                               Suffix : in String := ""
+                              ) is
+   separate;
 
-   -- Unsigned_16
-   procedure Print (
-                    Value  : in Interfaces.Unsigned_16;
-                    NL     : in Boolean := False;
-                    Prefix : in String := "";
-                    Suffix : in String := ""
-                   ) is
-   begin
-      if Prefix'Length /= 0 then
-         Print (Prefix);
-      end if;
-      Print (Bits.HWord (Value));
-      Print (Bits.LWord (Value));
-      if Suffix'Length /= 0 then
-         Print (Suffix);
-      end if;
-      if NL then
-         Print_NewLine;
-      end if;
-   end Print;
+   ----------------------------------------------------------------------------
+   -- Print_Unsigned32
+   ----------------------------------------------------------------------------
+   procedure Print_Unsigned32 (
+                               Value  : in Interfaces.Unsigned_32;
+                               NL     : in Boolean := False;
+                               Prefix : in String := "";
+                               Suffix : in String := ""
+                              ) is
+   separate;
 
-   -- Unsigned_32
-   procedure Print (
-                    Value  : in Interfaces.Unsigned_32;
-                    NL     : in Boolean := False;
-                    Prefix : in String := "";
-                    Suffix : in String := ""
-                   ) is
-   begin
-      if Prefix'Length /= 0 then
-         Print (Prefix);
-      end if;
-      Print (Bits.HWord (Value));
-      Print (Bits.LWord (Value));
-      if Suffix'Length /= 0 then
-         Print (Suffix);
-      end if;
-      if NL then
-         Print_NewLine;
-      end if;
-   end Print;
-
-   -- Unsigned_64
-   procedure Print (
-                    Value  : in Interfaces.Unsigned_64;
-                    NL     : in Boolean := False;
-                    Prefix : in String := "";
-                    Suffix : in String := ""
-                   ) is
-   begin
-      if Prefix'Length /= 0 then
-         Print (Prefix);
-      end if;
-      Print (Bits.HWord (Value));
-      Print (Bits.LWord (Value));
-      if Suffix'Length /= 0 then
-         Print (Suffix);
-      end if;
-      if NL then
-         Print_NewLine;
-      end if;
-   end Print;
+   ----------------------------------------------------------------------------
+   -- Print_Unsigned64
+   ----------------------------------------------------------------------------
+   procedure Print_Unsigned64 (
+                               Value  : in Interfaces.Unsigned_64;
+                               NL     : in Boolean := False;
+                               Prefix : in String := "";
+                               Suffix : in String := ""
+                              ) is
+   separate;
 
    ----------------------------------------------------------------------------
    -- Print_Integer_Address
@@ -269,17 +193,15 @@ package body Console is
    separate;
 
    ----------------------------------------------------------------------------
-   -- Print (Address)
+   -- Print_Address
    ----------------------------------------------------------------------------
-   procedure Print (
-                    Value  : in System.Address;
-                    NL     : in Boolean := False;
-                    Prefix : in String := "";
-                    Suffix : in String := ""
-                   ) is
-   begin
-      Print (SSE.To_Integer (Value), NL, Prefix, Suffix);
-   end Print;
+   procedure Print_Address (
+                            Value  : in System.Address;
+                            NL     : in Boolean := False;
+                            Prefix : in String := "";
+                            Suffix : in String := ""
+                           ) is
+   separate;
 
    ----------------------------------------------------------------------------
    -- Print_Integer

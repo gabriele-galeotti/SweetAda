@@ -40,14 +40,23 @@ library project Core is
 
    Console_Files := (
                      "console.adb", "console.ads",
+                     "console-print_address.adb",
                      "console-print_asciiz_string.adb",
                      "console-print_bitimage.adb",
+                     "console-print_bits1.adb",
+                     "console-print_boolean.adb",
                      "console-print_byte_array.adb",
                      "console-print_integer.adb",
                      "console-print_integer_address.adb",
                      "console-print_memory.adb",
+                     "console-print_newline.adb",
                      "console-print_sizet.adb",
-                     "console-print_string.adb"
+                     "console-print_string.adb",
+                     "console-print_unsigned16.adb",
+                     "console-print_unsigned32.adb",
+                     "console-print_unsigned64.adb",
+                     "console-print_unsigned8.adb",
+                     "console-print_unsignedhex8.adb"
                     );
 
    Core_Files := ("core.adb", "core.ads");
