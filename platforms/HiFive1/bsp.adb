@@ -138,7 +138,7 @@ package body BSP is
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
-      MTIMECMP_Write (MTIME_Read + MTIME_Offset);
+      mtimecmp_Write (mtime_Read + mtime_Offset);
       Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
