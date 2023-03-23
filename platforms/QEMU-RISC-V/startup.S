@@ -10,9 +10,9 @@
 
 #define __ASSEMBLER__ 1
 
-#define RISCV_TOOLCHAIN_WORKAROUND 1
-
 ////////////////////////////////////////////////////////////////////////////////
+
+                .option arch,+zicsr,+zifencei
 
                 .sect   .text,"ax"
 
@@ -26,39 +26,19 @@ _start:
                 // M: 3 << 11
                 //
                 li      t0,0x3<<11                      // "M" mode
-#if defined(RISCV_TOOLCHAIN_WORKAROUND)
-                .long   0x30001073|5<<15
-#else
                 csrw    mstatus,t0
-#endif
                 //li      t0,0xFFFF
-#if defined(RISCV_TOOLCHAIN_WORKAROUND)
-                //.long   0x30201073|5<<15
-#else
                 //csrw    medeleg,t0
-#endif
-#if defined(RISCV_TOOLCHAIN_WORKAROUND)
-                //.long   0x30301073|5<<15
-#else
                 //csrw    mideleg,t0
-#endif
                 la      t0,1f
-#if defined(RISCV_TOOLCHAIN_WORKAROUND)
-                .long   0x34101073|5<<15
-#else
                 csrw    mepc,t0
-#endif
                 mret
 1:
 
                 //
                 // Allow only hart #0.
                 //
-#if defined(RISCV_TOOLCHAIN_WORKAROUND)
-                .long   0xF1402073|5<<7
-#else
                 csrr    t0,mhartid
-#endif
                 bnez    t0,hart_idle
 
                 //

@@ -12,6 +12,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+                .option arch,+zicsr,+zifencei
+
                 .sect   .vectors,"ax"
 
                 .align  8
@@ -40,8 +42,8 @@ vectors:
                 sw      a6,68(sp)
                 sw      a7,72(sp)
 
-                .extern timer_process
-                call    timer_process
+                .extern exception_process
+                call    exception_process
 
                 lw      ra,0(sp)
                 //lw      sp,4(sp)

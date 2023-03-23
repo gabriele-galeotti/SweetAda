@@ -8,16 +8,13 @@
 # force LibGCC (__divdi3)
 USE_LIBGCC := Y
 
-# RISC-V 32
-CPU                   := RISC-V
-CPU_MODEL             := RV32IMAFC
-# -march=rv32imafc_zicsr_zifencei -mabi=ilp32f
-GCC_SWITCHES_PLATFORM += -march=rv32imafc -mabi=ilp32f
-STARTUP_OBJECTS       := startup.S llkernel.S
-LD_SWITCHES_PLATFORM  += -m elf32lriscv --no-warn-rwx-segments
-# QEMU executable type
-export RISCV32 := Y
+CPU       := RISC-V
+CPU_MODEL := RV32IMAFC
 
+GCC_SWITCHES_PLATFORM     += -march=rv32imafc -mabi=ilp32f
+#GCC_SWITCHES_PLATFORM     += -march=rv32imafc_zicsr_zifencei -mabi=ilp32f
+STARTUP_OBJECTS           := startup.S llkernel.S
+LD_SWITCHES_PLATFORM      += -m elf32lriscv --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM +=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00

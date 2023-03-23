@@ -36,11 +36,6 @@ package body Exceptions is
    use System.Machine_Code;
    use Interfaces;
 
-   procedure Timer_Process with
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "timer_process";
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -50,9 +45,9 @@ package body Exceptions is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Timer_Process
+   -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Timer_Process is
+   procedure Exception_Process is
    begin
       Core.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
@@ -62,8 +57,8 @@ package body Exceptions is
             IOEMU.IO0 := 0;
          end if;
       end if;
-      RISCV.MTIMECMP_Write (RISCV.MTIME_Read + Virt.Timer_Constant);
-   end Timer_Process;
+      RISCV.mtimecmp_Write (RISCV.mtime_Read + Virt.Timer_Constant);
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Init

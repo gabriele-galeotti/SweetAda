@@ -45,9 +45,10 @@ return 0
 ################################################################################
 
 # QEMU executable
-if [ "x${RISCV32}" = "xY" ] ; then
-  QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-riscv32"
-fi
+case ${CPU_MODEL} in
+  RV32*) QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-riscv32" ;;
+  RV64*) QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-riscv64" ;;
+esac
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
