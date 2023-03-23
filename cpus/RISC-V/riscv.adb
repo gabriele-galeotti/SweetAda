@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Configure;
 with Definitions;
 
 package body RISCV is
@@ -29,20 +30,10 @@ package body RISCV is
    --========================================================================--
 
    use System.Machine_Code;
+   use Definitions;
 
-   CRLF : String renames Definitions.CRLF;
-
-   RISCV_TOOLCHAIN_WORKAROUND : constant Boolean := True;
-
-   Register_Equates : constant String :=
-      "        .equ    a0,0x0A" & CRLF &
-      "        .equ    a1,0x0B" & CRLF &
-      "        .equ    a2,0x0C" & CRLF &
-      "        .equ    a3,0x0D" & CRLF &
-      "        .equ    a4,0x0E" & CRLF &
-      "        .equ    a5,0x0F" & CRLF &
-      "        .equ    a6,0x10" & CRLF &
-      "        .equ    a7,0x11" & CRLF;
+   ZICSR_ZIFENCEI_ASM : constant String :=
+      "        .option arch,+zicsr,+zifencei" & CRLF;
 
    --========================================================================--
    --                                                                        --
@@ -74,28 +65,16 @@ package body RISCV is
    function MCAUSE_Read return Unsigned_32 is
       MCAUSE : Unsigned_32;
    begin
-      if RISCV_TOOLCHAIN_WORKAROUND then
-         Asm (
-              Template => ""                                 & CRLF &
-                          Register_Equates                          &
-                          "        .long   0x34202073|%0<<7" & CRLF &
-                          "",
-              Outputs  => Unsigned_32'Asm_Output ("=r", MCAUSE),
-              Inputs   => No_Input_Operands,
-              Clobber  => "",
-              Volatile => True
-             );
-      else
-         Asm (
-              Template => ""                          & CRLF &
-                          "        csrr    %0,mcause" & CRLF &
-                          "",
-              Outputs  => Unsigned_32'Asm_Output ("=r", MCAUSE),
-              Inputs   => No_Input_Operands,
-              Clobber  => "",
-              Volatile => True
-             );
-      end if;
+      Asm (
+           Template => ""                            & CRLF &
+                       ZICSR_ZIFENCEI_ASM                   &
+                       "        csrr    %0,mcause  " & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", MCAUSE),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
       return MCAUSE;
    end MCAUSE_Read;
 
@@ -105,28 +84,16 @@ package body RISCV is
    function MEPC_Read return Unsigned_32 is
       MEPC : Unsigned_32;
    begin
-      if RISCV_TOOLCHAIN_WORKAROUND then
-         Asm (
-              Template => ""                                 & CRLF &
-                          Register_Equates                          &
-                          "        .long   0x34102073|%0<<7" & CRLF &
-                          "",
-              Outputs  => Unsigned_32'Asm_Output ("=r", MEPC),
-              Inputs   => No_Input_Operands,
-              Clobber  => "",
-              Volatile => True
-             );
-      else
-         Asm (
-              Template => ""                        & CRLF &
-                          "        csrr    %0,mepc" & CRLF &
-                          "",
-              Outputs  => Unsigned_32'Asm_Output ("=r", MEPC),
-              Inputs   => No_Input_Operands,
-              Clobber  => "",
-              Volatile => True
-             );
-      end if;
+      Asm (
+           Template => ""                            & CRLF &
+                       ZICSR_ZIFENCEI_ASM                   &
+                       "        csrr    %0,mepc    " & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", MEPC),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
       return MEPC;
    end MEPC_Read;
 
@@ -135,29 +102,27 @@ package body RISCV is
    ----------------------------------------------------------------------------
    procedure MTVEC_Write (Mtvec : in MTVEC_Type) is
    begin
-      if RISCV_TOOLCHAIN_WORKAROUND then
-         Asm (
-              Template => ""                                  & CRLF &
-                          Register_Equates                           &
-                          "        .long   0x30501073|%0<<15" & CRLF &
-                          "",
-              Outputs  => No_Output_Operands,
-              Inputs   => MTVEC_Type'Asm_Input ("r", Mtvec),
-              Clobber  => "",
-              Volatile => True
-             );
-      else
-         Asm (
-              Template => ""                         & CRLF &
-                          "        csrw    mtvec,%0" & CRLF &
-                          "",
-              Outputs  => No_Output_Operands,
-              Inputs   => MTVEC_Type'Asm_Input ("r", Mtvec),
-              Clobber  => "",
-              Volatile => True
-             );
-      end if;
+      Asm (
+           Template => ""                            & CRLF &
+                       ZICSR_ZIFENCEI_ASM                   &
+                       "        csrw    mtvec,%0   " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => MTVEC_Type'Asm_Input ("r", Mtvec),
+           Clobber  => "",
+           Volatile => True
+          );
    end MTVEC_Write;
+
+   ----------------------------------------------------------------------------
+   -- mtime/mtimecmp
+   ----------------------------------------------------------------------------
+
+   function mtime_Read return Unsigned_64 is
+   separate;
+
+   procedure mtimecmp_Write (Value : in Unsigned_64) is
+   separate;
 
    ----------------------------------------------------------------------------
    -- Asm_Call
@@ -179,85 +144,57 @@ package body RISCV is
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   MSTATUS_USMIE : constant MSTATUS_Type := (
-                                             UIE       => False,
-                                             SIE       => False,
-                                             MIE       => True,
-                                             UPIE      => False,
-                                             SPIE      => False,
-                                             MPIE      => False,
-                                             SPP       => False,
-                                             MPP       => 0,
-                                             FS        => 0,
-                                             XS        => 0,
-                                             MPRIV     => False,
-                                             SUM       => False,
-                                             MXR       => False,
-                                             TVM       => False,
-                                             TW        => False,
-                                             TSR       => False,
-                                             SD        => False,
-                                             others    => <>
+   MSTATUS_USMIE : constant mstatus_Type := (
+                                             UIE    => False,
+                                             SIE    => False,
+                                             MIE    => True,
+                                             UPIE   => False,
+                                             SPIE   => False,
+                                             MPIE   => False,
+                                             SPP    => False,
+                                             MPP    => 0,
+                                             FS     => 0,
+                                             XS     => 0,
+                                             MPRIV  => False,
+                                             SUM    => False,
+                                             MXR    => False,
+                                             TVM    => False,
+                                             TW     => False,
+                                             TSR    => False,
+                                             SD     => False,
+                                             others => <>
                                             );
 
    procedure Irq_Enable is
    begin
-      if RISCV_TOOLCHAIN_WORKAROUND then
-         Asm (
-              Template => ""                                  & CRLF &
-                          Register_Equates                           &
-                          "        .long   0x30002073|%0<<15" & CRLF &
-                          "        .long   0x30402073|%1<<15" & CRLF &
-                          "",
-              Outputs  => No_Output_Operands,
-              Inputs   => [
-                           MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
-                           Unsigned_32'Asm_Input ("r", 16#0000_0080#)
-                          ],
-              Clobber  => "",
-              Volatile => True
-             );
-      else
-         Asm (
-              Template => ""                              & CRLF &
-                          "        csrrs   x0,mstatus,%0" & CRLF &
-                          "        csrrs   x0,mie,%1    " & CRLF &
-                          "",
-              Outputs  => No_Output_Operands,
-              Inputs   => [
-                           MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
-                           Unsigned_32'Asm_Input ("r", 16#0000_0080#)
-                          ],
-              Clobber  => "",
-              Volatile => True
-             );
-      end if;
+      Asm (
+           Template => ""                              & CRLF &
+                       ZICSR_ZIFENCEI_ASM                     &
+                       "        csrrs   x0,mstatus,%0" & CRLF &
+                       "        csrrs   x0,mie,%1    " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        mstatus_Type'Asm_Input ("r", MSTATUS_USMIE),
+                        Unsigned_32'Asm_Input ("r", 16#0000_0080#)
+                       ],
+           Clobber  => "",
+           Volatile => True
+          );
    end Irq_Enable;
 
    procedure Irq_Disable is
    begin
-      if RISCV_TOOLCHAIN_WORKAROUND then
-         Asm (
-              Template => ""                                  & CRLF &
-                          Register_Equates                           &
-                          "        .long   0x30003073|%0<<15" & CRLF &
-                          "",
-              Outputs  => No_Output_Operands,
-              Inputs   => MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
-              Clobber  => "",
-              Volatile => True
-             );
-      else
-         Asm (
-              Template => ""                              & CRLF &
-                          "        csrrc   x0,mstatus,%0" & CRLF &
-                          "",
-              Outputs  => No_Output_Operands,
-              Inputs   => MSTATUS_Type'Asm_Input ("r", MSTATUS_USMIE),
-              Clobber  => "",
-              Volatile => True
-             );
-      end if;
+      Asm (
+           Template => ""                              & CRLF &
+                       ZICSR_ZIFENCEI_ASM                     &
+                       "        csrrc   x0,mstatus,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => mstatus_Type'Asm_Input ("r", MSTATUS_USMIE),
+           Clobber  => "",
+           Volatile => True
+          );
    end Irq_Disable;
 
    function Irq_State_Get return Irq_State_Type is

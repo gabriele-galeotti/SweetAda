@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ mtime.adb                                                                                                 --
+-- __FLN__ riscv-mtime_read.adb                                                                                      --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,36 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Bits;
-
-package body MTime_MTimeCmp is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use Bits;
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   function MTIME_Read return Unsigned_64 is
-   begin
-      return MTime.T;
-   end MTIME_Read;
-
-   procedure MTIMECMP_Write (Value : in Unsigned_64) is
-   begin
-      MTimeCmp.T := Value;
-   end MTIMECMP_Write;
-
-end MTime_MTimeCmp;
+separate (RISCV)
+function mtime_Read return Unsigned_64 is
+   L : Unsigned_32;
+   H : Unsigned_32;
+begin
+   loop
+      H := mtime.H;
+      L := mtime.L;
+      exit when H = mtime.H;
+   end loop;
+   return Make_Word (H, L);
+end mtime_Read;

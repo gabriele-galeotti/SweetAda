@@ -20,7 +20,6 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with RISCV_Definitions;
-with MTime_MTimeCmp;
 
 package RISCV is
 
@@ -39,11 +38,10 @@ package RISCV is
    use Interfaces;
    use Bits;
    use RISCV_Definitions;
-   use MTime_MTimeCmp;
 
    -- Machine Status (mstatus)
 
-   type MSTATUS_Type is
+   type mstatus_Type is
    record
       UIE       : Boolean;     -- User Interrupt Enable
       SIE       : Boolean;     -- Supervisor Interrupt Enable
@@ -69,7 +67,7 @@ package RISCV is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for MSTATUS_Type use
+   for mstatus_Type use
    record
       UIE       at 0 range 0 .. 0;
       SIE       at 0 range 1 .. 1;
@@ -119,14 +117,38 @@ package RISCV is
    -- CLIC/CLINT
    ----------------------------------------------------------------------------
 
+   MSIP_ADDRESS : constant := 16#0200_0000#;
+
    MSIP : aliased Unsigned_32 with
       Address              => To_Address (MSIP_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   function MTIME_Read return Unsigned_64            renames MTime_MTimeCmp.MTIME_Read;
-   procedure MTIMECMP_Write (Value : in Unsigned_64) renames MTime_MTimeCmp.MTIMECMP_Write;
+   ----------------------------------------------------------------------------
+   -- mtime/mtimecmp
+   ----------------------------------------------------------------------------
+
+   MTIME_ADDRESS : constant := 16#0200_BFF8#;
+
+   mtime : mtime_Type with
+      Address    => To_Address (MTIME_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   MTIMECMP_ADDRESS : constant := 16#0200_4000#;
+
+   mtimecmp : mtime_Type with
+      Address    => To_Address (MTIMECMP_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   function mtime_Read return Unsigned_64 with
+      Inline => True;
+   procedure mtimecmp_Write (Value : in Unsigned_64) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
