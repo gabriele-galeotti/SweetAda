@@ -1,9 +1,9 @@
 
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_RISCV)
 
-ifneq      ($(filter RV32IMAC RV32IMAFC,$(CPU_MODEL)),)
+ifeq      ($(findstring RV32,$(CPU_MODEL)),RV32)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/32
-else ifneq ($(filter RV64IMAC RV64IMAFDC,$(CPU_MODEL)),)
+else ifeq ($(findstring RV64,$(CPU_MODEL)),RV64)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/64
 endif
 
