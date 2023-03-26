@@ -69,11 +69,8 @@ package body Exceptions is
    begin
       Core.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
-         if Core.Tick_Count mod 1_000 = 0 then
-            -- IOEMU "TIMER" LED blinking
-            IOEMU.IO0 := 1;
-            IOEMU.IO0 := 0;
-         end if;
+         -- IRQ pulsemeter
+         IOEMU.IO0 := 1;
       end if;
       LEON3.GPTIMER.Control_Register_1.IP := False;
       LEON3.INTC_CLEAR.IC (10) := False;

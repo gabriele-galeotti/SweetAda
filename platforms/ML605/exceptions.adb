@@ -55,11 +55,8 @@ package body Exceptions is
       Timer.TCSR0.T0INT := False; -- clear Timer flag
       Core.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
-         if Core.Tick_Count mod 1_000 = 0 then
-            -- IOEMU "TIMER" LED blinking
-            IOEMU.IO0 := 1;
-            IOEMU.IO0 := 0;
-         end if;
+         -- IRQ pulsemeter
+         IOEMU.IO0 := 1;
       end if;
       INTC.IAR (TIMER_IRQ) := True; -- clear INTC flag
    end Exception_Process;

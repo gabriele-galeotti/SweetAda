@@ -51,11 +51,8 @@ package body Exceptions is
    begin
       Core.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
-         if Core.Tick_Count mod 1_000 = 0 then
-            -- IOEMU "TIMER" LED blinking
-            IOEMU.IO0 := 1;
-            IOEMU.IO0 := 0;
-         end if;
+         -- IRQ pulsemeter
+         IOEMU.IO0 := 1;
       end if;
       RISCV.mtimecmp_Write (RISCV.mtime_Read + Virt.Timer_Constant);
    end Exception_Process;
