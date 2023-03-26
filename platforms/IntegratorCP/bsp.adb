@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Configure;
 with Definitions;
 with Core;
 with Bits;
@@ -97,9 +98,9 @@ package body BSP is
       PL110_Descriptor.Base_Address := To_Address (PL110_BASEADDRESS);
       PL110.Init (PL110_Descriptor);
       -- Timer ----------------------------------------------------------------
-      -- Timer0 runs @ 40 MHz
+      -- Timer0 runs @ 40 MHz, prescale 16 = 2.5 MHz
       -- Timer1/2 run @ 1 MHz
-      Timer (0).Load    := 16#0020_0000#; -- Timer1/2: 16#0001_0000#;
+      Timer (0).Load    := (Configure.TIMER0_CLK / 16) / Configure.TICK_FREQUENCY;
       Timer (0).Control := (
                             ONESHOT    => False,
                             TIMER_SIZE => TIMER_SIZE_32,
