@@ -17,6 +17,7 @@
 
 with System.Storage_Elements;
 with Interfaces;
+with Quartus;
 
 package DE10Lite is
 
@@ -31,16 +32,14 @@ package DE10Lite is
    use System.Storage_Elements;
    use Interfaces;
 
-   -- Altera_Avalon_PIO
-
-   -- LEDs
+   -- LEDs Avalon Memory Mapped Slave
    LEDs_IO : Unsigned_32 with
-      Address    => To_Address (16#0002_1010#),
+      Address    => To_Address (Quartus.leds_s1_ADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
    LEDs_Dir : Unsigned_32 with
-      Address    => To_Address (16#0002_1014#),
+      Address    => To_Address (Quartus.leds_s1_ADDRESS + 4),
       Volatile   => True,
       Import     => True,
       Convention => Ada;

@@ -13,6 +13,9 @@
 # Arguments:
 # $1 = QSYS design full qualified filename path
 # $2 = Ada package name
+# $3 = module name
+# $4 = module name
+# ...
 #
 # Environment variables:
 # SWEETADA_PATH
