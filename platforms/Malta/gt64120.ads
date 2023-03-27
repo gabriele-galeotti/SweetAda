@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
@@ -32,7 +31,6 @@ package GT64120 is
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 

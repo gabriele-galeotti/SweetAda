@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Configure;
 with Definitions;
 with MIPS;
 with PCI;
@@ -106,9 +107,7 @@ package Malta is
    ----------------------------------------------------------------------------
 
    -- CP0 Count runs at half the pipeline CPU clock (QEMU CPU CLK = 320 MHz)
-   CP0_TIMER_COUNT : constant := (320 * MHz1 / 100) / 2;
-
-   Count_Expire : Unsigned_32;
+   CP0_TIMER_COUNT : constant := (320 * MHz1 / Configure.TICK_FREQUENCY) / 2;
 
    procedure Tclk_Init;
 

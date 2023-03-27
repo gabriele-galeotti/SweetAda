@@ -3,7 +3,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with Configure;
+with Core;
 with MIPS;
+with MIPS32;
 with Malta;
 with IDE;
 with BlockDevices;
@@ -92,6 +94,7 @@ package body Application is
                Value := @ + 1;
                for Delay_Loop_Count in 1 .. Delay_Count loop MIPS.NOP; end loop;
             end loop;
+
          end;
       end if;
       -------------------------------------------------------------------------

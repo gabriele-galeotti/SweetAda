@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
 with Interfaces;
 
 package CPU.IO is
@@ -28,7 +27,6 @@ package CPU.IO is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
 
    -- provide memory-mapped I/O subprograms for PIC and VGA driver
