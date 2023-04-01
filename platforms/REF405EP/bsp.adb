@@ -41,7 +41,6 @@ package body BSP is
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
-   use Core;
    use Bits;
    use PowerPC;
    use PPC405;
@@ -97,6 +96,11 @@ package body BSP is
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("REF405EP (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
+      if Core.Debug_Flag then
+         Console.Print ("Debug_Flag: ENABLED", NL => True);
+      end if;
+      -------------------------------------------------------------------------
       Console.Print (PVR_Read.Version, Prefix => "PVR version:  ", NL => True);
       Console.Print (PVR_Read.Revision, Prefix => "PVR revision: ", NL => True);
       -------------------------------------------------------------------------
