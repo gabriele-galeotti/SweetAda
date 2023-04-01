@@ -66,9 +66,9 @@ package body RISCV is
       MCAUSE : Unsigned_32;
    begin
       Asm (
-           Template => ""                            & CRLF &
-                       ZICSR_ZIFENCEI_ASM                   &
-                       "        csrr    %0,mcause  " & CRLF &
+           Template => ""                          & CRLF &
+                       ZICSR_ZIFENCEI_ASM                 &
+                       "        csrr    %0,mcause" & CRLF &
                        "",
            Outputs  => Unsigned_32'Asm_Output ("=r", MCAUSE),
            Inputs   => No_Input_Operands,
@@ -85,9 +85,9 @@ package body RISCV is
       MEPC : Unsigned_32;
    begin
       Asm (
-           Template => ""                            & CRLF &
-                       ZICSR_ZIFENCEI_ASM                   &
-                       "        csrr    %0,mepc    " & CRLF &
+           Template => ""                        & CRLF &
+                       ZICSR_ZIFENCEI_ASM               &
+                       "        csrr    %0,mepc" & CRLF &
                        "",
            Outputs  => Unsigned_32'Asm_Output ("=r", MEPC),
            Inputs   => No_Input_Operands,
@@ -103,9 +103,9 @@ package body RISCV is
    procedure MTVEC_Write (Mtvec : in MTVEC_Type) is
    begin
       Asm (
-           Template => ""                            & CRLF &
-                       ZICSR_ZIFENCEI_ASM                   &
-                       "        csrw    mtvec,%0   " & CRLF &
+           Template => ""                         & CRLF &
+                       ZICSR_ZIFENCEI_ASM                &
+                       "        csrw    mtvec,%0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => MTVEC_Type'Asm_Input ("r", Mtvec),
