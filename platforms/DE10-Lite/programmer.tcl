@@ -41,10 +41,11 @@ source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 #                                                                              #
 ################################################################################
 
-set QUARTUS_PATH $::env(QUARTUS_PATH)
-set PROJECT_PATH $::env(QSYS_PROJECT_PATH)
-set SOF_FILE     $::env(QSYS_SOF_FILENAME)
-set ELF_FILE     [file join $::env(SWEETADA_PATH) $::env(KERNEL_OUTFILE)]
+set QUARTUS_PATH             $::env(QUARTUS_PATH)
+set TOOLCHAIN_PROGRAM_PREFIX $::env(TOOLCHAIN_PROGRAM_PREFIX)
+set PROJECT_PATH             $::env(QSYS_PROJECT_PATH)
+set SOF_FILE                 $::env(QSYS_SOF_FILENAME)
+set ELF_FILE                 [file join $::env(SWEETADA_PATH) $::env(KERNEL_OUTFILE)]
 
 if {[platform_get] ne "unix"} {
     puts stderr "$SCRIPT_FILENAME: *** Error: platform not recognized."
@@ -74,15 +75,15 @@ nios2-configure-sof            \
 # --reset-target
 puts stdout "Running nios2-download ..."
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-cd ${QUARTUS_PATH}/nios2eds &&                 \
-PATH=$::env(TOOLCHAIN_PROGRAM_PREFIX):\${PATH} \
-./nios2_command_shell.sh                       \
-nios2-download                                 \
-  --debug                                      \
-  --cable \"USB-Blaster\"                      \
-  --device 1                                   \
-  --go                                         \
-  ${ELF_FILE}                                  \
+cd ${QUARTUS_PATH}/nios2eds &&            \
+PATH=${TOOLCHAIN_PROGRAM_PREFIX}:\${PATH} \
+./nios2_command_shell.sh                  \
+nios2-download                            \
+  --debug                                 \
+  --cable \"USB-Blaster\"                 \
+  --device 1                              \
+  --go                                    \
+  ${ELF_FILE}                             \
 "
 
 exit 0
