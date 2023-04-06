@@ -36,27 +36,28 @@ package body Z8530 is
 
    type Register_Type is
       (
-       WR0, WR1, WR2, WR3, WR4, WR5, WR6, WR7, WR8, WR9, WR10, WR11, WR12, WR13, WR14,
-       RR0, RR12, RR13
+       WR0, WR1, WR2, WR3, WR4, WR5, WR6, WR7, WR8, WR9, WR10, WR11, WR12, WR13, WR14, WR15,
+       RR0, RR1, RR2, RR3, RR4, RR5, RR6, RR7, RR8, RR9, RR10, RR11, RR12, RR13, RR14, RR15
       );
 
    Register_ID : constant array (Register_Type) of Unsigned_8 :=
       [
        WR0  => 0,  RR0  => 0,
-       WR1  => 1,
-       WR2  => 2,
-       WR3  => 3,
-       WR4  => 4,
-       WR5  => 5,
-       WR6  => 6,
-       WR7  => 7,
-       WR8  => 7,
-       WR9  => 9,
-       WR10 => 10,
-       WR11 => 11,
+       WR1  => 1,  RR1  => 1,
+       WR2  => 2,  RR2  => 2,
+       WR3  => 3,  RR3  => 3,
+       WR4  => 4,  RR4  => 4,
+       WR5  => 5,  RR5  => 5,
+       WR6  => 6,  RR6  => 6,
+       WR7  => 7,  RR7  => 7,
+       WR8  => 7,  RR8  => 8,
+       WR9  => 9,  RR9  => 9,
+       WR10 => 10, RR10 => 10,
+       WR11 => 11, RR11 => 11,
        WR12 => 12, RR12 => 12,
        WR13 => 13, RR13 => 13,
-       WR14 => 14
+       WR14 => 14, RR14 => 14,
+       WR15 => 15, RR15 => 15
       ];
 
    ----------------------------------------------------------------------------
@@ -133,11 +134,6 @@ package body Z8530 is
    ----------------------------------------------------------------------------
    -- 5.2.3 Write Register 2 (Interrupt Vector)
    ----------------------------------------------------------------------------
-
-   type WR2_Type is new Unsigned_8;
-
-   function To_U8 is new Ada.Unchecked_Conversion (WR2_Type, Unsigned_8);
-   function To_WR2 is new Ada.Unchecked_Conversion (Unsigned_8, WR2_Type);
 
    ----------------------------------------------------------------------------
    -- 5.2.4 Write Register 3 (Receive Parameters and Control)
@@ -436,7 +432,39 @@ package body Z8530 is
    function To_WR14 is new Ada.Unchecked_Conversion (Unsigned_8, WR14_Type);
 
    ----------------------------------------------------------------------------
-   -- Read Register 0 (Transmit/Receive Buffer Status and External Status)
+   -- 5.2.18 Write Register 15 (External/Status Interrupt Control)
+   ----------------------------------------------------------------------------
+
+   type WR15_Type is
+   record
+      SDLCFeatureEnable : Boolean := False; -- Point to Write Register WR7 Prime (ESCC and 85C30 only)
+      ZeroCountIE       : Boolean := False; -- Zero Count Interrupt Enable
+      SDLCFIFOEnable    : Boolean := False; -- Status FIFO Enable control bit (CMOS/ESCC)
+      DCDIE             : Boolean := False; -- DCD Interrupt Enable
+      SyncHuntIE        : Boolean := False; -- SYNC/Hunt Interrupt Enable
+      CTSIE             : Boolean := False; -- CTS Interrupt Enable
+      TxUnderrunEOMIE   : Boolean := False; -- Transmit Underrun/EOM Interrupt Enable
+      BreakAbortIE      : Boolean := False; -- Break/Abort Interrupt Enable
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for WR15_Type use
+   record
+      SDLCFeatureEnable at 0 range 0 .. 0;
+      ZeroCountIE       at 0 range 1 .. 1;
+      SDLCFIFOEnable    at 0 range 2 .. 2;
+      DCDIE             at 0 range 3 .. 3;
+      SyncHuntIE        at 0 range 4 .. 4;
+      CTSIE             at 0 range 5 .. 5;
+      TxUnderrunEOMIE   at 0 range 6 .. 6;
+      BreakAbortIE      at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (WR15_Type, Unsigned_8);
+   function To_WR15 is new Ada.Unchecked_Conversion (Unsigned_8, WR15_Type);
+
+   ----------------------------------------------------------------------------
+   -- 5.3.1 Read Register 0 (Transmit/Receive Buffer Status and External Status)
    ----------------------------------------------------------------------------
 
    type RR0_Type is
@@ -466,6 +494,197 @@ package body Z8530 is
 
    function To_U8 is new Ada.Unchecked_Conversion (RR0_Type, Unsigned_8);
    function To_RR0 is new Ada.Unchecked_Conversion (Unsigned_8, RR0_Type);
+
+   ----------------------------------------------------------------------------
+   -- 5.3.2 Read Register 1
+   ----------------------------------------------------------------------------
+
+   ResidueCode_28 : constant := 2#000#; -- I-Field Bits in Last Byte = 2, I-Field Bits in Previous Byte = 8
+   ResidueCode_06 : constant := 2#001#; -- I-Field Bits in Last Byte = 0, I-Field Bits in Previous Byte = 6
+   ResidueCode_04 : constant := 2#010#; -- I-Field Bits in Last Byte = 0, I-Field Bits in Previous Byte = 4
+   ResidueCode_08 : constant := 2#011#; -- I-Field Bits in Last Byte = 0, I-Field Bits in Previous Byte = 8
+   ResidueCode_03 : constant := 2#100#; -- I-Field Bits in Last Byte = 0, I-Field Bits in Previous Byte = 3
+   ResidueCode_07 : constant := 2#101#; -- I-Field Bits in Last Byte = 0, I-Field Bits in Previous Byte = 7
+   ResidueCode_05 : constant := 2#110#; -- I-Field Bits in Last Byte = 0, I-Field Bits in Previous Byte = 5
+   ResidueCode_18 : constant := 2#111#; -- I-Field Bits in Last Byte = 1, I-Field Bits in Previous Byte = 8
+
+   type RR1_Type is
+   record
+      AllSent         : Boolean; -- Bit 0: All Sent status
+      ResidueCode     : Bits_3;  -- Residue Codes, bits 2, 1, and 0
+      ParityError     : Boolean; -- Parity Error status.
+      RxOverrunError  : Boolean; -- Receiver Overrun Error status
+      CRCFramingError : Boolean; -- CRC/Framing Error status
+      SDLCEndOfFrame  : Boolean; -- End of Frame (SDLC) status
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for RR1_Type use
+   record
+      AllSent         at 0 range 0 .. 0;
+      ResidueCode     at 0 range 1 .. 3;
+      ParityError     at 0 range 4 .. 4;
+      RxOverrunError  at 0 range 5 .. 5;
+      CRCFramingError at 0 range 6 .. 6;
+      SDLCEndOfFrame  at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (RR1_Type, Unsigned_8);
+   function To_RR1 is new Ada.Unchecked_Conversion (Unsigned_8, RR1_Type);
+
+   ----------------------------------------------------------------------------
+   -- 5.3.3 Read Register 2
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.3.4 Read Register 3
+   ----------------------------------------------------------------------------
+
+   type RR3_Type is
+   record
+      Unused        : Bits_2;
+      CHA_RX        : Boolean; -- Channel A Rx IP
+      CHA_TX        : Boolean; -- Channel A Tx IP
+      CHA_ExtStatus : Boolean; -- Channel A Ext/Status IP
+      CHB_RX        : Boolean; -- Channel B Rx IP
+      CHB_TX        : Boolean; -- Channel B Tx IP
+      CHB_ExtStatus : Boolean; -- Channel B Ext/Status IP
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for RR3_Type use
+   record
+      Unused        at 0 range 0 .. 1;
+      CHA_RX        at 0 range 2 .. 2;
+      CHA_TX        at 0 range 3 .. 3;
+      CHA_ExtStatus at 0 range 4 .. 4;
+      CHB_RX        at 0 range 5 .. 5;
+      CHB_TX        at 0 range 6 .. 6;
+      CHB_ExtStatus at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (RR3_Type, Unsigned_8);
+   function To_RR3 is new Ada.Unchecked_Conversion (Unsigned_8, RR3_Type);
+
+   ----------------------------------------------------------------------------
+   -- 5.3.5 Read Register 4 (ESCC and 85C30 Only)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.3.6 Read Register 5 (ESCC and 85C30 Only)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.3.7 Read Register 6 (Not on NMOS)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.3.8 Read Register 7 (Not on NMOS)
+   ----------------------------------------------------------------------------
+
+   type RR7_Type is
+   record
+      BC06 : Bits_6;  -- most significant six bits of the frame byte count that is currently at the top of the Status FIFO
+      FDA  : Boolean; -- FIFO Data Available
+      FOS  : Boolean; -- FIFO Overflow Status
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for RR7_Type use
+   record
+      BC06 at 0 range 0 .. 5;
+      FDA  at 0 range 6 .. 6;
+      FOS  at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (RR7_Type, Unsigned_8);
+   function To_RR7 is new Ada.Unchecked_Conversion (Unsigned_8, RR7_Type);
+
+   ----------------------------------------------------------------------------
+   -- 5.3.9 Read Register 8
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.3.10 Read Register 9 (ESCC and 85C30 Only)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.3.11 Read Register 10
+   ----------------------------------------------------------------------------
+
+   type RR10_Type is
+   record
+      Unused1         : Bits_1;
+      OnLoop          : Boolean; -- On Loop status
+      Unused2         : Bits_2;
+      LoopSending     : Boolean; -- Loop Sending status
+      Unused3         : Bits_1;
+      TwoClockMissing : Boolean; -- Two Clocks Missing status
+      OneClockMissing : Boolean; -- One Clock Missing status
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for RR10_Type use
+   record
+      Unused1         at 0 range 0 .. 0;
+      OnLoop          at 0 range 1 .. 1;
+      Unused2         at 0 range 2 .. 3;
+      LoopSending     at 0 range 4 .. 4;
+      Unused3         at 0 range 5 .. 5;
+      TwoClockMissing at 0 range 6 .. 6;
+      OneClockMissing at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (RR10_Type, Unsigned_8);
+   function To_RR10 is new Ada.Unchecked_Conversion (Unsigned_8, RR10_Type);
+
+   ----------------------------------------------------------------------------
+   -- 5.3.12 Read Register 11 (ESCC and 85C30 Only)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.3.13 Read Register 12
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.3.14 Read Register 13
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.3.15 Read Register 14 (ESCC and 85C30 Only)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 5.3.16 Read Register 15
+   ----------------------------------------------------------------------------
+
+   type RR15_Type is
+   record
+      Unused1         : Bits_1;
+      ZeroCountIE     : Boolean; -- Zero Count Interrupt Enable
+      Unused2         : Bits_1;
+      DCDIE           : Boolean; -- DCD Interrupt Enable
+      SyncHuntIE      : Boolean; -- SYNC/Hunt Interrupt Enable
+      CTSIE           : Boolean; -- CTS Interrupt Enable
+      TxUnderrunEOMIE : Boolean; -- Transmit Underrun/EOM Interrupt Enable
+      BreakAbortIE    : Boolean; -- Break/Abort Interrupt Enable
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for RR15_Type use
+   record
+      Unused1         at 0 range 0 .. 0;
+      ZeroCountIE     at 0 range 1 .. 1;
+      Unused2         at 0 range 2 .. 2;
+      DCDIE           at 0 range 3 .. 3;
+      SyncHuntIE      at 0 range 4 .. 4;
+      CTSIE           at 0 range 5 .. 5;
+      TxUnderrunEOMIE at 0 range 6 .. 6;
+      BreakAbortIE    at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (RR15_Type, Unsigned_8);
+   function To_RR15 is new Ada.Unchecked_Conversion (Unsigned_8, RR15_Type);
 
    ----------------------------------------------------------------------------
    -- Local subprograms
