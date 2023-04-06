@@ -22,9 +22,12 @@ library project Cpu is
 
    for Target use Configure.Toolchain_Name;
    for Source_Dirs use Include_Directories & (".");
-   for Default_Language use "Asm_Cpp";
 
-   for Source_Files use ();
+   case Configure.Use_LibGCC is
+      when others =>
+         for Languages use ("Asm_Cpp");
+         for Source_Files use ("cpu.S");
+   end case;
 
    ----------------------------------------------------------------------------
    -- Naming

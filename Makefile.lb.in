@@ -36,18 +36,6 @@
 #
 
 #
-# create-empty
-#
-# Usage:
-# $(call create-empty,filename)
-#
-ifeq ($(OSTYPE),cmd)
-create-empty = $(TOUCH) $1
-else
-create-empty = $(TOUCH) $1
-endif
-
-#
 # update-timestamp
 #
 # Usage:
@@ -184,25 +172,6 @@ include $(wildcard $(DEP_FILES))
 
 else ifeq ($(BUILD_MODE),GPR)
 
-ifeq ($(OBJECTS),)
-
-#
-# GPRbuild (no object files)
-#
-
-$(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a :
-ifeq ($(OSTYPE),cmd)
-	$(call brief-command,\
-        $(call create-empty,$(OBJ_DIRECTORY_CMD)\lib$(LIBRARY_NAME).a) \
-        ,[AR-NULL],$(notdir $@))
-else
-	$(call brief-command,\
-        $(call create-empty,$(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a) \
-        ,[AR-NULL],$(notdir $@))
-endif
-
-else
-
 #
 # GPRbuild
 #
@@ -228,8 +197,6 @@ else
 	$(call brief-command,\
         $(CP) $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a $(OBJ_DIRECTORY)/ \
         ,[COPYOBJLIB],$(notdir $@))
-endif
-
 endif
 
 endif
