@@ -88,7 +88,7 @@ pragma Warnings (On, "pragma Pack affects convention ""C"" components");
    Page_Table_ROM      : aliased Page4k_Type with Suppress_Initialization => True; -- ROM
 
    Memory_Space : constant array (Natural range <>) of Memory_Descriptor_Type :=
-      (
+      [
        (Base_Address => 16#0000_0000#, Descriptor_Ptr => Page_Table_RAM1'Access),
        (Base_Address => 16#0004_0000#, Descriptor_Ptr => Page_Table_RAM2'Access),
        (Base_Address => 16#0008_0000#, Descriptor_Ptr => Page_Table_RAM3'Access),
@@ -98,7 +98,7 @@ pragma Warnings (On, "pragma Pack affects convention ""C"" components");
        (Base_Address => 16#00E8_0000#, Descriptor_Ptr => Page_Table_ZORROII1'Access),
        (Base_Address => 16#00EC_0000#, Descriptor_Ptr => Page_Table_ZORROII2'Access),
        (Base_Address => 16#00FC_0000#, Descriptor_Ptr => Page_Table_ROM'Access)
-      );
+      ];
 
    -- local subprograms
 
