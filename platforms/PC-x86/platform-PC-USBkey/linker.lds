@@ -31,6 +31,9 @@ SECTIONS
                 *(.rodata.*)
                 *(.gnu.linkonce.t.*)
                 *(.gnu.linkonce.r.*)
+                . = ALIGN(0x4);
+                PROVIDE(_debug_flag = .);
+                BYTE(0x00);
                 . = ALIGN(0x10);
                 _etext = .;
         } > ROM
