@@ -19,7 +19,6 @@ with System.Storage_Elements;
 with Interfaces;
 with Definitions;
 with Configure;
-with Core;
 with Bits;
 with PowerPC;
 with PPC405;
@@ -41,7 +40,6 @@ package body BSP is
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
-   use Core;
    use Bits;
    use PowerPC;
    use PPC405;

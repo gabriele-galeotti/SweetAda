@@ -46,7 +46,6 @@ package body BSP is
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
-   use Core;
    use Bits;
    use M68k;
    use Amiga;
@@ -82,7 +81,7 @@ package body BSP is
       Exceptions.Init;
       -- basic hardware initialization ----------------------------------------
       OCS_Setup;
-      OCS_Print (KERNEL_NAME & ": initializing" & CRLF);
+      OCS_Print (Core.KERNEL_NAME & ": initializing" & CRLF);
       OCS_Print ("Press mouse-MB to un-grab the pointer." & CRLF);
       OCS_Print ("F12+D to activate the debugger." & CRLF);
       OCS_Print ("Close this window to shutdown the emulator." & CRLF);

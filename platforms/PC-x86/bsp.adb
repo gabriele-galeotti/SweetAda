@@ -53,7 +53,6 @@ package body BSP is
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
-   use Core;
    use Bits;
    use CPU;
    use CPU.IO;
@@ -225,7 +224,7 @@ package body BSP is
       VGA.Init (0, 0);
       VGA.Set_Mode (VGA.MODE03H);
       VGA.Clear_Screen;
-      VGA.Print (0, 0, KERNEL_NAME & ": initializing");
+      VGA.Print (0, 0, Core.KERNEL_NAME & ": initializing");
       if QEMU then
          VGA.Print (0, 1, "Press CTRL-ALT-G to un-grab the mouse cursor.");
          VGA.Print (0, 2, "Close this window to shutdown the emulator.");

@@ -37,7 +37,6 @@ package body Exceptions is
 
    use System;
    use Interfaces;
-   use Core;
    use GDT_Simple;
    use BSP;
 
@@ -149,12 +148,12 @@ package body Exceptions is
    procedure Irq_Process is
    begin
       -- increment system tick counter
-      Tick_Count := @ + 1;
+      Core.Tick_Count := @ + 1;
       -- LED ignition QEMU/IOEMU or physical PC
       if QEMU then
          if Configure.USE_QEMU_IOEMU then
             -- IOEMU "TIMER" LED blinking
-            if Tick_Count mod 1_000 = 0 then
+            if Core.Tick_Count mod 1_000 = 0 then
                PC.PPI_ControlOut (PC.To_PPI_Control (16#FF#));
                PC.PPI_ControlOut (PC.To_PPI_Control (16#00#));
             end if;
