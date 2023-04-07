@@ -76,10 +76,20 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
+        .debug_info     : { *(.debug_info) }
+        .debug_abbrev   : { *(.debug_abbrev) }
+        .debug_aranges  : { *(.debug_aranges) }
+        .debug_line     : { *(.debug_line) }
+        .debug_line_str : { *(.debug_line_str) }
+        .debug_ranges   : { *(.debug_ranges) }
+        .debug_rnglists : { *(.debug_rnglists) }
+        .debug_str      : { *(.debug_str) }
+        /**********************************************************************
+         *                                                                    *
+         **********************************************************************/
         /DISCARD/ :
         {
-                *(.comment)
-                *(.eh_frame)
+                *(*)
         }
 }
 
