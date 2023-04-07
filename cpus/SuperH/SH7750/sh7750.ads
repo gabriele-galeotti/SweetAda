@@ -18,7 +18,6 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
-with Core;
 with Bits;
 
 package SH7750 is
@@ -36,7 +35,6 @@ package SH7750 is
    use System;
    use System.Storage_Elements;
    use Interfaces;
-   use Core;
    use Bits;
 
    ----------------------------------------------------------------------------
