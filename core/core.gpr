@@ -76,9 +76,13 @@ library project Core is
                      "llutils-be_to_cpue_32.adb",
                      "llutils-be_to_cpue_64.adb",
                      "llutils-build_address.adb",
+                     "llutils-byte_swap_16.adb",
+                     "llutils-byte_swap_32.adb",
+                     "llutils-byte_swap_64.adb",
                      "llutils-le_to_cpue_16.adb",
                      "llutils-le_to_cpue_32.adb",
-                     "llutils-le_to_cpue_64.adb"
+                     "llutils-le_to_cpue_64.adb",
+                     "llutils-select_address_bits.adb"
                     );
 
    Malloc_Files := ("malloc.adb", "malloc.ads");
