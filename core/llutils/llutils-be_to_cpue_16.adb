@@ -20,7 +20,7 @@ function BE_To_CPUE_16 (Object_Address : System.Address) return Interfaces.Unsig
    Value : aliased Interfaces.Unsigned_16 with
       Address => Object_Address;
 begin
-   if LittleEndian then
+   if Bits.LittleEndian then
       return Bits.Word_Swap (Value);
    else
       return Value;

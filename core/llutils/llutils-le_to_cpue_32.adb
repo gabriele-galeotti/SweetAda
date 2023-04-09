@@ -20,7 +20,7 @@ function LE_To_CPUE_32 (Object_Address : System.Address) return Interfaces.Unsig
    Value : aliased Interfaces.Unsigned_32 with
       Address => Object_Address;
 begin
-   if BigEndian then
+   if Bits.BigEndian then
       return Bits.Word_Swap (Value);
    else
       return Value;
