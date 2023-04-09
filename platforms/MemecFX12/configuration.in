@@ -11,11 +11,11 @@ USE_LIBADA := N
 CPU       := PowerPC
 CPU_MODEL := PPC405
 
-GCC_SWITCHES_PLATFORM     += -mcpu=405 -msoft-float -Wa,-m405 -Wa,-mregnames
-LD_SWITCHES_PLATFORM      +=
-OBJDUMP_SWITCHES_PLATFORM +=
+GCC_SWITCHES_PLATFORM     := -mcpu=405 -msoft-float -Wa,-m405 -Wa,-mregnames
+LD_SWITCHES_PLATFORM      :=
+OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
-OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
+OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 
 USE_APPLICATION := dummy
 

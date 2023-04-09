@@ -16,15 +16,15 @@ USE_LIBADA := N
 CPU       := AVR
 CPU_MODEL := ATMEGA328P
 
-GCC_SWITCHES_PLATFORM     += -mmcu=atmega328p -Wa,-mmcu=atmega328p
+GCC_SWITCHES_PLATFORM     := -mmcu=atmega328p -Wa,-mmcu=atmega328p
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      += -m avr5
-OBJDUMP_SWITCHES_PLATFORM +=
+LD_SWITCHES_PLATFORM      := -m avr5
+OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 # override default filename
 KERNEL_ROMFILE            := $(KERNEL_BASENAME).hex
-#OBJCOPY_SWITCHES_PLATFORM += -O srec -R .eeprom
-OBJCOPY_SWITCHES_PLATFORM += -O ihex -R .eeprom
+#OBJCOPY_SWITCHES_PLATFORM := -O srec -R .eeprom
+OBJCOPY_SWITCHES_PLATFORM := -O ihex -R .eeprom
 
 # override standard core unit
 export IMPLICIT_CORE_UNITS := $(filter-out core,$(IMPLICIT_CORE_UNITS))

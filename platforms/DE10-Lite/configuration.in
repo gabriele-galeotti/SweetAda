@@ -12,12 +12,12 @@ USE_LIBADA := N
 
 CPU := NiosII
 
-GCC_SWITCHES_PLATFORM     +=
+GCC_SWITCHES_PLATFORM     :=
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      +=
-OBJDUMP_SWITCHES_PLATFORM +=
+LD_SWITCHES_PLATFORM      :=
+OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
-OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
+OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 
 export QUARTUS_PATH      := /opt/intelFPGA_lite/22.1std
 export QSYS_PROJECT_PATH := /root/workspace/hardware/Altera_DE10-Lite/DE10-Lite_base_design

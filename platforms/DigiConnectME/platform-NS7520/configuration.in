@@ -10,12 +10,12 @@ CPU_MODEL      := ARM7TDMI
 # override cpus/ARM/configuration.in
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_ARMeb)
 
-GCC_SWITCHES_PLATFORM     += -mcpu=arm7tdmi -mabi=aapcs
+GCC_SWITCHES_PLATFORM     := -mcpu=arm7tdmi -mabi=aapcs
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      += --undefined=reset
-OBJDUMP_SWITCHES_PLATFORM +=
+LD_SWITCHES_PLATFORM      := --undefined=reset
+OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
-OBJCOPY_SWITCHES_PLATFORM += -O binary --gap-fill=0x00
+OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 
 USE_APPLICATION := test-DigiConnectME
 
