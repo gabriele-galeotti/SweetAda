@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with LLutils;
 with Console;
 
 package body Floating_Point is
@@ -117,7 +118,7 @@ package body Floating_Point is
       E     : Integer := 0;
       M     : Integer := 0;
       W     : Float;
-      D     : Console.Decimal_Digit_Type;
+      D     : LLutils.Decimal_Digit_Type;
       Error : Boolean := False;
    begin
       if F < 0.0 then
@@ -152,8 +153,8 @@ package body Floating_Point is
                Buffer_Idx := @ + 1;
             end if;
             W := Exp10 (M); -- highest digit
-            D := Console.Decimal_Digit_Type (Float'Floor (F / W));
-            Buffer (Buffer_Idx) := Console.To_Ch (D);
+            D := LLutils.Decimal_Digit_Type (Float'Floor (F / W));
+            Buffer (Buffer_Idx) := LLutils.To_Ch (D);
             Buffer_Idx := @ + 1;
             F := @ - Float (D) * W;
             M := @ - 1;
@@ -169,9 +170,9 @@ package body Floating_Point is
             Buffer (Buffer_Idx) := '+';
          end if;
          Buffer_Idx := @ + 1;
-         Buffer (Buffer_Idx) := Console.To_Ch (E / 10);
+         Buffer (Buffer_Idx) := LLutils.To_Ch (E / 10);
          Buffer_Idx := @ + 1;
-         Buffer (Buffer_Idx) := Console.To_Ch (E rem 10);
+         Buffer (Buffer_Idx) := LLutils.To_Ch (E rem 10);
       end if;
       -- print
       if Prefix'Length /= 0 then
