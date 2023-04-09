@@ -37,8 +37,6 @@ package Console is
 
    Maximum_String_Length : constant := 256;
 
-   subtype Decimal_Digit_Type is Natural range 0 .. 9;
-
    type Row_Size_Type is range 1 .. 64;
 
    type Console_Write_Ptr is access procedure (C : in Character);

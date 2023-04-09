@@ -19,10 +19,13 @@ with LLutils;
 
 separate (Console)
 procedure Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8) is
-   C : Character;
+   MSD : Boolean := True;
+   C   : Character;
 begin
-   LLutils.U8_To_HexDigit (Value => Value, MSD => True, LCase => False, C => C);
-   Print (C);
-   LLutils.U8_To_HexDigit (Value => Value, MSD => False, LCase => False, C => C);
-   Print (C);
+   loop
+      LLutils.U8_To_HexDigit (Value => Value, MSD => MSD, LCase => False, C => C);
+      Print (C);
+      MSD := not @;
+      exit when MSD;
+   end loop;
 end Print_UnsignedHex8;

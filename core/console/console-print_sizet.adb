@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with LLutils;
+
 separate (Console)
 procedure Print_sizet (
                        s      : in Interfaces.C.size_t;
@@ -30,7 +32,7 @@ begin
       Print (Prefix);
    end if;
    for Index in reverse Number_Literal'Range loop
-      Number_Literal (Index) := To_Ch (Decimal_Digit_Type (Number mod 10));
+      Number_Literal (Index) := LLutils.To_Ch (LLutils.Decimal_Digit_Type (Number mod 10));
       Number := @ / 10;
       if Number = 0 then
          Literal_Index := Index;

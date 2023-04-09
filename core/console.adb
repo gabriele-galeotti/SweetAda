@@ -36,8 +36,7 @@ package body Console is
    use Definitions;
    use type Bits.Bits_1;
 
-   function To_Ch (Digit : Decimal_Digit_Type) return Character with
-      Inline => True;
+   -- helper subprogram
    procedure Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8);
 
    --========================================================================--
@@ -62,14 +61,6 @@ package body Console is
    begin
       C := ISO88591.NUL;
    end Console_Null_Read;
-
-   ----------------------------------------------------------------------------
-   -- To_Ch (helper subprogram)
-   ----------------------------------------------------------------------------
-   function To_Ch (Digit : Decimal_Digit_Type) return Character is
-   begin
-      return Character'Val (Character'Pos ('0') + Digit);
-   end To_Ch;
 
    ----------------------------------------------------------------------------
    -- Print (Character)

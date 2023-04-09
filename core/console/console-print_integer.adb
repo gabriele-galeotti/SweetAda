@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with LLutils;
+
 separate (Console)
 procedure Print_Integer (
                          Value  : in Integer;
@@ -41,7 +43,7 @@ begin
          -- handle 2's complement off-range asymmetric negative numbers
          -- by prescaling their values
          while NNumber < -Integer'Last loop
-            Number_Literal (Literal_Index) := To_Ch (-(NNumber rem 10));
+            Number_Literal (Literal_Index) := LLutils.To_Ch (-(NNumber rem 10));
             Literal_Index := @ - 1;
             NNumber := @ / 10;
          end loop;
@@ -53,7 +55,7 @@ begin
    end if;
    -- build literal string
    for Index in reverse 2 .. Literal_Index loop
-      Number_Literal (Index) := To_Ch (Number rem 10);
+      Number_Literal (Index) := LLutils.To_Ch (Number rem 10);
       Number := @ / 10;
       if Number = 0 then
          Literal_Index := Index;
