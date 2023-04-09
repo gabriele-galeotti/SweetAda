@@ -39,50 +39,37 @@ package body LLutils is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Byte_Swap_16
+   -- Byte_Swap_XX
    ----------------------------------------------------------------------------
+
    procedure Byte_Swap_16 (Object_Address : in System.Address) is
-      Object : aliased Bits.Byte_Array (0 .. 1) with
-         Address    => Object_Address,
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
-      Value  : Interfaces.Unsigned_8;
-   begin
-      Value := Object (0); Object (0) := Object (1); Object (1) := Value;
-   end Byte_Swap_16;
-
-   ----------------------------------------------------------------------------
-   -- Byte_Swap_32
-   ----------------------------------------------------------------------------
+   separate;
    procedure Byte_Swap_32 (Object_Address : in System.Address) is
-      Object : aliased Bits.Byte_Array (0 .. 3) with
-         Address    => Object_Address,
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
-      Value  : Interfaces.Unsigned_8;
-   begin
-      Value := Object (0); Object (0) := Object (3); Object (3) := Value;
-      Value := Object (1); Object (1) := Object (2); Object (2) := Value;
-   end Byte_Swap_32;
+   separate;
+   procedure Byte_Swap_64 (Object_Address : in System.Address) is
+   separate;
 
    ----------------------------------------------------------------------------
-   -- Byte_Swap_64
+   -- BE_To_CPUE_XX
    ----------------------------------------------------------------------------
-   procedure Byte_Swap_64 (Object_Address : in System.Address) is
-      Object : aliased Bits.Byte_Array (0 .. 7) with
-         Address    => Object_Address,
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
-      Value  : Interfaces.Unsigned_8;
-   begin
-      Value := Object (0); Object (0) := Object (7); Object (7) := Value;
-      Value := Object (1); Object (1) := Object (6); Object (6) := Value;
-      Value := Object (2); Object (2) := Object (5); Object (5) := Value;
-      Value := Object (3); Object (3) := Object (4); Object (4) := Value;
-   end Byte_Swap_64;
+
+   function BE_To_CPUE_16 (Object_Address : System.Address) return Interfaces.Unsigned_16 is
+   separate;
+   function BE_To_CPUE_32 (Object_Address : System.Address) return Interfaces.Unsigned_32 is
+   separate;
+   function BE_To_CPUE_64 (Object_Address : System.Address) return Interfaces.Unsigned_64 is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- LE_To_CPUE_XX
+   ----------------------------------------------------------------------------
+
+   function LE_To_CPUE_16 (Object_Address : System.Address) return Interfaces.Unsigned_16 is
+   separate;
+   function LE_To_CPUE_32 (Object_Address : System.Address) return Interfaces.Unsigned_32 is
+   separate;
+   function LE_To_CPUE_64 (Object_Address : System.Address) return Interfaces.Unsigned_64 is
+   separate;
 
    ----------------------------------------------------------------------------
    -- Byte_Swap
@@ -132,22 +119,7 @@ package body LLutils is
                                  MSBit           : Bits.Address_Bit_Number;
                                  BE_Layout       : Boolean := False
                                 ) return SSE.Integer_Address is
-      Bit_Mask : SSE.Integer_Address;
-   begin
-      if Bits.LittleEndian or else (Bits.BigEndian and then not BE_Layout) then
-         if MSBit < LSBit then
-            return 0;
-         end if;
-         Bit_Mask := 2**(MSBit - LSBit + 1) - 1;
-         return (SSE.To_Integer (Address_Pattern) / 2**LSBit) and Bit_Mask;
-      else
-         if MSBit > LSBit then
-            return 0;
-         end if;
-         Bit_Mask := 2**(LSBit - MSBit + 1) - 1;
-         return (SSE.To_Integer (Address_Pattern) / 2**(System.Address'Size - 1 - LSBit)) and Bit_Mask;
-      end if;
-   end Select_Address_Bits;
+   separate;
 
    ----------------------------------------------------------------------------
    -- Address_Displacement
@@ -174,6 +146,14 @@ package body LLutils is
                            Scale_Address : Bits.Address_Shift
                           ) return System.Address is
    separate;
+
+   ----------------------------------------------------------------------------
+   -- To_Ch
+   ----------------------------------------------------------------------------
+   function To_Ch (Digit : Decimal_Digit_Type) return Character is
+   begin
+      return Character'Val (Character'Pos ('0') + Digit);
+   end To_Ch;
 
    ----------------------------------------------------------------------------
    -- HexDigit_To_U8

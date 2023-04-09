@@ -34,6 +34,10 @@ package LLutils is
 
    package SSE renames System.Storage_Elements;
 
+   ----------------------------------------------------------------------------
+   -- Byte swapping
+   ----------------------------------------------------------------------------
+
    procedure Byte_Swap_16 (Object_Address : in System.Address) with
       Inline => True;
    procedure Byte_Swap_32 (Object_Address : in System.Address) with
@@ -41,16 +45,33 @@ package LLutils is
    procedure Byte_Swap_64 (Object_Address : in System.Address) with
       Inline => True;
 
+   function BE_To_CPUE_16 (Object_Address : System.Address) return Interfaces.Unsigned_16 with
+      Inline => True;
+   function BE_To_CPUE_32 (Object_Address : System.Address) return Interfaces.Unsigned_32 with
+      Inline => True;
+   function BE_To_CPUE_64 (Object_Address : System.Address) return Interfaces.Unsigned_64 with
+      Inline => True;
+
+   function LE_To_CPUE_16 (Object_Address : System.Address) return Interfaces.Unsigned_16 with
+      Inline => True;
+   function LE_To_CPUE_32 (Object_Address : System.Address) return Interfaces.Unsigned_32 with
+      Inline => True;
+   function LE_To_CPUE_64 (Object_Address : System.Address) return Interfaces.Unsigned_64 with
+      Inline => True;
+
    procedure Byte_Swap (
                         Object_Address : in System.Address;
                         Size           : in Bits.Bitsize
-                       ) with
-      Inline => True;
+                       );
 
    procedure Byte_Swap_Next (
                              Object_Address : in out System.Address;
                              Size           : in     Bits.Bitsize
                             );
+
+   ----------------------------------------------------------------------------
+   -- Address manipulation
+   ----------------------------------------------------------------------------
 
    function Select_Address_Bits (
                                  Address_Pattern : System.Address;
@@ -72,6 +93,15 @@ package LLutils is
                            Offset        : SSE.Storage_Offset;
                            Scale_Address : Bits.Address_Shift
                           ) return System.Address with
+      Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- Character-oriented utilities
+   ----------------------------------------------------------------------------
+
+   subtype Decimal_Digit_Type is Natural range 0 .. 9;
+
+   function To_Ch (Digit : Decimal_Digit_Type) return Character with
       Inline => True;
 
    procedure HexDigit_To_U8 (
