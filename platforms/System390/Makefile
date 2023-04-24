@@ -55,24 +55,18 @@ endif
 
 .PHONY : postbuild
 postbuild :
-ifeq ($(IPL_MODE),CARD_READER)
-	@$(PYTHON) S360obj.py -a 0x10000 -p -l loader.rdr $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
-	@#$(TCLSH) S360obj.tcl -a 0x10000 -p -l loader.rdr $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
-else ifeq ($(IPL_MODE),DASD)
-	@$(RM) SYSRES.DSD
-	@$(PYTHON) S360obj.py -a 0x10000 -p $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
-	@#$(TCLSH) S360obj.tcl -a 0x10000 -p $(KERNEL_PARENT_PATH)/$(KERNEL_ROMFILE) $(KERNEL_IPLFILE)
-	@$(HERCULES_PREFIX)/bin/dasdload -0 dasd_ctlfile.txt SYSRES.DSD 5
+ifneq ($(POSTBUILD_COMMAND),)
+	$(POSTBUILD_COMMAND)
 endif
 
 .PHONY : clean
 clean :
-	$(RM) $(CLEAN_OBJECTS_COMMON) $(KERNEL_RDR)
+	$(RM) $(CLEAN_OBJECTS_COMMON)
 
 .PHONY : distclean
 distclean : clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) configure.h configure.ads
-	$(RM) s390.cnf hercules.rc $(KERNEL_IPLFILE) SYSRES.DSD
+	$(RM) s390.cnf hercules.rc
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
