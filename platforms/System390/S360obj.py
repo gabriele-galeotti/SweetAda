@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #
 # Create a minimal S/360 object file suitable to be IPLed.
@@ -128,7 +128,7 @@ def str2ebcdic(string):
 #                                                                              #
 ################################################################################
 def file_write_byte(f, byte):
-    buffer = bytearray([byte])
+    buffer = bytearray([int(byte)])
     f.write(buffer)
     return
 
