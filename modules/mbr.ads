@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
 with Interfaces;
 with BlockDevices;
 
@@ -29,7 +28,6 @@ package MBR is
    --                                                                        --
    --========================================================================--
 
-   use System;
    use Interfaces;
    use BlockDevices;
 
@@ -55,7 +53,7 @@ package MBR is
       LBA_Start        : Unsigned_32;
       LBA_Size         : Unsigned_32;
    end record with
-      Size => PARTITION_ENTRY_SIZE * Storage_Unit;
+      Size => PARTITION_ENTRY_SIZE * 8;
    for Partition_Entry_Type use record
       Status           at  0 range 0 .. 7;
       CHS_First_Sector at  1 range 0 .. 23;
