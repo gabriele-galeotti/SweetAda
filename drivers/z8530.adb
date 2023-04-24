@@ -50,7 +50,7 @@ package body Z8530 is
        WR5  => 5,  RR5  => 5,
        WR6  => 6,  RR6  => 6,
        WR7  => 7,  RR7  => 7,
-       WR8  => 7,  RR8  => 8,
+       WR8  => 8,  RR8  => 8,
        WR9  => 9,  RR9  => 9,
        WR10 => 10, RR10 => 10,
        WR11 => 11, RR11 => 11,
@@ -826,6 +826,16 @@ package body Z8530 is
       Create_Ports (Descriptor, Channel);
       -- reset register pointer
       Unused := Descriptor.Read_8 (Descriptor.Control_Port (Channel));
+      -- Master Interrupt Enable
+      Register_Write (Descriptor, Channel, WR9, To_U8 (WR9_Type'(
+         VIS    => False,
+         NV     => True,
+         DLC    => False,
+         MIE    => True,
+         SHnSL  => False,
+         INTACK => False,
+         RESCMD => RESCMD_RES
+         )));
       -- select BR Generator Output source = PCLK
       Register_Write (Descriptor, Channel, WR11, To_U8 (WR11_Type'(
          nTRxC     => nTRxC_BR,
@@ -869,20 +879,10 @@ package body Z8530 is
          EXT_INT_ENAB => False,
          Tx_INT_ENAB  => False,
          PAR_SPEC     => False,
-         Rx_INT_Modes => INT_ALL_Rx,
+         Rx_INT_Modes => RxINT_DISAB,
          WT_RDY_RT    => False,
          WT_FN_RDYFN  => False,
          WT_RDY_ENAB  => False
-         )));
-      -- Master Interrupt Enable
-      Register_Write (Descriptor, Channel, WR9, To_U8 (WR9_Type'(
-         VIS    => False,
-         NV     => True,
-         DLC    => False,
-         MIE    => True,
-         SHnSL  => False,
-         INTACK => False,
-         RESCMD => RESCMD_NONE
          )));
    end Init;
 
