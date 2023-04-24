@@ -647,13 +647,12 @@ ifneq ($(USE_ELFTOOL),)
 export ELFTOOL
 endif
 
-ifneq ($(TCLSH),)
-export TCLSH
-endif
-
-export USE_PYTHON
 ifneq ($(PYTHON),)
 export PYTHON
+endif
+
+ifneq ($(TCLSH),)
+export TCLSH
 endif
 
 ################################################################################

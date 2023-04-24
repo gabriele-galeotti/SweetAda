@@ -36,7 +36,7 @@ else ifeq ($(OSTYPE),linux)
   TOOLCHAIN_PREFIX := /opt/toolchains
   #TOOLCHAIN_PREFIX := /opt/GNAT/2021-arm-elf
   #TOOLCHAIN_PREFIX := /opt/GNAT/2021-riscv32-elf
-  PYTHON           := python
+  PYTHON           := python3
   TCLSH            := tclsh
 endif
 
@@ -69,8 +69,6 @@ TOOLS_CHECK := Y
 #USE_LIBEXEC_LD := Y
 
 USE_ELFTOOL := Y
-
-USE_PYTHON := Y
 
 ADA_MODE := ADA22
 

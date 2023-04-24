@@ -27,15 +27,12 @@ export QSYS_IO_LIST      := leds switches
 
 USE_APPLICATION := test-DE10-Lite
 
-ifeq ($(USE_PYTHON),Y)
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py -jtagd
 SESSION_END_COMMAND   :=
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py
 DEBUG_COMMAND         :=
-else
-SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -jtagd
-SESSION_END_COMMAND   :=
-RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
-DEBUG_COMMAND         :=
-endif
+#SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -jtagd
+#SESSION_END_COMMAND   :=
+#RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
+#DEBUG_COMMAND         :=
 
