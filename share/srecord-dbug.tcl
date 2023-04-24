@@ -16,8 +16,7 @@
 # $3 = BAUD_RATE
 #
 # Environment variables:
-# SWEETADA_PATH
-# LIBUTILS_DIRECTORY
+# none
 #
 
 ################################################################################
@@ -26,12 +25,6 @@
 ################################################################################
 
 set SCRIPT_FILENAME [file tail $argv0]
-
-################################################################################
-#                                                                              #
-################################################################################
-
-source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
 ################################################################################
 # Main loop.                                                                   #
@@ -61,7 +54,7 @@ flush $serialport_fd
 
 # download an S19 executable on console port (with echoing)
 puts -nonewline $serialport_fd "dl\x0D\x0A"
-msleep 1000
+after 1000
 
 # read kernel file and write to serial port
 set kernel_fd [open $kernel_srecfile r]
@@ -70,7 +63,7 @@ while {[gets $kernel_fd data] >= 0} {
     puts -nonewline $serialport_fd "$data\x0D\x0A"
     puts -nonewline stderr "."
     # allow processing of data on remote side
-    msleep 30
+    after 30
     set srec_type [string range $data 0 1]
     if {$srec_type eq "S7"} {
         set start_address [string range $data 4 11]
@@ -88,7 +81,7 @@ puts stderr ""
 close $kernel_fd
 
 # execute
-msleep 1000
+after 1000
 puts -nonewline $serialport_fd "go $start_address\x0D\x0A"
 
 close $serialport_fd

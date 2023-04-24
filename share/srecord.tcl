@@ -16,8 +16,7 @@
 # $3 = BAUD_RATE
 #
 # Environment variables:
-# SWEETADA_PATH
-# LIBUTILS_DIRECTORY
+# none
 #
 
 ################################################################################
@@ -26,12 +25,6 @@
 ################################################################################
 
 set SCRIPT_FILENAME [file tail $argv0]
-
-################################################################################
-#                                                                              #
-################################################################################
-
-source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 
 ################################################################################
 # Main loop.                                                                   #
@@ -71,7 +64,7 @@ switch $baud_rate {
 while {[gets $kernel_fd data] >= 0} {
     puts -nonewline $serialport_fd "$data\x0D\x0A"
     puts -nonewline stderr "."
-    msleep $delay
+    after $delay
     set srec_type [string range $data 0 1]
     if {$srec_type eq "S7"} {
         set start_address [string range $data 4 11]
