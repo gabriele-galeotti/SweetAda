@@ -32,21 +32,12 @@ package body FATFS is
    use LLutils;
    use FATFS.Cluster;
 
-   Sector_Start    : Sector_Type;     -- partition start (hidden sectors)
-   FAT_Copies      : FAT_Copies_Type; -- # of FATs
-   FAT_Modulus     : Unsigned_16;     -- table modulus
-   Sectors_Per_FAT : Unsigned_32;     -- sectors per FAT
-
    ----------------------------------------------------------------------------
    -- Local subprograms
    ----------------------------------------------------------------------------
 
    procedure Block_Swap_16 (B : in out Block_Type);
    procedure Block_Swap_32 (B : in out Block_Type);
-   function Sector_Offset (S : Sector_Type) return Sector_Type with
-      Inline => True;
-   function Sector_Offset (C : Cluster_Type) return Sector_Type with
-      Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -107,26 +98,6 @@ package body FATFS is
    end Physical_Sector;
 
    ----------------------------------------------------------------------------
-   -- Sector_Offset
-   ----------------------------------------------------------------------------
-   -- Compute the FAT sector offset from current FAT sector.
-   ----------------------------------------------------------------------------
-   function Sector_Offset (S : Sector_Type) return Sector_Type is
-   begin
-      return S - FAT_Start (FAT_Index);
-   end Sector_Offset;
-
-   ----------------------------------------------------------------------------
-   -- Sector_Offset
-   ----------------------------------------------------------------------------
-   -- Compute the relative FAT sector for a given cluster #.
-   ----------------------------------------------------------------------------
-   function Sector_Offset (C : Cluster_Type) return Sector_Type is
-   begin
-      return Sector_Type (C) / Sector_Type (FAT_Modulus);
-   end Sector_Offset;
-
-   ----------------------------------------------------------------------------
    -- FAT_Is_End
    ----------------------------------------------------------------------------
    -- Return True if sector points past end of current FAT.
@@ -139,11 +110,17 @@ package body FATFS is
    ----------------------------------------------------------------------------
    -- FAT_Sector
    ----------------------------------------------------------------------------
-   -- Return the sector # of active FAT based upon cluster #.
+   -- Return the sector # based upon cluster #.
    ----------------------------------------------------------------------------
-   function FAT_Sector (C : Cluster_Type) return Sector_Type is
+   function FAT_Sector (F : FAT_Type; C : Cluster_Type) return Sector_Type is
+      FAT_Modulus_Order : Natural;
    begin
-      return FAT_Start (FAT_Index) + Sector_Offset (C);
+      case F is
+         when FAT16  => FAT_Modulus_Order := 8;
+         when FAT32  => FAT_Modulus_Order := 7;
+         when others => FAT_Modulus_Order := 0;
+      end case;
+      return FAT_Start (FAT_Index) + Sector_Type (C / 2**FAT_Modulus_Order);
    end FAT_Sector;
 
    ----------------------------------------------------------------------------
@@ -151,9 +128,15 @@ package body FATFS is
    ----------------------------------------------------------------------------
    -- Return FAT entry index within a FAT sector.
    ----------------------------------------------------------------------------
-   function FAT_Entry_Index (C : Cluster_Type) return Natural is
+   function FAT_Entry_Index (F : FAT_Type; C : Cluster_Type) return Natural is
+      FAT_Modulus_Order : Natural;
    begin
-      return Natural (C mod Cluster_Type (FAT_Modulus));
+      case F is
+         when FAT16  => FAT_Modulus_Order := 8;
+         when FAT32  => FAT_Modulus_Order := 7;
+         when others => FAT_Modulus_Order := 0;
+      end case;
+      return Natural (C mod 2**FAT_Modulus_Order);
    end FAT_Entry_Index;
 
    ----------------------------------------------------------------------------
@@ -171,7 +154,7 @@ package body FATFS is
                   Import     => True,
                   Convention => Ada;
             begin
-               return Cluster_Type (LE_To_CPUE (FAT16_Table (FAT_Entry_Index (C))));
+               return Cluster_Type (LE_To_CPUE (FAT16_Table (FAT_Entry_Index (FAT_Style, C))));
             end;
          when FAT32 =>
             declare
@@ -180,7 +163,7 @@ package body FATFS is
                   Import     => True,
                   Convention => Ada;
             begin
-               return Cluster_Type (LE_To_CPUE (FAT32_Table (FAT_Entry_Index (C))));
+               return Cluster_Type (LE_To_CPUE (FAT32_Table (FAT_Entry_Index (FAT_Style, C))));
             end;
          when others =>
             return 0; -- unsupported
@@ -206,7 +189,7 @@ package body FATFS is
                   Import     => True,
                   Convention => Ada;
             begin
-               FAT16_Table (FAT_Entry_Index (Index)) := Unsigned_16 (C);
+               FAT16_Table (FAT_Entry_Index (FAT_Style, Index)) := Unsigned_16 (C);
             end;
          when FAT32 =>
             declare
@@ -215,7 +198,7 @@ package body FATFS is
                   Import     => True,
                   Convention => Ada;
             begin
-               FAT32_Table (FAT_Entry_Index (Index)) := Unsigned_32 (C);
+               FAT32_Table (FAT_Entry_Index (FAT_Style, Index)) := Unsigned_32 (C);
             end;
          when others =>
             null;
@@ -232,6 +215,12 @@ package body FATFS is
                          B       : in  Block_Type;
                          Success : out Boolean
                         ) is
+      -- compute the FAT sector offset from current FAT sector
+      function Sector_Offset (S : Sector_Type) return Sector_Type;
+      function Sector_Offset (S : Sector_Type) return Sector_Type is
+      begin
+         return S - FAT_Start (FAT_Index);
+      end Sector_Offset;
       Offset : constant Sector_Type := Sector_Offset (S);
    begin
       for Index in FAT_Start'Range loop
@@ -357,11 +346,9 @@ package body FATFS is
       Tmp_Number_Of_Clusters := BR_Total_Clusters;
       if not FAT32_Flag then
          FAT_Style := FAT16;
-         FAT_Modulus := 256;
          Console.Print ("Filesystem_Open: FAT16 detected.", NL => True);
       elsif Tmp_Number_Of_Clusters < 268_435_457 then
          FAT_Style := FAT32;
-         FAT_Modulus := 128;
          Console.Print ("Filesystem_Open: FAT32 detected.", NL => True);
       else
          Success := False;

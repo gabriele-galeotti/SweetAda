@@ -116,8 +116,8 @@ package FATFS is
       Root_Directory_First_Cluster at  44 range 0 .. 31;
       FS_Info_Sector               at  48 range 0 .. 15;
       Backup_Boot_Sector           at  50 range 0 .. 15;
-      Reserved                     at  52 range 0 .. 95;
-      Bootstrap_Code               at  64 range 0 .. 3567;
+      Reserved                     at  52 range 0 .. 12 * 8 - 1;
+      Bootstrap_Code               at  64 range 0 .. 446 * 8 - 1;
       Signature                    at 510 range 0 .. 15;
    end record;
 
@@ -259,9 +259,9 @@ package FATFS is
       Inline => True;
    function FAT_Is_End (S : Sector_Type) return Boolean with
       Inline => True;
-   function FAT_Sector (C : Cluster_Type) return Sector_Type with
+   function FAT_Sector (F : FAT_Type; C : Cluster_Type) return Sector_Type with
       Inline => True;
-   function FAT_Entry_Index (C : Cluster_Type) return Natural with
+   function FAT_Entry_Index (F : FAT_Type; C : Cluster_Type) return Natural with
       Inline => True;
    function FAT_Entry (B : Block_Type; C : Cluster_Type) return Cluster_Type with
       Inline => True;
@@ -343,8 +343,11 @@ private
    FAT_Is_Open            : Boolean := False;      -- filesystem is open and ready
    FAT_Style              : FAT_Type := FATNONE;   -- filesystem type
    Sector_Size            : Unsigned_16;           -- sector size
+   Sector_Start           : Sector_Type;           -- partition start (hidden sectors)
+   Sectors_Per_FAT        : Unsigned_32;           -- sectors per FAT
    Root_Directory_Cluster : Cluster_Type;          -- first cluster for root directory
    Root_Directory_Start   : Sector_Type;           -- where the root directory starts
+   FAT_Copies             : FAT_Copies_Type;       -- # of FATs
    FAT_Start              : Sector_Array (1 .. 4); -- maximum 4 FAT copies
    FAT_Index              : FAT_Copies_Type;       -- which FAT to use
    Root_Directory_Entries : Unsigned_16;           -- bootrecord Root_Directory_Entries

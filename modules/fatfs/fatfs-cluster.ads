@@ -34,17 +34,15 @@ package FATFS.Cluster is
    function File_EOF return Cluster_Type with
       Inline => True;
 
-   procedure Map (
-                  CCB   : out CCB_Type;
-                  S     : in  Sector_Type;
-                  Count : in  Unsigned_16
-                 );
+   procedure Map
+      (CCB   : out CCB_Type;
+       S     : in  Sector_Type;
+       Count : in  Unsigned_16);
 
-   procedure Open (
-                   CCB        : in out CCB_Type;
-                   C          : in     Cluster_Type;
-                   Keep_First : in     Boolean
-                  );
+   procedure Open
+      (CCB        : in out CCB_Type;
+       C          : in     Cluster_Type;
+       Keep_First : in     Boolean);
 
    procedure Advance (
                       CCB     : in out CCB_Type;

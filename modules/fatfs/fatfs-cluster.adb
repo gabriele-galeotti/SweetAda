@@ -185,7 +185,7 @@ package body FATFS.Cluster is
          return;
       end if;
       -- locate FAT sector for this cluster number
-      Sector := FAT_Sector (C);
+      Sector := FAT_Sector (FAT_Style, C);
       IO_Context.Read (Physical_Sector (Sector), B, Success);
       -- __FIX__ endian?
       if not Success then
@@ -284,10 +284,10 @@ package body FATFS.Cluster is
          C := 2; -- search from start of FAT
       end if;
       loop
-         Sector := FAT_Sector (C);
+         Sector := FAT_Sector (FAT_Style, C);
          exit when FAT_Is_End (Sector);
          if C /= Next_Writable_Cluster then -- reserve one cluster for writes
-            if FAT_Entry_Index (C) = 0 or else C = 2 or else First then
+            if FAT_Entry_Index (FAT_Style, C) = 0 or else C = 2 or else First then
                First := False;
                IO_Context.Read (Physical_Sector (Sector), B, Success); -- read in FAT sector
                exit when not Success;
@@ -378,7 +378,7 @@ package body FATFS.Cluster is
                     Chain   : in  Cluster_Type; -- cluster or File_EOF (end of chain)
                     Success : out Boolean       -- result of operation
                    ) is
-      Sector : constant Sector_Type := FAT_Sector (C);
+      Sector : constant Sector_Type := FAT_Sector (FAT_Style, C);
    begin
       if C = Next_Writable_Cluster then
          Next_Writable_Cluster := 0;                          -- mark this as in use
@@ -442,7 +442,7 @@ package body FATFS.Cluster is
       loop
          exit when not Is_Valid (C);
          -- read FAT Sector for current cluster
-         Sector := FAT_Sector (C);
+         Sector := FAT_Sector (FAT_Style, C);
          IO_Context.Read (Physical_Sector (Sector), B, Success);
          exit when not Success;
          -- update the FAT Sector entry
