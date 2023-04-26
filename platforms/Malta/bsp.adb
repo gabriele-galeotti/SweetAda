@@ -170,6 +170,7 @@ package body BSP is
       VGA.Init (MIPS.KSEG1_ADDRESS + 16#000A_0000#, MIPS.KSEG1_ADDRESS + 16#000B_8000#);
       VGA.Set_Mode (VGA.MODE12H);
       -------------------------------------------------------------------------
+      MIPS32.Irq_Level_Set (16#3F#);
       MIPS32.Irq_Enable;
       Tclk_Init;
       -------------------------------------------------------------------------

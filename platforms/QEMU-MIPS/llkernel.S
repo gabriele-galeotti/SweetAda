@@ -16,11 +16,12 @@
 
                 .sect   .vectors,"ax"
 
+                .set    noreorder
+                .set    noat
+
 //
 // Exception Vectors.
 //
-
-                .set    noreorder
 
                 //
                 // RESET entry point

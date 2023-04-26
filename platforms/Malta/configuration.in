@@ -7,12 +7,12 @@
 
 CPU       := MIPS
 CPU_MODEL := MIPS32-24K
-#CPU_MODEL := MIPS64-5K
+#CPU_MODEL := MIPS64-20K
 
 ifeq      ($(CPU_MODEL),MIPS32-24K)
 GCC_SWITCHES_PLATFORM     := -march=24kf
-else ifeq ($(CPU_MODEL),MIPS64-5K)
-GCC_SWITCHES_PLATFORM     := -march=5kc
+else ifeq ($(CPU_MODEL),MIPS64-20K)
+GCC_SWITCHES_PLATFORM     := -march=20kc
 endif
 STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      :=

@@ -16,20 +16,20 @@
 
                 .sect   .text,"ax"
 
+                .set    noreorder
+                .set    noat
+
                 .global _start
 _start:
 
                 //
-                // Set up SR and Cause registers.
+                // Initialize essential CP0 registers.
                 //
-                mfc0    $t0,CP0_PRId
-                mfc0    $v0,CP0_SR
-                mtc0    $0,CP0_WatchLo
-                mtc0    $0,CP0_WatchHi
-                and     $v0,SR_SR                       // preserve Soft Reset
-                or      $v0,SR_BEV                      // set Boot Exceptions
-                mtc0    $v0,CP0_SR                      // 32 bit, kernel mode, bootstrap
-                mtc0    $0,CP0_Cause
+                mtc0    $0,C0_CAUSE
+                nop
+                mtc0    $0,C0_WATCHLO
+                nop
+                mtc0    $0,C0_WATCHHI
                 nop
 
                 //

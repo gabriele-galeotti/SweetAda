@@ -49,9 +49,9 @@ SECTIONS
                 _sbss = .;
                 *(.bss)
                 *(.bss.*)
-                *(COMMON)
                 *(.sbss)
                 *(.sbss.*)
+                *(COMMON)
                 *(.scommon)
                 . = ALIGN(0x10);
                 _ebss = .;

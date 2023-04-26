@@ -27,6 +27,9 @@
 
                 .sect   .text
 
+                .set    noreorder
+                .set    noat
+
                 .type   _init,@function
                 .global _init
 _init:
@@ -34,9 +37,7 @@ _init:
                 //
                 // Zero all registers.
                 //
-                .set    noat
                 move    $1,$0
-                .set    at
                 move    $2,$0
                 move    $3,$0
                 move    $4,$0
@@ -69,40 +70,41 @@ _init:
                 move    $31,$0
 
                 // KSU=0, ERL=0, EXL=0
-                mfc0    $t0,CP0_SR
+                mfc0    $t0,C0_SR
                 nop
                 la      $t1,~(0x18|0x6)
                 and     $t0,$t1
-                mtc0    $t0,CP0_SR
+                mtc0    $t0,C0_SR
                 nop
-
-                // clear CP0_Cause, CP0_WatchLo, CP0_WatchHi
-                mtc0    $0,CP0_Cause
-                mtc0    $0,CP0_WatchLo
-                mtc0    $0,CP0_WatchHi
+                // clear Cause, WatchLo, WatchHi
+                mtc0    $0,C0_CAUSE
                 nop
-
+                mtc0    $0,C0_WATCHLO
+                nop
+                mtc0    $0,C0_WATCHHI
+                nop
                 // disable cacheability in kseg2/kseg3, kuseg/useg, kseg0
-                mfc0    $t0,CP0_Config
+                mfc0    $t0,C0_CONFIG
                 nop
                 la      $t1,~(CONFIG_K0_MASK|CONFIG_KU_MASK|CONFIG_K23_MASK)
                 and     $t0,$t1
                 la      $t1,(CACHE_ATTRIBUTE_UNCACHED<<28)|(CACHE_ATTRIBUTE_UNCACHED<<25)|(CACHE_ATTRIBUTE_UNCACHED<<0)
                 or      $t0,$t1
-                mtc0    $t0,CP0_Config
+                mtc0    $t0,C0_CONFIG
                 nop
-
                 // IV=0, use the general exception vector (0x0180)
-                mfc0    $t0,CP0_Cause
+                mfc0    $t0,C0_CAUSE
                 nop
                 la      $t1,~(0x00800000)
                 and     $t0,$t1
-                mtc0    $t0,CP0_Config
+                mtc0    $t0,C0_CONFIG
                 nop
 
-                // TLB initialization
-                //jal     tlb_reset
-                //nop
+                //
+                // TLB initialization.
+                //
+                jal     tlb_reset
+                nop
 
                 //
                 // Code relocation.
@@ -162,7 +164,6 @@ dead:           b       .
 ////////////////////////////////////////////////////////////////////////////////
 
 movcode:
-                .set    noreorder
                 .extern _text_start
                 .extern _stext
                 .extern _etext
@@ -184,7 +185,6 @@ movcode:
                 nop
 3:              jr      $ra
                 nop
-                .set    reorder
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -194,7 +194,6 @@ movcode:
 ////////////////////////////////////////////////////////////////////////////////
 
 movdata:
-                .set    noreorder
                 .extern _etext
                 .extern _sdata
                 .extern _edata
@@ -216,7 +215,6 @@ movdata:
                 nop
 3:              jr      $ra
                 nop
-                .set    reorder
 
 ////////////////////////////////////////////////////////////////////////////////
 // zerobss                                                                    //
@@ -225,7 +223,6 @@ movdata:
 ////////////////////////////////////////////////////////////////////////////////
 
 zerobss:
-                .set    noreorder
                 .extern _sbss
                 .extern _ebss
                 la      $t0,_sbss
@@ -235,38 +232,28 @@ zerobss:
                 addiu   $t0,4                   // delay slot
                 jr      $ra
                 nop
-                .set    reorder
 
 ////////////////////////////////////////////////////////////////////////////////
 // tlb_reset                                                                  //
 //                                                                            //
 // Initialize the TLB.                                                        //
-// vmips-1.5/sample_code/setup.S                                              //
 ////////////////////////////////////////////////////////////////////////////////
 
 tlb_reset:
-                .set    noreorder
-                li      $t0,0                   // t0 <- tlb index number (shifted)
-                li      $t1,0x81000000          // t1 <- tlb reset vaddr
-1:              mtc0    $0,CP0_EntryLo          // set up proposed tlb entry for reset
-                mtc0    $t1,CP0_EntryHi
-                ssnop                           // wait for pipeline hazard
-                ssnop
-                tlbp                            // check if it already exists
-                ssnop                           // wait for pipeline hazard
-                ssnop
-                mfc0    $t2,CP0_Index
-                bgez    $t2,1b                  // if it does, loop back
-                addiu   $t1,$t1,0x1000          // next vaddr (in delay slot)
-                mtc0    $t0,CP0_Index           // doesn''t exist, set index to write to
-                ssnop                           // wait for pipeline hazard
-                ssnop
-                addiu   $t0,$t0,0x100           // next tlb index (shifted)
-                bne     $t0,0x4000,1b           // if it''s not the last tlb index, loop
-                tlbwi                           // write tlb entry (in delay slot)
-                jr      $ra                     // done
-                nop                             // delay slot
-                .set    reorder
+                mfc0    $t0,C0_CONFIG1          // extract MMU size
+                ext     $t1,$t0,25,6            // highest # TLB entry
+                mtc0    $zero,C0_ENTRYLO0
+                mtc0    $zero,C0_ENTRYLO1
+                mtc0    $zero,C0_PAGEMASK       // 4k
+                mtc0    $zero,C0_WIRED
+                mtc0    $zero,C0_ENTRYHI
+1:              mtc0    $t1,C0_INDEX
+                ehb
+                tlbwi
+                bne     $t1,$zero,1b
+                add     $t1,-1
+                jr      $ra
+                nop
 
 ////////////////////////////////////////////////////////////////////////////////
 
