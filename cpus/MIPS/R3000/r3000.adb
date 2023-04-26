@@ -33,6 +33,24 @@ package body R3000 is
 
    CRLF : String renames Definitions.CRLF;
 
+   Register_Equates : constant String :=
+      "        .equ    CP0_Index,   $0 " & CRLF &
+      "        .equ    CP0_EntryLo, $2 " & CRLF &
+      "        .equ    CP0_Context, $4 " & CRLF &
+      "        .equ    CP0_BadVAddr,$8 " & CRLF &
+      "        .equ    CP0_Count,   $9 " & CRLF &
+      "        .equ    CP0_EntryHi, $10" & CRLF &
+      "        .equ    CP0_Compare, $11" & CRLF &
+      "        .equ    CP0_SR,      $12" & CRLF &
+      "        .equ    CP0_Cause,   $13" & CRLF &
+      "        .equ    CP0_EPC,     $14" & CRLF &
+      "        .equ    CP0_PRId,    $15" & CRLF &
+      "        .equ    CP0_Config,  $16" & CRLF &
+      "        .equ    CP0_WatchLo, $18" & CRLF &
+      "        .equ    CP0_WatchHi, $19" & CRLF &
+      "        .equ    CP0_XContext,$20" & CRLF &
+      "        .equ    CP0_Debug,   $23" & CRLF;
+
    type CP0_Register_Type is range 0 .. 31; -- 32 CP0 registers
 
    --========================================================================--
@@ -126,13 +144,13 @@ package body R3000 is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => ""                        & CRLF &
-                       "        mfc0    $t0,$12" & CRLF &
-                       "        nop            " & CRLF &
-                       "        ori     $t0,0xFF01  " & CRLF &
-                       "        mtc0    $t0,$12" & CRLF &
-                       "        nop            " & CRLF &
-                       "        nop            " & CRLF &
+           Template => ""                           & CRLF &
+                       Register_Equates                    &
+                       "        mfc0    $t0,CP0_SR" & CRLF &
+                       "        nop               " & CRLF &
+                       "        ori     $t0,$t0,1 " & CRLF &
+                       "        mtc0    $t0,CP0_SR" & CRLF &
+                       "        nop               " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
@@ -144,17 +162,19 @@ package body R3000 is
    procedure Irq_Disable is
    begin
       Asm (
-           Template => ""                               & CRLF &
-                       "        mfc0    $t0,$12       " & CRLF &
-                       "        nop                   " & CRLF &
-                       "        and     $t0,0xFFFFFFFE" & CRLF &
-                       "        mtc0    $t0,$12       " & CRLF &
-                       "        nop                   " & CRLF &
-                       "        nop                   " & CRLF &
+           Template => ""                            & CRLF &
+                       Register_Equates                     &
+                       "        mfc0    $t0,CP0_SR " & CRLF &
+                       "        nop                " & CRLF &
+                       "        li      $t1,1      " & CRLF &
+                       "        not     $t1,$t1    " & CRLF &
+                       "        and     $t0,$t0,$t1" & CRLF &
+                       "        mtc0    $t0,CP0_SR " & CRLF &
+                       "        nop                " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "$t0",
+           Clobber  => "$t0,$t1",
            Volatile => True
           );
    end Irq_Disable;

@@ -34,22 +34,22 @@ package body MIPS32 is
    CRLF : String renames Definitions.CRLF;
 
    Register_Equates : constant String :=
-      "        .equ    CP0_Index,   $0 " & CRLF &
-      "        .equ    CP0_EntryLo, $2 " & CRLF &
-      "        .equ    CP0_Context, $4 " & CRLF &
-      "        .equ    CP0_BadVAddr,$8 " & CRLF &
-      "        .equ    CP0_Count,   $9 " & CRLF &
-      "        .equ    CP0_EntryHi, $10" & CRLF &
-      "        .equ    CP0_Compare, $11" & CRLF &
-      "        .equ    CP0_SR,      $12" & CRLF &
-      "        .equ    CP0_Cause,   $13" & CRLF &
-      "        .equ    CP0_EPC,     $14" & CRLF &
-      "        .equ    CP0_PRId,    $15" & CRLF &
-      "        .equ    CP0_Config,  $16" & CRLF &
-      "        .equ    CP0_WatchLo, $18" & CRLF &
-      "        .equ    CP0_WatchHi, $19" & CRLF &
-      "        .equ    CP0_XContext,$20" & CRLF &
-      "        .equ    CP0_Debug,   $23" & CRLF;
+      "        .equ    C0_INDEX,   $0 " & CRLF &
+      "        .equ    C0_ENTRYLO, $2 " & CRLF &
+      "        .equ    C0_CONTEXT, $4 " & CRLF &
+      "        .equ    C0_BADVADDR,$8 " & CRLF &
+      "        .equ    C0_COUNT,   $9 " & CRLF &
+      "        .equ    C0_ENTRYHI, $10" & CRLF &
+      "        .equ    C0_COMPARE, $11" & CRLF &
+      "        .equ    C0_SR,      $12" & CRLF &
+      "        .equ    C0_CAUSE,   $13" & CRLF &
+      "        .equ    C0_EPC,     $14" & CRLF &
+      "        .equ    C0_PRID,    $15" & CRLF &
+      "        .equ    C0_CONFIG,  $16" & CRLF &
+      "        .equ    C0_WATCHLO, $18" & CRLF &
+      "        .equ    C0_WATCHHI, $19" & CRLF &
+      "        .equ    C0_XCONTEXT,$20" & CRLF &
+      "        .equ    C0_DEBUG,   $23" & CRLF;
 
    type CP0_Register_Type is range 16#00# .. 16#1F#;        -- 32 CP0 registers
    type CP0_Register_Select_Type is range 2#000# .. 2#111#; -- 3-bit select field
@@ -261,27 +261,62 @@ package body MIPS32 is
    procedure Irq_Enable is
    begin
       Asm (
-           Template => ""                               & CRLF &
-                       Register_Equates                        &
-                       "        mfc0    $t0,CP0_SR,0  " & CRLF &
-                       "        nop                   " & CRLF &
-                       "        lui     $t1,0         " & CRLF &
-                       "        ori     $t1,$t1,0xFC01" & CRLF & -- IM7..IM2 all enabled
-                       "        or      $t0,$t1       " & CRLF &
-                       "        mtc0    $t0,CP0_SR,0  " & CRLF &
-                       "        nop                   " & CRLF &
+           Template => ""                            & CRLF &
+                       Register_Equates                     &
+                       "        mfc0    $t0,C0_SR,0" & CRLF &
+                       "        nop                " & CRLF &
+                       "        ori     $t0,$t0,1  " & CRLF &
+                       "        mtc0    $t0,C0_SR,0" & CRLF &
+                       "        nop                " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "$t0,$t1",
+           Clobber  => "$t0",
            Volatile => True
           );
    end Irq_Enable;
 
    procedure Irq_Disable is
    begin
-      null;
+      Asm (
+           Template => ""                            & CRLF &
+                       Register_Equates                     &
+                       "        mfc0    $t0,C0_SR,0" & CRLF &
+                       "        nop                " & CRLF &
+                       "        li      $t1,1      " & CRLF &
+                       "        not     $t1,$t1    " & CRLF &
+                       "        and     $t0,$t0,$t1" & CRLF &
+                       "        mtc0    $t0,C0_SR,0" & CRLF &
+                       "        nop                " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "$t0,$t1",
+           Volatile => True
+          );
    end Irq_Disable;
+
+   procedure Irq_Level_Set (Irq_Level : in Irq_Level_Type) is
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       Register_Equates                     &
+                       "        mfc0    $t0,C0_SR,0" & CRLF &
+                       "        nop                " & CRLF &
+                       "        li      $t1,0xFC   " & CRLF &
+                       "        not     $t1,$t1    " & CRLF &
+                       "        and     $t0,$t0,$t1" & CRLF &
+                       "        sll     $t1,%0,10  " & CRLF &
+                       "        or      $t0,$t0,$t1" & CRLF &
+                       "        mtc0    $t0,C0_SR,0" & CRLF &
+                       "        nop                " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Irq_Level_Type'Asm_Input ("r", Irq_Level),
+           Clobber  => "$t0,$t1",
+           Volatile => True
+          );
+   end Irq_Level_Set;
 
    function Irq_State_Get return Irq_State_Type is
    begin

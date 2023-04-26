@@ -11,30 +11,30 @@
 #ifndef _MIPS_H
 #define _MIPS_H 1
 
-#define CP0_Index    $0         // TLB entry index register
-#define CP0_Random   $1
-#define CP0_EntryLo  $2         // TLB entry contents (low-order half)
-#define CP0_EntryLo0 $2         // TLB entry contents (low-order half) 0
-#define CP0_EntryLo1 $3         // TLB entry contents (low-order half) 1
-#define CP0_Context  $4
-#define CP0_PageMask $5
-#define CP0_Wired    $6
-#define CP0_BadVAddr $8
-#define CP0_Count    $9
-#define CP0_EntryHi  $10        // TLB entry contents (high-order half)
-#define CP0_Compare  $11
-#define CP0_SR       $12
-#define CP0_Cause    $13
-#define CP0_EPC      $14
-#define CP0_PRId     $15        // Processor Revision Indentifier
-#define CP0_Config   $16
-#define CP0_Config1  $16,1
-#define CP0_Config2  $16,2
-#define CP0_Config3  $16,3
-#define CP0_WatchLo  $18        // WatchpointLo
-#define CP0_WatchHi  $19        // WatchpointHi
-#define CP0_XContext $20        // XContext
-#define CP0_Debug    $23
+#define C0_INDEX    $0          // TLB entry index register
+#define C0_RANDOM   $1
+#define C0_ENTRYLO  $2          // TLB entry contents (low-order half)
+#define C0_ENTRYLO0 $2          // TLB entry contents (low-order half) 0
+#define C0_ENTRYLO1 $3          // TLB entry contents (low-order half) 1
+#define C0_CONTEXT  $4
+#define C0_PAGEMASK $5
+#define C0_WIRED    $6
+#define C0_BADVADDR $8
+#define C0_COUNT    $9
+#define C0_ENTRYHI  $10         // TLB entry contents (high-order half)
+#define C0_COMPARE  $11
+#define C0_SR       $12
+#define C0_CAUSE    $13
+#define C0_EPC      $14
+#define C0_PRID     $15         // Processor Revision Indentifier
+#define C0_CONFIG   $16
+#define C0_CONFIG1  $16,1
+#define C0_CONFIG2  $16,2
+#define C0_CONFIG3  $16,3
+#define C0_WATCHLO  $18         // WatchpointLo
+#define C0_WATCHHI  $19         // WatchpointHi
+#define C0_XCONTEXT $20
+#define C0_DEBUG    $23
 
 #define SR_SR  0x00100000       // Soft Reset
 #define SR_BEV 0x00400000       // Bootstrap Exception Vector

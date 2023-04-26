@@ -57,6 +57,22 @@ package body MIPS is
    end NOP;
 
    ----------------------------------------------------------------------------
+   -- BREAK
+   ----------------------------------------------------------------------------
+   procedure BREAK is
+   begin
+      Asm (
+           Template => ""              & CRLF &
+                       "        break" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end BREAK;
+
+   ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
    procedure Asm_Call (Target_Address : in Address) is
