@@ -109,6 +109,42 @@ package body ARMv4 is
    end Irq_Disable;
 
    ----------------------------------------------------------------------------
+   -- Fiq_Enable
+   ----------------------------------------------------------------------------
+   procedure Fiq_Enable is
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        mrs     r1,cpsr"     & CRLF &
+                       "        bic     r1,r1,#0x40" & CRLF &
+                       "        msr     cpsr_c,r1"   & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end Fiq_Enable;
+
+   ----------------------------------------------------------------------------
+   -- Fiq_Disable
+   ----------------------------------------------------------------------------
+   procedure Fiq_Disable is
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        mrs     r1,cpsr"     & CRLF &
+                       "        orr     r1,r1,#0x40" & CRLF &
+                       "        msr     cpsr_c,r1"   & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end Fiq_Disable;
+
+   ----------------------------------------------------------------------------
    -- Memory synchronization
    ----------------------------------------------------------------------------
    procedure Memory_Synchronization is

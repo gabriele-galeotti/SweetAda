@@ -37,20 +37,6 @@ package ARMv4 is
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- Generic definitions
-   ----------------------------------------------------------------------------
-
-   Opcode_BREAKPOINT      : constant := 16#E7FF_DEFE#;
-   Opcode_BREAKPOINT_Size : constant := 4;
-
-   BREAKPOINT_Asm_String : constant String := ".word   0xE7FFDEFE";
-
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
-
-   ----------------------------------------------------------------------------
    -- ARM registers
    ----------------------------------------------------------------------------
 
@@ -144,6 +130,20 @@ package ARMv4 is
    end record;
 
    ----------------------------------------------------------------------------
+   -- Generic definitions
+   ----------------------------------------------------------------------------
+
+   Opcode_BREAKPOINT      : constant := 16#E7FF_DEFE#;
+   Opcode_BREAKPOINT_Size : constant := 4;
+
+   BREAKPOINT_Asm_String : constant String := ".word   0xE7FFDEFE";
+
+   procedure NOP with
+      Inline => True;
+   procedure BREAKPOINT with
+      Inline => True;
+
+   ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
@@ -158,6 +158,10 @@ package ARMv4 is
    procedure Irq_Enable with
       Inline => True;
    procedure Irq_Disable with
+      Inline => True;
+   procedure Fiq_Enable with
+      Inline => True;
+   procedure Fiq_Disable with
       Inline => True;
 
    ----------------------------------------------------------------------------
