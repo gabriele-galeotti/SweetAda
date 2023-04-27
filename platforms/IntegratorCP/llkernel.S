@@ -14,42 +14,38 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+                .sect   .vectors,"ax"
+
+                .global V_Reset
+                ldr     pc,V_Reset                      // 0x00 Reset
+                ldr     pc,V_UndInstr                   // 0x04 Undefined Instruction
+                ldr     pc,V_SWI                        // 0x08 Software Interrupt
+                ldr     pc,V_AbortP                     // 0x0C Abort (Prefetch)
+                ldr     pc,V_AbortD                     // 0x10 Abort (Data)
+                ldr     pc,V_AddrExc                    // 0x14 Address Exception -- reserved
+                ldr     pc,V_IRQ                        // 0x18 IRQ
+                ldr     pc,V_FIQ                        // 0x1C FIQ
+
+                .extern _start
+V_Reset:        .long   _start
+V_UndInstr:     .long   0
+V_SWI:          .long   0
+V_AbortP:       .long   0
+V_AbortD:       .long   0
+V_AddrExc:      .long   0
+V_IRQ:          .long   irq_handler
+V_FIQ:          .long   irq_handler
+
+////////////////////////////////////////////////////////////////////////////////
+
                 .sect   .text,"ax"
 
                 .type   irq_handler,%function
                 .global irq_handler
 irq_handler:
-                sub     sp,sp,#64
-                str     r0,[sp]
-                str     r1,[sp,#4]
-                str     r2,[sp,#8]
-                str     r3,[sp,#12]
-                str     r4,[sp,#16]
-                str     r5,[sp,#20]
-                str     r6,[sp,#24]
-                str     r7,[sp,#28]
-                str     r8,[sp,#32]
-                str     r9,[sp,#36]
-                str     r10,[sp,#40]
-                str     r11,[sp,#44]
-                str     r12,[sp,#48]
-                str     lr,[sp,#52]
+                stmfd   sp!,{r0-r3,r9,r12,lr}
                 .extern irq_process
                 bl      irq_process
-                ldr     r0,[sp]
-                ldr     r1,[sp,#4]
-                ldr     r2,[sp,#8]
-                ldr     r3,[sp,#12]
-                ldr     r4,[sp,#16]
-                ldr     r5,[sp,#20]
-                ldr     r6,[sp,#24]
-                ldr     r7,[sp,#28]
-                ldr     r8,[sp,#32]
-                ldr     r9,[sp,#36]
-                ldr     r10,[sp,#40]
-                ldr     r11,[sp,#44]
-                ldr     r12,[sp,#48]
-                ldr     lr,[sp,#52]
-                add     sp,sp,#64
+                ldmfd   sp!,{r0-r3,r9,r12,lr}
                 subs    pc,lr,#4
 

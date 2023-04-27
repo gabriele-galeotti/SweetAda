@@ -16,39 +16,6 @@
 
                 .sect   .startup,"ax"
 
-                .global V_Reset
-                .global V_UndInstr
-                .global V_SWI
-                .global V_AbortP
-                .global V_AbortD
-                .global V_AddrExc
-                .global V_IRQ
-                .global V_FIQ
-                .extern undinstr_handler
-                .extern swi_handler
-                .extern abortp_handler
-                .extern abortd_handler
-                .extern addrexc_handler
-                .extern irq_handler
-                .extern fiq_handler
-
-                ldr     pc,V_Reset                      // 0x00 Reset
-                ldr     pc,V_UndInstr                   // 0x04 Undefined Instruction
-                ldr     pc,V_SWI                        // 0x08 Software Interrupt
-                ldr     pc,V_AbortP                     // 0x0C Abort (Prefetch)
-                ldr     pc,V_AbortD                     // 0x10 Abort (Data)
-                ldr     pc,V_AddrExc                    // 0x14 Address Exception -- reserved
-                ldr     pc,V_IRQ                        // 0x18 IRQ
-                ldr     pc,V_FIQ                        // 0x1C FIQ
-V_Reset:        .word   _start
-V_UndInstr:     .long   0                               //.word   undinstr_handler
-V_SWI:          .long   0                               //.word   swi_handler
-V_AbortP:       .long   0                               //.word   abortp_handler
-V_AbortD:       .long   0                               //.word   abortd_handler
-V_AddrExc:      .long   0                               //.word   addrexc_handler
-V_IRQ:          .word   irq_handler
-V_FIQ:          .long   0                               //.word   fiq_handler
-
                 .type   _start,%function
                 .global _start
 _start:

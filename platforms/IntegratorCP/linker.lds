@@ -3,7 +3,7 @@ ENTRY(_start)
 
 MEMORY
 {
-        RAM : ORIGIN = 0x00000000, LENGTH = 128M
+        RAM (rwx) : ORIGIN = 0x00000000, LENGTH = 128M
 }
 
 SECTIONS
@@ -14,6 +14,7 @@ SECTIONS
         .text :
         {
                 _stext = .;
+                KEEP(*(.vectors))
                 *(.startup)
                 *(.text)
                 *(.text.*)
@@ -23,8 +24,45 @@ SECTIONS
                 PROVIDE(_debug_flag = .);
                 BYTE(0x00);
                 . = ALIGN(0x10);
+/*
+                __exidx_start = .;
+                *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+                __exidx_end = .;
+                *(.ARM.extab* .gnu.linkonce.armextab.*)
+*/
                 _etext = .;
         } > RAM
+        /**********************************************************************
+         *                                                                    *
+         **********************************************************************/
+        .ARM.exidx :
+        {
+                . = ALIGN(4);
+                __exidx_start = .;
+                *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+                . = ALIGN(4);
+                __exidx_end = .;
+        } > RAM
+        /**********************************************************************
+         *                                                                    *
+         **********************************************************************/
+        .ARM.extab :
+        {
+                . = ALIGN(4);
+                *(.ARM.extab* .gnu.linkonce.armextab.*)
+                . = ALIGN(4);
+        } > RAM
+        /**********************************************************************
+         *                                                                    *
+         **********************************************************************/
+/*
+        __exidx_start = .;
+        .ARM.exidx :
+        {
+                *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+        } > RAM
+        __exidx_end = .;
+*/
         /**********************************************************************
          *                                                                    *
          **********************************************************************/

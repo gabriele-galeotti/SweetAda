@@ -24,6 +24,7 @@ with Core;
 with Bits;
 with MMIO;
 with Exceptions;
+with ARMv4;
 with CPU;
 with IntegratorCP;
 with Console;
@@ -112,6 +113,8 @@ package body BSP is
                            );
       PIC_IRQ_ENABLESET.TIMERINT0 := True;
       CPU.Irq_Enable;
+      -- PIC_FIQ_ENABLESET.TIMERINT0 := True;
+      -- ARMv4.Fiq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 

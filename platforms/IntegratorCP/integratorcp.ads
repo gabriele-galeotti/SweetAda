@@ -117,6 +117,18 @@ package IntegratorCP is
       Import               => True,
       Convention           => Ada;
 
+   PIC_FIQ_ENABLESET : aliased PIC_IRQ_ITEMS_Type with
+      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#28#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   PIC_FIQ_ENABLECLR : aliased PIC_IRQ_ITEMS_Type with
+      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#2C#),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- 4.9.2 Counter/timer registers
 
    TIMER_SIZE_16 : constant := 0; -- 16-bit counter (default)
