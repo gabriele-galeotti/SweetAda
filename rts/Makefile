@@ -33,8 +33,6 @@
 # RTSES
 # RTS_PATH
 # MULTILIB
-# MLL
-# DISABLE_STACK_USAGE
 #
 
 ################################################################################
@@ -99,15 +97,15 @@ ADAC_SWITCHES += $(MULTILIB_SWITCHES)
 #ADAC_SWITCHES += -fPIC
 ADAC_SWITCHES += -nostdinc
 ADAC_SWITCHES += -gnatwa
-#ADAC_SWITCHES += -gnata       # Assertions enabled.
+#ADAC_SWITCHES += -gnata    # Assertions enabled.
 # -gnatg implies -gnatwae and -gnatyg
-ADAC_SWITCHES += -gnatg       # Internal GNAT implementation mode.
-#ADAC_SWITCHES += -gnatn       # Activate inlining for subprograms for which pragma inline is specified.
-ADAC_SWITCHES += -gnatp       # Suppress all checks.
+ADAC_SWITCHES += -gnatg    # Internal GNAT implementation mode.
+#ADAC_SWITCHES += -gnatn    # Activate inlining for subprograms for which pragma inline is specified.
+ADAC_SWITCHES += -gnatp    # Suppress all checks.
 # turn off some style checks (which are turned on by -gnatg)
-#ADAC_SWITCHES += -gnatyC      # Check comments, single space.
-#ADAC_SWITCHES += -gnaty$(MLL) # Set maximum line length.
-ADAC_SWITCHES += -gnatyN      # Turn off all style checks.
+#ADAC_SWITCHES += -gnatyC   # Check comments, single space.
+#ADAC_SWITCHES += -gnaty132 # Set maximum line length.
+ADAC_SWITCHES += -gnatyN   # Turn off all style checks.
 ADAC_SWITCHES += -Wextra
 ADAC_SWITCHES += -Wall
 
@@ -144,11 +142,6 @@ LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.ali))
 -include $(RTS_SOURCE_PATH_TARGET)/Makefile.rts.in
 ADAC_SWITCHES += $(ADAC_SWITCHES_RTS)
 CC_SWITCHES   += $(CC_SWITCHES_RTS)
-
-# process per-target compiler switches
-ifneq ($(DISABLE_STACK_USAGE),Y)
-ADAC_SWITCHES += -fstack-usage
-endif
 
 ################################################################################
 #                                                                              #
