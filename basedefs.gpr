@@ -7,6 +7,7 @@ abstract project Basedefs is
    -- Types and variables
    ----------------------------------------------------------------------------
 
+   Ostype  := External ("OSTYPE", "");
    Verbose := External ("VERBOSE", "");
 
    ----------------------------------------------------------------------------
@@ -61,6 +62,12 @@ abstract project Basedefs is
 
    GCC_Wrapper_Switch := ("-wrapper", Configure.GCC_Wrapper);
 
+   No_DOS_LT_Switch := "";
+   case Ostype is
+      when "cmd" | "msys" => No_DOS_LT_Switch := "-gnatyd"; -- Check no DOS line terminators present.
+      when others         => null;
+   end case;
+
    package Compiler is
       -- Asm_Cpp
       for Driver ("Asm_Cpp") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
@@ -82,7 +89,18 @@ abstract project Basedefs is
                               "-fverbose-asm",
                               "-ffunction-sections",
                               "-fdata-sections",
-                              "-g3", "-gdwarf-5"
+                              "-g3", "-gdwarf-5",
+                              "-Wall", "-pedantic",
+                              "-Wbad-function-cast",
+                              "-Wcast-align",
+                              "-Winline",
+                              "-Wpointer-arith",
+                              "-Wredundant-decls",
+                              "-Wshadow",
+                              "-Wsign-compare",
+                              "-Wstrict-prototypes",
+                              "-Wundef",
+                              "-Wwrite-strings"
                              ) &
                              Configure.GCC_Switches_Platform &
                              GCC_Wrapper_Switch;
@@ -109,12 +127,90 @@ abstract project Basedefs is
                                 "-gnato1",
                                 "-gnatVa",
                                 "-fstack-usage",
-                                "-fdump-rtl-expand"
+                                "-fdump-rtl-expand",
+                                -- warning switches ---------------------------
+                                -- "-gnatwa",         -- Activate most optional warnings.
+                                "-gnatw.a",        -- Activate warnings on failing assertions.
+                                "-gnatwb",         -- Activate warnings on bad fixed values.
+                                "-gnatw.b",        -- Activate warnings on biased representation.
+                                "-gnatwC",         -- Activate warnings on conditionals.
+                                "-gnatw.c",        -- Activate warnings on missing component clauses.
+                                "-gnatwd",         -- Activate warnings on implicit dereferencing.
+                                "-gnatw.d",        -- Activate tagging of warning and info messages.
+                                -- "-gnatwe",         -- Treat warnings and style checks as errors.
+                                -- "-gnatwf",         -- Activate warnings on unreferenced formals.
+                                "-gnatwg",         -- Activate warnings on unrecognized pragmas.
+                                "-gnatwh",         -- Activate warnings on hiding.
+                                -- "-gnatw.h",        -- Activate warnings on holes/gaps in records.
+                                "-gnatwi",         -- Activate warnings on implementation units.
+                                "-gnatw.i",        -- Activate warnings on overlapping actuals.
+                                "-gnatwj",         -- Activate warnings on obsolescent features (Annex J).
+                                "-gnatwk",         -- Activate warnings on variables that could be constants.
+                                "-gnatw.k",        -- Activate warnings on redefinition of names in standard.
+                                "-gnatwl",         -- Activate warnings for elaboration pragmas.
+                                "-gnatw.l",        -- List inherited aspects.
+                                "-gnatwm",         -- Activate warnings on modified but unreferenced variables.
+                                "-gnatw.m",        -- Activate warnings on suspicious modulus values.
+                                -- "-gnatw.n",        -- Activate warnings on atomic synchronization.
+                                "-gnatwo",         -- Activate warnings on address clause overlays.
+                                "-gnatw.o",        -- Activate warnings on modified but unreferenced out parameters.
+                                "-gnatwp",         -- Activate warnings on ineffective pragma Inlines.
+                                "-gnatw.p",        -- Activate warnings on parameter ordering.
+                                "-gnatwq",         -- Activate warnings on questionable missing parentheses.
+                                "-gnatw.q",        -- Activate warnings on questionable layout of record types.
+                                "-gnatwr",         -- Activate warnings on redundant constructs.
+                                "-gnatw.r",        -- Activate warnings for object renaming function.
+                                -- "-gnatw_r",        -- Activate warnings for out-of-order record representation clauses.
+                                "-gnatw.s",        -- Activate warnings on overridden size clauses.
+                                -- "-gnatwt",         -- Activate warnings for tracking of deleted conditional code.
+                                "-gnatw.t",        -- Activate warnings on suspicious contracts.
+                                "-gnatw.u",        -- Activate warnings on unordered enumeration types.
+                                "-gnatwv",         -- Activate warnings on unassigned variables.
+                                -- "-gnatw.v",        -- Activate info messages for non-default bit order.
+                                "-gnatw.V",        -- Suppress info messages for non-default bit order.
+                                "-gnatww",         -- Activate warnings on wrong low bound assumption.
+                                -- "-gnatw.w",        -- Activate warnings on Warnings Off pragmas.
+                                "-gnatwx",         -- Activate warnings on Export/Import pragmas.
+                                "-gnatw.X",        -- Disable warnings for No_Exception_Propagation mode.
+                                -- "-gnatw.y",        -- Activate information messages for why package spec needs body.
+                                "-gnatwz",         -- Activate warnings on unchecked conversions.
+                                "-gnatw.z",        -- Activate warnings for size not a multiple of alignment.
+                                "-Wstack-usage=" & Configure.Stack_Limit,
+                                "-Wunused",
+                                "-Wuninitialized",
+                                -- "-gnatwu",         -- Activate warnings on unused entities.
+                                -- style switches -----------------------------
+                                "-gnaty3",    -- Specify indentation level.
+                                "-gnatyA",    -- Use of array index numbers in array attributes.
+                                "-gnatya",    -- Check attribute casing.
+                                "-gnatyb",    -- Blanks not allowed at statement end.
+                                "-gnatyB",    -- Check Boolean operators.
+                                -- "-gnatyc",    -- Check comments, double space.
+                                "-gnatyC",    -- Check comments, single space.
+                                "-gnatye",    -- Check end/exit labels.
+                                "-gnatyf",    -- No form feeds or vertical tabs.
+                                -- "-gnatyg",    -- GNAT style mode.
+                                "-gnatyh",    -- No horizontal tabs.
+                                -- "-gnatyI",    -- check mode IN keywords.
+                                "-gnatyi",    -- Check if-then layout.
+                                "-gnatyk",    -- Check keyword casing.
+                                "-gnatyL9",   -- Set maximum nesting level.
+                                "-gnatyl",    -- Check layout.
+                                -- "-gnatym",    -- Check maximum line length.
+                                "-gnatyM132", -- Set maximum line length.
+                                "-gnatyn",    -- Check casing of entities in Standard.
+                                -- "-gnatyo",    -- Check order of subprogram bodies.
+                                "-gnatyO",    -- Check that overriding subprograms are explicitly marked as such.
+                                "-gnatyp",    -- Check pragma casing.
+                                "-gnatyr",    -- Check references.
+                                "-gnatyS",    -- Check no statements after then/else.
+                                "-gnatys",    -- Check separate specs.
+                                "-gnatyt",    -- Check token spacing.
+                                "-gnatyu",    -- Check unnecessary blank lines.
+                                "-gnatyx"     -- Check extra parentheses.
                                ) &
                                Configure.ADAC_Switches_RTS     &
                                Configure.GCC_Switches_Platform &
-                               Configure.ADAC_Switches_Warning &
-                               Configure.ADAC_Switches_Style   &
                                GCC_Wrapper_Switch;
    end Compiler;
 

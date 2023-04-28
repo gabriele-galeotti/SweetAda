@@ -11,8 +11,6 @@
 #
 # Environment variables:
 # OSTYPE
-# MNL
-# MLL
 #
 
 ################################################################################
@@ -20,6 +18,11 @@
 # Assembler/Compiler style switches.                                           #
 #                                                                              #
 ################################################################################
+
+# Maximum Nesting Level
+MNL := 9
+# Maximum Line Length
+MLL := 132
 
 ADAC_SWITCHES_STYLE += -gnaty3       # Specify indentation level.
 ADAC_SWITCHES_STYLE += -gnatyA       # Use of array index numbers in array attributes.

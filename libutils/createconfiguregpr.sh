@@ -19,25 +19,24 @@
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
-# RTS_PATH
-# GNATADC_FILENAME
 # GCC_WRAPPER
+# GNATADC_FILENAME
+# LIBRARY_DIRECTORY
+# OBJECT_DIRECTORY
+# PLATFORM
+# CPU
+# RTS_PATH
 # ADA_MODE
+# OPTIMIZATION_LEVEL
+# STACK_LIMIT
 # USE_LIBGCC
 # USE_LIBADA
 # USE_CLIBRARY
-# PLATFORM
-# CPU
 # ADAC_SWITCHES_RTS
 # GCC_SWITCHES_PLATFORM
 # GCC_SWITCHES_STARTUP
 # INCLUDE_DIRECTORIES
 # IMPLICIT_ALI_UNITS
-# ADAC_SWITCHES_WARNING
-# ADAC_SWITCHES_STYLE
-# OPTIMIZATION_LEVEL
-# LIBRARY_DIRECTORY
-# OBJECT_DIRECTORY
 #
 
 ################################################################################
@@ -187,14 +186,15 @@ print_I "SweetAda_Path         := \"${SWEETADA_PATH}\";"
 print_I "Toolchain_Prefix      := \"${TOOLCHAIN_PREFIX}\";"
 print_I "Toolchain_Name        := \"${TOOLCHAIN_NAME}\";"
 print_I "GCC_Wrapper           := \"${GCC_WRAPPER}\";"
+print_I "GnatAdc_Filename      := \"${GNATADC_FILENAME}\";"
+print_I "Library_Directory     := \"${LIBRARY_DIRECTORY}\";"
+print_I "Object_Directory      := \"${OBJECT_DIRECTORY}\";"
 print_I "Platform              := \"${PLATFORM}\";"
 print_I "Cpu                   := \"${CPU}\";"
 print_I "RTS_Path              := \"${RTS_PATH}\";"
-print_I "GnatAdc_Filename      := \"${GNATADC_FILENAME}\";"
 print_I "Ada_Mode              := \"${ADA_MODE}\";"
 print_I "Optimization_Level    := \"${OPTIMIZATION_LEVEL}\";"
-print_I "Library_Directory     := \"${LIBRARY_DIRECTORY}\";"
-print_I "Object_Directory      := \"${OBJECT_DIRECTORY}\";"
+print_I "Stack_Limit           := \"${STACK_LIMIT}\";"
 print_I "Use_LibGCC            := \"${USE_LIBGCC}\";"
 print_I "Use_LibAda            := \"${USE_LIBADA}\";"
 print_I "Use_CLibrary          := \"${USE_CLIBRARY}\";"
@@ -216,12 +216,6 @@ print_list "${INCLUDE_DIRECTORIES}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_I "Implicit_ALI_Units    := ("
 print_list "${IMPLICIT_ALI_UNITS}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                         );"
-print_I "ADAC_Switches_Warning := ("
-print_list "${ADAC_SWITCHES_WARNING}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                         );"
-print_I "ADAC_Switches_Style   := ("
-print_list "${ADAC_SWITCHES_STYLE}" "${INDENTATION_LEVEL}" "${INDENTL}"
 print_I "                         );"
 print_V
 

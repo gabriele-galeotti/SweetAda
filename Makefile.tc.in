@@ -35,7 +35,6 @@
 # GNAT_WRAPPER
 # USE_UNPREFIXED_GNATMAKE
 # ENABLE_SPLIT_DWARF
-# DISABLE_STACK_USAGE
 #
 
 ################################################################################
@@ -337,9 +336,7 @@ ADAC_SWITCHES_DEFAULT += -fdump-ipa-cgraph           # .000i.cgraph
 ADAC_SWITCHES_DEFAULT += -fdump-rtl-expand           # .233r.expand
 ADAC_SWITCHES_DEFAULT += -fdump-rtl-dfinish          # .313r.dfinish
 ADAC_SWITCHES_DEFAULT += -fdump-tree-optimized-graph # .231t.optimized[.dot]
-ifneq ($(DISABLE_STACK_USAGE),Y)
 ADAC_SWITCHES_DEFAULT += -fstack-usage               # Static Stack Usage Analysis.
-endif
 ADAC_SWITCHES_DEFAULT += -gnatD                      # Create expanded source files for source level debugging.
 ADAC_SWITCHES_DEFAULT += -gnatG -gnatL               # List generated expanded code in source form.
 # -gnatR is mutually exclusive with -gnatD
@@ -410,13 +407,10 @@ export ADAC_SWITCHES_RTS
 ADAC_SWITCHES_DEFAULT += $(ADAC_SWITCHES_RTS)
 CC_SWITCHES_DEFAULT   += $(CC_SWITCHES_RTS)
 
-# Maximum Nesting Level
-MNL := 9
-# Maximum Line Length
-MLL := 132
-
+ifeq ($(BUILD_MODE),GNATMAKE)
 -include Makefile.wr.in
 -include Makefile.st.in
+endif
 
 ifeq ($(VERBOSE),Y)
 ADAC_SWITCHES_DEFAULT     += -gnatb -gnatv

@@ -10,7 +10,6 @@
 
 #
 # Environment variables:
-# DISABLE_STACK_USAGE
 # STACK_LIMIT
 #
 
@@ -71,9 +70,7 @@ ADAC_SWITCHES_WARNING += -gnatwz  # Activate warnings on unchecked conversions.
 ADAC_SWITCHES_WARNING += -gnatw.z # Activate warnings for size not a multiple of alignment.
 ADAC_SWITCHES_WARNING += -Wunused
 ADAC_SWITCHES_WARNING += -Wuninitialized
-ifneq ($(DISABLE_STACK_USAGE),Y)
 ADAC_SWITCHES_WARNING += -Wstack-usage=$(STACK_LIMIT)
-endif
 
 # turn on only for cosmetic purposes at the end of the development cycle
 # (nearly the same effect of -gnatwa)

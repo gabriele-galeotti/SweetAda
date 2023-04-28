@@ -16,25 +16,24 @@
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
-# RTS_PATH
-# GNATADC_FILENAME
 # GCC_WRAPPER
+# GNATADC_FILENAME
+# LIBRARY_DIRECTORY
+# OBJECT_DIRECTORY
+# PLATFORM
+# CPU
+# RTS_PATH
 # ADA_MODE
+# OPTIMIZATION_LEVEL
+# STACK_LIMIT
 # USE_LIBGCC
 # USE_LIBADA
 # USE_CLIBRARY
-# PLATFORM
-# CPU
 # ADAC_SWITCHES_RTS
 # GCC_SWITCHES_PLATFORM
 # GCC_SWITCHES_STARTUP
 # INCLUDE_DIRECTORIES
 # IMPLICIT_ALI_UNITS
-# ADAC_SWITCHES_WARNING
-# ADAC_SWITCHES_STYLE
-# OPTIMIZATION_LEVEL
-# LIBRARY_DIRECTORY
-# OBJECT_DIRECTORY
 #
 
 ################################################################################
@@ -122,7 +121,17 @@ function print_list
 $scriptname = $MyInvocation.MyCommand.Name
 
 $configure_project = $args[0]
+if ([string]::IsNullOrEmpty($configure_project))
+{
+  Write-Host "${scriptname}: *** Error: no project name specified."
+  ExitWithCode $p.ExitCode
+}
 $configure_filename = $args[1]
+if ([string]::IsNullOrEmpty($configure_filename))
+{
+  Write-Host "${scriptname}: *** Error: no project file specified."
+  ExitWithCode $p.ExitCode
+}
 
 Remove-Item -Path $configure_filename -Force -ErrorAction Ignore
 New-Item -Name $configure_filename -ItemType File | Out-Null
@@ -150,14 +159,15 @@ print_I $configure_filename "SweetAda_Path         := `"$(GetEnvVar SWEETADA_PAT
 print_I $configure_filename "Toolchain_Prefix      := `"$(GetEnvVar TOOLCHAIN_PREFIX)`";"
 print_I $configure_filename "Toolchain_Name        := `"$(GetEnvVar TOOLCHAIN_NAME)`";"
 print_I $configure_filename "GCC_Wrapper           := `"$(GetEnvVar GCC_WRAPPER)`";"
+print_I $configure_filename "GnatAdc_Filename      := `"$(GetEnvVar GNATADC_FILENAME)`";"
+print_I $configure_filename "Library_Directory     := `"$(GetEnvVar LIBRARY_DIRECTORY)`";"
+print_I $configure_filename "Object_Directory      := `"$(GetEnvVar OBJECT_DIRECTORY)`";"
 print_I $configure_filename "Platform              := `"$(GetEnvVar PLATFORM)`";"
 print_I $configure_filename "Cpu                   := `"$(GetEnvVar CPU)`";"
 print_I $configure_filename "RTS_Path              := `"$(GetEnvVar RTS_PATH)`";"
-print_I $configure_filename "GnatAdc_Filename      := `"$(GetEnvVar GNATADC_FILENAME)`";"
 print_I $configure_filename "Ada_Mode              := `"$(GetEnvVar ADA_MODE)`";"
 print_I $configure_filename "Optimization_Level    := `"$(GetEnvVar OPTIMIZATION_LEVEL)`";"
-print_I $configure_filename "Library_Directory     := `"$(GetEnvVar LIBRARY_DIRECTORY)`";"
-print_I $configure_filename "Object_Directory      := `"$(GetEnvVar OBJECT_DIRECTORY)`";"
+print_I $configure_filename "Stack_Limit           := `"$(GetEnvVar STACK_LIMIT)`";"
 print_I $configure_filename "Use_LibGCC            := `"$(GetEnvVar USE_LIBGCC)`";"
 print_I $configure_filename "Use_LibAda            := `"$(GetEnvVar USE_LIBADA)`";"
 print_I $configure_filename "Use_CLibrary          := `"$(GetEnvVar USE_CLIBRARY)`";"
@@ -179,12 +189,6 @@ print_list $configure_filename $(GetEnvVar INCLUDE_DIRECTORIES).Trim(" ") $inden
 print_I $configure_filename "                         );"
 print_I $configure_filename "Implicit_ALI_Units    := ("
 print_list $configure_filename $(GetEnvVar IMPLICIT_ALI_UNITS).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                         );"
-print_I $configure_filename "ADAC_Switches_Warning := ("
-print_list $configure_filename $(GetEnvVar ADAC_SWITCHES_WARNING).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                         );"
-print_I $configure_filename "ADAC_Switches_Style   := ("
-print_list $configure_filename $(GetEnvVar ADAC_SWITCHES_STYLE).Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
 print_V $configure_filename
 

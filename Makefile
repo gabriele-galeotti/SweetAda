@@ -429,7 +429,6 @@ IMPLICIT_CLIBRARY_UNITS :=
 #
 USE_UNPREFIXED_GNATMAKE :=
 ENABLE_SPLIT_DWARF      :=
-DISABLE_STACK_USAGE     :=
 
 ################################################################################
 #                                                                              #
@@ -925,9 +924,9 @@ endif
               $(OBJECT_DIRECTORY)/b__main.o         \
               $(CLIBRARY_OBJECT)                    \
               $(OBJECT_DIRECTORY)/libcore.a         \
+              $(LIBADA_OBJECTS)                     \
               $(OBJECT_DIRECTORY)/libcpu.a          \
               $(OBJECT_DIRECTORY)/libplatform.a     \
-              $(LIBADA_OBJECTS)                     \
               $(LIBGCC_OBJECT)                      \
               --end-group                           \
         ,[LD],$(KERNEL_OUTFILE))
@@ -1153,9 +1152,6 @@ endif
 endif
 ifneq ($(EXTERNAL_OBJECTS),)
 	@$(call echo-print,"EXTERNAL OBJECTS:       $(EXTERNAL_OBJECTS)")
-endif
-ifeq ($(DISABLE_STACK_USAGE),Y)
-	@$(call echo-print,"DISABLE STACK USAGE:    $(DISABLE_STACK_USAGE)")
 endif
 	@$(call echo-print,"")
 
