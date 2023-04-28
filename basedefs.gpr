@@ -64,8 +64,8 @@ abstract project Basedefs is
 
    No_DOS_LT_Switch := "";
    case Ostype is
-      when "cmd" | "msys" => No_DOS_LT_Switch := "-gnatyd"; -- Check no DOS line terminators present.
-      when others         => null;
+      when "cmd" | "msys" => null;
+      when others         => No_DOS_LT_Switch := "-gnatyd"; -- Check no DOS line terminators present.
    end case;
 
    package Compiler is
@@ -207,7 +207,8 @@ abstract project Basedefs is
                                 "-gnatys",    -- Check separate specs.
                                 "-gnatyt",    -- Check token spacing.
                                 "-gnatyu",    -- Check unnecessary blank lines.
-                                "-gnatyx"     -- Check extra parentheses.
+                                "-gnatyx",    -- Check extra parentheses.
+                                No_DOS_LT_Switch
                                ) &
                                Configure.ADAC_Switches_RTS     &
                                Configure.GCC_Switches_Platform &
