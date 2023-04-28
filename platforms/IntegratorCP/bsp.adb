@@ -79,7 +79,7 @@ package body BSP is
       Exceptions.Init;
       -- PL011 UART0 ----------------------------------------------------------
       PL011_Descriptor.Base_Address := To_Address (PL011_UART0_BASEADDRESS);
-      PL011_Descriptor.Baud_Clock   := 14_745_600;
+      PL011_Descriptor.Baud_Clock   := CLK_UART14M;
       PL011_Descriptor.Read_8       := MMIO.Read'Access;
       PL011_Descriptor.Write_8      := MMIO.Write'Access;
       PL011_Descriptor.Read_16      := MMIO.Read'Access;
