@@ -48,11 +48,11 @@ SECTIONS
                 _sbss = .;
                 *(.bss)
                 *(.bss.*)
-                *(COMMON)
                 *(.sbss)
                 *(.sbss.*)
-                /* *(.scommon) */
-                /* *(.dynbss) */
+                *(.dynbss)
+                *(COMMON)
+                *(.scommon)
                 . = ALIGN(0x10);
                 _ebss = .;
         } > RAM

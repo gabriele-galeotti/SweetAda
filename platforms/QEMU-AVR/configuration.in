@@ -10,9 +10,6 @@ RTS := zfp
 PROFILE := zfp
 USE_LIBADA := N
 
-# not supported
-DISABLE_STACK_USAGE := Y
-
 CPU       := AVR
 #CPU_MODEL := ATMEGA128A
 CPU_MODEL := ATMEGA328P
