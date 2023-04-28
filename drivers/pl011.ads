@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 
 package PL011 is
@@ -30,7 +29,6 @@ package PL011 is
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
 
    type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;

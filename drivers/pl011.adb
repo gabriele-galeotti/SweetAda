@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Bits;
 
@@ -28,6 +29,7 @@ package body PL011 is
    --                                                                        --
    --========================================================================--
 
+   use System.Storage_Elements;
    use Bits;
 
    ----------------------------------------------------------------------------
