@@ -1,6 +1,4 @@
 
-DISABLE_STACK_USAGE := Y
-
 #
 # AVR floating point issues.
 #
