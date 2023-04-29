@@ -124,13 +124,13 @@ $configure_project = $args[0]
 if ([string]::IsNullOrEmpty($configure_project))
 {
   Write-Host "${scriptname}: *** Error: no project name specified."
-  ExitWithCode $p.ExitCode
+  ExitWithCode 1
 }
 $configure_filename = $args[1]
 if ([string]::IsNullOrEmpty($configure_filename))
 {
   Write-Host "${scriptname}: *** Error: no project file specified."
-  ExitWithCode $p.ExitCode
+  ExitWithCode 1
 }
 
 Remove-Item -Path $configure_filename -Force -ErrorAction Ignore
