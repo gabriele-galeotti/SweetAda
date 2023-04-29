@@ -39,7 +39,6 @@ package body Exceptions is
 
    use System.Storage_Elements;
    use Abort_Library;
-   use Core;
    use Amiga;
    use BSP;
 
@@ -67,7 +66,7 @@ package body Exceptions is
             Console.Print (Unsigned_16'(MMIO.Read (Frame_Address + 16 + 6)), Prefix => "4: ", NL => True);
             System_Abort;
          when Trace | Trap_15 =>
-            Gdbstub.Enter_Stub (Gdbstub.TARGET_BREAKPOINT, KERNEL_THREAD_ID);
+            Gdbstub.Enter_Stub (Gdbstub.TARGET_BREAKPOINT, Core.KERNEL_THREAD_ID);
          when Format_Error =>
             Irq_Disable;
             Console.Print_NewLine;
@@ -94,13 +93,14 @@ package body Exceptions is
          -- Console.Print ("Level 2 IRQ", NL => True);
          -- check if A2065 interrupt
          if not A2065.Receive then
-            Tick_Count := @ + 1;
+            Core.Tick_Count := @ + 1;
             if Configure.USE_FS_UAE_IOEMU then
-               if Tick_Count mod 1_000 = 0 then
-                  -- IOEMU "TIMER" LED blinking
-                  IOEMU.CIA_IO0 := 1;
-                  IOEMU.CIA_IO0 := 0;
-               end if;
+               -- IRQ pulsemeter
+               IOEMU.CIA_IO0 := 1;
+            end if;
+            -- use power LED as tick IRQ monitoring
+            if Core.Tick_Count mod 500 = 0 then
+               CIAA.PRA.PA1 := not @;
             end if;
             -- clear pending interrupt
             Unused := CIAA.ICR;

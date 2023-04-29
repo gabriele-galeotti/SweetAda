@@ -20,3 +20,4 @@ ntsc_mode = false
 fullscreen = false
 sound_auto = false
 sound_output = false
+theme = led-bars-edge
