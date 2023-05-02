@@ -31,8 +31,40 @@ startcode:
                 bic     x0,x0,x1
                 cbz     x0,bootcore
 hold:           b       .
-
 bootcore:
+
+                //
+                // Static data relocation.
+                //
+                .extern _etext
+                .extern _sdata
+                .extern _edata
+                ldr     x1,=_etext
+                ldr     x2,=_sdata
+                ldr     x3,=_edata
+                cmp     x2,x3
+                beq     2f
+1:              ldr     x0,[x1],#8
+                str     x0,[x2],#8
+                cmp     x2,x3
+                blt     1b
+2:
+
+                //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                ldr     x1,=_sbss
+                ldr     x2,=_ebss
+                cmp     x1,x2
+                beq     2f
+                ldr     x0,=0
+1:              str     x0,[x1],#8
+                cmp     x1,x2
+                blt     1b
+2:
+
                 //
                 // Setup stack pointer.
                 //
