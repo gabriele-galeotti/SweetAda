@@ -12,6 +12,45 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+                .sect   .vectors,"ax"
+
+                .global _reset
+_reset:
+
+                // Reset
+                //.org    0x00
+                .extern _start
+                brid    _start
+                nop
+
+                // User Vector (Exception)
+                //.org    0x08
+                nop
+                nop
+
+                // Interrupt
+                //.org    0x10
+                .extern timerirq
+                brid    timerirq
+                nop
+
+                // Break
+                //.org    0x18
+                nop
+                nop
+
+                // Hardware Exception
+                //.org    0x20
+                nop
+                nop
+
+                //
+                // Reserved for future use
+                //
+                .space  0x28
+
+////////////////////////////////////////////////////////////////////////////////
+
                 .sect   .text,"ax"
 
                 .global timerirq

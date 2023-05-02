@@ -47,5 +47,3 @@ dead:           brid    .
                 .space  4096
 kernel_stack:
 
-#include "vectors.h"
-
