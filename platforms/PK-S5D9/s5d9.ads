@@ -1028,6 +1028,7 @@ pragma Warnings (On, "bits of * unused");
    end record with
       Bit_Order               => Low_Order_First,
       Size                    => 32,
+      Volatile_Full_Access    => True,
       Suppress_Initialization => True;
    for PFSR_Type use
    record
