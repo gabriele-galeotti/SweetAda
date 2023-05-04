@@ -134,7 +134,7 @@ abstract project Basedefs is
                                 "-gnatwb",         -- Activate warnings on bad fixed values.
                                 "-gnatw.b",        -- Activate warnings on biased representation.
                                 "-gnatwC",         -- Activate warnings on conditionals.
-                                "-gnatw.c",        -- Activate warnings on missing component clauses.
+                                -- "-gnatw.c",        -- Activate warnings on missing component clauses.
                                 "-gnatwd",         -- Activate warnings on implicit dereferencing.
                                 "-gnatw.d",        -- Activate tagging of warning and info messages.
                                 -- "-gnatwe",         -- Treat warnings and style checks as errors.
