@@ -30,7 +30,6 @@ _reset:
 
                 // Interrupt
                 //.org    0x10
-                .extern timerirq
                 brid    timerirq
                 nop
 

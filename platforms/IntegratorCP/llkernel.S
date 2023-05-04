@@ -17,6 +17,7 @@
                 .sect   .vectors,"ax"
 
                 .global V_Reset
+
                 ldr     pc,V_Reset                      // 0x00 Reset
                 ldr     pc,V_UndInstr                   // 0x04 Undefined Instruction
                 ldr     pc,V_SWI                        // 0x08 Software Interrupt

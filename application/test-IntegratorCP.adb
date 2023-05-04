@@ -2,7 +2,6 @@
 with Interfaces;
 with Configure;
 with CPU;
-with IntegratorCP;
 with PL110;
 with Console;
 with IOEMU;
