@@ -45,20 +45,7 @@ project SweetAda is
    -- Binder
    ----------------------------------------------------------------------------
 
-   Binder_Switches := ();
-
-   package Binder is
-      for Switches ("Ada") use (
-                                "-F",
-                                "-e",
-                                "-l",
-                                "-n",
-                                "-s",
-                                "-A=gnatbind_alis.lst",
-                                "-O=gnatbind_objs.lst"
-                               ) &
-                               Binder_Switches;
-   end Binder;
+   package Binder renames Basedefs.Binder;
 
    ----------------------------------------------------------------------------
    -- Linker (not used)
