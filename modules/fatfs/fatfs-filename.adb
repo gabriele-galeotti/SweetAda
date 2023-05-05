@@ -15,9 +15,18 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with FATFS.Utilities;
-
 package body FATFS.Filename is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   function To_Upper (C : Character) return Character with
+      Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -26,6 +35,27 @@ package body FATFS.Filename is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- To_Upper
+   ----------------------------------------------------------------------------
+   -- Implemented in order to avoid the use of Ada.Characters.Handling with a
+   -- ZFP-style RTS.
+   ----------------------------------------------------------------------------
+   function To_Upper (C : Character) return Character is
+      UCASE2LCASE : constant := Character'Pos ('A') - Character'Pos ('a');
+      function Is_Lower (C : Character) return Boolean;
+      function Is_Lower (C : Character) return Boolean is
+      begin
+         return C in 'a' .. 'z';
+      end Is_Lower;
+   begin
+      if Is_Lower (C) then
+         return Character'Val (Character'Pos (C) - UCASE2LCASE);
+      else
+         return C;
+      end if;
+   end To_Upper;
 
    ----------------------------------------------------------------------------
    -- Get_Name
@@ -42,7 +72,7 @@ package body FATFS.Filename is
       -- end if;
       for I in DE.Filename'Range loop
          exit when DE.Filename (I) = ' ';
-         FName (FIndex) := Utilities.To_Upper (DE.Filename (I));
+         FName (FIndex) := To_Upper (DE.Filename (I));
          FIndex := FIndex + 1;
       end loop;
       if DE.Extension (DE.Extension'First) /= ' ' then
@@ -50,7 +80,7 @@ package body FATFS.Filename is
          FIndex := FIndex + 1;
          for I in DE.Extension'Range loop
             exit when DE.Extension (I) = ' ';
-            FName (FIndex) := Utilities.To_Upper (DE.Extension (I));
+            FName (FIndex) := To_Upper (DE.Extension (I));
             FIndex := FIndex + 1;
          end loop;
       end if;
@@ -67,7 +97,7 @@ package body FATFS.Filename is
    -- function Get_Index (FName : String) return Natural is
    -- begin
    --    for I in reverse FName'Range loop
-   --       if Utilities.Is_Separator (FName (I)) then
+   --       if Is_Separator (FName (I)) then
    --          return I + 1;
    --       end if;
    --    end loop;
@@ -93,7 +123,7 @@ package body FATFS.Filename is
       for I in Base'Range loop
          exit when Index > FName'Last;
          exit when FName (Index) = '.';
-         Base (I) := Utilities.To_Upper (FName (Index));
+         Base (I) := To_Upper (FName (Index));
          Index := Index + 1;
       end loop;
       if Index <= FName'Last and then FName (Index) = '.' then
@@ -101,7 +131,7 @@ package body FATFS.Filename is
          for I in Ext'Range loop
             exit when Index > FName'Last;
             exit when FName (Index) = '.';
-            Ext (I) := Utilities.To_Upper (FName (Index));
+            Ext (I) := To_Upper (FName (Index));
             Index := Index + 1;
          end loop;
       end if;

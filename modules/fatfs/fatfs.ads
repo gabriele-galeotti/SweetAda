@@ -255,6 +255,12 @@ package FATFS is
    -- utilities API
    ----------------------------------------------------------------------------
 
+   function Is_Separator (C : Character) return Boolean with
+      Inline => True;
+   procedure Time_Set (T : in Time_Type) with
+      Inline => True;
+   procedure Time_Get (T : out Time_Type) with
+      Inline => True;
    function Physical_Sector (Sector : Sector_Type) return Sector_Type with
       Inline => True;
    function FAT_Is_End (S : Sector_Type) return Boolean with

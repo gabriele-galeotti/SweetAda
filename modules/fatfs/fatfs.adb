@@ -88,6 +88,32 @@ package body FATFS is
    end Register_BlockWrite_Procedure;
 
    ----------------------------------------------------------------------------
+   -- Is_Separator
+   ----------------------------------------------------------------------------
+   -- Return True if C is a pathname separator.
+   ----------------------------------------------------------------------------
+   function Is_Separator (C : Character) return Boolean is
+   begin
+      return C = '/' or else C = '\';
+   end Is_Separator;
+
+   ----------------------------------------------------------------------------
+   -- Time_Set
+   ----------------------------------------------------------------------------
+   procedure Time_Set (T : in Time_Type) is
+   begin
+      FS_Time := T;
+   end Time_Set;
+
+   ----------------------------------------------------------------------------
+   -- Time_Get
+   ----------------------------------------------------------------------------
+   procedure Time_Get (T : out Time_Type) is
+   begin
+      T := FS_Time;
+   end Time_Get;
+
+   ----------------------------------------------------------------------------
    -- Physical_Sector
    ----------------------------------------------------------------------------
    -- Compute a physical sector number, starting from a logical one.
