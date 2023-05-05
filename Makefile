@@ -876,6 +876,7 @@ endif
 
 $(OBJECT_DIRECTORY)/b__main.o : $(OBJECT_DIRECTORY)/b__main.adb
 	@$(REM) compile the main program, incorporating the given elaboration order
+ifeq ($(BUILD_MODE),GNATMAKE)
 ifeq ($(OSTYPE),cmd)
 	$(call brief-command, \
         $(ADAC_GNATBIND)                                  \
@@ -891,7 +892,7 @@ else
                          $(OBJECT_DIRECTORY)/b__main.adb  \
         ,[ADAC],b__main.adb)
 endif
-ifeq ($(BUILD_MODE),GPR)
+else ifeq ($(BUILD_MODE),GPR)
 	-@$(RM) $(GCC_WRAPPER_TIMESTAMP_FILENAME)
 endif
 ifeq ($(OSTYPE),cmd)
@@ -1120,8 +1121,7 @@ ifneq ($(TOOLCHAIN_NAME),)
 endif
 ifeq ($(BUILD_MODE),GNATMAKE)
 	@$(call echo-print,"GNATMAKE VERSION:       $(GNATMAKE_VERSION)")
-endif
-ifeq ($(BUILD_MODE),GPR)
+else ifeq ($(BUILD_MODE),GPR)
 	@$(call echo-print,"GPRBUILD VERSION:       $(GPRBUILD_VERSION)")
 endif
 	@$(call echo-print,"RTS:                    $(RTS)")
