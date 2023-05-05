@@ -67,6 +67,16 @@ GCC_MULTIDIR    := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFO
 LIBGCC_FILENAME := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-libgcc-file-name 2> /dev/null)
 endif
 
+# RTS
+RTS_ROOT_PATH := $(RTS_BASE_PATH)/$(RTS)/$(TOOLCHAIN_NAME)
+RTS_PATH      := $(RTS_ROOT_PATH)/$(GCC_MULTIDIR)
+ifeq ($(OSTYPE),cmd)
+RTS_PATH_CMD  := $(shell $(ECHO) $(RTS_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
+RTS_INSTALLED := $(shell IF EXIST "$(RTS_PATH_CMD)"\adainclude\system.ads (ECHO Y) ELSE (ECHO N))
+else
+RTS_INSTALLED := $(shell if [ -e "$(RTS_PATH)"/adainclude/system.ads ] ; then echo "Y" ; else echo "N" ; fi)
+endif
+
 # detect GCC compiler
 ifeq ($(OSTYPE),cmd)
 GCC_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -dumpversion 2> nul)
@@ -80,20 +90,6 @@ $(warning *** Warning: no valid toolchain.)
 endif
 endif
 
-# detect GNATMAKE
-GNATMAKE_PROBE := $(TOOLCHAIN_PROGRAM_PREFIX)gnatmake$(EXEEXT)
-ifeq ($(OSTYPE),cmd)
-GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(GNATMAKE_PROBE) --version 2> nul|$(SED) -e "2,$$d")
-else
-GNATMAKE_VERSION := $(shell PATH="$(PATH)" $(GNATMAKE_PROBE) --version 2> /dev/null | $(SED) -e "2,\$$d")
-endif
-ifeq ($(GNATMAKE_VERSION),)
-USE_UNPREFIXED_GNATMAKE := Y
-endif
-
-# GPRbuild executable
-GPRBUILD := gprbuild$(EXEEXT)
-
 ################################################################################
 #                                                                              #
 # Define toolchain components.                                                 #
@@ -106,14 +102,9 @@ TOOLCHAIN_ADAC     := $(TOOLCHAIN_PROGRAM_PREFIX)gcc$(EXEEXT)
 TOOLCHAIN_CC       := $(TOOLCHAIN_PROGRAM_PREFIX)gcc$(EXEEXT)
 TOOLCHAIN_CPP      := $(TOOLCHAIN_PROGRAM_PREFIX)cpp$(EXEEXT)
 TOOLCHAIN_GNATCHOP := $(TOOLCHAIN_PROGRAM_PREFIX)gnatchop$(EXEEXT)
-TOOLCHAIN_GNATLS   := $(TOOLCHAIN_PROGRAM_PREFIX)gnatls$(EXEEXT)
-ifeq ($(USE_UNPREFIXED_GNATMAKE),Y)
-TOOLCHAIN_GNATMAKE := gnatmake$(EXEEXT)
-else
-TOOLCHAIN_GNATMAKE := $(TOOLCHAIN_PROGRAM_PREFIX)gnatmake$(EXEEXT)
-endif
 TOOLCHAIN_GNATBIND := $(TOOLCHAIN_PROGRAM_PREFIX)gnatbind$(EXEEXT)
 TOOLCHAIN_GNATLINK := $(TOOLCHAIN_PROGRAM_PREFIX)gnatlink$(EXEEXT)
+TOOLCHAIN_GNATLS   := $(TOOLCHAIN_PROGRAM_PREFIX)gnatls$(EXEEXT)
 TOOLCHAIN_GNATPREP := $(TOOLCHAIN_PROGRAM_PREFIX)gnatprep$(EXEEXT)
 TOOLCHAIN_GNATXREF := $(TOOLCHAIN_PROGRAM_PREFIX)gnatxref$(EXEEXT)
 TOOLCHAIN_AR       := $(TOOLCHAIN_PROGRAM_PREFIX)ar$(EXEEXT)
@@ -129,26 +120,37 @@ TOOLCHAIN_READELF  := $(TOOLCHAIN_PROGRAM_PREFIX)readelf$(EXEEXT)
 TOOLCHAIN_SIZE     := $(TOOLCHAIN_PROGRAM_PREFIX)size$(EXEEXT)
 TOOLCHAIN_STRIP    := $(TOOLCHAIN_PROGRAM_PREFIX)strip$(EXEEXT)
 
+ifeq ($(OSTYPE),cmd)
+AS_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_AS) --version 2> nul| $(SED) -e "2,$$d")
+LD_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_LD) --version 2> nul| $(SED) -e "2,$$d")
+else
+AS_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_AS) --version 2> /dev/null | $(SED) -e "2,\$$d")
+LD_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_LD) --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
+
 # nature of compilers
 TOOLCHAIN_ADAC += -x ada
+
 # C compiler has no system libraries
-TOOLCHAIN_CC   += -ffreestanding
+TOOLCHAIN_CC += -ffreestanding
 
 ifeq      ($(ADA_MODE),ADA95)
-TOOLCHAIN_ADAC     += -gnat95
-TOOLCHAIN_GNATMAKE += -gnat95
+TOOLCHAIN_ADAC += -gnat95
 else ifeq ($(ADA_MODE),ADA05)
-TOOLCHAIN_ADAC     += -gnat2005
-TOOLCHAIN_GNATMAKE += -gnat2005
+TOOLCHAIN_ADAC += -gnat2005
 else ifeq ($(ADA_MODE),ADA12)
-TOOLCHAIN_ADAC     += -gnat2012
-TOOLCHAIN_GNATMAKE += -gnat2012
+TOOLCHAIN_ADAC += -gnat2012
 else ifeq ($(ADA_MODE),ADA22)
-TOOLCHAIN_ADAC     += -gnat2022
-TOOLCHAIN_GNATMAKE += -gnat2022
+TOOLCHAIN_ADAC += -gnat2022
 else
 $(warning *** Warning: no valid ADA_MODE.)
 endif
+
+################################################################################
+#                                                                              #
+# Basic toolchain commands and default switches.                               #
+#                                                                              #
+################################################################################
 
 AS       := $(TOOLCHAIN_AS)
 ADAC     := $(TOOLCHAIN_ADAC)
@@ -158,7 +160,6 @@ GNATBIND := $(TOOLCHAIN_GNATBIND)
 GNATCHOP := $(TOOLCHAIN_GNATCHOP)
 GNATLINK := $(TOOLCHAIN_GNATLINK)
 GNATLS   := $(TOOLCHAIN_GNATLS)
-GNATMAKE := $(TOOLCHAIN_GNATMAKE)
 GNATPREP := $(TOOLCHAIN_GNATPREP)
 GNATXREF := $(TOOLCHAIN_GNATXREF)
 AR       := $(TOOLCHAIN_AR)
@@ -172,52 +173,21 @@ READELF  := $(TOOLCHAIN_READELF)
 SIZE     := $(TOOLCHAIN_SIZE)
 STRIP    := $(TOOLCHAIN_STRIP)
 
-# RTS
-RTS_ROOT_PATH := $(RTS_BASE_PATH)/$(RTS)/$(TOOLCHAIN_NAME)
-RTS_PATH      := $(RTS_ROOT_PATH)/$(GCC_MULTIDIR)
-ifeq ($(OSTYPE),cmd)
-RTS_PATH_CMD  := $(shell $(ECHO) $(RTS_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
-RTS_INSTALLED := $(shell IF EXIST "$(RTS_PATH_CMD)"\adainclude\system.ads (ECHO Y) ELSE (ECHO N))
-else
-RTS_INSTALLED := $(shell if [ -e "$(RTS_PATH)"/adainclude/system.ads ] ; then echo "Y" ; else echo "N" ; fi)
-endif
-ADAC          += --RTS="$(RTS_PATH)"
-GNATLS        += --RTS="$(RTS_PATH)"
-GNATMAKE      += --RTS="$(RTS_PATH)"
-GNATBIND      += --RTS="$(RTS_PATH)"
-
-# detect the version of fundamental tools
-ifeq ($(OSTYPE),cmd)
-AS_VERSION       := $(shell SET "PATH=$(PATH)" && $(AS) --version 2> nul| $(SED) -e "2,$$d")
-LD_VERSION       := $(shell SET "PATH=$(PATH)" && $(LD) --version 2> nul| $(SED) -e "2,$$d")
-GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(GNATMAKE) --version 2> nul|$(SED) -e "2,$$d")
-GPRBUILD_VERSION := $(shell SET "PATH=$(PATH)" && $(GPRBUILD) --version 2> nul|$(SED) -e "2,$$d")
-else
-AS_VERSION       := $(shell PATH="$(PATH)" $(AS) --version 2> /dev/null | $(SED) -e "2,\$$d")
-LD_VERSION       := $(shell PATH="$(PATH)" $(LD) --version 2> /dev/null | $(SED) -e "2,\$$d")
-GNATMAKE_VERSION := $(shell PATH="$(PATH)" $(GNATMAKE) --version 2> /dev/null | $(SED) -e "2,\$$d")
-GPRBUILD_VERSION := $(shell PATH="$(PATH)" $(GPRBUILD) --version 2> /dev/null | $(SED) -e "2,\$$d")
-endif
-
-################################################################################
-#                                                                              #
-# Generic switches.                                                            #
-#                                                                              #
-################################################################################
+# add RTS and import switches
+ADAC     += --RTS="$(RTS_PATH)"
+GNATLS   += --RTS="$(RTS_PATH)"
+GNATBIND += --RTS="$(RTS_PATH)"
+-include $(RTS_DIRECTORY)/$(RTS)/$(TOOLCHAIN_NAME)/Makefile.rts.in
+export ADAC_SWITCHES_RTS
 
 # AS
 AS_SWITCHES_DEFAULT       +=
 
 # ADAC
-ADAC_SWITCHES_DEFAULT     += -gnatef # Display full source path name in brief error messages.
-ADAC_SWITCHES_DEFAULT     += -gnatf  # Full error reporting.
-ADAC_SWITCHES_DEFAULT     += -gnatU  # Tag all error messages with the unique string "error:"
-#ADAC_SWITCHES_DEFAULT     += -gnatu  # List units for this compilation.
-ADAC_SWITCHES_DEFAULT     += -fverbose-asm
+ADAC_SWITCHES_DEFAULT     +=
 
 # CC
-CC_SWITCHES_DEFAULT       += -std=c99
-CC_SWITCHES_DEFAULT       += -fverbose-asm
+CC_SWITCHES_DEFAULT       +=
 
 # CPP
 CPP_SWITCHES_DEFAULT      +=
@@ -225,18 +195,14 @@ CPP_SWITCHES_DEFAULT      +=
 # GNATBIND
 GNATBIND_SWITCHES_DEFAULT += -nostdinc -nostdlib
 
+# GNATCHOP
+GNATCHOP_SWITCHES_DEFAULT +=
+
 # GNATLINK
 GNATLINK_SWITCHES_DEFAULT +=
 
 # GNATLS
 GNATLS_SWITCHES_DEFAULT   +=
-
-# GNATMAKE
-#GNATMAKE_SWITCHES_DEFAULT += -d  # Display compilation progress
-GNATMAKE_SWITCHES_DEFAULT += -eL # Follow all symbolic links when processing project files
-GNATMAKE_SWITCHES_DEFAULT += -eS # Echo commands to stdout instead of stderr
-#GNATMAKE_SWITCHES_DEFAULT += -i  # In place. Replace existing ali file, or put it with source
-GNATMAKE_SWITCHES_DEFAULT += -nostdinc -nostdlib
 
 # GNATPREP
 GNATPREP_SWITCHES_DEFAULT += -c # retain all lines in the output source
@@ -254,6 +220,8 @@ LD_SWITCHES_DEFAULT       += --warn-common
 LD_SWITCHES_DEFAULT       += --warn-section-align
 #LD_SWITCHES_DEFAULT       += --no-warn-rwx-segments
 LD_SWITCHES_DEFAULT       += --print-memory-usage
+LD_SWITCHES_DEFAULT       += --gc-sections
+LD_SWITCHES_DEFAULT       += -g
 
 # NM
 NM_SWITCHES_DEFAULT       +=
@@ -265,6 +233,7 @@ OBJCOPY_SWITCHES_DEFAULT  +=
 OBJDUMP_SWITCHES_DEFAULT  += --demangle=gnat
 
 # RANLIB
+RANLIB_SWITCHES_DEFAULT   +=
 
 # READELF
 READELF_SWITCHES_DEFAULT  += --wide # Allow output width to exceed 80 characters
@@ -280,143 +249,25 @@ STRIP_SWITCHES_DEFAULT    +=
 
 ################################################################################
 #                                                                              #
-# Assembler/Compiler build switches.                                           #
+# GNATMAKE mode: import all settings.                                          #
+# GPR build mode: only define the executable to build the system.              #
 #                                                                              #
 ################################################################################
-
-#
-# Code generation.
-#
-# NOTE: the use of -gnatN is deprecated, the use of -gnatn is preferred
-#
-ADAC_SWITCHES_DEFAULT += -gnatn # Activate inlining for subprograms for which pragma inline is specified.
-# dead code removal
-ADAC_SWITCHES_DEFAULT += -ffunction-sections -fdata-sections
-CC_SWITCHES_DEFAULT   += -ffunction-sections -fdata-sections
-LD_SWITCHES_DEFAULT   += --gc-sections
-
-#
-# Debugging switches.
-#
-AS_SWITCHES_DEFAULT   += -g3 -gdwarf-5
-ADAC_SWITCHES_DEFAULT += -g3 -gdwarf-5 -fno-omit-frame-pointer
-CC_SWITCHES_DEFAULT   += -g3 -gdwarf-5 -fno-omit-frame-pointer
-LD_SWITCHES_DEFAULT   += -g
-ifeq ($(ENABLE_SPLIT_DWARF),Y)
-ADAC_SWITCHES_DEFAULT += -gsplit-dwarf
-CC_SWITCHES_DEFAULT   += -gsplit-dwarf
-endif
-
-#
-# Ada Run-Time Checks switches.
-#
-# __REF__ https://gcc.gnu.org/onlinedocs/gnat_ugn/Run-Time-Checks.html
-# NOTE: -gnato and -gnatE are switches required in order to be a "conforming compiler"
-# NOTE: -gnatE is not necessary, because GNAT ensure statically that the checks would not fail
-# NOTE: -gnato = -gnato1
-#
-# maximum check settings: -gnato1=ON  -gnatp=OFF -fstack-check=ON
-# minimum check settings: -gnato1=OFF -gnatp=ON  -fstack-check=OFF
-#
-#ADAC_SWITCHES_DEFAULT += -gnata        # pragma Assert enabled (requires s-assert.ads).
-ADAC_SWITCHES_DEFAULT += -gnatE        # Enables dynamic checks for access-before-elaboration on subprogram calls and generic instantiations.
-ADAC_SWITCHES_DEFAULT += -gnato1       # Enable "STRICT" numeric overflow checking.
-#ADAC_SWITCHES_DEFAULT += -gnatp        # pragma Suppress (All_Checks)
-#ADAC_SWITCHES_DEFAULT += -fstack-check # Activates stack overflow checking.
-
-#
-# Compilation information switches, stack usage and various functionalities.
-#
-# NOTE: use combinations of -gnatD -gnatG -gnatL for expanded source form
-# NOTE: -gnatD cause creation of .dg files with expanded informations
-# re-routed from stdout to these files; gcc-wrapper will create empty
-# .expand files
-#
-ADAC_SWITCHES_DEFAULT += -fdump-ipa-cgraph           # .000i.cgraph
-ADAC_SWITCHES_DEFAULT += -fdump-rtl-expand           # .233r.expand
-ADAC_SWITCHES_DEFAULT += -fdump-rtl-dfinish          # .313r.dfinish
-ADAC_SWITCHES_DEFAULT += -fdump-tree-optimized-graph # .231t.optimized[.dot]
-ADAC_SWITCHES_DEFAULT += -fstack-usage               # Static Stack Usage Analysis.
-ADAC_SWITCHES_DEFAULT += -gnatD                      # Create expanded source files for source level debugging.
-ADAC_SWITCHES_DEFAULT += -gnatG -gnatL               # List generated expanded code in source form.
-# -gnatR is mutually exclusive with -gnatD
-#ADAC_SWITCHES_DEFAULT += -gnatR                      # Output representation information for declared types and objects.
-#ADAC_SWITCHES_DEFAULT += -gnatdp                     # Generate messages for parser scope stack push/pops
-ADAC_SWITCHES_DEFAULT += -gnatdt                     # Print full tree.
-ADAC_SWITCHES_DEFAULT += -gnatd.b                    # Dump backend types
-ADAC_SWITCHES_DEFAULT += -gnatd.j                    # Generate listing of frontend inlined calls
-
-#
-# Ada validity checks.
-#
-ADAC_SWITCHES_DEFAULT += -gnatVa # All validity Checks.
-#ADAC_SWITCHES_DEFAULT += -gnatVc # Validity checks for copies.
-#ADAC_SWITCHES_DEFAULT += -gnatVd # Default (RM) validity checks.
-#ADAC_SWITCHES_DEFAULT += -gnatVe # Validity checks for elementary components.
-#ADAC_SWITCHES_DEFAULT += -gnatVf # Validity checks for floating-point values.
-#ADAC_SWITCHES_DEFAULT += -gnatVi # Validity checks for `in` mode parameters.
-#ADAC_SWITCHES_DEFAULT += -gnatVm # Validity checks for `in out` mode parameters.
-#ADAC_SWITCHES_DEFAULT += -gnatVo # Validity checks for operator and attribute operands.
-#ADAC_SWITCHES_DEFAULT += -gnatVp # Validity checks for parameters.
-#ADAC_SWITCHES_DEFAULT += -gnatVr # Validity checks for function returns.
-#ADAC_SWITCHES_DEFAULT += -gnatVs # Validity checks for subscripts.
-#ADAC_SWITCHES_DEFAULT += -gnatVt # Validity checks for tests.
-
-################################################################################
-#                                                                              #
-# Basic and fine-grained optimization switches, organized into levels.         #
-#                                                                              #
-################################################################################
-
-#
-# Basic optimization level is -O1. At -O0, GCC generates several function
-# calls to "_Unwind_Resume", which is a LibGCC function.
-#
-
-OPTIMIZATION_SWITCHES :=
-
-OPTIMIZATION_LEVEL ?= 0
-
-ifeq      ($(OPTIMIZATION_LEVEL),0)
-OPTIMIZATION_SWITCHES += -O0
-else ifeq ($(OPTIMIZATION_LEVEL),1)
-OPTIMIZATION_SWITCHES += -O1
-#OPTIMIZATION_SWITCHES += -fpeephole2
-#OPTIMIZATION_SWITCHES += -frerun-cse-after-loop
-else ifeq ($(OPTIMIZATION_LEVEL),2)
-OPTIMIZATION_SWITCHES += -O2
-# debugging switches already specify "-fno-omit-frame-pointer"
-#OPTIMIZATION_SWITCHES += -fomit-frame-pointer
-else
-$(warning *** Warning: no valid OPTIMIZATION_LEVEL.)
-endif
-
-ADAC_SWITCHES_DEFAULT += $(OPTIMIZATION_SWITCHES)
-CC_SWITCHES_DEFAULT   += $(OPTIMIZATION_SWITCHES)
-
-################################################################################
-#                                                                              #
-# Import RTS switches, assembler/compiler warning and style switches,          #
-# verbosity.                                                                   #
-#                                                                              #
-################################################################################
-
--include $(RTS_DIRECTORY)/$(RTS)/$(TOOLCHAIN_NAME)/Makefile.rts.in
-export ADAC_SWITCHES_RTS
-
-ADAC_SWITCHES_DEFAULT += $(ADAC_SWITCHES_RTS)
-CC_SWITCHES_DEFAULT   += $(CC_SWITCHES_RTS)
 
 ifeq ($(BUILD_MODE),GNATMAKE)
--include Makefile.wr.in
--include Makefile.st.in
-endif
-
-ifeq ($(VERBOSE),Y)
-ADAC_SWITCHES_DEFAULT     += -gnatb -gnatv
-GNATMAKE_SWITCHES_DEFAULT += -v
+include gnatmake.tc.in
+ifeq ($(OSTYPE),cmd)
+GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GNATMAKE) --version 2> nul|$(SED) -e "2,$$d")
 else
-GNATMAKE_SWITCHES_DEFAULT += -q
+GNATMAKE_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_GNATMAKE) --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
+else ifeq ($(BUILD_MODE),GPR)
+GPRBUILD := gprbuild$(EXEEXT)
+ifeq ($(OSTYPE),cmd)
+GPRBUILD_VERSION := $(shell SET "PATH=$(PATH)" && $(GPRBUILD) --version 2> nul|$(SED) -e "2,$$d")
+else
+GPRBUILD_VERSION := $(shell PATH="$(PATH)" $(GPRBUILD) --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
 endif
 
 ################################################################################
@@ -425,51 +276,36 @@ endif
 #                                                                              #
 ################################################################################
 
-ADAC     += $(ADAC_SWITCHES_DEFAULT) \
-            $(ADAC_SWITCHES_WARNING) \
-            $(ADAC_SWITCHES_STYLE)   \
-            $(GCC_SWITCHES_PLATFORM)
+ADAC     += $(ADAC_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM)
 
 AR       += $(AR_SWITCHES_DEFAULT)
 
-AS       += $(AS_SWITCHES_DEFAULT)  \
-            $(AS_SWITCHES_PLATFORM)
+AS       += $(AS_SWITCHES_DEFAULT) $(AS_SWITCHES_PLATFORM)
 
-CC       += $(CC_SWITCHES_DEFAULT)   \
-            $(CC_SWITCHES_WARNING)   \
-            $(GCC_SWITCHES_PLATFORM)
+CC       += $(CC_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM)
 
-CPP      += $(CPP_SWITCHES_DEFAULT)  \
-            $(GCC_SWITCHES_PLATFORM)
+CPP      += $(CPP_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM)
 
 GNATBIND += $(GNATBIND_SWITCHES_DEFAULT)
 
-GNATCHOP +=
+GNATCHOP += $(GNATCHOP_SWITCHES_DEFAULT)
 
 GNATLINK += $(GNATLINK_SWITCHES_DEFAULT)
 
-GNATLS   +=
-
-GNATMAKE += $(GNATMAKE_SWITCHES_DEFAULT) \
-            $(ADAC_SWITCHES_DEFAULT)     \
-            $(ADAC_SWITCHES_WARNING)     \
-            $(ADAC_SWITCHES_STYLE)       \
-            $(GCC_SWITCHES_PLATFORM)
+GNATLS   += $(GNATLS_SWITCHES_DEFAULT)
 
 GNATPREP += $(GNATPREP_SWITCHES_DEFAULT)
 
 GNATXREF += $(GNATXREF_SWITCHES_DEFAULT)
 
-LD       += $(LD_SWITCHES_DEFAULT)  \
-            $(LD_SWITCHES_PLATFORM)
+LD       += $(LD_SWITCHES_DEFAULT) $(LD_SWITCHES_PLATFORM)
 
 NM       += $(NM_SWITCHES_DEFAULT)
 
-OBJCOPY  += $(OBJCOPY_SWITCHES_DEFAULT)  \
-            $(OBJCOPY_SWITCHES_PLATFORM)
+OBJCOPY  += $(OBJCOPY_SWITCHES_DEFAULT) $(OBJCOPY_SWITCHES_PLATFORM)
 
-OBJDUMP  += $(OBJDUMP_SWITCHES_DEFAULT)  \
-            $(OBJDUMP_SWITCHES_PLATFORM)
+OBJDUMP  += $(OBJDUMP_SWITCHES_DEFAULT) $(OBJDUMP_SWITCHES_PLATFORM)
+
 RANLIB   += $(RANLIB_SWITCHES_DEFAULT)
 
 READELF  += $(READELF_SWITCHES_DEFAULT)
@@ -489,9 +325,6 @@ STRIP    += $(STRIP_SWITCHES_DEFAULT)
 # enable verbose assembler output in GCC wrapper (should begin with "-a")
 GCC_WRAPPER_ASSEMBLER_OUTPUT := -adghlmns
 export GCC_WRAPPER_ASSEMBLER_OUTPUT
-
-ADAC += -wrapper "$(GCC_WRAPPER)"
-CC   += -wrapper "$(GCC_WRAPPER)"
 
 ################################################################################
 #                                                                              #
@@ -514,8 +347,6 @@ export GNAT_WRAPPER_VERBOSE
 GNAT_WRAPPER_GCC_EXECUTABLE := $(TOOLCHAIN_PREFIX)/bin/$(TOOLCHAIN_GCC)
 export GNAT_WRAPPER_GCC_EXECUTABLE
 
-GNATMAKE += --GCC="$(GNAT_WRAPPER)" -cargs -wrapper "$(GCC_WRAPPER)" -margs
-
 ################################################################################
 #                                                                              #
 # Filenames to check for compile or bind phase triggering (generated by the    #
@@ -536,15 +367,9 @@ endif
 export GCC_WRAPPER_TIMESTAMP_FILENAME
 export GNAT_WRAPPER_TIMESTAMP_FILENAME
 
-################################################################################
-#                                                                              #
-# Various support toolchain executables.                                       #
-#                                                                              #
-################################################################################
-
-# avoid extraneous informations in .d files during VERBOSE mode
-GNATMAKE_DEPEND := $(filter-out -v,$(GNATMAKE))
-# special back-end compiler for GNATBIND-generated Ada files without output
-# of spurious warnings
-ADAC_GNATBIND := $(filter-out -gnatwu -gnatya -gnatyb -gnatyM$(MLL) -gnatyu,$(ADAC))
+ifeq ($(BUILD_MODE),GNATMAKE)
+ADAC     += -wrapper "$(GCC_WRAPPER)"
+CC       += -wrapper "$(GCC_WRAPPER)"
+GNATMAKE += --GCC="$(GNAT_WRAPPER)" -cargs -wrapper "$(GCC_WRAPPER)" -margs
+endif
 

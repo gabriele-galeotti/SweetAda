@@ -1,6 +1,6 @@
 
 #
-# Toolchain sub-Makefile (compiler style switches)
+# Toolchain sub-Makefile (ADAC/GNATMAKE compiler style switches)
 #
 # Copyright (C) 2020-2023 Gabriele Galeotti
 #
@@ -15,7 +15,7 @@
 
 ################################################################################
 #                                                                              #
-# Assembler/Compiler style switches.                                           #
+# Compiler style switches.                                                     #
 #                                                                              #
 ################################################################################
 

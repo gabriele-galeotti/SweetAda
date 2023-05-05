@@ -1,0 +1,245 @@
+
+#
+# Toolchain sub-Makefile (ADAC/GNATMAKE compiler switches)
+#
+# Copyright (C) 2020-2023 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Environment variables:
+#
+# OSTYPE
+# PATH
+# SED
+# EXEEXT
+# TOOLCHAIN_PROGRAM_PREFIX
+# ADA_MODE
+# RTS_PATH
+# STACK_LIMIT
+#
+
+################################################################################
+#                                                                              #
+# Detect GNATMAKE and set fundamental switches.                                #
+#                                                                              #
+################################################################################
+
+GNATMAKE_PROBE := $(TOOLCHAIN_PROGRAM_PREFIX)gnatmake$(EXEEXT)
+ifeq ($(OSTYPE),cmd)
+GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(GNATMAKE_PROBE) --version 2> nul|$(SED) -e "2,$$d")
+else
+GNATMAKE_VERSION := $(shell PATH="$(PATH)" $(GNATMAKE_PROBE) --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
+ifeq ($(GNATMAKE_VERSION),)
+USE_UNPREFIXED_GNATMAKE := Y
+endif
+
+ifeq ($(USE_UNPREFIXED_GNATMAKE),Y)
+TOOLCHAIN_GNATMAKE := gnatmake$(EXEEXT)
+else
+TOOLCHAIN_GNATMAKE := $(TOOLCHAIN_PROGRAM_PREFIX)gnatmake$(EXEEXT)
+endif
+
+GNATMAKE := $(TOOLCHAIN_GNATMAKE) --RTS="$(RTS_PATH)"
+
+ifeq      ($(ADA_MODE),ADA95)
+GNATMAKE += -gnat95
+else ifeq ($(ADA_MODE),ADA05)
+GNATMAKE += -gnat2005
+else ifeq ($(ADA_MODE),ADA12)
+GNATMAKE += -gnat2012
+else ifeq ($(ADA_MODE),ADA22)
+GNATMAKE += -gnat2022
+else
+$(warning *** Warning: no valid ADA_MODE.)
+endif
+
+################################################################################
+#                                                                              #
+# Default switches.                                                            #
+#                                                                              #
+################################################################################
+
+# ADAC
+ADAC_SWITCHES_DEFAULT     += $(ADAC_SWITCHES_RTS)
+ADAC_SWITCHES_DEFAULT     += -gnatef # Display full source path name in brief error messages.
+ADAC_SWITCHES_DEFAULT     += -gnatf  # Full error reporting.
+ADAC_SWITCHES_DEFAULT     += -gnatU  # Tag all error messages with the unique string "error:"
+#ADAC_SWITCHES_DEFAULT     += -gnatu  # List units for this compilation.
+ADAC_SWITCHES_DEFAULT     += -fverbose-asm
+
+# CC
+CC_SWITCHES_DEFAULT       += $(CC_SWITCHES_RTS)
+CC_SWITCHES_DEFAULT       += -std=c99
+CC_SWITCHES_DEFAULT       += -fverbose-asm
+
+# GNATMAKE
+#GNATMAKE_SWITCHES_DEFAULT += -d  # Display compilation progress
+GNATMAKE_SWITCHES_DEFAULT += -eL # Follow all symbolic links when processing project files
+GNATMAKE_SWITCHES_DEFAULT += -eS # Echo commands to stdout instead of stderr
+#GNATMAKE_SWITCHES_DEFAULT += -i  # In place. Replace existing ali file, or put it with source
+GNATMAKE_SWITCHES_DEFAULT += -nostdinc -nostdlib
+
+################################################################################
+#                                                                              #
+# Compiler build switches.                                                     #
+#                                                                              #
+################################################################################
+
+#
+# Code generation.
+#
+# NOTE: the use of -gnatN is deprecated, the use of -gnatn is preferred
+#
+ADAC_SWITCHES_DEFAULT += -gnatn # Activate inlining for subprograms for which pragma inline is specified.
+# dead code removal
+ADAC_SWITCHES_DEFAULT += -ffunction-sections -fdata-sections
+CC_SWITCHES_DEFAULT   += -ffunction-sections -fdata-sections
+
+#
+# Debugging switches.
+#
+AS_SWITCHES_DEFAULT   += -g -gdwarf-5
+ADAC_SWITCHES_DEFAULT += -g3 -gdwarf-5 -fno-omit-frame-pointer
+CC_SWITCHES_DEFAULT   += -g3 -gdwarf-5 -fno-omit-frame-pointer
+ifeq ($(ENABLE_SPLIT_DWARF),Y)
+ADAC_SWITCHES_DEFAULT += -gsplit-dwarf
+CC_SWITCHES_DEFAULT   += -gsplit-dwarf
+endif
+
+#
+# Ada Run-Time Checks switches.
+#
+# __REF__ https://gcc.gnu.org/onlinedocs/gnat_ugn/Run-Time-Checks.html
+# NOTE: -gnato and -gnatE are switches required in order to be a "conforming compiler"
+# NOTE: -gnatE is not necessary, because GNAT ensure statically that the checks would not fail
+# NOTE: -gnato = -gnato1
+#
+# maximum check settings: -gnato1=ON  -gnatp=OFF -fstack-check=ON
+# minimum check settings: -gnato1=OFF -gnatp=ON  -fstack-check=OFF
+#
+#ADAC_SWITCHES_DEFAULT += -gnata        # pragma Assert enabled (requires s-assert.ads).
+ADAC_SWITCHES_DEFAULT += -gnatE        # Enables dynamic checks for access-before-elaboration on subprogram calls and generic instantiations.
+ADAC_SWITCHES_DEFAULT += -gnato1       # Enable "STRICT" numeric overflow checking.
+#ADAC_SWITCHES_DEFAULT += -gnatp        # pragma Suppress (All_Checks)
+#ADAC_SWITCHES_DEFAULT += -fstack-check # Activates stack overflow checking.
+
+#
+# Compilation information switches, stack usage and various functionalities.
+#
+# NOTE: use combinations of -gnatD -gnatG -gnatL for expanded source form
+# NOTE: -gnatD cause creation of .dg files with expanded informations
+# re-routed from stdout to these files; gcc-wrapper will create empty
+# .expand files
+#
+ADAC_SWITCHES_DEFAULT += -fdump-ipa-cgraph           # .000i.cgraph
+ADAC_SWITCHES_DEFAULT += -fdump-rtl-expand           # .233r.expand
+ADAC_SWITCHES_DEFAULT += -fdump-rtl-dfinish          # .313r.dfinish
+ADAC_SWITCHES_DEFAULT += -fdump-tree-optimized-graph # .231t.optimized[.dot]
+ADAC_SWITCHES_DEFAULT += -fstack-usage               # Static Stack Usage Analysis.
+ADAC_SWITCHES_DEFAULT += -gnatD                      # Create expanded source files for source level debugging.
+ADAC_SWITCHES_DEFAULT += -gnatG -gnatL               # List generated expanded code in source form.
+# -gnatR is mutually exclusive with -gnatD
+#ADAC_SWITCHES_DEFAULT += -gnatR                      # Output representation information for declared types and objects.
+#ADAC_SWITCHES_DEFAULT += -gnatdp                     # Generate messages for parser scope stack push/pops
+ADAC_SWITCHES_DEFAULT += -gnatdt                     # Print full tree.
+ADAC_SWITCHES_DEFAULT += -gnatd.b                    # Dump backend types
+ADAC_SWITCHES_DEFAULT += -gnatd.j                    # Generate listing of frontend inlined calls
+
+#
+# Ada validity checks.
+#
+ADAC_SWITCHES_DEFAULT += -gnatVa # All validity Checks.
+#ADAC_SWITCHES_DEFAULT += -gnatVc # Validity checks for copies.
+#ADAC_SWITCHES_DEFAULT += -gnatVd # Default (RM) validity checks.
+#ADAC_SWITCHES_DEFAULT += -gnatVe # Validity checks for elementary components.
+#ADAC_SWITCHES_DEFAULT += -gnatVf # Validity checks for floating-point values.
+#ADAC_SWITCHES_DEFAULT += -gnatVi # Validity checks for `in` mode parameters.
+#ADAC_SWITCHES_DEFAULT += -gnatVm # Validity checks for `in out` mode parameters.
+#ADAC_SWITCHES_DEFAULT += -gnatVo # Validity checks for operator and attribute operands.
+#ADAC_SWITCHES_DEFAULT += -gnatVp # Validity checks for parameters.
+#ADAC_SWITCHES_DEFAULT += -gnatVr # Validity checks for function returns.
+#ADAC_SWITCHES_DEFAULT += -gnatVs # Validity checks for subscripts.
+#ADAC_SWITCHES_DEFAULT += -gnatVt # Validity checks for tests.
+
+################################################################################
+#                                                                              #
+# Basic and fine-grained optimization switches, organized into levels.         #
+#                                                                              #
+################################################################################
+
+#
+# Basic optimization level is -O1. At -O0, GCC generates several function
+# calls to "_Unwind_Resume", which is a LibGCC function.
+#
+
+OPTIMIZATION_SWITCHES :=
+
+OPTIMIZATION_LEVEL ?= 0
+
+ifeq      ($(OPTIMIZATION_LEVEL),0)
+OPTIMIZATION_SWITCHES += -O0
+else ifeq ($(OPTIMIZATION_LEVEL),1)
+OPTIMIZATION_SWITCHES += -O1
+#OPTIMIZATION_SWITCHES += -fpeephole2
+#OPTIMIZATION_SWITCHES += -frerun-cse-after-loop
+else ifeq ($(OPTIMIZATION_LEVEL),2)
+OPTIMIZATION_SWITCHES += -O2
+# debugging switches already specify "-fno-omit-frame-pointer"
+#OPTIMIZATION_SWITCHES += -fomit-frame-pointer
+else
+$(warning *** Warning: no valid OPTIMIZATION_LEVEL.)
+endif
+
+ADAC_SWITCHES_DEFAULT += $(OPTIMIZATION_SWITCHES)
+CC_SWITCHES_DEFAULT   += $(OPTIMIZATION_SWITCHES)
+
+################################################################################
+#                                                                              #
+# Verbosity.                                                                   #
+#                                                                              #
+################################################################################
+
+ifeq ($(VERBOSE),Y)
+ADAC_SWITCHES_DEFAULT     += -gnatb -gnatv
+GNATMAKE_SWITCHES_DEFAULT += -v
+else
+GNATMAKE_SWITCHES_DEFAULT += -q
+endif
+
+################################################################################
+#                                                                              #
+# Assemble final command lines.                                                #
+#                                                                              #
+################################################################################
+
+-include gnatmake.wr.in
+-include gnatmake.st.in
+
+ADAC     += $(ADAC_SWITCHES_WARNING) \
+            $(ADAC_SWITCHES_STYLE)
+
+CC       += $(CC_SWITCHES_WARNING)
+
+GNATMAKE += $(ADAC_SWITCHES_WARNING)     \
+            $(ADAC_SWITCHES_STYLE)       \
+            $(ADAC_SWITCHES_DEFAULT)     \
+            $(GNATMAKE_SWITCHES_DEFAULT) \
+            $(GCC_SWITCHES_PLATFORM)
+
+################################################################################
+#                                                                              #
+# Various support toolchain executables.                                       #
+#                                                                              #
+################################################################################
+
+# avoid extraneous informations in .d files during VERBOSE mode
+GNATMAKE_DEPEND := $(filter-out -v,$(GNATMAKE))
+
+# special back-end compiler for GNATBIND-generated Ada files without output of
+# spurious warnings
+ADAC_GNATBIND := $(filter-out -gnatwu -gnatya -gnatyb -gnatyM$(MLL) -gnatyu,$(ADAC))
+

@@ -1,6 +1,6 @@
 
 #
-# Toolchain sub-Makefile (compiler warning switches)
+# Toolchain sub-Makefile (ADAC/GNATMAKE compiler warning switches)
 #
 # Copyright (C) 2020-2023 Gabriele Galeotti
 #
@@ -15,12 +15,12 @@
 
 ################################################################################
 #                                                                              #
-# Assembler/Compiler warning switches.                                         #
+# Compiler warning switches.                                                   #
 #                                                                              #
 ################################################################################
 
 #
-# Ada warning switches.
+# Ada compiler warning switches.
 #
 #ADAC_SWITCHES_WARNING += -gnatwa  # Activate most optional warnings.
 ADAC_SWITCHES_WARNING += -gnatw.a # Activate warnings on failing assertions.
