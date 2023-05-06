@@ -175,6 +175,9 @@ $indentl =                  "                          "
 print_I $configure_filename "ADAC_Switches_RTS     := ("
 print_list $configure_filename $(GetEnvVar ADAC_SWITCHES_RTS).Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"
+print_I $configure_filename "CC_Switches_RTS       := ("
+print_list $configure_filename $(GetEnvVar CC_SWITCHES_RTS).Trim(" ") $indentation_level $indentl
+print_I $configure_filename "                         );"
 print_I $configure_filename "GCC_Switches_Platform := ("
 print_list $configure_filename $(GetEnvVar GCC_SWITCHES_PLATFORM).Trim(" ") $indentation_level $indentl
 print_I $configure_filename "                         );"

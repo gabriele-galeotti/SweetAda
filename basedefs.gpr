@@ -102,6 +102,7 @@ abstract project Basedefs is
                               "-Wundef",
                               "-Wwrite-strings"
                              ) &
+                             Configure.CC_Switches_RTS       &
                              Configure.GCC_Switches_Platform &
                              GCC_Wrapper_Switch;
       -- Ada
