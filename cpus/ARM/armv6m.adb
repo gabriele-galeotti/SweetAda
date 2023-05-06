@@ -61,8 +61,32 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    procedure BREAKPOINT is
    begin
-      null;
+      Asm (
+           Template => ""             & CRLF &
+                       "        bkpt" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
    end BREAKPOINT;
+
+   ----------------------------------------------------------------------------
+   -- WFI
+   ----------------------------------------------------------------------------
+   procedure WFI is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        wfi" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end WFI;
 
    ----------------------------------------------------------------------------
    -- Irq_Enable

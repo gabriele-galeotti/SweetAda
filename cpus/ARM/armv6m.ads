@@ -447,6 +447,8 @@ package ARMv6M is
       Inline => True;
    procedure BREAKPOINT with
       Inline => True;
+   procedure WFI with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
