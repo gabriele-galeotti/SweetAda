@@ -64,7 +64,6 @@ endif
 ################################################################################
 
 # ADAC
-ADAC_SWITCHES_DEFAULT     += $(ADAC_SWITCHES_RTS)
 ADAC_SWITCHES_DEFAULT     += -gnatef # Display full source path name in brief error messages.
 ADAC_SWITCHES_DEFAULT     += -gnatf  # Full error reporting.
 ADAC_SWITCHES_DEFAULT     += -gnatU  # Tag all error messages with the unique string "error:"
@@ -72,7 +71,6 @@ ADAC_SWITCHES_DEFAULT     += -gnatU  # Tag all error messages with the unique st
 ADAC_SWITCHES_DEFAULT     += -fverbose-asm
 
 # CC
-CC_SWITCHES_DEFAULT       += $(CC_SWITCHES_RTS)
 CC_SWITCHES_DEFAULT       += -std=c99
 CC_SWITCHES_DEFAULT       += -fverbose-asm
 
@@ -236,10 +234,10 @@ GNATMAKE += $(ADAC_SWITCHES_WARNING)     \
 #                                                                              #
 ################################################################################
 
-# avoid extraneous informations in .d files during VERBOSE mode
-GNATMAKE_DEPEND := $(filter-out -v,$(GNATMAKE))
-
 # special back-end compiler for GNATBIND-generated Ada files without output of
 # spurious warnings
-ADAC_GNATBIND := $(filter-out -gnatwu -gnatya -gnatyb -gnatyM$(MLL) -gnatyu,$(ADAC))
+ADAC_GNATBIND := $(filter-out $(ADAC_SWITCHES_STYLE),$(ADAC) $(ADAC_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM))
+
+# avoid extraneous informations in .d files during VERBOSE mode
+GNATMAKE_DEPEND := $(filter-out -v,$(GNATMAKE))
 
