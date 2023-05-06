@@ -103,7 +103,11 @@ ifeq ($(OSTYPE),cmd)
 	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
+ifeq ($(OSTYPE),darwin)
+	@$(SED) -i '' -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
+else
 	@$(SED) -i -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
+endif
 	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
@@ -131,7 +135,11 @@ ifeq ($(OSTYPE),cmd)
 	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
+ifeq ($(OSTYPE),darwin)
+	@$(SED) -i '' -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
+else
 	@$(SED) -i -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
+endif
 	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
@@ -156,11 +164,19 @@ ifeq ($(OSTYPE),cmd)
 	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
+ifeq ($(OSTYPE),darwin)
+	@$(SED)                                                                 \
+                -i ''                                                           \
+                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"   \
+                -e "s|$(KERNEL_PARENT_PATH)\(/.*\)|\$$(KERNEL_PARENT_PATH)\1|g" \
+                $(DEP_DIRECTORY)/$*.d
+else
 	@$(SED)                                                                 \
                 -i                                                              \
                 -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"   \
                 -e "s|$(KERNEL_PARENT_PATH)\(/.*\)|\$$(KERNEL_PARENT_PATH)\1|g" \
                 $(DEP_DIRECTORY)/$*.d
+endif
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
 
