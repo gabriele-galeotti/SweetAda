@@ -46,15 +46,17 @@ all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 .PHONY : installfiles
 installfiles :
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
-	@$(CREATESYMLINK) -v platform-$(SUBPLATFORM) Makefile.if.in
+	@$(CREATESYMLINK) -v -m Makefile.if.in platform-$(SUBPLATFORM) .
 	@$(call echo-print,"installfiles: done")
 	@$(call echo-print,"")
 
 .PHONY : configure
 configure :
 ifeq      ($(OSTYPE),cmd)
+	@$(RM) $(GNATADC_FILENAME)
 	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 else ifeq ($(OSTYPE),msys)
+	@$(RM) $(GNATADC_FILENAME)
 	@$(CP) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
