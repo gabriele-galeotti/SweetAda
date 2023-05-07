@@ -18,7 +18,6 @@
 # TOOLCHAIN_PROGRAM_PREFIX
 # ADA_MODE
 # RTS_PATH
-# STACK_LIMIT
 #
 
 ################################################################################
