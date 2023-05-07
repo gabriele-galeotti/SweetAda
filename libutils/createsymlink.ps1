@@ -10,15 +10,18 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# optional initial -m <filelist> to record symlinks
+# optional initial -v for verbosity
+# $1 = target filename or directory
+# $2 = link name filename or directory
+# every following pair is another symlink
 #
 # Environment variables:
 # VERBOSE
 #
-
-#
-# If $1 is a directory, all files contained in the directory are made targets
-# of the correspondent symlinks (with the same filename), regardless of $2.
+# If the target is a directory, then link name should be a directory, and
+# every file contained in the directory is made target of the correspondent
+# symlink (with the same filename).
 #
 
 ################################################################################
@@ -39,56 +42,95 @@ function ExitWithCode
 
 $scriptname = $MyInvocation.MyCommand.Name
 
+# check environment variable for verbosity
 $verbose = $env:VERBOSE
-$args_idx = 0
 
-if ($args[$args_idx] -eq "-v")
+# parse command line arguments
+$fileindex = 0
+while ($fileindex -lt $args.length)
 {
-  $verbose = "Y"
-  $args_idx++
-}
-
-$target = $args[$args_idx]
-$args_idx++
-$isfolder = (Test-Path -Path $target -PathType Container)
-if ($isfolder)
-{
-  $filelist_filename = $args[$args_idx]
-}
-else
-{
-  $link_name = $args[$args_idx]
-}
-
-if ($isfolder)
-{
-  if (![string]::IsNullOrEmpty($filelist_filename))
+  if ($args[$fileindex][0] -eq "-")
   {
-    "INSTALLED_FILENAMES :=" | Set-Content $filelist_filename
+    if ($args[$fileindex].Substring(1) -eq "v")
+    {
+      $verbose = "Y"
+    }
+    elseif ($args[$fileindex].Substring(1) -eq "m")
+    {
+      $fileindex++
+      $filelist_filename = $args[$fileindex]
+    }
+    else
+    {
+      Write-Host "${scriptname}: *** Error: unknown option $($args[$fileindex])."
+      ExitWithCode 1
+    }
   }
-  $files = Get-ChildItem $target
-  foreach ($f in $files)
+  else
   {
-    Remove-Item -Path $f -Force -ErrorAction Ignore
-    New-Item -ItemType SymbolicLink -Path $f -Target $target\$f | Out-Null
+    break
+  }
+  $fileindex++
+}
+
+# create filelist if specified
+if (![string]::IsNullOrEmpty($filelist_filename))
+{
+  "INSTALLED_FILENAMES :=" | Set-Content $filelist_filename
+}
+
+# check for at least one symlink target
+if ($fileindex -ge $args.length)
+{
+  Write-Host "${scriptname}: *** Error: no symlink target specified."
+  ExitWithCode 1
+}
+
+# loop as long as an argument exists
+# when arguments are exhausted, exit
+while ($fileindex -lt $args.length)
+{
+  $target = $args[$fileindex]
+  # then, the 2nd argument of the pair should exist
+  if (($fileindex + 1) -ge $args.length)
+  {
+    Write-Host "${scriptname}: *** Error: no symlink link name specified."
+    ExitWithCode 1
+  }
+  $isfolder = (Test-Path -Path $target -PathType Container)
+  if (-not($isfolder))
+  {
+    $link_name = $args[$fileindex + 1]
+    Remove-Item -Path $link_name -Force -ErrorAction Ignore
+    New-Item -ItemType SymbolicLink -Path $link_name -Target $target | Out-Null
     if ($verbose -eq "Y")
     {
-      Write-Host "${f} -> ${target}\${f}"
+      Write-Host "${link_name} -> ${target}"
     }
     if (![string]::IsNullOrEmpty($filelist_filename))
     {
-      "INSTALLED_FILENAMES += ${f}" | Add-Content $filelist_filename
+      "INSTALLED_FILENAMES += ${link_name}" | Add-Content $filelist_filename
     }
   }
-}
-else
-{
-  Remove-Item -Path $link_name -Force -ErrorAction Ignore
-  New-Item -ItemType SymbolicLink -Path $link_name -Target $target | Out-Null
-  if ($verbose -eq "Y")
+  else
   {
-    Write-Host "${link_name} -> ${target}"
+    $link_directory = $args[$fileindex + 1]
+    $files = Get-ChildItem $target
+    foreach ($f in $files)
+    {
+      Remove-Item -Path $link_directory\$f -Force -ErrorAction Ignore
+      New-Item -ItemType SymbolicLink -Path $link_directory\$f -Target $target\$f | Out-Null
+      if ($verbose -eq "Y")
+      {
+        Write-Host "${link_directory}\${f} -> ${target}\${f}"
+      }
+      if (![string]::IsNullOrEmpty($filelist_filename))
+      {
+        "INSTALLED_FILENAMES += ${link_directory}\${f}" | Add-Content $filelist_filename
+      }
+    }
   }
+  $fileindex += 2
 }
 
 ExitWithCode 0

@@ -11,21 +11,18 @@
 
 #
 # Arguments:
+# optional initial -m <filelist> to record symlinks
 # optional initial -v for verbosity
-# $1 = filename (target) or directory
-# if $1 is a normal file:
-# $2 = filename (link name)
-# if $1 is a directory:
-# $2 = filename of a file describing the list of files symlinked, in a
-#      Makefile-style syntax
+# $1 = target filename or directory
+# $2 = link name filename or directory
+# every following pair is another symlink
 #
 # Environment variables:
 # VERBOSE
 #
-
-#
-# If $1 is a directory, all files contained in the directory are made targets
-# of the correspondent symlinks (with the same filename), regardless of $2.
+# If the target is a directory, then link name should be a directory, and
+# every file contained in the directory is made target of the correspondent
+# symlink (with the same filename).
 #
 
 ################################################################################
@@ -73,49 +70,85 @@ return 0
 #                                                                              #
 ################################################################################
 
-#
-# Basic input parameters check.
-#
-if [ "x$1" = "x-v" ] ; then
-  VERBOSE=Y
-  shift
-fi
-TARGET="$1"
-if [ "x${TARGET}" = "x" ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: no symlink target specified."
-  exit 1
-fi
-if [ ! -d "${TARGET}" ] ; then
-  LINK_NAME="$2"
-  if [ "x${LINK_NAME}" = "x" ] ; then
-    log_print_error "${SCRIPT_FILENAME}: *** Error: no symlink link name specified."
-    exit 1
-  fi
-else
-  FILELIST_FILENAME="$2"
-fi
+FILELIST_FILENAME=
 
+# parse command line arguments
+while [ $# -gt 0 ] ; do
+  if [ "x${1:0:1}" = "x-" ] ; then
+    # "-" option
+    argument=${1:1}
+    case ${argument} in
+      "m")
+        shift
+        FILELIST_FILENAME="$1"
+        ;;
+      "v")
+        VERBOSE=Y
+        ;;
+      *)
+        printf "${SCRIPT_FILENAME}: *** Error: unknown option \"${argument}\".\n"
+        exit 1
+        ;;
+    esac
+  else
+    # no "-" option, start of symlink filenames
+    break
+  fi
+  shift
+done
+
+# check environment variable or explicit argument
 if [ "x${VERBOSE}" = "xY" ] ; then
   VERBOSE_OPTION="-v"
 else
   VERBOSE_OPTION=""
 fi
 
-if [ -d "${TARGET}" ] ; then
-  if [ "x${FILELIST_FILENAME}" != "x" ] ; then
-    printf "INSTALLED_FILENAMES :=\n" > ${FILELIST_FILENAME}
-  fi
-  for f in $(ls -A "${TARGET}"/) ; do
-    rm -f "${f}"
-    ln -s ${VERBOSE_OPTION} "${TARGET}"/"${f}" "${f}" || exit $?
-    if [ "x${FILELIST_FILENAME}" != "x" ] ; then
-      printf "INSTALLED_FILENAMES += ${f}\n" >> ${FILELIST_FILENAME}
-    fi
-  done
-else
-  rm -f "${LINK_NAME}"
-  ln -s ${VERBOSE_OPTION} "${TARGET}" "${LINK_NAME}" || exit $?
+# create filelist if specified
+if [ "x${FILELIST_FILENAME}" != "x" ] ; then
+  printf "INSTALLED_FILENAMES :=\n" > ${FILELIST_FILENAME}
 fi
+
+# check for at least one symlink target
+if [ "x$1" = "x" ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no symlink target specified."
+  exit 1
+fi
+
+# loop as long as an argument exists
+while true ; do
+  TARGET="$1"
+  # no initial argument of the pair, exit
+  if [ "x${TARGET}" = "x" ] ; then
+    break
+  fi
+  # then, the 2nd argument of the pair should exist
+  if [ "x$2" = "x" ] ; then
+    log_print_error "${SCRIPT_FILENAME}: *** Error: no symlink link name specified."
+    exit 1
+  fi
+  # symlink file or whole directory
+  if [ ! -d "${TARGET}" ] ; then
+    LINK_NAME="$2"
+    rm -f "${LINK_NAME}"
+    ln -s ${VERBOSE_OPTION} "${TARGET}" "${LINK_NAME}" || exit $?
+    if [ "x${FILELIST_FILENAME}" != "x" ] ; then
+      printf "INSTALLED_FILENAMES += ${LINK_NAME}\n" >> ${FILELIST_FILENAME}
+    fi
+  else
+    LINK_DIRECTORY="$2"
+    for f in $(ls -A "${TARGET}"/) ; do
+      rm -f "${f}"
+      ln -s ${VERBOSE_OPTION} "${TARGET}"/"${f}" "${LINK_DIRECTORY}"/"${f}" || exit $?
+      if [ "x${FILELIST_FILENAME}" != "x" ] ; then
+        printf "INSTALLED_FILENAMES += ${LINK_DIRECTORY}/${f}\n" >> ${FILELIST_FILENAME}
+      fi
+    done
+  fi
+  # shift to another pair of arguments
+  shift
+  shift
+done
 
 exit 0
 
