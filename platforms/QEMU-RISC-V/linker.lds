@@ -62,7 +62,7 @@ SECTIONS
          **********************************************************************/
         .debug_info     : { *(.debug_info) }
         .debug_abbrev   : { *(.debug_abbrev) }
-        .debug_aranges  : { *(.debug_aranges) }
+        .debug_aranges  : { obj/startup.o(.debug_aranges) *(.debug_aranges) }
         .debug_line     : { *(.debug_line) }
         .debug_line_str : { *(.debug_line_str) }
         .debug_ranges   : { *(.debug_ranges) }
