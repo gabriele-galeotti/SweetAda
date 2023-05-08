@@ -144,7 +144,7 @@ endif
 export TMPDIR
 
 # generate SWEETADA_PATH
-MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+MAKEFILEDIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 SWEETADA_PATH ?= $(MAKEFILEDIR)
 export SWEETADA_PATH
 
@@ -152,8 +152,10 @@ export SWEETADA_PATH
 LIBUTILS_DIRECTORY := libutils
 export LIBUTILS_DIRECTORY
 # add LIBUTILS_DIRECTORY to PATH
-ifeq ($(OSTYPE),cmd)
+ifeq      ($(OSTYPE),cmd)
 PATH := $(SWEETADA_PATH)\$(LIBUTILS_DIRECTORY);$(PATH)
+else ifeq ($(OSTYPE),msys)
+PATH := $(PATH):$(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY)
 else
 PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
@@ -429,6 +431,7 @@ IMPLICIT_CLIBRARY_UNITS :=
 # Various features.
 #
 USE_UNPREFIXED_GNATMAKE :=
+CPU_SUPPORT_DEFLIST     :=
 ENABLE_SPLIT_DWARF      :=
 
 ################################################################################
@@ -559,7 +562,8 @@ export                          \
        IMPLICIT_ALI_UNITS       \
        POSTBUILD_COMMAND        \
        CLEAN_OBJECTS_COMMON     \
-       DISTCLEAN_OBJECTS_COMMON
+       DISTCLEAN_OBJECTS_COMMON \
+       CPU_SUPPORT_DEFLIST
 
 # configuration
 export                    \
