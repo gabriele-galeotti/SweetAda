@@ -40,6 +40,8 @@ LIBGCC_SOURCES := div.S
 OBJECTS        += $(LIBGCC_SOURCES:%.S=$(OBJ_DIRECTORY)/%.o)
 endif
 
+-include Makefile.if.in
+
 .PHONY : all
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
@@ -54,6 +56,9 @@ else ifeq ($(OSTYPE),msys)
 else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 endif
+ifneq ($(CPU_SUPPORT_DEFLIST),)
+	@$(CREATESYMLINK) -v -m Makefile.if.in $(CPU_SUPPORT_DEFLIST)
+endif
 
 .PHONY : clean
 clean :
@@ -61,7 +66,7 @@ clean :
 
 .PHONY : distclean
 distclean : clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON) $(INSTALLED_FILENAMES) Makefile.if.in
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
