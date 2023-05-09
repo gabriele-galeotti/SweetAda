@@ -19,8 +19,10 @@ with Interfaces;
 
 separate (Bits)
 function Byte_Swap_32 (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
-   function BS32 (V : Interfaces.Unsigned_32) return Interfaces.Unsigned_32;
-   pragma Import (Intrinsic, BS32, "__builtin_bswap32");
+   function BS32 (V : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 with
+      Import        => True,
+      Convention    => Intrinsic,
+      External_Name => "__builtin_bswap32";
 begin
    return BS32 (Value);
 end Byte_Swap_32;
