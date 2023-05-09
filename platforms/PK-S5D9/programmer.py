@@ -148,7 +148,7 @@ if ELFTOOL != None:
     # ARM Thumb functions have LSB = 1
     START_ADDRESS = '0x{:X}'.format(int(result, base=16) & 0xFFFFFFFE)
 else:
-    START_ADDRESS = int(START_SYMBOL)
+    START_ADDRESS = START_SYMBOL
 printf('START ADDRESS = %s\n', START_ADDRESS)
 
 libopenocd.openocd_rpc_tx('reset halt')

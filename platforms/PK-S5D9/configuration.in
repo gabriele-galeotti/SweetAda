@@ -30,7 +30,7 @@ SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/pr
 SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py \
                            -shutdown
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py \
-                           -f "$(SWEETADA_PATH)"/kernel.o                                   \
+                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                          \
                            -e $(ELFTOOL)                                                    \
                            -s _start
 
@@ -42,7 +42,7 @@ RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/pr
 #SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl \
 #                           -shutdown
 #RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl \
-#                           -f "$(SWEETADA_PATH)"/kernel.o                                   \
+#                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                          \
 #                           -e $(ELFTOOL)                                                    \
 #                           -s _start
 
