@@ -972,6 +972,12 @@ pragma Warnings (On, "bits of * unused");
 
    -- 20.2.5 Port mn Pin Function Select Register (PmnPFS/PmnPFS_HA/PmnPFS_BY) (m = 0 to 9, A, B; n = 00 to 15)
 
+   PDR_PORTIN  : constant := 0; -- Input (functions as an input pin)
+   PDR_PORTOUT : constant := 1; -- Output (functions as an output pin).
+
+   NCODR_CMOS : constant := 0; -- CMOS output
+   NCODR_NMOS : constant := 1; -- NMOS open-drain output.
+
    DSCR_LowDrive    : constant := 2#00#;
    DSCR_MiddleDrive : constant := 2#01#;
    DSCR_HighDrive   : constant := 2#11#;
@@ -1009,21 +1015,21 @@ pragma Warnings (On, "bits of * unused");
 
    type PFSR_Type is
    record
-      PODR      : Boolean;     -- Port Output Data
-      PIDR      : Boolean;     -- Pmn State
-      PDR       : Boolean;     -- Port Direction
+      PODR      : Boolean := False;          -- Port Output Data
+      PIDR      : Boolean := False;          -- Pmn State
+      PDR       : Bits_1 := PDR_PORTIN;      -- Port Direction
       Reserved1 : Bits_1 := 0;
-      PCR       : Boolean;     -- Pull-up Control
+      PCR       : Boolean := False;          -- Pull-up Control
       Reserved2 : Bits_1 := 0;
-      NCODR     : Boolean;     -- N-Channel Open-Drain Control
+      NCODR     : Bits_1 := NCODR_CMOS;      -- N-Channel Open-Drain Control
       Reserved3 : Bits_3 := 0;
-      DSCR      : Bits_2;      -- Port Drive Capability
-      EOFEOR    : Bits_2;      -- Event on Falling/Event on Rising
-      ISEL      : Boolean;     -- IRQ Input Enable
-      ASEL      : Boolean;     -- Analog Input Enable
-      PMR       : Boolean;     -- Port Mode Control
+      DSCR      : Bits_2 := DSCR_LowDrive;   -- Port Drive Capability
+      EOFEOR    : Bits_2 := EOFEOR_Dontcare; -- Event on Falling/Event on Rising
+      ISEL      : Boolean := False;          -- IRQ Input Enable
+      ASEL      : Boolean := False;          -- Analog Input Enable
+      PMR       : Boolean := False;          -- Port Mode Control
       Reserved4 : Bits_7 := 0;
-      PSEL      : Bits_5;      -- Peripheral Select
+      PSEL      : Bits_5;                    -- Peripheral Select
       Reserved5 : Bits_3 := 0;
    end record with
       Bit_Order               => Low_Order_First,
@@ -2494,5 +2500,65 @@ pragma Warnings (On, "bits of * unused");
       SPBYT     at 0 range 6 .. 6;
       Reserved2 at 0 range 7 .. 7;
    end record;
+
+   ----------------------------------------------------------------------------
+   -- 39. Quad Serial Peripheral Interface (QSPI)
+   ----------------------------------------------------------------------------
+
+   -- 39.2.5 Communication Port Register (SFMCOM)
+
+   type SFMCOM_Type is
+   record
+      SFMD     : Unsigned_8;   -- Port select for direct communication with the SPI bus
+      Reserved : Bits_24 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SFMCOM_Type use
+   record
+      SFMD     at 0 range 0 .. 7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   -- 39.2.6 Communication Mode Control Register (SFMCMD)
+
+   DCOM_ROM    : constant := 0; -- ROM access mode
+   DCOM_DIRECT : constant := 1; -- Direct communication mode.
+
+   type SFMCMD_Type is
+   record
+      DCOM     : Bits_1;       -- Mode select for communication with the SPI bus
+      Reserved : Bits_31 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SFMCMD_Type use
+   record
+      DCOM     at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
+   -- QSPI
+
+   type QSPI_Type is
+   record
+      SFMCOM : SFMCOM_Type with Volatile_Full_Access => True;
+      SFMCMD : SFMCMD_Type with Volatile_Full_Access => True;
+   end record with
+      Size                    => 16#38# * 8,
+      Suppress_Initialization => True;
+   for QSPI_Type use
+   record
+      SFMCOM   at 16#10# range 0 .. 31;
+      SFMCMD   at 16#14# range 0 .. 31;
+   end record;
+
+   QSPI_ADDRESS : constant := 16#6400_0000#;
+
+   QSPI : aliased QSPI_Type with
+      Address    => To_Address (QSPI_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
 
 end S5D9;
