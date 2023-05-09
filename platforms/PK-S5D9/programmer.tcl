@@ -11,16 +11,18 @@
 
 #
 # Arguments:
-# -server   start OpenOCD server
-# -shutdown shutdown OpenOCD server
+# -c <OPENOCD_CFGFILE> OpenOCD configuration filename
+# -debug               enable debug mode
+# -e <ELFTOOL>         ELFTOOL executable to extract the start symbol
+# -f <SWEETADA_ELF>    ELF executable to download via JTAG
+# -p <OPENOCD_PREFIX>  OpenOCD installation prefix
+# -s <START_SYMBOL>    start symbol ("_start") or start address if -e option not present
+# -server              start OpenOCD server
+# -shutdown            shutdown OpenOCD server
 #
 # Environment variables:
 # SWEETADA_PATH
 # LIBUTILS_DIRECTORY
-# OPENOCD_PREFIX
-# PLATFORM_DIRECTORY
-# ELFTOOL
-# KERNEL_OUTFILE
 #
 
 ################################################################################
@@ -42,18 +44,51 @@ source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) libopenocd.tc
 #                                                                              #
 ################################################################################
 
-set OPENOCD_PREFIX  $::env(OPENOCD_PREFIX)
-set OPENOCD_CFGFILE [file join $::env(SWEETADA_PATH) $::env(PLATFORM_DIRECTORY) openocd.cfg]
-set ELFTOOL         $::env(ELFTOOL)
-set KERNEL_OUTFILE  [file join $::env(SWEETADA_PATH) $::env(KERNEL_OUTFILE)]
-set START_SYMBOL    _start
+set PLATFORM [platform_get]
 
-if {[lindex $argv 0] eq "-server"} {
-    set platform [platform_get]
-    if {$platform eq "windows"} {
+set OPENOCD_PREFIX  ""
+set OPENOCD_CFGFILE ""
+set DEBUG_MODE      0
+set SERVER_MODE     0
+set SHUTDOWN_MODE   0
+set SWEETADA_ELF    ""
+set ELFTOOL         ""
+set START_SYMBOL    ""
+
+set argv_last_idx [llength $argv]
+set argv_idx 0
+while {$argv_idx < $argv_last_idx} {
+    set token [lindex $argv $argv_idx]
+    switch $token {
+        -c        {incr argv_idx ; set OPENOCD_CFGFILE [lindex $argv $argv_idx]}
+        -debug    {set DEBUG_MODE 1}
+        -e        {incr argv_idx ; set ELFTOOL [lindex $argv $argv_idx]}
+        -f        {incr argv_idx ; set SWEETADA_ELF [lindex $argv $argv_idx]}
+        -p        {incr argv_idx ; set OPENOCD_PREFIX [lindex $argv $argv_idx]}
+        -s        {incr argv_idx ; set START_SYMBOL [lindex $argv $argv_idx]}
+        -server   {set SERVER_MODE 1}
+        -shutdown {set SHUTDOWN_MODE 1}
+        default {
+            puts stderr "$SCRIPT_FILENAME: *** Error: unknown argument."
+            exit 1
+        }
+    }
+    incr argv_idx
+}
+
+if {$SHUTDOWN_MODE ne 0} {
+    set SERVER_MODE 0
+}
+
+if {$SERVER_MODE ne 0} {
+    if {$OPENOCD_PREFIX eq ""} {
+        puts stderr "$SCRIPT_FILENAME: *** Error: platform not recognized."
+        exit 1
+    }
+    if {$PLATFORM eq "windows"} {
         set OPENOCD_EXECUTABLE [file join $OPENOCD_PREFIX bin openocd.exe]
         exec cmd.exe /C START "" "$OPENOCD_EXECUTABLE" -f "$OPENOCD_CFGFILE" &
-    } elseif {$platform eq "unix"} {
+    } elseif {$PLATFORM eq "unix"} {
         set OPENOCD_EXECUTABLE [file join $OPENOCD_PREFIX bin openocd]
         # __FIX__
         # if this script is called from Makefile, and the output is redirected
@@ -61,7 +96,7 @@ if {[lindex $argv 0] eq "-server"} {
         # seems to wait on an inherited stdout file descriptor, which is kept
         # opened by the xterm sub-process; have we to re-open it?
         close stdout
-        exec xterm -hold -e "$OPENOCD_EXECUTABLE" -f "$OPENOCD_CFGFILE" &
+        exec xterm -e "$OPENOCD_EXECUTABLE" -f "$OPENOCD_CFGFILE" &
     } else {
         puts stderr "$SCRIPT_FILENAME: *** Error: platform not recognized."
         exit 1
@@ -72,25 +107,42 @@ if {[lindex $argv 0] eq "-server"} {
 # local OpenOCD server
 openocd_rpc_init 127.0.0.1 6666
 
-if {[lindex $argv 0] eq "-shutdown"} {
+if {$SHUTDOWN_MODE ne 0} {
     openocd_rpc_tx "shutdown"
+    openocd_rpc_disconnect
     exit 0
 }
 
-if {[catch {exec $ELFTOOL -c findsymbol=$START_SYMBOL $KERNEL_OUTFILE} result] eq 0} {
-    # ARM Thumb functions have LSB = 1
-    set START_ADDRESS [format "0x%08X" [expr $result & 0xFFFFFFFE]]
-} else {
-    puts "*** Tcl error: no symbol $START_SYMBOL or no $KERNEL_OUTFILE file available."
+if {$SWEETADA_ELF eq ""} {
+    puts stderr "$SCRIPT_FILENAME: *** Error: ELF file not specified."
     openocd_rpc_disconnect
     exit 1
 }
+
+if {$START_SYMBOL eq ""} {
+    puts stderr "$SCRIPT_FILENAME: *** Error: START symbol not specified."
+    openocd_rpc_disconnect
+    exit 1
+}
+
+if {$ELFTOOL ne ""} {
+    if {[catch {exec $ELFTOOL -c findsymbol=$START_SYMBOL $SWEETADA_ELF} result] eq 0} {
+        # ARM Thumb functions have LSB = 1
+        set START_ADDRESS [format "0x%08X" [expr $result & 0xFFFFFFFE]]
+    } else {
+        puts stderr "$SCRIPT_FILENAME: *** Error: $ELFTOOL error."
+        openocd_rpc_disconnect
+        exit 1
+    }
+} else {
+    set START_ADDRESS $START_SYMBOL
+}
 puts "START ADDRESS = $START_ADDRESS"
 
-openocd_rpc_tx "halt"
+openocd_rpc_tx "reset halt"
 openocd_rpc_rx
-msleep 1000
-openocd_rpc_tx "load_image $KERNEL_OUTFILE"
+after 1000
+openocd_rpc_tx "load_image $SWEETADA_ELF"
 openocd_rpc_rx
 openocd_rpc_tx "resume $START_ADDRESS"
 openocd_rpc_rx
