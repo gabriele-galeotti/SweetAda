@@ -40,6 +40,8 @@ package body BSP is
 
    procedure CLK_Init;
    procedure Serial_Console_Init;
+   procedure QSPI_Init;
+   procedure QSPI_Test;
 
    --========================================================================--
    --                                                                        --
@@ -87,9 +89,9 @@ package body BSP is
       SCKSCR.CKSEL := CLK_MOSC;
       -- use MOSC clock
       PLLCCR := (
-         PLIDIV   => PLIDIV_2,      -- PLL Input Frequency Division Ratio Select
+         PLIDIV   => PLIDIV_2,      -- PLL Input Frequency Division Ratio Select (24 MHz / 2 = 12 MHz)
          PLSRCSEL => PLSRCSEL_MOSC, -- PLL Clock Source Select
-         PLLMUL   => PLLMUL_x_10_0, -- PLL Frequency Multiplication Factor Select
+         PLLMUL   => PLLMUL_x_10_0, -- PLL Frequency Multiplication Factor Select (12 MHz x 10 = 120 MHz)
          others   => <>
          );
       -- start PLL
@@ -101,15 +103,14 @@ package body BSP is
       -- select PLL
       SCKSCR.CKSEL := CLK_PLL;
       -- select module frequencies
-      SCKDIVCR.ICK := CLOCK_NODIV;
       SCKDIVCR := (
-         ICK    => CLOCK_NODIV,  -- System Clock
-         BCK    => CLOCK_DIV_4,  -- External Bus Clock
-         FCK    => CLOCK_DIV_4,  -- Flash Interface Clock
-         PCKA   => CLOCK_NODIV,  -- Peripheral Module Clock A
-         PCKB   => CLOCK_DIV_64, -- Peripheral Module Clock B
-         PCKC   => CLOCK_DIV_4,  -- Peripheral Module Clock C
-         PCKD   => CLOCK_DIV_4,  -- Peripheral Module Clock D
+         ICK    => CLOCK_NODIV,  -- System Clock              -> 120     MHz
+         BCK    => CLOCK_DIV_4,  -- External Bus Clock        ->  30     MHz
+         FCK    => CLOCK_DIV_4,  -- Flash Interface Clock     ->  30     MHz
+         PCKA   => CLOCK_NODIV,  -- Peripheral Module Clock A -> 120     MHz
+         PCKB   => CLOCK_DIV_64, -- Peripheral Module Clock B ->   1.875 MHz
+         PCKC   => CLOCK_DIV_4,  -- Peripheral Module Clock C ->  30     MHz
+         PCKD   => CLOCK_DIV_4,  -- Peripheral Module Clock D ->  30     MHz
          others => <>
          );
    end CLK_Init;
@@ -170,11 +171,9 @@ package body BSP is
       -- Table 34.10 Examples of BRR settings for different bit rates in asynchronous mode (2)
       SCI (3).BRR := 97; -- 9600 bps @ 120 MHz
       -- pin 706 function = SCI2, RxD
-      PFSR (P706).PSEL := PSEL_SCI2;
-      PFSR (P706).PMR  := True;
+      PFSR (P706) := (PMR => True, PSEL => PSEL_SCI2, others => <>);
       -- pin 707 function = SCI2, TxD
-      PFSR (P707).PSEL := PSEL_SCI2;
-      PFSR (P707).PMR  := True;
+      PFSR (P707) := (PMR => True, PSEL => PSEL_SCI2, others => <>);
       -- enable TE/RE
       SCI (3).SCR := (
          CKE    => CKE_Async_On_Chip_BRG_SCK_IO,
@@ -186,6 +185,38 @@ package body BSP is
       SCI (3).SSR.NORMAL.FER  := False;
       SCI (3).SSR.NORMAL.ORER := False;
    end Serial_Console_Init;
+
+   ----------------------------------------------------------------------------
+   -- QSPI_Init
+   ----------------------------------------------------------------------------
+   procedure QSPI_Init is
+   begin
+      -- pins 500..505 function = QSPI
+      for P5x in P500 .. P505 loop
+         PFSR (P5x) := (PMR => True, PSEL => PSEL_QSPI, others => <>);
+      end loop;
+   end QSPI_Init;
+
+   ----------------------------------------------------------------------------
+   -- QSPI_Test
+   ----------------------------------------------------------------------------
+   procedure QSPI_Test is
+      RDID  : constant := 16#9F#;
+      mfid  : Unsigned_8; -- “Manufacturer Identification”
+      mtype : Unsigned_8; -- “Memory Type”
+      mcap  : Unsigned_8; -- “Memory Capacity”
+   begin
+      -- QSPI Read Identification
+      QSPI.SFMCMD := (DCOM => DCOM_DIRECT, others => <>);
+      QSPI.SFMCOM := (SFMD => RDID, others => <>);
+      mfid  := QSPI.SFMCOM.SFMD;
+      mtype := QSPI.SFMCOM.SFMD;
+      mcap  := QSPI.SFMCOM.SFMD;
+      QSPI.SFMCMD := (DCOM => DCOM_DIRECT, others => <>);
+      Console.Print (mfid,  Prefix => "MFID  = 0x", NL => True);
+      Console.Print (mtype, Prefix => "MTYPE = 0x", NL => True);
+      Console.Print (mcap,  Prefix => "MCAP  = 0x", NL => True);
+   end QSPI_Test;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -229,11 +260,14 @@ package body BSP is
       -- power-on peripherals -------------------------------------------------
       MSTPCRB.MSTPB31 := False; -- SCI0 on
       MSTPCRB.MSTPB28 := False; -- SCI3 on
+      MSTPCRD.MSTPD3  := False; -- AGT0
+      MSTPCRB.MSTPB6  := False; -- QSPI
       -- enable writing to the PmnPFS register --------------------------------
       PWPR.B0WI  := False;
       PWPR.PFSWE := True;
       -------------------------------------------------------------------------
       Serial_Console_Init;
+      QSPI_Init;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
@@ -249,6 +283,7 @@ package body BSP is
       Console.Print (CortexM4.ACTLR.DISFOLD,    Prefix => "ACTLR: DISFOLD:    ", NL => True);
       Console.Print (CortexM4.ACTLR.DISFPCA,    Prefix => "ACTLR: DISFPCA:    ", NL => True);
       Console.Print (CortexM4.ACTLR.DISOOFP,    Prefix => "ACTLR: DISOOFP:    ", NL => True);
+      QSPI_Test;
       -------------------------------------------------------------------------
    end Setup;
 
