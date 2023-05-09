@@ -1,6 +1,6 @@
 
 #
-# Create "configure.gpr" GNATMAKE project file.
+# Create "configure.gpr" GPRbuild project file.
 #
 # Copyright (C) 2020-2023 Gabriele Galeotti
 #
@@ -36,6 +36,13 @@
 # INCLUDE_DIRECTORIES
 # IMPLICIT_ALI_UNITS
 #
+
+################################################################################
+# Script initialization.                                                       #
+#                                                                              #
+################################################################################
+
+$scriptname = $MyInvocation.MyCommand.Name
 
 ################################################################################
 # ExitWithCode()                                                               #
@@ -118,8 +125,6 @@ function print_list
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
-
-$scriptname = $MyInvocation.MyCommand.Name
 
 $configure_project = $args[0]
 if ([string]::IsNullOrEmpty($configure_project))

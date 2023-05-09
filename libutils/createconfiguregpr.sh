@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# Create "configure.gpr" GNATMAKE project file.
+# Create "configure.gpr" GPRbuild project file.
 #
 # Copyright (C) 2020-2023 Gabriele Galeotti
 #
