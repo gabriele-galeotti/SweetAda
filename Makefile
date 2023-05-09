@@ -144,7 +144,7 @@ endif
 export TMPDIR
 
 # generate SWEETADA_PATH
-MAKEFILEDIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 SWEETADA_PATH ?= $(MAKEFILEDIR)
 export SWEETADA_PATH
 
