@@ -83,10 +83,58 @@ package body ARMv6M is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end WFI;
+
+   ----------------------------------------------------------------------------
+   -- DMB
+   ----------------------------------------------------------------------------
+   procedure DMB is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        dmb" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end DMB;
+
+   ----------------------------------------------------------------------------
+   -- DSB
+   ----------------------------------------------------------------------------
+   procedure DSB is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        dsb" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end DSB;
+
+   ----------------------------------------------------------------------------
+   -- ISB
+   ----------------------------------------------------------------------------
+   procedure ISB is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        isb" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end ISB;
 
    ----------------------------------------------------------------------------
    -- Irq_Enable

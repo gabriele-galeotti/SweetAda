@@ -38,6 +38,20 @@ package ARMv6M is
    use Interfaces;
    use Bits;
 
+   -- B3.2.2 System control and ID registers
+
+   ACTLR_ADDRESS : constant := 16#E000_E008#;
+   CPUID_ADDRESS : constant := 16#E000_ED00#;
+   ICSR_ADDRESS  : constant := 16#E000_ED04#;
+   VTOR_ADDRESS  : constant := 16#E000_ED08#;
+   AIRCR_ADDRESS : constant := 16#E000_ED0C#;
+   SCR_ADDRESS   : constant := 16#E000_ED10#;
+   CCR_ADDRESS   : constant := 16#E000_ED14#;
+   SHPR2_ADDRESS : constant := 16#E000_ED1C#;
+   SHPR3_ADDRESS : constant := 16#E000_ED20#;
+   SHCSR_ADDRESS : constant := 16#E000_ED24#;
+   DFSR_ADDRESS  : constant := 16#E000_ED30#;
+
    -- B3.2.3 CPUID Base Register
 
    type CPUID_Type is
@@ -59,8 +73,6 @@ package ARMv6M is
       Implementer at 0 range 24 .. 31;
    end record;
 
-   CPUID_ADDRESS : constant := 16#E000_ED00#;
-
    CPUID : aliased CPUID_Type with
       Address              => To_Address (CPUID_ADDRESS),
       Volatile_Full_Access => True,
@@ -69,7 +81,7 @@ package ARMv6M is
 
    function To_U32 is new Ada.Unchecked_Conversion (CPUID_Type, Unsigned_32);
 
-   -- B3.2.4 Interrupt Control and State Register
+   -- B3.2.4 Interrupt Control and State Register, ICSR
 
    type ICSR_Type is
    record
@@ -108,15 +120,13 @@ package ARMv6M is
       NMIPENDSET  at 0 range 31 .. 31;
    end record;
 
-   ICSR_ADDRESS : constant := 16#E000_ED04#;
-
    ICSR : aliased ICSR_Type with
       Address              => To_Address (ICSR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.5 Vector Table Offset Register
+   -- B3.2.5 Vector Table Offset Register, VTOR
 
    type VTOR_Type is
    record
@@ -131,15 +141,13 @@ package ARMv6M is
       TBLOFF   at 0 range 6 .. 31;
    end record;
 
-   VTOR_ADDRESS : constant := 16#E000_ED08#;
-
    VTOR : aliased VTOR_Type with
       Address              => To_Address (VTOR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.6 Application Interrupt and Reset Control Register
+   -- B3.2.6 Application Interrupt and Reset Control Register, AIRCR
 
    ENDIANNESS_LITTLE : constant := 0; -- memory system data endianness = LITTLE
    ENDIANNESS_BIG    : constant := 1; -- memory system data endianness = BIG
@@ -167,15 +175,13 @@ package ARMv6M is
       VECTKEY_STAT  at 0 range 16 .. 31;
    end record;
 
-   AIRCR_ADDRESS : constant := 16#E000_ED0C#;
-
    AIRCR : aliased AIRCR_Type with
       Address              => To_Address (AIRCR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.7 System Control Register
+   -- B3.2.7 System Control Register, SCR
 
    type SCR_Type is
    record
@@ -198,15 +204,13 @@ package ARMv6M is
       Reserved3   at 0 range 5 .. 31;
    end record;
 
-   SCR_ADDRESS : constant := 16#E000_ED10#;
-
    SCR : aliased SCR_Type with
       Address              => To_Address (SCR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.8 Configuration and Control Register
+   -- B3.2.8 Configuration and Control Register, CCR
 
    type CCR_Type is
    record
@@ -227,15 +231,13 @@ package ARMv6M is
       Reserved3   at 0 range 10 .. 31;
    end record;
 
-   CCR_ADDRESS : constant := 16#E000_ED14#;
-
    CCR : aliased CCR_Type with
       Address              => To_Address (CCR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.9 System Handler Priority Register 2
+   -- B3.2.9 System Handler Priority Register 2, SHPR2
 
    type SHPR2_Type is
    record
@@ -250,15 +252,13 @@ package ARMv6M is
       PRI_11   at 0 range 30 .. 31;
    end record;
 
-   SHPR2_ADDRESS : constant := 16#E000_ED1C#;
-
    SHPR2 : aliased SHPR2_Type with
       Address              => To_Address (SHPR2_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.10 System Handler Priority Register 3
+   -- B3.2.10 System Handler Priority Register 3, SHPR3
 
    type SHPR3_Type is
    record
@@ -277,15 +277,13 @@ package ARMv6M is
       PRI_15    at 0 range 30 .. 31;
    end record;
 
-   SHPR3_ADDRESS : constant := 16#E000_ED20#;
-
    SHPR3 : aliased SHPR3_Type with
       Address              => To_Address (SHPR3_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.12 The Auxiliary Control Register
+   -- B3.2.12 The Auxiliary Control Register, ACTLR
    -- IMPLEMENTATION DEFINED
 
    type ACTLR_Type is
@@ -299,9 +297,14 @@ package ARMv6M is
       Reserved at 0 range 0 .. 31;
    end record;
 
-   ACTLR_ADDRESS : constant := 16#E000_E008#;
+   -- B3.3.2 System timer register support in the SCS
 
-   -- B3.3.3 SysTick Control and Status Register
+   SYST_CSR_ADDRESS   : constant := 16#E000_E010#;
+   SYST_RVR_ADDRESS   : constant := 16#E000_E014#;
+   SYST_CVR_ADDRESS   : constant := 16#E000_E018#;
+   SYST_CALIB_ADDRESS : constant := 16#E000_E01C#;
+
+   -- B3.3.3 SysTick Control and Status Register, SYST_CSR
 
    CLKSOURCE_EXT : constant := 0; -- SysTick uses the optional external reference clock.
    CLKSOURCE_CPU : constant := 1; -- SysTick uses the processor clock.
@@ -327,15 +330,13 @@ package ARMv6M is
       Reserved2 at 0 range 17 .. 31;
    end record;
 
-   SYST_CSR_ADDRESS : constant := 16#E000_E010#;
-
    SYST_CSR : aliased SYST_CSR_Type with
       Address              => To_Address (SYST_CSR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.3.4 SysTick Reload Value Register
+   -- B3.3.4 SysTick Reload Value Register, SYST_RVR
 
    type SYST_RVR_Type is
    record
@@ -350,15 +351,13 @@ package ARMv6M is
       Reserved at 0 range 24 .. 31;
    end record;
 
-   SYST_RVR_ADDRESS : constant := 16#E000_E014#;
-
    SYST_RVR : aliased SYST_RVR_Type with
       Address              => To_Address (SYST_RVR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.3.5 SysTick Current Value Register
+   -- B3.3.5 SysTick Current Value Register, SYST_CVR
 
    type SYST_CVR_Type is
    record
@@ -372,8 +371,6 @@ package ARMv6M is
       CURRENT  at 0 range 0 .. 23;
       Reserved at 0 range 24 .. 31;
    end record;
-
-   SYST_CVR_ADDRESS : constant := 16#E000_E018#;
 
    SYST_CVR : aliased SYST_CVR_Type with
       Address              => To_Address (SYST_CVR_ADDRESS),
@@ -400,15 +397,36 @@ package ARMv6M is
       NOREF    at 0 range 31 .. 31;
    end record;
 
-   SYST_CALIB_ADDRESS : constant := 16#E000_E01C#;
-
    SYST_CALIB : aliased SYST_CALIB_Type with
       Address              => To_Address (SYST_CALIB_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- C1.6.2 Debug Fault Status Register
+   -- C1.6.1 System Handler Control and State Register, SHCSR
+
+   type SHCSR_Type is
+   record
+      Reserved1    : Bits_15 := 0;
+      SVCALLPENDED : Boolean;      -- ... reflects the pending state (R), and updates the pending state, to the value written (W).
+      Reserved2    : Bits_16 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SHCSR_Type use
+   record
+      Reserved1    at 0 range 0 .. 14;
+      SVCALLPENDED at 0 range 15 .. 15;
+      Reserved2    at 0 range 16 .. 31;
+   end record;
+
+   SHCSR : aliased SHCSR_Type with
+      Address              => To_Address (SHCSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- C1.6.2 Debug Fault Status Register, DFSR
 
    type DFSR_Type is
    record
@@ -431,8 +449,6 @@ package ARMv6M is
       Reserved at 0 range 5 .. 31;
    end record;
 
-   DFSR_ADDRESS : constant := 16#E000_ED30#;
-
    DFSR : aliased DFSR_Type with
       Address              => To_Address (DFSR_ADDRESS),
       Volatile_Full_Access => True,
@@ -447,7 +463,18 @@ package ARMv6M is
       Inline => True;
    procedure BREAKPOINT with
       Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- Specific definitions
+   ----------------------------------------------------------------------------
+
    procedure WFI with
+      Inline => True;
+   procedure DMB with
+      Inline => True;
+   procedure DSB with
+      Inline => True;
+   procedure ISB with
       Inline => True;
 
    ----------------------------------------------------------------------------

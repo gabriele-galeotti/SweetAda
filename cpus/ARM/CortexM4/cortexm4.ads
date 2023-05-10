@@ -38,6 +38,8 @@ package CortexM4 is
 
    -- Auxiliary Control Register
 
+   ACTLR_ADDRESS renames ARMv7M.ACTLR_ADDRESS;
+
    type ACTLR_Type is
    record
       DISMCYCINT : Boolean;      -- Disables interruption of multi-cycle instructions.
@@ -61,10 +63,8 @@ package CortexM4 is
       Reserved2  at 0 range 10 .. 31;
    end record;
 
-   ACTLR_ADDRESS renames ARMv7M.ACTLR_ADDRESS;
-
    ACTLR : aliased ACTLR_Type with
-      Address              => To_Address (ARMv7M.ACTLR_ADDRESS),
+      Address              => To_Address (ACTLR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;

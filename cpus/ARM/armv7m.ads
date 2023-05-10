@@ -38,23 +38,38 @@ package ARMv7M is
    use Interfaces;
    use Bits;
 
+   -- B3.2.2 System control and ID registers
+
+   ACTLR_ADDRESS renames ARMv6M.ACTLR_ADDRESS;
+   CPUID_ADDRESS renames ARMv6M.CPUID_ADDRESS;
+   ICSR_ADDRESS  renames ARMv6M.ICSR_ADDRESS;
+   VTOR_ADDRESS  renames ARMv6M.VTOR_ADDRESS;
+   AIRCR_ADDRESS renames ARMv6M.AIRCR_ADDRESS;
+   SCR_ADDRESS   renames ARMv6M.SCR_ADDRESS;
+   CCR_ADDRESS   renames ARMv6M.CCR_ADDRESS;
+   SHPR1_ADDRESS : constant := 16#E000_ED18#;
+   SHPR2_ADDRESS renames ARMv6M.SHPR2_ADDRESS;
+   SHPR3_ADDRESS renames ARMv6M.SHPR3_ADDRESS;
+   SHCSR_ADDRESS renames ARMv6M.SHCSR_ADDRESS;
+   DFSR_ADDRESS  renames ARMv6M.DFSR_ADDRESS;
+
    -- B3.2.3 CPUID Base Register
 
    subtype CPUID_Type is ARMv6M.CPUID_Type;
    CPUID : CPUID_Type renames ARMv6M.CPUID;
    function To_U32 (S : CPUID_Type) return Unsigned_32 renames ARMv6M.To_U32;
 
-   -- B3.2.4 Interrupt Control and State Register
+   -- B3.2.4 Interrupt Control and State Register, ICSR
 
    subtype ICSR_Type is ARMv6M.ICSR_Type;
    ICSR : ICSR_Type renames ARMv6M.ICSR;
 
-   -- B3.2.5 Vector Table Offset Register
+   -- B3.2.5 Vector Table Offset Register, VTOR
 
    subtype VTOR_Type is ARMv6M.VTOR_Type;
    VTOR : VTOR_Type renames ARMv6M.VTOR;
 
-   -- B3.2.6 Application Interrupt and Reset Control Register
+   -- B3.2.6 Application Interrupt and Reset Control Register, AIRCR
 
    ENDIANNESS_LITTLE renames ARMv6M.ENDIANNESS_LITTLE;
    ENDIANNESS_BIG    renames ARMv6M.ENDIANNESS_BIG;
@@ -64,12 +79,12 @@ package ARMv7M is
    subtype AIRCR_Type is ARMv6M.AIRCR_Type;
    AIRCR : AIRCR_Type renames ARMv6M.AIRCR;
 
-   -- B3.2.7 System Control Register
+   -- B3.2.7 System Control Register, SCR
 
    subtype SCR_Type is ARMv6M.SCR_Type;
    SCR : SCR_Type renames ARMv6M.SCR;
 
-   -- B3.2.8 Configuration and Control Register
+   -- B3.2.8 Configuration and Control Register, CCR
 
    BFHFNMIGN_LOCKUP : constant := 0;
    BFHFNMIGN_IGNORE : constant := 1;
@@ -109,15 +124,13 @@ package ARMv7M is
       Reserved4      at 0 range 19 .. 31;
    end record;
 
-   CCR_ADDRESS : constant := 16#E000_ED14#;
-
    CCR : aliased CCR_Type with
       Address              => To_Address (CCR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.9 System Handler Priority Register 1
+   -- B3.2.10 System Handler Priority Register 1, SHPR1
 
    type SHPR1_Type is
    record
@@ -136,15 +149,13 @@ package ARMv7M is
       PRI_7 at 0 range 24 .. 31;
    end record;
 
-   SHPR1_ADDRESS : constant := 16#E000_ED18#;
-
    SHPR1 : aliased SHPR1_Type with
       Address              => To_Address (SHPR1_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.11 System Handler Priority Register 2
+   -- B3.2.11 System Handler Priority Register 2, SHPR2
 
    type SHPR2_Type is
    record
@@ -163,15 +174,13 @@ package ARMv7M is
       PRI_11 at 0 range 24 .. 31;
    end record;
 
-   SHPR2_ADDRESS : constant := 16#E000_ED1C#;
-
    SHPR2 : aliased SHPR2_Type with
-      Address              => To_Address (SHPR2_ADDRESS),
+      Address              => To_Address (ARMv6M.SHPR2_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.12 System Handler Priority Register 3
+   -- B3.2.12 System Handler Priority Register 3, SHPR3
 
    type SHPR3_Type is
    record
@@ -190,21 +199,78 @@ package ARMv7M is
       PRI_15 at 0 range 24 .. 31;
    end record;
 
-   SHPR3_ADDRESS : constant := 16#E000_ED20#;
-
    SHPR3 : aliased SHPR3_Type with
       Address              => To_Address (SHPR3_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
+   -- B3.2.13 System Handler Control and State Register, SHCSR
+
+   type SHCSR_Type is
+   record
+      MEMFAULTACT    : Boolean;      -- MemManage active.
+      BUSFAULTACT    : Boolean;      -- BusFault active.
+      Reserved1      : Bits_1 := 0;
+      USGFAULTACT    : Boolean;      -- UsageFault active.
+      Reserved2      : Bits_3 := 0;
+      SVCALLACT      : Boolean;      -- SVCall active.
+      MONITORACT     : Boolean;      -- Monitor active.
+      Reserved3      : Bits_1 := 0;
+      PENDSVACT      : Boolean;      -- PendSV active.
+      SYSTICKACT     : Boolean;      -- SysTick active.
+      USGFAULTPENDED : Boolean;      -- UsageFault pending.
+      MEMFAULTPENDED : Boolean;      -- MemManage pending.
+      BUSFAULTPENDED : Boolean;      -- BusFault pending.
+      SVCALLPENDED   : Boolean;      -- SVCall pending.
+      MEMFAULTENA    : Boolean;      -- Enable MemManage fault.
+      BUSFAULTENA    : Boolean;      -- Enable BusFault.
+      USGFAULTENA    : Boolean;      -- Enable UsageFault.
+      Reserved4      : Bits_13 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SHCSR_Type use
+   record
+      MEMFAULTACT    at 0 range 0 .. 0;
+      BUSFAULTACT    at 0 range 1 .. 1;
+      Reserved1      at 0 range 2 .. 2;
+      USGFAULTACT    at 0 range 3 .. 3;
+      Reserved2      at 0 range 4 .. 6;
+      SVCALLACT      at 0 range 7 .. 7;
+      MONITORACT     at 0 range 8 .. 8;
+      Reserved3      at 0 range 9 .. 9;
+      PENDSVACT      at 0 range 10 .. 10;
+      SYSTICKACT     at 0 range 11 .. 11;
+      USGFAULTPENDED at 0 range 12 .. 12;
+      MEMFAULTPENDED at 0 range 13 .. 13;
+      BUSFAULTPENDED at 0 range 14 .. 14;
+      SVCALLPENDED   at 0 range 15 .. 15;
+      MEMFAULTENA    at 0 range 16 .. 16;
+      BUSFAULTENA    at 0 range 17 .. 17;
+      USGFAULTENA    at 0 range 18 .. 18;
+      Reserved4      at 0 range 19 .. 31;
+   end record;
+
+   SHCSR : aliased SHCSR_Type with
+      Address              => To_Address (SHCSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- B3.2.25 Auxiliary Control Register
+
    -- IMPLEMENTATION DEFINED
-
    subtype ACTLR_Type is ARMv6M.ACTLR_Type;
-   ACTLR_ADDRESS renames ARMv6M.ACTLR_ADDRESS;
 
-   -- B3.3.3 SysTick Control and Status Register
+   -- B3.3.2 System timer register support in the SCS
+
+   SYST_CSR_ADDRESS   renames ARMv6M.SYST_CSR_ADDRESS;
+   SYST_RVR_ADDRESS   renames ARMv6M.SYST_RVR_ADDRESS;
+   SYST_CVR_ADDRESS   renames ARMv6M.SYST_CVR_ADDRESS;
+   SYST_CALIB_ADDRESS renames ARMv6M.SYST_CALIB_ADDRESS;
+
+   -- B3.3.3 SysTick Control and Status Register, SYST_CSR
 
    CLKSOURCE_EXT renames ARMv6M.CLKSOURCE_EXT;
    CLKSOURCE_CPU renames ARMv6M.CLKSOURCE_CPU;
@@ -212,12 +278,12 @@ package ARMv7M is
    subtype SYST_CSR_Type is ARMv6M.SYST_CSR_Type;
    SYST_CSR : SYST_CSR_Type renames ARMv6M.SYST_CSR;
 
-   -- B3.3.4 SysTick Reload Value Register
+   -- B3.3.4 SysTick Reload Value Register, SYST_RVR
 
    subtype SYST_RVR_Type is ARMv6M.SYST_RVR_Type;
    SYST_RVR : SYST_RVR_Type renames ARMv6M.SYST_RVR;
 
-   -- B3.3.5 SysTick Current Value Register
+   -- B3.3.5 SysTick Current Value Register, SYST_CVR
 
    type SYST_CVR_Type is
    record
@@ -230,20 +296,18 @@ package ARMv7M is
       CURRENT at 0 range 0 .. 31;
    end record;
 
-   SYST_CVR_ADDRESS renames ARMv6M.SYST_CVR_ADDRESS;
-
    SYST_CVR : aliased SYST_CVR_Type with
       Address              => To_Address (SYST_CVR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.3.6 SysTick Calibration Value Register
+   -- B3.3.6 SysTick Calibration Value Register, SYST_CALIB
 
    subtype SYST_CALIB_Type is ARMv6M.SYST_CALIB_Type;
    SYST_CALIB : SYST_CALIB_Type renames ARMv6M.SYST_CALIB;
 
-   -- C1.6.1 Debug Fault Status Register
+   -- C1.6.1 Debug Fault Status Register, DFSR
 
    subtype DFSR_Type is ARMv6M.DFSR_Type;
    DFSR : DFSR_Type renames ARMv6M.DFSR;
