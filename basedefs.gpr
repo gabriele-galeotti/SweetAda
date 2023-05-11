@@ -71,7 +71,6 @@ abstract project Basedefs is
    package Compiler is
       -- Asm_Cpp
       for Driver ("Asm_Cpp") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
-      for Include_Switches ("Asm_Cpp") use ("-I");
       for Switches ("Asm_Cpp") use (
                                     "-ffunction-sections",
                                     "-fdata-sections",
@@ -127,6 +126,7 @@ abstract project Basedefs is
                                 "-gnatE",
                                 "-gnato1",
                                 "-gnatVa",
+                                "-gnatX",
                                 "-fstack-usage",
                                 "-fdump-rtl-expand",
                                 -- warning switches ---------------------------
@@ -242,5 +242,6 @@ abstract project Basedefs is
    Library_Kind    := "static";
    Library_Support := "static_only";
    Library_Builder := Configure.Toolchain_Prefix & "/libexec/gprbuild/gprlib";
+   Archive_Builder := (Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-ar", "cr");
 
 end Basedefs;

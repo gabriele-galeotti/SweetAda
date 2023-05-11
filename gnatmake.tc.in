@@ -92,6 +92,7 @@ GNATMAKE_SWITCHES_DEFAULT += -nostdinc -nostdlib
 # NOTE: the use of -gnatN is deprecated, the use of -gnatn is preferred
 #
 ADAC_SWITCHES_DEFAULT += -gnatn # Activate inlining for subprograms for which pragma inline is specified.
+ADAC_SWITCHES_DEFAULT += -gnatX # extensions allowed
 # dead code removal
 ADAC_SWITCHES_DEFAULT += -ffunction-sections -fdata-sections
 CC_SWITCHES_DEFAULT   += -ffunction-sections -fdata-sections

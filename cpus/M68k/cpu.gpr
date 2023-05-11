@@ -63,6 +63,7 @@ library project Cpu is
    for Library_Kind use Basedefs.Library_Kind;
    for Library_Support use Basedefs.Library_Support;
    for Library_Builder use Basedefs.Library_Builder;
+   for Archive_Builder use Basedefs.Archive_Builder;
    for Object_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Object_Directory;
    for Library_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Library_Directory;
 
