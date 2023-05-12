@@ -19,6 +19,7 @@
                 .set    noreorder
                 .set    noat
 
+                .type   _start,@function
                 .global _start
 _start:
 
@@ -74,6 +75,8 @@ _start:
 
 dead:           b       .
                 nop
+
+                .size   _start,.-_start
 
 ////////////////////////////////////////////////////////////////////////////////
 
