@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces.C;
 with UART16x50;
 with IDE;
 with NE2000;
@@ -44,11 +43,6 @@ package BSP is
    Ethernet_Descriptor : aliased Ethernet_Descriptor_Type := Ethernet_DESCRIPTOR_INVALID;
 
    QEMU : Boolean := False;
-
-   function Number_Of_CPUs return Interfaces.C.int with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_number_of_cpus";
 
    procedure Tclk_Init;
    procedure Console_Putchar (C : in Character);

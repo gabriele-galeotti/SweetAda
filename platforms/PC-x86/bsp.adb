@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Interfaces.C;
 with Ada.Unchecked_Conversion;
 with Configure;
 with Definitions;
@@ -59,6 +60,10 @@ package body BSP is
    use i586;
    use APIC;
 
+   function Number_Of_CPUs return Interfaces.C.int with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_number_of_cpus";
    procedure Board_Init;
 
    --========================================================================--
