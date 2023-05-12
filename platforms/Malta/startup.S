@@ -30,9 +30,9 @@
                 .set    noreorder
                 .set    noat
 
-                .type   _init,@function
-                .global _init
-_init:
+                .type   _start,@function
+                .global _start
+_start:
 
                 //
                 // Zero all registers.
@@ -154,7 +154,7 @@ _init:
 dead:           b       .
                 nop
 
-                .size   _init,.-_init
+                .size   _start,.-_start
 
 #if 0
 ////////////////////////////////////////////////////////////////////////////////

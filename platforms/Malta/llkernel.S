@@ -83,8 +83,8 @@
                 .set    noreorder
                 .set    noat
 
-                .global _start
-_start:
+                .global _reset
+_reset:
 
                 //
                 // Reset
@@ -94,8 +94,8 @@ _start:
                 // PC = 0xBFC0_0000 (KSEG1, unmapped, uncached)
                 //
                 .org    0
-                .extern _init
-                j       _init                   // +0x00
+                .extern _start
+                j       _start                  // +0x00
                 nop                             // +0x04
                 nop                             // +0x08
                 nop                             // +0x0C
