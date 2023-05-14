@@ -65,7 +65,12 @@ library project Core is
 
    Gnat_Exceptions_Files := ("gnat_exceptions.adb", "gnat_exceptions.ads");
 
-   Integer_Math_Files := ("integer_math.adb", "integer_math.ads");
+   Integer_Math_Files := (
+                          "integer_math.adb", "integer_math.ads",
+                          "integer_math-log2.adb",
+                          "integer_math-rounddown.adb",
+                          "integer_math-roundup.adb"
+                         );
 
    Last_Chance_Handler_Files := ("last_chance_handler.adb", "last_chance_handler.ads");
 

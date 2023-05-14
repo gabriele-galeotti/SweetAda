@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ integer_math.adb                                                                                          --
+-- __FLN__ integer_math-log2.adb                                                                                     --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,32 +15,18 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body Integer_Math is
+with Interfaces;
+with Bits;
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Log2
-   ----------------------------------------------------------------------------
-   function Log2 (Value : Positive) return Log_Integer is
-   separate;
-
-   ----------------------------------------------------------------------------
-   -- Roundup
-   ----------------------------------------------------------------------------
-   function Roundup (Value : Natural; Modulo : Positive) return Natural is
-   separate;
-
-   ----------------------------------------------------------------------------
-   -- Rounddown
-   ----------------------------------------------------------------------------
-   function Rounddown (Value : Natural; Modulo : Positive) return Natural is
-   separate;
-
-end Integer_Math;
+separate (Integer_Math)
+function Log2 (Value : Positive) return Log_Integer is
+   Modulo : Positive := Value;
+   Result : Log_Integer;
+begin
+   Result := 0;
+   while Modulo > 255 loop
+      Modulo := @ / 2**8;
+      Result := @ + 8;
+   end loop;
+   return Result + Bits.FirstMSBit (Interfaces.Unsigned_8 (Modulo));
+end Log2;
