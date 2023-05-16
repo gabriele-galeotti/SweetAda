@@ -66,6 +66,9 @@ package System.Parameters is
    --  instances of users requiring large stack sizes (for example string
    --  processing).
 
+   Unspecified_Size : constant Size_Type := Size_Type'First;
+   --  Value used to indicate that no size type is set
+
    Runtime_Default_Sec_Stack_Size : constant Size_Type := @RUNTIME_DEFAULT_SEC_STACK_SIZE@;
    --  The run-time chosen default size for secondary stacks that may be
    --  overriden by the user with the use of binder -D switch.
