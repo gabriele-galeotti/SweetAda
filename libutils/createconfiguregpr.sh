@@ -26,6 +26,8 @@
 # PLATFORM
 # CPU
 # RTS_PATH
+# RTS
+# PROFILE
 # ADA_MODE
 # OPTIMIZATION_LEVEL
 # STACK_LIMIT
@@ -193,6 +195,8 @@ print_I "Object_Directory      := \"${OBJECT_DIRECTORY}\";"
 print_I "Platform              := \"${PLATFORM}\";"
 print_I "Cpu                   := \"${CPU}\";"
 print_I "RTS_Path              := \"${RTS_PATH}\";"
+print_I "RTS                   := \"${RTS}\";"
+print_I "Profile               := \"${PROFILE}\";"
 print_I "Ada_Mode              := \"${ADA_MODE}\";"
 print_I "Optimization_Level    := \"${OPTIMIZATION_LEVEL}\";"
 print_I "Stack_Limit           := \"${STACK_LIMIT}\";"

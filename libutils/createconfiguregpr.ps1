@@ -23,6 +23,8 @@
 # PLATFORM
 # CPU
 # RTS_PATH
+# RTS
+# PROFILE
 # ADA_MODE
 # OPTIMIZATION_LEVEL
 # STACK_LIMIT
@@ -171,6 +173,8 @@ print_I $configure_filename "Object_Directory      := `"$(GetEnvVar OBJECT_DIREC
 print_I $configure_filename "Platform              := `"$(GetEnvVar PLATFORM)`";"
 print_I $configure_filename "Cpu                   := `"$(GetEnvVar CPU)`";"
 print_I $configure_filename "RTS_Path              := `"$(GetEnvVar RTS_PATH)`";"
+print_I $configure_filename "RTS                   := `"$(GetEnvVar RTS)`";"
+print_I $configure_filename "Profile               := `"$(GetEnvVar PROFILE)`";"
 print_I $configure_filename "Ada_Mode              := `"$(GetEnvVar ADA_MODE)`";"
 print_I $configure_filename "Optimization_Level    := `"$(GetEnvVar OPTIMIZATION_LEVEL)`";"
 print_I $configure_filename "Stack_Limit           := `"$(GetEnvVar STACK_LIMIT)`";"
