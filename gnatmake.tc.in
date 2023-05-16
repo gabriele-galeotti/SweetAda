@@ -80,6 +80,9 @@ GNATMAKE_SWITCHES_DEFAULT += -eS # Echo commands to stdout instead of stderr
 #GNATMAKE_SWITCHES_DEFAULT += -i  # In place. Replace existing ali file, or put it with source
 GNATMAKE_SWITCHES_DEFAULT += -nostdinc -nostdlib
 
+# GNATBIND
+GNATBIND_SWITCHES_DEFAULT += -D4k
+
 ################################################################################
 #                                                                              #
 # Compiler build switches.                                                     #

@@ -45,7 +45,10 @@ project SweetAda is
    -- Binder
    ----------------------------------------------------------------------------
 
-   package Binder renames Basedefs.Binder;
+   -- package Binder renames Basedefs.Binder;
+   package Binder extends Basedefs.Binder is
+      for Switches ("Ada") use Binder'Switches ("Ada") & ("-D4k");
+   end Binder;
 
    ----------------------------------------------------------------------------
    -- Linker (not used)

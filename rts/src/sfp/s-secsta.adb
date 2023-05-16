@@ -31,248 +31,66 @@
 -- SweetAda SFP cutted-down version                                         --
 ------------------------------------------------------------------------------
 
--- with Ada.Unchecked_Conversion;
-with Ada.Unchecked_Deallocation;
+--  This is the HI-E version of this package
 
-with System.Parameters;       use System.Parameters;
-with System.Storage_Elements; use System.Storage_Elements;
+with Ada.Unchecked_Conversion;
 
 package body System.Secondary_Stack is
 
-   ------------------------------------
-   -- Binder Allocated Stack Support --
-   ------------------------------------
+   use type System.Parameters.Size_Type;
 
-   --  When at least one of the following restrictions
+   function Get_Sec_Stack return SS_Stack_Ptr;
+   pragma Import (C, Get_Sec_Stack, "__gnat_get_secondary_stack");
+   --  Return the pointer to the secondary stack of the current task.
    --
-   --    No_Implicit_Heap_Allocations
-   --    No_Implicit_Task_Allocations
+   --  The package imports this function to permit flexibility in the storage
+   --  of secondary stacks pointers to support a range of different ZFP and
+   --  other restricted run-time scenarios without needing to recompile the
+   --  run-time. A ZFP run-time will typically include a default implementation
+   --  suitable for single thread applications (s-sssita.adb). However, users
+   --  can replace this implementation by providing their own as part of their
+   --  program (for example, if multiple threads need to be supported in a ZFP
+   --  application).
    --
-   --  is in effect, the binder creates a static secondary stack pool, where
-   --  each stack has a default size. Assignment of these stacks to tasks is
-   --  performed by SS_Init. The following variables are defined in this unit
-   --  in order to avoid depending on the binder. Their values are set by the
-   --  binder.
-
-   Binder_SS_Count : Natural;
-   pragma Export (Ada, Binder_SS_Count, "__gnat_binder_ss_count");
-   --  The number of secondary stacks in the pool created by the binder
-
-   Binder_Default_SS_Size : Size_Type;
-   pragma Export (Ada, Binder_Default_SS_Size, "__gnat_default_ss_size");
-   --  The default secondary stack size as specified by the binder. The value
-   --  is defined here rather than in init.c or System.Init because the ZFP and
-   --  Ravenscar-ZFP run-times lack these locations.
-
-   Binder_Default_SS_Pool : Address;
-   pragma Export (Ada, Binder_Default_SS_Pool, "__gnat_default_ss_pool");
-   --  The address of the secondary stack pool created by the binder
-
-   -- __INF__
-   SweetAda_Stack : aliased SS_Stack (256);
-
-   -----------------------
-   -- Local subprograms --
-   -----------------------
-
-   procedure Allocate_Static
-     (Stack    : SS_Stack_Ptr;
-      Mem_Size : Memory_Size;
-      Addr     : out Address);
-   pragma Inline (Allocate_Static);
-   --  Allocate enough space on static secondary stack Stack to fit a request
-   --  of size Mem_Size. Addr denotes the address of the first byte of the
-   --  allocation.
-
-   procedure Free is new Ada.Unchecked_Deallocation (SS_Chunk, SS_Chunk_Ptr);
-   --  Free a dynamically allocated chunk
-
-   procedure Free is new Ada.Unchecked_Deallocation (SS_Stack, SS_Stack_Ptr);
-   --  Free a dynamically allocated secondary stack
-
-   function Has_Enough_Free_Memory
-     (Chunk    : SS_Chunk_Ptr;
-      Byte     : Memory_Index;
-      Mem_Size : Memory_Size) return Boolean;
-   pragma Inline (Has_Enough_Free_Memory);
-   --  Determine whether chunk Chunk has enough room to fit a memory request of
-   --  size Mem_Size, starting from the first free byte of the chunk denoted by
-   --  Byte.
-
-   function Size_Up_To_And_Including (Chunk : SS_Chunk_Ptr) return Memory_Size;
-   pragma Inline (Size_Up_To_And_Including);
-   --  Calculate the size of secondary stack which houses chunk Chunk, from the
-   --  start of the secondary stack up to and including Chunk itself. The size
-   --  includes the following kinds of memory:
+   --  Many Ravenscar run-times also use this mechanism to provide switch
+   --  between efficient single task and multitask implementations without
+   --  depending on System.Soft_Links.
    --
-   --    * Free memory in used chunks due to alignment holes
-   --    * Occupied memory by allocations
+   --  In all cases, the binder will generate a default-sized secondary stack
+   --  for the environment task if the secondary stack is used by the program
+   --  being binded.
    --
-   --  This is a constant time operation, regardless of the secondary stack's
-   --  nature.
-
-   function Used_Memory_Size (Stack : SS_Stack_Ptr) return Memory_Size;
-   pragma Inline (Used_Memory_Size);
-   --  Calculate the size of stack Stack's occupied memory usage. This includes
-   --  the following kinds of memory:
+   --  To support multithreaded ZFP-based applications, the binder supports
+   --  the creation of additional secondary stacks using the -Qnnn binder
+   --  switch. For the user to make use of these generated stacks, all threads
+   --  need to call SS_Init with a null-object parameter to be assigned a
+   --  stack. It is then the responsibility of the user to store the returned
+   --  pointer in a way that can be can retrieved via the user implementation
+   --  of the __gnat_get_secondary_stack function. In this scenario it is
+   --  recommended to use thread local variables. For example, if the
+   --  Thread_Local_Storage aspect is supported on the target:
    --
-   --    * Free memory in used chunks due to alignment holes
-   --    * Occupied memory by allocations
+   --  pragma Warnings (Off);
+   --  with System.Secondary_Stack; use System.Secondary_Stack;
+   --  pragma Warnings (On);
    --
-   --  This is a constant time operation, regardless of the secondary stack's
-   --  nature.
-
-   -----------------------
-   -- Allocate_On_Chunk --
-   -----------------------
-
-   procedure Allocate_On_Chunk
-     (Stack      : SS_Stack_Ptr;
-      Prev_Chunk : SS_Chunk_Ptr;
-      Chunk      : SS_Chunk_Ptr;
-      Byte       : Memory_Index;
-      Mem_Size   : Memory_Size;
-      Addr       : out Address)
-   is
-      New_High_Water_Mark : Memory_Size;
-
-   begin
-      --  The allocation occurs on a reused or a brand new chunk. Such a chunk
-      --  must always be connected to some previous chunk.
-
-      if Prev_Chunk /= null then
-         pragma Assert (Prev_Chunk.Next = Chunk);
-
-         --  Update the Size_Up_To_Chunk because this value is invalidated for
-         --  reused and new chunks.
-         --
-         --                         Prev_Chunk          Chunk
-         --                             v                 v
-         --    . . . . . . .     +--------------+     +--------
-         --                . --> |##############| --> |
-         --    . . . . . . .     +--------------+     +--------
-         --                       |            |
-         --    -------------------+------------+
-         --      Size_Up_To_Chunk      Size
-         --
-         --  The Size_Up_To_Chunk is equal to the size of the whole stack up to
-         --  the previous chunk, plus the size of the previous chunk itself.
-
-         Chunk.Size_Up_To_Chunk := Size_Up_To_And_Including (Prev_Chunk);
-      end if;
-
-      --  The chunk must have enough room to fit the memory request. If this is
-      --  not the case, then a previous step picked the wrong chunk.
-
-      pragma Assert (Has_Enough_Free_Memory (Chunk, Byte, Mem_Size));
-
-      --  The first byte of the allocation is the first free byte within the
-      --  chunk.
-
-      Addr := Chunk.Memory (Byte)'Address;
-
-      --  The chunk becomes the chunk indicated by the stack pointer. This is
-      --  either the currently indicated chunk, an existing chunk, or a brand
-      --  new chunk.
-
-      Stack.Top.Chunk := Chunk;
-
-      --  The next free byte is immediately after the memory request
-      --
-      --          Addr     Top.Byte
-      --          |        |
-      --    +-----|--------|----+
-      --    |##############|    |
-      --    +-------------------+
-
-      --  ??? this calculation may overflow on 32bit targets
-
-      Stack.Top.Byte := Byte + Mem_Size;
-
-      --  At this point the next free byte cannot go beyond the memory capacity
-      --  of the chunk indicated by the stack pointer, except when the chunk is
-      --  full, in which case it indicates the byte beyond the chunk. Ensure
-      --  that the occupied memory is at most as much as the capacity of the
-      --  chunk. Top.Byte - 1 denotes the last occupied byte.
-
-      pragma Assert (Stack.Top.Byte - 1 <= Stack.Top.Chunk.Size);
-
-      --  Calculate the new high water mark now that the memory request has
-      --  been fulfilled, and update if necessary. The new high water mark is
-      --  technically the size of the used memory by the whole stack.
-
-      New_High_Water_Mark := Used_Memory_Size (Stack);
-
-      if New_High_Water_Mark > Stack.High_Water_Mark then
-         Stack.High_Water_Mark := New_High_Water_Mark;
-      end if;
-   end Allocate_On_Chunk;
-
-   ---------------------
-   -- Allocate_Static --
-   ---------------------
-
-   procedure Allocate_Static
-     (Stack    : SS_Stack_Ptr;
-      Mem_Size : Memory_Size;
-      Addr     : out Address)
-   is
-   begin
-      --  Static secondary stack allocations are performed only on the static
-      --  chunk. There should be no dynamic chunks following the static chunk.
-
-      pragma Assert (Stack.Top.Chunk = Stack.Static_Chunk'Access);
-      pragma Assert (Stack.Top.Chunk.Next = null);
-
-      --  Raise Storage_Error if the static chunk does not have enough room to
-      --  fit the memory request. This indicates that the stack is about to be
-      --  depleted.
-
-      if not Has_Enough_Free_Memory
-               (Chunk    => Stack.Top.Chunk,
-                Byte     => Stack.Top.Byte,
-                Mem_Size => Mem_Size)
-      then
-         raise Storage_Error with "secondary stack exhausted";
-      end if;
-
-      Allocate_On_Chunk
-        (Stack      => Stack,
-         Prev_Chunk => null,
-         Chunk      => Stack.Top.Chunk,
-         Byte       => Stack.Top.Byte,
-         Mem_Size   => Mem_Size,
-         Addr       => Addr);
-   end Allocate_Static;
-
-   ----------------------------
-   -- Has_Enough_Free_Memory --
-   ----------------------------
-
-   function Has_Enough_Free_Memory
-     (Chunk    : SS_Chunk_Ptr;
-      Byte     : Memory_Index;
-      Mem_Size : Memory_Size) return Boolean
-   is
-   begin
-      --  Byte - 1 denotes the last occupied byte. Subtracting that byte from
-      --  the memory capacity of the chunk yields the size of the free memory
-      --  within the chunk. The chunk can fit the request as long as the free
-      --  memory is as big as the request.
-
-      return Chunk.Size - (Byte - 1) >= Mem_Size;
-   end Has_Enough_Free_Memory;
-
-   ------------------------------
-   -- Size_Up_To_And_Including --
-   ------------------------------
-
-   function Size_Up_To_And_Including
-     (Chunk : SS_Chunk_Ptr) return Memory_Size
-   is
-   begin
-      return Chunk.Size_Up_To_Chunk + Chunk.Size;
-   end Size_Up_To_And_Including;
+   --  package Secondary_Stack is
+   --     Thread_Sec_Stack : System.Secondary_Stack.SS_Stack_Ptr := null
+   --       with Thread_Local_Storage;
+   --
+   --     function Get_Sec_Stack return SS_Stack_Ptr
+   --       with Export, Convention => C,
+   --            External_Name => "__gnat_get_secondary_stack";
+   --
+   --    function Get_Sec_Stack return SS_Stack_Ptr is
+   --    begin
+   --       if Thread_Sec_Stack = null then
+   --          SS_Init (Thread_Sec_Stack);
+   --       end if;
+   --
+   --       return Thread_Sec_Stack;
+   --    end Get_Sec_Stack;
+   --  end Secondary_Stack;
 
    -----------------
    -- SS_Allocate --
@@ -280,108 +98,162 @@ package body System.Secondary_Stack is
 
    procedure SS_Allocate
      (Addr         : out Address;
-      Storage_Size : Storage_Count)
+      Storage_Size : SSE.Storage_Count)
    is
-      function Round_Up (Size : Storage_Count) return Memory_Size;
-      pragma Inline (Round_Up);
-      --  Round Size up to the nearest multiple of the maximum alignment
+      use type System.Storage_Elements.Storage_Count;
 
-      --------------
-      -- Round_Up --
-      --------------
+      Max_Align   : constant SS_Ptr := SS_Ptr (Standard'Maximum_Alignment);
+      Mem_Request : SS_Ptr;
 
-      function Round_Up (Size : Storage_Count) return Memory_Size is
-         Algn_MS : constant Memory_Size := Memory_Alignment;
-         Size_MS : constant Memory_Size := Memory_Size (Size);
+      Stack : constant SS_Stack_Ptr := Get_Sec_Stack;
+   begin
+      --  Round up Storage_Size to the nearest multiple of the max alignment
+      --  value for the target. This ensures efficient stack access. First
+      --  perform a check to ensure that the rounding operation does not
+      --  overflow SS_Ptr.
 
-      begin
-         --  Detect a case where the Storage_Size is very large and may yield
-         --  a rounded result which is outside the range of Chunk_Memory_Size.
-         --  Treat this case as secondary-stack depletion.
+      if SSE.Storage_Count (SS_Ptr'Last) - Standard'Maximum_Alignment <
+        Storage_Size
+      then
+         raise Storage_Error;
+      end if;
 
-         if Memory_Size'Last - Algn_MS < Size_MS then
-            raise Storage_Error with "secondary stack exhausted";
+      Mem_Request := ((SS_Ptr (Storage_Size) + Max_Align - 1) / Max_Align) *
+                       Max_Align;
+
+      --  Check if max stack usage is increasing
+
+      if Stack.Max - Stack.Top - Mem_Request < 0  then
+         --  If so, check if the stack is exceeded, noting Stack.Top points to
+         --  the first free byte (so the value of Stack.Top on a fully
+         --  allocated stack will be Stack.Size + 1). The comparison is formed
+         --  to prevent integer overflows.
+
+         if Stack.Size - Stack.Top - Mem_Request < -1 then
+            raise Storage_Error;
          end if;
 
-         return ((Size_MS + Algn_MS - 1) / Algn_MS) * Algn_MS;
-      end Round_Up;
+         --  Record new max usage
 
-      --  Local variables
-
-      -- Stack    : constant SS_Stack_Ptr := Get_Sec_Stack.all;
-      Stack    : constant SS_Stack_Ptr := SweetAda_Stack'Access;
-      Mem_Size : Memory_Size;
-
-   --  Start of processing for SS_Allocate
-
-   begin
-      --  Round the requested size up to the nearest multiple of the maximum
-      --  alignment to ensure efficient access.
-
-      if Storage_Size = 0 then
-         Mem_Size := Memory_Alignment;
-      else
-         --  It should not be possible to request an allocation of negative
-         --  size.
-
-         pragma Assert (Storage_Size >= 0);
-         Mem_Size := Round_Up (Storage_Size);
+         Stack.Max := Stack.Top + Mem_Request;
       end if;
 
-      if Sec_Stack_Dynamic then
-         -- __INF__ force static allocation
-         --  Allocate_Dynamic (Stack, Mem_Size, Addr);
-         raise Storage_Error with "dynamic allocation not implemented";
-      else
-         Allocate_Static  (Stack, Mem_Size, Addr);
-      end if;
+      --  Set resulting address and update top of stack pointer
+
+      Addr := Stack.Internal_Chunk (Stack.Top)'Address;
+      Stack.Top := Stack.Top + Mem_Request;
    end SS_Allocate;
 
+   ----------------
+   -- SS_Get_Max --
+   ----------------
+
+   function SS_Get_Max return Long_Long_Integer is
+   begin
+      --  Stack.Max points to the first untouched byte in the stack, thus the
+      --  maximum number of bytes that have been allocated on the stack is one
+      --  less the value of Stack.Max.
+
+      return Long_Long_Integer (Get_Sec_Stack.Max - 1);
+   end SS_Get_Max;
+
    -------------
-   -- SS_Free --
+   -- SS_Init --
    -------------
 
-   procedure SS_Free (Stack : in out SS_Stack_Ptr) is
-      Static_Chunk : constant SS_Chunk_Ptr := Stack.Static_Chunk'Access;
-      Next_Chunk   : SS_Chunk_Ptr;
+   procedure SS_Init
+     (Stack : in out SS_Stack_Ptr;
+      Size  : SP.Size_Type := SP.Unspecified_Size)
+   is
+      use Parameters;
 
    begin
-      --  Free all dynamically allocated chunks. The first dynamic chunk is
-      --  found immediately after the static chunk of the stack.
+      --  If the size of the secondary stack for a task has been specified via
+      --  the Secondary_Stack_Size aspect, then the compiler has allocated the
+      --  stack at compile time and the task create call will provide a pointer
+      --  to this stack. Otherwise, the task will be allocated a secondary
+      --  stack from the pool of default-sized secondary stacks created by the
+      --  binder.
 
-      while Static_Chunk.Next /= null loop
-         Next_Chunk := Static_Chunk.Next.Next;
-         Free (Static_Chunk.Next);
-         Static_Chunk.Next := Next_Chunk;
-      end loop;
+      if Stack = null then
+         --  Allocate a default-sized stack for the task.
 
-      --  At this point one of the following outcomes has taken place:
-      --
-      --    * The stack lacks any dynamic chunks
-      --
-      --    * The stack had dynamic chunks which were all freed
-      --
-      --  Either way, there should be nothing hanging off the static chunk
+         if Size = Unspecified_Size
+           and then Binder_SS_Count > 0
+           and then Num_Of_Assigned_Stacks < Binder_SS_Count
+         then
+            --  The default-sized secondary stack pool is passed from the
+            --  binder to this package as an Address since it is not possible
+            --  to have a pointer to an array of unconstrained objects. A
+            --  pointer to the pool is obtainable via an unchecked conversion
+            --  to a constrained array of SS_Stacks that mirrors the one used
+            --  by the binder.
 
-      pragma Assert (Static_Chunk.Next = null);
+            --  However, Ada understandably does not allow a local pointer to
+            --  a stack in the pool to be stored in a pointer outside of this
+            --  scope. While the conversion is safe in this case, since a view
+            --  of a global object is being used, using Unchecked_Access
+            --  would prevent users from specifying the restriction
+            --  No_Unchecked_Access whenever the secondary stack is used. As
+            --  a workaround, the local stack pointer is converted to a global
+            --  pointer via System.Address.
 
-      --  Free the stack only when it was dynamically allocated
+            declare
+               type Stk_Pool_Array is array (1 .. Binder_SS_Count) of
+                 aliased SS_Stack (Default_SS_Size);
+               type Stk_Pool_Access is access Stk_Pool_Array;
 
-      if Stack.Freeable then
-         Free (Stack);
+               function To_Stack_Pool is new
+                 Ada.Unchecked_Conversion (Address, Stk_Pool_Access);
+
+               pragma Warnings (Off);
+               function To_Global_Ptr is new
+                 Ada.Unchecked_Conversion (Address, SS_Stack_Ptr);
+               pragma Warnings (On);
+               --  Suppress aliasing warning since the pointer we return will
+               --  be the only access to the stack.
+
+               Local_Stk_Address : System.Address;
+
+            begin
+               Num_Of_Assigned_Stacks := Num_Of_Assigned_Stacks + 1;
+
+               pragma Assert (Num_Of_Assigned_Stacks >= 1);
+               --  Num_Of_Assigned_Stacks is defined as Natural. So after, the
+               --  Previous increment it shall be greater or equal to 1.
+
+               Local_Stk_Address :=
+                 To_Stack_Pool
+                   (Default_Sized_SS_Pool) (Num_Of_Assigned_Stacks)'Address;
+               pragma Annotate (CodePeer, False_Positive, "array index check",
+                                "Num_Of_Assigned_Stacks < Binder_SS_Count.");
+               Stack := To_Global_Ptr (Local_Stk_Address);
+            end;
+
+         --  Many run-times unconditionally bring in this package and call
+         --  SS_Init even though the secondary stack is not used by the
+         --  program. In this case return without assigning a stack as it will
+         --  never be used.
+
+         elsif Binder_SS_Count = 0 then
+            return;
+
+         else
+            raise Program_Error;
+         end if;
       end if;
-   end SS_Free;
+
+      Stack.Top := 1;
+      Stack.Max := 1;
+   end SS_Init;
 
    -------------
    -- SS_Mark --
    -------------
 
    function SS_Mark return Mark_Id is
-      -- Stack : constant SS_Stack_Ptr := Get_Sec_Stack.all;
-      Stack : constant SS_Stack_Ptr := SweetAda_Stack'Access;
-
    begin
-      return (Stack => Stack, Top => Stack.Top);
+      return Mark_Id (Get_Sec_Stack.Top);
    end SS_Mark;
 
    ----------------
@@ -390,31 +262,7 @@ package body System.Secondary_Stack is
 
    procedure SS_Release (M : Mark_Id) is
    begin
-      M.Stack.Top := M.Top;
+      Get_Sec_Stack.Top := SS_Ptr (M);
    end SS_Release;
-
-   ----------------------
-   -- Used_Memory_Size --
-   ----------------------
-
-   function Used_Memory_Size (Stack : SS_Stack_Ptr) return Memory_Size is
-   begin
-      --  The size of the occupied memory is equal to the size up to the chunk
-      --  indicated by the stack pointer, plus the size in use by the indicated
-      --  chunk itself. Top.Byte - 1 is the last occupied byte.
-      --
-      --                                     Top.Byte
-      --                                     |
-      --    . . . . . . .     +--------------|----+
-      --                . ..> |##############|    |
-      --    . . . . . . .     +-------------------+
-      --                       |             |
-      --    -------------------+-------------+
-      --      Size_Up_To_Chunk   size in use
-
-      --  ??? this calculation may overflow on 32bit targets
-
-      return Stack.Top.Chunk.Size_Up_To_Chunk + Stack.Top.Byte - 1;
-   end Used_Memory_Size;
 
 end System.Secondary_Stack;
