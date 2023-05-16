@@ -15,7 +15,7 @@ ifeq      ($(OSTYPE),cmd)
   TOOLCHAIN_PREFIX := C:\Program Files\SweetAda
   #PYTHON           := C:\Python27\python.exe
   PYTHON           := C:\Users\Administrator\AppData\Local\Programs\Python\Python38\python.exe
-  TCLSH            := $(TOOLCHAIN_PREFIX)\bin\tclsh86.exe
+  TCLSH            := C:\Tcl\bin\tclsh86.exe
 else ifeq ($(OSTYPE),msys)
   #
   # MSYS2
@@ -23,7 +23,7 @@ else ifeq ($(OSTYPE),msys)
   TOOLCHAIN_PREFIX := C:/Program Files/SweetAda
   #PYTHON           := C:/Python27/python.exe
   PYTHON           := C:/Users/Administrator/AppData/Local/Programs/Python/Python38/python.exe
-  TCLSH            := $(TOOLCHAIN_PREFIX)/bin/tclsh86.exe
+  TCLSH            := C:/Tcl/bin/tclsh86.exe
 else ifeq ($(OSTYPE),darwin)
   #
   # OS X
