@@ -142,7 +142,8 @@ abstract project Basedefs is
                                 "-gnatwg",         -- Activate warnings on unrecognized pragmas.
                                 "-gnatwh",         -- Activate warnings on hiding.
                                 -- "-gnatw.h",        -- Activate warnings on holes/gaps in records.
-                                "-gnatwi",         -- Activate warnings on implementation units.
+                                "-gnatwI",         -- Activate warnings on implementation units.
+                                -- "-gnatwi",         -- Activate warnings on implementation units.
                                 "-gnatw.i",        -- Activate warnings on overlapping actuals.
                                 "-gnatwj",         -- Activate warnings on obsolescent features (Annex J).
                                 "-gnatwk",         -- Activate warnings on variables that could be constants.
