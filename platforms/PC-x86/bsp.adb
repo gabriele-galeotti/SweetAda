@@ -16,6 +16,8 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with System.Parameters;
+with System.Secondary_Stack;
 with System.Storage_Elements;
 with Interfaces;
 with Interfaces.C;
@@ -51,6 +53,7 @@ package body BSP is
    --========================================================================--
 
    use System;
+   use type System.Secondary_Stack.SS_Stack_Ptr;
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
@@ -60,10 +63,20 @@ package body BSP is
    use i586;
    use APIC;
 
+   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
+
    function Number_Of_CPUs return Interfaces.C.int with
       Export        => True,
       Convention    => C,
       External_Name => "__gnat_number_of_cpus";
+
+   procedure Secondary_Stack_Init;
+
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_get_secondary_stack";
+
    procedure Board_Init;
 
    --========================================================================--
@@ -81,6 +94,22 @@ package body BSP is
    begin
       return 1;
    end Number_Of_CPUs;
+
+   ----------------------------------------------------------------------------
+   -- Secondary stack
+   ----------------------------------------------------------------------------
+
+   procedure Secondary_Stack_Init is
+   begin
+      if BSP_SS_Stack = null then
+         System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      end if;
+   end Secondary_Stack_Init;
+
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   begin
+      return BSP_SS_Stack;
+   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Tclk_Init
@@ -120,6 +149,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure Setup is
    begin
+      -------------------------------------------------------------------------
+      Secondary_Stack_Init;
       -------------------------------------------------------------------------
       GDT_Simple.Setup;
       Exceptions.Init;
