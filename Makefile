@@ -171,10 +171,10 @@ endif
 
 # default system parameters
 TOOLCHAIN_PREFIX   :=
-ADA_MODE           := ADA22
 BUILD_MODE         := GNATMAKE
 RTS                :=
 PROFILE            :=
+ADA_MODE           := ADA22
 USE_LIBGCC         :=
 USE_LIBADA         :=
 USE_CLIBRARY       :=
@@ -572,9 +572,9 @@ export                    \
        CPU                \
        CPU_MODEL          \
        FPU_MODEL          \
-       ADA_MODE           \
        RTS                \
        PROFILE            \
+       ADA_MODE           \
        USE_LIBGCC         \
        USE_LIBADA         \
        USE_CLIBRARY       \
@@ -1130,13 +1130,13 @@ else ifeq ($(BUILD_MODE),GPR)
 	@$(call echo-print,"GPRBUILD VERSION:        $(GPRBUILD_VERSION)")
 endif
 	@$(call echo-print,"GCC MULTIDIR:            $(GCC_MULTIDIR)")
-	@$(call echo-print,"ADA MODE:                $(ADA_MODE)")
 	@$(call echo-print,"RTS:                     $(RTS)")
 	@$(call echo-print,"GNAT.ADC PROFILE:        $(PROFILE)")
 ifneq ($(RTS),)
 	@$(call echo-print,"RTS ROOT PATH:           $(RTS_ROOT_PATH)")
 	@$(call echo-print,"RTS PATH:                $(RTS_PATH)")
 endif
+	@$(call echo-print,"ADA MODE:                $(ADA_MODE)")
 ifeq ($(USE_LIBGCC),Y)
 	@$(call echo-print,"LIBGCC FILENAME:         $(LIBGCC_FILENAME)")
 endif
