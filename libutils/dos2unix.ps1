@@ -39,8 +39,21 @@ function ExitWithCode
 #                                                                              #
 ################################################################################
 
+#
+# Basic input parameters check.
+#
 $input_filename = $args[0]
+if ([string]::IsNullOrEmpty($input_filename))
+{
+  Write-Host "${scriptname}: *** Error: no input file specified."
+  ExitWithCode 1
+}
 $output_filename = $args[1]
+if ([string]::IsNullOrEmpty($output_filename))
+{
+  Write-Host "${scriptname}: *** Error: no output file specified."
+  ExitWithCode 1
+}
 
 $textlines = [System.IO.File]::ReadAllText($input_filename) -Replace "`r",""
 [System.IO.File]::WriteAllText($output_filename, $textlines)

@@ -71,7 +71,6 @@ if [ "x${PROFILE}" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no PROFILE specified."
   exit 1
 fi
-
 GNATADC_FILENAME="$2"
 if [ "x${GNATADC_FILENAME}" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no GNATADC_FILENAME specified."

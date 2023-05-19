@@ -128,6 +128,9 @@ function print_list
 #                                                                              #
 ################################################################################
 
+#
+# Basic input parameters check.
+#
 $configure_project = $args[0]
 if ([string]::IsNullOrEmpty($configure_project))
 {

@@ -39,8 +39,21 @@ function ExitWithCode
 #                                                                              #
 ################################################################################
 
+#
+# Basic input parameters check.
+#
 $filename = $args[0]
+if ([string]::IsNullOrEmpty($filename))
+{
+  Write-Host "${scriptname}: *** Error: no input file specified."
+  ExitWithCode 1
+}
 $padstring = [string]$args[1]
+if ([string]::IsNullOrEmpty($padstring))
+{
+  Write-Host "${scriptname}: *** Error: no padding specified."
+  ExitWithCode 1
+}
 
 $last_character = $padstring.Substring($padstring.length - 1, 1)
 if ($last_character -eq "K" -or $last_character -eq "k")

@@ -42,7 +42,15 @@ function ExitWithCode
 #                                                                              #
 ################################################################################
 
+#
+# Basic input parameters check.
+#
 $definitions_filename = $args[0]
+if ([string]::IsNullOrEmpty($definitions_filename))
+{
+  Write-Host "${scriptname}: *** Error: no input file specified."
+  ExitWithCode 1
+}
 
 Remove-Item -Path $definitions_filename -Force -ErrorAction Ignore
 New-Item -Name $definitions_filename -ItemType File | Out-Null

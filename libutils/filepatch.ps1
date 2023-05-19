@@ -39,9 +39,27 @@ function ExitWithCode
 #                                                                              #
 ################################################################################
 
+#
+# Basic input parameters check.
+#
 $filename = $args[0]
+if ([string]::IsNullOrEmpty($filename))
+{
+  Write-Host "${scriptname}: *** Error: no input file specified."
+  ExitWithCode 1
+}
 $offset = [Convert]::ToInt32($args[1], 16)
+if ([string]::IsNullOrEmpty($offset))
+{
+  Write-Host "${scriptname}: *** Error: no offset specified."
+  ExitWithCode 1
+}
 $patchstring = $args[2]
+if ([string]::IsNullOrEmpty($patchstring))
+{
+  Write-Host "${scriptname}: *** Error: no patchstring specified."
+  ExitWithCode 1
+}
 
 $filebytes = [System.IO.File]::ReadAllBytes($filename)
 

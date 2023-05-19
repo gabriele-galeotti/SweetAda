@@ -39,7 +39,15 @@ function ExitWithCode
 #                                                                              #
 ################################################################################
 
+#
+# Basic input parameters check.
+#
 $input_filename = $args[0]
+if ([string]::IsNullOrEmpty($input_filename))
+{
+  Write-Host "${scriptname}: *** Error: no input file specified."
+  ExitWithCode 1
+}
 
 $file = Get-Item -Path $input_filename
 $file.LastWriteTime = (Get-Date)

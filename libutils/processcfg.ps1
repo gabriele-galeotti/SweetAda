@@ -57,9 +57,23 @@ function GetEnvVar
 #                                                                              #
 ################################################################################
 
-$sed = (Get-Item env:SED).Value
+#
+# Basic input parameters check.
+#
 $input_filename = $args[0]
+if ([string]::IsNullOrEmpty($input_filename))
+{
+  Write-Host "${scriptname}: *** Error: no input file specified."
+  ExitWithCode 1
+}
 $output_filename = $args[1]
+if ([string]::IsNullOrEmpty($output_filename))
+{
+  Write-Host "${scriptname}: *** Error: no output file specified."
+  ExitWithCode 1
+}
+
+$sed = (Get-Item env:SED).Value
 
 $symbols = Select-String -Pattern "@[_A-Za-z][_A-Za-z0-9]*@" $input_filename | `
   foreach {$_.Matches} | Select-Object -ExpandProperty Value
