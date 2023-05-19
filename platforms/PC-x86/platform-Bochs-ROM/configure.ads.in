@@ -1,0 +1,22 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM    : constant String := "PC-x86";
+   SUBPLATFORM : constant String := "Bochs-ROM";
+   CPU         : constant String := "@CPU@";
+   CPU_MODEL   : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   PC              : constant Boolean := True;
+   TICK_FREQUENCY  : constant := 1_000;
+   RAM_BASEADDRESS : constant := 16#0000_0000#;
+   RAM_SIZE        : constant := 16#1000_0000#;
+   USE_APIC        : constant Boolean := True;
+
+   -- IOEMU
+   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
+
+end Configure;
