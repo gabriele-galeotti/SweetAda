@@ -1173,6 +1173,8 @@ debug_notify_off : $(KERNEL_OUTFILE)
 ifeq ($(USE_ELFTOOL),Y)
 	@$(REM) patch Debug_Flag := False
 	@$(ELFTOOL) -c setdebugflag=0x00 $(KERNEL_OUTFILE)
+else
+	$(error Error: USE_ELFTOOL is not enabled)
 endif
 
 .PHONY : debug_notify_on
@@ -1180,6 +1182,8 @@ debug_notify_on : $(KERNEL_OUTFILE)
 ifeq ($(USE_ELFTOOL),Y)
 	@$(REM) patch Debug_Flag := True
 	@$(ELFTOOL) -c setdebugflag=0x01 $(KERNEL_OUTFILE)
+else
+	$(error Error: USE_ELFTOOL is not enabled)
 endif
 
 $(KERNEL_ROMFILE) : $(KERNEL_OUTFILE)
