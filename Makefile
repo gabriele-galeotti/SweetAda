@@ -1172,18 +1172,18 @@ configure : clean configure-aux infodump
 debug_notify_off : $(KERNEL_OUTFILE)
 ifeq ($(USE_ELFTOOL),Y)
 	@$(REM) patch Debug_Flag := False
-	@$(ELFTOOL) -c setdebugflag=0x00 $(KERNEL_OUTFILE)
-else
-	$(error Error: USE_ELFTOOL is not enabled)
+	$(call brief-command, \
+        $(ELFTOOL) -c setdebugflag=0x00 $(KERNEL_OUTFILE) \
+        ,[ELFTOOL],Debug_Flag: 0)
 endif
 
 .PHONY : debug_notify_on
 debug_notify_on : $(KERNEL_OUTFILE)
 ifeq ($(USE_ELFTOOL),Y)
 	@$(REM) patch Debug_Flag := True
-	@$(ELFTOOL) -c setdebugflag=0x01 $(KERNEL_OUTFILE)
-else
-	$(error Error: USE_ELFTOOL is not enabled)
+	$(call brief-command, \
+        $(ELFTOOL) -c setdebugflag=0x01 $(KERNEL_OUTFILE) \
+        ,[ELFTOOL],Debug_Flag: 1)
 endif
 
 $(KERNEL_ROMFILE) : $(KERNEL_OUTFILE)
