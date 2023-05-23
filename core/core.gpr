@@ -90,7 +90,13 @@ library project Core is
                      "llutils-select_address_bits.adb"
                     );
 
-   Malloc_Files := ("malloc.adb", "malloc.ads");
+   Malloc_Files := (
+                    "malloc.adb", "malloc.ads",
+                    "malloc-calloc.adb",
+                    "malloc-free.adb",
+                    "malloc-malloc.adb",
+                    "malloc-realloc.adb"
+                   );
 
    Memory_Functions_Files := (
                               "memory_functions.adb", "memory_functions.ads",
