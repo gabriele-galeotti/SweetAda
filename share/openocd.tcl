@@ -13,14 +13,17 @@
 # Arguments:
 # -c <OPENOCD_CFGFILE> OpenOCD configuration filename
 # -debug               enable debug mode
-# -e <ELFTOOL>         ELFTOOL executable to extract the start symbol
-# -f <SWEETADA_ELF>    ELF executable to download via JTAG
+# -e <ELFTOOL>         ELFTOOL executable used to extract the start symbol
+# -f <SWEETADA_ELF>    ELF executable to be downloaded via JTAG
 # -p <OPENOCD_PREFIX>  OpenOCD installation prefix
 # -s <START_SYMBOL>    start symbol ("_start") or start address if -e option not present
 # -server              start OpenOCD server
 # -shutdown            shutdown OpenOCD server
+# -thumb               ARM Thumb address handling
+# -w                   wait after OpenOCD termination
 #
 # Environment variables:
+# OSTYPE
 # SWEETADA_PATH
 # LIBUTILS_DIRECTORY
 #
@@ -44,6 +47,7 @@ source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) libopenocd.tc
 #                                                                              #
 ################################################################################
 
+set OSTYPE $::env(OSTYPE)
 set PLATFORM [platform_get]
 
 set OPENOCD_PREFIX  ""
@@ -54,6 +58,8 @@ set SHUTDOWN_MODE   0
 set SWEETADA_ELF    ""
 set ELFTOOL         ""
 set START_SYMBOL    ""
+set ARM_THUMB       0
+set WAIT_FLAG       0
 
 set argv_last_idx [llength $argv]
 set argv_idx 0
@@ -68,6 +74,8 @@ while {$argv_idx < $argv_last_idx} {
         -s        {incr argv_idx ; set START_SYMBOL [lindex $argv $argv_idx]}
         -server   {set SERVER_MODE 1}
         -shutdown {set SHUTDOWN_MODE 1}
+        -thumb    {set ARM_THUMB 1}
+        -w        {set WAIT_FLAG 1}
         default {
             puts stderr "$SCRIPT_FILENAME: *** Error: unknown argument."
             exit 1
@@ -82,21 +90,55 @@ if {$SHUTDOWN_MODE ne 0} {
 
 if {$SERVER_MODE ne 0} {
     if {$OPENOCD_PREFIX eq ""} {
-        puts stderr "$SCRIPT_FILENAME: *** Error: platform not recognized."
+        puts stderr "$SCRIPT_FILENAME: *** Error: no OpenOCD prefix specified."
         exit 1
     }
     if {$PLATFORM eq "windows"} {
-        set OPENOCD_EXECUTABLE [file join $OPENOCD_PREFIX bin openocd.exe]
-        exec cmd.exe /C START "" "$OPENOCD_EXECUTABLE" -f "$OPENOCD_CFGFILE" &
+        set ::env(PATH) [join [list [file join $OPENOCD_PREFIX bin] $::env(PATH)] ";"]
+        set cmd_args ""
+        if {$WAIT_FLAG ne 0} {
+            append cmd_args "/K "
+        } else {
+            append cmd_args "/C "
+        }
+        append cmd_args "openocd.exe -f \"$OPENOCD_CFGFILE\""
+        if {[catch {eval exec {$::env(ComSpec)} /C START {$::env(ComSpec)} $cmd_args &} result] ne 0} {
+            puts stderr "$SCRIPT_FILENAME: *** Error: system failure or OpenOCD executable not found."
+            exit 1
+        }
     } elseif {$PLATFORM eq "unix"} {
-        set OPENOCD_EXECUTABLE [file join $OPENOCD_PREFIX bin openocd]
-        # __FIX__
-        # if this script is called from Makefile, and the output is redirected
-        # on a tee pipe (menu-dialog.sh), then the script hangs because tee
-        # seems to wait on an inherited stdout file descriptor, which is kept
-        # opened by the xterm sub-process; have we to re-open it?
-        close stdout
-        exec xterm -e "$OPENOCD_EXECUTABLE" -f "$OPENOCD_CFGFILE" &
+        set ::env(PATH) [join [list [file join $OPENOCD_PREFIX bin] $::env(PATH)] ":"]
+        if {$OSTYPE eq "darwin"} {
+            set osascript_args ""
+            append osascript_args " -e \"tell application \\\"Terminal\\\"\""
+            append osascript_args " -e \"do script \\\"openocd -f \\\\\\\"$OPENOCD_CFGFILE\\\\\\\""
+            if {$WAIT_FLAG eq 0} {
+                append osascript_args " ; exit"
+            }
+            append osascript_args "\\\"\""
+            append osascript_args " -e \"end tell\""
+            if {[catch {eval exec /usr/bin/osascript $osascript_args &} result] ne 0} {
+                puts stderr "$SCRIPT_FILENAME: *** Error: system failure or OpenOCD executable not found."
+                exit 1
+            }
+        } else {
+            # __FIX__
+            # if this script is called from Makefile, and the output is redirected
+            # on a tee pipe (menu-dialog.sh), then the script hangs because tee
+            # seems to wait on an inherited stdout file descriptor, which is kept
+            # opened by the xterm sub-process; have we to re-open it?
+            close stdout
+            set xterm_args ""
+            if {$WAIT_FLAG ne 0} {
+                append xterm_args "-hold "
+            }
+            append xterm_args "-e "
+            append xterm_args "openocd -f \"$OPENOCD_CFGFILE\""
+            if {[catch {eval exec xterm $xterm_args &} result] ne 0} {
+                puts stderr "$SCRIPT_FILENAME: *** Error: system failure or OpenOCD executable not found."
+                exit 1
+            }
+        }
     } else {
         puts stderr "$SCRIPT_FILENAME: *** Error: platform not recognized."
         exit 1
@@ -105,7 +147,10 @@ if {$SERVER_MODE ne 0} {
 }
 
 # local OpenOCD server
-openocd_rpc_init 127.0.0.1 6666
+if {[catch {openocd_rpc_init 127.0.0.1 6666} result] ne 0} {
+    puts stderr "$SCRIPT_FILENAME: *** Error: no connection to OpenOCD server."
+    exit 1
+}
 
 if {$SHUTDOWN_MODE ne 0} {
     openocd_rpc_tx "shutdown"
@@ -126,11 +171,14 @@ if {$START_SYMBOL eq ""} {
 }
 
 if {$ELFTOOL ne ""} {
-    if {[catch {exec $ELFTOOL -c findsymbol=$START_SYMBOL $SWEETADA_ELF} result] eq 0} {
-        # ARM Thumb functions have LSB = 1
-        set START_ADDRESS [format "0x%08X" [expr $result & 0xFFFFFFFE]]
+    if {[catch {eval exec "\"$ELFTOOL\"" -c findsymbol=$START_SYMBOL "\"$SWEETADA_ELF\""} result] eq 0} {
+        set START_ADDRESS [format "0x%X" [expr $result]]
+        if {$ARM_THUMB ne 0} {
+            # ARM Thumb functions have LSb = 1
+            set START_ADDRESS [format "0x%X" [expr $START_ADDRESS & 0xFFFFFFFE]]
+        }
     } else {
-        puts stderr "$SCRIPT_FILENAME: *** Error: $ELFTOOL error."
+        puts stderr "$SCRIPT_FILENAME: *** Error: system failure or ELFTOOL executable not found."
         openocd_rpc_disconnect
         exit 1
     }
@@ -142,10 +190,12 @@ puts "START ADDRESS = $START_ADDRESS"
 openocd_rpc_tx "reset halt"
 openocd_rpc_rx
 after 1000
-openocd_rpc_tx "load_image $SWEETADA_ELF"
+openocd_rpc_tx "load_image \"$SWEETADA_ELF\""
 openocd_rpc_rx
-openocd_rpc_tx "resume $START_ADDRESS"
-openocd_rpc_rx
+if {$DEBUG_MODE eq 0} {
+    openocd_rpc_tx "resume $START_ADDRESS"
+    openocd_rpc_rx
+}
 
 openocd_rpc_disconnect
 

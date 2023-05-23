@@ -22,30 +22,45 @@ OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 
 USE_APPLICATION := test-PK-S5D9
 
-# Python
-SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py \
-                           -p /usr/local                                                    \
-                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg          \
-                           -server
-SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py \
+OPENOCD_PREFIX := /opt/OpenOCD
+#OPENOCD_PREFIX := C:\Program Files\OpenOCD-20230202-0.12.0
+
+# Python front-end
+SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
+                           -server -w                                                 \
+                           -p "$(OPENOCD_PREFIX)"                                     \
+                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg
+
+SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -shutdown
-RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py \
-                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                          \
-                           -e $(ELFTOOL)                                                    \
-                           -s _start
 
-# Tcl
-#SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl \
-#                           -p /usr/local                                                    \
-#                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg          \
-#                           -server
-#SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl \
+RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
+                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
+                           -e $(ELFTOOL) -s _start -thumb
+
+# Tcl front-end
+#SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
+#                           -server -w                                                 \
+#                           -p "$(OPENOCD_PREFIX)"                                     \
+#                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg
+#SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
 #                           -shutdown
-#RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl \
-#                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                          \
-#                           -e $(ELFTOOL)                                                    \
-#                           -s _start
+#RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
+#                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
+#                           -e $(ELFTOOL) -s _start -thumb
 
-# not implemented so far
-#DEBUG_COMMAND         := $(RUN_COMMAND) -debug
+# debug session in cmd.exe shell
+#DEBUG_COMMAND          := $(RUN_COMMAND) -debug &&                          \
+#                          %GDB%                                             \
+#                                -ex "target extended-remote localhost:3333" \
+#                                -ex "set language asm"                      \
+#                                -ex "set $$pc=_start"                       \
+#                                $(KERNEL_OUTFILE)
+# debug session in *sh shell
+DEBUG_COMMAND          := $(RUN_COMMAND) -debug &&                          \
+                          $$GDB                                             \
+                                -ex "target extended-remote localhost:3333" \
+                                -ex "set language asm"                      \
+                                -ex "set \$$pc=_start"                      \
+                                $(KERNEL_OUTFILE)
 
