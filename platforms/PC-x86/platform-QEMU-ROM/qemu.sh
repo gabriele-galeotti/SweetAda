@@ -78,7 +78,7 @@ ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
   -chardev "socket,id=SERIALPORT1,port=${SERIALPORT1},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \
   -serial "chardev:SERIALPORT1" \
   -device "ne2k_pci,netdev=qemu,mac=02:00:00:11:22:33" \
-  -netdev "id=qemu,type=tap,script=${LIBUTILS_DIRECTORY}/qemu-ifup.sh,downscript=${LIBUTILS_DIRECTORY}/qemu-ifdown.sh" \
+  -netdev "id=qemu,type=tap,script=${SHARE_DIRECTORY}/qemu-ifup.sh,downscript=${SHARE_DIRECTORY}/qemu-ifdown.sh" \
   -device "ide-hd,drive=disk,bus=ide.0" \
   -drive "id=disk,if=none,format=raw,file=${PLATFORM_DIRECTORY}/disk.dsk" \
   -usb -device "usb-hub,bus=usb-bus.0,port=1" \
