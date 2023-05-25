@@ -67,7 +67,7 @@ PLATFORM = library.platform_get()
 
 OPENOCD_PREFIX  = None
 OPENOCD_CFGFILE = None
-COMMAND_LIST    = None
+COMMAND_LIST    = ''
 DEBUG_MODE      = 0
 SERVER_MODE     = 0
 SHUTDOWN_MODE   = 0
@@ -211,8 +211,8 @@ libopenocd.openocd_rpc_tx('load_image' + ' "' + SWEETADA_ELF + '"')
 libopenocd.openocd_rpc_rx('echo')
 
 if DEBUG_MODE == 0:
-  libopenocd.openocd_rpc_tx('resume' + ' ' + START_ADDRESS)
-  libopenocd.openocd_rpc_rx('echo')
+    libopenocd.openocd_rpc_tx('resume' + ' ' + START_ADDRESS)
+    libopenocd.openocd_rpc_rx('echo')
 
 libopenocd.openocd_rpc_disconnect()
 
