@@ -91,7 +91,7 @@ while IFS= read -r textline ; do
   if [ "x${textline_woc}" != "x" ] ; then
     pragma=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*;\)\(.*\)|\1|")
     profiles=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*--\)\(.*\)|\2|")
-    profile_check=$(printf "%s" "${profiles}" | grep -c -w "${PROFILE}" 2> /dev/null)
+    profile_check=$(printf "%s" "${profiles}" | grep -c -w -e "${PROFILE}" 2> /dev/null)
     if [ "x${profile_check}" != "x0" ] ; then
       printf "%s\n" "${pragma}" >> "${GNATADC_FILENAME}"
     fi
