@@ -36,7 +36,7 @@ SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
 
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
-                           -e $(ELFTOOL) -s _start -thumb
+                           -e $(ELFTOOL) -s _start -thumb -command "reset halt"
 
 # Tcl front-end
 #SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
@@ -47,7 +47,7 @@ RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
 #                           -shutdown
 #RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
 #                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
-#                           -e $(ELFTOOL) -s _start -thumb
+#                           -e $(ELFTOOL) -s _start -thumb -command "reset halt"
 
 # debug session in cmd.exe shell
 #DEBUG_COMMAND          := $(RUN_COMMAND) -debug &&                          \
@@ -56,6 +56,7 @@ RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
 #                                -ex "set language asm"                      \
 #                                -ex "set $$pc=_start"                       \
 #                                $(KERNEL_OUTFILE)
+
 # debug session in *sh shell
 DEBUG_COMMAND          := $(RUN_COMMAND) -debug &&                          \
                           $$GDB                                             \
