@@ -12,6 +12,7 @@
 #
 # Arguments:
 # -c <OPENOCD_CFGFILE> OpenOCD configuration filename
+# -command <list>      semicolon-separated list of OpenOCD commands
 # -debug               enable debug mode
 # -e <ELFTOOL>         ELFTOOL executable used to extract the start symbol
 # -f <SWEETADA_ELF>    ELF executable to be downloaded via JTAG
@@ -52,6 +53,7 @@ set PLATFORM [platform_get]
 
 set OPENOCD_PREFIX  ""
 set OPENOCD_CFGFILE ""
+set COMMAND_LIST    ""
 set DEBUG_MODE      0
 set SERVER_MODE     0
 set SHUTDOWN_MODE   0
@@ -67,6 +69,7 @@ while {$argv_idx < $argv_last_idx} {
     set token [lindex $argv $argv_idx]
     switch $token {
         -c        {incr argv_idx ; set OPENOCD_CFGFILE [lindex $argv $argv_idx]}
+        -command  {incr argv_idx ; set COMMAND_LIST [lindex $argv $argv_idx]}
         -debug    {set DEBUG_MODE 1}
         -e        {incr argv_idx ; set ELFTOOL [lindex $argv $argv_idx]}
         -f        {incr argv_idx ; set SWEETADA_ELF [lindex $argv $argv_idx]}
@@ -187,11 +190,14 @@ if {$ELFTOOL ne ""} {
 }
 puts "START ADDRESS = $START_ADDRESS"
 
-openocd_rpc_tx "reset halt"
-openocd_rpc_rx
-after 1000
+foreach command [split $COMMAND_LIST ";"] {
+    openocd_rpc_tx $command
+    openocd_rpc_rx
+}
+
 openocd_rpc_tx "load_image \"$SWEETADA_ELF\""
 openocd_rpc_rx
+
 if {$DEBUG_MODE eq 0} {
     openocd_rpc_tx "resume $START_ADDRESS"
     openocd_rpc_rx

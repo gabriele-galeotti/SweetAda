@@ -12,6 +12,7 @@
 #
 # Arguments:
 # -c <OPENOCD_CFGFILE> OpenOCD configuration filename
+# -command <list>      semicolon-separated list of OpenOCD commands
 # -debug               enable debug mode
 # -e <ELFTOOL>         ELFTOOL executable used to extract the start symbol
 # -f <SWEETADA_ELF>    ELF executable to be downloaded via JTAG
@@ -66,6 +67,7 @@ PLATFORM = library.platform_get()
 
 OPENOCD_PREFIX  = None
 OPENOCD_CFGFILE = None
+COMMAND_LIST    = None
 DEBUG_MODE      = 0
 SERVER_MODE     = 0
 SHUTDOWN_MODE   = 0
@@ -81,6 +83,9 @@ while argv_idx < argc:
     if   sys.argv[argv_idx] == '-c':
         argv_idx += 1
         OPENOCD_CFGFILE = sys.argv[argv_idx]
+    elif sys.argv[argv_idx] == '-command':
+        argv_idx += 1
+        COMMAND_LIST = sys.argv[argv_idx]
     elif sys.argv[argv_idx] == '-debug':
         DEBUG_MODE = 1
     elif sys.argv[argv_idx] == '-e':
@@ -198,11 +203,13 @@ else:
     START_ADDRESS = START_SYMBOL
 printf('START ADDRESS = %s\n', START_ADDRESS)
 
-libopenocd.openocd_rpc_tx('reset halt')
-libopenocd.openocd_rpc_rx('echo')
-library.msleep(1000)
+for command in COMMAND_LIST.split(';'):
+    libopenocd.openocd_rpc_tx(command)
+    libopenocd.openocd_rpc_rx('echo')
+
 libopenocd.openocd_rpc_tx('load_image' + ' "' + SWEETADA_ELF + '"')
 libopenocd.openocd_rpc_rx('echo')
+
 if DEBUG_MODE == 0:
   libopenocd.openocd_rpc_tx('resume' + ' ' + START_ADDRESS)
   libopenocd.openocd_rpc_rx('echo')
