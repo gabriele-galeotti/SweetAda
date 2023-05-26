@@ -33,6 +33,7 @@ package KL46Z is
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
    -- 4.6.2 Peripheral bridge (AIPS-lite) memory map
 
@@ -45,20 +46,20 @@ package KL46Z is
 
    type SIM_SCGC5_Type is
    record
-      LPTMR     : Boolean;      -- Low Power Timer Access Control
-      Reserved1 : Boolean;      -- reserved, always 1
-      Reserved2 : Bits.Bits_3;  -- reserved, always 000
-      TSI       : Boolean;      -- TSI Access Control
-      Reserved3 : Boolean;      -- reserved, always 0
-      Reserved4 : Bits.Bits_2;  -- reserved, always 11
-      PORTA     : Boolean;      -- PORTA Clock Gate Control
-      PORTB     : Boolean;      -- PORTB Clock Gate Control
-      PORTC     : Boolean;      -- PORTC Clock Gate Control
-      PORTD     : Boolean;      -- PORTD Clock Gate Control
-      PORTE     : Boolean;      -- PORTE Clock Gate Control
-      Reserved5 : Bits.Bits_5;  -- reserved, always 00000
-      SLCD      : Boolean;      -- Segment LCD Clock Gate Control
-      Reserved6 : Bits.Bits_12; -- reserved, always 000000000000
+      LPTMR     : Boolean;         -- Low Power Timer Access Control
+      Reserved1 : Bits_1 := 1;
+      Reserved2 : Bits_3 := 0;
+      TSI       : Boolean;         -- TSI Access Control
+      Reserved3 : Bits_1 := 0;
+      Reserved4 : Bits_2 := 2#11#;
+      PORTA     : Boolean;         -- PORTA Clock Gate Control
+      PORTB     : Boolean;         -- PORTB Clock Gate Control
+      PORTC     : Boolean;         -- PORTC Clock Gate Control
+      PORTD     : Boolean;         -- PORTD Clock Gate Control
+      PORTE     : Boolean;         -- PORTE Clock Gate Control
+      Reserved5 : Bits_5 := 0;
+      SLCD      : Boolean;         -- Segment LCD Clock Gate Control
+      Reserved6 : Bits_12 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -117,17 +118,17 @@ package KL46Z is
       PS        : Boolean;     -- Pull Select
       PE        : Boolean;     -- Pull Enable
       SRE       : Boolean;     -- Slew Rate Enable
-      Reserved1 : Boolean;
+      Reserved1 : Bits_1 := 0;
       PFE       : Boolean;     -- Passive Filter Enable
-      Reserved2 : Boolean;
+      Reserved2 : Bits_1 := 0;
       DSE       : Boolean;     -- Drive Strength Enable
-      Reserved3 : Boolean;
-      MUX       : Bits.Bits_3; -- Pin Mux Control
-      Reserved4 : Bits.Bits_5;
-      IRQC      : Bits.Bits_4; -- Interrupt Configuration
-      Reserved5 : Bits.Bits_4;
+      Reserved3 : Bits_1 := 0;
+      MUX       : Bits_3;      -- Pin Mux Control
+      Reserved4 : Bits_5 := 0;
+      IRQC      : Bits_4;      -- Interrupt Configuration
+      Reserved5 : Bits_4 := 0;
       ISF       : Boolean;     -- Interrupt Status Flag
-      Reserved6 : Bits.Bits_7;
+      Reserved6 : Bits_7 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
