@@ -20,6 +20,7 @@
                 .global _start
 _start:
 
+                msr     daifset,#2
                 b       startcode
 
 startcode:
@@ -35,7 +36,7 @@ hold:           wfe
 bootcore:
 
                 //
-                // Check current level = EL1.
+                // Check if current level = EL1.
                 //
                 mrs     x0,currentel
                 ubfx    x1,x0,2,2
@@ -60,6 +61,19 @@ bootcore:
                 //
                 ldr     x0,=SVC_stack
                 mov     sp,x0
+
+                //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                ldr     x1,=_sbss
+                ldr     x2,=_ebss
+                b       2f
+                mov     w0,#0
+1:              str     w0,[x1],#4
+2:              cmp     x1,x2
+                blt     1b
 
                 //
                 // Jump to high-level code.
