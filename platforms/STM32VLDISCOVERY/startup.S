@@ -43,15 +43,28 @@ SysTick:        .long   0
 _start:
 
                 //
+                // Setup stack pointer.
+                //
+                ldr     r0,=stack
+                mov     sp,r0
+
+                //
                 // Static data relocation.
                 //
                 bl      movdata
 
                 //
-                // Setup stack pointer.
+                // Initialize .bss section.
                 //
-                ldr     r0,=stack
-                mov     sp,r0
+                .extern _sbss
+                .extern _ebss
+                ldr     r1,=_sbss
+                ldr     r2,=_ebss
+                mov     r0,#0
+                b       2f
+1:              stm     r1!,{r0}
+2:              cmp     r1,r2
+                bne     1b
 
                 //
                 // Jump to high-level code.
