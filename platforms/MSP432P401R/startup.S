@@ -31,7 +31,7 @@ _start:
                 .extern _ebss
                 ldr     r1,=_sbss
                 ldr     r2,=_ebss
-                movs    r0,#0
+                mov     r0,#0
                 b       2f
 1:              stm     r1!,{r0}
 2:              cmp     r1,r2
