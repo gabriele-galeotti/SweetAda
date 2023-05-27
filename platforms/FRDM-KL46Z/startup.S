@@ -25,6 +25,19 @@ _start:
                 mov     sp,r0
 
                 //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                ldr     r1,=_sbss
+                ldr     r2,=_ebss
+                mov     r0,#0
+                b       2f
+1:              stm     r1!,{r0}
+2:              cmp     r1,r2
+                bne     1b
+
+                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main
