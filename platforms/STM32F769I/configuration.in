@@ -17,10 +17,8 @@ OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 
 USE_APPLICATION := test-STM32F769I
 
-OPENOCD_PREFIX := /opt/OpenOCD
-
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
-                           -p "$(OPENOCD_PREFIX)"                                     \
+                           -p "/opt/OpenOCD"                                          \
                            -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg    \
                            -server -w
 SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
