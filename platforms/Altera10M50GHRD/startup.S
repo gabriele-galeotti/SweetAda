@@ -55,19 +55,6 @@ _start:
                 bltu    r1,r2,1b
 
                 //
-                // Clear .bss section.
-                //
-                .extern _sbss
-                .extern _ebss
-                movhi   r1,%hi(_sbss)
-                ori     r1,r1,%lo(_sbss)
-                movhi   r2,%hi(_ebss)
-                ori     r2,r2,%lo(_ebss)
-1:              stb     r0,0(r1)
-                addi    r1,r1,1
-                bne     r1,r2,1b
-
-                //
                 // Setup stack pointer.
                 //
                 movhi   sp,%hi(kernel_stack)
@@ -80,6 +67,19 @@ _start:
                 .extern _gp
                 movhi   gp,%hi(_gp)
                 ori     gp,gp,%lo(_gp)
+
+                //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                movhi   r1,%hi(_sbss)
+                ori     r1,r1,%lo(_sbss)
+                movhi   r2,%hi(_ebss)
+                ori     r2,r2,%lo(_ebss)
+1:              stb     r0,0(r1)
+                addi    r1,r1,1
+                bne     r1,r2,1b
 
                 //
                 // Jump to high-level code.
