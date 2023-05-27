@@ -22,21 +22,19 @@ OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 
 USE_APPLICATION := test-FRDM-KL46Z
 
-OPENOCD_PREFIX := /opt/OpenOCD
-
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
-                           -server -w                                                 \
-                           -p "$(OPENOCD_PREFIX)"                                     \
-                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg
+                           -p "/opt/OpenOCD"                                          \
+                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg    \
+                           -server -w
 SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -shutdown
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
                            -e $(ELFTOOL) -s _start -thumb -command "halt"
-DEBUG_COMMAND         := $(RUN_COMMAND) -debug &&                           \
-                          $$GDB                                             \
-                                -ex "target extended-remote localhost:3333" \
-                                -ex "set language asm"                      \
-                                -ex "set \$$pc=_start"                      \
-                                $(KERNEL_OUTFILE)
+DEBUG_COMMAND         := $(RUN_COMMAND) -debug &&                          \
+                         $$GDB                                             \
+                               -ex "target extended-remote localhost:3333" \
+                               -ex "set language asm"                      \
+                               -ex "set \$$pc=_start"                      \
+                               $(KERNEL_OUTFILE)
 
