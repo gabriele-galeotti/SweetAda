@@ -111,7 +111,6 @@ package body BSP is
       RPI3.GPFSEL0.FSEL5 := RPI3.GPIO_OUTPUT;
       RPI3.GPFSEL0.FSEL6 := RPI3.GPIO_OUTPUT;
       -- Timer IRQ ------------------------------------------------------------
-      RPI3.Timer_Init;
       RPI3.Timer_Reload;
       RPI3.Enable_IRQs_1 (RPI3.system_timer_match_1) := True;
       ARMv8A.Irq_Enable;

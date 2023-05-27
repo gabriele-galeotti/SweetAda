@@ -26,23 +26,13 @@ package body RPI3 is
    --========================================================================--
 
    Timer_Constant : constant := 2_000_000 / 1_000;
-   Timer_Count    : Unsigned_32;
-
-   ----------------------------------------------------------------------------
-   -- Timer_Init
-   ----------------------------------------------------------------------------
-   procedure Timer_Init is
-   begin
-      Timer_Count := SYSTEM_TIMER.CLO;
-   end Timer_Init;
 
    ----------------------------------------------------------------------------
    -- Timer_Reload
    ----------------------------------------------------------------------------
    procedure Timer_Reload is
    begin
-      Timer_Count := @ + Timer_Constant;
-      SYSTEM_TIMER.C1 := Timer_Count;
+      SYSTEM_TIMER.C1 := SYSTEM_TIMER.CLO + Timer_Constant;
    end Timer_Reload;
 
 end RPI3;
