@@ -40,6 +40,9 @@ LIBGNAT_SRCS += s-stoele.adb
 LIBGNAT_SRCS += s-stoele.ads
 LIBGNAT_SRCS += s-unstyp.ads
 
+LIBGNARL_SRCS += s-musplo.adb
+LIBGNARL_SRCS += s-musplo.ads
+
 #
 # system.ads default configuration.
 #
