@@ -25,29 +25,34 @@ package body FATFS.Cluster is
    --                                                                        --
    --========================================================================--
 
-   function Is_Valid (CCB : CCB_Type) return Boolean with
+   function Is_Valid
+      (CCB : in CCB_Type)
+      return Boolean with
       Inline => True;
 
-   function Is_Valid (C : Cluster_Type) return Boolean with
+   function Is_Valid
+      (D : in Descriptor_Type;
+       C : in Cluster_Type)
+      return Boolean with
       Inline => True;
 
-   procedure Get_Next (
-                       CCB     : in out CCB_Type;
-                       B       : in out Block_Type;
-                       Success : out    Boolean
-                      );
+   procedure Get_Next
+      (D       : in     Descriptor_Type;
+       CCB     : in out CCB_Type;
+       B       : in out Block_Type;
+       Success :    out Boolean);
 
-   procedure Internal_Locate (
-                              B       : out    Block_Type;
-                              C       : in out Cluster_Type;
-                              Success : out    Boolean
-                             );
+   procedure Internal_Locate
+      (D       : in     Descriptor_Type;
+       B       :    out Block_Type;
+       C       : in out Cluster_Type;
+       Success :    out Boolean);
 
-   procedure Locate (
-                     B       : out Block_Type;
-                     C       : out Cluster_Type;
-                     Success : out Boolean
-                    );
+   procedure Locate
+      (D       : in out Descriptor_Type;
+       B       :    out Block_Type;
+       C       :    out Cluster_Type;
+       Success :    out Boolean);
 
    --========================================================================--
    --                                                                        --
@@ -62,7 +67,10 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Return True if CCB is valid.
    ----------------------------------------------------------------------------
-   function Is_Valid (CCB : CCB_Type) return Boolean is
+   function Is_Valid
+      (CCB : in CCB_Type)
+      return Boolean
+      is
    begin
       return CCB.Start_Sector > 0 and then CCB.Sector_Count > 0;
    end Is_Valid;
@@ -72,9 +80,13 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Return True if cluster points to a data cluster.
    ----------------------------------------------------------------------------
-   function Is_Valid (C : Cluster_Type) return Boolean is
+   function Is_Valid
+      (D : in Descriptor_Type;
+       C : in Cluster_Type)
+      return Boolean
+      is
    begin
-      case FAT_Style is
+      case D.FAT_Style is
          when FAT16  => return C >= 2 and then C < 16#FFF0#;
          when FAT32  => return C >= 2 and then C < 16#FFFF_FFF0#;
          when others => return False;
@@ -86,7 +98,10 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Return True if sector is at the end of a cluster.
    ----------------------------------------------------------------------------
-   function Is_End (CCB : CCB_Type) return Boolean is
+   function Is_End
+      (CCB : in CCB_Type)
+      return Boolean
+      is
    begin
       return Unsigned_16 (CCB.Current_Sector - CCB.Start_Sector) >= CCB.Sector_Count; -- __FIX__ to be done in endianness?
    end Is_End;
@@ -96,9 +111,13 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Compute sector address of a cluster.
    ----------------------------------------------------------------------------
-   function To_Sector (C : Cluster_Type) return Sector_Type is
+   function To_Sector
+      (D : in Descriptor_Type;
+       C : in Cluster_Type)
+      return Sector_Type
+      is
    begin
-      return Cluster_Start + Sector_Type (C - 2) * Sector_Type (Sectors_Per_Cluster);
+      return D.Cluster_Start + Sector_Type (C - 2) * Sector_Type (D.Sectors_Per_Cluster);
    end To_Sector;
 
    ----------------------------------------------------------------------------
@@ -106,9 +125,12 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Return data cluster EOF value.
    ----------------------------------------------------------------------------
-   function File_EOF return Cluster_Type is
+   function File_EOF
+      (D : in Descriptor_Type)
+      return Cluster_Type
+      is
    begin
-      case FAT_Style is
+      case D.FAT_Style is
          when FAT16  => return 16#FFF8#;
          when FAT32  => return 16#FFFF_FFF8#;
          when others => return 1;
@@ -120,11 +142,11 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Look for an arbitrary region of the filesystem as if it was a cluster.
    ----------------------------------------------------------------------------
-   procedure Map (
-                  CCB   : out CCB_Type;
-                  S     : in  Sector_Type;
-                  Count : in  Unsigned_16
-                 ) is
+   procedure Map
+      (CCB   :    out CCB_Type;
+       S     : in     Sector_Type;
+       Count : in     Unsigned_16)
+       is
    begin
       CCB.Start_Sector    := S;
       CCB.Previous_Sector := 0;
@@ -140,23 +162,24 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Open a cluster.
    ----------------------------------------------------------------------------
-   procedure Open (
-                   CCB        : in out CCB_Type;
-                   C          : in     Cluster_Type;
-                   Keep_First : in     Boolean
-                  ) is
+   procedure Open
+      (D          : in     Descriptor_Type;
+       CCB        : in out CCB_Type;
+       C          : in     Cluster_Type;
+       Keep_First : in     Boolean)
+      is
       IO_Bytes      : constant Unsigned_32 := CCB.IO_Bytes;
       The_Cluster   : Cluster_Type := C;
       First_Cluster : Cluster_Type := CCB.First_Cluster;
    begin
-      if Is_Valid (The_Cluster) then
-         Map (CCB, To_Sector (The_Cluster), Sectors_Per_Cluster);
+      if Is_Valid (D, The_Cluster) then
+         Map (CCB, To_Sector (D, The_Cluster), D.Sectors_Per_Cluster);
          CCB.Cluster := The_Cluster; -- save cluster number
       else
          -- no clusters
          The_Cluster := 0;
          First_Cluster := 0;
-         Map (CCB, 0, Sectors_Per_Cluster);
+         Map (CCB, 0, D.Sectors_Per_Cluster);
       end if;
       if Keep_First then
          CCB.First_Cluster := First_Cluster;
@@ -171,13 +194,14 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Open next cluster, if any.
    ----------------------------------------------------------------------------
-   procedure Get_Next (
-                       CCB     : in out CCB_Type;
-                       B       : in out Block_Type;
-                       Success : out    Boolean
-                      ) is
-      Sector : Sector_Type := FAT_Start (FAT_Index); -- start of FAT
-      C      : Cluster_Type := CCB.Cluster;          -- current, then next cluster #
+   procedure Get_Next
+      (D       : in     Descriptor_Type;
+       CCB     : in out CCB_Type;
+       B       : in out Block_Type;
+       Success :    out Boolean)
+      is
+      Sector : Sector_Type := D.FAT_Start (D.FAT_Index); -- start of FAT
+      C      : Cluster_Type := CCB.Cluster;              -- current, then next cluster #
    begin
       if not Is_Valid (CCB) or else C < 2 or else CCB.First_Cluster < 2 then
          -- invalid CCB or end of cluster chain
@@ -185,19 +209,19 @@ package body FATFS.Cluster is
          return;
       end if;
       -- locate FAT sector for this cluster number
-      Sector := FAT_Sector (FAT_Style, C);
-      IO_Context.Read (Physical_Sector (Sector), B, Success);
+      Sector := FAT_Sector (D, D.FAT_Style, C);
+      D.Read (Physical_Sector (D, Sector), B, Success);
       -- __FIX__ endian?
       if not Success then
          return;
       end if;
       -- retrieve next cluster #
-      C := FAT_Entry (B, C);
-      if not Is_Valid (C) then
+      C := FAT_Entry (D, B, C);
+      if not Is_Valid (D, C) then
          -- no next cluster, treat as an error
          Success := False;
       else
-         Open (CCB, C, Keep_First => True);
+         Open (D, CCB, C, Keep_First => True);
       end if;
    end Get_Next;
 
@@ -206,18 +230,19 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Advance by one sector in a cluster.
    ----------------------------------------------------------------------------
-   procedure Advance (
-                      CCB     : in out CCB_Type;
-                      B       : in out Block_Type;
-                      Success : out    Boolean
-                     ) is
+   procedure Advance
+      (D       : in     Descriptor_Type;
+       CCB     : in out CCB_Type;
+       B       : in out Block_Type;
+       Success :    out Boolean)
+      is
    begin
       if not Is_Valid (CCB) then
          Success := False;
          return;
       end if;
       if Is_End (CCB) then
-         Get_Next (CCB, B, Success);
+         Get_Next (D, CCB, B, Success);
       else
          CCB.Current_Sector := CCB.Current_Sector + 1;
          Success := True;
@@ -229,23 +254,24 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Read a cluster, without sector bumping.
    ----------------------------------------------------------------------------
-   procedure Peek (
-                   CCB     : in out CCB_Type;
-                   B       : out    Block_Type;
-                   Success : out    Boolean
-                  ) is
+   procedure Peek
+      (D       : in     Descriptor_Type;
+       CCB     : in out CCB_Type;
+       B       :    out Block_Type;
+       Success :    out Boolean)
+      is
    begin
       if not Is_Valid (CCB) then
          Success := False;
          return;
       end if;
       if Is_End (CCB) then
-         Get_Next (CCB, B, Success);
+         Get_Next (D, CCB, B, Success);
       else
          Success := True;
       end if;
       if Success then
-         IO_Context.Read (Physical_Sector (CCB.Current_Sector), B, Success);
+         D.Read (Physical_Sector (D, CCB.Current_Sector), B, Success);
          -- __FIX__ endian?
       end if;
    end Peek;
@@ -255,10 +281,13 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Rewind the cluster chain.
    ----------------------------------------------------------------------------
-   procedure Rewind (CCB : in out CCB_Type) is
+   procedure Rewind
+      (D   : in     Descriptor_Type;
+       CCB : in out CCB_Type)
+      is
    begin
       if CCB.First_Cluster >= 2 then
-         Open (CCB, CCB.First_Cluster, Keep_First => True);
+         Open (D, CCB, CCB.First_Cluster, Keep_First => True);
       else
          CCB.Current_Sector := CCB.Start_Sector;
       end if;
@@ -271,11 +300,12 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Search a free cluster.
    ----------------------------------------------------------------------------
-   procedure Internal_Locate (
-                              B       : out    Block_Type;
-                              C       : in out Cluster_Type;
-                              Success : out    Boolean
-                             ) is
+   procedure Internal_Locate
+      (D       : in     Descriptor_Type;
+       B       :    out Block_Type;
+       C       : in out Cluster_Type;
+       Success :    out Boolean)
+      is
       Sector : Sector_Type;
       First  : Boolean := True;
    begin
@@ -284,15 +314,15 @@ package body FATFS.Cluster is
          C := 2; -- search from start of FAT
       end if;
       loop
-         Sector := FAT_Sector (FAT_Style, C);
-         exit when FAT_Is_End (Sector);
-         if C /= Next_Writable_Cluster then -- reserve one cluster for writes
-            if FAT_Entry_Index (FAT_Style, C) = 0 or else C = 2 or else First then
+         Sector := FAT_Sector (D, D.FAT_Style, C);
+         exit when FAT_Is_End (D, Sector);
+         if C /= D.Next_Writable_Cluster then -- reserve one cluster for writes
+            if FAT_Entry_Index (D.FAT_Style, C) = 0 or else C = 2 or else First then
                First := False;
-               IO_Context.Read (Physical_Sector (Sector), B, Success); -- read in FAT sector
+               D.Read (Physical_Sector (D, Sector), B, Success); -- read in FAT sector
                exit when not Success;
             end if;
-            if FAT_Entry (B, C) = 0 then
+            if FAT_Entry (D, B, C) = 0 then
                return; -- free cluster located
             end if;
          end if;
@@ -306,19 +336,20 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Search for free cluster.
    ----------------------------------------------------------------------------
-   procedure Locate (
-                     B       : out Block_Type;
-                     C       : out Cluster_Type;
-                     Success : out Boolean
-                    ) is
-      Retry : constant Boolean := Search_Cluster > 2;
+   procedure Locate
+      (D       : in out Descriptor_Type;
+       B       :    out Block_Type;
+       C       :    out Cluster_Type;
+       Success :    out Boolean)
+      is
+      Retry : constant Boolean := D.Search_Cluster > 2;
    begin
-      Internal_Locate (B, Search_Cluster, Success);
-      if (not Success or else Search_Cluster = 0) and then Retry then
-         Internal_Locate (B, Search_Cluster, Success);
+      Internal_Locate (D, B, D.Search_Cluster, Success);
+      if (not Success or else D.Search_Cluster = 0) and then Retry then
+         Internal_Locate (D, B, D.Search_Cluster, Success);
       end if;
       if Success then
-         C := Search_Cluster;
+         C := D.Search_Cluster;
       else
          C := 0;
       end if;
@@ -329,11 +360,14 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Pre-locate a free cluster.
    ----------------------------------------------------------------------------
-   procedure Prelocate (B : out Block_Type) is
+   procedure Prelocate
+      (D : in out Descriptor_Type;
+       B :    out Block_Type)
+      is
       Success : Boolean;
    begin
-      if Next_Writable_Cluster < 2 then
-         Locate (B, Next_Writable_Cluster, Success);
+      if D.Next_Writable_Cluster < 2 then
+         Locate (D, B, D.Next_Writable_Cluster, Success);
       end if;
    end Prelocate;
 
@@ -342,10 +376,14 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Put a 16/32-bit cluster # into directory entry.
    ----------------------------------------------------------------------------
-   procedure Put_First (DE : in out Directory_Entry_Type; C : in Cluster_Type) is
+   procedure Put_First
+      (D  : in     Descriptor_Type;
+       DE : in out Directory_Entry_Type;
+       C  : in     Cluster_Type)
+      is
    begin
       DE.First_Cluster := Unsigned_16 (Unsigned_32 (C) and 16#0000_FFFF#);
-      if FAT_Style = FAT32 then
+      if D.FAT_Style = FAT32 then
          DE.Cluster_High := Unsigned_16 (Shift_Right (Unsigned_32 (C), 16));
       end if;
    end Put_First;
@@ -355,9 +393,13 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Get a 16/32-bit cluster # from directory entry.
    ----------------------------------------------------------------------------
-   function Get_First (DE : Directory_Entry_Type) return Cluster_Type is
+   function Get_First
+      (D  : in     Descriptor_Type;
+       DE : in Directory_Entry_Type)
+      return Cluster_Type
+      is
    begin
-      case FAT_Style is
+      case D.FAT_Style is
          when FAT16 => return Cluster_Type (DE.First_Cluster);
          when FAT32 => return Cluster_Type (
                                             Shift_Left (Unsigned_32 (DE.Cluster_High), 16)
@@ -372,21 +414,22 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Claim the cluster by marking it as last in cluster chain.
    ----------------------------------------------------------------------------
-   procedure Claim (
-                    B       : out Block_Type;   -- I/O buffer to use
-                    C       : in  Cluster_Type; -- cluster to mark
-                    Chain   : in  Cluster_Type; -- cluster or File_EOF (end of chain)
-                    Success : out Boolean       -- result of operation
-                   ) is
-      Sector : constant Sector_Type := FAT_Sector (FAT_Style, C);
+   procedure Claim
+      (D       : in out Descriptor_Type;
+       B       :    out Block_Type;      -- I/O buffer to use
+       C       : in     Cluster_Type;    -- cluster to mark
+       Chain   : in     Cluster_Type;    -- cluster or File_EOF (end of chain)
+       Success :    out Boolean)
+      is
+      Sector : constant Sector_Type := FAT_Sector (D, D.FAT_Style, C);
    begin
-      if C = Next_Writable_Cluster then
-         Next_Writable_Cluster := 0;                          -- mark this as in use
+      if C = D.Next_Writable_Cluster then
+         D.Next_Writable_Cluster := 0;                          -- mark this as in use
       end if;
-      IO_Context.Read (Physical_Sector (Sector), B, Success); -- read in the FAT cluster
+      D.Read (Physical_Sector (D, Sector), B, Success); -- read in the FAT cluster
       if Success then
-         FAT_Put_Entry (B, C, Chain);                         -- mark as in use (as EOF)
-         FAT_Update (Sector, B, Success);                     -- update all FAT copies
+         FAT_Put_Entry (D, B, C, Chain);                         -- mark as in use (as EOF)
+         FAT_Update (D, Sector, B, Success);                     -- update all FAT copies
       end if;
    end Claim;
 
@@ -395,17 +438,18 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Read cluster and advance by one sector.
    ----------------------------------------------------------------------------
-   procedure Read (
-                   CCB     : in out CCB_Type;
-                   B       : out    Block_Type;
-                   Success : out    Boolean
-                  ) is
+   procedure Read
+      (D       : in     Descriptor_Type;
+       CCB     : in out CCB_Type;
+       B       :    out Block_Type;
+       Success :    out Boolean)
+      is
    begin
-      Peek (CCB, B, Success);
+      Peek (D, CCB, B, Success);
       if Success then
          CCB.Previous_Sector := CCB.Current_Sector;
          CCB.Current_Sector  := CCB.Current_Sector + 1;
-         CCB.IO_Bytes        := CCB.IO_Bytes + Unsigned_32 (Sector_Size);
+         CCB.IO_Bytes        := CCB.IO_Bytes + Unsigned_32 (D.Sector_Size);
       end if;
    end Read;
 
@@ -414,17 +458,18 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Re-read the last read sector of a cluster.
    ----------------------------------------------------------------------------
-   procedure Reread (
-                     CCB     : in  CCB_Type;
-                     B       : out Block_Type;
-                     Success : out Boolean
-                    ) is
+   procedure Reread
+      (D       : in     Descriptor_Type;
+       CCB     : in     CCB_Type;
+       B       :    out Block_Type;
+       Success :    out Boolean)
+      is
    begin
       if CCB.Previous_Sector = 0 then
          Success := False;
          return;
       end if;
-      IO_Context.Read (Physical_Sector (CCB.Previous_Sector), B, Success);
+      D.Read (Physical_Sector (D, CCB.Previous_Sector), B, Success);
    end Reread;
 
    ----------------------------------------------------------------------------
@@ -432,7 +477,11 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Release a cluster chain.
    ----------------------------------------------------------------------------
-   procedure Release_Chain (First_Cluster : in Cluster_Type; B : out Block_Type) is
+   procedure Release_Chain
+      (D             : in     Descriptor_Type;
+       First_Cluster : in     Cluster_Type;
+       B             :    out Block_Type)
+      is
       C       : Cluster_Type; -- current cluster in chain
       C_Next  : Cluster_Type; -- next cluster in chain
       Sector  : Sector_Type;  -- FAT sector for cluster
@@ -440,15 +489,15 @@ package body FATFS.Cluster is
    begin
       C := First_Cluster;
       loop
-         exit when not Is_Valid (C);
+         exit when not Is_Valid (D, C);
          -- read FAT Sector for current cluster
-         Sector := FAT_Sector (FAT_Style, C);
-         IO_Context.Read (Physical_Sector (Sector), B, Success);
+         Sector := FAT_Sector (D, D.FAT_Style, C);
+         D.Read (Physical_Sector (D, Sector), B, Success);
          exit when not Success;
          -- update the FAT Sector entry
-         C_Next := FAT_Entry (B, C);      -- get next cluster, if any
-         FAT_Put_Entry (B, C, 0);         -- mark this cluster as free
-         FAT_Update (Sector, B, Success); -- update all FAT entries
+         C_Next := FAT_Entry (D, B, C);      -- get next cluster, if any
+         FAT_Put_Entry (D, B, C, 0);         -- mark this cluster as free
+         FAT_Update (D, Sector, B, Success); -- update all FAT entries
          exit when not Success;
          C := C_Next;
       end loop;
@@ -459,11 +508,12 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Write the next sector, get next/extend cluster and write.
    ----------------------------------------------------------------------------
-   procedure Write (
-                    File    : in out WCB_Type;
-                    B       : in out Block_Type;
-                    Success : out    Boolean
-                   ) is
+   procedure Write
+      (D       : in out Descriptor_Type;
+       File    : in out WCB_Type;
+       B       : in out Block_Type;
+       Success :    out Boolean)
+      is
       New_Cluster : Cluster_Type := 0;
       DI          : Unsigned_16;
    begin
@@ -478,18 +528,18 @@ package body FATFS.Cluster is
          File.CCB.Current_Sector = 0
       then
          -- add first cluster or add a new cluster
-         if Next_Writable_Cluster < 2 then
+         if D.Next_Writable_Cluster < 2 then
             Success := False;
             return; -- no more space or I/O error(s)
          end if;
          -- save write data to the new cluster
-         New_Cluster := Next_Writable_Cluster;
-         IO_Context.Write (Physical_Sector (To_Sector (New_Cluster)), B, Success);
+         New_Cluster := D.Next_Writable_Cluster;
+         D.Write (Physical_Sector (D, To_Sector (D, New_Cluster)), B, Success);
          if not Success then
             return; -- I/O error
          end if;
          -- tell filesystem that we've claimed this cluster
-         Claim (B, New_Cluster, File_EOF, Success);
+         Claim (D, B, New_Cluster, File_EOF (D), Success);
          if not Success then
             return;
          end if;
@@ -504,34 +554,34 @@ package body FATFS.Cluster is
                   Import     => True,
                   Convention => Ada;
             begin
-               IO_Context.Read (Physical_Sector (File.Directory_Sector), B, Success);
+               D.Read (Physical_Sector (D, File.Directory_Sector), B, Success);
                if Success then
                   DI := File.Directory_Index mod 16;
-                  Put_First (Dir (DI), New_Cluster);
-                  IO_Context.Write (Physical_Sector (File.Directory_Sector), B, Success);
+                  Put_First (D, Dir (DI), New_Cluster);
+                  D.Write (Physical_Sector (D, File.Directory_Sector), B, Success);
                end if;
             end;
             if Success then
-               Open (File.CCB, New_Cluster, Keep_First => False);
+               Open (D, File.CCB, New_Cluster, Keep_First => False);
             else
                return; -- I/O error
             end if;
          else
             -- otherwise add a cluster to this file's chain
-            Claim (B, File.CCB.Cluster, New_Cluster, Success); -- link current cluster to next
+            Claim (D, B, File.CCB.Cluster, New_Cluster, Success); -- link current cluster to next
             if Success then
-               Open (File.CCB, New_Cluster, Keep_First => True);
+               Open (D, File.CCB, New_Cluster, Keep_First => True);
             else
                return;
             end if;
          end if;
-         File.CCB.IO_Bytes := File.CCB.IO_Bytes + Unsigned_32 (Sector_Size);
-         Prelocate (B);                                                           -- get next free cluster
-         IO_Context.Read (Physical_Sector (File.CCB.Current_Sector), B, Success); -- restore user''s buffer
+         File.CCB.IO_Bytes := File.CCB.IO_Bytes + Unsigned_32 (D.Sector_Size);
+         Prelocate (D, B);                                                           -- get next free cluster
+         D.Read (Physical_Sector (D, File.CCB.Current_Sector), B, Success); -- restore user''s buffer
       else
-         IO_Context.Write (Physical_Sector (File.CCB.Current_Sector), B, Success); -- a simple write
+         D.Write (Physical_Sector (D, File.CCB.Current_Sector), B, Success); -- a simple write
          if Success then
-            File.CCB.IO_Bytes := File.CCB.IO_Bytes + Unsigned_32 (Sector_Size);
+            File.CCB.IO_Bytes := File.CCB.IO_Bytes + Unsigned_32 (D.Sector_Size);
          end if;
       end if;
       File.CCB.Previous_Sector := File.CCB.Current_Sector;     -- the sector just written
@@ -543,7 +593,9 @@ package body FATFS.Cluster is
    ----------------------------------------------------------------------------
    -- Close a cluster.
    ----------------------------------------------------------------------------
-   procedure Close (CCB : out CCB_Type) is
+   procedure Close
+      (CCB : out CCB_Type)
+      is
    begin
       CCB.Start_Sector := 0;
       CCB.Sector_Count := 0;

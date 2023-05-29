@@ -28,25 +28,25 @@ package body FATFS.Textfile is
    --                                                                        --
    --========================================================================--
 
-   procedure Get (
-                  File    : in out TFCB_Type;
-                  B       : out    Block_Type;
-                  Count   : out    Unsigned_16;
-                  Success : out    Boolean
-                 );
+   procedure Get
+      (D       : in     Descriptor_Type;
+       File    : in out TFCB_Type;
+       B       :    out Block_Type;
+       Count   :    out Unsigned_16;
+       Success :    out Boolean);
 
-   procedure Get (
-                  File    : in     TWCB_Type;
-                  B       : in out Block_Type;
-                  Success : out    Boolean
-                 );
+   procedure Get
+      (D       : in     Descriptor_Type;
+       File    : in     TWCB_Type;
+       B       : in out Block_Type;
+       Success :    out Boolean);
 
-   procedure Put (
-                  File    : in out TWCB_Type;
-                  B       : in out Block_Type;
-                  Count   : in     Unsigned_16;
-                  Success : out    Boolean
-                 );
+   procedure Put
+      (D       : in out Descriptor_Type;
+       File    : in out TWCB_Type;
+       B       : in out Block_Type;
+       Count   : in     Unsigned_16;
+       Success : out    Boolean);
 
    --========================================================================--
    --                                                                        --
@@ -61,14 +61,15 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Open a text file by directory entry.
    ----------------------------------------------------------------------------
-   procedure Open (
-                   File    : out TFCB_Type;
-                   DE      : in  Directory_Entry_Type;
-                   Success : out Boolean
-                  ) is
+   procedure Open
+      (D       : in     Descriptor_Type;
+       File    :    out TFCB_Type;
+       DE      : in     Directory_Entry_Type;
+       Success :    out Boolean)
+      is
    begin
       File.Byte_Offset := 0;
-      Rawfile.Open (File.FCB, DE, Success);
+      Rawfile.Open (D, File.FCB, DE, Success);
    end Open;
 
    ----------------------------------------------------------------------------
@@ -76,15 +77,16 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Open a text file by name.
    ----------------------------------------------------------------------------
-   procedure Open (
-                   File      : out    TFCB_Type;
-                   DCB       : in out DCB_Type;
-                   File_Name : in     String;
-                   Success   : out    Boolean
-                  ) is
+   procedure Open
+      (D         : in     Descriptor_Type;
+       File      :    out TFCB_Type;
+       DCB       : in out DCB_Type;
+       File_Name : in     String;
+       Success   :    out Boolean)
+      is
    begin
       File.Byte_Offset := 0;
-      Rawfile.Open (File.FCB, DCB, File_Name, Success);
+      Rawfile.Open (D, File.FCB, DCB, File_Name, Success);
    end Open;
 
    ----------------------------------------------------------------------------
@@ -92,9 +94,12 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Rewind a text file.
    ----------------------------------------------------------------------------
-   procedure Rewind (File : in out TFCB_Type) is
+   procedure Rewind
+      (D    : in     Descriptor_Type;
+       File : in out TFCB_Type)
+      is
    begin
-      Rawfile.Rewind (File.FCB);
+      Rawfile.Rewind (D, File.FCB);
       File.Byte_Offset := 0;
    end Rewind;
 
@@ -103,17 +108,18 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Fetch a block to read from.
    ----------------------------------------------------------------------------
-   procedure Get (
-                  File    : in out TFCB_Type;
-                  B       : out    Block_Type;
-                  Count   : out    Unsigned_16;
-                  Success : out    Boolean
-                 ) is
+   procedure Get
+      (D       : in     Descriptor_Type;
+       File    : in out TFCB_Type;
+       B       :    out Block_Type;
+       Count   :    out Unsigned_16;
+       Success :    out Boolean)
+      is
    begin
       if File.Byte_Offset = 0 then
-         Rawfile.Read (File.FCB, B, Count, Success);
+         Rawfile.Read (D, File.FCB, B, Count, Success);
       else
-         Rawfile.Reread (File.FCB, B, Count, Success);
+         Rawfile.Reread (D, File.FCB, B, Count, Success);
       end if;
    end Get;
 
@@ -122,20 +128,21 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Read the next character from the text file.
    ----------------------------------------------------------------------------
-   procedure Read_Char (
-                        File    : in out TFCB_Type;
-                        C       : out    Character;
-                        Success : out    Boolean
-                       ) is
+   procedure Read_Char
+      (D       : in     Descriptor_Type;
+       File    : in out TFCB_Type;
+       C       :    out Character;
+       Success :    out Boolean)
+      is
       B     : Block_Type (0 .. 511);
       Count : Unsigned_16;
    begin
-      Get (File, B, Count, Success);
+      Get (D, File, B, Count, Success);
       C := Character'Val (0);
       if Success then
          if File.Byte_Offset < Count then
             C := Character'Val (B (Natural (File.Byte_Offset)));
-            File.Byte_Offset := (File.Byte_Offset + 1) mod Sector_Size;
+            File.Byte_Offset := (File.Byte_Offset + 1) mod D.Sector_Size;
          else
             Success := False; -- end of file
          end if;
@@ -147,12 +154,13 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Read the next text line from the text file.
    ----------------------------------------------------------------------------
-   procedure Read_Line (
-                        File    : in out TFCB_Type;
-                        Line    : out    String;
-                        Last    : out    Natural;
-                        Success : out    Boolean
-                       ) is
+   procedure Read_Line
+      (D       : in     Descriptor_Type;
+       File    : in out TFCB_Type;
+       Line    :    out String;
+       Last    :    out Natural;
+       Success :    out Boolean)
+      is
       B        : Block_Type (0 .. 511);
       Count    : Unsigned_16;
       Byte     : Unsigned_8;
@@ -163,7 +171,7 @@ package body FATFS.Textfile is
          Success := True;
          return;
       end if;
-      Get (File, B, Count, Success);
+      Get (D, File, B, Count, Success);
       if Success then
          if File.Byte_Offset >= Count then
             Success := False;
@@ -173,11 +181,11 @@ package body FATFS.Textfile is
             exit when File.Byte_Offset >= Count; -- end file test
             Byte := B (Natural (File.Byte_Offset));
             exit when Byte = 16#0D# or else Byte = 16#0A#;
-            File.Byte_Offset := (File.Byte_Offset + 1) mod Sector_Size;
+            File.Byte_Offset := (File.Byte_Offset + 1) mod D.Sector_Size;
             Line (Index) := Character'Val (Byte);
             Last := Index;
             if File.Byte_Offset = 0 then
-               Get (File, B, Count, Success);
+               Get (D, File, B, Count, Success);
                exit when not Success;
             end if;
          end loop;
@@ -185,16 +193,16 @@ package body FATFS.Textfile is
             exit when File.Byte_Offset >= Count; -- end file test
             Byte := B (Natural (File.Byte_Offset));
             if Byte = 16#0D# then
-               File.Byte_Offset := (File.Byte_Offset + 1) mod Sector_Size;
+               File.Byte_Offset := (File.Byte_Offset + 1) mod D.Sector_Size;
                -- End_Flag := True;
             elsif Byte = 16#0A# then
-               File.Byte_Offset := (File.Byte_Offset + 1) mod Sector_Size;
+               File.Byte_Offset := (File.Byte_Offset + 1) mod D.Sector_Size;
                exit;
             else
                exit; -- read line was truncated in user''s buffer
             end if;
             if File.Byte_Offset = 0 then
-               Get (File, B, Count, Success);
+               Get (D, File, B, Count, Success);
                exit when not Success;
             end if;
          end loop;
@@ -206,12 +214,13 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Read a binary record.
    ----------------------------------------------------------------------------
-   procedure Read (
-                   File    : in out TFCB_Type;
-                   Buffer  : out    Byte_Array;
-                   Count   : out    Unsigned_16;
-                   Success : out    Boolean
-                  ) is
+   procedure Read
+      (D       : in     Descriptor_Type;
+       File    : in out TFCB_Type;
+       Buffer  :    out Byte_Array;
+       Count   :    out Unsigned_16;
+       Success :    out Boolean)
+      is
       B          : Block_Type (0 .. 511);
       Read_Count : Unsigned_16;
    begin
@@ -220,15 +229,15 @@ package body FATFS.Textfile is
          Success := True;
          return;
       end if;
-      Get (File, B, Read_Count, Success);
+      Get (D, File, B, Read_Count, Success);
       for Index in Buffer'Range loop
          exit when not Success;
          exit when File.Byte_Offset >= Read_Count; -- end file test
          Buffer (Index) := B (Natural (File.Byte_Offset));
          Count := Count + 1;
-         File.Byte_Offset := (File.Byte_Offset + 1) mod Sector_Size;
+         File.Byte_Offset := (File.Byte_Offset + 1) mod D.Sector_Size;
          if File.Byte_Offset = 0 and then Index < Buffer'Last then
-            Get (File, B, Read_Count, Success);
+            Get (D, File, B, Read_Count, Success);
          end if;
       end loop;
       if Count < 1 then
@@ -241,15 +250,16 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Read an Unsigned_8.
    ----------------------------------------------------------------------------
-   procedure Read (
-                   File    : in out TFCB_Type;
-                   Data    : out    Unsigned_8;
-                   Success : out    Boolean
-                  ) is
+   procedure Read
+      (D       : in     Descriptor_Type;
+       File    : in out TFCB_Type;
+       Data    :    out Unsigned_8;
+       Success :    out Boolean)
+      is
       Buffer : Byte_Array (1 .. 1);
       Count  : Unsigned_16 with Unreferenced => True;
    begin
-      Read (File, Buffer, Count, Success);
+      Read (D, File, Buffer, Count, Success);
       if Success then
          Data := Buffer (Buffer'First);
       else
@@ -262,15 +272,16 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Read an Unsigned_16.
    ----------------------------------------------------------------------------
-   procedure Read (
-                   File    : in out TFCB_Type;
-                   Data    : out    Unsigned_16;
-                   Success : out    Boolean
-                  ) is
+   procedure Read
+      (D       : in     Descriptor_Type;
+       File    : in out TFCB_Type;
+       Data    :    out Unsigned_16;
+       Success :    out Boolean)
+      is
       Buffer : Byte_Array (1 .. 2);
       Count  : Unsigned_16;
    begin
-      Read (File, Buffer, Count, Success);
+      Read (D, File, Buffer, Count, Success);
       if Success and then Count = Buffer'Length then
          -- __FIX__ use Bits
          Data := Unsigned_16 (Buffer (Buffer'First)) or Shift_Left (Unsigned_16 (Buffer (Buffer'Last)), 8);
@@ -285,16 +296,17 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Read an Unsigned_32.
    ----------------------------------------------------------------------------
-   procedure Read (
-                   File    : in out TFCB_Type;
-                   Data    : out    Unsigned_32;
-                   Success : out    Boolean
-                  ) is
+   procedure Read
+      (D       : in     Descriptor_Type;
+       File    : in out TFCB_Type;
+       Data    :    out Unsigned_32;
+       Success :    out Boolean)
+      is
       Buffer : Byte_Array (1 .. 4);
       Count  : Unsigned_16;
    begin
       Data := 0;
-      Read (File, Buffer, Count, Success);
+      Read (D, File, Buffer, Count, Success);
       if Success and then Count = Buffer'Length then
          for Index in reverse Buffer'Range loop
             -- __FIX__ use Bits
@@ -310,9 +322,12 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Close a text file.
    ----------------------------------------------------------------------------
-   procedure Close (File : in out TFCB_Type) is
+   procedure Close
+      (D    : in     Descriptor_Type;
+       File : in out TFCB_Type)
+      is
    begin
-      Rawfile.Close (File.FCB);
+      Rawfile.Close (D, File.FCB);
    end Close;
 
    ----------------------------------------------------------------------------
@@ -320,15 +335,16 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Open an existing file for text writing.
    ----------------------------------------------------------------------------
-   procedure Open (
-                   File      : out    TWCB_Type;
-                   DCB       : in out DCB_Type;
-                   File_Name : in     String;
-                   Success   : out    Boolean
-                  ) is
+   procedure Open
+      (D         : in out Descriptor_Type;
+       File      :    out TWCB_Type;
+       DCB       : in out DCB_Type;
+       File_Name : in     String;
+       Success   :    out Boolean)
+      is
    begin
       File.Byte_Offset := 0;
-      Rawfile.Open (File.WCB, DCB, File_Name, Success);
+      Rawfile.Open (D, File.WCB, DCB, File_Name, Success);
    end Open;
 
    ----------------------------------------------------------------------------
@@ -336,15 +352,16 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Create a file.
    ----------------------------------------------------------------------------
-   procedure Create (
-                     File      : out    TWCB_Type;
-                     DCB       : in out DCB_Type;
-                     File_Name : in     String;
-                     Success   : out    Boolean
-                    ) is
+   procedure Create
+      (D         : in out Descriptor_Type;
+       File      :    out TWCB_Type;
+       DCB       : in out DCB_Type;
+       File_Name : in     String;
+       Success   :    out Boolean)
+      is
    begin
       File.Byte_Offset := 0;
-      Rawfile.Create (File.WCB, DCB, File_Name, Success);
+      Rawfile.Create (D, File.WCB, DCB, File_Name, Success);
    end Create;
 
    ----------------------------------------------------------------------------
@@ -352,16 +369,16 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Get partial buffer before appending text.
    ----------------------------------------------------------------------------
-   procedure Get (
-                  File    : in     TWCB_Type;
-                  B       : in out Block_Type;
-                  Success : out    Boolean
-                 ) is
+   procedure Get
+      (D       : in     Descriptor_Type;
+       File    : in     TWCB_Type;
+       B       : in out Block_Type;
+       Success :    out Boolean) is
    begin
       Success := Rawfile.Is_Valid (File.WCB);
       if Success then
          if File.Byte_Offset > 0 then
-            IO_Context.Read (Physical_Sector (File.WCB.CCB.Previous_Sector), B, Success);
+            D.Read (Physical_Sector (D, File.WCB.CCB.Previous_Sector), B, Success);
          else
             B := [others => 0];
          end if;
@@ -373,20 +390,21 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Put a block of text in a file.
    ----------------------------------------------------------------------------
-   procedure Put (
-                  File    : in out TWCB_Type;
-                  B       : in out Block_Type;
-                  Count   : in     Unsigned_16;
-                  Success : out    Boolean
-                 ) is
+   procedure Put
+      (D       : in out Descriptor_Type;
+       File    : in out TWCB_Type;
+       B       : in out Block_Type;
+       Count   : in     Unsigned_16;
+       Success : out    Boolean)
+      is
    begin
       if File.Byte_Offset = 0 then
-         Rawfile.Write (File.WCB, B, Count, Success); -- start a new sector of text
+         Rawfile.Write (D, File.WCB, B, Count, Success); -- start a new sector of text
       else
-         Rawfile.Rewrite (File.WCB, B, Count, Success); -- update last sector of text
+         Rawfile.Rewrite (D, File.WCB, B, Count, Success); -- update last sector of text
       end if;
       -- pragma Assert (Count <= Sector_Size); -- __FIX__
-      if Count >= Sector_Size then
+      if Count >= D.Sector_Size then
          File.Byte_Offset := 0;
       else
          File.Byte_Offset := Count;
@@ -398,19 +416,20 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Put a text character in a file.
    ----------------------------------------------------------------------------
-   procedure Put (
-                  File    : in out TWCB_Type;
-                  C       : in     Character;
-                  Success : out    Boolean
-                 ) is
+   procedure Put
+      (D       : in out Descriptor_Type;
+       File    : in out TWCB_Type;
+       C       : in     Character;
+       Success :    out Boolean)
+      is
       B     : Block_Type (0 .. 511);
       Count : Unsigned_16;
    begin
       Count := File.Byte_Offset + 1;
-      Get (File, B, Success);
+      Get (D, File, B, Success);
       if Success then
          B (Natural (File.Byte_Offset)) := Bits.To_U8 (C);
-         Put (File, B, Count, Success);
+         Put (D, File, B, Count, Success);
       end if;
    end Put;
 
@@ -419,11 +438,12 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Put a string of text in a file.
    ----------------------------------------------------------------------------
-   procedure Put (
-                  File    : in out TWCB_Type;
-                  Text    : in     String;
-                  Success : out    Boolean
-                 ) is
+   procedure Put
+      (D       : in out Descriptor_Type;
+       File    : in out TWCB_Type;
+       Text    : in     String;
+       Success :    out Boolean)
+      is
       B     : Block_Type (0 .. 511);
       Count : Unsigned_16 := File.Byte_Offset;
    begin
@@ -431,18 +451,18 @@ package body FATFS.Textfile is
          Success := True;
          return;
       end if;
-      Get (File, B, Success);
+      Get (D, File, B, Success);
       for Index in Text'Range loop
          exit when not Success;
          B (Natural (Count)) := Bits.To_U8 (Text (Index));
          Count := Count + 1;
-         if Count >= Sector_Size then
-            Put (File, B, Count, Success);
+         if Count >= D.Sector_Size then
+            Put (D, File, B, Count, Success);
             Count := 0;
          end if;
       end loop;
       if Success and then Count > 0 then
-         Put (File, B, Count, Success);
+         Put (D, File, B, Count, Success);
       end if;
    end Put;
 
@@ -451,9 +471,13 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Put a line terminator in a file.
    ----------------------------------------------------------------------------
-   procedure Put_NewLine (File : in out TWCB_Type; Success : out Boolean) is
+   procedure Put_NewLine
+      (D       : in out Descriptor_Type;
+       File    : in out TWCB_Type;
+       Success :    out Boolean)
+      is
    begin
-      Put (File, Definitions.CRLF, Success);
+      Put (D, File, Definitions.CRLF, Success);
    end Put_NewLine;
 
    ----------------------------------------------------------------------------
@@ -461,15 +485,16 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Put one line of text in a file (plus a terminating newline).
    ----------------------------------------------------------------------------
-   procedure Put_Line (
-                       File    : in out TWCB_Type;
-                       Text    : in     String;
-                       Success : out    Boolean
-                      ) is
+   procedure Put_Line
+      (D       : in out Descriptor_Type;
+       File    : in out TWCB_Type;
+       Text    : in     String;
+       Success :    out Boolean)
+      is
    begin
-      Put (File, Text, Success);
+      Put (D, File, Text, Success);
       if Success then
-         Put_NewLine (File, Success);
+         Put_NewLine (D, File, Success);
       end if;
    end Put_Line;
 
@@ -478,17 +503,18 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Write an array of values to a file.
    ----------------------------------------------------------------------------
-   procedure Write (
-                    File    : in out TWCB_Type;
-                    Buffer  : in     Byte_Array;
-                    Success : out    Boolean
-                   ) is
+   procedure Write
+      (D       : in out Descriptor_Type;
+       File    : in out TWCB_Type;
+       Buffer  : in     Byte_Array;
+       Success :    out Boolean)
+      is
       Text : aliased String (1 .. Buffer'Length) with
          Address    => Buffer (0)'Address,
          Import     => True,
          Convention => Ada;
    begin
-      Put (File, Text, Success);
+      Put (D, File, Text, Success);
    end Write;
 
    ----------------------------------------------------------------------------
@@ -496,15 +522,16 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Write an Unsigned_8 to a file.
    ----------------------------------------------------------------------------
-   procedure Write (
-                    File    : in out TWCB_Type;
-                    Data    : in     Unsigned_8;
-                    Success : out    Boolean
-                   ) is
+   procedure Write
+      (D       : in out Descriptor_Type;
+       File    : in out TWCB_Type;
+       Data    : in     Unsigned_8;
+       Success :    out Boolean)
+      is
       Buffer : Byte_Array (1 .. 1);
    begin
       Buffer (Buffer'First) := Data;
-      Write (File, Buffer, Success);
+      Write (D, File, Buffer, Success);
    end Write;
 
    ----------------------------------------------------------------------------
@@ -512,17 +539,18 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Write an Unsigned_16 to a file.
    ----------------------------------------------------------------------------
-   procedure Write (
-                    File    : in out TWCB_Type;
-                    Data    : in     Unsigned_16;
-                    Success : out    Boolean
-                   ) is
+   procedure Write
+      (D       : in out Descriptor_Type;
+       File    : in out TWCB_Type;
+       Data    : in     Unsigned_16;
+       Success : out    Boolean)
+      is
       Buffer : Byte_Array (1 .. 2);
    begin
       -- LE layout __FIX__ use Bits
       Buffer (Buffer'First + 0) := LByte (Data);
       Buffer (Buffer'First + 1) := HByte (Data);
-      Write (File, Buffer, Success);
+      Write (D, File, Buffer, Success);
    end Write;
 
    ----------------------------------------------------------------------------
@@ -530,11 +558,12 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Write an Unsigned_32 to a file.
    ----------------------------------------------------------------------------
-   procedure Write (
-                    File    : in out TWCB_Type;
-                    Data    : in     Unsigned_32;
-                    Success : out    Boolean
-                   ) is
+   procedure Write
+      (D       : in out Descriptor_Type;
+       File    : in out TWCB_Type;
+       Data    : in     Unsigned_32;
+       Success :    out Boolean)
+      is
       Buffer : Byte_Array (1 .. 4);
    begin
       -- LE layout __FIX__ use Bits
@@ -542,7 +571,7 @@ package body FATFS.Textfile is
       Buffer (Buffer'First + 1) := MByte (Data);
       Buffer (Buffer'First + 2) := NByte (Data);
       Buffer (Buffer'First + 3) := HByte (Data);
-      Write (File, Buffer, Success);
+      Write (D, File, Buffer, Success);
    end Write;
 
    ----------------------------------------------------------------------------
@@ -550,9 +579,13 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Force update of file size in directory entry.
    ----------------------------------------------------------------------------
-   procedure Sync (File : in out TWCB_Type; Success : out Boolean) is
+   procedure Sync
+      (D       : in     Descriptor_Type;
+       File    : in out TWCB_Type;
+       Success :    out Boolean)
+      is
    begin
-      Rawfile.Sync (File.WCB, Success);
+      Rawfile.Sync (D, File.WCB, Success);
    end Sync;
 
    ----------------------------------------------------------------------------
@@ -560,9 +593,13 @@ package body FATFS.Textfile is
    ----------------------------------------------------------------------------
    -- Close a text file.
    ----------------------------------------------------------------------------
-   procedure Close (File : in out TWCB_Type; Success : out Boolean) is
+   procedure Close
+      (D       : in     Descriptor_Type;
+       File    : in out TWCB_Type;
+       Success :    out Boolean)
+      is
    begin
-      Rawfile.Close (File.WCB, Success);
+      Rawfile.Close (D, File.WCB, Success);
    end Close;
 
 end FATFS.Textfile;

@@ -34,7 +34,9 @@ package body FATFS.Applications is
    ----------------------------------------------------------------------------
    -- Test
    ----------------------------------------------------------------------------
-   procedure Test is
+   procedure Test
+      (D : in Descriptor_Type)
+      is
       DCB     : DCB_Type;
       DE      : Directory_Entry_Type;
       Success : Boolean;
@@ -65,15 +67,15 @@ package body FATFS.Applications is
          Console.Print_NewLine;
       end Print_File_Name;
    begin
-      Directory.Open_Root (DCB, Success);
+      Directory.Open_Root (D, DCB, Success);
       if Success then
-         Directory.Get_Entry (DCB, DE, Success);
+         Directory.Get_Entry (D, DCB, DE, Success);
          if Success then
             Print_File_Name (DE);
          end if;
          -------------------------------------------
          loop
-            Directory.Next_Entry (DCB, DE, Success);
+            Directory.Next_Entry (D, DCB, DE, Success);
             if Success then
                Print_File_Name (DE);
             else
@@ -87,17 +89,19 @@ package body FATFS.Applications is
    ----------------------------------------------------------------------------
    -- Load_AUTOEXECBAT
    ----------------------------------------------------------------------------
-   procedure Load_AUTOEXECBAT is
+   procedure Load_AUTOEXECBAT
+      (D : in Descriptor_Type)
+      is
       DCB     : DCB_Type;
       DE      : Directory_Entry_Type;
       Success : Boolean;
    begin
-      Directory.Open_Root (DCB, Success);
+      Directory.Open_Root (D, DCB, Success);
       if not Success then
          return;
       end if;
       loop
-         Directory.Next_Entry (DCB, DE, Success);
+         Directory.Next_Entry (D, DCB, DE, Success);
          exit when not Success;
          if DE.Filename = "AUTOEXEC" and then DE.Extension = "BAT" then
             declare
@@ -106,18 +110,18 @@ package body FATFS.Applications is
                Line : String (1 .. 80);
             begin
                Console.Print ("Loading AUTOEXEC.BAT ...", NL => True);
-               Textfile.Open (F, DE, Success);
+               Textfile.Open (D, F, DE, Success);
                if Success then
                   Line := [others => ' '];
-                  Textfile.Read_Line (F, Line, L, Success);
+                  Textfile.Read_Line (D, F, Line, L, Success);
                   Console.Print (Line);
                   Console.Print_NewLine;
                   Line := [others => ' '];
-                  Textfile.Read_Line (F, Line, L, Success);
+                  Textfile.Read_Line (D, F, Line, L, Success);
                   Console.Print (Line);
                   Console.Print_NewLine;
                   Line := [others => ' '];
-                  Textfile.Read_Line (F, Line, L, Success);
+                  Textfile.Read_Line (D, F, Line, L, Success);
                   Console.Print (Line);
                   Console.Print_NewLine;
                end if;
@@ -131,17 +135,20 @@ package body FATFS.Applications is
    ----------------------------------------------------------------------------
    -- Load PROVA.PYC in the Python code array.
    ----------------------------------------------------------------------------
-   procedure Load_PROVA02PYC (Destination_Address : System.Address) is
+   procedure Load_PROVA02PYC
+      (D                   : in Descriptor_Type;
+       Destination_Address : in System.Address)
+      is
       DCB     : DCB_Type;
       DE      : Directory_Entry_Type;
       Success : Boolean;
    begin
-      Directory.Open_Root (DCB, Success);
+      Directory.Open_Root (D, DCB, Success);
       if not Success then
          return;
       end if;
       loop
-         Directory.Next_Entry (DCB, DE, Success);
+         Directory.Next_Entry (D, DCB, DE, Success);
          exit when not Success;
          if DE.Filename = "PROVA02 " and then DE.Extension = "PYC" then
             declare
@@ -150,9 +157,9 @@ package body FATFS.Applications is
                C : Unsigned_16;
             begin
                Console.Print ("Loading PROVA02.PYC ...", NL => True);
-               Rawfile.Open (F, DE, Success);
+               Rawfile.Open (D, F, DE, Success);
                if Success then
-                  Rawfile.Read (F, B, C, Success);
+                  Rawfile.Read (D, F, B, C, Success);
                   Console.Print (C, Prefix => "Size: ", NL => True);
                   Memory_Functions.Cpymem (B'Address, Destination_Address, Bytesize (C));
                end if;

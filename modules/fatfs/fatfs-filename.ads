@@ -25,15 +25,18 @@ package FATFS.Filename is
    --                                                                        --
    --========================================================================--
 
-   procedure Get_Name (DE : in Directory_Entry_Type; FName : out String);
+   procedure Get_Name
+      (DE    : in     Directory_Entry_Type;
+       FName :    out String);
 
-   -- function Get_Index (FName : String) return Natural;
+   -- function Get_Index
+   --    (FName : in String)
+   --    return Natural;
 
-   procedure Parse (
-                    Base    : out String;
-                    Ext     : out String;
-                    FName   : in  String;
-                    Success : out Boolean
-                   );
+   procedure Parse
+      (Base    :    out String;
+       Ext     :    out String;
+       FName   : in     String;
+       Success :    out Boolean);
 
 end FATFS.Filename;

@@ -36,16 +36,6 @@ package FATFS is
    use BlockDevices;
 
    ----------------------------------------------------------------------------
-   -- filesystem I/O
-   ----------------------------------------------------------------------------
-
-   type Block_IO_Descriptor_Type is
-   record
-      Read  : IO_Read_Ptr;  -- block read procedure
-      Write : IO_Write_Ptr; -- block write procedure
-   end record;
-
-   ----------------------------------------------------------------------------
    -- low-level filesystem types
    ----------------------------------------------------------------------------
 
@@ -244,50 +234,109 @@ package FATFS is
    type WCB_Type is limited private;
    type TWCB_Type is limited private;
 
-   ----------------------------------------------------------------------------
-   -- physical interface API
-   ----------------------------------------------------------------------------
+   MAGIC_DIR : constant := 95; -- magic value for directory
+   MAGIC_FCB : constant := 98; -- magic value for physical file read
+   MAGIC_WCB : constant := 97; -- magic value for physical file write
 
-   procedure Register_BlockRead_Procedure (Block_Read : in IO_Read_Ptr);    -- read one sector
-   procedure Register_BlockWrite_Procedure (Block_Write : in IO_Write_Ptr); -- write one sector
+   ----------------------------------------------------------------------------
+   -- Descriptor
+   ----------------------------------------------------------------------------
+   type Descriptor_Type is
+   record
+      Read                   : IO_Read_Ptr;           -- block read procedure
+      Write                  : IO_Write_Ptr;          -- block write procedure
+      FAT_Is_Open            : Boolean := False;      -- filesystem is open and ready
+      FAT_Style              : FAT_Type := FATNONE;   -- filesystem type
+      Sector_Size            : Unsigned_16;           -- sector size
+      Sector_Start           : Sector_Type;           -- partition start (hidden sectors)
+      Sectors_Per_FAT        : Unsigned_32;           -- sectors per FAT
+      Root_Directory_Cluster : Cluster_Type;          -- first cluster for root directory
+      Root_Directory_Start   : Sector_Type;           -- where the root directory starts
+      FAT_Copies             : FAT_Copies_Type;       -- # of FATs
+      FAT_Start              : Sector_Array (1 .. 4); -- maximum 4 FAT copies
+      FAT_Index              : FAT_Copies_Type;       -- which FAT to use
+      Root_Directory_Entries : Unsigned_16;           -- bootrecord Root_Directory_Entries
+      Cluster_Start          : Sector_Type;           -- where data clusters start
+      Sectors_Per_Cluster    : Unsigned_16;           -- sectors per cluster
+      Next_Writable_Cluster  : Cluster_Type;          -- next writable cluster
+      Search_Cluster         : Cluster_Type;          -- first cluster to search for free space
+      FS_Time                : Time_Type;             -- filesystem date/time (for writes/changes)
+   end record;
 
    ----------------------------------------------------------------------------
    -- utilities API
    ----------------------------------------------------------------------------
 
-   function Is_Separator (C : Character) return Boolean with
+   function Is_Separator
+      (C : in Character)
+      return Boolean with
       Inline => True;
-   procedure Time_Set (T : in Time_Type) with
+
+   procedure Time_Set
+      (D : in out Descriptor_Type;
+       T : in     Time_Type) with
       Inline => True;
-   procedure Time_Get (T : out Time_Type) with
+
+   procedure Time_Get
+      (D : in     Descriptor_Type;
+       T :    out Time_Type) with
       Inline => True;
-   function Physical_Sector (Sector : Sector_Type) return Sector_Type with
+
+   function Physical_Sector
+      (D      : in Descriptor_Type;
+       Sector : in Sector_Type)
+      return Sector_Type with
       Inline => True;
-   function FAT_Is_End (S : Sector_Type) return Boolean with
+
+   function FAT_Is_End
+      (D : in Descriptor_Type;
+       S : in Sector_Type)
+      return Boolean with
       Inline => True;
-   function FAT_Sector (F : FAT_Type; C : Cluster_Type) return Sector_Type with
+
+   function FAT_Sector
+      (D : in Descriptor_Type;
+       F : in FAT_Type;
+       C : in Cluster_Type)
+      return Sector_Type with
       Inline => True;
-   function FAT_Entry_Index (F : FAT_Type; C : Cluster_Type) return Natural with
+
+   function FAT_Entry_Index
+      (F : in FAT_Type;
+       C : in Cluster_Type)
+      return Natural with
       Inline => True;
-   function FAT_Entry (B : Block_Type; C : Cluster_Type) return Cluster_Type with
+
+   function FAT_Entry
+      (D : in Descriptor_Type;
+       B : in Block_Type;
+       C : in Cluster_Type)
+      return Cluster_Type with
       Inline => True;
-   procedure FAT_Put_Entry (
-                            B     : in out Block_Type;
-                            Index : in     Cluster_Type;
-                            C     : in     Cluster_Type
-                           );
-   procedure FAT_Update (
-                         S       : in  Sector_Type;
-                         B       : in  Block_Type;
-                         Success : out Boolean
-                        );
+
+   procedure FAT_Put_Entry
+      (D     : in     Descriptor_Type;
+       B     : in out Block_Type;
+       Index : in     Cluster_Type;
+       C     : in     Cluster_Type);
+
+   procedure FAT_Update
+      (D       : in     Descriptor_Type;
+       S       : in     Sector_Type;
+       B       : in     Block_Type;
+       Success :    out Boolean);
 
    ----------------------------------------------------------------------------
    -- Open/Close filesystem API
    ----------------------------------------------------------------------------
 
-   procedure Open (Partition_Start : in Sector_Type; Success : out Boolean);
-   procedure Close;
+   procedure Open
+      (D               : in out Descriptor_Type;
+       Partition_Start : in     Sector_Type;
+       Success         :    out Boolean);
+
+   procedure Close
+      (D : in out Descriptor_Type);
 
 private
 
@@ -339,28 +388,5 @@ private
       WCB         : WCB_Type;    -- underlying physical file
       Byte_Offset : Unsigned_16; -- byte offset within current sector
    end record;
-
-   MAGIC_DIR : constant := 95; -- magic value for directory
-   MAGIC_FCB : constant := 98; -- magic value for physical file read
-   MAGIC_WCB : constant := 97; -- magic value for physical file write
-
-   IO_Context : Block_IO_Descriptor_Type := (null, null);
-
-   FAT_Is_Open            : Boolean := False;      -- filesystem is open and ready
-   FAT_Style              : FAT_Type := FATNONE;   -- filesystem type
-   Sector_Size            : Unsigned_16;           -- sector size
-   Sector_Start           : Sector_Type;           -- partition start (hidden sectors)
-   Sectors_Per_FAT        : Unsigned_32;           -- sectors per FAT
-   Root_Directory_Cluster : Cluster_Type;          -- first cluster for root directory
-   Root_Directory_Start   : Sector_Type;           -- where the root directory starts
-   FAT_Copies             : FAT_Copies_Type;       -- # of FATs
-   FAT_Start              : Sector_Array (1 .. 4); -- maximum 4 FAT copies
-   FAT_Index              : FAT_Copies_Type;       -- which FAT to use
-   Root_Directory_Entries : Unsigned_16;           -- bootrecord Root_Directory_Entries
-   Cluster_Start          : Sector_Type;           -- where data clusters start
-   Sectors_Per_Cluster    : Unsigned_16;           -- sectors per cluster
-   Next_Writable_Cluster  : Cluster_Type;          -- next writable cluster
-   Search_Cluster         : Cluster_Type;          -- first cluster to search for free space
-   FS_Time                : Time_Type;             -- filesystem date/time (for writes/changes)
 
 end FATFS;

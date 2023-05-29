@@ -27,10 +27,14 @@ package FATFS.Applications is
    --                                                                        --
    --========================================================================--
 
-   procedure Test;
+   procedure Test
+      (D : in Descriptor_Type);
 
-   procedure Load_AUTOEXECBAT;
+   procedure Load_AUTOEXECBAT
+      (D : in Descriptor_Type);
 
-   procedure Load_PROVA02PYC (Destination_Address : System.Address);
+   procedure Load_PROVA02PYC
+      (D                   : in Descriptor_Type;
+       Destination_Address : in System.Address);
 
 end FATFS.Applications;

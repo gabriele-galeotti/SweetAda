@@ -25,13 +25,20 @@ package FATFS.Cluster is
    --                                                                        --
    --========================================================================--
 
-   function Is_End (CCB : CCB_Type) return Boolean with
+   function Is_End
+      (CCB : CCB_Type)
+      return Boolean with
       Inline => True;
 
-   function To_Sector (C : Cluster_Type) return Sector_Type with
+   function To_Sector
+      (D : in Descriptor_Type;
+       C : in Cluster_Type)
+      return Sector_Type with
       Inline => True;
 
-   function File_EOF return Cluster_Type with
+   function File_EOF
+      (D : in Descriptor_Type)
+      return Cluster_Type with
       Inline => True;
 
    procedure Map
@@ -40,57 +47,72 @@ package FATFS.Cluster is
        Count : in  Unsigned_16);
 
    procedure Open
-      (CCB        : in out CCB_Type;
+      (D          : in     Descriptor_Type;
+       CCB        : in out CCB_Type;
        C          : in     Cluster_Type;
        Keep_First : in     Boolean);
 
-   procedure Advance (
-                      CCB     : in out CCB_Type;
-                      B       : in out Block_Type;
-                      Success : out    Boolean
-                     );
+   procedure Advance
+      (D       : in     Descriptor_Type;
+       CCB     : in out CCB_Type;
+       B       : in out Block_Type;
+       Success :    out Boolean);
 
-   procedure Peek (
-                   CCB     : in out CCB_Type;
-                   B       : out    Block_Type;
-                   Success : out    Boolean
-                  );
+   procedure Peek
+      (D       : in     Descriptor_Type;
+       CCB     : in out CCB_Type;
+       B       :    out Block_Type;
+       Success :    out Boolean);
 
-   procedure Rewind (CCB : in out CCB_Type);
+   procedure Rewind
+      (D   : in     Descriptor_Type;
+       CCB : in out CCB_Type);
 
-   procedure Prelocate (B : out Block_Type);
+   procedure Prelocate
+      (D : in out Descriptor_Type;
+       B :    out Block_Type);
 
-   procedure Put_First (DE : in out Directory_Entry_Type; C : in Cluster_Type);
+   procedure Put_First
+      (D  : in     Descriptor_Type;
+       DE : in out Directory_Entry_Type;
+       C  : in     Cluster_Type);
 
-   function Get_First (DE : Directory_Entry_Type) return Cluster_Type;
+   function Get_First
+      (D  : in     Descriptor_Type;
+       DE : in Directory_Entry_Type)
+      return Cluster_Type;
 
-   procedure Claim (
-                    B       : out Block_Type;
-                    C       : in  Cluster_Type;
-                    Chain   : in  Cluster_Type;
-                    Success : out Boolean
-                   );
+   procedure Claim
+      (D       : in out Descriptor_Type;
+       B       :    out Block_Type;
+       C       : in     Cluster_Type;
+       Chain   : in     Cluster_Type;
+       Success :    out Boolean);
 
-   procedure Read (
-                   CCB     : in out CCB_Type;
-                   B       : out    Block_Type;
-                   Success : out    Boolean
-                  );
+   procedure Read
+      (D       : in     Descriptor_Type;
+       CCB     : in out CCB_Type;
+       B       :    out Block_Type;
+       Success :    out Boolean);
 
-   procedure Reread (
-                     CCB     : in  CCB_Type;
-                     B       : out Block_Type;
-                     Success : out Boolean
-                    );
+   procedure Reread
+      (D       : in     Descriptor_Type;
+       CCB     : in     CCB_Type;
+       B       :    out Block_Type;
+       Success :    out Boolean);
 
-   procedure Release_Chain (First_Cluster : in Cluster_Type; B : out Block_Type);
+   procedure Release_Chain
+      (D             : in     Descriptor_Type;
+       First_Cluster : in     Cluster_Type;
+       B             :    out Block_Type);
 
-   procedure Write (
-                    File    : in out WCB_Type;
-                    B       : in out Block_Type;
-                    Success : out    Boolean
-                   );
+   procedure Write
+      (D       : in out Descriptor_Type;
+       File    : in out WCB_Type;
+       B       : in out Block_Type;
+       Success :    out Boolean);
 
-   procedure Close (CCB : out CCB_Type);
+   procedure Close
+      (CCB : out CCB_Type);
 
 end FATFS.Cluster;

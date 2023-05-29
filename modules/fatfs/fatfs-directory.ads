@@ -25,47 +25,51 @@ package FATFS.Directory is
    --                                                                        --
    --========================================================================--
 
-   procedure Open_Root (DCB : out DCB_Type; Success : out Boolean);
+   procedure Open_Root
+      (D       : in     Descriptor_Type;
+       DCB     :    out DCB_Type;
+       Success :    out Boolean);
 
-   procedure Get_Entry (
-                        DCB     : in out DCB_Type;
-                        DE      : out    Directory_Entry_Type;
-                        Success : out    Boolean
-                       );
+   procedure Get_Entry
+      (D       : in     Descriptor_Type;
+       DCB     : in out DCB_Type;
+       DE      :    out Directory_Entry_Type;
+       Success :    out Boolean);
 
-   procedure Next_Entry (
-                         DCB     : in out DCB_Type;
-                         DE      : out    Directory_Entry_Type;
-                         Success : out    Boolean
-                        );
+   procedure Next_Entry
+      (D       : in     Descriptor_Type;
+       DCB     : in out DCB_Type;
+       DE      :    out Directory_Entry_Type;
+       Success :    out Boolean);
 
-   procedure Search (
-                     DCB            : in out DCB_Type;
-                     DE             : out    Directory_Entry_Type;
-                     Directory_Name : in     String;
-                     Success        : out    Boolean
-                    );
+   procedure Search
+      (D              : in     Descriptor_Type;
+       DCB            : in out DCB_Type;
+       DE             :    out Directory_Entry_Type;
+       Directory_Name : in     String;
+       Success        :    out Boolean);
 
-   procedure Create_Entry (
-                           DCB            : in out DCB_Type;
-                           DE             : out    Directory_Entry_Type;
-                           Directory_Name : in     String;
-                           Success        : out    Boolean
-                          );
+   procedure Create_Entry
+      (D              : in out Descriptor_Type;
+       DCB            : in out DCB_Type;
+       DE             :    out Directory_Entry_Type;
+       Directory_Name : in     String;
+       Success        :    out Boolean);
 
-   procedure Update_Entry (
-                           Sector  : in  Sector_Type;
-                           DE      : in  Directory_Entry_Type;
-                           Index   : in  Unsigned_16;
-                           Success : out Boolean
-                          );
+   procedure Update_Entry
+      (D       : in     Descriptor_Type;
+       Sector  : in     Sector_Type;
+       DE      : in     Directory_Entry_Type;
+       Index   : in     Unsigned_16;
+       Success :    out Boolean);
 
-   procedure Create_Subdirectory (
-                                  DCB            : in out DCB_Type;
-                                  Directory_Name : in     String;
-                                  Success        : out    Boolean
-                                 );
+   procedure Create_Subdirectory
+      (D              : in out Descriptor_Type;
+       DCB            : in out DCB_Type;
+       Directory_Name : in     String;
+       Success        :    out Boolean);
 
-   procedure Close (DCB : in out DCB_Type);
+   procedure Close
+      (DCB : in out DCB_Type);
 
 end FATFS.Directory;
