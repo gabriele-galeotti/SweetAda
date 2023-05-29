@@ -70,8 +70,6 @@ package body BSP is
       Convention    => C,
       External_Name => "__gnat_number_of_cpus";
 
-   procedure Secondary_Stack_Init;
-
    function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
       Export        => True,
       Convention    => C,
@@ -98,13 +96,6 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Secondary stack
    ----------------------------------------------------------------------------
-
-   procedure Secondary_Stack_Init is
-   begin
-      if BSP_SS_Stack = null then
-         System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
-      end if;
-   end Secondary_Stack_Init;
 
    function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
    begin
@@ -150,7 +141,7 @@ package body BSP is
    procedure Setup is
    begin
       -------------------------------------------------------------------------
-      Secondary_Stack_Init;
+      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
       -------------------------------------------------------------------------
       GDT_Simple.Setup;
       Exceptions.Init;
