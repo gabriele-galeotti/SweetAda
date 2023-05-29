@@ -15,7 +15,7 @@ else ifeq ($(CPU_MODEL),MIPS64-20K)
 GCC_SWITCHES_PLATFORM     := -march=20kc
 endif
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      :=
+LD_SWITCHES_PLATFORM      := --undefined=_reset
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 
