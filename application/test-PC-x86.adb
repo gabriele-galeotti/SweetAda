@@ -54,12 +54,12 @@ package body Application is
    use type Interfaces.C.size_t; -- directly useing this unit creates problem with
                                  -- visibility of False/True due to C_bool
 
-   CRLF : String renames Definitions.CRLF;
-
    -- Malloc memory area
    Heap : aliased Storage_Array (0 .. Definitions.kB64 - 1) with
        Alignment               => 16#1000#,
        Suppress_Initialization => True; -- pragma Initialize_Scalars
+
+   Fatfs_Object : FATFS.Descriptor_Type;
 
    function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean;
    procedure Handle_Ethernet;
@@ -164,13 +164,16 @@ package body Application is
             MBR.Init (IDE.Read'Access);
             MBR.Read (MBR.PARTITION1, Partition, Success);
             if Success then
-               FATFS.Register_BlockRead_Procedure (IDE.Read'Access);
-               FATFS.Register_BlockWrite_Procedure (IDE.Write'Access);
-               FATFS.Open (BlockDevices.Sector_Type (Partition.LBA_Start), Success);
+               Fatfs_Object.Read  := IDE.Read'Access;
+               Fatfs_Object.Write := IDE.Write'Access;
+               FATFS.Open
+                  (Fatfs_Object,
+                   BlockDevices.Sector_Type (Partition.LBA_Start),
+                   Success);
                if Success then
-                  FATFS.Applications.Test;
-                  FATFS.Applications.Load_AUTOEXECBAT;
-                  FATFS.Applications.Load_PROVA02PYC (PythonVM.Python_Code'Address);
+                  FATFS.Applications.Test (Fatfs_Object);
+                  FATFS.Applications.Load_AUTOEXECBAT (Fatfs_Object);
+                  FATFS.Applications.Load_PROVA02PYC (Fatfs_Object, PythonVM.Python_Code'Address);
                   -- PythonVM.Run;
                end if;
             end if;
