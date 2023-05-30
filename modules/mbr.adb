@@ -32,18 +32,6 @@ package body MBR is
    use System.Storage_Elements;
    use Bits;
 
-   ----------------------------------------------------------------------------
-   -- filesystem I/O
-   ----------------------------------------------------------------------------
-
-   type Block_IO_Descriptor_Type is
-   record
-      Read  : IO_Read_Ptr;  -- block read procedure
-      -- Write : IO_Write_Ptr; -- block write procedure
-   end record;
-
-   IO_Context : Block_IO_Descriptor_Type := (Read => null);
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -53,25 +41,18 @@ package body MBR is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Init
-   ----------------------------------------------------------------------------
-   procedure Init (Block_Read : IO_Read_Ptr) is
-   begin
-      IO_Context.Read := Block_Read;
-   end Init;
-
-   ----------------------------------------------------------------------------
    -- Read
    ----------------------------------------------------------------------------
-   procedure Read (
-                   Partition_Number : in  Partition_Number_Type;
-                   Partition        : out Partition_Entry_Type;
-                   Success          : out Boolean
-                  ) is
+   procedure Read
+      (Device           : in     IDE_Descriptor_Ptr;
+       Partition_Number : in     Partition_Number_Type;
+       Partition        :    out Partition_Entry_Type;
+       Success          :    out Boolean)
+      is
       Block  : aliased Block_Type (0 .. 16#01FF#);
       Offset : Storage_Offset;
    begin
-      IO_Context.Read (0, Block, Success);
+      IDE.Read (Device.all, 0, Block, Success);
       if Success then
          if Block (16#01FE# .. 16#01FF#) = [16#55#, 16#AA#] then
             case Partition_Number is
@@ -81,11 +62,7 @@ package body MBR is
                when PARTITION4 => Offset := 16#01EE#;
             end case;
             -- explicit assignment could cause misaligned access (e.g., MIPS)
-            Memory_Functions.Cpymem (
-                                     Block'Address + Offset,
-                                     Partition'Address,
-                                     PARTITION_ENTRY_SIZE
-                                    );
+            Memory_Functions.Cpymem (Block'Address + Offset, Partition'Address, PARTITION_ENTRY_SIZE);
             if BigEndian then
                Partition.LBA_Start := Byte_Swap_32 (@);
                Partition.LBA_Size  := Byte_Swap_32 (@);

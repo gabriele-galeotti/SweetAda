@@ -17,6 +17,7 @@
 
 with Interfaces;
 with BlockDevices;
+with IDE;
 
 package MBR is
 
@@ -63,11 +64,12 @@ package MBR is
       LBA_Size         at 12 range 0 .. 31;
    end record;
 
-   procedure Init (Block_Read : IO_Read_Ptr);
-   procedure Read (
-                   Partition_Number : in  Partition_Number_Type;
-                   Partition        : out Partition_Entry_Type;
-                   Success          : out Boolean
-                  );
+   type IDE_Descriptor_Ptr is access all IDE.Descriptor_Type;
+
+   procedure Read
+      (Device           : in     IDE_Descriptor_Ptr;
+       Partition_Number : in     Partition_Number_Type;
+       Partition        :    out Partition_Entry_Type;
+       Success          :    out Boolean);
 
 end MBR;
