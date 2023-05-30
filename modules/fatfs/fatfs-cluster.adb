@@ -31,8 +31,8 @@ package body FATFS.Cluster is
       Inline => True;
 
    function Is_Valid
-      (D : in Descriptor_Type;
-       C : in Cluster_Type)
+      (C : in Cluster_Type;
+       F : in FAT_Type)
       return Boolean with
       Inline => True;
 
@@ -43,15 +43,13 @@ package body FATFS.Cluster is
        Success :    out Boolean);
 
    procedure Internal_Locate
-      (D       : in     Descriptor_Type;
+      (D       : in out Descriptor_Type;
        B       :    out Block_Type;
-       C       : in out Cluster_Type;
        Success :    out Boolean);
 
    procedure Locate
       (D       : in out Descriptor_Type;
        B       :    out Block_Type;
-       C       :    out Cluster_Type;
        Success :    out Boolean);
 
    --========================================================================--
@@ -81,12 +79,12 @@ package body FATFS.Cluster is
    -- Return True if cluster points to a data cluster.
    ----------------------------------------------------------------------------
    function Is_Valid
-      (D : in Descriptor_Type;
-       C : in Cluster_Type)
+      (C : in Cluster_Type;
+       F : in FAT_Type)
       return Boolean
       is
    begin
-      case D.FAT_Style is
+      case F is
          when FAT16  => return C >= 2 and then C < 16#FFF0#;
          when FAT32  => return C >= 2 and then C < 16#FFFF_FFF0#;
          when others => return False;
@@ -126,11 +124,11 @@ package body FATFS.Cluster is
    -- Return data cluster EOF value.
    ----------------------------------------------------------------------------
    function File_EOF
-      (D : in Descriptor_Type)
+      (F : in FAT_Type)
       return Cluster_Type
       is
    begin
-      case D.FAT_Style is
+      case F is
          when FAT16  => return 16#FFF8#;
          when FAT32  => return 16#FFFF_FFF8#;
          when others => return 1;
@@ -172,7 +170,7 @@ package body FATFS.Cluster is
       The_Cluster   : Cluster_Type := C;
       First_Cluster : Cluster_Type := CCB.First_Cluster;
    begin
-      if Is_Valid (D, The_Cluster) then
+      if Is_Valid (The_Cluster, D.FAT_Style) then
          Map (CCB, To_Sector (D, The_Cluster), D.Sectors_Per_Cluster);
          CCB.Cluster := The_Cluster; -- save cluster number
       else
@@ -217,7 +215,7 @@ package body FATFS.Cluster is
       end if;
       -- retrieve next cluster #
       C := FAT_Entry (D, B, C);
-      if not Is_Valid (D, C) then
+      if not Is_Valid (C, D.FAT_Style) then
          -- no next cluster, treat as an error
          Success := False;
       else
@@ -301,34 +299,33 @@ package body FATFS.Cluster is
    -- Search a free cluster.
    ----------------------------------------------------------------------------
    procedure Internal_Locate
-      (D       : in     Descriptor_Type;
+      (D       : in out Descriptor_Type;
        B       :    out Block_Type;
-       C       : in out Cluster_Type;
        Success :    out Boolean)
       is
       Sector : Sector_Type;
       First  : Boolean := True;
    begin
       Success := False;
-      if C < 2 then
-         C := 2; -- search from start of FAT
+      if D.Search_Cluster < 2 then
+         D.Search_Cluster := 2; -- search from start of FAT
       end if;
       loop
-         Sector := FAT_Sector (D, D.FAT_Style, C);
+         Sector := FAT_Sector (D, D.FAT_Style, D.Search_Cluster);
          exit when FAT_Is_End (D, Sector);
-         if C /= D.Next_Writable_Cluster then -- reserve one cluster for writes
-            if FAT_Entry_Index (D.FAT_Style, C) = 0 or else C = 2 or else First then
+         if D.Search_Cluster /= D.Next_Writable_Cluster then -- reserve one cluster for writes
+            if FAT_Entry_Index (D.FAT_Style, D.Search_Cluster) = 0 or else D.Search_Cluster = 2 or else First then
                First := False;
                D.Read (Physical_Sector (D, Sector), B, Success); -- read in FAT sector
                exit when not Success;
             end if;
-            if FAT_Entry (D, B, C) = 0 then
+            if FAT_Entry (D, B, D.Search_Cluster) = 0 then
                return; -- free cluster located
             end if;
          end if;
-         C := C + 1;
+         D.Search_Cluster := D.Search_Cluster + 1;
       end loop;
-      C := 0; -- no space or I/O error
+      D.Search_Cluster := 0; -- no space or I/O error
    end Internal_Locate;
 
    ----------------------------------------------------------------------------
@@ -339,19 +336,18 @@ package body FATFS.Cluster is
    procedure Locate
       (D       : in out Descriptor_Type;
        B       :    out Block_Type;
-       C       :    out Cluster_Type;
        Success :    out Boolean)
       is
       Retry : constant Boolean := D.Search_Cluster > 2;
    begin
-      Internal_Locate (D, B, D.Search_Cluster, Success);
+      Internal_Locate (D, B, Success);
       if (not Success or else D.Search_Cluster = 0) and then Retry then
-         Internal_Locate (D, B, D.Search_Cluster, Success);
+         Internal_Locate (D, B, Success);
       end if;
       if Success then
-         C := D.Search_Cluster;
+         D.Next_Writable_Cluster := D.Search_Cluster;
       else
-         C := 0;
+         D.Next_Writable_Cluster := 0;
       end if;
    end Locate;
 
@@ -367,7 +363,7 @@ package body FATFS.Cluster is
       Success : Boolean;
    begin
       if D.Next_Writable_Cluster < 2 then
-         Locate (D, B, D.Next_Writable_Cluster, Success);
+         Locate (D, B, Success);
       end if;
    end Prelocate;
 
@@ -489,7 +485,7 @@ package body FATFS.Cluster is
    begin
       C := First_Cluster;
       loop
-         exit when not Is_Valid (D, C);
+         exit when not Is_Valid (C, D.FAT_Style);
          -- read FAT Sector for current cluster
          Sector := FAT_Sector (D, D.FAT_Style, C);
          D.Read (Physical_Sector (D, Sector), B, Success);
@@ -539,7 +535,7 @@ package body FATFS.Cluster is
             return; -- I/O error
          end if;
          -- tell filesystem that we've claimed this cluster
-         Claim (D, B, New_Cluster, File_EOF (D), Success);
+         Claim (D, B, New_Cluster, File_EOF (D.FAT_Style), Success);
          if not Success then
             return;
          end if;

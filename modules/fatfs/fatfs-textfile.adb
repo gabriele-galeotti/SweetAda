@@ -373,7 +373,8 @@ package body FATFS.Textfile is
       (D       : in     Descriptor_Type;
        File    : in     TWCB_Type;
        B       : in out Block_Type;
-       Success :    out Boolean) is
+       Success :    out Boolean)
+      is
    begin
       Success := Rawfile.Is_Valid (File.WCB);
       if Success then

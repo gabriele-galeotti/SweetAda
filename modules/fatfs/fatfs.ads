@@ -274,12 +274,14 @@ package FATFS is
 
    procedure Time_Set
       (D : in out Descriptor_Type;
-       T : in     Time_Type) with
+       T : in     Time_Type)
+      with
       Inline => True;
 
    procedure Time_Get
       (D : in     Descriptor_Type;
-       T :    out Time_Type) with
+       T :    out Time_Type)
+      with
       Inline => True;
 
    function Physical_Sector

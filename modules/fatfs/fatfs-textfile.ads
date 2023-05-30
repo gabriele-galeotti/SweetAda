@@ -83,8 +83,8 @@ package FATFS.Textfile is
        Success :    out Boolean);
 
    procedure Close
-      (D       : in     Descriptor_Type;
-       File    : in out TFCB_Type);
+      (D    : in     Descriptor_Type;
+       File : in out TFCB_Type);
 
    -- WRITE
 

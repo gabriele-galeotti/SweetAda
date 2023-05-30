@@ -36,8 +36,10 @@ package body FATFS is
    -- Local subprograms
    ----------------------------------------------------------------------------
 
-   procedure Block_Swap_16 (B : in out Block_Type);
-   procedure Block_Swap_32 (B : in out Block_Type);
+   procedure Block_Swap_16
+      (B : in out Block_Type);
+   procedure Block_Swap_32
+      (B : in out Block_Type);
 
    --========================================================================--
    --                                                                        --
@@ -51,7 +53,9 @@ package body FATFS is
    -- Block_Swap_XX subprograms.
    ----------------------------------------------------------------------------
 
-   procedure Block_Swap_16 (B : in out Block_Type) is
+   procedure Block_Swap_16
+      (B : in out Block_Type)
+      is
       A : aliased U16_Array (0 .. 255) with
          Address    => B (0)'Address,
          Import     => True,
@@ -62,7 +66,9 @@ package body FATFS is
       end loop;
    end Block_Swap_16;
 
-   procedure Block_Swap_32 (B : in out Block_Type) is
+   procedure Block_Swap_32
+      (B : in out Block_Type)
+      is
       A : aliased U32_Array (0 .. 127) with
          Address    => B (0)'Address,
          Import     => True,
@@ -74,25 +80,14 @@ package body FATFS is
    end Block_Swap_32;
 
    ----------------------------------------------------------------------------
-   -- Register I/O read/write subprograms.
-   ----------------------------------------------------------------------------
-
---   procedure Register_BlockRead_Procedure (Block_Read : in IO_Read_Ptr) is
---   begin
---      IO_Context.Read := Block_Read;
---   end Register_BlockRead_Procedure;
-
---   procedure Register_BlockWrite_Procedure (Block_Write : in IO_Write_Ptr) is
---   begin
---      IO_Context.Write := Block_Write;
---   end Register_BlockWrite_Procedure;
-
-   ----------------------------------------------------------------------------
    -- Is_Separator
    ----------------------------------------------------------------------------
    -- Return True if C is a pathname separator.
    ----------------------------------------------------------------------------
-   function Is_Separator (C : Character) return Boolean is
+   function Is_Separator
+      (C : in Character)
+      return Boolean
+      is
    begin
       return C = '/' or else C = '\';
    end Is_Separator;
@@ -140,7 +135,8 @@ package body FATFS is
    function FAT_Is_End
       (D : in Descriptor_Type;
        S : in Sector_Type)
-      return Boolean is
+      return Boolean
+      is
    begin
       return S >= D.FAT_Start (D.FAT_Index) + Sector_Type (D.Sectors_Per_FAT);
    end FAT_Is_End;
@@ -154,7 +150,8 @@ package body FATFS is
       (D : in Descriptor_Type;
        F : in FAT_Type;
        C : in Cluster_Type)
-      return Sector_Type is
+      return Sector_Type
+      is
       FAT_Modulus_Order : Natural;
    begin
       case F is
@@ -170,7 +167,11 @@ package body FATFS is
    ----------------------------------------------------------------------------
    -- Return FAT entry index within a FAT sector.
    ----------------------------------------------------------------------------
-   function FAT_Entry_Index (F : FAT_Type; C : Cluster_Type) return Natural is
+   function FAT_Entry_Index
+      (F : in FAT_Type;
+       C : in Cluster_Type)
+      return Natural
+      is
       FAT_Modulus_Order : Natural;
    begin
       case F is
@@ -296,13 +297,20 @@ package body FATFS is
       Tmp_Number_Of_Clusters : Unsigned_32;
       Sector                 : Sector_Type;
       FAT32_Flag             : Boolean;
-      procedure Swap_Data (B : in out Block_Type);
-      function BR_Is_FAT32 return Boolean;
-      function BR_Sectors_Per_FAT return Unsigned_32;
-      function BR_Total_Sectors return Unsigned_32;
-      function BR_Total_Clusters return Unsigned_32;
+      procedure Swap_Data
+         (B : in out Block_Type);
+      function BR_Is_FAT32
+         return Boolean;
+      function BR_Sectors_Per_FAT
+         return Unsigned_32;
+      function BR_Total_Sectors
+         return Unsigned_32;
+      function BR_Total_Clusters
+         return Unsigned_32;
       --------------------------------------------
-      procedure Swap_Data (B : in out Block_Type) is
+      procedure Swap_Data
+         (B : in out Block_Type)
+         is
          Values : Byte_Array (0 .. 511) with
             Address    => B'Address,
             Volatile   => True,
@@ -325,12 +333,16 @@ package body FATFS is
          Byte_Swap_16 (Values (Bootrecord.Signature'Position)'Address);
       end Swap_Data;
       ------------------------------------
-      function BR_Is_FAT32 return Boolean is
+      function BR_Is_FAT32
+         return Boolean
+         is
       begin
          return Bootrecord.Sectors_Per_FAT = 0;
       end BR_Is_FAT32;
       -----------------------------------------------
-      function BR_Sectors_Per_FAT return Unsigned_32 is
+      function BR_Sectors_Per_FAT
+         return Unsigned_32
+         is
       begin
          if not BR_Is_FAT32 then
             return Unsigned_32 (Bootrecord.Sectors_Per_FAT);
@@ -339,7 +351,9 @@ package body FATFS is
          end if;
       end BR_Sectors_Per_FAT;
       ---------------------------------------------
-      function BR_Total_Sectors return Unsigned_32 is
+      function BR_Total_Sectors
+         return Unsigned_32
+         is
       begin
          if not BR_Is_FAT32 then
             return Unsigned_32 (Bootrecord.Total_Sectors_in_FS);
@@ -348,7 +362,9 @@ package body FATFS is
          end if;
       end BR_Total_Sectors;
       ----------------------------------------------
-      function BR_Total_Clusters return Unsigned_32 is
+      function BR_Total_Clusters
+         return Unsigned_32
+         is
       begin
          return (
                  BR_Total_Sectors -

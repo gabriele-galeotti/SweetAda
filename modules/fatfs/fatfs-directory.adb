@@ -34,7 +34,9 @@ package body FATFS.Directory is
       return Boolean with
       Inline => True;
 
-   function Is_Deleted (DE : Directory_Entry_Type) return Boolean with
+   function Is_Deleted
+      (DE : in Directory_Entry_Type)
+      return Boolean with
       Inline => True;
 
    function Is_End
@@ -42,7 +44,9 @@ package body FATFS.Directory is
        DCB : in DCB_Type)
       return Boolean;
 
-   function Is_End (DE : Directory_Entry_Type) return Boolean;
+   function Is_End
+      (DE : in Directory_Entry_Type)
+      return Boolean;
 
    procedure Init_Entry
       (D    : in     Descriptor_Type;
@@ -109,7 +113,10 @@ package body FATFS.Directory is
    ----------------------------------------------------------------------------
    -- Return true if directory entry has been deleted.
    ----------------------------------------------------------------------------
-   function Is_Deleted (DE : Directory_Entry_Type) return Boolean is
+   function Is_Deleted
+      (DE : in Directory_Entry_Type)
+      return Boolean
+      is
    begin
       return Character'Pos (DE.Filename (DE.Filename'First)) = 16#E5#;
    end Is_Deleted;
@@ -139,7 +146,10 @@ package body FATFS.Directory is
    ----------------------------------------------------------------------------
    -- Return True if directory entry is EOF.
    ----------------------------------------------------------------------------
-   function Is_End (DE : Directory_Entry_Type) return Boolean is
+   function Is_End
+      (DE : in Directory_Entry_Type)
+      return Boolean
+      is
    begin
       return Character'Pos (DE.Filename (DE.Filename'First)) = 0;
    end Is_End;
@@ -364,7 +374,7 @@ package body FATFS.Directory is
       DE.YMD.Month       := D.FS_Time.Month;
       DE.YMD.Day         := D.FS_Time.Day;
       DE.Size            := 0;
-      Cluster.Put_First (D, DE, Cluster.File_EOF (D));
+      Cluster.Put_First (D, DE, Cluster.File_EOF (D.FAT_Style));
       if Last then
          DE.Filename (1) := Character'Val (0); -- end of directory marker
       end if;
@@ -437,7 +447,7 @@ package body FATFS.Directory is
       if DCB.CCB.First_Cluster >= 2 then
          New_Cluster := D.Next_Writable_Cluster;                         -- claim reserved cluster
          if New_Cluster >= 2 then
-            Cluster.Claim (D, B, New_Cluster, Cluster.File_EOF (D), Success); -- put EOF marker in FAT to claim it
+            Cluster.Claim (D, B, New_Cluster, Cluster.File_EOF (D.FAT_Style), Success); -- put EOF marker in FAT to claim it
          else
             Success := False;                                          -- no space left
          end if;
@@ -558,7 +568,7 @@ package body FATFS.Directory is
          end if;
          New_Cluster := D.Next_Writable_Cluster;
          Cluster.Put_First (D, DE, D.Next_Writable_Cluster);             -- assign cluster to subdirectory entry
-         Cluster.Claim (D, B, New_Cluster, Cluster.File_EOF (D), Success); -- mark it as in use with FFF8 entry
+         Cluster.Claim (D, B, New_Cluster, Cluster.File_EOF (D.FAT_Style), Success); -- mark it as in use with FFF8 entry
          if Success then
             Cluster.Prelocate (D, B);                                  -- replace free cluster, that we used
             Init_Cluster (D, B, New_Cluster, Success);                 -- initialize with "end dir" entries
@@ -580,7 +590,9 @@ package body FATFS.Directory is
    ----------------------------------------------------------------------------
    -- Close a directory.
    ----------------------------------------------------------------------------
-   procedure Close (DCB : in out DCB_Type) is
+   procedure Close
+      (DCB : in out DCB_Type)
+      is
    begin
       Cluster.Close (DCB.CCB);
       DCB.Magic := 0;

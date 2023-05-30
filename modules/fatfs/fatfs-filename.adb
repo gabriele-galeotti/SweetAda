@@ -25,7 +25,9 @@ package body FATFS.Filename is
    --                                                                        --
    --========================================================================--
 
-   function To_Upper (C : Character) return Character with
+   function To_Upper
+      (C : in Character)
+      return Character with
       Inline => True;
 
    --========================================================================--
@@ -42,15 +44,13 @@ package body FATFS.Filename is
    -- Implemented in order to avoid the use of Ada.Characters.Handling with a
    -- ZFP-style RTS.
    ----------------------------------------------------------------------------
-   function To_Upper (C : Character) return Character is
+   function To_Upper
+      (C : in Character)
+      return Character
+      is
       UCASE2LCASE : constant := Character'Pos ('A') - Character'Pos ('a');
-      function Is_Lower (C : Character) return Boolean;
-      function Is_Lower (C : Character) return Boolean is
-      begin
-         return C in 'a' .. 'z';
-      end Is_Lower;
    begin
-      if Is_Lower (C) then
+      if C in 'a' .. 'z' then
          return Character'Val (Character'Pos (C) - UCASE2LCASE);
       else
          return C;
@@ -62,7 +62,10 @@ package body FATFS.Filename is
    ----------------------------------------------------------------------------
    -- Return the directory entry filename.
    ----------------------------------------------------------------------------
-   procedure Get_Name (DE : in Directory_Entry_Type; FName : out String) is
+   procedure Get_Name
+      (DE    : in     Directory_Entry_Type;
+       FName :    out String)
+      is
       FIndex : Integer;
    begin
       FIndex := FName'First;
@@ -94,7 +97,10 @@ package body FATFS.Filename is
    ----------------------------------------------------------------------------
    -- Return the index of the start of the file name without directory.
    ----------------------------------------------------------------------------
-   -- function Get_Index (FName : String) return Natural is
+   -- function Get_Index
+   --    (FName : in String)
+   --    return Natural
+   --    is
    -- begin
    --    for I in reverse FName'Range loop
    --       if Is_Separator (FName (I)) then
@@ -109,12 +115,12 @@ package body FATFS.Filename is
    ----------------------------------------------------------------------------
    -- Parse a file name in an 8.3 format.
    ----------------------------------------------------------------------------
-   procedure Parse (
-                    Base    : out String;
-                    Ext     : out String;
-                    FName   : in  String;
-                    Success : out Boolean
-                   ) is
+   procedure Parse
+      (Base    :    out String;
+       Ext     :    out String;
+       FName   : in     String;
+       Success :    out Boolean)
+      is
       Index : Natural;
    begin
       Base := [others => ' '];

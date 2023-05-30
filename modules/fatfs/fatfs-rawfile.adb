@@ -28,13 +28,15 @@ package body FATFS.Rawfile is
    --                                                                        --
    --========================================================================--
 
-   function Is_Valid (FCB : FCB_Type) return Boolean with
+   function Is_Valid
+      (FCB : in FCB_Type)
+      return Boolean with
       Inline => True;
 
    procedure Finalize_IO
-      (D     : in     Descriptor_Type;
-       File  : in     FCB_Type;
-       Count :    out Unsigned_16);
+      (File        : in     FCB_Type;
+       Sector_Size : in     Unsigned_16;
+       Count       :    out Unsigned_16);
 
    --========================================================================--
    --                                                                        --
@@ -49,7 +51,10 @@ package body FATFS.Rawfile is
    ----------------------------------------------------------------------------
    -- Return True if FCB is valid.
    ----------------------------------------------------------------------------
-   function Is_Valid (FCB : FCB_Type) return Boolean is
+   function Is_Valid
+      (FCB : in FCB_Type)
+      return Boolean
+      is
    begin
       return FCB.Magic = MAGIC_FCB;
    end Is_Valid;
@@ -59,7 +64,10 @@ package body FATFS.Rawfile is
    ----------------------------------------------------------------------------
    -- Return True if WCB is valid.
    ----------------------------------------------------------------------------
-   function Is_Valid (WCB : WCB_Type) return Boolean is
+   function Is_Valid
+      (WCB : in WCB_Type)
+      return Boolean
+      is
    begin
       return WCB.Magic = MAGIC_WCB;
    end Is_Valid;
@@ -70,15 +78,15 @@ package body FATFS.Rawfile is
    -- Finalize a file I/O operation.
    ----------------------------------------------------------------------------
    procedure Finalize_IO
-      (D     : in     Descriptor_Type;
-       File  : in     FCB_Type;
-       Count :    out Unsigned_16)
+      (File        : in     FCB_Type;
+       Sector_Size : in     Unsigned_16;
+       Count       :    out Unsigned_16)
       is
    begin
       if File.CCB.IO_Bytes >= File.Size then
-         Count := Unsigned_16 (File.Size - (File.CCB.IO_Bytes - Unsigned_32 (D.Sector_Size)));
+         Count := Unsigned_16 (File.Size - (File.CCB.IO_Bytes - Unsigned_32 (Sector_Size)));
       else
-         Count := D.Sector_Size;
+         Count := Sector_Size;
       end if;
    end Finalize_IO;
 
@@ -159,7 +167,7 @@ package body FATFS.Rawfile is
       end if;
       Cluster.Read (D, File.CCB, B, Success);
       if Success then
-         Finalize_IO (D, File, Count);
+         Finalize_IO (File, D.Sector_Size, Count);
       end if;
    end Read;
 
@@ -183,7 +191,7 @@ package body FATFS.Rawfile is
       end if;
       Cluster.Reread (D, File.CCB, B, Success);
       if Success then
-         Finalize_IO (D, File, Count);
+         Finalize_IO (File, D.Sector_Size, Count);
       end if;
    end Reread;
 
@@ -229,7 +237,7 @@ package body FATFS.Rawfile is
             Cluster.Release_Chain (D, Cluster.Get_First (D, DE), B);
             Cluster.Prelocate (D, B); -- keep one free cluster at hand
          end;
-         Cluster.Put_First (D, DE, Cluster.File_EOF (D));
+         Cluster.Put_First (D, DE, Cluster.File_EOF (D.FAT_Style));
          Cluster.Open (D, File.CCB, Cluster.Get_First (D, DE), Keep_First => False);
          File.Directory_Index  := DCB.Current_Index;      -- remember which directory entry this is
          File.Directory_Sector := DCB.CCB.Current_Sector; -- remember where directory entry is
@@ -416,7 +424,7 @@ package body FATFS.Rawfile is
       begin
          DE.Filename (1) := Character'Val (16#E5#);
          DE.Size         := 0;
-         Cluster.Put_First (D, DE, Cluster.File_EOF (D));
+         Cluster.Put_First (D, DE, Cluster.File_EOF (D.FAT_Style));
          Directory.Update_Entry
             (D,
              DCB.CCB.Current_Sector,

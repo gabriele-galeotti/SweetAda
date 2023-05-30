@@ -26,7 +26,7 @@ package FATFS.Cluster is
    --========================================================================--
 
    function Is_End
-      (CCB : CCB_Type)
+      (CCB : in CCB_Type)
       return Boolean with
       Inline => True;
 
@@ -37,14 +37,14 @@ package FATFS.Cluster is
       Inline => True;
 
    function File_EOF
-      (D : in Descriptor_Type)
+      (F : in FAT_Type)
       return Cluster_Type with
       Inline => True;
 
    procedure Map
-      (CCB   : out CCB_Type;
-       S     : in  Sector_Type;
-       Count : in  Unsigned_16);
+      (CCB   :    out CCB_Type;
+       S     : in     Sector_Type;
+       Count : in     Unsigned_16);
 
    procedure Open
       (D          : in     Descriptor_Type;
@@ -78,7 +78,7 @@ package FATFS.Cluster is
        C  : in     Cluster_Type);
 
    function Get_First
-      (D  : in     Descriptor_Type;
+      (D  : in Descriptor_Type;
        DE : in Directory_Entry_Type)
       return Cluster_Type;
 
