@@ -12,6 +12,7 @@ with Malloc;
 with CPU;
 with CPU.IO;
 with PC;
+with BSP;
 with Exceptions;
 with PCI;
 with IDE;
@@ -161,11 +162,9 @@ package body Application is
             Success   : Boolean;
             Partition : MBR.Partition_Entry_Type;
          begin
-            MBR.Init (IDE.Read'Access);
-            MBR.Read (MBR.PARTITION1, Partition, Success);
+            MBR.Read (BSP.IDE_Descriptors (1)'Access, MBR.PARTITION1, Partition, Success);
             if Success then
-               Fatfs_Object.Read  := IDE.Read'Access;
-               Fatfs_Object.Write := IDE.Write'Access;
+               Fatfs_Object.Device := BSP.IDE_Descriptors (1)'Access;
                FATFS.Open
                   (Fatfs_Object,
                    BlockDevices.Sector_Type (Partition.LBA_Start),
