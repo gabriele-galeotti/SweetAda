@@ -40,12 +40,12 @@ package IDE is
    for Drive_Type use (0, 1);
 
    -- I/O subprograms access
-   type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;
+   type Port_Read_8_Ptr is access function (Port : in Address) return Unsigned_8;
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
-   type Port_Read_16_Ptr is access function (Port : Address) return Unsigned_16;
+   type Port_Read_16_Ptr is access function (Port : in Address) return Unsigned_16;
    type Port_Write_16_Ptr is access procedure (Port : in Address; Value : in Unsigned_16);
 
-   type IDE_Descriptor_Type is
+   type Descriptor_Type is
    record
       Base_Address  : Address;
       Scale_Address : Address_Shift;
@@ -55,7 +55,7 @@ package IDE is
       Write_16      : Port_Write_16_Ptr;
    end record;
 
-   IDE_DESCRIPTOR_INVALID : constant IDE_Descriptor_Type :=
+   DESCRIPTOR_INVALID : constant Descriptor_Type :=
       (
        Base_Address  => Null_Address,
        Scale_Address => 0,
@@ -65,16 +65,19 @@ package IDE is
        Write_16      => null
       );
 
-   procedure Init (Descriptor : in IDE_Descriptor_Type);
-   procedure Read (
-                   S       : in  Sector_Type;
-                   B       : out Block_Type;
-                   Success : out Boolean
-                  );
-   procedure Write (
-                    S       : in  Sector_Type;
-                    B       : in  Block_Type;
-                    Success : out Boolean
-                   );
+   procedure Read
+      (D       : in     Descriptor_Type;
+       S       : in     Sector_Type;
+       B       :    out Block_Type;
+       Success :    out Boolean);
+
+   procedure Write
+      (D       : in     Descriptor_Type;
+       S       : in     Sector_Type;
+       B       : in     Block_Type;
+       Success :    out Boolean);
+
+   procedure Init
+      (D : in Descriptor_Type);
 
 end IDE;

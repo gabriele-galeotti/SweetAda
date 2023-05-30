@@ -37,23 +37,23 @@ package body IDE is
    -- Register types
    ----------------------------------------------------------------------------
 
-   type IDE_Register_Type is (DATA, ERROR, SC, SN, CL, CM, HEAD, STATUS, FEATURE, COMMAND, CONTROL);
-   for IDE_Register_Type use (
-                              --           name      access notes
-                              16#0000#, -- DATA      R/W
-                              16#0001#, -- ERROR     R
-                              16#0002#, -- SC
-                              16#0003#, -- SN               LBA #0
-                              16#0004#, -- CL               LBA #1
-                              16#0005#, -- CM               LBA #2
-                              16#0006#, -- HEAD
-                              16#0007#, -- STATUS    R
-                              16#0011#, -- FEATURE   W
-                              16#0017#, -- COMMAND   W
-                              16#2206#  -- CONTROL   W      16#0206#
-                             );
+   type Register_Type is (DATA, ERROR, SC, SN, CL, CM, HEAD, STATUS, FEATURE, COMMAND, CONTROL);
+   for Register_Type use
+      (          -- name      access notes
+       16#0000#, -- DATA      R/W
+       16#0001#, -- ERROR     R
+       16#0002#, -- SC
+       16#0003#, -- SN               LBA #0
+       16#0004#, -- CL               LBA #1
+       16#0005#, -- CM               LBA #2
+       16#0006#, -- HEAD             value = ((x and 16#0F#) or 16#E0#)
+       16#0007#, -- STATUS    R
+       16#0011#, -- FEATURE   W
+       16#0017#, -- COMMAND   W
+       16#2206#  -- CONTROL   W      16#0206#
+      );
 
-   IDE_Register_Offset : constant array (IDE_Register_Type) of Storage_Offset :=
+   Register_Offset : constant array (Register_Type) of Storage_Offset :=
       [
        DATA    => 0,
        ERROR   => 1,
@@ -157,73 +157,52 @@ package body IDE is
    CMD_PIO_READ  : constant := 16#20#;
    CMD_PIO_WRITE : constant := 16#30#;
 
-   D : IDE_Descriptor_Type;
-
    -- Local subprograms
 
-   function Register_Read (
-                           Descriptor : IDE_Descriptor_Type;
-                           Register   : IDE_Register_Type
-                          ) return Unsigned_8 with
+   function Register_Read_8
+      (D : in Descriptor_Type;
+       R : in Register_Type)
+      return Unsigned_8 with
       Inline => True;
 
-   procedure Register_Write (
-                             Descriptor : in IDE_Descriptor_Type;
-                             Register   : in IDE_Register_Type;
-                             Value      : in Unsigned_8
-                            ) with
+   procedure Register_Write_8
+      (D     : in Descriptor_Type;
+       R     : in Register_Type;
+       Value : in Unsigned_8)
+      with
       Inline => True;
 
-   function Register_Read (
-                           Descriptor : IDE_Descriptor_Type;
-                           Register   : IDE_Register_Type
-                          ) return Unsigned_16 with
+   function Register_Read_16
+      (D : in Descriptor_Type;
+       R : in Register_Type)
+      return Unsigned_16 with
       Inline => True;
 
-   procedure Register_Write (
-                             Descriptor : in IDE_Descriptor_Type;
-                             Register   : in IDE_Register_Type;
-                             Value      : in Unsigned_16
-                            ) with
+   procedure Register_Write_16
+      (D     : in Descriptor_Type;
+       R     : in Register_Type;
+       Value : in Unsigned_16)
+      with
       Inline => True;
 
-   function DATA_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_16 with
-      Inline => True;
-   procedure DATA_Write (Descriptor : IDE_Descriptor_Type; Value : in Unsigned_16) with
-      Inline => True;
-   function ERROR_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
-      Inline => True;
-   procedure FEATURE_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
-      Inline => True;
-   function SC_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
-      Inline => True;
-   procedure SC_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
-      Inline => True;
-   function SN_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
-      Inline => True;
-   procedure SN_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
-      Inline => True;
-   function CL_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
-      Inline => True;
-   procedure CL_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
-      Inline => True;
-   function CM_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
-      Inline => True;
-   procedure CM_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
-      Inline => True;
-   function HEAD_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 with
-      Inline => True;
-   procedure HEAD_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
-      Inline => True;
-   procedure DRIVE_Set (Descriptor : in IDE_Descriptor_Type; Drive_Number : in Drive_Type) with
-      Inline => True;
-   function STATUS_Read (Descriptor : in IDE_Descriptor_Type) return STATUS_Type with
-      Inline => True;
-   procedure COMMAND_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) with
+   function HEAD_Set
+      (H : in Unsigned_8)
+      return Unsigned_8 with
       Inline => True;
 
-   function Is_Drive_Ready (Descriptor : IDE_Descriptor_Type) return Boolean;
-   function Is_DRQ_Active (Descriptor : IDE_Descriptor_Type) return Boolean;
+   procedure DRIVE_Set
+      (D            : in Descriptor_Type;
+       Drive_Number : in Drive_Type)
+      with
+      Inline => True;
+
+   function Is_Drive_Ready
+      (D : in Descriptor_Type)
+      return Boolean;
+
+   function Is_DRQ_Active
+      (D : in Descriptor_Type)
+      return Boolean;
 
    --========================================================================--
    --                                                                        --
@@ -236,178 +215,65 @@ package body IDE is
    ----------------------------------------------------------------------------
    -- Register_Read (8-bit)
    ----------------------------------------------------------------------------
-   function Register_Read (
-                           Descriptor : IDE_Descriptor_Type;
-                           Register   : IDE_Register_Type
-                          ) return Unsigned_8 is
+   function Register_Read_8
+      (D : in Descriptor_Type;
+       R : in Register_Type)
+      return Unsigned_8
+      is
    begin
-      return Descriptor.Read_8 (Build_Address (
-                                               Descriptor.Base_Address,
-                                               IDE_Register_Offset (Register),
-                                               Descriptor.Scale_Address
-                                              ));
-   end Register_Read;
+      return D.Read_8 (Build_Address (D.Base_Address, Register_Offset (R), D.Scale_Address));
+   end Register_Read_8;
 
    ----------------------------------------------------------------------------
    -- Register_Write (8-bit)
    ----------------------------------------------------------------------------
-   procedure Register_Write (
-                             Descriptor : in IDE_Descriptor_Type;
-                             Register   : in IDE_Register_Type;
-                             Value      : in Unsigned_8
-                            ) is
+   procedure Register_Write_8
+      (D     : in Descriptor_Type;
+       R     : in Register_Type;
+       Value : in Unsigned_8)
+      is
    begin
-      Descriptor.Write_8 (Build_Address (
-                                         Descriptor.Base_Address,
-                                         IDE_Register_Offset (Register),
-                                         Descriptor.Scale_Address
-                                        ), Value);
-   end Register_Write;
+      D.Write_8 (Build_Address (D.Base_Address, Register_Offset (R), D.Scale_Address), Value);
+   end Register_Write_8;
 
    ----------------------------------------------------------------------------
    -- Register_Read (16-bit)
    ----------------------------------------------------------------------------
-   function Register_Read (
-                           Descriptor : IDE_Descriptor_Type;
-                           Register   : IDE_Register_Type
-                          ) return Unsigned_16 is
+   function Register_Read_16
+      (D : in Descriptor_Type;
+       R : in Register_Type)
+      return Unsigned_16
+      is
    begin
-      return Descriptor.Read_16 (Build_Address (
-                                                Descriptor.Base_Address,
-                                                IDE_Register_Offset (Register),
-                                                Descriptor.Scale_Address
-                                               ));
-   end Register_Read;
+      return D.Read_16 (Build_Address (D.Base_Address, Register_Offset (R), D.Scale_Address));
+   end Register_Read_16;
 
    ----------------------------------------------------------------------------
    -- Register_Write (16-bit)
    ----------------------------------------------------------------------------
-   procedure Register_Write (
-                             Descriptor : in IDE_Descriptor_Type;
-                             Register   : in IDE_Register_Type;
-                             Value      : in Unsigned_16
-                            ) is
+   procedure Register_Write_16
+      (D     : in Descriptor_Type;
+       R     : in Register_Type;
+       Value : in Unsigned_16)
+      is
    begin
-      Descriptor.Write_16 (Build_Address (
-                                          Descriptor.Base_Address,
-                                          IDE_Register_Offset (Register),
-                                          Descriptor.Scale_Address
-                                         ), Value);
-   end Register_Write;
-
-   ----------------------------------------------------------------------------
-   -- ???_Read/Write
-   ----------------------------------------------------------------------------
-
-   function DATA_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_16 is
-   begin
-      return Register_Read (Descriptor, DATA);
-   end DATA_Read;
-
-   procedure DATA_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_16) is
-   begin
-      Register_Write (Descriptor, DATA, Value);
-   end DATA_Write;
-
-   function ERROR_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
-   begin
-      return Register_Read (Descriptor, ERROR);
-   end ERROR_Read;
-
-   procedure FEATURE_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
-   begin
-      Register_Write (Descriptor, FEATURE, Value);
-   end FEATURE_Write;
-
-   function SC_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
-   begin
-      return Register_Read (Descriptor, SC);
-   end SC_Read;
-
-   procedure SC_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
-   begin
-      Register_Write (Descriptor, SC, Value);
-   end SC_Write;
-
-   function SN_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
-   begin
-      return Register_Read (Descriptor, SN);
-   end SN_Read;
-
-   procedure SN_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
-   begin
-      Register_Write (Descriptor, SN, Value);
-   end SN_Write;
-
-   function CL_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
-   begin
-      return Register_Read (Descriptor, CL);
-   end CL_Read;
-
-   procedure CL_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
-   begin
-      Register_Write (Descriptor, CL, Value);
-   end CL_Write;
-
-   function CM_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
-   begin
-      return Register_Read (Descriptor, CM);
-   end CM_Read;
-
-   procedure CM_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
-   begin
-      Register_Write (Descriptor, CM, Value);
-   end CM_Write;
-
-   function HEAD_Read (Descriptor : IDE_Descriptor_Type) return Unsigned_8 is
-   begin
-      return Register_Read (Descriptor, HEAD);
-   end HEAD_Read;
-
-   procedure HEAD_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
-   begin
-      Register_Write (Descriptor, HEAD, (Value and 16#0F#) or 16#E0#);
-   end HEAD_Write;
-
-   procedure DRIVE_Set (Descriptor : in IDE_Descriptor_Type; Drive_Number : in Drive_Type) is
-      Drive_Value : Unsigned_8;
-   begin
-      case Drive_Number is
-         when MASTER => Drive_Value := 16#00#;
-         when SLAVE  => Drive_Value := 16#10#;
-      end case;
-      Register_Write (Descriptor, HEAD, (HEAD_Read (Descriptor) and 16#EF#) or Drive_Value);
-   end DRIVE_Set;
-
-   function STATUS_Read (Descriptor : IDE_Descriptor_Type) return STATUS_Type is
-   begin
-      return To_STATUS (Register_Read (Descriptor, STATUS));
-   end STATUS_Read;
-
-   procedure COMMAND_Write (Descriptor : in IDE_Descriptor_Type; Value : in Unsigned_8) is
-   begin
-      Register_Write (Descriptor, COMMAND, Value);
-   end COMMAND_Write;
-
-   --------------------------------------------------------------------------
-   -- Init
-   --------------------------------------------------------------------------
-   procedure Init (Descriptor : in IDE_Descriptor_Type) is
-   begin
-      D := Descriptor;
-   end Init;
+      D.Write_16 (Build_Address (D.Base_Address, Register_Offset (R), D.Scale_Address), Value);
+   end Register_Write_16;
 
    --------------------------------------------------------------------------
    -- Is_Drive_Ready
    --------------------------------------------------------------------------
-   function Is_Drive_Ready (Descriptor : IDE_Descriptor_Type) return Boolean is
+   function Is_Drive_Ready
+      (D : in Descriptor_Type)
+      return Boolean
+      is
       Success : Boolean := False;
    begin
       for Loop_Count in 1 .. 100_000 loop
          declare
             Drive_Status : STATUS_Type;
          begin
-            Drive_Status := STATUS_Read (Descriptor);
+            Drive_Status := To_STATUS (Register_Read_8 (D, STATUS));
             -- if BSY is set, no other bits are valid
             if not Drive_Status.BSY and then Drive_Status.RDY then
                Success := True;
@@ -421,11 +287,14 @@ package body IDE is
    --------------------------------------------------------------------------
    -- Is_DRQ_Active
    --------------------------------------------------------------------------
-   function Is_DRQ_Active (Descriptor : IDE_Descriptor_Type) return Boolean is
+   function Is_DRQ_Active
+      (D : in Descriptor_Type)
+      return Boolean
+      is
       Success : Boolean := False;
    begin
       for Loop_Count in 1 .. 100_000 loop
-         if STATUS_Read (Descriptor).DRQ then
+         if To_STATUS (Register_Read_8 (D, STATUS)).DRQ then
             Success := True;
             exit;
          end if;
@@ -434,13 +303,41 @@ package body IDE is
    end Is_DRQ_Active;
 
    --------------------------------------------------------------------------
+   -- HEAD_Set
+   --------------------------------------------------------------------------
+   function HEAD_Set
+      (H : in Unsigned_8)
+      return Unsigned_8
+      is
+   begin
+      return ((H and 16#0F#) or 16#E0#);
+   end HEAD_Set;
+
+   --------------------------------------------------------------------------
+   -- DRIVE_Set
+   --------------------------------------------------------------------------
+   procedure DRIVE_Set
+      (D            : in Descriptor_Type;
+       Drive_Number : in Drive_Type)
+      is
+      Drive_Value : Unsigned_8;
+   begin
+      case Drive_Number is
+         when MASTER => Drive_Value := 16#00#;
+         when SLAVE  => Drive_Value := 16#10#;
+      end case;
+      Register_Write_8 (D, HEAD, (Register_Read_8 (D, HEAD) and 16#EF#) or Drive_Value);
+   end DRIVE_Set;
+
+   --------------------------------------------------------------------------
    -- Read
    --------------------------------------------------------------------------
-   procedure Read (
-                   S       : in  Sector_Type;
-                   B       : out Block_Type;
-                   Success : out Boolean
-                  ) is
+   procedure Read
+      (D       : in     Descriptor_Type;
+       S       : in     Sector_Type;
+       B       :    out Block_Type;
+       Success :    out Boolean)
+      is
       type HD_Buffer_Type is array (0 .. 255) of Unsigned_16 with
          Pack => True;
       Buffer : HD_Buffer_Type with
@@ -454,17 +351,17 @@ package body IDE is
          return;
       end if;
       -- perform read ------------------------------------
-      SN_Write (D, Unsigned_8 (S mod 2**8));
-      CL_Write (D, Unsigned_8 ((S / 2**8) mod 2**8));
-      CM_Write (D, Unsigned_8 ((S / 2**16) mod 2**8));
-      HEAD_Write (D, 0);
-      FEATURE_Write (D, 0);
-      SC_Write (D, 1);
-      COMMAND_Write (D, CMD_PIO_READ);
+      Register_Write_8 (D, SN, Unsigned_8 (S mod 2**8));
+      Register_Write_8 (D, CL, Unsigned_8 ((S / 2**8) mod 2**8));
+      Register_Write_8 (D, CM, Unsigned_8 ((S / 2**16) mod 2**8));
+      Register_Write_8 (D, HEAD, HEAD_Set (0));
+      Register_Write_8 (D, FEATURE, 0);
+      Register_Write_8 (D, SC, 1);
+      Register_Write_8 (D, COMMAND, CMD_PIO_READ);
       ----------------------------------------------------
       for Index in Buffer'Range loop
          exit when not Is_DRQ_Active (D);
-         Buffer (Index) := DATA_Read (D);
+         Buffer (Index) := Register_Read_16 (D, DATA);
       end loop;
       ----------------------------------------------------
       Success := True;
@@ -473,11 +370,12 @@ package body IDE is
    --------------------------------------------------------------------------
    -- Write
    --------------------------------------------------------------------------
-   procedure Write (
-                    S       : in  Sector_Type;
-                    B       : in  Block_Type;
-                    Success : out Boolean
-                   ) is
+   procedure Write
+      (D       : in     Descriptor_Type;
+       S       : in     Sector_Type;
+       B       : in     Block_Type;
+       Success :    out Boolean)
+      is
       type HD_Buffer_Type is array (0 .. 255) of Unsigned_16 with
          Pack => True;
       Buffer : HD_Buffer_Type with
@@ -491,20 +389,30 @@ package body IDE is
          return;
       end if;
       -- perform write -----------------------------------
-      SN_Write (D, Unsigned_8 (S mod 2**8));
-      CL_Write (D, Unsigned_8 ((S / 2**8) mod 2**8));
-      CM_Write (D, Unsigned_8 ((S / 2**16) mod 2**8));
-      HEAD_Write (D, 0);
-      FEATURE_Write (D, 0);
-      SC_Write (D, 1);
-      COMMAND_Write (D, CMD_PIO_WRITE);
+      Register_Write_8 (D, SN, Unsigned_8 (S mod 2**8));
+      Register_Write_8 (D, CL, Unsigned_8 ((S / 2**8) mod 2**8));
+      Register_Write_8 (D, CM, Unsigned_8 ((S / 2**16) mod 2**8));
+      Register_Write_8 (D, HEAD, HEAD_Set (0));
+      Register_Write_8 (D, FEATURE, 0);
+      Register_Write_8 (D, SC, 1);
+      Register_Write_8 (D, COMMAND, CMD_PIO_WRITE);
       ----------------------------------------------------
       for Index in Buffer'Range loop
          exit when not Is_DRQ_Active (D);
-         DATA_Write (D, Buffer (Index));
+         Register_Write_16 (D, DATA, Buffer (Index));
       end loop;
       ----------------------------------------------------
       Success := True;
    end Write;
+
+   --------------------------------------------------------------------------
+   -- Init
+   --------------------------------------------------------------------------
+   procedure Init
+      (D : in Descriptor_Type)
+      is
+   begin
+      null;
+   end Init;
 
 end IDE;
