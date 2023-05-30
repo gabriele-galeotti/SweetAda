@@ -379,7 +379,7 @@ package body FATFS.Textfile is
       Success := Rawfile.Is_Valid (File.WCB);
       if Success then
          if File.Byte_Offset > 0 then
-            D.Read (Physical_Sector (D, File.WCB.CCB.Previous_Sector), B, Success);
+            IDE.Read (D.Device.all, Physical_Sector (D, File.WCB.CCB.Previous_Sector), B, Success);
          else
             B := [others => 0];
          end if;

@@ -398,7 +398,7 @@ package body FATFS.Directory is
       Success := True;
       loop
          exit when S > E;
-         D.Write (Physical_Sector (D, S), B, Success);
+         IDE.Write (D.Device.all, Physical_Sector (D, S), B, Success);
          exit when not Success;
          S := S + 1;
       end loop;
@@ -533,10 +533,10 @@ package body FATFS.Directory is
          Import     => True,
          Convention => Ada;
    begin
-      D.Read (Physical_Sector (D, Sector), B, Success);
+      IDE.Read (D.Device.all, Physical_Sector (D, Sector), B, Success);
       if Success then
          Dir_Entries (Index mod 16) := DE;
-         D.Write (Physical_Sector (D, Sector), B, Success);
+         IDE.Write (D.Device.all, Physical_Sector (D, Sector), B, Success);
       end if;
    end Update_Entry;
 

@@ -19,6 +19,7 @@ with System;
 with Interfaces;
 with Bits;
 with BlockDevices;
+with IDE;
 
 package FATFS is
 
@@ -238,13 +239,15 @@ package FATFS is
    MAGIC_FCB : constant := 98; -- magic value for physical file read
    MAGIC_WCB : constant := 97; -- magic value for physical file write
 
+   -- IDE block device
+   type IDE_Descriptor_Ptr is access all IDE.Descriptor_Type;
+
    ----------------------------------------------------------------------------
    -- Descriptor
    ----------------------------------------------------------------------------
    type Descriptor_Type is
    record
-      Read                   : IO_Read_Ptr;           -- block read procedure
-      Write                  : IO_Write_Ptr;          -- block write procedure
+      Device                 : IDE_Descriptor_Ptr;    -- IDE descriptor
       FAT_Is_Open            : Boolean := False;      -- filesystem is open and ready
       FAT_Style              : FAT_Type := FATNONE;   -- filesystem type
       Sector_Size            : Unsigned_16;           -- sector size

@@ -208,7 +208,7 @@ package body FATFS.Cluster is
       end if;
       -- locate FAT sector for this cluster number
       Sector := FAT_Sector (D, D.FAT_Style, C);
-      D.Read (Physical_Sector (D, Sector), B, Success);
+      IDE.Read (D.Device.all, Physical_Sector (D, Sector), B, Success);
       -- __FIX__ endian?
       if not Success then
          return;
@@ -269,7 +269,7 @@ package body FATFS.Cluster is
          Success := True;
       end if;
       if Success then
-         D.Read (Physical_Sector (D, CCB.Current_Sector), B, Success);
+         IDE.Read (D.Device.all, Physical_Sector (D, CCB.Current_Sector), B, Success);
          -- __FIX__ endian?
       end if;
    end Peek;
@@ -316,7 +316,7 @@ package body FATFS.Cluster is
          if D.Search_Cluster /= D.Next_Writable_Cluster then -- reserve one cluster for writes
             if FAT_Entry_Index (D.FAT_Style, D.Search_Cluster) = 0 or else D.Search_Cluster = 2 or else First then
                First := False;
-               D.Read (Physical_Sector (D, Sector), B, Success); -- read in FAT sector
+               IDE.Read (D.Device.all, Physical_Sector (D, Sector), B, Success); -- read in FAT sector
                exit when not Success;
             end if;
             if FAT_Entry (D, B, D.Search_Cluster) = 0 then
@@ -422,7 +422,7 @@ package body FATFS.Cluster is
       if C = D.Next_Writable_Cluster then
          D.Next_Writable_Cluster := 0;                          -- mark this as in use
       end if;
-      D.Read (Physical_Sector (D, Sector), B, Success); -- read in the FAT cluster
+      IDE.Read (D.Device.all, Physical_Sector (D, Sector), B, Success); -- read in the FAT cluster
       if Success then
          FAT_Put_Entry (D, B, C, Chain);                         -- mark as in use (as EOF)
          FAT_Update (D, Sector, B, Success);                     -- update all FAT copies
@@ -465,7 +465,7 @@ package body FATFS.Cluster is
          Success := False;
          return;
       end if;
-      D.Read (Physical_Sector (D, CCB.Previous_Sector), B, Success);
+      IDE.Read (D.Device.all, Physical_Sector (D, CCB.Previous_Sector), B, Success);
    end Reread;
 
    ----------------------------------------------------------------------------
@@ -488,7 +488,7 @@ package body FATFS.Cluster is
          exit when not Is_Valid (C, D.FAT_Style);
          -- read FAT Sector for current cluster
          Sector := FAT_Sector (D, D.FAT_Style, C);
-         D.Read (Physical_Sector (D, Sector), B, Success);
+         IDE.Read (D.Device.all, Physical_Sector (D, Sector), B, Success);
          exit when not Success;
          -- update the FAT Sector entry
          C_Next := FAT_Entry (D, B, C);      -- get next cluster, if any
@@ -530,7 +530,7 @@ package body FATFS.Cluster is
          end if;
          -- save write data to the new cluster
          New_Cluster := D.Next_Writable_Cluster;
-         D.Write (Physical_Sector (D, To_Sector (D, New_Cluster)), B, Success);
+         IDE.Write (D.Device.all, Physical_Sector (D, To_Sector (D, New_Cluster)), B, Success);
          if not Success then
             return; -- I/O error
          end if;
@@ -550,11 +550,11 @@ package body FATFS.Cluster is
                   Import     => True,
                   Convention => Ada;
             begin
-               D.Read (Physical_Sector (D, File.Directory_Sector), B, Success);
+               IDE.Read (D.Device.all, Physical_Sector (D, File.Directory_Sector), B, Success);
                if Success then
                   DI := File.Directory_Index mod 16;
                   Put_First (D, Dir (DI), New_Cluster);
-                  D.Write (Physical_Sector (D, File.Directory_Sector), B, Success);
+                  IDE.Write (D.Device.all, Physical_Sector (D, File.Directory_Sector), B, Success);
                end if;
             end;
             if Success then
@@ -573,9 +573,9 @@ package body FATFS.Cluster is
          end if;
          File.CCB.IO_Bytes := File.CCB.IO_Bytes + Unsigned_32 (D.Sector_Size);
          Prelocate (D, B);                                                           -- get next free cluster
-         D.Read (Physical_Sector (D, File.CCB.Current_Sector), B, Success); -- restore user''s buffer
+         IDE.Read (D.Device.all, Physical_Sector (D, File.CCB.Current_Sector), B, Success); -- restore user''s buffer
       else
-         D.Write (Physical_Sector (D, File.CCB.Current_Sector), B, Success); -- a simple write
+         IDE.Write (D.Device.all, Physical_Sector (D, File.CCB.Current_Sector), B, Success); -- a simple write
          if Success then
             File.CCB.IO_Bytes := File.CCB.IO_Bytes + Unsigned_32 (D.Sector_Size);
          end if;

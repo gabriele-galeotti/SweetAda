@@ -330,7 +330,7 @@ package body FATFS.Rawfile is
          Success := False;
          return;
       end if;
-      D.Write (Physical_Sector (D, File.CCB.Previous_Sector), B, Success);
+      IDE.Write (D.Device.all, Physical_Sector (D, File.CCB.Previous_Sector), B, Success);
       if Success then
          File.Last_Sector := Count;
       end if;
@@ -376,7 +376,7 @@ package body FATFS.Rawfile is
          return;
       end if;
       -- update file size in directory entry
-      D.Read (Physical_Sector (D, File.Directory_Sector), B, Success);
+      IDE.Read (D.Device.all, Physical_Sector (D, File.Directory_Sector), B, Success);
       if Success then
          Index := File.Directory_Index mod 16;
          DE (Index).YMD.Year                := D.FS_Time.Year;
@@ -393,7 +393,7 @@ package body FATFS.Rawfile is
          else
             DE (Index).Size := File.CCB.IO_Bytes;
          end if;
-         D.Write (Physical_Sector (D, File.Directory_Sector), B, Success);
+         IDE.Write (D.Device.all, Physical_Sector (D, File.Directory_Sector), B, Success);
       end if;
    end Sync;
 

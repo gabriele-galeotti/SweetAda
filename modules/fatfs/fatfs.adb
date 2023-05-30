@@ -275,7 +275,7 @@ package body FATFS is
    begin
       for Index in D.FAT_Start'Range loop
          if D.FAT_Start (Index) /= 0 then
-            D.Write (Physical_Sector (D, D.FAT_Start (Index)) + Offset, B, Success);
+            IDE.Write (D.Device.all, Physical_Sector (D, D.FAT_Start (Index)) + Offset, B, Success);
             exit when not Success;
          end if;
       end loop;
@@ -383,7 +383,7 @@ package body FATFS is
             Import     => True,
             Convention => Ada;
       begin
-         D.Read (Partition_Start, B, Success); -- logical sector #0 in FAT partition
+         IDE.Read (D.Device.all, Partition_Start, B, Success); -- logical sector #0 in FAT partition
          if BigEndian then
             Swap_Data (B);
          end if;
