@@ -226,10 +226,11 @@ zerobss:
                 .extern _sbss
                 .extern _ebss
                 la      $t0,_sbss
-                la      $t1,_ebss-4
+                la      $t1,_ebss
 1:              sw      $0,($t0)
+                addiu   $t0,4
                 bne     $t0,$t1,1b
-                addiu   $t0,4                   // delay slot
+                nop
                 jr      $ra
                 nop
 
