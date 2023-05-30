@@ -28,7 +28,10 @@ package body BlockDevices is
    --------------------------------------------------------------------------
    -- To_CHS (Values -> Layout)
    --------------------------------------------------------------------------
-   function To_CHS (CHS : CHS_Type) return CHS_Layout_Type is
+   function To_CHS
+      (CHS : in CHS_Type)
+      return CHS_Layout_Type
+      is
    begin
       return (CHS.H, CHS.S, CHS.C / 256, CHS.C mod 256);
    end To_CHS;
@@ -36,7 +39,10 @@ package body BlockDevices is
    --------------------------------------------------------------------------
    -- To_CHS (Layout -> Values)
    --------------------------------------------------------------------------
-   function To_CHS (CHS : CHS_Layout_Type) return CHS_Type is
+   function To_CHS
+      (CHS : in CHS_Layout_Type)
+      return CHS_Type
+      is
    begin
       return (CHS.CH * 256 + CHS.CL, CHS.H, CHS.S);
    end To_CHS;
@@ -46,7 +52,11 @@ package body BlockDevices is
    --------------------------------------------------------------------------
    -- LBA = (C * HPC + H) * SPT + (S - 1)
    --------------------------------------------------------------------------
-   function CHS_To_LBA (CHS : CHS_Type; CHS_Geometry : CHS_Type) return LBA_Type is
+   function CHS_To_LBA
+      (CHS          : in CHS_Type;
+       CHS_Geometry : in CHS_Type)
+      return LBA_Type
+      is
    begin
       return LBA_Type ((CHS.C * CHS_Geometry.H + CHS.H) * CHS_Geometry.S + (CHS.S - 1));
    end CHS_To_LBA;
@@ -60,7 +70,11 @@ package body BlockDevices is
    -- H = (LBA / SPT) mod HPC
    -- S = (LBA mod SPT) + 1
    --------------------------------------------------------------------------
-   function LBA_To_CHS (Sector_Number : LBA_Type; CHS_Geometry : CHS_Type) return CHS_Type is
+   function LBA_To_CHS
+      (Sector_Number : in LBA_Type;
+       CHS_Geometry  : in CHS_Type)
+      return CHS_Type
+      is
       Result : CHS_Type;
    begin
       Result.C := Natural (Sector_Number) / (CHS_Geometry.H * CHS_Geometry.S);

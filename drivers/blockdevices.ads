@@ -40,17 +40,6 @@ package BlockDevices is
    type Block_Type is new Bits.Byte_Array with
       Alignment => BLOCK_ALIGNMENT;
 
-   type IO_Read_Ptr is access procedure (
-                                         S       : in  Sector_Type;
-                                         B       : out Block_Type;
-                                         Success : out Boolean
-                                        );
-   type IO_Write_Ptr is access procedure (
-                                          S       : in  Sector_Type;
-                                          B       : in  Block_Type;
-                                          Success : out Boolean
-                                         );
-
    ----------------------------------------------------------------------------
    -- CHS addressing
    --
@@ -84,8 +73,13 @@ package BlockDevices is
       CL at 2 range 0 .. 7;
    end record;
 
-   function To_CHS (CHS : CHS_Type) return CHS_Layout_Type;
-   function To_CHS (CHS : CHS_Layout_Type) return CHS_Type;
+   function To_CHS
+      (CHS : in CHS_Type)
+      return CHS_Layout_Type;
+
+   function To_CHS
+      (CHS : in CHS_Layout_Type)
+      return CHS_Type;
 
    ----------------------------------------------------------------------------
    -- LBA addressing
@@ -93,7 +87,14 @@ package BlockDevices is
 
    type LBA_Type is mod 2**28;
 
-   function CHS_To_LBA (CHS : CHS_Type; CHS_Geometry : CHS_Type) return LBA_Type;
-   function LBA_To_CHS (Sector_Number : LBA_Type; CHS_Geometry : CHS_Type) return CHS_Type;
+   function CHS_To_LBA
+      (CHS          : in CHS_Type;
+       CHS_Geometry : in CHS_Type)
+      return LBA_Type;
+
+   function LBA_To_CHS
+      (Sector_Number : in LBA_Type;
+       CHS_Geometry  : in CHS_Type)
+      return CHS_Type;
 
 end BlockDevices;
