@@ -83,6 +83,18 @@ _start:
                 nop
 
                 //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                la      $t0,_sbss
+                la      $t1,_ebss
+1:              sw      $0,($t0)
+                addiu   $t0,4
+                bne     $t0,$t1,1b
+                nop
+
+                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

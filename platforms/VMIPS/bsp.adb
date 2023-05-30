@@ -58,18 +58,18 @@ package body BSP is
    procedure Console_Putchar (C : in Character) is
    begin
       loop
-         exit when VMIPS.SPIMCONSOLE_DISPLAY1_CONTROL /= 0;
+         exit when VMIPS.SPIMCONSOLE.DISPLAY1_CONTROL.CTL_RDY;
       end loop;
-      VMIPS.SPIMCONSOLE_DISPLAY1_DATA := Unsigned_32 (To_U8 (C));
+      VMIPS.SPIMCONSOLE.DISPLAY1_DATA := Unsigned_32 (To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
       Data : Unsigned_8;
    begin
       loop
-         exit when VMIPS.SPIMCONSOLE_KEYBOARD1_CONTROL /= 0;
+         exit when VMIPS.SPIMCONSOLE.KEYBOARD1_CONTROL.CTL_RDY;
       end loop;
-      Data := Unsigned_8 (VMIPS.SPIMCONSOLE_KEYBOARD1_DATA and 16#FF#);
+      Data := Unsigned_8 (VMIPS.SPIMCONSOLE.KEYBOARD1_DATA and 16#FF#);
       C := To_Ch (Data);
    end Console_Getchar;
 
