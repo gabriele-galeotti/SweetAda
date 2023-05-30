@@ -43,8 +43,6 @@ package Malta is
    use MIPS;
    use PCI;
    use GT64120;
-   use UART16x50;
-   use IDE;
 
    -- patch in BIOS ROM space, board ID = 0x420 (Malta board with CoreLV)
    BOARD_REVISION_ADDRESS : constant := KSEG1_ADDRESS + 16#1FC0_0010#;
@@ -79,7 +77,7 @@ package Malta is
       Import     => True,
       Convention => Ada;
 
-   CBUS_UART_Descriptor : Uart16x50_Descriptor_Type := Uart16x50_DESCRIPTOR_INVALID;
+   CBUS_UART_Descriptor : UART16x50.Uart16x50_Descriptor_Type := UART16x50.Uart16x50_DESCRIPTOR_INVALID;
 
    ----------------------------------------------------------------------------
    -- GT-64120A bridge
@@ -98,9 +96,9 @@ package Malta is
    -- PIIX4 devices
    ----------------------------------------------------------------------------
 
-   PIIX4_UART1_Descriptor : Uart16x50_Descriptor_Type := Uart16x50_DESCRIPTOR_INVALID;
-   PIIX4_UART2_Descriptor : Uart16x50_Descriptor_Type := Uart16x50_DESCRIPTOR_INVALID;
-   PIIX4_IDE_Descriptor   : IDE_Descriptor_Type := IDE_DESCRIPTOR_INVALID;
+   PIIX4_UART1_Descriptor : aliased UART16x50.Uart16x50_Descriptor_Type := UART16x50.Uart16x50_DESCRIPTOR_INVALID;
+   PIIX4_UART2_Descriptor : aliased UART16x50.Uart16x50_Descriptor_Type := UART16x50.Uart16x50_DESCRIPTOR_INVALID;
+   PIIX4_IDE_Descriptor   : aliased IDE.Descriptor_Type := IDE.DESCRIPTOR_INVALID;
 
    ----------------------------------------------------------------------------
    -- Timer
