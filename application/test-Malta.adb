@@ -59,11 +59,11 @@ package body Application is
             Success   : Boolean;
             Partition : MBR.Partition_Entry_Type;
          begin
-            MBR.Init (IDE.Read'Access);
-            MBR.Read (MBR.PARTITION1, Partition, Success);
+            MBR.Read (Malta.PIIX4_IDE_Descriptor'Access, MBR.PARTITION1, Partition, Success);
             if Success then
-               Fatfs_Object.Read  := IDE.Read'Access;
-               Fatfs_Object.Write := IDE.Write'Access;
+               -- Fatfs_Object.Read  := IDE.Read'Access;
+               -- Fatfs_Object.Write := IDE.Write'Access;
+               Fatfs_Object.Device := Malta.PIIX4_IDE_Descriptor'Access;
                FATFS.Open
                   (Fatfs_Object,
                    BlockDevices.Sector_Type (Partition.LBA_Start),
