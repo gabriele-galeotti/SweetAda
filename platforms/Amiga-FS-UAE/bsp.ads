@@ -27,7 +27,7 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   IDE_Descriptor : aliased IDE.IDE_Descriptor_Type := IDE.IDE_DESCRIPTOR_INVALID;
+   IDE_Descriptor : aliased IDE.Descriptor_Type := IDE.DESCRIPTOR_INVALID;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

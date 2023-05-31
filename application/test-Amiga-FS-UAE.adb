@@ -8,6 +8,7 @@ with Bits;
 with MMIO;
 with M68k;
 with Amiga;
+with BSP;
 with PBUF;
 with Ethernet;
 with A2065;
@@ -38,6 +39,8 @@ package body Application is
    use MMIO;
    use M68k;
    use Amiga;
+
+   Fatfs_Object : FATFS.Descriptor_Type;
 
    function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean;
    procedure Handle_Ethernet;
@@ -97,21 +100,22 @@ package body Application is
          end;
       end if;
       -------------------------------------------------------------------------
-      if False then
+      if True then
          declare
             Success   : Boolean;
             Partition : MBR.Partition_Entry_Type;
          begin
-            MBR.Init (IDE.Read'Access);
-            MBR.Read (MBR.PARTITION1, Partition, Success);
+            MBR.Read (BSP.IDE_Descriptor'Access, MBR.PARTITION1, Partition, Success);
             if Success then
-               FATFS.Register_BlockRead_Procedure (IDE.Read'Access);
-               FATFS.Register_BlockWrite_Procedure (IDE.Write'Access);
-               FATFS.Open (BlockDevices.Sector_Type (Partition.LBA_Start), Success);
+               Fatfs_Object.Device := BSP.IDE_Descriptor'Access;
+               FATFS.Open
+                  (Fatfs_Object,
+                   BlockDevices.Sector_Type (Partition.LBA_Start),
+                   Success);
                if Success then
-                  FATFS.Applications.Test;
-                  FATFS.Applications.Load_AUTOEXECBAT;
-                  FATFS.Applications.Load_PROVA02PYC (PythonVM.Python_Code'Address);
+                  FATFS.Applications.Test (Fatfs_Object);
+                  FATFS.Applications.Load_AUTOEXECBAT (Fatfs_Object);
+                  FATFS.Applications.Load_PROVA02PYC (Fatfs_Object, PythonVM.Python_Code'Address);
                end if;
             end if;
          end;

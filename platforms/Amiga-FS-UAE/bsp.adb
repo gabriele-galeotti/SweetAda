@@ -123,7 +123,7 @@ package body BSP is
          end;
       end if;
       -- Gayle IDE ------------------------------------------------------------
-      if False then
+      if True then
          IDE_Descriptor.Base_Address  := To_Address (Gayle.GAYLE_IDE_BASEADDRESS);
          IDE_Descriptor.Scale_Address := 2;
          IDE_Descriptor.Read_8        := MMIO.Read'Access;
