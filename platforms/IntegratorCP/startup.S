@@ -45,6 +45,19 @@ _start:
                 ldr     sp,=SVC_stack
 
                 //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                ldr     r1,=_sbss
+                ldr     r2,=_ebss
+                b       2f
+                ldr     r0,=0
+1:              str     r0,[r1],#4
+2:              cmp     r1,r2
+                blt     1b
+
+                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main
@@ -73,26 +86,6 @@ movdata:
 1:              ldr     r0,[r1],#4
                 str     r0,[r2],#4
                 cmp     r2,r3
-                blt     1b
-                mov     pc,lr
-
-////////////////////////////////////////////////////////////////////////////////
-// zerobss                                                                    //
-//                                                                            //
-// This function does not need a stack.                                       //
-////////////////////////////////////////////////////////////////////////////////
-
-zerobss:
-                // registers used: r0-r2
-                .extern _sbss
-                .extern _ebss
-                ldr     r1,=_sbss
-                ldr     r2,=_ebss
-                cmp     r1,r2
-                movcs   pc,lr
-                ldr     r0,=0
-1:              str     r0,[r1],#4
-                cmp     r1,r2
                 blt     1b
                 mov     pc,lr
 
