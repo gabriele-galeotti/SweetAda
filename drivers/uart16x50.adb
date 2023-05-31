@@ -37,20 +37,21 @@ package body UART16x50 is
    -- Register types
    ----------------------------------------------------------------------------
 
-   type Uart16x50_Register_Type is (RBR, IER, IIR, LCR, MCR, LSR, MSR, SCR, THR, DLL, DLM);
-   for Uart16x50_Register_Type use (
-                                    16#00#, -- RBR
-                                    16#01#, -- IER
-                                    16#02#, -- IIR
-                                    16#03#, -- LCR
-                                    16#04#, -- MCR
-                                    16#05#, -- LSR
-                                    16#06#, -- MSR
-                                    16#07#, -- SCR
-                                    16#10#, -- THR
-                                    16#20#, -- DLL
-                                    16#21#  -- DLM
-                                   );
+   type Register_Type is (RBR, IER, IIR, LCR, MCR, LSR, MSR, SCR, THR, DLL, DLM);
+   for Register_Type use
+      (
+       16#00#, -- RBR
+       16#01#, -- IER
+       16#02#, -- IIR
+       16#03#, -- LCR
+       16#04#, -- MCR
+       16#05#, -- LSR
+       16#06#, -- MSR
+       16#07#, -- SCR
+       16#10#, -- THR
+       16#20#, -- DLL
+       16#21#  -- DLM
+      );
 
    -- 8.1 Line Control Register
 
@@ -244,17 +245,17 @@ package body UART16x50 is
 
    -- Local subprograms
 
-   function Register_Read (
-                           Descriptor : Uart16x50_Descriptor_Type;
-                           Register   : Uart16x50_Register_Type
-                          ) return Unsigned_8 with
+   function Register_Read
+      (D : in Descriptor_Type;
+       R : in Register_Type)
+      return Unsigned_8 with
       Inline => True;
 
-   procedure Register_Write (
-                             Descriptor : in Uart16x50_Descriptor_Type;
-                             Register   : in Uart16x50_Register_Type;
-                             Value      : in Unsigned_8
-                            ) with
+   procedure Register_Write
+      (D     : in Descriptor_Type;
+       R     : in Register_Type;
+       Value : in Unsigned_8)
+      with
       Inline => True;
 
    --========================================================================--
@@ -268,104 +269,84 @@ package body UART16x50 is
    ----------------------------------------------------------------------------
    -- Register_Read
    ----------------------------------------------------------------------------
-   function Register_Read (
-                           Descriptor : Uart16x50_Descriptor_Type;
-                           Register   : Uart16x50_Register_Type
-                          ) return Unsigned_8 is
+   function Register_Read
+      (D : in Descriptor_Type;
+       R : in Register_Type)
+      return Unsigned_8
+      is
    begin
-      return Descriptor.Read_8 (Build_Address (
-                                               Descriptor.Base_Address,
-                                               To_SO (Uart16x50_Register_Type'Enum_Rep (Register) and 16#0F#),
-                                               Descriptor.Scale_Address
-                                              ));
+      return D.Read_8
+                (Build_Address
+                   (D.Base_Address,
+                    To_SO (Register_Type'Enum_Rep (R) and 16#0F#),
+                    D.Scale_Address));
    end Register_Read;
 
    ----------------------------------------------------------------------------
    -- Register_Write
    ----------------------------------------------------------------------------
-   procedure Register_Write (
-                             Descriptor : in Uart16x50_Descriptor_Type;
-                             Register   : in Uart16x50_Register_Type;
-                             Value      : in Unsigned_8
-                            ) is
+   procedure Register_Write
+      (D     : in Descriptor_Type;
+       R     : in Register_Type;
+       Value : in Unsigned_8)
+      is
    begin
-      Descriptor.Write_8 (Build_Address (
-                                         Descriptor.Base_Address,
-                                         To_SO (Uart16x50_Register_Type'Enum_Rep (Register) and 16#0F#),
-                                         Descriptor.Scale_Address
-                                        ), Value);
+      D.Write_8
+         (Build_Address
+            (D.Base_Address,
+             To_SO (Register_Type'Enum_Rep (R) and 16#0F#),
+             D.Scale_Address), Value);
    end Register_Write;
 
    ----------------------------------------------------------------------------
    -- Baud_Rate_Set
    ----------------------------------------------------------------------------
-   procedure Baud_Rate_Set (Descriptor : in Uart16x50_Descriptor_Type; Baud_Rate : in Integer) is
+   procedure Baud_Rate_Set
+      (D         : in Descriptor_Type;
+       Baud_Rate : in Integer)
+      is
    begin
       -- __FIX__
       -- a lock should be used here, because, once DLAB is set, no other
       -- threads should interfere with this statement sequence
-      Register_Write (Descriptor, LCR, To_U8 (LCR_Type'(
-                                                        WLS  => 0,
-                                                        STB  => 0,
-                                                        PEN  => False,
-                                                        EPS  => False,
-                                                        SP   => False,
-                                                        SB   => False,
-                                                        DLAB => True
-                                                       )));
-      Register_Write (Descriptor, DLL, Unsigned_8 ((Descriptor.Baud_Clock / (Baud_Rate * 16)) mod 2**8));
-      Register_Write (Descriptor, DLM, Unsigned_8 ((Descriptor.Baud_Clock / (Baud_Rate * 16)) / 2**8));
-      Register_Write (Descriptor, LCR, To_U8 (LCR_Type'(
-                                                        WLS  => WORD_LENGTH_8,
-                                                        STB  => STOP_BITS_1,
-                                                        PEN  => False,
-                                                        EPS  => False,
-                                                        SP   => False,
-                                                        SB   => False,
-                                                        DLAB => False
-                                                       )));
+      Register_Write
+         (D, LCR, To_U8 (LCR_Type'
+            (WLS  => 0,
+             STB  => 0,
+             PEN  => False,
+             EPS  => False,
+             SP   => False,
+             SB   => False,
+             DLAB => True)));
+      Register_Write (D, DLL, Unsigned_8 ((D.Baud_Clock / (Baud_Rate * 16)) mod 2**8));
+      Register_Write (D, DLM, Unsigned_8 ((D.Baud_Clock / (Baud_Rate * 16)) / 2**8));
+      Register_Write
+         (D, LCR, To_U8 (LCR_Type'
+            (WLS  => WORD_LENGTH_8,
+             STB  => STOP_BITS_1,
+             PEN  => False,
+             EPS  => False,
+             SP   => False,
+             SB   => False,
+             DLAB => False)));
    end Baud_Rate_Set;
-
-   ----------------------------------------------------------------------------
-   -- Init
-   ----------------------------------------------------------------------------
-   procedure Init (Descriptor : in out Uart16x50_Descriptor_Type) is
-   begin
-      Baud_Rate_Set (Descriptor, Definitions.Baud_Rate_Type'Enum_Rep (Definitions.BR_9600));
-      Register_Write (Descriptor, IER, To_U8 (IER_Type'(
-                                                        RDA    => True,
-                                                        THRE   => False,
-                                                        RLS    => False,
-                                                        MS     => False,
-                                                        Unused => 0
-                                                       )));
-      Register_Write (Descriptor, MCR, To_U8 (MCR_Type'(
-                                                        DTR      => True,
-                                                        RTS      => True,
-                                                        OUT1     => False,
-                                                        OUT2     => True,
-                                                        LOOPBACK => False,
-                                                        Unused   => 0
-                                                       )));
-   end Init;
 
    ----------------------------------------------------------------------------
    -- Input_Poll
    ----------------------------------------------------------------------------
-   procedure Input_Poll (
-                         Descriptor : in  Uart16x50_Descriptor_Type;
-                         Result     : out Unsigned_8;
-                         Success    : out Boolean
-                        );
-   procedure Input_Poll (
-                         Descriptor : in  Uart16x50_Descriptor_Type;
-                         Result     : out Unsigned_8;
-                         Success    : out Boolean
-                        ) is
+   procedure Input_Poll
+      (D       : in     Descriptor_Type;
+       Result  :    out Unsigned_8;
+       Success :    out Boolean);
+   procedure Input_Poll
+      (D       : in     Descriptor_Type;
+       Result  :    out Unsigned_8;
+       Success :    out Boolean)
+      is
    begin
       Success := False;
-      if To_LSR (Register_Read (Descriptor, LSR)).DR then
-         Result := Register_Read (Descriptor, RBR);
+      if To_LSR (Register_Read (D, LSR)).DR then
+         Result := Register_Read (D, RBR);
          Success := True;
       end if;
    end Input_Poll;
@@ -373,44 +354,77 @@ package body UART16x50 is
    ----------------------------------------------------------------------------
    -- TX
    ----------------------------------------------------------------------------
-   procedure TX (Descriptor : in out Uart16x50_Descriptor_Type; Data : in Unsigned_8) is
+   procedure TX
+      (D    : in out Descriptor_Type;
+       Data : in     Unsigned_8)
+      is
    begin
       -- wait for transmitter available
       loop
-         exit when To_LSR (Register_Read (Descriptor, LSR)).TEMT;
+         exit when To_LSR (Register_Read (D, LSR)).TEMT;
       end loop;
-      Register_Write (Descriptor, THR, Data);
+      Register_Write (D, THR, Data);
    end TX;
 
    ----------------------------------------------------------------------------
    -- RX
    ----------------------------------------------------------------------------
-   procedure RX (Descriptor : in out Uart16x50_Descriptor_Type; Data : out Unsigned_8) is
+   procedure RX
+      (D    : in out Descriptor_Type;
+       Data :    out Unsigned_8)
+      is
    begin
       -- wait for receiver available
       loop
-         exit when To_LSR (Register_Read (Descriptor, LSR)).DR;
+         exit when To_LSR (Register_Read (D, LSR)).DR;
       end loop;
-      Data := Register_Read (Descriptor, RBR);
+      Data := Register_Read (D, RBR);
    end RX;
 
    ----------------------------------------------------------------------------
    -- Receive
    ----------------------------------------------------------------------------
-   procedure Receive (Descriptor_Address : in System.Address) is
-      Descriptor : Uart16x50_Descriptor_Type with
+   procedure Receive
+      (Descriptor_Address : in System.Address)
+      is
+      D       : Descriptor_Type with
          Address    => Descriptor_Address,
          Import     => True,
          Convention => Ada;
-      Data       : Unsigned_8;
-      Success    : Boolean with Unreferenced => True;
+      Data    : Unsigned_8;
+      Success : Boolean with Unreferenced => True;
    begin
       -- wait for receiver available
       loop
-         exit when To_LSR (Register_Read (Descriptor, LSR)).DR;
+         exit when To_LSR (Register_Read (D, LSR)).DR;
       end loop;
-      Data := Register_Read (Descriptor, RBR);
-      FIFO.Put (Descriptor.Data_Queue'Access, Data, Success);
+      Data := Register_Read (D, RBR);
+      FIFO.Put (D.Data_Queue'Access, Data, Success);
    end Receive;
+
+   ----------------------------------------------------------------------------
+   -- Init
+   ----------------------------------------------------------------------------
+   procedure Init
+      (D : in out Descriptor_Type)
+      is
+   begin
+      Baud_Rate_Set (D, Definitions.Baud_Rate_Type'Enum_Rep (Definitions.BR_9600));
+      Register_Write
+         (D, IER, To_U8 (IER_Type'
+            (RDA    => True,
+             THRE   => False,
+             RLS    => False,
+             MS     => False,
+             Unused => 0)));
+      Register_Write
+         (D, MCR, To_U8 (MCR_Type'
+            (DTR      => True,
+             RTS      => True,
+             OUT1     => False,
+             OUT2     => True,
+             LOOPBACK => False,
+             Unused   => 0)));
+   end Init;
 
 end UART16x50;

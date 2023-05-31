@@ -42,10 +42,10 @@ package UART16x50 is
       UART_PC : Boolean;
    end record;
 
-   type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;
+   type Port_Read_8_Ptr is access function (Port : in Address) return Unsigned_8;
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
 
-   type Uart16x50_Descriptor_Type is
+   type Descriptor_Type is
    record
       Uart_Model    : Uart16x50_Model_Type;
       Base_Address  : Address;
@@ -57,7 +57,7 @@ package UART16x50 is
       Data_Queue    : aliased FIFO.Queue_Type;
    end record;
 
-   Uart16x50_DESCRIPTOR_INVALID : constant Uart16x50_Descriptor_Type :=
+   DESCRIPTOR_INVALID : constant Descriptor_Type :=
       [
        Uart_Model    => UARTNONE,
        Base_Address  => Null_Address,
@@ -70,10 +70,22 @@ package UART16x50 is
        Data_Queue    => [[others => 0], 0, 0, 0]
       ];
 
-   procedure Baud_Rate_Set (Descriptor : in Uart16x50_Descriptor_Type; Baud_Rate : in Integer);
-   procedure Init (Descriptor : in out Uart16x50_Descriptor_Type);
-   procedure TX (Descriptor : in out Uart16x50_Descriptor_Type; Data : in Unsigned_8);
-   procedure RX (Descriptor : in out Uart16x50_Descriptor_Type; Data : out Unsigned_8);
-   procedure Receive (Descriptor_Address : in System.Address);
+   procedure Baud_Rate_Set
+      (D         : in Descriptor_Type;
+       Baud_Rate : in Integer);
+
+   procedure TX
+      (D    : in out Descriptor_Type;
+       Data : in     Unsigned_8);
+
+   procedure RX
+      (D    : in out Descriptor_Type;
+       Data :    out Unsigned_8);
+
+   procedure Receive
+      (Descriptor_Address : in System.Address);
+
+   procedure Init
+      (D : in out Descriptor_Type);
 
 end UART16x50;
