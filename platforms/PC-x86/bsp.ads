@@ -30,12 +30,11 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   use UART16x50;
    use NE2000;
    use Ethernet;
 
-   UART_Descriptors    : array (1 .. 2) of aliased Uart16x50_Descriptor_Type :=
-                         [others => Uart16x50_DESCRIPTOR_INVALID];
+   UART_Descriptors    : array (1 .. 2) of aliased UART16x50.Descriptor_Type :=
+                         [others => UART16x50.DESCRIPTOR_INVALID];
    IDE_Descriptors     : array (1 .. 1) of aliased IDE.Descriptor_Type :=
                          [others => IDE.DESCRIPTOR_INVALID];
    NE2000_Descriptors  : array (1 .. 1) of aliased NE2000_Descriptor_Type :=

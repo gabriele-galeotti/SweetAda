@@ -77,7 +77,7 @@ package Malta is
       Import     => True,
       Convention => Ada;
 
-   CBUS_UART_Descriptor : UART16x50.Uart16x50_Descriptor_Type := UART16x50.Uart16x50_DESCRIPTOR_INVALID;
+   CBUS_UART_Descriptor : UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
 
    ----------------------------------------------------------------------------
    -- GT-64120A bridge
@@ -96,8 +96,8 @@ package Malta is
    -- PIIX4 devices
    ----------------------------------------------------------------------------
 
-   PIIX4_UART1_Descriptor : aliased UART16x50.Uart16x50_Descriptor_Type := UART16x50.Uart16x50_DESCRIPTOR_INVALID;
-   PIIX4_UART2_Descriptor : aliased UART16x50.Uart16x50_Descriptor_Type := UART16x50.Uart16x50_DESCRIPTOR_INVALID;
+   PIIX4_UART1_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
+   PIIX4_UART2_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
    PIIX4_IDE_Descriptor   : aliased IDE.Descriptor_Type := IDE.DESCRIPTOR_INVALID;
 
    ----------------------------------------------------------------------------

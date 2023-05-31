@@ -27,8 +27,8 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   UART1_Descriptor : aliased UART16x50.Uart16x50_Descriptor_Type := UART16x50.Uart16x50_DESCRIPTOR_INVALID;
-   UART2_Descriptor : aliased UART16x50.Uart16x50_Descriptor_Type := UART16x50.Uart16x50_DESCRIPTOR_INVALID;
+   UART1_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
+   UART2_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

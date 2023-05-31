@@ -29,7 +29,7 @@ package BSP is
 
    UART_BASEADDRESS : constant := 16#BFD0_03F8#;
 
-   UART_Descriptor : aliased UART16x50.Uart16x50_Descriptor_Type := UART16x50.Uart16x50_DESCRIPTOR_INVALID;
+   UART_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);
