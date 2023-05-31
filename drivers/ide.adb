@@ -168,8 +168,7 @@ package body IDE is
    procedure Register_Write_8
       (D     : in Descriptor_Type;
        R     : in Register_Type;
-       Value : in Unsigned_8)
-      with
+       Value : in Unsigned_8) with
       Inline => True;
 
    function Register_Read_16
@@ -181,8 +180,7 @@ package body IDE is
    procedure Register_Write_16
       (D     : in Descriptor_Type;
        R     : in Register_Type;
-       Value : in Unsigned_16)
-      with
+       Value : in Unsigned_16) with
       Inline => True;
 
    function HEAD_Set
@@ -192,8 +190,7 @@ package body IDE is
 
    procedure DRIVE_Set
       (D            : in Descriptor_Type;
-       Drive_Number : in Drive_Type)
-      with
+       Drive_Number : in Drive_Type) with
       Inline => True;
 
    function Is_Drive_Ready
