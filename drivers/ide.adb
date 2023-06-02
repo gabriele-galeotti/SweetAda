@@ -152,12 +152,16 @@ package body IDE is
    function To_U8 is new Ada.Unchecked_Conversion (STATUS_Type, Unsigned_8);
    function To_STATUS is new Ada.Unchecked_Conversion (Unsigned_8, STATUS_Type);
 
+   ----------------------------------------------------------------------------
    -- Local declarations
+   ----------------------------------------------------------------------------
 
    CMD_PIO_READ  : constant := 16#20#;
    CMD_PIO_WRITE : constant := 16#30#;
 
+   ----------------------------------------------------------------------------
    -- Local subprograms
+   ----------------------------------------------------------------------------
 
    function Register_Read_8
       (D : in Descriptor_Type;

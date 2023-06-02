@@ -125,7 +125,7 @@ package Ethernet is
    type RX_Ptr is access procedure (Data_Address : in Address);
    type TX_Ptr is access procedure (Data_Address : in Address; P : in Pbuf_Ptr);
 
-   type Ethernet_Descriptor_Type is
+   type Descriptor_Type is
    record
       Haddress     : MAC_Address_Type;  -- "hardware" address (MAC)
       Paddress     : IPv4_Address_Type; -- "protocol" address (IPv4)
@@ -134,7 +134,7 @@ package Ethernet is
       Data_Address : Address;
    end record;
 
-   Ethernet_DESCRIPTOR_INVALID : constant Ethernet_Descriptor_Type :=
+   DESCRIPTOR_INVALID : constant Descriptor_Type :=
       (
        Haddress     => [0, 0, 0, 0, 0, 0],
        Paddress     => [0, 0, 0, 0],
@@ -147,10 +147,17 @@ package Ethernet is
    -- Package subprograms
    ----------------------------------------------------------------------------
 
-   procedure Init (Descriptor : in Ethernet_Descriptor_Type);
-   function Descriptor_Get return Ethernet_Descriptor_Type;
-   procedure Packet_Handler (P : in Pbuf_Ptr);
-   procedure TX (P : in Pbuf_Ptr);
+   procedure Init
+      (D : in Descriptor_Type);
+
+   function Descriptor_Get
+      return Descriptor_Type;
+
+   procedure Packet_Handler
+      (P : in Pbuf_Ptr);
+
+   procedure TX
+      (P : in Pbuf_Ptr);
 
    ----------------------------------------------------------------------------
    -- Packet Queue
@@ -174,16 +181,18 @@ package Ethernet is
 
    Packet_Queue : aliased Queue_Type := [[others => null], 0, 0, 0];
 
-   function Nqueue (Q : access Queue_Type) return Natural;
-   procedure Enqueue (
-                      Q       : access Queue_Type;
-                      P       : in     Pbuf_Ptr;
-                      Success : out    Boolean
-                     );
-   procedure Dequeue (
-                      Q       : access Queue_Type;
-                      P       : out    Pbuf_Ptr;
-                      Success : out    Boolean
-                     );
+   function Nqueue
+      (Q : access Queue_Type)
+      return Natural;
+
+   procedure Enqueue
+      (Q       : access Queue_Type;
+       P       : in     Pbuf_Ptr;
+       Success :    out Boolean);
+
+   procedure Dequeue
+      (Q       : access Queue_Type;
+       P       : out    Pbuf_Ptr;
+       Success : out    Boolean);
 
 end Ethernet;

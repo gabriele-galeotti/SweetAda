@@ -35,7 +35,7 @@ package body Ethernet is
    EtherType_RARP : constant := 16#8035#;
    EtherType_IPv6 : constant := 16#86DD#;
 
-   The_Descriptor : Ethernet_Descriptor_Type := Ethernet_DESCRIPTOR_INVALID;
+   The_Descriptor : Descriptor_Type := DESCRIPTOR_INVALID;
 
    -- renaming shortcuts
    function H2N (Value : Unsigned_16) return Unsigned_16 renames HostToNetwork;
@@ -43,7 +43,8 @@ package body Ethernet is
    function H2N (Value : Unsigned_32) return Unsigned_32 renames HostToNetwork;
    function N2H (Value : Unsigned_32) return Unsigned_32 renames NetworkToHost;
 
-   procedure ARP_Handler (P : in Pbuf_Ptr);
+   procedure ARP_Handler
+      (P : in Pbuf_Ptr);
 
    --========================================================================--
    --                                                                        --
@@ -56,7 +57,9 @@ package body Ethernet is
    ----------------------------------------------------------------------------
    -- ARP_Handler
    ----------------------------------------------------------------------------
-   procedure ARP_Handler (P : in Pbuf_Ptr) is
+   procedure ARP_Handler
+      (P : in Pbuf_Ptr)
+      is
       ARP_Header : aliased ARP_Header_Type with
          Address    => Payload_CurrentAddress (P),
          Import     => True,
@@ -93,16 +96,19 @@ package body Ethernet is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init (Descriptor : in Ethernet_Descriptor_Type) is
+   procedure Init
+      (D : in Descriptor_Type) is
    begin
       PBUF.Init;
-      The_Descriptor := Descriptor;
+      The_Descriptor := D;
    end Init;
 
    ----------------------------------------------------------------------------
    -- Descriptor_Get
    ----------------------------------------------------------------------------
-   function Descriptor_Get return Ethernet_Descriptor_Type is
+   function Descriptor_Get
+      return Descriptor_Type
+      is
    begin
       return The_Descriptor;
    end Descriptor_Get;
@@ -112,7 +118,9 @@ package body Ethernet is
    ----------------------------------------------------------------------------
    -- src/netif/ethernetif.c:ethernetif_input()
    ----------------------------------------------------------------------------
-   procedure Packet_Handler (P : in Pbuf_Ptr) is
+   procedure Packet_Handler
+      (P : in Pbuf_Ptr)
+      is
       ETH_Header : aliased Ethernet_Header_Type with
          Address    => Payload_CurrentAddress (P),
          Import     => True,
@@ -141,7 +149,9 @@ package body Ethernet is
    ----------------------------------------------------------------------------
    -- TX
    ----------------------------------------------------------------------------
-   procedure TX (P : in Pbuf_Ptr) is
+   procedure TX
+      (P : in Pbuf_Ptr)
+      is
    begin
       The_Descriptor.TX.all (The_Descriptor.Data_Address, P);
    end TX;
@@ -149,7 +159,10 @@ package body Ethernet is
    ----------------------------------------------------------------------------
    -- Nqueue
    ----------------------------------------------------------------------------
-   function Nqueue (Q : access Queue_Type) return Natural is
+   function Nqueue
+      (Q : access Queue_Type)
+      return Natural
+      is
    begin
       return Q.all.Count;
    end Nqueue;
@@ -157,11 +170,11 @@ package body Ethernet is
    ----------------------------------------------------------------------------
    -- Enqueue
    ----------------------------------------------------------------------------
-   procedure Enqueue (
-                      Q       : access Queue_Type;
-                      P       : in     Pbuf_Ptr;
-                      Success : out    Boolean
-                     ) is
+   procedure Enqueue
+      (Q       : access Queue_Type;
+       P       : in     Pbuf_Ptr;
+       Success :    out Boolean)
+      is
       Irq_State : CPU.Irq_State_Type;
    begin
       Irq_State := CPU.Irq_State_Get;
@@ -180,11 +193,11 @@ package body Ethernet is
    ----------------------------------------------------------------------------
    -- Dequeue
    ----------------------------------------------------------------------------
-   procedure Dequeue (
-                      Q       : access Queue_Type;
-                      P       : out    Pbuf_Ptr;
-                      Success : out    Boolean
-                     ) is
+   procedure Dequeue
+      (Q       : access Queue_Type;
+       P       : out    Pbuf_Ptr;
+       Success : out    Boolean)
+      is
       Irq_State : CPU.Irq_State_Type;
    begin
       Irq_State := CPU.Irq_State_Get;

@@ -33,7 +33,11 @@ package body BlockDevices is
       return CHS_Layout_Type
       is
    begin
-      return (CHS.H, CHS.S, CHS.C / 256, CHS.C mod 256);
+      return CHS_Layout_Type'
+         (H  => CHS.H,
+          S  => CHS.S,
+          CH => CHS.C / 256,
+          CL => CHS.C mod 256);
    end To_CHS;
 
    --------------------------------------------------------------------------
@@ -44,7 +48,10 @@ package body BlockDevices is
       return CHS_Type
       is
    begin
-      return (CHS.CH * 256 + CHS.CL, CHS.H, CHS.S);
+      return CHS_Type'
+         (C => CHS.CH * 256 + CHS.CL,
+          H => CHS.H,
+          S => CHS.S);
    end To_CHS;
 
    --------------------------------------------------------------------------
@@ -75,12 +82,11 @@ package body BlockDevices is
        CHS_Geometry  : in CHS_Type)
       return CHS_Type
       is
-      Result : CHS_Type;
    begin
-      Result.C := Natural (Sector_Number) / (CHS_Geometry.H * CHS_Geometry.S);
-      Result.H := (Natural (Sector_Number) / CHS_Geometry.S) rem CHS_Geometry.H;
-      Result.S := (Natural (Sector_Number) rem CHS_Geometry.S) + 1;
-      return Result;
+      return CHS_Type'
+         (C => Natural (Sector_Number) / (CHS_Geometry.H * CHS_Geometry.S),
+          H => (Natural (Sector_Number) / CHS_Geometry.S) rem CHS_Geometry.H,
+          S => (Natural (Sector_Number) rem CHS_Geometry.S) + 1);
    end LBA_To_CHS;
 
 end BlockDevices;
