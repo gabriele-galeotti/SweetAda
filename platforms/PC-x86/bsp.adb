@@ -272,6 +272,7 @@ package body BSP is
             NE2000.Probe (NE2000_Descriptors (1).Device_Number, Success);
             if Success then
                NE2000_Descriptors (1).NE2000PCI    := True;
+               NE2000_Descriptors (1).PCI_Irq_Line := 5;
                NE2000_Descriptors (1).Base_Address := 16#C000#;
                NE2000_Descriptors (1).MAC          := [16#02#, 16#00#, 16#00#, 16#11#, 16#22#, 16#33#];
                NE2000_Descriptors (1).Read_8       := PortIn'Access;
