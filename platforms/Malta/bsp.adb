@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Parameters;
+with System.Secondary_Stack;
 with System.Storage_Elements;
 with Interfaces;
 with Configure;
@@ -45,6 +47,7 @@ package body BSP is
    --========================================================================--
 
    use System.Storage_Elements;
+   use type System.Secondary_Stack.SS_Stack_Ptr;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -55,6 +58,13 @@ package body BSP is
    use IDE;
    use FATFS;
 
+   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
+
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_get_secondary_stack";
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -62,6 +72,15 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Secondary stack
+   ----------------------------------------------------------------------------
+
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   begin
+      return BSP_SS_Stack;
+   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -86,6 +105,8 @@ package body BSP is
       Status : Status_Type;
       PRId   : PRId_Type;
    begin
+      -------------------------------------------------------------------------
+      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
       -------------------------------------------------------------------------
       HEX_DISPLAY := BOARD_REVISION;
       PCI_Init;
