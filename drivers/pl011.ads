@@ -36,7 +36,7 @@ package PL011 is
    type Port_Read_16_Ptr is access function (Port : Address) return Unsigned_16;
    type Port_Write_16_Ptr is access procedure (Port : in Address; Value : in Unsigned_16);
 
-   type PL011_Descriptor_Type is
+   type Descriptor_Type is
    record
       Base_Address : Address;
       Baud_Clock   : Positive;
@@ -46,7 +46,7 @@ package PL011 is
       Write_16     : Port_Write_16_Ptr;
    end record;
 
-   PL011_DESCRIPTOR_INVALID : constant PL011_Descriptor_Type :=
+   DESCRIPTOR_INVALID : constant Descriptor_Type :=
       (
        Base_Address => Null_Address,
        Baud_Clock   => 1,
@@ -56,8 +56,8 @@ package PL011 is
        Write_16     => null
       );
 
-   procedure Init (Descriptor : in PL011_Descriptor_Type);
-   procedure TX (Descriptor : in PL011_Descriptor_Type; Data : in Unsigned_8);
-   procedure RX (Descriptor : in PL011_Descriptor_Type; Data : out Unsigned_8);
+   procedure Init (Descriptor : in Descriptor_Type);
+   procedure TX (Descriptor : in Descriptor_Type; Data : in Unsigned_8);
+   procedure RX (Descriptor : in Descriptor_Type; Data : out Unsigned_8);
 
 end PL011;

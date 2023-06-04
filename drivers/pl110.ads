@@ -188,17 +188,17 @@ package PL110 is
    subtype Video_X_Coordinate_Type is Natural range 0 .. VIDEO_WIDTH / Videofont8x16.Font_Width - 1;
    subtype Video_Y_Coordinate_Type is Natural range 0 .. VIDEO_HEIGHT / Videofont8x16.Font_Height - 1;
 
-   type PL110_Descriptor_Type is
+   type Descriptor_Type is
    record
       Base_Address : Address;
    end record;
 
-   PL110_DESCRIPTOR_INVALID : constant PL110_Descriptor_Type :=
+   DESCRIPTOR_INVALID : constant Descriptor_Type :=
       (
        Base_Address => Null_Address
       );
 
-   procedure Init (Descriptor : in PL110_Descriptor_Type);
+   procedure Init (Descriptor : in Descriptor_Type);
    procedure Print (
                     X : in Video_X_Coordinate_Type;
                     Y : in Video_Y_Coordinate_Type;

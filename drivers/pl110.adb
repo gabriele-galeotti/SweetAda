@@ -56,7 +56,7 @@ package body PL110 is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init (Descriptor : in PL110_Descriptor_Type) is
+   procedure Init (Descriptor : in Descriptor_Type) is
       PL110_Device : aliased PL110_Type with
          Address    => Descriptor.Base_Address,
          Volatile   => True,
