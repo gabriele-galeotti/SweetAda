@@ -27,7 +27,7 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   PL011_Descriptor : PL011.PL011_Descriptor_Type := PL011.PL011_DESCRIPTOR_INVALID;
+   PL011_Descriptor : PL011.Descriptor_Type := PL011.DESCRIPTOR_INVALID;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

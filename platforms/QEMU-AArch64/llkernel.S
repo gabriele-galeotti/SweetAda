@@ -134,9 +134,8 @@ el1_lel32_fiq:  b       el_handler              // + 0x700 FIQ/vFIQ
                 .align  7
 el1_lel32_serr: b       el_handler              // + 0x780 SError/vSError
 
-                .extern exception_process
-el_handler:
-                b       .
+el_handler:     b       .
+
 irq_handler:
                 sub     sp,sp,512
                 stp     x0,x1,[sp,#16*0]
@@ -149,6 +148,7 @@ irq_handler:
                 stp     x14,x15,[sp,#16*7]
                 stp     x16,x17,[sp,#16*8]
                 stp     x18,x30,[sp,#16*9]
+                .extern exception_process
                 bl      exception_process
                 ldp     x0,x1,[sp,#16*0]
                 ldp     x2,x3,[sp,#16*1]
