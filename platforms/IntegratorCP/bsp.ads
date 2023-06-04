@@ -28,8 +28,8 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   PL011_Descriptor : aliased PL011.PL011_Descriptor_Type := PL011.PL011_DESCRIPTOR_INVALID;
-   PL110_Descriptor : aliased PL110.PL110_Descriptor_Type := PL110.PL110_DESCRIPTOR_INVALID;
+   PL011_Descriptor : aliased PL011.Descriptor_Type := PL011.DESCRIPTOR_INVALID;
+   PL110_Descriptor : aliased PL110.Descriptor_Type := PL110.DESCRIPTOR_INVALID;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);
