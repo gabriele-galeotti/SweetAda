@@ -26,7 +26,6 @@ with PBUF;
 with Ethernet;
 with Time;
 with PCICAN;
-with PythonVM;
 with IOEMU;
 with Console;
 
@@ -172,8 +171,6 @@ package body Application is
                if Success then
                   FATFS.Applications.Test (Fatfs_Object);
                   FATFS.Applications.Load_AUTOEXECBAT (Fatfs_Object);
-                  FATFS.Applications.Load_PROVA02PYC (Fatfs_Object, PythonVM.Python_Code'Address);
-                  -- PythonVM.Run;
                end if;
             end if;
          end;

@@ -14,7 +14,6 @@ with FATFS;
 with FATFS.Applications;
 with VGA;
 with SweetAda;
-with PythonVM;
 with IOEMU;
 with Console;
 
@@ -61,8 +60,6 @@ package body Application is
          begin
             MBR.Read (Malta.PIIX4_IDE_Descriptor'Access, MBR.PARTITION1, Partition, Success);
             if Success then
-               -- Fatfs_Object.Read  := IDE.Read'Access;
-               -- Fatfs_Object.Write := IDE.Write'Access;
                Fatfs_Object.Device := Malta.PIIX4_IDE_Descriptor'Access;
                FATFS.Open
                   (Fatfs_Object,
@@ -71,20 +68,8 @@ package body Application is
                if Success then
                   FATFS.Applications.Test (Fatfs_Object);
                   FATFS.Applications.Load_AUTOEXECBAT (Fatfs_Object);
-                  FATFS.Applications.Load_PROVA02PYC (Fatfs_Object, PythonVM.Python_Code'Address);
-                  -- PythonVM.Run;
                end if;
             end if;
---            if Success then
---               FATFS.Register_BlockRead_Procedure (IDE.Read'Access);
---               FATFS.Register_BlockWrite_Procedure (IDE.Write'Access);
---               FATFS.Open (BlockDevices.Sector_Type (Partition.LBA_Start), Success);
---               if Success then
---                  FATFS.Applications.Test;
---                  FATFS.Applications.Load_AUTOEXECBAT;
---                  FATFS.Applications.Load_PROVA02PYC (PythonVM.Python_Code'Address);
---               end if;
---            end if;
          end;
       end if;
       -------------------------------------------------------------------------

@@ -18,7 +18,6 @@ with MBR;
 with FATFS;
 with FATFS.Applications;
 with IOEMU;
-with PythonVM;
 with Console;
 
 package body Application is
@@ -115,7 +114,6 @@ package body Application is
                if Success then
                   FATFS.Applications.Test (Fatfs_Object);
                   FATFS.Applications.Load_AUTOEXECBAT (Fatfs_Object);
-                  FATFS.Applications.Load_PROVA02PYC (Fatfs_Object, PythonVM.Python_Code'Address);
                end if;
             end if;
          end;

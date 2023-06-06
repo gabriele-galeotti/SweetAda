@@ -15,8 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-
 package FATFS.Applications is
 
    --========================================================================--
@@ -32,9 +30,5 @@ package FATFS.Applications is
 
    procedure Load_AUTOEXECBAT
       (D : in Descriptor_Type);
-
-   procedure Load_PROVA02PYC
-      (D                   : in Descriptor_Type;
-       Destination_Address : in System.Address);
 
 end FATFS.Applications;

@@ -18,7 +18,6 @@
 with FATFS.Directory;
 with FATFS.Rawfile;
 with FATFS.Textfile;
-with Memory_Functions;
 with Console;
 
 package body FATFS.Applications is
@@ -129,43 +128,5 @@ package body FATFS.Applications is
          end if;
       end loop;
    end Load_AUTOEXECBAT;
-
-   ----------------------------------------------------------------------------
-   -- Load_PROVA02PYC
-   ----------------------------------------------------------------------------
-   -- Load PROVA.PYC in the Python code array.
-   ----------------------------------------------------------------------------
-   procedure Load_PROVA02PYC
-      (D                   : in Descriptor_Type;
-       Destination_Address : in System.Address)
-      is
-      DCB     : DCB_Type;
-      DE      : Directory_Entry_Type;
-      Success : Boolean;
-   begin
-      Directory.Open_Root (D, DCB, Success);
-      if not Success then
-         return;
-      end if;
-      loop
-         Directory.Next_Entry (D, DCB, DE, Success);
-         exit when not Success;
-         if DE.Filename = "PROVA02 " and then DE.Extension = "PYC" then
-            declare
-               F : FCB_Type;
-               B : Block_Type (0 .. 511);
-               C : Unsigned_16;
-            begin
-               Console.Print ("Loading PROVA02.PYC ...", NL => True);
-               Rawfile.Open (D, F, DE, Success);
-               if Success then
-                  Rawfile.Read (D, F, B, C, Success);
-                  Console.Print (C, Prefix => "Size: ", NL => True);
-                  Memory_Functions.Cpymem (B'Address, Destination_Address, Bytesize (C));
-               end if;
-            end;
-         end if;
-      end loop;
-   end Load_PROVA02PYC;
 
 end FATFS.Applications;

@@ -8,9 +8,8 @@
 # Please consult the LICENSE.txt file located in the top-level directory.
 #
 
-INCLUDE_DIRECTORIES += $(MODULES_DIRECTORY)          \
-                       $(MODULES_DIRECTORY)/crc      \
-                       $(MODULES_DIRECTORY)/fatfs    \
-                       $(MODULES_DIRECTORY)/pythonvm \
+INCLUDE_DIRECTORIES += $(MODULES_DIRECTORY)       \
+                       $(MODULES_DIRECTORY)/crc   \
+                       $(MODULES_DIRECTORY)/fatfs \
                        $(MODULES_DIRECTORY)/tcpip
 
