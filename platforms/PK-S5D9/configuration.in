@@ -27,22 +27,20 @@ OPENOCD_PREFIX := /opt/OpenOCD
 
 # Python front-end
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
-                           -server -w                                                 \
                            -p "$(OPENOCD_PREFIX)"                                     \
-                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg
-
+                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg    \
+                           -server -w
 SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -shutdown
-
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
                            -e $(ELFTOOL) -s _start -thumb -command "reset halt"
 
 # Tcl front-end
 #SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
-#                           -server -w                                                 \
 #                           -p "$(OPENOCD_PREFIX)"                                     \
-#                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg
+#                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg    \
+#                           -server -w
 #SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
 #                           -shutdown
 #RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
@@ -56,7 +54,6 @@ RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
 #                                -ex "set language asm"                      \
 #                                -ex "set $$pc=_start"                       \
 #                                $(KERNEL_OUTFILE)
-
 # debug session in *sh shell
 DEBUG_COMMAND          := $(RUN_COMMAND) -debug &&                          \
                           $$GDB                                             \

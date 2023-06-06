@@ -410,7 +410,7 @@ package body IDE is
    -- Init
    --------------------------------------------------------------------------
    procedure Init
-      (D : in Descriptor_Type)
+      (D : in out Descriptor_Type)
       is
    begin
       null;

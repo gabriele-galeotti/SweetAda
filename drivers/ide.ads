@@ -78,6 +78,6 @@ package IDE is
        Success :    out Boolean);
 
    procedure Init
-      (D : in Descriptor_Type);
+      (D : in out Descriptor_Type);
 
 end IDE;
