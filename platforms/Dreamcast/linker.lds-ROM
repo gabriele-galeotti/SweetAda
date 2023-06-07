@@ -21,8 +21,6 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                *(.got1)
-                *(.eh_frame)
                 . = ALIGN(0x10);
                 _etext = .;
         } > ROM
@@ -37,8 +35,6 @@ SECTIONS
                 *(.sdata)
                 _sdata2 = .;
                 *(.sdata2)
-                *(.got.plt)
-                *(.got)
                 . = ALIGN(0x10);
                 _edata = .;
         } > RAM
@@ -50,10 +46,10 @@ SECTIONS
                 _sbss = .;
                 *(.bss)
                 *(.bss.*)
-                *(COMMON)
                 *(.sbss)
                 *(.scommon)
                 *(.dynbss)
+                *(COMMON)
                 . = ALIGN(0x10);
                 _ebss = .;
         } > RAM
@@ -76,7 +72,7 @@ SECTIONS
          **********************************************************************/
         /DISCARD/ :
         {
-                *(.comment)
+                *(*)
         }
 }
 

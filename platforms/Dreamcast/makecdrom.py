@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #
 # Generate files to create a Dreamcast CD-ROM.
@@ -50,7 +50,7 @@ def errprintf(format, *args):
 def crc16(data, offset, length):
     crc = 0xFFFF
     for d in data[offset:offset + length]:
-        crc = crc ^ (ord(d) << 8)
+        crc = crc ^ (d << 8)
         for n in range(0, 8):
             if (crc & 0x8000) != 0:
                 crc = (crc << 1) ^ 0x1021
@@ -73,7 +73,7 @@ def randomize():
 #                                                                              #
 ################################################################################
 def save_chunk(fd, data, offset, size):
-    size = size / 32
+    size = size // 32
     table = []
     for i in range(0, size):
         table.append(i)
@@ -86,7 +86,8 @@ def save_chunk(fd, data, offset, size):
         # write a 32-byte chunk
         start = offset + 32 * table[i]
         end = start + 32 - 1
-        fd.write(''.join(data[start:end + 1]))
+        for b in data[start:end + 1]:
+            fd.write(b.to_bytes(1, 'big'))
 
 ################################################################################
 # Main loop.                                                                   #
@@ -175,7 +176,7 @@ for line in filein_textlines:
     # create a maximum length space-padded string and write the value
     # left-justified
     string_padded = token_value.ljust(length)
-    tmpl_data[position:position + length] = string_padded
+    tmpl_data[position:position + length] = bytes(string_padded.encode('utf-8'))
     # flag as processed
     fields[i][4] = True
 
@@ -186,16 +187,17 @@ for i in range(0, len(fields)):
 
 # compute CRC
 crc_value = crc16(tmpl_data, 0x40, 16)
-crc_value = list('{:04x}'.format(crc_value))
-crc_value_current = tmpl_data[0x20:0x23 + 1]
+crc_value_current = 0
+for c in tmpl_data[0x20:0x23 + 1]:
+    crc_value_current = crc_value_current * 16 + (c - 0x30)
 # sprintf()-like
-if crc_value_current != crc_value:
-    printf('Setting CRC to 0x%s (was 0x%s).\n', ''.join(crc_value), ''.join(crc_value_current))
-    crc_value_current = crc_value
-
+if crc_value != crc_value_current:
+    printf('Setting CRC to 0x%04X (was 0x%04X).\n', crc_value, crc_value_current)
+    tmpl_data[0x20:0x23 + 1] = bytes('{0:04X}'.format(crc_value).encode('utf-8'))
 # generate output file
 fd_fileout = open(fileout, 'wb')
-fd_fileout.write(''.join(tmpl_data))
+for b in tmpl_data:
+    fd_fileout.write(b.to_bytes(1, 'big'))
 fd_fileout.close()
 
 #
@@ -239,7 +241,8 @@ while chunk_size >= 32:
 if filein_size > 0:
     start = offset
     end = start + filein_size - 1
-    fd_fileout.write(filein_data[start:end + 1])
+    for b in filein_data[start:end + 1]:
+        fd_fileout.write(b.to_bytes(1, 'big'))
 fd_fileout.close()
 
 exit(0)
