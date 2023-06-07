@@ -12,7 +12,7 @@ CPU := MicroBlaze
 
 GCC_SWITCHES_PLATFORM     := -mcpu=v8.10.a
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      := --undefined=_reset
+LD_SWITCHES_PLATFORM      := --undefined=vectors
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
