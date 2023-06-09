@@ -17,7 +17,9 @@
                 .sect   .vectors,"ax"
 
                 // vector #1 is RESET @ 0x0000
-reset:          rjmp    _start
+reset:
+                .extern _start
+                rjmp    _start
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // #    SOURCE          INTERRUPT DEFINITION                            ARDUINO/C++ ISR()       ASSEMBLY NAME
