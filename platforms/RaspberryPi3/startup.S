@@ -20,20 +20,10 @@
                 .global _start
 _start:
 
-                msr     daifset,#2
+                msr     daifset,#0xF
                 b       startcode
 
 startcode:
-                //
-                // Allow only master core to execute code.
-                //
-                mrs     x0,mpidr_el1
-                and     x0,x0,#0xFF
-                cbz     x0,bootcore
-hold:           wfe
-                b       hold
-
-bootcore:
 
                 //
                 // Check if current level = EL1.
@@ -57,6 +47,23 @@ bootcore:
 1:
 
                 //
+                // Allow only master core to execute code.
+                //
+                mrs     x0,mpidr_el1
+                and     x0,x0,#0xFF
+                cbz     x0,bootcore
+hold:           wfe
+                b       hold
+bootcore:
+
+                //
+                // CPACR_EL1/FPEN Advanced SIMD and floating-point registers.
+                //
+                mrs     x1,cpacr_el1
+                orr     x0,x1,#(3<<20)
+                msr     cpacr_el1,x0
+
+                //
                 // Setup stack pointer.
                 //
                 ldr     x0,=SVC_stack
@@ -69,8 +76,8 @@ bootcore:
                 .extern _ebss
                 ldr     x1,=_sbss
                 ldr     x2,=_ebss
-                b       2f
                 mov     w0,#0
+                b       2f
 1:              str     w0,[x1],#4
 2:              cmp     x1,x2
                 blt     1b
