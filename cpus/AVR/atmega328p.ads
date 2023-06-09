@@ -1398,7 +1398,7 @@ package ATmega328P is
       DOR0  : Boolean := False; -- Data Overrun
       FE0   : Boolean := False; -- Framing Error
       UDRE0 : Boolean := True;  -- USART Data Register Empty
-      TXC0  : Boolean := False; -- USART Transmitt Complete
+      TXC0  : Boolean := False; -- USART Transmit Complete
       RXC0  : Boolean := False; -- USART Receive Complete
    end record with
       Bit_Order => Low_Order_First,
