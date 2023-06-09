@@ -16,8 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with System.Parameters;
+with System.Secondary_Stack;
 with System.Storage_Elements;
 with Interfaces;
+with Interfaces.C;
 with Configure;
 with Definitions;
 with Core;
@@ -43,12 +46,25 @@ package body BSP is
    --========================================================================--
 
    use System;
+   use type System.Secondary_Stack.SS_Stack_Ptr;
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
    use x86_64;
    use CPU.IO;
+
+   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
+
+   function Number_Of_CPUs return Interfaces.C.int with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_number_of_cpus";
+
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -57,6 +73,23 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Number_Of_CPUs
+   ----------------------------------------------------------------------------
+   function Number_Of_CPUs return Interfaces.C.int is
+   begin
+      return 1;
+   end Number_Of_CPUs;
+
+   ----------------------------------------------------------------------------
+   -- Secondary stack
+   ----------------------------------------------------------------------------
+
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   begin
+      return BSP_SS_Stack;
+   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Tclk_Init
@@ -89,6 +122,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure Setup is
    begin
+      -------------------------------------------------------------------------
+      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- UARTs ----------------------------------------------------------------

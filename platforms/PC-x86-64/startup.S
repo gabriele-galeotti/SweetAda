@@ -248,9 +248,15 @@ _longmode:
                 movq    %rsp,%rbp
 
                 //
-                // FPU initialization.
+                // Enable SSE.
                 //
-                finit
+                movq     %cr0,%rax
+                andw     $~(1<<2),%ax           // clear CR0.EM
+                orw      $(1<<1),%ax            // set CR0.MP
+                movq     %rax,%cr0
+                movq     %cr4,%rax
+                orw      $(3<<9),%ax            // set CR4.OSFXSR and CR4.OSXMMEXCPT
+                movq     %rax,%cr4
 
                 //
                 // Jump to high-level code.
