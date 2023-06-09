@@ -58,10 +58,11 @@ package body BSP is
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
-      Data : Unsigned_8;
    begin
-      Data := 0;
-      C := To_Ch (Data);
+      loop
+         exit when UCSR0A.RXC0;
+      end loop;
+      C := To_Ch (UDR0);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -85,9 +86,15 @@ package body BSP is
                  UCPOL0   => UCPOL_Rising,      -- Clock Polarity
                  UCSZ0_01 => UCSZ_8.UCSZ0_01,   -- Character Size bit 0 .. 1
                  USBS0    => USBS_1,            -- Stop Bit Select
-                 UPM0     => UPM_Even,          -- Parity Mode
+                 UPM0     => UPM_Disabled,      -- Parity Mode
                  UMSEL0   => UMSEL_Asynchronous -- USART Mode Select
                 );
+      -- without this, seemingly QEMU is not able to correctly setup RX poll
+      declare
+         Unused : Unsigned_8 with Unreferenced => True;
+      begin
+         Unused := UDR0;
+      end;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;

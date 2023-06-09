@@ -18,7 +18,6 @@ SECTIONS
                 *(.startup)
                 *(.text)
                 *(.text.*)
-                *(.eh_frame)
                 . = ALIGN(4);
                 PROVIDE(_debug_flag = .);
                 BYTE(0x00);
