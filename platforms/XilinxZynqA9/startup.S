@@ -14,15 +14,6 @@
 
                 .sect   .startup,"ax"
 
-                b       _start                          // 0x00 Reset
-                b       _start                          // 0x04 Undefined Instruction
-                b       _start                          // 0x08 Software Interrupt
-                b       _start                          // 0x0C Abort (Prefetch)
-                b       _start                          // 0x10 Abort (Data)
-                b       _start                          // 0x14 Address Exception -- reserved
-                b       _start                          // 0x18 IRQ
-                b       _start                          // 0x1C FIQ
-
                 .type   _start,%function
                 .global _start
 _start:
@@ -31,6 +22,19 @@ _start:
                 // Setup stack pointer.
                 //
                 ldr     sp,=SVC_stack
+
+                //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                ldr     r1,=_sbss
+                ldr     r2,=_ebss
+                mov     r0,#0
+                b       2f
+1:              str     r0,[r1],#4
+2:              cmp     r1,r2
+                blt     1b
 
                 //
                 // Jump to high-level code.
@@ -45,7 +49,6 @@ dead:           b       .
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
 //                                                                            //
-// This function does not need a stack.                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
 movdata:
@@ -56,31 +59,10 @@ movdata:
                 ldr     r1,=_etext
                 ldr     r2,=_sdata
                 ldr     r3,=_edata
-                cmp     r2,r3
-                movcs   pc,lr
+                b       2f
 1:              ldr     r0,[r1],#4
                 str     r0,[r2],#4
-                cmp     r2,r3
-                blt     1b
-                mov     pc,lr
-
-////////////////////////////////////////////////////////////////////////////////
-// zerobss                                                                    //
-//                                                                            //
-// This function does not need a stack.                                       //
-////////////////////////////////////////////////////////////////////////////////
-
-zerobss:
-                // registers used: r0-r2
-                .extern _sbss
-                .extern _ebss
-                ldr     r1,=_sbss
-                ldr     r2,=_ebss
-                cmp     r1,r2
-                movcs   pc,lr
-                ldr     r0,=0
-1:              str     r0,[r1],#4
-                cmp     r1,r2
+2:              cmp     r2,r3
                 blt     1b
                 mov     pc,lr
 
