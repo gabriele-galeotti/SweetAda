@@ -47,7 +47,6 @@ package body BSP is
    --========================================================================--
 
    use System.Storage_Elements;
-   use type System.Secondary_Stack.SS_Stack_Ptr;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -74,9 +73,8 @@ package body BSP is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Secondary stack
+   -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-
    function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
    begin
       return BSP_SS_Stack;

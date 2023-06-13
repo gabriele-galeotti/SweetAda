@@ -107,6 +107,11 @@ _start:
                 nop
 
                 //
+                // Setup stack pointer.
+                //
+                la      $sp,kernel_stack
+
+                //
                 // Code relocation.
                 //
                 //jal     movcode
@@ -117,17 +122,6 @@ _start:
                 //
                 jal     movdata
                 nop
-
-                //
-                // Initialize .bss section.
-                //
-                jal     zerobss
-                nop
-
-                //
-                // Setup stack pointer.
-                //
-                la      $sp,kernel_stack
 
                 //
                 // "The fp register points to the base of the stack frame for
@@ -142,6 +136,20 @@ _start:
                 .extern _gp
                 lui     $gp,%hi(_gp)
                 ori     $gp,%lo(_gp)
+
+                //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                la      $t0,_sbss
+                la      $t1,_ebss
+                b       2f
+                nop
+1:              sw      $0,($t0)
+                addiu   $t0,4
+2:              bne     $t0,$t1,1b
+                nop
 
                 //
                 // Jump to high-level code.
@@ -214,24 +222,6 @@ movdata:
                 bne     $t3,$0,1b
                 nop
 3:              jr      $ra
-                nop
-
-////////////////////////////////////////////////////////////////////////////////
-// zerobss                                                                    //
-//                                                                            //
-// This function does not need a stack.                                       //
-////////////////////////////////////////////////////////////////////////////////
-
-zerobss:
-                .extern _sbss
-                .extern _ebss
-                la      $t0,_sbss
-                la      $t1,_ebss
-1:              sw      $0,($t0)
-                addiu   $t0,4
-                bne     $t0,$t1,1b
-                nop
-                jr      $ra
                 nop
 
 ////////////////////////////////////////////////////////////////////////////////
