@@ -26,31 +26,15 @@ package body ZynqA9 is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- UART
-   ----------------------------------------------------------------------------
-
-   procedure UART_Init is
-   begin
-      Uart0.R_CR := (
-                     Unused1 => 0,
-                     RX_EN   => True,
-                     RX_DIS  => False,
-                     TX_EN   => True,
-                     TX_DIS  => False,
-                     Unused2 => 0
-                    );
-   end UART_Init;
-
-   ----------------------------------------------------------------------------
    -- UART_TX
    ----------------------------------------------------------------------------
    procedure UART_TX (Data : in Unsigned_8) is
    begin
       -- wait for transmitter available
       loop
-         exit when Uart0.R_SR.INTR_TEMPTY;
+         exit when UART0.SR.TXEMPTY;
       end loop;
-      Uart0.R_TX_RX := Unsigned_32 (Data);
+      UART0.FIFO := Unsigned_32 (Data);
    end UART_TX;
 
    ----------------------------------------------------------------------------
@@ -60,9 +44,27 @@ package body ZynqA9 is
    begin
       -- wait for receiver available
       loop
-         exit when not Uart0.R_SR.INTR_REMPTY;
+         exit when not UART0.SR.RXEMPTY;
       end loop;
-      Data := Unsigned_8 (Uart0.R_TX_RX);
+      Data := Unsigned_8 (UART0.FIFO);
    end UART_RX;
+
+   ----------------------------------------------------------------------------
+   -- UART_Init
+   ----------------------------------------------------------------------------
+   procedure UART_Init is
+   begin
+      UART0.CR :=
+         (RXRST    => False,
+          TXRST    => False,
+          RX_EN    => True,
+          RX_DIS   => False,
+          TX_EN    => True,
+          TX_DIS   => False,
+          TORST    => False,
+          STARTBRK => False,
+          STOPBRK  => False,
+          others   => <>);
+   end UART_Init;
 
 end ZynqA9;
