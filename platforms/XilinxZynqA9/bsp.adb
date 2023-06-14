@@ -78,6 +78,23 @@ package body BSP is
       if Core.Debug_Flag then
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
+      -- Timer ----------------------------------------------------------------
+      TTC0.CNT_CNTRL (0) :=
+         (DIS      => False,
+          INT      => INT_OVERFLOW,
+          DECR     => True,
+          MATCH    => False,
+          RST      => False,
+          EN_WAVE  => False,
+          POL_WAVE => POL_WAVE_L2H,
+          others   => <>);
+      TTC0.INTERVAL_VAL (0).COUNT_VALUE := 16#8000#;
+      TTC0.CLK_CNTRL (0) :=
+         (PS_EN    => True,
+          PS_VAL   => 8,
+          SRC      => 0,
+          EXT_EDGE => 0,
+          others   => <>);
       -------------------------------------------------------------------------
    end Setup;
 
