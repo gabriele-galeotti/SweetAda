@@ -34,7 +34,7 @@ package body ZynqA9 is
       loop
          exit when UART0.SR.TXEMPTY;
       end loop;
-      UART0.FIFO := Unsigned_32 (Data);
+      UART0.FIFO.FIFO := Data;
    end UART_TX;
 
    ----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ package body ZynqA9 is
       loop
          exit when not UART0.SR.RXEMPTY;
       end loop;
-      Data := Unsigned_8 (UART0.FIFO);
+      Data := UART0.FIFO.FIFO;
    end UART_RX;
 
    ----------------------------------------------------------------------------
@@ -65,6 +65,7 @@ package body ZynqA9 is
           STARTBRK => False,
           STOPBRK  => False,
           others   => <>);
+      UART0.RXWM.RTRIG := 1;
    end UART_Init;
 
 end ZynqA9;
