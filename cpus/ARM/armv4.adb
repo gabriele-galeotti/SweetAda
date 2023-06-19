@@ -73,7 +73,7 @@ package body ARMv4 is
    end BREAKPOINT;
 
    ----------------------------------------------------------------------------
-   -- Irq_Enable (IRQ)
+   -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable is
    begin
@@ -85,13 +85,13 @@ package body ARMv4 is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Enable;
 
    ----------------------------------------------------------------------------
-   -- Irq_Disable (IRQ)
+   -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable is
    begin
@@ -103,7 +103,7 @@ package body ARMv4 is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Disable;
@@ -121,7 +121,7 @@ package body ARMv4 is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end Fiq_Enable;
@@ -139,7 +139,7 @@ package body ARMv4 is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end Fiq_Disable;
@@ -150,7 +150,6 @@ package body ARMv4 is
    procedure Memory_Synchronization is
    begin
       Asm (
-           -- __TBD__
            Template => ""            & CRLF &
                        "        nop" & CRLF &
                        "",
