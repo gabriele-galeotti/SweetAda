@@ -52,8 +52,10 @@ SERVICE_GOALS := help              \
                  freeze            \
                  probevariable
 
+RTS_GOAL := rts
+
 NON_PLATFORM_GOALS := $(SERVICE_GOALS) \
-                      rts
+                      $(RTS_GOAL)
 
 PLATFORM_GOALS := configure          \
                   all                \
