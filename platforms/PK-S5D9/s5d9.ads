@@ -1066,27 +1066,24 @@ package S5D9 is
 
    -- 14.2.9 Wake Up Interrupt Enable Register (WUPEN)
 
-   type IRQWUPEN_Array_Type is array (0 .. 15) of Boolean with
-      Pack => True;
-
    type WUPEN_Type is
    record
-      IRQWUPEN     : IRQWUPEN_Array_Type; -- IRQ Interrupt Software Standby Returns Enable
-      IWDTWUPEN    : Boolean;             -- IWDT Interrupt Software Standby Returns Enable
-      KEYWUPEN     : Boolean;             -- Key Interrupt Software Standby Returns Enable
-      LVD1WUPEN    : Boolean;             -- LVD1 Interrupt Software Standby Returns Enable
-      LVD2WUPEN    : Boolean;             -- LVD2 Interrupt Software Standby Returns Enable
+      IRQWUPEN     : Bitmap_16;   -- IRQ Interrupt Software Standby Returns Enable
+      IWDTWUPEN    : Boolean;     -- IWDT Interrupt Software Standby Returns Enable
+      KEYWUPEN     : Boolean;     -- Key Interrupt Software Standby Returns Enable
+      LVD1WUPEN    : Boolean;     -- LVD1 Interrupt Software Standby Returns Enable
+      LVD2WUPEN    : Boolean;     -- LVD2 Interrupt Software Standby Returns Enable
       Reserved1    : Bits_2 := 0;
-      ACMPHS0WUPEN : Boolean;             -- ACMPHS0 Interrupt Software Standby Returns Enable
+      ACMPHS0WUPEN : Boolean;     -- ACMPHS0 Interrupt Software Standby Returns Enable
       Reserved2    : Bits_1 := 0;
-      RTCALMWUPEN  : Boolean;             -- RTC Alarm Interrupt Software Standby Returns Enable
-      RTCPRDWUPEN  : Boolean;             -- RTC Period Interrupt Software Standby Returns Enable
-      USBHSWUPEN   : Boolean;             -- USBHS Interrupt Software Standby Returns Enable
-      USBFSWUPEN   : Boolean;             -- USBFS Interrupt Software Standby Returns Enable
-      AGT1UDWUPEN  : Boolean;             -- AGT1 Underflow Interrupt Software Standby Returns Enable
-      AGT1CAWUPEN  : Boolean;             -- AGT1 Compare Match A Interrupt Software Standby Returns Enable
-      AGT1CBWUPEN  : Boolean;             -- AGT1 Compare Match B Interrupt Software Standby Returns Enable
-      IIC0WUPEN    : Boolean;             -- IIC0 Address Match Interrupt Software Standby Returns Enable
+      RTCALMWUPEN  : Boolean;     -- RTC Alarm Interrupt Software Standby Returns Enable
+      RTCPRDWUPEN  : Boolean;     -- RTC Period Interrupt Software Standby Returns Enable
+      USBHSWUPEN   : Boolean;     -- USBHS Interrupt Software Standby Returns Enable
+      USBFSWUPEN   : Boolean;     -- USBFS Interrupt Software Standby Returns Enable
+      AGT1UDWUPEN  : Boolean;     -- AGT1 Underflow Interrupt Software Standby Returns Enable
+      AGT1CAWUPEN  : Boolean;     -- AGT1 Compare Match A Interrupt Software Standby Returns Enable
+      AGT1CBWUPEN  : Boolean;     -- AGT1 Compare Match B Interrupt Software Standby Returns Enable
+      IIC0WUPEN    : Boolean;     -- IIC0 Address Match Interrupt Software Standby Returns Enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
