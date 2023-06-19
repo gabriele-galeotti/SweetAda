@@ -340,6 +340,79 @@ package ZynqA9 is
    -- B.28 System Level Control Registers (slcr)
    ----------------------------------------------------------------------------
 
+   -- SCL
+
+   type SCL_Type is
+   record
+      LOCK     : Boolean;      -- Secure configuration lock for these slcr registers: SCL, PSS_RST_CTRL, APU_CTRL, and WDT_CLK_SEL.
+      Reserved : Bits_31 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SCL_Type use
+   record
+      LOCK     at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
+   -- SLCR_LOCK
+
+   LOCK_KEY_VALUE : constant := 16#767B#;
+
+   type SLCR_LOCK_Type is
+   record
+      LOCK_KEY : Unsigned_16;  -- Write the lock key, 0x767B, to write protect the slcr registers
+      Reserved : Bits_16 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SLCR_LOCK_Type use
+   record
+      LOCK_KEY at 0 range 0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- SLCR_UNLOCK
+
+   UNLOCK_KEY_VALUE : constant := 16#DF0D#;
+
+   type SLCR_UNLOCK_Type is
+   record
+      UNLOCK_KEY : Unsigned_16;  -- Write the unlock key, 0xDF0D, to enable writes to the slcr registers.
+      Reserved   : Bits_16 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SLCR_UNLOCK_Type use
+   record
+      UNLOCK_KEY at 0 range 0 .. 15;
+      Reserved   at 0 range 16 .. 31;
+   end record;
+
+   -- slcr layout
+
+   type SLCR_Type is
+   record
+      SCL         : SCL_Type         with Volatile_Full_Access => True;
+      SLCR_LOCK   : SLCR_LOCK_Type   with Volatile_Full_Access => True;
+      SLCR_UNLOCK : SLCR_UNLOCK_Type with Volatile_Full_Access => True;
+   end record with
+      Size => 32 * 3;
+   for SLCR_Type use
+   record
+      SCL         at 0 range 0 .. 31;
+      SLCR_LOCK   at 4 range 0 .. 31;
+      SLCR_UNLOCK at 8 range 0 .. 31;
+   end record;
+
+   SLCR_BASEADDRESS : constant := 16#F800_0000#;
+
+   SLCR : aliased SLCR_Type with
+      Address    => To_Address (SLCR_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- B.32 Triple Timer Counter (ttc)
    ----------------------------------------------------------------------------

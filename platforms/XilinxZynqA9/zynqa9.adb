@@ -65,7 +65,6 @@ package body ZynqA9 is
           STARTBRK => False,
           STOPBRK  => False,
           others   => <>);
-      UART0.RXWM.RTRIG := 1;
    end UART_Init;
 
 end ZynqA9;
