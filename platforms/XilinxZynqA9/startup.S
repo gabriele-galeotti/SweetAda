@@ -10,6 +10,8 @@
 
 #define __ASSEMBLER__ 1
 
+#include <armv4.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .startup,"ax"
@@ -21,6 +23,30 @@ _start:
                 //
                 // Setup stack pointer.
                 //
+                //ldr     sp,=SVC_stack
+
+                //
+                // CPU is in supervisor mode.
+                // CPSR defaults to IRQ&FIRQ disabled.
+                // CPU modes setup: enter each mode one at the time, setting
+                // stack and IRQ/FIRQ flags.
+                //
+                mrs     r0,cpsr
+                bic     r0,r0,#Mode_MASK
+                orr     r1,r0,#Mode_FIQ
+                msr     cpsr,r1
+                ldr     sp,=FIQ_stack
+                orr     r1,r0,#Mode_IRQ
+                msr     cpsr,r1
+                ldr     sp,=IRQ_stack
+                orr     r1,r0,#Mode_ABT
+                msr     cpsr,r1
+                ldr     sp,=ABT_stack
+                orr     r1,r0,#Mode_UND
+                msr     cpsr,r1
+                ldr     sp,=UND_stack
+                orr     r1,r0,#Mode_SVC
+                msr     cpsr,r1
                 ldr     sp,=SVC_stack
 
                 //
