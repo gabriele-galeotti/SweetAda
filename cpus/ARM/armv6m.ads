@@ -485,6 +485,10 @@ package ARMv6M is
       Inline => True;
    procedure Irq_Disable with
       Inline => True;
+   procedure Fiq_Enable with
+      Inline => True;
+   procedure Fiq_Disable with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking

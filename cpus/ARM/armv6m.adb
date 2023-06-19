@@ -141,7 +141,15 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    procedure Irq_Enable is
    begin
-      null;
+      Asm (
+           Template => ""                  & CRLF &
+                       "        cpsie   i" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
    end Irq_Enable;
 
    ----------------------------------------------------------------------------
@@ -149,8 +157,48 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    procedure Irq_Disable is
    begin
-      null;
+      Asm (
+           Template => ""                  & CRLF &
+                       "        cpsid   i" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
    end Irq_Disable;
+
+   ----------------------------------------------------------------------------
+   -- Fiq_Enable
+   ----------------------------------------------------------------------------
+   procedure Fiq_Enable is
+   begin
+      Asm (
+           Template => ""                  & CRLF &
+                       "        cpsie   f" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end Fiq_Enable;
+
+   ----------------------------------------------------------------------------
+   -- Fiq_Disable
+   ----------------------------------------------------------------------------
+   procedure Fiq_Disable is
+   begin
+      Asm (
+           Template => ""                  & CRLF &
+                       "        cpsid   f" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end Fiq_Disable;
 
    ----------------------------------------------------------------------------
    -- Memory synchronization
