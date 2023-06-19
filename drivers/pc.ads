@@ -66,13 +66,13 @@ package PC is
 
    type i8042_OUTPORT_Type is
    record
-      SYSRES    : Boolean; -- system reset line
-      GATEA20   : Boolean; -- gate A20
-      Unused    : Bits_2;
-      OBUFFULL  : Boolean; -- output buffer full
-      IBUFEMPTY : Boolean; -- input buffer empty
-      KBDCLK    : Boolean; -- keyboard clock (output)
-      KDBDATA   : Boolean; -- keyboard data (output)
+      SYSRES    : Boolean;     -- system reset line
+      GATEA20   : Boolean;     -- gate A20
+      Unused    : Bits_2 := 0;
+      OBUFFULL  : Boolean;     -- output buffer full
+      IBUFEMPTY : Boolean;     -- input buffer empty
+      KBDCLK    : Boolean;     -- keyboard clock (output)
+      KDBDATA   : Boolean;     -- keyboard data (output)
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -422,13 +422,13 @@ package PC is
 
    type PPI_Control_Type is
    record
-      Strobe    : Boolean; -- negated
-      AUTOLF    : Boolean; -- negated
+      Strobe    : Boolean;     -- negated
+      AUTOLF    : Boolean;     -- negated
       INIT      : Boolean;
-      SelectOut : Boolean; -- negated
+      SelectOut : Boolean;     -- negated
       IRQEN     : Boolean;
       BIDIR     : Boolean;
-      Unused    : Bits_2;
+      Unused    : Bits_2 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
