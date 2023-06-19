@@ -32,8 +32,7 @@ package body RISCV is
    use System.Machine_Code;
    use Definitions;
 
-   ZICSR_ZIFENCEI_ASM : constant String :=
-      "        .option arch,+zicsr,+zifencei" & CRLF;
+   ZICSR_ZIFENCEI_ASM : constant String := "        .option arch,+zicsr,+zifencei";
 
    --========================================================================--
    --                                                                        --
@@ -67,7 +66,7 @@ package body RISCV is
    begin
       Asm (
            Template => ""                          & CRLF &
-                       ZICSR_ZIFENCEI_ASM                 &
+                       ZICSR_ZIFENCEI_ASM          & CRLF &
                        "        csrr    %0,mcause" & CRLF &
                        "",
            Outputs  => Unsigned_32'Asm_Output ("=r", MCAUSE),
@@ -86,7 +85,7 @@ package body RISCV is
    begin
       Asm (
            Template => ""                        & CRLF &
-                       ZICSR_ZIFENCEI_ASM               &
+                       ZICSR_ZIFENCEI_ASM        & CRLF &
                        "        csrr    %0,mepc" & CRLF &
                        "",
            Outputs  => Unsigned_32'Asm_Output ("=r", MEPC),
@@ -104,7 +103,7 @@ package body RISCV is
    begin
       Asm (
            Template => ""                         & CRLF &
-                       ZICSR_ZIFENCEI_ASM                &
+                       ZICSR_ZIFENCEI_ASM         & CRLF &
                        "        csrw    mtvec,%0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
@@ -169,7 +168,7 @@ package body RISCV is
    begin
       Asm (
            Template => ""                              & CRLF &
-                       ZICSR_ZIFENCEI_ASM                     &
+                       ZICSR_ZIFENCEI_ASM              & CRLF &
                        "        csrrs   x0,mstatus,%0" & CRLF &
                        "        csrrs   x0,mie,%1    " & CRLF &
                        "",
@@ -187,7 +186,7 @@ package body RISCV is
    begin
       Asm (
            Template => ""                              & CRLF &
-                       ZICSR_ZIFENCEI_ASM                     &
+                       ZICSR_ZIFENCEI_ASM              & CRLF &
                        "        csrrc   x0,mstatus,%0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
