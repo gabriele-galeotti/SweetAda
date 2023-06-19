@@ -88,6 +88,8 @@ package body BSP is
       -------------------------------------------------------------------------
       System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
       -- basic hardware initialization ----------------------------------------
+      ZynqA9.SLCR.SLCR_UNLOCK.UNLOCK_KEY := UNLOCK_KEY_VALUE;
+      ZynqA9.SLCR.SCL.LOCK := False;
       Exceptions.Init;
       UART_Init;
       -- Console --------------------------------------------------------------
@@ -100,7 +102,49 @@ package body BSP is
       if Core.Debug_Flag then
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
-      -------------------------------------------------------------------------
+      -- GIC ------------------------------------------------------------------
+      ZynqA9.APU.ICCICR :=
+         (EnableS  => False,
+          EnableNS => False,
+          AckCtl   => False,
+          FIQEn    => False,
+          SBPR     => False,
+          others   => <>);
+      ZynqA9.APU.ICDISR0 := [others => True];
+      ZynqA9.APU.ICDISR1 := [others => True];
+      ZynqA9.APU.ICDISR2 := [others => True];
+      ZynqA9.APU.ICDISER0 := [others => True];
+      ZynqA9.APU.ICDISER1 := [others => True];
+      ZynqA9.APU.ICDISER2 := [others => True];
+      ZynqA9.APU.ICDIPTR (8)  := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (9)  := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (10) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (11) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (12) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (13) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (14) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (15) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (16) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (17) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (18) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (19) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (20) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (21) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (22) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICDIPTR (23) := [others => ICDIPTR_CPU0];
+      ZynqA9.APU.ICCPMR.Priority := 16#FF#;
+      ZynqA9.APU.ICCICR :=
+         (EnableS  => True,
+          EnableNS => True,
+          AckCtl   => True,
+          FIQEn    => False,
+          SBPR     => False,
+          others   => <>);
+      ZynqA9.APU.ICDDCR :=
+         (Enable_secure     => True,
+          Enable_Non_secure => True,
+          others            => <>);
+      -- ttc timer ------------------------------------------------------------
       TTC0.CNT_CNTRL (0) :=
          (DIS      => False,
           INT      => INT_OVERFLOW,
