@@ -53,7 +53,6 @@ package body BSP is
    --========================================================================--
 
    use System;
-   use type System.Secondary_Stack.SS_Stack_Ptr;
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
@@ -94,9 +93,8 @@ package body BSP is
    end Number_Of_CPUs;
 
    ----------------------------------------------------------------------------
-   -- Secondary stack
+   -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-
    function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
    begin
       return BSP_SS_Stack;
