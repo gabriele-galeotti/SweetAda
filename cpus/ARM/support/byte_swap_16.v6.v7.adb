@@ -27,7 +27,7 @@ function Byte_Swap_16 (Value : Interfaces.Unsigned_16) return Interfaces.Unsigne
 begin
    Asm (
         Template => ""                      & CRLF &
-                    "        revsh   %0,%1" & CRLF &
+                    "        rev16   %0,%1" & CRLF &
                     "",
         Outputs  => Interfaces.Unsigned_16'Asm_Output ("=r", Result),
         Inputs   => Interfaces.Unsigned_16'Asm_Input ("r", Value),
