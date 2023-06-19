@@ -30,6 +30,8 @@ package S5D9 is
    --                                                                        --
    --========================================================================--
 
+   pragma Warnings (Off);
+
    use System;
    use System.Storage_Elements;
    use Interfaces;
@@ -846,6 +848,311 @@ package S5D9 is
       Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 14. Interrupt Controller Unit (ICU)
+   ----------------------------------------------------------------------------
+
+   -- 14.2.1 IRQ Control Register i (IRQCRi) (i = 0 to 15)
+
+   type IRQCR_Type is
+   record
+      IRQMD     : Bits_2;      -- IRQi Detection Sense Select
+      Reserved1 : Bits_2 := 0;
+      FCLKSEL   : Bits_2;      -- IRQi Digital Filter Sampling Clock Select
+      Reserved2 : Bits_1 := 0;
+      FLTEN     : Boolean;     -- IRQi Digital Filter Enable
+   end record with
+      Bit_Order            => Low_Order_First,
+      Size                 => 8,
+      Volatile_Full_Access => True;
+   for IRQCR_Type use
+   record
+      IRQMD     at 0 range 0 .. 1;
+      Reserved1 at 0 range 2 .. 3;
+      FCLKSEL   at 0 range 4 .. 5;
+      Reserved2 at 0 range 6 .. 6;
+      FLTEN     at 0 range 7 .. 7;
+   end record;
+
+   -- 14.2.2 Non-Maskable Interrupt Status Register (NMISR)
+
+   type NMISR_Type is
+   record
+      IWDTST    : Boolean; -- IWDT Underflow/Refresh Error Status Flag
+      WDTST     : Boolean; -- WDT Underflow/Refresh Error Status Flag
+      LVD1ST    : Boolean; -- Voltage Monitor 1 Interrupt Status Flag
+      LVD2ST    : Boolean; -- Voltage Monitor 2 Interrupt Status Flag
+      Reserved1 : Bits_2;
+      OSTST     : Boolean; -- Main Oscillation Stop Detection Interrupt Status Flag
+      NMIST     : Boolean; -- NMI Status Flag
+      RPEST     : Boolean; -- SRAM Parity Error Interrupt Status Flag
+      RECCST    : Boolean; -- SRAM ECC Error Interrupt Status Flag
+      BUSSST    : Boolean; -- MPU Bus Slave Error Interrupt Status Flag
+      BUSMST    : Boolean; -- MPU Bus Master Error Interrupt Status Flag
+      SPEST     : Boolean; -- CPU Stack Pointer Monitor Interrupt Status Flag
+      Reserved2 : Bits_3;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for NMISR_Type use
+   record
+      IWDTST    at 0 range 0 .. 0;
+      WDTST     at 0 range 1 .. 1;
+      LVD1ST    at 0 range 2 .. 2;
+      LVD2ST    at 0 range 3 .. 3;
+      Reserved1 at 0 range 4 .. 5;
+      OSTST     at 0 range 6 .. 6;
+      NMIST     at 0 range 7 .. 7;
+      RPEST     at 0 range 8 .. 8;
+      RECCST    at 0 range 9 .. 9;
+      BUSSST    at 0 range 10 .. 10;
+      BUSMST    at 0 range 11 .. 11;
+      SPEST     at 0 range 12 .. 12;
+      Reserved2 at 0 range 13 .. 15;
+   end record;
+
+   -- 14.2.3 Non-Maskable Interrupt Enable Register (NMIER)
+
+   type NMIER_Type is
+   record
+      IWDTEN    : Boolean;     -- IWDT Underflow/Refresh Error Interrupt Enable
+      WDTEN     : Boolean;     -- WDT Underflow/Refresh Error Interrupt Enable
+      LVD1EN    : Boolean;     -- Voltage Monitor 1 Interrupt Enable
+      LVD2EN    : Boolean;     -- Voltage Monitor 2 Interrupt Enable
+      Reserved1 : Bits_2 := 0;
+      OSTEN     : Boolean;     -- Main Oscillation Stop Detection Interrupt Enable
+      NMIEN     : Boolean;     -- NMI Interrupt Enable
+      RPEEN     : Boolean;     -- SRAM Parity Error Interrupt Enable
+      RECCEN    : Boolean;     -- SRAM ECC Error Interrupt Enable
+      BUSSEN    : Boolean;     -- MPU Bus Slave Error Interrupt Enable
+      BUSMEN    : Boolean;     -- MPU Bus Master Error Interrupt Enable
+      SPEEN     : Boolean;     -- CPU Stack Pointer Monitor Interrupt Enable
+      Reserved2 : Bits_3 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for NMIER_Type use
+   record
+      IWDTEN    at 0 range 0 .. 0;
+      WDTEN     at 0 range 1 .. 1;
+      LVD1EN    at 0 range 2 .. 2;
+      LVD2EN    at 0 range 3 .. 3;
+      Reserved1 at 0 range 4 .. 5;
+      OSTEN     at 0 range 6 .. 6;
+      NMIEN     at 0 range 7 .. 7;
+      RPEEN     at 0 range 8 .. 8;
+      RECCEN    at 0 range 9 .. 9;
+      BUSSEN    at 0 range 10 .. 10;
+      BUSMEN    at 0 range 11 .. 11;
+      SPEEN     at 0 range 12 .. 12;
+      Reserved2 at 0 range 13 .. 15;
+   end record;
+
+   -- 14.2.4 Non-Maskable Interrupt Status Clear Register (NMICLR)
+
+   type NMICLR_Type is
+   record
+      IWDTCLR   : Boolean;     -- IWDT Clear
+      WDTCLR    : Boolean;     -- WDT Clear
+      LVD1CLR   : Boolean;     -- LVD1 Clear
+      LVD2CLR   : Boolean;     -- LVD2 Clear
+      Reserved1 : Bits_2 := 0;
+      OSTCLR    : Boolean;     -- OSR Clear
+      NMICLR    : Boolean;     -- NMI Clear
+      RPECLR    : Boolean;     -- SRAM Parity Error Clear
+      RECCCLR   : Boolean;     -- SRAM ECC Error Clear
+      BUSSCLR   : Boolean;     -- Bus Slave Error Clear
+      BUSMCLR   : Boolean;     -- Bus Master Error Clear
+      SPECLR    : Boolean;     -- CPU Stack Pointer Monitor Interrupt Clear
+      Reserved2 : Bits_3 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for NMICLR_Type use
+   record
+      IWDTCLR   at 0 range 0 .. 0;
+      WDTCLR    at 0 range 1 .. 1;
+      LVD1CLR   at 0 range 2 .. 2;
+      LVD2CLR   at 0 range 3 .. 3;
+      Reserved1 at 0 range 4 .. 5;
+      OSTCLR    at 0 range 6 .. 6;
+      NMICLR    at 0 range 7 .. 7;
+      RPECLR    at 0 range 8 .. 8;
+      RECCCLR   at 0 range 9 .. 9;
+      BUSSCLR   at 0 range 10 .. 10;
+      BUSMCLR   at 0 range 11 .. 11;
+      SPECLR    at 0 range 12 .. 12;
+      Reserved2 at 0 range 13 .. 15;
+   end record;
+
+   -- 14.2.5 NMI Pin Interrupt Control Register (NMICR)
+
+   type NMICR_Type is
+   record
+      NMIMD     : Bits_1;      -- NMI Detection Set
+      Reserved1 : Bits_3 := 0;
+      NFCLKSEL  : Bits_2;      -- NMI Digital Filter Sampling Clock Select
+      Reserved2 : Bits_1 := 0;
+      NFLTEN    : Boolean;     -- NMI Digital Filter Enable
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for NMICR_Type use
+   record
+      NMIMD     at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 3;
+      NFCLKSEL  at 0 range 4 .. 5;
+      Reserved2 at 0 range 6 .. 6;
+      NFLTEN    at 0 range 7 .. 7;
+   end record;
+
+   -- 14.2.6 ICU Event Link Setting Register n (IELSRn) (n = 0 to 95)
+
+   type IELSR_Type is
+   record
+      IELS      : Bits_9;      -- ICU Event Link Select
+      Reserved1 : Bits_7 := 0;
+      IR        : Boolean;     -- Interrupt Status Flag
+      Reserved2 : Bits_7 := 0;
+      DTCE      : Boolean;     -- DTC Activation Enable
+      Reserved3 : Bits_7 := 0;
+   end record with
+      Bit_Order            => Low_Order_First,
+      Size                 => 32,
+      Volatile_Full_Access => True;
+   for IELSR_Type use
+   record
+      IELS      at 0 range 0 .. 8;
+      Reserved1 at 0 range 9 .. 15;
+      IR        at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 23;
+      DTCE      at 0 range 24 .. 24;
+      Reserved3 at 0 range 25 .. 31;
+   end record;
+
+   -- 14.2.7 DMAC Event Link Setting Register n (DELSRn) (n = 0 to 7)
+
+   type DELSR_Type is
+   record
+      IELS      : Bits_9;       -- DMAC Event Link Select
+      Reserved1 : Bits_7 := 0;
+      IR        : Boolean;      -- Interrupt Status Flag for DMAC
+      Reserved2 : Bits_15 := 0;
+   end record with
+      Bit_Order            => Low_Order_First,
+      Size                 => 32,
+      Volatile_Full_Access => True;
+   for DELSR_Type use
+   record
+      IELS      at 0 range 0 .. 8;
+      Reserved1 at 0 range 9 .. 15;
+      IR        at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 31;
+   end record;
+
+   -- 14.2.8 SYS Event Link Setting Register (SELSR0)
+
+   type SELSR0_Type is
+   record
+      SELS     : Bits_9;      -- SYS Event Link Select
+      Reserved : Bits_7 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for SELSR0_Type use
+   record
+      SELS     at 0 range 0 .. 8;
+      Reserved at 0 range 9 .. 15;
+   end record;
+
+   -- 14.2.9 Wake Up Interrupt Enable Register (WUPEN)
+
+   type IRQWUPEN_Array_Type is array (0 .. 15) of Boolean with
+      Pack => True;
+
+   type WUPEN_Type is
+   record
+      IRQWUPEN     : IRQWUPEN_Array_Type; -- IRQ Interrupt Software Standby Returns Enable
+      IWDTWUPEN    : Boolean;             -- IWDT Interrupt Software Standby Returns Enable
+      KEYWUPEN     : Boolean;             -- Key Interrupt Software Standby Returns Enable
+      LVD1WUPEN    : Boolean;             -- LVD1 Interrupt Software Standby Returns Enable
+      LVD2WUPEN    : Boolean;             -- LVD2 Interrupt Software Standby Returns Enable
+      Reserved1    : Bits_2 := 0;
+      ACMPHS0WUPEN : Boolean;             -- ACMPHS0 Interrupt Software Standby Returns Enable
+      Reserved2    : Bits_1 := 0;
+      RTCALMWUPEN  : Boolean;             -- RTC Alarm Interrupt Software Standby Returns Enable
+      RTCPRDWUPEN  : Boolean;             -- RTC Period Interrupt Software Standby Returns Enable
+      USBHSWUPEN   : Boolean;             -- USBHS Interrupt Software Standby Returns Enable
+      USBFSWUPEN   : Boolean;             -- USBFS Interrupt Software Standby Returns Enable
+      AGT1UDWUPEN  : Boolean;             -- AGT1 Underflow Interrupt Software Standby Returns Enable
+      AGT1CAWUPEN  : Boolean;             -- AGT1 Compare Match A Interrupt Software Standby Returns Enable
+      AGT1CBWUPEN  : Boolean;             -- AGT1 Compare Match B Interrupt Software Standby Returns Enable
+      IIC0WUPEN    : Boolean;             -- IIC0 Address Match Interrupt Software Standby Returns Enable
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for WUPEN_Type use
+   record
+      IRQWUPEN     at 0 range 0 .. 15;
+      IWDTWUPEN    at 0 range 16 .. 16;
+      KEYWUPEN     at 0 range 17 .. 17;
+      LVD1WUPEN    at 0 range 18 .. 18;
+      LVD2WUPEN    at 0 range 19 .. 19;
+      Reserved1    at 0 range 20 .. 21;
+      ACMPHS0WUPEN at 0 range 22 .. 22;
+      Reserved2    at 0 range 23 .. 23;
+      RTCALMWUPEN  at 0 range 24 .. 24;
+      RTCPRDWUPEN  at 0 range 25 .. 25;
+      USBHSWUPEN   at 0 range 26 .. 26;
+      USBFSWUPEN   at 0 range 27 .. 27;
+      AGT1UDWUPEN  at 0 range 28 .. 28;
+      AGT1CAWUPEN  at 0 range 29 .. 29;
+      AGT1CBWUPEN  at 0 range 30 .. 30;
+      IIC0WUPEN    at 0 range 31 .. 31;
+   end record;
+
+   -- ICU layout
+
+   type IRQCR_Array_Type is array (0 .. 15) of IRQCR_Type with
+      Pack => True;
+   type IELSR_Array_Type is array (0 .. 95) of IELSR_Type with
+      Pack => True;
+   type DELSR_Array_Type is array (0 .. 7) of DELSR_Type with
+      Pack => True;
+
+   type ICU_Type is
+   record
+      IRQCR  : IRQCR_Array_Type;
+      NMICR  : NMICR_Type        with Volatile_Full_Access => True;
+      NMIER  : NMIER_Type        with Volatile_Full_Access => True;
+      NMICLR : NMICLR_Type       with Volatile_Full_Access => True;
+      NMISR  : NMISR_Type        with Volatile_Full_Access => True;
+      WUPEN  : WUPEN_Type        with Volatile_Full_Access => True;
+      SELSR0 : SELSR0_Type       with Volatile_Full_Access => True;
+      DELSR  : DELSR_Array_Type;
+      IELSR  : IELSR_Array_Type;
+   end record with
+      Size => 16#F00# * 8;
+   for ICU_Type use
+   record
+      IRQCR  at 0        range 0 .. 16 * 8 - 1;
+      NMICR  at 16#0100# range 0 .. 7;
+      NMIER  at 16#0120# range 0 .. 15;
+      NMICLR at 16#0130# range 0 .. 15;
+      NMISR  at 16#0140# range 0 .. 15;
+      WUPEN  at 16#01A0# range 0 .. 31;
+      SELSR0 at 15#0200# range 0 .. 15;
+      DELSR  at 16#0280# range 0 .. 8 * 32 - 1;
+      IELSR  at 16#0300# range 0 .. 96 * 32 - 1;
+   end record;
+
+   ICU_ADDRESS : constant := 16#4000_6000#;
+
+   ICU : aliased ICU_Type with
+      Address    => To_Address (ICU_ADDRESS),
+      Import     => True,
+      Convention => Ada;
+
+   ----------------------------------------------------------------------------
    -- 20. I/O Ports
    ----------------------------------------------------------------------------
 
@@ -935,7 +1242,6 @@ package S5D9 is
 
    -- PORT0 .. PORTB memory-mapped array
 
-pragma Warnings (Off, "bits of * unused");
    type PORT_Type is
    record
       PODR : PODR_Type   with Volatile_Full_Access => True;
@@ -960,7 +1266,6 @@ pragma Warnings (Off, "bits of * unused");
       EORR at 16#0C# range 0 .. 15;
       EOSR at 16#0E# range 0 .. 15;
    end record;
-pragma Warnings (On, "bits of * unused");
 
    PORT_ADDRESS : constant := 16#4004_0000#;
 
