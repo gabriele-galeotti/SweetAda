@@ -38,6 +38,10 @@ package ARMv6M is
    use Interfaces;
    use Bits;
 
+   ----------------------------------------------------------------------------
+   -- B3.2 System Control Space (SCS)
+   ----------------------------------------------------------------------------
+
    -- B3.2.2 System control and ID registers
 
    ACTLR_ADDRESS : constant := 16#E000_E008#;
@@ -297,6 +301,10 @@ package ARMv6M is
       Reserved at 0 range 0 .. 31;
    end record;
 
+   ----------------------------------------------------------------------------
+   -- B3.3 The system timer, SysTick
+   ----------------------------------------------------------------------------
+
    -- B3.3.2 System timer register support in the SCS
 
    SYST_CSR_ADDRESS   : constant := 16#E000_E010#;
@@ -402,6 +410,60 @@ package ARMv6M is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- B3.4 Nested Vectored Interrupt Controller, NVIC
+   ----------------------------------------------------------------------------
+
+   -- B3.4.3 Interrupt Set-Enable Registers, NVIC_ISER
+   -- B3.4.4 Interrupt Clear-Enable Registers, NVIC_ICER
+   -- B3.4.5 Interrupt Set-Pending Registers, NVIC_ISPR
+   -- B3.4.6 Interrupt Clear-Pending Registers, NVIC_ICPR
+
+   type NVIC_Bitmap_Type is new Bitmap_32 with Volatile_Full_Access => True;
+
+   -- B3.4.7 Interrupt Priority Registers, NVIC_IPR0 - NVIC_IPR7
+
+   type NVIC_IPR_Type is array (0 .. 3) of Unsigned_8 with Volatile_Full_Access => True;
+
+   type NVIC_IPR_Array_Type is array (Natural range <>) of NVIC_IPR_Type;
+
+   NVIC_ISER_ADDRESS : constant := 16#E000_E100#;
+   NVIC_ICER_ADDRESS : constant := 16#E000_E180#;
+   NVIC_ISPR_ADDRESS : constant := 16#E000_E200#;
+   NVIC_ICPR_ADDRESS : constant := 16#E000_E280#;
+   NVIC_IABR_ADDRESS : constant := 16#E000_E300#;
+   NVIC_IPR_ADDRESS  : constant := 16#E000_E400#;
+
+   NVIC_ISER : aliased NVIC_Bitmap_Type with
+      Address    => To_Address (NVIC_ISER_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   NVIC_ICER : aliased NVIC_Bitmap_Type with
+      Address    => To_Address (NVIC_ICER_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   NVIC_ISPR : aliased NVIC_Bitmap_Type with
+      Address    => To_Address (NVIC_ISPR_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   NVIC_ICPR : aliased NVIC_Bitmap_Type with
+      Address    => To_Address (NVIC_ICPR_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   NVIC_IPR  : aliased NVIC_IPR_Array_Type (0 .. 7) with
+      Address    => To_Address (NVIC_IPR_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- C1.6 Debug system registers
+   ----------------------------------------------------------------------------
 
    -- C1.6.1 System Handler Control and State Register, SHCSR
 
