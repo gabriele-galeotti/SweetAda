@@ -38,6 +38,10 @@ package ARMv7M is
    use Interfaces;
    use Bits;
 
+   ----------------------------------------------------------------------------
+   -- B3.2 System Control Space (SCS)
+   ----------------------------------------------------------------------------
+
    -- B3.2.2 System control and ID registers
 
    ACTLR_ADDRESS renames ARMv6M.ACTLR_ADDRESS;
@@ -91,19 +95,19 @@ package ARMv7M is
 
    type CCR_Type is
    record
-      NONBASETHRDENA : Boolean; -- Controls whether the processor can enter Thread mode with exceptions active.
-      USERSETMPEND   : Boolean; -- Controls whether unprivileged software can access the STIR.
-      Reserved1      : Bits_1;
-      UNALIGN_TRP    : Boolean; -- unaligned word and halfword accesses generate a HardFault exception
-      DIV_0_TRP      : Boolean; -- Controls the trap on divide by 0.
-      Reserved2      : Bits_3;
-      BFHFNMIGN      : Bits_1;  -- Determines the effect of precise data access faults on handlers ...
-      STKALIGN       : Boolean; -- On exception entry, the SP ... is adjusted to be 8-byte aligned.
-      Reserved3      : Bits_6;
-      DC             : Boolean; -- Cache enable bit.
-      IC             : Boolean; -- Instruction cache enable bit.
-      BP             : Boolean; -- Branch prediction enable bit.
-      Reserved4      : Bits_13;
+      NONBASETHRDENA : Boolean;      -- Controls whether the processor can enter Thread mode with exceptions active.
+      USERSETMPEND   : Boolean;      -- Controls whether unprivileged software can access the STIR.
+      Reserved1      : Bits_1 := 0;
+      UNALIGN_TRP    : Boolean;      -- unaligned word and halfword accesses generate a HardFault exception
+      DIV_0_TRP      : Boolean;      -- Controls the trap on divide by 0.
+      Reserved2      : Bits_3 := 0;
+      BFHFNMIGN      : Bits_1;       -- Determines the effect of precise data access faults on handlers ...
+      STKALIGN       : Boolean;      -- On exception entry, the SP ... is adjusted to be 8-byte aligned.
+      Reserved3      : Bits_6 := 0;
+      DC             : Boolean;      -- Cache enable bit.
+      IC             : Boolean;      -- Instruction cache enable bit.
+      BP             : Boolean;      -- Branch prediction enable bit.
+      Reserved4      : Bits_13 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -258,10 +262,60 @@ package ARMv7M is
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.25 Auxiliary Control Register
+   -- B3.2.24 Interrupt Controller Type Register, ICTR
 
+   type ICTR_Type is
+   record
+      INTLINESNUM : Bits_4;  -- The total number of interrupt lines supported by an implementation, defined in groups of 32.
+      Reserved    : Bits_28;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for ICTR_Type use
+   record
+      INTLINESNUM at 0 range 0 .. 3;
+      Reserved    at 0 range 4 .. 31;
+   end record;
+
+   ICTR_ADDRESS : constant := 16#E000_E004#;
+
+   ICTR : aliased ICTR_Type with
+      Address              => To_Address (ICTR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.2.25 Auxiliary Control Register, ACTLR
    -- IMPLEMENTATION DEFINED
+
    subtype ACTLR_Type is ARMv6M.ACTLR_Type;
+
+   -- B3.2.26 Software Triggered Interrupt Register, STIR
+
+   type STIR_Type is
+   record
+      INTID    : Bits_9;       -- Indicates the interrupt to be triggered.
+      Reserved : Bits_23 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for STIR_Type use
+   record
+      INTID    at 0 range 0 .. 8;
+      Reserved at 0 range 9 .. 31;
+   end record;
+
+   STIR_ADDRESS : constant := 16#E000_EF00#;
+
+   STIR : aliased STIR_Type with
+      Address              => To_Address (STIR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- B3.3 The system timer, SysTick
+   ----------------------------------------------------------------------------
 
    -- B3.3.2 System timer register support in the SCS
 
@@ -306,6 +360,63 @@ package ARMv7M is
 
    subtype SYST_CALIB_Type is ARMv6M.SYST_CALIB_Type;
    SYST_CALIB : SYST_CALIB_Type renames ARMv6M.SYST_CALIB;
+
+   ----------------------------------------------------------------------------
+   -- B3.4 Nested Vectored Interrupt Controller, NVIC
+   ----------------------------------------------------------------------------
+
+   -- B3.4.4 Interrupt Set-Enable Registers, NVIC_ISER0-NVIC_ISER15
+   -- B3.4.5 Interrupt Clear-Enable Registers, NVIC_ICER0-NVIC_ICER15
+   -- B3.4.6 Interrupt Set-Pending Registers, NVIC_ISPR0-NVIC_ISPR15
+   -- B3.4.7 Interrupt Clear-Pending Registers, NVIC_ICPR0-NVIC_ICPR15
+   -- B3.4.8 Interrupt Active Bit Registers, NVIC_IABR0-NVIC_IABR15
+
+   type NVIC_Array_Type is array (Natural range <>) of ARMv6M.NVIC_Bitmap_Type with
+      Pack => True;
+
+   -- B3.4.9 Interrupt Priority Registers, NVIC_IPR0-NVIC_IPR123
+
+   NVIC_ISER_ADDRESS renames ARMv6M.NVIC_ISER_ADDRESS;
+   NVIC_ICER_ADDRESS renames ARMv6M.NVIC_ICER_ADDRESS;
+   NVIC_ISPR_ADDRESS renames ARMv6M.NVIC_ISPR_ADDRESS;
+   NVIC_ICPR_ADDRESS renames ARMv6M.NVIC_ICPR_ADDRESS;
+   NVIC_IABR_ADDRESS : constant := 16#E000_E300#;
+   NVIC_IPR_ADDRESS  renames ARMv6M.NVIC_IPR_ADDRESS;
+
+   NVIC_ISER : aliased NVIC_Array_Type (0 .. 15) with
+      Address    => To_Address (NVIC_ISER_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   NVIC_ICER : aliased NVIC_Array_Type (0 .. 15) with
+      Address    => To_Address (NVIC_ICER_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   NVIC_ISPR : aliased NVIC_Array_Type (0 .. 15) with
+      Address    => To_Address (NVIC_ISPR_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   NVIC_ICPR : aliased NVIC_Array_Type (0 .. 15) with
+      Address    => To_Address (NVIC_ICPR_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   NVIC_IABR : aliased NVIC_Array_Type (0 .. 15) with
+      Address    => To_Address (NVIC_IABR_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+   NVIC_IPR  : aliased ARMv6M.NVIC_IPR_Array_Type (0 .. 123) with
+      Address    => To_Address (NVIC_IPR_ADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- C1.6 Debug system registers
+   ----------------------------------------------------------------------------
 
    -- C1.6.1 Debug Fault Status Register, DFSR
 
