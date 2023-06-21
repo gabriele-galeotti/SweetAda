@@ -39,6 +39,31 @@ package ARMv6M is
    use Bits;
 
    ----------------------------------------------------------------------------
+   -- B1.4 Registers
+   ----------------------------------------------------------------------------
+
+   -- B1.4.2 The special-purpose Program Status Registers, xPSR
+
+   type APSR_Type is
+   record
+      Reserved : Bits_28 := 0;
+      V        : Boolean;      -- Overflow condition flag.
+      C        : Boolean;      -- Carry condition flag.
+      Z        : Boolean;      -- Zero condition flag.
+      N        : Boolean;      -- Negative condition flag.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for APSR_Type use
+   record
+      Reserved at 0 range 0 .. 27;
+      V        at 0 range 28 .. 28;
+      C        at 0 range 29 .. 29;
+      Z        at 0 range 30 .. 30;
+      N        at 0 range 31 .. 31;
+   end record;
+
+   ----------------------------------------------------------------------------
    -- B3.2 System Control Space (SCS)
    ----------------------------------------------------------------------------
 
@@ -319,12 +344,12 @@ package ARMv6M is
 
    type SYST_CSR_Type is
    record
-      ENABLE    : Boolean; -- Indicates the enabled status of the SysTick counter.
-      TICKINT   : Boolean; -- Indicates whether counting to 0 causes the status of the SysTick exception to change to pending.
-      CLKSOURCE : Bits_1;  -- Indicates the SysTick clock source.
-      Reserved1 : Bits_13;
-      COUNTFLAG : Boolean; -- Indicates whether the counter has counted to 0 since the last read of this register.
-      Reserved2 : Bits_15;
+      ENABLE    : Boolean;      -- Indicates the enabled status of the SysTick counter.
+      TICKINT   : Boolean;      -- Indicates whether counting to 0 causes the status of the SysTick exception to change to pending.
+      CLKSOURCE : Bits_1;       -- Indicates the SysTick clock source.
+      Reserved1 : Bits_13 := 0;
+      COUNTFLAG : Boolean;      -- Indicates whether the counter has counted to 0 since the last read of this register.
+      Reserved2 : Bits_15 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -348,8 +373,8 @@ package ARMv6M is
 
    type SYST_RVR_Type is
    record
-      RELOAD   : Bits_24; -- The value to load into the SYST_CVR register when the counter reaches 0.
-      Reserved : Bits_8;
+      RELOAD   : Bits_24;     -- The value to load into the SYST_CVR register when the counter reaches 0.
+      Reserved : Bits_8 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -369,8 +394,8 @@ package ARMv6M is
 
    type SYST_CVR_Type is
    record
-      CURRENT  : Bits_24; -- Current counter value.
-      Reserved : Bits_8;
+      CURRENT  : Bits_24;     -- Current counter value.
+      Reserved : Bits_8 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
