@@ -81,26 +81,26 @@ def msleep(ms):
 ################################################################################
 
 def u16_to_bebytes(n):
-    byte0 = (n / 0x100) % 0x100
+    byte0 = (n // 0x100) % 0x100
     byte1 = n % 0x100
     return [byte0, byte1]
 
 def u16_to_lebytes(n):
     byte0 = n % 0x100
-    byte1 = (n / 0x100) % 0x100
+    byte1 = (n // 0x100) % 0x100
     return [byte0, byte1]
 
 def u32_to_bebytes(n):
-    byte0 = (n / 0x1000000) % 0x100
-    byte1 = (n / 0x10000) % 0x100
-    byte2 = (n / 0x100) % 0x100
+    byte0 = (n // 0x1000000) % 0x100
+    byte1 = (n // 0x10000) % 0x100
+    byte2 = (n // 0x100) % 0x100
     byte3 = n % 0x100
     return [byte0, byte1, byte2, byte3]
 
 def u32_to_lebytes(n):
     byte0 = n % 0x100
-    byte1 = (n / 0x100) % 0x100
-    byte2 = (n / 0x10000) % 0x100
-    byte3 = (n / 0x1000000) % 0x100
+    byte1 = (n // 0x100) % 0x100
+    byte2 = (n // 0x10000) % 0x100
+    byte3 = (n // 0x1000000) % 0x100
     return [byte0, byte1, byte2, byte3]
 
