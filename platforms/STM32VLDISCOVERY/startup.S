@@ -12,30 +12,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .sect   .vectors,"ax"
-
-                .global vectors
-vectors:
-
-SP_Main:        .long   0
-Reset:          .long   _start
-NMI:            .long   0
-HardFault:      .long   0
-ReservedExc4:   .long   0
-ReservedExc5:   .long   0
-ReservedExc6:   .long   0
-ReservedExc7:   .long   0
-ReservedExc8:   .long   0
-ReservedExc9:   .long   0
-ReservedExcA:   .long   0
-SVCall:         .long   0
-ReservedExcC:   .long   0
-ReservedExcD:   .long   0
-PendSV:         .long   0
-SysTick:        .long   0
-
-////////////////////////////////////////////////////////////////////////////////
-
                 .sect   .startup,"ax"
 
                 .type   _start,%function

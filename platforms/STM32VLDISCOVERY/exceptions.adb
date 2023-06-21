@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.adb                                                                                                   --
+-- __FLN__ exceptions.adb                                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,17 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with Definitions;
-with Bits;
-with Core;
-with CPU;
-with ARMv7M;
-with STM32VLDISCOVERY;
-with Exceptions;
+with Abort_Library;
 with Console;
 
-package body BSP is
+package body Exceptions is
 
    --========================================================================--
    --                                                                        --
@@ -34,13 +27,6 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   use Interfaces;
-   use Definitions;
-   use Bits;
-   use STM32VLDISCOVERY;
-
-   procedure SysTick_Init;
 
    --========================================================================--
    --                                                                        --
@@ -51,65 +37,27 @@ package body BSP is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- SysTick_Init
+   -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure SysTick_Init is
+   procedure Exception_Process is
    begin
-      ARMv7M.SYST_RVR.RELOAD := 16#8000#;
-      ARMv7M.SHPR3.PRI_15 := 16#01#;
-      ARMv7M.SYST_CVR.CURRENT := 0;
-      ARMv7M.SYST_CSR :=
-         (ENABLE    => True,
-          TICKINT   => True,
-          CLKSOURCE => ARMv7M.CLKSOURCE_CPU,
-          COUNTFLAG => False,
-          others    => <>);
-   end SysTick_Init;
+      Abort_Library.System_Abort;
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
-   -- Console wrappers
+   -- Irq_Process
    ----------------------------------------------------------------------------
-
-   procedure Console_Putchar (C : in Character) is
+   procedure Irq_Process is
    begin
-      -- wait for transmitter available
-      loop
-         exit when USART1.USART_SR.TXE;
-      end loop;
-      USART1.USART_DR.DR := To_U8 (C);
-   end Console_Putchar;
-
-   procedure Console_Getchar (C : out Character) is
-      Data : Unsigned_8;
-   begin
-      -- wait for receiver available
-      loop
-         exit when USART1.USART_SR.RXNE;
-      end loop;
-      Data := USART1.USART_DR.DR;
-      C := To_Ch (Data);
-   end Console_Getchar;
+      null;
+   end Irq_Process;
 
    ----------------------------------------------------------------------------
-   -- Setup
+   -- Init
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Init is
    begin
-      -------------------------------------------------------------------------
-      Exceptions.Init;
-      -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
-      -------------------------------------------------------------------------
-      Console.Print ("STM32VLDISCOVERY (QEMU emulator)", NL => True);
-      -------------------------------------------------------------------------
-      if Core.Debug_Flag then
-         Console.Print ("Debug_Flag: ENABLED", NL => True);
-      end if;
-      -------------------------------------------------------------------------
-      SysTick_Init;
-      -------------------------------------------------------------------------
-   end Setup;
+      null;
+   end Init;
 
-end BSP;
+end Exceptions;

@@ -66,7 +66,7 @@ SERIALPORT1=4447
 
 # QEMU machine
 ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
-  -M stm32vldiscovery \
+  -M stm32vldiscovery -cpu cortex-m3 \
   -kernel ${KERNEL_OUTFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -chardev "socket,id=SERIALPORT0,port=${SERIALPORT0},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \

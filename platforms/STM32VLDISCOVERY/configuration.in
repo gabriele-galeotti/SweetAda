@@ -2,7 +2,7 @@
 #
 # STM32VLDISCOVERY (QEMU emulator)
 #
-# ARM Cortex-M3 LE
+# ARM Cortex-M3 LE (ARMv7-M)
 #
 
 # force ZFP
@@ -15,7 +15,7 @@ CPU_MODEL := CORTEXM3
 
 GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m3
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      :=
+LD_SWITCHES_PLATFORM      := --undefined=vectors
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
