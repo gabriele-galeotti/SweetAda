@@ -164,7 +164,7 @@ endif
 include Makefile.ut.in
 
 # check for RTS build
-ifeq ($(MAKECMDGOALS),rts)
+ifeq ($(MAKECMDGOALS),$(RTS_GOAL))
 # before loading configuration.in (which defines the RTS type used by the
 # platform), save the RTS variable from the environment in order to correctly
 # build the RTS specified when issuing the "rts" target
@@ -192,7 +192,7 @@ EXTERNAL_OBJECTS   :=
 # read the master configuration file
 include configuration.in
 
-ifneq ($(filter rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(TOOLCHAIN_PREFIX),)
 $(error Error: no valid TOOLCHAIN_PREFIX)
 endif
