@@ -330,7 +330,7 @@ package body PC is
          SelectOut => True,
          IRQEN     => False,
          BIDIR     => False,
-         Unused    => 0
+         others    => <>
          ));
       PPI_DataOut (0);
    end PPI_Init;
