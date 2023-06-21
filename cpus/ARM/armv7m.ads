@@ -39,6 +39,37 @@ package ARMv7M is
    use Bits;
 
    ----------------------------------------------------------------------------
+   -- B1.4 Registers
+   ----------------------------------------------------------------------------
+
+   -- B1.4.2 The special-purpose Program Status Registers, xPSR
+
+   type APSR_Type is
+   record
+      Reserved1 : Bits_16 := 0;
+      GE        : Bits_4;       -- [DSP extension only] Greater than or Equal flags.
+      Reserved2 : Bits_7 := 0;
+      Q         : Boolean;      -- Set to 1 if a SSAT or USAT instr changes the input value for the s or uns range of the result.
+      V         : Boolean;      -- Overflow condition flag.
+      C         : Boolean;      -- Carry condition flag.
+      Z         : Boolean;      -- Zero condition flag.
+      N         : Boolean;      -- Negative condition flag.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for APSR_Type use
+   record
+      Reserved1 at 0 range 0 .. 15;
+      GE        at 0 range 16 .. 19;
+      Reserved2 at 0 range 20 .. 26;
+      Q         at 0 range 27 .. 27;
+      V         at 0 range 28 .. 28;
+      C         at 0 range 29 .. 29;
+      Z         at 0 range 30 .. 30;
+      N         at 0 range 31 .. 31;
+   end record;
+
+   ----------------------------------------------------------------------------
    -- B3.2 System Control Space (SCS)
    ----------------------------------------------------------------------------
 
