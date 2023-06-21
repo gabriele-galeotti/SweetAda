@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #
 # Generate a PC-x86 bootable hard disk.
@@ -63,10 +63,10 @@ def errprintf(format, *args):
 # CHS layout in MBR: [0]=HEAD, [1]=SECTOR|CYLINDERH, [3]=CYLINDERL             #
 ################################################################################
 def ls2chs(sectorn, cyl, hpc, spt):
-    c = (sectorn / (spt * hpc)) % cyl
+    c = (sectorn // (spt * hpc)) % cyl
     cl = c % 256
-    ch = c / 256
-    return [(sectorn / spt) % hpc, ((sectorn % spt) + 1) + (ch * 64), cl]
+    ch = c // 256
+    return [(sectorn // spt) % hpc, ((sectorn % spt) + 1) + (ch * 64), cl]
 
 ################################################################################
 # write_partition()                                                            #
@@ -134,10 +134,10 @@ SECTORS_PER_CYLINDER = HPC * SPT
 # MBR # of sectors, 1 full cylinder
 MBR_SECTORS = SECTORS_PER_CYLINDER
 # compute # of sectors sufficient to contain the kernel
-KERNEL_SECTORS = (kernel_size + BPS - 1) / BPS
+KERNEL_SECTORS = (kernel_size + BPS - 1) // BPS
 printf('%s: kernel sector count: %d (0x%X)\n', SCRIPT_FILENAME, KERNEL_SECTORS, KERNEL_SECTORS)
 # compute # of cylinders sufficient to contain the kernel
-CYL_PARTITION = (KERNEL_SECTORS + SECTORS_PER_CYLINDER - 1) / SECTORS_PER_CYLINDER
+CYL_PARTITION = (KERNEL_SECTORS + SECTORS_PER_CYLINDER - 1) // SECTORS_PER_CYLINDER
 # total device # of cylinders, +1 for full cylinder MBR
 CYL = CYL_PARTITION + 1
 # sector count of device

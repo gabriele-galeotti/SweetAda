@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #
 # Generate a PC-x86 bootable 18-sector 1.44 MB floppy disk.
@@ -95,7 +95,7 @@ else:
         device_filename = sys.stdin.readline().rstrip()
 
 # build bootsector
-KERNEL_SECTORS = (kernel_size + BPS - 1) / BPS
+KERNEL_SECTORS = (kernel_size + BPS - 1) // BPS
 printf('%s: kernel sector count: %d (0x%X)\n', SCRIPT_FILENAME, KERNEL_SECTORS, KERNEL_SECTORS)
 os.system(
     os.getenv('TOOLCHAIN_CC')           + ' ' +
