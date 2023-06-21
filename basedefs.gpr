@@ -80,7 +80,7 @@ abstract project Basedefs is
                                    GCC_Wrapper_Switch;
       -- C
       for Driver ("C") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
-      for Leading_Required_Switches ("C") use ("--freestanding", "-std=c99");
+      for Leading_Required_Switches ("C") use ("-ffreestanding", "-std=c99");
       for Switches ("C") use (
                               "-O" & Configure.Optimization_Level,
                               "-fno-omit-frame-pointer",
