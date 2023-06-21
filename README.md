@@ -1,6 +1,11 @@
 
 ![alt text](https://www.sweetada.org/images/banner.jpg)
 
+<scroll down for the news>
+
+## SweetAda overview
+&nbsp;
+
 Welcome to SweetAda.
 
 SweetAda is a lightweight development framework whose purpose is the
@@ -17,25 +22,16 @@ complex software-controlled devices.
 
 SweetAda has some distinctive characteristics, like:
 - is ROMable
-- uses a ZFP run-time
+- could use a ZFP run-time
 - has no dependencies; neither external libraries nor underlying code are needed
 
-SweetAda, in addition to the core source code, consists of a toolchain
-(assembler, linker, Ada compiler and debugger) and (optionally) an emulator,
-which is used to execute the final output code in a virtual target machine.
-In order to use SweetAda, a decent POSIX&reg; environment with a Bash shell
-and GNU Make are required. In a Linux&reg; workstation this is quite standard,
-while for a Windows&#174; machine you can download and install either MSYS2
-(preferred) or Cygwin&reg;. Anyway, SweetAda toolchains for Windows have an
-integrated Make suited for a PowerShell CLI. Being completely makefile- and
-script- driven, SweetAda has many hooks which allow a nicely integration in a
-GUI environment such as, e.g., Eclipse, Kate or Visual Studio Code.
-
-SweetAda comes with high-quality GNU toolchains based on recent stock official
-FSF package releases, unpatched and compiled with strictly controlled options. The
-emulators are mainly based on the latest QEMU&trade; official release, augmented with
-the IOEMU physical I/O system, which allows software code to interact with a visual
-environment.
+SweetAda uses standard GNU toolchains, GNU Make and a decent POSIX&reg; shell
+environment. In a Linux&reg; workstation the latter is quite standard, while for a
+Windows&#174; machine you can download and install either MSYS2 (preferred) or
+Cygwin&reg;. Anyway, SweetAda comes with a port of Make and support for CMD/PowerShell
+CLI. Being completely makefile- and script- driven, SweetAda has many hooks which
+allow a nicely integration in a GUI environment such as, e.g., Eclipse, Kate or Visual
+Studio Code.
 
 To make SweetAda generic and, at the same time, reliable, it is regularly
 tested against an heterogeneous set of machines which are able to succesfully
@@ -55,6 +51,10 @@ execute the system code; a brief list could be given, e.g.:
 - Spartan 3E MicroBlaze softcore (JTAG-boot)
 - Raspberry Pi&trade; 3 ARMv8 (microSD-boot)
 
+Some machines are supported through a virtual emulator like QEMU&trade, and as
+an option, a virtual IOEMU physical I/O system could be used, which allows software
+code to interact with a visual environment.
+
 Great care has been put in the design and development of SweetAda.
 The software code is logically organized, written with aesthetically precise
 guidelines, and is compiled by a build machinery which enforces a very high
@@ -72,4 +72,14 @@ in future releases.
 Please note that much of the platform-specific code provided is given as an
 example. The emphasis of SweetAda is not about operating system design but
 rather on exploiting Ada language everywhere.
+
+## NEWS
+&nbsp;
+
+Thanks to the work of Fernando Oleo Blanco [https://irvise.xyz/](https://irvise.xyz/), SweetAda got displayed
+in the real world, running on a RISC-V SiFive(R) HiFive1 board.
+
+The Ada-based system was shown at the FOSDEM '23 recently held in Brussels.
+
+![alt text](https://media.licdn.com/dms/image/D4D22AQG6cf0OrSKm1A/feedshare-shrink_800/0/1686850573412?e=1690416000&v=beta&t=Bl5qFP6hv9ERZaaeCG-BGP_3s1g6epdgf5hQDuB5vFo)
 
