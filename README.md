@@ -4,7 +4,6 @@
 <scroll down for the news>
 
 ## SweetAda overview
-&nbsp;
 
 Welcome to SweetAda.
 
@@ -74,9 +73,10 @@ example. The emphasis of SweetAda is not about operating system design but
 rather on exploiting Ada language everywhere.
 
 ## NEWS
-&nbsp;
 
-Thanks to the work of Fernando Oleo Blanco [https://irvise.xyz/](https://irvise.xyz/), SweetAda got displayed
+21/06/2023
+
+Thanks to the work of Fernando Oleo Blanco ([https://irvise.xyz/](https://irvise.xyz/)), SweetAda got displayed
 in the real world, running on a RISC-V SiFive(R) HiFive1 board.
 
 The Ada-based system was shown at the FOSDEM '23 recently held in Brussels.
