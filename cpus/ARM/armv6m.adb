@@ -41,6 +41,226 @@ package body ARMv6M is
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- MSP/PSP_Read/Write
+   ----------------------------------------------------------------------------
+
+   function MSP_Read return Unsigned_32 is
+      Value : Unsigned_32;
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        mrs     %0,msp" & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end MSP_Read;
+
+   procedure MSP_Write (Value : in Unsigned_32) is
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        msr     msp,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Unsigned_32'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end MSP_Write;
+
+   function PSP_Read return Unsigned_32 is
+      Value : Unsigned_32;
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        mrs     %0,psp" & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end PSP_Read;
+
+   procedure PSP_Write (Value : in Unsigned_32) is
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        msr     psp,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Unsigned_32'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end PSP_Write;
+
+   ----------------------------------------------------------------------------
+   -- APSR_Read/Write
+   ----------------------------------------------------------------------------
+
+   function APSR_Read return APSR_Type is
+      Value : APSR_Type;
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        mrs     %0,apsr" & CRLF &
+                       "",
+           Outputs  => APSR_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end APSR_Read;
+
+   procedure APSR_Write (Value : in APSR_Type) is
+   begin
+      Asm (
+           Template => ""                              & CRLF &
+                       "        msr     apsr_nzcvq,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => APSR_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end APSR_Write;
+
+   ----------------------------------------------------------------------------
+   -- IPSR_Read/Write
+   ----------------------------------------------------------------------------
+
+   function IPSR_Read return IPSR_Type is
+      Value : IPSR_Type;
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        mrs     %0,ipsr" & CRLF &
+                       "",
+           Outputs  => IPSR_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end IPSR_Read;
+
+   procedure IPSR_Write (Value : in IPSR_Type) is
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        msr     ipsr,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => IPSR_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end IPSR_Write;
+
+   ----------------------------------------------------------------------------
+   -- EPSR_Read/Write
+   ----------------------------------------------------------------------------
+
+   function EPSR_Read return EPSR_Type is
+      Value : EPSR_Type;
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        mrs     %0,epsr" & CRLF &
+                       "",
+           Outputs  => EPSR_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end EPSR_Read;
+
+   procedure EPSR_Write (Value : in EPSR_Type) is
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        msr     epsr,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => EPSR_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end EPSR_Write;
+
+   ----------------------------------------------------------------------------
+   -- PRIMASK_Read/Write
+   ----------------------------------------------------------------------------
+
+   function PRIMASK_Read return PRIMASK_Type is
+      Value : PRIMASK_Type;
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        mrs     %0,primask" & CRLF &
+                       "",
+           Outputs  => PRIMASK_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end PRIMASK_Read;
+
+   procedure PRIMASK_Write (Value : in PRIMASK_Type) is
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        msr     primask,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => PRIMASK_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end PRIMASK_Write;
+
+   ----------------------------------------------------------------------------
+   -- CONTROL_Read/Write
+   ----------------------------------------------------------------------------
+
+   function CONTROL_Read return CONTROL_Type is
+      Value : CONTROL_Type;
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        mrs     %0,control" & CRLF &
+                       "",
+           Outputs  => CONTROL_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end CONTROL_Read;
+
+   procedure CONTROL_Write (Value : in CONTROL_Type) is
+   begin
+      Asm (
+           Template => ""                           & CRLF &
+                       "        msr     control,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => CONTROL_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end CONTROL_Write;
+
+   ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP is

@@ -42,15 +42,27 @@ package ARMv6M is
    -- B1.4 Registers
    ----------------------------------------------------------------------------
 
+   -- B1.4.1 The ARM core registers
+
+   function MSP_Read return Unsigned_32 with
+      Inline => True;
+   procedure MSP_Write (Value : in Unsigned_32) with
+      Inline => True;
+
+   function PSP_Read return Unsigned_32 with
+      Inline => True;
+   procedure PSP_Write (Value : in Unsigned_32) with
+      Inline => True;
+
    -- B1.4.2 The special-purpose Program Status Registers, xPSR
 
    type APSR_Type is
    record
-      Reserved : Bits_28 := 0;
-      V        : Boolean;      -- Overflow condition flag.
-      C        : Boolean;      -- Carry condition flag.
-      Z        : Boolean;      -- Zero condition flag.
-      N        : Boolean;      -- Negative condition flag.
+      Reserved : Bits_28;
+      V        : Boolean; -- Overflow condition flag.
+      C        : Boolean; -- Carry condition flag.
+      Z        : Boolean; -- Zero condition flag.
+      N        : Boolean; -- Negative condition flag.
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -62,6 +74,107 @@ package ARMv6M is
       Z        at 0 range 30 .. 30;
       N        at 0 range 31 .. 31;
    end record;
+
+   function To_U32 is new Ada.Unchecked_Conversion (APSR_Type, Unsigned_32);
+   function To_APSR is new Ada.Unchecked_Conversion (Unsigned_32, APSR_Type);
+
+   function APSR_Read return APSR_Type with
+      Inline => True;
+   procedure APSR_Write (Value : in APSR_Type) with
+      Inline => True;
+
+   type IPSR_Type is
+   record
+      Exception_Number : Bits_6;  -- in Handler mode, holds the exception number of the currently-executing exception
+      Reserved         : Bits_26;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for IPSR_Type use
+   record
+      Exception_Number at 0 range 0 .. 5;
+      Reserved         at 0 range 6 .. 31;
+   end record;
+
+   function To_U32 is new Ada.Unchecked_Conversion (IPSR_Type, Unsigned_32);
+   function To_IPSR is new Ada.Unchecked_Conversion (Unsigned_32, IPSR_Type);
+
+   function IPSR_Read return IPSR_Type with
+      Inline => True;
+   procedure IPSR_Write (Value : in IPSR_Type) with
+      Inline => True;
+
+   type EPSR_Type is
+   record
+      Reserved1 : Bits_9;
+      A         : Boolean; -- reserved, but when the processor stacks the PSR, it uses this bit to indicate the stack alignment
+      Reserved2 : Bits_14;
+      T         : Boolean; -- Thumb state
+      Reserved3 : Bits_7;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for EPSR_Type use
+   record
+      Reserved1 at 0 range 0 .. 8;
+      A         at 0 range 9 .. 9;
+      Reserved2 at 0 range 10 .. 23;
+      T         at 0 range 24 .. 24;
+      Reserved3 at 0 range 25 .. 31;
+   end record;
+
+   function To_U32 is new Ada.Unchecked_Conversion (EPSR_Type, Unsigned_32);
+   function To_EPSR is new Ada.Unchecked_Conversion (Unsigned_32, EPSR_Type);
+
+   function EPSR_Read return EPSR_Type with
+      Inline => True;
+   procedure EPSR_Write (Value : in EPSR_Type) with
+      Inline => True;
+
+   -- B1.4.3 The special-purpose mask register, PRIMASK
+
+   type PRIMASK_Type is
+   record
+      PM       : Boolean;      -- priority boosting
+      Reserved : Bits_31 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for PRIMASK_Type use
+   record
+      PM       at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
+   function PRIMASK_Read return PRIMASK_Type with
+      Inline => True;
+   procedure PRIMASK_Write (Value : in PRIMASK_Type) with
+      Inline => True;
+
+   -- B1.4.4 The special-purpose CONTROL register
+
+   SPSEL_SP_main    : constant := 0; -- Use SP_main as the current stack
+   SPSEL_SP_process : constant := 1; -- In Thread mode, use SP_process as the current stack.
+
+   type CONTROL_Type is
+   record
+      nPRIV    : Boolean; -- defines the execution privilege in Thread mode
+      SPSEL    : Bits_1;  -- Defines the stack to be used
+      Reserved : Bits_30;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for CONTROL_Type use
+   record
+      nPRIV    at 0 range 0 .. 0;
+      SPSEL    at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
+   function CONTROL_Read return CONTROL_Type with
+      Inline => True;
+   procedure CONTROL_Write (Value : in CONTROL_Type) with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- B3.2 System Control Space (SCS)
