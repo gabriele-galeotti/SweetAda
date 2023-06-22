@@ -17,6 +17,7 @@
 
 with System;
 with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with ARMv6M;
@@ -42,18 +43,26 @@ package ARMv7M is
    -- B1.4 Registers
    ----------------------------------------------------------------------------
 
+   -- B1.4.1 The Arm core registers
+
+   function MSP_Read return Unsigned_32         renames ARMv6M.MSP_Read;
+   procedure MSP_Write (Value : in Unsigned_32) renames ARMv6M.MSP_Write;
+
+   function PSP_Read return Unsigned_32         renames ARMv6M.PSP_Read;
+   procedure PSP_Write (Value : in Unsigned_32) renames ARMv6M.PSP_Write;
+
    -- B1.4.2 The special-purpose Program Status Registers, xPSR
 
    type APSR_Type is
    record
-      Reserved1 : Bits_16 := 0;
-      GE        : Bits_4;       -- [DSP extension only] Greater than or Equal flags.
-      Reserved2 : Bits_7 := 0;
-      Q         : Boolean;      -- Set to 1 if a SSAT or USAT instr changes the input value for the s or uns range of the result.
-      V         : Boolean;      -- Overflow condition flag.
-      C         : Boolean;      -- Carry condition flag.
-      Z         : Boolean;      -- Zero condition flag.
-      N         : Boolean;      -- Negative condition flag.
+      Reserved1 : Bits_16;
+      GE        : Bits_4;  -- Greater than or Equal flags.
+      Reserved2 : Bits_7;
+      Q         : Boolean; -- [DSP extension], the processor sets this bit to 1 to indicate an overflow on some multiplies.
+      V         : Boolean; -- Overflow condition flag.
+      C         : Boolean; -- Carry condition flag.
+      Z         : Boolean; -- Zero condition flag.
+      N         : Boolean; -- Negative condition flag.
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -69,24 +78,157 @@ package ARMv7M is
       N         at 0 range 31 .. 31;
    end record;
 
+   function To_U32 is new Ada.Unchecked_Conversion (APSR_Type, Unsigned_32);
+   function To_APSR is new Ada.Unchecked_Conversion (Unsigned_32, APSR_Type);
+
+   function APSR_Read return APSR_Type with
+      Inline => True;
+   procedure APSR_Write (Value : in APSR_Type) with
+      Inline => True;
+
+   type IPSR_Type is
+   record
+      Exception_Number : Bits_9;  -- in Handler mode, holds the exception number of the currently-executing exception
+      Reserved         : Bits_23;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for IPSR_Type use
+   record
+      Exception_Number at 0 range 0 .. 8;
+      Reserved         at 0 range 9 .. 31;
+   end record;
+
+   function To_U32 is new Ada.Unchecked_Conversion (IPSR_Type, Unsigned_32);
+   function To_IPSR is new Ada.Unchecked_Conversion (Unsigned_32, IPSR_Type);
+
+   function IPSR_Read return IPSR_Type with
+      Inline => True;
+   procedure IPSR_Write (Value : in IPSR_Type) with
+      Inline => True;
+
+   type EPSR_Type is
+   record
+      Reserved1 : Bits_9;
+      A         : Boolean; -- reserved, but when the processor stacks the PSR, it uses this bit to indicate the stack alignment
+      ICIIT1    : Bits_6;  -- saved exception-continuable instruction state or saved IT state
+      Reserved2 : Bits_8;
+      T         : Boolean; -- Thumb state
+      ICIIT2    : Bits_2;  -- saved exception-continuable instruction state or saved IT state
+      Reserved3 : Bits_5;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for EPSR_Type use
+   record
+      Reserved1 at 0 range 0 .. 8;
+      A         at 0 range 9 .. 9;
+      ICIIT1    at 0 range 10 .. 15;
+      Reserved2 at 0 range 16 .. 23;
+      T         at 0 range 24 .. 24;
+      ICIIT2    at 0 range 25 .. 26;
+      Reserved3 at 0 range 27 .. 31;
+   end record;
+
+   function To_U32 is new Ada.Unchecked_Conversion (EPSR_Type, Unsigned_32);
+   function To_EPSR is new Ada.Unchecked_Conversion (Unsigned_32, EPSR_Type);
+
+   function EPSR_Read return EPSR_Type with
+      Inline => True;
+   procedure EPSR_Write (Value : in EPSR_Type) with
+      Inline => True;
+
+   -- B1.4.3 The special-purpose mask registers
+
+   subtype PRIMASK_Type is ARMv6M.PRIMASK_Type;
+   function PRIMASK_Read return PRIMASK_Type         renames ARMv6M.PRIMASK_Read;
+   procedure PRIMASK_Write (Value : in PRIMASK_Type) renames ARMv6M.PRIMASK_Write;
+
+   type BASEPRI_Type is
+   record
+      BASEPRI  : Unsigned_8;   -- The base priority mask
+      Reserved : Bits_24 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for BASEPRI_Type use
+   record
+      BASEPRI  at 0 range 0 .. 7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   function BASEPRI_Read return BASEPRI_Type;
+   procedure BASEPRI_Write (Value : in BASEPRI_Type);
+
+   type FAULTMASK_Type is
+   record
+      FM       : Boolean;      -- The fault mask
+      Reserved : Bits_31 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for FAULTMASK_Type use
+   record
+      FM       at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
+   function FAULTMASK_Read return FAULTMASK_Type;
+   procedure FAULTMASK_Write (Value : in FAULTMASK_Type);
+
+   -- B1.4.4 The special-purpose CONTROL register
+
+   SPSEL_SP_main    : constant := 0; -- Use SP_main as the current stack
+   SPSEL_SP_process : constant := 1; -- In Thread mode, use SP_process as the current stack.
+
+   type CONTROL_Type is
+   record
+      nPRIV    : Boolean; -- defines the execution privilege in Thread mode
+      SPSEL    : Bits_1;  -- Defines the stack to be used
+      FPCA     : Boolean; -- if the processor includes the FP extension
+      Reserved : Bits_29;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for CONTROL_Type use
+   record
+      nPRIV    at 0 range 0 .. 0;
+      SPSEL    at 0 range 1 .. 1;
+      FPCA     at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 31;
+   end record;
+
+   function CONTROL_Read return CONTROL_Type;
+   procedure CONTROL_Write (Value : in CONTROL_Type);
+
    ----------------------------------------------------------------------------
    -- B3.2 System Control Space (SCS)
    ----------------------------------------------------------------------------
 
    -- B3.2.2 System control and ID registers
 
-   ACTLR_ADDRESS renames ARMv6M.ACTLR_ADDRESS;
-   CPUID_ADDRESS renames ARMv6M.CPUID_ADDRESS;
-   ICSR_ADDRESS  renames ARMv6M.ICSR_ADDRESS;
-   VTOR_ADDRESS  renames ARMv6M.VTOR_ADDRESS;
-   AIRCR_ADDRESS renames ARMv6M.AIRCR_ADDRESS;
-   SCR_ADDRESS   renames ARMv6M.SCR_ADDRESS;
-   CCR_ADDRESS   renames ARMv6M.CCR_ADDRESS;
-   SHPR1_ADDRESS : constant := 16#E000_ED18#;
-   SHPR2_ADDRESS renames ARMv6M.SHPR2_ADDRESS;
-   SHPR3_ADDRESS renames ARMv6M.SHPR3_ADDRESS;
-   SHCSR_ADDRESS renames ARMv6M.SHCSR_ADDRESS;
-   DFSR_ADDRESS  renames ARMv6M.DFSR_ADDRESS;
+   ICTR_ADDRESS   : constant := 16#E000_E004#;
+   ACTLR_ADDRESS  renames ARMv6M.ACTLR_ADDRESS;
+   CPUID_ADDRESS  renames ARMv6M.CPUID_ADDRESS;
+   ICSR_ADDRESS   renames ARMv6M.ICSR_ADDRESS;
+   VTOR_ADDRESS   renames ARMv6M.VTOR_ADDRESS;
+   AIRCR_ADDRESS  renames ARMv6M.AIRCR_ADDRESS;
+   SCR_ADDRESS    renames ARMv6M.SCR_ADDRESS;
+   CCR_ADDRESS    renames ARMv6M.CCR_ADDRESS;
+   SHPR1_ADDRESS  : constant := 16#E000_ED18#;
+   SHPR2_ADDRESS  renames ARMv6M.SHPR2_ADDRESS;
+   SHPR3_ADDRESS  renames ARMv6M.SHPR3_ADDRESS;
+   SHCSR_ADDRESS  renames ARMv6M.SHCSR_ADDRESS;
+   CFSR_ADDRESS   : constant := 16#E000_ED28#;
+   HFSR_ADDRESS   : constant := 16#E000_ED2C#;
+   DFSR_ADDRESS   renames ARMv6M.DFSR_ADDRESS;
+   MMFAR_ADDRESS  : constant := 16#E000_ED34#;
+   BFAR_ADDRESS   : constant := 16#E000_ED38#;
+   AFSR_ADDRESS   : constant := 16#E000_ED3C#;
+   CPACR_ADDRESS  : constant := 16#E000_ED88#;
+   FPCCR_ADDRESS  : constant := 16#E000_EF34#;
+   FPCAR_ADDRESS  : constant := 16#E000_EF38#;
+   FPDSCR_ADDRESS : constant := 16#E000_EF3C#;
 
    -- B3.2.3 CPUID Base Register
 
@@ -121,24 +263,21 @@ package ARMv7M is
 
    -- B3.2.8 Configuration and Control Register, CCR
 
-   BFHFNMIGN_LOCKUP : constant := 0;
-   BFHFNMIGN_IGNORE : constant := 1;
-
    type CCR_Type is
    record
-      NONBASETHRDENA : Boolean;      -- Controls whether the processor can enter Thread mode with exceptions active.
-      USERSETMPEND   : Boolean;      -- Controls whether unprivileged software can access the STIR.
-      Reserved1      : Bits_1 := 0;
-      UNALIGN_TRP    : Boolean;      -- unaligned word and halfword accesses generate a HardFault exception
-      DIV_0_TRP      : Boolean;      -- Controls the trap on divide by 0.
-      Reserved2      : Bits_3 := 0;
-      BFHFNMIGN      : Bits_1;       -- Determines the effect of precise data access faults on handlers ...
-      STKALIGN       : Boolean;      -- On exception entry, the SP ... is adjusted to be 8-byte aligned.
-      Reserved3      : Bits_6 := 0;
-      DC             : Boolean;      -- Cache enable bit.
-      IC             : Boolean;      -- Instruction cache enable bit.
-      BP             : Boolean;      -- Branch prediction enable bit.
-      Reserved4      : Bits_13 := 0;
+      NONBASETHRDENA : Boolean; -- Controls whether the processor can enter Thread mode with exceptions active.
+      USERSETMPEND   : Boolean; -- Controls whether unprivileged software can access the STIR.
+      Reserved1      : Bits_1;
+      UNALIGN_TRP    : Boolean; -- unaligned word and halfword accesses generate a HardFault exception
+      DIV_0_TRP      : Boolean; -- Controls the trap on divide by 0.
+      Reserved2      : Bits_3;
+      BFHFNMIGN      : Boolean; -- Determines the effect of precise data access faults on handlers ...
+      STKALIGN       : Boolean; -- On exception entry, the SP ... is adjusted to be 8-byte aligned.
+      Reserved3      : Bits_6;
+      DC             : Boolean; -- Cache enable bit.
+      IC             : Boolean; -- Instruction cache enable bit.
+      BP             : Boolean; -- Branch prediction enable bit.
+      Reserved4      : Bits_13;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -210,7 +349,7 @@ package ARMv7M is
    end record;
 
    SHPR2 : aliased SHPR2_Type with
-      Address              => To_Address (ARMv6M.SHPR2_ADDRESS),
+      Address              => To_Address (SHPR2_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
@@ -293,11 +432,211 @@ package ARMv7M is
       Import               => True,
       Convention           => Ada;
 
+   -- B3.2.15 Configurable Fault Status Register, CFSR
+
+   -- MemManage Status Register, MMFSR
+   type MMFSR_Type is
+   record
+      IACCVIOL  : Boolean;     -- MPU or Execute Never (XN) default memory map access violation on an instruction fetch ...
+      DACCVIOL  : Boolean;     -- Data access violation.
+      Reserved1 : Bits_1 := 0;
+      MUNSTKERR : Boolean;     -- A derived MemManage fault occurred on exception return.
+      MSTKERR   : Boolean;     -- A derived MemManage fault occurred on exception entry.
+      MLSPERR   : Boolean;     -- A MemManage fault occurred during FP lazy state preservation.
+      Reserved2 : Bits_1 := 0;
+      MMARVALID : Boolean;     -- MMFAR has valid contents.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for MMFSR_Type use
+   record
+      IACCVIOL  at 0 range 0 .. 0;
+      DACCVIOL  at 0 range 1 .. 1;
+      Reserved1 at 0 range 2 .. 2;
+      MUNSTKERR at 0 range 3 .. 3;
+      MSTKERR   at 0 range 4 .. 4;
+      MLSPERR   at 0 range 5 .. 5;
+      Reserved2 at 0 range 6 .. 6;
+      MMARVALID at 0 range 7 .. 7;
+   end record;
+
+   -- BusFault Status Register, BFSR
+   type BFSR_Type is
+   record
+      IBUSERR     : Boolean;     -- A bus fault on an instruction prefetch has occurred.
+      PRECISERR   : Boolean;     -- A precise data access error has occurred.
+      IMPRECISERR : Boolean;     -- A derived MemManage fault occurred on exception return.
+      UNSTKERR    : Boolean;     -- A derived bus fault has occurred on exception return.
+      STKERR      : Boolean;     -- A derived bus fault has occurred on exception entry.
+      LSPERR      : Boolean;     -- A bus fault occurred during FP lazy state preservation.
+      Reserved    : Bits_1 := 0;
+      BFARVALID   : Boolean;     -- BFAR has valid contents.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for BFSR_Type use
+   record
+      IBUSERR     at 0 range 0 .. 0;
+      PRECISERR   at 0 range 1 .. 1;
+      IMPRECISERR at 0 range 2 .. 2;
+      UNSTKERR    at 0 range 3 .. 3;
+      STKERR      at 0 range 4 .. 4;
+      LSPERR      at 0 range 5 .. 5;
+      Reserved    at 0 range 6 .. 6;
+      BFARVALID   at 0 range 7 .. 7;
+   end record;
+
+   -- UsageFault Status Register, UFSR
+   type UFSR_Type is
+   record
+      UNDEFINSTR : Boolean;     -- The processor has attempted to execute an undefined instruction.
+      INVSTATE   : Boolean;     -- Instruction executed with invalid EPSR.T or EPSR.IT field.
+      INVPC      : Boolean;     -- An integrity check error has occurred on EXC_RETURN.
+      NOCP       : Boolean;     -- A coprocessor access error has occurred.
+      Reserved1  : Bits_4 := 0;
+      UNALIGNED  : Boolean;     -- Unaligned access error has occurred.
+      DIVBYZERO  : Boolean;     -- Divide by zero error has occurred.
+      Reserved2  : Bits_6 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for UFSR_Type use
+   record
+      UNDEFINSTR at 0 range 0 .. 0;
+      INVSTATE   at 0 range 1 .. 1;
+      INVPC      at 0 range 2 .. 2;
+      NOCP       at 0 range 3 .. 3;
+      Reserved1  at 0 range 4 .. 7;
+      UNALIGNED  at 0 range 8 .. 8;
+      DIVBYZERO  at 0 range 9 .. 9;
+      Reserved2  at 0 range 10 .. 15;
+   end record;
+
+   type CFSR_Type is
+   record
+      MemManage  : MMFSR_Type; -- Provides information on MemManage exceptions.
+      BusFault   : BFSR_Type;  -- Provides information on BusFault exceptions.
+      UsageFault : UFSR_Type;  -- Provides information on UsageFault exceptions.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for CFSR_Type use
+   record
+      MemManage  at 0 range 0 .. 7;
+      BusFault   at 0 range 8 .. 15;
+      UsageFault at 0 range 16 .. 31;
+   end record;
+
+   CFSR : aliased CFSR_Type with
+      Address              => To_Address (CFSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.2.16 HardFault Status Register, HFSR
+
+   type HFSR_Type is
+   record
+      Reserved1 : Bits_1 := 0;
+      VECTTBL   : Boolean;      -- Vector table read fault has occurred.
+      Reserved2 : Bits_28 := 0;
+      FORCED    : Boolean;      -- Processor has escalated a configurable-priority exception to HardFault.
+      DEBUGEVT  : Boolean;      -- Debug event has occurred.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for HFSR_Type use
+   record
+      Reserved1 at 0 range 0 .. 0;
+      VECTTBL   at 0 range 1 .. 1;
+      Reserved2 at 0 range 2 .. 29;
+      FORCED    at 0 range 30 .. 30;
+      DEBUGEVT  at 0 range 31 .. 31;
+   end record;
+
+   HFSR : aliased HFSR_Type with
+      Address              => To_Address (HFSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.2.17 MemManage Fault Address Register, MMFAR
+
+   MMFAR : aliased Unsigned_32 with
+      Address              => To_Address (MMFAR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.2.18 BusFault Address Register, BFAR
+
+   BFAR : aliased Unsigned_32 with
+      Address              => To_Address (BFAR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- B3.2.19 Auxiliary Fault Status Register, AFSR
+   -- IMPLEMENTATION DEFINED
+
+   -- B3.2.20 Coprocessor Access Control Register, CPACR
+
+   CP_ACCESS_DENIED : constant := 2#00#;
+   CP_PRIVONLY      : constant := 2#01#;
+   CP_FULLACCESS    : constant := 2#11#;
+
+   type CPACR_Type is
+   record
+      CP0        : Bits_2;      -- access privileges for coprocessor
+      CP1        : Bits_2;      -- access privileges for coprocessor
+      CP2        : Bits_2;      -- access privileges for coprocessor
+      CP3        : Bits_2;      -- access privileges for coprocessor
+      CP4        : Bits_2;      -- access privileges for coprocessor
+      CP5        : Bits_2;      -- access privileges for coprocessor
+      CP6        : Bits_2;      -- access privileges for coprocessor
+      CP7        : Bits_2;      -- access privileges for coprocessor
+      Reserved8  : Bits_2 := 0;
+      Reserved9  : Bits_2 := 0;
+      CP10       : Bits_2;      -- access privileges for coprocessor
+      CP11       : Bits_2;      -- access privileges for coprocessor
+      Reserved12 : Bits_2 := 0;
+      Reserved13 : Bits_2 := 0;
+      Reserved14 : Bits_2 := 0;
+      Reserved15 : Bits_2 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for CPACR_Type use
+   record
+      CP0        at 0 range 0 .. 1;
+      CP1        at 0 range 2 .. 3;
+      CP2        at 0 range 4 .. 5;
+      CP3        at 0 range 6 .. 7;
+      CP4        at 0 range 8 .. 9;
+      CP5        at 0 range 10 .. 11;
+      CP6        at 0 range 12 .. 13;
+      CP7        at 0 range 14 .. 15;
+      Reserved8  at 0 range 16 .. 17;
+      Reserved9  at 0 range 18 .. 19;
+      CP10       at 0 range 20 .. 21;
+      CP11       at 0 range 22 .. 23;
+      Reserved12 at 0 range 24 .. 25;
+      Reserved13 at 0 range 26 .. 27;
+      Reserved14 at 0 range 28 .. 29;
+      Reserved15 at 0 range 30 .. 31;
+   end record;
+
+   CPACR : aliased CPACR_Type with
+      Address              => To_Address (CPACR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- B3.2.24 Interrupt Controller Type Register, ICTR
 
    type ICTR_Type is
    record
-      INTLINESNUM : Bits_4;  -- The total number of interrupt lines supported by an implementation, defined in groups of 32.
+      INTLINESNUM : Bits_4;  -- The total number of interrupt lines supported by an implementation
       Reserved    : Bits_28;
    end record with
       Bit_Order => Low_Order_First,
@@ -308,41 +647,16 @@ package ARMv7M is
       Reserved    at 0 range 4 .. 31;
    end record;
 
-   ICTR_ADDRESS : constant := 16#E000_E004#;
-
    ICTR : aliased ICTR_Type with
       Address              => To_Address (ICTR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- B3.2.25 Auxiliary Control Register, ACTLR
+   -- B3.2.25 Auxiliary Control Register
    -- IMPLEMENTATION DEFINED
 
    subtype ACTLR_Type is ARMv6M.ACTLR_Type;
-
-   -- B3.2.26 Software Triggered Interrupt Register, STIR
-
-   type STIR_Type is
-   record
-      INTID    : Bits_9;       -- Indicates the interrupt to be triggered.
-      Reserved : Bits_23 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for STIR_Type use
-   record
-      INTID    at 0 range 0 .. 8;
-      Reserved at 0 range 9 .. 31;
-   end record;
-
-   STIR_ADDRESS : constant := 16#E000_EF00#;
-
-   STIR : aliased STIR_Type with
-      Address              => To_Address (STIR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- B3.3 The system timer, SysTick
@@ -466,5 +780,7 @@ package ARMv7M is
 
    procedure Irq_Enable  renames ARMv6M.Irq_Enable;
    procedure Irq_Disable renames ARMv6M.Irq_Disable;
+   procedure Fiq_Enable  renames ARMv6M.Fiq_Enable;
+   procedure Fiq_Disable renames ARMv6M.Fiq_Disable;
 
 end ARMv7M;
