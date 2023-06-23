@@ -12,13 +12,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+                .syntax unified
+
                 .sect   .text,"ax"
 
                 .global vectors
 vectors:
 
 SP_Main:        .long   0
-Reset:          .long   0
+                .extern _start
+Reset:          .long   _start
 NMI:            .long   0
 HardFault:      .long   0
 ReservedExc4:   .long   0
