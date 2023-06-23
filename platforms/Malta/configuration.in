@@ -2,7 +2,7 @@
 #
 # Malta board (QEMU emulator)
 #
-# MIPS BE
+# MIPS32-24KF/MIPS64-20KC BE
 #
 
 CPU       := MIPS
