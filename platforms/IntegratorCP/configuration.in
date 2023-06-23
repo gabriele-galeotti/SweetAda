@@ -2,7 +2,7 @@
 #
 # Integrator/CP board (QEMU emulator)
 #
-# ARM926EJ-S LE
+# ARM926EJ-S LE (ARMv5TEJ)
 #
 
 CPU       := ARM
