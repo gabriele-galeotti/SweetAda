@@ -30,13 +30,15 @@ package STM32F769I is
    --                                                                        --
    --========================================================================--
 
+   pragma Warnings (Off);
+
    use System;
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- RCC
+   -- 5 Reset and clock control (RCC)
    ----------------------------------------------------------------------------
 
    -- 5.3.1 RCC clock control register (RCC_CR)
@@ -106,7 +108,7 @@ package STM32F769I is
       Convention => Ada;
 
    ----------------------------------------------------------------------------
-   -- GPIO
+   -- 6 General-purpose I/Os (GPIO)
    ----------------------------------------------------------------------------
 
    -- 6.4.1 GPIO port mode register (GPIOx_MODER) (x =A..K)
@@ -125,11 +127,9 @@ package STM32F769I is
    GPIO_PP : constant := 0; -- Output push-pull (reset state)
    GPIO_OD : constant := 1; -- Output open-drain
 
-pragma Warnings (Off, "bits of * unused");
    type GPIOx_OTYPER_Type is array (0 .. 15) of Bits_1 with
       Size => 32,
       Pack => True;
-pragma Warnings (On, "bits of * unused");
 
    -- 6.4.3 GPIO port output speed register (GPIOx_OSPEEDR) (x = A..K)
 
@@ -154,19 +154,15 @@ pragma Warnings (On, "bits of * unused");
 
    -- 6.4.5 GPIO port input data register (GPIOx_IDR) (x = A..K)
 
-pragma Warnings (Off, "bits of * unused");
    type GPIOx_IDR_Type is array (0 .. 15) of Bits_1 with
       Size => 32,
       Pack => True;
-pragma Warnings (On, "bits of * unused");
 
    -- 6.4.6 GPIO port output data register (GPIOx_ODR) (x = A..K)
 
-pragma Warnings (Off, "bits of * unused");
    type GPIOx_ODR_Type is array (0 .. 15) of Bits_1 with
       Size => 32,
       Pack => True;
-pragma Warnings (On, "bits of * unused");
 
    -- 6.4.7 GPIO port bit set/reset register (GPIOx_BSRR) (x = A..K)
 
@@ -280,10 +276,183 @@ pragma Warnings (On, "bits of * unused");
       AFRH    at 16#24# range 0 .. 31;
    end record;
 
+   GPIOA_BASEADDRESS : constant := 16#4002_0000#;
    GPIOJ_BASEADDRESS : constant := 16#4002_2400#;
 
+   GPIOA : aliased GPIO_PORT_Type with
+      Address    => To_Address (GPIOA_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
    GPIOJ : aliased GPIO_PORT_Type with
       Address    => To_Address (GPIOJ_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 34 Universal synchronous asynchronous receiver transmitter (USART)
+   ----------------------------------------------------------------------------
+
+   -- 34.8.1 Control register 1 (USART_CR1)
+
+   type USART_CR1_Type is
+   record
+      UE       : Boolean;     -- USART enable
+      UESM     : Boolean;     -- USART enable in Stop mode
+      RE       : Boolean;     -- Receiver enable
+      TE       : Boolean;     -- Transmitter enable
+      IDLEIE   : Boolean;     -- IDLE interrupt enable
+      RXNEIE   : Boolean;     -- RXNE interrupt enable
+      TCIE     : Boolean;     -- Transmission complete interrupt enable
+      TXEIE    : Boolean;     -- interrupt enable
+      PEIE     : Boolean;     -- PE interrupt enable
+      PS       : Bits_1;      -- Parity selection
+      PCE      : Boolean;     -- Parity control enable
+      WAKE     : Bits_1;      -- Receiver wakeup method
+      M0       : Bits_1;      -- Word length
+      MME      : Boolean;     -- Mute mode enable
+      CMIE     : Boolean;     -- Character match interrupt enable
+      OVER8    : Bits_1;      -- Oversampling mode
+      DEDT     : Bits_5;      -- Driver Enable de-assertion time
+      DEAT     : Bits_5;      -- Driver Enable assertion time
+      RTOIE    : Boolean;     -- Receiver timeout interrupt enable
+      EOBIE    : Boolean;     -- End of Block interrupt enable
+      M1       : Bits_1;      -- Word length
+      Reserved : Bits_3 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_CR1_Type use
+   record
+      UE       at 0 range 0 .. 0;
+      UESM     at 0 range 1 .. 1;
+      RE       at 0 range 2 .. 2;
+      TE       at 0 range 3 .. 3;
+      IDLEIE   at 0 range 4 .. 4;
+      RXNEIE   at 0 range 5 .. 5;
+      TCIE     at 0 range 6 .. 6;
+      TXEIE    at 0 range 7 .. 7;
+      PEIE     at 0 range 8 .. 8;
+      PS       at 0 range 9 .. 9;
+      PCE      at 0 range 10 .. 10;
+      WAKE     at 0 range 11 .. 11;
+      M0       at 0 range 12 .. 12;
+      MME      at 0 range 13 .. 13;
+      CMIE     at 0 range 14 .. 14;
+      OVER8    at 0 range 15 .. 15;
+      DEDT     at 0 range 16 .. 20;
+      DEAT     at 0 range 21 .. 25;
+      RTOIE    at 0 range 26 .. 26;
+      EOBIE    at 0 range 27 .. 27;
+      M1       at 0 range 28 .. 28;
+      Reserved at 0 range 29 .. 31;
+   end record;
+
+   -- 34.8.8 Interrupt and status register (USART_ISR)
+
+   type USART_ISR_Type is
+   record
+      PE        : Boolean;     -- Parity Error
+      FE        : Boolean;     -- Framing Error
+      NF        : Boolean;     -- START bit Noise detection flag
+      ORE       : Boolean;     -- Overrun error
+      IDLE      : Boolean;     -- Idle line detected
+      RXNE      : Boolean;     -- Read data register not empty
+      TC        : Boolean;     -- Transmission complete
+      TXE       : Boolean;     -- Transmit data register empty
+      LBDF      : Boolean;     -- LIN break detection flag
+      CTSIF     : Boolean;     -- CTS interrupt flag
+      CTS       : Boolean;     -- CTS flag
+      RTOF      : Boolean;     -- Receiver timeout
+      EOBF      : Boolean;     -- End of block flag
+      Reserved1 : Bits_1 := 0;
+      ABRE      : Boolean;     -- Auto baud rate error
+      ABRF      : Boolean;     -- Auto baud rate flag
+      BUSY      : Boolean;     -- Busy flag
+      CMF       : Boolean;     -- Character match flag
+      SBKF      : Boolean;     -- Send break flag
+      RWU       : Boolean;     -- Receiver wakeup from Mute mode
+      WUF       : Boolean;     -- Wakeup from Stop mode flag
+      TEACK     : Boolean;     -- Transmit enable acknowledge flag
+      REACK     : Boolean;     -- Receive enable acknowledge flag
+      Reserved2 : Bits_2 := 0;
+      TCBGT     : Boolean;     -- Transmission complete before guard time completion.
+      Reserved3 : Bits_6 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_ISR_Type use
+   record
+      PE        at 0 range 0 .. 0;
+      FE        at 0 range 1 .. 1;
+      NF        at 0 range 2 .. 2;
+      ORE       at 0 range 3 .. 3;
+      IDLE      at 0 range 4 .. 4;
+      RXNE      at 0 range 5 .. 5;
+      TC        at 0 range 6 .. 6;
+      TXE       at 0 range 7 .. 7;
+      LBDF      at 0 range 8 .. 8;
+      CTSIF     at 0 range 9 .. 9;
+      CTS       at 0 range 10 .. 10;
+      RTOF      at 0 range 11 .. 11;
+      EOBF      at 0 range 12 .. 12;
+      Reserved1 at 0 range 13 .. 13;
+      ABRE      at 0 range 14 .. 14;
+      ABRF      at 0 range 15 .. 15;
+      BUSY      at 0 range 16 .. 16;
+      CMF       at 0 range 17 .. 17;
+      SBKF      at 0 range 18 .. 18;
+      RWU       at 0 range 19 .. 19;
+      WUF       at 0 range 20 .. 20;
+      TEACK     at 0 range 21 .. 21;
+      REACK     at 0 range 22 .. 22;
+      Reserved2 at 0 range 23 .. 24;
+      TCBGT     at 0 range 25 .. 25;
+      Reserved3 at 0 range 26 .. 31;
+   end record;
+
+   -- 34.8.10 Receive data register (USART_RDR)
+   -- 34.8.11 Transmit data register (USART_TDR)
+
+   type USART_DR_Type is
+   record
+      DR       : Unsigned_8;
+      DR8      : Bits_1;
+      Reserved : Bits_23 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_DR_Type use
+   record
+      DR       at 0 range 0 .. 7;
+      DR8      at 0 range 8 .. 8;
+      Reserved at 0 range 9 .. 31;
+   end record;
+
+   -- 34.8 USART registers
+
+   type USART_Type is
+   record
+      USART_CR1 : USART_CR1_Type with Volatile_Full_Access => True;
+      USART_ISR : USART_ISR_Type with Volatile_Full_Access => True;
+      USART_RDR : USART_DR_Type;
+      USART_TDR : USART_DR_Type;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16#2C# * 8;
+   for USART_Type use
+   record
+      USART_CR1 at 16#00# range 0 .. 31;
+      USART_ISR at 16#1C# range 0 .. 31;
+      USART_RDR at 16#24# range 0 .. 31;
+      USART_TDR at 16#28# range 0 .. 31;
+   end record;
+
+   USART1_BASEADDRESS : constant := 16#4001_1000#;
+
+   USART1 : aliased USART_Type with
+      Address    => To_Address (USART1_BASEADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
