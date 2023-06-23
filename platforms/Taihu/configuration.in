@@ -9,7 +9,7 @@ CPU_MODEL := PPC405
 # -msdata=eabi
 GCC_SWITCHES_PLATFORM     := -mcpu=405 -meabi -msoft-float -Wa,-mregnames
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      :=
+LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
