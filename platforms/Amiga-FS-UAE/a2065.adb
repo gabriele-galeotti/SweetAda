@@ -142,7 +142,7 @@ package body A2065 is
    procedure Init is
       RDRA                : Ring_Descriptor_Pointer_Type;
       TDRA                : Ring_Descriptor_Pointer_Type;
-      Ethernet_Descriptor : Ethernet_Descriptor_Type := Ethernet_DESCRIPTOR_INVALID;
+      Ethernet_Descriptor : Ethernet.Descriptor_Type := Ethernet.DESCRIPTOR_INVALID;
       function To_R_RDP is new Ada.Unchecked_Conversion (Unsigned_32, Ring_Descriptor_Pointer_Type);
       function To_U32 is new Ada.Unchecked_Conversion (Ring_Descriptor_Pointer_Type, Unsigned_32);
    begin

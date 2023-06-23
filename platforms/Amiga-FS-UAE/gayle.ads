@@ -31,15 +31,16 @@ package Gayle is
 
    use System;
    use System.Storage_Elements;
+   use Bits;
 
    GAYLE_IDE_BASEADDRESS : constant := 16#00DD_2020#;
 
    type IDE_Devcon_Type is
    record
-      Unused1    : Bits.Bits_1;
+      Unused1    : Bits_1;
       IRQDISABLE : Boolean;
       RESET      : Boolean;
-      Unused2    : Bits.Bits_5;
+      Unused2    : Bits_5;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
