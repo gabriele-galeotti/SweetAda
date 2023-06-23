@@ -81,7 +81,7 @@ package body ARMv4 is
            Template => ""                            & CRLF &
                        "        mrs     r1,cpsr"     & CRLF &
                        "        bic     r1,r1,#0x80" & CRLF &
-                       "        msr     cpsr_c,r1"   & CRLF &
+                       "        msr     cpsr,r1"     & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
@@ -99,7 +99,7 @@ package body ARMv4 is
            Template => ""                            & CRLF &
                        "        mrs     r1,cpsr"     & CRLF &
                        "        orr     r1,r1,#0x80" & CRLF &
-                       "        msr     cpsr_c,r1"   & CRLF &
+                       "        msr     cpsr,r1"     & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
@@ -117,7 +117,7 @@ package body ARMv4 is
            Template => ""                            & CRLF &
                        "        mrs     r1,cpsr"     & CRLF &
                        "        bic     r1,r1,#0x40" & CRLF &
-                       "        msr     cpsr_c,r1"   & CRLF &
+                       "        msr     cpsr,r1"     & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
@@ -135,7 +135,7 @@ package body ARMv4 is
            Template => ""                            & CRLF &
                        "        mrs     r1,cpsr"     & CRLF &
                        "        orr     r1,r1,#0x40" & CRLF &
-                       "        msr     cpsr_c,r1"   & CRLF &
+                       "        msr     cpsr,r1"     & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
