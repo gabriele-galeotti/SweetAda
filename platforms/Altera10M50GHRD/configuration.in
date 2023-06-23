@@ -5,6 +5,11 @@
 # NiosII
 #
 
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
 CPU := NiosII
 
 GCC_SWITCHES_PLATFORM     :=

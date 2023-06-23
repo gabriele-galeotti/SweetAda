@@ -77,9 +77,10 @@ _start:
                 ori     r1,r1,%lo(_sbss)
                 movhi   r2,%hi(_ebss)
                 ori     r2,r2,%lo(_ebss)
+                br      2f
 1:              stb     r0,0(r1)
                 addi    r1,r1,1
-                bne     r1,r2,1b
+2:              bne     r1,r2,1b
 
                 //
                 // Jump to high-level code.
