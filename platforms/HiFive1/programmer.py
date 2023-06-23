@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #
 # OpenOCD code download.
@@ -85,10 +85,7 @@ if len(sys.argv) > 1:
         exit(0)
 
 elftool_command = [ELFTOOL, '-c', 'findsymbol=' + START_SYMBOL, KERNEL_OUTFILE]
-if library.is_python3():
-    result = subprocess.run(elftool_command, stdout=subprocess.PIPE).stdout.decode('utf-8').strip()
-else:
-    result = subprocess.check_output(elftool_command).strip()
+result = subprocess.run(elftool_command, stdout=subprocess.PIPE).stdout.decode('utf-8').strip()
 START_ADDRESS = '0x{:X}'.format(int(result, base=16))
 printf('START ADDRESS = %s\n', START_ADDRESS)
 
