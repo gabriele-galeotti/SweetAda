@@ -19,7 +19,6 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
-with ARMv7M;
 
 package ARMv7A is
 
@@ -37,13 +36,22 @@ package ARMv7A is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames ARMv7M.NOP;
+   procedure NOP with
+      Inline => True;
+   procedure BREAKPOINT with
+      Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames ARMv7M.Irq_Enable;
-   procedure Irq_Disable renames ARMv7M.Irq_Disable;
+   procedure Irq_Enable with
+      Inline => True;
+   procedure Irq_Disable with
+      Inline => True;
+   procedure Fiq_Enable with
+      Inline => True;
+   procedure Fiq_Disable with
+      Inline => True;
 
 end ARMv7A;
