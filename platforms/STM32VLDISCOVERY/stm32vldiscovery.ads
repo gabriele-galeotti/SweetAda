@@ -30,17 +30,18 @@ package STM32VLDISCOVERY is
    --                                                                        --
    --========================================================================--
 
+   pragma Warnings (Off);
+
    use System;
    use System.Storage_Elements;
    use Interfaces;
    use STM32;
 
-pragma Warnings (Off, "bits of * unused");
    type USART_Type is
    record
-      USART_SR  : USART.USART_SR_Type       with Volatile_Full_Access => True;
+      USART_SR  : USART.USART_SR_Type  with Volatile_Full_Access => True;
       USART_DR  : USART.USART_DR_Type;
-      USART_CR1 : USART.USART_CR1_F100_Type with Volatile_Full_Access => True;
+      USART_CR1 : USART.USART_CR1_Type with Volatile_Full_Access => True;
    end record with
       Size                    => 16#1C# * 8,
       Suppress_Initialization => True;
@@ -50,7 +51,6 @@ pragma Warnings (Off, "bits of * unused");
       USART_DR  at 16#04# range 0 .. 31;
       USART_CR1 at 16#0C# range 0 .. 31;
    end record;
-pragma Warnings (On, "bits of * unused");
 
    USART1_BASEADDRESS : constant := 16#4001_3800#;
 

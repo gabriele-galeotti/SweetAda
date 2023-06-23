@@ -12,8 +12,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+                .syntax unified
+
                 .sect   .startup,"ax"
 
+                .thumb_func
                 .type   _start,%function
                 .global _start
 _start:
@@ -57,6 +60,7 @@ dead:           b       .
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
+                .thumb_func
 movdata:
                 // registers used: r0-r4
                 .extern _etext

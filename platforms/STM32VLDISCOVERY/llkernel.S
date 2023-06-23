@@ -12,6 +12,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+                .syntax unified
+
                 .sect   .vectors,"ax"
 
                 .global vectors
@@ -33,7 +35,7 @@ SVCall:         .long   0
 DebugMonitor:   .long   0
 ReservedExcD:   .long   0
 PendSV:         .long   0
-SysTick:        .long   systick_handler+1
+SysTick:        .long   systick_handler
 
 Interrupt0:     .long   0
 Interrupt1:     .long   0
@@ -279,6 +281,7 @@ Interrupt237:   .long   0
 Interrupt238:   .long   0
 Interrupt239:   .long   0
 
+                .thumb_func
 systick_handler:
                 .extern irq_process
                 push    {lr}
