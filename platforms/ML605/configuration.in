@@ -8,6 +8,11 @@
 # UART:      16550-style @ 0x83E00000
 #
 
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
 CPU := MicroBlaze
 
 GCC_SWITCHES_PLATFORM     := -mcpu=v8.10.a
