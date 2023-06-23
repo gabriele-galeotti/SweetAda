@@ -50,7 +50,7 @@ execute the system code; a brief list could be given, e.g.:
 - Spartan 3E MicroBlaze softcore (JTAG-boot)
 - Raspberry Pi&trade; 3 ARMv8 (microSD-boot)
 
-Some machines are supported through a virtual emulator like QEMU&trade, and as
+Some machines are supported through a virtual emulator like QEMU(TM), and as
 an option, a virtual IOEMU physical I/O system could be used, which allows software
 code to interact with a visual environment.
 
