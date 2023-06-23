@@ -834,7 +834,7 @@ package body Z8530 is
          MIE    => True,
          SHnSL  => False,
          INTACK => False,
-         RESCMD => RESCMD_RES
+         RESCMD => RESCMD_NONE
          )));
       -- select BR Generator Output source = PCLK
       Register_Write (Descriptor, Channel, WR11, To_U8 (WR11_Type'(
@@ -874,9 +874,9 @@ package body Z8530 is
          TxN           => Tx_LENGTH_8,
          DTR           => False
          )));
-      -- enable RX interrupt
+      -- disable RX interrupt
       Register_Write (Descriptor, Channel, WR1, To_U8 (WR1_Type'(
-         EXT_INT_ENAB => False,
+         EXT_INT_ENAB => True,
          Tx_INT_ENAB  => False,
          PAR_SPEC     => False,
          Rx_INT_Modes => RxINT_DISAB,
