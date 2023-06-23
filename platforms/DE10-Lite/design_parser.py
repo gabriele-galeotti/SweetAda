@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #
 # Intel(R) Quartus design file parser.
@@ -11,7 +11,7 @@
 
 #
 # Arguments:
-# $1 = QSYS design full qualified filename path
+# $1 = QSYS design fully qualified file name
 # $2 = Ada package name
 # $3 = module name
 # $4 = module name
@@ -63,10 +63,10 @@ for el in sys.argv[3:]:
 
 ads_filename = package_name.lower() + '.ads'
 
-fdout = open(ads_filename, 'wb')
+fdout = open(ads_filename, 'w')
 sys.stdout = fdout
 
-print('package {} is').format(package_name)
+print('package {} is'.format(package_name))
 print('   pragma Pure;')
 
 tree = ET.parse(qsys_filename)
@@ -83,7 +83,7 @@ for connection in root.findall('connection'):
                 print('   {}_ADDRESS : constant := 16#{}#;'.format(end, address))
                 break
 
-print('end {};').format(package_name)
+print('end {};'.format(package_name))
 
 fdout.close()
 

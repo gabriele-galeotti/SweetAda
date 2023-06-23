@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #
 # Intel(R) Quartus SweetAda integration.
@@ -69,11 +69,8 @@ if platform != 'unix':
 if len(sys.argv) > 1:
     if sys.argv[1] == '-jtagd':
         jtagd_command = [os.path.join(QUARTUS_PATH, 'quartus/bin/jtagd')]
-        if library.is_python3():
-            result = subprocess.run(jtagd_command)
-            exit(result.returncode)
-        else:
-            result = subprocess.check_output(jtagd_command)
+        result = subprocess.run(jtagd_command)
+        exit(result.returncode)
     else:
         errprintf('%s: *** Error: command not recognized.\n', SCRIPT_FILENAME)
         exit(1)
@@ -89,13 +86,10 @@ configure_sof_command = [
        --device 1                        \
     ' + SOF_FILE
     ]
-if library.is_python3():
-    result = subprocess.run(configure_sof_command)
-    if result.returncode != 0:
-        errprintf('%s: *** Error: program failed.\n', SCRIPT_FILENAME)
-        exit(1)
-else:
-    result = subprocess.check_output(configure_sof_command)
+result = subprocess.run(configure_sof_command)
+if result.returncode != 0:
+    errprintf('%s: *** Error: program failed.\n', SCRIPT_FILENAME)
+    exit(1)
 
 # NOTE: needs nios2-elf-objcopy
 # --cpu_name "nios2_gen2_0"
@@ -115,13 +109,10 @@ download_command = [
        --go                                        \
     ' + ELF_FILE
     ]
-if library.is_python3():
-    result = subprocess.run(download_command)
-    if result.returncode != 0:
-        errprintf('%s: *** Error: program failed.\n', SCRIPT_FILENAME)
-        exit(1)
-else:
-    result = subprocess.check_output(download_command)
+result = subprocess.run(download_command)
+if result.returncode != 0:
+    errprintf('%s: *** Error: program failed.\n', SCRIPT_FILENAME)
+    exit(1)
 
 exit(0)
 
