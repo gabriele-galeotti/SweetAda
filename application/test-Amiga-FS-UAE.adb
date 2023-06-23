@@ -86,7 +86,7 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            Ethernet_Descriptor : Ethernet.Ethernet_Descriptor_Type;
+            Ethernet_Descriptor : Ethernet.Descriptor_Type;
          begin
             -- Ethernet module initialization ------------------------------
             Ethernet_Descriptor.Haddress := A2065.A2065_MAC;
