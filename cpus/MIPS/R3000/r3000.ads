@@ -48,7 +48,14 @@ package R3000 is
       IEo     : Boolean;     -- IE old
       KUo     : Boolean;     -- KU old
       Unused1 : Bits_2 := 0;
-      IM      : Unsigned_8;  -- interrupt mask
+      IM0     : Boolean;     -- interrupt mask 0 - software interrupt
+      IM1     : Boolean;     -- interrupt mask 1 - software interrupt
+      IM2     : Boolean;     -- interrupt mask 2 - int0 - Cause bit reads 1 when pin low (active)
+      IM3     : Boolean;     -- interrupt mask 3 - int1
+      IM4     : Boolean;     -- interrupt mask 4 - int2
+      IM5     : Boolean;     -- interrupt mask 5 - int3 - Usual choice for FPA.
+      IM6     : Boolean;     -- interrupt mask 6 - int4
+      IM7     : Boolean;     -- interrupt mask 7 - int5
       IsC     : Boolean;     -- isolate (data) cache
       SwC     : Boolean;     -- swap caches
       PZ      : Boolean;     -- When set, cache parity bits are written as zero and not checked.
@@ -74,7 +81,14 @@ package R3000 is
       IEo     at 0 range 4 .. 4;
       KUo     at 0 range 5 .. 5;
       Unused1 at 0 range 6 .. 7;
-      IM      at 0 range 8 .. 15;
+      IM0     at 0 range 8 .. 8;
+      IM1     at 0 range 9 .. 9;
+      IM2     at 0 range 10 .. 10;
+      IM3     at 0 range 11 .. 11;
+      IM4     at 0 range 12 .. 12;
+      IM5     at 0 range 13 .. 13;
+      IM6     at 0 range 14 .. 14;
+      IM7     at 0 range 15 .. 15;
       IsC     at 0 range 16 .. 16;
       SwC     at 0 range 17 .. 17;
       PZ      at 0 range 18 .. 18;
