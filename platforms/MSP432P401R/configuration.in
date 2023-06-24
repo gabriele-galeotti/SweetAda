@@ -2,8 +2,13 @@
 #
 # MSP432P401R
 #
-# ARM Cortex-M4F LE
+# ARM Cortex-M4F LE (ARMv7-M)
 #
+
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
 
 CPU       := ARM
 CPU_MODEL := CORTEXM4
