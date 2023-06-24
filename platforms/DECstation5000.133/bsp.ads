@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with SCC;
+with Z8530;
 
 package BSP is
 
@@ -27,11 +27,13 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   SCC_Descriptor1 : aliased SCC.SCCZ8530_Descriptor_Type := SCC.SCCZ8530_DESCRIPTOR_INVALID;
-   SCC_Descriptor2 : aliased SCC.SCCZ8530_Descriptor_Type := SCC.SCCZ8530_DESCRIPTOR_INVALID;
+   -- serial port "2"
+   SCC_Descriptor1 : aliased Z8530.Descriptor_Type := Z8530.DESCRIPTOR_INVALID;
+   -- serial port "3"
+   SCC_Descriptor2 : aliased Z8530.Descriptor_Type := Z8530.DESCRIPTOR_INVALID;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);
-   procedure BSP_Setup;
+   procedure Setup;
 
 end BSP;

@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ kn02ba.adb                                                                                                --
+-- __FLN__ exceptions.adb                                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,10 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Machine_Code;
-with Definitions;
+with Ada.Unchecked_Conversion;
+with Interfaces;
+with CPU;
+with KN02BA;
+with Console;
+with BSP;
 
-package body KN02BA is
+package body Exceptions is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +32,8 @@ package body KN02BA is
    --                                                                        --
    --========================================================================--
 
-   use System.Machine_Code;
-   use Definitions;
+   use Interfaces;
+   use KN02BA;
 
    --========================================================================--
    --                                                                        --
@@ -40,22 +44,27 @@ package body KN02BA is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Read32_NOP
+   -- Exception_Process
    ----------------------------------------------------------------------------
-   function Read32_NOP (Memory_Address : Address) return Unsigned_32 is
-      Result : Unsigned_32;
+   procedure Exception_Process is
    begin
-      Asm (
-           Template => ""                         & CRLF &
-                       "        lw      %0,0(%1)" & CRLF &
-                       "        nop             " & CRLF &
-                       "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", Result),
-           Inputs   => Address'Asm_Input ("r", Memory_Address),
-           Clobber  => "",
-           Volatile => True
-          );
-      return Result;
-   end Read32_NOP;
+      null;
+   end Exception_Process;
 
-end KN02BA;
+   ----------------------------------------------------------------------------
+   -- Irq_Process
+   ----------------------------------------------------------------------------
+   procedure Irq_Process is
+   begin
+      null;
+   end Irq_Process;
+
+   ----------------------------------------------------------------------------
+   -- Init
+   ----------------------------------------------------------------------------
+   procedure Init is
+   begin
+      null;
+   end Init;
+
+end Exceptions;

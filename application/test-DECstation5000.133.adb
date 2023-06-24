@@ -45,9 +45,9 @@ package body Application is
          begin
             Delay_Count := (if Configure.BOOT_FROM_NETWORK then 5_000_000 else 100_000);
             loop
-               IOASIC_CSR.LED0 := False;
+               IOASIC_SSR.LED0 := False;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-               IOASIC_CSR.LED0 := True;
+               IOASIC_SSR.LED0 := True;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
                Console.Print ("hello, SweetAda", NL => True);
             end loop;

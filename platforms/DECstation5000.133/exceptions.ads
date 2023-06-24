@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ kn02ba.adb                                                                                                --
+-- __FLN__ exceptions.ads                                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,47 +15,26 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Machine_Code;
-with Definitions;
-
-package body KN02BA is
+package Exceptions is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use System.Machine_Code;
-   use Definitions;
+   procedure Exception_Process with
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "exception_process";
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
+   procedure Irq_Process with
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "irq_process";
 
-   ----------------------------------------------------------------------------
-   -- Read32_NOP
-   ----------------------------------------------------------------------------
-   function Read32_NOP (Memory_Address : Address) return Unsigned_32 is
-      Result : Unsigned_32;
-   begin
-      Asm (
-           Template => ""                         & CRLF &
-                       "        lw      %0,0(%1)" & CRLF &
-                       "        nop             " & CRLF &
-                       "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", Result),
-           Inputs   => Address'Asm_Input ("r", Memory_Address),
-           Clobber  => "",
-           Volatile => True
-          );
-      return Result;
-   end Read32_NOP;
+   procedure Init;
 
-end KN02BA;
+end Exceptions;

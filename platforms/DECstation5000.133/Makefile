@@ -34,17 +34,19 @@ endif
 
 LIBRARY_NAME := platform
 
-OBJECTS :=
-OBJECTS += $(OBJ_DIRECTORY)/startup.o
-OBJECTS += $(OBJ_DIRECTORY)/llkernel.o
+OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
 
 .PHONY: all
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY : configure
 configure :
-ifeq ($(OSTYPE),cmd)
+ifeq      ($(OSTYPE),cmd)
+	@$(RM) $(GNATADC_FILENAME)
 	@$(CP) $(KERNEL_PARENT_PATH_CMD)\$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+else ifeq ($(OSTYPE),msys)
+	@$(RM) $(GNATADC_FILENAME)
+	@$(CP) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 else
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 endif
@@ -53,15 +55,8 @@ endif
 
 .PHONY : postbuild
 postbuild :
-	$(REM) S-record download
-	$(call brief-command, \
-        $(OBJCOPY) -O srec $(SWEETADA_PATH)/$(KERNEL_OUTFILE) $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec \
-        ,[OBJCOPY],$(KERNEL_BASENAME).srec)
-ifneq ($(OSTYPE),cmd)
-	@chmod a-x $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec
-endif
-ifeq ($(NETWORK_BOOT),Y)
-	$(CP) $(KERNEL_PARENT_PATH)/kernel.o $(TFTP_DIRECTORY)/$(TFTP_FILENAME)
+ifneq ($(POSTBUILD_COMMAND),)
+	$(POSTBUILD_COMMAND)
 endif
 
 .PHONY : clean

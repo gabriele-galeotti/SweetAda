@@ -10,7 +10,6 @@
 
 #define __ASSEMBLER__ 1
 
-#include <configure.h>
 #include <mips.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -19,17 +18,6 @@
 
                 .set    noreorder
                 .set    noat
-
-                .org    0
-                j       _start
-                nop
-                .org    0x100
-                break   0
-                .org    0x180
-                break   0
-                .org    0x200
-
-////////////////////////////////////////////////////////////////////////////////
 
                 .type   _start,@function
                 .global _start
@@ -42,7 +30,7 @@ _start:
                 ori     $sp,%lo(kernel_stack)
 
                 //
-                // .data section relocation.
+                // Static data relocation.
                 //
                 .extern _sdata
                 .extern _edata
