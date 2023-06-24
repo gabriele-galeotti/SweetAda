@@ -16,7 +16,7 @@ SECTIONS
         .text :
         {
                 _stext = .;
-                *(.vectors)
+                KEEP(*(.vectors))
                 *(.startup)
                 *(.text)
                 *(.text.*)

@@ -42,8 +42,8 @@ package body BSP is
    use Interfaces;
    use Definitions;
    use Bits;
-   use MIPS;
-   use R3000;
+   -- use MIPS;
+   -- use R3000;
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
@@ -77,7 +77,7 @@ package body BSP is
       loop
          exit when VMIPS.SPIMCONSOLE.DISPLAY1_CONTROL.CTL_RDY;
       end loop;
-      VMIPS.SPIMCONSOLE.DISPLAY1_DATA := Unsigned_32 (To_U8 (C));
+      VMIPS.SPIMCONSOLE.DISPLAY1_DATA.DATA := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
@@ -86,7 +86,7 @@ package body BSP is
       loop
          exit when VMIPS.SPIMCONSOLE.KEYBOARD1_CONTROL.CTL_RDY;
       end loop;
-      Data := Unsigned_8 (VMIPS.SPIMCONSOLE.KEYBOARD1_DATA and 16#FF#);
+      Data := VMIPS.SPIMCONSOLE.KEYBOARD1_DATA.DATA;
       C := To_Ch (Data);
    end Console_Getchar;
 
@@ -94,7 +94,7 @@ package body BSP is
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup is
-      PRId : PRId_Type;
+      PRId : R3000.PRId_Type;
    begin
       -------------------------------------------------------------------------
       System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
@@ -107,7 +107,7 @@ package body BSP is
       -------------------------------------------------------------------------
       Console.Print ("VMIPS", NL => True);
       -------------------------------------------------------------------------
-      PRId := CP0_PRId_Read;
+      PRId := R3000.CP0_PRId_Read;
       Console.Print ("PRId: ", NL => False);
       Console.Print (PRId.Imp, NL => False);
       Console.Print (".", NL => False);
@@ -120,6 +120,16 @@ package body BSP is
          when 7      => Console.Print ("R3041", NL => True);
          when others => Console.Print ("CPU unknown", NL => True);
       end case;
+      -------------------------------------------------------------------------
+      declare
+         S : R3000.Status_Type;
+      begin
+         S := R3000.CP0_SR_Read;
+         S.IM3 := True; -- Keyboard #1
+         R3000.CP0_SR_Write (S);
+      end;
+      VMIPS.SPIMCONSOLE.KEYBOARD1_CONTROL.CTL_IE := True;
+      -- R3000.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 

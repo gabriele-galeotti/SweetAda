@@ -83,11 +83,13 @@
                 .set    noreorder
                 .set    noat
 
+                .global vectors
+vectors:
+
                 //
-                // The ‘‘reset exception’’.
+                // The "reset exception".
                 //
                 .org    0
-_reset:
                 .extern _start
                 j       _start
                 nop
@@ -117,9 +119,8 @@ exc_handler:
                 nop
                 mfc0    $k0,C0_EPC
                 nop
-                addiu   $k0,4
-                rfe
                 jr      $k0
+                rfe
 
 ////////////////////////////////////////////////////////////////////////////////
 

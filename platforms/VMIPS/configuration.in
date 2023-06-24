@@ -8,13 +8,17 @@
 CPU       := MIPS
 CPU_MODEL := R3000
 
-# big-endian ("bigendian" option in vmipsrc)
+# big-endian
 GCC_SWITCHES_PLATFORM     := -march=r3000 -meb
 LD_SWITCHES_PLATFORM      := -EB
-# little-endian ("nobigendian" option in vmipsrc)
+export VMIPS_ENDIAN       := -o bigendian
+
+# little-endian
 #GCC_SWITCHES_PLATFORM     := -march=r3000 -mel
 #LD_SWITCHES_PLATFORM      := -EL
+#export VMIPS_ENDIAN       := -o nobigendian
 
+LD_SWITCHES_PLATFORM      += --undefined=vectors
 STARTUP_OBJECTS           := startup.S llkernel.S
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y

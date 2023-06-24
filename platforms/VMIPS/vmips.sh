@@ -9,6 +9,7 @@ fi
 setsid /usr/bin/xterm \
   -T "QEMU-2" -geometry 120x50 -bg blue -fg white -sl 1024 -e \
   ${VMIPS_EXECUTABLE}                                         \
+    ${VMIPS_ENDIAN}                                           \
     -o testdev                                                \
     ${VMIPS_DEBUG}                                            \
     ${SWEETADA_PATH}/${KERNEL_ROMFILE}                        \
