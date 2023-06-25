@@ -48,13 +48,13 @@ package ML605 is
    AXIENET_BASEADDRESS   : constant := 16#8278_0000#;
    AXIDMA_BASEADDRESS    : constant := 16#8460_0000#;
 
-   Timer : XPS_Timer_Type with
+   Timer : aliased XPS_Timer_Type with
       Address    => To_Address (TIMER_BASEADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   INTC : XPS_INTC_Type with
+   INTC : aliased XPS_INTC_Type with
       Address    => To_Address (INTC_BASEADDRESS),
       Volatile   => True,
       Import     => True,
