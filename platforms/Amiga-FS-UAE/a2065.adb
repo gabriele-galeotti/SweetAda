@@ -35,6 +35,9 @@ package body A2065 is
 
    use System.Storage_Elements;
    use Amiga;
+   use Am7990;
+   use Ethernet;
+   use PBUF;
 
    ----------------------------------------------------------------------------
    -- The Am7990 LANCE chip in Amiga's A2065 is wrapped with D0..D15 data lines

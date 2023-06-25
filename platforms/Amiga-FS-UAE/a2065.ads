@@ -36,13 +36,10 @@ package A2065 is
    use System;
    use Interfaces;
    use Bits;
-   use Am7990;
-   use Ethernet;
-   use PBUF;
 
-   A2065_MAC : MAC_Address_Type;
+   A2065_MAC : Ethernet.MAC_Address_Type;
 
-   Am7990_Descriptor             : aliased Am7990_Descriptor_Type := Am7990_DESCRIPTOR_INVALID;
+   Am7990_Descriptor             : aliased Am7990.Descriptor_Type := Am7990.DESCRIPTOR_INVALID;
    Am7990_Descriptor_Initialized : Boolean := False;
 
    ----------------------------------------------------------------------------

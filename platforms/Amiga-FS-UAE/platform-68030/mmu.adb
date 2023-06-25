@@ -103,6 +103,8 @@ package body MMU is
       Page_Setup (16#BFD#, DT_PAGEDSC, 16#00BF_D000#);
       -- CIAA
       Page_Setup (16#BFE#, DT_PAGEDSC, 16#00BF_E000#);
+      -- Gayle
+      Page_Setup (16#DD2#, DT_PAGEDSC, 16#00DD_2000#);
       -- CUSTOM
       Page_Setup (16#DFF#, DT_PAGEDSC, 16#00DF_F000#);
       -- ZORROII

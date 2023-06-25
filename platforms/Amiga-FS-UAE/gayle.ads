@@ -55,7 +55,7 @@ package Gayle is
    -- address shift = 2
    IDE_DEVCON_ADDRESS : constant := GAYLE_IDE_BASEADDRESS + 16#0406# * 2**2;
 
-   IDE_Devcon : IDE_Devcon_Type with
+   IDE_Devcon : aliased IDE_Devcon_Type with
       Address    => To_Address (IDE_DEVCON_ADDRESS),
       Volatile   => True,
       Import     => True,
