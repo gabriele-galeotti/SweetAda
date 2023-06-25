@@ -98,7 +98,7 @@ package VMIPS is
 
    SPIMCONSOLE_BASEADDRESS : constant := 16#0200_0000#;
 
-   SPIMCONSOLE : SPIMCONSOLE_Type with
+   SPIMCONSOLE : aliased SPIMCONSOLE_Type with
       Address    => To_Address (MIPS.KSEG1_ADDRESS + SPIMCONSOLE_BASEADDRESS),
       Volatile   => True,
       Import     => True,
