@@ -13,6 +13,7 @@ USE_LIBADA := N
 CPU := MicroBlaze
 
 GCC_SWITCHES_PLATFORM     := -mcpu=v7.00.b
+STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      :=
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         :=
