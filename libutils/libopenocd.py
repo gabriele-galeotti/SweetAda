@@ -60,10 +60,7 @@ def openocd_rpc_rx(mode='noecho'):
         data = s.recv(4096)
         # __FIX__ disconnect and return on EOF?
         if len(data) > 0:
-            if library.is_python3():
-                c = 0x1A
-            else:
-                c = b'\x1A'
+            c = 0x1A
             if data[-1] == c:
                 # end of response, exit
                 if mode == 'echo':
@@ -80,13 +77,8 @@ def openocd_rpc_rx(mode='noecho'):
 ################################################################################
 def openocd_rpc_tx(command):
     s = openocd_rpc_get_socket()
-    if library.is_python3():
-        # Python3
-        s.sendall(command.encode('utf-8'))
-        s.sendall(b'\x1A')
-    else:
-        # Python2
-        s.sendall(command + b'\x1A')
+    s.sendall(command.encode('utf-8'))
+    s.sendall(b'\x1A')
 
 ################################################################################
 # openocd_rpc_init                                                             #
