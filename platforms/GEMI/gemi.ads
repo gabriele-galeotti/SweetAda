@@ -35,13 +35,14 @@ package GEMI is
    use System.Storage_Elements;
    use Interfaces;
 
-   LEDPORT : Unsigned_8 with
-      Address    => To_Address (16#0600_0000#),
+   LEDPORT_ADDRESS  : constant := 16#0600_0000#;
+   UART_BASEADDRESS : constant := 16#0600_2000#;
+   RTC_BASEADDRESS  : constant := 16#0600_3000#;
+
+   LEDPORT : aliased Unsigned_8 with
+      Address    => To_Address (LEDPORT_ADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
-
-   UART_BASEADDRESS : constant := 16#0600_2000#;
-   RTC_BASEADDRESS  : constant := 16#0600_3000#;
 
 end GEMI;
