@@ -49,7 +49,6 @@ package body Application is
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
                IOASIC_SSR.LED0 := True;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-               Console.Print ("hello, SweetAda", NL => True);
             end loop;
          end;
       end if;

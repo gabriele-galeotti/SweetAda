@@ -114,7 +114,7 @@ package KN02BA is
 
    IOASIC_SSR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0100#;
 
-   IOASIC_SSR : IOASIC_SSR_Type with
+   IOASIC_SSR : aliased IOASIC_SSR_Type with
       Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SSR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -167,7 +167,7 @@ package KN02BA is
 
    IOASIC_SIR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0110#;
 
-   IOASIC_SIR : IOASIC_SI_Type with
+   IOASIC_SIR : aliased IOASIC_SI_Type with
       Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SIR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -175,7 +175,7 @@ package KN02BA is
 
    IOASIC_SIMR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0120#;
 
-   IOASIC_SIMR : IOASIC_SI_Type with
+   IOASIC_SIMR : aliased IOASIC_SI_Type with
       Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SIMR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -185,7 +185,7 @@ package KN02BA is
 
    IOASIC_SAR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0130#;
 
-   IOASIC_SAR : Unsigned_32 with
+   IOASIC_SAR : aliased Unsigned_32 with
       Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SAR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
