@@ -38,9 +38,7 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                *(.got1)
-                *(.got2)
-                *(.eh_frame)
+                *(.got*)
                 . = ALIGN(4);
                 PROVIDE(_debug_flag = .);
                 BYTE(0x00);
@@ -60,8 +58,6 @@ SECTIONS
                 *(.sdata.*)
                 _sdata2 = .;
                 *(.sdata2)
-                *(.got.plt)
-                *(.got)
                 . = ALIGN(0x10);
                 _edata = .;
         } > RAM
@@ -73,11 +69,8 @@ SECTIONS
                 _sbss = .;
                 *(.bss)
                 *(.bss.*)
-                *(COMMON)
                 *(.sbss)
-                *(.sbss.*)
-                /* *(.scommon) */
-                /* *(.dynbss) */
+                *(COMMON)
                 . = ALIGN(0x10);
                 _ebss = .;
         } > RAM
