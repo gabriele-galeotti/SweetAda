@@ -251,7 +251,7 @@ STRIP_SWITCHES_DEFAULT    +=
 ################################################################################
 #                                                                              #
 # GNATMAKE mode: import all settings.                                          #
-# GPR build mode: only define the executable to build the system.              #
+# GPRbuild mode: only define the executable to build the system.               #
 #                                                                              #
 ################################################################################
 
@@ -262,7 +262,7 @@ GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GNATMAKE) --versio
 else
 GNATMAKE_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_GNATMAKE) --version 2> /dev/null | $(SED) -e "2,\$$d")
 endif
-else ifeq ($(BUILD_MODE),GPR)
+else ifeq ($(BUILD_MODE),GPRbuild)
 GPRBUILD := gprbuild$(EXEEXT)
 ifeq ($(OSTYPE),cmd)
 GPRBUILD_VERSION := $(shell SET "PATH=$(PATH)" && $(GPRBUILD) --version 2> nul|$(SED) -e "2,$$d")
@@ -360,7 +360,7 @@ ifeq ($(BUILD_MODE),GNATMAKE)
 GCC_WRAPPER_TIMESTAMP_FILENAME      :=
 GNAT_WRAPPER_TIMESTAMP_FILENAME     := $(OBJECT_DIRECTORY)/gnatmake.tmp
 GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME := $(GNAT_WRAPPER_TIMESTAMP_FILENAME)
-else ifeq ($(BUILD_MODE),GPR)
+else ifeq ($(BUILD_MODE),GPRbuild)
 GCC_WRAPPER_TIMESTAMP_FILENAME      := gccmake.tmp
 GNAT_WRAPPER_TIMESTAMP_FILENAME     :=
 GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME := $(OBJECT_DIRECTORY)/$(GCC_WRAPPER_TIMESTAMP_FILENAME)

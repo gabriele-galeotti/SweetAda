@@ -69,6 +69,6 @@ export DOS2UNIX PROCESSCFG
 export FILEPAD FILEPATCH
 # needed by Makefile.lb.in
 export UPDATETM
-# needed by GPR
+# needed by GPRbuild
 export GCC_WRAPPER
 

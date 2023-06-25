@@ -511,7 +511,7 @@ IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)     \
                       $(IMPLICIT_CLIBRARY_UNITS)
 
 ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(filter GNATMAKE GPR,$(BUILD_MODE)),)
+ifeq ($(filter GNATMAKE GPRbuild,$(BUILD_MODE)),)
 $(warning *** Warning: no valid BUILD_MODE.)
 endif
 endif
@@ -682,7 +682,7 @@ MAKE_RTS         := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(RTS_DIRECTORY
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(d))
 
 ifeq ($(BUILD_MODE),GNATMAKE)
-IMPLICIT_ALI_UNITS_MAKEFILE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT_ALI_UNITS))
+IMPLICIT_ALI_UNITS_GNATMAKE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT_ALI_UNITS))
 endif
 
 CLEAN_OBJECTS     := $(KERNEL_OBJFILE) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE)
@@ -819,7 +819,7 @@ ifeq ($(BUILD_MODE),GNATMAKE)
                     $(INCLUDES)                 \
                     main.adb                    \
         ,[GNATMAKE],main.adb)
-else ifeq ($(BUILD_MODE),GPR)
+else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(REM) perform GPRbuild-driven procedure
 	$(call brief-command, \
         $(GPRBUILD)                      \
@@ -847,7 +847,7 @@ ifeq ($(BUILD_MODE),GNATMAKE)
                     -o b__main.adb                 \
                     $(INCLUDES)                    \
                     $(OBJECT_DIRECTORY)/main.ali   \
-                    $(IMPLICIT_ALI_UNITS_MAKEFILE) \
+                    $(IMPLICIT_ALI_UNITS_GNATMAKE) \
                     > gnatbind_elab.lst            \
         ,[GNATBIND],b__main.adb)
 ifeq ($(OSTYPE),cmd)
@@ -857,7 +857,7 @@ else
 	@$(MV) b__main.adb $(OBJECT_DIRECTORY)/
 	@$(MV) b__main.ads $(OBJECT_DIRECTORY)/
 endif
-else ifeq ($(BUILD_MODE),GPR)
+else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(REM) force rebind under GPRbuild
 ifeq ($(OSTYPE),cmd)
 	-@$(RM) $(OBJECT_DIRECTORY)\main.bexch
@@ -899,7 +899,7 @@ else
                          $(OBJECT_DIRECTORY)/b__main.adb  \
         ,[ADAC],b__main.adb)
 endif
-else ifeq ($(BUILD_MODE),GPR)
+else ifeq ($(BUILD_MODE),GPRbuild)
 	-@$(RM) $(GCC_WRAPPER_TIMESTAMP_FILENAME)
 endif
 ifeq ($(OSTYPE),cmd)
@@ -1128,7 +1128,7 @@ ifneq ($(TOOLCHAIN_NAME),)
 endif
 ifeq ($(BUILD_MODE),GNATMAKE)
 	@$(call echo-print,"GNATMAKE VERSION:        $(GNATMAKE_VERSION)")
-else ifeq ($(BUILD_MODE),GPR)
+else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(call echo-print,"GPRBUILD VERSION:        $(GPRBUILD_VERSION)")
 endif
 	@$(call echo-print,"GCC MULTIDIR:            $(GCC_MULTIDIR)")

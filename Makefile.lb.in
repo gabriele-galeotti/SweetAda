@@ -186,7 +186,7 @@ $(DEP_FILES) :
 
 include $(wildcard $(DEP_FILES))
 
-else ifeq ($(BUILD_MODE),GPR)
+else ifeq ($(BUILD_MODE),GPRbuild)
 
 #
 # GPRbuild
