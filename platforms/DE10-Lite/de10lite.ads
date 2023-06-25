@@ -33,12 +33,12 @@ package DE10Lite is
    use Interfaces;
 
    -- LEDs Avalon Memory Mapped Slave
-   LEDs_IO : Unsigned_32 with
+   LEDs_IO : aliased Unsigned_32 with
       Address    => To_Address (Quartus.leds_s1_ADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
-   LEDs_Dir : Unsigned_32 with
+   LEDs_Dir : aliased Unsigned_32 with
       Address    => To_Address (Quartus.leds_s1_ADDRESS + 4),
       Volatile   => True,
       Import     => True,
