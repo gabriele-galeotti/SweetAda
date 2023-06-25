@@ -48,18 +48,8 @@ package Am7990 is
    RDP_OFFSET : constant := 0; -- Register Data Port
    RAP_OFFSET : constant := 2; -- Register Address Port
 
-   type Am7990_Register_Type is (
-                                 CSR0,
-                                 CSR1,
-                                 CSR2,
-                                 CSR3
-                                );
-   for Am7990_Register_Type use (
-                                 16#000#,
-                                 16#001#,
-                                 16#002#,
-                                 16#003#
-                                );
+   type Register_Type is (CSR0, CSR1, CSR2, CSR3);
+   for Register_Type use (0, 1, 2, 3);
 
    ----------------------------------------------------------------------------
    -- CSRX register types
@@ -420,7 +410,7 @@ package Am7990 is
    -- Am7990 descriptor
    ----------------------------------------------------------------------------
 
-   type Am7990_Flags_Type is
+   type Flags_Type is
    record
       null;
    end record;
@@ -428,39 +418,35 @@ package Am7990 is
    type Port_Read_16_Ptr is access function (Port : Address) return Unsigned_16;
    type Port_Write_16_Ptr is access procedure (Port : in Address; Value : in Unsigned_16);
 
-   type Am7990_Descriptor_Type is
+   type Descriptor_Type is
    record
       Base_Address  : Address;
       Scale_Address : Address_Shift;
-      Flags         : Am7990_Flags_Type;
+      Flags         : Flags_Type;
       Read_16       : not null Port_Read_16_Ptr := MMIO.ReadN_U16'Access;
       Write_16      : not null Port_Write_16_Ptr := MMIO.WriteN_U16'Access;
    end record;
 
-   Am7990_DESCRIPTOR_INVALID : constant Am7990_Descriptor_Type :=
-      (
-       Base_Address  => Null_Address,
+   DESCRIPTOR_INVALID : constant Descriptor_Type :=
+      (Base_Address  => Null_Address,
        Scale_Address => 0,
        Flags         => (null record),
        Read_16       => MMIO.ReadN_U16'Access,
-       Write_16      => MMIO.WriteN_U16'Access
-      );
+       Write_16      => MMIO.WriteN_U16'Access);
 
    ----------------------------------------------------------------------------
    -- Am7990 register read/write
    ----------------------------------------------------------------------------
 
-   function Register_Read (
-                           Descriptor : Am7990_Descriptor_Type;
-                           Register   : Am7990_Register_Type
-                          ) return Unsigned_16 with
+   function Register_Read
+      (Descriptor : Descriptor_Type;
+       Register   : Register_Type) return Unsigned_16 with
       Inline => True;
 
-   procedure Register_Write (
-                             Descriptor : in Am7990_Descriptor_Type;
-                             Register   : in Am7990_Register_Type;
-                             Value      : in Unsigned_16
-                            ) with
+   procedure Register_Write
+      (Descriptor : in Descriptor_Type;
+       Register   : in Register_Type;
+       Value      : in Unsigned_16) with
       Inline => True;
 
 end Am7990;

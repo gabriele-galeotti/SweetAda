@@ -40,53 +40,33 @@ package body Am7990 is
    ----------------------------------------------------------------------------
    -- Register_Read
    ----------------------------------------------------------------------------
-   function Register_Read (
-                           Descriptor : Am7990_Descriptor_Type;
-                           Register   : Am7990_Register_Type
-                          ) return Unsigned_16 is
+   function Register_Read
+      (Descriptor : Descriptor_Type;
+       Register   : Register_Type) return Unsigned_16
+   is
    begin
-      Descriptor.Write_16 (
-                           Build_Address (
-                                          Descriptor.Base_Address,
-                                          RAP_OFFSET,
-                                          Descriptor.Scale_Address
-                                         ),
-                           Am7990_Register_Type'Enum_Rep (Register)
-                          );
-      return Descriptor.Read_16 (
-                                 Build_Address (
-                                                Descriptor.Base_Address,
-                                                RDP_OFFSET,
-                                                Descriptor.Scale_Address
-                                               )
-                                );
+      Descriptor.Write_16
+         (Build_Address (Descriptor.Base_Address, RAP_OFFSET, Descriptor.Scale_Address),
+          Register_Type'Enum_Rep (Register));
+      return Descriptor.Read_16
+         (Build_Address (Descriptor.Base_Address, RDP_OFFSET, Descriptor.Scale_Address));
    end Register_Read;
 
    ----------------------------------------------------------------------------
    -- Register_Write
    ----------------------------------------------------------------------------
-   procedure Register_Write (
-                             Descriptor : in Am7990_Descriptor_Type;
-                             Register   : in Am7990_Register_Type;
-                             Value      : in Unsigned_16
-                            ) is
+   procedure Register_Write
+      (Descriptor : in Descriptor_Type;
+       Register   : in Register_Type;
+       Value      : in Unsigned_16)
+   is
    begin
-      Descriptor.Write_16 (
-                           Build_Address (
-                                          Descriptor.Base_Address,
-                                          RAP_OFFSET,
-                                          Descriptor.Scale_Address
-                                         ),
-                           Am7990_Register_Type'Enum_Rep (Register)
-                          );
-      Descriptor.Write_16 (
-                           Build_Address (
-                                          Descriptor.Base_Address,
-                                          RDP_OFFSET,
-                                          Descriptor.Scale_Address
-                                         ),
-                           Value
-                          );
+      Descriptor.Write_16
+         (Build_Address (Descriptor.Base_Address, RAP_OFFSET, Descriptor.Scale_Address),
+          Register_Type'Enum_Rep (Register));
+      Descriptor.Write_16
+         (Build_Address (Descriptor.Base_Address, RDP_OFFSET, Descriptor.Scale_Address),
+          Value);
    end Register_Write;
 
 end Am7990;
