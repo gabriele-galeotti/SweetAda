@@ -31,8 +31,6 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                *(.gnu.linkonce.t.*)
-                *(.gnu.linkonce.r.*)
                 . = ALIGN(0x10);
                 _etext = .;
         } > SDRAM
@@ -44,8 +42,8 @@ SECTIONS
                 _sdata = .;
                 *(.data)
                 *(.data.*)
-                *(.gnu.linkonce.d.*)
-                *(.gcc_except_table)
+                *(.sdata)
+                *(.sdata.*)
                 . = ALIGN(0x10);
                 _edata = .;
         } > SDRAM
@@ -57,7 +55,6 @@ SECTIONS
                 _bss_start = .;
                 *(.bss)
                 *(.bss.*)
-                *(.gnu.linkonce.b.*)
                 *(COMMON)
                 . = ALIGN(0x10);
                 _end = .;
@@ -65,23 +62,23 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
-        .debug_info     : { *(.debug_info) }
-        .debug_abbrev   : { *(.debug_abbrev) }
-        .debug_aranges  : { *(.debug_aranges) }
-        .debug_frame    : { *(.debug_frame) }
-        .debug_line     : { *(.debug_line) }
-        .debug_line_str : { *(.debug_line_str) }
-        .debug_loclists : { *(.debug_loclists) }
-        .debug_macro    : { *(.debug_macro) }
-        .debug_names    : { *(.debug_names) }
-        .debug_rnglists : { *(.debug_rnglists) }
-        .debug_str      : { *(.debug_str) }
+        .debug_info     0 : { *(.debug_info) }
+        .debug_abbrev   0 : { *(.debug_abbrev) }
+        .debug_aranges  0 : { *(.debug_aranges) }
+        .debug_frame    0 : { *(.debug_frame) }
+        .debug_line     0 : { *(.debug_line) }
+        .debug_line_str 0 : { *(.debug_line_str) }
+        .debug_loclists 0 : { *(.debug_loclists) }
+        .debug_macro    0 : { *(.debug_macro) }
+        .debug_names    0 : { *(.debug_names) }
+        .debug_rnglists 0 : { *(.debug_rnglists) }
+        .debug_str      0 : { *(.debug_str) }
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
         /DISCARD/ :
         {
-                *(.comment)
+                *(*)
         }
 }
 

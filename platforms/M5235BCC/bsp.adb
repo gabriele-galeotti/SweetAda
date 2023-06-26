@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Parameters;
+with System.Secondary_Stack;
 with System.Storage_Elements;
 with Interfaces;
 with Definitions;
@@ -42,6 +44,13 @@ package body BSP is
 
    Flash_ROM_Address : constant Integer_Address := 16#FFE0_0000#;
 
+   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
+
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_get_secondary_stack";
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -49,6 +58,14 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Get_Sec_Stack
+   ----------------------------------------------------------------------------
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   begin
+      return BSP_SS_Stack;
+   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -80,6 +97,8 @@ package body BSP is
 pragma Warnings (Off, "volatile actual passed by copy");
    procedure Setup is
    begin
+      -------------------------------------------------------------------------
+      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
