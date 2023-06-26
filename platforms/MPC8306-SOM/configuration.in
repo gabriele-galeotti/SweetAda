@@ -3,6 +3,11 @@
 # MPC8306 SOM
 #
 
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
 CPU := PowerPC
 
 # -meabi -msdata=eabi
