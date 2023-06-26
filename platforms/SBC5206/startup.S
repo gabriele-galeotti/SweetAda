@@ -14,14 +14,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .sect   .vectors,"ax"
-
-#define INITIALSP 0
-#define INITIALPC _start
-#include "startup-vectors.h"
-
-////////////////////////////////////////////////////////////////////////////////
-
                 .sect   .startup,"ax"
 
                 .type   _start,@function
@@ -43,6 +35,11 @@ _start:
 #endif
 
                 //
+                // Setup stack pointer.
+                //
+                lea.l   kernel_stack,%sp
+
+                //
                 // Static data relocation.
                 //
                 .extern _etext
@@ -56,11 +53,6 @@ _start:
                 move.b  %a0@+,%a1@+
                 bra.s   1b
 2:
-
-                //
-                // Setup stack pointer.
-                //
-                lea.l   kernel_stack,%sp
 
                 //
                 // Jump to high-level code.
