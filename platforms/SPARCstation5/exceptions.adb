@@ -25,7 +25,10 @@ with Abort_Library;
 with LLutils;
 with SPARC;
 with Sun4m;
+with Z8530;
+with BSP;
 with IOEMU;
+with Console;
 
 package body Exceptions is
 
@@ -59,6 +62,7 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Exception_Process is
    begin
+      Console.Print ("*** EXCEPTION", NL => True);
       System_Abort;
    end Exception_Process;
 
@@ -67,15 +71,24 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Irq_Process is
    begin
-      Core.Tick_Count := @ + 1;
-      if Configure.USE_QEMU_IOEMU then
-         if Core.Tick_Count mod 1_000 = 0 then
-            -- IOEMU "TIMER" LED blinking
-            IOEMU.IO0 := 1;
-            IOEMU.IO0 := 0;
+      if Sun4m.SIPR.T then
+         Core.Tick_Count := @ + 1;
+         if Configure.USE_QEMU_IOEMU then
+            if Core.Tick_Count mod 1_000 = 0 then
+               -- IOEMU "TIMER" LED blinking
+               IOEMU.IO0 := 1;
+               IOEMU.IO0 := 0;
+            end if;
          end if;
+         Sun4m.System_Timer_ClearLR;
+      elsif Sun4m.SIPR.S then
+         declare
+            C : Character;
+         begin
+            BSP.Console_Getchar (C);
+            BSP.Console_Putchar (C);
+         end;
       end if;
-      Sun4m.System_Timer_ClearLR;
    end Irq_Process;
 
    ----------------------------------------------------------------------------

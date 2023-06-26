@@ -296,7 +296,7 @@ package Sun4m is
 
    E_CSR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#0#;
 
-   E_CSR : E_CSR_Type with
+   E_CSR : aliased E_CSR_Type with
       Address              => To_Address (E_CSR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -311,7 +311,7 @@ pragma Warnings (On, "volatile actual passed by copy");
 
    E_TST_CSR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#4#;
 
-   E_TST_CSR : Unsigned_32 with
+   E_TST_CSR : aliased Unsigned_32 with
       Address              => To_Address (E_TST_CSR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -321,7 +321,7 @@ pragma Warnings (On, "volatile actual passed by copy");
 
    E_VLD_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#8#;
 
-   E_VLD : Unsigned_32 with
+   E_VLD : aliased Unsigned_32 with
       Address              => To_Address (E_VLD_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -332,7 +332,7 @@ pragma Warnings (On, "volatile actual passed by copy");
 
    E_BASE_ADDR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#C#;
 
-   E_BASE_ADDR : Unsigned_8 with
+   E_BASE_ADDR : aliased Unsigned_8 with
       Address              => To_Address (E_BASE_ADDR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,

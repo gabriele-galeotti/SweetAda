@@ -38,7 +38,7 @@ package BSP is
 
    SCC_Descriptor : aliased Z8530.Descriptor_Type := Z8530.DESCRIPTOR_INVALID;
 
-   Am7990_Descriptor : aliased Am7990.Am7990_Descriptor_Type := Am7990.Am7990_DESCRIPTOR_INVALID;
+   Am7990_Descriptor : aliased Am7990.Descriptor_Type := Am7990.DESCRIPTOR_INVALID;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

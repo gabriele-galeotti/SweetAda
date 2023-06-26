@@ -21,8 +21,9 @@
                 // cleared).
                 //
 
-                .global trap_table
                 .align  16
+
+                .global trap_table
 trap_table:
 
                 // trap 0x00
@@ -94,63 +95,65 @@ trap_table:
                 nop
                 // interrupt_level_1 31 0x11
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_2 30 0x12
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_3 29 0x13
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_4 28 0x14
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_5 27 0x15
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_6 26 0x16
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_7 25 0x17
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_8 24 0x18
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_9 23 0x19
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_10 22 0x1A
+                // timer
                 .align  16
-                b       trap_entry
+                b       irq_entry
                 nop
                 // interrupt_level_11 21 0x1B
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_12 20 0x1C
+                // serial
                 .align  16
-                b       trap_entry
+                b       irq_entry
                 nop
                 // interrupt_level_13 19 0x1D
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_14 18 0x1E
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
                 // interrupt_level_15 17 0x1F
                 .align  16
-                b       trap_entry
+                b       irq_not_handled
                 nop
 
 trap_error:
@@ -158,7 +161,11 @@ trap_error:
                 call    exception_process
                 nop
 
-trap_entry:
+irq_not_handled:
+                b       .
+                nop
+
+irq_entry:
                 //
                 // The trapped program counters are saved in local registers 1
                 // and 2 of the new window: r[17] ← PC, r[18] ← nPC
