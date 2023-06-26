@@ -5,12 +5,17 @@
 # PowerPC PPC604
 #
 
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
 CPU := PowerPC
 
 # -meabi -msdata=eabi
 GCC_SWITCHES_PLATFORM     := -mcpu=604 -meabi -msoft-float -Wa,-m604 -Wa,-mregnames
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      :=
+LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
