@@ -38,6 +38,232 @@ package STM32F769I is
    use Bits;
 
    ----------------------------------------------------------------------------
+   -- 4 Power controller (PWR)
+   ----------------------------------------------------------------------------
+
+   -- 4.4.1 PWR power control register (PWR_CR1)
+
+   PLS_2V0 : constant := 2#000#; -- 2.0 V
+   PLS_2V1 : constant := 2#001#; -- 2.1 V
+   PLS_2V3 : constant := 2#010#; -- 2.3 V
+   PLS_2V5 : constant := 2#011#; -- 2.5 V
+   PLS_2V6 : constant := 2#100#; -- 2.6 V
+   PLS_2V7 : constant := 2#101#; -- 2.7 V
+   PLS_2V8 : constant := 2#110#; -- 2.8 V
+   PLS_2V9 : constant := 2#111#; -- 2.9 V
+
+   VOS_RESERVED : constant := 2#00#; -- Reserved (Scale 3 mode selected)
+   VOS_SCALE3   : constant := 2#01#; -- Scale 3 mode
+   VOS_SCALE2   : constant := 2#10#; -- Scale 2 mode
+   VOS_SCALE1   : constant := 2#11#; -- Scale 1 mode (reset value)
+
+   UDEN_DISABLE   : constant := 2#00#; -- Under-drive disable
+   UDEN_RESERVED1 : constant := 2#01#; -- Reserved
+   UDEN_RESERVED2 : constant := 2#10#; -- Reserved
+   UDEN_ENABLE    : constant := 2#11#; -- Under-drive enable
+
+   type PWR_CR1_Type is
+   record
+      LPDS      : Boolean;  -- Low-power deepsleep
+      PDDS      : Boolean;  -- Power-down deepsleep
+      Reserved1 : Bits_1;
+      CSBF      : Boolean;  -- Clear standby flag
+      PVDE      : Boolean;  -- Power voltage detector enable
+      PLS       : Bits_3;   -- PVD level selection
+      DBP       : Boolean;  -- Disable backup domain write protection
+      FPDS      : Boolean;  -- Flash power-down in Stop mode
+      LPUDS     : Boolean;  -- Low-power regulator in deepsleep under-drive mode
+      MRUDS     : Boolean;  -- Main regulator in deepsleep under-drive mode
+      Reserved2 : Bits_1;
+      ADCDC1    : Bits_1;   -- Refer to AN4073 for details on how to use this bit.
+      VOS       : Bits_2;   -- Regulator voltage scaling output selection
+      ODEN      : Boolean;  -- Over-drive enable
+      ODSWEN    : Boolean;  -- Over-drive switching enabled.
+      UDEN      : Bits_2;   -- Under-drive enable in stop mode
+      Reserved3 : Bits_12;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for PWR_CR1_Type use
+   record
+      LPDS      at 0 range 0 .. 0;
+      PDDS      at 0 range 1 .. 1;
+      Reserved1 at 0 range 2 .. 2;
+      CSBF      at 0 range 3 .. 3;
+      PVDE      at 0 range 4 .. 4;
+      PLS       at 0 range 5 .. 7;
+      DBP       at 0 range 8 .. 8;
+      FPDS      at 0 range 9 .. 9;
+      LPUDS     at 0 range 10 .. 10;
+      MRUDS     at 0 range 11 .. 11;
+      Reserved2 at 0 range 12 .. 12;
+      ADCDC1    at 0 range 13 .. 13;
+      VOS       at 0 range 14 .. 15;
+      ODEN      at 0 range 16 .. 16;
+      ODSWEN    at 0 range 17 .. 17;
+      UDEN      at 0 range 18 .. 19;
+      Reserved3 at 0 range 20 .. 31;
+   end record;
+
+   PWR_CR1_ADDRESS : constant := 16#4000_7000#;
+
+   PWR_CR1 : aliased PWR_CR1_Type with
+      Address              => To_Address (PWR_CR1_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 4.4.2 PWR power control/status register (PWR_CSR1)
+
+   PVDO_HIGHER : constant := 0; -- VDD is higher than the PVD threshold selected with the PLS[2:0] bits.
+   PVDO_LOWER  : constant := 1; -- VDD is lower than the PVD threshold selected with the PLS[2:0] bits.
+
+   UDRDY_DISABLED  : constant := 2#00#; -- Under-drive is disabled
+   UDRDY_RESERVED1 : constant := 2#01#; -- Reserved
+   UDRDY_RESERVED2 : constant := 2#10#; -- Reserved
+   UDRDY_STOP      : constant := 2#11#; -- Under-drive mode is activated in Stop mode.
+
+   type PWR_CSR1_Type is
+   record
+      WUIF      : Boolean; -- Wakeup internal flag
+      SBF       : Boolean; -- Standby flag
+      PVDO      : Bits_1;  -- This bit is set and cleared by hardware. It is valid only if PVD is enabled by the PVDE bit.
+      BRR       : Boolean; -- Backup regulator ready
+      Reserved1 : Bits_5;
+      BRE       : Boolean; -- Backup regulator enable
+      Reserved2 : Bits_4;
+      VOSRDY    : Boolean; -- Regulator voltage scaling output selection ready bit
+      Reserved3 : Bits_1;
+      ODRDY     : Boolean; -- Over-drive mode ready
+      ODSWRDY   : Boolean; -- Over-drive mode switching ready
+      UDRDY     : Bits_2;  -- Under-drive ready flag
+      Reserved4 : Bits_12;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for PWR_CSR1_Type use
+   record
+      WUIF      at 0 range 0 .. 0;
+      SBF       at 0 range 1 .. 1;
+      PVDO      at 0 range 2 .. 2;
+      BRR       at 0 range 3 .. 3;
+      Reserved1 at 0 range 4 .. 8;
+      BRE       at 0 range 9 .. 9;
+      Reserved2 at 0 range 10 .. 13;
+      VOSRDY    at 0 range 14 .. 14;
+      Reserved3 at 0 range 15 .. 15;
+      ODRDY     at 0 range 16 .. 16;
+      ODSWRDY   at 0 range 17 .. 17;
+      UDRDY     at 0 range 18 .. 19;
+      Reserved4 at 0 range 20 .. 31;
+   end record;
+
+   PWR_CSR1_ADDRESS : constant := 16#4000_7004#;
+
+   PWR_CSR1 : aliased PWR_CSR1_Type with
+      Address              => To_Address (PWR_CSR1_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 4.4.3 PWR power control/status register 2 (PWR_CR2)
+
+   WUPP_RISING  : constant := 0; -- Detection on rising edge
+   WUPP_FALLING : constant := 1; -- Detection on falling edge
+
+   type PWR_CR2_Type is
+   record
+      CWUPF1    : Boolean;      -- Clear Wakeup Pin flag for PA0
+      CWUPF2    : Boolean;      -- Clear Wakeup Pin flag for PA2
+      CWUPF3    : Boolean;      -- Clear Wakeup Pin flag for PC1
+      CWUPF4    : Boolean;      -- Clear Wakeup Pin flag for PC13
+      CWUPF5    : Boolean;      -- Clear Wakeup Pin flag for PI8
+      CWUPF6    : Boolean;      -- Clear Wakeup Pin flag for PI11
+      Reserved1 : Bits_2 := 0;
+      WUPP1     : Bits_1;       -- Wakeup pin polarity bit for PA0
+      WUPP2     : Bits_1;       -- Wakeup pin polarity bit for PA2
+      WUPP3     : Bits_1;       -- Wakeup pin polarity bit for PC1
+      WUPP4     : Bits_1;       -- Wakeup pin polarity bit for PC13
+      WUPP5     : Bits_1;       -- Wakeup pin polarity bit for PI8
+      WUPP6     : Bits_1;       -- Wakeup pin polarity bit for PI11
+      Reserved2 : Bits_18 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for PWR_CR2_Type use
+   record
+      CWUPF1    at 0 range 0 .. 0;
+      CWUPF2    at 0 range 1 .. 1;
+      CWUPF3    at 0 range 2 .. 2;
+      CWUPF4    at 0 range 3 .. 3;
+      CWUPF5    at 0 range 4 .. 4;
+      CWUPF6    at 0 range 5 .. 5;
+      Reserved1 at 0 range 6 .. 7;
+      WUPP1     at 0 range 8 .. 8;
+      WUPP2     at 0 range 9 .. 9;
+      WUPP3     at 0 range 10 .. 10;
+      WUPP4     at 0 range 11 .. 11;
+      WUPP5     at 0 range 12 .. 12;
+      WUPP6     at 0 range 13 .. 13;
+      Reserved2 at 0 range 14 .. 31;
+   end record;
+
+   PWR_CR2_ADDRESS : constant := 16#4000_7008#;
+
+   PWR_CR2 : aliased PWR_CR2_Type with
+      Address              => To_Address (PWR_CR2_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 4.4.4 PWR power control register 2 (PWR_CSR2)
+
+   type PWR_CSR2_Type is
+   record
+      WUPF1     : Boolean;      -- Wakeup Pin flag for PA0
+      WUPF2     : Boolean;      -- Wakeup Pin flag for PA2
+      WUPF3     : Boolean;      -- Wakeup Pin flag for PC1
+      WUPF4     : Boolean;      -- Wakeup Pin flag for PC13
+      WUPF5     : Boolean;      -- Wakeup Pin flag for PI8
+      WUPF6     : Boolean;      -- Wakeup Pin flag for PI11
+      Reserved1 : Bits_2 := 0;
+      EWUP1     : Boolean;      -- Enable Wakeup pin for PA0
+      EWUP2     : Boolean;      -- Enable Wakeup pin for PA2
+      EWUP3     : Boolean;      -- Enable Wakeup pin for PC1
+      EWUP4     : Boolean;      -- Enable Wakeup pin for PC13
+      EWUP5     : Boolean;      -- Enable Wakeup pin for PI8
+      EWUP6     : Boolean;      -- Enable Wakeup pin for PI11
+      Reserved2 : Bits_18 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for PWR_CSR2_Type use
+   record
+      WUPF1     at 0 range 0 .. 0;
+      WUPF2     at 0 range 1 .. 1;
+      WUPF3     at 0 range 2 .. 2;
+      WUPF4     at 0 range 3 .. 3;
+      WUPF5     at 0 range 4 .. 4;
+      WUPF6     at 0 range 5 .. 5;
+      Reserved1 at 0 range 6 .. 7;
+      EWUP1     at 0 range 8 .. 8;
+      EWUP2     at 0 range 9 .. 9;
+      EWUP3     at 0 range 10 .. 10;
+      EWUP4     at 0 range 11 .. 11;
+      EWUP5     at 0 range 12 .. 12;
+      EWUP6     at 0 range 13 .. 13;
+      Reserved2 at 0 range 14 .. 31;
+   end record;
+
+   PWR_CSR2_ADDRESS : constant := 16#4000_700C#;
+
+   PWR_CSR2 : aliased PWR_CSR2_Type with
+      Address              => To_Address (PWR_CSR2_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 5 Reset and clock control (RCC)
    ----------------------------------------------------------------------------
 
