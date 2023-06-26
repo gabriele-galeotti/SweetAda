@@ -21,7 +21,9 @@
 
                 .global vector_table
 vector_table:
+
 reset_sp:       .long   0
+                .extern _start
 reset_pc:       .long   _start
                 .space  (64-2)*4
                 // Table 14-15. Interrupt Source Assignment For INTC0
