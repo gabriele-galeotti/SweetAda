@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ spartan3a.ads                                                                                             --
+-- __FLN__ abort_library-system_abort.adb                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,49 +15,17 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
-with Interfaces;
-with Bits;
-
-package Spartan3A is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                               Public part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use System;
-   use System.Storage_Elements;
-   use Interfaces;
-   use Bits;
-
-   type GPIO_Type is
-   record
-      GPIO_DATA  : Bitmap_32 with Volatile_Full_Access => True;
-      GPIO_TRI   : Bitmap_32 with Volatile_Full_Access => True;
-      GPIO2_DATA : Bitmap_32 with Volatile_Full_Access => True;
-      GPIO2_TRI  : Bitmap_32 with Volatile_Full_Access => True;
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 16 * 8;
-   for GPIO_Type use
-   record
-      GPIO_DATA  at 16#00# range 0 .. 31;
-      GPIO_TRI   at 16#04# range 0 .. 31;
-      GPIO2_DATA at 16#08# range 0 .. 31;
-      GPIO2_TRI  at 16#0C# range 0 .. 31;
-   end record;
-
-   LEDs_BASEADDRESS : constant := 16#8142_0000#;
-
-   LEDs : aliased GPIO_Type with
-      Address    => To_Address (LEDs_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-
-end Spartan3A;
+separate (Abort_Library)
+procedure System_Abort (
+                        File    : in System.Address;
+                        Line    : in Integer;
+                        Column  : in Integer;
+                        Message : in System.Address
+                       ) is
+   pragma Unreferenced (File);
+   pragma Unreferenced (Line);
+   pragma Unreferenced (Column);
+   pragma Unreferenced (Message);
+begin
+   System_Abort; -- default abort procedure
+end System_Abort;

@@ -3,9 +3,8 @@ ENTRY(_start)
 
 MEMORY
 {
-        VECTORS : ORIGIN = 0x00000000, LENGTH = 8
-        LMB     : ORIGIN = 0x00000050, LENGTH = 0x1FB0
-        RAM     : ORIGIN = 0x50000000, LENGTH = 1M
+        LMB_VECTORS : ORIGIN = 0x00000000, LENGTH = 0x50
+        LMB         : ORIGIN = 0x00000050, LENGTH = 0x1FB0
 }
 
 SECTIONS
@@ -16,13 +15,7 @@ SECTIONS
         .vectors :
         {
                 KEEP(*(.vectors))
-        } > VECTORS
-        /*
-        .vectors : AT(_etext)
-        {
-                KEEP(*(.vectors))
-        } > LMB
-        */
+        } > LMB_VECTORS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
@@ -34,8 +27,6 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                *(.gnu.linkonce.t.*)
-                *(.gnu.linkonce.r.*)
                 . = ALIGN(0x10);
                 _etext = .;
         } > LMB
@@ -47,10 +38,9 @@ SECTIONS
                 _sdata = .;
                 *(.data)
                 *(.data.*)
-                *(.gnu.linkonce.d.*)
                 . = ALIGN(0x10);
                 _edata = .;
-        } > RAM
+        } > LMB
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
@@ -60,16 +50,29 @@ SECTIONS
                 *(.bss)
                 *(.bss.*)
                 *(COMMON)
-                *(.gnu.linkonce.b.*)
                 . = ALIGN(0x10);
                 _ebss = .;
-        } > RAM
+        } > LMB
+        /**********************************************************************
+         *                                                                    *
+         **********************************************************************/
+        .debug_info     0 : { *(.debug_info) }
+        .debug_abbrev   0 : { *(.debug_abbrev) }
+        .debug_aranges  0 : { *(.debug_aranges) }
+        .debug_frame    0 : { *(.debug_frame) }
+        .debug_line     0 : { *(.debug_line) }
+        .debug_line_str 0 : { *(.debug_line_str) }
+        .debug_loclists 0 : { *(.debug_loclists) }
+        .debug_macro    0 : { *(.debug_macro) }
+        .debug_names    0 : { *(.debug_names) }
+        .debug_rnglists 0 : { *(.debug_rnglists) }
+        .debug_str      0 : { *(.debug_str) }
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
         /DISCARD/ :
         {
-                *(.comment)
+                *(*)
         }
 }
 

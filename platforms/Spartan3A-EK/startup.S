@@ -12,12 +12,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .sect   .vectors,"ax"
-
-reset:          brai    _start
-
-////////////////////////////////////////////////////////////////////////////////
-
                 .sect   .startup,"ax"
 
                 .type   _start,@function
@@ -30,13 +24,26 @@ _start:
                 addik   r1,r0,kernel_stack
 
                 //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                addik   r3,r0,_sbss
+                addik   r4,r0,_ebss
+                brai    2f
+1:              sbi     r0,r3,0
+                addi    r3,r3,1
+2:              cmpu    r18,r3,r4
+                bnei    r18,1b
+
+                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main
-                brlid   r15,_ada_main
+                bralid  r15,_ada_main
                 nop
 
-dead:           brid    .
+dead:           braid   .
                 nop
 
                 .size   _start,.-_start
@@ -50,6 +57,6 @@ dead:           brid    .
                 .sect   .bss
 
                 .align  8
-                .space  4096
+                .space  256
 kernel_stack:
 
