@@ -12,8 +12,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+                .syntax unified
+
                 .sect   .startup,"ax"
 
+                .thumb_func
                 .type   _start,%function
                 .global _start
 _start:
