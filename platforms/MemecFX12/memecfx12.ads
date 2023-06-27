@@ -38,17 +38,17 @@ package MemecFX12 is
    XPAR_LCD_CONTROLLER_0_BASEADDR  : constant := 16#8500_0000#;
 
    -- LED
-   LED_IO : Unsigned_32 with
+   LED_IO : aliased Unsigned_32 with
       Address    => To_Address (XPAR_XPS_GPIO_0_BASEADDR_IO),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
-   LED_3STATE : Unsigned_32 with
+   LED_3STATE : aliased Unsigned_32 with
       Address    => To_Address (XPAR_XPS_GPIO_0_BASEADDR_3STATE),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
-   LCD : Unsigned_32 with
+   LCD : aliased Unsigned_32 with
       Address    => To_Address (XPAR_LCD_CONTROLLER_0_BASEADDR),
       Volatile   => True,
       Import     => True,
