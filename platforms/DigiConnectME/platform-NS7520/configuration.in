@@ -2,8 +2,13 @@
 #
 # Digi Connect ME
 #
-# ARM7TDMI NS7520 BE
+# ARM7TDMI NS7520 BE (ARMv4T)
 #
+
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
 
 CPU            := ARM
 CPU_MODEL      := ARM7TDMI
@@ -12,7 +17,7 @@ TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_ARMeb)
 
 GCC_SWITCHES_PLATFORM     := -mcpu=arm7tdmi -mabi=aapcs
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      := --undefined=reset
+LD_SWITCHES_PLATFORM      := --undefined=reset --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00

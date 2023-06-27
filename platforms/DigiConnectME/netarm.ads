@@ -73,13 +73,13 @@ package NETARM is
 
    -- GEN_BASE registers ------------------------------------------------------
 
-   SCR : Unsigned_32 with
+   SCR : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#0000#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   SSR : Unsigned_32 with
+   SSR : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#0004#),
       Volatile   => True,
       Import     => True,
@@ -104,61 +104,61 @@ package NETARM is
 
    PLLCR_ADDRESS : constant := GEN_BASEADDRESS + 16#0008#;
 
-   PLL_Control : Unsigned_32 with
+   PLL_Control : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#0008#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   SWSR : Unsigned_32 with
+   SWSR : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#000C#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   TCR1 : Unsigned_32 with
+   TCR1 : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#0010#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   TSR1 : Unsigned_32 with
+   TSR1 : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#0014#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   TCR2 : Unsigned_32 with
+   TCR2 : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#0018#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   TSR2 : Unsigned_32 with
+   TSR2 : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#001C#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   PORTA : Unsigned_32 with
+   PORTA : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#0020#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   PORTB : Unsigned_32 with
+   PORTB : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#0024#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   PORTC : Unsigned_32 with
+   PORTC : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#0028#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   PLL_Settings : Unsigned_32 with
+   PLL_Settings : aliased Unsigned_32 with
       Address    => To_Address (GEN_BASEADDRESS + 16#0040#),
       Volatile   => True,
       Import     => True,
@@ -166,61 +166,61 @@ package NETARM is
 
    -- MEM_BASE registers ------------------------------------------------------
 
-   MMCR : Unsigned_32 with
+   MMCR : aliased Unsigned_32 with
       Address    => To_Address (MEM_BASEADDRESS + 16#0000#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   CSBAR0 : Unsigned_32 with
+   CSBAR0 : aliased Unsigned_32 with
       Address    => To_Address (MEM_BASEADDRESS + 16#0010#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   CSOR0A : Unsigned_32 with
+   CSOR0A : aliased Unsigned_32 with
       Address    => To_Address (MEM_BASEADDRESS + 16#0014#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   CSOR0B : Unsigned_32 with
+   CSOR0B : aliased Unsigned_32 with
       Address    => To_Address (MEM_BASEADDRESS + 16#0018#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   CSBAR1 : Unsigned_32 with
+   CSBAR1 : aliased Unsigned_32 with
       Address    => To_Address (MEM_BASEADDRESS + 16#0020#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   CSOR1A : Unsigned_32 with
+   CSOR1A : aliased Unsigned_32 with
       Address    => To_Address (MEM_BASEADDRESS + 16#0024#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   CSOR1B : Unsigned_32 with
+   CSOR1B : aliased Unsigned_32 with
       Address    => To_Address (MEM_BASEADDRESS + 16#0028#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   CSBAR2 : Unsigned_32 with
+   CSBAR2 : aliased Unsigned_32 with
       Address    => To_Address (MEM_BASEADDRESS + 16#0030#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   CSOR2A : Unsigned_32 with
+   CSOR2A : aliased Unsigned_32 with
       Address    => To_Address (MEM_BASEADDRESS + 16#0034#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   CSOR2B : Unsigned_32 with
+   CSOR2B : aliased Unsigned_32 with
       Address    => To_Address (MEM_BASEADDRESS + 16#0038#),
       Volatile   => True,
       Import     => True,

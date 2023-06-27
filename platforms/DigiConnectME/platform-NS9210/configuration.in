@@ -2,8 +2,13 @@
 #
 # Digi Connect ME
 #
-# ARM926EJ-S NS9210 BE
+# ARM926EJ-S NS9210 BE (ARMv5TEJ)
 #
+
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
 
 CPU            := ARM
 CPU_MODEL      := ARM926EJ-S
@@ -12,7 +17,7 @@ TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_ARMeb)
 
 GCC_SWITCHES_PLATFORM     := -mcpu=arm926ej-s -mabi=aapcs
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      :=
+LD_SWITCHES_PLATFORM      := --undefined=reset --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
