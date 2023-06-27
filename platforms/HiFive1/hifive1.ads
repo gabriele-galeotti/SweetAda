@@ -39,8 +39,6 @@ package HiFive1 is
    -- __REF__ SiFive FE310-G002 Manual v1p0
    ----------------------------------------------------------------------------
 
-   AON_BASEADDRESS : constant := 16#1000_0000#;
-
    ----------------------------------------------------------------------------
    -- 6 Clock Generation (PRCI)
    ----------------------------------------------------------------------------
@@ -270,6 +268,27 @@ package HiFive1 is
    end PRCI;
 
    ----------------------------------------------------------------------------
+   -- 13 Always-On (AON) Domain
+   ----------------------------------------------------------------------------
+
+   package AON is
+
+      AON_BASEADDRESS : constant := 16#1000_0000#;
+
+      -- 13.9 Backup Registers
+
+      type backup_Type is new Bits_32 with
+         Volatile_Full_Access => True;
+
+      backup : aliased array (0 .. 15) of backup_Type with
+         Address    => To_Address (AON.AON_BASEADDRESS + 16#80#),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+   end AON;
+
+   ----------------------------------------------------------------------------
    -- 14 Watchdog Timer (WDT)
    ----------------------------------------------------------------------------
 
@@ -324,45 +343,239 @@ package HiFive1 is
          Reserved at 0 range 16 .. 31;
       end record;
 
-      WDT_BASEADDRESS : constant := AON_BASEADDRESS;
-
       wdogcfg : aliased wdogcfg_Type with
-         Address              => To_Address (WDT_BASEADDRESS + 16#00#),
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#00#),
          Volatile_Full_Access => True,
          Import               => True,
          Convention           => Ada;
 
       wdogcount : aliased Unsigned_32 with
-         Address              => To_Address (WDT_BASEADDRESS + 16#08#),
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#08#),
          Volatile_Full_Access => True,
          Import               => True,
          Convention           => Ada;
 
       wdogs : aliased Unsigned_16 with
-         Address              => To_Address (WDT_BASEADDRESS + 16#10#),
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#10#),
          Volatile_Full_Access => True,
          Import               => True,
          Convention           => Ada;
 
       wdogfeed : aliased Unsigned_32 with
-         Address              => To_Address (WDT_BASEADDRESS + 16#18#),
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#18#),
          Volatile_Full_Access => True,
          Import               => True,
          Convention           => Ada;
 
       wdogkey : aliased Unsigned_32 with
-         Address              => To_Address (WDT_BASEADDRESS + 16#1C#),
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#1C#),
          Volatile_Full_Access => True,
          Import               => True,
          Convention           => Ada;
 
       wdogcmp0 : aliased wdogcmp_Type with
-         Address              => To_Address (WDT_BASEADDRESS + 16#20#),
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#20#),
          Volatile_Full_Access => True,
          Import               => True,
          Convention           => Ada;
 
    end WDT;
+
+   ----------------------------------------------------------------------------
+   -- 15 Power-Management Unit (PMU)
+   ----------------------------------------------------------------------------
+
+   package PMU is
+
+      -- 15.3 PMU Key Register (pmukey)
+
+      pmukey : aliased Bits_32 with
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#14C#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      -- 15.4 PMU Program
+
+      type pmu_sleep_wakeup_iX_Type is
+      record
+         delaym       : Bits_4;       -- delay multiplier
+         pmu_out_0_en : Boolean;      -- Drive PMU Output En 0 High
+         pmu_out_1_en : Boolean;      -- Drive PMU Output En 1 High
+         corerst      : Boolean;      -- Core Reset
+         hfclkrst     : Boolean;      -- High-Frequency Clock Reset
+         isolate      : Boolean;      -- Isolate MOFF-to-AON Power Domains
+         Reserved     : Bits_23 := 0;
+      end record with
+         Bit_Order            => Low_Order_First,
+         Size                 => 32,
+         Volatile_Full_Access => True;
+      for pmu_sleep_wakeup_iX_Type use
+      record
+         delaym       at 0 range 0 .. 3;
+         pmu_out_0_en at 0 range 4 .. 4;
+         pmu_out_1_en at 0 range 5 .. 5;
+         corerst      at 0 range 6 .. 6;
+         hfclkrst     at 0 range 7 .. 7;
+         isolate      at 0 range 8 .. 8;
+         Reserved     at 0 range 9 .. 31;
+      end record;
+
+      pmuwakeupi : aliased array (0 .. 7) of pmu_sleep_wakeup_iX_Type with
+         Address    => To_Address (AON.AON_BASEADDRESS + 16#100#),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+      pmusleepi : aliased array (0 .. 7) of pmu_sleep_wakeup_iX_Type with
+         Address    => To_Address (AON.AON_BASEADDRESS + 16#120#),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+      -- 15.5 Initiate Sleep Sequence Register (pmusleep)
+
+      pmusleep : aliased Bits_32 with
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#148#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      -- 15.7 PMU Interrupt Enables (pmuie) and Wakeup Cause (pmucause)
+
+      -- __FIX__ manual indicates bits [3:0] used
+      type pmuie_Type is
+      record
+         rtc      : Boolean;      -- RTC wakeup
+         dwakeup  : Boolean;      -- Digital input wakeup
+         awakeup  : Boolean;      -- ??? Analog input wakeup
+         Reserved : Bits_29 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for pmuie_Type use
+      record
+         rtc      at 0 range 0 .. 0;
+         dwakeup  at 0 range 1 .. 1;
+         awakeup  at 0 range 2 .. 2;
+         Reserved at 0 range 3 .. 31;
+      end record;
+
+      pmuie : aliased pmuie_Type with
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#140#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      -- __REF__ https://forums.sifive.com/t/how-pmu-handles-power-on-reset-and-reset-button-push/6118/2
+      type pmucause_Type is
+      record
+         reset     : Boolean; -- Reset
+         rtc       : Boolean; -- RTC wakeup
+         dwakeup   : Boolean; -- Digital input wakeup
+         Reserved1 : Bits_5;
+         ponreset  : Boolean; -- Power-on reset
+         extreset  : Boolean; -- External reset
+         wdogreset : Boolean; -- Watchdog timer reset
+         Reserved2 : Bits_21;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for pmucause_Type use
+      record
+         reset     at 0 range 0 .. 0;
+         rtc       at 0 range 1 .. 1;
+         dwakeup   at 0 range 2 .. 2;
+         Reserved1 at 0 range 3 .. 7;
+         ponreset  at 0 range 8 .. 8;
+         extreset  at 0 range 9 .. 9;
+         wdogreset at 0 range 10 .. 10;
+         Reserved2 at 0 range 11 .. 31;
+      end record;
+
+      pmucause : aliased pmucause_Type with
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#144#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+   end PMU;
+
+   ----------------------------------------------------------------------------
+   -- 16 Real-Time Clock (RTC)
+   ----------------------------------------------------------------------------
+
+   package RTC is
+
+      rtcscale_NONE : constant := 2#0000#;
+      rtcscale_2    : constant := 2#0001#;
+      rtcscale_4    : constant := 2#0010#;
+      rtcscale_8    : constant := 2#0011#;
+      rtcscale_16   : constant := 2#0100#;
+      rtcscale_32   : constant := 2#0101#;
+      rtcscale_64   : constant := 2#0110#;
+      rtcscale_128  : constant := 2#0111#;
+      rtcscale_256  : constant := 2#1000#;
+      rtcscale_512  : constant := 2#1001#;
+      rtcscale_1k   : constant := 2#1010#;
+      rtcscale_2k   : constant := 2#1011#;
+      rtcscale_4k   : constant := 2#1100#;
+      rtcscale_8k   : constant := 2#1101#;
+      rtcscale_16k  : constant := 2#1110#;
+      rtcscale_32k  : constant := 2#1111#;
+
+      type rtccfg_Type is
+      record
+         rtcscale    : Bits_4;       -- Counter scale value.
+         Reserved1   : Bits_8 := 0;
+         rtcenalways : Boolean;      -- Enable Always - run continuously
+         Reserved2   : Bits_15 := 0;
+         rtcip0      : Boolean;      -- Interrupt 0 Pending
+         Reserved3   : Bits_3 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for rtccfg_Type use
+      record
+         rtcscale    at 0 range 0 .. 3;
+         Reserved1   at 0 range 4 .. 11;
+         rtcenalways at 0 range 12 .. 12;
+         Reserved2   at 0 range 13 .. 27;
+         rtcip0      at 0 range 28 .. 28;
+         Reserved3   at 0 range 29 .. 31;
+      end record;
+
+      rtccfg : aliased rtccfg_Type with
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#40#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      rtccountlo : aliased Unsigned_32 with
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#48#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      rtccounthi : aliased Unsigned_32 with
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#4C#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      rtcs : aliased Unsigned_32 with
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#50#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      rtccmp0 : aliased Unsigned_32 with
+         Address              => To_Address (AON.AON_BASEADDRESS + 16#60#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+   end RTC;
 
    ----------------------------------------------------------------------------
    -- 17 General Purpose Input/Output Controller (GPIO)
