@@ -64,22 +64,22 @@ package STM32F769I is
 
    type PWR_CR1_Type is
    record
-      LPDS      : Boolean;  -- Low-power deepsleep
-      PDDS      : Boolean;  -- Power-down deepsleep
+      LPDS      : Boolean; -- Low-power deepsleep
+      PDDS      : Boolean; -- Power-down deepsleep
       Reserved1 : Bits_1;
-      CSBF      : Boolean;  -- Clear standby flag
-      PVDE      : Boolean;  -- Power voltage detector enable
-      PLS       : Bits_3;   -- PVD level selection
-      DBP       : Boolean;  -- Disable backup domain write protection
-      FPDS      : Boolean;  -- Flash power-down in Stop mode
-      LPUDS     : Boolean;  -- Low-power regulator in deepsleep under-drive mode
-      MRUDS     : Boolean;  -- Main regulator in deepsleep under-drive mode
+      CSBF      : Boolean; -- Clear standby flag
+      PVDE      : Boolean; -- Power voltage detector enable
+      PLS       : Bits_3;  -- PVD level selection
+      DBP       : Boolean; -- Disable backup domain write protection
+      FPDS      : Boolean; -- Flash power-down in Stop mode
+      LPUDS     : Boolean; -- Low-power regulator in deepsleep under-drive mode
+      MRUDS     : Boolean; -- Main regulator in deepsleep under-drive mode
       Reserved2 : Bits_1;
-      ADCDC1    : Bits_1;   -- Refer to AN4073 for details on how to use this bit.
-      VOS       : Bits_2;   -- Regulator voltage scaling output selection
-      ODEN      : Boolean;  -- Over-drive enable
-      ODSWEN    : Boolean;  -- Over-drive switching enabled.
-      UDEN      : Bits_2;   -- Under-drive enable in stop mode
+      ADCDC1    : Bits_1;  -- Refer to AN4073 for details on how to use this bit.
+      VOS       : Bits_2;  -- Regulator voltage scaling output selection
+      ODEN      : Boolean; -- Over-drive enable
+      ODSWEN    : Boolean; -- Over-drive switching enabled.
+      UDEN      : Bits_2;  -- Under-drive enable in stop mode
       Reserved3 : Bits_12;
    end record with
       Bit_Order => Low_Order_First,
