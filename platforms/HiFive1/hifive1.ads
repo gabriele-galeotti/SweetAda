@@ -389,6 +389,8 @@ package HiFive1 is
 
       -- 15.3 PMU Key Register (pmukey)
 
+      pmukey_Value : constant := 16#0051_F15E#;
+
       pmukey : aliased Bits_32 with
          Address              => To_Address (AON.AON_BASEADDRESS + 16#14C#),
          Volatile_Full_Access => True,
@@ -443,7 +445,6 @@ package HiFive1 is
 
       -- 15.7 PMU Interrupt Enables (pmuie) and Wakeup Cause (pmucause)
 
-      -- __FIX__ manual indicates bits [3:0] used
       type pmuie_Type is
       record
          rtc      : Boolean;      -- RTC wakeup
@@ -467,7 +468,6 @@ package HiFive1 is
          Import               => True,
          Convention           => Ada;
 
-      -- __REF__ https://forums.sifive.com/t/how-pmu-handles-power-on-reset-and-reset-button-push/6118/2
       type pmucause_Type is
       record
          reset     : Boolean; -- Reset
@@ -507,22 +507,22 @@ package HiFive1 is
 
    package RTC is
 
-      rtcscale_NONE : constant := 2#0000#;
-      rtcscale_2    : constant := 2#0001#;
-      rtcscale_4    : constant := 2#0010#;
-      rtcscale_8    : constant := 2#0011#;
-      rtcscale_16   : constant := 2#0100#;
-      rtcscale_32   : constant := 2#0101#;
-      rtcscale_64   : constant := 2#0110#;
-      rtcscale_128  : constant := 2#0111#;
-      rtcscale_256  : constant := 2#1000#;
-      rtcscale_512  : constant := 2#1001#;
-      rtcscale_1k   : constant := 2#1010#;
-      rtcscale_2k   : constant := 2#1011#;
-      rtcscale_4k   : constant := 2#1100#;
-      rtcscale_8k   : constant := 2#1101#;
-      rtcscale_16k  : constant := 2#1110#;
-      rtcscale_32k  : constant := 2#1111#;
+      rtcscale_DIVNONE : constant := 2#0000#;
+      rtcscale_DIV2    : constant := 2#0001#;
+      rtcscale_DIV4    : constant := 2#0010#;
+      rtcscale_DIV8    : constant := 2#0011#;
+      rtcscale_DIV16   : constant := 2#0100#;
+      rtcscale_DIV32   : constant := 2#0101#;
+      rtcscale_DIV64   : constant := 2#0110#;
+      rtcscale_DIV128  : constant := 2#0111#;
+      rtcscale_DIV256  : constant := 2#1000#;
+      rtcscale_DIV512  : constant := 2#1001#;
+      rtcscale_DIV1k   : constant := 2#1010#;
+      rtcscale_DIV2k   : constant := 2#1011#;
+      rtcscale_DIV4k   : constant := 2#1100#;
+      rtcscale_DIV8k   : constant := 2#1101#;
+      rtcscale_DIV16k  : constant := 2#1110#;
+      rtcscale_DIV32k  : constant := 2#1111#;
 
       type rtccfg_Type is
       record
