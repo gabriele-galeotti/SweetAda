@@ -86,7 +86,7 @@ package Malta is
    GT64120_BUS_NUMBER    : constant Bus_Number_Type := 0;
    GT64120_DEVICE_NUMBER : constant Device_Number_Type := 0;
 
-   GT_64120 : GT64120_Type with
+   GT_64120 : aliased GT64120_Type with
       Address    => To_Address (GT64120_BASEADDRESS),
       Volatile   => True,
       Import     => True,
