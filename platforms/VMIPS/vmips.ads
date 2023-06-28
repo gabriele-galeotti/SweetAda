@@ -104,4 +104,14 @@ package VMIPS is
       Import     => True,
       Convention => Ada;
 
+   -- 11.1.4 Clock
+
+   SPIMCLOCK_ADDRESS : constant := SPIMCONSOLE_BASEADDRESS + 16#20#;
+
+   SPIMCLOCK : aliased Device_Control_Type with
+      Address              => To_Address (MIPS.KSEG1_ADDRESS + SPIMCLOCK_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
 end VMIPS;

@@ -94,7 +94,6 @@ package body BSP is
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup is
-      PRId : R3000.PRId_Type;
    begin
       -------------------------------------------------------------------------
       System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
@@ -107,19 +106,23 @@ package body BSP is
       -------------------------------------------------------------------------
       Console.Print ("VMIPS", NL => True);
       -------------------------------------------------------------------------
-      PRId := R3000.CP0_PRId_Read;
-      Console.Print ("PRId: ", NL => False);
-      Console.Print (PRId.Imp, NL => False);
-      Console.Print (".", NL => False);
-      Console.Print (PRId.Rev, NL => False);
-      Console.Print_NewLine;
-      case PRId.Imp is
-         -- some datasheets indicate "3" as the value for an R3000A
-         when 2      => Console.Print ("R3000A", NL => True);
-         when 3      => Console.Print ("R3000A/R3051/R3052/R3071/R3081", NL => True);
-         when 7      => Console.Print ("R3041", NL => True);
-         when others => Console.Print ("CPU unknown", NL => True);
-      end case;
+      declare
+         PRId : R3000.PRId_Type;
+      begin
+         PRId := R3000.CP0_PRId_Read;
+         Console.Print ("PRId: ", NL => False);
+         Console.Print (PRId.Imp, NL => False);
+         Console.Print (".", NL => False);
+         Console.Print (PRId.Rev, NL => False);
+         Console.Print_NewLine;
+         case PRId.Imp is
+            -- some datasheets indicate "3" as the value for an R3000A
+            when 2      => Console.Print ("R3000A", NL => True);
+            when 3      => Console.Print ("R3000A/R3051/R3052/R3071/R3081", NL => True);
+            when 7      => Console.Print ("R3041", NL => True);
+            when others => Console.Print ("CPU unknown", NL => True);
+         end case;
+      end;
       -------------------------------------------------------------------------
       declare
          S : R3000.Status_Type;
