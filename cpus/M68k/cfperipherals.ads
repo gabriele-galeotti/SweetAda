@@ -39,7 +39,7 @@ package CFPeripherals is
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- UART
+   -- SECTION 11 UART MODULES
    ----------------------------------------------------------------------------
 
    type UART_Register_Type is (
@@ -84,10 +84,7 @@ package CFPeripherals is
       ];
 
    type UART_Type is (UART1, UART2);
-   for UART_Type use (
-                      0,
-                      16#40#
-                     );
+   for UART_Type use (0,     16#40#);
 
    -- 11.4.1.1 MODE REGISTER 1 (UMR1)
 
@@ -138,6 +135,46 @@ package CFPeripherals is
 
    -- 11.4.1.2 MODE REGISTER 2 (UMR2)
 
+   --                              6-8   5     LENGTH BITS
+   SB_0  : constant := 2#0000#; -- 0.563 1.063
+   SB_1  : constant := 2#0001#; -- 0.625 1.125
+   SB_2  : constant := 2#0010#; -- 0.688 1.188
+   SB_3  : constant := 2#0011#; -- 0.750 1.250
+   SB_4  : constant := 2#0100#; -- 0.813 1.313
+   SB_5  : constant := 2#0101#; -- 0.875 1.375
+   SB_6  : constant := 2#0110#; -- 0.938 1.438
+   SB_7  : constant := 2#0111#; -- 1.000 1.500
+   SB_8  : constant := 2#1000#; -- 1.563 1.563
+   SB_9  : constant := 2#1001#; -- 1.625 1.625
+   SB_10 : constant := 2#1010#; -- 1.688 1.688
+   SB_11 : constant := 2#1011#; -- 1.750 1.750
+   SB_12 : constant := 2#1100#; -- 1.813 1.813
+   SB_13 : constant := 2#1101#; -- 1.875 1.875
+   SB_14 : constant := 2#1110#; -- 1.938 1.938
+   SB_15 : constant := 2#1111#; -- 2.000 2.000
+
+   CM_NORMAL   : constant := 2#00#; -- Normal
+   CM_AUTOECHO : constant := 2#01#; -- Automatic Echo
+   CM_LOCLBACK : constant := 2#10#; -- Local Loopback
+   CM_REMLBACK : constant := 2#11#; -- Remote Loopback
+
+   type UMR2_Type is
+   record
+      SB    : Bits_4;  -- Stop-Bit Length Control
+      TxCTS : Boolean; -- Transmitter Clear-to-Send
+      TxRTS : Boolean; -- Transmitter Ready-to-Send
+      CM    : Bits_2;  -- Channel Mode
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for UMR2_Type use
+   record
+      SB    at 0 range 0 .. 3;
+      TxCTS at 0 range 4 .. 4;
+      TxRTS at 0 range 5 .. 5;
+      CM    at 0 range 6 .. 7;
+   end record;
+
    -- 11.4.1.3 STATUS REGISTER (USR)
 
    type USR_Type is
@@ -169,6 +206,27 @@ package CFPeripherals is
    function To_USR is new Ada.Unchecked_Conversion (Unsigned_8, USR_Type);
 
    -- 11.4.1.4 CLOCK-SELECT REGISTER (UCSR)
+
+   TCS_TIMER : constant := 2#1101#; -- TIMER
+   TCS_EXT16 : constant := 2#1110#; -- Ext. clk. x 16
+   TCS_EXT   : constant := 2#1111#; -- Ext. clk. x 1
+
+   RCS_TIMER : constant := 2#1101#; -- TIMER
+   RCS_EXT16 : constant := 2#1110#; -- Ext. clk. x 16
+   RCS_EXT   : constant := 2#1111#; -- Ext. clk. x 1
+
+   type UCSR_Type is
+   record
+      TCS : Bits_4; -- Transmitter Clock Select
+      RCS : Bits_4; -- Receiver Clock Select
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for UCSR_Type use
+   record
+      TCS at 0 range 0 .. 3;
+      RCS at 0 range 4 .. 7;
+   end record;
 
    -- 11.4.1.5 COMMAND REGISTER (UCR)
 
@@ -211,20 +269,177 @@ package CFPeripherals is
 
    -- 11.4.1.8 INPUT PORT CHANGE REGISTER (UIPCR)
 
+   type UIPCR_Type is
+   record
+      CTS       : Bits_1;           -- Current State
+      Reserved1 : Bits_3 := 2#111#;
+      COS       : Boolean;          -- Change-of-State
+      Reserved2 : Bits_3 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for UIPCR_Type use
+   record
+      CTS       at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 3;
+      COS       at 0 range 4 .. 4;
+      Reserved2 at 0 range 5 .. 7;
+   end record;
+
    -- 11.4.1.9 AUXILIARY CONTROL REGISTER (UACR)
+
+   type UACR_Type is
+   record
+      IEC      : Boolean;     -- Input Enable Control
+      Reserved : Bits_7 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for UACR_Type use
+   record
+      IEC      at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
 
    -- 11.4.1.10 INTERRUPT STATUS REGISTER (UISR)
 
+   type UISR_Type is
+   record
+      TxRDY    : Boolean; -- Transmitter Ready
+      RxRDY    : Boolean; -- Receiver Ready or FIFO Full
+      DB       : Boolean; -- Delta Break
+      Reserved : Bits_4;
+      COS      : Boolean; -- Change-of-State
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for UISR_Type use
+   record
+      TxRDY    at 0 range 0 .. 0;
+      RxRDY    at 0 range 1 .. 1;
+      DB       at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 6;
+      COS      at 0 range 7 .. 7;
+   end record;
+
    -- 11.4.1.11 INTERRUPT MASK REGISTER (UIMR)
 
-   -- 11.4.1.12 TIMER UPPER PRELOAD REGISTER 1 (UBG1)
-
-   -- 11.4.1.13 TIMER UPPER PRELOAD REGISTER 2 (UBG2)
-
-   -- 11.4.1.14 INTERRUPT VECTOR REGISTER (UIVR)
+   type UIMR_Type is
+   record
+      TxRDY    : Boolean;     -- Transmitter Ready
+      FFULL    : Boolean;     -- FIFO Full
+      DB       : Boolean;     -- Delta Break
+      Reserved : Bits_4 := 0;
+      COS      : Boolean;     -- Change-of-State
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for UIMR_Type use
+   record
+      TxRDY    at 0 range 0 .. 0;
+      FFULL    at 0 range 1 .. 1;
+      DB       at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 6;
+      COS      at 0 range 7 .. 7;
+   end record;
 
    -- 11.4.1.14.1 Input Port Register (UIP)
 
+   type UIP_Type is
+   record
+      nCTS     : Boolean; -- Current State
+      Reserved : Bits_7;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for UIP_Type use
+   record
+      nCTS     at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
    -- 11.4.1.14.2 Output Port Data Registers (UOP1, UOP0)
+
+   type UOP_Type is
+   record
+      nRTS     : Boolean; -- Output Port Parallel Output
+      Reserved : Bits_7;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for UOP_Type use
+   record
+      nRTS     at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   ----------------------------------------------------------------------------
+   -- SECTION 13 TIMER MODULE
+   ----------------------------------------------------------------------------
+
+   -- 13.4.1.1 TIMER MODE REGISTER (TMR)
+
+   OM_PULSE  : constant := 0; -- Active-low pulse for one system clock cycle (30ns at 33 MHz)
+   OM_TOGGLE : constant := 1; -- Toggle output
+
+   type TMR_Type is
+   record
+      RST : Boolean;    -- Reset Timer
+      CLK : Bits_2;     -- Input Clock Source for the Timer
+      FRR : Boolean;    -- Free Run/Restart
+      ORI : Boolean;    -- Output Reference Interrupt Enable
+      OM  : Bits_1;     -- Output Mode
+      CE  : Bits_2;     -- Capture Edge and Enable Interrupt
+      PS  : Unsigned_8; -- Prescaler Value
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for TMR_Type use
+   record
+      RST at 0 range 0 .. 0;
+      CLK at 0 range 1 .. 2;
+      FRR at 0 range 3 .. 3;
+      ORI at 0 range 4 .. 4;
+      OM  at 0 range 5 .. 5;
+      CE  at 0 range 6 .. 7;
+      PS  at 0 range 8 .. 15;
+   end record;
+
+   -- 13.4.1.5 TIMER EVENT REGISTER (TER)
+
+   type TER_Type is
+   record
+      CAP      : Boolean;     -- Capture Event
+      REF      : Boolean;     -- Output Reference Event
+      Reserved : Bits_6 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TER_Type use
+   record
+      CAP      at 0 range 0 .. 0;
+      REF      at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 7;
+   end record;
+
+   -- 13.4.1 Understanding the General-Purpose Timer Registers
+
+   type TIMER_Type is
+   record
+      TMR : TMR_Type    with Volatile_Full_Access => True;
+      TRR : Unsigned_16 with Volatile_Full_Access => True;
+      TCR : Unsigned_16 with Volatile_Full_Access => True;
+      TCN : Unsigned_16 with Volatile_Full_Access => True;
+      TER : TER_Type    with Volatile_Full_Access => True;
+   end record with
+      Size => 16#112# * 8;
+   for TIMER_Type use
+   record
+      TMR at 16#100# range 0 .. 15;
+      TRR at 16#104# range 0 .. 15;
+      TCR at 16#108# range 0 .. 15;
+      TCN at 16#10C# range 0 .. 15;
+      TER at 16#111# range 0 .. 7;
+   end record;
 
 end CFPeripherals;
