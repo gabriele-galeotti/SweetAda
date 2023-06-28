@@ -113,6 +113,39 @@ package RISCV is
    procedure MTVEC_Write (Mtvec : in MTVEC_Type) with
       Inline => True;
 
+   -- Machine Cause (mcause)
+
+   -- Interrupt = 1
+   EXC_SWINT         : constant := 3;  -- Machine software interrupt
+   EXC_TIMERINT      : constant := 7;  -- Machine timer interrupt
+   EXC_EXTINT        : constant := 11; -- Machine external interrupt
+   -- Interrupt = 0
+   EXC_INSTRADDRMIS  : constant := 0;  -- Instruction address misaligned
+   EXC_INSTRACCFAULT : constant := 1;  -- Instruction access fault
+   EXC_INSTRILL      : constant := 2;  -- Illegal instruction
+   EXC_BREAKPT       : constant := 3;  -- Breakpoint
+   EXC_LOADADDRMIS   : constant := 4;  -- Load address misaligned
+   EXC_LOADACCFAULT  : constant := 5;  -- Load access fault
+   EXC_STAMOADDRMIS  : constant := 6;  -- Store/AMO address misaligned
+   EXC_STAMOACCFAULT : constant := 7;  -- Store/AMO access fault
+   EXC_ENVCALLUMODE  : constant := 8;  -- Environment call from U-mode
+   EXC_ENVCALLMMODE  : constant := 11; -- Environment call from M-mode
+
+   type MCAUSE_Type is
+   record
+      Exception_Code : Bits_10;  -- A code identifying the last exception.
+      Reserved       : Bits_21;
+      Interrupt      : Boolean;  -- 1, if the trap was caused by an interrupt; 0 otherwise.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for MCAUSE_Type use
+   record
+      Exception_Code at 0 range 0 .. 9;
+      Reserved       at 0 range 10 .. 30;
+      Interrupt      at 0 range 31 .. 31;
+   end record;
+
    ----------------------------------------------------------------------------
    -- CLIC/CLINT
    ----------------------------------------------------------------------------
