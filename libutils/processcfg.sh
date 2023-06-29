@@ -92,11 +92,23 @@ fi
 if [ "x${SYMBOLS}" != "x" ] ; then
   sed_command_string=""
   for symbol in ${SYMBOLS} ; do
-    variable=$(printf "%s" "${symbol}" | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|")
+    variable=$(printf "%s" "${symbol}" | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|") # "
     value=$(eval printf \"%s\" \"\$${variable}\")
     if [ "x${value}" = "x" ] ; then
       log_print_error "${SCRIPT_FILENAME}: *** Warning: variable \"${variable}\" has no value."
     fi
+    case ${value} in
+      \"*\")
+        stringvalue=$(printf "${value}" | sed -e "s|^\"\(.*\)\"\$|\1|")
+        value="${stringvalue}"
+        ;;
+      0x*)
+        hexvalue=$(printf "${value}" | sed -e "s|^0x||")
+        value="16#${hexvalue}#"
+        ;;
+      *)
+        ;;
+    esac
     sed_command_string="${sed_command_string} -e \"s|${symbol}|${value}|\""
   done
   printf "%s" "${sed_command_string} \"${INPUT_FILENAME}\"" | xargs sed > "${OUTPUT_FILENAME}" 2> /dev/null
