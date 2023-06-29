@@ -40,20 +40,20 @@ package MVME162FX is
    LCSR_ADDRESS : constant := 16#FFF4_0060#;
 
    LCSR : aliased Unsigned_32 with
-      Address    => To_Address (LCSR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (LCSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    -- 3.44 RESET Switch Control Register
 
    RESET_SCR_ADDRESS : constant := 16#FFF4_2044#;
 
    RESET_SCR : aliased Unsigned_8 with
-      Address    => To_Address (RESET_SCR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (RESET_SCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 3.9 MC2 chip
@@ -79,9 +79,9 @@ package MVME162FX is
    end record;
 
    MC2 : aliased MC2_Type with
-      Address    => To_Address (MC2_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+      Address              => To_Address (MC2_BASEADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
 end MVME162FX;
