@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
+with Configure;
 with LLutils;
 with MMIO;
 with CFPeripherals;
@@ -38,13 +39,11 @@ package body SBC5206 is
 
    -- Local subprograms
 
-   function Register_Read (
-                           Register   : UART_Register_Type
-                          ) return Unsigned_8;
-   procedure Register_Write (
-                             Register   : in UART_Register_Type;
-                             Value      : in Unsigned_8
-                            );
+   function Register_Read
+      (Register   : UART_Register_Type) return Unsigned_8;
+   procedure Register_Write
+      (Register   : in UART_Register_Type;
+       Value      : in Unsigned_8);
 
    --========================================================================--
    --                                                                        --
@@ -57,42 +56,31 @@ package body SBC5206 is
    ----------------------------------------------------------------------------
    -- Register_Read
    ----------------------------------------------------------------------------
-   function Register_Read (
-                           Register   : UART_Register_Type
-                          ) return Unsigned_8 is
+   function Register_Read
+      (Register   : UART_Register_Type) return Unsigned_8
+   is
    begin
-      return MMIO.Read_U8 (LLutils.Build_Address (
-                                               To_Address (MBAR_VALUE),
-                                               UART_Register_Offset (Register),
-                                               0
-                                              ));
+      return MMIO.Read_U8
+         (LLutils.Build_Address
+            (To_Address (Configure.MBAR_VALUE),
+             UART_Register_Offset (Register),
+             0));
    end Register_Read;
 
    ----------------------------------------------------------------------------
    -- Register_Write
    ----------------------------------------------------------------------------
-   procedure Register_Write (
-                             Register   : in UART_Register_Type;
-                             Value      : in Unsigned_8
-                            ) is
+   procedure Register_Write
+      (Register   : in UART_Register_Type;
+       Value      : in Unsigned_8)
+   is
    begin
-      MMIO.Write_U8 (LLutils.Build_Address (
-                                         To_Address (MBAR_VALUE),
-                                         UART_Register_Offset (Register),
-                                         0
-                                        ), Value);
+      MMIO.Write_U8
+         (LLutils.Build_Address
+            (To_Address (Configure.MBAR_VALUE),
+             UART_Register_Offset (Register),
+             0), Value);
    end Register_Write;
-
-   ----------------------------------------------------------------------------
-   -- Init
-   ----------------------------------------------------------------------------
-   procedure Init is
-   begin
-      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_RESET, others => 0)));
-      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_RxRESET, others => 0)));
-      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_TxRESET, others => 0)));
-      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_ENABLE, TC => TC_ENABLE, MISC => MISC_NONE, others => 0)));
-   end Init;
 
    ----------------------------------------------------------------------------
    -- TX
@@ -117,5 +105,16 @@ package body SBC5206 is
       end loop;
       Data := Register_Read (URB);
    end RX;
+
+   ----------------------------------------------------------------------------
+   -- Init
+   ----------------------------------------------------------------------------
+   procedure Init is
+   begin
+      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_RESET, others => <>)));
+      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_RxRESET, others => <>)));
+      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_TxRESET, others => <>)));
+      Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_ENABLE, TC => TC_ENABLE, MISC => MISC_NONE, others => <>)));
+   end Init;
 
 end SBC5206;

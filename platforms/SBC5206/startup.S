@@ -11,6 +11,7 @@
 #define __ASSEMBLER__ 1
 
 #include <coldfire.h>
+#include "configure.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +29,6 @@ _start:
 
                 // QEMU cannot handle $C0F operations (MCF5206 MBAR)
 #if 0
-# define MBAR_VALUE 0x10000000  /* Arnewsh SBC5206 board default */
                 move.l  #MBAR_VALUE,%d0                 // MBAR programming
                 ori.l   #1,%d0                          // valid bit = 1 (validate MBAR)
                 movec.l %d0,#MBAR                       // CFPRM 1.5.10

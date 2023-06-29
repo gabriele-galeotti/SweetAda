@@ -8,6 +8,9 @@ package Configure is
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
+   -- basic configuration parameters
+   MBAR_VALUE : constant := @MBAR_VALUE@;
+
    -- IOEMU
    USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
 

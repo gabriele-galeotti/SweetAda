@@ -13,6 +13,9 @@ OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 
+# Arnewsh SBC5206 board default
+export MBAR_VALUE := 0x10000000
+
 export USE_QEMU_IOEMU := False
 
 USE_APPLICATION := test-SBC5206

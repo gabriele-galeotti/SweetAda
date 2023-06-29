@@ -29,12 +29,11 @@ package SBC5206 is
 
    use Interfaces;
 
-   VBR        : constant := 16#0801#;
-   MBAR       : constant := 16#0C0F#;
-   MBAR_VALUE : constant := 16#1000_0000#; -- QEMU Arnewsh M5206AN board default
+   VBR  : constant := 16#0801#;
+   MBAR : constant := 16#0C0F#;
 
-   procedure Init;
    procedure TX (Data : in Unsigned_8);
    procedure RX (Data : out Unsigned_8);
+   procedure Init;
 
 end SBC5206;

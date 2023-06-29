@@ -6,4 +6,6 @@
 #define CPU       "@CPU@"
 #define CPU_MODEL "@CPU_MODEL@"
 
+#define MBAR_VALUE @MBAR_VALUE@
+
 #endif /* _CONFIGURE_H */
