@@ -133,9 +133,9 @@ package RISCV is
 
    type MCAUSE_Type is
    record
-      Exception_Code : Bits_10;  -- A code identifying the last exception.
+      Exception_Code : Bits_10; -- A code identifying the last exception.
       Reserved       : Bits_21;
-      Interrupt      : Boolean;  -- 1, if the trap was caused by an interrupt; 0 otherwise.
+      Interrupt      : Boolean; -- 1, if the trap was caused by an interrupt; 0 otherwise.
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
