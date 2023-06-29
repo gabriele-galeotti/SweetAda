@@ -55,6 +55,19 @@ _start:
 2:
 
                 //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                move.l  #_sbss,%a0
+                move.l  #_ebss,%a1
+1:              cmp.l   %a0,%a1
+                beq.s   2f
+                clr.b   %a0@+
+                bra.s   1b
+2:
+
+                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

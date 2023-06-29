@@ -40,10 +40,13 @@ package body SBC5206 is
    -- Local subprograms
 
    function Register_Read
-      (Register   : UART_Register_Type) return Unsigned_8;
+      (Register   : UART_Register_Type)
+      return Unsigned_8
+      with Inline => True;
    procedure Register_Write
       (Register   : in UART_Register_Type;
-       Value      : in Unsigned_8);
+       Value      : in Unsigned_8)
+      with Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -57,8 +60,9 @@ package body SBC5206 is
    -- Register_Read
    ----------------------------------------------------------------------------
    function Register_Read
-      (Register   : UART_Register_Type) return Unsigned_8
-   is
+      (Register   : UART_Register_Type)
+      return Unsigned_8
+      is
    begin
       return MMIO.Read_U8
          (LLutils.Build_Address
@@ -73,7 +77,7 @@ package body SBC5206 is
    procedure Register_Write
       (Register   : in UART_Register_Type;
        Value      : in Unsigned_8)
-   is
+      is
    begin
       MMIO.Write_U8
          (LLutils.Build_Address
@@ -85,7 +89,9 @@ package body SBC5206 is
    ----------------------------------------------------------------------------
    -- TX
    ----------------------------------------------------------------------------
-   procedure TX (Data : in Unsigned_8) is
+   procedure TX
+      (Data : in Unsigned_8)
+      is
    begin
       -- wait for transmitter buffer empty
       loop
@@ -97,7 +103,9 @@ package body SBC5206 is
    ----------------------------------------------------------------------------
    -- RX
    ----------------------------------------------------------------------------
-   procedure RX (Data : out Unsigned_8) is
+   procedure RX
+      (Data : out Unsigned_8)
+      is
    begin
       -- wait for data available
       loop
@@ -109,7 +117,8 @@ package body SBC5206 is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
    begin
       Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_RESET, others => <>)));
       Register_Write (UCR, To_U8 (UCR_Type'(RC => RC_NONE, TC => TC_NONE, MISC => MISC_RxRESET, others => <>)));
