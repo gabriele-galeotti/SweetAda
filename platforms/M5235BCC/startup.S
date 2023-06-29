@@ -95,7 +95,9 @@ _start:
 #endif
 
 #if 0
-                // clear bss segment
+                //
+                // Initialize .bss section.
+                //
                 move.l  #___BSS_START,%a0
                 move.l  #___BSS_END,%a1
 bss1:           cmp.l   %a0,%a1
