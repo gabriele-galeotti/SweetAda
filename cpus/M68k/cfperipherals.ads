@@ -42,25 +42,26 @@ package CFPeripherals is
    -- SECTION 11 UART MODULES
    ----------------------------------------------------------------------------
 
-   type UART_Register_Type is (
-                               UMR1,
-                               UMR2,
-                               USR,
-                               UCSR,
-                               UCR,
-                               URB,
-                               UTB,
-                               UIPCR,
-                               UACR,
-                               UISR,
-                               UIMR,
-                               UBG1,
-                               UBG2,
-                               UIVR,
-                               UIP,
-                               UOP1,
-                               UOP0
-                              );
+   type UART_Register_Type is
+      (
+       UMR1,
+       UMR2,
+       USR,
+       UCSR,
+       UCR,
+       URB,
+       UTB,
+       UIPCR,
+       UACR,
+       UISR,
+       UIMR,
+       UBG1,
+       UBG2,
+       UIVR,
+       UIP,
+       UOP1,
+       UOP0
+      );
 
    UART_Register_Offset : constant array (UART_Register_Type) of Storage_Offset :=
       [
@@ -82,9 +83,6 @@ package CFPeripherals is
        UOP1  => 16#0178#,
        UOP0  => 16#017C#
       ];
-
-   type UART_Type is (UART1, UART2);
-   for UART_Type use (0,     16#40#);
 
    -- 11.4.1.1 MODE REGISTER 1 (UMR1)
 
@@ -175,6 +173,9 @@ package CFPeripherals is
       CM    at 0 range 6 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (UMR2_Type, Unsigned_8);
+   function To_UMR2 is new Ada.Unchecked_Conversion (Unsigned_8, UMR2_Type);
+
    -- 11.4.1.3 STATUS REGISTER (USR)
 
    type USR_Type is
@@ -228,6 +229,9 @@ package CFPeripherals is
       RCS at 0 range 4 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (UCSR_Type, Unsigned_8);
+   function To_UCSR is new Ada.Unchecked_Conversion (Unsigned_8, UCSR_Type);
+
    -- 11.4.1.5 COMMAND REGISTER (UCR)
 
    RC_NONE    : constant := 2#00#; -- No Action Taken
@@ -249,19 +253,19 @@ package CFPeripherals is
 
    type UCR_Type is
    record
-      RC     : Bits_2; -- Receiver Commands
-      TC     : Bits_2; -- Transmitter Commands
-      MISC   : Bits_3; -- Miscellaneous Commands
-      Unused : Bits_1;
+      RC       : Bits_2; -- Receiver Commands
+      TC       : Bits_2; -- Transmitter Commands
+      MISC     : Bits_3; -- Miscellaneous Commands
+      Reserved : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
    for UCR_Type use
    record
-      RC     at 0 range 0 .. 1;
-      TC     at 0 range 2 .. 3;
-      MISC   at 0 range 4 .. 6;
-      Unused at 0 range 7 .. 7;
+      RC       at 0 range 0 .. 1;
+      TC       at 0 range 2 .. 3;
+      MISC     at 0 range 4 .. 6;
+      Reserved at 0 range 7 .. 7;
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (UCR_Type, Unsigned_8);
@@ -286,6 +290,9 @@ package CFPeripherals is
       Reserved2 at 0 range 5 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (UIPCR_Type, Unsigned_8);
+   function To_UIPCR is new Ada.Unchecked_Conversion (Unsigned_8, UIPCR_Type);
+
    -- 11.4.1.9 AUXILIARY CONTROL REGISTER (UACR)
 
    type UACR_Type is
@@ -300,6 +307,9 @@ package CFPeripherals is
       IEC      at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (UACR_Type, Unsigned_8);
+   function To_UACR is new Ada.Unchecked_Conversion (Unsigned_8, UACR_Type);
 
    -- 11.4.1.10 INTERRUPT STATUS REGISTER (UISR)
 
@@ -322,6 +332,9 @@ package CFPeripherals is
       COS      at 0 range 7 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (UISR_Type, Unsigned_8);
+   function To_UISR is new Ada.Unchecked_Conversion (Unsigned_8, UISR_Type);
+
    -- 11.4.1.11 INTERRUPT MASK REGISTER (UIMR)
 
    type UIMR_Type is
@@ -343,6 +356,9 @@ package CFPeripherals is
       COS      at 0 range 7 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (UIMR_Type, Unsigned_8);
+   function To_UIMR is new Ada.Unchecked_Conversion (Unsigned_8, UIMR_Type);
+
    -- 11.4.1.14.1 Input Port Register (UIP)
 
    type UIP_Type is
@@ -358,6 +374,9 @@ package CFPeripherals is
       Reserved at 0 range 1 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (UIP_Type, Unsigned_8);
+   function To_UIP is new Ada.Unchecked_Conversion (Unsigned_8, UIP_Type);
+
    -- 11.4.1.14.2 Output Port Data Registers (UOP1, UOP0)
 
    type UOP_Type is
@@ -372,6 +391,9 @@ package CFPeripherals is
       nRTS     at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (UOP_Type, Unsigned_8);
+   function To_UOP is new Ada.Unchecked_Conversion (Unsigned_8, UOP_Type);
 
    ----------------------------------------------------------------------------
    -- SECTION 13 TIMER MODULE
@@ -426,11 +448,11 @@ package CFPeripherals is
 
    type TIMER_Type is
    record
-      TMR : TMR_Type    with Volatile_Full_Access => True;
-      TRR : Unsigned_16 with Volatile_Full_Access => True;
-      TCR : Unsigned_16 with Volatile_Full_Access => True;
-      TCN : Unsigned_16 with Volatile_Full_Access => True;
-      TER : TER_Type    with Volatile_Full_Access => True;
+      TMR : TMR_Type;
+      TRR : Unsigned_16;
+      TCR : Unsigned_16;
+      TCN : Unsigned_16;
+      TER : TER_Type;
    end record with
       Size => 16#112# * 8;
    for TIMER_Type use
