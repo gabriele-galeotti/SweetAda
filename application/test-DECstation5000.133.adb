@@ -43,12 +43,13 @@ package body Application is
          declare
             Delay_Count : Integer;
          begin
-            Delay_Count := (if Configure.BOOT_FROM_NETWORK then 5_000_000 else 100_000);
+            Delay_Count := (if Configure.BOOT_FROM_NETWORK then 5_000_000 else 500_000);
             loop
                IOASIC_SSR.LED0 := False;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
                IOASIC_SSR.LED0 := True;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+               Console.Print (".");
             end loop;
          end;
       end if;
