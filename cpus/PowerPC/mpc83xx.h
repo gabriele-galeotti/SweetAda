@@ -1,6 +1,6 @@
 
 /*
- * mpc8306.h - MPC8306 architecture definitions.
+ * mpc83xx.h - MPC83xx architecture definitions.
  *
  * Copyright (C) 2020-2023 Gabriele Galeotti
  *
@@ -80,4 +80,4 @@
 #define  MCF  0x80
 #define I2C1DR  (IMMRBAR_VALUE + 0x00003010)
 
-#endif /* _MPC8306_H */
+#endif /* _MPC83xx_H */

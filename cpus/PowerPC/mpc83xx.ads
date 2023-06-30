@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ mpc8306.ads                                                                                               --
+-- __FLN__ mpc83xx.ads                                                                                               --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -20,7 +20,7 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package MPC8306 is
+package MPC83XX is
 
    --========================================================================--
    --                                                                        --
@@ -279,4 +279,4 @@ package MPC8306 is
       Import               => True,
       Convention           => Ada;
 
-end MPC8306;
+end MPC83XX;
