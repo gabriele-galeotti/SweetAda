@@ -91,8 +91,8 @@ _start:
                 la      $t1,_ebss
                 b       2f
                 nop
-1:              sw      $0,($t0)
-                addiu   $t0,4
+1:              sw      $zero,0($t0)
+                addiu   $t0,$t0,4
 2:              bne     $t0,$t1,1b
                 nop
 
