@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ memory_functions-bcopy.adb                                                                                --
+-- __FLN__ memory_functions-movemem.adb                                                                              --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,14 +16,14 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Memory_Functions)
-procedure Bcopy (
-                 S1 : in System.Address;
-                 S2 : in System.Address;
-                 N  : in Interfaces.C.size_t
-                ) is
+procedure Movemem (
+                   S1 : in System.Address;
+                   S2 : in System.Address;
+                   N  : in Bits.Bytesize
+                  ) is
    Src    : constant System.Address := S1;
    Dest   : constant System.Address := S2;
    Unused : System.Address with Unreferenced => True;
 begin
    Unused := Memmove (Dest, Src, N);
-end Bcopy;
+end Movemem;

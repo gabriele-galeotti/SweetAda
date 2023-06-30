@@ -68,15 +68,6 @@ package Memory_Functions is
       Convention    => C,
       External_Name => "memset";
 
-   procedure Bcopy (
-                    S1 : in System.Address;
-                    S2 : in System.Address;
-                    N  : in Interfaces.C.size_t
-                   ) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "bcopy";
-
    procedure Cmpmem (
                      S1 : in     System.Address;
                      S2 : in     System.Address;
@@ -88,13 +79,22 @@ package Memory_Functions is
       External_Name => "cmpmem";
 
    procedure Cpymem (
-                     S1 : in System.Address; -- source
-                     S2 : in System.Address; -- destination
+                     S1 : in System.Address;
+                     S2 : in System.Address;
                      N  : in Bits.Bytesize
                     ) with
       Export        => True,
       Convention    => C,
       External_Name => "cpymem";
+
+   procedure Movemem (
+                      S1 : in System.Address;
+                      S2 : in System.Address;
+                      N  : in Bits.Bytesize
+                     ) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "movemem";
 
    procedure Setmem (
                      S : in System.Address;

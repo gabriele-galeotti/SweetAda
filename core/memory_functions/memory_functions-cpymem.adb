@@ -25,5 +25,5 @@ procedure Cpymem (
    Dest   : constant System.Address := S2;
    Unused : System.Address with Unreferenced => True;
 begin
-   Unused := Memmove (Dest, Src, N);
+   Unused := Memcpy (Dest, Src, N);
 end Cpymem;

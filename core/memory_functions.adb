@@ -99,18 +99,6 @@ package body Memory_Functions is
    separate;
 
    ----------------------------------------------------------------------------
-   -- Bcopy
-   ----------------------------------------------------------------------------
-   -- Ada implementation of the equivalent C library function.
-   ----------------------------------------------------------------------------
-   procedure Bcopy (
-                    S1 : in System.Address;
-                    S2 : in System.Address;
-                    N  : in Interfaces.C.size_t
-                   ) is
-   separate;
-
-   ----------------------------------------------------------------------------
    -- Cmpmem
    ----------------------------------------------------------------------------
    -- Ada procedure version of Memcmp.
@@ -133,6 +121,18 @@ package body Memory_Functions is
                      S2 : in System.Address;
                      N  : in Bits.Bytesize
                     ) is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Movemem
+   ----------------------------------------------------------------------------
+   -- Ada procedure version of Memmove.
+   ----------------------------------------------------------------------------
+   procedure Movemem (
+                      S1 : in System.Address;
+                      S2 : in System.Address;
+                      N  : in Bits.Bytesize
+                     ) is
    separate;
 
    ----------------------------------------------------------------------------
