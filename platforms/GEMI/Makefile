@@ -35,21 +35,8 @@ endif
 LIBRARY_NAME := platform
 
 OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
-
-# overriding standard last_chance_handler unit requires a little bit of care,
-# see configuration.in
-# 1) add the unit to the library
-OBJECTS += $(OBJ_DIRECTORY)/last_chance_handler.o
-# 2) state the dependencies in terms of standard core units, that could be in
-# turn overriden
-# NOTE: in this case the prerequisite is empty because there is no dependency
-# on $(KERNEL_PARENT_PATH)/$(SPEC_ABORT_LIBRARY), so it is just a placeholder
-$(OBJ_DIRECTORY)/last_chance_handler.o :
-# 3) states all other explicit dependencies
-$(OBJ_DIRECTORY)/last_chance_handler.o : \
-  $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/sh.ads \
-  $(KERNEL_PARENT_PATH)/$(CPU_DIRECTORY)/sh.adb \
-  gemi.ads
+OBJECTS += $(foreach f,$(ADDITIONAL_ADB_OBJECTS:.adb=.o),$(OBJ_DIRECTORY)/$(f))
+OBJECTS += $(foreach f,$(ADDITIONAL_ADS_OBJECTS:.ads=.o),$(OBJ_DIRECTORY)/$(f))
 
 .PHONY : all
 all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a

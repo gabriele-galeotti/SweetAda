@@ -23,7 +23,6 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                *(.eh_frame)
                 . = ALIGN(0x10);
                 _etext = .;
         } > ROM
@@ -51,10 +50,6 @@ SECTIONS
                 _sbss = .;
                 *(.bss)
                 *(.bss.*)
-                *(.sbss)
-                *(.sbss.*)
-                *(.dynbss)
-                *(.scommon)
                 *(COMMON)
                 . = ALIGN(0x10);
                 _ebss = .;

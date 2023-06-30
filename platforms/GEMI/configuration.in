@@ -22,7 +22,10 @@ OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0xff
 
 # override standard last_chance_handler unit
 export IMPLICIT_CORE_UNITS := $(filter-out last_chance_handler,$(IMPLICIT_CORE_UNITS))
-export SPEC_LAST_CHANCE_HANDLER := $(CORE_DIRECTORY)/last_chance_handler.ads
+ifeq ($(BUILD_MODE),GNATMAKE)
+export ADDITIONAL_ADB_OBJECTS := last_chance_handler.adb
+export ADDITIONAL_ADS_OBJECTS := last_chance_handler.ads
+endif
 
 USE_APPLICATION := test-GEMI
 
