@@ -32,6 +32,22 @@ _start:
                 mov.l   REF(SVC_stack),r15
 
                 //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                mov.l   REF(_sbss),r2
+                mov.l   REF(_ebss),r3
+                xor     r1,r1
+1:              cmp/eq  r3,r2
+                bt      2f
+                nop
+                mov.l   @r2+,r1
+                bra     1b
+                nop
+2:
+
+                //
                 // Jump to high-level code.
                 //
                 mov.l   REF(_ada_main),r0
@@ -46,6 +62,8 @@ dead:           bra     .
                 .align  4
 DEF_LREF(SVC_stack)
 DEF_EREF(vector_table)
+DEF_EREF(_sbss)
+DEF_EREF(_ebss)
 DEF_EREF(adainit)
 DEF_EREF(_ada_main)
 
