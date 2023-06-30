@@ -1070,6 +1070,14 @@ configure-start :
 	@$(call echo-print,"$(PLATFORM): start configuration.")
 	@$(call echo-print,"")
 
+.PHONY : configure-gnatadc
+configure-gnatadc :
+	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
+
+.PHONY : configure-gpr
+configure-gpr :
+	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
+
 .PHONY : configure-subdirs
 configure-subdirs :
 	@$(MAKE) $(MAKE_APPLICATION) configure
@@ -1079,14 +1087,6 @@ configure-subdirs :
 	@$(MAKE) $(MAKE_DRIVERS) configure
 	@$(MAKE) $(MAKE_MODULES) configure
 	@$(MAKE) $(MAKE_PLATFORM) configure
-
-.PHONY : configure-gnatadc
-configure-gnatadc :
-	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
-
-.PHONY : configure-gpr
-configure-gpr :
-	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
 
 .PHONY : configure-end
 configure-end :

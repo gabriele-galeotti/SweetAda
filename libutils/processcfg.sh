@@ -92,7 +92,7 @@ fi
 if [ "x${SYMBOLS}" != "x" ] ; then
   sed_command_string=""
   for symbol in ${SYMBOLS} ; do
-    variable=$(printf "%s" "${symbol}" | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|") # "
+    variable=$(printf "%s" "${symbol}" | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|")
     value=$(eval printf \"%s\" \"\$${variable}\")
     if [ "x${value}" = "x" ] ; then
       log_print_error "${SCRIPT_FILENAME}: *** Warning: variable \"${variable}\" has no value."
