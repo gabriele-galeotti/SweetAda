@@ -8,8 +8,8 @@
  * Please consult the LICENSE.txt file located in the top-level directory.
  */
 
-#ifndef _MPC8306_H
-#define _MPC8306_H 1
+#ifndef _MPC83xx_H
+#define _MPC83xx_H 1
 
 #define IMMRBAR_DEFAULT 0xFF400000
 #define IMMRBAR_VALUE   0xFF400000
