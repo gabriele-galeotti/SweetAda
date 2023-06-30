@@ -22,7 +22,7 @@ with MMIO;
 with Bits;
 with PowerPC;
 with e300;
-with MPC8306;
+with MPC83XX;
 with Switch;
 with Console;
 
@@ -73,15 +73,15 @@ package body BSP is
       CPU_PVR          : PowerPC.PVR_Type;
    begin
       -- 6.3.2.5 System I/O Configuration Register 1 (SICR_1) -----------------
-      MPC8306.SICR_1 := 16#0001_165F#; -- UART1 mapped on I/O pads
+      MPC83XX.SICR_1 := 16#0001_165F#; -- UART1 mapped on I/O pads
       -- 6.3.2.6 System I/O Configuration Register 2 (SICR_2) -----------------
-      MPC8306.SICR_2 := 16#A005_0475#; -- GPIO22 function
+      MPC83XX.SICR_2 := 16#A005_0475#; -- GPIO22 function
       -- 21.3.1 GPIOn Direction Register (GP1DIR–GP2DIR) ----------------------
-      MPC8306.GP1DIR := 16#0000_0200#; -- GPIO22 = output
+      MPC83XX.GP1DIR := 16#0000_0200#; -- GPIO22 = output
       -- 21.3.2 GPIOn Open Drain Register (GP1ODR–GP2ODR) ---------------------
-      MPC8306.GP1ODR := 16#FFFF_FDFF#; -- GPIO22 = actively driven
+      MPC83XX.GP1ODR := 16#FFFF_FDFF#; -- GPIO22 = actively driven
       -- UARTs ----------------------------------------------------------------
-      UART1_Descriptor.Base_Address  := To_Address (MPC8306.UART1_BASEADDRESS);
+      UART1_Descriptor.Base_Address  := To_Address (MPC83XX.UART1_BASEADDRESS);
       UART1_Descriptor.Scale_Address := 0;
       UART1_Descriptor.Baud_Clock    := Switch.SYSTEM_CLOCK;
       UART1_Descriptor.Read_8        := MMIO.Read'Access;
@@ -89,7 +89,7 @@ package body BSP is
       UART1_Descriptor.Data_Queue    := [[others => 0], 0, 0, 0];
       UART16x50.Init (UART1_Descriptor);
       UART16x50.Baud_Rate_Set (UART1_Descriptor, Baud_Rate_Type'Enum_Rep (BR_115200));
-      UART2_Descriptor.Base_Address  := To_Address (MPC8306.UART2_BASEADDRESS);
+      UART2_Descriptor.Base_Address  := To_Address (MPC83XX.UART2_BASEADDRESS);
       UART2_Descriptor.Scale_Address := 0;
       UART2_Descriptor.Baud_Clock    := Switch.SYSTEM_CLOCK;
       UART2_Descriptor.Read_8        := MMIO.Read'Access;
@@ -108,8 +108,8 @@ package body BSP is
       Console.Print (CPU_PVR.Version, Prefix => "PVR (ver): ", NL => True);
       Console.Print (CPU_PVR.Revision, Prefix => "PVR (rev): ", NL => True);
       Console.Print (e300.SVR_Read, Prefix => "SVR: ", NL => True);
-      Console.Print (MPC8306.RCWLR, Prefix => "RCWLR: ", NL => True);
-      Console.Print (MPC8306.RCWHR, Prefix => "RCWHR: ", NL => True);
+      Console.Print (MPC83XX.RCWLR, Prefix => "RCWLR: ", NL => True);
+      Console.Print (MPC83XX.RCWHR, Prefix => "RCWHR: ", NL => True);
       -------------------------------------------------------------------------
    end Setup;
 

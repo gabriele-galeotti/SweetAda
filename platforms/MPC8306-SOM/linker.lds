@@ -48,10 +48,6 @@ SECTIONS
                 _bss_start = .;
                 *(.bss)
                 *(.bss.*)
-                *(.sbss)
-                *(.sbss.*)
-                *(.dynbss)
-                *(.scommon)
                 *(COMMON)
                 . = ALIGN(0x10);
                 _bss_end = .;

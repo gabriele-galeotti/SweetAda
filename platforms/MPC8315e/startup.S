@@ -11,7 +11,7 @@
 #define __ASSEMBLER__ 1
 
 #include <e300.h>
-//#include <mpc8315e.h>
+#include <mpc83xx.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -174,9 +174,13 @@ _start:
                 //lis     r13,_SDA_BASE_@h
                 //ori     r13,r13,_SDA_BASE_@l
 
-                .extern program_main
                 //bl      toggle_led
-                b       program_main
+
+                //
+                // Jump to high-level code.
+                //
+                .extern _ada_main
+                bl      _ada_main
 
 dead:           b       .
 
