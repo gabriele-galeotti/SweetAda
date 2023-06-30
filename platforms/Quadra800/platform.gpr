@@ -1,0 +1,63 @@
+
+-------------------------------------------------------------------------------
+-- SweetAda GPRbuild project file
+--
+-- Copyright (C) 2020-2023 Gabriele Galeotti
+--
+-- This work is licensed under the terms of the MIT License.
+-- Please consult the LICENSE.txt file located in the top-level directory.
+-------------------------------------------------------------------------------
+
+with "configure";
+with "basedefs";
+
+library project Platform is
+
+   ----------------------------------------------------------------------------
+   -- Definitions
+   ----------------------------------------------------------------------------
+
+   Kernel_Parent_Path := External ("KERNEL_PARENT_PATH", ".");
+   Include_Directories := Split (External ("GPR_INCLUDES", ""), " ");
+
+   for Target use Configure.Toolchain_Name;
+   for Source_Dirs use (".") & Include_Directories;
+   for Default_Language use "Asm_Cpp";
+
+   for Source_Files use Configure.Startup_Objects;
+
+   ----------------------------------------------------------------------------
+   -- Naming
+   ----------------------------------------------------------------------------
+
+   package Naming renames Basedefs.Naming;
+
+   ----------------------------------------------------------------------------
+   -- Builder
+   ----------------------------------------------------------------------------
+
+   package Builder renames Basedefs.Builder;
+
+   ----------------------------------------------------------------------------
+   -- Compiler
+   ----------------------------------------------------------------------------
+
+   package Compiler extends Basedefs.Compiler is
+      -- Asm_Cpp
+      for Switches ("Asm_Cpp") use Compiler'Switches ("Asm_Cpp") & Configure.GCC_Switches_Startup;
+   end Compiler;
+
+   ----------------------------------------------------------------------------
+   -- Library
+   ----------------------------------------------------------------------------
+
+   for Library_Kind use Basedefs.Library_Kind;
+   for Library_Support use Basedefs.Library_Support;
+   for Library_Builder use Basedefs.Library_Builder;
+   for Archive_Builder use Basedefs.Archive_Builder;
+   for Object_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Object_Directory;
+   for Library_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Library_Directory;
+
+   for Library_Name use "platform";
+
+end Platform;
