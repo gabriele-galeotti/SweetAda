@@ -51,6 +51,18 @@ _start:
                 lea.l   kernel_stack,%sp
 
                 //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                move.l  #_sbss,%a0
+                move.l  #_ebss,%a1
+                bra.s   2f
+1:              clr.b   %a0@+
+2:              cmp.l   %a0,%a1
+                bne.s   1b
+
+                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

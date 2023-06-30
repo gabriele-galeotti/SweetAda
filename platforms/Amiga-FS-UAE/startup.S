@@ -92,7 +92,7 @@ _start:
                 //
                 // Initialize .bss section.
                 //
-                fjsr    zerobss
+                //fjsr    zerobss
 
                 //
                 // Setup stack pointers (ISP and/or MSP).
@@ -110,6 +110,18 @@ _start:
                 // Setup frame pointer.
                 //
                 move.l  #0,%fp
+
+                //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                move.l  #_sbss,%a0
+                move.l  #_ebss,%a1
+                bra.s   2f
+1:              clr.b   %a0@+
+2:              cmp.l   %a0,%a1
+                bne.s   1b
 
                 //
                 // Jump to high-level code.
@@ -158,23 +170,6 @@ movdata:
 1:              cmp.l   %a1,%a2
                 beq.s   2f
                 move.b  %a0@+,%a1@+
-                bra.s   1b
-2:              frts
-
-////////////////////////////////////////////////////////////////////////////////
-// zerobss                                                                    //
-//                                                                            //
-// A6 = return address                                                        //
-////////////////////////////////////////////////////////////////////////////////
-
-zerobss:
-                .extern _sbss
-                .extern _ebss
-                move.l  #_sbss,%a0
-                move.l  #_ebss,%a1
-1:              cmp.l   %a0,%a1
-                beq.s   2f
-                clr.b   %a0@+
                 bra.s   1b
 2:              frts
 
