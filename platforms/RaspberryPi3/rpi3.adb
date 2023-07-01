@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with BSP;
+
 package body RPI3 is
 
    --========================================================================--
@@ -25,14 +27,12 @@ package body RPI3 is
    --                                                                        --
    --========================================================================--
 
-   Timer_Constant : constant := 2_000_000 / 1_000;
-
    ----------------------------------------------------------------------------
    -- Timer_Reload
    ----------------------------------------------------------------------------
    procedure Timer_Reload is
    begin
-      SYSTEM_TIMER.C1 := SYSTEM_TIMER.CLO + Timer_Constant;
+      SYSTEM_TIMER.C1 := SYSTEM_TIMER.CLO + BSP.Timer_Constant;
    end Timer_Reload;
 
 end RPI3;

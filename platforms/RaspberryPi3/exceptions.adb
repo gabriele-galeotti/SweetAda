@@ -22,6 +22,7 @@ with Bits;
 with Core;
 with ARMv8A;
 with RPI3;
+with BSP;
 
 package body Exceptions is
 
@@ -63,6 +64,14 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Exception_Process is
    begin
+      null;
+   end Exception_Process;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Process
+   ----------------------------------------------------------------------------
+   procedure Irq_Process is
+   begin
       Core.Tick_Count := @ + 1;
       if (Core.Tick_Count and 16#0000_0100#) = 0 then
          -- GPIO05 ON
@@ -72,8 +81,9 @@ package body Exceptions is
          RPI3.GPCLR0 := (CLR5 => True, others => False);
       end if;
       RPI3.Timer_Reload;
+      -- RPI3.SYSTEM_TIMER.C1 := RPI3.SYSTEM_TIMER.CLO + BSP.Timer_Constant;
       RPI3.SYSTEM_TIMER.CS.M1 := True;
-   end Exception_Process;
+   end Irq_Process;
 
    ----------------------------------------------------------------------------
    -- Init
@@ -84,6 +94,7 @@ package body Exceptions is
       -- ARMv8A.VBAR_EL3_Write (To_U64 (EL3_Table'Address));
       -- ARMv8A.VBAR_EL2_Write (To_U64 (EL2_Table'Address));
       ARMv8A.VBAR_EL1_Write (To_U64 (EL1_Table'Address));
+      null;
    end Init;
 
 end Exceptions;

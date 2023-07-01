@@ -15,7 +15,11 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with System.Parameters;
+with System.Secondary_Stack;
 with Interfaces;
+with Interfaces.C;
 with Definitions;
 with Bits;
 with ARMv8A;
@@ -37,6 +41,18 @@ package body BSP is
    use Definitions;
    use Bits;
 
+   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
+
+   function Number_Of_CPUs return Interfaces.C.int with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_number_of_cpus";
+
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_get_secondary_stack";
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -44,6 +60,22 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Number_Of_CPUs
+   ----------------------------------------------------------------------------
+   function Number_Of_CPUs return Interfaces.C.int is
+   begin
+      return 1;
+   end Number_Of_CPUs;
+
+   ----------------------------------------------------------------------------
+   -- Get_Sec_Stack
+   ----------------------------------------------------------------------------
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   begin
+      return BSP_SS_Stack;
+   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -75,6 +107,8 @@ package body BSP is
       Baud_Rate    : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
       -------------------------------------------------------------------------
+      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      -------------------------------------------------------------------------
       Exceptions.Init;
       -- GPIO pins 14/15 (8/10) take alternate function 5 ---------------------
       RPI3.GPFSEL1.FSEL14 := RPI3.GPIO_ALT5;
@@ -103,7 +137,6 @@ package body BSP is
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
-      -------------------------------------------------------------------------
       Console.Print ("Raspberry Pi 3", NL => True);
       Console.Print (Natural (ARMv8A.CurrentEL_Read.EL), Prefix => "Current EL:   ", NL => True);
       Console.Print (RPI3.ARMTIMER_IRQ_ClrAck,           Prefix => "ARM Timer ID: ", NL => True); -- "TMRA"
@@ -111,9 +144,9 @@ package body BSP is
       RPI3.GPFSEL0.FSEL5 := RPI3.GPIO_OUTPUT;
       RPI3.GPFSEL0.FSEL6 := RPI3.GPIO_OUTPUT;
       -- Timer IRQ ------------------------------------------------------------
-      RPI3.Timer_Reload;
       RPI3.Enable_IRQs_1 (RPI3.system_timer_match_1) := True;
       ARMv8A.Irq_Enable;
+      RPI3.Timer_Reload;
       -------------------------------------------------------------------------
    end Setup;
 

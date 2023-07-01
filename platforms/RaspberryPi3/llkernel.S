@@ -19,126 +19,129 @@
 el3_table:
                 // Current EL with SP0
                 .align  7
-el3_celsp0_syn: b       el_handler              // + 0x000 Synchronous
+el3_celsp0_syn: b       .                       // + 0x000 Synchronous
                 .align  7
-el3_celsp0_irq: b       el_handler              // + 0x080 IRQ/vIRQ
+el3_celsp0_irq: b       .                       // + 0x080 IRQ/vIRQ
                 .align  7
-el3_celsp0_fiq: b       el_handler              // + 0x100 FIQ/vFIQ
+el3_celsp0_fiq: b       .                       // + 0x100 FIQ/vFIQ
                 .align  7
-el3_celsp0_serr:b       el_handler              // + 0x180 SError/vSError
+el3_celsp0_serr:b       .                       // + 0x180 SError/vSError
                 // Current EL with SPx
                 .align  7
-el3_celspx_syn: b       el_handler              // + 0x200 Synchronous
+el3_celspx_syn: b       .                       // + 0x200 Synchronous
                 .align  7
-el3_celspx_irq: b       el_handler              // + 0x280 IRQ/vIRQ
+el3_celspx_irq: b       .                       // + 0x280 IRQ/vIRQ
                 .align  7
-el3_celspx_fiq: b       el_handler              // + 0x300 FIQ/vFIQ
+el3_celspx_fiq: b       .                       // + 0x300 FIQ/vFIQ
                 .align  7
-el3_celspx_serr:b       el_handler              // + 0x380 SError/vSError
+el3_celspx_serr:b       .                       // + 0x380 SError/vSError
                 // Lower EL using AArch64
                 .align  7
-el3_lel64_syn:  b       el_handler              // + 0x400 Synchronous
+el3_lel64_syn:  b       .                       // + 0x400 Synchronous
                 .align  7
-el3_lel64_irq:  b       el_handler              // + 0x480 IRQ/vIRQ
+el3_lel64_irq:  b       .                       // + 0x480 IRQ/vIRQ
                 .align  7
-el3_lel64_fiq:  b       el_handler              // + 0x500 FIQ/vFIQ
+el3_lel64_fiq:  b       .                       // + 0x500 FIQ/vFIQ
                 .align  7
-el3_lel64_serr: b       el_handler              // + 0x580 SError/vSError
+el3_lel64_serr: b       .                       // + 0x580 SError/vSError
                 // Lower EL using AArch32
                 .align  7
-el3_lel32_syn:  b       el_handler              // + 0x600 Synchronous
+el3_lel32_syn:  b       .                       // + 0x600 Synchronous
                 .align  7
-el3_lel32_irq:  b       el_handler              // + 0x680 IRQ/vIRQ
+el3_lel32_irq:  b       .                       // + 0x680 IRQ/vIRQ
                 .align  7
-el3_lel32_fiq:  b       el_handler              // + 0x700 FIQ/vFIQ
+el3_lel32_fiq:  b       .                       // + 0x700 FIQ/vFIQ
                 .align  7
-el3_lel32_serr: b       el_handler              // + 0x780 SError/vSError
+el3_lel32_serr: b       .                       // + 0x780 SError/vSError
 
                 .align  8
                 .global el2_table
 el2_table:
                 // Current EL with SP0
                 .align  7
-el2_celsp0_syn: b       el_handler              // + 0x000 Synchronous
+el2_celsp0_syn: b       .                       // + 0x000 Synchronous
                 .align  7
-el2_celsp0_irq: b       el_handler              // + 0x080 IRQ/vIRQ
+el2_celsp0_irq: b       .                       // + 0x080 IRQ/vIRQ
                 .align  7
-el2_celsp0_fiq: b       el_handler              // + 0x100 FIQ/vFIQ
+el2_celsp0_fiq: b       .                       // + 0x100 FIQ/vFIQ
                 .align  7
-el2_celsp0_serr:b       el_handler              // + 0x180 SError/vSError
+el2_celsp0_serr:b       .                       // + 0x180 SError/vSError
                 // Current EL with SPx
                 .align  7
-el2_celspx_syn: b       el_handler              // + 0x200 Synchronous
+el2_celspx_syn: b       .                       // + 0x200 Synchronous
                 .align  7
-el2_celspx_irq: b       el_handler              // + 0x280 IRQ/vIRQ
+el2_celspx_irq: b       .                       // + 0x280 IRQ/vIRQ
                 .align  7
-el2_celspx_fiq: b       el_handler              // + 0x300 FIQ/vFIQ
+el2_celspx_fiq: b       .                       // + 0x300 FIQ/vFIQ
                 .align  7
-el2_celspx_serr:b       el_handler              // + 0x380 SError/vSError
+el2_celspx_serr:b       .                       // + 0x380 SError/vSError
                 // Lower EL using AArch64
                 .align  7
-el2_lel64_syn:  b       el_handler              // + 0x400 Synchronous
+el2_lel64_syn:  b       .                       // + 0x400 Synchronous
                 .align  7
-el2_lel64_irq:  b       el_handler              // + 0x480 IRQ/vIRQ
+el2_lel64_irq:  b       .                       // + 0x480 IRQ/vIRQ
                 .align  7
-el2_lel64_fiq:  b       el_handler              // + 0x500 FIQ/vFIQ
+el2_lel64_fiq:  b       .                       // + 0x500 FIQ/vFIQ
                 .align  7
-el2_lel64_serr: b       el_handler              // + 0x580 SError/vSError
+el2_lel64_serr: b       .                       // + 0x580 SError/vSError
                 // Lower EL using AArch32
                 .align  7
-el2_lel32_syn:  b       el_handler              // + 0x600 Synchronous
+el2_lel32_syn:  b       .                       // + 0x600 Synchronous
                 .align  7
-el2_lel32_irq:  b       el_handler              // + 0x680 IRQ/vIRQ
+el2_lel32_irq:  b       .                       // + 0x680 IRQ/vIRQ
                 .align  7
-el2_lel32_fiq:  b       el_handler              // + 0x700 FIQ/vFIQ
+el2_lel32_fiq:  b       .                       // + 0x700 FIQ/vFIQ
                 .align  7
-el2_lel32_serr: b       el_handler              // + 0x780 SError/vSError
+el2_lel32_serr: b       .                       // + 0x780 SError/vSError
 
                 .align  8
                 .global el1_table
 el1_table:
                 // Current EL with SP0
                 .align  7
-el1_celsp0_syn: b       el_handler              // + 0x000 Synchronous
+el1_celsp0_syn: b       .                       // + 0x000 Synchronous
                 .align  7
-el1_celsp0_irq: b       el_handler              // + 0x080 IRQ/vIRQ
+el1_celsp0_irq: b       .                       // + 0x080 IRQ/vIRQ
                 .align  7
-el1_celsp0_fiq: b       el_handler              // + 0x100 FIQ/vFIQ
+el1_celsp0_fiq: b       .                       // + 0x100 FIQ/vFIQ
                 .align  7
-el1_celsp0_serr:b       el_handler              // + 0x180 SError/vSError
+el1_celsp0_serr:b       .                       // + 0x180 SError/vSError
                 // Current EL with SPx
                 .align  7
-el1_celspx_syn: b       el_handler              // + 0x200 Synchronous
+el1_celspx_syn: b       .                       // + 0x200 Synchronous
                 .align  7
 el1_celspx_irq: b       irq_handler             // + 0x280 IRQ/vIRQ
                 .align  7
-el1_celspx_fiq: b       el_handler              // + 0x300 FIQ/vFIQ
+el1_celspx_fiq: b       .                       // + 0x300 FIQ/vFIQ
                 .align  7
-el1_celspx_serr:b       el_handler              // + 0x380 SError/vSError
+el1_celspx_serr:b       .                       // + 0x380 SError/vSError
                 // Lower EL using AArch64
                 .align  7
-el1_lel64_syn:  b       el_handler              // + 0x400 Synchronous
+el1_lel64_syn:  b       .                       // + 0x400 Synchronous
                 .align  7
-el1_lel64_irq:  b       el_handler              // + 0x480 IRQ/vIRQ
+el1_lel64_irq:  b       .                       // + 0x480 IRQ/vIRQ
                 .align  7
-el1_lel64_fiq:  b       el_handler              // + 0x500 FIQ/vFIQ
+el1_lel64_fiq:  b       .                       // + 0x500 FIQ/vFIQ
                 .align  7
-el1_lel64_serr: b       el_handler              // + 0x580 SError/vSError
+el1_lel64_serr: b       .                       // + 0x580 SError/vSError
                 // Lower EL using AArch32
                 .align  7
-el1_lel32_syn:  b       el_handler              // + 0x600 Synchronous
+el1_lel32_syn:  b       .                       // + 0x600 Synchronous
                 .align  7
-el1_lel32_irq:  b       el_handler              // + 0x680 IRQ/vIRQ
+el1_lel32_irq:  b       .                       // + 0x680 IRQ/vIRQ
                 .align  7
-el1_lel32_fiq:  b       el_handler              // + 0x700 FIQ/vFIQ
+el1_lel32_fiq:  b       .                       // + 0x700 FIQ/vFIQ
                 .align  7
-el1_lel32_serr: b       el_handler              // + 0x780 SError/vSError
+el1_lel32_serr: b       .                       // + 0x780 SError/vSError
 
-                .extern exception_process
 el_handler:
                 b       .
+                .extern exception_process
+                bl      exception_process
+                eret
+
 irq_handler:
-                sub     sp,sp,512
+                sub     sp,sp,256
                 stp     x0,x1,[sp,#16*0]
                 stp     x2,x3,[sp,#16*1]
                 stp     x4,x5,[sp,#16*2]
@@ -148,8 +151,15 @@ irq_handler:
                 stp     x12,x13,[sp,#16*6]
                 stp     x14,x15,[sp,#16*7]
                 stp     x16,x17,[sp,#16*8]
-                stp     x18,x30,[sp,#16*9]
-                bl      exception_process
+                stp     x18,x19,[sp,#16*9]
+                stp     x20,x21,[sp,#16*10]
+                stp     x22,x23,[sp,#16*11]
+                stp     x24,x25,[sp,#16*12]
+                stp     x26,x27,[sp,#16*13]
+                stp     x28,x29,[sp,#16*14]
+                stp     x29,x30,[sp,#16*15]
+                .extern irq_process
+                bl      irq_process
                 ldp     x0,x1,[sp,#16*0]
                 ldp     x2,x3,[sp,#16*1]
                 ldp     x4,x5,[sp,#16*2]
@@ -159,7 +169,13 @@ irq_handler:
                 ldp     x12,x13,[sp,#16*6]
                 ldp     x14,x15,[sp,#16*7]
                 ldp     x16,x17,[sp,#16*8]
-                ldp     x18,x30,[sp,#16*9]
-                add     sp,sp,512
+                ldp     x18,x19,[sp,#16*9]
+                ldp     x20,x21,[sp,#16*10]
+                ldp     x22,x23,[sp,#16*11]
+                ldp     x24,x25,[sp,#16*12]
+                ldp     x26,x27,[sp,#16*13]
+                ldp     x28,x29,[sp,#16*14]
+                ldp     x29,x30,[sp,#16*15]
+                add     sp,sp,256
                 eret
 

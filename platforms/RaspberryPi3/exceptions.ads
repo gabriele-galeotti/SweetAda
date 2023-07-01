@@ -30,6 +30,11 @@ package Exceptions is
       Convention    => Asm,
       External_Name => "exception_process";
 
+   procedure Irq_Process with
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "irq_process";
+
    procedure Init;
 
 end Exceptions;

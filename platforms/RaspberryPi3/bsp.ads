@@ -25,6 +25,8 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
+   Timer_Constant : constant := 2_000_000 / 1_000;
+
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);
    procedure Setup;
