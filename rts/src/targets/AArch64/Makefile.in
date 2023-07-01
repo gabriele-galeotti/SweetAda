@@ -1,6 +1,8 @@
 
 LIBGNAT_SRCS += system.ads
 
+export SIZE_TYPE_ASPECTS := with Alignment => 16
+
 configure-rts-target :
 ifeq ($(OSTYPE),cmd)
 	$(PROCESSCFG) $(RTS_SOURCE_PATH_TARGET_CMD)\system.ads.in $(ADAINCLUDE_PATH_CMD)\system.ads
