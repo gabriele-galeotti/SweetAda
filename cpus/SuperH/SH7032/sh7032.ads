@@ -79,7 +79,7 @@ package SH7032 is
       Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- Section 13 Section 13 Serial Communication Interface (SCI)
+   -- Section 13 Serial Communication Interface (SCI)
    ----------------------------------------------------------------------------
 
    -- 13.2.5 Serial Mode Register
