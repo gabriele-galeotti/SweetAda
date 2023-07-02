@@ -38,32 +38,51 @@ package SH7032 is
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- Bus Control
+   -- Section 8 Bus State Controller (BSC)
    ----------------------------------------------------------------------------
+
+   -- 8.2.1 Bus Control Register (BCR)
+
+   BAS_WRHLA0 : constant := 0; -- WRH, WRL, and A0 enabled
+   BAS_LHBSWR : constant := 1; -- LBS, WR, and HBS enabled
+
+   RDDTY_50 : constant := 0; -- RD signal high-level duty cycle is 50% of T1 state
+   RDDTY_35 : constant := 1; -- RD signal high-level duty cycle is 35% of T1 state
 
    type Bus_Control_Register_Type is
    record
-      X : Boolean;
+      Reserved : Bits_11 := 0;
+      BAS      : Bits_1;       -- Byte Access Select
+      RDDTY    : Bits_1;       -- RD Duty
+      WARP     : Boolean;      -- Warp Mode Bit
+      IOE      : Boolean;      -- Multiplexed I/O Enable Bit
+      DRAME    : Boolean;      -- DRAM Enable Bit
    end record with
-      Size => 16;
+      Bit_Order => Low_Order_First,
+      Size      => 16;
    for Bus_Control_Register_Type use
    record
-      X at 0 range 0 .. 0;
+      Reserved at 0 range 0 .. 10;
+      BAS      at 0 range 11 .. 11;
+      RDDTY    at 0 range 12 .. 12;
+      WARP     at 0 range 13 .. 13;
+      IOE      at 0 range 14 .. 14;
+      DRAME    at 0 range 15 .. 15;
    end record;
 
-   BCR : Bus_Control_Register_Type with
-      Address    => To_Address (16#05FF_FFA0#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   BCR_ADDRESS : constant := 16#05FF_FFA0#;
+
+   BCR : aliased Bus_Control_Register_Type with
+      Address              => To_Address (BCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- Pin Function Controller
+   -- Section 13 Section 13 Serial Communication Interface (SCI)
    ----------------------------------------------------------------------------
 
-   ----------------------------------------------------------------------------
-   -- Serial Communication Interface
-   ----------------------------------------------------------------------------
+   -- 13.2.5 Serial Mode Register
 
    SCI_SYSCLOCK    : constant Bits_2 := 2#00#;
    SCI_SYSCLOCK_4  : constant Bits_2 := 2#01#;
@@ -92,7 +111,8 @@ package SH7032 is
       CHR  : Bits_1;
       CA   : Bits_1;
    end record with
-      Size => 8;
+      Bit_Order => Low_Order_First,
+      Size      => 8;
    for Serial_Mode_Register_Type use
    record
       CKS  at 0 range 0 .. 1;
@@ -104,12 +124,14 @@ package SH7032 is
       CA   at 0 range 7 .. 7;
    end record;
 
+   -- 13.1.4 Register Configuration
+
    type SCI_Type is
    record
-      SMR : Serial_Mode_Register_Type;
-      BRR : Unsigned_8;
-      TDR : Unsigned_8;
-      RDR : Unsigned_8;
+      SMR : Serial_Mode_Register_Type with Volatile_Full_Access => True;
+      BRR : Unsigned_8                with Volatile_Full_Access => True;
+      TDR : Unsigned_8                with Volatile_Full_Access => True;
+      RDR : Unsigned_8                with Volatile_Full_Access => True;
    end record with
       Size => 48;
    for SCI_Type use
@@ -120,13 +142,13 @@ package SH7032 is
       RDR at 5 range 0 .. 7;
    end record;
 
-   SCI0 : SCI_Type with
+   SCI0 : aliased SCI_Type with
       Address    => To_Address (16#05FF_FEC0#),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   SCI1 : SCI_Type with
+   SCI1 : aliased SCI_Type with
       Address    => To_Address (16#05FF_FEC8#),
       Volatile   => True,
       Import     => True,
