@@ -395,6 +395,163 @@ package ARMv8A is
       Inline => True;
 
    ----------------------------------------------------------------------------
+   -- FPCR
+   ----------------------------------------------------------------------------
+
+   RMode_RN : constant := 2#00#; -- Round to Nearest (RN) mode.
+   RMode_RP : constant := 2#01#; -- Round towards Plus Infinity (RP) mode.
+   RMode_RM : constant := 2#10#; -- Round towards Minus Infinity (RM) mode.
+   RMode_RZ : constant := 2#11#; -- Round towards Zero (RZ) mode.
+
+   type FPCR_Type is
+   record
+      FIZ       : Boolean;      -- Flush Inputs to Zero. Controls whether single-precision ...
+      AH        : Boolean;      -- Alternate Handling. Controls alternate handling of denormalized floating-point numbers.
+      NEP       : Boolean;      -- Controls how the output elements other than the lowest element of the vector ...
+      Reserved1 : Bits_5 := 0;
+      IOE       : Boolean;      -- Invalid Operation floating-point exception trap enable.
+      DZE       : Boolean;      -- Divide by Zero floating-point exception trap enable.
+      OFE       : Boolean;      -- Overflow floating-point exception trap enable.
+      UFE       : Boolean;      -- Underflow floating-point exception trap enable.
+      IXE       : Boolean;      -- Inexact floating-point exception trap enable.
+      Reserved2 : Bits_2 := 0;
+      IDE       : Boolean;      -- Input Denormal floating-point exception trap enable.
+      Len       : Bits_3 := 0;  -- This field has no function in AArch64 state, and non-zero values are ignored ...
+      FZ16      : Boolean;      -- Flushing denormalized numbers to zero control bit on half-precision data-processing instructions.
+      Stride    : Bits_2 := 0;  -- This field has no function in AArch64 state, and non-zero values are ignored ...
+      RMode     : Bits_2;       -- Rounding Mode control field.
+      FZ        : Boolean;      -- Flushing denormalized numbers to zero control bit.
+      DN        : Boolean;      -- Default NaN use for NaN propagation.
+      AHP       : Boolean;      -- Alternative half-precision control bit.
+      Reserved3 : Bits_5 := 0;
+      Reserved4 : Bits_32 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for FPCR_Type use record
+      FIZ       at 0 range 0 .. 0;
+      AH        at 0 range 1 .. 1;
+      NEP       at 0 range 2 .. 2;
+      Reserved1 at 0 range 3 .. 7;
+      IOE       at 0 range 8 .. 8;
+      DZE       at 0 range 9 .. 9;
+      OFE       at 0 range 10 .. 10;
+      UFE       at 0 range 11 .. 11;
+      IXE       at 0 range 12 .. 12;
+      Reserved2 at 0 range 13 .. 14;
+      IDE       at 0 range 15 .. 15;
+      Len       at 0 range 16 .. 18;
+      FZ16      at 0 range 19 .. 19;
+      Stride    at 0 range 20 .. 21;
+      RMode     at 0 range 22 .. 23;
+      FZ        at 0 range 24 .. 24;
+      DN        at 0 range 25 .. 25;
+      AHP       at 0 range 26 .. 26;
+      Reserved3 at 0 range 27 .. 31;
+      Reserved4 at 0 range 32 .. 63;
+   end record;
+
+   function FPCR_Read return FPCR_Type with
+      Inline => True;
+   procedure FPCR_Write (Value : in FPCR_Type) with
+      Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- FPEXC32_EL2
+   ----------------------------------------------------------------------------
+
+   type FPEXC32_EL2_Type is
+   record
+      IOF       : Boolean;      -- Invalid Operation floating-point exception trap enable.
+      DZF       : Boolean;      -- Divide by Zero floating-point exception trap enable.
+      OFF       : Boolean;      -- Overflow floating-point exception trap enable.
+      UFF       : Boolean;      -- Underflow floating-point exception trap enable.
+      IXF       : Boolean;      -- Inexact floating-point exception trap enable.
+      Reserved1 : Bits_2 := 0;
+      IDF       : Boolean;      -- Input Denormal floating-point exception trap enable.
+      VECITR    : Bits_3;
+      Reserved2 : Bits_15 := 0;
+      TFV       : Boolean;      -- Trapped Fault Valid bit.
+      VV        : Boolean;      -- VECITR valid bit.
+      FP2V      : Boolean;      -- FPINST2 instruction valid bit.
+      DEX       : Boolean;      -- Defined synchronous exception on floating-point execution.
+      EN        : Boolean;      -- Enables access to the Advanced SIMD and floating-point functionality ...
+      EX        : Boolean;      -- Exception bit.
+      Reserved3 : Bits_32 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for FPEXC32_EL2_Type use record
+      IOF       at 0 range 0 .. 0;
+      DZF       at 0 range 1 .. 1;
+      OFF       at 0 range 2 .. 2;
+      UFF       at 0 range 3 .. 3;
+      IXF       at 0 range 4 .. 4;
+      Reserved1 at 0 range 5 .. 6;
+      IDF       at 0 range 7 .. 7;
+      VECITR    at 0 range 8 .. 10;
+      Reserved2 at 0 range 11 .. 25;
+      TFV       at 0 range 26 .. 26;
+      VV        at 0 range 27 .. 27;
+      FP2V      at 0 range 28 .. 28;
+      DEX       at 0 range 29 .. 29;
+      EN        at 0 range 30 .. 30;
+      EX        at 0 range 31 .. 31;
+      Reserved3 at 0 range 32 .. 63;
+   end record;
+
+   function FPEXC32_EL2_Read return FPEXC32_EL2_Type with
+      Inline => True;
+   procedure FPEXC32_EL2_Write (Value : in FPEXC32_EL2_Type) with
+      Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- FPSR
+   ----------------------------------------------------------------------------
+
+   type FPSR_Type is
+   record
+      IOC       : Boolean;      -- Invalid Operation cumulative exception bit.
+      DZC       : Boolean;      -- Division by Zero cumulative exception bit.
+      OFC       : Boolean;      -- Overflow cumulative exception bit.
+      UFC       : Boolean;      -- Underflow cumulative exception bit.
+      IXC       : Boolean;      -- Inexact cumulative exception bit.
+      Reserved1 : Bits_2 := 0;
+      IDC       : Boolean;      -- Input Denormal cumulative exception bit.
+      Reserved2 : Bits_19 := 0;
+      QC        : Boolean;      -- Cumulative saturation bit, Advanced SIMD only.
+      V         : Boolean;      -- Overflow condition flag.
+      C         : Boolean;      -- Carry condition flag.
+      Z         : Boolean;      -- Zero condition flag.
+      N         : Boolean;      -- Negative condition flag.
+      Reserved3 : Bits_32 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for FPSR_Type use
+   record
+      IOC       at 0 range 0 .. 0;
+      DZC       at 0 range 1 .. 1;
+      OFC       at 0 range 2 .. 2;
+      UFC       at 0 range 3 .. 3;
+      IXC       at 0 range 4 .. 4;
+      Reserved1 at 0 range 5 .. 6;
+      IDC       at 0 range 7 .. 7;
+      Reserved2 at 0 range 8 .. 26;
+      QC        at 0 range 27 .. 27;
+      V         at 0 range 28 .. 28;
+      C         at 0 range 29 .. 29;
+      Z         at 0 range 30 .. 30;
+      N         at 0 range 31 .. 31;
+      Reserved3 at 0 range 32 .. 63;
+   end record;
+
+   function FPSR_Read return FPSR_Type with
+      Inline => True;
+   procedure FPSR_Write (Value : in FPSR_Type) with
+      Inline => True;
+
+   ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
