@@ -1,4 +1,6 @@
 
+LIBGNAT_SRCS += system.ads
+
 #
 # AVR floating point issues.
 #
@@ -11,11 +13,9 @@
 # s-scaval.adb:104:07: warning: size of "IV_Ill" is 96
 # s-scaval.adb:104:07: warning: size of "IS_Ill" is 64
 #
-
 ifeq ($(RTS),sfp)
 LIBGNAT_SRCS := $(filter-out s-scaval.adb s-scaval.ads,$(LIBGNAT_SRCS))
 endif
-LIBGNAT_SRCS += system.ads
 
 configure-rts-target :
 ifeq ($(OSTYPE),cmd)
