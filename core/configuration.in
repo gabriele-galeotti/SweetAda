@@ -8,15 +8,16 @@
 # Please consult the LICENSE.txt file located in the top-level directory.
 #
 
-INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                  \
-                       $(CORE_DIRECTORY)/abort_library    \
-                       $(CORE_DIRECTORY)/bits             \
-                       $(CORE_DIRECTORY)/console          \
-                       $(CORE_DIRECTORY)/integer_math     \
-                       $(CORE_DIRECTORY)/libgcc           \
-                       $(CORE_DIRECTORY)/llutils          \
-                       $(CORE_DIRECTORY)/malloc           \
-                       $(CORE_DIRECTORY)/memory_functions \
+INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                     \
+                       $(CORE_DIRECTORY)/abort_library       \
+                       $(CORE_DIRECTORY)/bits                \
+                       $(CORE_DIRECTORY)/console             \
+                       $(CORE_DIRECTORY)/integer_math        \
+                       $(CORE_DIRECTORY)/last_chance_handler \
+                       $(CORE_DIRECTORY)/libgcc              \
+                       $(CORE_DIRECTORY)/llutils             \
+                       $(CORE_DIRECTORY)/malloc              \
+                       $(CORE_DIRECTORY)/memory_functions    \
                        $(CORE_DIRECTORY)/mmio
 
 #

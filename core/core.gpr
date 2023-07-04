@@ -72,7 +72,10 @@ library project Core is
                           "integer_math-roundup.adb"
                          );
 
-   Last_Chance_Handler_Files := ("last_chance_handler.adb", "last_chance_handler.ads");
+   Last_Chance_Handler_Files := (
+                                 "last_chance_handler.adb", "last_chance_handler.ads",
+                                 "last_chance_handler-last_chance_handler.adb"
+                                );
 
    LLutils_Files := (
                      "llutils.adb", "llutils.ads",

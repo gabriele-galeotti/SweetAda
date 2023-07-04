@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ last_chance_handler.adb                                                                                   --
+-- __FLN__ last_chance_handler-last_chance_handler.adb                                                               --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,20 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body Last_Chance_Handler is
+with Abort_Library;
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Last_Chance_Handler
-   ----------------------------------------------------------------------------
-   procedure Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) is
-   separate;
-
+separate (Last_Chance_Handler)
+procedure Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) is
+begin
+   Abort_Library.System_Abort (System.Null_Address, Line, 0, Source_Location);
 end Last_Chance_Handler;
