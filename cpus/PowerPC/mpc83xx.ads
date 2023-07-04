@@ -47,7 +47,7 @@ package MPC83XX is
 
    -- 4.3.2.1 Reset Configuration Word Low Register (RCWLR)
 
-   RCWLR : Unsigned_32 with
+   RCWLR : aliased Unsigned_32 with
       Address              => To_Address (IMMRBAR + 16#0900#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -55,7 +55,7 @@ package MPC83XX is
 
    -- 4.3.2.2 Reset Configuration Word High Register (RCWHR)
 
-   RCWHR : Unsigned_32 with
+   RCWHR : aliased Unsigned_32 with
       Address              => To_Address (IMMRBAR + 16#0904#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -63,7 +63,7 @@ package MPC83XX is
 
    -- 6.3.2.5 System I/O Configuration Register 1 (SICR_1)
 
-   SICR_1 : Unsigned_32 with
+   SICR_1 : aliased Unsigned_32 with
       Address              => To_Address (IMMRBAR + 16#0114#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -71,7 +71,7 @@ package MPC83XX is
 
    -- 6.3.2.6 System I/O Configuration Register 2 (SICR_2)
 
-   SICR_2 : Unsigned_32 with
+   SICR_2 : aliased Unsigned_32 with
       Address              => To_Address (IMMRBAR + 16#0118#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -138,7 +138,7 @@ package MPC83XX is
 
    PRSSTAT_ADDRESS : constant := eSDHC_BASEADDRESS + 16#24#;
 
-   PRSSTAT : PRSSTAT_Type with
+   PRSSTAT : aliased PRSSTAT_Type with
       Address              => To_Address (PRSSTAT_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -249,7 +249,7 @@ package MPC83XX is
       DFSRR at 16#14# range 0 .. 7;
    end record;
 
-   I2C : I2C_Type with
+   I2C : aliased I2C_Type with
       Address    => To_Address (I2C1_BASEADDRESS),
       Volatile   => True,
       Import     => True,
@@ -257,7 +257,7 @@ package MPC83XX is
 
    -- 21.3.1 GPIOn Direction Register (GP1DIR–GP2DIR)
 
-   GP1DIR : Unsigned_32 with
+   GP1DIR : aliased Unsigned_32 with
       Address              => To_Address (GPIO1_BASEADDRESS + 16#00#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -265,7 +265,7 @@ package MPC83XX is
 
    -- 21.3.2 GPIOn Open Drain Register (GP1ODR–GP2ODR)
 
-   GP1ODR : Unsigned_32 with
+   GP1ODR : aliased Unsigned_32 with
       Address              => To_Address (GPIO1_BASEADDRESS + 16#04#),
       Volatile_Full_Access => True,
       Import               => True,
@@ -273,7 +273,7 @@ package MPC83XX is
 
    -- 21.3.3 GPIOn Data Register (GP1DAT–GP2DAT)
 
-   GP1DAT : Unsigned_32 with
+   GP1DAT : aliased Unsigned_32 with
       Address              => To_Address (GPIO1_BASEADDRESS + 16#08#),
       Volatile_Full_Access => True,
       Import               => True,
