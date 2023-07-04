@@ -648,7 +648,7 @@ export                           \
        STRIP
 
 export USE_ELFTOOL
-ifneq ($(USE_ELFTOOL),)
+ifeq ($(USE_ELFTOOL),Y)
 export ELFTOOL
 endif
 
