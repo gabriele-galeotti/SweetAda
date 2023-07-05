@@ -24,7 +24,7 @@ _start:
                 //
                 // Setup stack pointer.
                 //
-                ldr     r0,=stack
+                ldr     r0,=kernel_stack
                 mov     sp,r0
 
                 //
@@ -86,5 +86,5 @@ movdata:
 
                 .align  8
                 .space  1024
-stack:
+kernel_stack:
 
