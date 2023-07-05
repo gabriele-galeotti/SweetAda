@@ -31,30 +31,38 @@ package Malloc is
 
    pragma Preelaborate;
 
-   procedure Init (
-                   Memory_Address : in System.Address;
-                   Size           : in Bits.Bytesize;
-                   Debug_Flag     : in Boolean
-                  );
+   procedure Init
+      (Memory_Address : in System.Address;
+       Size           : in Bits.Bytesize;
+       Debug_Flag     : in Boolean);
 
-   function Malloc (Size : Interfaces.C.size_t) return System.Address with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_malloc";
+   function Malloc
+      (Size : Interfaces.C.size_t)
+      return System.Address
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_malloc";
 
-   procedure Free (Memory_Address : in System.Address) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_free";
+   procedure Free
+      (Memory_Address : in System.Address)
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_free";
 
-   function Calloc (Nmemb : Interfaces.C.size_t; Size : Interfaces.C.size_t) return System.Address with
-      Export        => True,
-      Convention    => Ada,
-      External_Name => "malloc__calloc";
+   function Calloc
+      (Nmemb : Interfaces.C.size_t;
+       Size  : Interfaces.C.size_t)
+      return System.Address
+      with Export        => True,
+           Convention    => Ada,
+           External_Name => "malloc__calloc";
 
-   function Realloc (Memory_Address : System.Address; Size : Interfaces.C.size_t) return System.Address with
-      Export        => True,
-      Convention    => Ada,
-      External_Name => "malloc__realloc";
+   function Realloc
+      (Memory_Address : System.Address;
+       Size : Interfaces.C.size_t)
+      return System.Address
+      with Export        => True,
+           Convention    => Ada,
+           External_Name => "malloc__realloc";
 
 end Malloc;

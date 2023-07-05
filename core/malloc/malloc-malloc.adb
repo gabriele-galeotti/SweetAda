@@ -16,7 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Malloc)
-function Malloc (Size : size_t) return Address is
+function Malloc
+   (Size : size_t)
+   return Address
+   is
    RSize : size_t;
    P     : Memory_Block_Ptr;
    Q     : Memory_Block_Ptr;
@@ -33,14 +36,14 @@ begin
    end if;
    -- traverse the list of free block
    P := Heap_Descriptor'Access;
-   Q := Heap_Descriptor.Pointer_Next;
+   Q := Heap_Descriptor.Next_Ptr;
    while Q /= null and then Q.all.Size < RSize loop
       P := Q;
-      Q := Q.all.Pointer_Next;
+      Q := Q.all.Next_Ptr;
    end loop;
    if Q = null then
       -- no block with sufficient size was found
-      return Null_Address;
+      raise Storage_Error;
    end if;
    if Debug then
       Console.Print (Q.all'Address, Prefix => "Found block @ ", NL => True);
@@ -50,23 +53,23 @@ begin
    -- stuck in the pool as available memory space
    if Q.all.Size - RSize >= 2 * MEMORYBLOCKTYPE_SIZE then
       declare
-         Half_Block : aliased Memory_Block_Type with
-            Address    => Q.all'Address + Storage_Offset (RSize),
-            Import     => True,
-            Convention => Ada;
+         Half_Block : aliased Memory_Block_Type
+            with Address    => Q.all'Address + Storage_Offset (RSize),
+                 Import     => True,
+                 Convention => Ada;
       begin
          if Debug then
             Console.Print (Half_Block'Address, Prefix => "Creating free block @ ", NL => True);
          end if;
-         P.all.Pointer_Next := Half_Block'Unchecked_Access;
-         P.all.Pointer_Next.all.Size := Q.all.Size - RSize;
-         P.all.Pointer_Next.all.Pointer_Next := Q.all.Pointer_Next;
+         P.all.Next_Ptr := Half_Block'Unchecked_Access;
+         P.all.Next_Ptr.all.Size := Q.all.Size - RSize;
+         P.all.Next_Ptr.all.Next_Ptr := Q.all.Next_Ptr;
          Q.all.Size := RSize;
       end;
    else
       -- use whole block
-      P.all.Pointer_Next := Q.all.Pointer_Next;
+      P.all.Next_Ptr := Q.all.Next_Ptr;
    end if;
-   Q.all.Pointer_Next := null;
+   Q.all.Next_Ptr := null;
    return Q.all'Address + MEMORYBLOCKTYPE_SIZE;
 end Malloc;

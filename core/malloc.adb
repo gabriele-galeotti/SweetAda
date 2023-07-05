@@ -48,19 +48,22 @@ package body Malloc is
 
    type Memory_Block_Type is
    record
-      Size         : size_t;
-      Pointer_Next : Memory_Block_Ptr;
+      Size     : size_t;
+      Next_Ptr : Memory_Block_Ptr;
    end record with
       Pack      => True,
       Alignment => DEFAULT_ALIGNMENT,
       Size      => MEMORYBLOCKTYPE_SIZE * Storage_Unit;
 
-   Heap_Descriptor : aliased Memory_Block_Type := (Size => 0, Pointer_Next => null);
+   Heap_Descriptor : aliased Memory_Block_Type := (Size => 0, Next_Ptr => null);
 
    Debug : Boolean := False;
 
-   function Round_Size (Size : size_t; Alignment : Natural) return size_t with
-      Inline => True;
+   function Round_Size
+      (Size      : size_t;
+       Alignment : Natural)
+      return size_t
+      with Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -73,7 +76,11 @@ package body Malloc is
    ----------------------------------------------------------------------------
    -- Round_Size
    ----------------------------------------------------------------------------
-   function Round_Size (Size : size_t; Alignment : Natural) return size_t is
+   function Round_Size
+      (Size      : size_t;
+       Alignment : Natural)
+      return size_t
+      is
    begin
       return size_t (Roundup (Natural (Size), Alignment));
    end Round_Size;
@@ -81,20 +88,20 @@ package body Malloc is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init (
-                   Memory_Address : in Address;
-                   Size           : in Bytesize;
-                   Debug_Flag     : in Boolean
-                  ) is
-      Heap_Block : aliased Memory_Block_Type with
-         Address    => Memory_Address,
-         Import     => True,
-         Convention => Ada;
+   procedure Init
+      (Memory_Address : in Address;
+       Size           : in Bytesize;
+       Debug_Flag     : in Boolean)
+      is
+      Heap_Block : aliased Memory_Block_Type
+         with Address    => Memory_Address,
+              Import     => True,
+              Convention => Ada;
    begin
       Debug := Debug_Flag;
       -- simulate a request to sbrk()
-      Heap_Block.Size         := Size;
-      Heap_Block.Pointer_Next := null;
+      Heap_Block.Size     := Size;
+      Heap_Block.Next_Ptr := null;
       if Debug then
          Console.Print (Heap_Block.Size, Prefix => "Initializing: ", NL => True);
          Console.Print (Integer'(MEMORYBLOCKTYPE_SIZE), Prefix => "MEMORYBLOCKTYPE_SIZE: ", NL => True);
@@ -105,19 +112,28 @@ package body Malloc is
    ----------------------------------------------------------------------------
    -- Malloc
    ----------------------------------------------------------------------------
-   function Malloc (Size : size_t) return Address is
+   function Malloc
+      (Size : size_t)
+      return Address
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Free
    ----------------------------------------------------------------------------
-   procedure Free (Memory_Address : in Address) is
+   procedure Free
+      (Memory_Address : in Address)
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Calloc
    ----------------------------------------------------------------------------
-   function Calloc (Nmemb : size_t; Size : size_t) return Address is
+   function Calloc
+      (Nmemb : size_t;
+       Size  : size_t)
+      return Address
+      is
    separate;
 
    ----------------------------------------------------------------------------
@@ -126,7 +142,11 @@ package body Malloc is
    -- Realloc (Null_Address, Size) is the same as Malloc (Size)
    -- Realloc (Memory_Address, 0) is the same as Free (Memory_Address)
    ----------------------------------------------------------------------------
-   function Realloc (Memory_Address : Address; Size : size_t) return Address is
+   function Realloc
+      (Memory_Address : Address;
+       Size           : size_t)
+      return Address
+      is
    separate;
 
 end Malloc;

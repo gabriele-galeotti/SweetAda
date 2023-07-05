@@ -16,11 +16,15 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Malloc)
-function Realloc (Memory_Address : Address; Size : size_t) return Address is
-   Memory_Block         : aliased Memory_Block_Type with
-      Address    => Memory_Address - MEMORYBLOCKTYPE_SIZE, -- uncover the data structure
-      Import     => True,
-      Convention => Ada;
+function Realloc
+   (Memory_Address : Address;
+    Size           : size_t)
+   return Address
+   is
+   Memory_Block         : aliased Memory_Block_Type
+      with Address    => Memory_Address - MEMORYBLOCKTYPE_SIZE, -- uncover the data structure
+           Import     => True,
+           Convention => Ada;
    Memory_Block_Address : Address;
    RSize                : size_t;
    P                    : Memory_Block_Ptr;
@@ -38,10 +42,10 @@ begin
    if Memory_Block.Size > RSize then
       -- block is too big, split it in two parts
       declare
-         Half_Block : aliased Memory_Block_Type with
-            Address    => Memory_Block_Address + Storage_Offset (RSize),
-            Import     => True,
-            Convention => Ada;
+         Half_Block : aliased Memory_Block_Type
+            with Address    => Memory_Block_Address + Storage_Offset (RSize),
+                 Import     => True,
+                 Convention => Ada;
       begin
          Half_Block.Size := Memory_Block.Size - RSize;
          Memory_Block.Size := RSize;
@@ -56,10 +60,10 @@ begin
             End_Address : Address;
          begin
             P := Heap_Descriptor'Access;
-            Q := Heap_Descriptor.Pointer_Next;
+            Q := Heap_Descriptor.Next_Ptr;
             while Q /= null and then Q.all'Address < Memory_Block_Address loop
                P := Q;
-               Q := Q.all.Pointer_Next;
+               Q := Q.all.Next_Ptr;
             end loop;
             -- compute memory block end address
             End_Address := Memory_Block_Address + Storage_Offset (Memory_Block.Size);
@@ -70,9 +74,9 @@ begin
             then
                -- expand the block in-place
                Memory_Block.Size := Memory_Block.Size + Q.all.Size;
-               P.all.Pointer_Next := Q.all.Pointer_Next;
-               Q.all.Size         := 0;
-               Q.all.Pointer_Next := null;
+               P.all.Next_Ptr := Q.all.Next_Ptr;
+               Q.all.Size     := 0;
+               Q.all.Next_Ptr := null;
             else
                -- failure, move the block
                declare
@@ -81,16 +85,15 @@ begin
                   New_Memory_Block_Address := Malloc (RSize);
                   if New_Memory_Block_Address /= Null_Address then
                      New_Memory_Block_Address :=
-                        Memory_Functions.Memcpy (
-                                                 New_Memory_Block_Address,
-                                                 Memory_Block_Address,
-                                                 Memory_Block.Size - MEMORYBLOCKTYPE_SIZE
-                                                );
+                        Memory_Functions.Memcpy
+                           (New_Memory_Block_Address,
+                            Memory_Block_Address,
+                            Memory_Block.Size - MEMORYBLOCKTYPE_SIZE);
                      Free (Memory_Block_Address);
                      -- update address
                      Memory_Block_Address := New_Memory_Block_Address;
                   else
-                     return Null_Address;
+                     raise Storage_Error;
                   end if;
                end;
             end if;

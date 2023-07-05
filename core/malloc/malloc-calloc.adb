@@ -16,7 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Malloc)
-function Calloc (Nmemb : size_t; Size : size_t) return Address is
+function Calloc
+   (Nmemb : size_t;
+    Size  : size_t)
+   return Address
+   is
    Nbytes         : size_t;
    Memory_Address : Address;
 begin
