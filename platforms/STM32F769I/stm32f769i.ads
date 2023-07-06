@@ -312,17 +312,131 @@ package STM32F769I is
       Reserved3 at 0 range 30 .. 31;
    end record;
 
+   -- 5.3.2 RCC PLL configuration register (RCC_PLLCFGR)
+
+   PLLP_DIV2 : constant := 2#00#; -- PLLP = 2
+   PLLP_DIV4 : constant := 2#01#; -- PLLP = 4
+   PLLP_DIV6 : constant := 2#10#; -- PLLP = 6
+   PLLP_DIV8 : constant := 2#11#; -- PLLP = 8
+
+   PLLSRC_HSI : constant := 0; -- HSI clock selected as PLL and PLLI2S clock entry
+   PLLSRC_HSE : constant := 1; -- HSE oscillator clock selected as PLL and PLLI2S clock entry
+
+   type RCC_PLLCFGR_Type is
+   record
+      PLLM      : Bits_6;      -- Division factor for the main PLLs (PLL, PLLI2S and PLLSAI) input clock
+      PLLN      : Bits_9;      -- Main PLL (PLL) multiplication factor for VCO
+      Reserved1 : Bits_1 := 0;
+      PLLP      : Bits_2;      -- Main PLL (PLL) division factor for main system clock
+      Reserved2 : Bits_4 := 0;
+      PLLSRC    : Bits_1;      -- Main PLL(PLL) and audio PLL (PLLI2S) entry clock source
+      Reserved3 : Bits_1 := 0;
+      PLLQ      : Bits_4;      -- Main PLL (PLL) division factor for USB OTG FS, SDMMC1/2 and random number generator clocks
+      PLLR      : Bits_3;      -- PLL division factor for DSI clock
+      Reserved4 : Bits_1 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_PLLCFGR_Type use
+   record
+      PLLM      at 0 range 0 .. 5;
+      PLLN      at 0 range 6 .. 14;
+      Reserved1 at 0 range 15 .. 15;
+      PLLP      at 0 range 16 .. 17;
+      Reserved2 at 0 range 18 .. 21;
+      PLLSRC    at 0 range 22 .. 22;
+      Reserved3 at 0 range 23 .. 23;
+      PLLQ      at 0 range 24 .. 27;
+      PLLR      at 0 range 28 .. 30;
+      Reserved4 at 0 range 31 .. 31;
+   end record;
+
+   -- 5.3.3 RCC clock configuration register (RCC_CFGR)
+
+   SW_HSI : constant := 2#00#; -- HSI oscillator selected as system clock
+   SW_HSE : constant := 2#01#; -- HSE oscillator selected as system clock
+   SW_PLL : constant := 2#10#; -- PLL selected as system clock
+
+   HPRE_DIV2   : constant := 2#1000#; -- system clock divided by 2
+   HPRE_DIV4   : constant := 2#1001#; -- system clock divided by 4
+   HPRE_DIV8   : constant := 2#1010#; -- system clock divided by 8
+   HPRE_DIV16  : constant := 2#1011#; -- system clock divided by 16
+   HPRE_DIV64  : constant := 2#1100#; -- system clock divided by 64
+   HPRE_DIV128 : constant := 2#1101#; -- system clock divided by 128
+   HPRE_DIV256 : constant := 2#1110#; -- system clock divided by 256
+   HPRE_DIV512 : constant := 2#1111#; -- system clock divided by 512
+
+   PPRE_DIV2  : constant := 2#100#; -- AHB clock divided by 2
+   PPRE_DIV4  : constant := 2#101#; -- AHB clock divided by 4
+   PPRE_DIV8  : constant := 2#110#; -- AHB clock divided by 8
+   PPRE_DIV16 : constant := 2#111#; -- AHB clock divided by 16
+
+   MCO1_HSI : constant := 2#00#; -- HSI clock selected
+   MCO1_LSE : constant := 2#01#; -- LSE oscillator selected
+   MCO1_HSE : constant := 2#10#; -- HSE oscillator clock selected
+   MCO1_PLL : constant := 2#11#; -- PLL clock selected
+
+   I2SSCR_PLLI2S : constant := 2#0#; -- PLLI2S clock used as I2S clock source
+   I2SSCR_EXT    : constant := 2#1#; -- External clock mapped on the I2S_CKIN pin used as I2S clock source
+
+   MCOPRE_DIV2 : constant := 2#100#; -- division by 2
+   MCOPRE_DIV3 : constant := 2#101#; -- division by 3
+   MCOPRE_DIV4 : constant := 2#110#; -- division by 4
+   MCOPRE_DIV5 : constant := 2#111#; -- division by 5
+
+   MCO2_SYSCLK : constant := 2#00#; -- System clock (SYSCLK) selected
+   MCO2_PLLI2S : constant := 2#01#; -- PLLI2S clock selected
+   MCO2_HSE    : constant := 2#10#; -- HSE oscillator clock selected
+   MCO2_PLL    : constant := 2#11#; -- PLL clock selected
+
+   type RCC_CFGR_Type is
+   record
+      SW        : Bits_2;      -- System clock switch
+      SWS       : Bits_2;      -- System clock switch status
+      HPRE      : Bits_4;      -- AHB prescaler
+      Reserved1 : Bits_2 := 0;
+      PPRE1     : Bits_3;      -- APB Low-speed prescaler (APB1)
+      PPRE2     : Bits_3;      -- APB high-speed prescaler (APB2)
+      RTCPRE    : Bits_5;      -- HSE division factor for RTC clock
+      MCO1      : Bits_2;      -- Microcontroller clock output 1
+      I2SSCR    : Bits_1;      -- I2S clock selection
+      MCO1PRE   : Bits_3;      -- MCO1 prescaler
+      MCO2PRE   : Bits_3;      -- MCO2 prescaler
+      MCO2      : Bits_2;      -- Microcontroller clock output 2
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_CFGR_Type use
+   record
+      SW        at 0 range 0 .. 1;
+      SWS       at 0 range 2 .. 3;
+      HPRE      at 0 range 4 .. 7;
+      Reserved1 at 0 range 8 .. 9;
+      PPRE1     at 0 range 10 .. 12;
+      PPRE2     at 0 range 13 .. 15;
+      RTCPRE    at 0 range 16 .. 20;
+      MCO1      at 0 range 21 .. 22;
+      I2SSCR    at 0 range 23 .. 23;
+      MCO1PRE   at 0 range 24 .. 26;
+      MCO2PRE   at 0 range 27 .. 29;
+      MCO2      at 0 range 30 .. 31;
+   end record;
+
    -- 5.3 RCC registers
 
    type RCC_Type is
    record
-      RCC_CR : RCC_CR_Type with Volatile_Full_Access => True;
+      RCC_CR      : RCC_CR_Type      with Volatile_Full_Access => True;
+      RCC_PLLCFGR : RCC_PLLCFGR_Type with Volatile_Full_Access => True;
+      RCC_CFGR    : RCC_CFGR_Type    with Volatile_Full_Access => True;
    end record with
-      Size                    => 32,
+      Size                    => 3 * 32,
       Suppress_Initialization => True;
    for RCC_Type use
    record
-      RCC_CR at 16#00# range 0 .. 31;
+      RCC_CR      at 16#00# range 0 .. 31;
+      RCC_PLLCFGR at 16#04# range 0 .. 31;
+      RCC_CFGR    at 16#08# range 0 .. 31;
    end record;
 
    RCC_BASEADDRESS : constant := 16#4002_3800#;
