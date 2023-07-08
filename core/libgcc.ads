@@ -29,6 +29,16 @@ package LibGCC is
 
    pragma Pure;
 
+   function BswapSI2 (V : GCC_Types.USI_Type) return GCC_Types.USI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__bswapsi2";
+
+   function BswapDI2 (V : GCC_Types.UDI_Type) return GCC_Types.UDI_Type with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__bswapdi2";
+
    function AddDI3 (
                     A1 : GCC_Types.UDI_Type;
                     A2 : GCC_Types.UDI_Type

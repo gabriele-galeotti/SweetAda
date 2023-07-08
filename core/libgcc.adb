@@ -27,6 +27,7 @@ package body LibGCC is
 
    use type GCC_Types.SI_Type;
    use type GCC_Types.USI_Type;
+   use type GCC_Types.UDI_Type;
 
    type UHI_2 is array (0 .. 1) of GCC_Types.UHI_Type with
       Alignment => GCC_Types.USI_Type'Alignment,
@@ -61,6 +62,18 @@ package body LibGCC is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- BswapSI2
+   ----------------------------------------------------------------------------
+   function BswapSI2 (V : GCC_Types.USI_Type) return GCC_Types.USI_Type is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- BswapDI2
+   ----------------------------------------------------------------------------
+   function BswapDI2 (V : GCC_Types.UDI_Type) return GCC_Types.UDI_Type is
+   separate;
 
    ----------------------------------------------------------------------------
    -- AddDI3
