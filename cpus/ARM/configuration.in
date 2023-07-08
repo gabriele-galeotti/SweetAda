@@ -14,20 +14,12 @@ else ifeq ($(CPU_MODEL),CORTEXA9)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexA9
 else ifeq ($(CPU_MODEL),CORTEXM0)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM0
-  CPU_SUPPORT_DEFLIST := ../support/byte_swap_16.v6.v7.adb CortexM0/bits-byte_swap_16.adb \
-                         ../support/byte_swap_32.v6.v7.adb CortexM0/bits-byte_swap_32.adb
 else ifeq ($(CPU_MODEL),CORTEXM3)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM3
-  CPU_SUPPORT_DEFLIST := ../support/byte_swap_16.v6.v7.adb CortexM3/bits-byte_swap_16.adb \
-                         ../support/byte_swap_32.v6.v7.adb CortexM3/bits-byte_swap_32.adb
 else ifeq ($(CPU_MODEL),CORTEXM4)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM4
-  CPU_SUPPORT_DEFLIST := ../support/byte_swap_16.v6.v7.adb CortexM4/bits-byte_swap_16.adb \
-                         ../support/byte_swap_32.v6.v7.adb CortexM4/bits-byte_swap_32.adb
 else ifeq ($(CPU_MODEL),CORTEXM7)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM7
-  CPU_SUPPORT_DEFLIST := ../support/byte_swap_16.v6.v7.adb CortexM7/bits-byte_swap_16.adb \
-                         ../support/byte_swap_32.v6.v7.adb CortexM7/bits-byte_swap_32.adb
 endif
 
 # override core MMIO
