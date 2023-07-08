@@ -121,7 +121,7 @@ package body MemecFX12 is
    -- in the main program before any access to the LCD panel is performed.
    ----------------------------------------------------------------------------
    procedure LCD_Init is
-      LCD_Data : constant array (Natural range <>) of Unsigned_8 := (16#38#, 16#06#, 16#0E#, 16#01#, 16#80#, 16#0C#);
+      LCD_Data : constant array (Natural range <>) of Unsigned_8 := [16#38#, 16#06#, 16#0E#, 16#01#, 16#80#, 16#0C#];
    begin
       Wait (150_000);
       for Index in LCD_Data'Range loop
