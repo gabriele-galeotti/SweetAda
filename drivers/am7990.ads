@@ -440,13 +440,14 @@ package Am7990 is
 
    function Register_Read
       (Descriptor : Descriptor_Type;
-       Register   : Register_Type) return Unsigned_16 with
-      Inline => True;
+       Register   : Register_Type)
+      return Unsigned_16
+      with Inline => True;
 
    procedure Register_Write
       (Descriptor : in Descriptor_Type;
        Register   : in Register_Type;
-       Value      : in Unsigned_16) with
-      Inline => True;
+       Value      : in Unsigned_16)
+      with Inline => True;
 
 end Am7990;
