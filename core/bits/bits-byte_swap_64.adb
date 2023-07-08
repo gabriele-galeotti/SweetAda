@@ -16,14 +16,16 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Bits)
-function Byte_Swap_64 (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_64 is
+function Byte_Swap_64
+   (Value : in Interfaces.Unsigned_64)
+   return Interfaces.Unsigned_64
+   is
+   function BS64
+      (V : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_64
+      with Import        => True,
+           Convention    => Intrinsic,
+           External_Name => "__builtin_bswap64";
 begin
-   return ShR (Value and 16#FF00_0000_0000_0000#, 56) or
-          ShR (Value and 16#00FF_0000_0000_0000#, 40) or
-          ShR (Value and 16#0000_FF00_0000_0000#, 24) or
-          ShR (Value and 16#0000_00FF_0000_0000#, 8) or
-          ShL (Value and 16#0000_0000_FF00_0000#, 8) or
-          ShL (Value and 16#0000_0000_00FF_0000#, 24) or
-          ShL (Value and 16#0000_0000_0000_FF00#, 40) or
-          ShL (Value and 16#0000_0000_0000_00FF#, 56);
+   return BS64 (Value);
 end Byte_Swap_64;

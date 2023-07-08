@@ -16,10 +16,16 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Bits)
-function Byte_Swap_32 (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
+function Byte_Swap_32
+   (Value : in Interfaces.Unsigned_32)
+   return Interfaces.Unsigned_32
+   is
+   function BS32
+      (V : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_32
+      with Import        => True,
+           Convention    => Intrinsic,
+           External_Name => "__builtin_bswap32";
 begin
-   return ShR (Value and 16#FF00_0000#, 24) or
-          ShR (Value and 16#00FF_0000#, 8) or
-          ShL (Value and 16#0000_FF00#, 8) or
-          ShL (Value and 16#0000_00FF#, 24);
+   return BS32 (Value);
 end Byte_Swap_32;

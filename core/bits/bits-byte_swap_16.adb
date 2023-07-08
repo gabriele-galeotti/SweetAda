@@ -16,8 +16,16 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Bits)
-function Byte_Swap_16 (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 is
+function Byte_Swap_16
+   (Value : in Interfaces.Unsigned_16)
+   return Interfaces.Unsigned_16
+   is
+   function BS16
+      (V : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_16
+      with Import        => True,
+           Convention    => Intrinsic,
+           External_Name => "__builtin_bswap16";
 begin
-   return ShR (Value and 16#FF00#, 8) or
-          ShL (Value and 16#00FF#, 8);
+   return BS16 (Value);
 end Byte_Swap_16;
