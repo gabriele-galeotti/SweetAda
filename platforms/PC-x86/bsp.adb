@@ -19,7 +19,6 @@ with System;
 with System.Parameters;
 with System.Secondary_Stack;
 with System.Storage_Elements;
-with Interfaces;
 with Interfaces.C;
 with Ada.Unchecked_Conversion;
 with Configure;

@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
 with Definitions;
 
 package BSP is
@@ -28,6 +29,12 @@ package BSP is
    --========================================================================--
 
    use Definitions;
+
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
+      Atomic        => True,
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "tick_count";
 
    -- clock triggers @ 1kHz
    mtime_Offset : constant := (CLK_RTC32k + 1_000 / 2) / 1_000;

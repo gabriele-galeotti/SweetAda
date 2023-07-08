@@ -19,7 +19,6 @@ with System.Storage_Elements;
 with Interfaces;
 with Definitions;
 with Bits;
-with Core;
 with RISCV;
 with HiFive1;
 with Console;
@@ -58,9 +57,9 @@ package body Exceptions is
          Console.Print (Cause, NL => True);
          loop null; end loop;
       else
-         Core.Tick_Count := @ + 1;
+         BSP.Tick_Count := @ + 1;
          RISCV.mtimecmp_Write (RISCV.mtime_Read + BSP.mtime_Offset);
-         if Core.Tick_Count mod 1_000 = 0 then
+         if BSP.Tick_Count mod 1_000 = 0 then
             Console.Print ("T", NL => False);
          end if;
       end if;

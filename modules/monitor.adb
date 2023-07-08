@@ -18,7 +18,6 @@
 with Ada.Characters.Latin_1;
 with System.Storage_Elements;
 with CPU;
-with Core;
 with BSP;
 with Console;
 with Srecord;
@@ -126,7 +125,7 @@ package body Monitor is
                end if;
             ------------------------------------
             elsif Buffer (1 .. 5) = "ticks" then
-               Console.Print (Core.Tick_Count, NL => True);
+               Console.Print (BSP.Tick_Count, NL => True);
             ----
             else
                Console.Print ("*** Error: unrecognized command.", NL => True);

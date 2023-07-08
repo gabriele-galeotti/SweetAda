@@ -18,7 +18,6 @@
 with System.Parameters;
 with System.Secondary_Stack;
 with System;
-with Interfaces;
 with Definitions;
 with Core;
 with SPARC;
@@ -39,6 +38,7 @@ package body BSP is
    use System;
    use Interfaces;
    use Definitions;
+   use Bits;
    use LEON3;
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;

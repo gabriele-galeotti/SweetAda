@@ -18,7 +18,6 @@
 with System;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
-with Interfaces;
 with Configure;
 with Definitions;
 with Bits;

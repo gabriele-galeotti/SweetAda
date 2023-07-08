@@ -17,7 +17,6 @@
 
 with System;
 with System.Storage_Elements;
-with Interfaces;
 with Configure;
 with Definitions;
 with Bits;

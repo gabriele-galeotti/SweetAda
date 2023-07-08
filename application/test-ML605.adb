@@ -2,9 +2,9 @@
 with System.Storage_Elements;
 with Interfaces;
 with Configure;
-with Core;
 with ML605;
 with CPU;
+with BSP;
 with IOEMU;
 with Console;
 
@@ -49,7 +49,7 @@ package body Application is
             loop
                if (Value mod 10) = 0 then
                   Console.Print ("hello, SweetAda", NL => True);
-                  Console.Print (Core.Tick_Count, NL => True);
+                  Console.Print (BSP.Tick_Count, NL => True);
                end if;
                Value := @ + 1;
                if Configure.USE_QEMU_IOEMU then

@@ -40,7 +40,7 @@ package body Exceptions is
    use System.Storage_Elements;
    use Abort_Library;
    use Amiga;
-   use BSP;
+   -- use BSP;
 
    --========================================================================--
    --                                                                        --
@@ -93,13 +93,13 @@ package body Exceptions is
          -- Console.Print ("Level 2 IRQ", NL => True);
          -- check if A2065 interrupt
          if not A2065.Receive then
-            Core.Tick_Count := @ + 1;
+            BSP.Tick_Count := @ + 1;
             if Configure.USE_FS_UAE_IOEMU then
                -- IRQ pulsemeter
                IOEMU.CIA_IO0 := 1;
             end if;
             -- use power LED as tick IRQ monitoring
-            if Core.Tick_Count mod 500 = 0 then
+            if BSP.Tick_Count mod 500 = 0 then
                CIAA.PRA.PA1 := not @;
             end if;
             -- clear pending interrupt

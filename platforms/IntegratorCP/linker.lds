@@ -24,12 +24,12 @@ SECTIONS
                 PROVIDE(_debug_flag = .);
                 BYTE(0x00);
                 . = ALIGN(0x10);
-/*
+                /*
                 __exidx_start = .;
                 *(.ARM.exidx* .gnu.linkonce.armexidx.*)
                 __exidx_end = .;
                 *(.ARM.extab* .gnu.linkonce.armextab.*)
-*/
+                */
                 _etext = .;
         } > RAM
         /**********************************************************************

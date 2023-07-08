@@ -20,11 +20,11 @@ with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Configure;
-with Core;
 with Abort_Library;
 with LLutils;
 with SPARC;
 with LEON3;
+with BSP;
 with IOEMU;
 
 package body Exceptions is
@@ -67,7 +67,7 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Irq_Process is
    begin
-      Core.Tick_Count := @ + 1;
+      BSP.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
          -- IRQ pulsemeter
          IOEMU.IO0 := 1;

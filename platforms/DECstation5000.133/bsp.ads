@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
 with Z8530;
 
 package BSP is
@@ -26,6 +27,12 @@ package BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
+      Atomic        => True,
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "tick_count";
 
    -- serial port "2"
    SCC_Descriptor1 : aliased Z8530.Descriptor_Type := Z8530.DESCRIPTOR_INVALID;

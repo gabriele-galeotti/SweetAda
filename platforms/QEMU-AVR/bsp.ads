@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+
 package BSP is
 
    --========================================================================--
@@ -24,6 +26,13 @@ package BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   -- AVR CPU version with no "Atomic" aspect
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
+      Volatile      => True,
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "tick_count";
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

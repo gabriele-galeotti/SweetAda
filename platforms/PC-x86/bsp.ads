@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
 with UART16x50;
 with IDE;
 with NE2000;
@@ -29,6 +30,12 @@ package BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
+      Atomic        => True,
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "tick_count";
 
    UART_Descriptors    : array (1 .. 2) of aliased UART16x50.Descriptor_Type :=
                          [others => UART16x50.DESCRIPTOR_INVALID];

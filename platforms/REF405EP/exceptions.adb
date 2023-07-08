@@ -18,7 +18,7 @@
 with System.Machine_Code;
 with Definitions;
 with Configure;
-with Core;
+with BSP;
 with IOEMU;
 with Console;
 
@@ -49,9 +49,9 @@ package body Exceptions is
    procedure Exception_Process (Identifier : in Unsigned_32) is
    begin
       if Identifier = PIT_IRQ_ID then
-         Core.Tick_Count := @ + 1;
+         BSP.Tick_Count := @ + 1;
          if Configure.USE_QEMU_IOEMU then
-            if Core.Tick_Count mod 1_000 = 0 then
+            if BSP.Tick_Count mod 1_000 = 0 then
                -- loop
                --    exit when (MFSPR_TSR and PIS) = 0;
                -- end loop;

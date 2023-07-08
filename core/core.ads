@@ -34,13 +34,7 @@ package Core is
    KERNEL_VERSION   : constant String := "0.0";
    KERNEL_THREAD_ID : constant := 1;
 
-   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
-      Atomic        => True,
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "tick_count";
-
-   Debug_Flag : constant Boolean with
+   Debug_Flag : aliased constant Boolean with
       Size          => 8,
       Import        => True,
       Convention    => Asm,

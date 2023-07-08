@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+
 package BSP is
 
    --========================================================================--
@@ -24,6 +26,12 @@ package BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
+      Atomic        => True,
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "tick_count";
 
    Timer_Constant : constant := 2_000_000 / 1_000;
 

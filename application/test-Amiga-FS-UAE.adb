@@ -3,7 +3,6 @@ with System.Machine_Code;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Configure;
-with Core;
 with Bits;
 with MMIO;
 with M68k;
@@ -33,7 +32,6 @@ package body Application is
    use System.Machine_Code;
    use Interfaces;
    use Configure;
-   use Core;
    use Bits;
    use MMIO;
    use M68k;
@@ -57,7 +55,7 @@ package body Application is
    ----------------------------------------------------------------------------
    function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean is
    begin
-      return (Tick_Count - Flash_Count) > Timeout;
+      return (BSP.Tick_Count - Flash_Count) > Timeout;
    end Tick_Count_Expired;
 
    ----------------------------------------------------------------------------
@@ -130,26 +128,26 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            TC1   : Unsigned_32 := Tick_Count;
-            TC2   : Unsigned_32 := Tick_Count;
-            TC3   : Unsigned_32 := Tick_Count;
+            TC1   : Unsigned_32 := BSP.Tick_Count;
+            TC2   : Unsigned_32 := BSP.Tick_Count;
+            TC3   : Unsigned_32 := BSP.Tick_Count;
             Value : Unsigned_8 := 0;
          begin
             loop
                if Tick_Count_Expired (TC1, 50) then
                   Handle_Ethernet;
-                  TC1 := Tick_Count;
+                  TC1 := BSP.Tick_Count;
                end if;
                if Tick_Count_Expired (TC2, 300) then
                   if Configure.USE_FS_UAE_IOEMU then
                      IOEMU.CIA_IO5 := Value;
                   end if;
                   Value := @ + 1;
-                  TC2 := Tick_Count;
+                  TC2 := BSP.Tick_Count;
                end if;
                if Tick_Count_Expired (TC3, 2000) then
                   Serialport_TX ('.');
-                  TC3 := Tick_Count;
+                  TC3 := BSP.Tick_Count;
                end if;
             end loop;
          end;

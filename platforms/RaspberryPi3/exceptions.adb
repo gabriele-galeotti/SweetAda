@@ -19,7 +19,6 @@ with System;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
-with Core;
 with ARMv8A;
 with RPI3;
 with BSP;
@@ -72,8 +71,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Irq_Process is
    begin
-      Core.Tick_Count := @ + 1;
-      if (Core.Tick_Count and 16#0000_0100#) = 0 then
+      BSP.Tick_Count := @ + 1;
+      if (BSP.Tick_Count and 16#0000_0100#) = 0 then
          -- GPIO05 ON
          RPI3.GPSET0 := (SET5 => True, others => False);
       else

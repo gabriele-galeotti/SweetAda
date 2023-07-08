@@ -20,7 +20,6 @@ with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Configure;
-with Core;
 with Abort_Library;
 with LLutils;
 with SPARC;
@@ -72,9 +71,9 @@ package body Exceptions is
    procedure Irq_Process is
    begin
       if Sun4m.SIPR.T then
-         Core.Tick_Count := @ + 1;
+         BSP.Tick_Count := @ + 1;
          if Configure.USE_QEMU_IOEMU then
-            if Core.Tick_Count mod 1_000 = 0 then
+            if BSP.Tick_Count mod 1_000 = 0 then
                -- IOEMU "TIMER" LED blinking
                IOEMU.IO0 := 1;
                IOEMU.IO0 := 0;

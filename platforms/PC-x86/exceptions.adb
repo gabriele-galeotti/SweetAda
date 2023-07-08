@@ -19,7 +19,6 @@ with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Configure;
-with Core;
 with Abort_Library;
 with Interrupts;
 with CPU.IO;
@@ -165,12 +164,12 @@ package body Exceptions is
       case Irq_Identifier is
          when PC.PIT_Interrupt =>
             -- increment system tick counter
-            Core.Tick_Count := @ + 1;
+            BSP.Tick_Count := @ + 1;
             -- LED ignition QEMU/IOEMU or physical PC
             if QEMU then
                if Configure.USE_QEMU_IOEMU then
                   -- IOEMU "TIMER" LED blinking
-                  if Core.Tick_Count mod 1_000 = 0 then
+                  if BSP.Tick_Count mod 1_000 = 0 then
                      PC.PPI_ControlOut (PC.To_PPI_Control (16#FF#));
                      PC.PPI_ControlOut (PC.To_PPI_Control (16#00#));
                   end if;
@@ -178,10 +177,10 @@ package body Exceptions is
             else
                -- with a physical machine, we have to turn on/off the LED at a
                -- "human" rate
-               if Core.Tick_Count mod 1_000 = 0 then
+               if BSP.Tick_Count mod 1_000 = 0 then
                   PC.PPI_ControlOut (PC.To_PPI_Control (16#04#)); -- PPI INIT signal
                end if;
-               if (Core.Tick_Count + 500) mod 1_000 = 0 then
+               if (BSP.Tick_Count + 500) mod 1_000 = 0 then
                   PC.PPI_ControlOut (PC.To_PPI_Control (0));
                end if;
             end if;

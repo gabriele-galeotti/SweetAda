@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
 with Bits;
 
 package BSP is
@@ -27,12 +28,16 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   use Bits;
-
-   Nwindows : aliased CPU_Integer with
+   Nwindows : aliased Bits.CPU_Integer with
       Import        => True,
       Convention    => Asm,
       External_Name => "nwindows";
+
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
+      Atomic        => True,
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "tick_count";
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);

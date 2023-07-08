@@ -19,10 +19,10 @@ with System;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Configure;
-with Core;
 with Bits;
 with ARMv8A;
 with Virt;
+with BSP;
 with IOEMU;
 
 package body Exceptions is
@@ -52,7 +52,7 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Exception_Process is
    begin
-      Core.Tick_Count := @ + 1;
+      BSP.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
          -- IRQ pulsemeter
          IOEMU.IO0 := 1;

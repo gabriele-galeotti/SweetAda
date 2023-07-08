@@ -17,8 +17,8 @@
 
 with Interfaces;
 with Configure;
-with Core;
 with GHRD;
+with BSP;
 with IOEMU;
 
 package body Exceptions is
@@ -39,7 +39,7 @@ package body Exceptions is
    procedure Irq_Process is
    begin
       if GHRD.Timer.Status.TO then
-         Core.Tick_Count := @ + 1;
+         BSP.Tick_Count := @ + 1;
          if Configure.USE_QEMU_IOEMU then
             -- IRQ pulsemeter
             IOEMU.IO0 := 1;

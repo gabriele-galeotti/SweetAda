@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
 with Bits;
 with Z8530;
 with Am7990;
@@ -33,6 +34,12 @@ package BSP is
       Import        => True,
       Convention    => Asm,
       External_Name => "nwindows";
+
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
+      Atomic        => True,
+      Export        => True,
+      Convention    => Asm,
+      External_Name => "tick_count";
 
    QEMU : Boolean := False;
 

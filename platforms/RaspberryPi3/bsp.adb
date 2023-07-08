@@ -18,7 +18,6 @@
 with System;
 with System.Parameters;
 with System.Secondary_Stack;
-with Interfaces;
 with Interfaces.C;
 with Definitions;
 with Bits;

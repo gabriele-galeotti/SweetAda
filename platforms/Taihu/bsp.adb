@@ -18,7 +18,6 @@
 with System.Parameters;
 with System.Secondary_Stack;
 with System.Storage_Elements;
-with Interfaces;
 with Definitions;
 with Configure;
 with Bits;

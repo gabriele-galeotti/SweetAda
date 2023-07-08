@@ -17,10 +17,10 @@
 
 with System.Machine_Code;
 with Interfaces;
-with Core;
 with RISCV;
 with Configure;
 with Virt;
+with BSP;
 with IOEMU;
 
 package body Exceptions is
@@ -49,7 +49,7 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Exception_Process is
    begin
-      Core.Tick_Count := @ + 1;
+      BSP.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
          -- IRQ pulsemeter
          IOEMU.IO0 := 1;

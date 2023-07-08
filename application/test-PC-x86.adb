@@ -43,7 +43,6 @@ package body Application is
    use System.Storage_Elements;
    use System.Machine_Code;
    use Interfaces;
-   use Core;
    use Bits;
    use CPU.IO;
    use PC;
@@ -77,7 +76,7 @@ package body Application is
    ----------------------------------------------------------------------------
    function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean is
    begin
-      return (Tick_Count - Flash_Count) > Timeout;
+      return (BSP.Tick_Count - Flash_Count) > Timeout;
    end Tick_Count_Expired;
 
    ----------------------------------------------------------------------------
@@ -182,14 +181,14 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            TC1   : Unsigned_32 := Tick_Count;
-            TC2   : Unsigned_32 := Tick_Count;
+            TC1   : Unsigned_32 := BSP.Tick_Count;
+            TC2   : Unsigned_32 := BSP.Tick_Count;
             Value : Unsigned_8 := 0;
          begin
             loop
                if Tick_Count_Expired (TC1, 50) then
                   Handle_Ethernet;
-                  TC1 := Tick_Count;
+                  TC1 := BSP.Tick_Count;
                end if;
                if Tick_Count_Expired (TC2, 300) then
                   -- IOEMU GPIO test
@@ -200,7 +199,7 @@ package body Application is
                      PortOut (IOEMU.IO3_ADDRESS, Unsigned_8'(Value * 4));
                   end if;
                   Value := @ + 1;
-                  TC2 := Tick_Count;
+                  TC2 := BSP.Tick_Count;
                end if;
             end loop;
          end;
