@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ memory_functions-memcpy.adb                                                                               --
+-- __FLN__ memory_functions-ememcpy.adb                                                                              --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,11 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Memory_Functions)
-function Memcpy (
-                 S1 : System.Address;
-                 S2 : System.Address;
-                 N  : Interfaces.C.size_t
-                ) return System.Address is
+function EMemcpy
+   (S1 : System.Address;
+    S2 : System.Address;
+    N  : Interfaces.C.size_t)
+   return System.Address
+   is
    pragma Suppress (Access_Check);
    function To_MAP is new Ada.Unchecked_Conversion (System.Address, Memory_Area_Ptr);
    P_S1 : constant Memory_Area_Ptr := To_MAP (S1);
@@ -33,4 +34,4 @@ begin
       end loop;
    end if;
    return S1;
-end Memcpy;
+end EMemcpy;

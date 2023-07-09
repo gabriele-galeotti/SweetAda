@@ -103,14 +103,10 @@ library project Core is
 
    Memory_Functions_Files := (
                               "memory_functions.adb", "memory_functions.ads",
-                              "memory_functions-cmpmem.adb",
-                              "memory_functions-cpymem.adb",
-                              "memory_functions-memcmp.adb",
-                              "memory_functions-memcpy.adb",
-                              "memory_functions-memmove.adb",
-                              "memory_functions-memset.adb",
-                              "memory_functions-movemem.adb",
-                              "memory_functions-setmem.adb"
+                              "memory_functions-ememcmp.adb",
+                              "memory_functions-ememcpy.adb",
+                              "memory_functions-ememmove.adb",
+                              "memory_functions-ememset.adb"
                              );
 
    for Source_Files use

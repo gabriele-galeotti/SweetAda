@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ memory_functions-cpymem.adb                                                                               --
+-- __FLN__ memory_functions-ememmove.adb                                                                             --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,14 +16,30 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Memory_Functions)
-procedure Cpymem (
-                  S1 : in System.Address;
-                  S2 : in System.Address;
-                  N  : in Bits.Bytesize
-                 ) is
-   Src    : constant System.Address := S1;
-   Dest   : constant System.Address := S2;
-   Unused : System.Address with Unreferenced => True;
+function EMemmove
+   (S1 : System.Address;
+    S2 : System.Address;
+    N  : Interfaces.C.size_t)
+   return System.Address
+   is
+   pragma Suppress (Access_Check);
+   function To_MAP is new Ada.Unchecked_Conversion (System.Address, Memory_Area_Ptr);
+   P_S1 : constant Memory_Area_Ptr := To_MAP (S1);
+   P_S2 : constant Memory_Area_Ptr := To_MAP (S2);
 begin
-   Unused := Memcpy (Dest, Src, N);
-end Cpymem;
+   -- avoid underflow since size_t is a modular type
+   if N > 0 then
+      if S1 <= S2 then
+         -- ascending addresses
+         for Index in 0 .. N - 1 loop
+            P_S1.all (Index) := P_S2.all (Index);
+         end loop;
+      else
+         -- descending addresses
+         for Index in reverse 0 .. N - 1 loop
+            P_S1.all (Index) := P_S2.all (Index);
+         end loop;
+      end if;
+   end if;
+   return S1;
+end EMemmove;

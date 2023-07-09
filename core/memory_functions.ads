@@ -32,77 +32,67 @@ package Memory_Functions is
 
    pragma Preelaborate;
 
-   function Memcmp (
-                    S1 : System.Address;
-                    S2 : System.Address;
-                    N  : Interfaces.C.size_t
-                   ) return Interfaces.C.int with
-      Export        => True,
-      Convention    => C,
-      External_Name => "memcmp";
+   ----------------------------------------------------------------------------
+   -- C-style function subprograms, with the same semantics and argument order
+   -- (destination address first)
+   ----------------------------------------------------------------------------
 
-   function Memcpy (
-                    S1 : System.Address;
-                    S2 : System.Address;
-                    N  : Interfaces.C.size_t
-                   ) return System.Address with
-      Export        => True,
-      Convention    => C,
-      External_Name => "memcpy";
+   function Memcmp
+      (S1 : System.Address;
+       S2 : System.Address;
+       N  : Interfaces.C.size_t)
+      return Interfaces.C.int
+      with Inline => True;
 
-   function Memmove (
-                     S1 : System.Address;
-                     S2 : System.Address;
-                     N  : Interfaces.C.size_t
-                    ) return System.Address with
-      Export        => True,
-      Convention    => C,
-      External_Name => "memmove";
+   function Memcpy
+      (S1 : System.Address;
+       S2 : System.Address;
+       N  : Interfaces.C.size_t)
+      return System.Address
+      with Inline => True;
 
-   function Memset (
-                    S : System.Address;
-                    C : Interfaces.C.int;
-                    N : Interfaces.C.size_t
-                   ) return System.Address with
-      Export        => True,
-      Convention    => C,
-      External_Name => "memset";
+   function Memmove
+      (S1 : System.Address;
+       S2 : System.Address;
+       N  : Interfaces.C.size_t)
+      return System.Address
+      with Inline => True;
 
-   procedure Cmpmem (
-                     S1 : in     System.Address;
-                     S2 : in     System.Address;
-                     N  : in     Bits.Bytesize;
-                     R  : in out Integer
-                    ) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "cmpmem";
+   function Memset
+      (S : System.Address;
+       C : Interfaces.C.int;
+       N : Interfaces.C.size_t)
+      return System.Address
+      with Inline => True;
 
-   procedure Cpymem (
-                     S1 : in System.Address;
-                     S2 : in System.Address;
-                     N  : in Bits.Bytesize
-                    ) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "cpymem";
+   ----------------------------------------------------------------------------
+   -- C-style procedure subprograms with inverted arguments (source address
+   -- first)
+   ----------------------------------------------------------------------------
 
-   procedure Movemem (
-                      S1 : in System.Address;
-                      S2 : in System.Address;
-                      N  : in Bits.Bytesize
-                     ) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "movemem";
+   procedure Cmpmem
+      (S1 : in     System.Address;
+       S2 : in     System.Address;
+       N  : in     Bits.Bytesize;
+       R  : in out Integer)
+      with Inline => True;
 
-   procedure Setmem (
-                     S : in System.Address;
-                     V : in Interfaces.Unsigned_8;
-                     N : in Bits.Bytesize
-                    ) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "setmem";
+   procedure Cpymem
+      (S1 : in System.Address;
+       S2 : in System.Address;
+       N  : in Bits.Bytesize)
+      with Inline => True;
+
+   procedure Movemem
+      (S1 : in System.Address;
+       S2 : in System.Address;
+       N  : in Bits.Bytesize)
+      with Inline => True;
+
+   procedure Setmem
+      (S : in System.Address;
+       V : in Interfaces.Unsigned_8;
+       N : in Bits.Bytesize)
+      with Inline => True;
 
 end Memory_Functions;
