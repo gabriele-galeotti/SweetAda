@@ -16,6 +16,8 @@
 
                 .sect   .text,"ax"
 
+                .align  7
+
                 .global vectors
 vectors:
 
