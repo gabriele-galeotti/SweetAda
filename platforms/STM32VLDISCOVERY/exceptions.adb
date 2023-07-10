@@ -15,8 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Storage_Elements;
+with Interfaces;
+with Bits;
 with Abort_Library;
-with Console;
+with ARMv7M;
+with CPU;
 
 package body Exceptions is
 
@@ -27,6 +31,10 @@ package body Exceptions is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use System.Storage_Elements;
+   use Interfaces;
+   use Bits;
 
    --========================================================================--
    --                                                                        --
@@ -55,9 +63,13 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
+      Vector_Table : constant Asm_Entry_Point
+         with Import        => True,
+              External_Name => "vectors";
    begin
-      null;
+      ARMv7M.VTOR.TBLOFF := Bits_25 (Shift_Right (Unsigned_32 (To_Integer (Vector_Table'Address)), 7));
    end Init;
 
 end Exceptions;

@@ -16,6 +16,8 @@
 
                 .sect   .vectors,"ax"
 
+                .align  7
+
                 .global vectors
 vectors:
 
@@ -283,8 +285,9 @@ Interrupt239:   .long   0
 
                 .thumb_func
 systick_handler:
-                .extern irq_process
                 push    {lr}
-                //bl      irq_process
-                pop     {pc}
+                .extern irq_process
+                bl      irq_process
+                pop     {lr}
+                bx      lr
 

@@ -54,7 +54,7 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure SysTick_Init is
    begin
-      ARMv7M.SYST_RVR.RELOAD := 16#8000#;
+      ARMv7M.SYST_RVR.RELOAD := 16#50_0000#;
       ARMv7M.SHPR3.PRI_15 := 16#01#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR :=
@@ -107,6 +107,8 @@ package body BSP is
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
+      ARMv7M.Irq_Enable;
+      ARMv7M.Fiq_Enable;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;

@@ -22,6 +22,12 @@
 _start:
 
                 //
+                // Disable interrupts.
+                //
+                cpsid   i
+                cpsid   f
+
+                //
                 // Setup stack pointer.
                 //
                 ldr     r0,=kernel_stack
