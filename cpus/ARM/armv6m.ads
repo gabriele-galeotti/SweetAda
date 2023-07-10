@@ -272,15 +272,15 @@ package ARMv6M is
 
    type VTOR_Type is
    record
-      Reserved : Bits_6;
-      TBLOFF   : Bits_26; -- Bits[31:7] of the vector table address.
+      Reserved : Bits_7 := 0;
+      TBLOFF   : Bits_25;     -- Bits[31:7] of the vector table address.
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for VTOR_Type use
    record
-      Reserved at 0 range 0 .. 5;
-      TBLOFF   at 0 range 6 .. 31;
+      Reserved at 0 range 0 .. 6;
+      TBLOFF   at 0 range 7 .. 31;
    end record;
 
    VTOR : aliased VTOR_Type with
