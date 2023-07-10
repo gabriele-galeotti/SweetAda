@@ -245,27 +245,27 @@ package Sun4m is
 
    type E_CSR_Type is
    record
-      E_INT_PEND      : Boolean; -- R   Set when e_irq_ active, cleared when e_irq_ inactive
-      E_ERR_PEND      : Boolean; -- R   Set when memory time-out, protection or late error detected on a ENET transfer.
-      E_DRAINING      : Bits_2;  -- R   Both bits set when E-cache draining dirty data to memory, otherwise both bits are 0.
-      E_INT_EN        : Boolean; -- R/W When set, enables sb_e_irq_ to assert when E_INT_PEND or E_ERR_PEND is set.
-      E_INVALIDATE    : Boolean; -- W   When set, marks all bytes in E-cache as invalid.  Resets itself. Reads as zero.
-      E_SLAVE_ERR     : Boolean; -- R/W Set on slave access size error to a ENET-related register.  Reset on write of 1.
-      E_RESET         : Boolean; -- R/W When set, invalidates the E-cache, resets the ENET interface, and asserts e_reset.
-      Unused1         : Bits_2;
-      E_DRAIN         : Boolean; -- R/W When set, forces draining of E-cache Resets itself when draining complete
-      E_DSBL_WR_DRN   : Boolean; -- R/W When set, disables draining of E-cache on descriptor writes from ENET.
-      E_DSBL_RD_DRN   : Boolean; -- R/W When set, disables draining of E-cache on slave reads to ENET.
-      Unused2         : Bits_2;
-      E_ILACC         : Boolean; -- R/W When set, modifies ENET DMA cycle.
-      E_DSBL_BUF_WR   : Boolean; -- R/W When set, disables buffering of slave writes to ENET.
-      E_DSBL_WR_INVAL : Boolean; -- R/W Defines whether E-cache is invalidated on slave writes to ENET 1 = no invalidate
-      E_BURST_SIZE    : Bits_2;  -- R/W Defines size of SBus read and write bursts for ENET transfers (see table below).
-      Unused3         : Bits_1;
-      E_LOOP_TEST     : Boolean; -- R/W When set, enables Ethernet loop-back mode by tristating TP_AUI_ output.
-      E_TP_AUI_x      : Boolean; -- R/W When E_LOOP_TEST = 0, selects TP or AUI Ethernet by driving TP_AUI to 1 or 0.
-      Unused4         : Bits_5;
-      E_DEV_ID        : Bits_4;  -- R   Device ID (For DMA2, E_DEV_ID=1010)
+      E_INT_PEND      : Boolean;     -- R   Set when e_irq_ active, cleared when e_irq_ inactive
+      E_ERR_PEND      : Boolean;     -- R   Set when memory time-out, protection or late error detected on a ENET transfer.
+      E_DRAINING      : Bits_2;      -- R   Both bits set when E-cache draining dirty data to memory, otherwise both bits are 0.
+      E_INT_EN        : Boolean;     -- R/W When set, enables sb_e_irq_ to assert when E_INT_PEND or E_ERR_PEND is set.
+      E_INVALIDATE    : Boolean;     -- W   When set, marks all bytes in E-cache as invalid.  Resets itself. Reads as zero.
+      E_SLAVE_ERR     : Boolean;     -- R/W Set on slave access size error to a ENET-related register.  Reset on write of 1.
+      E_RESET         : Boolean;     -- R/W When set, invalidates the E-cache, resets the ENET interface, and asserts e_reset.
+      Unused1         : Bits_2 := 0;
+      E_DRAIN         : Boolean;     -- R/W When set, forces draining of E-cache Resets itself when draining complete
+      E_DSBL_WR_DRN   : Boolean;     -- R/W When set, disables draining of E-cache on descriptor writes from ENET.
+      E_DSBL_RD_DRN   : Boolean;     -- R/W When set, disables draining of E-cache on slave reads to ENET.
+      Unused2         : Bits_2 := 0;
+      E_ILACC         : Boolean;     -- R/W When set, modifies ENET DMA cycle.
+      E_DSBL_BUF_WR   : Boolean;     -- R/W When set, disables buffering of slave writes to ENET.
+      E_DSBL_WR_INVAL : Boolean;     -- R/W Defines whether E-cache is invalidated on slave writes to ENET 1 = no invalidate
+      E_BURST_SIZE    : Bits_2;      -- R/W Defines size of SBus read and write bursts for ENET transfers (see table below).
+      Unused3         : Bits_1 := 0;
+      E_LOOP_TEST     : Boolean;     -- R/W When set, enables Ethernet loop-back mode by tristating TP_AUI_ output.
+      E_TP_AUI_x      : Boolean;     -- R/W When E_LOOP_TEST = 0, selects TP or AUI Ethernet by driving TP_AUI to 1 or 0.
+      Unused4         : Bits_5 := 0;
+      E_DEV_ID        : Bits_4;      -- R   Device ID (For DMA2, E_DEV_ID=1010)
    end record with
       Bit_Order => High_Order_First,
       Size      => 32;
