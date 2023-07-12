@@ -631,6 +631,123 @@ package STM32F769I is
       Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- 10 Nested vectored interrupt controller (NVIC)
+   ----------------------------------------------------------------------------
+
+   -- 10.1.2 Interrupt and exception vectors
+
+   IRQ_WWDG               : constant := 0;   -- Window Watchdog interrupt
+   IRQ_PVD                : constant := 1;   -- PVD through EXTI line detection interrupt
+   IRQ_TAMP_STAMP         : constant := 2;   -- Tamper and TimeStamp interrupts through the EXTI line
+   IRQ_RTC_WKUP           : constant := 3;   -- RTC Wakeup interrupt through the EXTI line
+   IRQ_FLASH              : constant := 4;   -- Flash global interrupt
+   IRQ_RCC                : constant := 5;   -- RCC global interrupt
+   IRQ_EXTI0              : constant := 6;   -- EXTI Line0 interrupt
+   IRQ_EXTI1              : constant := 7;   -- EXTI Line1 interrupt
+   IRQ_EXTI2              : constant := 8;   -- EXTI Line2 interrupt
+   IRQ_EXTI3              : constant := 9;   -- EXTI Line3 interrupt
+   IRQ_EXTI4              : constant := 10;  -- EXTI Line4 interrupt
+   IRQ_DMA1_Stream0       : constant := 11;  -- DMA1 Stream0 global interrupt
+   IRQ_DMA1_Stream1       : constant := 12;  -- DMA1 Stream1 global interrupt
+   IRQ_DMA1_Stream2       : constant := 13;  -- DMA1 Stream2 global interrupt
+   IRQ_DMA1_Stream3       : constant := 14;  -- DMA1 Stream3 global interrupt
+   IRQ_DMA1_Stream4       : constant := 15;  -- DMA1 Stream4 global interrupt
+   IRQ_DMA1_Stream5       : constant := 16;  -- DMA1 Stream5 global interrupt
+   IRQ_DMA1_Stream6       : constant := 17;  -- DMA1 Stream6 global interrupt
+   IRQ_ADC                : constant := 18;  -- ADC1, ADC2 and ADC3 global interrupts
+   IRQ_CAN1_TX            : constant := 19;  -- CAN1 TX interrupts
+   IRQ_CAN1_RX0           : constant := 20;  -- CAN1 RX0 interrupts
+   IRQ_CAN1_RX1           : constant := 21;  -- CAN1 RX1 interrupt
+   IRQ_CAN1_SCE           : constant := 22;  -- CAN1 SCE interrupt
+   IRQ_EXTI9_5            : constant := 23;  -- EXTI Line[9:5] interrupts
+   IRQ_TIM1_BRK_TIM9      : constant := 24;  -- TIM1 Break interrupt and TIM9 global interrupt
+   IRQ_TIM1_UP_TIM10      : constant := 25;  -- TIM1 Update interrupt and TIM10 global interrupt
+   IRQ_TIM1_TRG_COM_TIM11 : constant := 26;  -- TIM1 Trigger and Commutation interrupts and TIM11 global interrupt
+   IRQ_TIM1_CC            : constant := 27;  -- TIM1 Capture Compare interrupt
+   IRQ_TIM2               : constant := 28;  -- TIM2 global interrupt
+   IRQ_TIM3               : constant := 29;  -- TIM3 global interrupt
+   IRQ_TIM4               : constant := 30;  -- TIM4 global interrupt
+   IRQ_I2C1_EV            : constant := 31;  -- I2C1 event interrupt
+   IRQ_I2C1_ER            : constant := 32;  -- I2C1 error interrupt
+   IRQ_I2C2_EV            : constant := 33;  -- I2C2 event interrupt
+   IRQ_I2C2_ER            : constant := 34;  -- I2C2 error interrupt
+   IRQ_SPI1               : constant := 35;  -- SPI1 global interrupt
+   IRQ_SPI2               : constant := 36;  -- SPI2 global interrupt
+   IRQ_USART1             : constant := 37;  -- USART1 global interrupt
+   IRQ_USART2             : constant := 38;  -- USART2 global interrupt
+   IRQ_USART3             : constant := 39;  -- USART3 global interrupt
+   IRQ_EXTI15_10          : constant := 40;  -- EXTI Line[15:10] interrupts
+   IRQ_RTC_Alarm          : constant := 41;  -- RTC Alarms (A and B) through EXTI line interrupt
+   IRQ_OTG_FS_WKUP        : constant := 42;  -- USB On-The-Go FS Wakeup through EXTI line interrupt
+   IRQ_TIM8_BRK_TIM12     : constant := 43;  -- TIM8 Break interrupt and TIM12 global interrupt
+   IRQ_TIM8_UP_TIM13      : constant := 44;  -- TIM8 Update interrupt and TIM13 global interrupt
+   IRQ_TIM8_TRG_COM_TIM14 : constant := 45;  -- TIM8 Trigger and Commutation interrupts and TIM14 global interrupt
+   IRQ_TIM8_CC            : constant := 46;  -- TIM8 Capture Compare interrupt
+   IRQ_DMA1_Stream7       : constant := 47;  -- DMA1 Stream7 global interrupt
+   IRQ_FMC                : constant := 48;  -- FMC global interrupt
+   IRQ_SDMMC1             : constant := 49;  -- SDMMC1 global interrupt
+   IRQ_TIM5               : constant := 50;  -- TIM5 global interrupt
+   IRQ_SPI3               : constant := 51;  -- SPI3 global interrupt
+   IRQ_UART4              : constant := 52;  -- UART4 global interrupt
+   IRQ_UART5              : constant := 53;  -- UART5 global interrupt
+   IRQ_TIM6_DAC           : constant := 54;  -- TIM6 global interrupt, DAC1 and DAC2 underrun error interrupts
+   IRQ_TIM7               : constant := 55;  -- TIM7 global interrupt
+   IRQ_DMA2_Stream0       : constant := 56;  -- DMA2 Stream0 global interrupt
+   IRQ_DMA2_Stream1       : constant := 57;  -- DMA2 Stream1 global interrupt
+   IRQ_DMA2_Stream2       : constant := 58;  -- DMA2 Stream2 global interrupt
+   IRQ_DMA2_Stream3       : constant := 59;  -- DMA2 Stream3 global interrupt
+   IRQ_DMA2_Stream4       : constant := 60;  -- DMA2 Stream4 global interrupt
+   IRQ_ETH                : constant := 61;  -- Ethernet global interrupt
+   IRQ_ETH_WKUP           : constant := 62;  -- Ethernet Wakeup through EXTI line interrupt
+   IRQ_CAN2_TX            : constant := 63;  -- CAN2 TX interrupts
+   IRQ_CAN2_RX0           : constant := 64;  -- CAN2 RX0 interrupts
+   IRQ_CAN2_RX1           : constant := 65;  -- CAN2 RX1 interrupt
+   IRQ_CAN2_SCE           : constant := 66;  -- CAN2 SCE interrupt
+   IRQ_OTG_FS             : constant := 67;  -- USB On The Go FS global interrupt
+   IRQ_DMA2_Stream5       : constant := 68;  -- DMA2 Stream5 global interrupt
+   IRQ_DMA2_Stream6       : constant := 69;  -- DMA2 Stream6 global interrupt
+   IRQ_DMA2_Stream7       : constant := 70;  -- DMA2 Stream7 global interrupt
+   IRQ_USART6             : constant := 71;  -- USART6 global interrupt
+   IRQ_I2C3_EV            : constant := 72;  -- I2C3 event interrupt
+   IRQ_I2C3_ER            : constant := 73;  -- I2C3 error interrupt
+   IRQ_OTG_HS_EP1_OUT     : constant := 74;  -- USB On The Go HS End Point 1 Out global interrupt
+   IRQ_OTG_HS_EP1_IN      : constant := 75;  -- USB On The Go HS End Point 1 In global interrupt
+   IRQ_OTG_HS_WKUP        : constant := 76;  -- USB On The Go HS Wakeup through EXTI interrupt
+   IRQ_OTG_HS             : constant := 77;  -- USB On The Go HS global interrupt
+   IRQ_DCMI               : constant := 78;  -- DCMI global interrupt
+   IRQ_CRYP               : constant := 79;  -- CRYP crypto global interrupt
+   IRQ_HASH_RNG           : constant := 80;  -- Hash and Rng global interrupt
+   IRQ_FPU                : constant := 81;  -- FPU global interrupt
+   IRQ_UART7              : constant := 82;  -- UART7 global interrupt
+   IRQ_UART8              : constant := 83;  -- UART8 global interrupt
+   IRQ_SPI4               : constant := 84;  -- SPI4 global interrupt
+   IRQ_SPI5               : constant := 85;  -- SPI5 global interrupt
+   IRQ_SPI6               : constant := 86;  -- SPI6 global interrupt
+   IRQ_SAI7               : constant := 87;  -- SAI1 global interrupt
+   IRQ_LCD_TFT            : constant := 88;  -- LCD-TFT global interrupt
+   IRQ_LCD_TFT_E          : constant := 89;  -- LCD-TFT global Error interrupt
+   IRQ_DMA2D              : constant := 90;  -- DMA2D global interrupt
+   IRQ_SAI2               : constant := 91;  -- SAI2 global interrupt
+   IRQ_QuadSPI            : constant := 92;  -- QuadSPI global interrupt
+   IRQ_LP_Timer1          : constant := 93;  -- LP Timer1 global interrupt
+   IRQ_HDMI_CEC           : constant := 94;  -- HDMI-CEC global interrupt
+   IRQ_I2C4_EV            : constant := 95;  -- I2C4 event interrupt
+   IRQ_I2C4_ER            : constant := 96;  -- I2C4 Error interrupt
+   IRQ_SPDIFRX            : constant := 97;  -- SPDIFRX global interrupt
+   IRQ_DSIHOST            : constant := 98;  -- DSI host global interrupt
+   IRQ_DFSDM1_FLT0        : constant := 99;  -- DFSDM1 Filter 0 global interrupt
+   IRQ_DFSDM1_FLT1        : constant := 100; -- DFSDM1 Filter 1 global interrupt
+   IRQ_DFSDM1_FLT2        : constant := 101; -- DFSDM1 Filter 2 global interrupt
+   IRQ_DFSDM1_FLT3        : constant := 102; -- DFSDM1 Filter 3 global interrupt
+   IRQ_SDMMC2             : constant := 103; -- SDMMC2 global interrupt
+   IRQ_CAN3_TX            : constant := 104; -- CAN3 TX interrupt
+   IRQ_CAN3_RX0           : constant := 105; -- CAN3 RX0 interrupt
+   IRQ_CAN3_RX1           : constant := 106; -- CAN3 RX1 interrupt
+   IRQ_CAN3_SCE           : constant := 107; -- CAN3 SCE interrupt
+   IRQ_JPEG               : constant := 108; -- JPEG global interrupt
+   IRQ_MDIOS              : constant := 109; -- MDIO slave global interrupt
+
+   ----------------------------------------------------------------------------
    -- 34 Universal synchronous asynchronous receiver transmitter (USART)
    ----------------------------------------------------------------------------
 
