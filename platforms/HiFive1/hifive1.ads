@@ -958,4 +958,112 @@ package HiFive1 is
 
    end SPI;
 
+   ----------------------------------------------------------------------------
+   -- 20 Pulse Width Modulator (PWM)
+   ----------------------------------------------------------------------------
+
+   package PWM is
+
+      -- 20.4 PWM Count Register (pwmcount)
+
+      type pwmcount_Type is
+      record
+         pwmcount : Bits_31;     -- PWM count register. cmpwidth + 15 bits wide.
+         Reserved : Bits_1 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for pwmcount_Type use
+      record
+         pwmcount at 0 range 0 .. 30;
+         Reserved at 0 range 31 .. 31;
+      end record;
+
+      -- 20.5 PWM Configuration Register (pwmcfg)
+
+      type pwmcfg_Type is
+      record
+         pwmscale      : Bits_4;      -- PWM Counter scale
+         Reserved1     : Bits_4 := 0;
+         pwmsticky     : Boolean;     -- PWM Sticky - disallow clearing pwmcmp ip bits
+         pwmzerocmp    : Boolean;     -- PWM Zero - counter resets to zero after match
+         pwmdeglitch   : Boolean;     -- PWM Deglitch - latch pwmcmp ip within same cycle
+         Reserved2     : Bits_1 := 0;
+         pwmenalways   : Boolean;     -- PWM enable always - run continuously
+         pwmenoneshot  : Boolean;     -- PWM enable one shot - run one cycle
+         Reserved3     : Bits_2 := 0;
+         pwmcmp0center : Boolean;     -- PWM0 Compare Center
+         pwmcmp1center : Boolean;     -- PWM1 Compare Center
+         pwmcmp2center : Boolean;     -- PWM2 Compare Center
+         pwmcmp3center : Boolean;     -- PWM3 Compare Center
+         Reserved4     : Bits_4 := 0;
+         pwmcmp0gang   : Boolean;     -- PWM0/PWM1 Compare Gang
+         pwmcmp1gang   : Boolean;     -- PWM1/PWM2 Compare Gang
+         pwmcmp2gang   : Boolean;     -- PWM2/PWM3 Compare Gang
+         pwmcmp3gang   : Boolean;     -- PWM3/PWM0 Compare Gang
+         pwmcmp0ip     : Boolean;     -- PWM0 Interrupt Pending
+         pwmcmp1ip     : Boolean;     -- PWM1 Interrupt Pending
+         pwmcmp2ip     : Boolean;     -- PWM2 Interrupt Pending
+         pwmcmp3ip     : Boolean;     -- PWM3 Interrupt Pending
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for pwmcfg_Type use
+      record
+         pwmscale      at 0 range 0 .. 3;
+         Reserved1     at 0 range 4 .. 7;
+         pwmsticky     at 0 range 8 .. 8;
+         pwmzerocmp    at 0 range 9 .. 9;
+         pwmdeglitch   at 0 range 10 .. 10;
+         Reserved2     at 0 range 11 .. 11;
+         pwmenalways   at 0 range 12 .. 12;
+         pwmenoneshot  at 0 range 13 .. 13;
+         Reserved3     at 0 range 14 .. 15;
+         pwmcmp0center at 0 range 16 .. 16;
+         pwmcmp1center at 0 range 17 .. 17;
+         pwmcmp2center at 0 range 18 .. 18;
+         pwmcmp3center at 0 range 19 .. 19;
+         Reserved4     at 0 range 20 .. 23;
+         pwmcmp0gang   at 0 range 24 .. 24;
+         pwmcmp1gang   at 0 range 25 .. 25;
+         pwmcmp2gang   at 0 range 26 .. 26;
+         pwmcmp3gang   at 0 range 27 .. 27;
+         pwmcmp0ip     at 0 range 28 .. 28;
+         pwmcmp1ip     at 0 range 29 .. 29;
+         pwmcmp2ip     at 0 range 30 .. 30;
+         pwmcmp3ip     at 0 range 31 .. 31;
+      end record;
+
+      -- 20.6 Scaled PWM Count Register (pwms)
+
+      type pwms_Type is
+      record
+         pwms     : Bits_16;      -- Scaled PWM count register. cmpwidth bits wide.
+         Reserved : Bits_16 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for pwms_Type use
+      record
+         pwms     at 0 range 0 .. 15;
+         Reserved at 0 range 16 .. 31;
+      end record;
+
+      -- 20.7 PWM Compare Registers (pwmcmp0–pwmcmp3)
+
+      type pwmcmp_Type is
+      record
+         pwmcmp   : Bits_16;      -- PWM [0 .. 3] Compare Value
+         Reserved : Bits_16 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for pwmcmp_Type use
+      record
+         pwmcmp   at 0 range 0 .. 15;
+         Reserved at 0 range 16 .. 31;
+      end record;
+
+   end PWM;
+
 end HiFive1;
