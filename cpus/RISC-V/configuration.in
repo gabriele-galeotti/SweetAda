@@ -3,7 +3,6 @@ TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_RISCV)
 
 ifeq      ($(findstring RV32,$(CPU_MODEL)),RV32)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/32
-  CPU_SUPPORT_DEFLIST := ../support/byte_swap_32.adb 32/bits-byte_swap_32.adb
 else ifeq ($(findstring RV64,$(CPU_MODEL)),RV64)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/64
 endif
