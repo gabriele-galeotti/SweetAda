@@ -778,9 +778,9 @@ package ARMv7M is
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames ARMv6M.Irq_Enable;
-   procedure Irq_Disable renames ARMv6M.Irq_Disable;
-   procedure Fiq_Enable  renames ARMv6M.Fiq_Enable;
-   procedure Fiq_Disable renames ARMv6M.Fiq_Disable;
+   procedure Irq_Enable        renames ARMv6M.Irq_Enable;
+   procedure Irq_Disable       renames ARMv6M.Irq_Disable;
+   procedure Fault_Irq_Enable  renames ARMv6M.Fault_Irq_Enable;
+   procedure Fault_Irq_Disable renames ARMv6M.Fault_Irq_Disable;
 
 end ARMv7M;

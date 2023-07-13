@@ -685,9 +685,9 @@ package ARMv6M is
       Inline => True;
    procedure Irq_Disable with
       Inline => True;
-   procedure Fiq_Enable with
+   procedure Fault_Irq_Enable with
       Inline => True;
-   procedure Fiq_Disable with
+   procedure Fault_Irq_Disable with
       Inline => True;
 
    ----------------------------------------------------------------------------
