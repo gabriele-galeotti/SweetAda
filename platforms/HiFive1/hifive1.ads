@@ -905,7 +905,7 @@ package HiFive1 is
       record
          proto     : Bits_2 := 0;  -- SPI protocol
          endian    : Bits_1 := 0;  -- SPI endianness
-         dir       : Bits_1 := 0;  -- SPI I/O direction. This is reset to 1 for flash-enabled SPI controllers, 0 otherwise.
+         dir       : Bits_1 := 0;  -- SPI I/O direction.
          Reserved1 : Bits_12 := 0;
          len       : Bits_4 := 8;  -- Number of bits per frame
          Reserved2 : Bits_12 := 0;
@@ -955,6 +955,184 @@ package HiFive1 is
          Reserved at 0 range 8 .. 30;
          empty    at 0 range 31 .. 31;
       end record;
+
+      -- 19.13 Transmit Watermark Register (txmark)
+
+      type txmark_Type is
+      record
+         txmark   : Bits_3;       -- Transmit watermark.
+         Reserved : Bits_29 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for txmark_Type use
+      record
+         txmark   at 0 range 0 .. 2;
+         Reserved at 0 range 3 .. 31;
+      end record;
+
+      -- 19.14 Receive Watermark Register (rxmark)
+
+      type rxmark_Type is
+      record
+         rxmark   : Bits_3;       -- Receive watermark
+         Reserved : Bits_29 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for rxmark_Type use
+      record
+         rxmark   at 0 range 0 .. 2;
+         Reserved at 0 range 3 .. 31;
+      end record;
+
+      -- 19.15 SPI Interrupt Registers (ie and ip)
+
+      type ie_Type is
+      record
+         txwm   : Boolean;        -- Transmit watermark enable
+         rxwm   : Boolean;        -- Receive watermark enable
+         Reserved : Bits_30 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for ie_Type use
+      record
+         txwm     at 0 range 0 .. 0;
+         rxwm     at 0 range 1 .. 1;
+         Reserved at 0 range 2 .. 31;
+      end record;
+
+      type ip_Type is
+      record
+         txwm   : Boolean;        -- Transmit watermark pending
+         rxwm   : Boolean;        -- Receive watermark pending
+         Reserved : Bits_30 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for ip_Type use
+      record
+         txwm     at 0 range 0 .. 0;
+         rxwm     at 0 range 1 .. 1;
+         Reserved at 0 range 2 .. 31;
+      end record;
+
+      -- 19.16 SPI Flash Interface Control Register (fctrl)
+
+      type fctrl_Type is
+      record
+         en       : Boolean;      -- SPI Flash Mode Select
+         Reserved : Bits_31 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for fctrl_Type use
+      record
+         en       at 0 range 0 .. 0;
+         Reserved at 0 range 1 .. 31;
+      end record;
+
+      -- 19.17 SPI Flash Instruction Format Register (ffmt)
+
+      type ffmt_Type is
+      record
+         cmd_en     : Boolean;     -- Enable sending of command
+         addr_len   : Bits_3;      -- Number of address bytes (0 to 4)
+         pad_cnt    : Bits_4;      -- Number of dummy cycles
+         cmd_proto  : Bits_2;      -- Protocol for transmitting command
+         addr_proto : Bits_2;      -- Protocol for transmitting address and padding
+         data_proto : Bits_2;      -- Protocol for receiving data bytes
+         Reserved   : Bits_2 := 0;
+         cmd_code   : Unsigned_8;  -- Value of command byte
+         pad_code   : Unsigned_8;  -- First 8 bits to transmit during dummy cycles
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for ffmt_Type use
+      record
+         cmd_en     at 0 range 0 .. 0;
+         addr_len   at 0 range 1 .. 3;
+         pad_cnt    at 0 range 4 .. 7;
+         cmd_proto  at 0 range 8 .. 9;
+         addr_proto at 0 range 10 .. 11;
+         data_proto at 0 range 12 .. 13;
+         Reserved   at 0 range 14 .. 15;
+         cmd_code   at 0 range 16 .. 23;
+         pad_code   at 0 range 24 .. 31;
+      end record;
+
+      -- 19.3 Memory Map
+
+      type SPI_Type is
+      record
+         sckdiv  : sckdiv_Type  with Volatile_Full_Access => True;
+         sckmode : sckmode_Type with Volatile_Full_Access => True;
+         csid    : Unsigned_32  with Volatile_Full_Access => True;
+         csdef   : Unsigned_32  with Volatile_Full_Access => True;
+         csmode  : csmode_Type  with Volatile_Full_Access => True;
+         delay0  : delay0_Type  with Volatile_Full_Access => True;
+         delay1  : delay1_Type  with Volatile_Full_Access => True;
+         fmt     : fmt_Type     with Volatile_Full_Access => True;
+         txdata  : txdata_Type  with Volatile_Full_Access => True;
+         rxdata  : rxdata_Type  with Volatile_Full_Access => True;
+         txmark  : txmark_Type  with Volatile_Full_Access => True;
+         rxmark  : rxmark_Type  with Volatile_Full_Access => True;
+         fctrl   : fctrl_Type   with Volatile_Full_Access => True;
+         ffmt    : ffmt_Type    with Volatile_Full_Access => True;
+         ie      : ie_Type      with Volatile_Full_Access => True;
+         ip      : ip_Type      with Volatile_Full_Access => True;
+      end record with
+         Size => 16#78# * 8;
+      for SPI_Type use
+      record
+         sckdiv  at 16#00# range 0 .. 31;
+         sckmode at 16#04# range 0 .. 31;
+         csid    at 16#10# range 0 .. 31;
+         csdef   at 16#14# range 0 .. 31;
+         csmode  at 16#18# range 0 .. 31;
+         delay0  at 16#28# range 0 .. 31;
+         delay1  at 16#2C# range 0 .. 31;
+         fmt     at 16#40# range 0 .. 31;
+         txdata  at 16#48# range 0 .. 31;
+         rxdata  at 16#4C# range 0 .. 31;
+         txmark  at 16#50# range 0 .. 31;
+         rxmark  at 16#54# range 0 .. 31;
+         fctrl   at 16#60# range 0 .. 31;
+         ffmt    at 16#64# range 0 .. 31;
+         ie      at 16#70# range 0 .. 31;
+         ip      at 16#74# range 0 .. 31;
+      end record;
+
+      -- QSPI0: Flash Controller = Y, cs_width = 1, div_width = 12
+
+      QSPI0_BASEADDRESS : constant := 16#1001_4000#;
+
+      QSPI0 : aliased SPI_Type with
+         Address    => To_Address (QSPI0_BASEADDRESS),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+      -- SPI1: Flash Controller = N, cs_width = 4, div_width = 12
+
+      SPI1_BASEADDRESS : constant := 16#1002_4000#;
+
+      SPI1 : aliased SPI_Type with
+         Address    => To_Address (SPI1_BASEADDRESS),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+      -- SPI2: Flash Controller = N, cs_width = 1, div_width = 12
+
+      SPI2_BASEADDRESS : constant := 16#1003_4000#;
+
+      SPI2 : aliased SPI_Type with
+         Address    => To_Address (SPI2_BASEADDRESS),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
 
    end SPI;
 
