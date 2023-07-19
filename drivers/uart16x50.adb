@@ -238,8 +238,8 @@ package body UART16x50 is
 
    -- Local declarations
 
-   type Storage_Offset_Mod is mod 2**(Storage_Offset'Size - 1) with
-      Size => Storage_Offset'Size;
+   type Storage_Offset_Mod is mod 2**(Storage_Offset'Size - 1)
+      with Size => Storage_Offset'Size;
 
    function To_SO is new Ada.Unchecked_Conversion (Storage_Offset_Mod, Storage_Offset);
 
@@ -248,15 +248,14 @@ package body UART16x50 is
    function Register_Read
       (D : in Descriptor_Type;
        R : in Register_Type)
-      return Unsigned_8 with
-      Inline => True;
+      return Unsigned_8
+      with Inline => True;
 
    procedure Register_Write
       (D     : in Descriptor_Type;
        R     : in Register_Type;
        Value : in Unsigned_8)
-      with
-      Inline => True;
+      with Inline => True;
 
    --========================================================================--
    --                                                                        --

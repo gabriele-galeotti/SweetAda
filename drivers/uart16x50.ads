@@ -35,11 +35,11 @@ package UART16x50 is
    use Interfaces;
    use Bits;
 
-   type Uart16x50_Model_Type is (UARTNONE, UART16450, UART16550, UART16650, UART16750);
+   type Model_Type is (UARTNONE, UART16450, UART16550, UART16650, UART16750);
 
-   type Uart16x50_Flags_Type is
+   type Flags_Type is
    record
-      UART_PC : Boolean;
+      PC_UART : Boolean;
    end record;
 
    type Port_Read_8_Ptr is access function (Port : in Address) return Unsigned_8;
@@ -47,11 +47,11 @@ package UART16x50 is
 
    type Descriptor_Type is
    record
-      Uart_Model    : Uart16x50_Model_Type;
+      Uart_Model    : Model_Type;
       Base_Address  : Address;
       Scale_Address : Address_Shift;
       Baud_Clock    : Positive;
-      Flags         : Uart16x50_Flags_Type;
+      Flags         : Flags_Type;
       Read_8        : not null Port_Read_8_Ptr := MMIO.ReadN_U8'Access;
       Write_8       : not null Port_Write_8_Ptr := MMIO.WriteN_U8'Access;
       Data_Queue    : aliased FIFO.Queue_Type;
@@ -63,7 +63,7 @@ package UART16x50 is
        Base_Address  => Null_Address,
        Scale_Address => 0,
        Baud_Clock    => 1,
-       Flags         => (UART_PC => False),
+       Flags         => (PC_UART => False),
        Read_8        => MMIO.ReadN_U8'Access,
        Write_8       => MMIO.WriteN_U8'Access,
        -- Data_Queue    => FIFO.QUEUE_DEFAULT
