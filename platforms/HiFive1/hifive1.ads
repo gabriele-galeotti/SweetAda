@@ -789,6 +789,14 @@ package HiFive1 is
 
    package SPI is
 
+      -- protocol definitions for
+      -- fmt.proto
+      -- ffmt.[cmd_proto|addr_proto|data_proto]
+
+      proto_SINGLE : constant := 2#00#; -- DQ0 (MOSI), DQ1 (MISO)
+      proto_DUAL   : constant := 2#01#; -- DQ0, DQ1
+      proto_QUAD   : constant := 2#10#; -- DQ0, DQ1, DQ2, DQ3
+
       -- 19.4 Serial Clock Divisor Register (sckdiv)
 
       -- sample values, range is div2 .. div8192 in even steps
@@ -890,10 +898,6 @@ package HiFive1 is
       end record;
 
       -- 19.10 Frame Format Register (fmt)
-
-      proto_SINGLE : constant := 2#00#; -- DQ0 (MOSI), DQ1 (MISO)
-      proto_DUAL   : constant := 2#01#; -- DQ0, DQ1
-      proto_QUAD   : constant := 2#10#; -- DQ0, DQ1, DQ2, DQ3
 
       endian_MSB : constant := 0; -- Transmit most-significant bit (MSB) first
       endian_LSB : constant := 1; -- Transmit least-significant bit (LSB) first
