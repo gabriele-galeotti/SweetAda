@@ -70,7 +70,7 @@ package body MC146818A is
        16#3E#, 16#3F#
       );
 
-   -- REGISTER A ($OA)
+   -- REGISTER A ($0A)
 
    RS_None  : constant := 2#0000#; -- N/A
    RS_256   : constant := 2#0001#; -- PIR = 3.90625 ms, SQW f = 256 Hz
@@ -113,7 +113,7 @@ package body MC146818A is
    function To_U8 is new Ada.Unchecked_Conversion (RegisterA_Type, Unsigned_8);
    function To_RA is new Ada.Unchecked_Conversion (Unsigned_8, RegisterA_Type);
 
-   -- REGISTER B ($OB)
+   -- REGISTER B ($0B)
 
    type RegisterB_Type is
    record
@@ -143,7 +143,7 @@ package body MC146818A is
    function To_U8 is new Ada.Unchecked_Conversion (RegisterB_Type, Unsigned_8);
    function To_RB is new Ada.Unchecked_Conversion (Unsigned_8, RegisterB_Type);
 
-   -- REGISTER C ($OC)
+   -- REGISTER C ($0C)
 
    type RegisterC_Type is
    record
@@ -166,7 +166,7 @@ package body MC146818A is
 
    function To_RC is new Ada.Unchecked_Conversion (Unsigned_8, RegisterC_Type);
 
-   -- REGISTER D ($OD)
+   -- REGISTER D ($0D)
 
    type RegisterD_Type is
    record
