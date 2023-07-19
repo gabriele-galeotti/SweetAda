@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with MC146818A;
 with UART16x50;
 with IDE;
 with NE2000;
@@ -37,6 +38,7 @@ package BSP is
       Convention    => Asm,
       External_Name => "tick_count";
 
+   RTC_Descriptor      : aliased MC146818A.Descriptor_Type := MC146818A.DESCRIPTOR_INVALID;
    UART_Descriptors    : array (1 .. 2) of aliased UART16x50.Descriptor_Type :=
                          [others => UART16x50.DESCRIPTOR_INVALID];
    IDE_Descriptors     : array (1 .. 1) of aliased IDE.Descriptor_Type :=

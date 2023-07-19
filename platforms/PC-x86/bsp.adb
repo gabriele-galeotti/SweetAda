@@ -144,20 +144,40 @@ package body BSP is
       Exceptions.Init;
       MMU.Init;
       Board_Init;
+      -- RTC ------------------------------------------------------------------
+      RTC_Descriptor :=
+         (
+          Base_Address  => To_Address (PC.RTC_BASEADDRESS),
+          Scale_Address => 0,
+          Flags         => (PC_RTC => True),
+          Read_8        => IO_Read'Access,
+          Write_8       => IO_Write'Access
+         );
+      MC146818A.Init (RTC_Descriptor);
       -- UARTs ----------------------------------------------------------------
-      UART_Descriptors (1).Base_Address  := To_Address (PC.UART1_BASEADDRESS);
-      UART_Descriptors (1).Scale_Address := 0;
-      UART_Descriptors (1).Baud_Clock    := 1_843_200;
-      UART_Descriptors (1).Read_8        := IO_Read'Access;
-      UART_Descriptors (1).Write_8       := IO_Write'Access;
-      UART_Descriptors (1).Data_Queue    := [[others => 0], 0, 0, 0];
+      UART_Descriptors (1) :=
+         (
+          Uart_Model    => UART16x50.UART16450,
+          Base_Address  => To_Address (PC.UART1_BASEADDRESS),
+          Scale_Address => 0,
+          Baud_Clock    => CLK_UART1M8,
+          Flags         => (PC_UART => True),
+          Read_8        => IO_Read'Access,
+          Write_8       => IO_Write'Access,
+          Data_Queue    => [[others => 0], 0, 0, 0]
+         );
       UART16x50.Init (UART_Descriptors (1));
-      UART_Descriptors (2).Base_Address  := To_Address (PC.UART2_BASEADDRESS);
-      UART_Descriptors (2).Scale_Address := 0;
-      UART_Descriptors (2).Baud_Clock    := 1_843_200;
-      UART_Descriptors (2).Read_8        := IO_Read'Access;
-      UART_Descriptors (2).Write_8       := IO_Write'Access;
-      UART_Descriptors (2).Data_Queue    := [[others => 0], 0, 0, 0];
+      UART_Descriptors (2) :=
+         (
+          Uart_Model    => UART16x50.UART16450,
+          Base_Address  => To_Address (PC.UART2_BASEADDRESS),
+          Scale_Address => 0,
+          Baud_Clock    => CLK_UART1M8,
+          Flags         => (PC_UART => True),
+          Read_8        => IO_Read'Access,
+          Write_8       => IO_Write'Access,
+          Data_Queue    => [[others => 0], 0, 0, 0]
+         );
       UART16x50.Init (UART_Descriptors (2));
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
@@ -254,12 +274,15 @@ package body BSP is
          VGA.Print (0, 2, "Close this window to shutdown the emulator.");
       end if;
       -- IDE ------------------------------------------------------------------
-      IDE_Descriptors (1).Base_Address  := To_Address (PC.IDE1_BASEADDRESS);
-      IDE_Descriptors (1).Scale_Address := 0;
-      IDE_Descriptors (1).Read_8        := IO_Read'Access;
-      IDE_Descriptors (1).Write_8       := IO_Write'Access;
-      IDE_Descriptors (1).Read_16       := IO_Read'Access;
-      IDE_Descriptors (1).Write_16      := IO_Write'Access;
+      IDE_Descriptors (1) :=
+         (
+          Base_Address  => To_Address (PC.IDE1_BASEADDRESS),
+          Scale_Address => 0,
+          Read_8        => IO_Read'Access,
+          Write_8       => IO_Write'Access,
+          Read_16       => IO_Read'Access,
+          Write_16      => IO_Write'Access
+         );
       IDE.Init (IDE_Descriptors (1));
       -- NE2000 (PCI) ---------------------------------------------------------
       if True then
@@ -268,16 +291,22 @@ package body BSP is
          begin
             NE2000.Probe (NE2000_Descriptors (1).Device_Number, Success);
             if Success then
-               NE2000_Descriptors (1).NE2000PCI    := True;
-               NE2000_Descriptors (1).PCI_Irq_Line := 5;
-               NE2000_Descriptors (1).Base_Address := 16#C000#;
-               NE2000_Descriptors (1).MAC          := [16#02#, 16#00#, 16#00#, 16#11#, 16#22#, 16#33#];
-               NE2000_Descriptors (1).Read_8       := PortIn'Access;
-               NE2000_Descriptors (1).Write_8      := PortOut'Access;
-               NE2000_Descriptors (1).Read_16      := PortIn'Access;
-               NE2000_Descriptors (1).Write_16     := PortOut'Access;
-               NE2000_Descriptors (1).Read_32      := PortIn'Access;
-               NE2000_Descriptors (1).Write_32     := PortOut'Access;
+               NE2000_Descriptors (1) :=
+                  (
+                   NE2000PCI     => True,
+                   Device_Number => 0,
+                   BAR           => 0,
+                   PCI_Irq_Line  => 5,
+                   Base_Address  => 16#C000#,
+                   MAC           => [16#02#, 16#00#, 16#00#, 16#11#, 16#22#, 16#33#],
+                   Read_8        => PortIn'Access,
+                   Write_8       => PortOut'Access,
+                   Read_16       => PortIn'Access,
+                   Write_16      => PortOut'Access,
+                   Read_32       => PortIn'Access,
+                   Write_32      => PortOut'Access,
+                   Next_Ptr      => 0
+                  );
                NE2000.Init_PCI (NE2000_Descriptors (1));
             end if;
          end;
@@ -309,7 +338,8 @@ package body BSP is
       PC.PIC_Irq_Enable (PC.PIT_Interrupt);
       -- RTC
       PC.PIC_Irq_Enable (PC.RTC_Interrupt);
-      Interrupts.Install (PC.RTC_Interrupt, PC.RTC_Handle'Access, Null_Address);
+      -- Interrupts.Install (PC.RTC_Interrupt, PC.RTC_Handle'Access, Null_Address);
+      Interrupts.Install (PC.RTC_Interrupt, MC146818A.Handle'Access, RTC_Descriptor'Address);
       -- UART1
       PC.PIC_Irq_Enable (PC.PIC_Irq4);
       Interrupts.Install (PC.PIC_Irq4, UART16x50.Receive'Access, UART_Descriptors (1)'Address);
@@ -320,11 +350,12 @@ package body BSP is
       PC.PIC_Irq_Enable (PC.PIC_Irq5);
       Interrupts.Install (PC.PIC_Irq5, NE2000.Interrupt_Handler'Access, NE2000_Descriptors (1)'Address);
       declare
-         Pirqc : constant PIIX.PIRQC_Type := (
-                                              IRQROUTE   => PIIX.IRQROUTE_IRQ5,
-                                              IRQROUTEEN => NTrue,
-                                              others     => <>
-                                             );
+         Pirqc : constant PIIX.PIRQC_Type :=
+            (
+             IRQROUTE   => PIIX.IRQROUTE_IRQ5,
+             IRQROUTEEN => NTrue,
+             others     => <>
+            );
       begin
          -- PIC ELCR
          CPU.IO.PortOut (16#04D0#, Unsigned_8'(16#20#)); -- RTL8029 bit5, Irq5

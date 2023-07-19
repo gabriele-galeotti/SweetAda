@@ -5,6 +5,7 @@ with System.Machine_Code;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Interfaces.C;
+with Configure;
 with Definitions;
 with Core;
 with Bits;
@@ -21,6 +22,7 @@ with BlockDevices;
 with MBR;
 with FATFS;
 with FATFS.Applications;
+with MC146818A;
 with UART16x50;
 with PBUF;
 with Ethernet;
@@ -106,7 +108,7 @@ package body Application is
             TM : Time.TM_Time;
          begin
             Console.Print ("Current date: ", NL => False);
-            RTC_Read_Clock (TM);
+            MC146818A.Read_Clock (BSP.RTC_Descriptor, TM);
             if TM.Year < 70 then
                Console.Print (TM.Year + 2_000, NL => False);
             else
@@ -191,8 +193,8 @@ package body Application is
                   TC1 := BSP.Tick_Count;
                end if;
                if Tick_Count_Expired (TC2, 300) then
-                  -- IOEMU GPIO test
-                  if Core.Debug_Flag then
+                  if Configure.USE_QEMU_IOEMU then
+                     -- IOEMU GPIO test
                      PortOut (IOEMU.IO0_ADDRESS, Unsigned_8'(Value * 1));
                      PortOut (IOEMU.IO1_ADDRESS, Unsigned_8'(Value * 2));
                      PortOut (IOEMU.IO2_ADDRESS, Unsigned_8'(Value * 3));
