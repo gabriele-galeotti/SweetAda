@@ -97,9 +97,9 @@ package body MC146818A is
 
    type RegisterA_Type is
    record
-      RS  : Bits_4;  -- rate selection
-      DIV : Bits_3;  -- divider chain
-      UIP : Boolean; -- update in progress
+      RS  : Bits_4;           -- rate selection
+      DIV : Bits_3;           -- divider chain
+      UIP : Boolean := False; -- update in progress
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -327,11 +327,13 @@ package body MC146818A is
    procedure Init
       (D : in Descriptor_Type)
       is
+      RA     : RegisterA_Type;
       Unused : Unsigned_8 with Unreferenced => True;
       RB     : RegisterB_Type;
    begin
       -- operating time base = 32.768 kHz, periodic interrupt = 1024 Hz
-      Register_Write (D, RegisterA, Unsigned_8'(16#26#));
+      RA := (RS => RS_1k024, DIV => DIV_32k, others => <>);
+      Register_Write (D, RegisterA, To_U8 (RA));
       -- clear pending interrupts
       Unused := Register_Read (D, RegisterC);
       -- enable PIE interrupt in Register B
