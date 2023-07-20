@@ -287,14 +287,15 @@ package body BSP is
       -- NE2000 (PCI) ---------------------------------------------------------
       if True then
          declare
-            Success : Boolean;
+            PCI_Device_Number : PCI.Device_Number_Type;
+            Success         : Boolean;
          begin
-            NE2000.Probe (NE2000_Descriptors (1).Device_Number, Success);
+            NE2000.Probe (PCI_Device_Number, Success);
             if Success then
                NE2000_Descriptors (1) :=
                   (
                    NE2000PCI     => True,
-                   Device_Number => 0,
+                   Device_Number => PCI_Device_Number,
                    BAR           => 0,
                    PCI_Irq_Line  => 5,
                    Base_Address  => 16#C000#,
@@ -338,7 +339,6 @@ package body BSP is
       PC.PIC_Irq_Enable (PC.PIT_Interrupt);
       -- RTC
       PC.PIC_Irq_Enable (PC.RTC_Interrupt);
-      -- Interrupts.Install (PC.RTC_Interrupt, PC.RTC_Handle'Access, Null_Address);
       Interrupts.Install (PC.RTC_Interrupt, MC146818A.Handle'Access, RTC_Descriptor'Address);
       -- UART1
       PC.PIC_Irq_Enable (PC.PIC_Irq4);
