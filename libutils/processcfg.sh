@@ -80,7 +80,7 @@ fi
 #
 # Gather "@"-delimited symbols from input file.
 #
-SYMBOLS=$(grep -U -o "@[_A-Za-z][_A-Za-z0-9]*@" "${INPUT_FILENAME}" 2> /dev/null)
+SYMBOLS=$(grep -U -o "@-\?[_A-Za-z][_A-Za-z0-9]*@" "${INPUT_FILENAME}" 2> /dev/null)
 if [ $? -eq 2 ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: in processing input file \"${INPUT_FILENAME}\"."
   exit 1
@@ -93,9 +93,20 @@ if [ "x${SYMBOLS}" != "x" ] ; then
   sed_command_string=""
   for symbol in ${SYMBOLS} ; do
     variable=$(printf "%s" "${symbol}" | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|")
+    optional=
+    case ${variable} in
+      -*)
+        variable=${variable#?}
+        optional=Y
+        ;;
+      *)
+        ;;
+    esac
     value=$(eval printf \"%s\" \"\$${variable}\")
     if [ "x${value}" = "x" ] ; then
-      log_print_error "${SCRIPT_FILENAME}: *** Warning: variable \"${variable}\" has no value."
+      if [ "x${optional}" != "xY" ] ; then
+        log_print_error "${SCRIPT_FILENAME}: *** Warning: variable \"${variable}\" has no value."
+      fi
     fi
     case ${value} in
       \"*\")
