@@ -60,7 +60,7 @@ package System.Parameters is
    type Size_Type is range
      -(2 ** (Integer'(Standard'Address_Size) - 1)) ..
      +(2 ** (Integer'(Standard'Address_Size) - 1)) - 1
-      @SIZE_TYPE_ASPECTS@;
+      @-SIZE_TYPE_ASPECTS@;
    --  Type used to provide task stack sizes to the runtime. Sized to permit
    --  stack sizes of up to half the total addressable memory space. This may
    --  seem excessively large (even for 32-bit systems), however there are many
