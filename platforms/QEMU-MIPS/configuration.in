@@ -8,7 +8,7 @@
 CPU       := MIPS
 CPU_MODEL := MIPS32-24K
 
-GCC_SWITCHES_PLATFORM     := -march=24kf
+GCC_SWITCHES_PLATFORM     := -march=24kf -mno-extern-sdata
 STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := --undefined=reset
 OBJDUMP_SWITCHES_PLATFORM :=

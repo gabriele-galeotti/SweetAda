@@ -20,10 +20,12 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                *(.MIPS.abiflags)
                 . = ALIGN(0x4);
                 PROVIDE(_debug_flag = .);
                 BYTE(0x00);
+                . = ALIGN(0x4);
+                *(.MIPS.abiflags)
+                . = ALIGN(0x10);
                 _etext = .;
         } > ROM
         /**********************************************************************
@@ -35,12 +37,11 @@ SECTIONS
                 *(.data)
                 *(.data.*)
                 *(.sdata)
+                *(.sdata.*)
                 . = ALIGN(0x10);
                 _edata = .;
         } > RAM
         _gp = ALIGN(16);
-        .lit8 : { *(.lit8) }
-        .lit4 : { *(.lit4) }
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
@@ -49,6 +50,8 @@ SECTIONS
                 _sbss = .;
                 *(.bss)
                 *(.bss.*)
+                *(.sbss)
+                *(.sbss.*)
                 *(COMMON)
                 _ebss = .;
         } > RAM
