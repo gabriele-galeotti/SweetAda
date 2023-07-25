@@ -31,7 +31,6 @@ package body PC is
 
    PIC_Lock : CPU.Lock_Type;
    PIT_Lock : CPU.Lock_Type;
-   RTC_Lock : CPU.Lock_Type;
 
    --========================================================================--
    --                                                                        --

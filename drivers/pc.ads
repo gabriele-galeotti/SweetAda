@@ -175,6 +175,11 @@ package PC is
    -- i8254 PIT
    ----------------------------------------------------------------------------
 
+   COUNTER0     : constant := PIT_BASEADDRESS + 16#00#;
+   COUNTER1     : constant := PIT_BASEADDRESS + 16#01#;
+   COUNTER2     : constant := PIT_BASEADDRESS + 16#02#;
+   CONTROL_WORD : constant := PIT_BASEADDRESS + 16#03#;
+
    -- MASTER_CLK is four times the NTSC color burst frequency:
    -- 4 * (315 / 88) = 4 * 3.579(54) = 14.318182 MHz, T = 69.84 ns
    MASTER_CLK : constant := Definitions.CLK_NTSCx4;
@@ -182,7 +187,10 @@ package PC is
    -- then is divided further by 4.
    PIT_CLK    : constant := (MASTER_CLK + (12 / 2)) / 12; -- 1.193182 MHz, T = 0.838 us
 
+   PIT_Interrupt : constant CPU.Irq_Id_Type := PIC_Irq0;
+
    -- Control Word Format
+
    -- D1 .. D3 MODE or counter # in LATCH
    MODE0                 : constant := 2#000#; -- interrupt on terminal count
    MODE1                 : constant := 2#001#; -- programmable monoflop
@@ -247,15 +255,8 @@ package PC is
 
    function To_PIT_Status is new Ada.Unchecked_Conversion (Unsigned_8, PIT_Status_Type);
 
-   COUNTER0     : constant := PIT_BASEADDRESS + 16#00#;
-   COUNTER1     : constant := PIT_BASEADDRESS + 16#01#;
-   COUNTER2     : constant := PIT_BASEADDRESS + 16#02#;
-   CONTROL_WORD : constant := PIT_BASEADDRESS + 16#03#;
-
    procedure PIT_Counter0_Init (Count : in Unsigned_16);
    procedure PIT_Counter1_Delay (Delay100us_Units : in Positive);
-
-   PIT_Interrupt : constant CPU.Irq_Id_Type := PIC_Irq0;
 
    ----------------------------------------------------------------------------
    -- MC146818A RTC
@@ -266,6 +267,10 @@ package PC is
    ----------------------------------------------------------------------------
    -- Parallel Port Interface PPI
    ----------------------------------------------------------------------------
+
+   PPI_DATA    : constant := PPI_BASEADDRESS + 16#00#;
+   PPI_STATUS  : constant := PPI_BASEADDRESS + 16#01#;
+   PPI_CONTROL : constant := PPI_BASEADDRESS + 16#02#;
 
    type PPI_Status_Type is
    record
@@ -317,10 +322,6 @@ package PC is
 
    function To_U8 is new Ada.Unchecked_Conversion (PPI_Control_Type, Unsigned_8);
    function To_PPI_Control is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Control_Type);
-
-   PPI_DATA    : constant := PPI_BASEADDRESS + 16#00#;
-   PPI_STATUS  : constant := PPI_BASEADDRESS + 16#01#;
-   PPI_CONTROL : constant := PPI_BASEADDRESS + 16#02#;
 
    procedure PPI_DataIn (Value : out Unsigned_8);
    procedure PPI_DataOut (Value : in Unsigned_8);
