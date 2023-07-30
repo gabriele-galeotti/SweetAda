@@ -59,47 +59,47 @@ package body RISCV is
    end NOP;
 
    ----------------------------------------------------------------------------
-   -- MCAUSE_Read
+   -- mcause_Read
    ----------------------------------------------------------------------------
-   function MCAUSE_Read return Unsigned_32 is
-      MCAUSE : Unsigned_32;
+   function mcause_Read return Unsigned_32 is
+      mcause : Unsigned_32;
    begin
       Asm (
            Template => ""                          & CRLF &
                        ZICSR_ZIFENCEI_ASM          & CRLF &
                        "        csrr    %0,mcause" & CRLF &
                        "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", MCAUSE),
+           Outputs  => Unsigned_32'Asm_Output ("=r", mcause),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
           );
-      return MCAUSE;
-   end MCAUSE_Read;
+      return mcause;
+   end mcause_Read;
 
    ----------------------------------------------------------------------------
-   -- MEPC_Read
+   -- mepc_Read
    ----------------------------------------------------------------------------
-   function MEPC_Read return Unsigned_32 is
-      MEPC : Unsigned_32;
+   function mepc_Read return Unsigned_32 is
+      mepc : Unsigned_32;
    begin
       Asm (
            Template => ""                        & CRLF &
                        ZICSR_ZIFENCEI_ASM        & CRLF &
                        "        csrr    %0,mepc" & CRLF &
                        "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", MEPC),
+           Outputs  => Unsigned_32'Asm_Output ("=r", mepc),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
           );
-      return MEPC;
-   end MEPC_Read;
+      return mepc;
+   end mepc_Read;
 
    ----------------------------------------------------------------------------
-   -- MTVEC_Write
+   -- mtvec_Write
    ----------------------------------------------------------------------------
-   procedure MTVEC_Write (Mtvec : in MTVEC_Type) is
+   procedure mtvec_Write (mtvec : in mtvec_Type) is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -107,11 +107,11 @@ package body RISCV is
                        "        csrw    mtvec,%0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => MTVEC_Type'Asm_Input ("r", Mtvec),
+           Inputs   => mtvec_Type'Asm_Input ("r", mtvec),
            Clobber  => "",
            Volatile => True
           );
-   end MTVEC_Write;
+   end mtvec_Write;
 
    ----------------------------------------------------------------------------
    -- mtime/mtimecmp
@@ -143,7 +143,7 @@ package body RISCV is
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   MSTATUS_USMIE : constant mstatus_Type := (
+   mstatus_USMIE : constant mstatus_Type := (
                                              UIE    => False,
                                              SIE    => False,
                                              MIE    => True,
@@ -174,7 +174,7 @@ package body RISCV is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => [
-                        mstatus_Type'Asm_Input ("r", MSTATUS_USMIE),
+                        mstatus_Type'Asm_Input ("r", mstatus_USMIE),
                         Unsigned_32'Asm_Input ("r", 16#0000_0080#)
                        ],
            Clobber  => "",
@@ -190,7 +190,7 @@ package body RISCV is
                        "        csrrc   x0,mstatus,%0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => mstatus_Type'Asm_Input ("r", MSTATUS_USMIE),
+           Inputs   => mstatus_Type'Asm_Input ("r", mstatus_USMIE),
            Clobber  => "",
            Volatile => True
           );

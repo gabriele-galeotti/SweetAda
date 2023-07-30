@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
 with Interfaces;
 with Bits;
 
@@ -30,17 +31,79 @@ package RISCV_Definitions is
 
    pragma Pure;
 
+   use System;
    use Interfaces;
    use Bits;
 
    XLEN : constant := 64;
 
-   type MTime_Type is
+   -- Machine Status (mstatus)
+
+   type mstatus_Type is
+   record
+      UIE       : Boolean;      -- User Interrupt Enable
+      SIE       : Boolean;      -- Supervisor Interrupt Enable
+      Reserved1 : Bits_1 := 0;
+      MIE       : Boolean;      -- Machine Interrupt Enable
+      UPIE      : Boolean;      -- User Previous Interrupt Enable
+      SPIE      : Boolean;      -- Supervisor Previous Interrupt Enable
+      Reserved2 : Bits_1 := 0;
+      MPIE      : Boolean;      -- Machine Previous Interrupt Enabler
+      SPP       : Boolean;      -- Supervisor Previous Privilege
+      Reserved3 : Bits_2 := 0;
+      MPP       : Bits_2;       -- Machine Previous Privilege
+      FS        : Bits_2;       -- Floating Point State
+      XS        : Bits_2;       -- User Mode Extension State
+      MPRIV     : Boolean;      -- Modify Privilege (access memory as MPP)
+      SUM       : Boolean;      -- Permit Supervisor User Memory Access
+      MXR       : Boolean;      -- Make Executable Readable
+      TVM       : Boolean;      -- Trap Virtual memory
+      TW        : Boolean;      -- Timeout Wait (traps S-Mode wfi)
+      TSR       : Boolean;      -- Trap SRET
+      Reserved4 : Bits_9 := 0;
+      UXL       : Bits_2;       -- effective XLEN in U-mode
+      SXL       : Bits_2;       -- effective XLEN in S-mode
+      Reserved5 : Bits_27 := 0;
+      SD        : Boolean;      -- State Dirty (FS and XS summary bit)
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for mstatus_Type use
+   record
+      UIE       at 0 range 0 .. 0;
+      SIE       at 0 range 1 .. 1;
+      Reserved1 at 0 range 2 .. 2;
+      MIE       at 0 range 3 .. 3;
+      UPIE      at 0 range 4 .. 4;
+      SPIE      at 0 range 5 .. 5;
+      Reserved2 at 0 range 6 .. 6;
+      MPIE      at 0 range 7 .. 7;
+      SPP       at 0 range 8 .. 8;
+      Reserved3 at 0 range 9 .. 10;
+      MPP       at 0 range 11 .. 12;
+      FS        at 0 range 13 .. 14;
+      XS        at 0 range 15 .. 16;
+      MPRIV     at 0 range 17 .. 17;
+      SUM       at 0 range 18 .. 18;
+      MXR       at 0 range 19 .. 19;
+      TVM       at 0 range 20 .. 20;
+      TW        at 0 range 21 .. 21;
+      TSR       at 0 range 22 .. 22;
+      Reserved4 at 0 range 23 .. 31;
+      UXL       at 0 range 32 .. 33;
+      SXL       at 0 range 34 .. 35;
+      Reserved5 at 0 range 36 .. 62;
+      SD        at 0 range 63 .. 63;
+   end record;
+
+   -- mtime
+
+   type mtime_Type is
    record
       T : Unsigned_64 with Volatile_Full_Access => True;
    end record with
       Size => 64;
-   for MTime_Type use
+   for mtime_Type use
    record
       T at 0 range 0 .. 63;
    end record;

@@ -37,80 +37,30 @@ package RISCV is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
-   use RISCV_Definitions;
 
    -- Machine Status (mstatus)
 
-   type mstatus_Type is
-   record
-      UIE       : Boolean;     -- User Interrupt Enable
-      SIE       : Boolean;     -- Supervisor Interrupt Enable
-      Reserved1 : Bits_1 := 0;
-      MIE       : Boolean;     -- Machine Interrupt Enable
-      UPIE      : Boolean;     -- User Previous Interrupt Enable
-      SPIE      : Boolean;     -- Supervisor Previous Interrupt Enable
-      Reserved2 : Bits_1 := 0;
-      MPIE      : Boolean;     -- Machine Previous Interrupt Enabler
-      SPP       : Boolean;     -- Supervisor Previous Privilege
-      Reserved3 : Bits_2 := 0;
-      MPP       : Bits_2;      -- Machine Previous Privilege
-      FS        : Bits_2;      -- Floating Point State
-      XS        : Bits_2;      -- User Mode Extension State
-      MPRIV     : Boolean;     -- Modify Privilege (access memory as MPP)
-      SUM       : Boolean;     -- Permit Supervisor User Memory Access
-      MXR       : Boolean;     -- Make Executable Readable
-      TVM       : Boolean;     -- Trap Virtual memory
-      TW        : Boolean;     -- Timeout Wait (traps S-Mode wfi)
-      TSR       : Boolean;     -- Trap SRET
-      Reserved4 : Bits_8 := 0;
-      SD        : Boolean;     -- State Dirty (FS and XS summary bit)
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for mstatus_Type use
-   record
-      UIE       at 0 range 0 .. 0;
-      SIE       at 0 range 1 .. 1;
-      Reserved1 at 0 range 2 .. 2;
-      MIE       at 0 range 3 .. 3;
-      UPIE      at 0 range 4 .. 4;
-      SPIE      at 0 range 5 .. 5;
-      Reserved2 at 0 range 6 .. 6;
-      MPIE      at 0 range 7 .. 7;
-      SPP       at 0 range 8 .. 8;
-      Reserved3 at 0 range 9 .. 10;
-      MPP       at 0 range 11 .. 12;
-      FS        at 0 range 13 .. 14;
-      XS        at 0 range 15 .. 16;
-      MPRIV     at 0 range 17 .. 17;
-      SUM       at 0 range 18 .. 18;
-      MXR       at 0 range 19 .. 19;
-      TVM       at 0 range 20 .. 20;
-      TW        at 0 range 21 .. 21;
-      TSR       at 0 range 22 .. 22;
-      Reserved4 at 0 range 23 .. 30;
-      SD        at 0 range 31 .. 31;
-   end record;
+   subtype mstatus_Type is RISCV_Definitions.mstatus_Type;
 
    -- Machine Trap Vector CSR (mtvec)
 
    MODE_Direct   : constant := 2#00#;
    MODE_Vectored : constant := 2#01#;
 
-   type MTVEC_Type is
+   type mtvec_Type is
    record
       MODE : Bits_2;  -- MODE Sets the interrupt processing mode.
       BASE : Bits_30; -- Interrupt Vector Base Address.
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for MTVEC_Type use
+   for mtvec_Type use
    record
       MODE at 0 range 0 .. 1;
       BASE at 0 range 2 .. 31;
    end record;
 
-   procedure MTVEC_Write (Mtvec : in MTVEC_Type) with
+   procedure mtvec_Write (mtvec : in mtvec_Type) with
       Inline => True;
 
    -- Machine Cause (mcause)
@@ -131,7 +81,7 @@ package RISCV is
    EXC_ENVCALLUMODE  : constant := 8;  -- Environment call from U-mode
    EXC_ENVCALLMMODE  : constant := 11; -- Environment call from M-mode
 
-   type MCAUSE_Type is
+   type mcause_Type is
    record
       Exception_Code : Bits_10; -- A code identifying the last exception.
       Reserved       : Bits_21;
@@ -139,7 +89,7 @@ package RISCV is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
-   for MCAUSE_Type use
+   for mcause_Type use
    record
       Exception_Code at 0 range 0 .. 9;
       Reserved       at 0 range 10 .. 30;
@@ -150,30 +100,47 @@ package RISCV is
    -- CLIC/CLINT
    ----------------------------------------------------------------------------
 
-   MSIP_ADDRESS : constant := 16#0200_0000#;
+   msip_ADDRESS : constant := 16#0200_0000#;
 
-   MSIP : aliased Unsigned_32 with
-      Address              => To_Address (MSIP_ADDRESS),
+   msip : aliased Unsigned_32 with
+      Address              => To_Address (msip_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   -- threshold
+
+   type threshold_Type is
+   record
+      Threshold : Bits_3;  -- Sets the priority threshold
+      Reserved  : Bits_29;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for threshold_Type use
+   record
+      Threshold at 0 range 0 .. 2;
+      Reserved  at 0 range 3 .. 31;
+   end record;
+
+   threshold_ADDRESS_OFFSET : constant := 16#0020_0000#;
 
    ----------------------------------------------------------------------------
    -- mtime/mtimecmp
    ----------------------------------------------------------------------------
 
-   MTIME_ADDRESS : constant := 16#0200_BFF8#;
+   mtime_ADDRESS : constant := 16#0200_BFF8#;
 
-   mtime : mtime_Type with
-      Address    => To_Address (MTIME_ADDRESS),
+   mtime : RISCV_Definitions.mtime_Type with
+      Address    => To_Address (mtime_ADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
 
-   MTIMECMP_ADDRESS : constant := 16#0200_4000#;
+   mtimecmp_ADDRESS : constant := 16#0200_4000#;
 
-   mtimecmp : mtime_Type with
-      Address    => To_Address (MTIMECMP_ADDRESS),
+   mtimecmp : RISCV_Definitions.mtime_Type with
+      Address    => To_Address (mtimecmp_ADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
@@ -189,9 +156,9 @@ package RISCV is
 
    procedure NOP with
       Inline => True;
-   function MCAUSE_Read return Unsigned_32 with
+   function mcause_Read return Unsigned_32 with
       Inline => True;
-   function MEPC_Read return Unsigned_32 with
+   function mepc_Read return Unsigned_32 with
       Inline => True;
    procedure Asm_Call (Target_Address : in Address) with
       Inline => True;
