@@ -108,16 +108,6 @@ package body BSP is
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
-      declare
-         Vectors      : aliased Asm_Entry_Point with
-            Import        => True,
-            Convention    => Asm,
-            External_Name => "vectors";
-         Base_Address : Bits_30;
-      begin
-         Base_Address := Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2));
-         RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, BASE => Base_Address));
-      end;
       RISCV.mtimecmp_Write (RISCV.mtime_Read + Virt.Timer_Constant);
       RISCV.Irq_Enable;
       -------------------------------------------------------------------------

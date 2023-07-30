@@ -16,7 +16,9 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with System.Storage_Elements;
 with Interfaces;
+with Bits;
 with RISCV;
 with Configure;
 with Virt;
@@ -34,7 +36,9 @@ package body Exceptions is
    --========================================================================--
 
    use System.Machine_Code;
+   use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
    --========================================================================--
    --                                                                        --
@@ -47,7 +51,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
    begin
       BSP.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
@@ -60,6 +65,16 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is null;
+   procedure Init
+      is
+      Vectors      : aliased Asm_Entry_Point
+         with Import        => True,
+              Convention    => Asm,
+              External_Name => "vectors";
+      Base_Address : Bits_30;
+   begin
+      Base_Address := Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2));
+      RISCV.mtvec_Write ((MODE => RISCV.MODE_Direct, BASE => Base_Address));
+   end Init;
 
 end Exceptions;

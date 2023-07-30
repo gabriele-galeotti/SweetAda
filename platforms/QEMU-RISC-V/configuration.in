@@ -5,16 +5,21 @@
 # RISC-V
 #
 
-# force LibGCC (__divdi3)
+# force linking with LibGCC (__divdi3)
 USE_LIBGCC := Y
 
-CPU       := RISC-V
-CPU_MODEL := RV32IMAFC
+CPU := RISC-V
 
-GCC_SWITCHES_PLATFORM     := -march=rv32imafc -mabi=ilp32f
-#GCC_SWITCHES_PLATFORM     := -march=rv32imafc_zicsr_zifencei -mabi=ilp32f
+# 32-bit
+CPU_MODEL             := RV32IMAFC
+GCC_SWITCHES_PLATFORM := -march=rv32imafc -mabi=ilp32f
+LD_SWITCHES_PLATFORM  := -m elf32lriscv --no-warn-rwx-segments
+# 64-bit
+#CPU_MODEL             := RV64IMAC
+#GCC_SWITCHES_PLATFORM := -march=rv64imac -mabi=lp64
+#LD_SWITCHES_PLATFORM  := -m elf64lriscv --no-warn-rwx-segments
+
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      := -m elf32lriscv --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
