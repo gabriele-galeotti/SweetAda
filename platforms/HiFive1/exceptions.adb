@@ -52,7 +52,7 @@ package body Exceptions is
    procedure Exception_Process is
       Cause : Unsigned_32;
    begin
-      Cause := RISCV.MCAUSE_Read;
+      Cause := RISCV.mcause_Read;
       if (Cause and 16#8000_0000#) = 0 then
          Console.Print (Cause, NL => True);
          loop null; end loop;
@@ -76,7 +76,7 @@ package body Exceptions is
       Base_Address : Bits_30;
    begin
       Base_Address := Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2));
-      RISCV.MTVEC_Write ((MODE => RISCV.MODE_Direct, BASE => Base_Address));
+      RISCV.mtvec_Write ((MODE => RISCV.MODE_Direct, BASE => Base_Address));
    end Init;
 
 end Exceptions;
