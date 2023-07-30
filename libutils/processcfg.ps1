@@ -44,11 +44,11 @@ function GetEnvVar
   param([string]$varname)
   if (-not (Test-Path env:$varname))
   {
-    return $null
+    return [string]::Empty
   }
   else
   {
-    return (Get-Item env:$varname).Value.Trim("`"")
+    return (Get-Item env:$varname).Value
   }
 }
 
@@ -75,7 +75,7 @@ if ([string]::IsNullOrEmpty($output_filename))
 
 $sed = (Get-Item env:SED).Value
 
-$symbols = Select-String -Pattern "@[_A-Za-z][_A-Za-z0-9]*@" $input_filename | `
+$symbols = Select-String -Pattern "@-?[_A-Za-z][_A-Za-z0-9]*@" $input_filename | `
   foreach {$_.Matches} | Select-Object -ExpandProperty Value
 
 $pinfo = New-Object System.Diagnostics.ProcessStartInfo
@@ -90,10 +90,19 @@ if ($symbols.Count -gt 0)
   foreach ($symbol in $symbols)
   {
     $variable = $symbol.Trim("@")
-    $value = $(GetEnvVar $variable)
-    if ($value -eq $null)
+    $optional = $false
+    if ($variable.StartsWith("-"))
     {
-      Write-Host "*** Warning: variable `"$variable`" has no value."
+      $variable = $variable.TrimStart("-")
+      $optional = $true
+    }
+    $value = $(GetEnvVar $variable)
+    if ($value -eq [string]::Empty)
+    {
+      if (-not $optional)
+      {
+        Write-Host "*** Warning: variable `"$variable`" has no value."
+      }
     }
     else
     {

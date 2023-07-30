@@ -66,7 +66,7 @@ function GetEnvVar
   param([string]$varname)
   if (-not (Test-Path env:$varname))
   {
-    return ""
+    return [string]::Empty
   }
   else
   {
