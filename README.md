@@ -81,5 +81,5 @@ in the real world, running on a RISC-V SiFive(R) HiFive1 board.
 
 The Ada-based system was shown at the FOSDEM '23 recently held in Brussels.
 
-![alt text](https://media.licdn.com/dms/image/D4D22AQG6cf0OrSKm1A/feedshare-shrink_800/0/1686850573412?e=1690416000&v=beta&t=Bl5qFP6hv9ERZaaeCG-BGP_3s1g6epdgf5hQDuB5vFo)
+![alt text](https://www.sweetada.org/images/20230204_100149.jpg)
 
