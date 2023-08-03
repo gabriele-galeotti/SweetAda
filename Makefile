@@ -210,6 +210,18 @@ PATH := $(TOOLCHAIN_PREFIX)/bin:$(PATH)
 endif
 endif
 
+# add GPRBUILD_PREFIX to PATH
+ifneq ($(GPRBUILD_PREFIX),)
+ifeq      ($(OSTYPE),cmd)
+PATH := $(GPRBUILD_PREFIX)\bin;$(PATH)
+else ifeq ($(OSTYPE),msys)
+GPRBUILD_PREFIX_MSYS := $(shell cygpath.exe -u "$(GPRBUILD_PREFIX)" 2> /dev/null)
+PATH := $(GPRBUILD_PREFIX_MSYS)/bin:$(PATH)
+else
+PATH := $(GPRBUILD_PREFIX)/bin:$(PATH)
+endif
+endif
+
 # export PATH so that we can use everything
 export PATH
 
@@ -589,6 +601,7 @@ export                    \
 # toolchain
 export                           \
        TOOLCHAIN_PREFIX          \
+       GPRBUILD_PREFIX           \
        TOOLCHAIN_NAME_AArch64    \
        TOOLCHAIN_NAME_ARM        \
        TOOLCHAIN_NAME_M68k       \
@@ -1118,6 +1131,7 @@ endif
 	@$(call echo-print,"OSTYPE:                  $(OSTYPE)")
 	@$(call echo-print,"SWEETADA PATH:           $(SWEETADA_PATH)")
 	@$(call echo-print,"TOOLCHAIN PREFIX:        $(TOOLCHAIN_PREFIX)")
+	@$(call echo-print,"GPRBUILD PREFIX:         $(GPRBUILD_PREFIX)")
 	@$(call echo-print,"TOOLCHAIN NAME:          $(TOOLCHAIN_NAME)")
 	@$(call echo-print,"MAKE VERSION:            $(MAKE_VERSION)")
 	@$(call echo-print,"BUILD MODE:              $(BUILD_MODE)")

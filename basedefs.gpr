@@ -242,7 +242,11 @@ abstract project Basedefs is
 
    Library_Kind    := "static";
    Library_Support := "static_only";
-   Library_Builder := Configure.Toolchain_Prefix & "/libexec/gprbuild/gprlib";
+   Library_Builder := "../libexec/gprbuild/gprlib";
+   case Configure.Gprbuild_Prefix is
+      when ""     => null;
+      when others => Library_Builder := Configure.Gprbuild_Prefix & "bin/" & Library_Builder;
+   end case;
    Archive_Builder := (Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-ar", "cr");
 
 end Basedefs;

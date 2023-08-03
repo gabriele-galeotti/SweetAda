@@ -15,6 +15,7 @@
 # Environment variables:
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
+# GPRBUILD_PREFIX
 # TOOLCHAIN_NAME
 # GCC_WRAPPER
 # GNATADC_FILENAME
@@ -168,6 +169,7 @@ print_V $configure_filename
 #
 print_I $configure_filename "SweetAda_Path         := `"$(GetEnvVar SWEETADA_PATH)`";"
 print_I $configure_filename "Toolchain_Prefix      := `"$(GetEnvVar TOOLCHAIN_PREFIX)`";"
+print_I $configure_filename "Gprbuild_Prefix       := `"$(GetEnvVar GPRBUILD_PREFIX)`";"
 print_I $configure_filename "Toolchain_Name        := `"$(GetEnvVar TOOLCHAIN_NAME)`";"
 print_I $configure_filename "GCC_Wrapper           := `"$(GetEnvVar GCC_WRAPPER)`";"
 print_I $configure_filename "GnatAdc_Filename      := `"$(GetEnvVar GNATADC_FILENAME)`";"

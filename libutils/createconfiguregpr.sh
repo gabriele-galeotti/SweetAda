@@ -18,6 +18,7 @@
 # OSTYPE
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
+# GPRBUILD_PREFIX
 # TOOLCHAIN_NAME
 # GCC_WRAPPER
 # GNATADC_FILENAME
@@ -187,6 +188,7 @@ print_V
 #
 print_I "SweetAda_Path         := \"${SWEETADA_PATH}\";"
 print_I "Toolchain_Prefix      := \"${TOOLCHAIN_PREFIX}\";"
+print_I "Gprbuild_Prefix       := \"${GPRBUILD_PREFIX}\";"
 print_I "Toolchain_Name        := \"${TOOLCHAIN_NAME}\";"
 print_I "GCC_Wrapper           := \"${GCC_WRAPPER}\";"
 print_I "GnatAdc_Filename      := \"${GNATADC_FILENAME}\";"

@@ -13,6 +13,7 @@ ifeq      ($(OSTYPE),cmd)
   # Windows
   #
   TOOLCHAIN_PREFIX := C:\Program Files\SweetAda
+  GPRBUILD_PREFIX  := C:\Program Files\GNAT\gprbuild-x86_64-windows64-22.0.0-1
   PYTHON           := C:\Users\Administrator\AppData\Local\Programs\Python\Python38\python.exe
   TCLSH            := C:\Tcl\bin\tclsh86.exe
 else ifeq ($(OSTYPE),msys)
@@ -20,6 +21,7 @@ else ifeq ($(OSTYPE),msys)
   # MSYS2
   #
   TOOLCHAIN_PREFIX := C:/Program Files/SweetAda
+  GPRBUILD_PREFIX  := C:/Program Files/GNAT/gprbuild-x86_64-windows64-22.0.0-1
   PYTHON           := C:/Users/Administrator/AppData/Local/Programs/Python/Python38/python.exe
   TCLSH            := C:/Tcl/bin/tclsh86.exe
 else ifeq ($(OSTYPE),darwin)
