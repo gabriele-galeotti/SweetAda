@@ -104,21 +104,18 @@ if ($symbols.Count -gt 0)
         Write-Host "*** Warning: variable `"$variable`" has no value."
       }
     }
-    else
+    if ($value.StartsWith("`"") -and $value.EndsWith("`""))
     {
-      if ($value.StartsWith("`"") -and $value.EndsWith("`""))
-      {
-        $stringvalue = $value.Trim("`"")
-        $value = $stringvalue
-      }
-      elseif ($value.StartsWith("0x"))
-      {
-        $hexvalue = $value.Substring(2)
-        $value = "16#$hexvalue#"
-      }
-      $pinfo.Arguments += " -e"
-      $pinfo.Arguments += " `"s|$symbol|$value|`""
+      $stringvalue = $value.Trim("`"")
+      $value = $stringvalue
     }
+    elseif ($value.StartsWith("0x"))
+    {
+      $hexvalue = $value.Substring(2)
+      $value = "16#$hexvalue#"
+    }
+    $pinfo.Arguments += " -e"
+    $pinfo.Arguments += " `"s|$symbol|$value|`""
   }
 }
 else
