@@ -26,10 +26,10 @@ export ZCX_BY_DEFAULT            := False
 
 configure-rts :
 ifeq ($(OSTYPE),cmd)
-	$(CP) $(RTS_SOURCE_PATH_CMD)\*.ads $(ADAINCLUDE_PATH_CMD)\ $(NULL)
-	$(CP) $(RTS_SOURCE_PATH_CMD)\*.adb $(ADAINCLUDE_PATH_CMD)\ $(NULL)
+	$(CP) "$(RTS_SOURCE_PATH_CMD)"\*.ads "$(ADAINCLUDE_PATH_CMD)"\ $(NULL)
+	$(CP) "$(RTS_SOURCE_PATH_CMD)"\*.adb "$(ADAINCLUDE_PATH_CMD)"\ $(NULL)
 else
-	$(CP) $(RTS_SOURCE_PATH)/*.ads $(ADAINCLUDE_PATH)/
-	$(CP) $(RTS_SOURCE_PATH)/*.adb $(ADAINCLUDE_PATH)/
+	$(CP) "$(RTS_SOURCE_PATH)"/*.ads "$(ADAINCLUDE_PATH)"/
+	$(CP) "$(RTS_SOURCE_PATH)"/*.adb "$(ADAINCLUDE_PATH)"/
 endif
 
