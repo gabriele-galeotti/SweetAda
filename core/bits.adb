@@ -42,22 +42,34 @@ package body Bits is
    -- P/NBooleans
    ----------------------------------------------------------------------------
 
-   function Inactive (Value : PBoolean) return Boolean is
+   function Inactive
+      (Value : in PBoolean)
+      return Boolean
+      is
    begin
       return Value = PFalse;
    end Inactive;
 
-   function Active (Value : PBoolean) return Boolean is
+   function Active
+      (Value : in PBoolean)
+      return Boolean
+      is
    begin
       return Value = PTrue;
    end Active;
 
-   function Inactive (Value : NBoolean) return Boolean is
+   function Inactive
+      (Value : in NBoolean)
+      return Boolean
+      is
    begin
       return Value = NFalse;
    end Inactive;
 
-   function Active (Value : NBoolean) return Boolean is
+   function Active
+      (Value : in NBoolean)
+      return Boolean
+      is
    begin
       return Value = NTrue;
    end Active;
@@ -65,7 +77,10 @@ package body Bits is
    ----------------------------------------------------------------------------
    -- Map_Bitsize
    ----------------------------------------------------------------------------
-   function Map_Bitsize (Size : Positive) return Bitsize is
+   function Map_Bitsize
+      (Size : in Positive)
+      return Bitsize
+      is
    begin
       case Size is
          when 8      => return BIT8;
@@ -80,12 +95,18 @@ package body Bits is
    -- Bits_1 <=> Boolean conversions
    ----------------------------------------------------------------------------
 
-   function To_Boolean (Value : Bits_1) return Boolean is
+   function To_Boolean
+      (Value : in Bits_1)
+      return Boolean
+      is
    begin
       return Value /= 0;
    end To_Boolean;
 
-   function To_Bits_1 (Value : Boolean) return Bits_1 is
+   function To_Bits_1
+      (Value : in Boolean)
+      return Bits_1
+      is
    begin
       if Value then
          return 1;
@@ -98,49 +119,73 @@ package body Bits is
    -- Bits_XX <=> Bitmap_XX conversions
    ----------------------------------------------------------------------------
 
-   function To_B8 (Value : Bitmap_8) return Bits_8 is
+   function To_B8
+      (Value : in Bitmap_8)
+      return Bits_8
+      is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_8, Bits_8);
    begin
       return Convert (Value);
    end To_B8;
 
-   function To_BM8 (Value : Bits_8) return Bitmap_8 is
+   function To_BM8
+      (Value : in Bits_8)
+      return Bitmap_8
+      is
       function Convert is new Ada.Unchecked_Conversion (Bits_8, Bitmap_8);
    begin
       return Convert (Value);
    end To_BM8;
 
-   function To_B16 (Value : Bitmap_16) return Bits_16 is
+   function To_B16
+      (Value : in Bitmap_16)
+      return Bits_16
+      is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_16, Bits_16);
    begin
       return Convert (Value);
    end To_B16;
 
-   function To_BM16 (Value : Bits_16) return Bitmap_16 is
+   function To_BM16
+      (Value : in Bits_16)
+      return Bitmap_16
+      is
       function Convert is new Ada.Unchecked_Conversion (Bits_16, Bitmap_16);
    begin
       return Convert (Value);
    end To_BM16;
 
-   function To_B32 (Value : Bitmap_32) return Bits_32 is
+   function To_B32
+      (Value : in Bitmap_32)
+      return Bits_32
+      is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_32, Bits_32);
    begin
       return Convert (Value);
    end To_B32;
 
-   function To_BM32 (Value : Bits_32) return Bitmap_32 is
+   function To_BM32
+      (Value : in Bits_32)
+      return Bitmap_32
+      is
       function Convert is new Ada.Unchecked_Conversion (Bits_32, Bitmap_32);
    begin
       return Convert (Value);
    end To_BM32;
 
-   function To_B64 (Value : Bitmap_64) return Bits_64 is
+   function To_B64
+      (Value : in Bitmap_64)
+      return Bits_64
+      is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_64, Bits_64);
    begin
       return Convert (Value);
    end To_B64;
 
-   function To_BM64 (Value : Bits_64) return Bitmap_64 is
+   function To_BM64
+      (Value : in Bits_64)
+      return Bitmap_64
+      is
       function Convert is new Ada.Unchecked_Conversion (Bits_64, Bitmap_64);
    begin
       return Convert (Value);
@@ -150,13 +195,19 @@ package body Bits is
    -- Unsigned_8 <=> Storage_Element conversions
    ----------------------------------------------------------------------------
 
-   function To_U8 (Value : SSE.Storage_Element) return Interfaces.Unsigned_8 is
+   function To_U8
+      (Value : in SSE.Storage_Element)
+      return Interfaces.Unsigned_8
+      is
       function Convert is new Ada.Unchecked_Conversion (SSE.Storage_Element, Interfaces.Unsigned_8);
    begin
       return Convert (Value);
    end To_U8;
 
-   function To_SE (Value : Interfaces.Unsigned_8) return SSE.Storage_Element is
+   function To_SE
+      (Value : in Interfaces.Unsigned_8)
+      return SSE.Storage_Element
+      is
       function Convert is new Ada.Unchecked_Conversion (Interfaces.Unsigned_8, SSE.Storage_Element);
    begin
       return Convert (Value);
@@ -166,12 +217,18 @@ package body Bits is
    -- Unsigned_8 <=> Character conversions
    ----------------------------------------------------------------------------
 
-   function To_U8 (C : Character) return Interfaces.Unsigned_8 is
+   function To_U8
+      (C : in Character)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Character'Pos (C);
    end To_U8;
 
-   function To_Ch (Value : Interfaces.Unsigned_8) return Character is
+   function To_Ch
+      (Value : in Interfaces.Unsigned_8)
+      return Character
+      is
    begin
       return Character'Val (Value);
    end To_Ch;
@@ -180,19 +237,29 @@ package body Bits is
    -- Integer/Mod_Integer conversions and functions
    ----------------------------------------------------------------------------
 
-   function To_Mod (Value : Integer) return Mod_Integer is
+   function To_Mod
+      (Value : in Integer)
+      return Mod_Integer
+      is
       function Convert is new Ada.Unchecked_Conversion (Integer, Mod_Integer);
    begin
       return Convert (Value);
    end To_Mod;
 
-   function To_Integer (Value : Mod_Integer) return Integer is
+   function To_Integer
+      (Value : in Mod_Integer)
+      return Integer
+      is
       function Convert is new Ada.Unchecked_Conversion (Mod_Integer, Integer);
    begin
       return Convert (Value);
    end To_Integer;
 
-   function Suppress_LSB (Value : Integer; Order : Integer_Bit_Number) return Integer is
+   function Suppress_LSB
+      (Value : in Integer;
+       Order : in Integer_Bit_Number)
+      return Integer
+      is
    begin
       return To_Integer (To_Mod (Value) and not (2**(Order + 1) - 1));
    end Suppress_LSB;
@@ -202,7 +269,10 @@ package body Bits is
    ----------------------------------------------------------------------------
    -- Reverse the bit pattern of a byte.
    ----------------------------------------------------------------------------
-   function Byte_Reverse (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_8 is
+   function Byte_Reverse
+      (Value : in Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_8
+      is
    separate;
 
    ----------------------------------------------------------------------------
@@ -210,7 +280,10 @@ package body Bits is
    ----------------------------------------------------------------------------
    -- Find the first MS bit set.
    ----------------------------------------------------------------------------
-   function FirstMSBit (Value : Interfaces.Unsigned_8) return Integer is
+   function FirstMSBit
+      (Value : in Interfaces.Unsigned_8)
+      return Integer
+      is
       -- table of floor(Log2(x))
       MSBitArray : constant array (Interfaces.Unsigned_8 range <>) of Integer :=
          [
@@ -240,9 +313,14 @@ package body Bits is
    ----------------------------------------------------------------------------
    generic
       type Modular_Type is mod <>;
-   function g_LSBitOn (V : Modular_Type) return Boolean with
+   function g_LSBitOn
+      (V : in Modular_Type)
+      return Boolean with
       Inline => True;
-   function g_LSBitOn (V : Modular_Type) return Boolean is
+   function g_LSBitOn
+      (V : in Modular_Type)
+      return Boolean
+      is
    begin
       return (V and 1) /= 0;
    end g_LSBitOn;
@@ -252,9 +330,14 @@ package body Bits is
    ----------------------------------------------------------------------------
    generic
       type Modular_Type is mod <>;
-   function g_MSBitOn (V : Modular_Type) return Boolean with
+   function g_MSBitOn
+      (V : in Modular_Type)
+      return Boolean with
       Inline => True;
-   function g_MSBitOn (V : Modular_Type) return Boolean is
+   function g_MSBitOn
+      (V : in Modular_Type)
+      return Boolean
+      is
    begin
       return (V and 2**(Modular_Type'Size - 1)) /= 0;
    end g_MSBitOn;
@@ -263,49 +346,73 @@ package body Bits is
    -- L/MSBitOn
    ----------------------------------------------------------------------------
 
-   function LSBitOn (Value : Interfaces.Unsigned_8) return Boolean is
+   function LSBitOn
+      (Value : in Interfaces.Unsigned_8)
+      return Boolean
+      is
       function U8_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_8);
    begin
       return U8_LSBitOn (Value);
    end LSBitOn;
 
-   function LSBitOn (Value : Interfaces.Unsigned_16) return Boolean is
+   function LSBitOn
+      (Value : in Interfaces.Unsigned_16)
+      return Boolean
+      is
       function U16_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_16);
    begin
       return U16_LSBitOn (Value);
    end LSBitOn;
 
-   function LSBitOn (Value : Interfaces.Unsigned_32) return Boolean is
+   function LSBitOn
+      (Value : in Interfaces.Unsigned_32)
+      return Boolean
+      is
       function U32_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_32);
    begin
       return U32_LSBitOn (Value);
    end LSBitOn;
 
-   function LSBitOn (Value : Interfaces.Unsigned_64) return Boolean is
+   function LSBitOn
+      (Value : in Interfaces.Unsigned_64)
+      return Boolean
+      is
       function U64_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_64);
    begin
       return U64_LSBitOn (Value);
    end LSBitOn;
 
-   function MSBitOn (Value : Interfaces.Unsigned_8) return Boolean is
+   function MSBitOn
+      (Value : in Interfaces.Unsigned_8)
+      return Boolean
+      is
       function U8_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_8);
    begin
       return U8_MSBitOn (Value);
    end MSBitOn;
 
-   function MSBitOn (Value : Interfaces.Unsigned_16) return Boolean is
+   function MSBitOn
+      (Value : in Interfaces.Unsigned_16)
+      return Boolean
+      is
       function U16_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_16);
    begin
       return U16_MSBitOn (Value);
    end MSBitOn;
 
-   function MSBitOn (Value : Interfaces.Unsigned_32) return Boolean is
+   function MSBitOn
+      (Value : in Interfaces.Unsigned_32)
+      return Boolean
+      is
       function U32_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_32);
    begin
       return U32_MSBitOn (Value);
    end MSBitOn;
 
-   function MSBitOn (Value : Interfaces.Unsigned_64) return Boolean is
+   function MSBitOn
+      (Value : in Interfaces.Unsigned_64)
+      return Boolean
+      is
       function U64_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_64);
    begin
       return U64_MSBitOn (Value);
