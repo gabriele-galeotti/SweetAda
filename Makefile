@@ -978,7 +978,7 @@ endif
 #
 
 .PHONY : kernel_lib_obj_dir
-kernel_lib_obj_dir:
+kernel_lib_obj_dir :
 ifeq ($(OSTYPE),cmd)
 	@IF NOT EXIST $(LIBRARY_DIRECTORY)\ $(MKDIR) $(LIBRARY_DIRECTORY)
 	@IF NOT EXIST $(OBJECT_DIRECTORY)\ $(MKDIR) $(OBJECT_DIRECTORY)
