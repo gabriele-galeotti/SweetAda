@@ -14,12 +14,16 @@ CPU := RISC-V
 CPU_MODEL             := RV32IMAFC
 GCC_SWITCHES_PLATFORM := -march=rv32imafc -mabi=ilp32f
 LD_SWITCHES_PLATFORM  := -m elf32lriscv --no-warn-rwx-segments
+
 # 64-bit
+# *** do not use, still under development
 #CPU_MODEL             := RV64IMAC
 #GCC_SWITCHES_PLATFORM := -march=rv64imac -mabi=lp64
 #LD_SWITCHES_PLATFORM  := -m elf64lriscv --no-warn-rwx-segments
 
 STARTUP_OBJECTS           := startup.S llkernel.S
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0x0200BFF8
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtimecmp_mmap=0x02004000
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00

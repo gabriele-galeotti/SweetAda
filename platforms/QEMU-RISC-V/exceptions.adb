@@ -20,9 +20,11 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with RISCV;
+with MTIME;
 with Configure;
 with Virt;
 with BSP;
+with Console;
 with IOEMU;
 
 package body Exceptions is
@@ -39,6 +41,7 @@ package body Exceptions is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
+   use RISCV;
 
    --========================================================================--
    --                                                                        --
@@ -53,13 +56,22 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Exception_Process
       is
+      mcause : mcause_Type;
    begin
-      BSP.Tick_Count := @ + 1;
-      if Configure.USE_QEMU_IOEMU then
-         -- IRQ pulsemeter
-         IOEMU.IO0 := 1;
+      mcause := mcause_Read;
+      if mcause.Interrupt then
+         BSP.Tick_Count := @ + 1;
+         if Configure.USE_QEMU_IOEMU then
+            -- IRQ pulsemeter
+            IOEMU.IO0 := 1;
+         end if;
+         Virt.Timer_Value := @ + Virt.Timer_Constant;
+         MTIME.mtimecmp_Write (Virt.Timer_Value);
+      else
+         Console.Print (MXLEN_Type (mcause.Exception_Code), Prefix => "***", NL => True);
+         Console.Print (mepc_Read, Prefix => "***", NL => True);
+         loop null; end loop;
       end if;
-      RISCV.mtimecmp_Write (RISCV.mtime_Read + Virt.Timer_Constant);
    end Exception_Process;
 
    ----------------------------------------------------------------------------
@@ -67,14 +79,15 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    procedure Init
       is
-      Vectors      : aliased Asm_Entry_Point
+      Vectors : aliased Asm_Entry_Point
          with Import        => True,
               Convention    => Asm,
               External_Name => "vectors";
-      Base_Address : Bits_30;
    begin
-      Base_Address := Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2));
-      RISCV.mtvec_Write ((MODE => RISCV.MODE_Direct, BASE => Base_Address));
+      mtvec_Write ((
+         MODE => MODE_Direct,
+         BASE => mtvec_BASE_Type (Shift_Right (MXLEN_Type (To_Integer (Vectors'Address)), 2))
+         ));
    end Init;
 
 end Exceptions;

@@ -23,6 +23,7 @@ with Core;
 with Bits;
 with MMIO;
 with RISCV;
+with MTIME;
 with Exceptions;
 with Virt;
 with Console;
@@ -108,7 +109,8 @@ package body BSP is
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
-      RISCV.mtimecmp_Write (RISCV.mtime_Read + Virt.Timer_Constant);
+      Virt.Timer_Value := MTIME.mtime_Read + Virt.Timer_Constant;
+      MTIME.mtimecmp_Write (Virt.Timer_Value);
       RISCV.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;

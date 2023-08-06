@@ -46,8 +46,14 @@ return 0
 
 # QEMU executable
 case ${CPU_MODEL} in
-  RV32*) QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-riscv32" ;;
-  RV64*) QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-riscv64" ;;
+  RV32*)
+    QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-riscv32"
+    CPU="rv32"
+    ;;
+  RV64*)
+    QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-riscv64"
+    CPU="rv64"
+    ;;
 esac
 
 # debug options
@@ -69,7 +75,7 @@ SERIALPORT1=4447
 
 # QEMU machine
 ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
-  -M virt \
+  -M virt -cpu ${CPU} -smp 4 \
   -bios ${KERNEL_ROMFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -chardev "socket,id=SERIALPORT0,port=${SERIALPORT0},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \

@@ -18,6 +18,7 @@
 with System.Storage_Elements;
 with Interfaces;
 with Definitions;
+with Configure;
 with Goldfish;
 
 package Virt is
@@ -37,7 +38,9 @@ package Virt is
    -- Timer
 
    Timer_Frequency : constant := 10 * MHz1;
-   Timer_Constant  : constant := (Timer_Frequency + 1_000 / 2) / 1_000;
+   Timer_Constant  : constant := (Timer_Frequency + Configure.TICK_FREQUENCY / 2) / Configure.TICK_FREQUENCY;
+
+   Timer_Value : Unsigned_64;
 
    -- UART 16x50-style
 
