@@ -37,7 +37,9 @@ package RISCV_Definitions is
 
    XLEN : constant := 32;
 
-   -- Machine Status (mstatus)
+   subtype MXLEN_Type is Unsigned_32;
+
+   -- 3.1.6 Machine Status Registers (mstatus and mstatush)
 
    type mstatus_Type is
    record
@@ -90,7 +92,41 @@ package RISCV_Definitions is
       SD        at 0 range 31 .. 31;
    end record;
 
-   -- mtime
+   -- 3.1.7 Machine Trap-Vector Base-Address Register (mtvec)
+
+   subtype mtvec_BASE_Type is Bits_30;
+
+   type mtvec_Type is
+   record
+      MODE : Bits_2;          -- MODE Sets the interrupt processing mode.
+      BASE : mtvec_BASE_Type; -- Interrupt Vector Base Address.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for mtvec_Type use
+   record
+      MODE at 0 range 0 .. 1;
+      BASE at 0 range 2 .. 31;
+   end record;
+
+   -- 3.1.15 Machine Cause Register (mcause)
+
+   subtype mcause_Exception_Code_Type is Bits_31;
+
+   type mcause_Type is
+   record
+      Exception_Code : mcause_Exception_Code_Type; -- A code identifying the last exception.
+      Interrupt      : Boolean;                    -- 1, if the trap was caused by an interrupt; 0 otherwise.
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for mcause_Type use
+   record
+      Exception_Code at 0 range 0 .. 30;
+      Interrupt      at 0 range 31 .. 31;
+   end record;
+
+   -- 3.2.1 Machine Timer Registers (mtime and mtimecmp)
 
    type mtime_Type is
    record

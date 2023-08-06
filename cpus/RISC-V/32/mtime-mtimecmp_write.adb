@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ riscv-mtime_read.adb                                                                                      --
+-- __FLN__ mtime-mtimecmp_write.adb                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,15 +15,17 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-separate (RISCV)
-function mtime_Read return Unsigned_64 is
-   L : Unsigned_32;
-   H : Unsigned_32;
+with Bits;
+with RISCV;
+
+separate (MTIME)
+procedure mtimecmp_Write (Value : in Unsigned_64) is
+   mtimecmp_mmap : aliased RISCV.mtime_Type
+      with Import        => True,
+           Convention    => Ada,
+           External_Name => "_riscv_mtimecmp_mmap";
 begin
-   loop
-      H := mtime.H;
-      L := mtime.L;
-      exit when H = mtime.H;
-   end loop;
-   return Make_Word (H, L);
-end mtime_Read;
+   mtimecmp_mmap.H := 16#FFFF_FFFF#;
+   mtimecmp_mmap.L := Bits.LWord (Value);
+   mtimecmp_mmap.H := Bits.HWord (Value);
+end mtimecmp_Write;

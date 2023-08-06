@@ -43,63 +43,11 @@ package body RISCV is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- NOP
-   ----------------------------------------------------------------------------
-   procedure NOP is
-   begin
-      Asm (
-           Template => ""            & CRLF &
-                       "        nop" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end NOP;
-
-   ----------------------------------------------------------------------------
-   -- mcause_Read
-   ----------------------------------------------------------------------------
-   function mcause_Read return Unsigned_32 is
-      mcause : Unsigned_32;
-   begin
-      Asm (
-           Template => ""                          & CRLF &
-                       ZICSR_ZIFENCEI_ASM          & CRLF &
-                       "        csrr    %0,mcause" & CRLF &
-                       "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", mcause),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return mcause;
-   end mcause_Read;
-
-   ----------------------------------------------------------------------------
-   -- mepc_Read
-   ----------------------------------------------------------------------------
-   function mepc_Read return Unsigned_32 is
-      mepc : Unsigned_32;
-   begin
-      Asm (
-           Template => ""                        & CRLF &
-                       ZICSR_ZIFENCEI_ASM        & CRLF &
-                       "        csrr    %0,mepc" & CRLF &
-                       "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", mepc),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return mepc;
-   end mepc_Read;
-
-   ----------------------------------------------------------------------------
    -- mtvec_Write
    ----------------------------------------------------------------------------
-   procedure mtvec_Write (mtvec : in mtvec_Type) is
+   procedure mtvec_Write
+      (mtvec : in mtvec_Type)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -114,19 +62,70 @@ package body RISCV is
    end mtvec_Write;
 
    ----------------------------------------------------------------------------
-   -- mtime/mtimecmp
+   -- mepc_Read
    ----------------------------------------------------------------------------
+   function mepc_Read
+      return MXLEN_Type
+      is
+      mepc : MXLEN_Type;
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       ZICSR_ZIFENCEI_ASM        & CRLF &
+                       "        csrr    %0,mepc" & CRLF &
+                       "",
+           Outputs  => MXLEN_Type'Asm_Output ("=r", mepc),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return mepc;
+   end mepc_Read;
 
-   function mtime_Read return Unsigned_64 is
-   separate;
+   ----------------------------------------------------------------------------
+   -- mcause_Read
+   ----------------------------------------------------------------------------
+   function mcause_Read
+      return mcause_Type
+      is
+      mcause : mcause_Type;
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       ZICSR_ZIFENCEI_ASM          & CRLF &
+                       "        csrr    %0,mcause" & CRLF &
+                       "",
+           Outputs  => mcause_Type'Asm_Output ("=r", mcause),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return mcause;
+   end mcause_Read;
 
-   procedure mtimecmp_Write (Value : in Unsigned_64) is
-   separate;
+   ----------------------------------------------------------------------------
+   -- NOP
+   ----------------------------------------------------------------------------
+   procedure NOP
+      is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end NOP;
 
    ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
+   procedure Asm_Call
+      (Target_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -164,7 +163,8 @@ package body RISCV is
                                              others => <>
                                             );
 
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       Asm (
            Template => ""                              & CRLF &
@@ -175,14 +175,15 @@ package body RISCV is
            Outputs  => No_Output_Operands,
            Inputs   => [
                         mstatus_Type'Asm_Input ("r", mstatus_USMIE),
-                        Unsigned_32'Asm_Input ("r", 16#0000_0080#)
+                        MXLEN_Type'Asm_Input ("r", 16#80#)
                        ],
            Clobber  => "",
            Volatile => True
           );
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       Asm (
            Template => ""                              & CRLF &
@@ -196,12 +197,16 @@ package body RISCV is
           );
    end Irq_Disable;
 
-   function Irq_State_Get return Irq_State_Type is
+   function Irq_State_Get
+      return Irq_State_Type
+      is
    begin
       return 0; -- __TBD__
    end Irq_State_Get;
 
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
    begin
       null; -- __TBD__
    end Irq_State_Set;
