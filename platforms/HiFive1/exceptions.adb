@@ -16,10 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
 with Interfaces;
 with Definitions;
 with Bits;
 with RISCV;
+with MTIME;
 with HiFive1;
 with Console;
 with BSP;
@@ -37,6 +39,8 @@ package body Exceptions is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
+   use RISCV;
+   use MTIME;
 
    --========================================================================--
    --                                                                        --
@@ -50,18 +54,26 @@ package body Exceptions is
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process is
-      Cause : Unsigned_32;
+      mcause : mcause_Type;
    begin
-      Cause := RISCV.mcause_Read;
-      if (Cause and 16#8000_0000#) = 0 then
-         Console.Print (Cause, NL => True);
-         loop null; end loop;
-      else
+      mcause := mcause_Read;
+      if mcause.Interrupt then
          BSP.Tick_Count := @ + 1;
-         RISCV.mtimecmp_Write (RISCV.mtime_Read + BSP.mtime_Offset);
+
+--         mtimecmp_Write (mtime_Read + BSP.mtime_Offset);
+         BSP.Timer_Value := @ + BSP.Timer_Constant;
+         mtimecmp_Write (BSP.Timer_Value);
+
          if BSP.Tick_Count mod 1_000 = 0 then
             Console.Print ("T", NL => False);
          end if;
+      else
+         declare
+            function To_U32 is new Ada.Unchecked_Conversion (mcause_Type, Unsigned_32);
+         begin
+            Console.Print (To_U32 (mcause), Prefix => "*** Exception: ", NL => True);
+         end;
+         loop null; end loop;
       end if;
    end Exception_Process;
 
@@ -73,10 +85,11 @@ package body Exceptions is
          Import        => True,
          Convention    => Asm,
          External_Name => "vectors";
-      Base_Address : Bits_30;
    begin
-      Base_Address := Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2));
-      RISCV.mtvec_Write ((MODE => RISCV.MODE_Direct, BASE => Base_Address));
+      RISCV.mtvec_Write ((
+         MODE => RISCV.MODE_Direct,
+         BASE => Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2))
+         ));
    end Init;
 
 end Exceptions;

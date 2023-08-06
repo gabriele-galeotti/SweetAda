@@ -19,6 +19,7 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
+with RISCV;
 
 package HiFive1 is
 
@@ -266,6 +267,47 @@ package HiFive1 is
          Convention           => Ada;
 
    end PRCI;
+
+   ----------------------------------------------------------------------------
+   -- 9 Core-Local Interruptor (CLINT)
+   ----------------------------------------------------------------------------
+
+   package CLINT is
+
+      msip_ADDRESS : constant := 16#0200_0000#;
+
+      msip : aliased Unsigned_32 with
+         Address              => To_Address (msip_ADDRESS),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+   end CLINT;
+
+   ----------------------------------------------------------------------------
+   -- 10 Platform-Level Interrupt Controller (PLIC)
+   ----------------------------------------------------------------------------
+
+   package PLIC is
+
+      -- threshold
+
+      type threshold_Type is
+      record
+         Threshold : Bits_3;  -- Sets the priority threshold
+         Reserved  : Bits_29;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for threshold_Type use
+      record
+         Threshold at 0 range 0 .. 2;
+         Reserved  at 0 range 3 .. 31;
+      end record;
+
+      threshold_ADDRESS_OFFSET : constant := 16#0020_0000#;
+
+   end PLIC;
 
    ----------------------------------------------------------------------------
    -- 13 Always-On (AON) Domain

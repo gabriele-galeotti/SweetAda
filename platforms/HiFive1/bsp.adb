@@ -18,6 +18,7 @@
 with Bits;
 with CPU;
 with RISCV;
+with MTIME;
 with HiFive1;
 with Exceptions;
 with Console;
@@ -35,6 +36,7 @@ package body BSP is
    use Interfaces;
    use Bits;
    use RISCV;
+   use MTIME;
    use HiFive1;
 
    procedure CLK_Init;
@@ -137,7 +139,8 @@ package body BSP is
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
-      mtimecmp_Write (mtime_Read + mtime_Offset);
+      Timer_Value := mtime_Read + Timer_Constant;
+      mtimecmp_Write (Timer_Value);
       Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;

@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Configure;
 with Definitions;
 
 package BSP is
@@ -36,8 +37,9 @@ package BSP is
       Convention    => Asm,
       External_Name => "tick_count";
 
-   -- clock triggers @ 1kHz
-   mtime_Offset : constant := (CLK_RTC32k + 1_000 / 2) / 1_000;
+   Timer_Frequency : constant := CLK_RTC32k;
+   Timer_Constant  : constant := (Timer_Frequency + Configure.TICK_FREQUENCY / 2) / Configure.TICK_FREQUENCY;
+   Timer_Value     : Interfaces.Unsigned_64;
 
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);
