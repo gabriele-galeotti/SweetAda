@@ -108,7 +108,7 @@ package body BSP is
       end if;
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
-      ARMv7M.Fiq_Enable;
+      ARMv7M.Fault_Irq_Enable;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;
