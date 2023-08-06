@@ -118,7 +118,7 @@ package RISCV_Definitions is
 
    -- 3.1.15 Machine Cause Register (mcause)
 
-   subtype mcause_Exception_Code_Type is Bits_51;
+   subtype mcause_Exception_Code_Type is Bits_63;
 
    type mcause_Type is
    record

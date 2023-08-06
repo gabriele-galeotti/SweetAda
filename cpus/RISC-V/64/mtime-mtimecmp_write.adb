@@ -19,10 +19,10 @@ with RISCV;
 
 separate (MTIME)
 procedure mtimecmp_Write (Value : in Unsigned_64) is
-   mtimecmp : aliased RISCV.mtime_Type
+   mtimecmp_mmap : aliased RISCV.mtime_Type
       with Import        => True,
            Convention    => Ada,
            External_Name => "_riscv_mtimecmp_mmap";
 begin
-   mtimecmp.T := Value;
+   mtimecmp_mmap.T := Value;
 end mtimecmp_Write;

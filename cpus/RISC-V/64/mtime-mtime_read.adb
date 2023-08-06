@@ -19,10 +19,10 @@ with RISCV;
 
 separate (MTIME)
 function mtime_Read return Unsigned_64 is
-   mtime : aliased RISCV.mtime_Type
+   mtime_mmap : aliased RISCV.mtime_Type
       with Import        => True,
            Convention    => Ada,
            External_Name => "_riscv_mtime_mmap";
 begin
-   return mtime.T;
+   return mtime_mmap.T;
 end mtime_Read;
