@@ -16,6 +16,9 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Configure;
+with Definitions;
+with Virt;
 with UART16x50;
 
 package BSP is
@@ -28,16 +31,22 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
-      Atomic        => True,
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "tick_count";
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0
+      with Atomic        => True,
+           Export        => True,
+           Convention    => Asm,
+           External_Name => "tick_count";
+
+   Timer_Frequency : constant := 10 * Definitions.MHz1;
+   Timer_Constant  : constant := (Timer_Frequency + Configure.TICK_FREQUENCY / 2) / Configure.TICK_FREQUENCY;
+   Timer_Value     : Interfaces.Unsigned_64;
 
    UART_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
 
-   procedure Console_Putchar (C : in Character);
-   procedure Console_Getchar (C : out Character);
+   procedure Console_Putchar
+      (C : in Character);
+   procedure Console_Getchar
+      (C : out Character);
    procedure Setup;
 
 end BSP;

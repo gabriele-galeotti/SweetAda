@@ -22,7 +22,6 @@ with Bits;
 with RISCV;
 with MTIME;
 with Configure;
-with Virt;
 with BSP;
 with Console;
 with IOEMU;
@@ -65,8 +64,8 @@ package body Exceptions is
             -- IRQ pulsemeter
             IOEMU.IO0 := 1;
          end if;
-         Virt.Timer_Value := @ + Virt.Timer_Constant;
-         MTIME.mtimecmp_Write (Virt.Timer_Value);
+         BSP.Timer_Value := @ + BSP.Timer_Constant;
+         MTIME.mtimecmp_Write (BSP.Timer_Value);
       else
          Console.Print (MXLEN_Type (mcause.Exception_Code), Prefix => "***", NL => True);
          Console.Print (mepc_Read, Prefix => "***", NL => True);
