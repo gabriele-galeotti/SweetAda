@@ -93,24 +93,6 @@ package body FATFS.Filename is
    end Get_Name;
 
    ----------------------------------------------------------------------------
-   -- Get_Index
-   ----------------------------------------------------------------------------
-   -- Return the index of the start of the file name without directory.
-   ----------------------------------------------------------------------------
-   -- function Get_Index
-   --    (FName : in String)
-   --    return Natural
-   --    is
-   -- begin
-   --    for I in reverse FName'Range loop
-   --       if Is_Separator (FName (I)) then
-   --          return I + 1;
-   --       end if;
-   --    end loop;
-   --    return FName'First;
-   -- end Get_Index;
-
-   ----------------------------------------------------------------------------
    -- Parse
    ----------------------------------------------------------------------------
    -- Parse a file name in an 8.3 format.

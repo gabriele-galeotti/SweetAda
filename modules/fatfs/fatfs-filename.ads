@@ -29,10 +29,6 @@ package FATFS.Filename is
       (DE    : in     Directory_Entry_Type;
        FName :    out String);
 
-   -- function Get_Index
-   --    (FName : in String)
-   --    return Natural;
-
    procedure Parse
       (Base    :    out String;
        Ext     :    out String;

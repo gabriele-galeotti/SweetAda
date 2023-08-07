@@ -173,6 +173,7 @@ endif
 
 # default system parameters
 TOOLCHAIN_PREFIX   :=
+GPRBUILD_PREFIX    :=
 BUILD_MODE         := GNATMAKE
 RTS                :=
 PROFILE            :=
