@@ -1,0 +1,69 @@
+
+-------------------------------------------------------------------------------
+-- SweetAda GPRbuild project file
+--
+-- Copyright (C) 2020-2023 Gabriele Galeotti
+--
+-- This work is licensed under the terms of the MIT License.
+-- Please consult the LICENSE.txt file located in the top-level directory.
+-------------------------------------------------------------------------------
+
+with "configure";
+
+abstract project Gprbuild_Wr is
+
+   Switches_Warning := (
+                        -- "-gnatwa",         -- Activate most optional warnings.
+                        "-gnatw.a",        -- Activate warnings on failing assertions.
+                        "-gnatwb",         -- Activate warnings on bad fixed values.
+                        "-gnatw.b",        -- Activate warnings on biased representation.
+                        "-gnatwC",         -- Activate warnings on conditionals.
+                        -- "-gnatw.c",        -- Activate warnings on missing component clauses.
+                        "-gnatwd",         -- Activate warnings on implicit dereferencing.
+                        "-gnatw.d",        -- Activate tagging of warning and info messages.
+                        -- "-gnatwe",         -- Treat warnings and style checks as errors.
+                        -- "-gnatwf",         -- Activate warnings on unreferenced formals.
+                        "-gnatwg",         -- Activate warnings on unrecognized pragmas.
+                        "-gnatwh",         -- Activate warnings on hiding.
+                        -- "-gnatw.h",        -- Activate warnings on holes/gaps in records.
+                        "-gnatwI",         -- Activate warnings on implementation units.
+                        -- "-gnatwi",         -- Activate warnings on implementation units.
+                        "-gnatw.i",        -- Activate warnings on overlapping actuals.
+                        "-gnatwj",         -- Activate warnings on obsolescent features (Annex J).
+                        "-gnatwk",         -- Activate warnings on variables that could be constants.
+                        "-gnatw.k",        -- Activate warnings on redefinition of names in standard.
+                        "-gnatwl",         -- Activate warnings for elaboration pragmas.
+                        "-gnatw.l",        -- List inherited aspects.
+                        "-gnatwm",         -- Activate warnings on modified but unreferenced variables.
+                        "-gnatw.m",        -- Activate warnings on suspicious modulus values.
+                        -- "-gnatw.n",        -- Activate warnings on atomic synchronization.
+                        "-gnatwo",         -- Activate warnings on address clause overlays.
+                        "-gnatw.o",        -- Activate warnings on modified but unreferenced out parameters.
+                        "-gnatwp",         -- Activate warnings on ineffective pragma Inlines.
+                        "-gnatw.p",        -- Activate warnings on parameter ordering.
+                        "-gnatwq",         -- Activate warnings on questionable missing parentheses.
+                        "-gnatw.q",        -- Activate warnings on questionable layout of record types.
+                        "-gnatwr",         -- Activate warnings on redundant constructs.
+                        "-gnatw.r",        -- Activate warnings for object renaming function.
+                        -- "-gnatw_r",        -- Activate warnings for out-of-order record representation clauses.
+                        "-gnatw.s",        -- Activate warnings on overridden size clauses.
+                        -- "-gnatwt",         -- Activate warnings for tracking of deleted conditional code.
+                        "-gnatw.t",        -- Activate warnings on suspicious contracts.
+                        "-gnatw.u",        -- Activate warnings on unordered enumeration types.
+                        "-gnatwv",         -- Activate warnings on unassigned variables.
+                        -- "-gnatw.v",        -- Activate info messages for non-default bit order.
+                        "-gnatw.V",        -- Suppress info messages for non-default bit order.
+                        "-gnatww",         -- Activate warnings on wrong low bound assumption.
+                        -- "-gnatw.w",        -- Activate warnings on Warnings Off pragmas.
+                        "-gnatwx",         -- Activate warnings on Export/Import pragmas.
+                        "-gnatw.X",        -- Disable warnings for No_Exception_Propagation mode.
+                        -- "-gnatw.y",        -- Activate information messages for why package spec needs body.
+                        "-gnatwz",         -- Activate warnings on unchecked conversions.
+                        "-gnatw.z",        -- Activate warnings for size not a multiple of alignment.
+                        "-Wstack-usage=" & Configure.Stack_Limit,
+                        "-Wunused",
+                        "-Wuninitialized"
+                        -- "-gnatwu"          -- Activate warnings on unused entities.
+                       );
+
+end Gprbuild_Wr;

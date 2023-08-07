@@ -9,7 +9,7 @@
 -------------------------------------------------------------------------------
 
 with "configure";
-with "basedefs";
+with "gprbuild_tc";
 
 library project Cpu is
 
@@ -40,28 +40,28 @@ library project Cpu is
    -- Naming
    ----------------------------------------------------------------------------
 
-   package Naming renames Basedefs.Naming;
+   package Naming renames Gprbuild_Tc.Naming;
 
    ----------------------------------------------------------------------------
    -- Builder
    ----------------------------------------------------------------------------
 
-   package Builder renames Basedefs.Builder;
+   package Builder renames Gprbuild_Tc.Builder;
 
    ----------------------------------------------------------------------------
    -- Compiler
    ----------------------------------------------------------------------------
 
-   package Compiler renames Basedefs.Compiler;
+   package Compiler renames Gprbuild_Tc.Compiler;
 
    ----------------------------------------------------------------------------
    -- Library
    ----------------------------------------------------------------------------
 
-   for Library_Kind use Basedefs.Library_Kind;
-   for Library_Support use Basedefs.Library_Support;
-   for Library_Builder use Basedefs.Library_Builder;
-   for Archive_Builder use Basedefs.Archive_Builder;
+   for Library_Kind use Gprbuild_Tc.Library_Kind;
+   for Library_Support use Gprbuild_Tc.Library_Support;
+   for Library_Builder use Gprbuild_Tc.Library_Builder;
+   for Archive_Builder use Gprbuild_Tc.Archive_Builder;
    for Object_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Object_Directory;
    for Library_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Library_Directory;
 

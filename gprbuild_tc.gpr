@@ -1,0 +1,184 @@
+
+-------------------------------------------------------------------------------
+-- SweetAda GPRbuild project file
+--
+-- Copyright (C) 2020-2023 Gabriele Galeotti
+--
+-- This work is licensed under the terms of the MIT License.
+-- Please consult the LICENSE.txt file located in the top-level directory.
+-------------------------------------------------------------------------------
+
+with "configure";
+with "gprbuild_st";
+with "gprbuild_wr";
+
+abstract project Gprbuild_Tc is
+
+   ----------------------------------------------------------------------------
+   -- Types and variables
+   ----------------------------------------------------------------------------
+
+   Ostype  := External ("OSTYPE", "");
+   Verbose := External ("VERBOSE", "");
+
+   ----------------------------------------------------------------------------
+   -- Naming
+   ----------------------------------------------------------------------------
+
+   package Naming is
+      for Spec_Suffix ("Asm_Cpp") use ".h";
+      for Body_Suffix ("Asm_Cpp") use ".S";
+      for Spec_Suffix ("C")       use ".h";
+      for Body_Suffix ("C")       use ".c";
+      for Spec_Suffix ("Ada")     use ".ads";
+      for Body_Suffix ("Ada")     use ".adb";
+   end Naming;
+
+   ----------------------------------------------------------------------------
+   -- Builder
+   ----------------------------------------------------------------------------
+
+   Builder_Switches := ();
+
+   case Verbose is
+      when "Y" | "y" | "1" => Builder_Switches := Builder_Switches & ("-v");
+      when others          => null;
+   end case;
+
+   package Builder is
+      for Global_Configuration_Pragmas use Configure.GnatAdc_Filename;
+      for Switches ("Asm_Cpp") use Builder_Switches;
+      for Switches ("C") use Builder_Switches;
+      for Switches ("Ada") use (
+                                "-nostdinc",
+                                "-nostdlib",
+                                "--RTS=" & Configure.RTS_Path
+                               ) &
+                               Builder_Switches;
+   end Builder;
+
+   ----------------------------------------------------------------------------
+   -- Compiler
+   ----------------------------------------------------------------------------
+
+   Ada_Mode := "";
+   case Configure.Ada_Mode is
+      when "ADA95" => Ada_Mode := "-gnat95";
+      when "ADA05" => Ada_Mode := "-gnat2005";
+      when "ADA12" => Ada_Mode := "-gnat2012";
+      when "ADA20" => Ada_Mode := "-gnat2020";
+      when "ADA22" => Ada_Mode := "-gnat2022";
+      when others  => null;
+   end case;
+
+   GCC_Wrapper_Switch := ("-wrapper", Configure.GCC_Wrapper);
+
+   No_DOS_LT_Switch := "";
+   case Ostype is
+      when "cmd" | "msys" => null;
+      when others         => No_DOS_LT_Switch := "-gnatyd"; -- Check no DOS line terminators present.
+   end case;
+
+   package Compiler is
+      -- Asm_Cpp
+      for Driver ("Asm_Cpp") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
+      for Switches ("Asm_Cpp") use (
+                                    "-ffunction-sections",
+                                    "-fdata-sections",
+                                    "-g3", "-gdwarf-5"
+                                   ) &
+                                   GCC_Wrapper_Switch              &
+                                   Configure.GCC_Switches_Platform;
+      -- C
+      for Driver ("C") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
+      for Leading_Required_Switches ("C") use ("-ffreestanding", "-std=c99");
+      for Switches ("C") use (
+                              "-O" & Configure.Optimization_Level,
+                              "-fno-omit-frame-pointer",
+                              "-fverbose-asm",
+                              "-ffunction-sections",
+                              "-fdata-sections",
+                              "-g3", "-gdwarf-5",
+                              "-Wall", "-pedantic",
+                              "-Wbad-function-cast",
+                              "-Wcast-align",
+                              "-Winline",
+                              "-Wpointer-arith",
+                              "-Wredundant-decls",
+                              "-Wshadow",
+                              "-Wsign-compare",
+                              "-Wstrict-prototypes",
+                              "-Wundef",
+                              "-Wwrite-strings"
+                             ) &
+                             GCC_Wrapper_Switch              &
+                             Configure.CC_Switches_RTS       &
+                             Configure.GCC_Switches_Platform;
+      -- Ada
+      for Driver ("Ada") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
+      for Mapping_Spec_Suffix ("Ada") use "%s";
+      for Mapping_Body_Suffix ("Ada") use "%b";
+      for Dependency_Kind ("Ada") use "ALI_File";
+      for Multi_Unit_Object_Separator ("Ada") use "~";
+      for Leading_Required_Switches ("Ada") use ("-x", "ada");
+      for Include_Switches ("Ada") use ("-I");
+      for Switches ("Ada") use (
+                                Ada_Mode,
+                                "-O" & Configure.Optimization_Level,
+                                "-fno-omit-frame-pointer",
+                                "-fverbose-asm",
+                                "-ffunction-sections",
+                                "-fdata-sections",
+                                "-g3", "-gdwarf-5",
+                                "-gnatef",
+                                "-gnatf",
+                                "-gnatU",
+                                "-gnatn",
+                                "-gnatE",
+                                "-gnato1",
+                                "-gnatVa",
+                                "-gnatX",
+                                "-fstack-usage",
+                                "-fdump-rtl-expand",
+                                No_DOS_LT_Switch
+                               ) &
+                               GCC_Wrapper_Switch              &
+                               Configure.ADAC_Switches_RTS     &
+                               Configure.GCC_Switches_Platform &
+                               Gprbuild_Wr.Switches_Warning    &
+                               Gprbuild_St.Switches_Style;
+   end Compiler;
+
+   ----------------------------------------------------------------------------
+   -- Binder
+   ----------------------------------------------------------------------------
+
+   Binder_Switches := ();
+
+   package Binder is
+      for Switches ("Ada") use (
+                                "-F",
+                                "-e",
+                                "-l",
+                                "-n",
+                                "-s",
+                                "-A=gnatbind_alis.lst",
+                                "-O=gnatbind_objs.lst"
+                               ) &
+                               Binder_Switches;
+   end Binder;
+
+   ----------------------------------------------------------------------------
+   -- Library definitions
+   ----------------------------------------------------------------------------
+
+   Library_Kind    := "static";
+   Library_Support := "static_only";
+   Library_Builder := "../libexec/gprbuild/gprlib";
+   case Configure.Gprbuild_Prefix is
+      when ""     => null;
+      when others => Library_Builder := Configure.Gprbuild_Prefix & "/bin/" & Library_Builder;
+   end case;
+   Archive_Builder := (Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-ar", "cr");
+
+end Gprbuild_Tc;
