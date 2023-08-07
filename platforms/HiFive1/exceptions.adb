@@ -59,14 +59,11 @@ package body Exceptions is
       mcause := mcause_Read;
       if mcause.Interrupt then
          BSP.Tick_Count := @ + 1;
-
---         mtimecmp_Write (mtime_Read + BSP.mtime_Offset);
-         BSP.Timer_Value := @ + BSP.Timer_Constant;
-         mtimecmp_Write (BSP.Timer_Value);
-
          if BSP.Tick_Count mod 1_000 = 0 then
             Console.Print ("T", NL => False);
          end if;
+         BSP.Timer_Value := @ + BSP.Timer_Constant;
+         mtimecmp_Write (BSP.Timer_Value);
       else
          declare
             function To_U32 is new Ada.Unchecked_Conversion (mcause_Type, Unsigned_32);
