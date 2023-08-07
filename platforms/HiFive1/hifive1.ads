@@ -31,7 +31,11 @@ package HiFive1 is
    --                                                                        --
    --========================================================================--
 
-   use System;
+   -- PLIC.priority clashes with System.Priority, so we use a renaming on
+   -- System.Low_Order_First, which is the only object imported from the unit,
+   -- avoiding a use-ing clause
+   -- use System;
+   Low_Order_First : System.Bit_Order renames System.Low_Order_First;
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
@@ -274,13 +278,42 @@ package HiFive1 is
 
    package CLINT is
 
+      -- 9.2 MSIP Registers
+
+      type msip_Type is
+      record
+         MSIP     : Boolean;      -- Machine-mode software interrupt
+         Reserved : Bits_31 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for msip_Type use
+      record
+         MSIP     at 0 range 0 .. 0;
+         Reserved at 0 range 1 .. 31;
+      end record;
+
       msip_ADDRESS : constant := 16#0200_0000#;
 
-      msip : aliased Unsigned_32 with
+      msip : aliased msip_Type with
          Address              => To_Address (msip_ADDRESS),
          Volatile_Full_Access => True,
          Import               => True,
          Convention           => Ada;
+
+      -- 9.3 Timer Registers
+
+      mtime : aliased RISCV.mtime_Type with
+         Volatile      => True,
+         Import        => True,
+         Convention    => Ada,
+         External_Name => "_riscv_mtime_mmap";
+
+      mtimecmp : aliased RISCV.mtime_Type with
+         Volatile      => True,
+         Import        => True,
+         Convention    => Ada,
+         External_Name => "_riscv_mtimecmp_mmap";
 
    end CLINT;
 
@@ -290,12 +323,96 @@ package HiFive1 is
 
    package PLIC is
 
-      -- threshold
+      PLIC_BASEADDRESS : constant := 16#0C00_0000#;
+
+      -- 10.2 Interrupt Sources
+
+      IntID_NONE         : constant := 0;
+      IntID_AON_Watchdog : constant := 1;
+      IntID_AON_RTC      : constant := 2;
+      IntID_UART0        : constant := 3;
+      IntID_UART1        : constant := 4;
+      IntID_QSPI0        : constant := 5;
+      IntID_SPI1         : constant := 6;
+      IntID_SPI2         : constant := 7;
+      IntID_GPIO0        : constant := 8;
+      IntID_GPIO1        : constant := 9;
+      IntID_GPIO2        : constant := 10;
+      IntID_GPIO3        : constant := 11;
+      IntID_GPIO4        : constant := 12;
+      IntID_GPIO5        : constant := 13;
+      IntID_GPIO6        : constant := 14;
+      IntID_GPIO7        : constant := 15;
+      IntID_GPIO8        : constant := 16;
+      IntID_GPIO9        : constant := 17;
+      IntID_GPIO10       : constant := 18;
+      IntID_GPIO11       : constant := 19;
+      IntID_GPIO12       : constant := 20;
+      IntID_GPIO13       : constant := 21;
+      IntID_GPIO14       : constant := 22;
+      IntID_GPIO15       : constant := 23;
+      IntID_GPIO16       : constant := 24;
+      IntID_GPIO17       : constant := 25;
+      IntID_GPIO18       : constant := 26;
+      IntID_GPIO19       : constant := 27;
+      IntID_GPIO20       : constant := 28;
+      IntID_GPIO21       : constant := 29;
+      IntID_GPIO22       : constant := 30;
+      IntID_GPIO23       : constant := 31;
+      IntID_GPIO24       : constant := 32;
+      IntID_GPIO25       : constant := 33;
+      IntID_GPIO26       : constant := 34;
+      IntID_GPIO27       : constant := 35;
+      IntID_GPIO28       : constant := 36;
+      IntID_GPIO29       : constant := 37;
+      IntID_GPIO30       : constant := 38;
+      IntID_GPIO31       : constant := 39;
+      IntID_PWM00        : constant := 40;
+      IntID_PWM01        : constant := 41;
+      IntID_PWM02        : constant := 42;
+      IntID_PWM03        : constant := 43;
+      IntID_PWM10        : constant := 44;
+      IntID_PWM11        : constant := 45;
+      IntID_PWM12        : constant := 46;
+      IntID_PWM13        : constant := 47;
+      IntID_PWM20        : constant := 48;
+      IntID_PWM21        : constant := 49;
+      IntID_PWM22        : constant := 50;
+      IntID_PWM23        : constant := 51;
+      IntID_I2C          : constant := 52;
+
+      -- 10.3 Interrupt Priorities
+
+      type priority_Type is
+      record
+         Priority : Bits_3;       -- Sets the priority for a given global interrupt.
+         Reserved : Bits_29 := 0;
+      end record with
+         Bit_Order            => Low_Order_First,
+         Size                 => 32,
+         Volatile_Full_Access => True;
+      for priority_Type use
+      record
+         Priority at 0 range 0 .. 2;
+         Reserved at 0 range 3 .. 31;
+      end record;
+
+      priority : aliased array (0 .. 52) of priority_Type with
+         Address    => To_Address (PLIC_BASEADDRESS + 16#0000_0000#),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+      -- 10.4 Interrupt Pending Bits
+
+      -- 10.5 Interrupt Enables
+
+      -- 10.6 Priority Thresholds
 
       type threshold_Type is
       record
-         Threshold : Bits_3;  -- Sets the priority threshold
-         Reserved  : Bits_29;
+         Threshold : Bits_3;       -- Sets the priority threshold
+         Reserved  : Bits_29 := 0;
       end record with
          Bit_Order => Low_Order_First,
          Size      => 32;
@@ -305,7 +422,14 @@ package HiFive1 is
          Reserved  at 0 range 3 .. 31;
       end record;
 
-      threshold_ADDRESS_OFFSET : constant := 16#0020_0000#;
+      threshold : aliased threshold_Type with
+         Address              => To_Address (PLIC_BASEADDRESS + 16#0020_0000#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
+
+      -- 10.7 Interrupt Claim Process
+      -- 10.8 Interrupt Completion
 
    end PLIC;
 
