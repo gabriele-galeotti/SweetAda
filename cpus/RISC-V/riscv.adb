@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
-with Configure;
 with Definitions;
 
 package body RISCV is

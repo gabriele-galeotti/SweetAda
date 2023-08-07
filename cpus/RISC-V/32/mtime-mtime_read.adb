@@ -24,8 +24,8 @@ function mtime_Read return Unsigned_64 is
       with Import        => True,
            Convention    => Ada,
            External_Name => "_riscv_mtime_mmap";
-   L : Unsigned_32;
-   H : Unsigned_32;
+   L          : Unsigned_32;
+   H          : Unsigned_32;
 begin
    loop
       H := mtime_mmap.H;
