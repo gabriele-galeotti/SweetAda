@@ -1,0 +1,35 @@
+
+#
+# NEORV32
+#
+# RISC-V RV32 CPU
+#
+
+# force ZFP
+RTS := zfp
+PROFILE := zfp
+USE_LIBADA := N
+
+CPU       := RISC-V
+CPU_MODEL := RV32I
+
+#GCC_SWITCHES_PLATFORM     := -march=rv32i -mabi=ilp32
+STARTUP_OBJECTS           := startup.S llkernel.S
+LD_SWITCHES_PLATFORM      := -m elf32lriscv
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0x0200BFF8
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtimecmp_mmap=0x02004000
+OBJDUMP_SWITCHES_PLATFORM :=
+POSTBUILD_ROMFILE         := Y
+OBJCOPY_SWITCHES_PLATFORM :=
+
+USE_APPLICATION := dummy
+
+NEORV32_PATH := /root/workspace/hardware/NEORV32/neorv32-main
+
+RUN_COMMAND := (                                                         \
+                cp -f kernel.o $(NEORV32_PATH)/sw/example/hello_world/ ; \
+                cd $(NEORV32_PATH)/sw/example/hello_world ;              \
+                mv -f kernel.o main.elf ;                                \
+                make USER_FLAGS+=-DUART0_SIM_MODE MARCH=rv32i sim        \
+               )
+
