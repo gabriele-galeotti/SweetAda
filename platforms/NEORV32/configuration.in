@@ -19,17 +19,18 @@ LD_SWITCHES_PLATFORM      := -m elf32lriscv
 LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0x0200BFF8
 LD_SWITCHES_PLATFORM      += --defsym _riscv_mtimecmp_mmap=0x02004000
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
+POSTBUILD_ROMFILE         :=
 OBJCOPY_SWITCHES_PLATFORM :=
+CLEAN_OBJECTS_COMMON      += sweetada.vhd
 
 USE_APPLICATION := dummy
 
-NEORV32_PATH := /root/workspace/hardware/NEORV32/neorv32-main
+export NEORV32_HOME := /root/workspace/hardware/NEORV32/neorv32-main
+export GHDL_PATH    := /opt/GHDL
 
-RUN_COMMAND := (                                                         \
-                cp -f kernel.o $(NEORV32_PATH)/sw/example/hello_world/ ; \
-                cd $(NEORV32_PATH)/sw/example/hello_world ;              \
-                mv -f kernel.o main.elf ;                                \
-                make USER_FLAGS+=-DUART0_SIM_MODE MARCH=rv32i sim        \
-               )
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/neorv32-exec.sh
+DEBUG_COMMAND :=
 
