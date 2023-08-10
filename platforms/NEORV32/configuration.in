@@ -16,14 +16,14 @@ CPU_MODEL := RV32I
 GCC_SWITCHES_PLATFORM     := -march=rv32i -mabi=ilp32
 STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := -m elf32lriscv
-LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0x0200BFF8
-LD_SWITCHES_PLATFORM      += --defsym _riscv_mtimecmp_mmap=0x02004000
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0xFFFFF400
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtimecmp_mmap=0xFFFFF408
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         :=
 OBJCOPY_SWITCHES_PLATFORM :=
 CLEAN_OBJECTS_COMMON      += sweetada.vhd
 
-USE_APPLICATION := dummy
+USE_APPLICATION := test-NEORV32
 
 export NEORV32_HOME := /root/workspace/hardware/NEORV32/neorv32-main
 export GHDL_PATH    := /opt/GHDL

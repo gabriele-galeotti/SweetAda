@@ -15,12 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Definitions;
 with Bits;
-with CPU;
-with RISCV;
-with MTIME;
 with NEORV32;
-with Exceptions;
 with Console;
 
 package body BSP is
@@ -33,10 +30,8 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
+   use Definitions;
    use Bits;
-   use RISCV;
-   use MTIME;
    use NEORV32;
 
    --========================================================================--
@@ -95,9 +90,9 @@ package body BSP is
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
-      -- Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
-      Console.Print ("*** Hello SweetAda on NEORV32!", NL => True);
+      Console.Print ("NEORV32 (main-6863fd9)", NL => True);
       -------------------------------------------------------------------------
    end Setup;
 
