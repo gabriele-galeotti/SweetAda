@@ -33,9 +33,6 @@ SECTIONS
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
-                /* *(.gnu.linkonce.t.*) */
-                /* *(.gnu.linkonce.r.*) */
-                *(.eh_frame)
                 . = ALIGN(0x10);
                 _etext = .;
         } > ROM
@@ -50,8 +47,6 @@ SECTIONS
                 *(.data.*)
                 *(.sdata)
                 *(.sdata.*)
-                /* *(.gnu.linkonce.d.*) */
-                /* *(.gcc_except_table) */
                 . = ALIGN(0x10);
                 _edata = .;
         } > RAM
@@ -70,7 +65,6 @@ SECTIONS
                 *(.bss)
                 *(.bss.*)
                 *(COMMON)
-                /* *(.gnu.linkonce.b.*) */
                 . = ALIGN(0x10);
                 _ebss = .;
         } > RAM
@@ -93,7 +87,7 @@ SECTIONS
          **********************************************************************/
         /DISCARD/ :
         {
-                *(.comment)
+                *(*)
         }
 }
 
