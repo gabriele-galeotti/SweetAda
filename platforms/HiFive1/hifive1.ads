@@ -405,7 +405,31 @@ package HiFive1 is
 
       -- 10.4 Interrupt Pending Bits
 
+      pending1 : aliased Bitmap_32 with
+         Address    => To_Address (PLIC_BASEADDRESS + 16#0000_1000#),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+      pending2 : aliased Bitmap_32 with
+         Address    => To_Address (PLIC_BASEADDRESS + 16#0000_1004#),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
       -- 10.5 Interrupt Enables
+
+      enable1 : aliased Bitmap_32 with
+         Address    => To_Address (PLIC_BASEADDRESS + 16#0000_2000#),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+      enable2 : aliased Bitmap_32 with
+         Address    => To_Address (PLIC_BASEADDRESS + 16#0000_2004#),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
 
       -- 10.6 Priority Thresholds
 
@@ -430,6 +454,12 @@ package HiFive1 is
 
       -- 10.7 Interrupt Claim Process
       -- 10.8 Interrupt Completion
+
+      claim : aliased Unsigned_32 with
+         Address              => To_Address (PLIC_BASEADDRESS + 16#0020_0004#),
+         Volatile_Full_Access => True,
+         Import               => True,
+         Convention           => Ada;
 
    end PLIC;
 
