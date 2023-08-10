@@ -145,7 +145,7 @@ while true ; do
       fi
     done
   fi
-  # shift to another pair of arguments
+  # shift to the next argument pair
   shift
   shift
 done

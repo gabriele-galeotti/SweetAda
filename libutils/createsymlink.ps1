@@ -135,6 +135,7 @@ while ($fileindex -lt $args.length)
       }
     }
   }
+  # shift to the next argument pair
   $fileindex += 2
 }
 

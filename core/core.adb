@@ -59,8 +59,6 @@ package body Core is
    ----------------------------------------------------------------------------
    -- Stack_Check
    ----------------------------------------------------------------------------
-   -- __TBD__
-   ----------------------------------------------------------------------------
    function Stack_Check (Stack_Address : System.Address) return Stack_Access is
       pragma Unreferenced (Stack_Address);
    begin

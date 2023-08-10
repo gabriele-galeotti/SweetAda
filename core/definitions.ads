@@ -89,7 +89,7 @@ package Definitions is
    CLK_UART18M  : constant := 18_432_000; -- CLK_UART1M8 * 10
    CLK_PAL28M   : constant := 28_375_160; -- CLK_PAL * 64/10
 
-   -- serial port bit rates
+   -- serial port baud rates
    type Baud_Rate_Type is (
                            BR_300,
                            BR_1200,
