@@ -422,6 +422,77 @@ package STM32F769I is
       MCO2      at 0 range 30 .. 31;
    end record;
 
+   -- 5.3.14 RCC APB2 peripheral clock enable register (RCC_APB2ENR)
+
+   type RCC_APB2ENR_Type is
+   record
+      TIM1EN    : Boolean; -- TIM1 clock enable
+      TIM8EN    : Boolean; -- TIM8 clock enable
+      Reserved1 : Bits_2;
+      USART1EN  : Boolean; -- USART1 clock enable
+      USART6EN  : Boolean; -- USART6 clock enable
+      Reserved2 : Bits_1;
+      SDMMC2EN  : Boolean; -- SDMMC2 clock enable
+      ADC1EN    : Boolean; -- ADC1 clock enable
+      ADC2EN    : Boolean; -- ADC2 clock enable
+      ADC3EN    : Boolean; -- ADC3 clock enable
+      SDMMC1EN  : Boolean; -- SDMMC1 clock enable
+      SPI1EN    : Boolean; -- SPI1 clock enable
+      SPI4EN    : Boolean; -- SPI4 clock enable
+      SYSCFGEN  : Boolean; -- System configuration controller clock enable
+      Reserved3 : Bits_1;
+      TIM9EN    : Boolean; -- TIM9 clock enable
+      TIM10EN   : Boolean; -- TIM10 clock enable
+      TIM11EN   : Boolean; -- TIM11 clock enable
+      Reserved4 : Bits_1;
+      SPI5EN    : Boolean; -- SPI5 clock enable
+      SPI6EN    : Boolean; -- SPI6 clock enable
+      SAI1EN    : Boolean; -- SAI1 clock enable
+      SAI2EN    : Boolean; -- SAI2 clock enable
+      Reserved5 : Bits_2;
+      LTDCEN    : Boolean; -- LTDC clock enable
+      DSIEN     : Boolean; -- DSIHOST clock enable
+      Reserved6 : Bits_1;
+      DFSDM1EN  : Boolean; -- DFSDM1 module reset
+      MDIOEN    : Boolean; -- MDIO clock enable
+      Reserved7 : Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_APB2ENR_Type use
+   record
+      TIM1EN    at 0 range 0 .. 0;
+      TIM8EN    at 0 range 1 .. 1;
+      Reserved1 at 0 range 2 .. 3;
+      USART1EN  at 0 range 4 .. 4;
+      USART6EN  at 0 range 5 .. 5;
+      Reserved2 at 0 range 6 .. 6;
+      SDMMC2EN  at 0 range 7 .. 7;
+      ADC1EN    at 0 range 8 .. 8;
+      ADC2EN    at 0 range 9 .. 9;
+      ADC3EN    at 0 range 10 .. 10;
+      SDMMC1EN  at 0 range 11 .. 11;
+      SPI1EN    at 0 range 12 .. 12;
+      SPI4EN    at 0 range 13 .. 13;
+      SYSCFGEN  at 0 range 14 .. 14;
+      Reserved3 at 0 range 15 .. 15;
+      TIM9EN    at 0 range 16 .. 16;
+      TIM10EN   at 0 range 17 .. 17;
+      TIM11EN   at 0 range 18 .. 18;
+      Reserved4 at 0 range 19 .. 19;
+      SPI5EN    at 0 range 20 .. 20;
+      SPI6EN    at 0 range 21 .. 21;
+      SAI1EN    at 0 range 22 .. 22;
+      SAI2EN    at 0 range 23 .. 23;
+      Reserved5 at 0 range 24 .. 25;
+      LTDCEN    at 0 range 26 .. 26;
+      DSIEN     at 0 range 27 .. 27;
+      Reserved6 at 0 range 28 .. 28;
+      DFSDM1EN  at 0 range 29 .. 29;
+      MDIOEN    at 0 range 30 .. 30;
+      Reserved7 at 0 range 31 .. 31;
+   end record;
+
    -- 5.3 RCC registers
 
    type RCC_Type is
@@ -429,14 +500,16 @@ package STM32F769I is
       RCC_CR      : RCC_CR_Type      with Volatile_Full_Access => True;
       RCC_PLLCFGR : RCC_PLLCFGR_Type with Volatile_Full_Access => True;
       RCC_CFGR    : RCC_CFGR_Type    with Volatile_Full_Access => True;
+      RCC_APB2ENR : RCC_APB2ENR_Type with Volatile_Full_Access => True;
    end record with
-      Size                    => 3 * 32,
+      Size                    => 16#48# * 8,
       Suppress_Initialization => True;
    for RCC_Type use
    record
       RCC_CR      at 16#00# range 0 .. 31;
       RCC_PLLCFGR at 16#04# range 0 .. 31;
       RCC_CFGR    at 16#08# range 0 .. 31;
+      RCC_APB2ENR at 16#44# range 0 .. 31;
    end record;
 
    RCC_BASEADDRESS : constant := 16#4002_3800#;
@@ -617,13 +690,23 @@ package STM32F769I is
    end record;
 
    GPIOA_BASEADDRESS : constant := 16#4002_0000#;
-   GPIOJ_BASEADDRESS : constant := 16#4002_2400#;
 
    GPIOA : aliased GPIO_PORT_Type with
       Address    => To_Address (GPIOA_BASEADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
+
+   GPIOC_BASEADDRESS : constant := 16#4002_0800#;
+
+   GPIOC : aliased GPIO_PORT_Type with
+      Address    => To_Address (GPIOC_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   GPIOJ_BASEADDRESS : constant := 16#4002_2400#;
+
    GPIOJ : aliased GPIO_PORT_Type with
       Address    => To_Address (GPIOJ_BASEADDRESS),
       Volatile   => True,
@@ -806,6 +889,21 @@ package STM32F769I is
       Reserved at 0 range 29 .. 31;
    end record;
 
+   -- 34.8.4 Baud rate register (USART_BRR)
+
+   type USART_BRR_Type is
+   record
+      BRR      : Bits_16; -- BRR value
+      Reserved : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_BRR_Type use
+   record
+      BRR      at 0 range 0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 34.8.8 Interrupt and status register (USART_ISR)
 
    type USART_ISR_Type is
@@ -892,6 +990,7 @@ package STM32F769I is
    type USART_Type is
    record
       USART_CR1 : USART_CR1_Type with Volatile_Full_Access => True;
+      USART_BRR : USART_BRR_Type with Volatile_Full_Access => True;
       USART_ISR : USART_ISR_Type with Volatile_Full_Access => True;
       USART_RDR : USART_DR_Type;
       USART_TDR : USART_DR_Type;
@@ -901,6 +1000,7 @@ package STM32F769I is
    for USART_Type use
    record
       USART_CR1 at 16#00# range 0 .. 31;
+      USART_BRR at 16#0C# range 0 .. 31;
       USART_ISR at 16#1C# range 0 .. 31;
       USART_RDR at 16#24# range 0 .. 31;
       USART_TDR at 16#28# range 0 .. 31;
@@ -910,6 +1010,14 @@ package STM32F769I is
 
    USART1 : aliased USART_Type with
       Address    => To_Address (USART1_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   USART6_BASEADDRESS : constant := 16#4001_1400#;
+
+   USART6 : aliased USART_Type with
+      Address    => To_Address (USART6_BASEADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;

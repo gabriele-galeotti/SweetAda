@@ -2,7 +2,7 @@
 #
 # STM32F769I
 #
-# ARM Cortex-M7 LE (ARMv7E-M)
+# STM32F769NIH6 (BGA216) ARM Cortex-M7 LE (ARMv7E-M)
 #
 
 # force ZFP
