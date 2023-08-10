@@ -10,35 +10,35 @@
 
 abstract project Gprbuild_St is
 
-   Switches_Style := (
-                      "-gnaty3",    -- Specify indentation level.
-                      "-gnatyA",    -- Use of array index numbers in array attributes.
-                      "-gnatya",    -- Check attribute casing.
-                      "-gnatyb",    -- Blanks not allowed at statement end.
-                      "-gnatyB",    -- Check Boolean operators.
-                      -- "-gnatyc",    -- Check comments, double space.
-                      "-gnatyC",    -- Check comments, single space.
-                      "-gnatye",    -- Check end/exit labels.
-                      "-gnatyf",    -- No form feeds or vertical tabs.
-                      -- "-gnatyg",    -- GNAT style mode.
-                      "-gnatyh",    -- No horizontal tabs.
-                      -- "-gnatyI",    -- check mode IN keywords.
-                      "-gnatyi",    -- Check if-then layout.
-                      "-gnatyk",    -- Check keyword casing.
-                      "-gnatyL9",   -- Set maximum nesting level.
-                      "-gnatyl",    -- Check layout.
-                      -- "-gnatym",    -- Check maximum line length.
-                      "-gnatyM132", -- Set maximum line length.
-                      "-gnatyn",    -- Check casing of entities in Standard.
-                      -- "-gnatyo",    -- Check order of subprogram bodies.
-                      "-gnatyO",    -- Check that overriding subprograms are explicitly marked as such.
-                      "-gnatyp",    -- Check pragma casing.
-                      "-gnatyr",    -- Check references.
-                      "-gnatyS",    -- Check no statements after then/else.
-                      "-gnatys",    -- Check separate specs.
-                      "-gnatyt",    -- Check token spacing.
-                      "-gnatyu",    -- Check unnecessary blank lines.
-                      "-gnatyx"     -- Check extra parentheses.
-                     );
+   ADAC_Switches_Style := (
+                           "-gnaty3",    -- Specify indentation level.
+                           "-gnatyA",    -- Use of array index numbers in array attributes.
+                           "-gnatya",    -- Check attribute casing.
+                           "-gnatyb",    -- Blanks not allowed at statement end.
+                           "-gnatyB",    -- Check Boolean operators.
+                           -- "-gnatyc",    -- Check comments, double space.
+                           "-gnatyC",    -- Check comments, single space.
+                           "-gnatye",    -- Check end/exit labels.
+                           "-gnatyf",    -- No form feeds or vertical tabs.
+                           -- "-gnatyg",    -- GNAT style mode.
+                           "-gnatyh",    -- No horizontal tabs.
+                           -- "-gnatyI",    -- check mode IN keywords.
+                           "-gnatyi",    -- Check if-then layout.
+                           "-gnatyk",    -- Check keyword casing.
+                           "-gnatyL9",   -- Set maximum nesting level.
+                           "-gnatyl",    -- Check layout.
+                           -- "-gnatym",    -- Check maximum line length.
+                           "-gnatyM132", -- Set maximum line length.
+                           "-gnatyn",    -- Check casing of entities in Standard.
+                           -- "-gnatyo",    -- Check order of subprogram bodies.
+                           "-gnatyO",    -- Check that overriding subprograms are explicitly marked as such.
+                           "-gnatyp",    -- Check pragma casing.
+                           "-gnatyr",    -- Check references.
+                           "-gnatyS",    -- Check no statements after then/else.
+                           "-gnatys",    -- Check separate specs.
+                           "-gnatyt",    -- Check token spacing.
+                           "-gnatyu",    -- Check unnecessary blank lines.
+                           "-gnatyx"     -- Check extra parentheses.
+                          );
 
 end Gprbuild_St;

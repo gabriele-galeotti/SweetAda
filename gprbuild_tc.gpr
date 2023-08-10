@@ -98,22 +98,12 @@ abstract project Gprbuild_Tc is
                               "-fverbose-asm",
                               "-ffunction-sections",
                               "-fdata-sections",
-                              "-g3", "-gdwarf-5",
-                              "-Wall", "-pedantic",
-                              "-Wbad-function-cast",
-                              "-Wcast-align",
-                              "-Winline",
-                              "-Wpointer-arith",
-                              "-Wredundant-decls",
-                              "-Wshadow",
-                              "-Wsign-compare",
-                              "-Wstrict-prototypes",
-                              "-Wundef",
-                              "-Wwrite-strings"
+                              "-g3", "-gdwarf-5"
                              ) &
                              GCC_Wrapper_Switch              &
                              Configure.CC_Switches_RTS       &
-                             Configure.GCC_Switches_Platform;
+                             Configure.GCC_Switches_Platform &
+                             Gprbuild_Wr.CC_Switches_Warning;
       -- Ada
       for Driver ("Ada") use Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
       for Mapping_Spec_Suffix ("Ada") use "%s";
@@ -142,11 +132,11 @@ abstract project Gprbuild_Tc is
                                 "-fdump-rtl-expand",
                                 No_DOS_LT_Switch
                                ) &
-                               GCC_Wrapper_Switch              &
-                               Configure.ADAC_Switches_RTS     &
-                               Configure.GCC_Switches_Platform &
-                               Gprbuild_Wr.Switches_Warning    &
-                               Gprbuild_St.Switches_Style;
+                               GCC_Wrapper_Switch                &
+                               Configure.ADAC_Switches_RTS       &
+                               Configure.GCC_Switches_Platform   &
+                               Gprbuild_Wr.ADAC_Switches_Warning &
+                               Gprbuild_St.ADAC_Switches_Style;
    end Compiler;
 
    ----------------------------------------------------------------------------
