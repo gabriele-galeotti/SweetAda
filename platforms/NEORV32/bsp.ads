@@ -30,6 +30,7 @@ package BSP is
 
    Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
       -- Atomic        => True,
+      Volatile      => True,
       Export        => True,
       Convention    => Asm,
       External_Name => "tick_count";
