@@ -12,19 +12,6 @@ with "configure";
 
 abstract project Gprbuild_Wr is
 
-   CC_Switches_Warning := (
-                           "-Wall", "-pedantic",
-                           "-Wbad-function-cast",
-                           "-Wcast-align",
-                           "-Winline",
-                           "-Wpointer-arith",
-                           "-Wredundant-decls",
-                           "-Wshadow",
-                           "-Wsign-compare",
-                           "-Wstrict-prototypes",
-                           "-Wundef",
-                           "-Wwrite-strings"
-                          );
    ADAC_Switches_Warning := (
                              -- "-gnatwa",         -- Activate most optional warnings.
                              "-gnatw.a",        -- Activate warnings on failing assertions.
@@ -78,5 +65,19 @@ abstract project Gprbuild_Wr is
                              "-Wuninitialized"
                              -- "-gnatwu"          -- Activate warnings on unused entities.
                             );
+
+   CC_Switches_Warning := (
+                           "-Wall", "-pedantic",
+                           "-Wbad-function-cast",
+                           "-Wcast-align",
+                           "-Winline",
+                           "-Wpointer-arith",
+                           "-Wredundant-decls",
+                           "-Wshadow",
+                           "-Wsign-compare",
+                           "-Wstrict-prototypes",
+                           "-Wundef",
+                           "-Wwrite-strings"
+                          );
 
 end Gprbuild_Wr;
