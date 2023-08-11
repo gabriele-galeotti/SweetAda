@@ -146,7 +146,7 @@ package body Application is
          end;
       end if;
       -------------------------------------------------------------------------
-      if False then
+      if True then
          declare
             procedure Ctest with
                Import        => True,
