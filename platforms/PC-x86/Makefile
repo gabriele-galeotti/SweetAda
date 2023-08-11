@@ -35,6 +35,8 @@ endif
 LIBRARY_NAME := platform
 
 OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
+# C items
+OBJECTS += $(patsubst %,$(OBJ_DIRECTORY)/%.o,$(EXTERNAL_OBJECTS))
 
 -include Makefile.if.in
 
