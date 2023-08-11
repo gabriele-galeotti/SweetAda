@@ -145,6 +145,7 @@ endif
 endif
 
 %.o : %.S
+%.o : %.c
 $(OBJ_DIRECTORY)/%.o : %.S $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
         $(CC)                            \
@@ -156,25 +157,65 @@ $(OBJ_DIRECTORY)/%.o : %.S $(DEP_DIRECTORY)/%.d
         ,[CC/AS],$<)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@$(SED)                                                                \
-                -i                                                             \
-                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)$$|$$(OBJ_DIRECTORY)\1|"    \
-                -e "s|$(KERNEL_PARENT_PATH)\(/.*\)|$$(KERNEL_PARENT_PATH)\1|g" \
+	@$(SED)                                                                      \
+                -i                                                                   \
+                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)$$|$$(OBJ_DIRECTORY)\1|"          \
+                -e "s|^$(KERNEL_PARENT_PATH)\(/[^ :]*\)|$$(KERNEL_PARENT_PATH)\1|g"  \
+                -e "s| $(KERNEL_PARENT_PATH)\(/[^ :]*\)| $$(KERNEL_PARENT_PATH)\1|g" \
                 $(DEP_DIRECTORY_CMD)\$*.d
 	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
-	@$(SED)                                                                 \
-                -i ''                                                           \
-                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"   \
-                -e "s|$(KERNEL_PARENT_PATH)\(/.*\)|\$$(KERNEL_PARENT_PATH)\1|g" \
+	@$(SED)                                                                       \
+                -i ''                                                                 \
+                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
+                -e "s|^$(KERNEL_PARENT_PATH)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
+                -e "s| $(KERNEL_PARENT_PATH)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
                 $(DEP_DIRECTORY)/$*.d
 else
-	@$(SED)                                                                 \
-                -i                                                              \
-                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"   \
-                -e "s|$(KERNEL_PARENT_PATH)\(/.*\)|\$$(KERNEL_PARENT_PATH)\1|g" \
+	@$(SED)                                                                       \
+                -i                                                                    \
+                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
+                -e "s|^$(KERNEL_PARENT_PATH)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
+                -e "s| $(KERNEL_PARENT_PATH)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
+                $(DEP_DIRECTORY)/$*.d
+endif
+	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
+endif
+$(OBJ_DIRECTORY)/%.o : %.c $(DEP_DIRECTORY)/%.d
+	$(call brief-command, \
+        $(CC)                            \
+              -o $@                      \
+              -MT $@ -MMD -MP            \
+              -MF $(DEP_DIRECTORY)/$*.td \
+              $(GCC_SWITCHES_LIBRARY)    \
+              -c $(INCLUDES) $<          \
+        ,[CC/AS],$<)
+ifeq ($(OSTYPE),cmd)
+	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
+	@$(SED)                                                                      \
+                -i                                                                   \
+                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)$$|$$(OBJ_DIRECTORY)\1|"          \
+                -e "s|^$(KERNEL_PARENT_PATH)\(/[^ :]*\)|$$(KERNEL_PARENT_PATH)\1|g"  \
+                -e "s| $(KERNEL_PARENT_PATH)\(/[^ :]*\)| $$(KERNEL_PARENT_PATH)\1|g" \
+                $(DEP_DIRECTORY_CMD)\$*.d
+	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
+else
+	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
+ifeq ($(OSTYPE),darwin)
+	@$(SED)                                                                       \
+                -i ''                                                                 \
+                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
+                -e "s|^$(KERNEL_PARENT_PATH)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
+                -e "s| $(KERNEL_PARENT_PATH)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
+                $(DEP_DIRECTORY)/$*.d
+else
+	@$(SED)                                                                       \
+                -i                                                                    \
+                -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
+                -e "s|^$(KERNEL_PARENT_PATH)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
+                -e "s| $(KERNEL_PARENT_PATH)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
                 $(DEP_DIRECTORY)/$*.d
 endif
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)

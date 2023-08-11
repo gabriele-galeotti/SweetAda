@@ -69,24 +69,3 @@ distclean : clean
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
-# add rule for .c files because Makefile.lb.in has only Asm/Ada
-%.o : %.c
-$(OBJ_DIRECTORY)/%.o : %.c $(DEP_DIRECTORY)/%.d
-	$(call brief-command, \
-        $(CC)                            \
-              -o $@                      \
-              -MT $@ -MMD -MP            \
-              -MF $(DEP_DIRECTORY)/$*.td \
-              $(GCC_SWITCHES_LIBRARY)    \
-              -c -I. $<                  \
-        ,[CC/AS],$<)
-ifeq ($(OSTYPE),cmd)
-	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@$(SED) -i -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)$$|$$(OBJ_DIRECTORY)\1|" $(DEP_DIRECTORY_CMD)\$*.d
-	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
-else
-	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
-	@$(SED) -i -e "s|^$(OBJ_DIRECTORY)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|" $(DEP_DIRECTORY)/$*.d
-	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
-endif
-
