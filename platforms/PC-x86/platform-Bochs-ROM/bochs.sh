@@ -44,9 +44,10 @@ return 0
 #                                                                              #
 ################################################################################
 
-# telnet ports
+# telnet port numbers and listening timeout in s
 SERIALPORT0=4446
 SERIALPORT1=4447
+TILTIMEOUT=3
 
 BOCHS_EXEC=/opt/Bochs/bin/bochs
 BOCHS_RC=()
@@ -71,13 +72,13 @@ done
 BOCHS_PID=$!
 
 # console for serial port
-tcpport_is_listening ${SERIALPORT0} 3 "*** Error"
+tcpport_is_listening ${SERIALPORT0} ${TILTIMEOUT} "*** Error"
   setsid /usr/bin/xterm \
   -T "BOCHS-1" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
   /bin/telnet localhost ${SERIALPORT0} \
   &
 # console for serial port
-tcpport_is_listening ${SERIALPORT1} 3 "*** Error"
+tcpport_is_listening ${SERIALPORT1} ${TILTIMEOUT} "*** Error"
   setsid /usr/bin/xterm \
   -T "BOCHS-2" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
   /bin/telnet localhost ${SERIALPORT1} \

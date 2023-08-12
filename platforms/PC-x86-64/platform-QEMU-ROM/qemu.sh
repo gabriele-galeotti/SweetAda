@@ -59,10 +59,11 @@ else
   QEMU_DEBUG=
 fi
 
-# telnet ports
+# telnet port numbers and listening timeout in s
 MONITORPORT=4445
 SERIALPORT0=4446
 SERIALPORT1=4447
+TILTIMEOUT=3
 
 # IP address for qemu-ifup.sh
 export QEMU_IPADDRESS="192.168.3.1"
@@ -82,7 +83,7 @@ ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
 QEMU_PID=$!
 
 # console for serial port
-tcpport_is_listening ${SERIALPORT0} 3 "*** Error"
+tcpport_is_listening ${SERIALPORT0} ${TILTIMEOUT} "*** Error"
 case ${OSTYPE} in
   darwin)
     /usr/bin/osascript \
@@ -99,7 +100,7 @@ case ${OSTYPE} in
     ;;
 esac
 # console for serial port
-tcpport_is_listening ${SERIALPORT1} 3 "*** Error"
+tcpport_is_listening ${SERIALPORT1} ${TILTIMEOUT} "*** Error"
 case ${OSTYPE} in
   darwin)
     /usr/bin/osascript \
