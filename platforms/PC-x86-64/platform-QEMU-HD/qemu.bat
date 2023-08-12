@@ -16,10 +16,11 @@ IF "%1"=="-debug" (
   SET QEMU_DEBUG=
   )
 
-REM telnet ports
+REM telnet port numbers and listening timeout in s
 SET MONITORPORT=4445
 SET SERIALPORT0=4446
 SET SERIALPORT1=4447
+SET TILTIMEOUT=3
 
 REM QEMU machine
 START "" "%QEMU_EXECUTABLE%" ^
@@ -34,10 +35,10 @@ START "" "%QEMU_EXECUTABLE%" ^
   %QEMU_DEBUG%
 
 REM console for serial port
-CALL :TCPPORT_IS_LISTENING %SERIALPORT0%
+CALL :TCPPORT_IS_LISTENING %SERIALPORT0% %TILTIMEOUT%
 START "" "C:\Program Files"\PuTTY\putty-w64.exe telnet://localhost:%SERIALPORT0%/
 REM console for serial port
-CALL :TCPPORT_IS_LISTENING %SERIALPORT1%
+CALL :TCPPORT_IS_LISTENING %SERIALPORT1% %TILTIMEOUT%
 START "" "C:\Program Files"\PuTTY\putty-w64.exe telnet://localhost:%SERIALPORT1%/
 
 REM debug session
@@ -66,7 +67,7 @@ SET "NLOOPS=0"
     GOTO :TIL_LOOPEND
     )
   SET /A NLOOPS += 1
-  IF "%NLOOPS%" NEQ "3" GOTO :TIL_LOOP
+  IF "%NLOOPS%" NEQ "%2" GOTO :TIL_LOOP
 :TIL_LOOPEND
 IF NOT "%PORTOK%"=="Y" ECHO TIMEOUT WAITING FOR PORT %1
 GOTO :EOF
