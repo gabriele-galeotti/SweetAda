@@ -2,7 +2,7 @@
 #
 # SiFive HiFive1 Rev B
 #
-# SiFive E31 RISC-V RV32IMAC CPU
+# SiFive E31 RISC-V RV32IMAC
 #
 
 # force ZFP

@@ -2,7 +2,7 @@
 #
 # NEORV32
 #
-# RISC-V RV32 CPU
+# RISC-V RV32I
 #
 
 # force ZFP

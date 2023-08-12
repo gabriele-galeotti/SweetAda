@@ -2,6 +2,8 @@
 #
 # MVME 162-510A VME board
 #
+# M68040
+#
 
 # force ZFP
 RTS := zfp
