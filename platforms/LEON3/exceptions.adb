@@ -73,7 +73,7 @@ package body Exceptions is
          IOEMU.IO0 := 1;
       end if;
       LEON3.GPTIMER.Control_Register_1.IP := False;
-      LEON3.INTC_CLEAR.IC (10) := False;
+      LEON3.INTC_CLEAR.IC (10) := True;
    end Irq_Process;
 
    ----------------------------------------------------------------------------
