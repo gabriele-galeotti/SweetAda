@@ -926,8 +926,8 @@ package STM32F769I is
    end record;
 
    M_8N1 : constant M_WORD_LENGTH_Type := (0, 0); -- 1 Start bit, 8 data bits, n stop bits
-   M_9N1 : constant M_WORD_LENGTH_Type := (0, 1); -- 1 Start bit, 9 data bits, n stop bits
-   M_7N1 : constant M_WORD_LENGTH_Type := (1, 0); -- 1 Start bit, 7 data bits, n stop bits
+   M_9N1 : constant M_WORD_LENGTH_Type := (1, 0); -- 1 Start bit, 9 data bits, n stop bits
+   M_7N1 : constant M_WORD_LENGTH_Type := (0, 1); -- 1 Start bit, 7 data bits, n stop bits
 
    OVER8_16 : constant := 0; -- Oversampling by 16
    OVER8_8  : constant := 1; -- Oversampling by 8
