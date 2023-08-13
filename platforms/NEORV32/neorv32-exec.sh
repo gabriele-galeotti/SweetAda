@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# NEORV32 front-end script.
+# NEORV32 GHDL front-end script.
 #
 # Copyright (C) 2020-2023 Gabriele Galeotti
 #
@@ -45,14 +45,10 @@ IMAGE_GEN="${NEORV32_HOME}"/sw/image_gen/image_gen
 APP_IMG=neorv32_application_image.vhd
 
 # generate a pure binary image out of .text/.rodata/.data sections
-${OBJCOPY} -I elf32-little ${KERNEL_OUTFILE} -j .text   -O binary ${PLATFORM_DIRECTORY}/text.bin
-${OBJCOPY} -I elf32-little ${KERNEL_OUTFILE} -j .rodata -O binary ${PLATFORM_DIRECTORY}/rodata.bin
-${OBJCOPY} -I elf32-little ${KERNEL_OUTFILE} -j .data   -O binary ${PLATFORM_DIRECTORY}/data.bin
-cat                                    \
-  ${PLATFORM_DIRECTORY}/text.bin       \
-  ${PLATFORM_DIRECTORY}/rodata.bin     \
-  ${PLATFORM_DIRECTORY}/data.bin       \
-  > ${PLATFORM_DIRECTORY}/sweetada.bin
+${OBJCOPY}                                     \
+  -j .text -j .rodata -j .data                 \
+  -I elf32-little ${KERNEL_OUTFILE}            \
+  -O binary ${PLATFORM_DIRECTORY}/sweetada.bin
 # elaborate a SweetAda VHDL source
 cd ${PLATFORM_DIRECTORY}
 "${IMAGE_GEN}" -app_img sweetada.bin sweetada.vhd
