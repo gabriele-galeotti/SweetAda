@@ -3,6 +3,22 @@
 #
 # Dreamcast (GXemul emulator).
 #
+# Copyright (C) 2020-2023 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Arguments:
+# none
+#
+# Environment variables:
+# SWEETADA_PATH
+# PLATFORM_DIRECTORY
+# KERNEL_ROMFILE
+# BOOT_TYPE
+#
 
 ################################################################################
 # Script initialization.                                                       #

@@ -19,6 +19,11 @@ REM PLATFORM
 REM SUBPLATFORM
 REM
 
+REM ############################################################################
+REM # Main loop.                                                               #
+REM #                                                                          #
+REM ############################################################################
+
 SETLOCAL ENABLEEXTENSIONS
 SETLOCAL ENABLEDELAYEDEXPANSION
 
@@ -61,6 +66,10 @@ SET ACTION_VALID=
 
 EXIT /B %ERRORLEVEL%
 
+REM ############################################################################
+REM # setplatform                                                              #
+REM #                                                                          #
+REM ############################################################################
 :setplatform
 REM select a platform
 IF NOT "%PLATFORM%"=="" GOTO :eof
@@ -81,6 +90,10 @@ REM SET "PLATFORM=Taihu" && SET "SUBPLATFORM="
 REM SET "PLATFORM=XilinxZynqA9" && SET "SUBPLATFORM="
 GOTO :eof
 
+REM ############################################################################
+REM # pipe                                                                     #
+REM #                                                                          #
+REM ############################################################################
 :pipe
 COPY /Y nul %LOGFILE% > nul 2>&1
 FOR /F "tokens=1* delims=]" %%A IN ('FIND /N /V ""') DO (
@@ -89,6 +102,10 @@ FOR /F "tokens=1* delims=]" %%A IN ('FIND /N /V ""') DO (
   )
 GOTO :eof
 
+REM ############################################################################
+REM # showerrorlog                                                             #
+REM #                                                                          #
+REM ############################################################################
 :showerrorlog
 FOR /F %%I IN ("make.errors.log") DO SET ERRORLOGSIZE=%%~zI
 IF %ERRORLOGSIZE% GTR 0 (
@@ -100,6 +117,10 @@ IF %ERRORLOGSIZE% GTR 0 (
   )
 GOTO :eof
 
+REM ############################################################################
+REM # usage                                                                    #
+REM #                                                                          #
+REM ############################################################################
 :usage
 ECHO Usage:
 ECHO menu.bat ^<action^>

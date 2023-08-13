@@ -1,7 +1,23 @@
 #!/usr/bin/env sh
 
 #
-# VMIPS.
+# VMIPS (VMIPS emulator).
+#
+# Copyright (C) 2020-2023 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Arguments:
+# -debug
+#
+# Environment variables:
+# SWEETADA_PATH
+# KERNEL_OUTFILE
+# KERNEL_ROMFILE
+# VMIPS_ENDIAN
 #
 
 ################################################################################

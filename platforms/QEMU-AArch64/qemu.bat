@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM SBC5206 (QEMU emulator).
+REM QEMU-AArch64 (QEMU emulator).
 REM
 REM Copyright (C) 2020-2023 Gabriele Galeotti
 REM
@@ -25,7 +25,7 @@ REM #                                                                          #
 REM ############################################################################
 
 REM QEMU executable
-SET "QEMU_FILENAME=qemu-system-m68kw.exe"
+SET "QEMU_FILENAME=qemu-system-aarch64w.exe"
 SET "QEMU_EXECUTABLE=C:\Program Files\QEMU\%QEMU_FILENAME%"
 
 REM debug options
@@ -44,7 +44,7 @@ SET TILTIMEOUT=3
 
 REM QEMU machine
 START "" "%QEMU_EXECUTABLE%" ^
-  -M an5206 ^
+  -M virt -cpu cortex-a53 -m 128 ^
   -kernel %KERNEL_OUTFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^

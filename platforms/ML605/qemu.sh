@@ -1,7 +1,23 @@
 #!/usr/bin/env sh
 
 #
-# ML605 QEMU.
+# ML605 (QEMU emulator).
+#
+# Copyright (C) 2020-2023 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Arguments:
+# -debug
+#
+# Environment variables:
+# OSTYPE
+# GDB
+# KERNEL_OUTFILE
+# KERNEL_ROMFILE
 #
 
 ################################################################################

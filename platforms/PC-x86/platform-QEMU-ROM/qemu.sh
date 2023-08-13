@@ -1,7 +1,25 @@
 #!/usr/bin/env sh
 
 #
-# PC-x86 QEMU.
+# PC-x86 (QEMU emulator).
+#
+# Copyright (C) 2020-2023 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Arguments:
+# -debug
+#
+# Environment variables:
+# OSTYPE
+# PLATFORM_DIRECTORY
+# SHARE_DIRECTORY
+# GDB
+# KERNEL_ROMFILE
+# KERNEL_OUTFILE
 #
 
 ################################################################################

@@ -18,6 +18,11 @@ REM SWEETADA_PATH
 REM KERNEL_ROMFILE
 REM
 
+REM ############################################################################
+REM # Main loop.                                                               #
+REM #                                                                          #
+REM ############################################################################
+
 SET "AVRDUDE_PATH=C:\Program Files\avrdude"
 SET "AVRDUDE_EXEC=%AVRDUDE_PATH%\bin\avrdude.exe"
 

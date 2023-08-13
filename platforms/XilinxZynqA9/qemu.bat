@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM Xilinx Zynq A9 QEMU.
+REM Xilinx Zynq A9 (QEMU emulator).
 REM
 REM Copyright (C) 2020-2023 Gabriele Galeotti
 REM
@@ -14,6 +14,8 @@ REM Arguments:
 REM -debug
 REM
 REM Environment variables:
+REM TOOLCHAIN_PREFIX
+REM GDB
 REM KERNEL_OUTFILE
 REM
 

@@ -1,7 +1,20 @@
 #!/usr/bin/env sh
 
 #
-# Arnewsh SBC5206 QEMU.
+# SBC5206 (QEMU emulator).
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Arguments:
+# -debug
+#
+# Environment variables:
+# OSTYPE
+# GDB
+# KERNEL_OUTFILE
 #
 
 ################################################################################

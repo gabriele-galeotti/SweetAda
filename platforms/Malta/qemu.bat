@@ -1,8 +1,30 @@
 @ECHO OFF
 
 REM
-REM Malta QEMU.
+REM Malta (QEMU emulator).
 REM
+REM Copyright (C) 2020-2023 Gabriele Galeotti
+REM
+REM This work is licensed under the terms of the MIT License.
+REM Please consult the LICENSE.txt file located in the top-level directory.
+REM
+
+REM
+REM Arguments:
+REM -debug
+REM
+REM Environment variables:
+REM TOOLCHAIN_PREFIX
+REM GDB
+REM KERNEL_OUTFILE
+REM KERNEL_ROMFILE
+REM CPU_MODEL
+REM
+
+REM ############################################################################
+REM # Main loop.                                                               #
+REM #                                                                          #
+REM ############################################################################
 
 REM QEMU executable
 IF "%CPU_MODEL%"=="MIPS32-24K" (
@@ -63,6 +85,10 @@ IF "%1"=="-debug" (
 
 EXIT /B %ERRORLEVEL%
 
+REM ############################################################################
+REM # TCPPORT_IS_LISTENING                                                     #
+REM #                                                                          #
+REM ############################################################################
 :TCPPORT_IS_LISTENING
 SET "PORTOK=N"
 SET "NLOOPS=0"
@@ -79,6 +105,10 @@ SET "NLOOPS=0"
 IF NOT "%PORTOK%"=="Y" ECHO TIMEOUT WAITING FOR PORT %1
 GOTO :EOF
 
+REM ############################################################################
+REM # QEMUWAIT                                                                 #
+REM #                                                                          #
+REM ############################################################################
 :QEMUWAIT
 :QW_LOOP
 tasklist | find /I "%QEMU_FILENAME%" >NUL 2>&1

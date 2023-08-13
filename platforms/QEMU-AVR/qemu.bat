@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM SBC5206 (QEMU emulator).
+REM QEMU-AVR (QEMU emulator).
 REM
 REM Copyright (C) 2020-2023 Gabriele Galeotti
 REM
@@ -25,7 +25,7 @@ REM #                                                                          #
 REM ############################################################################
 
 REM QEMU executable
-SET "QEMU_FILENAME=qemu-system-m68kw.exe"
+SET "QEMU_FILENAME=qemu-system-avrw.exe"
 SET "QEMU_EXECUTABLE=C:\Program Files\QEMU\%QEMU_FILENAME%"
 
 REM debug options
@@ -39,26 +39,20 @@ IF "%1"=="-debug" (
 REM telnet port numbers and listening timeout in s
 SET MONITORPORT=4445
 SET SERIALPORT0=4446
-SET SERIALPORT1=4447
 SET TILTIMEOUT=3
 
 REM QEMU machine
 START "" "%QEMU_EXECUTABLE%" ^
-  -M an5206 ^
+  -M uno -cpu avr5-avr-cpu ^
   -kernel %KERNEL_OUTFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
   -serial chardev:SERIALPORT0 ^
-  -chardev socket,id=SERIALPORT1,port=%SERIALPORT1%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
-  -serial chardev:SERIALPORT1 ^
   %QEMU_DEBUG%
 
 REM console for serial port
 CALL :TCPPORT_IS_LISTENING %SERIALPORT0% %TILTIMEOUT%
 START "" "C:\Program Files"\PuTTY\putty-w64.exe telnet://localhost:%SERIALPORT0%/
-REM console for serial port
-CALL :TCPPORT_IS_LISTENING %SERIALPORT1% %TILTIMEOUT%
-START "" "C:\Program Files"\PuTTY\putty-w64.exe telnet://localhost:%SERIALPORT1%/
 
 REM debug session
 IF "%1"=="-debug" (

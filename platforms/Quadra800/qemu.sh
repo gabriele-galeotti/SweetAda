@@ -1,7 +1,21 @@
 #!/usr/bin/env sh
 
 #
-# Quadra 800 QEMU.
+# Quadra 800 (QEMU emulator).
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Arguments:
+# -debug
+#
+# Environment variables:
+# OSTYPE
+# GDB
+# KERNEL_OUTFILE
+# KERNEL_ROMFILE
 #
 
 ################################################################################
