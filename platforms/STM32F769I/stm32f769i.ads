@@ -1141,6 +1141,61 @@ package STM32F769I is
       Reserved at 0 range 16 .. 31;
    end record;
 
+   -- 34.8.5 Guard time and prescaler register (USART_GTPR)
+
+   type USART_GTPR_Type is
+   record
+      PSC      : Unsigned_8; -- Prescaler value
+      GT       : Unsigned_8; -- Guard time value
+      Reserved : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_GTPR_Type use
+   record
+      PSC      at 0 range  0 ..  7;
+      GT       at 0 range  8 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 34.8.6 Receiver timeout register (USART_RTOR)
+
+   type USART_RTOR_Type is
+   record
+      RTO  : Bits_24; -- Receiver timeout value
+      BLEN : Bits_8;  -- Block Length
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_RTOR_Type use
+   record
+      RTO  at 0 range  0 .. 23;
+      BLEN at 0 range 24 .. 31;
+   end record;
+
+   -- 34.8.7 Request register (USART_RQR)
+
+   type USART_RQR_Type is
+   record
+      ABRRQ    : Boolean; -- Auto baud rate request
+      SBKRQ    : Boolean; -- Send break request
+      MMRQ     : Boolean; -- Mute mode request
+      RXFRQ    : Boolean; -- Receive data flush request
+      TXFRQ    : Boolean; -- Transmit data flush request
+      Reserved : Bits_27;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_RQR_Type use
+   record
+      ABRRQ    at 0 range 0 ..  0;
+      SBKRQ    at 0 range 1 ..  1;
+      MMRQ     at 0 range 2 ..  2;
+      RXFRQ    at 0 range 3 ..  3;
+      TXFRQ    at 0 range 4 ..  4;
+      Reserved at 0 range 5 .. 31;
+   end record;
+
    -- 34.8.8 Interrupt and status register (USART_ISR)
 
    type USART_ISR_Type is
@@ -1204,6 +1259,53 @@ package STM32F769I is
       Reserved3 at 0 range 26 .. 31;
    end record;
 
+   -- 34.8.9 Interrupt flag clear register (USART_ICR)
+
+   type USART_ICR_Type is
+   record
+      PECF      : Boolean; -- Parity error clear flag
+      FECF      : Boolean; -- Framing error clear flag
+      NCF       : Boolean; -- Noise detected clear flag
+      ORECF     : Boolean; -- Overrun error clear flag
+      IDLECF    : Boolean; -- Idle line detected clear flag
+      Reserved1 : Bits_1;
+      TCCF      : Boolean; -- Transmission complete clear flag
+      TCBGTCF   : Boolean; -- Transmission completed before guard time clear flag
+      LBDCF     : Boolean; -- LIN break detection clear flag
+      CTSCF     : Boolean; -- CTS clear flag
+      Reserved2 : Bits_1;
+      RTOCF     : Boolean; -- Receiver timeout clear flag
+      EOBCF     : Boolean; -- End of block clear flag
+      Reserved3 : Bits_4;
+      CMCF      : Boolean; -- Character match clear flag
+      Reserved4 : Bits_2;
+      WUCF      : Boolean; -- Wakeup from Stop mode clear flag
+      Reserved5 : Bits_11;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_ICR_Type use
+   record
+      PECF      at 0 range  0 ..  0;
+      FECF      at 0 range  1 ..  1;
+      NCF       at 0 range  2 ..  2;
+      ORECF     at 0 range  3 ..  3;
+      IDLECF    at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  5;
+      TCCF      at 0 range  6 ..  6;
+      TCBGTCF   at 0 range  7 ..  7;
+      LBDCF     at 0 range  8 ..  8;
+      CTSCF     at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 10;
+      RTOCF     at 0 range 11 .. 11;
+      EOBCF     at 0 range 12 .. 12;
+      Reserved3 at 0 range 13 .. 16;
+      CMCF      at 0 range 17 .. 17;
+      Reserved4 at 0 range 18 .. 19;
+      WUCF      at 0 range 20 .. 20;
+      Reserved5 at 0 range 21 .. 31;
+   end record;
+
    -- 34.8.10 Receive data register (USART_RDR)
    -- 34.8.11 Transmit data register (USART_TDR)
 
@@ -1226,25 +1328,33 @@ package STM32F769I is
 
    type USART_Type is
    record
-      USART_CR1 : USART_CR1_Type with Volatile_Full_Access => True;
-      USART_CR2 : USART_CR2_Type with Volatile_Full_Access => True;
-      USART_CR3 : USART_CR3_Type with Volatile_Full_Access => True;
-      USART_BRR : USART_BRR_Type with Volatile_Full_Access => True;
-      USART_ISR : USART_ISR_Type with Volatile_Full_Access => True;
-      USART_RDR : USART_DR_Type;
-      USART_TDR : USART_DR_Type;
+      USART_CR1  : USART_CR1_Type  with Volatile_Full_Access => True;
+      USART_CR2  : USART_CR2_Type  with Volatile_Full_Access => True;
+      USART_CR3  : USART_CR3_Type  with Volatile_Full_Access => True;
+      USART_BRR  : USART_BRR_Type  with Volatile_Full_Access => True;
+      USART_GTPR : USART_GTPR_Type with Volatile_Full_Access => True;
+      USART_RTOR : USART_RTOR_Type with Volatile_Full_Access => True;
+      USART_RQR  : USART_RQR_Type  with Volatile_Full_Access => True;
+      USART_ISR  : USART_ISR_Type  with Volatile_Full_Access => True;
+      USART_ICR  : USART_ICR_Type  with Volatile_Full_Access => True;
+      USART_RDR  : USART_DR_Type;
+      USART_TDR  : USART_DR_Type;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16#2C# * 8;
    for USART_Type use
    record
-      USART_CR1 at 16#00# range 0 .. 31;
-      USART_CR2 at 16#04# range 0 .. 31;
-      USART_CR3 at 16#08# range 0 .. 31;
-      USART_BRR at 16#0C# range 0 .. 31;
-      USART_ISR at 16#1C# range 0 .. 31;
-      USART_RDR at 16#24# range 0 .. 31;
-      USART_TDR at 16#28# range 0 .. 31;
+      USART_CR1  at 16#00# range 0 .. 31;
+      USART_CR2  at 16#04# range 0 .. 31;
+      USART_CR3  at 16#08# range 0 .. 31;
+      USART_BRR  at 16#0C# range 0 .. 31;
+      USART_GTPR at 16#10# range 0 .. 31;
+      USART_RTOR at 16#14# range 0 .. 31;
+      USART_RQR  at 16#18# range 0 .. 31;
+      USART_ISR  at 16#1C# range 0 .. 31;
+      USART_ICR  at 16#20# range 0 .. 31;
+      USART_RDR  at 16#24# range 0 .. 31;
+      USART_TDR  at 16#28# range 0 .. 31;
    end record;
 
    USART1_BASEADDRESS : constant := 16#4001_1000#;
