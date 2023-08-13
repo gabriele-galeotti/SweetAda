@@ -1060,6 +1060,72 @@ package STM32F769I is
       ADD74     at 0 range 28 .. 31;
    end record;
 
+   -- 34.8.3 Control register 3 (USART_CR3)
+
+   DEP_HIGH : constant := 0; -- DE signal is active high.
+   DEP_LOW  : constant := 1; -- DE signal is active low.
+
+   SCARCNT_RETXDIS : constant := 0; -- No automatic retransmission in transmit mode.
+
+   WUS_ADDRMATCH : constant := 2#00#; -- WUF active on address match
+   WUS_STARTBIT  : constant := 2#10#; -- WuF active on Start bit detection
+   WUS_RXNE      : constant := 2#11#; -- WUF active on RXNE.
+
+   type USART_CR3_Type is
+   record
+      EIE       : Boolean; -- Error interrupt enable
+      IREN      : Boolean; -- IrDA mode enable
+      IRLP      : Boolean; -- IrDA low-power
+      HDSEL     : Boolean; -- Half-duplex selection
+      NACK      : Boolean; -- Smartcard NACK enable
+      SCEN      : Boolean; -- Smartcard mode enable
+      DMAR      : Boolean; -- DMA enable receiver
+      DMAT      : Boolean; -- DMA enable transmitter
+      RTSE      : Boolean; -- RTS enable
+      CTSE      : Boolean; -- CTS enable
+      CTSIE     : Boolean; -- CTS interrupt enable
+      ONEBIT    : Boolean; -- One sample bit method enable
+      OVRDIS    : Boolean; -- Overrun Disable
+      DDRE      : Boolean; -- DMA Disable on Reception Error
+      DEM       : Boolean; -- Driver enable mode
+      DEP       : Bits_1;  -- Driver enable polarity selection
+      Reserved1 : Bits_1;
+      SCARCNT   : Bits_3;  -- Smartcard auto-retry count
+      WUS       : Bits_2;  -- Wakeup from Stop mode interrupt flag selection
+      WUFIE     : Boolean; -- Wakeup from Stop mode interrupt enable
+      UCESM     : Boolean; -- USART Clock Enable in Stop mode.
+      TCBGTIE   : Boolean; -- Transmission complete before guard time interrupt enable
+      Reserved2 : Bits_7;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_CR3_Type use
+   record
+      EIE       at 0 range  0 ..  0;
+      IREN      at 0 range  1 ..  1;
+      IRLP      at 0 range  2 ..  2;
+      HDSEL     at 0 range  3 ..  3;
+      NACK      at 0 range  4 ..  4;
+      SCEN      at 0 range  5 ..  5;
+      DMAR      at 0 range  6 ..  6;
+      DMAT      at 0 range  7 ..  7;
+      RTSE      at 0 range  8 ..  8;
+      CTSE      at 0 range  9 ..  9;
+      CTSIE     at 0 range 10 .. 10;
+      ONEBIT    at 0 range 11 .. 11;
+      OVRDIS    at 0 range 12 .. 12;
+      DDRE      at 0 range 13 .. 13;
+      DEM       at 0 range 14 .. 14;
+      DEP       at 0 range 15 .. 15;
+      Reserved1 at 0 range 16 .. 16;
+      SCARCNT   at 0 range 17 .. 19;
+      WUS       at 0 range 20 .. 21;
+      WUFIE     at 0 range 22 .. 22;
+      UCESM     at 0 range 23 .. 23;
+      TCBGTIE   at 0 range 24 .. 24;
+      Reserved2 at 0 range 25 .. 31;
+   end record;
+
    -- 34.8.4 Baud rate register (USART_BRR)
 
    type USART_BRR_Type is
@@ -1162,6 +1228,7 @@ package STM32F769I is
    record
       USART_CR1 : USART_CR1_Type with Volatile_Full_Access => True;
       USART_CR2 : USART_CR2_Type with Volatile_Full_Access => True;
+      USART_CR3 : USART_CR3_Type with Volatile_Full_Access => True;
       USART_BRR : USART_BRR_Type with Volatile_Full_Access => True;
       USART_ISR : USART_ISR_Type with Volatile_Full_Access => True;
       USART_RDR : USART_DR_Type;
@@ -1173,6 +1240,7 @@ package STM32F769I is
    record
       USART_CR1 at 16#00# range 0 .. 31;
       USART_CR2 at 16#04# range 0 .. 31;
+      USART_CR3 at 16#08# range 0 .. 31;
       USART_BRR at 16#0C# range 0 .. 31;
       USART_ISR at 16#1C# range 0 .. 31;
       USART_RDR at 16#24# range 0 .. 31;
