@@ -43,7 +43,7 @@ package body Am7990 is
    function Register_Read
       (Descriptor : Descriptor_Type;
        Register   : Register_Type) return Unsigned_16
-   is
+      is
    begin
       Descriptor.Write_16
          (Build_Address (Descriptor.Base_Address, RAP_OFFSET, Descriptor.Scale_Address),
@@ -59,7 +59,7 @@ package body Am7990 is
       (Descriptor : in Descriptor_Type;
        Register   : in Register_Type;
        Value      : in Unsigned_16)
-   is
+      is
    begin
       Descriptor.Write_16
          (Build_Address (Descriptor.Base_Address, RAP_OFFSET, Descriptor.Scale_Address),
