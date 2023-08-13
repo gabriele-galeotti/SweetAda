@@ -913,6 +913,25 @@ package STM32F769I is
 
    -- 34.8.1 Control register 1 (USART_CR1)
 
+   PS_EVEN : constant := 0; -- Even parity
+   PS_ODD  : constant := 1; -- Odd parity
+
+   WAKE_IDLE : constant := 0; -- Idle line
+   WAKE_ADDR : constant := 1; -- Address mark
+
+   type M_WORD_LENGTH_Type is
+   record
+      M0 : Bits_1;
+      M1 : Bits_1;
+   end record;
+
+   M_8N1 : constant M_WORD_LENGTH_Type := (0, 0); -- 1 Start bit, 8 data bits, n stop bits
+   M_9N1 : constant M_WORD_LENGTH_Type := (0, 1); -- 1 Start bit, 9 data bits, n stop bits
+   M_7N1 : constant M_WORD_LENGTH_Type := (1, 0); -- 1 Start bit, 7 data bits, n stop bits
+
+   OVER8_16 : constant := 0; -- Oversampling by 16
+   OVER8_8  : constant := 1; -- Oversampling by 8
+
    type USART_CR1_Type is
    record
       UE       : Boolean;     -- USART enable
@@ -964,6 +983,81 @@ package STM32F769I is
       EOBIE    at 0 range 27 .. 27;
       M1       at 0 range 28 .. 28;
       Reserved at 0 range 29 .. 31;
+   end record;
+
+   -- 34.8.2 Control register 2 (USART_CR2)
+
+   ADDM7_4 : constant := 0; -- 4-bit address detection
+   ADDM7_7 : constant := 1; -- 7-bit address detection (in 8-bit data mode)
+
+   LBDL_10 : constant := 0; -- 10-bit break detection
+   LBDL_11 : constant := 1; -- 11-bit break detection
+
+   CPHA_1ST : constant := 0; -- The first clock transition is the first data capture edge
+   CPHA_2ND : constant := 1; -- The second clock transition is the first data capture edge
+
+   CPOL_LOW  : constant := 0; -- Steady low value on CK pin outside transmission window
+   CPOL_HIGH : constant := 1; -- Steady high value on CK pin outside transmission window
+
+   STOP_1  : constant := 2#00#; -- 1 stop bit
+   STOP_05 : constant := 2#01#; -- 0.5 stop bit
+   STOP_2  : constant := 2#10#; -- 2 stop bits
+   STOP_15 : constant := 2#11#; -- 1.5 stop bits
+
+   ABRMOD_START   : constant := 2#00#; --  Measurement of the start bit is used to detect the baud rate.
+   ABRMOD_FALLING : constant := 2#01#; --  Falling edge to falling edge measurement.
+   ABRMOD_7F      : constant := 2#10#; --  0x7F frame detection.
+   ABRMOD_55      : constant := 2#11#; --  0x55 frame detection
+
+   type USART_CR2_Type is
+   record
+      Reserved1 : Bits_4;
+      ADDM7     : Bits_1;  -- 7-bit Address Detection/4-bit Address Detection
+      LBDL      : Bits_1;  -- LIN break detection length
+      LBDIE     : Boolean; -- LIN break detection interrupt enable
+      Reserved2 : Bits_1;
+      LBCL      : Boolean; -- Last bit clock pulse
+      CPHA      : Bits_1;  -- Clock phase
+      CPOL      : Bits_1;  -- Clock polarity
+      CLKEN     : Boolean; -- Clock enable
+      STOP      : Bits_2;  -- STOP bits
+      LINEN     : Boolean; -- LIN mode enable
+      SWAP      : Boolean; -- Swap TX/RX pins
+      RXINV     : Boolean; -- RX pin active level inversion
+      TXINV     : Boolean; -- TX pin active level inversion
+      DATAINV   : Boolean; -- Binary data inversion
+      MSBFIRST  : Boolean; -- Most significant bit first
+      ABREN     : Boolean; -- Auto baud rate enable
+      ABRMOD    : Bits_2;  -- Auto baud rate mode
+      RTOEN     : Boolean; -- Receiver timeout enable
+      ADD30     : Bits_4;  -- Address of the USART node
+      ADD74     : Bits_4;  -- Address of the USART node
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_CR2_Type use
+   record
+      Reserved1 at 0 range  0 ..  3;
+      ADDM7     at 0 range  4 ..  4;
+      LBDL      at 0 range  5 ..  5;
+      LBDIE     at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      LBCL      at 0 range  8 ..  8;
+      CPHA      at 0 range  9 ..  9;
+      CPOL      at 0 range 10 .. 10;
+      CLKEN     at 0 range 11 .. 11;
+      STOP      at 0 range 12 .. 13;
+      LINEN     at 0 range 14 .. 14;
+      SWAP      at 0 range 15 .. 15;
+      RXINV     at 0 range 16 .. 16;
+      TXINV     at 0 range 17 .. 17;
+      DATAINV   at 0 range 18 .. 18;
+      MSBFIRST  at 0 range 19 .. 19;
+      ABREN     at 0 range 20 .. 20;
+      ABRMOD    at 0 range 21 .. 22;
+      RTOEN     at 0 range 23 .. 23;
+      ADD30     at 0 range 24 .. 27;
+      ADD74     at 0 range 28 .. 31;
    end record;
 
    -- 34.8.4 Baud rate register (USART_BRR)
@@ -1067,6 +1161,7 @@ package STM32F769I is
    type USART_Type is
    record
       USART_CR1 : USART_CR1_Type with Volatile_Full_Access => True;
+      USART_CR2 : USART_CR2_Type with Volatile_Full_Access => True;
       USART_BRR : USART_BRR_Type with Volatile_Full_Access => True;
       USART_ISR : USART_ISR_Type with Volatile_Full_Access => True;
       USART_RDR : USART_DR_Type;
@@ -1077,6 +1172,7 @@ package STM32F769I is
    for USART_Type use
    record
       USART_CR1 at 16#00# range 0 .. 31;
+      USART_CR2 at 16#04# range 0 .. 31;
       USART_BRR at 16#0C# range 0 .. 31;
       USART_ISR at 16#1C# range 0 .. 31;
       USART_RDR at 16#24# range 0 .. 31;
