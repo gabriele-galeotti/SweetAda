@@ -774,10 +774,66 @@ package STM32F769I is
       Import     => True,
       Convention => Ada;
 
+   GPIOB_BASEADDRESS : constant := 16#4002_0400#;
+
+   GPIOB : aliased GPIO_PORT_Type with
+      Address    => To_Address (GPIOB_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
    GPIOC_BASEADDRESS : constant := 16#4002_0800#;
 
    GPIOC : aliased GPIO_PORT_Type with
       Address    => To_Address (GPIOC_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   GPIOD_BASEADDRESS : constant := 16#4002_0C00#;
+
+   GPIOD : aliased GPIO_PORT_Type with
+      Address    => To_Address (GPIOD_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   GPIOE_BASEADDRESS : constant := 16#4002_1000#;
+
+   GPIOE : aliased GPIO_PORT_Type with
+      Address    => To_Address (GPIOE_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   GPIOF_BASEADDRESS : constant := 16#4002_1400#;
+
+   GPIOF : aliased GPIO_PORT_Type with
+      Address    => To_Address (GPIOF_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   GPIOG_BASEADDRESS : constant := 16#4002_1800#;
+
+   GPIOG : aliased GPIO_PORT_Type with
+      Address    => To_Address (GPIOG_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   GPIOH_BASEADDRESS : constant := 16#4002_1C00#;
+
+   GPIOH : aliased GPIO_PORT_Type with
+      Address    => To_Address (GPIOH_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   GPIOI_BASEADDRESS : constant := 16#4002_2000#;
+
+   GPIOI : aliased GPIO_PORT_Type with
+      Address    => To_Address (GPIOI_BASEADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
@@ -789,6 +845,55 @@ package STM32F769I is
       Volatile   => True,
       Import     => True,
       Convention => Ada;
+
+   GPIOK_BASEADDRESS : constant := 16#4002_2800#;
+
+   GPIOK : aliased GPIO_PORT_Type with
+      Address    => To_Address (GPIOK_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 7 System configuration controller (SYSCFG)
+   ----------------------------------------------------------------------------
+
+   -- 7.2.1 SYSCFG memory remap register (SYSCFG_MEMRMP)
+
+   MEM_BOOT_ADD0 : constant := 0; -- Boot memory base address is defined by BOOT_ADD0 option byte
+   MEM_BOOT_ADD1 : constant := 1; -- Boot memory base address is defined by BOOT_ADD1 option byte
+
+   SWP_FMC_NONE  : constant := 2#00#; -- No FMC memory mapping swapping
+   SWP_FMC_SDRAM : constant := 2#01#; -- NOR/RAM and SDRAM memory mapping swapped
+
+   type SYSCFG_MEMRMP_Type is
+   record
+      MEM_BOOT  : Bits_1;  -- Memory boot mapping
+      Reserved1 : Bits_7;
+      SWP_FB    : Boolean; -- Flash Bank swap
+      Reserved2 : Bits_1;
+      SWP_FMC   : Bits_2;  -- FMC memory mapping swap
+      Reserved3 : Bits_20;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SYSCFG_MEMRMP_Type use
+   record
+      MEM_BOOT  at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  7;
+      SWP_FB    at 0 range  8 ..  8;
+      Reserved2 at 0 range  9 ..  9;
+      SWP_FMC   at 0 range 10 .. 11;
+      Reserved3 at 0 range 12 .. 31;
+   end record;
+
+   SYSCFG_MEMRMP_ADDRESS : constant := 16#4001_3800#;
+
+   SYSCFG_MEMRMP : aliased SYSCFG_MEMRMP_Type with
+      Address              => To_Address (SYSCFG_MEMRMP_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 10 Nested vectored interrupt controller (NVIC)
