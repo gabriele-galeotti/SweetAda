@@ -78,7 +78,7 @@ package body BSP is
       RCC.RCC_APB2ENR.USART6EN := True;
       GPIOC.AFRL (6) := AF8;
       GPIOC.AFRL (7) := AF8;
-      GPIOC.MODER  := [6 | 7 => GPIO_ALT, others => <>];
+      GPIOC.MODER := [6 | 7 => GPIO_ALT, others => <>];
       USART6.USART_CR1.UE := False;
       USART6.USART_BRR.BRR := 16#2710#; -- 9600 baud
       USART6.USART_CR1.TE := True;

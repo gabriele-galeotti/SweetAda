@@ -422,6 +422,8 @@ package STM32F769I is
       MCO2      at 0 range 30 .. 31;
    end record;
 
+   -- 5.3.4 RCC clock interrupt register (RCC_CIR)
+
    -- 5.3.13 RCC APB1 peripheral clock enable register (RCC_APB1ENR)
 
    type RCC_APB1ENR_Type is
@@ -450,7 +452,7 @@ package STM32F769I is
       I2C1EN    : Boolean; -- I2C1 clock enable
       I2C2EN    : Boolean; -- I2C2 clock enable
       I2C3EN    : Boolean; -- I2C3 clock enable
-      I2C4      : Boolean; -- Boolean; -- I2C4 clock enable
+      I2C4      : Boolean; -- I2C4 clock enable
       CAN1EN    : Boolean; -- CAN 1 clock enable
       CAN2EN    : Boolean; -- CAN 2 clock enable
       CECEN     : Boolean; -- HDMI-CEC clock enable
