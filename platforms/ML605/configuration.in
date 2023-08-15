@@ -3,9 +3,6 @@
 # ML605 (QEMU emulator)
 #
 # MicroBlaze v8.10.a BE
-# RAM (LMB): 128 kB @ 0
-# RAM:       128 MB @ 0x50000000
-# UART:      16550-style @ 0x83E00000
 #
 
 # force ZFP

@@ -2,6 +2,8 @@
 #
 # Macintosh Quadra 800 (QEMU emulator)
 #
+# M68040
+#
 
 # force ZFP
 RTS := zfp

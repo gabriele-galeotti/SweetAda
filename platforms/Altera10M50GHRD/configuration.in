@@ -2,7 +2,7 @@
 #
 # Altera 10M50GHRD board (QEMU emulator)
 #
-# NiosII
+# Nios II
 #
 
 # force ZFP

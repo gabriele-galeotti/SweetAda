@@ -2,7 +2,7 @@
 #
 # Amiga (FS-UAE emulator)
 #
-# M68000
+# M68010
 #
 
 CPU       := M68k
