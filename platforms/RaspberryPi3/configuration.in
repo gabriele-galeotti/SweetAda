@@ -2,7 +2,7 @@
 #
 # Raspberry Pi 3
 #
-# BCM2837 4-core Cortex-A53 AArch64 LE
+# BCM2837 4-core Cortex-A53 LE (ARMv8-A)
 #
 
 CPU       := AArch64
@@ -29,12 +29,7 @@ SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
                            -shutdown
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
-                           -e $(ELFTOOL) -s _start -command "\
-                             targets bcm2837.cpu0 ; halt ;   \
-                             targets bcm2837.cpu1 ; halt ;   \
-                             targets bcm2837.cpu2 ; halt ;   \
-                             targets bcm2837.cpu3 ; halt ;   \
-                             targets bcm2837.cpu0 ; targets"
+                           -e $(ELFTOOL) -s _start -command "halt"
 DEBUG_COMMAND         := $(RUN_COMMAND) -debug &&                          \
                          $$GDB                                             \
                                -ex "target extended-remote localhost:3333" \

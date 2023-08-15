@@ -37,18 +37,15 @@ package body Exceptions is
    use Interfaces;
    use Bits;
 
-   EL3_Table : aliased constant Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "el3_table";
-   EL2_Table : aliased constant Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "el2_table";
-   EL1_Table : aliased constant Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "el1_table";
+   EL3_Table : aliased constant Asm_Entry_Point
+      with Import        => True,
+           External_Name => "el3_table";
+   EL2_Table : aliased constant Asm_Entry_Point
+      with Import        => True,
+           External_Name => "el2_table";
+   EL1_Table : aliased constant Asm_Entry_Point
+      with Import        => True,
+           External_Name => "el1_table";
 
    --========================================================================--
    --                                                                        --

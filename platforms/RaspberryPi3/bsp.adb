@@ -65,7 +65,7 @@ package body BSP is
    ----------------------------------------------------------------------------
    function Number_Of_CPUs return Interfaces.C.int is
    begin
-      return 1;
+      return 4;
    end Number_Of_CPUs;
 
    ----------------------------------------------------------------------------

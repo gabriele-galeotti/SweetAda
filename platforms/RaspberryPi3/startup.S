@@ -66,7 +66,7 @@ bootcore:
                 //
                 // Setup stack pointer.
                 //
-                ldr     x0,=SVC_stack
+                ldr     x0,=kernel_stack
                 mov     sp,x0
 
                 //
@@ -102,5 +102,5 @@ dead:           b       .
 
                 .align  8
                 .space  4096
-SVC_stack:
+kernel_stack:
 
