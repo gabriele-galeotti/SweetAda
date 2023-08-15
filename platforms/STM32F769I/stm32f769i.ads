@@ -424,6 +424,65 @@ package STM32F769I is
 
    -- 5.3.4 RCC clock interrupt register (RCC_CIR)
 
+   type RCC_CIR_Type is
+   record
+      LSIRDYF     : Boolean; -- LSI ready interrupt flag
+      LSERDYF     : Boolean; -- LSE ready interrupt flag
+      HSIRDYF     : Boolean; -- HSI ready interrupt flag
+      HSERDYF     : Boolean; -- HSE ready interrupt flag
+      PLLRDYF     : Boolean; -- Main PLL (PLL) ready interrupt flag
+      PLLI2SRDYF  : Boolean; -- PLLI2S ready interrupt flag
+      PLLSAIRDYF  : Boolean; -- PLLSAI Ready Interrupt flag
+      CSSF        : Boolean; -- Clock security system interrupt flag
+      LSIRDYIE    : Boolean; -- LSI ready interrupt enable
+      LSERDYIE    : Boolean; -- LSE ready interrupt enable
+      HSIRDYIE    : Boolean; -- HSI ready interrupt enable
+      HSERDYIE    : Boolean; -- HSE ready interrupt enable
+      PLLRDYIE    : Boolean; -- Main PLL (PLL) ready interrupt enable
+      PLLI2SRDYIE : Boolean; -- PLLI2S ready interrupt enable
+      PLLSAIRDYIE : Boolean; -- PLLSAI Ready Interrupt Enable
+      Reserved1   : Bits_1;
+      LSIRDYC     : Boolean; -- LSI ready interrupt clear
+      LSERDYC     : Boolean; -- LSE ready interrupt clear
+      HSIRDYC     : Boolean; -- HSI ready interrupt clear
+      HSERDYC     : Boolean; -- HSE ready interrupt clear
+      PLLRDYC     : Boolean; -- Main PLL(PLL) ready interrupt clear
+      PLLI2SRDYC  : Boolean; -- PLLI2S ready interrupt clear
+      PLLSAIRDYC  : Boolean; -- PLLSAI Ready Interrupt Clear
+      CSSC        : Boolean; -- Clock security system interrupt clear
+      Reserved2   : Bits_8;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_CIR_Type use
+   record
+      LSIRDYF     at 0 range  0 ..  0;
+      LSERDYF     at 0 range  1 ..  1;
+      HSIRDYF     at 0 range  2 ..  2;
+      HSERDYF     at 0 range  3 ..  3;
+      PLLRDYF     at 0 range  4 ..  4;
+      PLLI2SRDYF  at 0 range  5 ..  5;
+      PLLSAIRDYF  at 0 range  6 ..  6;
+      CSSF        at 0 range  7 ..  7;
+      LSIRDYIE    at 0 range  8 ..  8;
+      LSERDYIE    at 0 range  9 ..  9;
+      HSIRDYIE    at 0 range 10 .. 10;
+      HSERDYIE    at 0 range 11 .. 11;
+      PLLRDYIE    at 0 range 12 .. 12;
+      PLLI2SRDYIE at 0 range 13 .. 13;
+      PLLSAIRDYIE at 0 range 14 .. 14;
+      Reserved1   at 0 range 15 .. 15;
+      LSIRDYC     at 0 range 16 .. 16;
+      LSERDYC     at 0 range 17 .. 17;
+      HSIRDYC     at 0 range 18 .. 18;
+      HSERDYC     at 0 range 19 .. 19;
+      PLLRDYC     at 0 range 20 .. 20;
+      PLLI2SRDYC  at 0 range 21 .. 21;
+      PLLSAIRDYC  at 0 range 22 .. 22;
+      CSSC        at 0 range 23 .. 23;
+      Reserved2   at 0 range 24 .. 31;
+   end record;
+
    -- 5.3.13 RCC APB1 peripheral clock enable register (RCC_APB1ENR)
 
    type RCC_APB1ENR_Type is
@@ -577,6 +636,7 @@ package STM32F769I is
       RCC_CR      : RCC_CR_Type      with Volatile_Full_Access => True;
       RCC_PLLCFGR : RCC_PLLCFGR_Type with Volatile_Full_Access => True;
       RCC_CFGR    : RCC_CFGR_Type    with Volatile_Full_Access => True;
+      RCC_CIR     : RCC_CIR_Type     with Volatile_Full_Access => True;
       RCC_APB1ENR : RCC_APB1ENR_Type with Volatile_Full_Access => True;
       RCC_APB2ENR : RCC_APB2ENR_Type with Volatile_Full_Access => True;
    end record with
@@ -587,6 +647,7 @@ package STM32F769I is
       RCC_CR      at 16#00# range 0 .. 31;
       RCC_PLLCFGR at 16#04# range 0 .. 31;
       RCC_CFGR    at 16#08# range 0 .. 31;
+      RCC_CIR     at 16#0C# range 0 .. 31;
       RCC_APB1ENR at 16#40# range 0 .. 31;
       RCC_APB2ENR at 16#44# range 0 .. 31;
    end record;
