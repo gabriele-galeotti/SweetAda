@@ -33,6 +33,12 @@ _start:
 1:
 
                 //
+                // Clear medeleg/mideleg.
+                //
+                csrw    medeleg,zero
+                csrw    mideleg,zero
+
+                //
                 // Allow only hart #0.
                 //
                 csrr    t0,mhartid
@@ -74,7 +80,7 @@ hart_idle:
 
                 .sect   .bss
 
-                .align  8
+                .align  4
                 .space  4096
 kernel_stack:
 

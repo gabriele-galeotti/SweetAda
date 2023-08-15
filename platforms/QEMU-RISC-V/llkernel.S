@@ -12,6 +12,18 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#if   __riscv_xlen == 32
+# define SAVEREG sw
+# define LOADREG lw
+# define X2 1
+#elif __riscv_xlen == 64
+# define SAVEREG sd
+# define LOADREG ld
+# define X2 2
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
                 .option arch,+zicsr,+zifencei
 
                 .sect   .vectors,"ax"
@@ -21,49 +33,50 @@
                 .global vectors
 vectors:
 
+
                 addi    sp,sp,-256
-                sw      ra,0(sp)
-                //sw      sp,4(sp)
-                sw      gp,8(sp)
-                sw      tp,12(sp)
-                sw      t0,16(sp)
-                sw      t1,20(sp)
-                sw      t2,24(sp)
-                sw      t3,28(sp)
-                sw      t4,32(sp)
-                sw      t5,36(sp)
-                sw      t6,40(sp)
-                sw      a0,44(sp)
-                sw      a1,48(sp)
-                sw      a2,52(sp)
-                sw      a3,56(sp)
-                sw      a4,60(sp)
-                sw      a5,64(sp)
-                sw      a6,68(sp)
-                sw      a7,72(sp)
+                SAVEREG ra,(0*X2)(sp)
+                //SAVEREG sp,(4*X2)(sp)
+                SAVEREG gp,(8*X2)(sp)
+                SAVEREG tp,(12*X2)(sp)
+                SAVEREG t0,(16*X2)(sp)
+                SAVEREG t1,(20*X2)(sp)
+                SAVEREG t2,(24*X2)(sp)
+                SAVEREG t3,(28*X2)(sp)
+                SAVEREG t4,(32*X2)(sp)
+                SAVEREG t5,(36*X2)(sp)
+                SAVEREG t6,(40*X2)(sp)
+                SAVEREG a0,(44*X2)(sp)
+                SAVEREG a1,(48*X2)(sp)
+                SAVEREG a2,(52*X2)(sp)
+                SAVEREG a3,(56*X2)(sp)
+                SAVEREG a4,(60*X2)(sp)
+                SAVEREG a5,(64*X2)(sp)
+                SAVEREG a6,(68*X2)(sp)
+                SAVEREG a7,(72*X2)(sp)
 
                 .extern exception_process
-                call    exception_process
+                jal     exception_process
 
-                lw      ra,0(sp)
-                //lw      sp,4(sp)
-                lw      gp,8(sp)
-                lw      tp,12(sp)
-                lw      t0,16(sp)
-                lw      t1,20(sp)
-                lw      t2,24(sp)
-                lw      t3,28(sp)
-                lw      t4,32(sp)
-                lw      t5,36(sp)
-                lw      t6,40(sp)
-                lw      a0,44(sp)
-                lw      a1,48(sp)
-                lw      a2,52(sp)
-                lw      a3,56(sp)
-                lw      a4,60(sp)
-                lw      a5,64(sp)
-                lw      a6,68(sp)
-                lw      a7,72(sp)
+                LOADREG ra,(0*X2)(sp)
+                //LOADREG sp,(4*X2)(sp)
+                LOADREG gp,(8*X2)(sp)
+                LOADREG tp,(12*X2)(sp)
+                LOADREG t0,(16*X2)(sp)
+                LOADREG t1,(20*X2)(sp)
+                LOADREG t2,(24*X2)(sp)
+                LOADREG t3,(28*X2)(sp)
+                LOADREG t4,(32*X2)(sp)
+                LOADREG t5,(36*X2)(sp)
+                LOADREG t6,(40*X2)(sp)
+                LOADREG a0,(44*X2)(sp)
+                LOADREG a1,(48*X2)(sp)
+                LOADREG a2,(52*X2)(sp)
+                LOADREG a3,(56*X2)(sp)
+                LOADREG a4,(60*X2)(sp)
+                LOADREG a5,(64*X2)(sp)
+                LOADREG a6,(68*X2)(sp)
+                LOADREG a7,(72*X2)(sp)
                 addi    sp,sp,256
                 mret
 

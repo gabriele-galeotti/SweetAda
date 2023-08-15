@@ -39,8 +39,6 @@ SECTIONS
                 *(.data.*)
                 *(.sdata)
                 *(.sdata.*)
-                *(.sdata2)
-                *(.sdata2.*)
                 . = ALIGN(0x10);
                 _edata = .;
         } > RAM
