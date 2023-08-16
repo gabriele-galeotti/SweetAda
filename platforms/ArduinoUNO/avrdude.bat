@@ -14,7 +14,6 @@ REM Arguments:
 REM none
 REM
 REM Environment variables:
-REM SWEETADA_PATH
 REM KERNEL_ROMFILE
 REM
 
@@ -23,13 +22,20 @@ REM # Main loop.                                                               #
 REM #                                                                          #
 REM ############################################################################
 
-SET "AVRDUDE_PATH=C:\Program Files\avrdude"
-SET "AVRDUDE_EXEC=%AVRDUDE_PATH%\bin\avrdude.exe"
+SET "AVRDUDE_PREFIX=C:\Program Files\avrdude"
+
+SET "AVRDUDE_ARGS="
+SET "AVRDUDE_ARGS=%AVRDUDE_ARGS% -v -v -V"
+SET "AVRDUDE_ARGS=%AVRDUDE_ARGS% -p atmega328p"
+SET "AVRDUDE_ARGS=%AVRDUDE_ARGS% -P USB"
+SET "AVRDUDE_ARGS=%AVRDUDE_ARGS% -c arduino"
+SET "AVRDUDE_ARGS=%AVRDUDE_ARGS% -D"
+SET "AVRDUDE_ARGS=%AVRDUDE_ARGS% -U flash:w:%KERNEL_ROMFILE%:i"
 
 ECHO Press RESET on board and press <ENTER>, then release RESET ...
 PAUSE > nul
 
-"%AVRDUDE_EXEC%" -v -v -V -p atmega328p -P USB -c arduino -D -U flash:w:"%SWEETADA_PATH%"\%KERNEL_ROMFILE%:i
+"%AVRDUDE_PREFIX%"\bin\avrdude.exe %AVRDUDE_ARGS%
 
 EXIT /B %ERRORLEVEL%
 

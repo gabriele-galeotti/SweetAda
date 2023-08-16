@@ -14,7 +14,6 @@
 # none
 #
 # Environment variables:
-# SWEETADA_PATH
 # KERNEL_ROMFILE
 #
 
@@ -31,7 +30,6 @@ SCRIPT_FILENAME=$(basename "$0")
 ################################################################################
 
 AVRDUDE_PREFIX=/opt/avrdude
-AVRDUDE_EXEC=${AVRDUDE_PREFIX}/bin/avrdude
 
 AVRDUDE_ARGS=""
 AVRDUDE_ARGS="${AVRDUDE_ARGS} -v -v -V"
@@ -39,12 +37,12 @@ AVRDUDE_ARGS="${AVRDUDE_ARGS} -p atmega328p"
 AVRDUDE_ARGS="${AVRDUDE_ARGS} -P /dev/ttyACM0"
 AVRDUDE_ARGS="${AVRDUDE_ARGS} -c arduino"
 AVRDUDE_ARGS="${AVRDUDE_ARGS} -D"
-AVRDUDE_ARGS="${AVRDUDE_ARGS} -U flash:w:${SWEETADA_PATH}/${KERNEL_ROMFILE}:i"
+AVRDUDE_ARGS="${AVRDUDE_ARGS} -U flash:w:${KERNEL_ROMFILE}:i"
 
 printf "Press RESET on board and press <ENTER>, then release RESET ... "
 read answer
 
-${AVRDUDE_EXEC} ${AVRDUDE_ARGS}
+"${AVRDUDE_PREFIX}"/bin/avrdude ${AVRDUDE_ARGS}
 
 exit $?
 
