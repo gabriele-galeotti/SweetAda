@@ -55,7 +55,10 @@ cd ${PLATFORM_DIRECTORY}
 # install the SweetAda VHDL source
 cp -f sweetada.vhd "${NEORV32_RTL_PATH}"/${APP_IMG}
 # run the simulation
-PATH=${GHDL_PATH}/bin:${PATH} "${NEORV32_SIM_PATH}"/simple/ghdl.sh
+PATH=${GHDL_PATH}/bin:${PATH} xterm                \
+  -T "NEORV32" -geometry 132x50 -bg blue -fg white \
+  -e "${NEORV32_SIM_PATH}"/simple/ghdl.sh          \
+  &
 
 exit 0
 

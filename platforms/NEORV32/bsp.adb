@@ -30,6 +30,7 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
+   use Interfaces;
    use Definitions;
    use Bits;
    use NEORV32;
@@ -56,8 +57,14 @@ package body BSP is
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := To_Ch (0);
+      -- wait for receiver available
+      loop
+         exit when UART0.CTRL.RX_NEMPTY;
+      end loop;
+      Data := UART0.DATA.RTX;
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------

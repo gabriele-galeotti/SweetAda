@@ -101,8 +101,8 @@ package NEORV32 is
 
    type UART_Type is
    record
-      CTRL : CTRL_Type with Volatile => True;
-      DATA : DATA_Type with Volatile => True;
+      CTRL : CTRL_Type with Volatile_Full_Access => True;
+      DATA : DATA_Type with Volatile_Full_Access => True;
    end record
       with Size => 2 * 32;
    for UART_Type use
