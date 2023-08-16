@@ -100,7 +100,7 @@ dead:           b       .
 
                 .sect   .bss
 
-                .align  8
+                .align  4
                 .space  4096
 kernel_stack:
 

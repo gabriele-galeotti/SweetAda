@@ -157,7 +157,7 @@ irq_handler:
                 stp     x24,x25,[sp,#16*12]
                 stp     x26,x27,[sp,#16*13]
                 stp     x28,x29,[sp,#16*14]
-                stp     x29,x30,[sp,#16*15]
+                stp     x30,xzr,[sp,#16*15]
                 .extern irq_process
                 bl      irq_process
                 ldp     x0,x1,[sp,#16*0]
@@ -175,7 +175,7 @@ irq_handler:
                 ldp     x24,x25,[sp,#16*12]
                 ldp     x26,x27,[sp,#16*13]
                 ldp     x28,x29,[sp,#16*14]
-                ldp     x29,x30,[sp,#16*15]
+                ldp     x30,xzr,[sp,#16*15]
                 add     sp,sp,256
                 eret
 
