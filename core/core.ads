@@ -34,29 +34,31 @@ package Core is
    KERNEL_VERSION   : constant String := "0.0";
    KERNEL_THREAD_ID : constant := 1;
 
-   Debug_Flag : aliased constant Boolean with
-      Size          => 8,
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "_debug_flag";
-
-   procedure Parameters_Dump;
+   Debug_Flag : aliased constant Boolean
+      with Size          => 8,
+           Import        => True,
+           Convention    => Asm,
+           External_Name => "_debug_flag";
 
    ----------------------------------------------------------------------------
    -- RTS-related
    ----------------------------------------------------------------------------
 
    -- System.Parameters imports this value
-   Default_Stack_Size_Value : Integer := -1 with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gl_default_stack_size";
+   Default_Stack_Size_Value : Integer := -1
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gl_default_stack_size";
 
    -- stack checking
+
    type Stack_Access is access all Integer;
-   function Stack_Check (Stack_Address : System.Address) return Stack_Access with
-      Export        => True,
-      Convention    => C,
-      External_Name => "_gnat_stack_check";
+
+   function Stack_Check
+      (Stack_Address : System.Address)
+      return Stack_Access
+      with Export        => True,
+           Convention    => C,
+           External_Name => "_gnat_stack_check";
 
 end Core;

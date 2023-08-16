@@ -17,9 +17,11 @@
 
 with Ada.Characters.Latin_1;
 with System.Storage_Elements;
+with Bits;
+with Console;
 with CPU;
 with BSP;
-with Console;
+with Linker;
 with Srecord;
 
 package body Monitor is
@@ -43,6 +45,7 @@ package body Monitor is
 
    procedure Getline;
    procedure Help;
+   procedure Parameters_Dump;
 
    --========================================================================--
    --                                                                        --
@@ -89,11 +92,39 @@ package body Monitor is
    end Getline;
 
    ----------------------------------------------------------------------------
+   -- Parameters_Dump
+   ----------------------------------------------------------------------------
+   procedure Parameters_Dump is
+   begin
+      Console.Print ("CPU byte order:        ");
+      if Bits.BigEndian then
+         Console.Print ("BE");
+      else
+         Console.Print ("LE");
+      end if;
+      Console.Print_NewLine;
+      Console.Print (
+                     Integer'(Standard'Word_Size),
+                     Prefix => "Standard'Word_Size:    ",
+                     NL     => True
+                    );
+      Console.Print (
+                     Integer'(Standard'Address_Size),
+                     Prefix => "Standard'Address_Size: ",
+                     NL     => True
+                    );
+      Console.Print (Linker.SText'Address, Prefix => "SText:                 ", NL => True);
+      Console.Print (Linker.SData'Address, Prefix => "SData:                 ", NL => True);
+      Console.Print (Linker.SBss'Address,  Prefix => "SBss:                  ", NL => True);
+   end Parameters_Dump;
+
+   ----------------------------------------------------------------------------
    -- Help
    ----------------------------------------------------------------------------
    procedure Help is
    begin
       Console.Print ("help    - this help",        NL => True);
+      Console.Print ("parms   - parameters dump",  NL => True);
       Console.Print ("srecord - Srecord download", NL => True);
       Console.Print ("ticks   - print Tick_Count", NL => True);
    end Help;
@@ -111,6 +142,9 @@ package body Monitor is
             -----------------------------------
             if    Buffer (1 .. 4) = "help" then
                Help;
+            --------------------------------------
+            elsif Buffer (1 .. 5) = "parms" then
+               Parameters_Dump;
             --------------------------------------
             elsif Buffer (1 .. 7) = "srecord" then
                Srecord.Init (
