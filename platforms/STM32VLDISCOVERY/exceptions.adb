@@ -47,7 +47,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
    begin
       Abort_Library.System_Abort;
    end Exception_Process;
@@ -55,7 +56,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process is
+   procedure Irq_Process
+      is
    begin
       null;
    end Irq_Process;

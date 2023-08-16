@@ -1,6 +1,6 @@
 
 //
-// startup.S - STM32F405 startup.
+// startup.S - Low-level startup.
 //
 // Copyright (C) 2020-2023 Gabriele Galeotti
 //
