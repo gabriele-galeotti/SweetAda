@@ -14,6 +14,7 @@
 # none
 #
 # Environment variables:
+# PATH
 # SWEETADA_PATH
 # PLATFORM_DIRECTORY
 # KERNEL_OUTFILE
