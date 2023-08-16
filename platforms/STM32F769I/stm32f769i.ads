@@ -483,6 +483,105 @@ package STM32F769I is
       Reserved2   at 0 range 24 .. 31;
    end record;
 
+   -- 5.3.5 RCC AHB1 peripheral reset register (RCC_AHB1RSTR)
+
+   type RCC_AHB1RSTR_Type is
+   record
+      GPIOARST  : Boolean; -- IO port A reset
+      GPIOBRST  : Boolean; -- IO port B reset
+      GPIOCRST  : Boolean; -- IO port C reset
+      GPIODRST  : Boolean; -- IO port D reset
+      GPIOERST  : Boolean; -- IO port E reset
+      GPIOFRST  : Boolean; -- IO port F reset
+      GPIOGRST  : Boolean; -- IO port G reset
+      GPIOHRST  : Boolean; -- IO port H reset
+      GPIOIRST  : Boolean; -- IO port I reset
+      GPIOJRST  : Boolean; -- IO port J reset
+      GPIOKRST  : Boolean; -- IO port K reset
+      Reserved1 : Bits_1;
+      CRCRST    : Boolean; -- CRC reset
+      Reserved2 : Bits_8;
+      DMA1RST   : Boolean; -- DMA2 reset
+      DMA2RST   : Boolean; -- DMA2 reset
+      DMA2DRST  : Boolean; -- DMA2D reset
+      Reserved3 : Bits_1;
+      ETHMACRST : Boolean; -- Ethernet MAC reset
+      Reserved4 : Bits_3;
+      OTGHSRST  : Boolean; -- USB OTG HS module reset
+      Reserved5 : Bits_2;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_AHB1RSTR_Type use
+   record
+      GPIOARST  at 0 range  0 ..  0;
+      GPIOBRST  at 0 range  1 ..  1;
+      GPIOCRST  at 0 range  2 ..  2;
+      GPIODRST  at 0 range  3 ..  3;
+      GPIOERST  at 0 range  4 ..  4;
+      GPIOFRST  at 0 range  5 ..  5;
+      GPIOGRST  at 0 range  6 ..  6;
+      GPIOHRST  at 0 range  7 ..  7;
+      GPIOIRST  at 0 range  8 ..  8;
+      GPIOJRST  at 0 range  9 ..  9;
+      GPIOKRST  at 0 range 10 .. 10;
+      Reserved1 at 0 range 11 .. 11;
+      CRCRST    at 0 range 12 .. 12;
+      Reserved2 at 0 range 13 .. 20;
+      DMA1RST   at 0 range 21 .. 21;
+      DMA2RST   at 0 range 22 .. 22;
+      DMA2DRST  at 0 range 23 .. 23;
+      Reserved3 at 0 range 24 .. 24;
+      ETHMACRST at 0 range 25 .. 25;
+      Reserved4 at 0 range 26 .. 28;
+      OTGHSRST  at 0 range 29 .. 29;
+      Reserved5 at 0 range 30 .. 31;
+   end record;
+
+   -- 5.3.6 RCC AHB2 peripheral reset register (RCC_AHB2RSTR)
+
+   type RCC_AHB2RSTR_Type is
+   record
+      DCMIRST   : Boolean; -- Camera interface reset
+      JPEGRST   : Boolean; -- JPEG module reset
+      Reserved1 : Bits_2;
+      CRYPRST   : Boolean; -- Cryptographic module reset
+      HASHRST   : Boolean; -- Hash module reset
+      RNGRST    : Boolean; -- Random number generator module reset
+      OTGFSRST  : Boolean; -- USB OTG FS module reset
+      Reserved2 : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_AHB2RSTR_Type use
+   record
+      DCMIRST   at 0 range 0 ..  0;
+      JPEGRST   at 0 range 1 ..  1;
+      Reserved1 at 0 range 2 ..  3;
+      CRYPRST   at 0 range 4 ..  4;
+      HASHRST   at 0 range 5 ..  5;
+      RNGRST    at 0 range 6 ..  6;
+      OTGFSRST  at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
+   -- 5.3.7 RCC AHB3 peripheral reset register (RCC_AHB3RSTR)
+
+   type RCC_AHB3RSTR_Type is
+   record
+      FMCRST   : Boolean; -- Flexible memory controller module reset
+      QSPIRST  : Boolean; -- Quad SPI memory controller reset
+      Reserved : Bits_30;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_AHB3RSTR_Type use
+   record
+      FMCRST   at 0 range 0 ..  0;
+      QSPIRST  at 0 range 1 ..  1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
    -- 5.3.13 RCC APB1 peripheral clock enable register (RCC_APB1ENR)
 
    type RCC_APB1ENR_Type is
@@ -633,23 +732,29 @@ package STM32F769I is
 
    type RCC_Type is
    record
-      RCC_CR      : RCC_CR_Type      with Volatile_Full_Access => True;
-      RCC_PLLCFGR : RCC_PLLCFGR_Type with Volatile_Full_Access => True;
-      RCC_CFGR    : RCC_CFGR_Type    with Volatile_Full_Access => True;
-      RCC_CIR     : RCC_CIR_Type     with Volatile_Full_Access => True;
-      RCC_APB1ENR : RCC_APB1ENR_Type with Volatile_Full_Access => True;
-      RCC_APB2ENR : RCC_APB2ENR_Type with Volatile_Full_Access => True;
+      RCC_CR       : RCC_CR_Type       with Volatile_Full_Access => True;
+      RCC_PLLCFGR  : RCC_PLLCFGR_Type  with Volatile_Full_Access => True;
+      RCC_CFGR     : RCC_CFGR_Type     with Volatile_Full_Access => True;
+      RCC_CIR      : RCC_CIR_Type      with Volatile_Full_Access => True;
+      RCC_AHB1RSTR : RCC_AHB1RSTR_Type with Volatile_Full_Access => True;
+      RCC_AHB2RSTR : RCC_AHB2RSTR_Type with Volatile_Full_Access => True;
+      RCC_AHB3RSTR : RCC_AHB3RSTR_Type with Volatile_Full_Access => True;
+      RCC_APB1ENR  : RCC_APB1ENR_Type  with Volatile_Full_Access => True;
+      RCC_APB2ENR  : RCC_APB2ENR_Type  with Volatile_Full_Access => True;
    end record with
       Size                    => 16#48# * 8,
       Suppress_Initialization => True;
    for RCC_Type use
    record
-      RCC_CR      at 16#00# range 0 .. 31;
-      RCC_PLLCFGR at 16#04# range 0 .. 31;
-      RCC_CFGR    at 16#08# range 0 .. 31;
-      RCC_CIR     at 16#0C# range 0 .. 31;
-      RCC_APB1ENR at 16#40# range 0 .. 31;
-      RCC_APB2ENR at 16#44# range 0 .. 31;
+      RCC_CR       at 16#00# range 0 .. 31;
+      RCC_PLLCFGR  at 16#04# range 0 .. 31;
+      RCC_CFGR     at 16#08# range 0 .. 31;
+      RCC_CIR      at 16#0C# range 0 .. 31;
+      RCC_AHB1RSTR at 16#10# range 0 .. 31;
+      RCC_AHB2RSTR at 16#14# range 0 .. 31;
+      RCC_AHB3RSTR at 16#18# range 0 .. 31;
+      RCC_APB1ENR  at 16#40# range 0 .. 31;
+      RCC_APB2ENR  at 16#44# range 0 .. 31;
    end record;
 
    RCC_BASEADDRESS : constant := 16#4002_3800#;
