@@ -33,34 +33,28 @@ package Linker is
    -- Memory areas imported from linker
    ----------------------------------------------------------------------------
 
-   SText : constant Bits.Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "_stext";
+   SText : constant Bits.Asm_Entry_Point
+      with Import        => True,
+           External_Name => "_stext";
 
-   EText : constant Bits.Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "_etext";
+   EText : constant Bits.Asm_Entry_Point
+      with Import        => True,
+           External_Name => "_etext";
 
-   SData : constant Bits.Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "_sdata";
+   SData : constant Bits.Asm_Entry_Point
+      with Import        => True,
+           External_Name => "_sdata";
 
-   EData : constant Bits.Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "_edata";
+   EData : constant Bits.Asm_Entry_Point
+      with Import        => True,
+           External_Name => "_edata";
 
-   SBss  : constant Bits.Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "_sbss";
+   SBss  : constant Bits.Asm_Entry_Point
+      with Import        => True,
+           External_Name => "_sbss";
 
-   EBss  : constant Bits.Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "_ebss";
+   EBss  : constant Bits.Asm_Entry_Point
+      with Import        => True,
+           External_Name => "_ebss";
 
 end Linker;
