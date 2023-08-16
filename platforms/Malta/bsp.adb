@@ -132,7 +132,6 @@ package body BSP is
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
-      Core.Parameters_Dump;
       PRId := CP0_PRId_Read;
       Console.Print ("CPU ID         : ");
       case PRId.CPU_ID is
