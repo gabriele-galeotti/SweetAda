@@ -137,7 +137,7 @@ el1_lel32_serr: b       el_handler              // + 0x780 SError/vSError
 el_handler:     b       .
 
 irq_handler:
-                sub     sp,sp,512
+                sub     sp,sp,256
                 stp     x0,x1,[sp,#16*0]
                 stp     x2,x3,[sp,#16*1]
                 stp     x4,x5,[sp,#16*2]
@@ -147,7 +147,8 @@ irq_handler:
                 stp     x12,x13,[sp,#16*6]
                 stp     x14,x15,[sp,#16*7]
                 stp     x16,x17,[sp,#16*8]
-                stp     x18,x30,[sp,#16*9]
+                stp     x18,x29,[sp,#16*9]
+                stp     x30,xzr,[sp,#16*10]
                 .extern exception_process
                 bl      exception_process
                 ldp     x0,x1,[sp,#16*0]
@@ -159,7 +160,8 @@ irq_handler:
                 ldp     x12,x13,[sp,#16*6]
                 ldp     x14,x15,[sp,#16*7]
                 ldp     x16,x17,[sp,#16*8]
-                ldp     x18,x30,[sp,#16*9]
-                add     sp,sp,512
+                ldp     x18,x29,[sp,#16*9]
+                ldp     x30,xzr,[sp,#16*10]
+                add     sp,sp,256
                 eret
 
