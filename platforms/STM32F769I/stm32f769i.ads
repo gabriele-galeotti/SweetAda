@@ -312,6 +312,14 @@ package STM32F769I is
       Reserved3 at 0 range 30 .. 31;
    end record;
 
+   RCC_CR_ADDRESS : constant := 16#4002_3800#;
+
+   RCC_CR : aliased RCC_CR_Type with
+      Address              => To_Address (RCC_CR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- 5.3.2 RCC PLL configuration register (RCC_PLLCFGR)
 
    PLLP_DIV2 : constant := 2#00#; -- PLLP = 2
@@ -350,6 +358,14 @@ package STM32F769I is
       PLLR      at 0 range 28 .. 30;
       Reserved4 at 0 range 31 .. 31;
    end record;
+
+   RCC_PLLCFGR_ADDRESS : constant := 16#4002_3804#;
+
+   RCC_PLLCFGR : aliased RCC_PLLCFGR_Type with
+      Address              => To_Address (RCC_PLLCFGR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    -- 5.3.3 RCC clock configuration register (RCC_CFGR)
 
@@ -422,6 +438,14 @@ package STM32F769I is
       MCO2      at 0 range 30 .. 31;
    end record;
 
+   RCC_CFGR_ADDRESS : constant := 16#4002_3808#;
+
+   RCC_CFGR : aliased RCC_CFGR_Type with
+      Address              => To_Address (RCC_CFGR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- 5.3.4 RCC clock interrupt register (RCC_CIR)
 
    type RCC_CIR_Type is
@@ -483,6 +507,14 @@ package STM32F769I is
       Reserved2   at 0 range 24 .. 31;
    end record;
 
+   RCC_CIR_ADDRESS : constant := 16#4002_380C#;
+
+   RCC_CIR : aliased RCC_CIR_Type with
+      Address              => To_Address (RCC_CIR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- 5.3.5 RCC AHB1 peripheral reset register (RCC_AHB1RSTR)
 
    type RCC_AHB1RSTR_Type is
@@ -538,6 +570,14 @@ package STM32F769I is
       Reserved5 at 0 range 30 .. 31;
    end record;
 
+   RCC_AHB1RSTR_ADDRESS : constant := 16#4002_3810#;
+
+   RCC_AHB1RSTR : aliased RCC_AHB1RSTR_Type with
+      Address              => To_Address (RCC_AHB1RSTR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- 5.3.6 RCC AHB2 peripheral reset register (RCC_AHB2RSTR)
 
    type RCC_AHB2RSTR_Type is
@@ -565,6 +605,14 @@ package STM32F769I is
       Reserved2 at 0 range 8 .. 31;
    end record;
 
+   RCC_AHB2RSTR_ADDRESS : constant := 16#4002_3814#;
+
+   RCC_AHB2RSTR : aliased RCC_AHB2RSTR_Type with
+      Address              => To_Address (RCC_AHB2RSTR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    -- 5.3.7 RCC AHB3 peripheral reset register (RCC_AHB3RSTR)
 
    type RCC_AHB3RSTR_Type is
@@ -581,6 +629,309 @@ package STM32F769I is
       QSPIRST  at 0 range 1 ..  1;
       Reserved at 0 range 2 .. 31;
    end record;
+
+   RCC_AHB3RSTR_ADDRESS : constant := 16#4002_3818#;
+
+   RCC_AHB3RSTR : aliased RCC_AHB3RSTR_Type with
+      Address              => To_Address (RCC_AHB3RSTR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.8 RCC APB1 peripheral reset register (RCC_APB1RSTR)
+
+   type RCC_APB1RSTR_Type is
+   record
+      TIM2RST    : Boolean; -- TIM2 reset
+      TIM3RST    : Boolean; -- TIM3 reset
+      TIM4RST    : Boolean; -- TIM4 reset
+      TIM5RST    : Boolean; -- TIM5 reset
+      TIM6RST    : Boolean; -- TIM6 reset
+      TIM7RST    : Boolean; -- TIM7 reset
+      TIM12RST   : Boolean; -- TIM12 reset
+      TIM13RST   : Boolean; -- TIM13 reset
+      TIM14RST   : Boolean; -- TIM14 reset
+      LPTMI1RST  : Boolean; -- Low-power timer 1 reset
+      Reserved1  : Bits_1;
+      WWDGRST    : Boolean; -- Window watchdog reset
+      Reserved2  : Bits_1;
+      CAN3RST    : Boolean; -- CAN 3 reset
+      SPI2RST    : Boolean; -- SPI2 reset
+      SPI3RST    : Boolean; -- SPI3 reset
+      SPDIFRXRST : Boolean; -- SPDIFRX reset
+      USART2RST  : Boolean; -- USART2 reset
+      USART3RST  : Boolean; -- USART3 reset
+      UART4RST   : Boolean; -- UART4 reset
+      UART5RST   : Boolean; -- UART5 reset
+      I2C1RST    : Boolean; -- I2C1 reset
+      I2C2RST    : Boolean; -- I2C2 reset
+      I2C3RST    : Boolean; -- I2C3 reset
+      I2C4RST    : Boolean; -- I2C4 reset
+      CAN1RST    : Boolean; -- CAN 1 reset
+      CAN2RST    : Boolean; -- CAN 2 reset
+      CECRST     : Boolean; -- HDMI-CEC reset
+      PWRRST     : Boolean; -- Power interface reset
+      DACRST     : Boolean; -- DAC interface reset
+      UART7RST   : Boolean; -- UART7 reset
+      UART8RST   : Boolean; -- UART8 reset
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_APB1RSTR_Type use
+   record
+      TIM2RST    at 0 range  0  .. 0;
+      TIM3RST    at 0 range  1  .. 1;
+      TIM4RST    at 0 range  2  .. 2;
+      TIM5RST    at 0 range  3  .. 3;
+      TIM6RST    at 0 range  4  .. 4;
+      TIM7RST    at 0 range  5  .. 5;
+      TIM12RST   at 0 range  6  .. 6;
+      TIM13RST   at 0 range  7  .. 7;
+      TIM14RST   at 0 range  8  .. 8;
+      LPTMI1RST  at 0 range  9  .. 9;
+      Reserved1  at 0 range 10 .. 10;
+      WWDGRST    at 0 range 11 .. 11;
+      Reserved2  at 0 range 12 .. 12;
+      CAN3RST    at 0 range 13 .. 13;
+      SPI2RST    at 0 range 14 .. 14;
+      SPI3RST    at 0 range 15 .. 15;
+      SPDIFRXRST at 0 range 16 .. 16;
+      USART2RST  at 0 range 17 .. 17;
+      USART3RST  at 0 range 18 .. 18;
+      UART4RST   at 0 range 19 .. 19;
+      UART5RST   at 0 range 20 .. 20;
+      I2C1RST    at 0 range 21 .. 21;
+      I2C2RST    at 0 range 22 .. 22;
+      I2C3RST    at 0 range 23 .. 23;
+      I2C4RST    at 0 range 24 .. 24;
+      CAN1RST    at 0 range 25 .. 25;
+      CAN2RST    at 0 range 26 .. 26;
+      CECRST     at 0 range 27 .. 27;
+      PWRRST     at 0 range 28 .. 28;
+      DACRST     at 0 range 29 .. 29;
+      UART7RST   at 0 range 30 .. 30;
+      UART8RST   at 0 range 31 .. 31;
+   end record;
+
+   RCC_APB1RSTR_ADDRESS : constant := 16#4002_3820#;
+
+   RCC_APB1RSTR : aliased RCC_APB1RSTR_Type with
+      Address              => To_Address (RCC_APB1RSTR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.9 RCC APB2 peripheral reset register (RCC_APB2RSTR)
+
+   type RCC_APB2RSTR_Type is
+   record
+      TIM1RST   : Boolean; -- TIM1 reset
+      TIM8RST   : Boolean; -- TIM8 reset
+      Reserved1 : Bits_2;
+      USART1RST : Boolean; -- USART1 reset
+      USART6RST : Boolean; -- USART6 reset
+      Reserved2 : Bits_1;
+      SDMMC2RST : Boolean; -- SDMMC2 module reset
+      ADC1RST   : Boolean; -- ADC interface reset (common to all ADCs)
+      Reserved3 : Bits_2;
+      SDMMC1RST : Boolean; -- SDMMC1 reset
+      SPI1RST   : Boolean; -- SPI1 reset
+      SPI4RST   : Boolean; -- SPI4 reset
+      SYSCFGRST : Boolean; -- System configuration controller reset
+      Reserved4 : Bits_1;
+      TIM9RST   : Boolean; -- TIM9 reset
+      TIM10RST  : Boolean; -- TIM10 reset
+      TIM11RST  : Boolean; -- TIM11 reset
+      Reserved5 : Bits_1;
+      SPI5RST   : Boolean; -- SPI5 reset
+      SPI6RST   : Boolean; -- SPI6 reset
+      SAI1RST   : Boolean; -- SAI1 reset
+      SAI2RST   : Boolean; -- SAI2 reset
+      Reserved6 : Bits_2;
+      LTDCRST   : Boolean; -- LTDC reset
+      DSIRST    : Boolean; -- DSIHOST module reset
+      Reserved7 : Bits_1;
+      DFSDM1RST : Boolean; -- DFSDM1 module reset
+      MDIORST   : Boolean; -- MDIO module reset
+      Reserved8 : Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_APB2RSTR_Type use
+   record
+      TIM1RST   at 0 range  0 ..  0;
+      TIM8RST   at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  3;
+      USART1RST at 0 range  4 ..  4;
+      USART6RST at 0 range  5 ..  5;
+      Reserved2 at 0 range  6 ..  6;
+      SDMMC2RST at 0 range  7 ..  7;
+      ADC1RST   at 0 range  8 ..  8;
+      Reserved3 at 0 range  9 .. 10;
+      SDMMC1RST at 0 range 11 .. 11;
+      SPI1RST   at 0 range 12 .. 12;
+      SPI4RST   at 0 range 13 .. 13;
+      SYSCFGRST at 0 range 14 .. 14;
+      Reserved4 at 0 range 15 .. 15;
+      TIM9RST   at 0 range 16 .. 16;
+      TIM10RST  at 0 range 17 .. 17;
+      TIM11RST  at 0 range 18 .. 18;
+      Reserved5 at 0 range 19 .. 19;
+      SPI5RST   at 0 range 20 .. 20;
+      SPI6RST   at 0 range 21 .. 21;
+      SAI1RST   at 0 range 22 .. 22;
+      SAI2RST   at 0 range 23 .. 23;
+      Reserved6 at 0 range 24 .. 25;
+      LTDCRST   at 0 range 26 .. 26;
+      DSIRST    at 0 range 27 .. 27;
+      Reserved7 at 0 range 28 .. 28;
+      DFSDM1RST at 0 range 29 .. 29;
+      MDIORST   at 0 range 30 .. 30;
+      Reserved8 at 0 range 31 .. 31;
+   end record;
+
+   RCC_APB2RSTR_ADDRESS : constant := 16#4002_3824#;
+
+   RCC_APB2RSTR : aliased RCC_APB2RSTR_Type with
+      Address              => To_Address (RCC_APB2RSTR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.10 RCC AHB1 peripheral clock register (RCC_AHB1ENR)
+
+   type RCC_AHB1ENR_Type is
+   record
+      GPIOAEN     : Boolean; -- IO port A clock enable
+      GPIOBEN     : Boolean; -- IO port B clock enable
+      GPIOCEN     : Boolean; -- IO port C clock enable
+      GPIODEN     : Boolean; -- IO port D clock enable
+      GPIOEEN     : Boolean; -- IO port E clock enable
+      GPIOFEN     : Boolean; -- IO port F clock enable
+      GPIOGEN     : Boolean; -- IO port G clock enable
+      GPIOHEN     : Boolean; -- IO port H clock enable
+      GPIOIEN     : Boolean; -- IO port I clock enable
+      GPIOJEN     : Boolean; -- IO port J clock enable
+      GPIOKEN     : Boolean; -- IO port K clock enable
+      Reserved1   : Bits_1;
+      CRCEN       : Boolean; -- CRC clock enable
+      Reserved2   : Bits_5;
+      BKPSRAMEN   : Boolean; -- Backup SRAM interface clock enable
+      Reserved3   : Bits_1;
+      DTCMRAMEN   : Boolean; -- DTCM data RAM clock enable
+      DMA1EN      : Boolean; -- DMA1 clock enable
+      DMA2EN      : Boolean; -- DMA2 clock enable
+      DMA2DEN     : Boolean; -- DMA2D clock enable
+      Reserved4   : Bits_1;
+      ETHMACEN    : Boolean; -- Ethernet MAC clock enable
+      ETHMACTXEN  : Boolean; -- Ethernet Transmission clock enable
+      ETHMACRXEN  : Boolean; -- Ethernet Reception clock enable
+      ETHMACPTPEN : Boolean; -- Ethernet PTP clock enable
+      OTGHSEN     : Boolean; -- USB OTG HS clock enable
+      OTGHSULPIEN : Boolean; -- USB OTG HSULPI clock enable
+      Reserved5   : Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_AHB1ENR_Type use
+   record
+      GPIOAEN     at 0 range  0 ..  0;
+      GPIOBEN     at 0 range  1 ..  1;
+      GPIOCEN     at 0 range  2 ..  2;
+      GPIODEN     at 0 range  3 ..  3;
+      GPIOEEN     at 0 range  4 ..  4;
+      GPIOFEN     at 0 range  5 ..  5;
+      GPIOGEN     at 0 range  6 ..  6;
+      GPIOHEN     at 0 range  7 ..  7;
+      GPIOIEN     at 0 range  8 ..  8;
+      GPIOJEN     at 0 range  9 ..  9;
+      GPIOKEN     at 0 range 10 .. 10;
+      Reserved1   at 0 range 11 .. 11;
+      CRCEN       at 0 range 12 .. 12;
+      Reserved2   at 0 range 13 .. 17;
+      BKPSRAMEN   at 0 range 18 .. 18;
+      Reserved3   at 0 range 19 .. 19;
+      DTCMRAMEN   at 0 range 20 .. 20;
+      DMA1EN      at 0 range 21 .. 21;
+      DMA2EN      at 0 range 22 .. 22;
+      DMA2DEN     at 0 range 23 .. 23;
+      Reserved4   at 0 range 24 .. 24;
+      ETHMACEN    at 0 range 25 .. 25;
+      ETHMACTXEN  at 0 range 26 .. 26;
+      ETHMACRXEN  at 0 range 27 .. 27;
+      ETHMACPTPEN at 0 range 28 .. 28;
+      OTGHSEN     at 0 range 29 .. 29;
+      OTGHSULPIEN at 0 range 30 .. 30;
+      Reserved5   at 0 range 31 .. 31;
+   end record;
+
+   RCC_AHB1ENR_ADDRESS : constant := 16#4002_3830#;
+
+   RCC_AHB1ENR : aliased RCC_AHB1ENR_Type with
+      Address              => To_Address (RCC_AHB1ENR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.11 RCC AHB2 peripheral clock enable register (RCC_AHB2ENR)
+
+   type RCC_AHB2ENR_Type is
+   record
+      DCMIEN    : Boolean; -- Camera interface enable
+      JPEGEN    : Boolean; -- JPEG module clock enable
+      Reserved1 : Bits_2;
+      CRYPEN    : Boolean; -- Cryptographic modules clock enable
+      HASHEN    : Boolean; -- Hash modules clock enable
+      RNGEN     : Boolean; -- Random number generator clock enable
+      OTGFSEN   : Boolean; -- USB OTG FS clock enable
+      Reserved2 : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_AHB2ENR_Type use
+   record
+      DCMIEN    at 0 range 0 ..  0;
+      JPEGEN    at 0 range 1 ..  1;
+      Reserved1 at 0 range 2 ..  3;
+      CRYPEN    at 0 range 4 ..  4;
+      HASHEN    at 0 range 5 ..  5;
+      RNGEN     at 0 range 6 ..  6;
+      OTGFSEN   at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
+   RCC_AHB2ENR_ADDRESS : constant := 16#4002_3834#;
+
+   RCC_AHB2ENR : aliased RCC_AHB2ENR_Type with
+      Address              => To_Address (RCC_AHB2ENR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.12 RCC AHB3 peripheral clock enable register (RCC_AHB3ENR)
+
+   type RCC_AHB3ENR_Type is
+   record
+      FMCEN    : Boolean; -- Flexible memory controller clock enable
+      QSPIEN   : Boolean; -- Quad SPI memory controller clock enable
+      Reserved : Bits_30;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_AHB3ENR_Type use
+   record
+      FMCEN    at 0 range 0 ..  0;
+      QSPIEN   at 0 range 1 ..  1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
+   RCC_AHB3ENR_ADDRESS : constant := 16#4002_3838#;
+
+   RCC_AHB3ENR : aliased RCC_AHB3ENR_Type with
+      Address              => To_Address (RCC_AHB3ENR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    -- 5.3.13 RCC APB1 peripheral clock enable register (RCC_APB1ENR)
 
@@ -610,7 +961,7 @@ package STM32F769I is
       I2C1EN    : Boolean; -- I2C1 clock enable
       I2C2EN    : Boolean; -- I2C2 clock enable
       I2C3EN    : Boolean; -- I2C3 clock enable
-      I2C4      : Boolean; -- I2C4 clock enable
+      I2C4EN    : Boolean; -- I2C4 clock enable
       CAN1EN    : Boolean; -- CAN 1 clock enable
       CAN2EN    : Boolean; -- CAN 2 clock enable
       CECEN     : Boolean; -- HDMI-CEC clock enable
@@ -647,7 +998,7 @@ package STM32F769I is
       I2C1EN    at 0 range 21 .. 21;
       I2C2EN    at 0 range 22 .. 22;
       I2C3EN    at 0 range 23 .. 23;
-      I2C4      at 0 range 24 .. 24;
+      I2C4EN    at 0 range 24 .. 24;
       CAN1EN    at 0 range 25 .. 25;
       CAN2EN    at 0 range 26 .. 26;
       CECEN     at 0 range 27 .. 27;
@@ -656,6 +1007,14 @@ package STM32F769I is
       UART7EN   at 0 range 30 .. 30;
       UART8EN   at 0 range 31 .. 31;
    end record;
+
+   RCC_APB1ENR_ADDRESS : constant := 16#4002_3840#;
+
+   RCC_APB1ENR : aliased RCC_APB1ENR_Type with
+      Address              => To_Address (RCC_APB1ENR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    -- 5.3.14 RCC APB2 peripheral clock enable register (RCC_APB2ENR)
 
@@ -688,7 +1047,7 @@ package STM32F769I is
       LTDCEN    : Boolean; -- LTDC clock enable
       DSIEN     : Boolean; -- DSIHOST clock enable
       Reserved6 : Bits_1;
-      DFSDM1EN  : Boolean; -- DFSDM1 module reset
+      DFSDM1EN  : Boolean; -- DFSDM1 clock enable
       MDIOEN    : Boolean; -- MDIO clock enable
       Reserved7 : Bits_1;
    end record with
@@ -728,42 +1087,777 @@ package STM32F769I is
       Reserved7 at 0 range 31 .. 31;
    end record;
 
-   -- 5.3 RCC registers
+   RCC_APB2ENR_ADDRESS : constant := 16#4002_3844#;
 
-   type RCC_Type is
+   RCC_APB2ENR : aliased RCC_APB2ENR_Type with
+      Address              => To_Address (RCC_APB2ENR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.15 RCC AHB1 peripheral clock enable in low-power mode register (RCC_AHB1LPENR)
+
+   type RCC_AHB1LPENR_Type is
    record
-      RCC_CR       : RCC_CR_Type       with Volatile_Full_Access => True;
-      RCC_PLLCFGR  : RCC_PLLCFGR_Type  with Volatile_Full_Access => True;
-      RCC_CFGR     : RCC_CFGR_Type     with Volatile_Full_Access => True;
-      RCC_CIR      : RCC_CIR_Type      with Volatile_Full_Access => True;
-      RCC_AHB1RSTR : RCC_AHB1RSTR_Type with Volatile_Full_Access => True;
-      RCC_AHB2RSTR : RCC_AHB2RSTR_Type with Volatile_Full_Access => True;
-      RCC_AHB3RSTR : RCC_AHB3RSTR_Type with Volatile_Full_Access => True;
-      RCC_APB1ENR  : RCC_APB1ENR_Type  with Volatile_Full_Access => True;
-      RCC_APB2ENR  : RCC_APB2ENR_Type  with Volatile_Full_Access => True;
+      GPIOALPEN     : Boolean; -- IO port A clock enable during sleep mode
+      GPIOBLPEN     : Boolean; -- IO port B clock enable during Sleep mode
+      GPIOCLPEN     : Boolean; -- IO port C clock enable during Sleep mode
+      GPIODLPEN     : Boolean; -- IO port D clock enable during Sleep mode
+      GPIOELPEN     : Boolean; -- IO port E clock enable during Sleep mode
+      GPIOFLPEN     : Boolean; -- IO port F clock enable during Sleep mode
+      GPIOGLPEN     : Boolean; -- IO port G clock enable during Sleep mode
+      GPIOHLPEN     : Boolean; -- IO port H clock enable during Sleep mode
+      GPIOILPEN     : Boolean; -- IO port I clock enable during Sleep mode
+      GPIOJLPEN     : Boolean; -- IO port J clock enable during Sleep mode
+      GPIOKLPEN     : Boolean; -- IO port K clock enable during Sleep mode
+      Reserved1     : Bits_1;
+      CRCLPEN       : Boolean; -- CRC clock enable during Sleep mode
+      AXILPEN       : Boolean; -- AXI to AHB bridge clock enable during Sleep mode
+      Reserved2     : Bits_1;
+      FLITFLPEN     : Boolean; -- Flash interface clock enable during Sleep mode
+      SRAM1LPEN     : Boolean; -- SRAM1 interface clock enable during Sleep mode
+      SRAM2LPEN     : Boolean; -- SRAM2 interface clock enable during Sleep mode
+      BKPSRAMLPEN   : Boolean; -- Backup SRAM interface clock enable during Sleep mode
+      Reserved3     : Bits_1;
+      DTCMLPEN      : Boolean; -- DTCM RAM interface clock enable during Sleep mode
+      DMA1LPEN      : Boolean; -- DMA1 clock enable during Sleep mode
+      DMA2LPEN      : Boolean; -- DMA2 clock enable during Sleep mode
+      DMA2DLPEN     : Boolean; -- DMA2D clock enable during Sleep mode
+      Reserved4     : Bits_1;
+      ETHMACLPEN    : Boolean; -- Ethernet MAC clock enable during Sleep mode
+      ETHMACTXLPEN  : Boolean; -- Ethernet transmission clock enable during Sleep mode
+      ETHMACRXLPEN  : Boolean; -- Ethernet reception clock enable during Sleep mode
+      ETHMACPTPLPEN : Boolean; -- Ethernet PTP clock enable during Sleep mode
+      OTGHSLPEN     : Boolean; -- USB OTG HS clock enable during Sleep mode
+      OTGHSULPILPEN : Boolean; -- USB OTG HS ULPI clock enable during Sleep mode
+      Reserved5     : Bits_1;
    end record with
-      Size                    => 16#48# * 8,
-      Suppress_Initialization => True;
-   for RCC_Type use
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_AHB1LPENR_Type use
    record
-      RCC_CR       at 16#00# range 0 .. 31;
-      RCC_PLLCFGR  at 16#04# range 0 .. 31;
-      RCC_CFGR     at 16#08# range 0 .. 31;
-      RCC_CIR      at 16#0C# range 0 .. 31;
-      RCC_AHB1RSTR at 16#10# range 0 .. 31;
-      RCC_AHB2RSTR at 16#14# range 0 .. 31;
-      RCC_AHB3RSTR at 16#18# range 0 .. 31;
-      RCC_APB1ENR  at 16#40# range 0 .. 31;
-      RCC_APB2ENR  at 16#44# range 0 .. 31;
+      GPIOALPEN     at 0 range  0 ..  0;
+      GPIOBLPEN     at 0 range  1 ..  1;
+      GPIOCLPEN     at 0 range  2 ..  2;
+      GPIODLPEN     at 0 range  3 ..  3;
+      GPIOELPEN     at 0 range  4 ..  4;
+      GPIOFLPEN     at 0 range  5 ..  5;
+      GPIOGLPEN     at 0 range  6 ..  6;
+      GPIOHLPEN     at 0 range  7 ..  7;
+      GPIOILPEN     at 0 range  8 ..  8;
+      GPIOJLPEN     at 0 range  9 ..  9;
+      GPIOKLPEN     at 0 range 10 .. 10;
+      Reserved1     at 0 range 11 .. 11;
+      CRCLPEN       at 0 range 12 .. 12;
+      AXILPEN       at 0 range 13 .. 13;
+      Reserved2     at 0 range 14 .. 14;
+      FLITFLPEN     at 0 range 15 .. 15;
+      SRAM1LPEN     at 0 range 16 .. 16;
+      SRAM2LPEN     at 0 range 17 .. 17;
+      BKPSRAMLPEN   at 0 range 18 .. 18;
+      Reserved3     at 0 range 19 .. 19;
+      DTCMLPEN      at 0 range 20 .. 20;
+      DMA1LPEN      at 0 range 21 .. 21;
+      DMA2LPEN      at 0 range 22 .. 22;
+      DMA2DLPEN     at 0 range 23 .. 23;
+      Reserved4     at 0 range 24 .. 24;
+      ETHMACLPEN    at 0 range 25 .. 25;
+      ETHMACTXLPEN  at 0 range 26 .. 26;
+      ETHMACRXLPEN  at 0 range 27 .. 27;
+      ETHMACPTPLPEN at 0 range 28 .. 28;
+      OTGHSLPEN     at 0 range 29 .. 29;
+      OTGHSULPILPEN at 0 range 30 .. 30;
+      Reserved5     at 0 range 31 .. 31;
    end record;
 
-   RCC_BASEADDRESS : constant := 16#4002_3800#;
+   RCC_AHB1LPENR_ADDRESS : constant := 16#4002_3850#;
 
-   RCC : aliased RCC_Type with
-      Address    => To_Address (RCC_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   RCC_AHB1LPENR : aliased RCC_AHB1LPENR_Type with
+      Address              => To_Address (RCC_AHB1LPENR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.16 RCC AHB2 peripheral clock enable in low-power mode register (RCC_AHB2LPENR)
+
+   type RCC_AHB2LPENR_Type is
+   record
+      DCMILPEN  : Boolean; -- Camera interface enable during Sleep mode
+      JPEGLPEN  : Boolean; -- JPEG module enabled during Sleep mode
+      Reserved1 : Bits_2;
+      CRYPLPEN  : Boolean; -- Cryptography modules clock enable during Sleep mode
+      HASHLPEN  : Boolean; -- Hash modules clock enable during Sleep mode
+      RNGLPEN   : Boolean; -- Random number generator clock enable during Sleep mode
+      OTGFSLPEN : Boolean; -- USB OTG FS clock enable during Sleep mode
+      Reserved2 : Bits_24;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_AHB2LPENR_Type use
+   record
+      DCMILPEN  at 0 range 0 ..  0;
+      JPEGLPEN  at 0 range 1 ..  1;
+      Reserved1 at 0 range 2 ..  3;
+      CRYPLPEN  at 0 range 4 ..  4;
+      HASHLPEN  at 0 range 5 ..  5;
+      RNGLPEN   at 0 range 6 ..  6;
+      OTGFSLPEN at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
+   RCC_AHB2LPENR_ADDRESS : constant := 16#4002_3854#;
+
+   RCC_AHB2LPENR : aliased RCC_AHB2LPENR_Type with
+      Address              => To_Address (RCC_AHB2LPENR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.17 RCC AHB3 peripheral clock enable in low-power mode register (RCC_AHB3LPENR)
+
+   type RCC_AHB3LPENR_Type is
+   record
+      FMCLPEN  : Boolean; -- Flexible memory controller module clock enable during Sleep mode
+      QSPILPEN : Boolean; -- QUADSPI memory controller clock enable during Sleep mode
+      Reserved : Bits_30;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_AHB3LPENR_Type use
+   record
+      FMCLPEN  at 0 range 0 ..  0;
+      QSPILPEN at 0 range 1 ..  1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
+   RCC_AHB3LPENR_ADDRESS : constant := 16#4002_3858#;
+
+   RCC_AHB3LPENR : aliased RCC_AHB3LPENR_Type with
+      Address              => To_Address (RCC_AHB3LPENR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.18 RCC APB1 peripheral clock enable in low-power mode register (RCC_APB1LPENR)
+
+   type RCC_APB1LPENR_Type is
+   record
+      TIM2LPEN    : Boolean; -- TIM2 clock enable during Sleep mode
+      TIM3LPEN    : Boolean; -- TIM3 clock enable during Sleep mode
+      TIM4LPEN    : Boolean; -- TIM4 clock enable during Sleep mode
+      TIM5LPEN    : Boolean; -- TIM5 clock enable during Sleep mode
+      TIM6LPEN    : Boolean; -- TIM6 clock enable during Sleep mode
+      TIM7LPEN    : Boolean; -- TIM7 clock enable during Sleep mode
+      TIM12LPEN   : Boolean; -- TIM12 clock enable during Sleep mode
+      TIM13LPEN   : Boolean; -- Boolean; -- TIM13 clock enable during Sleep mode
+      TIM14LPEN   : Boolean; -- TIM14 clock enable during Sleep mode
+      LPTIM1LPEN  : Boolean; -- low-power timer 1 clock enable during Sleep mode
+      RTCAPBLPEN  : Boolean; -- RTC register interface clock enable during Sleep mode
+      WWDGLPEN    : Boolean; -- Window watchdog clock enable during Sleep mode
+      Reserved    : Bits_1;
+      CAN3LPEN    : Boolean; -- CAN 3 clock enable during Sleep mode
+      SPI2LPEN    : Boolean; -- SPI2 clock enable during Sleep mode
+      SPI3LPEN    : Boolean; -- SPI3 clock enable during Sleep mode
+      SPDIFRXLPEN : Boolean; -- SPDIFRX clock enable during Sleep mode
+      USART2LPEN  : Boolean; -- USART2 clock enable during Sleep mode
+      USART3LPEN  : Boolean; -- USART3 clock enable during Sleep mode
+      UART4LPEN   : Boolean; -- UART4 clock enable during Sleep mode
+      UART5LPEN   : Boolean; -- UART5 clock enable during Sleep mode
+      I2C1LPEN    : Boolean; -- I2C1 clock enable during Sleep mode
+      I2C2LPEN    : Boolean; -- I2C2 clock enable during Sleep mode
+      I2C3LPEN    : Boolean; -- I2C3 clock enable during Sleep mode
+      I2C4LPEN    : Boolean; -- I2C4 clock enable during Sleep mode
+      CAN1LPEN    : Boolean; -- CAN 1 clock enable during Sleep mode
+      CAN2LPEN    : Boolean; -- CAN 2 clock enable during Sleep mode
+      CECLPEN     : Boolean; -- HDMI-CEC clock enable during Sleep mode
+      PWRLPEN     : Boolean; -- Power interface clock enable during Sleep mode
+      DACLPEN     : Boolean; -- DAC interface clock enable during Sleep mode
+      UART7LPEN   : Boolean; -- UART7 clock enable during Sleep mode
+      UART8LPEN   : Boolean; -- UART8 clock enable during Sleep mode
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_APB1LPENR_Type use
+   record
+      TIM2LPEN    at 0 range  0 ..  0;
+      TIM3LPEN    at 0 range  1 ..  1;
+      TIM4LPEN    at 0 range  2 ..  2;
+      TIM5LPEN    at 0 range  3 ..  3;
+      TIM6LPEN    at 0 range  4 ..  4;
+      TIM7LPEN    at 0 range  5 ..  5;
+      TIM12LPEN   at 0 range  6 ..  6;
+      TIM13LPEN   at 0 range  7 ..  7;
+      TIM14LPEN   at 0 range  8 ..  8;
+      LPTIM1LPEN  at 0 range  9 ..  9;
+      RTCAPBLPEN  at 0 range 10 .. 10;
+      WWDGLPEN    at 0 range 11 .. 11;
+      Reserved    at 0 range 12 .. 12;
+      CAN3LPEN    at 0 range 13 .. 13;
+      SPI2LPEN    at 0 range 14 .. 14;
+      SPI3LPEN    at 0 range 15 .. 15;
+      SPDIFRXLPEN at 0 range 16 .. 16;
+      USART2LPEN  at 0 range 17 .. 17;
+      USART3LPEN  at 0 range 18 .. 18;
+      UART4LPEN   at 0 range 19 .. 19;
+      UART5LPEN   at 0 range 20 .. 20;
+      I2C1LPEN    at 0 range 21 .. 21;
+      I2C2LPEN    at 0 range 22 .. 22;
+      I2C3LPEN    at 0 range 23 .. 23;
+      I2C4LPEN    at 0 range 24 .. 24;
+      CAN1LPEN    at 0 range 25 .. 25;
+      CAN2LPEN    at 0 range 26 .. 26;
+      CECLPEN     at 0 range 27 .. 27;
+      PWRLPEN     at 0 range 28 .. 28;
+      DACLPEN     at 0 range 29 .. 29;
+      UART7LPEN   at 0 range 30 .. 30;
+      UART8LPEN   at 0 range 31 .. 31;
+   end record;
+
+   RCC_APB1LPENR_ADDRESS : constant := 16#4002_3860#;
+
+   RCC_APB1LPENR : aliased RCC_APB1LPENR_Type with
+      Address              => To_Address (RCC_APB1LPENR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.19 RCC APB2 peripheral clock enabled in low-power mode register (RCC_APB2LPENR)
+
+   type RCC_APB2LPENR_Type is
+   record
+      TIM1LPEN   : Boolean; -- TIM1 clock enable during Sleep mode
+      TIM8LPEN   : Boolean; -- TIM8 clock enable during Sleep mode
+      Reserved1  : Bits_2;
+      USART1LPEN : Boolean; -- USART1 clock enable during Sleep mode
+      USART6LPEN : Boolean; -- USART6 clock enable during Sleep mode
+      Reserved2  : Bits_1;
+      SDMMC2LPEN : Boolean; -- SDMMC2 clock enable during Sleep mode
+      ADC1LPEN   : Boolean; -- ADC1 clock enable during Sleep mode
+      ADC2LPEN   : Boolean; -- ADC2 clock enable during Sleep mode
+      ADC3LPEN   : Boolean; -- ADC 3 clock enable during Sleep mode
+      SDMMC1LPEN : Boolean; -- SDMMC1 clock enable during Sleep mode
+      SPI1LPEN   : Boolean; -- SPI1 clock enable during Sleep mode
+      SPI4LPEN   : Boolean; -- SPI4 clock enable during Sleep mode
+      SYSCFGLPEN : Boolean; -- System configuration controller clock enable during Sleep mode
+      Reserved3  : Bits_1;
+      TIM9LPEN   : Boolean; -- TIM9 clock enable during sleep mode
+      TIM10LPEN  : Boolean; -- TIM10 clock enable during Sleep mode
+      TIM11LPEN  : Boolean; -- TIM11 clock enable during Sleep mode
+      Reserved4  : Bits_1;
+      SPI5LPEN   : Boolean; -- SPI5 clock enable during Sleep mode
+      SPI6LPEN   : Boolean; -- SPI6 clock enable during Sleep mode
+      SAI1LPEN   : Boolean; -- SAI1 clock enable during Sleep mode
+      SAI2LPEN   : Boolean; -- SAI2 clock enable during Sleep mode
+      Reserved5  : Bits_2;
+      LTDCLPEN   : Boolean; -- LTDC clock enable during Sleep mode
+      DSILPEN    : Boolean; -- DSIHOST clock enable during Sleep mode
+      Reserved6  : Bits_1;
+      DFSDM1LPEN : Boolean; -- DFSDM1 clock enable during Sleep mode
+      MDIOLPEN   : Boolean; -- MDIO clock enable during Sleep mode
+      Reserved7  : Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_APB2LPENR_Type use
+   record
+      TIM1LPEN   at 0 range  0 ..  0;
+      TIM8LPEN   at 0 range  1 ..  1;
+      Reserved1  at 0 range  2 ..  3;
+      USART1LPEN at 0 range  4 ..  4;
+      USART6LPEN at 0 range  5 ..  5;
+      Reserved2  at 0 range  6 ..  6;
+      SDMMC2LPEN at 0 range  7 ..  7;
+      ADC1LPEN   at 0 range  8 ..  8;
+      ADC2LPEN   at 0 range  9 ..  9;
+      ADC3LPEN   at 0 range 10 .. 10;
+      SDMMC1LPEN at 0 range 11 .. 11;
+      SPI1LPEN   at 0 range 12 .. 12;
+      SPI4LPEN   at 0 range 13 .. 13;
+      SYSCFGLPEN at 0 range 14 .. 14;
+      Reserved3  at 0 range 15 .. 15;
+      TIM9LPEN   at 0 range 16 .. 16;
+      TIM10LPEN  at 0 range 17 .. 17;
+      TIM11LPEN  at 0 range 18 .. 18;
+      Reserved4  at 0 range 19 .. 19;
+      SPI5LPEN   at 0 range 20 .. 20;
+      SPI6LPEN   at 0 range 21 .. 21;
+      SAI1LPEN   at 0 range 22 .. 22;
+      SAI2LPEN   at 0 range 23 .. 23;
+      Reserved5  at 0 range 24 .. 25;
+      LTDCLPEN   at 0 range 26 .. 26;
+      DSILPEN    at 0 range 27 .. 27;
+      Reserved6  at 0 range 28 .. 28;
+      DFSDM1LPEN at 0 range 29 .. 29;
+      MDIOLPEN   at 0 range 30 .. 30;
+      Reserved7  at 0 range 31 .. 31;
+   end record;
+
+   RCC_APB2LPENR_ADDRESS : constant := 16#4002_3864#;
+
+   RCC_APB2LPENR : aliased RCC_APB2LPENR_Type with
+      Address              => To_Address (RCC_APB2LPENR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.20 RCC backup domain control register (RCC_BDCR)
+
+   LSEDRV_LOW     : constant := 2#00#; -- Low driving capability
+   LSEDRV_MEDHIGH : constant := 2#01#; -- Medium high driving capability
+   LSEDRV_MEDLOW  : constant := 2#10#; -- Medium low driving capability
+   LSEDRV_HIGH    : constant := 2#11#; -- High driving capability
+
+   RTCSEL_NONE : constant := 2#00#; -- No clock
+   RTCSEL_LSE  : constant := 2#01#; -- LSE oscillator clock used as the RTC clock
+   RTCSEL_LSI  : constant := 2#10#; -- LSI oscillator clock used as the RTC clock
+   RTCSEL_HSE  : constant := 2#11#; -- HSE oscillator clock divided by a programmable prescaler ...
+
+   type RCC_BDCR_Type is
+   record
+      LSEON      : Boolean; -- External low-speed oscillator enable
+      LSERDY     : Boolean; -- External low-speed oscillator ready
+      LSEBYP     : Boolean; -- External low-speed oscillator bypass
+      LSEDRV     : Bits_2;  -- LSE oscillator drive capability
+      Reserved1  : Bits_3;
+      RTCSEL     : Bits_2;  -- RTC clock source selection
+      Reserved2  : Bits_5;
+      RTCEN      : Boolean; -- RTC clock enable
+      BDRST      : Boolean; -- Backup domain software reset
+      Reserved3  : Bits_15;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_BDCR_Type use
+   record
+      LSEON      at 0 range  0 ..  0;
+      LSERDY     at 0 range  1 ..  1;
+      LSEBYP     at 0 range  2 ..  2;
+      LSEDRV     at 0 range  3 ..  4;
+      Reserved1  at 0 range  5 ..  7;
+      RTCSEL     at 0 range  8 ..  9;
+      Reserved2  at 0 range 10 .. 14;
+      RTCEN      at 0 range 15 .. 15;
+      BDRST      at 0 range 16 .. 16;
+      Reserved3  at 0 range 17 .. 31;
+   end record;
+
+   RCC_BDCR_ADDRESS : constant := 16#4002_3870#;
+
+   RCC_BDCR : aliased RCC_BDCR_Type with
+      Address              => To_Address (RCC_BDCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.21 RCC clock control & status register (RCC_CSR)
+
+   type RCC_CSR_Type is
+   record
+      LSION    : Boolean; -- Internal low-speed oscillator enable
+      LSIRDY   : Boolean; -- Internal low-speed oscillator ready
+      Reserved : Bits_22;
+      RMVF     : Boolean; -- Remove reset flag
+      BORRSTF  : Boolean; -- BOR reset flag
+      PINRSTF  : Boolean; -- PIN reset flag
+      PORRSTF  : Boolean; -- POR/PDR reset flag
+      SFTRSTF  : Boolean; -- Software reset flag
+      IWDGRSTF : Boolean; -- Independent watchdog reset flag
+      WWDGRSTF : Boolean; -- Window watchdog reset flag
+      LPWRRSTF : Boolean; -- Low-power reset flag
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_CSR_Type use
+   record
+      LSION    at 0 range  0 ..  0;
+      LSIRDY   at 0 range  1 ..  1;
+      Reserved at 0 range  2 .. 23;
+      RMVF     at 0 range 24 .. 24;
+      BORRSTF  at 0 range 25 .. 25;
+      PINRSTF  at 0 range 26 .. 26;
+      PORRSTF  at 0 range 27 .. 27;
+      SFTRSTF  at 0 range 28 .. 28;
+      IWDGRSTF at 0 range 29 .. 29;
+      WWDGRSTF at 0 range 30 .. 30;
+      LPWRRSTF at 0 range 31 .. 31;
+   end record;
+
+   RCC_CSR_ADDRESS : constant := 16#4002_3874#;
+
+   RCC_CSR : aliased RCC_CSR_Type with
+      Address              => To_Address (RCC_CSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.22 RCC spread spectrum clock generation register (RCC_SSCGR)
+
+   SPREADSEL_CENTER : constant := 0; -- Center spread
+   SPREADSEL_DOWN   : constant := 1; -- Down spread
+
+   type RCC_SSCGR_Type is
+   record
+      MODPER    : Bits_13; -- Modulation period
+      INCSTEP   : Bits_15; -- Incrementation step
+      Reserved  : Bits_2;
+      SPREADSEL : Bits_1;  -- Spread Select
+      SSCGEN    : Boolean; -- Spread spectrum modulation enable
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_SSCGR_Type use
+   record
+      MODPER    at 0 range  0 .. 12;
+      INCSTEP   at 0 range 13 .. 27;
+      Reserved  at 0 range 28 .. 29;
+      SPREADSEL at 0 range 30 .. 30;
+      SSCGEN    at 0 range 31 .. 31;
+   end record;
+
+   RCC_SSCGR_ADDRESS : constant := 16#4002_3880#;
+
+   RCC_SSCGR : aliased RCC_SSCGR_Type with
+      Address              => To_Address (RCC_SSCGR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.23 RCC PLLI2S configuration register (RCC_PLLI2SCFGR)
+
+   PLLI2SP_DIV2 : constant := 2#00#;
+   PLLI2SP_DIV4 : constant := 2#01#;
+   PLLI2SP_DIV6 : constant := 2#10#;
+   PLLI2SP_DIV8 : constant := 2#11#;
+
+   PLLI2SQ_DIV2  : constant := 2;
+   PLLI2SQ_DIV3  : constant := 3;
+   PLLI2SQ_DIV4  : constant := 4;
+   PLLI2SQ_DIV5  : constant := 5;
+   PLLI2SQ_DIV6  : constant := 6;
+   PLLI2SQ_DIV7  : constant := 7;
+   PLLI2SQ_DIV8  : constant := 8;
+   PLLI2SQ_DIV9  : constant := 9;
+   PLLI2SQ_DIV10 : constant := 10;
+   PLLI2SQ_DIV11 : constant := 11;
+   PLLI2SQ_DIV12 : constant := 12;
+   PLLI2SQ_DIV13 : constant := 13;
+   PLLI2SQ_DIV14 : constant := 14;
+   PLLI2SQ_DIV15 : constant := 15;
+
+   PLLI2R_DIV2 : constant := 2;
+   PLLI2R_DIV3 : constant := 3;
+   PLLI2R_DIV4 : constant := 4;
+   PLLI2R_DIV5 : constant := 5;
+   PLLI2R_DIV6 : constant := 6;
+   PLLI2R_DIV7 : constant := 7;
+
+   type RCC_PLLI2SCFGR_Type is
+   record
+      Reserved1 : Bits_6;
+      PLLI2SN   : Bits_9 range 50 .. 432; -- PLLI2S multiplication factor for VCO
+      Reserved2 : Bits_1;
+      PLLI2SP   : Bits_2;                 -- PLLI2S division factor for SPDIFRX clock
+      Reserved3 : Bits_6;
+      PLLI2SQ   : Bits_4 range 2 .. 15;   -- PLLI2S division factor for SAIs clock
+      PLLI2SR   : Bits_3 range 2 .. 7;    -- PLLI2S division factor for I2S clocks
+      Reserved4 : Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_PLLI2SCFGR_Type use
+   record
+      Reserved1 at 0 range  0 ..  5;
+      PLLI2SN   at 0 range  6 .. 14;
+      Reserved2 at 0 range 15 .. 15;
+      PLLI2SP   at 0 range 16 .. 17;
+      Reserved3 at 0 range 18 .. 23;
+      PLLI2SQ   at 0 range 24 .. 27;
+      PLLI2SR   at 0 range 28 .. 30;
+      Reserved4 at 0 range 31 .. 31;
+   end record;
+
+   RCC_PLLI2SCFGR_ADDRESS : constant := 16#4002_3884#;
+
+   RCC_PLLI2SCFGR : aliased RCC_PLLI2SCFGR_Type with
+      Address              => To_Address (RCC_PLLI2SCFGR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.24 RCC PLLSAI configuration register (RCC_PLLSAICFGR)
+
+   PLLSAIP_DIV2 : constant := 2#00#;
+   PLLSAIP_DIV4 : constant := 2#01#;
+   PLLSAIP_DIV6 : constant := 2#10#;
+   PLLSAIP_DIV8 : constant := 2#11#;
+
+   PLLSAIQ_DIV2  : constant := 2;
+   PLLSAIQ_DIV3  : constant := 3;
+   PLLSAIQ_DIV4  : constant := 4;
+   PLLSAIQ_DIV5  : constant := 5;
+   PLLSAIQ_DIV6  : constant := 6;
+   PLLSAIQ_DIV7  : constant := 7;
+   PLLSAIQ_DIV8  : constant := 8;
+   PLLSAIQ_DIV9  : constant := 9;
+   PLLSAIQ_DIV10 : constant := 10;
+   PLLSAIQ_DIV11 : constant := 11;
+   PLLSAIQ_DIV12 : constant := 12;
+   PLLSAIQ_DIV13 : constant := 13;
+   PLLSAIQ_DIV14 : constant := 14;
+   PLLSAIQ_DIV15 : constant := 15;
+
+   PLLSAIR_DIV2 : constant := 2;
+   PLLSAIR_DIV3 : constant := 3;
+   PLLSAIR_DIV4 : constant := 4;
+   PLLSAIR_DIV5 : constant := 5;
+   PLLSAIR_DIV6 : constant := 6;
+   PLLSAIR_DIV7 : constant := 7;
+
+   type RCC_PLLSAICFGR_Type is
+   record
+      Reserved1 : Bits_6;
+      PLLSAIN   : Bits_9 range 50 .. 432; -- PLLSAI multiplication factor for VCO
+      Reserved2 : Bits_1;
+      PLLSAIP   : Bits_2;                 -- PLLSAI division factor for 48MHz clock
+      Reserved3 : Bits_6;
+      PLLSAIQ   : Bits_4 range 2 .. 15;   -- PLLSAI division factor for SAI clock
+      PLLSAIR   : Bits_3 range 2 .. 7;    -- PLLSAI division factor for LCD clock
+      Reserved4 : Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_PLLSAICFGR_Type use
+   record
+      Reserved1 at 0 range  0 ..  5;
+      PLLSAIN   at 0 range  6 .. 14;
+      Reserved2 at 0 range 15 .. 15;
+      PLLSAIP   at 0 range 16 .. 17;
+      Reserved3 at 0 range 18 .. 23;
+      PLLSAIQ   at 0 range 24 .. 27;
+      PLLSAIR   at 0 range 28 .. 30;
+      Reserved4 at 0 range 31 .. 31;
+   end record;
+
+   RCC_PLLSAICFGR_ADDRESS : constant := 16#4002_3888#;
+
+   RCC_PLLSAICFGR : aliased RCC_PLLSAICFGR_Type with
+      Address              => To_Address (RCC_PLLSAICFGR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.25 RCC dedicated clocks configuration register (RCC_DCKCFGR1)
+
+   PLLI2SorSAIDIVQ_NONE  : constant := 0;  -- PLLI2SorSAIDIVQ = /1
+   PLLI2SorSAIDIVQ_DIV2  : constant := 1;  -- PLLI2SorSAIDIVQ = /2
+   PLLI2SorSAIDIVQ_DIV3  : constant := 2;  -- PLLI2SorSAIDIVQ = /3
+   PLLI2SorSAIDIVQ_DIV4  : constant := 3;  -- PLLI2SorSAIDIVQ = /4
+   PLLI2SorSAIDIVQ_DIV5  : constant := 4;  -- PLLI2SorSAIDIVQ = /5
+   PLLI2SorSAIDIVQ_DIV6  : constant := 5;  -- ..
+   PLLI2SorSAIDIVQ_DIV7  : constant := 6;
+   PLLI2SorSAIDIVQ_DIV8  : constant := 7;
+   PLLI2SorSAIDIVQ_DIV9  : constant := 8;
+   PLLI2SorSAIDIVQ_DIV10 : constant := 9;
+   PLLI2SorSAIDIVQ_DIV11 : constant := 10;
+   PLLI2SorSAIDIVQ_DIV12 : constant := 11;
+   PLLI2SorSAIDIVQ_DIV13 : constant := 12;
+   PLLI2SorSAIDIVQ_DIV14 : constant := 13;
+   PLLI2SorSAIDIVQ_DIV15 : constant := 14;
+   PLLI2SorSAIDIVQ_DIV16 : constant := 15;
+   PLLI2SorSAIDIVQ_DIV17 : constant := 16;
+   PLLI2SorSAIDIVQ_DIV18 : constant := 17;
+   PLLI2SorSAIDIVQ_DIV19 : constant := 18;
+   PLLI2SorSAIDIVQ_DIV20 : constant := 19;
+   PLLI2SorSAIDIVQ_DIV21 : constant := 20;
+   PLLI2SorSAIDIVQ_DIV22 : constant := 21;
+   PLLI2SorSAIDIVQ_DIV23 : constant := 22;
+   PLLI2SorSAIDIVQ_DIV24 : constant := 23;
+   PLLI2SorSAIDIVQ_DIV25 : constant := 24;
+   PLLI2SorSAIDIVQ_DIV26 : constant := 25;
+   PLLI2SorSAIDIVQ_DIV27 : constant := 26;
+   PLLI2SorSAIDIVQ_DIV28 : constant := 27;
+   PLLI2SorSAIDIVQ_DIV29 : constant := 28;
+   PLLI2SorSAIDIVQ_DIV30 : constant := 29;
+   PLLI2SorSAIDIVQ_DIV31 : constant := 30;
+   PLLI2SorSAIDIVQ_DIV32 : constant := 31; -- PLLI2SorSAIDIVQ = /32
+
+   PLLSAIDIVR_DIV2  : constant := 2#00#; -- PLLSAIDIVR = /2
+   PLLSAIDIVR_DIV4  : constant := 2#01#; -- PLLSAIDIVR = /4
+   PLLSAIDIVR_DIV8  : constant := 2#10#; -- PLLSAIDIVR = /8
+   PLLSAIDIVR_DIV16 : constant := 2#11#; -- PLLSAIDIVR = /16
+
+   SAIxSEL_SAI    : constant := 2#00#; -- SAIx clock frequency = f(PLLSAI_Q) / PLLSAIDIVQ
+   SAIxSEL_I2S    : constant := 2#01#; -- SAIx clock frequency = f(PLLI2S_Q) / PLLI2SDIVQ
+   SAIxSEL_ALT    : constant := 2#10#; -- SAIx clock frequency = Alternate function input frequency
+   SAIxSEL_HSIHSE : constant := 2#11#; -- SAIx clock frequency = HSI or HSE
+
+   TIMPRE_2xPCLKx : constant := 0; -- If the APB prescaler ... 1, TIMxCLK = PCLKx. Otherwise ... TIMxCLK = 2xPCLKx.
+   TIMPRE_4xPCLKx : constant := 1; -- If the APB prescaler ... 1, 2 or 4, TIMxCLK = HCLK. Otherwise ... TIMxCLK = 4xPCLKx.
+
+   DFSDM1SEL_APB2   : constant := 0; -- APB2 clock (PCLK2) selected as DFSDM1 Kernel clock source
+   DFSDM1SEL_SYSCLK : constant := 1; -- System clock (SYSCLK) clock selected as DFSDM1 Kernel clock source
+
+   ADFSDM1SEL_SAI1 : constant := 0; -- SAI1 clock selected as DFSDM1 Audio clock source
+   ADFSDM1SEL_SAI2 : constant := 1; -- SAI2 clock selected as DFSDM1 Audio clock source
+
+   type RCC_DCKCFGR1_Type is
+   record
+      PLLI2SDIVQ : Bits_5; -- PLLI2S division factor for SAI1 clock
+      Reserved1  : Bits_3;
+      PLLSAIDIVQ : Bits_5; -- PLLSAI division factor for SAI1 clock
+      Reserved2  : Bits_3;
+      PLLSAIDIVR : Bits_2; -- division factor for LCD_CLK
+      Reserved3  : Bits_2;
+      SAI1SEL    : Bits_2; -- SAI1 clock source selection
+      SAI2SEL    : Bits_2; -- SAI2 clock source selection:
+      TIMPRE     : Bits_1; -- Timers clocks prescalers selection
+      DFSDM1SEL  : Bits_1; -- DFSDM1 clock source selection:
+      ADFSDM1SEL : Bits_1; -- DFSDM1 AUDIO clock source selection:
+      Reserved4  : Bits_5;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_DCKCFGR1_Type use
+   record
+      PLLI2SDIVQ at 0 range  0 ..  4;
+      Reserved1  at 0 range  5 ..  7;
+      PLLSAIDIVQ at 0 range  8 .. 12;
+      Reserved2  at 0 range 13 .. 15;
+      PLLSAIDIVR at 0 range 16 .. 17;
+      Reserved3  at 0 range 18 .. 19;
+      SAI1SEL    at 0 range 20 .. 21;
+      SAI2SEL    at 0 range 22 .. 23;
+      TIMPRE     at 0 range 24 .. 24;
+      DFSDM1SEL  at 0 range 25 .. 25;
+      ADFSDM1SEL at 0 range 26 .. 26;
+      Reserved4  at 0 range 27 .. 31;
+   end record;
+
+   RCC_DCKCFGR1_ADDRESS : constant := 16#4002_388C#;
+
+   RCC_DCKCFGR1 : aliased RCC_DCKCFGR1_Type with
+      Address              => To_Address (RCC_DCKCFGR1_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 5.3.26 RCC dedicated clocks configuration register (RCC_DCKCFGR2)
+
+   USART1SEL_APB2 : constant := 2#00#; -- APB2 clock (PCLK2) is selected as USART 1 clock
+   USART1SEL_SYS  : constant := 2#01#; -- System clock is selected as USART 1 clock
+   USART1SEL_HSI  : constant := 2#10#; -- HSI clock is selected as USART 1 clock
+   USART1SEL_LSE  : constant := 2#11#; -- LSE clock is selected as USART 1 clock
+
+   USART2SEL_APB1 : constant := 2#00#; -- APB1 clock (PCLK1) is selected as USART 2 clock
+   USART2SEL_SYS  : constant := 2#01#; -- System clock is selected as USART 2 clock
+   USART2SEL_HSI  : constant := 2#10#; -- HSI clock is selected as USART 2 clock
+   USART2SEL_LSE  : constant := 2#11#; -- LSE clock is selected as USART 2 clock
+
+   USART3SEL_APB1 : constant := 2#00#; -- APB1 clock (PCLK1) is selected as USART 3 clock
+   USART3SEL_SYS  : constant := 2#01#; -- System clock is selected as USART 3 clock
+   USART3SEL_HSI  : constant := 2#10#; -- HSI clock is selected as USART 3 clock
+   USART3SEL_LSE  : constant := 2#11#; -- LSE clock is selected as USART 3 clock
+
+   UART4SEL_APB1 : constant := 2#00#; -- APB1 clock (PCLK1) is selected as UART 4 clock
+   UART4SEL_SYS  : constant := 2#01#; -- System clock is selected as UART 4 clock
+   UART4SEL_HSI  : constant := 2#10#; -- HSI clock is selected as UART 4 clock
+   UART4SEL_LSE  : constant := 2#11#; -- LSE clock is selected as UART 4 clock
+
+   UART5SEL_APB1 : constant := 2#00#; -- APB1 clock (PCLK1) is selected as UART 5 clock
+   UART5SEL_SYS  : constant := 2#01#; -- System clock is selected as UART 5 clock
+   UART5SEL_HSI  : constant := 2#10#; -- HSI clock is selected as UART 5 clock
+   UART5SEL_LSE  : constant := 2#11#; -- LSE clock is selected as UART 5 clock
+
+   USART6SEL_APB2 : constant := 2#00#; -- APB2 clock (PCLK2) is selected as USART 6 clock
+   USART6SEL_SYS  : constant := 2#01#; -- System clock is selected as USART 6 clock
+   USART6SEL_HSI  : constant := 2#10#; -- HSI clock is selected as USART 6 clock
+   USART6SEL_LSE  : constant := 2#11#; -- LSE clock is selected as USART 6 clock
+
+   UART7SEL_APB1 : constant := 2#00#; -- APB1 clock (PCLK1) is selected as UART 7 clock
+   UART7SEL_SYS  : constant := 2#01#; -- System clock is selected as UART 7 clock
+   UART7SEL_HSI  : constant := 2#10#; -- HSI clock is selected as UART 7 clock
+   UART7SEL_LSE  : constant := 2#11#; -- LSE clock is selected as UART 7 clock
+
+   UART8SEL_APB1 : constant := 2#00#; -- APB1 clock (PCLK1) is selected as UART 8 clock
+   UART8SEL_SYS  : constant := 2#01#; -- System clock is selected as UART 8 clock
+   UART8SEL_HSI  : constant := 2#10#; -- HSI clock is selected as UART 8 clock
+   UART8SEL_LSE  : constant := 2#11#; -- LSE clock is selected as UART 8 clock
+
+   I2CxSEL_APB1 : constant := 2#00#; -- APB clock (PCLK1) is selected as I2Cx clock
+   I2CxSEL_SYS  : constant := 2#01#; -- System clock is selected as I2Cx clock
+   I2CxSEL_HSI  : constant := 2#10#; -- HSI clock is selected as I2Cx clock
+
+   LPTIM1SEL_APB1 : constant := 2#00#; -- APB1 clock (PCLK1) selected as LPTILM1 clock
+   LPTIM1SEL_LSI  : constant := 2#01#; -- LSI clock is selected as LPTILM1 clock
+   LPTIM1SEL_HSI  : constant := 2#10#; -- HSI clock is selected as LPTILM1 clock
+   LPTIM1SEL_LSE  : constant := 2#11#; -- LSE clock is selected as LPTILM1 clock
+
+   CECSEL_LSE : constant := 0; -- LSE clock is selected as HDMI-CEC clock
+   CECSEL_HSI : constant := 1; -- HSI divided by 488 clock is selected as HDMI-CEC clock
+
+   CK48MSEL_PLL    : constant := 0; -- 48MHz clock from PLL is selected
+   CK48MSEL_PLLSAI : constant := 1; -- 48MHz clock from PLLSAI is selected.
+
+   SDMMCxSEL_48M : constant := 0; -- 48 MHz clock is selected as SDMMC1 clock
+   SDMMCxSEL_SYS : constant := 1; -- System clock is selected as SDMMC1 clock
+
+   DSISEL_DSIPHY : constant := 0; -- DSI-PHY used as DSI byte lane clock source (usual case)
+   DSISEL_PLLR   : constant := 1; -- PLLR used as DSI byte lane clock source, used in case DSI PLL and DSI-PHY are off ...
+
+   type RCC_DCKCFGR2_Type is
+   record
+      USART1SEL : Bits_2; -- USART 1 clock source selection
+      USART2SEL : Bits_2; -- USART 2 clock source selection
+      USART3SEL : Bits_2; -- USART 3 clock source selection
+      UART4SEL  : Bits_2; -- UART 4 clock source selection
+      UART5SEL  : Bits_2; -- UART 5 clock source selection
+      USART6SEL : Bits_2; -- USART 6 clock source selection
+      UART7SEL  : Bits_2; -- UART 7 clock source selection
+      UART8SEL  : Bits_2; -- UART 8 clock source selection
+      I2C1SEL   : Bits_2; -- I2C1 clock source selection
+      I2C2SEL   : Bits_2; -- I2C2 clock source selection
+      I2C3SEL   : Bits_2; -- I2C3 clock source selection
+      I2C4SEL   : Bits_2; -- I2C4 clock source selection
+      LPTIM1SEL : Bits_2; -- Low-power timer 1 clock source selection
+      CECSEL    : Bits_1; -- HDMI-CEC clock source selection
+      CK48MSEL  : Bits_1; -- 48MHz clock source selection
+      SDMMC1SEL : Bits_1; -- SDMMC1 clock source selection
+      SDMMC2SEL : Bits_1; -- SDMMC2 clock source selection
+      DSISEL    : Bits_1; -- DSI clock source selection
+      Reserved  : Bits_1;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for RCC_DCKCFGR2_Type use
+   record
+      USART1SEL at 0 range  0 ..  1;
+      USART2SEL at 0 range  2 ..  3;
+      USART3SEL at 0 range  4 ..  5;
+      UART4SEL  at 0 range  6 ..  7;
+      UART5SEL  at 0 range  8 ..  9;
+      USART6SEL at 0 range 10 .. 11;
+      UART7SEL  at 0 range 12 .. 13;
+      UART8SEL  at 0 range 14 .. 15;
+      I2C1SEL   at 0 range 16 .. 17;
+      I2C2SEL   at 0 range 18 .. 19;
+      I2C3SEL   at 0 range 20 .. 21;
+      I2C4SEL   at 0 range 22 .. 23;
+      LPTIM1SEL at 0 range 24 .. 25;
+      CECSEL    at 0 range 26 .. 26;
+      CK48MSEL  at 0 range 27 .. 27;
+      SDMMC1SEL at 0 range 28 .. 28;
+      SDMMC2SEL at 0 range 29 .. 29;
+      DSISEL    at 0 range 30 .. 30;
+      Reserved  at 0 range 31 .. 31;
+   end record;
+
+   RCC_DCKCFGR2_ADDRESS : constant := 16#4002_3890#;
+
+   RCC_DCKCFGR2 : aliased RCC_DCKCFGR2_Type with
+      Address              => To_Address (RCC_DCKCFGR2_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 6 General-purpose I/Os (GPIO)
@@ -1063,6 +2157,237 @@ package STM32F769I is
       Import               => True,
       Convention           => Ada;
 
+   -- 7.2.2 SYSCFG peripheral mode configuration register (SYSCFG_PMC)
+
+   MII_RMII_SEL_MII  : constant := 0; -- MII interface is selected
+   MII_RMII_SEL_RMII : constant := 1; -- RMII PHY interface is selected
+
+   type SYSCFG_PMC_Type is
+   record
+      I2C1_FMP     : Boolean; -- I2C1_FMP I2C1 Fast Mode + Enable
+      I2C2_FMP     : Boolean; -- I2C2_FMP I2C2 Fast Mode + Enable
+      I2C3_FMP     : Boolean; -- I2C3_FMP I2C3 Fast Mode + Enable
+      I2C4_FMP     : Boolean; -- I2C4_FMP I2C4 Fast Mode + Enable
+      PB6_FMP      : Boolean; -- PB6_FMP Fast Mode + Enable
+      PB7_FMP      : Boolean; -- PB7_FMP Fast Mode + Enable
+      PB8_FMP      : Boolean; -- PB8_FMP Fast Mode + Enable
+      PB9_FMP      : Boolean; -- Fast Mode + Enable
+      Reserved1    : Bits_8;
+      ADC1DC2      : Boolean; -- ADC accuracy Option 2
+      ADC2DC2      : Boolean; -- ADC accuracy Option 2
+      ADC3DC2      : Boolean; -- ADC accuracy Option 2
+      Reserved2    : Bits_4;
+      MII_RMII_SEL : Bits_1;  -- Ethernet PHY interface selection
+      Reserved3    : Bits_8;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SYSCFG_PMC_Type use
+   record
+      I2C1_FMP     at 0 range  0 ..  0;
+      I2C2_FMP     at 0 range  1 ..  1;
+      I2C3_FMP     at 0 range  2 ..  2;
+      I2C4_FMP     at 0 range  3 ..  3;
+      PB6_FMP      at 0 range  4 ..  4;
+      PB7_FMP      at 0 range  5 ..  5;
+      PB8_FMP      at 0 range  6 ..  6;
+      PB9_FMP      at 0 range  7 ..  7;
+      Reserved1    at 0 range  8 .. 15;
+      ADC1DC2      at 0 range 16 .. 16;
+      ADC2DC2      at 0 range 17 .. 17;
+      ADC3DC2      at 0 range 18 .. 18;
+      Reserved2    at 0 range 19 .. 22;
+      MII_RMII_SEL at 0 range 23 .. 23;
+      Reserved3    at 0 range 24 .. 31;
+   end record;
+
+   SYSCFG_PMC_ADDRESS : constant := 16#4001_3804#;
+
+   SYSCFG_PMC : aliased SYSCFG_MEMRMP_Type with
+      Address              => To_Address (SYSCFG_PMC_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 7.2.3 SYSCFG external interrupt configuration register 1 (SYSCFG_EXTICR1)
+   -- 7.2.4 SYSCFG external interrupt configuration register 2 (SYSCFG_EXTICR2)
+   -- 7.2.5 SYSCFG external interrupt configuration register 3 (SYSCFG_EXTICR3)
+   -- 7.2.6 SYSCFG external interrupt configuration register 4 (SYSCFG_EXTICR4)
+
+   EXTI_PA : constant := 2#0000#; -- PA[x] pin
+   EXTI_PB : constant := 2#0001#; -- PB[x] pin
+   EXTI_PC : constant := 2#0010#; -- PC[x] pin
+   EXTI_PD : constant := 2#0011#; -- PD[x] pin
+   EXTI_PE : constant := 2#0100#; -- PE[x] pin
+   EXTI_PF : constant := 2#0101#; -- PF[x] pin
+   EXTI_PG : constant := 2#0110#; -- PG[x] pin
+   EXTI_PH : constant := 2#0111#; -- PH[x] pin
+   EXTI_PI : constant := 2#1000#; -- PI[x] pin
+   EXTI_PJ : constant := 2#1001#; -- PJ[x] pin
+   EXTI_PK : constant := 2#1010#; -- PK[x] pin
+
+   type SYSCFG_EXTICR1_Type is
+   record
+      EXTI0    : Bits_4;  -- EXTI 0 configuration
+      EXTI1    : Bits_4;  -- EXTI 1 configuration
+      EXTI2    : Bits_4;  -- EXTI 2 configuration
+      EXTI3    : Bits_4;  -- EXTI 3 configuration
+      Reserved : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SYSCFG_EXTICR1_Type use
+   record
+      EXTI0    at 0 range  0 ..  3;
+      EXTI1    at 0 range  4 ..  7;
+      EXTI2    at 0 range  8 .. 11;
+      EXTI3    at 0 range 12 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   SYSCFG_EXTICR1_ADDRESS : constant := 16#4001_3808#;
+
+   SYSCFG_EXTICR1 : aliased SYSCFG_EXTICR1_Type with
+      Address              => To_Address (SYSCFG_EXTICR1_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   type SYSCFG_EXTICR2_Type is
+   record
+      EXTI4    : Bits_4;  -- EXTI 4 configuration
+      EXTI5    : Bits_4;  -- EXTI 5 configuration
+      EXTI6    : Bits_4;  -- EXTI 6 configuration
+      EXTI7    : Bits_4;  -- EXTI 7 configuration
+      Reserved : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SYSCFG_EXTICR2_Type use
+   record
+      EXTI4    at 0 range  0 ..  3;
+      EXTI5    at 0 range  4 ..  7;
+      EXTI6    at 0 range  8 .. 11;
+      EXTI7    at 0 range 12 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   SYSCFG_EXTICR2_ADDRESS : constant := 16#4001_380C#;
+
+   SYSCFG_EXTICR2 : aliased SYSCFG_EXTICR2_Type with
+      Address              => To_Address (SYSCFG_EXTICR2_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   type SYSCFG_EXTICR3_Type is
+   record
+      EXTI8    : Bits_4;  -- EXTI 8 configuration
+      EXTI9    : Bits_4;  -- EXTI 9 configuration
+      EXTI10   : Bits_4;  -- EXTI 10 configuration
+      EXTI11   : Bits_4;  -- EXTI 11 configuration
+      Reserved : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SYSCFG_EXTICR3_Type use
+   record
+      EXTI8    at 0 range  0 ..  3;
+      EXTI9    at 0 range  4 ..  7;
+      EXTI10   at 0 range  8 .. 11;
+      EXTI11   at 0 range 12 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   SYSCFG_EXTICR3_ADDRESS : constant := 16#4001_3810#;
+
+   SYSCFG_EXTICR3 : aliased SYSCFG_EXTICR3_Type with
+      Address              => To_Address (SYSCFG_EXTICR3_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   type SYSCFG_EXTICR4_Type is
+   record
+      EXTI12   : Bits_4;  -- EXTI 12 configuration
+      EXTI13   : Bits_4;  -- EXTI 13 configuration
+      EXTI14   : Bits_4;  -- EXTI 14 configuration
+      EXTI15   : Bits_4;  -- EXTI 15 configuration
+      Reserved : Bits_16;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SYSCFG_EXTICR4_Type use
+   record
+      EXTI12   at 0 range  0 ..  3;
+      EXTI13   at 0 range  4 ..  7;
+      EXTI14   at 0 range  8 .. 11;
+      EXTI15   at 0 range 12 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   SYSCFG_EXTICR4_ADDRESS : constant := 16#4001_3814#;
+
+   SYSCFG_EXTICR4 : aliased SYSCFG_EXTICR4_Type with
+      Address              => To_Address (SYSCFG_EXTICR4_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 7.2.7 Class B register (SYSCFG_CBR)
+
+   type SYSCFG_CBR_Type is
+   record
+      CLL       : Boolean; -- Core Lockup Lock
+      Reserved1 : Bits_1;
+      PVDL      : Boolean; -- PVD Lock
+      Reserved2 : Bits_29;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SYSCFG_CBR_Type use
+   record
+      CLL       at 0 range 0 ..  0;
+      Reserved1 at 0 range 1 ..  1;
+      PVDL      at 0 range 2 ..  2;
+      Reserved2 at 0 range 3 .. 31;
+   end record;
+
+   SYSCFG_CBR_ADDRESS : constant := 16#4001_381C#;
+
+   SYSCFG_CBR : aliased SYSCFG_CBR_Type with
+      Address              => To_Address (SYSCFG_CBR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 7.2.8 Compensation cell control register (SYSCFG_CMPCR)
+
+   type SYSCFG_CMPCR_Type is
+   record
+      CMP_PD    : Boolean; -- Compensation cell power-down
+      Reserved1 : Bits_7;
+      READY     : Boolean; -- Compensation cell ready flag
+      Reserved2 : Bits_23;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for SYSCFG_CMPCR_Type use
+   record
+      CMP_PD    at 0 range 0 ..  0;
+      Reserved1 at 0 range 1 ..  7;
+      READY     at 0 range 8 ..  8;
+      Reserved2 at 0 range 9 .. 31;
+   end record;
+
+   SYSCFG_CMPCR_ADDRESS : constant := 16#4001_3820#;
+
+   SYSCFG_CMPCR : aliased SYSCFG_CMPCR_Type with
+      Address              => To_Address (SYSCFG_CMPCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
    ----------------------------------------------------------------------------
    -- 10 Nested vectored interrupt controller (NVIC)
    ----------------------------------------------------------------------------
@@ -1179,6 +2504,172 @@ package STM32F769I is
    IRQ_CAN3_SCE           : constant := 107; -- CAN3 SCE interrupt
    IRQ_JPEG               : constant := 108; -- JPEG global interrupt
    IRQ_MDIOS              : constant := 109; -- MDIO slave global interrupt
+
+   ----------------------------------------------------------------------------
+   -- 28 Basic timers (TIM6/TIM7)
+   ----------------------------------------------------------------------------
+
+   -- 28.4.1 TIM6/TIM7 control register 1 (TIMx_CR1)
+
+   URS_ANY          : constant := 0; -- Any of the following events generates ...
+   URS_COUNTER_OFUF : constant := 1; -- Only counter overflow/underflow generates ..
+
+   type TIMx_CR1_Type is
+   record
+      CEN       : Boolean; -- Counter enable
+      UDIS      : Boolean; -- Update disable
+      URS       : Bits_1;  -- Update request source
+      OPM       : Boolean; -- One-pulse mode
+      Reserved1 : Bits_3;
+      ARPE      : Boolean; -- Auto-reload preload enable
+      Reserved2 : Bits_3;
+      UIFREMAP  : Boolean; -- UIF status bit remapping
+      Reserved3 : Bits_4;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for TIMx_CR1_Type use
+   record
+      CEN       at 0 range  0 ..  0;
+      UDIS      at 0 range  1 ..  1;
+      URS       at 0 range  2 ..  2;
+      OPM       at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 ..  6;
+      ARPE      at 0 range  7 ..  7;
+      Reserved2 at 0 range  8 .. 10;
+      UIFREMAP  at 0 range 11 .. 11;
+      Reserved3 at 0 range 12 .. 15;
+   end record;
+
+   -- 28.4.2 TIM6/TIM7 control register 2 (TIMx_CR2)
+
+   MMS_RESET  : constant := 2#000#; -- the UG bit from the TIMx_EGR register is used as a trigger output (TRGO).
+   MMS_ENABLE : constant := 2#001#; -- the Counter enable signal, CNT_EN, is used as a trigger output (TRGO).
+   MMS_UPDATE : constant := 2#010#; -- The update event is selected as a trigger output (TRGO).
+
+   type TIMx_CR2_Type is
+   record
+      Reserved1 : Bits_4;
+      MMS       : Bits_3; -- Master mode selection
+      Reserved2 : Bits_9;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for TIMx_CR2_Type use
+   record
+      Reserved1 at 0 range 0 ..  3;
+      MMS       at 0 range 4 ..  6;
+      Reserved2 at 0 range 7 .. 15;
+   end record;
+
+   -- 28.4.3 TIM6/TIM7 DMA/Interrupt enable register (TIMx_DIER)
+
+   type TIMx_DIER_Type is
+   record
+      UIE       : Boolean; -- Update interrupt enable
+      Reserved1 : Bits_7;
+      UDE       : Boolean; -- Update DMA request enable
+      Reserved2 : Bits_7;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for TIMx_DIER_Type use
+   record
+      UIE       at 0 range 0 ..  0;
+      Reserved1 at 0 range 1 ..  7;
+      UDE       at 0 range 8 ..  8;
+      Reserved2 at 0 range 9 .. 15;
+   end record;
+
+   -- 28.4.4 TIM6/TIM7 status register (TIMx_SR)
+
+   type TIMx_SR_Type is
+   record
+      UIF      : Boolean; -- Update interrupt flag
+      Reserved : Bits_15;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for TIMx_SR_Type use
+   record
+      UIF      at 0 range 0 ..  0;
+      Reserved at 0 range 1 .. 15;
+   end record;
+
+   -- 28.4.5 TIM6/TIM7 event generation register (TIMx_EGR)
+
+   type TIMx_EGR_Type is
+   record
+      UG       : Boolean; -- Update generation
+      Reserved : Bits_15;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16;
+   for TIMx_EGR_Type use
+   record
+      UG       at 0 range 0 ..  0;
+      Reserved at 0 range 1 .. 15;
+   end record;
+
+   -- 28.4.6 TIM6/TIM7 counter (TIMx_CNT)
+
+   type TIMx_CNT_Type is
+   record
+      CNT      : Unsigned_16; -- Counter value
+      Reserved : Bits_15;
+      UIFCPY   : Boolean;     -- UIF Copy
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for TIMx_CNT_Type use
+   record
+      CNT      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 30;
+      UIFCPY   at 0 range 31 .. 31;
+   end record;
+
+   -- 28.4 TIM6/TIM7 registers
+
+   type Basic_Timers_Type is
+   record
+      TIMx_CR1  : TIMx_CR1_Type  with Volatile_Full_Access => True;
+      TIMx_CR2  : TIMx_CR2_Type  with Volatile_Full_Access => True;
+      TIMx_DIER : TIMx_DIER_Type with Volatile_Full_Access => True;
+      TIMx_SR   : TIMx_SR_Type   with Volatile_Full_Access => True;
+      TIMx_EGR  : TIMx_EGR_Type  with Volatile_Full_Access => True;
+      TIMx_CNT  : TIMx_CNT_Type  with Volatile_Full_Access => True;
+      TIMx_PSC  : Unsigned_16    with Volatile_Full_Access => True;
+      TIMx_ARR  : Unsigned_16    with Volatile_Full_Access => True;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 16#30# * 8;
+   for Basic_Timers_Type use
+   record
+      TIMx_CR1  at 16#00# range 0 .. 15;
+      TIMx_CR2  at 16#04# range 0 .. 15;
+      TIMx_DIER at 16#0C# range 0 .. 15;
+      TIMx_SR   at 16#10# range 0 .. 15;
+      TIMx_EGR  at 16#14# range 0 .. 15;
+      TIMx_CNT  at 16#24# range 0 .. 31;
+      TIMx_PSC  at 16#28# range 0 .. 15;
+      TIMx_ARR  at 16#2C# range 0 .. 15;
+   end record;
+
+   TIM6_BASEADDRESS : constant := 16#4000_1000#;
+
+   TIM6 : aliased Basic_Timers_Type with
+      Address    => To_Address (TIM6_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   TIM7_BASEADDRESS : constant := 16#4000_1400#;
+
+   TIM7 : aliased Basic_Timers_Type with
+      Address    => To_Address (TIM7_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 34 Universal synchronous asynchronous receiver transmitter (USART)
@@ -1638,10 +3129,58 @@ package STM32F769I is
       Import     => True,
       Convention => Ada;
 
+   USART2_BASEADDRESS : constant := 16#4000_4400#;
+
+   USART2 : aliased USART_Type with
+      Address    => To_Address (USART2_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   USART3_BASEADDRESS : constant := 16#4000_4800#;
+
+   USART3 : aliased USART_Type with
+      Address    => To_Address (USART3_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   UART4_BASEADDRESS : constant := 16#4000_4C00#;
+
+   UART4 : aliased USART_Type with
+      Address    => To_Address (UART4_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   UART5_BASEADDRESS : constant := 16#4000_5000#;
+
+   UART5 : aliased USART_Type with
+      Address    => To_Address (UART5_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
    USART6_BASEADDRESS : constant := 16#4001_1400#;
 
    USART6 : aliased USART_Type with
       Address    => To_Address (USART6_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   UART7_BASEADDRESS : constant := 16#4000_7800#;
+
+   UART7 : aliased USART_Type with
+      Address    => To_Address (UART7_BASEADDRESS),
+      Volatile   => True,
+      Import     => True,
+      Convention => Ada;
+
+   UART8_BASEADDRESS : constant := 16#4000_7C00#;
+
+   UART8 : aliased USART_Type with
+      Address    => To_Address (UART8_BASEADDRESS),
       Volatile   => True,
       Import     => True,
       Convention => Ada;
