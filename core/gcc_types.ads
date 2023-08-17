@@ -59,12 +59,8 @@ package GCC_Types is
       Alignment => Interfaces.Unsigned_64'Alignment,
       Size      => System.Storage_Unit * 8;
    -- 128-bit
-   -- type TI_Type is range -2**((System.Storage_Unit * 16) - 1) .. +2**((System.Storage_Unit * 16) - 1) - 1 with
-   --    Alignment => Interfaces.Integer_128'Alignment,
-   --    Size      => System.Storage_Unit * 16;
-   -- type UTI_Type is mod 2**(System.Storage_Unit * 16) with
-   --    Alignment => Interfaces.Unsigned_128'Alignment,
-   --    Size      => System.Storage_Unit * 16;
+   type TI_Type is new Interfaces.Integer_128;
+   type UTI_Type is new Interfaces.Unsigned_128;
 
    function Shift_Left (Value : USI_Type; Amount : Natural) return USI_Type with
       Import     => True,
