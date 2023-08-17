@@ -166,36 +166,36 @@ package body IDE is
    function Register_Read_8
       (D : in Descriptor_Type;
        R : in Register_Type)
-      return Unsigned_8 with
-      Inline => True;
+      return Unsigned_8
+      with Inline => True;
 
    procedure Register_Write_8
       (D     : in Descriptor_Type;
        R     : in Register_Type;
-       Value : in Unsigned_8) with
-      Inline => True;
+       Value : in Unsigned_8)
+      with Inline => True;
 
    function Register_Read_16
       (D : in Descriptor_Type;
        R : in Register_Type)
-      return Unsigned_16 with
-      Inline => True;
+      return Unsigned_16
+      with Inline => True;
 
    procedure Register_Write_16
       (D     : in Descriptor_Type;
        R     : in Register_Type;
-       Value : in Unsigned_16) with
-      Inline => True;
+       Value : in Unsigned_16)
+      with Inline => True;
 
    function HEAD_Set
       (H : in Unsigned_8)
-      return Unsigned_8 with
-      Inline => True;
+      return Unsigned_8
+      with Inline => True;
 
    procedure DRIVE_Set
       (D            : in Descriptor_Type;
-       Drive_Number : in Drive_Type) with
-      Inline => True;
+       Drive_Number : in Drive_Type)
+      with Inline => True;
 
    function Is_Drive_Ready
       (D : in Descriptor_Type)
