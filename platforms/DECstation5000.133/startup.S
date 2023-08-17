@@ -1,6 +1,6 @@
 
 //
-// startup.S - DECstation 5000/133 MIPS R3000 startup.
+// startup.S - Low-level startup.
 //
 // Copyright (C) 2020-2023 Gabriele Galeotti
 //
