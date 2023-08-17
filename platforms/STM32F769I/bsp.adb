@@ -75,7 +75,7 @@ package body BSP is
       -- set USART6 -----------------------------------------------------------
       -- USART6_TX PC6 (H15) CN13-2 D1
       -- USART6_RX PC7 (G15) CN13-1 D0
-      RCC.RCC_APB2ENR.USART6EN := True;
+      RCC_APB2ENR.USART6EN := True;
       GPIOC.AFRL (6) := AF8;
       GPIOC.AFRL (7) := AF8;
       GPIOC.MODER := [6 | 7 => GPIO_ALT, others => <>];
