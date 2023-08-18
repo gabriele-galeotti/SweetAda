@@ -79,20 +79,19 @@ package body PL110 is
                                  );
       PL110_Device.LCDUPBASE := FRAMEBUFFER_BASEADDRESS;
       PL110_Device.LCDControl := (
-                                  LcdEn       => 1,
+                                  LcdEn       => True,
                                   LcdBpp      => BPP16,
-                                  LcdBW       => 0,
-                                  LcdTFT      => 1,
-                                  LcdMono8    => 0,
-                                  LcdDual     => 0,
-                                  BGR         => 0,
-                                  BEBO        => 0,
-                                  BEPO        => 0,
-                                  LcdPwr      => 1,
+                                  LcdBW       => False,
+                                  LcdTFT      => True,
+                                  LcdMono8    => False,
+                                  LcdDual     => False,
+                                  BGR         => BGR_RGB,
+                                  BEBO        => False,
+                                  BEPO        => False,
+                                  LcdPwr      => True,
                                   LcdVComp    => VCOMPBP,
                                   Reserved1   => 0,
-                                  LDmaFIFOTME => 0,
-                                  WATERMARK   => 0,
+                                  WATERMARK   => WATERMARK_4,
                                   Reserved2   => 0
                                  );
       -- clear screen

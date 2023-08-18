@@ -37,52 +37,50 @@ package PL110 is
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- Horizontal Axis Panel Control Register, LCDTiming0
+   -- PL110 Registers
    ----------------------------------------------------------------------------
+
+   -- Horizontal Axis Panel Control Register, LCDTiming0
 
    type LCDTiming0_Type is
    record
       Reserved : Bits_2 := 0;
-      PPL      : Natural range 0 .. 2**6 - 1;
-      HSW      : Natural range 0 .. 2**8 - 1;
-      HFP      : Natural range 0 .. 2**8 - 1;
-      HBP      : Natural range 0 .. 2**8 - 1;
+      PPL      : Natural range 0 .. 2**6 - 1; -- Pixels-per-line. Actual pixels-per-line = 16 * (PPL + 1).
+      HSW      : Natural range 0 .. 2**8 - 1; -- Horizontal synchronization pulse width, ...
+      HFP      : Natural range 0 .. 2**8 - 1; -- Horizontal front porch, ...
+      HBP      : Natural range 0 .. 2**8 - 1; -- Horizontal back porch,
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for LCDTiming0_Type use
    record
-      Reserved at 0 range 0 .. 1;
-      PPL      at 0 range 2 .. 7;
-      HSW      at 0 range 8 .. 15;
+      Reserved at 0 range  0 ..  1;
+      PPL      at 0 range  2 ..  7;
+      HSW      at 0 range  8 .. 15;
       HFP      at 0 range 16 .. 23;
       HBP      at 0 range 24 .. 31;
    end record;
 
-   ----------------------------------------------------------------------------
    -- Vertical Axis Panel Control Register, LCDTiming1
-   ----------------------------------------------------------------------------
 
    type LCDTiming1_Type is
    record
-      LPP : Natural range 0 .. 2**10 - 1;
-      VSW : Natural range 0 .. 2**6 - 1;
-      VFP : Natural range 0 .. 2**8 - 1;
-      VBP : Natural range 0 .. 2**8 - 1;
+      LPP : Natural range 0 .. 2**10 - 1; -- Lines per panel is the number of active lines per screen.
+      VSW : Natural range 0 .. 2**6 - 1;  -- Vertical synchronization pulse width is the number of horizontal synchronization lines.
+      VFP : Natural range 0 .. 2**8 - 1;  -- Vertical front porch is the number of inactive lines at the end of frame, ...
+      VBP : Natural range 0 .. 2**8 - 1;  -- Vertical back porch is the number of inactive lines at the start of a frame, ...
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for LCDTiming1_Type use
    record
-      LPP at 0 range 0 .. 9;
+      LPP at 0 range  0 ..  9;
       VSW at 0 range 10 .. 15;
       VFP at 0 range 16 .. 23;
       VBP at 0 range 24 .. 31;
    end record;
 
-   ----------------------------------------------------------------------------
    -- Control Register, LCDControl
-   ----------------------------------------------------------------------------
 
    subtype LcdBpp_Type is Bits_3;
    BPP1  : constant LcdBpp_Type := 2#000#;
@@ -92,6 +90,10 @@ package PL110 is
    BPP16 : constant LcdBpp_Type := 2#100#;
    BPP24 : constant LcdBpp_Type := 2#101#;
 
+   subtype BGR_Type is Bits_1;
+   BGR_RGB : constant BGR_Type := 0; -- RGB normal output
+   BGR_BGR : constant BGR_Type := 1; -- red and blue swapped.
+
    -- Generate interrupt at ...
    subtype LcdVComp_Type is Bits_2;
    VCOMPVS : constant LcdVComp_Type := 2#00#; -- start of vertical synchronization
@@ -99,41 +101,43 @@ package PL110 is
    VCOMPAV : constant LcdVComp_Type := 2#10#; -- start of active video
    VCOMPFP : constant LcdVComp_Type := 2#11#; -- start of front porch
 
+   subtype WATERMARK_Type is Bits_1;
+   WATERMARK_4 : constant WATERMARK_Type := 0; -- HBUSREQM ... when either of the two DMA FIFOs have four or more empty locations
+   WATERMARK_8 : constant WATERMARK_Type := 1; -- HBUSREQM ... when either of the DMA FIFOs have eight or more empty locations.
+
    type LCDControl_Type is
    record
-      LcdEn       : Bits_1;
-      LcdBpp      : LcdBpp_Type;
-      LcdBW       : Bits_1;
-      LcdTFT      : Bits_1;
-      LcdMono8    : Bits_1;
-      LcdDual     : Bits_1;
-      BGR         : Bits_1;
-      BEBO        : Bits_1;
-      BEPO        : Bits_1;
-      LcdPwr      : Bits_1;
-      LcdVComp    : LcdVComp_Type;
-      Reserved1   : Bits_1;
-      LDmaFIFOTME : Bits_1;
-      WATERMARK   : Bits_1;
+      LcdEn       : Boolean;        -- LCD controller enable:
+      LcdBpp      : LcdBpp_Type;    -- LCD bits per pixel:
+      LcdBW       : Boolean;        -- STN LCD is monochrome (black and white):
+      LcdTFT      : Boolean;        -- LCD is TFT:
+      LcdMono8    : Boolean;        -- Monochrome LCD has an 8-bit interface.
+      LcdDual     : Boolean;        -- LCD interface is dual panel STN:
+      BGR         : BGR_Type;       -- RGB of BGR format selection:
+      BEBO        : Boolean;        -- Big-endian byte order:
+      BEPO        : Boolean;        -- Big-endian pixel ordering within a byte:
+      LcdPwr      : Boolean;        -- LCD power enable:
+      LcdVComp    : LcdVComp_Type;  -- Generate interrupt at:
+      Reserved1   : Bits_2;
+      WATERMARK   : WATERMARK_Type; -- LCD DMA FIFO Watermark level:
       Reserved2   : Bits_15 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
    for LCDControl_Type use
    record
-      LcdEn       at 0 range 0 .. 0;
-      LcdBpp      at 0 range 1 .. 3;
-      LcdBW       at 0 range 4 .. 4;
-      LcdTFT      at 0 range 5 .. 5;
-      LcdMono8    at 0 range 6 .. 6;
-      LcdDual     at 0 range 7 .. 7;
-      BGR         at 0 range 8 .. 8;
-      BEBO        at 0 range 9 .. 9;
+      LcdEn       at 0 range  0 ..  0;
+      LcdBpp      at 0 range  1 ..  3;
+      LcdBW       at 0 range  4 ..  4;
+      LcdTFT      at 0 range  5 ..  5;
+      LcdMono8    at 0 range  6 ..  6;
+      LcdDual     at 0 range  7 ..  7;
+      BGR         at 0 range  8 ..  8;
+      BEBO        at 0 range  9 ..  9;
       BEPO        at 0 range 10 .. 10;
       LcdPwr      at 0 range 11 .. 11;
       LcdVComp    at 0 range 12 .. 13;
-      Reserved1   at 0 range 14 .. 14;
-      LDmaFIFOTME at 0 range 15 .. 15;
+      Reserved1   at 0 range 14 .. 15;
       WATERMARK   at 0 range 16 .. 16;
       Reserved2   at 0 range 17 .. 31;
    end record;
@@ -151,7 +155,7 @@ package PL110 is
       LCDStatus     : Unsigned_32     with Volatile_Full_Access => True;
       LCDInterrupt  : Unsigned_32     with Volatile_Full_Access => True;
    end record with
-      Size => 10 * 32;
+      Size => 16#28# * 8;
    for PL110_Type use
    record
       LCDTiming0    at 16#00# range 0 .. 31;
