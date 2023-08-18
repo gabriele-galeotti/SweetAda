@@ -71,16 +71,16 @@ package IntegratorCP is
       Size      => 32;
    for PIC_IRQ_ITEMS_Type use
    record
-      SOFTINT   at 0 range 0 .. 0;
-      UARTINT0  at 0 range 1 .. 1;
-      UARTINT1  at 0 range 2 .. 2;
-      KBDINT    at 0 range 3 .. 3;
-      MOUSEINT  at 0 range 4 .. 4;
-      TIMERINT0 at 0 range 5 .. 5;
-      TIMERINT1 at 0 range 6 .. 6;
-      TIMERINT2 at 0 range 7 .. 7;
-      RTCINT    at 0 range 8 .. 8;
-      LM_LLINT0 at 0 range 9 .. 9;
+      SOFTINT   at 0 range  0 ..  0;
+      UARTINT0  at 0 range  1 ..  1;
+      UARTINT1  at 0 range  2 ..  2;
+      KBDINT    at 0 range  3 ..  3;
+      MOUSEINT  at 0 range  4 ..  4;
+      TIMERINT0 at 0 range  5 ..  5;
+      TIMERINT1 at 0 range  6 ..  6;
+      TIMERINT2 at 0 range  7 ..  7;
+      RTCINT    at 0 range  8 ..  8;
+      LM_LLINT0 at 0 range  9 ..  9;
       LM_LLINT1 at 0 range 10 .. 10;
       Reserved1 at 0 range 11 .. 21;
       CLCDCINT  at 0 range 22 .. 22;
@@ -156,13 +156,13 @@ package IntegratorCP is
       Size      => 32;
    for TimerXControl_Type use
    record
-      ONESHOT    at 0 range 0 .. 0;
-      TIMER_SIZE at 0 range 1 .. 1;
-      PRESCALE   at 0 range 2 .. 3;
-      Reserved1  at 0 range 4 .. 4;
-      IE         at 0 range 5 .. 5;
-      MODE       at 0 range 6 .. 6;
-      ENABLE     at 0 range 7 .. 7;
+      ONESHOT    at 0 range 0 ..  0;
+      TIMER_SIZE at 0 range 1 ..  1;
+      PRESCALE   at 0 range 2 ..  3;
+      Reserved1  at 0 range 4 ..  4;
+      IE         at 0 range 5 ..  5;
+      MODE       at 0 range 6 ..  6;
+      ENABLE     at 0 range 7 ..  7;
       Reserved2  at 0 range 8 .. 31;
    end record;
 
@@ -175,7 +175,7 @@ package IntegratorCP is
       Size      => 32;
    for TimerXRIS_Type use
    record
-      RTI      at 0 range 0 .. 0;
+      RTI      at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
 
@@ -188,7 +188,7 @@ package IntegratorCP is
       Size      => 32;
    for TimerXMIS_Type use
    record
-      TI       at 0 range 0 .. 0;
+      TI       at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
 
@@ -216,6 +216,7 @@ package IntegratorCP is
 
    Timer : aliased array (0 .. 2) of Timer_Type with
       Address    => To_Address (COUNTERTIMER_BASEADDRESS),
+      Volatile   => True,
       Import     => True,
       Convention => Ada;
 
