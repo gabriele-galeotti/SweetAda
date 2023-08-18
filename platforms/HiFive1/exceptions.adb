@@ -22,7 +22,6 @@ with Definitions;
 with Bits;
 with RISCV;
 with MTIME;
-with HiFive1;
 with Console;
 with BSP;
 
@@ -78,10 +77,9 @@ package body Exceptions is
    -- Init
    ----------------------------------------------------------------------------
    procedure Init is
-      Vectors      : aliased Asm_Entry_Point with
-         Import        => True,
-         Convention    => Asm,
-         External_Name => "vectors";
+      Vectors : aliased Asm_Entry_Point
+         with Import        => True,
+              External_Name => "vectors";
    begin
       RISCV.mtvec_Write ((
          MODE => RISCV.MODE_Direct,
