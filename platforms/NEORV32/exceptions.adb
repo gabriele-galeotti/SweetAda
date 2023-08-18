@@ -15,6 +15,16 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
+with Interfaces;
+with Definitions;
+with Bits;
+with RISCV;
+with MTIME;
+with Console;
+with BSP;
+
 package body Exceptions is
 
    --========================================================================--
@@ -24,6 +34,12 @@ package body Exceptions is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use System.Storage_Elements;
+   use Interfaces;
+   use Bits;
+   use RISCV;
+   use MTIME;
 
    --========================================================================--
    --                                                                        --
@@ -36,11 +52,38 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is null;
+   procedure Exception_Process is
+      mcause : mcause_Type;
+   begin
+      mcause := mcause_Read;
+      if mcause.Interrupt then
+         BSP.Tick_Count := @ + 1;
+         Console.Print_NewLine;
+         Console.Print ("*** TIMER interrupt", NL => True);
+         BSP.Timer_Value := @ + BSP.Timer_Constant;
+         mtimecmp_Write (BSP.Timer_Value);
+      else
+         declare
+            function To_U32 is new Ada.Unchecked_Conversion (mcause_Type, Unsigned_32);
+         begin
+            Console.Print (To_U32 (mcause), Prefix => "*** Exception: ", NL => True);
+         end;
+         loop null; end loop;
+      end if;
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is null;
+   procedure Init is
+      Vectors : aliased Asm_Entry_Point
+         with Import        => True,
+              External_Name => "vectors";
+   begin
+      RISCV.mtvec_Write ((
+         MODE => RISCV.MODE_Direct,
+         BASE => Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2))
+         ));
+   end Init;
 
 end Exceptions;

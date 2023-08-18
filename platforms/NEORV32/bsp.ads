@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
-with Configure;
 
 package BSP is
 
@@ -33,6 +32,9 @@ package BSP is
       Export        => True,
       Convention    => Asm,
       External_Name => "tick_count";
+
+   Timer_Constant : constant := 16#10_000#;
+   Timer_Value    : Interfaces.Unsigned_64;
 
    procedure Console_Putchar (C : in Character) with Inline => True;
    procedure Console_Getchar (C : out Character);

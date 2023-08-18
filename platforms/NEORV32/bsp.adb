@@ -17,7 +17,10 @@
 
 with Definitions;
 with Bits;
+with RISCV;
+with MTIME;
 with NEORV32;
+with Exceptions;
 with Console;
 
 package body BSP is
@@ -33,6 +36,8 @@ package body BSP is
    use Interfaces;
    use Definitions;
    use Bits;
+   use RISCV;
+   use MTIME;
    use NEORV32;
 
    --========================================================================--
@@ -100,6 +105,12 @@ package body BSP is
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("NEORV32 (main-6863fd9)", NL => True);
+      -------------------------------------------------------------------------
+      Exceptions.Init;
+      -------------------------------------------------------------------------
+      Timer_Value := mtime_Read + Timer_Constant;
+      mtimecmp_Write (Timer_Value);
+      Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 
