@@ -1344,14 +1344,27 @@ package HiFive1 is
 
       -- 20.4 PWM Count Register (pwmcount)
 
-      type pwmcount_Type is
+      type pwmcount8_Type is
+      record
+         pwmcount : Bits_23;     -- PWM count register. cmpwidth + 15 bits wide.
+         Reserved : Bits_9 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for pwmcount8_Type use
+      record
+         pwmcount at 0 range 0 .. 22;
+         Reserved at 0 range 23 .. 31;
+      end record;
+
+      type pwmcount16_Type is
       record
          pwmcount : Bits_31;     -- PWM count register. cmpwidth + 15 bits wide.
          Reserved : Bits_1 := 0;
       end record with
          Bit_Order => Low_Order_First,
          Size      => 32;
-      for pwmcount_Type use
+      for pwmcount16_Type use
       record
          pwmcount at 0 range 0 .. 30;
          Reserved at 0 range 31 .. 31;
@@ -1414,14 +1427,27 @@ package HiFive1 is
 
       -- 20.6 Scaled PWM Count Register (pwms)
 
-      type pwms_Type is
+      type pwms8_Type is
+      record
+         pwms     : Bits_8;       -- Scaled PWM count register. cmpwidth bits wide.
+         Reserved : Bits_24 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for pwms8_Type use
+      record
+         pwms     at 0 range 0 .. 7;
+         Reserved at 0 range 8 .. 31;
+      end record;
+
+      type pwms16_Type is
       record
          pwms     : Bits_16;      -- Scaled PWM count register. cmpwidth bits wide.
          Reserved : Bits_16 := 0;
       end record with
          Bit_Order => Low_Order_First,
          Size      => 32;
-      for pwms_Type use
+      for pwms16_Type use
       record
          pwms     at 0 range 0 .. 15;
          Reserved at 0 range 16 .. 31;
@@ -1429,18 +1455,121 @@ package HiFive1 is
 
       -- 20.7 PWM Compare Registers (pwmcmp0–pwmcmp3)
 
-      type pwmcmp_Type is
+      type pwmcmp8_Type is
+      record
+         pwmcmp   : Bits_8;       -- PWM [0 .. 3] Compare Value
+         Reserved : Bits_24 := 0;
+      end record with
+         Bit_Order => Low_Order_First,
+         Size      => 32;
+      for pwmcmp8_Type use
+      record
+         pwmcmp   at 0 range 0 .. 7;
+         Reserved at 0 range 8 .. 31;
+      end record;
+
+      type pwmcmp16_Type is
       record
          pwmcmp   : Bits_16;      -- PWM [0 .. 3] Compare Value
          Reserved : Bits_16 := 0;
       end record with
          Bit_Order => Low_Order_First,
          Size      => 32;
-      for pwmcmp_Type use
+      for pwmcmp16_Type use
       record
          pwmcmp   at 0 range 0 .. 15;
          Reserved at 0 range 16 .. 31;
       end record;
+
+      -- 20.3 PWM Memory Map
+
+      type pwm_cmpwidth8_Type is
+      record
+         pwmcfg    : pwmcfg_Type    with Volatile_Full_Access => True;
+         Reserved1 : Unsigned_32;
+         pwmcount  : pwmcount8_Type with Volatile_Full_Access => True;
+         Reserved2 : Unsigned_32;
+         pwms      : pwms8_Type     with Volatile_Full_Access => True;
+         Reserved3 : Unsigned_32;
+         Reserved4 : Unsigned_32;
+         Reserved5 : Unsigned_32;
+         pwmcmp0   : pwmcmp8_Type   with Volatile_Full_Access => True;
+         pwmcmp1   : pwmcmp8_Type   with Volatile_Full_Access => True;
+         pwmcmp2   : pwmcmp8_Type   with Volatile_Full_Access => True;
+         pwmcmp3   : pwmcmp8_Type   with Volatile_Full_Access => True;
+      end record with
+         Size => 16#30# * 8;
+      for pwm_cmpwidth8_Type use
+      record
+         pwmcfg    at 16#00# range 0 .. 31;
+         Reserved1 at 16#04# range 0 .. 31;
+         pwmcount  at 16#08# range 0 .. 31;
+         Reserved2 at 16#0C# range 0 .. 31;
+         pwms      at 16#10# range 0 .. 31;
+         Reserved3 at 16#14# range 0 .. 31;
+         Reserved4 at 16#18# range 0 .. 31;
+         Reserved5 at 16#1C# range 0 .. 31;
+         pwmcmp0   at 16#20# range 0 .. 31;
+         pwmcmp1   at 16#24# range 0 .. 31;
+         pwmcmp2   at 16#28# range 0 .. 31;
+         pwmcmp3   at 16#2C# range 0 .. 31;
+      end record;
+
+      PWM0_BASEADDRESS : constant := 16#1001_5000#;
+
+      PWM0 : aliased pwm_cmpwidth8_Type with
+         Address    => To_Address (PWM0_BASEADDRESS),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+      type pwm_cmpwidth16_Type is
+      record
+         pwmcfg    : pwmcfg_Type     with Volatile_Full_Access => True;
+         Reserved1 : Unsigned_32;
+         pwmcount  : pwmcount16_Type with Volatile_Full_Access => True;
+         Reserved2 : Unsigned_32;
+         pwms      : pwms16_Type     with Volatile_Full_Access => True;
+         Reserved3 : Unsigned_32;
+         Reserved4 : Unsigned_32;
+         Reserved5 : Unsigned_32;
+         pwmcmp0   : pwmcmp16_Type   with Volatile_Full_Access => True;
+         pwmcmp1   : pwmcmp16_Type   with Volatile_Full_Access => True;
+         pwmcmp2   : pwmcmp16_Type   with Volatile_Full_Access => True;
+         pwmcmp3   : pwmcmp16_Type   with Volatile_Full_Access => True;
+      end record with
+         Size => 16#30# * 8;
+      for pwm_cmpwidth16_Type use
+      record
+         pwmcfg    at 16#00# range 0 .. 31;
+         Reserved1 at 16#04# range 0 .. 31;
+         pwmcount  at 16#08# range 0 .. 31;
+         Reserved2 at 16#0C# range 0 .. 31;
+         pwms      at 16#10# range 0 .. 31;
+         Reserved3 at 16#14# range 0 .. 31;
+         Reserved4 at 16#18# range 0 .. 31;
+         Reserved5 at 16#1C# range 0 .. 31;
+         pwmcmp0   at 16#20# range 0 .. 31;
+         pwmcmp1   at 16#24# range 0 .. 31;
+         pwmcmp2   at 16#28# range 0 .. 31;
+         pwmcmp3   at 16#2C# range 0 .. 31;
+      end record;
+
+      PWM1_BASEADDRESS : constant := 16#1002_5000#;
+
+      PWM1 : aliased pwm_cmpwidth16_Type with
+         Address    => To_Address (PWM1_BASEADDRESS),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
+
+      PWM2_BASEADDRESS : constant := 16#1003_5000#;
+
+      PWM2 : aliased pwm_cmpwidth16_Type with
+         Address    => To_Address (PWM2_BASEADDRESS),
+         Volatile   => True,
+         Import     => True,
+         Convention => Ada;
 
    end PWM;
 
