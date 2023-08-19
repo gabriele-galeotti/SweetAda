@@ -278,7 +278,7 @@ package body Bits is
    ----------------------------------------------------------------------------
    -- FirstMSBit
    ----------------------------------------------------------------------------
-   -- Find the first MS bit set.
+   -- Find the first MS bit set in an 8-bit byte.
    ----------------------------------------------------------------------------
    function FirstMSBit
       (Value : in Interfaces.Unsigned_8)
@@ -315,8 +315,8 @@ package body Bits is
       type Modular_Type is mod <>;
    function g_LSBitOn
       (V : in Modular_Type)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
    function g_LSBitOn
       (V : in Modular_Type)
       return Boolean
@@ -332,8 +332,8 @@ package body Bits is
       type Modular_Type is mod <>;
    function g_MSBitOn
       (V : in Modular_Type)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
    function g_MSBitOn
       (V : in Modular_Type)
       return Boolean
@@ -423,23 +423,37 @@ package body Bits is
    ----------------------------------------------------------------------------
 
    -- Unsigned_8
-   function Bit0 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_8 is
+
+   function Bit0
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Value and 16#01#;
    end Bit0;
-   function Bit7 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_8 is
+
+   function Bit7
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Value and 16#80#;
    end Bit7;
-   function BitN (Value : Interfaces.Unsigned_8; NBit : Natural) return Boolean is
+
+   function BitN
+      (Value : Interfaces.Unsigned_8; NBit : Natural)
+      return Boolean
+      is
    begin
       return (Value and 2**NBit) /= 0;
    end BitN;
-   function BitN (
-                  Value : Interfaces.Unsigned_8;
-                  NBit  : Natural;
-                  Bit   : Boolean
-                 ) return Interfaces.Unsigned_8 is
+
+   function BitN
+      (Value : Interfaces.Unsigned_8;
+       NBit  : Natural;
+       Bit   : Boolean)
+      return Interfaces.Unsigned_8
+      is
    begin
       if Bit then
          return Value or 2**NBit;
@@ -447,45 +461,29 @@ package body Bits is
          return Value and (not Interfaces.Unsigned_8'(2**NBit));
       end if;
    end BitN;
-   function EDBitN (Value : Interfaces.Unsigned_8; NBit : Natural) return Boolean is
-   begin
-      if BigEndian then
-         return (Value and 2**(7 - NBit)) /= 0;
-      else
-         return (Value and 2**NBit) /= 0;
-      end if;
-   end EDBitN;
-   function EDBitN (
-                    Value : Interfaces.Unsigned_8;
-                    NBit  : Natural;
-                    Bit   : Boolean
-                   ) return Interfaces.Unsigned_8 is
-   begin
-      if BigEndian then
-         if Bit then
-            return Value or 2**(7 - NBit);
-         else
-            return Value and (not Interfaces.Unsigned_8'(2**(7 - NBit)));
-         end if;
-      else
-         if Bit then
-            return Value or 2**NBit;
-         else
-            return Value and (not Interfaces.Unsigned_8'(2**NBit));
-         end if;
-      end if;
-   end EDBitN;
 
    -- Unsigned_16
-   function Bit0 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_16 is
+
+   function Bit0
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_16
+      is
    begin
       return Interfaces.Unsigned_16 (Value and 16#01#);
    end Bit0;
-   function Bit7 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_16 is
+
+   function Bit7
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_16
+      is
    begin
       return Interfaces.Unsigned_16 (Value and 16#80#);
    end Bit7;
-   function BitN (Value : Interfaces.Unsigned_16; NBit : Natural) return Boolean is
+
+   function BitN
+      (Value : Interfaces.Unsigned_16; NBit : Natural)
+      return Boolean
+      is
    begin
       if BigEndian then
          return (Value and 2**(15 - (NBit mod 16))) /= 0;
@@ -495,15 +493,27 @@ package body Bits is
    end BitN;
 
    -- Unsigned_32
-   function Bit0 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_32 is
+
+   function Bit0
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_32
+      is
    begin
       return Interfaces.Unsigned_32 (Value and 16#01#);
    end Bit0;
-   function Bit7 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_32 is
+
+   function Bit7
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_32
+      is
    begin
       return Interfaces.Unsigned_32 (Value and 16#80#);
    end Bit7;
-   function BitN (Value : Interfaces.Unsigned_32; NBit : Natural) return Boolean is
+
+   function BitN
+      (Value : Interfaces.Unsigned_32; NBit : Natural)
+      return Boolean
+      is
    begin
       if BigEndian then
          return (Value and 2**(31 - (NBit mod 32))) /= 0;
@@ -513,15 +523,27 @@ package body Bits is
    end BitN;
 
    -- Unsigned_64
-   function Bit0 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_64 is
+
+   function Bit0
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_64
+      is
    begin
       return Interfaces.Unsigned_64 (Value and 16#01#);
    end Bit0;
-   function Bit7 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_64 is
+
+   function Bit7
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_64
+      is
    begin
       return Interfaces.Unsigned_64 (Value and 16#80#);
    end Bit7;
-   function BitN (Value : Interfaces.Unsigned_64; NBit : Natural) return Boolean is
+
+   function BitN
+      (Value : Interfaces.Unsigned_64; NBit : Natural)
+      return Boolean
+      is
    begin
       if BigEndian then
          return (Value and 2**(63 - (NBit mod 64))) /= 0;
@@ -531,161 +553,125 @@ package body Bits is
    end BitN;
 
    ----------------------------------------------------------------------------
-   -- Bit_Extend
-   ----------------------------------------------------------------------------
-
-   -- Unsigned_8
-   function Bit_Extend (Value : Interfaces.Unsigned_8; Bit : Natural) return Interfaces.Unsigned_8 is
-      Sign   : Interfaces.Unsigned_8;
-      Mask   : Interfaces.Unsigned_8;
-      Result : Interfaces.Unsigned_8 := 0;
-   begin
-      if Bit <= 7 then
-         if BigEndian then
-            Sign := 2**(7 - Bit);
-         else
-            Sign := 2**Bit;
-         end if;
-         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
-         Sign := Value and Sign; -- Sign is now conditionally asserted
-         Result := Value and Mask;
-         if Sign /= 0 then
-            Result := Result or (not Mask);
-         end if;
-      end if;
-      return Result;
-   end Bit_Extend;
-
-   -- Unsigned_16
-   function Bit_Extend (Value : Interfaces.Unsigned_16; Bit : Natural) return Interfaces.Unsigned_16 is
-      Sign   : Interfaces.Unsigned_16;
-      Mask   : Interfaces.Unsigned_16;
-      Result : Interfaces.Unsigned_16 := 0;
-   begin
-      if Bit <= 15 then
-         if BigEndian then
-            Sign := 2**(15 - Bit);
-         else
-            Sign := 2**Bit;
-         end if;
-         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
-         Sign := Value and Sign; -- Sign is now conditionally asserted
-         Result := Value and Mask;
-         if Sign /= 0 then
-            Result := Result or (not Mask);
-         end if;
-      end if;
-      return Result;
-   end Bit_Extend;
-
-   -- Unsigned_32
-   function Bit_Extend (Value : Interfaces.Unsigned_32; Bit : Natural) return Interfaces.Unsigned_32 is
-      Sign   : Interfaces.Unsigned_32;
-      Mask   : Interfaces.Unsigned_32;
-      Result : Interfaces.Unsigned_32 := 0;
-   begin
-      if Bit <= 31 then
-         if BigEndian then
-            Sign := 2**(31 - Bit);
-         else
-            Sign := 2**Bit;
-         end if;
-         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
-         Sign := Value and Sign; -- Sign is now conditionally asserted
-         Result := Value and Mask;
-         if Sign /= 0 then
-            Result := Result or (not Mask);
-         end if;
-      end if;
-      return Result;
-   end Bit_Extend;
-
-   -- Unsigned_64
-   function Bit_Extend (Value : Interfaces.Unsigned_64; Bit : Natural) return Interfaces.Unsigned_64 is
-      Sign   : Interfaces.Unsigned_64;
-      Mask   : Interfaces.Unsigned_64;
-      Result : Interfaces.Unsigned_64 := 0;
-   begin
-      if Bit <= 63 then
-         if BigEndian then
-            Sign := 2**(63 - Bit);
-         else
-            Sign := 2**Bit;
-         end if;
-         Mask := Sign - 1;       -- create value bitmask (does not cover sign bit)
-         Sign := Value and Sign; -- Sign is now conditionally asserted
-         Result := Value and Mask;
-         if Sign /= 0 then
-            Result := Result or (not Mask);
-         end if;
-      end if;
-      return Result;
-   end Bit_Extend;
-
-   ----------------------------------------------------------------------------
    -- L/M/N/O/P/Q/R/HByte
    ----------------------------------------------------------------------------
    -- Extract an Unsigned_8-component from a word.
    ----------------------------------------------------------------------------
 
    -- Unsigned_16
-   function LByte (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_8 is
+
+   function LByte
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (Value and Unsigned_8_Mask);
    end LByte;
-   function HByte (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_8 is
+
+   function HByte
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 8) and Unsigned_8_Mask);
    end HByte;
 
    -- Unsigned_32
-   function LByte (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_8 is
+
+   function LByte
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (Value and Unsigned_8_Mask);
    end LByte;
-   function MByte (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_8 is
+
+   function MByte
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 8) and Unsigned_8_Mask);
    end MByte;
-   function NByte (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_8 is
+
+   function NByte
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 16) and Unsigned_8_Mask);
    end NByte;
-   function HByte (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_8 is
+
+   function HByte
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 24) and Unsigned_8_Mask);
    end HByte;
 
    -- Unsigned_64
-   function LByte (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_8 is
+
+   function LByte
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (Value and Unsigned_8_Mask);
    end LByte;
-   function MByte (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_8 is
+
+   function MByte
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 8) and Unsigned_8_Mask);
    end MByte;
-   function NByte (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_8 is
+
+   function NByte
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 16) and Unsigned_8_Mask);
    end NByte;
-   function OByte (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_8 is
+
+   function OByte
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 24) and Unsigned_8_Mask);
    end OByte;
-   function PByte (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_8 is
+
+   function PByte
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 32) and Unsigned_8_Mask);
    end PByte;
-   function QByte (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_8 is
+
+   function QByte
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 40) and Unsigned_8_Mask);
    end QByte;
-   function RByte (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_8 is
+
+   function RByte
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 48) and Unsigned_8_Mask);
    end RByte;
-   function HByte (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_8 is
+
+   function HByte
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 56) and Unsigned_8_Mask);
    end HByte;
@@ -695,31 +681,55 @@ package body Bits is
    ----------------------------------------------------------------------------
 
    -- Unsigned_16
-   function LWord (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_8 is
+
+   function LWord
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (Value and Unsigned_8_Mask);
    end LWord;
-   function HWord (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_8 is
+
+   function HWord
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 8) and Unsigned_8_Mask);
    end HWord;
 
    -- Unsigned_32
-   function LWord (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_16 is
+
+   function LWord
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_16
+      is
    begin
       return Interfaces.Unsigned_16 (Value and Unsigned_16_Mask);
    end LWord;
-   function HWord (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_16 is
+
+   function HWord
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_16
+      is
    begin
       return Interfaces.Unsigned_16 (ShR (Value, 16) and Unsigned_16_Mask);
    end HWord;
 
    -- Unsigned_64
-   function LWord (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_32 is
+
+   function LWord
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_32
+      is
    begin
       return Interfaces.Unsigned_32 (Value and Unsigned_32_Mask);
    end LWord;
-   function HWord (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_32 is
+
+   function HWord
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_32
+      is
    begin
       return Interfaces.Unsigned_32 (ShR (Value, 32) and Unsigned_32_Mask);
    end HWord;
@@ -730,20 +740,22 @@ package body Bits is
    -- Assemble a 16/32/64-bit word using low-order halves.
    ----------------------------------------------------------------------------
 
-   function Make_Word (
-                       Value_H : Interfaces.Unsigned_8;
-                       Value_L : Interfaces.Unsigned_8
-                      ) return Interfaces.Unsigned_16 is
+   function Make_Word
+      (Value_H : Interfaces.Unsigned_8;
+       Value_L : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_16
+      is
    begin
       return ShL (Interfaces.Unsigned_16 (Value_H), 8) or Interfaces.Unsigned_16 (Value_L);
    end Make_Word;
 
-   function Make_Word (
-                       Value_H : Interfaces.Unsigned_8;
-                       Value_N : Interfaces.Unsigned_8;
-                       Value_M : Interfaces.Unsigned_8;
-                       Value_L : Interfaces.Unsigned_8
-                      ) return Interfaces.Unsigned_32 is
+   function Make_Word
+      (Value_H : Interfaces.Unsigned_8;
+       Value_N : Interfaces.Unsigned_8;
+       Value_M : Interfaces.Unsigned_8;
+       Value_L : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_32
+      is
    begin
       return ShL (Interfaces.Unsigned_32 (Value_H), 24) or
              ShL (Interfaces.Unsigned_32 (Value_N), 16) or
@@ -751,18 +763,20 @@ package body Bits is
                   Interfaces.Unsigned_32 (Value_L);
    end Make_Word;
 
-   function Make_Word (
-                       Value_H : Interfaces.Unsigned_16;
-                       Value_L : Interfaces.Unsigned_16
-                      ) return Interfaces.Unsigned_32 is
+   function Make_Word
+      (Value_H : Interfaces.Unsigned_16;
+       Value_L : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_32
+      is
    begin
       return ShL (Interfaces.Unsigned_32 (Value_H), 16) or Interfaces.Unsigned_32 (Value_L);
    end Make_Word;
 
-   function Make_Word (
-                       Value_H : Interfaces.Unsigned_32;
-                       Value_L : Interfaces.Unsigned_32
-                      ) return Interfaces.Unsigned_64 is
+   function Make_Word
+      (Value_H : Interfaces.Unsigned_32;
+       Value_L : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_64
+      is
    begin
       return ShL (Interfaces.Unsigned_64 (Value_H), 32) or Interfaces.Unsigned_64 (Value_L);
    end Make_Word;
@@ -771,16 +785,27 @@ package body Bits is
    -- Byte_Swap
    ----------------------------------------------------------------------------
 
-   function Byte_Swap_8 (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_8 is
+   function Byte_Swap_8
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_8
+      is
    separate;
 
-   function Byte_Swap_16 (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 is
+   function Byte_Swap_16
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_16
+      is
    separate;
 
-   function Byte_Swap_32 (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
+   function Byte_Swap_32
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_32 is
    separate;
 
-   function Byte_Swap_64 (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_64 is
+   function Byte_Swap_64
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_64
+      is
    separate;
 
    ----------------------------------------------------------------------------
@@ -789,23 +814,35 @@ package body Bits is
    -- Swap two halves of a 16/32/64-bit word.
    ----------------------------------------------------------------------------
 
-   function Word_Swap (Value : Interfaces.Unsigned_8) return Interfaces.Unsigned_8 is
+   function Word_Swap
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_8
+      is
    begin
       return Value;
    end Word_Swap;
 
-   function Word_Swap (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 is
+   function Word_Swap
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_16
+      is
    begin
       return Byte_Swap (Value);
    end Word_Swap;
 
-   function Word_Swap (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
+   function Word_Swap
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_32
+      is
    begin
       return ShR (Value and 16#FFFF_0000#, 16) or
              ShL (Value and 16#0000_FFFF#, 16);
    end Word_Swap;
 
-   function Word_Swap (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_64 is
+   function Word_Swap
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_64
+      is
    begin
       return ShR (Value and 16#FFFF_FFFF_0000_0000#, 32) or
              ShL (Value and 16#0000_0000_FFFF_FFFF#, 32);
@@ -816,7 +853,11 @@ package body Bits is
    ----------------------------------------------------------------------------
 
    -- Unsigned_16
-   function CPUE_To_BE (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 is
+
+   function CPUE_To_BE
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_16
+      is
    begin
       if BigEndian then
          return Value;
@@ -824,7 +865,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end CPUE_To_BE;
-   function BE_To_CPUE (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 is
+
+   function BE_To_CPUE
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_16
+      is
    begin
       if BigEndian then
          return Value;
@@ -832,7 +877,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end BE_To_CPUE;
-   function CPUE_To_LE (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 is
+
+   function CPUE_To_LE
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_16
+      is
    begin
       if LittleEndian then
          return Value;
@@ -840,7 +889,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end CPUE_To_LE;
-   function LE_To_CPUE (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 is
+
+   function LE_To_CPUE
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_16
+      is
    begin
       if LittleEndian then
          return Value;
@@ -850,7 +903,11 @@ package body Bits is
    end LE_To_CPUE;
 
    -- Unsigned_32
-   function CPUE_To_BE (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
+
+   function CPUE_To_BE
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_32
+      is
    begin
       if BigEndian then
          return Value;
@@ -858,7 +915,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end CPUE_To_BE;
-   function BE_To_CPUE (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
+
+   function BE_To_CPUE
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_32
+      is
    begin
       if BigEndian then
          return Value;
@@ -866,7 +927,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end BE_To_CPUE;
-   function CPUE_To_LE (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
+
+   function CPUE_To_LE
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_32
+      is
    begin
       if LittleEndian then
          return Value;
@@ -874,7 +939,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end CPUE_To_LE;
-   function LE_To_CPUE (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
+
+   function LE_To_CPUE
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_32
+      is
    begin
       if LittleEndian then
          return Value;
@@ -884,7 +953,11 @@ package body Bits is
    end LE_To_CPUE;
 
    -- Unsigned_64
-   function CPUE_To_BE (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_64 is
+
+   function CPUE_To_BE
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_64
+      is
    begin
       if BigEndian then
          return Value;
@@ -892,7 +965,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end CPUE_To_BE;
-   function BE_To_CPUE (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_64 is
+
+   function BE_To_CPUE
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_64
+      is
    begin
       if BigEndian then
          return Value;
@@ -900,7 +977,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end BE_To_CPUE;
-   function CPUE_To_LE (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_64 is
+
+   function CPUE_To_LE
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_64
+      is
    begin
       if LittleEndian then
          return Value;
@@ -908,7 +989,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end CPUE_To_LE;
-   function LE_To_CPUE (Value : Interfaces.Unsigned_64) return Interfaces.Unsigned_64 is
+
+   function LE_To_CPUE
+      (Value : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_64
+      is
    begin
       if LittleEndian then
          return Value;
@@ -922,7 +1007,11 @@ package body Bits is
    ----------------------------------------------------------------------------
 
    -- Unsigned_16
-   function HostToNetwork (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 is
+
+   function HostToNetwork
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_16
+      is
    begin
       if BigEndian then
          return Value;
@@ -930,7 +1019,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end HostToNetwork;
-   function NetworkToHost (Value : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 is
+
+   function NetworkToHost
+      (Value : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_16
+      is
    begin
       if BigEndian then
          return Value;
@@ -940,7 +1033,11 @@ package body Bits is
    end NetworkToHost;
 
    -- Unsigned_32
-   function HostToNetwork (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
+
+   function HostToNetwork
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_32
+      is
    begin
       if BigEndian then
          return Value;
@@ -948,7 +1045,11 @@ package body Bits is
          return Byte_Swap (Value);
       end if;
    end HostToNetwork;
-   function NetworkToHost (Value : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
+
+   function NetworkToHost
+      (Value : Interfaces.Unsigned_32)
+      return Interfaces.Unsigned_32
+      is
    begin
       if BigEndian then
          return Value;

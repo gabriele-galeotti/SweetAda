@@ -887,19 +887,6 @@ package Bits is
       return Interfaces.Unsigned_8
       with Inline => True;
 
-   -- Endian-Dependent BitN
-   function EDBitN
-      (Value : Interfaces.Unsigned_8;
-       NBit  : Natural)
-      return Boolean
-      with Inline => True;
-   function EDBitN
-      (Value : Interfaces.Unsigned_8;
-       NBit  : Natural;
-       Bit   : Boolean)
-      return Interfaces.Unsigned_8
-      with Inline => True;
-
    -- BitX
    function Bit0
       (Value : Interfaces.Unsigned_8)
@@ -940,24 +927,6 @@ package Bits is
        NBit  : Natural)
       return Boolean
       with Inline => True;
-
-   -- Bit_Extend
-   function Bit_Extend
-      (Value : Interfaces.Unsigned_8;
-       Bit   : Natural)
-      return Interfaces.Unsigned_8;
-   function Bit_Extend
-      (Value : Interfaces.Unsigned_16;
-       Bit   : Natural)
-      return Interfaces.Unsigned_16;
-   function Bit_Extend
-      (Value : Interfaces.Unsigned_32;
-       Bit   : Natural)
-      return Interfaces.Unsigned_32;
-   function Bit_Extend
-      (Value : Interfaces.Unsigned_64;
-       Bit   : Natural)
-      return Interfaces.Unsigned_64;
 
    -- Byte/Word manipulation
 
