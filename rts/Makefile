@@ -114,6 +114,11 @@ CC_SWITCHES += $(MULTILIB_SWITCHES)
 CC_SWITCHES += -ffreestanding
 CC_SWITCHES += -Wall
 
+# include additional system-wide, target-dependent compiler switches
+-include $(RTS_SOURCE_PATH_TARGET)/rts.cs.in
+ADAC_SWITCHES += $(ADAC_SWITCHES_RTS)
+CC_SWITCHES   += $(CC_SWITCHES_RTS)
+
 ################################################################################
 #                                                                              #
 # Specific setup.                                                              #
@@ -137,11 +142,6 @@ LIBGNARL      := $(ADALIB_PATH)/libgnarl.a
 LIBGNARL_ADS  := $(filter-out %.adb,$(LIBGNARL_SRCS))
 LIBGNARL_OBJS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.o))
 LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.ali))
-
-# include additional system-wide, target-dependent compiler switches
--include $(RTS_SOURCE_PATH_TARGET)/rts.cs.in
-ADAC_SWITCHES += $(ADAC_SWITCHES_RTS)
-CC_SWITCHES   += $(CC_SWITCHES_RTS)
 
 ################################################################################
 #                                                                              #
