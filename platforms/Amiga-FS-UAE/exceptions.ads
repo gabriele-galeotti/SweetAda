@@ -38,8 +38,8 @@ package Exceptions is
    -- By marking IVT with a Suppress_Initialization aspect, we can avoid
    -- place it in the .data section, which leads to a waste of space due to
    -- alignment.
-   IVT : aliased Exception_Vector_Table_Type with
-      Suppress_Initialization => True;
+   IVT : aliased Exception_Vector_Table_Type
+      with Suppress_Initialization => True;
 
    ----------------------------------------------------------------------------
    -- Exception Handlers
@@ -47,72 +47,33 @@ package Exceptions is
 
    -- 000 stack pointer
    -- 001 reset vector
-   -- 002
-   Buserr_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "buserr_handler";
-   -- 003
-   Addrerr_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "addrerr_handler";
-   -- 004
-   Illinstr_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "illinstr_handler";
-   -- 005
-   Div0_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "div0_handler";
-   -- 006
-   Chkinstr_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "chkinstr_handler";
-   -- 007
-   Trapc_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "trapc_handler";
-   -- 008
-   PrivilegeV_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "privilegev_handler";
-   -- 009
-   Trace_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "trace_handler";
-   -- 010
-   Line1010_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "line1010_handler";
-   -- 011
-   Line1111_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "line1111_handler";
+   Buserr_Handler                       : aliased Asm_Entry_Point -- 002
+      with Import => True, External_Name => "buserr_handler";
+   Addrerr_Handler                      : aliased Asm_Entry_Point -- 003
+      with Import => True, External_Name => "addrerr_handler";
+   Illinstr_Handler                     : aliased Asm_Entry_Point -- 004
+      with Import => True, External_Name => "illinstr_handler";
+   Div0_Handler                         : aliased Asm_Entry_Point -- 005
+      with Import => True, External_Name => "div0_handler";
+   Chkinstr_Handler                     : aliased Asm_Entry_Point -- 006
+      with Import => True, External_Name => "chkinstr_handler";
+   Trapc_Handler                        : aliased Asm_Entry_Point -- 007
+      with Import => True, External_Name => "trapc_handler";
+   PrivilegeV_Handler                   : aliased Asm_Entry_Point -- 008
+      with Import => True, External_Name => "privilegev_handler";
+   Trace_Handler                        : aliased Asm_Entry_Point -- 009
+      with Import => True, External_Name => "trace_handler";
+   Line1010_Handler                     : aliased Asm_Entry_Point -- 010
+      with Import => True, External_Name => "line1010_handler";
+   Line1111_Handler                     : aliased Asm_Entry_Point -- 011
+      with Import => True, External_Name => "line1111_handler";
    -- 012 is reserved
-   -- 013
-   CProtocolV_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "cprotocolv_handler";
-   -- 014
-   Formaterr_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "formaterr_handler";
-   -- 015
-   Uninitint_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "uninitint_handler";
+   CProtocolV_Handler                   : aliased Asm_Entry_Point -- 013
+      with Import => True, External_Name => "cprotocolv_handler";
+   Formaterr_Handler                    : aliased Asm_Entry_Point -- 014
+      with Import => True, External_Name => "formaterr_handler";
+   Uninitint_Handler                    : aliased Asm_Entry_Point -- 015
+      with Import => True, External_Name => "uninitint_handler";
    -- 016 is reserved
    -- 017 is reserved
    -- 018 is reserved
@@ -121,61 +82,52 @@ package Exceptions is
    -- 021 is reserved
    -- 022 is reserved
    -- 023 is reserved
-   -- 024
-   Spurious_Interrupt_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "spurious_handler";
-   -- 025
-   Level_1_Interrupt_Autovector_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "l1autovector_handler";
-   -- 026
-   Level_2_Interrupt_Autovector_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "l2autovector_handler";
-   -- 027
-   Level_3_Interrupt_Autovector_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "l3autovector_handler";
-   -- 028
-   Level_4_Interrupt_Autovector_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "l4autovector_handler";
-   -- 029
-   Level_5_Interrupt_Autovector_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "l5autovector_handler";
-   -- 030
-   Level_6_Interrupt_Autovector_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "l6autovector_handler";
-   -- 031
-   Level_7_Interrupt_Autovector_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "l7autovector_handler";
-   -- 047
-   Trap_15_Handler : aliased Asm_Entry_Point with
-      Import        => True,
-      Convention    => Asm,
-      External_Name => "trap15_handler";
+   Spurious_Interrupt_Handler           : aliased Asm_Entry_Point -- 024
+      with Import => True, External_Name => "spurious_handler";
+   Level_1_Interrupt_Autovector_Handler : aliased Asm_Entry_Point -- 025
+      with Import => True, External_Name => "l1autovector_handler";
+   Level_2_Interrupt_Autovector_Handler : aliased Asm_Entry_Point -- 026
+      with Import => True, External_Name => "l2autovector_handler";
+   Level_3_Interrupt_Autovector_Handler : aliased Asm_Entry_Point -- 027
+      with Import => True, External_Name => "l3autovector_handler";
+   Level_4_Interrupt_Autovector_Handler : aliased Asm_Entry_Point -- 028
+      with Import => True, External_Name => "l4autovector_handler";
+   Level_5_Interrupt_Autovector_Handler : aliased Asm_Entry_Point -- 029
+      with Import => True, External_Name => "l5autovector_handler";
+   Level_6_Interrupt_Autovector_Handler : aliased Asm_Entry_Point -- 030
+      with Import => True, External_Name => "l6autovector_handler";
+   Level_7_Interrupt_Autovector_Handler : aliased Asm_Entry_Point -- 031
+      with Import => True, External_Name => "l7autovector_handler";
+   -- 032 trap0
+   -- 033 trap1
+   -- 034 trap2
+   -- 035 trap3
+   -- 036 trap4
+   -- 037 trap5
+   -- 038 trap6
+   -- 039 trap7
+   -- 040 trap8
+   -- 041 trap9
+   -- 042 trap10
+   -- 043 trap11
+   -- 044 trap12
+   -- 045 trap13
+   -- 046 trap14
+   Trap_15_Handler                      : aliased Asm_Entry_Point -- 047
+      with Import => True, External_Name => "trap15_handler";
 
-   procedure Exception_Process (Exception_Number : in Unsigned_32; Frame_Address : in Address) with
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "exception_process";
+   procedure Exception_Process
+      (Exception_Number : in Unsigned_32;
+       Frame_Address    : in Address)
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "exception_process";
 
-   procedure Irq_Process (Irq_Identifier : in Exception_Vector_Id_Type) with
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "irq_process";
+   procedure Irq_Process
+      (Irq_Identifier : in Exception_Vector_Id_Type)
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "irq_process";
 
    procedure Init;
 
