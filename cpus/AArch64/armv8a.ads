@@ -36,15 +36,6 @@ package ARMv8A is
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- CPU helper subprograms
-   ----------------------------------------------------------------------------
-
-   procedure NOP with
-      Inline => True;
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
-
-   ----------------------------------------------------------------------------
    -- CurrentEL
    ----------------------------------------------------------------------------
 
@@ -63,9 +54,9 @@ package ARMv8A is
       Bit_Order => Low_Order_First,
       Size      => 64;
    for EL_Type use record
-      Reserved1 at 0 range 0 .. 1;
-      EL        at 0 range 2 .. 3;
-      Reserved2 at 0 range 4 .. 31;
+      Reserved1 at 0 range  0 ..  1;
+      EL        at 0 range  2 ..  3;
+      Reserved2 at 0 range  4 .. 31;
       Reserved3 at 0 range 32 .. 63;
    end record;
 
@@ -73,8 +64,204 @@ package ARMv8A is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- HCR_EL2
+   -- C5.2 Special-purpose registers
    ----------------------------------------------------------------------------
+
+   -- C5.2.8 FPCR, Floating-point Control Register
+
+   RMode_RN : constant := 2#00#; -- Round to Nearest (RN) mode.
+   RMode_RP : constant := 2#01#; -- Round towards Plus Infinity (RP) mode.
+   RMode_RM : constant := 2#10#; -- Round towards Minus Infinity (RM) mode.
+   RMode_RZ : constant := 2#11#; -- Round towards Zero (RZ) mode.
+
+   type FPCR_Type is
+   record
+      FIZ       : Boolean;      -- Flush Inputs to Zero. Controls whether single-precision ...
+      AH        : Boolean;      -- Alternate Handling. Controls alternate handling of denormalized floating-point numbers.
+      NEP       : Boolean;      -- Controls how the output elements other than the lowest element of the vector ...
+      Reserved1 : Bits_5 := 0;
+      IOE       : Boolean;      -- Invalid Operation floating-point exception trap enable.
+      DZE       : Boolean;      -- Divide by Zero floating-point exception trap enable.
+      OFE       : Boolean;      -- Overflow floating-point exception trap enable.
+      UFE       : Boolean;      -- Underflow floating-point exception trap enable.
+      IXE       : Boolean;      -- Inexact floating-point exception trap enable.
+      Reserved2 : Bits_2 := 0;
+      IDE       : Boolean;      -- Input Denormal floating-point exception trap enable.
+      Len       : Bits_3 := 0;  -- This field has no function in AArch64 state, and non-zero values are ignored ...
+      FZ16      : Boolean;      -- Flushing denormalized numbers to zero control bit on half-precision data-processing instructions.
+      Stride    : Bits_2 := 0;  -- This field has no function in AArch64 state, and non-zero values are ignored ...
+      RMode     : Bits_2;       -- Rounding Mode control field.
+      FZ        : Boolean;      -- Flushing denormalized numbers to zero control bit.
+      DN        : Boolean;      -- Default NaN use for NaN propagation.
+      AHP       : Boolean;      -- Alternative half-precision control bit.
+      Reserved3 : Bits_5 := 0;
+      Reserved4 : Bits_32 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for FPCR_Type use record
+      FIZ       at 0 range  0 ..  0;
+      AH        at 0 range  1 ..  1;
+      NEP       at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 ..  7;
+      IOE       at 0 range  8 ..  8;
+      DZE       at 0 range  9 ..  9;
+      OFE       at 0 range 10 .. 10;
+      UFE       at 0 range 11 .. 11;
+      IXE       at 0 range 12 .. 12;
+      Reserved2 at 0 range 13 .. 14;
+      IDE       at 0 range 15 .. 15;
+      Len       at 0 range 16 .. 18;
+      FZ16      at 0 range 19 .. 19;
+      Stride    at 0 range 20 .. 21;
+      RMode     at 0 range 22 .. 23;
+      FZ        at 0 range 24 .. 24;
+      DN        at 0 range 25 .. 25;
+      AHP       at 0 range 26 .. 26;
+      Reserved3 at 0 range 27 .. 31;
+      Reserved4 at 0 range 32 .. 63;
+   end record;
+
+   function FPCR_Read return FPCR_Type with
+      Inline => True;
+   procedure FPCR_Write (Value : in FPCR_Type) with
+      Inline => True;
+
+   -- C5.2.9 FPSR, Floating-point Status Register
+
+   type FPSR_Type is
+   record
+      IOC       : Boolean;      -- Invalid Operation cumulative exception bit.
+      DZC       : Boolean;      -- Division by Zero cumulative exception bit.
+      OFC       : Boolean;      -- Overflow cumulative exception bit.
+      UFC       : Boolean;      -- Underflow cumulative exception bit.
+      IXC       : Boolean;      -- Inexact cumulative exception bit.
+      Reserved1 : Bits_2 := 0;
+      IDC       : Boolean;      -- Input Denormal cumulative exception bit.
+      Reserved2 : Bits_19 := 0;
+      QC        : Boolean;      -- Cumulative saturation bit, Advanced SIMD only.
+      V         : Boolean;      -- Overflow condition flag.
+      C         : Boolean;      -- Carry condition flag.
+      Z         : Boolean;      -- Zero condition flag.
+      N         : Boolean;      -- Negative condition flag.
+      Reserved3 : Bits_32 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for FPSR_Type use
+   record
+      IOC       at 0 range  0 ..  0;
+      DZC       at 0 range  1 ..  1;
+      OFC       at 0 range  2 ..  2;
+      UFC       at 0 range  3 ..  3;
+      IXC       at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  6;
+      IDC       at 0 range  7 ..  7;
+      Reserved2 at 0 range  8 .. 26;
+      QC        at 0 range 27 .. 27;
+      V         at 0 range 28 .. 28;
+      C         at 0 range 29 .. 29;
+      Z         at 0 range 30 .. 30;
+      N         at 0 range 31 .. 31;
+      Reserved3 at 0 range 32 .. 63;
+   end record;
+
+   function FPSR_Read return FPSR_Type with
+      Inline => True;
+   procedure FPSR_Write (Value : in FPSR_Type) with
+      Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- D19.2 General system control registers
+   ----------------------------------------------------------------------------
+
+   -- D19.2.1 ACCDATA_EL1, Accelerator Data
+
+   type ACCDATA_EL1_Type is
+   record
+      ACCDATA  : Bits_32;      -- Holds the lower 32 bits of the data that is stored by an ST64BV0, ...
+      Reserved : Bits_32 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for ACCDATA_EL1_Type use record
+      ACCDATA  at 0 range  0 .. 31;
+      Reserved at 0 range 32 .. 63;
+   end record;
+
+   -- D19.2.15 APDAKeyHi_EL1, Pointer Authentication Key A for Data (bits[127:64])
+   -- D19.2.16 APDAKeyLo_EL1, Pointer Authentication Key A for Data (bits[63:0])
+   -- D19.2.17 APDBKeyHi_EL1, Pointer Authentication Key B for Data (bits[127:64])
+   -- D19.2.18 APDBKeyLo_EL1, Pointer Authentication Key B for Data (bits[63:0])
+   -- D19.2.19 APGAKeyHi_EL1, Pointer Authentication Key A for Code (bits[127:64])
+   -- D19.2.20 APGAKeyLo_EL1, Pointer Authentication Key A for Code (bits[63:0])
+   -- D19.2.21 APIAKeyHi_EL1, Pointer Authentication Key A for Instruction (bits[127:64])
+   -- D19.2.22 APIAKeyLo_EL1, Pointer Authentication Key A for Instruction (bits[63:0])
+   -- D19.2.23 APIBKeyHi_EL1, Pointer Authentication Key B for Instruction (bits[127:64])
+   -- D19.2.24 APIBKeyLo_EL1, Pointer Authentication Key B for Instruction (bits[63:0])
+
+   -- D19.2.25 CCSIDR2_EL1, Current Cache Size ID Register 2
+
+   type CCSIDR2_EL1_Type is
+   record
+      NumSets  : Bits_24;      -- (Number of sets in cache) - 1, therefore a value of 0 indicates 1 set in the cache. ...
+      Reserved : Bits_40 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for CCSIDR2_EL1_Type use record
+      NumSets  at 0 range  0 .. 23;
+      Reserved at 0 range 24 .. 63;
+   end record;
+
+   -- D19.2.43 FPEXC32_EL2, Floating-Point Exception Control register
+
+   type FPEXC32_EL2_Type is
+   record
+      IOF       : Boolean;      -- Invalid Operation floating-point exception trap enable.
+      DZF       : Boolean;      -- Divide by Zero floating-point exception trap enable.
+      OFF       : Boolean;      -- Overflow floating-point exception trap enable.
+      UFF       : Boolean;      -- Underflow floating-point exception trap enable.
+      IXF       : Boolean;      -- Inexact floating-point exception trap enable.
+      Reserved1 : Bits_2 := 0;
+      IDF       : Boolean;      -- Input Denormal floating-point exception trap enable.
+      VECITR    : Bits_3;
+      Reserved2 : Bits_15 := 0;
+      TFV       : Boolean;      -- Trapped Fault Valid bit.
+      VV        : Boolean;      -- VECITR valid bit.
+      FP2V      : Boolean;      -- FPINST2 instruction valid bit.
+      DEX       : Boolean;      -- Defined synchronous exception on floating-point execution.
+      EN        : Boolean;      -- Enables access to the Advanced SIMD and floating-point functionality ...
+      EX        : Boolean;      -- Exception bit.
+      Reserved3 : Bits_32 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for FPEXC32_EL2_Type use record
+      IOF       at 0 range  0 ..  0;
+      DZF       at 0 range  1 ..  1;
+      OFF       at 0 range  2 ..  2;
+      UFF       at 0 range  3 ..  3;
+      IXF       at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  6;
+      IDF       at 0 range  7 ..  7;
+      VECITR    at 0 range  8 .. 10;
+      Reserved2 at 0 range 11 .. 25;
+      TFV       at 0 range 26 .. 26;
+      VV        at 0 range 27 .. 27;
+      FP2V      at 0 range 28 .. 28;
+      DEX       at 0 range 29 .. 29;
+      EN        at 0 range 30 .. 30;
+      EX        at 0 range 31 .. 31;
+      Reserved3 at 0 range 32 .. 63;
+   end record;
+
+   function FPEXC32_EL2_Read return FPEXC32_EL2_Type with
+      Inline => True;
+   procedure FPEXC32_EL2_Write (Value : in FPEXC32_EL2_Type) with
+      Inline => True;
+
+   -- D19.2.48 HCR_EL2, Hypervisor Configuration Register
 
    type HCR_EL2_Type is
    record
@@ -142,16 +329,16 @@ package ARMv8A is
       Bit_Order => Low_Order_First,
       Size      => 64;
    for HCR_EL2_Type use record
-      VM        at 0 range 0 .. 0;
-      SWIO      at 0 range 1 .. 1;
-      PTW       at 0 range 2 .. 2;
-      FMO       at 0 range 3 .. 3;
-      IMO       at 0 range 4 .. 4;
-      AMO       at 0 range 5 .. 5;
-      VF        at 0 range 6 .. 6;
-      VI        at 0 range 7 .. 7;
-      VSE       at 0 range 8 .. 8;
-      FB        at 0 range 9 .. 9;
+      VM        at 0 range  0 ..  0;
+      SWIO      at 0 range  1 ..  1;
+      PTW       at 0 range  2 ..  2;
+      FMO       at 0 range  3 ..  3;
+      IMO       at 0 range  4 ..  4;
+      AMO       at 0 range  5 ..  5;
+      VF        at 0 range  6 ..  6;
+      VI        at 0 range  7 ..  7;
+      VSE       at 0 range  8 ..  8;
+      FB        at 0 range  9 ..  9;
       BSU       at 0 range 10 .. 11;
       DC        at 0 range 12 .. 12;
       TWI       at 0 range 13 .. 13;
@@ -209,9 +396,7 @@ package ARMv8A is
    procedure HCR_EL2_Write (Value : in HCR_EL2_Type) with
       Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- SCTLR_EL1
-   ----------------------------------------------------------------------------
+   -- D19.2.124 SCTLR_EL1, System Control Register (EL1)
 
    E0E_LE : constant := 0; -- Explicit data accesses at EL0 are little-endian.
    E0E_BE : constant := 1; -- Explicit data accesses at EL0 are big-endian.
@@ -219,70 +404,136 @@ package ARMv8A is
    EE_LE : constant := 0; -- Little-endian.
    EE_BE : constant := 1; -- Big-endian.
 
+   TCF_NONE     : constant := 2#00#; -- Tag Check Faults have no effect on the PE.
+   TCF_SYN      : constant := 2#01#; -- Tag Check Faults cause a synchronous exception.
+   TCF_ACC      : constant := 2#10#; -- Tag Check Faults are asynchronously accumulated.
+   TCF_RSYNWACC : constant := 2#11#; -- [FEAT_MTE3] Tag Check Faults cause a syn exc on reads, and are asyn acc on writes.
+
+   DSSBS_0 : constant := 0; -- PSTATE.SSBS is set to 0 on an exception to EL1.
+   DSSBS_1 : constant := 1; -- PSTATE.SSBS is set to 1 on an exception to EL1.
+
    type SCTLR_EL1_Type is
    record
-      M          : Boolean;         -- MMU enable.
-      A          : Boolean;         -- Alignment check enable.
-      C          : Boolean;         -- Cache enable.
-      SA         : Boolean;         -- Enable Stack Alignment check.
-      SA0        : Boolean;         -- Enable EL0 Stack Alignment check.
-      CP15BEN    : Boolean;         -- AArch32 CP15 barrier enable.
-      THEE       : Boolean;         -- ThumbEE enable.
-      ITD        : Boolean;         -- IT instruction disable.
-      SED        : Boolean;         -- SETEND instruction disable.
-      UMA        : Boolean;         -- User Mask Access.
+      M          : Boolean;     -- MMU enable for EL1&0 stage 1 address translation.
+      A          : Boolean;     -- Alignment check enable.
+      C          : Boolean;     -- Stage 1 Cacheability control, for data accesses.
+      SA         : Boolean;     -- SP Alignment check enable.
+      SA0        : Boolean;     -- SP Alignment check enable for EL0.
+      CP15BEN    : Boolean;     -- System instruction memory barrier enable.
+      nAA        : Boolean;     -- Non-aligned access.
+      ITD        : Boolean;     -- IT disable.
+      SED        : Boolean;     -- SETEND instruction disable.
+      UMA        : Boolean;     -- User Mask Access.
+      EnRCTX     : Boolean;     -- Enable EL0 access to the following System instructions: ...
+      EOS        : Boolean;     -- Exception Exit is Context Synchronizing.
+      I          : Boolean;     -- Stage 1 instruction access Cacheability control, for accesses at EL0 and EL1: ...
+      EnDB       : Boolean;     -- Controls enabling of pointer authentication (using the APDBKey_EL1 key) of instruction ...
+      DZE        : Boolean;     -- Traps EL0 execution of DC ZVA instructions ...
+      UCT        : Boolean;     -- Traps EL0 accesses to the CTR_EL0 to EL1, or to EL2 when ...
+      nTWI       : Boolean;     -- Traps EL0 execution of WFI instructions to EL1, or to EL2 when ...
       Reserved1  : Bits_1 := 0;
-      Reserved2  : Bits_1 := 1;
-      I          : Boolean;         -- Instruction cache enable.
-      Reserved3  : Bits_1 := 0;
-      DZE        : Boolean;         -- Enables access to the DC ZVA instruction at EL0.
-      UCT        : Boolean;         -- Enables EL0 access to the CTR_EL0 register in AArch64 state.
-      nTWI       : Boolean;         -- WFI non-trapping.
-      Reserved4  : Bits_1 := 0;
-      nTWE       : Boolean;         -- WFE non-trapping.
-      WXN        : Boolean;         -- Write permission implies Execute Never (XN).
-      Reserved5  : Bits_1 := 1;
-      Reserved6  : Bits_1 := 0;
-      Reserved7  : Bits_2 := 2#11#;
-      E0E        : Bits_1;          -- Endianness of explicit data access at EL0.
-      EE         : Bits_1;          -- Exception endianness.
-      UCI        : Boolean;         -- Enables EL0 access to the DC CVAU, DC CIVAC, DC CVAC and IC IVAU instrs in AArch64 state.
-      Reserved8  : Bits_1 := 0;
-      Reserved9  : Bits_2 := 2#11#;
-      Reserved10 : Bits_2 := 0;
+      nTWE       : Boolean;     -- Traps EL0 execution of WFE instructions to EL1, or to EL2 when ...
+      WXN        : Boolean;     -- Write permission implies Execute Never (XN).
+      TSCXT      : Boolean;     -- Trap EL0 Access to the SCXTNUM_EL0 register, when EL0 is using AArch64.
+      IESB       : Boolean;     -- Implicit Error Synchronization event enable.
+      EIS        : Boolean;     -- Exception Entry is Context Synchronizing.
+      SPAN       : Boolean;     -- Set Privileged Access Never, on taking an exception to EL1.
+      E0E        : Bits_1;      -- Endianness of data accesses at EL0.
+      EE         : Bits_1;      -- Endianness of data accesses at EL1, and stage 1 translation table walks in ...
+      UCI        : Boolean;     -- Enables EL0 access to the DC CVAU, DC CIVAC, DC CVAC and IC IVAU instrs in AArch64 state.
+      EnDA       : Boolean;     -- Controls enabling of pointer authentication (using the APDAKey_EL1 key) of instruction ...
+      nTLSMD     : Boolean;     -- No Trap Load Multiple and Store Multiple to Device-nGRE/Device-nGnRE/Device-nGnRnE memory.
+      LSMAOE     : Boolean;     -- Load Multiple and Store Multiple Atomicity and Ordering Enable.
+      EnIB       : Boolean;     -- Controls enabling of pointer authentication (using the APIBKey_EL1 key) of instruction ...
+      EnIA       : Boolean;     -- Controls enabling of pointer authentication (using the APIAKey_EL1 key) of instruction ...
+      CMOW       : Boolean;     -- Controls cache maintenance instruction permission for ...
+      MSCEn      : Boolean;     -- Memory Copy and Memory Set instructions Enable.
+      Reserved2  : Bits_1 := 0;
+      BT0        : Boolean;     -- PAC Branch Type compatibility at EL0.
+      BT1        : Boolean;     -- PAC Branch Type compatibility at EL1.
+      ITFSB      : Boolean;     -- When synchronous exceptions are not being generated by Tag Check Faults, ...
+      TCF0       : Bits_2;      -- Tag Check Fault in EL0.
+      TCF        : Bits_2;      -- Tag Check Fault in EL1.
+      ATA0       : Boolean;     -- Allocation Tag Access in EL0.
+      ATA        : Boolean;     -- Allocation Tag Access in EL1.
+      DSSBS      : Bits_1;      -- Default PSTATE.SSBS value on Exception Entry.
+      TWEDEn     : Boolean;     -- TWE Delay Enable.
+      TWEDEL     : Bits_4;      -- TWE Delay.
+      TMT0       : Boolean;     -- Forces a trivial implementation of the Transactional Memory Extension at EL0.
+      TMT        : Boolean;     -- Forces a trivial implementation of the Transactional Memory Extension at EL1.
+      TME0       : Boolean;     -- Enables the Transactional Memory Extension at EL0.
+      TME        : Boolean;     -- Enables the Transactional Memory Extension at EL1.
+      EnASR      : Boolean;     -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
+      EnAS0      : Boolean;     -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
+      EnALS      : Boolean;     -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
+      EPAN       : Boolean;     -- Enhanced Privileged Access Never.
+      Reserved3  : Bits_2 := 0;
+      EnTP2      : Boolean;     -- Traps instructions executed at EL0 that access ...
+      NMI        : Boolean;     -- Non-maskable Interrupt enable.
+      SPINTMASK  : Boolean;     -- SP Interrupt Mask enable.
+      TIDCP      : Boolean;     -- Trap IMPLEMENTATION DEFINED functionality.
    end record with
       Bit_Order => Low_Order_First,
-      Size      => 32;
+      Size      => 64;
    for SCTLR_EL1_Type use record
-      M          at 0 range 0 .. 0;
-      A          at 0 range 1 .. 1;
-      C          at 0 range 2 .. 2;
-      SA         at 0 range 3 .. 3;
-      SA0        at 0 range 4 .. 4;
-      CP15BEN    at 0 range 5 .. 5;
-      THEE       at 0 range 6 .. 6;
-      ITD        at 0 range 7 .. 7;
-      SED        at 0 range 8 .. 8;
-      UMA        at 0 range 9 .. 9;
-      Reserved1  at 0 range 10 .. 10;
-      Reserved2  at 0 range 11 .. 11;
+      M          at 0 range  0 ..  0;
+      A          at 0 range  1 ..  1;
+      C          at 0 range  2 ..  2;
+      SA         at 0 range  3 ..  3;
+      SA0        at 0 range  4 ..  4;
+      CP15BEN    at 0 range  5 ..  5;
+      nAA        at 0 range  6 ..  6;
+      ITD        at 0 range  7 ..  7;
+      SED        at 0 range  8 ..  8;
+      UMA        at 0 range  9 ..  9;
+      EnRCTX     at 0 range 10 .. 10;
+      EOS        at 0 range 11 .. 11;
       I          at 0 range 12 .. 12;
-      Reserved3  at 0 range 13 .. 13;
+      EnDB       at 0 range 13 .. 13;
       DZE        at 0 range 14 .. 14;
       UCT        at 0 range 15 .. 15;
       nTWI       at 0 range 16 .. 16;
-      Reserved4  at 0 range 17 .. 17;
+      Reserved1  at 0 range 17 .. 17;
       nTWE       at 0 range 18 .. 18;
       WXN        at 0 range 19 .. 19;
-      Reserved5  at 0 range 20 .. 20;
-      Reserved6  at 0 range 21 .. 21;
-      Reserved7  at 0 range 22 .. 23;
+      TSCXT      at 0 range 20 .. 20;
+      IESB       at 0 range 21 .. 21;
+      EIS        at 0 range 22 .. 22;
+      SPAN       at 0 range 23 .. 23;
       E0E        at 0 range 24 .. 24;
       EE         at 0 range 25 .. 25;
       UCI        at 0 range 26 .. 26;
-      Reserved8  at 0 range 27 .. 27;
-      Reserved9  at 0 range 28 .. 29;
-      Reserved10 at 0 range 30 .. 31;
+      EnDA       at 0 range 27 .. 27;
+      nTLSMD     at 0 range 28 .. 28;
+      LSMAOE     at 0 range 29 .. 29;
+      EnIB       at 0 range 30 .. 30;
+      EnIA       at 0 range 31 .. 31;
+      CMOW       at 0 range 32 .. 32;
+      MSCEn      at 0 range 33 .. 33;
+      Reserved2  at 0 range 34 .. 34;
+      BT0        at 0 range 35 .. 35;
+      BT1        at 0 range 36 .. 36;
+      ITFSB      at 0 range 37 .. 37;
+      TCF0       at 0 range 38 .. 39;
+      TCF        at 0 range 40 .. 41;
+      ATA0       at 0 range 42 .. 42;
+      ATA        at 0 range 43 .. 43;
+      DSSBS      at 0 range 44 .. 44;
+      TWEDEn     at 0 range 45 .. 45;
+      TWEDEL     at 0 range 46 .. 49;
+      TMT0       at 0 range 50 .. 50;
+      TMT        at 0 range 51 .. 51;
+      TME0       at 0 range 52 .. 52;
+      TME        at 0 range 53 .. 53;
+      EnASR      at 0 range 54 .. 54;
+      EnAS0      at 0 range 55 .. 55;
+      EnALS      at 0 range 56 .. 56;
+      EPAN       at 0 range 57 .. 57;
+      Reserved3  at 0 range 58 .. 59;
+      EnTP2      at 0 range 60 .. 60;
+      NMI        at 0 range 61 .. 61;
+      SPINTMASK  at 0 range 62 .. 62;
+      TIDCP      at 0 range 63 .. 63;
    end record;
 
    function SCTLR_EL1_Read return SCTLR_EL1_Type with
@@ -290,9 +541,9 @@ package ARMv8A is
    procedure SCTLR_EL1_Write (Value : in SCTLR_EL1_Type) with
       Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- VBAR_ELx
-   ----------------------------------------------------------------------------
+   -- D19.2.157 VBAR_EL1, Vector Base Address Register (EL1)
+   -- D19.2.158 VBAR_EL2, Vector Base Address Register (EL2)
+   -- D19.2.159 VBAR_EL3, Vector Base Address Register (EL3)
 
    function VBAR_EL1_Read return Unsigned_64 with
       Inline => True;
@@ -308,8 +559,27 @@ package ARMv8A is
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- CNTP_CTL_EL0
+   -- D19.12 Generic Timer registers
    ----------------------------------------------------------------------------
+
+   -- D19.12.1 CNTFRQ_EL0, Counter-timer Frequency register
+
+   type CNTFRQ_EL0_Type is
+   record
+      Clock_frequency : Unsigned_32;  -- Clock_Frequency.
+      Reserved        : Bits_32 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for CNTFRQ_EL0_Type use record
+      Clock_frequency at 0 range  0 .. 31;
+      Reserved        at 0 range 32 .. 63;
+   end record;
+
+   function CNTFRQ_EL0_Read return CNTFRQ_EL0_Type with
+      Inline => True;
+
+   -- D19.12.16 CNTP_CTL_EL0, Counter-timer Physical Timer Control register
 
    type CNTP_CTL_EL0_Type is
    record
@@ -322,10 +592,10 @@ package ARMv8A is
       Bit_Order => Low_Order_First,
       Size      => 64;
    for CNTP_CTL_EL0_Type use record
-      ENABLE    at 0 range 0 .. 0;
-      IMASK     at 0 range 1 .. 1;
-      ISTATUS   at 0 range 2 .. 2;
-      Reserved1 at 0 range 3 .. 31;
+      ENABLE    at 0 range  0 ..  0;
+      IMASK     at 0 range  1 ..  1;
+      ISTATUS   at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 .. 31;
       Reserved2 at 0 range 32 .. 63;
    end record;
 
@@ -334,20 +604,14 @@ package ARMv8A is
    procedure CNTP_CTL_EL0_Write (Value : in CNTP_CTL_EL0_Type) with
       Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- CNTP_CVAL_EL0
-   ----------------------------------------------------------------------------
-
-   -- Holds the EL1 physical timer CompareValue.
+   -- D19.12.17 CNTP_CVAL_EL0, Counter-timer Physical Timer CompareValue register
 
    function CNTP_CVAL_EL0_Read return Unsigned_64 with
       Inline => True;
    procedure CNTP_CVAL_EL0_Write (Value : in Unsigned_64) with
       Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- CNTP_TVAL_EL0
-   ----------------------------------------------------------------------------
+   -- D19.12.18 CNTP_TVAL_EL0, Counter-timer Physical Timer TimerValue register
 
    type CNTP_TVAL_EL0_Type is
    record
@@ -357,7 +621,7 @@ package ARMv8A is
       Bit_Order => Low_Order_First,
       Size      => 64;
    for CNTP_TVAL_EL0_Type use record
-      TimerValue at 0 range 0 .. 31;
+      TimerValue at 0 range  0 .. 31;
       Reserved   at 0 range 32 .. 63;
    end record;
 
@@ -366,189 +630,18 @@ package ARMv8A is
    procedure CNTP_TVAL_EL0_Write (Value : in CNTP_TVAL_EL0_Type) with
       Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- CNTPCT_EL0
-   ----------------------------------------------------------------------------
-
-   -- Holds the 64-bit physical count value.
+   -- D19.12.20 CNTPCT_EL0, Counter-timer Physical Count register
 
    function CNTPCT_EL0_Read return Unsigned_64 with
       Inline => True;
 
    ----------------------------------------------------------------------------
-   -- CNTFRQ_EL0
+   -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   type CNTFRQ_EL0_Type is
-   record
-      Clock_frequency : Unsigned_32;  -- Clock_Frequency.
-      Reserved        : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for CNTFRQ_EL0_Type use record
-      Clock_frequency at 0 range 0 .. 31;
-      Reserved        at 0 range 32 .. 63;
-   end record;
-
-   function CNTFRQ_EL0_Read return CNTFRQ_EL0_Type with
+   procedure NOP with
       Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- FPCR
-   ----------------------------------------------------------------------------
-
-   RMode_RN : constant := 2#00#; -- Round to Nearest (RN) mode.
-   RMode_RP : constant := 2#01#; -- Round towards Plus Infinity (RP) mode.
-   RMode_RM : constant := 2#10#; -- Round towards Minus Infinity (RM) mode.
-   RMode_RZ : constant := 2#11#; -- Round towards Zero (RZ) mode.
-
-   type FPCR_Type is
-   record
-      FIZ       : Boolean;      -- Flush Inputs to Zero. Controls whether single-precision ...
-      AH        : Boolean;      -- Alternate Handling. Controls alternate handling of denormalized floating-point numbers.
-      NEP       : Boolean;      -- Controls how the output elements other than the lowest element of the vector ...
-      Reserved1 : Bits_5 := 0;
-      IOE       : Boolean;      -- Invalid Operation floating-point exception trap enable.
-      DZE       : Boolean;      -- Divide by Zero floating-point exception trap enable.
-      OFE       : Boolean;      -- Overflow floating-point exception trap enable.
-      UFE       : Boolean;      -- Underflow floating-point exception trap enable.
-      IXE       : Boolean;      -- Inexact floating-point exception trap enable.
-      Reserved2 : Bits_2 := 0;
-      IDE       : Boolean;      -- Input Denormal floating-point exception trap enable.
-      Len       : Bits_3 := 0;  -- This field has no function in AArch64 state, and non-zero values are ignored ...
-      FZ16      : Boolean;      -- Flushing denormalized numbers to zero control bit on half-precision data-processing instructions.
-      Stride    : Bits_2 := 0;  -- This field has no function in AArch64 state, and non-zero values are ignored ...
-      RMode     : Bits_2;       -- Rounding Mode control field.
-      FZ        : Boolean;      -- Flushing denormalized numbers to zero control bit.
-      DN        : Boolean;      -- Default NaN use for NaN propagation.
-      AHP       : Boolean;      -- Alternative half-precision control bit.
-      Reserved3 : Bits_5 := 0;
-      Reserved4 : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for FPCR_Type use record
-      FIZ       at 0 range 0 .. 0;
-      AH        at 0 range 1 .. 1;
-      NEP       at 0 range 2 .. 2;
-      Reserved1 at 0 range 3 .. 7;
-      IOE       at 0 range 8 .. 8;
-      DZE       at 0 range 9 .. 9;
-      OFE       at 0 range 10 .. 10;
-      UFE       at 0 range 11 .. 11;
-      IXE       at 0 range 12 .. 12;
-      Reserved2 at 0 range 13 .. 14;
-      IDE       at 0 range 15 .. 15;
-      Len       at 0 range 16 .. 18;
-      FZ16      at 0 range 19 .. 19;
-      Stride    at 0 range 20 .. 21;
-      RMode     at 0 range 22 .. 23;
-      FZ        at 0 range 24 .. 24;
-      DN        at 0 range 25 .. 25;
-      AHP       at 0 range 26 .. 26;
-      Reserved3 at 0 range 27 .. 31;
-      Reserved4 at 0 range 32 .. 63;
-   end record;
-
-   function FPCR_Read return FPCR_Type with
-      Inline => True;
-   procedure FPCR_Write (Value : in FPCR_Type) with
-      Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- FPEXC32_EL2
-   ----------------------------------------------------------------------------
-
-   type FPEXC32_EL2_Type is
-   record
-      IOF       : Boolean;      -- Invalid Operation floating-point exception trap enable.
-      DZF       : Boolean;      -- Divide by Zero floating-point exception trap enable.
-      OFF       : Boolean;      -- Overflow floating-point exception trap enable.
-      UFF       : Boolean;      -- Underflow floating-point exception trap enable.
-      IXF       : Boolean;      -- Inexact floating-point exception trap enable.
-      Reserved1 : Bits_2 := 0;
-      IDF       : Boolean;      -- Input Denormal floating-point exception trap enable.
-      VECITR    : Bits_3;
-      Reserved2 : Bits_15 := 0;
-      TFV       : Boolean;      -- Trapped Fault Valid bit.
-      VV        : Boolean;      -- VECITR valid bit.
-      FP2V      : Boolean;      -- FPINST2 instruction valid bit.
-      DEX       : Boolean;      -- Defined synchronous exception on floating-point execution.
-      EN        : Boolean;      -- Enables access to the Advanced SIMD and floating-point functionality ...
-      EX        : Boolean;      -- Exception bit.
-      Reserved3 : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for FPEXC32_EL2_Type use record
-      IOF       at 0 range 0 .. 0;
-      DZF       at 0 range 1 .. 1;
-      OFF       at 0 range 2 .. 2;
-      UFF       at 0 range 3 .. 3;
-      IXF       at 0 range 4 .. 4;
-      Reserved1 at 0 range 5 .. 6;
-      IDF       at 0 range 7 .. 7;
-      VECITR    at 0 range 8 .. 10;
-      Reserved2 at 0 range 11 .. 25;
-      TFV       at 0 range 26 .. 26;
-      VV        at 0 range 27 .. 27;
-      FP2V      at 0 range 28 .. 28;
-      DEX       at 0 range 29 .. 29;
-      EN        at 0 range 30 .. 30;
-      EX        at 0 range 31 .. 31;
-      Reserved3 at 0 range 32 .. 63;
-   end record;
-
-   function FPEXC32_EL2_Read return FPEXC32_EL2_Type with
-      Inline => True;
-   procedure FPEXC32_EL2_Write (Value : in FPEXC32_EL2_Type) with
-      Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- FPSR
-   ----------------------------------------------------------------------------
-
-   type FPSR_Type is
-   record
-      IOC       : Boolean;      -- Invalid Operation cumulative exception bit.
-      DZC       : Boolean;      -- Division by Zero cumulative exception bit.
-      OFC       : Boolean;      -- Overflow cumulative exception bit.
-      UFC       : Boolean;      -- Underflow cumulative exception bit.
-      IXC       : Boolean;      -- Inexact cumulative exception bit.
-      Reserved1 : Bits_2 := 0;
-      IDC       : Boolean;      -- Input Denormal cumulative exception bit.
-      Reserved2 : Bits_19 := 0;
-      QC        : Boolean;      -- Cumulative saturation bit, Advanced SIMD only.
-      V         : Boolean;      -- Overflow condition flag.
-      C         : Boolean;      -- Carry condition flag.
-      Z         : Boolean;      -- Zero condition flag.
-      N         : Boolean;      -- Negative condition flag.
-      Reserved3 : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for FPSR_Type use
-   record
-      IOC       at 0 range 0 .. 0;
-      DZC       at 0 range 1 .. 1;
-      OFC       at 0 range 2 .. 2;
-      UFC       at 0 range 3 .. 3;
-      IXC       at 0 range 4 .. 4;
-      Reserved1 at 0 range 5 .. 6;
-      IDC       at 0 range 7 .. 7;
-      Reserved2 at 0 range 8 .. 26;
-      QC        at 0 range 27 .. 27;
-      V         at 0 range 28 .. 28;
-      C         at 0 range 29 .. 29;
-      Z         at 0 range 30 .. 30;
-      N         at 0 range 31 .. 31;
-      Reserved3 at 0 range 32 .. 63;
-   end record;
-
-   function FPSR_Read return FPSR_Type with
-      Inline => True;
-   procedure FPSR_Write (Value : in FPSR_Type) with
+   procedure Asm_Call (Target_Address : in Address) with
       Inline => True;
 
    ----------------------------------------------------------------------------

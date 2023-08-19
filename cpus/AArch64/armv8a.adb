@@ -41,38 +41,6 @@ package body ARMv8A is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- NOP
-   ----------------------------------------------------------------------------
-   procedure NOP is
-   begin
-      Asm (
-           Template => ""            & CRLF &
-                       "        nop" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end NOP;
-
-   ----------------------------------------------------------------------------
-   -- Asm_Call
-   ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
-   begin
-      Asm (
-           Template => ""                   & CRLF &
-                       "        blr     %0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => System.Address'Asm_Input ("r", Target_Address),
-           Clobber  => "x30",
-           Volatile => True
-          );
-   end Asm_Call;
-
-   ----------------------------------------------------------------------------
    -- CurrentEL_Read
    ----------------------------------------------------------------------------
    function CurrentEL_Read return EL_Type is
@@ -89,6 +57,102 @@ package body ARMv8A is
           );
       return Value;
    end CurrentEL_Read;
+
+   ----------------------------------------------------------------------------
+   -- FPCR_Read/Write
+   ----------------------------------------------------------------------------
+
+   function FPCR_Read return FPCR_Type is
+      Value : FPCR_Type;
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        mrs     %0,fpcr" & CRLF &
+                       "",
+           Outputs  => FPCR_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end FPCR_Read;
+
+   procedure FPCR_Write (Value : in FPCR_Type) is
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        msr     fpcr,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => FPCR_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end FPCR_Write;
+
+   ----------------------------------------------------------------------------
+   -- FPSR_Read/Write
+   ----------------------------------------------------------------------------
+
+   function FPSR_Read return FPSR_Type is
+      Value : FPSR_Type;
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        mrs     %0,fpsr" & CRLF &
+                       "",
+           Outputs  => FPSR_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end FPSR_Read;
+
+   procedure FPSR_Write (Value : in FPSR_Type) is
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        msr     fpsr,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => FPSR_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end FPSR_Write;
+
+   ----------------------------------------------------------------------------
+   -- FPEXC32_EL2_Read/Write
+   ----------------------------------------------------------------------------
+
+   function FPEXC32_EL2_Read return FPEXC32_EL2_Type is
+      Value : FPEXC32_EL2_Type;
+   begin
+      Asm (
+           Template => ""                               & CRLF &
+                       "        mrs     %0,fpexc32_el2" & CRLF &
+                       "",
+           Outputs  => FPEXC32_EL2_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end FPEXC32_EL2_Read;
+
+   procedure FPEXC32_EL2_Write (Value : in FPEXC32_EL2_Type) is
+   begin
+      Asm (
+           Template => ""                               & CRLF &
+                       "        msr     fpexc32_el2,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => FPEXC32_EL2_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end FPEXC32_EL2_Write;
 
    ----------------------------------------------------------------------------
    -- HCR_EL2_Read/Write
@@ -243,6 +307,25 @@ package body ARMv8A is
    end VBAR_EL3_Write;
 
    ----------------------------------------------------------------------------
+   -- CNTFRQ_EL0_Read
+   ----------------------------------------------------------------------------
+
+   function CNTFRQ_EL0_Read return CNTFRQ_EL0_Type is
+      Value : CNTFRQ_EL0_Type;
+   begin
+      Asm (
+           Template => ""                              & CRLF &
+                       "        mrs     %0,cntfrq_el0" & CRLF &
+                       "",
+           Outputs  => CNTFRQ_EL0_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end CNTFRQ_EL0_Read;
+
+   ----------------------------------------------------------------------------
    -- CNTP_CTL_EL0_Read/Write
    ----------------------------------------------------------------------------
 
@@ -358,119 +441,36 @@ package body ARMv8A is
    end CNTPCT_EL0_Read;
 
    ----------------------------------------------------------------------------
-   -- CNTFRQ_EL0_Read
+   -- NOP
    ----------------------------------------------------------------------------
-
-   function CNTFRQ_EL0_Read return CNTFRQ_EL0_Type is
-      Value : CNTFRQ_EL0_Type;
+   procedure NOP is
    begin
       Asm (
-           Template => ""                              & CRLF &
-                       "        mrs     %0,cntfrq_el0" & CRLF &
-                       "",
-           Outputs  => CNTFRQ_EL0_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end CNTFRQ_EL0_Read;
-
-   ----------------------------------------------------------------------------
-   -- FPCR_Read/Write
-   ----------------------------------------------------------------------------
-
-   function FPCR_Read return FPCR_Type is
-      Value : FPCR_Type;
-   begin
-      Asm (
-           Template => ""                        & CRLF &
-                       "        mrs     %0,fpcr" & CRLF &
-                       "",
-           Outputs  => FPCR_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end FPCR_Read;
-
-   procedure FPCR_Write (Value : in FPCR_Type) is
-   begin
-      Asm (
-           Template => ""                        & CRLF &
-                       "        msr     fpcr,%0" & CRLF &
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => FPCR_Type'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end FPCR_Write;
-
-   ----------------------------------------------------------------------------
-   -- FPEXC32_EL2_Read/Write
-   ----------------------------------------------------------------------------
-
-   function FPEXC32_EL2_Read return FPEXC32_EL2_Type is
-      Value : FPEXC32_EL2_Type;
-   begin
-      Asm (
-           Template => ""                               & CRLF &
-                       "        mrs     %0,fpexc32_el2" & CRLF &
-                       "",
-           Outputs  => FPEXC32_EL2_Type'Asm_Output ("=r", Value),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
           );
-      return Value;
-   end FPEXC32_EL2_Read;
-
-   procedure FPEXC32_EL2_Write (Value : in FPEXC32_EL2_Type) is
-   begin
-      Asm (
-           Template => ""                               & CRLF &
-                       "        msr     fpexc32_el2,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => FPEXC32_EL2_Type'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end FPEXC32_EL2_Write;
+   end NOP;
 
    ----------------------------------------------------------------------------
-   -- FPSR_Read/Write
+   -- Asm_Call
    ----------------------------------------------------------------------------
-
-   function FPSR_Read return FPSR_Type is
-      Value : FPSR_Type;
+   procedure Asm_Call (Target_Address : in Address) is
    begin
       Asm (
-           Template => ""                        & CRLF &
-                       "        mrs     %0,fpsr" & CRLF &
-                       "",
-           Outputs  => FPSR_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end FPSR_Read;
-
-   procedure FPSR_Write (Value : in FPSR_Type) is
-   begin
-      Asm (
-           Template => ""                        & CRLF &
-                       "        msr     fpsr,%0" & CRLF &
+           Template => ""                   & CRLF &
+                       "        blr     %0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => FPSR_Type'Asm_Input ("r", Value),
-           Clobber  => "",
+           Inputs   => System.Address'Asm_Input ("r", Target_Address),
+           Clobber  => "x30",
            Volatile => True
           );
-   end FPSR_Write;
+   end Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Irq_Enable
