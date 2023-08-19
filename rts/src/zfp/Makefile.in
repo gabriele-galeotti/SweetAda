@@ -33,3 +33,15 @@ else
 	$(CP) "$(RTS_SOURCE_PATH)"/*.adb "$(ADAINCLUDE_PATH)"/
 endif
 
+#
+# From .../gcc/ada/Makefile.rtl:
+#
+# Force no function reordering on a-except.o because of the exclusion bounds
+# mechanism (see the source file for more detailed information).
+# force debugging information on a-except.o so that it is always
+# possible to set conditional breakpoints on exceptions.
+# use -O1 otherwise gdb isn't able to get a full backtrace on mips targets.
+#
+$(ADALIB_PATH)/a-except.o : $(ADAINCLUDE_PATH)/a-except.adb
+	$(ADAC) -o $@ -c -g -O1 -fno-inline -fno-toplevel-reorder $(ADAC_SWITCHES) $<
+

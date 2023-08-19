@@ -177,7 +177,7 @@ STRIP    := $(TOOLCHAIN_STRIP)
 ADAC     += --RTS="$(RTS_PATH)"
 GNATLS   += --RTS="$(RTS_PATH)"
 GNATBIND += --RTS="$(RTS_PATH)"
--include $(RTS_DIRECTORY)/$(RTS)/$(TOOLCHAIN_NAME)/Makefile.rts.in
+-include $(RTS_DIRECTORY)/$(RTS)/$(TOOLCHAIN_NAME)/rts.cs.in
 export ADAC_SWITCHES_RTS
 export CC_SWITCHES_RTS
 

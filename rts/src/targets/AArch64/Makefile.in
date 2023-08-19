@@ -13,8 +13,8 @@ ifneq (,$(filter $(OSTYPE),cmd msys))
 	$(DOS2UNIX) $(ADAINCLUDE_PATH_CMD)\system.ads $(ADAINCLUDE_PATH_CMD)\system.ads
 endif
 ifeq ($(OSTYPE),cmd)
-	$(CP) $(RTS_SOURCE_PATH_TARGET_CMD)\Makefile.rts.in $(RTS)\$(TOOLCHAIN_NAME)\ $(NULL)
+	$(CP) $(RTS_SOURCE_PATH_TARGET_CMD)\rts.cs.in $(RTS)\$(TOOLCHAIN_NAME)\ $(NULL)
 else
-	$(CP) $(RTS_SOURCE_PATH_TARGET)/Makefile.rts.in ./$(RTS)/$(TOOLCHAIN_NAME)/
+	$(CP) $(RTS_SOURCE_PATH_TARGET)/rts.cs.in ./$(RTS)/$(TOOLCHAIN_NAME)/
 endif
 

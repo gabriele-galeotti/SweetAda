@@ -138,8 +138,8 @@ LIBGNARL_ADS  := $(filter-out %.adb,$(LIBGNARL_SRCS))
 LIBGNARL_OBJS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.o))
 LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.ali))
 
-# this include file defines additional target-dependent switches
--include $(RTS_SOURCE_PATH_TARGET)/Makefile.rts.in
+# include additional system-wide, target-dependent compiler switches
+-include $(RTS_SOURCE_PATH_TARGET)/rts.cs.in
 ADAC_SWITCHES += $(ADAC_SWITCHES_RTS)
 CC_SWITCHES   += $(CC_SWITCHES_RTS)
 
@@ -210,18 +210,6 @@ ifeq ($(OSTYPE),cmd)
 else
 	@$(RM) $(ADALIB_PATH)/*.o
 endif
-
-#
-# From .../gcc/ada/Makefile.rtl:
-#
-# Force no function reordering on a-except.o because of the exclusion bounds
-# mechanism (see the source file for more detailed information).
-# force debugging information on a-except.o so that it is always
-# possible to set conditional breakpoints on exceptions.
-# use -O1 otherwise gdb isn't able to get a full backtrace on mips targets.
-#
-$(ADALIB_PATH)/a-except.o : $(ADAINCLUDE_PATH)/a-except.adb
-	$(ADAC) -o $@ -c -g -O1 -fno-inline -fno-toplevel-reorder $(ADAC_SWITCHES) $<
 
 # Ada sources generic rules
 $(ADALIB_PATH)/%.o : $(ADAINCLUDE_PATH)/%.adb
