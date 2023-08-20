@@ -70,7 +70,7 @@ el2_celsp0_serr:b       el_handler              // + 0x180 SError/vSError
                 .align  7
 el2_celspx_syn: b       el_handler              // + 0x200 Synchronous
                 .align  7
-el2_celspx_irq: b       el_handler              // + 0x280 IRQ/vIRQ
+el2_celspx_irq: b       irq_handler             // + 0x280 IRQ/vIRQ
                 .align  7
 el2_celspx_fiq: b       el_handler              // + 0x300 FIQ/vFIQ
                 .align  7

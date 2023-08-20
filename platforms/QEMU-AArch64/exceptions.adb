@@ -62,7 +62,7 @@ package body Exceptions is
          IOEMU.IO0 := 1;
       end if;
       Virt.GICD_ICPENDR (30) := True;
-      Virt.Timer_Reload;
+      BSP.Timer_Reload;
    end Exception_Process;
 
    ----------------------------------------------------------------------------
@@ -71,6 +71,9 @@ package body Exceptions is
    procedure Init is
       function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
    begin
+      if ARMv8A.CurrentEL_Read.EL = 2 then
+         ARMv8A.VBAR_EL2_Write (To_U64 (EL2_Table'Address));
+      end if;
       ARMv8A.VBAR_EL1_Write (To_U64 (EL1_Table'Address));
    end Init;
 

@@ -36,6 +36,7 @@ package BSP is
 
    PL011_Descriptor : PL011.Descriptor_Type := PL011.DESCRIPTOR_INVALID;
 
+   procedure Timer_Reload;
    procedure Console_Putchar (C : in Character);
    procedure Console_Getchar (C : out Character);
    procedure Setup;

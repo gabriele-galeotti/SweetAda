@@ -19,6 +19,7 @@ with System;
 with System.Parameters;
 with System.Secondary_Stack;
 with System.Storage_Elements;
+with Configure;
 with Definitions;
 with Core;
 with Bits;
@@ -47,6 +48,8 @@ package body BSP is
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
+   Timer_Constant : Unsigned_32;
+
    function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
       Export        => True,
       Convention    => C,
@@ -67,6 +70,14 @@ package body BSP is
    begin
       return BSP_SS_Stack;
    end Get_Sec_Stack;
+
+   ----------------------------------------------------------------------------
+   -- Timer_Reload
+   ----------------------------------------------------------------------------
+   procedure Timer_Reload is
+   begin
+      ARMv8A.CNTP_TVAL_EL0_Write ((TimerValue => Timer_Constant, others => <>));
+   end Timer_Reload;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -114,17 +125,30 @@ package body BSP is
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
+      Timer_Constant :=
+         (ARMv8A.CNTFRQ_EL0_Read.Clock_frequency + Configure.TICK_FREQUENCY / 2) /
+         Configure.TICK_FREQUENCY;
       Virt.GICD_CTLR.EnableGrp1 := True;
       Virt.GICD_ISENABLER (30)  := True;
       Virt.GICC_CTLR.EnableGrp1 := True;
       Virt.GICC_PMR.Priority    := 16#FF#;
-      Virt.Timer_Reload;
+      Timer_Reload;
       ARMv8A.CNTP_CTL_EL0_Write ((
                                   ENABLE  => True,
                                   IMASK   => False,
                                   ISTATUS => False,
                                   others  => <>
                                  ));
+      -- handle IRQs at EL2
+      if ARMv8A.CurrentEL_Read.EL = 2 then
+         declare
+            HCR_EL2 : ARMv8A.HCR_EL2_Type;
+         begin
+            HCR_EL2 := ARMv8A.HCR_EL2_Read;
+            HCR_EL2.IMO := True;
+            ARMv8A.HCR_EL2_Write (HCR_EL2);
+         end;
+      end if;
       ARMv8A.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;

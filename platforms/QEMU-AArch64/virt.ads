@@ -29,6 +29,8 @@ package Virt is
    --                                                                        --
    --========================================================================--
 
+   pragma Elaborate_Body;
+
    use System.Storage_Elements;
    use Bits;
    use GIC;
@@ -62,7 +64,5 @@ package Virt is
       Convention           => Ada;
 
    PL011_UART0_BASEADDRESS : constant := 16#0900_0000#;
-
-   procedure Timer_Reload;
 
 end Virt;
