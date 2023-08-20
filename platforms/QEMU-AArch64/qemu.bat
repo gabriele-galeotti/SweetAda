@@ -43,6 +43,9 @@ SET SERIALPORT1=4447
 SET TILTIMEOUT=3
 
 REM QEMU machine
+REM EL1: default
+REM EL2: virtualization=on
+REM EL3: secure=on
 START "" "%QEMU_EXECUTABLE%" ^
   -M virt -cpu cortex-a53 -m 128 ^
   -kernel %KERNEL_OUTFILE% ^

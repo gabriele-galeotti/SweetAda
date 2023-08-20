@@ -79,6 +79,9 @@ SERIALPORT1=4447
 TILTIMEOUT=3
 
 # QEMU machine
+# EL1: default
+# EL2: virtualization=on
+# EL3: secure=on
 ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
   -M virt -cpu cortex-a53 -m 128 \
   -kernel ${KERNEL_OUTFILE} \

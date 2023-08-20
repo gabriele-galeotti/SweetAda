@@ -134,6 +134,8 @@ el1_lel32_fiq:  b       el_handler              // + 0x700 FIQ/vFIQ
                 .align  7
 el1_lel32_serr: b       el_handler              // + 0x780 SError/vSError
 
+////////////////////////////////////////////////////////////////////////////////
+
 el_handler:     b       .
 
 irq_handler:
