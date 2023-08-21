@@ -709,7 +709,7 @@ DISTCLEAN_OBJECTS := $(CONFIGUREGPR_FILENAME) $(KERNEL_CFGFILE)
 ################################################################################
 
 ifeq ($(USE_LIBGCC),Y)
-LIBGCC_OBJECT += $(LIBGCC_FILENAME)
+LIBGCC_OBJECT := "$(LIBGCC_FILENAME)"
 else
 LIBGCC_OBJECT :=
 endif
@@ -721,8 +721,7 @@ endif
 ifeq ($(USE_LIBADA),Y)
 LIBGNAT_OBJECT  := "$(RTS_PATH)"/adalib/libgnat.a
 LIBGNARL_OBJECT := "$(RTS_PATH)"/adalib/libgnarl.a
-LIBADA_OBJECTS  += $(LIBGNAT_OBJECT)
-LIBADA_OBJECTS  += $(LIBGNARL_OBJECT)
+LIBADA_OBJECTS  := $(LIBGNAT_OBJECT) $(LIBGNARL_OBJECT)
 else
 LIBADA_OBJECTS  :=
 endif

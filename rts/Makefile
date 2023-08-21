@@ -95,7 +95,7 @@ ADAC_SWITCHES += --RTS="$(SWEETADA_PATH)"/rts/$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILI
 ADAC_SWITCHES += $(MULTILIB_SWITCHES)
 # we are building a static library, so no PIC
 #ADAC_SWITCHES += -fPIC
-ADAC_SWITCHES += -nostdinc
+ADAC_SWITCHES += -nostdinc -nostdlib
 ADAC_SWITCHES += -gnatwa
 #ADAC_SWITCHES += -gnata    # Assertions enabled.
 # -gnatg implies -gnatwae and -gnatyg

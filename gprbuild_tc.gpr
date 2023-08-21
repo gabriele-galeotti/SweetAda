@@ -120,6 +120,7 @@ abstract project Gprbuild_Tc is
                                 "-ffunction-sections",
                                 "-fdata-sections",
                                 "-g3", "-gdwarf-5",
+                                "-nostdinc", "-nostdlib",
                                 "-gnatef",
                                 "-gnatf",
                                 "-gnatU",
@@ -147,6 +148,7 @@ abstract project Gprbuild_Tc is
 
    package Binder is
       for Switches ("Ada") use (
+                                "-nostdinc", "-nostdlib",
                                 "-F",
                                 "-e",
                                 "-l",
