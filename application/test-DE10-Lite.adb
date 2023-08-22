@@ -2,6 +2,7 @@
 with Interfaces;
 with CPU;
 with DE10Lite;
+with Console;
 
 package body Application is
 
@@ -39,8 +40,9 @@ package body Application is
             LEDs_Dir := 16#FFFF_FFFF#;
             loop
                LEDs_IO := Value;
-               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
                Value := @ + 1;
+               Console.Print (".", NL => False);
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
       end if;

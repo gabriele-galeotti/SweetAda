@@ -59,7 +59,7 @@ qsys_filename = sys.argv[1]
 package_name = sys.argv[2]
 end_list = []
 for el in sys.argv[3:]:
-    end_list.append(el + '.s1')
+    end_list.append(el)
 
 ads_filename = package_name.lower() + '.ads'
 
@@ -74,12 +74,12 @@ root = tree.getroot()
 for connection in root.findall('connection'):
     end = connection.get('end')
     if end in end_list:
-        end = end.replace('.s1', '_s1')
+        end = end.replace('.', '_')
         for parameter in connection.findall('parameter'):
             name = parameter.get('name')
             if name == 'baseAddress':
                 address = parameter.get('value').replace('0x', '')
-                address = address[:4] + '_' + address[4:]
+                #address = address[:4] + '_' + address[4:]
                 print('   {}_ADDRESS : constant := 16#{}#;'.format(end, address))
                 break
 

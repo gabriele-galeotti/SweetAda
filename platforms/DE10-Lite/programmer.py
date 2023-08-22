@@ -19,7 +19,8 @@
 # TOOLCHAIN_PROGRAM_PREFIX
 # QUARTUS_PATH
 # QSYS_PROJECT_PATH
-# QSYS_SOF_FILENAME
+# QSYS_SOF_FILE
+# QSYS_JDI_FILE
 # KERNEL_OUTFILE
 #
 
@@ -58,7 +59,8 @@ def errprintf(format, *args):
 
 TOOLCHAIN_PROGRAM_PREFIX = os.getenv('TOOLCHAIN_PROGRAM_PREFIX')
 QUARTUS_PATH             = os.getenv('QUARTUS_PATH')
-SOF_FILE                 = os.getenv('QSYS_SOF_FILENAME')
+SOF_FILE                 = os.getenv('QSYS_SOF_FILE')
+JDI_FILE                 = os.getenv('QSYS_JDI_FILE')
 ELF_FILE                 = os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('KERNEL_OUTFILE'))
 
 platform = library.platform_get()
@@ -92,10 +94,6 @@ if result.returncode != 0:
     exit(1)
 
 # NOTE: needs nios2-elf-objcopy
-# --cpu_name "nios2_gen2_0"
-# --instance 0
-# --jdi ${JDI}
-# --reset-target
 printf('Running nios2-download ...\n')
 download_command = [
     'sh', '-c',
@@ -106,6 +104,10 @@ download_command = [
        --debug                                     \
        --cable "USB-Blaster"                       \
        --device 1                                  \
+       --instance 0                                \
+       --cpu_name "nios2_gen2_0"                   \
+       --jdi ' + JDI_FILE + '                      \
+       --reset-target                              \
        --go                                        \
     ' + ELF_FILE
     ]

@@ -15,7 +15,26 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Definitions;
+with Bits;
+with Console;
+with CPU;
+with DE10Lite;
+
 package body BSP is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use Interfaces;
+   use Definitions;
+   use Bits;
+   use DE10Lite;
 
    --========================================================================--
    --                                                                        --
@@ -31,12 +50,22 @@ package body BSP is
 
    procedure Console_Putchar (C : in Character) is
    begin
-      null;
+      -- wait for transmitter available
+      loop
+         exit when JTAG_UART.control.WSPACE >= 0;
+      end loop;
+      JTAG_UART.data.DATA := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar (C : out Character) is
+      Data : Unsigned_8;
    begin
-      C := Character'Val (0);
+      -- wait for receiver available
+      loop
+         exit when JTAG_UART.data.RVALID;
+      end loop;
+      Data := JTAG_UART.data.DATA;
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -44,8 +73,18 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure Setup is
    begin
+      -- JTAG UART ------------------------------------------------------------
+      JTAG_UART.control := (
+         RE     => False,
+         WE     => False,
+         others => <>
+         );
+      -- Console --------------------------------------------------------------
+      Console.Console_Descriptor.Write := Console_Putchar'Access;
+      Console.Console_Descriptor.Read := Console_Getchar'Access;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
-      null;
+      Console.Print ("DE10-Lite", NL => True);
       -------------------------------------------------------------------------
    end Setup;
 

@@ -19,7 +19,8 @@
 # TOOLCHAIN_PROGRAM_PREFIX
 # QUARTUS_PATH
 # QSYS_PROJECT_PATH
-# QSYS_SOF_FILENAME
+# QSYS_SOF_FILE
+# QSYS_JDI_FILE
 # KERNEL_OUTFILE
 #
 
@@ -44,7 +45,8 @@ source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 set QUARTUS_PATH             $::env(QUARTUS_PATH)
 set TOOLCHAIN_PROGRAM_PREFIX $::env(TOOLCHAIN_PROGRAM_PREFIX)
 set PROJECT_PATH             $::env(QSYS_PROJECT_PATH)
-set SOF_FILE                 $::env(QSYS_SOF_FILENAME)
+set SOF_FILE                 $::env(QSYS_SOF_FILE)
+set JDI_FILE                 $::env(QSYS_JDI_FILE)
 set ELF_FILE                 [file join $::env(SWEETADA_PATH) $::env(KERNEL_OUTFILE)]
 
 if {[platform_get] ne "unix"} {
@@ -69,10 +71,6 @@ nios2-configure-sof            \
 "
 
 # NOTE: needs nios2-elf-objcopy
-# --cpu_name "nios2_gen2_0"
-# --instance 0
-# --jdi ${JDI}
-# --reset-target
 puts stdout "Running nios2-download ..."
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
 cd ${QUARTUS_PATH}/nios2eds &&            \
@@ -82,6 +80,10 @@ nios2-download                            \
   --debug                                 \
   --cable \"USB-Blaster\"                 \
   --device 1                              \
+  --instance 0                            \
+  --cpu_name \"nios2_gen2_0\"             \
+  --jdi ${JDI_FILE}                       \
+  --reset-target                          \
   --go                                    \
   ${ELF_FILE}                             \
 "

@@ -12,5 +12,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .sect   .text,"ax"
+                .sect   .vectors,"ax"
+
+                .set    noat
+
+                .global vectors
+vectors:
+
+reset:
+                .extern _start
+                movhi   r2,%hi(_start)
+                ori     r2,r2,%lo(_start)
+                jmp     r2
 

@@ -52,7 +52,7 @@ else
 endif
 	@$(PROCESSCFG) configure.h.in configure.h
 	@$(PROCESSCFG) configure.ads.in configure.ads
-	@$(PYTHON) design_parser.py $(QSYS_FILENAME) Quartus $(QSYS_IO_LIST)
+	@$(PYTHON) design_parser.py $(QSYS_FILE) Quartus $(QSYS_IO_LIST)
 
 .PHONY : postbuild
 postbuild :

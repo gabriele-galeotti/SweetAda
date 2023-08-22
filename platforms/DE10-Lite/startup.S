@@ -14,11 +14,6 @@
 
                 .sect   .startup,"ax"
 
-                .set    noat
-                movhi   r2,%hi(_start)
-                ori     r2,r2,%lo(_start)
-                jmp     r2
-
                 .type   _start,@function
                 .global _start
 _start:
@@ -29,6 +24,13 @@ _start:
                 movhi   sp,%hiadj(kernel_stack)
                 addi    sp,sp,%lo(kernel_stack)
                 mov     fp,sp
+
+                //
+                // Setup global pointer.
+                //
+                .extern _gp
+                movhi   gp,%hiadj(_gp)
+                addi    gp,gp,%lo(_gp)
 
                 //
                 // Jump to high-level code.
@@ -51,6 +53,6 @@ dead:           br      .
                 .sect   .bss
 
                 .align  8
-                .space  4096
+                .space  1024
 kernel_stack:
 
