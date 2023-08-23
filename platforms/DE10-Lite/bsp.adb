@@ -52,7 +52,7 @@ package body BSP is
    begin
       -- wait for transmitter available
       loop
-         exit when JTAG_UART.control.WSPACE >= 0;
+         exit when JTAG_UART.control.WSPACE /= 0;
       end loop;
       JTAG_UART.data.DATA := To_U8 (C);
    end Console_Putchar;

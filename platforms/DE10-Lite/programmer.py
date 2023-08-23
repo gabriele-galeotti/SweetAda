@@ -63,6 +63,10 @@ SOF_FILE                 = os.getenv('QSYS_SOF_FILE')
 JDI_FILE                 = os.getenv('QSYS_JDI_FILE')
 ELF_FILE                 = os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('KERNEL_OUTFILE'))
 
+# default parameters
+CABLE_NAME = 'USB-Blaster'
+DEVICE_NO  = '1'
+
 platform = library.platform_get()
 if platform != 'unix':
     errprintf('%s: *** Error: platform not recognized.\n', SCRIPT_FILENAME)
@@ -83,9 +87,8 @@ configure_sof_command = [
     'cd ' + QUARTUS_PATH + '/nios2eds && \
      ./nios2_command_shell.sh            \
      nios2-configure-sof                 \
-       --debug                           \
-       --cable "USB-Blaster"             \
-       --device 1                        \
+       --cable "' + CABLE_NAME + '"      \
+       --device ' + DEVICE_NO + '        \
     ' + SOF_FILE
     ]
 result = subprocess.run(configure_sof_command)
@@ -101,11 +104,8 @@ download_command = [
      PATH=' + TOOLCHAIN_PROGRAM_PREFIX + ':${PATH} \
      ./nios2_command_shell.sh                      \
      nios2-download                                \
-       --debug                                     \
-       --cable "USB-Blaster"                       \
-       --device 1                                  \
-       --instance 0                                \
-       --cpu_name "nios2_gen2_0"                   \
+       --cable "' + CABLE_NAME + '"                \
+       --device ' + DEVICE_NO + '                  \
        --jdi ' + JDI_FILE + '                      \
        --reset-target                              \
        --go                                        \

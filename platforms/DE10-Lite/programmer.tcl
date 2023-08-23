@@ -49,6 +49,10 @@ set SOF_FILE                 $::env(QSYS_SOF_FILE)
 set JDI_FILE                 $::env(QSYS_JDI_FILE)
 set ELF_FILE                 [file join $::env(SWEETADA_PATH) $::env(KERNEL_OUTFILE)]
 
+# default parameters
+set CABLE_NAME "USB-Blaster"
+set DEVICE_NO  "1"
+
 if {[platform_get] ne "unix"} {
     puts stderr "$SCRIPT_FILENAME: *** Error: platform not recognized."
     exit 1
@@ -64,9 +68,8 @@ exec -ignorestderr >@stdout 2>@stderr sh -c "\
 cd ${QUARTUS_PATH}/nios2eds && \
 ./nios2_command_shell.sh       \
 nios2-configure-sof            \
-  --debug                      \
-  --cable \"USB-Blaster\"      \
-  --device 1                   \
+  --cable \"${CABLE_NAME}\"    \
+  --device ${DEVICE_NO}        \
   ${SOF_FILE}                  \
 "
 
@@ -77,11 +80,8 @@ cd ${QUARTUS_PATH}/nios2eds &&            \
 PATH=${TOOLCHAIN_PROGRAM_PREFIX}:\${PATH} \
 ./nios2_command_shell.sh                  \
 nios2-download                            \
-  --debug                                 \
-  --cable \"USB-Blaster\"                 \
-  --device 1                              \
-  --instance 0                            \
-  --cpu_name \"nios2_gen2_0\"             \
+  --cable \"${CABLE_NAME}\"               \
+  --device ${DEVICE_NO}                   \
   --jdi ${JDI_FILE}                       \
   --reset-target                          \
   --go                                    \
