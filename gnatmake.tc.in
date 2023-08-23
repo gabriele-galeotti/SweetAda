@@ -74,11 +74,11 @@ CC_SWITCHES_DEFAULT       += -std=c99
 CC_SWITCHES_DEFAULT       += -fverbose-asm
 
 # GNATMAKE
+GNATMAKE_SWITCHES_DEFAULT += -nostdinc -nostdlib
 #GNATMAKE_SWITCHES_DEFAULT += -d  # Display compilation progress
 GNATMAKE_SWITCHES_DEFAULT += -eL # Follow all symbolic links when processing project files
 GNATMAKE_SWITCHES_DEFAULT += -eS # Echo commands to stdout instead of stderr
 #GNATMAKE_SWITCHES_DEFAULT += -i  # In place. Replace existing ali file, or put it with source
-GNATMAKE_SWITCHES_DEFAULT += -nostdinc -nostdlib
 
 # GNATBIND
 GNATBIND_SWITCHES_DEFAULT += -D4k

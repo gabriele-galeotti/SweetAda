@@ -114,13 +114,13 @@ abstract project Gprbuild_Tc is
       for Include_Switches ("Ada") use ("-I");
       for Switches ("Ada") use (
                                 Ada_Mode,
+                                "-nostdinc", "-nostdlib",
                                 "-O" & Configure.Optimization_Level,
                                 "-fno-omit-frame-pointer",
                                 "-fverbose-asm",
                                 "-ffunction-sections",
                                 "-fdata-sections",
                                 "-g3", "-gdwarf-5",
-                                "-nostdinc", "-nostdlib",
                                 "-gnatef",
                                 "-gnatf",
                                 "-gnatU",

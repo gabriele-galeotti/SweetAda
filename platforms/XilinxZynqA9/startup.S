@@ -1,6 +1,6 @@
 
 //
-// startup.S - ZynqA9 startup (QEMU emulator).
+// startup.S - Low-level startup.
 //
 // Copyright (C) 2020-2023 Gabriele Galeotti
 //
@@ -21,11 +21,6 @@
                 .type   _start,%function
                 .global _start
 _start:
-
-                //
-                // Setup stack pointer.
-                //
-                //ldr     sp,=SVC_stack
 
                 //
                 // CPU is in supervisor mode.

@@ -37,15 +37,9 @@ package body Exceptions is
    use Interfaces;
    use Bits;
 
-   EL3_Table : aliased constant Asm_Entry_Point
-      with Import        => True,
-           External_Name => "el3_table";
-   EL2_Table : aliased constant Asm_Entry_Point
-      with Import        => True,
-           External_Name => "el2_table";
-   EL1_Table : aliased constant Asm_Entry_Point
-      with Import        => True,
-           External_Name => "el1_table";
+   EL3_Table : aliased constant Asm_Entry_Point with Import => True, External_Name => "el3_table";
+   EL2_Table : aliased constant Asm_Entry_Point with Import => True, External_Name => "el2_table";
+   EL1_Table : aliased constant Asm_Entry_Point with Import => True, External_Name => "el1_table";
 
    --========================================================================--
    --                                                                        --
@@ -77,7 +71,6 @@ package body Exceptions is
          RPI3.GPCLR0 := (CLR5 => True, others => False);
       end if;
       RPI3.Timer_Reload;
-      -- RPI3.SYSTEM_TIMER.C1 := RPI3.SYSTEM_TIMER.CLO + BSP.Timer_Constant;
       RPI3.SYSTEM_TIMER.CS.M1 := True;
    end Irq_Process;
 
@@ -90,7 +83,6 @@ package body Exceptions is
       -- ARMv8A.VBAR_EL3_Write (To_U64 (EL3_Table'Address));
       -- ARMv8A.VBAR_EL2_Write (To_U64 (EL2_Table'Address));
       ARMv8A.VBAR_EL1_Write (To_U64 (EL1_Table'Address));
-      null;
    end Init;
 
 end Exceptions;
