@@ -80,7 +80,7 @@ IF "%1"=="-debug" (
   %KERNEL_OUTFILE% ^
   -ex "target remote tcp:localhost:1234" ^
   -ex "break *0x80000000" ^
-  -ex "continue" ^
+  -ex "continue"
   ) ELSE (
   CALL :QEMUWAIT
   )

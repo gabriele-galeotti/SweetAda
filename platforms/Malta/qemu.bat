@@ -78,7 +78,7 @@ IF "%1"=="-debug" (
   -iex "set basenames-may-differ" ^
   -iex "set architecture %GDB_ARCH%" ^
   %KERNEL_OUTFILE% ^
-  -ex "target remote tcp:localhost:1234" ^
+  -ex "target remote tcp:localhost:1234"
   ) ELSE (
   CALL :QEMUWAIT
   )

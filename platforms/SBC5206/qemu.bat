@@ -66,7 +66,7 @@ IF "%1"=="-debug" (
   -iex "set new-console on" ^
   -iex "set basenames-may-differ" ^
   %KERNEL_OUTFILE% ^
-  -ex "target remote tcp:localhost:1234" ^
+  -ex "target remote tcp:localhost:1234"
   ) ELSE (
   CALL :QEMUWAIT
   )

@@ -70,7 +70,7 @@ IF "%1"=="-debug" (
     -iex "set architecture i386" ^
     %KERNEL_OUTFILE% ^
     -ex "target remote tcp:localhost:1234" ^
-    -ex "break _start" -ex "continue" ^
+    -ex "break _start" -ex "continue"
   ) ELSE (
   CALL :QEMUWAIT
   )
