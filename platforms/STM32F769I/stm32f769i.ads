@@ -332,15 +332,15 @@ package STM32F769I is
 
    type RCC_PLLCFGR_Type is
    record
-      PLLM      : Bits_6;      -- Division factor for the main PLLs (PLL, PLLI2S and PLLSAI) input clock
-      PLLN      : Bits_9;      -- Main PLL (PLL) multiplication factor for VCO
+      PLLM      : Bits_6 range 2 .. 63;   -- Division factor for the main PLLs (PLL, PLLI2S and PLLSAI) input clock
+      PLLN      : Bits_9 range 50 .. 432; -- Main PLL (PLL) multiplication factor for VCO
       Reserved1 : Bits_1 := 0;
-      PLLP      : Bits_2;      -- Main PLL (PLL) division factor for main system clock
+      PLLP      : Bits_2;                 -- Main PLL (PLL) division factor for main system clock
       Reserved2 : Bits_4 := 0;
-      PLLSRC    : Bits_1;      -- Main PLL(PLL) and audio PLL (PLLI2S) entry clock source
+      PLLSRC    : Bits_1;                 -- Main PLL(PLL) and audio PLL (PLLI2S) entry clock source
       Reserved3 : Bits_1 := 0;
-      PLLQ      : Bits_4;      -- Main PLL (PLL) division factor for USB OTG FS, SDMMC1/2 and random number generator clocks
-      PLLR      : Bits_3;      -- PLL division factor for DSI clock
+      PLLQ      : Bits_4 range 2 .. 15;   -- Main PLL (PLL) division factor for USB OTG FS, SDMMC1/2 and [RNG] clocks
+      PLLR      : Bits_3 range 2 ..7;     -- PLL division factor for DSI clock
       Reserved4 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
