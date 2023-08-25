@@ -373,6 +373,7 @@ package STM32F769I is
    SW_HSE : constant := 2#01#; -- HSE oscillator selected as system clock
    SW_PLL : constant := 2#10#; -- PLL selected as system clock
 
+   HPRE_NONE   : constant := 2#0000#; -- system clock not divided
    HPRE_DIV2   : constant := 2#1000#; -- system clock divided by 2
    HPRE_DIV4   : constant := 2#1001#; -- system clock divided by 4
    HPRE_DIV8   : constant := 2#1010#; -- system clock divided by 8
@@ -407,18 +408,18 @@ package STM32F769I is
 
    type RCC_CFGR_Type is
    record
-      SW        : Bits_2;      -- System clock switch
-      SWS       : Bits_2;      -- System clock switch status
-      HPRE      : Bits_4;      -- AHB prescaler
+      SW        : Bits_2 := 0; -- System clock switch
+      SWS       : Bits_2 := 0; -- System clock switch status
+      HPRE      : Bits_4 := 0; -- AHB prescaler
       Reserved1 : Bits_2 := 0;
-      PPRE1     : Bits_3;      -- APB Low-speed prescaler (APB1)
-      PPRE2     : Bits_3;      -- APB high-speed prescaler (APB2)
-      RTCPRE    : Bits_5;      -- HSE division factor for RTC clock
-      MCO1      : Bits_2;      -- Microcontroller clock output 1
-      I2SSCR    : Bits_1;      -- I2S clock selection
-      MCO1PRE   : Bits_3;      -- MCO1 prescaler
-      MCO2PRE   : Bits_3;      -- MCO2 prescaler
-      MCO2      : Bits_2;      -- Microcontroller clock output 2
+      PPRE1     : Bits_3 := 0; -- APB Low-speed prescaler (APB1)
+      PPRE2     : Bits_3 := 0; -- APB high-speed prescaler (APB2)
+      RTCPRE    : Bits_5 := 0; -- HSE division factor for RTC clock
+      MCO1      : Bits_2 := 0; -- Microcontroller clock output 1
+      I2SSCR    : Bits_1 := 0; -- I2S clock selection
+      MCO1PRE   : Bits_3 := 0; -- MCO1 prescaler
+      MCO2PRE   : Bits_3 := 0; -- MCO2 prescaler
+      MCO2      : Bits_2 := 0; -- Microcontroller clock output 2
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2894,7 +2895,7 @@ package STM32F769I is
 
    type USART_BRR_Type is
    record
-      BRR      : Bits_16; -- BRR value
+      BRR      : Unsigned_16; -- BRR value
       Reserved : Bits_16;
    end record with
       Bit_Order => Low_Order_First,
