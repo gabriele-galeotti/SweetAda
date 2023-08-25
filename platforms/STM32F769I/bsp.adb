@@ -35,6 +35,8 @@ package body BSP is
    use Bits;
    use STM32F769I;
 
+   procedure CLK_Init;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -42,6 +44,54 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- CLK_Init
+   ----------------------------------------------------------------------------
+   -- Starting form an unknown status:
+   -- 1) activate the default HSI clock
+   -- 2) when running in HSI, program either:
+   --    a) PLL running out of HSI
+   --    b) PLL running out of HSE
+   -- 3) switch to PLL
+   ----------------------------------------------------------------------------
+   procedure CLK_Init
+      is
+      -- HSI, PLL, 192 MHz
+      HSI192 : constant RCC_PLLCFGR_Type :=
+         (PLLM => 8, PLLN => 192, PLLP => PLLP_DIV2, PLLSRC => PLLSRC_HSI, PLLQ => 4, PLLR => 2, others => <>);
+      -- HSE, PLL, 200 MHz @ 25 MHz external clock
+      HSE200 : constant RCC_PLLCFGR_Type :=
+         (PLLM => 16, PLLN => 256, PLLP => PLLP_DIV2, PLLSRC => PLLSRC_HSE, PLLQ => 4, PLLR => 2, others => <>);
+      -- use HSI192 or HSE200
+      -- Clk    : constant RCC_PLLCFGR_Type := HSI192;
+      Clk    : constant RCC_PLLCFGR_Type := HSE200;
+   begin
+      -- activate HSI
+      RCC_CR.HSION := True;
+      loop exit when RCC_CR.HSIRDY; end loop;
+      RCC_CFGR.SW := SW_HSI;
+      -- PLL disable
+      RCC_CR.PLLON := False;
+      -- HSE requires setup
+      if Clk.PLLSRC = PLLSRC_HSE then
+         RCC_CR.HSEON := True;
+         loop exit when RCC_CR.HSERDY; end loop;
+      end if;
+      -- setup PLL parameters
+      RCC_PLLCFGR := Clk;
+      -- PLL enable
+      RCC_CR.PLLON := True;
+      loop exit when RCC_CR.PLLRDY; end loop;
+      -- configure main clocks
+      RCC_CFGR := (
+         SW     => SW_PLL,    -- SYSCLK = PLL
+         HPRE   => HPRE_NONE, -- AHB prescaler
+         PPRE1  => PPRE_DIV4, -- APB Low-speed prescaler (APB1)
+         PPRE2  => PPRE_DIV2, -- APB high-speed prescaler (APB2)
+         others => <>
+         );
+   end CLK_Init;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -72,15 +122,19 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure Setup is
    begin
-      -- set USART6 -----------------------------------------------------------
+      -- CLK ------------------------------------------------------------------
+      CLK_Init;
+      -- USART6 ---------------------------------------------------------------
       -- USART6_TX PC6 (H15) CN13-2 D1
       -- USART6_RX PC7 (G15) CN13-1 D0
+      RCC_DCKCFGR2.USART6SEL := USART6SEL_APB2;
       RCC_APB2ENR.USART6EN := True;
       GPIOC.AFRL (6) := AF8;
       GPIOC.AFRL (7) := AF8;
       GPIOC.MODER := [6 | 7 => GPIO_ALT, others => <>];
       USART6.USART_CR1.UE := False;
-      USART6.USART_BRR.BRR := 16#2710#; -- 9600 baud
+      -- USART6.USART_BRR.BRR := Unsigned_16 (96_000_000 / 9_600); -- assume HSI192, fck = 96 MHz, 9600 baud
+      USART6.USART_BRR.BRR := Unsigned_16 (100_000_000 / 9_600); -- assume HSE200, fck = 100 MHz, 9600 baud
       USART6.USART_CR1.TE := True;
       USART6.USART_CR1.UE := True;
       -- Console --------------------------------------------------------------
