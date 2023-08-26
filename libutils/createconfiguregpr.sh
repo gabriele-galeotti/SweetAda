@@ -32,6 +32,7 @@
 # ADA_MODE
 # OPTIMIZATION_LEVEL
 # STACK_LIMIT
+# GNATBIND_SECSTACK
 # USE_LIBGCC
 # USE_LIBADA
 # USE_CLIBRARY
@@ -202,6 +203,7 @@ print_I "Profile               := \"${PROFILE}\";"
 print_I "Ada_Mode              := \"${ADA_MODE}\";"
 print_I "Optimization_Level    := \"${OPTIMIZATION_LEVEL}\";"
 print_I "Stack_Limit           := \"${STACK_LIMIT}\";"
+print_I "Gnatbind_SecStack     := \"${GNATBIND_SECSTACK}\";"
 print_I "Use_LibGCC            := \"${USE_LIBGCC}\";"
 print_I "Use_LibAda            := \"${USE_LIBADA}\";"
 print_I "Use_CLibrary          := \"${USE_CLIBRARY}\";"

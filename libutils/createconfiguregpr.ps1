@@ -29,6 +29,7 @@
 # ADA_MODE
 # OPTIMIZATION_LEVEL
 # STACK_LIMIT
+# GNATBIND_SECSTACK
 # USE_LIBGCC
 # USE_LIBADA
 # USE_CLIBRARY
@@ -183,6 +184,7 @@ print_I $configure_filename "Profile               := `"$(GetEnvVar PROFILE)`";"
 print_I $configure_filename "Ada_Mode              := `"$(GetEnvVar ADA_MODE)`";"
 print_I $configure_filename "Optimization_Level    := `"$(GetEnvVar OPTIMIZATION_LEVEL)`";"
 print_I $configure_filename "Stack_Limit           := `"$(GetEnvVar STACK_LIMIT)`";"
+print_I $configure_filename "Gnatbind_SecStack     := `"$(GetEnvVar GNATBIND_SECSTACK)`";"
 print_I $configure_filename "Use_LibGCC            := `"$(GetEnvVar USE_LIBGCC)`";"
 print_I $configure_filename "Use_LibAda            := `"$(GetEnvVar USE_LIBADA)`";"
 print_I $configure_filename "Use_CLibrary          := `"$(GetEnvVar USE_CLIBRARY)`";"

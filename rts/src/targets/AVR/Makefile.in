@@ -17,6 +17,9 @@ ifeq ($(RTS),sfp)
 LIBGNAT_SRCS := $(filter-out s-scaval.adb s-scaval.ads,$(LIBGNAT_SRCS))
 endif
 
+# secondary stack size
+export RUNTIME_DEFAULT_SEC_STACK_SIZE := 128
+
 configure-rts-target :
 ifeq ($(OSTYPE),cmd)
 	$(CP) $(RTS_SOURCE_PATH_TARGET_CMD)\interfac.ads $(ADAINCLUDE_PATH_CMD)\ $(NULL)

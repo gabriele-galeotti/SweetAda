@@ -45,9 +45,7 @@ project SweetAda is
    -- Binder
    ----------------------------------------------------------------------------
 
-   package Binder extends Gprbuild_Tc.Binder is
-      for Switches ("Ada") use Binder'Switches ("Ada") & ("-D4k");
-   end Binder;
+   package Binder renames Gprbuild_Tc.Binder;
 
    ----------------------------------------------------------------------------
    -- Linker (not used)

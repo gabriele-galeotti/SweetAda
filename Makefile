@@ -445,6 +445,7 @@ IMPLICIT_CLIBRARY_UNITS :=
 #
 # Various features.
 #
+GNATBIND_SECSTACK       :=
 USE_UNPREFIXED_GNATMAKE :=
 CPU_SUPPORT_DEFLIST     :=
 ENABLE_SPLIT_DWARF      :=
@@ -597,7 +598,8 @@ export                    \
        OPTIMIZATION_LEVEL \
        EXTERNAL_OBJECTS   \
        STACK_LIMIT        \
-       USE_APPLICATION
+       USE_APPLICATION    \
+       GNATBIND_SECSTACK
 
 # toolchain
 export                           \

@@ -1,4 +1,8 @@
 
+#
+# Basic units.
+#
+
 LIBGNAT_SRCS += a-assert.adb
 LIBGNAT_SRCS += a-assert.ads
 LIBGNAT_SRCS += a-charac.ads
@@ -57,7 +61,7 @@ export ZCX_BY_DEFAULT            := False
 # s-parame.ads default configuration.
 #
 export SIZE_TYPE_ASPECTS              :=
-export RUNTIME_DEFAULT_SEC_STACK_SIZE := 10 * 1024
+export RUNTIME_DEFAULT_SEC_STACK_SIZE := 4 * 1024
 export SEC_STACK_DYNAMIC              := False
 
 configure-rts :
