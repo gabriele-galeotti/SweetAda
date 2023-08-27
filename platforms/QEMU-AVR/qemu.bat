@@ -28,6 +28,20 @@ REM QEMU executable
 SET "QEMU_FILENAME=qemu-system-avrw.exe"
 SET "QEMU_EXECUTABLE=C:\Program Files\QEMU\%QEMU_FILENAME%"
 
+REM QEMU CPU
+SET "CPU="
+IF /I "%CPU_MODEL%"=="ATMEGA128A" (
+  SET "CPU=avr51-avr-cpu"
+  GOTO :CPU_OK
+  )
+IF /I "%CPU_MODEL%"=="ATMEGA328P" (
+  SET "CPU=avr5-avr-cpu"
+  GOTO :CPU_OK
+  )
+ECHO %~nx0: *** Error: %CPU_MODEL%: no CPU or CPU unsupported.
+GOTO :L_EXIT
+:CPU_OK
+
 REM debug options
 IF "%1"=="-debug" (
   SET "QEMU_DEBUG=-S -gdb tcp:localhost:1234,ipv4"
@@ -43,7 +57,7 @@ SET TILTIMEOUT=3
 
 REM QEMU machine
 START "" "%QEMU_EXECUTABLE%" ^
-  -M uno -cpu avr5-avr-cpu ^
+  -M uno -cpu %CPU% ^
   -kernel %KERNEL_OUTFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
@@ -65,6 +79,7 @@ IF "%1"=="-debug" (
   CALL :QEMUWAIT
   )
 
+:L_EXIT
 EXIT /B %ERRORLEVEL%
 
 REM ############################################################################

@@ -2,22 +2,26 @@
 #
 # QEMU-AVR (QEMU emulator)
 #
-# AVR ATmega328P
+# AVR ATmega128A/ATmega328P
 #
 
 # force ZFP
-RTS := zfp
-PROFILE := zfp
-USE_LIBADA := N
+#RTS := zfp
+#PROFILE := zfp
+#USE_LIBADA := N
 
-CPU       := AVR
-#CPU_MODEL := ATMEGA128A
-CPU_MODEL := ATMEGA328P
+CPU := AVR
 
-#GCC_SWITCHES_PLATFORM     := -mmcu=atmega128a -Wa,-mmcu=atmega128a
-#LD_SWITCHES_PLATFORM      := -m avr51
-GCC_SWITCHES_PLATFORM     := -mmcu=atmega328p -Wa,-mmcu=atmega328p
-LD_SWITCHES_PLATFORM      := -m avr5
+#CPU_MODEL             := ATMEGA128A
+#GCC_SWITCHES_PLATFORM := -mmcu=atmega128a
+#LD_SCRIPT             := linker.lds-avr51
+#LD_SWITCHES_PLATFORM  := -m avr51
+
+CPU_MODEL             := ATMEGA328P
+GCC_SWITCHES_PLATFORM := -mmcu=atmega328p
+LD_SCRIPT             := linker.lds-avr5
+LD_SWITCHES_PLATFORM  := -m avr5
+
 STARTUP_OBJECTS           := startup.S llkernel.S
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y

@@ -15,6 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with System.Parameters;
+with System.Secondary_Stack;
+with System.Storage_Elements;
 with Definitions;
 with Bits;
 with ATmega328P;
@@ -30,10 +34,19 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
+   use System;
+   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
    use ATmega328P;
+
+   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
+
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -42,6 +55,14 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Get_Sec_Stack
+   ----------------------------------------------------------------------------
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   begin
+      return BSP_SS_Stack;
+   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -69,6 +90,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure Setup is
    begin
+      -------------------------------------------------------------------------
+      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
       -- USART0 ---------------------------------------------------------------
       UBRR0L := 16#67#;
       UBRR0H := 0;

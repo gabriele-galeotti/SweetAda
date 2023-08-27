@@ -16,6 +16,7 @@
 # GDB
 # KERNEL_OUTFILE
 # KERNEL_ROMFILE
+# CPU_MODEL
 #
 
 ################################################################################
@@ -61,6 +62,20 @@ return 0
 # QEMU executable
 QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-avr"
 
+# QEMU CPU
+case ${CPU_MODEL} in
+  ATMEGA128A)
+    CPU="avr51-avr-cpu"
+    ;;
+  ATMEGA328P)
+    CPU="avr5-avr-cpu"
+    ;;
+  *)
+    printf "${SCRIPT_FILENAME}: *** Error: ${CPU_MODEL}: no CPU or CPU unsupported."
+    exit 1
+    ;;
+esac
+
 # debug options
 if [ "x$1" = "x-debug" ] ; then
   case ${OSTYPE} in
@@ -80,7 +95,7 @@ TILTIMEOUT=3
 
 # QEMU machine
 ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
-  -M uno -cpu avr5-avr-cpu \
+  -M uno -cpu ${CPU} \
   -bios ${KERNEL_ROMFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -chardev "socket,id=SERIALPORT0,port=${SERIALPORT0},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \
