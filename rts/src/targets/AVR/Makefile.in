@@ -14,6 +14,7 @@ LIBGNAT_SRCS_TARGET += system.ads
 # s-scaval.adb:104:07: warning: size of "IS_Ill" is 64
 #
 LIBGNAT_SRCS_COMMON := $(filter-out interfac.ads,$(LIBGNAT_SRCS_COMMON))
+LIBGNAT_SRCS_TARGET += interfac.ads
 ifeq ($(RTS),sfp)
 LIBGNAT_SRCS_COMMON := $(filter-out s-scaval.adb s-scaval.ads,$(LIBGNAT_SRCS_COMMON))
 endif
