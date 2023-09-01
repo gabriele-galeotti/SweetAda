@@ -1265,8 +1265,7 @@ ifeq ($(OSTYPE),cmd)
            SET "MAKEFLAGS=" && SET "RTS=$(RTS_BUILD)"                     && \
            "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" configure       && \
            "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" multilib           \
-           || EXIT /B %ERRORLEVEL%                                           \
-          )
+          ) || EXIT /B 1
 else
 	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                                         \
           (                                                                                        \

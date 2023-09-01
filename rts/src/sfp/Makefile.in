@@ -3,49 +3,36 @@
 # Basic units.
 #
 
-LIBGNAT_SRCS += a-assert.adb
-LIBGNAT_SRCS += a-assert.ads
-LIBGNAT_SRCS += a-charac.ads
-LIBGNAT_SRCS += a-chlat1.ads
-LIBGNAT_SRCS += a-except.adb
-LIBGNAT_SRCS += a-except.ads
-LIBGNAT_SRCS += a-tags.adb
-LIBGNAT_SRCS += a-tags.ads
-LIBGNAT_SRCS += a-unccon.ads
-LIBGNAT_SRCS += a-uncdea.ads
-LIBGNAT_SRCS += ada.ads
-LIBGNAT_SRCS += g-souinf.ads
-LIBGNAT_SRCS += gnat.ads
-LIBGNAT_SRCS += i-c.adb
-LIBGNAT_SRCS += i-c.ads
-LIBGNAT_SRCS += i-cexten.ads
-LIBGNAT_SRCS += interfac.ads
-LIBGNAT_SRCS += s-assert.adb
-LIBGNAT_SRCS += s-assert.ads
-LIBGNAT_SRCS += s-atacco.adb
-LIBGNAT_SRCS += s-atacco.ads
-LIBGNAT_SRCS += s-exctab.adb
-LIBGNAT_SRCS += s-exctab.ads
-LIBGNAT_SRCS += s-fatflt.ads
-LIBGNAT_SRCS += s-fatgen.adb
-LIBGNAT_SRCS += s-fatgen.ads
-LIBGNAT_SRCS += s-fatlfl.ads
-LIBGNAT_SRCS += s-fatllf.ads
-LIBGNAT_SRCS += s-maccod.ads
-LIBGNAT_SRCS += s-multip.adb
-LIBGNAT_SRCS += s-multip.ads
-LIBGNAT_SRCS += s-parame.ads
-LIBGNAT_SRCS += s-secsta.adb
-LIBGNAT_SRCS += s-secsta.ads
-LIBGNAT_SRCS += s-scaval.adb
-LIBGNAT_SRCS += s-scaval.ads
-LIBGNAT_SRCS += s-stalib.ads
-LIBGNAT_SRCS += s-stoele.adb
-LIBGNAT_SRCS += s-stoele.ads
-LIBGNAT_SRCS += s-unstyp.ads
+LIBGNAT_SRCS_COMMON += a-assert.ads a-assert.adb
+LIBGNAT_SRCS_COMMON += a-charac.ads
+LIBGNAT_SRCS_COMMON += a-chlat1.ads
+LIBGNAT_SRCS_COMMON += a-except.ads a-except.adb
+LIBGNAT_SRCS_COMMON += a-tags.ads   a-tags.adb
+LIBGNAT_SRCS_COMMON += a-unccon.ads
+LIBGNAT_SRCS_COMMON += a-uncdea.ads
+LIBGNAT_SRCS_COMMON += ada.ads
+LIBGNAT_SRCS_COMMON += g-souinf.ads
+LIBGNAT_SRCS_COMMON += gnat.ads
+LIBGNAT_SRCS_COMMON += i-c.ads      i-c.adb
+LIBGNAT_SRCS_COMMON += i-cexten.ads
+LIBGNAT_SRCS_COMMON += interfac.ads
+LIBGNAT_SRCS_COMMON += s-assert.ads s-assert.adb
+LIBGNAT_SRCS_COMMON += s-atacco.ads s-atacco.adb
+LIBGNAT_SRCS_COMMON += s-exctab.ads s-exctab.adb
+LIBGNAT_SRCS_COMMON += s-fatflt.ads
+LIBGNAT_SRCS_COMMON += s-fatgen.ads s-fatgen.adb
+LIBGNAT_SRCS_COMMON += s-fatlfl.ads
+LIBGNAT_SRCS_COMMON += s-fatllf.ads
+LIBGNAT_SRCS_COMMON += s-maccod.ads
+LIBGNAT_SRCS_COMMON += s-multip.ads s-multip.adb
+LIBGNAT_SRCS_COMMON += s-parame.ads
+LIBGNAT_SRCS_COMMON += s-scaval.ads s-scaval.adb
+LIBGNAT_SRCS_COMMON += s-secsta.ads s-secsta.adb
+LIBGNAT_SRCS_COMMON += s-stalib.ads
+LIBGNAT_SRCS_COMMON += s-stoele.ads s-stoele.adb
+LIBGNAT_SRCS_COMMON += s-unstyp.ads
 
-LIBGNARL_SRCS += s-musplo.adb
-LIBGNARL_SRCS += s-musplo.ads
+LIBGNARL_SRCS_COMMON += s-musplo.ads s-musplo.adb
 
 #
 # system.ads default configuration.
@@ -64,18 +51,44 @@ export SIZE_TYPE_ASPECTS              :=
 export RUNTIME_DEFAULT_SEC_STACK_SIZE := 4 * 1024
 export SEC_STACK_DYNAMIC              := False
 
+#
+# Makefile rules.
+#
+
 configure-rts :
-ifeq ($(OSTYPE),cmd)
-	$(CP) "$(RTS_SOURCE_PATH_CMD)"\*.ads "$(ADAINCLUDE_PATH_CMD)"\ $(NULL)
-	$(CP) "$(RTS_SOURCE_PATH_CMD)"\*.adb "$(ADAINCLUDE_PATH_CMD)"\ $(NULL)
-	$(PROCESSCFG) $(RTS_SOURCE_PATH_CMD)\s-parame.ads.in $(ADAINCLUDE_PATH_CMD)\s-parame.ads
+ifeq      ($(OSTYPE),cmd)
+	@FOR %%F IN ($(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON)) DO                \
+          @ECHO OFF &&                                                                 \
+          IF EXIST $(RTS_SOURCE_PATH_CMD)\%%F.in (                                     \
+            (                                                                          \
+             $(PROCESSCFG) $(RTS_SOURCE_PATH_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%F && \
+             $(DOS2UNIX) $(ADAINCLUDE_PATH_CMD)\%%F $(ADAINCLUDE_PATH_CMD)\%%F         \
+            ) || EXIT /B 1                                                             \
+          ) ELSE (                                                                     \
+            $(CP) "$(RTS_SOURCE_PATH_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\               \
+            || EXIT /B 1                                                               \
+          )
+else ifeq ($(OSTYPE),msys)
+	@for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do         \
+          (                                                                   \
+           if [ -e $(RTS_SOURCE_PATH)/$$f.in ] ; then                         \
+             $(PROCESSCFG) $(RTS_SOURCE_PATH)/$$f.in $(ADAINCLUDE_PATH)/$$f ; \
+             $(DOS2UNIX) $(ADAINCLUDE_PATH)/$$f $(ADAINCLUDE_PATH)/$$f ;      \
+           else                                                               \
+             $(CP) "$(RTS_SOURCE_PATH)"/$$f "$(ADAINCLUDE_PATH)"/ ;           \
+           fi                                                                 \
+          ) || exit $$? ;                                                     \
+        done
 else
-	$(CP) "$(RTS_SOURCE_PATH)"/*.ads "$(ADAINCLUDE_PATH)"/
-	$(CP) "$(RTS_SOURCE_PATH)"/*.adb "$(ADAINCLUDE_PATH)"/
-	$(PROCESSCFG) $(RTS_SOURCE_PATH)/s-parame.ads.in $(ADAINCLUDE_PATH)/s-parame.ads
-endif
-ifneq ($(filter $(OSTYPE),cmd msys),)
-	$(DOS2UNIX) $(ADAINCLUDE_PATH_CMD)\s-parame.ads $(ADAINCLUDE_PATH_CMD)\s-parame.ads
+	@for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do         \
+          (                                                                   \
+           if [ -e $(RTS_SOURCE_PATH)/$$f.in ] ; then                         \
+             $(PROCESSCFG) $(RTS_SOURCE_PATH)/$$f.in $(ADAINCLUDE_PATH)/$$f ; \
+           else                                                               \
+             $(CP) "$(RTS_SOURCE_PATH)"/$$f "$(ADAINCLUDE_PATH)"/ ;           \
+           fi                                                                 \
+          ) || exit $$? ;                                                     \
+        done
 endif
 
 #

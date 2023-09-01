@@ -1,18 +1,20 @@
 
-LIBGNAT_SRCS += a-charac.ads
-LIBGNAT_SRCS += a-chlat1.ads
-LIBGNAT_SRCS += a-unccon.ads
-LIBGNAT_SRCS += a-uncdea.ads
-LIBGNAT_SRCS += ada.ads
-LIBGNAT_SRCS += i-c.ads
-LIBGNAT_SRCS += i-cexten.ads
-LIBGNAT_SRCS += interfac.ads
-LIBGNAT_SRCS += s-atacco.adb
-LIBGNAT_SRCS += s-atacco.ads
-LIBGNAT_SRCS += s-maccod.ads
-LIBGNAT_SRCS += s-stoele.adb
-LIBGNAT_SRCS += s-stoele.ads
-LIBGNAT_SRCS += s-unstyp.ads
+#
+# Basic units.
+#
+
+LIBGNAT_SRCS_COMMON += a-charac.ads
+LIBGNAT_SRCS_COMMON += a-chlat1.ads
+LIBGNAT_SRCS_COMMON += a-unccon.ads
+LIBGNAT_SRCS_COMMON += a-uncdea.ads
+LIBGNAT_SRCS_COMMON += ada.ads
+LIBGNAT_SRCS_COMMON += i-c.ads
+LIBGNAT_SRCS_COMMON += i-cexten.ads
+LIBGNAT_SRCS_COMMON += interfac.ads
+LIBGNAT_SRCS_COMMON += s-atacco.ads s-atacco.adb
+LIBGNAT_SRCS_COMMON += s-maccod.ads
+LIBGNAT_SRCS_COMMON += s-stoele.ads s-stoele.adb
+LIBGNAT_SRCS_COMMON += s-unstyp.ads
 
 #
 # system.ads default configuration.
@@ -23,6 +25,10 @@ export SUPPRESS_STANDARD_LIBRARY := True
 export EXIT_STATUS_SUPPORTED     := False
 export USE_ADA_MAIN_PROGRAM_NAME := False
 export ZCX_BY_DEFAULT            := False
+
+#
+# Makefile rules.
+#
 
 configure-rts :
 ifeq ($(OSTYPE),cmd)

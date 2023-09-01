@@ -1,5 +1,5 @@
 
-LIBGNAT_SRCS += system.ads
+LIBGNAT_SRCS_TARGET += system.ads
 
 #
 # AVR floating point issues.
@@ -13,8 +13,9 @@ LIBGNAT_SRCS += system.ads
 # s-scaval.adb:104:07: warning: size of "IV_Ill" is 96
 # s-scaval.adb:104:07: warning: size of "IS_Ill" is 64
 #
+LIBGNAT_SRCS_COMMON := $(filter-out interfac.ads,$(LIBGNAT_SRCS_COMMON))
 ifeq ($(RTS),sfp)
-LIBGNAT_SRCS := $(filter-out s-scaval.adb s-scaval.ads,$(LIBGNAT_SRCS))
+LIBGNAT_SRCS_COMMON := $(filter-out s-scaval.adb s-scaval.ads,$(LIBGNAT_SRCS_COMMON))
 endif
 
 # secondary stack size
@@ -23,17 +24,17 @@ export RUNTIME_DEFAULT_SEC_STACK_SIZE := 128
 configure-rts-target :
 ifeq ($(OSTYPE),cmd)
 	$(CP) $(RTS_SOURCE_PATH_TARGET_CMD)\interfac.ads $(ADAINCLUDE_PATH_CMD)\ $(NULL)
-	$(PROCESSCFG) $(RTS_SOURCE_PATH_TARGET_CMD)\system.ads.in $(ADAINCLUDE_PATH_CMD)\system.ads
+	@$(PROCESSCFG) $(RTS_SOURCE_PATH_TARGET_CMD)\system.ads.in $(ADAINCLUDE_PATH_CMD)\system.ads
 else
 	$(CP) $(RTS_SOURCE_PATH_TARGET)/interfac.ads $(ADAINCLUDE_PATH)/
-	$(PROCESSCFG) $(RTS_SOURCE_PATH_TARGET)/system.ads.in $(ADAINCLUDE_PATH)/system.ads
+	@$(PROCESSCFG) $(RTS_SOURCE_PATH_TARGET)/system.ads.in $(ADAINCLUDE_PATH)/system.ads
 endif
-ifneq (,$(filter $(OSTYPE),cmd msys))
-	$(DOS2UNIX) $(ADAINCLUDE_PATH_CMD)\system.ads $(ADAINCLUDE_PATH_CMD)\system.ads
+ifneq ($(filter $(OSTYPE),cmd msys),)
+	@$(DOS2UNIX) $(ADAINCLUDE_PATH_CMD)\system.ads $(ADAINCLUDE_PATH_CMD)\system.ads
 endif
 ifeq ($(OSTYPE),cmd)
 	$(CP) $(RTS_SOURCE_PATH_TARGET_CMD)\rts.cs.in $(RTS)\$(TOOLCHAIN_NAME)\ $(NULL)
 else
-	$(CP) $(RTS_SOURCE_PATH_TARGET)/rts.cs.in ./$(RTS)/$(TOOLCHAIN_NAME)/
+	$(CP) $(RTS_SOURCE_PATH_TARGET)/rts.cs.in $(RTS)/$(TOOLCHAIN_NAME)/
 endif
 

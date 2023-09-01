@@ -119,19 +119,20 @@ CC_SWITCHES += -Wall
 ADAC_SWITCHES += $(ADAC_SWITCHES_RTS)
 CC_SWITCHES   += $(CC_SWITCHES_RTS)
 
-################################################################################
-#                                                                              #
-# Specific setup.                                                              #
-#                                                                              #
-################################################################################
-
-LIBGNAT_SRCS  :=
-LIBGNARL_SRCS :=
+LIBGNAT_SRCS         :=
+LIBGNAT_SRCS_COMMON  :=
+LIBGNAT_SRCS_TARGET  :=
+LIBGNARL_SRCS        :=
+LIBGNARL_SRCS_COMMON :=
+LIBGNARL_SRCS_TARGET :=
 
 # RTS target-independent part
 include $(RTS_SOURCE_PATH)/Makefile.in
 # RTS target-dependent part
 -include $(RTS_SOURCE_PATH_TARGET)/Makefile.in
+
+LIBGNAT_SRCS  += $(LIBGNAT_SRCS_COMMON) $(LIBGNAT_SRCS_TARGET)
+LIBGNARL_SRCS += $(LIBGNARL_SRCS_COMMON) $(LIBGNARL_SRCS_TARGET)
 
 LIBGNAT       := $(ADALIB_PATH)/libgnat.a
 LIBGNAT_ADS   := $(filter-out %.adb,$(LIBGNAT_SRCS))
@@ -176,15 +177,15 @@ configure-rts-target :
 .PHONY : createdirectories
 createdirectories :
 ifeq ($(OSTYPE),cmd)
-	IF EXIST $(ADAINCLUDE_PATH_CMD)\ $(RMDIR) $(ADAINCLUDE_PATH_CMD)\ $(NULL)
-	$(MKDIR) $(ADAINCLUDE_PATH_CMD)
-	IF EXIST $(ADALIB_PATH_CMD)\ $(RMDIR) $(ADALIB_PATH_CMD)\ $(NULL)
-	$(MKDIR) $(ADALIB_PATH_CMD)
+	@IF EXIST $(ADAINCLUDE_PATH_CMD)\ $(RMDIR) $(ADAINCLUDE_PATH_CMD)\ $(NULL)
+	@$(MKDIR) $(ADAINCLUDE_PATH_CMD)
+	@IF EXIST $(ADALIB_PATH_CMD)\ $(RMDIR) $(ADALIB_PATH_CMD)\ $(NULL)
+	@$(MKDIR) $(ADALIB_PATH_CMD)
 else
-	$(RMDIR) $(ADAINCLUDE_PATH)
-	$(MKDIR) $(ADAINCLUDE_PATH)
-	$(RMDIR) $(ADALIB_PATH)
-	$(MKDIR) $(ADALIB_PATH)
+	@$(RMDIR) $(ADAINCLUDE_PATH)
+	@$(MKDIR) $(ADAINCLUDE_PATH)
+	@$(RMDIR) $(ADALIB_PATH)
+	@$(MKDIR) $(ADALIB_PATH)
 endif
 
 .PHONY : multilib
