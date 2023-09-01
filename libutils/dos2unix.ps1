@@ -55,8 +55,24 @@ if ([string]::IsNullOrEmpty($output_filename))
   ExitWithCode 1
 }
 
-$textlines = [System.IO.File]::ReadAllText($input_filename) -Replace "`r",""
-[System.IO.File]::WriteAllText($output_filename, $textlines)
+try
+{
+  $textlines = [System.IO.File]::ReadAllText($input_filename) -Replace "`r",""
+}
+catch
+{
+  Write-Host "${scriptname}: *** Error: processing ${input_filename}."
+  ExitWithCode 1
+}
+try
+{
+  [System.IO.File]::WriteAllText($output_filename, $textlines)
+}
+catch
+{
+  Write-Host "${scriptname}: *** Error: processing ${output_filename}."
+  ExitWithCode 1
+}
 
 ExitWithCode 0
 
