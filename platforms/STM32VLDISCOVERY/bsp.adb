@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Definitions;
+with Configure;
 with Bits;
 with Core;
 with CPU;
@@ -54,7 +55,7 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure SysTick_Init is
    begin
-      ARMv7M.SYST_RVR.RELOAD := 16#50_0000#;
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (Configure.SYSCLK_FREQUENCY / Configure.TICK_FREQUENCY);
       ARMv7M.SHPR3.PRI_15 := 16#01#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR :=

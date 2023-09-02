@@ -21,6 +21,8 @@ with Bits;
 with Abort_Library;
 with ARMv7M;
 with CPU;
+with BSP;
+with Console;
 
 package body Exceptions is
 
@@ -59,7 +61,10 @@ package body Exceptions is
    procedure Irq_Process
       is
    begin
-      null;
+      BSP.Tick_Count := @ + 1;
+      if BSP.Tick_Count mod 1_000 = 0 then
+         Console.Print ("*** T ***", NL => True);
+      end if;
    end Irq_Process;
 
    ----------------------------------------------------------------------------

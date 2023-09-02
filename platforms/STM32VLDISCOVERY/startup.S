@@ -90,7 +90,7 @@ movdata:
 
                 .sect   .bss
 
-                .align  8
+                .align  3
                 .space  1024
 kernel_stack:
 

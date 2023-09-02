@@ -1,12 +1,20 @@
 
+with Definitions;
+
 package Configure is
 
    pragma Pure;
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM  : constant String := "STM32VLDISCOVERY";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   SYSCLK_FREQUENCY : constant := 24 * MHz1; -- QEMU
+   TICK_FREQUENCY   : constant := 1 * kHz1;
 
    -- IOEMU
    USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
