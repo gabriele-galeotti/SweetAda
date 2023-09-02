@@ -6,7 +6,7 @@
 --                                                                          --
 --                                 B o d y                                  --
 --                                                                          --
---          Copyright (C) 1992-2010, Free Software Foundation, Inc.         --
+--          Copyright (C) 1992-2020, Free Software Foundation, Inc.         --
 --                                                                          --
 -- GNAT is free software;  you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -15,8 +15,13 @@
 -- OUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY --
 -- or FITNESS FOR A PARTICULAR PURPOSE.                                     --
 --                                                                          --
--- You should have received a copy of the GNU General Public License along  --
--- with this library; see the file COPYING3. If not, see:                   --
+-- As a special exception under Section 7 of GPL version 3, you are granted --
+-- additional permissions described in the GCC Runtime Library Exception,   --
+-- version 3.1, as published by the Free Software Foundation.               --
+--                                                                          --
+-- You should have received a copy of the GNU General Public License and    --
+-- a copy of the GCC Runtime Library Exception along with this program;     --
+-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --
 -- <http://www.gnu.org/licenses/>.                                          --
 --                                                                          --
 -- GNAT was originally developed  by the GNAT team at  New York University. --
@@ -50,6 +55,40 @@ package body Ada.Tags is
 
    function To_Type_Specific_Data_Ptr is
      new Ada.Unchecked_Conversion (System.Address, Type_Specific_Data_Ptr);
+
+   -------------------
+   -- CW_Membership --
+   -------------------
+
+   --  Canonical implementation of Classwide Membership corresponding to:
+
+   --     Obj in Typ'Class
+
+   --  Each dispatch table contains a reference to a table of ancestors (stored
+   --  in the first part of the Tags_Table) and a count of the level of
+   --  inheritance "Idepth".
+
+   --  Obj is in Typ'Class if Typ'Tag is in the table of ancestors that are
+   --  contained in the dispatch table referenced by Obj'Tag . Knowing the
+   --  level of inheritance of both types, this can be computed in constant
+   --  time by the formula:
+
+   --   TSD (Obj'tag).Tags_Table (TSD (Obj'tag).Idepth - TSD (Typ'tag).Idepth)
+   --     = Typ'tag
+
+   function CW_Membership (Obj_Tag : Tag; Typ_Tag : Tag) return Boolean is
+      Obj_TSD_Ptr : constant Addr_Ptr :=
+        To_Addr_Ptr (To_Address (Obj_Tag) - DT_Typeinfo_Ptr_Size);
+      Typ_TSD_Ptr : constant Addr_Ptr :=
+        To_Addr_Ptr (To_Address (Typ_Tag) - DT_Typeinfo_Ptr_Size);
+      Obj_TSD     : constant Type_Specific_Data_Ptr :=
+        To_Type_Specific_Data_Ptr (Obj_TSD_Ptr.all);
+      Typ_TSD     : constant Type_Specific_Data_Ptr :=
+        To_Type_Specific_Data_Ptr (Typ_TSD_Ptr.all);
+      Pos         : constant Integer := Obj_TSD.Idepth - Typ_TSD.Idepth;
+   begin
+      return Pos >= 0 and then Obj_TSD.Tags_Table (Pos) = Typ_Tag;
+   end CW_Membership;
 
    -------------------
    -- Expanded_Name --

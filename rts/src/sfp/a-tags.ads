@@ -6,7 +6,7 @@
 --                                                                          --
 --                                 S p e c                                  --
 --                                                                          --
---          Copyright (C) 1992-2014, Free Software Foundation, Inc.         --
+--          Copyright (C) 1992-2020, Free Software Foundation, Inc.         --
 --                                                                          --
 -- This specification is derived from the Ada Reference Manual for use with --
 -- GNAT. The copyright notice above, and the license provisions that follow --
@@ -19,8 +19,13 @@
 -- OUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY --
 -- or FITNESS FOR A PARTICULAR PURPOSE.                                     --
 --                                                                          --
--- You should have received a copy of the GNU General Public License along  --
--- with this library; see the file COPYING3. If not, see:                   --
+-- As a special exception under Section 7 of GPL version 3, you are granted --
+-- additional permissions described in the GCC Runtime Library Exception,   --
+-- version 3.1, as published by the Free Software Foundation.               --
+--                                                                          --
+-- You should have received a copy of the GNU General Public License and    --
+-- a copy of the GCC Runtime Library Exception along with this program;     --
+-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --
 -- <http://www.gnu.org/licenses/>.                                          --
 --                                                                          --
 -- GNAT was originally developed  by the GNAT team at  New York University. --
@@ -167,7 +172,6 @@ private
       Alignment     : Natural;
       Expanded_Name : Cstring_Ptr;
       External_Tag  : Cstring_Ptr;
-      HT_Link       : Tag_Ptr;
       --  Components used to support to the Ada.Tags subprograms in ARM 3.9
 
       --  Note: Expanded_Name is referenced by GDB to determine the actual name
@@ -250,19 +254,14 @@ private
                                 + DT_Predef_Prims_Size;
    --  Offset from Prims_Ptr to Predef_Prims component
 
+   function CW_Membership (Obj_Tag : Tag; Typ_Tag : Tag) return Boolean;
+   --  Given the tag of an object and the tag associated to a type, return
+   --  true if Obj is in Typ'Class.
+
    Max_Predef_Prims : constant Positive := 10;
-   --  Number of reserved slots for the following predefined ada primitives:
-   --
-   --    1. Size
-   --    2. Read
-   --    3. Write
-   --    4. Input
-   --    5. Output
-   --    6. "="
-   --    7. assignment
-   --    8. deep adjust
-   --    9. deep finalize
-   --   10. Put_Image
+   --  Number of reserved slots for predefined ada primitives: Size, Read,
+   --  Write, Input, Output, "=", assignment, deep adjust, deep finalize,
+   --  and Put_Image.
    --  The compiler checks that this value is correct.
 
    subtype Predef_Prims_Table  is Address_Array (1 .. Max_Predef_Prims);
