@@ -32,7 +32,7 @@ RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
                            -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
                            -e $(ELFTOOL) -s _start -thumb -command "reset halt"
 DEBUG_COMMAND         := $(RUN_COMMAND) -debug &&                          \
-                         $$GDB                                             \
+                         $${GDB}                                           \
                                -ex "target extended-remote localhost:3333" \
                                -ex "set language asm"                      \
                                -ex "set \$$pc=_start"                      \

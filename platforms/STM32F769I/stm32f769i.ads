@@ -340,7 +340,7 @@ package STM32F769I is
       PLLSRC    : Bits_1;                 -- Main PLL(PLL) and audio PLL (PLLI2S) entry clock source
       Reserved3 : Bits_1 := 0;
       PLLQ      : Bits_4 range 2 .. 15;   -- Main PLL (PLL) division factor for USB OTG FS, SDMMC1/2 and [RNG] clocks
-      PLLR      : Bits_3 range 2 ..7;     -- PLL division factor for DSI clock
+      PLLR      : Bits_3 range 2 .. 7;    -- PLL division factor for DSI clock
       Reserved4 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,

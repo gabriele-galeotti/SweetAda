@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# DE-10 Lite GDB.
+# DE-10 Lite GDB front-end.
 #
 # Copyright (C) 2020-2023 Gabriele Galeotti
 #
