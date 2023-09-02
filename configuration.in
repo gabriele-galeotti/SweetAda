@@ -39,6 +39,7 @@ else ifeq ($(OSTYPE),linux)
   TOOLCHAIN_PREFIX := /opt/toolchains
   #TOOLCHAIN_PREFIX := /opt/GNAT/2021-arm-elf
   #TOOLCHAIN_PREFIX := /opt/GNAT/2021-riscv32-elf
+  GPRBUILD_PREFIX  := /usr
   PYTHON           := python3
   TCLSH            := tclsh
 endif
