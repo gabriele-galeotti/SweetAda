@@ -193,15 +193,6 @@ case ${OSTYPE} in
       MAKE="make"
     fi
     ;;
-  msys)
-    # use SweetAda make (try a standard installation prefix)
-    SWEETADA_MAKE="/c/Program Files/SweetAda/bin/make.exe"
-    if [ -e "${SWEETADA_MAKE}" ] ; then
-      MAKE="${SWEETADA_MAKE}"
-    else
-      MAKE="make"
-    fi
-    ;;
   *)
     # defaults to system make
     MAKE="make"
