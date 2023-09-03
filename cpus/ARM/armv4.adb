@@ -43,7 +43,8 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -59,7 +60,8 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
+   procedure BREAKPOINT
+      is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -75,15 +77,17 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
+      CPSR_R : Bits_32;
    begin
       Asm (
            Template => ""                            & CRLF &
-                       "        mrs     r1,cpsr"     & CRLF &
-                       "        bic     r1,r1,#0x80" & CRLF &
-                       "        msr     cpsr,r1"     & CRLF &
+                       "        mrs     %0,cpsr"     & CRLF &
+                       "        bic     %0,%0,#0x80" & CRLF &
+                       "        msr     cpsr_c,%0"   & CRLF &
                        "",
-           Outputs  => No_Output_Operands,
+           Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True
@@ -93,15 +97,17 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    -- Irq_Disable
    ----------------------------------------------------------------------------
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
+      CPSR_R : Bits_32;
    begin
       Asm (
            Template => ""                            & CRLF &
-                       "        mrs     r1,cpsr"     & CRLF &
-                       "        orr     r1,r1,#0x80" & CRLF &
-                       "        msr     cpsr,r1"     & CRLF &
+                       "        mrs     %0,cpsr"     & CRLF &
+                       "        orr     %0,%0,#0x80" & CRLF &
+                       "        msr     cpsr_c,%0"   & CRLF &
                        "",
-           Outputs  => No_Output_Operands,
+           Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True
@@ -111,15 +117,17 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    -- Fiq_Enable
    ----------------------------------------------------------------------------
-   procedure Fiq_Enable is
+   procedure Fiq_Enable
+      is
+      CPSR_R : Bits_32;
    begin
       Asm (
            Template => ""                            & CRLF &
-                       "        mrs     r1,cpsr"     & CRLF &
-                       "        bic     r1,r1,#0x40" & CRLF &
-                       "        msr     cpsr,r1"     & CRLF &
+                       "        mrs     %0,cpsr"     & CRLF &
+                       "        bic     %0,%0,#0x40" & CRLF &
+                       "        msr     cpsr_c,%0"   & CRLF &
                        "",
-           Outputs  => No_Output_Operands,
+           Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True
@@ -129,20 +137,60 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    -- Fiq_Disable
    ----------------------------------------------------------------------------
-   procedure Fiq_Disable is
+   procedure Fiq_Disable
+      is
+      CPSR_R : Bits_32;
    begin
       Asm (
            Template => ""                            & CRLF &
-                       "        mrs     r1,cpsr"     & CRLF &
-                       "        orr     r1,r1,#0x40" & CRLF &
-                       "        msr     cpsr,r1"     & CRLF &
+                       "        mrs     %0,cpsr"     & CRLF &
+                       "        orr     %0,%0,#0x40" & CRLF &
+                       "        msr     cpsr_c,%0"   & CRLF &
                        "",
-           Outputs  => No_Output_Operands,
+           Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True
           );
    end Fiq_Disable;
+
+   ----------------------------------------------------------------------------
+   -- Irq_State_Get
+   ----------------------------------------------------------------------------
+   function Irq_State_Get
+      return Irq_State_Type
+      is
+      Irq_State : Irq_State_Type;
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        mrs     %0,cpsr" & CRLF &
+                       "",
+           Outputs  => Irq_State_Type'Asm_Output ("=r", Irq_State),
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+      return Irq_State;
+   end Irq_State_Get;
+
+   ----------------------------------------------------------------------------
+   -- Irq_State_Set
+   ----------------------------------------------------------------------------
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       "        msr     cpsr_c,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Irq_State_Type'Asm_Input  ("r", Irq_State),
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end Irq_State_Set;
 
    ----------------------------------------------------------------------------
    -- Memory synchronization

@@ -39,7 +39,11 @@ package ARMv5TE is
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
+   subtype Irq_State_Type is ARMv4.Irq_State_Type;
+
    procedure Irq_Enable  renames ARMv4.Irq_Enable;
    procedure Irq_Disable renames ARMv4.Irq_Disable;
+   function Irq_State_Get return Irq_State_Type            renames ARMv4.Irq_State_Get;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames ARMv4.Irq_State_Set;
 
 end ARMv5TE;

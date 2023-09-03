@@ -118,11 +118,11 @@ package ARMv4 is
       Size      => 32;
    for CPSR_Type use
    record
-      M      at 0 range 0 .. 4;
-      T      at 0 range 5 .. 5;
-      F      at 0 range 6 .. 6;
-      I      at 0 range 7 .. 7;
-      Unused at 0 range 8 .. 27;
+      M      at 0 range  0 ..  4;
+      T      at 0 range  5 ..  5;
+      F      at 0 range  6 ..  6;
+      I      at 0 range  7 ..  7;
+      Unused at 0 range  8 .. 27;
       V      at 0 range 28 .. 28;
       C      at 0 range 29 .. 29;
       Z      at 0 range 30 .. 30;
@@ -162,6 +162,13 @@ package ARMv4 is
    procedure Fiq_Enable with
       Inline => True;
    procedure Fiq_Disable with
+      Inline => True;
+
+   type Irq_State_Type is new Bits_32;
+
+   function Irq_State_Get return Irq_State_Type with
+      Inline => True;
+   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
       Inline => True;
 
    ----------------------------------------------------------------------------
