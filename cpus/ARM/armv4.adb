@@ -83,9 +83,9 @@ package body ARMv4 is
    begin
       Asm (
            Template => ""                            & CRLF &
-                       "        mrs     %0,cpsr"     & CRLF &
+                       "        mrs     %0,cpsr    " & CRLF &
                        "        bic     %0,%0,#0x80" & CRLF &
-                       "        msr     cpsr_c,%0"   & CRLF &
+                       "        msr     cpsr_c,%0  " & CRLF &
                        "",
            Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
@@ -103,9 +103,9 @@ package body ARMv4 is
    begin
       Asm (
            Template => ""                            & CRLF &
-                       "        mrs     %0,cpsr"     & CRLF &
+                       "        mrs     %0,cpsr    " & CRLF &
                        "        orr     %0,%0,#0x80" & CRLF &
-                       "        msr     cpsr_c,%0"   & CRLF &
+                       "        msr     cpsr_c,%0  " & CRLF &
                        "",
            Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
@@ -123,9 +123,9 @@ package body ARMv4 is
    begin
       Asm (
            Template => ""                            & CRLF &
-                       "        mrs     %0,cpsr"     & CRLF &
+                       "        mrs     %0,cpsr    " & CRLF &
                        "        bic     %0,%0,#0x40" & CRLF &
-                       "        msr     cpsr_c,%0"   & CRLF &
+                       "        msr     cpsr_c,%0  " & CRLF &
                        "",
            Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
@@ -143,9 +143,9 @@ package body ARMv4 is
    begin
       Asm (
            Template => ""                            & CRLF &
-                       "        mrs     %0,cpsr"     & CRLF &
+                       "        mrs     %0,cpsr    " & CRLF &
                        "        orr     %0,%0,#0x40" & CRLF &
-                       "        msr     cpsr_c,%0"   & CRLF &
+                       "        msr     cpsr_c,%0  " & CRLF &
                        "",
            Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,

@@ -56,7 +56,7 @@ RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
 #                                $(KERNEL_OUTFILE)
 # debug session in *sh shell
 DEBUG_COMMAND          := $(RUN_COMMAND) -debug &&                          \
-                          $$GDB                                             \
+                          $${GDB}                                           \
                                 -ex "target extended-remote localhost:3333" \
                                 -ex "set language asm"                      \
                                 -ex "set \$$pc=_start"                      \

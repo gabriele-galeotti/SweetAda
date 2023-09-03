@@ -16,9 +16,8 @@
 
                 .sect   .vectors,"ax"
 
-                .global reset
-
                 // 0x18 is the distance from the instruction and the vector minus 0x8
+                .global reset
 reset:          ldr     pc,[pc,#0x18]                   // 0x00 Reset
                 ldr     pc,[pc,#0x18]                   // 0x04 Undefined Instruction
                 ldr     pc,[pc,#0x18]                   // 0x08 Software Interrupt
