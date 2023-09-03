@@ -135,7 +135,7 @@ package R3000 is
    -- Interrupts
    ----------------------------------------------------------------------------
 
-   type Irq_State_Type is new Natural;
+   subtype Irq_State_Type is Unsigned_32;
    type Irq_Id_Type is new Natural;
 
    procedure Irq_Enable with
