@@ -238,7 +238,7 @@ package body x86_64 is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => Irq_State_Type'Asm_Input ("a", Irq_State),
-           Clobber  => "memory",
+           Clobber  => "memory,cc",
            Volatile => True
           );
    end Irq_State_Set;

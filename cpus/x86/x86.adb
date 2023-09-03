@@ -389,7 +389,7 @@ package body x86 is
                        "        pushfl    " & CRLF &
                        "        popl    %0" & CRLF &
                        "",
-           Outputs  => Irq_State_Type'Asm_Output ("=a", Irq_State),
+           Outputs  => Irq_State_Type'Asm_Output ("=rm", Irq_State),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True
@@ -405,8 +405,8 @@ package body x86 is
                        "        popfl     " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => Irq_State_Type'Asm_Input ("a", Irq_State),
-           Clobber  => "memory",
+           Inputs   => Irq_State_Type'Asm_Input ("g", Irq_State),
+           Clobber  => "memory,cc",
            Volatile => True
           );
    end Irq_State_Set;
