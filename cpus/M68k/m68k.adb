@@ -253,7 +253,7 @@ package body M68k is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Enable;
@@ -266,7 +266,7 @@ package body M68k is
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Disable;
