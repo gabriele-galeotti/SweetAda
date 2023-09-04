@@ -43,7 +43,8 @@ package body MicroBlaze is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -59,7 +60,8 @@ package body MicroBlaze is
    ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
+   procedure BREAKPOINT
+      is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -76,7 +78,8 @@ package body MicroBlaze is
    -- Cache management
    ----------------------------------------------------------------------------
 
-   procedure ICache_Invalidate is
+   procedure ICache_Invalidate
+      is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -96,7 +99,8 @@ package body MicroBlaze is
           );
    end ICache_Invalidate;
 
-   procedure ICache_Enable is
+   procedure ICache_Enable
+      is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -111,7 +115,8 @@ package body MicroBlaze is
           );
    end ICache_Enable;
 
-   procedure DCache_Invalidate is
+   procedure DCache_Invalidate
+      is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -131,7 +136,8 @@ package body MicroBlaze is
           );
    end DCache_Invalidate;
 
-   procedure DCache_Enable is
+   procedure DCache_Enable
+      is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -147,35 +153,66 @@ package body MicroBlaze is
    end DCache_Enable;
 
    ----------------------------------------------------------------------------
-   -- Irq_Enable/Disable
+   -- Irq_Enable
    ----------------------------------------------------------------------------
-
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
+      RMSR_R : Unsigned_32;
    begin
       Asm (
-           Template => ""                          & CRLF &
-                       "        mfs     r11,rmsr " & CRLF &
-                       "        ori     r11,r11,2" & CRLF &
-                       "        mts     rmsr,r11 " & CRLF &
+           Template => ""                         & CRLF &
+                       "        mfs     %0,rmsr " & CRLF &
+                       "        nop             " & CRLF &
+                       "        ori     %0,%0,%1" & CRLF &
+                       "        mts     rmsr,%0 " & CRLF &
+                       "        nop             " & CRLF &
                        "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "r11",
+           Outputs  => Unsigned_32'Asm_Output ("=r", RMSR_R),
+           Inputs   => Unsigned_32'Asm_Input ("i", MSR_IE),
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   ----------------------------------------------------------------------------
+   -- Irq_Disable
+   ----------------------------------------------------------------------------
+   procedure Irq_Disable
+      is
+      RMSR_R : Unsigned_32;
    begin
-      null;
+      Asm (
+           Template => ""                         & CRLF &
+                       "        mfs     %0,rmsr " & CRLF &
+                       "        nop             " & CRLF &
+                       "        andi    %0,%0,%1" & CRLF &
+                       "        mts     rmsr,%0 " & CRLF &
+                       "        nop             " & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", RMSR_R),
+           Inputs   => Unsigned_32'Asm_Input ("i", not MSR_IE),
+           Clobber  => "memory",
+           Volatile => True
+          );
    end Irq_Disable;
 
-   function Irq_State_Get return Irq_State_Type is
+   ----------------------------------------------------------------------------
+   -- Irq_State_Get
+   ----------------------------------------------------------------------------
+   -- __TBD__
+   function Irq_State_Get return Irq_State_Type
+      is
    begin
       return 0;
    end Irq_State_Get;
 
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   ----------------------------------------------------------------------------
+   -- Irq_State_Set
+   ----------------------------------------------------------------------------
+   -- __TBD__
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
    begin
       null;
    end Irq_State_Set;

@@ -38,6 +38,8 @@ package MicroBlaze is
 
    BREAKPOINT_Asm_String : constant String := ".word   0xB9CC0060";
 
+   MSR_IE : constant := 2#10#;
+
    procedure NOP with
       Inline => True;
    procedure BREAKPOINT with
@@ -128,22 +130,22 @@ package MicroBlaze is
    -- Cache management
    ----------------------------------------------------------------------------
 
-   procedure ICache_Invalidate with
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "icache_invalidate";
-   procedure ICache_Enable with
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "icache_enable";
-   procedure DCache_Invalidate with
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "dcache_invalidate";
-   procedure DCache_Enable with
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "dcache_enable";
+   procedure ICache_Invalidate
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "icache_invalidate";
+   procedure ICache_Enable
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "icache_enable";
+   procedure DCache_Invalidate
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "dcache_invalidate";
+   procedure DCache_Enable
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "dcache_enable";
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -151,13 +153,15 @@ package MicroBlaze is
 
    subtype Irq_State_Type is Integer;
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   function Irq_State_Get return Irq_State_Type with
-      Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   function Irq_State_Get
+      return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
 end MicroBlaze;
