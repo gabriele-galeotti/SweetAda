@@ -42,10 +42,13 @@ package SPARC is
    -- 0x30800000 is Branch Always with annul, 22-displacement address (4x, sign-extended)
    Opcode_BRANCH_ALWAYS : constant := 16#3080_0000#;
 
-   procedure NOP with
-      Inline => True;
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
+   PSR_PIL : constant := 16#0000_0F00#;
+
+   procedure NOP
+      with Inline => True;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- PSR
@@ -92,10 +95,12 @@ package SPARC is
       impl     at 0 range 28 .. 31;
    end record;
 
-   function PSR_Read return PSR_Type with
-      Inline => True;
-   procedure PSR_Write (PSR : in PSR_Type) with
-      Inline => True;
+   function PSR_Read
+      return PSR_Type
+      with Inline => True;
+   procedure PSR_Write
+      (PSR : in PSR_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- SPARC registers
@@ -156,10 +161,12 @@ package SPARC is
       Code at 0 range 0 .. 127;
    end record;
 
-   procedure TBR_Set (TBR_Address : in Address) with
-      Inline => True;
-   procedure Traps_Enable (Enable : in Boolean) with
-      Inline => True;
+   procedure TBR_Set
+      (TBR_Address : in Address)
+      with Inline => True;
+   procedure Traps_Enable
+      (Enable : in Boolean)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -169,7 +176,9 @@ package SPARC is
 
    procedure Irq_Enable;
    procedure Irq_Disable;
-   function Irq_State_Get return Irq_State_Type;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type);
+   function Irq_State_Get
+      return Irq_State_Type;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type);
 
 end SPARC;

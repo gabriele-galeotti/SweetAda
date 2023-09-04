@@ -46,7 +46,8 @@ package body SPARC is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -62,7 +63,9 @@ package body SPARC is
    ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
+   procedure Asm_Call
+      (Target_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -80,7 +83,9 @@ package body SPARC is
    -- PSR_Read/Write
    ----------------------------------------------------------------------------
 
-   function PSR_Read return PSR_Type is
+   function PSR_Read
+      return PSR_Type
+      is
       PSR : PSR_Type;
    begin
       Asm (
@@ -95,7 +100,9 @@ package body SPARC is
       return PSR;
    end PSR_Read;
 
-   procedure PSR_Write (PSR : in PSR_Type) is
+   procedure PSR_Write
+      (PSR : in PSR_Type)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -113,7 +120,9 @@ package body SPARC is
    -- Traps
    ----------------------------------------------------------------------------
 
-   procedure TBR_Set (TBR_Address : in Address) is
+   procedure TBR_Set
+      (TBR_Address : in Address)
+      is
       function To_U32 is new Ada.Unchecked_Conversion (Address, Unsigned_32);
    begin
       Asm (
@@ -127,7 +136,9 @@ package body SPARC is
           );
    end TBR_Set;
 
-   procedure Traps_Enable (Enable : in Boolean) is
+   procedure Traps_Enable
+      (Enable : in Boolean)
+      is
       PSR : PSR_Type;
    begin
       PSR := PSR_Read;
@@ -136,55 +147,67 @@ package body SPARC is
    end Traps_Enable;
 
    ----------------------------------------------------------------------------
-   -- Irq_Enable/Disable
+   -- Irq_Enable
    ----------------------------------------------------------------------------
-
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
+      PSR_R : Unsigned_32;
    begin
       Asm (
-           Template => ""                             & CRLF &
-                       "        mov     %%psr,%%g1  " & CRLF &
-                       "        and     %%g1,%0,%%g1" & CRLF &
-                       "        or      %%g1,%1,%%g1" & CRLF &
-                       "        mov     %%g1,%%psr  " & CRLF &
-                       "        nop ; nop ; nop     " & CRLF &
+           Template => ""                           & CRLF &
+                       "        rd      %%psr,%0  " & CRLF &
+                       "        nop ; nop ; nop   " & CRLF &
+                       "        andn    %0,%1,%0  " & CRLF &
+                       "        wr      %0,0,%%psr" & CRLF &
+                       "        nop ; nop ; nop   " & CRLF &
                        "",
-           Outputs  => No_Output_Operands,
-           Inputs   => [
-                        Unsigned_32'Asm_Input ("r", 16#FFFF_F0FF#),
-                        Unsigned_32'Asm_Input ("r", 16#0000_0020#)
-                       ],
-           Clobber  => "g1",
+           Outputs  => Unsigned_32'Asm_Output ("=r", PSR_R),
+           Inputs   => Unsigned_32'Asm_Input ("i", PSR_PIL),
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   ----------------------------------------------------------------------------
+   -- Irq_Disable
+   ----------------------------------------------------------------------------
+   procedure Irq_Disable
+      is
+      PSR_R : Unsigned_32;
    begin
       Asm (
-           Template => ""                             & CRLF &
-                       "        mov     %%psr,%%g1  " & CRLF &
-                       "        and     %%g1,%0,%%g1" & CRLF &
-                       "        mov     %%g1,%%psr  " & CRLF &
-                       "        nop ; nop ; nop     " & CRLF &
+           Template => ""                           & CRLF &
+                       "        rd      %%psr,%0  " & CRLF &
+                       "        nop ; nop ; nop   " & CRLF &
+                       "        or      %0,%1,%0  " & CRLF &
+                       "        wr      %0,0,%%psr" & CRLF &
+                       "        nop ; nop ; nop   " & CRLF &
                        "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_32'Asm_Input ("r", 16#FFFF_FFDF#),
-           Clobber  => "g1",
+           Outputs  => Unsigned_32'Asm_Output ("=r", PSR_R),
+           Inputs   => Unsigned_32'Asm_Input ("i", PSR_PIL),
+           Clobber  => "memory",
            Volatile => True
           );
-
    end Irq_Disable;
 
+   ----------------------------------------------------------------------------
+   -- Irq_State_Get
+   ----------------------------------------------------------------------------
    -- __TBD__
-   function Irq_State_Get return Irq_State_Type is
+   function Irq_State_Get
+      return Irq_State_Type
+      is
    begin
       return 0;
    end Irq_State_Get;
 
+   ----------------------------------------------------------------------------
+   -- Irq_State_Set
+   ----------------------------------------------------------------------------
    -- __TBD__
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
-      pragma Unreferenced (Irq_State);
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
    begin
       null;
    end Irq_State_Set;
