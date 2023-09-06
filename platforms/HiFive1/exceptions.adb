@@ -20,6 +20,7 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Definitions;
 with Bits;
+with LLutils;
 with RISCV;
 with MTIME;
 with Console;
@@ -83,7 +84,7 @@ package body Exceptions is
    begin
       RISCV.mtvec_Write ((
          MODE => RISCV.MODE_Direct,
-         BASE => Bits_30 (Shift_Right (Unsigned_32 (To_Integer (Vectors'Address)), 2))
+         BASE => Bits_30 (LLutils.Select_Address_Bits (Vectors'Address, 2, 31))
          ));
    end Init;
 
