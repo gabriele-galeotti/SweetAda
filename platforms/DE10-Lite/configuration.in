@@ -20,7 +20,7 @@ POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 
 export QUARTUS_PATH      := /opt/intelFPGA_lite/22.1std
-export QSYS_PROJECT_PATH := /root/workspace/devices/Altera_DE10-Lite/DE10-Lite_base_design
+export QSYS_PROJECT_PATH := /root/workspace/devices/DE10-Lite/DE10-Lite_base_design
 export QSYS_FILE         := $(QSYS_PROJECT_PATH)/de10lite.qsys
 export QSYS_SOF_FILE     := $(QSYS_PROJECT_PATH)/output_files/DE10-Lite.sof
 export QSYS_JDI_FILE     := $(QSYS_PROJECT_PATH)/output_files/DE10-Lite.jdi
