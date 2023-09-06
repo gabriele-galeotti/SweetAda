@@ -42,7 +42,7 @@ GXEMUL_EXECUTABLE="/opt/GXemul/bin/gxemul"
 # -i -r
 #
 "${GXEMUL_EXECUTABLE}"                          \
-  -X -x -Q                                      \
+  -Q -X -x                                      \
   -E decstation -e 3min                         \
   0xBFC00000:${SWEETADA_PATH}/${KERNEL_ROMFILE} \
   &
