@@ -16,8 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Definitions;
+with Configure;
 with Bits;
+with ARMv7M;
 with STM32F769I;
+with Exceptions;
 with Console;
 
 package body BSP is
@@ -36,6 +39,7 @@ package body BSP is
    use STM32F769I;
 
    procedure CLK_Init;
+   procedure SysTick_Init;
 
    --========================================================================--
    --                                                                        --
@@ -94,6 +98,22 @@ package body BSP is
    end CLK_Init;
 
    ----------------------------------------------------------------------------
+   -- SysTick_Init
+   ----------------------------------------------------------------------------
+   procedure SysTick_Init is
+   begin
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 ((Configure.SYSCLK_FREQUENCY / 8) / Configure.TICK_FREQUENCY);
+      ARMv7M.SHPR3.PRI_15 := 16#FF#;
+      ARMv7M.SYST_CVR.CURRENT := 0;
+      ARMv7M.SYST_CSR :=
+         (ENABLE    => True,
+          TICKINT   => True,
+          CLKSOURCE => ARMv7M.CLKSOURCE_EXT,
+          COUNTFLAG => False,
+          others    => <>);
+   end SysTick_Init;
+
+   ----------------------------------------------------------------------------
    -- Console wrappers
    ----------------------------------------------------------------------------
 
@@ -122,6 +142,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    procedure Setup is
    begin
+      -------------------------------------------------------------------------
+      Exceptions.Init;
       -- CLK ------------------------------------------------------------------
       CLK_Init;
       -- USART6 ---------------------------------------------------------------
@@ -133,8 +155,8 @@ package body BSP is
       GPIOC.AFRL (7) := AF8;
       GPIOC.MODER := [6 | 7 => GPIO_ALT, others => <>];
       USART6.USART_CR1.UE := False;
-      -- USART6.USART_BRR.BRR := Unsigned_16 (96_000_000 / 9_600); -- assume HSI192, fck = 96 MHz, 9600 baud
-      USART6.USART_BRR.BRR := Unsigned_16 (100_000_000 / 9_600); -- assume HSE200, fck = 100 MHz, 9600 baud
+      -- USART6.USART_BRR.BRR := Unsigned_16 (96 * MHz1 / 9_600); -- assume HSI192, fck = 96 MHz, 9600 baud
+      USART6.USART_BRR.BRR := Unsigned_16 (100 * MHz1 / 9_600); -- assume HSE200, fck = 100 MHz, 9600 baud
       USART6.USART_CR1.TE := True;
       USART6.USART_CR1.UE := True;
       -- Console --------------------------------------------------------------
@@ -143,6 +165,10 @@ package body BSP is
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("STM32F769I", NL => True);
+      -------------------------------------------------------------------------
+      ARMv7M.Irq_Enable;
+      ARMv7M.Fault_Irq_Enable;
+      SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;
 
