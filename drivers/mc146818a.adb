@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Multiprocessors.Spin_Locks;
 with Ada.Unchecked_Conversion;
 with LLutils;
 with CPU;
@@ -29,6 +30,7 @@ package body MC146818A is
    --                                                                        --
    --========================================================================--
 
+   use System.Multiprocessors.Spin_Locks;
    use LLutils;
 
    ----------------------------------------------------------------------------
@@ -183,8 +185,8 @@ package body MC146818A is
 
    function To_RD is new Ada.Unchecked_Conversion (Unsigned_8, RegisterD_Type);
 
-   -- lock
-   RTC_Lock : CPU.Lock_Type;
+   -- Register locking
+   RTC_Lock : Spin_Lock;
 
    -- PC-specific
    PC_INDEX       : constant := 0;
