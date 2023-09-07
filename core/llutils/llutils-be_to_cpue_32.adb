@@ -16,9 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (LLutils)
-function BE_To_CPUE_32 (Object_Address : System.Address) return Interfaces.Unsigned_32 is
-   Value : aliased Interfaces.Unsigned_32 with
-      Address => Object_Address;
+function BE_To_CPUE_32
+   (Object_Address : System.Address)
+   return Interfaces.Unsigned_32
+   is
+   Value : aliased Interfaces.Unsigned_32
+      with Address => Object_Address;
 begin
    if Bits.LittleEndian then
       return Bits.Word_Swap (Value);

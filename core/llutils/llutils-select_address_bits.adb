@@ -16,12 +16,13 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (LLutils)
-function Select_Address_Bits (
-                              Address_Pattern : System.Address;
-                              LSBit           : Bits.Address_Bit_Number;
-                              MSBit           : Bits.Address_Bit_Number;
-                              BE_Layout       : Boolean := False
-                             ) return SSE.Integer_Address is
+function Select_Address_Bits
+   (Address_Pattern : System.Address;
+    LSBit           : Bits.Address_Bit_Number;
+    MSBit           : Bits.Address_Bit_Number;
+    BE_Layout       : Boolean := False)
+   return SSE.Integer_Address
+   is
    Bit_Mask : SSE.Integer_Address;
 begin
    if Bits.LittleEndian or else (Bits.BigEndian and then not BE_Layout) then

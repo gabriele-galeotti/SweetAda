@@ -16,12 +16,14 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (LLutils)
-procedure Byte_Swap_64 (Object_Address : in System.Address) is
-   Object : aliased Bits.Byte_Array (0 .. 7) with
-      Address    => Object_Address,
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+procedure Byte_Swap_64
+   (Object_Address : in System.Address)
+   is
+   Object : aliased Bits.Byte_Array (0 .. 7)
+      with Address    => Object_Address,
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
    Value  : Interfaces.Unsigned_8;
 begin
    Value := Object (0); Object (0) := Object (7); Object (7) := Value;
