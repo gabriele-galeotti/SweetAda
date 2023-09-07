@@ -30,35 +30,45 @@ package C_Wrappers is
 
    pragma Preelaborate;
 
-   procedure Ada_Abort with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_abort",
-      No_Return     => True;
+   procedure Ada_Abort
+      with Export        => True,
+           Convention    => C,
+           External_Name => "ada_abort",
+           No_Return     => True;
 
-   procedure Ada_Print_Character (c : in Interfaces.C.char) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_print_character";
+   procedure Ada_Print_Character
+      (c : in Interfaces.C.char)
+      with Export        => True,
+           Convention    => C,
+           External_Name => "ada_print_character";
 
-   function Ada_Malloc (S : Interfaces.C.size_t) return System.Address with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_malloc";
+   function Ada_Malloc
+      (S : Interfaces.C.size_t)
+      return System.Address
+      with Export        => True,
+           Convention    => C,
+           External_Name => "ada_malloc";
 
-   procedure Ada_Free (A : in System.Address) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_free";
+   procedure Ada_Free
+      (A : in System.Address)
+      with Export        => True,
+           Convention    => C,
+           External_Name => "ada_free";
 
-   function Ada_Calloc (N : Interfaces.C.size_t; S : Interfaces.C.size_t) return System.Address with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_calloc";
+   function Ada_Calloc
+      (N : Interfaces.C.size_t;
+       S : Interfaces.C.size_t)
+      return System.Address
+      with Export        => True,
+           Convention    => C,
+           External_Name => "ada_calloc";
 
-   function Ada_Realloc (A : System.Address; S : Interfaces.C.size_t) return System.Address with
-      Export        => True,
-      Convention    => C,
-      External_Name => "ada_realloc";
+   function Ada_Realloc
+      (A : System.Address;
+       S : Interfaces.C.size_t)
+      return System.Address
+      with Export        => True,
+           Convention    => C,
+           External_Name => "ada_realloc";
 
 end C_Wrappers;

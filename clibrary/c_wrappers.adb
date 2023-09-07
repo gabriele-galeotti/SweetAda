@@ -25,57 +25,82 @@ package body C_Wrappers is
    --                                                                        --
    --========================================================================--
 
-   procedure Ada_Abort is
-      procedure System_Abort with
-         Import        => True,
-         Convention    => Ada,
-         External_Name => "abort_library__system_abort",
-         No_Return     => True;
+   procedure Ada_Abort
+      is
+      procedure System_Abort
+         with Import        => True,
+              Convention    => Ada,
+              External_Name => "abort_library__system_abort",
+              No_Return     => True;
    begin
       System_Abort;
    end Ada_Abort;
 
-   procedure Ada_Print_Character (c : in Interfaces.C.char) is
-      procedure Print (cc : in Interfaces.C.char) with
-         Import        => True,
-         Convention    => Ada,
-         External_Name => "console__print__cchar";
+   procedure Ada_Print_Character
+      (c : in Interfaces.C.char)
+      is
+      procedure Print
+         (cc : in Interfaces.C.char)
+         with Import        => True,
+              Convention    => Ada,
+              External_Name => "console__print__cchar";
    begin
       Print (c);
    end Ada_Print_Character;
 
-   function Ada_Malloc (S : Interfaces.C.size_t) return System.Address is
-      function Malloc (SS : Interfaces.C.size_t) return System.Address with
-         Import        => True,
-         Convention    => C,
-         External_Name => "__gnat_malloc";
+   function Ada_Malloc
+      (S : Interfaces.C.size_t) return System.Address
+      is
+      function Malloc
+         (SS : Interfaces.C.size_t)
+         return System.Address
+         with Import        => True,
+              Convention    => C,
+              External_Name => "__gnat_malloc";
    begin
       return Malloc (S);
    end Ada_Malloc;
 
-   procedure Ada_Free (A : in System.Address) is
-      procedure Free (AA : in System.Address) with
-         Import        => True,
-         Convention    => C,
-         External_Name => "__gnat_free";
+   procedure Ada_Free
+      (A : in System.Address)
+      is
+      procedure Free
+         (AA : in System.Address)
+         with Import        => True,
+              Convention    => C,
+              External_Name => "__gnat_free";
    begin
       Free (A);
    end Ada_Free;
 
-   function Ada_Calloc (N : Interfaces.C.size_t; S : Interfaces.C.size_t) return System.Address is
-      function Calloc (NN : Interfaces.C.size_t; SS : Interfaces.C.size_t) return System.Address with
-         Import        => True,
-         Convention    => Ada,
-         External_Name => "malloc__calloc";
+   function Ada_Calloc
+      (N : Interfaces.C.size_t;
+       S : Interfaces.C.size_t)
+      return System.Address
+      is
+      function Calloc
+         (NN : Interfaces.C.size_t;
+          SS : Interfaces.C.size_t)
+         return System.Address
+         with Import        => True,
+              Convention    => Ada,
+              External_Name => "malloc__calloc";
    begin
       return Calloc (N, S);
    end Ada_Calloc;
 
-   function Ada_Realloc (A : System.Address; S : Interfaces.C.size_t) return System.Address is
-      function Realloc (AA : System.Address; SS : Interfaces.C.size_t) return System.Address with
-         Import        => True,
-         Convention    => Ada,
-         External_Name => "malloc__realloc";
+   function Ada_Realloc
+      (A : System.Address;
+       S : Interfaces.C.size_t)
+      return System.Address
+      is
+      function Realloc
+         (AA : System.Address;
+          SS : Interfaces.C.size_t)
+         return System.Address
+         with Import        => True,
+              Convention    => Ada,
+              External_Name => "malloc__realloc";
    begin
       return Realloc (A, S);
    end Ada_Realloc;
