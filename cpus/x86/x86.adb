@@ -411,40 +411,4 @@ package body x86 is
           );
    end Irq_State_Set;
 
-   ----------------------------------------------------------------------------
-   -- Locking subprograms
-   ----------------------------------------------------------------------------
-
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) is
-      Locked_Item : Lock_Type := (Lock => LOCK_LOCK);
-   begin
-      Asm (
-           Template => ""                      & CRLF &
-                       "        xchgl   %0,%1" & CRLF &
-                       "",
-           Outputs  => [
-                        CPU_Unsigned'Asm_Output ("+r", Locked_Item.Lock),
-                        CPU_Unsigned'Asm_Output ("+m", Lock_Object.Lock)
-                       ],
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      Success := Locked_Item.Lock = LOCK_UNLOCK;
-   end Lock_Try;
-
-   procedure Lock (Lock_Object : in out Lock_Type) is
-      Success : Boolean;
-   begin
-      loop
-         Lock_Try (Lock_Object, Success);
-         exit when Success;
-      end loop;
-   end Lock;
-
-   procedure Unlock (Lock_Object : out Lock_Type) is
-   begin
-      Lock_Object.Lock := LOCK_UNLOCK;
-   end Unlock;
-
 end x86;

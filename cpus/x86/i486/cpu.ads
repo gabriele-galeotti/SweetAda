@@ -51,14 +51,4 @@ package CPU is
    function Irq_State_Get return Irq_State_Type            renames x86.Irq_State_Get;
    procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames x86.Irq_State_Set;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   subtype Lock_Type is x86.Lock_Type;
-
-   procedure Lock_Try (Lock_Object : in out x86.Lock_Type; Success : out Boolean) renames x86.Lock_Try;
-   procedure Lock (Lock_Object : in out x86.Lock_Type)                            renames x86.Lock;
-   procedure Unlock (Lock_Object : out x86.Lock_Type)                             renames x86.Unlock;
-
 end CPU;
