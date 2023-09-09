@@ -16,7 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (MMIO)
-procedure WriteA_U16 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_16) is
+procedure WriteA_U16
+   (Memory_Address : in System.Address;
+    Value          : in Interfaces.Unsigned_16)
+   is
 begin
    raise Program_Error;
 end WriteA_U16;

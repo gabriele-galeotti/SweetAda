@@ -16,7 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (MMIO)
-function ReadA_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 is
+function ReadA_U64
+   (Memory_Address : System.Address)
+   return Interfaces.Unsigned_64
+   is
 begin
    raise Program_Error;
    return 0;

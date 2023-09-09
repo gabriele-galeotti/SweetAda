@@ -18,7 +18,10 @@
 with Bits;
 
 separate (MMIO)
-procedure WriteAS_U32 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_32) is
+procedure WriteAS_U32
+   (Memory_Address : in System.Address;
+    Value          : in Interfaces.Unsigned_32)
+   is
 begin
    raise Program_Error;
 end WriteAS_U32;
