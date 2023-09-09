@@ -28,7 +28,8 @@ package body Abort_Library is
    ----------------------------------------------------------------------------
    -- System_Abort (parameterless)
    ----------------------------------------------------------------------------
-   procedure System_Abort is
+   procedure System_Abort
+      is
    begin
       loop null; end loop;
    end System_Abort;
@@ -36,12 +37,12 @@ package body Abort_Library is
    ----------------------------------------------------------------------------
    -- System_Abort (parameterized)
    ----------------------------------------------------------------------------
-   procedure System_Abort (
-                           File    : in System.Address;
-                           Line    : in Integer;
-                           Column  : in Integer;
-                           Message : in System.Address
-                          ) is
+   procedure System_Abort
+      (File    : in System.Address;
+       Line    : in Integer;
+       Column  : in Integer;
+       Message : in System.Address)
+      is
    separate;
 
 end Abort_Library;

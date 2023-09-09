@@ -29,18 +29,17 @@ package Abort_Library is
 
    pragma Preelaborate;
 
-   procedure System_Abort with
-      Export        => True,
-      Convention    => Ada,
-      External_Name => "abort_library__system_abort",
-      No_Return     => True;
+   procedure System_Abort
+      with Export        => True,
+           Convention    => Ada,
+           External_Name => "abort_library__system_abort",
+           No_Return     => True;
 
-   procedure System_Abort (
-                           File    : in System.Address;
-                           Line    : in Integer;
-                           Column  : in Integer;
-                           Message : in System.Address
-                          ) with
-      No_Return => True;
+   procedure System_Abort
+      (File    : in System.Address;
+       Line    : in Integer;
+       Column  : in Integer;
+       Message : in System.Address)
+      with No_Return => True;
 
 end Abort_Library;

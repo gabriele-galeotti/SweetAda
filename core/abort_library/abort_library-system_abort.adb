@@ -21,12 +21,12 @@ with Console;
 use type System.Address;
 
 separate (Abort_Library)
-procedure System_Abort (
-                        File    : in System.Address;
-                        Line    : in Integer;
-                        Column  : in Integer;
-                        Message : in System.Address
-                       ) is
+procedure System_Abort
+   (File    : in System.Address;
+    Line    : in Integer;
+    Column  : in Integer;
+    Message : in System.Address)
+   is
 begin
    Console.Print_NewLine;
    Console.Print ("*** SYSTEM ABORT", NL => True);
