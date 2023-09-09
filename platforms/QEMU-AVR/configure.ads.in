@@ -1,10 +1,17 @@
 
+with Definitions;
+
 package Configure is
 
    pragma Pure;
 
+   use Definitions;
+
    -- PLATFORM and CPU definitions
    PLATFORM : constant String := "QEMU-AVR";
    CPU      : constant String := "@CPU@";
+
+   -- basic configuration parameters
+   CLK_FREQUENCY : constant := 16 * MHz1;
 
 end Configure;
