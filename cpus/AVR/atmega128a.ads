@@ -66,7 +66,7 @@ package ATmega128A is
 
    SREG_ADDRESS : constant := 16#5F#;
 
-   SREG : SREG_Type with
+   SREG : aliased SREG_Type with
       Address              => To_Address (SREG_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -105,7 +105,7 @@ package ATmega128A is
 
    PORTA_ADDRESS : constant := 16#3B#;
 
-   PORTA : PORTA_Type with
+   PORTA : aliased PORTA_Type with
       Address              => To_Address (PORTA_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -138,7 +138,7 @@ package ATmega128A is
 
    DDRA_ADDRESS : constant := 16#3A#;
 
-   DDRA : DDRA_Type with
+   DDRA : aliased DDRA_Type with
       Address              => To_Address (DDRA_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -171,7 +171,7 @@ package ATmega128A is
 
    PINA_ADDRESS : constant := 16#39#;
 
-   PINA : PINA_Type with
+   PINA : aliased PINA_Type with
       Address              => To_Address (PINA_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -206,7 +206,7 @@ package ATmega128A is
 
    PORTB_ADDRESS : constant := 16#38#;
 
-   PORTB : PORTB_Type with
+   PORTB : aliased PORTB_Type with
       Address              => To_Address (PORTB_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -239,7 +239,7 @@ package ATmega128A is
 
    DDRB_ADDRESS : constant := 16#37#;
 
-   DDRB : DDRB_Type with
+   DDRB : aliased DDRB_Type with
       Address              => To_Address (DDRB_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -272,7 +272,7 @@ package ATmega128A is
 
    PINB_ADDRESS : constant := 16#36#;
 
-   PINB : PINB_Type with
+   PINB : aliased PINB_Type with
       Address              => To_Address (PINB_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -307,7 +307,7 @@ package ATmega128A is
 
    PORTC_ADDRESS : constant := 16#35#;
 
-   PORTC : PORTC_Type with
+   PORTC : aliased PORTC_Type with
       Address              => To_Address (PORTC_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -322,7 +322,7 @@ package ATmega128A is
       DDC4   : Boolean;
       DDC5   : Boolean;
       DDC6   : Boolean;
-      Unused : Boolean;
+      Unused : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -340,7 +340,7 @@ package ATmega128A is
 
    DDRC_ADDRESS : constant := 16#34#;
 
-   DDRC : DDRC_Type with
+   DDRC : aliased DDRC_Type with
       Address              => To_Address (DDRC_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -355,7 +355,7 @@ package ATmega128A is
       PINC4  : Boolean;
       PINC5  : Boolean;
       PINC6  : Boolean;
-      Unused : Boolean;
+      Unused : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
@@ -373,7 +373,7 @@ package ATmega128A is
 
    PINC_ADDRESS : constant := 16#33#;
 
-   PINC : PINC_Type with
+   PINC : aliased PINC_Type with
       Address              => To_Address (PINC_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -408,7 +408,7 @@ package ATmega128A is
 
    PORTD_ADDRESS : constant := 16#32#;
 
-   PORTD : PORTD_Type with
+   PORTD : aliased PORTD_Type with
       Address              => To_Address (PORTD_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -441,7 +441,7 @@ package ATmega128A is
 
    DDRD_ADDRESS : constant := 16#31#;
 
-   DDRD : DDRD_Type with
+   DDRD : aliased DDRD_Type with
       Address              => To_Address (DDRD_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
@@ -474,7 +474,7 @@ package ATmega128A is
 
    PIND_ADDRESS : constant := 16#30#;
 
-   PIND : PIND_Type with
+   PIND : aliased PIND_Type with
       Address              => To_Address (PIND_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
