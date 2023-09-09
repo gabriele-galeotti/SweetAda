@@ -27,10 +27,10 @@ startcode:
                 // Allow only master core to execute code.
                 //
                 mrs     x0,mpidr_el1
-                mov     x1,#0xC1000000
-                bic     x0,x0,x1
+                and     x0,x0,#0xFF
                 cbz     x0,bootcore
-hold:           b       .
+hold:           wfe
+                b       hold
 bootcore:
 
                 //
@@ -41,6 +41,11 @@ bootcore:
                 msr     cpacr_el1,x0
 
                 //
+                // Ensure completion of previous instructions.
+                //
+                isb
+
+                //
                 // Setup stack pointer.
                 //
                 ldr     x0,=kernel_stack
@@ -49,7 +54,17 @@ bootcore:
                 //
                 // Static data relocation.
                 //
-                bl      movdata
+                .extern _etext
+                .extern _sdata
+                .extern _edata
+                ldr     x1,=_etext
+                ldr     x2,=_sdata
+                ldr     x3,=_edata
+                b       2f
+1:              ldr     x0,[x1],#8
+                str     x0,[x2],#8
+2:              cmp     x2,x3
+                blt     1b
 
                 //
                 // Initialize .bss section.
@@ -73,26 +88,6 @@ bootcore:
 dead:           b       .
 
                 .size   _start,.-_start
-
-////////////////////////////////////////////////////////////////////////////////
-// movdata                                                                    //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
-
-movdata:
-                // registers used: x0-x3
-                .extern _etext
-                .extern _sdata
-                .extern _edata
-                ldr     x1,=_etext
-                ldr     x2,=_sdata
-                ldr     x3,=_edata
-                b       2f
-1:              ldr     x0,[x1],#8
-                str     x0,[x2],#8
-2:              cmp     x2,x3
-                blt     1b
-                ret
 
 ////////////////////////////////////////////////////////////////////////////////
 
