@@ -35,11 +35,15 @@ startcode:
                 //
                 // EL2 ---> EL1
                 //
-                ldr     x0,=(3<<28|3<<22|1<<20|1<<11)
+#define SCTLR_DEFAULT  ((3<<28)|(3<<22)|(1<<20)|(1<<11))
+#define HCR_RW         (1<<31)
+#define SPSR_MASK_ALL  (7<<6)
+#define SPSR_MODE_EL1h (5<<0)
+                ldr     x0,=SCTLR_DEFAULT
                 msr     sctlr_el1,x0
-                ldr     x0,=(1<<31)
+                ldr     x0,=HCR_RW
                 msr     hcr_el2,x0
-                ldr     x0,=(7<<6|5<<0)
+                ldr     x0,=(SPSR_MASK_ALL|SPSR_MODE_EL1h)
                 msr     spsr_el2,x0
                 adr     x0,1f
                 msr     elr_el2,x0
@@ -62,6 +66,11 @@ bootcore:
                 mrs     x1,cpacr_el1
                 orr     x0,x1,#(3<<20)
                 msr     cpacr_el1,x0
+
+                //
+                // Ensure completion of previous instructions.
+                //
+                isb
 
                 //
                 // Setup stack pointer.
