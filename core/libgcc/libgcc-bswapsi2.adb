@@ -16,7 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (LibGCC)
-function BswapSI2 (V : GCC_Types.USI_Type) return GCC_Types.USI_Type is
+function BswapSI2
+   (V : GCC_Types.USI_Type)
+   return GCC_Types.USI_Type
+   is
 begin
    return GCC_Types.Shift_Right (V and 16#FF00_0000#, 24) or
           GCC_Types.Shift_Right (V and 16#00FF_0000#, 8) or

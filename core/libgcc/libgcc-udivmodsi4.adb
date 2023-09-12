@@ -16,17 +16,18 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (LibGCC)
-function UDivModSI4 (
-                     N : GCC_Types.USI_Type;
-                     D : GCC_Types.USI_Type;
-                     M : Boolean
-                    ) return GCC_Types.USI_Type is
-   function Is_Negative (Value : GCC_Types.USI_Type) return Boolean with
-      Inline => True;
-   function Is_Negative (Value : GCC_Types.USI_Type) return Boolean is
-   begin
-      return (Value and 16#8000_0000#) /= 0;
-   end Is_Negative;
+function UDivModSI4
+   (N : GCC_Types.USI_Type;
+    D : GCC_Types.USI_Type;
+    M : Boolean)
+   return GCC_Types.USI_Type
+   is
+   function Is_Negative
+      (Value : GCC_Types.USI_Type)
+      return Boolean
+      is
+      ((Value and 16#8000_0000#) /= 0)
+      with Inline => True;
    Num    : GCC_Types.USI_Type := N;
    Den    : GCC_Types.USI_Type := D;
    Bit    : GCC_Types.USI_Type;

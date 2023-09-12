@@ -16,10 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (LibGCC)
-function MulSI3 (
-                 M1 : GCC_Types.USI_Type;
-                 M2 : GCC_Types.USI_Type
-                ) return GCC_Types.USI_Type is
+function MulSI3
+   (M1 : GCC_Types.USI_Type;
+    M2 : GCC_Types.USI_Type)
+   return GCC_Types.USI_Type
+   is
    T_M1 : GCC_Types.USI_Type := M1;
    T_M2 : GCC_Types.USI_Type := M2;
    R    : GCC_Types.USI_Type := 0;

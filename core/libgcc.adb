@@ -29,31 +29,30 @@ package body LibGCC is
    use type GCC_Types.USI_Type;
    use type GCC_Types.UDI_Type;
 
-   type UHI_2 is array (0 .. 1) of GCC_Types.UHI_Type with
-      Alignment => GCC_Types.USI_Type'Alignment,
-      Pack      => True;
+   type UHI_2 is array (0 .. 1) of GCC_Types.UHI_Type
+      with Alignment => GCC_Types.USI_Type'Alignment,
+           Pack      => True;
 
-   type USI_2 is array (0 .. 1) of GCC_Types.USI_Type with
-      Alignment => GCC_Types.UDI_Type'Alignment,
-      Pack      => True;
+   type USI_2 is array (0 .. 1) of GCC_Types.USI_Type
+      with Alignment => GCC_Types.UDI_Type'Alignment,
+           Pack      => True;
 
-   procedure UMul32x32 (
-                        M1 : in  GCC_Types.USI_Type;
-                        M2 : in  GCC_Types.USI_Type;
-                        RH : out GCC_Types.USI_Type;
-                        RL : out GCC_Types.USI_Type
-                       );
+   procedure UMul32x32
+      (M1 : in     GCC_Types.USI_Type;
+       M2 : in     GCC_Types.USI_Type;
+       RH :    out GCC_Types.USI_Type;
+       RL :    out GCC_Types.USI_Type);
 
-   function UMulSIDI3 (
-                       M1 : GCC_Types.USI_Type;
-                       M2 : GCC_Types.USI_Type
-                      ) return GCC_Types.UDI_Type;
+   function UMulSIDI3
+      (M1 : GCC_Types.USI_Type;
+       M2 : GCC_Types.USI_Type)
+      return GCC_Types.UDI_Type;
 
-   function UDivModSI4 (
-                        N : GCC_Types.USI_Type;
-                        D : GCC_Types.USI_Type;
-                        M : Boolean
-                       ) return GCC_Types.USI_Type;
+   function UDivModSI4
+      (N : GCC_Types.USI_Type;
+       D : GCC_Types.USI_Type;
+       M : Boolean)
+      return GCC_Types.USI_Type;
 
    --========================================================================--
    --                                                                        --
@@ -66,123 +65,140 @@ package body LibGCC is
    ----------------------------------------------------------------------------
    -- BswapSI2
    ----------------------------------------------------------------------------
-   function BswapSI2 (V : GCC_Types.USI_Type) return GCC_Types.USI_Type is
+   function BswapSI2
+      (V : GCC_Types.USI_Type)
+      return GCC_Types.USI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- BswapDI2
    ----------------------------------------------------------------------------
-   function BswapDI2 (V : GCC_Types.UDI_Type) return GCC_Types.UDI_Type is
+   function BswapDI2
+      (V : GCC_Types.UDI_Type)
+      return GCC_Types.UDI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- AddDI3
    ----------------------------------------------------------------------------
-   function AddDI3 (
-                    A1 : GCC_Types.UDI_Type;
-                    A2 : GCC_Types.UDI_Type
-                   ) return GCC_Types.UDI_Type is
+   function AddDI3
+      (A1 : GCC_Types.UDI_Type;
+       A2 : GCC_Types.UDI_Type)
+      return GCC_Types.UDI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- SubDI3
    ----------------------------------------------------------------------------
-   function SubDI3 (
-                    A1 : GCC_Types.UDI_Type;
-                    A2 : GCC_Types.UDI_Type
-                   ) return GCC_Types.UDI_Type is
+   function SubDI3
+      (A1 : GCC_Types.UDI_Type;
+       A2 : GCC_Types.UDI_Type)
+      return GCC_Types.UDI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- NegDI2
    ----------------------------------------------------------------------------
-   function NegDI2 (
-                    Value : GCC_Types.UDI_Type
-                   ) return GCC_Types.UDI_Type is
+   function NegDI2
+      (Value : GCC_Types.UDI_Type)
+      return GCC_Types.UDI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- UMul32x32
    ----------------------------------------------------------------------------
-   procedure UMul32x32 (
-                        M1 : in  GCC_Types.USI_Type;
-                        M2 : in  GCC_Types.USI_Type;
-                        RH : out GCC_Types.USI_Type;
-                        RL : out GCC_Types.USI_Type
-                       ) is
+   procedure UMul32x32
+      (M1 : in     GCC_Types.USI_Type;
+       M2 : in     GCC_Types.USI_Type;
+       RH :    out GCC_Types.USI_Type;
+       RL :    out GCC_Types.USI_Type)
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- UMulSIDI3
    ----------------------------------------------------------------------------
-   function UMulSIDI3 (
-                       M1 : GCC_Types.USI_Type;
-                       M2 : GCC_Types.USI_Type
-                      ) return GCC_Types.UDI_Type is
+   function UMulSIDI3
+      (M1 : GCC_Types.USI_Type;
+       M2 : GCC_Types.USI_Type)
+      return GCC_Types.UDI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- MulSI3
    ----------------------------------------------------------------------------
-   function MulSI3 (
-                    M1 : GCC_Types.USI_Type;
-                    M2 : GCC_Types.USI_Type
-                   ) return GCC_Types.USI_Type is
+   function MulSI3
+      (M1 : GCC_Types.USI_Type;
+       M2 : GCC_Types.USI_Type)
+      return GCC_Types.USI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- MulDI3
    ----------------------------------------------------------------------------
-   function MulDI3 (
-                    M1 : GCC_Types.UDI_Type;
-                    M2 : GCC_Types.UDI_Type
-                   ) return GCC_Types.UDI_Type is
+   function MulDI3
+      (M1 : GCC_Types.UDI_Type;
+       M2 : GCC_Types.UDI_Type)
+      return GCC_Types.UDI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- UDivModSI4
    ----------------------------------------------------------------------------
-   function UDivModSI4 (
-                        N : GCC_Types.USI_Type;
-                        D : GCC_Types.USI_Type;
-                        M : Boolean
-                       ) return GCC_Types.USI_Type is
+   function UDivModSI4
+      (N : GCC_Types.USI_Type;
+       D : GCC_Types.USI_Type;
+       M : Boolean)
+      return GCC_Types.USI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- DivSI3
    ----------------------------------------------------------------------------
-   function DivSI3 (
-                    N : GCC_Types.SI_Type;
-                    D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type is
+   function DivSI3
+      (N : GCC_Types.SI_Type;
+       D : GCC_Types.SI_Type)
+      return GCC_Types.SI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- ModSI3
    ----------------------------------------------------------------------------
-   function ModSI3 (
-                    N : GCC_Types.SI_Type;
-                    D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type is
+   function ModSI3
+      (N : GCC_Types.SI_Type;
+       D : GCC_Types.SI_Type)
+      return GCC_Types.SI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- UDivSI3
    ----------------------------------------------------------------------------
-   function UDivSI3 (
-                     N : GCC_Types.USI_Type;
-                     D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type is
+   function UDivSI3
+      (N : GCC_Types.USI_Type;
+       D : GCC_Types.USI_Type)
+      return GCC_Types.USI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- UModSI3
    ----------------------------------------------------------------------------
-   function UModSI3 (
-                     N : GCC_Types.USI_Type;
-                     D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type is
+   function UModSI3
+      (N : GCC_Types.USI_Type;
+       D : GCC_Types.USI_Type)
+      return GCC_Types.USI_Type
+      is
    separate;
 
 end LibGCC;

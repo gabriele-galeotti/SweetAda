@@ -16,12 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (LibGCC)
-procedure UMul32x32 (
-                     M1 : in  GCC_Types.USI_Type;
-                     M2 : in  GCC_Types.USI_Type;
-                     RH : out GCC_Types.USI_Type;
-                     RL : out GCC_Types.USI_Type
-                    ) is
+procedure UMul32x32
+   (M1 : in     GCC_Types.USI_Type;
+    M2 : in     GCC_Types.USI_Type;
+    RH :    out GCC_Types.USI_Type;
+    RL :    out GCC_Types.USI_Type)
+   is
    M1_LOW  : constant GCC_Types.USI_Type := M1 mod 2**16;
    M1_HIGH : constant GCC_Types.USI_Type := M1 / 2**16;
    M2_LOW  : constant GCC_Types.USI_Type := M2 mod 2**16;

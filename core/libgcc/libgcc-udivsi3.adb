@@ -16,10 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (LibGCC)
-function UDivSI3 (
-                  N : GCC_Types.USI_Type;
-                  D : GCC_Types.USI_Type
-                 ) return GCC_Types.USI_Type is
+function UDivSI3
+   (N : GCC_Types.USI_Type;
+    D : GCC_Types.USI_Type)
+   return GCC_Types.USI_Type
+   is
 begin
    return UDivModSI4 (N, D, False);
 end UDivSI3;

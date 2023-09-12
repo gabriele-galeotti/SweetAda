@@ -16,7 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (LibGCC)
-function BswapDI2 (V : GCC_Types.UDI_Type) return GCC_Types.UDI_Type is
+function BswapDI2
+   (V : GCC_Types.UDI_Type)
+   return GCC_Types.UDI_Type
+   is
 begin
    return GCC_Types.Shift_Right (V and 16#FF00_0000_0000_0000#, 56) or
           GCC_Types.Shift_Right (V and 16#00FF_0000_0000_0000#, 40) or

@@ -18,10 +18,11 @@
 with Ada.Unchecked_Conversion;
 
 separate (LibGCC)
-function ModSI3 (
-                 N : GCC_Types.SI_Type;
-                 D : GCC_Types.SI_Type
-                ) return GCC_Types.SI_Type is
+function ModSI3
+   (N : GCC_Types.SI_Type;
+    D : GCC_Types.SI_Type)
+   return GCC_Types.SI_Type
+   is
    function To_USI is new Ada.Unchecked_Conversion (GCC_Types.SI_Type, GCC_Types.USI_Type);
    function To_SI is new Ada.Unchecked_Conversion (GCC_Types.USI_Type, GCC_Types.SI_Type);
    Num      : GCC_Types.SI_Type := N;
