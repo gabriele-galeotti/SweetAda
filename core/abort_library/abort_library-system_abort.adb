@@ -32,13 +32,13 @@ begin
    Console.Print ("*** SYSTEM ABORT", NL => True);
    if File /= System.Null_Address then
       Console.Print ("File:    ", NL => False);
-      Console.Print_ASCIIZ_String (String_Ptr => File, NL => True);
+      Console.Print_ASCIIZ_String (String_Address => File, NL => True);
    end if;
    if Line /= 0 then
       Console.Print (Prefix => "Line:    ", Value => Line, NL => True);
       Console.Print (Prefix => "Column:  ", Value => Column, NL => True);
    end if;
    Console.Print ("Message: ", NL => False);
-   Console.Print_ASCIIZ_String (String_Ptr => Message, NL => True);
+   Console.Print_ASCIIZ_String (String_Address => Message, NL => True);
    System_Abort; -- default abort procedure
 end System_Abort;
