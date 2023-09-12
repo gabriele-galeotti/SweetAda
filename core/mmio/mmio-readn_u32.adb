@@ -16,7 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (MMIO)
-function ReadN_U32 (Memory_Address : System.Address) return Interfaces.Unsigned_32 is
+function ReadN_U32
+   (Memory_Address : System.Address)
+   return Interfaces.Unsigned_32
+   is
    pragma Unreferenced (Memory_Address);
 begin
    return 0;

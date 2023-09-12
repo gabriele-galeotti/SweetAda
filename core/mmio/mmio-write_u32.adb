@@ -16,12 +16,15 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (MMIO)
-procedure Write_U32 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_32) is
-   Content : aliased Interfaces.Unsigned_32 with
-      Address    => Memory_Address,
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+procedure Write_U32
+   (Memory_Address : in System.Address;
+    Value          : in Interfaces.Unsigned_32)
+   is
+   Content : aliased Interfaces.Unsigned_32
+      with Address    => Memory_Address,
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 begin
    Content := Value;
 end Write_U32;

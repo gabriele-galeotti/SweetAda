@@ -16,12 +16,15 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (MMIO)
-function ReadA_U8 (Memory_Address : System.Address) return Interfaces.Unsigned_8 is
-   Result : aliased Interfaces.Unsigned_8 with
-      Address    => Memory_Address,
-      Atomic     => True,
-      Import     => True,
-      Convention => Ada;
+function ReadA_U8
+   (Memory_Address : System.Address)
+   return Interfaces.Unsigned_8
+   is
+   Result : aliased Interfaces.Unsigned_8
+      with Address    => Memory_Address,
+           Atomic     => True,
+           Import     => True,
+           Convention => Ada;
 begin
    return Result;
 end ReadA_U8;

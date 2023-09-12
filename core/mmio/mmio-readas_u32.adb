@@ -18,7 +18,10 @@
 with Bits;
 
 separate (MMIO)
-function ReadAS_U32 (Memory_Address : System.Address) return Interfaces.Unsigned_32 is
+function ReadAS_U32
+   (Memory_Address : System.Address)
+   return Interfaces.Unsigned_32
+   is
 begin
    return Bits.Byte_Swap (ReadA_U32 (Memory_Address));
 end ReadAS_U32;

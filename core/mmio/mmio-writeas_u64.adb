@@ -18,7 +18,10 @@
 with Bits;
 
 separate (MMIO)
-procedure WriteAS_U64 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_64) is
+procedure WriteAS_U64
+   (Memory_Address : in System.Address;
+    Value          : in Interfaces.Unsigned_64)
+   is
 begin
    WriteA_U64 (Memory_Address, Bits.Byte_Swap (Value));
 end WriteAS_U64;

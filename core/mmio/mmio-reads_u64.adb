@@ -18,12 +18,15 @@
 with Bits;
 
 separate (MMIO)
-function ReadS_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 is
-   Content : aliased Interfaces.Unsigned_64 with
-      Address    => Memory_Address,
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+function ReadS_U64
+   (Memory_Address : System.Address)
+   return Interfaces.Unsigned_64
+   is
+   Content : aliased Interfaces.Unsigned_64
+      with Address    => Memory_Address,
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 begin
    return Bits.Byte_Swap (Content);
 end ReadS_U64;

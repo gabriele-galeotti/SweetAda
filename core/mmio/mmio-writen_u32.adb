@@ -16,7 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (MMIO)
-procedure WriteN_U32 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_32) is
+procedure WriteN_U32
+   (Memory_Address : in System.Address;
+    Value          : in Interfaces.Unsigned_32)
+   is
    pragma Unreferenced (Memory_Address);
    pragma Unreferenced (Value);
 begin

@@ -16,7 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (MMIO)
-procedure WriteAS_U8 (Memory_Address : in System.Address; Value : in Interfaces.Unsigned_8) is
+procedure WriteAS_U8
+   (Memory_Address : in System.Address;
+    Value          : in Interfaces.Unsigned_8)
+   is
 begin
    WriteA_U8 (Memory_Address, Value);
 end WriteAS_U8;

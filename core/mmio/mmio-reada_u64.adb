@@ -16,15 +16,18 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (MMIO)
-function ReadA_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 is
+function ReadA_U64
+   (Memory_Address : System.Address)
+   return Interfaces.Unsigned_64
+   is
 begin
    if System.Word_Size = 64 then
       declare
-         Result : aliased Interfaces.Unsigned_64 with
-            Address    => Memory_Address,
-            Atomic     => True,
-            Import     => True,
-            Convention => Ada;
+         Result : aliased Interfaces.Unsigned_64
+            with Address    => Memory_Address,
+                 Atomic     => True,
+                 Import     => True,
+                 Convention => Ada;
       begin
          return Result;
       end;
