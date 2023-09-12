@@ -18,7 +18,9 @@
 with LLutils;
 
 separate (Console)
-procedure Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8) is
+procedure Print_UnsignedHex8
+   (Value : in Interfaces.Unsigned_8)
+   is
    MSD : Boolean := True;
    C   : Character;
 begin

@@ -37,7 +37,8 @@ package body Console is
    use type Bits.Bits_1;
 
    -- helper subprogram
-   procedure Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8);
+   procedure Print_UnsignedHex8
+      (Value : in Interfaces.Unsigned_8);
 
    --========================================================================--
    --                                                                        --
@@ -51,13 +52,17 @@ package body Console is
    -- Console "null" functions
    ----------------------------------------------------------------------------
 
-   procedure Console_Null_Write (C : in Character) is
+   procedure Console_Null_Write
+      (C : in Character)
+      is
       pragma Unreferenced (C);
    begin
       null;
    end Console_Null_Write;
 
-   procedure Console_Null_Read (C : out Character) is
+   procedure Console_Null_Read
+      (C : out Character)
+      is
    begin
       C := ISO88591.NUL;
    end Console_Null_Read;
@@ -65,7 +70,9 @@ package body Console is
    ----------------------------------------------------------------------------
    -- Print (Character)
    ----------------------------------------------------------------------------
-   procedure Print (C : in Character) is
+   procedure Print
+      (C : in Character)
+      is
    begin
       Console_Descriptor.Write (C);
    end Print;
@@ -73,13 +80,16 @@ package body Console is
    ----------------------------------------------------------------------------
    -- Print (Interfaces.C.char)
    ----------------------------------------------------------------------------
-   procedure Print (c : in Interfaces.C.char) is
+   procedure Print
+      (c : in Interfaces.C.char)
+      is
       -- borrowed from i-c.adb, avoid using a non-ZFP unit
-      function To_Ada (Item : Interfaces.C.char) return Character;
-      function To_Ada (Item : Interfaces.C.char) return Character is
-      begin
-         return Character'Val (Interfaces.C.char'Pos (Item));
-      end To_Ada;
+      function To_Ada
+         (Item : Interfaces.C.char)
+         return Character
+         is
+         (Character'Val (Interfaces.C.char'Pos (Item)))
+         with Inline => True;
    begin
       Print (To_Ada (c));
    end Print;
@@ -87,144 +97,147 @@ package body Console is
    ----------------------------------------------------------------------------
    -- Print_NewLine
    ----------------------------------------------------------------------------
-   procedure Print_NewLine is
+   procedure Print_NewLine
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_String
    ----------------------------------------------------------------------------
-   procedure Print_String (
-                           S     : in String;
-                           Limit : in Natural := Maximum_String_Length;
-                           NL    : in Boolean := False
-                          ) is
+   procedure Print_String
+      (S     : in String;
+       Limit : in Natural := Maximum_String_Length;
+       NL    : in Boolean := False)
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print (Boolean)
    ----------------------------------------------------------------------------
-   procedure Print_Boolean (
-                            Value  : in Boolean;
-                            NL     : in Boolean := False;
-                            Prefix : in String := "";
-                            Suffix : in String := ""
-                           ) is
+   procedure Print_Boolean
+      (Value  : in Boolean;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print (Bits_1)
    ----------------------------------------------------------------------------
-   procedure Print_Bits1 (
-                          Value  : in Bits.Bits_1;
-                          NL     : in Boolean := False;
-                          Prefix : in String := "";
-                          Suffix : in String := ""
-                         ) is
+   procedure Print_Bits1
+      (Value  : in Bits.Bits_1;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_UnsignedHex8 (helper subprogram)
    ----------------------------------------------------------------------------
-   procedure Print_UnsignedHex8 (Value : in Interfaces.Unsigned_8) is
+   procedure Print_UnsignedHex8
+      (Value : in Interfaces.Unsigned_8)
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_Unsigned8
    ----------------------------------------------------------------------------
-   procedure Print_Unsigned8 (
-                              Value  : in Interfaces.Unsigned_8;
-                              NL     : in Boolean := False;
-                              Prefix : in String := "";
-                              Suffix : in String := ""
-                             ) is
+   procedure Print_Unsigned8
+      (Value  : in Interfaces.Unsigned_8;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_Unsigned16
    ----------------------------------------------------------------------------
-   procedure Print_Unsigned16 (
-                               Value  : in Interfaces.Unsigned_16;
-                               NL     : in Boolean := False;
-                               Prefix : in String := "";
-                               Suffix : in String := ""
-                              ) is
+   procedure Print_Unsigned16
+      (Value  : in Interfaces.Unsigned_16;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_Unsigned32
    ----------------------------------------------------------------------------
-   procedure Print_Unsigned32 (
-                               Value  : in Interfaces.Unsigned_32;
-                               NL     : in Boolean := False;
-                               Prefix : in String := "";
-                               Suffix : in String := ""
-                              ) is
+   procedure Print_Unsigned32
+      (Value  : in Interfaces.Unsigned_32;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_Unsigned64
    ----------------------------------------------------------------------------
-   procedure Print_Unsigned64 (
-                               Value  : in Interfaces.Unsigned_64;
-                               NL     : in Boolean := False;
-                               Prefix : in String := "";
-                               Suffix : in String := ""
-                              ) is
+   procedure Print_Unsigned64
+      (Value  : in Interfaces.Unsigned_64;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_Integer_Address
    ----------------------------------------------------------------------------
-   procedure Print_Integer_Address (
-                                    Value  : in SSE.Integer_Address;
-                                    NL     : in Boolean := False;
-                                    Prefix : in String := "";
-                                    Suffix : in String := ""
-                                   ) is
+   procedure Print_Integer_Address
+      (Value  : in SSE.Integer_Address;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_Address
    ----------------------------------------------------------------------------
-   procedure Print_Address (
-                            Value  : in System.Address;
-                            NL     : in Boolean := False;
-                            Prefix : in String := "";
-                            Suffix : in String := ""
-                           ) is
+   procedure Print_Address
+      (Value  : in System.Address;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_Integer
    ----------------------------------------------------------------------------
-   procedure Print_Integer (
-                            Value  : in Integer;
-                            NL     : in Boolean := False;
-                            Prefix : in String := "";
-                            Suffix : in String := ""
-                           ) is
+   procedure Print_Integer
+      (Value  : in Integer;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_sizet
    ----------------------------------------------------------------------------
-   procedure Print_sizet (
-                          s      : in Interfaces.C.size_t;
-                          NL     : in Boolean := False;
-                          Prefix : in String := "";
-                          Suffix : in String := ""
-                         ) is
+   procedure Print_sizet
+      (s      : in Interfaces.C.size_t;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_BitImage
    ----------------------------------------------------------------------------
-   procedure Print_BitImage (
-                             Value  : in Interfaces.Unsigned_8;
-                             NL     : in Boolean := False;
-                             Prefix : in String := "";
-                             Suffix : in String := ""
-                            ) is
+   procedure Print_BitImage
+      (Value  : in Interfaces.Unsigned_8;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
@@ -232,34 +245,34 @@ package body Console is
    ----------------------------------------------------------------------------
    -- Limit = 0 --> print whole array
    ----------------------------------------------------------------------------
-   procedure Print_Byte_Array (
-                               ByteArray : in Bits.Byte_Array;
-                               Limit     : in Natural := 0;
-                               NL        : in Boolean := False;
-                               Prefix    : in String := "";
-                               Separator : in Character := ' '
-                              ) is
+   procedure Print_Byte_Array
+      (ByteArray : in Bits.Byte_Array;
+       Limit     : in Natural := 0;
+       NL        : in Boolean := False;
+       Prefix    : in String := "";
+       Separator : in Character := ' ')
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_ASCIIZ_String
    ----------------------------------------------------------------------------
-   procedure Print_ASCIIZ_String (
-                                  String_Ptr : in System.Address;
-                                  NL         : in Boolean := False;
-                                  Prefix     : in String := "";
-                                  Suffix     : in String := ""
-                                 ) is
+   procedure Print_ASCIIZ_String
+      (String_Address : in System.Address;
+       NL             : in Boolean := False;
+       Prefix         : in String := "";
+       Suffix         : in String := "")
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_Memory
    ----------------------------------------------------------------------------
-   procedure Print_Memory (
-                           Start_Address : in System.Address;
-                           Data_Size     : in Bits.Bytesize;
-                           Row_Size      : in Row_Size_Type := 16
-                          ) is
+   procedure Print_Memory
+      (Start_Address : in System.Address;
+       Data_Size     : in Bits.Bytesize;
+       Row_Size      : in Row_Size_Type := 16)
+      is
    separate;
 
 end Console;

@@ -18,12 +18,12 @@
 with LLutils;
 
 separate (Console)
-procedure Print_Integer_Address (
-                                 Value  : in SSE.Integer_Address;
-                                 NL     : in Boolean := False;
-                                 Prefix : in String := "";
-                                 Suffix : in String := ""
-                                ) is
+procedure Print_Integer_Address
+   (Value  : in SSE.Integer_Address;
+    NL     : in Boolean := False;
+    Prefix : in String := "";
+    Suffix : in String := "")
+   is
    IAddress        : SSE.Integer_Address := Value;
    MDigits         : constant Natural := (SSE.Integer_Address'Size + 3) / 4;
    Address_Digit   : Interfaces.Unsigned_8;

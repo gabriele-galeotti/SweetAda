@@ -16,12 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print_Address (
-                         Value  : in System.Address;
-                         NL     : in Boolean := False;
-                         Prefix : in String := "";
-                         Suffix : in String := ""
-                        ) is
+procedure Print_Address
+   (Value  : in System.Address;
+    NL     : in Boolean := False;
+    Prefix : in String := "";
+    Suffix : in String := "")
+   is
 begin
    Print (SSE.To_Integer (Value), NL, Prefix, Suffix);
 end Print_Address;

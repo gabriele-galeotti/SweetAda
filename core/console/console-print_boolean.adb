@@ -16,12 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print_Boolean (
-                         Value  : in Boolean;
-                         NL     : in Boolean := False;
-                         Prefix : in String := "";
-                         Suffix : in String := ""
-                        ) is
+procedure Print_Boolean
+   (Value  : in Boolean;
+    NL     : in Boolean := False;
+    Prefix : in String := "";
+    Suffix : in String := "")
+   is
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);

@@ -16,12 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print_BitImage (
-                          Value  : in Interfaces.Unsigned_8;
-                          NL     : in Boolean := False;
-                          Prefix : in String := "";
-                          Suffix : in String := ""
-                         ) is
+procedure Print_BitImage
+   (Value  : in Interfaces.Unsigned_8;
+    NL     : in Boolean := False;
+    Prefix : in String := "";
+    Suffix : in String := "")
+   is
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);

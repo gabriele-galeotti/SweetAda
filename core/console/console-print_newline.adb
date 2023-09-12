@@ -16,7 +16,8 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print_NewLine is
+procedure Print_NewLine
+   is
 begin
    for Index in CRLF'Range loop
       Print (CRLF (Index));

@@ -16,12 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print_Bits1 (
-                       Value  : in Bits.Bits_1;
-                       NL     : in Boolean := False;
-                       Prefix : in String := "";
-                       Suffix : in String := ""
-                      ) is
+procedure Print_Bits1
+   (Value  : in Bits.Bits_1;
+    NL     : in Boolean := False;
+    Prefix : in String := "";
+    Suffix : in String := "")
+   is
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);

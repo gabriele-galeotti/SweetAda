@@ -16,13 +16,13 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print_Byte_Array (
-                            ByteArray : in Bits.Byte_Array;
-                            Limit     : in Natural := 0;
-                            NL        : in Boolean := False;
-                            Prefix    : in String := "";
-                            Separator : in Character := ' '
-                           ) is
+procedure Print_Byte_Array
+   (ByteArray : in Bits.Byte_Array;
+    Limit     : in Natural := 0;
+    NL        : in Boolean := False;
+    Prefix    : in String := "";
+    Separator : in Character := ' ')
+   is
    Index_Upper : Natural range ByteArray'First .. ByteArray'Last;
 begin
    if Prefix'Length /= 0 then

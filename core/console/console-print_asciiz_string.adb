@@ -16,29 +16,29 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print_ASCIIZ_String (
-                               String_Ptr : in System.Address;
-                               NL         : in Boolean := False;
-                               Prefix     : in String := "";
-                               Suffix     : in String := ""
-                              ) is
-   String_Address : System.Address := String_Ptr;
+procedure Print_ASCIIZ_String
+   (String_Address : in System.Address;
+    NL             : in Boolean := False;
+    Prefix         : in String := "";
+    Suffix         : in String := "")
+   is
+   SA : System.Address := String_Address;
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);
    end if;
-   if String_Address /= System.Null_Address then
+   if SA /= System.Null_Address then
       for Index in Interfaces.C.size_t range 0 .. Maximum_String_Length - 1 loop
          declare
-            c : aliased Interfaces.C.char with
-               Address    => String_Address,
-               Import     => True,
-               Convention => Ada;
+            c : aliased Interfaces.C.char
+               with Address    => String_Address,
+                    Import     => True,
+                    Convention => Ada;
          begin
             exit when c = Interfaces.C.nul;
             Print (c);
          end;
-         String_Address := @ + 1;
+         SA := @ + 1;
       end loop;
    end if;
    if Suffix'Length /= 0 then

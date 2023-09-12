@@ -16,12 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print_Unsigned32 (
-                            Value  : in Interfaces.Unsigned_32;
-                            NL     : in Boolean := False;
-                            Prefix : in String := "";
-                            Suffix : in String := ""
-                           ) is
+procedure Print_Unsigned32
+   (Value  : in Interfaces.Unsigned_32;
+    NL     : in Boolean := False;
+    Prefix : in String := "";
+    Suffix : in String := "")
+   is
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);

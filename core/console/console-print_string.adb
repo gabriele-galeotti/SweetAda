@@ -16,11 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print_String (
-                        S     : in String;
-                        Limit : in Natural := Maximum_String_Length;
-                        NL    : in Boolean := False
-                       ) is
+procedure Print_String
+   (S     : in String;
+    Limit : in Natural := Maximum_String_Length;
+    NL    : in Boolean := False)
+   is
    String_Index_Limit : Integer;
 begin
    if S'Length > Limit then

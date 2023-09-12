@@ -18,12 +18,12 @@
 with LLutils;
 
 separate (Console)
-procedure Print_Integer (
-                         Value  : in Integer;
-                         NL     : in Boolean := False;
-                         Prefix : in String := "";
-                         Suffix : in String := ""
-                        ) is
+procedure Print_Integer
+   (Value  : in Integer;
+    NL     : in Boolean := False;
+    Prefix : in String := "";
+    Suffix : in String := "")
+   is
    subtype Negative_Integer is Integer range Integer'First .. -1;
    subtype Positive_Integer is Integer range 0 .. Integer'Last;
    Negative_Sign  : Boolean := False;
