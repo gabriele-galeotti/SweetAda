@@ -27,10 +27,10 @@ with Application;
 --===========================================================================--
 
 procedure Main is
-   procedure Ada_Init with
-      Import        => True,
-      Convention    => C,
-      External_Name => "adainit";
+   procedure Ada_Init
+      with Import        => True,
+           Convention    => C,
+           External_Name => "adainit";
 begin
    Ada_Init;
    BSP.Setup;
