@@ -28,19 +28,30 @@ package body Integer_Math is
    ----------------------------------------------------------------------------
    -- Log2
    ----------------------------------------------------------------------------
-   function Log2 (Value : Positive) return Log_Integer is
+   function Log2
+      (Value : Positive)
+      return Log_Integer
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Roundup
    ----------------------------------------------------------------------------
-   function Roundup (Value : Natural; Modulo : Positive) return Natural is
+   function Roundup
+      (Value  : Natural;
+       Modulo : Positive)
+      return Natural
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- Rounddown
    ----------------------------------------------------------------------------
-   function Rounddown (Value : Natural; Modulo : Positive) return Natural is
+   function Rounddown
+      (Value  : Natural;
+       Modulo : Positive)
+      return Natural
+      is
    separate;
 
 end Integer_Math;

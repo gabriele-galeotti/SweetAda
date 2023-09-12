@@ -29,9 +29,18 @@ package Integer_Math is
 
    subtype Log_Integer is Integer range 0 .. Integer'Size;
 
-   function Log2 (Value : Positive) return Log_Integer;
+   function Log2
+      (Value : Positive)
+      return Log_Integer;
 
-   function Roundup (Value : Natural; Modulo : Positive) return Natural;
-   function Rounddown (Value : Natural; Modulo : Positive) return Natural;
+   function Roundup
+      (Value  : Natural;
+       Modulo : Positive)
+      return Natural;
+
+   function Rounddown
+      (Value  : Natural;
+       Modulo : Positive)
+      return Natural;
 
 end Integer_Math;

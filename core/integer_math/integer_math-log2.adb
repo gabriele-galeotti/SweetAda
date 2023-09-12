@@ -19,7 +19,10 @@ with Interfaces;
 with Bits;
 
 separate (Integer_Math)
-function Log2 (Value : Positive) return Log_Integer is
+function Log2
+   (Value : Positive)
+   return Log_Integer
+   is
    Modulo : Positive := Value;
    Result : Log_Integer;
 begin

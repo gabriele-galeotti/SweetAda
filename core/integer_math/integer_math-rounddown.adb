@@ -16,7 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Integer_Math)
-function Rounddown (Value : Natural; Modulo : Positive) return Natural is
+function Rounddown
+   (Value  : Natural;
+    Modulo : Positive)
+   return Natural
+   is
    Result    : Natural;
    Remainder : Natural;
 begin
