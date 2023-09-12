@@ -28,7 +28,10 @@ package body Last_Chance_Handler is
    ----------------------------------------------------------------------------
    -- Last_Chance_Handler
    ----------------------------------------------------------------------------
-   procedure Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) is
+   procedure Last_Chance_Handler
+      (Source_Location : in System.Address;
+       Line            : in Integer)
+      is
    separate;
 
 end Last_Chance_Handler;

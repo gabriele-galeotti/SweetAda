@@ -18,7 +18,10 @@
 with Abort_Library;
 
 separate (Last_Chance_Handler)
-procedure Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) is
+procedure Last_Chance_Handler
+   (Source_Location : in System.Address;
+    Line            : in Integer)
+   is
 begin
    Abort_Library.System_Abort (System.Null_Address, Line, 0, Source_Location);
 end Last_Chance_Handler;
