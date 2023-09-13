@@ -166,9 +166,42 @@ else
 configure : createdirectories configure-rts configure-rts-target
 endif
 
-# configure-rts is in src/$(RTS)/Makefile.in
 .PHONY : configure-rts
 configure-rts :
+ifeq      ($(OSTYPE),cmd)
+	@FOR %%F IN ($(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON)) DO                \
+          @ECHO OFF &&                                                                 \
+          IF EXIST $(RTS_SOURCE_PATH_CMD)\%%F.in (                                     \
+            (                                                                          \
+             $(PROCESSCFG) $(RTS_SOURCE_PATH_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%F && \
+             $(DOS2UNIX) $(ADAINCLUDE_PATH_CMD)\%%F $(ADAINCLUDE_PATH_CMD)\%%F         \
+            ) || EXIT /B 1                                                             \
+          ) ELSE (                                                                     \
+            $(CP) "$(RTS_SOURCE_PATH_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\               \
+            || EXIT /B 1                                                               \
+          )
+else ifeq ($(OSTYPE),msys)
+	@for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do         \
+          (                                                                   \
+           if [ -e $(RTS_SOURCE_PATH)/$$f.in ] ; then                         \
+             $(PROCESSCFG) $(RTS_SOURCE_PATH)/$$f.in $(ADAINCLUDE_PATH)/$$f ; \
+             $(DOS2UNIX) $(ADAINCLUDE_PATH)/$$f $(ADAINCLUDE_PATH)/$$f ;      \
+           else                                                               \
+             $(CP) "$(RTS_SOURCE_PATH)"/$$f "$(ADAINCLUDE_PATH)"/ ;           \
+           fi                                                                 \
+          ) || exit $$? ;                                                     \
+        done
+else
+	@for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do         \
+          (                                                                   \
+           if [ -e $(RTS_SOURCE_PATH)/$$f.in ] ; then                         \
+             $(PROCESSCFG) $(RTS_SOURCE_PATH)/$$f.in $(ADAINCLUDE_PATH)/$$f ; \
+           else                                                               \
+             $(CP) "$(RTS_SOURCE_PATH)"/$$f "$(ADAINCLUDE_PATH)"/ ;           \
+           fi                                                                 \
+          ) || exit $$? ;                                                     \
+        done
+endif
 
 # configure-rts-target is in src/targets/$(TARGET)/Makefile.in
 .PHONY : configure-rts-target
