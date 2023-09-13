@@ -26,7 +26,8 @@ library project Core is
 
    Abort_Library_Files := (
                            "abort_library.adb", "abort_library.ads",
-                           "abort_library-system_abort.adb"
+                           "abort_library-system_abort_parameterized.adb",
+                           "abort_library-system_abort_parameterless.adb"
                           );
 
    Bits_Files := (
@@ -40,6 +41,7 @@ library project Core is
 
    Console_Files := (
                      "console.adb", "console.ads",
+                     "console-print.adb",
                      "console-print_address.adb",
                      "console-print_asciiz_string.adb",
                      "console-print_bitimage.adb",
