@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ abort_library-system_abort.adb                                                                            --
+-- __FLN__ abort_library-system_abort_parameterized.adb                                                              --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -21,7 +21,7 @@ with Console;
 use type System.Address;
 
 separate (Abort_Library)
-procedure System_Abort
+procedure System_Abort_Parameterized
    (File    : in System.Address;
     Line    : in Integer;
     Column  : in Integer;
@@ -41,4 +41,4 @@ begin
    Console.Print ("Message: ", NL => False);
    Console.Print_ASCIIZ_String (String_Address => Message, NL => True);
    System_Abort; -- default abort procedure
-end System_Abort;
+end System_Abort_Parameterized;

@@ -30,7 +30,7 @@ package body C_Wrappers is
       procedure System_Abort
          with Import        => True,
               Convention    => Ada,
-              External_Name => "abort_library__system_abort",
+              External_Name => "abort_library__system_abort_parameterless",
               No_Return     => True;
    begin
       System_Abort;

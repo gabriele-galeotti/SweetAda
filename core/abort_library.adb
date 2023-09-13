@@ -20,19 +20,55 @@ package body Abort_Library is
    --========================================================================--
    --                                                                        --
    --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   procedure System_Abort_Parameterless
+      with Export        => True,
+           Convention    => Ada,
+           External_Name => "abort_library__system_abort_parameterless",
+           No_Return     => True;
+
+   procedure System_Abort_Parameterized
+      (File    : in System.Address;
+       Line    : in Integer;
+       Column  : in Integer;
+       Message : in System.Address)
+      with No_Return => True;
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
    --                           Package subprograms                          --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- System_Abort_Parameterless
+   ----------------------------------------------------------------------------
+   procedure System_Abort_Parameterless
+      is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- System_Abort_Parameterized
+   ----------------------------------------------------------------------------
+   procedure System_Abort_Parameterized
+      (File    : in System.Address;
+       Line    : in Integer;
+       Column  : in Integer;
+       Message : in System.Address)
+      is
+   separate;
+
+   ----------------------------------------------------------------------------
    -- System_Abort (parameterless)
    ----------------------------------------------------------------------------
    procedure System_Abort
-      is
-   begin
-      loop null; end loop;
-   end System_Abort;
+      renames System_Abort_Parameterless;
 
    ----------------------------------------------------------------------------
    -- System_Abort (parameterized)
@@ -42,7 +78,6 @@ package body Abort_Library is
        Line    : in Integer;
        Column  : in Integer;
        Message : in System.Address)
-      is
-   separate;
+      renames System_Abort_Parameterized;
 
 end Abort_Library;
