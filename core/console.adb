@@ -83,16 +83,7 @@ package body Console is
    procedure Print
       (c : in Interfaces.C.char)
       is
-      -- borrowed from i-c.adb, avoid using a non-ZFP unit
-      function To_Ada
-         (Item : Interfaces.C.char)
-         return Character
-         is
-         (Character'Val (Interfaces.C.char'Pos (Item)))
-         with Inline => True;
-   begin
-      Print (To_Ada (c));
-   end Print;
+   separate;
 
    ----------------------------------------------------------------------------
    -- Print_NewLine
