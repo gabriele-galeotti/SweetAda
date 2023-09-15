@@ -934,7 +934,8 @@ endif
 ifeq ($(NOBUILD),Y)
 $(KERNEL_OUTFILE) :
 else
-$(KERNEL_OUTFILE) : $(OBJECT_DIRECTORY)/b__main.o      \
+$(KERNEL_OUTFILE) : $(GNATADC_FILENAME) $(CONFIGUREGPR_FILENAME) \
+                    $(OBJECT_DIRECTORY)/b__main.o                \
                     $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
 endif
 	@$(REM) link phase
@@ -1086,11 +1087,15 @@ configure-start :
 	@$(call echo-print,"")
 
 .PHONY : configure-gnatadc
-configure-gnatadc :
+configure-gnatadc : $(GNATADC_FILENAME)
+
+$(GNATADC_FILENAME) :
 	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
 
 .PHONY : configure-gpr
-configure-gpr :
+configure-gpr : $(CONFIGUREGPR_FILENAME)
+
+$(CONFIGUREGPR_FILENAME) :
 	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
 
 .PHONY : configure-subdirs
