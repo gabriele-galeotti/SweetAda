@@ -43,6 +43,87 @@ function ExitWithCode
 }
 
 ################################################################################
+# SetTimeOfSymlink()                                                           #
+#                                                                              #
+################################################################################
+
+$CreateFile_signature = @'
+[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+public static extern IntPtr
+CreateFile(
+  string filename,
+  uint   access,
+  uint   share,
+  IntPtr securityAttributes,
+  uint   creationDisposition,
+  uint   flagsAndAttributes,
+  IntPtr templateFile
+  );
+'@
+$CreateFile = Add-Type -MemberDefinition $CreateFile_signature -Name "Win32CreateFile" -Namespace Win32 -PassThru
+
+$CloseHandle_signature = @'
+[DllImport("kernel32.dll", SetLastError = true)]
+public static extern bool
+CloseHandle(IntPtr hHandle);
+'@
+$CloseHandle = Add-Type -MemberDefinition $CloseHandle_signature -Name "Win32CloseHandle" -Namespace Win32 -PassThru
+
+$GetFileTime_signature = @'
+[DllImport("kernel32.dll", SetLastError = true)]
+public static extern bool
+GetFileTime(
+  IntPtr   hFile,
+  ref long lpCreationTime,
+  ref long lpLastAccessTime,
+  ref long lpLastWriteTime
+  );
+'@
+$GetFileTime = Add-Type -MemberDefinition $GetFileTime_signature -Name "Win32GetFileTime" -Namespace Win32 -PassThru
+
+$SetFileTime_signature = @'
+[DllImport("kernel32.dll", SetLastError = true)]
+public static extern bool
+SetFileTime(
+  IntPtr   hFile,
+  ref long lpCreationTime,
+  ref long lpLastAccessTime,
+  ref long lpLastWriteTime
+  );
+'@
+$SetFileTime = Add-Type -MemberDefinition $SetFileTime_signature -Name "Win32SetFileTime" -Namespace Win32 -PassThru
+
+function SetTimeOfSymlink
+{
+  param([string]$symlink, [string]$source)
+  [Long]$CreationTime   = 0
+  [Long]$LastAccessTime = 0
+  [Long]$LastWriteTime  = 0
+  $handle = $CreateFile::CreateFile(
+                                  $source,
+                                  0x80,
+                                  0,
+                                  [System.IntPtr]::Zero,
+                                  3,
+                                  0x80,
+                                  [System.IntPtr]::Zero
+                                  )
+  $GetFileTime::GetFileTime($handle, [ref]$CreationTime, [ref]$LastAccessTime, [ref]$LastWriteTime) | Out-Null
+  $CloseHandle::CloseHandle($handle) | Out-Null
+  $handle = $CreateFile::CreateFile(
+                                  $symlink,
+                                  0x100,
+                                  0,
+                                  [System.IntPtr]::Zero,
+                                  3,
+                                  0x200000,
+                                  [System.IntPtr]::Zero
+                                  )
+  $SetFileTime::SetFileTime($handle, [ref]$CreationTime, [ref]$LastAccessTime, [ref]$LastWriteTime) | Out-Null
+  $CloseHandle::CloseHandle($handle) | Out-Null
+}
+
+################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
@@ -108,6 +189,7 @@ while ($fileindex -lt $args.length)
     $link_name = $args[$fileindex + 1]
     Remove-Item -Path $link_name -Force -ErrorAction Ignore
     New-Item -ItemType SymbolicLink -Path $link_name -Target $target | Out-Null
+    SetTimeOfSymlink $link_name $target
     if ($verbose -eq "Y")
     {
       Write-Host "${link_name} -> ${target}"
@@ -125,6 +207,7 @@ while ($fileindex -lt $args.length)
     {
       Remove-Item -Path $link_directory\$f -Force -ErrorAction Ignore
       New-Item -ItemType SymbolicLink -Path $link_directory\$f -Target $target\$f | Out-Null
+      SetTimeOfSymlink $link_directory\$f $target\$f
       if ($verbose -eq "Y")
       {
         Write-Host "${link_directory}\${f} -> ${target}\${f}"
