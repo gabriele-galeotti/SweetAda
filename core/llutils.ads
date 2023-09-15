@@ -74,10 +74,17 @@ package LLutils is
       return Interfaces.Unsigned_64
       with Inline => True;
 
+   ----------------------------------------------------------------------------
+   -- Perform a size-driven byte swapping on an object.
+   ----------------------------------------------------------------------------
    procedure Byte_Swap
       (Object_Address : in System.Address;
        Size           : in Bits.Bitsize);
 
+   ----------------------------------------------------------------------------
+   -- Perform a size-driven byte swapping on an object and then advance the
+   -- address.
+   ----------------------------------------------------------------------------
    procedure Byte_Swap_Next
       (Object_Address : in out System.Address;
        Size           : in     Bits.Bitsize);
@@ -105,7 +112,7 @@ package LLutils is
    ----------------------------------------------------------------------------
    -- Compute the displacement between two addresses, scaled by a factor.
    -- NOTE: when converting a displacement to an unsigned object, use an
-   -- unchecked conversion (Storage_Offset is a signed integer type)
+   -- unchecked conversion (Storage_Offset is a signed integer type).
    ----------------------------------------------------------------------------
    function Address_Displacement
       (Local_Address  : System.Address;
@@ -130,6 +137,9 @@ package LLutils is
 
    subtype Decimal_Digit_Type is Natural range 0 .. 9;
 
+   ----------------------------------------------------------------------------
+   -- Convert a digit to a character.
+   ----------------------------------------------------------------------------
    function To_Ch
       (Digit : Decimal_Digit_Type)
       return Character
@@ -149,7 +159,7 @@ package LLutils is
 
    ----------------------------------------------------------------------------
    -- Take an 8-bit (2 hex digits) input value; if MSD, return the MS digit as
-   -- a character representing the hexadecimal digit, else the LS digit
+   -- a character representing the hexadecimal digit, else the LS digit.
    ----------------------------------------------------------------------------
    procedure U8_To_HexDigit
       (Value : in     Interfaces.Unsigned_8;

@@ -255,7 +255,7 @@ STRIP_SWITCHES_DEFAULT    +=
 #                                                                              #
 ################################################################################
 
-ifeq ($(BUILD_MODE),GNATMAKE)
+ifeq      ($(BUILD_MODE),GNATMAKE)
 include gnatmake.tc.in
 ifeq ($(OSTYPE),cmd)
 GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GNATMAKE) --version 2> nul|$(SED) -e "2,$$d")
@@ -356,7 +356,7 @@ export GNAT_WRAPPER_GCC_EXECUTABLE
 #                                                                              #
 ################################################################################
 
-ifeq ($(BUILD_MODE),GNATMAKE)
+ifeq      ($(BUILD_MODE),GNATMAKE)
 GCC_WRAPPER_TIMESTAMP_FILENAME      :=
 GNAT_WRAPPER_TIMESTAMP_FILENAME     := $(OBJECT_DIRECTORY)/gnatmake.tmp
 GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME := $(GNAT_WRAPPER_TIMESTAMP_FILENAME)
