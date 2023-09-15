@@ -90,29 +90,27 @@ package Definitions is
    CLK_PAL28M   : constant := 28_375_160; -- CLK_PAL * 64/10
 
    -- serial port baud rates
-   type Baud_Rate_Type is (
-                           BR_300,
-                           BR_1200,
-                           BR_2400,
-                           BR_4800,
-                           BR_9600,
-                           BR_19200,
-                           BR_38400,
-                           BR_57600,
-                           BR_115200,
-                           BR_230400
-                          );
-   for Baud_Rate_Type use (
-                           300,
-                           1_200,
-                           2_400,
-                           4_800,
-                           9_600,
-                           19_200,
-                           38_400,
-                           57_600,
-                           115_200,
-                           230_400
-                          );
+   type Baud_Rate_Type is
+      (BR_300,
+       BR_1200,
+       BR_2400,
+       BR_4800,
+       BR_9600,
+       BR_19200,
+       BR_38400,
+       BR_57600,
+       BR_115200,
+       BR_230400);
+   for Baud_Rate_Type use
+      (300,
+       1_200,
+       2_400,
+       4_800,
+       9_600,
+       19_200,
+       38_400,
+       57_600,
+       115_200,
+       230_400);
 
 end Definitions;

@@ -32,8 +32,12 @@ package body Floating_Point is
    Buffer      : String (1 .. Buffer_Size);
    Buffer_Idx  : Integer;
 
-   function Exp10 (N : Integer) return Float;
-   function Log10 (F : Float) return Integer;
+   function Exp10
+      (N : Integer)
+      return Float;
+   function Log10
+      (F : Float)
+      return Integer;
 
    --========================================================================--
    --                                                                        --
@@ -48,7 +52,10 @@ package body Floating_Point is
    ----------------------------------------------------------------------------
    -- Compute 10^n.
    ----------------------------------------------------------------------------
-   function Exp10 (N : Integer) return Float is
+   function Exp10
+      (N : Integer)
+      return Float
+      is
       E : Integer := N;
       V : Float := 1.0;
    begin
@@ -78,7 +85,10 @@ package body Floating_Point is
    ----------------------------------------------------------------------------
    -- Compute log10(n).
    ----------------------------------------------------------------------------
-   function Log10 (F : Float) return Integer is
+   function Log10
+      (F : Float)
+      return Integer
+      is
       V : Float := F;
       L : Integer := 0;
    begin
@@ -106,13 +116,13 @@ package body Floating_Point is
    ----------------------------------------------------------------------------
    -- Print (Float)
    ----------------------------------------------------------------------------
-   procedure Print_Float (
-                          Value     : in Float;
-                          Precision : in Integer := 6;
-                          NL        : in Boolean := False;
-                          Prefix    : in String := "";
-                          Suffix    : in String := ""
-                         ) is
+   procedure Print_Float
+      (Value     : in Float;
+       Precision : in Integer := 6;
+       NL        : in Boolean := False;
+       Prefix    : in String := "";
+       Suffix    : in String := "")
+      is
       F     : Float := Value;
       S     : Character;
       E     : Integer := 0;

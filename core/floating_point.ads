@@ -25,12 +25,11 @@ package Floating_Point is
    --                                                                        --
    --========================================================================--
 
-   procedure Print_Float (
-                          Value     : in Float;
-                          Precision : in Integer := 6;
-                          NL        : in Boolean := False;
-                          Prefix    : in String := "";
-                          Suffix    : in String := ""
-                         );
+   procedure Print_Float
+      (Value     : in Float;
+       Precision : in Integer := 6;
+       NL        : in Boolean := False;
+       Prefix    : in String := "";
+       Suffix    : in String := "");
 
 end Floating_Point;
