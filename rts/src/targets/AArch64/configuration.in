@@ -1,0 +1,5 @@
+
+LIBGNAT_SRCS_TARGET += system.ads
+
+export SIZE_TYPE_ASPECTS := with Alignment => 16
+

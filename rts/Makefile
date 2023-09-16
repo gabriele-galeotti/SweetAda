@@ -127,9 +127,9 @@ LIBGNARL_SRCS_COMMON :=
 LIBGNARL_SRCS_TARGET :=
 
 # RTS target-independent part
-include $(RTS_SOURCE_PATH)/Makefile.in
+-include $(RTS_SOURCE_PATH)/configuration.in
 # RTS target-dependent part
--include $(RTS_SOURCE_PATH_TARGET)/Makefile.in
+-include $(RTS_SOURCE_PATH_TARGET)/configuration.in
 
 LIBGNAT_SRCS  += $(LIBGNAT_SRCS_COMMON) $(LIBGNAT_SRCS_TARGET)
 LIBGNARL_SRCS += $(LIBGNARL_SRCS_COMMON) $(LIBGNARL_SRCS_TARGET)
@@ -169,43 +169,52 @@ endif
 .PHONY : configure-rts
 configure-rts :
 ifeq      ($(OSTYPE),cmd)
-	@FOR %%F IN ($(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON)) DO                \
-          @ECHO OFF &&                                                                 \
-          IF EXIST $(RTS_SOURCE_PATH_CMD)\%%F.in (                                     \
-            (                                                                          \
-             $(PROCESSCFG) $(RTS_SOURCE_PATH_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%F && \
-             $(DOS2UNIX) $(ADAINCLUDE_PATH_CMD)\%%F $(ADAINCLUDE_PATH_CMD)\%%F         \
-            ) || EXIT /B 1                                                             \
-          ) ELSE (                                                                     \
-            $(CP) "$(RTS_SOURCE_PATH_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\               \
-            || EXIT /B 1                                                               \
+	@FOR %%F IN ($(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON)) DO               \
+          @ECHO OFF &&                                                                \
+          IF EXIST $(RTS_SOURCE_PATH_CMD)\%%F.in (                                    \
+            $(PROCESSCFG) -r $(RTS_SOURCE_PATH_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%F \
+            || EXIT /B 1                                                              \
+          ) ELSE (                                                                    \
+            $(CP) "$(RTS_SOURCE_PATH_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\              \
+            || EXIT /B 1                                                              \
           )
-else ifeq ($(OSTYPE),msys)
-	@for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do         \
-          (                                                                   \
-           if [ -e $(RTS_SOURCE_PATH)/$$f.in ] ; then                         \
-             $(PROCESSCFG) $(RTS_SOURCE_PATH)/$$f.in $(ADAINCLUDE_PATH)/$$f ; \
-             $(DOS2UNIX) $(ADAINCLUDE_PATH)/$$f $(ADAINCLUDE_PATH)/$$f ;      \
-           else                                                               \
-             $(CP) "$(RTS_SOURCE_PATH)"/$$f "$(ADAINCLUDE_PATH)"/ ;           \
-           fi                                                                 \
-          ) || exit $$? ;                                                     \
-        done
 else
-	@for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do         \
-          (                                                                   \
-           if [ -e $(RTS_SOURCE_PATH)/$$f.in ] ; then                         \
-             $(PROCESSCFG) $(RTS_SOURCE_PATH)/$$f.in $(ADAINCLUDE_PATH)/$$f ; \
-           else                                                               \
-             $(CP) "$(RTS_SOURCE_PATH)"/$$f "$(ADAINCLUDE_PATH)"/ ;           \
-           fi                                                                 \
-          ) || exit $$? ;                                                     \
+	@for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do            \
+          (                                                                      \
+           if [ -e $(RTS_SOURCE_PATH)/$$f.in ] ; then                            \
+             $(PROCESSCFG) -r $(RTS_SOURCE_PATH)/$$f.in $(ADAINCLUDE_PATH)/$$f ; \
+           else                                                                  \
+             $(CP) "$(RTS_SOURCE_PATH)"/$$f "$(ADAINCLUDE_PATH)"/ ;              \
+           fi                                                                    \
+          ) || exit $$? ;                                                        \
         done
 endif
 
-# configure-rts-target is in src/targets/$(TARGET)/Makefile.in
 .PHONY : configure-rts-target
 configure-rts-target :
+ifeq      ($(OSTYPE),cmd)
+	@FOR %%F IN ($(LIBGNAT_SRCS_TARGET) $(LIBGNARL_SRCS_TARGET)) DO                      \
+          @ECHO OFF &&                                                                       \
+          IF EXIST $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in (                                    \
+            $(PROCESSCFG) -r $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%F \
+            || EXIT /B 1                                                                     \
+          ) ELSE (                                                                           \
+            $(CP) "$(RTS_SOURCE_PATH_TARGET_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\              \
+            || EXIT /B 1                                                                     \
+          )
+	$(CP) $(RTS_SOURCE_PATH_TARGET_CMD)\rts.cs.in $(RTS)\$(TOOLCHAIN_NAME)\ $(NULL)
+else
+	@for f in $(LIBGNAT_SRCS_TARGET) $(LIBGNARL_SRCS_TARGET) ; do                   \
+          (                                                                             \
+           if [ -e $(RTS_SOURCE_PATH_TARGET)/$$f.in ] ; then                            \
+             $(PROCESSCFG) -r $(RTS_SOURCE_PATH_TARGET)/$$f.in $(ADAINCLUDE_PATH)/$$f ; \
+           else                                                                         \
+             $(CP) "$(RTS_SOURCE_PATH_TARGET)"/$$f "$(ADAINCLUDE_PATH)"/ ;              \
+           fi                                                                           \
+          ) || exit $$? ;                                                               \
+        done
+	$(CP) $(RTS_SOURCE_PATH_TARGET)/rts.cs.in $(RTS)/$(TOOLCHAIN_NAME)/
+endif
 
 .PHONY : createdirectories
 createdirectories :
@@ -244,6 +253,11 @@ ifeq ($(OSTYPE),cmd)
 else
 	@$(RM) $(ADALIB_PATH)/*.o
 endif
+
+# RTS target-independent part
+-include $(RTS_SOURCE_PATH)/Makefile.in
+# RTS target-dependent part
+-include $(RTS_SOURCE_PATH_TARGET)/Makefile.in
 
 # Ada sources generic rules
 $(ADALIB_PATH)/%.o : $(ADAINCLUDE_PATH)/%.adb

@@ -1,0 +1,3 @@
+
+LIBGNAT_SRCS_TARGET += system.ads
+

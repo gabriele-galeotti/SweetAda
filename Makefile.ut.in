@@ -64,11 +64,13 @@ PROCESSCFG         := processcfg$(SCREXT)
 endif
 
 # needed by RTS Makefile
-export DOS2UNIX PROCESSCFG
+export PROCESSCFG
 # utilities useful in user scripts
 export FILEPAD FILEPATCH
 # needed by Makefile.lb.in
 export UPDATETM
 # needed by GPRbuild
 export GCC_WRAPPER
+# useful utility
+export DOS2UNIX
 
