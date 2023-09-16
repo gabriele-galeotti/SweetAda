@@ -168,7 +168,7 @@ endif
 
 .PHONY : configure-rts
 configure-rts :
-ifeq      ($(OSTYPE),cmd)
+ifeq ($(OSTYPE),cmd)
 	@FOR %%F IN ($(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON)) DO               \
           @ECHO OFF &&                                                                \
           IF EXIST $(RTS_SOURCE_PATH_CMD)\%%F.in (                                    \
@@ -192,7 +192,7 @@ endif
 
 .PHONY : configure-rts-target
 configure-rts-target :
-ifeq      ($(OSTYPE),cmd)
+ifeq ($(OSTYPE),cmd)
 	@FOR %%F IN ($(LIBGNAT_SRCS_TARGET) $(LIBGNARL_SRCS_TARGET)) DO                      \
           @ECHO OFF &&                                                                       \
           IF EXIST $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in (                                    \
