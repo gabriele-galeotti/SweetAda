@@ -58,6 +58,7 @@ NON_PLATFORM_GOALS := $(SERVICE_GOALS) \
                       $(RTS_GOAL)
 
 PLATFORM_GOALS := configure          \
+                  configure-subdirs  \
                   all                \
                   $(KERNEL_BASENAME) \
                   kernel_libinfo     \
@@ -1089,14 +1090,23 @@ configure-start :
 .PHONY : configure-gnatadc
 configure-gnatadc : $(GNATADC_FILENAME)
 
-$(GNATADC_FILENAME) :
+$(GNATADC_FILENAME) : configuration.in                       \
+                      $(PLATFORM_DIRECTORY)/configuration.in
+	$(MAKE) clean
 	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
+	$(MAKE) configure-subdirs
 
 .PHONY : configure-gpr
 configure-gpr : $(CONFIGUREGPR_FILENAME)
 
-$(CONFIGUREGPR_FILENAME) :
+$(CONFIGUREGPR_FILENAME) : configuration.in                       \
+                           gprbuild_st.gpr                        \
+                           gprbuild_tc.gpr                        \
+                           gprbuild_wr.gpr                        \
+                           $(PLATFORM_DIRECTORY)/configuration.in
+	$(MAKE) clean
 	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
+	$(MAKE) configure-subdirs
 
 .PHONY : configure-subdirs
 configure-subdirs :
