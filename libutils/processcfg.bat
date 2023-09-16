@@ -11,6 +11,7 @@ REM
 
 REM
 REM Arguments:
+REM optional starting "-r" = removes CR from processed text
 REM $1 = input filename
 REM $2 = output filename
 REM

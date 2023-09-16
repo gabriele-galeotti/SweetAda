@@ -11,6 +11,7 @@
 
 #
 # Arguments:
+# optional starting "-r", ignored
 # $1 = input filename
 # $2 = output filename
 #
@@ -66,6 +67,9 @@ return 0
 #
 # Basic input parameters check.
 #
+if [ "x$1" = "x-r" ] ; then
+  shift
+fi
 INPUT_FILENAME="$1"
 if [ "x${INPUT_FILENAME}" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no input file specified."

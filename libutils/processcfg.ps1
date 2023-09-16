@@ -57,16 +57,24 @@ function GetEnvVar
 #                                                                              #
 ################################################################################
 
+[int]$argc = 0
+[bool]$remove_cr = $false
+
 #
 # Basic input parameters check.
 #
-$input_filename = $args[0]
+if ([string]$args[$argc] -eq "-r")
+{
+  $remove_cr = $true
+  $argc = $argc + 1
+}
+$input_filename = $args[$argc]
 if ([string]::IsNullOrEmpty($input_filename))
 {
   Write-Host "${scriptname}: *** Error: no input file specified."
   ExitWithCode 1
 }
-$output_filename = $args[1]
+$output_filename = $args[$argc + 1]
 if ([string]::IsNullOrEmpty($output_filename))
 {
   Write-Host "${scriptname}: *** Error: no output file specified."
@@ -142,6 +150,11 @@ catch
 {
   Write-Host "${scriptname}: *** Error: executing ${sed}."
   ExitWithCode 1
+}
+
+if ($remove_cr)
+{
+  $stdout = $stdout | ForEach-Object {$_ -Replace "`r",""}
 }
 Set-Content -Path $output_filename -Value $stdout -NoNewLine -Force
 
