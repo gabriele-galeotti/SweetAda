@@ -702,8 +702,14 @@ ifeq ($(BUILD_MODE),GNATMAKE)
 IMPLICIT_ALI_UNITS_GNATMAKE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT_ALI_UNITS))
 endif
 
-CLEAN_OBJECTS     := $(KERNEL_OBJFILE) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE)
-DISTCLEAN_OBJECTS := $(CONFIGUREGPR_FILENAME) $(KERNEL_CFGFILE)
+CLEAN_OBJECTS     := $(KERNEL_OBJFILE)       \
+                     $(KERNEL_OUTFILE)       \
+                     $(KERNEL_ROMFILE)       \
+                     $(CLEAN_OBJECTS_COMMON)
+
+DISTCLEAN_OBJECTS := $(KERNEL_CFGFILE)           \
+                     $(CONFIGUREGPR_FILENAME)    \
+                     $(DISTCLEAN_OBJECTS_COMMON)
 
 ################################################################################
 #                                                                              #
@@ -825,7 +831,7 @@ ifeq ($(USE_CLIBRARY),Y)
 endif
 
 $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME) : FORCE
-ifeq ($(BUILD_MODE),GNATMAKE)
+ifeq      ($(BUILD_MODE),GNATMAKE)
 	@$(REM) perform GNATMAKE-driven procedure
 	$(call brief-command, \
         $(GNATMAKE)                             \
@@ -854,7 +860,7 @@ $(OBJECT_DIRECTORY)/b__main.adb : $(OBJECT_DIRECTORY)/libcore.a          \
                                   $(CLIBRARY_OBJECT)                     \
                                   $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME)
 	@$(REM) bind all units and generate b__main
-ifeq ($(BUILD_MODE),GNATMAKE)
+ifeq      ($(BUILD_MODE),GNATMAKE)
 	$(call brief-command, \
         $(GNATBIND)                                \
                     -F -e -l -n -s                 \
@@ -899,7 +905,7 @@ endif
 
 $(OBJECT_DIRECTORY)/b__main.o : $(OBJECT_DIRECTORY)/b__main.adb
 	@$(REM) compile the main program, incorporating the given elaboration order
-ifeq ($(BUILD_MODE),GNATMAKE)
+ifeq      ($(BUILD_MODE),GNATMAKE)
 ifeq ($(OSTYPE),cmd)
 	$(call brief-command, \
         $(ADAC_GNATBIND)                                  \
@@ -918,7 +924,7 @@ endif
 else ifeq ($(BUILD_MODE),GPRbuild)
 	-@$(RM) $(GCC_WRAPPER_TIMESTAMP_FILENAME)
 endif
-ifeq ($(OSTYPE),cmd)
+ifeq      ($(OSTYPE),cmd)
 	@$(SED) -i -e "s|\\|/|g" -e "s| |\\ |g" gnatbind_objs.lst
 else ifeq ($(OSTYPE),msys)
 	@$(SED) -i -e "s|\\\\|/|g" -e "s| |\\\\ |g" gnatbind_objs.lst
@@ -1094,7 +1100,6 @@ $(GNATADC_FILENAME) : configuration.in                       \
                       $(PLATFORM_DIRECTORY)/configuration.in
 	$(MAKE) clean
 	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
-	$(MAKE) configure-subdirs
 
 .PHONY : configure-gpr
 configure-gpr : $(CONFIGUREGPR_FILENAME)
@@ -1106,7 +1111,6 @@ $(CONFIGUREGPR_FILENAME) : configuration.in                       \
                            $(PLATFORM_DIRECTORY)/configuration.in
 	$(MAKE) clean
 	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
-	$(MAKE) configure-subdirs
 
 .PHONY : configure-subdirs
 configure-subdirs :
@@ -1157,7 +1161,7 @@ ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"AS VERSION:              $(AS_VERSION)")
 	@$(call echo-print,"LD VERSION:              $(LD_VERSION)")
 endif
-ifeq ($(BUILD_MODE),GNATMAKE)
+ifeq      ($(BUILD_MODE),GNATMAKE)
 	@$(call echo-print,"GNATMAKE VERSION:        $(GNATMAKE_VERSION)")
 else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(call echo-print,"GPRBUILD VERSION:        $(GPRBUILD_VERSION)")
@@ -1315,7 +1319,7 @@ else
 	-$(RM) $(LIBRARY_DIRECTORY)/*
 	-$(RMDIR) $(OBJECT_DIRECTORY)/*
 endif
-	-$(RM) $(CLEAN_OBJECTS_COMMON) $(CLEAN_OBJECTS)
+	-$(RM) $(CLEAN_OBJECTS)
 
 .PHONY : distclean
 distclean : clean
