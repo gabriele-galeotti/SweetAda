@@ -81,9 +81,6 @@ RTS_SOURCE_PATH_TARGET_CMD := $(shell $(ECHO) $(RTS_SOURCE_PATH_TARGET)| $(SED) 
 ADAINCLUDE_PATH_CMD        := $(shell $(ECHO) $(ADAINCLUDE_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
 ADALIB_PATH_CMD            := $(shell $(ECHO) $(ADALIB_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
 endif
-ifeq ($(OSTYPE),msys)
-ADAINCLUDE_PATH_CMD        := $(shell $(ECHO) $(ADAINCLUDE_PATH)| $(SED) -e "s|/|\\\\|g" -e "s|\\.\\\\||g")
-endif
 
 ADAC   := $(TOOLCHAIN_ADAC)
 CC     := $(TOOLCHAIN_CC)
