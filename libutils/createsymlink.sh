@@ -74,15 +74,15 @@ FILELIST_FILENAME=
 
 # parse command line arguments
 while [ $# -gt 0 ] ; do
-  if [ "x${1:0:1}" = "x-" ] ; then
+  argument="$1"
+  if [ $(printf "%.1s" "${argument}") = "-" ] ; then
     # "-" option
-    argument=${1:1}
-    case ${argument} in
-      "m")
+    case "${argument}" in
+      "-m")
         shift
-        FILELIST_FILENAME="$1"
+        FILELIST_FILENAME="${argument}"
         ;;
-      "v")
+      "-v")
         VERBOSE=Y
         ;;
       *)
