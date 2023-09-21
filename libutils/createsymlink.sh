@@ -80,7 +80,7 @@ while [ $# -gt 0 ] ; do
     case "${argument}" in
       "-m")
         shift
-        FILELIST_FILENAME="${argument}"
+        FILELIST_FILENAME="$1"
         ;;
       "-v")
         VERBOSE=Y
