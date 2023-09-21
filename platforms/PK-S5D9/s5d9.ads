@@ -95,12 +95,12 @@ package S5D9 is
       Size      => 16;
    for RSTSR1_Type use
    record
-      IWDTRF    at 0 range 0 .. 0;
-      WDTRF     at 0 range 1 .. 1;
-      SWRF      at 0 range 2 .. 2;
-      Reserved1 at 0 range 3 .. 7;
-      RPERF     at 0 range 8 .. 8;
-      REERF     at 0 range 9 .. 9;
+      IWDTRF    at 0 range  0 ..  0;
+      WDTRF     at 0 range  1 ..  1;
+      SWRF      at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 ..  7;
+      RPERF     at 0 range  8 ..  8;
+      REERF     at 0 range  9 ..  9;
       BUSSRF    at 0 range 10 .. 10;
       BUSMRF    at 0 range 11 .. 11;
       SPERF     at 0 range 12 .. 12;
@@ -173,11 +173,11 @@ package S5D9 is
       Size      => 32;
    for SCKDIVCR_Type use
    record
-      PCKD      at 0 range 0 .. 2;
-      Reserved1 at 0 range 3 .. 3;
-      PCKC      at 0 range 4 .. 6;
-      Reserved2 at 0 range 7 .. 7;
-      PCKB      at 0 range 8 .. 10;
+      PCKD      at 0 range  0 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      PCKC      at 0 range  4 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      PCKB      at 0 range  8 .. 10;
       Reserved3 at 0 range 11 .. 11;
       PCKA      at 0 range 12 .. 14;
       Reserved4 at 0 range 15 .. 15;
@@ -320,11 +320,11 @@ package S5D9 is
       Size      => 16;
    for PLLCCR_Type use
    record
-      PLIDIV    at 0 range 0 .. 1;
-      Reserved1 at 0 range 2 .. 3;
-      PLSRCSEL  at 0 range 4 .. 4;
-      Reserved2 at 0 range 5 .. 7;
-      PLLMUL    at 0 range 8 .. 13;
+      PLIDIV    at 0 range  0 ..  1;
+      Reserved1 at 0 range  2 ..  3;
+      PLSRCSEL  at 0 range  4 ..  4;
+      Reserved2 at 0 range  5 ..  7;
+      PLLMUL    at 0 range  8 .. 13;
       Reserved3 at 0 range 14 .. 15;
    end record;
 
@@ -567,7 +567,7 @@ package S5D9 is
       Size      => 16;
    for SBYCR_Type use
    record
-      Reserved at 0 range 0 .. 13;
+      Reserved at 0 range  0 .. 13;
       OPE      at 0 range 14 .. 14;
       SSBY     at 0 range 15 .. 15;
    end record;
@@ -598,13 +598,13 @@ package S5D9 is
       Size      => 32;
    for MSTPCRA_Type use
    record
-      MSTPA0    at 0 range 0 .. 0;
-      MSTPA1    at 0 range 1 .. 1;
-      Reserved1 at 0 range 2 .. 4;
-      MSTPA5    at 0 range 5 .. 5;
-      MSTPA6    at 0 range 6 .. 6;
-      MSTPA7    at 0 range 7 .. 7;
-      Reserved2 at 0 range 8 .. 21;
+      MSTPA0    at 0 range  0 ..  0;
+      MSTPA1    at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  4;
+      MSTPA5    at 0 range  5 ..  5;
+      MSTPA6    at 0 range  6 ..  6;
+      MSTPA7    at 0 range  7 ..  7;
+      Reserved2 at 0 range  8 .. 21;
       MSTPA22   at 0 range 22 .. 22;
       Reserved3 at 0 range 23 .. 31;
    end record;
@@ -655,15 +655,15 @@ package S5D9 is
       Size      => 32;
    for MSTPCRB_Type use
    record
-      Reserved1 at 0 range 0 .. 0;
-      MSTPB1    at 0 range 1 .. 1;
-      MSTPB2    at 0 range 2 .. 2;
-      Reserved2 at 0 range 3 .. 4;
-      MSTPB5    at 0 range 5 .. 5;
-      MSTPB6    at 0 range 6 .. 6;
-      MSTPB7    at 0 range 7 .. 7;
-      MSTPB8    at 0 range 8 .. 8;
-      MSTPB9    at 0 range 9 .. 9;
+      Reserved1 at 0 range  0 ..  0;
+      MSTPB1    at 0 range  1 ..  1;
+      MSTPB2    at 0 range  2 ..  2;
+      Reserved2 at 0 range  3 ..  4;
+      MSTPB5    at 0 range  5 ..  5;
+      MSTPB6    at 0 range  6 ..  6;
+      MSTPB7    at 0 range  7 ..  7;
+      MSTPB8    at 0 range  8 ..  8;
+      MSTPB9    at 0 range  9 ..  9;
       Reserved3 at 0 range 10 .. 10;
       MSTPB11   at 0 range 11 .. 11;
       MSTPB12   at 0 range 12 .. 12;
@@ -721,16 +721,16 @@ package S5D9 is
       Size      => 32;
    for MSTPCRC_Type use
    record
-      MSTPC0    at 0 range 0 .. 0;
-      MSTPC1    at 0 range 1 .. 1;
-      MSTPC2    at 0 range 2 .. 2;
-      MSTPC3    at 0 range 3 .. 3;
-      MSTPC4    at 0 range 4 .. 4;
-      MSTPC5    at 0 range 5 .. 5;
-      MSTPC6    at 0 range 6 .. 6;
-      MSTPC7    at 0 range 7 .. 7;
-      MSTPC8    at 0 range 8 .. 8;
-      MSTPC9    at 0 range 9 .. 9;
+      MSTPC0    at 0 range  0 ..  0;
+      MSTPC1    at 0 range  1 ..  1;
+      MSTPC2    at 0 range  2 ..  2;
+      MSTPC3    at 0 range  3 ..  3;
+      MSTPC4    at 0 range  4 ..  4;
+      MSTPC5    at 0 range  5 ..  5;
+      MSTPC6    at 0 range  6 ..  6;
+      MSTPC7    at 0 range  7 ..  7;
+      MSTPC8    at 0 range  8 ..  8;
+      MSTPC9    at 0 range  9 ..  9;
       Reserved1 at 0 range 10 .. 10;
       MSTPC11   at 0 range 11 .. 11;
       MSTPC12   at 0 range 12 .. 12;
@@ -779,13 +779,13 @@ package S5D9 is
       Size      => 32;
    for MSTPCRD_Type use
    record
-      Reserved1 at 0 range 0 .. 1;
-      MSTPD2    at 0 range 2 .. 2;
-      MSTPD3    at 0 range 3 .. 3;
-      Reserved2 at 0 range 4 .. 4;
-      MSTPD5    at 0 range 5 .. 5;
-      MSTPD6    at 0 range 6 .. 6;
-      Reserved3 at 0 range 7 .. 13;
+      Reserved1 at 0 range  0 ..  1;
+      MSTPD2    at 0 range  2 ..  2;
+      MSTPD3    at 0 range  3 ..  3;
+      Reserved2 at 0 range  4 ..  4;
+      MSTPD5    at 0 range  5 ..  5;
+      MSTPD6    at 0 range  6 ..  6;
+      Reserved3 at 0 range  7 .. 13;
       MSTPD14   at 0 range 14 .. 14;
       MSTPD15   at 0 range 15 .. 15;
       MSTPD16   at 0 range 16 .. 16;
@@ -831,11 +831,11 @@ package S5D9 is
       Size      => 16;
    for PRCR_Type use
    record
-      PRC0      at 0 range 0 .. 0;
-      PRC1      at 0 range 1 .. 1;
-      Reserved1 at 0 range 2 .. 2;
-      PRC3      at 0 range 3 .. 3;
-      Reserved2 at 0 range 4 .. 7;
+      PRC0      at 0 range 0 ..  0;
+      PRC1      at 0 range 1 ..  1;
+      Reserved1 at 0 range 2 ..  2;
+      PRC3      at 0 range 3 ..  3;
+      Reserved2 at 0 range 4 ..  7;
       PRKEY     at 0 range 8 .. 15;
    end record;
 
@@ -895,15 +895,15 @@ package S5D9 is
       Size      => 16;
    for NMISR_Type use
    record
-      IWDTST    at 0 range 0 .. 0;
-      WDTST     at 0 range 1 .. 1;
-      LVD1ST    at 0 range 2 .. 2;
-      LVD2ST    at 0 range 3 .. 3;
-      Reserved1 at 0 range 4 .. 5;
-      OSTST     at 0 range 6 .. 6;
-      NMIST     at 0 range 7 .. 7;
-      RPEST     at 0 range 8 .. 8;
-      RECCST    at 0 range 9 .. 9;
+      IWDTST    at 0 range  0 ..  0;
+      WDTST     at 0 range  1 ..  1;
+      LVD1ST    at 0 range  2 ..  2;
+      LVD2ST    at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 ..  5;
+      OSTST     at 0 range  6 ..  6;
+      NMIST     at 0 range  7 ..  7;
+      RPEST     at 0 range  8 ..  8;
+      RECCST    at 0 range  9 ..  9;
       BUSSST    at 0 range 10 .. 10;
       BUSMST    at 0 range 11 .. 11;
       SPEST     at 0 range 12 .. 12;
@@ -932,15 +932,15 @@ package S5D9 is
       Size      => 16;
    for NMIER_Type use
    record
-      IWDTEN    at 0 range 0 .. 0;
-      WDTEN     at 0 range 1 .. 1;
-      LVD1EN    at 0 range 2 .. 2;
-      LVD2EN    at 0 range 3 .. 3;
-      Reserved1 at 0 range 4 .. 5;
-      OSTEN     at 0 range 6 .. 6;
-      NMIEN     at 0 range 7 .. 7;
-      RPEEN     at 0 range 8 .. 8;
-      RECCEN    at 0 range 9 .. 9;
+      IWDTEN    at 0 range  0 ..  0;
+      WDTEN     at 0 range  1 ..  1;
+      LVD1EN    at 0 range  2 ..  2;
+      LVD2EN    at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 ..  5;
+      OSTEN     at 0 range  6 ..  6;
+      NMIEN     at 0 range  7 ..  7;
+      RPEEN     at 0 range  8 ..  8;
+      RECCEN    at 0 range  9 ..  9;
       BUSSEN    at 0 range 10 .. 10;
       BUSMEN    at 0 range 11 .. 11;
       SPEEN     at 0 range 12 .. 12;
@@ -969,15 +969,15 @@ package S5D9 is
       Size      => 16;
    for NMICLR_Type use
    record
-      IWDTCLR   at 0 range 0 .. 0;
-      WDTCLR    at 0 range 1 .. 1;
-      LVD1CLR   at 0 range 2 .. 2;
-      LVD2CLR   at 0 range 3 .. 3;
-      Reserved1 at 0 range 4 .. 5;
-      OSTCLR    at 0 range 6 .. 6;
-      NMICLR    at 0 range 7 .. 7;
-      RPECLR    at 0 range 8 .. 8;
-      RECCCLR   at 0 range 9 .. 9;
+      IWDTCLR   at 0 range  0 ..  0;
+      WDTCLR    at 0 range  1 ..  1;
+      LVD1CLR   at 0 range  2 ..  2;
+      LVD2CLR   at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 ..  5;
+      OSTCLR    at 0 range  6 ..  6;
+      NMICLR    at 0 range  7 ..  7;
+      RPECLR    at 0 range  8 ..  8;
+      RECCCLR   at 0 range  9 ..  9;
       BUSSCLR   at 0 range 10 .. 10;
       BUSMCLR   at 0 range 11 .. 11;
       SPECLR    at 0 range 12 .. 12;
@@ -1021,8 +1021,8 @@ package S5D9 is
       Volatile_Full_Access => True;
    for IELSR_Type use
    record
-      IELS      at 0 range 0 .. 8;
-      Reserved1 at 0 range 9 .. 15;
+      IELS      at 0 range  0 ..  8;
+      Reserved1 at 0 range  9 .. 15;
       IR        at 0 range 16 .. 16;
       Reserved2 at 0 range 17 .. 23;
       DTCE      at 0 range 24 .. 24;
@@ -1043,8 +1043,8 @@ package S5D9 is
       Volatile_Full_Access => True;
    for DELSR_Type use
    record
-      IELS      at 0 range 0 .. 8;
-      Reserved1 at 0 range 9 .. 15;
+      IELS      at 0 range  0 ..  8;
+      Reserved1 at 0 range  9 .. 15;
       IR        at 0 range 16 .. 16;
       Reserved2 at 0 range 17 .. 31;
    end record;
@@ -1060,7 +1060,7 @@ package S5D9 is
       Size      => 16;
    for SELSR0_Type use
    record
-      SELS     at 0 range 0 .. 8;
+      SELS     at 0 range 0 ..  8;
       Reserved at 0 range 9 .. 15;
    end record;
 
@@ -1089,7 +1089,7 @@ package S5D9 is
       Size      => 32;
    for WUPEN_Type use
    record
-      IRQWUPEN     at 0 range 0 .. 15;
+      IRQWUPEN     at 0 range  0 .. 15;
       IWDTWUPEN    at 0 range 16 .. 16;
       KEYWUPEN     at 0 range 17 .. 17;
       LVD1WUPEN    at 0 range 18 .. 18;
@@ -1466,13 +1466,13 @@ package S5D9 is
    for ICU_Type use
    record
       IRQCR  at 0        range 0 .. 16 * 8 - 1;
-      NMICR  at 16#0100# range 0 .. 7;
+      NMICR  at 16#0100# range 0 ..  7;
       NMIER  at 16#0120# range 0 .. 15;
       NMICLR at 16#0130# range 0 .. 15;
       NMISR  at 16#0140# range 0 .. 15;
       WUPEN  at 16#01A0# range 0 .. 31;
       SELSR0 at 15#0200# range 0 .. 15;
-      DELSR  at 16#0280# range 0 .. 8 * 32 - 1;
+      DELSR  at 16#0280# range 0 ..  8 * 32 - 1;
       IELSR  at 16#0300# range 0 .. 96 * 32 - 1;
    end record;
 
@@ -1512,16 +1512,16 @@ package S5D9 is
       Size      => 16;
    for PODR_Type use
    record
-      PODR00 at 0 range 0 .. 0;
-      PODR01 at 0 range 1 .. 1;
-      PODR02 at 0 range 2 .. 2;
-      PODR03 at 0 range 3 .. 3;
-      PODR04 at 0 range 4 .. 4;
-      PODR05 at 0 range 5 .. 5;
-      PODR06 at 0 range 6 .. 6;
-      PODR07 at 0 range 7 .. 7;
-      PODR08 at 0 range 8 .. 8;
-      PODR09 at 0 range 9 .. 9;
+      PODR00 at 0 range  0 ..  0;
+      PODR01 at 0 range  1 ..  1;
+      PODR02 at 0 range  2 ..  2;
+      PODR03 at 0 range  3 ..  3;
+      PODR04 at 0 range  4 ..  4;
+      PODR05 at 0 range  5 ..  5;
+      PODR06 at 0 range  6 ..  6;
+      PODR07 at 0 range  7 ..  7;
+      PODR08 at 0 range  8 ..  8;
+      PODR09 at 0 range  9 ..  9;
       PODR10 at 0 range 10 .. 10;
       PODR11 at 0 range 11 .. 11;
       PODR12 at 0 range 12 .. 12;
@@ -1553,16 +1553,16 @@ package S5D9 is
       Size      => 16;
    for PDR_Type use
    record
-      PDR00 at 0 range 0 .. 0;
-      PDR01 at 0 range 1 .. 1;
-      PDR02 at 0 range 2 .. 2;
-      PDR03 at 0 range 3 .. 3;
-      PDR04 at 0 range 4 .. 4;
-      PDR05 at 0 range 5 .. 5;
-      PDR06 at 0 range 6 .. 6;
-      PDR07 at 0 range 7 .. 7;
-      PDR08 at 0 range 8 .. 8;
-      PDR09 at 0 range 9 .. 9;
+      PDR00 at 0 range  0 ..  0;
+      PDR01 at 0 range  1 ..  1;
+      PDR02 at 0 range  2 ..  2;
+      PDR03 at 0 range  3 ..  3;
+      PDR04 at 0 range  4 ..  4;
+      PDR05 at 0 range  5 ..  5;
+      PDR06 at 0 range  6 ..  6;
+      PDR07 at 0 range  7 ..  7;
+      PDR08 at 0 range  8 ..  8;
+      PDR09 at 0 range  9 ..  9;
       PDR10 at 0 range 10 .. 10;
       PDR11 at 0 range 11 .. 11;
       PDR12 at 0 range 12 .. 12;
@@ -1674,14 +1674,14 @@ package S5D9 is
       Suppress_Initialization => True;
    for PFSR_Type use
    record
-      PODR      at 0 range 0 .. 0;
-      PIDR      at 0 range 1 .. 1;
-      PDR       at 0 range 2 .. 2;
-      Reserved1 at 0 range 3 .. 3;
-      PCR       at 0 range 4 .. 4;
-      Reserved2 at 0 range 5 .. 5;
-      NCODR     at 0 range 6 .. 6;
-      Reserved3 at 0 range 7 .. 9;
+      PODR      at 0 range  0 ..  0;
+      PIDR      at 0 range  1 ..  1;
+      PDR       at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      PCR       at 0 range  4 ..  4;
+      Reserved2 at 0 range  5 ..  5;
+      NCODR     at 0 range  6 ..  6;
+      Reserved3 at 0 range  7 ..  9;
       DSCR      at 0 range 10 .. 11;
       EOFEOR    at 0 range 12 .. 13;
       ISEL      at 0 range 14 .. 14;
@@ -1949,14 +1949,14 @@ package S5D9 is
       AGTCMA   at 16#02# range 0 .. 15;
       AGTCMB   at 16#04# range 0 .. 15;
       Pad1     at 16#06# range 0 .. 15;
-      AGTCR    at 16#08# range 0 .. 7;
-      AGTMR1   at 16#09# range 0 .. 7;
-      AGTMR2   at 16#0A# range 0 .. 7;
-      Pad2     at 16#0B# range 0 .. 7;
-      AGTIOC   at 16#0C# range 0 .. 7;
-      AGTISR   at 16#0D# range 0 .. 7;
-      AGTCMSR  at 16#0E# range 0 .. 7;
-      AGTIOSEL at 16#0F# range 0 .. 7;
+      AGTCR    at 16#08# range 0 ..  7;
+      AGTMR1   at 16#09# range 0 ..  7;
+      AGTMR2   at 16#0A# range 0 ..  7;
+      Pad2     at 16#0B# range 0 ..  7;
+      AGTIOC   at 16#0C# range 0 ..  7;
+      AGTISR   at 16#0D# range 0 ..  7;
+      AGTCMSR  at 16#0E# range 0 ..  7;
+      AGTIOSEL at 16#0F# range 0 ..  7;
    end record;
 
    AGT_ADDRESS : constant := 16#4008_4000#;
@@ -2426,12 +2426,12 @@ package S5D9 is
       Size      => 16;
    for FCR_Type use
    record
-      FM    at 0 range 0 .. 0;
-      RFRST at 0 range 1 .. 1;
-      TFRST at 0 range 2 .. 2;
-      DRES  at 0 range 3 .. 3;
-      TTRG  at 0 range 4 .. 7;
-      RTRG  at 0 range 8 .. 11;
+      FM    at 0 range  0 ..  0;
+      RFRST at 0 range  1 ..  1;
+      TFRST at 0 range  2 ..  2;
+      DRES  at 0 range  3 ..  3;
+      TTRG  at 0 range  4 ..  7;
+      RTRG  at 0 range  8 .. 11;
       RSTRG at 0 range 12 .. 15;
    end record;
 
@@ -2448,9 +2448,9 @@ package S5D9 is
       Size      => 16;
    for FDR_Type use
    record
-      R         at 0 range 0 .. 4;
-      Reserved1 at 0 range 5 .. 7;
-      T         at 0 range 8 .. 12;
+      R         at 0 range  0 ..  4;
+      Reserved1 at 0 range  5 ..  7;
+      T         at 0 range  8 .. 12;
       Reserved2 at 0 range 13 .. 15;
    end record;
 
@@ -2469,11 +2469,11 @@ package S5D9 is
       Size      => 16;
    for LSR_Type use
    record
-      ORER      at 0 range 0 .. 0;
-      Reserved1 at 0 range 1 .. 1;
-      FNUM      at 0 range 2 .. 6;
-      Reserved2 at 0 range 7 .. 7;
-      PNUM      at 0 range 8 .. 12;
+      ORER      at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      FNUM      at 0 range  2 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      PNUM      at 0 range  8 .. 12;
       Reserved3 at 0 range 13 .. 15;
    end record;
 
@@ -2488,7 +2488,7 @@ package S5D9 is
       Size      => 16;
    for CDR_Type use
    record
-      CMPD     at 0 range 0 .. 8;
+      CMPD     at 0 range 0 ..  8;
       Reserved at 0 range 9 .. 15;
    end record;
 
@@ -2572,29 +2572,29 @@ package S5D9 is
       Suppress_Initialization => True;
    for SCI_Type use
    record
-      SMR      at 16#00# range 0 .. 7;
-      BRR      at 16#01# range 0 .. 7;
-      SCR      at 16#02# range 0 .. 7;
-      TDR      at 16#03# range 0 .. 7;
-      SSR      at 16#04# range 0 .. 7;
-      RDR      at 16#05# range 0 .. 7;
-      SCMR     at 16#06# range 0 .. 7;
-      SEMR     at 16#07# range 0 .. 7;
-      SNFR     at 16#08# range 0 .. 7;
-      SIMR1    at 16#09# range 0 .. 7;
-      SIMR2    at 16#0A# range 0 .. 7;
-      SIMR3    at 16#0B# range 0 .. 7;
-      SISR     at 16#0C# range 0 .. 7;
-      SPMR     at 16#0D# range 0 .. 7;
+      SMR      at 16#00# range 0 ..  7;
+      BRR      at 16#01# range 0 ..  7;
+      SCR      at 16#02# range 0 ..  7;
+      TDR      at 16#03# range 0 ..  7;
+      SSR      at 16#04# range 0 ..  7;
+      RDR      at 16#05# range 0 ..  7;
+      SCMR     at 16#06# range 0 ..  7;
+      SEMR     at 16#07# range 0 ..  7;
+      SNFR     at 16#08# range 0 ..  7;
+      SIMR1    at 16#09# range 0 ..  7;
+      SIMR2    at 16#0A# range 0 ..  7;
+      SIMR3    at 16#0B# range 0 ..  7;
+      SISR     at 16#0C# range 0 ..  7;
+      SPMR     at 16#0D# range 0 ..  7;
       TDRHL    at 16#0E# range 0 .. 15;
       RDRHL    at 16#10# range 0 .. 15;
-      MDDR     at 16#12# range 0 .. 7;
-      DCCR     at 16#13# range 0 .. 7;
+      MDDR     at 16#12# range 0 ..  7;
+      DCCR     at 16#13# range 0 ..  7;
       FCR      at 16#14# range 0 .. 15;
       FDR      at 16#16# range 0 .. 15;
       LSR      at 16#18# range 0 .. 15;
       CDR      at 16#1A# range 0 .. 15;
-      SPTR     at 16#1C# range 0 .. 7;
+      SPTR     at 16#1C# range 0 ..  7;
       Reserved at 16#1D# range 0 .. 23;
    end record;
 
@@ -3152,7 +3152,7 @@ package S5D9 is
       Size      => 32;
    for SFMCOM_Type use
    record
-      SFMD     at 0 range 0 .. 7;
+      SFMD     at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
@@ -3170,7 +3170,7 @@ package S5D9 is
       Size      => 32;
    for SFMCMD_Type use
    record
-      DCOM     at 0 range 0 .. 0;
+      DCOM     at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
 
