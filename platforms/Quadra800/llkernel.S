@@ -26,9 +26,9 @@
 //
 // Context switching routine.
 //
-// Gli argomenti di questa routine sono i puntatori a due aree:
-// quello della area di salvataggio del contesto attuale e quello
-// della area del nuovo contesto.
+// Arguments of this routine are two pointers:
+// - a current context saving area
+// - a next context saving area
 //
 // sp+0 return address
 // sp+4 parm1 (old execution context)
@@ -143,7 +143,7 @@ spurious_handler:
 //
 // Trap instruction handler.
 //
-// Layout dello stack:
+// Stack layout:
 //
 // sp@(0)  d0                     (4)
 // sp@(4)  d1                     (4)
@@ -305,7 +305,7 @@ userirq31_handler:
                 jmp     irq_entry
 
 //
-// Layout dello stack:
+// Stack layout:
 //
 // sp@(0)  d0                     (4)
 // sp@(4)  d1                     (4)

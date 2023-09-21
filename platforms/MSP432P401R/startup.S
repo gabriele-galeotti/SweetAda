@@ -1,6 +1,6 @@
 
 //
-// startup.S - MSP432P401R startup.
+// startup.S - Low-level startup.
 //
 // Copyright (C) 2020-2023 Gabriele Galeotti
 //

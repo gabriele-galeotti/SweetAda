@@ -1,6 +1,6 @@
 
 //
-// startup.S - MVME 162-510A startup.
+// startup.S - Low-level startup.
 //
 // Copyright (C) 2020-2023 Gabriele Galeotti
 //

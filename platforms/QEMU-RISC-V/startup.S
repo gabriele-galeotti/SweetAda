@@ -1,6 +1,6 @@
 
 //
-// startup.S - RISC-V startup (QEMU emulator).
+// startup.S - Low-level startup.
 //
 // Copyright (C) 2020-2023 Gabriele Galeotti
 //
