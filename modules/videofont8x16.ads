@@ -35,8 +35,8 @@ package Videofont8x16 is
    Font_Height      : constant := 16;
    Font_NCharacters : constant := 256;
 
-   type Font_Character_Type is new SSE.Storage_Array (0 .. SSE.Storage_Offset (Font_Height - 1)) with
-      Alignment => 16;
+   type Font_Character_Type is new SSE.Storage_Array (0 .. SSE.Storage_Offset (Font_Height - 1))
+      with Alignment => 16;
 
    ----------------------------------------------------------------------------
    -- CodePage 437 (CP 437, OEM 437, PC-8, MS-DOS Latin US)
