@@ -12,5 +12,14 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .sect   .text,"ax"
+                .sect   .vectors,"ax"
+
+                .global POR_reset
+                .global reset
+
+                .extern _start
+POR_reset:      .long   _start
+POR_sp:         .long   0
+reset:          .long   _start
+initial_sp:     .long   0
 

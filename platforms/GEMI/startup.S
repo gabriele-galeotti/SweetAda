@@ -1,6 +1,6 @@
 
 //
-// startup.S - GEMI startup.
+// startup.S - Low-level startup.
 //
 // Copyright (C) 2020-2023 Gabriele Galeotti
 //
@@ -14,16 +14,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .sect   .vectors,"ax"
-
-POR_reset:      .long   _start
-POR_sp:         .long   0
-reset:          .long   _start
-sp:             .long   0
-
-////////////////////////////////////////////////////////////////////////////////
-
                 .sect   .startup,"ax"
+
+                .align  1
 
                 .type   _start,@function
                 .global _start
@@ -50,31 +43,52 @@ _start:
                 mov.l   PACR2A,r1
                 mov.w   PACR2V,r0
                 mov.w   r0,@r1
+                bra     1f
+                nop
+VARL(BCRA, 0x05FFFFA0)                                  // BCR
+VARW(BCRV, 0x0800)                                      // enable BAS
+VARL(WCR1A, 0x05FFFFA2)                                 // WCR1
+VARW(WCR1V, 0x00FD)                                     // disable /WAIT sampling
+VARL(WCR3A, 0x05FFFFA6)                                 // WCR3
+VARW(WCR3V, 0xF800)                                     // default
+VARL(PACR1A, 0x05FFFFC8)                                // PACR1
+VARW(PACR1V, 0xFF06)                                    // enable /DREQ1, /DACK1, /DREQ0, /DACK0, PA11, PA10, /AH, PA8
+VARL(PACR2A, 0x05FFFFCA)                                // PACR2
+VARW(PACR2V, 0xFF95)                                    // enable /BACK, /RD, /LBS, /WR, /WAIT, /CS6, /CS5, /CS4
+1:
 
                 //
                 // Setup stack pointer.
                 //
-                mov.l   REF(SVC_stack),r15
+                mov.l   REF(kernel_stack),r15
 
                 //
                 // Static data relocation.
                 //
-                mov.l   REF(movdata),r0
-                jsr     @r0
+                mov.l   REF(_sdata),r1
+                mov.l   REF(_edata),r2
+                mov.l   REF(_etext),r3
+1:              cmp/ge  r2,r1
+                bt      2f
                 nop
+                mov.l   @r3+,r0
+                mov.l   r0,@r1
+                add     #4,r1
+                bra     1b
+                nop
+2:
 
                 //
                 // Initialize .bss section.
                 //
-                .extern _sbss
-                .extern _ebss
-                mov.l   REF(_sbss),r2
-                mov.l   REF(_ebss),r3
-                xor     r1,r1
-1:              cmp/eq  r3,r2
+                mov.l   REF(_sbss),r1
+                mov.l   REF(_ebss),r2
+                xor     r0,r0
+1:              cmp/ge  r2,r1
                 bt      2f
                 nop
-                mov.l   @r2+,r1
+                mov.l   r0,@r1
+                add     #4,r1
                 bra     1b
                 nop
 2:
@@ -91,53 +105,13 @@ dead:           bra     .
 
                 .size   _start,.-_start
 
-                .align  4
-VARL(BCRA, 0x05FFFFA0)                                  // BCR
-VARW(BCRV, 0x0800)                                      // enable BAS
-                .align  4
-VARL(WCR1A, 0x05FFFFA2)                                 // WCR1
-VARW(WCR1V, 0xFFFF)                                     // default
-                .align  4
-VARL(WCR3A, 0x05FFFFA6)                                 // WCR3
-VARW(WCR3V, 0xF800)                                     // default
-                .align  4
-VARL(PACR1A, 0x05FFFFC8)                                // PACR1
-VARW(PACR1V, 0xFF06)                                    // enable /DREQ0, /DREQ1, /AH
-                .align  4
-VARL(PACR2A, 0x05FFFFCA)                                // PACR2
-VARW(PACR2V, 0xFF95)                                    // default
-                .align  4
-DEF_LREF(SVC_stack)
-DEF_LREF(movdata)
-DEF_EREF(_sbss)
-DEF_EREF(_ebss)
-DEF_EREF(adainit)
-DEF_EREF(_ada_main)
-
-////////////////////////////////////////////////////////////////////////////////
-// movdata                                                                    //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
-
-                .align  2
-movdata:
-                mov.l   REF(_sdata),r1
-                mov.l   REF(_edata),r3
-                cmp/eq  r3,r1
-                bt      .L3
-                mov.l   REF(_etext),r2
-.L4:            mov.l   @r2+,r7
-                cmp/eq  r3,r1
-                mov.l   r7,@r1
-                add     #4,r1
-                bf      .L4
-.L3:            rts
-                nop
-
-                .align  4
-DEF_EREF(_etext)
-DEF_EREF(_sdata)
-DEF_EREF(_edata)
+DEF_LREFL(kernel_stack)
+DEF_EREFL(_etext)
+DEF_EREFL(_sdata)
+DEF_EREFL(_edata)
+DEF_EREFL(_sbss)
+DEF_EREFL(_ebss)
+DEF_EREFL(_ada_main)
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -149,5 +123,5 @@ DEF_EREF(_edata)
 
                 .align  8
                 .space  4096
-SVC_stack:
+kernel_stack:
 

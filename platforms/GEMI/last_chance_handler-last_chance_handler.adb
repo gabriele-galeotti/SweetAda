@@ -15,46 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with SH;
-with GEMI;
-
-package body Last_Chance_Handler is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use Interfaces;
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Last_Chance_Handler
-   ----------------------------------------------------------------------------
-   procedure Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) is
-      pragma Unreferenced (Source_Location);
-      pragma Unreferenced (Line);
-      Delay_Count : constant := 30_000;
-      Value       : Unsigned_8 := 16#F0#;
-   begin
-      loop
-         GEMI.LEDPORT := Value;
-         for Delay_Loop_Count in 1 .. Delay_Count loop
-            SH.NOP;
-         end loop;
-         Value := Value xor 16#10#;
-      end loop;
-   end Last_Chance_Handler;
-
+separate (Last_Chance_Handler)
+procedure Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) is
+   procedure GEMI_Last_Chance_Handler (SL : in System.Address; L : in Integer) with
+      Import        => True,
+      Convention    => C,
+      External_Name => "__gemi_last_chance_handler",
+      No_Return     => True;
+begin
+   GEMI_Last_Chance_Handler (Source_Location, Line);
 end Last_Chance_Handler;

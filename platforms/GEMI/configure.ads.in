@@ -1,11 +1,19 @@
 
+with Definitions;
+
 package Configure is
 
    pragma Pure;
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM  : constant String := "GEMI";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   -- CLK_FREQUENCY : constant := CLK_UART7M3; -- board #1
+   CLK_FREQUENCY : constant := 16 * MHz1;   -- board #2
 
 end Configure;

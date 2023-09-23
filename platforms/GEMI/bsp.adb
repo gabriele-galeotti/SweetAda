@@ -17,10 +17,11 @@
 
 with System;
 with System.Storage_Elements;
-with Interfaces;
+with Configure;
 with Definitions;
 with Bits;
 with MMIO;
+with SH;
 with GEMI;
 with Console;
 
@@ -40,6 +41,12 @@ package body BSP is
    use Bits;
    use Interfaces;
 
+   procedure GEMI_Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) with
+      Export        => True,
+      Convention    => C,
+      External_Name => "__gemi_last_chance_handler",
+      No_Return     => True;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -47,6 +54,24 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- GEMI_Last_Chance_Handler
+   ----------------------------------------------------------------------------
+   procedure GEMI_Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) is
+      pragma Unreferenced (Source_Location);
+      pragma Unreferenced (Line);
+      Delay_Count : constant := 30_000;
+      Value       : Unsigned_8 := 16#F0#;
+   begin
+      loop
+         GEMI.LEDPORT := Value;
+         for Delay_Loop_Count in 1 .. Delay_Count loop
+            SH.NOP;
+         end loop;
+         Value := Value xor 16#10#;
+      end loop;
+   end GEMI_Last_Chance_Handler;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -72,8 +97,7 @@ package body BSP is
       -- UART -----------------------------------------------------------------
       UART_Descriptor.Base_Address  := To_Address (GEMI.UART_BASEADDRESS);
       UART_Descriptor.Scale_Address := 4;
-      UART_Descriptor.Baud_Clock    := CLK_UART7M3; -- board #1
-      -- UART_Descriptor.Baud_Clock    := 16 * MHz1;   -- board #2
+      UART_Descriptor.Baud_Clock    := Configure.CLK_FREQUENCY;
       UART_Descriptor.Read_8        := MMIO.Read'Access;
       UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART_Descriptor.Data_Queue    := [[others => 0], 0, 0, 0];

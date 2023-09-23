@@ -3,9 +3,9 @@ ENTRY(_start)
 
 MEMORY
 {
-        ROM : ORIGIN = 0x00000000, LENGTH = 128k
-        /* RAM : ORIGIN = 0x0FFFE000 LENGTH = 8k */ /* internal RAM */
-        RAM : ORIGIN = 0x0A000000, LENGTH = 256k /* external RAM */
+        ROM  : ORIGIN = 0x00000000, LENGTH = 128k
+        RAM  : ORIGIN = 0x0A000000, LENGTH = 256k /* external RAM */
+        IRAM : ORIGIN = 0x0FFFE000, LENGTH = 8k   /* internal RAM */
 }
 
 SECTIONS
@@ -13,8 +13,7 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
-        _text_start = .;
-        .text : AT(_text_start)
+        .text :
         {
                 _stext = .;
                 KEEP(*(.vectors))
@@ -29,8 +28,7 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
-        _data_start = _text_start + SIZEOF(.text);
-        .data : AT(_data_start)
+        .data : AT(_etext)
         {
                 _sdata = .;
                 *(.data)
