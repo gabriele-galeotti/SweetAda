@@ -10,7 +10,7 @@
 
                 .sect   .text,"ax"
 
-                .align  2
+                .align  1
 
                 .global roto
 roto:
@@ -54,7 +54,7 @@ set_cache:      ! now that we are in P2, it's safe to enable the cache
                 nop                     ! 8
                 jmp     @r0
                 mov     r1,r0
-                .align  4
+                .align  2
 p2_mask:        .long   0xA0000000
 set_cache_addr: .long   set_cache
 main_addr:      .long   main
@@ -191,7 +191,7 @@ xloop:          //mov.l   VIDEO_RAM,r0
                 lds     r14,pr
                 rts
                 mov.l   @r15+,r14
-                .align  4
+                .align  2
 CLRCOUNT:       .long   640*480/2
 VIDEO_BASE:     .long   0xA5000000
 TWIDTH:         .long   256

@@ -61,6 +61,5 @@ vector_table:
                 rte
                 nop
 
-                .align  4
-DEF_EREF(exception_process)
+DEF_EREFL(exception_process)
 

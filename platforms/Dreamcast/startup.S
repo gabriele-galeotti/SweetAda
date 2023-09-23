@@ -16,6 +16,8 @@
 
                 .sect   .startup,"ax"
 
+                .align  1
+
                 .type   _start,@function
                 .global _start
 _start:
@@ -29,7 +31,7 @@ _start:
                 //
                 // Setup stack pointer.
                 //
-                mov.l   REF(SVC_stack),r15
+                mov.l   REF(kernel_stack),r15
 
                 //
                 // Initialize .bss section.
@@ -59,13 +61,12 @@ dead:           bra     .
 
                 .size   _start,.-_start
 
-                .align  4
-DEF_LREF(SVC_stack)
-DEF_EREF(vector_table)
-DEF_EREF(_sbss)
-DEF_EREF(_ebss)
-DEF_EREF(adainit)
-DEF_EREF(_ada_main)
+DEF_LREFL(kernel_stack)
+DEF_EREFL(vector_table)
+DEF_EREFL(_sbss)
+DEF_EREFL(_ebss)
+DEF_EREFL(adainit)
+DEF_EREFL(_ada_main)
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -77,5 +78,5 @@ DEF_EREF(_ada_main)
 
                 .align  8
                 .space  4096
-SVC_stack:
+kernel_stack:
 

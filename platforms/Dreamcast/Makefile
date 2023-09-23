@@ -37,7 +37,7 @@ endif
 LIBRARY_NAME := platform
 
 OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
-OBJECTS += $(foreach f,$(ADDITIONAL_S_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
+OBJECTS += $(foreach f,$(ADDITIONAL_ASM_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
 OBJECTS += $(foreach f,$(ADDITIONAL_ADB_OBJECTS:.adb=.o),$(OBJ_DIRECTORY)/$(f))
 OBJECTS += $(foreach f,$(ADDITIONAL_ADS_OBJECTS:.ads=.o),$(OBJ_DIRECTORY)/$(f))
 

@@ -10,6 +10,8 @@
 
                 .sect   .text,"ax"
 
+                .align  1
+
                 .global video
 video:
 
@@ -52,7 +54,7 @@ set_cache:      ! now that we are in P2, it's safe to enable the cache
                 nop                     ! 8
                 jmp     @r0
                 mov     r1,r0
-                .align  4
+                .align  2
 p2_mask:        .long   0xA0000000
 set_cache_addr: .long   set_cache
 main_addr:      .long   main
@@ -93,10 +95,10 @@ main:
                 lds     r14,pr
                 rts
                 mov.l   @r15+,r14
-                .align  4
+                .align  2
 message:        .ascii  "hello, SweetAda"
                 .byte   0
-                .align  2
+                .align  1
                 ! draw a text string on screen
                 ! assumes a 640*480 screen with RGB555 or RGB565 pixels
                 ! r4 = x
@@ -223,7 +225,7 @@ nopixel2:       bf/s    drawx2
                 add     r3,r0
                 rts
                 nop
-                .align  4
+                .align  2
 syscall_b4:     .long   0x8C0000B4
 drawmod:        .word   2*(640-12)
                 ! clear screen
@@ -237,7 +239,7 @@ clrloop:        mov.w   r4,@r0          ! clear one pixel
                 add     #2,r0
                 rts
                 nop
-                .align  4
+                .align  2
 vrambase:       .long   0xA5000000
 clrcount:       .long   640*480
                 ! set up video registers to the desired
@@ -331,7 +333,7 @@ rgbmode:        shll8   r0
                 mov.l   r0,@r1
                 rts
                 nop
-                .align  4
+                .align  2
 videobase:      .long   0xA05F8000
 cvbsbase:       .long   0xA0702C00
 bppshifttab:    .byte   1,1,0,2
@@ -354,7 +356,7 @@ check_cable:    ! set PORT8 and PORT9 to input
                 shlr8   r0
                 rts
                 and     #3,r0
-                .align  4
+                .align  2
 porta:          .long   0xFF80002C
 pctra_clr:      .long   0xFFF0FFFF
 pctra_set:      .long   0x000A0000

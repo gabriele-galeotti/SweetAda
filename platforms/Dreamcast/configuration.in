@@ -15,13 +15,14 @@ CPU_MODEL := SH7750
 
 GCC_SWITCHES_PLATFORM     := -m4 -Wa,--isa=sh4
 STARTUP_OBJECTS           := startup.S llkernel.S
+GCC_SWITCHES_STARTUP      := -Wa,-g
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --pad-to=0x00200000 --gap-fill=0x00
 CLEAN_OBJECTS_COMMON      := gxemullog.txt IP.BIN 1ST_READ.BIN sweetada.iso
 
-export ADDITIONAL_S_OBJECTS := roto.S video.S
+export ADDITIONAL_ASM_OBJECTS := roto.S video.S
 
 export BOOT_TYPE := ROM
 #export BOOT_TYPE := CD-ROM
