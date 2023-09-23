@@ -31,8 +31,8 @@ package EBCDIC is
 
    package SSE renames System.Storage_Elements;
 
-   type EBCDIC_String is array (Positive range <>) of SSE.Storage_Element with
-      Pack => True;
+   type EBCDIC_String is array (Positive range <>) of SSE.Storage_Element
+      with Pack => True;
 
    ----------------------------------------------------------------------------
    -- CodePage 437 (CP 437, OEM 437, PC-8, MS-DOS Latin US) --> EBCDIC
@@ -106,6 +106,8 @@ package EBCDIC is
        16#90#, 16#3F#, 16#3F#, 16#3F#, 16#3F#, 16#EA#, 16#3F#, 16#FF#
       ];
 
-   procedure To_EBCDIC (S1 : in String; S2 : out EBCDIC_String);
+   procedure To_EBCDIC
+      (S1 : in     String;
+       S2 :    out EBCDIC_String);
 
 end EBCDIC;

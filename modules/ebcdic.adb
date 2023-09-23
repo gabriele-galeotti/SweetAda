@@ -28,7 +28,10 @@ package body EBCDIC is
    ----------------------------------------------------------------------------
    -- To_EBCDIC
    ----------------------------------------------------------------------------
-   procedure To_EBCDIC (S1 : in String; S2 : out EBCDIC_String) is
+   procedure To_EBCDIC
+      (S1 : in     String;
+       S2 :    out EBCDIC_String)
+      is
       S2_Index : Positive := S2'First;
    begin
       for S1_Index in S1'Range loop
