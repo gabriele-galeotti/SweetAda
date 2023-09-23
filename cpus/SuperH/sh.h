@@ -21,31 +21,53 @@
  * Define variable label containing a value:
  * output: "LABEL: VALUE"
  */
-#define VARW(label, value)  \
-label:          .word value
-#define VARL(label, value)  \
-label:          .long value
+#define VARW(label, value)      \
+                .align  1     ; \
+label:          .word   value
+#define VARL(label, value)      \
+                .align  2     ; \
+label:          .long   value
 
 /*
  * Create a prefixed symbol name:
- * output: "p_SYMBOL"
+ * output: "r_SYMBOL"
  */
-#define REF(symbol) STRCONCAT(p_, symbol)
+#define REF(symbol) STRCONCAT(r_, symbol)
 
 /*
- * Define a local reference symbol:
- * output: "p_SYMBOL: .long SYMBOL"
+ * Define a 16-bit local reference symbol:
+ * output: "r_SYMBOL: .word SYMBOL"
  */
-#define DEF_LREF(symbol)     \
-REF(symbol):    .long symbol
+#define DEF_LREFW(symbol)        \
+                .align  1      ; \
+REF(symbol):    .word   symbol
 
 /*
- * Define an external reference symbol:
+ * Define a 32-bit local reference symbol:
+ * output: "r_SYMBOL: .long SYMBOL"
+ */
+#define DEF_LREFL(symbol)        \
+                .align  2      ; \
+REF(symbol):    .long   symbol
+
+/*
+ * Define a 16-bit external reference symbol:
  * output: " .extern SYMBOL"
- *         "p_SYMBOL: .long SYMBOL"
+ *         "r_SYMBOL: .word SYMBOL"
  */
-#define DEF_EREF(symbol)        \
-                .extern symbol; \
+#define DEF_EREFW(symbol)        \
+                .align  1      ; \
+                .extern symbol ; \
+REF(symbol):    .word   symbol
+
+/*
+ * Define a 32-bit external reference symbol:
+ * output: " .extern SYMBOL"
+ *         "r_SYMBOL: .long SYMBOL"
+ */
+#define DEF_EREFL(symbol)        \
+                .align  2      ; \
+                .extern symbol ; \
 REF(symbol):    .long   symbol
 
 #endif /* _SH_H */
