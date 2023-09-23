@@ -56,7 +56,10 @@ library project Cpu is
    -- Compiler
    ----------------------------------------------------------------------------
 
-   package Compiler renames Gprbuild_Tc.Compiler;
+   package Compiler extends Gprbuild_Tc.Compiler is
+      -- Asm_Cpp
+      for Switches ("Asm_Cpp") use Compiler'Switches ("Asm_Cpp") & ("-Wa,-g");
+   end Compiler;
 
    ----------------------------------------------------------------------------
    -- Library
