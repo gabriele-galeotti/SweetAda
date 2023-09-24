@@ -51,9 +51,7 @@ ${OBJCOPY}                                     \
   -O binary ${PLATFORM_DIRECTORY}/sweetada.bin
 # elaborate a SweetAda VHDL source
 cd ${PLATFORM_DIRECTORY}
-"${IMAGE_GEN}" -app_img sweetada.bin sweetada.vhd
-# install the SweetAda VHDL source
-cp -f sweetada.vhd "${NEORV32_RTL_PATH}"/${APP_IMG}
+"${IMAGE_GEN}" -app_img sweetada.bin "${NEORV32_RTL_PATH}"/${APP_IMG}
 # run the simulation
 PATH=${GHDL_PATH}/bin:${PATH} xterm                \
   -T "NEORV32" -geometry 132x50 -bg blue -fg white \
