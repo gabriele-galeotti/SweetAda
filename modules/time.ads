@@ -47,27 +47,45 @@ package Time is
    Day_Of_Week : constant array (Natural range 1 .. 7) of String (1 .. 3) :=
       ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-   function Date2Days (
-                       D : Natural;
-                       M : Natural;
-                       Y : Natural
-                      ) return Natural;
+   ----------------------------------------------------------------------------
+   -- Compute the number of days since 1970-01-01.
+   -- D, M, Y in standard format.
+   ----------------------------------------------------------------------------
+   function Date2Days
+      (D : Natural;
+       M : Natural;
+       Y : Natural)
+      return Natural;
 
-   function NDay_Of_Week (
-                          D : Natural;
-                          M : Natural;
-                          Y : Natural
-                         ) return Natural;
+   ----------------------------------------------------------------------------
+   -- Given a date, output the day of the week as an index to be used with
+   -- Day_Of_Week array. Exploit 1970-01-01 = Thursday.
+   -- D, M, Y in standard format.
+   ----------------------------------------------------------------------------
+   function NDay_Of_Week
+      (D : Natural;
+       M : Natural;
+       Y : Natural)
+      return Natural;
 
-   function Make_Time (
-                       Year : Positive;
-                       Mon  : Positive;
-                       Day  : Positive;
-                       Hour : Natural;
-                       Min  : Natural;
-                       Sec  : Natural
-                      ) return Natural;
+   ----------------------------------------------------------------------------
+   -- Convert Gregorian date since 1970-01-01 00:00:00 to seconds.
+   -- Assume input in normal date format, i.e. 1980-12-31 23:59:59.
+   ----------------------------------------------------------------------------
+   function Make_Time
+      (Year : Positive;
+       Mon  : Positive;
+       Day  : Positive;
+       Hour : Natural;
+       Min  : Natural;
+       Sec  : Natural)
+      return Natural;
 
-   procedure Make_Time (T : in Unsigned_32; TM : out TM_Time);
+   ----------------------------------------------------------------------------
+   -- Convert number of seconds since 1970-01-01 00:00:00 to date.
+   ----------------------------------------------------------------------------
+   procedure Make_Time
+      (T  : in     Unsigned_32;
+       TM :    out TM_Time);
 
 end Time;
