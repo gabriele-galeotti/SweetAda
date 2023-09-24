@@ -34,7 +34,7 @@ package Memory_Functions is
 
    ----------------------------------------------------------------------------
    -- C-style function subprograms, with the same semantics and argument order
-   -- (destination address first)
+   -- (destination address first).
    ----------------------------------------------------------------------------
 
    function Memcmp
@@ -67,7 +67,7 @@ package Memory_Functions is
 
    ----------------------------------------------------------------------------
    -- C-style procedure subprograms with inverted arguments (source address
-   -- first)
+   -- first).
    ----------------------------------------------------------------------------
 
    procedure Cmpmem

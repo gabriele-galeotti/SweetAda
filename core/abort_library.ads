@@ -29,9 +29,20 @@ package Abort_Library is
 
    pragma Preelaborate;
 
+   ----------------------------------------------------------------------------
+   -- System_Abort (parameterless)
+   ----------------------------------------------------------------------------
+   -- This subprogram may be called by the C Library.
+   ----------------------------------------------------------------------------
    procedure System_Abort
       with No_Return => True;
 
+   ----------------------------------------------------------------------------
+   -- System_Abort (parameterized)
+   ----------------------------------------------------------------------------
+   -- This subprogram is called by the standard, not-overriden, version of
+   -- Last_Chance_handler and all the subprograms in GNAT_Exceptions.
+   ----------------------------------------------------------------------------
    procedure System_Abort
       (File    : in System.Address;
        Line    : in Integer;

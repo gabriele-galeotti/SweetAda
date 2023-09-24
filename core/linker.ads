@@ -30,7 +30,7 @@ package Linker is
    pragma Pure;
 
    ----------------------------------------------------------------------------
-   -- Memory areas imported from linker
+   -- Memory areas imported from linker.
    ----------------------------------------------------------------------------
 
    SText : constant Bits.Asm_Entry_Point
