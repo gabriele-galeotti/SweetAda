@@ -147,24 +147,24 @@ LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.ali))
 #                                                                              #
 ################################################################################
 
-.PHONY : all
+.PHONY: all
 ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_DIRECTORIES_SKIP)),)
-all :
+all:
 	$(info *** Skipping target "all" for multilib directory "$(MULTILIB_DIRECTORY)".)
 else
-all : configure-rts configure-rts-target multilib
+all: configure-rts configure-rts-target multilib
 endif
 
-.PHONY : configure
+.PHONY: configure
 ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_DIRECTORIES_SKIP)),)
-configure :
+configure:
 	$(info *** Skipping target "configure" for multilib directory "$(MULTILIB_DIRECTORY)".)
 else
-configure : createdirectories configure-rts configure-rts-target
+configure: createdirectories configure-rts configure-rts-target
 endif
 
-.PHONY : configure-rts
-configure-rts :
+.PHONY: configure-rts
+configure-rts:
 ifeq ($(OSTYPE),cmd)
 	@FOR %%F IN ($(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON)) DO               \
           @ECHO OFF &&                                                                \
@@ -187,8 +187,8 @@ else
         done
 endif
 
-.PHONY : configure-rts-target
-configure-rts-target :
+.PHONY: configure-rts-target
+configure-rts-target:
 ifeq ($(OSTYPE),cmd)
 	@FOR %%F IN ($(LIBGNAT_SRCS_TARGET) $(LIBGNARL_SRCS_TARGET)) DO                      \
           @ECHO OFF &&                                                                       \
@@ -213,8 +213,8 @@ else
 	$(CP) $(RTS_SOURCE_PATH_TARGET)/rts.cs.in $(RTS)/$(TOOLCHAIN_NAME)/
 endif
 
-.PHONY : createdirectories
-createdirectories :
+.PHONY: createdirectories
+createdirectories:
 ifeq ($(OSTYPE),cmd)
 	@IF EXIST $(ADAINCLUDE_PATH_CMD)\ $(RMDIR) $(ADAINCLUDE_PATH_CMD)\ $(NULL)
 	@$(MKDIR) $(ADAINCLUDE_PATH_CMD)
@@ -227,24 +227,24 @@ else
 	@$(MKDIR) $(ADALIB_PATH)
 endif
 
-.PHONY : multilib
+.PHONY: multilib
 ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_DIRECTORIES_SKIP)),)
-multilib :
+multilib:
 	$(info *** Skipping target "multilib" for multilib directory "$(MULTILIB_DIRECTORY)".)
 else
-multilib : $(LIBGNAT) $(LIBGNARL) clean-objs
+multilib: $(LIBGNAT) $(LIBGNARL) clean-objs
 endif
 
-$(LIBGNAT) : $(LIBGNAT_OBJS)
+$(LIBGNAT): $(LIBGNAT_OBJS)
 	$(AR) cr $@ $(LIBGNAT_OBJS)
 	$(RANLIB) $@
 
-$(LIBGNARL) : $(LIBGNARL_OBJS)
+$(LIBGNARL): $(LIBGNARL_OBJS)
 	$(AR) cr $@ $(LIBGNARL_OBJS)
 	$(RANLIB) $@
 
-.PHONY : clean-objs
-clean-objs :
+.PHONY: clean-objs
+clean-objs:
 ifeq ($(OSTYPE),cmd)
 	@$(RM) $(ADALIB_PATH_CMD)\*.o
 else
@@ -257,12 +257,12 @@ endif
 -include $(RTS_SOURCE_PATH_TARGET)/Makefile.in
 
 # Ada sources generic rules
-$(ADALIB_PATH)/%.o : $(ADAINCLUDE_PATH)/%.adb
+$(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.adb
 	$(ADAC) -o $@ -c -g -O2 $(ADAC_SWITCHES) $<
-$(ADALIB_PATH)/%.o : $(ADAINCLUDE_PATH)/%.ads
+$(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.ads
 	$(ADAC) -o $@ -c -g -O2 $(ADAC_SWITCHES) $<
 
 # C sources generic rules
-$(ADALIB_PATH)/%.o : $(ADAINCLUDE_PATH)/%.c
+$(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.c
 	$(CC) -o $@ -c -g -O2 $(CC_SWITCHES) $<
 

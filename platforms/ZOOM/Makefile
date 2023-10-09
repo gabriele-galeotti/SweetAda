@@ -42,24 +42,24 @@ OBJECTS += $(OBJ_DIRECTORY)/llkernel.o
 
 -include Makefile.if.in
 
-.PHONY : all
-all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+.PHONY: all
+all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : installfiles
-installfiles :
+.PHONY: installfiles
+installfiles:
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
 	@$(CREATESYMLINK) -v -m Makefile.if.in platform-$(SUBPLATFORM) .
 	@$(call echo-print,"installfiles: done")
 	@$(call echo-print,"")
 
-.PHONY : configure
-configure :
+.PHONY: configure
+configure:
 	@$(CREATESYMLINK) $(GNATADC_FILENAME_TARGET) $(GNATADC_FILENAME)
 	@$(PROCESSCFG) configure.h.in configure.h
 	@$(PROCESSCFG) configure.ads.in configure.ads
 
-.PHONY : postbuild
-postbuild :
+.PHONY: postbuild
+postbuild:
 	$(REM) dBUG S-record download
 	$(call brief-command, \
         $(OBJCOPY) -O srec $(SWEETADA_PATH)/$(KERNEL_OUTFILE) $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec \
@@ -68,12 +68,12 @@ ifneq ($(OSTYPE),cmd)
 	@chmod a-x $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec
 endif
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON)           \
               configure.h configure.ads             \
               $(INSTALLED_FILENAMES) Makefile.if.in

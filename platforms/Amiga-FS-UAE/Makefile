@@ -40,32 +40,32 @@ OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
 
 -include Makefile.if.in
 
-.PHONY : all
-all : $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
+.PHONY: all
+all: $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : installfiles
-installfiles :
+.PHONY: installfiles
+installfiles:
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
 	@$(CREATESYMLINK) -v -m Makefile.if.in platform-$(SUBPLATFORM) .
 	@$(call echo-print,"installfiles: done")
 	@$(call echo-print,"")
 	@$(PROCESSCFG) fs-uae.conf.in fs-uae.conf
 
-.PHONY : configure
-configure :
+.PHONY: configure
+configure:
 	@$(CREATESYMLINK) $(GNATADC_FILENAME_TARGET) $(GNATADC_FILENAME)
 	@$(PROCESSCFG) configure.h.in configure.h
 	@$(PROCESSCFG) configure.ads.in configure.ads
 
-.PHONY : postbuild
-postbuild :
+.PHONY: postbuild
+postbuild:
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON) debug.uae fs-uae.log.txt
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON)           \
               fs-uae.conf configure.h configure.ads \
               $(INSTALLED_FILENAMES) Makefile.if.in

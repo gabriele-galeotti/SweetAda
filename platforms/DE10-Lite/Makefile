@@ -38,25 +38,25 @@ LIBRARY_NAME := platform
 
 OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
 
-.PHONY : all
-all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+.PHONY: all
+all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : configure
-configure :
+.PHONY: configure
+configure:
 	@$(CREATESYMLINK) $(GNATADC_FILENAME_TARGET) $(GNATADC_FILENAME)
 	@$(PROCESSCFG) configure.h.in configure.h
 	@$(PROCESSCFG) configure.ads.in configure.ads
 	@$(PYTHON) design_parser.py $(QSYS_FILE) Quartus $(QSYS_IO_LIST)
 
-.PHONY : postbuild
-postbuild :
+.PHONY: postbuild
+postbuild:
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) configure.h configure.ads
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in

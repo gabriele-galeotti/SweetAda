@@ -29,7 +29,7 @@
 #                                                                              #
 ################################################################################
 
-.POSIX :
+.POSIX:
 
 .DEFAULT_GOAL := help
 
@@ -751,8 +751,8 @@ endif
 # Default target.
 #
 
-.PHONY : help
-help :
+.PHONY: help
+help:
 	@$(call echo-print,"make help (default)")
 	@$(call echo-print,"  Display an help about make targets.")
 	@$(call echo-print,"make RTS=<rts> CPU=<cpu> TOOLCHAIN_NAME=<toolchain_name> rts")
@@ -766,7 +766,8 @@ help :
 	@$(call echo-print,"make $(KERNEL_BASENAME)")
 	@$(call echo-print,"  Build the kernel binary output file '$(KERNEL_OUTFILE)'.")
 	@$(call echo-print,"make postbuild")
-	@$(call echo-print,"  Perform platform-specific finalizations and create a physical kernel file '$(KERNEL_ROMFILE)'.")
+	@$(call echo-print,"  Perform platform-specific finalizations \
+                              and create a physical kernel file '$(KERNEL_ROMFILE)'.")
 	@$(call echo-print,"make session-start")
 	@$(call echo-print,"  Perform session start activities.")
 	@$(call echo-print,"make session-end activities")
@@ -813,24 +814,24 @@ endif
 # Compile phase.
 #
 
-.PHONY : FORCE
-FORCE :
+.PHONY: FORCE
+FORCE:
 
-$(OBJECT_DIRECTORY)/libcore.a : FORCE
+$(OBJECT_DIRECTORY)/libcore.a: FORCE
 	$(MAKE) $(MAKE_CORE) all
 
-$(OBJECT_DIRECTORY)/libcpu.a : FORCE
+$(OBJECT_DIRECTORY)/libcpu.a: FORCE
 	$(MAKE) $(MAKE_CPU) all
 
-$(OBJECT_DIRECTORY)/libplatform.a : FORCE
+$(OBJECT_DIRECTORY)/libplatform.a: FORCE
 	$(MAKE) $(MAKE_PLATFORM) all
 
-$(CLIBRARY_OBJECT) : FORCE
+$(CLIBRARY_OBJECT): FORCE
 ifeq ($(USE_CLIBRARY),Y)
 	$(MAKE) $(MAKE_CLIBRARY) all
 endif
 
-$(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME) : FORCE
+$(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME): FORCE
 ifeq      ($(BUILD_MODE),GNATMAKE)
 	@$(REM) perform GNATMAKE-driven procedure
 	$(call brief-command, \
@@ -854,11 +855,11 @@ endif
 # Bind phase.
 #
 
-$(OBJECT_DIRECTORY)/b__main.adb : $(OBJECT_DIRECTORY)/libcore.a          \
-                                  $(OBJECT_DIRECTORY)/libcpu.a           \
-                                  $(OBJECT_DIRECTORY)/libplatform.a      \
-                                  $(CLIBRARY_OBJECT)                     \
-                                  $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME)
+$(OBJECT_DIRECTORY)/b__main.adb: $(OBJECT_DIRECTORY)/libcore.a          \
+                                 $(OBJECT_DIRECTORY)/libcpu.a           \
+                                 $(OBJECT_DIRECTORY)/libplatform.a      \
+                                 $(CLIBRARY_OBJECT)                     \
+                                 $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME)
 	@$(REM) bind all units and generate b__main
 ifeq      ($(BUILD_MODE),GNATMAKE)
 	$(call brief-command, \
@@ -903,7 +904,7 @@ endif
 # Compile the binder-generated source file.
 #
 
-$(OBJECT_DIRECTORY)/b__main.o : $(OBJECT_DIRECTORY)/b__main.adb
+$(OBJECT_DIRECTORY)/b__main.o: $(OBJECT_DIRECTORY)/b__main.adb
 	@$(REM) compile the main program, incorporating the given elaboration order
 ifeq      ($(BUILD_MODE),GNATMAKE)
 ifeq ($(OSTYPE),cmd)
@@ -939,11 +940,11 @@ endif
 #
 
 ifeq ($(NOBUILD),Y)
-$(KERNEL_OUTFILE) :
+$(KERNEL_OUTFILE):
 else
-$(KERNEL_OUTFILE) : $(GNATADC_FILENAME) $(CONFIGUREGPR_FILENAME) \
-                    $(OBJECT_DIRECTORY)/b__main.o                \
-                    $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
+$(KERNEL_OUTFILE): $(GNATADC_FILENAME) $(CONFIGUREGPR_FILENAME) \
+                   $(OBJECT_DIRECTORY)/b__main.o                \
+                   $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
 endif
 	@$(REM) link phase
 	$(call brief-command, \
@@ -987,8 +988,8 @@ endif
 # Auxiliary targets.
 #
 
-.PHONY : kernel_lib_obj_dir
-kernel_lib_obj_dir :
+.PHONY: kernel_lib_obj_dir
+kernel_lib_obj_dir:
 ifeq ($(OSTYPE),cmd)
 	@IF NOT EXIST $(LIBRARY_DIRECTORY)\ $(MKDIR) $(LIBRARY_DIRECTORY)
 	@IF NOT EXIST $(OBJECT_DIRECTORY)\ $(MKDIR) $(OBJECT_DIRECTORY)
@@ -997,8 +998,8 @@ else
 	@$(MKDIR) $(OBJECT_DIRECTORY)
 endif
 
-.PHONY : kernel_start
-kernel_start :
+.PHONY: kernel_start
+kernel_start:
 ifeq ($(GCC_VERSION),)
 	$(error Error: no valid toolchain)
 endif
@@ -1009,57 +1010,57 @@ endif
 	@$(call echo-print,"$(PLATFORM): start kernel build.")
 	@$(call echo-print,"")
 
-.PHONY : kernel_end
-kernel_end :
+.PHONY: kernel_end
+kernel_end:
 	@$(call echo-print,"$(PLATFORM): kernel compiled successfully.")
 	@$(call echo-print,"")
 
 $(KERNEL_BASENAME).lst     \
 $(KERNEL_BASENAME).src.lst \
-$(KERNEL_BASENAME).elf.lst : $(KERNEL_OUTFILE)
+$(KERNEL_BASENAME).elf.lst: $(KERNEL_OUTFILE)
 
 libgnat.lst      \
 libgnat.elf.lst  \
 libgnarl.lst     \
-libgnarl.elf.lst : $(KERNEL_OUTFILE)
+libgnarl.elf.lst: $(KERNEL_OUTFILE)
 	@$(OBJDUMP) -Sdx $(LIBGNAT_OBJECT) > libgnat.lst
 	@$(READELF) $(LIBGNAT_OBJECT) > libgnat.elf.lst
 	@$(OBJDUMP) -Sdx $(LIBGNARL_OBJECT) > libgnarl.lst
 	@$(READELF) $(LIBGNARL_OBJECT) > libgnarl.elf.lst
 
 libgcc.lst     \
-libgcc.elf.lst : $(KERNEL_OUTFILE)
+libgcc.elf.lst: $(KERNEL_OUTFILE)
 	@$(OBJDUMP) -Sdx $(LIBGCC_OBJECT) > libgcc.lst
 	@$(READELF) $(LIBGCC_OBJECT) > libgcc.elf.lst
 
-.PHONY : kernel_libinfo
-kernel_libinfo :
+.PHONY: kernel_libinfo
+kernel_libinfo:
 ifeq ($(USE_LIBADA),Y)
-kernel_libinfo : libgnat.lst libgnat.elf.lst libgnarl.lst libgnarl.elf.lst
+kernel_libinfo: libgnat.lst libgnat.elf.lst libgnarl.lst libgnarl.elf.lst
 endif
 ifeq ($(USE_LIBGCC),Y)
-kernel_libinfo : libgcc.lst libgcc.elf.lst
+kernel_libinfo: libgcc.lst libgcc.elf.lst
 endif
 
-.PHONY : kernel_info
-kernel_info : kernel_libinfo             \
-              $(KERNEL_BASENAME).lst     \
-              $(KERNEL_BASENAME).src.lst \
-              $(KERNEL_BASENAME).elf.lst
+.PHONY: kernel_info
+kernel_info: kernel_libinfo             \
+             $(KERNEL_BASENAME).lst     \
+             $(KERNEL_BASENAME).src.lst \
+             $(KERNEL_BASENAME).elf.lst
 
 #
 # Main targets.
 #
 
-.PHONY : $(KERNEL_BASENAME)
-$(KERNEL_BASENAME) : $(KERNEL_OUTFILE)
+.PHONY: $(KERNEL_BASENAME)
+$(KERNEL_BASENAME): $(KERNEL_OUTFILE)
 
-.PHONY : all
-all : kernel_start       \
-      kernel_lib_obj_dir \
-      $(KERNEL_BASENAME) \
-      kernel_end         \
-      kernel_info
+.PHONY: all
+all: kernel_start       \
+     kernel_lib_obj_dir \
+     $(KERNEL_BASENAME) \
+     kernel_end         \
+     kernel_info
 
 #
 # Configuration targets.
@@ -1067,8 +1068,8 @@ all : kernel_start       \
 
 # create KERNEL_CFGFILE file and eventually install subplatform-dependent
 # files (subsequent "configure" phase needs all target files in place)
-.PHONY : createkernelcfg
-createkernelcfg : distclean
+.PHONY: createkernelcfg
+createkernelcfg: distclean
 ifneq ($(PLATFORM),)
 	@$(RM) $(KERNEL_CFGFILE)
 	@$(TOUCH) $(KERNEL_CFGFILE)
@@ -1087,33 +1088,33 @@ else
 	$(error Error: no valid PLATFORM, configuration not created)
 endif
 
-.PHONY : configure-start
-configure-start :
+.PHONY: configure-start
+configure-start:
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): start configuration.")
 	@$(call echo-print,"")
 
-.PHONY : configure-gnatadc
-configure-gnatadc : $(GNATADC_FILENAME)
+.PHONY: configure-gnatadc
+configure-gnatadc: $(GNATADC_FILENAME)
 
-$(GNATADC_FILENAME) : configuration.in                       \
-                      $(PLATFORM_DIRECTORY)/configuration.in
+$(GNATADC_FILENAME): configuration.in                       \
+                     $(PLATFORM_DIRECTORY)/configuration.in
 	$(MAKE) clean
 	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
 
-.PHONY : configure-gpr
-configure-gpr : $(CONFIGUREGPR_FILENAME)
+.PHONY: configure-gpr
+configure-gpr: $(CONFIGUREGPR_FILENAME)
 
-$(CONFIGUREGPR_FILENAME) : configuration.in                       \
-                           gprbuild_st.gpr                        \
-                           gprbuild_tc.gpr                        \
-                           gprbuild_wr.gpr                        \
-                           $(PLATFORM_DIRECTORY)/configuration.in
+$(CONFIGUREGPR_FILENAME): configuration.in                       \
+                          gprbuild_st.gpr                        \
+                          gprbuild_tc.gpr                        \
+                          gprbuild_wr.gpr                        \
+                          $(PLATFORM_DIRECTORY)/configuration.in
 	$(MAKE) clean
 	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
 
-.PHONY : configure-subdirs
-configure-subdirs :
+.PHONY: configure-subdirs
+configure-subdirs:
 	@$(MAKE) $(MAKE_APPLICATION) configure
 	@$(MAKE) $(MAKE_CLIBRARY) configure
 	@$(MAKE) $(MAKE_CORE) configure
@@ -1122,21 +1123,21 @@ configure-subdirs :
 	@$(MAKE) $(MAKE_MODULES) configure
 	@$(MAKE) $(MAKE_PLATFORM) configure
 
-.PHONY : configure-end
-configure-end :
+.PHONY: configure-end
+configure-end:
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): configuration completed.")
 	@$(call echo-print,"")
 
-.PHONY : configure-aux
-configure-aux : configure-start   \
-                configure-gnatadc \
-                configure-gpr     \
-                configure-subdirs \
-                configure-end
+.PHONY: configure-aux
+configure-aux: configure-start   \
+               configure-gnatadc \
+               configure-gpr     \
+               configure-subdirs \
+               configure-end
 
-.PHONY : infodump
-infodump :
+.PHONY: infodump
+infodump:
 	@$(call echo-print,"Configuration parameters:")
 	@$(call echo-print,"PLATFORM:                $(PLATFORM)")
 ifneq ($(SUBPLATFORM),)
@@ -1196,8 +1197,8 @@ ifneq ($(EXTERNAL_OBJECTS),)
 endif
 	@$(call echo-print,"")
 
-.PHONY : configure
-configure : clean configure-aux infodump
+.PHONY: configure
+configure: clean configure-aux infodump
 
 #
 # KERNEL_ROMFILE/postbuild/session-start/session-end/run/debug targets.
@@ -1205,8 +1206,8 @@ configure : clean configure-aux infodump
 # Commands are executed with current directory = SWEETADA_PATH.
 #
 
-.PHONY : debug_notify_off
-debug_notify_off : $(KERNEL_OUTFILE)
+.PHONY: debug_notify_off
+debug_notify_off: $(KERNEL_OUTFILE)
 ifeq ($(USE_ELFTOOL),Y)
 	@$(REM) patch Debug_Flag := False
 	$(call brief-command, \
@@ -1214,8 +1215,8 @@ ifeq ($(USE_ELFTOOL),Y)
         ,[ELFTOOL],Debug_Flag: 0)
 endif
 
-.PHONY : debug_notify_on
-debug_notify_on : $(KERNEL_OUTFILE)
+.PHONY: debug_notify_on
+debug_notify_on: $(KERNEL_OUTFILE)
 ifeq ($(USE_ELFTOOL),Y)
 	@$(REM) patch Debug_Flag := True
 	$(call brief-command, \
@@ -1223,7 +1224,7 @@ ifeq ($(USE_ELFTOOL),Y)
         ,[ELFTOOL],Debug_Flag: 1)
 endif
 
-$(KERNEL_ROMFILE) : $(KERNEL_OUTFILE)
+$(KERNEL_ROMFILE): $(KERNEL_OUTFILE)
 ifeq ($(POSTBUILD_ROMFILE),Y)
 	$(call brief-command, \
         $(OBJCOPY) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE) \
@@ -1233,28 +1234,28 @@ ifneq ($(OSTYPE),cmd)
 endif
 endif
 
-.PHONY : postbuild
-postbuild : $(KERNEL_ROMFILE)
+.PHONY: postbuild
+postbuild: $(KERNEL_ROMFILE)
 	@$(MAKE) $(MAKE_PLATFORM) postbuild
 
-.PHONY : session-start
-session-start :
+.PHONY: session-start
+session-start:
 ifneq ($(SESSION_START_COMMAND),)
 	-$(SESSION_START_COMMAND)
 else
 	$(error Error: no SESSION_START_COMMAND defined)
 endif
 
-.PHONY : session-end
-session-end :
+.PHONY: session-end
+session-end:
 ifneq ($(SESSION_END_COMMAND),)
 	-$(SESSION_END_COMMAND)
 else
 	$(error Error: no SESSION_END_COMMAND defined)
 endif
 
-.PHONY : run
-run : debug_notify_off
+.PHONY: run
+run: debug_notify_off
 	$(MAKE) NOBUILD=Y postbuild
 ifneq ($(RUN_COMMAND),)
 	-$(RUN_COMMAND)
@@ -1262,8 +1263,8 @@ else
 	$(error Error: no RUN_COMMAND defined)
 endif
 
-.PHONY : debug
-debug : debug_notify_on
+.PHONY: debug
+debug: debug_notify_on
 	$(MAKE) NOBUILD=Y postbuild
 ifneq ($(DEBUG_COMMAND),)
 	-$(DEBUG_COMMAND)
@@ -1275,8 +1276,8 @@ endif
 # RTS.
 #
 
-.PHONY : rts
-rts :
+.PHONY: rts
+rts:
 ifeq ($(OSTYPE),cmd)
 	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
           (                                                                  \
@@ -1299,8 +1300,8 @@ endif
 # Cleaning targets.
 #
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean
 	$(MAKE) $(MAKE_CORE) clean
@@ -1313,16 +1314,21 @@ ifneq ($(PLATFORM),)
 	$(MAKE) $(MAKE_PLATFORM) clean
 endif
 ifeq ($(OSTYPE),cmd)
-	-IF EXIST $(LIBRARY_DIRECTORY)\ $(CD) $(LIBRARY_DIRECTORY) && $(RM) *.*
-	-IF EXIST $(OBJECT_DIRECTORY)\ $(CD) $(OBJECT_DIRECTORY) && $(RM) *.* && $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
+	-IF EXIST $(LIBRARY_DIRECTORY)\ \
+          $(CD) $(LIBRARY_DIRECTORY) && \
+          $(RM) *.*
+	-IF EXIST $(OBJECT_DIRECTORY)\                \
+          $(CD) $(OBJECT_DIRECTORY)                && \
+          $(RM) *.*                                && \
+          $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
 else
 	-$(RM) $(LIBRARY_DIRECTORY)/*
 	-$(RMDIR) $(OBJECT_DIRECTORY)/*
 endif
 	-$(RM) $(CLEAN_OBJECTS)
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(MAKE) $(MAKE_APPLICATION) distclean
 	$(MAKE) $(MAKE_CLIBRARY) distclean
 	$(MAKE) $(MAKE_CORE) distclean
@@ -1347,18 +1353,18 @@ endif
 #
 # Libutils tools.
 #
-.PHONY : libutils-elftool
-libutils-elftool :
+.PHONY: libutils-elftool
+libutils-elftool:
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool install
-.PHONY : libutils-gcc-wrapper
-libutils-gcc-wrapper :
+.PHONY: libutils-gcc-wrapper
+libutils-gcc-wrapper:
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper install
-.PHONY : libutils-gnat-wrapper
-libutils-gnat-wrapper :
+.PHONY: libutils-gnat-wrapper
+libutils-gnat-wrapper:
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper install
@@ -1369,8 +1375,8 @@ libutils-gnat-wrapper :
 FREEZE_DIRECTORY    := freeze
 FILES_TO_BE_FREEZED :=
 -include $(FREEZE_DIRECTORY)/Makefile.fz.in
-.PHONY : freeze
-freeze :
+.PHONY: freeze
+freeze:
 ifneq ($(FILES_TO_BE_FREEZED),)
 ifeq ($(OSTYPE),cmd)
 	-$(CP) $(FILES_TO_BE_FREEZED) $(FREEZE_DIRECTORY)\ $(NULL)
@@ -1385,7 +1391,7 @@ endif
 # Example:
 # $ VERBOSE= PROBEVARIABLE="PLATFORMS" make probevariable 2> /dev/null
 #
-.PHONY : probevariable
-probevariable :
+.PHONY: probevariable
+probevariable:
 	@$(call echo-print,"$($(PROBEVARIABLE))")
 

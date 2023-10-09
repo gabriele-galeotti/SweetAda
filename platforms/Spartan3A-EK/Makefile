@@ -40,26 +40,26 @@ OBJECTS :=
 OBJECTS += $(OBJ_DIRECTORY)/startup.o
 OBJECTS += $(OBJ_DIRECTORY)/llkernel.o
 
-.PHONY : all
-all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+.PHONY: all
+all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : configure
-configure :
+.PHONY: configure
+configure:
 	@$(CREATESYMLINK) $(GNATADC_FILENAME_TARGET) $(GNATADC_FILENAME)
 	@$(PROCESSCFG) configure.h.in configure.h
 	@$(PROCESSCFG) configure.ads.in configure.ads
 
-.PHONY : postbuild
-postbuild :
+.PHONY: postbuild
+postbuild:
 	$(REM) bitstream file must have .elf extension
 	$(CP) $(KERNEL_PARENT_PATH)/$(KERNEL_OUTFILE) $(KERNEL_PARENT_PATH)/$(KERNEL_BASENAME).elf
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) configure.h configure.ads download.bit*
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in

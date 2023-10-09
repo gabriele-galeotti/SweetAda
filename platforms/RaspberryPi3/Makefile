@@ -40,17 +40,17 @@ OBJECTS :=
 OBJECTS += $(OBJ_DIRECTORY)/startup.o
 OBJECTS += $(OBJ_DIRECTORY)/llkernel.o
 
-.PHONY : all
-all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+.PHONY: all
+all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : configure
-configure :
+.PHONY: configure
+configure:
 	@$(CREATESYMLINK) $(GNATADC_FILENAME_TARGET) $(GNATADC_FILENAME)
 	@$(PROCESSCFG) configure.h.in configure.h
 	@$(PROCESSCFG) configure.ads.in configure.ads
 
-.PHONY : postbuild
-postbuild :
+.PHONY: postbuild
+postbuild:
 	$(call brief-command, \
         $(OBJCOPY)                                               \
                    -j .romstartup -j .text -j .data              \
@@ -62,12 +62,12 @@ ifneq ($(OSTYPE),cmd)
 	@chmod a-x $(KERNEL_PARENT_PATH)/$(KERNEL_BASENAME).srec
 endif
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON) config.txt
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) configure.h configure.ads
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in

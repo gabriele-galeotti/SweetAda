@@ -36,18 +36,18 @@ LIBRARY_NAME := drivers
 
 OBJECTS :=
 
-.PHONY : all
-all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+.PHONY: all
+all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : configure
-configure :
+.PHONY: configure
+configure:
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in

@@ -37,8 +37,10 @@ endif
 LIBRARY_NAME := cpu
 
 OBJECTS :=
+
 # force inclusion of not-explicit-referenced subprograms
 OBJECTS += $(OBJ_DIRECTORY)/unwind.o
+
 ifneq ($(USE_LIBGCC),Y)
 LIB1ASMSRC       := lib1funcs.S
 LIBGCC_FUNCTIONS := divsi3 dvmd_tls udivsi3 muldi3
@@ -52,22 +54,22 @@ endif
 
 -include Makefile.if.in
 
-.PHONY : all
-all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+.PHONY: all
+all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : configure
-configure : $(LIBGCC_SOURCES)
+.PHONY: configure
+configure: $(LIBGCC_SOURCES)
 	@$(CREATESYMLINK) $(GNATADC_FILENAME_TARGET) $(GNATADC_FILENAME)
 ifneq ($(CPU_SUPPORT_DEFLIST),)
 	@$(CREATESYMLINK) -v -m Makefile.if.in $(CPU_SUPPORT_DEFLIST)
 endif
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) $(INSTALLED_FILENAMES) Makefile.if.in
 ifneq ($(USE_LIBGCC),Y)
 	$(RM) $(LIBGCC_SOURCES)

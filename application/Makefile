@@ -15,18 +15,18 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
-.PHONY : configure
-configure :
+.PHONY: configure
+configure:
 ifneq ($(USE_APPLICATION),)
 	@$(CREATESYMLINK) $(USE_APPLICATION).ads application.ads
 	@$(CREATESYMLINK) $(USE_APPLICATION).adb application.adb
 endif
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) application.ad*
 

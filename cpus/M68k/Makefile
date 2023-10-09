@@ -37,6 +37,7 @@ endif
 LIBRARY_NAME := cpu
 
 OBJECTS :=
+
 ifneq ($(USE_LIBGCC),Y)
 LIB1ASMSRC       := lb1sf68.S
 LIBGCC_FUNCTIONS := mulsi3 divsi3 udivsi3 modsi3 umodsi3
@@ -48,19 +49,19 @@ $(LIBGCC_SOURCES) : %.S : $(LIB1ASMSRC)
         ,[CPP],$@)
 endif
 
-.PHONY : all
-all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+.PHONY: all
+all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : configure
-configure : $(LIBGCC_SOURCES)
+.PHONY: configure
+configure: $(LIBGCC_SOURCES)
 	@$(CREATESYMLINK) $(GNATADC_FILENAME_TARGET) $(GNATADC_FILENAME)
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 ifneq ($(USE_LIBGCC),Y)
 	$(RM) $(LIBGCC_SOURCES)

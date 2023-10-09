@@ -36,7 +36,8 @@ endif
 
 LIBRARY_NAME := cpu
 
-OBJECTS        :=
+OBJECTS :=
+
 ifneq ($(USE_LIBGCC),Y)
 LIBGCC_SOURCES := div.S
 OBJECTS        += $(LIBGCC_SOURCES:%.S=$(OBJ_DIRECTORY)/%.o)
@@ -44,22 +45,22 @@ endif
 
 -include Makefile.if.in
 
-.PHONY : all
-all : $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+.PHONY: all
+all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY : configure
-configure :
+.PHONY: configure
+configure:
 	@$(CREATESYMLINK) $(GNATADC_FILENAME_TARGET) $(GNATADC_FILENAME)
 ifneq ($(CPU_SUPPORT_DEFLIST),)
 	@$(CREATESYMLINK) -v -m Makefile.if.in $(CPU_SUPPORT_DEFLIST)
 endif
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
-.PHONY : distclean
-distclean : clean
+.PHONY: distclean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) $(INSTALLED_FILENAMES) Makefile.if.in
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
