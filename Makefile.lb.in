@@ -33,6 +33,7 @@
 # GNATMAKE_DEPEND
 # GCC_WRAPPER_TIMESTAMP_FILENAME
 # GNAT_WRAPPER_TIMESTAMP_FILENAME
+# GPRBUILD_ENABLE_<LIBRARY_NAME>
 #
 
 #
@@ -69,7 +70,7 @@ else
 GCC_SWITCHES_LIBRARY :=
 endif
 
-$(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
+$(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a: $(OBJECTS)
 	$(call brief-command,\
         $(AR) cr $@ $(OBJECTS) \
         ,[AR],$(notdir $@))
@@ -77,9 +78,9 @@ $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a : $(OBJECTS)
         $(RANLIB) $@ \
         ,[RANLIB],$(notdir $@))
 
-%.o : %.adb
-%.o : %.ads
-$(OBJ_DIRECTORY)/%.o : %.adb $(DEP_DIRECTORY)/%.d
+%.o: %.adb
+%.o: %.ads
+$(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
         $(GNATMAKE)                             \
                     -gnatec=$(GNATADC_FILENAME) \
@@ -111,7 +112,7 @@ endif
 	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
-$(OBJ_DIRECTORY)/%.o : %.ads $(DEP_DIRECTORY)/%.d
+$(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
         $(GNATMAKE)                             \
                     -gnatec=$(GNATADC_FILENAME) \
@@ -144,9 +145,9 @@ endif
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
 
-%.o : %.S
-%.o : %.c
-$(OBJ_DIRECTORY)/%.o : %.S $(DEP_DIRECTORY)/%.d
+%.o: %.S
+%.o: %.c
+$(OBJ_DIRECTORY)/%.o: %.S $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
         $(CC)                            \
               -o $@                      \
@@ -183,7 +184,7 @@ else
 endif
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
-$(OBJ_DIRECTORY)/%.o : %.c $(DEP_DIRECTORY)/%.d
+$(OBJ_DIRECTORY)/%.o: %.c $(DEP_DIRECTORY)/%.d
 	$(call brief-command, \
         $(CC)                            \
               -o $@                      \
@@ -223,7 +224,7 @@ endif
 
 DEP_FILES := $(OBJECTS:%.o=%.d)
 
-$(DEP_FILES) :
+$(DEP_FILES):
 
 include $(wildcard $(DEP_FILES))
 
@@ -233,19 +234,36 @@ else ifeq ($(BUILD_MODE),GPRbuild)
 # GPRbuild
 #
 
+ifeq ($(OBJECTS)$(GPRBUILD_ENABLE_$(LIBRARY_NAME)),)
+
+$(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a:
+ifeq ($(OSTYPE),cmd)
+	$(call brief-command,\
+        $(TOUCH) $(LIB_DIRECTORY_CMD)\lib$(LIBRARY_NAME).a \
+        ,[NULL],$(notdir $@))
+else
+	$(call brief-command,\
+        $(TOUCH) $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a \
+        ,[NULL],$(notdir $@))
+endif
+
+else
+
 export GPR_INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
 
-.PHONY : FORCE
-FORCE :
+.PHONY: FORCE
+FORCE:
 
-$(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a : FORCE
+$(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a: FORCE
 	$(call brief-command,\
         $(GPRBUILD)                           \
                     -aP $(KERNEL_PARENT_PATH) \
                     -P $(LIBRARY_NAME).gpr    \
         ,[GPRBUILD-L],$(LIBRARY_NAME).gpr)
 
-$(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a : $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a
+endif
+
+$(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a: $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a
 ifeq ($(OSTYPE),cmd)
 	$(call brief-command,\
         $(CP) $(LIB_DIRECTORY_CMD)\lib$(LIBRARY_NAME).a $(OBJ_DIRECTORY_CMD)\ \

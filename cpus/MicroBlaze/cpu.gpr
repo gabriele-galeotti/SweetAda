@@ -26,7 +26,7 @@ library project Cpu is
    case Configure.Use_LibGCC is
       when "Y"    =>
          for Languages use ("Ada");
-         for Source_Files use ("libcpu.ads");
+         for Source_Files use ();
       when others =>
          for Languages use ("Asm_Cpp", "Ada");
          for Source_Files use (
