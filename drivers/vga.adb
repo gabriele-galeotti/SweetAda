@@ -304,20 +304,29 @@ package body VGA is
    -- Local subprograms
    ----------------------------------------------------------------------------
 
-   procedure SEQUENCER_Register_Write (R : in SEQUENCER_Register_Type; Value : in Unsigned_8);
-   procedure CRTC6845_Register_Read (R : in CRTC6845_Register_Type; Value : out Unsigned_8);
-   procedure CRTC6845_Register_Write (R : in CRTC6845_Register_Type; Value : in Unsigned_8);
+   procedure SEQUENCER_Register_Write
+      (R     : in SEQUENCER_Register_Type;
+       Value : in Unsigned_8);
+   procedure CRTC6845_Register_Read
+      (R     : in     CRTC6845_Register_Type;
+       Value :    out Unsigned_8);
+   procedure CRTC6845_Register_Write
+      (R     : in CRTC6845_Register_Type;
+       Value : in Unsigned_8);
    procedure CRTC6845_Registers_Lock;
    procedure CRTC6845_Registers_Unlock;
-   procedure GC_Register_Write (R : in GC_Register_Type; Value : in Unsigned_8);
-   procedure ATC_Register_Write (R : in ATC_Register_Type; Value : in Unsigned_8);
+   procedure GC_Register_Write
+      (R     : in GC_Register_Type;
+       Value : in Unsigned_8);
+   procedure ATC_Register_Write
+      (R     : in ATC_Register_Type;
+       Value : in Unsigned_8);
    procedure DAC_Init;
    procedure Load_Font;
-   procedure Draw_Pixel (
-                         X     : in Natural;
-                         Y     : in Natural;
-                         Color : in Unsigned_8
-                        );
+   procedure Draw_Pixel
+      (X     : in Natural;
+       Y     : in Natural;
+       Color : in Unsigned_8);
 
    --========================================================================--
    --                                                                        --
@@ -330,7 +339,10 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- SEQUENCER_Register_Write
    ----------------------------------------------------------------------------
-   procedure SEQUENCER_Register_Write (R : in SEQUENCER_Register_Type; Value : in Unsigned_8) is
+   procedure SEQUENCER_Register_Write
+      (R     : in SEQUENCER_Register_Type;
+       Value : in Unsigned_8)
+      is
    begin
       CPU.IO.PortOut (SEQUENCER_INDEX, Unsigned_8 (R));
       CPU.IO.PortOut (SEQUENCER_DATA, Value);
@@ -339,7 +351,10 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- CRTC6845_Register_Read
    ----------------------------------------------------------------------------
-   procedure CRTC6845_Register_Read (R : in CRTC6845_Register_Type; Value : out Unsigned_8) is
+   procedure CRTC6845_Register_Read
+      (R     : in     CRTC6845_Register_Type;
+       Value :    out Unsigned_8)
+      is
    begin
       CPU.IO.PortOut (CRTC6845_INDEX, Unsigned_8 (R));
       Value := CPU.IO.PortIn (CRTC6845_DATA);
@@ -348,7 +363,10 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- CRTC6845_Register_Write
    ----------------------------------------------------------------------------
-   procedure CRTC6845_Register_Write (R : in CRTC6845_Register_Type; Value : in Unsigned_8) is
+   procedure CRTC6845_Register_Write
+      (R     : in CRTC6845_Register_Type;
+       Value : in Unsigned_8)
+      is
    begin
       CPU.IO.PortOut (CRTC6845_INDEX, Unsigned_8 (R));
       CPU.IO.PortOut (CRTC6845_DATA, Value);
@@ -357,7 +375,8 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- CRTC6845_Registers_Lock
    ----------------------------------------------------------------------------
-   procedure CRTC6845_Registers_Lock is
+   procedure CRTC6845_Registers_Lock
+      is
       Unused : Unsigned_8;
    begin
       -- CRTC registers 0-7 are locked by setting bit 7 of CRTC[0x11]
@@ -368,7 +387,8 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- CRTC6845_Registers_Unlock
    ----------------------------------------------------------------------------
-   procedure CRTC6845_Registers_Unlock is
+   procedure CRTC6845_Registers_Unlock
+      is
       Unused : Unsigned_8;
    begin
       -- CRTC registers 0-7 are unlocked by clearing bit 7 of CRTC[0x11]
@@ -379,7 +399,10 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- GC_Register_Write
    ----------------------------------------------------------------------------
-   procedure GC_Register_Write (R : in GC_Register_Type; Value : in Unsigned_8) is
+   procedure GC_Register_Write
+      (R     : in GC_Register_Type;
+       Value : in Unsigned_8)
+      is
    begin
       CPU.IO.PortOut (GRAPHICS_INDEX, Unsigned_8 (R));
       CPU.IO.PortOut (GRAPHICS_DATA, Value);
@@ -388,7 +411,10 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- ATC_Register_Write
    ----------------------------------------------------------------------------
-   procedure ATC_Register_Write (R : in ATC_Register_Type; Value : in Unsigned_8) is
+   procedure ATC_Register_Write
+      (R     : in ATC_Register_Type;
+       Value : in Unsigned_8)
+      is
       Unused : Unsigned_8;
    begin
       Unused := CPU.IO.PortIn (INPUT_STATUS_1);
@@ -405,7 +431,8 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- DAC_Init
    ----------------------------------------------------------------------------
-   procedure DAC_Init is
+   procedure DAC_Init
+      is
    begin
       -- __FIX__ disable interrupts
       CPU.IO.PortOut (PEL_MASK, Unsigned_8'(16#FF#));
@@ -429,27 +456,28 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- Load_Font
    ----------------------------------------------------------------------------
-   procedure Load_Font is
+   procedure Load_Font
+      is
       -- VGA font types and memory space
       type VGA_Character_Type is new Storage_Array (0 .. 31);
-      VGA_Font_Memory : aliased array (0 .. Videofont8x16.Font_NCharacters - 1) of VGA_Character_Type with
-         Alignment  => 16,
-         Address    => To_Address (Video_Buffer_BaseAddress),
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
+      VGA_Font_Memory : aliased array (0 .. Videofont8x16.Font_NCharacters - 1) of VGA_Character_Type
+         with Alignment  => 16,
+              Address    => To_Address (Video_Buffer_BaseAddress),
+              Volatile   => True,
+              Import     => True,
+              Convention => Ada;
    begin
       for Index in Videofont8x16.Font'Range loop
          declare
-            Character_Pattern_Src : Videofont8x16.Font_Character_Type with
-               Address    => Videofont8x16.Font (Index)'Address,
-               Import     => True,
-               Convention => Ada;
-            Character_Pattern_Dst : Videofont8x16.Font_Character_Type with
-               Address    => VGA_Font_Memory (Index)'Address,
-               Volatile   => True,
-               Import     => True,
-               Convention => Ada;
+            Character_Pattern_Src : Videofont8x16.Font_Character_Type
+               with Address    => Videofont8x16.Font (Index)'Address,
+                    Import     => True,
+                    Convention => Ada;
+            Character_Pattern_Dst : Videofont8x16.Font_Character_Type
+               with Address    => VGA_Font_Memory (Index)'Address,
+                    Volatile   => True,
+                    Import     => True,
+                    Convention => Ada;
          begin
             Character_Pattern_Dst := Character_Pattern_Src;
          end;
@@ -459,10 +487,10 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init (
-                   Video_Memory_BaseAddress : in Integer_Address;
-                   Text_Memory_BaseAddress  : in Integer_Address
-                  ) is
+   procedure Init
+      (Video_Memory_BaseAddress : in Integer_Address;
+       Text_Memory_BaseAddress  : in Integer_Address)
+      is
    begin
       if Video_Memory_BaseAddress /= 0 then
          Video_Buffer_BaseAddress := Video_Memory_BaseAddress;
@@ -475,20 +503,9 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- Set_Mode
    ----------------------------------------------------------------------------
-   -- text mode 03h, 80x25 cell size, 9x16 WxH font, no interrupt
-   -- resolution: 720x400 pixels
-   -- colors:     16 (standard CGA color values)
-   -- clock:      28.322 MHz
-   -- hsync:      31.469 kHz (negative polarity)
-   -- vsync:      70.087 Hz (positive polarity)
-   -- graphic mode 12h
-   -- resolution: 640x480 pixels
-   -- colors:     16
-   -- clock:      25.175 MHz
-   -- hsync:      31.469 kHz (negative polarity)
-   -- vsync:      59.940 Hz (negative polarity)
-   ----------------------------------------------------------------------------
-   procedure Set_Mode (Mode : in Mode_Type) is
+   procedure Set_Mode
+      (Mode : in Mode_Type)
+      is
    begin
       -- Video Subsystem Enable -----------------------------------------------
       -- bit0 = 1  --> the I/O and memory address decoding for the video
@@ -574,14 +591,15 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- Clear_Screen
    ----------------------------------------------------------------------------
-   procedure Clear_Screen is
+   procedure Clear_Screen
+      is
    begin
       for Index in Storage_Offset range 0 .. VIDEO_TEXT_WIDTH * VIDEO_TEXT_HEIGHT * 2 - 1 loop
          declare
-            Video_Cell : Unsigned_8 with
-               Address    => To_Address (Text_Buffer_BaseAddress) + Index,
-               Import     => True,
-               Convention => Ada;
+            Video_Cell : Unsigned_8
+               with Address    => To_Address (Text_Buffer_BaseAddress) + Index,
+                    Import     => True,
+                    Convention => Ada;
          begin
             Video_Cell := 16#00#;
          end;
@@ -591,21 +609,18 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- Print (Character)
    ----------------------------------------------------------------------------
-   -- Print character C @ X, Y.
-   -- BGREEN on BLACK
-   ----------------------------------------------------------------------------
-   procedure Print (
-                    X : in Video_X_Coordinate_Type;
-                    Y : in Video_Y_Coordinate_Type;
-                    C : in Character
-                   ) is
-      type Video_Text_Memory_Type is
-         array (0 .. (VIDEO_TEXT_WIDTH * VIDEO_TEXT_HEIGHT) - 1) of aliased Text_Character_Type with
-            Pack => True;
-      Video_Text_Memory : Video_Text_Memory_Type with
-         Address    => To_Address (Text_Buffer_BaseAddress),
-         Volatile   => True,
-         Import     => True,
+   procedure Print
+      (X : in Video_X_Coordinate_Type;
+       Y : in Video_Y_Coordinate_Type;
+       C : in Character)
+      is
+      type Video_Text_Memory_Type is array (0 .. (VIDEO_TEXT_WIDTH * VIDEO_TEXT_HEIGHT) - 1)
+         of aliased Text_Character_Type
+         with Pack => True;
+      Video_Text_Memory : Video_Text_Memory_Type
+         with Address    => To_Address (Text_Buffer_BaseAddress),
+              Volatile   => True,
+              Import     => True,
          Convention => Ada;
       Video_Attributes : constant Text_Character_Attributes_Type := (FG => 16#0A#, BG => 16#00#);
    begin
@@ -616,13 +631,11 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- Print (String)
    ----------------------------------------------------------------------------
-   -- Print string S @ X, Y.
-   ----------------------------------------------------------------------------
-   procedure Print (
-                    X : in Video_X_Coordinate_Type;
-                    Y : in Video_Y_Coordinate_Type;
-                    S : in String
-                   ) is
+   procedure Print
+      (X : in Video_X_Coordinate_Type;
+       Y : in Video_Y_Coordinate_Type;
+       S : in String)
+      is
       X1 : Video_X_Coordinate_Type;
       Y1 : Video_Y_Coordinate_Type;
       C  : Character;
@@ -648,18 +661,18 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- Draw_Pixel
    ----------------------------------------------------------------------------
-   procedure Draw_Pixel (
-                         X     : in Natural;
-                         Y     : in Natural;
-                         Color : in Unsigned_8
-                        ) is
-      type Plane_Type is array (0 .. 2**16 - 1) of Unsigned_8 with
-         Pack => True;
-      Plane         : Plane_Type with
-         Address    => To_Address (Video_Buffer_BaseAddress),
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
+   procedure Draw_Pixel
+      (X     : in Natural;
+       Y     : in Natural;
+       Color : in Unsigned_8)
+      is
+      type Plane_Type is array (0 .. 2**16 - 1) of Unsigned_8
+         with Pack => True;
+      Plane         : Plane_Type
+         with Address    => To_Address (Video_Buffer_BaseAddress),
+              Volatile   => True,
+              Import     => True,
+              Convention => Ada;
       Plane_Index   : Natural;
       Bit_Number    : Natural;
       Pixel_Segment : Unsigned_8;
@@ -682,7 +695,9 @@ package body VGA is
    ----------------------------------------------------------------------------
    -- Draw_Picture
    ----------------------------------------------------------------------------
-   procedure Draw_Picture (Picture : in Storage_Array) is
+   procedure Draw_Picture
+      (Picture : in Storage_Array)
+      is
       Pixel_Idx : Storage_Offset := 0;
    begin
       for Y in 0 .. 479 loop
