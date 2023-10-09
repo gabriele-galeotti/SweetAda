@@ -15,9 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
+with LLutils;
 with Abort_Library;
 with ARMv7M;
 with CPU;
@@ -34,7 +34,6 @@ package body Exceptions is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -76,7 +75,7 @@ package body Exceptions is
          with Import        => True,
               External_Name => "vectors";
    begin
-      ARMv7M.VTOR.TBLOFF := Bits_25 (Shift_Right (Unsigned_32 (To_Integer (Vector_Table'Address)), 7));
+      ARMv7M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
    end Init;
 
 end Exceptions;
