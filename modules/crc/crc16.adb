@@ -88,7 +88,9 @@ package body CRC16 is
    ----------------------------------------------------------------------------
    -- Initialize
    ----------------------------------------------------------------------------
-   function Initialize return Unsigned_16 is
+   function Initialize
+      return Unsigned_16
+      is
    begin
       return Value_Init;
    end Initialize;
@@ -96,7 +98,11 @@ package body CRC16 is
    ----------------------------------------------------------------------------
    -- Update
    ----------------------------------------------------------------------------
-   function Update (Value : Unsigned_16; Item : Unsigned_8) return Unsigned_16 is
+   function Update
+      (Value : Unsigned_16;
+       Item  : Unsigned_8)
+      return Unsigned_16
+      is
    begin
       return Shift_Right (Value, 8) xor Table (Unsigned_8 (Value and 16#00FF#) xor Item);
    end Update;
@@ -104,7 +110,11 @@ package body CRC16 is
    ----------------------------------------------------------------------------
    -- Compute
    ----------------------------------------------------------------------------
-   function Compute (Value : Unsigned_16; Data : Bits.Byte_Array) return Unsigned_16 is
+   function Compute
+      (Value : Unsigned_16;
+       Data  : Bits.Byte_Array)
+      return Unsigned_16
+      is
       Crc : Unsigned_16 := Value;
    begin
       for Index in Data'Range loop
@@ -116,7 +126,10 @@ package body CRC16 is
    ----------------------------------------------------------------------------
    -- Finalize
    ----------------------------------------------------------------------------
-   function Finalize (Value : Unsigned_16) return Unsigned_16 is
+   function Finalize
+      (Value : Unsigned_16)
+      return Unsigned_16
+      is
    begin
       return Value xor Value_XorOut;
    end Finalize;
