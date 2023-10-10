@@ -52,15 +52,15 @@ package BlockDevices is
    type CHS_Type is
    record
       C : Natural range 0 .. 1023;
-      H : Natural range 0 .. 254;
-      S : Natural range 1 .. 63;
+      H : Natural range 0 ..  254;
+      S : Natural range 1 ..   63;
    end record;
 
    type CHS_Layout_Type is
    record
       H  : Natural range 0 .. 254;
-      S  : Natural range 1 .. 63;
-      CH : Natural range 0 .. 3;
+      S  : Natural range 1 ..  63;
+      CH : Natural range 0 ..   3;
       CL : Natural range 0 .. 255;
    end record with
       Bit_Order => Low_Order_First,
@@ -87,12 +87,12 @@ package BlockDevices is
 
    type LBA_Type is mod 2**28;
 
-   function CHS_To_LBA
+   function To_LBA
       (CHS          : in CHS_Type;
        CHS_Geometry : in CHS_Type)
       return LBA_Type;
 
-   function LBA_To_CHS
+   function To_CHS
       (Sector_Number : in LBA_Type;
        CHS_Geometry  : in CHS_Type)
       return CHS_Type;

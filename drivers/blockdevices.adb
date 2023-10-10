@@ -55,21 +55,21 @@ package body BlockDevices is
    end To_CHS;
 
    --------------------------------------------------------------------------
-   -- CHS_To_LBA
+   -- To_LBA
    --------------------------------------------------------------------------
    -- LBA = (C * HPC + H) * SPT + (S - 1)
    --------------------------------------------------------------------------
-   function CHS_To_LBA
+   function To_LBA
       (CHS          : in CHS_Type;
        CHS_Geometry : in CHS_Type)
       return LBA_Type
       is
    begin
       return LBA_Type ((CHS.C * CHS_Geometry.H + CHS.H) * CHS_Geometry.S + (CHS.S - 1));
-   end CHS_To_LBA;
+   end To_LBA;
 
    --------------------------------------------------------------------------
-   -- LBA_To_CHS
+   -- To_CHS
    --------------------------------------------------------------------------
    -- Mapping from an LBA (0-based) to a CHS triplet (with underlying disk
    -- geometry (CYL, HPC, SPT) specified in CHS_Geometry:
@@ -77,7 +77,7 @@ package body BlockDevices is
    -- H = (LBA / SPT) mod HPC
    -- S = (LBA mod SPT) + 1
    --------------------------------------------------------------------------
-   function LBA_To_CHS
+   function To_CHS
       (Sector_Number : in LBA_Type;
        CHS_Geometry  : in CHS_Type)
       return CHS_Type
@@ -87,6 +87,6 @@ package body BlockDevices is
          (C => Natural (Sector_Number) / (CHS_Geometry.H * CHS_Geometry.S),
           H => (Natural (Sector_Number) / CHS_Geometry.S) rem CHS_Geometry.H,
           S => (Natural (Sector_Number) rem CHS_Geometry.S) + 1);
-   end LBA_To_CHS;
+   end To_CHS;
 
 end BlockDevices;
