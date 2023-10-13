@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-extern void  ada_abort(void) __attribute__ ((noreturn));
+extern void  ada_abort(void) __attribute__((noreturn));
 extern void  ada_print_character(char);
 extern void *ada_malloc(size_t);
 extern void  ada_free(void *);

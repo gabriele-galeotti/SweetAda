@@ -20,10 +20,10 @@
 extern "C" {
 #endif
 
-extern int printf(const char *, ...) __attribute__ ((format (printf, 1, 2)));
+extern int printf(const char *, ...) __attribute__((format (printf, 1, 2)));
 extern int putchar(int);
 extern int puts(const char *);
-extern int sprintf(char *, const char *, ...) __attribute__ ((format (printf, 2, 3)));
+extern int sprintf(char *, const char *, ...) __attribute__((format (printf, 2, 3)));
 extern int vsnprintf(char *, size_t, const char *, va_list);
 
 #define EOF (-1)

@@ -22,7 +22,7 @@ extern "C" {
 typedef struct { int quot; int rem; } div_t;
 typedef struct { long quot; long rem; } ldiv_t;
 
-extern void           abort(void) __attribute__ ((noreturn));
+extern void           abort(void) __attribute__((noreturn));
 extern int            abs(int);
 extern int            atoi(const char *);
 extern long           atol(const char *);

@@ -22,7 +22,7 @@ extern "C" {
 #if defined(NDEBUG)
 # define assert(ignore) ((void)0)
 #else
-extern void __assert(const char *, int, const char *, const char *) __attribute__ ((noreturn));
+extern void __assert(const char *, int, const char *, const char *) __attribute__((noreturn));
 # if defined(__STDC__)
 #  define assert(e) ((e) != 0 ? (void)0 : __assert(__FILE__, __LINE__, __func__, #e))
 # else
