@@ -78,16 +78,16 @@ package Am7990 is
       Size      => 16;
    for CSR0_Type use
    record
-      INIT at 0 range 0 .. 0;
-      STRT at 0 range 1 .. 1;
-      STOP at 0 range 2 .. 2;
-      TDMD at 0 range 3 .. 3;
-      TXON at 0 range 4 .. 4;
-      RXON at 0 range 5 .. 5;
-      INEA at 0 range 6 .. 6;
-      INTR at 0 range 7 .. 7;
-      IDON at 0 range 8 .. 8;
-      TINT at 0 range 9 .. 9;
+      INIT at 0 range  0 ..  0;
+      STRT at 0 range  1 ..  1;
+      STOP at 0 range  2 ..  2;
+      TDMD at 0 range  3 ..  3;
+      TXON at 0 range  4 ..  4;
+      RXON at 0 range  5 ..  5;
+      INEA at 0 range  6 ..  6;
+      INTR at 0 range  7 ..  7;
+      IDON at 0 range  8 ..  8;
+      TINT at 0 range  9 ..  9;
       RINT at 0 range 10 .. 10;
       MERR at 0 range 11 .. 11;
       MISS at 0 range 12 .. 12;
@@ -110,9 +110,9 @@ package Am7990 is
       Size      => 16;
    for CSR3_Type use
    record
-      BCON     at 0 range 0 .. 0;
-      ACON     at 0 range 1 .. 1;
-      BSWP     at 0 range 2 .. 2;
+      BCON     at 0 range 0 ..  0;
+      ACON     at 0 range 1 ..  1;
+      BSWP     at 0 range 2 ..  2;
       Reserved at 0 range 3 .. 15;
    end record;
 
@@ -150,9 +150,9 @@ package Am7990 is
       Size      => 16;
    for RMD1_Type use
    record
-      HADR at 0 range 0 .. 7;
-      ENP  at 0 range 8 .. 8;
-      STP  at 0 range 9 .. 9;
+      HADR at 0 range  0 ..  7;
+      ENP  at 0 range  8 ..  8;
+      STP  at 0 range  9 ..  9;
       BUFF at 0 range 10 .. 10;
       CRC  at 0 range 11 .. 11;
       OFLO at 0 range 12 .. 12;
@@ -170,7 +170,7 @@ package Am7990 is
       Size      => 16;
    for RMD2_Type use
    record
-      BCNT at 0 range 0 .. 11;
+      BCNT at 0 range  0 .. 11;
       ONES at 0 range 12 .. 15;
    end record;
 
@@ -183,7 +183,7 @@ package Am7990 is
       Size      => 16;
    for RMD3_Type use
    record
-      MCNT     at 0 range 0 .. 11;
+      MCNT     at 0 range  0 .. 11;
       Reserved at 0 range 12 .. 15;
    end record;
 
@@ -206,9 +206,9 @@ package Am7990 is
       RMD3 at 6 range 0 .. 15;
    end record;
 
-   type Receive_Ring_Type is array (Natural range <>) of Receive_Message_Descriptor_Type with
-      Pack                    => True,
-      Suppress_Initialization => True;
+   type Receive_Ring_Type is array (Natural range <>) of Receive_Message_Descriptor_Type
+      with Pack                    => True,
+           Suppress_Initialization => True;
 
    ----------------------------------------------------------------------------
    -- Transmit Message Descriptor
@@ -241,9 +241,9 @@ package Am7990 is
       Size      => 16;
    for TMD1_Type use
    record
-      HADR    at 0 range 0 .. 7;
-      ENP     at 0 range 8 .. 8;
-      STP     at 0 range 9 .. 9;
+      HADR    at 0 range  0 ..  7;
+      ENP     at 0 range  8 ..  8;
+      STP     at 0 range  9 ..  9;
       DEF     at 0 range 10 .. 10;
       ONE     at 0 range 11 .. 11;
       MORE    at 0 range 12 .. 12;
@@ -261,7 +261,7 @@ package Am7990 is
       Size      => 16;
    for TMD2_Type use
    record
-      BCNT at 0 range 0 .. 11;
+      BCNT at 0 range  0 .. 11;
       ONES at 0 range 12 .. 15;
    end record;
 
@@ -279,7 +279,7 @@ package Am7990 is
       Size      => 16;
    for TMD3_Type use
    record
-      TDR  at 0 range 0 .. 9;
+      TDR  at 0 range  0 ..  9;
       RTRY at 0 range 10 .. 10;
       LCAR at 0 range 11 .. 11;
       LCOL at 0 range 12 .. 12;
@@ -307,9 +307,9 @@ package Am7990 is
       TMD3 at 6 range 0 .. 15;
    end record;
 
-   type Transmit_Ring_Type is array (Natural range <>) of Transmit_Message_Descriptor_Type with
-      Pack                    => True,
-      Suppress_Initialization => True;
+   type Transmit_Ring_Type is array (Natural range <>) of Transmit_Message_Descriptor_Type
+      with Pack                    => True,
+           Suppress_Initialization => True;
 
    ----------------------------------------------------------------------------
    -- Initialization Block
@@ -332,14 +332,14 @@ package Am7990 is
       Size      => 16;
    for Mode_Register_Type use
    record
-      DRX      at 0 range 0 .. 0;
-      DTX      at 0 range 1 .. 1;
-      LOOPB    at 0 range 2 .. 2;
-      DTCR     at 0 range 3 .. 3;
-      COLL     at 0 range 4 .. 4;
-      DRTY     at 0 range 5 .. 5;
-      INTL     at 0 range 6 .. 6;
-      Reserved at 0 range 7 .. 14;
+      DRX      at 0 range  0 ..  0;
+      DTX      at 0 range  1 ..  1;
+      LOOPB    at 0 range  2 ..  2;
+      DTCR     at 0 range  3 ..  3;
+      COLL     at 0 range  4 ..  4;
+      DRTY     at 0 range  5 ..  5;
+      INTL     at 0 range  6 ..  6;
+      Reserved at 0 range  7 .. 14;
       PROM     at 0 range 15 .. 15;
    end record;
 
@@ -354,8 +354,8 @@ package Am7990 is
       Size      => 32;
    for Ring_Descriptor_Pointer_Type use
    record
-      Reserved1    at 0 range 0 .. 2;
-      Ring_Pointer at 0 range 3 .. 23;
+      Reserved1    at 0 range  0 ..  2;
+      Ring_Pointer at 0 range  3 .. 23;
       Reserved2    at 0 range 24 .. 28;
       Length       at 0 range 29 .. 31;
    end record;
@@ -384,24 +384,24 @@ package Am7990 is
       Size      => 24 * 8;
    for Initialization_Block_Type use
    record
-      MODE   at 0 range 0 .. 15;
+      MODE   at  0 range 0 .. 15;
       -- offset 2,3: seen as the U16 value MAC[0..1]
-      PADR1  at 2 range 0 .. 7;   -- LE addressing: MAC[1] is at +0
-      PADR0  at 3 range 0 .. 7;   -- LE addressing: MAC[0] is at +1
+      PADR1  at  2 range 0 ..  7; -- LE addressing: MAC[1] is at +0
+      PADR0  at  3 range 0 ..  7; -- LE addressing: MAC[0] is at +1
       -- offset 4,5: seen as the U16 value MAC[2..3]
-      PADR3  at 4 range 0 .. 7;   -- LE addressing: MAC[3] is at +0
-      PADR2  at 5 range 0 .. 7;   -- LE addressing: MAC[2] is at +1
+      PADR3  at  4 range 0 ..  7; -- LE addressing: MAC[3] is at +0
+      PADR2  at  5 range 0 ..  7; -- LE addressing: MAC[2] is at +1
       -- offset 6,7: seen as the U16 value MAC[4..5]
-      PADR5  at 6 range 0 .. 7;   -- LE addressing: MAC[5] is at +0
-      PADR4  at 7 range 0 .. 7;   -- LE addressing: MAC[4] is at +1
-      LADRF1 at 8 range 0 .. 7;
-      LADRF0 at 9 range 0 .. 7;
-      LADRF3 at 10 range 0 .. 7;
-      LADRF2 at 11 range 0 .. 7;
-      LADRF5 at 12 range 0 .. 7;
-      LADRF4 at 13 range 0 .. 7;
-      LADRF7 at 14 range 0 .. 7;
-      LADRF6 at 15 range 0 .. 7;
+      PADR5  at  6 range 0 ..  7; -- LE addressing: MAC[5] is at +0
+      PADR4  at  7 range 0 ..  7; -- LE addressing: MAC[4] is at +1
+      LADRF1 at  8 range 0 ..  7;
+      LADRF0 at  9 range 0 ..  7;
+      LADRF3 at 10 range 0 ..  7;
+      LADRF2 at 11 range 0 ..  7;
+      LADRF5 at 12 range 0 ..  7;
+      LADRF4 at 13 range 0 ..  7;
+      LADRF7 at 14 range 0 ..  7;
+      LADRF6 at 15 range 0 ..  7;
       RDRA   at 16 range 0 .. 31;
       TDRA   at 20 range 0 .. 31;
    end record;
