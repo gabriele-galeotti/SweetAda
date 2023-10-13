@@ -179,11 +179,11 @@ package PL110 is
 
    FRAMEBUFFER_BASEADDRESS : constant := 16#0020_0000#;
 
-   Framebuffer : aliased U16_Array (0 .. VIDEO_WIDTH * VIDEO_HEIGHT - 1) with
-      Address    => To_Address (FRAMEBUFFER_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   Framebuffer : aliased U16_Array (0 .. VIDEO_WIDTH * VIDEO_HEIGHT - 1)
+      with Address    => To_Address (FRAMEBUFFER_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Interface
@@ -202,16 +202,26 @@ package PL110 is
        Base_Address => Null_Address
       );
 
-   procedure Init (Descriptor : in Descriptor_Type);
-   procedure Print (
-                    X : in Video_X_Coordinate_Type;
-                    Y : in Video_Y_Coordinate_Type;
-                    C : in Character
-                   );
-   procedure Print (
-                    X : in Video_X_Coordinate_Type;
-                    Y : in Video_Y_Coordinate_Type;
-                    S : in String
-                   );
+   ----------------------------------------------------------------------------
+   -- Initialization procedure.
+   ----------------------------------------------------------------------------
+   procedure Init
+      (Descriptor : in Descriptor_Type);
+
+   ----------------------------------------------------------------------------
+   -- Print character C @ X, Y.
+   ----------------------------------------------------------------------------
+   procedure Print
+      (X : in Video_X_Coordinate_Type;
+       Y : in Video_Y_Coordinate_Type;
+       C : in Character);
+
+   ----------------------------------------------------------------------------
+   -- Print string S @ X, Y.
+   ----------------------------------------------------------------------------
+   procedure Print
+      (X : in Video_X_Coordinate_Type;
+       Y : in Video_Y_Coordinate_Type;
+       S : in String);
 
 end PL110;

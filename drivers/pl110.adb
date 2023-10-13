@@ -46,7 +46,12 @@ package body PL110 is
    ----------------------------------------------------------------------------
    -- RGB565
    ----------------------------------------------------------------------------
-   function RGB565 (R : R_Type; G : G_Type; B : B_Type) return Unsigned_16 is
+   function RGB565
+      (R : R_Type;
+       G : G_Type;
+       B : B_Type)
+      return Unsigned_16
+      is
    begin
       return Shift_Left (Unsigned_16 (R), 11) or
              Shift_Left (Unsigned_16 (G), 5)  or
@@ -56,44 +61,43 @@ package body PL110 is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init (Descriptor : in Descriptor_Type) is
-      PL110_Device : aliased PL110_Type with
-         Address    => Descriptor.Base_Address,
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
+   procedure Init
+      (Descriptor : in Descriptor_Type)
+      is
+      PL110_Device : aliased PL110_Type
+         with Address    => Descriptor.Base_Address,
+              Volatile   => True,
+              Import     => True,
+              Convention => Ada;
    begin
       -- WxH = 640x480, 16 bpp RGB565
-      PL110_Device.LCDTiming0 := (
-                                  Reserved => 0,
-                                  PPL      => 640 / 16 - 1,
-                                  HSW      => 64 - 1,
-                                  HFP      => 32 - 1,
-                                  HBP      => 64 - 1
-                                 );
-      PL110_Device.LCDTiming1 := (
-                                  LPP => 480 - 1,
-                                  VSW => 19 - 1,
-                                  VFP => 11,
-                                  VBP => 8
-                                 );
+      PL110_Device.LCDTiming0 :=
+         (Reserved => 0,
+          PPL      => 640 / 16 - 1,
+          HSW      => 64 - 1,
+          HFP      => 32 - 1,
+          HBP      => 64 - 1);
+      PL110_Device.LCDTiming1 :=
+         (LPP => 480 - 1,
+          VSW => 19 - 1,
+          VFP => 11,
+          VBP => 8);
       PL110_Device.LCDUPBASE := FRAMEBUFFER_BASEADDRESS;
-      PL110_Device.LCDControl := (
-                                  LcdEn       => True,
-                                  LcdBpp      => BPP16,
-                                  LcdBW       => False,
-                                  LcdTFT      => True,
-                                  LcdMono8    => False,
-                                  LcdDual     => False,
-                                  BGR         => BGR_RGB,
-                                  BEBO        => False,
-                                  BEPO        => False,
-                                  LcdPwr      => True,
-                                  LcdVComp    => VCOMPBP,
-                                  Reserved1   => 0,
-                                  WATERMARK   => WATERMARK_4,
-                                  Reserved2   => 0
-                                 );
+      PL110_Device.LCDControl :=
+         (LcdEn     => True,
+          LcdBpp    => BPP16,
+          LcdBW     => False,
+          LcdTFT    => True,
+          LcdMono8  => False,
+          LcdDual   => False,
+          BGR       => BGR_RGB,
+          BEBO      => False,
+          BEPO      => False,
+          LcdPwr    => True,
+          LcdVComp  => VCOMPBP,
+          Reserved1 => 0,
+          WATERMARK => WATERMARK_4,
+          Reserved2 => 0);
       -- clear screen
       declare
          BG_Color : constant Unsigned_16 := RGB565 (16#1F#, 16#0F#, 16#00#);
@@ -107,13 +111,11 @@ package body PL110 is
    ----------------------------------------------------------------------------
    -- Print (Character)
    ----------------------------------------------------------------------------
-   -- Print character C @ X, Y.
-   ----------------------------------------------------------------------------
-   procedure Print (
-                    X : in Video_X_Coordinate_Type;
-                    Y : in Video_Y_Coordinate_Type;
-                    C : in Character
-                   ) is
+   procedure Print
+      (X : in Video_X_Coordinate_Type;
+       Y : in Video_Y_Coordinate_Type;
+       C : in Character)
+      is
       Framebuffer_Offset : Natural;
       Pattern            : Unsigned_8;
    begin
@@ -132,13 +134,11 @@ package body PL110 is
    ----------------------------------------------------------------------------
    -- Print (String)
    ----------------------------------------------------------------------------
-   -- Print string S @ X, Y.
-   ----------------------------------------------------------------------------
-   procedure Print (
-                    X : in Video_X_Coordinate_Type;
-                    Y : in Video_Y_Coordinate_Type;
-                    S : in String
-                   ) is
+   procedure Print
+      (X : in Video_X_Coordinate_Type;
+       Y : in Video_Y_Coordinate_Type;
+       S : in String)
+      is
       X1 : Video_X_Coordinate_Type;
       Y1 : Video_Y_Coordinate_Type;
       C  : Character;
