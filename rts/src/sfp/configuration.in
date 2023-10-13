@@ -4,33 +4,33 @@
 #
 
 LIBGNAT_SRCS_COMMON += a-assert.ads a-assert.adb
-LIBGNAT_SRCS_COMMON += a-charac.ads
-LIBGNAT_SRCS_COMMON += a-chlat1.ads
+LIBGNAT_SRCS_COMMON += ../common/a-charac.ads
+LIBGNAT_SRCS_COMMON += ../common/a-chlat1.ads
 LIBGNAT_SRCS_COMMON += a-except.ads a-except.adb
 LIBGNAT_SRCS_COMMON += a-tags.ads   a-tags.adb
-LIBGNAT_SRCS_COMMON += a-unccon.ads
-LIBGNAT_SRCS_COMMON += a-uncdea.ads
-LIBGNAT_SRCS_COMMON += ada.ads
+LIBGNAT_SRCS_COMMON += ../common/a-unccon.ads
+LIBGNAT_SRCS_COMMON += ../common/a-uncdea.ads
+LIBGNAT_SRCS_COMMON += ../common/ada.ads
 LIBGNAT_SRCS_COMMON += g-souinf.ads
 LIBGNAT_SRCS_COMMON += gnat.ads
 LIBGNAT_SRCS_COMMON += i-c.ads      i-c.adb
-LIBGNAT_SRCS_COMMON += i-cexten.ads
-LIBGNAT_SRCS_COMMON += interfac.ads
+LIBGNAT_SRCS_COMMON += ../common/i-cexten.ads
+LIBGNAT_SRCS_COMMON += ../common/interfac.ads
 LIBGNAT_SRCS_COMMON += s-assert.ads s-assert.adb
-LIBGNAT_SRCS_COMMON += s-atacco.ads s-atacco.adb
+LIBGNAT_SRCS_COMMON += ../common/s-atacco.ads ../common/s-atacco.adb
 LIBGNAT_SRCS_COMMON += s-exctab.ads s-exctab.adb
 LIBGNAT_SRCS_COMMON += s-fatflt.ads
 LIBGNAT_SRCS_COMMON += s-fatgen.ads s-fatgen.adb
 LIBGNAT_SRCS_COMMON += s-fatlfl.ads
 LIBGNAT_SRCS_COMMON += s-fatllf.ads
-LIBGNAT_SRCS_COMMON += s-maccod.ads
+LIBGNAT_SRCS_COMMON += ../common/s-maccod.ads
 LIBGNAT_SRCS_COMMON += s-multip.ads s-multip.adb
 LIBGNAT_SRCS_COMMON += s-parame.ads
 LIBGNAT_SRCS_COMMON += s-scaval.ads s-scaval.adb
 LIBGNAT_SRCS_COMMON += s-secsta.ads s-secsta.adb
 LIBGNAT_SRCS_COMMON += s-stalib.ads
-LIBGNAT_SRCS_COMMON += s-stoele.ads s-stoele.adb
-LIBGNAT_SRCS_COMMON += s-unstyp.ads
+LIBGNAT_SRCS_COMMON += ../common/s-stoele.ads ../common/s-stoele.adb
+LIBGNAT_SRCS_COMMON += ../common/s-unstyp.ads
 
 LIBGNARL_SRCS_COMMON += s-musplo.ads s-musplo.adb
 

@@ -3,18 +3,18 @@
 # Basic units.
 #
 
-LIBGNAT_SRCS_COMMON += a-charac.ads
-LIBGNAT_SRCS_COMMON += a-chlat1.ads
-LIBGNAT_SRCS_COMMON += a-unccon.ads
-LIBGNAT_SRCS_COMMON += a-uncdea.ads
-LIBGNAT_SRCS_COMMON += ada.ads
+LIBGNAT_SRCS_COMMON += ../common/a-charac.ads
+LIBGNAT_SRCS_COMMON += ../common/a-chlat1.ads
+LIBGNAT_SRCS_COMMON += ../common/a-unccon.ads
+LIBGNAT_SRCS_COMMON += ../common/a-uncdea.ads
+LIBGNAT_SRCS_COMMON += ../common/ada.ads
 LIBGNAT_SRCS_COMMON += i-c.ads
-LIBGNAT_SRCS_COMMON += i-cexten.ads
-LIBGNAT_SRCS_COMMON += interfac.ads
-LIBGNAT_SRCS_COMMON += s-atacco.ads s-atacco.adb
-LIBGNAT_SRCS_COMMON += s-maccod.ads
-LIBGNAT_SRCS_COMMON += s-stoele.ads s-stoele.adb
-LIBGNAT_SRCS_COMMON += s-unstyp.ads
+LIBGNAT_SRCS_COMMON += ../common/i-cexten.ads
+LIBGNAT_SRCS_COMMON += ../common/interfac.ads
+LIBGNAT_SRCS_COMMON += ../common/s-atacco.ads ../common/s-atacco.adb
+LIBGNAT_SRCS_COMMON += ../common/s-maccod.ads
+LIBGNAT_SRCS_COMMON += ../common/s-stoele.ads ../common/s-stoele.adb
+LIBGNAT_SRCS_COMMON += ../common/s-unstyp.ads
 
 #
 # system.ads default configuration.

@@ -76,10 +76,10 @@ RTS_SOURCE_PATH_TARGET     := ./src/targets/$(TARGET)
 ADAINCLUDE_PATH            := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adainclude
 ADALIB_PATH                := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adalib
 ifeq ($(OSTYPE),cmd)
-RTS_SOURCE_PATH_CMD        := $(shell $(ECHO) $(RTS_SOURCE_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
-RTS_SOURCE_PATH_TARGET_CMD := $(shell $(ECHO) $(RTS_SOURCE_PATH_TARGET)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
-ADAINCLUDE_PATH_CMD        := $(shell $(ECHO) $(ADAINCLUDE_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
-ADALIB_PATH_CMD            := $(shell $(ECHO) $(ADALIB_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
+RTS_SOURCE_PATH_CMD        := $(subst /,\,$(RTS_SOURCE_PATH))
+RTS_SOURCE_PATH_TARGET_CMD := $(subst /,\,$(RTS_SOURCE_PATH_TARGET))
+ADAINCLUDE_PATH_CMD        := $(subst /,\,$(ADAINCLUDE_PATH))
+ADALIB_PATH_CMD            := $(subst /,\,$(ADALIB_PATH))
 endif
 
 ADAC   := $(TOOLCHAIN_ADAC)
@@ -133,13 +133,13 @@ LIBGNARL_SRCS += $(LIBGNARL_SRCS_COMMON) $(LIBGNARL_SRCS_TARGET)
 
 LIBGNAT       := $(ADALIB_PATH)/libgnat.a
 LIBGNAT_ADS   := $(filter-out %.adb,$(LIBGNAT_SRCS))
-LIBGNAT_OBJS  := $(addprefix $(ADALIB_PATH)/,$(LIBGNAT_ADS:.ads=.o))
-LIBGNAT_ALIS  := $(addprefix $(ADALIB_PATH)/,$(LIBGNAT_ADS:.ads=.ali))
+LIBGNAT_OBJS  := $(addprefix $(ADALIB_PATH)/,$(notdir $(LIBGNAT_ADS:.ads=.o)))
+LIBGNAT_ALIS  := $(addprefix $(ADALIB_PATH)/,$(notdir $(LIBGNAT_ADS:.ads=.ali)))
 
 LIBGNARL      := $(ADALIB_PATH)/libgnarl.a
 LIBGNARL_ADS  := $(filter-out %.adb,$(LIBGNARL_SRCS))
-LIBGNARL_OBJS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.o))
-LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(LIBGNARL_ADS:.ads=.ali))
+LIBGNARL_OBJS := $(addprefix $(ADALIB_PATH)/,$(notdir $(LIBGNARL_ADS:.ads=.o)))
+LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(notdir $(LIBGNARL_ADS:.ads=.ali)))
 
 ################################################################################
 #                                                                              #
@@ -166,49 +166,49 @@ endif
 .PHONY: configure-rts
 configure-rts:
 ifeq ($(OSTYPE),cmd)
-	@FOR %%F IN ($(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON)) DO               \
-          @ECHO OFF &&                                                                \
-          IF EXIST $(RTS_SOURCE_PATH_CMD)\%%F.in (                                    \
-            $(PROCESSCFG) -r $(RTS_SOURCE_PATH_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%F \
-            || EXIT /B 1                                                              \
-          ) ELSE (                                                                    \
-            $(CP) "$(RTS_SOURCE_PATH_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\              \
-            || EXIT /B 1                                                              \
+	@FOR %%F IN ($(subst /,\,$(LIBGNAT_SRCS_COMMON)) $(subst /,\,$(LIBGNARL_SRCS_COMMON))) DO \
+          @ECHO OFF &&                                                                            \
+          IF EXIST $(RTS_SOURCE_PATH_CMD)\%%F.in (                                                \
+            $(PROCESSCFG) -r $(RTS_SOURCE_PATH_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%~nF%%~xF      \
+            || EXIT /B 1                                                                          \
+          ) ELSE (                                                                                \
+            $(CP) "$(RTS_SOURCE_PATH_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\%%~nF%%~xF                \
+            || EXIT /B 1                                                                          \
           )
 else
-	@for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do            \
-          (                                                                      \
-           if [ -e $(RTS_SOURCE_PATH)/$$f.in ] ; then                            \
-             $(PROCESSCFG) -r $(RTS_SOURCE_PATH)/$$f.in $(ADAINCLUDE_PATH)/$$f ; \
-           else                                                                  \
-             $(CP) "$(RTS_SOURCE_PATH)"/$$f "$(ADAINCLUDE_PATH)"/ ;              \
-           fi                                                                    \
-          ) || exit $$? ;                                                        \
+	@for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do                         \
+          (                                                                                   \
+           if [ -e $(RTS_SOURCE_PATH)/$$f.in ] ; then                                         \
+             $(PROCESSCFG) -r $(RTS_SOURCE_PATH)/$$f.in $(ADAINCLUDE_PATH)/$$(basename $$f) ; \
+           else                                                                               \
+             $(CP) "$(RTS_SOURCE_PATH)"/$$f "$(ADAINCLUDE_PATH)"/$$(basename $$f) ;           \
+           fi                                                                                 \
+          ) || exit $$? ;                                                                     \
         done
 endif
 
 .PHONY: configure-rts-target
 configure-rts-target:
 ifeq ($(OSTYPE),cmd)
-	@FOR %%F IN ($(LIBGNAT_SRCS_TARGET) $(LIBGNARL_SRCS_TARGET)) DO                      \
-          @ECHO OFF &&                                                                       \
-          IF EXIST $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in (                                    \
-            $(PROCESSCFG) -r $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%F \
-            || EXIT /B 1                                                                     \
-          ) ELSE (                                                                           \
-            $(CP) "$(RTS_SOURCE_PATH_TARGET_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\              \
-            || EXIT /B 1                                                                     \
+	@FOR %%F IN ($(subst /,\,$(LIBGNAT_SRCS_COMMON)) $(subst /,\,$(LIBGNARL_SRCS_COMMON))) DO   \
+          @ECHO OFF &&                                                                              \
+          IF EXIST $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in (                                           \
+            $(PROCESSCFG) -r $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%~nF%%~xF \
+            || EXIT /B 1                                                                            \
+          ) ELSE (                                                                                  \
+            $(CP) "$(RTS_SOURCE_PATH_TARGET_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\%%~nF%%~xF           \
+            || EXIT /B 1                                                                            \
           )
 	$(CP) $(RTS_SOURCE_PATH_TARGET_CMD)\rts.cs.in $(RTS)\$(TOOLCHAIN_NAME)\ $(NULL)
 else
-	@for f in $(LIBGNAT_SRCS_TARGET) $(LIBGNARL_SRCS_TARGET) ; do                   \
-          (                                                                             \
-           if [ -e $(RTS_SOURCE_PATH_TARGET)/$$f.in ] ; then                            \
-             $(PROCESSCFG) -r $(RTS_SOURCE_PATH_TARGET)/$$f.in $(ADAINCLUDE_PATH)/$$f ; \
-           else                                                                         \
-             $(CP) "$(RTS_SOURCE_PATH_TARGET)"/$$f "$(ADAINCLUDE_PATH)"/ ;              \
-           fi                                                                           \
-          ) || exit $$? ;                                                               \
+	@for f in $(LIBGNAT_SRCS_TARGET) $(LIBGNARL_SRCS_TARGET) ; do                                \
+          (                                                                                          \
+           if [ -e $(RTS_SOURCE_PATH_TARGET)/$$f.in ] ; then                                         \
+             $(PROCESSCFG) -r $(RTS_SOURCE_PATH_TARGET)/$$f.in $(ADAINCLUDE_PATH)/$$(basename $$f) ; \
+           else                                                                                      \
+             $(CP) "$(RTS_SOURCE_PATH_TARGET)"/$$f "$(ADAINCLUDE_PATH)"/$$(basename $$f) ;           \
+           fi                                                                                        \
+          ) || exit $$? ;                                                                            \
         done
 	$(CP) $(RTS_SOURCE_PATH_TARGET)/rts.cs.in $(RTS)/$(TOOLCHAIN_NAME)/
 endif
