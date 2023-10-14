@@ -2,6 +2,16 @@
 LIBGNAT_SRCS_TARGET += system.ads
 
 #
+# AVR does not tolerate IEEE_Float_64.
+#
+ifeq ($(OSTYPE),cmd)
+LIBGNAT_SRCS_COMMON := $(shell $(ECHO) $(LIBGNAT_SRCS_COMMON)| $(SED) -e "s|[^ ]*interfac.ads||g")
+else
+LIBGNAT_SRCS_COMMON := $(shell $(ECHO) "$(LIBGNAT_SRCS_COMMON)" | $(SED) -e "s|[^ ]*interfac.ads||g")
+endif
+LIBGNAT_SRCS_TARGET += interfac.ads
+
+#
 # AVR floating point issues.
 #
 # s-scaval.adb:103:07: warning: "IV_Ilf" overlays smaller object
@@ -13,10 +23,12 @@ LIBGNAT_SRCS_TARGET += system.ads
 # s-scaval.adb:104:07: warning: size of "IV_Ill" is 96
 # s-scaval.adb:104:07: warning: size of "IS_Ill" is 64
 #
-LIBGNAT_SRCS_COMMON := $(filter-out interfac.ads,$(LIBGNAT_SRCS_COMMON))
-LIBGNAT_SRCS_TARGET += interfac.ads
 ifeq ($(RTS),sfp)
-LIBGNAT_SRCS_COMMON := $(filter-out s-scaval.adb s-scaval.ads,$(LIBGNAT_SRCS_COMMON))
+ifeq ($(OSTYPE),cmd)
+LIBGNAT_SRCS_COMMON := $(shell $(ECHO) $(LIBGNAT_SRCS_COMMON)| $(SED) -e "s|[^ ]*s-scaval.ad.||g")
+else
+LIBGNAT_SRCS_COMMON := $(shell $(ECHO) "$(LIBGNAT_SRCS_COMMON)" | $(SED) -e "s|[^ ]*s-scaval.ad.||g")
+endif
 endif
 
 # secondary stack size
