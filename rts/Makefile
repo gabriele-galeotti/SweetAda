@@ -15,7 +15,6 @@
 # Environment variables:
 # NULL
 # OSTYPE
-# CAT
 # CP
 # ECHO
 # MKDIR
@@ -190,7 +189,7 @@ endif
 .PHONY: configure-rts-target
 configure-rts-target:
 ifeq ($(OSTYPE),cmd)
-	@FOR %%F IN ($(subst /,\,$(LIBGNAT_SRCS_COMMON)) $(subst /,\,$(LIBGNARL_SRCS_COMMON))) DO   \
+	@FOR %%F IN ($(subst /,\,$(LIBGNAT_SRCS_TARGET)) $(subst /,\,$(LIBGNARL_SRCS_TARGET))) DO   \
           @ECHO OFF &&                                                                              \
           IF EXIST $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in (                                           \
             $(PROCESSCFG) -r $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%~nF%%~xF \
