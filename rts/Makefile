@@ -22,7 +22,6 @@
 # RMDIR
 # SED
 # CPU
-# CPUS
 # TOOLCHAIN_NAME
 # TOOLCHAIN_ADAC
 # TOOLCHAIN_CC
@@ -33,6 +32,32 @@
 # RTS_PATH
 # MULTILIB
 #
+
+################################################################################
+#                                                                              #
+# Utility functions.                                                           #
+#                                                                              #
+################################################################################
+
+#
+# remove
+#
+# Usage:
+# $(call remove,<variable>,<unit_basename>)
+#
+# This function will remove a [relative-path-prefix]unit from a list.
+# If:
+# LIBGNAT_SRCS_COMMON = xxx.ads ../common/yyy.ads ../common/zzz.ads
+# then, after the command:
+# $(call remove,LIBGNAT_SRCS_COMMON,yyy.ads)
+# the unit will be removed from the list and the content of the list will be:
+# LIBGNAT_SRCS_COMMON = xxx.ads ../common/zzz.ads
+#
+ifeq ($(OSTYPE),cmd)
+remove = $(eval $1 := $(shell $(ECHO) $($1)| $(SED) -e "s|[^ ]*$2||"))
+else
+remove = $(eval $1 := $(shell $(ECHO) "$($1)" | $(SED) -e "s|[^ ]*$2||"))
+endif
 
 ################################################################################
 #                                                                              #
