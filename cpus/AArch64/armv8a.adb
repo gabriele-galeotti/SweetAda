@@ -41,404 +41,101 @@ package body ARMv8A is
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- CurrentEL_Read
+   -- MRS/MSR templates
    ----------------------------------------------------------------------------
-   function CurrentEL_Read return EL_Type is
-      Value : EL_Type;
+
+   generic
+      Register_Name : in String;
+      type Register_Type is private;
+   function MRS
+      return Register_Type
+      with Inline => True;
+
+   generic
+      Register_Name : in String;
+      type Register_Type is private;
+   procedure MSR
+      (Value : in Register_Type)
+      with Inline => True;
+
+   function MRS return
+      Register_Type
+      is
+      Result : Register_Type;
    begin
       Asm (
-           Template => ""                             & CRLF &
-                       "        mrs     %0,currentel" & CRLF &
+           Template => ""                                    & CRLF &
+                       "        mrs     %0," & Register_Name & CRLF &
                        "",
-           Outputs  => EL_Type'Asm_Output ("=r", Value),
+           Outputs  => Register_Type'Asm_Output ("=r", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
           );
-      return Value;
-   end CurrentEL_Read;
+      return Result;
+   end MRS;
 
-   ----------------------------------------------------------------------------
-   -- FPCR_Read/Write
-   ----------------------------------------------------------------------------
-
-   function FPCR_Read return FPCR_Type is
-      Value : FPCR_Type;
+   procedure MSR
+      (Value : in Register_Type)
+      is
    begin
       Asm (
-           Template => ""                        & CRLF &
-                       "        mrs     %0,fpcr" & CRLF &
-                       "",
-           Outputs  => FPCR_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end FPCR_Read;
-
-   procedure FPCR_Write (Value : in FPCR_Type) is
-   begin
-      Asm (
-           Template => ""                        & CRLF &
-                       "        msr     fpcr,%0" & CRLF &
+           Template => ""                                         & CRLF &
+                       "        msr     " & Register_Name & ",%0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => FPCR_Type'Asm_Input ("r", Value),
+           Inputs   => Register_Type'Asm_Input ("r", Value),
            Clobber  => "",
            Volatile => True
           );
-   end FPCR_Write;
+   end MSR;
 
    ----------------------------------------------------------------------------
-   -- FPSR_Read/Write
+   -- MRS/MSR instantiations
    ----------------------------------------------------------------------------
 
-   function FPSR_Read return FPSR_Type is
-      Value : FPSR_Type;
-   begin
-      Asm (
-           Template => ""                        & CRLF &
-                       "        mrs     %0,fpsr" & CRLF &
-                       "",
-           Outputs  => FPSR_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end FPSR_Read;
+pragma Style_Checks (Off);
 
-   procedure FPSR_Write (Value : in FPSR_Type) is
-   begin
-      Asm (
-           Template => ""                        & CRLF &
-                       "        msr     fpsr,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => FPSR_Type'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end FPSR_Write;
+   function CurrentEL_Read return EL_Type is function MRS_Read is new MRS ("currentel", EL_Type); begin return MRS_Read; end CurrentEL_Read;
 
-   ----------------------------------------------------------------------------
-   -- FPEXC32_EL2_Read/Write
-   ----------------------------------------------------------------------------
+   function FPCR_Read return FPCR_Type is function MRS_Read is new MRS ("fpcr", FPCR_Type); begin return MRS_Read; end FPCR_Read;
+   procedure FPCR_Write (Value : in FPCR_Type) is procedure MSR_Write is new MSR ("fpcr", FPCR_Type); begin MSR_Write (Value); end FPCR_Write;
 
-   function FPEXC32_EL2_Read return FPEXC32_EL2_Type is
-      Value : FPEXC32_EL2_Type;
-   begin
-      Asm (
-           Template => ""                               & CRLF &
-                       "        mrs     %0,fpexc32_el2" & CRLF &
-                       "",
-           Outputs  => FPEXC32_EL2_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end FPEXC32_EL2_Read;
+   function FPSR_Read return FPSR_Type is function MRS_Read is new MRS ("fpsr", FPSR_Type); begin return MRS_Read; end FPSR_Read;
+   procedure FPSR_Write (Value : in FPSR_Type) is procedure MSR_Write is new MSR ("fpsr", FPSR_Type); begin MSR_Write (Value); end FPSR_Write;
 
-   procedure FPEXC32_EL2_Write (Value : in FPEXC32_EL2_Type) is
-   begin
-      Asm (
-           Template => ""                               & CRLF &
-                       "        msr     fpexc32_el2,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => FPEXC32_EL2_Type'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end FPEXC32_EL2_Write;
+   function FPEXC32_EL2_Read return FPEXC32_EL2_Type is function MRS_Read is new MRS ("fpexc32_el2", FPEXC32_EL2_Type); begin return MRS_Read; end FPEXC32_EL2_Read;
+   procedure FPEXC32_EL2_Write (Value : in FPEXC32_EL2_Type) is procedure MSR_Write is new MSR ("fpexc32_el2", FPEXC32_EL2_Type); begin MSR_Write (Value); end FPEXC32_EL2_Write;
 
-   ----------------------------------------------------------------------------
-   -- HCR_EL2_Read/Write
-   ----------------------------------------------------------------------------
+   function HCR_EL2_Read return HCR_EL2_Type is function MRS_Read is new MRS ("hcr_el2", HCR_EL2_Type); begin return MRS_Read; end HCR_EL2_Read;
+   procedure HCR_EL2_Write (Value : in HCR_EL2_Type) is procedure MSR_Write is new MSR ("hcr_el2", HCR_EL2_Type); begin MSR_Write (Value); end HCR_EL2_Write;
 
-   function HCR_EL2_Read return HCR_EL2_Type is
-      Value : HCR_EL2_Type;
-   begin
-      Asm (
-           Template => ""                           & CRLF &
-                       "        mrs     %0,hcr_el2" & CRLF &
-                       "",
-           Outputs  => HCR_EL2_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end HCR_EL2_Read;
+   function SCTLR_EL1_Read return SCTLR_EL1_Type is function MRS_Read is new MRS ("sctlr_el1", SCTLR_EL1_Type); begin return MRS_Read; end SCTLR_EL1_Read;
+   procedure SCTLR_EL1_Write (Value : in SCTLR_EL1_Type) is procedure MSR_Write is new MSR ("sctlr_el1", SCTLR_EL1_Type); begin MSR_Write (Value); end SCTLR_EL1_Write;
 
-   procedure HCR_EL2_Write (Value : in HCR_EL2_Type) is
-   begin
-      Asm (
-           Template => ""                           & CRLF &
-                       "        msr     hcr_el2,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => HCR_EL2_Type'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end HCR_EL2_Write;
+   function VBAR_EL1_Read return Unsigned_64 is function MRS_Read is new MRS ("vbar_el1", Unsigned_64); begin return MRS_Read; end VBAR_EL1_Read;
+   procedure VBAR_EL1_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("vbar_el1", Unsigned_64); begin MSR_Write (Value); end VBAR_EL1_Write;
 
-   ----------------------------------------------------------------------------
-   -- SCTLR_EL1_Read/Write
-   ----------------------------------------------------------------------------
+   function VBAR_EL2_Read return Unsigned_64 is function MRS_Read is new MRS ("vbar_el2", Unsigned_64); begin return MRS_Read; end VBAR_EL2_Read;
+   procedure VBAR_EL2_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("vbar_el2", Unsigned_64); begin MSR_Write (Value); end VBAR_EL2_Write;
 
-   function SCTLR_EL1_Read return SCTLR_EL1_Type is
-      Value : SCTLR_EL1_Type;
-   begin
-      Asm (
-           Template => ""                             & CRLF &
-                       "        mrs     %0,sctlr_el1" & CRLF &
-                       "",
-           Outputs  => SCTLR_EL1_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end SCTLR_EL1_Read;
+   function VBAR_EL3_Read return Unsigned_64 is function MRS_Read is new MRS ("vbar_el3", Unsigned_64); begin return MRS_Read; end VBAR_EL3_Read;
+   procedure VBAR_EL3_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("vbar_el3", Unsigned_64); begin MSR_Write (Value); end VBAR_EL3_Write;
 
-   procedure SCTLR_EL1_Write (Value : in SCTLR_EL1_Type) is
-   begin
-      Asm (
-           Template => ""                             & CRLF &
-                       "        msr     sctlr_el1,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => SCTLR_EL1_Type'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end SCTLR_EL1_Write;
+   function CNTFRQ_EL0_Read return CNTFRQ_EL0_Type is function MRS_Read is new MRS ("cntfrq_el0", CNTFRQ_EL0_Type); begin return MRS_Read; end CNTFRQ_EL0_Read;
 
-   ----------------------------------------------------------------------------
-   -- VBAR_ELx_Read/Write
-   ----------------------------------------------------------------------------
+   function CNTP_CTL_EL0_Read return CNTP_CTL_EL0_Type is function MRS_Read is new MRS ("cntp_ctl_el0", CNTP_CTL_EL0_Type); begin return MRS_Read; end CNTP_CTL_EL0_Read;
+   procedure CNTP_CTL_EL0_Write (Value : CNTP_CTL_EL0_Type) is procedure MSR_Write is new MSR ("cntp_ctl_el0", CNTP_CTL_EL0_Type); begin MSR_Write (Value); end CNTP_CTL_EL0_Write;
 
-   function VBAR_EL1_Read return Unsigned_64 is
-      Value : Unsigned_64;
-   begin
-      Asm (
-           Template => ""                            & CRLF &
-                       "        mrs     %0,vbar_el1" & CRLF &
-                       "",
-           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end VBAR_EL1_Read;
+   function CNTP_CVAL_EL0_Read return Unsigned_64 is function MRS_Read is new MRS ("cntp_cval_el0", Unsigned_64); begin return MRS_Read; end CNTP_CVAL_EL0_Read;
+   procedure CNTP_CVAL_EL0_Write (Value : Unsigned_64) is procedure MSR_Write is new MSR ("cntp_cval_el0", Unsigned_64); begin MSR_Write (Value); end CNTP_CVAL_EL0_Write;
 
-   procedure VBAR_EL1_Write (Value : in Unsigned_64) is
-   begin
-      Asm (
-           Template => ""                            & CRLF &
-                       "        msr     vbar_el1,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_64'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end VBAR_EL1_Write;
+   function CNTP_TVAL_EL0_Read return CNTP_TVAL_EL0_Type is function MRS_Read is new MRS ("cntp_tval_el0", CNTP_TVAL_EL0_Type); begin return MRS_Read; end CNTP_TVAL_EL0_Read;
+   procedure CNTP_TVAL_EL0_Write (Value : CNTP_TVAL_EL0_Type) is procedure MSR_Write is new MSR ("cntp_tval_el0", CNTP_TVAL_EL0_Type); begin MSR_Write (Value); end CNTP_TVAL_EL0_Write;
 
-   function VBAR_EL2_Read return Unsigned_64 is
-      Value : Unsigned_64;
-   begin
-      Asm (
-           Template => ""                            & CRLF &
-                       "        mrs     %0,vbar_el2" & CRLF &
-                       "",
-           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end VBAR_EL2_Read;
+   function CNTPCT_EL0_Read return Unsigned_64 is function MRS_Read is new MRS ("cntfrq_el0", Unsigned_64); begin return MRS_Read; end CNTPCT_EL0_Read;
 
-   procedure VBAR_EL2_Write (Value : in Unsigned_64) is
-   begin
-      Asm (
-           Template => ""                            & CRLF &
-                       "        msr     vbar_el2,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_64'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end VBAR_EL2_Write;
-
-   function VBAR_EL3_Read return Unsigned_64 is
-      Value : Unsigned_64;
-   begin
-      Asm (
-           Template => ""                            & CRLF &
-                       "        mrs     %0,vbar_el3" & CRLF &
-                       "",
-           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end VBAR_EL3_Read;
-
-   procedure VBAR_EL3_Write (Value : in Unsigned_64) is
-   begin
-      Asm (
-           Template => ""                            & CRLF &
-                       "        msr     vbar_el3,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_64'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end VBAR_EL3_Write;
-
-   ----------------------------------------------------------------------------
-   -- CNTFRQ_EL0_Read
-   ----------------------------------------------------------------------------
-
-   function CNTFRQ_EL0_Read return CNTFRQ_EL0_Type is
-      Value : CNTFRQ_EL0_Type;
-   begin
-      Asm (
-           Template => ""                              & CRLF &
-                       "        mrs     %0,cntfrq_el0" & CRLF &
-                       "",
-           Outputs  => CNTFRQ_EL0_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end CNTFRQ_EL0_Read;
-
-   ----------------------------------------------------------------------------
-   -- CNTP_CTL_EL0_Read/Write
-   ----------------------------------------------------------------------------
-
-   function CNTP_CTL_EL0_Read return CNTP_CTL_EL0_Type is
-      Value : CNTP_CTL_EL0_Type;
-   begin
-      Asm (
-           Template => ""                                & CRLF &
-                       "        mrs     %0,cntp_ctl_el0" & CRLF &
-                       "",
-           Outputs  => CNTP_CTL_EL0_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end CNTP_CTL_EL0_Read;
-
-   procedure CNTP_CTL_EL0_Write (Value : in CNTP_CTL_EL0_Type) is
-   begin
-      Asm (
-           Template => ""                                & CRLF &
-                       "        msr     cntp_ctl_el0,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => CNTP_CTL_EL0_Type'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end CNTP_CTL_EL0_Write;
-
-   ----------------------------------------------------------------------------
-   -- CNTP_CVAL_EL0_Read/Write
-   ----------------------------------------------------------------------------
-
-   function CNTP_CVAL_EL0_Read return Unsigned_64 is
-      Value : Unsigned_64;
-   begin
-      Asm (
-           Template => ""                                 & CRLF &
-                       "        mrs     %0,cntp_cval_el0" & CRLF &
-                       "",
-           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end CNTP_CVAL_EL0_Read;
-
-   procedure CNTP_CVAL_EL0_Write (Value : in Unsigned_64) is
-   begin
-      Asm (
-           Template => ""                                 & CRLF &
-                       "        msr     cntp_cval_el0,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_64'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end CNTP_CVAL_EL0_Write;
-
-   ----------------------------------------------------------------------------
-   -- CNTP_TVAL_EL0_Read/Write
-   ----------------------------------------------------------------------------
-
-   function CNTP_TVAL_EL0_Read return CNTP_TVAL_EL0_Type is
-      Value : CNTP_TVAL_EL0_Type;
-   begin
-      Asm (
-           Template => ""                                 & CRLF &
-                       "        mrs     %0,cntp_tval_el0" & CRLF &
-                       "",
-           Outputs  => CNTP_TVAL_EL0_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end CNTP_TVAL_EL0_Read;
-
-   procedure CNTP_TVAL_EL0_Write (Value : in CNTP_TVAL_EL0_Type) is
-   begin
-      Asm (
-           Template => ""                                 & CRLF &
-                       "        msr     cntp_tval_el0,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => CNTP_TVAL_EL0_Type'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end CNTP_TVAL_EL0_Write;
-
-   ----------------------------------------------------------------------------
-   -- CNTPCT_EL0_Read
-   ----------------------------------------------------------------------------
-
-   function CNTPCT_EL0_Read return Unsigned_64 is
-      Value : Unsigned_64;
-   begin
-      Asm (
-           Template => ""                              & CRLF &
-                       "        mrs     %0,cntpct_el0" & CRLF &
-                       "",
-           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end CNTPCT_EL0_Read;
+pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
    -- NOP
