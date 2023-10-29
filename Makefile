@@ -31,6 +31,8 @@
 
 .POSIX:
 
+.NOTPARALLEL:
+
 .DEFAULT_GOAL := help
 
 NULL  :=
@@ -350,7 +352,7 @@ CONFIGUREGPR_FILENAME := configure.gpr
 
 # cleaning
 CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
-                            *.map *.o *.out *.srec *.td *.tmp
+                            *.map *.o *.out* *.srec *.td *.tmp
 DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)
 
 ################################################################################
@@ -442,6 +444,12 @@ INCLUDE_DIRECTORIES     :=
 CPU_INCLUDE_DIRECTORIES :=
 IMPLICIT_CORE_UNITS     :=
 IMPLICIT_CLIBRARY_UNITS :=
+
+#
+# Initialize configuration dependencies.
+#
+CONFIGURE_DEPS          :=
+CONFIGURE_DEPS_PLATFORM :=
 
 #
 # Various features.
@@ -580,6 +588,7 @@ export                          \
        POSTBUILD_COMMAND        \
        CLEAN_OBJECTS_COMMON     \
        DISTCLEAN_OBJECTS_COMMON \
+       CONFIGURE_DEPS           \
        CPU_SUPPORT_DEFLIST
 
 # configuration
@@ -1012,6 +1021,7 @@ endif
 
 .PHONY: kernel_end
 kernel_end:
+	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): kernel compiled successfully.")
 	@$(call echo-print,"")
 
