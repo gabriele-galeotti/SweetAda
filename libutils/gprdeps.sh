@@ -11,7 +11,7 @@
 
 #
 # Arguments:
-# optional starting "-u" = output sorted, non-duplicated units
+# optional starting "-u" = output sorted, not-duplicated units
 # $1 = input filename
 #
 # Environment variables:

@@ -11,7 +11,7 @@ REM
 
 REM
 REM Arguments:
-REM optional starting "-u" = output sorted, non-duplicated units
+REM optional starting "-u" = output sorted, not-duplicated units
 REM $1 = input filename
 REM
 REM Environment variables:
