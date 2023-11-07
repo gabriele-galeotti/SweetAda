@@ -764,7 +764,7 @@ endif
 help:
 	@$(call echo-print,"make help (default)")
 	@$(call echo-print,"  Display an help about make targets.")
-	@$(call echo-print,"make RTS=<rts> CPU=<cpu> TOOLCHAIN_NAME=<toolchain_name> rts")
+	@$(call echo-print,"make RTS=<rts> [CPU=<cpu>] [TOOLCHAIN_NAME=<toolchain_name>] rts")
 	@$(call echo-print,"  Create RTS <rts> for CPU <cpu> with toolchain <toolchain_name>.")
 	@$(call echo-print,"make PLATFORM=<platform> [SUBPLATFORM=<subplatform>] createkernelcfg")
 	@$(call echo-print,"  Create the '$(KERNEL_CFGFILE)' main configuration file.")
