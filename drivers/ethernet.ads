@@ -93,8 +93,8 @@ package Ethernet is
    record
       Htype at  0 range 0 .. 15;
       Ptype at  2 range 0 .. 15;
-      Hlen  at  4 range 0 .. 7;
-      Plen  at  5 range 0 .. 7;
+      Hlen  at  4 range 0 ..  7;
+      Plen  at  5 range 0 ..  7;
       Oper  at  6 range 0 .. 15;
       Sha   at  8 range 0 .. 47;
       Spa   at 14 range 0 .. 31;
@@ -167,8 +167,8 @@ package Ethernet is
 
    type Queue_Index_Type is mod QUEUE_SIZE;
 
-   type Queue_Array is array (Queue_Index_Type) of Pbuf_Ptr with
-      Suppress_Initialization => True;
+   type Queue_Array is array (Queue_Index_Type) of Pbuf_Ptr
+      with Suppress_Initialization => True;
 
    type Queue_Type is
    record

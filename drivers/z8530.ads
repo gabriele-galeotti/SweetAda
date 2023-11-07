@@ -73,24 +73,20 @@ package Z8530 is
        Data_Port      => [Null_Address, Null_Address]
       );
 
-   procedure Baud_Rate_Set (
-                            Descriptor : in Descriptor_Type;
-                            Channel    : in Channel_Type;
-                            Baud_Rate  : in Definitions.Baud_Rate_Type
-                           );
-   procedure Init (
-                   Descriptor : in out Descriptor_Type;
-                   Channel    : in     Channel_Type
-                  );
-   procedure TX (
-                 Descriptor : in Descriptor_Type;
-                 Channel    : in Channel_Type;
-                 Data       : in Unsigned_8
-                );
-   procedure RX (
-                 Descriptor : in  Descriptor_Type;
-                 Channel    : in  Channel_Type;
-                 Data       : out Unsigned_8
-                );
+   procedure Baud_Rate_Set
+      (Descriptor : in Descriptor_Type;
+       Channel    : in Channel_Type;
+       Baud_Rate  : in Definitions.Baud_Rate_Type);
+   procedure Init
+      (Descriptor : in out Descriptor_Type;
+       Channel    : in     Channel_Type);
+   procedure TX
+      (Descriptor : in Descriptor_Type;
+       Channel    : in Channel_Type;
+       Data       : in Unsigned_8);
+   procedure RX
+      (Descriptor : in     Descriptor_Type;
+       Channel    : in     Channel_Type;
+       Data       :    out Unsigned_8);
 
 end Z8530;

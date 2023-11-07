@@ -60,10 +60,10 @@ package body Ethernet is
    procedure ARP_Handler
       (P : in Pbuf_Ptr)
       is
-      ARP_Header : aliased ARP_Header_Type with
-         Address    => Payload_CurrentAddress (P),
-         Import     => True,
-         Convention => Ada;
+      ARP_Header : aliased ARP_Header_Type
+         with Address    => Payload_CurrentAddress (P),
+              Import     => True,
+              Convention => Ada;
    begin
       case N2H (ARP_Header.Oper) is
          when ARP_REQUEST =>
@@ -121,10 +121,10 @@ package body Ethernet is
    procedure Packet_Handler
       (P : in Pbuf_Ptr)
       is
-      ETH_Header : aliased Ethernet_Header_Type with
-         Address    => Payload_CurrentAddress (P),
-         Import     => True,
-         Convention => Ada;
+      ETH_Header : aliased Ethernet_Header_Type
+         with Address    => Payload_CurrentAddress (P),
+              Import     => True,
+              Convention => Ada;
    begin
       -- Console.Print ("---------------------------------------------------------", NL => True);
       -- Console.Print (P.all.Total_Size, Prefix => "length: ", NL => True);

@@ -690,25 +690,23 @@ package body Z8530 is
    -- Local subprograms
    ----------------------------------------------------------------------------
 
-   procedure Create_Ports (
-                           Descriptor : in out Descriptor_Type;
-                           Channel    : in     Channel_Type
-                          );
+   procedure Create_Ports
+      (Descriptor : in out Descriptor_Type;
+       Channel    : in     Channel_Type);
 
-   function Register_Read (
-                           Descriptor : Descriptor_Type;
-                           Channel    : Channel_Type;
-                           Register   : Register_Type
-                          ) return Unsigned_8 with
-      Inline => True;
+   function Register_Read
+      (Descriptor : Descriptor_Type;
+       Channel    : Channel_Type;
+       Register   : Register_Type)
+      return Unsigned_8
+      with Inline => True;
 
-   procedure Register_Write (
-                             Descriptor : in Descriptor_Type;
-                             Channel    : in Channel_Type;
-                             Register   : in Register_Type;
-                             Value      : in Unsigned_8
-                            ) with
-      Inline => True;
+   procedure Register_Write
+      (Descriptor : in Descriptor_Type;
+       Channel    : in Channel_Type;
+       Register   : in Register_Type;
+       Value      : in Unsigned_8)
+      with Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -732,10 +730,10 @@ package body Z8530 is
    --   A2 --> D//C
    --   A3 --> A//B
    ----------------------------------------------------------------------------
-   procedure Create_Ports (
-                           Descriptor : in out Descriptor_Type;
-                           Channel    : in     Channel_Type
-                          ) is
+   procedure Create_Ports
+      (Descriptor : in out Descriptor_Type;
+       Channel    : in     Channel_Type)
+      is
       Base_Address : Address := Descriptor.Base_Address;
    begin
       if Descriptor.Flags.DECstation5000133 then
@@ -751,11 +749,12 @@ package body Z8530 is
    ----------------------------------------------------------------------------
    -- Register_Read
    ----------------------------------------------------------------------------
-   function Register_Read (
-                           Descriptor : Descriptor_Type;
-                           Channel    : Channel_Type;
-                           Register   : Register_Type
-                          ) return Unsigned_8 is
+   function Register_Read
+      (Descriptor : Descriptor_Type;
+       Channel    : Channel_Type;
+       Register   : Register_Type)
+      return Unsigned_8
+      is
    begin
       Descriptor.Write_8 (Descriptor.Control_Port (Channel), Register_ID (Register));
       return Descriptor.Read_8 (Descriptor.Control_Port (Channel));
@@ -764,12 +763,12 @@ package body Z8530 is
    ----------------------------------------------------------------------------
    -- Register_Write
    ----------------------------------------------------------------------------
-   procedure Register_Write (
-                             Descriptor : in Descriptor_Type;
-                             Channel    : in Channel_Type;
-                             Register   : in Register_Type;
-                             Value      : in Unsigned_8
-                            ) is
+   procedure Register_Write
+      (Descriptor : in Descriptor_Type;
+       Channel    : in Channel_Type;
+       Register   : in Register_Type;
+       Value      : in Unsigned_8)
+      is
    begin
       Descriptor.Write_8 (Descriptor.Control_Port (Channel), Register_ID (Register));
       Descriptor.Write_8 (Descriptor.Control_Port (Channel), Value);
@@ -783,11 +782,11 @@ package body Z8530 is
    -- select the clock source for the BRG by setting bit D1 of WR14. Finally,
    -- the BRG is enabled by setting bit D0 of WR14 to 1.
    ----------------------------------------------------------------------------
-   procedure Baud_Rate_Set (
-                            Descriptor : in Descriptor_Type;
-                            Channel    : in Channel_Type;
-                            Baud_Rate  : in Definitions.Baud_Rate_Type
-                           ) is
+   procedure Baud_Rate_Set
+      (Descriptor : in Descriptor_Type;
+       Channel    : in Channel_Type;
+       Baud_Rate  : in Definitions.Baud_Rate_Type)
+      is
       Unused        : Unsigned_8 with Unreferenced => True;
       BR            : constant Integer := Definitions.Baud_Rate_Type'Enum_Rep (Baud_Rate);
       Time_Constant : Unsigned_16;
@@ -817,10 +816,10 @@ package body Z8530 is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init (
-                   Descriptor : in out Descriptor_Type;
-                   Channel    : in     Channel_Type
-                  ) is
+   procedure Init
+      (Descriptor : in out Descriptor_Type;
+       Channel    : in     Channel_Type)
+      is
       Unused : Unsigned_8 with Unreferenced => True;
    begin
       Create_Ports (Descriptor, Channel);
@@ -889,11 +888,11 @@ package body Z8530 is
    ----------------------------------------------------------------------------
    -- TX
    ----------------------------------------------------------------------------
-   procedure TX (
-                 Descriptor : in Descriptor_Type;
-                 Channel    : in Channel_Type;
-                 Data       : in Unsigned_8
-                ) is
+   procedure TX
+      (Descriptor : in Descriptor_Type;
+       Channel    : in Channel_Type;
+       Data       : in Unsigned_8)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -911,11 +910,11 @@ package body Z8530 is
    ----------------------------------------------------------------------------
    -- RX
    ----------------------------------------------------------------------------
-   procedure RX (
-                 Descriptor : in  Descriptor_Type;
-                 Channel    : in  Channel_Type;
-                 Data       : out Unsigned_8
-                ) is
+   procedure RX
+      (Descriptor : in  Descriptor_Type;
+       Channel    : in  Channel_Type;
+       Data       : out Unsigned_8)
+      is
    begin
       -- wait for receiver available
       loop

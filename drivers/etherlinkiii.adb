@@ -59,11 +59,15 @@ package body EtherLinkIII is
 
    EtherLinkIII_Card : EtherLinkIII_Card_Type;
 
-   procedure Select_Window (N : in NWindow_Type) with
-      Inline => True;
-   function Status_Read return Unsigned_16 with
-      Inline => True;
-   function EEPROM_ID_Read (Data_Index : Natural) return Unsigned_16;
+   procedure Select_Window
+      (N : in NWindow_Type)
+      with Inline => True;
+   function Status_Read
+      return Unsigned_16
+      with Inline => True;
+   function EEPROM_ID_Read
+      (Data_Index : Natural)
+      return Unsigned_16;
 
    --========================================================================--
    --                                                                        --
@@ -76,18 +80,21 @@ package body EtherLinkIII is
    ----------------------------------------------------------------------------
    -- Select_Window
    ----------------------------------------------------------------------------
-   procedure Select_Window (N : in NWindow_Type) is
+   procedure Select_Window
+      (N : in NWindow_Type)
+      is
    begin
-      IO_Write (
-                EtherLinkIII_Card.Base_Address + CMD_REGISTER,
-                16#0800# + Unsigned_16 (N)
-               );
+      IO_Write
+         (EtherLinkIII_Card.Base_Address + CMD_REGISTER,
+          16#0800# + Unsigned_16 (N));
    end Select_Window;
 
    ----------------------------------------------------------------------------
    -- Status_Read
    ----------------------------------------------------------------------------
-   function Status_Read return Unsigned_16 is
+   function Status_Read
+      return Unsigned_16
+      is
    begin
       return Unsigned_16'(IO_Read (EtherLinkIII_Card.Base_Address + 16#0E#));
    end Status_Read;
@@ -95,7 +102,10 @@ package body EtherLinkIII is
    ----------------------------------------------------------------------------
    -- EEPROM_Read
    ----------------------------------------------------------------------------
-   function EEPROM_ID_Read (Data_Index : Natural) return Unsigned_16 is
+   function EEPROM_ID_Read
+      (Data_Index : Natural)
+      return Unsigned_16
+      is
       Result : Unsigned_16;
    begin
       PortOut (ID_PORT, EEPROM_READ or Unsigned_8 (Data_Index));
@@ -113,7 +123,8 @@ package body EtherLinkIII is
    ----------------------------------------------------------------------------
    -- __REF__ 7-2 Adapter Configuration and Enable
    ----------------------------------------------------------------------------
-   procedure Probe is
+   procedure Probe
+      is
    begin
       -- ID sequence
       -- IDS is in ID_WAIT state, and it monitors write accesses to 01x0h

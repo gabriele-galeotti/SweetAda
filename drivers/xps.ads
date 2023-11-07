@@ -64,7 +64,7 @@ package XPS is
       Size      => 32;
    for XPS_Timer_CSR_Type use
    record
-      Reserved at 0 range 0 .. 20;
+      Reserved at 0 range  0 .. 20;
       ENALL    at 0 range 21 .. 21;
       PWMA0    at 0 range 22 .. 22;
       T0INT    at 0 range 23 .. 23;
@@ -108,7 +108,7 @@ package XPS is
       Size      => 32;
    for XPS_INTC_MER_Type use
    record
-      Reserved at 0 range 0 .. 29;
+      Reserved at 0 range  0 .. 29;
       HIE      at 0 range 30 .. 30;
       ME       at 0 range 31 .. 31;
    end record;
