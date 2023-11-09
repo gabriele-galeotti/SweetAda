@@ -42,6 +42,10 @@ function ParseGpr
 {
   param([string]$filename)
   $units = ""
+  if (-not(Test-Path -Path "$filename" -PathType Leaf))
+  {
+    return $units
+  }
   foreach ($textline in Get-Content "$filename")
   {
     $textline = $textline.Trim()

@@ -82,6 +82,9 @@ return 0
 ################################################################################
 parse_gpr()
 {
+if [ ! -e $1 ] ; then
+  return
+fi
 while IFS= read -r line ; do
   line=$(printf "%s" "${line}" | sed                \
           -e "s|^[[:blank:]]*||;s|[[:blank:]]*\$||" \
