@@ -13,8 +13,6 @@
 # OSTYPE
 # ECHO
 # SED
-# TOUCH
-# UPDATETM
 # BUILD_MODE
 # KERNEL_PARENT_PATH
 # LIB_DIRECTORY
@@ -35,18 +33,6 @@
 # GNAT_WRAPPER_TIMESTAMP_FILENAME
 # GPRBUILD_ENABLE_<LIBRARY_NAME>
 #
-
-#
-# update-timestamp
-#
-# Usage:
-# $(call update-timestamp,filename)
-#
-ifeq ($(OSTYPE),cmd)
-update-timestamp = $(UPDATETM) $1
-else
-update-timestamp = $(TOUCH) $1
-endif
 
 # export top-level directory reference
 export KERNEL_PARENT_PATH

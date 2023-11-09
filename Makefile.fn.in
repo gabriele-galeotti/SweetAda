@@ -15,6 +15,8 @@
 # VERBOSE
 # ECHO
 # SED
+# UPDATETM
+# TOUCH
 #
 
 BRIEFTEXT_NSPACE := 12
@@ -85,5 +87,33 @@ ifeq ($(OSTYPE),cmd)
 ls-dirs = DIR /A:D /B *
 else
 ls-dirs = ls -A -d */ | $(SED) -e "s|/\$$||"
+endif
+
+#
+# update-timestamp
+#
+# Usage:
+# $(call update-timestamp,filename)
+#
+# Update a file timestamp using current datetime.
+#
+ifeq ($(OSTYPE),cmd)
+update-timestamp = $(UPDATETM) $1
+else
+update-timestamp = $(TOUCH) $1
+endif
+
+#
+# update-timestamp-reffile
+#
+# Usage:
+# $(call update-timestamp-reffile,reference_filename,filename)
+#
+# Update a file timestamp using a file reference.
+#
+ifeq ($(OSTYPE),cmd)
+update-timestamp-reffile = $(UPDATETM) -r $1 $2
+else
+update-timestamp-reffile = $(TOUCH) -r $1 $2
 endif
 
