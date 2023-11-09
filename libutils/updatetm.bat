@@ -11,6 +11,7 @@ REM
 
 REM
 REM Arguments:
+REM optional starting "-r <reference_filename>"
 REM $1 = input filename
 REM
 REM Environment variables:

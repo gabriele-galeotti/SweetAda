@@ -39,10 +39,25 @@ function ExitWithCode
 #                                                                              #
 ################################################################################
 
+[int]$argc = 0
+[bool]$reffile = $false
+
 #
 # Basic input parameters check.
 #
-$input_filename = $args[0]
+if ([string]$args[$argc] -eq "-r")
+{
+  $reffile = $true
+  $argc = $argc + 1
+  $reffile_filename = $args[$argc]
+  if ([string]::IsNullOrEmpty($reffile_filename))
+  {
+    Write-Host "${scriptname}: *** Error: no reference file specified."
+    ExitWithCode 1
+  }
+  $argc = $argc + 1
+}
+$input_filename = $args[$argc]
 if ([string]::IsNullOrEmpty($input_filename))
 {
   Write-Host "${scriptname}: *** Error: no input file specified."
@@ -50,7 +65,14 @@ if ([string]::IsNullOrEmpty($input_filename))
 }
 
 $file = Get-Item -Path $input_filename
-$file.LastWriteTime = (Get-Date)
+if ($reffile)
+{
+  $file.LastWriteTime = (Get-ChildItem -Path $reffile_filename | Select LastWriteTime | Get-Date)
+}
+else
+{
+  $file.LastWriteTime = (Get-Date)
+}
 
 ExitWithCode 0
 
