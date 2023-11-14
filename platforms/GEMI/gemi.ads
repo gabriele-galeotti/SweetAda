@@ -39,10 +39,10 @@ package GEMI is
    UART_BASEADDRESS : constant := 16#0600_2000#;
    RTC_BASEADDRESS  : constant := 16#0600_3000#;
 
-   LEDPORT : aliased Unsigned_8 with
-      Address              => To_Address (LEDPORT_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   LEDPORT : aliased Unsigned_8
+      with Address              => To_Address (LEDPORT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end GEMI;

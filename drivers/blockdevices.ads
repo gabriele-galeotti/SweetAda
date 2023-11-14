@@ -37,8 +37,8 @@ package BlockDevices is
 
    BLOCK_ALIGNMENT : constant := 8;
 
-   type Block_Type is new Bits.Byte_Array with
-      Alignment => BLOCK_ALIGNMENT;
+   type Block_Type is new Bits.Byte_Array
+      with Alignment => BLOCK_ALIGNMENT;
 
    ----------------------------------------------------------------------------
    -- CHS addressing

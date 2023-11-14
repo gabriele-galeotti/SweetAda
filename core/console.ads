@@ -53,7 +53,9 @@ package Console is
    procedure Console_Null_Read
       (C : out Character);
 
-   Console_Descriptor : Console_Descriptor_Type := (Console_Null_Write'Access, Console_Null_Read'Access);
+   Console_Descriptor : Console_Descriptor_Type :=
+      (Console_Null_Write'Access,
+       Console_Null_Read'Access);
 
    -- Print (Character)
    procedure Print

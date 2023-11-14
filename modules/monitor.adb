@@ -58,7 +58,8 @@ package body Monitor is
    ----------------------------------------------------------------------------
    -- Getline
    ----------------------------------------------------------------------------
-   procedure Getline is
+   procedure Getline
+      is
       C : Character;
    begin
       Buffer_Idx := 1;
@@ -94,7 +95,8 @@ package body Monitor is
    ----------------------------------------------------------------------------
    -- Parameters_Dump
    ----------------------------------------------------------------------------
-   procedure Parameters_Dump is
+   procedure Parameters_Dump
+      is
    begin
       Console.Print ("CPU byte order:        ");
       if Bits.BigEndian then
@@ -103,25 +105,18 @@ package body Monitor is
          Console.Print ("LE");
       end if;
       Console.Print_NewLine;
-      Console.Print (
-                     Integer'(Standard'Word_Size),
-                     Prefix => "Standard'Word_Size:    ",
-                     NL     => True
-                    );
-      Console.Print (
-                     Integer'(Standard'Address_Size),
-                     Prefix => "Standard'Address_Size: ",
-                     NL     => True
-                    );
-      Console.Print (Linker.SText'Address, Prefix => "SText:                 ", NL => True);
-      Console.Print (Linker.SData'Address, Prefix => "SData:                 ", NL => True);
-      Console.Print (Linker.SBss'Address,  Prefix => "SBss:                  ", NL => True);
+      Console.Print (Prefix => "Standard'Word_Size:    ", Value => Integer'(Standard'Word_Size), NL => True);
+      Console.Print (Prefix => "Standard'Address_Size: ", Value => Integer'(Standard'Address_Size), NL => True);
+      Console.Print (Prefix => "SText:                 ", Value => Linker.SText'Address, NL => True);
+      Console.Print (Prefix => "SData:                 ", Value => Linker.SData'Address, NL => True);
+      Console.Print (Prefix => "SBss:                  ", Value => Linker.SBss'Address, NL => True);
    end Parameters_Dump;
 
    ----------------------------------------------------------------------------
    -- Help
    ----------------------------------------------------------------------------
-   procedure Help is
+   procedure Help
+      is
    begin
       Console.Print ("help    - this help",        NL => True);
       Console.Print ("parms   - parameters dump",  NL => True);
@@ -132,7 +127,8 @@ package body Monitor is
    ----------------------------------------------------------------------------
    -- Monitor
    ----------------------------------------------------------------------------
-   procedure Monitor is
+   procedure Monitor
+      is
    begin
       Console.Print (Banner, NL => True);
       loop
@@ -147,14 +143,10 @@ package body Monitor is
                Parameters_Dump;
             --------------------------------------
             elsif Buffer (1 .. 7) = "srecord" then
-               Srecord.Init (
-                             BSP.Console_Getchar'Access,
-                             BSP.Console_Putchar'Access,
-                             False
-                            );
+               Srecord.Init (BSP.Console_Getchar'Access, BSP.Console_Putchar'Access, False);
                Srecord.Receive;
                if Srecord.Start_Address /= 0 then
-                  Console.Print (Srecord.Start_Address, Prefix => "START ADDRESS: ", NL => True);
+                  Console.Print (Prefix => "START ADDRESS: ", Value => Srecord.Start_Address, NL => True);
                   CPU.Asm_Call (To_Address (Srecord.Start_Address));
                end if;
             ------------------------------------
