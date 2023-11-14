@@ -13,6 +13,9 @@
 # OSTYPE
 #
 
+# assert a successful inclusion
+MAKEFILE_INCLUDE := Y
+
 ################################################################################
 #                                                                              #
 # Compiler style switches.                                                     #

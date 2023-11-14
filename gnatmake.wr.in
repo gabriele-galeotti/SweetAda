@@ -13,6 +13,9 @@
 # STACK_LIMIT
 #
 
+# assert a successful inclusion
+MAKEFILE_INCLUDE := Y
+
 ################################################################################
 #                                                                              #
 # Compiler warning switches.                                                   #
