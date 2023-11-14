@@ -18,6 +18,7 @@
 # ADA_MODE
 # RTS_PATH
 # GNATBIND_SECSTACK
+# CONFIGURE_DEPS
 #
 
 ################################################################################
@@ -219,8 +220,17 @@ endif
 #                                                                              #
 ################################################################################
 
+MAKEFILE_INCLUDE := N
 -include gnatmake.wr.in
+ifeq ($(MAKEFILE_INCLUDE),Y)
+CONFIGURE_DEPS += gnatmake.wr.in
+endif
+
+MAKEFILE_INCLUDE := N
 -include gnatmake.st.in
+ifeq ($(MAKEFILE_INCLUDE),Y)
+CONFIGURE_DEPS += gnatmake.st.in
+endif
 
 ADAC     += $(ADAC_SWITCHES_WARNING) \
             $(ADAC_SWITCHES_STYLE)

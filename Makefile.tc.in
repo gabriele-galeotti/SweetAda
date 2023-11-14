@@ -35,6 +35,7 @@
 # GNAT_WRAPPER
 # USE_UNPREFIXED_GNATMAKE
 # ENABLE_SPLIT_DWARF
+# CONFIGURE_DEPS
 #
 
 ################################################################################
@@ -257,6 +258,7 @@ STRIP_SWITCHES_DEFAULT    +=
 
 ifeq      ($(BUILD_MODE),GNATMAKE)
 include gnatmake.tc.in
+CONFIGURE_DEPS += gnatmake.tc.in
 ifeq ($(OSTYPE),cmd)
 GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GNATMAKE) --version 2> nul|$(SED) -e "2,$$d")
 else

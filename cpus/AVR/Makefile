@@ -22,16 +22,13 @@ include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
 # shorthands
-LIB_DIRECTORY           := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)
-OBJ_DIRECTORY           := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
-DEP_DIRECTORY           := $(OBJ_DIRECTORY)
-GNATADC_FILENAME_TARGET := $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME)
+LIB_DIRECTORY     := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)
+OBJ_DIRECTORY     := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
+DEP_DIRECTORY     := $(OBJ_DIRECTORY)
 ifeq ($(OSTYPE),cmd)
-KERNEL_PARENT_PATH_CMD  := $(subst /,\,$(KERNEL_PARENT_PATH))
-LIB_DIRECTORY_CMD       := $(subst /,\,$(LIB_DIRECTORY))
-OBJ_DIRECTORY_CMD       := $(subst /,\,$(OBJ_DIRECTORY))
-DEP_DIRECTORY_CMD       := $(OBJ_DIRECTORY_CMD)
-GNATADC_FILENAME_TARGET := $(subst /,\,$(GNATADC_FILENAME_TARGET))
+LIB_DIRECTORY_CMD := $(subst /,\,$(LIB_DIRECTORY))
+OBJ_DIRECTORY_CMD := $(subst /,\,$(OBJ_DIRECTORY))
+DEP_DIRECTORY_CMD := $(OBJ_DIRECTORY_CMD)
 endif
 
 LIBRARY_NAME := cpu
@@ -45,10 +42,12 @@ LIBGCC_FUNCTIONS := adddi3_s8 cmpdi2 cmpdi2_s8 ashrdi3 negsi2 subdi3 mulsidi3   
                     udivmodhi4
 LIBGCC_SOURCES   := $(foreach f,$(LIBGCC_FUNCTIONS),L_$(f).S)
 OBJECTS          += $(foreach f,$(LIBGCC_FUNCTIONS),$(OBJ_DIRECTORY)/L_$(f).o)
-$(LIBGCC_SOURCES) : %.S : $(LIB1ASMSRC)
+$(LIBGCC_SOURCES): %.S : $(LIB1ASMSRC)
 	$(call brief-command, \
         $(CPP) -o $@ -x assembler-with-cpp -P -CC -D$* $(LIB1ASMSRC) \
         ,[CPP],$@)
+else
+LIBGCC_SOURCES :=
 endif
 
 .PHONY: all
@@ -56,7 +55,7 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
 configure: $(LIBGCC_SOURCES)
-	@$(CREATESYMLINK) $(GNATADC_FILENAME_TARGET) $(GNATADC_FILENAME)
+	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
 .PHONY: clean
 clean:

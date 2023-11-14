@@ -22,16 +22,13 @@ include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
 # shorthands
-LIB_DIRECTORY           := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)
-OBJ_DIRECTORY           := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
-DEP_DIRECTORY           := $(OBJ_DIRECTORY)
-GNATADC_FILENAME_TARGET := $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME)
+LIB_DIRECTORY     := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)
+OBJ_DIRECTORY     := $(KERNEL_PARENT_PATH)/$(OBJECT_DIRECTORY)
+DEP_DIRECTORY     := $(OBJ_DIRECTORY)
 ifeq ($(OSTYPE),cmd)
-KERNEL_PARENT_PATH_CMD  := $(subst /,\,$(KERNEL_PARENT_PATH))
-LIB_DIRECTORY_CMD       := $(subst /,\,$(LIB_DIRECTORY))
-OBJ_DIRECTORY_CMD       := $(subst /,\,$(OBJ_DIRECTORY))
-DEP_DIRECTORY_CMD       := $(OBJ_DIRECTORY_CMD)
-GNATADC_FILENAME_TARGET := $(subst /,\,$(GNATADC_FILENAME_TARGET))
+LIB_DIRECTORY_CMD := $(subst /,\,$(LIB_DIRECTORY))
+OBJ_DIRECTORY_CMD := $(subst /,\,$(OBJ_DIRECTORY))
+DEP_DIRECTORY_CMD := $(OBJ_DIRECTORY_CMD)
 endif
 
 LIBRARY_NAME := platform
@@ -46,9 +43,24 @@ installfiles:
 
 .PHONY: configure
 configure:
-	@$(CREATESYMLINK) $(GNATADC_FILENAME_TARGET) $(GNATADC_FILENAME)
-	@$(PROCESSCFG) configure.h.in configure.h
-	@$(PROCESSCFG) configure.ads.in configure.ads
+	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+ifeq ($(OSTYPE),cmd)
+	@FOR %%F IN ($(CONFIGURE_FILES_PLATFORM)) DO \
+          @ECHO OFF &&                               \
+          IF EXIST %%F.in (                          \
+            $(PROCESSCFG) %%F.in %%F || EXIT /B 1    \
+          ) ELSE (                                   \
+            EXIT /B 1                                \
+          )
+else
+	@for f in $(CONFIGURE_FILES_PLATFORM) ; do  \
+          if [ -e $$f.in ] ; then                   \
+            $(PROCESSCFG) $$f.in $$f || exit $$? ;  \
+          else                                      \
+            exit 1 ;                                \
+          fi ;                                      \
+        done
+endif
 
 .PHONY: postbuild
 postbuild:
@@ -59,7 +71,8 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) configure.h configure.ads
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
+              $(CONFIGURE_FILES_PLATFORM)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

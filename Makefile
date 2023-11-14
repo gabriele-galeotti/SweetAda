@@ -81,7 +81,7 @@ $(error Error: $(NON_MAKEFILE_TARGETS): no known Makefile target)
 endif
 
 # detect OS type
-# detected OS names: "linux"/"cmd"/"msys"/"darwin"
+# detected OS names: "cmd"/"msys"/"darwin"/"linux"
 ifeq ($(OS),Windows_NT)
 ifneq ($(MSYSTEM),)
 OSTYPE := msys
@@ -90,10 +90,10 @@ OSTYPE := cmd
 endif
 else
 OSTYPE_UNAME := $(shell uname -s 2> /dev/null)
-ifeq      ($(OSTYPE_UNAME),Linux)
-OSTYPE := linux
-else ifeq ($(OSTYPE_UNAME),Darwin)
+ifeq      ($(OSTYPE_UNAME),Darwin)
 OSTYPE := darwin
+else ifeq ($(OSTYPE_UNAME),Linux)
+OSTYPE := linux
 else
 $(error Error: no valid OSTYPE)
 endif
@@ -193,8 +193,14 @@ POSTBUILD_ROMFILE  :=
 IMPLICIT_ALI_UNITS :=
 EXTERNAL_OBJECTS   :=
 
+# initialize configuration dependencies
+CONFIGURE_FILES_PLATFORM :=
+CONFIGURE_DEPS           :=
+GPRBUILD_DEPS            :=
+
 # read the master configuration file
 include configuration.in
+CONFIGURE_DEPS += configuration.in
 
 ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(TOOLCHAIN_PREFIX),)
@@ -336,6 +342,9 @@ CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/nu
 RTSES     := $(filter-out targets,$(shell ($(CD) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null))
 endif
 
+# build flag and version control
+DOTSWEETADA := .sweetada
+
 # default kernel filenames
 KERNEL_CFGFILE := $(KERNEL_BASENAME).cfg
 KERNEL_DEPFILE := $(KERNEL_BASENAME).d
@@ -446,12 +455,6 @@ IMPLICIT_CORE_UNITS     :=
 IMPLICIT_CLIBRARY_UNITS :=
 
 #
-# Initialize configuration dependencies.
-#
-CONFIGURE_DEPS          :=
-CONFIGURE_DEPS_PLATFORM :=
-
-#
 # Various features.
 #
 GNATBIND_SECSTACK       :=
@@ -471,12 +474,6 @@ ENABLE_SPLIT_DWARF      :=
 # the "probevariable" target).
 #
 
-# standard components
--include $(APPLICATION_DIRECTORY)/configuration.in
--include $(DRIVERS_DIRECTORY)/configuration.in
--include $(MODULES_DIRECTORY)/configuration.in
--include $(CORE_DIRECTORY)/configuration.in
-
 # try to read PLATFORM from configuration file
 ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
 -include $(KERNEL_CFGFILE)
@@ -487,7 +484,10 @@ ifneq ($(PLATFORM),)
 # platform known
 PLATFORM_DIRECTORY     := $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
 PLATFORM_DIRECTORY_CMD := $(PLATFORM_BASE_DIRECTORY)\$(PLATFORM)
--include $(PLATFORM_DIRECTORY)/configuration.in
+ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
+include $(PLATFORM_DIRECTORY)/configuration.in
+CONFIGURE_DEPS += $(PLATFORM_DIRECTORY)/configuration.in
+endif
 else
 # platform not known, output an error message
 ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
@@ -499,12 +499,49 @@ ifneq ($(CPU),)
 # CPU known
 CPU_DIRECTORY     := $(CPU_BASE_DIRECTORY)/$(CPU)
 CPU_DIRECTORY_CMD := $(CPU_BASE_DIRECTORY)\$(CPU)
--include $(CPU_DIRECTORY)/configuration.in
+include $(CPU_DIRECTORY)/configuration.in
+CONFIGURE_DEPS += $(CPU_DIRECTORY)/configuration.in
 endif
 
--include $(CLIBRARY_DIRECTORY)/configuration.in
+# standard components
+include $(APPLICATION_DIRECTORY)/configuration.in
+CONFIGURE_DEPS += $(APPLICATION_DIRECTORY)/configuration.in
+ifeq ($(USE_CLIBRARY),Y)
+include $(CLIBRARY_DIRECTORY)/configuration.in
+CONFIGURE_DEPS += $(CLIBRARY_DIRECTORY)/configuration.in
+endif
+include $(CORE_DIRECTORY)/configuration.in
+CONFIGURE_DEPS += $(CORE_DIRECTORY)/configuration.in
+include $(DRIVERS_DIRECTORY)/configuration.in
+CONFIGURE_DEPS += $(DRIVERS_DIRECTORY)/configuration.in
+include $(MODULES_DIRECTORY)/configuration.in
+CONFIGURE_DEPS += $(MODULES_DIRECTORY)/configuration.in
 
--include Makefile.tc.in
+# GPRbuild configuration dependencies
+ifeq ($(BUILD_MODE),GPRbuild)
+ifeq ($(OSTYPE),cmd)
+GPRBUILD_DEPS += $(sort $(shell SET "PATH=$(PATH)" && $(GPRDEPS) $(KERNEL_GPRFILE) 2> nul))
+else
+GPRBUILD_DEPS += $(sort $(shell PATH="$(PATH)" && $(GPRDEPS) $(KERNEL_GPRFILE) 2> /dev/null))
+endif
+endif
+
+################################################################################
+#                                                                              #
+# Post-configuration finalization.                                             #
+#                                                                              #
+################################################################################
+
+#
+# Now that the complete configuration is known, do a finalization on some
+# sensible parameters.
+#
+
+ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifeq ($(filter GNATMAKE GPRbuild,$(BUILD_MODE)),)
+$(warning *** Warning: no valid BUILD_MODE.)
+endif
+endif
 
 # if RTS_BUILD is null, use the one read from configuration files
 ifeq ($(RTS_BUILD),)
@@ -533,11 +570,8 @@ endif
 IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)     \
                       $(IMPLICIT_CLIBRARY_UNITS)
 
-ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(filter GNATMAKE GPRbuild,$(BUILD_MODE)),)
-$(warning *** Warning: no valid BUILD_MODE.)
-endif
-endif
+# toolchain specifications
+include Makefile.tc.in
 
 ################################################################################
 #                                                                              #
@@ -554,41 +588,42 @@ endif
 ################################################################################
 
 # build system
-export                          \
-       MAKE                     \
-       KERNEL_BASENAME          \
-       KERNEL_CFGFILE           \
-       KERNEL_DEPFILE           \
-       KERNEL_OUTFILE           \
-       KERNEL_ROMFILE           \
-       PLATFORM_BASE_DIRECTORY  \
-       PLATFORM_DIRECTORY       \
-       PLATFORM_DIRECTORY_CMD   \
-       CPU_BASE_DIRECTORY       \
-       CPU_DIRECTORY            \
-       CPU_DIRECTORY_CMD        \
-       CPU_MODEL_DIRECTORY      \
-       APPLICATION_DIRECTORY    \
-       CLIBRARY_DIRECTORY       \
-       CORE_DIRECTORY           \
-       DRIVERS_DIRECTORY        \
-       MODULES_DIRECTORY        \
-       LIBRARY_DIRECTORY        \
-       OBJECT_DIRECTORY         \
-       RTS_DIRECTORY            \
-       SHARE_DIRECTORY          \
-       RTS_BASE_PATH            \
-       GNATADC_FILENAME         \
-       CPUS                     \
-       RTSES                    \
-       INCLUDE_DIRECTORIES      \
-       IMPLICIT_CORE_UNITS      \
-       IMPLICIT_CLIBRARY_UNITS  \
-       IMPLICIT_ALI_UNITS       \
-       POSTBUILD_COMMAND        \
-       CLEAN_OBJECTS_COMMON     \
-       DISTCLEAN_OBJECTS_COMMON \
-       CONFIGURE_DEPS           \
+export                           \
+       MAKE                      \
+       KERNEL_BASENAME           \
+       KERNEL_CFGFILE            \
+       KERNEL_DEPFILE            \
+       KERNEL_OUTFILE            \
+       KERNEL_ROMFILE            \
+       PLATFORM_BASE_DIRECTORY   \
+       PLATFORM_DIRECTORY        \
+       PLATFORM_DIRECTORY_CMD    \
+       CPU_BASE_DIRECTORY        \
+       CPU_DIRECTORY             \
+       CPU_DIRECTORY_CMD         \
+       CPU_MODEL_DIRECTORY       \
+       APPLICATION_DIRECTORY     \
+       CLIBRARY_DIRECTORY        \
+       CORE_DIRECTORY            \
+       DRIVERS_DIRECTORY         \
+       MODULES_DIRECTORY         \
+       LIBRARY_DIRECTORY         \
+       OBJECT_DIRECTORY          \
+       RTS_DIRECTORY             \
+       SHARE_DIRECTORY           \
+       RTS_BASE_PATH             \
+       GNATADC_FILENAME          \
+       CPUS                      \
+       RTSES                     \
+       INCLUDE_DIRECTORIES       \
+       IMPLICIT_CORE_UNITS       \
+       IMPLICIT_CLIBRARY_UNITS   \
+       IMPLICIT_ALI_UNITS        \
+       POSTBUILD_COMMAND         \
+       CONFIGURE_FILES_PLATFORM  \
+       CLEAN_OBJECTS_COMMON      \
+       DISTCLEAN_OBJECTS_COMMON  \
+       CONFIGURE_DEPS            \
        CPU_SUPPORT_DEFLIST
 
 # configuration
@@ -617,6 +652,7 @@ export                           \
        GPRBUILD_PREFIX           \
        TOOLCHAIN_NAME_AArch64    \
        TOOLCHAIN_NAME_ARM        \
+       TOOLCHAIN_NAME_AVR        \
        TOOLCHAIN_NAME_M68k       \
        TOOLCHAIN_NAME_MIPS       \
        TOOLCHAIN_NAME_MIPS64     \
@@ -636,6 +672,7 @@ export                           \
        TOOLCHAIN_GCC             \
        TOOLCHAIN_ADAC            \
        TOOLCHAIN_AR              \
+       TOOLCHAIN_AS              \
        TOOLCHAIN_CC              \
        TOOLCHAIN_GDB             \
        TOOLCHAIN_LD              \
@@ -764,8 +801,10 @@ endif
 help:
 	@$(call echo-print,"make help (default)")
 	@$(call echo-print,"  Display an help about make targets.")
-	@$(call echo-print,"make RTS=<rts> [CPU=<cpu>] [TOOLCHAIN_NAME=<toolchain_name>] rts")
-	@$(call echo-print,"  Create RTS <rts> for CPU <cpu> with toolchain <toolchain_name>.")
+	@$(call echo-print,"make [RTS=<rts>] [CPU=<cpu>] [CPU_MODEL=<cpu_model>] \
+                                 [TOOLCHAIN_NAME=<toolchain_name>] rts")
+	@$(call echo-print,"  Create RTS <rts> for CPU <cpu> [CPU_MODEL <cpu_model>] \
+                              using toolchain <toolchain_name>.")
 	@$(call echo-print,"make PLATFORM=<platform> [SUBPLATFORM=<subplatform>] createkernelcfg")
 	@$(call echo-print,"  Create the '$(KERNEL_CFGFILE)' main configuration file.")
 	@$(call echo-print,"make configure")
@@ -842,7 +881,7 @@ endif
 
 $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME): FORCE
 ifeq      ($(BUILD_MODE),GNATMAKE)
-	@$(REM) perform GNATMAKE-driven procedure
+	@$(REM) GNATMAKE-driven procedure
 	$(call brief-command, \
         $(GNATMAKE)                             \
                     -c                          \
@@ -852,7 +891,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                     main.adb                    \
         ,[GNATMAKE],main.adb)
 else ifeq ($(BUILD_MODE),GPRbuild)
-	@$(REM) perform GPRbuild-driven procedure
+	@$(REM) GPRbuild-driven procedure
 	$(call brief-command, \
         $(GPRBUILD)                      \
                     -c -p                \
@@ -864,19 +903,21 @@ endif
 # Bind phase.
 #
 
-$(OBJECT_DIRECTORY)/b__main.adb: $(OBJECT_DIRECTORY)/libcore.a          \
-                                 $(OBJECT_DIRECTORY)/libcpu.a           \
-                                 $(OBJECT_DIRECTORY)/libplatform.a      \
-                                 $(CLIBRARY_OBJECT)                     \
-                                 $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME)
+B__MAIN_ADB_DEPS :=
+B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libcore.a
+B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libcpu.a
+B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libplatform.a
+B__MAIN_ADB_DEPS += $(CLIBRARY_OBJECT)
+B__MAIN_ADB_DEPS += $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME)
+$(OBJECT_DIRECTORY)/b__main.adb: $(B__MAIN_ADB_DEPS)
 	@$(REM) bind all units and generate b__main
 ifeq      ($(BUILD_MODE),GNATMAKE)
 	$(call brief-command, \
         $(GNATBIND)                                \
+                    -o b__main.adb                 \
                     -F -e -l -n -s                 \
                     -A=gnatbind_alis.lst           \
                     -O=gnatbind_objs.lst           \
-                    -o b__main.adb                 \
                     $(INCLUDES)                    \
                     $(OBJECT_DIRECTORY)/main.ali   \
                     $(IMPLICIT_ALI_UNITS_GNATMAKE) \
@@ -919,17 +960,17 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
 ifeq ($(OSTYPE),cmd)
 	$(call brief-command, \
         $(ADAC_GNATBIND)                                  \
-                         -c                               \
                          -o $(OBJECT_DIRECTORY)\b__main.o \
+                         -c                               \
                          $(OBJECT_DIRECTORY)\b__main.adb  \
-        ,[ADAC],b__main.adb)
+        ,[ADAC],$(<F))
 else
 	$(call brief-command, \
         $(ADAC_GNATBIND)                                  \
-                         -c                               \
                          -o $(OBJECT_DIRECTORY)/b__main.o \
+                         -c                               \
                          $(OBJECT_DIRECTORY)/b__main.adb  \
-        ,[ADAC],b__main.adb)
+        ,[ADAC],$(<F))
 endif
 else ifeq ($(BUILD_MODE),GPRbuild)
 	-@$(RM) $(GCC_WRAPPER_TIMESTAMP_FILENAME)
@@ -951,15 +992,17 @@ endif
 ifeq ($(NOBUILD),Y)
 $(KERNEL_OUTFILE):
 else
-$(KERNEL_OUTFILE): $(GNATADC_FILENAME) $(CONFIGUREGPR_FILENAME) \
-                   $(OBJECT_DIRECTORY)/b__main.o                \
-                   $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
+KERNEL_OUTFILE_DEPS :=
+KERNEL_OUTFILE_DEPS += $(DOTSWEETADA)
+KERNEL_OUTFILE_DEPS += $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
+KERNEL_OUTFILE_DEPS += $(OBJECT_DIRECTORY)/b__main.o
+$(KERNEL_OUTFILE): $(KERNEL_OUTFILE_DEPS)
 endif
 	@$(REM) link phase
 	$(call brief-command, \
         $(LD)                                       \
+              -o $@                                 \
               -T $(PLATFORM_DIRECTORY)/$(LD_SCRIPT) \
-              -o $(KERNEL_OUTFILE)                  \
               --start-group                         \
               @gnatbind_objs.lst                    \
               $(OBJECT_DIRECTORY)/b__main.o         \
@@ -970,26 +1013,27 @@ endif
               $(OBJECT_DIRECTORY)/libplatform.a     \
               $(LIBGCC_OBJECT)                      \
               --end-group                           \
-        ,[LD],$(KERNEL_OUTFILE))
+        ,[LD],$@)
 ifneq ($(OSTYPE),cmd)
-	@chmod a-x $(KERNEL_OUTFILE)
+	@chmod a-x $@
 endif
+	$(call update-timestamp-reffile,$@,$(DOTSWEETADA))
 	$(call brief-command, \
-        $(OBJDUMP) -dx $(KERNEL_OUTFILE) > $(KERNEL_BASENAME).lst \
+        $(OBJDUMP) -dx $@ > $(KERNEL_BASENAME).lst \
         ,[OBJDUMP],$(KERNEL_BASENAME).lst)
 	$(call brief-command, \
-        $(OBJDUMP) -Sdx $(KERNEL_OUTFILE) > $(KERNEL_BASENAME).src.lst \
+        $(OBJDUMP) -Sdx $@ > $(KERNEL_BASENAME).src.lst \
         ,[OBJDUMP-S],$(KERNEL_BASENAME).src.lst)
 	$(call brief-command, \
-        $(READELF) $(KERNEL_OUTFILE) > $(KERNEL_BASENAME).elf.lst \
+        $(READELF) $@ > $(KERNEL_BASENAME).elf.lst \
         ,[READELF],$(KERNEL_BASENAME).elf.lst)
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): ELF sections dump.")
 	@$(call echo-print,"")
 ifeq ($(USE_ELFTOOL),Y)
-	@$(ELFTOOL) -c dumpsections $(KERNEL_OUTFILE)
+	@$(ELFTOOL) -c dumpsections $@
 else
-	@$(SIZE) $(KERNEL_OUTFILE)
+	@$(SIZE) $@
 endif
 	@$(call echo-print,"")
 
@@ -1098,40 +1142,48 @@ else
 	$(error Error: no valid PLATFORM, configuration not created)
 endif
 
+define configure-subdirs-command =
+@$(MAKE) $(MAKE_APPLICATION) configure
+@$(MAKE) $(MAKE_CLIBRARY) configure
+@$(MAKE) $(MAKE_CORE) configure
+@$(MAKE) $(MAKE_CPU) configure
+@$(MAKE) $(MAKE_DRIVERS) configure
+@$(MAKE) $(MAKE_MODULES) configure
+@$(MAKE) $(MAKE_PLATFORM) configure
+endef
+
+DOTSWEETADA_DEPS :=
+DOTSWEETADA_DEPS += $(CONFIGURE_DEPS)
+DOTSWEETADA_DEPS += $(GNATADC_FILENAME)
+ifeq ($(BUILD_MODE),GPRbuild)
+DOTSWEETADA_DEPS += $(GPRBUILD_DEPS)
+endif
+./$(DOTSWEETADA): $(DOTSWEETADA_DEPS)
+	$(MAKE) clean
+	$(configure-subdirs-command)
+	$(TOUCH) $@
+
+.PHONY: configure-gnatadc
+configure-gnatadc: $(GNATADC_FILENAME)
+$(GNATADC_FILENAME): $(CONFIGURE_DEPS) $(GNATADC_FILENAME).in
+	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
+
+ifeq ($(BUILD_MODE),GPRbuild)
+.PHONY: configure-gpr
+configure-gpr: $(CONFIGUREGPR_FILENAME)
+$(CONFIGUREGPR_FILENAME): $(CONFIGURE_DEPS)
+	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
+endif
+
+.PHONY: configure-subdirs
+configure-subdirs:
+	$(configure-subdirs-command)
+
 .PHONY: configure-start
 configure-start:
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): start configuration.")
 	@$(call echo-print,"")
-
-.PHONY: configure-gnatadc
-configure-gnatadc: $(GNATADC_FILENAME)
-
-$(GNATADC_FILENAME): configuration.in                       \
-                     $(PLATFORM_DIRECTORY)/configuration.in
-	$(MAKE) clean
-	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
-
-.PHONY: configure-gpr
-configure-gpr: $(CONFIGUREGPR_FILENAME)
-
-$(CONFIGUREGPR_FILENAME): configuration.in                       \
-                          gprbuild_st.gpr                        \
-                          gprbuild_tc.gpr                        \
-                          gprbuild_wr.gpr                        \
-                          $(PLATFORM_DIRECTORY)/configuration.in
-	$(MAKE) clean
-	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
-
-.PHONY: configure-subdirs
-configure-subdirs:
-	@$(MAKE) $(MAKE_APPLICATION) configure
-	@$(MAKE) $(MAKE_CLIBRARY) configure
-	@$(MAKE) $(MAKE_CORE) configure
-	@$(MAKE) $(MAKE_CPU) configure
-	@$(MAKE) $(MAKE_DRIVERS) configure
-	@$(MAKE) $(MAKE_MODULES) configure
-	@$(MAKE) $(MAKE_PLATFORM) configure
 
 .PHONY: configure-end
 configure-end:
@@ -1140,11 +1192,19 @@ configure-end:
 	@$(call echo-print,"")
 
 .PHONY: configure-aux
-configure-aux: configure-start   \
-               configure-gnatadc \
-               configure-gpr     \
-               configure-subdirs \
-               configure-end
+CONFIGURE_AUX_DEPS :=
+CONFIGURE_AUX_DEPS += configure-start
+CONFIGURE_AUX_DEPS += configure-gnatadc
+ifeq ($(BUILD_MODE),GPRbuild)
+CONFIGURE_AUX_DEPS += configure-gpr
+endif
+CONFIGURE_AUX_DEPS += configure-subdirs
+CONFIGURE_AUX_DEPS += configure-end
+configure-aux: $(CONFIGURE_AUX_DEPS)
+
+.PHONY: configure
+configure: clean configure-aux infodump
+	$(TOUCH) $(DOTSWEETADA)
 
 .PHONY: infodump
 infodump:
@@ -1206,9 +1266,6 @@ ifneq ($(EXTERNAL_OBJECTS),)
 	@$(call echo-print,"EXTERNAL OBJECTS:        $(EXTERNAL_OBJECTS)")
 endif
 	@$(call echo-print,"")
-
-.PHONY: configure
-configure: clean configure-aux infodump
 
 #
 # KERNEL_ROMFILE/postbuild/session-start/session-end/run/debug targets.
@@ -1293,16 +1350,16 @@ ifeq ($(OSTYPE),cmd)
           (                                                                  \
            ECHO.&& ECHO $(CPU): RTS = $(RTS_BUILD), multilib = %%M&& ECHO.&& \
            SET "MAKEFLAGS=" && SET "RTS=$(RTS_BUILD)"                     && \
-           "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" configure       && \
-           "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := %%M" multilib           \
+           "$(MAKE)" $(MAKE_RTS) MULTILIB=%%M configure                   && \
+           "$(MAKE)" $(MAKE_RTS) MULTILIB=%%M multilib                       \
           ) || EXIT /B 1
 else
-	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                                         \
-          (                                                                                        \
-           echo "" && echo "$(CPU): RTS = $(RTS_BUILD), multilib = $$m" && echo ""              && \
-           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" configure && \
-           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) --eval="MULTILIB := $$m" multilib     \
-          ) || exit $$? ;                                                                          \
+	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                                \
+          (                                                                               \
+           echo "" && echo "$(CPU): RTS = $(RTS_BUILD), multilib = \"$$m\"" && echo "" && \
+           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" configure  && \
+           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" multilib      \
+          ) || exit $$? ;                                                                 \
         done
 endif
 
