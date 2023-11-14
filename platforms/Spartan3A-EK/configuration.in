@@ -18,6 +18,7 @@ LD_SWITCHES_PLATFORM      := --undefined=vectors --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         :=
 OBJCOPY_SWITCHES_PLATFORM :=
+CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
 
 USE_APPLICATION := test-Spartan3A-EK
 

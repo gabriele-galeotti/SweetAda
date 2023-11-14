@@ -1,24 +1,28 @@
 
 #
-# Renesas Electronic PK-S5D9
+# Renesas Synergy™ S5D9 (PK-S5D9)
 #
-# Synergy S5D9 120 MHz ARM Cortex-M4 LE (ARMv7-M)
+# ARM Cortex-M4 LE (ARMv7E-M)
 #
 
 # force ZFP
-RTS := zfp
-PROFILE := zfp
-USE_LIBADA := N
+#RTS := zfp
+#PROFILE := zfp
+#USE_LIBADA := N
+USE_LIBGCC := Y
 
 CPU       := ARM
 CPU_MODEL := CORTEXM4
 
-GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
+#GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
+GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m4 -mthumb -mfloat-abi=softfp -mfpu=fpv4-sp-d16
+#GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m4 -mthumb
 STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
 
 USE_APPLICATION := test-PK-S5D9
 

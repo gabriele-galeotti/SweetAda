@@ -13,6 +13,7 @@ LD_SWITCHES_PLATFORM      :=
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
 
 # default parameters
 export BOOT_FROM_NETWORK := False

@@ -18,6 +18,7 @@ STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := --undefined=_reset
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
 
 export USE_QEMU_IOEMU := False
 

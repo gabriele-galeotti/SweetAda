@@ -20,7 +20,8 @@ LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --pad-to=0x00200000 --gap-fill=0x00
-CLEAN_OBJECTS_COMMON      := gxemullog.txt IP.BIN 1ST_READ.BIN sweetada.iso
+CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+CLEAN_OBJECTS_COMMON      += gxemullog.txt IP.BIN 1ST_READ.BIN sweetada.iso
 
 export ADDITIONAL_ASM_OBJECTS := roto.S video.S
 

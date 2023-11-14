@@ -22,6 +22,7 @@ POSTBUILD_ROMFILE         := Y
 KERNEL_ROMFILE            := $(KERNEL_BASENAME).hex
 #OBJCOPY_SWITCHES_PLATFORM := -O srec -R .eeprom
 OBJCOPY_SWITCHES_PLATFORM := -O ihex -R .eeprom
+CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
 
 USE_APPLICATION := test-ArduinoUNO
 

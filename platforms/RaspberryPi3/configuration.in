@@ -14,6 +14,7 @@ LD_SWITCHES_PLATFORM      := --undefined=el_table --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
 
 USE_APPLICATION := test-RaspberryPi3
 
@@ -29,7 +30,7 @@ SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
                            -shutdown
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
-                           -e $(ELFTOOL) -s _start -command "halt"
+                           -e $(ELFTOOL) -s _start -command "reset init;halt"
 DEBUG_COMMAND         := $(RUN_COMMAND) -debug &&                          \
                          $${GDB}                                           \
                                -ex "target extended-remote localhost:3333" \

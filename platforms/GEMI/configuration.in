@@ -20,6 +20,7 @@ LD_SWITCHES_PLATFORM      := --undefined=POR_reset
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0xff
+CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
 
 USE_APPLICATION := test-GEMI
 

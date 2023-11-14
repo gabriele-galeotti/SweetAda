@@ -12,6 +12,7 @@ LD_SWITCHES_PLATFORM      := -m elf_s390
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+CONFIGURE_FILES_PLATFORM  := configure.ads configure.h s390.cnf hercules.rc
 POSTBUILD_COMMAND         := $(SHELL_EXEC) postbuild$(SCREXT)
 
 USE_APPLICATION := test-System390

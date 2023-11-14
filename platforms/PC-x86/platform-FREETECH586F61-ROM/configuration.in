@@ -7,8 +7,8 @@
 # W83787F SuperIO
 # RAM: 8M, 2xZ124BBK32-70A modules, TIZ44400-70 FPM DRAM
 # BIOS COMx default addresses:
-# COM1: 0x3e8
-# COM2: 0x2f8
+# COM1: 0x3E8
+# COM2: 0x2F8
 #
 
 CPU       := x86
@@ -22,6 +22,7 @@ OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 # EPROM/FlashEPROM content is 0xFF when empty, speed-up programming
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0xFF
+CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
 
 export KERNEL_STACK_SIZE := 4096
 
