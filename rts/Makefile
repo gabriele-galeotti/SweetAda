@@ -152,6 +152,8 @@ LIBGNARL_SRCS_TARGET :=
 # RTS target-dependent part
 -include $(RTS_SOURCE_PATH_TARGET)/configuration.in
 
+MULTILIB_SKIPS := $(foreach m,$(MULTILIB_DIRECTORIES_SKIP),"$(m)")
+
 LIBGNAT_SRCS  += $(LIBGNAT_SRCS_COMMON) $(LIBGNAT_SRCS_TARGET)
 LIBGNARL_SRCS += $(LIBGNARL_SRCS_COMMON) $(LIBGNARL_SRCS_TARGET)
 
@@ -172,7 +174,7 @@ LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(notdir $(LIBGNARL_ADS:.ads=.ali))
 ################################################################################
 
 .PHONY: all
-ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_DIRECTORIES_SKIP)),)
+ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_SKIPS)),)
 all:
 	$(info *** Skipping target "all" for multilib directory "$(MULTILIB_DIRECTORY)".)
 else
@@ -180,7 +182,7 @@ all: configure-rts configure-rts-target multilib
 endif
 
 .PHONY: configure
-ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_DIRECTORIES_SKIP)),)
+ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_SKIPS)),)
 configure:
 	$(info *** Skipping target "configure" for multilib directory "$(MULTILIB_DIRECTORY)".)
 else
@@ -252,7 +254,7 @@ else
 endif
 
 .PHONY: multilib
-ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_DIRECTORIES_SKIP)),)
+ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_SKIPS)),)
 multilib:
 	$(info *** Skipping target "multilib" for multilib directory "$(MULTILIB_DIRECTORY)".)
 else
