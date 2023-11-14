@@ -15,6 +15,8 @@ LIBGNAT_SRCS_TARGET += system.ads
 # s-scaval.adb:104:07: warning: size of "IS_Ill" is 64
 #
 ifeq ($(RTS),sfp)
-MULTILIB_DIRECTORIES_SKIP := "ml/m4-single-only"
+ifeq ($(TOOLCHAIN_NAME),$(TOOLCHAIN_NAME_SuperH))
+MULTILIB_DIRECTORIES_SKIP := m4-single-only ml/m4-single-only
+endif
 endif
 
