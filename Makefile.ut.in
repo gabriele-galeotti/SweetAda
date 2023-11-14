@@ -33,6 +33,8 @@ else  ifeq ($(OSTYPE),linux)
 ELFTOOL      := elftool-lnx$(EXEEXT)
 GCC_WRAPPER  := gcc-wrapper-lnx$(EXEEXT)
 GNAT_WRAPPER := gnat-wrapper-lnx$(EXEEXT)
+else
+$(error Error: no valid executables for OSTYPE '$(OSTYPE)')
 endif
 
 ifeq ($(OSTYPE),msys)
@@ -43,7 +45,8 @@ CREATESYMLINK      := createsymlink$(SCREXT_cmd)
 DOS2UNIX           := dos2unix$(SCREXT_cmd)
 FILEPAD            := filepad$(SCREXT_cmd)
 FILEPATCH          := filepatch$(SCREXT_cmd)
-GPRDEPS            := gprdeps$(SCREXT_cmd)
+#GPRDEPS            := gprdeps$(SCREXT_cmd)
+GPRDEPS            := powershell -ExecutionPolicy Bypass -File $(LIBUTILS_DIRECTORY)/gprdeps.ps1
 PROCESSCFG         := processcfg$(SCREXT_cmd)
 UPDATETM           := updatetm$(SCREXT_cmd)
 else
@@ -57,7 +60,8 @@ UPDATETM           := updatetm$(SCREXT)
 endif
 FILEPAD            := filepad$(SCREXT)
 FILEPATCH          := filepatch$(SCREXT)
-GPRDEPS            := gprdeps$(SCREXT)
+#GPRDEPS            := gprdeps$(SCREXT)
+GPRDEPS            := powershell -ExecutionPolicy Bypass -File $(LIBUTILS_DIRECTORY)/gprdeps.ps1
 PROCESSCFG         := processcfg$(SCREXT)
 endif
 
