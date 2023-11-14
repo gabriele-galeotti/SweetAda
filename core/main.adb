@@ -26,7 +26,8 @@ with Application;
 --                                                                           --
 --===========================================================================--
 
-procedure Main is
+procedure Main
+   is
    procedure Ada_Init
       with Import        => True,
            Convention    => C,
