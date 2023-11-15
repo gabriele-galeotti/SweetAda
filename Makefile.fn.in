@@ -127,7 +127,7 @@ endif
 # If:
 # LIBGNAT_SRCS_COMMON = xxx.ads ../common/yyy.ads ../common/zzz.ads
 # then, after the command:
-# $(call remove,LIBGNAT_SRCS_COMMON,yyy.ads)
+# $(call remove-basename,LIBGNAT_SRCS_COMMON,yyy.ads)
 # the unit will be removed from the list and the content of the list will be:
 # LIBGNAT_SRCS_COMMON = xxx.ads ../common/zzz.ads
 #
