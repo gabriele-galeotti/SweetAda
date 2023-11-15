@@ -257,9 +257,9 @@ endif
 VERBOSE ?=
 # normalize VERBOSE
 ifeq ($(OSTYPE),cmd)
-VERBOSE := $(shell $(ECHO) $(VERBOSE)| $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
+override VERBOSE := $(shell $(ECHO) $(VERBOSE)| $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
 else
-VERBOSE := $(shell $(ECHO) "$(VERBOSE)" | $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
+override VERBOSE := $(shell $(ECHO) "$(VERBOSE)" | $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
 endif
 export VERBOSE
 
@@ -1344,7 +1344,7 @@ endif
 #
 
 .PHONY: rts
-rts:
+rts: clean
 ifeq ($(OSTYPE),cmd)
 	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
           (                                                                  \
@@ -1369,6 +1369,9 @@ endif
 
 .PHONY: clean
 clean:
+ifeq ($(OSTYPE),cmd)
+	-@RENAME \\.\"$(shell cd)"\nul. deletefile.tmp 2> nul
+endif
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean
 	$(MAKE) $(MAKE_CORE) clean

@@ -297,6 +297,11 @@ GNATLINK += $(GNATLINK_SWITCHES_DEFAULT)
 
 GNATLS   += $(GNATLS_SWITCHES_DEFAULT)
 
+ifeq ($(BUILD_MODE),GNATMAKE)
+GNATMAKE += $(ADAC_SWITCHES_DEFAULT)
+GNATMAKE += $(GNATMAKE_SWITCHES_DEFAULT) $(GCC_SWITCHES_PLATFORM)
+endif
+
 GNATPREP += $(GNATPREP_SWITCHES_DEFAULT)
 
 GNATXREF += $(GNATXREF_SWITCHES_DEFAULT)
@@ -374,5 +379,27 @@ ifeq ($(BUILD_MODE),GNATMAKE)
 ADAC     += -wrapper "$(GCC_WRAPPER)"
 CC       += -wrapper "$(GCC_WRAPPER)"
 GNATMAKE += --GCC="$(GNAT_WRAPPER)" -cargs -wrapper "$(GCC_WRAPPER)" -margs
+endif
+
+################################################################################
+#                                                                              #
+# Final toolchain setup.                                                       #
+#                                                                              #
+################################################################################
+
+# beautify compiler command lines
+ADAC     := $(filter-out ,$(ADAC))
+CC       := $(filter-out ,$(CC))
+ifeq ($(BUILD_MODE),GNATMAKE)
+GNATMAKE := $(filter-out ,$(GNATMAKE))
+endif
+
+# special back-end compiler for GNATBIND-generated Ada files without output of
+# spurious warnings
+ADAC_GNATBIND := $(filter-out $(ADAC_SWITCHES_STYLE),$(ADAC))
+
+# avoid extraneous informations in .d files during VERBOSE mode
+ifeq ($(BUILD_MODE),GNATMAKE)
+GNATMAKE_DEPEND := $(filter-out -v,$(GNATMAKE))
 endif
 
