@@ -35,32 +35,6 @@
 
 ################################################################################
 #                                                                              #
-# Utility functions.                                                           #
-#                                                                              #
-################################################################################
-
-#
-# remove
-#
-# Usage:
-# $(call remove,<variable>,<unit_basename>)
-#
-# This function will remove a [relative-path-prefix]unit from a list.
-# If:
-# LIBGNAT_SRCS_COMMON = xxx.ads ../common/yyy.ads ../common/zzz.ads
-# then, after the command:
-# $(call remove,LIBGNAT_SRCS_COMMON,yyy.ads)
-# the unit will be removed from the list and the content of the list will be:
-# LIBGNAT_SRCS_COMMON = xxx.ads ../common/zzz.ads
-#
-ifeq ($(OSTYPE),cmd)
-remove = $(eval $1 := $(shell $(ECHO) $($1)| $(SED) -e "s|[^ ]*$2||"))
-else
-remove = $(eval $1 := $(shell $(ECHO) "$($1)" | $(SED) -e "s|[^ ]*$2||"))
-endif
-
-################################################################################
-#                                                                              #
 # Parameter checks.                                                            #
 #                                                                              #
 ################################################################################
@@ -83,6 +57,8 @@ endif
 # Initialize basic variables and paths.                                        #
 #                                                                              #
 ################################################################################
+
+include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 
 TARGET := $(CPU)
 
@@ -166,6 +142,9 @@ LIBGNARL      := $(ADALIB_PATH)/libgnarl.a
 LIBGNARL_ADS  := $(filter-out %.adb,$(LIBGNARL_SRCS))
 LIBGNARL_OBJS := $(addprefix $(ADALIB_PATH)/,$(notdir $(LIBGNARL_ADS:.ads=.o)))
 LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(notdir $(LIBGNARL_ADS:.ads=.ali)))
+
+ADAC_SWITCHES := $(filter-out ,$(ADAC_SWITCHES))
+CC_SWITCHES   := $(filter-out ,$(CC_SWITCHES))
 
 ################################################################################
 #                                                                              #

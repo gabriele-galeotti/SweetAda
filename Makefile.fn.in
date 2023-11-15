@@ -117,3 +117,23 @@ else
 update-timestamp-reffile = $(TOUCH) -r $1 $2
 endif
 
+#
+# remove-basename
+#
+# Usage:
+# $(call remove-basename,<file_list>,<file_basename>)
+#
+# This function will remove a [relative-path-prefix]file from a list.
+# If:
+# LIBGNAT_SRCS_COMMON = xxx.ads ../common/yyy.ads ../common/zzz.ads
+# then, after the command:
+# $(call remove,LIBGNAT_SRCS_COMMON,yyy.ads)
+# the unit will be removed from the list and the content of the list will be:
+# LIBGNAT_SRCS_COMMON = xxx.ads ../common/zzz.ads
+#
+ifeq ($(OSTYPE),cmd)
+remove-basename = $(eval $1 := $(shell $(ECHO) $($1)| $(SED) -e "s|[^ ]*$2||"))
+else
+remove-basename = $(eval $1 := $(shell $(ECHO) "$($1)" | $(SED) -e "s|[^ ]*$2||"))
+endif
+
