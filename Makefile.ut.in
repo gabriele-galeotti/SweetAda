@@ -15,6 +15,7 @@
 # SCREXT
 # SCREXT_cmd
 # SCREXT_unx
+# LIBUTILS_DIRECTORY
 #
 
 ifeq      ($(OSTYPE),msys)
@@ -29,7 +30,7 @@ else ifeq ($(OSTYPE),darwin)
 ELFTOOL      := elftool-osx$(EXEEXT)
 GCC_WRAPPER  := gcc-wrapper-osx$(EXEEXT)
 GNAT_WRAPPER := gnat-wrapper-osx$(EXEEXT)
-else  ifeq ($(OSTYPE),linux)
+else ifeq ($(OSTYPE),linux)
 ELFTOOL      := elftool-lnx$(EXEEXT)
 GCC_WRAPPER  := gcc-wrapper-lnx$(EXEEXT)
 GNAT_WRAPPER := gnat-wrapper-lnx$(EXEEXT)
@@ -45,7 +46,6 @@ CREATESYMLINK      := createsymlink$(SCREXT_cmd)
 DOS2UNIX           := dos2unix$(SCREXT_cmd)
 FILEPAD            := filepad$(SCREXT_cmd)
 FILEPATCH          := filepatch$(SCREXT_cmd)
-#GPRDEPS            := gprdeps$(SCREXT_cmd)
 GPRDEPS            := powershell -ExecutionPolicy Bypass -File $(LIBUTILS_DIRECTORY)/gprdeps.ps1
 PROCESSCFG         := processcfg$(SCREXT_cmd)
 UPDATETM           := updatetm$(SCREXT_cmd)
@@ -56,12 +56,16 @@ CREATEGNATADC      := creategnatadc$(SCREXT)
 CREATESYMLINK      := createsymlink$(SCREXT)
 ifeq ($(OSTYPE),cmd)
 DOS2UNIX           := dos2unix$(SCREXT)
+GPRDEPS            := powershell -ExecutionPolicy Bypass -File $(LIBUTILS_DIRECTORY)/gprdeps.ps1
 UPDATETM           := updatetm$(SCREXT)
+else
+DOS2UNIX           :=
+GPRDEPS            := gprdeps$(SCREXT)
+UPDATETM           :=
 endif
 FILEPAD            := filepad$(SCREXT)
 FILEPATCH          := filepatch$(SCREXT)
-#GPRDEPS            := gprdeps$(SCREXT)
-GPRDEPS            := powershell -ExecutionPolicy Bypass -File $(LIBUTILS_DIRECTORY)/gprdeps.ps1
+GPRDEPS            := gprdeps$(SCREXT)
 PROCESSCFG         := processcfg$(SCREXT)
 endif
 
