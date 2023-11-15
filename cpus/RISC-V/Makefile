@@ -58,7 +58,8 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) $(INSTALLED_FILENAMES) Makefile.if.in
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)           \
+              $(INSTALLED_FILENAMES) Makefile.if.in
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

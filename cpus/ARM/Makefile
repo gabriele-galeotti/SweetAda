@@ -69,7 +69,8 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) $(INSTALLED_FILENAMES) Makefile.if.in
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)           \
+              $(INSTALLED_FILENAMES) Makefile.if.in
 ifneq ($(USE_LIBGCC),Y)
 	$(RM) $(LIBGCC_SOURCES)
 endif
