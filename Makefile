@@ -335,11 +335,11 @@ RTS_BASE_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)
 ifeq ($(OSTYPE),cmd)
 PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2> nul)
 CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2> nul)
-RTSES     := $(filter-out targets,$(shell $(CD) $(RTS_DIRECTORY)\src && $(call ls-dirs) 2> nul))
+RTSES     := $(filter-out common targets,$(shell $(CD) $(RTS_DIRECTORY)\src && $(call ls-dirs) 2> nul))
 else
 PLATFORMS := $(shell ($(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
 CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
-RTSES     := $(filter-out targets,$(shell ($(CD) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null))
+RTSES     := $(filter-out common targets,$(shell ($(CD) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null))
 endif
 
 # build flag and version control
@@ -520,9 +520,19 @@ CONFIGURE_DEPS += $(MODULES_DIRECTORY)/configuration.in
 # GPRbuild configuration dependencies
 ifeq ($(BUILD_MODE),GPRbuild)
 ifeq ($(OSTYPE),cmd)
-GPRBUILD_DEPS += $(sort $(shell SET "PATH=$(PATH)" && $(GPRDEPS) $(KERNEL_GPRFILE) 2> nul))
+GPRBUILD_DEPS += $(sort $(shell                                                   \
+                                SET "PATH=$(PATH)"                             && \
+                                SET "SWEETADA_PATH=$(SWEETADA_PATH)"           && \
+                                SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)" && \
+                                $(GPRDEPS) $(KERNEL_GPRFILE)                      \
+                                2> nul))
 else
-GPRBUILD_DEPS += $(sort $(shell PATH="$(PATH)" && $(GPRDEPS) $(KERNEL_GPRFILE) 2> /dev/null))
+GPRBUILD_DEPS += $(sort $(shell                                               \
+                                PATH="$(PATH)"                             && \
+                                SWEETADA_PATH="$(SWEETADA_PATH)"           && \
+                                LIBUTILS_DIRECTORY="$(LIBUTILS_DIRECTORY)" && \
+                                $(GPRDEPS) $(KERNEL_GPRFILE)                  \
+                                2> /dev/null))
 endif
 endif
 
@@ -774,12 +784,24 @@ USE_LIBADA := Y
 endif
 
 ifeq ($(USE_LIBADA),Y)
+ifeq ($(OSTYPE),msys)
+LIBGNAT_OBJECT  := "$(shell cygpath.exe -m "$(RTS_PATH)")"/adalib/libgnat.a
+LIBGNARL_OBJECT := "$(shell cygpath.exe -m "$(RTS_PATH)")"/adalib/libgnarl.a
+else
 LIBGNAT_OBJECT  := "$(RTS_PATH)"/adalib/libgnat.a
 LIBGNARL_OBJECT := "$(RTS_PATH)"/adalib/libgnarl.a
+endif
 LIBADA_OBJECTS  := $(LIBGNAT_OBJECT) $(LIBGNARL_OBJECT)
 else
 LIBADA_OBJECTS  :=
 endif
+#ifeq ($(USE_LIBADA),Y)
+#LIBGNAT_OBJECT  := "$(RTS_PATH)"/adalib/libgnat.a
+#LIBGNARL_OBJECT := "$(RTS_PATH)"/adalib/libgnarl.a
+#LIBADA_OBJECTS  := $(LIBGNAT_OBJECT) $(LIBGNARL_OBJECT)
+#else
+#LIBADA_OBJECTS  :=
+#endif
 
 ifeq ($(USE_CLIBRARY),Y)
 CLIBRARY_OBJECT := $(OBJECT_DIRECTORY)/libclibrary.a
@@ -803,7 +825,7 @@ help:
 	@$(call echo-print,"  Display an help about make targets.")
 	@$(call echo-print,"make [RTS=<rts>] [CPU=<cpu>] [CPU_MODEL=<cpu_model>] \
                                  [TOOLCHAIN_NAME=<toolchain_name>] rts")
-	@$(call echo-print,"  Create RTS <rts> for CPU <cpu> [CPU_MODEL <cpu_model>] \
+	@$(call echo-print,"  Build RTS <rts> for CPU <cpu> [CPU model <cpu_model>] \
                               using toolchain <toolchain_name>.")
 	@$(call echo-print,"make PLATFORM=<platform> [SUBPLATFORM=<subplatform>] createkernelcfg")
 	@$(call echo-print,"  Create the '$(KERNEL_CFGFILE)' main configuration file.")
@@ -812,10 +834,10 @@ help:
 	@$(call echo-print,"make all")
 	@$(call echo-print,"  Perform the same as 'make $(KERNEL_BASENAME)'.")
 	@$(call echo-print,"make $(KERNEL_BASENAME)")
-	@$(call echo-print,"  Build the kernel binary output file '$(KERNEL_OUTFILE)'.")
+	@$(call echo-print,"  Build the kernel target-output file '$(KERNEL_OUTFILE)'.")
 	@$(call echo-print,"make postbuild")
 	@$(call echo-print,"  Perform platform-specific finalizations \
-                              and create a physical kernel file '$(KERNEL_ROMFILE)'.")
+                              and build a customized binary file '$(KERNEL_ROMFILE)'.")
 	@$(call echo-print,"make session-start")
 	@$(call echo-print,"  Perform session start activities.")
 	@$(call echo-print,"make session-end activities")
@@ -924,11 +946,9 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                     > gnatbind_elab.lst            \
         ,[GNATBIND],b__main.adb)
 ifeq ($(OSTYPE),cmd)
-	@$(MV) b__main.adb $(OBJECT_DIRECTORY)\ $(NULL)
-	@$(MV) b__main.ads $(OBJECT_DIRECTORY)\ $(NULL)
+	@$(MV) b__main.ad* $(OBJECT_DIRECTORY)\ $(NULL)
 else
-	@$(MV) b__main.adb $(OBJECT_DIRECTORY)/
-	@$(MV) b__main.ads $(OBJECT_DIRECTORY)/
+	@$(MV) b__main.ad* $(OBJECT_DIRECTORY)/
 endif
 else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(REM) force rebind under GPRbuild
@@ -1191,6 +1211,13 @@ configure-end:
 	@$(call echo-print,"$(PLATFORM): configuration completed.")
 	@$(call echo-print,"")
 
+.PHONY: configure-delete
+configure-delete:
+	@$(RM) $(GNATADC_FILENAME)
+ifeq ($(BUILD_MODE),GPRbuild)
+	@$(RM) $(CONFIGUREGPR_FILENAME)
+endif
+
 .PHONY: configure-aux
 CONFIGURE_AUX_DEPS :=
 CONFIGURE_AUX_DEPS += configure-start
@@ -1203,7 +1230,7 @@ CONFIGURE_AUX_DEPS += configure-end
 configure-aux: $(CONFIGURE_AUX_DEPS)
 
 .PHONY: configure
-configure: clean configure-aux infodump
+configure: clean configure-delete configure-aux infodump
 	$(TOUCH) $(DOTSWEETADA)
 
 .PHONY: infodump
@@ -1223,7 +1250,9 @@ endif
 	@$(call echo-print,"OSTYPE:                  $(OSTYPE)")
 	@$(call echo-print,"SWEETADA PATH:           $(SWEETADA_PATH)")
 	@$(call echo-print,"TOOLCHAIN PREFIX:        $(TOOLCHAIN_PREFIX)")
+ifeq ($(BUILD_MODE),GPRbuild)
 	@$(call echo-print,"GPRBUILD PREFIX:         $(GPRBUILD_PREFIX)")
+endif
 	@$(call echo-print,"TOOLCHAIN NAME:          $(TOOLCHAIN_NAME)")
 	@$(call echo-print,"MAKE VERSION:            $(MAKE_VERSION)")
 	@$(call echo-print,"BUILD MODE:              $(BUILD_MODE)")
@@ -1369,8 +1398,12 @@ endif
 
 .PHONY: clean
 clean:
-ifeq ($(OSTYPE),cmd)
+.PHONY: clean
+clean:
+ifeq      ($(OSTYPE),cmd)
 	-@RENAME \\.\"$(shell cd)"\nul. deletefile.tmp 2> nul
+else ifeq ($(OSTYPE),msys)
+	-@cmd.exe /C "RENAME \\\\.\\\"$$(cygpath.exe -w "$$(pwd)")\"\\nul. deletefile.tmp" 2> /dev/null
 endif
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean

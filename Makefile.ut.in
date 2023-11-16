@@ -18,11 +18,11 @@
 # LIBUTILS_DIRECTORY
 #
 
-ifeq      ($(OSTYPE),msys)
+ifeq      ($(OSTYPE),cmd)
 ELFTOOL      := elftool-win$(EXEEXT)
 GCC_WRAPPER  := gcc-wrapper-win$(EXEEXT)
 GNAT_WRAPPER := gnat-wrapper-win$(EXEEXT)
-else ifeq ($(OSTYPE),cmd)
+else ifeq ($(OSTYPE),msys)
 ELFTOOL      := elftool-win$(EXEEXT)
 GCC_WRAPPER  := gcc-wrapper-win$(EXEEXT)
 GNAT_WRAPPER := gnat-wrapper-win$(EXEEXT)
@@ -46,7 +46,7 @@ CREATESYMLINK      := createsymlink$(SCREXT_cmd)
 DOS2UNIX           := dos2unix$(SCREXT_cmd)
 FILEPAD            := filepad$(SCREXT_cmd)
 FILEPATCH          := filepatch$(SCREXT_cmd)
-GPRDEPS            := powershell -ExecutionPolicy Bypass -File $(LIBUTILS_DIRECTORY)/gprdeps.ps1
+GPRDEPS            := gprdeps$(SCREXT_cmd)
 PROCESSCFG         := processcfg$(SCREXT_cmd)
 UPDATETM           := updatetm$(SCREXT_cmd)
 else
@@ -54,29 +54,24 @@ CREATECONFIGUREGPR := createconfiguregpr$(SCREXT)
 CREATEDEFINITIONS  := createdefinitions$(SCREXT)
 CREATEGNATADC      := creategnatadc$(SCREXT)
 CREATESYMLINK      := createsymlink$(SCREXT)
-ifeq ($(OSTYPE),cmd)
-DOS2UNIX           := dos2unix$(SCREXT)
-GPRDEPS            := powershell -ExecutionPolicy Bypass -File $(LIBUTILS_DIRECTORY)/gprdeps.ps1
-UPDATETM           := updatetm$(SCREXT)
-else
-DOS2UNIX           :=
-GPRDEPS            := gprdeps$(SCREXT)
-UPDATETM           :=
-endif
 FILEPAD            := filepad$(SCREXT)
 FILEPATCH          := filepatch$(SCREXT)
 GPRDEPS            := gprdeps$(SCREXT)
 PROCESSCFG         := processcfg$(SCREXT)
+ifeq ($(OSTYPE),cmd)
+DOS2UNIX           := dos2unix$(SCREXT)
+UPDATETM           := updatetm$(SCREXT)
+endif
 endif
 
-# needed by RTS Makefile
-export PROCESSCFG
-# utilities useful in user scripts
-export FILEPAD FILEPATCH
-# needed by Makefile.lb.in
-export UPDATETM
 # needed by GPRbuild
 export GCC_WRAPPER
+# needed by RTS Makefile
+export PROCESSCFG
+# needed by Makefile.lb.in
+export UPDATETM
+# utilities useful in user scripts
+export FILEPAD FILEPATCH
 # useful utility
 export DOS2UNIX
 
