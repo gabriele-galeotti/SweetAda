@@ -6,8 +6,8 @@
 #
 
 # force ZFP
-RTS := zfp
-PROFILE := zfp
+RTS        := zfp
+PROFILE    := zfp
 USE_LIBADA := N
 
 CPU       := M68k

@@ -15,7 +15,6 @@
 # SCREXT
 # SCREXT_cmd
 # SCREXT_unx
-# LIBUTILS_DIRECTORY
 #
 
 ifeq      ($(OSTYPE),cmd)
