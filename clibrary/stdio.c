@@ -117,11 +117,7 @@ number_to_literal(char *string, char *string_end, unsigned long number, int base
          */
         if (base < 2 || base > 36)
         {
-                if (string < string_end)
-                {
-                        *string++ = '=';
-                }
-                return string;
+                return NULL;
         }
 
         /*
@@ -212,37 +208,45 @@ number_to_literal(char *string, char *string_end, unsigned long number, int base
         {
                 while (field_width-- > 0)
                 {
-                        *string++ = ' ';
+                        if (string <= string_end)
+                        {
+                                *string = ' ';
+                        }
+                        ++string;
                 }
         }
 
         if (sign != 0)
         {
-                if (string < string_end)
+                if (string <= string_end)
                 {
-                        *string++ = sign;
+                        *string = sign;
                 }
+                ++string;
         }
 
         if ((type & LEAD0X) != 0)
         {
                 if (base == 8)
                 {
-                        if (string < string_end)
+                        if (string <= string_end)
                         {
-                                *string++ = '0';
+                                *string = '0';
                         }
+                        ++string;
                 }
                 else if (base == 16)
                 {
-                        if (string < string_end)
+                        if (string <= string_end)
                         {
-                                *string++ = '0';
+                                *string = '0';
                         }
-                        if (string < string_end)
+                        ++string;
+                        if (string <= string_end)
                         {
-                                *string++ = digit_table[33]; /* "x" or "X" */
+                                *string = digit_table[33]; /* "x" or "X" */
                         }
+                        ++string;
                 }
         }
 
@@ -250,35 +254,39 @@ number_to_literal(char *string, char *string_end, unsigned long number, int base
         {
                 while (field_width-- > 0)
                 {
-                        if (string < string_end)
+                        if (string <= string_end)
                         {
-                                *string++ = pad_character;
+                                *string = pad_character;
                         }
+                        ++string;
                 }
         }
 
         while (ndigits < precision--)
         {
-                if (string < string_end)
+                if (string <= string_end)
                 {
-                        *string++ = '\0';
+                        *string = '\0';
                 }
+                ++string;
         }
 
         while (ndigits-- > 0)
         {
-                if (string < string_end)
+                if (string <= string_end)
                 {
-                        *string++ = buffer[ndigits];
+                        *string = buffer[ndigits];
                 }
+                ++string;
         }
 
         while (field_width-- > 0)
         {
-                if (string < string_end)
+                if (string <= string_end)
                 {
-                        *string++ = ' ';
+                        *string = ' ';
                 }
+                ++string;
         }
 
         return string;
@@ -293,31 +301,33 @@ number_to_literal(char *string, char *string_end, unsigned long number, int base
 int
 vsnprintf(char *s, size_t n, const char *format, va_list ap)
 {
-        char          *string_end;  /* string buffer end position                              */
-        char          *string;      /* string scan pointer                                     */
+        char          *pbuffer;     /* buffer scan pointer                                     */
+        char          *pbuffer_end; /* buffer pointer end position                             */
         int            flags;       /* flags passed to number_to_literal()                     */
         int            field_width; /* width of output field                                   */
-        int            precision;   /* min # of digits for integers; max # of chars for string */
+        int            precision;   /* min # of digits for integers; max # of chars for buffer */
         int            qualifier;   /* "h", "l", or "L" for integer fields                     */
         int            base;
         unsigned long  number;
 
-        string_end = s + n - 1;
+        pbuffer = s;
+        pbuffer_end = pbuffer + n - 1;
 
-        if (string_end < s - 1)
+        if (pbuffer_end < s - 1)
         {
-                string_end = (void *)-1;
-                n = string_end - s + 1;
+                pbuffer_end = (void *)-1;
+                n = pbuffer_end - s + 1;
         }
 
-        for (string = s; *format != '\0'; ++format)
+        for ((void)pbuffer; *format != '\0'; ++format)
         {
                 if (*format != '%')
                 {
-                        if (string < string_end)
+                        if (pbuffer <= pbuffer_end)
                         {
-                                *string++ = *format;
+                                *pbuffer = *format;
                         }
+                        ++pbuffer;
                         continue;
                 }
                 /*
@@ -333,6 +343,7 @@ repeat:
                         case ' ': flags |= SPACE; goto repeat; break;
                         case '#': flags |= LEAD0X; goto repeat; break;
                         case '0': flags |= ZEROPAD; goto repeat; break;
+                        default:  break;
                 }
                 /* field width */
                 field_width = -1;
@@ -381,10 +392,15 @@ repeat:
                 }
                 /* conversion qualifier */
                 qualifier = -1;
-                if (*format == 'h' || *format == 'l')
+                if (*format == 'h' || *format == 'l' || *format == 'L' || *format =='Z')
                 {
                         qualifier = *format;
                         ++format;
+                        if (qualifier == 'l' && *format == 'l')
+                        {
+                                qualifier = 'L';
+                                ++format;
+                        }
                 }
                 base = 10; /* set default base for numeric formats */
                 switch (*format)
@@ -392,27 +408,30 @@ repeat:
                         case 'c':
                                 {
                                         char c;
-                                        c = (unsigned char)va_arg(ap, int);
                                         if ((flags & LEFT) == 0)
                                         {
                                                 while (--field_width > 0)
                                                 {
-                                                        if (string < string_end)
+                                                        if (pbuffer <= pbuffer_end)
                                                         {
-                                                                *string++ = ' ';
+                                                                *pbuffer = ' ';
                                                         }
+                                                        ++pbuffer;
                                                 }
                                         }
-                                        if (string < string_end)
+                                        c = (unsigned char)va_arg(ap, int);
+                                        if (pbuffer <= pbuffer_end)
                                         {
-                                                *string++ = c;
+                                                *pbuffer = c;
                                         }
+                                        ++pbuffer;
                                         while (--field_width > 0)
                                         {
-                                                if (string < string_end)
+                                                if (pbuffer <= pbuffer_end)
                                                 {
-                                                        *string++ = ' ';
+                                                        *pbuffer = ' ';
                                                 }
+                                                ++pbuffer;
                                         }
                                 }
                                 continue;
@@ -422,19 +441,19 @@ repeat:
                                 {
                                         long *plong_argument;
                                         plong_argument = va_arg(ap, long *);
-                                        *plong_argument = string - s;
+                                        *plong_argument = pbuffer - s;
                                 }
                                 else if (qualifier == 'Z')
                                 {
                                         size_t *psizet_argument;
                                         psizet_argument = va_arg(ap, size_t *);
-                                        *psizet_argument = string - s;
+                                        *psizet_argument = pbuffer - s;
                                 }
                                 else
                                 {
                                         int *pint_argument;
                                         pint_argument = va_arg(ap, int *);
-                                        *pint_argument = string - s;
+                                        *pint_argument = pbuffer - s;
                                 }
                                 continue;
                                 break;
@@ -444,9 +463,9 @@ repeat:
                                         field_width = 2 * sizeof(void *);
                                         flags |= ZEROPAD;
                                 }
-                                string = number_to_literal(
-                                                           string,
-                                                           string_end,
+                                pbuffer = number_to_literal(
+                                                pbuffer,
+                                                pbuffer_end,
                                                            (unsigned long)va_arg(ap, void *),
                                                            16,
                                                            field_width,
@@ -470,34 +489,39 @@ repeat:
                                         {
                                                 while (length < field_width--)
                                                 {
-                                                        if (string < string_end)
+                                                        if (pbuffer <= pbuffer_end)
                                                         {
-                                                                *string++ = ' ';
+                                                                *pbuffer = ' ';
                                                         }
+                                                        ++pbuffer;
                                                 }
                                         }
                                         for (count = 0; count < length; ++count)
                                         {
-                                                if (string < string_end)
+                                                if (pbuffer <= pbuffer_end)
                                                 {
-                                                        *string++ = *string_argument++;
+                                                        *pbuffer = *string_argument;
                                                 }
+                                                ++pbuffer;
+                                                ++string_argument;
                                         }
                                         while (length < field_width--)
                                         {
-                                                if (string < string_end)
+                                                if (pbuffer <= pbuffer_end)
                                                 {
-                                                        *string++ = ' ';
+                                                        *pbuffer = ' ';
                                                 }
+                                                ++pbuffer;
                                         }
                                 }
                                 continue;
                                 break;
                         case '%':
-                                if (string < string_end)
+                                if (pbuffer <= pbuffer_end)
                                 {
-                                        *string++ = '%';
+                                        *pbuffer = '%';
                                 }
+                                ++pbuffer;
                                 continue;
                                 break;
                         case 'd':
@@ -515,16 +539,18 @@ repeat:
                                 base = 16;
                                 break;
                         default:
-                                if (string < string_end)
+                                if (pbuffer <= pbuffer_end)
                                 {
-                                        *string++ = '%';
+                                        *pbuffer = '%';
                                 }
+                                ++pbuffer;
                                 if (*format != '\0')
                                 {
-                                        if (string < string_end)
+                                        if (pbuffer <= pbuffer_end)
                                         {
-                                                *string++ = *format;
+                                                *pbuffer = *format;
                                         }
+                                        ++pbuffer;
                                 }
                                 else
                                 {
@@ -557,9 +583,9 @@ repeat:
                                 number = (signed int)number;
                         }
                 }
-                string = number_to_literal(
-                                           string,
-                                           string_end,
+                pbuffer = number_to_literal(
+                                pbuffer,
+                                pbuffer_end,
                                            number,
                                            base,
                                            field_width,
@@ -568,16 +594,19 @@ repeat:
                                           );
         }
 
-        if (string <= string_end)
+        if (pbuffer <= pbuffer_end)
         {
-                *string = '\0';
+                *pbuffer = '\0';
         }
-        else if (n > 0)
+        else
         {
-                *string_end = '\0';
+                if (n > 0)
+                {
+                        *pbuffer_end = '\0';
+                }
         }
 
-        return string - s;
+        return pbuffer - s;
 }
 
 /******************************************************************************
