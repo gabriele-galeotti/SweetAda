@@ -184,6 +184,7 @@ ADA_MODE           := ADA22
 USE_LIBGCC         :=
 USE_LIBADA         :=
 USE_CLIBRARY       :=
+USE_LIBM           :=
 USE_APPLICATION    := dummy
 OPTIMIZATION_LEVEL :=
 STACK_LIMIT        := 4096
@@ -649,6 +650,7 @@ export                    \
        USE_LIBGCC         \
        USE_LIBADA         \
        USE_CLIBRARY       \
+       USE_LIBM           \
        BUILD_MODE         \
        OPTIMIZATION_LEVEL \
        EXTERNAL_OBJECTS   \
@@ -795,18 +797,17 @@ LIBADA_OBJECTS  := $(LIBGNAT_OBJECT) $(LIBGNARL_OBJECT)
 else
 LIBADA_OBJECTS  :=
 endif
-#ifeq ($(USE_LIBADA),Y)
-#LIBGNAT_OBJECT  := "$(RTS_PATH)"/adalib/libgnat.a
-#LIBGNARL_OBJECT := "$(RTS_PATH)"/adalib/libgnarl.a
-#LIBADA_OBJECTS  := $(LIBGNAT_OBJECT) $(LIBGNARL_OBJECT)
-#else
-#LIBADA_OBJECTS  :=
-#endif
 
 ifeq ($(USE_CLIBRARY),Y)
 CLIBRARY_OBJECT := $(OBJECT_DIRECTORY)/libclibrary.a
 else
 CLIBRARY_OBJECT :=
+endif
+
+ifeq ($(USE_LIBM),Y)
+LIBM_OBJECT := $(TOOLCHAIN_PREFIX)/$(TOOLCHAIN_NAME)/lib/$(GCC_MULTIDIR)/libm.a
+else
+LIBM_OBJECT :=
 endif
 
 ################################################################################
@@ -1026,6 +1027,7 @@ endif
               --start-group                         \
               @gnatbind_objs.lst                    \
               $(OBJECT_DIRECTORY)/b__main.o         \
+              $(LIBM_OBJECT)                        \
               $(CLIBRARY_OBJECT)                    \
               $(OBJECT_DIRECTORY)/libcore.a         \
               $(LIBADA_OBJECTS)                     \
