@@ -1408,8 +1408,6 @@ endif
 
 .PHONY: clean
 clean:
-.PHONY: clean
-clean:
 ifeq      ($(OSTYPE),cmd)
 	-@RENAME \\.\"$(shell cd)"\nul. deletefile.tmp 2> nul
 else ifeq ($(OSTYPE),msys)
