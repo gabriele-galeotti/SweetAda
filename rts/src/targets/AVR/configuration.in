@@ -4,7 +4,7 @@ LIBGNAT_SRCS_TARGET += system.ads
 #
 # AVR does not tolerate IEEE_Float_64.
 #
-$(call remove,LIBGNAT_SRCS_COMMON,interfac.ads)
+$(call remove-basename,LIBGNAT_SRCS_COMMON,interfac.ads)
 LIBGNAT_SRCS_TARGET += interfac.ads
 
 #
@@ -20,8 +20,8 @@ LIBGNAT_SRCS_TARGET += interfac.ads
 # s-scaval.adb:104:07: warning: size of "IS_Ill" is 64
 #
 ifeq ($(RTS),sfp)
-$(call remove,LIBGNAT_SRCS_COMMON,s-scaval.ads)
-$(call remove,LIBGNAT_SRCS_COMMON,s-scaval.adb)
+$(call remove-basename,LIBGNAT_SRCS_COMMON,s-scaval.ads)
+$(call remove-basename,LIBGNAT_SRCS_COMMON,s-scaval.adb)
 endif
 
 # secondary stack size
