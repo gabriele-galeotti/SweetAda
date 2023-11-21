@@ -41,7 +41,9 @@ package PCICAN is
        Device_Number => 0
       );
 
-   procedure Probe (Device_Number : out Device_Number_Type; Success : out Boolean);
+   procedure Probe
+      (Device_Number : out Device_Number_Type;
+       Success       : out Boolean);
    procedure Init;
    procedure TX;
 

@@ -137,7 +137,10 @@ package body PCICAN is
    ----------------------------------------------------------------------------
    -- Probe
    ----------------------------------------------------------------------------
-   procedure Probe (Device_Number : out Device_Number_Type; Success : out Boolean) is
+   procedure Probe
+      (Device_Number : out Device_Number_Type;
+       Success       : out Boolean)
+      is
    begin
       Cfg_Find_Device_By_Id (BUS0, VENDOR_ID_AMCC, DEVICE_ID_PCICAN, Device_Number, Success);
       if Success then
@@ -148,7 +151,8 @@ package body PCICAN is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
    begin
       -- initialize PCI interface, setup BAR __FIX__ device number hardwired @ 4
       Cfg_Write (BUS0, 4, 0, BAR0_Register_Offset, Unsigned_32'(16#D000#)); -- S5920
@@ -163,7 +167,8 @@ package body PCICAN is
    ----------------------------------------------------------------------------
    -- __TBD__ stub for test, transmit something
    ----------------------------------------------------------------------------
-   procedure TX is
+   procedure TX
+      is
       Data32 : Unsigned_32 with Unreferenced => True;
    begin
       Data32 := CPU.IO.PortIn (16#D038#);        -- D000+38 S5920+INTCSR

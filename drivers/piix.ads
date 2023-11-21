@@ -209,7 +209,8 @@ package PIIX is
    -- subprograms
    ----------------------------------------------------------------------------
 
-   function Probe return Boolean;
+   function Probe
+      return Boolean;
    procedure Init;
 
 end PIIX;
