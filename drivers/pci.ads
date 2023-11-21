@@ -184,82 +184,75 @@ package PCI is
    ----------------------------------------------------------------------------
 
    -- Unsigned_8
-   function Cfg_Read (
-                      Bus_Number      : Bus_Number_Type;
-                      Device_Number   : Device_Number_Type;
-                      Function_Number : Function_Number_Type;
-                      Register_Number : Register_Number_Type
-                     ) return Unsigned_8 with
-      Inline => True;
-   procedure Cfg_Write (
-                        Bus_Number      : in Bus_Number_Type;
-                        Device_Number   : in Device_Number_Type;
-                        Function_Number : in Function_Number_Type;
-                        Register_Number : in Register_Number_Type;
-                        Value           : in Unsigned_8
-                       ) with
-      Inline => True;
+   function Cfg_Read
+      (Bus_Number      : Bus_Number_Type;
+       Device_Number   : Device_Number_Type;
+       Function_Number : Function_Number_Type;
+       Register_Number : Register_Number_Type)
+      return Unsigned_8
+      with Inline => True;
+   procedure Cfg_Write
+      (Bus_Number      : in Bus_Number_Type;
+       Device_Number   : in Device_Number_Type;
+       Function_Number : in Function_Number_Type;
+       Register_Number : in Register_Number_Type;
+       Value           : in Unsigned_8)
+      with Inline => True;
 
    -- Unsigned_16
-   function Cfg_Read (
-                      Bus_Number      : Bus_Number_Type;
-                      Device_Number   : Device_Number_Type;
-                      Function_Number : Function_Number_Type;
-                      Register_Number : Register_Number_Type
-                     ) return Unsigned_16 with
-      Inline => True;
-   procedure Cfg_Write (
-                        Bus_Number      : in Bus_Number_Type;
-                        Device_Number   : in Device_Number_Type;
-                        Function_Number : in Function_Number_Type;
-                        Register_Number : in Register_Number_Type;
-                        Value           : in Unsigned_16
-                       ) with
-      Inline => True;
+   function Cfg_Read
+      (Bus_Number      : Bus_Number_Type;
+       Device_Number   : Device_Number_Type;
+       Function_Number : Function_Number_Type;
+       Register_Number : Register_Number_Type)
+      return Unsigned_16
+      with Inline => True;
+   procedure Cfg_Write
+      (Bus_Number      : in Bus_Number_Type;
+       Device_Number   : in Device_Number_Type;
+       Function_Number : in Function_Number_Type;
+       Register_Number : in Register_Number_Type;
+       Value           : in Unsigned_16)
+      with Inline => True;
 
    -- Unsigned_32
-   function Cfg_Read (
-                      Bus_Number      : Bus_Number_Type;
-                      Device_Number   : Device_Number_Type;
-                      Function_Number : Function_Number_Type;
-                      Register_Number : Register_Number_Type
-                     ) return Unsigned_32 with
-      Inline => True;
-   procedure Cfg_Write (
-                        Bus_Number      : in Bus_Number_Type;
-                        Device_Number   : in Device_Number_Type;
-                        Function_Number : in Function_Number_Type;
-                        Register_Number : in Register_Number_Type;
-                        Value           : in Unsigned_32
-                       ) with
-      Inline => True;
+   function Cfg_Read
+      (Bus_Number      : Bus_Number_Type;
+       Device_Number   : Device_Number_Type;
+       Function_Number : Function_Number_Type;
+       Register_Number : Register_Number_Type)
+      return Unsigned_32
+      with Inline => True;
+   procedure Cfg_Write
+      (Bus_Number      : in Bus_Number_Type;
+       Device_Number   : in Device_Number_Type;
+       Function_Number : in Function_Number_Type;
+       Register_Number : in Register_Number_Type;
+       Value           : in Unsigned_32)
+      with Inline => True;
 
-   procedure Cfg_Detect_Device (
-                                Bus_Number    : in  Bus_Number_Type;
-                                Device_Number : in  Device_Number_Type;
-                                Vendor_Id     : out Vendor_Id_Type;
-                                Device_Id     : out Device_Id_Type;
-                                Success       : out Boolean
-                               );
+   procedure Cfg_Detect_Device
+      (Bus_Number    : in     Bus_Number_Type;
+       Device_Number : in     Device_Number_Type;
+       Vendor_Id     :    out Vendor_Id_Type;
+       Device_Id     :    out Device_Id_Type;
+       Success       :    out Boolean);
 
-   procedure Cfg_Find_Device_By_Id (
-                                    Bus_Number    : in  Bus_Number_Type;
-                                    Vendor_Id     : in  Vendor_Id_Type;
-                                    Device_Id     : in  Device_Id_Type;
-                                    Device_Number : out Device_Number_Type;
-                                    Success       : out Boolean
-                                   );
+   procedure Cfg_Find_Device_By_Id
+      (Bus_Number    : in     Bus_Number_Type;
+       Vendor_Id     : in     Vendor_Id_Type;
+       Device_Id     : in     Device_Id_Type;
+       Device_Number :    out Device_Number_Type;
+       Success       :    out Boolean);
 
-   procedure Cfg_Dump (
-                       Bus_Number      : in Bus_Number_Type;
-                       Device_Number   : in Device_Number_Type;
-                       Function_Number : in Function_Number_Type
-                      );
+   procedure Cfg_Dump
+      (Bus_Number      : in Bus_Number_Type;
+       Device_Number   : in Device_Number_Type;
+       Function_Number : in Function_Number_Type);
 
-   procedure BARs_Dump (
-                        Bus_Number      : in Bus_Number_Type;
-                        Device_Number   : in Device_Number_Type;
-                        Function_Number : in Function_Number_Type
-                       );
+   procedure BARs_Dump
+      (Bus_Number      : in Bus_Number_Type;
+       Device_Number   : in Device_Number_Type;
+       Function_Number : in Function_Number_Type);
 
 end PCI;

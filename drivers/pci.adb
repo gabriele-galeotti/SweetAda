@@ -44,12 +44,13 @@ package body PCI is
 
    -- Unsigned_8
 
-   function Cfg_Read (
-                      Bus_Number      : Bus_Number_Type;
-                      Device_Number   : Device_Number_Type;
-                      Function_Number : Function_Number_Type;
-                      Register_Number : Register_Number_Type
-                     ) return Unsigned_8 is
+   function Cfg_Read
+      (Bus_Number      : Bus_Number_Type;
+       Device_Number   : Device_Number_Type;
+       Function_Number : Function_Number_Type;
+       Register_Number : Register_Number_Type)
+      return Unsigned_8
+      is
       Offset : Unsigned_8 range 0 .. 3;
       Data   : Unsigned_32;
    begin
@@ -63,13 +64,13 @@ package body PCI is
       end case;
    end Cfg_Read;
 
-   procedure Cfg_Write (
-                        Bus_Number      : in Bus_Number_Type;
-                        Device_Number   : in Device_Number_Type;
-                        Function_Number : in Function_Number_Type;
-                        Register_Number : in Register_Number_Type;
-                        Value           : in Unsigned_8
-                       ) is
+   procedure Cfg_Write
+      (Bus_Number      : in Bus_Number_Type;
+       Device_Number   : in Device_Number_Type;
+       Function_Number : in Function_Number_Type;
+       Register_Number : in Register_Number_Type;
+       Value           : in Unsigned_8)
+      is
       Offset : Unsigned_8 range 0 .. 3;
       Data   : Unsigned_32;
    begin
@@ -86,12 +87,13 @@ package body PCI is
 
    -- Unsigned_16
 
-   function Cfg_Read (
-                      Bus_Number      : Bus_Number_Type;
-                      Device_Number   : Device_Number_Type;
-                      Function_Number : Function_Number_Type;
-                      Register_Number : Register_Number_Type
-                     ) return Unsigned_16 is
+   function Cfg_Read
+      (Bus_Number      : Bus_Number_Type;
+       Device_Number   : Device_Number_Type;
+       Function_Number : Function_Number_Type;
+       Register_Number : Register_Number_Type)
+      return Unsigned_16
+      is
       Offset : Unsigned_8 range 0 .. 2;
       Data   : Unsigned_32;
    begin
@@ -105,13 +107,13 @@ package body PCI is
       end case;
    end Cfg_Read;
 
-   procedure Cfg_Write (
-                        Bus_Number      : in Bus_Number_Type;
-                        Device_Number   : in Device_Number_Type;
-                        Function_Number : in Function_Number_Type;
-                        Register_Number : in Register_Number_Type;
-                        Value           : in Unsigned_16
-                       ) is
+   procedure Cfg_Write
+      (Bus_Number      : in Bus_Number_Type;
+       Device_Number   : in Device_Number_Type;
+       Function_Number : in Function_Number_Type;
+       Register_Number : in Register_Number_Type;
+       Value           : in Unsigned_16)
+      is
       Offset : Unsigned_8 range 0 .. 2;
       Data   : Unsigned_32;
    begin
@@ -128,12 +130,13 @@ package body PCI is
 
    -- Unsigned_32
 
-   function Cfg_Read (
-                      Bus_Number      : Bus_Number_Type;
-                      Device_Number   : Device_Number_Type;
-                      Function_Number : Function_Number_Type;
-                      Register_Number : Register_Number_Type
-                     ) return Unsigned_32 is
+   function Cfg_Read
+      (Bus_Number      : Bus_Number_Type;
+       Device_Number   : Device_Number_Type;
+       Function_Number : Function_Number_Type;
+       Register_Number : Register_Number_Type)
+      return Unsigned_32
+      is
       Confadd_Value : Confadd_Type;
    begin
       Confadd_Value.REGNUM  := Register_Number and 16#FC#;
@@ -144,13 +147,13 @@ package body PCI is
       return Cfg_Access_Descriptor.Read_32 (CONFDATA);
    end Cfg_Read;
 
-   procedure Cfg_Write (
-                        Bus_Number      : in Bus_Number_Type;
-                        Device_Number   : in Device_Number_Type;
-                        Function_Number : in Function_Number_Type;
-                        Register_Number : in Register_Number_Type;
-                        Value           : in Unsigned_32
-                       ) is
+   procedure Cfg_Write
+      (Bus_Number      : in Bus_Number_Type;
+       Device_Number   : in Device_Number_Type;
+       Function_Number : in Function_Number_Type;
+       Register_Number : in Register_Number_Type;
+       Value           : in Unsigned_32)
+      is
       Confadd_Value : Confadd_Type;
    begin
       Confadd_Value.REGNUM  := Register_Number and 16#FC#;
@@ -166,13 +169,13 @@ package body PCI is
    ----------------------------------------------------------------------------
    -- Return Vendor/Device Ids for a device number.
    ----------------------------------------------------------------------------
-   procedure Cfg_Detect_Device (
-                                Bus_Number    : in  Bus_Number_Type;
-                                Device_Number : in  Device_Number_Type;
-                                Vendor_Id     : out Vendor_Id_Type;
-                                Device_Id     : out Device_Id_Type;
-                                Success       : out Boolean
-                               ) is
+   procedure Cfg_Detect_Device
+      (Bus_Number    : in     Bus_Number_Type;
+       Device_Number : in     Device_Number_Type;
+       Vendor_Id     :    out Vendor_Id_Type;
+       Device_Id     :    out Device_Id_Type;
+       Success       :    out Boolean)
+      is
       -- PCI bridge responds with an invalid value if device does not exist
       INVALID_DEVICE : constant := 16#FFFF_FFFF#;
       Data           : Unsigned_32;
@@ -192,13 +195,13 @@ package body PCI is
    ----------------------------------------------------------------------------
    -- Return the device number for Vendor/Device Ids.
    ----------------------------------------------------------------------------
-   procedure Cfg_Find_Device_By_Id (
-                                    Bus_Number    : in  Bus_Number_Type;
-                                    Vendor_Id     : in  Vendor_Id_Type;
-                                    Device_Id     : in  Device_Id_Type;
-                                    Device_Number : out Device_Number_Type;
-                                    Success       : out Boolean
-                                   ) is
+   procedure Cfg_Find_Device_By_Id
+      (Bus_Number    : in     Bus_Number_Type;
+       Vendor_Id     : in     Vendor_Id_Type;
+       Device_Id     : in     Device_Id_Type;
+       Device_Number :    out Device_Number_Type;
+       Success       :    out Boolean)
+      is
       Data : Unsigned_32;
    begin
       Device_Number := 0;
@@ -221,20 +224,20 @@ package body PCI is
    ----------------------------------------------------------------------------
    -- Configuration space register dump.
    ----------------------------------------------------------------------------
-   procedure Cfg_Dump (
-                       Bus_Number      : in Bus_Number_Type;
-                       Device_Number   : in Device_Number_Type;
-                       Function_Number : in Function_Number_Type
-                      ) is
+   procedure Cfg_Dump
+      (Bus_Number      : in Bus_Number_Type;
+       Device_Number   : in Device_Number_Type;
+       Function_Number : in Function_Number_Type)
+      is
       Cfg_Space : Byte_Array (0 .. 255);
    begin
       for Index in Cfg_Space'Range loop
          Cfg_Space (Index) := Cfg_Read (
-                                        Bus_Number,
-                                        Device_Number,
-                                        Function_Number,
-                                        Register_Number_Type (Index)
-                                       );
+                                 Bus_Number,
+                                 Device_Number,
+                                 Function_Number,
+                                 Register_Number_Type (Index)
+                                 );
       end loop;
       Console.Print_Memory (Cfg_Space'Address, Cfg_Space'Length);
    end Cfg_Dump;
@@ -245,11 +248,11 @@ package body PCI is
    -- Print out BARs contents.
    -- BARs_Dump (BUS0, 16#0A#, 0);
    ----------------------------------------------------------------------------
-   procedure BARs_Dump (
-                        Bus_Number      : in Bus_Number_Type;
-                        Device_Number   : in Device_Number_Type;
-                        Function_Number : in Function_Number_Type
-                       ) is
+   procedure BARs_Dump
+      (Bus_Number      : in Bus_Number_Type;
+       Device_Number   : in Device_Number_Type;
+       Function_Number : in Function_Number_Type)
+      is
       Data : Unsigned_32;
    begin
       Data := Cfg_Read (Bus_Number, Device_Number, Function_Number, BAR0_Register_Offset);

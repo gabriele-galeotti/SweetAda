@@ -163,13 +163,17 @@ package PC is
    PIC_Irq14 : constant CPU.Irq_Id_Type := 16#2E#;
    PIC_Irq15 : constant CPU.Irq_Id_Type := 16#2F#;
 
-   procedure PIC_Init (Vector_Offset_Master : in Unsigned_8; Vector_Offset_Slave : in Unsigned_8);
-   procedure PIC_Irq_Enable (Irq : in CPU.Irq_Id_Type);
-   procedure PIC_Irq_Disable (Irq : in CPU.Irq_Id_Type);
-   procedure PIC1_EOI with
-      Inline => True;
-   procedure PIC2_EOI with
-      Inline => True;
+   procedure PIC_Init
+      (Vector_Offset_Master : in Unsigned_8;
+       Vector_Offset_Slave  : in Unsigned_8);
+   procedure PIC_Irq_Enable
+      (Irq : in CPU.Irq_Id_Type);
+   procedure PIC_Irq_Disable
+      (Irq : in CPU.Irq_Id_Type);
+   procedure PIC1_EOI
+      with Inline => True;
+   procedure PIC2_EOI
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- i8254 PIT
@@ -255,8 +259,10 @@ package PC is
 
    function To_PIT_Status is new Ada.Unchecked_Conversion (Unsigned_8, PIT_Status_Type);
 
-   procedure PIT_Counter0_Init (Count : in Unsigned_16);
-   procedure PIT_Counter1_Delay (Delay100us_Units : in Positive);
+   procedure PIT_Counter0_Init
+      (Count : in Unsigned_16);
+   procedure PIT_Counter1_Delay
+      (Delay100us_Units : in Positive);
 
    ----------------------------------------------------------------------------
    -- MC146818A RTC
@@ -323,11 +329,16 @@ package PC is
    function To_U8 is new Ada.Unchecked_Conversion (PPI_Control_Type, Unsigned_8);
    function To_PPI_Control is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Control_Type);
 
-   procedure PPI_DataIn (Value : out Unsigned_8);
-   procedure PPI_DataOut (Value : in Unsigned_8);
-   procedure PPI_StatusIn (Value : out PPI_Status_Type);
-   procedure PPI_ControlIn (Value : out PPI_Control_Type);
-   procedure PPI_ControlOut (Value : in PPI_Control_Type);
+   procedure PPI_DataIn
+      (Value : out Unsigned_8);
+   procedure PPI_DataOut
+      (Value : in Unsigned_8);
+   procedure PPI_StatusIn
+      (Value : out PPI_Status_Type);
+   procedure PPI_ControlIn
+      (Value : out PPI_Control_Type);
+   procedure PPI_ControlOut
+      (Value : in PPI_Control_Type);
    procedure PPI_Init;
 
 end PC;

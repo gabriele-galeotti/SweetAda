@@ -74,9 +74,9 @@ package body PL011 is
       Size      => 16;
    for UARTDR_Type use
    record
-      DATA     at 0 range 0 .. 7;
-      FE       at 0 range 8 .. 8;
-      PE       at 0 range 9 .. 9;
+      DATA     at 0 range  0 ..  7;
+      FE       at 0 range  8 ..  8;
+      PE       at 0 range  9 ..  9;
       BE       at 0 range 10 .. 10;
       OE       at 0 range 11 .. 11;
       Reserved at 0 range 12 .. 15;
@@ -102,15 +102,15 @@ package body PL011 is
       Size      => 16;
    for UARTFR_Type use
    record
-      CTS      at 0 range 0 .. 0;
-      DSR      at 0 range 1 .. 1;
-      DCD      at 0 range 2 .. 2;
-      BUSY     at 0 range 3 .. 3;
-      RXFE     at 0 range 4 .. 4;
-      TXFF     at 0 range 5 .. 5;
-      RXFF     at 0 range 6 .. 6;
-      TXFE     at 0 range 7 .. 7;
-      RI       at 0 range 8 .. 8;
+      CTS      at 0 range 0 ..  0;
+      DSR      at 0 range 1 ..  1;
+      DCD      at 0 range 2 ..  2;
+      BUSY     at 0 range 3 ..  3;
+      RXFE     at 0 range 4 ..  4;
+      TXFF     at 0 range 5 ..  5;
+      RXFF     at 0 range 6 ..  6;
+      TXFE     at 0 range 7 ..  7;
+      RI       at 0 range 8 ..  8;
       Reserved at 0 range 9 .. 15;
    end record;
 
@@ -137,13 +137,13 @@ package body PL011 is
       Size      => 16;
    for UARTCR_Type use
    record
-      UARTEN   at 0 range 0 .. 0;
-      SIREN    at 0 range 1 .. 1;
-      SIRLP    at 0 range 2 .. 2;
-      Reserved at 0 range 3 .. 6;
-      LBE      at 0 range 7 .. 7;
-      TXE      at 0 range 8 .. 8;
-      RXE      at 0 range 9 .. 9;
+      UARTEN   at 0 range  0 ..  0;
+      SIREN    at 0 range  1 ..  1;
+      SIRLP    at 0 range  2 ..  2;
+      Reserved at 0 range  3 ..  6;
+      LBE      at 0 range  7 ..  7;
+      TXE      at 0 range  8 ..  8;
+      RXE      at 0 range  9 ..  9;
       DTR      at 0 range 10 .. 10;
       RTS      at 0 range 11 .. 11;
       Out1     at 0 range 12 .. 12;
@@ -157,28 +157,26 @@ package body PL011 is
 
    -- Local subprograms
 
-   function Register_Read (
-                           Descriptor : Descriptor_Type;
-                           Register   : Register_Type
-                          ) return Unsigned_8 with
-      Inline => True;
-   procedure Register_Write (
-                             Descriptor : in Descriptor_Type;
-                             Register   : in Register_Type;
-                             Value      : in Unsigned_8
-                            ) with
-      Inline => True;
-   function Register_Read (
-                           Descriptor : Descriptor_Type;
-                           Register   : Register_Type
-                          ) return Unsigned_16 with
-      Inline => True;
-   procedure Register_Write (
-                             Descriptor : in Descriptor_Type;
-                             Register   : in Register_Type;
-                             Value      : in Unsigned_16
-                            ) with
-      Inline => True;
+   function Register_Read
+      (Descriptor : Descriptor_Type;
+       Register   : Register_Type)
+      return Unsigned_8
+      with Inline => True;
+   procedure Register_Write
+      (Descriptor : in Descriptor_Type;
+       Register   : in Register_Type;
+       Value      : in Unsigned_8)
+      with Inline => True;
+   function Register_Read
+      (Descriptor : Descriptor_Type;
+       Register   : Register_Type)
+      return Unsigned_16
+      with Inline => True;
+   procedure Register_Write
+      (Descriptor : in Descriptor_Type;
+       Register   : in Register_Type;
+       Value      : in Unsigned_16)
+      with Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -191,10 +189,11 @@ package body PL011 is
    ----------------------------------------------------------------------------
    -- Register_Read (8-bit)
    ----------------------------------------------------------------------------
-   function Register_Read (
-                           Descriptor : Descriptor_Type;
-                           Register   : Register_Type
-                          ) return Unsigned_8 is
+   function Register_Read
+      (Descriptor : Descriptor_Type;
+       Register   : Register_Type)
+      return Unsigned_8
+      is
    begin
       return Descriptor.Read_8 (Descriptor.Base_Address + Register_Offset (Register));
    end Register_Read;
@@ -202,11 +201,11 @@ package body PL011 is
    ----------------------------------------------------------------------------
    -- Register_Write (8-bit)
    ----------------------------------------------------------------------------
-   procedure Register_Write (
-                             Descriptor : in Descriptor_Type;
-                             Register   : in Register_Type;
-                             Value      : in Unsigned_8
-                            ) is
+   procedure Register_Write
+      (Descriptor : in Descriptor_Type;
+       Register   : in Register_Type;
+       Value      : in Unsigned_8)
+      is
    begin
       Descriptor.Write_8 (Descriptor.Base_Address + Register_Offset (Register), Value);
    end Register_Write;
@@ -214,10 +213,11 @@ package body PL011 is
    ----------------------------------------------------------------------------
    -- Register_Read (16-bit)
    ----------------------------------------------------------------------------
-   function Register_Read (
-                           Descriptor : Descriptor_Type;
-                           Register   : Register_Type
-                          ) return Unsigned_16 is
+   function Register_Read
+      (Descriptor : Descriptor_Type;
+       Register   : Register_Type)
+      return Unsigned_16
+      is
    begin
       return Descriptor.Read_16 (Descriptor.Base_Address + Register_Offset (Register));
    end Register_Read;
@@ -225,11 +225,11 @@ package body PL011 is
    ----------------------------------------------------------------------------
    -- Register_Write (16-bit)
    ----------------------------------------------------------------------------
-   procedure Register_Write (
-                             Descriptor : in Descriptor_Type;
-                             Register   : in Register_Type;
-                             Value      : in Unsigned_16
-                            ) is
+   procedure Register_Write
+      (Descriptor : in Descriptor_Type;
+       Register   : in Register_Type;
+       Value      : in Unsigned_16)
+      is
    begin
       Descriptor.Write_16 (Descriptor.Base_Address + Register_Offset (Register), Value);
    end Register_Write;
@@ -237,29 +237,37 @@ package body PL011 is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init (Descriptor : in Descriptor_Type) is
+   procedure Init
+      (Descriptor : in Descriptor_Type)
+      is
    begin
-      Register_Write (Descriptor, UARTCR, To_U16 (UARTCR_Type'(
-                                                               UARTEN => True,
-                                                               SIREN  => False,
-                                                               SIRLP  => False,
-                                                               LBE    => False,
-                                                               TXE    => True,
-                                                               RXE    => True,
-                                                               DTR    => False,
-                                                               RTS    => False,
-                                                               Out1   => False,
-                                                               Out2   => False,
-                                                               RTSEn  => False,
-                                                               CTSEn  => False,
-                                                               others => 0
-                                                              )));
+      Register_Write
+         (Descriptor,
+          UARTCR,
+          To_U16 (UARTCR_Type'(
+             UARTEN => True,
+             SIREN  => False,
+             SIRLP  => False,
+             LBE    => False,
+             TXE    => True,
+             RXE    => True,
+             DTR    => False,
+             RTS    => False,
+             Out1   => False,
+             Out2   => False,
+             RTSEn  => False,
+             CTSEn  => False,
+             others => 0
+             )));
    end Init;
 
    ----------------------------------------------------------------------------
    -- TX
    ----------------------------------------------------------------------------
-   procedure TX (Descriptor : in Descriptor_Type; Data : in Unsigned_8) is
+   procedure TX
+      (Descriptor : in Descriptor_Type;
+       Data       : in Unsigned_8)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -271,7 +279,10 @@ package body PL011 is
    ----------------------------------------------------------------------------
    -- RX
    ----------------------------------------------------------------------------
-   procedure RX (Descriptor : in Descriptor_Type; Data : out Unsigned_8) is
+   procedure RX
+      (Descriptor : in     Descriptor_Type;
+       Data       :    out Unsigned_8)
+      is
    begin
       -- wait for receiver available
       loop

@@ -56,8 +56,13 @@ package PL011 is
        Write_16     => null
       );
 
-   procedure Init (Descriptor : in Descriptor_Type);
-   procedure TX (Descriptor : in Descriptor_Type; Data : in Unsigned_8);
-   procedure RX (Descriptor : in Descriptor_Type; Data : out Unsigned_8);
+   procedure Init
+      (Descriptor : in Descriptor_Type);
+   procedure TX
+      (Descriptor : in Descriptor_Type;
+       Data       : in Unsigned_8);
+   procedure RX
+      (Descriptor : in     Descriptor_Type;
+       Data       :    out Unsigned_8);
 
 end PL011;

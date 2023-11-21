@@ -49,7 +49,10 @@ package body PC is
    -- pin 16 (SP/EN) is HIGH for PIC1 and LOW for PIC2
    -- ICW1 = 0x19 for level triggered mode
    ----------------------------------------------------------------------------
-   procedure PIC_Init (Vector_Offset_Master : in Unsigned_8; Vector_Offset_Slave : in Unsigned_8) is
+   procedure PIC_Init
+      (Vector_Offset_Master : in Unsigned_8;
+       Vector_Offset_Slave  : in Unsigned_8)
+      is
    begin
       Lock (PIC_Lock);
       -- PIC2 (slave)
@@ -75,7 +78,9 @@ package body PC is
    ----------------------------------------------------------------------------
    -- Enable an IRQ hardware signal.
    ----------------------------------------------------------------------------
-   procedure PIC_Irq_Enable (Irq : in CPU.Irq_Id_Type) is
+   procedure PIC_Irq_Enable
+      (Irq : in CPU.Irq_Id_Type)
+      is
       Irq_Line : Natural range 0 .. 7;
       Port     : Unsigned_16;
       Data     : Unsigned_8;
@@ -98,7 +103,9 @@ package body PC is
    ----------------------------------------------------------------------------
    -- Disable an IRQ hardware signal.
    ----------------------------------------------------------------------------
-   procedure PIC_Irq_Disable (Irq : in CPU.Irq_Id_Type) is
+   procedure PIC_Irq_Disable
+      (Irq : in CPU.Irq_Id_Type)
+      is
       Irq_Line : Natural range 0 .. 7;
       Port     : Unsigned_16;
       Data     : Unsigned_8;
@@ -123,7 +130,8 @@ package body PC is
    ----------------------------------------------------------------------------
    -- PIC1_EOI
    ----------------------------------------------------------------------------
-   procedure PIC1_EOI is
+   procedure PIC1_EOI
+      is
    begin
       CPU.IO.PortOut (PIC1_OCW2, Unsigned_8'(16#20#));
    end PIC1_EOI;
@@ -133,7 +141,8 @@ package body PC is
    ----------------------------------------------------------------------------
    -- For a slave PIC interrupt, an EOI should be sent also to the master.
    ----------------------------------------------------------------------------
-   procedure PIC2_EOI is
+   procedure PIC2_EOI
+      is
    begin
       Lock (PIC_Lock);
       CPU.IO.PortOut (PIC1_OCW2, Unsigned_8'(16#20#));
@@ -144,7 +153,9 @@ package body PC is
    ----------------------------------------------------------------------------
    -- PIT_Counter0_Init
    ----------------------------------------------------------------------------
-   procedure PIT_Counter0_Init (Count : in Unsigned_16) is
+   procedure PIT_Counter0_Init
+      (Count : in Unsigned_16)
+      is
    begin
       -- MODE2 = Rate Generator
       CPU.IO.PortOut (CONTROL_WORD, To_U8 (PIT_Control_Word_Type'(
@@ -165,7 +176,9 @@ package body PC is
    -- NOTE: for MODE0 count is N + 1 cycles
    -- NOTE: PIT should be reprogrammed after every terminal count
    ----------------------------------------------------------------------------
-   procedure PIT_Counter1_Delay (Delay100us_Units : in Positive) is
+   procedure PIT_Counter1_Delay
+      (Delay100us_Units : in Positive)
+      is
       US100_count : constant := ((((PIT_CLK * 100) + (1_000_000 / 2)) / 1_000_000) - 1);
    begin
       Lock (PIT_Lock);
@@ -197,7 +210,9 @@ package body PC is
    ----------------------------------------------------------------------------
    -- PPI_DataIn
    ----------------------------------------------------------------------------
-   procedure PPI_DataIn (Value : out Unsigned_8) is
+   procedure PPI_DataIn
+      (Value : out Unsigned_8)
+      is
    begin
       Value := CPU.IO.PortIn (PPI_DATA);
    end PPI_DataIn;
@@ -205,7 +220,9 @@ package body PC is
    ----------------------------------------------------------------------------
    -- PPI_DataOut
    ----------------------------------------------------------------------------
-   procedure PPI_DataOut (Value : in Unsigned_8) is
+   procedure PPI_DataOut
+      (Value : in Unsigned_8)
+      is
    begin
       CPU.IO.PortOut (PPI_DATA, Value);
    end PPI_DataOut;
@@ -213,7 +230,9 @@ package body PC is
    ----------------------------------------------------------------------------
    -- PPI_StatusIn
    ----------------------------------------------------------------------------
-   procedure PPI_StatusIn (Value : out PPI_Status_Type) is
+   procedure PPI_StatusIn
+      (Value : out PPI_Status_Type)
+      is
    begin
       Value := To_PPI_Status (CPU.IO.PortIn (PPI_STATUS));
    end PPI_StatusIn;
@@ -221,7 +240,9 @@ package body PC is
    ----------------------------------------------------------------------------
    -- PPI_ControlIn
    ----------------------------------------------------------------------------
-   procedure PPI_ControlIn (Value : out PPI_Control_Type) is
+   procedure PPI_ControlIn
+      (Value : out PPI_Control_Type)
+      is
    begin
       Value := To_PPI_Control (CPU.IO.PortIn (PPI_CONTROL));
    end PPI_ControlIn;
@@ -229,7 +250,9 @@ package body PC is
    ----------------------------------------------------------------------------
    -- PPI_ControlOut
    ----------------------------------------------------------------------------
-   procedure PPI_ControlOut (Value : in PPI_Control_Type) is
+   procedure PPI_ControlOut
+      (Value : in PPI_Control_Type)
+      is
    begin
       CPU.IO.PortOut (PPI_CONTROL, To_U8 (Value));
    end PPI_ControlOut;
@@ -237,7 +260,8 @@ package body PC is
    ----------------------------------------------------------------------------
    -- PPI_Init
    ----------------------------------------------------------------------------
-   procedure PPI_Init is
+   procedure PPI_Init
+      is
    begin
       PPI_ControlOut ((
          Strobe    => True,
