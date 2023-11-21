@@ -333,15 +333,23 @@ SHARE_DIRECTORY         := share
 # RTS_BASE_PATH: where all RTSes live
 RTS_BASE_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)
 
+# PLATFORMS and CPUs
 ifeq ($(OSTYPE),cmd)
 PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2> nul)
 CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2> nul)
-RTSES     := $(filter-out common targets,$(shell $(CD) $(RTS_DIRECTORY)\src && $(call ls-dirs) 2> nul))
 else
 PLATFORMS := $(shell ($(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
 CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
-RTSES     := $(filter-out common targets,$(shell ($(CD) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null))
 endif
+
+# RTSes
+RTS_SRC_NO_DIRS  := common targets
+ifeq ($(OSTYPE),cmd)
+RTS_SRC_ALL_DIRS := $(shell $(CD) $(RTS_DIRECTORY)\src && $(call ls-dirs) 2> nul)
+else
+RTS_SRC_ALL_DIRS := $(shell ($(CD) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null)
+endif
+RTSES            := $(filter-out $(RTS_SRC_NO_DIRS),$(RTS_SRC_ALL_DIRS))
 
 # build flag and version control
 DOTSWEETADA := .sweetada
