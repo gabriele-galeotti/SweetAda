@@ -270,6 +270,9 @@ package ARMv6M is
 
    -- B3.2.5 Vector Table Offset Register, VTOR
 
+   VTOR_ADDRESS_LSB : constant := 7;
+   VTOR_ADDRESS_MSB : constant := 31;
+
    type VTOR_Type is
    record
       Reserved : Bits_7 := 0;

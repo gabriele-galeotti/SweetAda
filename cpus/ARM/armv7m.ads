@@ -243,6 +243,8 @@ package ARMv7M is
 
    -- B3.2.5 Vector Table Offset Register, VTOR
 
+   VTOR_ADDRESS_LSB renames ARMv6M.VTOR_ADDRESS_LSB;
+   VTOR_ADDRESS_MSB renames ARMv6M.VTOR_ADDRESS_MSB;
    subtype VTOR_Type is ARMv6M.VTOR_Type;
    VTOR : VTOR_Type renames ARMv6M.VTOR;
 
