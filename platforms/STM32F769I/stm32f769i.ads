@@ -30,8 +30,6 @@ package STM32F769I is
    --                                                                        --
    --========================================================================--
 
-   pragma Warnings (Off);
-
    use System;
    use System.Storage_Elements;
    use Interfaces;
@@ -64,23 +62,23 @@ package STM32F769I is
 
    type PWR_CR1_Type is
    record
-      LPDS      : Boolean; -- Low-power deepsleep
-      PDDS      : Boolean; -- Power-down deepsleep
-      Reserved1 : Bits_1;
-      CSBF      : Boolean; -- Clear standby flag
-      PVDE      : Boolean; -- Power voltage detector enable
-      PLS       : Bits_3;  -- PVD level selection
-      DBP       : Boolean; -- Disable backup domain write protection
-      FPDS      : Boolean; -- Flash power-down in Stop mode
-      LPUDS     : Boolean; -- Low-power regulator in deepsleep under-drive mode
-      MRUDS     : Boolean; -- Main regulator in deepsleep under-drive mode
-      Reserved2 : Bits_1;
-      ADCDC1    : Bits_1;  -- Refer to AN4073 for details on how to use this bit.
-      VOS       : Bits_2;  -- Regulator voltage scaling output selection
-      ODEN      : Boolean; -- Over-drive enable
-      ODSWEN    : Boolean; -- Over-drive switching enabled.
-      UDEN      : Bits_2;  -- Under-drive enable in stop mode
-      Reserved3 : Bits_12;
+      LPDS      : Boolean;      -- Low-power deepsleep
+      PDDS      : Boolean;      -- Power-down deepsleep
+      Reserved1 : Bits_1 := 0;
+      CSBF      : Boolean;      -- Clear standby flag
+      PVDE      : Boolean;      -- Power voltage detector enable
+      PLS       : Bits_3;       -- PVD level selection
+      DBP       : Boolean;      -- Disable backup domain write protection
+      FPDS      : Boolean;      -- Flash power-down in Stop mode
+      LPUDS     : Boolean;      -- Low-power regulator in deepsleep under-drive mode
+      MRUDS     : Boolean;      -- Main regulator in deepsleep under-drive mode
+      Reserved2 : Bits_1 := 0;
+      ADCDC1    : Bits_1;       -- Refer to AN4073 for details on how to use this bit.
+      VOS       : Bits_2;       -- Regulator voltage scaling output selection
+      ODEN      : Boolean;      -- Over-drive enable
+      ODSWEN    : Boolean;      -- Over-drive switching enabled.
+      UDEN      : Bits_2;       -- Under-drive enable in stop mode
+      Reserved3 : Bits_12 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -125,19 +123,19 @@ package STM32F769I is
 
    type PWR_CSR1_Type is
    record
-      WUIF      : Boolean; -- Wakeup internal flag
-      SBF       : Boolean; -- Standby flag
-      PVDO      : Bits_1;  -- This bit is set and cleared by hardware. It is valid only if PVD is enabled by the PVDE bit.
-      BRR       : Boolean; -- Backup regulator ready
-      Reserved1 : Bits_5;
-      BRE       : Boolean; -- Backup regulator enable
-      Reserved2 : Bits_4;
-      VOSRDY    : Boolean; -- Regulator voltage scaling output selection ready bit
-      Reserved3 : Bits_1;
-      ODRDY     : Boolean; -- Over-drive mode ready
-      ODSWRDY   : Boolean; -- Over-drive mode switching ready
-      UDRDY     : Bits_2;  -- Under-drive ready flag
-      Reserved4 : Bits_12;
+      WUIF      : Boolean;      -- Wakeup internal flag
+      SBF       : Boolean;      -- Standby flag
+      PVDO      : Bits_1;       -- This bit is set and cleared by hardware. It is valid only if PVD is enabled by the PVDE bit.
+      BRR       : Boolean;      -- Backup regulator ready
+      Reserved1 : Bits_5 := 0;
+      BRE       : Boolean;      -- Backup regulator enable
+      Reserved2 : Bits_4 := 0;
+      VOSRDY    : Boolean;      -- Regulator voltage scaling output selection ready bit
+      Reserved3 : Bits_1 := 0;
+      ODRDY     : Boolean;      -- Over-drive mode ready
+      ODSWRDY   : Boolean;      -- Over-drive mode switching ready
+      UDRDY     : Bits_2;       -- Under-drive ready flag
+      Reserved4 : Bits_12 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -451,31 +449,31 @@ package STM32F769I is
 
    type RCC_CIR_Type is
    record
-      LSIRDYF     : Boolean; -- LSI ready interrupt flag
-      LSERDYF     : Boolean; -- LSE ready interrupt flag
-      HSIRDYF     : Boolean; -- HSI ready interrupt flag
-      HSERDYF     : Boolean; -- HSE ready interrupt flag
-      PLLRDYF     : Boolean; -- Main PLL (PLL) ready interrupt flag
-      PLLI2SRDYF  : Boolean; -- PLLI2S ready interrupt flag
-      PLLSAIRDYF  : Boolean; -- PLLSAI Ready Interrupt flag
-      CSSF        : Boolean; -- Clock security system interrupt flag
-      LSIRDYIE    : Boolean; -- LSI ready interrupt enable
-      LSERDYIE    : Boolean; -- LSE ready interrupt enable
-      HSIRDYIE    : Boolean; -- HSI ready interrupt enable
-      HSERDYIE    : Boolean; -- HSE ready interrupt enable
-      PLLRDYIE    : Boolean; -- Main PLL (PLL) ready interrupt enable
-      PLLI2SRDYIE : Boolean; -- PLLI2S ready interrupt enable
-      PLLSAIRDYIE : Boolean; -- PLLSAI Ready Interrupt Enable
-      Reserved1   : Bits_1;
-      LSIRDYC     : Boolean; -- LSI ready interrupt clear
-      LSERDYC     : Boolean; -- LSE ready interrupt clear
-      HSIRDYC     : Boolean; -- HSI ready interrupt clear
-      HSERDYC     : Boolean; -- HSE ready interrupt clear
-      PLLRDYC     : Boolean; -- Main PLL(PLL) ready interrupt clear
-      PLLI2SRDYC  : Boolean; -- PLLI2S ready interrupt clear
-      PLLSAIRDYC  : Boolean; -- PLLSAI Ready Interrupt Clear
-      CSSC        : Boolean; -- Clock security system interrupt clear
-      Reserved2   : Bits_8;
+      LSIRDYF     : Boolean;     -- LSI ready interrupt flag
+      LSERDYF     : Boolean;     -- LSE ready interrupt flag
+      HSIRDYF     : Boolean;     -- HSI ready interrupt flag
+      HSERDYF     : Boolean;     -- HSE ready interrupt flag
+      PLLRDYF     : Boolean;     -- Main PLL (PLL) ready interrupt flag
+      PLLI2SRDYF  : Boolean;     -- PLLI2S ready interrupt flag
+      PLLSAIRDYF  : Boolean;     -- PLLSAI Ready Interrupt flag
+      CSSF        : Boolean;     -- Clock security system interrupt flag
+      LSIRDYIE    : Boolean;     -- LSI ready interrupt enable
+      LSERDYIE    : Boolean;     -- LSE ready interrupt enable
+      HSIRDYIE    : Boolean;     -- HSI ready interrupt enable
+      HSERDYIE    : Boolean;     -- HSE ready interrupt enable
+      PLLRDYIE    : Boolean;     -- Main PLL (PLL) ready interrupt enable
+      PLLI2SRDYIE : Boolean;     -- PLLI2S ready interrupt enable
+      PLLSAIRDYIE : Boolean;     -- PLLSAI Ready Interrupt Enable
+      Reserved1   : Bits_1 := 0;
+      LSIRDYC     : Boolean;     -- LSI ready interrupt clear
+      LSERDYC     : Boolean;     -- LSE ready interrupt clear
+      HSIRDYC     : Boolean;     -- HSI ready interrupt clear
+      HSERDYC     : Boolean;     -- HSE ready interrupt clear
+      PLLRDYC     : Boolean;     -- Main PLL(PLL) ready interrupt clear
+      PLLI2SRDYC  : Boolean;     -- PLLI2S ready interrupt clear
+      PLLSAIRDYC  : Boolean;     -- PLLSAI Ready Interrupt Clear
+      CSSC        : Boolean;     -- Clock security system interrupt clear
+      Reserved2   : Bits_8 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -520,28 +518,28 @@ package STM32F769I is
 
    type RCC_AHB1RSTR_Type is
    record
-      GPIOARST  : Boolean; -- IO port A reset
-      GPIOBRST  : Boolean; -- IO port B reset
-      GPIOCRST  : Boolean; -- IO port C reset
-      GPIODRST  : Boolean; -- IO port D reset
-      GPIOERST  : Boolean; -- IO port E reset
-      GPIOFRST  : Boolean; -- IO port F reset
-      GPIOGRST  : Boolean; -- IO port G reset
-      GPIOHRST  : Boolean; -- IO port H reset
-      GPIOIRST  : Boolean; -- IO port I reset
-      GPIOJRST  : Boolean; -- IO port J reset
-      GPIOKRST  : Boolean; -- IO port K reset
-      Reserved1 : Bits_1;
-      CRCRST    : Boolean; -- CRC reset
-      Reserved2 : Bits_8;
-      DMA1RST   : Boolean; -- DMA2 reset
-      DMA2RST   : Boolean; -- DMA2 reset
-      DMA2DRST  : Boolean; -- DMA2D reset
-      Reserved3 : Bits_1;
-      ETHMACRST : Boolean; -- Ethernet MAC reset
-      Reserved4 : Bits_3;
-      OTGHSRST  : Boolean; -- USB OTG HS module reset
-      Reserved5 : Bits_2;
+      GPIOARST  : Boolean;     -- IO port A reset
+      GPIOBRST  : Boolean;     -- IO port B reset
+      GPIOCRST  : Boolean;     -- IO port C reset
+      GPIODRST  : Boolean;     -- IO port D reset
+      GPIOERST  : Boolean;     -- IO port E reset
+      GPIOFRST  : Boolean;     -- IO port F reset
+      GPIOGRST  : Boolean;     -- IO port G reset
+      GPIOHRST  : Boolean;     -- IO port H reset
+      GPIOIRST  : Boolean;     -- IO port I reset
+      GPIOJRST  : Boolean;     -- IO port J reset
+      GPIOKRST  : Boolean;     -- IO port K reset
+      Reserved1 : Bits_1 := 0;
+      CRCRST    : Boolean;     -- CRC reset
+      Reserved2 : Bits_8 := 0;
+      DMA1RST   : Boolean;     -- DMA2 reset
+      DMA2RST   : Boolean;     -- DMA2 reset
+      DMA2DRST  : Boolean;     -- DMA2D reset
+      Reserved3 : Bits_1 := 0;
+      ETHMACRST : Boolean;     -- Ethernet MAC reset
+      Reserved4 : Bits_3 := 0;
+      OTGHSRST  : Boolean;     -- USB OTG HS module reset
+      Reserved5 : Bits_2 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -583,14 +581,14 @@ package STM32F769I is
 
    type RCC_AHB2RSTR_Type is
    record
-      DCMIRST   : Boolean; -- Camera interface reset
-      JPEGRST   : Boolean; -- JPEG module reset
-      Reserved1 : Bits_2;
-      CRYPRST   : Boolean; -- Cryptographic module reset
-      HASHRST   : Boolean; -- Hash module reset
-      RNGRST    : Boolean; -- Random number generator module reset
-      OTGFSRST  : Boolean; -- USB OTG FS module reset
-      Reserved2 : Bits_24;
+      DCMIRST   : Boolean;      -- Camera interface reset
+      JPEGRST   : Boolean;      -- JPEG module reset
+      Reserved1 : Bits_2 := 0;
+      CRYPRST   : Boolean;      -- Cryptographic module reset
+      HASHRST   : Boolean;      -- Hash module reset
+      RNGRST    : Boolean;      -- Random number generator module reset
+      OTGFSRST  : Boolean;      -- USB OTG FS module reset
+      Reserved2 : Bits_24 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -618,9 +616,9 @@ package STM32F769I is
 
    type RCC_AHB3RSTR_Type is
    record
-      FMCRST   : Boolean; -- Flexible memory controller module reset
-      QSPIRST  : Boolean; -- Quad SPI memory controller reset
-      Reserved : Bits_30;
+      FMCRST   : Boolean;      -- Flexible memory controller module reset
+      QSPIRST  : Boolean;      -- Quad SPI memory controller reset
+      Reserved : Bits_30 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -643,38 +641,38 @@ package STM32F769I is
 
    type RCC_APB1RSTR_Type is
    record
-      TIM2RST    : Boolean; -- TIM2 reset
-      TIM3RST    : Boolean; -- TIM3 reset
-      TIM4RST    : Boolean; -- TIM4 reset
-      TIM5RST    : Boolean; -- TIM5 reset
-      TIM6RST    : Boolean; -- TIM6 reset
-      TIM7RST    : Boolean; -- TIM7 reset
-      TIM12RST   : Boolean; -- TIM12 reset
-      TIM13RST   : Boolean; -- TIM13 reset
-      TIM14RST   : Boolean; -- TIM14 reset
-      LPTMI1RST  : Boolean; -- Low-power timer 1 reset
-      Reserved1  : Bits_1;
-      WWDGRST    : Boolean; -- Window watchdog reset
-      Reserved2  : Bits_1;
-      CAN3RST    : Boolean; -- CAN 3 reset
-      SPI2RST    : Boolean; -- SPI2 reset
-      SPI3RST    : Boolean; -- SPI3 reset
-      SPDIFRXRST : Boolean; -- SPDIFRX reset
-      USART2RST  : Boolean; -- USART2 reset
-      USART3RST  : Boolean; -- USART3 reset
-      UART4RST   : Boolean; -- UART4 reset
-      UART5RST   : Boolean; -- UART5 reset
-      I2C1RST    : Boolean; -- I2C1 reset
-      I2C2RST    : Boolean; -- I2C2 reset
-      I2C3RST    : Boolean; -- I2C3 reset
-      I2C4RST    : Boolean; -- I2C4 reset
-      CAN1RST    : Boolean; -- CAN 1 reset
-      CAN2RST    : Boolean; -- CAN 2 reset
-      CECRST     : Boolean; -- HDMI-CEC reset
-      PWRRST     : Boolean; -- Power interface reset
-      DACRST     : Boolean; -- DAC interface reset
-      UART7RST   : Boolean; -- UART7 reset
-      UART8RST   : Boolean; -- UART8 reset
+      TIM2RST    : Boolean;     -- TIM2 reset
+      TIM3RST    : Boolean;     -- TIM3 reset
+      TIM4RST    : Boolean;     -- TIM4 reset
+      TIM5RST    : Boolean;     -- TIM5 reset
+      TIM6RST    : Boolean;     -- TIM6 reset
+      TIM7RST    : Boolean;     -- TIM7 reset
+      TIM12RST   : Boolean;     -- TIM12 reset
+      TIM13RST   : Boolean;     -- TIM13 reset
+      TIM14RST   : Boolean;     -- TIM14 reset
+      LPTMI1RST  : Boolean;     -- Low-power timer 1 reset
+      Reserved1  : Bits_1 := 0;
+      WWDGRST    : Boolean;     -- Window watchdog reset
+      Reserved2  : Bits_1 := 0;
+      CAN3RST    : Boolean;     -- CAN 3 reset
+      SPI2RST    : Boolean;     -- SPI2 reset
+      SPI3RST    : Boolean;     -- SPI3 reset
+      SPDIFRXRST : Boolean;     -- SPDIFRX reset
+      USART2RST  : Boolean;     -- USART2 reset
+      USART3RST  : Boolean;     -- USART3 reset
+      UART4RST   : Boolean;     -- UART4 reset
+      UART5RST   : Boolean;     -- UART5 reset
+      I2C1RST    : Boolean;     -- I2C1 reset
+      I2C2RST    : Boolean;     -- I2C2 reset
+      I2C3RST    : Boolean;     -- I2C3 reset
+      I2C4RST    : Boolean;     -- I2C4 reset
+      CAN1RST    : Boolean;     -- CAN 1 reset
+      CAN2RST    : Boolean;     -- CAN 2 reset
+      CECRST     : Boolean;     -- HDMI-CEC reset
+      PWRRST     : Boolean;     -- Power interface reset
+      DACRST     : Boolean;     -- DAC interface reset
+      UART7RST   : Boolean;     -- UART7 reset
+      UART8RST   : Boolean;     -- UART8 reset
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -726,35 +724,35 @@ package STM32F769I is
 
    type RCC_APB2RSTR_Type is
    record
-      TIM1RST   : Boolean; -- TIM1 reset
-      TIM8RST   : Boolean; -- TIM8 reset
-      Reserved1 : Bits_2;
-      USART1RST : Boolean; -- USART1 reset
-      USART6RST : Boolean; -- USART6 reset
-      Reserved2 : Bits_1;
-      SDMMC2RST : Boolean; -- SDMMC2 module reset
-      ADC1RST   : Boolean; -- ADC interface reset (common to all ADCs)
-      Reserved3 : Bits_2;
-      SDMMC1RST : Boolean; -- SDMMC1 reset
-      SPI1RST   : Boolean; -- SPI1 reset
-      SPI4RST   : Boolean; -- SPI4 reset
-      SYSCFGRST : Boolean; -- System configuration controller reset
-      Reserved4 : Bits_1;
-      TIM9RST   : Boolean; -- TIM9 reset
-      TIM10RST  : Boolean; -- TIM10 reset
-      TIM11RST  : Boolean; -- TIM11 reset
-      Reserved5 : Bits_1;
-      SPI5RST   : Boolean; -- SPI5 reset
-      SPI6RST   : Boolean; -- SPI6 reset
-      SAI1RST   : Boolean; -- SAI1 reset
-      SAI2RST   : Boolean; -- SAI2 reset
-      Reserved6 : Bits_2;
-      LTDCRST   : Boolean; -- LTDC reset
-      DSIRST    : Boolean; -- DSIHOST module reset
-      Reserved7 : Bits_1;
-      DFSDM1RST : Boolean; -- DFSDM1 module reset
-      MDIORST   : Boolean; -- MDIO module reset
-      Reserved8 : Bits_1;
+      TIM1RST   : Boolean;     -- TIM1 reset
+      TIM8RST   : Boolean;     -- TIM8 reset
+      Reserved1 : Bits_2 := 0;
+      USART1RST : Boolean;     -- USART1 reset
+      USART6RST : Boolean;     -- USART6 reset
+      Reserved2 : Bits_1 := 0;
+      SDMMC2RST : Boolean;     -- SDMMC2 module reset
+      ADC1RST   : Boolean;     -- ADC interface reset (common to all ADCs)
+      Reserved3 : Bits_2 := 0;
+      SDMMC1RST : Boolean;     -- SDMMC1 reset
+      SPI1RST   : Boolean;     -- SPI1 reset
+      SPI4RST   : Boolean;     -- SPI4 reset
+      SYSCFGRST : Boolean;     -- System configuration controller reset
+      Reserved4 : Bits_1 := 0;
+      TIM9RST   : Boolean;     -- TIM9 reset
+      TIM10RST  : Boolean;     -- TIM10 reset
+      TIM11RST  : Boolean;     -- TIM11 reset
+      Reserved5 : Bits_1 := 0;
+      SPI5RST   : Boolean;     -- SPI5 reset
+      SPI6RST   : Boolean;     -- SPI6 reset
+      SAI1RST   : Boolean;     -- SAI1 reset
+      SAI2RST   : Boolean;     -- SAI2 reset
+      Reserved6 : Bits_2 := 0;
+      LTDCRST   : Boolean;     -- LTDC reset
+      DSIRST    : Boolean;     -- DSIHOST module reset
+      Reserved7 : Bits_1 := 0;
+      DFSDM1RST : Boolean;     -- DFSDM1 module reset
+      MDIORST   : Boolean;     -- MDIO module reset
+      Reserved8 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -803,34 +801,34 @@ package STM32F769I is
 
    type RCC_AHB1ENR_Type is
    record
-      GPIOAEN     : Boolean; -- IO port A clock enable
-      GPIOBEN     : Boolean; -- IO port B clock enable
-      GPIOCEN     : Boolean; -- IO port C clock enable
-      GPIODEN     : Boolean; -- IO port D clock enable
-      GPIOEEN     : Boolean; -- IO port E clock enable
-      GPIOFEN     : Boolean; -- IO port F clock enable
-      GPIOGEN     : Boolean; -- IO port G clock enable
-      GPIOHEN     : Boolean; -- IO port H clock enable
-      GPIOIEN     : Boolean; -- IO port I clock enable
-      GPIOJEN     : Boolean; -- IO port J clock enable
-      GPIOKEN     : Boolean; -- IO port K clock enable
-      Reserved1   : Bits_1;
-      CRCEN       : Boolean; -- CRC clock enable
-      Reserved2   : Bits_5;
-      BKPSRAMEN   : Boolean; -- Backup SRAM interface clock enable
-      Reserved3   : Bits_1;
-      DTCMRAMEN   : Boolean; -- DTCM data RAM clock enable
-      DMA1EN      : Boolean; -- DMA1 clock enable
-      DMA2EN      : Boolean; -- DMA2 clock enable
-      DMA2DEN     : Boolean; -- DMA2D clock enable
-      Reserved4   : Bits_1;
-      ETHMACEN    : Boolean; -- Ethernet MAC clock enable
-      ETHMACTXEN  : Boolean; -- Ethernet Transmission clock enable
-      ETHMACRXEN  : Boolean; -- Ethernet Reception clock enable
-      ETHMACPTPEN : Boolean; -- Ethernet PTP clock enable
-      OTGHSEN     : Boolean; -- USB OTG HS clock enable
-      OTGHSULPIEN : Boolean; -- USB OTG HSULPI clock enable
-      Reserved5   : Bits_1;
+      GPIOAEN     : Boolean;     -- IO port A clock enable
+      GPIOBEN     : Boolean;     -- IO port B clock enable
+      GPIOCEN     : Boolean;     -- IO port C clock enable
+      GPIODEN     : Boolean;     -- IO port D clock enable
+      GPIOEEN     : Boolean;     -- IO port E clock enable
+      GPIOFEN     : Boolean;     -- IO port F clock enable
+      GPIOGEN     : Boolean;     -- IO port G clock enable
+      GPIOHEN     : Boolean;     -- IO port H clock enable
+      GPIOIEN     : Boolean;     -- IO port I clock enable
+      GPIOJEN     : Boolean;     -- IO port J clock enable
+      GPIOKEN     : Boolean;     -- IO port K clock enable
+      Reserved1   : Bits_1 := 0;
+      CRCEN       : Boolean;     -- CRC clock enable
+      Reserved2   : Bits_5 := 0;
+      BKPSRAMEN   : Boolean;     -- Backup SRAM interface clock enable
+      Reserved3   : Bits_1 := 0;
+      DTCMRAMEN   : Boolean;     -- DTCM data RAM clock enable
+      DMA1EN      : Boolean;     -- DMA1 clock enable
+      DMA2EN      : Boolean;     -- DMA2 clock enable
+      DMA2DEN     : Boolean;     -- DMA2D clock enable
+      Reserved4   : Bits_1 := 0;
+      ETHMACEN    : Boolean;     -- Ethernet MAC clock enable
+      ETHMACTXEN  : Boolean;     -- Ethernet Transmission clock enable
+      ETHMACRXEN  : Boolean;     -- Ethernet Reception clock enable
+      ETHMACPTPEN : Boolean;     -- Ethernet PTP clock enable
+      OTGHSEN     : Boolean;     -- USB OTG HS clock enable
+      OTGHSULPIEN : Boolean;     -- USB OTG HSULPI clock enable
+      Reserved5   : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -878,14 +876,14 @@ package STM32F769I is
 
    type RCC_AHB2ENR_Type is
    record
-      DCMIEN    : Boolean; -- Camera interface enable
-      JPEGEN    : Boolean; -- JPEG module clock enable
-      Reserved1 : Bits_2;
-      CRYPEN    : Boolean; -- Cryptographic modules clock enable
-      HASHEN    : Boolean; -- Hash modules clock enable
-      RNGEN     : Boolean; -- Random number generator clock enable
-      OTGFSEN   : Boolean; -- USB OTG FS clock enable
-      Reserved2 : Bits_24;
+      DCMIEN    : Boolean;      -- Camera interface enable
+      JPEGEN    : Boolean;      -- JPEG module clock enable
+      Reserved1 : Bits_2 := 0;
+      CRYPEN    : Boolean;      -- Cryptographic modules clock enable
+      HASHEN    : Boolean;      -- Hash modules clock enable
+      RNGEN     : Boolean;      -- Random number generator clock enable
+      OTGFSEN   : Boolean;      -- USB OTG FS clock enable
+      Reserved2 : Bits_24 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -913,9 +911,9 @@ package STM32F769I is
 
    type RCC_AHB3ENR_Type is
    record
-      FMCEN    : Boolean; -- Flexible memory controller clock enable
-      QSPIEN   : Boolean; -- Quad SPI memory controller clock enable
-      Reserved : Bits_30;
+      FMCEN    : Boolean;      -- Flexible memory controller clock enable
+      QSPIEN   : Boolean;      -- Quad SPI memory controller clock enable
+      Reserved : Bits_30 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -938,38 +936,38 @@ package STM32F769I is
 
    type RCC_APB1ENR_Type is
    record
-      TIM2EN    : Boolean; -- TIM2 clock enable
-      TIM3EN    : Boolean; -- TIM3 clock enable
-      TIM4EN    : Boolean; -- TIM4 clock enable
-      TIM5EN    : Boolean; -- TIM5 clock enable
-      TIM6EN    : Boolean; -- TIM6 clock enable
-      TIM7EN    : Boolean; -- TIM7 clock enable
-      TIM12EN   : Boolean; -- TIM12 clock enable
-      TIM13EN   : Boolean; -- TIM13 clock enable
-      TIM14EN   : Boolean; -- TIM14 clock enable
-      LPTMI1EN  : Boolean; -- Low-power timer 1 clock enable
-      RTCAPBEN  : Boolean; -- RTC register interface clock enable
-      WWDGEN    : Boolean; -- Window watchdog clock enable
-      Reserved  : Bits_1;
-      CAN3EN    : Boolean; -- CAN 3 clock enable
-      SPI2EN    : Boolean; -- SPI2 clock enable
-      SPI3EN    : Boolean; -- SPI3 clock enable
-      SPDIFRXEN : Boolean; -- SPDIFRX clock enable
-      USART2EN  : Boolean; -- USART2 clock enable
-      USART3EN  : Boolean; -- USART3 clock enable
-      UART4EN   : Boolean; -- UART4 clock enable
-      UART5EN   : Boolean; -- UART5 clock enable
-      I2C1EN    : Boolean; -- I2C1 clock enable
-      I2C2EN    : Boolean; -- I2C2 clock enable
-      I2C3EN    : Boolean; -- I2C3 clock enable
-      I2C4EN    : Boolean; -- I2C4 clock enable
-      CAN1EN    : Boolean; -- CAN 1 clock enable
-      CAN2EN    : Boolean; -- CAN 2 clock enable
-      CECEN     : Boolean; -- HDMI-CEC clock enable
-      PWREN     : Boolean; -- Power interface clock enable
-      DACEN     : Boolean; -- DAC interface clock enable
-      UART7EN   : Boolean; -- UART7 clock enable
-      UART8EN   : Boolean; -- UART8 clock enable
+      TIM2EN    : Boolean;     -- TIM2 clock enable
+      TIM3EN    : Boolean;     -- TIM3 clock enable
+      TIM4EN    : Boolean;     -- TIM4 clock enable
+      TIM5EN    : Boolean;     -- TIM5 clock enable
+      TIM6EN    : Boolean;     -- TIM6 clock enable
+      TIM7EN    : Boolean;     -- TIM7 clock enable
+      TIM12EN   : Boolean;     -- TIM12 clock enable
+      TIM13EN   : Boolean;     -- TIM13 clock enable
+      TIM14EN   : Boolean;     -- TIM14 clock enable
+      LPTMI1EN  : Boolean;     -- Low-power timer 1 clock enable
+      RTCAPBEN  : Boolean;     -- RTC register interface clock enable
+      WWDGEN    : Boolean;     -- Window watchdog clock enable
+      Reserved  : Bits_1 := 0;
+      CAN3EN    : Boolean;     -- CAN 3 clock enable
+      SPI2EN    : Boolean;     -- SPI2 clock enable
+      SPI3EN    : Boolean;     -- SPI3 clock enable
+      SPDIFRXEN : Boolean;     -- SPDIFRX clock enable
+      USART2EN  : Boolean;     -- USART2 clock enable
+      USART3EN  : Boolean;     -- USART3 clock enable
+      UART4EN   : Boolean;     -- UART4 clock enable
+      UART5EN   : Boolean;     -- UART5 clock enable
+      I2C1EN    : Boolean;     -- I2C1 clock enable
+      I2C2EN    : Boolean;     -- I2C2 clock enable
+      I2C3EN    : Boolean;     -- I2C3 clock enable
+      I2C4EN    : Boolean;     -- I2C4 clock enable
+      CAN1EN    : Boolean;     -- CAN 1 clock enable
+      CAN2EN    : Boolean;     -- CAN 2 clock enable
+      CECEN     : Boolean;     -- HDMI-CEC clock enable
+      PWREN     : Boolean;     -- Power interface clock enable
+      DACEN     : Boolean;     -- DAC interface clock enable
+      UART7EN   : Boolean;     -- UART7 clock enable
+      UART8EN   : Boolean;     -- UART8 clock enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1021,36 +1019,36 @@ package STM32F769I is
 
    type RCC_APB2ENR_Type is
    record
-      TIM1EN    : Boolean; -- TIM1 clock enable
-      TIM8EN    : Boolean; -- TIM8 clock enable
-      Reserved1 : Bits_2;
-      USART1EN  : Boolean; -- USART1 clock enable
-      USART6EN  : Boolean; -- USART6 clock enable
-      Reserved2 : Bits_1;
-      SDMMC2EN  : Boolean; -- SDMMC2 clock enable
-      ADC1EN    : Boolean; -- ADC1 clock enable
-      ADC2EN    : Boolean; -- ADC2 clock enable
-      ADC3EN    : Boolean; -- ADC3 clock enable
-      SDMMC1EN  : Boolean; -- SDMMC1 clock enable
-      SPI1EN    : Boolean; -- SPI1 clock enable
-      SPI4EN    : Boolean; -- SPI4 clock enable
-      SYSCFGEN  : Boolean; -- System configuration controller clock enable
-      Reserved3 : Bits_1;
-      TIM9EN    : Boolean; -- TIM9 clock enable
-      TIM10EN   : Boolean; -- TIM10 clock enable
-      TIM11EN   : Boolean; -- TIM11 clock enable
-      Reserved4 : Bits_1;
-      SPI5EN    : Boolean; -- SPI5 clock enable
-      SPI6EN    : Boolean; -- SPI6 clock enable
-      SAI1EN    : Boolean; -- SAI1 clock enable
-      SAI2EN    : Boolean; -- SAI2 clock enable
-      Reserved5 : Bits_2;
-      LTDCEN    : Boolean; -- LTDC clock enable
-      DSIEN     : Boolean; -- DSIHOST clock enable
-      Reserved6 : Bits_1;
-      DFSDM1EN  : Boolean; -- DFSDM1 clock enable
-      MDIOEN    : Boolean; -- MDIO clock enable
-      Reserved7 : Bits_1;
+      TIM1EN    : Boolean;     -- TIM1 clock enable
+      TIM8EN    : Boolean;     -- TIM8 clock enable
+      Reserved1 : Bits_2 := 0;
+      USART1EN  : Boolean;     -- USART1 clock enable
+      USART6EN  : Boolean;     -- USART6 clock enable
+      Reserved2 : Bits_1 := 0;
+      SDMMC2EN  : Boolean;     -- SDMMC2 clock enable
+      ADC1EN    : Boolean;     -- ADC1 clock enable
+      ADC2EN    : Boolean;     -- ADC2 clock enable
+      ADC3EN    : Boolean;     -- ADC3 clock enable
+      SDMMC1EN  : Boolean;     -- SDMMC1 clock enable
+      SPI1EN    : Boolean;     -- SPI1 clock enable
+      SPI4EN    : Boolean;     -- SPI4 clock enable
+      SYSCFGEN  : Boolean;     -- System configuration controller clock enable
+      Reserved3 : Bits_1 := 0;
+      TIM9EN    : Boolean;     -- TIM9 clock enable
+      TIM10EN   : Boolean;     -- TIM10 clock enable
+      TIM11EN   : Boolean;     -- TIM11 clock enable
+      Reserved4 : Bits_1 := 0;
+      SPI5EN    : Boolean;     -- SPI5 clock enable
+      SPI6EN    : Boolean;     -- SPI6 clock enable
+      SAI1EN    : Boolean;     -- SAI1 clock enable
+      SAI2EN    : Boolean;     -- SAI2 clock enable
+      Reserved5 : Bits_2 := 0;
+      LTDCEN    : Boolean;     -- LTDC clock enable
+      DSIEN     : Boolean;     -- DSIHOST clock enable
+      Reserved6 : Bits_1 := 0;
+      DFSDM1EN  : Boolean;     -- DFSDM1 clock enable
+      MDIOEN    : Boolean;     -- MDIO clock enable
+      Reserved7 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1100,38 +1098,38 @@ package STM32F769I is
 
    type RCC_AHB1LPENR_Type is
    record
-      GPIOALPEN     : Boolean; -- IO port A clock enable during sleep mode
-      GPIOBLPEN     : Boolean; -- IO port B clock enable during Sleep mode
-      GPIOCLPEN     : Boolean; -- IO port C clock enable during Sleep mode
-      GPIODLPEN     : Boolean; -- IO port D clock enable during Sleep mode
-      GPIOELPEN     : Boolean; -- IO port E clock enable during Sleep mode
-      GPIOFLPEN     : Boolean; -- IO port F clock enable during Sleep mode
-      GPIOGLPEN     : Boolean; -- IO port G clock enable during Sleep mode
-      GPIOHLPEN     : Boolean; -- IO port H clock enable during Sleep mode
-      GPIOILPEN     : Boolean; -- IO port I clock enable during Sleep mode
-      GPIOJLPEN     : Boolean; -- IO port J clock enable during Sleep mode
-      GPIOKLPEN     : Boolean; -- IO port K clock enable during Sleep mode
-      Reserved1     : Bits_1;
-      CRCLPEN       : Boolean; -- CRC clock enable during Sleep mode
-      AXILPEN       : Boolean; -- AXI to AHB bridge clock enable during Sleep mode
-      Reserved2     : Bits_1;
-      FLITFLPEN     : Boolean; -- Flash interface clock enable during Sleep mode
-      SRAM1LPEN     : Boolean; -- SRAM1 interface clock enable during Sleep mode
-      SRAM2LPEN     : Boolean; -- SRAM2 interface clock enable during Sleep mode
-      BKPSRAMLPEN   : Boolean; -- Backup SRAM interface clock enable during Sleep mode
-      Reserved3     : Bits_1;
-      DTCMLPEN      : Boolean; -- DTCM RAM interface clock enable during Sleep mode
-      DMA1LPEN      : Boolean; -- DMA1 clock enable during Sleep mode
-      DMA2LPEN      : Boolean; -- DMA2 clock enable during Sleep mode
-      DMA2DLPEN     : Boolean; -- DMA2D clock enable during Sleep mode
-      Reserved4     : Bits_1;
-      ETHMACLPEN    : Boolean; -- Ethernet MAC clock enable during Sleep mode
-      ETHMACTXLPEN  : Boolean; -- Ethernet transmission clock enable during Sleep mode
-      ETHMACRXLPEN  : Boolean; -- Ethernet reception clock enable during Sleep mode
-      ETHMACPTPLPEN : Boolean; -- Ethernet PTP clock enable during Sleep mode
-      OTGHSLPEN     : Boolean; -- USB OTG HS clock enable during Sleep mode
-      OTGHSULPILPEN : Boolean; -- USB OTG HS ULPI clock enable during Sleep mode
-      Reserved5     : Bits_1;
+      GPIOALPEN     : Boolean;     -- IO port A clock enable during sleep mode
+      GPIOBLPEN     : Boolean;     -- IO port B clock enable during Sleep mode
+      GPIOCLPEN     : Boolean;     -- IO port C clock enable during Sleep mode
+      GPIODLPEN     : Boolean;     -- IO port D clock enable during Sleep mode
+      GPIOELPEN     : Boolean;     -- IO port E clock enable during Sleep mode
+      GPIOFLPEN     : Boolean;     -- IO port F clock enable during Sleep mode
+      GPIOGLPEN     : Boolean;     -- IO port G clock enable during Sleep mode
+      GPIOHLPEN     : Boolean;     -- IO port H clock enable during Sleep mode
+      GPIOILPEN     : Boolean;     -- IO port I clock enable during Sleep mode
+      GPIOJLPEN     : Boolean;     -- IO port J clock enable during Sleep mode
+      GPIOKLPEN     : Boolean;     -- IO port K clock enable during Sleep mode
+      Reserved1     : Bits_1 := 0;
+      CRCLPEN       : Boolean;     -- CRC clock enable during Sleep mode
+      AXILPEN       : Boolean;     -- AXI to AHB bridge clock enable during Sleep mode
+      Reserved2     : Bits_1 := 0;
+      FLITFLPEN     : Boolean;     -- Flash interface clock enable during Sleep mode
+      SRAM1LPEN     : Boolean;     -- SRAM1 interface clock enable during Sleep mode
+      SRAM2LPEN     : Boolean;     -- SRAM2 interface clock enable during Sleep mode
+      BKPSRAMLPEN   : Boolean;     -- Backup SRAM interface clock enable during Sleep mode
+      Reserved3     : Bits_1 := 0;
+      DTCMLPEN      : Boolean;     -- DTCM RAM interface clock enable during Sleep mode
+      DMA1LPEN      : Boolean;     -- DMA1 clock enable during Sleep mode
+      DMA2LPEN      : Boolean;     -- DMA2 clock enable during Sleep mode
+      DMA2DLPEN     : Boolean;     -- DMA2D clock enable during Sleep mode
+      Reserved4     : Bits_1 := 0;
+      ETHMACLPEN    : Boolean;     -- Ethernet MAC clock enable during Sleep mode
+      ETHMACTXLPEN  : Boolean;     -- Ethernet transmission clock enable during Sleep mode
+      ETHMACRXLPEN  : Boolean;     -- Ethernet reception clock enable during Sleep mode
+      ETHMACPTPLPEN : Boolean;     -- Ethernet PTP clock enable during Sleep mode
+      OTGHSLPEN     : Boolean;     -- USB OTG HS clock enable during Sleep mode
+      OTGHSULPILPEN : Boolean;     -- USB OTG HS ULPI clock enable during Sleep mode
+      Reserved5     : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1183,14 +1181,14 @@ package STM32F769I is
 
    type RCC_AHB2LPENR_Type is
    record
-      DCMILPEN  : Boolean; -- Camera interface enable during Sleep mode
-      JPEGLPEN  : Boolean; -- JPEG module enabled during Sleep mode
-      Reserved1 : Bits_2;
-      CRYPLPEN  : Boolean; -- Cryptography modules clock enable during Sleep mode
-      HASHLPEN  : Boolean; -- Hash modules clock enable during Sleep mode
-      RNGLPEN   : Boolean; -- Random number generator clock enable during Sleep mode
-      OTGFSLPEN : Boolean; -- USB OTG FS clock enable during Sleep mode
-      Reserved2 : Bits_24;
+      DCMILPEN  : Boolean;      -- Camera interface enable during Sleep mode
+      JPEGLPEN  : Boolean;      -- JPEG module enabled during Sleep mode
+      Reserved1 : Bits_2 := 0;
+      CRYPLPEN  : Boolean;      -- Cryptography modules clock enable during Sleep mode
+      HASHLPEN  : Boolean;      -- Hash modules clock enable during Sleep mode
+      RNGLPEN   : Boolean;      -- Random number generator clock enable during Sleep mode
+      OTGFSLPEN : Boolean;      -- USB OTG FS clock enable during Sleep mode
+      Reserved2 : Bits_24 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1218,9 +1216,9 @@ package STM32F769I is
 
    type RCC_AHB3LPENR_Type is
    record
-      FMCLPEN  : Boolean; -- Flexible memory controller module clock enable during Sleep mode
-      QSPILPEN : Boolean; -- QUADSPI memory controller clock enable during Sleep mode
-      Reserved : Bits_30;
+      FMCLPEN  : Boolean;      -- Flexible memory controller module clock enable during Sleep mode
+      QSPILPEN : Boolean;      -- QUADSPI memory controller clock enable during Sleep mode
+      Reserved : Bits_30 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1243,38 +1241,38 @@ package STM32F769I is
 
    type RCC_APB1LPENR_Type is
    record
-      TIM2LPEN    : Boolean; -- TIM2 clock enable during Sleep mode
-      TIM3LPEN    : Boolean; -- TIM3 clock enable during Sleep mode
-      TIM4LPEN    : Boolean; -- TIM4 clock enable during Sleep mode
-      TIM5LPEN    : Boolean; -- TIM5 clock enable during Sleep mode
-      TIM6LPEN    : Boolean; -- TIM6 clock enable during Sleep mode
-      TIM7LPEN    : Boolean; -- TIM7 clock enable during Sleep mode
-      TIM12LPEN   : Boolean; -- TIM12 clock enable during Sleep mode
-      TIM13LPEN   : Boolean; -- Boolean; -- TIM13 clock enable during Sleep mode
-      TIM14LPEN   : Boolean; -- TIM14 clock enable during Sleep mode
-      LPTIM1LPEN  : Boolean; -- low-power timer 1 clock enable during Sleep mode
-      RTCAPBLPEN  : Boolean; -- RTC register interface clock enable during Sleep mode
-      WWDGLPEN    : Boolean; -- Window watchdog clock enable during Sleep mode
-      Reserved    : Bits_1;
-      CAN3LPEN    : Boolean; -- CAN 3 clock enable during Sleep mode
-      SPI2LPEN    : Boolean; -- SPI2 clock enable during Sleep mode
-      SPI3LPEN    : Boolean; -- SPI3 clock enable during Sleep mode
-      SPDIFRXLPEN : Boolean; -- SPDIFRX clock enable during Sleep mode
-      USART2LPEN  : Boolean; -- USART2 clock enable during Sleep mode
-      USART3LPEN  : Boolean; -- USART3 clock enable during Sleep mode
-      UART4LPEN   : Boolean; -- UART4 clock enable during Sleep mode
-      UART5LPEN   : Boolean; -- UART5 clock enable during Sleep mode
-      I2C1LPEN    : Boolean; -- I2C1 clock enable during Sleep mode
-      I2C2LPEN    : Boolean; -- I2C2 clock enable during Sleep mode
-      I2C3LPEN    : Boolean; -- I2C3 clock enable during Sleep mode
-      I2C4LPEN    : Boolean; -- I2C4 clock enable during Sleep mode
-      CAN1LPEN    : Boolean; -- CAN 1 clock enable during Sleep mode
-      CAN2LPEN    : Boolean; -- CAN 2 clock enable during Sleep mode
-      CECLPEN     : Boolean; -- HDMI-CEC clock enable during Sleep mode
-      PWRLPEN     : Boolean; -- Power interface clock enable during Sleep mode
-      DACLPEN     : Boolean; -- DAC interface clock enable during Sleep mode
-      UART7LPEN   : Boolean; -- UART7 clock enable during Sleep mode
-      UART8LPEN   : Boolean; -- UART8 clock enable during Sleep mode
+      TIM2LPEN    : Boolean;     -- TIM2 clock enable during Sleep mode
+      TIM3LPEN    : Boolean;     -- TIM3 clock enable during Sleep mode
+      TIM4LPEN    : Boolean;     -- TIM4 clock enable during Sleep mode
+      TIM5LPEN    : Boolean;     -- TIM5 clock enable during Sleep mode
+      TIM6LPEN    : Boolean;     -- TIM6 clock enable during Sleep mode
+      TIM7LPEN    : Boolean;     -- TIM7 clock enable during Sleep mode
+      TIM12LPEN   : Boolean;     -- TIM12 clock enable during Sleep mode
+      TIM13LPEN   : Boolean;     -- TIM13 clock enable during Sleep mode
+      TIM14LPEN   : Boolean;     -- TIM14 clock enable during Sleep mode
+      LPTIM1LPEN  : Boolean;     -- low-power timer 1 clock enable during Sleep mode
+      RTCAPBLPEN  : Boolean;     -- RTC register interface clock enable during Sleep mode
+      WWDGLPEN    : Boolean;     -- Window watchdog clock enable during Sleep mode
+      Reserved    : Bits_1 := 0;
+      CAN3LPEN    : Boolean;     -- CAN 3 clock enable during Sleep mode
+      SPI2LPEN    : Boolean;     -- SPI2 clock enable during Sleep mode
+      SPI3LPEN    : Boolean;     -- SPI3 clock enable during Sleep mode
+      SPDIFRXLPEN : Boolean;     -- SPDIFRX clock enable during Sleep mode
+      USART2LPEN  : Boolean;     -- USART2 clock enable during Sleep mode
+      USART3LPEN  : Boolean;     -- USART3 clock enable during Sleep mode
+      UART4LPEN   : Boolean;     -- UART4 clock enable during Sleep mode
+      UART5LPEN   : Boolean;     -- UART5 clock enable during Sleep mode
+      I2C1LPEN    : Boolean;     -- I2C1 clock enable during Sleep mode
+      I2C2LPEN    : Boolean;     -- I2C2 clock enable during Sleep mode
+      I2C3LPEN    : Boolean;     -- I2C3 clock enable during Sleep mode
+      I2C4LPEN    : Boolean;     -- I2C4 clock enable during Sleep mode
+      CAN1LPEN    : Boolean;     -- CAN 1 clock enable during Sleep mode
+      CAN2LPEN    : Boolean;     -- CAN 2 clock enable during Sleep mode
+      CECLPEN     : Boolean;     -- HDMI-CEC clock enable during Sleep mode
+      PWRLPEN     : Boolean;     -- Power interface clock enable during Sleep mode
+      DACLPEN     : Boolean;     -- DAC interface clock enable during Sleep mode
+      UART7LPEN   : Boolean;     -- UART7 clock enable during Sleep mode
+      UART8LPEN   : Boolean;     -- UART8 clock enable during Sleep mode
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1326,36 +1324,36 @@ package STM32F769I is
 
    type RCC_APB2LPENR_Type is
    record
-      TIM1LPEN   : Boolean; -- TIM1 clock enable during Sleep mode
-      TIM8LPEN   : Boolean; -- TIM8 clock enable during Sleep mode
-      Reserved1  : Bits_2;
-      USART1LPEN : Boolean; -- USART1 clock enable during Sleep mode
-      USART6LPEN : Boolean; -- USART6 clock enable during Sleep mode
-      Reserved2  : Bits_1;
-      SDMMC2LPEN : Boolean; -- SDMMC2 clock enable during Sleep mode
-      ADC1LPEN   : Boolean; -- ADC1 clock enable during Sleep mode
-      ADC2LPEN   : Boolean; -- ADC2 clock enable during Sleep mode
-      ADC3LPEN   : Boolean; -- ADC 3 clock enable during Sleep mode
-      SDMMC1LPEN : Boolean; -- SDMMC1 clock enable during Sleep mode
-      SPI1LPEN   : Boolean; -- SPI1 clock enable during Sleep mode
-      SPI4LPEN   : Boolean; -- SPI4 clock enable during Sleep mode
-      SYSCFGLPEN : Boolean; -- System configuration controller clock enable during Sleep mode
-      Reserved3  : Bits_1;
-      TIM9LPEN   : Boolean; -- TIM9 clock enable during sleep mode
-      TIM10LPEN  : Boolean; -- TIM10 clock enable during Sleep mode
-      TIM11LPEN  : Boolean; -- TIM11 clock enable during Sleep mode
-      Reserved4  : Bits_1;
-      SPI5LPEN   : Boolean; -- SPI5 clock enable during Sleep mode
-      SPI6LPEN   : Boolean; -- SPI6 clock enable during Sleep mode
-      SAI1LPEN   : Boolean; -- SAI1 clock enable during Sleep mode
-      SAI2LPEN   : Boolean; -- SAI2 clock enable during Sleep mode
-      Reserved5  : Bits_2;
-      LTDCLPEN   : Boolean; -- LTDC clock enable during Sleep mode
-      DSILPEN    : Boolean; -- DSIHOST clock enable during Sleep mode
-      Reserved6  : Bits_1;
-      DFSDM1LPEN : Boolean; -- DFSDM1 clock enable during Sleep mode
-      MDIOLPEN   : Boolean; -- MDIO clock enable during Sleep mode
-      Reserved7  : Bits_1;
+      TIM1LPEN   : Boolean;     -- TIM1 clock enable during Sleep mode
+      TIM8LPEN   : Boolean;     -- TIM8 clock enable during Sleep mode
+      Reserved1  : Bits_2 := 0;
+      USART1LPEN : Boolean;     -- USART1 clock enable during Sleep mode
+      USART6LPEN : Boolean;     -- USART6 clock enable during Sleep mode
+      Reserved2  : Bits_1 := 0;
+      SDMMC2LPEN : Boolean;     -- SDMMC2 clock enable during Sleep mode
+      ADC1LPEN   : Boolean;     -- ADC1 clock enable during Sleep mode
+      ADC2LPEN   : Boolean;     -- ADC2 clock enable during Sleep mode
+      ADC3LPEN   : Boolean;     -- ADC 3 clock enable during Sleep mode
+      SDMMC1LPEN : Boolean;     -- SDMMC1 clock enable during Sleep mode
+      SPI1LPEN   : Boolean;     -- SPI1 clock enable during Sleep mode
+      SPI4LPEN   : Boolean;     -- SPI4 clock enable during Sleep mode
+      SYSCFGLPEN : Boolean;     -- System configuration controller clock enable during Sleep mode
+      Reserved3  : Bits_1 := 0;
+      TIM9LPEN   : Boolean;     -- TIM9 clock enable during sleep mode
+      TIM10LPEN  : Boolean;     -- TIM10 clock enable during Sleep mode
+      TIM11LPEN  : Boolean;     -- TIM11 clock enable during Sleep mode
+      Reserved4  : Bits_1 := 0;
+      SPI5LPEN   : Boolean;     -- SPI5 clock enable during Sleep mode
+      SPI6LPEN   : Boolean;     -- SPI6 clock enable during Sleep mode
+      SAI1LPEN   : Boolean;     -- SAI1 clock enable during Sleep mode
+      SAI2LPEN   : Boolean;     -- SAI2 clock enable during Sleep mode
+      Reserved5  : Bits_2 := 0;
+      LTDCLPEN   : Boolean;     -- LTDC clock enable during Sleep mode
+      DSILPEN    : Boolean;     -- DSIHOST clock enable during Sleep mode
+      Reserved6  : Bits_1 := 0;
+      DFSDM1LPEN : Boolean;     -- DFSDM1 clock enable during Sleep mode
+      MDIOLPEN   : Boolean;     -- MDIO clock enable during Sleep mode
+      Reserved7  : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1415,16 +1413,16 @@ package STM32F769I is
 
    type RCC_BDCR_Type is
    record
-      LSEON      : Boolean; -- External low-speed oscillator enable
-      LSERDY     : Boolean; -- External low-speed oscillator ready
-      LSEBYP     : Boolean; -- External low-speed oscillator bypass
-      LSEDRV     : Bits_2;  -- LSE oscillator drive capability
-      Reserved1  : Bits_3;
-      RTCSEL     : Bits_2;  -- RTC clock source selection
-      Reserved2  : Bits_5;
-      RTCEN      : Boolean; -- RTC clock enable
-      BDRST      : Boolean; -- Backup domain software reset
-      Reserved3  : Bits_15;
+      LSEON      : Boolean;      -- External low-speed oscillator enable
+      LSERDY     : Boolean;      -- External low-speed oscillator ready
+      LSEBYP     : Boolean;      -- External low-speed oscillator bypass
+      LSEDRV     : Bits_2;       -- LSE oscillator drive capability
+      Reserved1  : Bits_3 := 0;
+      RTCSEL     : Bits_2;       -- RTC clock source selection
+      Reserved2  : Bits_5 := 0;
+      RTCEN      : Boolean;      -- RTC clock enable
+      BDRST      : Boolean;      -- Backup domain software reset
+      Reserved3  : Bits_15 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1454,17 +1452,17 @@ package STM32F769I is
 
    type RCC_CSR_Type is
    record
-      LSION    : Boolean; -- Internal low-speed oscillator enable
-      LSIRDY   : Boolean; -- Internal low-speed oscillator ready
-      Reserved : Bits_22;
-      RMVF     : Boolean; -- Remove reset flag
-      BORRSTF  : Boolean; -- BOR reset flag
-      PINRSTF  : Boolean; -- PIN reset flag
-      PORRSTF  : Boolean; -- POR/PDR reset flag
-      SFTRSTF  : Boolean; -- Software reset flag
-      IWDGRSTF : Boolean; -- Independent watchdog reset flag
-      WWDGRSTF : Boolean; -- Window watchdog reset flag
-      LPWRRSTF : Boolean; -- Low-power reset flag
+      LSION    : Boolean;      -- Internal low-speed oscillator enable
+      LSIRDY   : Boolean;      -- Internal low-speed oscillator ready
+      Reserved : Bits_22 := 0;
+      RMVF     : Boolean;      -- Remove reset flag
+      BORRSTF  : Boolean;      -- BOR reset flag
+      PINRSTF  : Boolean;      -- PIN reset flag
+      PORRSTF  : Boolean;      -- POR/PDR reset flag
+      SFTRSTF  : Boolean;      -- Software reset flag
+      IWDGRSTF : Boolean;      -- Independent watchdog reset flag
+      WWDGRSTF : Boolean;      -- Window watchdog reset flag
+      LPWRRSTF : Boolean;      -- Low-power reset flag
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1498,11 +1496,11 @@ package STM32F769I is
 
    type RCC_SSCGR_Type is
    record
-      MODPER    : Bits_13; -- Modulation period
-      INCSTEP   : Bits_15; -- Incrementation step
-      Reserved  : Bits_2;
-      SPREADSEL : Bits_1;  -- Spread Select
-      SSCGEN    : Boolean; -- Spread spectrum modulation enable
+      MODPER    : Bits_13;     -- Modulation period
+      INCSTEP   : Bits_15;     -- Incrementation step
+      Reserved  : Bits_2 := 0;
+      SPREADSEL : Bits_1;      -- Spread Select
+      SSCGEN    : Boolean;     -- Spread spectrum modulation enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1554,14 +1552,14 @@ package STM32F769I is
 
    type RCC_PLLI2SCFGR_Type is
    record
-      Reserved1 : Bits_6;
+      Reserved1 : Bits_6 := 0;
       PLLI2SN   : Bits_9 range 50 .. 432; -- PLLI2S multiplication factor for VCO
-      Reserved2 : Bits_1;
+      Reserved2 : Bits_1 := 0;
       PLLI2SP   : Bits_2;                 -- PLLI2S division factor for SPDIFRX clock
-      Reserved3 : Bits_6;
+      Reserved3 : Bits_6 := 0;
       PLLI2SQ   : Bits_4 range 2 .. 15;   -- PLLI2S division factor for SAIs clock
       PLLI2SR   : Bits_3 range 2 .. 7;    -- PLLI2S division factor for I2S clocks
-      Reserved4 : Bits_1;
+      Reserved4 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1616,14 +1614,14 @@ package STM32F769I is
 
    type RCC_PLLSAICFGR_Type is
    record
-      Reserved1 : Bits_6;
+      Reserved1 : Bits_6 := 0;
       PLLSAIN   : Bits_9 range 50 .. 432; -- PLLSAI multiplication factor for VCO
-      Reserved2 : Bits_1;
+      Reserved2 : Bits_1 := 0;
       PLLSAIP   : Bits_2;                 -- PLLSAI division factor for 48MHz clock
-      Reserved3 : Bits_6;
+      Reserved3 : Bits_6 := 0;
       PLLSAIQ   : Bits_4 range 2 .. 15;   -- PLLSAI division factor for SAI clock
       PLLSAIR   : Bits_3 range 2 .. 7;    -- PLLSAI division factor for LCD clock
-      Reserved4 : Bits_1;
+      Reserved4 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1703,18 +1701,18 @@ package STM32F769I is
 
    type RCC_DCKCFGR1_Type is
    record
-      PLLI2SDIVQ : Bits_5; -- PLLI2S division factor for SAI1 clock
-      Reserved1  : Bits_3;
-      PLLSAIDIVQ : Bits_5; -- PLLSAI division factor for SAI1 clock
-      Reserved2  : Bits_3;
-      PLLSAIDIVR : Bits_2; -- division factor for LCD_CLK
-      Reserved3  : Bits_2;
-      SAI1SEL    : Bits_2; -- SAI1 clock source selection
-      SAI2SEL    : Bits_2; -- SAI2 clock source selection:
-      TIMPRE     : Bits_1; -- Timers clocks prescalers selection
-      DFSDM1SEL  : Bits_1; -- DFSDM1 clock source selection:
-      ADFSDM1SEL : Bits_1; -- DFSDM1 AUDIO clock source selection:
-      Reserved4  : Bits_5;
+      PLLI2SDIVQ : Bits_5;      -- PLLI2S division factor for SAI1 clock
+      Reserved1  : Bits_3 := 0;
+      PLLSAIDIVQ : Bits_5;      -- PLLSAI division factor for SAI1 clock
+      Reserved2  : Bits_3 := 0;
+      PLLSAIDIVR : Bits_2;      -- division factor for LCD_CLK
+      Reserved3  : Bits_2 := 0;
+      SAI1SEL    : Bits_2;      -- SAI1 clock source selection
+      SAI2SEL    : Bits_2;      -- SAI2 clock source selection:
+      TIMPRE     : Bits_1;      -- Timers clocks prescalers selection
+      DFSDM1SEL  : Bits_1;      -- DFSDM1 clock source selection:
+      ADFSDM1SEL : Bits_1;      -- DFSDM1 AUDIO clock source selection:
+      Reserved4  : Bits_5 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1807,25 +1805,25 @@ package STM32F769I is
 
    type RCC_DCKCFGR2_Type is
    record
-      USART1SEL : Bits_2; -- USART 1 clock source selection
-      USART2SEL : Bits_2; -- USART 2 clock source selection
-      USART3SEL : Bits_2; -- USART 3 clock source selection
-      UART4SEL  : Bits_2; -- UART 4 clock source selection
-      UART5SEL  : Bits_2; -- UART 5 clock source selection
-      USART6SEL : Bits_2; -- USART 6 clock source selection
-      UART7SEL  : Bits_2; -- UART 7 clock source selection
-      UART8SEL  : Bits_2; -- UART 8 clock source selection
-      I2C1SEL   : Bits_2; -- I2C1 clock source selection
-      I2C2SEL   : Bits_2; -- I2C2 clock source selection
-      I2C3SEL   : Bits_2; -- I2C3 clock source selection
-      I2C4SEL   : Bits_2; -- I2C4 clock source selection
-      LPTIM1SEL : Bits_2; -- Low-power timer 1 clock source selection
-      CECSEL    : Bits_1; -- HDMI-CEC clock source selection
-      CK48MSEL  : Bits_1; -- 48MHz clock source selection
-      SDMMC1SEL : Bits_1; -- SDMMC1 clock source selection
-      SDMMC2SEL : Bits_1; -- SDMMC2 clock source selection
-      DSISEL    : Bits_1; -- DSI clock source selection
-      Reserved  : Bits_1;
+      USART1SEL : Bits_2;      -- USART 1 clock source selection
+      USART2SEL : Bits_2;      -- USART 2 clock source selection
+      USART3SEL : Bits_2;      -- USART 3 clock source selection
+      UART4SEL  : Bits_2;      -- UART 4 clock source selection
+      UART5SEL  : Bits_2;      -- UART 5 clock source selection
+      USART6SEL : Bits_2;      -- USART 6 clock source selection
+      UART7SEL  : Bits_2;      -- UART 7 clock source selection
+      UART8SEL  : Bits_2;      -- UART 8 clock source selection
+      I2C1SEL   : Bits_2;      -- I2C1 clock source selection
+      I2C2SEL   : Bits_2;      -- I2C2 clock source selection
+      I2C3SEL   : Bits_2;      -- I2C3 clock source selection
+      I2C4SEL   : Bits_2;      -- I2C4 clock source selection
+      LPTIM1SEL : Bits_2;      -- Low-power timer 1 clock source selection
+      CECSEL    : Bits_1;      -- HDMI-CEC clock source selection
+      CK48MSEL  : Bits_1;      -- 48MHz clock source selection
+      SDMMC1SEL : Bits_1;      -- SDMMC1 clock source selection
+      SDMMC2SEL : Bits_1;      -- SDMMC2 clock source selection
+      DSISEL    : Bits_1;      -- DSI clock source selection
+      Reserved  : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -1880,9 +1878,11 @@ package STM32F769I is
    GPIO_PP : constant := 0; -- Output push-pull (reset state)
    GPIO_OD : constant := 1; -- Output open-drain
 
+pragma Warnings (Off);
    type GPIOx_OTYPER_Type is array (0 .. 15) of Bits_1 with
       Size => 32,
       Pack => True;
+pragma Warnings (On);
 
    -- 6.4.3 GPIO port output speed register (GPIOx_OSPEEDR) (x = A..K)
 
@@ -1907,15 +1907,19 @@ package STM32F769I is
 
    -- 6.4.5 GPIO port input data register (GPIOx_IDR) (x = A..K)
 
+pragma Warnings (Off);
    type GPIOx_IDR_Type is array (0 .. 15) of Bits_1 with
       Size => 32,
       Pack => True;
+pragma Warnings (On);
 
    -- 6.4.6 GPIO port output data register (GPIOx_ODR) (x = A..K)
 
+pragma Warnings (Off);
    type GPIOx_ODR_Type is array (0 .. 15) of Bits_1 with
       Size => 32,
       Pack => True;
+pragma Warnings (On);
 
    -- 6.4.7 GPIO port bit set/reset register (GPIOx_BSRR) (x = A..K)
 
@@ -1992,26 +1996,26 @@ package STM32F769I is
 
    type GPIO_PORT_Type is
    record
-      MODER   : GPIOx_MODER_Type := [others => GPIO_IN] with
-         Volatile_Full_Access => True; -- mode register
-      OTYPER  : GPIOx_OTYPER_Type := [others => GPIO_PP] with
-         Volatile_Full_Access => True; -- output type register
-      OSPEEDR : GPIOx_OSPEEDR_Type := [others => GPIO_LO] with
-         Volatile_Full_Access => True; -- output speed register
-      PUPDR   : GPIOx_PUPDR_Type := [others => GPIO_NOPUPD] with
-         Volatile_Full_Access => True; -- pull-up/pull-down register
-      IDR     : GPIOx_IDR_Type with
-         Volatile_Full_Access => True; -- input data register
-      ODR     : GPIOx_ODR_Type with
-         Volatile_Full_Access => True; -- output data register
-      BSRR    : GPIOx_BSRR_Type := [[others => False], [others => False]] with
-         Volatile_Full_Access => True; -- bit set/reset register
-      LCKR    : GPIOx_LCKR_Type := (LCK => [others => False], LCKK => False, others => <>) with
-         Volatile_Full_Access => True; -- configuration lock register
-      AFRL    : AFRL_Type := [others => AF0] with
-         Volatile_Full_Access => True; -- alternate function low register
-      AFRH    : AFRH_Type := [others => AF0] with
-         Volatile_Full_Access => True; -- alternate function high register
+      MODER   : GPIOx_MODER_Type := [others => GPIO_IN]
+         with Volatile_Full_Access => True; -- mode register
+      OTYPER  : GPIOx_OTYPER_Type := [others => GPIO_PP]
+         with Volatile_Full_Access => True; -- output type register
+      OSPEEDR : GPIOx_OSPEEDR_Type := [others => GPIO_LO]
+         with Volatile_Full_Access => True; -- output speed register
+      PUPDR   : GPIOx_PUPDR_Type := [others => GPIO_NOPUPD]
+         with Volatile_Full_Access => True; -- pull-up/pull-down register
+      IDR     : GPIOx_IDR_Type
+         with Volatile_Full_Access => True; -- input data register
+      ODR     : GPIOx_ODR_Type
+         with Volatile_Full_Access => True; -- output data register
+      BSRR    : GPIOx_BSRR_Type := [[others => False], [others => False]]
+         with Volatile_Full_Access => True; -- bit set/reset register
+      LCKR    : GPIOx_LCKR_Type := (LCK => [others => False], LCKK => False, others => <>)
+         with Volatile_Full_Access => True; -- configuration lock register
+      AFRL    : AFRL_Type := [others => AF0]
+         with Volatile_Full_Access => True; -- alternate function low register
+      AFRH    : AFRH_Type := [others => AF0]
+         with Volatile_Full_Access => True; -- alternate function high register
    end record with
       Size                    => 16#28# * 8,
       Suppress_Initialization => True;
@@ -2131,12 +2135,12 @@ package STM32F769I is
 
    type SYSCFG_MEMRMP_Type is
    record
-      MEM_BOOT  : Bits_1;  -- Memory boot mapping
-      Reserved1 : Bits_7;
-      SWP_FB    : Boolean; -- Flash Bank swap
-      Reserved2 : Bits_1;
-      SWP_FMC   : Bits_2;  -- FMC memory mapping swap
-      Reserved3 : Bits_20;
+      MEM_BOOT  : Bits_1;       -- Memory boot mapping
+      Reserved1 : Bits_7 := 0;
+      SWP_FB    : Boolean;      -- Flash Bank swap
+      Reserved2 : Bits_1 := 0;
+      SWP_FMC   : Bits_2;       -- FMC memory mapping swap
+      Reserved3 : Bits_20 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2165,21 +2169,21 @@ package STM32F769I is
 
    type SYSCFG_PMC_Type is
    record
-      I2C1_FMP     : Boolean; -- I2C1_FMP I2C1 Fast Mode + Enable
-      I2C2_FMP     : Boolean; -- I2C2_FMP I2C2 Fast Mode + Enable
-      I2C3_FMP     : Boolean; -- I2C3_FMP I2C3 Fast Mode + Enable
-      I2C4_FMP     : Boolean; -- I2C4_FMP I2C4 Fast Mode + Enable
-      PB6_FMP      : Boolean; -- PB6_FMP Fast Mode + Enable
-      PB7_FMP      : Boolean; -- PB7_FMP Fast Mode + Enable
-      PB8_FMP      : Boolean; -- PB8_FMP Fast Mode + Enable
-      PB9_FMP      : Boolean; -- Fast Mode + Enable
-      Reserved1    : Bits_8;
-      ADC1DC2      : Boolean; -- ADC accuracy Option 2
-      ADC2DC2      : Boolean; -- ADC accuracy Option 2
-      ADC3DC2      : Boolean; -- ADC accuracy Option 2
-      Reserved2    : Bits_4;
-      MII_RMII_SEL : Bits_1;  -- Ethernet PHY interface selection
-      Reserved3    : Bits_8;
+      I2C1_FMP     : Boolean;     -- I2C1_FMP I2C1 Fast Mode + Enable
+      I2C2_FMP     : Boolean;     -- I2C2_FMP I2C2 Fast Mode + Enable
+      I2C3_FMP     : Boolean;     -- I2C3_FMP I2C3 Fast Mode + Enable
+      I2C4_FMP     : Boolean;     -- I2C4_FMP I2C4 Fast Mode + Enable
+      PB6_FMP      : Boolean;     -- PB6_FMP Fast Mode + Enable
+      PB7_FMP      : Boolean;     -- PB7_FMP Fast Mode + Enable
+      PB8_FMP      : Boolean;     -- PB8_FMP Fast Mode + Enable
+      PB9_FMP      : Boolean;     -- Fast Mode + Enable
+      Reserved1    : Bits_8 := 0;
+      ADC1DC2      : Boolean;     -- ADC accuracy Option 2
+      ADC2DC2      : Boolean;     -- ADC accuracy Option 2
+      ADC3DC2      : Boolean;     -- ADC accuracy Option 2
+      Reserved2    : Bits_4 := 0;
+      MII_RMII_SEL : Bits_1;      -- Ethernet PHY interface selection
+      Reserved3    : Bits_8 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2229,11 +2233,11 @@ package STM32F769I is
 
    type SYSCFG_EXTICR1_Type is
    record
-      EXTI0    : Bits_4;  -- EXTI 0 configuration
-      EXTI1    : Bits_4;  -- EXTI 1 configuration
-      EXTI2    : Bits_4;  -- EXTI 2 configuration
-      EXTI3    : Bits_4;  -- EXTI 3 configuration
-      Reserved : Bits_16;
+      EXTI0    : Bits_4;       -- EXTI 0 configuration
+      EXTI1    : Bits_4;       -- EXTI 1 configuration
+      EXTI2    : Bits_4;       -- EXTI 2 configuration
+      EXTI3    : Bits_4;       -- EXTI 3 configuration
+      Reserved : Bits_16 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2256,11 +2260,11 @@ package STM32F769I is
 
    type SYSCFG_EXTICR2_Type is
    record
-      EXTI4    : Bits_4;  -- EXTI 4 configuration
-      EXTI5    : Bits_4;  -- EXTI 5 configuration
-      EXTI6    : Bits_4;  -- EXTI 6 configuration
-      EXTI7    : Bits_4;  -- EXTI 7 configuration
-      Reserved : Bits_16;
+      EXTI4    : Bits_4;       -- EXTI 4 configuration
+      EXTI5    : Bits_4;       -- EXTI 5 configuration
+      EXTI6    : Bits_4;       -- EXTI 6 configuration
+      EXTI7    : Bits_4;       -- EXTI 7 configuration
+      Reserved : Bits_16 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2283,11 +2287,11 @@ package STM32F769I is
 
    type SYSCFG_EXTICR3_Type is
    record
-      EXTI8    : Bits_4;  -- EXTI 8 configuration
-      EXTI9    : Bits_4;  -- EXTI 9 configuration
-      EXTI10   : Bits_4;  -- EXTI 10 configuration
-      EXTI11   : Bits_4;  -- EXTI 11 configuration
-      Reserved : Bits_16;
+      EXTI8    : Bits_4;       -- EXTI 8 configuration
+      EXTI9    : Bits_4;       -- EXTI 9 configuration
+      EXTI10   : Bits_4;       -- EXTI 10 configuration
+      EXTI11   : Bits_4;       -- EXTI 11 configuration
+      Reserved : Bits_16 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2310,11 +2314,11 @@ package STM32F769I is
 
    type SYSCFG_EXTICR4_Type is
    record
-      EXTI12   : Bits_4;  -- EXTI 12 configuration
-      EXTI13   : Bits_4;  -- EXTI 13 configuration
-      EXTI14   : Bits_4;  -- EXTI 14 configuration
-      EXTI15   : Bits_4;  -- EXTI 15 configuration
-      Reserved : Bits_16;
+      EXTI12   : Bits_4;       -- EXTI 12 configuration
+      EXTI13   : Bits_4;       -- EXTI 13 configuration
+      EXTI14   : Bits_4;       -- EXTI 14 configuration
+      EXTI15   : Bits_4;       -- EXTI 15 configuration
+      Reserved : Bits_16 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2339,10 +2343,10 @@ package STM32F769I is
 
    type SYSCFG_CBR_Type is
    record
-      CLL       : Boolean; -- Core Lockup Lock
-      Reserved1 : Bits_1;
-      PVDL      : Boolean; -- PVD Lock
-      Reserved2 : Bits_29;
+      CLL       : Boolean;      -- Core Lockup Lock
+      Reserved1 : Bits_1 := 0;
+      PVDL      : Boolean;      -- PVD Lock
+      Reserved2 : Bits_29 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2366,10 +2370,10 @@ package STM32F769I is
 
    type SYSCFG_CMPCR_Type is
    record
-      CMP_PD    : Boolean; -- Compensation cell power-down
-      Reserved1 : Bits_7;
-      READY     : Boolean; -- Compensation cell ready flag
-      Reserved2 : Bits_23;
+      CMP_PD    : Boolean;      -- Compensation cell power-down
+      Reserved1 : Bits_7 := 0;
+      READY     : Boolean;      -- Compensation cell ready flag
+      Reserved2 : Bits_23 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2517,15 +2521,15 @@ package STM32F769I is
 
    type TIMx_CR1_Type is
    record
-      CEN       : Boolean; -- Counter enable
-      UDIS      : Boolean; -- Update disable
-      URS       : Bits_1;  -- Update request source
-      OPM       : Boolean; -- One-pulse mode
-      Reserved1 : Bits_3;
-      ARPE      : Boolean; -- Auto-reload preload enable
-      Reserved2 : Bits_3;
-      UIFREMAP  : Boolean; -- UIF status bit remapping
-      Reserved3 : Bits_4;
+      CEN       : Boolean;     -- Counter enable
+      UDIS      : Boolean;     -- Update disable
+      URS       : Bits_1;      -- Update request source
+      OPM       : Boolean;     -- One-pulse mode
+      Reserved1 : Bits_3 := 0;
+      ARPE      : Boolean;     -- Auto-reload preload enable
+      Reserved2 : Bits_3 := 0;
+      UIFREMAP  : Boolean;     -- UIF status bit remapping
+      Reserved3 : Bits_4 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -2550,9 +2554,9 @@ package STM32F769I is
 
    type TIMx_CR2_Type is
    record
-      Reserved1 : Bits_4;
-      MMS       : Bits_3; -- Master mode selection
-      Reserved2 : Bits_9;
+      Reserved1 : Bits_4 := 0;
+      MMS       : Bits_3;      -- Master mode selection
+      Reserved2 : Bits_9 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -2567,10 +2571,10 @@ package STM32F769I is
 
    type TIMx_DIER_Type is
    record
-      UIE       : Boolean; -- Update interrupt enable
-      Reserved1 : Bits_7;
-      UDE       : Boolean; -- Update DMA request enable
-      Reserved2 : Bits_7;
+      UIE       : Boolean;     -- Update interrupt enable
+      Reserved1 : Bits_7 := 0;
+      UDE       : Boolean;     -- Update DMA request enable
+      Reserved2 : Bits_7 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -2586,8 +2590,8 @@ package STM32F769I is
 
    type TIMx_SR_Type is
    record
-      UIF      : Boolean; -- Update interrupt flag
-      Reserved : Bits_15;
+      UIF      : Boolean;      -- Update interrupt flag
+      Reserved : Bits_15 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -2601,8 +2605,8 @@ package STM32F769I is
 
    type TIMx_EGR_Type is
    record
-      UG       : Boolean; -- Update generation
-      Reserved : Bits_15;
+      UG       : Boolean;      -- Update generation
+      Reserved : Bits_15 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 16;
@@ -2616,9 +2620,9 @@ package STM32F769I is
 
    type TIMx_CNT_Type is
    record
-      CNT      : Unsigned_16; -- Counter value
-      Reserved : Bits_15;
-      UIFCPY   : Boolean;     -- UIF Copy
+      CNT      : Unsigned_16;  -- Counter value
+      Reserved : Bits_15 := 0;
+      UIFCPY   : Boolean;      -- UIF Copy
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2776,27 +2780,27 @@ package STM32F769I is
 
    type USART_CR2_Type is
    record
-      Reserved1 : Bits_4;
-      ADDM7     : Bits_1;  -- 7-bit Address Detection/4-bit Address Detection
-      LBDL      : Bits_1;  -- LIN break detection length
-      LBDIE     : Boolean; -- LIN break detection interrupt enable
-      Reserved2 : Bits_1;
-      LBCL      : Boolean; -- Last bit clock pulse
-      CPHA      : Bits_1;  -- Clock phase
-      CPOL      : Bits_1;  -- Clock polarity
-      CLKEN     : Boolean; -- Clock enable
-      STOP      : Bits_2;  -- STOP bits
-      LINEN     : Boolean; -- LIN mode enable
-      SWAP      : Boolean; -- Swap TX/RX pins
-      RXINV     : Boolean; -- RX pin active level inversion
-      TXINV     : Boolean; -- TX pin active level inversion
-      DATAINV   : Boolean; -- Binary data inversion
-      MSBFIRST  : Boolean; -- Most significant bit first
-      ABREN     : Boolean; -- Auto baud rate enable
-      ABRMOD    : Bits_2;  -- Auto baud rate mode
-      RTOEN     : Boolean; -- Receiver timeout enable
-      ADD30     : Bits_4;  -- Address of the USART node
-      ADD74     : Bits_4;  -- Address of the USART node
+      Reserved1 : Bits_4 := 0;
+      ADDM7     : Bits_1;      -- 7-bit Address Detection/4-bit Address Detection
+      LBDL      : Bits_1;      -- LIN break detection length
+      LBDIE     : Boolean;     -- LIN break detection interrupt enable
+      Reserved2 : Bits_1 := 0;
+      LBCL      : Boolean;     -- Last bit clock pulse
+      CPHA      : Bits_1;      -- Clock phase
+      CPOL      : Bits_1;      -- Clock polarity
+      CLKEN     : Boolean;     -- Clock enable
+      STOP      : Bits_2;      -- STOP bits
+      LINEN     : Boolean;     -- LIN mode enable
+      SWAP      : Boolean;     -- Swap TX/RX pins
+      RXINV     : Boolean;     -- RX pin active level inversion
+      TXINV     : Boolean;     -- TX pin active level inversion
+      DATAINV   : Boolean;     -- Binary data inversion
+      MSBFIRST  : Boolean;     -- Most significant bit first
+      ABREN     : Boolean;     -- Auto baud rate enable
+      ABRMOD    : Bits_2;      -- Auto baud rate mode
+      RTOEN     : Boolean;     -- Receiver timeout enable
+      ADD30     : Bits_4;      -- Address of the USART node
+      ADD74     : Bits_4;      -- Address of the USART node
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2838,29 +2842,29 @@ package STM32F769I is
 
    type USART_CR3_Type is
    record
-      EIE       : Boolean; -- Error interrupt enable
-      IREN      : Boolean; -- IrDA mode enable
-      IRLP      : Boolean; -- IrDA low-power
-      HDSEL     : Boolean; -- Half-duplex selection
-      NACK      : Boolean; -- Smartcard NACK enable
-      SCEN      : Boolean; -- Smartcard mode enable
-      DMAR      : Boolean; -- DMA enable receiver
-      DMAT      : Boolean; -- DMA enable transmitter
-      RTSE      : Boolean; -- RTS enable
-      CTSE      : Boolean; -- CTS enable
-      CTSIE     : Boolean; -- CTS interrupt enable
-      ONEBIT    : Boolean; -- One sample bit method enable
-      OVRDIS    : Boolean; -- Overrun Disable
-      DDRE      : Boolean; -- DMA Disable on Reception Error
-      DEM       : Boolean; -- Driver enable mode
-      DEP       : Bits_1;  -- Driver enable polarity selection
-      Reserved1 : Bits_1;
-      SCARCNT   : Bits_3;  -- Smartcard auto-retry count
-      WUS       : Bits_2;  -- Wakeup from Stop mode interrupt flag selection
-      WUFIE     : Boolean; -- Wakeup from Stop mode interrupt enable
-      UCESM     : Boolean; -- USART Clock Enable in Stop mode.
-      TCBGTIE   : Boolean; -- Transmission complete before guard time interrupt enable
-      Reserved2 : Bits_7;
+      EIE       : Boolean;     -- Error interrupt enable
+      IREN      : Boolean;     -- IrDA mode enable
+      IRLP      : Boolean;     -- IrDA low-power
+      HDSEL     : Boolean;     -- Half-duplex selection
+      NACK      : Boolean;     -- Smartcard NACK enable
+      SCEN      : Boolean;     -- Smartcard mode enable
+      DMAR      : Boolean;     -- DMA enable receiver
+      DMAT      : Boolean;     -- DMA enable transmitter
+      RTSE      : Boolean;     -- RTS enable
+      CTSE      : Boolean;     -- CTS enable
+      CTSIE     : Boolean;     -- CTS interrupt enable
+      ONEBIT    : Boolean;     -- One sample bit method enable
+      OVRDIS    : Boolean;     -- Overrun Disable
+      DDRE      : Boolean;     -- DMA Disable on Reception Error
+      DEM       : Boolean;     -- Driver enable mode
+      DEP       : Bits_1;      -- Driver enable polarity selection
+      Reserved1 : Bits_1 := 0;
+      SCARCNT   : Bits_3;      -- Smartcard auto-retry count
+      WUS       : Bits_2;      -- Wakeup from Stop mode interrupt flag selection
+      WUFIE     : Boolean;     -- Wakeup from Stop mode interrupt enable
+      UCESM     : Boolean;     -- USART Clock Enable in Stop mode.
+      TCBGTIE   : Boolean;     -- Transmission complete before guard time interrupt enable
+      Reserved2 : Bits_7 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2895,8 +2899,8 @@ package STM32F769I is
 
    type USART_BRR_Type is
    record
-      BRR      : Unsigned_16; -- BRR value
-      Reserved : Bits_16;
+      BRR      : Unsigned_16;  -- BRR value
+      Reserved : Bits_16 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2910,9 +2914,9 @@ package STM32F769I is
 
    type USART_GTPR_Type is
    record
-      PSC      : Unsigned_8; -- Prescaler value
-      GT       : Unsigned_8; -- Guard time value
-      Reserved : Bits_16;
+      PSC      : Unsigned_8;   -- Prescaler value
+      GT       : Unsigned_8;   -- Guard time value
+      Reserved : Bits_16 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -2942,12 +2946,12 @@ package STM32F769I is
 
    type USART_RQR_Type is
    record
-      ABRRQ    : Boolean; -- Auto baud rate request
-      SBKRQ    : Boolean; -- Send break request
-      MMRQ     : Boolean; -- Mute mode request
-      RXFRQ    : Boolean; -- Receive data flush request
-      TXFRQ    : Boolean; -- Transmit data flush request
-      Reserved : Bits_27;
+      ABRRQ    : Boolean;      -- Auto baud rate request
+      SBKRQ    : Boolean;      -- Send break request
+      MMRQ     : Boolean;      -- Mute mode request
+      RXFRQ    : Boolean;      -- Receive data flush request
+      TXFRQ    : Boolean;      -- Transmit data flush request
+      Reserved : Bits_27 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -3028,24 +3032,24 @@ package STM32F769I is
 
    type USART_ICR_Type is
    record
-      PECF      : Boolean; -- Parity error clear flag
-      FECF      : Boolean; -- Framing error clear flag
-      NCF       : Boolean; -- Noise detected clear flag
-      ORECF     : Boolean; -- Overrun error clear flag
-      IDLECF    : Boolean; -- Idle line detected clear flag
-      Reserved1 : Bits_1;
-      TCCF      : Boolean; -- Transmission complete clear flag
-      TCBGTCF   : Boolean; -- Transmission completed before guard time clear flag
-      LBDCF     : Boolean; -- LIN break detection clear flag
-      CTSCF     : Boolean; -- CTS clear flag
-      Reserved2 : Bits_1;
-      RTOCF     : Boolean; -- Receiver timeout clear flag
-      EOBCF     : Boolean; -- End of block clear flag
-      Reserved3 : Bits_4;
-      CMCF      : Boolean; -- Character match clear flag
+      PECF      : Boolean;      -- Parity error clear flag
+      FECF      : Boolean;      -- Framing error clear flag
+      NCF       : Boolean;      -- Noise detected clear flag
+      ORECF     : Boolean;      -- Overrun error clear flag
+      IDLECF    : Boolean;      -- Idle line detected clear flag
+      Reserved1 : Bits_1 := 0;
+      TCCF      : Boolean;      -- Transmission complete clear flag
+      TCBGTCF   : Boolean;      -- Transmission completed before guard time clear flag
+      LBDCF     : Boolean;      -- LIN break detection clear flag
+      CTSCF     : Boolean;      -- CTS clear flag
+      Reserved2 : Bits_1 := 0;
+      RTOCF     : Boolean;      -- Receiver timeout clear flag
+      EOBCF     : Boolean;      -- End of block clear flag
+      Reserved3 : Bits_4 := 0;
+      CMCF      : Boolean;      -- Character match clear flag
       Reserved4 : Bits_2;
-      WUCF      : Boolean; -- Wakeup from Stop mode clear flag
-      Reserved5 : Bits_11;
+      WUCF      : Boolean;      -- Wakeup from Stop mode clear flag
+      Reserved5 : Bits_11 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
