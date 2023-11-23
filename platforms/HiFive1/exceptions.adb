@@ -53,7 +53,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
       mcause : mcause_Type;
    begin
       mcause := mcause_Read;
@@ -77,14 +78,19 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
       Vectors : aliased Asm_Entry_Point
          with Import        => True,
               External_Name => "vectors";
    begin
-      RISCV.mtvec_Write ((
-         MODE => RISCV.MODE_Direct,
-         BASE => Bits_30 (LLutils.Select_Address_Bits (Vectors'Address, 2, 31))
+      mtvec_Write ((
+         MODE => MODE_Direct,
+         BASE => mtvec_BASE_Type (LLutils.Select_Address_Bits (
+                    Vectors'Address,
+                    mtvec_BASE_ADDRESS_LSB,
+                    mtvec_BASE_ADDRESS_MSB
+                    ))
          ));
    end Init;
 
