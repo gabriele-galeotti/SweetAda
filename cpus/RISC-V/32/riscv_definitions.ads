@@ -94,6 +94,9 @@ package RISCV_Definitions is
 
    -- 3.1.7 Machine Trap-Vector Base-Address Register (mtvec)
 
+   mtvec_BASE_ADDRESS_LSB : constant := 2;
+   mtvec_BASE_ADDRESS_MSB : constant := 31;
+
    subtype mtvec_BASE_Type is Bits_30;
 
    type mtvec_Type is

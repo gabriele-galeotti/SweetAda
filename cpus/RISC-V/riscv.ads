@@ -38,7 +38,7 @@ package RISCV is
    use Interfaces;
    use Bits;
 
-   MXLEN : constant := RISCV_Definitions.XLEN;
+   MXLEN renames RISCV_Definitions.XLEN;
 
    subtype MXLEN_Type is RISCV_Definitions.MXLEN_Type;
 
@@ -54,6 +54,9 @@ package RISCV is
 
    MODE_Direct   : constant := 2#00#;
    MODE_Vectored : constant := 2#01#;
+
+   mtvec_BASE_ADDRESS_LSB renames RISCV_Definitions.mtvec_BASE_ADDRESS_LSB;
+   mtvec_BASE_ADDRESS_MSB renames RISCV_Definitions.mtvec_BASE_ADDRESS_MSB;
 
    subtype mtvec_Type      is RISCV_Definitions.mtvec_Type;
    subtype mtvec_BASE_Type is RISCV_Definitions.mtvec_BASE_Type;
