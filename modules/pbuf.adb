@@ -29,13 +29,15 @@ package body PBUF is
 
    Pool_Memory : array (0 .. PBUF_NUMS - 1) of aliased Pbuf_Type;
 
-   Pool_Pointer : Pbuf_Ptr with
-      Volatile => True;
+   Pool_Pointer : Pbuf_Ptr
+      with Volatile => True;
 
-   procedure Reset (Item : in out Pbuf_Type) with
-      Inline => True;
+   procedure Reset
+      (Item : in out Pbuf_Type)
+      with Inline => True;
 
-   function Allocate_Simple return Pbuf_Ptr;
+   function Allocate_Simple
+      return Pbuf_Ptr;
 
    --========================================================================--
    --                                                                        --
@@ -48,7 +50,9 @@ package body PBUF is
    ----------------------------------------------------------------------------
    -- Reset
    ----------------------------------------------------------------------------
-   procedure Reset (Item : in out Pbuf_Type) is
+   procedure Reset
+      (Item : in out Pbuf_Type)
+      is
    begin
       Item.Size            := PBUF_PAYLOAD_SIZE; -- available space
       Item.Total_Size      := 0;                 -- unnecessary, only for clarity
@@ -59,7 +63,8 @@ package body PBUF is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
    begin
       for Index in Pool_Memory'Range loop
          declare
@@ -85,7 +90,9 @@ package body PBUF is
    ----------------------------------------------------------------------------
    -- Allocate_Simple
    ----------------------------------------------------------------------------
-   function Allocate_Simple return Pbuf_Ptr is
+   function Allocate_Simple
+      return Pbuf_Ptr
+      is
       Irq_State : CPU.Irq_State_Type;
       Result    : Pbuf_Ptr;
    begin
@@ -111,7 +118,10 @@ package body PBUF is
    -- Allocate a pbuf chain.
    -- __REF__ src/core/pbuf.c:pbuf_alloc()
    ----------------------------------------------------------------------------
-   function Allocate (Size : Natural) return Pbuf_Ptr is
+   function Allocate
+      (Size : Natural)
+      return Pbuf_Ptr
+      is
       P              : Pbuf_Ptr; -- first pbuf (head)
       C              : Pbuf_Ptr; -- current (last) allocated pbuf
       N              : Pbuf_Ptr; -- freshly allocated pbuf
@@ -157,7 +167,9 @@ package body PBUF is
    ----------------------------------------------------------------------------
    -- Free
    ----------------------------------------------------------------------------
-   procedure Free (Item : in Pbuf_Ptr) is
+   procedure Free
+      (Item : in Pbuf_Ptr)
+      is
       Irq_State : CPU.Irq_State_Type;
       P         : Pbuf_Ptr;
       Q         : Pbuf_Ptr;
@@ -189,7 +201,10 @@ package body PBUF is
    ----------------------------------------------------------------------------
    -- Payload_Adjust
    ----------------------------------------------------------------------------
-   procedure Payload_Adjust (P : in Pbuf_Ptr; Adjust : in Integer) is
+   procedure Payload_Adjust
+      (P      : in Pbuf_Ptr;
+       Adjust : in Integer)
+      is
    begin
       P.all.Offset_Previous := P.all.Offset;
       P.all.Offset          := P.all.Offset - Adjust;
@@ -200,7 +215,9 @@ package body PBUF is
    ----------------------------------------------------------------------------
    -- Payload_Rewind
    ----------------------------------------------------------------------------
-   procedure Payload_Rewind (P : in Pbuf_Ptr) is
+   procedure Payload_Rewind
+      (P : in Pbuf_Ptr)
+      is
       Offset_Previous : constant Natural := P.all.Offset;
       Skew            : constant Integer := P.all.Offset - P.all.Offset_Previous;
    begin
@@ -213,7 +230,11 @@ package body PBUF is
    ----------------------------------------------------------------------------
    -- Payload_Address
    ----------------------------------------------------------------------------
-   function Payload_Address (P : Pbuf_Ptr; Offset : Natural := 0) return System.Address is
+   function Payload_Address
+      (P      : Pbuf_Ptr;
+       Offset : Natural := 0)
+      return System.Address
+      is
    begin
       return P.all.Payload (Offset)'Address;
    end Payload_Address;
@@ -221,7 +242,10 @@ package body PBUF is
    ----------------------------------------------------------------------------
    -- Payload_CurrentAddress
    ----------------------------------------------------------------------------
-   function Payload_CurrentAddress (P : Pbuf_Ptr) return System.Address is
+   function Payload_CurrentAddress
+      (P : Pbuf_Ptr)
+      return System.Address
+      is
    begin
       return Payload_Address (P, P.all.Offset);
    end Payload_CurrentAddress;

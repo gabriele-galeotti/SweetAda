@@ -48,21 +48,32 @@ package body Gdbstub is
    Single_Stepping         : Boolean := False;
    Debug_Mode              : Debug_Mode_Type := DEBUG_NONE;
 
-   procedure Packet_Dump (
-                          Packet_Source : in Packet_Source_Type;
-                          Packet_String : in String;
-                          Packet_Length : in Natural
-                         );
+   procedure Packet_Dump
+      (Packet_Source : in Packet_Source_Type;
+       Packet_String : in String;
+       Packet_Length : in Natural);
    procedure RX_Packet;
    procedure TX_Packet;
-   procedure TX_Packet_Copy_Response (Response : in String);
-   procedure Read_Next_Character (C : out Character; Success : out Boolean);
-   procedure Read_Digit (Result : out Unsigned_8; Success : out Boolean);
-   procedure Parse_SimpleValue (Result : out Natural; Success : out Boolean);
-   procedure Parse_Byte (Result : out Unsigned_8; Success : out Boolean);
-   procedure Parse_IAddress (Result : out Integer_Address; Success : out Boolean);
+   procedure TX_Packet_Copy_Response
+      (Response : in String);
+   procedure Read_Next_Character
+      (C       : out Character;
+       Success : out Boolean);
+   procedure Read_Digit
+      (Result  : out Unsigned_8;
+       Success : out Boolean);
+   procedure Parse_SimpleValue
+      (Result  : out Natural;
+       Success : out Boolean);
+   procedure Parse_Byte
+      (Result  : out Unsigned_8;
+       Success : out Boolean);
+   procedure Parse_IAddress
+      (Result  : out Integer_Address;
+       Success : out Boolean);
    procedure Notify_Halt_Reason;
-   procedure Handle_Continue (Exit_Flag : in out Boolean);
+   procedure Handle_Continue
+      (Exit_Flag : in out Boolean);
    procedure Handle_Set_Thread;
    procedure Handle_Kill_Request;
    procedure Handle_General_Registers_Read;
@@ -73,8 +84,10 @@ package body Gdbstub is
    procedure Handle_Register_Write;
    procedure Handle_General_Query;
    procedure Handle_General_Set;
-   procedure Handle_Restart (Exit_Flag : in out Boolean);
-   procedure Handle_Step (Exit_Flag : in out Boolean);
+   procedure Handle_Restart
+      (Exit_Flag : in out Boolean);
+   procedure Handle_Step
+      (Exit_Flag : in out Boolean);
    procedure Handle_Multi_Letter_Packets;
    procedure Command_Loop;
 
@@ -91,7 +104,10 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- Create a textual, all-lowercase byte value.
    ----------------------------------------------------------------------------
-   procedure Byte_Text (Value : in Unsigned_8; Packet : in out Byte_Text_Type) is
+   procedure Byte_Text
+      (Value  : in     Unsigned_8;
+       Packet : in out Byte_Text_Type)
+      is
    begin
       U8_To_HexDigit (Value => Value, MSD => True, LCase => True, C => Packet (1));
       U8_To_HexDigit (Value => Value, MSD => False, LCase => True, C => Packet (2));
@@ -100,11 +116,10 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- Packet_Dump
    ----------------------------------------------------------------------------
-   procedure Packet_Dump (
-                          Packet_Source : in Packet_Source_Type;
-                          Packet_String : in String;
-                          Packet_Length : in Natural
-                         ) is
+   procedure Packet_Dump
+      (Packet_Source : in Packet_Source_Type;
+       Packet_String : in String;
+       Packet_Length : in Natural) is
       Prefix : String (1 .. 6);
    begin
       case Packet_Source is
@@ -130,7 +145,8 @@ package body Gdbstub is
    -- NOTE: RX_Packet cannot exit until it has received a well-formed packet,
    --       so RX_Packet_Length cannot be undefined
    ----------------------------------------------------------------------------
-   procedure RX_Packet is
+   procedure RX_Packet
+      is
       type RX_Status_Type is (WAIT_PACKET_START, RX_CHARACTERS, RX_CHECKSUM1, RX_CHECKSUM2);
       RX_Status            : RX_Status_Type;
       Index                : Positive := 1;
@@ -205,7 +221,8 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- TX_Packet
    ----------------------------------------------------------------------------
-   procedure TX_Packet is
+   procedure TX_Packet
+      is
       TX_Packet_Length   : Natural;
       TX_Packet_Checksum : Unsigned_8;
       Response           : Character;
@@ -236,7 +253,9 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- TX_Packet_Copy_Response
    ----------------------------------------------------------------------------
-   procedure TX_Packet_Copy_Response (Response : in String) is
+   procedure TX_Packet_Copy_Response
+      (Response : in String)
+      is
       Response_Length : constant Integer := Response'Length;
    begin
       if Response_Length <= TX_Packet_Buffer'Last then
@@ -253,7 +272,10 @@ package body Gdbstub is
    -- Return, if success, the character pointed to by Packet_Index.
    -- Packet_Index is incremented and points to the next character.
    ----------------------------------------------------------------------------
-   procedure Read_Next_Character (C : out Character; Success : out Boolean) is
+   procedure Read_Next_Character
+      (C       : out Character;
+       Success : out Boolean)
+      is
    begin
       C := Character'Val (0);
       if RX_Packet_Index <= RX_Packet_Length then
@@ -270,7 +292,10 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- Read a digit with lookahead
    ----------------------------------------------------------------------------
-   procedure Read_Digit (Result : out Unsigned_8; Success : out Boolean) is
+   procedure Read_Digit
+      (Result  : out Unsigned_8;
+       Success : out Boolean)
+      is
       C : Character;
    begin
       Result := 0;
@@ -287,7 +312,10 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- Parse_SimpleValue
    ----------------------------------------------------------------------------
-   procedure Parse_SimpleValue (Result : out Natural; Success : out Boolean) is
+   procedure Parse_SimpleValue
+      (Result  : out Natural;
+       Success : out Boolean)
+      is
       MDigits : constant Natural := (Natural'Size + 3) / 4; -- maximum # of digits for a base16 number
       NDigits : Natural;
       Digit   : Unsigned_8;
@@ -311,7 +339,10 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- Parse_Byte
    ----------------------------------------------------------------------------
-   procedure Parse_Byte (Result : out Unsigned_8; Success : out Boolean) is
+   procedure Parse_Byte
+      (Result  : out Unsigned_8;
+       Success : out Boolean)
+      is
       NDigits : Natural;
       Digit   : Unsigned_8;
       C_Is_Ok : Boolean;
@@ -334,7 +365,10 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- Parse_IAddress
    ----------------------------------------------------------------------------
-   procedure Parse_IAddress (Result : out Integer_Address; Success : out Boolean) is
+   procedure Parse_IAddress
+      (Result  : out Integer_Address;
+       Success : out Boolean)
+      is
       MDigits : constant Natural := (Integer_Address'Size + 3) / 4; -- maximum # of digits for a base16 number
       NDigits : Natural;
       Digit   : Unsigned_8;
@@ -358,7 +392,9 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- Notify_Packet_Error
    ----------------------------------------------------------------------------
-   procedure Notify_Packet_Error (Error_Message : in String) is
+   procedure Notify_Packet_Error
+      (Error_Message : in String)
+      is
    begin
       Console.Print (Error_Message, NL => True);
    end Notify_Packet_Error;
@@ -369,7 +405,8 @@ package body Gdbstub is
    -- "?"
    -- Indicate the reason why the target halted.
    ----------------------------------------------------------------------------
-   procedure Notify_Halt_Reason is
+   procedure Notify_Halt_Reason
+      is
    begin
       -- TX_Packet_Copy_Response ("T__thread:__;");
       -- TX_Packet_Buffer (2 .. 3)   := "05"; -- GDB TRAP signal
@@ -384,7 +421,9 @@ package body Gdbstub is
    -- "c [addr]"
    -- Continue at addr, which is the address to resume.
    ----------------------------------------------------------------------------
-   procedure Handle_Continue (Exit_Flag : in out Boolean) is
+   procedure Handle_Continue
+      (Exit_Flag : in out Boolean)
+      is
    begin
       Exit_Flag := True;
    end Handle_Continue;
@@ -395,7 +434,8 @@ package body Gdbstub is
    -- "g"
    -- Read general registers.
    ----------------------------------------------------------------------------
-   procedure Handle_General_Registers_Read is
+   procedure Handle_General_Registers_Read
+      is
    begin
       Registers_Read;
       TX_Packet;
@@ -407,7 +447,8 @@ package body Gdbstub is
    -- "G XX..."
    -- Write general registers.
    ----------------------------------------------------------------------------
-   procedure Handle_General_Registers_Write is
+   procedure Handle_General_Registers_Write
+      is
    begin
       null;
    end Handle_General_Registers_Write;
@@ -418,7 +459,8 @@ package body Gdbstub is
    -- "H op thread-id"
    -- Set thread for subsequent operations.
    ----------------------------------------------------------------------------
-   procedure Handle_Set_Thread is
+   procedure Handle_Set_Thread
+      is
       C             : Character;
       Success       : Boolean;
       Thread_Number : Natural;
@@ -447,7 +489,8 @@ package body Gdbstub is
    -- "k"
    -- Kill request.
    ----------------------------------------------------------------------------
-   procedure Handle_Kill_Request is
+   procedure Handle_Kill_Request
+      is
    begin
       null; -- system remains in wait-for-packet state
    end Handle_Kill_Request;
@@ -459,7 +502,8 @@ package body Gdbstub is
    -- Read length addressable memory units starting at address addr.
    -- reply : <memorycontents>/EXX
    ----------------------------------------------------------------------------
-   procedure Handle_Memory_Read is
+   procedure Handle_Memory_Read
+      is
       type HMR_Status_Type is (PARSE_ADDRESS, CHECK_COMMA, PARSE_LENGTH);
       HMR_Status     : HMR_Status_Type;
       Success        : Boolean;
@@ -516,14 +560,15 @@ package body Gdbstub is
    -- "M addr,length:XX..."
    -- Write length addressable memory units starting at address addr.
    ----------------------------------------------------------------------------
-   procedure Handle_Memory_Write is
+   procedure Handle_Memory_Write
+      is
       type HMW_Status_Type is (
-                               PARSE_ADDRESS,
-                               CHECK_COMMA,
-                               PARSE_LENGTH,
-                               CHECK_COLON,
-                               PARSE_MEMORY_BYTES
-                              );
+              PARSE_ADDRESS,
+              CHECK_COMMA,
+              PARSE_LENGTH,
+              CHECK_COLON,
+              PARSE_MEMORY_BYTES
+              );
       HMW_Status     : HMW_Status_Type;
       Success        : Boolean;
       Memory_Address : Integer_Address := 0;
@@ -596,7 +641,8 @@ package body Gdbstub is
    -- "p n"
    -- Read the value of register n.
    ----------------------------------------------------------------------------
-   procedure Handle_Register_Read is
+   procedure Handle_Register_Read
+      is
       Success         : Boolean;
       Register_Number : Natural;
    begin
@@ -616,7 +662,8 @@ package body Gdbstub is
    -- "P n...=r..."
    -- Write register n... with value r....
    ----------------------------------------------------------------------------
-   procedure Handle_Register_Write is
+   procedure Handle_Register_Write
+      is
       type HRW_Status_Type is (PARSE_REGISTER, CHECK_EQUAL, PARSE_HEX_VALUE);
       HRW_Status      : HRW_Status_Type;
       Success         : Boolean;
@@ -674,7 +721,8 @@ package body Gdbstub is
    -- "q name params..."
    -- General query packets.
    ----------------------------------------------------------------------------
-   procedure Handle_General_Query is
+   procedure Handle_General_Query
+      is
       Send_Response : Boolean;
    begin
       Send_Response := True;
@@ -682,14 +730,14 @@ package body Gdbstub is
          -- Tell the remote stub about features supported by gdb, and query the stub for features it supports
          -- reply: <featureslist>
          TX_Packet_Copy_Response (
-                                  "swbreak+;"                  &
-                                  "hwbreak-;"                  &
-                                  "fork-events-;"              &
-                                  "vfork-events-;"             &
-                                  "multiprocess-;"             &
-                                  "EnableDisableTracepoints-;" &
-                                  ""
-                                 );
+            "swbreak+;"                  &
+            "hwbreak-;"                  &
+            "fork-events-;"              &
+            "vfork-events-;"             &
+            "multiprocess-;"             &
+            "EnableDisableTracepoints-;" &
+            ""
+            );
       -- elsif (RX_Packet_Length >= 9) and then (RX_Packet_Buffer (2 .. 9) = "Symbol::") then
       --    -- Notify the target that gdb is prepared to serve symbol lookup requests.
       --    -- reply: The target does not need to look up any (more) symbols.
@@ -726,7 +774,8 @@ package body Gdbstub is
    -- "Q name params..."
    -- General set packets.
    ----------------------------------------------------------------------------
-   procedure Handle_General_Set is
+   procedure Handle_General_Set
+      is
    begin
       null;
    end Handle_General_Set;
@@ -736,7 +785,9 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- "R"
    ----------------------------------------------------------------------------
-   procedure Handle_Restart (Exit_Flag : in out Boolean) is
+   procedure Handle_Restart
+      (Exit_Flag : in out Boolean)
+      is
    begin
       Exit_Flag := True;
    end Handle_Restart;
@@ -746,7 +797,9 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- "s"
    ----------------------------------------------------------------------------
-   procedure Handle_Step (Exit_Flag : in out Boolean) is
+   procedure Handle_Step
+      (Exit_Flag : in out Boolean)
+      is
    begin
       if Step_Execute then
          Single_Stepping := True;
@@ -757,7 +810,8 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- Handle_Multi_Letter_Packets
    ----------------------------------------------------------------------------
-   procedure Handle_Multi_Letter_Packets is
+   procedure Handle_Multi_Letter_Packets
+      is
       Send_Response : Boolean;
    begin
       Send_Response := True;
@@ -772,7 +826,8 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- Command_Loop
    ----------------------------------------------------------------------------
-   procedure Command_Loop is
+   procedure Command_Loop
+      is
       Exit_Flag : Boolean;
    begin
       Exit_Flag := False;
@@ -810,7 +865,10 @@ package body Gdbstub is
    ----------------------------------------------------------------------------
    -- Enter_Stub
    ----------------------------------------------------------------------------
-   procedure Enter_Stub (Cause : in Target_State_Type; Thread_ID : in Natural) is
+   procedure Enter_Stub
+      (Cause     : in Target_State_Type;
+       Thread_ID : in Natural)
+      is
       pragma Unreferenced (Cause);
       pragma Unreferenced (Thread_ID);
    begin
@@ -841,11 +899,11 @@ package body Gdbstub is
    -- Getchar: procedure pointer to get a character from terminal
    -- Putchar: procedure pointer to put a character to terminal
    ----------------------------------------------------------------------------
-   procedure Init (
-                   Getchar : in Getchar_Ptr;
-                   Putchar : in Putchar_Ptr;
-                   Mode    : in Debug_Mode_Type
-                  ) is
+   procedure Init
+      (Getchar : in Getchar_Ptr;
+       Putchar : in Putchar_Ptr;
+       Mode    : in Debug_Mode_Type)
+      is
    begin
       RX_Character := Getchar;
       TX_Character := Putchar;

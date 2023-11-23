@@ -49,13 +49,24 @@ package PBUF is
       Suppress_Initialization => True; -- pragma Restrictions (No_Implicit_Loops)
 
    procedure Init;
-   function Allocate (Size : Natural) return Pbuf_Ptr;
-   procedure Free (Item : in Pbuf_Ptr);
-   procedure Payload_Adjust (P : in Pbuf_Ptr; Adjust : in Integer);
-   procedure Payload_Rewind (P : in Pbuf_Ptr);
-   function Payload_Address (P : Pbuf_Ptr; Offset : Natural := 0) return System.Address with
-      Inline => True;
-   function Payload_CurrentAddress (P : Pbuf_Ptr) return System.Address with
-      Inline => True;
+   function Allocate
+      (Size : Natural)
+      return Pbuf_Ptr;
+   procedure Free
+      (Item : in Pbuf_Ptr);
+   procedure Payload_Adjust
+      (P      : in Pbuf_Ptr;
+       Adjust : in Integer);
+   procedure Payload_Rewind
+      (P : in Pbuf_Ptr);
+   function Payload_Address
+      (P      : Pbuf_Ptr;
+       Offset : Natural := 0)
+      return System.Address
+      with Inline => True;
+   function Payload_CurrentAddress
+      (P : Pbuf_Ptr)
+      return System.Address
+      with Inline => True;
 
 end PBUF;

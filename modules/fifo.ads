@@ -32,8 +32,8 @@ package FIFO is
 
    type Queue_Index_Type is mod QUEUE_SIZE;
 
-   type Queue_Array is new Bits.Byte_Array (0 .. QUEUE_SIZE - 1) with
-      Suppress_Initialization => True;
+   type Queue_Array is new Bits.Byte_Array (0 .. QUEUE_SIZE - 1)
+      with Suppress_Initialization => True;
 
    type Queue_Type is
    record
@@ -44,15 +44,13 @@ package FIFO is
    end record with
       Volatile => True;
 
-   procedure Put (
-                  Q       : access Queue_Type;
-                  Data    : in     Interfaces.Unsigned_8;
-                  Success : out    Boolean
-                 );
-   procedure Get (
-                  Q       : access Queue_Type;
-                  Data    : out    Interfaces.Unsigned_8;
-                  Success : out    Boolean
-                 );
+   procedure Put
+      (Q       : access Queue_Type;
+       Data    : in     Interfaces.Unsigned_8;
+       Success :    out Boolean);
+   procedure Get
+      (Q       : access Queue_Type;
+       Data    : out    Interfaces.Unsigned_8;
+       Success : out    Boolean);
 
 end FIFO;

@@ -30,11 +30,11 @@ package body FIFO is
    ----------------------------------------------------------------------------
    -- Put
    ----------------------------------------------------------------------------
-   procedure Put (
-                  Q       : access Queue_Type;
-                  Data    : in     Interfaces.Unsigned_8;
-                  Success : out    Boolean
-                 ) is
+   procedure Put
+      (Q       : access Queue_Type;
+       Data    : in     Interfaces.Unsigned_8;
+       Success :    out Boolean)
+      is
       Irq_State : CPU.Irq_State_Type;
    begin
       Irq_State := CPU.Irq_State_Get;
@@ -53,11 +53,11 @@ package body FIFO is
    ----------------------------------------------------------------------------
    -- Get
    ----------------------------------------------------------------------------
-   procedure Get (
-                  Q       : access Queue_Type;
-                  Data    : out    Interfaces.Unsigned_8;
-                  Success : out    Boolean
-                 ) is
+   procedure Get
+      (Q       : access Queue_Type;
+       Data    : out    Interfaces.Unsigned_8;
+       Success : out    Boolean)
+      is
       Irq_State : CPU.Irq_State_Type;
    begin
       Irq_State := CPU.Irq_State_Get;
