@@ -30,8 +30,6 @@ package STM32VLDISCOVERY is
    --                                                                        --
    --========================================================================--
 
-   pragma Warnings (Off);
-
    use System;
    use System.Storage_Elements;
    use Interfaces;
@@ -78,9 +76,9 @@ package STM32VLDISCOVERY is
 
    type USART_DR_Type is
    record
-      DR       : Unsigned_8; -- Data value
-      DR8      : Bits_1;     -- 9th bit
-      Reserved : Bits_23;
+      DR       : Unsigned_8;   -- Data value
+      DR8      : Bits_1;       -- 9th bit
+      Reserved : Bits_23 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 32;
@@ -89,6 +87,23 @@ package STM32VLDISCOVERY is
       DR       at 0 range 0 ..  7;
       DR8      at 0 range 8 ..  8;
       Reserved at 0 range 9 .. 31;
+   end record;
+
+   -- 23.6.3 Baud rate register (USART_BRR)
+
+   type USART_BRR_Type is
+   record
+      DIV_Fraction : Bits_4;       -- fraction of USARTDIV
+      DIV_Mantissa : Bits_12;      -- mantissa of USARTDIV
+      Reserved     : Bits_16 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_BRR_Type use
+   record
+      DIV_Fraction at 0 range  0 ..  3;
+      DIV_Mantissa at 0 range  4 .. 15;
+      Reserved     at 0 range 16 .. 31;
    end record;
 
    -- 23.6.4 Control register 1 (USART_CR1)
@@ -148,21 +163,132 @@ package STM32VLDISCOVERY is
       Reserved2 at 0 range 16 .. 31;
    end record;
 
+   -- 23.6.5 Control register 2 (USART_CR2)
+
+   LBDL_10 : constant := 0; -- 10-bit break detection
+   LBDL_11 : constant := 1; -- 11-bit break detection
+
+   CPHA_1ST : constant := 0; -- The first clock transition is the first data capture edge
+   CPHA_2ND : constant := 1; -- The second clock transition is the first data capture edge
+
+   CPOL_LOW  : constant := 0; -- Steady low value on CK pin outside transmission window
+   CPOL_HIGH : constant := 1; -- Steady high value on CK pin outside transmission window
+
+   STOP_1  : constant := 2#00#; -- 1 stop bit
+   STOP_05 : constant := 2#01#; -- 0.5 stop bit
+   STOP_2  : constant := 2#10#; -- 2 stop bits
+   STOP_15 : constant := 2#11#; -- 1.5 stop bits
+
+   type USART_CR2_Type is
+   record
+      ADD       : Bits_4;       -- Address of the USART node
+      Reserved1 : Bits_1 := 0;
+      LBDL      : Bits_1;       -- lin break detection length
+      LBDIE     : Boolean;      -- LIN break detection interrupt enable
+      Reserved2 : Bits_1 := 0;
+      LBCL      : Boolean;      -- Last bit clock pulse
+      CPHA      : Bits_1;       -- Clock phase
+      CPOL      : Bits_1;       -- Clock polarity
+      CLKEN     : Boolean;      -- Clock enable
+      STOP      : Bits_2;       -- STOP bits
+      LINEN     : Boolean;      -- LIN mode enable
+      Reserved3 : Bits_17 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_CR2_Type use
+   record
+      ADD       at 0 range  0 ..  3;
+      Reserved1 at 0 range  4 ..  4;
+      LBDL      at 0 range  5 ..  5;
+      LBDIE     at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      LBCL      at 0 range  8 ..  8;
+      CPHA      at 0 range  9 ..  9;
+      CPOL      at 0 range 10 .. 10;
+      CLKEN     at 0 range 11 .. 11;
+      STOP      at 0 range 12 .. 13;
+      LINEN     at 0 range 14 .. 14;
+      Reserved3 at 0 range 15 .. 31;
+   end record;
+
+   -- 23.6.6 Control register 3 (USART_CR3)
+
+   type USART_CR3_Type is
+   record
+      EIE      : Boolean;      -- Error interrupt enable
+      IREN     : Boolean;      -- IrDA mode enable
+      IRLP     : Boolean;      -- IrDA low-power
+      HDSEL    : Boolean;      -- Half-duplex selection
+      NACK     : Boolean;      -- Smartcard NACK enable
+      SCEN     : Boolean;      -- Smartcard mode enable
+      DMAR     : Boolean;      -- DMA enable receiver
+      DMAT     : Boolean;      -- DMA enable transmitter
+      RTSE     : Boolean;      -- RTS enable
+      CTSE     : Boolean;      -- CTS enable
+      CTSIE    : Boolean;      -- CTS interrupt enable
+      ONEBIT   : Boolean;      -- One sample bit method enable
+      Reserved : Bits_20 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_CR3_Type use
+   record
+      EIE      at 0 range  0 ..  0;
+      IREN     at 0 range  1 ..  1;
+      IRLP     at 0 range  2 ..  2;
+      HDSEL    at 0 range  3 ..  3;
+      NACK     at 0 range  4 ..  4;
+      SCEN     at 0 range  5 ..  5;
+      DMAR     at 0 range  6 ..  6;
+      DMAT     at 0 range  7 ..  7;
+      RTSE     at 0 range  8 ..  8;
+      CTSE     at 0 range  9 ..  9;
+      CTSIE    at 0 range 10 .. 10;
+      ONEBIT   at 0 range 11 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
+   -- 23.6.7 Guard time and prescaler register (USART_GTPR)
+
+   type USART_GTPR_Type is
+   record
+      PSC      : Unsigned_8;   -- Prescaler value
+      GT       : Unsigned_8;   -- Guard time value
+      Reserved : Bits_16 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 32;
+   for USART_GTPR_Type use
+   record
+      PSC      at 0 range  0 ..  7;
+      GT       at 0 range  8 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 23.6.8 USART register map
 
    type USART_Type is
    record
-      USART_SR  : USART_SR_Type  with Volatile_Full_Access => True;
-      USART_DR  : USART_DR_Type;
-      USART_CR1 : USART_CR1_Type with Volatile_Full_Access => True;
+      USART_SR   : USART_SR_Type   with Volatile_Full_Access => True;
+      USART_DR   : USART_DR_Type;
+      USART_BRR  : USART_BRR_Type  with Volatile_Full_Access => True;
+      USART_CR1  : USART_CR1_Type  with Volatile_Full_Access => True;
+      USART_CR2  : USART_CR2_Type  with Volatile_Full_Access => True;
+      USART_CR3  : USART_CR3_Type  with Volatile_Full_Access => True;
+      USART_GTPR : USART_GTPR_Type with Volatile_Full_Access => True;
    end record with
       Size                    => 16#1C# * 8,
       Suppress_Initialization => True;
    for USART_Type use
    record
-      USART_SR  at 16#00# range 0 .. 31;
-      USART_DR  at 16#04# range 0 .. 31;
-      USART_CR1 at 16#0C# range 0 .. 31;
+      USART_SR   at 16#00# range 0 .. 31;
+      USART_DR   at 16#04# range 0 .. 31;
+      USART_BRR  at 16#08# range 0 .. 31;
+      USART_CR1  at 16#0C# range 0 .. 31;
+      USART_CR2  at 16#10# range 0 .. 31;
+      USART_CR3  at 16#14# range 0 .. 31;
+      USART_GTPR at 16#18# range 0 .. 31;
    end record;
 
    USART1_BASEADDRESS : constant := 16#4001_3800#;
