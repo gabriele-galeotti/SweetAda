@@ -13,7 +13,7 @@
 # arguments specified in .bat script
 #
 # Environment variables:
-# every variable referenced in the input file
+# none
 #
 
 ################################################################################

@@ -98,8 +98,8 @@ package LLutils is
    -- Some CPUs are inherently big-endian machines (in the sense of how they
    -- store multi-byte objects), like PowerPC-class CPUs, but the bit layout
    -- (i.e., the numbering of bits in registers and physical hardware busses)
-   -- is anyway little-endian, like M68k-class machines. So use always LE
-   -- behaviour when not explicitly specified.
+   -- is anyway little-endian, like M68k-class CPUs. So, use always LE layout
+   -- when not explicitly specified.
    ----------------------------------------------------------------------------
    function Select_Address_Bits
       (Address_Pattern : System.Address;

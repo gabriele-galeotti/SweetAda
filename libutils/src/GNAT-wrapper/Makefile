@@ -80,18 +80,18 @@ HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall
 HOST_LD_SWITCHES ?= -g -static-libgcc -static-libstdc++
 endif
 
-.PHONY : all
-all : gnat-wrapper$(EXEEXT)
+.PHONY: all
+all: gnat-wrapper$(EXEEXT)
 
-gnat-wrapper$(EXEEXT) : gnat-wrapper.o library.o
+gnat-wrapper$(EXEEXT): gnat-wrapper.o library.o
 	$(HOST_CC) -o $@ $(HOST_LD_SWITCHES) $^
-gnat-wrapper.o : gnat-wrapper.c
+gnat-wrapper.o: gnat-wrapper.c
 	$(HOST_CC) -o $@ -c -I.. $(HOST_CC_SWITCHES) $<
-library.o : ../library.c
+library.o: ../library.c
 	$(HOST_CC) -o $@ -c -I.. -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
-.PHONY : install
-install : gnat-wrapper$(EXEEXT)
+.PHONY: install
+install: gnat-wrapper$(EXEEXT)
 ifeq      ($(OSTYPE),linux)
 	$(CP) gnat-wrapper$(EXEEXT) ../../gnat-wrapper-lnx$(EXEEXT)
 else ifeq ($(OSTYPE),cmd)
@@ -102,7 +102,7 @@ else ifeq ($(OSTYPE),darwin)
 	$(CP) gnat-wrapper$(EXEEXT) ../../gnat-wrapper-osx$(EXEEXT)
 endif
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) *.o gnat-wrapper$(EXEEXT)
 

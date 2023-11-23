@@ -80,18 +80,18 @@ HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall
 HOST_LD_SWITCHES ?= -g -static-libgcc -static-libstdc++
 endif
 
-.PHONY : all
-all : gcc-wrapper$(EXEEXT)
+.PHONY: all
+all: gcc-wrapper$(EXEEXT)
 
-gcc-wrapper$(EXEEXT) : gcc-wrapper.o library.o
+gcc-wrapper$(EXEEXT): gcc-wrapper.o library.o
 	$(HOST_CC) -o $@ $(HOST_LD_SWITCHES) $^
-gcc-wrapper.o : gcc-wrapper.c
+gcc-wrapper.o: gcc-wrapper.c
 	$(HOST_CC) -o $@ -c -I.. $(HOST_CC_SWITCHES) $<
-library.o : ../library.c
+library.o: ../library.c
 	$(HOST_CC) -o $@ -c -I.. -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
-.PHONY : install
-install : gcc-wrapper$(EXEEXT)
+.PHONY: install
+install: gcc-wrapper$(EXEEXT)
 ifeq      ($(OSTYPE),linux)
 	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-lnx$(EXEEXT)
 else ifeq ($(OSTYPE),cmd)
@@ -102,7 +102,7 @@ else ifeq ($(OSTYPE),darwin)
 	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-osx$(EXEEXT)
 endif
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	$(RM) *.o gcc-wrapper$(EXEEXT)
 

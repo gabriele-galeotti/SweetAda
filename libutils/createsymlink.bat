@@ -11,8 +11,11 @@ REM
 
 REM
 REM Arguments:
-REM $1 = filename (target) or directory
-REM $2 = filename (link name)
+REM optional initial -m <filelist> to record symlinks
+REM optional initial -v for verbosity
+REM $1 = target filename or directory
+REM $2 = link name filename or directory
+REM every following pair is another symlink
 REM
 REM Environment variables:
 REM SWEETADA_PATH
