@@ -19,6 +19,7 @@ with System.Machine_Code;
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
+with LLutils;
 with RISCV;
 with MTIME;
 with Configure;
@@ -80,12 +81,15 @@ package body Exceptions is
       is
       Vectors : aliased Asm_Entry_Point
          with Import        => True,
-              Convention    => Asm,
               External_Name => "vectors";
    begin
       mtvec_Write ((
          MODE => MODE_Direct,
-         BASE => mtvec_BASE_Type (Shift_Right (MXLEN_Type (To_Integer (Vectors'Address)), 2))
+         BASE => mtvec_BASE_Type (LLutils.Select_Address_Bits (
+                    Vectors'Address,
+                    mtvec_BASE_ADDRESS_LSB,
+                    mtvec_BASE_ADDRESS_MSB
+                    ))
          ));
    end Init;
 
