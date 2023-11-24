@@ -47,6 +47,7 @@ package RISCV is
    ----------------------------------------------------------------------------
 
    subtype mstatus_Type is RISCV_Definitions.mstatus_Type;
+   subtype mstatush_Type is RISCV_Definitions.mstatush_Type;
 
    ----------------------------------------------------------------------------
    -- 3.1.7 Machine Trap-Vector Base-Address Register (mtvec)
@@ -63,6 +64,17 @@ package RISCV is
 
    procedure mtvec_Write
       (mtvec : in mtvec_Type)
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- 3.1.9 Machine Interrupt Registers (mip and mie)
+   ----------------------------------------------------------------------------
+
+   subtype mip_Type is RISCV_Definitions.mip_Type;
+   subtype mie_Type is RISCV_Definitions.mie_Type;
+
+   procedure mie_Set_Interrupt
+      (mie : in mie_Type)
       with Inline => True;
 
    ----------------------------------------------------------------------------

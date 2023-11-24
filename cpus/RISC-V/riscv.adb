@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body RISCV is
@@ -30,6 +31,7 @@ package body RISCV is
 
    use System.Machine_Code;
    use Definitions;
+   use RISCV_Definitions;
 
    ZICSR_ZIFENCEI_ASM : constant String := "        .option arch,+zicsr,+zifencei";
 
@@ -141,41 +143,35 @@ package body RISCV is
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   mstatus_USMIE : constant mstatus_Type := (
-                                             UIE    => False,
-                                             SIE    => False,
-                                             MIE    => True,
-                                             UPIE   => False,
-                                             SPIE   => False,
-                                             MPIE   => False,
-                                             SPP    => False,
-                                             MPP    => 0,
-                                             FS     => 0,
-                                             XS     => 0,
-                                             MPRIV  => False,
-                                             SUM    => False,
-                                             MXR    => False,
-                                             TVM    => False,
-                                             TW     => False,
-                                             TSR    => False,
-                                             SD     => False,
-                                             others => <>
-                                            );
+   procedure mie_Set_Interrupt
+      (mie : in mie_Type)
+      is
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       ZICSR_ZIFENCEI_ASM          & CRLF &
+                       "        csrrs   x0,mie,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => mie_Type'Asm_Input ("r", mie),
+           Clobber  => "",
+           Volatile => True
+          );
+   end mie_Set_Interrupt;
 
    procedure Irq_Enable
       is
+      function To_mstatus is new Ada.Unchecked_Conversion (MXLEN_Type, mstatus_Type);
+      mstatus : mstatus_Type := To_mstatus (0);
    begin
+      mstatus.MIE := True;
       Asm (
            Template => ""                              & CRLF &
                        ZICSR_ZIFENCEI_ASM              & CRLF &
                        "        csrrs   x0,mstatus,%0" & CRLF &
-                       "        csrrs   x0,mie,%1    " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => [
-                        mstatus_Type'Asm_Input ("r", mstatus_USMIE),
-                        MXLEN_Type'Asm_Input ("r", 16#80#)
-                       ],
+           Inputs   => mstatus_Type'Asm_Input ("r", mstatus),
            Clobber  => "",
            Volatile => True
           );
@@ -183,14 +179,17 @@ package body RISCV is
 
    procedure Irq_Disable
       is
+      function To_mstatus is new Ada.Unchecked_Conversion (MXLEN_Type, mstatus_Type);
+      mstatus : mstatus_Type := To_mstatus (0);
    begin
+      mstatus.MIE := True;
       Asm (
            Template => ""                              & CRLF &
                        ZICSR_ZIFENCEI_ASM              & CRLF &
                        "        csrrc   x0,mstatus,%0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => mstatus_Type'Asm_Input ("r", mstatus_USMIE),
+           Inputs   => mstatus_Type'Asm_Input ("r", mstatus),
            Clobber  => "",
            Volatile => True
           );
