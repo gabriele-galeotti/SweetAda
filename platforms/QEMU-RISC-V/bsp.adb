@@ -40,6 +40,7 @@ package body BSP is
    use Interfaces;
    use Definitions;
    use Bits;
+   use RISCV;
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
@@ -117,7 +118,8 @@ package body BSP is
       -------------------------------------------------------------------------
       Timer_Value := MTIME.mtime_Read + Timer_Constant;
       MTIME.mtimecmp_Write (Timer_Value);
-      RISCV.Irq_Enable;
+      mie_Set_Interrupt (mie_Type'(MTIE => True, others => <>));
+      Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 
