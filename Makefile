@@ -1258,6 +1258,7 @@ ifneq ($(FPU_MODEL),)
 	@$(call echo-print,"FPU MODEL:               $(FPU_MODEL)")
 endif
 	@$(call echo-print,"OSTYPE:                  $(OSTYPE)")
+	@$(call echo-print,"SHELL:                   $(SHELL)")
 	@$(call echo-print,"SWEETADA PATH:           $(SWEETADA_PATH)")
 	@$(call echo-print,"TOOLCHAIN PREFIX:        $(TOOLCHAIN_PREFIX)")
 ifeq ($(BUILD_MODE),GPRbuild)
