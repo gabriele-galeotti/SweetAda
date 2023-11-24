@@ -165,7 +165,7 @@ ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_SKIPS)),)
 configure:
 	$(info *** Skipping target "configure" for multilib directory "$(MULTILIB_DIRECTORY)".)
 else
-configure: createdirectories configure-rts configure-rts-target
+configure: create-dirs configure-rts configure-rts-target
 endif
 
 .PHONY: configure-rts
@@ -218,8 +218,8 @@ else
 	$(CP) $(RTS_SOURCE_PATH_TARGET)/rts.cs.in $(RTS)/$(TOOLCHAIN_NAME)/
 endif
 
-.PHONY: createdirectories
-createdirectories:
+.PHONY: create-dirs
+create-dirs:
 ifeq ($(OSTYPE),cmd)
 	@IF EXIST $(ADAINCLUDE_PATH_CMD)\ $(RMDIR) $(ADAINCLUDE_PATH_CMD)\ $(NULL)
 	@$(MKDIR) $(ADAINCLUDE_PATH_CMD)
