@@ -20,10 +20,8 @@
 # HOST_LD_SWITCHES
 #
 
-NULL  :=
-
 # detect OS type
-# detected OS names: "linux"/"cmd"/"msys"/"darwin"
+# detected OS names: "cmd"/"msys"/"darwin"/"linux"
 ifeq ($(OS),Windows_NT)
 ifneq ($(MSYSTEM),)
 OSTYPE := msys
@@ -32,10 +30,10 @@ OSTYPE := cmd
 endif
 else
 OSTYPE_UNAME := $(shell uname -s 2> /dev/null)
-ifeq      ($(OSTYPE_UNAME),Linux)
-OSTYPE := linux
-else ifeq ($(OSTYPE_UNAME),Darwin)
+ifeq      ($(OSTYPE_UNAME),Darwin)
 OSTYPE := darwin
+else ifeq ($(OSTYPE_UNAME),Linux)
+OSTYPE := linux
 else
 $(error Error: no valid OSTYPE)
 endif
@@ -62,11 +60,7 @@ REM    := \#
 RM     := rm -f
 endif
 
-ifeq      ($(OSTYPE),linux)
-HOST_CC          ?= gcc
-HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall
-HOST_LD_SWITCHES ?= -g
-else ifeq ($(OSTYPE),cmd)
+ifeq      ($(OSTYPE),cmd)
 HOST_CC          ?= gcc
 HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
 HOST_LD_SWITCHES ?= -g -static -mconsole
@@ -78,6 +72,10 @@ else ifeq ($(OSTYPE),darwin)
 HOST_CC          ?= gcc
 HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall
 HOST_LD_SWITCHES ?= -g -static-libgcc -static-libstdc++
+else ifeq ($(OSTYPE),linux)
+HOST_CC          ?= gcc
+HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall
+HOST_LD_SWITCHES ?= -g
 endif
 
 .PHONY: all
@@ -92,14 +90,14 @@ library.o: ../library.c
 
 .PHONY: install
 install: gcc-wrapper$(EXEEXT)
-ifeq      ($(OSTYPE),linux)
-	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-lnx$(EXEEXT)
-else ifeq ($(OSTYPE),cmd)
-	$(CP) gcc-wrapper$(EXEEXT) ..\..\gcc-wrapper-win$(EXEEXT) $(NULL)
+ifeq      ($(OSTYPE),cmd)
+	$(CP) gcc-wrapper$(EXEEXT) ..\..\gcc-wrapper-win$(EXEEXT)
 else ifeq ($(OSTYPE),msys)
 	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-win$(EXEEXT)
 else ifeq ($(OSTYPE),darwin)
 	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-osx$(EXEEXT)
+else ifeq ($(OSTYPE),linux)
+	$(CP) gcc-wrapper$(EXEEXT) ../../gcc-wrapper-lnx$(EXEEXT)
 endif
 
 .PHONY: clean
