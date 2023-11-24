@@ -118,7 +118,7 @@ package body BSP is
       -------------------------------------------------------------------------
       Timer_Value := MTIME.mtime_Read + Timer_Constant;
       MTIME.mtimecmp_Write (Timer_Value);
-      mie_Set_Interrupt (mie_Type'(MTIE => True, others => <>));
+      mie_Set_Interrupt ((MTIE => True, others => <>));
       Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
