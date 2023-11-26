@@ -21,7 +21,6 @@ with Interfaces;
 with Definitions;
 with Bits;
 with CPU;
-with Time;
 
 package PC is
 
