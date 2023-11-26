@@ -43,13 +43,13 @@ package body VGA is
    ----------------------------------------------------------------------------
 
    ATTRIBUTE              : constant := 16#03C0#;
-   ATTRIBUTE_READ         : constant := 16#03C1#;
+   -- ATTRIBUTE_READ         : constant := 16#03C1#;
    MISCELLANEOUS_OUTPUT   : constant := 16#03C2#;
    VIDEO_SUBSYSTEM_ENABLE : constant := 16#03C3#;
    SEQUENCER_INDEX        : constant := 16#03C4#;
    SEQUENCER_DATA         : constant := 16#03C5#;
    PEL_MASK               : constant := 16#03C6#;
-   PEL_READ_INDEX         : constant := 16#03C7#;
+   -- PEL_READ_INDEX         : constant := 16#03C7#;
    PEL_WRITE_INDEX        : constant := 16#03C8#;
    PEL_DATA               : constant := 16#03C9#;
    GRAPHICS_INDEX         : constant := 16#03CE#;
