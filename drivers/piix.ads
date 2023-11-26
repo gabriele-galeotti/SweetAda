@@ -19,7 +19,6 @@ with System;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
-with PCI;
 
 package PIIX is
 
@@ -34,7 +33,6 @@ package PIIX is
    use System;
    use Interfaces;
    use Bits;
-   use PCI;
 
    ----------------------------------------------------------------------------
    -- function 0: PCI-to-ISA Bridge
