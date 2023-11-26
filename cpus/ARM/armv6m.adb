@@ -44,7 +44,9 @@ package body ARMv6M is
    -- MSP/PSP_Read/Write
    ----------------------------------------------------------------------------
 
-   function MSP_Read return Unsigned_32 is
+   function MSP_Read
+      return Unsigned_32
+      is
       Value : Unsigned_32;
    begin
       Asm (
@@ -59,7 +61,9 @@ package body ARMv6M is
       return Value;
    end MSP_Read;
 
-   procedure MSP_Write (Value : in Unsigned_32) is
+   procedure MSP_Write
+      (Value : in Unsigned_32)
+      is
    begin
       Asm (
            Template => ""                       & CRLF &
@@ -72,7 +76,9 @@ package body ARMv6M is
           );
    end MSP_Write;
 
-   function PSP_Read return Unsigned_32 is
+   function PSP_Read
+      return Unsigned_32
+      is
       Value : Unsigned_32;
    begin
       Asm (
@@ -87,7 +93,9 @@ package body ARMv6M is
       return Value;
    end PSP_Read;
 
-   procedure PSP_Write (Value : in Unsigned_32) is
+   procedure PSP_Write
+      (Value : in Unsigned_32)
+      is
    begin
       Asm (
            Template => ""                       & CRLF &
@@ -104,7 +112,9 @@ package body ARMv6M is
    -- APSR_Read/Write
    ----------------------------------------------------------------------------
 
-   function APSR_Read return APSR_Type is
+   function APSR_Read
+      return APSR_Type
+      is
       Value : APSR_Type;
    begin
       Asm (
@@ -119,7 +129,9 @@ package body ARMv6M is
       return Value;
    end APSR_Read;
 
-   procedure APSR_Write (Value : in APSR_Type) is
+   procedure APSR_Write
+      (Value : in APSR_Type)
+      is
    begin
       Asm (
            Template => ""                              & CRLF &
@@ -136,7 +148,9 @@ package body ARMv6M is
    -- IPSR_Read/Write
    ----------------------------------------------------------------------------
 
-   function IPSR_Read return IPSR_Type is
+   function IPSR_Read
+      return IPSR_Type
+      is
       Value : IPSR_Type;
    begin
       Asm (
@@ -151,7 +165,9 @@ package body ARMv6M is
       return Value;
    end IPSR_Read;
 
-   procedure IPSR_Write (Value : in IPSR_Type) is
+   procedure IPSR_Write
+      (Value : in IPSR_Type)
+      is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -168,7 +184,9 @@ package body ARMv6M is
    -- EPSR_Read/Write
    ----------------------------------------------------------------------------
 
-   function EPSR_Read return EPSR_Type is
+   function EPSR_Read
+      return EPSR_Type
+      is
       Value : EPSR_Type;
    begin
       Asm (
@@ -183,7 +201,9 @@ package body ARMv6M is
       return Value;
    end EPSR_Read;
 
-   procedure EPSR_Write (Value : in EPSR_Type) is
+   procedure EPSR_Write
+      (Value : in EPSR_Type)
+      is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -200,7 +220,9 @@ package body ARMv6M is
    -- PRIMASK_Read/Write
    ----------------------------------------------------------------------------
 
-   function PRIMASK_Read return PRIMASK_Type is
+   function PRIMASK_Read
+      return PRIMASK_Type
+      is
       Value : PRIMASK_Type;
    begin
       Asm (
@@ -215,7 +237,9 @@ package body ARMv6M is
       return Value;
    end PRIMASK_Read;
 
-   procedure PRIMASK_Write (Value : in PRIMASK_Type) is
+   procedure PRIMASK_Write
+      (Value : in PRIMASK_Type)
+      is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -232,7 +256,9 @@ package body ARMv6M is
    -- CONTROL_Read/Write
    ----------------------------------------------------------------------------
 
-   function CONTROL_Read return CONTROL_Type is
+   function CONTROL_Read
+      return CONTROL_Type
+      is
       Value : CONTROL_Type;
    begin
       Asm (
@@ -247,7 +273,9 @@ package body ARMv6M is
       return Value;
    end CONTROL_Read;
 
-   procedure CONTROL_Write (Value : in CONTROL_Type) is
+   procedure CONTROL_Write
+      (Value : in CONTROL_Type)
+      is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -263,7 +291,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -279,7 +308,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
+   procedure BREAKPOINT
+      is
    begin
       Asm (
            Template => ""             & CRLF &
@@ -295,7 +325,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- WFI
    ----------------------------------------------------------------------------
-   procedure WFI is
+   procedure WFI
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -311,7 +342,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- DMB
    ----------------------------------------------------------------------------
-   procedure DMB is
+   procedure DMB
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -327,7 +359,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- DSB
    ----------------------------------------------------------------------------
-   procedure DSB is
+   procedure DSB
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -343,7 +376,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- ISB
    ----------------------------------------------------------------------------
-   procedure ISB is
+   procedure ISB
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -359,7 +393,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -375,7 +410,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- Irq_Disable
    ----------------------------------------------------------------------------
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -391,7 +427,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- Fault_Irq_Enable
    ----------------------------------------------------------------------------
-   procedure Fault_Irq_Enable is
+   procedure Fault_Irq_Enable
+      is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -407,7 +444,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- Fault_Irq_Disable
    ----------------------------------------------------------------------------
-   procedure Fault_Irq_Disable is
+   procedure Fault_Irq_Disable
+      is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -423,7 +461,8 @@ package body ARMv6M is
    ----------------------------------------------------------------------------
    -- Memory synchronization
    ----------------------------------------------------------------------------
-   procedure Memory_Synchronization is
+   procedure Memory_Synchronization
+      is
    begin
       null;
    end Memory_Synchronization;

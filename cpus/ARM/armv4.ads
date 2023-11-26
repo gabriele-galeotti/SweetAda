@@ -138,10 +138,10 @@ package ARMv4 is
 
    BREAKPOINT_Asm_String : constant String := ".word   0xE7FFDEFE";
 
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -155,30 +155,32 @@ package ARMv4 is
    IRQ                   : constant := 16#18#;
    FIQ                   : constant := 16#1C#;
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   procedure Fiq_Enable with
-      Inline => True;
-   procedure Fiq_Disable with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   procedure Fiq_Enable
+      with Inline => True;
+   procedure Fiq_Disable
+      with Inline => True;
 
    type Irq_State_Type is new Bits_32;
 
-   function Irq_State_Get return Irq_State_Type with
-      Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
-      Inline => True;
+   function Irq_State_Get
+      return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
    ----------------------------------------------------------------------------
 
-   procedure Memory_Synchronization with
-      Inline        => True,
-      Export        => True,
-      Convention    => C,
-      External_Name => "__sync_synchronize";
+   procedure Memory_Synchronization
+      with Inline        => True,
+           Export        => True,
+           Convention    => C,
+           External_Name => "__sync_synchronize";
 
 end ARMv4;

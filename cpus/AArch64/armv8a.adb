@@ -140,7 +140,8 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -156,7 +157,9 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
+   procedure Asm_Call
+      (Target_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -172,7 +175,8 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -188,7 +192,8 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    -- Irq_Disable
    ----------------------------------------------------------------------------
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       Asm (
            Template => ""                           & CRLF &

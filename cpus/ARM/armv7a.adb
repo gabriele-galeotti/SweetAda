@@ -43,7 +43,8 @@ package body ARMv7A is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -59,7 +60,8 @@ package body ARMv7A is
    ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
+   procedure BREAKPOINT
+      is
    begin
       Asm (
            Template => ""             & CRLF &
@@ -75,7 +77,8 @@ package body ARMv7A is
    ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -91,7 +94,8 @@ package body ARMv7A is
    ----------------------------------------------------------------------------
    -- Irq_Disable
    ----------------------------------------------------------------------------
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -107,7 +111,8 @@ package body ARMv7A is
    ----------------------------------------------------------------------------
    -- Fault_Irq_Enable
    ----------------------------------------------------------------------------
-   procedure Fault_Irq_Enable is
+   procedure Fault_Irq_Enable
+      is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -123,7 +128,8 @@ package body ARMv7A is
    ----------------------------------------------------------------------------
    -- Fault_Irq_Disable
    ----------------------------------------------------------------------------
-   procedure Fault_Irq_Disable is
+   procedure Fault_Irq_Disable
+      is
    begin
       Asm (
            Template => ""                  & CRLF &

@@ -68,7 +68,7 @@ package ARMv7M is
       Size      => 32;
    for APSR_Type use
    record
-      Reserved1 at 0 range 0 .. 15;
+      Reserved1 at 0 range  0 .. 15;
       GE        at 0 range 16 .. 19;
       Reserved2 at 0 range 20 .. 26;
       Q         at 0 range 27 .. 27;
@@ -81,10 +81,12 @@ package ARMv7M is
    function To_U32 is new Ada.Unchecked_Conversion (APSR_Type, Unsigned_32);
    function To_APSR is new Ada.Unchecked_Conversion (Unsigned_32, APSR_Type);
 
-   function APSR_Read return APSR_Type with
-      Inline => True;
-   procedure APSR_Write (Value : in APSR_Type) with
-      Inline => True;
+   function APSR_Read
+      return APSR_Type
+      with Inline => True;
+   procedure APSR_Write
+      (Value : in APSR_Type)
+      with Inline => True;
 
    type IPSR_Type is
    record
@@ -95,17 +97,19 @@ package ARMv7M is
       Size      => 32;
    for IPSR_Type use
    record
-      Exception_Number at 0 range 0 .. 8;
+      Exception_Number at 0 range 0 ..  8;
       Reserved         at 0 range 9 .. 31;
    end record;
 
    function To_U32 is new Ada.Unchecked_Conversion (IPSR_Type, Unsigned_32);
    function To_IPSR is new Ada.Unchecked_Conversion (Unsigned_32, IPSR_Type);
 
-   function IPSR_Read return IPSR_Type with
-      Inline => True;
-   procedure IPSR_Write (Value : in IPSR_Type) with
-      Inline => True;
+   function IPSR_Read
+      return IPSR_Type
+      with Inline => True;
+   procedure IPSR_Write
+      (Value : in IPSR_Type)
+      with Inline => True;
 
    type EPSR_Type is
    record
@@ -121,8 +125,8 @@ package ARMv7M is
       Size      => 32;
    for EPSR_Type use
    record
-      Reserved1 at 0 range 0 .. 8;
-      A         at 0 range 9 .. 9;
+      Reserved1 at 0 range  0 ..  8;
+      A         at 0 range  9 ..  9;
       ICIIT1    at 0 range 10 .. 15;
       Reserved2 at 0 range 16 .. 23;
       T         at 0 range 24 .. 24;
@@ -133,10 +137,12 @@ package ARMv7M is
    function To_U32 is new Ada.Unchecked_Conversion (EPSR_Type, Unsigned_32);
    function To_EPSR is new Ada.Unchecked_Conversion (Unsigned_32, EPSR_Type);
 
-   function EPSR_Read return EPSR_Type with
-      Inline => True;
-   procedure EPSR_Write (Value : in EPSR_Type) with
-      Inline => True;
+   function EPSR_Read
+      return EPSR_Type
+      with Inline => True;
+   procedure EPSR_Write
+      (Value : in EPSR_Type)
+      with Inline => True;
 
    -- B1.4.3 The special-purpose mask registers
 
@@ -153,12 +159,16 @@ package ARMv7M is
       Size      => 32;
    for BASEPRI_Type use
    record
-      BASEPRI  at 0 range 0 .. 7;
+      BASEPRI  at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
-   function BASEPRI_Read return BASEPRI_Type;
-   procedure BASEPRI_Write (Value : in BASEPRI_Type);
+   function BASEPRI_Read
+      return BASEPRI_Type
+      with Inline => True;
+   procedure BASEPRI_Write
+      (Value : in BASEPRI_Type)
+      with Inline => True;
 
    type FAULTMASK_Type is
    record
@@ -169,12 +179,16 @@ package ARMv7M is
       Size      => 32;
    for FAULTMASK_Type use
    record
-      FM       at 0 range 0 .. 0;
+      FM       at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
 
-   function FAULTMASK_Read return FAULTMASK_Type;
-   procedure FAULTMASK_Write (Value : in FAULTMASK_Type);
+   function FAULTMASK_Read
+      return FAULTMASK_Type
+      with Inline => True;
+   procedure FAULTMASK_Write
+      (Value : in FAULTMASK_Type)
+      with Inline => True;
 
    -- B1.4.4 The special-purpose CONTROL register
 
@@ -198,8 +212,12 @@ package ARMv7M is
       Reserved at 0 range 3 .. 31;
    end record;
 
-   function CONTROL_Read return CONTROL_Type;
-   procedure CONTROL_Write (Value : in CONTROL_Type);
+   function CONTROL_Read
+      return CONTROL_Type
+      with Inline => True;
+   procedure CONTROL_Write
+      (Value : in CONTROL_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- B3.2 System Control Space (SCS)
@@ -285,14 +303,14 @@ package ARMv7M is
       Size      => 32;
    for CCR_Type use
    record
-      NONBASETHRDENA at 0 range 0 .. 0;
-      USERSETMPEND   at 0 range 1 .. 1;
-      Reserved1      at 0 range 2 .. 2;
-      UNALIGN_TRP    at 0 range 3 .. 3;
-      DIV_0_TRP      at 0 range 4 .. 4;
-      Reserved2      at 0 range 5 .. 7;
-      BFHFNMIGN      at 0 range 8 .. 8;
-      STKALIGN       at 0 range 9 .. 9;
+      NONBASETHRDENA at 0 range  0 ..  0;
+      USERSETMPEND   at 0 range  1 ..  1;
+      Reserved1      at 0 range  2 ..  2;
+      UNALIGN_TRP    at 0 range  3 ..  3;
+      DIV_0_TRP      at 0 range  4 ..  4;
+      Reserved2      at 0 range  5 ..  7;
+      BFHFNMIGN      at 0 range  8 ..  8;
+      STKALIGN       at 0 range  9 ..  9;
       Reserved3      at 0 range 10 .. 15;
       DC             at 0 range 16 .. 16;
       IC             at 0 range 17 .. 17;
@@ -300,11 +318,11 @@ package ARMv7M is
       Reserved4      at 0 range 19 .. 31;
    end record;
 
-   CCR : aliased CCR_Type with
-      Address              => To_Address (CCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   CCR : aliased CCR_Type
+      with Address              => To_Address (CCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.10 System Handler Priority Register 1, SHPR1
 
@@ -319,17 +337,17 @@ package ARMv7M is
       Size      => 32;
    for SHPR1_Type use
    record
-      PRI_4 at 0 range 0 .. 7;
-      PRI_5 at 0 range 8 .. 15;
+      PRI_4 at 0 range  0 ..  7;
+      PRI_5 at 0 range  8 .. 15;
       PRI_6 at 0 range 16 .. 23;
       PRI_7 at 0 range 24 .. 31;
    end record;
 
-   SHPR1 : aliased SHPR1_Type with
-      Address              => To_Address (SHPR1_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SHPR1 : aliased SHPR1_Type
+      with Address              => To_Address (SHPR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.11 System Handler Priority Register 2, SHPR2
 
@@ -344,17 +362,17 @@ package ARMv7M is
       Size      => 32;
    for SHPR2_Type use
    record
-      PRI_8  at 0 range 0 .. 7;
-      PRI_9  at 0 range 8 .. 15;
+      PRI_8  at 0 range  0 ..  7;
+      PRI_9  at 0 range  8 .. 15;
       PRI_10 at 0 range 16 .. 23;
       PRI_11 at 0 range 24 .. 31;
    end record;
 
-   SHPR2 : aliased SHPR2_Type with
-      Address              => To_Address (SHPR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SHPR2 : aliased SHPR2_Type
+      with Address              => To_Address (SHPR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.12 System Handler Priority Register 3, SHPR3
 
@@ -369,17 +387,17 @@ package ARMv7M is
       Size      => 32;
    for SHPR3_Type use
    record
-      PRI_12 at 0 range 0 .. 7;
-      PRI_13 at 0 range 8 .. 15;
+      PRI_12 at 0 range  0 ..  7;
+      PRI_13 at 0 range  8 .. 15;
       PRI_14 at 0 range 16 .. 23;
       PRI_15 at 0 range 24 .. 31;
    end record;
 
-   SHPR3 : aliased SHPR3_Type with
-      Address              => To_Address (SHPR3_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SHPR3 : aliased SHPR3_Type
+      with Address              => To_Address (SHPR3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.13 System Handler Control and State Register, SHCSR
 
@@ -408,14 +426,14 @@ package ARMv7M is
       Size      => 32;
    for SHCSR_Type use
    record
-      MEMFAULTACT    at 0 range 0 .. 0;
-      BUSFAULTACT    at 0 range 1 .. 1;
-      Reserved1      at 0 range 2 .. 2;
-      USGFAULTACT    at 0 range 3 .. 3;
-      Reserved2      at 0 range 4 .. 6;
-      SVCALLACT      at 0 range 7 .. 7;
-      MONITORACT     at 0 range 8 .. 8;
-      Reserved3      at 0 range 9 .. 9;
+      MEMFAULTACT    at 0 range  0 ..  0;
+      BUSFAULTACT    at 0 range  1 ..  1;
+      Reserved1      at 0 range  2 ..  2;
+      USGFAULTACT    at 0 range  3 ..  3;
+      Reserved2      at 0 range  4 ..  6;
+      SVCALLACT      at 0 range  7 ..  7;
+      MONITORACT     at 0 range  8 ..  8;
+      Reserved3      at 0 range  9 ..  9;
       PENDSVACT      at 0 range 10 .. 10;
       SYSTICKACT     at 0 range 11 .. 11;
       USGFAULTPENDED at 0 range 12 .. 12;
@@ -428,11 +446,11 @@ package ARMv7M is
       Reserved4      at 0 range 19 .. 31;
    end record;
 
-   SHCSR : aliased SHCSR_Type with
-      Address              => To_Address (SHCSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SHCSR : aliased SHCSR_Type
+      with Address              => To_Address (SHCSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.15 Configurable Fault Status Register, CFSR
 
@@ -504,13 +522,13 @@ package ARMv7M is
       Size      => 16;
    for UFSR_Type use
    record
-      UNDEFINSTR at 0 range 0 .. 0;
-      INVSTATE   at 0 range 1 .. 1;
-      INVPC      at 0 range 2 .. 2;
-      NOCP       at 0 range 3 .. 3;
-      Reserved1  at 0 range 4 .. 7;
-      UNALIGNED  at 0 range 8 .. 8;
-      DIVBYZERO  at 0 range 9 .. 9;
+      UNDEFINSTR at 0 range  0 ..  0;
+      INVSTATE   at 0 range  1 ..  1;
+      INVPC      at 0 range  2 ..  2;
+      NOCP       at 0 range  3 ..  3;
+      Reserved1  at 0 range  4 ..  7;
+      UNALIGNED  at 0 range  8 ..  8;
+      DIVBYZERO  at 0 range  9 ..  9;
       Reserved2  at 0 range 10 .. 15;
    end record;
 
@@ -524,16 +542,16 @@ package ARMv7M is
       Size      => 32;
    for CFSR_Type use
    record
-      MemManage  at 0 range 0 .. 7;
-      BusFault   at 0 range 8 .. 15;
+      MemManage  at 0 range  0 ..  7;
+      BusFault   at 0 range  8 .. 15;
       UsageFault at 0 range 16 .. 31;
    end record;
 
-   CFSR : aliased CFSR_Type with
-      Address              => To_Address (CFSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   CFSR : aliased CFSR_Type
+      with Address              => To_Address (CFSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.16 HardFault Status Register, HFSR
 
@@ -549,34 +567,34 @@ package ARMv7M is
       Size      => 32;
    for HFSR_Type use
    record
-      Reserved1 at 0 range 0 .. 0;
-      VECTTBL   at 0 range 1 .. 1;
-      Reserved2 at 0 range 2 .. 29;
+      Reserved1 at 0 range  0 ..  0;
+      VECTTBL   at 0 range  1 ..  1;
+      Reserved2 at 0 range  2 .. 29;
       FORCED    at 0 range 30 .. 30;
       DEBUGEVT  at 0 range 31 .. 31;
    end record;
 
-   HFSR : aliased HFSR_Type with
-      Address              => To_Address (HFSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   HFSR : aliased HFSR_Type
+      with Address              => To_Address (HFSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.17 MemManage Fault Address Register, MMFAR
 
-   MMFAR : aliased Unsigned_32 with
-      Address              => To_Address (MMFAR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MMFAR : aliased Unsigned_32
+      with Address              => To_Address (MMFAR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.18 BusFault Address Register, BFAR
 
-   BFAR : aliased Unsigned_32 with
-      Address              => To_Address (BFAR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   BFAR : aliased Unsigned_32
+      with Address              => To_Address (BFAR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.19 Auxiliary Fault Status Register, AFSR
    -- IMPLEMENTATION DEFINED
@@ -610,11 +628,11 @@ package ARMv7M is
       Size      => 32;
    for CPACR_Type use
    record
-      CP0        at 0 range 0 .. 1;
-      CP1        at 0 range 2 .. 3;
-      CP2        at 0 range 4 .. 5;
-      CP3        at 0 range 6 .. 7;
-      CP4        at 0 range 8 .. 9;
+      CP0        at 0 range  0 ..  1;
+      CP1        at 0 range  2 ..  3;
+      CP2        at 0 range  4 ..  5;
+      CP3        at 0 range  6 ..  7;
+      CP4        at 0 range  8 ..  9;
       CP5        at 0 range 10 .. 11;
       CP6        at 0 range 12 .. 13;
       CP7        at 0 range 14 .. 15;
@@ -628,11 +646,11 @@ package ARMv7M is
       Reserved15 at 0 range 30 .. 31;
    end record;
 
-   CPACR : aliased CPACR_Type with
-      Address              => To_Address (CPACR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   CPACR : aliased CPACR_Type
+      with Address              => To_Address (CPACR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.24 Interrupt Controller Type Register, ICTR
 
@@ -645,15 +663,15 @@ package ARMv7M is
       Size      => 32;
    for ICTR_Type use
    record
-      INTLINESNUM at 0 range 0 .. 3;
+      INTLINESNUM at 0 range 0 ..  3;
       Reserved    at 0 range 4 .. 31;
    end record;
 
-   ICTR : aliased ICTR_Type with
-      Address              => To_Address (ICTR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   ICTR : aliased ICTR_Type
+      with Address              => To_Address (ICTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.25 Auxiliary Control Register
    -- IMPLEMENTATION DEFINED
@@ -697,11 +715,11 @@ package ARMv7M is
       CURRENT at 0 range 0 .. 31;
    end record;
 
-   SYST_CVR : aliased SYST_CVR_Type with
-      Address              => To_Address (SYST_CVR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYST_CVR : aliased SYST_CVR_Type
+      with Address              => To_Address (SYST_CVR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.3.6 SysTick Calibration Value Register, SYST_CALIB
 
@@ -718,8 +736,8 @@ package ARMv7M is
    -- B3.4.7 Interrupt Clear-Pending Registers, NVIC_ICPR0-NVIC_ICPR15
    -- B3.4.8 Interrupt Active Bit Registers, NVIC_IABR0-NVIC_IABR15
 
-   type NVIC_Array_Type is array (Natural range <>) of ARMv6M.NVIC_Bitmap_Type with
-      Pack => True;
+   type NVIC_Array_Type is array (Natural range <>) of ARMv6M.NVIC_Bitmap_Type
+      with Pack => True;
 
    -- B3.4.9 Interrupt Priority Registers, NVIC_IPR0-NVIC_IPR123
 
@@ -730,36 +748,36 @@ package ARMv7M is
    NVIC_IABR_ADDRESS : constant := 16#E000_E300#;
    NVIC_IPR_ADDRESS  renames ARMv6M.NVIC_IPR_ADDRESS;
 
-   NVIC_ISER : aliased NVIC_Array_Type (0 .. 15) with
-      Address    => To_Address (NVIC_ISER_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   NVIC_ICER : aliased NVIC_Array_Type (0 .. 15) with
-      Address    => To_Address (NVIC_ICER_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   NVIC_ISPR : aliased NVIC_Array_Type (0 .. 15) with
-      Address    => To_Address (NVIC_ISPR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   NVIC_ICPR : aliased NVIC_Array_Type (0 .. 15) with
-      Address    => To_Address (NVIC_ICPR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   NVIC_IABR : aliased NVIC_Array_Type (0 .. 15) with
-      Address    => To_Address (NVIC_IABR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   NVIC_IPR  : aliased ARMv6M.NVIC_IPR_Array_Type (0 .. 123) with
-      Address    => To_Address (NVIC_IPR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   NVIC_ISER : aliased NVIC_Array_Type (0 .. 15)
+      with Address    => To_Address (NVIC_ISER_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   NVIC_ICER : aliased NVIC_Array_Type (0 .. 15)
+      with Address    => To_Address (NVIC_ICER_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   NVIC_ISPR : aliased NVIC_Array_Type (0 .. 15)
+      with Address    => To_Address (NVIC_ISPR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   NVIC_ICPR : aliased NVIC_Array_Type (0 .. 15)
+      with Address    => To_Address (NVIC_ICPR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   NVIC_IABR : aliased NVIC_Array_Type (0 .. 15)
+      with Address    => To_Address (NVIC_IABR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   NVIC_IPR  : aliased ARMv6M.NVIC_IPR_Array_Type (0 .. 123)
+      with Address    => To_Address (NVIC_IPR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- C1.6 Debug system registers

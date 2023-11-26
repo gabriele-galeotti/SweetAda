@@ -48,25 +48,25 @@ package ARMv7M.FPU is
       Size      => 32;
    for FPCCR_Type use
    record
-      LSPACT    at 0 range 0 .. 0;
-      USER      at 0 range 1 .. 1;
-      Reserved1 at 0 range 2 .. 2;
-      THREAD    at 0 range 3 .. 3;
-      HFRDY     at 0 range 4 .. 4;
-      MMRDY     at 0 range 5 .. 5;
-      BFRDY     at 0 range 6 .. 6;
-      Reserved2 at 0 range 7 .. 7;
-      MONRDY    at 0 range 8 .. 8;
-      Reserved3 at 0 range 9 .. 29;
+      LSPACT    at 0 range  0 ..  0;
+      USER      at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  2;
+      THREAD    at 0 range  3 ..  3;
+      HFRDY     at 0 range  4 ..  4;
+      MMRDY     at 0 range  5 ..  5;
+      BFRDY     at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      MONRDY    at 0 range  8 ..  8;
+      Reserved3 at 0 range  9 .. 29;
       LSPEN     at 0 range 30 .. 30;
       ASPEN     at 0 range 31 .. 31;
    end record;
 
-   FPCCR : aliased FPCCR_Type with
-      Address              => To_Address (FPCCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   FPCCR : aliased FPCCR_Type
+      with Address              => To_Address (FPCCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.22 Floating Point Context Address Register, FPCAR
 
@@ -79,15 +79,15 @@ package ARMv7M.FPU is
       Size      => 32;
    for FPCAR_Type use
    record
-      Reserved at 0 range 0 .. 2;
+      Reserved at 0 range 0 ..  2;
       ADDRESS  at 0 range 3 .. 31;
    end record;
 
-   FPCAR : aliased FPCAR_Type with
-      Address              => To_Address (FPCAR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   FPCAR : aliased FPCAR_Type
+      with Address              => To_Address (FPCAR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- A2.5.3 Floating-point Status and Control Register, FPSCR
 
@@ -120,14 +120,14 @@ package ARMv7M.FPU is
       Size      => 32;
    for FPSCR_Type use
    record
-      IOC       at 0 range 0 .. 0;
-      DZC       at 0 range 1 .. 1;
-      OFC       at 0 range 2 .. 2;
-      UFC       at 0 range 3 .. 3;
-      IXC       at 0 range 4 .. 4;
-      Reserved1 at 0 range 5 .. 6;
-      IDC       at 0 range 7 .. 7;
-      Reserved2 at 0 range 8 .. 21;
+      IOC       at 0 range  0 ..  0;
+      DZC       at 0 range  1 ..  1;
+      OFC       at 0 range  2 ..  2;
+      UFC       at 0 range  3 ..  3;
+      IXC       at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  6;
+      IDC       at 0 range  7 ..  7;
+      Reserved2 at 0 range  8 .. 21;
       RMode     at 0 range 22 .. 23;
       FZ        at 0 range 24 .. 24;
       DN        at 0 range 25 .. 25;
@@ -139,8 +139,10 @@ package ARMv7M.FPU is
       N         at 0 range 31 .. 31;
    end record;
 
-   function FPSCR_Read return FPSCR_Type;
-   procedure FPSCR_Write (Value : in FPSCR_Type);
+   function FPSCR_Read
+      return FPSCR_Type;
+   procedure FPSCR_Write
+      (Value : in FPSCR_Type);
 
    -- B3.2.23 Floating Point Default Status Control Register, FPDSCR
 
@@ -157,7 +159,7 @@ package ARMv7M.FPU is
       Size      => 32;
    for FPDSCR_Type use
    record
-      Reserved1 at 0 range 0 .. 21;
+      Reserved1 at 0 range  0 .. 21;
       RMode     at 0 range 22 .. 23;
       FZ        at 0 range 24 .. 24;
       DN        at 0 range 25 .. 25;
@@ -165,10 +167,10 @@ package ARMv7M.FPU is
       Reserved2 at 0 range 27 .. 31;
    end record;
 
-   FPDSCR : aliased FPDSCR_Type with
-      Address              => To_Address (FPDSCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   FPDSCR : aliased FPDSCR_Type
+      with Address              => To_Address (FPDSCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end ARMv7M.FPU;

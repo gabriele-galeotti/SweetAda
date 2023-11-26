@@ -36,22 +36,22 @@ package ARMv7A is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   procedure Fault_Irq_Enable with
-      Inline => True;
-   procedure Fault_Irq_Disable with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   procedure Fault_Irq_Enable
+      with Inline => True;
+   procedure Fault_Irq_Disable
+      with Inline => True;
 
 end ARMv7A;

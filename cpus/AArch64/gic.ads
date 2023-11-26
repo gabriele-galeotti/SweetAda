@@ -51,11 +51,11 @@ package GIC is
       Bit_Order => Low_Order_First,
       Size      => 32;
    for GICD_CTLR_Type use record
-      EnableGrp1  at 0 range 0 .. 0;
-      EnableGrp1A at 0 range 1 .. 1;
-      Reserved1   at 0 range 2 .. 3;
-      ARE_NS      at 0 range 4 .. 4;
-      Reserved2   at 0 range 5 .. 30;
+      EnableGrp1  at 0 range  0 ..  0;
+      EnableGrp1A at 0 range  1 ..  1;
+      Reserved1   at 0 range  2 ..  3;
+      ARE_NS      at 0 range  4 ..  4;
+      Reserved2   at 0 range  5 .. 30;
       RWP         at 0 range 31 .. 31;
    end record;
 
@@ -75,12 +75,12 @@ package GIC is
       Bit_Order => Low_Order_First,
       Size      => 32;
    for GICC_CTLR_Type use record
-      EnableGrp1    at 0 range 0 .. 0;
-      Reserved1     at 0 range 1 .. 4;
-      FIQBypDisGrp1 at 0 range 5 .. 5;
-      IRQBypDisGrp1 at 0 range 6 .. 6;
-      Reserved2     at 0 range 7 .. 8;
-      EOImodeNS     at 0 range 9 .. 9;
+      EnableGrp1    at 0 range  0 ..  0;
+      Reserved1     at 0 range  1 ..  4;
+      FIQBypDisGrp1 at 0 range  5 ..  5;
+      IRQBypDisGrp1 at 0 range  6 ..  6;
+      Reserved2     at 0 range  7 ..  8;
+      EOImodeNS     at 0 range  9 ..  9;
       Reserved3     at 0 range 19 .. 31;
    end record;
 
@@ -92,7 +92,7 @@ package GIC is
       Bit_Order => Low_Order_First,
       Size      => 32;
    for GICC_PMR_Type use record
-      Priority at 0 range 0 .. 7;
+      Priority at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 

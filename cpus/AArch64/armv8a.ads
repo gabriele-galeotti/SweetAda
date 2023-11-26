@@ -60,8 +60,9 @@ package ARMv8A is
       Reserved3 at 0 range 32 .. 63;
    end record;
 
-   function CurrentEL_Read return EL_Type with
-      Inline => True;
+   function CurrentEL_Read
+      return EL_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- C5.2 Special-purpose registers
@@ -122,10 +123,12 @@ package ARMv8A is
       Reserved4 at 0 range 32 .. 63;
    end record;
 
-   function FPCR_Read return FPCR_Type with
-      Inline => True;
-   procedure FPCR_Write (Value : in FPCR_Type) with
-      Inline => True;
+   function FPCR_Read
+      return FPCR_Type
+      with Inline => True;
+   procedure FPCR_Write
+      (Value : in FPCR_Type)
+      with Inline => True;
 
    -- C5.2.9 FPSR, Floating-point Status Register
 
@@ -166,10 +169,12 @@ package ARMv8A is
       Reserved3 at 0 range 32 .. 63;
    end record;
 
-   function FPSR_Read return FPSR_Type with
-      Inline => True;
-   procedure FPSR_Write (Value : in FPSR_Type) with
-      Inline => True;
+   function FPSR_Read
+      return FPSR_Type
+      with Inline => True;
+   procedure FPSR_Write
+      (Value : in FPSR_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- D19.2 General system control registers
@@ -256,10 +261,12 @@ package ARMv8A is
       Reserved3 at 0 range 32 .. 63;
    end record;
 
-   function FPEXC32_EL2_Read return FPEXC32_EL2_Type with
-      Inline => True;
-   procedure FPEXC32_EL2_Write (Value : in FPEXC32_EL2_Type) with
-      Inline => True;
+   function FPEXC32_EL2_Read
+      return FPEXC32_EL2_Type
+      with Inline => True;
+   procedure FPEXC32_EL2_Write
+      (Value : in FPEXC32_EL2_Type)
+      with Inline => True;
 
    -- D19.2.48 HCR_EL2, Hypervisor Configuration Register
 
@@ -391,10 +398,12 @@ package ARMv8A is
       TWEDEL    at 0 range 60 .. 63;
    end record;
 
-   function HCR_EL2_Read return HCR_EL2_Type with
-      Inline => True;
-   procedure HCR_EL2_Write (Value : in HCR_EL2_Type) with
-      Inline => True;
+   function HCR_EL2_Read
+      return HCR_EL2_Type
+      with Inline => True;
+   procedure HCR_EL2_Write
+      (Value : in HCR_EL2_Type)
+      with Inline => True;
 
    -- D19.2.124 SCTLR_EL1, System Control Register (EL1)
 
@@ -536,27 +545,35 @@ package ARMv8A is
       TIDCP      at 0 range 63 .. 63;
    end record;
 
-   function SCTLR_EL1_Read return SCTLR_EL1_Type with
-      Inline => True;
-   procedure SCTLR_EL1_Write (Value : in SCTLR_EL1_Type) with
-      Inline => True;
+   function SCTLR_EL1_Read
+      return SCTLR_EL1_Type
+      with Inline => True;
+   procedure SCTLR_EL1_Write
+      (Value : in SCTLR_EL1_Type)
+      with Inline => True;
 
    -- D19.2.157 VBAR_EL1, Vector Base Address Register (EL1)
    -- D19.2.158 VBAR_EL2, Vector Base Address Register (EL2)
    -- D19.2.159 VBAR_EL3, Vector Base Address Register (EL3)
 
-   function VBAR_EL1_Read return Unsigned_64 with
-      Inline => True;
-   procedure VBAR_EL1_Write (Value : in Unsigned_64) with
-      Inline => True;
-   function VBAR_EL2_Read return Unsigned_64 with
-      Inline => True;
-   procedure VBAR_EL2_Write (Value : in Unsigned_64) with
-      Inline => True;
-   function VBAR_EL3_Read return Unsigned_64 with
-      Inline => True;
-   procedure VBAR_EL3_Write (Value : in Unsigned_64) with
-      Inline => True;
+   function VBAR_EL1_Read
+      return Unsigned_64
+      with Inline => True;
+   procedure VBAR_EL1_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
+   function VBAR_EL2_Read
+      return Unsigned_64
+      with Inline => True;
+   procedure VBAR_EL2_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
+   function VBAR_EL3_Read
+      return Unsigned_64
+      with Inline => True;
+   procedure VBAR_EL3_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- D19.12 Generic Timer registers
@@ -576,8 +593,9 @@ package ARMv8A is
       Reserved        at 0 range 32 .. 63;
    end record;
 
-   function CNTFRQ_EL0_Read return CNTFRQ_EL0_Type with
-      Inline => True;
+   function CNTFRQ_EL0_Read
+      return CNTFRQ_EL0_Type
+      with Inline => True;
 
    -- D19.12.16 CNTP_CTL_EL0, Counter-timer Physical Timer Control register
 
@@ -599,17 +617,21 @@ package ARMv8A is
       Reserved2 at 0 range 32 .. 63;
    end record;
 
-   function CNTP_CTL_EL0_Read return CNTP_CTL_EL0_Type with
-      Inline => True;
-   procedure CNTP_CTL_EL0_Write (Value : in CNTP_CTL_EL0_Type) with
-      Inline => True;
+   function CNTP_CTL_EL0_Read
+      return CNTP_CTL_EL0_Type
+      with Inline => True;
+   procedure CNTP_CTL_EL0_Write
+      (Value : in CNTP_CTL_EL0_Type)
+      with Inline => True;
 
    -- D19.12.17 CNTP_CVAL_EL0, Counter-timer Physical Timer CompareValue register
 
-   function CNTP_CVAL_EL0_Read return Unsigned_64 with
-      Inline => True;
-   procedure CNTP_CVAL_EL0_Write (Value : in Unsigned_64) with
-      Inline => True;
+   function CNTP_CVAL_EL0_Read
+      return Unsigned_64
+      with Inline => True;
+   procedure CNTP_CVAL_EL0_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
 
    -- D19.12.18 CNTP_TVAL_EL0, Counter-timer Physical Timer TimerValue register
 
@@ -625,32 +647,36 @@ package ARMv8A is
       Reserved   at 0 range 32 .. 63;
    end record;
 
-   function CNTP_TVAL_EL0_Read return CNTP_TVAL_EL0_Type with
-      Inline => True;
-   procedure CNTP_TVAL_EL0_Write (Value : in CNTP_TVAL_EL0_Type) with
-      Inline => True;
+   function CNTP_TVAL_EL0_Read
+      return CNTP_TVAL_EL0_Type
+      with Inline => True;
+   procedure CNTP_TVAL_EL0_Write
+      (Value : in CNTP_TVAL_EL0_Type)
+      with Inline => True;
 
    -- D19.12.20 CNTPCT_EL0, Counter-timer Physical Count register
 
-   function CNTPCT_EL0_Read return Unsigned_64 with
-      Inline => True;
+   function CNTPCT_EL0_Read
+      return Unsigned_64
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP with
-      Inline => True;
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
 
 end ARMv8A;

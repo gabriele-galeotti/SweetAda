@@ -44,7 +44,9 @@ package body ARMv7M is
    -- APSR_Read/Write
    ----------------------------------------------------------------------------
 
-   function APSR_Read return APSR_Type is
+   function APSR_Read
+      return APSR_Type
+      is
       Value : APSR_Type;
    begin
       Asm (
@@ -59,7 +61,9 @@ package body ARMv7M is
       return Value;
    end APSR_Read;
 
-   procedure APSR_Write (Value : in APSR_Type) is
+   procedure APSR_Write
+      (Value : in APSR_Type)
+      is
    begin
       Asm (
            Template => ""                              & CRLF &
@@ -76,7 +80,9 @@ package body ARMv7M is
    -- IPSR_Read/Write
    ----------------------------------------------------------------------------
 
-   function IPSR_Read return IPSR_Type is
+   function IPSR_Read
+      return IPSR_Type
+      is
       Value : IPSR_Type;
    begin
       Asm (
@@ -91,7 +97,9 @@ package body ARMv7M is
       return Value;
    end IPSR_Read;
 
-   procedure IPSR_Write (Value : in IPSR_Type) is
+   procedure IPSR_Write
+      (Value : in IPSR_Type)
+      is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -108,7 +116,9 @@ package body ARMv7M is
    -- EPSR_Read/Write
    ----------------------------------------------------------------------------
 
-   function EPSR_Read return EPSR_Type is
+   function EPSR_Read
+      return EPSR_Type
+      is
       Value : EPSR_Type;
    begin
       Asm (
@@ -123,7 +133,9 @@ package body ARMv7M is
       return Value;
    end EPSR_Read;
 
-   procedure EPSR_Write (Value : in EPSR_Type) is
+   procedure EPSR_Write
+      (Value : in EPSR_Type)
+      is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -140,7 +152,9 @@ package body ARMv7M is
    -- BASEPRI_Read/Write
    ----------------------------------------------------------------------------
 
-   function BASEPRI_Read return BASEPRI_Type is
+   function BASEPRI_Read
+      return BASEPRI_Type
+      is
       Value : BASEPRI_Type;
    begin
       Asm (
@@ -155,7 +169,9 @@ package body ARMv7M is
       return Value;
    end BASEPRI_Read;
 
-   procedure BASEPRI_Write (Value : in BASEPRI_Type) is
+   procedure BASEPRI_Write
+      (Value : in BASEPRI_Type)
+      is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -172,7 +188,9 @@ package body ARMv7M is
    -- FAULTMASK_Read/Write
    ----------------------------------------------------------------------------
 
-   function FAULTMASK_Read return FAULTMASK_Type is
+   function FAULTMASK_Read
+      return FAULTMASK_Type
+      is
       Value : FAULTMASK_Type;
    begin
       Asm (
@@ -187,7 +205,9 @@ package body ARMv7M is
       return Value;
    end FAULTMASK_Read;
 
-   procedure FAULTMASK_Write (Value : in FAULTMASK_Type) is
+   procedure FAULTMASK_Write
+      (Value : in FAULTMASK_Type)
+      is
    begin
       Asm (
            Template => ""                             & CRLF &
@@ -204,7 +224,9 @@ package body ARMv7M is
    -- CONTROL_Read/Write
    ----------------------------------------------------------------------------
 
-   function CONTROL_Read return CONTROL_Type is
+   function CONTROL_Read
+      return CONTROL_Type
+      is
       Value : CONTROL_Type;
    begin
       Asm (
@@ -219,7 +241,9 @@ package body ARMv7M is
       return Value;
    end CONTROL_Read;
 
-   procedure CONTROL_Write (Value : in CONTROL_Type) is
+   procedure CONTROL_Write
+      (Value : in CONTROL_Type)
+      is
    begin
       Asm (
            Template => ""                           & CRLF &

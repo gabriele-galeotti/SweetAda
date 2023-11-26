@@ -195,7 +195,8 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    -- Memory synchronization
    ----------------------------------------------------------------------------
-   procedure Memory_Synchronization is
+   procedure Memory_Synchronization
+      is
    begin
       Asm (
            Template => ""            & CRLF &

@@ -54,19 +54,19 @@ package CortexM4 is
       Size      => 32;
    for ACTLR_Type use
    record
-      DISMCYCINT at 0 range 0 .. 0;
-      DISDEFWBUF at 0 range 1 .. 1;
-      DISFOLD    at 0 range 2 .. 2;
-      Reserved1  at 0 range 3 .. 7;
-      DISFPCA    at 0 range 8 .. 8;
-      DISOOFP    at 0 range 9 .. 9;
+      DISMCYCINT at 0 range  0 ..  0;
+      DISDEFWBUF at 0 range  1 ..  1;
+      DISFOLD    at 0 range  2 ..  2;
+      Reserved1  at 0 range  3 ..  7;
+      DISFPCA    at 0 range  8 ..  8;
+      DISOOFP    at 0 range  9 ..  9;
       Reserved2  at 0 range 10 .. 31;
    end record;
 
-   ACTLR : aliased ACTLR_Type with
-      Address              => To_Address (ACTLR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   ACTLR : aliased ACTLR_Type
+      with Address              => To_Address (ACTLR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end CortexM4;

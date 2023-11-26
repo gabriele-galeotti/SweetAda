@@ -36,7 +36,9 @@ package body Unwind is
    ----------------------------------------------------------------------------
    -- Unwind_Resume
    ----------------------------------------------------------------------------
-   -- procedure Unwind_Resume (Exception_Object_Address : in Address) is
+   -- procedure Unwind_Resume
+   --    (Exception_Object_Address : in Address)
+   --    is
    --    pragma Unreferenced (Exception_Object_Address);
    -- begin
    --    null;
@@ -46,19 +48,25 @@ package body Unwind is
    -- ABI defined personality routine entry points
    ----------------------------------------------------------------------------
 
-   function EABI_unwind_cpp_pr0 return Unwind_Reason_Code is
+   function EABI_unwind_cpp_pr0
+      return Unwind_Reason_Code
+      is
    begin
       -- return __gnu_unwind_pr_common (state, ucbp, context, 0);
       return URC_NO_REASON;
    end EABI_unwind_cpp_pr0;
 
-   function EABI_unwind_cpp_pr1 return Unwind_Reason_Code is
+   function EABI_unwind_cpp_pr1
+      return Unwind_Reason_Code
+      is
    begin
       -- return __gnu_unwind_pr_common (state, ucbp, context, 1);
       return URC_NO_REASON;
    end EABI_unwind_cpp_pr1;
 
-   function EABI_unwind_cpp_pr2 return Unwind_Reason_Code is
+   function EABI_unwind_cpp_pr2
+      return Unwind_Reason_Code
+      is
    begin
       -- return __gnu_unwind_pr_common (state, ucbp, context, 2);
       return URC_NO_REASON;

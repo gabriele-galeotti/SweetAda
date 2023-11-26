@@ -44,7 +44,9 @@ package body ARMv7M.FPU is
    -- FPSCR_Read/Write
    ----------------------------------------------------------------------------
 
-   function FPSCR_Read return FPSCR_Type is
+   function FPSCR_Read
+      return FPSCR_Type
+      is
       Value : FPSCR_Type;
    begin
       Asm (
@@ -59,7 +61,9 @@ package body ARMv7M.FPU is
       return Value;
    end FPSCR_Read;
 
-   procedure FPSCR_Write (Value : in FPSCR_Type) is
+   procedure FPSCR_Write
+      (Value : in FPSCR_Type)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &

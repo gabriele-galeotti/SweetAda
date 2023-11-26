@@ -44,15 +44,19 @@ package ARMv6M is
 
    -- B1.4.1 The ARM core registers
 
-   function MSP_Read return Unsigned_32 with
-      Inline => True;
-   procedure MSP_Write (Value : in Unsigned_32) with
-      Inline => True;
+   function MSP_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure MSP_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
-   function PSP_Read return Unsigned_32 with
-      Inline => True;
-   procedure PSP_Write (Value : in Unsigned_32) with
-      Inline => True;
+   function PSP_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure PSP_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
    -- B1.4.2 The special-purpose Program Status Registers, xPSR
 
@@ -68,7 +72,7 @@ package ARMv6M is
       Size      => 32;
    for APSR_Type use
    record
-      Reserved at 0 range 0 .. 27;
+      Reserved at 0 range  0 .. 27;
       V        at 0 range 28 .. 28;
       C        at 0 range 29 .. 29;
       Z        at 0 range 30 .. 30;
@@ -78,10 +82,12 @@ package ARMv6M is
    function To_U32 is new Ada.Unchecked_Conversion (APSR_Type, Unsigned_32);
    function To_APSR is new Ada.Unchecked_Conversion (Unsigned_32, APSR_Type);
 
-   function APSR_Read return APSR_Type with
-      Inline => True;
-   procedure APSR_Write (Value : in APSR_Type) with
-      Inline => True;
+   function APSR_Read
+      return APSR_Type
+      with Inline => True;
+   procedure APSR_Write
+      (Value : in APSR_Type)
+      with Inline => True;
 
    type IPSR_Type is
    record
@@ -92,17 +98,19 @@ package ARMv6M is
       Size      => 32;
    for IPSR_Type use
    record
-      Exception_Number at 0 range 0 .. 5;
+      Exception_Number at 0 range 0 ..  5;
       Reserved         at 0 range 6 .. 31;
    end record;
 
    function To_U32 is new Ada.Unchecked_Conversion (IPSR_Type, Unsigned_32);
    function To_IPSR is new Ada.Unchecked_Conversion (Unsigned_32, IPSR_Type);
 
-   function IPSR_Read return IPSR_Type with
-      Inline => True;
-   procedure IPSR_Write (Value : in IPSR_Type) with
-      Inline => True;
+   function IPSR_Read
+      return IPSR_Type
+      with Inline => True;
+   procedure IPSR_Write
+      (Value : in IPSR_Type)
+      with Inline => True;
 
    type EPSR_Type is
    record
@@ -116,8 +124,8 @@ package ARMv6M is
       Size      => 32;
    for EPSR_Type use
    record
-      Reserved1 at 0 range 0 .. 8;
-      A         at 0 range 9 .. 9;
+      Reserved1 at 0 range  0 ..  8;
+      A         at 0 range  9 ..  9;
       Reserved2 at 0 range 10 .. 23;
       T         at 0 range 24 .. 24;
       Reserved3 at 0 range 25 .. 31;
@@ -126,10 +134,12 @@ package ARMv6M is
    function To_U32 is new Ada.Unchecked_Conversion (EPSR_Type, Unsigned_32);
    function To_EPSR is new Ada.Unchecked_Conversion (Unsigned_32, EPSR_Type);
 
-   function EPSR_Read return EPSR_Type with
-      Inline => True;
-   procedure EPSR_Write (Value : in EPSR_Type) with
-      Inline => True;
+   function EPSR_Read
+      return EPSR_Type
+      with Inline => True;
+   procedure EPSR_Write
+      (Value : in EPSR_Type)
+      with Inline => True;
 
    -- B1.4.3 The special-purpose mask register, PRIMASK
 
@@ -142,14 +152,16 @@ package ARMv6M is
       Size      => 32;
    for PRIMASK_Type use
    record
-      PM       at 0 range 0 .. 0;
+      PM       at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
 
-   function PRIMASK_Read return PRIMASK_Type with
-      Inline => True;
-   procedure PRIMASK_Write (Value : in PRIMASK_Type) with
-      Inline => True;
+   function PRIMASK_Read
+      return PRIMASK_Type
+      with Inline => True;
+   procedure PRIMASK_Write
+      (Value : in PRIMASK_Type)
+      with Inline => True;
 
    -- B1.4.4 The special-purpose CONTROL register
 
@@ -166,15 +178,17 @@ package ARMv6M is
       Size      => 32;
    for CONTROL_Type use
    record
-      nPRIV    at 0 range 0 .. 0;
-      SPSEL    at 0 range 1 .. 1;
+      nPRIV    at 0 range 0 ..  0;
+      SPSEL    at 0 range 1 ..  1;
       Reserved at 0 range 2 .. 31;
    end record;
 
-   function CONTROL_Read return CONTROL_Type with
-      Inline => True;
-   procedure CONTROL_Write (Value : in CONTROL_Type) with
-      Inline => True;
+   function CONTROL_Read
+      return CONTROL_Type
+      with Inline => True;
+   procedure CONTROL_Write
+      (Value : in CONTROL_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- B3.2 System Control Space (SCS)
@@ -208,18 +222,18 @@ package ARMv6M is
       Size      => 32;
    for CPUID_Type use
    record
-      Revision    at 0 range 0 .. 3;
-      PartNo      at 0 range 4 .. 15;
+      Revision    at 0 range  0 ..  3;
+      PartNo      at 0 range  4 .. 15;
       Constant0F  at 0 range 16 .. 19;
       Variant     at 0 range 20 .. 23;
       Implementer at 0 range 24 .. 31;
    end record;
 
-   CPUID : aliased CPUID_Type with
-      Address              => To_Address (CPUID_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   CPUID : aliased CPUID_Type
+      with Address              => To_Address (CPUID_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    function To_U32 is new Ada.Unchecked_Conversion (CPUID_Type, Unsigned_32);
 
@@ -246,8 +260,8 @@ package ARMv6M is
       Size      => 32;
    for ICSR_Type use
    record
-      VECTACTIVE  at 0 range 0 .. 8;
-      Reserved1   at 0 range 9 .. 10;
+      VECTACTIVE  at 0 range  0 ..  8;
+      Reserved1   at 0 range  9 .. 10;
       RETTOBASE   at 0 range 11 .. 11;
       VECTPENDING at 0 range 12 .. 20;
       Reserved2   at 0 range 21 .. 21;
@@ -262,11 +276,11 @@ package ARMv6M is
       NMIPENDSET  at 0 range 31 .. 31;
    end record;
 
-   ICSR : aliased ICSR_Type with
-      Address              => To_Address (ICSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   ICSR : aliased ICSR_Type
+      with Address              => To_Address (ICSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.5 Vector Table Offset Register, VTOR
 
@@ -282,15 +296,15 @@ package ARMv6M is
       Size      => 32;
    for VTOR_Type use
    record
-      Reserved at 0 range 0 .. 6;
+      Reserved at 0 range 0 ..  6;
       TBLOFF   at 0 range 7 .. 31;
    end record;
 
-   VTOR : aliased VTOR_Type with
-      Address              => To_Address (VTOR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   VTOR : aliased VTOR_Type
+      with Address              => To_Address (VTOR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.6 Application Interrupt and Reset Control Register, AIRCR
 
@@ -312,19 +326,19 @@ package ARMv6M is
       Size      => 32;
    for AIRCR_Type use
    record
-      Reserved1     at 0 range 0 .. 0;
-      VECTCLRACTIVE at 0 range 1 .. 1;
-      SYSRESETREQ   at 0 range 2 .. 2;
-      Reserved2     at 0 range 3 .. 14;
+      Reserved1     at 0 range  0 ..  0;
+      VECTCLRACTIVE at 0 range  1 ..  1;
+      SYSRESETREQ   at 0 range  2 ..  2;
+      Reserved2     at 0 range  3 .. 14;
       ENDIANNESS    at 0 range 15 .. 15;
       VECTKEY_STAT  at 0 range 16 .. 31;
    end record;
 
-   AIRCR : aliased AIRCR_Type with
-      Address              => To_Address (AIRCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AIRCR : aliased AIRCR_Type
+      with Address              => To_Address (AIRCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.7 System Control Register, SCR
 
@@ -341,19 +355,19 @@ package ARMv6M is
       Size      => 32;
    for SCR_Type use
    record
-      Reserved1   at 0 range 0 .. 0;
-      SLEEPONEXIT at 0 range 1 .. 1;
-      SLEEPDEEP   at 0 range 2 .. 2;
-      Reserved2   at 0 range 3 .. 3;
-      SEVONPEND   at 0 range 4 .. 4;
+      Reserved1   at 0 range 0 ..  0;
+      SLEEPONEXIT at 0 range 1 ..  1;
+      SLEEPDEEP   at 0 range 2 ..  2;
+      Reserved2   at 0 range 3 ..  3;
+      SEVONPEND   at 0 range 4 ..  4;
       Reserved3   at 0 range 5 .. 31;
    end record;
 
-   SCR : aliased SCR_Type with
-      Address              => To_Address (SCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SCR : aliased SCR_Type
+      with Address              => To_Address (SCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.8 Configuration and Control Register, CCR
 
@@ -369,18 +383,18 @@ package ARMv6M is
       Size      => 32;
    for CCR_Type use
    record
-      Reserved1   at 0 range 0 .. 2;
-      UNALIGN_TRP at 0 range 3 .. 3;
-      Reserved2   at 0 range 4 .. 8;
-      STKALIGN    at 0 range 9 .. 9;
+      Reserved1   at 0 range  0 ..  2;
+      UNALIGN_TRP at 0 range  3 ..  3;
+      Reserved2   at 0 range  4 ..  8;
+      STKALIGN    at 0 range  9 ..  9;
       Reserved3   at 0 range 10 .. 31;
    end record;
 
-   CCR : aliased CCR_Type with
-      Address              => To_Address (CCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   CCR : aliased CCR_Type
+      with Address              => To_Address (CCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.9 System Handler Priority Register 2, SHPR2
 
@@ -393,15 +407,15 @@ package ARMv6M is
       Size      => 32;
    for SHPR2_Type use
    record
-      Reserved at 0 range 0 .. 29;
+      Reserved at 0 range  0 .. 29;
       PRI_11   at 0 range 30 .. 31;
    end record;
 
-   SHPR2 : aliased SHPR2_Type with
-      Address              => To_Address (SHPR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SHPR2 : aliased SHPR2_Type
+      with Address              => To_Address (SHPR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.10 System Handler Priority Register 3, SHPR3
 
@@ -416,17 +430,17 @@ package ARMv6M is
       Size      => 32;
    for SHPR3_Type use
    record
-      Reserved1 at 0 range 0 .. 21;
+      Reserved1 at 0 range  0 .. 21;
       PRI_14    at 0 range 22 .. 23;
       Reserved2 at 0 range 24 .. 29;
       PRI_15    at 0 range 30 .. 31;
    end record;
 
-   SHPR3 : aliased SHPR3_Type with
-      Address              => To_Address (SHPR3_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SHPR3 : aliased SHPR3_Type
+      with Address              => To_Address (SHPR3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.2.12 The Auxiliary Control Register, ACTLR
    -- IMPLEMENTATION DEFINED
@@ -471,19 +485,19 @@ package ARMv6M is
       Size      => 32;
    for SYST_CSR_Type use
    record
-      ENABLE    at 0 range 0 .. 0;
-      TICKINT   at 0 range 1 .. 1;
-      CLKSOURCE at 0 range 2 .. 2;
-      Reserved1 at 0 range 3 .. 15;
+      ENABLE    at 0 range  0 ..  0;
+      TICKINT   at 0 range  1 ..  1;
+      CLKSOURCE at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 .. 15;
       COUNTFLAG at 0 range 16 .. 16;
       Reserved2 at 0 range 17 .. 31;
    end record;
 
-   SYST_CSR : aliased SYST_CSR_Type with
-      Address              => To_Address (SYST_CSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYST_CSR : aliased SYST_CSR_Type
+      with Address              => To_Address (SYST_CSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.3.4 SysTick Reload Value Register, SYST_RVR
 
@@ -496,15 +510,15 @@ package ARMv6M is
       Size      => 32;
    for SYST_RVR_Type use
    record
-      RELOAD   at 0 range 0 .. 23;
+      RELOAD   at 0 range  0 .. 23;
       Reserved at 0 range 24 .. 31;
    end record;
 
-   SYST_RVR : aliased SYST_RVR_Type with
-      Address              => To_Address (SYST_RVR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYST_RVR : aliased SYST_RVR_Type
+      with Address              => To_Address (SYST_RVR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.3.5 SysTick Current Value Register, SYST_CVR
 
@@ -517,15 +531,15 @@ package ARMv6M is
       Size      => 32;
    for SYST_CVR_Type use
    record
-      CURRENT  at 0 range 0 .. 23;
+      CURRENT  at 0 range  0 .. 23;
       Reserved at 0 range 24 .. 31;
    end record;
 
-   SYST_CVR : aliased SYST_CVR_Type with
-      Address              => To_Address (SYST_CVR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYST_CVR : aliased SYST_CVR_Type
+      with Address              => To_Address (SYST_CVR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- B3.3.6 SysTick Calibration Value Register
 
@@ -540,17 +554,17 @@ package ARMv6M is
       Size      => 32;
    for SYST_CALIB_Type use
    record
-      TENMS    at 0 range 0 .. 23;
+      TENMS    at 0 range  0 .. 23;
       Reserved at 0 range 24 .. 29;
       SKEW     at 0 range 30 .. 30;
       NOREF    at 0 range 31 .. 31;
    end record;
 
-   SYST_CALIB : aliased SYST_CALIB_Type with
-      Address              => To_Address (SYST_CALIB_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYST_CALIB : aliased SYST_CALIB_Type
+      with Address              => To_Address (SYST_CALIB_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- B3.4 Nested Vectored Interrupt Controller, NVIC
@@ -561,11 +575,13 @@ package ARMv6M is
    -- B3.4.5 Interrupt Set-Pending Registers, NVIC_ISPR
    -- B3.4.6 Interrupt Clear-Pending Registers, NVIC_ICPR
 
-   type NVIC_Bitmap_Type is new Bitmap_32 with Volatile_Full_Access => True;
+   type NVIC_Bitmap_Type is new Bitmap_32
+      with Volatile_Full_Access => True;
 
    -- B3.4.7 Interrupt Priority Registers, NVIC_IPR0 - NVIC_IPR7
 
-   type NVIC_IPR_Type is array (0 .. 3) of Unsigned_8 with Volatile_Full_Access => True;
+   type NVIC_IPR_Type is array (0 .. 3) of Unsigned_8
+      with Volatile_Full_Access => True;
 
    type NVIC_IPR_Array_Type is array (Natural range <>) of NVIC_IPR_Type;
 
@@ -576,31 +592,31 @@ package ARMv6M is
    NVIC_IABR_ADDRESS : constant := 16#E000_E300#;
    NVIC_IPR_ADDRESS  : constant := 16#E000_E400#;
 
-   NVIC_ISER : aliased NVIC_Bitmap_Type with
-      Address    => To_Address (NVIC_ISER_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   NVIC_ICER : aliased NVIC_Bitmap_Type with
-      Address    => To_Address (NVIC_ICER_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   NVIC_ISPR : aliased NVIC_Bitmap_Type with
-      Address    => To_Address (NVIC_ISPR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   NVIC_ICPR : aliased NVIC_Bitmap_Type with
-      Address    => To_Address (NVIC_ICPR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   NVIC_IPR  : aliased NVIC_IPR_Array_Type (0 .. 7) with
-      Address    => To_Address (NVIC_IPR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   NVIC_ISER : aliased NVIC_Bitmap_Type
+      with Address    => To_Address (NVIC_ISER_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   NVIC_ICER : aliased NVIC_Bitmap_Type
+      with Address    => To_Address (NVIC_ICER_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   NVIC_ISPR : aliased NVIC_Bitmap_Type
+      with Address    => To_Address (NVIC_ISPR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   NVIC_ICPR : aliased NVIC_Bitmap_Type
+      with Address    => To_Address (NVIC_ICPR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   NVIC_IPR  : aliased NVIC_IPR_Array_Type (0 .. 7)
+      with Address    => To_Address (NVIC_IPR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- C1.6 Debug system registers
@@ -618,16 +634,16 @@ package ARMv6M is
       Size      => 32;
    for SHCSR_Type use
    record
-      Reserved1    at 0 range 0 .. 14;
+      Reserved1    at 0 range  0 .. 14;
       SVCALLPENDED at 0 range 15 .. 15;
       Reserved2    at 0 range 16 .. 31;
    end record;
 
-   SHCSR : aliased SHCSR_Type with
-      Address              => To_Address (SHCSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SHCSR : aliased SHCSR_Type
+      with Address              => To_Address (SHCSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- C1.6.2 Debug Fault Status Register, DFSR
 
@@ -644,63 +660,63 @@ package ARMv6M is
       Size      => 32;
    for DFSR_Type use
    record
-      HALTED   at 0 range 0 .. 0;
-      BKPT     at 0 range 1 .. 1;
-      DWTTRAP  at 0 range 2 .. 2;
-      VCATCH   at 0 range 3 .. 3;
-      EXTERNAL at 0 range 4 .. 4;
+      HALTED   at 0 range 0 ..  0;
+      BKPT     at 0 range 1 ..  1;
+      DWTTRAP  at 0 range 2 ..  2;
+      VCATCH   at 0 range 3 ..  3;
+      EXTERNAL at 0 range 4 ..  4;
       Reserved at 0 range 5 .. 31;
    end record;
 
-   DFSR : aliased DFSR_Type with
-      Address              => To_Address (DFSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   DFSR : aliased DFSR_Type
+      with Address              => To_Address (DFSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Generic definitions
    ----------------------------------------------------------------------------
 
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Specific definitions
    ----------------------------------------------------------------------------
 
-   procedure WFI with
-      Inline => True;
-   procedure DMB with
-      Inline => True;
-   procedure DSB with
-      Inline => True;
-   procedure ISB with
-      Inline => True;
+   procedure WFI
+      with Inline => True;
+   procedure DMB
+      with Inline => True;
+   procedure DSB
+      with Inline => True;
+   procedure ISB
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   procedure Fault_Irq_Enable with
-      Inline => True;
-   procedure Fault_Irq_Disable with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   procedure Fault_Irq_Enable
+      with Inline => True;
+   procedure Fault_Irq_Disable
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
    ----------------------------------------------------------------------------
 
-   procedure Memory_Synchronization with
-      Inline        => True,
-      Export        => True,
-      Convention    => C,
-      External_Name => "__sync_synchronize";
+   procedure Memory_Synchronization
+      with Inline        => True,
+           Export        => True,
+           Convention    => C,
+           External_Name => "__sync_synchronize";
 
 end ARMv6M;
