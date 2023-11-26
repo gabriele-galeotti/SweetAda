@@ -1196,12 +1196,18 @@ endif
 .PHONY: configure-gnatadc
 configure-gnatadc: $(GNATADC_FILENAME)
 $(GNATADC_FILENAME): $(CONFIGURE_DEPS) $(GNATADC_FILENAME).in
+ifneq ($(RTS_INSTALLED),Y)
+	$(error Error: no RTS available)
+endif
 	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
 
 ifeq ($(BUILD_MODE),GPRbuild)
 .PHONY: configure-gpr
 configure-gpr: $(CONFIGUREGPR_FILENAME)
 $(CONFIGUREGPR_FILENAME): $(CONFIGURE_DEPS)
+ifneq ($(RTS_INSTALLED),Y)
+	$(error Error: no RTS available)
+endif
 	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
 endif
 
