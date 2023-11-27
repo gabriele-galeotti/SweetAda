@@ -4,8 +4,9 @@ package Configure is
    pragma Pure;
 
    -- PLATFORM and CPU definitions
-   PLATFORM : constant String := "ArduinoUNO";
-   CPU      : constant String := "@CPU@";
+   PLATFORM  : constant String := "ArduinoUNO";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
    CLOCK_XTAL : constant := 16_000_000;

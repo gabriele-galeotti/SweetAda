@@ -15,7 +15,7 @@ CPU_MODEL := ATMEGA328P
 
 GCC_SWITCHES_PLATFORM     := -mmcu=atmega328p -Wa,-mmcu=atmega328p
 STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      := -m avr5
+LD_SWITCHES_PLATFORM      := -m avr5 --undefined=vectors
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
 # override default filename

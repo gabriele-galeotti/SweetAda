@@ -10,13 +10,16 @@
 
 #define __ASSEMBLER__ 1
 
-////////////////////////////////////////////////////////////////////////////////
+#include <avr.h>
 
-#define SREG 0x3F
+////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .vectors,"ax"
 
-                // vector #1 is RESET @ 0x0000
+                .global vectors
+vectors:
+
+                // vector #1 @0x0000 is RESET
 reset:
                 .extern _start
                 rjmp    _start
