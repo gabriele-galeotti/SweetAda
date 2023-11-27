@@ -8,8 +8,9 @@ package Configure is
    use Definitions;
 
    -- PLATFORM and CPU definitions
-   PLATFORM : constant String := "QEMU-AVR";
-   CPU      : constant String := "@CPU@";
+   PLATFORM  : constant String := "QEMU-AVR";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
    CLK_FREQUENCY : constant := 16 * MHz1;

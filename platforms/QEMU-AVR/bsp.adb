@@ -18,7 +18,7 @@
 with System;
 with System.Parameters;
 with System.Secondary_Stack;
-with System.Storage_Elements;
+with Configure;
 with Definitions;
 with Bits;
 with ATmega328P;
@@ -34,8 +34,6 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -122,7 +120,7 @@ package body BSP is
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
-      Console.Print ("AVR ATmega328P (QEMU emulator)", NL => True);
+      Console.Print ("AVR " & Configure.CPU_MODEL & " (QEMU emulator)", NL => True);
       -- setup GPIO PIN 13 ----------------------------------------------------
       DDRB := (DDB5 => True, others => False);
       -------------------------------------------------------------------------
