@@ -35,6 +35,23 @@ function ExitWithCode
 }
 
 ################################################################################
+# GetEnvVar()                                                                  #
+#                                                                              #
+################################################################################
+function GetEnvVar
+{
+  param([string]$varname)
+  if (-not (Test-Path env:$varname))
+  {
+    return [string]::Empty
+  }
+  else
+  {
+    return (Get-Item env:$varname).Value
+  }
+}
+
+################################################################################
 # SetTimeOfSymlink()                                                           #
 #                                                                              #
 ################################################################################
@@ -121,7 +138,7 @@ function SetTimeOfSymlink
 ################################################################################
 
 # check environment variable for verbosity
-$verbose = $env:VERBOSE
+$verbose = $(GetEnvVar VERBOSE)
 
 # parse command line arguments
 $fileindex = 0
