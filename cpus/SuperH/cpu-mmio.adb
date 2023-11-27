@@ -43,7 +43,10 @@ package body CPU.MMIO is
    --                                                                        --
    --========================================================================--
 
-   function Read_U8 (Memory_Address : System.Address) return Interfaces.Unsigned_8 is
+   function Read_U8
+      (Memory_Address : System.Address)
+      return Interfaces.Unsigned_8
+      is
       Result : Interfaces.Unsigned_8;
    begin
       Asm (
@@ -58,7 +61,10 @@ package body CPU.MMIO is
       return Result;
    end Read_U8;
 
-   function Read_U16 (Memory_Address : System.Address) return Interfaces.Unsigned_16 is
+   function Read_U16
+      (Memory_Address : System.Address)
+      return Interfaces.Unsigned_16
+      is
       Result : Interfaces.Unsigned_16;
    begin
       Asm (
@@ -73,7 +79,10 @@ package body CPU.MMIO is
       return Result;
    end Read_U16;
 
-   function Read_U32 (Memory_Address : System.Address) return Interfaces.Unsigned_32 is
+   function Read_U32
+      (Memory_Address : System.Address)
+      return Interfaces.Unsigned_32
+      is
       Result : Interfaces.Unsigned_32;
    begin
       Asm (
@@ -88,7 +97,10 @@ package body CPU.MMIO is
       return Result;
    end Read_U32;
 
-   function Read_U64 (Memory_Address : System.Address) return Interfaces.Unsigned_64 is
+   function Read_U64
+      (Memory_Address : System.Address)
+      return Interfaces.Unsigned_64
+      is
    begin
       return Bits.Make_Word (Read_U32 (Memory_Address), Read_U32 (Memory_Address + 4));
    end Read_U64;

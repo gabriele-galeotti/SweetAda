@@ -44,7 +44,8 @@ package body SH7750 is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -60,7 +61,8 @@ package body SH7750 is
    ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
+   procedure BREAKPOINT
+      is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -76,7 +78,9 @@ package body SH7750 is
    ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
+   procedure Asm_Call
+      (Target_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                    & CRLF &
@@ -94,7 +98,9 @@ package body SH7750 is
    -- Status Register Read/Write
    ----------------------------------------------------------------------------
 
-   function SR_Read return SR_Type is
+   function SR_Read
+      return SR_Type
+      is
       Value : Unsigned_32;
       function To_SR is new Ada.Unchecked_Conversion (Unsigned_32, SR_Type);
    begin
@@ -110,7 +116,9 @@ package body SH7750 is
       return To_SR (Value);
    end SR_Read;
 
-   procedure SR_Write (Value : in SR_Type) is
+   procedure SR_Write
+      (Value : in SR_Type)
+      is
       function To_U32 is new Ada.Unchecked_Conversion (SR_Type, Unsigned_32);
    begin
       Asm (

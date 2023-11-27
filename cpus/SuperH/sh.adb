@@ -45,7 +45,8 @@ package body SH is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -62,22 +63,28 @@ package body SH is
    -- Interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       null; -- __TBD__
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       null; -- __TBD__
    end Irq_Disable;
 
-   function Irq_State_Get return Irq_State_Type is
+   function Irq_State_Get
+      return Irq_State_Type
+      is
    begin
       return 0; -- __TBD__
    end Irq_State_Get;
 
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
    begin
       null; -- __TBD__
    end Irq_State_Set;
@@ -86,7 +93,10 @@ package body SH is
    -- Locking subprograms
    ----------------------------------------------------------------------------
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) is
+   procedure Lock_Try
+      (Lock_Object : in out Lock_Type;
+       Success     :    out Boolean)
+      is
       Lock_Flag : CPU_Integer;
    begin
       Asm (
@@ -106,7 +116,9 @@ package body SH is
       Success := Lock_Flag = 0;
    end Lock_Try;
 
-   procedure Lock (Lock_Object : in out Lock_Type) is
+   procedure Lock
+      (Lock_Object : in out Lock_Type)
+      is
       Success : Boolean;
    begin
       loop
@@ -115,7 +127,9 @@ package body SH is
       end loop;
    end Lock;
 
-   procedure Unlock (Lock_Object : out Lock_Type) is
+   procedure Unlock
+      (Lock_Object : out Lock_Type)
+      is
    begin
       Lock_Object.Lock := LOCK_UNLOCK;
    end Unlock;

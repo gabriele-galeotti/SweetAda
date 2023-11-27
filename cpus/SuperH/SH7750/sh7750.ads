@@ -46,12 +46,13 @@ package SH7750 is
 
    BREAKPOINT_Asm_String : constant String := ".word   0xC3C3";
 
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- SH4 registers
@@ -139,10 +140,12 @@ package SH7750 is
       Reserved4 at 0 range 31 .. 31;
    end record;
 
-   function SR_Read return SR_Type with
-      Inline => True;
-   procedure SR_Write (Value : in SR_Type) with
-      Inline => True;
+   function SR_Read
+      return SR_Type
+      with Inline => True;
+   procedure SR_Write
+      (Value : in SR_Type)
+      with Inline => True;
 
    -- Floating-point status/control register, FPSCR
 
@@ -350,11 +353,11 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
 
    TMU_BASEADDRESS : constant := 16#FFD8_0000#; -- P4 area
 
-   TMU : aliased TMU_Type with
-      Address    => To_Address (TMU_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   TMU : aliased TMU_Type
+      with Address    => To_Address (TMU_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Section 16 Serial Communication Interface with FIFO (SCIF)
@@ -613,10 +616,10 @@ pragma Warnings (On, "* bits of ""SCIF_Type"" unused");
 
    SCIF_BASEADDRESS : constant := 16#FFE8_0000#; -- P4 area
 
-   SCIF : aliased SCIF_Type with
-      Address    => To_Address (SCIF_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SCIF : aliased SCIF_Type
+      with Address    => To_Address (SCIF_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end SH7750;

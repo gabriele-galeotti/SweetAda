@@ -62,7 +62,7 @@ package SH7032 is
       Size      => 16;
    for Bus_Control_Register_Type use
    record
-      Reserved at 0 range 0 .. 10;
+      Reserved at 0 range  0 .. 10;
       BAS      at 0 range 11 .. 11;
       RDDTY    at 0 range 12 .. 12;
       WARP     at 0 range 13 .. 13;
@@ -72,11 +72,11 @@ package SH7032 is
 
    BCR_ADDRESS : constant := 16#05FF_FFA0#;
 
-   BCR : aliased Bus_Control_Register_Type with
-      Address              => To_Address (BCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   BCR : aliased Bus_Control_Register_Type
+      with Address              => To_Address (BCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Section 13 Serial Communication Interface (SCI)
@@ -142,16 +142,16 @@ package SH7032 is
       RDR at 5 range 0 .. 7;
    end record;
 
-   SCI0 : aliased SCI_Type with
-      Address    => To_Address (16#05FF_FEC0#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SCI0 : aliased SCI_Type
+      with Address    => To_Address (16#05FF_FEC0#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   SCI1 : aliased SCI_Type with
-      Address    => To_Address (16#05FF_FEC8#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SCI1 : aliased SCI_Type
+      with Address    => To_Address (16#05FF_FEC8#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end SH7032;

@@ -35,8 +35,8 @@ package SH is
    -- Generic definitions
    ----------------------------------------------------------------------------
 
-   procedure NOP with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -44,14 +44,16 @@ package SH is
 
    type Irq_State_Type is new Integer;
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   function Irq_State_Get return Irq_State_Type with
-      Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   function Irq_State_Get
+      return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
@@ -66,8 +68,12 @@ package SH is
    end record with
       Size => CPU_Unsigned'Size;
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean);
-   procedure Lock (Lock_Object : in out Lock_Type);
-   procedure Unlock (Lock_Object : out Lock_Type);
+   procedure Lock_Try
+      (Lock_Object : in out Lock_Type;
+       Success     :    out Boolean);
+   procedure Lock
+      (Lock_Object : in out Lock_Type);
+   procedure Unlock
+      (Lock_Object : out Lock_Type);
 
 end SH;

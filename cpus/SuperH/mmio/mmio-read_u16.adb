@@ -18,7 +18,10 @@
 with CPU.MMIO;
 
 separate (MMIO)
-function Read_U16 (Memory_Address : System.Address) return Interfaces.Unsigned_16 is
+function Read_U16
+   (Memory_Address : System.Address)
+   return Interfaces.Unsigned_16
+   is
 begin
    return CPU.MMIO.Read_U16 (Memory_Address);
 end Read_U16;
