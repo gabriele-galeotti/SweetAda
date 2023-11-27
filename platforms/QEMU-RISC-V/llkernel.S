@@ -28,12 +28,51 @@
 
                 .sect   .vectors,"ax"
 
-                .align  8
+                .align  2
 
                 .global vectors
 vectors:
+                // offset 0x00 User Software Interrupt
+                .align  2
+vector_usi:     j       exc_handler
+                // offset 0x04 Supervisor Software Interrupt
+                .align  2
+vector_ssi:     j       exc_handler
+                // offset 0x08 -
+                .align  2
+                .space  4
+                // offset 0x0C Machine Software Interrupt
+                .align  2
+vector_msi:     j       exc_handler
+                // offset 0x10 User Timer Interrupt
+                .align  2
+vector_uti:     j       exc_handler
+                // offset 0x14 Supervisor Timer Interrupt
+                .align  2
+vector_sti:     j       exc_handler
+                // offset 0x18 -
+                .align  2
+                .space  4
+                // offset 0x1C Machine Timer Interrupt
+                .align  2
+vector_mti:     j       exc_handler
+                // offset 0x20 User External Interrupt
+                .align  2
+vector_uei:     j       exc_handler
+                // offset 0x24 Supervisor External Interrupt
+                .align  2
+vector_sei:     j       exc_handler
+                // offset 0x28 -
+                .align  2
+                .space  4
+                // offset 0x2C Machine External Interrupt
+                .align  2
+vector_mei:     j       exc_handler
 
+                .align  2
+                .space  4 * 4
 
+exc_handler:
                 addi    sp,sp,-256
                 SAVEREG ra,(0*X2)(sp)
                 //SAVEREG sp,(4*X2)(sp)

@@ -15,8 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Machine_Code;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with LLutils;
@@ -37,8 +35,6 @@ package body Exceptions is
    --                                                                        --
    --========================================================================--
 
-   use System.Machine_Code;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
    use RISCV;
@@ -84,7 +80,7 @@ package body Exceptions is
               External_Name => "vectors";
    begin
       mtvec_Write ((
-         MODE => MODE_Direct,
+         MODE => MODE_Vectored,
          BASE => mtvec_BASE_Type (LLutils.Select_Address_Bits (
                     Vectors'Address,
                     mtvec_BASE_ADDRESS_LSB,
