@@ -17,7 +17,6 @@
 
 with System;
 with Ada.Unchecked_Conversion;
-with Interfaces;
 with Bits;
 
 package ARMv4 is
@@ -33,7 +32,6 @@ package ARMv4 is
    pragma Preelaborate;
 
    use System;
-   use Interfaces;
    use Bits;
 
    ----------------------------------------------------------------------------
@@ -89,7 +87,7 @@ package ARMv4 is
    subtype Register_Number_Type is Natural range R0 .. CPSR;
 
    ----------------------------------------------------------------------------
-   -- CPSR
+   -- A2.5 Program status registers
    ----------------------------------------------------------------------------
 
    type CPU_Mode_Type is new Bits_5;
