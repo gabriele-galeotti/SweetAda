@@ -37,7 +37,32 @@ package ATmega128A is
    -- CPU control
    ----------------------------------------------------------------------------
 
-   -- Status Register
+   -- 16.2.1. MCUCR – MCU Control Register
+
+   type MCUCR_Type is
+   record
+      IVCE     : Boolean;     -- Interrupt Vector Change Enable
+      IVSEL    : Boolean;     -- Interrupt Vector Select
+      Reserved : Bits_6 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for MCUCR_Type use
+   record
+      IVCE     at 0 range 0 .. 0;
+      IVSEL    at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 7;
+   end record;
+
+   MCUCR_ADDRESS : constant := 16#55#;
+
+   MCUCR : aliased MCUCR_Type with
+      Address              => To_Address (MCUCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 11.3.1. SREG – The AVR Status Register
 
    type SREG_Type is
    record
@@ -76,7 +101,7 @@ package ATmega128A is
    -- I/O Ports
    ----------------------------------------------------------------------------
 
-   -- Port A
+   -- 18.4.2. PORTA – Port A Data Register
 
    type PORTA_Type is
    record
@@ -111,6 +136,8 @@ package ATmega128A is
       Import               => True,
       Convention           => Ada;
 
+   -- 18.4.3. DDRA – Port A Data Direction Register
+
    type DDRA_Type is
    record
       DDA0 : Boolean;
@@ -143,6 +170,8 @@ package ATmega128A is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   -- 18.4.4. PINA – Port A Input Pins Address
 
    type PINA_Type is
    record
@@ -177,7 +206,7 @@ package ATmega128A is
       Import               => True,
       Convention           => Ada;
 
-   -- Port B
+   -- 18.4.5. PORTB – The Port B Data Register
 
    type PORTB_Type is
    record
@@ -212,6 +241,8 @@ package ATmega128A is
       Import               => True,
       Convention           => Ada;
 
+   -- 18.4.6. DDRB – The Port B Data Direction Register
+
    type DDRB_Type is
    record
       DDB0 : Boolean;
@@ -244,6 +275,8 @@ package ATmega128A is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   -- 18.4.7. PINB – The Port B Input Pins Address
 
    type PINB_Type is
    record
@@ -278,7 +311,7 @@ package ATmega128A is
       Import               => True,
       Convention           => Ada;
 
-   -- Port C
+   -- 18.4.8. PORTC – The Port C Data Register
 
    type PORTC_Type is
    record
@@ -313,6 +346,8 @@ package ATmega128A is
       Import               => True,
       Convention           => Ada;
 
+   -- 18.4.9. DDRC – The Port C Data Direction Register
+
    type DDRC_Type is
    record
       DDC0   : Boolean;
@@ -345,6 +380,8 @@ package ATmega128A is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   -- 18.4.10. PINC – The Port C Input Pins Address
 
    type PINC_Type is
    record
@@ -379,7 +416,7 @@ package ATmega128A is
       Import               => True,
       Convention           => Ada;
 
-   -- Port D
+   -- 18.4.11. PORTD – The Port D Data Register
 
    type PORTD_Type is
    record
@@ -414,6 +451,8 @@ package ATmega128A is
       Import               => True,
       Convention           => Ada;
 
+   -- 18.4.12. DDRD – The Port D Data Direction Register
+
    type DDRD_Type is
    record
       DDD0 : Boolean;
@@ -446,6 +485,8 @@ package ATmega128A is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   -- 18.4.13. PIND – The Port D Input Pins Address
 
    type PIND_Type is
    record
