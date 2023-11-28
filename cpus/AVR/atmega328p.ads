@@ -39,7 +39,7 @@ package ATmega328P is
    -- CPU control
    ----------------------------------------------------------------------------
 
-   -- Sleep Mode Control Register
+   -- 9.11.1 SMCR – Sleep Mode Control Register
 
    Idle                : constant := 2#000#;
    ADC_Noise_Reduction : constant := 2#001#;
@@ -71,7 +71,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- MCU Status Register
+   -- 10.9.1 MCUSR – MCU Status Register
 
    type MCUSR_Type is
    record
@@ -100,7 +100,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- MCU Control Register
+   -- 9.11.2 MCUCR – MCU Control Register
 
    type MCUCR_Type is
    record
@@ -133,7 +133,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Status Register
+   -- 6.3.1 SREG – AVR Status Register
 
    type SREG_Type is
    record
@@ -168,7 +168,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Watchdog Timer Control Register
+   -- 10.9.2 WDTCSR – Watchdog Timer Control Register
 
    type WDT_Prescaler_Type is
    record
@@ -216,7 +216,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Oscillator Calibration Register
+   -- 8.12.1 OSCCAL – Oscillator Calibration Register
 
    OSCCAL_ADDRESS : constant := 16#66#;
 
@@ -226,7 +226,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Clock Prescale Register
+   -- 8.12.2 CLKPR – Clock Prescale Register
 
    Clock_Prescaler_1   : constant := 2#0000#;
    Clock_Prescaler_2   : constant := 2#0001#;
@@ -261,7 +261,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Power Reduction Register
+   -- 9.11.3 PRR – Power Reduction Register
 
    type PRR_Type is
    record
@@ -363,7 +363,7 @@ package ATmega328P is
    -- General Purpose Registers
    ----------------------------------------------------------------------------
 
-   -- General Purpose I/O Register 0
+   -- 7.6.6 GPIOR0 – General Purpose I/O Register 0
 
    GPIOR0_ADDRESS : constant := 16#3E#;
 
@@ -373,7 +373,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- General Purpose I/O Register 1
+   -- 7.6.5 GPIOR1 – General Purpose I/O Register 1
 
    GPIOR1_ADDRESS : constant := 16#4A#;
 
@@ -383,7 +383,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- General Purpose I/O Register 2
+   -- 7.6.4 GPIOR2 – General Purpose I/O Register 2
 
    GPIOR2_ADDRESS : constant := 16#4B#;
 
@@ -397,7 +397,7 @@ package ATmega328P is
    -- Timer/Counter0
    ----------------------------------------------------------------------------
 
-   -- Timer/Counter0 Control Register A
+   -- 14.9.1 TCCR0A – Timer/Counter Control Register A
 
    type TC0_WGM_Type is
    record
@@ -441,7 +441,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter0 Control Register B
+   -- 14.9.2 TCCR0B – Timer/Counter Control Register B
 
    TC0_Clock_Select_NOCLK   : constant := 2#000#;
    TC0_Clock_Select_CLK     : constant := 2#001#;
@@ -479,7 +479,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter0 Register
+   -- 14.9.3 TCNT0 – Timer/Counter Register
 
    TCNT0_ADDRESS : constant := 16#46#;
 
@@ -489,7 +489,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Output Compare Register A
+   -- 14.9.4 OCR0A – Output Compare Register A
 
    OCR0A_ADDRESS : constant := 16#47#;
 
@@ -499,7 +499,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Output Compare Register B
+   -- 14.9.5 OCR0B – Output Compare Register B
 
    OCR0B_ADDRESS : constant := 16#48#;
 
@@ -509,7 +509,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter0 Interrupt Mask Register
+   -- 14.9.6 TIMSK0 – Timer/Counter Interrupt Mask Register
 
    type TIMSK0_Type is
    record
@@ -536,7 +536,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter0 Interrupt Flag Register
+   -- 14.9.7 TIFR0 - Timer/Counter0 Interrupt Flag Register
 
    type TIFR0_Type is
    record
@@ -567,7 +567,7 @@ package ATmega328P is
    -- Timer/Counter1
    ----------------------------------------------------------------------------
 
-   -- Timer/Counter1 Control Register A
+   -- 15.11.1 TCCR1A – Timer/Counter1 Control Register A
 
    type TC1_WGM_Type is
    record
@@ -620,7 +620,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter1 Control Register B
+   -- 15.11.2 TCCR1B – Timer/Counter1 Control Register B
 
    TC1_Clock_Select_NOCLK   : constant := 2#000#;
    TC1_Clock_Select_CLK     : constant := 2#001#;
@@ -658,7 +658,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter1 Control Register C
+   -- 15.11.3 TCCR1C - Timer/Counter1 Control Register C
 
    type TCCR1C_Type is
    record
@@ -683,7 +683,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter1 Register
+   -- 15.11.4 TCNT1H and TCNT1L – Timer/Counter1
 
    TCNT1L_ADDRESS : constant := 16#84#;
 
@@ -701,7 +701,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Output Compare Register 1 A
+   -- 15.11.5 OCR1AH and OCR1AL – Output Compare Register 1 A
 
    OCR1AL_ADDRESS : constant := 16#88#;
 
@@ -719,7 +719,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Output Compare Register 1 B
+   -- 15.11.6 OCR1BH and OCR1BL – Output Compare Register 1 B
 
    OCR1BL_ADDRESS : constant := 16#8A#;
 
@@ -737,7 +737,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Input Capture Register 1
+   -- 15.11.7 ICR1H and ICR1L – Input Capture Register 1
 
    ICR1L_ADDRESS : constant := 16#86#;
 
@@ -755,7 +755,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter1 Interrupt Mask Register
+   -- 15.11.8 TIMSK1 - Timer/Counter1 Interrupt Mask Register
 
    type TIMSK1_Type is
    record
@@ -786,7 +786,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter1 Interrupt Flag Register
+   -- 15.11.9 TIFR1 – Timer/Counter1 Interrupt Flag Register
 
    type TIFR1_Type is
    record
@@ -821,7 +821,7 @@ package ATmega328P is
    -- Timer/Counter2
    ----------------------------------------------------------------------------
 
-   -- Timer/Counter2 Control Register A
+   -- 17.11.1 TCCR2A – Timer/Counter Control Register A
 
    type TC2_WGM_Type is
    record
@@ -865,7 +865,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter2 Control Register B
+   -- 17.11.2 TCCR2B – Timer/Counter Control Register B
 
    TC2_Clock_Select_NOCLK   : constant := 2#000#;
    TC2_Clock_Select_CLK     : constant := 2#001#;
@@ -903,7 +903,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter2 Register
+   -- 17.11.3 TCNT2 – Timer/Counter Register
 
    TCNT2_ADDRESS : constant := 16#B2#;
 
@@ -913,7 +913,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Output Compare Register A
+   -- 17.11.4 OCR2A – Output Compare Register A
 
    OCR2A_ADDRESS : constant := 16#B3#;
 
@@ -923,7 +923,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Output Compare Register B
+   -- 17.11.5 OCR2B – Output Compare Register B
 
    OCR2B_ADDRESS : constant := 16#B4#;
 
@@ -933,7 +933,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter2 Interrupt Mask Register
+   -- 17.11.6 TIMSK2 – Timer/Counter2 Interrupt Mask Register
 
    type TIMSK2_Type is
    record
@@ -960,7 +960,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Timer/Counter2 Interrupt Flag Register
+   -- 17.11.7 TIFR2 – Timer/Counter2 Interrupt Flag Register
 
    type TIFR2_Type is
    record
@@ -987,7 +987,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Asynchronous Status Register
+   -- 17.11.8 ASSR – Asynchronous Status Register
 
    type ASSR_Type is
    record
@@ -1022,7 +1022,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- General Timer/Counter Control Register
+   -- 17.11.9 GTCCR – General Timer/Counter Control Register
 
    type GTCCR_Type is
    record
@@ -1053,7 +1053,7 @@ package ATmega328P is
    -- I/O Ports
    ----------------------------------------------------------------------------
 
-   -- Port B
+   -- 13.4.2 PORTB – The Port B Data Register
 
    type PORTB_Type is
    record
@@ -1088,6 +1088,8 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
+   -- 13.4.3 DDRB – The Port B Data Direction Register
+
    type DDRB_Type is
    record
       DDB0 : Boolean;
@@ -1120,6 +1122,8 @@ package ATmega328P is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   -- 13.4.4 PINB – The Port B Input Pins Address
 
    type PINB_Type is
    record
@@ -1154,7 +1158,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Port C
+   -- 13.4.5 PORTC – The Port C Data Register
 
    type PORTC_Type is
    record
@@ -1189,6 +1193,8 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
+   -- 13.4.6 DDRC – The Port C Data Direction Register
+
    type DDRC_Type is
    record
       DDC0   : Boolean;
@@ -1221,6 +1227,8 @@ package ATmega328P is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   -- 13.4.7 PINC – The Port C Input Pins Address
 
    type PINC_Type is
    record
@@ -1255,7 +1263,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- Port D
+   -- 13.4.8 PORTD – The Port D Data Register
 
    type PORTD_Type is
    record
@@ -1290,6 +1298,8 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
+   -- 13.4.9 DDRD – The Port D Data Direction Register
+
    type DDRD_Type is
    record
       DDD0 : Boolean;
@@ -1322,6 +1332,8 @@ package ATmega328P is
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
+
+   -- 13.4.10 PIND – The Port D Input Pins Address
 
    type PIND_Type is
    record
@@ -1388,7 +1400,7 @@ package ATmega328P is
    UMSEL_Reserved     : constant := 2#10#;
    UMSEL_Master_SPI   : constant := 2#11#;
 
-   -- USART Control and Status Register A
+   -- 19.10.2 UCSRnA – USART Control and Status Register n A
 
    type UCSR0A_Type is
    record
@@ -1423,7 +1435,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- USART Control and Status Register B
+   -- 19.10.3 UCSRnB – USART Control and Status Register n B
 
    type UCSR0B_Type is
    record
@@ -1458,7 +1470,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- USART Control and Status Register C
+   -- 19.10.4 UCSRnC - USART Control and Status Register n C
 
    type UCSR0C_Type is
    record
@@ -1487,7 +1499,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- USART Baud Rate Register low byte
+   -- 19.10.5 UBRRnL and UBRRnH – USART Baud Rate Registers
 
    UBRR0L_ADDRESS : constant := 16#C4#;
 
@@ -1497,8 +1509,6 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- USART Baud Rate Register high byte
-
    UBRR0H_ADDRESS : constant := 16#C5#;
 
    UBRR0H : aliased Unsigned_8 with
@@ -1507,7 +1517,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- USART I/O Data Register
+   -- 19.10.1 UDRn – USART I/O Data Register n
 
    UDR0_ADDRESS : constant := 16#C6#;
 
@@ -1521,7 +1531,7 @@ package ATmega328P is
    -- SPI
    ----------------------------------------------------------------------------
 
-   -- SPI Control Register
+   -- 18.5.1 SPCR – SPI Control Register
 
    SPR_DIV4   : constant := 2#00#; -- fOSC/4
    SPR_DIV16  : constant := 2#01#; -- fOSC/16
@@ -1571,7 +1581,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- SPI Status Register
+   -- 18.5.2 SPSR – SPI Status Register
 
    type SPSR_Type is
    record
@@ -1598,7 +1608,7 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- SPI I/O Data Register
+   -- 18.5.3 SPDR – SPI Data Register
 
    SPDR_ADDRESS : constant := 16#4E#;
 
