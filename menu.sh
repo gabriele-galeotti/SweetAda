@@ -14,8 +14,6 @@
 # <action> = action to perform: "configure", "all", etc
 #
 # Environment variables:
-# OS
-# MSYSTEM
 # PLATFORM
 # SUBPLATFORM
 #
@@ -30,23 +28,6 @@ LOG_FILENAME=""
 if [ "x${LOG_FILENAME}" != "x" ] ; then
   rm -f "${LOG_FILENAME}"
   touch "${LOG_FILENAME}"
-fi
-if [ "x${OS}" = "xWindows_NT" ] ; then
-  if [ "x${MSYSTEM}" = "x" ] ; then
-    OSTYPE=cmd
-  else
-    OSTYPE=msys
-  fi
-else
-  OSTYPE_UNAME=$(uname -s 2> /dev/null)
-  if   [ "x${OSTYPE_UNAME}" = "xLinux" ] ; then
-    OSTYPE=linux
-  elif [ "x${OSTYPE_UNAME}" = "xDarwin" ] ; then
-    OSTYPE=darwin
-  else
-    log_print_error "${SCRIPT_FILENAME}: *** Error: no valid OSTYPE."
-    exit 1
-  fi
 fi
 
 ################################################################################
@@ -170,7 +151,6 @@ printf "%s\n" "Specify CPU=<cpu> TOOLCHAIN_NAME=<toolchain_name> RTS=<rts> (and"
 printf "%s\n" "optionally CPU_MODEL=<cpu_model>) in the environment variable space"
 printf "%s\n" "before executing the \"rts\" action."
 printf "%s\n" ""
-printf "%s\n" "OSTYPE:              ${OSTYPE}"
 printf "%s\n" "MAKE:                ${MAKE}"
 printf "%s\n" "default PLATFORM:    ${PLATFORM}"
 printf "%s\n" "default SUBPLATFORM: ${SUBPLATFORM}"
@@ -183,21 +163,9 @@ return 0
 #                                                                              #
 ################################################################################
 
-case ${OSTYPE} in
-  darwin)
-    # use SweetAda make (try a standard installation prefix)
-    SWEETADA_MAKE=/opt/sweetada/bin/make
-    if [ -e "${SWEETADA_MAKE}" ] ; then
-      MAKE="${SWEETADA_MAKE}"
-    else
-      MAKE="make"
-    fi
-    ;;
-  *)
-    # defaults to system make
-    MAKE="make"
-    ;;
-esac
+if [ "x${MAKE}" = "x" ] ; then
+  MAKE=make
+fi
 
 case $1 in
   "help")
