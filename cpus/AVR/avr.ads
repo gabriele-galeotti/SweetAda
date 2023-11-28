@@ -35,12 +35,13 @@ package AVR is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP with
-      Inline => True;
-   procedure RET with
-      Inline => True;
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure RET
+      with Inline => True;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -48,9 +49,9 @@ package AVR is
 
    subtype Irq_State_Type is Integer;
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
 
 end AVR;

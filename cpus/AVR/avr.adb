@@ -43,7 +43,8 @@ package body AVR is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -59,7 +60,8 @@ package body AVR is
    ----------------------------------------------------------------------------
    -- RET
    ----------------------------------------------------------------------------
-   procedure RET is
+   procedure RET
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -75,7 +77,9 @@ package body AVR is
    ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
+   procedure Asm_Call
+      (Target_Address : in Address)
+      is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -92,7 +96,8 @@ package body AVR is
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -105,7 +110,8 @@ package body AVR is
           );
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       Asm (
            Template => ""            & CRLF &
