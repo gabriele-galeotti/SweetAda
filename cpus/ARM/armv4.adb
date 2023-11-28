@@ -79,7 +79,7 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    procedure Irq_Enable
       is
-      CPSR_R : Bits_32;
+      CPSR_R : CPSR_Type;
    begin
       Asm (
            Template => ""                            & CRLF &
@@ -87,7 +87,7 @@ package body ARMv4 is
                        "        bic     %0,%0,#0x80" & CRLF &
                        "        msr     cpsr_c,%0  " & CRLF &
                        "",
-           Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
+           Outputs  => CPSR_Type'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True
@@ -99,7 +99,7 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    procedure Irq_Disable
       is
-      CPSR_R : Bits_32;
+      CPSR_R : CPSR_Type;
    begin
       Asm (
            Template => ""                            & CRLF &
@@ -107,7 +107,7 @@ package body ARMv4 is
                        "        orr     %0,%0,#0x80" & CRLF &
                        "        msr     cpsr_c,%0  " & CRLF &
                        "",
-           Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
+           Outputs  => CPSR_Type'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True
@@ -119,7 +119,7 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    procedure Fiq_Enable
       is
-      CPSR_R : Bits_32;
+      CPSR_R : CPSR_Type;
    begin
       Asm (
            Template => ""                            & CRLF &
@@ -127,7 +127,7 @@ package body ARMv4 is
                        "        bic     %0,%0,#0x40" & CRLF &
                        "        msr     cpsr_c,%0  " & CRLF &
                        "",
-           Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
+           Outputs  => CPSR_Type'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True
@@ -139,7 +139,7 @@ package body ARMv4 is
    ----------------------------------------------------------------------------
    procedure Fiq_Disable
       is
-      CPSR_R : Bits_32;
+      CPSR_R : CPSR_Type;
    begin
       Asm (
            Template => ""                            & CRLF &
@@ -147,7 +147,7 @@ package body ARMv4 is
                        "        orr     %0,%0,#0x40" & CRLF &
                        "        msr     cpsr_c,%0  " & CRLF &
                        "",
-           Outputs  => Bits_32'Asm_Output ("=r", CPSR_R),
+           Outputs  => CPSR_Type'Asm_Output ("=r", CPSR_R),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True
