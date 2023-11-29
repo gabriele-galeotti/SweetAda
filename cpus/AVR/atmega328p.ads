@@ -36,102 +36,8 @@ package ATmega328P is
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- CPU control
+   -- 6. AVR CPU Core
    ----------------------------------------------------------------------------
-
-   -- 9.11.1 SMCR – Sleep Mode Control Register
-
-   Idle                : constant := 2#000#;
-   ADC_Noise_Reduction : constant := 2#001#;
-   Power_Down          : constant := 2#010#;
-   Power_Save          : constant := 2#011#;
-   Standby             : constant := 2#110#;
-   External_Standby    : constant := 2#111#;
-
-   type SMCR_Type is
-   record
-      SE       : Boolean;     -- Sleep Enable
-      SM       : Bits_3;      -- Sleep Mode Select
-      Reserved : Bits_4 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SMCR_Type use
-   record
-      SE       at 0 range 0 .. 0;
-      SM       at 0 range 1 .. 3;
-      Reserved at 0 range 4 .. 7;
-   end record;
-
-   SMCR_ADDRESS : constant := 16#53#;
-
-   SMCR : aliased SMCR_Type with
-      Address              => To_Address (SMCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 10.9.1 MCUSR – MCU Status Register
-
-   type MCUSR_Type is
-   record
-      PORF     : Boolean;     -- Power-on reset flag
-      EXTRF    : Boolean;     -- External Reset flag
-      BORF     : Boolean;     -- Brown-out Reset flag
-      WDRF     : Boolean;     -- Watchdog Reset flag
-      Reserved : Bits_4 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MCUSR_Type use
-   record
-      PORF     at 0 range 0 .. 0;
-      EXTRF    at 0 range 1 .. 1;
-      BORF     at 0 range 2 .. 2;
-      WDRF     at 0 range 3 .. 3;
-      Reserved at 0 range 4 .. 7;
-   end record;
-
-   MCUSR_ADDRESS : constant := 16#54#;
-
-   MCUSR : aliased MCUSR_Type with
-      Address              => To_Address (MCUSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 9.11.2 MCUCR – MCU Control Register
-
-   type MCUCR_Type is
-   record
-      IVCE      : Boolean;
-      IVSEL     : Boolean;
-      Reserved1 : Bits_2 := 0;
-      PUD       : Boolean;
-      BODSE     : Boolean;     -- BOD Sleep Enable
-      BODS      : Boolean;     -- BOD Sleep
-      Reserved2 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MCUCR_Type use
-   record
-      IVCE      at 0 range 0 .. 0;
-      IVSEL     at 0 range 1 .. 1;
-      Reserved1 at 0 range 2 .. 3;
-      PUD       at 0 range 4 .. 4;
-      BODSE     at 0 range 5 .. 5;
-      BODS      at 0 range 6 .. 6;
-      Reserved2 at 0 range 7 .. 7;
-   end record;
-
-   MCUCR_ADDRESS : constant := 16#55#;
-
-   MCUCR : aliased MCUCR_Type with
-      Address              => To_Address (MCUCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
 
    -- 6.3.1 SREG – AVR Status Register
 
@@ -168,136 +74,8 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   -- 10.9.2 WDTCSR – Watchdog Timer Control Register
-
-   type WDT_Prescaler_Type is
-   record
-      WDP012 : Bits_3; -- Watchdog Timer Prescaler bit 0 .. 2
-      WDP3   : Bits_1; -- Watchdog Timer Prescaler bit 3
-   end record;
-
-   WDT_2K    : constant WDT_Prescaler_Type := (2#000#, 0);
-   WDT_4K    : constant WDT_Prescaler_Type := (2#001#, 0);
-   WDT_8K    : constant WDT_Prescaler_Type := (2#010#, 0);
-   WDT_16K   : constant WDT_Prescaler_Type := (2#011#, 0);
-   WDT_32K   : constant WDT_Prescaler_Type := (2#100#, 0);
-   WDT_64K   : constant WDT_Prescaler_Type := (2#101#, 0);
-   WDT_128K  : constant WDT_Prescaler_Type := (2#110#, 0);
-   WDT_256K  : constant WDT_Prescaler_Type := (2#111#, 0);
-   WDT_512K  : constant WDT_Prescaler_Type := (2#000#, 1);
-   WDT_1024K : constant WDT_Prescaler_Type := (2#001#, 1);
-
-   type WDTCSR_Type is
-   record
-      WDP012 : Bits_3;  -- Watchdog Timer Prescaler bit 0 .. 2
-      WDE    : Boolean; -- Watchdog Enable
-      WDCE   : Boolean; -- Watchdog Change Enable
-      WDP3   : Bits_1;  -- Watchdog Timer Prescaler bit 3
-      WDIE   : Boolean; -- Watchdog Timeout Interrupt Enable
-      WDIF   : Boolean; -- Watchdog Timeout Interrupt flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WDTCSR_Type use
-   record
-      WDP012 at 0 range 0 .. 2;
-      WDE    at 0 range 3 .. 3;
-      WDCE   at 0 range 4 .. 4;
-      WDP3   at 0 range 5 .. 5;
-      WDIE   at 0 range 6 .. 6;
-      WDIF   at 0 range 7 .. 7;
-   end record;
-
-   WDTCSR_ADDRESS : constant := 16#60#;
-
-   WDTCSR : aliased WDTCSR_Type with
-      Address              => To_Address (WDTCSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 8.12.1 OSCCAL – Oscillator Calibration Register
-
-   OSCCAL_ADDRESS : constant := 16#66#;
-
-   OSCCAL : Unsigned_8 with
-      Address              => To_Address (OSCCAL_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 8.12.2 CLKPR – Clock Prescale Register
-
-   Clock_Prescaler_1   : constant := 2#0000#;
-   Clock_Prescaler_2   : constant := 2#0001#;
-   Clock_Prescaler_4   : constant := 2#0010#;
-   Clock_Prescaler_8   : constant := 2#0011#;
-   Clock_Prescaler_16  : constant := 2#0100#;
-   Clock_Prescaler_32  : constant := 2#0101#;
-   Clock_Prescaler_64  : constant := 2#0110#;
-   Clock_Prescaler_128 : constant := 2#0111#;
-   Clock_Prescaler_256 : constant := 2#1000#;
-
-   type CLKPR_Type is
-   record
-      CLKPS    : Bits_4;      -- Clock Prescaler Select bit 0 .. 3
-      Reserved : Bits_3 := 0;
-      CLKPCE   : Boolean;     -- Clock Prescaler Change Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CLKPR_Type use
-   record
-      CLKPS    at 0 range 0 .. 3;
-      Reserved at 0 range 4 .. 6;
-      CLKPCE   at 0 range 7 .. 7;
-   end record;
-
-   CLKPR_ADDRESS : constant := 16#61#;
-
-   CLKPR : aliased CLKPR_Type with
-      Address              => To_Address (CLKPR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 9.11.3 PRR – Power Reduction Register
-
-   type PRR_Type is
-   record
-      PRADC    : Boolean;     -- Power Reduction ADC
-      PRUSART0 : Boolean;     -- Power Reduction USART
-      PRSPI    : Boolean;     -- Power Reduction Serial Peripheral Interface
-      PRTIM1   : Boolean;     -- Power Reduction Timer/Counter1
-      Reserved : Bits_1 := 0;
-      PRTIM0   : Boolean;     -- Power Reduction Timer/Counter0
-      PRTIM2   : Boolean;     -- Power Reduction Timer/Counter2
-      PRTWI    : Boolean;     -- Power Reduction TWI
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PRR_Type use
-   record
-      PRADC    at 0 range 0 .. 0;
-      PRUSART0 at 0 range 1 .. 1;
-      PRSPI    at 0 range 2 .. 2;
-      PRTIM1   at 0 range 3 .. 3;
-      Reserved at 0 range 4 .. 4;
-      PRTIM0   at 0 range 5 .. 5;
-      PRTIM2   at 0 range 6 .. 6;
-      PRTWI    at 0 range 7 .. 7;
-   end record;
-
-   PRR_ADDRESS : constant := 16#64#;
-
-   PRR : aliased PRR_Type with
-      Address              => To_Address (PRR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
    ----------------------------------------------------------------------------
-   -- EEPROM
+   -- 7. AVR Memories
    ----------------------------------------------------------------------------
 
    -- 7.6.3 EECR - The EEPROM Control Register
@@ -359,10 +137,6 @@ package ATmega328P is
       Import               => True,
       Convention           => Ada;
 
-   ----------------------------------------------------------------------------
-   -- General Purpose Registers
-   ----------------------------------------------------------------------------
-
    -- 7.6.6 GPIOR0 – General Purpose I/O Register 0
 
    GPIOR0_ADDRESS : constant := 16#3E#;
@@ -394,663 +168,242 @@ package ATmega328P is
       Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- Timer/Counter0
+   -- 8. System Clock and Clock Options
    ----------------------------------------------------------------------------
 
-   -- 14.9.1 TCCR0A – Timer/Counter Control Register A
+   -- 8.12.1 OSCCAL – Oscillator Calibration Register
 
-   type TC0_WGM_Type is
+   OSCCAL_ADDRESS : constant := 16#66#;
+
+   OSCCAL : Unsigned_8 with
+      Address              => To_Address (OSCCAL_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 8.12.2 CLKPR – Clock Prescale Register
+
+   Clock_Prescaler_1   : constant := 2#0000#;
+   Clock_Prescaler_2   : constant := 2#0001#;
+   Clock_Prescaler_4   : constant := 2#0010#;
+   Clock_Prescaler_8   : constant := 2#0011#;
+   Clock_Prescaler_16  : constant := 2#0100#;
+   Clock_Prescaler_32  : constant := 2#0101#;
+   Clock_Prescaler_64  : constant := 2#0110#;
+   Clock_Prescaler_128 : constant := 2#0111#;
+   Clock_Prescaler_256 : constant := 2#1000#;
+
+   type CLKPR_Type is
    record
-      WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
-      WGM2  : Bits_1; -- Waveform Generation Mode bit 2
-   end record;
-
-   TC0_WGM_Normal       : constant TC0_WGM_Type := (2#00#, 0);
-   TC0_WGM_PWM_Correct1 : constant TC0_WGM_Type := (2#01#, 0);
-   TC0_WGM_CTC          : constant TC0_WGM_Type := (2#10#, 0);
-   TC0_WGM_PWM_Fast1    : constant TC0_WGM_Type := (2#11#, 0);
-   TC0_WGM_PWM_Correct2 : constant TC0_WGM_Type := (2#01#, 1);
-   TC0_WGM_PWM_Fast2    : constant TC0_WGM_Type := (2#11#, 1);
-
-   type TCCR0A_Type is
-   record
-      WGM01    : Bits_2;      -- Waveform Generation Mode bit 0 .. 1
-      Reserved : Bits_2 := 0;
-      COM0B0   : Boolean;     -- Compare Match Output B Mode bit 0
-      COM0B1   : Boolean;     -- Compare Match Output B Mode bit 1
-      COM0A0   : Boolean;     -- Compare Match Output A Mode bit 0
-      COM0A1   : Boolean;     -- Compare Match Output A Mode bit 1
+      CLKPS    : Bits_4;      -- Clock Prescaler Select bit 0 .. 3
+      Reserved : Bits_3 := 0;
+      CLKPCE   : Boolean;     -- Clock Prescaler Change Enable
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
-   for TCCR0A_Type use
+   for CLKPR_Type use
    record
-      WGM01    at 0 range 0 .. 1;
-      Reserved at 0 range 2 .. 3;
-      COM0B0   at 0 range 4 .. 4;
-      COM0B1   at 0 range 5 .. 5;
-      COM0A0   at 0 range 6 .. 6;
-      COM0A1   at 0 range 7 .. 7;
+      CLKPS    at 0 range 0 .. 3;
+      Reserved at 0 range 4 .. 6;
+      CLKPCE   at 0 range 7 .. 7;
    end record;
 
-   TCCR0A_ADDRESS : constant := 16#44#;
+   CLKPR_ADDRESS : constant := 16#61#;
 
-   TCCR0A : aliased TCCR0A_Type with
-      Address              => To_Address (TCCR0A_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 14.9.2 TCCR0B – Timer/Counter Control Register B
-
-   TC0_Clock_Select_NOCLK   : constant := 2#000#;
-   TC0_Clock_Select_CLK     : constant := 2#001#;
-   TC0_Clock_Select_CLK8    : constant := 2#010#;
-   TC0_Clock_Select_CLK32   : constant := 2#011#;
-   TC0_Clock_Select_CLK64   : constant := 2#100#;
-   TC0_Clock_Select_CLK128  : constant := 2#101#;
-   TC0_Clock_Select_CLK256  : constant := 2#110#;
-   TC0_Clock_Select_CLK1024 : constant := 2#111#;
-
-   type TCCR0B_Type is
-   record
-      CS0      : Bits_3;      -- Clock Select
-      WGM2     : Bits_1;      -- Waveform Generation Mode bit 2
-      Reserved : Bits_2 := 0;
-      FOC0B    : Boolean;     -- Force Output Compare B
-      FOC0A    : Boolean;     -- Force Output Compare A
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR0B_Type use
-   record
-      CS0      at 0 range 0 .. 2;
-      WGM2     at 0 range 3 .. 3;
-      Reserved at 0 range 4 .. 5;
-      FOC0B    at 0 range 6 .. 6;
-      FOC0A    at 0 range 7 .. 7;
-   end record;
-
-   TCCR0B_ADDRESS : constant := 16#45#;
-
-   TCCR0B : aliased TCCR0B_Type with
-      Address              => To_Address (TCCR0B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 14.9.3 TCNT0 – Timer/Counter Register
-
-   TCNT0_ADDRESS : constant := 16#46#;
-
-   TCNT0 : aliased Unsigned_8 with
-      Address              => To_Address (TCNT0_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 14.9.4 OCR0A – Output Compare Register A
-
-   OCR0A_ADDRESS : constant := 16#47#;
-
-   OCR0A : aliased Unsigned_8 with
-      Address              => To_Address (OCR0A_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 14.9.5 OCR0B – Output Compare Register B
-
-   OCR0B_ADDRESS : constant := 16#48#;
-
-   OCR0B : aliased Unsigned_8 with
-      Address              => To_Address (OCR0B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 14.9.6 TIMSK0 – Timer/Counter Interrupt Mask Register
-
-   type TIMSK0_Type is
-   record
-      TOIE0    : Boolean;     -- Timer/Counter0 Overflow Interrupt Enable
-      OCIE0A   : Boolean;     -- Timer/Counter0 Output Compare Match A Interrupt Enable
-      OCIE0B   : Boolean;     -- Timer/Counter0 Output Compare Match B Interrupt Enable
-      Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIMSK0_Type use
-   record
-      TOIE0    at 0 range 0 .. 0;
-      OCIE0A   at 0 range 1 .. 1;
-      OCIE0B   at 0 range 2 .. 2;
-      Reserved at 0 range 3 .. 7;
-   end record;
-
-   TIMSK0_ADDRESS : constant := 16#6E#;
-
-   TIMSK0 : aliased TIMSK0_Type with
-      Address              => To_Address (TIMSK0_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 14.9.7 TIFR0 - Timer/Counter0 Interrupt Flag Register
-
-   type TIFR0_Type is
-   record
-      TOV0     : Boolean;     -- Timer/Counter0 Overflow Flag
-      OCF0A    : Boolean;     -- Timer/Counter0 Output Compare A Match Flag
-      OCF0B    : Boolean;     -- Timer/Counter0 Output Compare B Match Flag
-      Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIFR0_Type use
-   record
-      TOV0     at 0 range 0 .. 0;
-      OCF0A    at 0 range 1 .. 1;
-      OCF0B    at 0 range 2 .. 2;
-      Reserved at 0 range 3 .. 7;
-   end record;
-
-   TIFR0_ADDRESS : constant := 16#35#;
-
-   TIFR0 : aliased TIFR0_Type with
-      Address              => To_Address (TIFR0_ADDRESS),
+   CLKPR : aliased CLKPR_Type with
+      Address              => To_Address (CLKPR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- Timer/Counter1
+   -- 9. Power Management and Sleep Modes
    ----------------------------------------------------------------------------
 
-   -- 15.11.1 TCCR1A – Timer/Counter1 Control Register A
+   -- 9.11.1 SMCR – Sleep Mode Control Register
 
-   type TC1_WGM_Type is
+   Idle                : constant := 2#000#;
+   ADC_Noise_Reduction : constant := 2#001#;
+   Power_Down          : constant := 2#010#;
+   Power_Save          : constant := 2#011#;
+   Standby             : constant := 2#110#;
+   External_Standby    : constant := 2#111#;
+
+   type SMCR_Type is
    record
-      WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
-      WGM23 : Bits_2; -- Waveform Generation Mode bit 2
-   end record;
-
-   TC1_WGM_Normal            : constant TC1_WGM_Type := (2#00#, 2#00#);
-   TC1_WGM_PWM_PCorrect8bit  : constant TC1_WGM_Type := (2#01#, 2#00#);
-   TC1_WGM_PWM_PCorrect9bit  : constant TC1_WGM_Type := (2#10#, 2#00#);
-   TC1_WGM_PWM_PCorrect10bit : constant TC1_WGM_Type := (2#11#, 2#00#);
-   TC1_WGM_CTC1              : constant TC1_WGM_Type := (2#00#, 2#01#);
-   TC1_WGM_PWM_Fast8bit      : constant TC1_WGM_Type := (2#01#, 2#01#);
-   TC1_WGM_PWM_Fast9bit      : constant TC1_WGM_Type := (2#10#, 2#01#);
-   TC1_WGM_PWM_Fast10bit     : constant TC1_WGM_Type := (2#11#, 2#01#);
-   TC1_WGM_PWM_PFCorrect1    : constant TC1_WGM_Type := (2#00#, 2#10#);
-   TC1_WGM_PWM_PFCorrect2    : constant TC1_WGM_Type := (2#01#, 2#10#);
-   TC1_WGM_PWM_PCorrect1     : constant TC1_WGM_Type := (2#10#, 2#10#);
-   TC1_WGM_PWM_PCorrect2     : constant TC1_WGM_Type := (2#11#, 2#10#);
-   TC1_WGM_CTC2              : constant TC1_WGM_Type := (2#00#, 2#11#);
-   TC1_WGM_PWM_Fast1         : constant TC1_WGM_Type := (2#10#, 2#11#);
-   TC1_WGM_PWM_Fast2         : constant TC1_WGM_Type := (2#11#, 2#11#);
-
-   type TCCR1A_Type is
-   record
-      WGM01    : Bits_2;      -- Waveform Generation Mode bit 0 .. 1
-      Reserved : Bits_2 := 0;
-      COM1B0   : Boolean;     -- Compare Match Output B Mode bit 0
-      COM1B1   : Boolean;     -- Compare Match Output B Mode bit 1
-      COM1A0   : Boolean;     -- Compare Match Output A Mode bit 0
-      COM1A1   : Boolean;     -- Compare Match Output A Mode bit 1
+      SE       : Boolean;     -- Sleep Enable
+      SM       : Bits_3;      -- Sleep Mode Select
+      Reserved : Bits_4 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
-   for TCCR1A_Type use
+   for SMCR_Type use
    record
-      WGM01    at 0 range 0 .. 1;
-      Reserved at 0 range 2 .. 3;
-      COM1B0   at 0 range 4 .. 4;
-      COM1B1   at 0 range 5 .. 5;
-      COM1A0   at 0 range 6 .. 6;
-      COM1A1   at 0 range 7 .. 7;
+      SE       at 0 range 0 .. 0;
+      SM       at 0 range 1 .. 3;
+      Reserved at 0 range 4 .. 7;
    end record;
 
-   TCCR1A_ADDRESS : constant := 16#80#;
+   SMCR_ADDRESS : constant := 16#53#;
 
-   TCCR1A : aliased TCCR1A_Type with
-      Address              => To_Address (TCCR1A_ADDRESS),
+   SMCR : aliased SMCR_Type with
+      Address              => To_Address (SMCR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- 15.11.2 TCCR1B – Timer/Counter1 Control Register B
+   -- 9.11.2 MCUCR – MCU Control Register
+   -- 11.5.2 MCUCR – MCU Control Register
 
-   TC1_Clock_Select_NOCLK   : constant := 2#000#;
-   TC1_Clock_Select_CLK     : constant := 2#001#;
-   TC1_Clock_Select_CLK8    : constant := 2#010#;
-   TC1_Clock_Select_CLK64   : constant := 2#011#;
-   TC1_Clock_Select_CLK256  : constant := 2#100#;
-   TC1_Clock_Select_CLK1024 : constant := 2#101#;
-   TC1_Clock_Select_EXT_T1F : constant := 2#110#;
-   TC1_Clock_Select_EXT_T1R : constant := 2#111#;
-
-   type TCCR1B_Type is
+   type MCUCR_Type is
    record
-      CS1      : Bits_3;      -- Clock Select
-      WGM23    : Bits_2;      -- Waveform Generation Mode bit 2 .. 3
-      Reserved : Bits_1 := 0;
-      ICES1    : Boolean;     -- Force Output Compare B
-      ICNC1    : Boolean;     -- Force Output Compare A
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR1B_Type use
-   record
-      CS1      at 0 range 0 .. 2;
-      WGM23    at 0 range 3 .. 4;
-      Reserved at 0 range 5 .. 5;
-      ICES1    at 0 range 6 .. 6;
-      ICNC1    at 0 range 7 .. 7;
-   end record;
-
-   TCCR1B_ADDRESS : constant := 16#81#;
-
-   TCCR1B : aliased TCCR1B_Type with
-      Address              => To_Address (TCCR1B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 15.11.3 TCCR1C - Timer/Counter1 Control Register C
-
-   type TCCR1C_Type is
-   record
-      Reserved : Bits_6 := 0;
-      FOC1B    : Boolean;     -- Force Output Compare B
-      FOC1A    : Boolean;     -- Force Output Compare A
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR1C_Type use
-   record
-      Reserved at 0 range 0 .. 5;
-      FOC1B    at 0 range 6 .. 6;
-      FOC1A    at 0 range 7 .. 7;
-   end record;
-
-   TCCR1C_ADDRESS : constant := 16#82#;
-
-   TCCR1C : aliased TCCR1C_Type with
-      Address              => To_Address (TCCR1C_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 15.11.4 TCNT1H and TCNT1L – Timer/Counter1
-
-   TCNT1L_ADDRESS : constant := 16#84#;
-
-   TCNT1L : aliased Unsigned_8 with
-      Address              => To_Address (TCNT1L_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   TCNT1H_ADDRESS : constant := 16#85#;
-
-   TCNT1H : aliased Unsigned_8 with
-      Address              => To_Address (TCNT1H_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 15.11.5 OCR1AH and OCR1AL – Output Compare Register 1 A
-
-   OCR1AL_ADDRESS : constant := 16#88#;
-
-   OCR1AL : aliased Unsigned_8 with
-      Address              => To_Address (OCR1AL_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   OCR1AH_ADDRESS : constant := 16#89#;
-
-   OCR1AH : aliased Unsigned_8 with
-      Address              => To_Address (OCR1AH_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 15.11.6 OCR1BH and OCR1BL – Output Compare Register 1 B
-
-   OCR1BL_ADDRESS : constant := 16#8A#;
-
-   OCR1BL : aliased Unsigned_8 with
-      Address              => To_Address (OCR1BL_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   OCR1BH_ADDRESS : constant := 16#8B#;
-
-   OCR1BH : aliased Unsigned_8 with
-      Address              => To_Address (OCR1BH_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 15.11.7 ICR1H and ICR1L – Input Capture Register 1
-
-   ICR1L_ADDRESS : constant := 16#86#;
-
-   ICR1L : aliased Unsigned_8 with
-      Address              => To_Address (ICR1L_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   ICR1H_ADDRESS : constant := 16#87#;
-
-   ICR1H : aliased Unsigned_8 with
-      Address              => To_Address (ICR1H_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 15.11.8 TIMSK1 - Timer/Counter1 Interrupt Mask Register
-
-   type TIMSK1_Type is
-   record
-      TOIE1     : Boolean;     -- Timer/Counter1 Overflow Interrupt Enable
-      OCIE1A    : Boolean;     -- Timer/Counter1 Output Compare Match A Interrupt Enable
-      OCIE1B    : Boolean;     -- Timer/Counter1 Output Compare Match B Interrupt Enable
+      IVCE      : Boolean;     -- Interrupt Vector Change Enable
+      IVSEL     : Boolean;     -- Interrupt Vector Select
       Reserved1 : Bits_2 := 0;
-      ICIE1     : Boolean;     -- Timer/Counter1 Input Capture Interrupt Enable
-      Reserved2 : Bits_2 := 0;
+      PUD       : Boolean;     -- Pull-up Disable
+      BODSE     : Boolean;     -- BOD Sleep Enable
+      BODS      : Boolean;     -- BOD Sleep
+      Reserved2 : Bits_1 := 0;
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
-   for TIMSK1_Type use
+   for MCUCR_Type use
    record
-      TOIE1     at 0 range 0 .. 0;
-      OCIE1A    at 0 range 1 .. 1;
-      OCIE1B    at 0 range 2 .. 2;
-      Reserved1 at 0 range 3 .. 4;
-      ICIE1     at 0 range 5 .. 5;
-      Reserved2 at 0 range 6 .. 7;
+      IVCE      at 0 range 0 .. 0;
+      IVSEL     at 0 range 1 .. 1;
+      Reserved1 at 0 range 2 .. 3;
+      PUD       at 0 range 4 .. 4;
+      BODSE     at 0 range 5 .. 5;
+      BODS      at 0 range 6 .. 6;
+      Reserved2 at 0 range 7 .. 7;
    end record;
 
-   TIMSK1_ADDRESS : constant := 16#6F#;
+   MCUCR_ADDRESS : constant := 16#55#;
 
-   TIMSK1 : aliased TIMSK1_Type with
-      Address              => To_Address (TIMSK1_ADDRESS),
+   MCUCR : aliased MCUCR_Type with
+      Address              => To_Address (MCUCR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
-   -- 15.11.9 TIFR1 – Timer/Counter1 Interrupt Flag Register
+   -- 9.11.3 PRR – Power Reduction Register
 
-   type TIFR1_Type is
+   type PRR_Type is
    record
-      TOV1      : Boolean;     -- Timer/Counter1 Overflow Flag
-      OCF1A     : Boolean;     -- Timer/Counter1 Output Compare A Match Flag
-      OCF1B     : Boolean;     -- Timer/Counter1 Output Compare B Match Flag
-      Reserved1 : Bits_2 := 0;
-      ICF1      : Boolean;     -- Timer/Counter1 Input Capture Flag
-      Reserved2 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIFR1_Type use
-   record
-      TOV1      at 0 range 0 .. 0;
-      OCF1A     at 0 range 1 .. 1;
-      OCF1B     at 0 range 2 .. 2;
-      Reserved1 at 0 range 3 .. 4;
-      ICF1      at 0 range 5 .. 5;
-      Reserved2 at 0 range 6 .. 7;
-   end record;
-
-   TIFR1_ADDRESS : constant := 16#36#;
-
-   TIFR1 : aliased TIFR1_Type with
-      Address              => To_Address (TIFR1_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   ----------------------------------------------------------------------------
-   -- Timer/Counter2
-   ----------------------------------------------------------------------------
-
-   -- 17.11.1 TCCR2A – Timer/Counter Control Register A
-
-   type TC2_WGM_Type is
-   record
-      WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
-      WGM2  : Bits_1; -- Waveform Generation Mode bit 2
-   end record;
-
-   TC2_WGM2_Normal       : constant TC2_WGM_Type := (2#00#, 0);
-   TC2_WGM2_PWM_Correct1 : constant TC2_WGM_Type := (2#01#, 0);
-   TC2_WGM2_CTC          : constant TC2_WGM_Type := (2#10#, 0);
-   TC2_WGM2_PWM_Fast1    : constant TC2_WGM_Type := (2#11#, 0);
-   TC2_WGM2_PWM_Correct2 : constant TC2_WGM_Type := (2#01#, 1);
-   TC2_WGM2_PWM_Fast2    : constant TC2_WGM_Type := (2#11#, 1);
-
-   type TCCR2A_Type is
-   record
-      WGM01    : Bits_2;      -- Waveform Generation Mode bit 0 .. 1
-      Reserved : Bits_2 := 0;
-      COM2B0   : Boolean;     -- Compare Match Output B Mode bit 0
-      COM2B1   : Boolean;     -- Compare Match Output B Mode bit 1
-      COM2A0   : Boolean;     -- Compare Match Output A Mode bit 0
-      COM2A1   : Boolean;     -- Compare Match Output A Mode bit 1
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR2A_Type use
-   record
-      WGM01    at 0 range 0 .. 1;
-      Reserved at 0 range 2 .. 3;
-      COM2B0   at 0 range 4 .. 4;
-      COM2B1   at 0 range 5 .. 5;
-      COM2A0   at 0 range 6 .. 6;
-      COM2A1   at 0 range 7 .. 7;
-   end record;
-
-   TCCR2A_ADDRESS : constant := 16#B0#;
-
-   TCCR2A : aliased TCCR2A_Type with
-      Address              => To_Address (TCCR2A_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 17.11.2 TCCR2B – Timer/Counter Control Register B
-
-   TC2_Clock_Select_NOCLK   : constant := 2#000#;
-   TC2_Clock_Select_CLK     : constant := 2#001#;
-   TC2_Clock_Select_CLK8    : constant := 2#010#;
-   TC2_Clock_Select_CLK32   : constant := 2#011#;
-   TC2_Clock_Select_CLK64   : constant := 2#100#;
-   TC2_Clock_Select_CLK128  : constant := 2#101#;
-   TC2_Clock_Select_CLK256  : constant := 2#110#;
-   TC2_Clock_Select_CLK1024 : constant := 2#111#;
-
-   type TCCR2B_Type is
-   record
-      CS2      : Bits_3;      -- Clock Select
-      WGM2     : Bits_1;      -- Waveform Generation Mode bit 2
-      Reserved : Bits_2 := 0;
-      FOC2B    : Boolean;     -- Force Output Compare B
-      FOC2A    : Boolean;     -- Force Output Compare A
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR2B_Type use
-   record
-      CS2      at 0 range 0 .. 2;
-      WGM2     at 0 range 3 .. 3;
-      Reserved at 0 range 4 .. 5;
-      FOC2B    at 0 range 6 .. 6;
-      FOC2A    at 0 range 7 .. 7;
-   end record;
-
-   TCCR2B_ADDRESS : constant := 16#B1#;
-
-   TCCR2B : aliased TCCR2B_Type with
-      Address              => To_Address (TCCR2B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 17.11.3 TCNT2 – Timer/Counter Register
-
-   TCNT2_ADDRESS : constant := 16#B2#;
-
-   TCNT2 : aliased Unsigned_8 with
-      Address              => To_Address (TCNT2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 17.11.4 OCR2A – Output Compare Register A
-
-   OCR2A_ADDRESS : constant := 16#B3#;
-
-   OCR2A : aliased Unsigned_8 with
-      Address              => To_Address (OCR2A_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 17.11.5 OCR2B – Output Compare Register B
-
-   OCR2B_ADDRESS : constant := 16#B4#;
-
-   OCR2B : aliased Unsigned_8 with
-      Address              => To_Address (OCR2B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 17.11.6 TIMSK2 – Timer/Counter2 Interrupt Mask Register
-
-   type TIMSK2_Type is
-   record
-      TOIE2    : Boolean;     -- Timer/Counter2 Overflow Interrupt Enable
-      OCIE2A   : Boolean;     -- Timer/Counter2 Output Compare Match A Interrupt Enable
-      OCIE2B   : Boolean;     -- Timer/Counter2 Output Compare Match B Interrupt Enable
-      Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIMSK2_Type use
-   record
-      TOIE2    at 0 range 0 .. 0;
-      OCIE2A   at 0 range 1 .. 1;
-      OCIE2B   at 0 range 2 .. 2;
-      Reserved at 0 range 3 .. 7;
-   end record;
-
-   TIMSK2_ADDRESS : constant := 16#70#;
-
-   TIMSK2 : aliased TIMSK2_Type with
-      Address              => To_Address (TIMSK2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 17.11.7 TIFR2 – Timer/Counter2 Interrupt Flag Register
-
-   type TIFR2_Type is
-   record
-      TOV2     : Boolean;     -- Timer/Counter2 Overflow Flag
-      OCF2A    : Boolean;     -- Timer/Counter2 Output Compare A Match Flag
-      OCF2B    : Boolean;     -- Timer/Counter2 Output Compare B Match Flag
-      Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIFR2_Type use
-   record
-      TOV2     at 0 range 0 .. 0;
-      OCF2A    at 0 range 1 .. 1;
-      OCF2B    at 0 range 2 .. 2;
-      Reserved at 0 range 3 .. 7;
-   end record;
-
-   TIFR2_ADDRESS : constant := 16#37#;
-
-   TIFR2 : aliased TIFR2_Type with
-      Address              => To_Address (TIFR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 17.11.8 ASSR – Asynchronous Status Register
-
-   type ASSR_Type is
-   record
-      TCR2BUB  : Boolean;     -- Timer/Counter Control Register2 Update Busy
-      TCR2AUB  : Boolean;     -- Timer/Counter Control Register2 Update Busy
-      OCR2BUB  : Boolean;     -- Output Compare Register2 Update Busy
-      OCR2AUB  : Boolean;     -- Output Compare Register2 Update Busy
-      TCN2UB   : Boolean;     -- Timer/Counter2 Update Busy
-      AS2      : Boolean;     -- Asynchronous Timer/Counter2
-      EXCLK    : Boolean;     -- Enable External Clock Input
+      PRADC    : Boolean;     -- Power Reduction ADC
+      PRUSART0 : Boolean;     -- Power Reduction USART
+      PRSPI    : Boolean;     -- Power Reduction Serial Peripheral Interface
+      PRTIM1   : Boolean;     -- Power Reduction Timer/Counter1
       Reserved : Bits_1 := 0;
+      PRTIM0   : Boolean;     -- Power Reduction Timer/Counter0
+      PRTIM2   : Boolean;     -- Power Reduction Timer/Counter2
+      PRTWI    : Boolean;     -- Power Reduction TWI
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
-   for ASSR_Type use
+   for PRR_Type use
    record
-      TCR2BUB  at 0 range 0 .. 0;
-      TCR2AUB  at 0 range 1 .. 1;
-      OCR2BUB  at 0 range 2 .. 2;
-      OCR2AUB  at 0 range 3 .. 3;
-      TCN2UB   at 0 range 4 .. 4;
-      AS2      at 0 range 5 .. 5;
-      EXCLK    at 0 range 6 .. 6;
-      Reserved at 0 range 7 .. 7;
+      PRADC    at 0 range 0 .. 0;
+      PRUSART0 at 0 range 1 .. 1;
+      PRSPI    at 0 range 2 .. 2;
+      PRTIM1   at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 4;
+      PRTIM0   at 0 range 5 .. 5;
+      PRTIM2   at 0 range 6 .. 6;
+      PRTWI    at 0 range 7 .. 7;
    end record;
 
-   ASSR_ADDRESS : constant := 16#B6#;
+   PRR_ADDRESS : constant := 16#64#;
 
-   ASSR : aliased ASSR_Type with
-      Address              => To_Address (ASSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 17.11.9 GTCCR – General Timer/Counter Control Register
-
-   type GTCCR_Type is
-   record
-      PSRSYNC  : Boolean;     -- Prescaler Reset Timer/Counter1 and Timer/Counter0
-      PSRASY   : Boolean;     -- Prescaler Reset Timer/Counter2
-      Reserved : Bits_5 := 0;
-      TSM      : Boolean;     -- Timer/Counter Synchronization Mode
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for GTCCR_Type use
-   record
-      PSRSYNC  at 0 range 0 .. 0;
-      PSRASY   at 0 range 1 .. 1;
-      Reserved at 0 range 2 .. 6;
-      TSM      at 0 range 7 .. 7;
-   end record;
-
-   GTCCR_ADDRESS : constant := 16#43#;
-
-   GTCCR : aliased GTCCR_Type with
-      Address              => To_Address (GTCCR_ADDRESS),
+   PRR : aliased PRR_Type with
+      Address              => To_Address (PRR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- I/O Ports
+   -- 10. System Control and Reset
+   ----------------------------------------------------------------------------
+
+   -- 10.9.1 MCUSR – MCU Status Register
+
+   type MCUSR_Type is
+   record
+      PORF     : Boolean;     -- Power-on reset flag
+      EXTRF    : Boolean;     -- External Reset flag
+      BORF     : Boolean;     -- Brown-out Reset flag
+      WDRF     : Boolean;     -- Watchdog Reset flag
+      Reserved : Bits_4 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for MCUSR_Type use
+   record
+      PORF     at 0 range 0 .. 0;
+      EXTRF    at 0 range 1 .. 1;
+      BORF     at 0 range 2 .. 2;
+      WDRF     at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 7;
+   end record;
+
+   MCUSR_ADDRESS : constant := 16#54#;
+
+   MCUSR : aliased MCUSR_Type with
+      Address              => To_Address (MCUSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 10.9.2 WDTCSR – Watchdog Timer Control Register
+
+   type WDT_Prescaler_Type is
+   record
+      WDP012 : Bits_3; -- Watchdog Timer Prescaler bit 0 .. 2
+      WDP3   : Bits_1; -- Watchdog Timer Prescaler bit 3
+   end record;
+
+   WDT_2K    : constant WDT_Prescaler_Type := (2#000#, 0);
+   WDT_4K    : constant WDT_Prescaler_Type := (2#001#, 0);
+   WDT_8K    : constant WDT_Prescaler_Type := (2#010#, 0);
+   WDT_16K   : constant WDT_Prescaler_Type := (2#011#, 0);
+   WDT_32K   : constant WDT_Prescaler_Type := (2#100#, 0);
+   WDT_64K   : constant WDT_Prescaler_Type := (2#101#, 0);
+   WDT_128K  : constant WDT_Prescaler_Type := (2#110#, 0);
+   WDT_256K  : constant WDT_Prescaler_Type := (2#111#, 0);
+   WDT_512K  : constant WDT_Prescaler_Type := (2#000#, 1);
+   WDT_1024K : constant WDT_Prescaler_Type := (2#001#, 1);
+
+   type WDTCSR_Type is
+   record
+      WDP012 : Bits_3;  -- Watchdog Timer Prescaler bit 0 .. 2
+      WDE    : Boolean; -- Watchdog Enable
+      WDCE   : Boolean; -- Watchdog Change Enable
+      WDP3   : Bits_1;  -- Watchdog Timer Prescaler bit 3
+      WDIE   : Boolean; -- Watchdog Timeout Interrupt Enable
+      WDIF   : Boolean; -- Watchdog Timeout Interrupt flag
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for WDTCSR_Type use
+   record
+      WDP012 at 0 range 0 .. 2;
+      WDE    at 0 range 3 .. 3;
+      WDCE   at 0 range 4 .. 4;
+      WDP3   at 0 range 5 .. 5;
+      WDIE   at 0 range 6 .. 6;
+      WDIF   at 0 range 7 .. 7;
+   end record;
+
+   WDTCSR_ADDRESS : constant := 16#60#;
+
+   WDTCSR : aliased WDTCSR_Type with
+      Address              => To_Address (WDTCSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 13. I/O-Ports
    ----------------------------------------------------------------------------
 
    -- 13.4.2 PORTB – The Port B Data Register
@@ -1369,7 +722,754 @@ package ATmega328P is
       Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- USART
+   -- 14. 8-bit Timer/Counter0 with PWM
+   ----------------------------------------------------------------------------
+
+   -- 14.9.1 TCCR0A – Timer/Counter Control Register A
+
+   type TC0_WGM_Type is
+   record
+      WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
+      WGM2  : Bits_1; -- Waveform Generation Mode bit 2
+   end record;
+
+   TC0_WGM_Normal       : constant TC0_WGM_Type := (2#00#, 0);
+   TC0_WGM_PWM_Correct1 : constant TC0_WGM_Type := (2#01#, 0);
+   TC0_WGM_CTC          : constant TC0_WGM_Type := (2#10#, 0);
+   TC0_WGM_PWM_Fast1    : constant TC0_WGM_Type := (2#11#, 0);
+   TC0_WGM_PWM_Correct2 : constant TC0_WGM_Type := (2#01#, 1);
+   TC0_WGM_PWM_Fast2    : constant TC0_WGM_Type := (2#11#, 1);
+
+   type TCCR0A_Type is
+   record
+      WGM01    : Bits_2;      -- Waveform Generation Mode bit 0 .. 1
+      Reserved : Bits_2 := 0;
+      COM0B0   : Boolean;     -- Compare Match Output B Mode bit 0
+      COM0B1   : Boolean;     -- Compare Match Output B Mode bit 1
+      COM0A0   : Boolean;     -- Compare Match Output A Mode bit 0
+      COM0A1   : Boolean;     -- Compare Match Output A Mode bit 1
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TCCR0A_Type use
+   record
+      WGM01    at 0 range 0 .. 1;
+      Reserved at 0 range 2 .. 3;
+      COM0B0   at 0 range 4 .. 4;
+      COM0B1   at 0 range 5 .. 5;
+      COM0A0   at 0 range 6 .. 6;
+      COM0A1   at 0 range 7 .. 7;
+   end record;
+
+   TCCR0A_ADDRESS : constant := 16#44#;
+
+   TCCR0A : aliased TCCR0A_Type with
+      Address              => To_Address (TCCR0A_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 14.9.2 TCCR0B – Timer/Counter Control Register B
+
+   TC0_Clock_Select_NOCLK   : constant := 2#000#;
+   TC0_Clock_Select_CLK     : constant := 2#001#;
+   TC0_Clock_Select_CLK8    : constant := 2#010#;
+   TC0_Clock_Select_CLK32   : constant := 2#011#;
+   TC0_Clock_Select_CLK64   : constant := 2#100#;
+   TC0_Clock_Select_CLK128  : constant := 2#101#;
+   TC0_Clock_Select_CLK256  : constant := 2#110#;
+   TC0_Clock_Select_CLK1024 : constant := 2#111#;
+
+   type TCCR0B_Type is
+   record
+      CS0      : Bits_3;      -- Clock Select
+      WGM2     : Bits_1;      -- Waveform Generation Mode bit 2
+      Reserved : Bits_2 := 0;
+      FOC0B    : Boolean;     -- Force Output Compare B
+      FOC0A    : Boolean;     -- Force Output Compare A
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TCCR0B_Type use
+   record
+      CS0      at 0 range 0 .. 2;
+      WGM2     at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 5;
+      FOC0B    at 0 range 6 .. 6;
+      FOC0A    at 0 range 7 .. 7;
+   end record;
+
+   TCCR0B_ADDRESS : constant := 16#45#;
+
+   TCCR0B : aliased TCCR0B_Type with
+      Address              => To_Address (TCCR0B_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 14.9.3 TCNT0 – Timer/Counter Register
+
+   TCNT0_ADDRESS : constant := 16#46#;
+
+   TCNT0 : aliased Unsigned_8 with
+      Address              => To_Address (TCNT0_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 14.9.4 OCR0A – Output Compare Register A
+
+   OCR0A_ADDRESS : constant := 16#47#;
+
+   OCR0A : aliased Unsigned_8 with
+      Address              => To_Address (OCR0A_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 14.9.5 OCR0B – Output Compare Register B
+
+   OCR0B_ADDRESS : constant := 16#48#;
+
+   OCR0B : aliased Unsigned_8 with
+      Address              => To_Address (OCR0B_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 14.9.6 TIMSK0 – Timer/Counter Interrupt Mask Register
+
+   type TIMSK0_Type is
+   record
+      TOIE0    : Boolean;     -- Timer/Counter0 Overflow Interrupt Enable
+      OCIE0A   : Boolean;     -- Timer/Counter0 Output Compare Match A Interrupt Enable
+      OCIE0B   : Boolean;     -- Timer/Counter0 Output Compare Match B Interrupt Enable
+      Reserved : Bits_5 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TIMSK0_Type use
+   record
+      TOIE0    at 0 range 0 .. 0;
+      OCIE0A   at 0 range 1 .. 1;
+      OCIE0B   at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   TIMSK0_ADDRESS : constant := 16#6E#;
+
+   TIMSK0 : aliased TIMSK0_Type with
+      Address              => To_Address (TIMSK0_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 14.9.7 TIFR0 - Timer/Counter0 Interrupt Flag Register
+
+   type TIFR0_Type is
+   record
+      TOV0     : Boolean;     -- Timer/Counter0 Overflow Flag
+      OCF0A    : Boolean;     -- Timer/Counter0 Output Compare A Match Flag
+      OCF0B    : Boolean;     -- Timer/Counter0 Output Compare B Match Flag
+      Reserved : Bits_5 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TIFR0_Type use
+   record
+      TOV0     at 0 range 0 .. 0;
+      OCF0A    at 0 range 1 .. 1;
+      OCF0B    at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   TIFR0_ADDRESS : constant := 16#35#;
+
+   TIFR0 : aliased TIFR0_Type with
+      Address              => To_Address (TIFR0_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 15. 16-bit Timer/Counter1 with PWM
+   ----------------------------------------------------------------------------
+
+   -- 15.11.1 TCCR1A – Timer/Counter1 Control Register A
+
+   type TC1_WGM_Type is
+   record
+      WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
+      WGM23 : Bits_2; -- Waveform Generation Mode bit 2
+   end record;
+
+   TC1_WGM_Normal            : constant TC1_WGM_Type := (2#00#, 2#00#);
+   TC1_WGM_PWM_PCorrect8bit  : constant TC1_WGM_Type := (2#01#, 2#00#);
+   TC1_WGM_PWM_PCorrect9bit  : constant TC1_WGM_Type := (2#10#, 2#00#);
+   TC1_WGM_PWM_PCorrect10bit : constant TC1_WGM_Type := (2#11#, 2#00#);
+   TC1_WGM_CTC1              : constant TC1_WGM_Type := (2#00#, 2#01#);
+   TC1_WGM_PWM_Fast8bit      : constant TC1_WGM_Type := (2#01#, 2#01#);
+   TC1_WGM_PWM_Fast9bit      : constant TC1_WGM_Type := (2#10#, 2#01#);
+   TC1_WGM_PWM_Fast10bit     : constant TC1_WGM_Type := (2#11#, 2#01#);
+   TC1_WGM_PWM_PFCorrect1    : constant TC1_WGM_Type := (2#00#, 2#10#);
+   TC1_WGM_PWM_PFCorrect2    : constant TC1_WGM_Type := (2#01#, 2#10#);
+   TC1_WGM_PWM_PCorrect1     : constant TC1_WGM_Type := (2#10#, 2#10#);
+   TC1_WGM_PWM_PCorrect2     : constant TC1_WGM_Type := (2#11#, 2#10#);
+   TC1_WGM_CTC2              : constant TC1_WGM_Type := (2#00#, 2#11#);
+   TC1_WGM_PWM_Fast1         : constant TC1_WGM_Type := (2#10#, 2#11#);
+   TC1_WGM_PWM_Fast2         : constant TC1_WGM_Type := (2#11#, 2#11#);
+
+   type TCCR1A_Type is
+   record
+      WGM01    : Bits_2;      -- Waveform Generation Mode bit 0 .. 1
+      Reserved : Bits_2 := 0;
+      COM1B0   : Boolean;     -- Compare Match Output B Mode bit 0
+      COM1B1   : Boolean;     -- Compare Match Output B Mode bit 1
+      COM1A0   : Boolean;     -- Compare Match Output A Mode bit 0
+      COM1A1   : Boolean;     -- Compare Match Output A Mode bit 1
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TCCR1A_Type use
+   record
+      WGM01    at 0 range 0 .. 1;
+      Reserved at 0 range 2 .. 3;
+      COM1B0   at 0 range 4 .. 4;
+      COM1B1   at 0 range 5 .. 5;
+      COM1A0   at 0 range 6 .. 6;
+      COM1A1   at 0 range 7 .. 7;
+   end record;
+
+   TCCR1A_ADDRESS : constant := 16#80#;
+
+   TCCR1A : aliased TCCR1A_Type with
+      Address              => To_Address (TCCR1A_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 15.11.2 TCCR1B – Timer/Counter1 Control Register B
+
+   TC1_Clock_Select_NOCLK   : constant := 2#000#;
+   TC1_Clock_Select_CLK     : constant := 2#001#;
+   TC1_Clock_Select_CLK8    : constant := 2#010#;
+   TC1_Clock_Select_CLK64   : constant := 2#011#;
+   TC1_Clock_Select_CLK256  : constant := 2#100#;
+   TC1_Clock_Select_CLK1024 : constant := 2#101#;
+   TC1_Clock_Select_EXT_T1F : constant := 2#110#;
+   TC1_Clock_Select_EXT_T1R : constant := 2#111#;
+
+   type TCCR1B_Type is
+   record
+      CS1      : Bits_3;      -- Clock Select
+      WGM23    : Bits_2;      -- Waveform Generation Mode bit 2 .. 3
+      Reserved : Bits_1 := 0;
+      ICES1    : Boolean;     -- Force Output Compare B
+      ICNC1    : Boolean;     -- Force Output Compare A
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TCCR1B_Type use
+   record
+      CS1      at 0 range 0 .. 2;
+      WGM23    at 0 range 3 .. 4;
+      Reserved at 0 range 5 .. 5;
+      ICES1    at 0 range 6 .. 6;
+      ICNC1    at 0 range 7 .. 7;
+   end record;
+
+   TCCR1B_ADDRESS : constant := 16#81#;
+
+   TCCR1B : aliased TCCR1B_Type with
+      Address              => To_Address (TCCR1B_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 15.11.3 TCCR1C - Timer/Counter1 Control Register C
+
+   type TCCR1C_Type is
+   record
+      Reserved : Bits_6 := 0;
+      FOC1B    : Boolean;     -- Force Output Compare B
+      FOC1A    : Boolean;     -- Force Output Compare A
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TCCR1C_Type use
+   record
+      Reserved at 0 range 0 .. 5;
+      FOC1B    at 0 range 6 .. 6;
+      FOC1A    at 0 range 7 .. 7;
+   end record;
+
+   TCCR1C_ADDRESS : constant := 16#82#;
+
+   TCCR1C : aliased TCCR1C_Type with
+      Address              => To_Address (TCCR1C_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 15.11.4 TCNT1H and TCNT1L – Timer/Counter1
+
+   TCNT1L_ADDRESS : constant := 16#84#;
+
+   TCNT1L : aliased Unsigned_8 with
+      Address              => To_Address (TCNT1L_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   TCNT1H_ADDRESS : constant := 16#85#;
+
+   TCNT1H : aliased Unsigned_8 with
+      Address              => To_Address (TCNT1H_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 15.11.5 OCR1AH and OCR1AL – Output Compare Register 1 A
+
+   OCR1AL_ADDRESS : constant := 16#88#;
+
+   OCR1AL : aliased Unsigned_8 with
+      Address              => To_Address (OCR1AL_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   OCR1AH_ADDRESS : constant := 16#89#;
+
+   OCR1AH : aliased Unsigned_8 with
+      Address              => To_Address (OCR1AH_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 15.11.6 OCR1BH and OCR1BL – Output Compare Register 1 B
+
+   OCR1BL_ADDRESS : constant := 16#8A#;
+
+   OCR1BL : aliased Unsigned_8 with
+      Address              => To_Address (OCR1BL_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   OCR1BH_ADDRESS : constant := 16#8B#;
+
+   OCR1BH : aliased Unsigned_8 with
+      Address              => To_Address (OCR1BH_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 15.11.7 ICR1H and ICR1L – Input Capture Register 1
+
+   ICR1L_ADDRESS : constant := 16#86#;
+
+   ICR1L : aliased Unsigned_8 with
+      Address              => To_Address (ICR1L_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ICR1H_ADDRESS : constant := 16#87#;
+
+   ICR1H : aliased Unsigned_8 with
+      Address              => To_Address (ICR1H_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 15.11.8 TIMSK1 - Timer/Counter1 Interrupt Mask Register
+
+   type TIMSK1_Type is
+   record
+      TOIE1     : Boolean;     -- Timer/Counter1 Overflow Interrupt Enable
+      OCIE1A    : Boolean;     -- Timer/Counter1 Output Compare Match A Interrupt Enable
+      OCIE1B    : Boolean;     -- Timer/Counter1 Output Compare Match B Interrupt Enable
+      Reserved1 : Bits_2 := 0;
+      ICIE1     : Boolean;     -- Timer/Counter1 Input Capture Interrupt Enable
+      Reserved2 : Bits_2 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TIMSK1_Type use
+   record
+      TOIE1     at 0 range 0 .. 0;
+      OCIE1A    at 0 range 1 .. 1;
+      OCIE1B    at 0 range 2 .. 2;
+      Reserved1 at 0 range 3 .. 4;
+      ICIE1     at 0 range 5 .. 5;
+      Reserved2 at 0 range 6 .. 7;
+   end record;
+
+   TIMSK1_ADDRESS : constant := 16#6F#;
+
+   TIMSK1 : aliased TIMSK1_Type with
+      Address              => To_Address (TIMSK1_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 15.11.9 TIFR1 – Timer/Counter1 Interrupt Flag Register
+
+   type TIFR1_Type is
+   record
+      TOV1      : Boolean;     -- Timer/Counter1 Overflow Flag
+      OCF1A     : Boolean;     -- Timer/Counter1 Output Compare A Match Flag
+      OCF1B     : Boolean;     -- Timer/Counter1 Output Compare B Match Flag
+      Reserved1 : Bits_2 := 0;
+      ICF1      : Boolean;     -- Timer/Counter1 Input Capture Flag
+      Reserved2 : Bits_2 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TIFR1_Type use
+   record
+      TOV1      at 0 range 0 .. 0;
+      OCF1A     at 0 range 1 .. 1;
+      OCF1B     at 0 range 2 .. 2;
+      Reserved1 at 0 range 3 .. 4;
+      ICF1      at 0 range 5 .. 5;
+      Reserved2 at 0 range 6 .. 7;
+   end record;
+
+   TIFR1_ADDRESS : constant := 16#36#;
+
+   TIFR1 : aliased TIFR1_Type with
+      Address              => To_Address (TIFR1_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 17. 8-bit Timer/Counter2 with PWM and Asynchronous Operation
+   ----------------------------------------------------------------------------
+
+   -- 17.11.1 TCCR2A – Timer/Counter Control Register A
+
+   type TC2_WGM_Type is
+   record
+      WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
+      WGM2  : Bits_1; -- Waveform Generation Mode bit 2
+   end record;
+
+   TC2_WGM2_Normal       : constant TC2_WGM_Type := (2#00#, 0);
+   TC2_WGM2_PWM_Correct1 : constant TC2_WGM_Type := (2#01#, 0);
+   TC2_WGM2_CTC          : constant TC2_WGM_Type := (2#10#, 0);
+   TC2_WGM2_PWM_Fast1    : constant TC2_WGM_Type := (2#11#, 0);
+   TC2_WGM2_PWM_Correct2 : constant TC2_WGM_Type := (2#01#, 1);
+   TC2_WGM2_PWM_Fast2    : constant TC2_WGM_Type := (2#11#, 1);
+
+   type TCCR2A_Type is
+   record
+      WGM01    : Bits_2;      -- Waveform Generation Mode bit 0 .. 1
+      Reserved : Bits_2 := 0;
+      COM2B0   : Boolean;     -- Compare Match Output B Mode bit 0
+      COM2B1   : Boolean;     -- Compare Match Output B Mode bit 1
+      COM2A0   : Boolean;     -- Compare Match Output A Mode bit 0
+      COM2A1   : Boolean;     -- Compare Match Output A Mode bit 1
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TCCR2A_Type use
+   record
+      WGM01    at 0 range 0 .. 1;
+      Reserved at 0 range 2 .. 3;
+      COM2B0   at 0 range 4 .. 4;
+      COM2B1   at 0 range 5 .. 5;
+      COM2A0   at 0 range 6 .. 6;
+      COM2A1   at 0 range 7 .. 7;
+   end record;
+
+   TCCR2A_ADDRESS : constant := 16#B0#;
+
+   TCCR2A : aliased TCCR2A_Type with
+      Address              => To_Address (TCCR2A_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 17.11.2 TCCR2B – Timer/Counter Control Register B
+
+   TC2_Clock_Select_NOCLK   : constant := 2#000#;
+   TC2_Clock_Select_CLK     : constant := 2#001#;
+   TC2_Clock_Select_CLK8    : constant := 2#010#;
+   TC2_Clock_Select_CLK32   : constant := 2#011#;
+   TC2_Clock_Select_CLK64   : constant := 2#100#;
+   TC2_Clock_Select_CLK128  : constant := 2#101#;
+   TC2_Clock_Select_CLK256  : constant := 2#110#;
+   TC2_Clock_Select_CLK1024 : constant := 2#111#;
+
+   type TCCR2B_Type is
+   record
+      CS2      : Bits_3;      -- Clock Select
+      WGM2     : Bits_1;      -- Waveform Generation Mode bit 2
+      Reserved : Bits_2 := 0;
+      FOC2B    : Boolean;     -- Force Output Compare B
+      FOC2A    : Boolean;     -- Force Output Compare A
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TCCR2B_Type use
+   record
+      CS2      at 0 range 0 .. 2;
+      WGM2     at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 5;
+      FOC2B    at 0 range 6 .. 6;
+      FOC2A    at 0 range 7 .. 7;
+   end record;
+
+   TCCR2B_ADDRESS : constant := 16#B1#;
+
+   TCCR2B : aliased TCCR2B_Type with
+      Address              => To_Address (TCCR2B_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 17.11.3 TCNT2 – Timer/Counter Register
+
+   TCNT2_ADDRESS : constant := 16#B2#;
+
+   TCNT2 : aliased Unsigned_8 with
+      Address              => To_Address (TCNT2_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 17.11.4 OCR2A – Output Compare Register A
+
+   OCR2A_ADDRESS : constant := 16#B3#;
+
+   OCR2A : aliased Unsigned_8 with
+      Address              => To_Address (OCR2A_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 17.11.5 OCR2B – Output Compare Register B
+
+   OCR2B_ADDRESS : constant := 16#B4#;
+
+   OCR2B : aliased Unsigned_8 with
+      Address              => To_Address (OCR2B_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 17.11.6 TIMSK2 – Timer/Counter2 Interrupt Mask Register
+
+   type TIMSK2_Type is
+   record
+      TOIE2    : Boolean;     -- Timer/Counter2 Overflow Interrupt Enable
+      OCIE2A   : Boolean;     -- Timer/Counter2 Output Compare Match A Interrupt Enable
+      OCIE2B   : Boolean;     -- Timer/Counter2 Output Compare Match B Interrupt Enable
+      Reserved : Bits_5 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TIMSK2_Type use
+   record
+      TOIE2    at 0 range 0 .. 0;
+      OCIE2A   at 0 range 1 .. 1;
+      OCIE2B   at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   TIMSK2_ADDRESS : constant := 16#70#;
+
+   TIMSK2 : aliased TIMSK2_Type with
+      Address              => To_Address (TIMSK2_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 17.11.7 TIFR2 – Timer/Counter2 Interrupt Flag Register
+
+   type TIFR2_Type is
+   record
+      TOV2     : Boolean;     -- Timer/Counter2 Overflow Flag
+      OCF2A    : Boolean;     -- Timer/Counter2 Output Compare A Match Flag
+      OCF2B    : Boolean;     -- Timer/Counter2 Output Compare B Match Flag
+      Reserved : Bits_5 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for TIFR2_Type use
+   record
+      TOV2     at 0 range 0 .. 0;
+      OCF2A    at 0 range 1 .. 1;
+      OCF2B    at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   TIFR2_ADDRESS : constant := 16#37#;
+
+   TIFR2 : aliased TIFR2_Type with
+      Address              => To_Address (TIFR2_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 17.11.8 ASSR – Asynchronous Status Register
+
+   type ASSR_Type is
+   record
+      TCR2BUB  : Boolean;     -- Timer/Counter Control Register2 Update Busy
+      TCR2AUB  : Boolean;     -- Timer/Counter Control Register2 Update Busy
+      OCR2BUB  : Boolean;     -- Output Compare Register2 Update Busy
+      OCR2AUB  : Boolean;     -- Output Compare Register2 Update Busy
+      TCN2UB   : Boolean;     -- Timer/Counter2 Update Busy
+      AS2      : Boolean;     -- Asynchronous Timer/Counter2
+      EXCLK    : Boolean;     -- Enable External Clock Input
+      Reserved : Bits_1 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for ASSR_Type use
+   record
+      TCR2BUB  at 0 range 0 .. 0;
+      TCR2AUB  at 0 range 1 .. 1;
+      OCR2BUB  at 0 range 2 .. 2;
+      OCR2AUB  at 0 range 3 .. 3;
+      TCN2UB   at 0 range 4 .. 4;
+      AS2      at 0 range 5 .. 5;
+      EXCLK    at 0 range 6 .. 6;
+      Reserved at 0 range 7 .. 7;
+   end record;
+
+   ASSR_ADDRESS : constant := 16#B6#;
+
+   ASSR : aliased ASSR_Type with
+      Address              => To_Address (ASSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 17.11.9 GTCCR – General Timer/Counter Control Register
+
+   type GTCCR_Type is
+   record
+      PSRSYNC  : Boolean;     -- Prescaler Reset Timer/Counter1 and Timer/Counter0
+      PSRASY   : Boolean;     -- Prescaler Reset Timer/Counter2
+      Reserved : Bits_5 := 0;
+      TSM      : Boolean;     -- Timer/Counter Synchronization Mode
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for GTCCR_Type use
+   record
+      PSRSYNC  at 0 range 0 .. 0;
+      PSRASY   at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 6;
+      TSM      at 0 range 7 .. 7;
+   end record;
+
+   GTCCR_ADDRESS : constant := 16#43#;
+
+   GTCCR : aliased GTCCR_Type with
+      Address              => To_Address (GTCCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 18. SPI – Serial Peripheral Interface
+   ----------------------------------------------------------------------------
+
+   -- 18.5.1 SPCR – SPI Control Register
+
+   SPR_DIV4   : constant := 2#00#; -- fOSC/4
+   SPR_DIV16  : constant := 2#01#; -- fOSC/16
+   SPR_DIV64  : constant := 2#10#; -- fOSC/64
+   SPR_DIV128 : constant := 2#11#; -- fOSC/128
+
+   CPHA_LSample_TSetup : constant := 0; -- Leading Edge = Sample, Trailing Edge = Setup
+   CPHA_LSetup_TSample : constant := 1; -- Leading Edge = Setup, Trailing Edge = Sample
+
+   CPOL_LRaising_TFalling : constant := 0; -- Leading Edge = Raising, Trailing Edge = Falling
+   CPOL_LFalling_TRaising : constant := 1; -- Leading Edge = Falling, Trailing Edge = Raising
+
+   MSTR_SLAVE  : constant := 0; -- SPI Slave
+   MSTR_MASTER : constant := 1; -- SPI Master
+
+   DORD_MSB : constant := 0; -- MSB first
+   DORD_LSB : constant := 1; -- LSB first
+
+   type SPCR_Type is
+   record
+      SPR  : Bits_2;  -- SPI Clock Rate Select 1 and 0
+      CPHA : Bits_1;  -- Clock Phase
+      CPOL : Bits_1;  -- Clock Polarity
+      MSTR : Bits_1;  -- Master/Slave Select
+      DORD : Bits_1;  -- Data Order
+      SPE  : Boolean; -- SPI Enable
+      SPIE : Boolean; -- SPI Interrupt Enable
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SPCR_Type use
+   record
+      SPR  at 0 range 0 .. 1;
+      CPHA at 0 range 2 .. 2;
+      CPOL at 0 range 3 .. 3;
+      MSTR at 0 range 4 .. 4;
+      DORD at 0 range 5 .. 5;
+      SPE  at 0 range 6 .. 6;
+      SPIE at 0 range 7 .. 7;
+   end record;
+
+   SPCR_ADDRESS : constant := 16#4C#;
+
+   SPCR : aliased SPCR_Type with
+      Address              => To_Address (SPCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 18.5.2 SPSR – SPI Status Register
+
+   type SPSR_Type is
+   record
+      SPI2X    : Boolean;     -- Double SPI Speed Bit
+      Reserved : Bits_5 := 0;
+      WCOL     : Boolean;     -- Write COLlision Flag
+      SPIF     : Boolean;     -- SPI Interrupt Flag
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for SPSR_Type use
+   record
+      SPI2X    at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 5;
+      WCOL     at 0 range 6 .. 6;
+      SPIF     at 0 range 7 .. 7;
+   end record;
+
+   SPSR_ADDRESS : constant := 16#4D#;
+
+   SPSR : aliased SPSR_Type with
+      Address              => To_Address (SPSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 18.5.3 SPDR – SPI Data Register
+
+   SPDR_ADDRESS : constant := 16#4E#;
+
+   SPDR : aliased Unsigned_8 with
+      Address              => To_Address (SPDR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 19. USART0
    ----------------------------------------------------------------------------
 
    type USART_Character_Size_Type is
@@ -1523,97 +1623,6 @@ package ATmega328P is
 
    UDR0 : aliased Unsigned_8 with
       Address              => To_Address (UDR0_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   ----------------------------------------------------------------------------
-   -- SPI
-   ----------------------------------------------------------------------------
-
-   -- 18.5.1 SPCR – SPI Control Register
-
-   SPR_DIV4   : constant := 2#00#; -- fOSC/4
-   SPR_DIV16  : constant := 2#01#; -- fOSC/16
-   SPR_DIV64  : constant := 2#10#; -- fOSC/64
-   SPR_DIV128 : constant := 2#11#; -- fOSC/128
-
-   CPHA_LSample_TSetup : constant := 0; -- Leading Edge = Sample, Trailing Edge = Setup
-   CPHA_LSetup_TSample : constant := 1; -- Leading Edge = Setup, Trailing Edge = Sample
-
-   CPOL_LRaising_TFalling : constant := 0; -- Leading Edge = Raising, Trailing Edge = Falling
-   CPOL_LFalling_TRaising : constant := 1; -- Leading Edge = Falling, Trailing Edge = Raising
-
-   MSTR_SLAVE  : constant := 0; -- SPI Slave
-   MSTR_MASTER : constant := 1; -- SPI Master
-
-   DORD_MSB : constant := 0; -- MSB first
-   DORD_LSB : constant := 1; -- LSB first
-
-   type SPCR_Type is
-   record
-      SPR  : Bits_2;  -- SPI Clock Rate Select 1 and 0
-      CPHA : Bits_1;  -- Clock Phase
-      CPOL : Bits_1;  -- Clock Polarity
-      MSTR : Bits_1;  -- Master/Slave Select
-      DORD : Bits_1;  -- Data Order
-      SPE  : Boolean; -- SPI Enable
-      SPIE : Boolean; -- SPI Interrupt Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPCR_Type use
-   record
-      SPR  at 0 range 0 .. 1;
-      CPHA at 0 range 2 .. 2;
-      CPOL at 0 range 3 .. 3;
-      MSTR at 0 range 4 .. 4;
-      DORD at 0 range 5 .. 5;
-      SPE  at 0 range 6 .. 6;
-      SPIE at 0 range 7 .. 7;
-   end record;
-
-   SPCR_ADDRESS : constant := 16#4C#;
-
-   SPCR : aliased SPCR_Type with
-      Address              => To_Address (SPCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 18.5.2 SPSR – SPI Status Register
-
-   type SPSR_Type is
-   record
-      SPI2X    : Boolean;     -- Double SPI Speed Bit
-      Reserved : Bits_5 := 0;
-      WCOL     : Boolean;     -- Write COLlision Flag
-      SPIF     : Boolean;     -- SPI Interrupt Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPSR_Type use
-   record
-      SPI2X    at 0 range 0 .. 0;
-      Reserved at 0 range 1 .. 5;
-      WCOL     at 0 range 6 .. 6;
-      SPIF     at 0 range 7 .. 7;
-   end record;
-
-   SPSR_ADDRESS : constant := 16#4D#;
-
-   SPSR : aliased SPSR_Type with
-      Address              => To_Address (SPSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-
-   -- 18.5.3 SPDR – SPI Data Register
-
-   SPDR_ADDRESS : constant := 16#4E#;
-
-   SPDR : aliased Unsigned_8 with
-      Address              => To_Address (SPDR_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
