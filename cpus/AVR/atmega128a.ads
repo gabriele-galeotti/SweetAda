@@ -32,35 +32,12 @@ package ATmega128A is
 
    use System;
    use System.Storage_Elements;
+   use Interfaces;
+   use Bits;
 
    ----------------------------------------------------------------------------
-   -- CPU control
+   -- 11. AVR CPU Core
    ----------------------------------------------------------------------------
-
-   -- 16.2.1. MCUCR – MCU Control Register
-
-   type MCUCR_Type is
-   record
-      IVCE     : Boolean;     -- Interrupt Vector Change Enable
-      IVSEL    : Boolean;     -- Interrupt Vector Select
-      Reserved : Bits_6 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MCUCR_Type use
-   record
-      IVCE     at 0 range 0 .. 0;
-      IVSEL    at 0 range 1 .. 1;
-      Reserved at 0 range 2 .. 7;
-   end record;
-
-   MCUCR_ADDRESS : constant := 16#55#;
-
-   MCUCR : aliased MCUCR_Type with
-      Address              => To_Address (MCUCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
 
    -- 11.3.1. SREG – The AVR Status Register
 
@@ -98,7 +75,147 @@ package ATmega128A is
       Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- I/O Ports
+   -- 13. System Clock and Clock Options
+   ----------------------------------------------------------------------------
+
+   -- 13.10.1.XDIV – XTAL Divide Control Register
+
+   type XDIV_Type is
+   record
+      XDIV   : Bits_7;  -- XTAL Divide Select Bits [n = 6:0]
+      XDIVEN : Boolean; -- XTAL Divide Enable
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for XDIV_Type use
+   record
+      XDIV   at 0 range 0 .. 6;
+      XDIVEN at 0 range 7 .. 7;
+   end record;
+
+   XDIV_ADDRESS : constant := 16#5C#;
+
+   XDIV : aliased XDIV_Type with
+      Address              => To_Address (XDIV_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 13.10.2. OSCCAL – Oscillator Calibration Register
+
+   OSCCAL_ADDRESS : constant := 16#51#;
+
+   OSCCAL : Unsigned_8 with
+      Address              => To_Address (OSCCAL_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 14. Power Management and Sleep Modes
+   ----------------------------------------------------------------------------
+
+   -- 14.9.1. MCUCR – MCU Control Register
+   -- 16.2.1. MCUCR – MCU Control Register
+
+   type MCUCR_Type is
+   record
+      IVCE     : Boolean;     -- Interrupt Vector Change Enable
+      IVSEL    : Boolean;     -- Interrupt Vector Select
+      Reserved : Bits_6 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for MCUCR_Type use
+   record
+      IVCE     at 0 range 0 .. 0;
+      IVSEL    at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 7;
+   end record;
+
+   MCUCR_ADDRESS : constant := 16#55#;
+
+   MCUCR : aliased MCUCR_Type with
+      Address              => To_Address (MCUCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 15. System Control and Reset
+   ----------------------------------------------------------------------------
+
+   -- 15.6.1. MCUCSR – MCU Control and Status Register
+
+   type MCUCSR_Type is
+   record
+      PORF     : Boolean;     -- Power-on Reset Flag
+      EXTRF    : Boolean;     -- External Reset Flag
+      BORF     : Boolean;     -- Brown-out Reset Flag
+      WDRF     : Boolean;     -- Watchdog Reset Flag
+      JTRF     : Boolean;     -- JTAG Reset Flag
+      Reserved : Bits_3 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for MCUCSR_Type use
+   record
+      PORF     at 0 range 0 .. 0;
+      EXTRF    at 0 range 1 .. 1;
+      BORF     at 0 range 2 .. 2;
+      WDRF     at 0 range 3 .. 3;
+      JTRF     at 0 range 4 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   MCUCSR_ADDRESS : constant := 16#54#;
+
+   MCUCSR : aliased MCUCSR_Type with
+      Address              => To_Address (MCUCSR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   -- 15.6.2. WDTCR – Watchdog Timer Control Register
+
+   type WDT_Prescaler_Type is new Bits_3;
+
+   WDT_16K   : constant WDT_Prescaler_Type := 2#000#;
+   WDT_32K   : constant WDT_Prescaler_Type := 2#001#;
+   WDT_64K   : constant WDT_Prescaler_Type := 2#010#;
+   WDT_128K  : constant WDT_Prescaler_Type := 2#011#;
+   WDT_256K  : constant WDT_Prescaler_Type := 2#100#;
+   WDT_512K  : constant WDT_Prescaler_Type := 2#101#;
+   WDT_1024K : constant WDT_Prescaler_Type := 2#110#;
+   WDT_2048K : constant WDT_Prescaler_Type := 2#111#;
+
+   type WDTCR_Type is
+   record
+      WDP012   : Bits_3;      -- Watchdog Timer Prescaler bit 0 .. 2
+      WDE      : Boolean;     -- Watchdog Enable
+      WDCE     : Boolean;     -- Watchdog Change Enable
+      Reserved : Bits_3 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 8;
+   for WDTCR_Type use
+   record
+      WDP012   at 0 range 0 .. 2;
+      WDE      at 0 range 3 .. 3;
+      WDCE     at 0 range 4 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   WDTCR_ADDRESS : constant := 16#41#;
+
+   WDTCR : aliased WDTCR_Type with
+      Address              => To_Address (WDTCR_ADDRESS),
+      Volatile_Full_Access => True,
+      Import               => True,
+      Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 18. I/O Ports
    ----------------------------------------------------------------------------
 
    -- 18.4.2. PORTA – Port A Data Register
