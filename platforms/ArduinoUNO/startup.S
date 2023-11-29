@@ -50,7 +50,7 @@ _start:
                 .extern _ada_main
                 call    _ada_main
 
-dead:           jmp     .
+dead:           rjmp    dead
 
                 .size   _start,.-_start
 
