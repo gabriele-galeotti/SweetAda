@@ -29,8 +29,8 @@ package DivSI3Table is
 
    use Interfaces;
 
-   type GCC_Table_Type is array (0 .. 255) of Unsigned_8 with
-      Pack => True;
+   type GCC_Table_Type is array (0 .. 255) of Unsigned_8
+      with Pack => True;
 
    ----------------------------------------------------------------------------
    -- the address of divsi3_table is pre-loaded by the compiler in a register
@@ -70,9 +70,9 @@ package DivSI3Table is
        14 / 8, 14 / 9, 14 / 10, 14 / 11, 14 / 12, 14 / 13, 14 / 14, 14 / 15,
        0,      15 / 1, 15 / 2,  15 / 3,  15 / 4,  15 / 5,  15 / 6,  15 / 7,
        15 / 8, 15 / 9, 15 / 10, 15 / 11, 15 / 12, 15 / 13, 15 / 14, 15 / 15
-      ] with
-      Export        => True,
-      Convention    => C,
-      External_Name => "_divsi3_table";
+      ]
+      with Export        => True,
+           Convention    => C,
+           External_Name => "_divsi3_table";
 
 end DivSI3Table;

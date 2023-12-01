@@ -14,6 +14,7 @@
 #
 
                 .sect   .text,"ax"
+
                 .global __udivsi3
                 .type   __udivsi3,@function
                 .ent    __udivsi3

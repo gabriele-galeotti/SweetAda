@@ -14,6 +14,7 @@
 #
 
                 .sect   .text,"ax"
+
                 .global __modsi3
                 .type   __modsi3,@function
                 .ent    __modsi3

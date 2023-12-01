@@ -19,7 +19,9 @@ with Bits;
 with RISCV;
 
 separate (MTIME)
-procedure mtimecmp_Write (Value : in Unsigned_64) is
+procedure mtimecmp_Write
+   (Value : in Unsigned_64)
+   is
    mtimecmp_mmap : aliased RISCV.mtime_Type
       with Import        => True,
            Convention    => Ada,

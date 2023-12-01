@@ -14,6 +14,7 @@
 #
 
                 .sect   .text,"ax"
+
                 .global __umodsi3
                 .type   __umodsi3,@function
                 .ent    __umodsi3

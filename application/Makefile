@@ -28,5 +28,6 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) application.ad*
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
+              application.ad*
 

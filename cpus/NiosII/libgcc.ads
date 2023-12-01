@@ -29,36 +29,36 @@ package LibGCC is
 
    pragma Pure;
 
-   function DivSI3 (
-                    N : GCC_Types.SI_Type;
-                    D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__divsi3";
+   function DivSI3
+      (N : GCC_Types.SI_Type;
+       D : GCC_Types.SI_Type)
+      return GCC_Types.SI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__divsi3";
 
-   function ModSI3 (
-                    N : GCC_Types.SI_Type;
-                    D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__modsi3";
+   function ModSI3
+      (N : GCC_Types.SI_Type;
+       D : GCC_Types.SI_Type)
+      return GCC_Types.SI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__modsi3";
 
-   function UDivSI3 (
-                     N : GCC_Types.USI_Type;
-                     D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__udivsi3";
+   function UDivSI3
+      (N : GCC_Types.USI_Type;
+       D : GCC_Types.USI_Type)
+      return GCC_Types.USI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__udivsi3";
 
-   function UModSI3 (
-                     N : GCC_Types.USI_Type;
-                     D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__umodsi3";
+   function UModSI3
+      (N : GCC_Types.USI_Type;
+       D : GCC_Types.USI_Type)
+      return GCC_Types.USI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__umodsi3";
 
 end LibGCC;

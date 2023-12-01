@@ -28,11 +28,11 @@ package body LibGCC is
    use type GCC_Types.SI_Type;
    use type GCC_Types.USI_Type;
 
-   function UDivModSI4 (
-                        N : GCC_Types.USI_Type;
-                        D : GCC_Types.USI_Type;
-                        M : Boolean
-                       ) return GCC_Types.USI_Type;
+   function UDivModSI4
+      (N : GCC_Types.USI_Type;
+       D : GCC_Types.USI_Type;
+       M : Boolean)
+      return GCC_Types.USI_Type;
 
    --========================================================================--
    --                                                                        --
@@ -45,47 +45,52 @@ package body LibGCC is
    ----------------------------------------------------------------------------
    -- UDivModSI4
    ----------------------------------------------------------------------------
-   function UDivModSI4 (
-                        N : GCC_Types.USI_Type;
-                        D : GCC_Types.USI_Type;
-                        M : Boolean
-                       ) return GCC_Types.USI_Type is
+   function UDivModSI4
+      (N : GCC_Types.USI_Type;
+       D : GCC_Types.USI_Type;
+       M : Boolean)
+      return GCC_Types.USI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- DivSI3
    ----------------------------------------------------------------------------
-   function DivSI3 (
-                    N : GCC_Types.SI_Type;
-                    D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type is
+   function DivSI3
+      (N : GCC_Types.SI_Type;
+       D : GCC_Types.SI_Type)
+      return GCC_Types.SI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- ModSI3
    ----------------------------------------------------------------------------
-   function ModSI3 (
-                    N : GCC_Types.SI_Type;
-                    D : GCC_Types.SI_Type
-                   ) return GCC_Types.SI_Type is
+   function ModSI3
+      (N : GCC_Types.SI_Type;
+       D : GCC_Types.SI_Type)
+      return GCC_Types.SI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- UDivSI3
    ----------------------------------------------------------------------------
-   function UDivSI3 (
-                     N : GCC_Types.USI_Type;
-                     D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type is
+   function UDivSI3
+      (N : GCC_Types.USI_Type;
+       D : GCC_Types.USI_Type)
+      return GCC_Types.USI_Type
+      is
    separate;
 
    ----------------------------------------------------------------------------
    -- UModSI3
    ----------------------------------------------------------------------------
-   function UModSI3 (
-                     N : GCC_Types.USI_Type;
-                     D : GCC_Types.USI_Type
-                    ) return GCC_Types.USI_Type is
+   function UModSI3
+      (N : GCC_Types.USI_Type;
+       D : GCC_Types.USI_Type)
+      return GCC_Types.USI_Type
+      is
    separate;
 
 end LibGCC;

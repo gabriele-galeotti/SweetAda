@@ -14,6 +14,7 @@
 #
 
                 .sect   .text,"ax"
+
                 .global __mulsi3
                 .type   __mulsi3,@function
                 .ent    __mulsi3

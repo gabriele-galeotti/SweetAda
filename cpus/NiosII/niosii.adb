@@ -44,7 +44,9 @@ package body NiosII is
    -- status_Read/Write
    ----------------------------------------------------------------------------
 
-   function status_Read return status_Type is
+   function status_Read
+      return status_Type
+      is
       Value : status_Type;
    begin
       Asm (
@@ -59,7 +61,9 @@ package body NiosII is
       return Value;
    end status_Read;
 
-   procedure status_Write (Value : in status_Type) is
+   procedure status_Write
+      (Value : in status_Type)
+      is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -76,7 +80,9 @@ package body NiosII is
    -- estatus_Read/Write
    ----------------------------------------------------------------------------
 
-   function estatus_Read return status_Type is
+   function estatus_Read
+      return status_Type
+      is
       Value : status_Type;
    begin
       Asm (
@@ -91,7 +97,9 @@ package body NiosII is
       return Value;
    end estatus_Read;
 
-   procedure estatus_Write (Value : in status_Type) is
+   procedure estatus_Write
+      (Value : in status_Type)
+      is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -108,7 +116,9 @@ package body NiosII is
    -- bstatus_Read/Write
    ----------------------------------------------------------------------------
 
-   function bstatus_Read return status_Type is
+   function bstatus_Read
+      return status_Type
+      is
       Value : status_Type;
    begin
       Asm (
@@ -123,7 +133,9 @@ package body NiosII is
       return Value;
    end bstatus_Read;
 
-   procedure bstatus_Write (Value : in status_Type) is
+   procedure bstatus_Write
+      (Value : in status_Type)
+      is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -140,7 +152,9 @@ package body NiosII is
    -- ienable_Read/Write
    ----------------------------------------------------------------------------
 
-   function ienable_Read return Bitmap_32 is
+   function ienable_Read
+      return Bitmap_32
+      is
       Value : Bitmap_32;
    begin
       Asm (
@@ -155,7 +169,9 @@ package body NiosII is
       return Value;
    end ienable_Read;
 
-   procedure ienable_Write (Value : in Bitmap_32) is
+   procedure ienable_Write
+      (Value : in Bitmap_32)
+      is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -171,7 +187,9 @@ package body NiosII is
    ----------------------------------------------------------------------------
    -- ipending_Read
    ----------------------------------------------------------------------------
-   function ipending_Read return Bitmap_32 is
+   function ipending_Read
+      return Bitmap_32
+      is
       Value : Bitmap_32;
    begin
       Asm (
@@ -189,7 +207,9 @@ package body NiosII is
    ----------------------------------------------------------------------------
    -- cpuid_Read
    ----------------------------------------------------------------------------
-   function cpuid_Read return Unsigned_32 is
+   function cpuid_Read
+      return Unsigned_32
+      is
       Value : Unsigned_32;
    begin
       Asm (
@@ -207,7 +227,9 @@ package body NiosII is
    ----------------------------------------------------------------------------
    -- exception_control_Read
    ----------------------------------------------------------------------------
-   function exception_control_Read return exception_control_Type is
+   function exception_control_Read
+      return exception_control_Type
+      is
       Value : exception_control_Type;
    begin
       Asm (
@@ -225,7 +247,8 @@ package body NiosII is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -241,7 +264,9 @@ package body NiosII is
    ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
+   procedure Asm_Call
+      (Target_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -258,7 +283,9 @@ package body NiosII is
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   procedure PIE_Set (PIE : in Boolean) is
+   procedure PIE_Set
+      (PIE : in Boolean)
+      is
       status : status_Type;
    begin
       status := status_Read;
@@ -266,22 +293,28 @@ package body NiosII is
       status_Write (status);
    end PIE_Set;
 
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       PIE_Set (True);
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       PIE_Set (False);
    end Irq_Disable;
 
-   function Irq_State_Get return Irq_State_Type is
+   function Irq_State_Get
+      return Irq_State_Type
+      is
    begin
       return status_Read.PIE;
    end Irq_State_Get;
 
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
    begin
       PIE_Set (Irq_State);
    end Irq_State_Set;

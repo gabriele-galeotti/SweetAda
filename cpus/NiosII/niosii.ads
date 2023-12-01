@@ -70,20 +70,26 @@ package NiosII is
       Reserved at 0 range 24 .. 31;
    end record;
 
-   function status_Read return status_Type with
-      Inline => True;
-   procedure status_Write (Value : in status_Type) with
-      Inline => True;
+   function status_Read
+      return status_Type
+      with Inline => True;
+   procedure status_Write
+      (Value : in status_Type)
+      with Inline => True;
 
-   function estatus_Read return status_Type with
-      Inline => True;
-   procedure estatus_Write (Value : in status_Type) with
-      Inline => True;
+   function estatus_Read
+      return status_Type
+      with Inline => True;
+   procedure estatus_Write
+      (Value : in status_Type)
+      with Inline => True;
 
-   function bstatus_Read return status_Type with
-      Inline => True;
-   procedure bstatus_Write (Value : in status_Type) with
-      Inline => True;
+   function bstatus_Read
+      return status_Type
+      with Inline => True;
+   procedure bstatus_Write
+      (Value : in status_Type)
+      with Inline => True;
 
    -- IRQ constants for ienable and ipending
 
@@ -122,20 +128,24 @@ package NiosII is
 
    -- ienable
 
-   function ienable_Read return Bitmap_32 with
-      Inline => True;
-   procedure ienable_Write (Value : in Bitmap_32) with
-      Inline => True;
+   function ienable_Read
+      return Bitmap_32
+      with Inline => True;
+   procedure ienable_Write
+      (Value : in Bitmap_32)
+      with Inline => True;
 
    -- ipending
 
-   function ipending_Read return Bitmap_32 with
-      Inline => True;
+   function ipending_Read
+      return Bitmap_32
+      with Inline => True;
 
    -- cpuid
 
-   function cpuid_Read return Unsigned_32 with
-      Inline => True;
+   function cpuid_Read
+      return Unsigned_32
+      with Inline => True;
 
    -- exception control
 
@@ -154,17 +164,19 @@ package NiosII is
       Reserved2 at 0 range 7 .. 31;
    end record;
 
-   function exception_control_Read return exception_control_Type with
-      Inline => True;
+   function exception_control_Read
+      return exception_control_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP with
-      Inline => True;
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Irq handling
@@ -172,17 +184,20 @@ package NiosII is
 
    subtype Irq_State_Type is Boolean;
 
-   procedure PIE_Set (PIE : in Boolean) with
-      Inline => True;
+   procedure PIE_Set
+      (PIE : in Boolean)
+      with Inline => True;
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
 
-   function Irq_State_Get return Irq_State_Type with
-      Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
-      Inline => True;
+   function Irq_State_Get
+      return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
 end NiosII;

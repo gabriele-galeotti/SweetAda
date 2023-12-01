@@ -18,7 +18,9 @@
 with RISCV;
 
 separate (MTIME)
-function mtime_Read return Unsigned_64 is
+function mtime_Read
+   return Unsigned_64
+   is
    mtime_mmap : aliased RISCV.mtime_Type
       with Import        => True,
            Convention    => Ada,
