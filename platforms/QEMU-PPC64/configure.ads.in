@@ -1,0 +1,14 @@
+
+package Configure is
+
+   pragma Pure;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM  : constant String := "QEMU-PPC64";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- IOEMU
+   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
+
+end Configure;
