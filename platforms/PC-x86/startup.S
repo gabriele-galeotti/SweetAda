@@ -235,7 +235,7 @@ delay:          movw    $0x43,%dx               // CONTROL_WORD_REGISTER
 
                 .sect   .bss
 
-                .align  8
+                .balign 8
                 .space  KERNEL_STACK_SIZE
 kernel_stack:
 

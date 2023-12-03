@@ -45,7 +45,7 @@
                 // stack, discarding upper 2 bytes
                 //
 
-                .align  4
+                .balign 4
                 .global div_by_0_handler
 div_by_0_handler:
                 // number: 0
@@ -53,7 +53,7 @@ div_by_0_handler:
                 pushl   $DIVISION_BY_0
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global debug_exception_handler
 debug_exception_handler:
                 // number: 1
@@ -61,7 +61,7 @@ debug_exception_handler:
                 pushl   $DEBUG_EXCEPTION
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global nmi_interrupt_handler
 nmi_interrupt_handler:
                 // number: 2
@@ -69,7 +69,7 @@ nmi_interrupt_handler:
                 pushl   $NMI_INTERRUPT
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global one_byte_int_handler
 one_byte_int_handler:
                 // number: 3
@@ -77,7 +77,7 @@ one_byte_int_handler:
                 pushl   $ONE_BYTE_INTERRUPT
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global int_on_overflow_handler
 int_on_overflow_handler:
                 // number: 4
@@ -85,7 +85,7 @@ int_on_overflow_handler:
                 pushl   $INT_ON_OVERFLOW
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global array_bounds_handler
 array_bounds_handler:
                 // number: 5
@@ -93,7 +93,7 @@ array_bounds_handler:
                 pushl   $ARRAY_BOUNDS
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global invalid_opcode_handler
 invalid_opcode_handler:
                 // number: 6
@@ -101,7 +101,7 @@ invalid_opcode_handler:
                 pushl   $INVALID_OPCODE
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global device_not_avl_handler
 device_not_avl_handler:
                 // number: 7
@@ -109,7 +109,7 @@ device_not_avl_handler:
                 pushl   $DEVICE_NOT_AVAILABLE
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global double_fault_handler
 double_fault_handler:
                 // number: 8
@@ -117,7 +117,7 @@ double_fault_handler:
                 pushl   $DOUBLE_FAULT
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global cp_seg_ovr_handler
 cp_seg_ovr_handler:
                 // number: 9
@@ -125,7 +125,7 @@ cp_seg_ovr_handler:
                 pushl   $CP_SEGMENT_OVERRUN
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global invalid_tss_handler
 invalid_tss_handler:
                 // number: 10
@@ -133,7 +133,7 @@ invalid_tss_handler:
                 pushl   $INVALID_TSS
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global seg_not_prsnt_handler
 seg_not_prsnt_handler:
                 // number: 11
@@ -141,7 +141,7 @@ seg_not_prsnt_handler:
                 pushl   $SEGMENT_NOT_PRESENT
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global stack_fault_handler
 stack_fault_handler:
                 // number: 12
@@ -149,7 +149,7 @@ stack_fault_handler:
                 pushl   $STACK_FAULT
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global gen_prot_fault_handler
 gen_prot_fault_handler:
                 // number: 13
@@ -157,7 +157,7 @@ gen_prot_fault_handler:
                 pushl   $GENERAL_PROTECTION
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global page_fault_handler
 page_fault_handler:
                 // number: 14
@@ -165,7 +165,7 @@ page_fault_handler:
                 pushl   $PAGE_FAULT
                 jmp     exception_handler
 
-                .align  4
+                .balign 4
                 .global coproc_error_handler
 coproc_error_handler:
                 // number: 16
@@ -176,7 +176,7 @@ coproc_error_handler:
                 //
                 // Exception common handler.
                 //
-                .align  4
+                .balign 4
 exception_handler:
                 .extern exception_process
                 SAVE_REGISTERS
@@ -197,98 +197,98 @@ exception_handler:
                 // argument for the subsequent call.
                 //
 
-                .align  4
+                .balign 4
                 .global irq0_handler
 irq0_handler:
                 pushl   $IRQ0
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq1_handler
 irq1_handler:
                 pushl   $IRQ1
                 jmp     irq_handler
 
 // IRQ2 rerouted to IRQ9
-//                .align  4
+//                .balign 4
 //                .global irq2_handler
 //irq2_handler:
 //                pushl   $IRQ2
 //                jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq3_handler
 irq3_handler:
                 pushl   $IRQ3
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq4_handler
 irq4_handler:
                 pushl   $IRQ4
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq5_handler
 irq5_handler:
                 pushl   $IRQ5
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq6_handler
 irq6_handler:
                 pushl   $IRQ6
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq7_handler
 irq7_handler:
                 pushl   $IRQ7
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq8_handler
 irq8_handler:
                 pushl   $IRQ8
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq9_handler
 irq9_handler:
                 pushl   $IRQ9
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq10_handler
 irq10_handler:
                 pushl   $IRQ10
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq11_handler
 irq11_handler:
                 pushl   $IRQ11
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq12_handler
 irq12_handler:
                 pushl   $IRQ12
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq13_handler
 irq13_handler:
                 pushl   $IRQ13
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq14_handler
 irq14_handler:
                 pushl   $IRQ14
                 jmp     irq_handler
 
-                .align  4
+                .balign 4
                 .global irq15_handler
 irq15_handler:
                 pushl   $IRQ15
@@ -297,7 +297,7 @@ irq15_handler:
                 //
                 // IRQ common handler.
                 //
-                .align  4
+                .balign 4
 irq_handler:
                 .extern irq_process
                 SAVE_REGISTERS
