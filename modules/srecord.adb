@@ -38,18 +38,17 @@ package body Srecord is
 
    type Srecord_Type is (NONE, S0, S1, S2, S3, S4, S5, S6, S7, S8, S9);
 
-   type RX_Status_Type is (
-                           WAIT_S,
-                           WAIT_TYPE,
-                           WAIT_BYTECOUNT1,
-                           WAIT_BYTECOUNT2,
-                           WAIT_ADDRESS,
-                           WAIT_COUNT,
-                           WAIT_DATA,
-                           WAIT_CHECKSUM1,
-                           WAIT_CHECKSUM2,
-                           WAIT_EOL
-                          );
+   type RX_Status_Type is
+      (WAIT_S,
+       WAIT_TYPE,
+       WAIT_BYTECOUNT1,
+       WAIT_BYTECOUNT2,
+       WAIT_ADDRESS,
+       WAIT_COUNT,
+       WAIT_DATA,
+       WAIT_CHECKSUM1,
+       WAIT_CHECKSUM2,
+       WAIT_EOL);
 
    RX_Character : Getchar_Ptr;
    TX_Character : Putchar_Ptr;
@@ -72,7 +71,8 @@ package body Srecord is
    -- S/Type/ByteCount/Address/Data/Checksum
    -- A quick exit from the loop could be obtained by typing "S70400000000FB".
    ----------------------------------------------------------------------------
-   procedure Receive is
+   procedure Receive
+      is
       RX_Status         : RX_Status_Type;
       C                 : Character;
       C_Is_HexDigit     : Boolean;
@@ -270,11 +270,11 @@ package body Srecord is
    -- Getchar: procedure pointer to get a character from terminal
    -- Putchar: procedure pointer to put a character to terminal
    ----------------------------------------------------------------------------
-   procedure Init (
-                   Getchar     : in Getchar_Ptr;
-                   Putchar     : in Putchar_Ptr;
-                   Echo_Enable : in Boolean
-                  ) is
+   procedure Init
+      (Getchar     : in Getchar_Ptr;
+       Putchar     : in Putchar_Ptr;
+       Echo_Enable : in Boolean)
+      is
    begin
       RX_Character := Getchar;
       TX_Character := Putchar;

@@ -13,9 +13,6 @@
 /*
  * ISO 8859-1 and Microsoft® Windows Latin-1 increased characters.
  *
- * __REF__ http://www.ascii-code.com/
- * __REF__ https://en.wikipedia.org/wiki/ISO/IEC_8859-1
- *
  * _CTYPE_U 0x01 UPPERCASE SYMBOL
  * _CTYPE_L 0x02 LOWERCASE SYMBOL
  * _CTYPE_D 0x04 NUMERIC DIGIT

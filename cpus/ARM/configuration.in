@@ -1,6 +1,6 @@
 
 ifeq ($(TOOLCHAIN_NAME),)
-# defaults to LE ARM
+# default to LE ARM
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_ARM)
 endif
 

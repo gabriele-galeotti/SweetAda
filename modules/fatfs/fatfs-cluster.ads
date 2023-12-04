@@ -27,19 +27,19 @@ package FATFS.Cluster is
 
    function Is_End
       (CCB : in CCB_Type)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
 
    function To_Sector
       (D : in Descriptor_Type;
        C : in Cluster_Type)
-      return Sector_Type with
-      Inline => True;
+      return Sector_Type
+      with Inline => True;
 
    function File_EOF
       (F : in FAT_Type)
-      return Cluster_Type with
-      Inline => True;
+      return Cluster_Type
+      with Inline => True;
 
    procedure Map
       (CCB   :    out CCB_Type;

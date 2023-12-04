@@ -35,10 +35,9 @@ package Srecord is
    Start_Address : Integer_Address := 0;
 
    procedure Receive;
-   procedure Init (
-                   Getchar     : in Getchar_Ptr;
-                   Putchar     : in Putchar_Ptr;
-                   Echo_Enable : in Boolean
-                  );
+   procedure Init
+      (Getchar     : in Getchar_Ptr;
+       Putchar     : in Putchar_Ptr;
+       Echo_Enable : in Boolean);
 
 end Srecord;

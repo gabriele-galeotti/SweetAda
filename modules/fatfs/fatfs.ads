@@ -214,8 +214,8 @@ package FATFS is
       Size            at 28 range 0 .. 31;
    end record;
 
-   type Directory_Entry_Array is array (Unsigned_16 range <>) of Directory_Entry_Type with
-      Component_Size => 32 * Storage_Unit;
+   type Directory_Entry_Array is array (Unsigned_16 range <>) of Directory_Entry_Type
+      with Component_Size => 32 * Storage_Unit;
 
    -- Cluster Control Block
    type CCB_Type is
@@ -272,52 +272,50 @@ package FATFS is
 
    function Is_Separator
       (C : in Character)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
 
    procedure Time_Set
       (D : in out Descriptor_Type;
        T : in     Time_Type)
-      with
-      Inline => True;
+      with Inline => True;
 
    procedure Time_Get
       (D : in     Descriptor_Type;
        T :    out Time_Type)
-      with
-      Inline => True;
+      with Inline => True;
 
    function Physical_Sector
       (D      : in Descriptor_Type;
        Sector : in Sector_Type)
-      return Sector_Type with
-      Inline => True;
+      return Sector_Type
+      with Inline => True;
 
    function FAT_Is_End
       (D : in Descriptor_Type;
        S : in Sector_Type)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
 
    function FAT_Sector
       (D : in Descriptor_Type;
        F : in FAT_Type;
        C : in Cluster_Type)
-      return Sector_Type with
-      Inline => True;
+      return Sector_Type
+      with Inline => True;
 
    function FAT_Entry_Index
       (F : in FAT_Type;
        C : in Cluster_Type)
-      return Natural with
-      Inline => True;
+      return Natural
+      with Inline => True;
 
    function FAT_Entry
       (D : in Descriptor_Type;
        B : in Block_Type;
        C : in Cluster_Type)
-      return Cluster_Type with
-      Inline => True;
+      return Cluster_Type
+      with Inline => True;
 
    procedure FAT_Put_Entry
       (D     : in     Descriptor_Type;

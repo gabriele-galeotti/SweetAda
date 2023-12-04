@@ -40,10 +40,10 @@ package MicroBlaze is
 
    MSR_IE : constant := 2#10#;
 
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- MicroBlaze registers

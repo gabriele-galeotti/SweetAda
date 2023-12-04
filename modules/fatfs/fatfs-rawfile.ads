@@ -27,8 +27,8 @@ package FATFS.Rawfile is
 
    function Is_Valid
       (WCB : in WCB_Type)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
 
    -- READ
 
