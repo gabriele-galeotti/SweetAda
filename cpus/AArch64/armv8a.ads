@@ -405,6 +405,124 @@ package ARMv8A is
       (Value : in HCR_EL2_Type)
       with Inline => True;
 
+   -- D19.2.120 SCR_EL3, Secure Configuration Register
+
+   type Non_Secure_Type is
+   record
+      NS  : Bits_1;
+      NSE : Bits_1;
+   end record;
+
+   Non_Secure_Secure    : constant Non_Secure_Type := (0, 0); -- Secure.
+   Non_Secure_NonSecure : constant Non_Secure_Type := (0, 1); -- Non-secure.
+   Non_Secure_Reserved  : constant Non_Secure_Type := (1, 0); -- Reserved.
+   Non_Secure_Realm     : constant Non_Secure_Type := (1, 1); -- Realm.
+
+   type SCR_EL3_Type is
+   record
+      NS        : Bits_1;          -- Non-secure bit.
+      IRQ       : Boolean;         -- Physical IRQ Routing.
+      FIQ       : Boolean;         -- Physical FIQ Routing.
+      EA        : Boolean;         -- External Abort and SError interrupt routing.
+      Reserved1 : Bits_2 := 2#11#;
+      Reserved2 : Bits_1 := 0;
+      SMD       : Boolean;         -- Secure Monitor Call disable.
+      HCE       : Boolean;         -- Hypervisor Call instruction enable.
+      SIF       : Boolean;         -- Secure instruction fetch.
+      RW        : Boolean;         -- Execution state control for lower Exception levels.
+      ST        : Boolean;         -- Traps Secure EL1 accesses to the Counter-timer Physical Secure timer ...
+      TWI       : Boolean;         -- Traps EL2, EL1, and EL0 execution of WFI instructions to EL3, from any ...
+      TWE       : Boolean;         -- Traps EL2, EL1, and EL0 execution of WFE instructions to EL3, from any ...
+      TLOR      : Boolean;         -- Trap LOR registers.
+      TERR      : Boolean;         -- Trap accesses of error record registers.
+      APK       : Boolean;         -- Trap registers holding "key" values for Pointer Authentication.
+      API       : Boolean;         -- Controls the use of the following instructions related to Pointer Authentication.
+      EEL2      : Boolean;         -- Secure EL2 Enable.
+      EASE      : Boolean;         -- External aborts to SError interrupt vector.
+      NMEA      : Boolean;         -- Non-maskable External Aborts.
+      FIEN      : Boolean;         -- Fault Injection enable.
+      Reserved3 : Bits_3 := 0;
+      EnSCXT    : Boolean;         -- Enables access to the SCXTNUM_EL2, SCXTNUM_EL1, and SCXTNUM_EL0 registers.
+      ATA       : Boolean;         -- Allocation Tag Access.
+      FGTEn     : Boolean;         -- Fine-Grained Traps Enable.
+      ECVEn     : Boolean;         -- ECV Enable.
+      TWEDEn    : Boolean;         -- TWE Delay Enable.
+      TWEDEL    : Bits_4;          -- TWE Delay.
+      TME       : Boolean;         -- Enables access to the TSTART, TCOMMIT, TTEST and TCANCEL instructions at ...
+      AMVOFFEN  : Boolean;         -- Activity Monitors Virtual Offsets Enable.
+      EnAS0     : Boolean;         -- Traps execution of an ST64BV0 instruction at EL0, EL1, or EL2 to EL3.
+      ADEn      : Boolean;         -- Enables access to the ACCDATA_EL1 register at EL1 and EL2.
+      HXEn      : Boolean;         -- Enables access to the HCRX_EL2 register at EL2 from EL3.
+      Reserved4 : Bits_1 := 0;
+      TRNDR     : Boolean;         -- Controls trapping of reads of RNDR and RNDRRS.
+      EnTP2     : Boolean;         -- Traps instructions executed at EL2, EL1, and EL0 that access TPIDR2_EL0 to EL3.
+      Reserved5 : Bits_1 := 0;
+      TCR2En    : Boolean;         -- TCR2_ELx register trap control.
+      SCTLR2En  : Boolean;         -- SCTLR2_ELx register trap control.
+      Reserved6 : Bits_3 := 0;
+      GPF       : Boolean;         -- Controls the reporting of Granule protection faults at EL0, EL1 and EL2.
+      MECEn     : Boolean;         -- Enables access to the following EL2 MECID registers, from EL2: ...
+      Reserved7 : Bits_12 := 0;
+      NSE       : Bits_1;          -- This field, evaluated with SCR_EL3.NS, selects the Security state of EL2 and ...
+      Reserved8 : Bits_1 := 0;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for SCR_EL3_Type use record
+      NS        at 0 range  0 ..  0;
+      IRQ       at 0 range  1 ..  1;
+      FIQ       at 0 range  2 ..  2;
+      EA        at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 ..  5;
+      Reserved2 at 0 range  6 ..  6;
+      SMD       at 0 range  7 ..  7;
+      HCE       at 0 range  8 ..  8;
+      SIF       at 0 range  9 ..  9;
+      RW        at 0 range 10 .. 10;
+      ST        at 0 range 11 .. 11;
+      TWI       at 0 range 12 .. 12;
+      TWE       at 0 range 13 .. 13;
+      TLOR      at 0 range 14 .. 14;
+      TERR      at 0 range 15 .. 15;
+      APK       at 0 range 16 .. 16;
+      API       at 0 range 17 .. 17;
+      EEL2      at 0 range 18 .. 18;
+      EASE      at 0 range 19 .. 19;
+      NMEA      at 0 range 20 .. 20;
+      FIEN      at 0 range 21 .. 21;
+      Reserved3 at 0 range 22 .. 24;
+      EnSCXT    at 0 range 25 .. 25;
+      ATA       at 0 range 26 .. 26;
+      FGTEn     at 0 range 27 .. 27;
+      ECVEn     at 0 range 28 .. 28;
+      TWEDEn    at 0 range 29 .. 29;
+      TWEDEL    at 0 range 30 .. 33;
+      TME       at 0 range 34 .. 34;
+      AMVOFFEN  at 0 range 35 .. 35;
+      EnAS0     at 0 range 36 .. 36;
+      ADEn      at 0 range 37 .. 37;
+      HXEn      at 0 range 38 .. 38;
+      Reserved4 at 0 range 39 .. 39;
+      TRNDR     at 0 range 40 .. 40;
+      EnTP2     at 0 range 41 .. 41;
+      Reserved5 at 0 range 42 .. 42;
+      TCR2En    at 0 range 43 .. 43;
+      SCTLR2En  at 0 range 44 .. 44;
+      Reserved6 at 0 range 45 .. 47;
+      GPF       at 0 range 48 .. 48;
+      MECEn     at 0 range 49 .. 49;
+      Reserved7 at 0 range 50 .. 61;
+      NSE       at 0 range 62 .. 62;
+      Reserved8 at 0 range 63 .. 63;
+   end record;
+
+   function SCR_EL3_Read
+      return SCR_EL3_Type
+      with Inline => True;
+   procedure SCR_EL3_Write
+      (Value : in SCR_EL3_Type)
+      with Inline => True;
+
    -- D19.2.124 SCTLR_EL1, System Control Register (EL1)
 
    E0E_LE : constant := 0; -- Explicit data accesses at EL0 are little-endian.
