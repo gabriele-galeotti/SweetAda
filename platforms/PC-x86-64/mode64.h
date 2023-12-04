@@ -178,11 +178,11 @@
                 .extern _longmode
                 ljmpl   $SELECTOR_KCODE64,$_longmode
 
-                .align  2,0
+                .balign 2,0
 gdtdsc64:       .word   3*8-1                           // bytes 0..1 GDT limit in bytes
                 .long   gdt64                           // bytes 2..5 GDT linear base address
 
-                .align  GDT_ALIGNMENT,0
+                .balign GDT_ALIGNMENT,0
 gdt64:
                 // selector #0x00 invalid entry
                 .quad   0
@@ -205,7 +205,7 @@ gdt64:
 
                 .pushsection .pagetables
 
-                .align  4096
+                .balign 4096
 
 pml4t:          .space  512*8
 

@@ -276,7 +276,7 @@ dead:           jmp     .
 
                 .sect   .bss
 
-                .align  8
+                .balign 8
                 .space  KERNEL_STACK_SIZE
 kernel_stack:
 
