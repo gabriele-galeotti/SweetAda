@@ -37,9 +37,15 @@ package body Exceptions is
    use Interfaces;
    use Bits;
 
-   EL3_Table : aliased constant Asm_Entry_Point with Import => True, External_Name => "el3_table";
-   EL2_Table : aliased constant Asm_Entry_Point with Import => True, External_Name => "el2_table";
-   EL1_Table : aliased constant Asm_Entry_Point with Import => True, External_Name => "el1_table";
+   EL3_Table : aliased constant Asm_Entry_Point
+      with Import        => True,
+           External_Name => "el3_table";
+   EL2_Table : aliased constant Asm_Entry_Point
+      with Import        => True,
+           External_Name => "el2_table";
+   EL1_Table : aliased constant Asm_Entry_Point
+      with Import        => True,
+           External_Name => "el1_table";
 
    --========================================================================--
    --                                                                        --
@@ -52,7 +58,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
    begin
       null;
    end Exception_Process;
@@ -60,7 +67,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process is
+   procedure Irq_Process
+      is
    begin
       BSP.Tick_Count := @ + 1;
       if (BSP.Tick_Count and 16#0000_0100#) = 0 then
@@ -77,11 +85,16 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
       function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
    begin
-      -- ARMv8A.VBAR_EL3_Write (To_U64 (EL3_Table'Address));
-      -- ARMv8A.VBAR_EL2_Write (To_U64 (EL2_Table'Address));
+      if ARMv8A.CurrentEL_Read.EL = 3 then
+         ARMv8A.VBAR_EL3_Write (To_U64 (EL3_Table'Address));
+      end if;
+      if ARMv8A.CurrentEL_Read.EL = 2 then
+         ARMv8A.VBAR_EL2_Write (To_U64 (EL2_Table'Address));
+      end if;
       ARMv8A.VBAR_EL1_Write (To_U64 (EL1_Table'Address));
    end Init;
 

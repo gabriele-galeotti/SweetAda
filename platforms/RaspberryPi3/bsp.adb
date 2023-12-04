@@ -42,15 +42,15 @@ package body BSP is
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
-   function Number_Of_CPUs return Interfaces.C.int with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_number_of_cpus";
+   function Number_Of_CPUs return Interfaces.C.int
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_number_of_cpus";
 
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_get_secondary_stack";
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -63,7 +63,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Number_Of_CPUs
    ----------------------------------------------------------------------------
-   function Number_Of_CPUs return Interfaces.C.int is
+   function Number_Of_CPUs return Interfaces.C.int
+      is
    begin
       return 4;
    end Number_Of_CPUs;
@@ -71,7 +72,9 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      is
    begin
       return BSP_SS_Stack;
    end Get_Sec_Stack;
@@ -80,7 +83,9 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -89,7 +94,9 @@ package body BSP is
       RPI3.AUX_MU_IO_REG.DATA := To_U8 (C);
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
    begin
       -- wait for receiver available
       loop
@@ -101,7 +108,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
       System_Clock : constant := 250 * MHz1;
       Baud_Rate    : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
@@ -144,6 +152,16 @@ package body BSP is
       RPI3.GPFSEL0.FSEL6 := RPI3.GPIO_OUTPUT;
       -- Timer IRQ ------------------------------------------------------------
       RPI3.Enable_IRQs_1 (RPI3.system_timer_match_1) := True;
+      -- handle IRQs at EL2
+      if ARMv8A.CurrentEL_Read.EL = 2 then
+         declare
+            HCR_EL2 : ARMv8A.HCR_EL2_Type;
+         begin
+            HCR_EL2 := ARMv8A.HCR_EL2_Read;
+            HCR_EL2.IMO := True;
+            ARMv8A.HCR_EL2_Write (HCR_EL2);
+         end;
+      end if;
       ARMv8A.Irq_Enable;
       RPI3.Timer_Reload;
       -------------------------------------------------------------------------

@@ -10,6 +10,7 @@ CPU_MODEL := Cortex-A53
 
 GCC_SWITCHES_PLATFORM     := -mcpu=cortex-a53 -mabi=lp64
 STARTUP_OBJECTS           := startup.S llkernel.S
+#GCC_SWITCHES_STARTUP      := -DSTARTUP_EL1
 LD_SWITCHES_PLATFORM      := --undefined=el_table --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
@@ -30,7 +31,7 @@ SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
                            -shutdown
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
-                           -e $(ELFTOOL) -s _start -command "reset init;halt"
+                           -e $(ELFTOOL) -s _start -command "halt"
 DEBUG_COMMAND         := $(RUN_COMMAND) -debug &&                          \
                          $${GDB}                                           \
                                -ex "target extended-remote localhost:3333" \

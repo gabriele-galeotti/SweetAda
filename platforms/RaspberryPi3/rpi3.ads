@@ -66,17 +66,17 @@ package RPI3 is
       Size      => 32;
    for AUXENB_Type use
    record
-      MiniUART_Enable at 0 range 0 .. 0;
-      SPI1_Enable     at 0 range 1 .. 1;
-      SPI2_Enable     at 0 range 2 .. 2;
+      MiniUART_Enable at 0 range 0 ..  0;
+      SPI1_Enable     at 0 range 1 ..  1;
+      SPI2_Enable     at 0 range 2 ..  2;
       Reserved        at 0 range 3 .. 31;
    end record;
 
-   AUXENB : aliased AUXENB_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#04#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUXENB : aliased AUXENB_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_IO
 
@@ -89,15 +89,15 @@ package RPI3 is
       Size      => 32;
    for AUX_MU_IO_Type use
    record
-      DATA     at 0 range 0 .. 7;
+      DATA     at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_IO_REG : aliased AUX_MU_IO_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#40#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_IO_REG : aliased AUX_MU_IO_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#40#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_IER
 
@@ -112,17 +112,17 @@ package RPI3 is
       Size      => 32;
    for AUX_MU_IER_Type use
    record
-      En_RX_Int  at 0 range 0 .. 0;
-      En_TX_Int  at 0 range 1 .. 1;
-      Other_Ints at 0 range 2 .. 7;
+      En_RX_Int  at 0 range 0 ..  0;
+      En_TX_Int  at 0 range 1 ..  1;
+      Other_Ints at 0 range 2 ..  7;
       Reserved   at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_IER_REG : aliased AUX_MU_IER_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#44#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_IER_REG : aliased AUX_MU_IER_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#44#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_IIR
 
@@ -148,21 +148,21 @@ package RPI3 is
       Size            => 32;
    for AUX_MU_IIR_Type use
    record
-      Int_Pend      at 0 range 0 .. 0;
-      THRE          at 0 range 1 .. 1;
-      RHVB          at 0 range 2 .. 2;
-      FIFO_RX_Clear at 0 range 1 .. 1;
-      FIFO_TX_Clear at 0 range 2 .. 2;
-      Reserved1     at 0 range 3 .. 5;
-      FIFO_en       at 0 range 6 .. 7;
+      Int_Pend      at 0 range 0 ..  0;
+      THRE          at 0 range 1 ..  1;
+      RHVB          at 0 range 2 ..  2;
+      FIFO_RX_Clear at 0 range 1 ..  1;
+      FIFO_TX_Clear at 0 range 2 ..  2;
+      Reserved1     at 0 range 3 ..  5;
+      FIFO_en       at 0 range 6 ..  7;
       Reserved2     at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_IIR_REG : aliased AUX_MU_IIR_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#48#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_IIR_REG : aliased AUX_MU_IIR_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#48#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_LCR
 
@@ -181,18 +181,18 @@ package RPI3 is
       Size      => 32;
    for AUX_MU_LCR_Type use
    record
-      Data_Size   at 0 range 0 .. 1;
-      Reserved1   at 0 range 2 .. 5;
-      Break       at 0 range 6 .. 6;
-      DLAB_Access at 0 range 7 .. 7;
+      Data_Size   at 0 range 0 ..  1;
+      Reserved1   at 0 range 2 ..  5;
+      Break       at 0 range 6 ..  6;
+      DLAB_Access at 0 range 7 ..  7;
       Reserved2   at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_LCR_REG : aliased AUX_MU_LCR_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#4C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_LCR_REG : aliased AUX_MU_LCR_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#4C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_MCR
 
@@ -207,17 +207,17 @@ package RPI3 is
       Size      => 32;
    for AUX_MU_MCR_Type use
    record
-      Reserved1 at 0 range 0 .. 0;
-      RTS       at 0 range 1 .. 1;
-      Reserved2 at 0 range 2 .. 7;
+      Reserved1 at 0 range 0 ..  0;
+      RTS       at 0 range 1 ..  1;
+      Reserved2 at 0 range 2 ..  7;
       Reserved3 at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_MCR_REG : aliased AUX_MU_MCR_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#50#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_MCR_REG : aliased AUX_MU_MCR_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#50#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_LSR
 
@@ -235,20 +235,20 @@ package RPI3 is
       Size      => 32;
    for AUX_MU_LSR_Type use
    record
-      Data_Ready        at 0 range 0 .. 0;
-      Receiver_Overrun  at 0 range 1 .. 1;
-      Reserved1         at 0 range 2 .. 4;
-      Transmitter_Empty at 0 range 5 .. 5;
-      Transmitter_Idle  at 0 range 6 .. 6;
-      Reserved2         at 0 range 7 .. 7;
+      Data_Ready        at 0 range 0 ..  0;
+      Receiver_Overrun  at 0 range 1 ..  1;
+      Reserved1         at 0 range 2 ..  4;
+      Transmitter_Empty at 0 range 5 ..  5;
+      Transmitter_Idle  at 0 range 6 ..  6;
+      Reserved2         at 0 range 7 ..  7;
       Reserved3         at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_LSR_REG : aliased AUX_MU_LSR_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#54#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_LSR_REG : aliased AUX_MU_LSR_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#54#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_MSR
 
@@ -263,17 +263,17 @@ package RPI3 is
       Size      => 32;
    for AUX_MU_MSR_Type use
    record
-      Reserved1  at 0 range 0 .. 3;
-      CTS_Status at 0 range 4 .. 4;
-      Reserved2  at 0 range 5 .. 7;
+      Reserved1  at 0 range 0 ..  3;
+      CTS_Status at 0 range 4 ..  4;
+      Reserved2  at 0 range 5 ..  7;
       Reserved3  at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_MSR_REG : aliased AUX_MU_MSR_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#58#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_MSR_REG : aliased AUX_MU_MSR_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#58#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_SCRATCH
 
@@ -286,15 +286,15 @@ package RPI3 is
       Size      => 32;
    for AUX_MU_SCRATCH_Type use
    record
-      Scratch  at 0 range 0 .. 7;
+      Scratch  at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_SCRATCH_REG : aliased AUX_MU_SCRATCH_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#5C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_SCRATCH_REG : aliased AUX_MU_SCRATCH_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#5C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_CNTL
 
@@ -324,21 +324,21 @@ package RPI3 is
       Size      => 32;
    for AUX_MU_CNTL_Type use
    record
-      Receiver_Enable    at 0 range 0 .. 0;
-      Transmitter_Enable at 0 range 1 .. 1;
-      RTS_RX_Autoflow    at 0 range 2 .. 2;
-      CTS_TX_Autoflow    at 0 range 3 .. 3;
-      RTS_Autoflow_Level at 0 range 4 .. 5;
-      RTS_Assert_Level   at 0 range 6 .. 6;
-      CTS_Assert_Level   at 0 range 7 .. 7;
+      Receiver_Enable    at 0 range 0 ..  0;
+      Transmitter_Enable at 0 range 1 ..  1;
+      RTS_RX_Autoflow    at 0 range 2 ..  2;
+      CTS_TX_Autoflow    at 0 range 3 ..  3;
+      RTS_Autoflow_Level at 0 range 4 ..  5;
+      RTS_Assert_Level   at 0 range 6 ..  6;
+      CTS_Assert_Level   at 0 range 7 ..  7;
       Reserved           at 0 range 8 .. 31;
    end record;
 
-   AUX_MU_CNTL_REG : aliased AUX_MU_CNTL_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#60#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_CNTL_REG : aliased AUX_MU_CNTL_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#60#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_STAT
 
@@ -364,16 +364,16 @@ package RPI3 is
       Size      => 32;
    for AUX_MU_STAT_Type use
    record
-      Sym_Avail    at 0 range 0 .. 0;
-      SP_Avail     at 0 range 1 .. 1;
-      RX_Idle      at 0 range 2 .. 2;
-      TX_Idle      at 0 range 3 .. 3;
-      RX_Overrun   at 0 range 4 .. 4;
-      TX_FIFOFull  at 0 range 5 .. 5;
-      RTS          at 0 range 6 .. 6;
-      CTS          at 0 range 7 .. 7;
-      TX_FIFOEmpty at 0 range 8 .. 8;
-      TX_Done      at 0 range 9 .. 9;
+      Sym_Avail    at 0 range  0 ..  0;
+      SP_Avail     at 0 range  1 ..  1;
+      RX_Idle      at 0 range  2 ..  2;
+      TX_Idle      at 0 range  3 ..  3;
+      RX_Overrun   at 0 range  4 ..  4;
+      TX_FIFOFull  at 0 range  5 ..  5;
+      RTS          at 0 range  6 ..  6;
+      CTS          at 0 range  7 ..  7;
+      TX_FIFOEmpty at 0 range  8 ..  8;
+      TX_Done      at 0 range  9 ..  9;
       Reserved1    at 0 range 10 .. 15;
       RX_FIFOLevel at 0 range 16 .. 19;
       Reserved2    at 0 range 20 .. 23;
@@ -381,11 +381,11 @@ package RPI3 is
       Reserved3    at 0 range 28 .. 31;
    end record;
 
-   AUX_MU_STAT_REG : aliased AUX_MU_STAT_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#64#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_STAT_REG : aliased AUX_MU_STAT_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#64#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- AUX_MU_BAUD
 
@@ -398,15 +398,15 @@ package RPI3 is
       Size      => 32;
    for AUX_MU_BAUD_Type use
    record
-      Baudrate at 0 range 0 .. 15;
+      Baudrate at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
    end record;
 
-   AUX_MU_BAUD : aliased AUX_MU_BAUD_Type with
-      Address              => To_Address (AUX_BASEADDRESS + 16#68#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   AUX_MU_BAUD : aliased AUX_MU_BAUD_Type
+      with Address              => To_Address (AUX_BASEADDRESS + 16#68#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 6 General Purpose I/O (GPIO)
@@ -439,10 +439,10 @@ package RPI3 is
       Size      => 32;
    for GPFSEL0_Type use
    record
-      FSEL0    at 0 range 0 .. 2;
-      FSEL1    at 0 range 3 .. 5;
-      FSEL2    at 0 range 6 .. 8;
-      FSEL3    at 0 range 9 .. 11;
+      FSEL0    at 0 range  0 ..  2;
+      FSEL1    at 0 range  3 ..  5;
+      FSEL2    at 0 range  6 ..  8;
+      FSEL3    at 0 range  9 .. 11;
       FSEL4    at 0 range 12 .. 14;
       FSEL5    at 0 range 15 .. 17;
       FSEL6    at 0 range 18 .. 20;
@@ -452,11 +452,11 @@ package RPI3 is
       Reserved at 0 range 30 .. 31;
    end record;
 
-   GPFSEL0 : aliased GPFSEL0_Type with
-      Address              => To_Address (GPIO_BASEADDRESS + 16#00#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPFSEL0 : aliased GPFSEL0_Type
+      with Address              => To_Address (GPIO_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    type GPFSEL1_Type is
    record
@@ -476,10 +476,10 @@ package RPI3 is
       Size      => 32;
    for GPFSEL1_Type use
    record
-      FSEL10   at 0 range 0 .. 2;
-      FSEL11   at 0 range 3 .. 5;
-      FSEL12   at 0 range 6 .. 8;
-      FSEL13   at 0 range 9 .. 11;
+      FSEL10   at 0 range  0 ..  2;
+      FSEL11   at 0 range  3 ..  5;
+      FSEL12   at 0 range  6 ..  8;
+      FSEL13   at 0 range  9 .. 11;
       FSEL14   at 0 range 12 .. 14;
       FSEL15   at 0 range 15 .. 17;
       FSEL16   at 0 range 18 .. 20;
@@ -489,11 +489,11 @@ package RPI3 is
       Reserved at 0 range 30 .. 31;
    end record;
 
-   GPFSEL1 : aliased GPFSEL1_Type with
-      Address              => To_Address (GPIO_BASEADDRESS + 16#04#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPFSEL1 : aliased GPFSEL1_Type
+      with Address              => To_Address (GPIO_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    type GPFSEL2_Type is
    record
@@ -513,10 +513,10 @@ package RPI3 is
       Size      => 32;
    for GPFSEL2_Type use
    record
-      FSEL20   at 0 range 0 .. 2;
-      FSEL21   at 0 range 3 .. 5;
-      FSEL22   at 0 range 6 .. 8;
-      FSEL23   at 0 range 9 .. 11;
+      FSEL20   at 0 range  0 ..  2;
+      FSEL21   at 0 range  3 ..  5;
+      FSEL22   at 0 range  6 ..  8;
+      FSEL23   at 0 range  9 .. 11;
       FSEL24   at 0 range 12 .. 14;
       FSEL25   at 0 range 15 .. 17;
       FSEL26   at 0 range 18 .. 20;
@@ -526,11 +526,11 @@ package RPI3 is
       Reserved at 0 range 30 .. 31;
    end record;
 
-   GPFSEL2 : aliased GPFSEL2_Type with
-      Address              => To_Address (GPIO_BASEADDRESS + 16#08#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPFSEL2 : aliased GPFSEL2_Type
+      with Address              => To_Address (GPIO_BASEADDRESS + 16#08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    type GPFSEL3_Type is
    record
@@ -550,10 +550,10 @@ package RPI3 is
       Size      => 32;
    for GPFSEL3_Type use
    record
-      FSEL30   at 0 range 0 .. 2;
-      FSEL31   at 0 range 3 .. 5;
-      FSEL32   at 0 range 6 .. 8;
-      FSEL33   at 0 range 9 .. 11;
+      FSEL30   at 0 range  0 ..  2;
+      FSEL31   at 0 range  3 ..  5;
+      FSEL32   at 0 range  6 ..  8;
+      FSEL33   at 0 range  9 .. 11;
       FSEL34   at 0 range 12 .. 14;
       FSEL35   at 0 range 15 .. 17;
       FSEL36   at 0 range 18 .. 20;
@@ -563,11 +563,11 @@ package RPI3 is
       Reserved at 0 range 30 .. 31;
    end record;
 
-   GPFSEL3 : aliased GPFSEL3_Type with
-      Address              => To_Address (GPIO_BASEADDRESS + 16#0C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPFSEL3 : aliased GPFSEL3_Type
+      with Address              => To_Address (GPIO_BASEADDRESS + 16#0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    type GPFSEL4_Type is
    record
@@ -587,10 +587,10 @@ package RPI3 is
       Size      => 32;
    for GPFSEL4_Type use
    record
-      FSEL40   at 0 range 0 .. 2;
-      FSEL41   at 0 range 3 .. 5;
-      FSEL42   at 0 range 6 .. 8;
-      FSEL43   at 0 range 9 .. 11;
+      FSEL40   at 0 range  0 ..  2;
+      FSEL41   at 0 range  3 ..  5;
+      FSEL42   at 0 range  6 ..  8;
+      FSEL43   at 0 range  9 .. 11;
       FSEL44   at 0 range 12 .. 14;
       FSEL45   at 0 range 15 .. 17;
       FSEL46   at 0 range 18 .. 20;
@@ -600,11 +600,11 @@ package RPI3 is
       Reserved at 0 range 30 .. 31;
    end record;
 
-   GPFSEL4 : aliased GPFSEL4_Type with
-      Address              => To_Address (GPIO_BASEADDRESS + 16#10#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPFSEL4 : aliased GPFSEL4_Type
+      with Address              => To_Address (GPIO_BASEADDRESS + 16#10#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    type GPFSEL5_Type is
    record
@@ -618,18 +618,18 @@ package RPI3 is
       Size      => 32;
    for GPFSEL5_Type use
    record
-      FSEL50   at 0 range 0 .. 2;
-      FSEL51   at 0 range 3 .. 5;
-      FSEL52   at 0 range 6 .. 8;
-      FSEL53   at 0 range 9 .. 11;
+      FSEL50   at 0 range  0 ..  2;
+      FSEL51   at 0 range  3 ..  5;
+      FSEL52   at 0 range  6 ..  8;
+      FSEL53   at 0 range  9 .. 11;
       Reserved at 0 range 12 .. 31;
    end record;
 
-   GPFSEL5 : aliased GPFSEL5_Type with
-      Address              => To_Address (GPIO_BASEADDRESS + 16#14#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPFSEL5 : aliased GPFSEL5_Type
+      with Address              => To_Address (GPIO_BASEADDRESS + 16#14#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    type GPSET0_Type is
    record
@@ -670,16 +670,16 @@ package RPI3 is
       Size      => 32;
    for GPSET0_Type use
    record
-      SET0  at 0 range 0 .. 0;
-      SET1  at 0 range 1 .. 1;
-      SET2  at 0 range 2 .. 2;
-      SET3  at 0 range 3 .. 3;
-      SET4  at 0 range 4 .. 4;
-      SET5  at 0 range 5 .. 5;
-      SET6  at 0 range 6 .. 6;
-      SET7  at 0 range 7 .. 7;
-      SET8  at 0 range 8 .. 8;
-      SET9  at 0 range 9 .. 9;
+      SET0  at 0 range  0 ..  0;
+      SET1  at 0 range  1 ..  1;
+      SET2  at 0 range  2 ..  2;
+      SET3  at 0 range  3 ..  3;
+      SET4  at 0 range  4 ..  4;
+      SET5  at 0 range  5 ..  5;
+      SET6  at 0 range  6 ..  6;
+      SET7  at 0 range  7 ..  7;
+      SET8  at 0 range  8 ..  8;
+      SET9  at 0 range  9 ..  9;
       SET10 at 0 range 10 .. 10;
       SET11 at 0 range 11 .. 11;
       SET12 at 0 range 12 .. 12;
@@ -704,11 +704,11 @@ package RPI3 is
       SET31 at 0 range 31 .. 31;
    end record;
 
-   GPSET0 : aliased GPSET0_Type with
-      Address              => To_Address (GPIO_BASEADDRESS + 16#1C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPSET0 : aliased GPSET0_Type
+      with Address              => To_Address (GPIO_BASEADDRESS + 16#1C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    type GPSET1_Type is
    record
@@ -740,16 +740,16 @@ package RPI3 is
       Size      => 32;
    for GPSET1_Type use
    record
-      SET32    at 0 range 0 .. 0;
-      SET33    at 0 range 1 .. 1;
-      SET34    at 0 range 2 .. 2;
-      SET35    at 0 range 3 .. 3;
-      SET36    at 0 range 4 .. 4;
-      SET37    at 0 range 5 .. 5;
-      SET38    at 0 range 6 .. 6;
-      SET39    at 0 range 7 .. 7;
-      SET40    at 0 range 8 .. 8;
-      SET41    at 0 range 9 .. 9;
+      SET32    at 0 range  0 ..  0;
+      SET33    at 0 range  1 ..  1;
+      SET34    at 0 range  2 ..  2;
+      SET35    at 0 range  3 ..  3;
+      SET36    at 0 range  4 ..  4;
+      SET37    at 0 range  5 ..  5;
+      SET38    at 0 range  6 ..  6;
+      SET39    at 0 range  7 ..  7;
+      SET40    at 0 range  8 ..  8;
+      SET41    at 0 range  9 ..  9;
       SET42    at 0 range 10 .. 10;
       SET43    at 0 range 11 .. 11;
       SET44    at 0 range 12 .. 12;
@@ -765,11 +765,11 @@ package RPI3 is
       Reserved at 0 range 22 .. 31;
    end record;
 
-   GPSET1 : aliased GPSET1_Type with
-      Address              => To_Address (GPIO_BASEADDRESS + 16#20#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPSET1 : aliased GPSET1_Type
+      with Address              => To_Address (GPIO_BASEADDRESS + 16#20#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    type GPCLR0_Type is
    record
@@ -810,16 +810,16 @@ package RPI3 is
       Size      => 32;
    for GPCLR0_Type use
    record
-      CLR0  at 0 range 0 .. 0;
-      CLR1  at 0 range 1 .. 1;
-      CLR2  at 0 range 2 .. 2;
-      CLR3  at 0 range 3 .. 3;
-      CLR4  at 0 range 4 .. 4;
-      CLR5  at 0 range 5 .. 5;
-      CLR6  at 0 range 6 .. 6;
-      CLR7  at 0 range 7 .. 7;
-      CLR8  at 0 range 8 .. 8;
-      CLR9  at 0 range 9 .. 9;
+      CLR0  at 0 range  0 ..  0;
+      CLR1  at 0 range  1 ..  1;
+      CLR2  at 0 range  2 ..  2;
+      CLR3  at 0 range  3 ..  3;
+      CLR4  at 0 range  4 ..  4;
+      CLR5  at 0 range  5 ..  5;
+      CLR6  at 0 range  6 ..  6;
+      CLR7  at 0 range  7 ..  7;
+      CLR8  at 0 range  8 ..  8;
+      CLR9  at 0 range  9 ..  9;
       CLR10 at 0 range 10 .. 10;
       CLR11 at 0 range 11 .. 11;
       CLR12 at 0 range 12 .. 12;
@@ -844,11 +844,11 @@ package RPI3 is
       CLR31 at 0 range 31 .. 31;
    end record;
 
-   GPCLR0 : aliased GPCLR0_Type with
-      Address              => To_Address (GPIO_BASEADDRESS + 16#28#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPCLR0 : aliased GPCLR0_Type
+      with Address              => To_Address (GPIO_BASEADDRESS + 16#28#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    type GPCLR1_Type is
    record
@@ -880,16 +880,16 @@ package RPI3 is
       Size      => 32;
    for GPCLR1_Type use
    record
-      CLR32    at 0 range 0 .. 0;
-      CLR33    at 0 range 1 .. 1;
-      CLR34    at 0 range 2 .. 2;
-      CLR35    at 0 range 3 .. 3;
-      CLR36    at 0 range 4 .. 4;
-      CLR37    at 0 range 5 .. 5;
-      CLR38    at 0 range 6 .. 6;
-      CLR39    at 0 range 7 .. 7;
-      CLR40    at 0 range 8 .. 8;
-      CLR41    at 0 range 9 .. 9;
+      CLR32    at 0 range  0 ..  0;
+      CLR33    at 0 range  1 ..  1;
+      CLR34    at 0 range  2 ..  2;
+      CLR35    at 0 range  3 ..  3;
+      CLR36    at 0 range  4 ..  4;
+      CLR37    at 0 range  5 ..  5;
+      CLR38    at 0 range  6 ..  6;
+      CLR39    at 0 range  7 ..  7;
+      CLR40    at 0 range  8 ..  8;
+      CLR41    at 0 range  9 ..  9;
       CLR42    at 0 range 10 .. 10;
       CLR43    at 0 range 11 .. 11;
       CLR44    at 0 range 12 .. 12;
@@ -905,11 +905,11 @@ package RPI3 is
       Reserved at 0 range 22 .. 31;
    end record;
 
-   GPCLR1 : aliased GPCLR1_Type with
-      Address              => To_Address (GPIO_BASEADDRESS + 16#2C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPCLR1 : aliased GPCLR1_Type
+      with Address              => To_Address (GPIO_BASEADDRESS + 16#2C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 7 Interrupts
@@ -958,56 +958,56 @@ package RPI3 is
    pcm_int         : constant := 55 - 32;
    uart_int        : constant := 57 - 32;
 
-   IRQ_basic_pending  : aliased Bitmap_32 with
-      Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#200#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   IRQ_pending_1      : aliased Bitmap_32 with
-      Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#204#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   IRQ_pending_2      : aliased Bitmap_32 with
-      Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#208#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   FIQ_control        : aliased Bitmap_32 with
-      Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#20C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   Enable_IRQs_1      : aliased Bitmap_32 with
-      Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#210#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   Enable_IRQs_2      : aliased Bitmap_32 with
-      Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#214#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   Enable_Basic_IRQs  : aliased Bitmap_32 with
-      Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#218#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   Disable_IRQs_1     : aliased Bitmap_32 with
-      Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#21C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   Disable_IRQs_2     : aliased Bitmap_32 with
-      Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#220#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   Disable_Basic_IRQs : aliased Bitmap_32 with
-      Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#224#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   IRQ_basic_pending  : aliased Bitmap_32
+      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#200#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   IRQ_pending_1      : aliased Bitmap_32
+      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#204#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   IRQ_pending_2      : aliased Bitmap_32
+      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#208#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   FIQ_control        : aliased Bitmap_32
+      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#20C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   Enable_IRQs_1      : aliased Bitmap_32
+      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#210#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   Enable_IRQs_2      : aliased Bitmap_32
+      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#214#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   Enable_Basic_IRQs  : aliased Bitmap_32
+      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#218#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   Disable_IRQs_1     : aliased Bitmap_32
+      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#21C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   Disable_IRQs_2     : aliased Bitmap_32
+      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#220#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   Disable_Basic_IRQs : aliased Bitmap_32
+      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#224#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 12.1 System Timer Registers
@@ -1054,11 +1054,11 @@ package RPI3 is
       C3  at 16#18# range 0 .. 31;
    end record;
 
-   SYSTEM_TIMER : aliased System_Timer_Type with
-      Address    => To_Address (SYSTEM_TIMER_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SYSTEM_TIMER : aliased System_Timer_Type
+      with Address    => To_Address (SYSTEM_TIMER_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 14 Timer (ARM side)
@@ -1066,51 +1066,51 @@ package RPI3 is
 
    -- ARM SP804
 
-   ARMTIMER_Load       : aliased Unsigned_32 with
-      Address              => To_Address (ARMTIMER_BASEADDRESS + 16#00#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   ARMTIMER_Value      : aliased Unsigned_32 with
-      Address              => To_Address (ARMTIMER_BASEADDRESS + 16#04#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   ARMTIMER_Control    : aliased Unsigned_32 with
-      Address              => To_Address (ARMTIMER_BASEADDRESS + 16#08#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   ARMTIMER_IRQ_ClrAck : aliased Unsigned_32 with
-      Address              => To_Address (ARMTIMER_BASEADDRESS + 16#0C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   ARMTIMER_RAW_IRQ    : aliased Unsigned_32 with
-      Address              => To_Address (ARMTIMER_BASEADDRESS + 16#10#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   ARMTIMER_Masked_IRQ : aliased Unsigned_32 with
-      Address              => To_Address (ARMTIMER_BASEADDRESS + 16#14#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   ARMTIMER_Reload     : aliased Unsigned_32 with
-      Address              => To_Address (ARMTIMER_BASEADDRESS + 16#18#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   ARMTIMER_Pre_div    : aliased Unsigned_32 with
-      Address              => To_Address (ARMTIMER_BASEADDRESS + 16#1C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   ARMTIMER_FreeRunCnt : aliased Unsigned_32 with
-      Address              => To_Address (ARMTIMER_BASEADDRESS + 16#20#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   ARMTIMER_Load       : aliased Unsigned_32
+      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   ARMTIMER_Value      : aliased Unsigned_32
+      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   ARMTIMER_Control    : aliased Unsigned_32
+      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   ARMTIMER_IRQ_ClrAck : aliased Unsigned_32
+      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   ARMTIMER_RAW_IRQ    : aliased Unsigned_32
+      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#10#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   ARMTIMER_Masked_IRQ : aliased Unsigned_32
+      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#14#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   ARMTIMER_Reload     : aliased Unsigned_32
+      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#18#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   ARMTIMER_Pre_div    : aliased Unsigned_32
+      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#1C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   ARMTIMER_FreeRunCnt : aliased Unsigned_32
+      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#20#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- MAILBOX
@@ -1125,7 +1125,7 @@ package RPI3 is
       Size      => 32;
    for Message_Type use
    record
-      Channel at 0 range 0 .. 3;
+      Channel at 0 range 0 ..  3;
       Data    at 0 range 4 .. 31;
    end record;
 
@@ -1139,7 +1139,7 @@ package RPI3 is
       Size      => 32;
    for Message_Status_Type use
    record
-      Reserved at 0 range 0 .. 29;
+      Reserved at 0 range  0 .. 29;
       Empty    at 0 range 30 .. 30;
       Full     at 0 range 31 .. 31;
    end record;
@@ -1147,21 +1147,21 @@ package RPI3 is
    -- POLL   @ 0x10
    -- SENDER @ 0x14
    -- CONFIG @ 0x1C
-   MAIL0_Read   : aliased Message_Type with
-      Address              => To_Address (MAILBOX_BASEADDRESS + 16#00#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   MAIL0_Status : aliased Message_Status_Type with
-      Address              => To_Address (MAILBOX_BASEADDRESS + 16#18#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   MAIL0_Write  : aliased Message_Type with
-      Address              => To_Address (MAILBOX_BASEADDRESS + 16#20#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MAIL0_Read   : aliased Message_Type
+      with Address              => To_Address (MAILBOX_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   MAIL0_Status : aliased Message_Status_Type
+      with Address              => To_Address (MAILBOX_BASEADDRESS + 16#18#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   MAIL0_Write  : aliased Message_Type
+      with Address              => To_Address (MAILBOX_BASEADDRESS + 16#20#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    PROPERTY_CHANNEL_ID : constant := 8;
 

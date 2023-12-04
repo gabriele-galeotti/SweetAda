@@ -20,11 +20,17 @@
                 .global _start
 _start:
 
-                msr     daifset,#0xF
-                b       startcode
+                //
+                // Allow only master core to execute code.
+                //
+                mrs     x0,mpidr_el1
+                and     x0,x0,#0xFF
+                cbz     x0,bootcore
+hold:           wfe
+                b       hold
+bootcore:
 
-startcode:
-
+#if defined(STARTUP_EL1)
                 //
                 // Check if current level = EL1.
                 //
@@ -38,7 +44,11 @@ startcode:
 #define SCTLR_DEFAULT  ((3<<28)|(3<<22)|(1<<20)|(1<<11))
 #define HCR_RW         (1<<31)
 #define SPSR_MASK_ALL  (7<<6)
+#define SPSR_MODE_EL0  (0<<0)
+#define SPSR_MODE_ELt  (4<<0)
 #define SPSR_MODE_EL1h (5<<0)
+#define SPSR_MODE_EL2t (8<<0)
+#define SPSR_MODE_EL2h (9<<0)
                 ldr     x0,=SCTLR_DEFAULT
                 msr     sctlr_el1,x0
                 ldr     x0,=HCR_RW
@@ -49,16 +59,7 @@ startcode:
                 msr     elr_el2,x0
                 eret
 1:
-
-                //
-                // Allow only master core to execute code.
-                //
-                mrs     x0,mpidr_el1
-                and     x0,x0,#0xFF
-                cbz     x0,bootcore
-hold:           wfe
-                b       hold
-bootcore:
+#endif
 
                 //
                 // CPACR_EL1/FPEN Advanced SIMD and floating-point registers.
