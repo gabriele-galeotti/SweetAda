@@ -139,6 +139,16 @@ package body BSP is
                                   ISTATUS => False,
                                   others  => <>
                                  ));
+      -- handle IRQs at EL3
+      if ARMv8A.CurrentEL_Read.EL = 3 then
+         declare
+            SCR_EL3 : ARMv8A.SCR_EL3_Type;
+         begin
+            SCR_EL3 := ARMv8A.SCR_EL3_Read;
+            SCR_EL3.IRQ := True;
+            ARMv8A.SCR_EL3_Write (SCR_EL3);
+         end;
+      end if;
       -- handle IRQs at EL2
       if ARMv8A.CurrentEL_Read.EL = 2 then
          declare
