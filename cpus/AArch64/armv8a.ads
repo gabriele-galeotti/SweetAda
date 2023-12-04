@@ -405,6 +405,34 @@ package ARMv8A is
       (Value : in HCR_EL2_Type)
       with Inline => True;
 
+   -- D19.2.94 ISR_EL1, Interrupt Status Register
+
+   type ISR_EL1_Type is
+   record
+      Reserved1 : Bits_6;
+      F         : Boolean; -- FIQ pending bit.
+      I         : Boolean; -- IRQ pending bit.
+      A         : Boolean; -- SError interrupt pending bit.
+      F_S       : Boolean; -- FIQ with Superpriority pending bit.
+      I_S       : Boolean; -- IRQ with Superpriority pending bit.
+      Reserved2 : Bits_53;
+   end record with
+      Bit_Order => Low_Order_First,
+      Size      => 64;
+   for ISR_EL1_Type use record
+      Reserved1 at 0 range  0 ..  5;
+      F         at 0 range  6 ..  6;
+      I         at 0 range  7 ..  7;
+      A         at 0 range  8 ..  8;
+      F_S       at 0 range  9 ..  9;
+      I_S       at 0 range 10 .. 10;
+      Reserved2 at 0 range 11 .. 63;
+   end record;
+
+   function ISR_EL1_Read
+      return ISR_EL1_Type
+      with Inline => True;
+
    -- D19.2.120 SCR_EL3, Secure Configuration Register
 
    type Non_Secure_Type is
