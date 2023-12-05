@@ -83,7 +83,11 @@ package body Exceptions is
    begin
       RISCV.mtvec_Write ((
          MODE => RISCV.MODE_Direct,
-         BASE => Bits_30 (LLutils.Select_Address_Bits (Vectors'Address, 2, 31))
+         BASE => mtvec_BASE_Type (LLutils.Select_Address_Bits (
+                    Vectors'Address,
+                    mtvec_BASE_ADDRESS_LSB,
+                    mtvec_BASE_ADDRESS_MSB
+                    ))
          ));
    end Init;
 
