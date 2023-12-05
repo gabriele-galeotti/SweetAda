@@ -1,20 +1,24 @@
 
-ifeq      ($(CPU_MODEL),R3000)
+ifeq      ($(or                               \
+  $(if $(findstring R3000, $(CPU_MODEL)),Y,), \
+  $(if $(findstring R4300, $(CPU_MODEL)),Y,), \
+  $(if $(findstring RM5231,$(CPU_MODEL)),Y,)  \
+  ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/R3000
-else ifeq ($(CPU_MODEL),R4300)
-  TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS)
-  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/R3000
-else ifeq ($(CPU_MODEL),RM5231)
-  TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS)
-  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/R3000
-else ifeq ($(CPU_MODEL),MIPS32-24K)
+else ifeq ($(or                                  \
+  $(if $(findstring MIPS32-24K,$(CPU_MODEL)),Y,) \
+  ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MIPS32
-else ifeq ($(CPU_MODEL),MIPS64-5K)
+else ifeq ($(or                                 \
+  $(if $(findstring MIPS64-5K,$(CPU_MODEL)),Y,) \
+  ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS64)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MIPS32
-else ifeq ($(CPU_MODEL),MIPS64-20K)
+else ifeq ($(or                                  \
+  $(if $(findstring MIPS64-20K,$(CPU_MODEL)),Y,) \
+  ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS64)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MIPS32
 else
