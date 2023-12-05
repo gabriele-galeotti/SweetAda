@@ -41,19 +41,23 @@ package MIPS32 is
    -- 6.2.10 Count Register (CP0 Register 9, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_Count_Read return Unsigned_32 with
-      Inline => True;
-   procedure CP0_Count_Write (Value : in Unsigned_32) with
-      Inline => True;
+   function CP0_Count_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure CP0_Count_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 6.2.12 Compare Register (CP0 Register 11, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_Compare_Read return Unsigned_32 with
-      Inline => True;
-   procedure CP0_Compare_Write (Value : in Unsigned_32) with
-      Inline => True;
+   function CP0_Compare_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure CP0_Compare_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 6.2.13 Status Register (CP0 Register 12, Select 0)
@@ -67,8 +71,7 @@ package MIPS32 is
    FR_32  : constant := 0; -- FP registers can contain any 32-bit datatype. 64-bit in even-odd pairs of registers
    FR_ANY : constant := 1; -- FP registers can contain any datatype
 
-   type Status_Type is
-   record
+   type Status_Type is record
       IE        : Boolean;     -- Interrupt Enable
       EXL       : Boolean;     -- Exception Level
       ERL       : Boolean;     -- Error Level
@@ -93,19 +96,18 @@ package MIPS32 is
       CU1       : Boolean;
       CU2       : Boolean;
       CU3       : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Status_Type use
-   record
-      IE        at 0 range 0 .. 0;
-      EXL       at 0 range 1 .. 1;
-      ERL       at 0 range 2 .. 2;
-      KSU       at 0 range 3 .. 4;
-      Reserved1 at 0 range 5 .. 5;
-      Reserved2 at 0 range 6 .. 6;
-      Reserved3 at 0 range 7 .. 7;
-      IM        at 0 range 8 .. 15;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Status_Type use record
+      IE        at 0 range  0 ..  0;
+      EXL       at 0 range  1 ..  1;
+      ERL       at 0 range  2 ..  2;
+      KSU       at 0 range  3 ..  4;
+      Reserved1 at 0 range  5 ..  5;
+      Reserved2 at 0 range  6 ..  6;
+      Reserved3 at 0 range  7 ..  7;
+      IM        at 0 range  8 .. 15;
       Reserved4 at 0 range 16 .. 16;
       CEE       at 0 range 17 .. 17;
       ZERO      at 0 range 18 .. 18;
@@ -124,10 +126,12 @@ package MIPS32 is
       CU3       at 0 range 31 .. 31;
    end record;
 
-   function CP0_SR_Read return Status_Type with
-      Inline => True;
-   procedure CP0_SR_Write (Value : in Status_Type) with
-      Inline => True;
+   function CP0_SR_Read
+      return Status_Type
+      with Inline => True;
+   procedure CP0_SR_Write
+      (Value : in Status_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 6.2.17 Cause Register (CP0 Register 13, Select 0)
@@ -169,8 +173,7 @@ package MIPS32 is
    IV_Exception : constant := 0; -- Use the general exception vector (16#180)
    IV_Interrupt : constant := 1; -- Use the special interrupt vector (16#200)
 
-   type Cause_Type is
-   record
+   type Cause_Type is record
       Reserved1 : Bits_2 := 0;
       ExcCode   : Bits_5 := 0;            -- Exception Code
       Reserved2 : Bits_1 := 0;
@@ -184,15 +187,14 @@ package MIPS32 is
       CE        : Bits_2 := 0;            -- Coprocessor unit number referenced
       Reserved5 : Bits_1 := 0;
       BD        : Boolean := False;       -- Branch Delay
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Cause_Type use
-   record
-      Reserved1 at 0 range 0 .. 1;
-      ExcCode   at 0 range 2 .. 6;
-      Reserved2 at 0 range 7 .. 7;
-      IP        at 0 range 8 .. 15;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Cause_Type use record
+      Reserved1 at 0 range  0 ..  1;
+      ExcCode   at 0 range  2 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      IP        at 0 range  8 .. 15;
       Reserved3 at 0 range 16 .. 21;
       WP        at 0 range 22 .. 22;
       IV        at 0 range 23 .. 23;
@@ -204,59 +206,63 @@ package MIPS32 is
       BD        at 0 range 31 .. 31;
    end record;
 
-   function CP0_Cause_Read return Unsigned_32 with
-      Inline => True;
-   procedure CP0_Cause_Write (Value : in Unsigned_32) with
-      Inline => True;
+   function CP0_Cause_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure CP0_Cause_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 6.2.18 Exception Program Counter (CP0 Register 14, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_EPC_Read return Unsigned_32 with
-      Inline => True;
-   procedure CP0_EPC_Write (Value : in Unsigned_32) with
-      Inline => True;
+   function CP0_EPC_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure CP0_EPC_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 6.2.19 Processor Identification (CP0 Register 15, Select 0)
    ----------------------------------------------------------------------------
 
-   type PRId_Type is
-   record
+   type PRId_Type is record
       Revision        : Unsigned_8; -- Rev
       CPU_ID          : Unsigned_8; -- Imp
       Company_ID      : Unsigned_8;
       Company_Options : Unsigned_8;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PRId_Type use
-   record
-      Revision        at 0 range 0 .. 7;
-      CPU_ID          at 0 range 8 .. 15;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PRId_Type use record
+      Revision        at 0 range  0 ..  7;
+      CPU_ID          at 0 range  8 .. 15;
       Company_ID      at 0 range 16 .. 23;
       Company_Options at 0 range 24 .. 31;
    end record;
 
-   function CP0_PRId_Read return PRId_Type with
-      Inline => True;
+   function CP0_PRId_Read
+      return PRId_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 6.2.21 Config Register (CP0 Register 16, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_Config_Read return Unsigned_32 with
-      Inline => True;
-   procedure CP0_Config_Write (Value : in Unsigned_32) with
-      Inline => True;
+   function CP0_Config_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure CP0_Config_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 6.2.22 Config1 Register (CP0 Register 16, Select 1)
    ----------------------------------------------------------------------------
 
-   type Config1_Type is
-   record
+   type Config1_Type is record
       FP       : Boolean; -- FPU implemented.
       EP       : Boolean; -- EJTAG present
       CA       : Boolean; -- Code compression (MIPS16) implemented.
@@ -272,19 +278,18 @@ package MIPS32 is
       IcS      : Bits_3;  -- This field contains the number of instruction cache sets per way.
       MMU_Size : Bits_6;  -- This field contains the number of entries in the TLB minus one.
       M        : Bits_1;  -- This bit is hardwired to ‘1’ to indicate the presence of the Config2 register.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Config1_Type use
-   record
-      FP       at 0 range 0 .. 0;
-      EP       at 0 range 1 .. 1;
-      CA       at 0 range 2 .. 2;
-      WR       at 0 range 3 .. 3;
-      PC       at 0 range 4 .. 4;
-      MD       at 0 range 5 .. 5;
-      C2       at 0 range 6 .. 6;
-      DA       at 0 range 7 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Config1_Type use record
+      FP       at 0 range  0 ..  0;
+      EP       at 0 range  1 ..  1;
+      CA       at 0 range  2 ..  2;
+      WR       at 0 range  3 ..  3;
+      PC       at 0 range  4 ..  4;
+      MD       at 0 range  5 ..  5;
+      C2       at 0 range  6 ..  6;
+      DA       at 0 range  7 ..  9;
       DL       at 0 range 10 .. 12;
       DS       at 0 range 13 .. 15;
       IcA      at 0 range 16 .. 18;
@@ -294,19 +299,23 @@ package MIPS32 is
       M        at 0 range 31 .. 31;
    end record;
 
-   function CP0_Config1_Read return Unsigned_32 with
-      Inline => True;
-   procedure CP0_Config1_Write (Value : in Unsigned_32) with
-      Inline => True;
+   function CP0_Config1_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure CP0_Config1_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 6.2.28 Debug Register (CP0 Register 23, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_Debug_Read return Unsigned_32 with
-      Inline => True;
-   procedure CP0_Debug_Write (Value : in Unsigned_32) with
-      Inline => True;
+   function CP0_Debug_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure CP0_Debug_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Interrupts
@@ -316,26 +325,33 @@ package MIPS32 is
    type Irq_Id_Type is new Natural;
    subtype Irq_Level_Type is Unsigned_16 range 0 .. 63;
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   procedure Irq_Level_Set (Irq_Level : in Irq_Level_Type) with
-      Inline => True;
-   function Irq_State_Get return Irq_State_Type with
-      Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   procedure Irq_Level_Set
+      (Irq_Level : in Irq_Level_Type)
+      with Inline => True;
+   function Irq_State_Get
+      return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
    ----------------------------------------------------------------------------
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) with
-      Inline => True;
-   procedure Lock (Lock_Object : in out Lock_Type) with
-      Inline => True;
-   procedure Unlock (Lock_Object : out Lock_Type) with
-      Inline => True;
+   procedure Lock_Try
+      (Lock_Object : in out Lock_Type;
+       Success     :    out Boolean)
+      with Inline => True;
+   procedure Lock
+      (Lock_Object : in out Lock_Type)
+      with Inline => True;
+   procedure Unlock
+      (Lock_Object : out Lock_Type)
+      with Inline => True;
 
 end MIPS32;

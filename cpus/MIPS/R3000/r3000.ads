@@ -39,8 +39,7 @@ package R3000 is
    -- Status Register (CP0 register 12)
    ----------------------------------------------------------------------------
 
-   type Status_Type is
-   record
+   type Status_Type is record
       IEc     : Boolean;     -- IEc is set 0 to prevent the CPU taking any interrupt, 1 to enable.
       KUc     : Boolean;     -- KUc is set 1 when running with kernel privileges, 0 for user mode.
       IEp     : Boolean;     -- IE previous
@@ -69,20 +68,19 @@ package R3000 is
       CU0     : Boolean;     -- co-processor 0 usable
       CU1     : Boolean;     -- co-processor 1 usable
       Unused4 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Status_Type use
-   record
-      IEc     at 0 range 0 .. 0;
-      KUc     at 0 range 1 .. 1;
-      IEp     at 0 range 2 .. 2;
-      KUp     at 0 range 3 .. 3;
-      IEo     at 0 range 4 .. 4;
-      KUo     at 0 range 5 .. 5;
-      Unused1 at 0 range 6 .. 7;
-      IM0     at 0 range 8 .. 8;
-      IM1     at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Status_Type use record
+      IEc     at 0 range  0 ..  0;
+      KUc     at 0 range  1 ..  1;
+      IEp     at 0 range  2 ..  2;
+      KUp     at 0 range  3 ..  3;
+      IEo     at 0 range  4 ..  4;
+      KUo     at 0 range  5 ..  5;
+      Unused1 at 0 range  6 ..  7;
+      IM0     at 0 range  8 ..  8;
+      IM1     at 0 range  9 ..  9;
       IM2     at 0 range 10 .. 10;
       IM3     at 0 range 11 .. 11;
       IM4     at 0 range 12 .. 12;
@@ -104,32 +102,33 @@ package R3000 is
       Unused4 at 0 range 30 .. 31;
    end record;
 
-   function CP0_SR_Read return Status_Type with
-      Inline => True;
-   procedure CP0_SR_Write (Value : in Status_Type) with
-      Inline => True;
+   function CP0_SR_Read
+      return Status_Type
+      with Inline => True;
+   procedure CP0_SR_Write
+      (Value : in Status_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- PRId register (CP0 register 15)
    ----------------------------------------------------------------------------
 
-   type PRId_Type is
-   record
+   type PRId_Type is record
       Rev    : Unsigned_8;
       Imp    : Unsigned_8;
       Unused : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PRId_Type use
-   record
-      Rev    at 0 range 0 .. 7;
-      Imp    at 0 range 8 .. 15;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PRId_Type use record
+      Rev    at 0 range  0 ..  7;
+      Imp    at 0 range  8 .. 15;
       Unused at 0 range 16 .. 31;
    end record;
 
-   function CP0_PRId_Read return PRId_Type with
-      Inline => True;
+   function CP0_PRId_Read
+      return PRId_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Interrupts
@@ -138,13 +137,15 @@ package R3000 is
    subtype Irq_State_Type is Unsigned_32;
    type Irq_Id_Type is new Natural;
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   function Irq_State_Get return Irq_State_Type with
-      Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   function Irq_State_Get
+      return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
 end R3000;

@@ -43,7 +43,8 @@ package body MIPS is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -59,7 +60,8 @@ package body MIPS is
    ----------------------------------------------------------------------------
    -- BREAK
    ----------------------------------------------------------------------------
-   procedure BREAK is
+   procedure BREAK
+      is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -75,7 +77,9 @@ package body MIPS is
    ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
+   procedure Asm_Call
+      (Target_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                   & CRLF &

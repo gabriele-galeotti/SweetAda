@@ -69,9 +69,12 @@ package body MIPS32 is
    generic
       Register        : CP0_Register_Type;
       Register_Select : CP0_Register_Select_Type;
-   function MFC0 return Unsigned_32;
-   pragma Inline (MFC0);
-   function MFC0 return Unsigned_32 is
+   function MFC0
+      return Unsigned_32
+      with Inline => True;
+   function MFC0
+      return Unsigned_32
+      is
       Result : Unsigned_32;
    begin
       Asm (
@@ -93,9 +96,12 @@ package body MIPS32 is
    generic
       Register        : CP0_Register_Type;
       Register_Select : CP0_Register_Select_Type;
-   procedure MTC0 (Register_Value : in Unsigned_32);
-   pragma Inline (MTC0);
-   procedure MTC0 (Register_Value : in Unsigned_32) is
+   procedure MTC0
+      (Register_Value : in Unsigned_32)
+      with Inline => True;
+   procedure MTC0
+      (Register_Value : in Unsigned_32)
+      is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -117,13 +123,17 @@ package body MIPS32 is
    -- Count register (CP0 register 9, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_Count_Read return Unsigned_32 is
+   function CP0_Count_Read
+      return Unsigned_32
+      is
       function CP0_Read is new MFC0 (9, 0);
    begin
       return CP0_Read;
    end CP0_Count_Read;
 
-   procedure CP0_Count_Write (Value : in Unsigned_32) is
+   procedure CP0_Count_Write
+      (Value : in Unsigned_32)
+      is
       procedure CP0_Write is new MTC0 (9, 0);
    begin
       CP0_Write (Value);
@@ -133,13 +143,17 @@ package body MIPS32 is
    -- Compare register (CP0 register 11, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_Compare_Read return Unsigned_32 is
+   function CP0_Compare_Read
+      return Unsigned_32
+      is
       function CP0_Read is new MFC0 (11, 0);
    begin
       return CP0_Read;
    end CP0_Compare_Read;
 
-   procedure CP0_Compare_Write (Value : in Unsigned_32) is
+   procedure CP0_Compare_Write
+      (Value : in Unsigned_32)
+      is
       procedure CP0_Write is new MTC0 (11, 0);
    begin
       CP0_Write (Value);
@@ -149,14 +163,18 @@ package body MIPS32 is
    -- Status Register (CP0 register 12, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_SR_Read return Status_Type is
+   function CP0_SR_Read
+      return Status_Type
+      is
       function U32_To_SRT is new Ada.Unchecked_Conversion (Unsigned_32, Status_Type);
       function CP0_Read is new MFC0 (12, 0);
    begin
       return U32_To_SRT (CP0_Read);
    end CP0_SR_Read;
 
-   procedure CP0_SR_Write (Value : in Status_Type) is
+   procedure CP0_SR_Write
+      (Value : in Status_Type)
+      is
       function SRT_To_U32 is new Ada.Unchecked_Conversion (Status_Type, Unsigned_32);
       procedure CP0_Write is new MTC0 (12, 0);
    begin
@@ -167,13 +185,17 @@ package body MIPS32 is
    -- Cause register (CP0 register 13, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_Cause_Read return Unsigned_32 is
+   function CP0_Cause_Read
+      return Unsigned_32
+      is
       function CP0_Read is new MFC0 (13, 0);
    begin
       return CP0_Read;
    end CP0_Cause_Read;
 
-   procedure CP0_Cause_Write (Value : in Unsigned_32) is
+   procedure CP0_Cause_Write
+      (Value : in Unsigned_32)
+      is
       procedure CP0_Write is new MTC0 (13, 0);
    begin
       CP0_Write (Value);
@@ -183,13 +205,17 @@ package body MIPS32 is
    -- Exception Program Counter register (CP0 register 14, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_EPC_Read return Unsigned_32 is
+   function CP0_EPC_Read
+      return Unsigned_32
+      is
       function CP0_Read is new MFC0 (14, 0);
    begin
       return CP0_Read;
    end CP0_EPC_Read;
 
-   procedure CP0_EPC_Write (Value : in Unsigned_32) is
+   procedure CP0_EPC_Write
+      (Value : in Unsigned_32)
+      is
       procedure CP0_Write is new MTC0 (14, 0);
    begin
       CP0_Write (Value);
@@ -199,7 +225,9 @@ package body MIPS32 is
    -- PRId register (CP0 register 15, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_PRId_Read return PRId_Type is
+   function CP0_PRId_Read
+      return PRId_Type
+      is
       function U32_To_PRId is new Ada.Unchecked_Conversion (Unsigned_32, PRId_Type);
       function CP0_Read is new MFC0 (15, 0);
    begin
@@ -210,13 +238,17 @@ package body MIPS32 is
    -- Config register (CP0 register 16, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_Config_Read return Unsigned_32 is
+   function CP0_Config_Read
+      return Unsigned_32
+      is
       function CP0_Read is new MFC0 (16, 0);
    begin
       return CP0_Read;
    end CP0_Config_Read;
 
-   procedure CP0_Config_Write (Value : in Unsigned_32) is
+   procedure CP0_Config_Write
+      (Value : in Unsigned_32)
+      is
       procedure CP0_Write is new MTC0 (16, 0);
    begin
       CP0_Write (Value);
@@ -226,13 +258,17 @@ package body MIPS32 is
    -- Config1 register (CP0 register 16, Select 1)
    ----------------------------------------------------------------------------
 
-   function CP0_Config1_Read return Unsigned_32 is
+   function CP0_Config1_Read
+      return Unsigned_32
+      is
       function CP0_Read is new MFC0 (16, 1);
    begin
       return CP0_Read;
    end CP0_Config1_Read;
 
-   procedure CP0_Config1_Write (Value : in Unsigned_32) is
+   procedure CP0_Config1_Write
+      (Value : in Unsigned_32)
+      is
       procedure CP0_Write is new MTC0 (16, 1);
    begin
       CP0_Write (Value);
@@ -242,13 +278,17 @@ package body MIPS32 is
    -- Debug register (CP0 register 23, Select 0)
    ----------------------------------------------------------------------------
 
-   function CP0_Debug_Read return Unsigned_32 is
+   function CP0_Debug_Read
+      return Unsigned_32
+      is
       function CP0_Read is new MFC0 (23, 0);
    begin
       return CP0_Read;
    end CP0_Debug_Read;
 
-   procedure CP0_Debug_Write (Value : in Unsigned_32) is
+   procedure CP0_Debug_Write
+      (Value : in Unsigned_32)
+      is
       procedure CP0_Write is new MTC0 (23, 0);
    begin
       CP0_Write (Value);
@@ -258,7 +298,8 @@ package body MIPS32 is
    -- Interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       Asm (
            Template => ""                            & CRLF &
@@ -276,7 +317,8 @@ package body MIPS32 is
           );
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       Asm (
            Template => ""                            & CRLF &
@@ -296,7 +338,9 @@ package body MIPS32 is
           );
    end Irq_Disable;
 
-   procedure Irq_Level_Set (Irq_Level : in Irq_Level_Type) is
+   procedure Irq_Level_Set
+      (Irq_Level : in Irq_Level_Type)
+      is
    begin
       Asm (
            Template => ""                            & CRLF &
@@ -318,21 +362,28 @@ package body MIPS32 is
           );
    end Irq_Level_Set;
 
-   function Irq_State_Get return Irq_State_Type is
+   function Irq_State_Get
+      return Irq_State_Type
+      is
    begin
-      return 0;
+      return 0; -- __TBD__
    end Irq_State_Get;
 
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
    begin
-      null;
+      null; -- __TBD__
    end Irq_State_Set;
 
    ----------------------------------------------------------------------------
    -- Locking subprograms
    ----------------------------------------------------------------------------
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) is
+   procedure Lock_Try
+      (Lock_Object : in out Lock_Type;
+       Success     :    out Boolean)
+      is
       Locked_Item : Lock_Type := (Lock => LOCK_LOCK);
       T_lock      : Lock_Type;
    begin
@@ -363,7 +414,9 @@ package body MIPS32 is
       end if;
    end Lock_Try;
 
-   procedure Lock (Lock_Object : in out Lock_Type) is
+   procedure Lock
+      (Lock_Object : in out Lock_Type)
+      is
       Success : Boolean;
    begin
       loop
@@ -372,7 +425,9 @@ package body MIPS32 is
       end loop;
    end Lock;
 
-   procedure Unlock (Lock_Object : out Lock_Type) is
+   procedure Unlock
+      (Lock_Object : out Lock_Type)
+      is
    begin
       Lock_Object.Lock := LOCK_UNLOCK;
    end Unlock;
