@@ -122,8 +122,7 @@ package PowerPC is
    PR_US : constant := 0; -- The processor can execute both user- and supervisor-level instructions.
    PR_U  : constant := 1; -- The processor can only execute user-level instructions.
 
-   type FE_Type is
-   record
+   type FE_Type is record
       FE0 : Bits_1;
       FE1 : Bits_1;
    end record;
@@ -136,8 +135,7 @@ package PowerPC is
    IP_LOW  : constant := 0; -- Interrupts are vectored to the physical address 0x000n_nnnn.
    IP_HIGH : constant := 1; -- Interrupts are vectored to the physical address 0xFFFn_nnnn.
 
-   type MSR_Type is
-   record
+   type MSR_Type is record
       Reserved1 : Bits_13 := 0;
       POW       : Boolean;      -- Power management enable
       Reserved2 : Bits_1 := 0;
@@ -157,12 +155,11 @@ package PowerPC is
       Reserved4 : Bits_2 := 0;
       RI        : Boolean;      -- Recoverable interrupt
       LE        : Boolean;      -- Little-endian mode enable
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 32;
-   for MSR_Type use
-   record
-      Reserved1 at 0 range 0 .. 12;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for MSR_Type use record
+      Reserved1 at 0 range  0 .. 12;
       POW       at 0 range 13 .. 13;
       Reserved2 at 0 range 14 .. 14;
       ILE       at 0 range 15 .. 15;
@@ -183,10 +180,12 @@ package PowerPC is
       LE        at 0 range 31 .. 31;
    end record;
 
-   function MSR_Read return MSR_Type with
-      Inline => True;
-   procedure MSR_Write (Value : in MSR_Type) with
-      Inline => True;
+   function MSR_Read
+      return MSR_Type
+      with Inline => True;
+   procedure MSR_Write
+      (Value : in MSR_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- FPSCR
@@ -214,8 +213,7 @@ package PowerPC is
    RN_ToInf   : constant := 2#10#; -- Round toward +infinity
    RN_ToMInf  : constant := 2#11#; -- Round toward –infinity
 
-   type FPSCR_Type is
-   record
+   type FPSCR_Type is record
       FX       : Boolean;     -- Floating-point exception summary.
       FEX      : Boolean;     -- Floating-point enabled exception summary
       VX       : Boolean;     -- Floating-point invalid operation exception summary.
@@ -243,21 +241,20 @@ package PowerPC is
       XE       : Boolean;     -- Floating-point inexact exception enable.
       NI       : Boolean;     -- Floating-point non-IEEE mode.
       RN       : Bits_2;      -- Floating-point rounding control.
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 32;
-   for FPSCR_Type use
-   record
-      FX       at 0 range 0 .. 0;
-      FEX      at 0 range 1 .. 1;
-      VX       at 0 range 2 .. 2;
-      OX       at 0 range 3 .. 3;
-      UX       at 0 range 4 .. 4;
-      ZX       at 0 range 5 .. 5;
-      XX       at 0 range 6 .. 6;
-      VXSNAN   at 0 range 7 .. 7;
-      VXISI    at 0 range 8 .. 8;
-      VXIDI    at 0 range 9 .. 9;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for FPSCR_Type use record
+      FX       at 0 range  0 ..  0;
+      FEX      at 0 range  1 ..  1;
+      VX       at 0 range  2 ..  2;
+      OX       at 0 range  3 ..  3;
+      UX       at 0 range  4 ..  4;
+      ZX       at 0 range  5 ..  5;
+      XX       at 0 range  6 ..  6;
+      VXSNAN   at 0 range  7 ..  7;
+      VXISI    at 0 range  8 ..  8;
+      VXIDI    at 0 range  9 ..  9;
       VXZDZ    at 0 range 10 .. 10;
       VXIMZ    at 0 range 11 .. 11;
       VXVC     at 0 range 12 .. 12;
@@ -281,22 +278,20 @@ package PowerPC is
    -- XER
    ----------------------------------------------------------------------------
 
-   type XER_Type is
-   record
+   type XER_Type is record
       SO         : Boolean;                     -- Summary overflow.
       OV         : Boolean;                     -- Overflow.
       CA         : Boolean;                     -- Carry.
       Reserved   : Bits_22 := 0;
       Byte_count : Natural range 0 .. 2**7 - 1; -- # of bytes in lswx and stswx instructions
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 32;
-   for XER_Type use
-   record
-      SO         at 0 range 0 .. 0;
-      OV         at 0 range 1 .. 1;
-      CA         at 0 range 2 .. 2;
-      Reserved   at 0 range 3 .. 24;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for XER_Type use record
+      SO         at 0 range  0 ..  0;
+      OV         at 0 range  1 ..  1;
+      CA         at 0 range  2 ..  2;
+      Reserved   at 0 range  3 .. 24;
       Byte_count at 0 range 25 .. 31;
    end record;
 
@@ -349,46 +344,47 @@ package PowerPC is
    generic
       SPR : in SPR_Type;
       type Register_Type is private;
-   function MFSPR return Register_Type with
-      Inline => True;
+   function MFSPR
+      return Register_Type
+      with Inline => True;
 
    generic
       SPR : in SPR_Type;
       type Register_Type is private;
-   procedure MTSPR (Value : in Register_Type) with
-      Inline => True;
+   procedure MTSPR
+      (Value : in Register_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- SPRs types and access subprograms
    ----------------------------------------------------------------------------
 
-   type PVR_Type is
-   record
+   type PVR_Type is record
       Version  : Unsigned_16;
       Revision : Unsigned_16;
-   end record with
-      Size => 32;
-   for PVR_Type use
-   record
-      Version  at 0 range 0 .. 15;
+   end record
+      with Size => 32;
+   for PVR_Type use record
+      Version  at 0 range  0 .. 15;
       Revision at 0 range 16 .. 31;
    end record;
 
-   function PVR_Read return PVR_Type with
-      Inline => True;
+   function PVR_Read
+      return PVR_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
-   procedure SYNC with
-      Inline => True;
-   procedure ISYNC with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
+   procedure SYNC
+      with Inline => True;
+   procedure ISYNC
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -398,11 +394,13 @@ package PowerPC is
 
    subtype Irq_State_Type is Integer;
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   function Irq_State_Get return Irq_State_Type;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type);
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   function Irq_State_Get
+      return Irq_State_Type;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type);
 
 end PowerPC;

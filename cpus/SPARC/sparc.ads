@@ -54,18 +54,16 @@ package SPARC is
    -- PSR
    ----------------------------------------------------------------------------
 
-   type icc_Type is
-   record
+   type icc_Type is record
       N : Boolean; -- negative
       Z : Boolean; -- zero
       V : Boolean; -- overflow
       C : Boolean; -- carry
-   end record with
-      Size => 4,
-      Pack => True;
+   end record
+      with Size => 4,
+           Pack => True;
 
-   type PSR_Type is
-   record
+   type PSR_Type is record
       CWP      : Natural range 0 .. 31; -- current_window_pointer
       ET       : Boolean;               -- enable_traps
       PS       : Boolean;               -- previous_supervisor
@@ -77,11 +75,10 @@ package SPARC is
       icc      : icc_Type;              -- integer_cond_codes
       ver      : Bits_4;                -- version
       impl     : Bits_4;                -- implementation
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PSR_Type use record
       CWP      at 0 range 0 .. 4;
       ET       at 0 range 5 .. 5;
       PS       at 0 range 6 .. 6;
@@ -109,40 +106,10 @@ package SPARC is
    subtype Register_Number_Type is Natural range 0 .. 31;
 
    Register_Size : constant array (0 .. 31) of Positive :=
-      [
-       0  => 4,
-       1  => 4,
-       2  => 4,
-       3  => 4,
-       4  => 4,
-       5  => 4,
-       6  => 4,
-       7  => 4,
-       8  => 4,
-       9  => 4,
-       10 => 4,
-       11 => 4,
-       12 => 4,
-       13 => 4,
-       14 => 4,
-       15 => 4,
-       16 => 4,
-       17 => 4,
-       18 => 4,
-       19 => 4,
-       20 => 4,
-       21 => 4,
-       22 => 4,
-       23 => 4,
-       24 => 4,
-       25 => 4,
-       26 => 4,
-       27 => 4,
-       28 => 4,
-       29 => 4,
-       30 => 4,
-       31 => 4
-      ];
+      [ 0 => 4,  1 => 4,  2 => 4,  3 => 4,  4 => 4,  5 => 4,  6 => 4,  7 => 4,
+        8 => 4,  9 => 4, 10 => 4, 11 => 4, 12 => 4, 13 => 4, 14 => 4, 15 => 4,
+       16 => 4, 17 => 4, 18 => 4, 19 => 4, 20 => 4, 21 => 4, 22 => 4, 23 => 4,
+       24 => 4, 25 => 4, 26 => 4, 27 => 4, 28 => 4, 29 => 4, 30 => 4, 31 => 4];
 
    Maximum_Register_Size : constant := 4;
 
@@ -150,14 +117,12 @@ package SPARC is
    -- Traps
    ----------------------------------------------------------------------------
 
-   type TrapTable_Item_Type is
-   record
+   type TrapTable_Item_Type is record
       Code : U32_Array (0 .. 3);
-   end record with
-      Alignment => 16,
-      Size      => 4 * 32;
-   for TrapTable_Item_Type use
-   record
+   end record
+      with Alignment => 16,
+           Size      => 4 * 32;
+   for TrapTable_Item_Type use record
       Code at 0 range 0 .. 127;
    end record;
 

@@ -45,7 +45,8 @@ package body PowerPC is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -61,7 +62,8 @@ package body PowerPC is
    ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
+   procedure BREAKPOINT
+      is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -77,7 +79,8 @@ package body PowerPC is
    ----------------------------------------------------------------------------
    -- SYNC
    ----------------------------------------------------------------------------
-   procedure SYNC is
+   procedure SYNC
+      is
    begin
       Asm (
            Template => ""             & CRLF &
@@ -93,7 +96,8 @@ package body PowerPC is
    ----------------------------------------------------------------------------
    -- ISYNC
    ----------------------------------------------------------------------------
-   procedure ISYNC is
+   procedure ISYNC
+      is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -109,7 +113,9 @@ package body PowerPC is
    ----------------------------------------------------------------------------
    -- MSR_Read
    ----------------------------------------------------------------------------
-   function MSR_Read return MSR_Type is
+   function MSR_Read
+      return MSR_Type
+      is
       Result : MSR_Type;
    begin
       Asm (
@@ -127,7 +133,9 @@ package body PowerPC is
    ----------------------------------------------------------------------------
    -- MSR_Write
    ----------------------------------------------------------------------------
-   procedure MSR_Write (Value : in MSR_Type) is
+   procedure MSR_Write
+      (Value : in MSR_Type)
+      is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -144,7 +152,9 @@ package body PowerPC is
    -- SPRs generics
    ----------------------------------------------------------------------------
 
-   function MFSPR return Register_Type is
+   function MFSPR
+      return Register_Type
+      is
       Result : Register_Type;
    begin
       Asm (
@@ -159,7 +169,9 @@ package body PowerPC is
       return Result;
    end MFSPR;
 
-   procedure MTSPR (Value : in Register_Type) is
+   procedure MTSPR
+      (Value : in Register_Type)
+      is
    begin
       Asm (
            Template => ""                      & CRLF &
@@ -179,7 +191,9 @@ package body PowerPC is
    -- SPRs subprograms
    ----------------------------------------------------------------------------
 
-   function PVR_Read return PVR_Type is
+   function PVR_Read
+      return PVR_Type
+      is
       function SPR_Read is new MFSPR (PVR, PVR_Type);
    begin
       return SPR_Read;
@@ -189,7 +203,8 @@ package body PowerPC is
    -- Exceptions
    ----------------------------------------------------------------------------
 
-   procedure Setup_Exception_Stack is
+   procedure Setup_Exception_Stack
+      is
    begin
       Asm (
            Template => ""                                        & CRLF &
@@ -211,15 +226,19 @@ package body PowerPC is
 
    procedure Irq_Disable is null;
 
-   function Irq_State_Get return Irq_State_Type is
+   function Irq_State_Get
+      return Irq_State_Type
+      is
    begin
-      return 0;
+      return 0; -- __TBD__
    end Irq_State_Get;
 
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
       pragma Unreferenced (Irq_State);
    begin
-      null;
+      null; -- __TBD__
    end Irq_State_Set;
 
 end PowerPC;

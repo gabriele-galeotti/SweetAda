@@ -83,14 +83,16 @@ package PPC405 is
    generic
       DCR : in DCR_Type;
       type DCR_Value_Type is private;
-   function MFDCR return DCR_Value_Type with
-      Inline => True;
+   function MFDCR
+      return DCR_Value_Type
+      with Inline => True;
 
    generic
       DCR : in DCR_Type;
       type DCR_Value_Type is private;
-   procedure MTDCR (DCR_Value : in DCR_Value_Type) with
-      Inline => True;
+   procedure MTDCR
+      (DCR_Value : in DCR_Value_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- TSR Timer Status Register
@@ -103,31 +105,31 @@ package PPC405 is
    TSR_CHIP   : constant TSR_TCR_WR_Type := 2#10#;
    TSR_SYSTEM : constant TSR_TCR_WR_Type := 2#11#;
 
-   type TSR_Register_Type is
-   record
+   type TSR_Register_Type is record
       ENW      : Boolean;
       WIS      : Boolean;
       WRS      : TSR_TCR_WR_Type;
       PIS      : Boolean;
       FIS      : Boolean;
       Reserved : Bits_26;
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 32;
-   for TSR_Register_Type use
-   record
-      ENW      at 0 range 0 .. 0;
-      WIS      at 0 range 1 .. 1;
-      WRS      at 0 range 2 .. 3;
-      PIS      at 0 range 4 .. 4;
-      FIS      at 0 range 5 .. 5;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for TSR_Register_Type use record
+      ENW      at 0 range 0 ..  0;
+      WIS      at 0 range 1 ..  1;
+      WRS      at 0 range 2 ..  3;
+      PIS      at 0 range 4 ..  4;
+      FIS      at 0 range 5 ..  5;
       Reserved at 0 range 6 .. 31;
    end record;
 
-   function TSR_Read return TSR_Register_Type with
-      Inline => True;
-   procedure TSR_Write (Value : in TSR_Register_Type) with
-      Inline => True;
+   function TSR_Read
+      return TSR_Register_Type
+      with Inline => True;
+   procedure TSR_Write
+      (Value : in TSR_Register_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- TCR Timer Control Register
@@ -145,8 +147,7 @@ package PPC405 is
    FIT_P_17 : constant FIT_Period_Type := 2#10#; -- 2^17 clocks
    FIT_P_21 : constant FIT_Period_Type := 2#11#; -- 2^21 clocks
 
-   type TCR_Register_Type is
-   record
+   type TCR_Register_Type is record
       WP       : TCR_WP_Type;
       WRC      : TSR_TCR_WR_Type;
       WIE      : Boolean;
@@ -155,34 +156,37 @@ package PPC405 is
       FIE      : Boolean;
       ARE      : Boolean;
       Reserved : Bits_22;
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 32;
-   for TCR_Register_Type use
-   record
-      WP       at 0 range 0 .. 1;
-      WRC      at 0 range 2 .. 3;
-      WIE      at 0 range 4 .. 4;
-      PIE      at 0 range 5 .. 5;
-      FP       at 0 range 6 .. 7;
-      FIE      at 0 range 8 .. 8;
-      ARE      at 0 range 9 .. 9;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for TCR_Register_Type use record
+      WP       at 0 range  0 ..  1;
+      WRC      at 0 range  2 ..  3;
+      WIE      at 0 range  4 ..  4;
+      PIE      at 0 range  5 ..  5;
+      FP       at 0 range  6 ..  7;
+      FIE      at 0 range  8 ..  8;
+      ARE      at 0 range  9 ..  9;
       Reserved at 0 range 10 .. 31;
    end record;
 
-   function TCR_Read return TCR_Register_Type with
-      Inline => True;
-   procedure TCR_Write (Value : in TCR_Register_Type) with
-      Inline => True;
+   function TCR_Read
+      return TCR_Register_Type
+      with Inline => True;
+   procedure TCR_Write
+      (Value : in TCR_Register_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- PIT Programmable Interval Timer
    ----------------------------------------------------------------------------
 
-   function PIT_Read return Unsigned_32 with
-      Inline => True;
-   procedure PIT_Write (Value : in Unsigned_32) with
-      Inline => True;
+   function PIT_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure PIT_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- UIC Universal Interrupt Controller
@@ -227,25 +231,29 @@ package PPC405 is
 
    subtype UIC0_SR_Type is Bitmap_32;
 
-   function UIC0_SR_Read return UIC0_SR_Type with
-      Inline => True;
-   procedure UIC0_SR_Write (Value : in UIC0_SR_Type) with
-      Inline => True;
+   function UIC0_SR_Read
+      return UIC0_SR_Type
+      with Inline => True;
+   procedure UIC0_SR_Write
+      (Value : in UIC0_SR_Type)
+      with Inline => True;
 
    -- 10.5.2 UIC Enable Register (UIC0_ER)
 
    subtype UIC0_ER_Type is Bitmap_32;
 
-   function UIC0_ER_Read return UIC0_ER_Type with
-      Inline => True;
-   procedure UIC0_ER_Write (Value : in UIC0_ER_Type) with
-      Inline => True;
+   function UIC0_ER_Read
+      return UIC0_ER_Type
+      with Inline => True;
+   procedure UIC0_ER_Write
+      (Value : in UIC0_ER_Type)
+      with Inline => True;
 
    -- MSREE_Set/Clear
 
-   procedure MSREE_Set with
-      Inline => True;
-   procedure MSREE_Clear with
-      Inline => True;
+   procedure MSREE_Set
+      with Inline => True;
+   procedure MSREE_Clear
+      with Inline => True;
 
 end PPC405;

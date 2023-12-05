@@ -41,8 +41,7 @@ package NiosII is
 
    -- status/estatus/bstatus
 
-   type status_Type is
-   record
+   type status_Type is record
       PIE      : Boolean;     -- PIE is the processor interrupt-enable bit.
       U        : Boolean;     -- U is the user mode bit.
       EH       : Boolean;     -- EH is the exception handler mode bit.
@@ -53,16 +52,15 @@ package NiosII is
       NMI      : Boolean;     -- NMI is the nonmaskable interrupt mode bit.
       RSIE     : Boolean;     -- RSIE is the register set interrupt-enable bit.
       Reserved : Bits_8 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for status_Type use
-   record
-      PIE      at 0 range 0 .. 0;
-      U        at 0 range 1 .. 1;
-      EH       at 0 range 2 .. 2;
-      IH       at 0 range 3 .. 3;
-      IL       at 0 range 4 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for status_Type use record
+      PIE      at 0 range  0 ..  0;
+      U        at 0 range  1 ..  1;
+      EH       at 0 range  2 ..  2;
+      IH       at 0 range  3 ..  3;
+      IL       at 0 range  4 ..  9;
       CRS      at 0 range 10 .. 15;
       PRS      at 0 range 16 .. 21;
       NMI      at 0 range 22 .. 22;
@@ -149,18 +147,16 @@ package NiosII is
 
    -- exception control
 
-   type exception_control_Type is
-   record
+   type exception_control_Type is record
       Reserved1 : Bits_2 := 0;
       Cause     : Bits_5;       -- CAUSE is written by the Nios II processor when certain exceptions occur.
       Reserved2 : Bits_25 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for exception_control_Type use
-   record
-      Reserved1 at 0 range 0 .. 1;
-      Cause     at 0 range 2 .. 6;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for exception_control_Type use record
+      Reserved1 at 0 range 0 ..  1;
+      Cause     at 0 range 2 ..  6;
       Reserved2 at 0 range 7 .. 31;
    end record;
 

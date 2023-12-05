@@ -25,7 +25,9 @@ package body e300 is
    --                                                                        --
    --========================================================================--
 
-   function SVR_Read return Unsigned_32 is
+   function SVR_Read
+      return Unsigned_32
+      is
       function SPR_Read is new MFSPR (SVR, Unsigned_32);
    begin
       return SPR_Read;

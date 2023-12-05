@@ -79,7 +79,8 @@ package e300 is
    -- SPRs access subprograms
    ----------------------------------------------------------------------------
 
-   function SVR_Read return Unsigned_32 with
-      Inline => True;
+   function SVR_Read
+      return Unsigned_32
+      with Inline => True;
 
 end e300;

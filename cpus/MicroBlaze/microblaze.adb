@@ -199,22 +199,20 @@ package body MicroBlaze is
    ----------------------------------------------------------------------------
    -- Irq_State_Get
    ----------------------------------------------------------------------------
-   -- __TBD__
    function Irq_State_Get return Irq_State_Type
       is
    begin
-      return 0;
+      return 0; -- __TBD__
    end Irq_State_Get;
 
    ----------------------------------------------------------------------------
    -- Irq_State_Set
    ----------------------------------------------------------------------------
-   -- __TBD__
    procedure Irq_State_Set
       (Irq_State : in Irq_State_Type)
       is
    begin
-      null;
+      null; -- __TBD__
    end Irq_State_Set;
 
 end MicroBlaze;
