@@ -44,15 +44,14 @@ package ARMv8A is
    EL2 : constant := 2#10#;
    EL3 : constant := 2#11#;
 
-   type EL_Type is
-   record
+   type EL_Type is record
       Reserved1 : Bits_2;
       EL        : Bits_2;  -- Current Exception level.
       Reserved2 : Bits_28;
       Reserved3 : Bits_32;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for EL_Type use record
       Reserved1 at 0 range  0 ..  1;
       EL        at 0 range  2 ..  3;
@@ -75,8 +74,7 @@ package ARMv8A is
    RMode_RM : constant := 2#10#; -- Round towards Minus Infinity (RM) mode.
    RMode_RZ : constant := 2#11#; -- Round towards Zero (RZ) mode.
 
-   type FPCR_Type is
-   record
+   type FPCR_Type is record
       FIZ       : Boolean;      -- Flush Inputs to Zero. Controls whether single-precision ...
       AH        : Boolean;      -- Alternate Handling. Controls alternate handling of denormalized floating-point numbers.
       NEP       : Boolean;      -- Controls how the output elements other than the lowest element of the vector ...
@@ -97,9 +95,9 @@ package ARMv8A is
       AHP       : Boolean;      -- Alternative half-precision control bit.
       Reserved3 : Bits_5 := 0;
       Reserved4 : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for FPCR_Type use record
       FIZ       at 0 range  0 ..  0;
       AH        at 0 range  1 ..  1;
@@ -132,8 +130,7 @@ package ARMv8A is
 
    -- C5.2.9 FPSR, Floating-point Status Register
 
-   type FPSR_Type is
-   record
+   type FPSR_Type is record
       IOC       : Boolean;      -- Invalid Operation cumulative exception bit.
       DZC       : Boolean;      -- Division by Zero cumulative exception bit.
       OFC       : Boolean;      -- Overflow cumulative exception bit.
@@ -148,11 +145,10 @@ package ARMv8A is
       Z         : Boolean;      -- Zero condition flag.
       N         : Boolean;      -- Negative condition flag.
       Reserved3 : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for FPSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for FPSR_Type use record
       IOC       at 0 range  0 ..  0;
       DZC       at 0 range  1 ..  1;
       OFC       at 0 range  2 ..  2;
@@ -182,13 +178,12 @@ package ARMv8A is
 
    -- D19.2.1 ACCDATA_EL1, Accelerator Data
 
-   type ACCDATA_EL1_Type is
-   record
+   type ACCDATA_EL1_Type is record
       ACCDATA  : Bits_32;      -- Holds the lower 32 bits of the data that is stored by an ST64BV0, ...
       Reserved : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for ACCDATA_EL1_Type use record
       ACCDATA  at 0 range  0 .. 31;
       Reserved at 0 range 32 .. 63;
@@ -207,13 +202,12 @@ package ARMv8A is
 
    -- D19.2.25 CCSIDR2_EL1, Current Cache Size ID Register 2
 
-   type CCSIDR2_EL1_Type is
-   record
+   type CCSIDR2_EL1_Type is record
       NumSets  : Bits_24;      -- (Number of sets in cache) - 1, therefore a value of 0 indicates 1 set in the cache. ...
       Reserved : Bits_40 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for CCSIDR2_EL1_Type use record
       NumSets  at 0 range  0 .. 23;
       Reserved at 0 range 24 .. 63;
@@ -221,8 +215,7 @@ package ARMv8A is
 
    -- D19.2.43 FPEXC32_EL2, Floating-Point Exception Control register
 
-   type FPEXC32_EL2_Type is
-   record
+   type FPEXC32_EL2_Type is record
       IOF       : Boolean;      -- Invalid Operation floating-point exception trap enable.
       DZF       : Boolean;      -- Divide by Zero floating-point exception trap enable.
       OFF       : Boolean;      -- Overflow floating-point exception trap enable.
@@ -239,9 +232,9 @@ package ARMv8A is
       EN        : Boolean;      -- Enables access to the Advanced SIMD and floating-point functionality ...
       EX        : Boolean;      -- Exception bit.
       Reserved3 : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for FPEXC32_EL2_Type use record
       IOF       at 0 range  0 ..  0;
       DZF       at 0 range  1 ..  1;
@@ -270,8 +263,7 @@ package ARMv8A is
 
    -- D19.2.48 HCR_EL2, Hypervisor Configuration Register
 
-   type HCR_EL2_Type is
-   record
+   type HCR_EL2_Type is record
       VM        : Boolean;     -- Virtualization enable.
       SWIO      : Boolean;     -- Set/Way Invalidation Override.
       PTW       : Boolean;     -- Protected Table Walk.
@@ -332,9 +324,9 @@ package ARMv8A is
       TID5      : Boolean;     -- Trap ID group 5.
       TWEDEn    : Boolean;     -- TWE Delay Enable.
       TWEDEL    : Bits_4 := 0; -- TWE Delay.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for HCR_EL2_Type use record
       VM        at 0 range  0 ..  0;
       SWIO      at 0 range  1 ..  1;
@@ -407,8 +399,7 @@ package ARMv8A is
 
    -- D19.2.94 ISR_EL1, Interrupt Status Register
 
-   type ISR_EL1_Type is
-   record
+   type ISR_EL1_Type is record
       Reserved1 : Bits_6;
       F         : Boolean; -- FIQ pending bit.
       I         : Boolean; -- IRQ pending bit.
@@ -416,9 +407,9 @@ package ARMv8A is
       F_S       : Boolean; -- FIQ with Superpriority pending bit.
       I_S       : Boolean; -- IRQ with Superpriority pending bit.
       Reserved2 : Bits_53;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for ISR_EL1_Type use record
       Reserved1 at 0 range  0 ..  5;
       F         at 0 range  6 ..  6;
@@ -435,8 +426,7 @@ package ARMv8A is
 
    -- D19.2.120 SCR_EL3, Secure Configuration Register
 
-   type Non_Secure_Type is
-   record
+   type Non_Secure_Type is record
       NS  : Bits_1;
       NSE : Bits_1;
    end record;
@@ -446,8 +436,7 @@ package ARMv8A is
    Non_Secure_Reserved  : constant Non_Secure_Type := (1, 0); -- Reserved.
    Non_Secure_Realm     : constant Non_Secure_Type := (1, 1); -- Realm.
 
-   type SCR_EL3_Type is
-   record
+   type SCR_EL3_Type is record
       NS        : Bits_1;          -- Non-secure bit.
       IRQ       : Boolean;         -- Physical IRQ Routing.
       FIQ       : Boolean;         -- Physical FIQ Routing.
@@ -493,9 +482,9 @@ package ARMv8A is
       Reserved7 : Bits_12 := 0;
       NSE       : Bits_1;          -- This field, evaluated with SCR_EL3.NS, selects the Security state of EL2 and ...
       Reserved8 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for SCR_EL3_Type use record
       NS        at 0 range  0 ..  0;
       IRQ       at 0 range  1 ..  1;
@@ -567,8 +556,7 @@ package ARMv8A is
    DSSBS_0 : constant := 0; -- PSTATE.SSBS is set to 0 on an exception to EL1.
    DSSBS_1 : constant := 1; -- PSTATE.SSBS is set to 1 on an exception to EL1.
 
-   type SCTLR_EL1_Type is
-   record
+   type SCTLR_EL1_Type is record
       M          : Boolean;     -- MMU enable for EL1&0 stage 1 address translation.
       A          : Boolean;     -- Alignment check enable.
       C          : Boolean;     -- Stage 1 Cacheability control, for data accesses.
@@ -627,9 +615,9 @@ package ARMv8A is
       NMI        : Boolean;     -- Non-maskable Interrupt enable.
       SPINTMASK  : Boolean;     -- SP Interrupt Mask enable.
       TIDCP      : Boolean;     -- Trap IMPLEMENTATION DEFINED functionality.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for SCTLR_EL1_Type use record
       M          at 0 range  0 ..  0;
       A          at 0 range  1 ..  1;
@@ -727,13 +715,12 @@ package ARMv8A is
 
    -- D19.12.1 CNTFRQ_EL0, Counter-timer Frequency register
 
-   type CNTFRQ_EL0_Type is
-   record
+   type CNTFRQ_EL0_Type is record
       Clock_frequency : Unsigned_32;  -- Clock_Frequency.
       Reserved        : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for CNTFRQ_EL0_Type use record
       Clock_frequency at 0 range  0 .. 31;
       Reserved        at 0 range 32 .. 63;
@@ -745,16 +732,15 @@ package ARMv8A is
 
    -- D19.12.16 CNTP_CTL_EL0, Counter-timer Physical Timer Control register
 
-   type CNTP_CTL_EL0_Type is
-   record
+   type CNTP_CTL_EL0_Type is record
       ENABLE    : Boolean;      -- Enables the timer.
       IMASK     : Boolean;      -- Timer interrupt mask bit.
       ISTATUS   : Boolean;      -- The status of the timer.
       Reserved1 : Bits_29 := 0;
       Reserved2 : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for CNTP_CTL_EL0_Type use record
       ENABLE    at 0 range  0 ..  0;
       IMASK     at 0 range  1 ..  1;
@@ -781,13 +767,12 @@ package ARMv8A is
 
    -- D19.12.18 CNTP_TVAL_EL0, Counter-timer Physical Timer TimerValue register
 
-   type CNTP_TVAL_EL0_Type is
-   record
+   type CNTP_TVAL_EL0_Type is record
       TimerValue : Unsigned_32;  -- The TimerValue view of the EL1 physical timer.
       Reserved   : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
    for CNTP_TVAL_EL0_Type use record
       TimerValue at 0 range  0 .. 31;
       Reserved   at 0 range 32 .. 63;
