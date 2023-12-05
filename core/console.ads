@@ -42,8 +42,7 @@ package Console is
    type Console_Write_Ptr is access procedure (C : in Character);
    type Console_Read_Ptr is access procedure (C : out Character);
 
-   type Console_Descriptor_Type is
-   record
+   type Console_Descriptor_Type is record
       Write : not null Console_Write_Ptr;
       Read  : not null Console_Read_Ptr;
    end record;

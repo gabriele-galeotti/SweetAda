@@ -30,8 +30,7 @@ package Interrupts is
 
    type Interrupt_Handler_Ptr is access procedure (Data_Address : in System.Address);
 
-   type Interrupt_Descriptor_Type is
-   record
+   type Interrupt_Descriptor_Type is record
       Irq_Handler  : Interrupt_Handler_Ptr;
       Data_Address : System.Address;
    end record;
@@ -39,11 +38,11 @@ package Interrupts is
    INTERRUPT_DESCRIPTOR_INVALID : constant Interrupt_Descriptor_Type := (null, System.Null_Address);
 
    procedure Init;
-   procedure Install (
-                      Irq          : in CPU.Irq_Id_Type;
-                      Irq_Handler  : in Interrupt_Handler_Ptr;
-                      Data_Address : in System.Address
-                     );
-   procedure Handler (Irq : in CPU.Irq_Id_Type);
+   procedure Install
+      (Irq          : in CPU.Irq_Id_Type;
+       Irq_Handler  : in Interrupt_Handler_Ptr;
+       Data_Address : in System.Address);
+   procedure Handler
+      (Irq : in CPU.Irq_Id_Type);
 
 end Interrupts;

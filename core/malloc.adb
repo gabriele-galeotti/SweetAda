@@ -46,14 +46,13 @@ package body Malloc is
    MEMORYBLOCKTYPE_SIZE : constant := DEFAULT_ALIGNMENT *
       ((((size_t'Size + Standard'Address_Size) / Storage_Unit) + DEFAULT_ALIGNMENT - 1) / DEFAULT_ALIGNMENT);
 
-   type Memory_Block_Type is
-   record
+   type Memory_Block_Type is record
       Size     : size_t;
       Next_Ptr : Memory_Block_Ptr;
-   end record with
-      Pack      => True,
-      Alignment => DEFAULT_ALIGNMENT,
-      Size      => MEMORYBLOCKTYPE_SIZE * Storage_Unit;
+   end record
+      with Pack      => True,
+           Alignment => DEFAULT_ALIGNMENT,
+           Size      => MEMORYBLOCKTYPE_SIZE * Storage_Unit;
 
    Heap_Descriptor : aliased Memory_Block_Type := (Size => 0, Next_Ptr => null);
 
