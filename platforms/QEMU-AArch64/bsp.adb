@@ -50,10 +50,11 @@ package body BSP is
 
    Timer_Constant : Unsigned_32;
 
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_get_secondary_stack";
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -66,7 +67,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr
+      is
    begin
       return BSP_SS_Stack;
    end Get_Sec_Stack;
@@ -74,7 +76,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Timer_Reload
    ----------------------------------------------------------------------------
-   procedure Timer_Reload is
+   procedure Timer_Reload
+      is
    begin
       ARMv8A.CNTP_TVAL_EL0_Write ((TimerValue => Timer_Constant, others => <>));
    end Timer_Reload;
@@ -83,12 +86,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       PL011.TX (PL011_Descriptor, To_U8 (C));
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       PL011.RX (PL011_Descriptor, Data);
@@ -98,7 +105,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       Exceptions.Init;
@@ -125,20 +133,21 @@ package body BSP is
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
+      -- GIC minimal setup
+      GICD.GICD_CTLR.EnableGrp0   := True;
+      GICD.GICD_ISENABLER (0)(30) := True;
+      GICC.GICC_CTLR.EnableGrp0   := True;
+      GICC.GICC_PMR.Priority      := 16#FF#;
       Timer_Constant :=
          (ARMv8A.CNTFRQ_EL0_Read.Clock_frequency + Configure.TICK_FREQUENCY / 2) /
          Configure.TICK_FREQUENCY;
-      Virt.GICD_CTLR.EnableGrp1 := True;
-      Virt.GICD_ISENABLER (30)  := True;
-      Virt.GICC_CTLR.EnableGrp1 := True;
-      Virt.GICC_PMR.Priority    := 16#FF#;
       Timer_Reload;
       ARMv8A.CNTP_CTL_EL0_Write ((
-                                  ENABLE  => True,
-                                  IMASK   => False,
-                                  ISTATUS => False,
-                                  others  => <>
-                                 ));
+         ENABLE  => True,
+         IMASK   => False,
+         ISTATUS => False,
+         others  => <>
+         ));
       -- handle IRQs at EL3
       if ARMv8A.CurrentEL_Read.EL = 3 then
          declare

@@ -60,21 +60,23 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
    begin
       BSP.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
          -- IRQ pulsemeter
          IOEMU.IO0 := 1;
       end if;
-      Virt.GICD_ICPENDR (30) := True;
+      Virt.GICD.GICD_ICPENDR (0)(30) := True;
       BSP.Timer_Reload;
    end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
       function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
    begin
       if ARMv8A.CurrentEL_Read.EL = 3 then
