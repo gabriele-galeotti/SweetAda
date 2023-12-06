@@ -33,8 +33,7 @@ package Goldfish is
    -- RTC
    ----------------------------------------------------------------------------
 
-   type RTC_Type is
-   record
+   type RTC_Type is record
       TIME_LOW        : Unsigned_32 with Volatile_Full_Access => True;
       TIME_HIGH       : Unsigned_32 with Volatile_Full_Access => True;
       ALARM_LOW       : Unsigned_32 with Volatile_Full_Access => True;
@@ -43,10 +42,9 @@ package Goldfish is
       CLEAR_ALARM     : Unsigned_32 with Volatile_Full_Access => True;
       ALARM_STATUS    : Unsigned_32 with Volatile_Full_Access => True;
       CLEAR_INTERRUPT : Unsigned_32 with Volatile_Full_Access => True;
-   end record with
-      Size => 16#20# * 8;
-   for RTC_Type use
-   record
+   end record
+      with Size => 16#20# * 8;
+   for RTC_Type use record
       TIME_LOW        at 16#00# range 0 .. 31;
       TIME_HIGH       at 16#04# range 0 .. 31;
       ALARM_LOW       at 16#08# range 0 .. 31;

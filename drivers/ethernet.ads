@@ -53,16 +53,14 @@ package Ethernet is
    ----------------------------------------------------------------------------
 
    ETH_HDR_SIZE : constant := 14;
-   type Ethernet_Header_Type is
-   record
+   type Ethernet_Header_Type is record
       MAC_Destination : MAC_Address_Type;
       MAC_Source      : MAC_Address_Type;
       Type_or_Length  : Unsigned_16;
-   end record with
-      Alignment => 2,
-      Size      => ETH_HDR_SIZE * Storage_Unit;
-   for Ethernet_Header_Type use
-   record
+   end record
+      with Alignment => 2,
+           Size      => ETH_HDR_SIZE * Storage_Unit;
+   for Ethernet_Header_Type use record
       MAC_Destination at  0 range 0 .. 47;
       MAC_Source      at  6 range 0 .. 47;
       Type_or_Length  at 12 range 0 .. 15;
@@ -75,8 +73,7 @@ package Ethernet is
    ----------------------------------------------------------------------------
 
    ARP_HDR_SIZE : constant := 28;
-   type ARP_Header_Type is
-   record
+   type ARP_Header_Type is record
       Htype : Unsigned_16;
       Ptype : Unsigned_16;
       Hlen  : Unsigned_8;
@@ -86,11 +83,10 @@ package Ethernet is
       Spa   : IPv4_Address_Type;
       Tha   : MAC_Address_Type;
       Tpa   : IPv4_Address_Type;
-   end record with
-      Alignment => 2,
-      Size      => ARP_HDR_SIZE * Storage_Unit;
-   for ARP_Header_Type use
-   record
+   end record
+      with Alignment => 2,
+           Size      => ARP_HDR_SIZE * Storage_Unit;
+   for ARP_Header_Type use record
       Htype at  0 range 0 .. 15;
       Ptype at  2 range 0 .. 15;
       Hlen  at  4 range 0 ..  7;
@@ -111,8 +107,7 @@ package Ethernet is
 
    ARP_NENTRIES : constant Natural := 16;
 
-   type ARP_Entry_Type is
-   record
+   type ARP_Entry_Type is record
       IP_Entry : Unsigned_32;
    end record;
 
@@ -125,8 +120,7 @@ package Ethernet is
    type RX_Ptr is access procedure (Data_Address : in Address);
    type TX_Ptr is access procedure (Data_Address : in Address; P : in Pbuf_Ptr);
 
-   type Descriptor_Type is
-   record
+   type Descriptor_Type is record
       Haddress     : MAC_Address_Type;  -- "hardware" address (MAC)
       Paddress     : IPv4_Address_Type; -- "protocol" address (IPv4)
       RX           : RX_Ptr;
@@ -170,14 +164,13 @@ package Ethernet is
    type Queue_Array is array (Queue_Index_Type) of Pbuf_Ptr
       with Suppress_Initialization => True;
 
-   type Queue_Type is
-   record
+   type Queue_Type is record
       Queue : Queue_Array;
       Head  : Queue_Index_Type := 0;
       Tail  : Queue_Index_Type := 0;
       Count : Natural range 0 .. QUEUE_SIZE := 0;
-   end record with
-      Volatile => True;
+   end record
+      with Volatile => True;
 
    Packet_Queue : aliased Queue_Type := [[others => null], 0, 0, 0];
 

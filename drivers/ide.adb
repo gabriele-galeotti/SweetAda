@@ -70,8 +70,7 @@ package body IDE is
 
    -- ERROR Register
 
-   type ERROR_Type is
-   record
+   type ERROR_Type is record
       AMNF  : Boolean; -- Address Mark Not Found
       TK0NF : Boolean; -- TracK 0 Not Found
       ABRT  : Boolean; -- ABoRTed command
@@ -80,11 +79,10 @@ package body IDE is
       MC    : Boolean; -- Media Change
       UNC   : Boolean; -- UNCorrectable data error
       BBK   : Boolean; -- Bad Block Detected
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ERROR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ERROR_Type use record
       AMNF  at 0 range 0 .. 0;
       TK0NF at 0 range 1 .. 1;
       ABRT  at 0 range 2 .. 2;
@@ -100,18 +98,16 @@ package body IDE is
 
    -- HEAD Register
 
-   type HEAD_Type is
-   record
+   type HEAD_Type is record
       HS      : Natural range 0 .. 15; -- Head Select
       DRV     : Drive_Type;            -- MASTER/SLAVE
       Unused1 : Bits.Bits_1;
       L       : Boolean;               -- LBA mode
       Unused2 : Bits.Bits_1;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for HEAD_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for HEAD_Type use record
       HS      at 0 range 0 .. 3;
       DRV     at 0 range 4 .. 4;
       Unused1 at 0 range 5 .. 5;
@@ -124,8 +120,7 @@ package body IDE is
 
    -- STATUS Register
 
-   type STATUS_Type is
-   record
+   type STATUS_Type is record
       ERR  : Boolean;
       IDX  : Boolean;
       CORR : Boolean;
@@ -134,11 +129,10 @@ package body IDE is
       WFT  : Boolean;
       RDY  : Boolean;
       BSY  : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for STATUS_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for STATUS_Type use record
       ERR  at 0 range 0 .. 0;
       IDX  at 0 range 1 .. 1;
       CORR at 0 range 2 .. 2;

@@ -97,16 +97,14 @@ package body MC146818A is
    DIV_Any1 : constant := 2#110#; -- Time Base Frequency = Any, Operation Mode = No
    DIV_Any2 : constant := 2#111#; -- Time Base Frequency = Any, Operation Mode = No
 
-   type RegisterA_Type is
-   record
+   type RegisterA_Type is record
       RS  : Bits_4;           -- rate selection
       DIV : Bits_3;           -- divider chain
       UIP : Boolean := False; -- update in progress
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RegisterA_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RegisterA_Type use record
       RS  at 0 range 0 .. 3;
       DIV at 0 range 4 .. 6;
       UIP at 0 range 7 .. 7;
@@ -117,8 +115,7 @@ package body MC146818A is
 
    -- REGISTER B ($0B)
 
-   type RegisterB_Type is
-   record
+   type RegisterB_Type is record
       DSE    : Boolean; -- daylight savings enable
       Hour24 : Boolean; -- format of the hours bytes
       DM     : Boolean; -- data mode
@@ -127,11 +124,10 @@ package body MC146818A is
       AIE    : Boolean; -- alarm interrupt enable
       PIE    : Boolean; -- periodic interrupt enable
       SET    : Boolean; -- initialize the time and calendar bytes
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RegisterB_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RegisterB_Type use record
       DSE    at 0 range 0 .. 0;
       Hour24 at 0 range 1 .. 1;
       DM     at 0 range 2 .. 2;
@@ -147,18 +143,16 @@ package body MC146818A is
 
    -- REGISTER C ($0C)
 
-   type RegisterC_Type is
-   record
+   type RegisterC_Type is record
       Unused : Bits_4;
       UF     : Boolean; -- update-ended interrupt flag
       AF     : Boolean; -- alarm interrupt flag
       PF     : Boolean; -- periodic interrupt flag
       IRQF   : Boolean; -- interrupt request flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RegisterC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RegisterC_Type use record
       Unused at 0 range 0 .. 3;
       UF     at 0 range 4 .. 4;
       AF     at 0 range 5 .. 5;
@@ -170,15 +164,13 @@ package body MC146818A is
 
    -- REGISTER D ($0D)
 
-   type RegisterD_Type is
-   record
+   type RegisterD_Type is record
       Unused : Bits_7;
       VRT    : Boolean; -- valid RAM and time
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RegisterD_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RegisterD_Type use record
       Unused at 0 range 0 .. 6;
       VRT    at 0 range 7 .. 7;
    end record;

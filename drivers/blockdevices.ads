@@ -49,24 +49,21 @@ package BlockDevices is
    -- 3rd byte: CL
    ----------------------------------------------------------------------------
 
-   type CHS_Type is
-   record
+   type CHS_Type is record
       C : Natural range 0 .. 1023;
       H : Natural range 0 ..  254;
       S : Natural range 1 ..   63;
    end record;
 
-   type CHS_Layout_Type is
-   record
+   type CHS_Layout_Type is record
       H  : Natural range 0 .. 254;
       S  : Natural range 1 ..  63;
       CH : Natural range 0 ..   3;
       CL : Natural range 0 .. 255;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 3 * 8;
-   for CHS_Layout_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 3 * 8;
+   for CHS_Layout_Type use record
       H  at 0 range 0 .. 7;
       S  at 1 range 0 .. 5;
       CH at 1 range 6 .. 7;

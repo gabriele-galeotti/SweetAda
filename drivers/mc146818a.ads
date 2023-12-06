@@ -43,8 +43,7 @@ package MC146818A is
    type Port_Read_8_Ptr is access function (Port : in Address) return Unsigned_8;
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
 
-   type Descriptor_Type is
-   record
+   type Descriptor_Type is record
       Base_Address  : Address;
       Scale_Address : Address_Shift;
       Flags         : Flags_Type;

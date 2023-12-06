@@ -45,8 +45,7 @@ package IDE is
    type Port_Read_16_Ptr is access function (Port : in Address) return Unsigned_16;
    type Port_Write_16_Ptr is access procedure (Port : in Address; Value : in Unsigned_16);
 
-   type Descriptor_Type is
-   record
+   type Descriptor_Type is record
       Base_Address  : Address;
       Scale_Address : Address_Shift;
       Read_8        : Port_Read_8_Ptr;

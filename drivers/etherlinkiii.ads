@@ -33,8 +33,7 @@ package EtherLinkIII is
    use Interfaces;
    use Ethernet;
 
-   type EtherLinkIII_Card_Type is
-   record
+   type EtherLinkIII_Card_Type is record
       Base_Address : Address;
       MAC          : MAC_Address_Type;
       IF_Port      : Unsigned_16;

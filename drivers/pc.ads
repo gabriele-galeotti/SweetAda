@@ -63,8 +63,7 @@ package PC is
    i8042_OUTPORT_RD_CMD : constant := 16#D0#; -- data is read from i8042 output port and placed in data register
    i8042_OUTPORT_WR_CMD : constant := 16#D1#; -- next byte written to port 60h is placed in i8042 output port
 
-   type i8042_OUTPORT_Type is
-   record
+   type i8042_OUTPORT_Type is record
       SYSRES    : Boolean;     -- system reset line
       GATEA20   : Boolean;     -- gate A20
       Unused    : Bits_2 := 0;
@@ -72,11 +71,10 @@ package PC is
       IBUFEMPTY : Boolean;     -- input buffer empty
       KBDCLK    : Boolean;     -- keyboard clock (output)
       KDBDATA   : Boolean;     -- keyboard data (output)
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for i8042_OUTPORT_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for i8042_OUTPORT_Type use record
       SYSRES    at 0 range 0 .. 0;
       GATEA20   at 0 range 1 .. 1;
       Unused    at 0 range 2 .. 3;
@@ -89,8 +87,7 @@ package PC is
    function To_U8 is new Ada.Unchecked_Conversion (i8042_OUTPORT_Type, Unsigned_8);
    function To_i8042_OUTPORT is new Ada.Unchecked_Conversion (Unsigned_8, i8042_OUTPORT_Type);
 
-   type PORTB_Type is
-   record
+   type PORTB_Type is record
       TIM2GATESPK : Boolean; -- RW
       SPKRDATA    : Boolean; -- RW
       ENBRAMPCK   : Boolean; -- RW
@@ -99,11 +96,10 @@ package PC is
       OUT2        : Boolean; -- RO
       IOCHCK      : Boolean; -- RO
       PCK         : Boolean; -- RO
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PORTB_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PORTB_Type use record
       TIM2GATESPK at 0 range 0 .. 0;
       SPKRDATA    at 0 range 1 .. 1;
       ENBRAMPCK   at 0 range 2 .. 2;
@@ -218,17 +214,15 @@ package PC is
    SELECT_COUNTER2       : constant := 2#10#;
    READBACK              : constant := 2#11#;
 
-   type PIT_Control_Word_Type is
-   record
+   type PIT_Control_Word_Type is record
       BCD  : Boolean;
       MODE : Bits_3;
       RW   : Bits_2;
       SC   : Bits_2;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PIT_Control_Word_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIT_Control_Word_Type use record
       BCD  at 0 range 0 .. 0;
       MODE at 0 range 1 .. 3;
       RW   at 0 range 4 .. 5;
@@ -237,18 +231,16 @@ package PC is
 
    function To_U8 is new Ada.Unchecked_Conversion (PIT_Control_Word_Type, Unsigned_8);
 
-   type PIT_Status_Type is
-   record
+   type PIT_Status_Type is record
       BCD        : Boolean;
       MODE       : Bits_3;
       RW         : Bits_2;
       Null_Count : Boolean;
       OUT_Pin    : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PIT_Status_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIT_Status_Type use record
       BCD        at 0 range 0 .. 0;
       MODE       at 0 range 1 .. 3;
       RW         at 0 range 4 .. 5;
@@ -277,8 +269,7 @@ package PC is
    PPI_STATUS  : constant := PPI_BASEADDRESS + 16#01#;
    PPI_CONTROL : constant := PPI_BASEADDRESS + 16#02#;
 
-   type PPI_Status_Type is
-   record
+   type PPI_Status_Type is record
       Unused   : Bits_2;
       IRQ      : Boolean;
       Error    : Boolean;
@@ -286,11 +277,10 @@ package PC is
       PaperOut : Boolean;
       ACK      : Boolean;
       Busy     : Boolean; -- negated
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PPI_Status_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PPI_Status_Type use record
       Unused   at 0 range 0 .. 1;
       IRQ      at 0 range 2 .. 2;
       Error    at 0 range 3 .. 3;
@@ -302,8 +292,7 @@ package PC is
 
    function To_PPI_Status is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Status_Type);
 
-   type PPI_Control_Type is
-   record
+   type PPI_Control_Type is record
       Strobe    : Boolean;     -- negated
       AUTOLF    : Boolean;     -- negated
       INIT      : Boolean;
@@ -311,11 +300,10 @@ package PC is
       IRQEN     : Boolean;
       BIDIR     : Boolean;
       Unused    : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PPI_Control_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PPI_Control_Type use record
       Strobe    at 0 range 0 .. 0;
       AUTOLF    at 0 range 1 .. 1;
       INIT      at 0 range 2 .. 2;
