@@ -10,3 +10,17 @@
 
 #define __ASSEMBLER__ 1
 
+////////////////////////////////////////////////////////////////////////////////
+
+                .sect   .vectors,"ax"
+
+                .org    0
+
+                .org    0x10
+                .global reset
+                .extern _start
+reset:          b       _start
+
+                .org    0x100
+                b       reset
+

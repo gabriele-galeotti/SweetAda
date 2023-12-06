@@ -14,7 +14,7 @@ SECTIONS
         .text :
         {
                 _stext = .;
-                *(.startup)
+                *(.vectors)
                 *(.text)
                 *(.text.*)
                 *(.rodata)
@@ -66,8 +66,12 @@ SECTIONS
         .debug_srcinfo     0 : { *(.debug_srcinfo) }
         .debug_sfnames     0 : { *(.debug_sfnames) }
         /* DWARF 1.1 and DWARF 2 */
-        .debug_aranges     0 : { obj/startup.o(.debug_aranges) *(.debug_aranges) }
         /* .debug_aranges     0 : { *(.debug_aranges) } */
+        .debug_aranges     0 : {
+                                obj/llkernel.o(.debug_aranges)
+                                obj/startup.o(.debug_aranges)
+                                *(.debug_aranges)
+                               }
         .debug_pubnames    0 : { *(.debug_pubnames) }
         /* DWARF 2 */
         .debug_info        0 : { *(.debug_info .gnu.linkonce.wi.*) }

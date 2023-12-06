@@ -12,7 +12,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .sect   .startup,"ax"
+                .sect   .text,"ax"
 
                 .space  0x10
 
@@ -23,23 +23,23 @@ _start:
                 //
                 // Setup stack pointer.
                 //
-                lis   r1,kernel_stack@highest
-                ori   r1,r1,kernel_stack@higher
-                sldi  r1,r1,32
-                oris  r1,r1,kernel_stack@h
-                ori   r1,r1,kernel_stack@l
+                lis     r1,kernel_stack@highest
+                ori     r1,r1,kernel_stack@higher
+                sldi    r1,r1,32
+                oris    r1,r1,kernel_stack@h
+                ori     r1,r1,kernel_stack@l
 
                 //
                 // Setup TOC.
                 //
                 .extern _toc
-                lis   r2,_toc@highest
-                ori   r2,r2,_toc@higher
-                sldi  r2,r2,32
-                oris  r2,r2,_toc@h
-                ori   r2,r2,_toc@l
-                addi  r2,r2,0x7FFF
-                addi  r2,r2,1
+                lis     r2,_toc@highest
+                ori     r2,r2,_toc@higher
+                sldi    r2,r2,32
+                oris    r2,r2,_toc@h
+                ori     r2,r2,_toc@l
+                addi    r2,r2,0x7FFF
+                addi    r2,r2,1
 
                 //
                 // Jump to high-level code.
