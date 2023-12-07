@@ -1018,6 +1018,9 @@ endif
 # Link phase.
 #
 
+$(PLATFORM_DIRECTORY)/%.lds: $(PLATFORM_DIRECTORY)/%.lds.S
+	$(CPP) -o $@ -E $<
+
 ifeq ($(NOBUILD),Y)
 $(KERNEL_OUTFILE):
 else
