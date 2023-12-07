@@ -66,19 +66,44 @@ package body P8 is
    ----------------------------------------------------------------------------
    procedure HMER_Clear
       is
+      HMER            : constant := 16#150#;
       -- FAIL + DONE + STATUS
       HMER_CLEAR_MASK : constant := 16#00C0_0700_0000_0000#;
    begin
       Asm (
-           Template => ""                         & CRLF &
-                       "        mtspr   0x150,%0" & CRLF &
+           Template => ""                      & CRLF &
+                       "        mtspr   %0,%1" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_64'Asm_Input ("r", HMER_CLEAR_MASK),
-           Clobber  => "",
+           Inputs   => [
+                        Integer'Asm_Input ("i", HMER),
+                        Unsigned_64'Asm_Input ("r", HMER_CLEAR_MASK)
+                       ],
+           Clobber  => "memory",
            Volatile => True
           );
    end HMER_Clear;
+
+   ----------------------------------------------------------------------------
+   -- HMER_Read
+   ----------------------------------------------------------------------------
+   function HMER_Read
+      return Unsigned_64
+      is
+      HMER  : constant := 16#150#;
+      Value : Unsigned_64;
+   begin
+      Asm (
+           Template => ""                      & CRLF &
+                       "        mfspr   %0,%1" & CRLF &
+                       "",
+           Outputs  => Unsigned_64'Asm_Output ("=r", Value),
+           Inputs   => Integer'Asm_Input ("i", HMER),
+           Clobber  => "memory",
+           Volatile => True
+          );
+      return Value;
+   end HMER_Read;
 
    ----------------------------------------------------------------------------
    -- XSCOM_Address
@@ -97,10 +122,24 @@ package body P8 is
    end XSCOM_Address;
 
    ----------------------------------------------------------------------------
+   -- XSCOM_Wait_Done
+   ----------------------------------------------------------------------------
+   procedure XSCOM_Wait_Done
+      is
+      HMER : Unsigned_64 with Volatile => True;
+   begin
+      loop
+         exit when (HMER_Read and 16#0040_0000_0000_0000#) /= 0;
+      end loop;
+      -- HW822317
+      HMER := HMER_Read;
+   end XSCOM_Wait_Done;
+
+   ----------------------------------------------------------------------------
    -- XSCOM_In64
    ----------------------------------------------------------------------------
    function XSCOM_In64
-      (Address : Integer_Address)
+      (Device_Address : Integer_Address)
       return Unsigned_64
       is
       Value : Unsigned_64;
@@ -113,7 +152,7 @@ package body P8 is
                        "        ldcix   %0,0,%1" & CRLF &
                        "",
            Outputs  => Unsigned_64'Asm_Output ("=r", Value),
-           Inputs   => Integer_Address'Asm_Input ("r", Address),
+           Inputs   => Integer_Address'Asm_Input ("r", Device_Address),
            Clobber  => "memory",
            Volatile => True
           );
@@ -124,8 +163,8 @@ package body P8 is
    -- XSCOM_Out64
    ----------------------------------------------------------------------------
    procedure XSCOM_Out64
-      (Address : in Integer_Address;
-       Value   : in Unsigned_64)
+      (Device_Address : in Integer_Address;
+       Value          : in Unsigned_64)
       is
    begin
       SYNC;
@@ -138,7 +177,7 @@ package body P8 is
            Outputs  => No_Output_Operands,
            Inputs   => [
                         Unsigned_64'Asm_Input ("r", Value),
-                        Integer_Address'Asm_Input ("r", Address)
+                        Integer_Address'Asm_Input ("r", Device_Address)
                        ],
            Clobber  => "memory",
            Volatile => True

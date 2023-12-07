@@ -1,6 +1,6 @@
 
 #
-# PowerPC 64-bit (QEMU emulator)
+# PowerPC POWER8 (QEMU emulator)
 #
 
 # force ZFP
@@ -11,7 +11,7 @@ USE_LIBADA := N
 CPU       := PowerPC
 CPU_MODEL := POWERPC64
 
-GCC_SWITCHES_PLATFORM     := -mcpu=powerpc64 -Wa,-mregnames
+GCC_SWITCHES_PLATFORM     := -mcpu=power8 -mbig -mno-vsx -Wa,-mregnames
 STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := --undefined=reset --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=

@@ -15,31 +15,39 @@ SECTIONS
         {
                 _stext = .;
                 *(.vectors)
-                *(.text)
-                *(.text.*)
-                *(.rodata)
-                *(.rodata.*)
+                *(.text .text.* .gnu.linkonce.t.*)
+                *(.rodata .rodata.* .gnu.linkonce.r.*)
                 . = ALIGN(0x10);
                 _etext = .;
         } > RAM
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
+        .opd  : ALIGN(8) { KEEP (*(.opd)) } > RAM
+        .toc1 : ALIGN(8) { *(.toc1) } > RAM
+        .got  : ALIGN(256) { *(.got .toc) } > RAM
+        .toc : ALIGN(8)
+        {
+                _toc = . + 0x8000;
+                *(.toc)
+        } > RAM
+        .sdata :
+        {
+                *(.sdata .sdata.* .gnu.linkonce.s.*)
+        } > RAM
+        .tocbss : ALIGN(8) { *(.tocbss) } > RAM
+        .sbss :
+        {
+                *(.dynsbss)
+                *(.sbss .sbss.* .gnu.linkonce.sb.*)
+                *(.scommon)
+        }
+        . = ALIGN(0x10);
         .data :
         {
                 _sdata = .;
-                _toc = .;
-                *(.toc*)
                 *(.data)
                 *(.data.*)
-                *(.tocbss)
-                *(.plt)
-                *(.sdata)
-                *(.sdata.*)
-                _sdata2 = .;
-                *(.sdata2)
-                *(.got*)
-                *(.opd)
                 . = ALIGN(0x10);
                 _edata = .;
         } > RAM
@@ -49,10 +57,7 @@ SECTIONS
         .bss ADDR(.data) + SIZEOF(.data) (NOLOAD) :
         {
                 _sbss = .;
-                *(.bss)
-                *(.bss.*)
-                *(.sbss)
-                *(COMMON)
+                *(.bss .bss.* .gnu.linkonce.b.*)
                 . = ALIGN(0x10);
                 _ebss = .;
         } > RAM

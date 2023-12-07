@@ -31,6 +31,7 @@ package P8 is
    --                                                                        --
    --========================================================================--
 
+   use System;
    package SSE renames System.Storage_Elements;
    use SSE;
 
@@ -44,7 +45,8 @@ package P8 is
    -- P8 Naples DD1.0
    CFAM_ID_P8NVL : constant := 16#120D_3049_8000_0000#;
 
-   PNV_XSCOM_LPC_BASE : constant := 16#B_0020#;
+   PNV_XSCOM_LPC_BASE : constant := 16#000B_0020#;
+   LPC_IO_OPB_ADDR    : constant := 16#D001_0000#;
 
    ECCB_CTL   : constant := 0;
    ECCB_RESET : constant := 1;
@@ -52,18 +54,19 @@ package P8 is
    ECCB_DATA  : constant := 3;
 
    type LPC_CMD_Type is record
-      Unused1 : Bits.Bits_4 := 0;
+      Magic   : Bits.Bits_4 := 0;       -- 0xD
       Size    : Bits.Bits_4;            -- size
       Unused2 : Bits.Bits_7 := 0;
       Read    : Boolean;                -- read/write
       Unused3 : Bits.Bits_7 := 0;
-      Addrlen : Bits.Bits_3;            -- address length
+      Addrlen : Bits.Bits_3 := 0;       -- address length (4)
       Unused4 : Bits.Bits_6 := 0;
       Address : Interfaces.Unsigned_32; -- address
    end record
-      with Size => 64;
+      with Bit_Order => High_Order_First,
+           Size => 64;
    for LPC_CMD_Type use record
-      Unused1 at 0 range  0 ..  3;
+      Magic   at 0 range  0 ..  3;
       Size    at 0 range  4 ..  7;
       Unused2 at 0 range  8 .. 14;
       Read    at 0 range 15 .. 15;
@@ -77,18 +80,23 @@ package P8 is
 
    procedure HMER_Clear
       with Inline => True;
+   function HMER_Read
+      return Interfaces.Unsigned_64
+      with Inline => True;
    function XSCOM_Address
       (Base   : Interfaces.Unsigned_64;
        Offset : Interfaces.Unsigned_64)
       return SSE.Integer_Address
       with Inline => True;
+   procedure XSCOM_Wait_Done
+      with Inline => True;
    function XSCOM_In64
-      (Address : SSE.Integer_Address)
+      (Device_Address : SSE.Integer_Address)
       return Interfaces.Unsigned_64
       with Inline => True;
    procedure XSCOM_Out64
-      (Address : in SSE.Integer_Address;
-       Value   : in Interfaces.Unsigned_64)
+      (Device_Address : in SSE.Integer_Address;
+       Value          : in Interfaces.Unsigned_64)
       with Inline => True;
 
 end P8;

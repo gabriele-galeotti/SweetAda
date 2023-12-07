@@ -14,8 +14,6 @@
 
                 .sect   .text,"ax"
 
-                .space  0x10
-
                 .type   _start,@function
                 .global _start
 _start:
@@ -38,8 +36,6 @@ _start:
                 sldi    r2,r2,32
                 oris    r2,r2,_toc@h
                 ori     r2,r2,_toc@l
-                addi    r2,r2,0x7FFF
-                addi    r2,r2,1
 
                 //
                 // Jump to high-level code.
