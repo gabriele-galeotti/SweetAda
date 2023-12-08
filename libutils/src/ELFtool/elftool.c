@@ -57,28 +57,26 @@
  ******************************************************************************/
 
 typedef enum {
-        ELF_K_NONE = 0,
-        ELF_K_AR,
-        ELF_K_COFF,
-        ELF_K_ELF,
-        ELF_K_SENTINEL
-        } Elf_Kind;
+        NONE = 0,
+        AR,
+        COFF,
+        ELF
+        } Filetype_t;
 
 typedef struct _Elf_Scn {
         union {
                 Elf64_Shdr u_shdr64;
                 Elf32_Shdr u_shdr32;
                 } s_uhdr;
-        } Elf_Scn;
+        } Elf_Scn_t;
 
 typedef struct _Elf_Data {
         void   *d_buf;
         size_t  d_size;
-        } Elf_Data;
+        } Elf_Data_t;
 
 typedef struct _Elf {
         int           fd;                       /* file descriptor */
-        Elf_Kind      kind;                     /* kind */
         size_t        idlen;                    /* identifier size */
         unsigned int  class;                    /* ELF class */
         uint8_t      *data;                     /* file/member data */
@@ -97,18 +95,17 @@ typedef struct _Elf {
         size_t        scn_symtab_size;
         off_t         scn_text_offset;
         uint64_t      scn_text_addr;
-        } Elf;
+        } Elf_t;
 
 enum {
-        ELF_E_NOERROR,
-        ELF_E_UNKNOWN_ERROR,
-        ELF_E_UNIMPLEMENTED,
-        ELF_E_ARGUMENT,
-        ELF_E_IO,
-        ELF_E_NOMEM,
-        ELF_E_UNKNOWN_CLASS,
-        ELF_E_NOSUCHSCN,
-        ELF_E_SENTINEL
+        ERROR_NOERROR,
+        ERROR_UNKNOWN_ERROR,
+        ERROR_UNIMPLEMENTED,
+        ERROR_ARGUMENT,
+        ERROR_IO,
+        ERROR_NOMEM,
+        ERROR_UNKNOWN_CLASS,
+        ERROR_NOSUCHSCN
         };
 
 /******************************************************************************
@@ -124,7 +121,7 @@ enum {
 typedef struct {
         const char *input_filename;
         int         command;
-        Elf        *pelf;
+        Elf_t      *pelf;
         bool        flag_verbose;               /* VERBOSE environment variable */
         bool        endianness_swap;
         size_t      scn_max_string_length;
@@ -278,7 +275,7 @@ data_read(int fd, void *buffer, size_t length)
  *                                                                            *
  ******************************************************************************/
 static void *
-elf_read(Elf *pelf, void *buffer, off_t offset, size_t length)
+elf_read(Elf_t *pelf, void *buffer, off_t offset, size_t length)
 {
         if (length != 0)
         {
@@ -286,15 +283,15 @@ elf_read(Elf *pelf, void *buffer, off_t offset, size_t length)
                 offset += pelf->base;
                 if (lseek(pelf->fd, offset, SEEK_SET) != offset)
                 {
-                        // ELF_E_IO
+                        // ERROR_IO
                 }
                 else if ((t_buffer = buffer) == NULL && (t_buffer = lib_malloc(length)) == NULL)
                 {
-                        // ELF_E_NOMEM
+                        // ERROR_NOMEM
                 }
                 else if (data_read(pelf->fd, t_buffer, length) < 0)
                 {
-                        // ELF_E_IO
+                        // ERROR_IO
                         if (t_buffer != buffer)
                         {
                                 lib_free((void *)t_buffer);
@@ -314,10 +311,10 @@ elf_read(Elf *pelf, void *buffer, off_t offset, size_t length)
  * elf_begin()                                                                *
  *                                                                            *
  ******************************************************************************/
-static Elf *
+static Elf_t *
 elf_begin(int fd)
 {
-        Elf    *pelf;
+        Elf_t  *pelf;
         off_t   fd_offset;
         size_t  size;
         int     endian_detect;
@@ -325,15 +322,15 @@ elf_begin(int fd)
         fd_offset = lseek(fd, (off_t)0, SEEK_END);
         if (fd_offset == (off_t)-1)
         {
-                // ELF_E_IO
+                // ERROR_IO
                 return NULL;
         }
         size = fd_offset;
 
-        pelf = (Elf *)lib_malloc(sizeof(Elf));
+        pelf = (Elf_t *)lib_malloc(sizeof(Elf_t));
         if (pelf == NULL)
         {
-                // ELF_E_NOMEM
+                // ERROR_NOMEM
                 return NULL;
         }
         pelf->fd = fd;
@@ -342,7 +339,7 @@ elf_begin(int fd)
         pelf->data = elf_read(pelf, NULL, 0, size);
         if (pelf->data == NULL)
         {
-                // ELF_E_IO
+                // ERROR_IO
                 lib_free((void *)pelf);
                 pelf = NULL;
                 return NULL;
@@ -355,11 +352,22 @@ elf_begin(int fd)
         pelf->idlen = size;
         if (size >= EI_NIDENT && memcmp(pelf->data, ELFMAG, SELFMAG) == 0)
         {
-                pelf->kind = ELF_K_ELF;
                 pelf->idlen = EI_NIDENT;
                 pelf->class = pelf->data[EI_CLASS];
                 pelf->encoding = pelf->data[EI_DATA];
                 pelf->version = pelf->data[EI_VERSION];
+                /*
+                 * ELFDATA2LSB == 1 2's complement, little endian
+                 * ELFDATA2MSB == 2 2's complement, big endian
+                 */
+                endian_detect = endianness_detect();
+                if (
+                     (pelf->encoding == ELFDATA2LSB && endian_detect == ENDIANNESS_BIG)    ||
+                     (pelf->encoding == ELFDATA2MSB && endian_detect == ENDIANNESS_LITTLE)
+                   )
+                {
+                        application.endianness_swap = true;
+                }
         }
         else
         {
@@ -367,19 +375,6 @@ elf_begin(int fd)
                 pelf->data = NULL;
                 lib_free((void *)pelf);
                 pelf = NULL;
-        }
-
-        /*
-         * ELFDATA2LSB == 1 2's complement, little endian
-         * ELFDATA2MSB == 2 2's complement, big endian
-         */
-        endian_detect = endianness_detect();
-        if (
-             (pelf->encoding == ELFDATA2LSB && endian_detect == ENDIANNESS_BIG)    ||
-             (pelf->encoding == ELFDATA2MSB && endian_detect == ENDIANNESS_LITTLE)
-           )
-        {
-                application.endianness_swap = true;
         }
 
         return pelf;
@@ -390,7 +385,7 @@ elf_begin(int fd)
  *                                                                            *
  ******************************************************************************/
 static int
-elf_end(Elf *pelf)
+elf_end(Elf_t *pelf)
 {
         if (pelf != NULL)
         {
@@ -411,7 +406,7 @@ elf_end(Elf *pelf)
  *                                                                            *
  ******************************************************************************/
 static void
-elf_analyze(Elf *pelf)
+elf_analyze(Elf_t *pelf)
 {
         int         idx;
         off_t       name;
@@ -495,7 +490,7 @@ elf_analyze(Elf *pelf)
  *                                                                            *
  ******************************************************************************/
 static int
-elf_find_symbol(Elf *pelf, const char *symbol, uint64_t *pvalue)
+elf_find_symbol(Elf_t *pelf, const char *symbol, uint64_t *pvalue)
 {
         int         nsymbol;
         int         idx;
