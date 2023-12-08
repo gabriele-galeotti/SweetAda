@@ -38,19 +38,17 @@ package body PCICAN is
    use Bits;
    use CPU;
 
-   type CR_Type is
-   record
+   type CR_Type is record
       RR       : Boolean;
       RIE      : Boolean;
       TIE      : Boolean;
       EIE      : Boolean;
       OIE      : Boolean;
       Reserved : Bits_3;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CR_Type use record
       RR       at 0 range 0 .. 0;
       RIE      at 0 range 1 .. 1;
       TIE      at 0 range 2 .. 2;
@@ -59,19 +57,17 @@ package body PCICAN is
       Reserved at 0 range 5 .. 7;
    end record;
 
-   type CMR_Type is
-   record
+   type CMR_Type is record
       TR       : Boolean;
       ABTTX    : Boolean; -- "AT" (Abort Transmission) conflicts with reserved word
       RRB      : Boolean;
       CDO      : Boolean;
       GTS      : Boolean;
       Reserved : Bits_3;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CMR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CMR_Type use record
       TR       at 0 range 0 .. 0;
       ABTTX    at 0 range 1 .. 1;
       RRB      at 0 range 2 .. 2;
@@ -80,8 +76,7 @@ package body PCICAN is
       Reserved at 0 range 5 .. 7;
    end record;
 
-   type SR_Type is
-   record
+   type SR_Type is record
       RBS : Boolean;
       DOS : Boolean;
       TBS : Boolean;
@@ -90,11 +85,10 @@ package body PCICAN is
       TS  : Boolean;
       ES  : Boolean;
       BS  : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SR_Type use record
       RBS at 0 range 0 .. 0;
       DOS at 0 range 1 .. 1;
       TBS at 0 range 2 .. 2;
@@ -105,19 +99,17 @@ package body PCICAN is
       BS  at 0 range 7 .. 7;
    end record;
 
-   type IR_Type is
-   record
+   type IR_Type is record
       RI       : Boolean;
       TI       : Boolean;
       EI       : Boolean;
       DOI      : Boolean;
       WUI      : Boolean;
       Reserved : Bits_3;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for IR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for IR_Type use record
       RI       at 0 range 0 .. 0;
       TI       at 0 range 1 .. 1;
       EI       at 0 range 2 .. 2;

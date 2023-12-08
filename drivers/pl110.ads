@@ -42,18 +42,16 @@ package PL110 is
 
    -- Horizontal Axis Panel Control Register, LCDTiming0
 
-   type LCDTiming0_Type is
-   record
+   type LCDTiming0_Type is record
       Reserved : Bits_2 := 0;
       PPL      : Natural range 0 .. 2**6 - 1; -- Pixels-per-line. Actual pixels-per-line = 16 * (PPL + 1).
       HSW      : Natural range 0 .. 2**8 - 1; -- Horizontal synchronization pulse width, ...
       HFP      : Natural range 0 .. 2**8 - 1; -- Horizontal front porch, ...
       HBP      : Natural range 0 .. 2**8 - 1; -- Horizontal back porch,
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for LCDTiming0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCDTiming0_Type use record
       Reserved at 0 range  0 ..  1;
       PPL      at 0 range  2 ..  7;
       HSW      at 0 range  8 .. 15;
@@ -63,17 +61,15 @@ package PL110 is
 
    -- Vertical Axis Panel Control Register, LCDTiming1
 
-   type LCDTiming1_Type is
-   record
+   type LCDTiming1_Type is record
       LPP : Natural range 0 .. 2**10 - 1; -- Lines per panel is the number of active lines per screen.
       VSW : Natural range 0 .. 2**6 - 1;  -- Vertical synchronization pulse width is the number of horizontal synchronization lines.
       VFP : Natural range 0 .. 2**8 - 1;  -- Vertical front porch is the number of inactive lines at the end of frame, ...
       VBP : Natural range 0 .. 2**8 - 1;  -- Vertical back porch is the number of inactive lines at the start of a frame, ...
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for LCDTiming1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCDTiming1_Type use record
       LPP at 0 range  0 ..  9;
       VSW at 0 range 10 .. 15;
       VFP at 0 range 16 .. 23;
@@ -105,8 +101,7 @@ package PL110 is
    WATERMARK_4 : constant WATERMARK_Type := 0; -- HBUSREQM ... when either of the two DMA FIFOs have four or more empty locations
    WATERMARK_8 : constant WATERMARK_Type := 1; -- HBUSREQM ... when either of the DMA FIFOs have eight or more empty locations.
 
-   type LCDControl_Type is
-   record
+   type LCDControl_Type is record
       LcdEn       : Boolean;        -- LCD controller enable:
       LcdBpp      : LcdBpp_Type;    -- LCD bits per pixel:
       LcdBW       : Boolean;        -- STN LCD is monochrome (black and white):
@@ -121,11 +116,10 @@ package PL110 is
       Reserved1   : Bits_2;
       WATERMARK   : WATERMARK_Type; -- LCD DMA FIFO Watermark level:
       Reserved2   : Bits_15 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for LCDControl_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCDControl_Type use record
       LcdEn       at 0 range  0 ..  0;
       LcdBpp      at 0 range  1 ..  3;
       LcdBW       at 0 range  4 ..  4;
@@ -142,8 +136,7 @@ package PL110 is
       Reserved2   at 0 range 17 .. 31;
    end record;
 
-   type PL110_Type is
-   record
+   type PL110_Type is record
       LCDTiming0    : LCDTiming0_Type with Volatile_Full_Access => True;
       LCDTiming1    : LCDTiming1_Type with Volatile_Full_Access => True;
       LCDTiming2    : Unsigned_32     with Volatile_Full_Access => True;
@@ -154,10 +147,9 @@ package PL110 is
       LCDControl    : LCDControl_Type with Volatile_Full_Access => True;
       LCDStatus     : Unsigned_32     with Volatile_Full_Access => True;
       LCDInterrupt  : Unsigned_32     with Volatile_Full_Access => True;
-   end record with
-      Size => 16#28# * 8;
-   for PL110_Type use
-   record
+   end record
+      with Size => 16#28# * 8;
+   for PL110_Type use record
       LCDTiming0    at 16#00# range 0 .. 31;
       LCDTiming1    at 16#04# range 0 .. 31;
       LCDTiming2    at 16#08# range 0 .. 31;
@@ -192,8 +184,7 @@ package PL110 is
    subtype Video_X_Coordinate_Type is Natural range 0 .. VIDEO_WIDTH / Videofont8x16.Font_Width - 1;
    subtype Video_Y_Coordinate_Type is Natural range 0 .. VIDEO_HEIGHT / Videofont8x16.Font_Height - 1;
 
-   type Descriptor_Type is
-   record
+   type Descriptor_Type is record
       Base_Address : Address;
    end record;
 

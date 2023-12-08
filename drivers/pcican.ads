@@ -29,8 +29,7 @@ package PCICAN is
 
    use PCI;
 
-   type Descriptor_Type is
-   record
+   type Descriptor_Type is record
       Bus_Number    : Bus_Number_Type;
       Device_Number : Device_Number_Type;
    end record;

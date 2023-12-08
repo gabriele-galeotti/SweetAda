@@ -123,19 +123,17 @@ package PCI is
    type Function_Number_Type is new Bits_3;
    type Register_Number_Type is new Bits_8;
 
-   type Confadd_Type is
-   record
+   type Confadd_Type is record
       REGNUM   : Register_Number_Type;
       FUNCNUM  : Function_Number_Type;
       DEVNUM   : Device_Number_Type;
       BUSNUM   : Bus_Number_Type;
       Reserved : Bits_7;
       CONE     : Boolean := True;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Confadd_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Confadd_Type use record
       REGNUM   at 0 range 0 .. 7;
       FUNCNUM  at 1 range 0 .. 2;
       DEVNUM   at 1 range 3 .. 7;
@@ -169,8 +167,7 @@ package PCI is
    type Cfg_Read_32_Ptr is access function (Port : Unsigned_16) return Unsigned_32;
    type Cfg_Write_32_Ptr is access procedure (Port : in Unsigned_16; Value : in Unsigned_32);
 
-   type Cfg_Access_Descriptor_Type is
-   record
+   type Cfg_Access_Descriptor_Type is record
       Read_32  : Cfg_Read_32_Ptr;
       Write_32 : Cfg_Write_32_Ptr;
    end record;

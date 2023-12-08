@@ -40,8 +40,7 @@ package PIIX is
 
    -- 2.2.9. XBCS—X-BUS CHIP SELECT REGISTER (Function 0)
 
-   type XBCS_Type is
-   record
+   type XBCS_Type is record
       RTC       : Boolean;     -- RTC Address Location Enable.
       KBDC      : Boolean;     -- Keyboard Controller Address Location Enable.
       BIOSCS_WP : Boolean;     -- BIOSCS# Write Protect Enable.
@@ -52,11 +51,10 @@ package PIIX is
       EXTBIOS   : Boolean;     -- Extended BIOS Enable.
       APIC      : Boolean;     -- PIIX3: APIC Chip Select.
       Reserved2 : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for XBCS_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for XBCS_Type use record
       RTC       at 0 range 0 .. 0;
       KBDC      at 0 range 1 .. 1;
       BIOSCS_WP at 0 range 2 .. 2;
@@ -88,16 +86,14 @@ package PIIX is
    IRQROUTE_IRQ14      : constant := 2#1110#; -- IRQ14
    IRQROUTE_IRQ15      : constant := 2#1111#; -- IRQ15
 
-   type PIRQC_Type is
-   record
+   type PIRQC_Type is record
       IRQROUTE   : Bits_4;      -- Interrupt Routing.
       Reserved   : Bits_3 := 0;
       IRQROUTEEN : NBoolean;    -- Interrupt Routing Enable. 0=Enable; 1=Disable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PIRQC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIRQC_Type use record
       IRQROUTE   at 0 range 0 .. 3;
       Reserved   at 0 range 4 .. 6;
       IRQROUTEEN at 0 range 7 .. 7;
@@ -124,18 +120,16 @@ package PIIX is
    TOM_MB15 : constant := 2#1110#; -- 15 Mbyte
    TOM_MB16 : constant := 2#1111#; -- 16 Mbyte
 
-   type TOM_Type is
-   record
+   type TOM_Type is record
       Reserved        : Bits_1 := 0;
       ISADMAFWD       : Boolean;     -- ISA/DMA 512–640-Kbyte Region Forwarding Enable.
       ABSEGFWD        : Boolean;     -- PIIX3: A,B Segment Forwarding Enable.
       ISADMALOBIOSFWD : Boolean;     -- ISA/DMA Lower BIOS Forwarding Enable.
       TOM             : Bits_4;      -- Top Of Memory.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TOM_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TOM_Type use record
       Reserved        at 0 range 0 .. 0;
       ISADMAFWD       at 0 range 1 .. 1;
       ABSEGFWD        at 0 range 2 .. 2;
@@ -147,18 +141,16 @@ package PIIX is
 
    -- use IRQROUTE_IRQx constants from PIRQC_Type
 
-   type MBIRQ_Type is
-   record
+   type MBIRQ_Type is record
       IRQROUTE   : Bits_4;      -- Interrupt Routing.
       Reserved   : Bits_1 := 0;
       IRQ0       : Boolean;     -- PIIX3: IRQ0 Enable
       MIRQSHARE  : Boolean;     -- MIRQx/IRQx Sharing Enable.
       IRQROUTEEN : NBoolean;    -- Interrupt Routing Enable.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MBIRQ_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MBIRQ_Type use record
       IRQROUTE   at 0 range 0 .. 3;
       Reserved   at 0 range 4 .. 4;
       IRQ0       at 0 range 5 .. 5;
@@ -168,17 +160,15 @@ package PIIX is
 
    -- 2.2.16. APICBASE—APIC BASE ADDRESS RELOCATION REGISTER (Function 0) (PIIX3 Only)
 
-   type APICBASE_Type is
-   record
+   type APICBASE_Type is record
       Y        : Bits_2;      -- Y-Base Address.
       X        : Bits_4;      -- X-Base Address.
       A12MASK  : Boolean;     -- A12 Mask.
       Reserved : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for APICBASE_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for APICBASE_Type use record
       Y        at 0 range 0 .. 1;
       X        at 0 range 2 .. 5;
       A12MASK  at 0 range 6 .. 6;

@@ -61,19 +61,17 @@ package body PL011 is
        UARTDMACR => 16#48#
       ];
 
-   type UARTDR_Type is
-   record
+   type UARTDR_Type is record
       DATA     : Unsigned_8; -- Receive (read) data character. Transmit (write) data character.
       FE       : Boolean;    -- Framing error.
       PE       : Boolean;    -- Parity error.
       BE       : Boolean;    -- Break error.
       OE       : Boolean;    -- Overrun error.
       Reserved : Bits_4;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for UARTDR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UARTDR_Type use record
       DATA     at 0 range  0 ..  7;
       FE       at 0 range  8 ..  8;
       PE       at 0 range  9 ..  9;
@@ -85,8 +83,7 @@ package body PL011 is
    function To_U16 is new Ada.Unchecked_Conversion (UARTDR_Type, Unsigned_16);
    function To_UARTDR is new Ada.Unchecked_Conversion (Unsigned_16, UARTDR_Type);
 
-   type UARTFR_Type is
-   record
+   type UARTFR_Type is record
       CTS      : Boolean; -- Clear to send.
       DSR      : Boolean; -- Data set ready.
       DCD      : Boolean; -- Data carrier detect.
@@ -97,11 +94,10 @@ package body PL011 is
       TXFE     : Boolean; -- Transmit FIFO empty.
       RI       : Boolean; -- Ring indicator.
       Reserved : Bits_7;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for UARTFR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UARTFR_Type use record
       CTS      at 0 range 0 ..  0;
       DSR      at 0 range 1 ..  1;
       DCD      at 0 range 2 ..  2;
@@ -117,8 +113,7 @@ package body PL011 is
    function To_U16 is new Ada.Unchecked_Conversion (UARTFR_Type, Unsigned_16);
    function To_UARTFR is new Ada.Unchecked_Conversion (Unsigned_16, UARTFR_Type);
 
-   type UARTCR_Type is
-   record
+   type UARTCR_Type is record
       UARTEN   : Boolean; -- UART enable.
       SIREN    : Boolean; -- SIR enable.
       SIRLP    : Boolean; -- SIR low-power IrDA mode.
@@ -132,11 +127,10 @@ package body PL011 is
       Out2     : Boolean; -- This bit is the complement of the UART Out2 (nUARTOut2) modem status output.
       RTSEn    : Boolean; -- RTS hardware flow control enable
       CTSEn    : Boolean; -- CTS hardware flow control enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for UARTCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UARTCR_Type use record
       UARTEN   at 0 range  0 ..  0;
       SIREN    at 0 range  1 ..  1;
       SIRLP    at 0 range  2 ..  2;

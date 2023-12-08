@@ -45,8 +45,7 @@ package XPS is
    MDT0_GEN : constant := 0; -- Timer mode is generate
    MDT0_CAP : constant := 1; -- Timer mode is capture
 
-   type XPS_Timer_CSR_Type is
-   record
+   type XPS_Timer_CSR_Type is record
       Reserved : Bits_21 := 0;
       ENALL    : Boolean;      -- Enable All Timers
       PWMA0    : Boolean;      -- Enable Pulse Width Modulation for Timer0
@@ -59,11 +58,10 @@ package XPS is
       GENT0    : Boolean;      -- Enable External Generate Signal Timer0
       UDT0     : Bits_1;       -- Up/Down Count Timer0
       MDT0     : Bits_1;       -- Timer0 Mode
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 32;
-   for XPS_Timer_CSR_Type use
-   record
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for XPS_Timer_CSR_Type use record
       Reserved at 0 range  0 .. 20;
       ENALL    at 0 range 21 .. 21;
       PWMA0    at 0 range 22 .. 22;
@@ -78,15 +76,13 @@ package XPS is
       MDT0     at 0 range 31 .. 31;
    end record;
 
-   type XPS_Timer_Type is
-   record
+   type XPS_Timer_Type is record
       TCSR0 : XPS_Timer_CSR_Type with Volatile_Full_Access => True;
       TLR0  : Unsigned_32        with Volatile_Full_Access => True;
       TCR0  : Unsigned_32        with Volatile_Full_Access => True;
-   end record with
-      Size => 3 * 32;
-   for XPS_Timer_Type use
-   record
+   end record
+      with Size => 3 * 32;
+   for XPS_Timer_Type use record
       TCSR0 at 0 range 0 .. 31;
       TLR0  at 4 range 0 .. 31;
       TCR0  at 8 range 0 .. 31;
@@ -98,23 +94,20 @@ package XPS is
 
    -- Master Enable Register (MER) (15)
 
-   type XPS_INTC_MER_Type is
-   record
+   type XPS_INTC_MER_Type is record
       Reserved : Bits_30 := 0;
       HIE      : Boolean;      -- Hardware Interrupt Enable
       ME       : Boolean;      -- Master IRQ Enable
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 32;
-   for XPS_INTC_MER_Type use
-   record
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for XPS_INTC_MER_Type use record
       Reserved at 0 range  0 .. 29;
       HIE      at 0 range 30 .. 30;
       ME       at 0 range 31 .. 31;
    end record;
 
-   type XPS_INTC_Type is
-   record
+   type XPS_INTC_Type is record
       ISR : Bitmap_32         with Volatile_Full_Access => True;
       IPR : Bitmap_32         with Volatile_Full_Access => True;
       IER : Bitmap_32         with Volatile_Full_Access => True;
@@ -123,10 +116,9 @@ package XPS is
       CIE : Bitmap_32         with Volatile_Full_Access => True;
       IVR : Unsigned_32       with Volatile_Full_Access => True;
       MER : XPS_INTC_MER_Type with Volatile_Full_Access => True;
-   end record with
-      Size => 8 * 32;
-   for XPS_INTC_Type use
-   record
+   end record
+      with Size => 8 * 32;
+   for XPS_INTC_Type use record
       ISR at 16#00# range 0 .. 31;
       IPR at 16#04# range 0 .. 31;
       IER at 16#08# range 0 .. 31;
