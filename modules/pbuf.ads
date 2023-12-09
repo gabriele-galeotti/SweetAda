@@ -34,8 +34,7 @@ package PBUF is
    type Pbuf_Type;
    type Pbuf_Ptr is access all Pbuf_Type;
 
-   type Pbuf_Type is
-   record
+   type Pbuf_Type is record
       Payload         : Bits.Byte_A2Array (0 .. PBUF_PAYLOAD_SIZE - 1);
       Index           : Natural;
       Next            : Pbuf_Ptr;
@@ -44,9 +43,9 @@ package PBUF is
       Offset          : Natural range 0 .. PBUF_PAYLOAD_SIZE - 1;
       Offset_Previous : Natural range 0 .. PBUF_PAYLOAD_SIZE - 1;
       Nref            : Natural;
-   end record with
-      Volatile                => True,
-      Suppress_Initialization => True; -- pragma Restrictions (No_Implicit_Loops)
+   end record
+      with Volatile                => True,
+           Suppress_Initialization => True; -- pragma Restrictions (No_Implicit_Loops)
 
    procedure Init;
    function Allocate

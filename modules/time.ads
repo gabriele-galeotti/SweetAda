@@ -29,8 +29,7 @@ package Time is
 
    use Interfaces;
 
-   type TM_Time is
-   record
+   type TM_Time is record
       Sec   : Natural; -- Seconds (0-60)
       Min   : Natural; -- Minutes (0-59)
       Hour  : Natural; -- Hours (0-23)

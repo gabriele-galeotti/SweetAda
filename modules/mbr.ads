@@ -45,16 +45,15 @@ package MBR is
 
    PARTITION_ENTRY_SIZE : constant := 16;
 
-   type Partition_Entry_Type is
-   record
+   type Partition_Entry_Type is record
       Status           : Unsigned_8;
       CHS_First_Sector : CHS_Layout_Type;
       Partition        : Partition_Type;
       CHS_Last_Sector  : CHS_Layout_Type;
       LBA_Start        : Unsigned_32;
       LBA_Size         : Unsigned_32;
-   end record with
-      Size => PARTITION_ENTRY_SIZE * 8;
+   end record
+      with Size => PARTITION_ENTRY_SIZE * 8;
    for Partition_Entry_Type use record
       Status           at  0 range 0 .. 7;
       CHS_First_Sector at  1 range 0 .. 23;
