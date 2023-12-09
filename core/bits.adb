@@ -782,6 +782,82 @@ package body Bits is
    end Make_Word;
 
    ----------------------------------------------------------------------------
+   -- BitMask_XX
+   ----------------------------------------------------------------------------
+
+   function BitMask_8
+      (MSb    : Bits_3;
+       LSb    : Bits_3;
+       Negate : Boolean := False)
+      return Interfaces.Unsigned_8
+      is
+      Value : Interfaces.Unsigned_8;
+      M     : Natural := Natural (MSb);
+      L     : Natural := Natural (LSb);
+   begin
+      if BigEndian then
+         M := 7 - @;
+         L := 7 - @;
+      end if;
+      Value := (2**M - 2**L) or 2**M;
+      return (if Negate then not Value else Value);
+   end BitMask_8;
+
+   function BitMask_16
+      (MSb    : Bits_4;
+       LSb    : Bits_4;
+       Negate : Boolean := False)
+      return Interfaces.Unsigned_16
+      is
+      Value : Interfaces.Unsigned_16;
+      M     : Natural := Natural (MSb);
+      L     : Natural := Natural (LSb);
+   begin
+      if BigEndian then
+         M := 15 - @;
+         L := 15 - @;
+      end if;
+      Value := (2**M - 2**L) or 2**M;
+      return (if Negate then not Value else Value);
+   end BitMask_16;
+
+   function BitMask_32
+      (MSb    : Bits_5;
+       LSb    : Bits_5;
+       Negate : Boolean := False)
+      return Interfaces.Unsigned_32
+      is
+      Value : Interfaces.Unsigned_32;
+      M     : Natural := Natural (MSb);
+      L     : Natural := Natural (LSb);
+   begin
+      if BigEndian then
+         M := 31 - @;
+         L := 31 - @;
+      end if;
+      Value := (2**M - 2**L) or 2**M;
+      return (if Negate then not Value else Value);
+   end BitMask_32;
+
+   function BitMask_64
+      (MSb    : Bits_6;
+       LSb    : Bits_6;
+       Negate : Boolean := False)
+      return Interfaces.Unsigned_64
+      is
+      Value : Interfaces.Unsigned_64;
+      M     : Natural := Natural (MSb);
+      L     : Natural := Natural (LSb);
+   begin
+      if BigEndian then
+         M := 63 - @;
+         L := 63 - @;
+      end if;
+      Value := (2**M - 2**L) or 2**M;
+      return (if Negate then not Value else Value);
+   end BitMask_64;
+
+   ----------------------------------------------------------------------------
    -- Byte_Swap
    ----------------------------------------------------------------------------
 

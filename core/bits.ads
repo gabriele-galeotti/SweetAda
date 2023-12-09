@@ -877,7 +877,8 @@ package Bits is
       return Interfaces.Unsigned_8
       with Inline => True;
    function BitN
-      (Value : Interfaces.Unsigned_8; NBit : Natural)
+      (Value : Interfaces.Unsigned_8;
+       NBit  : Natural)
       return Boolean
       with Inline => True;
    function BitN
@@ -1036,6 +1037,38 @@ package Bits is
        Value_L : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_64
       with Inline => True;
+
+   -- BitMask_XX
+
+   function BitMask_8
+      (MSb    : Bits_3;
+       LSb    : Bits_3;
+       Negate : Boolean := False)
+      return Interfaces.Unsigned_8
+      with Inline => True;
+
+   function BitMask_16
+      (MSb    : Bits_4;
+       LSb    : Bits_4;
+       Negate : Boolean := False)
+      return Interfaces.Unsigned_16
+      with Inline => True;
+
+   function BitMask_32
+      (MSb    : Bits_5;
+       LSb    : Bits_5;
+       Negate : Boolean := False)
+      return Interfaces.Unsigned_32
+      with Inline => True;
+
+   function BitMask_64
+      (MSb    : Bits_6;
+       LSb    : Bits_6;
+       Negate : Boolean := False)
+      return Interfaces.Unsigned_64
+      with Inline => True;
+
+   -- Swapping
 
    function Byte_Swap_8
       (Value : Interfaces.Unsigned_8)
