@@ -29,15 +29,40 @@ package Integer_Math is
 
    subtype Log_Integer is Integer range 0 .. Integer'Size;
 
+   ----------------------------------------------------------------------------
+   -- GCD - Greatest Common Divisor
+   ----------------------------------------------------------------------------
+   function GCD
+      (Value1 : Integer;
+       Value2 : Integer)
+      return Natural;
+
+   ----------------------------------------------------------------------------
+   -- LCM - Least Common Multiple
+   ----------------------------------------------------------------------------
+   function LCM
+      (Value1 : Integer;
+       Value2 : Integer)
+      return Natural;
+
+   ----------------------------------------------------------------------------
+   -- Log2 - compute log2(x)
+   ----------------------------------------------------------------------------
    function Log2
       (Value : Positive)
       return Log_Integer;
 
+   ----------------------------------------------------------------------------
+   -- Roundup - round up x modulo m
+   ----------------------------------------------------------------------------
    function Roundup
       (Value  : Natural;
        Modulo : Positive)
       return Natural;
 
+   ----------------------------------------------------------------------------
+   -- Rounddown - round down up x modulo m
+   ----------------------------------------------------------------------------
    function Rounddown
       (Value  : Natural;
        Modulo : Positive)
