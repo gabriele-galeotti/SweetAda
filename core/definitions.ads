@@ -74,11 +74,14 @@ package Definitions is
    GHz1 : constant := 1_000 * MHz1;
 
    -- common known clock rates in Hz
-   CLK_RTC32k   : constant :=     32_768;
-   CLK_UART1M8  : constant :=  1_843_200;
+   CLK_RTC32k   : constant :=     32_768; -- 2**15
+   CLK_RTC1M    : constant :=  1_048_576; -- 2**20
+   CLK_UART1M8  : constant :=  1_843_200; -- 3**2 * 5**2 * 2**13
+   CLK_RTC2M    : constant :=  2_097_152; -- 2**21
    CLK_UART2M4  : constant :=  2_457_600; -- CLK_UART1M8 * 4/3
    CLK_NTSC     : constant :=  3_579_545;
    CLK_UART3M6  : constant :=  3_686_400; -- CLK_UART1M8 * 2
+   CLK_RTC4M    : constant :=  4_194_304; -- 2**22
    CLK_PAL      : constant :=  4_433_619;
    CLK_UART4M9  : constant :=  4_915_200; -- CLK_UART1M8 * 8/3
    CLK_PALAmiga : constant :=  7_093_790; -- CLK_PAL28M / 4
