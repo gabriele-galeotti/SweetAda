@@ -114,11 +114,11 @@ if [ "x${SYMBOLS}" != "x" ] ; then
     fi
     case ${value} in
       \"*\")
-        stringvalue=$(printf "${value}" | sed -e "s|^\"\(.*\)\"\$|\1|")
+        stringvalue=$(printf "%s" "${value}" | sed -e "s|^\"\(.*\)\"\$|\1|")
         value="${stringvalue}"
         ;;
       0x*)
-        hexvalue=$(printf "${value}" | sed -e "s|^0x||")
+        hexvalue=$(printf "%s" "${value}" | sed -e "s|^0x||")
         value="16#${hexvalue}#"
         ;;
       *)

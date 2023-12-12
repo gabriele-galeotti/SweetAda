@@ -352,7 +352,7 @@ if [ "x${ACTION}" = "x" ] ; then
     action_execute ${RESULT}
     exit_status=$?
     if [ "${exit_status}" -eq 0 ] ; then
-      printf "Press <ENTER> to continue: "
+      printf "%s" "Press <ENTER> to continue: "
       read answer
     else
       break
@@ -362,7 +362,7 @@ else
   action_execute ${ACTION}
   exit_status=$?
   if [ "x${PAUSE}" = "xY" ] ; then
-    printf "Press <ENTER> to continue: "
+    printf "%s" "Press <ENTER> to continue: "
     read answer
   fi
 fi

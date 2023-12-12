@@ -86,7 +86,7 @@ while [ $# -gt 0 ] ; do
         VERBOSE=Y
         ;;
       *)
-        printf "${SCRIPT_FILENAME}: *** Error: unknown option \"${argument}\".\n"
+        printf "%s\n" "${SCRIPT_FILENAME}: *** Error: unknown option \"${argument}\"."
         exit 1
         ;;
     esac
@@ -106,7 +106,7 @@ fi
 
 # create filelist if specified
 if [ "x${FILELIST_FILENAME}" != "x" ] ; then
-  printf "INSTALLED_FILENAMES :=\n" > ${FILELIST_FILENAME}
+  printf "%s\n" "INSTALLED_FILENAMES :=" > ${FILELIST_FILENAME}
 fi
 
 # check for at least one symlink target
@@ -133,7 +133,7 @@ while true ; do
     rm -f "${LINK_NAME}"
     ln -s ${VERBOSE_OPTION} "${TARGET}" "${LINK_NAME}" || exit $?
     if [ "x${FILELIST_FILENAME}" != "x" ] ; then
-      printf "INSTALLED_FILENAMES += ${LINK_NAME}\n" >> ${FILELIST_FILENAME}
+      printf "%s\n" "INSTALLED_FILENAMES += ${LINK_NAME}" >> ${FILELIST_FILENAME}
     fi
   else
     LINK_DIRECTORY="$2"
@@ -141,7 +141,7 @@ while true ; do
       rm -f "${f}"
       ln -s ${VERBOSE_OPTION} "${TARGET}"/"${f}" "${LINK_DIRECTORY}"/"${f}" || exit $?
       if [ "x${FILELIST_FILENAME}" != "x" ] ; then
-        printf "INSTALLED_FILENAMES += ${LINK_DIRECTORY}/${f}\n" >> ${FILELIST_FILENAME}
+        printf "%s\n" "INSTALLED_FILENAMES += ${LINK_DIRECTORY}/${f}" >> ${FILELIST_FILENAME}
       fi
     done
   fi
