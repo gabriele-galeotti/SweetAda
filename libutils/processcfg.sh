@@ -84,7 +84,7 @@ fi
 #
 # Gather "@"-delimited symbols from input file.
 #
-SYMBOLS=$(grep -U -o "@-\?[_A-Za-z][_A-Za-z0-9]*@" "${INPUT_FILENAME}" 2> /dev/null)
+SYMBOLS=$(grep -U -o -e "@-\?[_A-Za-z][_A-Za-z0-9]*@" "${INPUT_FILENAME}" 2> /dev/null)
 if [ $? -eq 2 ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: in processing input file \"${INPUT_FILENAME}\"."
   exit 1
