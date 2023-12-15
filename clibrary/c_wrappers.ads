@@ -18,7 +18,9 @@
 with System;
 with Interfaces.C;
 
-package C_Wrappers is
+package C_Wrappers
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package C_Wrappers is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    procedure Ada_Abort
       with Export        => True,
