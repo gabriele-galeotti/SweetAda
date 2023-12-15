@@ -20,7 +20,8 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package ATmega328P is
+package ATmega328P
+   is
 
    --========================================================================--
    --                                                                        --
@@ -41,8 +42,7 @@ package ATmega328P is
 
    -- 6.3.1 SREG – AVR Status Register
 
-   type SREG_Type is
-   record
+   type SREG_Type is record
       C : Boolean; -- Carry flag
       Z : Boolean; -- Zero flag
       N : Boolean; -- Negative flag
@@ -51,11 +51,10 @@ package ATmega328P is
       H : Boolean; -- Half Carry flag
       T : Boolean; -- Bit Copy Storage
       I : Boolean; -- Global Interrupt Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SREG_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SREG_Type use record
       C at 0 range 0 .. 0;
       Z at 0 range 1 .. 1;
       N at 0 range 2 .. 2;
@@ -68,11 +67,11 @@ package ATmega328P is
 
    SREG_ADDRESS : constant := 16#5F#;
 
-   SREG : aliased SREG_Type with
-      Address              => To_Address (SREG_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SREG : aliased SREG_Type
+      with Address              => To_Address (SREG_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 7. AVR Memories
@@ -80,19 +79,17 @@ package ATmega328P is
 
    -- 7.6.3 EECR - The EEPROM Control Register
 
-   type EECR_Type is
-   record
+   type EECR_Type is record
       EERE     : Boolean;     -- EEPROM Read Enable
       EEPE     : Boolean;     -- EEPROM Write Enable
       EEMPE    : Boolean;     -- EEPROM Master Write Enable
       EERIE    : Boolean;     -- EEPROM Ready Interrupt Enable
       EEPM01   : Boolean;     -- EEPROM Programming Mode Bits
       Reserved : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for EECR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for EECR_Type use record
       EERE     at 0 range 0 .. 0;
       EEPE     at 0 range 1 .. 1;
       EEMPE    at 0 range 2 .. 2;
@@ -103,69 +100,69 @@ package ATmega328P is
 
    EECR_ADDRESS : constant := 16#3F#;
 
-   EECR : aliased EECR_Type with
-      Address              => To_Address (EECR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   EECR : aliased EECR_Type
+      with Address              => To_Address (EECR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 7.6.2 EEDR - The EEPROM Data Register
 
    EEDR_ADDRESS : constant := 16#40#;
 
-   EEDR : aliased Unsigned_8 with
-      Address              => To_Address (EEDR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   EEDR : aliased Unsigned_8
+      with Address              => To_Address (EEDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 7.6.1 EEARH and EEARL - The EEPROM Address Register
 
    EEARL_ADDRESS : constant := 16#41#;
 
-   EEARL : aliased Unsigned_8 with
-      Address              => To_Address (EEARL_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   EEARL : aliased Unsigned_8
+      with Address              => To_Address (EEARL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    EEARH_ADDRESS : constant := 16#42#;
 
-   EEARH : aliased Unsigned_8 with
-      Address              => To_Address (EEARH_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   EEARH : aliased Unsigned_8
+      with Address              => To_Address (EEARH_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 7.6.6 GPIOR0 – General Purpose I/O Register 0
 
    GPIOR0_ADDRESS : constant := 16#3E#;
 
-   GPIOR0 : aliased Unsigned_8 with
-      Address              => To_Address (GPIOR0_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPIOR0 : aliased Unsigned_8
+      with Address              => To_Address (GPIOR0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 7.6.5 GPIOR1 – General Purpose I/O Register 1
 
    GPIOR1_ADDRESS : constant := 16#4A#;
 
-   GPIOR1 : aliased Unsigned_8 with
-      Address              => To_Address (GPIOR1_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPIOR1 : aliased Unsigned_8
+      with Address              => To_Address (GPIOR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 7.6.4 GPIOR2 – General Purpose I/O Register 2
 
    GPIOR2_ADDRESS : constant := 16#4B#;
 
-   GPIOR2 : aliased Unsigned_8 with
-      Address              => To_Address (GPIOR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GPIOR2 : aliased Unsigned_8
+      with Address              => To_Address (GPIOR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 8. System Clock and Clock Options
@@ -175,11 +172,11 @@ package ATmega328P is
 
    OSCCAL_ADDRESS : constant := 16#66#;
 
-   OSCCAL : Unsigned_8 with
-      Address              => To_Address (OSCCAL_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   OSCCAL : Unsigned_8
+      with Address              => To_Address (OSCCAL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 8.12.2 CLKPR – Clock Prescale Register
 
@@ -193,16 +190,14 @@ package ATmega328P is
    Clock_Prescaler_128 : constant := 2#0111#;
    Clock_Prescaler_256 : constant := 2#1000#;
 
-   type CLKPR_Type is
-   record
+   type CLKPR_Type is record
       CLKPS    : Bits_4;      -- Clock Prescaler Select bit 0 .. 3
       Reserved : Bits_3 := 0;
       CLKPCE   : Boolean;     -- Clock Prescaler Change Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CLKPR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CLKPR_Type use record
       CLKPS    at 0 range 0 .. 3;
       Reserved at 0 range 4 .. 6;
       CLKPCE   at 0 range 7 .. 7;
@@ -210,11 +205,11 @@ package ATmega328P is
 
    CLKPR_ADDRESS : constant := 16#61#;
 
-   CLKPR : aliased CLKPR_Type with
-      Address              => To_Address (CLKPR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   CLKPR : aliased CLKPR_Type
+      with Address              => To_Address (CLKPR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 9. Power Management and Sleep Modes
@@ -229,16 +224,14 @@ package ATmega328P is
    Standby             : constant := 2#110#;
    External_Standby    : constant := 2#111#;
 
-   type SMCR_Type is
-   record
+   type SMCR_Type is record
       SE       : Boolean;     -- Sleep Enable
       SM       : Bits_3;      -- Sleep Mode Select
       Reserved : Bits_4 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SMCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SMCR_Type use record
       SE       at 0 range 0 .. 0;
       SM       at 0 range 1 .. 3;
       Reserved at 0 range 4 .. 7;
@@ -246,17 +239,16 @@ package ATmega328P is
 
    SMCR_ADDRESS : constant := 16#53#;
 
-   SMCR : aliased SMCR_Type with
-      Address              => To_Address (SMCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SMCR : aliased SMCR_Type
+      with Address              => To_Address (SMCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.11.2 MCUCR – MCU Control Register
    -- 11.5.2 MCUCR – MCU Control Register
 
-   type MCUCR_Type is
-   record
+   type MCUCR_Type is record
       IVCE      : Boolean;     -- Interrupt Vector Change Enable
       IVSEL     : Boolean;     -- Interrupt Vector Select
       Reserved1 : Bits_2 := 0;
@@ -264,11 +256,10 @@ package ATmega328P is
       BODSE     : Boolean;     -- BOD Sleep Enable
       BODS      : Boolean;     -- BOD Sleep
       Reserved2 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MCUCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCUCR_Type use record
       IVCE      at 0 range 0 .. 0;
       IVSEL     at 0 range 1 .. 1;
       Reserved1 at 0 range 2 .. 3;
@@ -280,16 +271,15 @@ package ATmega328P is
 
    MCUCR_ADDRESS : constant := 16#55#;
 
-   MCUCR : aliased MCUCR_Type with
-      Address              => To_Address (MCUCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MCUCR : aliased MCUCR_Type
+      with Address              => To_Address (MCUCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.11.3 PRR – Power Reduction Register
 
-   type PRR_Type is
-   record
+   type PRR_Type is record
       PRADC    : Boolean;     -- Power Reduction ADC
       PRUSART0 : Boolean;     -- Power Reduction USART
       PRSPI    : Boolean;     -- Power Reduction Serial Peripheral Interface
@@ -298,11 +288,10 @@ package ATmega328P is
       PRTIM0   : Boolean;     -- Power Reduction Timer/Counter0
       PRTIM2   : Boolean;     -- Power Reduction Timer/Counter2
       PRTWI    : Boolean;     -- Power Reduction TWI
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PRR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PRR_Type use record
       PRADC    at 0 range 0 .. 0;
       PRUSART0 at 0 range 1 .. 1;
       PRSPI    at 0 range 2 .. 2;
@@ -315,11 +304,11 @@ package ATmega328P is
 
    PRR_ADDRESS : constant := 16#64#;
 
-   PRR : aliased PRR_Type with
-      Address              => To_Address (PRR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PRR : aliased PRR_Type
+      with Address              => To_Address (PRR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 10. System Control and Reset
@@ -327,18 +316,16 @@ package ATmega328P is
 
    -- 10.9.1 MCUSR – MCU Status Register
 
-   type MCUSR_Type is
-   record
+   type MCUSR_Type is record
       PORF     : Boolean;     -- Power-on reset flag
       EXTRF    : Boolean;     -- External Reset flag
       BORF     : Boolean;     -- Brown-out Reset flag
       WDRF     : Boolean;     -- Watchdog Reset flag
       Reserved : Bits_4 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MCUSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCUSR_Type use record
       PORF     at 0 range 0 .. 0;
       EXTRF    at 0 range 1 .. 1;
       BORF     at 0 range 2 .. 2;
@@ -348,16 +335,15 @@ package ATmega328P is
 
    MCUSR_ADDRESS : constant := 16#54#;
 
-   MCUSR : aliased MCUSR_Type with
-      Address              => To_Address (MCUSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MCUSR : aliased MCUSR_Type
+      with Address              => To_Address (MCUSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 10.9.2 WDTCSR – Watchdog Timer Control Register
 
-   type WDT_Prescaler_Type is
-   record
+   type WDT_Prescaler_Type is record
       WDP012 : Bits_3; -- Watchdog Timer Prescaler bit 0 .. 2
       WDP3   : Bits_1; -- Watchdog Timer Prescaler bit 3
    end record;
@@ -373,19 +359,17 @@ package ATmega328P is
    WDT_512K  : constant WDT_Prescaler_Type := (2#000#, 1);
    WDT_1024K : constant WDT_Prescaler_Type := (2#001#, 1);
 
-   type WDTCSR_Type is
-   record
+   type WDTCSR_Type is record
       WDP012 : Bits_3;  -- Watchdog Timer Prescaler bit 0 .. 2
       WDE    : Boolean; -- Watchdog Enable
       WDCE   : Boolean; -- Watchdog Change Enable
       WDP3   : Bits_1;  -- Watchdog Timer Prescaler bit 3
       WDIE   : Boolean; -- Watchdog Timeout Interrupt Enable
       WDIF   : Boolean; -- Watchdog Timeout Interrupt flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WDTCSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WDTCSR_Type use record
       WDP012 at 0 range 0 .. 2;
       WDE    at 0 range 3 .. 3;
       WDCE   at 0 range 4 .. 4;
@@ -396,11 +380,11 @@ package ATmega328P is
 
    WDTCSR_ADDRESS : constant := 16#60#;
 
-   WDTCSR : aliased WDTCSR_Type with
-      Address              => To_Address (WDTCSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   WDTCSR : aliased WDTCSR_Type
+      with Address              => To_Address (WDTCSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 13. I/O-Ports
@@ -408,8 +392,7 @@ package ATmega328P is
 
    -- 13.4.2 PORTB – The Port B Data Register
 
-   type PORTB_Type is
-   record
+   type PORTB_Type is record
       PORTB0 : Boolean;
       PORTB1 : Boolean;
       PORTB2 : Boolean;
@@ -418,11 +401,10 @@ package ATmega328P is
       PORTB5 : Boolean;
       PORTB6 : Boolean;
       PORTB7 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PORTB_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PORTB_Type use record
       PORTB0 at 0 range 0 .. 0;
       PORTB1 at 0 range 1 .. 1;
       PORTB2 at 0 range 2 .. 2;
@@ -435,16 +417,15 @@ package ATmega328P is
 
    PORTB_ADDRESS : constant := 16#25#;
 
-   PORTB : aliased PORTB_Type with
-      Address              => To_Address (PORTB_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PORTB : aliased PORTB_Type
+      with Address              => To_Address (PORTB_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.4.3 DDRB – The Port B Data Direction Register
 
-   type DDRB_Type is
-   record
+   type DDRB_Type is record
       DDB0 : Boolean;
       DDB1 : Boolean;
       DDB2 : Boolean;
@@ -453,11 +434,10 @@ package ATmega328P is
       DDB5 : Boolean;
       DDB6 : Boolean;
       DDB7 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for DDRB_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DDRB_Type use record
       DDB0 at 0 range 0 .. 0;
       DDB1 at 0 range 1 .. 1;
       DDB2 at 0 range 2 .. 2;
@@ -470,16 +450,15 @@ package ATmega328P is
 
    DDRB_ADDRESS : constant := 16#24#;
 
-   DDRB : aliased DDRB_Type with
-      Address              => To_Address (DDRB_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   DDRB : aliased DDRB_Type
+      with Address              => To_Address (DDRB_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.4.4 PINB – The Port B Input Pins Address
 
-   type PINB_Type is
-   record
+   type PINB_Type is record
       PINB0 : Boolean;
       PINB1 : Boolean;
       PINB2 : Boolean;
@@ -488,11 +467,10 @@ package ATmega328P is
       PINB5 : Boolean;
       PINB6 : Boolean;
       PINB7 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PINB_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PINB_Type use record
       PINB0 at 0 range 0 .. 0;
       PINB1 at 0 range 1 .. 1;
       PINB2 at 0 range 2 .. 2;
@@ -505,16 +483,15 @@ package ATmega328P is
 
    PINB_ADDRESS : constant := 16#23#;
 
-   PINB : aliased PINB_Type with
-      Address              => To_Address (PINB_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PINB : aliased PINB_Type
+      with Address              => To_Address (PINB_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.4.5 PORTC – The Port C Data Register
 
-   type PORTC_Type is
-   record
+   type PORTC_Type is record
       PORTC0 : Boolean;
       PORTC1 : Boolean;
       PORTC2 : Boolean;
@@ -523,11 +500,10 @@ package ATmega328P is
       PORTC5 : Boolean;
       PORTC6 : Boolean;
       Unused : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PORTC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PORTC_Type use record
       PORTC0 at 0 range 0 .. 0;
       PORTC1 at 0 range 1 .. 1;
       PORTC2 at 0 range 2 .. 2;
@@ -540,16 +516,15 @@ package ATmega328P is
 
    PORTC_ADDRESS : constant := 16#28#;
 
-   PORTC : aliased PORTC_Type with
-      Address              => To_Address (PORTC_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PORTC : aliased PORTC_Type
+      with Address              => To_Address (PORTC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.4.6 DDRC – The Port C Data Direction Register
 
-   type DDRC_Type is
-   record
+   type DDRC_Type is record
       DDC0   : Boolean;
       DDC1   : Boolean;
       DDC2   : Boolean;
@@ -558,11 +533,10 @@ package ATmega328P is
       DDC5   : Boolean;
       DDC6   : Boolean;
       Unused : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for DDRC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DDRC_Type use record
       DDC0   at 0 range 0 .. 0;
       DDC1   at 0 range 1 .. 1;
       DDC2   at 0 range 2 .. 2;
@@ -575,16 +549,15 @@ package ATmega328P is
 
    DDRC_ADDRESS : constant := 16#27#;
 
-   DDRC : aliased DDRC_Type with
-      Address              => To_Address (DDRC_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   DDRC : aliased DDRC_Type
+      with Address              => To_Address (DDRC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.4.7 PINC – The Port C Input Pins Address
 
-   type PINC_Type is
-   record
+   type PINC_Type is record
       PINC0  : Boolean;
       PINC1  : Boolean;
       PINC2  : Boolean;
@@ -593,11 +566,10 @@ package ATmega328P is
       PINC5  : Boolean;
       PINC6  : Boolean;
       Unused : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PINC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PINC_Type use record
       PINC0  at 0 range 0 .. 0;
       PINC1  at 0 range 1 .. 1;
       PINC2  at 0 range 2 .. 2;
@@ -610,16 +582,15 @@ package ATmega328P is
 
    PINC_ADDRESS : constant := 16#26#;
 
-   PINC : aliased PINC_Type with
-      Address              => To_Address (PINC_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PINC : aliased PINC_Type
+      with Address              => To_Address (PINC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.4.8 PORTD – The Port D Data Register
 
-   type PORTD_Type is
-   record
+   type PORTD_Type is record
       PORTD0 : Boolean;
       PORTD1 : Boolean;
       PORTD2 : Boolean;
@@ -628,11 +599,10 @@ package ATmega328P is
       PORTD5 : Boolean;
       PORTD6 : Boolean;
       PORTD7 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PORTD_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PORTD_Type use record
       PORTD0 at 0 range 0 .. 0;
       PORTD1 at 0 range 1 .. 1;
       PORTD2 at 0 range 2 .. 2;
@@ -645,16 +615,15 @@ package ATmega328P is
 
    PORTD_ADDRESS : constant := 16#2B#;
 
-   PORTD : aliased PORTB_Type with
-      Address              => To_Address (PORTD_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PORTD : aliased PORTB_Type
+      with Address              => To_Address (PORTD_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.4.9 DDRD – The Port D Data Direction Register
 
-   type DDRD_Type is
-   record
+   type DDRD_Type is record
       DDD0 : Boolean;
       DDD1 : Boolean;
       DDD2 : Boolean;
@@ -663,11 +632,10 @@ package ATmega328P is
       DDD5 : Boolean;
       DDD6 : Boolean;
       DDD7 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for DDRD_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DDRD_Type use record
       DDD0 at 0 range 0 .. 0;
       DDD1 at 0 range 1 .. 1;
       DDD2 at 0 range 2 .. 2;
@@ -680,16 +648,15 @@ package ATmega328P is
 
    DDRD_ADDRESS : constant := 16#2A#;
 
-   DDRD : aliased DDRD_Type with
-      Address              => To_Address (DDRD_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   DDRD : aliased DDRD_Type
+      with Address              => To_Address (DDRD_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.4.10 PIND – The Port D Input Pins Address
 
-   type PIND_Type is
-   record
+   type PIND_Type is record
       PIND0 : Boolean;
       PIND1 : Boolean;
       PIND2 : Boolean;
@@ -701,8 +668,7 @@ package ATmega328P is
    end record with
       Bit_Order => Low_Order_First,
       Size      => 8;
-   for PIND_Type use
-   record
+   for PIND_Type use record
       PIND0 at 0 range 0 .. 0;
       PIND1 at 0 range 1 .. 1;
       PIND2 at 0 range 2 .. 2;
@@ -715,11 +681,11 @@ package ATmega328P is
 
    PIND_ADDRESS : constant := 16#29#;
 
-   PIND : aliased PIND_Type with
-      Address              => To_Address (PIND_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PIND : aliased PIND_Type
+      with Address              => To_Address (PIND_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 14. 8-bit Timer/Counter0 with PWM
@@ -727,8 +693,7 @@ package ATmega328P is
 
    -- 14.9.1 TCCR0A – Timer/Counter Control Register A
 
-   type TC0_WGM_Type is
-   record
+   type TC0_WGM_Type is record
       WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
       WGM2  : Bits_1; -- Waveform Generation Mode bit 2
    end record;
@@ -740,19 +705,17 @@ package ATmega328P is
    TC0_WGM_PWM_Correct2 : constant TC0_WGM_Type := (2#01#, 1);
    TC0_WGM_PWM_Fast2    : constant TC0_WGM_Type := (2#11#, 1);
 
-   type TCCR0A_Type is
-   record
+   type TCCR0A_Type is record
       WGM01    : Bits_2;      -- Waveform Generation Mode bit 0 .. 1
       Reserved : Bits_2 := 0;
       COM0B0   : Boolean;     -- Compare Match Output B Mode bit 0
       COM0B1   : Boolean;     -- Compare Match Output B Mode bit 1
       COM0A0   : Boolean;     -- Compare Match Output A Mode bit 0
       COM0A1   : Boolean;     -- Compare Match Output A Mode bit 1
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR0A_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TCCR0A_Type use record
       WGM01    at 0 range 0 .. 1;
       Reserved at 0 range 2 .. 3;
       COM0B0   at 0 range 4 .. 4;
@@ -763,11 +726,11 @@ package ATmega328P is
 
    TCCR0A_ADDRESS : constant := 16#44#;
 
-   TCCR0A : aliased TCCR0A_Type with
-      Address              => To_Address (TCCR0A_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCCR0A : aliased TCCR0A_Type
+      with Address              => To_Address (TCCR0A_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 14.9.2 TCCR0B – Timer/Counter Control Register B
 
@@ -780,18 +743,16 @@ package ATmega328P is
    TC0_Clock_Select_CLK256  : constant := 2#110#;
    TC0_Clock_Select_CLK1024 : constant := 2#111#;
 
-   type TCCR0B_Type is
-   record
+   type TCCR0B_Type is record
       CS0      : Bits_3;      -- Clock Select
       WGM2     : Bits_1;      -- Waveform Generation Mode bit 2
       Reserved : Bits_2 := 0;
       FOC0B    : Boolean;     -- Force Output Compare B
       FOC0A    : Boolean;     -- Force Output Compare A
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR0B_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TCCR0B_Type use record
       CS0      at 0 range 0 .. 2;
       WGM2     at 0 range 3 .. 3;
       Reserved at 0 range 4 .. 5;
@@ -801,55 +762,53 @@ package ATmega328P is
 
    TCCR0B_ADDRESS : constant := 16#45#;
 
-   TCCR0B : aliased TCCR0B_Type with
-      Address              => To_Address (TCCR0B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCCR0B : aliased TCCR0B_Type
+      with Address              => To_Address (TCCR0B_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 14.9.3 TCNT0 – Timer/Counter Register
 
    TCNT0_ADDRESS : constant := 16#46#;
 
-   TCNT0 : aliased Unsigned_8 with
-      Address              => To_Address (TCNT0_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCNT0 : aliased Unsigned_8
+      with Address              => To_Address (TCNT0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 14.9.4 OCR0A – Output Compare Register A
 
    OCR0A_ADDRESS : constant := 16#47#;
 
-   OCR0A : aliased Unsigned_8 with
-      Address              => To_Address (OCR0A_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   OCR0A : aliased Unsigned_8
+      with Address              => To_Address (OCR0A_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 14.9.5 OCR0B – Output Compare Register B
 
    OCR0B_ADDRESS : constant := 16#48#;
 
-   OCR0B : aliased Unsigned_8 with
-      Address              => To_Address (OCR0B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   OCR0B : aliased Unsigned_8
+      with Address              => To_Address (OCR0B_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 14.9.6 TIMSK0 – Timer/Counter Interrupt Mask Register
 
-   type TIMSK0_Type is
-   record
+   type TIMSK0_Type is record
       TOIE0    : Boolean;     -- Timer/Counter0 Overflow Interrupt Enable
       OCIE0A   : Boolean;     -- Timer/Counter0 Output Compare Match A Interrupt Enable
       OCIE0B   : Boolean;     -- Timer/Counter0 Output Compare Match B Interrupt Enable
       Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIMSK0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TIMSK0_Type use record
       TOIE0    at 0 range 0 .. 0;
       OCIE0A   at 0 range 1 .. 1;
       OCIE0B   at 0 range 2 .. 2;
@@ -858,25 +817,23 @@ package ATmega328P is
 
    TIMSK0_ADDRESS : constant := 16#6E#;
 
-   TIMSK0 : aliased TIMSK0_Type with
-      Address              => To_Address (TIMSK0_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TIMSK0 : aliased TIMSK0_Type
+      with Address              => To_Address (TIMSK0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 14.9.7 TIFR0 - Timer/Counter0 Interrupt Flag Register
 
-   type TIFR0_Type is
-   record
+   type TIFR0_Type is record
       TOV0     : Boolean;     -- Timer/Counter0 Overflow Flag
       OCF0A    : Boolean;     -- Timer/Counter0 Output Compare A Match Flag
       OCF0B    : Boolean;     -- Timer/Counter0 Output Compare B Match Flag
       Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIFR0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TIFR0_Type use record
       TOV0     at 0 range 0 .. 0;
       OCF0A    at 0 range 1 .. 1;
       OCF0B    at 0 range 2 .. 2;
@@ -885,11 +842,11 @@ package ATmega328P is
 
    TIFR0_ADDRESS : constant := 16#35#;
 
-   TIFR0 : aliased TIFR0_Type with
-      Address              => To_Address (TIFR0_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TIFR0 : aliased TIFR0_Type
+      with Address              => To_Address (TIFR0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 15. 16-bit Timer/Counter1 with PWM
@@ -897,8 +854,7 @@ package ATmega328P is
 
    -- 15.11.1 TCCR1A – Timer/Counter1 Control Register A
 
-   type TC1_WGM_Type is
-   record
+   type TC1_WGM_Type is record
       WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
       WGM23 : Bits_2; -- Waveform Generation Mode bit 2
    end record;
@@ -919,19 +875,17 @@ package ATmega328P is
    TC1_WGM_PWM_Fast1         : constant TC1_WGM_Type := (2#10#, 2#11#);
    TC1_WGM_PWM_Fast2         : constant TC1_WGM_Type := (2#11#, 2#11#);
 
-   type TCCR1A_Type is
-   record
+   type TCCR1A_Type is record
       WGM01    : Bits_2;      -- Waveform Generation Mode bit 0 .. 1
       Reserved : Bits_2 := 0;
       COM1B0   : Boolean;     -- Compare Match Output B Mode bit 0
       COM1B1   : Boolean;     -- Compare Match Output B Mode bit 1
       COM1A0   : Boolean;     -- Compare Match Output A Mode bit 0
       COM1A1   : Boolean;     -- Compare Match Output A Mode bit 1
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR1A_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TCCR1A_Type use record
       WGM01    at 0 range 0 .. 1;
       Reserved at 0 range 2 .. 3;
       COM1B0   at 0 range 4 .. 4;
@@ -942,11 +896,11 @@ package ATmega328P is
 
    TCCR1A_ADDRESS : constant := 16#80#;
 
-   TCCR1A : aliased TCCR1A_Type with
-      Address              => To_Address (TCCR1A_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCCR1A : aliased TCCR1A_Type
+      with Address              => To_Address (TCCR1A_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 15.11.2 TCCR1B – Timer/Counter1 Control Register B
 
@@ -959,18 +913,16 @@ package ATmega328P is
    TC1_Clock_Select_EXT_T1F : constant := 2#110#;
    TC1_Clock_Select_EXT_T1R : constant := 2#111#;
 
-   type TCCR1B_Type is
-   record
+   type TCCR1B_Type is record
       CS1      : Bits_3;      -- Clock Select
       WGM23    : Bits_2;      -- Waveform Generation Mode bit 2 .. 3
       Reserved : Bits_1 := 0;
       ICES1    : Boolean;     -- Force Output Compare B
       ICNC1    : Boolean;     -- Force Output Compare A
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR1B_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TCCR1B_Type use record
       CS1      at 0 range 0 .. 2;
       WGM23    at 0 range 3 .. 4;
       Reserved at 0 range 5 .. 5;
@@ -980,24 +932,22 @@ package ATmega328P is
 
    TCCR1B_ADDRESS : constant := 16#81#;
 
-   TCCR1B : aliased TCCR1B_Type with
-      Address              => To_Address (TCCR1B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCCR1B : aliased TCCR1B_Type
+      with Address              => To_Address (TCCR1B_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 15.11.3 TCCR1C - Timer/Counter1 Control Register C
 
-   type TCCR1C_Type is
-   record
+   type TCCR1C_Type is record
       Reserved : Bits_6 := 0;
       FOC1B    : Boolean;     -- Force Output Compare B
       FOC1A    : Boolean;     -- Force Output Compare A
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR1C_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TCCR1C_Type use record
       Reserved at 0 range 0 .. 5;
       FOC1B    at 0 range 6 .. 6;
       FOC1A    at 0 range 7 .. 7;
@@ -1005,99 +955,97 @@ package ATmega328P is
 
    TCCR1C_ADDRESS : constant := 16#82#;
 
-   TCCR1C : aliased TCCR1C_Type with
-      Address              => To_Address (TCCR1C_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCCR1C : aliased TCCR1C_Type
+      with Address              => To_Address (TCCR1C_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 15.11.4 TCNT1H and TCNT1L – Timer/Counter1
 
    TCNT1L_ADDRESS : constant := 16#84#;
 
-   TCNT1L : aliased Unsigned_8 with
-      Address              => To_Address (TCNT1L_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCNT1L : aliased Unsigned_8
+      with Address              => To_Address (TCNT1L_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    TCNT1H_ADDRESS : constant := 16#85#;
 
-   TCNT1H : aliased Unsigned_8 with
-      Address              => To_Address (TCNT1H_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCNT1H : aliased Unsigned_8
+      with Address              => To_Address (TCNT1H_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 15.11.5 OCR1AH and OCR1AL – Output Compare Register 1 A
 
    OCR1AL_ADDRESS : constant := 16#88#;
 
-   OCR1AL : aliased Unsigned_8 with
-      Address              => To_Address (OCR1AL_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   OCR1AL : aliased Unsigned_8
+      with Address              => To_Address (OCR1AL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    OCR1AH_ADDRESS : constant := 16#89#;
 
-   OCR1AH : aliased Unsigned_8 with
-      Address              => To_Address (OCR1AH_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   OCR1AH : aliased Unsigned_8
+      with Address              => To_Address (OCR1AH_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 15.11.6 OCR1BH and OCR1BL – Output Compare Register 1 B
 
    OCR1BL_ADDRESS : constant := 16#8A#;
 
-   OCR1BL : aliased Unsigned_8 with
-      Address              => To_Address (OCR1BL_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   OCR1BL : aliased Unsigned_8
+      with Address              => To_Address (OCR1BL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    OCR1BH_ADDRESS : constant := 16#8B#;
 
-   OCR1BH : aliased Unsigned_8 with
-      Address              => To_Address (OCR1BH_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   OCR1BH : aliased Unsigned_8
+      with Address              => To_Address (OCR1BH_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 15.11.7 ICR1H and ICR1L – Input Capture Register 1
 
    ICR1L_ADDRESS : constant := 16#86#;
 
-   ICR1L : aliased Unsigned_8 with
-      Address              => To_Address (ICR1L_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   ICR1L : aliased Unsigned_8
+      with Address              => To_Address (ICR1L_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ICR1H_ADDRESS : constant := 16#87#;
 
-   ICR1H : aliased Unsigned_8 with
-      Address              => To_Address (ICR1H_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   ICR1H : aliased Unsigned_8
+      with Address              => To_Address (ICR1H_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 15.11.8 TIMSK1 - Timer/Counter1 Interrupt Mask Register
 
-   type TIMSK1_Type is
-   record
+   type TIMSK1_Type is record
       TOIE1     : Boolean;     -- Timer/Counter1 Overflow Interrupt Enable
       OCIE1A    : Boolean;     -- Timer/Counter1 Output Compare Match A Interrupt Enable
       OCIE1B    : Boolean;     -- Timer/Counter1 Output Compare Match B Interrupt Enable
       Reserved1 : Bits_2 := 0;
       ICIE1     : Boolean;     -- Timer/Counter1 Input Capture Interrupt Enable
       Reserved2 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIMSK1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TIMSK1_Type use record
       TOIE1     at 0 range 0 .. 0;
       OCIE1A    at 0 range 1 .. 1;
       OCIE1B    at 0 range 2 .. 2;
@@ -1108,27 +1056,25 @@ package ATmega328P is
 
    TIMSK1_ADDRESS : constant := 16#6F#;
 
-   TIMSK1 : aliased TIMSK1_Type with
-      Address              => To_Address (TIMSK1_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TIMSK1 : aliased TIMSK1_Type
+      with Address              => To_Address (TIMSK1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 15.11.9 TIFR1 – Timer/Counter1 Interrupt Flag Register
 
-   type TIFR1_Type is
-   record
+   type TIFR1_Type is record
       TOV1      : Boolean;     -- Timer/Counter1 Overflow Flag
       OCF1A     : Boolean;     -- Timer/Counter1 Output Compare A Match Flag
       OCF1B     : Boolean;     -- Timer/Counter1 Output Compare B Match Flag
       Reserved1 : Bits_2 := 0;
       ICF1      : Boolean;     -- Timer/Counter1 Input Capture Flag
       Reserved2 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIFR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TIFR1_Type use record
       TOV1      at 0 range 0 .. 0;
       OCF1A     at 0 range 1 .. 1;
       OCF1B     at 0 range 2 .. 2;
@@ -1139,11 +1085,11 @@ package ATmega328P is
 
    TIFR1_ADDRESS : constant := 16#36#;
 
-   TIFR1 : aliased TIFR1_Type with
-      Address              => To_Address (TIFR1_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TIFR1 : aliased TIFR1_Type
+      with Address              => To_Address (TIFR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 17. 8-bit Timer/Counter2 with PWM and Asynchronous Operation
@@ -1151,8 +1097,7 @@ package ATmega328P is
 
    -- 17.11.1 TCCR2A – Timer/Counter Control Register A
 
-   type TC2_WGM_Type is
-   record
+   type TC2_WGM_Type is record
       WGM01 : Bits_2; -- Waveform Generation Mode bit 0 .. 1
       WGM2  : Bits_1; -- Waveform Generation Mode bit 2
    end record;
@@ -1164,19 +1109,17 @@ package ATmega328P is
    TC2_WGM2_PWM_Correct2 : constant TC2_WGM_Type := (2#01#, 1);
    TC2_WGM2_PWM_Fast2    : constant TC2_WGM_Type := (2#11#, 1);
 
-   type TCCR2A_Type is
-   record
+   type TCCR2A_Type is record
       WGM01    : Bits_2;      -- Waveform Generation Mode bit 0 .. 1
       Reserved : Bits_2 := 0;
       COM2B0   : Boolean;     -- Compare Match Output B Mode bit 0
       COM2B1   : Boolean;     -- Compare Match Output B Mode bit 1
       COM2A0   : Boolean;     -- Compare Match Output A Mode bit 0
       COM2A1   : Boolean;     -- Compare Match Output A Mode bit 1
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR2A_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TCCR2A_Type use record
       WGM01    at 0 range 0 .. 1;
       Reserved at 0 range 2 .. 3;
       COM2B0   at 0 range 4 .. 4;
@@ -1187,11 +1130,11 @@ package ATmega328P is
 
    TCCR2A_ADDRESS : constant := 16#B0#;
 
-   TCCR2A : aliased TCCR2A_Type with
-      Address              => To_Address (TCCR2A_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCCR2A : aliased TCCR2A_Type
+      with Address              => To_Address (TCCR2A_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 17.11.2 TCCR2B – Timer/Counter Control Register B
 
@@ -1204,18 +1147,16 @@ package ATmega328P is
    TC2_Clock_Select_CLK256  : constant := 2#110#;
    TC2_Clock_Select_CLK1024 : constant := 2#111#;
 
-   type TCCR2B_Type is
-   record
+   type TCCR2B_Type is record
       CS2      : Bits_3;      -- Clock Select
       WGM2     : Bits_1;      -- Waveform Generation Mode bit 2
       Reserved : Bits_2 := 0;
       FOC2B    : Boolean;     -- Force Output Compare B
       FOC2A    : Boolean;     -- Force Output Compare A
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCCR2B_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TCCR2B_Type use record
       CS2      at 0 range 0 .. 2;
       WGM2     at 0 range 3 .. 3;
       Reserved at 0 range 4 .. 5;
@@ -1225,55 +1166,53 @@ package ATmega328P is
 
    TCCR2B_ADDRESS : constant := 16#B1#;
 
-   TCCR2B : aliased TCCR2B_Type with
-      Address              => To_Address (TCCR2B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCCR2B : aliased TCCR2B_Type
+      with Address              => To_Address (TCCR2B_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 17.11.3 TCNT2 – Timer/Counter Register
 
    TCNT2_ADDRESS : constant := 16#B2#;
 
-   TCNT2 : aliased Unsigned_8 with
-      Address              => To_Address (TCNT2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TCNT2 : aliased Unsigned_8
+      with Address              => To_Address (TCNT2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 17.11.4 OCR2A – Output Compare Register A
 
    OCR2A_ADDRESS : constant := 16#B3#;
 
-   OCR2A : aliased Unsigned_8 with
-      Address              => To_Address (OCR2A_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   OCR2A : aliased Unsigned_8
+      with Address              => To_Address (OCR2A_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 17.11.5 OCR2B – Output Compare Register B
 
    OCR2B_ADDRESS : constant := 16#B4#;
 
-   OCR2B : aliased Unsigned_8 with
-      Address              => To_Address (OCR2B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   OCR2B : aliased Unsigned_8
+      with Address              => To_Address (OCR2B_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 17.11.6 TIMSK2 – Timer/Counter2 Interrupt Mask Register
 
-   type TIMSK2_Type is
-   record
+   type TIMSK2_Type is record
       TOIE2    : Boolean;     -- Timer/Counter2 Overflow Interrupt Enable
       OCIE2A   : Boolean;     -- Timer/Counter2 Output Compare Match A Interrupt Enable
       OCIE2B   : Boolean;     -- Timer/Counter2 Output Compare Match B Interrupt Enable
       Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIMSK2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TIMSK2_Type use record
       TOIE2    at 0 range 0 .. 0;
       OCIE2A   at 0 range 1 .. 1;
       OCIE2B   at 0 range 2 .. 2;
@@ -1282,25 +1221,23 @@ package ATmega328P is
 
    TIMSK2_ADDRESS : constant := 16#70#;
 
-   TIMSK2 : aliased TIMSK2_Type with
-      Address              => To_Address (TIMSK2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TIMSK2 : aliased TIMSK2_Type
+      with Address              => To_Address (TIMSK2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 17.11.7 TIFR2 – Timer/Counter2 Interrupt Flag Register
 
-   type TIFR2_Type is
-   record
+   type TIFR2_Type is record
       TOV2     : Boolean;     -- Timer/Counter2 Overflow Flag
       OCF2A    : Boolean;     -- Timer/Counter2 Output Compare A Match Flag
       OCF2B    : Boolean;     -- Timer/Counter2 Output Compare B Match Flag
       Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TIFR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TIFR2_Type use record
       TOV2     at 0 range 0 .. 0;
       OCF2A    at 0 range 1 .. 1;
       OCF2B    at 0 range 2 .. 2;
@@ -1309,16 +1246,15 @@ package ATmega328P is
 
    TIFR2_ADDRESS : constant := 16#37#;
 
-   TIFR2 : aliased TIFR2_Type with
-      Address              => To_Address (TIFR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   TIFR2 : aliased TIFR2_Type
+      with Address              => To_Address (TIFR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 17.11.8 ASSR – Asynchronous Status Register
 
-   type ASSR_Type is
-   record
+   type ASSR_Type is record
       TCR2BUB  : Boolean;     -- Timer/Counter Control Register2 Update Busy
       TCR2AUB  : Boolean;     -- Timer/Counter Control Register2 Update Busy
       OCR2BUB  : Boolean;     -- Output Compare Register2 Update Busy
@@ -1327,11 +1263,10 @@ package ATmega328P is
       AS2      : Boolean;     -- Asynchronous Timer/Counter2
       EXCLK    : Boolean;     -- Enable External Clock Input
       Reserved : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ASSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ASSR_Type use record
       TCR2BUB  at 0 range 0 .. 0;
       TCR2AUB  at 0 range 1 .. 1;
       OCR2BUB  at 0 range 2 .. 2;
@@ -1344,25 +1279,23 @@ package ATmega328P is
 
    ASSR_ADDRESS : constant := 16#B6#;
 
-   ASSR : aliased ASSR_Type with
-      Address              => To_Address (ASSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   ASSR : aliased ASSR_Type
+      with Address              => To_Address (ASSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 17.11.9 GTCCR – General Timer/Counter Control Register
 
-   type GTCCR_Type is
-   record
+   type GTCCR_Type is record
       PSRSYNC  : Boolean;     -- Prescaler Reset Timer/Counter1 and Timer/Counter0
       PSRASY   : Boolean;     -- Prescaler Reset Timer/Counter2
       Reserved : Bits_5 := 0;
       TSM      : Boolean;     -- Timer/Counter Synchronization Mode
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for GTCCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for GTCCR_Type use record
       PSRSYNC  at 0 range 0 .. 0;
       PSRASY   at 0 range 1 .. 1;
       Reserved at 0 range 2 .. 6;
@@ -1371,11 +1304,11 @@ package ATmega328P is
 
    GTCCR_ADDRESS : constant := 16#43#;
 
-   GTCCR : aliased GTCCR_Type with
-      Address              => To_Address (GTCCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   GTCCR : aliased GTCCR_Type
+      with Address              => To_Address (GTCCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 18. SPI – Serial Peripheral Interface
@@ -1400,8 +1333,7 @@ package ATmega328P is
    DORD_MSB : constant := 0; -- MSB first
    DORD_LSB : constant := 1; -- LSB first
 
-   type SPCR_Type is
-   record
+   type SPCR_Type is record
       SPR  : Bits_2;  -- SPI Clock Rate Select 1 and 0
       CPHA : Bits_1;  -- Clock Phase
       CPOL : Bits_1;  -- Clock Polarity
@@ -1409,11 +1341,10 @@ package ATmega328P is
       DORD : Bits_1;  -- Data Order
       SPE  : Boolean; -- SPI Enable
       SPIE : Boolean; -- SPI Interrupt Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPCR_Type use record
       SPR  at 0 range 0 .. 1;
       CPHA at 0 range 2 .. 2;
       CPOL at 0 range 3 .. 3;
@@ -1425,25 +1356,23 @@ package ATmega328P is
 
    SPCR_ADDRESS : constant := 16#4C#;
 
-   SPCR : aliased SPCR_Type with
-      Address              => To_Address (SPCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SPCR : aliased SPCR_Type
+      with Address              => To_Address (SPCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 18.5.2 SPSR – SPI Status Register
 
-   type SPSR_Type is
-   record
+   type SPSR_Type is record
       SPI2X    : Boolean;     -- Double SPI Speed Bit
       Reserved : Bits_5 := 0;
       WCOL     : Boolean;     -- Write COLlision Flag
       SPIF     : Boolean;     -- SPI Interrupt Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPSR_Type use record
       SPI2X    at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 5;
       WCOL     at 0 range 6 .. 6;
@@ -1452,28 +1381,27 @@ package ATmega328P is
 
    SPSR_ADDRESS : constant := 16#4D#;
 
-   SPSR : aliased SPSR_Type with
-      Address              => To_Address (SPSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SPSR : aliased SPSR_Type
+      with Address              => To_Address (SPSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 18.5.3 SPDR – SPI Data Register
 
    SPDR_ADDRESS : constant := 16#4E#;
 
-   SPDR : aliased Unsigned_8 with
-      Address              => To_Address (SPDR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SPDR : aliased Unsigned_8
+      with Address              => To_Address (SPDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 19. USART0
    ----------------------------------------------------------------------------
 
-   type USART_Character_Size_Type is
-   record
+   type USART_Character_Size_Type is record
       UCSZ0_01 : Bits_2; -- Character Size bit 0 .. 1
       UCSZ0_2  : Bits_1; -- Character Size bit 2
    end record;
@@ -1502,8 +1430,7 @@ package ATmega328P is
 
    -- 19.10.2 UCSRnA – USART Control and Status Register n A
 
-   type UCSR0A_Type is
-   record
+   type UCSR0A_Type is record
       MPCM0 : Boolean := False; -- Multi-Processor Communication Mode
       U2X0  : Boolean := False; -- Double the USART transmission speed
       UPE0  : Boolean := False; -- Parity Error
@@ -1512,11 +1439,10 @@ package ATmega328P is
       UDRE0 : Boolean := True;  -- USART Data Register Empty
       TXC0  : Boolean := False; -- USART Transmit Complete
       RXC0  : Boolean := False; -- USART Receive Complete
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UCSR0A_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UCSR0A_Type use record
       MPCM0 at 0 range 0 .. 0;
       U2X0  at 0 range 1 .. 1;
       UPE0  at 0 range 2 .. 2;
@@ -1529,16 +1455,15 @@ package ATmega328P is
 
    UCSR0A_ADDRESS : constant := 16#C0#;
 
-   UCSR0A : aliased UCSR0A_Type with
-      Address              => To_Address (UCSR0A_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   UCSR0A : aliased UCSR0A_Type
+      with Address              => To_Address (UCSR0A_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 19.10.3 UCSRnB – USART Control and Status Register n B
 
-   type UCSR0B_Type is
-   record
+   type UCSR0B_Type is record
       TXB80   : Bits_1 := 0;              -- Transmit Data bit 8
       RXB80   : Bits_1 := 0;              -- Receive Data bit 8
       UCSZ0_2 : Bits_1 := UCSZ_8.UCSZ0_2; -- Character Size bit 2
@@ -1547,11 +1472,10 @@ package ATmega328P is
       UDRIE0  : Boolean := False;         -- USART Data register Empty Interrupt Enable
       TXCIE0  : Boolean := False;         -- TX Complete Interrupt Enable
       RXCIE0  : Boolean := False;         -- RX Complete Interrupt Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UCSR0B_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UCSR0B_Type use record
       TXB80   at 0 range 0 .. 0;
       RXB80   at 0 range 1 .. 1;
       UCSZ0_2 at 0 range 2 .. 2;
@@ -1564,26 +1488,24 @@ package ATmega328P is
 
    UCSR0B_ADDRESS : constant := 16#C1#;
 
-   UCSR0B : aliased UCSR0B_Type with
-      Address              => To_Address (UCSR0B_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   UCSR0B : aliased UCSR0B_Type
+      with Address              => To_Address (UCSR0B_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 19.10.4 UCSRnC - USART Control and Status Register n C
 
-   type UCSR0C_Type is
-   record
+   type UCSR0C_Type is record
       UCPOL0   : Bits_1 := UCPOL_Rising;       -- Clock Polarity
       UCSZ0_01 : Bits_2 := UCSZ_8.UCSZ0_01;    -- Character Size bit 0 .. 1
       USBS0    : Bits_1 := USBS_1;             -- Stop Bit Select
       UPM0     : Bits_2 := UPM_Even;           -- Parity Mode
       UMSEL0   : Bits_2 := UMSEL_Asynchronous; -- USART Mode Select
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UCSR0C_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UCSR0C_Type use record
       UCPOL0   at 0 range 0 .. 0;
       UCSZ0_01 at 0 range 1 .. 2;
       USBS0    at 0 range 3 .. 3;
@@ -1593,38 +1515,38 @@ package ATmega328P is
 
    UCSR0C_ADDRESS : constant := 16#C2#;
 
-   UCSR0C : aliased UCSR0C_Type with
-      Address              => To_Address (UCSR0C_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   UCSR0C : aliased UCSR0C_Type
+      with Address              => To_Address (UCSR0C_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 19.10.5 UBRRnL and UBRRnH – USART Baud Rate Registers
 
    UBRR0L_ADDRESS : constant := 16#C4#;
 
-   UBRR0L : aliased Unsigned_8 with
-      Address              => To_Address (UBRR0L_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   UBRR0L : aliased Unsigned_8
+      with Address              => To_Address (UBRR0L_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    UBRR0H_ADDRESS : constant := 16#C5#;
 
-   UBRR0H : aliased Unsigned_8 with
-      Address              => To_Address (UBRR0H_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   UBRR0H : aliased Unsigned_8
+      with Address              => To_Address (UBRR0H_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 19.10.1 UDRn – USART I/O Data Register n
 
    UDR0_ADDRESS : constant := 16#C6#;
 
-   UDR0 : aliased Unsigned_8 with
-      Address              => To_Address (UDR0_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   UDR0 : aliased Unsigned_8
+      with Address              => To_Address (UDR0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end ATmega328P;
