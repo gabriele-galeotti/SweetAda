@@ -18,7 +18,8 @@
 with LLutils;
 with Console;
 
-package body Floating_Point is
+package body Floating_Point
+   is
 
    --========================================================================--
    --                                                                        --

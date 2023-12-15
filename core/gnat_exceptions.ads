@@ -17,7 +17,9 @@
 
 with System;
 
-package GNAT_Exceptions is
+package GNAT_Exceptions
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,8 +28,6 @@ package GNAT_Exceptions is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    procedure Rcheck_CE_Access_Check
       (File : in System.Address;

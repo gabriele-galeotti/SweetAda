@@ -19,7 +19,9 @@ with System;
 with Interfaces.C;
 with Bits;
 
-package Malloc is
+package Malloc
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package Malloc is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    procedure Init
       (Memory_Address : in System.Address;

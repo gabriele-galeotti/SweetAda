@@ -18,7 +18,9 @@
 with System;
 with Interfaces;
 
-package GCC_Types is
+package GCC_Types
+   with Pure => True;
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package GCC_Types is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    -- 8-bit
    type QI_Type is range -2**((System.Storage_Unit * 1) - 1) .. +2**((System.Storage_Unit * 1) - 1) - 1

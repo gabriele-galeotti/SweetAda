@@ -21,7 +21,8 @@ with Integer_Math;
 with Memory_Functions;
 with Console;
 
-package body Malloc is
+package body Malloc
+   is
 
    --========================================================================--
    --                                                                        --

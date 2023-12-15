@@ -21,7 +21,9 @@ with Interfaces;
 with Interfaces.C;
 with Bits;
 
-package Console is
+package Console
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -30,8 +32,6 @@ package Console is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    package SSE renames System.Storage_Elements;
 

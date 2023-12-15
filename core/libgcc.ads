@@ -17,7 +17,9 @@
 
 with GCC_Types;
 
-package LibGCC is
+package LibGCC
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,8 +28,6 @@ package LibGCC is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    function BswapSI2
       (V : GCC_Types.USI_Type)

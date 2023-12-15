@@ -17,7 +17,9 @@
 
 with System;
 
-package Abort_Library is
+package Abort_Library
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,8 +28,6 @@ package Abort_Library is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    ----------------------------------------------------------------------------
    -- System_Abort (parameterless)

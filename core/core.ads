@@ -17,7 +17,9 @@
 
 with System;
 
-package Core is
+package Core
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,8 +28,6 @@ package Core is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    KERNEL_NAME      : constant String := "Archaea";
    KERNEL_VERSION   : constant String := "0.0";

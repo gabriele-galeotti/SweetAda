@@ -17,7 +17,8 @@
 
 with Definitions;
 
-package body Console is
+package body Console
+   is
 
    --========================================================================--
    --                                                                        --

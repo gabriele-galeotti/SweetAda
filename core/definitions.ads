@@ -17,7 +17,9 @@
 
 with Ada.Characters.Latin_1;
 
-package Definitions is
+package Definitions
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,8 +28,6 @@ package Definitions is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    package ISO88591 renames Ada.Characters.Latin_1;
 

@@ -15,7 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package Integer_Math is
+package Integer_Math
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -24,8 +26,6 @@ package Integer_Math is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    subtype Log_Integer is Integer range 0 .. Integer'Size;
 

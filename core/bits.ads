@@ -21,7 +21,9 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Interfaces.C;
 
-package Bits is
+package Bits
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -30,8 +32,6 @@ package Bits is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    use type System.Bit_Order;
 

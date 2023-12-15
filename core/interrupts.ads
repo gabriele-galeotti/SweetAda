@@ -18,7 +18,8 @@
 with System;
 with CPU;
 
-package Interrupts is
+package Interrupts
+   is
 
    --========================================================================--
    --                                                                        --

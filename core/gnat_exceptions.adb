@@ -18,7 +18,8 @@
 with Ada.Characters.Latin_1;
 with Abort_Library;
 
-package body GNAT_Exceptions is
+package body GNAT_Exceptions
+   is
 
    --========================================================================--
    --                                                                        --

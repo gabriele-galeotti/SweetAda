@@ -20,7 +20,9 @@ with Interfaces;
 with Interfaces.C;
 with Bits;
 
-package Memory_Functions is
+package Memory_Functions
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -29,8 +31,6 @@ package Memory_Functions is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    ----------------------------------------------------------------------------
    -- C-style function subprograms, with the same semantics and argument order

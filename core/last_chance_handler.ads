@@ -17,7 +17,9 @@
 
 with System;
 
-package Last_Chance_Handler is
+package Last_Chance_Handler
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,8 +28,6 @@ package Last_Chance_Handler is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    -- Source_Location is a C NUL-terminated string
    procedure Last_Chance_Handler

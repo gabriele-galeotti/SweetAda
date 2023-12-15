@@ -17,7 +17,8 @@
 
 with Ada.Unchecked_Conversion;
 
-package body Memory_Functions is
+package body Memory_Functions
+   is
 
    --========================================================================--
    --                                                                        --

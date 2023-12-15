@@ -18,7 +18,9 @@
 with System;
 with Interfaces;
 
-package MMIO is
+package MMIO
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package MMIO is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    ----------------------------------------------------------------------------
    -- "Standard" Read/Write Unsigned_XX
