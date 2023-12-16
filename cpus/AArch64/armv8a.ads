@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package ARMv8A is
+package ARMv8A
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package ARMv8A is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Interfaces;

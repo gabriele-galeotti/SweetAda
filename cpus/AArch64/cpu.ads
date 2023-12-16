@@ -18,7 +18,9 @@
 with System;
 with ARMv8A;
 
-package CPU is
+package CPU
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package CPU is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
 

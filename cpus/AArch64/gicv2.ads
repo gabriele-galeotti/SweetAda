@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package GICv2 is
+package GICv2
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package GICv2 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Interfaces;

@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body ARMv8A is
+package body ARMv8A
+   is
 
    --========================================================================--
    --                                                                        --
