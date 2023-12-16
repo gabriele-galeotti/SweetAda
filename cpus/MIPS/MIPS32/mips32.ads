@@ -20,7 +20,9 @@ with Interfaces;
 with Bits;
 with MIPS;
 
-package MIPS32 is
+package MIPS32
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -29,8 +31,6 @@ package MIPS32 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Interfaces;

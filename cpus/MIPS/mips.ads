@@ -18,7 +18,9 @@
 with System;
 with Bits;
 
-package MIPS is
+package MIPS
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package MIPS is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Bits;
@@ -121,10 +121,9 @@ package MIPS is
    LOCK_UNLOCK : constant CPU_Unsigned := 0;
    LOCK_LOCK   : constant CPU_Unsigned := 1;
 
-   type Lock_Type is
-   record
+   type Lock_Type is record
       Lock : aliased CPU_Unsigned := LOCK_UNLOCK with Atomic => True;
-   end record with
-      Size => CPU_Unsigned'Size;
+   end record
+      with Size => CPU_Unsigned'Size;
 
 end MIPS;

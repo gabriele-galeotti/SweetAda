@@ -19,7 +19,9 @@ with System;
 with MIPS;
 with MIPS32;
 
-package CPU is
+package CPU
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package CPU is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
 

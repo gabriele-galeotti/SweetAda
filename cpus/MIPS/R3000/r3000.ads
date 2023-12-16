@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package R3000 is
+package R3000
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package R3000 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Interfaces;

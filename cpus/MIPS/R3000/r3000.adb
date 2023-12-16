@@ -19,7 +19,8 @@ with System.Machine_Code;
 with Ada.Unchecked_Conversion;
 with Definitions;
 
-package body R3000 is
+package body R3000
+   is
 
    --========================================================================--
    --                                                                        --

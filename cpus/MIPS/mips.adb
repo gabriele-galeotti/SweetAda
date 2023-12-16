@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body MIPS is
+package body MIPS
+   is
 
    --========================================================================--
    --                                                                        --

@@ -19,7 +19,8 @@ with System.Machine_Code;
 with Ada.Unchecked_Conversion;
 with Definitions;
 
-package body MIPS32 is
+package body MIPS32
+   is
 
    --========================================================================--
    --                                                                        --
