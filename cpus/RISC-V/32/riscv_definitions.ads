@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package RISCV_Definitions is
+package RISCV_Definitions
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package RISCV_Definitions is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    use System;
    use Interfaces;
@@ -63,8 +63,7 @@ package RISCV_Definitions is
    XS_NONEDIRTYSOMECLEAN     : constant := 2#10#; -- None dirty, some clean
    XS_SOMEDIRTY              : constant := 2#11#; -- Some dirty
 
-   type mstatus_Type is
-   record
+   type mstatus_Type is record
       Reserved1 : Bits_1;  -- WPRI
       SIE       : Boolean; -- Supervisor Interrupt Enable
       Reserved2 : Bits_1;  -- WPRI
@@ -86,11 +85,10 @@ package RISCV_Definitions is
       TSR       : Boolean; -- Trap SRET
       Reserved4 : Bits_8;  -- WPRI
       SD        : Boolean; -- State Dirty (FS and XS summary bit)
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for mstatus_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for mstatus_Type use record
       Reserved1 at 0 range  0 ..  0;
       SIE       at 0 range  1 ..  1;
       Reserved2 at 0 range  2 ..  2;
@@ -114,17 +112,15 @@ package RISCV_Definitions is
       SD        at 0 range 31 .. 31;
    end record;
 
-   type mstatush_Type is
-   record
+   type mstatush_Type is record
       Reserved1 : Bits_4;  -- WPRI
       SBE       : Boolean; -- S-mode big-endian
       MBE       : Boolean; -- M-mode big-endian
       Reserved2 : Bits_26; -- WPRI
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for mstatush_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for mstatush_Type use record
       Reserved1 at 0 range 0 ..  3;
       SBE       at 0 range 4 ..  4;
       MBE       at 0 range 5 ..  5;
@@ -138,23 +134,20 @@ package RISCV_Definitions is
 
    subtype mtvec_BASE_Type is Bits_30;
 
-   type mtvec_Type is
-   record
+   type mtvec_Type is record
       MODE : Bits_2;          -- MODE Sets the interrupt processing mode.
       BASE : mtvec_BASE_Type; -- Interrupt Vector Base Address.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for mtvec_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for mtvec_Type use record
       MODE at 0 range 0 .. 1;
       BASE at 0 range 2 .. 31;
    end record;
 
    -- 3.1.9 Machine Interrupt Registers (mip and mie)
 
-   type mip_Type is
-   record
+   type mip_Type is record
       Reserved1 : Bits_1 := 0;  -- WARL
       SSIP      : Boolean;      -- supervisor-level software interrupt pending
       Reserved2 : Bits_1 := 0;  -- WARL
@@ -169,11 +162,10 @@ package RISCV_Definitions is
       MEIP      : Boolean;      -- machine-level external interrupt pending
       Reserved7 : Bits_4 := 0;  -- WARL
       Reserved8 : Bits_16 := 0; -- WARL
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for mip_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for mip_Type use record
       Reserved1 at 0 range  0 ..  0;
       SSIP      at 0 range  1 ..  1;
       Reserved2 at 0 range  2 ..  2;
@@ -190,8 +182,7 @@ package RISCV_Definitions is
       Reserved8 at 0 range 16 .. 31;
    end record;
 
-   type mie_Type is
-   record
+   type mie_Type is record
       Reserved1 : Bits_1 := 0;  -- WARL
       SSIE      : Boolean;      -- supervisor-level software interrupt enable
       Reserved2 : Bits_1 := 0;  -- WARL
@@ -206,11 +197,10 @@ package RISCV_Definitions is
       MEIE      : Boolean;      -- machine-level external interrupt enable
       Reserved7 : Bits_4 := 0;  -- WARL
       Reserved8 : Bits_16 := 0; -- WARL
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for mie_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for mie_Type use record
       Reserved1 at 0 range  0 ..  0;
       SSIE      at 0 range  1 ..  1;
       Reserved2 at 0 range  2 ..  2;
@@ -231,29 +221,25 @@ package RISCV_Definitions is
 
    subtype mcause_Exception_Code_Type is Bits_31;
 
-   type mcause_Type is
-   record
+   type mcause_Type is record
       Exception_Code : mcause_Exception_Code_Type; -- A code identifying the last exception.
       Interrupt      : Boolean;                    -- 1, if the trap was caused by an interrupt; 0 otherwise.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for mcause_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for mcause_Type use record
       Exception_Code at 0 range  0 .. 30;
       Interrupt      at 0 range 31 .. 31;
    end record;
 
    -- 3.2.1 Machine Timer Registers (mtime and mtimecmp)
 
-   type mtime_Type is
-   record
+   type mtime_Type is record
       L : Unsigned_32 with Volatile_Full_Access => True;
       H : Unsigned_32 with Volatile_Full_Access => True;
-   end record with
-      Size => 64;
-   for mtime_Type use
-   record
+   end record
+      with Size => 64;
+   for mtime_Type use record
       L at BE_ByteOrder * 4 + LE_ByteOrder * 0 range 0 .. 31;
       H at BE_ByteOrder * 0 + LE_ByteOrder * 4 range 0 .. 31;
    end record;

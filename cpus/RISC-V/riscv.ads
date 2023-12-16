@@ -21,7 +21,9 @@ with Interfaces;
 with Bits;
 with RISCV_Definitions;
 
-package RISCV is
+package RISCV
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -30,8 +32,6 @@ package RISCV is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use System.Storage_Elements;
