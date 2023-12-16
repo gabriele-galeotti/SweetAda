@@ -17,7 +17,8 @@
 
 with Interfaces;
 
-package MicroBlaze is
+package MicroBlaze
+   is
 
    --========================================================================--
    --                                                                        --
