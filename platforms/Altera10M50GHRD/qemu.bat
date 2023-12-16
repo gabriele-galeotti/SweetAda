@@ -75,8 +75,8 @@ REM ############################################################################
 SET "PORTOK=N"
 SET "NLOOPS=0"
 :TIL_LOOP
-  timeout /NOBREAK /T 1 >NUL
-  FOR /F "tokens=*" %%I in ('netstat -an ^| find ":%1" ^| find /C "LISTENING"') DO SET VAR=%%I
+  timeout.exe /NOBREAK /T 1 >NUL
+  FOR /F "tokens=*" %%I in ('NETSTAT.EXE -an ^| find.exe ":%1" ^| find.exe /C "LISTENING"') DO SET VAR=%%I
   IF "%VAR%" NEQ "0" (
     SET "PORTOK=Y"
     GOTO :TIL_LOOPEND
@@ -93,11 +93,11 @@ REM #                                                                          #
 REM ############################################################################
 :QEMUWAIT
 :QW_LOOP
-tasklist | find /I "%QEMU_FILENAME%" >NUL 2>&1
+tasklist.exe | find.exe /I "%QEMU_FILENAME%" >NUL 2>&1
 IF ERRORLEVEL 1 (
   GOTO :QW_LOOPEND
   ) ELSE (
-  timeout /NOBREAK /T 5 >NUL
+  timeout.exe /NOBREAK /T 5 >NUL
   GOTO :QW_LOOP
   )
 :QW_LOOPEND
