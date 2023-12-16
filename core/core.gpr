@@ -69,6 +69,8 @@ library project Core is
 
    Integer_Math_Files := (
                           "integer_math.adb", "integer_math.ads",
+                          "integer_math-gcd.adb",
+                          "integer_math-lcm.adb",
                           "integer_math-log2.adb",
                           "integer_math-rounddown.adb",
                           "integer_math-roundup.adb"
