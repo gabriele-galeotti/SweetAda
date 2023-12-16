@@ -19,7 +19,7 @@ with System;
 with Interfaces;
 
 package GCC_Types
-   with Pure => True;
+   with Pure => True
    is
 
    --========================================================================--
