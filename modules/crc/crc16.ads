@@ -18,7 +18,9 @@
 with Interfaces;
 with Bits;
 
-package CRC16 is
+package CRC16
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package CRC16 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    function Initialize
       return Interfaces.Unsigned_16

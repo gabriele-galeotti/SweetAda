@@ -18,7 +18,8 @@
 with FATFS.Cluster;
 with FATFS.Directory;
 
-package body FATFS.Rawfile is
+package body FATFS.Rawfile
+   is
 
    --========================================================================--
    --                                                                        --

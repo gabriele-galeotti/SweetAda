@@ -20,7 +20,8 @@ with Interfaces;
 with Bits;
 with PBUF;
 
-package TCPIP is
+package TCPIP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -43,8 +44,7 @@ package TCPIP is
    ----------------------------------------------------------------------------
 
    IPv4_HDR_SIZE : constant := 20;
-   type IPv4_Header_Type is
-   record
+   type IPv4_Header_Type is record
       Version              : Bits_4;
       IHL                  : Bits_4;            -- header length in *32-bit* units (including Options)
       DSCP                 : Bits_6;            -- RFC 2474
@@ -58,12 +58,11 @@ package TCPIP is
       Header_Checksum      : Unsigned_16;       -- checksum, not including Options fields
       Src_Address          : IPv4_Address_Type;
       Dst_Address          : IPv4_Address_Type;
-   end record with
-      Alignment => 2,
-      Bit_Order => High_Order_First,
-      Size      => IPv4_HDR_SIZE * Storage_Unit;
-   for IPv4_Header_Type use
-   record
+   end record
+      with Alignment => 2,
+           Bit_Order => High_Order_First,
+           Size      => IPv4_HDR_SIZE * Storage_Unit;
+   for IPv4_Header_Type use record
       Version              at  0 range 0 .. 3;
       IHL                  at  0 range 4 .. 7;
       DSCP                 at  1 range 0 .. 5;
@@ -89,17 +88,15 @@ package TCPIP is
    ----------------------------------------------------------------------------
 
    ICMP_HDR_SIZE : constant := 8;
-   type ICMP_Header_Type is
-   record
+   type ICMP_Header_Type is record
       Typ          : Unsigned_8;
       Code         : Unsigned_8;
       Checksum     : Unsigned_16;
       Restofheader : Unsigned_32;
-   end record with
-      Alignment => 2,
-      Size      => ICMP_HDR_SIZE * Storage_Unit;
-   for ICMP_Header_Type use
-   record
+   end record
+      with Alignment => 2,
+           Size      => ICMP_HDR_SIZE * Storage_Unit;
+   for ICMP_Header_Type use record
       Typ          at 0 range 0 .. 7;
       Code         at 1 range 0 .. 7;
       Checksum     at 2 range 0 .. 15;
@@ -115,17 +112,15 @@ package TCPIP is
    ----------------------------------------------------------------------------
 
    UDP_HDR_SIZE : constant := 8;
-   type UDP_Header_Type is
-   record
+   type UDP_Header_Type is record
       Src_Port : Unsigned_16;
       Dst_Port : Unsigned_16;
       Length   : Unsigned_16; -- including this header, minimum 8
       Checksum : Unsigned_16;
-   end record with
-      Alignment => 2,
-      Size      => UDP_HDR_SIZE * Storage_Unit;
-   for UDP_Header_Type use
-   record
+   end record
+      with Alignment => 2,
+           Size      => UDP_HDR_SIZE * Storage_Unit;
+   for UDP_Header_Type use record
       Src_Port at 0 range 0 .. 15;
       Dst_Port at 2 range 0 .. 15;
       Length   at 4 range 0 .. 15;
@@ -133,18 +128,16 @@ package TCPIP is
    end record;
 
    UDP_IPv4_PseudoHeader_SIZE : constant := 12;
-   type UDP_IPv4_PseudoHeader_Type is
-   record
+   type UDP_IPv4_PseudoHeader_Type is record
       Src_Address : IPv4_Address_Type; -- IP src address
       Dst_Address : IPv4_Address_Type; -- IP dst address
       Zeroes      : Unsigned_8 := 0;   -- 0
       Protocol    : Unsigned_8;        -- UDP
       Length      : Unsigned_16;       -- UDP header + data
-   end record with
-      Alignment => 2,
-      Size      => UDP_IPv4_PseudoHeader_SIZE * Storage_Unit;
-   for UDP_IPv4_PseudoHeader_Type use
-   record
+   end record
+      with Alignment => 2,
+           Size      => UDP_IPv4_PseudoHeader_SIZE * Storage_Unit;
+   for UDP_IPv4_PseudoHeader_Type use record
       Src_Address at  0 range 0 .. 31;
       Dst_Address at  4 range 0 .. 31;
       Zeroes      at  8 range 0 .. 7;
@@ -157,8 +150,7 @@ package TCPIP is
    ----------------------------------------------------------------------------
 
    TCP_HDR_SIZE : constant := 20;
-   type TCP_Header_Type is
-   record
+   type TCP_Header_Type is record
       Src_Port       : Unsigned_16;
       Dst_Port       : Unsigned_16;
       Seq_Num        : Unsigned_32;
@@ -174,12 +166,11 @@ package TCPIP is
       Window_Size    : Unsigned_16;
       Checksum       : Unsigned_16;
       Urgent_Pointer : Unsigned_16;
-   end record with
-      Alignment => 2,
-      Bit_Order => High_Order_First,
-      Size      => TCP_HDR_SIZE * Storage_Unit;
-   for TCP_Header_Type use
-   record
+   end record
+      with Alignment => 2,
+           Bit_Order => High_Order_First,
+           Size      => TCP_HDR_SIZE * Storage_Unit;
+   for TCP_Header_Type use record
       Src_Port       at  0 range 0 .. 15;
       Dst_Port       at  2 range 0 .. 15;
       Seq_Num        at  4 range 0 .. 31;

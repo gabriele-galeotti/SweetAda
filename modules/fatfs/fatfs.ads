@@ -21,7 +21,8 @@ with Bits;
 with BlockDevices;
 with IDE;
 
-package FATFS is
+package FATFS
+   is
 
    --========================================================================--
    --                                                                        --
@@ -49,8 +50,7 @@ package FATFS is
    -- FAT bootrecord
    ----------------------------------------------------------------------------
 
-   type Bootrecord_Type is
-   record
+   type Bootrecord_Type is record
       Jump_Opcode                  : Byte_Array (0 .. 2);   -- 0x000 0 .. 2    : jump to bootstrap
       OEM_Name                     : String (1 .. 8);       -- 0x003 3 .. 10   : OEM name/version (e.g. "MSDOS5.0")
       -- BPB
@@ -78,11 +78,10 @@ package FATFS is
       Reserved                     : Byte_Array (0 .. 11);  -- 0x034 52 .. 63  : FAT32
       Bootstrap_Code               : Byte_Array (0 .. 445); -- 0x040 64 .. 509 : bootstrap code
       Signature                    : Unsigned_16;           -- 0x1FE 510 .. 511: AA 55
-   end record with
-      Alignment => 8,
-      Size      => 512 * Storage_Unit;
-   for Bootrecord_Type use
-   record
+   end record
+      with Alignment => 8,
+           Size      => 512 * Storage_Unit;
+   for Bootrecord_Type use record
       Jump_Opcode                  at   0 range 0 .. 23;
       OEM_Name                     at   3 range 0 .. 63;
       -- BPB
@@ -123,38 +122,33 @@ package FATFS is
    type Month_Type is mod 2**4;  -- Month
    type Year_Type is mod 2**7;   -- Year (minus 1980)
 
-   type HMS_Type is
-   record
+   type HMS_Type is record
       Second : Second_Type;
       Minute : Minute_Type;
       Hour   : Hour_Type;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 2 * Storage_Unit;
-   for HMS_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 2 * Storage_Unit;
+   for HMS_Type use record
       Second at 0 range 0 .. 4;
       Minute at 0 range 5 .. 10;
       Hour   at 0 range 11 .. 15;
    end record;
 
-   type YMD_Type is
-   record
+   type YMD_Type is record
       Day   : Day_Type;
       Month : Month_Type;
       Year  : Year_Type;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 2 * Storage_Unit;
-   for YMD_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 2 * Storage_Unit;
+   for YMD_Type use record
       Day   at 0 range 0 .. 4;
       Month at 0 range 5 .. 8;
       Year  at 0 range 9 .. 15;
    end record;
 
-   type Time_Type is
-   record
+   type Time_Type is record
       Year   : Year_Type;
       Month  : Month_Type;
       Day    : Day_Type;
@@ -163,8 +157,7 @@ package FATFS is
       Second : Second_Type;
    end record;
 
-   type File_Attributes_Type is
-   record
+   type File_Attributes_Type is record
       Read_Only    : Boolean;
       Hidden_File  : Boolean;
       System_File  : Boolean;
@@ -173,11 +166,10 @@ package FATFS is
       Archive      : Boolean;
       Reserved1    : Boolean;
       Reserved2    : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 1 * Storage_Unit;
-   for File_Attributes_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 1 * Storage_Unit;
+   for File_Attributes_Type use record
       Read_Only    at 0 range 0 .. 0;
       Hidden_File  at 0 range 1 .. 1;
       System_File  at 0 range 2 .. 2;
@@ -188,8 +180,7 @@ package FATFS is
       Reserved2    at 0 range 7 .. 7;
    end record;
 
-   type Directory_Entry_Type is
-   record
+   type Directory_Entry_Type is record
       Filename        : String (1 .. 8);
       Extension       : String (1 .. 3);
       File_Attributes : File_Attributes_Type;
@@ -199,10 +190,9 @@ package FATFS is
       YMD             : YMD_Type;
       First_Cluster   : Unsigned_16;
       Size            : Unsigned_32;
-   end record with
-      Size => 32 * Storage_Unit;
-   for Directory_Entry_Type use
-   record
+   end record
+      with Size => 32 * Storage_Unit;
+   for Directory_Entry_Type use record
       Filename        at  0 range 0 .. 63;
       Extension       at  8 range 0 .. 23;
       File_Attributes at 11 range 0 .. 7;
@@ -218,8 +208,7 @@ package FATFS is
       with Component_Size => 32 * Storage_Unit;
 
    -- Cluster Control Block
-   type CCB_Type is
-   record
+   type CCB_Type is record
       Start_Sector    : Sector_Type;  -- rewind to this sector
       Previous_Sector : Sector_Type;  -- last sector read/written (else 0)
       First_Cluster   : Cluster_Type; -- or rewind to this cluster if >= 2
@@ -245,8 +234,7 @@ package FATFS is
    ----------------------------------------------------------------------------
    -- Descriptor
    ----------------------------------------------------------------------------
-   type Descriptor_Type is
-   record
+   type Descriptor_Type is record
       Device                 : IDE_Descriptor_Ptr;    -- IDE descriptor
       FAT_Is_Open            : Boolean := False;      -- filesystem is open and ready
       FAT_Style              : FAT_Type := FATNONE;   -- filesystem type
@@ -352,8 +340,7 @@ private
    --========================================================================--
 
    -- Directory Control Block
-   type DCB_Type is
-   record
+   type DCB_Type is record
       CCB               : CCB_Type;    -- Cluster Control Block
       Current_Index     : Unsigned_16; -- directory entry index
       Directory_Entries : Unsigned_16; -- how many directory entries in this block
@@ -361,16 +348,14 @@ private
    end record;
 
    -- File Control Block (raw read)
-   type FCB_Type is
-   record
+   type FCB_Type is record
       CCB   : CCB_Type;    -- Cluster Control Block
       Size  : Unsigned_32; -- file size in bytes
       Magic : Unsigned_8;  -- Magic_File
    end record;
 
    -- Write Control Block
-   type WCB_Type is
-   limited record
+   type WCB_Type is limited record
       CCB              : CCB_Type;    -- Cluster Control Block
       Directory_Sector : Sector_Type; -- sector containing directory entry
       Directory_Index  : Unsigned_16; -- directory entry index (to update later)
@@ -379,15 +364,13 @@ private
    end record;
 
    -- Text File Control Block (text read)
-   type TFCB_Type is
-   record
+   type TFCB_Type is record
       FCB         : FCB_Type;    -- underlying physical file
       Byte_Offset : Unsigned_16; -- byte offset within the current sector
    end record;
 
    -- Text Write Control Block
-   type TWCB_Type is
-   limited record
+   type TWCB_Type is limited record
       WCB         : WCB_Type;    -- underlying physical file
       Byte_Offset : Unsigned_16; -- byte offset within current sector
    end record;

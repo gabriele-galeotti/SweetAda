@@ -18,7 +18,8 @@
 with Definitions;
 with FATFS.Rawfile;
 
-package body FATFS.Textfile is
+package body FATFS.Textfile
+   is
 
    --========================================================================--
    --                                                                        --

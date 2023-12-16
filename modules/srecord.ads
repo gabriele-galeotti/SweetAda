@@ -17,7 +17,8 @@
 
 with System.Storage_Elements;
 
-package Srecord is
+package Srecord
+   is
 
    --========================================================================--
    --                                                                        --

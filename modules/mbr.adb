@@ -19,7 +19,8 @@ with System.Storage_Elements;
 with Bits;
 with Memory_Functions;
 
-package body MBR is
+package body MBR
+   is
 
    --========================================================================--
    --                                                                        --

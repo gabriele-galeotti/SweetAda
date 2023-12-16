@@ -17,7 +17,8 @@
 
 with Interfaces;
 
-package Gdbstub is
+package Gdbstub
+   is
 
    --========================================================================--
    --                                                                        --

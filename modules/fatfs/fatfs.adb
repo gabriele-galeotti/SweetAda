@@ -19,7 +19,8 @@ with LLutils;
 with FATFS.Cluster;
 with Console; -- __FIX__ debug
 
-package body FATFS is
+package body FATFS
+   is
 
    --========================================================================--
    --                                                                        --

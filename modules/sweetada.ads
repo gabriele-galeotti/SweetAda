@@ -1,9 +1,9 @@
 
 with System.Storage_Elements;
 
-package SweetAda is
-
-   pragma Pure;
+package SweetAda
+   with Pure => True
+   is
 
    package SSE renames System.Storage_Elements;
 

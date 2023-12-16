@@ -21,7 +21,8 @@ with LLutils;
 with Gdbstub.CPU;
 with Console;
 
-package body Gdbstub is
+package body Gdbstub
+   is
 
    --========================================================================--
    --                                                                        --

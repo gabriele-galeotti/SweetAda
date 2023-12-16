@@ -18,7 +18,8 @@
 with Interfaces;
 with Bits;
 
-package FIFO is
+package FIFO
+   is
 
    --========================================================================--
    --                                                                        --
@@ -35,14 +36,13 @@ package FIFO is
    type Queue_Array is new Bits.Byte_Array (0 .. QUEUE_SIZE - 1)
       with Suppress_Initialization => True;
 
-   type Queue_Type is
-   record
+   type Queue_Type is record
       Queue : Queue_Array;
       Head  : Queue_Index_Type := 0;
       Tail  : Queue_Index_Type := 0;
       Count : Natural range 0 .. QUEUE_SIZE := 0;
-   end record with
-      Volatile => True;
+   end record
+      with Volatile => True;
 
    procedure Put
       (Q       : access Queue_Type;

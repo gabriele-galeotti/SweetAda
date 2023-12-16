@@ -24,7 +24,8 @@ with BSP;
 with Linker;
 with Srecord;
 
-package body Monitor is
+package body Monitor
+   is
 
    --========================================================================--
    --                                                                        --

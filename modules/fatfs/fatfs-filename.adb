@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body FATFS.Filename is
+package body FATFS.Filename
+   is
 
    --========================================================================--
    --                                                                        --

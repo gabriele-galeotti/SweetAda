@@ -19,7 +19,8 @@ with Interfaces;
 with BlockDevices;
 with IDE;
 
-package MBR is
+package MBR
+   is
 
    --========================================================================--
    --                                                                        --

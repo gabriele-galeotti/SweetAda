@@ -18,7 +18,9 @@
 with Interfaces;
 with Bits;
 
-package CRC32 is
+package CRC32
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package CRC32 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    function Initialize
       return Interfaces.Unsigned_32

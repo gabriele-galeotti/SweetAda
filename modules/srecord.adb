@@ -21,7 +21,8 @@ with Bits;
 with LLutils;
 with Memory_Functions;
 
-package body Srecord is
+package body Srecord
+   is
 
    --========================================================================--
    --                                                                        --

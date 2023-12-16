@@ -20,7 +20,8 @@ with FATFS.Rawfile;
 with FATFS.Textfile;
 with Console;
 
-package body FATFS.Applications is
+package body FATFS.Applications
+   is
 
    --========================================================================--
    --                                                                        --

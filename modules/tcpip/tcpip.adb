@@ -19,7 +19,8 @@ with Ada.Unchecked_Conversion;
 with Ethernet;
 with Console;
 
-package body TCPIP is
+package body TCPIP
+   is
 
    --========================================================================--
    --                                                                        --

@@ -18,7 +18,8 @@
 with System;
 with Bits;
 
-package PBUF is
+package PBUF
+   is
 
    --========================================================================--
    --                                                                        --

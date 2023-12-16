@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body EBCDIC is
+package body EBCDIC
+   is
 
    --========================================================================--
    --                                                                        --

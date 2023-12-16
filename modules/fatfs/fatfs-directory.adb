@@ -18,7 +18,8 @@
 with FATFS.Cluster;
 with FATFS.Filename;
 
-package body FATFS.Directory is
+package body FATFS.Directory
+   is
 
    --========================================================================--
    --                                                                        --

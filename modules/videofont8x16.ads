@@ -17,7 +17,9 @@
 
 with System.Storage_Elements;
 
-package Videofont8x16 is
+package Videofont8x16
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,8 +28,6 @@ package Videofont8x16 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    package SSE renames System.Storage_Elements;
 

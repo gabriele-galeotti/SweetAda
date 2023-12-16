@@ -17,7 +17,9 @@
 
 with System.Storage_Elements;
 
-package EBCDIC is
+package EBCDIC
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,8 +28,6 @@ package EBCDIC is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    package SSE renames System.Storage_Elements;
 

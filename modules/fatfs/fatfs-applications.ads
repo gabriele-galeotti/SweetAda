@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package FATFS.Applications is
+package FATFS.Applications
+   is
 
    --========================================================================--
    --                                                                        --

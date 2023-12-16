@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package FATFS.Cluster is
+package FATFS.Cluster
+   is
 
    --========================================================================--
    --                                                                        --
