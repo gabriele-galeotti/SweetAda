@@ -17,7 +17,9 @@
 
 with System;
 
-package CFv2 is
+package CFv2
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,20 +29,18 @@ package CFv2 is
    --                                                                        --
    --========================================================================--
 
-   pragma Preelaborate;
-
    use System;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP with
-      Inline => True;
-   procedure PAUSE with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure PAUSE
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -50,11 +50,12 @@ package CFv2 is
 
    subtype Vector_Number_Type is Natural range 0 .. 255;
 
-   IVT : aliased array (Vector_Number_Type) of Vector_Type with
-      Import     => True,
-      Convention => Ada;
+   IVT : aliased array (Vector_Number_Type) of Vector_Type
+      with Import     => True,
+           Convention => Ada;
 
-   procedure VBR_Set (VBR_Address : in Address) with
-      Inline => True;
+   procedure VBR_Set
+      (VBR_Address : in Address)
+      with Inline => True;
 
 end CFv2;

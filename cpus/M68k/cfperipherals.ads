@@ -23,7 +23,8 @@ with Bits;
 with LLutils;
 with MMIO;
 
-package CFPeripherals is
+package CFPeripherals
+   is
 
    --========================================================================--
    --                                                                        --
@@ -109,18 +110,16 @@ package CFPeripherals is
    RxRTS_NONE  : constant := 2#0#; -- The receiver has no effect on /RTS
    RxRTS_FFULL : constant := 2#1#; -- On receipt of a valid start bit, RTS is negated if the UART FIFO is full
 
-   type UMR1_Type is
-   record
+   type UMR1_Type is record
       BC    : Bits_2; -- Bits per Character
       PTPM  : Bits_3; -- Parity Type and Parity Mode
       ERR   : Bits_1; -- Error Mode
       RxIRQ : Bits_1; -- Receiver Interrupt Select
       RxRTS : Bits_1; -- Receiver Request-to-Send Control
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UMR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UMR1_Type use record
       BC    at 0 range 0 .. 1;
       PTPM  at 0 range 2 .. 4;
       ERR   at 0 range 5 .. 5;
@@ -156,17 +155,15 @@ package CFPeripherals is
    CM_LOCLBACK : constant := 2#10#; -- Local Loopback
    CM_REMLBACK : constant := 2#11#; -- Remote Loopback
 
-   type UMR2_Type is
-   record
+   type UMR2_Type is record
       SB    : Bits_4;  -- Stop-Bit Length Control
       TxCTS : Boolean; -- Transmitter Clear-to-Send
       TxRTS : Boolean; -- Transmitter Ready-to-Send
       CM    : Bits_2;  -- Channel Mode
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UMR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UMR2_Type use record
       SB    at 0 range 0 .. 3;
       TxCTS at 0 range 4 .. 4;
       TxRTS at 0 range 5 .. 5;
@@ -178,8 +175,7 @@ package CFPeripherals is
 
    -- 11.4.1.3 STATUS REGISTER (USR)
 
-   type USR_Type is
-   record
+   type USR_Type is record
       RxRDY : Boolean; -- Receiver Ready
       FFULL : Boolean; -- FIFO Full
       TxRDY : Boolean; -- Transmitter Ready
@@ -188,11 +184,10 @@ package CFPeripherals is
       PE    : Boolean; -- Parity Error
       FE    : Boolean; -- Framing Error
       RB    : Boolean; -- Received Break
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for USR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for USR_Type use record
       RxRDY at 0 range 0 .. 0;
       FFULL at 0 range 1 .. 1;
       TxRDY at 0 range 2 .. 2;
@@ -216,15 +211,13 @@ package CFPeripherals is
    RCS_EXT16 : constant := 2#1110#; -- Ext. clk. x 16
    RCS_EXT   : constant := 2#1111#; -- Ext. clk. x 1
 
-   type UCSR_Type is
-   record
+   type UCSR_Type is record
       TCS : Bits_4; -- Transmitter Clock Select
       RCS : Bits_4; -- Receiver Clock Select
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UCSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UCSR_Type use record
       TCS at 0 range 0 .. 3;
       RCS at 0 range 4 .. 7;
    end record;
@@ -251,17 +244,15 @@ package CFPeripherals is
    MISC_BRKSTART : constant := 2#110#; -- Start Break
    MISC_BRKSTOP  : constant := 2#111#; -- Stop Break
 
-   type UCR_Type is
-   record
+   type UCR_Type is record
       RC       : Bits_2; -- Receiver Commands
       TC       : Bits_2; -- Transmitter Commands
       MISC     : Bits_3; -- Miscellaneous Commands
       Reserved : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UCR_Type use record
       RC       at 0 range 0 .. 1;
       TC       at 0 range 2 .. 3;
       MISC     at 0 range 4 .. 6;
@@ -273,17 +264,15 @@ package CFPeripherals is
 
    -- 11.4.1.8 INPUT PORT CHANGE REGISTER (UIPCR)
 
-   type UIPCR_Type is
-   record
+   type UIPCR_Type is record
       CTS       : Bits_1;           -- Current State
       Reserved1 : Bits_3 := 2#111#;
       COS       : Boolean;          -- Change-of-State
       Reserved2 : Bits_3 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UIPCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UIPCR_Type use record
       CTS       at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 3;
       COS       at 0 range 4 .. 4;
@@ -295,15 +284,13 @@ package CFPeripherals is
 
    -- 11.4.1.9 AUXILIARY CONTROL REGISTER (UACR)
 
-   type UACR_Type is
-   record
+   type UACR_Type is record
       IEC      : Boolean;     -- Input Enable Control
       Reserved : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UACR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UACR_Type use record
       IEC      at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
@@ -313,18 +300,16 @@ package CFPeripherals is
 
    -- 11.4.1.10 INTERRUPT STATUS REGISTER (UISR)
 
-   type UISR_Type is
-   record
+   type UISR_Type is record
       TxRDY    : Boolean; -- Transmitter Ready
       RxRDY    : Boolean; -- Receiver Ready or FIFO Full
       DB       : Boolean; -- Delta Break
       Reserved : Bits_4;
       COS      : Boolean; -- Change-of-State
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UISR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UISR_Type use record
       TxRDY    at 0 range 0 .. 0;
       RxRDY    at 0 range 1 .. 1;
       DB       at 0 range 2 .. 2;
@@ -337,18 +322,16 @@ package CFPeripherals is
 
    -- 11.4.1.11 INTERRUPT MASK REGISTER (UIMR)
 
-   type UIMR_Type is
-   record
+   type UIMR_Type is record
       TxRDY    : Boolean;     -- Transmitter Ready
       FFULL    : Boolean;     -- FIFO Full
       DB       : Boolean;     -- Delta Break
       Reserved : Bits_4 := 0;
       COS      : Boolean;     -- Change-of-State
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UIMR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UIMR_Type use record
       TxRDY    at 0 range 0 .. 0;
       FFULL    at 0 range 1 .. 1;
       DB       at 0 range 2 .. 2;
@@ -361,15 +344,13 @@ package CFPeripherals is
 
    -- 11.4.1.14.1 Input Port Register (UIP)
 
-   type UIP_Type is
-   record
+   type UIP_Type is record
       nCTS     : Boolean; -- Current State
       Reserved : Bits_7;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UIP_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UIP_Type use record
       nCTS     at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
@@ -379,15 +360,13 @@ package CFPeripherals is
 
    -- 11.4.1.14.2 Output Port Data Registers (UOP1, UOP0)
 
-   type UOP_Type is
-   record
+   type UOP_Type is record
       nRTS     : Boolean; -- Output Port Parallel Output
       Reserved : Bits_7;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for UOP_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UOP_Type use record
       nRTS     at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
@@ -404,8 +383,7 @@ package CFPeripherals is
    OM_PULSE  : constant := 0; -- Active-low pulse for one system clock cycle (30ns at 33 MHz)
    OM_TOGGLE : constant := 1; -- Toggle output
 
-   type TMR_Type is
-   record
+   type TMR_Type is record
       RST : Boolean;    -- Reset Timer
       CLK : Bits_2;     -- Input Clock Source for the Timer
       FRR : Boolean;    -- Free Run/Restart
@@ -413,11 +391,10 @@ package CFPeripherals is
       OM  : Bits_1;     -- Output Mode
       CE  : Bits_2;     -- Capture Edge and Enable Interrupt
       PS  : Unsigned_8; -- Prescaler Value
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for TMR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TMR_Type use record
       RST at 0 range 0 .. 0;
       CLK at 0 range 1 .. 2;
       FRR at 0 range 3 .. 3;
@@ -429,16 +406,14 @@ package CFPeripherals is
 
    -- 13.4.1.5 TIMER EVENT REGISTER (TER)
 
-   type TER_Type is
-   record
+   type TER_Type is record
       CAP      : Boolean;     -- Capture Event
       REF      : Boolean;     -- Output Reference Event
       Reserved : Bits_6 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TER_Type use record
       CAP      at 0 range 0 .. 0;
       REF      at 0 range 1 .. 1;
       Reserved at 0 range 2 .. 7;
@@ -446,17 +421,15 @@ package CFPeripherals is
 
    -- 13.4.1 Understanding the General-Purpose Timer Registers
 
-   type TIMER_Type is
-   record
+   type TIMER_Type is record
       TMR : TMR_Type;
       TRR : Unsigned_16;
       TCR : Unsigned_16;
       TCN : Unsigned_16;
       TER : TER_Type;
-   end record with
-      Size => 16#112# * 8;
-   for TIMER_Type use
-   record
+   end record
+      with Size => 16#112# * 8;
+   for TIMER_Type use record
       TMR at 16#100# range 0 .. 15;
       TRR at 16#104# range 0 .. 15;
       TCR at 16#108# range 0 .. 15;

@@ -20,7 +20,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package MCF5373 is
+package MCF5373
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -29,8 +31,6 @@ package MCF5373 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use System.Storage_Elements;
@@ -54,8 +54,7 @@ package MCF5373 is
    HLCK_NORMAL : constant := 0; -- Normal operation.
    HLCK_HALF   : constant := 1; -- Half cache operation.
 
-   type CACR_Type is
-   record
+   type CACR_Type is record
       Reserved1 : Bits_4;
       EUSP      : Boolean; -- Enable user stack pointer.
       DW        : Boolean; -- Default write protect.
@@ -70,11 +69,10 @@ package MCF5373 is
       ESB       : Boolean; -- Enable store buffer.
       Reserved5 : Bits_1;
       EC        : Boolean; -- Enable cache.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CACR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CACR_Type use record
       Reserved1 at 0 range 0 .. 3;
       EUSP      at 0 range 4 .. 4;
       DW        at 0 range 5 .. 5;
@@ -102,8 +100,7 @@ package MCF5373 is
    S_SV   : constant := 2#01#; -- Match addresses only in supervisor mode
    S_ALL  : constant := 2#10#; -- Execute cache matching on all accesses
 
-   type ACR_Type is
-   record
+   type ACR_Type is record
       Reserved1    : Bits_2;
       W            : Boolean; -- Write protect.
       Reserved2    : Bits_2;
@@ -113,11 +110,10 @@ package MCF5373 is
       E            : Boolean; -- Enable.
       Address_Mask : Bits_8;  -- Address mask.
       Address_Base : Bits_8;  -- Address base.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for ACR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ACR_Type use record
       Reserved1    at 0 range 0 .. 1;
       W            at 0 range 2 .. 2;
       Reserved2    at 0 range 3 .. 4;
@@ -131,39 +127,35 @@ package MCF5373 is
 
    -- 9.3.3 Chip Identification Register (CIR)
 
-   type CIR_Type is
-   record
+   type CIR_Type is record
       PRN : Bits_6;  -- Part revision number
       PIN : Bits_10; -- Part identification number
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for CIR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for CIR_Type use record
       PRN at 0 range 0 .. 5;
       PIN at 0 range 6 .. 15;
    end record;
 
-   CIR : aliased CIR_Type with
-      Address              => To_Address (16#FC0A_000A#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   CIR : aliased CIR_Type
+      with Address              => To_Address (16#FC0A_000A#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.3.1 Port Output Data Registers (PODR_x)
 
-   type PODR_TIMER_Type is
-   record
+   type PODR_TIMER_Type is record
       PODR_0   : Boolean;
       PODR_1   : Boolean;
       PODR_2   : Boolean;
       PODR_3   : Boolean;
       Reserved : Bits_4;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PODR_TIMER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PODR_TIMER_Type use record
       PODR_0   at 0 range 0 .. 0;
       PODR_1   at 0 range 1 .. 1;
       PODR_2   at 0 range 2 .. 2;
@@ -171,26 +163,24 @@ package MCF5373 is
       Reserved at 0 range 4 .. 7;
    end record;
 
-   PODR_TIMER : aliased PODR_TIMER_Type with
-      Address              => To_Address (16#FC0A_400B#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PODR_TIMER : aliased PODR_TIMER_Type
+      with Address              => To_Address (16#FC0A_400B#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.3.2 Port Data Direction Registers (PDDR_x)
 
-   type PDDR_TIMER_Type is
-   record
+   type PDDR_TIMER_Type is record
       PDDR_0   : Boolean;
       PDDR_1   : Boolean;
       PDDR_2   : Boolean;
       PDDR_3   : Boolean;
       Reserved : Bits_4;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PDDR_TIMER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PDDR_TIMER_Type use record
       PDDR_0   at 0 range 0 .. 0;
       PDDR_1   at 0 range 1 .. 1;
       PDDR_2   at 0 range 2 .. 2;
@@ -198,26 +188,24 @@ package MCF5373 is
       Reserved at 0 range 4 .. 7;
    end record;
 
-   PDDR_TIMER : aliased PDDR_TIMER_Type with
-      Address              => To_Address (16#FC0A_401F#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PDDR_TIMER : aliased PDDR_TIMER_Type
+      with Address              => To_Address (16#FC0A_401F#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.3.3 Port Pin Data/Set Data Registers (PPDSDR_x)
 
-   type PPDSDR_TIMER_Type is
-   record
+   type PPDSDR_TIMER_Type is record
       PPDSDR_0 : Boolean;
       PPDSDR_1 : Boolean;
       PPDSDR_2 : Boolean;
       PPDSDR_3 : Boolean;
       Reserved : Bits_4;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PPDSDR_TIMER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PPDSDR_TIMER_Type use record
       PPDSDR_0 at 0 range 0 .. 0;
       PPDSDR_1 at 0 range 1 .. 1;
       PPDSDR_2 at 0 range 2 .. 2;
@@ -225,11 +213,11 @@ package MCF5373 is
       Reserved at 0 range 4 .. 7;
    end record;
 
-   PPDSDR_TIMER : aliased PPDSDR_TIMER_Type with
-      Address              => To_Address (16#FC0A_4033#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PPDSDR_TIMER : aliased PPDSDR_TIMER_Type
+      with Address              => To_Address (16#FC0A_4033#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 13.3.5.6 Timer Pin Assignment Registers (PAR_TIMER)
 
@@ -253,43 +241,39 @@ package MCF5373 is
    PAR_T3IN_T3OUT  : constant := 2#10#;
    PAR_T3IN_T3IN   : constant := 2#11#;
 
-   type PAR_TIMER_Type is
-   record
+   type PAR_TIMER_Type is record
       PAR_T0IN : Bits_2; -- DMA Timer 0 pin assignment
       PAR_T1IN : Bits_2; -- DMA Timer 1 pin assignment
       PAR_T2IN : Bits_2; -- DMA Timer 2 pin assignment
       PAR_T3IN : Bits_2; -- DMA Timer 3 pin assignment
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PAR_TIMER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PAR_TIMER_Type use record
       PAR_T0IN at 0 range 0 .. 1;
       PAR_T1IN at 0 range 2 .. 3;
       PAR_T2IN at 0 range 4 .. 5;
       PAR_T3IN at 0 range 6 .. 7;
    end record;
 
-   PAR_TIMER : aliased PAR_TIMER_Type with
-      Address              => To_Address (16#FC0A_405C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PAR_TIMER : aliased PAR_TIMER_Type
+      with Address              => To_Address (16#FC0A_405C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 26.2.1 Watchdog Control Register (WCR)
 
-   type WCR_Type is
-   record
+   type WCR_Type is record
       EN       : Boolean; -- Watchdog enable bit.
       HALTED   : Boolean; -- Halted mode bit.
       DOZE     : Boolean; -- Doze mode bit.
       WAIT     : Boolean; -- Wait mode bit.
       Reserved : Bits_12;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for WCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for WCR_Type use record
       EN       at 0 range 0 .. 0;
       HALTED   at 0 range 1 .. 1;
       DOZE     at 0 range 2 .. 2;
@@ -297,16 +281,15 @@ package MCF5373 is
       Reserved at 0 range 4 .. 15;
    end record;
 
-   WCR : aliased WCR_Type with
-      Address              => To_Address (16#FC09_8000#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   WCR : aliased WCR_Type
+      with Address              => To_Address (16#FC09_8000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 30.3.3 UART Status Registers (USRn)
 
-   type USR_Type is
-   record
+   type USR_Type is record
       RXRDY : Boolean; -- Receiver ready
       FFULL : Boolean; -- FIFO full
       TXRDY : Boolean; -- Transmitter ready
@@ -315,11 +298,10 @@ package MCF5373 is
       PE    : Boolean; -- Parity error
       FE    : Boolean; -- Framing error
       RB    : Boolean; -- Received break
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for USR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for USR_Type use record
       RXRDY at 0 range 0 .. 0;
       FFULL at 0 range 1 .. 1;
       TXRDY at 0 range 2 .. 2;
@@ -330,26 +312,26 @@ package MCF5373 is
       RB    at 0 range 7 .. 7;
    end record;
 
-   USR0 : aliased USR_Type with
-      Address              => To_Address (16#FC06_0004#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   USR0 : aliased USR_Type
+      with Address              => To_Address (16#FC06_0004#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 30.3.6 UART Receive Buffers (URBn)
 
-   URB0 : aliased Unsigned_8 with
-      Address              => To_Address (16#FC06_000C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   URB0 : aliased Unsigned_8
+      with Address              => To_Address (16#FC06_000C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 30.3.7 UART Transmit Buffers (UTBn)
 
-   UTB0 : aliased Unsigned_8 with
-      Address              => To_Address (16#FC06_000C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   UTB0 : aliased Unsigned_8
+      with Address              => To_Address (16#FC06_000C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end MCF5373;

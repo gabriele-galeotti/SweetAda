@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package M68030 is
+package M68030
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package M68030 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Interfaces;
@@ -60,8 +60,7 @@ package M68030 is
    LU_UPPER : constant := 0; -- limit field is the unsigned upper limit of the translation table indexes
    LU_LOWER : constant := 1; -- limit field is the unsigned lower limit of the translation table indexes
 
-   type RPDSC_Type is
-   record
+   type RPDSC_Type is record
       Unused   : Bits_4 := 0;
       TA_LO    : Bits_12;      -- Table Address
       TA_HI    : Unsigned_16;  -- Table Address
@@ -69,11 +68,10 @@ package M68030 is
       Reserved : Bits_14 := 0;
       LIMIT    : Bits_15;      -- Limit
       LU       : Bits_1;       -- Lower/Upper
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for RPDSC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for RPDSC_Type use record
       Unused   at 0 range 0 .. 3;
       TA_LO    at 0 range 4 .. 15;
       TA_HI    at 0 range 16 .. 31;
@@ -85,17 +83,15 @@ package M68030 is
 
    -- 9.5.1.3 SHORT-FORMAT TABLE DESCRIPTOR
 
-   type SFTDSC_Type is
-   record
+   type SFTDSC_Type is record
       DT : DT_Type; -- descriptor type
       WP : Boolean; -- write protection
       U  : Boolean; -- accessed (depends)
       TA : Bits_28; -- Table Address
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SFTDSC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFTDSC_Type use record
       DT at 0 range 0 .. 1;
       WP at 0 range 2 .. 2;
       U  at 0 range 3 .. 3;
@@ -105,8 +101,7 @@ package M68030 is
    -- 9.5.1.5 SHORT-FORMAT EARLY TERMINATION PAGE DESCRIPTOR
    -- 9.5.1.7 SHORT-FORMAT PAGE DESCRIPTOR
 
-   type SFPDSC_Type is
-   record
+   type SFPDSC_Type is record
       DT        : DT_Type;     -- descriptor type
       WP        : Boolean;     -- write protection
       U         : Boolean;     -- accessed (depends)
@@ -115,11 +110,10 @@ package M68030 is
       CI        : Boolean;     -- Cache Inhibit
       Reserved2 : Bits_1 := 0;
       PA        : Bits_24;     -- Page Address
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SFPDSC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFPDSC_Type use record
       DT        at 0 range 0 .. 1;
       WP        at 0 range 2 .. 2;
       U         at 0 range 3 .. 3;
@@ -132,8 +126,7 @@ package M68030 is
 
    -- 9.7.2 Translation Control Register
 
-   type TCR_Type is
-   record
+   type TCR_Type is record
       TID      : Natural range 0 .. 15; -- Table Index
       TIC      : Natural range 0 .. 15; -- Table Index
       TIB      : Natural range 0 .. 15; -- Table Index
@@ -144,11 +137,10 @@ package M68030 is
       SRE      : Boolean;               -- Supervisor Root Pointer Enable
       Reserved : Bits_5 := 0;
       E        : Boolean;               -- Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for TCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TCR_Type use record
       TID      at 0 range 0 .. 3;
       TIC      at 0 range 4 .. 7;
       TIB      at 0 range 8 .. 11;
@@ -166,8 +158,7 @@ package M68030 is
    RW_W : constant := 0; -- Write accesses transparent
    RW_R : constant := 1; -- Read accesses transparent
 
-   type TTR_Type is
-   record
+   type TTR_Type is record
       FCMASK    : Bits_3;      -- Function Code Mask
       Reserved1 : Bits_1 := 0;
       FCBASE    : Bits_3;      -- Function Code Base
@@ -179,11 +170,10 @@ package M68030 is
       E         : Boolean;     -- Enable
       LAM       : Unsigned_8;  -- LOGICAL ADDRESS MASK
       LAB       : Unsigned_8;  -- LOGICAL ADDRESS BASE
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for TTR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TTR_Type use record
       FCMASK    at 0 range 0 .. 2;
       Reserved1 at 0 range 3 .. 3;
       FCBASE    at 0 range 4 .. 6;
@@ -199,8 +189,7 @@ package M68030 is
 
    -- 9.7.4 MMU Status Register
 
-   type MMUSR_Type is
-   record
+   type MMUSR_Type is record
       N         : Bits_3;      -- Number of Levels
       Reserved1 : Bits_3 := 0;
       T         : Boolean;     -- Transparent
@@ -212,11 +201,10 @@ package M68030 is
       S         : Boolean;     -- Supervisor Violation
       L         : Boolean;     -- Limit
       B         : Boolean;     -- Bus Error
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for MMUSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for MMUSR_Type use record
       N         at 0 range 0 .. 2;
       Reserved1 at 0 range 3 .. 5;
       T         at 0 range 6 .. 6;
@@ -232,11 +220,14 @@ package M68030 is
 
    -- subprograms
 
-   procedure CRP_Set (CRP_Address : in Address) with
-      Inline => True;
-   procedure SRP_Set (SRP_Address : in Address) with
-      Inline => True;
-   procedure TCR_Set (Value : in TCR_Type) with
-      Inline => True;
+   procedure CRP_Set
+      (CRP_Address : in Address)
+      with Inline => True;
+   procedure SRP_Set
+      (SRP_Address : in Address)
+      with Inline => True;
+   procedure TCR_Set
+      (Value : in TCR_Type)
+      with Inline => True;
 
 end M68030;

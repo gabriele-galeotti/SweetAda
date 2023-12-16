@@ -18,7 +18,8 @@
 with System;
 with Bits;
 
-package Gdbstub.CPU is
+package Gdbstub.CPU
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,34 +29,26 @@ package Gdbstub.CPU is
    --                                                                        --
    --========================================================================--
 
-   procedure Register_Read (Register_Number : in Natural);
+   procedure Register_Read
+      (Register_Number : in Natural);
    procedure Registers_Read;
-   procedure Register_Write (
-                             Register_Number : in Natural;
-                             Register_Value  : in Bits.Byte_Array;
-                             Byte_Count      : in Natural
-                            );
+   procedure Register_Write
+      (Register_Number : in Natural;
+       Register_Value  : in Bits.Byte_Array;
+       Byte_Count      : in Natural);
    procedure Registers_Write;
-   function PC_Read return System.Address;
-   procedure PC_Write (Value : in System.Address);
+   function PC_Read
+      return System.Address;
+   procedure PC_Write
+      (Value : in System.Address);
    procedure Breakpoint_Adjust_PC_Backward;
    procedure Breakpoint_Adjust_PC_Forward;
    procedure Breakpoint_Adjust_PC;
    procedure Breakpoint_Skip;
-   procedure Breakpoint_Set;
-   function Step_Execute return Boolean;
+   procedure Breakpoint_Set
+      with Inline => True;
+   function Step_Execute
+      return Boolean;
    procedure Step_Resume;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   pragma Inline (Breakpoint_Set);
 
 end Gdbstub.CPU;

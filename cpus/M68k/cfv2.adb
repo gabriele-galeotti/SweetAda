@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body CFv2 is
+package body CFv2
+   is
 
    --========================================================================--
    --                                                                        --
@@ -43,7 +44,8 @@ package body CFv2 is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -59,7 +61,8 @@ package body CFv2 is
    ----------------------------------------------------------------------------
    -- PAUSE
    ----------------------------------------------------------------------------
-   procedure PAUSE is
+   procedure PAUSE
+      is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -75,7 +78,8 @@ package body CFv2 is
    ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
+   procedure BREAKPOINT
+      is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -91,7 +95,9 @@ package body CFv2 is
    ----------------------------------------------------------------------------
    -- VBR_Set
    ----------------------------------------------------------------------------
-   procedure VBR_Set (VBR_Address : in Address) is
+   procedure VBR_Set
+      (VBR_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &

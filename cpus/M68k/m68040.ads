@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package M68040 is
+package M68040
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package M68040 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Interfaces;
@@ -66,18 +66,16 @@ package M68040 is
    -- 3.2.2.1 TABLE DESCRIPTORS
 
    -- ROOT TABLE DESCRIPTOR (ROOT LEVEL)
-   type RTDSC_Type is
-   record
+   type RTDSC_Type is record
       UDT      : UDT_Type;    -- Upper Level Descriptor Type
       W        : Boolean;     -- Write Protected
       U        : Boolean;     -- Used
       Reserved : Bits_5 := 0;
       PTA      : Bits_23;     -- Pointer Table Address
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RTDSC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTDSC_Type use record
       UDT      at 0 range 0 .. 1;
       W        at 0 range 2 .. 2;
       U        at 0 range 3 .. 3;
@@ -86,8 +84,7 @@ package M68040 is
    end record;
 
    -- 4K, 8K POINTER TABLE DESCRIPTOR (POINTER LEVEL)
-   type PTDSC_Type (PAGESIZE : Bits_1) is
-   record
+   type PTDSC_Type (PAGESIZE : Bits_1) is record
       UDT : UDT_Type;                -- Upper Level Descriptor Type
       W   : Boolean;                 -- Write Protected
       U   : Boolean;                 -- Used
@@ -99,12 +96,11 @@ package M68040 is
             Reserved2 : Bits_3 := 0;
             PTA8      : Bits_25;     -- Page Table Address
       end case;
-   end record with
-      Bit_Order       => Low_Order_First,
-      Size            => 32,
-      Unchecked_Union => True;
-   for PTDSC_Type use
-   record
+   end record
+      with Bit_Order       => Low_Order_First,
+           Size            => 32,
+           Unchecked_Union => True;
+   for PTDSC_Type use record
       UDT       at 0 range 0 .. 1;
       W         at 0 range 2 .. 2;
       U         at 0 range 3 .. 3;
@@ -116,8 +112,7 @@ package M68040 is
 
    -- 3.2.2.2 PAGE DESCRIPTORS
 
-   type P4DSC_Type is
-   record
+   type P4DSC_Type is record
       PDT : PDT_Type; -- Page Descriptor Type
       W   : Boolean;  -- Write Protected
       U   : Boolean;  -- Used
@@ -129,11 +124,10 @@ package M68040 is
       G   : Boolean;  -- Global
       UR0 : Bits_1;   -- User Reserved
       PA4 : Bits_20;  -- Physical Address
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for P4DSC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for P4DSC_Type use record
       PDT at 0 range 0 .. 1;
       W   at 0 range 2 .. 2;
       U   at 0 range 3 .. 3;
@@ -147,8 +141,7 @@ package M68040 is
       PA4 at 0 range 12 .. 31;
    end record;
 
-   type P8DSC_Type is
-   record
+   type P8DSC_Type is record
       PDT : PDT_Type; -- Page Descriptor Type
       W   : Boolean;  -- Write Protected
       U   : Boolean;  -- Used
@@ -161,11 +154,10 @@ package M68040 is
       UR0 : Bits_1;   -- User Reserved
       UR1 : Bits_1;   -- User Reserved
       PA8 : Bits_19;  -- Physical Address
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for P8DSC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for P8DSC_Type use record
       PDT at 0 range 0 .. 1;
       W   at 0 range 2 .. 2;
       U   at 0 range 3 .. 3;
@@ -180,8 +172,7 @@ package M68040 is
       PA8 at 0 range 13 .. 31;
    end record;
 
-   type P48DSC_Type (PAGESIZE : Bits_1) is
-   record
+   type P48DSC_Type (PAGESIZE : Bits_1) is record
       PDT : PDT_Type;      -- Page Descriptor Type
       W   : Boolean;       -- Write Protected
       U   : Boolean;       -- Used
@@ -199,12 +190,11 @@ package M68040 is
             UR1 : Bits_1;  -- User Reserved
             PA8 : Bits_19; -- Physical Address
       end case;
-   end record with
-      Bit_Order       => Low_Order_First,
-      Size            => 32,
-      Unchecked_Union => True;
-   for P48DSC_Type use
-   record
+   end record
+      with Bit_Order       => Low_Order_First,
+           Size            => 32,
+           Unchecked_Union => True;
+   for P48DSC_Type use record
       PDT at 0 range 0 .. 1;
       W   at 0 range 2 .. 2;
       U   at 0 range 3 .. 3;
@@ -220,31 +210,27 @@ package M68040 is
       PA8 at 0 range 13 .. 31;
    end record;
 
-   type PINDDSC_Type is
-   record
+   type PINDDSC_Type is record
       PDT : PDT_Type; -- Page Descriptor Type
       DA  : Bits_30;  -- Descriptor Address
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PINDDSC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PINDDSC_Type use record
       PDT at 0 range 0 .. 1;
       DA  at 0 range 2 .. 31;
    end record;
 
    -- 3.1.2 Translation Control Register
 
-   type TCR_Type is
-   record
+   type TCR_Type is record
       Reserved : Bits_14 := 0;
       P        : Bits_1;       -- Page Size
       E        : Boolean;      -- Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for TCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TCR_Type use record
       Reserved at 0 range 0 .. 13;
       P        at 0 range 14 .. 14;
       E        at 0 range 15 .. 15;
@@ -257,8 +243,7 @@ package M68040 is
    S_IGN  : constant := 2#10#; -- Ignore FC2 when matching
    S_IGN2 : constant := 2#11#; -- Ignore FC2 when matching
 
-   type TTR_Type is
-   record
+   type TTR_Type is record
       Reserved1 : Bits_2 := 0;
       W         : Boolean;     -- Write Protect
       Reserved2 : Bits_2 := 0;
@@ -271,11 +256,10 @@ package M68040 is
       E         : Boolean;     -- Enable
       LAM       : Unsigned_8;  -- Logical Address Mask
       LAB       : Unsigned_8;  -- Logical Address Base
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for TTR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TTR_Type use record
       Reserved1 at 0 range 0 .. 1;
       W         at 0 range 2 .. 2;
       Reserved2 at 0 range 3 .. 4;
@@ -292,8 +276,7 @@ package M68040 is
 
    -- 3.1.4 MMU Status Register
 
-   type MMUSR_Type is
-   record
+   type MMUSR_Type is record
       R        : Boolean;     -- Resident
       T        : Boolean;     -- Transparent Translation Register Hit
       W        : Boolean;     -- Write Protect
@@ -306,11 +289,10 @@ package M68040 is
       G        : Boolean;     -- Global
       B        : Boolean;     -- Bus Error
       PA       : Bits_20;     -- Physical Address
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for MMUSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MMUSR_Type use record
       R        at 0 range 0 .. 0;
       T        at 0 range 1 .. 1;
       W        at 0 range 2 .. 2;
@@ -327,13 +309,16 @@ package M68040 is
 
    -- subprograms
 
-   procedure URP_Set (URP_Address : in Address) with
-      Inline => True;
-   procedure SRP_Set (SRP_Address : in Address) with
-      Inline => True;
-   procedure TCR_Set (Value : in TCR_Type) with
-      Inline => True;
-   procedure PFLUSHA with
-      Inline => True;
+   procedure URP_Set
+      (URP_Address : in Address)
+      with Inline => True;
+   procedure SRP_Set
+      (SRP_Address : in Address)
+      with Inline => True;
+   procedure TCR_Set
+      (Value : in TCR_Type)
+      with Inline => True;
+   procedure PFLUSHA
+      with Inline => True;
 
 end M68040;

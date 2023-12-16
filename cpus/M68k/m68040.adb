@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body M68040 is
+package body M68040
+   is
 
    --========================================================================--
    --                                                                        --
@@ -43,7 +44,9 @@ package body M68040 is
    ----------------------------------------------------------------------------
    -- URP_Set
    ----------------------------------------------------------------------------
-   procedure URP_Set (URP_Address : in Address) is
+   procedure URP_Set
+      (URP_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -59,7 +62,9 @@ package body M68040 is
    ----------------------------------------------------------------------------
    -- SRP_Set
    ----------------------------------------------------------------------------
-   procedure SRP_Set (SRP_Address : in Address) is
+   procedure SRP_Set
+      (SRP_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -75,7 +80,9 @@ package body M68040 is
    ----------------------------------------------------------------------------
    -- TCR_Set
    ----------------------------------------------------------------------------
-   procedure TCR_Set (Value : in TCR_Type) is
+   procedure TCR_Set
+      (Value : in TCR_Type)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -91,7 +98,8 @@ package body M68040 is
    ----------------------------------------------------------------------------
    -- PFLUSHA
    ----------------------------------------------------------------------------
-   procedure PFLUSHA is
+   procedure PFLUSHA
+      is
    begin
       Asm (
            Template => ""                & CRLF &

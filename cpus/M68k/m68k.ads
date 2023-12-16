@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package M68k is
+package M68k
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package M68k is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Interfaces;
@@ -100,8 +100,7 @@ package M68k is
    ILEVEL6 : constant ILEVEL_Type := 2#110#;
    ILEVEL7 : constant ILEVEL_Type := 2#111#;
 
-   type SR_Type is
-   record
+   type SR_Type is record
       -- CCR
       C         : Boolean;     -- CARRY
       V         : Boolean;     -- OVERFLOW
@@ -116,11 +115,10 @@ package M68k is
       S         : Boolean;     -- SUPERVISOR/USER STATE
       T0        : Boolean;     -- TRACE ENABLE 0
       T1        : Boolean;     -- TRACE ENABLE 1
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SR_Type use record
       C         at 0 range 0 .. 0;
       V         at 0 range 1 .. 1;
       Z         at 0 range 2 .. 2;
@@ -147,8 +145,7 @@ package M68k is
    PREC_2 : constant := 2#10#;
    PREC_3 : constant := 2#11#;
 
-   type FPCR_Type is
-   record
+   type FPCR_Type is record
       -- MODE CONTROL
       Reserved1 : Bits_4;
       RND       : Bits_2; -- ROUNDING MODE
@@ -163,11 +160,10 @@ package M68k is
       SNAN      : Boolean; -- SIGNALING NOT-A-NUMBER
       BSUN      : Boolean; -- BRANCH/SET ON UNORDERED
       Reserved2 : Bits_16;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for FPCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FPCR_Type use record
       Reserved1 at 0 range 0 .. 3;
       RND       at 0 range 4 .. 5;
       PREC      at 0 range 6 .. 7;
@@ -186,38 +182,54 @@ package M68k is
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
 
-   procedure BREAKPOINT with
-      Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
 
-   function SR_Read return SR_Type with
-      Inline => True;
+   function SR_Read
+      return SR_Type
+      with Inline => True;
 
-   procedure SR_Write (Value : in SR_Type) with
-      Inline => True;
+   procedure SR_Write
+      (Value : in SR_Type)
+      with Inline => True;
 
-   procedure VBR_Set (VBR_Address : in Address) with
-      Inline => True;
+   procedure VBR_Set
+      (VBR_Address : in Address)
+      with Inline => True;
 
-   function MoveSByte (A : in Address) return Unsigned_8 with
-      Inline => True;
-   procedure MoveSByte (A : in Address; B : in Unsigned_8) with
-      Inline => True;
+   function MoveSByte
+      (A : in Address)
+      return Unsigned_8
+      with Inline => True;
+   procedure MoveSByte
+      (A : in Address;
+       B : in Unsigned_8)
+      with Inline => True;
 
-   function MoveSWord (A : in Address) return Unsigned_16 with
-      Inline => True;
-   procedure MoveSWord (A : in Address; W : in Unsigned_16) with
-      Inline => True;
+   function MoveSWord
+      (A : in Address)
+      return Unsigned_16
+      with Inline => True;
+   procedure MoveSWord
+      (A : in Address;
+       W : in Unsigned_16)
+      with Inline => True;
 
-   function MoveSLong (A : in Address) return Unsigned_32 with
-      Inline => True;
-   procedure MoveSLong (A : in Address; L : in Unsigned_32) with
-      Inline => True;
+   function MoveSLong
+      (A : in Address)
+      return Unsigned_32
+      with Inline => True;
+   procedure MoveSLong
+      (A : in Address;
+       L : in Unsigned_32)
+      with Inline => True;
 
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -482,20 +494,22 @@ package M68k is
    User_Defined_Vector_190            : constant := 254;
    User_Defined_Vector_191            : constant := 255;
 
-   type Exception_Vector_Table_Type is array (Exception_Vector_Id_Type) of Address with
-      Alignment => 2**10,
-      Size      => 256 * 32;
+   type Exception_Vector_Table_Type is array (Exception_Vector_Id_Type) of Address
+      with Alignment => 2**10,
+           Size      => 256 * 32;
 
    subtype Irq_State_Type is ILEVEL_Type;
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   function Irq_State_Get return Irq_State_Type with
-      Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   function Irq_State_Get
+      return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Locking
@@ -504,17 +518,20 @@ package M68k is
    LOCK_UNLOCK : constant CPU_Unsigned := 0;
    LOCK_LOCK   : constant CPU_Unsigned := 1;
 
-   type Lock_Type is
-   record
+   type Lock_Type is record
       Lock : aliased CPU_Unsigned := LOCK_UNLOCK with Atomic => True;
-   end record with
-      Size => CPU_Unsigned'Size;
+   end record
+      with Size => CPU_Unsigned'Size;
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) with
-      Inline => True;
-   procedure Lock (Lock_Object : in out Lock_Type) with
-      Inline => True;
-   procedure Unlock (Lock_Object : out Lock_Type) with
-      Inline => True;
+   procedure Lock_Try
+      (Lock_Object : in out Lock_Type;
+       Success     :    out Boolean)
+      with Inline => True;
+   procedure Lock
+      (Lock_Object : in out Lock_Type)
+      with Inline => True;
+   procedure Unlock
+      (Lock_Object : out Lock_Type)
+      with Inline => True;
 
 end M68k;

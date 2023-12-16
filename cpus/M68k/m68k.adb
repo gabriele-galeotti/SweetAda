@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body M68k is
+package body M68k
+   is
 
    --========================================================================--
    --                                                                        --
@@ -43,7 +44,8 @@ package body M68k is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -59,7 +61,8 @@ package body M68k is
    ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
+   procedure BREAKPOINT
+      is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -76,7 +79,9 @@ package body M68k is
    -- Status Register (Condition Code Register)
    ----------------------------------------------------------------------------
 
-   function SR_Read return SR_Type is
+   function SR_Read
+      return SR_Type
+      is
       Value : SR_Type;
    begin
       Asm (
@@ -91,7 +96,9 @@ package body M68k is
       return Value;
    end SR_Read;
 
-   procedure SR_Write (Value : in SR_Type) is
+   procedure SR_Write
+      (Value : in SR_Type)
+      is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -107,7 +114,9 @@ package body M68k is
    ----------------------------------------------------------------------------
    -- VBR_Set
    ----------------------------------------------------------------------------
-   procedure VBR_Set (VBR_Address : in Address) is
+   procedure VBR_Set
+      (VBR_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -124,7 +133,10 @@ package body M68k is
    -- MoveSByte
    ----------------------------------------------------------------------------
 
-   function MoveSByte (A : Address) return Unsigned_8 is
+   function MoveSByte
+      (A : Address)
+      return Unsigned_8
+      is
       B : Unsigned_8;
    begin
       Asm (
@@ -139,7 +151,10 @@ package body M68k is
       return B;
    end MoveSByte;
 
-   procedure MoveSByte (A : in Address; B : in Unsigned_8) is
+   procedure MoveSByte
+      (A : in Address;
+       B : in Unsigned_8)
+      is
    begin
       Asm (
            Template => ""                       & CRLF &
@@ -159,7 +174,10 @@ package body M68k is
    -- MoveSWord
    ----------------------------------------------------------------------------
 
-   function MoveSWord (A : in Address) return Unsigned_16 is
+   function MoveSWord
+      (A : in Address)
+      return Unsigned_16
+      is
       W : Unsigned_16;
    begin
       Asm (
@@ -174,7 +192,10 @@ package body M68k is
       return W;
    end MoveSWord;
 
-   procedure MoveSWord (A : in Address; W : in Unsigned_16) is
+   procedure MoveSWord
+      (A : in Address;
+       W : in Unsigned_16)
+      is
    begin
       Asm (
            Template => ""                       & CRLF &
@@ -194,7 +215,10 @@ package body M68k is
    -- MoveSLong
    ----------------------------------------------------------------------------
 
-   function MoveSLong (A : in Address) return Unsigned_32 is
+   function MoveSLong
+      (A : in Address)
+      return Unsigned_32
+      is
       L : Unsigned_32;
    begin
       Asm (
@@ -209,7 +233,10 @@ package body M68k is
       return L;
    end MoveSLong;
 
-   procedure MoveSLong (A : in Address; L : in Unsigned_32) is
+   procedure MoveSLong
+      (A : in Address;
+       L : in Unsigned_32)
+      is
    begin
       Asm (
            Template => ""                       & CRLF &
@@ -228,7 +255,9 @@ package body M68k is
    ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
+   procedure Asm_Call
+      (Target_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                    & CRLF &
@@ -245,7 +274,8 @@ package body M68k is
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       Asm (
            Template => ""                             & CRLF &
@@ -258,7 +288,8 @@ package body M68k is
           );
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       Asm (
            Template => ""                             & CRLF &
@@ -271,12 +302,16 @@ package body M68k is
           );
    end Irq_Disable;
 
-   function Irq_State_Get return Irq_State_Type is
+   function Irq_State_Get
+      return Irq_State_Type
+      is
    begin
       return SR_Read.ILEVEL;
    end Irq_State_Get;
 
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
       Value : SR_Type;
    begin
       Value        := SR_Read;
@@ -288,10 +323,15 @@ package body M68k is
    -- Locking subprograms
    ----------------------------------------------------------------------------
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) is
+   procedure Lock_Try
+      (Lock_Object : in out Lock_Type;
+       Success     :    out Boolean)
+      is
    separate;
 
-   procedure Lock (Lock_Object : in out Lock_Type) is
+   procedure Lock
+      (Lock_Object : in out Lock_Type)
+      is
       Success : Boolean;
    begin
       loop
@@ -300,7 +340,9 @@ package body M68k is
       end loop;
    end Lock;
 
-   procedure Unlock (Lock_Object : out Lock_Type) is
+   procedure Unlock
+      (Lock_Object : out Lock_Type)
+      is
    begin
       Lock_Object.Lock := LOCK_UNLOCK;
    end Unlock;

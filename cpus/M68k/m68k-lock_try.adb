@@ -16,7 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (M68k)
-procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) is
+procedure Lock_Try
+   (Lock_Object : in out Lock_Type;
+    Success     :    out Boolean)
+   is
    Locked_Item : Lock_Type := (Lock => LOCK_UNLOCK);
 begin
    Asm (

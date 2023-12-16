@@ -21,7 +21,9 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
-package MCF523x is
+package MCF523x
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -30,8 +32,6 @@ package MCF523x is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use System.Storage_Elements;
@@ -71,8 +71,7 @@ package MCF523x is
    MFD_16X : constant := 2#110#;
    MFD_18X : constant := 2#111#;
 
-   type SYNCR_Type is
-   record
+   type SYNCR_Type is record
       EXP       : Bits_10; -- Expected difference value
       DEPTH     : Bits_2;  -- Frequency modulation depth and enable
       RATE      : Bits_1;  -- Modulation rate
@@ -86,11 +85,10 @@ package MCF523x is
       Reserved1 : Bits_2;
       MFD       : Bits_3;  -- Multiplication factor divider
       Reserved2 : Bits_5;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYNCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYNCR_Type use record
       EXP       at 0 range 0 .. 9;
       DEPTH     at 0 range 10 .. 11;
       RATE      at 0 range 12 .. 12;
@@ -106,11 +104,11 @@ package MCF523x is
       Reserved2 at 0 range 27 .. 31;
    end record;
 
-   SYNCR : aliased SYNCR_Type with
-      Address    => To_Address (IPSBAR_BASEADDRESS + 16#0012_0000#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SYNCR : aliased SYNCR_Type
+      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0012_0000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- 7.3.1.2 Synthesizer Status Register (SYNSR)
 
@@ -123,8 +121,7 @@ package MCF523x is
    PLLMODE_EXT : constant := 0; -- External clock mode
    PLLMODE_PLL : constant := 1; -- PLL clock mode
 
-   type SYNSR_Type is
-   record
+   type SYNSR_Type is record
       CALPASS  : Boolean; -- Calibration passed
       CALDONE  : Boolean; -- Calibration complete
       LOCF     : Boolean; -- Loss-of-clock flag
@@ -136,11 +133,10 @@ package MCF523x is
       LOC      : Boolean; -- Loss-of-clock status
       LOLF     : Boolean; -- Loss-of-lock flag
       Reserved : Bits_22;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYNSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYNSR_Type use record
       CALPASS  at 0 range 0 .. 0;
       CALDONE  at 0 range 1 .. 1;
       LOCF     at 0 range 2 .. 2;
@@ -154,32 +150,30 @@ package MCF523x is
       Reserved at 0 range 10 .. 31;
    end record;
 
-   SYNSR : aliased SYNSR_Type with
-      Address    => To_Address (IPSBAR_BASEADDRESS + 16#0012_0004#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SYNSR : aliased SYNSR_Type
+      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0012_0004#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- 9.3.3.3 Chip Identification Register (CIR)
 
-   type CIR_Type is
-   record
+   type CIR_Type is record
       PRN : Bits_6;  -- Part revision number
       PIN : Bits_10; -- Part identification number
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for CIR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for CIR_Type use record
       PRN at 0 range 0 .. 5;
       PIN at 0 range 6 .. 15;
    end record;
 
-   CIR : aliased CIR_Type with
-      Address    => To_Address (IPSBAR_BASEADDRESS + 16#0011_000A#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CIR : aliased CIR_Type
+      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0011_000A#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- 11.2.1.1 Internal Peripheral System Base Address Register (IPSBAR)
 
@@ -188,34 +182,31 @@ package MCF523x is
    BA_2 : constant := 2#10#; -- internal peripherals @ 0x8000_0000
    BA_3 : constant := 2#11#; -- internal peripherals @ 0xC000_0000
 
-   type IPSBAR_Type is
-   record
+   type IPSBAR_Type is record
       V        : Boolean; -- Valid
       Reserved : Bits_29;
       BA       : Bits_2;  -- Base address
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for IPSBAR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for IPSBAR_Type use record
       V        at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 29;
       BA       at 0 range 30 .. 31;
    end record;
 
-   IPSBAR : aliased IPSBAR_Type with
-      Address    => To_Address (IPSBAR_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   IPSBAR : aliased IPSBAR_Type
+      with Address    => To_Address (IPSBAR_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    function To_U32 is new Ada.Unchecked_Conversion (IPSBAR_Type, Unsigned_32);
    function To_IPSBAR is new Ada.Unchecked_Conversion (Unsigned_32, IPSBAR_Type);
 
    -- 26.3.3 UART Status Registers (USRn)
 
-   type USR_Type is
-   record
+   type USR_Type is record
       RXRDY : Boolean; -- Receiver ready
       FFULL : Boolean; -- FIFO full
       TXRDY : Boolean; -- Transmitter ready
@@ -224,11 +215,10 @@ package MCF523x is
       PE    : Boolean; -- Parity error
       FE    : Boolean; -- Framing error
       RB    : Boolean; -- Received break
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for USR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for USR_Type use record
       RXRDY at 0 range 0 .. 0;
       FFULL at 0 range 1 .. 1;
       TXRDY at 0 range 2 .. 2;
@@ -239,26 +229,26 @@ package MCF523x is
       RB    at 0 range 7 .. 7;
    end record;
 
-   USR0 : aliased USR_Type with
-      Address    => To_Address (IPSBAR_BASEADDRESS + 16#0000_0204#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   USR0 : aliased USR_Type
+      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0000_0204#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- 26.3.6 UART Receive Buffers (URBn)
 
-   URB0 : aliased Unsigned_8 with
-      Address    => To_Address (IPSBAR_BASEADDRESS + 16#0000_020C#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   URB0 : aliased Unsigned_8
+      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0000_020C#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- 26.3.7 UART Transmit Buffers (UTBn)
 
-   UTB0 : aliased Unsigned_8 with
-      Address    => To_Address (IPSBAR_BASEADDRESS + 16#0000_020C#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   UTB0 : aliased Unsigned_8
+      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0000_020C#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end MCF523x;
