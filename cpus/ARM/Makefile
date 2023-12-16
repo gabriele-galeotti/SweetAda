@@ -35,9 +35,6 @@ LIBRARY_NAME := cpu
 
 OBJECTS :=
 
-# force inclusion of not-explicit-referenced subprograms
-OBJECTS += $(OBJ_DIRECTORY)/unwind.o
-
 ifneq ($(USE_LIBGCC),Y)
 LIB1ASMSRC       := lib1funcs.S
 LIBGCC_FUNCTIONS := divsi3 dvmd_tls udivsi3 muldi3
@@ -47,6 +44,7 @@ $(LIBGCC_SOURCES): %.S : $(LIB1ASMSRC)
 	$(call brief-command, \
         $(CPP) -o $@ -x assembler-with-cpp -P -CC -D$* $(LIB1ASMSRC) \
         ,[CPP],$@)
+OBJECTS          += $(OBJ_DIRECTORY)/unwind.o
 else
 LIBGCC_SOURCES :=
 endif
