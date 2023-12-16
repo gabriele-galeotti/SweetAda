@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package NiosII is
+package NiosII
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package NiosII is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Interfaces;

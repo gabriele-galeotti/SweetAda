@@ -17,7 +17,9 @@
 
 with GCC_Types;
 
-package LibGCC is
+package LibGCC
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,8 +28,6 @@ package LibGCC is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    function DivSI3
       (N : GCC_Types.SI_Type;

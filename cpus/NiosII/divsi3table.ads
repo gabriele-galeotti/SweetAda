@@ -17,7 +17,8 @@
 
 with Interfaces;
 
-package DivSI3Table is
+package DivSI3Table
+   is
 
    --========================================================================--
    --                                                                        --
