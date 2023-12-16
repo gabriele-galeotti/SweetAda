@@ -40,7 +40,7 @@ tcpport_is_listening()
 {
 _time_start=$(date +%s)
 while true ; do
-  netstat -l -t --numeric-ports | grep ":$1[^0-9]" > /dev/null
+  netstat -l -t --numeric-ports | grep -e ":$1[^0-9]" > /dev/null
   _exit_status=$?
   if   [ "${_exit_status}" -eq 0 ] ; then
     break
