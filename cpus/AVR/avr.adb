@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body AVR is
+package body AVR
+   is
 
    --========================================================================--
    --                                                                        --

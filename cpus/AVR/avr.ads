@@ -17,7 +17,9 @@
 
 with System;
 
-package AVR is
+package AVR
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,8 +28,6 @@ package AVR is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
 

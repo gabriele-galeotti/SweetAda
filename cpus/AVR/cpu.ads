@@ -19,6 +19,7 @@ with System;
 with AVR;
 
 package CPU
+   with Preelaborate => True
    is
 
    --========================================================================--
@@ -28,8 +29,6 @@ package CPU
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
 
