@@ -18,7 +18,7 @@ REM SWEETADA_PATH
 REM LIBUTILS_DIRECTORY
 REM
 
-powershell -ExecutionPolicy Bypass -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/createdefinitions.ps1 ""%*""
+powershell.exe -ExecutionPolicy Bypass -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/createdefinitions.ps1 ""%*""
 
 EXIT /B %ERRORLEVEL%
 
