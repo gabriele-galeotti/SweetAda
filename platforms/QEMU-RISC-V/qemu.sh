@@ -38,8 +38,8 @@ tcpport_is_listening()
 _time_start=$(date +%s)
 while true ; do
   case ${OSTYPE} in
-    darwin) _port_listening=$(netstat -a -n -t | grep -c "^tcp4.*127.0.0.1.$1.*LISTEN.*\$") ;;
-    *)      _port_listening=$(netstat -l -t --numeric-ports | grep -c "^tcp.*localhost:$1.*LISTEN.*\$") ;;
+    darwin) _port_listening=$(netstat -a -n -t | grep -c -e "^tcp4.*127.0.0.1.$1.*LISTEN.*\$") ;;
+    *)      _port_listening=$(netstat -l -t --numeric-ports | grep -c -e "^tcp.*localhost:$1.*LISTEN.*\$") ;;
   esac
   [ "${_port_listening}" -eq 1 ] && break
   _time_current=$(date +%s)
