@@ -20,7 +20,8 @@ with System.Storage_Elements;
 with Definitions;
 with Bits;
 
-package body CPU.MMIO is
+package body CPU.MMIO
+   is
 
    --========================================================================--
    --                                                                        --

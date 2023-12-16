@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body SH7032 is
+package body SH7032
+   is
 
    --========================================================================--
    --                                                                        --

@@ -18,7 +18,9 @@
 with System;
 with Interfaces;
 
-package CPU.MMIO is
+package CPU.MMIO
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package CPU.MMIO is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    function Read_U8
       (Memory_Address : System.Address)

@@ -19,7 +19,8 @@ with System.Machine_Code;
 with Ada.Unchecked_Conversion;
 with Definitions;
 
-package body SH7750 is
+package body SH7750
+   is
 
    --========================================================================--
    --                                                                        --

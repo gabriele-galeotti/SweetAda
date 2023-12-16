@@ -20,7 +20,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package SH7032 is
+package SH7032
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -29,8 +31,6 @@ package SH7032 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use System.Storage_Elements;
@@ -49,19 +49,17 @@ package SH7032 is
    RDDTY_50 : constant := 0; -- RD signal high-level duty cycle is 50% of T1 state
    RDDTY_35 : constant := 1; -- RD signal high-level duty cycle is 35% of T1 state
 
-   type Bus_Control_Register_Type is
-   record
+   type Bus_Control_Register_Type is record
       Reserved : Bits_11 := 0;
       BAS      : Bits_1;       -- Byte Access Select
       RDDTY    : Bits_1;       -- RD Duty
       WARP     : Boolean;      -- Warp Mode Bit
       IOE      : Boolean;      -- Multiplexed I/O Enable Bit
       DRAME    : Boolean;      -- DRAM Enable Bit
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for Bus_Control_Register_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for Bus_Control_Register_Type use record
       Reserved at 0 range  0 .. 10;
       BAS      at 0 range 11 .. 11;
       RDDTY    at 0 range 12 .. 12;
@@ -101,8 +99,7 @@ package SH7032 is
    SCI_MODE_ASYNC : constant Bits_1 := 0;
    SCI_MODE_SYNC  : constant Bits_1 := 1;
 
-   type Serial_Mode_Register_Type is
-   record
+   type Serial_Mode_Register_Type is record
       CKS  : Bits_2;
       MP   : Boolean;
       STOP : Bits_1;
@@ -110,11 +107,10 @@ package SH7032 is
       PE   : Boolean;
       CHR  : Bits_1;
       CA   : Bits_1;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for Serial_Mode_Register_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for Serial_Mode_Register_Type use record
       CKS  at 0 range 0 .. 1;
       MP   at 0 range 2 .. 2;
       STOP at 0 range 3 .. 3;
@@ -126,16 +122,14 @@ package SH7032 is
 
    -- 13.1.4 Register Configuration
 
-   type SCI_Type is
-   record
+   type SCI_Type is record
       SMR : Serial_Mode_Register_Type with Volatile_Full_Access => True;
       BRR : Unsigned_8                with Volatile_Full_Access => True;
       TDR : Unsigned_8                with Volatile_Full_Access => True;
       RDR : Unsigned_8                with Volatile_Full_Access => True;
-   end record with
-      Size => 48;
-   for SCI_Type use
-   record
+   end record
+      with Size => 6 * 8;
+   for SCI_Type use record
       SMR at 0 range 0 .. 7;
       BRR at 1 range 0 .. 7;
       TDR at 3 range 0 .. 7;

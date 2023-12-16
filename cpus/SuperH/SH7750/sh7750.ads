@@ -20,7 +20,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package SH7750 is
+package SH7750
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -29,8 +31,6 @@ package SH7750 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use System.Storage_Elements;
@@ -105,8 +105,7 @@ package SH7750 is
    RB_BANK0 : constant := 0; -- R0_BANK0–R7_BANK0 are accessed as general registers R0–R7.
    RB_BANK1 : constant := 1; -- R0_BANK1–R7_BANK1 are accessed as general registers R0–R7.
 
-   type SR_Type is
-   record
+   type SR_Type is record
       T         : Boolean;      -- True/false condition or carry/borrow bit
       S         : Boolean;      -- Specifies a saturation operation for a MAC instruction.
       Reserved1 : Bits_2 := 0;
@@ -120,11 +119,10 @@ package SH7750 is
       RB        : Bits_1;       -- General register bank specifier in privileged mode
       MD        : Bits_1;       -- Processor mode
       Reserved4 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SR_Type use record
       T         at 0 range 0 .. 0;
       S         at 0 range 1 .. 1;
       Reserved1 at 0 range 2 .. 3;
@@ -166,8 +164,7 @@ package SH7750 is
    FR_BANK0 : constant := 0; -- FPR0..15_BANK0 are assigned to FR0–FR15; FPR0..15_BANK1 are assigned to XF0–XF15.
    FR_BANK1 : constant := 1; -- FPR0..15_BANK0 are assigned to XF0–XF15; FPR0..15_BANK1 are assigned to FR0–FR15.
 
-   type FPSCR_Type is
-   record
+   type FPSCR_Type is record
       RM           : Bits_2;  -- Rounding mode
       FL_Inexact   : Boolean; -- FPU exception flag fields
       FL_Underflow : Boolean; --
@@ -190,11 +187,10 @@ package SH7750 is
       SZ           : Bits_1;  -- Transfer size mode
       FR           : Bits_1;  -- Floating-point register bank
       Reserved     : Bits_10;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for FPSCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FPSCR_Type use record
       RM           at 0 range 0 .. 1;
       FL_Inexact   at 0 range 2 .. 2;
       FL_Underflow at 0 range 3 .. 3;
@@ -228,32 +224,28 @@ package SH7750 is
    TCOE_External : constant := 0; -- Timer clock pin (TCLK) is used as ext clock in or in capture control in pin
    TCOE_RTCOUT   : constant := 1; -- Timer clock pin (TCLK) is used as on-chip RTC output clock output pin
 
-   type TOCR_Type is
-   record
+   type TOCR_Type is record
       TCOE     : Bits_1; -- Timer Clock Pin Control
       Reserved : Bits_7;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TOCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TOCR_Type use record
       TCOE     at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
 
    -- 12.2.2 Timer Start Register (TSTR)
 
-   type TSTR_Type is
-   record
+   type TSTR_Type is record
       STR0     : Boolean; -- Counter Start 0
       STR1     : Boolean; -- Counter Start 1
       STR2     : Boolean; -- Counter Start 2
       Reserved : Bits_5;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TSTR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TSTR_Type use record
       STR0     at 0 range 0 .. 0;
       STR1     at 0 range 1 .. 1;
       STR2     at 0 range 2 .. 2;
@@ -282,8 +274,7 @@ package SH7750 is
    ICPE_CAPTINTNE : constant := 2#10#; -- Input capture function is used, but interrupt due to input capture (TICPI2) is not enabled
    ICPE_CAPTINTEN : constant := 2#11#; -- Input capture function is used, and interrupt due to input capture (TICPI2) is enabled
 
-   type TCR_Type (T : TMU_Kind := CHANNEL_01) is
-   record
+   type TCR_Type (T : TMU_Kind := CHANNEL_01) is record
       TPSC : Bits_3;  -- Timer Prescaler 2 to 0
       CKEG : Bits_2;  -- Clock Edge 1 and 0
       UNIE : Boolean; -- Underflow Interrupt Control
@@ -297,12 +288,11 @@ package SH7750 is
             ICPF      : Boolean; -- Input Capture Interrupt Flag
             Reserved  : Bits_6;
       end case;
-   end record with
-      Bit_Order       => Low_Order_First,
-      Size            => 16,
-      Unchecked_Union => True;
-   for TCR_Type use
-   record
+   end record
+      with Bit_Order       => Low_Order_First,
+           Size            => 16,
+           Unchecked_Union => True;
+   for TCR_Type use record
       TPSC      at 0 range 0 .. 2;
       CKEG      at 0 range 3 .. 4;
       UNIE      at 0 range 5 .. 5;
@@ -317,8 +307,7 @@ package SH7750 is
    -- 12.1.4 Register Configuration
 
 pragma Warnings (Off, "* bits of ""TMU_Type"" unused");
-   type TMU_Type is
-   record
+   type TMU_Type is record
       TOCR  : TOCR_Type   with Volatile_Full_Access => True;
       TSTR  : TSTR_Type   with Volatile_Full_Access => True;
       TCOR0 : Unsigned_32 with Volatile_Full_Access => True;
@@ -331,11 +320,10 @@ pragma Warnings (Off, "* bits of ""TMU_Type"" unused");
       TCNT2 : Unsigned_32 with Volatile_Full_Access => True;
       TCR2  : TCR_Type    with Volatile_Full_Access => True;
       TCPR2 : Unsigned_32 with Volatile_Full_Access => True;
-   end record with
-      Alignment => 4,
-      Size      => 16#30# * 8;
-   for TMU_Type use
-   record
+   end record
+      with Alignment => 4,
+           Size      => 16#30# * 8;
+   for TMU_Type use record
       TOCR  at 16#00# range 0 .. 7;
       TSTR  at 16#04# range 0 .. 7;
       TCOR0 at 16#08# range 0 .. 31;
@@ -379,8 +367,7 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
    CHR_8 : constant := 0; -- 8-bit data
    CHR_7 : constant := 1; -- 7-bit data
 
-   type SCSMR2_Type is
-   record
+   type SCSMR2_Type is record
       CKS       : Bits_2;  -- Clock Select 1 and 0
       Reserved1 : Bits_1;
       STOP      : Bits_1;  -- Stop Bit Length
@@ -388,11 +375,10 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       PE        : Boolean; -- Parity Enable
       CHR       : Bits_1;  -- Character Length
       Reserved2 : Bits_1;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SCSMR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SCSMR2_Type use record
       CKS       at 0 range 0 .. 1;
       Reserved1 at 0 range 2 .. 2;
       STOP      at 0 range 3 .. 3;
@@ -407,8 +393,7 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
    CKE1_Internal : constant := 0; -- Internal clock/SCK2 pin functions as input pin
    CKE1_External : constant := 1; -- External clock/SCK2 pin functions as clock input
 
-   type SCSCR2_Type is
-   record
+   type SCSCR2_Type is record
       Reserved1 : Bits_1 := 0;
       CKE1      : Bits_1;      -- Clock Enable 1
       Reserved2 : Bits_1 := 0;
@@ -418,11 +403,10 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       RIE       : Boolean;     -- Receive Interrupt Enable
       TIE       : Boolean;     -- Transmit Interrupt Enable
       Reserved3 : Bits_8 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SCSCR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SCSCR2_Type use record
       Reserved1 at 0 range 0 .. 0;
       CKE1      at 0 range 1 .. 1;
       Reserved2 at 0 range 2 .. 2;
@@ -436,8 +420,7 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
 
    -- 16.2.7 Serial Status Register (SCFSR2)
 
-   type SCFSR2_Type is
-   record
+   type SCFSR2_Type is record
       DR    : Boolean; -- Receive Data Ready
       RDF   : Boolean; -- Receive FIFO Data Full
       PER   : Boolean; -- Parity Error
@@ -448,11 +431,10 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       ER    : Boolean; -- Receive Error
       FER03 : Bits_4;  -- Number of Framing Errors
       PER03 : Bits_4;  -- Number of Parity Errors
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SCFSR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SCFSR2_Type use record
       DR    at 0 range 0 .. 0;
       RDF   at 0 range 1 .. 1;
       PER   at 0 range 2 .. 2;
@@ -486,8 +468,7 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
    RSTRG_12 : constant := 2#10#; -- RTS2 Output Active Trigger = 12
    RSTRG_14 : constant := 2#11#; -- RTS2 Output Active Trigger = 14
 
-   type SCFCR2_Type is
-   record
+   type SCFCR2_Type is record
       LOOPBACK : Boolean; -- Loopback Test
       RFRST    : Boolean; -- Receive FIFO Data Register Reset
       TFRST    : Boolean; -- Transmit FIFO Data Register Reset
@@ -496,11 +477,10 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       RTRG     : Bits_2;  -- Receive FIFO Data Number Trigger
       RSTRG    : Bits_3;  -- nRTS2 Output Active Trigger
       Reserved : Bits_5;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SCFCR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SCFCR2_Type use record
       LOOPBACK at 0 range 0 .. 0;
       RFRST    at 0 range 1 .. 1;
       TFRST    at 0 range 2 .. 2;
@@ -513,17 +493,15 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
 
    -- 16.2.10 FIFO Data Count Register (SCFDR2)
 
-   type SCFDR2_Type is
-   record
+   type SCFDR2_Type is record
       R         : Bits_5; -- number of receive data bytes in SCFRDR2
       Reserved1 : Bits_3;
       T         : Bits_5; -- number of transmit data bytes in SCFTDR2
       Reserved2 : Bits_3;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SCFDR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SCFDR2_Type use record
       R         at 0 range 0 .. 4;
       Reserved1 at 0 range 5 .. 7;
       T         at 0 range 8 .. 12;
@@ -541,8 +519,7 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
    RTSDT_N     : constant := 0; -- RTSDT bit value is not output to nRTS2pin
    RTSDT_nRTS2 : constant := 1; -- RTSDT bit value is output to nRTS2pin
 
-   type SCSPTR2_Type is
-   record
+   type SCSPTR2_Type is record
       SPB2DT    : Bits_1; -- Serial Port Break Data
       SPB2IO    : Bits_1; -- Serial Port Break I/O
       Reserved1 : Bits_2;
@@ -551,11 +528,10 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       RTSDT     : Bits_1; -- Serial Port RTS Port Data
       RTSIO     : Bits_1; -- Serial Port RTS Port I/O
       Reserved2 : Bits_8;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SCSPTR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SCSPTR2_Type use record
       SPB2DT    at 0 range 0 .. 0;
       SPB2IO    at 0 range 1 .. 1;
       Reserved1 at 0 range 2 .. 3;
@@ -568,15 +544,13 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
 
    -- 16.2.12 Line Status Register (SCLSR2)
 
-   type SCLSR2_Type is
-   record
+   type SCLSR2_Type is record
       ORER     : Boolean; -- Overrun Error
       Reserved : Bits_15;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SCLSR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SCLSR2_Type use record
       ORER     at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 15;
    end record;
@@ -584,8 +558,7 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
    -- 16.1.4 Register Configuration
 
 pragma Warnings (Off, "* bits of ""SCIF_Type"" unused");
-   type SCIF_Type is
-   record
+   type SCIF_Type is record
       SCSMR2  : SCSMR2_Type  with Volatile_Full_Access => True;
       SCBRR2  : Unsigned_8   with Volatile_Full_Access => True;
       SCSCR2  : SCSCR2_Type  with Volatile_Full_Access => True;
@@ -596,11 +569,10 @@ pragma Warnings (Off, "* bits of ""SCIF_Type"" unused");
       SCFDR2  : SCFDR2_Type  with Volatile_Full_Access => True;
       SCSPTR2 : SCSPTR2_Type with Volatile_Full_Access => True;
       SCLSR2  : SCLSR2_Type  with Volatile_Full_Access => True;
-   end record with
-      Alignment => 4,
-      Size      => 16#28# * 8;
-   for SCIF_Type use
-   record
+   end record
+      with Alignment => 4,
+           Size      => 16#28# * 8;
+   for SCIF_Type use record
       SCSMR2  at 16#00# range 0 .. 7;
       SCBRR2  at 16#04# range 0 .. 7;
       SCSCR2  at 16#08# range 0 .. 15;

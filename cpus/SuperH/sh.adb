@@ -19,7 +19,8 @@ with System;
 with System.Machine_Code;
 with Definitions;
 
-package body SH is
+package body SH
+   is
 
    --========================================================================--
    --                                                                        --
