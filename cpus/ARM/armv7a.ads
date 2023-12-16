@@ -20,7 +20,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package ARMv7A is
+package ARMv7A
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -29,8 +31,6 @@ package ARMv7A is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms

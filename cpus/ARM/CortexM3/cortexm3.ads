@@ -21,7 +21,8 @@ with Interfaces;
 with Bits;
 with ARMv7M;
 
-package CortexM3 is
+package CortexM3
+   is
 
    --========================================================================--
    --                                                                        --
@@ -38,8 +39,7 @@ package CortexM3 is
 
    -- Auxiliary Control Register
 
-   type ACTLR_Type is
-   record
+   type ACTLR_Type is record
       DISMCYCINT : Boolean;      -- Disables interruption of multi-cycle instructions.
       DISDEFWBUF : Boolean;      -- Disables write buffer use during default memory map accesses.
       DISFOLD    : Boolean;      -- Disables folding of IT instructions.
@@ -47,11 +47,10 @@ package CortexM3 is
       DISFPCA    : Boolean;      -- SBZP.
       DISOOFP    : Boolean;      -- Disables FP instructions completing out of order with respect to integer instructions.
       Reserved2  : Bits_22 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for ACTLR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ACTLR_Type use record
       DISMCYCINT at 0 range  0 ..  0;
       DISDEFWBUF at 0 range  1 ..  1;
       DISFOLD    at 0 range  2 ..  2;

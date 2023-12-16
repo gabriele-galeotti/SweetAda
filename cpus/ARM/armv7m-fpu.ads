@@ -15,7 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package ARMv7M.FPU is
+package ARMv7M.FPU
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -25,12 +27,9 @@ package ARMv7M.FPU is
    --                                                                        --
    --========================================================================--
 
-   pragma Preelaborate;
-
    -- B3.2.21 Floating Point Context Control Register, FPCCR
 
-   type FPCCR_Type is
-   record
+   type FPCCR_Type is record
       LSPACT    : Boolean;      -- Indicates whether Lazy preservation of the FP state is active
       USER      : Boolean;      -- Indicates the privilege level ... when the processor allocated the FP stack frame
       Reserved1 : Bits_1 := 0;
@@ -43,11 +42,10 @@ package ARMv7M.FPU is
       Reserved3 : Bits_21 := 0;
       LSPEN     : Boolean;      -- Enables lazy context save of FP state
       ASPEN     : Boolean;      -- When this bit is set to 1, execution of a floating-point instr sets the CONTROL.FPCA bit to 1
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for FPCCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FPCCR_Type use record
       LSPACT    at 0 range  0 ..  0;
       USER      at 0 range  1 ..  1;
       Reserved1 at 0 range  2 ..  2;
@@ -70,15 +68,13 @@ package ARMv7M.FPU is
 
    -- B3.2.22 Floating Point Context Address Register, FPCAR
 
-   type FPCAR_Type is
-   record
+   type FPCAR_Type is record
       Reserved : Bits_3 := 0;
       ADDRESS  : Bits_29;     -- The location of the unpopulated floating-point reg space allocated on an exception stack frame.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for FPCAR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FPCAR_Type use record
       Reserved at 0 range 0 ..  2;
       ADDRESS  at 0 range 3 .. 31;
    end record;
@@ -96,8 +92,7 @@ package ARMv7M.FPU is
    RMode_RM : constant := 2#10#; -- Round towards Minus Infinity (RM) mode.
    RMode_RZ : constant := 2#11#; -- Round towards Zero (RZ) mode.
 
-   type FPSCR_Type is
-   record
+   type FPSCR_Type is record
       IOC       : Boolean;      -- Invalid Operation cumulative exception bit.
       DZC       : Boolean;      -- Division by Zero cumulative exception bit.
       OFC       : Boolean;      -- Overflow cumulative exception bit.
@@ -115,11 +110,10 @@ package ARMv7M.FPU is
       C         : Boolean;      -- Carry condition flag.
       Z         : Boolean;      -- Zero condition flag.
       N         : Boolean;      -- Negative condition flag.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for FPSCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FPSCR_Type use record
       IOC       at 0 range  0 ..  0;
       DZC       at 0 range  1 ..  1;
       OFC       at 0 range  2 ..  2;
@@ -146,19 +140,17 @@ package ARMv7M.FPU is
 
    -- B3.2.23 Floating Point Default Status Control Register, FPDSCR
 
-   type FPDSCR_Type is
-   record
+   type FPDSCR_Type is record
       Reserved1 : Bits_22 := 0;
       RMode     : Bits_2;       -- Default value for FPSCR.RMode.
       FZ        : Boolean;      -- Default value for FPSCR.FZ.
       DN        : Boolean;      -- Default value for FPSCR.DN.
       AHP       : Boolean;      -- Default value for FPSCR.AHP.
       Reserved2 : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for FPDSCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FPDSCR_Type use record
       Reserved1 at 0 range  0 .. 21;
       RMode     at 0 range 22 .. 23;
       FZ        at 0 range 24 .. 24;

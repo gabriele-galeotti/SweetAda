@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body ARMv4 is
+package body ARMv4
+   is
 
    --========================================================================--
    --                                                                        --

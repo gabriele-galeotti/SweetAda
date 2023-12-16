@@ -22,7 +22,9 @@ with Interfaces;
 with Bits;
 with ARMv6M;
 
-package ARMv7M is
+package ARMv7M
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -31,8 +33,6 @@ package ARMv7M is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use System.Storage_Elements;
@@ -53,8 +53,7 @@ package ARMv7M is
 
    -- B1.4.2 The special-purpose Program Status Registers, xPSR
 
-   type APSR_Type is
-   record
+   type APSR_Type is record
       Reserved1 : Bits_16;
       GE        : Bits_4;  -- Greater than or Equal flags.
       Reserved2 : Bits_7;
@@ -63,11 +62,10 @@ package ARMv7M is
       C         : Boolean; -- Carry condition flag.
       Z         : Boolean; -- Zero condition flag.
       N         : Boolean; -- Negative condition flag.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for APSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for APSR_Type use record
       Reserved1 at 0 range  0 .. 15;
       GE        at 0 range 16 .. 19;
       Reserved2 at 0 range 20 .. 26;
@@ -88,15 +86,13 @@ package ARMv7M is
       (Value : in APSR_Type)
       with Inline => True;
 
-   type IPSR_Type is
-   record
+   type IPSR_Type is record
       Exception_Number : Bits_9;  -- in Handler mode, holds the exception number of the currently-executing exception
       Reserved         : Bits_23;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for IPSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for IPSR_Type use record
       Exception_Number at 0 range 0 ..  8;
       Reserved         at 0 range 9 .. 31;
    end record;
@@ -111,8 +107,7 @@ package ARMv7M is
       (Value : in IPSR_Type)
       with Inline => True;
 
-   type EPSR_Type is
-   record
+   type EPSR_Type is record
       Reserved1 : Bits_9;
       A         : Boolean; -- reserved, but when the processor stacks the PSR, it uses this bit to indicate the stack alignment
       ICIIT1    : Bits_6;  -- saved exception-continuable instruction state or saved IT state
@@ -120,11 +115,10 @@ package ARMv7M is
       T         : Boolean; -- Thumb state
       ICIIT2    : Bits_2;  -- saved exception-continuable instruction state or saved IT state
       Reserved3 : Bits_5;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for EPSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EPSR_Type use record
       Reserved1 at 0 range  0 ..  8;
       A         at 0 range  9 ..  9;
       ICIIT1    at 0 range 10 .. 15;
@@ -150,15 +144,13 @@ package ARMv7M is
    function PRIMASK_Read return PRIMASK_Type         renames ARMv6M.PRIMASK_Read;
    procedure PRIMASK_Write (Value : in PRIMASK_Type) renames ARMv6M.PRIMASK_Write;
 
-   type BASEPRI_Type is
-   record
+   type BASEPRI_Type is record
       BASEPRI  : Unsigned_8;   -- The base priority mask
       Reserved : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for BASEPRI_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for BASEPRI_Type use record
       BASEPRI  at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
@@ -170,15 +162,13 @@ package ARMv7M is
       (Value : in BASEPRI_Type)
       with Inline => True;
 
-   type FAULTMASK_Type is
-   record
+   type FAULTMASK_Type is record
       FM       : Boolean;      -- The fault mask
       Reserved : Bits_31 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for FAULTMASK_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FAULTMASK_Type use record
       FM       at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
@@ -195,17 +185,15 @@ package ARMv7M is
    SPSEL_SP_main    : constant := 0; -- Use SP_main as the current stack
    SPSEL_SP_process : constant := 1; -- In Thread mode, use SP_process as the current stack.
 
-   type CONTROL_Type is
-   record
+   type CONTROL_Type is record
       nPRIV    : Boolean; -- defines the execution privilege in Thread mode
       SPSEL    : Bits_1;  -- Defines the stack to be used
       FPCA     : Boolean; -- if the processor includes the FP extension
       Reserved : Bits_29;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CONTROL_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CONTROL_Type use record
       nPRIV    at 0 range 0 .. 0;
       SPSEL    at 0 range 1 .. 1;
       FPCA     at 0 range 2 .. 2;
@@ -283,8 +271,7 @@ package ARMv7M is
 
    -- B3.2.8 Configuration and Control Register, CCR
 
-   type CCR_Type is
-   record
+   type CCR_Type is record
       NONBASETHRDENA : Boolean; -- Controls whether the processor can enter Thread mode with exceptions active.
       USERSETMPEND   : Boolean; -- Controls whether unprivileged software can access the STIR.
       Reserved1      : Bits_1;
@@ -298,11 +285,10 @@ package ARMv7M is
       IC             : Boolean; -- Instruction cache enable bit.
       BP             : Boolean; -- Branch prediction enable bit.
       Reserved4      : Bits_13;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CCR_Type use record
       NONBASETHRDENA at 0 range  0 ..  0;
       USERSETMPEND   at 0 range  1 ..  1;
       Reserved1      at 0 range  2 ..  2;
@@ -326,17 +312,15 @@ package ARMv7M is
 
    -- B3.2.10 System Handler Priority Register 1, SHPR1
 
-   type SHPR1_Type is
-   record
+   type SHPR1_Type is record
       PRI_4 : Bits_8; -- Priority of system handler 4, MemManage.
       PRI_5 : Bits_8; -- Priority of system handler 5, BusFault.
       PRI_6 : Bits_8; -- Priority of system handler 6, UsageFault.
       PRI_7 : Bits_8; -- Reserved for priority of system handler 7.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SHPR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SHPR1_Type use record
       PRI_4 at 0 range  0 ..  7;
       PRI_5 at 0 range  8 .. 15;
       PRI_6 at 0 range 16 .. 23;
@@ -351,17 +335,15 @@ package ARMv7M is
 
    -- B3.2.11 System Handler Priority Register 2, SHPR2
 
-   type SHPR2_Type is
-   record
+   type SHPR2_Type is record
       PRI_8  : Bits_8; -- Reserved for priority of system handler 8.
       PRI_9  : Bits_8; -- Reserved for priority of system handler 9.
       PRI_10 : Bits_8; -- Reserved for priority of system handler 10.
       PRI_11 : Bits_8; -- Priority of system handler 11, SVCall.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SHPR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SHPR2_Type use record
       PRI_8  at 0 range  0 ..  7;
       PRI_9  at 0 range  8 .. 15;
       PRI_10 at 0 range 16 .. 23;
@@ -376,17 +358,15 @@ package ARMv7M is
 
    -- B3.2.12 System Handler Priority Register 3, SHPR3
 
-   type SHPR3_Type is
-   record
+   type SHPR3_Type is record
       PRI_12 : Bits_8; -- Priority of system handler 12, DebugMonitor.
       PRI_13 : Bits_8; -- Reserved for priority of system handler 13.
       PRI_14 : Bits_8; -- Priority of system handler 14, PendSV.
       PRI_15 : Bits_8; -- Priority of system handler 15, SysTick.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SHPR3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SHPR3_Type use record
       PRI_12 at 0 range  0 ..  7;
       PRI_13 at 0 range  8 .. 15;
       PRI_14 at 0 range 16 .. 23;
@@ -401,8 +381,7 @@ package ARMv7M is
 
    -- B3.2.13 System Handler Control and State Register, SHCSR
 
-   type SHCSR_Type is
-   record
+   type SHCSR_Type is record
       MEMFAULTACT    : Boolean;      -- MemManage active.
       BUSFAULTACT    : Boolean;      -- BusFault active.
       Reserved1      : Bits_1 := 0;
@@ -421,11 +400,10 @@ package ARMv7M is
       BUSFAULTENA    : Boolean;      -- Enable BusFault.
       USGFAULTENA    : Boolean;      -- Enable UsageFault.
       Reserved4      : Bits_13 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SHCSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SHCSR_Type use record
       MEMFAULTACT    at 0 range  0 ..  0;
       BUSFAULTACT    at 0 range  1 ..  1;
       Reserved1      at 0 range  2 ..  2;
@@ -455,8 +433,7 @@ package ARMv7M is
    -- B3.2.15 Configurable Fault Status Register, CFSR
 
    -- MemManage Status Register, MMFSR
-   type MMFSR_Type is
-   record
+   type MMFSR_Type is record
       IACCVIOL  : Boolean;     -- MPU or Execute Never (XN) default memory map access violation on an instruction fetch ...
       DACCVIOL  : Boolean;     -- Data access violation.
       Reserved1 : Bits_1 := 0;
@@ -465,11 +442,10 @@ package ARMv7M is
       MLSPERR   : Boolean;     -- A MemManage fault occurred during FP lazy state preservation.
       Reserved2 : Bits_1 := 0;
       MMARVALID : Boolean;     -- MMFAR has valid contents.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MMFSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MMFSR_Type use record
       IACCVIOL  at 0 range 0 .. 0;
       DACCVIOL  at 0 range 1 .. 1;
       Reserved1 at 0 range 2 .. 2;
@@ -481,8 +457,7 @@ package ARMv7M is
    end record;
 
    -- BusFault Status Register, BFSR
-   type BFSR_Type is
-   record
+   type BFSR_Type is record
       IBUSERR     : Boolean;     -- A bus fault on an instruction prefetch has occurred.
       PRECISERR   : Boolean;     -- A precise data access error has occurred.
       IMPRECISERR : Boolean;     -- A derived MemManage fault occurred on exception return.
@@ -491,11 +466,10 @@ package ARMv7M is
       LSPERR      : Boolean;     -- A bus fault occurred during FP lazy state preservation.
       Reserved    : Bits_1 := 0;
       BFARVALID   : Boolean;     -- BFAR has valid contents.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for BFSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for BFSR_Type use record
       IBUSERR     at 0 range 0 .. 0;
       PRECISERR   at 0 range 1 .. 1;
       IMPRECISERR at 0 range 2 .. 2;
@@ -507,8 +481,7 @@ package ARMv7M is
    end record;
 
    -- UsageFault Status Register, UFSR
-   type UFSR_Type is
-   record
+   type UFSR_Type is record
       UNDEFINSTR : Boolean;     -- The processor has attempted to execute an undefined instruction.
       INVSTATE   : Boolean;     -- Instruction executed with invalid EPSR.T or EPSR.IT field.
       INVPC      : Boolean;     -- An integrity check error has occurred on EXC_RETURN.
@@ -517,11 +490,10 @@ package ARMv7M is
       UNALIGNED  : Boolean;     -- Unaligned access error has occurred.
       DIVBYZERO  : Boolean;     -- Divide by zero error has occurred.
       Reserved2  : Bits_6 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for UFSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UFSR_Type use record
       UNDEFINSTR at 0 range  0 ..  0;
       INVSTATE   at 0 range  1 ..  1;
       INVPC      at 0 range  2 ..  2;
@@ -532,16 +504,14 @@ package ARMv7M is
       Reserved2  at 0 range 10 .. 15;
    end record;
 
-   type CFSR_Type is
-   record
+   type CFSR_Type is record
       MemManage  : MMFSR_Type; -- Provides information on MemManage exceptions.
       BusFault   : BFSR_Type;  -- Provides information on BusFault exceptions.
       UsageFault : UFSR_Type;  -- Provides information on UsageFault exceptions.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CFSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CFSR_Type use record
       MemManage  at 0 range  0 ..  7;
       BusFault   at 0 range  8 .. 15;
       UsageFault at 0 range 16 .. 31;
@@ -555,18 +525,16 @@ package ARMv7M is
 
    -- B3.2.16 HardFault Status Register, HFSR
 
-   type HFSR_Type is
-   record
+   type HFSR_Type is record
       Reserved1 : Bits_1 := 0;
       VECTTBL   : Boolean;      -- Vector table read fault has occurred.
       Reserved2 : Bits_28 := 0;
       FORCED    : Boolean;      -- Processor has escalated a configurable-priority exception to HardFault.
       DEBUGEVT  : Boolean;      -- Debug event has occurred.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for HFSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for HFSR_Type use record
       Reserved1 at 0 range  0 ..  0;
       VECTTBL   at 0 range  1 ..  1;
       Reserved2 at 0 range  2 .. 29;
@@ -605,8 +573,7 @@ package ARMv7M is
    CP_PRIVONLY      : constant := 2#01#;
    CP_FULLACCESS    : constant := 2#11#;
 
-   type CPACR_Type is
-   record
+   type CPACR_Type is record
       CP0        : Bits_2;      -- access privileges for coprocessor
       CP1        : Bits_2;      -- access privileges for coprocessor
       CP2        : Bits_2;      -- access privileges for coprocessor
@@ -623,11 +590,10 @@ package ARMv7M is
       Reserved13 : Bits_2 := 0;
       Reserved14 : Bits_2 := 0;
       Reserved15 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CPACR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CPACR_Type use record
       CP0        at 0 range  0 ..  1;
       CP1        at 0 range  2 ..  3;
       CP2        at 0 range  4 ..  5;
@@ -654,15 +620,13 @@ package ARMv7M is
 
    -- B3.2.24 Interrupt Controller Type Register, ICTR
 
-   type ICTR_Type is
-   record
+   type ICTR_Type is record
       INTLINESNUM : Bits_4;  -- The total number of interrupt lines supported by an implementation
       Reserved    : Bits_28;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for ICTR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ICTR_Type use record
       INTLINESNUM at 0 range 0 ..  3;
       Reserved    at 0 range 4 .. 31;
    end record;
@@ -704,14 +668,12 @@ package ARMv7M is
 
    -- B3.3.5 SysTick Current Value Register, SYST_CVR
 
-   type SYST_CVR_Type is
-   record
+   type SYST_CVR_Type is record
       CURRENT : Bits_32; -- Current counter value.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYST_CVR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYST_CVR_Type use record
       CURRENT at 0 range 0 .. 31;
    end record;
 

@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body ARMv7M.FPU is
+package body ARMv7M.FPU
+   is
 
    --========================================================================--
    --                                                                        --

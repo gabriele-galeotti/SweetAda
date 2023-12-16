@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body ARMv7A is
+package body ARMv7A
+   is
 
    --========================================================================--
    --                                                                        --

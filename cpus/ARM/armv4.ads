@@ -19,7 +19,9 @@ with System;
 with Ada.Unchecked_Conversion;
 with Bits;
 
-package ARMv4 is
+package ARMv4
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package ARMv4 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Bits;
@@ -100,8 +100,7 @@ package ARMv4 is
    MODE_UND : constant CPU_Mode_Type := 2#11011#;
    MODE_SYS : constant CPU_Mode_Type := 2#11111#;
 
-   type CPSR_Type is
-   record
+   type CPSR_Type is record
       M      : CPU_Mode_Type;
       T      : Boolean;
       F      : Boolean;
@@ -111,11 +110,10 @@ package ARMv4 is
       C      : Boolean;
       Z      : Boolean;
       N      : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CPSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CPSR_Type use record
       M      at 0 range  0 ..  4;
       T      at 0 range  5 ..  5;
       F      at 0 range  6 ..  6;
