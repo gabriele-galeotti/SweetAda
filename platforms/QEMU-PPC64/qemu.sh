@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# PowerPC 64-bit (QEMU emulator).
+# PowerPC POWER8 (QEMU emulator).
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -44,7 +44,7 @@ while true ; do
   _time_current=$(date +%s)
   if [ $((_time_current-_time_start)) -gt $2 ] ; then
     if [ "x$3" != "x" ] ; then
-      printf "$3: timeout waiting for port $1.\n"
+      printf "%s\n" "$3: timeout waiting for port $1."
     fi
     return 1
   fi

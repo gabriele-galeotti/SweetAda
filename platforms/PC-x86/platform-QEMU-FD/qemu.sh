@@ -46,7 +46,7 @@ while true ; do
   _time_current=$(date +%s)
   if [ $((_time_current-_time_start)) -gt $2 ] ; then
     if [ "x$3" != "x" ] ; then
-      printf "$3: timeout waiting for port $1.\n"
+      printf "%s\n" "$3: timeout waiting for port $1."
     fi
     return 1
   fi

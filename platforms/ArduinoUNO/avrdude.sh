@@ -39,7 +39,7 @@ AVRDUDE_ARGS="${AVRDUDE_ARGS} -c arduino"
 AVRDUDE_ARGS="${AVRDUDE_ARGS} -D"
 AVRDUDE_ARGS="${AVRDUDE_ARGS} -U flash:w:${KERNEL_ROMFILE}:i"
 
-printf "Press RESET on board and press <ENTER>, then release RESET ... "
+printf "%s" "Press RESET on board and press <ENTER>, then release RESET ... "
 read answer
 
 "${AVRDUDE_PREFIX}"/bin/avrdude ${AVRDUDE_ARGS}
