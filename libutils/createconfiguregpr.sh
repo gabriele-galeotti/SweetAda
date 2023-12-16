@@ -15,7 +15,6 @@
 # $2 = configure filename
 #
 # Environment variables:
-# OSTYPE
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # GPRBUILD_PREFIX
@@ -162,11 +161,6 @@ fi
 
 rm -f "${CONFIGURE_FILENAME}"
 touch "${CONFIGURE_FILENAME}"
-
-if [ "x${OSTYPE}" = "xmsys" ] ; then
-  TOOLCHAIN_PREFIX=$(cygpath -m "${TOOLCHAIN_PREFIX}")
-  RTS_PATH=$(cygpath -m "${RTS_PATH}")
-fi
 
 INDENTATION_ADA="   " # Ada 3-space indentation style
 
