@@ -59,12 +59,12 @@ ifeq ($(OSTYPE),cmd)
             EXIT /B 1                                \
           )
 else
-	@for f in $(CONFIGURE_FILES_PLATFORM) ; do  \
-          if [ -e $$f.in ] ; then                   \
-            $(PROCESSCFG) $$f.in $$f || exit $$? ;  \
-          else                                      \
-            exit 1 ;                                \
-          fi ;                                      \
+	@for f in $(CONFIGURE_FILES_PLATFORM) ; do \
+          if [ -e $$f.in ] ; then                  \
+            $(PROCESSCFG) $$f.in $$f || exit $$? ; \
+          else                                     \
+            exit 1 ;                               \
+          fi ;                                     \
         done
 endif
 
