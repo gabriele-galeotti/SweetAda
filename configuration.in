@@ -87,5 +87,3 @@ PROFILE := sfp
 
 OPTIMIZATION_LEVEL := 1
 
-#USE_LIBGCC := Y
-
