@@ -130,7 +130,7 @@ package body Srecord
                end if;
             -----------------------
             when WAIT_BYTECOUNT1 =>
-               HexDigit_To_U8 (C => C, MSD => True, Value => Hex8, Success => C_Is_HexDigit);
+               To_U8 (C => C, MSD => True, Value => Hex8, Success => C_Is_HexDigit);
                if C_Is_HexDigit then
                   RX_Status := WAIT_BYTECOUNT2;
                else
@@ -139,7 +139,7 @@ package body Srecord
                end if;
             -----------------------
             when WAIT_BYTECOUNT2 =>
-               HexDigit_To_U8 (C => C, MSD => False, Value => Hex8, Success => C_Is_HexDigit);
+               To_U8 (C => C, MSD => False, Value => Hex8, Success => C_Is_HexDigit);
                if C_Is_HexDigit then
                   Checksum_Computed := @ + Hex8;
                   Bytecount := Natural (Hex8);
@@ -158,7 +158,7 @@ package body Srecord
                   MSdigit := False;
                end if;
                Hex8 := 0;
-               HexDigit_To_U8 (C => C, MSD => False, Value => Hex8, Success => C_Is_HexDigit);
+               To_U8 (C => C, MSD => False, Value => Hex8, Success => C_Is_HexDigit);
                if C_Is_HexDigit then
                   if MSdigit then
                      Checksum_Computed := @ + Hex8 * 2**4;
@@ -190,7 +190,7 @@ package body Srecord
                else
                   MSdigit := False;
                end if;
-               HexDigit_To_U8 (C => C, MSD => MSdigit, Value => Hex8, Success => C_Is_HexDigit);
+               To_U8 (C => C, MSD => MSdigit, Value => Hex8, Success => C_Is_HexDigit);
                if C_Is_HexDigit then
                   if not MSdigit then
                      if Srec /= S0 then
@@ -209,7 +209,7 @@ package body Srecord
                end if;
             ----------------------
             when WAIT_CHECKSUM1 =>
-               HexDigit_To_U8 (C => C, MSD => True, Value => Hex8, Success => C_Is_HexDigit);
+               To_U8 (C => C, MSD => True, Value => Hex8, Success => C_Is_HexDigit);
                if C_Is_HexDigit then
                   RX_Status := WAIT_CHECKSUM2;
                else
@@ -218,7 +218,7 @@ package body Srecord
                end if;
             ----------------------
             when WAIT_CHECKSUM2 =>
-               HexDigit_To_U8 (C => C, MSD => False, Value => Hex8, Success => C_Is_HexDigit);
+               To_U8 (C => C, MSD => False, Value => Hex8, Success => C_Is_HexDigit);
                if C_Is_HexDigit then
                   Checksum_Received := Hex8;
                   Checksum_Computed := not @;

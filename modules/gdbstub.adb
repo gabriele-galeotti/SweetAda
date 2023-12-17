@@ -110,8 +110,8 @@ package body Gdbstub
        Packet : in out Byte_Text_Type)
       is
    begin
-      U8_To_HexDigit (Value => Value, MSD => True, LCase => True, C => Packet (1));
-      U8_To_HexDigit (Value => Value, MSD => False, LCase => True, C => Packet (2));
+      To_HexDigit (Value => Value, MSD => True, LCase => True, C => Packet (1));
+      To_HexDigit (Value => Value, MSD => False, LCase => True, C => Packet (2));
    end Byte_Text;
 
    ----------------------------------------------------------------------------
@@ -192,7 +192,7 @@ package body Gdbstub
                end if;
             --------------------
             when RX_CHECKSUM1 =>
-               HexDigit_To_U8 (C => C, MSD => True, Value => RX_Packet_Checksum, Success => C_Is_HexDigit);
+               To_U8 (C => C, MSD => True, Value => RX_Packet_Checksum, Success => C_Is_HexDigit);
                if C_Is_HexDigit then
                   RX_Status := RX_CHECKSUM2;
                else
@@ -202,7 +202,7 @@ package body Gdbstub
                end if;
             --------------------
             when RX_CHECKSUM2 =>
-               HexDigit_To_U8 (C => C, MSD => False, Value => RX_Packet_Checksum, Success => C_Is_HexDigit);
+               To_U8 (C => C, MSD => False, Value => RX_Packet_Checksum, Success => C_Is_HexDigit);
                if C_Is_HexDigit then
                   if RX_Packet_Checksum = RX_Computed_Checksum then
                      TX_Character.all ('+');
@@ -302,7 +302,7 @@ package body Gdbstub
       Result := 0;
       Read_Next_Character (C, Success);
       if Success then
-         HexDigit_To_U8 (C => C, MSD => False, Value => Result, Success => Success);
+         To_U8 (C => C, MSD => False, Value => Result, Success => Success);
          if not Success then
             -- rewind by 1 character
             RX_Packet_Index := RX_Packet_Index - 1;
