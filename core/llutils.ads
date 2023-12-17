@@ -151,7 +151,7 @@ package LLutils
    -- Value = 0x33, C = 'A', MSD = True => Value = 0xA3
    -- Value = 0x33, C = '4', MSD = False => Value = 0x34
    ----------------------------------------------------------------------------
-   procedure HexDigit_To_U8
+   procedure To_U8
       (C       : in     Character;
        MSD     : in     Boolean;
        Value   : in out Interfaces.Unsigned_8;
@@ -161,7 +161,7 @@ package LLutils
    -- Take an 8-bit (2 hex digits) input value; if MSD, return the MS digit as
    -- a character representing the hexadecimal digit, else the LS digit.
    ----------------------------------------------------------------------------
-   procedure U8_To_HexDigit
+   procedure To_HexDigit
       (Value : in     Interfaces.Unsigned_8;
        MSD   : in     Boolean;
        LCase : in     Boolean;

@@ -177,9 +177,9 @@ package body LLutils
    end To_Ch;
 
    ----------------------------------------------------------------------------
-   -- HexDigit_To_U8
+   -- To_U8
    ----------------------------------------------------------------------------
-   procedure HexDigit_To_U8
+   procedure To_U8
       (C       : in     Character;
        MSD     : in     Boolean;
        Value   : in out Interfaces.Unsigned_8;
@@ -195,12 +195,12 @@ package body LLutils
       end case;
       Value := (if MSD then (@ and 16#0F#) or (Digit * 2**4) else (@ and 16#F0#) or Digit);
       Success := True;
-   end HexDigit_To_U8;
+   end To_U8;
 
    ----------------------------------------------------------------------------
-   -- U8_To_HexDigit
+   -- To_HexDigit
    ----------------------------------------------------------------------------
-   procedure U8_To_HexDigit
+   procedure To_HexDigit
       (Value : in     Interfaces.Unsigned_8;
        MSD   : in     Boolean;
        LCase : in     Boolean;
@@ -222,6 +222,6 @@ package body LLutils
       else
          C := Character'Val (Character'Pos ('0') + Digit);
       end if;
-   end U8_To_HexDigit;
+   end To_HexDigit;
 
 end LLutils;
