@@ -21,7 +21,8 @@ with Bits;
 with CPU.IO;
 with Videofont8x16;
 
-package body VGA is
+package body VGA
+   is
 
    --========================================================================--
    --                                                                        --
@@ -275,27 +276,23 @@ package body VGA is
    type Foreground_Color_Type is new Bits_4;
    type Background_Color_Type is new Bits_4;
 
-   type Text_Character_Attributes_Type is
-   record
+   type Text_Character_Attributes_Type is record
       FG : Foreground_Color_Type;
       BG : Background_Color_Type;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for Text_Character_Attributes_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for Text_Character_Attributes_Type use record
       FG at 0 range 0 .. 3;
       BG at 0 range 4 .. 7;
    end record;
 
-   type Text_Character_Type is
-   record
+   type Text_Character_Type is record
       C          : Unsigned_8;
       Attributes : Text_Character_Attributes_Type;
-   end record with
-      Size => 16;
-   for Text_Character_Type use
-   record
+   end record
+      with Size => 16;
+   for Text_Character_Type use record
       C          at 0 range 0 .. 7;
       Attributes at 1 range 0 .. 7;
    end record;

@@ -17,7 +17,8 @@
 
 with System.Storage_Elements;
 
-package VGA is
+package VGA
+   is
 
    --========================================================================--
    --                                                                        --
