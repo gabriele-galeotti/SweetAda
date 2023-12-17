@@ -34,7 +34,7 @@ begin
    end if;
    for Index in reverse 1 .. MDigits loop
       Address_Digit := Interfaces.Unsigned_8 (IAddress mod 2**4);
-      LLutils.U8_To_HexDigit (
+      LLutils.To_HexDigit (
          Value => Address_Digit,
          MSD   => False,
          LCase => False,

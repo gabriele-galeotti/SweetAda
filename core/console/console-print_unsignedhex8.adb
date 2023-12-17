@@ -25,7 +25,7 @@ procedure Print_UnsignedHex8
    C   : Character;
 begin
    loop
-      LLutils.U8_To_HexDigit (Value => Value, MSD => MSD, LCase => False, C => C);
+      LLutils.To_HexDigit (Value => Value, MSD => MSD, LCase => False, C => C);
       Print (C);
       MSD := not @;
       exit when MSD;
