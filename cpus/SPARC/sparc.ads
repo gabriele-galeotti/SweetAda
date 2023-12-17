@@ -18,7 +18,9 @@
 with System;
 with Bits;
 
-package SPARC is
+package SPARC
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package SPARC is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Bits;

@@ -20,7 +20,8 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Definitions;
 
-package body SPARC is
+package body SPARC
+   is
 
    --========================================================================--
    --                                                                        --

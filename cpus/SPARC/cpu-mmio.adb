@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body CPU.MMIO is
+package body CPU.MMIO
+   is
 
    --========================================================================--
    --                                                                        --

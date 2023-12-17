@@ -18,7 +18,9 @@
 with System;
 with SPARC;
 
-package CPU is
+package CPU
+   with => Preelaborate
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package CPU is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
 
