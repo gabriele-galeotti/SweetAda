@@ -19,7 +19,8 @@ with System.Storage_Elements;
 with System.Machine_Code;
 with Definitions;
 
-package body PowerPC is
+package body PowerPC
+   is
 
    --========================================================================--
    --                                                                        --

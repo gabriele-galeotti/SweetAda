@@ -20,7 +20,8 @@ with Interfaces;
 with Bits;
 with PowerPC;
 
-package PPC405 is
+package PPC405
+   is
 
    --========================================================================--
    --                                                                        --

@@ -20,7 +20,8 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package MPC83XX is
+package MPC83XX
+   is
 
    --========================================================================--
    --                                                                        --

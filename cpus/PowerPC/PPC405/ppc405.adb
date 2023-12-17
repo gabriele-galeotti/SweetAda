@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body PPC405 is
+package body PPC405
+   is
 
    --========================================================================--
    --                                                                        --
