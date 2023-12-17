@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package Winbond_W83787 is
+package Winbond_W83787
+   is
 
    procedure Setup;
 

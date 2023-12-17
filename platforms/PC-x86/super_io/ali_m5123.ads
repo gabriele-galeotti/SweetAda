@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package ALi_M5123 is
+package ALi_M5123
+   is
 
    procedure Setup;
 

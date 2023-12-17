@@ -16,7 +16,8 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (BSP)
-procedure Board_Init is
+procedure Board_Init
+   is
 begin
    null;
 end Board_Init;

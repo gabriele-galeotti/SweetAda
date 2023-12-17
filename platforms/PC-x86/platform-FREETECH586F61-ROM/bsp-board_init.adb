@@ -18,7 +18,8 @@
 with Winbond_W83787;
 
 separate (BSP)
-procedure Board_Init is
+procedure Board_Init
+   is
 begin
    Winbond_W83787.Setup;
 end Board_Init;

@@ -18,14 +18,14 @@
 with Interfaces;
 with CPU.IO;
 
-package body Winbond_W83787 is
+package body Winbond_W83787
+   is
 
    ----------------------------------------------------------------------------
    -- Winbond W83787 configuration
    ----------------------------------------------------------------------------
    procedure Setup is
-      type W83787_Type is
-      record
+      type W83787_Type is record
          Port : Interfaces.Unsigned_8;
          Data : Interfaces.Unsigned_8;
       end record;

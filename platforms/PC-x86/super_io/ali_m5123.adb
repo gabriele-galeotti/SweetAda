@@ -18,7 +18,8 @@
 with Interfaces;
 with CPU.IO;
 
-package body ALi_M5123 is
+package body ALi_M5123
+   is
 
    CONFIG_Port : constant Interfaces.Unsigned_16 := 16#03F0#; -- 16#0370#
    INDEX_Port  : constant Interfaces.Unsigned_16 := 16#03F0#; -- 16#0370#
