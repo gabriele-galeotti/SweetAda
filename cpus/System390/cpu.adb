@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body CPU is
+package body CPU
+   is
 
    --========================================================================--
    --                                                                        --
@@ -43,7 +44,8 @@ package body CPU is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""             & CRLF &
@@ -60,12 +62,14 @@ package body CPU is
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       null;
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       null;
    end Irq_Disable;
@@ -74,7 +78,10 @@ package body CPU is
    -- Locking subprograms
    ----------------------------------------------------------------------------
 
-   procedure Lock_Try (Lock_Object : in out Lock_Type; Success : out Boolean) is
+   procedure Lock_Try
+      (Lock_Object : in out Lock_Type;
+       Success     :    out Boolean)
+      is
       Lock_Flag : CPU_Unsigned := 0;
    begin
       Asm (
@@ -95,7 +102,9 @@ package body CPU is
       Success := Lock_Flag /= 0;
    end Lock_Try;
 
-   procedure Lock (Lock_Object : in out Lock_Type) is
+   procedure Lock
+      (Lock_Object : in out Lock_Type)
+      is
       Success : Boolean;
    begin
       loop
@@ -104,7 +113,9 @@ package body CPU is
       end loop;
    end Lock;
 
-   procedure Unlock (Lock_Object : out Lock_Type) is
+   procedure Unlock
+      (Lock_Object : out Lock_Type)
+      is
    begin
       Lock_Object.Lock := LOCK_UNLOCK;
    end Unlock;
