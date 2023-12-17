@@ -182,9 +182,9 @@ RTS                :=
 PROFILE            :=
 ADA_MODE           := ADA22
 USE_LIBGCC         :=
+USE_LIBM           :=
 USE_LIBADA         :=
 USE_CLIBRARY       :=
-USE_LIBM           :=
 USE_APPLICATION    := dummy
 OPTIMIZATION_LEVEL :=
 STACK_LIMIT        := 4096
@@ -789,6 +789,12 @@ else
 LIBGCC_OBJECT :=
 endif
 
+ifeq ($(USE_LIBM),Y)
+LIBM_OBJECT := "$(TOOLCHAIN_PREFIX)"/$(TOOLCHAIN_NAME)/lib/$(GCC_MULTIDIR)/libm.a
+else
+LIBM_OBJECT :=
+endif
+
 ifneq ($(RTS),zfp)
 USE_LIBADA := Y
 endif
@@ -810,12 +816,6 @@ ifeq ($(USE_CLIBRARY),Y)
 CLIBRARY_OBJECT := $(OBJECT_DIRECTORY)/libclibrary.a
 else
 CLIBRARY_OBJECT :=
-endif
-
-ifeq ($(USE_LIBM),Y)
-LIBM_OBJECT := $(TOOLCHAIN_PREFIX)/$(TOOLCHAIN_NAME)/lib/$(GCC_MULTIDIR)/libm.a
-else
-LIBM_OBJECT :=
 endif
 
 ################################################################################
@@ -1295,7 +1295,10 @@ ifneq ($(RTS),)
 endif
 	@$(call echo-print,"ADA MODE:                $(ADA_MODE)")
 ifeq ($(USE_LIBGCC),Y)
-	@$(call echo-print,"LIBGCC FILENAME:         $(LIBGCC_FILENAME)")
+	@$(call echo-print,"LIBGCC FILENAME:         $(LIBGCC_OBJECT)")
+endif
+ifeq ($(USE_LIBM),Y)
+	@$(call echo-print,"LIBM FILENAME:           $(LIBM_OBJECT)")
 endif
 	@$(call echo-print,"USE LIBADA:              $(USE_LIBADA)")
 	@$(call echo-print,"USE CLIBRARY:            $(USE_CLIBRARY)")
