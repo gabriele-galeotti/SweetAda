@@ -223,9 +223,25 @@ package body PowerPC
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable is null;
+   procedure Irq_Enable
+      is
+      MSR : MSR_Type;
+   begin
+      MSR := MSR_Read;
+      MSR.EE := True;
+      SYNC;
+      MSR_Write (MSR);
+   end Irq_Enable;
 
-   procedure Irq_Disable is null;
+   procedure Irq_Disable
+      is
+      MSR : MSR_Type;
+   begin
+      MSR := MSR_Read;
+      MSR.EE := False;
+      SYNC;
+      MSR_Write (MSR);
+   end Irq_Disable;
 
    function Irq_State_Get
       return Irq_State_Type

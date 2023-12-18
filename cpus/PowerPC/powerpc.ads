@@ -396,9 +396,9 @@ package PowerPC
    subtype Irq_State_Type is Integer;
 
    procedure Irq_Enable
-      with Inline => True;
+      with Inline_Always => True;
    procedure Irq_Disable
-      with Inline => True;
+      with Inline_Always => True;
    function Irq_State_Get
       return Irq_State_Type;
    procedure Irq_State_Set
