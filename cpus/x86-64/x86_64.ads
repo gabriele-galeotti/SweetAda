@@ -20,7 +20,9 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
-package x86_64 is
+package x86_64
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -29,8 +31,6 @@ package x86_64 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Interfaces;
@@ -58,16 +58,14 @@ package x86_64 is
 
    type Selector_Index_Type is new Bits_13; -- theoretically GDT could have 8192 entries
 
-   type Selector_Type is
-   record
+   type Selector_Type is record
       RPL   : PL_Type;             -- requested Privilege Level
       TI    : TI_Type;             -- GDT or LDT
       Index : Selector_Index_Type; -- index into table
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for Selector_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for Selector_Type use record
       RPL   at 0 range 0 .. 1;
       TI    at 0 range 2 .. 2;
       Index at 0 range 3 .. 15;
@@ -140,8 +138,7 @@ package x86_64 is
 
    SEGMENT_DESCRIPTOR_ALIGNMENT : constant := 8;
 
-   type Segment_Descriptor_Type is
-   record
+   type Segment_Descriptor_Type is record
       Limit_LO : Unsigned_16;         -- Segment Limit 0 .. 15
       Base_LO  : Unsigned_16;         -- Segment base address 0 .. 15
       Base_MI  : Unsigned_8;          -- Segment base address 16 .. 23
@@ -155,12 +152,11 @@ package x86_64 is
       D_B      : Default_OpSize_Type; -- Default operation size
       G        : Granularity_Type;    -- Granularity
       Base_HI  : Unsigned_8;          -- Segment base address 24 .. 31
-   end record with
-      Alignment => SEGMENT_DESCRIPTOR_ALIGNMENT,
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for Segment_Descriptor_Type use
-   record
+   end record
+      with Alignment => SEGMENT_DESCRIPTOR_ALIGNMENT,
+           Bit_Order => Low_Order_First,
+           Size      => 64;
+   for Segment_Descriptor_Type use record
       Limit_LO at 0 range 0 .. 15;
       Base_LO  at 2 range 0 .. 15;
       Base_MI  at 4 range 0 .. 7;
@@ -197,17 +193,15 @@ package x86_64 is
    -- GDT
    ----------------------------------------------------------------------------
 
-   type GDT_Descriptor_Type is
-   record
+   type GDT_Descriptor_Type is record
       Limit   : Unsigned_16;
       Base_LO : Unsigned_16;
       Base_HI : Unsigned_16;
-   end record with
-      Alignment => 2,
-      Bit_Order => Low_Order_First,
-      Size      => 48;
-   for GDT_Descriptor_Type use
-   record
+   end record
+      with Alignment => 2,
+           Bit_Order => Low_Order_First,
+           Size      => 48;
+   for GDT_Descriptor_Type use record
       Limit   at 0 range 0 .. 15;
       Base_LO at 2 range 0 .. 15;
       Base_HI at 4 range 0 .. 15;
@@ -219,8 +213,7 @@ package x86_64 is
 
    EXCEPTION_DESCRIPTOR_ALIGNMENT : constant := 16;
 
-   type Exception_Descriptor_Type is
-   record
+   type Exception_Descriptor_Type is record
       Offset_LO : Unsigned_16;       -- Offset to procedure entry point 0 .. 15
       Selector  : Selector_Type;     -- Segment Selector for destination code segment
       IST       : Bits_3 := 0;       -- Interrupt Stack Table
@@ -233,12 +226,11 @@ package x86_64 is
       Offset_MI : Unsigned_16;       -- Offset to procedure entry point 16 .. 31
       Offset_HI : Unsigned_32;       -- Offset to procedure entry point 32 .. 63
       Reserved4 : Unsigned_32;
-   end record with
-      Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
-      Bit_Order => Low_Order_First,
-      Size      => 128;
-   for Exception_Descriptor_Type use
-   record
+   end record
+      with Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
+           Bit_Order => Low_Order_First,
+           Size      => 128;
+   for Exception_Descriptor_Type use record
       Offset_LO at 0  range 0 .. 15;
       Selector  at 2  range 0 .. 15;
       IST       at 4  range 0 .. 2;
@@ -270,18 +262,16 @@ package x86_64 is
    -- IDT
    ----------------------------------------------------------------------------
 
-   type IDT_Descriptor_Type is
-   record
+   type IDT_Descriptor_Type is record
       Limit   : Unsigned_16;
       Base_LO : Unsigned_16;
       Base_MI : Unsigned_16;
       Base_HI : Unsigned_32;
-   end record with
-      Alignment => 2,
-      Bit_Order => Low_Order_First,
-      Size      => 80;
-   for IDT_Descriptor_Type use
-   record
+   end record
+      with Alignment => 2,
+           Bit_Order => Low_Order_First,
+           Size      => 80;
+   for IDT_Descriptor_Type use record
       Limit   at 0 range 0 .. 15;
       Base_LO at 2 range 0 .. 15;
       Base_MI at 4 range 0 .. 15;
@@ -381,25 +371,23 @@ package x86_64 is
    MsgPtr_VIRTUALIZATION       : constant access constant String := String_VIRTUALIZATION'Access;
    MsgPtr_UNKNOWN              : constant access constant String := String_UNKNOWN'Access;
 
-   type IDT_Type is array (Exception_Id_Type range <>) of Exception_Descriptor_Type with
-      Pack => True;
+   type IDT_Type is array (Exception_Id_Type range <>) of Exception_Descriptor_Type
+      with Pack => True;
 
    subtype IDT_Length_Type is Positive range 1 .. EXCEPTION_ITEMS;
 
-   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type) with
-      Inline => True;
-   procedure IDT_Set (
-                      IDT_Descriptor : in out IDT_Descriptor_Type;
-                      IDT_Address    : in     Address;
-                      IDT_Length     : in     IDT_Length_Type
-                     ) with
-      Inline => True;
-   procedure IDT_Set_Handler (
-                              IDT_Entry         : in out Exception_Descriptor_Type;
-                              Exception_Handler : in     Address;
-                              Selector          : in     Selector_Type;
-                              SegType           : in     Segment_Gate_Type
-                             );
+   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type)
+      with Inline => True;
+   procedure IDT_Set
+      (IDT_Descriptor : in out IDT_Descriptor_Type;
+       IDT_Address    : in     Address;
+       IDT_Length     : in     IDT_Length_Type)
+      with Inline => True;
+   procedure IDT_Set_Handler
+      (IDT_Entry         : in out Exception_Descriptor_Type;
+       Exception_Handler : in     Address;
+       Selector          : in     Selector_Type;
+       SegType           : in     Segment_Gate_Type);
 
    ----------------------------------------------------------------------------
    -- Registers
@@ -407,8 +395,7 @@ package x86_64 is
 
    -- RFLAGS
 
-   type RFLAGS_Type is
-   record
+   type RFLAGS_Type is record
       CF        : Boolean; -- Carry Flag
       Reserved1 : Bits_1;
       PF        : Boolean; -- Parity Flag
@@ -432,11 +419,10 @@ package x86_64 is
       ID        : Boolean; -- Identification Flag
       Reserved5 : Bits_10;
       Reserved6 : Bits_32;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for RFLAGS_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for RFLAGS_Type use record
       CF        at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 1;
       PF        at 0 range 2 .. 2;
@@ -464,8 +450,7 @@ package x86_64 is
 
    -- CR0
 
-   type CR0_Type is
-   record
+   type CR0_Type is record
       PE        : Boolean;      -- Protected mode Enable
       MP        : Boolean;      -- Monitor Co-processor
       EM        : Boolean;      -- Emulation (no x87 FPU unit present)
@@ -481,11 +466,10 @@ package x86_64 is
       CD        : Boolean;      -- Cache Disable
       PG        : Boolean;      -- Paging enable
       Reserved4 : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for CR0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for CR0_Type use record
       PE        at 0 range 0 .. 0;
       MP        at 0 range 1 .. 1;
       EM        at 0 range 2 .. 2;
@@ -508,18 +492,16 @@ package x86_64 is
 
    -- CR3
 
-   type CR3_Type is
-   record
+   type CR3_Type is record
       Reserved1 : Bits_3;
       PWT       : Boolean; -- Page-level Write-Through
       PCD       : Boolean; -- Page-level Cache Disable
       Reserved2 : Bits_7;
       PDB       : Bits_52; -- Page-Directory Base
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for CR3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for CR3_Type use record
       Reserved1 at 0 range 0 .. 2;
       PWT       at 0 range 3 .. 3;
       PCD       at 0 range 4 .. 4;
@@ -532,8 +514,7 @@ package x86_64 is
 
    -- CR4
 
-   type CR4_Type is
-   record
+   type CR4_Type is record
       VME        : Boolean;      -- Virtual-8086 Mode Extensions
       PVI        : Boolean;      -- Protected-Mode Virtual Interrupts
       TSD        : Boolean;      -- Time Stamp Disable
@@ -558,11 +539,10 @@ package x86_64 is
       PKE        : Boolean;      -- Protection-Key-Enable Bit
       Reserved4  : Bits_9;
       Reserved5  : Bits_32 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for CR4_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for CR4_Type use record
       VME        at 0 range 0 .. 0;
       PVI        at 0 range 1 .. 1;
       TSD        at 0 range 2 .. 2;
@@ -628,8 +608,7 @@ package x86_64 is
 
    -- IA32_APIC_BASE
 
-   type IA32_APIC_BASE_Type is
-   record
+   type IA32_APIC_BASE_Type is record
       Reserved1          : Bits_8;
       BSP                : Boolean; -- Indicates if the processor is the bootstrap processor (BSP).
       Reserved2          : Bits_1;
@@ -637,11 +616,10 @@ package x86_64 is
       APIC_Global_Enable : Boolean; -- Enables or disables the local APIC
       APIC_Base          : Bits_24; -- Specifies the base address of the APIC registers.
       Reserved3          : Bits_28;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for IA32_APIC_BASE_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for IA32_APIC_BASE_Type use record
       Reserved1          at 0 range 0 .. 7;
       BSP                at 0 range 8 .. 8;
       Reserved2          at 0 range 9 .. 9;
@@ -656,8 +634,7 @@ package x86_64 is
 
    -- IA32_EFER
 
-   type IA32_EFER_Type is
-   record
+   type IA32_EFER_Type is record
       SCE       : Boolean; -- SYSCALL Enable
       Reserved1 : Bits_7;
       LME       : Boolean; -- IA-32e Mode Enable
@@ -666,11 +643,10 @@ package x86_64 is
       NXE       : Boolean; -- Execute Disable Bit Enable
       Reserved3 : Bits_20;
       Reserved4 : Bits_32;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for IA32_EFER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for IA32_EFER_Type use record
       SCE       at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 7;
       LME       at 0 range 8 .. 8;
@@ -686,10 +662,13 @@ package x86_64 is
 
    -- subprograms
 
-   function RDMSR (MSR_Register_Number : MSR_Type) return Unsigned_64 with
-      Inline => True;
-   procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64) with
-      Inline => True;
+   function RDMSR
+      (MSR_Register_Number : MSR_Type)
+      return Unsigned_64 with Inline => True;
+   procedure WRMSR
+      (MSR_Register_Number : in MSR_Type;
+       Value               : in Unsigned_64)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
@@ -701,24 +680,27 @@ package x86_64 is
 
    BREAKPOINT_Asm_String : constant String := ".byte   0xCC";
 
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   function Irq_State_Get return Irq_State_Type with
-      Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   function Irq_State_Get
+      return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
 end x86_64;

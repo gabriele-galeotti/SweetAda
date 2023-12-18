@@ -19,7 +19,8 @@ with System.Machine_Code;
 with Definitions;
 with LLutils;
 
-package body x86_64 is
+package body x86_64
+   is
 
    --========================================================================--
    --                                                                        --
@@ -45,7 +46,9 @@ package body x86_64 is
    ----------------------------------------------------------------------------
    -- LIDTR
    ----------------------------------------------------------------------------
-   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type) is
+   procedure LIDTR
+      (IDT_Descriptor : in IDT_Descriptor_Type)
+      is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -65,11 +68,11 @@ package body x86_64 is
    -- IDT_Address:    address of IDT
    -- IDT_Length:     length of IDT (# of entries)
    ----------------------------------------------------------------------------
-   procedure IDT_Set (
-                      IDT_Descriptor : in out IDT_Descriptor_Type;
-                      IDT_Address    : in     Address;
-                      IDT_Length     : in     IDT_Length_Type
-                     ) is
+   procedure IDT_Set
+      (IDT_Descriptor : in out IDT_Descriptor_Type;
+       IDT_Address    : in     Address;
+       IDT_Length     : in     IDT_Length_Type)
+      is
       Irq_State : Irq_State_Type;
    begin
       IDT_Descriptor.Base_LO := Unsigned_16 (Select_Address_Bits (IDT_Address, 0, 15));
@@ -84,12 +87,12 @@ package body x86_64 is
    ----------------------------------------------------------------------------
    -- IDT_Set_Handler
    ----------------------------------------------------------------------------
-   procedure IDT_Set_Handler (
-                              IDT_Entry         : in out Exception_Descriptor_Type;
-                              Exception_Handler : in     Address;
-                              Selector          : in     Selector_Type;
-                              SegType           : in     Segment_Gate_Type
-                             ) is
+   procedure IDT_Set_Handler
+      (IDT_Entry         : in out Exception_Descriptor_Type;
+       Exception_Handler : in     Address;
+       Selector          : in     Selector_Type;
+       SegType           : in     Segment_Gate_Type)
+      is
    begin
       IDT_Entry.Offset_LO := Unsigned_16 (Select_Address_Bits (Exception_Handler, 0, 15));
       IDT_Entry.Selector  := Selector;
@@ -104,7 +107,10 @@ package body x86_64 is
    -- RDMSR/WRMSR
    ----------------------------------------------------------------------------
 
-   function RDMSR (MSR_Register_Number : MSR_Type) return Unsigned_64 is
+   function RDMSR
+      (MSR_Register_Number : MSR_Type)
+      return Unsigned_64
+      is
       Result : Unsigned_64;
    begin
       Asm (
@@ -119,7 +125,10 @@ package body x86_64 is
       return Result;
    end RDMSR;
 
-   procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64) is
+   procedure WRMSR
+      (MSR_Register_Number : in MSR_Type;
+       Value               : in Unsigned_64)
+      is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -138,7 +147,8 @@ package body x86_64 is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -154,7 +164,8 @@ package body x86_64 is
    ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
+   procedure BREAKPOINT
+      is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -170,7 +181,9 @@ package body x86_64 is
    ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
+   procedure Asm_Call
+      (Target_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                    & CRLF &
@@ -187,7 +200,8 @@ package body x86_64 is
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -200,7 +214,8 @@ package body x86_64 is
           );
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -213,7 +228,9 @@ package body x86_64 is
           );
    end Irq_Disable;
 
-   function Irq_State_Get return Irq_State_Type is
+   function Irq_State_Get
+      return Irq_State_Type
+      is
       Irq_State : Irq_State_Type;
    begin
       Asm (
@@ -229,7 +246,9 @@ package body x86_64 is
       return Irq_State;
    end Irq_State_Get;
 
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
    begin
       Asm (
            Template => ""                   & CRLF &
