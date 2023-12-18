@@ -52,8 +52,7 @@ package body PPC405
    begin
       Asm (
            Template => ""                      & CRLF &
-                       -- "        mfdcr   %0,%1" & CRLF &
-                       "        .long   0x7C000286|(%0<<21)|(%1<<11)" & CRLF &
+                       "        mfdcr   %0,%1" & CRLF &
                        "",
            Outputs  => DCR_Value_Type'Asm_Output ("=r", DCR_Value),
            Inputs   => DCR_Type'Asm_Input ("i", DCR),
@@ -69,8 +68,7 @@ package body PPC405
    begin
       Asm (
            Template => ""                      & CRLF &
-                       -- "        mtdcr   %0,%1" & CRLF &
-                       "        .long   0x7C000386|(%1<<21)|(%0<<11)" & CRLF &
+                       "        mtdcr   %0,%1" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => [
@@ -154,21 +152,21 @@ package body PPC405
       DCR_Write (Value);
    end UIC0_SR_Write;
 
---   function UIC0_ER_Read
---      return UIC0_ER_Type
---      is
---      function DCR_Read is new MFDCR (UIC0_ER, UIC0_ER_Type);
---   begin
---      return DCR_Read;
---   end UIC0_ER_Read;
+   -- function UIC0_ER_Read
+   --    return UIC0_ER_Type
+   --    is
+   --    function DCR_Read is new MFDCR (UIC0_ER, UIC0_ER_Type);
+   -- begin
+   --    return DCR_Read;
+   -- end UIC0_ER_Read;
 
---   procedure UIC0_ER_Write
---      (Value : in UIC0_ER_Type)
---      is
---      procedure DCR_Write is new MTDCR (UIC0_ER, UIC0_ER_Type);
---   begin
---      DCR_Write (Value);
---   end UIC0_ER_Write;
+   -- procedure UIC0_ER_Write
+   --    (Value : in UIC0_ER_Type)
+   --    is
+   --    procedure DCR_Write is new MTDCR (UIC0_ER, UIC0_ER_Type);
+   -- begin
+   --    DCR_Write (Value);
+   -- end UIC0_ER_Write;
 
    function UIC0_ER_Read
       return Bitmap_32
@@ -187,37 +185,35 @@ package body PPC405
    end UIC0_ER_Write;
 
    ----------------------------------------------------------------------------
-   -- MSR External Enable
+   -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure MSREE_Set
+   procedure Irq_Enable
       is
    begin
       Asm (
            Template => ""                  & CRLF &
-                       -- "        wrteei  1" & CRLF &
-                       "        .long   0x7C008146" & CRLF &
+                       "        wrteei  1" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
           );
-   end MSREE_Set;
+   end Irq_Enable;
 
-   procedure MSREE_Clear
+   procedure Irq_Disable
       is
    begin
       Asm (
            Template => ""                  & CRLF &
-                       -- "        wrteei  0" & CRLF &
-                       "        .long   0x7C000146" & CRLF &
+                       "        wrteei  0" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
           );
-   end MSREE_Clear;
+   end Irq_Disable;
 
 end PPC405;

@@ -250,11 +250,13 @@ package PPC405
       (Value : in UIC0_ER_Type)
       with Inline => True;
 
-   -- MSREE_Set/Clear
+   ----------------------------------------------------------------------------
+   -- Exceptions and interrupts
+   ----------------------------------------------------------------------------
 
-   procedure MSREE_Set
+   procedure Irq_Enable
       with Inline => True;
-   procedure MSREE_Clear
+   procedure Irq_Disable
       with Inline => True;
 
 end PPC405;

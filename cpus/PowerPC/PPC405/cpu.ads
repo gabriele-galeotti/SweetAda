@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with PowerPC;
+with PPC405;
 
 package CPU
    is
@@ -40,8 +41,8 @@ package CPU
 
    subtype Irq_State_Type is PowerPC.Irq_State_Type;
 
-   procedure Irq_Enable                                    renames PowerPC.Irq_Enable;
-   procedure Irq_Disable                                   renames PowerPC.Irq_Disable;
+   procedure Irq_Enable                                    renames PPC405.Irq_Enable;
+   procedure Irq_Disable                                   renames PPC405.Irq_Disable;
    function Irq_State_Get return Irq_State_Type            renames PowerPC.Irq_State_Get;
    procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames PowerPC.Irq_State_Set;
 
