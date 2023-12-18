@@ -67,16 +67,16 @@ package i486
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for CR4_Type use record
-      VME        at 0 range 0 .. 0;
-      PVI        at 0 range 1 .. 1;
-      TSD        at 0 range 2 .. 2;
-      DE         at 0 range 3 .. 3;
-      PSE        at 0 range 4 .. 4;
-      PAE        at 0 range 5 .. 5;
-      MCE        at 0 range 6 .. 6;
-      PGE        at 0 range 7 .. 7;
-      PCE        at 0 range 8 .. 8;
-      OSFXSR     at 0 range 9 .. 9;
+      VME        at 0 range  0 ..  0;
+      PVI        at 0 range  1 ..  1;
+      TSD        at 0 range  2 ..  2;
+      DE         at 0 range  3 ..  3;
+      PSE        at 0 range  4 ..  4;
+      PAE        at 0 range  5 ..  5;
+      MCE        at 0 range  6 ..  6;
+      PGE        at 0 range  7 ..  7;
+      PCE        at 0 range  8 ..  8;
+      OSFXSR     at 0 range  9 ..  9;
       OSXMMEXCPT at 0 range 10 .. 10;
       Reserved1  at 0 range 11 .. 12;
       VMXE       at 0 range 13 .. 13;
@@ -152,16 +152,16 @@ package i486
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for CPU_Features_Type use record
-      FPU       at 0 range 0 .. 0;
-      VME       at 0 range 1 .. 1;
-      DE        at 0 range 2 .. 2;
-      PSE       at 0 range 3 .. 3;
-      TSC       at 0 range 4 .. 4;
-      MSR       at 0 range 5 .. 5;
-      PAE       at 0 range 6 .. 6;
-      MCE       at 0 range 7 .. 7;
-      CX8       at 0 range 8 .. 8;
-      APIC      at 0 range 9 .. 9;
+      FPU       at 0 range  0 ..  0;
+      VME       at 0 range  1 ..  1;
+      DE        at 0 range  2 ..  2;
+      PSE       at 0 range  3 ..  3;
+      TSC       at 0 range  4 ..  4;
+      MSR       at 0 range  5 ..  5;
+      PAE       at 0 range  6 ..  6;
+      MCE       at 0 range  7 ..  7;
+      CX8       at 0 range  8 ..  8;
+      APIC      at 0 range  9 ..  9;
       Reserved1 at 0 range 10 .. 10;
       SEP       at 0 range 11 .. 11;
       MTRR      at 0 range 12 .. 12;

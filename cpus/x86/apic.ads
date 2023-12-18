@@ -50,8 +50,8 @@ package APIC
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for TPR_Type use record
-      SubClass at 0 range 0 .. 3;
-      Class    at 0 range 4 .. 7;
+      SubClass at 0 range 0 ..  3;
+      Class    at 0 range 4 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
@@ -68,9 +68,9 @@ package APIC
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for SVR_Type use record
-      VECTOR    at 0 range 0 .. 7;
-      ENABLE    at 0 range 8 .. 8;
-      FPC       at 0 range 9 .. 9;
+      VECTOR    at 0 range  0 ..  7;
+      ENABLE    at 0 range  8 ..  8;
+      FPC       at 0 range  9 ..  9;
       Reserved1 at 0 range 10 .. 11;
       EOIBS     at 0 range 12 .. 12;
       Reserved2 at 0 range 13 .. 31;
@@ -107,8 +107,8 @@ package APIC
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for LVT_Type use record
-      VECTOR    at 0 range 0 .. 7;
-      DM        at 0 range 8 .. 10;
+      VECTOR    at 0 range  0 ..  7;
+      DM        at 0 range  8 .. 10;
       Reserved1 at 0 range 11 .. 11;
       DS        at 0 range 12 .. 12;
       IIPP      at 0 range 13 .. 13;

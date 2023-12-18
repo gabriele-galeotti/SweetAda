@@ -90,9 +90,9 @@ package i586
       with Bit_Order => Low_Order_First,
            Size      => 64;
    for IA32_APIC_BASE_Type use record
-      Reserved1          at 0 range 0 .. 7;
-      BSP                at 0 range 8 .. 8;
-      Reserved2          at 0 range 9 .. 9;
+      Reserved1          at 0 range  0 ..  7;
+      BSP                at 0 range  8 ..  8;
+      Reserved2          at 0 range  9 ..  9;
       Enable_x2APIC_mode at 0 range 10 .. 10;
       APIC_Global_Enable at 0 range 11 .. 11;
       APIC_Base          at 0 range 12 .. 35;
