@@ -34,7 +34,7 @@ SCRIPT_FILENAME=$(basename "$0")
 
 # install SweetAda on FAT32 1st partition of a micro-SD memory card
 
-USDCARD_DEVICE=$(blkid | grep UUID=\"${USDCARD_UUID}\" | sed -e "s|^\(/dev/.*\)\(:.*\)\$|\1|")
+USDCARD_DEVICE=$(blkid | grep -e "UUID=\"${USDCARD_UUID}\"" | sed -e "s|^\(/dev/.*\)\(:.*\)\$|\1|")
 if [ "x${USDCARD_DEVICE}" = "x" ] ; then
   echo "*** Error: UUID=${USDCARD_UUID}: no device found."
   exit 1
