@@ -116,7 +116,7 @@ package body BSP is
       Console.Print (PVR_Read.Version, Prefix => "PVR version:  ", NL => True);
       Console.Print (PVR_Read.Revision, Prefix => "PVR revision: ", NL => True);
       Tclk_Init;
-      MSREE_Set;
+      PPC405.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 
