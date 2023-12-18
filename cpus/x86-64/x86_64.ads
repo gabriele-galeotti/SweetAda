@@ -66,8 +66,8 @@ package x86_64
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for Selector_Type use record
-      RPL   at 0 range 0 .. 1;
-      TI    at 0 range 2 .. 2;
+      RPL   at 0 range 0 ..  1;
+      TI    at 0 range 2 ..  2;
       Index at 0 range 3 .. 15;
    end record;
 
@@ -159,17 +159,17 @@ package x86_64
    for Segment_Descriptor_Type use record
       Limit_LO at 0 range 0 .. 15;
       Base_LO  at 2 range 0 .. 15;
-      Base_MI  at 4 range 0 .. 7;
-      SegType  at 5 range 0 .. 3;
-      S        at 5 range 4 .. 4;
-      DPL      at 5 range 5 .. 6;
-      P        at 5 range 7 .. 7;
-      Limit_HI at 6 range 0 .. 3;
-      AVL      at 6 range 4 .. 4;
-      L        at 6 range 5 .. 5;
-      D_B      at 6 range 6 .. 6;
-      G        at 6 range 7 .. 7;
-      Base_HI  at 7 range 0 .. 7;
+      Base_MI  at 4 range 0 ..  7;
+      SegType  at 5 range 0 ..  3;
+      S        at 5 range 4 ..  4;
+      DPL      at 5 range 5 ..  6;
+      P        at 5 range 7 ..  7;
+      Limit_HI at 6 range 0 ..  3;
+      AVL      at 6 range 4 ..  4;
+      L        at 6 range 5 ..  5;
+      D_B      at 6 range 6 ..  6;
+      G        at 6 range 7 ..  7;
+      Base_HI  at 7 range 0 ..  7;
    end record;
 
    SEGMENT_DESCRIPTOR_INVALID : constant Segment_Descriptor_Type :=
@@ -233,13 +233,13 @@ package x86_64
    for Exception_Descriptor_Type use record
       Offset_LO at 0  range 0 .. 15;
       Selector  at 2  range 0 .. 15;
-      IST       at 4  range 0 .. 2;
-      Reserved1 at 4  range 3 .. 4;
-      Reserved2 at 4  range 5 .. 7;
-      SegType   at 5  range 0 .. 3;
-      Reserved3 at 5  range 4 .. 4;
-      DPL       at 5  range 5 .. 6;
-      P         at 5  range 7 .. 7;
+      IST       at 4  range 0 ..  2;
+      Reserved1 at 4  range 3 ..  4;
+      Reserved2 at 4  range 5 ..  7;
+      SegType   at 5  range 0 ..  3;
+      Reserved3 at 5  range 4 ..  4;
+      DPL       at 5  range 5 ..  6;
+      P         at 5  range 7 ..  7;
       Offset_MI at 6  range 0 .. 15;
       Offset_HI at 8  range 0 .. 31;
       Reserved4 at 12 range 0 .. 31;
@@ -423,16 +423,16 @@ package x86_64
       with Bit_Order => Low_Order_First,
            Size      => 64;
    for RFLAGS_Type use record
-      CF        at 0 range 0 .. 0;
-      Reserved1 at 0 range 1 .. 1;
-      PF        at 0 range 2 .. 2;
-      Reserved2 at 0 range 3 .. 3;
-      AF        at 0 range 4 .. 4;
-      Reserved3 at 0 range 5 .. 5;
-      ZF        at 0 range 6 .. 6;
-      SF        at 0 range 7 .. 7;
-      TF        at 0 range 8 .. 8;
-      IFlag     at 0 range 9 .. 9;
+      CF        at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      PF        at 0 range  2 ..  2;
+      Reserved2 at 0 range  3 ..  3;
+      AF        at 0 range  4 ..  4;
+      Reserved3 at 0 range  5 ..  5;
+      ZF        at 0 range  6 ..  6;
+      SF        at 0 range  7 ..  7;
+      TF        at 0 range  8 ..  8;
+      IFlag     at 0 range  9 ..  9;
       DF        at 0 range 10 .. 10;
       OFlag     at 0 range 11 .. 11;
       IOPL      at 0 range 12 .. 13;
@@ -470,13 +470,13 @@ package x86_64
       with Bit_Order => Low_Order_First,
            Size      => 64;
    for CR0_Type use record
-      PE        at 0 range 0 .. 0;
-      MP        at 0 range 1 .. 1;
-      EM        at 0 range 2 .. 2;
-      TS        at 0 range 3 .. 3;
-      ET        at 0 range 4 .. 4;
-      NE        at 0 range 5 .. 5;
-      Reserved1 at 0 range 6 .. 15;
+      PE        at 0 range  0 ..  0;
+      MP        at 0 range  1 ..  1;
+      EM        at 0 range  2 ..  2;
+      TS        at 0 range  3 ..  3;
+      ET        at 0 range  4 ..  4;
+      NE        at 0 range  5 ..  5;
+      Reserved1 at 0 range  6 .. 15;
       WP        at 0 range 16 .. 16;
       Reserved2 at 0 range 17 .. 17;
       AM        at 0 range 18 .. 18;
@@ -502,10 +502,10 @@ package x86_64
       with Bit_Order => Low_Order_First,
            Size      => 64;
    for CR3_Type use record
-      Reserved1 at 0 range 0 .. 2;
-      PWT       at 0 range 3 .. 3;
-      PCD       at 0 range 4 .. 4;
-      Reserved2 at 0 range 5 .. 11;
+      Reserved1 at 0 range  0 ..  2;
+      PWT       at 0 range  3 ..  3;
+      PCD       at 0 range  4 ..  4;
+      Reserved2 at 0 range  5 .. 11;
       PDB       at 0 range 12 .. 63;
    end record;
 
@@ -543,16 +543,16 @@ package x86_64
       with Bit_Order => Low_Order_First,
            Size      => 64;
    for CR4_Type use record
-      VME        at 0 range 0 .. 0;
-      PVI        at 0 range 1 .. 1;
-      TSD        at 0 range 2 .. 2;
-      DE         at 0 range 3 .. 3;
-      PSE        at 0 range 4 .. 4;
-      PAE        at 0 range 5 .. 5;
-      MCE        at 0 range 6 .. 6;
-      PGE        at 0 range 7 .. 7;
-      PCE        at 0 range 8 .. 8;
-      OSFXSR     at 0 range 9 .. 9;
+      VME        at 0 range  0 ..  0;
+      PVI        at 0 range  1 ..  1;
+      TSD        at 0 range  2 ..  2;
+      DE         at 0 range  3 ..  3;
+      PSE        at 0 range  4 ..  4;
+      PAE        at 0 range  5 ..  5;
+      MCE        at 0 range  6 ..  6;
+      PGE        at 0 range  7 ..  7;
+      PCE        at 0 range  8 ..  8;
+      OSFXSR     at 0 range  9 ..  9;
       OSXMMEXCPT at 0 range 10 .. 10;
       Reserved1  at 0 range 11 .. 12;
       VMXE       at 0 range 13 .. 13;
@@ -620,9 +620,9 @@ package x86_64
       with Bit_Order => Low_Order_First,
            Size      => 64;
    for IA32_APIC_BASE_Type use record
-      Reserved1          at 0 range 0 .. 7;
-      BSP                at 0 range 8 .. 8;
-      Reserved2          at 0 range 9 .. 9;
+      Reserved1          at 0 range  0 ..  7;
+      BSP                at 0 range  8 ..  8;
+      Reserved2          at 0 range  9 ..  9;
       Enable_x2APIC_mode at 0 range 10 .. 10;
       APIC_Global_Enable at 0 range 11 .. 11;
       APIC_Base          at 0 range 12 .. 35;
@@ -647,10 +647,10 @@ package x86_64
       with Bit_Order => Low_Order_First,
            Size      => 64;
    for IA32_EFER_Type use record
-      SCE       at 0 range 0 .. 0;
-      Reserved1 at 0 range 1 .. 7;
-      LME       at 0 range 8 .. 8;
-      Reserved2 at 0 range 9 .. 9;
+      SCE       at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  7;
+      LME       at 0 range  8 ..  8;
+      Reserved2 at 0 range  9 ..  9;
       LMA       at 0 range 10 .. 10;
       NXE       at 0 range 11 .. 11;
       Reserved3 at 0 range 12 .. 31;
