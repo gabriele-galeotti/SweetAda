@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with LLutils;
 
-package body x86 is
+package body x86
+   is
 
    --========================================================================--
    --                                                                        --
@@ -44,7 +45,8 @@ package body x86 is
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
-   procedure NOP is
+   procedure NOP
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -60,7 +62,8 @@ package body x86 is
    ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
-   procedure BREAKPOINT is
+   procedure BREAKPOINT
+      is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -76,7 +79,9 @@ package body x86 is
    ----------------------------------------------------------------------------
    -- ESP_Read
    ----------------------------------------------------------------------------
-   function ESP_Read return Address is
+   function ESP_Read
+      return Address
+      is
       Result : Address;
    begin
       Asm (
@@ -95,7 +100,9 @@ package body x86 is
    -- CRX registers
    ----------------------------------------------------------------------------
 
-   function CR0_Read return CR0_Type is
+   function CR0_Read
+      return CR0_Type
+      is
       Result : CR0_Type;
    begin
       Asm (
@@ -110,7 +117,9 @@ package body x86 is
       return Result;
    end CR0_Read;
 
-   procedure CR0_Write (Value : in CR0_Type) is
+   procedure CR0_Write
+      (Value : in CR0_Type)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -123,7 +132,9 @@ package body x86 is
           );
    end CR0_Write;
 
-   function CR2_Read return Address is
+   function CR2_Read
+      return Address
+      is
       Result : Address;
    begin
       Asm (
@@ -138,7 +149,9 @@ package body x86 is
       return Result;
    end CR2_Read;
 
-   function CR3_Read return CR3_Type is
+   function CR3_Read
+      return CR3_Type
+      is
       Result : CR3_Type;
    begin
       Asm (
@@ -153,7 +166,9 @@ package body x86 is
       return Result;
    end CR3_Read;
 
-   procedure CR3_Write (Value : in CR3_Type) is
+   procedure CR3_Write
+      (Value : in CR3_Type)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -171,14 +186,17 @@ package body x86 is
    ----------------------------------------------------------------------------
    -- LGDTR
    ----------------------------------------------------------------------------
-   procedure LGDTR (GDT_Descriptor : in GDT_Descriptor_Type; GDT_Code_Selector_Index : in GDT_Index_Type) is
+   procedure LGDTR
+      (GDT_Descriptor          : in GDT_Descriptor_Type;
+       GDT_Code_Selector_Index : in GDT_Index_Type)
+      is
       Selector_Address_Target : aliased Selector_Address_Target_Type;
    begin
       Selector_Address_Target.Selector := (
-                                           RPL   => PL0,
-                                           TI    => TI_GDT,
-                                           Index => Selector_Index_Type (GDT_Code_Selector_Index)
-                                          );
+         RPL   => PL0,
+         TI    => TI_GDT,
+         Index => Selector_Index_Type (GDT_Code_Selector_Index)
+         );
       Asm (
            Template => ""                       & CRLF &
                        "        lgdtl   %0    " & CRLF &
@@ -200,7 +218,9 @@ package body x86 is
    ----------------------------------------------------------------------------
    -- LIDTR
    ----------------------------------------------------------------------------
-   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type) is
+   procedure LIDTR
+      (IDT_Descriptor : in IDT_Descriptor_Type)
+      is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -221,12 +241,12 @@ package body x86 is
    -- GDT_Length               length of GDT (# of entries)
    -- GDT_Code_Selector_Index: target selector of the LGDTR jmp
    ----------------------------------------------------------------------------
-   procedure GDT_Set (
-                      GDT_Descriptor          : in out GDT_Descriptor_Type;
-                      GDT_Address             : in     Address;
-                      GDT_Length              : in     GDT_Index_Type;
-                      GDT_Code_Selector_Index : in     GDT_Index_Type
-                     ) is
+   procedure GDT_Set
+      (GDT_Descriptor          : in out GDT_Descriptor_Type;
+       GDT_Address             : in     Address;
+       GDT_Length              : in     GDT_Index_Type;
+       GDT_Code_Selector_Index : in     GDT_Index_Type)
+      is
       Irq_State : Irq_State_Type;
    begin
       GDT_Descriptor.Base_LO := Unsigned_16 (Select_Address_Bits (GDT_Address, 0, 15));
@@ -240,17 +260,17 @@ package body x86 is
    ----------------------------------------------------------------------------
    -- GDT_Set_Entry
    ----------------------------------------------------------------------------
-   procedure GDT_Set_Entry (
-                            GDT_Entry : in out Segment_Descriptor_Type;
-                            Base      : in     Address;
-                            Limit     : in     Storage_Offset;
-                            SegType   : in     Segment_Gate_Type;
-                            S         : in     Descriptor_Type;
-                            DPL       : in     PL_Type;
-                            P         : in     Boolean;
-                            D_B       : in     Default_OpSize_Type;
-                            G         : in     Granularity_Type
-                           ) is
+   procedure GDT_Set_Entry
+      (GDT_Entry : in out Segment_Descriptor_Type;
+       Base      : in     Address;
+       Limit     : in     Storage_Offset;
+       SegType   : in     Segment_Gate_Type;
+       S         : in     Descriptor_Type;
+       DPL       : in     PL_Type;
+       P         : in     Boolean;
+       D_B       : in     Default_OpSize_Type;
+       G         : in     Granularity_Type)
+      is
    begin
       GDT_Entry.Limit_LO := Unsigned_16 (Unsigned_32 (Limit) and Unsigned_16_Mask);
       GDT_Entry.Base_LO  := Unsigned_16 (Select_Address_Bits (Base, 0, 15));
@@ -274,11 +294,11 @@ package body x86 is
    -- IDT_Address:    address of IDT
    -- IDT_Length:     length of IDT (# of entries)
    ----------------------------------------------------------------------------
-   procedure IDT_Set (
-                      IDT_Descriptor : in out IDT_Descriptor_Type;
-                      IDT_Address    : in     Address;
-                      IDT_Length     : in     IDT_Length_Type
-                     ) is
+   procedure IDT_Set
+      (IDT_Descriptor : in out IDT_Descriptor_Type;
+       IDT_Address    : in     Address;
+       IDT_Length     : in     IDT_Length_Type)
+      is
       Irq_State : Irq_State_Type;
    begin
       IDT_Descriptor.Base_LO := Unsigned_16 (Select_Address_Bits (IDT_Address, 0, 15));
@@ -292,12 +312,12 @@ package body x86 is
    ----------------------------------------------------------------------------
    -- IDT_Set_Handler
    ----------------------------------------------------------------------------
-   procedure IDT_Set_Handler (
-                              IDT_Entry         : in out Exception_Descriptor_Type;
-                              Exception_Handler : in     Address;
-                              Selector          : in     Selector_Type;
-                              SegType           : in     Segment_Gate_Type
-                             ) is
+   procedure IDT_Set_Handler
+      (IDT_Entry         : in out Exception_Descriptor_Type;
+       Exception_Handler : in     Address;
+       Selector          : in     Selector_Type;
+       SegType           : in     Segment_Gate_Type)
+      is
    begin
       IDT_Entry.Offset_LO := Unsigned_16 (Select_Address_Bits (Exception_Handler, 0, 15));
       IDT_Entry.Selector  := Selector;
@@ -312,25 +332,37 @@ package body x86 is
    ----------------------------------------------------------------------------
 
    -- Offset
-   function Select_Address_Bits_OFS (CPU_Address : Address) return Bits_12 is
+   function Select_Address_Bits_OFS
+      (CPU_Address : Address)
+      return Bits_12
+      is
    begin
       return Bits_12 (Select_Address_Bits (CPU_Address, 0, 11));
    end Select_Address_Bits_OFS;
 
    -- Page Frame Address
-   function Select_Address_Bits_PFA (CPU_Address : Address) return Bits_20 is
+   function Select_Address_Bits_PFA
+      (CPU_Address : Address)
+      return Bits_20
+      is
    begin
       return Bits_20 (Select_Address_Bits (CPU_Address, 12, 31));
    end Select_Address_Bits_PFA;
 
    -- Page Table Entry
-   function Select_Address_Bits_PTE (CPU_Address : Address) return Bits_10 is
+   function Select_Address_Bits_PTE
+      (CPU_Address : Address)
+      return Bits_10
+      is
    begin
       return Bits_10 (Select_Address_Bits (CPU_Address, 12, 21));
    end Select_Address_Bits_PTE;
 
    -- Page Directory Entry
-   function Select_Address_Bits_PDE (CPU_Address : Address) return Bits_10 is
+   function Select_Address_Bits_PDE
+      (CPU_Address : Address)
+      return Bits_10
+      is
    begin
       return Bits_10 (Select_Address_Bits (CPU_Address, 22, 31));
    end Select_Address_Bits_PDE;
@@ -338,7 +370,9 @@ package body x86 is
    ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
-   procedure Asm_Call (Target_Address : in Address) is
+   procedure Asm_Call
+      (Target_Address : in Address)
+      is
    begin
       Asm (
            Template => ""                    & CRLF &
@@ -355,7 +389,8 @@ package body x86 is
    -- Irq_Enable/Disable
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable is
+   procedure Irq_Enable
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -368,7 +403,8 @@ package body x86 is
           );
    end Irq_Enable;
 
-   procedure Irq_Disable is
+   procedure Irq_Disable
+      is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -381,7 +417,9 @@ package body x86 is
           );
    end Irq_Disable;
 
-   function Irq_State_Get return Irq_State_Type is
+   function Irq_State_Get
+      return Irq_State_Type
+      is
       Irq_State : Irq_State_Type;
    begin
       Asm (
@@ -397,7 +435,9 @@ package body x86 is
       return Irq_State;
    end Irq_State_Get;
 
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) is
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      is
    begin
       Asm (
            Template => ""                   & CRLF &

@@ -22,7 +22,9 @@ with Bits;
 with x86;
 with i486;
 
-package i586 is
+package i586
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -31,8 +33,6 @@ package i586 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use Interfaces;
@@ -62,10 +62,10 @@ package i586 is
    -- Page directory (4M)
    ----------------------------------------------------------------------------
 
-   type PD4M_Type is array (0 .. 2**10 - 1) of PDEntry_Type (PAGESELECT4M) with
-      Pack                    => True,
-      Alignment               => PAGESIZE4k,
-      Suppress_Initialization => True;
+   type PD4M_Type is array (0 .. 2**10 - 1) of PDEntry_Type (PAGESELECT4M)
+      with Pack                    => True,
+           Alignment               => PAGESIZE4k,
+           Suppress_Initialization => True;
 
    ----------------------------------------------------------------------------
    -- MSRs
@@ -78,8 +78,7 @@ package i586 is
 
    -- IA32_APIC_BASE
 
-   type IA32_APIC_BASE_Type is
-   record
+   type IA32_APIC_BASE_Type is record
       Reserved1          : Bits_8;
       BSP                : Boolean; -- Indicates if the processor is the bootstrap processor (BSP).
       Reserved2          : Bits_1;
@@ -87,11 +86,10 @@ package i586 is
       APIC_Global_Enable : Boolean; -- Enables or disables the local APIC
       APIC_Base          : Bits_24; -- Specifies the base address of the APIC registers.
       Reserved3          : Bits_28;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for IA32_APIC_BASE_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for IA32_APIC_BASE_Type use record
       Reserved1          at 0 range 0 .. 7;
       BSP                at 0 range 8 .. 8;
       Reserved2          at 0 range 9 .. 9;
@@ -106,11 +104,16 @@ package i586 is
 
    -- subprograms
 
-   function RDMSR (MSR_Register_Number : MSR_Type) return Unsigned_64 with
-      Inline => True;
-   procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64) with
-      Inline => True;
-   function RDTSC return Unsigned_64 with
-      Inline => True;
+   function RDMSR
+      (MSR_Register_Number : MSR_Type)
+      return Unsigned_64
+      with Inline => True;
+   procedure WRMSR
+      (MSR_Register_Number : in MSR_Type;
+       Value               : in Unsigned_64)
+      with Inline => True;
+   function RDTSC
+      return Unsigned_64
+      with Inline => True;
 
 end i586;

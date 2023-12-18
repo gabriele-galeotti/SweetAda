@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body i486 is
+package body i486
+   is
 
    --========================================================================--
    --                                                                        --
@@ -44,7 +45,9 @@ package body i486 is
    -- CR4 register handling
    ----------------------------------------------------------------------------
 
-   function CR4_Read return CR4_Type is
+   function CR4_Read
+      return CR4_Type
+      is
       Result : CR4_Type;
    begin
       Asm (
@@ -59,7 +62,9 @@ package body i486 is
       return Result;
    end CR4_Read;
 
-   procedure CR4_Write (Value : in CR4_Type) is
+   procedure CR4_Write
+      (Value : in CR4_Type)
+      is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -75,7 +80,9 @@ package body i486 is
    ----------------------------------------------------------------------------
    -- CPUID_Enabled
    ----------------------------------------------------------------------------
-   function CPUID_Enabled return Boolean is
+   function CPUID_Enabled
+      return Boolean
+      is
       Result : Unsigned_32;
    begin
       Asm (
@@ -105,14 +112,16 @@ package body i486 is
    ----------------------------------------------------------------------------
    -- CPU_VendorID_Read
    ----------------------------------------------------------------------------
-   function CPU_VendorID_Read return CPUID_VendorID_String_Type is
+   function CPU_VendorID_Read
+      return CPUID_VendorID_String_Type
+      is
       Result       : aliased CPUID_VendorID_String_Type;
-      EBX_Register : aliased Unsigned_32 with
-         Address => Result (1)'Address;
-      EDX_Register : aliased Unsigned_32 with
-         Address => Result (5)'Address;
-      ECX_Register : aliased Unsigned_32 with
-         Address => Result (9)'Address;
+      EBX_Register : aliased Unsigned_32
+         with Address => Result (1)'Address;
+      EDX_Register : aliased Unsigned_32
+         with Address => Result (5)'Address;
+      ECX_Register : aliased Unsigned_32
+         with Address => Result (9)'Address;
    begin
       Asm (
            Template => ""              & CRLF &
@@ -136,7 +145,9 @@ package body i486 is
    -- EAX=1 returns CPUs stepping, model, and family information in EAX,
    -- feature flags in EDX and ECX, and additional feature info in EBX.
    ----------------------------------------------------------------------------
-   function CPU_Features_Read return CPU_Features_Type is
+   function CPU_Features_Read
+      return CPU_Features_Type
+      is
       Result : CPU_Features_Type;
    begin
       Asm (

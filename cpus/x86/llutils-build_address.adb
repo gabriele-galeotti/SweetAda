@@ -19,11 +19,12 @@ with System.Machine_Code;
 with Ada.Characters.Latin_1;
 
 separate (LLutils)
-function Build_Address (
-                        Base_Address  : System.Address;
-                        Offset        : SSE.Storage_Offset;
-                        Scale_Address : Bits.Address_Shift
-                       ) return System.Address is
+function Build_Address
+   (Base_Address  : System.Address;
+    Offset        : SSE.Storage_Offset;
+    Scale_Address : Bits.Address_Shift)
+   return System.Address
+   is
    use System.Machine_Code;
    package ISO88591 renames Ada.Characters.Latin_1;
    CRLF   : constant String := ISO88591.CR & ISO88591.LF;

@@ -20,7 +20,8 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package APIC is
+package APIC
+   is
 
    --========================================================================--
    --                                                                        --
@@ -41,16 +42,14 @@ package APIC is
 
    -- 10.8.3.1 Task and Processor Priorities
 
-   type TPR_Type is
-   record
+   type TPR_Type is record
       SubClass : Natural range 0 .. 15; -- Task-Priority Sub-Class
       Class    : Natural range 0 .. 15; -- Task-Priority Class
       Reserved : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for TPR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TPR_Type use record
       SubClass at 0 range 0 .. 3;
       Class    at 0 range 4 .. 7;
       Reserved at 0 range 8 .. 31;
@@ -58,19 +57,17 @@ package APIC is
 
    -- 10.9 SPURIOUS INTERRUPT
 
-   type SVR_Type is
-   record
+   type SVR_Type is record
       VECTOR    : Bits_8;       -- Spurious Vector
       ENABLE    : Boolean;      -- APIC Software Enable/Disable
       FPC       : Boolean;      -- Focus Processor Checking
       Reserved1 : Bits_2 := 0;
       EOIBS     : Boolean;      -- EOI-Broadcast Suppression
       Reserved2 : Bits_19 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SVR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SVR_Type use record
       VECTOR    at 0 range 0 .. 7;
       ENABLE    at 0 range 8 .. 8;
       FPC       at 0 range 9 .. 9;
@@ -96,8 +93,7 @@ package APIC is
    TM_EDGE  : constant := 0; -- edge sensitive
    TM_LEVEL : constant := 1; -- level sensitive
 
-   type LVT_Type is
-   record
+   type LVT_Type is record
       VECTOR    : Bits_8;       -- Vector
       DM        : Bits_3;       -- Delivery Mode
       Reserved1 : Bits_1 := 0;
@@ -107,11 +103,10 @@ package APIC is
       TM        : Bits_1;       -- Trigger Mode
       Mask      : Boolean;      -- Mask
       Reserved2 : Bits_15 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for LVT_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LVT_Type use record
       VECTOR    at 0 range 0 .. 7;
       DM        at 0 range 8 .. 10;
       Reserved1 at 0 range 11 .. 11;
@@ -125,15 +120,13 @@ package APIC is
 
    -- LAPIC
 
-   type LAPIC_Type is
-   record
+   type LAPIC_Type is record
       TPR   : TPR_Type with Volatile_Full_Access => True; -- Task Priority Register
       SVR   : SVR_Type with Volatile_Full_Access => True; -- Spurious Interrupt Vector Register
       LINT0 : LVT_Type with Volatile_Full_Access => True; -- LINT0
       LINT1 : LVT_Type with Volatile_Full_Access => True; -- LINT1
    end record;
-   for LAPIC_Type use
-   record
+   for LAPIC_Type use record
       TPR   at 16#080# range 0 .. 31;
       SVR   at 16#0F0# range 0 .. 31;
       LINT0 at 16#350# range 0 .. 31;
@@ -142,11 +135,11 @@ package APIC is
 
    LAPIC_BASEADDRESS : constant := 16#0000_0000_FEE0_0000#;
 
-   LAPIC : aliased LAPIC_Type with
-      Address    => To_Address (LAPIC_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   LAPIC : aliased LAPIC_Type
+      with Address    => To_Address (LAPIC_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    procedure LAPIC_Init;
 
@@ -165,7 +158,11 @@ package APIC is
    IOAPICARB : constant := 2;
    IOREDTBL  : constant := 1;
 
-   function IOAPIC_Read (Register_Number : Natural) return Unsigned_32;
-   procedure IOAPIC_Write (Register_Number : in Natural; Value : in Unsigned_32);
+   function IOAPIC_Read
+      (Register_Number : Natural)
+      return Unsigned_32;
+   procedure IOAPIC_Write
+      (Register_Number : in Natural;
+       Value           : in Unsigned_32);
 
 end APIC;

@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body i586 is
+package body i586
+   is
 
    --========================================================================--
    --                                                                        --
@@ -44,7 +45,10 @@ package body i586 is
    -- RDMSR/WRMSR
    ----------------------------------------------------------------------------
 
-   function RDMSR (MSR_Register_Number : MSR_Type) return Unsigned_64 is
+   function RDMSR
+      (MSR_Register_Number : MSR_Type)
+      return Unsigned_64
+      is
       Result : Unsigned_64;
    begin
       Asm (
@@ -59,7 +63,10 @@ package body i586 is
       return Result;
    end RDMSR;
 
-   procedure WRMSR (MSR_Register_Number : in MSR_Type; Value : in Unsigned_64) is
+   procedure WRMSR
+      (MSR_Register_Number : in MSR_Type;
+       Value               : in Unsigned_64)
+      is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -78,7 +85,9 @@ package body i586 is
    ----------------------------------------------------------------------------
    -- RDTSC
    ----------------------------------------------------------------------------
-   function RDTSC return Unsigned_64 is
+   function RDTSC
+      return Unsigned_64
+      is
       Result : Unsigned_64;
    begin
       Asm (

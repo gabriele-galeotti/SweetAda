@@ -21,7 +21,8 @@ with Bits;
 with CPU;
 with x86;
 
-package body MMU is
+package body MMU
+   is
 
    --========================================================================--
    --                                                                        --
@@ -37,12 +38,12 @@ package body MMU is
    use CPU;
    use x86;
 
-   PD : aliased PD4k_Type with
-      Volatile => True;
+   PD : aliased PD4k_Type
+      with Volatile => True;
 
    -- first page table
-   PTE0 : aliased PT_Type with
-      Volatile => True;
+   PTE0 : aliased PT_Type
+      with Volatile => True;
 
    --========================================================================--
    --                                                                        --
@@ -58,7 +59,8 @@ package body MMU is
    -- 4-KiB page version
    ----------------------------------------------------------------------------
 
-   procedure Init is
+   procedure Init
+      is
       CR0                      : CR0_Type;
       CR3                      : CR3_Type;
       Page_Frame_Address_Start : Address;
@@ -67,32 +69,32 @@ package body MMU is
       -- clear page directory to prevent false mappings
       for Index in PD'Range loop
          PD (Index) := (
-                        PS  => PAGESELECT4k,
-                        P   => False,
-                        RW  => PAGE_RW,
-                        US  => PAGE_U,
-                        PWT => False,
-                        PCD => False,
-                        A   => False,
-                        PTA => 0
-                       );
+            PS  => PAGESELECT4k,
+            P   => False,
+            RW  => PAGE_RW,
+            US  => PAGE_U,
+            PWT => False,
+            PCD => False,
+            A   => False,
+            PTA => 0
+            );
       end loop;
       Page_Frame_Address_Start := To_Address (16#0000_0000#);
       -- enable all PTE #0 page table entries (1024 * 4 KiB = 4 MiB)
       for Index in PTE0'Range loop
          Page_Frame_Address_End := Page_Frame_Address_Start + PAGESIZE4k;
          PTE0 (Index) := (
-                          P   => True,
-                          RW  => PAGE_RW,
-                          US  => PAGE_U,
-                          PWT => False,
-                          PCD => False,
-                          A   => False,
-                          D   => False,
-                          PAT => False,
-                          G   => False,
-                          PFA => Select_Address_Bits_PFA (Page_Frame_Address_Start)
-                         );
+             P   => True,
+             RW  => PAGE_RW,
+             US  => PAGE_U,
+             PWT => False,
+             PCD => False,
+             A   => False,
+             D   => False,
+             PAT => False,
+             G   => False,
+             PFA => Select_Address_Bits_PFA (Page_Frame_Address_Start)
+             );
          Page_Frame_Address_Start := Page_Frame_Address_End;
       end loop;
       -- enable PTE #0 in page directory

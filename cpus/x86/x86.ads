@@ -22,7 +22,9 @@ with Interfaces;
 with Definitions;
 with Bits;
 
-package x86 is
+package x86
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -31,8 +33,6 @@ package x86 is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use System.Storage_Elements;
@@ -61,16 +61,14 @@ package x86 is
 
    type Selector_Index_Type is new Bits_13; -- theoretically GDT could have 8192 entries
 
-   type Selector_Type is
-   record
+   type Selector_Type is record
       RPL   : PL_Type;             -- requested Privilege Level
       TI    : TI_Type;             -- GDT or LDT
       Index : Selector_Index_Type; -- index into table
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for Selector_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for Selector_Type use record
       RPL   at 0 range 0 .. 1;
       TI    at 0 range 2 .. 2;
       Index at 0 range 3 .. 15;
@@ -146,8 +144,7 @@ package x86 is
 
    SEGMENT_DESCRIPTOR_ALIGNMENT : constant := 8;
 
-   type Segment_Descriptor_Type is
-   record
+   type Segment_Descriptor_Type is record
       Limit_LO : Unsigned_16;         -- Segment Limit 0 .. 15
       Base_LO  : Unsigned_16;         -- Segment base address 0 .. 15
       Base_MI  : Unsigned_8;          -- Segment base address 16 .. 23
@@ -161,12 +158,11 @@ package x86 is
       D_B      : Default_OpSize_Type; -- Default operation size
       G        : Granularity_Type;    -- Granularity
       Base_HI  : Unsigned_8;          -- Segment base address 24 .. 31
-   end record with
-      Alignment => SEGMENT_DESCRIPTOR_ALIGNMENT,
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for Segment_Descriptor_Type use
-   record
+   end record
+      with Alignment => SEGMENT_DESCRIPTOR_ALIGNMENT,
+           Bit_Order => Low_Order_First,
+           Size      => 64;
+   for Segment_Descriptor_Type use record
       Limit_LO at 0 range 0 .. 15;
       Base_LO  at 2 range 0 .. 15;
       Base_MI  at 4 range 0 .. 7;
@@ -203,17 +199,15 @@ package x86 is
    -- GDT
    ----------------------------------------------------------------------------
 
-   type GDT_Descriptor_Type is
-   record
+   type GDT_Descriptor_Type is record
       Limit   : Unsigned_16;
       Base_LO : Unsigned_16;
       Base_HI : Unsigned_16;
-   end record with
-      Alignment => 2,
-      Bit_Order => Low_Order_First,
-      Size      => 48;
-   for GDT_Descriptor_Type use
-   record
+   end record
+      with Alignment => 2,
+           Bit_Order => Low_Order_First,
+           Size      => 6 * 8;
+   for GDT_Descriptor_Type use record
       Limit   at 0 range 0 .. 15;
       Base_LO at 2 range 0 .. 15;
       Base_HI at 4 range 0 .. 15;
@@ -227,39 +221,37 @@ package x86 is
       );
 
    subtype GDT_Index_Type is Natural range 0 .. 2**Selector_Index_Type'Size - 1;
-   type GDT_Type is array (GDT_Index_Type range <>) of Segment_Descriptor_Type with
-      Pack => True;
+   type GDT_Type is array (GDT_Index_Type range <>) of Segment_Descriptor_Type
+      with Pack => True;
 
-   procedure LGDTR (GDT_Descriptor : in GDT_Descriptor_Type; GDT_Code_Selector_Index : in GDT_Index_Type) with
-      Inline => True;
-   procedure GDT_Set (
-                      GDT_Descriptor          : in out GDT_Descriptor_Type;
-                      GDT_Address             : in     Address;
-                      GDT_Length              : in     GDT_Index_Type;
-                      GDT_Code_Selector_Index : in     GDT_Index_Type
-                     ) with
-      Inline => True;
-   procedure GDT_Set_Entry (
-                            GDT_Entry   : in out Segment_Descriptor_Type;
-                            Base        : in     Address;
-                            Limit       : in     Storage_Offset;
-                            SegType     : in     Segment_Gate_Type;
-                            S           : in     Descriptor_Type;
-                            DPL         : in     PL_Type;
-                            P           : in     Boolean;
-                            D_B         : in     Default_OpSize_Type;
-                            G           : in     Granularity_Type
-                           );
+   procedure LGDTR
+      (GDT_Descriptor          : in GDT_Descriptor_Type;
+       GDT_Code_Selector_Index : in GDT_Index_Type)
+      with Inline => True;
+   procedure GDT_Set
+      (GDT_Descriptor          : in out GDT_Descriptor_Type;
+       GDT_Address             : in     Address;
+       GDT_Length              : in     GDT_Index_Type;
+       GDT_Code_Selector_Index : in     GDT_Index_Type)
+      with Inline => True;
+   procedure GDT_Set_Entry
+      (GDT_Entry   : in out Segment_Descriptor_Type;
+       Base        : in     Address;
+       Limit       : in     Storage_Offset;
+       SegType     : in     Segment_Gate_Type;
+       S           : in     Descriptor_Type;
+       DPL         : in     PL_Type;
+       P           : in     Boolean;
+       D_B         : in     Default_OpSize_Type;
+       G           : in     Granularity_Type);
 
    -- this is a memory artifact used as a jump target when reloading GDT (see LGDTR procedure)
-   type Selector_Address_Target_Type is
-   record
+   type Selector_Address_Target_Type is record
       Offset   : Address;
       Selector : Selector_Type;
-   end record with
-      Size => 48;
-   for Selector_Address_Target_Type use
-   record
+   end record
+      with Size => 6 * 8;
+   for Selector_Address_Target_Type use record
       Offset   at 0 range 0 .. 31;
       Selector at 4 range 0 .. 15;
    end record;
@@ -270,8 +262,7 @@ package x86 is
 
    EXCEPTION_DESCRIPTOR_ALIGNMENT : constant := 8;
 
-   type Exception_Descriptor_Type is
-   record
+   type Exception_Descriptor_Type is record
       Offset_LO : Unsigned_16;       -- Offset to procedure entry point 0 .. 15
       Selector  : Selector_Type;     -- Segment Selector for destination code segment
       Reserved1 : Bits_5 := 0;
@@ -281,12 +272,11 @@ package x86 is
       DPL       : PL_Type;           -- Descriptor Privilege Level
       P         : Boolean;           -- Segment Present flag
       Offset_HI : Unsigned_16;       -- Offset to procedure entry point 16 .. 31
-   end record with
-      Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
-      Bit_Order => Low_Order_First,
-      Size      => 64;
-   for Exception_Descriptor_Type use
-   record
+   end record
+      with Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
+           Bit_Order => Low_Order_First,
+           Size      => 64;
+   for Exception_Descriptor_Type use record
       Offset_LO at 0 range 0 .. 15;
       Selector  at 2 range 0 .. 15;
       Reserved1 at 4 range 0 .. 4;
@@ -313,17 +303,15 @@ package x86 is
    -- IDT
    ----------------------------------------------------------------------------
 
-   type IDT_Descriptor_Type is
-   record
+   type IDT_Descriptor_Type is record
       Limit   : Unsigned_16;
       Base_LO : Unsigned_16;
       Base_HI : Unsigned_16;
-   end record with
-      Alignment => 2,
-      Bit_Order => Low_Order_First,
-      Size      => 48;
-   for IDT_Descriptor_Type use
-   record
+   end record
+      with Alignment => 2,
+           Bit_Order => Low_Order_First,
+           Size      => 6 * 8;
+   for IDT_Descriptor_Type use record
       Limit   at 0 range 0 .. 15;
       Base_LO at 2 range 0 .. 15;
       Base_HI at 4 range 0 .. 15;
@@ -421,26 +409,25 @@ package x86 is
    MsgPtr_VIRTUALIZATION       : constant access constant String := String_VIRTUALIZATION'Access;
    MsgPtr_UNKNOWN              : constant access constant String := String_UNKNOWN'Access;
 
-   type IDT_Type is array (Exception_Id_Type range <>) of Exception_Descriptor_Type with
-      Pack                    => True,
-      Suppress_Initialization => True;
+   type IDT_Type is array (Exception_Id_Type range <>) of Exception_Descriptor_Type
+      with Pack                    => True,
+           Suppress_Initialization => True;
 
    subtype IDT_Length_Type is Positive range 1 .. EXCEPTION_ITEMS;
 
-   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type) with
-      Inline => True;
-   procedure IDT_Set (
-                      IDT_Descriptor : in out IDT_Descriptor_Type;
-                      IDT_Address    : in     Address;
-                      IDT_Length     : in     IDT_Length_Type
-                     ) with
-      Inline => True;
-   procedure IDT_Set_Handler (
-                              IDT_Entry         : in out Exception_Descriptor_Type;
-                              Exception_Handler : in     Address;
-                              Selector          : in     Selector_Type;
-                              SegType           : in     Segment_Gate_Type
-                             );
+   procedure LIDTR
+      (IDT_Descriptor : in IDT_Descriptor_Type)
+      with Inline => True;
+   procedure IDT_Set
+      (IDT_Descriptor : in out IDT_Descriptor_Type;
+       IDT_Address    : in     Address;
+       IDT_Length     : in     IDT_Length_Type)
+      with Inline => True;
+   procedure IDT_Set_Handler
+      (IDT_Entry         : in out Exception_Descriptor_Type;
+       Exception_Handler : in     Address;
+       Selector          : in     Selector_Type;
+       SegType           : in     Segment_Gate_Type);
 
    ----------------------------------------------------------------------------
    -- Paging
@@ -462,8 +449,7 @@ package x86 is
 
    -- Page Table Entry
 
-   type PTEntry_Type is
-   record
+   type PTEntry_Type is record
       P   : Boolean; -- Present
       RW  : Bits_1;  -- Read/write
       US  : Bits_1;  -- User/supervisor
@@ -474,11 +460,10 @@ package x86 is
       PAT : Boolean; -- Page Attribute Table
       G   : Boolean; -- Global
       PFA : Bits_20; -- Address of 4KB page frame
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PTEntry_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PTEntry_Type use record
       P   at 0 range 0 .. 0;
       RW  at 0 range 1 .. 1;
       US  at 0 range 2 .. 2;
@@ -493,15 +478,14 @@ package x86 is
 
    -- Page table: 1024 entries aligned on 4k boundary
 
-   type PT_Type is array (0 .. 2**10 - 1) of PTEntry_Type with
-      Alignment               => PAGESIZE4k,
-      Pack                    => True,
-      Suppress_Initialization => True;
+   type PT_Type is array (0 .. 2**10 - 1) of PTEntry_Type
+      with Alignment               => PAGESIZE4k,
+           Pack                    => True,
+           Suppress_Initialization => True;
 
    -- Page Directory Entry
 
-   type PDEntry_Type (PS : Page_Select_Type) is
-   record
+   type PDEntry_Type (PS : Page_Select_Type) is record
       P   : Boolean;         -- Present
       RW  : Bits_1;          -- Read/write
       US  : Bits_1;          -- User/supervisor
@@ -518,11 +502,10 @@ package x86 is
             PFA36 : Bits_4;  -- 36-bit address
             PFA   : Bits_10; -- Address of 4MB page frame
       end case;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PDEntry_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PDEntry_Type use record
       P     at 0 range 0 .. 0;
       RW    at 0 range 1 .. 1;
       US    at 0 range 2 .. 2;
@@ -566,23 +549,31 @@ package x86 is
       );
 
    -- Page directory (4k): 1024 entries aligned on 4k boundary
-   type PD4k_Type is array (0 .. 2**10 - 1) of PDEntry_Type (PAGESELECT4k) with
-      Alignment               => PAGESIZE4k,
-      Pack                    => True,
-      Suppress_Initialization => True;
+   type PD4k_Type is array (0 .. 2**10 - 1) of PDEntry_Type (PAGESELECT4k)
+      with Alignment               => PAGESIZE4k,
+           Pack                    => True,
+           Suppress_Initialization => True;
 
    -- offset in a 4-KiB page
-   function Select_Address_Bits_OFS (CPU_Address : Address) return Bits_12 with
-      Inline => True;
+   function Select_Address_Bits_OFS
+      (CPU_Address : Address)
+      return Bits_12
+      with Inline => True;
    -- 4-KiB page
-   function Select_Address_Bits_PFA (CPU_Address : Address) return Bits_20 with
-      Inline => True;
+   function Select_Address_Bits_PFA
+      (CPU_Address : Address)
+      return Bits_20
+      with Inline => True;
    -- page table entry for 4-MiB page
-   function Select_Address_Bits_PTE (CPU_Address : Address) return Bits_10 with
-      Inline => True;
+   function Select_Address_Bits_PTE
+      (CPU_Address : Address)
+      return Bits_10
+      with Inline => True;
    -- page directory entry
-   function Select_Address_Bits_PDE (CPU_Address : Address) return Bits_10 with
-      Inline => True;
+   function Select_Address_Bits_PDE
+      (CPU_Address : Address)
+      return Bits_10
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Registers
@@ -629,8 +620,7 @@ package x86 is
 
    -- EFLAGS
 
-   type EFLAGS_Type is
-   record
+   type EFLAGS_Type is record
       CF        : Boolean; -- Carry Flag
       Reserved1 : Bits_1;
       PF        : Boolean; -- Parity Flag
@@ -653,11 +643,10 @@ package x86 is
       VIP       : Boolean; -- Virtual Interrupt Pending
       ID        : Boolean; -- Identification Flag
       Reserved5 : Bits_10;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for EFLAGS_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EFLAGS_Type use record
       CF        at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 1;
       PF        at 0 range 2 .. 2;
@@ -684,8 +673,7 @@ package x86 is
 
    -- CR0
 
-   type CR0_Type is
-   record
+   type CR0_Type is record
       PE        : Boolean; -- Protected mode Enable
       MP        : Boolean; -- Monitor Co-processor
       EM        : Boolean; -- Emulation (no x87 FPU unit present)
@@ -700,11 +688,10 @@ package x86 is
       NW        : Boolean; -- Not Write through
       CD        : Boolean; -- Cache Disable
       PG        : Boolean; -- Paging enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CR0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CR0_Type use record
       PE        at 0 range 0 .. 0;
       MP        at 0 range 1 .. 1;
       EM        at 0 range 2 .. 2;
@@ -723,18 +710,16 @@ package x86 is
 
    -- CR3
 
-   type CR3_Type is
-   record
+   type CR3_Type is record
       Reserved1 : Bits_3;
       PWT       : Boolean; -- Page-level Write-Through
       PCD       : Boolean; -- Page-level Cache Disable
       Reserved2 : Bits_7;
       PDB       : Bits_20; -- Page-Directory Base
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CR3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CR3_Type use record
       Reserved1 at 0 range 0 .. 2;
       PWT       at 0 range 3 .. 3;
       PCD       at 0 range 4 .. 4;
@@ -746,18 +731,24 @@ package x86 is
 
    -- subprograms
 
-   function ESP_Read return Address with
-      Inline => True;
-   function CR0_Read return CR0_Type with
-      Inline => True;
-   procedure CR0_Write (Value : in CR0_Type) with
-      Inline => True;
-   function CR2_Read return Address with
-      Inline => True;
-   function CR3_Read return CR3_Type with
-      Inline => True;
-   procedure CR3_Write (Value : in CR3_Type) with
-      Inline => True;
+   function ESP_Read
+      return Address
+      with Inline => True;
+   function CR0_Read
+      return CR0_Type
+      with Inline => True;
+   procedure CR0_Write
+      (Value : in CR0_Type)
+      with Inline => True;
+   function CR2_Read
+      return Address
+      with Inline => True;
+   function CR3_Read
+      return CR3_Type
+      with Inline => True;
+   procedure CR3_Write
+      (Value : in CR3_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
@@ -769,40 +760,41 @@ package x86 is
 
    BREAKPOINT_Asm_String : constant String := ".byte   0xCC";
 
-   procedure NOP with
-      Inline => True;
-   procedure BREAKPOINT with
-      Inline => True;
-   procedure Asm_Call (Target_Address : in Address) with
-      Inline => True;
+   procedure NOP
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   type Exception_Stack_Frame_Type is
-   record
+   type Exception_Stack_Frame_Type is record
       EIP    : Address;
       CS     : Selector_Type;
       Unused : Bits_16;
       EFLAGS : EFLAGS_Type;
-   end record with
-      Size => 96;
-   for Exception_Stack_Frame_Type use
-   record
+   end record
+      with Size => 96;
+   for Exception_Stack_Frame_Type use record
       EIP    at 0 range 0 .. 31;
       CS     at 4 range 0 .. 15;
       Unused at 4 range 16 .. 31;
       EFLAGS at 8 range 0 .. 31;
    end record;
 
-   procedure Irq_Enable with
-      Inline => True;
-   procedure Irq_Disable with
-      Inline => True;
-   function Irq_State_Get return Irq_State_Type with
-      Inline => True;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) with
-      Inline => True;
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
+   function Irq_State_Get
+      return Irq_State_Type
+      with Inline => True;
+   procedure Irq_State_Set
+      (Irq_State : in Irq_State_Type)
+      with Inline => True;
 
 end x86;

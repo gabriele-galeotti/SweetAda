@@ -18,7 +18,8 @@
 with System.Storage_Elements;
 with x86;
 
-package body Gdbstub.CPU is
+package body Gdbstub.CPU
+   is
 
    --========================================================================--
    --                                                                        --
@@ -38,8 +39,7 @@ package body Gdbstub.CPU is
    -- Register memory mapping
    ----------------------------------------------------------------------------
 
-   type CPU_Context_Type is
-   record
+   type CPU_Context_Type is record
       EAX    : Unsigned_32;
       ECX    : Unsigned_32;
       EDX    : Unsigned_32;
@@ -73,8 +73,7 @@ package body Gdbstub.CPU is
       FOOFF  : Unsigned_32;
       FOP    : Unsigned_32;
    end record;
-   for CPU_Context_Type use
-   record
+   for CPU_Context_Type use record
       EAX    at 0   range 0 .. 31;
       ECX    at 4   range 0 .. 31;
       EDX    at 8   range 0 .. 31;
@@ -109,15 +108,14 @@ package body Gdbstub.CPU is
       FOP    at 166 range 0 .. 31;
    end record;
 
-   Gdbstub_Data_Area : aliased CPU_Context_Type with
-      Volatile                => True,
-      Suppress_Initialization => True,
-      Export                  => True,
-      Convention              => Asm,
-      External_Name           => "gdbstub_data_area";
+   Gdbstub_Data_Area : aliased CPU_Context_Type
+      with Volatile                => True,
+           Suppress_Initialization => True,
+           Export                  => True,
+           Convention              => Asm,
+           External_Name           => "gdbstub_data_area";
 
-   type Register_Descriptor is
-   record
+   type Register_Descriptor is record
       Offset : Storage_Offset;
       Size   : Positive;
    end record;
@@ -169,17 +167,24 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- Register_Read
    ----------------------------------------------------------------------------
-   procedure Register_Read (Register_Number : in Natural) is
-      procedure Register_Read_Helper (RAddress : in Address; Size : in Positive);
-      pragma Inline (Register_Read_Helper);
-      procedure Register_Read_Helper (RAddress : in Address; Size : in Positive) is
-         RArray : Byte_Array (1 .. Size) with
-            Address    => RAddress,
-            Volatile   => True,
-            Import     => True,
-            Convention => Ada;
-         Digit1_Idx  : Integer;
-         Digit2_Idx  : Integer;
+   procedure Register_Read
+      (Register_Number : in Natural)
+      is
+      procedure Register_Read_Helper
+         (RAddress : in Address;
+          Size     : in Positive)
+         with Inline => True;
+      procedure Register_Read_Helper
+         (RAddress : in Address;
+          Size     : in Positive)
+         is
+         RArray     : Byte_Array (1 .. Size)
+            with Address    => RAddress,
+                 Volatile   => True,
+                 Import     => True,
+                 Convention => Ada;
+         Digit1_Idx : Integer;
+         Digit2_Idx : Integer;
       begin
          for Index in RArray'Range loop
             Digit1_Idx := TX_Packet_Index + 1;
@@ -193,16 +198,17 @@ package body Gdbstub.CPU is
       -- an error
       if Register_Number in Register_Number_Type'Range then
          Register_Read_Helper (
-                               Gdbstub_Data_Area'Address + Registers_Layout (Register_Number).Offset,
-                               Registers_Layout (Register_Number).Size
-                              );
+            Gdbstub_Data_Area'Address + Registers_Layout (Register_Number).Offset,
+            Registers_Layout (Register_Number).Size
+            );
       end if;
    end Register_Read;
 
    ----------------------------------------------------------------------------
    -- Registers_Read
    ----------------------------------------------------------------------------
-   procedure Registers_Read is
+   procedure Registers_Read
+      is
    begin
       for Register_Number in EAX .. GS loop
          Register_Read (Register_Number);
@@ -212,11 +218,11 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- Register_Write
    ----------------------------------------------------------------------------
-   procedure Register_Write (
-                             Register_Number : in Natural;
-                             Register_Value  : in Byte_Array;
-                             Byte_Count      : in Natural
-                            ) is
+   procedure Register_Write
+      (Register_Number : in Natural;
+       Register_Value  : in Byte_Array;
+       Byte_Count      : in Natural)
+      is
    begin
       null; -- __TBD__
    end Register_Write;
@@ -224,7 +230,8 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- Registers_Write
    ----------------------------------------------------------------------------
-   procedure Registers_Write is
+   procedure Registers_Write
+      is
    begin
       null; -- __TBD__
    end Registers_Write;
@@ -232,7 +239,9 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- PC_Read
    ----------------------------------------------------------------------------
-   function PC_Read return Address is
+   function PC_Read
+      return Address
+      is
    begin
       return To_Address (Integer_Address (Gdbstub_Data_Area.EIP));
    end PC_Read;
@@ -240,7 +249,9 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- PC_Write
    ----------------------------------------------------------------------------
-   procedure PC_Write (Value : in Address) is
+   procedure PC_Write
+      (Value : in Address)
+      is
    begin
       Gdbstub_Data_Area.EIP := Unsigned_32 (To_Integer (Value));
    end PC_Write;
@@ -250,7 +261,8 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- x86 INT $3 instruction leaves PC pointing to the next instruction.
    ----------------------------------------------------------------------------
-   procedure Breakpoint_Adjust_PC_Backward is
+   procedure Breakpoint_Adjust_PC_Backward
+      is
    begin
       PC_Write (PC_Read - Opcode_BREAKPOINT_Size);
    end Breakpoint_Adjust_PC_Backward;
@@ -258,7 +270,8 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- Breakpoint_Adjust_PC_Forward
    ----------------------------------------------------------------------------
-   procedure Breakpoint_Adjust_PC_Forward is
+   procedure Breakpoint_Adjust_PC_Forward
+      is
    begin
       PC_Write (PC_Read + Opcode_BREAKPOINT_Size);
    end Breakpoint_Adjust_PC_Forward;
@@ -266,7 +279,8 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- Breakpoint_Adjust_PC
    ----------------------------------------------------------------------------
-   procedure Breakpoint_Adjust_PC is
+   procedure Breakpoint_Adjust_PC
+      is
    begin
       Breakpoint_Adjust_PC_Backward;
    end Breakpoint_Adjust_PC;
@@ -274,7 +288,8 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- Breakpoint_Skip
    ----------------------------------------------------------------------------
-   procedure Breakpoint_Skip is
+   procedure Breakpoint_Skip
+      is
    begin
       Breakpoint_Adjust_PC_Forward;
    end Breakpoint_Skip;
@@ -282,7 +297,8 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- Breakpoint_Set
    ----------------------------------------------------------------------------
-   procedure Breakpoint_Set is
+   procedure Breakpoint_Set
+      is
    begin
       BREAKPOINT;
    end Breakpoint_Set;
@@ -290,7 +306,9 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- Step_Execute
    ----------------------------------------------------------------------------
-   function Step_Execute return Boolean is
+   function Step_Execute
+      return Boolean
+      is
    begin
       Gdbstub_Data_Area.EFLAGS.TF := True;
       return True;
@@ -299,7 +317,8 @@ package body Gdbstub.CPU is
    ----------------------------------------------------------------------------
    -- Step_Resume
    ----------------------------------------------------------------------------
-   procedure Step_Resume is
+   procedure Step_Resume
+      is
    begin
       Gdbstub_Data_Area.EFLAGS.TF := False;
    end Step_Resume;

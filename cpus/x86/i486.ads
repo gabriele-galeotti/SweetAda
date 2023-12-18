@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package i486 is
+package i486
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -29,8 +31,6 @@ package i486 is
    --                                                                        --
    --========================================================================--
 
-   pragma Preelaborate;
-
    use System;
    use Interfaces;
    use Bits;
@@ -39,8 +39,7 @@ package i486 is
    -- CR4 register
    ----------------------------------------------------------------------------
 
-   type CR4_Type is
-   record
+   type CR4_Type is record
       VME        : Boolean;
       PVI        : Boolean;
       TSD        : Boolean;
@@ -64,11 +63,10 @@ package i486 is
       SMAP       : Boolean;
       PKE        : Boolean;
       Reserved4  : Bits_9;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CR4_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CR4_Type use record
       VME        at 0 range 0 .. 0;
       PVI        at 0 range 1 .. 1;
       TSD        at 0 range 2 .. 2;
@@ -94,27 +92,30 @@ package i486 is
       Reserved4  at 0 range 23 .. 31;
    end record;
 
-   function CR4_Read return CR4_Type with
-      Inline => True;
-   procedure CR4_Write (Value : in CR4_Type) with
-      Inline => True;
+   function CR4_Read
+      return CR4_Type
+      with Inline => True;
+   procedure CR4_Write
+      (Value : in CR4_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- CPUID
    ----------------------------------------------------------------------------
 
-   function CPUID_Enabled return Boolean with
-      Inline => True;
+   function CPUID_Enabled
+      return Boolean
+      with Inline => True;
 
-   type CPUID_VendorID_String_Type is new String (1 .. 12) with
-      Alignment => Unsigned_32'Alignment,
-      Size      => Unsigned_32'Size * 3;
+   type CPUID_VendorID_String_Type is new String (1 .. 12)
+      with Alignment => Unsigned_32'Alignment,
+           Size      => Unsigned_32'Size * 3;
 
-   function CPU_VendorID_Read return CPUID_VendorID_String_Type with
-      Inline => True;
+   function CPU_VendorID_Read
+      return CPUID_VendorID_String_Type
+      with Inline => True;
 
-   type CPU_Features_Type is
-   record
+   type CPU_Features_Type is record
       FPU       : Boolean;
       VME       : Boolean;
       DE        : Boolean;
@@ -147,11 +148,10 @@ package i486 is
       TM1       : Boolean;
       IA64      : Boolean;
       PBE       : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CPU_Features_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CPU_Features_Type use record
       FPU       at 0 range 0 .. 0;
       VME       at 0 range 1 .. 1;
       DE        at 0 range 2 .. 2;
@@ -186,7 +186,8 @@ package i486 is
       PBE       at 0 range 31 .. 31;
    end record;
 
-   function CPU_Features_Read return CPU_Features_Type with
-      Inline => True;
+   function CPU_Features_Read
+      return CPU_Features_Type
+      with Inline => True;
 
 end i486;

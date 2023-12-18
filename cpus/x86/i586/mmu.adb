@@ -17,12 +17,11 @@
 
 with System;
 with System.Storage_Elements;
-with Bits;
-with CPU;
 with x86;
 with i586;
 
-package body MMU is
+package body MMU
+   is
 
    --========================================================================--
    --                                                                        --
@@ -34,13 +33,11 @@ package body MMU is
 
    use System;
    use System.Storage_Elements;
-   use Bits;
-   use CPU;
    use x86;
    use i586;
 
-   PD : aliased PD4M_Type with
-      Volatile => True;
+   PD : aliased PD4M_Type
+      with Volatile => True;
 
    --========================================================================--
    --                                                                        --
@@ -55,7 +52,8 @@ package body MMU is
    ----------------------------------------------------------------------------
    -- 4-MiB page version (PSE)
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
       CR0                      : CR0_Type;
       CR3                      : CR3_Type;
       CR4                      : CR4_Type;

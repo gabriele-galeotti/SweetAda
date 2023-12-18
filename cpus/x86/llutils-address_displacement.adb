@@ -19,11 +19,12 @@ with System.Machine_Code;
 with Ada.Characters.Latin_1;
 
 separate (LLutils)
-function Address_Displacement (
-                               Local_Address  : System.Address;
-                               Target_Address : System.Address;
-                               Scale_Address  : Bits.Address_Shift
-                              ) return SSE.Storage_Offset is
+function Address_Displacement
+   (Local_Address  : System.Address;
+    Target_Address : System.Address;
+    Scale_Address  : Bits.Address_Shift)
+   return SSE.Storage_Offset
+   is
    use System.Machine_Code;
    package ISO88591 renames Ada.Characters.Latin_1;
    CRLF   : constant String := ISO88591.CR & ISO88591.LF;
