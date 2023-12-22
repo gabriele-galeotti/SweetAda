@@ -145,7 +145,7 @@ return 0
 ################################################################################
 # LFPL_list()                                                                  #
 #                                                                              #
-# Build a list of the source languages detected in LOWLEVEL_FILES_PLATFORM.    #
+# Build a list of the source languages detected in input arguments.            #
 ################################################################################
 LFPL_list()
 {
@@ -157,7 +157,7 @@ for f in "$@" ; do
     *.S)
       if [ ! "x${_LFP_S_files}" = "xY" ] ; then
         _LFP_S_files=Y
-        _LFP_list="${_LFPL_list:+${_LFPL_list} }Asm_Cpp"
+        _LFPL_list="${_LFPL_list:+${_LFPL_list} }Asm_Cpp"
       fi
       ;;
     *.c)

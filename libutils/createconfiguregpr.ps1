@@ -129,7 +129,7 @@ function print_list
 ################################################################################
 # LFPL_list()                                                                  #
 #                                                                              #
-# Build a list of the source languages detected in LOWLEVEL_FILES_PLATFORM.    #
+# Build a list of the source languages detected in input arguments.            #
 ################################################################################
 function LFPL_list
 {
