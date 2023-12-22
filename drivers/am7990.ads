@@ -22,7 +22,8 @@ with Interfaces;
 with Bits;
 with MMIO;
 
-package Am7990 is
+package Am7990
+   is
 
    --========================================================================--
    --                                                                        --

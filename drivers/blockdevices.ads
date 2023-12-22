@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package BlockDevices is
+package BlockDevices
+   with  Pure => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package BlockDevices is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Pure;
 
    use System;
 

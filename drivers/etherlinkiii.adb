@@ -22,7 +22,8 @@ with CPU.IO;
 with PC;
 with Console;
 
-package body EtherLinkIII is
+package body EtherLinkIII
+   is
 
    --========================================================================--
    --                                                                        --

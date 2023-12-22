@@ -19,7 +19,8 @@ with System;
 with Interfaces;
 with Ethernet;
 
-package EtherLinkIII is
+package EtherLinkIII
+   is
 
    --========================================================================--
    --                                                                        --
