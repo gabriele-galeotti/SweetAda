@@ -83,7 +83,7 @@ TILTIMEOUT=3
 # EL2: -M virt,virtualization=on
 # EL3: -M virt,secure=on
 ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
-  -M virt,secure=on -cpu cortex-a53 -m 128 \
+  -M virt,secure=on -cpu cortex-a53 -smp 4 -m 128 \
   -bios ${KERNEL_ROMFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -chardev "socket,id=SERIALPORT0,port=${SERIALPORT0},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \
@@ -137,7 +137,7 @@ elif [ "x$1" = "x-debug" ] ; then
     -q \
     -iex "set basenames-may-differ" \
     ${KERNEL_OUTFILE} \
-    -ex "target remote tcp:localhost:1234"
+    -ex "target extended-remote tcp:localhost:1234"
 fi
 
 exit $?
