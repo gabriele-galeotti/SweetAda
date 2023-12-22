@@ -8,26 +8,50 @@
 # PCI Device #0003 8086:100E 82540EM Gigabit Ethernet Controller
 #
 
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+USE_CLIBRARY := Y
+
+USE_APPLICATION := test-PC-x86
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU       := x86
 CPU_MODEL := i586
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     := -march=i586
-STARTUP_OBJECTS           := startup.S llkernel.S
-GCC_SWITCHES_STARTUP      := -DMODE32 -DENABLE_A20 -DDATA_RELOC
 LD_SWITCHES_PLATFORM      :=
 OBJDUMP_SWITCHES_PLATFORM :=
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+POSTBUILD_ROMFILE         := Y
 
-USE_CLIBRARY := Y
-EXTERNAL_OBJECTS += ctest
+CONFIGURE_FILES_PLATFORM       := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S startupc.c
+GCC_SWITCHES_LOWLEVEL_PLATFORM := -DMODE32 -DENABLE_A20 -DDATA_RELOC
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
 
 export KERNEL_STACK_SIZE := 4096
+export USE_QEMU_IOEMU    := False
 
-export USE_QEMU_IOEMU := False
-
-USE_APPLICATION := test-PC-x86
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

@@ -1,30 +1,55 @@
 
 #
-# Arduino UNO
+# Arduino™ UNO
 #
-# AVR ATmega328P
+# AVR® ATmega328P
 #
 
-# force ZFP
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
+USE_APPLICATION := test-ArduinoUNO
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU       := AVR
 CPU_MODEL := ATMEGA328P
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     := -mmcu=atmega328p -Wa,-mmcu=atmega328p
-STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := -m avr5 --undefined=vectors
 OBJDUMP_SWITCHES_PLATFORM :=
+#OBJCOPY_SWITCHES_PLATFORM := -O srec -R .eeprom
+OBJCOPY_SWITCHES_PLATFORM := -O ihex -R .eeprom
 POSTBUILD_ROMFILE         := Y
 # override default filename
 KERNEL_ROMFILE            := $(KERNEL_BASENAME).hex
-#OBJCOPY_SWITCHES_PLATFORM := -O srec -R .eeprom
-OBJCOPY_SWITCHES_PLATFORM := -O ihex -R .eeprom
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
 
-USE_APPLICATION := test-ArduinoUNO
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

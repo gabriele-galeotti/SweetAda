@@ -441,13 +441,13 @@ CXXC_SWITCHES_WARNING :=
 #
 # Initialize platform-dependent toolchain switches.
 #
-AS_SWITCHES_PLATFORM      :=
-GCC_SWITCHES_PLATFORM     :=
-STARTUP_OBJECTS           :=
-GCC_SWITCHES_STARTUP      :=
-LD_SWITCHES_PLATFORM      :=
-OBJCOPY_SWITCHES_PLATFORM :=
-OBJDUMP_SWITCHES_PLATFORM :=
+AS_SWITCHES_PLATFORM           :=
+GCC_SWITCHES_PLATFORM          :=
+LOWLEVEL_FILES_PLATFORM        :=
+GCC_SWITCHES_LOWLEVEL_PLATFORM :=
+LD_SWITCHES_PLATFORM           :=
+OBJCOPY_SWITCHES_PLATFORM      :=
+OBJDUMP_SWITCHES_PLATFORM      :=
 
 #
 # Initialize RTS-imported toolchain switches.
@@ -646,24 +646,27 @@ export                           \
        CPU_SUPPORT_DEFLIST
 
 # configuration
-export                    \
-       PLATFORM           \
-       SUBPLATFORM        \
-       CPU                \
-       CPU_MODEL          \
-       FPU_MODEL          \
-       RTS                \
-       PROFILE            \
-       ADA_MODE           \
-       USE_LIBGCC         \
-       USE_LIBADA         \
-       USE_CLIBRARY       \
-       USE_LIBM           \
-       BUILD_MODE         \
-       OPTIMIZATION_LEVEL \
-       EXTERNAL_OBJECTS   \
-       STACK_LIMIT        \
-       USE_APPLICATION    \
+export                                \
+       PLATFORM                       \
+       SUBPLATFORM                    \
+       CPU                            \
+       CPU_MODEL                      \
+       FPU_MODEL                      \
+       RTS                            \
+       PROFILE                        \
+       ADA_MODE                       \
+       USE_LIBGCC                     \
+       USE_LIBM                       \
+       USE_LIBADA                     \
+       USE_CLIBRARY                   \
+       BUILD_MODE                     \
+       OPTIMIZATION_LEVEL             \
+       GCC_SWITCHES_PLATFORM          \
+       LOWLEVEL_FILES_PLATFORM        \
+       GCC_SWITCHES_LOWLEVEL_PLATFORM \
+       EXTERNAL_OBJECTS               \
+       STACK_LIMIT                    \
+       USE_APPLICATION                \
        GNATBIND_SECSTACK
 
 # toolchain
@@ -699,9 +702,6 @@ export                           \
        TOOLCHAIN_OBJDUMP         \
        TOOLCHAIN_RANLIB          \
        GCC_VERSION               \
-       GCC_SWITCHES_PLATFORM     \
-       STARTUP_OBJECTS           \
-       GCC_SWITCHES_STARTUP      \
        RTS_ROOT_PATH             \
        RTS_PATH                  \
        ADAC                      \
@@ -1038,6 +1038,7 @@ endif
               --start-group                         \
               @gnatbind_objs.lst                    \
               $(OBJECT_DIRECTORY)/b__main.o         \
+              $(EXTERNAL_OBJECTS)                   \
               $(LIBM_OBJECT)                        \
               $(CLIBRARY_OBJECT)                    \
               $(OBJECT_DIRECTORY)/libcore.a         \
@@ -1307,8 +1308,8 @@ ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"ADA GCC SWITCHES (RTS):  $(strip $(ADAC_SWITCHES_RTS))")
 	@$(call echo-print,"C GCC SWITCHES (RTS):    $(strip $(CC_SWITCHES_RTS))")
 	@$(call echo-print,"GCC SWITCHES (PLATFORM): $(strip $(GCC_SWITCHES_PLATFORM))")
-	@$(call echo-print,"STARTUP OBJECTS:         $(strip $(STARTUP_OBJECTS))")
-	@$(call echo-print,"GCC SWITCHES (STARTUP):  $(strip $(GCC_SWITCHES_STARTUP))")
+	@$(call echo-print,"LOWLEVEL FILES:          $(strip $(LOWLEVEL_FILES_PLATFORM))")
+	@$(call echo-print,"GCC SWITCHES (LOWLEVEL): $(strip $(GCC_SWITCHES_LOWLEVEL_PLATFORM))")
 	@$(call echo-print,"LD SCRIPT:               $(LD_SCRIPT)")
 	@$(call echo-print,"LD SWITCHES:             $(strip $(LD_SWITCHES_PLATFORM))")
 	@$(call echo-print,"OBJCOPY SWITCHES:        $(strip $(OBJCOPY_SWITCHES_PLATFORM))")

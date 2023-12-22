@@ -2,27 +2,55 @@
 #
 # Amiga (FS-UAE emulator)
 #
-# M68030
+# Motorola® M68030
 #
+
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+USE_APPLICATION := test-Amiga-FS-UAE
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
 
 CPU       := M68k
 CPU_MODEL := M68030
 FPU_MODEL := M68881
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     := -mcpu=68030 -m68881
-STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
-OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
-OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 LD_SCRIPT                 := linker.lds-rom
 #LD_SCRIPT                 := linker.lds-chipram # S-record download
 #LD_SCRIPT                 := linker.lds-fastram # S-record download
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+OBJDUMP_SWITCHES_PLATFORM :=
+OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+POSTBUILD_ROMFILE         := Y
+
+CONFIGURE_FILES_PLATFORM := fs-uae.conf configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+CLEAN_OBJECTS_COMMON += debug.uae fs-uae.log.txt
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
 
 export USE_FS_UAE_IOEMU := False
 
-USE_APPLICATION := test-Amiga-FS-UAE
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

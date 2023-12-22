@@ -1,27 +1,49 @@
 
 #
-# Samsung Galaxy J1
+# Samsung® Galaxy J1
 #
-# ARM Cortex-A7 LE (ARMv7-A)
+# ARM® Cortex-A7 LE (ARMv7-A)
 #
 
-# force ZFP
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU       := ARM
 CPU_MODEL := CortexA7
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     := -mcpu=cortex-a7
-STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := N
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
 
-USE_APPLICATION := dummy
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

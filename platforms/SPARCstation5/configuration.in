@@ -5,20 +5,39 @@
 # SPARC V8 BE - Fujitsu MB86904/Sun STP1012 "microSPARC II"
 #
 
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU := SPARC
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     := -mcpu=v8 -m32 -mflat
-STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      :=
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+POSTBUILD_ROMFILE         := Y
 
-# default parameters
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
 export BOOT_FROM_NETWORK := False
-export USE_QEMU := False
-export USE_QEMU_IOEMU := False
+export USE_QEMU          := False
+export USE_QEMU_IOEMU    := False
 
 #APPLICATION_TYPE := ROM
 #APPLICATION_TYPE := RAM
@@ -27,82 +46,76 @@ APPLICATION_TYPE := QEMU
 #APPLICATION_TYPE := srecord
 
 ################################################################################
-ifeq ($(APPLICATION_TYPE),ROM)
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
-GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=1
-USE_APPLICATION      := test-SPARCstation5
-LD_SCRIPT            := linker.lds-ROM
+ifeq      ($(APPLICATION_TYPE),ROM)
+
+USE_APPLICATION := test-SPARCstation5
+LD_SCRIPT       := linker.lds-ROM
+
+GCC_SWITCHES_LOWLEVEL_PLATFORM += -DRELOCATE_DATA=1
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
-
 RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/boot-rom.sh
 DEBUG_COMMAND := $(RUN_COMMAND)
 
-endif
-################################################################################
-ifeq ($(APPLICATION_TYPE),RAM)
+else ifeq ($(APPLICATION_TYPE),RAM)
 
-GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=0
-USE_APPLICATION      := test-SPARCstation5
-LD_SCRIPT            := linker.lds-RAM
+USE_APPLICATION := test-SPARCstation5
+LD_SCRIPT       := linker.lds-RAM
+
+GCC_SWITCHES_LOWLEVEL_PLATFORM += -DRELOCATE_DATA=0
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
-
 RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord.tcl   \
                    "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 9600
 DEBUG_COMMAND :=
 
-endif
-################################################################################
-ifeq ($(APPLICATION_TYPE),QEMU)
+else ifeq ($(APPLICATION_TYPE),QEMU)
 
-GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=1
 LD_SCRIPT            := linker.lds-ROM
 USE_APPLICATION      := test-SPARCstation5
+
+GCC_SWITCHES_LOWLEVEL_PLATFORM += -DRELOCATE_DATA=1
 
 export USE_QEMU := True
 export USE_QEMU_IOEMU := False
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
-
 RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT)
 DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT) -debug
 
-endif
-################################################################################
-ifeq ($(APPLICATION_TYPE),networkboot)
+else ifeq ($(APPLICATION_TYPE),networkboot)
 
-GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=0
 LD_SCRIPT            := linker.lds-networkboot
 USE_APPLICATION      := test-SPARCstation5
+
+GCC_SWITCHES_LOWLEVEL_PLATFORM += -DRELOCATE_DATA=0
 
 POSTBUILD_COMMAND := $(SHELL_EXEC) postbuild-network$(SCREXT)
 
 export BOOT_FROM_NETWORK := True
-
 export ELFTOAOUT := /usr/local/bin/elftoaout
 export TFTP_DIRECTORY := /home/tftpboot
 export TFTP_FILENAME := C0A80202.SUN4M
 
-endif
-################################################################################
-ifeq ($(APPLICATION_TYPE),srecord)
+else ifeq ($(APPLICATION_TYPE),srecord)
 
-GCC_SWITCHES_STARTUP += -DRELOCATE_DATA=1
 LD_SCRIPT            := linker.lds-srecord
 USE_APPLICATION      := test-srecord
-
 POSTBUILD_COMMAND := $(SHELL_EXEC) postbuild-srecord$(SCREXT)
+
+GCC_SWITCHES_LOWLEVEL_PLATFORM += -DRELOCATE_DATA=1
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
-
 RUN_COMMAND   :=
 DEBUG_COMMAND :=
 
 endif
-################################################################################
 

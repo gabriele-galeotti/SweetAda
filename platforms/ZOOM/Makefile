@@ -33,7 +33,10 @@ endif
 
 LIBRARY_NAME := platform
 
-OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
+OBJECTS_XFORM_1 := $(filter %.S %.c,$(LOWLEVEL_FILES_PLATFORM))
+OBJECTS_XFORM_2 := $(OBJECTS_XFORM_1:.S=.o)
+OBJECTS_XFORM_3 := $(OBJECTS_XFORM_2:.c=.o)
+OBJECTS := $(foreach f,$(OBJECTS_XFORM_3),$(OBJ_DIRECTORY)/$(f))
 
 -include Makefile.if.in
 

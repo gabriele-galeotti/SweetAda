@@ -5,23 +5,48 @@
 # MKL46Z256VLLZ4 ARM Cortex-M0 LE (ARMv6-M)
 #
 
-# force ZFP
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
+USE_APPLICATION := test-FRDM-KL46Z
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU       := ARM
 CPU_MODEL := CORTEXM0
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m0
-STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+POSTBUILD_ROMFILE         := Y
 
-USE_APPLICATION := test-FRDM-KL46Z
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -p "/opt/OpenOCD"                                          \

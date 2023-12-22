@@ -5,30 +5,53 @@
 # AVR ATmega128A/ATmega328P
 #
 
-# force ZFP
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 #RTS        := zfp
 #PROFILE    := zfp
 #USE_LIBADA := N
 
+USE_APPLICATION := test-QEMU-AVR
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU := AVR
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
 
 #CPU_MODEL             := ATMEGA128A
 #GCC_SWITCHES_PLATFORM := -mmcu=atmega128a
 #LD_SCRIPT             := linker.lds-avr51
 #LD_SWITCHES_PLATFORM  := -m avr51 --undefined=vectors
-
 CPU_MODEL             := ATMEGA328P
 GCC_SWITCHES_PLATFORM := -mmcu=atmega328p
 LD_SCRIPT             := linker.lds-avr5
 LD_SWITCHES_PLATFORM  := -m avr5 --undefined=vectors
-
-STARTUP_OBJECTS           := startup.S llkernel.S
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+POSTBUILD_ROMFILE         := Y
 
-USE_APPLICATION := test-QEMU-AVR
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

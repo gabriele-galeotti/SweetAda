@@ -31,6 +31,7 @@
 # STACK_LIMIT
 # GNATBIND_SECSTACK
 # USE_LIBGCC
+# USE_LIBM
 # USE_LIBADA
 # USE_CLIBRARY
 # ADAC_SWITCHES_RTS
@@ -126,6 +127,41 @@ function print_list
 }
 
 ################################################################################
+# LFPL_list()                                                                  #
+#                                                                              #
+# Build a list of the source languages detected in LOWLEVEL_FILES_PLATFORM.    #
+################################################################################
+function LFPL_list
+{
+  param([string]$list)
+  $LFP_S_files = $false
+  $LFP_C_files = $false
+  $LFPL = ""
+  foreach ($f in $list)
+  {
+     if ($f.Trim().EndsWith(".S") -and -not $LFP_S_files)
+     {
+       $LFP_S_files = $true
+       if ($LFPL.Length -gt 0)
+       {
+         $LFPL = $LFPL + " "
+       }
+       $LFPL = $LFPL + "Asm_Cpp"
+     }
+     elseif ($f.Trim().EndsWith(".c") -and -not $LFP_C_files)
+     {
+       $LFP_C_files = $true
+       if ($LFPL.Length -gt 0)
+       {
+         $LFPL = $LFPL + " "
+       }
+       $LFPL = $LFPL + "C"
+     }
+  }
+  return $LFPL
+}
+
+################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
@@ -168,48 +204,52 @@ print_V $configure_filename
 #
 # Configuration declarations.
 #
-print_I $configure_filename "SweetAda_Path         := `"$(GetEnvVar SWEETADA_PATH)`";"
-print_I $configure_filename "Toolchain_Prefix      := `"$(GetEnvVar TOOLCHAIN_PREFIX)`";"
-print_I $configure_filename "Gprbuild_Prefix       := `"$(GetEnvVar GPRBUILD_PREFIX)`";"
-print_I $configure_filename "Toolchain_Name        := `"$(GetEnvVar TOOLCHAIN_NAME)`";"
-print_I $configure_filename "GCC_Wrapper           := `"$(GetEnvVar GCC_WRAPPER)`";"
-print_I $configure_filename "GnatAdc_Filename      := `"$(GetEnvVar GNATADC_FILENAME)`";"
-print_I $configure_filename "Library_Directory     := `"$(GetEnvVar LIBRARY_DIRECTORY)`";"
-print_I $configure_filename "Object_Directory      := `"$(GetEnvVar OBJECT_DIRECTORY)`";"
-print_I $configure_filename "Platform              := `"$(GetEnvVar PLATFORM)`";"
-print_I $configure_filename "Cpu                   := `"$(GetEnvVar CPU)`";"
-print_I $configure_filename "RTS_Path              := `"$(GetEnvVar RTS_PATH)`";"
-print_I $configure_filename "RTS                   := `"$(GetEnvVar RTS)`";"
-print_I $configure_filename "Profile               := `"$(GetEnvVar PROFILE)`";"
-print_I $configure_filename "Ada_Mode              := `"$(GetEnvVar ADA_MODE)`";"
-print_I $configure_filename "Optimization_Level    := `"$(GetEnvVar OPTIMIZATION_LEVEL)`";"
-print_I $configure_filename "Stack_Limit           := `"$(GetEnvVar STACK_LIMIT)`";"
-print_I $configure_filename "Gnatbind_SecStack     := `"$(GetEnvVar GNATBIND_SECSTACK)`";"
-print_I $configure_filename "Use_LibGCC            := `"$(GetEnvVar USE_LIBGCC)`";"
-print_I $configure_filename "Use_LibAda            := `"$(GetEnvVar USE_LIBADA)`";"
-print_I $configure_filename "Use_CLibrary          := `"$(GetEnvVar USE_CLIBRARY)`";"
-$indentl =                  "                          "
-print_I $configure_filename "ADAC_Switches_RTS     := ("
+print_I $configure_filename "SweetAda_Path                     := `"$(GetEnvVar SWEETADA_PATH)`";"
+print_I $configure_filename "Toolchain_Prefix                  := `"$(GetEnvVar TOOLCHAIN_PREFIX)`";"
+print_I $configure_filename "Gprbuild_Prefix                   := `"$(GetEnvVar GPRBUILD_PREFIX)`";"
+print_I $configure_filename "Toolchain_Name                    := `"$(GetEnvVar TOOLCHAIN_NAME)`";"
+print_I $configure_filename "GCC_Wrapper                       := `"$(GetEnvVar GCC_WRAPPER)`";"
+print_I $configure_filename "GnatAdc_Filename                  := `"$(GetEnvVar GNATADC_FILENAME)`";"
+print_I $configure_filename "Library_Directory                 := `"$(GetEnvVar LIBRARY_DIRECTORY)`";"
+print_I $configure_filename "Object_Directory                  := `"$(GetEnvVar OBJECT_DIRECTORY)`";"
+print_I $configure_filename "Platform                          := `"$(GetEnvVar PLATFORM)`";"
+print_I $configure_filename "Cpu                               := `"$(GetEnvVar CPU)`";"
+print_I $configure_filename "RTS_Path                          := `"$(GetEnvVar RTS_PATH)`";"
+print_I $configure_filename "RTS                               := `"$(GetEnvVar RTS)`";"
+print_I $configure_filename "Profile                           := `"$(GetEnvVar PROFILE)`";"
+print_I $configure_filename "Ada_Mode                          := `"$(GetEnvVar ADA_MODE)`";"
+print_I $configure_filename "Optimization_Level                := `"$(GetEnvVar OPTIMIZATION_LEVEL)`";"
+print_I $configure_filename "Stack_Limit                       := `"$(GetEnvVar STACK_LIMIT)`";"
+print_I $configure_filename "Gnatbind_SecStack                 := `"$(GetEnvVar GNATBIND_SECSTACK)`";"
+print_I $configure_filename "Use_LibGCC                        := `"$(GetEnvVar USE_LIBGCC)`";"
+print_I $configure_filename "Use_Libm                          := `"$(GetEnvVar USE_LIBM)`";"
+print_I $configure_filename "Use_LibAda                        := `"$(GetEnvVar USE_LIBADA)`";"
+print_I $configure_filename "Use_CLibrary                      := `"$(GetEnvVar USE_CLIBRARY)`";"
+$indentl =                  "                                      "
+print_I $configure_filename "ADAC_Switches_RTS                 := ("
 print_list $configure_filename $(GetEnvVar ADAC_SWITCHES_RTS).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                         );"
-print_I $configure_filename "CC_Switches_RTS       := ("
+print_I $configure_filename "                                     );"
+print_I $configure_filename "CC_Switches_RTS                   := ("
 print_list $configure_filename $(GetEnvVar CC_SWITCHES_RTS).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                         );"
-print_I $configure_filename "GCC_Switches_Platform := ("
+print_I $configure_filename "                                     );"
+print_I $configure_filename "GCC_Switches_Platform             := ("
 print_list $configure_filename $(GetEnvVar GCC_SWITCHES_PLATFORM).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                         );"
-print_I $configure_filename "Startup_Objects       := ("
-print_list $configure_filename $(GetEnvVar STARTUP_OBJECTS).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                         );"
-print_I $configure_filename "GCC_Switches_Startup  := ("
-print_list $configure_filename $(GetEnvVar GCC_SWITCHES_STARTUP).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                         );"
-print_I $configure_filename "Include_Directories   := ("
+print_I $configure_filename "                                     );"
+print_I $configure_filename "Lowlevel_Files_Platform           := ("
+print_list $configure_filename $(GetEnvVar LOWLEVEL_FILES_PLATFORM).Trim(" ") $indentation_level $indentl
+print_I $configure_filename "                                     );"
+print_I $configure_filename "Lowlevel_Files_Platform_Languages := ("
+print_list $configure_filename $(LFPL_list $(GetEnvVar LOWLEVEL_FILES_PLATFORM)) $indentation_level $indentl
+print_I $configure_filename "                                     );"
+print_I $configure_filename "GCC_Switches_Lowlevel_Platform    := ("
+print_list $configure_filename $(GetEnvVar GCC_SWITCHES_LOWLEVEL_PLATFORM).Trim(" ") $indentation_level $indentl
+print_I $configure_filename "                                     );"
+print_I $configure_filename "Include_Directories               := ("
 print_list $configure_filename $(GetEnvVar INCLUDE_DIRECTORIES).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                         );"
-print_I $configure_filename "Implicit_ALI_Units    := ("
+print_I $configure_filename "                                     );"
+print_I $configure_filename "Implicit_ALI_Units                := ("
 print_list $configure_filename $(GetEnvVar IMPLICIT_ALI_UNITS).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                         );"
+print_I $configure_filename "                                     );"
 print_V $configure_filename
 
 #

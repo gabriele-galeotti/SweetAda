@@ -1,29 +1,54 @@
 
 #
-# MPC8306 "COMESA Switch" CPU board
+# MPC8306 embedded board CPU board
 #
 
-# force ZFP
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
+USE_APPLICATION := test-MPC8306-Switch
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU := PowerPC
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
 
 # -meabi -msdata=eabi
 GCC_SWITCHES_PLATFORM     := -mcpu=e300c3 -meabi -msoft-float -Wa,-me300 -Wa,-mregnames
-STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+POSTBUILD_ROMFILE         := Y
 
-USE_APPLICATION := test-MPC8306-Switch
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
 
 export CCS_PREFIX=/root/project/hardware/PowerPC/USBTAP
 export CCS_NETSERVER_PORT=41476
 export USBTAP_SN=12022069
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/ccs-exec.sh -server
 SESSION_END_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/ccs-exec.sh -shutdown

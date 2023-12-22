@@ -5,28 +5,53 @@
 # NS7520 ARM7TDMI BE (ARMv4T)
 #
 
-# force ZFP
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
-CPU            := ARM
-CPU_MODEL      := ARM7TDMI
+USE_APPLICATION := test-DigiConnectME
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
+CPU       := ARM
+CPU_MODEL := ARM7TDMI
+
 # override cpus/ARM/configuration.in
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_ARMeb)
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     := -mcpu=arm7tdmi -mabi=aapcs
-STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := --undefined=reset --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+POSTBUILD_ROMFILE         := Y
 
-USE_APPLICATION := test-DigiConnectME
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 
-OPENOCD_PREFIX := /usr/local
-export OPENOCD_PREFIX
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
+
+export OPENOCD_PREFIX := /usr/local
 
 SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -server
 SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -shutdown

@@ -22,15 +22,17 @@ library project Platform is
 
    for Target use Configure.Toolchain_Name;
    for Source_Dirs use (".") & Include_Directories;
-   for Default_Language use "Asm_Cpp";
+   for Languages use Configure.Lowlevel_Files_Platform_Languages;
 
-   for Source_Files use Configure.Startup_Objects;
+   for Source_Files use Configure.Lowlevel_Files_Platform;
 
    ----------------------------------------------------------------------------
    -- Naming
    ----------------------------------------------------------------------------
 
-   package Naming renames Gprbuild_Tc.Naming;
+   package Naming extends Gprbuild_Tc.Naming is
+      for Spec_Suffix ("C") use ".hc";
+   end Naming;
 
    ----------------------------------------------------------------------------
    -- Builder
@@ -44,7 +46,9 @@ library project Platform is
 
    package Compiler extends Gprbuild_Tc.Compiler is
       -- Asm_Cpp
-      for Switches ("Asm_Cpp") use Compiler'Switches ("Asm_Cpp") & Configure.GCC_Switches_Startup;
+      for Switches ("Asm_Cpp") use Compiler'Switches ("Asm_Cpp") & Configure.GCC_Switches_Lowlevel_Platform;
+      -- C
+      for Switches ("C") use Compiler'Switches ("C") & Configure.GCC_Switches_Lowlevel_Platform;
    end Compiler;
 
    ----------------------------------------------------------------------------

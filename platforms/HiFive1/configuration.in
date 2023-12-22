@@ -5,25 +5,49 @@
 # RISC-V SiFive E31 RV32IMAC
 #
 
-# force ZFP
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
+USE_APPLICATION := test-HiFive1
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU       := RISC-V
 CPU_MODEL := RV32IMAC
 
-GCC_SWITCHES_PLATFORM     := -march=rv32imac -mabi=ilp32
-STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      := -m elf32lriscv
-LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0x200BFF8
-LD_SWITCHES_PLATFORM      += --defsym _riscv_mtimecmp_mmap=0x2004000
-OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := N
-OBJCOPY_SWITCHES_PLATFORM :=
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
 
-USE_APPLICATION := test-HiFive1
+GCC_SWITCHES_PLATFORM     := -march=rv32imac -mabi=ilp32
+LD_SWITCHES_PLATFORM      := -m elf32lriscv
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0x200BFF8    \
+                             --defsym _riscv_mtimecmp_mmap=0x2004000
+OBJDUMP_SWITCHES_PLATFORM :=
+OBJCOPY_SWITCHES_PLATFORM :=
+
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 export OPENOCD_PREFIX := /opt/OpenOCD
 
@@ -31,6 +55,7 @@ SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/pr
 SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py -shutdown
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py
 DEBUG_COMMAND         := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py
+
 #SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -server
 #SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -shutdown
 #RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl

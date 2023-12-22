@@ -5,31 +5,56 @@
 # MicroBlaze v7.00.b BE XC3S400AFT256-4
 #
 
-# force ZFP
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
-CPU := MicroBlaze
-
-GCC_SWITCHES_PLATFORM     := -mcpu=v7.00.b
-STARTUP_OBJECTS           := startup.S llkernel.S
-LD_SWITCHES_PLATFORM      := --undefined=vectors --no-warn-rwx-segments
-OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         :=
-OBJCOPY_SWITCHES_PLATFORM :=
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
-
 USE_APPLICATION := test-Spartan3A-EK
 
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
+CPU := MicroBlaze
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+GCC_SWITCHES_PLATFORM     := -mcpu=v7.00.b
+LD_SWITCHES_PLATFORM      := --undefined=vectors --no-warn-rwx-segments
+OBJDUMP_SWITCHES_PLATFORM :=
+OBJCOPY_SWITCHES_PLATFORM :=
+POSTBUILD_ROMFILE         :=
+
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
 # Xilinx ISE
-XILINX_PATH  := /opt/XilinxISE/14.7/ISE_DS
+export XILINX_PATH  := /opt/XilinxISE/14.7/ISE_DS
 # top-level directory of the project
-PROJECT_PATH := /root/workspace/hardware/Xilinx_Spartan-3A_EK/Spartan_3A_Eval_Test_Source_v92
+export PROJECT_PATH := /root/workspace/hardware/Xilinx_Spartan-3A_EK/Spartan_3A_Eval_Test_Source_v92
 # device part
-DEVICE       := xc3s400aft256-4
+export DEVICE       := xc3s400aft256-4
 # communication port
-COMMPORT     := /dev/ttyACM0
+export COMMPORT     := /dev/ttyACM0
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

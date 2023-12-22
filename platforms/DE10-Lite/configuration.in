@@ -5,20 +5,42 @@
 # Nios® II MAX10 10M50DAF484C7G
 #
 
-# force ZFP
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
+USE_APPLICATION := test-DE10-Lite
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU := NiosII
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     :=
-STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := --undefined=vectors --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+POSTBUILD_ROMFILE         := Y
+
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
 
 export QUARTUS_PATH      := /opt/intelFPGA_lite/22.1std
 export QSYS_PROJECT_PATH := /root/workspace/devices/DE10-Lite/DE10-Lite_base_design
@@ -27,7 +49,10 @@ export QSYS_SOF_FILE     := $(QSYS_PROJECT_PATH)/output_files/DE10-Lite.sof
 export QSYS_JDI_FILE     := $(QSYS_PROJECT_PATH)/output_files/DE10-Lite.jdi
 export QSYS_IO_LIST      := leds.s1 switches.s1 jtag_uart_0.avalon_jtag_slave
 
-USE_APPLICATION := test-DE10-Lite
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 # Python front-end
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py -jtagd

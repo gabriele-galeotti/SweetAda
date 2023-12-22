@@ -3,23 +3,48 @@
 # PC-x86 ("USBkey" boot version)
 #
 
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU       := x86
 CPU_MODEL := i586
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     := -march=i586
-STARTUP_OBJECTS           := startup.S llkernel.S
-GCC_SWITCHES_STARTUP      := -DMODE32 -DENABLE_A20 -DDATA_RELOC
 LD_SWITCHES_PLATFORM      :=
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+POSTBUILD_ROMFILE         := Y
 POSTBUILD_COMMAND         := $(SHELL_EXEC) postbuild-usbkey$(SCREXT)
-CLEAN_OBJECTS_COMMON      += pcbootusbkey.dsk
+
+CONFIGURE_FILES_PLATFORM       := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S
+GCC_SWITCHES_LOWLEVEL_PLATFORM := -DMODE32 -DENABLE_A20 -DDATA_RELOC
+
+CLEAN_OBJECTS_COMMON += pcbootusbkey.dsk
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
 
 export KERNEL_STACK_SIZE := 4096
 
-USE_APPLICATION := dummy
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

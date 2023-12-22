@@ -5,8 +5,25 @@
 # MIPS R3000A
 #
 
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+USE_APPLICATION := test-VMIPS
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU       := MIPS
 CPU_MODEL := R3000
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
 
 # big-endian
 GCC_SWITCHES_PLATFORM     := -march=r3000 -meb
@@ -19,15 +36,24 @@ export VMIPS_ENDIAN       := -o bigendian
 #export VMIPS_ENDIAN       := -o nobigendian
 
 LD_SWITCHES_PLATFORM      += --undefined=vectors
-STARTUP_OBJECTS           := startup.S llkernel.S
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+POSTBUILD_ROMFILE         := Y
+
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
 
 export USE_QEMU_IOEMU := False
 
-USE_APPLICATION := test-VMIPS
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

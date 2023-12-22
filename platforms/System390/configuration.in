@@ -3,19 +3,42 @@
 # S/390 (Hercules emulator)
 #
 
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+USE_APPLICATION := test-System390
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU       := System390
 CPU_MODEL := ESA390
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     := -m31
-STARTUP_OBJECTS           := startup.S llkernel.S
 LD_SWITCHES_PLATFORM      := -m elf_s390
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h s390.cnf hercules.rc
+POSTBUILD_ROMFILE         := Y
 POSTBUILD_COMMAND         := $(SHELL_EXEC) postbuild$(SCREXT)
 
-USE_APPLICATION := test-System390
+CONFIGURE_FILES_PLATFORM := s390.cnf hercules.rc configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+CLEAN_OBJECTS_COMMON += s390.cnf hercules.rc
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
 
 KERNEL_IPLFILE := $(KERNEL_BASENAME).ipl
 
@@ -46,6 +69,11 @@ export HERCULES_PREFIX
 export HERCULES_RC := $(SWEETADA_PATH)/$(PLATFORM_DIRECTORY)/hercules.rc
 # X3270 executable
 export X3270 := /opt/x3270/bin/x3270
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

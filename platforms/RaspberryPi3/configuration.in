@@ -5,23 +5,49 @@
 # BCM2837 4-core Cortex-A53 LE (ARMv8-A)
 #
 
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+USE_APPLICATION := test-RaspberryPi3
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
 CPU       := AArch64
 CPU_MODEL := Cortex-A53
 
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
 GCC_SWITCHES_PLATFORM     := -mcpu=cortex-a53 -mabi=lp64
-STARTUP_OBJECTS           := startup.S llkernel.S
 #GCC_SWITCHES_STARTUP      := -DSTARTUP_EL1
 LD_SWITCHES_PLATFORM      := --undefined=el_table --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
-POSTBUILD_ROMFILE         := Y
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
-CONFIGURE_FILES_PLATFORM  := configure.ads configure.h
+POSTBUILD_ROMFILE         := Y
 
-USE_APPLICATION := test-RaspberryPi3
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
 
 # parameters for createbootdevice.sh (if used)
 #export USDCARD_UUID       := 3FFC-F14C
 #export USDCARD_MOUNTPOINT := /mnt/hd
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
 
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -p "/opt/OpenOCD"                                          \

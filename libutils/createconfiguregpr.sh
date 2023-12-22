@@ -33,12 +33,14 @@
 # STACK_LIMIT
 # GNATBIND_SECSTACK
 # USE_LIBGCC
+# USE_LIBM
 # USE_LIBADA
 # USE_CLIBRARY
 # ADAC_SWITCHES_RTS
 # CC_SWITCHES_RTS
 # GCC_SWITCHES_PLATFORM
-# GCC_SWITCHES_STARTUP
+# LOWLEVEL_FILES_PLATFORM
+# GCC_SWITCHES_LOWLEVEL_PLATFORM
 # INCLUDE_DIRECTORIES
 # IMPLICIT_ALI_UNITS
 #
@@ -141,6 +143,36 @@ return 0
 }
 
 ################################################################################
+# LFPL_list()                                                                  #
+#                                                                              #
+# Build a list of the source languages detected in LOWLEVEL_FILES_PLATFORM.    #
+################################################################################
+LFPL_list()
+{
+_LFP_S_files=
+_LFP_C_files=
+_LFPL_list=""
+for f in "$@" ; do
+  case ${f} in
+    *.S)
+      if [ ! "x${_LFP_S_files}" = "xY" ] ; then
+        _LFP_S_files=Y
+        _LFP_list="${_LFPL_list:+${_LFPL_list} }Asm_Cpp"
+      fi
+      ;;
+    *.c)
+      if [ ! "x${_LFP_C_files}" = "xY" ] ; then
+        _LFP_C_files=Y
+        _LFPL_list="${_LFPL_list:+${_LFPL_list} }C"
+      fi
+      ;;
+  esac
+done
+printf "%s\n" "${_LFPL_list}"
+return 0
+}
+
+################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
@@ -181,48 +213,52 @@ print_V
 #
 # Configuration declarations.
 #
-print_I "SweetAda_Path         := \"${SWEETADA_PATH}\";"
-print_I "Toolchain_Prefix      := \"${TOOLCHAIN_PREFIX}\";"
-print_I "Gprbuild_Prefix       := \"${GPRBUILD_PREFIX}\";"
-print_I "Toolchain_Name        := \"${TOOLCHAIN_NAME}\";"
-print_I "GCC_Wrapper           := \"${GCC_WRAPPER}\";"
-print_I "GnatAdc_Filename      := \"${GNATADC_FILENAME}\";"
-print_I "Library_Directory     := \"${LIBRARY_DIRECTORY}\";"
-print_I "Object_Directory      := \"${OBJECT_DIRECTORY}\";"
-print_I "Platform              := \"${PLATFORM}\";"
-print_I "Cpu                   := \"${CPU}\";"
-print_I "RTS_Path              := \"${RTS_PATH}\";"
-print_I "RTS                   := \"${RTS}\";"
-print_I "Profile               := \"${PROFILE}\";"
-print_I "Ada_Mode              := \"${ADA_MODE}\";"
-print_I "Optimization_Level    := \"${OPTIMIZATION_LEVEL}\";"
-print_I "Stack_Limit           := \"${STACK_LIMIT}\";"
-print_I "Gnatbind_SecStack     := \"${GNATBIND_SECSTACK}\";"
-print_I "Use_LibGCC            := \"${USE_LIBGCC}\";"
-print_I "Use_LibAda            := \"${USE_LIBADA}\";"
-print_I "Use_CLibrary          := \"${USE_CLIBRARY}\";"
-INDENTL="                          "
-print_I "ADAC_Switches_RTS     := ("
+print_I "SweetAda_Path                     := \"${SWEETADA_PATH}\";"
+print_I "Toolchain_Prefix                  := \"${TOOLCHAIN_PREFIX}\";"
+print_I "Gprbuild_Prefix                   := \"${GPRBUILD_PREFIX}\";"
+print_I "Toolchain_Name                    := \"${TOOLCHAIN_NAME}\";"
+print_I "GCC_Wrapper                       := \"${GCC_WRAPPER}\";"
+print_I "GnatAdc_Filename                  := \"${GNATADC_FILENAME}\";"
+print_I "Library_Directory                 := \"${LIBRARY_DIRECTORY}\";"
+print_I "Object_Directory                  := \"${OBJECT_DIRECTORY}\";"
+print_I "Platform                          := \"${PLATFORM}\";"
+print_I "Cpu                               := \"${CPU}\";"
+print_I "RTS_Path                          := \"${RTS_PATH}\";"
+print_I "RTS                               := \"${RTS}\";"
+print_I "Profile                           := \"${PROFILE}\";"
+print_I "Ada_Mode                          := \"${ADA_MODE}\";"
+print_I "Optimization_Level                := \"${OPTIMIZATION_LEVEL}\";"
+print_I "Stack_Limit                       := \"${STACK_LIMIT}\";"
+print_I "Gnatbind_SecStack                 := \"${GNATBIND_SECSTACK}\";"
+print_I "Use_LibGCC                        := \"${USE_LIBGCC}\";"
+print_I "Use_Libm                          := \"${USE_LIBM}\";"
+print_I "Use_LibAda                        := \"${USE_LIBADA}\";"
+print_I "Use_CLibrary                      := \"${USE_CLIBRARY}\";"
+INDENTL="                                      "
+print_I "ADAC_Switches_RTS                 := ("
 print_list "${ADAC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                         );"
-print_I "CC_Switches_RTS       := ("
+print_I "                                     );"
+print_I "CC_Switches_RTS                   := ("
 print_list "${CC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                         );"
-print_I "GCC_Switches_Platform := ("
+print_I "                                     );"
+print_I "GCC_Switches_Platform             := ("
 print_list "${GCC_SWITCHES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                         );"
-print_I "Startup_Objects       := ("
-print_list "${STARTUP_OBJECTS}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                         );"
-print_I "GCC_Switches_Startup  := ("
-print_list "${GCC_SWITCHES_STARTUP}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                         );"
-print_I "Include_Directories   := ("
+print_I "                                     );"
+print_I "Lowlevel_Files_Platform           := ("
+print_list "${LOWLEVEL_FILES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}"
+print_I "                                     );"
+print_I "Lowlevel_Files_Platform_Languages := ("
+print_list "$(LFPL_list ${LOWLEVEL_FILES_PLATFORM})" "${INDENTATION_LEVEL}" "${INDENTL}"
+print_I "                                     );"
+print_I "GCC_Switches_Lowlevel_Platform    := ("
+print_list "${GCC_SWITCHES_LOWLEVEL_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}"
+print_I "                                     );"
+print_I "Include_Directories               := ("
 print_list "${INCLUDE_DIRECTORIES}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                         );"
-print_I "Implicit_ALI_Units    := ("
+print_I "                                     );"
+print_I "Implicit_ALI_Units                := ("
 print_list "${IMPLICIT_ALI_UNITS}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                         );"
+print_I "                                     );"
 print_V
 
 #

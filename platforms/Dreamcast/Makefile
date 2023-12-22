@@ -33,10 +33,10 @@ endif
 
 LIBRARY_NAME := platform
 
-OBJECTS := $(foreach f,$(STARTUP_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
-OBJECTS += $(foreach f,$(ADDITIONAL_ASM_OBJECTS:.S=.o),$(OBJ_DIRECTORY)/$(f))
-OBJECTS += $(foreach f,$(ADDITIONAL_ADB_OBJECTS:.adb=.o),$(OBJ_DIRECTORY)/$(f))
-OBJECTS += $(foreach f,$(ADDITIONAL_ADS_OBJECTS:.ads=.o),$(OBJ_DIRECTORY)/$(f))
+OBJECTS_XFORM_1 := $(filter %.S %.c,$(LOWLEVEL_FILES_PLATFORM))
+OBJECTS_XFORM_2 := $(OBJECTS_XFORM_1:.S=.o)
+OBJECTS_XFORM_3 := $(OBJECTS_XFORM_2:.c=.o)
+OBJECTS := $(foreach f,$(OBJECTS_XFORM_3),$(OBJ_DIRECTORY)/$(f))
 
 .PHONY: all
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
