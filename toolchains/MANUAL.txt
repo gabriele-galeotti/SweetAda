@@ -25,7 +25,7 @@ for package distribution/relocation and you should not specify it for a
 standard installation.
 
 Uncomment the toolchain name useful for your needs, and all the phase_* flags.
-They are keep separate so that it is not necessary to restart everything,
+They are kept separate so that it is not necessary to restart everything,
 should some problem arise during the build. In particular, the configure phase
 will wipe out the whole build directory.
 
