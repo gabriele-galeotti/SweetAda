@@ -60,8 +60,7 @@ package STM32F769I is
    UDEN_RESERVED2 : constant := 2#10#; -- Reserved
    UDEN_ENABLE    : constant := 2#11#; -- Under-drive enable
 
-   type PWR_CR1_Type is
-   record
+   type PWR_CR1_Type is record
       LPDS      : Boolean;      -- Low-power deepsleep
       PDDS      : Boolean;      -- Power-down deepsleep
       Reserved1 : Bits_1 := 0;
@@ -79,11 +78,10 @@ package STM32F769I is
       ODSWEN    : Boolean;      -- Over-drive switching enabled.
       UDEN      : Bits_2;       -- Under-drive enable in stop mode
       Reserved3 : Bits_12 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PWR_CR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PWR_CR1_Type use record
       LPDS      at 0 range  0 ..  0;
       PDDS      at 0 range  1 ..  1;
       Reserved1 at 0 range  2 ..  2;
@@ -105,11 +103,11 @@ package STM32F769I is
 
    PWR_CR1_ADDRESS : constant := 16#4000_7000#;
 
-   PWR_CR1 : aliased PWR_CR1_Type with
-      Address              => To_Address (PWR_CR1_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PWR_CR1 : aliased PWR_CR1_Type
+      with Address              => To_Address (PWR_CR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 4.4.2 PWR power control/status register (PWR_CSR1)
 
@@ -121,8 +119,7 @@ package STM32F769I is
    UDRDY_RESERVED2 : constant := 2#10#; -- Reserved
    UDRDY_STOP      : constant := 2#11#; -- Under-drive mode is activated in Stop mode.
 
-   type PWR_CSR1_Type is
-   record
+   type PWR_CSR1_Type is record
       WUIF      : Boolean;      -- Wakeup internal flag
       SBF       : Boolean;      -- Standby flag
       PVDO      : Bits_1;       -- This bit is set and cleared by hardware. It is valid only if PVD is enabled by the PVDE bit.
@@ -136,11 +133,10 @@ package STM32F769I is
       ODSWRDY   : Boolean;      -- Over-drive mode switching ready
       UDRDY     : Bits_2;       -- Under-drive ready flag
       Reserved4 : Bits_12 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PWR_CSR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PWR_CSR1_Type use record
       WUIF      at 0 range  0 ..  0;
       SBF       at 0 range  1 ..  1;
       PVDO      at 0 range  2 ..  2;
@@ -158,19 +154,18 @@ package STM32F769I is
 
    PWR_CSR1_ADDRESS : constant := 16#4000_7004#;
 
-   PWR_CSR1 : aliased PWR_CSR1_Type with
-      Address              => To_Address (PWR_CSR1_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PWR_CSR1 : aliased PWR_CSR1_Type
+      with Address              => To_Address (PWR_CSR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 4.4.3 PWR power control/status register 2 (PWR_CR2)
 
    WUPP_RISING  : constant := 0; -- Detection on rising edge
    WUPP_FALLING : constant := 1; -- Detection on falling edge
 
-   type PWR_CR2_Type is
-   record
+   type PWR_CR2_Type is record
       CWUPF1    : Boolean;      -- Clear Wakeup Pin flag for PA0
       CWUPF2    : Boolean;      -- Clear Wakeup Pin flag for PA2
       CWUPF3    : Boolean;      -- Clear Wakeup Pin flag for PC1
@@ -185,11 +180,10 @@ package STM32F769I is
       WUPP5     : Bits_1;       -- Wakeup pin polarity bit for PI8
       WUPP6     : Bits_1;       -- Wakeup pin polarity bit for PI11
       Reserved2 : Bits_18 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PWR_CR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PWR_CR2_Type use record
       CWUPF1    at 0 range  0 ..  0;
       CWUPF2    at 0 range  1 ..  1;
       CWUPF3    at 0 range  2 ..  2;
@@ -208,16 +202,15 @@ package STM32F769I is
 
    PWR_CR2_ADDRESS : constant := 16#4000_7008#;
 
-   PWR_CR2 : aliased PWR_CR2_Type with
-      Address              => To_Address (PWR_CR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PWR_CR2 : aliased PWR_CR2_Type
+      with Address              => To_Address (PWR_CR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 4.4.4 PWR power control register 2 (PWR_CSR2)
 
-   type PWR_CSR2_Type is
-   record
+   type PWR_CSR2_Type is record
       WUPF1     : Boolean;      -- Wakeup Pin flag for PA0
       WUPF2     : Boolean;      -- Wakeup Pin flag for PA2
       WUPF3     : Boolean;      -- Wakeup Pin flag for PC1
@@ -232,11 +225,10 @@ package STM32F769I is
       EWUP5     : Boolean;      -- Enable Wakeup pin for PI8
       EWUP6     : Boolean;      -- Enable Wakeup pin for PI11
       Reserved2 : Bits_18 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PWR_CSR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PWR_CSR2_Type use record
       WUPF1     at 0 range  0 ..  0;
       WUPF2     at 0 range  1 ..  1;
       WUPF3     at 0 range  2 ..  2;
@@ -255,11 +247,11 @@ package STM32F769I is
 
    PWR_CSR2_ADDRESS : constant := 16#4000_700C#;
 
-   PWR_CSR2 : aliased PWR_CSR2_Type with
-      Address              => To_Address (PWR_CSR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PWR_CSR2 : aliased PWR_CSR2_Type
+      with Address              => To_Address (PWR_CSR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 5 Reset and clock control (RCC)
@@ -267,8 +259,7 @@ package STM32F769I is
 
    -- 5.3.1 RCC clock control register (RCC_CR)
 
-   type RCC_CR_Type is
-   record
+   type RCC_CR_Type is record
       HSION     : Boolean := False; -- Internal high-speed clock enable
       HSIRDY    : Boolean := False; -- Internal high-speed clock ready flag
       Reserved1 : Bits_1 := 0;
@@ -286,11 +277,10 @@ package STM32F769I is
       PLLSAION  : Boolean := False; -- PLLSAI enable
       PLLSAIRDY : Boolean := False; -- PLLSAI clock ready flag
       Reserved3 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_CR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_CR_Type use record
       HSION     at 0 range  0 ..  0;
       HSIRDY    at 0 range  1 ..  1;
       Reserved1 at 0 range  2 ..  2;
@@ -312,11 +302,11 @@ package STM32F769I is
 
    RCC_CR_ADDRESS : constant := 16#4002_3800#;
 
-   RCC_CR : aliased RCC_CR_Type with
-      Address              => To_Address (RCC_CR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_CR : aliased RCC_CR_Type
+      with Address              => To_Address (RCC_CR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.2 RCC PLL configuration register (RCC_PLLCFGR)
 
@@ -328,8 +318,7 @@ package STM32F769I is
    PLLSRC_HSI : constant := 0; -- HSI clock selected as PLL and PLLI2S clock entry
    PLLSRC_HSE : constant := 1; -- HSE oscillator clock selected as PLL and PLLI2S clock entry
 
-   type RCC_PLLCFGR_Type is
-   record
+   type RCC_PLLCFGR_Type is record
       PLLM      : Bits_6 range 2 .. 63;   -- Division factor for the main PLLs (PLL, PLLI2S and PLLSAI) input clock
       PLLN      : Bits_9 range 50 .. 432; -- Main PLL (PLL) multiplication factor for VCO
       Reserved1 : Bits_1 := 0;
@@ -340,11 +329,10 @@ package STM32F769I is
       PLLQ      : Bits_4 range 2 .. 15;   -- Main PLL (PLL) division factor for USB OTG FS, SDMMC1/2 and [RNG] clocks
       PLLR      : Bits_3 range 2 .. 7;    -- PLL division factor for DSI clock
       Reserved4 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_PLLCFGR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_PLLCFGR_Type use record
       PLLM      at 0 range  0 ..  5;
       PLLN      at 0 range  6 .. 14;
       Reserved1 at 0 range 15 .. 15;
@@ -359,11 +347,11 @@ package STM32F769I is
 
    RCC_PLLCFGR_ADDRESS : constant := 16#4002_3804#;
 
-   RCC_PLLCFGR : aliased RCC_PLLCFGR_Type with
-      Address              => To_Address (RCC_PLLCFGR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_PLLCFGR : aliased RCC_PLLCFGR_Type
+      with Address              => To_Address (RCC_PLLCFGR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.3 RCC clock configuration register (RCC_CFGR)
 
@@ -404,8 +392,7 @@ package STM32F769I is
    MCO2_HSE    : constant := 2#10#; -- HSE oscillator clock selected
    MCO2_PLL    : constant := 2#11#; -- PLL clock selected
 
-   type RCC_CFGR_Type is
-   record
+   type RCC_CFGR_Type is record
       SW        : Bits_2 := 0; -- System clock switch
       SWS       : Bits_2 := 0; -- System clock switch status
       HPRE      : Bits_4 := 0; -- AHB prescaler
@@ -418,11 +405,10 @@ package STM32F769I is
       MCO1PRE   : Bits_3 := 0; -- MCO1 prescaler
       MCO2PRE   : Bits_3 := 0; -- MCO2 prescaler
       MCO2      : Bits_2 := 0; -- Microcontroller clock output 2
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_CFGR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_CFGR_Type use record
       SW        at 0 range  0 ..  1;
       SWS       at 0 range  2 ..  3;
       HPRE      at 0 range  4 ..  7;
@@ -439,16 +425,15 @@ package STM32F769I is
 
    RCC_CFGR_ADDRESS : constant := 16#4002_3808#;
 
-   RCC_CFGR : aliased RCC_CFGR_Type with
-      Address              => To_Address (RCC_CFGR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_CFGR : aliased RCC_CFGR_Type
+      with Address              => To_Address (RCC_CFGR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.4 RCC clock interrupt register (RCC_CIR)
 
-   type RCC_CIR_Type is
-   record
+   type RCC_CIR_Type is record
       LSIRDYF     : Boolean;     -- LSI ready interrupt flag
       LSERDYF     : Boolean;     -- LSE ready interrupt flag
       HSIRDYF     : Boolean;     -- HSI ready interrupt flag
@@ -474,11 +459,10 @@ package STM32F769I is
       PLLSAIRDYC  : Boolean;     -- PLLSAI Ready Interrupt Clear
       CSSC        : Boolean;     -- Clock security system interrupt clear
       Reserved2   : Bits_8 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_CIR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_CIR_Type use record
       LSIRDYF     at 0 range  0 ..  0;
       LSERDYF     at 0 range  1 ..  1;
       HSIRDYF     at 0 range  2 ..  2;
@@ -508,16 +492,15 @@ package STM32F769I is
 
    RCC_CIR_ADDRESS : constant := 16#4002_380C#;
 
-   RCC_CIR : aliased RCC_CIR_Type with
-      Address              => To_Address (RCC_CIR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_CIR : aliased RCC_CIR_Type
+      with Address              => To_Address (RCC_CIR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.5 RCC AHB1 peripheral reset register (RCC_AHB1RSTR)
 
-   type RCC_AHB1RSTR_Type is
-   record
+   type RCC_AHB1RSTR_Type is record
       GPIOARST  : Boolean;     -- IO port A reset
       GPIOBRST  : Boolean;     -- IO port B reset
       GPIOCRST  : Boolean;     -- IO port C reset
@@ -540,11 +523,10 @@ package STM32F769I is
       Reserved4 : Bits_3 := 0;
       OTGHSRST  : Boolean;     -- USB OTG HS module reset
       Reserved5 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_AHB1RSTR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_AHB1RSTR_Type use record
       GPIOARST  at 0 range  0 ..  0;
       GPIOBRST  at 0 range  1 ..  1;
       GPIOCRST  at 0 range  2 ..  2;
@@ -571,16 +553,15 @@ package STM32F769I is
 
    RCC_AHB1RSTR_ADDRESS : constant := 16#4002_3810#;
 
-   RCC_AHB1RSTR : aliased RCC_AHB1RSTR_Type with
-      Address              => To_Address (RCC_AHB1RSTR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_AHB1RSTR : aliased RCC_AHB1RSTR_Type
+      with Address              => To_Address (RCC_AHB1RSTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.6 RCC AHB2 peripheral reset register (RCC_AHB2RSTR)
 
-   type RCC_AHB2RSTR_Type is
-   record
+   type RCC_AHB2RSTR_Type is record
       DCMIRST   : Boolean;      -- Camera interface reset
       JPEGRST   : Boolean;      -- JPEG module reset
       Reserved1 : Bits_2 := 0;
@@ -589,11 +570,10 @@ package STM32F769I is
       RNGRST    : Boolean;      -- Random number generator module reset
       OTGFSRST  : Boolean;      -- USB OTG FS module reset
       Reserved2 : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_AHB2RSTR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_AHB2RSTR_Type use record
       DCMIRST   at 0 range 0 ..  0;
       JPEGRST   at 0 range 1 ..  1;
       Reserved1 at 0 range 2 ..  3;
@@ -606,24 +586,22 @@ package STM32F769I is
 
    RCC_AHB2RSTR_ADDRESS : constant := 16#4002_3814#;
 
-   RCC_AHB2RSTR : aliased RCC_AHB2RSTR_Type with
-      Address              => To_Address (RCC_AHB2RSTR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_AHB2RSTR : aliased RCC_AHB2RSTR_Type
+      with Address              => To_Address (RCC_AHB2RSTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.7 RCC AHB3 peripheral reset register (RCC_AHB3RSTR)
 
-   type RCC_AHB3RSTR_Type is
-   record
+   type RCC_AHB3RSTR_Type is record
       FMCRST   : Boolean;      -- Flexible memory controller module reset
       QSPIRST  : Boolean;      -- Quad SPI memory controller reset
       Reserved : Bits_30 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_AHB3RSTR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_AHB3RSTR_Type use record
       FMCRST   at 0 range 0 ..  0;
       QSPIRST  at 0 range 1 ..  1;
       Reserved at 0 range 2 .. 31;
@@ -631,16 +609,15 @@ package STM32F769I is
 
    RCC_AHB3RSTR_ADDRESS : constant := 16#4002_3818#;
 
-   RCC_AHB3RSTR : aliased RCC_AHB3RSTR_Type with
-      Address              => To_Address (RCC_AHB3RSTR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_AHB3RSTR : aliased RCC_AHB3RSTR_Type
+      with Address              => To_Address (RCC_AHB3RSTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.8 RCC APB1 peripheral reset register (RCC_APB1RSTR)
 
-   type RCC_APB1RSTR_Type is
-   record
+   type RCC_APB1RSTR_Type is record
       TIM2RST    : Boolean;     -- TIM2 reset
       TIM3RST    : Boolean;     -- TIM3 reset
       TIM4RST    : Boolean;     -- TIM4 reset
@@ -673,11 +650,10 @@ package STM32F769I is
       DACRST     : Boolean;     -- DAC interface reset
       UART7RST   : Boolean;     -- UART7 reset
       UART8RST   : Boolean;     -- UART8 reset
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_APB1RSTR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_APB1RSTR_Type use record
       TIM2RST    at 0 range  0  .. 0;
       TIM3RST    at 0 range  1  .. 1;
       TIM4RST    at 0 range  2  .. 2;
@@ -714,16 +690,15 @@ package STM32F769I is
 
    RCC_APB1RSTR_ADDRESS : constant := 16#4002_3820#;
 
-   RCC_APB1RSTR : aliased RCC_APB1RSTR_Type with
-      Address              => To_Address (RCC_APB1RSTR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_APB1RSTR : aliased RCC_APB1RSTR_Type
+      with Address              => To_Address (RCC_APB1RSTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.9 RCC APB2 peripheral reset register (RCC_APB2RSTR)
 
-   type RCC_APB2RSTR_Type is
-   record
+   type RCC_APB2RSTR_Type is record
       TIM1RST   : Boolean;     -- TIM1 reset
       TIM8RST   : Boolean;     -- TIM8 reset
       Reserved1 : Bits_2 := 0;
@@ -753,11 +728,10 @@ package STM32F769I is
       DFSDM1RST : Boolean;     -- DFSDM1 module reset
       MDIORST   : Boolean;     -- MDIO module reset
       Reserved8 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_APB2RSTR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_APB2RSTR_Type use record
       TIM1RST   at 0 range  0 ..  0;
       TIM8RST   at 0 range  1 ..  1;
       Reserved1 at 0 range  2 ..  3;
@@ -791,16 +765,15 @@ package STM32F769I is
 
    RCC_APB2RSTR_ADDRESS : constant := 16#4002_3824#;
 
-   RCC_APB2RSTR : aliased RCC_APB2RSTR_Type with
-      Address              => To_Address (RCC_APB2RSTR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_APB2RSTR : aliased RCC_APB2RSTR_Type
+      with Address              => To_Address (RCC_APB2RSTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.10 RCC AHB1 peripheral clock register (RCC_AHB1ENR)
 
-   type RCC_AHB1ENR_Type is
-   record
+   type RCC_AHB1ENR_Type is record
       GPIOAEN     : Boolean;     -- IO port A clock enable
       GPIOBEN     : Boolean;     -- IO port B clock enable
       GPIOCEN     : Boolean;     -- IO port C clock enable
@@ -829,11 +802,10 @@ package STM32F769I is
       OTGHSEN     : Boolean;     -- USB OTG HS clock enable
       OTGHSULPIEN : Boolean;     -- USB OTG HSULPI clock enable
       Reserved5   : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_AHB1ENR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_AHB1ENR_Type use record
       GPIOAEN     at 0 range  0 ..  0;
       GPIOBEN     at 0 range  1 ..  1;
       GPIOCEN     at 0 range  2 ..  2;
@@ -866,16 +838,15 @@ package STM32F769I is
 
    RCC_AHB1ENR_ADDRESS : constant := 16#4002_3830#;
 
-   RCC_AHB1ENR : aliased RCC_AHB1ENR_Type with
-      Address              => To_Address (RCC_AHB1ENR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_AHB1ENR : aliased RCC_AHB1ENR_Type
+      with Address              => To_Address (RCC_AHB1ENR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.11 RCC AHB2 peripheral clock enable register (RCC_AHB2ENR)
 
-   type RCC_AHB2ENR_Type is
-   record
+   type RCC_AHB2ENR_Type is record
       DCMIEN    : Boolean;      -- Camera interface enable
       JPEGEN    : Boolean;      -- JPEG module clock enable
       Reserved1 : Bits_2 := 0;
@@ -884,11 +855,10 @@ package STM32F769I is
       RNGEN     : Boolean;      -- Random number generator clock enable
       OTGFSEN   : Boolean;      -- USB OTG FS clock enable
       Reserved2 : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_AHB2ENR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_AHB2ENR_Type use record
       DCMIEN    at 0 range 0 ..  0;
       JPEGEN    at 0 range 1 ..  1;
       Reserved1 at 0 range 2 ..  3;
@@ -901,24 +871,22 @@ package STM32F769I is
 
    RCC_AHB2ENR_ADDRESS : constant := 16#4002_3834#;
 
-   RCC_AHB2ENR : aliased RCC_AHB2ENR_Type with
-      Address              => To_Address (RCC_AHB2ENR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_AHB2ENR : aliased RCC_AHB2ENR_Type
+      with Address              => To_Address (RCC_AHB2ENR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.12 RCC AHB3 peripheral clock enable register (RCC_AHB3ENR)
 
-   type RCC_AHB3ENR_Type is
-   record
+   type RCC_AHB3ENR_Type is record
       FMCEN    : Boolean;      -- Flexible memory controller clock enable
       QSPIEN   : Boolean;      -- Quad SPI memory controller clock enable
       Reserved : Bits_30 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_AHB3ENR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_AHB3ENR_Type use record
       FMCEN    at 0 range 0 ..  0;
       QSPIEN   at 0 range 1 ..  1;
       Reserved at 0 range 2 .. 31;
@@ -926,16 +894,15 @@ package STM32F769I is
 
    RCC_AHB3ENR_ADDRESS : constant := 16#4002_3838#;
 
-   RCC_AHB3ENR : aliased RCC_AHB3ENR_Type with
-      Address              => To_Address (RCC_AHB3ENR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_AHB3ENR : aliased RCC_AHB3ENR_Type
+      with Address              => To_Address (RCC_AHB3ENR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.13 RCC APB1 peripheral clock enable register (RCC_APB1ENR)
 
-   type RCC_APB1ENR_Type is
-   record
+   type RCC_APB1ENR_Type is record
       TIM2EN    : Boolean;     -- TIM2 clock enable
       TIM3EN    : Boolean;     -- TIM3 clock enable
       TIM4EN    : Boolean;     -- TIM4 clock enable
@@ -968,11 +935,10 @@ package STM32F769I is
       DACEN     : Boolean;     -- DAC interface clock enable
       UART7EN   : Boolean;     -- UART7 clock enable
       UART8EN   : Boolean;     -- UART8 clock enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_APB1ENR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_APB1ENR_Type use record
       TIM2EN    at 0 range  0  .. 0;
       TIM3EN    at 0 range  1  .. 1;
       TIM4EN    at 0 range  2  .. 2;
@@ -1009,16 +975,15 @@ package STM32F769I is
 
    RCC_APB1ENR_ADDRESS : constant := 16#4002_3840#;
 
-   RCC_APB1ENR : aliased RCC_APB1ENR_Type with
-      Address              => To_Address (RCC_APB1ENR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_APB1ENR : aliased RCC_APB1ENR_Type
+      with Address              => To_Address (RCC_APB1ENR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.14 RCC APB2 peripheral clock enable register (RCC_APB2ENR)
 
-   type RCC_APB2ENR_Type is
-   record
+   type RCC_APB2ENR_Type is record
       TIM1EN    : Boolean;     -- TIM1 clock enable
       TIM8EN    : Boolean;     -- TIM8 clock enable
       Reserved1 : Bits_2 := 0;
@@ -1049,11 +1014,10 @@ package STM32F769I is
       DFSDM1EN  : Boolean;     -- DFSDM1 clock enable
       MDIOEN    : Boolean;     -- MDIO clock enable
       Reserved7 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_APB2ENR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_APB2ENR_Type use record
       TIM1EN    at 0 range  0 ..  0;
       TIM8EN    at 0 range  1 ..  1;
       Reserved1 at 0 range  2 ..  3;
@@ -1088,16 +1052,15 @@ package STM32F769I is
 
    RCC_APB2ENR_ADDRESS : constant := 16#4002_3844#;
 
-   RCC_APB2ENR : aliased RCC_APB2ENR_Type with
-      Address              => To_Address (RCC_APB2ENR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_APB2ENR : aliased RCC_APB2ENR_Type
+      with Address              => To_Address (RCC_APB2ENR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.15 RCC AHB1 peripheral clock enable in low-power mode register (RCC_AHB1LPENR)
 
-   type RCC_AHB1LPENR_Type is
-   record
+   type RCC_AHB1LPENR_Type is record
       GPIOALPEN     : Boolean;     -- IO port A clock enable during sleep mode
       GPIOBLPEN     : Boolean;     -- IO port B clock enable during Sleep mode
       GPIOCLPEN     : Boolean;     -- IO port C clock enable during Sleep mode
@@ -1130,11 +1093,10 @@ package STM32F769I is
       OTGHSLPEN     : Boolean;     -- USB OTG HS clock enable during Sleep mode
       OTGHSULPILPEN : Boolean;     -- USB OTG HS ULPI clock enable during Sleep mode
       Reserved5     : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_AHB1LPENR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_AHB1LPENR_Type use record
       GPIOALPEN     at 0 range  0 ..  0;
       GPIOBLPEN     at 0 range  1 ..  1;
       GPIOCLPEN     at 0 range  2 ..  2;
@@ -1171,16 +1133,15 @@ package STM32F769I is
 
    RCC_AHB1LPENR_ADDRESS : constant := 16#4002_3850#;
 
-   RCC_AHB1LPENR : aliased RCC_AHB1LPENR_Type with
-      Address              => To_Address (RCC_AHB1LPENR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_AHB1LPENR : aliased RCC_AHB1LPENR_Type
+      with Address              => To_Address (RCC_AHB1LPENR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.16 RCC AHB2 peripheral clock enable in low-power mode register (RCC_AHB2LPENR)
 
-   type RCC_AHB2LPENR_Type is
-   record
+   type RCC_AHB2LPENR_Type is record
       DCMILPEN  : Boolean;      -- Camera interface enable during Sleep mode
       JPEGLPEN  : Boolean;      -- JPEG module enabled during Sleep mode
       Reserved1 : Bits_2 := 0;
@@ -1189,11 +1150,10 @@ package STM32F769I is
       RNGLPEN   : Boolean;      -- Random number generator clock enable during Sleep mode
       OTGFSLPEN : Boolean;      -- USB OTG FS clock enable during Sleep mode
       Reserved2 : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_AHB2LPENR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_AHB2LPENR_Type use record
       DCMILPEN  at 0 range 0 ..  0;
       JPEGLPEN  at 0 range 1 ..  1;
       Reserved1 at 0 range 2 ..  3;
@@ -1206,24 +1166,22 @@ package STM32F769I is
 
    RCC_AHB2LPENR_ADDRESS : constant := 16#4002_3854#;
 
-   RCC_AHB2LPENR : aliased RCC_AHB2LPENR_Type with
-      Address              => To_Address (RCC_AHB2LPENR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_AHB2LPENR : aliased RCC_AHB2LPENR_Type
+      with Address              => To_Address (RCC_AHB2LPENR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.17 RCC AHB3 peripheral clock enable in low-power mode register (RCC_AHB3LPENR)
 
-   type RCC_AHB3LPENR_Type is
-   record
+   type RCC_AHB3LPENR_Type is record
       FMCLPEN  : Boolean;      -- Flexible memory controller module clock enable during Sleep mode
       QSPILPEN : Boolean;      -- QUADSPI memory controller clock enable during Sleep mode
       Reserved : Bits_30 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_AHB3LPENR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_AHB3LPENR_Type use record
       FMCLPEN  at 0 range 0 ..  0;
       QSPILPEN at 0 range 1 ..  1;
       Reserved at 0 range 2 .. 31;
@@ -1231,16 +1189,15 @@ package STM32F769I is
 
    RCC_AHB3LPENR_ADDRESS : constant := 16#4002_3858#;
 
-   RCC_AHB3LPENR : aliased RCC_AHB3LPENR_Type with
-      Address              => To_Address (RCC_AHB3LPENR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_AHB3LPENR : aliased RCC_AHB3LPENR_Type
+      with Address              => To_Address (RCC_AHB3LPENR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.18 RCC APB1 peripheral clock enable in low-power mode register (RCC_APB1LPENR)
 
-   type RCC_APB1LPENR_Type is
-   record
+   type RCC_APB1LPENR_Type is record
       TIM2LPEN    : Boolean;     -- TIM2 clock enable during Sleep mode
       TIM3LPEN    : Boolean;     -- TIM3 clock enable during Sleep mode
       TIM4LPEN    : Boolean;     -- TIM4 clock enable during Sleep mode
@@ -1273,11 +1230,10 @@ package STM32F769I is
       DACLPEN     : Boolean;     -- DAC interface clock enable during Sleep mode
       UART7LPEN   : Boolean;     -- UART7 clock enable during Sleep mode
       UART8LPEN   : Boolean;     -- UART8 clock enable during Sleep mode
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_APB1LPENR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_APB1LPENR_Type use record
       TIM2LPEN    at 0 range  0 ..  0;
       TIM3LPEN    at 0 range  1 ..  1;
       TIM4LPEN    at 0 range  2 ..  2;
@@ -1314,16 +1270,15 @@ package STM32F769I is
 
    RCC_APB1LPENR_ADDRESS : constant := 16#4002_3860#;
 
-   RCC_APB1LPENR : aliased RCC_APB1LPENR_Type with
-      Address              => To_Address (RCC_APB1LPENR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_APB1LPENR : aliased RCC_APB1LPENR_Type
+      with Address              => To_Address (RCC_APB1LPENR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.19 RCC APB2 peripheral clock enabled in low-power mode register (RCC_APB2LPENR)
 
-   type RCC_APB2LPENR_Type is
-   record
+   type RCC_APB2LPENR_Type is record
       TIM1LPEN   : Boolean;     -- TIM1 clock enable during Sleep mode
       TIM8LPEN   : Boolean;     -- TIM8 clock enable during Sleep mode
       Reserved1  : Bits_2 := 0;
@@ -1354,11 +1309,10 @@ package STM32F769I is
       DFSDM1LPEN : Boolean;     -- DFSDM1 clock enable during Sleep mode
       MDIOLPEN   : Boolean;     -- MDIO clock enable during Sleep mode
       Reserved7  : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_APB2LPENR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_APB2LPENR_Type use record
       TIM1LPEN   at 0 range  0 ..  0;
       TIM8LPEN   at 0 range  1 ..  1;
       Reserved1  at 0 range  2 ..  3;
@@ -1393,11 +1347,11 @@ package STM32F769I is
 
    RCC_APB2LPENR_ADDRESS : constant := 16#4002_3864#;
 
-   RCC_APB2LPENR : aliased RCC_APB2LPENR_Type with
-      Address              => To_Address (RCC_APB2LPENR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_APB2LPENR : aliased RCC_APB2LPENR_Type
+      with Address              => To_Address (RCC_APB2LPENR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.20 RCC backup domain control register (RCC_BDCR)
 
@@ -1411,8 +1365,7 @@ package STM32F769I is
    RTCSEL_LSI  : constant := 2#10#; -- LSI oscillator clock used as the RTC clock
    RTCSEL_HSE  : constant := 2#11#; -- HSE oscillator clock divided by a programmable prescaler ...
 
-   type RCC_BDCR_Type is
-   record
+   type RCC_BDCR_Type is record
       LSEON      : Boolean;      -- External low-speed oscillator enable
       LSERDY     : Boolean;      -- External low-speed oscillator ready
       LSEBYP     : Boolean;      -- External low-speed oscillator bypass
@@ -1423,11 +1376,10 @@ package STM32F769I is
       RTCEN      : Boolean;      -- RTC clock enable
       BDRST      : Boolean;      -- Backup domain software reset
       Reserved3  : Bits_15 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_BDCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_BDCR_Type use record
       LSEON      at 0 range  0 ..  0;
       LSERDY     at 0 range  1 ..  1;
       LSEBYP     at 0 range  2 ..  2;
@@ -1442,16 +1394,15 @@ package STM32F769I is
 
    RCC_BDCR_ADDRESS : constant := 16#4002_3870#;
 
-   RCC_BDCR : aliased RCC_BDCR_Type with
-      Address              => To_Address (RCC_BDCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_BDCR : aliased RCC_BDCR_Type
+      with Address              => To_Address (RCC_BDCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.21 RCC clock control & status register (RCC_CSR)
 
-   type RCC_CSR_Type is
-   record
+   type RCC_CSR_Type is record
       LSION    : Boolean;      -- Internal low-speed oscillator enable
       LSIRDY   : Boolean;      -- Internal low-speed oscillator ready
       Reserved : Bits_22 := 0;
@@ -1463,11 +1414,10 @@ package STM32F769I is
       IWDGRSTF : Boolean;      -- Independent watchdog reset flag
       WWDGRSTF : Boolean;      -- Window watchdog reset flag
       LPWRRSTF : Boolean;      -- Low-power reset flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_CSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_CSR_Type use record
       LSION    at 0 range  0 ..  0;
       LSIRDY   at 0 range  1 ..  1;
       Reserved at 0 range  2 .. 23;
@@ -1483,10 +1433,10 @@ package STM32F769I is
 
    RCC_CSR_ADDRESS : constant := 16#4002_3874#;
 
-   RCC_CSR : aliased RCC_CSR_Type with
-      Address              => To_Address (RCC_CSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
+   RCC_CSR : aliased RCC_CSR_Type
+      with Address              => To_Address (RCC_CSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
       Convention           => Ada;
 
    -- 5.3.22 RCC spread spectrum clock generation register (RCC_SSCGR)
@@ -1494,18 +1444,16 @@ package STM32F769I is
    SPREADSEL_CENTER : constant := 0; -- Center spread
    SPREADSEL_DOWN   : constant := 1; -- Down spread
 
-   type RCC_SSCGR_Type is
-   record
+   type RCC_SSCGR_Type is record
       MODPER    : Bits_13;     -- Modulation period
       INCSTEP   : Bits_15;     -- Incrementation step
       Reserved  : Bits_2 := 0;
       SPREADSEL : Bits_1;      -- Spread Select
       SSCGEN    : Boolean;     -- Spread spectrum modulation enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_SSCGR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_SSCGR_Type use record
       MODPER    at 0 range  0 .. 12;
       INCSTEP   at 0 range 13 .. 27;
       Reserved  at 0 range 28 .. 29;
@@ -1515,11 +1463,11 @@ package STM32F769I is
 
    RCC_SSCGR_ADDRESS : constant := 16#4002_3880#;
 
-   RCC_SSCGR : aliased RCC_SSCGR_Type with
-      Address              => To_Address (RCC_SSCGR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_SSCGR : aliased RCC_SSCGR_Type
+      with Address              => To_Address (RCC_SSCGR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.23 RCC PLLI2S configuration register (RCC_PLLI2SCFGR)
 
@@ -1550,8 +1498,7 @@ package STM32F769I is
    PLLI2R_DIV6 : constant := 6;
    PLLI2R_DIV7 : constant := 7;
 
-   type RCC_PLLI2SCFGR_Type is
-   record
+   type RCC_PLLI2SCFGR_Type is record
       Reserved1 : Bits_6 := 0;
       PLLI2SN   : Bits_9 range 50 .. 432; -- PLLI2S multiplication factor for VCO
       Reserved2 : Bits_1 := 0;
@@ -1560,11 +1507,10 @@ package STM32F769I is
       PLLI2SQ   : Bits_4 range 2 .. 15;   -- PLLI2S division factor for SAIs clock
       PLLI2SR   : Bits_3 range 2 .. 7;    -- PLLI2S division factor for I2S clocks
       Reserved4 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_PLLI2SCFGR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_PLLI2SCFGR_Type use record
       Reserved1 at 0 range  0 ..  5;
       PLLI2SN   at 0 range  6 .. 14;
       Reserved2 at 0 range 15 .. 15;
@@ -1577,11 +1523,11 @@ package STM32F769I is
 
    RCC_PLLI2SCFGR_ADDRESS : constant := 16#4002_3884#;
 
-   RCC_PLLI2SCFGR : aliased RCC_PLLI2SCFGR_Type with
-      Address              => To_Address (RCC_PLLI2SCFGR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_PLLI2SCFGR : aliased RCC_PLLI2SCFGR_Type
+      with Address              => To_Address (RCC_PLLI2SCFGR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.24 RCC PLLSAI configuration register (RCC_PLLSAICFGR)
 
@@ -1612,8 +1558,7 @@ package STM32F769I is
    PLLSAIR_DIV6 : constant := 6;
    PLLSAIR_DIV7 : constant := 7;
 
-   type RCC_PLLSAICFGR_Type is
-   record
+   type RCC_PLLSAICFGR_Type is record
       Reserved1 : Bits_6 := 0;
       PLLSAIN   : Bits_9 range 50 .. 432; -- PLLSAI multiplication factor for VCO
       Reserved2 : Bits_1 := 0;
@@ -1622,11 +1567,10 @@ package STM32F769I is
       PLLSAIQ   : Bits_4 range 2 .. 15;   -- PLLSAI division factor for SAI clock
       PLLSAIR   : Bits_3 range 2 .. 7;    -- PLLSAI division factor for LCD clock
       Reserved4 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_PLLSAICFGR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_PLLSAICFGR_Type use record
       Reserved1 at 0 range  0 ..  5;
       PLLSAIN   at 0 range  6 .. 14;
       Reserved2 at 0 range 15 .. 15;
@@ -1639,11 +1583,11 @@ package STM32F769I is
 
    RCC_PLLSAICFGR_ADDRESS : constant := 16#4002_3888#;
 
-   RCC_PLLSAICFGR : aliased RCC_PLLSAICFGR_Type with
-      Address              => To_Address (RCC_PLLSAICFGR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_PLLSAICFGR : aliased RCC_PLLSAICFGR_Type
+      with Address              => To_Address (RCC_PLLSAICFGR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.25 RCC dedicated clocks configuration register (RCC_DCKCFGR1)
 
@@ -1699,8 +1643,7 @@ package STM32F769I is
    ADFSDM1SEL_SAI1 : constant := 0; -- SAI1 clock selected as DFSDM1 Audio clock source
    ADFSDM1SEL_SAI2 : constant := 1; -- SAI2 clock selected as DFSDM1 Audio clock source
 
-   type RCC_DCKCFGR1_Type is
-   record
+   type RCC_DCKCFGR1_Type is record
       PLLI2SDIVQ : Bits_5;      -- PLLI2S division factor for SAI1 clock
       Reserved1  : Bits_3 := 0;
       PLLSAIDIVQ : Bits_5;      -- PLLSAI division factor for SAI1 clock
@@ -1713,11 +1656,10 @@ package STM32F769I is
       DFSDM1SEL  : Bits_1;      -- DFSDM1 clock source selection:
       ADFSDM1SEL : Bits_1;      -- DFSDM1 AUDIO clock source selection:
       Reserved4  : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_DCKCFGR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_DCKCFGR1_Type use record
       PLLI2SDIVQ at 0 range  0 ..  4;
       Reserved1  at 0 range  5 ..  7;
       PLLSAIDIVQ at 0 range  8 .. 12;
@@ -1734,11 +1676,11 @@ package STM32F769I is
 
    RCC_DCKCFGR1_ADDRESS : constant := 16#4002_388C#;
 
-   RCC_DCKCFGR1 : aliased RCC_DCKCFGR1_Type with
-      Address              => To_Address (RCC_DCKCFGR1_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_DCKCFGR1 : aliased RCC_DCKCFGR1_Type
+      with Address              => To_Address (RCC_DCKCFGR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 5.3.26 RCC dedicated clocks configuration register (RCC_DCKCFGR2)
 
@@ -1803,8 +1745,7 @@ package STM32F769I is
    DSISEL_DSIPHY : constant := 0; -- DSI-PHY used as DSI byte lane clock source (usual case)
    DSISEL_PLLR   : constant := 1; -- PLLR used as DSI byte lane clock source, used in case DSI PLL and DSI-PHY are off ...
 
-   type RCC_DCKCFGR2_Type is
-   record
+   type RCC_DCKCFGR2_Type is record
       USART1SEL : Bits_2;      -- USART 1 clock source selection
       USART2SEL : Bits_2;      -- USART 2 clock source selection
       USART3SEL : Bits_2;      -- USART 3 clock source selection
@@ -1824,11 +1765,10 @@ package STM32F769I is
       SDMMC2SEL : Bits_1;      -- SDMMC2 clock source selection
       DSISEL    : Bits_1;      -- DSI clock source selection
       Reserved  : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for RCC_DCKCFGR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RCC_DCKCFGR2_Type use record
       USART1SEL at 0 range  0 ..  1;
       USART2SEL at 0 range  2 ..  3;
       USART3SEL at 0 range  4 ..  5;
@@ -1852,11 +1792,11 @@ package STM32F769I is
 
    RCC_DCKCFGR2_ADDRESS : constant := 16#4002_3890#;
 
-   RCC_DCKCFGR2 : aliased RCC_DCKCFGR2_Type with
-      Address              => To_Address (RCC_DCKCFGR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RCC_DCKCFGR2 : aliased RCC_DCKCFGR2_Type
+      with Address              => To_Address (RCC_DCKCFGR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 6 General-purpose I/Os (GPIO)
@@ -1869,9 +1809,9 @@ package STM32F769I is
    GPIO_ALT : constant := 2#10#; -- Alternate function mode
    GPIO_ANL : constant := 2#11#; -- Analog mode
 
-   type GPIOx_MODER_Type is array (0 .. 15) of Bits_2 with
-      Size => 32,
-      Pack => True;
+   type GPIOx_MODER_Type is array (0 .. 15) of Bits_2
+      with Size => 32,
+           Pack => True;
 
    -- 6.4.2 GPIO port output type register (GPIOx_OTYPER) (x = A..K)
 
@@ -1879,9 +1819,9 @@ package STM32F769I is
    GPIO_OD : constant := 1; -- Output open-drain
 
 pragma Warnings (Off);
-   type GPIOx_OTYPER_Type is array (0 .. 15) of Bits_1 with
-      Size => 32,
-      Pack => True;
+   type GPIOx_OTYPER_Type is array (0 .. 15) of Bits_1
+      with Size => 32,
+           Pack => True;
 pragma Warnings (On);
 
    -- 6.4.3 GPIO port output speed register (GPIOx_OSPEEDR) (x = A..K)
@@ -1891,9 +1831,9 @@ pragma Warnings (On);
    GPIO_HI : constant := 2#10#; -- High speed
    GPIO_VH : constant := 2#11#; -- Very high speed
 
-   type GPIOx_OSPEEDR_Type is array (0 .. 15) of Bits_2 with
-      Size => 32,
-      Pack => True;
+   type GPIOx_OSPEEDR_Type is array (0 .. 15) of Bits_2
+      with Size => 32,
+           Pack => True;
 
    -- 6.4.4 GPIO port pull-up/pull-down register (GPIOx_PUPDR)(x = A..K)
 
@@ -1901,64 +1841,60 @@ pragma Warnings (On);
    GPIO_PU     : constant := 2#01#; -- Pull-up
    GPIO_PD     : constant := 2#10#; -- Pull-down
 
-   type GPIOx_PUPDR_Type is array (0 .. 15) of Bits_2 with
-      Size => 32,
-      Pack => True;
+   type GPIOx_PUPDR_Type is array (0 .. 15) of Bits_2
+      with Size => 32,
+           Pack => True;
 
    -- 6.4.5 GPIO port input data register (GPIOx_IDR) (x = A..K)
 
 pragma Warnings (Off);
-   type GPIOx_IDR_Type is array (0 .. 15) of Bits_1 with
-      Size => 32,
-      Pack => True;
+   type GPIOx_IDR_Type is array (0 .. 15) of Bits_1
+      with Size => 32,
+           Pack => True;
 pragma Warnings (On);
 
    -- 6.4.6 GPIO port output data register (GPIOx_ODR) (x = A..K)
 
 pragma Warnings (Off);
-   type GPIOx_ODR_Type is array (0 .. 15) of Bits_1 with
-      Size => 32,
-      Pack => True;
+   type GPIOx_ODR_Type is array (0 .. 15) of Bits_1
+      with Size => 32,
+           Pack => True;
 pragma Warnings (On);
 
    -- 6.4.7 GPIO port bit set/reset register (GPIOx_BSRR) (x = A..K)
 
-   type BSRR_SET_Type is array (0 .. 15) of Boolean with
-      Size => 16,
-      Pack => True;
+   type BSRR_SET_Type is array (0 .. 15) of Boolean
+      with Size => 16,
+           Pack => True;
    type BSRR_RST_Type is array (0 .. 15) of Boolean with
       Size => 16,
       Pack => True;
 
-   type GPIOx_BSRR_Type is
-   record
+   type GPIOx_BSRR_Type is record
       SET : BSRR_SET_Type;
       RST : BSRR_RST_Type;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPIOx_BSRR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPIOx_BSRR_Type use record
       SET at 0 range  0 .. 15;
       RST at 0 range 16 .. 31;
    end record;
 
    -- 6.4.8 GPIO port configuration lock register (GPIOx_LCKR) (x = A..K)
 
-   type LCKy_Type is array (0 .. 15) of Boolean with
-      Size => 16,
-      Pack => True;
+   type LCKy_Type is array (0 .. 15) of Boolean
+      with Size => 16,
+           Pack => True;
 
-   type GPIOx_LCKR_Type is
-   record
+   type GPIOx_LCKR_Type is record
       LCK      : LCKy_Type;    -- Port x lock bit y (y= 0..15)
       LCKK     : Boolean;      -- Lock key
       Reserved : Bits_15 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPIOx_LCKR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPIOx_LCKR_Type use record
       LCK      at 0 range  0 .. 15;
       LCKK     at 0 range 16 .. 16;
       Reserved at 0 range 17 .. 31;
@@ -1984,18 +1920,17 @@ pragma Warnings (On);
    AF14 : constant := 2#1110#;
    AF15 : constant := 2#1111#;
 
-   type AFRL_Type is array (0 .. 7) of Bits_4 with
-      Size => 32,
-      Pack => True;
+   type AFRL_Type is array (0 .. 7) of Bits_4
+      with Size => 32,
+           Pack => True;
 
-   type AFRH_Type is array (8 .. 15) of Bits_4 with
-      Size => 32,
-      Pack => True;
+   type AFRH_Type is array (8 .. 15) of Bits_4
+      with Size => 32,
+           Pack => True;
 
    -- 6.4. GPIO registers
 
-   type GPIO_PORT_Type is
-   record
+   type GPIO_PORT_Type is record
       MODER   : GPIOx_MODER_Type := [others => GPIO_IN]
          with Volatile_Full_Access => True; -- mode register
       OTYPER  : GPIOx_OTYPER_Type := [others => GPIO_PP]
@@ -2016,11 +1951,10 @@ pragma Warnings (On);
          with Volatile_Full_Access => True; -- alternate function low register
       AFRH    : AFRH_Type := [others => AF0]
          with Volatile_Full_Access => True; -- alternate function high register
-   end record with
-      Size                    => 16#28# * 8,
-      Suppress_Initialization => True;
-   for GPIO_PORT_Type use
-   record
+   end record
+      with Size                    => 16#28# * 8,
+           Suppress_Initialization => True;
+   for GPIO_PORT_Type use record
       MODER   at 16#00# range 0 .. 31;
       OTYPER  at 16#04# range 0 .. 31;
       OSPEEDR at 16#08# range 0 .. 31;
@@ -2035,91 +1969,91 @@ pragma Warnings (On);
 
    GPIOA_BASEADDRESS : constant := 16#4002_0000#;
 
-   GPIOA : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOA_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOA : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOA_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    GPIOB_BASEADDRESS : constant := 16#4002_0400#;
 
-   GPIOB : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOB_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOB : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOB_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    GPIOC_BASEADDRESS : constant := 16#4002_0800#;
 
-   GPIOC : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOC_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOC : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOC_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    GPIOD_BASEADDRESS : constant := 16#4002_0C00#;
 
-   GPIOD : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOD_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOD : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOD_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    GPIOE_BASEADDRESS : constant := 16#4002_1000#;
 
-   GPIOE : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOE_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOE : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOE_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    GPIOF_BASEADDRESS : constant := 16#4002_1400#;
 
-   GPIOF : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOF_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOF : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOF_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    GPIOG_BASEADDRESS : constant := 16#4002_1800#;
 
-   GPIOG : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOG_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOG : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOG_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    GPIOH_BASEADDRESS : constant := 16#4002_1C00#;
 
-   GPIOH : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOH_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOH : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOH_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    GPIOI_BASEADDRESS : constant := 16#4002_2000#;
 
-   GPIOI : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOI_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOI : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOI_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    GPIOJ_BASEADDRESS : constant := 16#4002_2400#;
 
-   GPIOJ : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOJ_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOJ : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOJ_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    GPIOK_BASEADDRESS : constant := 16#4002_2800#;
 
-   GPIOK : aliased GPIO_PORT_Type with
-      Address    => To_Address (GPIOK_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOK : aliased GPIO_PORT_Type
+      with Address    => To_Address (GPIOK_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 7 System configuration controller (SYSCFG)
@@ -2133,19 +2067,17 @@ pragma Warnings (On);
    SWP_FMC_NONE  : constant := 2#00#; -- No FMC memory mapping swapping
    SWP_FMC_SDRAM : constant := 2#01#; -- NOR/RAM and SDRAM memory mapping swapped
 
-   type SYSCFG_MEMRMP_Type is
-   record
+   type SYSCFG_MEMRMP_Type is record
       MEM_BOOT  : Bits_1;       -- Memory boot mapping
       Reserved1 : Bits_7 := 0;
       SWP_FB    : Boolean;      -- Flash Bank swap
       Reserved2 : Bits_1 := 0;
       SWP_FMC   : Bits_2;       -- FMC memory mapping swap
       Reserved3 : Bits_20 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYSCFG_MEMRMP_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYSCFG_MEMRMP_Type use record
       MEM_BOOT  at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
       SWP_FB    at 0 range  8 ..  8;
@@ -2156,19 +2088,18 @@ pragma Warnings (On);
 
    SYSCFG_MEMRMP_ADDRESS : constant := 16#4001_3800#;
 
-   SYSCFG_MEMRMP : aliased SYSCFG_MEMRMP_Type with
-      Address              => To_Address (SYSCFG_MEMRMP_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYSCFG_MEMRMP : aliased SYSCFG_MEMRMP_Type
+      with Address              => To_Address (SYSCFG_MEMRMP_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 7.2.2 SYSCFG peripheral mode configuration register (SYSCFG_PMC)
 
    MII_RMII_SEL_MII  : constant := 0; -- MII interface is selected
    MII_RMII_SEL_RMII : constant := 1; -- RMII PHY interface is selected
 
-   type SYSCFG_PMC_Type is
-   record
+   type SYSCFG_PMC_Type is record
       I2C1_FMP     : Boolean;     -- I2C1_FMP I2C1 Fast Mode + Enable
       I2C2_FMP     : Boolean;     -- I2C2_FMP I2C2 Fast Mode + Enable
       I2C3_FMP     : Boolean;     -- I2C3_FMP I2C3 Fast Mode + Enable
@@ -2184,11 +2115,10 @@ pragma Warnings (On);
       Reserved2    : Bits_4 := 0;
       MII_RMII_SEL : Bits_1;      -- Ethernet PHY interface selection
       Reserved3    : Bits_8 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYSCFG_PMC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYSCFG_PMC_Type use record
       I2C1_FMP     at 0 range  0 ..  0;
       I2C2_FMP     at 0 range  1 ..  1;
       I2C3_FMP     at 0 range  2 ..  2;
@@ -2208,11 +2138,11 @@ pragma Warnings (On);
 
    SYSCFG_PMC_ADDRESS : constant := 16#4001_3804#;
 
-   SYSCFG_PMC : aliased SYSCFG_MEMRMP_Type with
-      Address              => To_Address (SYSCFG_PMC_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYSCFG_PMC : aliased SYSCFG_MEMRMP_Type
+      with Address              => To_Address (SYSCFG_PMC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 7.2.3 SYSCFG external interrupt configuration register 1 (SYSCFG_EXTICR1)
    -- 7.2.4 SYSCFG external interrupt configuration register 2 (SYSCFG_EXTICR2)
@@ -2231,18 +2161,16 @@ pragma Warnings (On);
    EXTI_PJ : constant := 2#1001#; -- PJ[x] pin
    EXTI_PK : constant := 2#1010#; -- PK[x] pin
 
-   type SYSCFG_EXTICR1_Type is
-   record
+   type SYSCFG_EXTICR1_Type is record
       EXTI0    : Bits_4;       -- EXTI 0 configuration
       EXTI1    : Bits_4;       -- EXTI 1 configuration
       EXTI2    : Bits_4;       -- EXTI 2 configuration
       EXTI3    : Bits_4;       -- EXTI 3 configuration
       Reserved : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYSCFG_EXTICR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYSCFG_EXTICR1_Type use record
       EXTI0    at 0 range  0 ..  3;
       EXTI1    at 0 range  4 ..  7;
       EXTI2    at 0 range  8 .. 11;
@@ -2252,24 +2180,22 @@ pragma Warnings (On);
 
    SYSCFG_EXTICR1_ADDRESS : constant := 16#4001_3808#;
 
-   SYSCFG_EXTICR1 : aliased SYSCFG_EXTICR1_Type with
-      Address              => To_Address (SYSCFG_EXTICR1_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYSCFG_EXTICR1 : aliased SYSCFG_EXTICR1_Type
+      with Address              => To_Address (SYSCFG_EXTICR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
-   type SYSCFG_EXTICR2_Type is
-   record
+   type SYSCFG_EXTICR2_Type is record
       EXTI4    : Bits_4;       -- EXTI 4 configuration
       EXTI5    : Bits_4;       -- EXTI 5 configuration
       EXTI6    : Bits_4;       -- EXTI 6 configuration
       EXTI7    : Bits_4;       -- EXTI 7 configuration
       Reserved : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYSCFG_EXTICR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYSCFG_EXTICR2_Type use record
       EXTI4    at 0 range  0 ..  3;
       EXTI5    at 0 range  4 ..  7;
       EXTI6    at 0 range  8 .. 11;
@@ -2279,24 +2205,22 @@ pragma Warnings (On);
 
    SYSCFG_EXTICR2_ADDRESS : constant := 16#4001_380C#;
 
-   SYSCFG_EXTICR2 : aliased SYSCFG_EXTICR2_Type with
-      Address              => To_Address (SYSCFG_EXTICR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYSCFG_EXTICR2 : aliased SYSCFG_EXTICR2_Type
+      with Address              => To_Address (SYSCFG_EXTICR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
-   type SYSCFG_EXTICR3_Type is
-   record
+   type SYSCFG_EXTICR3_Type is record
       EXTI8    : Bits_4;       -- EXTI 8 configuration
       EXTI9    : Bits_4;       -- EXTI 9 configuration
       EXTI10   : Bits_4;       -- EXTI 10 configuration
       EXTI11   : Bits_4;       -- EXTI 11 configuration
       Reserved : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYSCFG_EXTICR3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYSCFG_EXTICR3_Type use record
       EXTI8    at 0 range  0 ..  3;
       EXTI9    at 0 range  4 ..  7;
       EXTI10   at 0 range  8 .. 11;
@@ -2306,24 +2230,22 @@ pragma Warnings (On);
 
    SYSCFG_EXTICR3_ADDRESS : constant := 16#4001_3810#;
 
-   SYSCFG_EXTICR3 : aliased SYSCFG_EXTICR3_Type with
-      Address              => To_Address (SYSCFG_EXTICR3_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYSCFG_EXTICR3 : aliased SYSCFG_EXTICR3_Type
+      with Address              => To_Address (SYSCFG_EXTICR3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
-   type SYSCFG_EXTICR4_Type is
-   record
+   type SYSCFG_EXTICR4_Type is record
       EXTI12   : Bits_4;       -- EXTI 12 configuration
       EXTI13   : Bits_4;       -- EXTI 13 configuration
       EXTI14   : Bits_4;       -- EXTI 14 configuration
       EXTI15   : Bits_4;       -- EXTI 15 configuration
       Reserved : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYSCFG_EXTICR4_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYSCFG_EXTICR4_Type use record
       EXTI12   at 0 range  0 ..  3;
       EXTI13   at 0 range  4 ..  7;
       EXTI14   at 0 range  8 .. 11;
@@ -2333,25 +2255,23 @@ pragma Warnings (On);
 
    SYSCFG_EXTICR4_ADDRESS : constant := 16#4001_3814#;
 
-   SYSCFG_EXTICR4 : aliased SYSCFG_EXTICR4_Type with
-      Address              => To_Address (SYSCFG_EXTICR4_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYSCFG_EXTICR4 : aliased SYSCFG_EXTICR4_Type
+      with Address              => To_Address (SYSCFG_EXTICR4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 7.2.7 Class B register (SYSCFG_CBR)
 
-   type SYSCFG_CBR_Type is
-   record
+   type SYSCFG_CBR_Type is record
       CLL       : Boolean;      -- Core Lockup Lock
       Reserved1 : Bits_1 := 0;
       PVDL      : Boolean;      -- PVD Lock
       Reserved2 : Bits_29 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYSCFG_CBR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYSCFG_CBR_Type use record
       CLL       at 0 range 0 ..  0;
       Reserved1 at 0 range 1 ..  1;
       PVDL      at 0 range 2 ..  2;
@@ -2360,25 +2280,23 @@ pragma Warnings (On);
 
    SYSCFG_CBR_ADDRESS : constant := 16#4001_381C#;
 
-   SYSCFG_CBR : aliased SYSCFG_CBR_Type with
-      Address              => To_Address (SYSCFG_CBR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYSCFG_CBR : aliased SYSCFG_CBR_Type
+      with Address              => To_Address (SYSCFG_CBR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 7.2.8 Compensation cell control register (SYSCFG_CMPCR)
 
-   type SYSCFG_CMPCR_Type is
-   record
+   type SYSCFG_CMPCR_Type is record
       CMP_PD    : Boolean;      -- Compensation cell power-down
       Reserved1 : Bits_7 := 0;
       READY     : Boolean;      -- Compensation cell ready flag
       Reserved2 : Bits_23 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SYSCFG_CMPCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYSCFG_CMPCR_Type use record
       CMP_PD    at 0 range 0 ..  0;
       Reserved1 at 0 range 1 ..  7;
       READY     at 0 range 8 ..  8;
@@ -2387,11 +2305,11 @@ pragma Warnings (On);
 
    SYSCFG_CMPCR_ADDRESS : constant := 16#4001_3820#;
 
-   SYSCFG_CMPCR : aliased SYSCFG_CMPCR_Type with
-      Address              => To_Address (SYSCFG_CMPCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SYSCFG_CMPCR : aliased SYSCFG_CMPCR_Type
+      with Address              => To_Address (SYSCFG_CMPCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 10 Nested vectored interrupt controller (NVIC)
@@ -2519,8 +2437,7 @@ pragma Warnings (On);
    URS_ANY          : constant := 0; -- Any of the following events generates ...
    URS_COUNTER_OFUF : constant := 1; -- Only counter overflow/underflow generates ..
 
-   type TIMx_CR1_Type is
-   record
+   type TIMx_CR1_Type is record
       CEN       : Boolean;     -- Counter enable
       UDIS      : Boolean;     -- Update disable
       URS       : Bits_1;      -- Update request source
@@ -2530,11 +2447,10 @@ pragma Warnings (On);
       Reserved2 : Bits_3 := 0;
       UIFREMAP  : Boolean;     -- UIF status bit remapping
       Reserved3 : Bits_4 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for TIMx_CR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_CR1_Type use record
       CEN       at 0 range  0 ..  0;
       UDIS      at 0 range  1 ..  1;
       URS       at 0 range  2 ..  2;
@@ -2552,16 +2468,14 @@ pragma Warnings (On);
    MMS_ENABLE : constant := 2#001#; -- the Counter enable signal, CNT_EN, is used as a trigger output (TRGO).
    MMS_UPDATE : constant := 2#010#; -- The update event is selected as a trigger output (TRGO).
 
-   type TIMx_CR2_Type is
-   record
+   type TIMx_CR2_Type is record
       Reserved1 : Bits_4 := 0;
       MMS       : Bits_3;      -- Master mode selection
       Reserved2 : Bits_9 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for TIMx_CR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_CR2_Type use record
       Reserved1 at 0 range 0 ..  3;
       MMS       at 0 range 4 ..  6;
       Reserved2 at 0 range 7 .. 15;
@@ -2569,17 +2483,15 @@ pragma Warnings (On);
 
    -- 28.4.3 TIM6/TIM7 DMA/Interrupt enable register (TIMx_DIER)
 
-   type TIMx_DIER_Type is
-   record
+   type TIMx_DIER_Type is record
       UIE       : Boolean;     -- Update interrupt enable
       Reserved1 : Bits_7 := 0;
       UDE       : Boolean;     -- Update DMA request enable
       Reserved2 : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for TIMx_DIER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_DIER_Type use record
       UIE       at 0 range 0 ..  0;
       Reserved1 at 0 range 1 ..  7;
       UDE       at 0 range 8 ..  8;
@@ -2588,46 +2500,40 @@ pragma Warnings (On);
 
    -- 28.4.4 TIM6/TIM7 status register (TIMx_SR)
 
-   type TIMx_SR_Type is
-   record
+   type TIMx_SR_Type is record
       UIF      : Boolean;      -- Update interrupt flag
       Reserved : Bits_15 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for TIMx_SR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_SR_Type use record
       UIF      at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 15;
    end record;
 
    -- 28.4.5 TIM6/TIM7 event generation register (TIMx_EGR)
 
-   type TIMx_EGR_Type is
-   record
+   type TIMx_EGR_Type is record
       UG       : Boolean;      -- Update generation
       Reserved : Bits_15 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for TIMx_EGR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_EGR_Type use record
       UG       at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 15;
    end record;
 
    -- 28.4.6 TIM6/TIM7 counter (TIMx_CNT)
 
-   type TIMx_CNT_Type is
-   record
+   type TIMx_CNT_Type is record
       CNT      : Unsigned_16;  -- Counter value
       Reserved : Bits_15 := 0;
       UIFCPY   : Boolean;      -- UIF Copy
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for TIMx_CNT_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CNT_Type use record
       CNT      at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 30;
       UIFCPY   at 0 range 31 .. 31;
@@ -2635,8 +2541,7 @@ pragma Warnings (On);
 
    -- 28.4 TIM6/TIM7 registers
 
-   type Basic_Timers_Type is
-   record
+   type Basic_Timers_Type is record
       TIMx_CR1  : TIMx_CR1_Type  with Volatile_Full_Access => True;
       TIMx_CR2  : TIMx_CR2_Type  with Volatile_Full_Access => True;
       TIMx_DIER : TIMx_DIER_Type with Volatile_Full_Access => True;
@@ -2645,11 +2550,10 @@ pragma Warnings (On);
       TIMx_CNT  : TIMx_CNT_Type  with Volatile_Full_Access => True;
       TIMx_PSC  : Unsigned_16    with Volatile_Full_Access => True;
       TIMx_ARR  : Unsigned_16    with Volatile_Full_Access => True;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16#30# * 8;
-   for Basic_Timers_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16#30# * 8;
+   for Basic_Timers_Type use record
       TIMx_CR1  at 16#00# range 0 .. 15;
       TIMx_CR2  at 16#04# range 0 .. 15;
       TIMx_DIER at 16#0C# range 0 .. 15;
@@ -2662,19 +2566,19 @@ pragma Warnings (On);
 
    TIM6_BASEADDRESS : constant := 16#4000_1000#;
 
-   TIM6 : aliased Basic_Timers_Type with
-      Address    => To_Address (TIM6_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   TIM6 : aliased Basic_Timers_Type
+      with Address    => To_Address (TIM6_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    TIM7_BASEADDRESS : constant := 16#4000_1400#;
 
-   TIM7 : aliased Basic_Timers_Type with
-      Address    => To_Address (TIM7_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   TIM7 : aliased Basic_Timers_Type
+      with Address    => To_Address (TIM7_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 34 Universal synchronous asynchronous receiver transmitter (USART)
@@ -2688,8 +2592,7 @@ pragma Warnings (On);
    WAKE_IDLE : constant := 0; -- Idle line
    WAKE_ADDR : constant := 1; -- Address mark
 
-   type M_WORD_LENGTH_Type is
-   record
+   type M_WORD_LENGTH_Type is record
       M0 : Bits_1;
       M1 : Bits_1;
    end record;
@@ -2701,8 +2604,7 @@ pragma Warnings (On);
    OVER8_16 : constant := 0; -- Oversampling by 16
    OVER8_8  : constant := 1; -- Oversampling by 8
 
-   type USART_CR1_Type is
-   record
+   type USART_CR1_Type is record
       UE       : Boolean;     -- USART enable
       UESM     : Boolean;     -- USART enable in Stop mode
       RE       : Boolean;     -- Receiver enable
@@ -2725,11 +2627,10 @@ pragma Warnings (On);
       EOBIE    : Boolean;     -- End of Block interrupt enable
       M1       : Bits_1;      -- Word length
       Reserved : Bits_3 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_CR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_CR1_Type use record
       UE       at 0 range  0 ..  0;
       UESM     at 0 range  1 ..  1;
       RE       at 0 range  2 ..  2;
@@ -2778,8 +2679,7 @@ pragma Warnings (On);
    ABRMOD_7F      : constant := 2#10#; --  0x7F frame detection.
    ABRMOD_55      : constant := 2#11#; --  0x55 frame detection
 
-   type USART_CR2_Type is
-   record
+   type USART_CR2_Type is record
       Reserved1 : Bits_4 := 0;
       ADDM7     : Bits_1;      -- 7-bit Address Detection/4-bit Address Detection
       LBDL      : Bits_1;      -- LIN break detection length
@@ -2801,11 +2701,10 @@ pragma Warnings (On);
       RTOEN     : Boolean;     -- Receiver timeout enable
       ADD30     : Bits_4;      -- Address of the USART node
       ADD74     : Bits_4;      -- Address of the USART node
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_CR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_CR2_Type use record
       Reserved1 at 0 range  0 ..  3;
       ADDM7     at 0 range  4 ..  4;
       LBDL      at 0 range  5 ..  5;
@@ -2840,8 +2739,7 @@ pragma Warnings (On);
    WUS_STARTBIT  : constant := 2#10#; -- WuF active on Start bit detection
    WUS_RXNE      : constant := 2#11#; -- WUF active on RXNE.
 
-   type USART_CR3_Type is
-   record
+   type USART_CR3_Type is record
       EIE       : Boolean;     -- Error interrupt enable
       IREN      : Boolean;     -- IrDA mode enable
       IRLP      : Boolean;     -- IrDA low-power
@@ -2865,11 +2763,10 @@ pragma Warnings (On);
       UCESM     : Boolean;     -- USART Clock Enable in Stop mode.
       TCBGTIE   : Boolean;     -- Transmission complete before guard time interrupt enable
       Reserved2 : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_CR3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_CR3_Type use record
       EIE       at 0 range  0 ..  0;
       IREN      at 0 range  1 ..  1;
       IRLP      at 0 range  2 ..  2;
@@ -2897,31 +2794,27 @@ pragma Warnings (On);
 
    -- 34.8.4 Baud rate register (USART_BRR)
 
-   type USART_BRR_Type is
-   record
+   type USART_BRR_Type is record
       BRR      : Unsigned_16;  -- BRR value
       Reserved : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_BRR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_BRR_Type use record
       BRR      at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
    end record;
 
    -- 34.8.5 Guard time and prescaler register (USART_GTPR)
 
-   type USART_GTPR_Type is
-   record
+   type USART_GTPR_Type is record
       PSC      : Unsigned_8;   -- Prescaler value
       GT       : Unsigned_8;   -- Guard time value
       Reserved : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_GTPR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_GTPR_Type use record
       PSC      at 0 range  0 ..  7;
       GT       at 0 range  8 .. 15;
       Reserved at 0 range 16 .. 31;
@@ -2929,34 +2822,30 @@ pragma Warnings (On);
 
    -- 34.8.6 Receiver timeout register (USART_RTOR)
 
-   type USART_RTOR_Type is
-   record
+   type USART_RTOR_Type is record
       RTO  : Bits_24; -- Receiver timeout value
       BLEN : Bits_8;  -- Block Length
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_RTOR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_RTOR_Type use record
       RTO  at 0 range  0 .. 23;
       BLEN at 0 range 24 .. 31;
    end record;
 
    -- 34.8.7 Request register (USART_RQR)
 
-   type USART_RQR_Type is
-   record
+   type USART_RQR_Type is record
       ABRRQ    : Boolean;      -- Auto baud rate request
       SBKRQ    : Boolean;      -- Send break request
       MMRQ     : Boolean;      -- Mute mode request
       RXFRQ    : Boolean;      -- Receive data flush request
       TXFRQ    : Boolean;      -- Transmit data flush request
       Reserved : Bits_27 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_RQR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_RQR_Type use record
       ABRRQ    at 0 range 0 ..  0;
       SBKRQ    at 0 range 1 ..  1;
       MMRQ     at 0 range 2 ..  2;
@@ -2967,8 +2856,7 @@ pragma Warnings (On);
 
    -- 34.8.8 Interrupt and status register (USART_ISR)
 
-   type USART_ISR_Type is
-   record
+   type USART_ISR_Type is record
       PE        : Boolean;     -- Parity Error
       FE        : Boolean;     -- Framing Error
       NF        : Boolean;     -- START bit Noise detection flag
@@ -2995,11 +2883,10 @@ pragma Warnings (On);
       Reserved2 : Bits_2 := 0;
       TCBGT     : Boolean;     -- Transmission complete before guard time completion.
       Reserved3 : Bits_6 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_ISR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_ISR_Type use record
       PE        at 0 range  0 ..  0;
       FE        at 0 range  1 ..  1;
       NF        at 0 range  2 ..  2;
@@ -3030,8 +2917,7 @@ pragma Warnings (On);
 
    -- 34.8.9 Interrupt flag clear register (USART_ICR)
 
-   type USART_ICR_Type is
-   record
+   type USART_ICR_Type is record
       PECF      : Boolean;      -- Parity error clear flag
       FECF      : Boolean;      -- Framing error clear flag
       NCF       : Boolean;      -- Noise detected clear flag
@@ -3050,11 +2936,10 @@ pragma Warnings (On);
       Reserved4 : Bits_2;
       WUCF      : Boolean;      -- Wakeup from Stop mode clear flag
       Reserved5 : Bits_11 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_ICR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_ICR_Type use record
       PECF      at 0 range  0 ..  0;
       FECF      at 0 range  1 ..  1;
       NCF       at 0 range  2 ..  2;
@@ -3078,16 +2963,14 @@ pragma Warnings (On);
    -- 34.8.10 Receive data register (USART_RDR)
    -- 34.8.11 Transmit data register (USART_TDR)
 
-   type USART_DR_Type is
-   record
+   type USART_DR_Type is record
       DR       : Unsigned_8;
       DR8      : Bits_1;
       Reserved : Bits_23 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_DR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_DR_Type use record
       DR       at 0 range 0 ..  7;
       DR8      at 0 range 8 ..  8;
       Reserved at 0 range 9 .. 31;
@@ -3095,8 +2978,7 @@ pragma Warnings (On);
 
    -- 34.8 USART registers
 
-   type USART_Type is
-   record
+   type USART_Type is record
       USART_CR1  : USART_CR1_Type  with Volatile_Full_Access => True;
       USART_CR2  : USART_CR2_Type  with Volatile_Full_Access => True;
       USART_CR3  : USART_CR3_Type  with Volatile_Full_Access => True;
@@ -3108,11 +2990,10 @@ pragma Warnings (On);
       USART_ICR  : USART_ICR_Type  with Volatile_Full_Access => True;
       USART_RDR  : USART_DR_Type;
       USART_TDR  : USART_DR_Type;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16#2C# * 8;
-   for USART_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16#2C# * 8;
+   for USART_Type use record
       USART_CR1  at 16#00# range 0 .. 31;
       USART_CR2  at 16#04# range 0 .. 31;
       USART_CR3  at 16#08# range 0 .. 31;
@@ -3128,66 +3009,66 @@ pragma Warnings (On);
 
    USART1_BASEADDRESS : constant := 16#4001_1000#;
 
-   USART1 : aliased USART_Type with
-      Address    => To_Address (USART1_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   USART1 : aliased USART_Type
+      with Address    => To_Address (USART1_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    USART2_BASEADDRESS : constant := 16#4000_4400#;
 
-   USART2 : aliased USART_Type with
-      Address    => To_Address (USART2_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   USART2 : aliased USART_Type
+      with Address    => To_Address (USART2_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    USART3_BASEADDRESS : constant := 16#4000_4800#;
 
-   USART3 : aliased USART_Type with
-      Address    => To_Address (USART3_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   USART3 : aliased USART_Type
+      with Address    => To_Address (USART3_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    UART4_BASEADDRESS : constant := 16#4000_4C00#;
 
-   UART4 : aliased USART_Type with
-      Address    => To_Address (UART4_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   UART4 : aliased USART_Type
+      with Address    => To_Address (UART4_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    UART5_BASEADDRESS : constant := 16#4000_5000#;
 
-   UART5 : aliased USART_Type with
-      Address    => To_Address (UART5_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   UART5 : aliased USART_Type
+      with Address    => To_Address (UART5_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    USART6_BASEADDRESS : constant := 16#4001_1400#;
 
-   USART6 : aliased USART_Type with
-      Address    => To_Address (USART6_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   USART6 : aliased USART_Type
+      with Address    => To_Address (USART6_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    UART7_BASEADDRESS : constant := 16#4000_7800#;
 
-   UART7 : aliased USART_Type with
-      Address    => To_Address (UART7_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   UART7 : aliased USART_Type
+      with Address    => To_Address (UART7_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    UART8_BASEADDRESS : constant := 16#4000_7C00#;
 
-   UART8 : aliased USART_Type with
-      Address    => To_Address (UART8_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   UART8 : aliased USART_Type
+      with Address    => To_Address (UART8_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end STM32F769I;
