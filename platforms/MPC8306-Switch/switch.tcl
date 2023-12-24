@@ -1,6 +1,6 @@
 
 #
-# MPC8306 COMESA "Switch" CCS configuration.
+# MPC8306 embedded board CCS configuration.
 #
 
 ################################################################################
