@@ -1,0 +1,100 @@
+
+SweetAda GNU toolchain build scripts
+--------------------------------------------------------------------------------
+
+These are little shell scripts to build a GNAT toolchain from official FSF
+repositories in a Linux environment.
+
+- https://ftp.gnu.org/pub/gnu/binutils/binutils-2.41.tar.[bz2|gz|lz|xz]
+- https://ftp.gnu.org/pub/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.[gz|xz]
+- https://ftp.gnu.org/pub/gnu/gdb/gdb-13.2.tar.[gz|xz]
+
+The scripts are Bash scripts which use array features, so they can''t be run
+in a strict POSIX environment which does not provide this facility. A series
+of standard tools are needed online, like Bison/readline/expat, so check your
+environment and install them to satisfy requirements.
+
+These scripts are rather generic, so they could be successfully run also in an
+MSYS2 environment. That being said, it is extremely time-consuming to build
+the toolchains in layered environments like MSYS2 or Cygwin.
+
+The scripts have default choices for a standard build. The scripts variables
+have, e.g., /usr/local/src as the home of the source packages, so this
+variable could be changed to suit your environment. DESTDIR is only useful
+for package distribution/relocation and you should not specify it for a
+standard installation.
+
+Uncomment the toolchain name useful for your needs, and all the phase_* flags.
+They are keep separate so that it is not necessary to restart everything,
+should some problem arise during the build. In particular, the configure phase
+will wipe out the whole build directory.
+
+If you want optimized executables, add -O2 to the flags for the host compiler
+when configuring:
+
+  CONFIGURE_VARS+=("CFLAGS=\"-g -O2\"")
+  CONFIGURE_VARS+=("LDFLAGS=\"-g -O2\"")
+
+The scripts do not cover GPRbuild, because it is rather complex to provide a
+simple procedure to build it under all situations, please refer to official
+package providers.
+
+Binutils
+--------------------------------------------------------------------------------
+
+Binutils is rather simple to build and does not require external support or
+particular handlings.
+
+GCC
+--------------------------------------------------------------------------------
+
+With this scripts, only one loop of GCC will be built. That means no libada,
+libc or libm libraries, just the compiler and LibGCC. This suffices for a
+normal use of SweetAda in practically all situations. Further development
+will cover in the future also the libm build.
+
+In order to successfully build GCC, the GMP, MPC and MPFR libraries are
+needed, so download the appropriate package from your preferred package
+provider. Of course you do not need the development packages but only the
+(shared) libraries, plus headers.
+
+It is highly advised to integrate ISL and libiconv source libraries into the
+source tree of GCC. Download:
+
+- https://libisl.sourceforge.io/isl-0.26.tar.[bz2|gz|xz]
+- https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.17.tar.gz
+
+and have them decompressed so that the following layout exists:
+
+/usr/local/src
+  |
+  +- gcc-13.2.0
+  |   |
+  |   +-- INSTALL
+  |   +-- c++tools
+  |   ...
+  |   +-- isl (-> symlink to ISL source directory)
+  |   +-- libiconv (-> symlink to libiconv source directory)
+  |   ...
+  ...
+
+Note that the added directories should have no version suffix, so remove the
+version suffix or create a symlink to the physical source directory.
+
+GDB
+--------------------------------------------------------------------------------
+
+Like GCC, it is highly advised to integrate ISL and libiconv libraries into the
+source tree of GDB as well.
+
+Due to not-perfect integration with all possible OS distribution layouts, a
+little helper script exists to detect Python 3 libraries. The option is
+specified in the configure list, but it is commented out because maybe your
+system has a 1-1 match with GDB''s configure idea of the Python which is
+actually installed in the system.
+
+If you experience problems, try to uncomment this option, then, if the problem
+persists, try to discover potential issues by checking if python-config
+(usually located in /usr/bin) provides correct responses and change parameters
+thereof.
+
