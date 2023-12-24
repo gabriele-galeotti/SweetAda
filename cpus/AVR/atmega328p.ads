@@ -21,6 +21,7 @@ with Interfaces;
 with Bits;
 
 package ATmega328P
+   with Preelaborate => True
    is
 
    --========================================================================--
