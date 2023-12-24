@@ -21,19 +21,19 @@ vectors:
 
 SP_Main:        .long   0
                 .extern _start
-Reset:          .long   _start
-NMI:            .long   0
-HardFault:      .long   0
-ReservedExc4:   .long   0
-ReservedExc5:   .long   0
-ReservedExc6:   .long   0
-ReservedExc7:   .long   0
-ReservedExc8:   .long   0
-ReservedExc9:   .long   0
-ReservedExcA:   .long   0
-SVCall:         .long   0
-ReservedExcC:   .long   0
-ReservedExcD:   .long   0
-PendSV:         .long   0
-SysTick:        .long   0
+Reset:          .long   _start                  //  1
+NMI:            .long   0                       //  2
+HardFault:      .long   0                       //  3
+ReservedExc4:   .long   0                       //  4
+ReservedExc5:   .long   0                       //  5
+ReservedExc6:   .long   0                       //  6
+ReservedExc7:   .long   0                       //  7
+ReservedExc8:   .long   0                       //  8
+ReservedExc9:   .long   0                       //  9
+ReservedExcA:   .long   0                       // 10
+SVCall:         .long   0                       // 11
+ReservedExcC:   .long   0                       // 12
+ReservedExcD:   .long   0                       // 13
+PendSV:         .long   0                       // 14
+SysTick:        .long   0                       // 15
 
