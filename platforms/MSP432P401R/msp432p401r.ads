@@ -33,23 +33,23 @@ package MSP432P401R is
    use System.Storage_Elements;
    use Interfaces;
 
-   WDTCTL : aliased Unsigned_16 with
-      Address    => To_Address (16#4000_480C#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   WDTCTL : aliased Unsigned_16
+      with Address    => To_Address (16#4000_480C#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    PORT_BASE : constant := 16#4000_4C00#;
 
-   PAOUT_L : aliased Unsigned_8 with
-      Address    => To_Address (PORT_BASE + 16#02#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   PADIR_L : aliased Unsigned_8 with
-      Address    => To_Address (PORT_BASE + 16#04#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   PAOUT_L : aliased Unsigned_8
+      with Address    => To_Address (PORT_BASE + 16#02#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   PADIR_L : aliased Unsigned_8
+      with Address    => To_Address (PORT_BASE + 16#04#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end MSP432P401R;
