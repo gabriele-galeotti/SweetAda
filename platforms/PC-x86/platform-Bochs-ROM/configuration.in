@@ -37,7 +37,7 @@ OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 POSTBUILD_ROMFILE         := Y
 
 CONFIGURE_FILES_PLATFORM       := configure.ads configure.h
-LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S
+LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S startupc.c
 GCC_SWITCHES_LOWLEVEL_PLATFORM := -DMODE32 -DDATA_RELOC
 
 CLEAN_OBJECTS_COMMON += $(PLATFORM_DIRECTORY)/bochsrc

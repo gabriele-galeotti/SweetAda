@@ -33,7 +33,7 @@ POSTBUILD_ROMFILE         := Y
 POSTBUILD_COMMAND         := $(SHELL_EXEC) postbuild-fd$(SCREXT)
 
 CONFIGURE_FILES_PLATFORM       := configure.ads configure.h
-LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S
+LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S startupc.c
 GCC_SWITCHES_LOWLEVEL_PLATFORM := -DMODE32 -DENABLE_A20 -DDATA_RELOC
 
 ################################################################################
