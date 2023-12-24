@@ -22,7 +22,8 @@ with Definitions;
 with Bits;
 with CPU;
 
-package PC is
+package PC
+   is
 
    --========================================================================--
    --                                                                        --

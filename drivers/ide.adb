@@ -20,7 +20,8 @@ with Ada.Unchecked_Conversion;
 with LLutils;
 with Console;
 
-package body IDE is
+package body IDE
+   is
 
    --========================================================================--
    --                                                                        --

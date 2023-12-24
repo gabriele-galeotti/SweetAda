@@ -18,7 +18,8 @@
 with Ada.Unchecked_Conversion;
 with Console;
 
-package body PCI is
+package body PCI
+   is
 
    --========================================================================--
    --                                                                        --

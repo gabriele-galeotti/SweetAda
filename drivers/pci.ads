@@ -19,7 +19,8 @@ with System;
 with Interfaces;
 with Bits;
 
-package PCI is
+package PCI
+   is
 
    --========================================================================--
    --                                                                        --

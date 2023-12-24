@@ -21,7 +21,8 @@ with Bits;
 with MMIO;
 with Time;
 
-package MC146818A is
+package MC146818A
+   is
 
    --========================================================================--
    --                                                                        --
@@ -35,8 +36,7 @@ package MC146818A is
    use Interfaces;
    use Bits;
 
-   type Flags_Type is
-   record
+   type Flags_Type is record
       PC_RTC : Boolean;
    end record;
 

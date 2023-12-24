@@ -20,7 +20,8 @@ with Ada.Unchecked_Conversion;
 with LLutils;
 with CPU;
 
-package body MC146818A is
+package body MC146818A
+   is
 
    --========================================================================--
    --                                                                        --

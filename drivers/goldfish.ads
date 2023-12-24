@@ -17,7 +17,8 @@
 
 with Interfaces;
 
-package Goldfish is
+package Goldfish
+   is
 
    --========================================================================--
    --                                                                        --

@@ -18,7 +18,8 @@
 with System.Multiprocessors.Spin_Locks;
 with CPU.IO;
 
-package body PC is
+package body PC
+   is
 
    --========================================================================--
    --                                                                        --

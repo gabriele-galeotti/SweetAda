@@ -20,7 +20,8 @@ with Interfaces;
 with Bits;
 with BlockDevices;
 
-package IDE is
+package IDE
+   is
 
    --========================================================================--
    --                                                                        --
