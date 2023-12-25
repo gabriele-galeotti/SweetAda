@@ -67,6 +67,9 @@ endif
 
 .PHONY: postbuild
 postbuild:
+ifneq ($(POSTBUILD_COMMAND),)
+	$(POSTBUILD_COMMAND)
+endif
 
 .PHONY: clean
 clean:
