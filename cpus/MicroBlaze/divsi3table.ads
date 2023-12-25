@@ -18,6 +18,7 @@
 with Interfaces;
 
 package DivSI3Table
+   with Preelaborate => True
    is
 
    --========================================================================--

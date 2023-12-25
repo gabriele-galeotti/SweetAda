@@ -18,6 +18,7 @@
 with MicroBlaze;
 
 package CPU
+   with Preelaborate => True
    is
 
    --========================================================================--

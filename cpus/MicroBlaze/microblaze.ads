@@ -18,6 +18,7 @@
 with Interfaces;
 
 package MicroBlaze
+   with Preelaborate => True
    is
 
    --========================================================================--
