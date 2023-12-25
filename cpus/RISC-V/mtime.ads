@@ -18,6 +18,7 @@
 with Interfaces;
 
 package MTIME
+   with Preelaborate => True
    is
 
    --========================================================================--
