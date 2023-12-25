@@ -19,6 +19,7 @@ with System;
 with Bits;
 
 package CPU
+   with Preelaborate => True
    is
 
    --========================================================================--
@@ -41,7 +42,7 @@ package CPU
            Bit_Order => High_Order_First,
            Size      => 64;
    for PSWT use record
-      Reserved1   at 0 range 0 .. 31;
+      Reserved1   at 0 range  0 .. 31;
       Reserved2   at 0 range 32 .. 32;
       New_Address at 0 range 33 .. 63;
    end record;
