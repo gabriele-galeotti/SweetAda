@@ -18,6 +18,7 @@
 with Interfaces;
 
 package DivSI3Table
+   with Pure => True
    is
 
    --========================================================================--
@@ -37,7 +38,7 @@ package DivSI3Table
    -- the address of divsi3_table is pre-loaded by the compiler in a register
    -- __REF__ gcc/config/nios2/nios2.c:nios2_emit_expensive_div()
    ----------------------------------------------------------------------------
-   Table : GCC_Table_Type :=
+   Table : constant GCC_Table_Type :=
       [
        0,      0 / 1,  0 / 2,   0 / 3,   0 / 4,   0 / 5,   0 / 6,   0 / 7,
        0 / 8,  0 / 9,  0 / 10,  0 / 11,  0 / 12,  0 / 13,  0 / 14,  0 / 15,
