@@ -79,11 +79,11 @@ package SPARC
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for PSR_Type use record
-      CWP      at 0 range 0 .. 4;
-      ET       at 0 range 5 .. 5;
-      PS       at 0 range 6 .. 6;
-      S        at 0 range 7 .. 7;
-      PIL      at 0 range 8 .. 11;
+      CWP      at 0 range  0 ..  4;
+      ET       at 0 range  5 ..  5;
+      PS       at 0 range  6 ..  6;
+      S        at 0 range  7 ..  7;
+      PIL      at 0 range  8 .. 11;
       EF       at 0 range 12 .. 12;
       EC       at 0 range 13 .. 13;
       Reserved at 0 range 14 .. 19;
