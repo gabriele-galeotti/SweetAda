@@ -76,10 +76,10 @@ package M68040
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for RTDSC_Type use record
-      UDT      at 0 range 0 .. 1;
-      W        at 0 range 2 .. 2;
-      U        at 0 range 3 .. 3;
-      Reserved at 0 range 4 .. 8;
+      UDT      at 0 range 0 ..  1;
+      W        at 0 range 2 ..  2;
+      U        at 0 range 3 ..  3;
+      Reserved at 0 range 4 ..  8;
       PTA      at 0 range 9 .. 31;
    end record;
 
@@ -101,12 +101,12 @@ package M68040
            Size            => 32,
            Unchecked_Union => True;
    for PTDSC_Type use record
-      UDT       at 0 range 0 .. 1;
-      W         at 0 range 2 .. 2;
-      U         at 0 range 3 .. 3;
-      Reserved1 at 0 range 4 .. 7;
+      UDT       at 0 range 0 ..  1;
+      W         at 0 range 2 ..  2;
+      U         at 0 range 3 ..  3;
+      Reserved1 at 0 range 4 ..  7;
       PTA4      at 0 range 8 .. 31;
-      Reserved2 at 0 range 4 .. 6;
+      Reserved2 at 0 range 4 ..  6;
       PTA8      at 0 range 7 .. 31;
    end record;
 
@@ -128,14 +128,14 @@ package M68040
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for P4DSC_Type use record
-      PDT at 0 range 0 .. 1;
-      W   at 0 range 2 .. 2;
-      U   at 0 range 3 .. 3;
-      M   at 0 range 4 .. 4;
-      CM  at 0 range 5 .. 6;
-      S   at 0 range 7 .. 7;
-      U0  at 0 range 8 .. 8;
-      U1  at 0 range 9 .. 9;
+      PDT at 0 range  0 ..  1;
+      W   at 0 range  2 ..  2;
+      U   at 0 range  3 ..  3;
+      M   at 0 range  4 ..  4;
+      CM  at 0 range  5 ..  6;
+      S   at 0 range  7 ..  7;
+      U0  at 0 range  8 ..  8;
+      U1  at 0 range  9 ..  9;
       G   at 0 range 10 .. 10;
       UR0 at 0 range 11 .. 11;
       PA4 at 0 range 12 .. 31;
@@ -158,14 +158,14 @@ package M68040
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for P8DSC_Type use record
-      PDT at 0 range 0 .. 1;
-      W   at 0 range 2 .. 2;
-      U   at 0 range 3 .. 3;
-      M   at 0 range 4 .. 4;
-      CM  at 0 range 5 .. 6;
-      S   at 0 range 7 .. 7;
-      U0  at 0 range 8 .. 8;
-      U1  at 0 range 9 .. 9;
+      PDT at 0 range  0 ..  1;
+      W   at 0 range  2 ..  2;
+      U   at 0 range  3 ..  3;
+      M   at 0 range  4 ..  4;
+      CM  at 0 range  5 ..  6;
+      S   at 0 range  7 ..  7;
+      U0  at 0 range  8 ..  8;
+      U1  at 0 range  9 ..  9;
       G   at 0 range 10 .. 10;
       UR0 at 0 range 11 .. 11;
       UR1 at 0 range 12 .. 12;
@@ -195,14 +195,14 @@ package M68040
            Size            => 32,
            Unchecked_Union => True;
    for P48DSC_Type use record
-      PDT at 0 range 0 .. 1;
-      W   at 0 range 2 .. 2;
-      U   at 0 range 3 .. 3;
-      M   at 0 range 4 .. 4;
-      CM  at 0 range 5 .. 6;
-      S   at 0 range 7 .. 7;
-      U0  at 0 range 8 .. 8;
-      U1  at 0 range 9 .. 9;
+      PDT at 0 range  0 ..  1;
+      W   at 0 range  2 ..  2;
+      U   at 0 range  3 ..  3;
+      M   at 0 range  4 ..  4;
+      CM  at 0 range  5 ..  6;
+      S   at 0 range  7 ..  7;
+      U0  at 0 range  8 ..  8;
+      U1  at 0 range  9 ..  9;
       G   at 0 range 10 .. 10;
       UR0 at 0 range 11 .. 11;
       PA4 at 0 range 12 .. 31;
@@ -217,7 +217,7 @@ package M68040
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for PINDDSC_Type use record
-      PDT at 0 range 0 .. 1;
+      PDT at 0 range 0 ..  1;
       DA  at 0 range 2 .. 31;
    end record;
 
@@ -231,7 +231,7 @@ package M68040
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for TCR_Type use record
-      Reserved at 0 range 0 .. 13;
+      Reserved at 0 range  0 .. 13;
       P        at 0 range 14 .. 14;
       E        at 0 range 15 .. 15;
    end record;
@@ -260,13 +260,13 @@ package M68040
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for TTR_Type use record
-      Reserved1 at 0 range 0 .. 1;
-      W         at 0 range 2 .. 2;
-      Reserved2 at 0 range 3 .. 4;
-      CM        at 0 range 5 .. 6;
-      Reserved3 at 0 range 7 .. 7;
-      U0        at 0 range 8 .. 8;
-      U1        at 0 range 9 .. 9;
+      Reserved1 at 0 range  0 ..  1;
+      W         at 0 range  2 ..  2;
+      Reserved2 at 0 range  3 ..  4;
+      CM        at 0 range  5 ..  6;
+      Reserved3 at 0 range  7 ..  7;
+      U0        at 0 range  8 ..  8;
+      U1        at 0 range  9 ..  9;
       Reserved4 at 0 range 10 .. 12;
       S         at 0 range 13 .. 14;
       E         at 0 range 15 .. 15;
@@ -293,15 +293,15 @@ package M68040
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for MMUSR_Type use record
-      R        at 0 range 0 .. 0;
-      T        at 0 range 1 .. 1;
-      W        at 0 range 2 .. 2;
-      Reserved at 0 range 3 .. 3;
-      M        at 0 range 4 .. 4;
-      CM       at 0 range 5 .. 6;
-      S        at 0 range 7 .. 7;
-      U0       at 0 range 8 .. 8;
-      U1       at 0 range 9 .. 9;
+      R        at 0 range  0 ..  0;
+      T        at 0 range  1 ..  1;
+      W        at 0 range  2 ..  2;
+      Reserved at 0 range  3 ..  3;
+      M        at 0 range  4 ..  4;
+      CM       at 0 range  5 ..  6;
+      S        at 0 range  7 ..  7;
+      U0       at 0 range  8 ..  8;
+      U1       at 0 range  9 ..  9;
       G        at 0 range 10 .. 10;
       B        at 0 range 11 .. 11;
       PA       at 0 range 12 .. 31;

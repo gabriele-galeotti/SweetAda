@@ -89,7 +89,7 @@ package MCF523x
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for SYNCR_Type use record
-      EXP       at 0 range 0 .. 9;
+      EXP       at 0 range  0 ..  9;
       DEPTH     at 0 range 10 .. 11;
       RATE      at 0 range 12 .. 12;
       LOCIRQ    at 0 range 13 .. 13;
@@ -137,16 +137,16 @@ package MCF523x
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for SYNSR_Type use record
-      CALPASS  at 0 range 0 .. 0;
-      CALDONE  at 0 range 1 .. 1;
-      LOCF     at 0 range 2 .. 2;
-      LOCK     at 0 range 3 .. 3;
-      LOCKS    at 0 range 4 .. 4;
-      PLLREF   at 0 range 5 .. 5;
-      PLLSEL   at 0 range 6 .. 6;
-      PLLMODE  at 0 range 7 .. 7;
-      LOC      at 0 range 8 .. 8;
-      LOLF     at 0 range 9 .. 9;
+      CALPASS  at 0 range  0 ..  0;
+      CALDONE  at 0 range  1 ..  1;
+      LOCF     at 0 range  2 ..  2;
+      LOCK     at 0 range  3 ..  3;
+      LOCKS    at 0 range  4 ..  4;
+      PLLREF   at 0 range  5 ..  5;
+      PLLSEL   at 0 range  6 ..  6;
+      PLLMODE  at 0 range  7 ..  7;
+      LOC      at 0 range  8 ..  8;
+      LOLF     at 0 range  9 ..  9;
       Reserved at 0 range 10 .. 31;
    end record;
 
@@ -165,7 +165,7 @@ package MCF523x
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for CIR_Type use record
-      PRN at 0 range 0 .. 5;
+      PRN at 0 range 0 ..  5;
       PIN at 0 range 6 .. 15;
    end record;
 
@@ -190,8 +190,8 @@ package MCF523x
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for IPSBAR_Type use record
-      V        at 0 range 0 .. 0;
-      Reserved at 0 range 1 .. 29;
+      V        at 0 range  0 ..  0;
+      Reserved at 0 range  1 .. 29;
       BA       at 0 range 30 .. 31;
    end record;
 

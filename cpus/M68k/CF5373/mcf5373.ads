@@ -73,11 +73,11 @@ package MCF5373
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for CACR_Type use record
-      Reserved1 at 0 range 0 .. 3;
-      EUSP      at 0 range 4 .. 4;
-      DW        at 0 range 5 .. 5;
-      Reserved2 at 0 range 6 .. 7;
-      DCM       at 0 range 8 .. 9;
+      Reserved1 at 0 range  0 ..  3;
+      EUSP      at 0 range  4 ..  4;
+      DW        at 0 range  5 ..  5;
+      Reserved2 at 0 range  6 ..  7;
+      DCM       at 0 range  8 ..  9;
       DNFB      at 0 range 10 .. 10;
       Reserved3 at 0 range 11 .. 23;
       CINVA     at 0 range 24 .. 24;
@@ -114,11 +114,11 @@ package MCF5373
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for ACR_Type use record
-      Reserved1    at 0 range 0 .. 1;
-      W            at 0 range 2 .. 2;
-      Reserved2    at 0 range 3 .. 4;
-      CM           at 0 range 5 .. 6;
-      Reserved3    at 0 range 7 .. 12;
+      Reserved1    at 0 range  0 ..  1;
+      W            at 0 range  2 ..  2;
+      Reserved2    at 0 range  3 ..  4;
+      CM           at 0 range  5 ..  6;
+      Reserved3    at 0 range  7 .. 12;
       S            at 0 range 13 .. 14;
       E            at 0 range 15 .. 15;
       Address_Mask at 0 range 16 .. 23;
@@ -134,7 +134,7 @@ package MCF5373
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for CIR_Type use record
-      PRN at 0 range 0 .. 5;
+      PRN at 0 range 0 ..  5;
       PIN at 0 range 6 .. 15;
    end record;
 
@@ -274,10 +274,10 @@ package MCF5373
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for WCR_Type use record
-      EN       at 0 range 0 .. 0;
-      HALTED   at 0 range 1 .. 1;
-      DOZE     at 0 range 2 .. 2;
-      WAIT     at 0 range 3 .. 3;
+      EN       at 0 range 0 ..  0;
+      HALTED   at 0 range 1 ..  1;
+      DOZE     at 0 range 2 ..  2;
+      WAIT     at 0 range 3 ..  3;
       Reserved at 0 range 4 .. 15;
    end record;
 

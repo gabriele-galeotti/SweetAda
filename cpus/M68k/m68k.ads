@@ -119,13 +119,13 @@ package M68k
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for SR_Type use record
-      C         at 0 range 0 .. 0;
-      V         at 0 range 1 .. 1;
-      Z         at 0 range 2 .. 2;
-      N         at 0 range 3 .. 3;
-      X         at 0 range 4 .. 4;
-      Reserved1 at 0 range 5 .. 7;
-      ILEVEL    at 0 range 8 .. 10;
+      C         at 0 range  0 ..  0;
+      V         at 0 range  1 ..  1;
+      Z         at 0 range  2 ..  2;
+      N         at 0 range  3 ..  3;
+      X         at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  7;
+      ILEVEL    at 0 range  8 .. 10;
       Reserved2 at 0 range 11 .. 11;
       M         at 0 range 12 .. 12;
       S         at 0 range 13 .. 13;
@@ -164,11 +164,11 @@ package M68k
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for FPCR_Type use record
-      Reserved1 at 0 range 0 .. 3;
-      RND       at 0 range 4 .. 5;
-      PREC      at 0 range 6 .. 7;
-      INEX1     at 0 range 8 .. 8;
-      INEX2     at 0 range 9 .. 9;
+      Reserved1 at 0 range  0 ..  3;
+      RND       at 0 range  4 ..  5;
+      PREC      at 0 range  6 ..  7;
+      INEX1     at 0 range  8 ..  8;
+      INEX2     at 0 range  9 ..  9;
       DZ        at 0 range 10 .. 10;
       UNFL      at 0 range 11 .. 11;
       OVFL      at 0 range 12 .. 12;

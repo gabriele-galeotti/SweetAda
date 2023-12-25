@@ -24,6 +24,7 @@ with LLutils;
 with MMIO;
 
 package CFPeripherals
+   with Preelaborate => True
    is
 
    --========================================================================--
@@ -395,12 +396,12 @@ package CFPeripherals
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for TMR_Type use record
-      RST at 0 range 0 .. 0;
-      CLK at 0 range 1 .. 2;
-      FRR at 0 range 3 .. 3;
-      ORI at 0 range 4 .. 4;
-      OM  at 0 range 5 .. 5;
-      CE  at 0 range 6 .. 7;
+      RST at 0 range 0 ..  0;
+      CLK at 0 range 1 ..  2;
+      FRR at 0 range 3 ..  3;
+      ORI at 0 range 4 ..  4;
+      OM  at 0 range 5 ..  5;
+      CE  at 0 range 6 ..  7;
       PS  at 0 range 8 .. 15;
    end record;
 
@@ -434,7 +435,7 @@ package CFPeripherals
       TRR at 16#104# range 0 .. 15;
       TCR at 16#108# range 0 .. 15;
       TCN at 16#10C# range 0 .. 15;
-      TER at 16#111# range 0 .. 7;
+      TER at 16#111# range 0 ..  7;
    end record;
 
 end CFPeripherals;

@@ -72,8 +72,8 @@ package M68030
       with Bit_Order => Low_Order_First,
            Size      => 64;
    for RPDSC_Type use record
-      Unused   at 0 range 0 .. 3;
-      TA_LO    at 0 range 4 .. 15;
+      Unused   at 0 range  0 ..  3;
+      TA_LO    at 0 range  4 .. 15;
       TA_HI    at 0 range 16 .. 31;
       DT       at 0 range 32 .. 33;
       Reserved at 0 range 34 .. 47;
@@ -92,9 +92,9 @@ package M68030
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for SFTDSC_Type use record
-      DT at 0 range 0 .. 1;
-      WP at 0 range 2 .. 2;
-      U  at 0 range 3 .. 3;
+      DT at 0 range 0 ..  1;
+      WP at 0 range 2 ..  2;
+      U  at 0 range 3 ..  3;
       TA at 0 range 4 .. 31;
    end record;
 
@@ -114,13 +114,13 @@ package M68030
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for SFPDSC_Type use record
-      DT        at 0 range 0 .. 1;
-      WP        at 0 range 2 .. 2;
-      U         at 0 range 3 .. 3;
-      M         at 0 range 4 .. 4;
-      Reserved1 at 0 range 5 .. 5;
-      CI        at 0 range 6 .. 6;
-      Reserved2 at 0 range 7 .. 7;
+      DT        at 0 range 0 ..  1;
+      WP        at 0 range 2 ..  2;
+      U         at 0 range 3 ..  3;
+      M         at 0 range 4 ..  4;
+      Reserved1 at 0 range 5 ..  5;
+      CI        at 0 range 6 ..  6;
+      Reserved2 at 0 range 7 ..  7;
       PA        at 0 range 8 .. 31;
    end record;
 
@@ -141,9 +141,9 @@ package M68030
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for TCR_Type use record
-      TID      at 0 range 0 .. 3;
-      TIC      at 0 range 4 .. 7;
-      TIB      at 0 range 8 .. 11;
+      TID      at 0 range  0 ..  3;
+      TIC      at 0 range  4 ..  7;
+      TIB      at 0 range  8 .. 11;
       TIA      at 0 range 12 .. 15;
       ISHIFT   at 0 range 16 .. 19;
       PS       at 0 range 20 .. 23;
@@ -174,12 +174,12 @@ package M68030
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for TTR_Type use record
-      FCMASK    at 0 range 0 .. 2;
-      Reserved1 at 0 range 3 .. 3;
-      FCBASE    at 0 range 4 .. 6;
-      Reserved2 at 0 range 7 .. 7;
-      RWM       at 0 range 8 .. 8;
-      RW        at 0 range 9 .. 9;
+      FCMASK    at 0 range  0 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      FCBASE    at 0 range  4 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      RWM       at 0 range  8 ..  8;
+      RW        at 0 range  9 ..  9;
       CI        at 0 range 10 .. 10;
       Reserved3 at 0 range 11 .. 14;
       E         at 0 range 15 .. 15;
@@ -205,11 +205,11 @@ package M68030
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for MMUSR_Type use record
-      N         at 0 range 0 .. 2;
-      Reserved1 at 0 range 3 .. 5;
-      T         at 0 range 6 .. 6;
-      Reserved2 at 0 range 7 .. 8;
-      M         at 0 range 9 .. 9;
+      N         at 0 range  0 ..  2;
+      Reserved1 at 0 range  3 ..  5;
+      T         at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  8;
+      M         at 0 range  9 ..  9;
       I         at 0 range 10 .. 10;
       W         at 0 range 11 .. 11;
       Reserved3 at 0 range 12 .. 12;
