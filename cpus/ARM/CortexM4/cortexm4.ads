@@ -22,6 +22,7 @@ with Bits;
 with ARMv7M;
 
 package CortexM4
+   with Preelaborate => True
    is
 
    --========================================================================--
