@@ -21,6 +21,7 @@ with Bits;
 with PowerPC;
 
 package PPC405
+   with Preelaborate => True
    is
 
    --========================================================================--

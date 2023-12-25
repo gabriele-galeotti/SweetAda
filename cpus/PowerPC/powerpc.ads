@@ -20,6 +20,7 @@ with Interfaces;
 with Bits;
 
 package PowerPC
+   with Preelaborate => True
    is
 
    --========================================================================--
