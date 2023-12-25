@@ -18,6 +18,7 @@
 with Interfaces;
 
 package Goldfish
+   with Pure => True
    is
 
    --========================================================================--
