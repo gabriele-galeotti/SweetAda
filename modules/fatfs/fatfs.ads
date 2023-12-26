@@ -86,12 +86,12 @@ package FATFS
       OEM_Name                     at   3 range 0 .. 63;
       -- BPB
       Bytes_Per_Sector             at  11 range 0 .. 15;
-      Sectors_Per_Cluster          at  13 range 0 .. 7;
+      Sectors_Per_Cluster          at  13 range 0 ..  7;
       Reserved_Sectors             at  14 range 0 .. 15;
-      FAT_Copies                   at  16 range 0 .. 7;
+      FAT_Copies                   at  16 range 0 ..  7;
       Root_Directory_Entries       at  17 range 0 .. 15;
       Total_Sectors_in_FS          at  19 range 0 .. 15;
-      Media_Descriptor             at  21 range 0 .. 7;
+      Media_Descriptor             at  21 range 0 ..  7;
       Sectors_Per_FAT              at  22 range 0 .. 15;
       -- DOS 3.31 BPB
       Sectors_Per_Track            at  24 range 0 .. 15;
@@ -101,8 +101,8 @@ package FATFS
       -- FAT32 Extended BPB
       Sectors_Per_FAT_32           at  36 range 0 .. 31;
       Mirror_Flags                 at  40 range 0 .. 15;
-      FS_Version_Major             at  42 range 0 .. 7;
-      FS_Version_Minor             at  43 range 0 .. 7;
+      FS_Version_Major             at  42 range 0 ..  7;
+      FS_Version_Minor             at  43 range 0 ..  7;
       Root_Directory_First_Cluster at  44 range 0 .. 31;
       FS_Info_Sector               at  48 range 0 .. 15;
       Backup_Boot_Sector           at  50 range 0 .. 15;
