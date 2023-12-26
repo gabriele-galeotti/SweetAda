@@ -63,16 +63,16 @@ package TCPIP
            Bit_Order => High_Order_First,
            Size      => IPv4_HDR_SIZE * Storage_Unit;
    for IPv4_Header_Type use record
-      Version              at  0 range 0 .. 3;
-      IHL                  at  0 range 4 .. 7;
-      DSCP                 at  1 range 0 .. 5;
-      ECN                  at  1 range 6 .. 7;
+      Version              at  0 range 0 ..  3;
+      IHL                  at  0 range 4 ..  7;
+      DSCP                 at  1 range 0 ..  5;
+      ECN                  at  1 range 6 ..  7;
       Total_Length         at  2 range 0 .. 15;
       Identification       at  4 range 0 .. 15;
-      Flags                at  6 range 0 .. 2;
+      Flags                at  6 range 0 ..  2;
       Fragmentation_Offset at  6 range 3 .. 15;
-      TTL                  at  8 range 0 .. 7;
-      Protocol             at  9 range 0 .. 7;
+      TTL                  at  8 range 0 ..  7;
+      Protocol             at  9 range 0 ..  7;
       Header_Checksum      at 10 range 0 .. 15;
       Src_Address          at 12 range 0 .. 31;
       Dst_Address          at 16 range 0 .. 31;
@@ -97,8 +97,8 @@ package TCPIP
       with Alignment => 2,
            Size      => ICMP_HDR_SIZE * Storage_Unit;
    for ICMP_Header_Type use record
-      Typ          at 0 range 0 .. 7;
-      Code         at 1 range 0 .. 7;
+      Typ          at 0 range 0 ..  7;
+      Code         at 1 range 0 ..  7;
       Checksum     at 2 range 0 .. 15;
       Restofheader at 4 range 0 .. 31;
    end record;
@@ -140,8 +140,8 @@ package TCPIP
    for UDP_IPv4_PseudoHeader_Type use record
       Src_Address at  0 range 0 .. 31;
       Dst_Address at  4 range 0 .. 31;
-      Zeroes      at  8 range 0 .. 7;
-      Protocol    at  9 range 0 .. 7;
+      Zeroes      at  8 range 0 ..  7;
+      Protocol    at  9 range 0 ..  7;
       Length      at 10 range 0 .. 15;
    end record;
 
@@ -171,21 +171,21 @@ package TCPIP
            Bit_Order => High_Order_First,
            Size      => TCP_HDR_SIZE * Storage_Unit;
    for TCP_Header_Type use record
-      Src_Port       at  0 range 0 .. 15;
-      Dst_Port       at  2 range 0 .. 15;
-      Seq_Num        at  4 range 0 .. 31;
-      Ack_Num        at  8 range 0 .. 31;
-      HLen           at 12 range 0 .. 3;
-      Reserved       at 12 range 4 .. 9;
+      Src_Port       at  0 range  0 .. 15;
+      Dst_Port       at  2 range  0 .. 15;
+      Seq_Num        at  4 range  0 .. 31;
+      Ack_Num        at  8 range  0 .. 31;
+      HLen           at 12 range  0 ..  3;
+      Reserved       at 12 range  4 ..  9;
       Urg            at 12 range 10 .. 10;
       Ack            at 12 range 11 .. 11;
       Psh            at 12 range 12 .. 12;
       Rst            at 12 range 13 .. 13;
       Syn            at 12 range 14 .. 14;
       Fin            at 12 range 15 .. 15;
-      Window_Size    at 14 range 0 .. 15;
-      Checksum       at 16 range 0 .. 15;
-      Urgent_Pointer at 18 range 0 .. 15;
+      Window_Size    at 14 range  0 .. 15;
+      Checksum       at 16 range  0 .. 15;
+      Urgent_Pointer at 18 range  0 .. 15;
    end record;
 
    ----------------------------------------------------------------------------

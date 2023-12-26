@@ -36,12 +36,20 @@ package body TCPIP
    function H2N (Value : Unsigned_32) return Unsigned_32 renames HostToNetwork;
    function N2H (Value : Unsigned_32) return Unsigned_32 renames NetworkToHost;
 
-   function Checksum_Core_U32 (Data : Byte_A2Array) return Unsigned_32;
-   function Checksum (Data : Byte_A2Array; Sum_Initial : Unsigned_32 := 0) return Unsigned_16;
+   function Checksum_Core_U32
+      (Data : Byte_A2Array)
+      return Unsigned_32;
+   function Checksum
+      (Data        : Byte_A2Array;
+       Sum_Initial : Unsigned_32 := 0)
+      return Unsigned_16;
 
-   procedure ICMP_Handler (P : in Pbuf_Ptr);
-   procedure UDP_Handler (P : in Pbuf_Ptr);
-   procedure TCP_Handler (P : in Pbuf_Ptr);
+   procedure ICMP_Handler
+      (P : in Pbuf_Ptr);
+   procedure UDP_Handler
+      (P : in Pbuf_Ptr);
+   procedure TCP_Handler
+      (P : in Pbuf_Ptr);
 
    --========================================================================--
    --                                                                        --
@@ -57,12 +65,15 @@ package body TCPIP
    -- Basic network-order 16-bit data checksum computation.
    -- __REF__ RFC 1071
    ----------------------------------------------------------------------------
-   function Checksum_Core_U32 (Data : Byte_A2Array) return Unsigned_32 is
+   function Checksum_Core_U32
+      (Data : Byte_A2Array)
+      return Unsigned_32
+      is
       Sum    : Unsigned_32 := 0;
       Length : Natural := Data'Length;
       Index  : Integer := Data'First;
-      Data16 : U16_Array (Data'First .. Natural'Last) with
-         Address => Data'Address;
+      Data16 : U16_Array (Data'First .. Natural'Last)
+         with Address => Data'Address;
    begin
       while Length > 1 loop
          Sum := @ + Unsigned_32 (Data16 (Index));
@@ -81,7 +92,11 @@ package body TCPIP
    -- Compute 1's-complement 16-bit IP checksum using Checksum_Core_U32.
    -- __REF__ RFC 1071
    ----------------------------------------------------------------------------
-   function Checksum (Data : Byte_A2Array; Sum_Initial : Unsigned_32 := 0) return Unsigned_16 is
+   function Checksum
+      (Data        : Byte_A2Array;
+       Sum_Initial : Unsigned_32 := 0)
+      return Unsigned_16
+      is
       Sum  : Unsigned_32;
       HSum : Unsigned_16;
    begin
@@ -102,11 +117,13 @@ package body TCPIP
    ----------------------------------------------------------------------------
    -- __REF__ RFC 792
    ----------------------------------------------------------------------------
-   procedure ICMP_Handler (P : in Pbuf_Ptr) is
-      ICMP_Header : aliased ICMP_Header_Type with
-         Address    => Payload_CurrentAddress (P),
-         Import     => True,
-         Convention => Ada;
+   procedure ICMP_Handler
+      (P : in Pbuf_Ptr)
+      is
+      ICMP_Header : aliased ICMP_Header_Type
+         with Address    => Payload_CurrentAddress (P),
+              Import     => True,
+              Convention => Ada;
    begin
       case ICMP_Header.Typ is
          when ICMP_ECHO_REQUEST =>
@@ -121,10 +138,10 @@ package body TCPIP
             -- __FIX__ exploit received packet: change src/dst IP, compute checksum
             Payload_Rewind (P);
             declare
-               IPv4_Header   : aliased IPv4_Header_Type with
-                  Address    => Payload_CurrentAddress (P),
-                  Import     => True,
-                  Convention => Ada;
+               IPv4_Header   : aliased IPv4_Header_Type
+                  with Address    => Payload_CurrentAddress (P),
+                       Import     => True,
+                       Convention => Ada;
                Header_Length : Natural;
             begin
                IPv4_Header.Dst_Address     := IPv4_Header.Src_Address;
@@ -150,11 +167,13 @@ package body TCPIP
    ----------------------------------------------------------------------------
    -- __REF__ RFC 768
    ----------------------------------------------------------------------------
-   procedure UDP_Handler (P : in Pbuf_Ptr) is
-      UDP_Header      : aliased UDP_Header_Type with
-         Address    => Payload_CurrentAddress (P),
-         Import     => True,
-         Convention => Ada;
+   procedure UDP_Handler
+      (P : in Pbuf_Ptr)
+      is
+      UDP_Header      : aliased UDP_Header_Type
+         with Address    => Payload_CurrentAddress (P),
+              Import     => True,
+              Convention => Ada;
       Checksum_Header : Unsigned_32;
       Checksum_Total  : Unsigned_16;
    begin
@@ -182,9 +201,9 @@ package body TCPIP
          end;
          Payload_Rewind (P); -- restore UDP header
          Checksum_Total := Checksum (
-                                     P.all.Payload (P.all.Offset .. P.all.Offset + P.all.Total_Size - 1),
-                                     Checksum_Header
-                                    );
+                              P.all.Payload (P.all.Offset .. P.all.Offset + P.all.Total_Size - 1),
+                              Checksum_Header
+                              );
          if Checksum_Total = 0 then
             Console.Print ("UDP checksum OK.", NL => True);
          else
@@ -199,16 +218,16 @@ package body TCPIP
       -- dst port remains the same (we send to the dst of this message)
       Payload_Rewind (P); -- uncover IP header
       declare
-         IPv4_Header      : aliased IPv4_Header_Type with
-            Address    => Payload_CurrentAddress (P),
-            Import     => True,
-            Convention => Ada;
+         IPv4_Header      : aliased IPv4_Header_Type
+            with Address    => Payload_CurrentAddress (P),
+                 Import     => True,
+                 Convention => Ada;
          IP_Header_Length : Natural;
          Pseudo_Header    : aliased UDP_IPv4_PseudoHeader_Type;
-         Pseudo_Header_BA : Byte_A2Array (1 .. UDP_IPv4_PseudoHeader_SIZE) with
-            Address    => Pseudo_Header'Address,
-            Import     => True,
-            Convention => Ada;
+         Pseudo_Header_BA : aliased Byte_A2Array (1 .. UDP_IPv4_PseudoHeader_SIZE)
+            with Address    => Pseudo_Header'Address,
+                 Import     => True,
+                 Convention => Ada;
       begin
          IPv4_Header.Dst_Address     := IPv4_Header.Src_Address;
          IPv4_Header.Src_Address     := Ethernet.Descriptor_Get.Paddress;
@@ -225,9 +244,9 @@ package body TCPIP
       Payload_Rewind (P); -- restore UDP header
       UDP_Header.Checksum := 0;
       Checksum_Total := Checksum (
-                                  P.all.Payload (P.all.Offset .. P.all.Offset + P.all.Total_Size - 1),
-                                  Checksum_Header
-                                 );
+                           P.all.Payload (P.all.Offset .. P.all.Offset + P.all.Total_Size - 1),
+                           Checksum_Header
+                           );
       UDP_Header.Checksum := Checksum_Total;
       Payload_Rewind (P);                                          -- uncover IP header
       Payload_Adjust (P, +Ethernet.ETH_HDR_SIZE);
@@ -241,11 +260,13 @@ package body TCPIP
    ----------------------------------------------------------------------------
    -- __REF__ RFC 793
    ----------------------------------------------------------------------------
-   procedure TCP_Handler (P : in Pbuf_Ptr) is
-      TCP_Header : aliased TCP_Header_Type with
-         Address    => Payload_CurrentAddress (P),
-         Import     => True,
-         Convention => Ada;
+   procedure TCP_Handler
+      (P : in Pbuf_Ptr)
+      is
+      TCP_Header : aliased TCP_Header_Type
+         with Address    => Payload_CurrentAddress (P),
+              Import     => True,
+              Convention => Ada;
    begin
       Console.Print (N2H (TCP_Header.Src_Port), Prefix => "SRC PORT: ", NL => True);
       Console.Print (N2H (TCP_Header.Dst_Port), Prefix => "DST PORT: ", NL => True);
@@ -255,11 +276,13 @@ package body TCPIP
    ----------------------------------------------------------------------------
    -- IPv4_Handler
    ----------------------------------------------------------------------------
-   procedure IPv4_Handler (P : in Pbuf_Ptr) is
-      IPv4_Header      : aliased IPv4_Header_Type with
-         Address    => Payload_CurrentAddress (P),
-         Import     => True,
-         Convention => Ada;
+   procedure IPv4_Handler
+      (P : in Pbuf_Ptr)
+      is
+      IPv4_Header      : aliased IPv4_Header_Type
+         with Address    => Payload_CurrentAddress (P),
+              Import     => True,
+              Convention => Ada;
       IP_Header_Length : Natural; -- i.e. offset to start of payload
    begin
       IP_Header_Length := Natural (IPv4_Header.IHL) * 4;
