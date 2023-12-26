@@ -64,11 +64,8 @@ endif
 
 .PHONY: postbuild
 postbuild:
-	$(call brief-command, \
-        $(OBJCOPY) -O srec $(SWEETADA_PATH)/$(KERNEL_OUTFILE) $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec \
-        ,[OBJCOPY],$(KERNEL_BASENAME).srec)
-ifneq ($(OSTYPE),cmd)
-	@chmod a-x $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec
+ifneq ($(POSTBUILD_COMMAND),)
+	$(POSTBUILD_COMMAND)
 endif
 
 .PHONY: clean
