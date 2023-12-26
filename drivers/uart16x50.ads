@@ -58,7 +58,7 @@ package UART16x50 is
    end record;
 
    DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      [
+      (
        Uart_Model    => UARTNONE,
        Base_Address  => Null_Address,
        Scale_Address => 0,
@@ -67,8 +67,8 @@ package UART16x50 is
        Read_8        => MMIO.ReadN_U8'Access,
        Write_8       => MMIO.WriteN_U8'Access,
        -- Data_Queue    => FIFO.QUEUE_DEFAULT
-       Data_Queue    => [[others => 0], 0, 0, 0]
-      ];
+       Data_Queue    => ([others => 0], 0, 0, 0)
+      );
 
    procedure Baud_Rate_Set
       (D         : in Descriptor_Type;
