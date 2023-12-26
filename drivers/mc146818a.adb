@@ -280,8 +280,15 @@ package body MC146818A
       RTC_DayOfMonth : Unsigned_8;
       RTC_Month      : Unsigned_8;
       RTC_Year       : Unsigned_8;
-      function Adjust_BCD (V : Unsigned_8; BCD : Boolean) return Unsigned_8;
-      function Adjust_BCD (V : Unsigned_8; BCD : Boolean) return Unsigned_8 is
+      function Adjust_BCD
+         (V   : Unsigned_8;
+          BCD : Boolean)
+         return Unsigned_8;
+      function Adjust_BCD
+         (V   : Unsigned_8;
+          BCD : Boolean)
+         return Unsigned_8
+         is
       begin
          if BCD then
             return (V and 16#0F#) + (V / 2**4) * 10;
