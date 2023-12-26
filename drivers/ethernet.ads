@@ -172,7 +172,7 @@ package Ethernet is
    end record
       with Volatile => True;
 
-   Packet_Queue : aliased Queue_Type := [[others => null], 0, 0, 0];
+   Packet_Queue : aliased Queue_Type := ([others => null], 0, 0, 0);
 
    function Nqueue
       (Q : access Queue_Type)
