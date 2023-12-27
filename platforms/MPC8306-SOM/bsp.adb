@@ -80,7 +80,7 @@ package body BSP is
       UART1_Descriptor.Baud_Clock    := SOM.SYSTEM_CLOCK;
       UART1_Descriptor.Read_8        := MMIO.Read'Access;
       UART1_Descriptor.Write_8       := MMIO.Write'Access;
-      UART1_Descriptor.Data_Queue    := [[others => 0], 0, 0, 0];
+      UART1_Descriptor.Data_Queue    := ([others => 0], 0, 0, 0);
       UART16x50.Init (UART1_Descriptor);
       UART16x50.Baud_Rate_Set (UART1_Descriptor, Baud_Rate_Type'Enum_Rep (BR_115200));
       UART2_Descriptor.Base_Address  := To_Address (MPC83XX.UART2_BASEADDRESS);
@@ -88,7 +88,7 @@ package body BSP is
       UART2_Descriptor.Baud_Clock    := SOM.SYSTEM_CLOCK;
       UART2_Descriptor.Read_8        := MMIO.Read'Access;
       UART2_Descriptor.Write_8       := MMIO.Write'Access;
-      UART2_Descriptor.Data_Queue    := [[others => 0], 0, 0, 0];
+      UART2_Descriptor.Data_Queue    := ([others => 0], 0, 0, 0);
       UART16x50.Init (UART2_Descriptor);
       UART16x50.Baud_Rate_Set (UART2_Descriptor, Baud_Rate_Type'Enum_Rep (BR_115200));
       -- Console --------------------------------------------------------------
