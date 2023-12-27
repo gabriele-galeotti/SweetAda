@@ -123,12 +123,12 @@ package SH7750
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for SR_Type use record
-      T         at 0 range 0 .. 0;
-      S         at 0 range 1 .. 1;
-      Reserved1 at 0 range 2 .. 3;
-      IMASK     at 0 range 4 .. 7;
-      Q         at 0 range 8 .. 8;
-      M         at 0 range 9 .. 9;
+      T         at 0 range  0 ..  0;
+      S         at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  3;
+      IMASK     at 0 range  4 ..  7;
+      Q         at 0 range  8 ..  8;
+      M         at 0 range  9 ..  9;
       Reserved2 at 0 range 10 .. 14;
       FD        at 0 range 15 .. 15;
       Reserved3 at 0 range 16 .. 27;
@@ -191,15 +191,15 @@ package SH7750
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for FPSCR_Type use record
-      RM           at 0 range 0 .. 1;
-      FL_Inexact   at 0 range 2 .. 2;
-      FL_Underflow at 0 range 3 .. 3;
-      FL_Overflow  at 0 range 4 .. 4;
-      FL_DivZero   at 0 range 5 .. 5;
-      FL_Invalid   at 0 range 6 .. 6;
-      EN_Inexact   at 0 range 7 .. 7;
-      EN_Underflow at 0 range 8 .. 8;
-      EN_Overflow  at 0 range 9 .. 9;
+      RM           at 0 range  0 ..  1;
+      FL_Inexact   at 0 range  2 ..  2;
+      FL_Underflow at 0 range  3 ..  3;
+      FL_Overflow  at 0 range  4 ..  4;
+      FL_DivZero   at 0 range  5 ..  5;
+      FL_Invalid   at 0 range  6 ..  6;
+      EN_Inexact   at 0 range  7 ..  7;
+      EN_Underflow at 0 range  8 ..  8;
+      EN_Overflow  at 0 range  9 ..  9;
       EN_DivZero   at 0 range 10 .. 10;
       EN_Invalid   at 0 range 11 .. 11;
       CA_Inexact   at 0 range 12 .. 12;
@@ -293,14 +293,14 @@ package SH7750
            Size            => 16,
            Unchecked_Union => True;
    for TCR_Type use record
-      TPSC      at 0 range 0 .. 2;
-      CKEG      at 0 range 3 .. 4;
-      UNIE      at 0 range 5 .. 5;
-      UNF       at 0 range 8 .. 8;
-      Reserved1 at 0 range 6 .. 7;
-      Reserved2 at 0 range 9 .. 15;
-      ICPE      at 0 range 6 .. 7;
-      ICPF      at 0 range 9 .. 9;
+      TPSC      at 0 range  0 ..  2;
+      CKEG      at 0 range  3 ..  4;
+      UNIE      at 0 range  5 ..  5;
+      UNF       at 0 range  8 ..  8;
+      Reserved1 at 0 range  6 ..  7;
+      Reserved2 at 0 range  9 .. 15;
+      ICPE      at 0 range  6 ..  7;
+      ICPF      at 0 range  9 ..  9;
       Reserved  at 0 range 10 .. 15;
    end record;
 
@@ -324,8 +324,8 @@ pragma Warnings (Off, "* bits of ""TMU_Type"" unused");
       with Alignment => 4,
            Size      => 16#30# * 8;
    for TMU_Type use record
-      TOCR  at 16#00# range 0 .. 7;
-      TSTR  at 16#04# range 0 .. 7;
+      TOCR  at 16#00# range 0 ..  7;
+      TSTR  at 16#04# range 0 ..  7;
       TCOR0 at 16#08# range 0 .. 31;
       TCNT0 at 16#0C# range 0 .. 31;
       TCR0  at 16#10# range 0 .. 15;
@@ -407,14 +407,14 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for SCSCR2_Type use record
-      Reserved1 at 0 range 0 .. 0;
-      CKE1      at 0 range 1 .. 1;
-      Reserved2 at 0 range 2 .. 2;
-      REIE      at 0 range 3 .. 3;
-      RE        at 0 range 4 .. 4;
-      TE        at 0 range 5 .. 5;
-      RIE       at 0 range 6 .. 6;
-      TIE       at 0 range 7 .. 7;
+      Reserved1 at 0 range 0 ..  0;
+      CKE1      at 0 range 1 ..  1;
+      Reserved2 at 0 range 2 ..  2;
+      REIE      at 0 range 3 ..  3;
+      RE        at 0 range 4 ..  4;
+      TE        at 0 range 5 ..  5;
+      RIE       at 0 range 6 ..  6;
+      TIE       at 0 range 7 ..  7;
       Reserved3 at 0 range 8 .. 15;
    end record;
 
@@ -435,15 +435,15 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for SCFSR2_Type use record
-      DR    at 0 range 0 .. 0;
-      RDF   at 0 range 1 .. 1;
-      PER   at 0 range 2 .. 2;
-      FER   at 0 range 3 .. 3;
-      BRK   at 0 range 4 .. 4;
-      TDFE  at 0 range 5 .. 5;
-      TEND  at 0 range 6 .. 6;
-      ER    at 0 range 7 .. 7;
-      FER03 at 0 range 8 .. 11;
+      DR    at 0 range  0 ..  0;
+      RDF   at 0 range  1 ..  1;
+      PER   at 0 range  2 ..  2;
+      FER   at 0 range  3 ..  3;
+      BRK   at 0 range  4 ..  4;
+      TDFE  at 0 range  5 ..  5;
+      TEND  at 0 range  6 ..  6;
+      ER    at 0 range  7 ..  7;
+      FER03 at 0 range  8 .. 11;
       PER03 at 0 range 12 .. 15;
    end record;
 
@@ -481,13 +481,13 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for SCFCR2_Type use record
-      LOOPBACK at 0 range 0 .. 0;
-      RFRST    at 0 range 1 .. 1;
-      TFRST    at 0 range 2 .. 2;
-      MCE      at 0 range 3 .. 3;
-      TTRG     at 0 range 4 .. 5;
-      RTRG     at 0 range 6 .. 7;
-      RSTRG    at 0 range 8 .. 10;
+      LOOPBACK at 0 range  0 ..  0;
+      RFRST    at 0 range  1 ..  1;
+      TFRST    at 0 range  2 ..  2;
+      MCE      at 0 range  3 ..  3;
+      TTRG     at 0 range  4 ..  5;
+      RTRG     at 0 range  6 ..  7;
+      RSTRG    at 0 range  8 .. 10;
       Reserved at 0 range 11 .. 15;
    end record;
 
@@ -502,9 +502,9 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for SCFDR2_Type use record
-      R         at 0 range 0 .. 4;
-      Reserved1 at 0 range 5 .. 7;
-      T         at 0 range 8 .. 12;
+      R         at 0 range  0 ..  4;
+      Reserved1 at 0 range  5 ..  7;
+      T         at 0 range  8 .. 12;
       Reserved2 at 0 range 13 .. 15;
    end record;
 
@@ -532,13 +532,13 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for SCSPTR2_Type use record
-      SPB2DT    at 0 range 0 .. 0;
-      SPB2IO    at 0 range 1 .. 1;
-      Reserved1 at 0 range 2 .. 3;
-      CTSDT     at 0 range 4 .. 4;
-      CTSIO     at 0 range 5 .. 5;
-      RTSDT     at 0 range 6 .. 6;
-      RTSIO     at 0 range 7 .. 7;
+      SPB2DT    at 0 range 0 ..  0;
+      SPB2IO    at 0 range 1 ..  1;
+      Reserved1 at 0 range 2 ..  3;
+      CTSDT     at 0 range 4 ..  4;
+      CTSIO     at 0 range 5 ..  5;
+      RTSDT     at 0 range 6 ..  6;
+      RTSIO     at 0 range 7 ..  7;
       Reserved2 at 0 range 8 .. 15;
    end record;
 
@@ -551,7 +551,7 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for SCLSR2_Type use record
-      ORER     at 0 range 0 .. 0;
+      ORER     at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 15;
    end record;
 
@@ -573,12 +573,12 @@ pragma Warnings (Off, "* bits of ""SCIF_Type"" unused");
       with Alignment => 4,
            Size      => 16#28# * 8;
    for SCIF_Type use record
-      SCSMR2  at 16#00# range 0 .. 7;
-      SCBRR2  at 16#04# range 0 .. 7;
+      SCSMR2  at 16#00# range 0 ..  7;
+      SCBRR2  at 16#04# range 0 ..  7;
       SCSCR2  at 16#08# range 0 .. 15;
-      SCFTDR2 at 16#0C# range 0 .. 7;
+      SCFTDR2 at 16#0C# range 0 ..  7;
       SCFSR2  at 16#10# range 0 .. 15;
-      SCFRDR2 at 16#14# range 0 .. 7;
+      SCFRDR2 at 16#14# range 0 ..  7;
       SCFCR2  at 16#18# range 0 .. 15;
       SCFDR2  at 16#1C# range 0 .. 15;
       SCSPTR2 at 16#20# range 0 .. 15;
