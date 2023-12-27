@@ -1,0 +1,53 @@
+
+#
+# QEMU-OpenRISC (QEMU emulator)
+#
+# OpenRISC OR1200
+#
+
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+USE_APPLICATION := test-QEMU-OpenRISC
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
+CPU       := OpenRISC
+CPU_MODEL := ???
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+CPU_MODEL                 :=
+GCC_SWITCHES_PLATFORM     :=
+LD_SWITCHES_PLATFORM      := --undefined=vectors --no-warn-rwx-segments
+OBJDUMP_SWITCHES_PLATFORM :=
+OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+POSTBUILD_ROMFILE         :=
+
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT) -debug
+

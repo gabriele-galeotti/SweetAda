@@ -1,0 +1,13 @@
+
+with Definitions;
+
+package Configure
+   with Pure => True
+   is
+
+   -- PLATFORM and CPU definitions
+   PLATFORM  : constant String := "QEMU-OpenRISC";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
+
+end Configure;
