@@ -18,6 +18,7 @@
 with Interfaces;
 
 package Time
+   with Preelaborate => True
    is
 
    --========================================================================--
