@@ -164,7 +164,7 @@ package body BSP is
           Flags         => (PC_UART => True),
           Read_8        => IO_Read'Access,
           Write_8       => IO_Write'Access,
-          Data_Queue    => [[others => 0], 0, 0, 0]
+          Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptors (1));
       UART_Descriptors (2) :=
@@ -176,7 +176,7 @@ package body BSP is
           Flags         => (PC_UART => True),
           Read_8        => IO_Read'Access,
           Write_8       => IO_Write'Access,
-          Data_Queue    => [[others => 0], 0, 0, 0]
+          Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptors (2));
       -- Console --------------------------------------------------------------
