@@ -1,0 +1,63 @@
+
+-------------------------------------------------------------------------------
+-- SweetAda GPRbuild project file
+--
+-- Copyright (C) 2020-2023 Gabriele Galeotti
+--
+-- This work is licensed under the terms of the MIT License.
+-- Please consult the LICENSE.txt file located in the top-level directory.
+-------------------------------------------------------------------------------
+
+with "configure";
+with "gprbuild_tc";
+
+library project Cpu is
+
+   ----------------------------------------------------------------------------
+   -- Definitions
+   ----------------------------------------------------------------------------
+
+   Kernel_Parent_Path := external ("KERNEL_PARENT_PATH", ".");
+   Include_Directories := Split (external ("GPR_INCLUDES", ""), " ");
+
+   for Target use Configure.Toolchain_Name;
+   for Source_Dirs use Include_Directories & (".");
+
+   case Configure.Use_LibGCC is
+      when others =>
+         for Languages use ("Ada");
+         for Source_Files use ();
+   end case;
+
+   ----------------------------------------------------------------------------
+   -- Naming
+   ----------------------------------------------------------------------------
+
+   package Naming renames Gprbuild_Tc.Naming;
+
+   ----------------------------------------------------------------------------
+   -- Builder
+   ----------------------------------------------------------------------------
+
+   package Builder renames Gprbuild_Tc.Builder;
+
+   ----------------------------------------------------------------------------
+   -- Compiler
+   ----------------------------------------------------------------------------
+
+   package Compiler renames Gprbuild_Tc.Compiler;
+
+   ----------------------------------------------------------------------------
+   -- Library
+   ----------------------------------------------------------------------------
+
+   for Library_Kind use Gprbuild_Tc.Library_Kind;
+   for Library_Support use Gprbuild_Tc.Library_Support;
+   for Library_Builder use Gprbuild_Tc.Library_Builder;
+   for Archive_Builder use Gprbuild_Tc.Archive_Builder;
+   for Object_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Object_Directory;
+   for Library_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Library_Directory;
+
+   for Library_Name use "cpu";
+
+end Cpu;

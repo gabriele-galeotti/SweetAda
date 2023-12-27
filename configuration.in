@@ -59,6 +59,7 @@ TOOLCHAIN_NAME_MIPS       := mips-elf
 TOOLCHAIN_NAME_MIPS64     := mips64-elf
 TOOLCHAIN_NAME_MicroBlaze := microblaze-elf
 TOOLCHAIN_NAME_NiosII     := nios2-elf
+TOOLCHAIN_NAME_OpenRISC   := or1k-elf
 TOOLCHAIN_NAME_PowerPC    := powerpc-elf
 TOOLCHAIN_NAME_PowerPC64  := powerpc64-linux
 TOOLCHAIN_NAME_RISCV      := riscv-elf
