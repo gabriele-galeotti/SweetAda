@@ -74,6 +74,7 @@ LOG_DIRECTORY=$(pwd)
 #TARGET=mips64-elf
 #TARGET=microblaze-elf
 #TARGET=nios2-elf
+#TARGET=or1k-elf
 #TARGET=powerpc-elf
 #TARGET=powerpc64-linux
 #TARGET=riscv-elf
