@@ -75,6 +75,7 @@ package body MC146818A
 
    -- REGISTER A ($0A)
 
+   -- TABLE 5 – PERIODIC INTERRUPT RATE AND SQUARE WAVE OUTPUT FREQUENCY
    RS_None  : constant := 2#0000#; -- N/A
    RS_256   : constant := 2#0001#; -- PIR = 3.90625 ms, SQW f = 256 Hz
    RS_128   : constant := 2#0010#; -- PIR = 7.8125 ms, SQW f = 128 Hz
@@ -92,6 +93,7 @@ package body MC146818A
    RS_4     : constant := 2#1110#; -- PIR = 250 ms, SQW f = 4 Hz
    RS_2     : constant := 2#1111#; -- PIR = 500 ms, SQW f = 2 Hz
 
+   -- TABLE 4 - DIVIDER CONFIGURATIONS
    DIV_4M   : constant := 2#000#; -- Time Base Frequency = 4.194304 MHz, Operation Mode = Yes, N = 0
    DIV_1M   : constant := 2#001#; -- Time Base Frequency = 1.048576 MHz, Operation Mode = Yes, N = 2
    DIV_32k  : constant := 2#010#; -- Time Base Frequency = 32.768 kHz, Operation Mode = Yes, N = 7
@@ -189,8 +191,8 @@ package body MC146818A
    -- Register_Read/Write
 
    function Register_Read
-      (D : in Descriptor_Type;
-       R : in Register_Type)
+      (D : Descriptor_Type;
+       R : Register_Type)
       return Unsigned_8
       with Inline => True;
 
@@ -212,8 +214,8 @@ package body MC146818A
    -- Register_Read
    ----------------------------------------------------------------------------
    function Register_Read
-      (D : in Descriptor_Type;
-       R : in Register_Type)
+      (D : Descriptor_Type;
+       R : Register_Type)
       return Unsigned_8
       is
       RegN  : Unsigned_8;
@@ -291,7 +293,7 @@ package body MC146818A
          is
       begin
          if BCD then
-            return (V and 16#0F#) + (V / 2**4) * 10;
+            return (V and 16#0F#) + ShR (V, 4) * 10;
          else
             return V;
          end if;

@@ -40,7 +40,7 @@ package MC146818A
       PC_RTC : Boolean;
    end record;
 
-   type Port_Read_8_Ptr is access function (Port : in Address) return Unsigned_8;
+   type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
 
    type Descriptor_Type is record
