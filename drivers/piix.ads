@@ -20,7 +20,8 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
-package PIIX is
+package PIIX
+   is
 
    --========================================================================--
    --                                                                        --
@@ -35,39 +36,70 @@ package PIIX is
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- function 0: PCI-to-ISA Bridge
+   -- 2.2. PCI Configuration Registers - PCI To ISA Bridge (Function 0)
    ----------------------------------------------------------------------------
 
-   -- 2.2.9. XBCS—X-BUS CHIP SELECT REGISTER (Function 0)
+   -- 2.2.3. PCICMD-COMMAND REGISTER (Function 0)
+
+   type PCICMD0_Type is record
+      IOSE      : Boolean := True;  -- I/O Space Access Enable (IOSE).
+      MAE       : Boolean := True;  -- Memory Access Enable (MAE). (Not Implemented)
+      BME       : Boolean := True;  -- Bus Master Enable (BME). (Not Implemented)
+      SCE       : Boolean;          -- Special Cycle Enable (SCE).
+      PMWE      : Boolean := False; -- Postable Memory Write Enable. (Not Implemented)
+      Reserved1 : Bits_3 := 0;
+      SERRE     : Boolean;          -- SERR# Enable (SERRE).
+      FBE       : Boolean := False; -- Fast Back-to-Back Enable.
+      Reserved2 : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PCICMD0_Type use record
+      IOSE      at 0 range  0 ..  0;
+      MAE       at 0 range  1 ..  1;
+      BME       at 0 range  2 ..  2;
+      SCE       at 0 range  3 ..  3;
+      PMWE      at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  7;
+      SERRE     at 0 range  8 ..  8;
+      FBE       at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 15;
+   end record;
+
+   function To_U16 is new Ada.Unchecked_Conversion (PCICMD0_Type, Unsigned_16);
+
+   -- 2.2.9. XBCS-X-BUS CHIP SELECT REGISTER (Function 0)
 
    type XBCS_Type is record
-      RTC       : Boolean;     -- RTC Address Location Enable.
-      KBDC      : Boolean;     -- Keyboard Controller Address Location Enable.
-      BIOSCS_WP : Boolean;     -- BIOSCS# Write Protect Enable.
-      Reserved1 : Bits_1 := 0;
-      IRQ12M    : Boolean;     -- IRQ12/M Mouse Function Enable.
-      COPROCERR : Boolean;     -- Coprocessor Error function Enable.
-      LOBIOS    : Boolean;     -- Lower BIOS Enable.
-      EXTBIOS   : Boolean;     -- Extended BIOS Enable.
-      APIC      : Boolean;     -- PIIX3: APIC Chip Select.
-      Reserved2 : Bits_7 := 0;
+      RTCALE     : Boolean; -- RTC Address Location Enable.
+      KBDCALE    : Boolean; -- Keyboard Controller Address Location Enable.
+      BIOSCS_WPE : Boolean; -- BIOSCS# Write Protect Enable.
+      Reserved1  : Bits_1;
+      IRQ12ME    : Boolean; -- IRQ12/M Mouse Function Enable.
+      COPROCERRE : Boolean; -- Coprocessor Error function Enable.
+      LOBIOSE    : Boolean; -- Lower BIOS Enable.
+      EXTBIOSE   : Boolean; -- Extended BIOS Enable.
+      APICCS     : Boolean; -- PIIX3: APIC Chip Select.
+      Reserved2  : Bits_7;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for XBCS_Type use record
-      RTC       at 0 range 0 .. 0;
-      KBDC      at 0 range 1 .. 1;
-      BIOSCS_WP at 0 range 2 .. 2;
-      Reserved1 at 0 range 3 .. 3;
-      IRQ12M    at 0 range 4 .. 4;
-      COPROCERR at 0 range 5 .. 5;
-      LOBIOS    at 0 range 6 .. 6;
-      EXTBIOS   at 0 range 7 .. 7;
-      APIC      at 0 range 8 .. 8;
-      Reserved2 at 0 range 9 .. 15;
+      RTCALE     at 0 range 0 ..  0;
+      KBDCALE    at 0 range 1 ..  1;
+      BIOSCS_WPE at 0 range 2 ..  2;
+      Reserved1  at 0 range 3 ..  3;
+      IRQ12ME    at 0 range 4 ..  4;
+      COPROCERRE at 0 range 5 ..  5;
+      LOBIOSE    at 0 range 6 ..  6;
+      EXTBIOSE   at 0 range 7 ..  7;
+      APICCS     at 0 range 8 ..  8;
+      Reserved2  at 0 range 9 .. 15;
    end record;
 
-   -- 2.2.10. PIRQRC[A:D]—PIRQx ROUTE CONTROL REGISTERS (Function 0)
+   function To_U16 is new Ada.Unchecked_Conversion (XBCS_Type, Unsigned_16);
+
+   -- 2.2.10. PIRQRC[A:D]-PIRQx ROUTE CONTROL REGISTERS (Function 0)
 
    IRQROUTE_RESERVED1  : constant := 2#0000#; -- Reserved
    IRQROUTE_RESERVED2  : constant := 2#0001#; -- Reserved
@@ -101,7 +133,7 @@ package PIIX is
 
    function To_U8 is new Ada.Unchecked_Conversion (PIRQC_Type, Unsigned_8);
 
-   -- 2.2.11. TOM—TOP OF MEMORY REGISTER (Function 0)
+   -- 2.2.11. TOM-TOP OF MEMORY REGISTER (Function 0)
 
    TOM_MB1  : constant := 2#0000#; -- 1 Mbyte
    TOM_MB2  : constant := 2#0001#; -- 2 Mbyte
@@ -121,11 +153,11 @@ package PIIX is
    TOM_MB16 : constant := 2#1111#; -- 16 Mbyte
 
    type TOM_Type is record
-      Reserved        : Bits_1 := 0;
-      ISADMAFWD       : Boolean;     -- ISA/DMA 512–640-Kbyte Region Forwarding Enable.
-      ABSEGFWD        : Boolean;     -- PIIX3: A,B Segment Forwarding Enable.
-      ISADMALOBIOSFWD : Boolean;     -- ISA/DMA Lower BIOS Forwarding Enable.
-      TOM             : Bits_4;      -- Top Of Memory.
+      Reserved        : Bits_1;
+      ISADMAFWD       : Boolean; -- ISA/DMA 512–640-Kbyte Region Forwarding Enable.
+      ABSEGFWD        : Boolean; -- PIIX3: A,B Segment Forwarding Enable.
+      ISADMALOBIOSFWD : Boolean; -- ISA/DMA Lower BIOS Forwarding Enable.
+      TOM             : Bits_4;  -- Top Of Memory.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -137,16 +169,55 @@ package PIIX is
       TOM             at 0 range 4 .. 7;
    end record;
 
-   -- 2.2.13. MBIRQ[1:0]—MOTHERBOARD DEVICE IRQ ROUTE CONTROL REGISTERS (Function 0)
+   function To_U8 is new Ada.Unchecked_Conversion (TOM_Type, Unsigned_8);
+
+   -- 2.2.12. MSTAT-MISCELLANEOUS STATUS REGISTER (Function 0)
+
+   ISACD_DIV4 : constant := 0; -- 0=Clock divisor of 4 (PCICLK=33 MHz)
+   ISACD_DIV3 : constant := 1; -- 0=Clock divisor of 3 (PCICLK=25 MHz)
+
+   IEDMAS_INT : constant := 0; -- 0=Normal DMA Operation.
+   IEDMAS_EXT : constant := 1; --
+
+   type MSTAT_Type is record
+      ISACD     : Bits_1;  -- ISA Clock Divisor (Status)
+      IEDMAS    : Bits_1;  -- Internal ISA DMA or External DMA Mode Status (IEDMAS)
+      PCIHTBE   : Boolean; -- PCI Header Type Bit Enable
+      Reserved1 : Bits_1;
+      USBE      : Boolean; -- USB Enable (USBE)
+      Reserved2 : Bits_1;
+      ESMIME    : Boolean; -- EXTSMI# Mode Enable (ESMIME)
+      NBRE      : Boolean; -- NB Retry Enable (NBRE)
+      Reserved3 : Bits_7;
+      SERRG     : Boolean; -- SERR# Generation Due To Delayed Transaction
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for MSTAT_Type use record
+      ISACD     at 0 range  0 ..  0;
+      IEDMAS    at 0 range  1 ..  1;
+      PCIHTBE   at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      USBE      at 0 range  4 ..  4;
+      Reserved2 at 0 range  5 ..  5;
+      ESMIME    at 0 range  6 ..  6;
+      NBRE      at 0 range  7 ..  7;
+      Reserved3 at 0 range  8 .. 14;
+      SERRG     at 0 range 15 .. 15;
+   end record;
+
+   function To_U16 is new Ada.Unchecked_Conversion (MSTAT_Type, Unsigned_16);
+
+   -- 2.2.13. MBIRQ[1:0]-MOTHERBOARD DEVICE IRQ ROUTE CONTROL REGISTERS (Function 0)
 
    -- use IRQROUTE_IRQx constants from PIRQC_Type
 
    type MBIRQ_Type is record
-      IRQROUTE   : Bits_4;      -- Interrupt Routing.
-      Reserved   : Bits_1 := 0;
-      IRQ0       : Boolean;     -- PIIX3: IRQ0 Enable
-      MIRQSHARE  : Boolean;     -- MIRQx/IRQx Sharing Enable.
-      IRQROUTEEN : NBoolean;    -- Interrupt Routing Enable.
+      IRQROUTE   : Bits_4;   -- Interrupt Routing.
+      Reserved   : Bits_1;
+      IRQ0       : Boolean;  -- PIIX3: IRQ0 Enable
+      MIRQSHARE  : Boolean;  -- MIRQx/IRQx Sharing Enable.
+      IRQROUTEEN : NBoolean; -- Interrupt Routing Enable.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -158,13 +229,15 @@ package PIIX is
       IRQROUTEEN at 0 range 7 .. 7;
    end record;
 
-   -- 2.2.16. APICBASE—APIC BASE ADDRESS RELOCATION REGISTER (Function 0) (PIIX3 Only)
+   function To_U8 is new Ada.Unchecked_Conversion (MBIRQ_Type, Unsigned_8);
+
+   -- 2.2.16. APICBASE-APIC BASE ADDRESS RELOCATION REGISTER (Function 0) (PIIX3 Only)
 
    type APICBASE_Type is record
-      Y        : Bits_2;      -- Y-Base Address.
-      X        : Bits_4;      -- X-Base Address.
-      A12MASK  : Boolean;     -- A12 Mask.
-      Reserved : Bits_1 := 0;
+      Y        : Bits_2;  -- Y-Base Address.
+      X        : Bits_4;  -- X-Base Address.
+      A12MASK  : Boolean; -- A12 Mask.
+      Reserved : Bits_1;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -174,6 +247,10 @@ package PIIX is
       A12MASK  at 0 range 6 .. 6;
       Reserved at 0 range 7 .. 7;
    end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (APICBASE_Type, Unsigned_8);
+
+   -- 2.1. Register Access
 
    XBCS     : constant := 16#4E#;
    PIRQRCA  : constant := 16#60#;
@@ -186,12 +263,66 @@ package PIIX is
    APICBASE : constant := 16#80#; -- PIIX3
 
    ----------------------------------------------------------------------------
-   -- function 1: IDE Interface
+   -- 2.3. PCI Configuration Registers - IDE Interface (Function 1)
    ----------------------------------------------------------------------------
 
+   -- 2.3.3. PCICMD-COMMAND REGISTER (Function 1)
+
+   type PCICMD1_Type is record
+      IOSE      : Boolean;          -- I/O Space Access Enable (IOSE).
+      MSE       : Boolean := True;  -- Memory Space Enable (MSE). (Not Implemented)
+      BME       : Boolean;          -- Bus Master Enable (BME).
+      SCE       : Boolean := False; -- Special Cycle Enable (SCE). (Not Implemented)
+      MWI       : Boolean := False; -- Memory Write and Invalidate Enable (MWI). (Not Implemented)
+      Reserved1 : Bits_4 := 0;
+      FBE       : Boolean := False; -- Fast Back to Back Enable (FBE). (Not Implemented)
+      Reserved2 : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PCICMD1_Type use record
+      IOSE      at 0 range  0 ..  0;
+      MSE       at 0 range  1 ..  1;
+      BME       at 0 range  2 ..  2;
+      SCE       at 0 range  3 ..  3;
+      MWI       at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  8;
+      FBE       at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 15;
+   end record;
+
+   function To_U16 is new Ada.Unchecked_Conversion (PCICMD1_Type, Unsigned_16);
+
    ----------------------------------------------------------------------------
-   -- function 2: Universal Serial Bus Interface (PIIX3 only)
+   -- 2.4. PCI Configuration Registers - Universal Serial Bus (Function 2) (PIIX3 Only)
    ----------------------------------------------------------------------------
+
+   -- 2.4.3. PCICMD-COMMAND REGISTER (Function 2)
+
+   type PCICMD2_Type is record
+      IOSE      : Boolean;          -- I/O Space Access Enable (IOSE).
+      MSE       : Boolean := False; -- Memory Space Enable (MSE). (Not Implemented)
+      BME       : Boolean;          -- Bus Master Enable (BME).
+      SCE       : Boolean := False; -- Special Cycle Enable (SCE). (Not Implemented)
+      MWI       : Boolean := False; -- Memory Write and Invalidate Enable (MWI). (Not Implemented)
+      Reserved1 : Bits_4 := 0;
+      FBE       : Boolean := False; -- Fast Back to Back Enable (FBE). (Not Implemented)
+      Reserved2 : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PCICMD2_Type use record
+      IOSE      at 0 range  0 ..  0;
+      MSE       at 0 range  1 ..  1;
+      BME       at 0 range  2 ..  2;
+      SCE       at 0 range  3 ..  3;
+      MWI       at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  8;
+      FBE       at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 15;
+   end record;
+
+   function To_U16 is new Ada.Unchecked_Conversion (PCICMD2_Type, Unsigned_16);
 
    ----------------------------------------------------------------------------
    -- subprograms
@@ -199,6 +330,7 @@ package PIIX is
 
    function Probe
       return Boolean;
+
    procedure Init;
 
 end PIIX;
