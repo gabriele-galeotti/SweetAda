@@ -21,14 +21,28 @@ with CPU.IO;
 package body ALi_M5123
    is
 
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
    CONFIG_Port : constant Interfaces.Unsigned_16 := 16#03F0#; -- 16#0370#
    INDEX_Port  : constant Interfaces.Unsigned_16 := 16#03F0#; -- 16#0370#
    DATA_Port   : constant Interfaces.Unsigned_16 := 16#03F1#; -- 16#0371#
 
-   ----------------------------------------------------------------------------
-   -- ALi M5213 configuration
-   ----------------------------------------------------------------------------
-   procedure Setup is
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Package subprograms                          --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   procedure Setup
+      is
    begin
       -- enter configuration mode
       CPU.IO.PortOut (CONFIG_Port, Interfaces.Unsigned_8'(16#51#));

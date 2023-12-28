@@ -21,16 +21,22 @@ with CPU.IO;
 package body Winbond_W83787
    is
 
-   ----------------------------------------------------------------------------
-   -- Winbond W83787 configuration
-   ----------------------------------------------------------------------------
-   procedure Setup is
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Package subprograms                          --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   procedure Setup
+      is
       type W83787_Type is record
          Port : Interfaces.Unsigned_8;
          Data : Interfaces.Unsigned_8;
       end record;
       W83787_InitData : constant array (Natural range <>) of W83787_Type :=
-         (
+         [
           (16#00#, 16#04#), -- CR0: enable PRN mode
           (16#01#, 16#2C#), -- CR1: PRN=0x378, COM1=0x3F8, COM2=0x2F8
           (16#02#, 16#FF#), -- CR2:
@@ -38,7 +44,7 @@ package body Winbond_W83787
           (16#04#, 16#00#), -- CR4:
           (16#06#, 16#00#), -- CR6:
           (16#09#, 16#80#)  -- CR9: enable PRN mode
-         );
+         ];
       EFER : constant Interfaces.Unsigned_16 := 16#0250#;
       EFIR : constant Interfaces.Unsigned_16 := 16#0251#;
       EFDR : constant Interfaces.Unsigned_16 := 16#0252#;
