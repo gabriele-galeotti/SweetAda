@@ -18,7 +18,8 @@
 with System;
 with Interfaces;
 
-package PL011 is
+package PL011
+   is
 
    --========================================================================--
    --                                                                        --
@@ -36,8 +37,7 @@ package PL011 is
    type Port_Read_16_Ptr is access function (Port : Address) return Unsigned_16;
    type Port_Write_16_Ptr is access procedure (Port : in Address; Value : in Unsigned_16);
 
-   type Descriptor_Type is
-   record
+   type Descriptor_Type is record
       Base_Address : Address;
       Baud_Clock   : Positive;
       Read_8       : Port_Read_8_Ptr;

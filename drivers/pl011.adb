@@ -19,7 +19,8 @@ with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Bits;
 
-package body PL011 is
+package body PL011
+   is
 
    --========================================================================--
    --                                                                        --

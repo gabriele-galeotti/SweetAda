@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body PL110 is
+package body PL110
+   is
 
    --========================================================================--
    --                                                                        --
@@ -55,7 +56,7 @@ package body PL110 is
    begin
       return Shift_Left (Unsigned_16 (R), 11) or
              Shift_Left (Unsigned_16 (G), 5)  or
-                         Unsigned_16 (B);
+             Unsigned_16 (B);
    end RGB565;
 
    ----------------------------------------------------------------------------

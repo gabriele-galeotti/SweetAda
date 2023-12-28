@@ -21,7 +21,8 @@ with Interfaces;
 with Bits;
 with Videofont8x16;
 
-package PL110 is
+package PL110
+   is
 
    --========================================================================--
    --                                                                        --
