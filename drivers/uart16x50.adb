@@ -20,7 +20,8 @@ with Ada.Unchecked_Conversion;
 with Definitions;
 with LLutils;
 
-package body UART16x50 is
+package body UART16x50
+   is
 
    --========================================================================--
    --                                                                        --
@@ -65,8 +66,7 @@ package body UART16x50 is
    STOP_BITS_1 : constant Number_Of_Stop_Bits_Type := 0;
    STOP_BITS_2 : constant Number_Of_Stop_Bits_Type := 1;
 
-   type LCR_Type is
-   record
+   type LCR_Type is record
       WLS  : Word_Length_Select_Type;
       STB  : Number_Of_Stop_Bits_Type;
       PEN  : Boolean;                  -- Parity Enable
@@ -74,11 +74,10 @@ package body UART16x50 is
       SP   : Boolean;                  -- Stick Parity
       SB   : Boolean;                  -- Set Break
       DLAB : Boolean;                  -- Divisor Latch Access Bit
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for LCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LCR_Type use record
       WLS  at 0 range 0 .. 1;
       STB  at 0 range 2 .. 2;
       PEN  at 0 range 3 .. 3;
@@ -101,8 +100,7 @@ package body UART16x50 is
    --       the THR.
    -- TSRE: When set indicates that the TSR is empty. It is reset when a word
    --       is loaded into it from the THR.
-   type LSR_Type is
-   record
+   type LSR_Type is record
       DR     : Boolean;     -- Data Ready
       OE     : Boolean;     -- Overrun Error
       PE     : Boolean;     -- Parity Error
@@ -111,11 +109,10 @@ package body UART16x50 is
       THRE   : Boolean;     -- Transmitter Holding Register Empty
       TEMT   : Boolean;     -- Transmitter (Shift Register) Empty
       Unused : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for LSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LSR_Type use record
       DR     at 0 range 0 .. 0;
       OE     at 0 range 1 .. 1;
       PE     at 0 range 2 .. 2;
@@ -138,16 +135,14 @@ package body UART16x50 is
    IPL2 : constant Interrupt_Priority_Type := 2#10#; -- 2nd:     Received Data Available
    IPL3 : constant Interrupt_Priority_Type := 2#11#; -- highest: Receiver Line Status
 
-   type IIR_Type is
-   record
+   type IIR_Type is record
       IPn    : Boolean;                 -- negated: 0 if Interrupt Pending
       IPL    : Interrupt_Priority_Type;
       Unused : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for IIR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for IIR_Type use record
       IPn    at 0 range 0 .. 0;
       IPL    at 0 range 1 .. 2;
       Unused at 0 range 3 .. 7;
@@ -158,18 +153,16 @@ package body UART16x50 is
 
    -- 8.6 Interrupt Enable Register
 
-   type IER_Type is
-   record
+   type IER_Type is record
       RDA    : Boolean;     -- Received Data Available
       THRE   : Boolean;     -- Transmitter Holding Register Empty
       RLS    : Boolean;     -- Receiver Line Status
       MS     : Boolean;     -- MODEM Status
       Unused : Bits_4 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for IER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for IER_Type use record
       RDA    at 0 range 0 .. 0;
       THRE   at 0 range 1 .. 1;
       RLS    at 0 range 2 .. 2;
@@ -182,19 +175,17 @@ package body UART16x50 is
 
    -- 8.7 Modem Control Register
 
-   type MCR_Type is
-   record
+   type MCR_Type is record
       DTR      : Boolean;     -- Data Terminal Ready
       RTS      : Boolean;     -- Request To Send
       OUT1     : Boolean;
       OUT2     : Boolean;
       LOOPBACK : Boolean;
       Unused   : Bits_3 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCR_Type use record
       DTR      at 0 range 0 .. 0;
       RTS      at 0 range 1 .. 1;
       OUT1     at 0 range 2 .. 2;
@@ -208,8 +199,7 @@ package body UART16x50 is
 
    -- 8.8 Modem Status Register
 
-   type MSR_Type is
-   record
+   type MSR_Type is record
       DCTS : Boolean; -- Delta CTS
       DDSR : Boolean; -- Delta DSR
       TERI : Boolean; -- Trailing Edge Ring Indicator
@@ -218,11 +208,10 @@ package body UART16x50 is
       DSR  : Boolean; -- DSR
       RI   : Boolean; -- RI
       DCD  : Boolean; -- DCD
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MSR_Type use record
       DCTS at 0 range 0 .. 0;
       DDSR at 0 range 1 .. 1;
       TERI at 0 range 2 .. 2;
@@ -256,6 +245,11 @@ package body UART16x50 is
        R     : in Register_Type;
        Value : in Unsigned_8)
       with Inline => True;
+
+   procedure Input_Poll
+      (D       : in     Descriptor_Type;
+       Result  :    out Unsigned_8;
+       Success :    out Boolean);
 
    --========================================================================--
    --                                                                        --
@@ -333,10 +327,6 @@ package body UART16x50 is
    ----------------------------------------------------------------------------
    -- Input_Poll
    ----------------------------------------------------------------------------
-   procedure Input_Poll
-      (D       : in     Descriptor_Type;
-       Result  :    out Unsigned_8;
-       Success :    out Boolean);
    procedure Input_Poll
       (D       : in     Descriptor_Type;
        Result  :    out Unsigned_8;

@@ -20,7 +20,8 @@ with Interfaces;
 with Definitions;
 with Bits;
 
-package Z8530 is
+package Z8530
+   is
 
    --========================================================================--
    --                                                                        --

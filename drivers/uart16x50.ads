@@ -21,7 +21,8 @@ with Bits;
 with MMIO;
 with FIFO;
 
-package UART16x50 is
+package UART16x50
+   is
 
    --========================================================================--
    --                                                                        --
@@ -37,16 +38,14 @@ package UART16x50 is
 
    type Model_Type is (UARTNONE, UART16450, UART16550, UART16650, UART16750);
 
-   type Flags_Type is
-   record
+   type Flags_Type is record
       PC_UART : Boolean;
    end record;
 
    type Port_Read_8_Ptr is access function (Port : in Address) return Unsigned_8;
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
 
-   type Descriptor_Type is
-   record
+   type Descriptor_Type is record
       Uart_Model    : Model_Type;
       Base_Address  : Address;
       Scale_Address : Address_Shift;

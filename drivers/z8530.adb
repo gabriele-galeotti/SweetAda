@@ -18,7 +18,8 @@
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 
-package body Z8530 is
+package body Z8530
+   is
 
    --========================================================================--
    --                                                                        --
@@ -78,16 +79,14 @@ package body Z8530 is
    CMD_ERROR_RESET       : constant := 2#110#;
    CMD_RESET_HIGHEST_IUS : constant := 2#111#;
 
-   type WR0_Type is
-   record
+   type WR0_Type is record
       RN        : Bits_3; -- Register Selection Code
       CMD_Code  : Bits_3; -- Command Codes
       CRC_Reset : Bits_2; -- CRC Reset Codes 1 And 0
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WR0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WR0_Type use record
       RN        at 0 range 0 .. 2;
       CMD_Code  at 0 range 3 .. 5;
       CRC_Reset at 0 range 6 .. 7;
@@ -105,8 +104,7 @@ package body Z8530 is
    INT_ALL_Rx  : constant := 2#10#; -- Interrupt on All Receive Characters or Special Condition
    INT_ERR_Rx  : constant := 2#11#; -- Receive Interrupt on Special Condition
 
-   type WR1_Type is
-   record
+   type WR1_Type is record
       EXT_INT_ENAB : Boolean; -- External/Status Master Interrupt Enable
       Tx_INT_ENAB  : Boolean; -- Transmitter Interrupt Enable
       PAR_SPEC     : Boolean; -- Parity is special condition
@@ -114,11 +112,10 @@ package body Z8530 is
       WT_RDY_RT    : Boolean; -- /WAIT//REQUEST on Transmit or Receive
       WT_FN_RDYFN  : Boolean; -- WAIT/DMA Request Function
       WT_RDY_ENAB  : Boolean; -- WAIT/DMA Request Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WR1_Type use record
       EXT_INT_ENAB at 0 range 0 .. 0;
       Tx_INT_ENAB  at 0 range 1 .. 1;
       PAR_SPEC     at 0 range 2 .. 2;
@@ -144,8 +141,7 @@ package body Z8530 is
    Rx_LENGTH_6 : constant := 2#10#;
    Rx_LENGTH_8 : constant := 2#11#;
 
-   type WR3_Type is
-   record
+   type WR3_Type is record
       Rx_Enable     : Boolean; -- Receiver Enable
       SYNC_L_INH    : Boolean; -- SYNC Character Load Inhibit
       ADD_SM        : Boolean; -- Address Search Mode (SDLC)
@@ -153,11 +149,10 @@ package body Z8530 is
       ENT_HM        : Boolean; -- Enter Hunt Mode
       Auto_Enables  : Boolean; -- Auto Enables
       RxN           : Bits_2;  -- Receiver Bits/Character
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WR3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WR3_Type use record
       Rx_Enable     at 0 range 0 .. 0;
       SYNC_L_INH    at 0 range 1 .. 1;
       ADD_SM        at 0 range 2 .. 2;
@@ -189,18 +184,16 @@ package body Z8530 is
    X32CLK : constant := 2#10#; -- X32 Clock Mode
    X64CLK : constant := 2#11#; -- X64 Clock Mode
 
-   type WR4_Type is
-   record
+   type WR4_Type is record
       PAR_ENAB   : Boolean; -- Parity Enable
       PAR_EVEN   : Boolean; -- Parity Even/Odd
       STOP_BITS  : Bits_2;  -- Stop Bits selection, bits 1 and 0
       SYNC_MODES : Bits_2;  -- SYNC Mode selection bits 1 and 0
       XCLK_RATE  : Bits_2;  -- Clock Rate bits 1 and 0
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WR4_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WR4_Type use record
       PAR_ENAB   at 0 range 0 .. 0;
       PAR_EVEN   at 0 range 1 .. 1;
       STOP_BITS  at 0 range 2 .. 3;
@@ -220,8 +213,7 @@ package body Z8530 is
    Tx_LENGTH_7 : constant := 2#01#;
    Tx_LENGTH_8 : constant := 2#11#;
 
-   type WR5_Type is
-   record
+   type WR5_Type is record
       Tx_CRC_Enable : Boolean; -- Transmit CRC Enable
       RTS           : Boolean; -- Request To Send control bit
       nSDLC_CRC16   : Boolean; -- /SDLC/CRC-16
@@ -229,11 +221,10 @@ package body Z8530 is
       Send_Break    : Boolean; -- Send Break control bit
       TxN           : Bits_2;  -- Transmit Bits/Character select bits 1 and 0
       DTR           : Boolean; -- Data Terminal Ready control bit
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WR5_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WR5_Type use record
       Tx_CRC_Enable at 0 range 0 .. 0;
       RTS           at 0 range 1 .. 1;
       nSDLC_CRC16   at 0 range 2 .. 2;
@@ -275,8 +266,7 @@ package body Z8530 is
    RESCMD_CHA  : constant := 2#10#; -- Channel Reset A
    RESCMD_RES  : constant := 2#11#; -- Force Hardware Reset
 
-   type WR9_Type is
-   record
+   type WR9_Type is record
       VIS    : Boolean; -- Vector Includes Status control bit
       NV     : Boolean; -- No Vector select bit
       DLC    : Boolean; -- Disable Lower Chain control bit
@@ -284,11 +274,10 @@ package body Z8530 is
       SHnSL  : Boolean; -- Status High//Status Low control bit
       INTACK : Boolean; -- Software Interrupt Acknowledge control bit
       RESCMD : Bits_2;  -- Reset Command Bits
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WR9_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WR9_Type use record
       VIS    at 0 range 0 .. 0;
       NV     at 0 range 1 .. 1;
       DLC    at 0 range 2 .. 2;
@@ -310,8 +299,7 @@ package body Z8530 is
    DataEncoding_FM1  : constant := 2#10#; -- FM1 (transition = 1)
    DataEncoding_FM0  : constant := 2#11#; -- FM0 (transition = 0)
 
-   type WR10_Type is
-   record
+   type WR10_Type is record
       SYNC6OR8           : Boolean; -- 6-Bit/8-Bit SYNC select bit
       Loop_Mode          : Boolean; -- Loop Mode control bit
       AbortFlag_Underrun : Boolean; -- Abort//Flag On Underrun select bit
@@ -319,11 +307,10 @@ package body Z8530 is
       GoActiveOnPoll     : Boolean; -- Go-Active-On-Poll control bit
       DataEncoding       : Bits_2;  -- Data Encoding select bits.
       CRCPreset          : Boolean; -- CRC Presets I/O select bit
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WR10_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WR10_Type use record
       SYNC6OR8           at 0 range 0 .. 0;
       Loop_Mode          at 0 range 1 .. 1;
       AbortFlag_Underrun at 0 range 2 .. 2;
@@ -361,18 +348,16 @@ package body Z8530 is
    RTxC_XTAL_TTL  : constant := 0; -- SCC expects a TTL-compatible signal as an input to this pin.
    RTxC_XTAL_XTAL : constant := 1; -- SCC connects a HGA between the /RTxC and /SYNC pins in expectation of a XTAL.
 
-   type WR11_Type is
-   record
+   type WR11_Type is record
       nTRxC     : Bits_2; -- /TRxC Output Source select bits 1 and 0
       TRxC_IO   : Bits_1; -- TRxC Pin I/O control bit
       TxCLK     : Bits_2; -- Transmit Clock select bits 1 and 0.
       RxCLK     : Bits_2; -- Receiver Clock select bits 1 and 0
       RTxC_XTAL : Bits_1; -- RTxC-XTAL//NO XTAL select bit
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WR11_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WR11_Type use record
       nTRxC     at 0 range 0 .. 1;
       TRxC_IO   at 0 range 2 .. 2;
       TxCLK     at 0 range 3 .. 4;
@@ -407,19 +392,17 @@ package body Z8530 is
    DPLL_CMD_FM      : constant := 2#110#; -- Set FM Mode
    DPLL_CMD_NRZI    : constant := 2#111#; -- Set NRZI Mode
 
-   type WR14_Type is
-   record
+   type WR14_Type is record
       BREN         : Boolean; -- Baud Rate Generator Enable
       BRSOURCE     : Bits_1;  -- Baud Rate Generator Source select bit
       DTR_Function : Boolean; -- DTR/Request Function select bit
       AUTOECHO     : Boolean; -- Auto Echo select bit
       Loc_LOOPBACK : Boolean; -- Local Loopback select bit
       DPLL_CMD     : Bits_3;  -- Digital Phase-Locked Loop Command Bits.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WR14_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WR14_Type use record
       BREN         at 0 range 0 .. 0;
       BRSOURCE     at 0 range 1 .. 1;
       DTR_Function at 0 range 2 .. 2;
@@ -435,8 +418,7 @@ package body Z8530 is
    -- 5.2.18 Write Register 15 (External/Status Interrupt Control)
    ----------------------------------------------------------------------------
 
-   type WR15_Type is
-   record
+   type WR15_Type is record
       SDLCFeatureEnable : Boolean := False; -- Point to Write Register WR7 Prime (ESCC and 85C30 only)
       ZeroCountIE       : Boolean := False; -- Zero Count Interrupt Enable
       SDLCFIFOEnable    : Boolean := False; -- Status FIFO Enable control bit (CMOS/ESCC)
@@ -445,11 +427,10 @@ package body Z8530 is
       CTSIE             : Boolean := False; -- CTS Interrupt Enable
       TxUnderrunEOMIE   : Boolean := False; -- Transmit Underrun/EOM Interrupt Enable
       BreakAbortIE      : Boolean := False; -- Break/Abort Interrupt Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for WR15_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for WR15_Type use record
       SDLCFeatureEnable at 0 range 0 .. 0;
       ZeroCountIE       at 0 range 1 .. 1;
       SDLCFIFOEnable    at 0 range 2 .. 2;
@@ -467,8 +448,7 @@ package body Z8530 is
    -- 5.3.1 Read Register 0 (Transmit/Receive Buffer Status and External Status)
    ----------------------------------------------------------------------------
 
-   type RR0_Type is
-   record
+   type RR0_Type is record
       RXCA       : Boolean; -- Receive Character Available
       Zero_Count : Boolean; -- Zero Count status
       TXBE       : Boolean; -- TX Buffer Empty status
@@ -477,11 +457,10 @@ package body Z8530 is
       CTS        : Boolean; -- Clear to Send pin status
       TXUR_EOM   : Boolean; -- Transmit Underrun/EOM status
       BreakAbort : Boolean; -- Break/Abort status
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RR0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RR0_Type use record
       RXCA       at 0 range 0 .. 0;
       Zero_Count at 0 range 1 .. 1;
       TXBE       at 0 range 2 .. 2;
@@ -508,19 +487,17 @@ package body Z8530 is
    ResidueCode_05 : constant := 2#110#; -- I-Field Bits in Last Byte = 0, I-Field Bits in Previous Byte = 5
    ResidueCode_18 : constant := 2#111#; -- I-Field Bits in Last Byte = 1, I-Field Bits in Previous Byte = 8
 
-   type RR1_Type is
-   record
+   type RR1_Type is record
       AllSent         : Boolean; -- Bit 0: All Sent status
       ResidueCode     : Bits_3;  -- Residue Codes, bits 2, 1, and 0
       ParityError     : Boolean; -- Parity Error status.
       RxOverrunError  : Boolean; -- Receiver Overrun Error status
       CRCFramingError : Boolean; -- CRC/Framing Error status
       SDLCEndOfFrame  : Boolean; -- End of Frame (SDLC) status
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RR1_Type use record
       AllSent         at 0 range 0 .. 0;
       ResidueCode     at 0 range 1 .. 3;
       ParityError     at 0 range 4 .. 4;
@@ -540,8 +517,7 @@ package body Z8530 is
    -- 5.3.4 Read Register 3
    ----------------------------------------------------------------------------
 
-   type RR3_Type is
-   record
+   type RR3_Type is record
       Unused        : Bits_2;
       CHA_RX        : Boolean; -- Channel A Rx IP
       CHA_TX        : Boolean; -- Channel A Tx IP
@@ -549,11 +525,10 @@ package body Z8530 is
       CHB_RX        : Boolean; -- Channel B Rx IP
       CHB_TX        : Boolean; -- Channel B Tx IP
       CHB_ExtStatus : Boolean; -- Channel B Ext/Status IP
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RR3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RR3_Type use record
       Unused        at 0 range 0 .. 1;
       CHA_RX        at 0 range 2 .. 2;
       CHA_TX        at 0 range 3 .. 3;
@@ -582,16 +557,14 @@ package body Z8530 is
    -- 5.3.8 Read Register 7 (Not on NMOS)
    ----------------------------------------------------------------------------
 
-   type RR7_Type is
-   record
+   type RR7_Type is record
       BC06 : Bits_6;  -- most significant six bits of the frame byte count that is currently at the top of the Status FIFO
       FDA  : Boolean; -- FIFO Data Available
       FOS  : Boolean; -- FIFO Overflow Status
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RR7_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RR7_Type use record
       BC06 at 0 range 0 .. 5;
       FDA  at 0 range 6 .. 6;
       FOS  at 0 range 7 .. 7;
@@ -612,8 +585,7 @@ package body Z8530 is
    -- 5.3.11 Read Register 10
    ----------------------------------------------------------------------------
 
-   type RR10_Type is
-   record
+   type RR10_Type is record
       Unused1         : Bits_1;
       OnLoop          : Boolean; -- On Loop status
       Unused2         : Bits_2;
@@ -621,11 +593,10 @@ package body Z8530 is
       Unused3         : Bits_1;
       TwoClockMissing : Boolean; -- Two Clocks Missing status
       OneClockMissing : Boolean; -- One Clock Missing status
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RR10_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RR10_Type use record
       Unused1         at 0 range 0 .. 0;
       OnLoop          at 0 range 1 .. 1;
       Unused2         at 0 range 2 .. 3;
@@ -658,8 +629,7 @@ package body Z8530 is
    -- 5.3.16 Read Register 15
    ----------------------------------------------------------------------------
 
-   type RR15_Type is
-   record
+   type RR15_Type is record
       Unused1         : Bits_1;
       ZeroCountIE     : Boolean; -- Zero Count Interrupt Enable
       Unused2         : Bits_1;
@@ -668,11 +638,10 @@ package body Z8530 is
       CTSIE           : Boolean; -- CTS Interrupt Enable
       TxUnderrunEOMIE : Boolean; -- Transmit Underrun/EOM Interrupt Enable
       BreakAbortIE    : Boolean; -- Break/Abort Interrupt Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RR15_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RR15_Type use record
       Unused1         at 0 range 0 .. 0;
       ZeroCountIE     at 0 range 1 .. 1;
       Unused2         at 0 range 2 .. 2;

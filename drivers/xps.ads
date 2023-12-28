@@ -19,7 +19,8 @@ with System;
 with Interfaces;
 with Bits;
 
-package XPS is
+package XPS
+   is
 
    --========================================================================--
    --                                                                        --
