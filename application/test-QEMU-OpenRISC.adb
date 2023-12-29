@@ -18,7 +18,6 @@ package body Application is
    ----------------------------------------------------------------------------
    procedure Run is
    begin
-      Console.Print_Memory (System.Null_Address, 16, 16);
       -------------------------------------------------------------------------
       if True then
          declare
