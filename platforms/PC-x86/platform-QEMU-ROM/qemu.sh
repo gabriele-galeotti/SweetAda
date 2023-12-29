@@ -45,12 +45,14 @@ while true ; do
     *)      _port_listening=$(netstat -l -t --numeric-ports | grep -c -e "^tcp.*localhost:$1.*LISTEN.*\$") ;;
   esac
   [ "${_port_listening}" -eq 1 ] && break
-  _time_current=$(date +%s)
-  if [ $((_time_current-_time_start)) -gt $2 ] ; then
-    if [ "x$3" != "x" ] ; then
-      printf "%s\n" "$3: timeout waiting for port $1."
+  if [ $2 -gt 0 ] ; then
+    _time_current=$(date +%s)
+    if [ $((_time_current-_time_start)) -gt $2 ] ; then
+      if [ "x$3" != "x" ] ; then
+        printf "%s\n" "$3: timeout waiting for port $1."
+      fi
+      return 1
     fi
-    return 1
   fi
   sleep 1
 done
