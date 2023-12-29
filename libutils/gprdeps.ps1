@@ -42,7 +42,7 @@ function ParseGpr
 {
   param([string]$filename)
   $units = ""
-  if (-not(Test-Path -Path "$filename" -PathType Leaf))
+  if (-not (Test-Path -Path "$filename" -PathType Leaf))
   {
     return $units
   }

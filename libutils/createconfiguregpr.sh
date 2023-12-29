@@ -155,13 +155,13 @@ _LFPL_list=""
 for f in "$@" ; do
   case ${f} in
     *.S)
-      if [ ! "x${_LFP_S_files}" = "xY" ] ; then
+      if [ "x${_LFP_S_files}" != "xY" ] ; then
         _LFP_S_files=Y
         _LFPL_list="${_LFPL_list:+${_LFPL_list} }Asm_Cpp"
       fi
       ;;
     *.c)
-      if [ ! "x${_LFP_C_files}" = "xY" ] ; then
+      if [ "x${_LFP_C_files}" != "xY" ] ; then
         _LFP_C_files=Y
         _LFPL_list="${_LFPL_list:+${_LFPL_list} }C"
       fi

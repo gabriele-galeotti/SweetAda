@@ -193,7 +193,7 @@ while ($fileindex -lt $args.length)
     ExitWithCode 1
   }
   $isfolder = (Test-Path -Path $target -PathType Container)
-  if (-not($isfolder))
+  if (-not $isfolder)
   {
     $link_name = $args[$fileindex + 1]
     Remove-Item -Path $link_name -Force -ErrorAction Ignore
