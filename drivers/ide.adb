@@ -159,8 +159,8 @@ package body IDE
    ----------------------------------------------------------------------------
 
    function Register_Read_8
-      (D : in Descriptor_Type;
-       R : in Register_Type)
+      (D : Descriptor_Type;
+       R : Register_Type)
       return Unsigned_8
       with Inline => True;
 
@@ -171,8 +171,8 @@ package body IDE
       with Inline => True;
 
    function Register_Read_16
-      (D : in Descriptor_Type;
-       R : in Register_Type)
+      (D : Descriptor_Type;
+       R : Register_Type)
       return Unsigned_16
       with Inline => True;
 
@@ -183,7 +183,7 @@ package body IDE
       with Inline => True;
 
    function HEAD_Set
-      (H : in Unsigned_8)
+      (H : Unsigned_8)
       return Unsigned_8
       with Inline => True;
 
@@ -193,11 +193,11 @@ package body IDE
       with Inline => True;
 
    function Is_Drive_Ready
-      (D : in Descriptor_Type)
+      (D : Descriptor_Type)
       return Boolean;
 
    function Is_DRQ_Active
-      (D : in Descriptor_Type)
+      (D : Descriptor_Type)
       return Boolean;
 
    --========================================================================--
@@ -212,8 +212,8 @@ package body IDE
    -- Register_Read (8-bit)
    ----------------------------------------------------------------------------
    function Register_Read_8
-      (D : in Descriptor_Type;
-       R : in Register_Type)
+      (D : Descriptor_Type;
+       R : Register_Type)
       return Unsigned_8
       is
    begin
@@ -236,8 +236,8 @@ package body IDE
    -- Register_Read (16-bit)
    ----------------------------------------------------------------------------
    function Register_Read_16
-      (D : in Descriptor_Type;
-       R : in Register_Type)
+      (D : Descriptor_Type;
+       R : Register_Type)
       return Unsigned_16
       is
    begin
@@ -260,7 +260,7 @@ package body IDE
    -- Is_Drive_Ready
    --------------------------------------------------------------------------
    function Is_Drive_Ready
-      (D : in Descriptor_Type)
+      (D : Descriptor_Type)
       return Boolean
       is
       Success : Boolean := False;
@@ -284,7 +284,7 @@ package body IDE
    -- Is_DRQ_Active
    --------------------------------------------------------------------------
    function Is_DRQ_Active
-      (D : in Descriptor_Type)
+      (D : Descriptor_Type)
       return Boolean
       is
       Success : Boolean := False;
@@ -302,7 +302,7 @@ package body IDE
    -- HEAD_Set
    --------------------------------------------------------------------------
    function HEAD_Set
-      (H : in Unsigned_8)
+      (H : Unsigned_8)
       return Unsigned_8
       is
    begin
@@ -334,10 +334,10 @@ package body IDE
        B       :    out Block_Type;
        Success :    out Boolean)
       is
-      type HD_Buffer_Type is array (0 .. 255) of Unsigned_16 with
-         Pack => True;
-      Buffer : HD_Buffer_Type with
-         Address => B (0)'Address;
+      type HD_Buffer_Type is array (0 .. 255) of Unsigned_16
+         with Pack => True;
+      Buffer : HD_Buffer_Type
+         with Address => B (0)'Address;
    begin
       ----------------------------------------------------
       DRIVE_Set (D, MASTER);
@@ -372,10 +372,10 @@ package body IDE
        B       : in     Block_Type;
        Success :    out Boolean)
       is
-      type HD_Buffer_Type is array (0 .. 255) of Unsigned_16 with
-         Pack => True;
-      Buffer : HD_Buffer_Type with
-         Address => B (0)'Address;
+      type HD_Buffer_Type is array (0 .. 255) of Unsigned_16
+         with Pack => True;
+      Buffer : HD_Buffer_Type
+         with Address => B (0)'Address;
    begin
       ----------------------------------------------------
       DRIVE_Set (D, MASTER);

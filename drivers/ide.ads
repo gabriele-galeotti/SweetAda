@@ -41,9 +41,9 @@ package IDE
    for Drive_Type use (0, 1);
 
    -- I/O subprograms access
-   type Port_Read_8_Ptr is access function (Port : in Address) return Unsigned_8;
+   type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
-   type Port_Read_16_Ptr is access function (Port : in Address) return Unsigned_16;
+   type Port_Read_16_Ptr is access function (Port : Address) return Unsigned_16;
    type Port_Write_16_Ptr is access procedure (Port : in Address; Value : in Unsigned_16);
 
    type Descriptor_Type is record
