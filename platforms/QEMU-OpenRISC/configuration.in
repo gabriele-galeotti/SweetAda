@@ -18,14 +18,13 @@ USE_APPLICATION := test-QEMU-OpenRISC
 ################################################################################
 
 CPU       := OpenRISC
-CPU_MODEL := ???
+CPU_MODEL := OR1200
 
 ################################################################################
 # Build system parameters.                                                     #
 #                                                                              #
 ################################################################################
 
-CPU_MODEL                 :=
 GCC_SWITCHES_PLATFORM     :=
 LD_SWITCHES_PLATFORM      := --undefined=vectors --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
