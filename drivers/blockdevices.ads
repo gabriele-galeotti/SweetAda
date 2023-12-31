@@ -20,7 +20,7 @@ with Interfaces;
 with Bits;
 
 package BlockDevices
-   with  Pure => True
+   with Pure => True
    is
 
    --========================================================================--

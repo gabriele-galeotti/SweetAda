@@ -18,7 +18,8 @@
 with CPU;
 with Console;
 
-package body Ethernet is
+package body Ethernet
+   is
 
    --========================================================================--
    --                                                                        --

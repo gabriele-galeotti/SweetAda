@@ -22,7 +22,8 @@ with PCI;
 with Ethernet;
 with PBUF;
 
-package NE2000 is
+package NE2000
+   is
 
    --========================================================================--
    --                                                                        --
@@ -43,8 +44,7 @@ package NE2000 is
    type Port_Read_32_Ptr is access function (Port : Unsigned_16) return Unsigned_32;
    type Port_Write_32_Ptr is access procedure (Port : in Unsigned_16; Value : in Unsigned_32);
 
-   type Descriptor_Type is
-   record
+   type Descriptor_Type is record
       NE2000PCI     : Boolean;
       Device_Number : PCI.Device_Number_Type;
       BAR           : Unsigned_16;

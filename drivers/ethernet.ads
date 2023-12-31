@@ -21,7 +21,8 @@ with Bits;
 with TCPIP;
 with PBUF;
 
-package Ethernet is
+package Ethernet
+   is
 
    --========================================================================--
    --                                                                        --
