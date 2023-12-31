@@ -813,7 +813,7 @@ package body Z8530
          RTxC_XTAL => RTxC_XTAL_TTL
          )));
       Baud_Rate_Set (Descriptor, Channel, Definitions.BR_9600);
-      -- X16 Clock Mode, External Sync Mode, 1 Stop Bit/Character, Parity
+      -- X16 Clock Mode, Monosync Mode, 1 Stop Bit/Character, Parity
       -- EVEN, Parity not Enable
       Register_Write (Descriptor, Channel, WR4, To_U8 (WR4_Type'(
          PAR_ENAB   => False,

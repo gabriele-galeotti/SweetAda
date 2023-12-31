@@ -49,7 +49,8 @@ else ifeq ($(OSTYPE),linux)
 endif
 
 # standard toolchain names
-# toolchains have names like "arm-eabi", "riscv32-elf", "x86_64-pc-linux-gnu", etc
+# toolchains have names like "arm-eabi", "riscv32-elf", "x86_64-pc-linux-gnu",
+# etc
 TOOLCHAIN_NAME_AArch64    := aarch64-elf
 TOOLCHAIN_NAME_ARM        := arm-eabi
 TOOLCHAIN_NAME_ARMeb      := armeb-eabi
