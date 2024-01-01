@@ -22,7 +22,8 @@ with MMIO;
 with CPU;
 with Console;
 
-package body NE2000 is
+package body NE2000
+   is
 
    --========================================================================--
    --                                                                        --
@@ -146,18 +147,16 @@ package body NE2000 is
    PAGE2 : constant := 2#10#;
    PAGE3 : constant := 2#11#;
 
-   type CR_Type is
-   record
+   type CR_Type is record
       STP : Boolean; -- STOP
       STA : Boolean; -- START
       TXP : Boolean; -- TRANSMIT PACKET
       RD  : Bits_3;  -- REMOTE DMA COMMAND
       PS  : PS_Type; -- PAGE SELECT
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CR_Type use record
       STP at 0 range 0 .. 0;
       STA at 0 range 1 .. 1;
       TXP at 0 range 2 .. 2;
@@ -183,8 +182,7 @@ package body NE2000 is
    -- TSR: Transmit Status Register (04H; Type=R in Page0)
    ----------------------------------------------------------------------------
 
-   type TSR_Type is
-   record
+   type TSR_Type is record
       PTX    : Boolean; -- PACKET TRANSMITTED
       Unused : Bits_1;
       COL    : Boolean; -- TRANSMIT COLLIDED
@@ -193,11 +191,10 @@ package body NE2000 is
       FU     : Boolean; -- FIFO UNDERRUN not present in RTL8029
       CDH    : Boolean; -- CD HEARTBEAT
       OWC    : Boolean; -- OUT OF WINDOW COLLISION
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TSR_Type use record
      PTX    at 0 range 0 .. 0;
      Unused at 0 range 1 .. 1;
      COL    at 0 range 2 .. 2;
@@ -212,8 +209,7 @@ package body NE2000 is
    -- ISR: Interrupt Status Register (07H; Type=R/W in Page0)
    ----------------------------------------------------------------------------
 
-   type ISR_Type is
-   record
+   type ISR_Type is record
       PRX : Boolean;
       PTX : Boolean;
       RXE : Boolean;
@@ -222,11 +218,10 @@ package body NE2000 is
       CNT : Boolean;
       RDC : Boolean;
       RST : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ISR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ISR_Type use record
      PRX at 0 range 0 .. 0;
      PTX at 0 range 1 .. 1;
      RXE at 0 range 2 .. 2;
@@ -250,8 +245,7 @@ package body NE2000 is
    -- RCR: Receive Configuration Register (0CH; Type=W in Page0, Type=R in Page2)
    ----------------------------------------------------------------------------
 
-   type RCR_Type is
-   record
+   type RCR_Type is record
       SEP    : Boolean; -- SAVE ERRORED PACKETS
       AR     : Boolean; -- ACCEPT RUNT PACKETS
       AB     : Boolean; -- ACCEPT BROADCAST
@@ -259,11 +253,10 @@ package body NE2000 is
       PRO    : Boolean; -- PROMISCUOUS PHYSICAL
       MON    : Boolean; -- MONITOR MODE
       Unused : Bits_2;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RCR_Type use record
       SEP    at 0 range 0 .. 0;
       AR     at 0 range 1 .. 1;
       AB     at 0 range 2 .. 2;
@@ -280,8 +273,7 @@ package body NE2000 is
    -- RSR: Receive Status Register (0CH; Type=R in Page0)
    ----------------------------------------------------------------------------
 
-   type RSR_Type is
-   record
+   type RSR_Type is record
       PRX : Boolean; -- PACKET RECEIVED INTACT
       CRC : Boolean; -- CRC ERROR
       FAE : Boolean; -- FRAME ALIGNMENT ERROR
@@ -290,11 +282,10 @@ package body NE2000 is
       PHY : Boolean; -- PHYSICAL/MULTICAST ADDRESS
       DIS : Boolean; -- RECEIVER DISABLED
       DFR : Boolean; -- DEFERRING
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RSR_Type use record
       PRX at 0 range 0 .. 0;
       CRC at 0 range 1 .. 1;
       FAE at 0 range 2 .. 2;
@@ -317,18 +308,16 @@ package body NE2000 is
    LB_External2 : constant := 2#10#; -- LOOPBACK MODE 2
    LB_External3 : constant := 2#11#; -- LOOPBACK MODE 3
 
-   type TCR_Type is
-   record
+   type TCR_Type is record
       CRC    : Boolean; -- INHIBIT CRC
       LB     : Bits_2;  -- ENCODED LOOPBACK CONTROL
       ATD    : Boolean; -- AUTO TRANSMIT DISABLE
       OFST   : Boolean; -- COLLISION OFFSET ENABLE
       Unused : Bits_3;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for TCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TCR_Type use record
       CRC    at 0 range 0 .. 0;
       LB     at 0 range 1 .. 2;
       ATD    at 0 range 3 .. 3;
@@ -348,8 +337,7 @@ package body NE2000 is
    FT4 : constant := 2#10#; -- 4 word, 8 bytes
    FT6 : constant := 2#11#; -- 6 word, 12 bytes
 
-   type DCR_Type is
-   record
+   type DCR_Type is record
       WTS    : Boolean; -- WORD TRANSFER SELECT False => byte-wide, True => word-wide (16-bit)
       BOS    : Boolean; -- BYTE ORDER SELECT
       LAS    : Boolean; -- LONG ADDRESS SELECT
@@ -357,11 +345,10 @@ package body NE2000 is
       AR     : Boolean; -- AUTO-INITIALIZE REMOTE
       FT     : Bits_2;  -- FIFO THRESHOLD SELECT
       Unused : Bits_1;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for DCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DCR_Type use record
       WTS    at 0 range 0 .. 0;
       BOS    at 0 range 1 .. 1;
       LAS    at 0 range 2 .. 2;
@@ -377,8 +364,7 @@ package body NE2000 is
    -- IMR: Interrupt Mask Register (0FH; Type=W in Page0, Type=R in Page2)
    ----------------------------------------------------------------------------
 
-   type IMR_Type is
-   record
+   type IMR_Type is record
       PRXE : Boolean;
       PTXE : Boolean;
       RXEE : Boolean;
@@ -387,11 +373,10 @@ package body NE2000 is
       CNTE : Boolean;
       RDCE : Boolean; -- enable remote DMA complete
       RSTE : Boolean; -- not present in original 8390
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for IMR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for IMR_Type use record
      PRXE at 0 range 0 .. 0;
      PTXE at 0 range 1 .. 1;
      RXEE at 0 range 2 .. 2;
@@ -414,19 +399,17 @@ package body NE2000 is
    EEM_Prg9346  : constant := 2#10#; -- 9346 programming
    EEM_CfgWE    : constant := 2#11#; -- Config register write enable
 
-   type CR9346_Type is
-   record
+   type CR9346_Type is record
       EEDO   : Bits_1 := 0; -- state of EEDO pin in auto-load or 9346 programming mode.
       EEDI   : Bits_1 := 0; -- state of EEDI pin in auto-load or 9346 programming mode.
       EESK   : Bits_1 := 0; -- state of EESK pin in auto-load or 9346 programming mode.
       EECS   : Bits_1 := 0; -- state of EECS pin in auto-load or 9346 programming mode.
       Unused : Bits_2 := 0;
       EEM    : Bits_2;      -- These 2 bits select the RTL8029AS operating mode.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CR9346_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CR9346_Type use record
       EEDO   at 0 range 0 .. 0;
       EEDI   at 0 range 1 .. 1;
       EESK   at 0 range 2 .. 2;
@@ -441,16 +424,14 @@ package body NE2000 is
    -- CONFIG0: RTL8029AS Configuration Register 0 (03H; Type=R)
    ----------------------------------------------------------------------------
 
-   type CONFIG0_Type is
-   record
+   type CONFIG0_Type is record
       Unused1 : Bits_2 := 0;
       BNC     : Boolean;     -- RTL8029AS is using the 10Base2 thin cable as its networking medium.
       Unused2 : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CONFIG0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CONFIG0_Type use record
       Unused1 at 0 range 0 .. 1;
       BNC     at 0 range 2 .. 2;
       Unused2 at 0 range 3 .. 7;
@@ -472,18 +453,16 @@ package body NE2000 is
    PL_10Base5 : constant := 2#10#; -- 10Base5
    PL_10Base2 : constant := 2#11#; -- 10Base2
 
-   type CONFIG2_Type is
-   record
+   type CONFIG2_Type is record
       BS     : Bits_2;      -- Select Boot ROM size
       Unused : Bits_2 := 0;
       PF     : Boolean;     -- Pause Flag
       FCE    : Boolean;     -- Flow Control Enable
       PL     : Bits_2;      -- Select network medium types.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CONFIG2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CONFIG2_Type use record
       BS     at 0 range 0 .. 1;
       Unused at 0 range 2 .. 3;
       PF     at 0 range 4 .. 4;
@@ -503,8 +482,7 @@ package body NE2000 is
    LEDS1_L1RXL2TX    : constant := 0;
    LEDS1_L1CRSL2MCSB : constant := 1;
 
-   type CONFIG3_Type is
-   record
+   type CONFIG3_Type is record
       Unused1  : Bits_1 := 0;
       PWRDN    : Boolean;     -- This bit, when set, puts RTL8029AS into power down mode.
       SLEEP    : Boolean;     -- This bit, when set, puts RTL8029AS into sleep mode.
@@ -513,11 +491,10 @@ package body NE2000 is
       LEDS1    : Bits_1;      -- These two bits select the outputs to LED2-0 pins.
       FUDUP    : Boolean;     -- When this bit is set, RTL8029AS is set to the full-duplex mode
       Unused2  : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CONFIG3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CONFIG3_Type use record
       Unused1  at 0 range 0 .. 0;
       PWRDN    at 0 range 1 .. 1;
       SLEEP    at 0 range 2 .. 2;
@@ -536,18 +513,16 @@ package body NE2000 is
 
    RING_DESCRIPTOR_SIZE : constant := 4;
 
-   type Ring_Descriptor_Type is
-   record
+   type Ring_Descriptor_Type is record
       Receive_Status      : Unsigned_8;
       Next_Packet_Pointer : Unsigned_8;
       Receive_Byte_Count  : Unsigned_16; -- byte count, including this descriptor
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => RING_DESCRIPTOR_SIZE * Storage_Unit;
-   for Ring_Descriptor_Type use
-   record
-      Receive_Status      at 0 range 0 .. 7;
-      Next_Packet_Pointer at 1 range 0 .. 7;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => RING_DESCRIPTOR_SIZE * Storage_Unit;
+   for Ring_Descriptor_Type use record
+      Receive_Status      at 0 range 0 ..  7;
+      Next_Packet_Pointer at 1 range 0 ..  7;
       Receive_Byte_Count  at 2 range 0 .. 15;
    end record;
 
@@ -560,8 +535,8 @@ package body NE2000 is
    function Port_Address
       (Base_Address : in Unsigned_16;
        R            : in Register_Type)
-      return Unsigned_16 with
-      Inline => True;
+      return Unsigned_16
+      with Inline => True;
    procedure Reset
       (D : in Descriptor_Type);
    procedure Setup
@@ -601,8 +576,14 @@ package body NE2000 is
       (D : in Descriptor_Type)
       is
       BAR : Unsigned_16;
-      function In8 (Port : in Unsigned_16) return Unsigned_8 renames D.Read_8.all;
-      procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
+      function In8
+         (Port : in Unsigned_16)
+         return Unsigned_8
+         renames D.Read_8.all;
+      procedure Out8
+         (Port  : in Unsigned_16;
+          Value : in Unsigned_8)
+         renames D.Write_8.all;
    begin
       BAR := D.BAR;
       Out8 (PA (BAR, RST), In8 (PA (BAR, RST))); -- read = enable RESET, then write = disable RESET
@@ -715,15 +696,22 @@ package body NE2000 is
    -- Interrupt_Handler
    ----------------------------------------------------------------------------
    procedure Interrupt_Handler
-      (Descriptor_Address : in Address) is
-      D      : Descriptor_Type with
-         Address    => Descriptor_Address,
-         Import     => True,
-         Convention => Ada;
+      (Descriptor_Address : in Address)
+      is
+      D      : Descriptor_Type
+         with Address    => Descriptor_Address,
+              Import     => True,
+              Convention => Ada;
       BAR    : Unsigned_16;
       Status : ISR_Type;
-      function In8 (Port : Unsigned_16) return Unsigned_8 renames D.Read_8.all;
-      procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
+      function In8
+         (Port : Unsigned_16)
+         return Unsigned_8
+         renames D.Read_8.all;
+      procedure Out8
+         (Port  : in Unsigned_16;
+          Value : in Unsigned_8)
+         renames D.Write_8.all;
    begin
       BAR := D.BAR;
       -- Page 0 NODMA
@@ -748,7 +736,10 @@ package body NE2000 is
       (D : in out Descriptor_Type)
       is
       BAR : Unsigned_16;
-      procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
+      procedure Out8
+         (Port  : in Unsigned_16;
+          Value : in Unsigned_8)
+         renames D.Write_8.all;
    begin
       BAR := D.BAR;
       -- Page 1 NODMA
@@ -773,12 +764,29 @@ package body NE2000 is
       NIC_Packet_Header : Ring_Descriptor_Type;
       P                 : Pbuf_Ptr;
       Index             : Storage_Offset;
-      function In8 (Port : Unsigned_16) return Unsigned_8 renames D.Read_8.all;
-      function In16 (Port : Unsigned_16) return Unsigned_16 renames D.Read_16.all;
-      function In32 (Port : Unsigned_16) return Unsigned_32 renames D.Read_32.all;
-      procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
-      procedure Setup_DMA_Port (Memory_Address : in Unsigned_16; Byte_Count : in Unsigned_16);
-      procedure Setup_DMA_Port (Memory_Address : in Unsigned_16; Byte_Count : in Unsigned_16) is
+      function In8
+         (Port : Unsigned_16)
+         return Unsigned_8
+         renames D.Read_8.all;
+      function In16
+         (Port : Unsigned_16)
+         return Unsigned_16
+         renames D.Read_16.all;
+      function In32
+         (Port : Unsigned_16)
+         return Unsigned_32
+         renames D.Read_32.all;
+      procedure Out8
+         (Port  : in Unsigned_16;
+          Value : in Unsigned_8)
+         renames D.Write_8.all;
+      procedure Setup_DMA_Port
+         (Memory_Address : in Unsigned_16;
+          Byte_Count     : in Unsigned_16);
+      procedure Setup_DMA_Port
+         (Memory_Address : in Unsigned_16;
+          Byte_Count     : in Unsigned_16)
+         is
       begin
          -- Page 0 NODMA
          Out8 (PA (BAR, CR), To_U8 (CR_PAGE0));
@@ -788,7 +796,8 @@ package body NE2000 is
          Out8 (PA (BAR, RBCR1), HByte (Byte_Count));     -- RBCR1: set remote byte count HI
       end Setup_DMA_Port;
       procedure Packet_Dump_Length;
-      procedure Packet_Dump_Length is
+      procedure Packet_Dump_Length
+         is
       begin
          Console.Print (NIC_Packet_Header.Receive_Status,               Prefix => "RSR:           ", NL => True);
          Console.Print (Integer (NIC_Packet_Header.Receive_Byte_Count), Prefix => "packet length: ", NL => True);
@@ -893,20 +902,30 @@ package body NE2000 is
       (Descriptor_Address : in Address;
        P                  : in Pbuf_Ptr)
       is
-      D          : Descriptor_Type with
-         Address    => Descriptor_Address,
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
+      D          : Descriptor_Type
+         with Address    => Descriptor_Address,
+              Volatile   => True,
+              Import     => True,
+              Convention => Ada;
       BAR        : Unsigned_16;
       Byte_Idx   : Integer;
       Data       : Unsigned_32;
       Irq_State  : CPU.Irq_State_Type;
-      function In8 (Port : Unsigned_16) return Unsigned_8 renames D.Read_8.all;
-      procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
-      procedure Out32 (Port : in Unsigned_16; Value : in Unsigned_32) renames D.Write_32.all;
+      function In8
+         (Port : Unsigned_16)
+         return Unsigned_8
+         renames D.Read_8.all;
+      procedure Out8
+         (Port  : in Unsigned_16;
+          Value : in Unsigned_8)
+         renames D.Write_8.all;
+      procedure Out32
+         (Port  : in Unsigned_16;
+          Value : in Unsigned_32)
+         renames D.Write_32.all;
       procedure Packet_Dump;
-      procedure Packet_Dump is
+      procedure Packet_Dump
+         is
       begin
          Console.Print (P.all.Size, Prefix => "Packet tx is: ", NL => True);
          Console.Print_Memory (Payload_Address (P), Bits.Bytesize (P.all.Size));
