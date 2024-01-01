@@ -5,7 +5,7 @@ package Configure
 
    -- PLATFORM and CPU definitions
    PLATFORM    : constant String := "PC-x86";
-   SUBPLATFORM : constant String := "SUPERMICRO-P6SBA-FD";
+   SUBPLATFORM : constant String := "SUPERMICRO-P6SBA-ROM";
    CPU         : constant String := "@CPU@";
    CPU_MODEL   : constant String := "@CPU_MODEL@";
 
