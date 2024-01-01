@@ -31,7 +31,7 @@ begin
       for Index in Interfaces.C.size_t range 0 .. Maximum_String_Length - 1 loop
          declare
             c : aliased Interfaces.C.char
-               with Address    => String_Address,
+               with Address    => SA,
                     Import     => True,
                     Convention => Ada;
          begin
