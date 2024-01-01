@@ -17,7 +17,9 @@
 
 with System;
 with Interfaces;
+with Interfaces.C;
 with Bits;
+with Memory_Functions;
 with CPU.IO;
 with Videofont8x16;
 
@@ -34,6 +36,7 @@ package body VGA
 
    use System;
    use Interfaces;
+   use type Interfaces.C.size_t;
    use Bits;
 
    Video_Buffer_BaseAddress : Integer_Address := 16#000A_0000#;
@@ -287,11 +290,12 @@ package body VGA
       BG at 0 range 4 .. 7;
    end record;
 
+   TEXT_CHARACTER_SIZE : constant := 2;
    type Text_Character_Type is record
       C          : Unsigned_8;
       Attributes : Text_Character_Attributes_Type;
    end record
-      with Size => 16;
+      with Size => TEXT_CHARACTER_SIZE * Storage_Unit;
    for Text_Character_Type use record
       C          at 0 range 0 .. 7;
       Attributes at 1 range 0 .. 7;
@@ -618,7 +622,7 @@ package body VGA
          with Address    => To_Address (Text_Buffer_BaseAddress),
               Volatile   => True,
               Import     => True,
-         Convention => Ada;
+              Convention => Ada;
       Video_Attributes : constant Text_Character_Attributes_Type := (FG => 16#0A#, BG => 16#00#);
    begin
       Video_Text_Memory (X + Y * VIDEO_TEXT_WIDTH) :=
@@ -654,6 +658,23 @@ package body VGA
          end if;
       end loop;
    end Print;
+
+   ----------------------------------------------------------------------------
+   -- Scroll_Text
+   ----------------------------------------------------------------------------
+   procedure Scroll_Text
+      is
+      BYTES_PER_TEXTLINE : constant := VIDEO_TEXT_WIDTH * TEXT_CHARACTER_SIZE;
+   begin
+      Memory_Functions.Movemem (
+         To_Address (Text_Buffer_BaseAddress) + BYTES_PER_TEXTLINE,
+         To_Address (Text_Buffer_BaseAddress),
+         (VIDEO_TEXT_HEIGHT - 1) * BYTES_PER_TEXTLINE
+         );
+      for X in Video_X_Coordinate_Type'Range loop
+         Print (X, Video_Y_Coordinate_Type'Last, ' ');
+      end loop;
+   end Scroll_Text;
 
    ----------------------------------------------------------------------------
    -- Draw_Pixel
