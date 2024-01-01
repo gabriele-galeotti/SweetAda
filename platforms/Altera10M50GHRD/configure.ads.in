@@ -1,16 +1,20 @@
 
+with Definitions;
+
 package Configure
    with Pure => True
    is
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM : constant String := "Altera10M50GHRD";
    CPU      : constant String := "@CPU@";
 
    -- basic configuration parameters
-   TIMER_SYSCLK          : constant := 75_000_000;
-   TIMER_1_SYSCLK        : constant := 75_000_000;
-   TICK_FREQUENCY        : constant := 1_000;
+   TIMER_SYSCLK          : constant := 75 * MHz1;
+   TIMER_1_SYSCLK        : constant := 75 * MHz1;
+   TICK_FREQUENCY        : constant := 1 * kHz1;
    RESET_ADDRESS         : constant := @RESET_ADDRESS@;
    EXCEPTION_ADDRESS     : constant := @EXCEPTION_ADDRESS@;
    FAST_TLB_MISS_ADDRESS : constant := @FAST_TLB_MISS_ADDRESS@;

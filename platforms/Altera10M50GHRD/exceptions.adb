@@ -21,7 +21,8 @@ with GHRD;
 with BSP;
 with IOEMU;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -36,7 +37,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process is
+   procedure Irq_Process
+      is
    begin
       if GHRD.Timer.Status.TO then
          BSP.Tick_Count := @ + 1;
@@ -51,6 +53,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is null;
+   procedure Init
+      is
+   null;
 
 end Exceptions;

@@ -49,42 +49,37 @@ package GHRD is
    -- Timer
    ----------------------------------------------------------------------------
 
-   type Timer_Status_Type is
-   record
+   type Timer_Status_Type is record
       TO       : Boolean := False;
       RUN      : Boolean := False;
       Reserved : Bits_30 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Timer_Status_Type use
-   record
-      TO       at 0 range 0 .. 0;
-      RUN      at 0 range 1 .. 1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Timer_Status_Type use record
+      TO       at 0 range 0 ..  0;
+      RUN      at 0 range 1 ..  1;
       Reserved at 0 range 2 .. 31;
    end record;
 
-   type Timer_Control_Type is
-   record
+   type Timer_Control_Type is record
       ITO      : Boolean := False;
       CONT     : Boolean := False;
       START    : Boolean := False;
       STOP     : Boolean := False;
       Reserved : Bits_28 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Timer_Control_Type use
-   record
-      ITO      at 0 range 0 .. 0;
-      CONT     at 0 range 1 .. 1;
-      START    at 0 range 2 .. 2;
-      STOP     at 0 range 3 .. 3;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Timer_Control_Type use record
+      ITO      at 0 range 0 ..  0;
+      CONT     at 0 range 1 ..  1;
+      START    at 0 range 2 ..  2;
+      STOP     at 0 range 3 ..  3;
       Reserved at 0 range 4 .. 31;
    end record;
 
-   type Timer_Type is
-   record
+   type Timer_Type is record
       Status  : Timer_Status_Type  with Volatile_Full_Access => True;
       Control : Timer_Control_Type with Volatile_Full_Access => True;
       PeriodL : Unsigned_32        with Volatile_Full_Access => True; -- 16-bit
@@ -93,8 +88,7 @@ package GHRD is
       SnapH   : Unsigned_32        with Volatile_Full_Access => True; -- 16-bit
    end record with
       Size => 6 * 32;
-   for Timer_Type use
-   record
+   for Timer_Type use record
       Status  at 16#00# range 0 .. 31;
       Control at 16#04# range 0 .. 31;
       PeriodL at 16#08# range 0 .. 31;
@@ -105,19 +99,19 @@ package GHRD is
 
    TIMER_ADDRESS : constant := 16#F800_1440#;
 
-   Timer : aliased Timer_Type with
-      Address    => To_Address (TIMER_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   Timer : aliased Timer_Type
+      with Address    => To_Address (TIMER_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    TIMER_1_ADDRESS : constant := 16#E000_0880#;
 
-   Timer_1 : aliased Timer_Type with
-      Address    => To_Address (TIMER_1_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   Timer_1 : aliased Timer_Type
+      with Address    => To_Address (TIMER_1_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- subprograms

@@ -26,7 +26,8 @@ with GHRD;
 with Exceptions;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -54,12 +55,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       UART16x50.TX (UART_Descriptor, To_U8 (C));
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       UART16x50.RX (UART_Descriptor, Data);
@@ -94,9 +99,9 @@ package body BSP is
       -------------------------------------------------------------------------
       Tclk_Init;
       NiosII.ienable_Write (Bitmap_32'(
-                                       NiosII.IRQ0 => True, -- enable timer irq
-                                       others      => False
-                                      ));
+         NiosII.IRQ0 => True, -- enable timer irq
+         others      => False
+         ));
       CPU.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
