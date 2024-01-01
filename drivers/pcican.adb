@@ -22,7 +22,8 @@ with Bits;
 with CPU.IO;
 with Console;
 
-package body PCICAN is
+package body PCICAN
+   is
 
    --========================================================================--
    --                                                                        --
