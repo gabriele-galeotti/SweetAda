@@ -299,7 +299,7 @@ package body MC146818A
          end if;
       end Adjust_BCD;
    begin
-      CPU.Irq_Disable;
+      -- CPU.Irq_Disable; __FIX__
       while True loop
          exit when not To_RA (Register_Read (D, RegisterA)).UIP;
       end loop;
@@ -312,7 +312,7 @@ package body MC146818A
       RTC_Month      := Register_Read (D, Month);
       RTC_Year       := Register_Read (D, Year);
       RTC_RB         := To_RB (Register_Read (D, RegisterB));
-      CPU.Irq_Enable;
+      -- CPU.Irq_Enable; __FIX__
       RTC_BCD := not RTC_RB.DM;
       T.IsDST := (if RTC_RB.DSE then 1 else 0);
       T.Sec   := Natural (Adjust_BCD (RTC_Second, RTC_BCD));
