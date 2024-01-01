@@ -120,7 +120,8 @@ package body Gdbstub
    procedure Packet_Dump
       (Packet_Source : in Packet_Source_Type;
        Packet_String : in String;
-       Packet_Length : in Natural) is
+       Packet_Length : in Natural)
+      is
       Prefix : String (1 .. 6);
    begin
       case Packet_Source is
