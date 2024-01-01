@@ -113,6 +113,8 @@ package PCI
    DEVICE_ID_PIIX3        : constant Device_Id_Type := 16#7000#; -- 82371SB PIIX3 [Natoma/Triton II]
    DEVICE_ID_82437VX      : constant Device_Id_Type := 16#7030#; -- 82437VX TVX 430VX [Triton VX]
    DEVICE_ID_PIIX4        : constant Device_Id_Type := 16#7110#; -- 82371AB/EB/MB PIIX4
+   DEVICE_ID_82443BX      : constant Device_Id_Type := 16#7190#; -- 82443BX/ZX/DX Host bridge
+   DEVICE_ID_82443BXAGP   : constant Device_Id_Type := 16#7191#; -- 82443BX/ZX/DX AGP bridge
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
