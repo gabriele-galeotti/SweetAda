@@ -20,7 +20,8 @@ with Bits;
 with Android;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -46,12 +47,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       null;
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       Data := 0;
@@ -61,7 +66,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       Android.Print_Message ("*******************" & CRLF);

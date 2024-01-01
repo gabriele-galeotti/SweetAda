@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package Android is
+package Android
+   is
 
    --========================================================================--
    --                                                                        --
@@ -25,7 +26,9 @@ package Android is
    --                                                                        --
    --========================================================================--
 
-   procedure System_Exit (Exit_Status : in Integer);
-   procedure Print_Message (Message : in String);
+   procedure System_Exit
+      (Exit_Status : in Integer);
+   procedure Print_Message
+      (Message : in String);
 
 end Android;

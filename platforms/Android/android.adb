@@ -19,7 +19,8 @@ with System;
 with System.Machine_Code;
 with Definitions;
 
-package body Android is
+package body Android
+   is
 
    --========================================================================--
    --                                                                        --
@@ -47,7 +48,9 @@ package body Android is
    ----------------------------------------------------------------------------
    -- System_Exit
    ----------------------------------------------------------------------------
-   procedure System_Exit (Exit_Status : in Integer) is
+   procedure System_Exit
+      (Exit_Status : in Integer)
+      is
    begin
       Asm (
            Template => ""                      & CRLF &
@@ -68,7 +71,9 @@ package body Android is
    ----------------------------------------------------------------------------
    -- Print_Message
    ----------------------------------------------------------------------------
-   procedure Print_Message (Message : in String) is
+   procedure Print_Message
+      (Message : in String)
+      is
    begin
       Asm (
            Template => ""                      & CRLF &
