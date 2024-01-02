@@ -53,7 +53,7 @@ APPLICATION_TYPE := QEMU
 ifeq      ($(APPLICATION_TYPE),ROM)
 
 USE_APPLICATION := test-SPARCstation5
-LD_SCRIPT       := linker.lds-ROM
+LD_SCRIPT       := linker-ROM.lds
 
 GCC_SWITCHES_LOWLEVEL_PLATFORM += -DRELOCATE_DATA=1
 
@@ -65,7 +65,7 @@ DEBUG_COMMAND := $(RUN_COMMAND)
 else ifeq ($(APPLICATION_TYPE),RAM)
 
 USE_APPLICATION := test-SPARCstation5
-LD_SCRIPT       := linker.lds-RAM
+LD_SCRIPT       := linker-RAM.lds
 
 GCC_SWITCHES_LOWLEVEL_PLATFORM += -DRELOCATE_DATA=0
 
@@ -77,7 +77,7 @@ DEBUG_COMMAND :=
 
 else ifeq ($(APPLICATION_TYPE),QEMU)
 
-LD_SCRIPT            := linker.lds-ROM
+LD_SCRIPT            := linker-ROM.lds
 USE_APPLICATION      := test-SPARCstation5
 
 GCC_SWITCHES_LOWLEVEL_PLATFORM += -DRELOCATE_DATA=1
@@ -92,7 +92,7 @@ DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT) -debug
 
 else ifeq ($(APPLICATION_TYPE),networkboot)
 
-LD_SCRIPT            := linker.lds-networkboot
+LD_SCRIPT            := linker-networkboot.lds
 USE_APPLICATION      := test-SPARCstation5
 
 GCC_SWITCHES_LOWLEVEL_PLATFORM += -DRELOCATE_DATA=0
@@ -106,7 +106,7 @@ export TFTP_FILENAME := C0A80202.SUN4M
 
 else ifeq ($(APPLICATION_TYPE),srecord)
 
-LD_SCRIPT            := linker.lds-srecord
+LD_SCRIPT            := linker-srecord.lds
 USE_APPLICATION      := test-srecord
 POSTBUILD_COMMAND := $(SHELL_EXEC) postbuild-srecord$(SCREXT)
 
