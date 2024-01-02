@@ -25,7 +25,8 @@ with Virt;
 with BSP;
 with IOEMU;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --

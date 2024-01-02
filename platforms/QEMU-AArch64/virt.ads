@@ -19,7 +19,9 @@ with System.Storage_Elements;
 with Bits;
 with GICv2;
 
-package Virt is
+package Virt
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package Virt is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Elaborate_Body;
 
    use System.Storage_Elements;
    use Bits;

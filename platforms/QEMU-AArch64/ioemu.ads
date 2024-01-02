@@ -18,7 +18,8 @@
 with System.Storage_Elements;
 with Interfaces;
 
-package IOEMU is
+package IOEMU
+   is
 
    --========================================================================--
    --                                                                        --

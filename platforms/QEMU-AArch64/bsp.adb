@@ -29,7 +29,8 @@ with Virt;
 with Exceptions;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -67,7 +68,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
       is
    begin
       return BSP_SS_Stack;
