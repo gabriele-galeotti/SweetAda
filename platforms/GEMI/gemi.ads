@@ -19,7 +19,9 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 
-package GEMI is
+package GEMI
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package GEMI is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   pragma Preelaborate;
 
    use System;
    use System.Storage_Elements;

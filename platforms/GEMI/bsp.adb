@@ -25,7 +25,8 @@ with SH;
 with GEMI;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -41,11 +42,13 @@ package body BSP is
    use Bits;
    use Interfaces;
 
-   procedure GEMI_Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gemi_last_chance_handler",
-      No_Return     => True;
+   procedure GEMI_Last_Chance_Handler
+      (Source_Location : in System.Address;
+       Line            : in Integer)
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gemi_last_chance_handler",
+           No_Return     => True;
 
    --========================================================================--
    --                                                                        --
@@ -58,7 +61,10 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- GEMI_Last_Chance_Handler
    ----------------------------------------------------------------------------
-   procedure GEMI_Last_Chance_Handler (Source_Location : in System.Address; Line : in Integer) is
+   procedure GEMI_Last_Chance_Handler
+      (Source_Location : in System.Address;
+       Line            : in Integer)
+      is
       pragma Unreferenced (Source_Location);
       pragma Unreferenced (Line);
       Delay_Count : constant := 30_000;
@@ -77,12 +83,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       UART16x50.TX (UART_Descriptor, To_U8 (C));
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       UART16x50.RX (UART_Descriptor, Data);
