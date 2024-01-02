@@ -20,7 +20,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package NEORV32 is
+package NEORV32
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -35,8 +37,7 @@ package NEORV32 is
    use Interfaces;
    use Bits;
 
-   type CTRL_Type is
-   record
+   type CTRL_Type is record
       EN            : Boolean;     -- UART global enable
       SIM_MODE      : Boolean;     -- Simulation output override enable
       HWFC_EN       : Boolean;     -- Enable RTS/CTS hardware flow-control
@@ -59,8 +60,7 @@ package NEORV32 is
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for CTRL_Type use
-   record
+   for CTRL_Type use record
       EN            at 0 range 0 .. 0;
       SIM_MODE      at 0 range 1 .. 1;
       HWFC_EN       at 0 range 2 .. 2;
@@ -82,8 +82,7 @@ package NEORV32 is
       TX_BUSY       at 0 range 31 .. 31;
    end record;
 
-   type DATA_Type is
-   record
+   type DATA_Type is record
       RTX          : Unsigned_8;   -- UART receive/transmit data
       RX_FIFO_SIZE : Bits_4 := 0;  -- log2(RX FIFO size)
       TX_FIFO_SIZE : Bits_4 := 0;  -- log2(TX FIFO size)
@@ -91,22 +90,19 @@ package NEORV32 is
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for DATA_Type use
-   record
+   for DATA_Type use record
       RTX          at 0 range 0 .. 7;
       RX_FIFO_SIZE at 0 range 8 .. 11;
       TX_FIFO_SIZE at 0 range 12 .. 15;
       Reserved     at 0 range 16 .. 31;
    end record;
 
-   type UART_Type is
-   record
+   type UART_Type is record
       CTRL : CTRL_Type with Volatile_Full_Access => True;
       DATA : DATA_Type with Volatile_Full_Access => True;
    end record
       with Size => 2 * 32;
-   for UART_Type use
-   record
+   for UART_Type use record
       CTRL at 0 range 0 .. 31;
       DATA at 4 range 0 .. 31;
    end record;

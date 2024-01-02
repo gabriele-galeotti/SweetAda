@@ -26,7 +26,8 @@ with MTIME;
 with Console;
 with BSP;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -53,7 +54,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
       mcause : mcause_Type;
    begin
       mcause := mcause_Read;
@@ -76,7 +78,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
       Vectors : aliased Asm_Entry_Point
          with Import        => True,
               External_Name => "vectors";

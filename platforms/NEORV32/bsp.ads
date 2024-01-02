@@ -17,7 +17,8 @@
 
 with Interfaces;
 
-package BSP is
+package BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,17 +28,19 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
-      Atomic        => True,
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "tick_count";
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0
+      with Atomic        => True,
+           Export        => True,
+           Convention    => Asm,
+           External_Name => "tick_count";
 
    Timer_Constant : constant := 16#10_000#;
    Timer_Value    : Interfaces.Unsigned_64;
 
-   procedure Console_Putchar (C : in Character) with Inline => True;
-   procedure Console_Getchar (C : out Character);
+   procedure Console_Putchar
+      (C : in Character);
+   procedure Console_Getchar
+      (C : out Character);
    procedure Setup;
 
 end BSP;
