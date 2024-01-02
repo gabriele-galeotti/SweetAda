@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body P8 is
+package body P8
+   is
 
    --========================================================================--
    --                                                                        --

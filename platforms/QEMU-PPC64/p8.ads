@@ -21,7 +21,9 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
-package P8 is
+package P8
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --

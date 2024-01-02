@@ -21,7 +21,8 @@ with CPU;
 with P8;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
