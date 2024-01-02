@@ -22,7 +22,8 @@ with Bits;
 with MIPS;
 with R3000;
 
-package KN02BA is
+package KN02BA
+   is
 
    --========================================================================--
    --                                                                        --
@@ -69,8 +70,7 @@ package KN02BA is
 
    -- SSR System Support Register ---------------------------------------------
 
-   type IOASIC_SSR_Type is
-   record
+   type IOASIC_SSR_Type is record
       LED0        : Boolean := True;   -- .... O... rear LEDs, 0=on, 1=off
       LED1        : Boolean := True;   -- .... .O..
       LED2        : Boolean := True;   -- .... ..O.
@@ -88,11 +88,10 @@ package KN02BA is
       TXDIS1      : Boolean := False;  -- active low
       DIAGDN      : Boolean := False;
       Unused2     : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for IOASIC_SSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for IOASIC_SSR_Type use record
       LED0        at 0 range 0 .. 0;
       LED1        at 0 range 1 .. 1;
       LED2        at 0 range 2 .. 2;
@@ -114,18 +113,17 @@ package KN02BA is
 
    IOASIC_SSR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0100#;
 
-   IOASIC_SSR : aliased IOASIC_SSR_Type with
-      Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   IOASIC_SSR : aliased IOASIC_SSR_Type
+      with Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- SIR/SIMR System Interrupt (Mask) Register -------------------------------
 
    -- .../include/asm-mips/dec/kn02ba.h
    -- I/O ASIC interrupt bits. Star marks denote non-IRQ status bits.
-   type IOASIC_SI_Type is
-   record
+   type IOASIC_SI_Type is record
       PBNO      : Boolean;      -- button debouncer
       PBNC      : Boolean;      -- ~HALT button debouncer
       SCSI_FIFO : Boolean;      -- <ASC_DATA> SCSI data ready (for PIO)
@@ -142,11 +140,10 @@ package KN02BA is
       Unused3   : Bits_1 := 0;
       NVRAM     : Boolean;      -- (*) NVRAM clear jumper
       Unused_4  : Bits_17 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for IOASIC_SI_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for IOASIC_SI_Type use record
       PBNO      at 0 range 0 .. 0;
       PBNC      at 0 range 1 .. 1;
       SCSI_FIFO at 0 range 2 .. 2;
@@ -167,34 +164,36 @@ package KN02BA is
 
    IOASIC_SIR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0110#;
 
-   IOASIC_SIR : aliased IOASIC_SI_Type with
-      Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SIR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   IOASIC_SIR : aliased IOASIC_SI_Type
+      with Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SIR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    IOASIC_SIMR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0120#;
 
-   IOASIC_SIMR : aliased IOASIC_SI_Type with
-      Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SIMR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   IOASIC_SIMR : aliased IOASIC_SI_Type
+      with Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SIMR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- SAR System Address Register ---------------------------------------------
 
    IOASIC_SAR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0130#;
 
-   IOASIC_SAR : aliased Unsigned_32 with
-      Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SAR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   IOASIC_SAR : aliased Unsigned_32
+      with Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SAR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Utility subprograms -----------------------------------------------------
 
    -- ROM code use a NOP when operating with I/O ports
-   function Read32_NOP (Memory_Address : Address) return Unsigned_32 with
-      Inline => True;
+   function Read32_NOP
+      (Memory_Address : Address)
+      return Unsigned_32
+      with Inline => True;
 
 end KN02BA;

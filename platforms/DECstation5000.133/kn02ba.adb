@@ -18,7 +18,8 @@
 with System.Machine_Code;
 with Definitions;
 
-package body KN02BA is
+package body KN02BA
+   is
 
    --========================================================================--
    --                                                                        --
@@ -42,7 +43,10 @@ package body KN02BA is
    ----------------------------------------------------------------------------
    -- Read32_NOP
    ----------------------------------------------------------------------------
-   function Read32_NOP (Memory_Address : Address) return Unsigned_32 is
+   function Read32_NOP
+      (Memory_Address : Address)
+      return Unsigned_32
+      is
       Result : Unsigned_32;
    begin
       Asm (
