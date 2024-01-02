@@ -28,9 +28,9 @@ FPU_MODEL := M68881
 
 GCC_SWITCHES_PLATFORM     := -mcpu=68020 -m68881
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
-LD_SCRIPT                 := linker.lds-rom
-#LD_SCRIPT                 := linker.lds-chipram # S-record download
-#LD_SCRIPT                 := linker.lds-fastram # S-record download
+LD_SCRIPT                 := linker-rom.lds
+#LD_SCRIPT                 := linker-chipram.lds # S-record download
+#LD_SCRIPT                 := linker-fastram.lds # S-record download
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 POSTBUILD_ROMFILE         := Y
