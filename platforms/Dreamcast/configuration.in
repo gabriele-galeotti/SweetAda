@@ -51,14 +51,14 @@ export BOOT_TYPE := ROM
 #export BOOT_TYPE := NETWORK
 
 ifeq      ($(BOOT_TYPE),ROM)
-LD_SCRIPT := linker.lds-ROM
+LD_SCRIPT := linker-ROM.lds
 export GXEMUL := Y
 else ifeq ($(BOOT_TYPE),CD-ROM)
-LD_SCRIPT := linker.lds-CD-ROM
+LD_SCRIPT := linker-CD-ROM.lds
 POSTBUILD_COMMAND := $(SHELL_EXEC) postbuild-cdrom$(SCREXT)
 export GXEMUL := Y
 else ifeq ($(BOOT_TYPE),NETWORK)
-LD_SCRIPT := linker.lds-networkboot
+LD_SCRIPT := linker-networkboot.lds
 export GXEMUL := N
 endif
 
