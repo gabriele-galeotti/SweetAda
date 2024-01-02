@@ -16,12 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Abort_Library)
-procedure System_Abort (
-                        File    : in System.Address;
-                        Line    : in Integer;
-                        Column  : in Integer;
-                        Message : in System.Address
-                       ) is
+procedure System_Abort
+   (File    : in System.Address;
+    Line    : in Integer;
+    Column  : in Integer;
+    Message : in System.Address)
+   is
    pragma Unreferenced (File);
    pragma Unreferenced (Line);
    pragma Unreferenced (Column);

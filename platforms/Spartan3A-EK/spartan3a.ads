@@ -20,7 +20,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package Spartan3A is
+package Spartan3A
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -35,17 +37,15 @@ package Spartan3A is
    use Interfaces;
    use Bits;
 
-   type GPIO_Type is
-   record
+   type GPIO_Type is record
       GPIO_DATA  : Bitmap_32 with Volatile_Full_Access => True;
       GPIO_TRI   : Bitmap_32 with Volatile_Full_Access => True;
       GPIO2_DATA : Bitmap_32 with Volatile_Full_Access => True;
       GPIO2_TRI  : Bitmap_32 with Volatile_Full_Access => True;
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 16 * 8;
-   for GPIO_Type use
-   record
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 16 * 8;
+   for GPIO_Type use record
       GPIO_DATA  at 16#00# range 0 .. 31;
       GPIO_TRI   at 16#04# range 0 .. 31;
       GPIO2_DATA at 16#08# range 0 .. 31;
@@ -54,10 +54,10 @@ package Spartan3A is
 
    LEDs_BASEADDRESS : constant := 16#8142_0000#;
 
-   LEDs : aliased GPIO_Type with
-      Address    => To_Address (LEDs_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   LEDs : aliased GPIO_Type
+      with Address    => To_Address (LEDs_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end Spartan3A;
