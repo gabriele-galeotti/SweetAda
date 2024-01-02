@@ -66,8 +66,9 @@ ads_filename = package_name.lower() + '.ads'
 fdout = open(ads_filename, 'w')
 sys.stdout = fdout
 
-print('package {} is'.format(package_name))
-print('   pragma Pure;')
+print('package {}'.format(package_name))
+print('   with Pure => True')
+print('   is')
 
 tree = ET.parse(qsys_filename)
 root = tree.getroot()

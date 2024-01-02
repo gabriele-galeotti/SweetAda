@@ -21,7 +21,8 @@ with Console;
 with CPU;
 with DE10Lite;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -48,7 +49,9 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -57,7 +60,9 @@ package body BSP is
       JTAG_UART.data.DATA := To_U8 (C);
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       -- wait for receiver available
@@ -71,7 +76,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -- JTAG UART ------------------------------------------------------------
       JTAG_UART.control := (
