@@ -18,7 +18,8 @@
 with Interfaces;
 with Z8530;
 
-package BSP is
+package BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,19 +29,21 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
-      Atomic        => True,
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "tick_count";
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0
+      with Atomic        => True,
+           Export        => True,
+           Convention    => Asm,
+           External_Name => "tick_count";
 
    -- serial port "2"
    SCC_Descriptor1 : aliased Z8530.Descriptor_Type := Z8530.DESCRIPTOR_INVALID;
    -- serial port "3"
    SCC_Descriptor2 : aliased Z8530.Descriptor_Type := Z8530.DESCRIPTOR_INVALID;
 
-   procedure Console_Putchar (C : in Character);
-   procedure Console_Getchar (C : out Character);
+   procedure Console_Putchar
+      (C : in Character);
+   procedure Console_Getchar
+      (C : out Character);
    procedure Setup;
 
 end BSP;

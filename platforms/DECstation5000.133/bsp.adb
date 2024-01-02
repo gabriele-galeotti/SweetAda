@@ -29,7 +29,8 @@ with KN02BA;
 with Exceptions;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -48,10 +49,11 @@ package body BSP is
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_get_secondary_stack";
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -64,7 +66,9 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      is
    begin
       return BSP_SS_Stack;
    end Get_Sec_Stack;
@@ -73,13 +77,17 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       -- Z8530.TX (SCC_Descriptor1, Z8530.CHANNELB, To_U8 (C)); -- SCC0 serial port "2"
       Z8530.TX (SCC_Descriptor2, Z8530.CHANNELB, To_U8 (C)); -- SCC1 serial port "3"
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       -- Z8530.RX (SCC_Descriptor1, Z8530.CHANNELB, Data); -- SCC0 serial port "2"
@@ -90,7 +98,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
