@@ -52,7 +52,7 @@ package body Winbond_W83977
           (16#2#, 16#61#, 16#F8#), -- CR61: ''
           -- COM2
           (16#3#, 16#30#, 16#01#), -- CR30: Activates the logical device.
-          (16#3#, 16#60#, 16#02#), -- CR60: These two registers select Serial Port 1 I/O base address ...
+          (16#3#, 16#60#, 16#02#), -- CR60: These two registers select Serial Port 2 I/O base address ...
           (16#3#, 16#61#, 16#F8#), -- CR61: ''
           -- ACPI
           (16#A#, 16#30#, 16#01#), -- CR30: Activates the logical device.
