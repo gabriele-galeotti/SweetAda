@@ -26,7 +26,8 @@ with MTIME;
 with Console;
 with BSP;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --

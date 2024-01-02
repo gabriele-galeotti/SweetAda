@@ -21,7 +21,9 @@ with Interfaces;
 with Bits;
 with RISCV;
 
-package HiFive1 is
+package HiFive1
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
