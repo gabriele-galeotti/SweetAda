@@ -617,6 +617,7 @@ export                           \
        PLATFORM_BASE_DIRECTORY   \
        PLATFORM_DIRECTORY        \
        PLATFORM_DIRECTORY_CMD    \
+       CPUS                      \
        CPU_BASE_DIRECTORY        \
        CPU_DIRECTORY             \
        CPU_DIRECTORY_CMD         \
@@ -628,46 +629,18 @@ export                           \
        MODULES_DIRECTORY         \
        LIBRARY_DIRECTORY         \
        OBJECT_DIRECTORY          \
-       RTS_DIRECTORY             \
-       SHARE_DIRECTORY           \
-       RTS_BASE_PATH             \
-       GNATADC_FILENAME          \
-       CPUS                      \
        RTSES                     \
+       RTS_DIRECTORY             \
+       RTS_BASE_PATH             \
+       SHARE_DIRECTORY           \
+       GNATADC_FILENAME          \
        INCLUDE_DIRECTORIES       \
        IMPLICIT_CORE_UNITS       \
        IMPLICIT_CLIBRARY_UNITS   \
        IMPLICIT_ALI_UNITS        \
-       POSTBUILD_COMMAND         \
-       CONFIGURE_FILES_PLATFORM  \
        CLEAN_OBJECTS_COMMON      \
        DISTCLEAN_OBJECTS_COMMON  \
-       CONFIGURE_DEPS            \
-       CPU_SUPPORT_DEFLIST
-
-# configuration
-export                                \
-       PLATFORM                       \
-       SUBPLATFORM                    \
-       CPU                            \
-       CPU_MODEL                      \
-       FPU_MODEL                      \
-       RTS                            \
-       PROFILE                        \
-       ADA_MODE                       \
-       USE_LIBGCC                     \
-       USE_LIBM                       \
-       USE_LIBADA                     \
-       USE_CLIBRARY                   \
-       BUILD_MODE                     \
-       OPTIMIZATION_LEVEL             \
-       GCC_SWITCHES_PLATFORM          \
-       LOWLEVEL_FILES_PLATFORM        \
-       GCC_SWITCHES_LOWLEVEL_PLATFORM \
-       EXTERNAL_OBJECTS               \
-       STACK_LIMIT                    \
-       USE_APPLICATION                \
-       GNATBIND_SECSTACK
+       CONFIGURE_DEPS
 
 # toolchain
 export                           \
@@ -729,6 +702,33 @@ export                           \
        READELF                   \
        SIZE                      \
        STRIP
+
+# configuration
+export                                \
+       PLATFORM                       \
+       SUBPLATFORM                    \
+       CPU                            \
+       CPU_MODEL                      \
+       FPU_MODEL                      \
+       BUILD_MODE                     \
+       OPTIMIZATION_LEVEL             \
+       RTS                            \
+       PROFILE                        \
+       ADA_MODE                       \
+       USE_LIBGCC                     \
+       USE_LIBM                       \
+       USE_LIBADA                     \
+       USE_CLIBRARY                   \
+       USE_APPLICATION                \
+       CONFIGURE_FILES_PLATFORM       \
+       GCC_SWITCHES_PLATFORM          \
+       LOWLEVEL_FILES_PLATFORM        \
+       GCC_SWITCHES_LOWLEVEL_PLATFORM \
+       EXTERNAL_OBJECTS               \
+       STACK_LIMIT                    \
+       GNATBIND_SECSTACK              \
+       POSTBUILD_COMMAND              \
+       CPU_SUPPORT_DEFLIST
 
 export USE_ELFTOOL
 ifeq ($(USE_ELFTOOL),Y)
