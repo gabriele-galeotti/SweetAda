@@ -30,11 +30,11 @@ CPU := AVR
 
 #CPU_MODEL             := ATMEGA128A
 #GCC_SWITCHES_PLATFORM := -mmcu=atmega128a
-#LD_SCRIPT             := linker.lds-avr51
+#LD_SCRIPT             := linker-avr51.lds
 #LD_SWITCHES_PLATFORM  := -m avr51 --undefined=vectors
 CPU_MODEL             := ATMEGA328P
 GCC_SWITCHES_PLATFORM := -mmcu=atmega328p
-LD_SCRIPT             := linker.lds-avr5
+LD_SCRIPT             := linker-avr5.lds
 LD_SWITCHES_PLATFORM  := -m avr5 --undefined=vectors
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
