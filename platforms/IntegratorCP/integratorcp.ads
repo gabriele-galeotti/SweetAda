@@ -20,7 +20,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package IntegratorCP is
+package IntegratorCP
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -44,8 +46,7 @@ package IntegratorCP is
 
    -- 3.6.1 Primary interrupt controller
 
-   type PIC_IRQ_ITEMS_Type is
-   record
+   type PIC_IRQ_ITEMS_Type is record
       SOFTINT   : Boolean;
       UARTINT0  : Boolean;
       UARTINT1  : Boolean;
@@ -66,11 +67,10 @@ package IntegratorCP is
       ETHINT    : Boolean;
       TSPENINT  : Boolean;
       Reserved2 : Bits_3;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PIC_IRQ_ITEMS_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PIC_IRQ_ITEMS_Type use record
       SOFTINT   at 0 range  0 ..  0;
       UARTINT0  at 0 range  1 ..  1;
       UARTINT1  at 0 range  2 ..  2;
@@ -93,41 +93,41 @@ package IntegratorCP is
       Reserved2 at 0 range 29 .. 31;
    end record;
 
-   PIC_IRQ_STATUS    : aliased PIC_IRQ_ITEMS_Type with
-      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#00#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PIC_IRQ_STATUS    : aliased PIC_IRQ_ITEMS_Type
+      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
-   PIC_IRQ_RAWSTAT   : aliased PIC_IRQ_ITEMS_Type with
-      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#04#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PIC_IRQ_RAWSTAT   : aliased PIC_IRQ_ITEMS_Type
+      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
-   PIC_IRQ_ENABLESET : aliased PIC_IRQ_ITEMS_Type with
-      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#08#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PIC_IRQ_ENABLESET : aliased PIC_IRQ_ITEMS_Type
+      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
-   PIC_IRQ_ENABLECLR : aliased PIC_IRQ_ITEMS_Type with
-      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#0C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PIC_IRQ_ENABLECLR : aliased PIC_IRQ_ITEMS_Type
+      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
-   PIC_FIQ_ENABLESET : aliased PIC_IRQ_ITEMS_Type with
-      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#28#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PIC_FIQ_ENABLESET : aliased PIC_IRQ_ITEMS_Type
+      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#28#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
-   PIC_FIQ_ENABLECLR : aliased PIC_IRQ_ITEMS_Type with
-      Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#2C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PIC_FIQ_ENABLECLR : aliased PIC_IRQ_ITEMS_Type
+      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#2C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 4.9.2 Counter/timer registers
 
@@ -141,8 +141,7 @@ package IntegratorCP is
    MODE_FREERUNNING : constant := 0; -- free running, counts once and then wraps to 0xFFFF
    MODE_PERIODIC    : constant := 1; -- periodic, reloads from load register at the end of each count.
 
-   type TimerXControl_Type is
-   record
+   type TimerXControl_Type is record
       ONESHOT    : Boolean;      -- Selects one-shot or wrapping counter mode
       TIMER_SIZE : Bits_1;       -- Selects 16/32 bit counter operation
       PRESCALE   : Bits_2;       -- Prescale divisor
@@ -151,11 +150,10 @@ package IntegratorCP is
       MODE       : Bits_1;       -- Timer mode
       ENABLE     : Boolean;      -- Timer enable
       Reserved2  : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for TimerXControl_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TimerXControl_Type use record
       ONESHOT    at 0 range 0 ..  0;
       TIMER_SIZE at 0 range 1 ..  1;
       PRESCALE   at 0 range 2 ..  3;
@@ -166,34 +164,29 @@ package IntegratorCP is
       Reserved2  at 0 range 8 .. 31;
    end record;
 
-   type TimerXRIS_Type is
-   record
+   type TimerXRIS_Type is record
       RTI      : Boolean; -- Raw interrupt status from the counter
       Reserved : Bits_31;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for TimerXRIS_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TimerXRIS_Type use record
       RTI      at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
 
-   type TimerXMIS_Type is
-   record
+   type TimerXMIS_Type is record
       TI       : Boolean; -- Enabled interrupt status from the counter
       Reserved : Bits_31;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for TimerXMIS_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TimerXMIS_Type use record
       TI       at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
 
-   type Timer_Type is
-   record
+   type Timer_Type is record
       Load    : Unsigned_32        with Volatile_Full_Access => True;
       Value   : Unsigned_32        with Volatile_Full_Access => True;
       Control : TimerXControl_Type with Volatile_Full_Access => True;
@@ -201,10 +194,9 @@ package IntegratorCP is
       RIS     : TimerXRIS_Type     with Volatile_Full_Access => True;
       MIS     : TimerXMIS_Type     with Volatile_Full_Access => True;
       BGLoad  : Unsigned_32        with Volatile_Full_Access => True;
-   end record with
-      Alignment => 16#100#;
-   for Timer_Type use
-   record
+   end record
+      with Alignment => 16#100#;
+   for Timer_Type use record
       Load    at 16#00# range 0 .. 31;
       Value   at 16#04# range 0 .. 31;
       Control at 16#08# range 0 .. 31;
@@ -214,10 +206,10 @@ package IntegratorCP is
       BGLoad  at 16#18# range 0 .. 31;
    end record;
 
-   Timer : aliased array (0 .. 2) of Timer_Type with
-      Address    => To_Address (COUNTERTIMER_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   Timer : aliased array (0 .. 2) of Timer_Type
+      with Address    => To_Address (COUNTERTIMER_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end IntegratorCP;

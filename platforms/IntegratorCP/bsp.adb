@@ -30,7 +30,8 @@ with CPU;
 with IntegratorCP;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -49,10 +50,11 @@ package body BSP is
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_get_secondary_stack";
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -65,7 +67,9 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      is
    begin
       return BSP_SS_Stack;
    end Get_Sec_Stack;
@@ -74,12 +78,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       PL011.TX (PL011_Descriptor, To_U8 (C));
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       PL011.RX (PL011_Descriptor, Data);
@@ -89,7 +97,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
@@ -121,14 +130,14 @@ package body BSP is
       -- Timer1/2 run @ 1 MHz
       Timer (0).Load    := (Configure.TIMER0_CLK / 16) / Configure.TICK_FREQUENCY;
       Timer (0).Control := (
-                            ONESHOT    => False,
-                            TIMER_SIZE => TIMER_SIZE_32,
-                            PRESCALE   => PRESCALE_16,
-                            IE         => True,
-                            MODE       => MODE_PERIODIC,
-                            ENABLE     => True,
-                            others     => <>
-                           );
+         ONESHOT    => False,
+         TIMER_SIZE => TIMER_SIZE_32,
+         PRESCALE   => PRESCALE_16,
+         IE         => True,
+         MODE       => MODE_PERIODIC,
+         ENABLE     => True,
+         others     => <>
+         );
       PIC_IRQ_ENABLESET.TIMERINT0 := True;
       CPU.Irq_Enable;
       -- PIC_FIQ_ENABLESET.TIMERINT0 := True;

@@ -19,7 +19,8 @@ with Interfaces;
 with PL011;
 with PL110;
 
-package BSP is
+package BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -29,17 +30,19 @@ package BSP is
    --                                                                        --
    --========================================================================--
 
-   Tick_Count : aliased Interfaces.Unsigned_32 := 0 with
-      Atomic        => True,
-      Export        => True,
-      Convention    => Asm,
-      External_Name => "tick_count";
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0
+      with Atomic        => True,
+           Export        => True,
+           Convention    => Asm,
+           External_Name => "tick_count";
 
    PL011_Descriptor : aliased PL011.Descriptor_Type := PL011.DESCRIPTOR_INVALID;
    PL110_Descriptor : aliased PL110.Descriptor_Type := PL110.DESCRIPTOR_INVALID;
 
-   procedure Console_Putchar (C : in Character);
-   procedure Console_Getchar (C : out Character);
+   procedure Console_Putchar
+      (C : in Character);
+   procedure Console_Getchar
+      (C : out Character);
    procedure Setup;
 
 end BSP;

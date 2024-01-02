@@ -19,7 +19,8 @@ with System;
 with Interfaces;
 with Bits;
 
-package LAN91C111 is
+package LAN91C111
+   is
 
    --========================================================================--
    --                                                                        --
@@ -38,8 +39,7 @@ package LAN91C111 is
    type Port_Read_16_Ptr is access function (Port : Address) return Unsigned_16;
    type Port_Write_16_Ptr is access procedure (Port : in Address; Value : in Unsigned_16);
 
-   type LAN91C111_Descriptor_Type is
-   record
+   type LAN91C111_Descriptor_Type is record
       Read_8   : Port_Read_8_Ptr;
       Write_8  : Port_Write_8_Ptr;
       Read_16  : Port_Read_16_Ptr;

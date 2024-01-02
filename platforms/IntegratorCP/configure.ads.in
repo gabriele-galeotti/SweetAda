@@ -1,7 +1,11 @@
 
+with Definitions;
+
 package Configure
    with Pure => True
    is
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM  : constant String := "IntegratorCP";
@@ -9,10 +13,10 @@ package Configure
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   TIMER0_CLK     : constant := 40_000_000;
-   TIMER1_CLK     : constant := 1_000_000;
-   TIMER2_CLK     : constant := 1_000_000;
-   TICK_FREQUENCY : constant := 1_000;
+   TIMER0_CLK     : constant := 40 * MHz1;
+   TIMER1_CLK     : constant := 1 * MHz1;
+   TIMER2_CLK     : constant := 1 * MHz1;
+   TICK_FREQUENCY : constant := 1 * kHz1;
 
    -- IOEMU
    USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;

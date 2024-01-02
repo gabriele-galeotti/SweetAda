@@ -19,7 +19,8 @@ with Configure;
 with IntegratorCP;
 with IOEMU;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -32,7 +33,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process is
+   procedure Irq_Process
+      is
    begin
       IntegratorCP.Timer (0).IntClr := 0;
       if Configure.USE_QEMU_IOEMU then
