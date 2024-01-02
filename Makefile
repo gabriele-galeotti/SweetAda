@@ -1157,7 +1157,8 @@ all: kernel_start       \
 # create KERNEL_CFGFILE file and eventually install subplatform-dependent
 # files (subsequent "configure" phase needs all target files in place)
 .PHONY: createkernelcfg
-createkernelcfg: distclean
+createkernelcfg:
+	$(MAKE) distclean
 ifneq ($(PLATFORM),)
 	@$(RM) $(KERNEL_CFGFILE)
 	@$(TOUCH) $(KERNEL_CFGFILE)
