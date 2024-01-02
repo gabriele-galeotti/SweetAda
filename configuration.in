@@ -32,8 +32,8 @@ else ifeq ($(OSTYPE),darwin)
   #
   # OS X
   #
-  TOOLCHAIN_PREFIX := /opt/sweetada
-  GPRBUILD_PREFIX  := /opt/sweetada
+  TOOLCHAIN_PREFIX := /opt/toolchains
+  GPRBUILD_PREFIX  := /opt/toolchains
   PYTHON           := python3
   TCLSH            := tclsh
 else ifeq ($(OSTYPE),linux)
