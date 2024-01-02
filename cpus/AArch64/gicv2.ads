@@ -261,6 +261,7 @@ package GICv2
 
    -- 4.1.2 Distributor register map
 
+pragma Warnings (Off, "* bits of ""GICD_Type"" unused");
    type GICD_Type is record
       GICD_CTLR       : GICD_CTLR_Type    with Volatile_Full_Access => True;
       GICD_TYPER      : GICD_TYPER_Type   with Volatile_Full_Access => True;
@@ -302,6 +303,7 @@ package GICv2
       GICD_SPENDSGIR  at 16#F20# range 0 .. 2 * 32 - 1;
       GICD_ICPIDR2    at 16#FE8# range 0 .. 31;
    end record;
+pragma Warnings (On, "* bits of ""GICD_Type"" unused");
 
    ----------------------------------------------------------------------------
    -- 4.4 CPU interface register descriptions
