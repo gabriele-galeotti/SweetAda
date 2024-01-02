@@ -15,7 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package Atlas is
+package Atlas
+   with Pure => True
+   is
 
    --========================================================================--
    --                                                                        --

@@ -22,7 +22,8 @@ with MMIO;
 with Atlas;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -50,12 +51,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       UART16x50.TX (UART1_Descriptor, To_U8 (C));
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       UART16x50.RX (UART1_Descriptor, Data);
@@ -65,7 +70,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -- UART1 ----------------------------------------------------------------
       UART1_Descriptor.Base_Address  := To_Address (UART1_BASEADDRESS);
