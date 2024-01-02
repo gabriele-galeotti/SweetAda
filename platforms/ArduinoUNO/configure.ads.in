@@ -1,7 +1,11 @@
 
+with Definitions;
+
 package Configure
    with Pure => True
    is
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM  : constant String := "ArduinoUNO";
@@ -9,6 +13,6 @@ package Configure
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   CLOCK_XTAL : constant := 16_000_000;
+   CLOCK_XTAL : constant := 16 * MHz1;
 
 end Configure;
