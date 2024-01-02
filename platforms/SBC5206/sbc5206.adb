@@ -23,7 +23,8 @@ with LLutils;
 with MMIO;
 with CFPeripherals;
 
-package body SBC5206 is
+package body SBC5206
+   is
 
    --========================================================================--
    --                                                                        --
@@ -40,12 +41,12 @@ package body SBC5206 is
    -- Local subprograms
 
    function Register_Read
-      (Register   : UART_Register_Type)
+      (Register : UART_Register_Type)
       return Unsigned_8
       with Inline => True;
    procedure Register_Write
-      (Register   : in UART_Register_Type;
-       Value      : in Unsigned_8)
+      (Register : in UART_Register_Type;
+       Value    : in Unsigned_8)
       with Inline => True;
 
    --========================================================================--
@@ -60,7 +61,7 @@ package body SBC5206 is
    -- Register_Read
    ----------------------------------------------------------------------------
    function Register_Read
-      (Register   : UART_Register_Type)
+      (Register : UART_Register_Type)
       return Unsigned_8
       is
    begin
@@ -75,8 +76,8 @@ package body SBC5206 is
    -- Register_Write
    ----------------------------------------------------------------------------
    procedure Register_Write
-      (Register   : in UART_Register_Type;
-       Value      : in Unsigned_8)
+      (Register : in UART_Register_Type;
+       Value    : in Unsigned_8)
       is
    begin
       MMIO.Write_U8

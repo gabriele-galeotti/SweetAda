@@ -17,7 +17,9 @@
 
 with Interfaces;
 
-package SBC5206 is
+package SBC5206
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -32,8 +34,10 @@ package SBC5206 is
    VBR  : constant := 16#0801#;
    MBAR : constant := 16#0C0F#;
 
-   procedure TX (Data : in Unsigned_8);
-   procedure RX (Data : out Unsigned_8);
+   procedure TX
+      (Data : in Unsigned_8);
+   procedure RX
+      (Data : out Unsigned_8);
    procedure Init;
 
 end SBC5206;

@@ -23,7 +23,8 @@ with Exceptions;
 with SBC5206;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -39,10 +40,11 @@ package body BSP is
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_get_secondary_stack";
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -55,7 +57,9 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      is
    begin
       return BSP_SS_Stack;
    end Get_Sec_Stack;
@@ -64,12 +68,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       SBC5206.TX (To_U8 (C));
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       SBC5206.RX (Data);
@@ -79,7 +87,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
