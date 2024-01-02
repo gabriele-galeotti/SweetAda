@@ -31,10 +31,10 @@ CPU_MODEL := R3000
 GCC_SWITCHES_PLATFORM     := -march=r3000 -mel
 LD_SWITCHES_PLATFORM      := -EL --undefined=vectors
 ifeq ($(NETWORK_BOOT),Y)
-LD_SCRIPT                 := linker.lds-networkboot
+LD_SCRIPT                 := linker-networkboot.lds
 else
-LD_SCRIPT                 := linker.lds-ROM
-#LD_SCRIPT                 := linker.lds-RAM
+LD_SCRIPT                 := linker-ROM.lds
+#LD_SCRIPT                 := linker-RAM.lds
 endif
 OBJDUMP_SWITCHES_PLATFORM := --disassembler-options=hwr-names=r3000,reg-names=r3000
 OBJCOPY_SWITCHES_PLATFORM := -O binary
