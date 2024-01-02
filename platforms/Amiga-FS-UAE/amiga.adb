@@ -117,7 +117,7 @@ package body Amiga is
    ----------------------------------------------------------------------------
    procedure OCS_Scroll is
    begin
-      Memory_Functions.Cpymem (
+      Memory_Functions.Movemem (
          Framebuffer'Address + BYTES_PER_TEXTLINE,
          Framebuffer'Address,
          (VIDEO_WIDTH * VIDEO_HEIGHT) / 8 - BYTES_PER_TEXTLINE
