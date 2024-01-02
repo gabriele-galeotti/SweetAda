@@ -11,8 +11,7 @@ REM
 
 REM
 REM Arguments:
-REM $1 = input filename
-REM $2 = output filename
+REM all arguments are passed to .ps1
 REM
 REM Environment variables:
 REM SWEETADA_PATH

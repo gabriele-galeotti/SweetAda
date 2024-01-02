@@ -10,7 +10,9 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# $1 = filename
+# $2 = offset in hexadecimal format
+# $3 = string containing the hexadecimal representation of a byte to patch in
 #
 # Environment variables:
 # none

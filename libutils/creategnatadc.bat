@@ -11,8 +11,7 @@ REM
 
 REM
 REM Arguments:
-REM $1 = PROFILE
-REM $2 = GNATADC_FILENAME
+REM all arguments are passed to .ps1
 REM
 REM Environment variables:
 REM SWEETADA_PATH

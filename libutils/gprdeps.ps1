@@ -10,7 +10,8 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# optional starting "-u" = output sorted, not-duplicated units
+# $1 = input filename
 #
 # Environment variables:
 # none

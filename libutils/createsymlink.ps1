@@ -10,7 +10,11 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# optional initial -m <filelist> to record symlinks
+# optional initial -v for verbosity
+# $1 = target filename or directory
+# $2 = link name filename or directory
+# every following pair is another symlink
 #
 # Environment variables:
 # VERBOSE

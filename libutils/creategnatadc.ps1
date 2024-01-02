@@ -10,7 +10,8 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# $1 = PROFILE
+# $2 = GNATADC_FILENAME
 #
 # Environment variables:
 # none

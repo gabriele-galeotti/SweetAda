@@ -10,7 +10,8 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# $1 = input filename
+# $2 = final length or size modulo (allowed specification like "512k")
 #
 # Environment variables:
 # none

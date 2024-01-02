@@ -10,7 +10,8 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# optional starting "-r <reference_filename>"
+# $1 = input filename
 #
 # Environment variables:
 # none

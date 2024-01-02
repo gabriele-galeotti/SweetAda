@@ -10,7 +10,8 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# $1 = input filename
+# $2 = output filename
 #
 # Environment variables:
 # none

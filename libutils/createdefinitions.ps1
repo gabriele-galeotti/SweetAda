@@ -10,7 +10,7 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# $1 = definitions filename
 #
 # Environment variables:
 # PLATFORM

@@ -10,7 +10,9 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# optional starting "-r" = removes CR from processed text
+# $1 = input filename
+# $2 = output filename
 #
 # Environment variables:
 # SED

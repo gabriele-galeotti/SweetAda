@@ -10,7 +10,8 @@
 
 #
 # Arguments:
-# arguments specified in .bat script
+# $1 = configure project
+# $2 = configure filename
 #
 # Environment variables:
 # SWEETADA_PATH
