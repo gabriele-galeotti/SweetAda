@@ -18,7 +18,9 @@
 with System.Storage_Elements;
 with Interfaces;
 
-package Spartan3E is
+package Spartan3E
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -43,15 +45,15 @@ package Spartan3E is
    LEDS_TS_BASEADDRESS : constant := 16#8140_0004# + 3;
 
    -- LEDs
-   LEDs_IO : aliased Unsigned_8 with
-      Address    => To_Address (LEDS_IO_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   LEDs_TS : aliased Unsigned_8 with
-      Address    => To_Address (LEDS_TS_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   LEDs_IO : aliased Unsigned_8
+      with Address    => To_Address (LEDS_IO_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   LEDs_TS : aliased Unsigned_8
+      with Address    => To_Address (LEDS_TS_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end Spartan3E;
