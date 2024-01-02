@@ -3,7 +3,7 @@
 REM
 REM Malta (QEMU emulator).
 REM
-REM Copyright (C) 2020-2023 Gabriele Galeotti
+REM Copyright (C) 2020-2024 Gabriele Galeotti
 REM
 REM This work is licensed under the terms of the MIT License.
 REM Please consult the LICENSE.txt file located in the top-level directory.
