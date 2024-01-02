@@ -25,7 +25,8 @@ with STM32VLDISCOVERY;
 with Exceptions;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -53,7 +54,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- SysTick_Init
    ----------------------------------------------------------------------------
-   procedure SysTick_Init is
+   procedure SysTick_Init
+      is
    begin
       ARMv7M.SYST_RVR.RELOAD := Bits_24 (Configure.SYSCLK_FREQUENCY / Configure.TICK_FREQUENCY);
       ARMv7M.SHPR3.PRI_15 := 16#01#;
@@ -70,7 +72,9 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -79,7 +83,9 @@ package body BSP is
       USART1.USART_DR.DR := To_U8 (C);
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       -- wait for receiver available
@@ -93,7 +99,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       Exceptions.Init;

@@ -20,7 +20,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package STM32VLDISCOVERY is
+package STM32VLDISCOVERY
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -41,8 +43,7 @@ package STM32VLDISCOVERY is
 
    -- 23.6.1 Status register (USART_SR)
 
-   type USART_SR_Type is
-   record
+   type USART_SR_Type is record
       PE       : Boolean := False;       -- Parity error
       FE       : Boolean := False;       -- Framing error
       NF       : Boolean := False;       -- Noise detected flag
@@ -54,11 +55,10 @@ package STM32VLDISCOVERY is
       LBD      : Boolean := True;        -- LIN break detection flag
       CTS      : Boolean := True;        -- CTS flag
       Reserved : Bits_22 := 16#00_3000#;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_SR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_SR_Type use record
       PE       at 0 range  0 ..  0;
       FE       at 0 range  1 ..  1;
       NF       at 0 range  2 ..  2;
@@ -74,16 +74,14 @@ package STM32VLDISCOVERY is
 
    -- 23.6.2 Data register (USART_DR)
 
-   type USART_DR_Type is
-   record
+   type USART_DR_Type is record
       DR       : Unsigned_8;   -- Data value
       DR8      : Bits_1;       -- 9th bit
       Reserved : Bits_23 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_DR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_DR_Type use record
       DR       at 0 range 0 ..  7;
       DR8      at 0 range 8 ..  8;
       Reserved at 0 range 9 .. 31;
@@ -91,16 +89,14 @@ package STM32VLDISCOVERY is
 
    -- 23.6.3 Baud rate register (USART_BRR)
 
-   type USART_BRR_Type is
-   record
+   type USART_BRR_Type is record
       DIV_Fraction : Bits_4;       -- fraction of USARTDIV
       DIV_Mantissa : Bits_12;      -- mantissa of USARTDIV
       Reserved     : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_BRR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_BRR_Type use record
       DIV_Fraction at 0 range  0 ..  3;
       DIV_Mantissa at 0 range  4 .. 15;
       Reserved     at 0 range 16 .. 31;
@@ -120,8 +116,7 @@ package STM32VLDISCOVERY is
    OVER8_16 : constant := 0; -- Oversampling by 16
    OVER8_8  : constant := 1; -- Oversampling by 8
 
-   type USART_CR1_Type is
-   record
+   type USART_CR1_Type is record
       SM        : Boolean;      -- Send break
       RWU       : Boolean;      -- Receiver wakeup
       RE        : Boolean;      -- Receiver enable
@@ -139,11 +134,10 @@ package STM32VLDISCOVERY is
       Reserved1 : Bits_1 := 0;
       OVER8     : Bits_1;       -- Oversampling mode
       Reserved2 : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_CR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_CR1_Type use record
       SM        at 0 range  0 ..  0;
       RWU       at 0 range  1 ..  1;
       RE        at 0 range  2 ..  2;
@@ -179,8 +173,7 @@ package STM32VLDISCOVERY is
    STOP_2  : constant := 2#10#; -- 2 stop bits
    STOP_15 : constant := 2#11#; -- 1.5 stop bits
 
-   type USART_CR2_Type is
-   record
+   type USART_CR2_Type is record
       ADD       : Bits_4;       -- Address of the USART node
       Reserved1 : Bits_1 := 0;
       LBDL      : Bits_1;       -- lin break detection length
@@ -193,11 +186,10 @@ package STM32VLDISCOVERY is
       STOP      : Bits_2;       -- STOP bits
       LINEN     : Boolean;      -- LIN mode enable
       Reserved3 : Bits_17 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_CR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_CR2_Type use record
       ADD       at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  4;
       LBDL      at 0 range  5 ..  5;
@@ -214,8 +206,7 @@ package STM32VLDISCOVERY is
 
    -- 23.6.6 Control register 3 (USART_CR3)
 
-   type USART_CR3_Type is
-   record
+   type USART_CR3_Type is record
       EIE      : Boolean;      -- Error interrupt enable
       IREN     : Boolean;      -- IrDA mode enable
       IRLP     : Boolean;      -- IrDA low-power
@@ -229,11 +220,10 @@ package STM32VLDISCOVERY is
       CTSIE    : Boolean;      -- CTS interrupt enable
       ONEBIT   : Boolean;      -- One sample bit method enable
       Reserved : Bits_20 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_CR3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_CR3_Type use record
       EIE      at 0 range  0 ..  0;
       IREN     at 0 range  1 ..  1;
       IRLP     at 0 range  2 ..  2;
@@ -251,16 +241,14 @@ package STM32VLDISCOVERY is
 
    -- 23.6.7 Guard time and prescaler register (USART_GTPR)
 
-   type USART_GTPR_Type is
-   record
+   type USART_GTPR_Type is record
       PSC      : Unsigned_8;   -- Prescaler value
       GT       : Unsigned_8;   -- Guard time value
       Reserved : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for USART_GTPR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for USART_GTPR_Type use record
       PSC      at 0 range  0 ..  7;
       GT       at 0 range  8 .. 15;
       Reserved at 0 range 16 .. 31;
@@ -268,8 +256,7 @@ package STM32VLDISCOVERY is
 
    -- 23.6.8 USART register map
 
-   type USART_Type is
-   record
+   type USART_Type is record
       USART_SR   : USART_SR_Type   with Volatile_Full_Access => True;
       USART_DR   : USART_DR_Type;
       USART_BRR  : USART_BRR_Type  with Volatile_Full_Access => True;
@@ -277,11 +264,10 @@ package STM32VLDISCOVERY is
       USART_CR2  : USART_CR2_Type  with Volatile_Full_Access => True;
       USART_CR3  : USART_CR3_Type  with Volatile_Full_Access => True;
       USART_GTPR : USART_GTPR_Type with Volatile_Full_Access => True;
-   end record with
-      Size                    => 16#1C# * 8,
-      Suppress_Initialization => True;
-   for USART_Type use
-   record
+   end record
+      with Size                    => 16#1C# * 8,
+           Suppress_Initialization => True;
+   for USART_Type use record
       USART_SR   at 16#00# range 0 .. 31;
       USART_DR   at 16#04# range 0 .. 31;
       USART_BRR  at 16#08# range 0 .. 31;
@@ -293,10 +279,10 @@ package STM32VLDISCOVERY is
 
    USART1_BASEADDRESS : constant := 16#4001_3800#;
 
-   USART1 : aliased USART_Type with
-      Address    => To_Address (USART1_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   USART1 : aliased USART_Type
+      with Address    => To_Address (USART1_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end STM32VLDISCOVERY;

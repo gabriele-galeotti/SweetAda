@@ -24,7 +24,8 @@ with CPU;
 with BSP;
 with Console;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
