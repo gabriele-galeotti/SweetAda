@@ -20,7 +20,8 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package STM32F769I is
+package STM32F769I
+   is
 
    --========================================================================--
    --                                                                        --
@@ -1943,7 +1944,7 @@ pragma Warnings (On);
          with Volatile_Full_Access => True; -- input data register
       ODR     : GPIOx_ODR_Type
          with Volatile_Full_Access => True; -- output data register
-      BSRR    : GPIOx_BSRR_Type := [[others => False], [others => False]]
+      BSRR    : GPIOx_BSRR_Type := ([others => False], [others => False])
          with Volatile_Full_Access => True; -- bit set/reset register
       LCKR    : GPIOx_LCKR_Type := (LCK => [others => False], LCKK => False, others => <>)
          with Volatile_Full_Access => True; -- configuration lock register
