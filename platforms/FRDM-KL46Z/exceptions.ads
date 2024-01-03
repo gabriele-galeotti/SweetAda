@@ -18,7 +18,8 @@
 with System;
 with Bits;
 
-package Exceptions is
+package Exceptions
+   is
 
    --========================================================================--
    --                                                                        --

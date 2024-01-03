@@ -20,7 +20,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package KL46Z is
+package KL46Z
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -44,8 +46,7 @@ package KL46Z is
 
    -- 12.2.9 System Clock Gating Control Register 5
 
-   type SIM_SCGC5_Type is
-   record
+   type SIM_SCGC5_Type is record
       LPTMR     : Boolean;         -- Low Power Timer Access Control
       Reserved1 : Bits_1 := 1;
       Reserved2 : Bits_3 := 0;
@@ -60,18 +61,17 @@ package KL46Z is
       Reserved5 : Bits_5 := 0;
       SLCD      : Boolean;         -- Segment LCD Clock Gate Control
       Reserved6 : Bits_12 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SIM_SCGC5_Type use
-   record
-      LPTMR     at 0 range 0 .. 0;
-      Reserved1 at 0 range 1 .. 1;
-      Reserved2 at 0 range 2 .. 4;
-      TSI       at 0 range 5 .. 5;
-      Reserved3 at 0 range 6 .. 6;
-      Reserved4 at 0 range 7 .. 8;
-      PORTA     at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SCGC5_Type use record
+      LPTMR     at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      Reserved2 at 0 range  2 ..  4;
+      TSI       at 0 range  5 ..  5;
+      Reserved3 at 0 range  6 ..  6;
+      Reserved4 at 0 range  7 ..  8;
+      PORTA     at 0 range  9 ..  9;
       PORTB     at 0 range 10 .. 10;
       PORTC     at 0 range 11 .. 11;
       PORTD     at 0 range 12 .. 12;
@@ -83,11 +83,11 @@ package KL46Z is
 
    SIM_SCGC5_ADDRESS : constant := SIM_BASEADDRESS + 16#1038#;
 
-   SIM_SCGC5 : aliased SIM_SCGC5_Type with
-      Address    => To_Address (SIM_SCGC5_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SIM_SCGC5 : aliased SIM_SCGC5_Type
+      with Address    => To_Address (SIM_SCGC5_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- Port x multiplexing control
 
@@ -113,8 +113,7 @@ package KL46Z is
    IRQC_IRQ_Either  : constant := 2#1011#;
    IRQC_IRQ_One     : constant := 2#1100#;
 
-   type PORTx_PCRn_Type is
-   record
+   type PORTx_PCRn_Type is record
       PS        : Boolean;     -- Pull Select
       PE        : Boolean;     -- Pull Enable
       SRE       : Boolean;     -- Slew Rate Enable
@@ -129,20 +128,19 @@ package KL46Z is
       Reserved5 : Bits_4 := 0;
       ISF       : Boolean;     -- Interrupt Status Flag
       Reserved6 : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PORTx_PCRn_Type use
-   record
-      PS        at 0 range 0 .. 0;
-      PE        at 0 range 1 .. 1;
-      SRE       at 0 range 2 .. 2;
-      Reserved1 at 0 range 3 .. 3;
-      PFE       at 0 range 4 .. 4;
-      Reserved2 at 0 range 5 .. 5;
-      DSE       at 0 range 6 .. 6;
-      Reserved3 at 0 range 7 .. 7;
-      MUX       at 0 range 8 .. 10;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PORTx_PCRn_Type use record
+      PS        at 0 range  0 ..  0;
+      PE        at 0 range  1 ..  1;
+      SRE       at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      PFE       at 0 range  4 ..  4;
+      Reserved2 at 0 range  5 ..  5;
+      DSE       at 0 range  6 ..  6;
+      Reserved3 at 0 range  7 ..  7;
+      MUX       at 0 range  8 .. 10;
       Reserved4 at 0 range 11 .. 15;
       IRQC      at 0 range 16 .. 19;
       Reserved5 at 0 range 20 .. 23;
@@ -326,8 +324,7 @@ pragma Style_Checks (On);
 
    -- 42.2.1 Port Data Output Register
 
-   type GPIOx_PDOR_Type is
-   record
+   type GPIOx_PDOR_Type is record
       PDO00 : Boolean;
       PDO01 : Boolean;
       PDO02 : Boolean;
@@ -360,21 +357,20 @@ pragma Style_Checks (On);
       PDO29 : Boolean;
       PDO30 : Boolean;
       PDO31 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPIOx_PDOR_Type use
-   record
-      PDO00 at 0 range 0 .. 0;
-      PDO01 at 0 range 1 .. 1;
-      PDO02 at 0 range 2 .. 2;
-      PDO03 at 0 range 3 .. 3;
-      PDO04 at 0 range 4 .. 4;
-      PDO05 at 0 range 5 .. 5;
-      PDO06 at 0 range 6 .. 6;
-      PDO07 at 0 range 7 .. 7;
-      PDO08 at 0 range 8 .. 8;
-      PDO09 at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPIOx_PDOR_Type use record
+      PDO00 at 0 range  0 ..  0;
+      PDO01 at 0 range  1 ..  1;
+      PDO02 at 0 range  2 ..  2;
+      PDO03 at 0 range  3 ..  3;
+      PDO04 at 0 range  4 ..  4;
+      PDO05 at 0 range  5 ..  5;
+      PDO06 at 0 range  6 ..  6;
+      PDO07 at 0 range  7 ..  7;
+      PDO08 at 0 range  8 ..  8;
+      PDO09 at 0 range  9 ..  9;
       PDO10 at 0 range 10 .. 10;
       PDO11 at 0 range 11 .. 11;
       PDO12 at 0 range 12 .. 12;
@@ -401,8 +397,7 @@ pragma Style_Checks (On);
 
    -- 42.2.2 Port Set Output Register
 
-   type GPIOx_PSOR_Type is
-   record
+   type GPIOx_PSOR_Type is record
       PTSO00 : Boolean;
       PTSO01 : Boolean;
       PTSO02 : Boolean;
@@ -435,21 +430,20 @@ pragma Style_Checks (On);
       PTSO29 : Boolean;
       PTSO30 : Boolean;
       PTSO31 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPIOx_PSOR_Type use
-   record
-      PTSO00 at 0 range 0 .. 0;
-      PTSO01 at 0 range 1 .. 1;
-      PTSO02 at 0 range 2 .. 2;
-      PTSO03 at 0 range 3 .. 3;
-      PTSO04 at 0 range 4 .. 4;
-      PTSO05 at 0 range 5 .. 5;
-      PTSO06 at 0 range 6 .. 6;
-      PTSO07 at 0 range 7 .. 7;
-      PTSO08 at 0 range 8 .. 8;
-      PTSO09 at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPIOx_PSOR_Type use record
+      PTSO00 at 0 range  0 ..  0;
+      PTSO01 at 0 range  1 ..  1;
+      PTSO02 at 0 range  2 ..  2;
+      PTSO03 at 0 range  3 ..  3;
+      PTSO04 at 0 range  4 ..  4;
+      PTSO05 at 0 range  5 ..  5;
+      PTSO06 at 0 range  6 ..  6;
+      PTSO07 at 0 range  7 ..  7;
+      PTSO08 at 0 range  8 ..  8;
+      PTSO09 at 0 range  9 ..  9;
       PTSO10 at 0 range 10 .. 10;
       PTSO11 at 0 range 11 .. 11;
       PTSO12 at 0 range 12 .. 12;
@@ -476,8 +470,7 @@ pragma Style_Checks (On);
 
    -- 42.2.3 Port Clear Output Register
 
-   type GPIOx_PCOR_Type is
-   record
+   type GPIOx_PCOR_Type is record
       PTCO00 : Boolean;
       PTCO01 : Boolean;
       PTCO02 : Boolean;
@@ -510,21 +503,20 @@ pragma Style_Checks (On);
       PTCO29 : Boolean;
       PTCO30 : Boolean;
       PTCO31 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPIOx_PCOR_Type use
-   record
-      PTCO00 at 0 range 0 .. 0;
-      PTCO01 at 0 range 1 .. 1;
-      PTCO02 at 0 range 2 .. 2;
-      PTCO03 at 0 range 3 .. 3;
-      PTCO04 at 0 range 4 .. 4;
-      PTCO05 at 0 range 5 .. 5;
-      PTCO06 at 0 range 6 .. 6;
-      PTCO07 at 0 range 7 .. 7;
-      PTCO08 at 0 range 8 .. 8;
-      PTCO09 at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPIOx_PCOR_Type use record
+      PTCO00 at 0 range  0 ..  0;
+      PTCO01 at 0 range  1 ..  1;
+      PTCO02 at 0 range  2 ..  2;
+      PTCO03 at 0 range  3 ..  3;
+      PTCO04 at 0 range  4 ..  4;
+      PTCO05 at 0 range  5 ..  5;
+      PTCO06 at 0 range  6 ..  6;
+      PTCO07 at 0 range  7 ..  7;
+      PTCO08 at 0 range  8 ..  8;
+      PTCO09 at 0 range  9 ..  9;
       PTCO10 at 0 range 10 .. 10;
       PTCO11 at 0 range 11 .. 11;
       PTCO12 at 0 range 12 .. 12;
@@ -551,8 +543,7 @@ pragma Style_Checks (On);
 
    -- 42.2.4 Port Toggle Output Register
 
-   type GPIOx_PTOR_Type is
-   record
+   type GPIOx_PTOR_Type is record
       PTTO00 : Boolean;
       PTTO01 : Boolean;
       PTTO02 : Boolean;
@@ -585,21 +576,20 @@ pragma Style_Checks (On);
       PTTO29 : Boolean;
       PTTO30 : Boolean;
       PTTO31 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPIOx_PTOR_Type use
-   record
-      PTTO00 at 0 range 0 .. 0;
-      PTTO01 at 0 range 1 .. 1;
-      PTTO02 at 0 range 2 .. 2;
-      PTTO03 at 0 range 3 .. 3;
-      PTTO04 at 0 range 4 .. 4;
-      PTTO05 at 0 range 5 .. 5;
-      PTTO06 at 0 range 6 .. 6;
-      PTTO07 at 0 range 7 .. 7;
-      PTTO08 at 0 range 8 .. 8;
-      PTTO09 at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPIOx_PTOR_Type use record
+      PTTO00 at 0 range  0 ..  0;
+      PTTO01 at 0 range  1 ..  1;
+      PTTO02 at 0 range  2 ..  2;
+      PTTO03 at 0 range  3 ..  3;
+      PTTO04 at 0 range  4 ..  4;
+      PTTO05 at 0 range  5 ..  5;
+      PTTO06 at 0 range  6 ..  6;
+      PTTO07 at 0 range  7 ..  7;
+      PTTO08 at 0 range  8 ..  8;
+      PTTO09 at 0 range  9 ..  9;
       PTTO10 at 0 range 10 .. 10;
       PTTO11 at 0 range 11 .. 11;
       PTTO12 at 0 range 12 .. 12;
@@ -626,8 +616,7 @@ pragma Style_Checks (On);
 
    -- 42.2.5 Port Data Input Register
 
-   type GPIOx_PDIR_Type is
-   record
+   type GPIOx_PDIR_Type is record
       PDI00 : Boolean;
       PDI01 : Boolean;
       PDI02 : Boolean;
@@ -660,21 +649,20 @@ pragma Style_Checks (On);
       PDI29 : Boolean;
       PDI30 : Boolean;
       PDI31 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPIOx_PDIR_Type use
-   record
-      PDI00 at 0 range 0 .. 0;
-      PDI01 at 0 range 1 .. 1;
-      PDI02 at 0 range 2 .. 2;
-      PDI03 at 0 range 3 .. 3;
-      PDI04 at 0 range 4 .. 4;
-      PDI05 at 0 range 5 .. 5;
-      PDI06 at 0 range 6 .. 6;
-      PDI07 at 0 range 7 .. 7;
-      PDI08 at 0 range 8 .. 8;
-      PDI09 at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPIOx_PDIR_Type use record
+      PDI00 at 0 range  0 ..  0;
+      PDI01 at 0 range  1 ..  1;
+      PDI02 at 0 range  2 ..  2;
+      PDI03 at 0 range  3 ..  3;
+      PDI04 at 0 range  4 ..  4;
+      PDI05 at 0 range  5 ..  5;
+      PDI06 at 0 range  6 ..  6;
+      PDI07 at 0 range  7 ..  7;
+      PDI08 at 0 range  8 ..  8;
+      PDI09 at 0 range  9 ..  9;
       PDI10 at 0 range 10 .. 10;
       PDI11 at 0 range 11 .. 11;
       PDI12 at 0 range 12 .. 12;
@@ -701,8 +689,7 @@ pragma Style_Checks (On);
 
    -- 42.2.6 Port Data Direction Register
 
-   type GPIOx_PDDR_Type is
-   record
+   type GPIOx_PDDR_Type is record
       PDD00 : Boolean;
       PDD01 : Boolean;
       PDD02 : Boolean;
@@ -735,21 +722,20 @@ pragma Style_Checks (On);
       PDD29 : Boolean;
       PDD30 : Boolean;
       PDD31 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPIOx_PDDR_Type use
-   record
-      PDD00 at 0 range 0 .. 0;
-      PDD01 at 0 range 1 .. 1;
-      PDD02 at 0 range 2 .. 2;
-      PDD03 at 0 range 3 .. 3;
-      PDD04 at 0 range 4 .. 4;
-      PDD05 at 0 range 5 .. 5;
-      PDD06 at 0 range 6 .. 6;
-      PDD07 at 0 range 7 .. 7;
-      PDD08 at 0 range 8 .. 8;
-      PDD09 at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPIOx_PDDR_Type use record
+      PDD00 at 0 range  0 ..  0;
+      PDD01 at 0 range  1 ..  1;
+      PDD02 at 0 range  2 ..  2;
+      PDD03 at 0 range  3 ..  3;
+      PDD04 at 0 range  4 ..  4;
+      PDD05 at 0 range  5 ..  5;
+      PDD06 at 0 range  6 ..  6;
+      PDD07 at 0 range  7 ..  7;
+      PDD08 at 0 range  8 ..  8;
+      PDD09 at 0 range  9 ..  9;
       PDD10 at 0 range 10 .. 10;
       PDD11 at 0 range 11 .. 11;
       PDD12 at 0 range 12 .. 12;
@@ -783,36 +769,36 @@ pragma Style_Checks (On);
    GPIOA_PDIR_ADDRESS : constant := GPIO_BASEADDRESS + 16#10#;
    GPIOA_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#14#;
 
-   GPIOA_PDOR : aliased GPIOx_PDOR_Type with
-      Address    => To_Address (GPIOD_PDOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOA_PSOR : aliased GPIOx_PSOR_Type with
-      Address    => To_Address (GPIOA_PSOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOA_PCOR : aliased GPIOx_PCOR_Type with
-      Address    => To_Address (GPIOA_PCOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOA_PTOR : aliased GPIOx_PTOR_Type with
-      Address    => To_Address (GPIOA_PTOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOA_PDIR : aliased GPIOx_PDIR_Type with
-      Address    => To_Address (GPIOA_PDIR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOA_PDDR : aliased GPIOx_PDDR_Type with
-      Address    => To_Address (GPIOA_PDDR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOA_PDOR : aliased GPIOx_PDOR_Type
+      with Address    => To_Address (GPIOD_PDOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOA_PSOR : aliased GPIOx_PSOR_Type
+      with Address    => To_Address (GPIOA_PSOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOA_PCOR : aliased GPIOx_PCOR_Type
+      with Address    => To_Address (GPIOA_PCOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOA_PTOR : aliased GPIOx_PTOR_Type
+      with Address    => To_Address (GPIOA_PTOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOA_PDIR : aliased GPIOx_PDIR_Type
+      with Address    => To_Address (GPIOA_PDIR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOA_PDDR : aliased GPIOx_PDDR_Type
+      with Address    => To_Address (GPIOA_PDDR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- Port B
 
@@ -823,36 +809,36 @@ pragma Style_Checks (On);
    GPIOB_PDIR_ADDRESS : constant := GPIO_BASEADDRESS + 16#50#;
    GPIOB_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#54#;
 
-   GPIOB_PDOR : aliased GPIOx_PDOR_Type with
-      Address    => To_Address (GPIOD_PDOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOB_PSOR : aliased GPIOx_PSOR_Type with
-      Address    => To_Address (GPIOB_PSOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOB_PCOR : aliased GPIOx_PCOR_Type with
-      Address    => To_Address (GPIOB_PCOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOB_PTOR : aliased GPIOx_PTOR_Type with
-      Address    => To_Address (GPIOB_PTOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOB_PDIR : aliased GPIOx_PDIR_Type with
-      Address    => To_Address (GPIOB_PDIR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOB_PDDR : aliased GPIOx_PDDR_Type with
-      Address    => To_Address (GPIOB_PDDR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOB_PDOR : aliased GPIOx_PDOR_Type
+      with Address    => To_Address (GPIOD_PDOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOB_PSOR : aliased GPIOx_PSOR_Type
+      with Address    => To_Address (GPIOB_PSOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOB_PCOR : aliased GPIOx_PCOR_Type
+      with Address    => To_Address (GPIOB_PCOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOB_PTOR : aliased GPIOx_PTOR_Type
+      with Address    => To_Address (GPIOB_PTOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOB_PDIR : aliased GPIOx_PDIR_Type
+      with Address    => To_Address (GPIOB_PDIR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOB_PDDR : aliased GPIOx_PDDR_Type
+      with Address    => To_Address (GPIOB_PDDR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- Port C
 
@@ -863,36 +849,36 @@ pragma Style_Checks (On);
    GPIOC_PDIR_ADDRESS : constant := GPIO_BASEADDRESS + 16#90#;
    GPIOC_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#94#;
 
-   GPIOC_PDOR : aliased GPIOx_PDOR_Type with
-      Address    => To_Address (GPIOC_PDOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOC_PSOR : aliased GPIOx_PSOR_Type with
-      Address    => To_Address (GPIOC_PSOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOC_PCOR : aliased GPIOx_PCOR_Type with
-      Address    => To_Address (GPIOC_PCOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOC_PTOR : aliased GPIOx_PTOR_Type with
-      Address    => To_Address (GPIOC_PTOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOC_PDIR : aliased GPIOx_PDIR_Type with
-      Address    => To_Address (GPIOC_PDIR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOC_PDDR : aliased GPIOx_PDDR_Type with
-      Address    => To_Address (GPIOC_PDDR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOC_PDOR : aliased GPIOx_PDOR_Type
+      with Address    => To_Address (GPIOC_PDOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOC_PSOR : aliased GPIOx_PSOR_Type
+      with Address    => To_Address (GPIOC_PSOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOC_PCOR : aliased GPIOx_PCOR_Type
+      with Address    => To_Address (GPIOC_PCOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOC_PTOR : aliased GPIOx_PTOR_Type
+      with Address    => To_Address (GPIOC_PTOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOC_PDIR : aliased GPIOx_PDIR_Type
+      with Address    => To_Address (GPIOC_PDIR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOC_PDDR : aliased GPIOx_PDDR_Type
+      with Address    => To_Address (GPIOC_PDDR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- Port D
 
@@ -903,36 +889,36 @@ pragma Style_Checks (On);
    GPIOD_PDIR_ADDRESS : constant := GPIO_BASEADDRESS + 16#D0#;
    GPIOD_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#D4#;
 
-   GPIOD_PDOR : aliased GPIOx_PDOR_Type with
-      Address    => To_Address (GPIOD_PDOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOD_PSOR : aliased GPIOx_PSOR_Type with
-      Address    => To_Address (GPIOD_PSOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOD_PCOR : aliased GPIOx_PCOR_Type with
-      Address    => To_Address (GPIOD_PCOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOD_PTOR : aliased GPIOx_PTOR_Type with
-      Address    => To_Address (GPIOD_PTOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOD_PDIR : aliased GPIOx_PDIR_Type with
-      Address    => To_Address (GPIOD_PDIR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOD_PDDR : aliased GPIOx_PDDR_Type with
-      Address    => To_Address (GPIOD_PDDR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOD_PDOR : aliased GPIOx_PDOR_Type
+      with Address    => To_Address (GPIOD_PDOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOD_PSOR : aliased GPIOx_PSOR_Type
+      with Address    => To_Address (GPIOD_PSOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOD_PCOR : aliased GPIOx_PCOR_Type
+      with Address    => To_Address (GPIOD_PCOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOD_PTOR : aliased GPIOx_PTOR_Type
+      with Address    => To_Address (GPIOD_PTOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOD_PDIR : aliased GPIOx_PDIR_Type
+      with Address    => To_Address (GPIOD_PDIR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOD_PDDR : aliased GPIOx_PDDR_Type
+      with Address    => To_Address (GPIOD_PDDR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- Port E
 
@@ -943,35 +929,35 @@ pragma Style_Checks (On);
    GPIOE_PDIR_ADDRESS : constant := GPIO_BASEADDRESS + 16#110#;
    GPIOE_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#114#;
 
-   GPIOE_PDOR : aliased GPIOx_PDOR_Type with
-      Address    => To_Address (GPIOE_PDOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOE_PSOR : aliased GPIOx_PSOR_Type with
-      Address    => To_Address (GPIOE_PSOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOE_PCOR : aliased GPIOx_PCOR_Type with
-      Address    => To_Address (GPIOE_PCOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOE_PTOR : aliased GPIOx_PTOR_Type with
-      Address    => To_Address (GPIOE_PTOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOE_PDIR : aliased GPIOx_PDIR_Type with
-      Address    => To_Address (GPIOE_PDIR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   GPIOE_PDDR : aliased GPIOx_PDDR_Type with
-      Address    => To_Address (GPIOE_PDDR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GPIOE_PDOR : aliased GPIOx_PDOR_Type
+      with Address    => To_Address (GPIOE_PDOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOE_PSOR : aliased GPIOx_PSOR_Type
+      with Address    => To_Address (GPIOE_PSOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOE_PCOR : aliased GPIOx_PCOR_Type
+      with Address    => To_Address (GPIOE_PCOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOE_PTOR : aliased GPIOx_PTOR_Type
+      with Address    => To_Address (GPIOE_PTOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOE_PDIR : aliased GPIOx_PDIR_Type
+      with Address    => To_Address (GPIOE_PDIR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   GPIOE_PDDR : aliased GPIOx_PDDR_Type
+      with Address    => To_Address (GPIOE_PDDR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end KL46Z;
