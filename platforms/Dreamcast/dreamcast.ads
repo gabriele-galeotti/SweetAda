@@ -19,7 +19,9 @@ with System;
 with System.Storage_Elements;
 with Bits;
 
-package Dreamcast is
+package Dreamcast
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -35,16 +37,18 @@ package Dreamcast is
    VIDEO_BASEADDRESS    : constant := 16#A500_0000#;
    VIDEO_FRAME_BYTESIZE : constant := 640 * 480 * 2; -- VGA 640x480
 
-   VIDEO_FRAME : aliased Bits.U8_Array (0 .. VIDEO_FRAME_BYTESIZE - 1) with
-      Alignment  => 4,
-      Address    => To_Address (VIDEO_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   VIDEO_FRAME : aliased Bits.U8_Array (0 .. VIDEO_FRAME_BYTESIZE - 1)
+      with Alignment  => 4,
+           Address    => To_Address (VIDEO_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    type Video_Cable_Type is (CABLE_VGA, CABLE_NONE, CABLE_RGB, CABLE_COMPOSITE);
 
-   function Video_Cable return Video_Cable_Type;
-   function Video_Font return Address;
+   function Video_Cable
+      return Video_Cable_Type;
+   function Video_Font
+      return Address;
 
 end Dreamcast;

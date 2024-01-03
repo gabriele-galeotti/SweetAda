@@ -19,7 +19,8 @@ with System.Machine_Code;
 with Interfaces;
 with Definitions;
 
-package body Dreamcast is
+package body Dreamcast
+   is
 
    --========================================================================--
    --                                                                        --
@@ -44,17 +45,19 @@ package body Dreamcast is
    ----------------------------------------------------------------------------
    -- Video_Cable
    ----------------------------------------------------------------------------
-   function Video_Cable return Video_Cable_Type is
-      PortA : Unsigned_32 with
-         Address              => To_Address (16#FF80_002C#),
-         Volatile_Full_Access => True,
-         Import               => True,
-         Convention           => Ada;
-      Port89 : Unsigned_16 with
-         Address              => To_Address (16#FF80_0030#),
-         Volatile_Full_Access => True,
-         Import               => True,
-         Convention           => Ada;
+   function Video_Cable
+      return Video_Cable_Type
+      is
+      PortA : Unsigned_32
+         with Address              => To_Address (16#FF80_002C#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+      Port89 : Unsigned_16
+         with Address              => To_Address (16#FF80_0030#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
    begin
       -- set PORT8 and PORT9 to input
       PortA := (PortA and 16#FFF0FFFF#) or 16#000A_0000#;
@@ -69,7 +72,9 @@ package body Dreamcast is
    ----------------------------------------------------------------------------
    -- Video_Font
    ----------------------------------------------------------------------------
-   function Video_Font return Address is
+   function Video_Font
+      return Address
+      is
       Result : System.Address;
    begin
       Asm (

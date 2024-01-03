@@ -28,7 +28,8 @@ with Exceptions;
 with IOEMU;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -57,7 +58,9 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -66,7 +69,9 @@ package body BSP is
       SCIF.SCFTDR2 := To_U8 (C);
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       -- wait for receiver available
@@ -81,28 +86,29 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -- enable SCIF RX/TX ----------------------------------------------------
       SCIF.SCSCR2 := (
-                      CKE1   => CKE1_Internal,
-                      REIE   => False,
-                      RE     => True,
-                      TE     => True,
-                      RIE    => False,
-                      TIE    => False,
-                      others => <>
-                     );
+         CKE1   => CKE1_Internal,
+         REIE   => False,
+         RE     => True,
+         TE     => True,
+         RIE    => False,
+         TIE    => False,
+         others => <>
+         );
       SCIF.SCFCR2 := (
-                      LOOPBACK => False,
-                      RFRST    => False,
-                      TFRST    => False,
-                      MCE      => False,
-                      TTRG     => TTRG_1,
-                      RTRG     => RTRG_1,
-                      RSTRG    => 0,
-                      others   => 0
-                     );
+         LOOPBACK => False,
+         RFRST    => False,
+         TFRST    => False,
+         MCE      => False,
+         TTRG     => TTRG_1,
+         RTRG     => RTRG_1,
+         RSTRG    => 0,
+         others   => 0
+         );
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;

@@ -18,7 +18,8 @@
 with System.Storage_Elements;
 with Interfaces;
 
-package IOEMU is
+package IOEMU
+   is
 
    --========================================================================--
    --                                                                        --
@@ -34,24 +35,24 @@ package IOEMU is
    IOEMU_ASIC_BASEADDRESS : constant := 16#005F_6900#;
 
    -- IO0 0x005F6940 8-bit wide port
-   IO0 : Unsigned_8 with
-      Address    => To_Address (IOEMU_ASIC_BASEADDRESS + 16#40#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   IO0 : Unsigned_8
+      with Address    => To_Address (IOEMU_ASIC_BASEADDRESS + 16#40#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- IO1 0x005F6944 8-bit wide port
-   IO1 : Unsigned_8 with
-      Address    => To_Address (IOEMU_ASIC_BASEADDRESS + 16#44#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   IO1 : Unsigned_8
+      with Address    => To_Address (IOEMU_ASIC_BASEADDRESS + 16#44#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- IO2 0x005F6948 8-bit wide port
-   IO2 : Unsigned_8 with
-      Address    => To_Address (IOEMU_ASIC_BASEADDRESS + 16#48#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   IO2 : Unsigned_8
+      with Address    => To_Address (IOEMU_ASIC_BASEADDRESS + 16#48#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end IOEMU;
