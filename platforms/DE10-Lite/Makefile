@@ -76,8 +76,8 @@ clean:
 .PHONY: distclean
 distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-              Quartus.ads                 \
-              $(CONFIGURE_FILES_PLATFORM)
+              $(CONFIGURE_FILES_PLATFORM) \
+              quartus.ads
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
