@@ -63,23 +63,27 @@ package GCC_Types
    type UTI_Type is new Interfaces.Unsigned_128;
 
    function Shift_Left
-      (Value : USI_Type; Amount : Natural)
+      (Value  : USI_Type;
+       Amount : Natural)
       return USI_Type
       with Import     => True,
            Convention => Intrinsic;
    function Shift_Right
-      (Value : USI_Type; Amount : Natural)
+      (Value  : USI_Type;
+       Amount : Natural)
       return USI_Type
       with Import     => True,
            Convention => Intrinsic;
 
    function Shift_Left
-      (Value : UDI_Type; Amount : Natural)
+      (Value  : UDI_Type;
+       Amount : Natural)
       return UDI_Type
       with Import     => True,
            Convention => Intrinsic;
    function Shift_Right
-      (Value : UDI_Type; Amount : Natural)
+      (Value  : UDI_Type;
+       Amount : Natural)
       return UDI_Type
       with Import     => True,
            Convention => Intrinsic;
