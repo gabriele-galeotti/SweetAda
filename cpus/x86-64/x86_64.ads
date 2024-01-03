@@ -376,7 +376,8 @@ package x86_64
 
    subtype IDT_Length_Type is Positive range 1 .. EXCEPTION_ITEMS;
 
-   procedure LIDTR (IDT_Descriptor : in IDT_Descriptor_Type)
+   procedure LIDTR
+      (IDT_Descriptor : in IDT_Descriptor_Type)
       with Inline => True;
    procedure IDT_Set
       (IDT_Descriptor : in out IDT_Descriptor_Type;
@@ -664,7 +665,8 @@ package x86_64
 
    function RDMSR
       (MSR_Register_Number : MSR_Type)
-      return Unsigned_64 with Inline => True;
+      return Unsigned_64
+      with Inline => True;
    procedure WRMSR
       (MSR_Register_Number : in MSR_Type;
        Value               : in Unsigned_64)
