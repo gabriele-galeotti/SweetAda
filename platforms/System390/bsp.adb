@@ -22,7 +22,8 @@ with Definitions;
 with Malloc;
 with S390;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -39,9 +40,9 @@ package body BSP is
    use S390;
 
    -- Malloc memory area
-   Heap : aliased Storage_Array (0 .. kB64 - 1) with
-      Alignment               => 16#1000#,
-      Suppress_Initialization => True; -- pragma Initialize_Scalars
+   Heap : aliased Storage_Array (0 .. kB64 - 1)
+      with Alignment               => 16#1000#,
+           Suppress_Initialization => True; -- pragma Initialize_Scalars
 
    --========================================================================--
    --                                                                        --
@@ -54,7 +55,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       Tclk_Init;

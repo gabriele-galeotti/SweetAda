@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package X3270 is
+package X3270
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,11 +28,11 @@ package X3270 is
 
    procedure Clear_Screen;
    procedure Line_Feed;
-   procedure Write_Message_RC (
-                               Message : in String;
-                               Row     : in Natural;
-                               Column  : in Natural
-                              );
-   procedure Write_Message (Message : in String);
+   procedure Write_Message_RC
+      (Message : in String;
+       Row     : in Natural;
+       Column  : in Natural);
+   procedure Write_Message
+      (Message : in String);
 
 end X3270;

@@ -23,7 +23,8 @@ with Definitions;
 with Bits;
 with EBCDIC;
 
-package body S390 is
+package body S390
+   is
 
    --========================================================================--
    --                                                                        --
@@ -50,7 +51,8 @@ package body S390 is
    ----------------------------------------------------------------------------
    -- TOD clock
    ----------------------------------------------------------------------------
-   procedure Tclk_Init is
+   procedure Tclk_Init
+      is
       init_timer_cc : Unsigned_64;
       cc            : Unsigned_32;
    begin

@@ -25,7 +25,8 @@ with Bits;
 with S390;
 with EBCDIC;
 
-package body X3270 is
+package body X3270
+   is
 
    --========================================================================--
    --                                                                        --
@@ -44,19 +45,17 @@ package body X3270 is
 
 pragma Warnings (Off, "size is not a multiple of alignment");
    MSG_HDR_SIZE : constant := 6;
-   type MSG_Header_Type is
-   record
+   type MSG_Header_Type is record
       WCC           : Unsigned_8;
       Command_SF    : Unsigned_8;
       SF_Parameters : Unsigned_8;
       Command_SBA   : Unsigned_8;
       SBA_AddressH  : Unsigned_8;
       SBA_AddressL  : Unsigned_8;
-   end record with
-      Alignment => 4,
-      Size      => MSG_HDR_SIZE * Storage_Unit;
-   for MSG_Header_Type use
-   record
+   end record
+      with Alignment => 4,
+           Size      => MSG_HDR_SIZE * Storage_Unit;
+   for MSG_Header_Type use record
       WCC           at 0 range 0 .. 7;
       Command_SF    at 1 range 0 .. 7;
       SF_Parameters at 2 range 0 .. 7;
@@ -77,8 +76,11 @@ pragma Warnings (On, "size is not a multiple of alignment");
    Current_Row    : Natural;
    Current_Column : Natural;
 
-   function To_Buffer_Address (R : in Natural; C : in Natural) return Unsigned_16 with
-      Inline => True;
+   function To_Buffer_Address
+      (R : Natural;
+       C : Natural)
+      return Unsigned_16
+      with Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -91,7 +93,11 @@ pragma Warnings (On, "size is not a multiple of alignment");
    ----------------------------------------------------------------------------
    -- To_Buffer_Address
    ----------------------------------------------------------------------------
-   function To_Buffer_Address (R : in Natural; C : in Natural) return Unsigned_16 is
+   function To_Buffer_Address
+      (R : Natural;
+       C : Natural)
+      return Unsigned_16
+      is
       BA : Unsigned_16;
    begin
       BA := Unsigned_16 (R * 80 + C);
@@ -101,13 +107,16 @@ pragma Warnings (On, "size is not a multiple of alignment");
    ----------------------------------------------------------------------------
    -- Clear_Screen
    ----------------------------------------------------------------------------
-   procedure Clear_Screen is
+   procedure Clear_Screen
+      is
       Message_Header : aliased MSG_Header_Type;
       Cursor_Address : Unsigned_16;
-      procedure CLS (A : Address; L : Natural) with
-         Import        => True,
-         Convention    => Asm,
-         External_Name => "x3270_cls";
+      procedure CLS
+         (A : Address;
+          L : Natural)
+         with Import        => True,
+              Convention    => Asm,
+              External_Name => "x3270_cls";
    begin
       Cursor_Address := To_Buffer_Address (1, 1);
       Message_Header.WCC           := 16#C7#; -- WCC: reset+alarm+restore+resetMDT
@@ -124,7 +133,8 @@ pragma Warnings (On, "size is not a multiple of alignment");
    ----------------------------------------------------------------------------
    -- Line_Feed
    ----------------------------------------------------------------------------
-   procedure Line_Feed is
+   procedure Line_Feed
+      is
    begin
       Current_Row    := Current_Row + 1;
       Current_Column := 0;
@@ -133,26 +143,32 @@ pragma Warnings (On, "size is not a multiple of alignment");
    ----------------------------------------------------------------------------
    -- Write_Message_RC
    ----------------------------------------------------------------------------
-   procedure Write_Message_RC (Message : in String; Row : in Natural; Column : in Natural) is
+   procedure Write_Message_RC
+      (Message : in String;
+       Row     : in Natural;
+       Column  : in Natural)
+      is
       subtype Work_Area is Byte_A4Array (1 .. MSG_HDR_SIZE + Message'Length);
       package Work_Area_Ops is new System.Address_To_Access_Conversions (Work_Area);
       use type Work_Area_Ops.Object_Pointer;
       subtype Work_Area_Ptr is Work_Area_Ops.Object_Pointer;
       procedure Free is new Ada.Unchecked_Deallocation (Work_Area, Work_Area_Ptr);
       Message_Ptr    : Work_Area_Ptr := new Work_Area;
-      Message_Header : aliased MSG_Header_Type with
-         Address    => Work_Area_Ops.To_Address (Message_Ptr),
-         Import     => True,
-         Convention => Ada;
-      E_String       : aliased EBCDIC_String (Message'Range) with
-         Address    => Message_Header'Address + MSG_HDR_SIZE,
-         Import     => True,
-         Convention => Ada;
+      Message_Header : aliased MSG_Header_Type
+         with Address    => Work_Area_Ops.To_Address (Message_Ptr),
+              Import     => True,
+              Convention => Ada;
+      E_String       : aliased EBCDIC_String (Message'Range)
+         with Address    => Message_Header'Address + MSG_HDR_SIZE,
+              Import     => True,
+              Convention => Ada;
       Cursor_Address : Unsigned_16;
-      procedure Write (A : Address; L : Natural) with
-         Import        => True,
-         Convention    => Asm,
-         External_Name => "x3270_write";
+      procedure Write
+         (A : Address;
+          L : Natural)
+         with Import        => True,
+              Convention    => Asm,
+              External_Name => "x3270_write";
    begin
       Cursor_Address := To_Buffer_Address (Row, Column);
       Message_Header.WCC           := 16#C7#; -- WCC: reset+alarm+restore+resetMDT
@@ -171,7 +187,9 @@ pragma Warnings (On, "size is not a multiple of alignment");
    ----------------------------------------------------------------------------
    -- Write_Message
    ----------------------------------------------------------------------------
-   procedure Write_Message (Message : in String) is
+   procedure Write_Message
+      (Message : in String)
+      is
    begin
       Write_Message_RC (Message, Current_Row, Current_Column);
       Line_Feed;
