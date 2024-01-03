@@ -30,7 +30,7 @@ package body BlockDevices
    -- To_CHS (Values -> Layout)
    --------------------------------------------------------------------------
    function To_CHS
-      (CHS : in CHS_Type)
+      (CHS : CHS_Type)
       return CHS_Layout_Type
       is
    begin
@@ -45,7 +45,7 @@ package body BlockDevices
    -- To_CHS (Layout -> Values)
    --------------------------------------------------------------------------
    function To_CHS
-      (CHS : in CHS_Layout_Type)
+      (CHS : CHS_Layout_Type)
       return CHS_Type
       is
    begin
@@ -61,8 +61,8 @@ package body BlockDevices
    -- LBA = (C * HPC + H) * SPT + (S - 1)
    --------------------------------------------------------------------------
    function To_LBA
-      (CHS          : in CHS_Type;
-       CHS_Geometry : in CHS_Type)
+      (CHS          : CHS_Type;
+       CHS_Geometry : CHS_Type)
       return LBA_Type
       is
    begin
@@ -79,8 +79,8 @@ package body BlockDevices
    -- S = (LBA mod SPT) + 1
    --------------------------------------------------------------------------
    function To_CHS
-      (Sector_Number : in LBA_Type;
-       CHS_Geometry  : in CHS_Type)
+      (Sector_Number : LBA_Type;
+       CHS_Geometry  : CHS_Type)
       return CHS_Type
       is
    begin

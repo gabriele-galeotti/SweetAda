@@ -71,11 +71,11 @@ package BlockDevices
    end record;
 
    function To_CHS
-      (CHS : in CHS_Type)
+      (CHS : CHS_Type)
       return CHS_Layout_Type;
 
    function To_CHS
-      (CHS : in CHS_Layout_Type)
+      (CHS : CHS_Layout_Type)
       return CHS_Type;
 
    ----------------------------------------------------------------------------
@@ -85,13 +85,13 @@ package BlockDevices
    type LBA_Type is mod 2**28;
 
    function To_LBA
-      (CHS          : in CHS_Type;
-       CHS_Geometry : in CHS_Type)
+      (CHS          : CHS_Type;
+       CHS_Geometry : CHS_Type)
       return LBA_Type;
 
    function To_CHS
-      (Sector_Number : in LBA_Type;
-       CHS_Geometry  : in CHS_Type)
+      (Sector_Number : LBA_Type;
+       CHS_Geometry  : CHS_Type)
       return CHS_Type;
 
 end BlockDevices;
