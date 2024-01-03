@@ -61,11 +61,11 @@ package NEORV32
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for CTRL_Type use record
-      EN            at 0 range 0 .. 0;
-      SIM_MODE      at 0 range 1 .. 1;
-      HWFC_EN       at 0 range 2 .. 2;
-      PRSC          at 0 range 3 .. 5;
-      BAUD          at 0 range 6 .. 15;
+      EN            at 0 range  0 ..  0;
+      SIM_MODE      at 0 range  1 ..  1;
+      HWFC_EN       at 0 range  2 ..  2;
+      PRSC          at 0 range  3 ..  5;
+      BAUD          at 0 range  6 .. 15;
       RX_NEMPTY     at 0 range 16 .. 16;
       RX_HALF       at 0 range 17 .. 17;
       RX_FULL       at 0 range 18 .. 18;
@@ -91,8 +91,8 @@ package NEORV32
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for DATA_Type use record
-      RTX          at 0 range 0 .. 7;
-      RX_FIFO_SIZE at 0 range 8 .. 11;
+      RTX          at 0 range  0 ..  7;
+      RX_FIFO_SIZE at 0 range  8 .. 11;
       TX_FIFO_SIZE at 0 range 12 .. 15;
       Reserved     at 0 range 16 .. 31;
    end record;
