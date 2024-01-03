@@ -27,7 +27,8 @@ with LEON3;
 with BSP;
 with IOEMU;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -57,7 +58,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
    begin
       System_Abort;
    end Exception_Process;
@@ -65,7 +67,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process is
+   procedure Irq_Process
+      is
    begin
       BSP.Tick_Count := @ + 1;
       if Configure.USE_QEMU_IOEMU then
@@ -79,7 +82,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
       Trap_Template  : TrapTable_Item_Type;
       Vector_Address : Address;
       Displacement   : Storage_Offset;

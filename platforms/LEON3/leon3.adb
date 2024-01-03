@@ -17,7 +17,8 @@
 
 with Configure;
 
-package body LEON3 is
+package body LEON3
+   is
 
    --========================================================================--
    --                                                                        --
@@ -31,7 +32,8 @@ package body LEON3 is
    -- Tclk_Init
    -- interrupt_level_6 26 0x16
    ----------------------------------------------------------------------------
-   procedure Tclk_Init is
+   procedure Tclk_Init
+      is
    begin
       -- Timer prescaler input frequency = 40 MHz, output = 1 MHz
       GPTIMER.Scaler_Reload_Value := 40;
@@ -41,15 +43,15 @@ package body LEON3 is
       GPTIMER.Reload_3           := 1_000;
       GPTIMER.Reload_4           := 1_000;
       GPTIMER.Control_Register_1 := (
-                                     EN     => False,
-                                     RS     => True,
-                                     LD     => False,
-                                     IE     => True,
-                                     IP     => False,
-                                     CH     => False,
-                                     DH     => False,
-                                     others => 0
-                                    );
+         EN     => False,
+         RS     => True,
+         LD     => False,
+         IE     => True,
+         IP     => False,
+         CH     => False,
+         DH     => False,
+         others => 0
+         );
       GPTIMER.Control_Register_1.EN := True;
       GPTIMER.Control_Register_1.LD := True;
    end Tclk_Init;
@@ -57,31 +59,34 @@ package body LEON3 is
    ----------------------------------------------------------------------------
    -- UART1_Init
    ----------------------------------------------------------------------------
-   procedure UART1_Init is
+   procedure UART1_Init
+      is
    begin
       UART1.Control_Register := (
-                                 RE       => True,
-                                 TE       => True,
-                                 RI       => False,
-                                 TI       => False,
-                                 PS       => PS_EVEN,
-                                 PE       => False,
-                                 LB       => False,
-                                 TF       => False,
-                                 RF       => False,
-                                 DB       => False,
-                                 FA       => False,
-                                 Unused1  => 0,
-                                 Unused2  => 0,
-                                 Unused3  => 0,
-                                 Reserved => 0
-                                );
+         RE       => True,
+         TE       => True,
+         RI       => False,
+         TI       => False,
+         PS       => PS_EVEN,
+         PE       => False,
+         LB       => False,
+         TF       => False,
+         RF       => False,
+         DB       => False,
+         FA       => False,
+         Unused1  => 0,
+         Unused2  => 0,
+         Unused3  => 0,
+         Reserved => 0
+         );
    end UART1_Init;
 
    ----------------------------------------------------------------------------
    -- UART1_TX
    ----------------------------------------------------------------------------
-   procedure UART1_TX (Data : in Unsigned_8) is
+   procedure UART1_TX
+      (Data : in Unsigned_8)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -93,7 +98,9 @@ package body LEON3 is
    ----------------------------------------------------------------------------
    -- UART1_RX
    ----------------------------------------------------------------------------
-   procedure UART1_RX (Data : out Unsigned_8) is
+   procedure UART1_RX
+      (Data : out Unsigned_8)
+      is
    begin
       -- wait for receiver available
       loop
