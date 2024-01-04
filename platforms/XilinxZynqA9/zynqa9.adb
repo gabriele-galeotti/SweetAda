@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body ZynqA9 is
+package body ZynqA9
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,7 +29,9 @@ package body ZynqA9 is
    ----------------------------------------------------------------------------
    -- UART_TX
    ----------------------------------------------------------------------------
-   procedure UART_TX (Data : in Unsigned_8) is
+   procedure UART_TX
+      (Data : in Unsigned_8)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -40,7 +43,9 @@ package body ZynqA9 is
    ----------------------------------------------------------------------------
    -- UART_RX
    ----------------------------------------------------------------------------
-   procedure UART_RX (Data : out Unsigned_8) is
+   procedure UART_RX
+      (Data : out Unsigned_8)
+      is
    begin
       -- wait for receiver available
       loop
@@ -52,7 +57,8 @@ package body ZynqA9 is
    ----------------------------------------------------------------------------
    -- UART_Init
    ----------------------------------------------------------------------------
-   procedure UART_Init is
+   procedure UART_Init
+      is
    begin
       UART0.CR :=
          (RXRST    => False,

@@ -18,7 +18,8 @@
 with System.Storage_Elements;
 with Interfaces;
 
-package IOEMU is
+package IOEMU
+   is
 
    --========================================================================--
    --                                                                        --
@@ -33,45 +34,45 @@ package IOEMU is
 
    IOEMU_BASEADDRESS : constant := 16#F800_7200#;
 
-   IO0 : aliased Unsigned_8 with
-      Address              => To_Address (IOEMU_BASEADDRESS + 0),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   IO1 : aliased Unsigned_8 with
-      Address              => To_Address (IOEMU_BASEADDRESS + 1),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   IO2 : aliased Unsigned_8 with
-      Address              => To_Address (IOEMU_BASEADDRESS + 2),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   IO3 : aliased Unsigned_8 with
-      Address              => To_Address (IOEMU_BASEADDRESS + 3),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   IO4 : aliased Unsigned_8 with
-      Address              => To_Address (IOEMU_BASEADDRESS + 4),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   IO5 : aliased Unsigned_8 with
-      Address              => To_Address (IOEMU_BASEADDRESS + 5),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   IO6 : aliased Unsigned_8 with
-      Address              => To_Address (IOEMU_BASEADDRESS + 6),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   IO7 : aliased Unsigned_8 with
-      Address              => To_Address (IOEMU_BASEADDRESS + 7),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   IO0 : aliased Unsigned_8
+      with Address              => To_Address (IOEMU_BASEADDRESS + 0),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   IO1 : aliased Unsigned_8
+      with Address              => To_Address (IOEMU_BASEADDRESS + 1),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   IO2 : aliased Unsigned_8
+      with Address              => To_Address (IOEMU_BASEADDRESS + 2),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   IO3 : aliased Unsigned_8
+      with Address              => To_Address (IOEMU_BASEADDRESS + 3),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   IO4 : aliased Unsigned_8
+      with Address              => To_Address (IOEMU_BASEADDRESS + 4),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   IO5 : aliased Unsigned_8
+      with Address              => To_Address (IOEMU_BASEADDRESS + 5),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   IO6 : aliased Unsigned_8
+      with Address              => To_Address (IOEMU_BASEADDRESS + 6),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   IO7 : aliased Unsigned_8
+      with Address              => To_Address (IOEMU_BASEADDRESS + 7),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end IOEMU;
