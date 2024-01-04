@@ -426,7 +426,7 @@ elf_analyze(Elf_t *pelf)
                 pelf->shoff               = SWAP32(ehdr->e_shoff);
                 pelf->shnum               = SWAP16(ehdr->e_shnum);
                 pelf->shentsize           = SWAP16(ehdr->e_shentsize);
-                pelf->shstrndx            = SWAP16(ehdr->e_shstridx);
+                pelf->shstrndx            = SWAP16(ehdr->e_shstrndx);
                 pelf->scn_shstrtab_offset = SWAP32(((Elf32_Shdr *)(pelf->data + pelf->shoff + pelf->shstrndx * pelf->shentsize))->sh_offset);
         }
         else if (pelf->class == ELFCLASS64)
@@ -437,7 +437,7 @@ elf_analyze(Elf_t *pelf)
                 pelf->shoff               = SWAP64(ehdr->e_shoff);
                 pelf->shnum               = SWAP16(ehdr->e_shnum);
                 pelf->shentsize           = SWAP16(ehdr->e_shentsize);
-                pelf->shstrndx            = SWAP16(ehdr->e_shstridx);
+                pelf->shstrndx            = SWAP16(ehdr->e_shstrndx);
                 pelf->scn_shstrtab_offset = SWAP64(((Elf64_Shdr *)(pelf->data + pelf->shoff + pelf->shstrndx * pelf->shentsize))->sh_offset);
         }
         for (idx = 0; idx < (int)pelf->shnum; idx++)
@@ -450,7 +450,7 @@ elf_analyze(Elf_t *pelf)
                         name   = SWAP32(shdr->sh_name);
                         offset = SWAP32(shdr->sh_offset);
                         size   = SWAP32(shdr->sh_size);
-                        addr   = SWAP32(shdr->sh_address);
+                        addr   = SWAP32(shdr->sh_addr);
                 }
                 else if (pelf->class == ELFCLASS64)
                 {
@@ -459,7 +459,7 @@ elf_analyze(Elf_t *pelf)
                         name   = SWAP32(shdr->sh_name);
                         offset = SWAP64(shdr->sh_offset);
                         size   = SWAP64(shdr->sh_size);
-                        addr   = SWAP64(shdr->sh_address);
+                        addr   = SWAP64(shdr->sh_addr);
                 }
                 /* get section name */
                 scn_name = (const char *)(pelf->data + pelf->scn_shstrtab_offset + name);
@@ -515,7 +515,7 @@ elf_find_symbol(Elf_t *pelf, const char *symbol, uint64_t *pvalue)
                         Elf32_Sym *sym;
                         sym = (Elf32_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf32_Sym));
                         name  = SWAP32(sym->st_name);
-                        shndx = SWAP16(sym->st_shidx);
+                        shndx = SWAP16(sym->st_shndx);
                         value = SWAP32(sym->st_value);
                         size  = SWAP32(sym->st_size);
                 }
@@ -524,7 +524,7 @@ elf_find_symbol(Elf_t *pelf, const char *symbol, uint64_t *pvalue)
                         Elf64_Sym *sym;
                         sym = (Elf64_Sym *)(pelf->data + pelf->scn_symtab_offset + idx * sizeof(Elf64_Sym));
                         name  = SWAP32(sym->st_name);
-                        shndx = SWAP16(sym->st_shidx);
+                        shndx = SWAP16(sym->st_shndx);
                         value = SWAP64(sym->st_value);
                         size  = SWAP64(sym->st_size);
                 }
@@ -634,7 +634,7 @@ command_dumpsections(void)
                         shdr = (Elf32_Shdr *)(application.pelf->data + application.pelf->shoff + idx * application.pelf->shentsize);
                         name = SWAP32(shdr->sh_name);
                         size = SWAP32(shdr->sh_size);
-                        addr = SWAP32(shdr->sh_address);
+                        addr = SWAP32(shdr->sh_addr);
                 }
                 else if (application.pelf->class == ELFCLASS64)
                 {
@@ -642,7 +642,7 @@ command_dumpsections(void)
                         shdr = (Elf64_Shdr *)(application.pelf->data + application.pelf->shoff + idx * application.pelf->shentsize);
                         name = SWAP32(shdr->sh_name);
                         size = SWAP64(shdr->sh_size);
-                        addr = SWAP64(shdr->sh_address);
+                        addr = SWAP64(shdr->sh_addr);
                 }
                 /* get section name */
                 scn_name = (const char *)(application.pelf->data + application.pelf->scn_shstrtab_offset + name);
