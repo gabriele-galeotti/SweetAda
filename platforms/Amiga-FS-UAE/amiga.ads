@@ -22,7 +22,8 @@ with Definitions;
 with Bits;
 with Videofont8x8;
 
-package Amiga is
+package Amiga
+   is
 
    --========================================================================--
    --                                                                        --
@@ -51,8 +52,7 @@ package Amiga is
    -- CUSTOM
    ----------------------------------------------------------------------------
 
-   type SERDATR_Type is
-   record
+   type SERDATR_Type is record
       DB      : Unsigned_8; -- Data bits
       STP_DB8 : Bits_1;     -- Stop bit if LONG, data bit if not
       STP     : Bits_1;     -- Stop bit
@@ -62,14 +62,13 @@ package Amiga is
       TBE     : Boolean;    -- Serial port transmit buffer empty (mirror)
       RBF     : Boolean;    -- Serial port receive buffer full (mirror)
       OVRUN   : Boolean;    -- Serial port receiver overun
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SERDATR_Type use
-   record
-      DB      at 0 range 0 .. 7;
-      STP_DB8 at 0 range 8 .. 8;
-      STP     at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SERDATR_Type use record
+      DB      at 0 range  0 ..  7;
+      STP_DB8 at 0 range  8 ..  8;
+      STP     at 0 range  9 ..  9;
       Unused  at 0 range 10 .. 10;
       RXD     at 0 range 11 .. 11;
       TSRE    at 0 range 12 .. 12;
@@ -78,34 +77,29 @@ package Amiga is
       OVRUN   at 0 range 15 .. 15;
    end record;
 
-   type SERDAT_Type is
-   record
+   type SERDAT_Type is record
       D : Unsigned_8; -- Data bits
       S : Unsigned_8; -- Stop bit
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SERDAT_Type use
-   record
-      D at 0 range 0 .. 7;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SERDAT_Type use record
+      D at 0 range 0 ..  7;
       S at 0 range 8 .. 15;
    end record;
 
-   type SERPER_Type is
-   record
+   type SERPER_Type is record
       RATE : Bits_15; -- Defines baud rate=1/((N+1)*.2794 microseconds)
       LONG : Boolean; -- Defines serial receive as 9 bit word
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SERPER_Type use
-   record
-      RATE at 0 range 0 .. 14;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SERPER_Type use record
+      RATE at 0 range  0 .. 14;
       LONG at 0 range 15 .. 15;
    end record;
 
-   type CUSTOM_Type is
-   record
+   type CUSTOM_Type is record
       SERDATR : SERDATR_Type with Volatile_Full_Access => True;
       INTENAR : Unsigned_16  with Volatile_Full_Access => True;
       INTREQR : Unsigned_16  with Volatile_Full_Access => True;
@@ -128,8 +122,7 @@ package Amiga is
       COLOR01 : Unsigned_16  with Volatile_Full_Access => True;
       COLOR02 : Unsigned_16  with Volatile_Full_Access => True;
    end record;
-   for CUSTOM_Type use
-   record
+   for CUSTOM_Type use record
       SERDATR at 16#0018# range 0 .. 15;
       INTENAR at 16#001C# range 0 .. 15;
       INTREQR at 16#001E# range 0 .. 15;
@@ -155,11 +148,11 @@ package Amiga is
 
    CUSTOM_BASEADDRESS : constant := 16#00DF_F000#;
 
-   CUSTOM : aliased CUSTOM_Type with
-      Address    => To_Address (CUSTOM_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CUSTOM : aliased CUSTOM_Type
+      with Address    => To_Address (CUSTOM_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- INTENA Interrupt Enable register
    TBE   : constant := 2#0000_0000_0000_0001#;
@@ -202,23 +195,27 @@ package Amiga is
    DMAF_MASTER : constant := 2#0000_0010_0000_0000#;
    DMACON_SET  : constant := 2#1000_0000_0000_0000#;
 
-   procedure INTENA_ClearAll with
-      Inline => True;
+   procedure INTENA_ClearAll
+      with Inline => True;
 
-   procedure INTENA_ClearBitMask (Value : in Unsigned_16) with
-      Inline => True;
+   procedure INTENA_ClearBitMask
+      (Value : in Unsigned_16)
+      with Inline => True;
 
-   procedure INTENA_SetBitMask (Value : in Unsigned_16) with
-      Inline => True;
+   procedure INTENA_SetBitMask
+      (Value : in Unsigned_16)
+      with Inline => True;
 
-   procedure INTREQ_ClearAll with
-      Inline => True;
+   procedure INTREQ_ClearAll
+      with Inline => True;
 
-   procedure INTREQ_ClearBitMask (Value : in Unsigned_16) with
-      Inline => True;
+   procedure INTREQ_ClearBitMask
+      (Value : in Unsigned_16)
+      with Inline => True;
 
-   procedure INTREQ_SetBitMask (Value : in Unsigned_16) with
-      Inline => True;
+   procedure INTREQ_SetBitMask
+      (Value : in Unsigned_16)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- OCS video
@@ -230,21 +227,20 @@ package Amiga is
    -- keep in-sync with linker.lds address definition
    FRAMEBUFFER_BASEADDRESS : constant := 16#0003_0000#;
 
-   Framebuffer : aliased Byte_Array (0 .. VIDEO_WIDTH * VIDEO_HEIGHT - 1) with
-      Address    => To_Address (FRAMEBUFFER_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   Framebuffer : aliased Byte_Array (0 .. VIDEO_WIDTH * VIDEO_HEIGHT - 1)
+      with Address    => To_Address (FRAMEBUFFER_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   Copperlist : aliased U16_Array (0 .. 5) with
-      Alignment               => 16#0000_1000#,
-      Suppress_Initialization => True;
+   Copperlist : aliased U16_Array (0 .. 5)
+      with Alignment               => 16#0000_1000#,
+           Suppress_Initialization => True;
 
    subtype Video_X_Coordinate_Type is Natural range 0 .. VIDEO_WIDTH / Videofont8x8.Font_Width - 1;
    subtype Video_Y_Coordinate_Type is Natural range 0 .. VIDEO_HEIGHT / Videofont8x8.Font_Height - 1;
 
-   type Cursor_Type is
-   record
+   type Cursor_Type is record
       X : Video_X_Coordinate_Type;
       Y : Video_Y_Coordinate_Type;
    end record;
@@ -252,16 +248,17 @@ package Amiga is
    Cursor : Cursor_Type;
 
    procedure OCS_Clear_Screen;
-   procedure OCS_Print (C : in Character);
-   procedure OCS_Print (S : in String);
+   procedure OCS_Print
+      (C : in Character);
+   procedure OCS_Print
+      (S : in String);
    procedure OCS_Setup;
 
    ----------------------------------------------------------------------------
    -- CIAs
    ----------------------------------------------------------------------------
 
-   type CIA_PRA_Type is
-   record
+   type CIA_PRA_Type is record
       PA0 : Boolean;
       PA1 : Boolean;
       PA2 : Boolean;
@@ -270,11 +267,10 @@ package Amiga is
       PA5 : Boolean;
       PA6 : Boolean;
       PA7 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CIA_PRA_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CIA_PRA_Type use record
       PA0 at 0 range 0 .. 0;
       PA1 at 0 range 1 .. 1;
       PA2 at 0 range 2 .. 2;
@@ -285,8 +281,7 @@ package Amiga is
       PA7 at 0 range 7 .. 7;
    end record;
 
-   type CIA_PRB_Type is
-   record
+   type CIA_PRB_Type is record
       PB0 : Boolean;
       PB1 : Boolean;
       PB2 : Boolean;
@@ -295,11 +290,10 @@ package Amiga is
       PB5 : Boolean;
       PB6 : Boolean;
       PB7 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CIA_PRB_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CIA_PRB_Type use record
       PB0 at 0 range 0 .. 0;
       PB1 at 0 range 1 .. 1;
       PB2 at 0 range 2 .. 2;
@@ -310,8 +304,7 @@ package Amiga is
       PB7 at 0 range 7 .. 7;
    end record;
 
-   type CIA_DDRA_Type is
-   record
+   type CIA_DDRA_Type is record
       DPA0 : Boolean;
       DPA1 : Boolean;
       DPA2 : Boolean;
@@ -320,11 +313,10 @@ package Amiga is
       DPA5 : Boolean;
       DPA6 : Boolean;
       DPA7 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CIA_DDRA_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CIA_DDRA_Type use record
       DPA0 at 0 range 0 .. 0;
       DPA1 at 0 range 1 .. 1;
       DPA2 at 0 range 2 .. 2;
@@ -335,8 +327,7 @@ package Amiga is
       DPA7 at 0 range 7 .. 7;
    end record;
 
-   type CIA_DDRB_Type is
-   record
+   type CIA_DDRB_Type is record
       DPB0 : Boolean;
       DPB1 : Boolean;
       DPB2 : Boolean;
@@ -345,11 +336,10 @@ package Amiga is
       DPB5 : Boolean;
       DPB6 : Boolean;
       DPB7 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for CIA_DDRB_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CIA_DDRB_Type use record
       DPB0 at 0 range 0 .. 0;
       DPB1 at 0 range 1 .. 1;
       DPB2 at 0 range 2 .. 2;
@@ -360,8 +350,7 @@ package Amiga is
       DPB7 at 0 range 7 .. 7;
    end record;
 
-   -- type CIA_ICR_Type is
-   -- record
+   -- type CIA_ICR_Type is record
    -- end record with
    --    Bit_Order => Low_Order_First,
    --    Size      => 8;
@@ -369,8 +358,7 @@ package Amiga is
    -- record
    -- end record;
 
-   type CIA_Type is
-   record
+   type CIA_Type is record
       PRA      : CIA_PRA_Type  with Volatile_Full_Access => True;
       PRB      : CIA_PRB_Type  with Volatile_Full_Access => True;
       DDRA     : CIA_DDRA_Type with Volatile_Full_Access => True;
@@ -388,8 +376,7 @@ package Amiga is
       CRA      : Unsigned_8    with Volatile_Full_Access => True;
       CRB      : Unsigned_8    with Volatile_Full_Access => True;
    end record;
-   for CIA_Type use
-   record
+   for CIA_Type use record
       PRA      at 16#0000# range 0 .. 7;
       PRB      at 16#0100# range 0 .. 7;
       DDRA     at 16#0200# range 0 .. 7;
@@ -430,11 +417,11 @@ package Amiga is
 
    CIAA_BASEADDRESS : constant := 16#00BF_E001#;
 
-   CIAA : aliased CIA_Type with
-      Address    => To_Address (CIAA_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CIAA : aliased CIA_Type
+      with Address    => To_Address (CIAA_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- CIA B U301, wired on D8..D15
    -- PRA
@@ -458,26 +445,30 @@ package Amiga is
 
    CIAB_BASEADDRESS : constant := 16#00BF_D000#;
 
-   CIAB : aliased CIA_Type with
-      Address    => To_Address (CIAB_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CIAB : aliased CIA_Type
+      with Address    => To_Address (CIAB_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   procedure CIAA_ICR_ClearAll with
-      Inline => True;
+   procedure CIAA_ICR_ClearAll
+      with Inline => True;
 
-   procedure CIAA_ICR_ClearBitMask (Value : in Unsigned_8) with
-      Inline => True;
+   procedure CIAA_ICR_ClearBitMask
+      (Value : in Unsigned_8)
+      with Inline => True;
 
-   procedure CIAA_ICR_SetBitMask (Value : in Unsigned_8) with
-      Inline => True;
+   procedure CIAA_ICR_SetBitMask
+      (Value : in Unsigned_8)
+      with Inline => True;
 
    procedure Serialport_Init;
 
-   procedure Serialport_RX (C : out Character);
+   procedure Serialport_RX
+      (C : out Character);
 
-   procedure Serialport_TX (C : in Character);
+   procedure Serialport_TX
+      (C : in Character);
 
    procedure Tclk_Init;
 
@@ -485,15 +476,13 @@ package Amiga is
    -- MSM6242 RTC
    ----------------------------------------------------------------------------
 
-   type MSM6242_Type is
-   record
+   type MSM6242_Type is record
       S1   : Unsigned_8 with Volatile_Full_Access => True; -- 1-second digit register
       S10  : Unsigned_8 with Volatile_Full_Access => True; -- 10-second digit register
       MI1  : Unsigned_8 with Volatile_Full_Access => True; -- 1-minute digit register
       MI10 : Unsigned_8 with Volatile_Full_Access => True; -- 10-minute digit register
    end record;
-   for MSM6242_Type use
-   record
+   for MSM6242_Type use record
       S1   at 16#0000# range 0 .. 7;
       S10  at 16#0002# range 0 .. 7;
       MI1  at 16#0004# range 0 .. 7;
@@ -502,10 +491,10 @@ package Amiga is
 
    MSM6242_BASEADDRESS : constant := 16#00DC_0001#; -- wired on D0..D7
 
-   MSM6242 : aliased MSM6242_Type with
-      Address    => To_Address (MSM6242_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   MSM6242 : aliased MSM6242_Type
+      with Address    => To_Address (MSM6242_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end Amiga;

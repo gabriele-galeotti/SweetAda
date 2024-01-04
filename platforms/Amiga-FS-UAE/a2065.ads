@@ -23,7 +23,8 @@ with Am7990;
 with Ethernet;
 with PBUF;
 
-package A2065 is
+package A2065
+   is
 
    --========================================================================--
    --                                                                        --
@@ -55,9 +56,14 @@ package A2065 is
    -- subprograms
    ----------------------------------------------------------------------------
 
-   procedure Probe (PIC : in ZorroII.PIC_Type; Success : out Boolean);
+   procedure Probe
+      (PIC     : in     ZorroII.PIC_Type;
+       Success :    out Boolean);
    procedure Init;
-   function Receive return Boolean;
-   procedure Transmit (Data_Address : in System.Address; P : in PBUF.Pbuf_Ptr);
+   function Receive
+      return Boolean;
+   procedure Transmit
+      (Data_Address : in System.Address;
+       P            : in PBUF.Pbuf_Ptr);
 
 end A2065;

@@ -23,7 +23,8 @@ with Memory_Functions;
 with Amiga;
 with Console;
 
-package body A2065 is
+package body A2065
+   is
 
    --========================================================================--
    --                                                                        --
@@ -46,8 +47,8 @@ package body A2065 is
    -- because memory is read differently on the two sides.
    ----------------------------------------------------------------------------
 
-   Initialization_Done : Boolean := False with
-      Atomic => True;
+   Initialization_Done : Boolean := False
+      with Atomic => True;
 
    ----------------------------------------------------------------------------
    -- Packet buffer
@@ -64,18 +65,18 @@ package body A2065 is
    RDR_ORDER : constant := 3; -- 2^3 = 8 entries
 
    -- size = 64 * 8 = 512 = 0x200
-   Receive_Ring : aliased Receive_Ring_Type (0 .. 2**RDR_ORDER - 1) with
-      Address    => To_Address (16#00EA_8100#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   Receive_Ring : aliased Receive_Ring_Type (0 .. 2**RDR_ORDER - 1)
+      with Address    => To_Address (16#00EA_8100#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- size = 2048 * 8 = 16384 = 0x4000
-   Receive_Buffers : array (0 .. 2**RDR_ORDER - 1) of aliased Packet_Buffer_Type with
-      Address    => To_Address (16#00EA_8800#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   Receive_Buffers : array (0 .. 2**RDR_ORDER - 1) of aliased Packet_Buffer_Type
+      with Address    => To_Address (16#00EA_8800#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Transmit ring
@@ -83,27 +84,27 @@ package body A2065 is
 
    TDR_ORDER : constant := 0; -- 2^0 = 1 entry
 
-   Transmit_Ring : aliased Transmit_Ring_Type (0 .. 2**TDR_ORDER - 1) with
-      Address    => To_Address (16#00EA_E000#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   Transmit_Ring : aliased Transmit_Ring_Type (0 .. 2**TDR_ORDER - 1)
+      with Address    => To_Address (16#00EA_E000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   Transmit_Buffers : array (0 .. 2**TDR_ORDER - 1) of aliased Packet_Buffer_Type with
-      Address    => To_Address (16#00EA_E100#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   Transmit_Buffers : array (0 .. 2**TDR_ORDER - 1) of aliased Packet_Buffer_Type
+      with Address    => To_Address (16#00EA_E100#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Initialization block
    ----------------------------------------------------------------------------
 
-   Initialization_Block : Initialization_Block_Type with
-      Address    => To_Address (A2065_BASEADDRESS + A2065_RAM_OFFSET),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   Initialization_Block : Initialization_Block_Type
+      with Address    => To_Address (A2065_BASEADDRESS + A2065_RAM_OFFSET),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- starting RX buffer
    RX_Buffer_Index : Natural := 0;
@@ -119,7 +120,10 @@ package body A2065 is
    ----------------------------------------------------------------------------
    -- Probe
    ----------------------------------------------------------------------------
-   procedure Probe (PIC : in ZorroII.PIC_Type; Success : out Boolean) is
+   procedure Probe
+      (PIC     : in     ZorroII.PIC_Type;
+       Success :    out Boolean)
+      is
    begin
       -- MAC = 02-80-10 (Commodore OUI, locally administered) + last 24 bits of
       -- the board S/N offsets
@@ -142,7 +146,8 @@ package body A2065 is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
       RDRA                : Ring_Descriptor_Pointer_Type;
       TDRA                : Ring_Descriptor_Pointer_Type;
       Ethernet_Descriptor : Ethernet.Descriptor_Type := Ethernet.DESCRIPTOR_INVALID;
@@ -157,36 +162,36 @@ package body A2065 is
       Am7990_Descriptor_Initialized := True;
       -- begin initialization sequence by setting STOP bit
       Register_Write (
-                      Am7990_Descriptor,
-                      CSR0,
-                      To_U16 (CSR0_Type'(
-                                         STOP   => True,
-                                         others => False
-                                        ))
-                     );
+         Am7990_Descriptor,
+         CSR0,
+         To_U16 (CSR0_Type'(
+            STOP   => True,
+            others => False
+            ))
+         );
       -- once the STOP bit is set, other registers can be accessed
       -- setup Initialization Block address in CSR1,2
       Register_Write (
-                      Am7990_Descriptor,
-                      CSR1,
-                      LWord (Unsigned_32'(A2065_BASEADDRESS + A2065_RAM_OFFSET)) and 16#FFFE#
-                     );
+         Am7990_Descriptor,
+         CSR1,
+         LWord (Unsigned_32'(A2065_BASEADDRESS + A2065_RAM_OFFSET)) and 16#FFFE#
+         );
       Register_Write (
-                      Am7990_Descriptor,
-                      CSR2,
-                      HWord (Unsigned_32'(A2065_BASEADDRESS + A2065_RAM_OFFSET)) and 16#00FF#
-                     );
+         Am7990_Descriptor,
+         CSR2,
+         HWord (Unsigned_32'(A2065_BASEADDRESS + A2065_RAM_OFFSET)) and 16#00FF#
+         );
       -- setup CSR3
       Register_Write (
-                      Am7990_Descriptor,
-                      CSR3,
-                      To_U16 (CSR3_Type'(
-                                         BCON     => 0,
-                                         ACON     => 0,
-                                         BSWP     => 1,
-                                         Reserved => 0
-                                        ))
-                     );
+         Am7990_Descriptor,
+         CSR3,
+         To_U16 (CSR3_Type'(
+            BCON     => 0,
+            ACON     => 0,
+            BSWP     => 1,
+            Reserved => 0
+            ))
+         );
       -- setup Receive Message Descriptors
       for Index in Receive_Ring'Range loop
          Receive_Ring (Index).RMD0 :=
@@ -233,16 +238,16 @@ package body A2065 is
       -- the Initialization Block will be read by LANCE when the INIT bit in
       -- CSR0 is set
       Initialization_Block.MODE := (
-                                    DRX      => False,
-                                    DTX      => False,
-                                    LOOPB    => False,
-                                    DTCR     => False,
-                                    COLL     => False,
-                                    DRTY     => False,
-                                    INTL     => False,
-                                    Reserved => 0,
-                                    PROM     => True
-                                   );
+         DRX      => False,
+         DTX      => False,
+         LOOPB    => False,
+         DTCR     => False,
+         COLL     => False,
+         DRTY     => False,
+         INTL     => False,
+         Reserved => 0,
+         PROM     => True
+         );
       Initialization_Block.PADR0 := A2065_MAC (0);
       Initialization_Block.PADR1 := A2065_MAC (1);
       Initialization_Block.PADR2 := A2065_MAC (2);
@@ -259,33 +264,35 @@ package body A2065 is
       Initialization_Block.TDRA := To_R_RDP (Word_Swap (To_U32 (TDRA)));
       -- set INIT, clear STOP
       Register_Write (
-                      Am7990_Descriptor,
-                      CSR0,
-                      To_U16 (CSR0_Type'(
-                                         INIT   => True,
-                                         INEA   => True,
-                                         others => False
-                                        ))
-                     );
+         Am7990_Descriptor,
+         CSR0,
+         To_U16 (CSR0_Type'(
+            INIT   => True,
+            INEA   => True,
+            others => False
+            ))
+         );
       -- wait for initialization done
       loop
          exit when Initialization_Done;
       end loop;
       -- enable LANCE to send and receive packets
       Register_Write (
-                      Am7990_Descriptor,
-                      CSR0,
-                      To_U16 (CSR0_Type'(
-                                         STRT   => True,
-                                         others => False
-                                        ))
-                     );
+         Am7990_Descriptor,
+         CSR0,
+         To_U16 (CSR0_Type'(
+            STRT   => True,
+            others => False
+            ))
+         );
    end Init;
 
    ----------------------------------------------------------------------------
    -- Receive
    ----------------------------------------------------------------------------
-   function Receive return Boolean is
+   function Receive
+      return Boolean
+      is
       Result       : Boolean;
       A2065_Status : CSR0_Type;
       P            : Pbuf_Ptr;
@@ -299,13 +306,13 @@ package body A2065 is
          if A2065_Status.IDON then
             -- initialization complete
             Register_Write (
-                            Am7990_Descriptor,
-                            CSR0,
-                            To_U16 (CSR0_Type'(
-                                               IDON   => True,
-                                               others => False
-                                              ))
-                           );
+               Am7990_Descriptor,
+               CSR0,
+               To_U16 (CSR0_Type'(
+                  IDON   => True,
+                  others => False
+                  ))
+               );
             Initialization_Done := True;
             Result := True;
             -- Console.Print ("A2065: Initialization done.", NL => True);
@@ -316,26 +323,26 @@ package body A2065 is
             end loop;
             -- __FIX__ check for errors
             Register_Write (
-                            Am7990_Descriptor,
-                            CSR0,
-                            To_U16 (CSR0_Type'(
-                                               TXON   => True,
-                                               RXON   => True,
-                                               BABL   => True,
-                                               MISS   => True,
-                                               MERR   => True,
-                                               TINT   => False,
-                                               RINT   => True,
-                                               others => False
-                                              ))
-                           );
+               Am7990_Descriptor,
+               CSR0,
+               To_U16 (CSR0_Type'(
+                  TXON   => True,
+                  RXON   => True,
+                  BABL   => True,
+                  MISS   => True,
+                  MERR   => True,
+                  TINT   => False,
+                  RINT   => True,
+                  others => False
+                  ))
+               );
             -- Console.Print (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT), Prefix => "RECEIVE = ", NL => True);
             P := Allocate (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT) - 4); -- discard FCS
             Memory_Functions.Cpymem (
-                                     Receive_Buffers (RX_Buffer_Index)'Address,
-                                     Payload_Address (P),
-                                     Bytesize (Receive_Ring (RX_Buffer_Index).RMD3.MCNT - 4)
-                                    );
+               Receive_Buffers (RX_Buffer_Index)'Address,
+               Payload_Address (P),
+               Bytesize (Receive_Ring (RX_Buffer_Index).RMD3.MCNT - 4)
+               );
             -- Receive_Ring (RX_Buffer_Index).RMD3.MCNT := 0; ???
             Receive_Ring (RX_Buffer_Index).RMD1.OWN := True;
             declare
@@ -346,19 +353,19 @@ package body A2065 is
             Result := True;
          elsif A2065_Status.TINT then
             Register_Write (
-                            Am7990_Descriptor,
-                            CSR0,
-                            To_U16 (CSR0_Type'(
-                                               TXON   => True,
-                                               RXON   => True,
-                                               BABL   => True,
-                                               MISS   => True,
-                                               MERR   => True,
-                                               TINT   => True,
-                                               RINT   => False,
-                                               others => False
-                                              ))
-                           );
+               Am7990_Descriptor,
+               CSR0,
+               To_U16 (CSR0_Type'(
+                  TXON   => True,
+                  RXON   => True,
+                  BABL   => True,
+                  MISS   => True,
+                  MERR   => True,
+                  TINT   => True,
+                  RINT   => False,
+                  others => False
+                  ))
+               );
             Transmit_Ring (0).TMD1.OWN := False;
             Result := True;
          end if;
@@ -369,7 +376,10 @@ package body A2065 is
    ----------------------------------------------------------------------------
    -- Transmit
    ----------------------------------------------------------------------------
-   procedure Transmit (Data_Address : in System.Address; P : in Pbuf_Ptr) is
+   procedure Transmit
+      (Data_Address : in System.Address;
+       P            : in Pbuf_Ptr)
+      is
       pragma Unreferenced (Data_Address);
    begin
       -- __FIX__
@@ -379,28 +389,28 @@ package body A2065 is
       Console.Print (P.all.Size, Prefix => "TRANSMIT: ", NL => True);
       -- __FIX__ only one pbuf
       Memory_Functions.Cpymem (
-                               Payload_Address (P),
-                               Transmit_Buffers (0)'Address,
-                               Bytesize (P.all.Size)
-                              );
+         Payload_Address (P),
+         Transmit_Buffers (0)'Address,
+         Bytesize (P.all.Size)
+         );
       Transmit_Ring (0).TMD2 := (BCNT => -Bits_12 (P.all.Size), others => <>);
       Transmit_Ring (0).TMD1.ENP := True;
       Transmit_Ring (0).TMD1.STP := True;
       Transmit_Ring (0).TMD1.OWN := True;
       Register_Write (
-                      Am7990_Descriptor,
-                      CSR0,
-                      To_U16 (CSR0_Type'(
-                                         TXON   => True,
-                                         RXON   => True,
-                                         BABL   => True,
-                                         MISS   => True,
-                                         MERR   => True,
-                                         TINT   => True,
-                                         RINT   => True,
-                                         others => False
-                                        ))
-                     );
+         Am7990_Descriptor,
+         CSR0,
+         To_U16 (CSR0_Type'(
+            TXON   => True,
+            RXON   => True,
+            BABL   => True,
+            MISS   => True,
+            MERR   => True,
+            TINT   => True,
+            RINT   => True,
+            others => False
+            ))
+         );
    end Transmit;
 
 end A2065;

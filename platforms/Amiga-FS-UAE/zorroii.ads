@@ -18,7 +18,8 @@
 with System.Storage_Elements;
 with Interfaces;
 
-package ZorroII is
+package ZorroII
+   is
 
    --========================================================================--
    --                                                                        --
@@ -31,8 +32,7 @@ package ZorroII is
    use System.Storage_Elements;
    use Interfaces;
 
-   type PIC_Type is
-   record
+   type PIC_Type is record
      Board           : Unsigned_8;
      ID_Product      : Unsigned_8;
      ID_Manufacturer : Unsigned_16;
@@ -40,8 +40,10 @@ package ZorroII is
      Control_Status  : Unsigned_8;
    end record;
 
-   function Read return PIC_Type;
-   procedure Setup (Base_Address : in Integer_Address);
+   function Read
+      return PIC_Type;
+   procedure Setup
+      (Base_Address : in Integer_Address);
    procedure Shutup;
 
 end ZorroII;
