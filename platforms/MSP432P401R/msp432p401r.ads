@@ -19,7 +19,8 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 
-package MSP432P401R is
+package MSP432P401R
+   is
 
    --========================================================================--
    --                                                                        --
