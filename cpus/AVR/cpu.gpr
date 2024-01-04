@@ -43,7 +43,14 @@ library project Cpu is
                                "L_udivmodhi4.S",
                                "L_udivmodsi4.S",
                                "L_umulhisi3.S",
-                               "L_umulsidi3.S"
+                               "L_umulsidi3.S",
+                               "L_negdi2.S",
+                               "L_divdi3.S",
+                               "L_moddi3.S",
+                               "L_udivdi3.S",
+                               "L_udivmod64.S",
+                               "L_prologue.S",
+                               "L_epilogue.S"
                               );
    end case;
 
