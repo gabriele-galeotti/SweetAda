@@ -23,6 +23,7 @@ with MIPS;
 with R3000;
 
 package KN02BA
+   with Preelaborate => True
    is
 
    --========================================================================--
