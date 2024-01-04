@@ -20,7 +20,8 @@ with Bits;
 with MCF5373;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -38,7 +39,9 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -47,7 +50,9 @@ package body BSP is
       MCF5373.UTB0 := To_U8 (C);
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       -- wait for receiver available
@@ -61,7 +66,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup.
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
