@@ -39,7 +39,8 @@ ifneq ($(USE_LIBGCC),Y)
 LIB1ASMSRC       := lib1funcs.S
 LIBGCC_FUNCTIONS := adddi3_s8 cmpdi2 cmpdi2_s8 ashrdi3 negsi2 subdi3 mulsidi3   \
                     umulsidi3 umulhisi3 muldi3_6 divmodsi4 udivmodsi4 divmodhi4 \
-                    udivmodhi4
+                    udivmodhi4 negdi2 divdi3 moddi3 udivdi3 udivmod64           \
+                    prologue epilogue
 LIBGCC_SOURCES   := $(foreach f,$(LIBGCC_FUNCTIONS),L_$(f).S)
 OBJECTS          += $(foreach f,$(LIBGCC_FUNCTIONS),$(OBJ_DIRECTORY)/L_$(f).o)
 $(LIBGCC_SOURCES): %.S : $(LIB1ASMSRC)
