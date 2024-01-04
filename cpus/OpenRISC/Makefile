@@ -35,11 +35,25 @@ LIBRARY_NAME := cpu
 
 OBJECTS :=
 
+ifneq ($(USE_LIBGCC),Y)
+LIB1ASMSRC       := lib1funcs.S
+LIBGCC_FUNCTIONS := mulsi3 udivsi3 umodsi3 divsi3 modsi3
+LIBGCC_SOURCES   := $(foreach f,$(LIBGCC_FUNCTIONS),L_$(f).S)
+OBJECTS          += $(foreach f,$(LIBGCC_FUNCTIONS),$(OBJ_DIRECTORY)/L_$(f).o)
+$(LIBGCC_SOURCES): %.S : $(LIB1ASMSRC)
+	$(call brief-command, \
+        $(CPP) -o $@ -x assembler-with-cpp -P -CC -D$* $(LIB1ASMSRC) \
+        ,[CPP],$@)
+OBJECTS          += libgcc.o
+else
+LIBGCC_SOURCES :=
+endif
+
 .PHONY: all
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
-configure:
+configure: $(LIBGCC_SOURCES)
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
 .PHONY: clean
@@ -49,6 +63,9 @@ clean:
 .PHONY: distclean
 distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
+ifneq ($(USE_LIBGCC),Y)
+	$(RM) $(LIBGCC_SOURCES)
+endif
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
