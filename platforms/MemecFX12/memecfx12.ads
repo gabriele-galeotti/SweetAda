@@ -19,7 +19,8 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 
-package MemecFX12 is
+package MemecFX12
+   is
 
    --========================================================================--
    --                                                                        --
@@ -38,31 +39,36 @@ package MemecFX12 is
    XPAR_LCD_CONTROLLER_0_BASEADDR  : constant := 16#8500_0000#;
 
    -- LED
-   LED_IO : aliased Unsigned_32 with
-      Address    => To_Address (XPAR_XPS_GPIO_0_BASEADDR_IO),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   LED_3STATE : aliased Unsigned_32 with
-      Address    => To_Address (XPAR_XPS_GPIO_0_BASEADDR_3STATE),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
-   LCD : aliased Unsigned_32 with
-      Address    => To_Address (XPAR_LCD_CONTROLLER_0_BASEADDR),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   LED_IO : aliased Unsigned_32
+      with Address    => To_Address (XPAR_XPS_GPIO_0_BASEADDR_IO),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   LED_3STATE : aliased Unsigned_32
+      with Address    => To_Address (XPAR_XPS_GPIO_0_BASEADDR_3STATE),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   LCD : aliased Unsigned_32
+      with Address    => To_Address (XPAR_LCD_CONTROLLER_0_BASEADDR),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   procedure Wait (Loops : in Positive);
-   procedure LCD_Display_Update (
-                                 Base_Address : in System.Address;
-                                 Data         : in Unsigned_8;
-                                 Mode         : in Unsigned_32
-                                );
-   procedure LCD_Write (Base_Address : in System.Address; S : in String);
-   procedure LCD_Clear (Base_Address : in System.Address);
-   procedure LCD_Line (Base_Address : in System.Address; Line : in Integer);
+   procedure Wait
+      (Loops : in Positive);
+   procedure LCD_Display_Update
+      (Base_Address : in System.Address;
+       Data         : in Unsigned_8;
+       Mode         : in Unsigned_32);
+   procedure LCD_Write
+      (Base_Address : in System.Address;
+       S            : in String);
+   procedure LCD_Clear
+      (Base_Address : in System.Address);
+   procedure LCD_Line
+      (Base_Address : in System.Address;
+       Line         : in Integer);
    procedure LCD_Init;
 
 end MemecFX12;

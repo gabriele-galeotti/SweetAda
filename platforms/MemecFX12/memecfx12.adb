@@ -17,7 +17,8 @@
 
 with Bits;
 
-package body MemecFX12 is
+package body MemecFX12
+   is
 
    --========================================================================--
    --                                                                        --
@@ -30,7 +31,9 @@ package body MemecFX12 is
    ----------------------------------------------------------------------------
    -- Wait
    ----------------------------------------------------------------------------
-   procedure Wait (Loops : in Positive) is
+   procedure Wait
+      (Loops : in Positive)
+      is
       Value : Integer with
          Volatile => True;
    begin
@@ -56,16 +59,16 @@ package body MemecFX12 is
    -- and 8 bits of data are used to form a 10-bit quantity that will be
    -- writen to the LCD panel over the OPB data bus.
    ----------------------------------------------------------------------------
-   procedure LCD_Display_Update (
-                                 Base_Address : in System.Address;
-                                 Data         : in Unsigned_8;
-                                 Mode         : in Unsigned_32
-                                ) is
-      LCD_Port : Unsigned_32 with
-         Address    => Base_Address,
-         Volatile   => True,
-         Import     => True,
-         Convention => Ada;
+   procedure LCD_Display_Update
+      (Base_Address : in System.Address;
+       Data         : in Unsigned_8;
+       Mode         : in Unsigned_32)
+      is
+      LCD_Port : Unsigned_32
+         with Address    => Base_Address,
+              Volatile   => True,
+              Import     => True,
+              Convention => Ada;
       Extended_Mode : Unsigned_32;
       Extended_Data : Unsigned_32;
       Control_Data  : Unsigned_32;
@@ -82,7 +85,10 @@ package body MemecFX12 is
    ----------------------------------------------------------------------------
    -- This subprogram is used to write a string of characters to the LCD panel.
    ----------------------------------------------------------------------------
-   procedure LCD_Write (Base_Address : in System.Address; S : in String) is
+   procedure LCD_Write
+      (Base_Address : in System.Address;
+       S            : in String)
+      is
    begin
       for Index in S'Range loop
          LCD_Display_Update (Base_Address, Bits.To_U8 (S (Index)), 2);
@@ -94,7 +100,9 @@ package body MemecFX12 is
    ----------------------------------------------------------------------------
    -- The following subprogram is used to clear the LCD panel.
    ----------------------------------------------------------------------------
-   procedure LCD_Clear (Base_Address : in System.Address) is
+   procedure LCD_Clear
+      (Base_Address : in System.Address)
+      is
    begin
       LCD_Display_Update (Base_Address, 16#01#, 0);
    end LCD_Clear;
@@ -105,7 +113,10 @@ package body MemecFX12 is
    -- The following subprogram is used to select which line of the LCD is being
    -- writen to (line 1 or 2).
    ----------------------------------------------------------------------------
-   procedure LCD_Line (Base_Address : in System.Address; Line : in Integer) is
+   procedure LCD_Line
+      (Base_Address : in System.Address;
+       Line         : in Integer)
+      is
    begin
       case Line is
          when 1      => LCD_Display_Update (Base_Address, 16#80#, 0);
@@ -120,8 +131,10 @@ package body MemecFX12 is
    -- The following subprogram performs LCD initializations. It must be called
    -- in the main program before any access to the LCD panel is performed.
    ----------------------------------------------------------------------------
-   procedure LCD_Init is
-      LCD_Data : constant array (Natural range <>) of Unsigned_8 := [16#38#, 16#06#, 16#0E#, 16#01#, 16#80#, 16#0C#];
+   procedure LCD_Init
+      is
+      LCD_Data : constant array (Natural range <>) of Unsigned_8 :=
+         [16#38#, 16#06#, 16#0E#, 16#01#, 16#80#, 16#0C#];
    begin
       Wait (150_000);
       for Index in LCD_Data'Range loop
