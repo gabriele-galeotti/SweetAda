@@ -24,7 +24,8 @@ with Exceptions;
 with Quadra800;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
