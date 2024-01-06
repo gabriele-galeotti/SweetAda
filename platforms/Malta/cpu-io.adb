@@ -19,7 +19,8 @@ with System.Storage_Elements;
 with MMIO;
 with Malta;
 
-package body CPU.IO is
+package body CPU.IO
+   is
 
    --========================================================================--
    --                                                                        --
@@ -39,12 +40,18 @@ package body CPU.IO is
    --                                                                        --
    --========================================================================--
 
-   function PortIn (Port : Unsigned_16) return Unsigned_8 is
+   function PortIn
+      (Port : Unsigned_16)
+      return Unsigned_8
+      is
    begin
       return MMIO.Read (To_Address (Malta.PIIX4_BASEADDRESS + Integer_Address (Port)));
    end PortIn;
 
-   procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_8) is
+   procedure PortOut
+      (Port  : in Unsigned_16;
+       Value : in Unsigned_8)
+      is
    begin
       MMIO.Write (To_Address (Malta.PIIX4_BASEADDRESS + Integer_Address (Port)), Value);
    end PortOut;

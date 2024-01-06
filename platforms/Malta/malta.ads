@@ -26,7 +26,8 @@ with GT64120;
 with UART16x50;
 with IDE;
 
-package Malta is
+package Malta
+   is
 
    --========================================================================--
    --                                                                        --
@@ -59,23 +60,23 @@ package Malta is
    -- Malta peripherals
    ----------------------------------------------------------------------------
 
-   BOARD_REVISION : aliased Unsigned_32 with
-      Address    => To_Address (BOARD_REVISION_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   BOARD_REVISION : aliased Unsigned_32
+      with Address    => To_Address (BOARD_REVISION_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   LEDBAR : aliased Unsigned_8 with
-      Address    => To_Address (LEDBAR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   LEDBAR : aliased Unsigned_8
+      with Address    => To_Address (LEDBAR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   HEX_DISPLAY : aliased Unsigned_32 with
-      Address    => To_Address (HEX_DISPLAY_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   HEX_DISPLAY : aliased Unsigned_32
+      with Address    => To_Address (HEX_DISPLAY_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    CBUS_UART_Descriptor : UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
 
@@ -86,11 +87,11 @@ package Malta is
    GT64120_BUS_NUMBER    : constant Bus_Number_Type := 0;
    GT64120_DEVICE_NUMBER : constant Device_Number_Type := 0;
 
-   GT_64120 : aliased GT64120_Type with
-      Address    => To_Address (GT64120_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   GT_64120 : aliased GT64120_Type
+      with Address    => To_Address (GT64120_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- PIIX4 devices
@@ -113,8 +114,12 @@ package Malta is
    -- PCI
    ----------------------------------------------------------------------------
 
-   function PCI_PortIn (Port : Unsigned_16) return Unsigned_32;
-   procedure PCI_PortOut (Port : in Unsigned_16; Value : in Unsigned_32);
+   function PCI_PortIn
+      (Port : Unsigned_16)
+      return Unsigned_32;
+   procedure PCI_PortOut
+      (Port  : in Unsigned_16;
+       Value : in Unsigned_32);
    procedure PCI_Init;
    procedure PCI_Devices_Detect;
    procedure PIIX4_PIC_Init;

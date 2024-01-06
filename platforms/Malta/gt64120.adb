@@ -17,7 +17,8 @@
 
 with MMIO;
 
-package body GT64120 is
+package body GT64120
+   is
 
    --========================================================================--
    --                                                                        --
@@ -31,7 +32,10 @@ package body GT64120 is
    -- CPU Interface Configuration Read/Write
    ----------------------------------------------------------------------------
 
-   procedure CPUIC_Read (A : in Address; CPUIC : out CPU_Interface_Configuration_Type) is
+   procedure CPUIC_Read
+      (A     : in     Address;
+       CPUIC :    out CPU_Interface_Configuration_Type)
+      is
    begin
       if Bits.BigEndian then
          CPUIC := To_CPUIC (MMIO.ReadAS (A));
@@ -40,7 +44,10 @@ package body GT64120 is
       end if;
    end CPUIC_Read;
 
-   procedure CPUIC_Write (A : in Address; CPUIC : in CPU_Interface_Configuration_Type) is
+   procedure CPUIC_Write
+      (A     : in Address;
+       CPUIC : in CPU_Interface_Configuration_Type)
+      is
    begin
       if Bits.BigEndian then
          MMIO.WriteAS (A, To_U32 (CPUIC));
@@ -52,7 +59,10 @@ package body GT64120 is
    ----------------------------------------------------------------------------
    -- Make_PCILD
    ----------------------------------------------------------------------------
-   function Make_PCILD (Start_Address : Unsigned_64) return PCI_Low_Decode_Address_Type is
+   function Make_PCILD
+      (Start_Address : Unsigned_64)
+      return PCI_Low_Decode_Address_Type
+      is
       PCILD : PCI_Low_Decode_Address_Type;
    begin
       PCILD.Low  := Bits_15 (Shift_Right (Start_Address, 21));
@@ -66,7 +76,11 @@ package body GT64120 is
    ----------------------------------------------------------------------------
    -- Make_PCIHD
    ----------------------------------------------------------------------------
-   function Make_PCIHD (Start_Address : Unsigned_64; Size : Unsigned_64) return PCI_High_Decode_Address_Type is
+   function Make_PCIHD
+      (Start_Address : Unsigned_64;
+       Size          : Unsigned_64)
+      return PCI_High_Decode_Address_Type
+      is
       PCIHD : PCI_High_Decode_Address_Type;
    begin
       PCIHD.High := Bits_7 (Shift_Right (Start_Address + Size - 1, 21) and 16#7F#);

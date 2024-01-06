@@ -17,7 +17,8 @@
 
 with Interfaces;
 
-package CPU.IO is
+package CPU.IO
+   is
 
    --========================================================================--
    --                                                                        --
@@ -30,7 +31,11 @@ package CPU.IO is
    use Interfaces;
 
    -- provide memory-mapped I/O subprograms for PIC and VGA driver
-   function PortIn (Port : Unsigned_16) return Unsigned_8;
-   procedure PortOut (Port : in Unsigned_16; Value : in Unsigned_8);
+   function PortIn
+      (Port : Unsigned_16)
+      return Unsigned_8;
+   procedure PortOut
+      (Port  : in Unsigned_16;
+       Value : in Unsigned_8);
 
 end CPU.IO;

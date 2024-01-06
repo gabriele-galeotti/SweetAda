@@ -20,7 +20,9 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
-package GT64120 is
+package GT64120
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -60,8 +62,7 @@ package GT64120 is
    PCI_1_Override_2G       : constant := 2#10#; -- 2Gbyte PCI_1 Mem0 space
    PCI_1_Override_Reserved : constant := 2#11#; -- Reserved
 
-   type CPU_Interface_Configuration_Type is
-   record
+   type CPU_Interface_Configuration_Type is record
       CacheOpMap         : Bits_9 := 0;      -- Cache Operation Mapping
       CachePres          : Boolean := False; -- Secondary Cache support
       Reserved1          : Bits_1 := 0;
@@ -78,13 +79,12 @@ package GT64120 is
       Reserved3          : Bits_2 := 0;
       PCI_1_Override     : Bits_2 := 0;      -- PCI_1_Override
       Reserved4          : Bits_6 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CPU_Interface_Configuration_Type use
-   record
-      CacheOpMap         at 0 range 0 .. 8;
-      CachePres          at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CPU_Interface_Configuration_Type use record
+      CacheOpMap         at 0 range  0 ..  8;
+      CachePres          at 0 range  9 ..  9;
       Reserved1          at 0 range 10 .. 10;
       WriteMode          at 0 range 11 .. 11;
       Endianness         at 0 range 12 .. 12;
@@ -106,32 +106,28 @@ package GT64120 is
 
    -- 20.4 CPU Address Decode
 
-   type PCI_Low_Decode_Address_Type is
-   record
+   type PCI_Low_Decode_Address_Type is record
       Low      : Bits_15 := 0; -- The PCI_0 I/O address space is accessed when the decoded addresses are between Low and High.
       Reserved : Bits_17 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PCI_Low_Decode_Address_Type use
-   record
-      Low      at 0 range 0 .. 14;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PCI_Low_Decode_Address_Type use record
+      Low      at 0 range  0 .. 14;
       Reserved at 0 range 15 .. 31;
    end record;
 
    function To_U32 is new Ada.Unchecked_Conversion (PCI_Low_Decode_Address_Type, Unsigned_32);
    function To_PCILD is new Ada.Unchecked_Conversion (Unsigned_32, PCI_Low_Decode_Address_Type);
 
-   type PCI_High_Decode_Address_Type is
-   record
+   type PCI_High_Decode_Address_Type is record
       High     : Bits_7 := 0;  -- The PCI_0 I/O address space is accessed when the decoded addresses are between Low and High.
       Reserved : Bits_25 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PCI_High_Decode_Address_Type use
-   record
-      High     at 0 range 0 .. 6;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PCI_High_Decode_Address_Type use record
+      High     at 0 range 0 ..  6;
       Reserved at 0 range 7 .. 31;
    end record;
 
@@ -149,8 +145,7 @@ package GT64120 is
    DRAMtoPCIErr_ALWAYS : constant := 0; -- PAR is always driven by the GT–64120A with even parity matching the address/data
    DRAMtoPCIErr_ECC    : constant := 1; -- In case of PCI read ... GT–64120A drives PAR with parity NOT matching the data
 
-   type PCI_0_Command_Type is
-   record
+   type PCI_0_Command_Type is record
       MByteSwap    : Boolean := False; -- Master Byte Swap.
       SyncMode     : Bits_3 := 0;      -- Indicates the ratio between TClk and PClk
       Reserved1    : Bits_4 := 0;
@@ -163,15 +158,14 @@ package GT64120 is
       Reserved4    : Bits_9 := 0;
       DRAMtoPCIErr : Bits_1 := 0;      -- Propagate SDRAM ECC errors to PCI
       Reserved5    : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PCI_0_Command_Type use
-   record
-      MByteSwap    at 0 range 0 .. 0;
-      SyncMode     at 0 range 1 .. 3;
-      Reserved1    at 0 range 4 .. 7;
-      Reserved2    at 0 range 8 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PCI_0_Command_Type use record
+      MByteSwap    at 0 range  0 ..  0;
+      SyncMode     at 0 range  1 ..  3;
+      Reserved1    at 0 range  4 ..  7;
+      Reserved2    at 0 range  8 ..  9;
       MWordSwap    at 0 range 10 .. 10;
       SWordSwap    at 0 range 11 .. 11;
       SSBWordSwap  at 0 range 12 .. 12;
@@ -185,8 +179,7 @@ package GT64120 is
    -- 20.2 Register Maps
 
 pragma Warnings (Off, "bits of * unused");
-   type GT64120_Type is
-   record
+   type GT64120_Type is record
       CPU_Interface_Configuration    : CPU_Interface_Configuration_Type with Volatile_Full_Access => True;
       PCI_0_IO_Low_Decode_Address    : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
       PCI_0_IO_High_Decode_Address   : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
@@ -207,11 +200,10 @@ pragma Warnings (Off, "bits of * unused");
       SDRAMBM                        : Unsigned_32                      with Volatile_Full_Access => True;
       SDRAMAD                        : Unsigned_32                      with Volatile_Full_Access => True;
       PCI_0_Command                  : PCI_0_Command_Type               with Volatile_Full_Access => True;
-   end record with
-      Alignment => 4,
-      Size      => 16#CA0# * 8;
-   for GT64120_Type use
-   record
+   end record
+      with Alignment => 4,
+           Size      => 16#CA0# * 8;
+   for GT64120_Type use record
       CPU_Interface_Configuration    at 16#000# range 0 .. 31;
       PCI_0_IO_Low_Decode_Address    at 16#048# range 0 .. 31;
       PCI_0_IO_High_Decode_Address   at 16#050# range 0 .. 31;
@@ -237,10 +229,19 @@ pragma Warnings (On, "bits of * unused");
 
    -- Subprograms
 
-   procedure CPUIC_Read (A : in Address; CPUIC : out CPU_Interface_Configuration_Type);
-   procedure CPUIC_Write (A : in Address; CPUIC : in CPU_Interface_Configuration_Type);
+   procedure CPUIC_Read
+      (A     : in     Address;
+       CPUIC :    out CPU_Interface_Configuration_Type);
+   procedure CPUIC_Write
+      (A     : in Address;
+       CPUIC : in CPU_Interface_Configuration_Type);
 
-   function Make_PCILD (Start_Address : Unsigned_64) return PCI_Low_Decode_Address_Type;
-   function Make_PCIHD (Start_Address : Unsigned_64; Size : Unsigned_64) return PCI_High_Decode_Address_Type;
+   function Make_PCILD
+      (Start_Address : Unsigned_64)
+      return PCI_Low_Decode_Address_Type;
+   function Make_PCIHD
+      (Start_Address : Unsigned_64;
+       Size          : Unsigned_64)
+      return PCI_High_Decode_Address_Type;
 
 end GT64120;

@@ -23,7 +23,8 @@ with Malta;
 with BSP;
 with IOEMU;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -47,7 +48,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
       Count : Unsigned_32;
    begin
       Count := MIPS32.CP0_Count_Read;
