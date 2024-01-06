@@ -1867,9 +1867,9 @@ pragma Warnings (On);
    type BSRR_SET_Type is array (0 .. 15) of Boolean
       with Size => 16,
            Pack => True;
-   type BSRR_RST_Type is array (0 .. 15) of Boolean with
-      Size => 16,
-      Pack => True;
+   type BSRR_RST_Type is array (0 .. 15) of Boolean
+      with Size => 16,
+           Pack => True;
 
    type GPIOx_BSRR_Type is record
       SET : BSRR_SET_Type;
