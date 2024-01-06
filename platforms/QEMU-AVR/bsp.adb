@@ -24,7 +24,8 @@ with Bits;
 with ATmega328P;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -41,10 +42,11 @@ package body BSP is
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_get_secondary_stack";
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -57,7 +59,9 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      is
    begin
       return BSP_SS_Stack;
    end Get_Sec_Stack;
@@ -66,7 +70,9 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -75,8 +81,11 @@ package body BSP is
       UDR0 := To_U8 (C);
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
    begin
+      -- wait for receiver available
       loop
          exit when UCSR0A.RXC0;
       end loop;
@@ -86,7 +95,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
@@ -94,21 +104,21 @@ package body BSP is
       UBRR0L := 16#67#;
       UBRR0H := 0;
       UCSR0B := (
-                 UCSZ0_2 => UCSZ_8.UCSZ0_2, -- Character Size bit 2
-                 TXEN0   => True,           -- Transmitter Enable
-                 RXEN0   => True,           -- Receiver Enable
-                 UDRIE0  => False,          -- USART Data register Empty Interrupt Enable
-                 TXCIE0  => False,          -- TX Complete Interrupt Enable
-                 RXCIE0  => False,          -- RX Complete Interrupt Enable
-                 others  => <>
-                );
+         UCSZ0_2 => UCSZ_8.UCSZ0_2, -- Character Size bit 2
+         TXEN0   => True,           -- Transmitter Enable
+         RXEN0   => True,           -- Receiver Enable
+         UDRIE0  => False,          -- USART Data register Empty Interrupt Enable
+         TXCIE0  => False,          -- TX Complete Interrupt Enable
+         RXCIE0  => False,          -- RX Complete Interrupt Enable
+         others  => <>
+         );
       UCSR0C := (
-                 UCPOL0   => UCPOL_Rising,      -- Clock Polarity
-                 UCSZ0_01 => UCSZ_8.UCSZ0_01,   -- Character Size bit 0 .. 1
-                 USBS0    => USBS_1,            -- Stop Bit Select
-                 UPM0     => UPM_Disabled,      -- Parity Mode
-                 UMSEL0   => UMSEL_Asynchronous -- USART Mode Select
-                );
+         UCPOL0   => UCPOL_Rising,      -- Clock Polarity
+         UCSZ0_01 => UCSZ_8.UCSZ0_01,   -- Character Size bit 0 .. 1
+         USBS0    => USBS_1,            -- Stop Bit Select
+         UPM0     => UPM_Disabled,      -- Parity Mode
+         UMSEL0   => UMSEL_Asynchronous -- USART Mode Select
+         );
       -- without this, seemingly QEMU is not able to correctly setup RX poll
       declare
          Unused : Unsigned_8 with Unreferenced => True;
