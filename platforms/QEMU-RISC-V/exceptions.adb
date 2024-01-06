@@ -25,7 +25,8 @@ with BSP;
 with Console;
 with IOEMU;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --

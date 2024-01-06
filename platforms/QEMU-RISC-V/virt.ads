@@ -18,7 +18,9 @@
 with System.Storage_Elements;
 with Goldfish;
 
-package Virt is
+package Virt
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --

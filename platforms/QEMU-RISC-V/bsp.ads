@@ -21,7 +21,8 @@ with Definitions;
 with Virt;
 with UART16x50;
 
-package BSP is
+package BSP
+   is
 
    --========================================================================--
    --                                                                        --
