@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,7 +29,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
    begin
       null;
    end Exception_Process;
@@ -36,7 +38,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process is
+   procedure Irq_Process
+      is
    begin
       null;
    end Irq_Process;
@@ -44,7 +47,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
    begin
       null;
    end Init;

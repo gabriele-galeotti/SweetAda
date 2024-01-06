@@ -22,7 +22,8 @@ with Bits;
 with MIPS;
 with R3000;
 
-package VMIPS is
+package VMIPS
+   is
 
    --========================================================================--
    --                                                                        --
@@ -52,44 +53,38 @@ package VMIPS is
    -- 11.1 SPIM-compatible console device
    ----------------------------------------------------------------------------
 
-   type Device_Control_Type is
-   record
+   type Device_Control_Type is record
       CTL_RDY : Boolean;
       CTL_IE  : Boolean;
       Unused  : Bits_30;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Device_Control_Type use
-   record
-      CTL_RDY at 0 range 0 .. 0;
-      CTL_IE  at 0 range 1 .. 1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Device_Control_Type use record
+      CTL_RDY at 0 range 0 ..  0;
+      CTL_IE  at 0 range 1 ..  1;
       Unused  at 0 range 2 .. 31;
    end record;
 
-   type Device_Data_Type is
-   record
+   type Device_Data_Type is record
       DATA   : Unsigned_8;
       Unused : Bits_24;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Device_Data_Type use
-   record
-      DATA   at 0 range 0 .. 7;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Device_Data_Type use record
+      DATA   at 0 range 0 ..  7;
       Unused at 0 range 8 .. 31;
    end record;
 
-   type SPIMCONSOLE_Type is
-   record
+   type SPIMCONSOLE_Type is record
       KEYBOARD1_CONTROL : Device_Control_Type;
       KEYBOARD1_DATA    : Device_Data_Type;
       DISPLAY1_CONTROL  : Device_Control_Type;
       DISPLAY1_DATA     : Device_Data_Type;
-   end record with
-      Size => 4 * 32;
-   for SPIMCONSOLE_Type use
-   record
+   end record
+      with Size => 4 * 32;
+   for SPIMCONSOLE_Type use record
       KEYBOARD1_CONTROL at 0  range 0 .. 31;
       KEYBOARD1_DATA    at 4  range 0 .. 31;
       DISPLAY1_CONTROL  at 8  range 0 .. 31;
@@ -98,20 +93,20 @@ package VMIPS is
 
    SPIMCONSOLE_BASEADDRESS : constant := 16#0200_0000#;
 
-   SPIMCONSOLE : aliased SPIMCONSOLE_Type with
-      Address    => To_Address (MIPS.KSEG1_ADDRESS + SPIMCONSOLE_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SPIMCONSOLE : aliased SPIMCONSOLE_Type
+      with Address    => To_Address (MIPS.KSEG1_ADDRESS + SPIMCONSOLE_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- 11.1.4 Clock
 
    SPIMCLOCK_ADDRESS : constant := SPIMCONSOLE_BASEADDRESS + 16#20#;
 
-   SPIMCLOCK : aliased Device_Control_Type with
-      Address              => To_Address (MIPS.KSEG1_ADDRESS + SPIMCLOCK_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SPIMCLOCK : aliased Device_Control_Type
+      with Address              => To_Address (MIPS.KSEG1_ADDRESS + SPIMCLOCK_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end VMIPS;

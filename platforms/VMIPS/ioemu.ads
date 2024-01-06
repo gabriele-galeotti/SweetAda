@@ -19,7 +19,8 @@ with System.Storage_Elements;
 with Interfaces;
 with MIPS;
 
-package IOEMU is
+package IOEMU
+   is
 
    --========================================================================--
    --                                                                        --
@@ -34,15 +35,15 @@ package IOEMU is
 
    IOEMU_BASEADDRESS : constant := 16#0201_0000#;
 
-   IO0 : aliased Unsigned_32 with
-      Address              => To_Address (MIPS.KSEG1_ADDRESS + IOEMU_BASEADDRESS + 0),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
-   IO1 : aliased Unsigned_32 with
-      Address              => To_Address (MIPS.KSEG1_ADDRESS + IOEMU_BASEADDRESS + 4),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   IO0 : aliased Unsigned_32
+      with Address              => To_Address (MIPS.KSEG1_ADDRESS + IOEMU_BASEADDRESS + 0),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+   IO1 : aliased Unsigned_32
+      with Address              => To_Address (MIPS.KSEG1_ADDRESS + IOEMU_BASEADDRESS + 4),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end IOEMU;
