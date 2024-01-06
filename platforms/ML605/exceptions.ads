@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package Exceptions is
+package Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -25,10 +26,10 @@ package Exceptions is
    --                                                                        --
    --========================================================================--
 
-   procedure Exception_Process with
-      Export         => True,
-      Convention     => Asm,
-      External_Name  => "exception_process";
+   procedure Exception_Process
+      with Export         => True,
+           Convention     => Asm,
+           External_Name  => "exception_process";
 
    procedure Init;
 

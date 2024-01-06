@@ -17,7 +17,8 @@
 
 with Definitions;
 
-package body ML605 is
+package body ML605
+   is
 
    --========================================================================--
    --                                                                        --
@@ -43,23 +44,24 @@ package body ML605 is
    ----------------------------------------------------------------------------
    -- Tclk_Init
    ----------------------------------------------------------------------------
-   procedure Tclk_Init is
+   procedure Tclk_Init
+      is
    begin
       Timer.TLR0 := TIMER_CLK / 1_000;
       Timer.TCSR0 := (
-                      ENALL  => False,
-                      PWMA0  => False,
-                      T0INT  => False,
-                      ENT0   => False,
-                      ENIT0  => True,
-                      LOAD0  => False,
-                      ARHT0  => True,
-                      CAPT0  => False,
-                      GENT0  => False,
-                      UDT0   => UDT0_DOWN,
-                      MDT0   => MDT0_GEN,
-                      others => 0
-                     );
+         ENALL  => False,
+         PWMA0  => False,
+         T0INT  => False,
+         ENT0   => False,
+         ENIT0  => True,
+         LOAD0  => False,
+         ARHT0  => True,
+         CAPT0  => False,
+         GENT0  => False,
+         UDT0   => UDT0_DOWN,
+         MDT0   => MDT0_GEN,
+         others => 0
+         );
       -- initial loading
       Timer.TCSR0.LOAD0 := True;
       Timer.TCSR0.LOAD0 := False;
@@ -70,7 +72,8 @@ package body ML605 is
    ----------------------------------------------------------------------------
    -- INTC_Init
    ----------------------------------------------------------------------------
-   procedure INTC_Init is
+   procedure INTC_Init
+      is
    begin
       INTC.ISR := [others => False];
       INTC.IPR := [others => False];
@@ -79,11 +82,12 @@ package body ML605 is
       INTC.SIE := [others => False];
       INTC.CIE := [others => False];
       INTC.IVR := 0;
-      INTC.MER := [
-                   HIE    => True,
-                   ME     => True,
-                   others => 0
-                  ];
+      INTC.MER :=
+         [
+          HIE    => True,
+          ME     => True,
+          others => 0
+         ];
    end INTC_Init;
 
 end ML605;

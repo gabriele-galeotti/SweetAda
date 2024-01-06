@@ -24,7 +24,8 @@ with ML605;
 with BSP;
 with IOEMU;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -50,7 +51,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
    begin
       Timer.TCSR0.T0INT := False; -- clear Timer flag
       BSP.Tick_Count := @ + 1;
@@ -64,13 +66,14 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
    begin
       Memory_Functions.Cpymem (
-                               Linker.EText'Address, -- .vectors section
-                               SSE.To_Address (0),   -- LMB RAM @ 0
-                               256
-                              );
+         Linker.EText'Address, -- .vectors section
+         SSE.To_Address (0),   -- LMB RAM @ 0
+         256
+         );
    end Init;
 
 end Exceptions;
