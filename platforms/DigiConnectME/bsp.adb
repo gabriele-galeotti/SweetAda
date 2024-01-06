@@ -23,7 +23,8 @@ with Bits;
 with NETARM;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -51,7 +52,9 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -60,7 +63,9 @@ package body BSP is
       NETARM.SCFIFOR.DATA (0) := To_U8 (C);
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       NETARM.SCSR.RXBC := True;
@@ -75,7 +80,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       --- Serial Channel A ----------------------------------------------------
       -- FXTAL = 18.432 MHz/ 5 = 3.6864 MHz

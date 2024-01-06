@@ -20,7 +20,9 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package NETARM is
+package NETARM
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -73,165 +75,162 @@ package NETARM is
 
    -- GEN_BASE registers ------------------------------------------------------
 
-   SCR : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#0000#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SCR : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#0000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   SSR : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#0004#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SSR : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#0004#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- PLL Control register
 
-   type PLLCR_Type is
-   record
+   type PLLCR_Type is record
       Reserved1 : Bits.Bits_24;
       PLLCNT    : Bits.Bits_4;
       Reserved2 : Bits.Bits_4;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for PLLCR_Type use
-   record
-      Reserved1 at 0 range 0 .. 23;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PLLCR_Type use record
+      Reserved1 at 0 range  0 .. 23;
       PLLCNT    at 0 range 24 .. 27;
       Reserved2 at 0 range 28 .. 31;
    end record;
 
    PLLCR_ADDRESS : constant := GEN_BASEADDRESS + 16#0008#;
 
-   PLL_Control : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#0008#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   PLL_Control : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#0008#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   SWSR : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#000C#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SWSR : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#000C#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   TCR1 : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#0010#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   TCR1 : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#0010#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   TSR1 : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#0014#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   TSR1 : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#0014#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   TCR2 : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#0018#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   TCR2 : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#0018#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   TSR2 : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#001C#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   TSR2 : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#001C#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   PORTA : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#0020#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   PORTA : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#0020#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   PORTB : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#0024#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   PORTB : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#0024#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   PORTC : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#0028#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   PORTC : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#0028#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   PLL_Settings : aliased Unsigned_32 with
-      Address    => To_Address (GEN_BASEADDRESS + 16#0040#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   PLL_Settings : aliased Unsigned_32
+      with Address    => To_Address (GEN_BASEADDRESS + 16#0040#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- MEM_BASE registers ------------------------------------------------------
 
-   MMCR : aliased Unsigned_32 with
-      Address    => To_Address (MEM_BASEADDRESS + 16#0000#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   MMCR : aliased Unsigned_32
+      with Address    => To_Address (MEM_BASEADDRESS + 16#0000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   CSBAR0 : aliased Unsigned_32 with
-      Address    => To_Address (MEM_BASEADDRESS + 16#0010#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CSBAR0 : aliased Unsigned_32
+      with Address    => To_Address (MEM_BASEADDRESS + 16#0010#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   CSOR0A : aliased Unsigned_32 with
-      Address    => To_Address (MEM_BASEADDRESS + 16#0014#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CSOR0A : aliased Unsigned_32
+      with Address    => To_Address (MEM_BASEADDRESS + 16#0014#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   CSOR0B : aliased Unsigned_32 with
-      Address    => To_Address (MEM_BASEADDRESS + 16#0018#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CSOR0B : aliased Unsigned_32
+      with Address    => To_Address (MEM_BASEADDRESS + 16#0018#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   CSBAR1 : aliased Unsigned_32 with
-      Address    => To_Address (MEM_BASEADDRESS + 16#0020#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CSBAR1 : aliased Unsigned_32
+      with Address    => To_Address (MEM_BASEADDRESS + 16#0020#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   CSOR1A : aliased Unsigned_32 with
-      Address    => To_Address (MEM_BASEADDRESS + 16#0024#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CSOR1A : aliased Unsigned_32
+      with Address    => To_Address (MEM_BASEADDRESS + 16#0024#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   CSOR1B : aliased Unsigned_32 with
-      Address    => To_Address (MEM_BASEADDRESS + 16#0028#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CSOR1B : aliased Unsigned_32
+      with Address    => To_Address (MEM_BASEADDRESS + 16#0028#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   CSBAR2 : aliased Unsigned_32 with
-      Address    => To_Address (MEM_BASEADDRESS + 16#0030#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CSBAR2 : aliased Unsigned_32
+      with Address    => To_Address (MEM_BASEADDRESS + 16#0030#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   CSOR2A : aliased Unsigned_32 with
-      Address    => To_Address (MEM_BASEADDRESS + 16#0034#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CSOR2A : aliased Unsigned_32
+      with Address    => To_Address (MEM_BASEADDRESS + 16#0034#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   CSOR2B : aliased Unsigned_32 with
-      Address    => To_Address (MEM_BASEADDRESS + 16#0038#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   CSOR2B : aliased Unsigned_32
+      with Address    => To_Address (MEM_BASEADDRESS + 16#0038#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- SER_BASE registers ------------------------------------------------------
 
    -- Serial Channel Control Register A
 
-   type SCCRA_Type is
-   record
+   type SCCRA_Type is record
       ETXDMA   : Boolean;     -- Interrupt enable: Enables transmit DMA requests
       ETXBC    : Boolean;     -- Interrupt enable: Transmit buffer closed
       ETXHALF  : Boolean;     -- Interrupt enable: Transmit FIFO half-empty
@@ -263,21 +262,21 @@ package NETARM is
       STICKP   : Boolean;     -- Stick parity
       BRK      : Boolean;     -- Send break
       CE       : Boolean;     -- Channel enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for SCCRA_Type use
    record
-      ETXDMA  at 0 range 0 .. 0;
-      ETXBC   at 0 range 1 .. 1;
-      ETXHALF at 0 range 2 .. 2;
-      ETXOBE  at 0 range 3 .. 3;
-      ETXCTS  at 0 range 4 .. 4;
-      ERXDSR  at 0 range 5 .. 5;
-      ERXRI   at 0 range 6 .. 6;
-      ERXDCD  at 0 range 7 .. 7;
-      ERXDMA  at 0 range 8 .. 8;
-      ERXBC   at 0 range 9 .. 9;
+      ETXDMA  at 0 range  0 ..  0;
+      ETXBC   at 0 range  1 ..  1;
+      ETXHALF at 0 range  2 ..  2;
+      ETXOBE  at 0 range  3 ..  3;
+      ETXCTS  at 0 range  4 ..  4;
+      ERXDSR  at 0 range  5 ..  5;
+      ERXRI   at 0 range  6 ..  6;
+      ERXDCD  at 0 range  7 ..  7;
+      ERXDMA  at 0 range  8 ..  8;
+      ERXBC   at 0 range  9 ..  9;
       ERXHALF at 0 range 10 .. 10;
       ERXDRDY at 0 range 11 .. 11;
       ERXORUN at 0 range 12 .. 12;
@@ -303,16 +302,15 @@ package NETARM is
 
    SCCRA_ADDRESS : constant := SER_BASEADDRESS + 16#00#;
 
-   SCCRA : aliased SCCRA_Type with
-      Address              => To_Address (SCCRA_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SCCRA : aliased SCCRA_Type
+      with Address              => To_Address (SCCRA_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Serial Channel Control Register B
 
-   type SCCRB_Type is
-   record
+   type SCCRB_Type is record
       Reserved1 : Bits.Bits_17;
       MAM2      : Boolean;     -- Match address mode 2
       MAM1      : Boolean;     -- Match address mode 1
@@ -325,12 +323,11 @@ package NETARM is
       RDM3      : Boolean;     -- Enable receive data match 3
       RDM2      : Boolean;     -- Enable receive data match 2
       RDM1      : Boolean;     -- Enable receive data match 1
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SCCRB_Type use
-   record
-      Reserved1 at 0 range 0 .. 16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SCCRB_Type use record
+      Reserved1 at 0 range  0 .. 16;
       MAM2      at 0 range 17 .. 17;
       MAM1      at 0 range 18 .. 18;
       BITORDR   at 0 range 19 .. 19;
@@ -346,16 +343,15 @@ package NETARM is
 
    SCCRB_ADDRESS : constant := SER_BASEADDRESS + 16#04#;
 
-   SCCRB : aliased SCCRB_Type with
-      Address              => To_Address (SCCRB_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SCCRB : aliased SCCRB_Type
+      with Address              => To_Address (SCCRB_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Serial Channel Status Register
 
-   type SCSR_Type is
-   record
+   type SCSR_Type is record
       TXEMPTY  : Boolean;
       TXBC     : Boolean;
       TXHALF   : Boolean;
@@ -384,21 +380,20 @@ package NETARM is
       MATCH3   : Boolean;
       MATCH2   : Boolean;
       MATCH1   : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SCSR_Type use
-   record
-      TXEMPTY  at 0 range 0 .. 0;
-      TXBC     at 0 range 1 .. 1;
-      TXHALF   at 0 range 2 .. 2;
-      TXRDY    at 0 range 3 .. 3;
-      TXCTSI   at 0 range 4 .. 4;
-      RXDSRI   at 0 range 5 .. 5;
-      RXRII    at 0 range 6 .. 6;
-      RXDCDI   at 0 range 7 .. 7;
-      RXFULL   at 0 range 8 .. 8;
-      RXBC     at 0 range 9 .. 9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SCSR_Type use record
+      TXEMPTY  at 0 range  0 ..  0;
+      TXBC     at 0 range  1 ..  1;
+      TXHALF   at 0 range  2 ..  2;
+      TXRDY    at 0 range  3 ..  3;
+      TXCTSI   at 0 range  4 ..  4;
+      RXDSRI   at 0 range  5 ..  5;
+      RXRII    at 0 range  6 ..  6;
+      RXDCDI   at 0 range  7 ..  7;
+      RXFULL   at 0 range  8 ..  8;
+      RXBC     at 0 range  9 ..  9;
       RXHALF   at 0 range 10 .. 10;
       RXRDY    at 0 range 11 .. 11;
       RXOVER   at 0 range 12 .. 12;
@@ -421,11 +416,11 @@ package NETARM is
 
    SCSR_ADDRESS : constant := SER_BASEADDRESS + 16#08#;
 
-   SCSR : aliased SCSR_Type with
-      Address              => To_Address (SCSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SCSR : aliased SCSR_Type
+      with Address              => To_Address (SCSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Serial Channel Bit-Rate Generator Reg
 
@@ -437,8 +432,7 @@ package NETARM is
    BRG_PORTA4B4 : constant := 16#10#; -- Input clock defined by input on PORTA4/B4
    BRG_PORTC5C7 : constant := 16#11#; -- Input clock defined by input on PORTC5/C7
 
-   type SCBRGR_Type is
-   record
+   type SCBRGR_Type is record
       NREG      : Bits.Bits_11; -- BRG frequency
       Reserved1 : Bits.Bits_1;
       RICS      : Boolean;
@@ -458,12 +452,11 @@ package NETARM is
       RXSRC     : Boolean;
       TMODE     : Bits.Bits_1;
       EBIT      : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SCBRGR_Type use
-   record
-      NREG      at 0 range 0 .. 10;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SCBRGR_Type use record
+      NREG      at 0 range  0 .. 10;
       Reserved1 at 0 range 11 .. 11;
       RICS      at 0 range 12 .. 12;
       RSVD      at 0 range 13 .. 13;
@@ -486,27 +479,26 @@ package NETARM is
 
    SCBRGR_ADDRESS : constant := SER_BASEADDRESS + 16#0C#;
 
-   SCBRGR : aliased SCBRGR_Type with
-      Address              => To_Address (SCBRGR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SCBRGR : aliased SCBRGR_Type
+      with Address              => To_Address (SCBRGR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Serial Channel FIFO registers
 
-   type SCFIFOR_Type is
-   record
+   type SCFIFOR_Type is record
       DATA : Bits.U8_Array (0 .. 3);
-   end record with
-      Size => 4 * 8;
+   end record
+      with Size => 4 * 8;
 
    SCFIFOR_ADDRESS : constant := SER_BASEADDRESS + 16#10#;
 
-   SCFIFOR : aliased SCFIFOR_Type with
-      Address    => To_Address (SCFIFOR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SCFIFOR : aliased SCFIFOR_Type
+      with Address    => To_Address (SCFIFOR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- subprograms
 
