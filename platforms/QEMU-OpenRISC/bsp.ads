@@ -18,7 +18,8 @@
 with Interfaces;
 with UART16x50;
 
-package BSP is
+package BSP
+   is
 
    --========================================================================--
    --                                                                        --
