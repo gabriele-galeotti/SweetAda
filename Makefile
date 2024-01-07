@@ -494,7 +494,7 @@ ifneq ($(PLATFORM),)
 PLATFORM_DIRECTORY     := $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
 PLATFORM_DIRECTORY_CMD := $(PLATFORM_BASE_DIRECTORY)\$(PLATFORM)
 ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
-include $(PLATFORM_DIRECTORY)/configuration.in
+-include $(PLATFORM_DIRECTORY)/configuration.in
 CONFIGURE_DEPS += $(PLATFORM_DIRECTORY)/configuration.in
 endif
 else
