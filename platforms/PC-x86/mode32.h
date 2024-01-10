@@ -32,7 +32,8 @@ _start16:
                 movw    %ax,%ds
 #if defined(__i586__)
                 movl    %cr0,%eax
-                orl     $(CR0_CD|CR0_NW),%eax   // disable cache memory and write-through logic
+                orl     $CR0_CD,%eax            // set cache disable
+                andl    $~(CR0_NW),%eax         // disable write-back, enable write-through logic
                 movl    %eax,%cr0
                 wbinvd
 #endif
