@@ -4,6 +4,7 @@
 void __attribute__((__section__(".startup")))
 startup(void)
 {
+        /* __NOP__ */
 }
 
 /* imported as procedure "Ctest" */
