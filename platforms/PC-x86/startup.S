@@ -57,17 +57,40 @@ _start:
                 movw    %ax,%gs
                 movw    %ax,%ss
 
+                // disable cache
+#define IA32_MTRR_DEF_TYPE 0x2FF
+                xorl    %eax,%eax
+                xorl    %edx,%edx
+                movl    $IA32_MTRR_DEF_TYPE,%ecx
+                wrmsr
+
+////////////////////////////////////////////////////////////////////////////////
+
+#if defined(STARTUP_MEMORY)
+# include "startup-memory.h"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
+                jmp     post_kbdinit
+#include "i8042.h"
+post_kbdinit:
+                //
+                // Initialize 8042 keyboard controller.
+                //
+                fcall   kbd_init
 #if defined(ENABLE_A20)
                 //
                 // Enable A20 line.
                 //
-                fcall   reset_8042
-                movb    $0xD1,%al               // Write Output Port: next byte written to port 60h is placed in the 8042 output port
+                // write i8042 output port
+                movb    $0xD1,%al
                 outb    %al,$0x64
-                fcall   reset_8042
-                movb    $0xDF,%al               // A20 line on
+                KBDIBUFRDY
+                // A20 line on
+                movb    $0xDF,%al
                 outb    %al,$0x60
-                fcall   reset_8042
+                KBDIBUFRDY
                 // check if enabled:
                 // keep writing (different!) values in 0x000000, reading
                 // from 0x100000; when the value differs we are ok
@@ -82,9 +105,8 @@ _start:
                 je      1b
 #endif
 
-#if defined(STARTUP_MEMORY)
-# include "startup-memory.h"
-#endif
+////////////////////////////////////////////////////////////////////////////////
+
 #if defined(CODE_RELOC)
                 fcall   movcode
 #endif
@@ -176,54 +198,34 @@ zerobss:
             rep stosb
                 fret
 
-#if defined(ENABLE_A20)
-////////////////////////////////////////////////////////////////////////////////
-// reset_8042                                                                 //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
-
-reset_8042:     movl    %esp,%ebp               // save return address
-1:              movl    $10,%ecx                // 1 ms delay
-                fcall   delay
-                inb     $0x64,%al               // status port
-                testb   $1,%al                  // data present?
-                jz      2f
-                movl    $10,%ecx                // 1 ms delay
-                fcall   delay
-                inb     $0x60,%al               // flush data
-                jmp     1b
-2:              testb   $2,%al                  // is input buffer full?
-                jnz     1b                      // yes, loop again
-                movl    %ebp,%esp
-                fret
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////
 // delay                                                                      //
 //                                                                            //
-// 100 us delay * ECX                                                         //
+// 300 us delay * ECX                                                         //
 // PIT timer input frequency: 1.193182 MHz, t = 0.838 us                      //
 // 100 us --> count = 119.33 = 0x77 (0x76 because the timer counts N + 1)     //
-// COUNTER0, MODE 0, INTERRUPT ON TERMINAL COUNT, monitor OUT pin             //
+// COUNTER0, MODE 0, INTERRUPT ON TERMINAL COUNT, monitor COUNT               //
 ////////////////////////////////////////////////////////////////////////////////
 
-delay:          movw    $0x43,%dx               // CONTROL_WORD_REGISTER
-                movb    $30,%al                 // COUNTER0, CNT_BOTH_BYTE, MODE0, COUNT_BINARY
-                outb    %al,%dx
+#define PITCOUNT 0x0076
+
+delay:
+                movb    $0x30,%al               // COUNTER0, CNT_BOTH_BYTE, MODE0, COUNT_BINARY
+                outb    %al,$0x43
                 // 100 us timing
-                movw    $0x40,%dx
-                movb    $0x76,%al
-                outb    %al,%dx
-                movb    $0x00,%al
-                outb    %al,%dx
-                // read-back OUT state
-1:              movw    $0x43,%dx               // CONTROL_WORD_REGISTER
-                movb    $0xE2,%al               // LATCH STATUS
-                outb    %al,%dx
-                movw    $0x40,%dx               // read STATUS from COUNTER0
-                inb     %dx,%al
-                testb   $0x80,%al               // OUT is active?
-                jne     1b
+                movb    $(PITCOUNT&0xFF),%al
+                outb    %al,$0x40
+                movb    $(PITCOUNT>>8),%al
+                outb    %al,$0x40
+                // read-back
+1:              movb    $0xD2,%al               // LATCH COUNT
+                outb    %al,$0x43
+                inb     $0x40,%al               // read COUNTL from COUNTER0
+                movb    %al,%bl
+                inb     $0x40,%al               // read COUNTH from COUNTER0
+                movb    %al,%bh
+                cmpw    $0,%bx
+                jg      1b
                 loop    delay
                 fret
 
