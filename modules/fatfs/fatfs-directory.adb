@@ -32,13 +32,13 @@ package body FATFS.Directory
    function Is_Valid
       (D   : in Descriptor_Type;
        DCB : in DCB_Type)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
 
    function Is_Deleted
       (DE : in Directory_Entry_Type)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
 
    function Is_End
       (D   : in Descriptor_Type;
@@ -181,11 +181,11 @@ package body FATFS.Directory
          return;
       end if;
       declare
-         DEA   : aliased Directory_Entry_Array (0 .. D.Sector_Size / 32 - 1) with
-            Alignment  => BLOCK_ALIGNMENT,
-            Address    => B'Address,
-            Import     => True,
-            Convention => Ada;
+         DEA   : aliased Directory_Entry_Array (0 .. D.Sector_Size / 32 - 1)
+            with Alignment  => BLOCK_ALIGNMENT,
+                 Address    => B'Address,
+                 Import     => True,
+                 Convention => Ada;
          Index : constant Unsigned_16 := DCB.Current_Index mod (D.Sector_Size / 32);
       begin
          -- __PTC__ endian
@@ -529,10 +529,10 @@ package body FATFS.Directory
        Success :    out Boolean)
       is
       B           : aliased Block_Type (0 .. 511);
-      Dir_Entries : aliased Directory_Entry_Array (0 .. 15) with
-         Address    => B'Address,
-         Import     => True,
-         Convention => Ada;
+      Dir_Entries : aliased Directory_Entry_Array (0 .. 15)
+         with Address    => B'Address,
+              Import     => True,
+              Convention => Ada;
    begin
       IDE.Read (D.Device.all, Physical_Sector (D, Sector), B, Success);
       if Success then

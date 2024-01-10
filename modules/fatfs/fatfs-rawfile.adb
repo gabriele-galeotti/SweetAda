@@ -31,8 +31,8 @@ package body FATFS.Rawfile
 
    function Is_Valid
       (FCB : in FCB_Type)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
 
    procedure Finalize_IO
       (File        : in     FCB_Type;
@@ -366,10 +366,10 @@ package body FATFS.Rawfile
        Success :    out Boolean)
       is
       B     : aliased Block_Type (0 .. 511);
-      DE    : aliased Directory_Entry_Array (0 .. 15) with
-         Address    => B'Address,
-         Import     => True,
-         Convention => Ada;
+      DE    : aliased Directory_Entry_Array (0 .. 15)
+         with Address    => B'Address,
+              Import     => True,
+              Convention => Ada;
       Index : Unsigned_16;
    begin
       if not Is_Valid (File) then

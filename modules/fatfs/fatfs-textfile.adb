@@ -511,10 +511,10 @@ package body FATFS.Textfile
        Buffer  : in     Byte_Array;
        Success :    out Boolean)
       is
-      Text : aliased String (1 .. Buffer'Length) with
-         Address    => Buffer (0)'Address,
-         Import     => True,
-         Convention => Ada;
+      Text : aliased String (1 .. Buffer'Length)
+         with Address    => Buffer (0)'Address,
+              Import     => True,
+              Convention => Ada;
    begin
       Put (D, File, Text, Success);
    end Write;

@@ -28,14 +28,14 @@ package body FATFS.Cluster
 
    function Is_Valid
       (CCB : in CCB_Type)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
 
    function Is_Valid
       (C : in Cluster_Type;
        F : in FAT_Type)
-      return Boolean with
-      Inline => True;
+      return Boolean
+      with Inline => True;
 
    procedure Get_Next
       (D       : in     Descriptor_Type;
@@ -145,7 +145,7 @@ package body FATFS.Cluster
       (CCB   :    out CCB_Type;
        S     : in     Sector_Type;
        Count : in     Unsigned_16)
-       is
+      is
    begin
       CCB.Start_Sector    := S;
       CCB.Previous_Sector := 0;
@@ -546,10 +546,10 @@ package body FATFS.Cluster
          ---------------------------------------------------------------------
          if File.CCB.Current_Sector = 0 then
             declare
-               Dir : aliased Directory_Entry_Array (0 .. 15) with
-                  Address    => B (0)'Address,
-                  Import     => True,
-                  Convention => Ada;
+               Dir : aliased Directory_Entry_Array (0 .. 15)
+                  with Address    => B (0)'Address,
+                       Import     => True,
+                       Convention => Ada;
             begin
                IDE.Read (D.Device.all, Physical_Sector (D, File.Directory_Sector), B, Success);
                if Success then

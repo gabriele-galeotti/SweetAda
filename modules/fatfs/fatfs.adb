@@ -57,10 +57,10 @@ package body FATFS
    procedure Block_Swap_16
       (B : in out Block_Type)
       is
-      A : aliased U16_Array (0 .. 255) with
-         Address    => B (0)'Address,
-         Import     => True,
-         Convention => Ada;
+      A : aliased U16_Array (0 .. 255)
+         with Address    => B (0)'Address,
+              Import     => True,
+              Convention => Ada;
    begin
       for Index in A'Range loop
          Byte_Swap_16 (A (Index)'Address);
@@ -70,10 +70,10 @@ package body FATFS
    procedure Block_Swap_32
       (B : in out Block_Type)
       is
-      A : aliased U32_Array (0 .. 127) with
-         Address    => B (0)'Address,
-         Import     => True,
-         Convention => Ada;
+      A : aliased U32_Array (0 .. 127)
+         with Address    => B (0)'Address,
+              Import     => True,
+              Convention => Ada;
    begin
       for Index in A'Range loop
          Byte_Swap_32 (A (Index)'Address);
@@ -198,19 +198,19 @@ package body FATFS
       case D.FAT_Style is
          when FAT16 =>
             declare
-               FAT16_Table : aliased U16_Array (0 .. 255) with
-                  Address    => B (0)'Address,
-                  Import     => True,
-                  Convention => Ada;
+               FAT16_Table : aliased U16_Array (0 .. 255)
+                  with Address    => B (0)'Address,
+                       Import     => True,
+                       Convention => Ada;
             begin
                return Cluster_Type (LE_To_CPUE (FAT16_Table (FAT_Entry_Index (D.FAT_Style, C))));
             end;
          when FAT32 =>
             declare
-               FAT32_Table : aliased U32_Array (0 .. 127) with
-                  Address    => B (0)'Address,
-                  Import     => True,
-                  Convention => Ada;
+               FAT32_Table : aliased U32_Array (0 .. 127)
+                  with Address    => B (0)'Address,
+                       Import     => True,
+                       Convention => Ada;
             begin
                return Cluster_Type (LE_To_CPUE (FAT32_Table (FAT_Entry_Index (D.FAT_Style, C))));
             end;
@@ -234,19 +234,19 @@ package body FATFS
       case D.FAT_Style is
          when FAT16 =>
             declare
-               FAT16_Table : aliased U16_Array (0 .. 255) with
-                  Address    => B (0)'Address,
-                  Import     => True,
-                  Convention => Ada;
+               FAT16_Table : aliased U16_Array (0 .. 255)
+                  with Address    => B (0)'Address,
+                       Import     => True,
+                       Convention => Ada;
             begin
                FAT16_Table (FAT_Entry_Index (D.FAT_Style, Index)) := Unsigned_16 (C);
             end;
          when FAT32 =>
             declare
-               FAT32_Table : aliased U32_Array (0 .. 127) with
-                  Address    => B (0)'Address,
-                  Import     => True,
-                  Convention => Ada;
+               FAT32_Table : aliased U32_Array (0 .. 127)
+                  with Address    => B (0)'Address,
+                       Import     => True,
+                       Convention => Ada;
             begin
                FAT32_Table (FAT_Entry_Index (D.FAT_Style, Index)) := Unsigned_32 (C);
             end;
@@ -312,10 +312,10 @@ package body FATFS
       procedure Swap_Data
          (B : in out Block_Type)
          is
-         Values : Byte_Array (0 .. 511) with
-            Address    => B'Address,
-            Volatile   => True,
-            Convention => Ada;
+         Values : Byte_Array (0 .. 511)
+            with Address    => B'Address,
+                 Volatile   => True,
+                 Convention => Ada;
       begin
          Byte_Swap_16 (Values (Bootrecord.Bytes_Per_Sector'Position)'Address);
          Byte_Swap_16 (Values (Bootrecord.Reserved_Sectors'Position)'Address);
@@ -379,10 +379,10 @@ package body FATFS
       -- Read FAT bootrecord.
       -------------------------------------------------------------------------
       declare
-         B : aliased Block_Type (0 .. 511) with
-            Address    => Bootrecord'Address,
-            Import     => True,
-            Convention => Ada;
+         B : aliased Block_Type (0 .. 511)
+            with Address    => Bootrecord'Address,
+                 Import     => True,
+                 Convention => Ada;
       begin
          IDE.Read (D.Device.all, Partition_Start, B, Success); -- logical sector #0 in FAT partition
          if BigEndian then

@@ -28,8 +28,8 @@ package body FATFS.Filename
 
    function To_Upper
       (C : in Character)
-      return Character with
-      Inline => True;
+      return Character
+      with Inline => True;
 
    --========================================================================--
    --                                                                        --
