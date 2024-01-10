@@ -119,7 +119,7 @@ package body Time
       is
    begin
       return
-         (Y - 1970) * 365  +
+         (Y - 1_970) * 365  +
          Leap_Days_since1970 (Y - 1) +
          Days_In_Year (M) +
          D - 1 +
@@ -153,7 +153,7 @@ package body Time
       return Natural
       is
    begin
-      return Date2Days (Day, Mon, Year) * 86400 + Hour * 3600 + Min * 60 + Sec;
+      return Date2Days (Day, Mon, Year) * 86_400 + Hour * 3_600 + Min * 60 + Sec;
    end Make_Time;
 
    ----------------------------------------------------------------------------
@@ -168,17 +168,17 @@ package body Time
       Year_minus1970 : Natural;
       Year           : Natural;
    begin
-      Days := Seconds / 86400;
-      Seconds := @ - Days * 86400;
+      Days := Seconds / 86_400;
+      Seconds := @ - Days * 86_400;
       TM.WDay := (Days + 4) mod 7;
       Year_minus1970 := Days / 365;
-      Year := Year_minus1970 + 1970;
+      Year := Year_minus1970 + 1_970;
       Days := @ - (Year_minus1970 * 365 + Leap_Days_since1970 (Year - 1));
       if Days < 0 then
          Year := @ - 1;
          Days := @ + 365 + (if Is_Leap_Year (Year) then 1 else 0);
       end if;
-      TM.Year := Year - 1900;
+      TM.Year := Year - 1_900;
       TM.YDay := Days;
       TM.Mon := 0;
       for Month in 1 .. 12 loop
@@ -194,8 +194,8 @@ package body Time
          end;
       end loop;
       TM.MDay := Days + 1;
-      TM.Hour := Seconds / 3600;
-      Seconds := @ - TM.Hour * 3600;
+      TM.Hour := Seconds / 3_600;
+      Seconds := @ - TM.Hour * 3_600;
       TM.Min := Seconds / 60;
       TM.Sec := Seconds - TM.Min * 60;
       TM.IsDST := -1;
