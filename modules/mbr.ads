@@ -56,9 +56,9 @@ package MBR
    end record
       with Size => PARTITION_ENTRY_SIZE * 8;
    for Partition_Entry_Type use record
-      Status           at  0 range 0 .. 7;
+      Status           at  0 range 0 ..  7;
       CHS_First_Sector at  1 range 0 .. 23;
-      Partition        at  4 range 0 .. 7;
+      Partition        at  4 range 0 ..  7;
       CHS_Last_Sector  at  5 range 0 .. 23;
       LBA_Start        at  8 range 0 .. 31;
       LBA_Size         at 12 range 0 .. 31;
