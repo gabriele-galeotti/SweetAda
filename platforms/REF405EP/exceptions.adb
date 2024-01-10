@@ -22,7 +22,8 @@ with BSP;
 with IOEMU;
 with Console;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -46,7 +47,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process (Identifier : in Unsigned_32) is
+   procedure Exception_Process (Identifier : in Unsigned_32)
+      is
    begin
       if Identifier = PIT_IRQ_ID then
          BSP.Tick_Count := @ + 1;
@@ -82,7 +84,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
    begin
       Asm (
            Template => ""                                        & CRLF &

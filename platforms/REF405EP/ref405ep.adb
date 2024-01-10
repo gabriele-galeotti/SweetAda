@@ -19,7 +19,8 @@ with Configure;
 with PowerPC;
 with PPC405;
 
-package body REF405EP is
+package body REF405EP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -43,7 +44,8 @@ package body REF405EP is
    ----------------------------------------------------------------------------
    -- Tclk_Init
    ----------------------------------------------------------------------------
-   procedure Tclk_Init is
+   procedure Tclk_Init
+      is
       Period    : constant := (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) / Configure.TICK_FREQUENCY;
       TCR_Value : TCR_Register_Type;
    begin
