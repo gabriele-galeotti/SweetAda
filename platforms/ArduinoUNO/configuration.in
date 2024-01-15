@@ -16,6 +16,8 @@ USE_LIBADA := N
 
 USE_APPLICATION := test-ArduinoUNO
 
+SIMAVR :=
+
 ################################################################################
 # CPU.                                                                         #
 #                                                                              #
@@ -29,7 +31,7 @@ CPU_MODEL := ATMEGA328P
 #                                                                              #
 ################################################################################
 
-GCC_SWITCHES_PLATFORM     := -mmcu=atmega328p -Wa,-mmcu=atmega328p
+GCC_SWITCHES_PLATFORM     := -mmcu=atmega328p
 LD_SWITCHES_PLATFORM      := -m avr5 --undefined=vectors
 OBJDUMP_SWITCHES_PLATFORM :=
 #OBJCOPY_SWITCHES_PLATFORM := -O srec -R .eeprom
@@ -40,6 +42,18 @@ KERNEL_ROMFILE            := $(KERNEL_BASENAME).hex
 
 CONFIGURE_FILES_PLATFORM := configure.ads configure.h
 LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+# run on simavr
+ifeq ($(SIMAVR),Y)
+SIMAVR_PREFIX                  := /opt/simavr
+export SIMAVR_PREFIX
+LD_SCRIPT                      := linker-simavr.lds
+LD_SWITCHES_PLATFORM           += --undefined=_vcdtrace
+LOWLEVEL_FILES_PLATFORM        += simavr.c
+GCC_SWITCHES_LOWLEVEL_PLATFORM += -I $(SIMAVR_PREFIX)/include
+POSTBUILD_ROMFILE              :=
+CLEAN_OBJECTS_COMMON           += simavr.vcd simavr.vcd.idx
+endif
 
 ################################################################################
 # User parameters.                                                             #
@@ -54,7 +68,12 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
+ifneq ($(SIMAVR),Y)
 RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/avrdude.sh
 #RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/avrdude.bat
 DEBUG_COMMAND :=
+else
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/simavr.sh
+DEBUG_COMMAND :=
+endif
 

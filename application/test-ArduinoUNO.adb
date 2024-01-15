@@ -29,7 +29,7 @@ package body Application is
    -- type USART_Buffer_Ptr is access USART_Buffer;
    -- function To_USART_Buffer_Ptr is new Ada.Unchecked_Conversion (System.Address, USART_Buffer_Ptr);
 
-   Hello : constant USART_Buffer := ('H', 'E', 'L', 'L', 'O');
+   Hello : constant USART_Buffer := ['H', 'E', 'L', 'L', 'O', Character'Val (10)];
 
    --========================================================================--
    --                                                                        --
@@ -107,7 +107,7 @@ package body Application is
                     TXEN0   => True,           -- Transmitter Enable
                     RXEN0   => True,           -- Receiver Enable
                     UDRIE0  => False,          -- USART Data register Empty Interrupt Enable
-                    TXCIE0  => False,          -- TX Complete Interrupt Enable
+                    TXCIE0  => True,           -- TX Complete Interrupt Enable
                     RXCIE0  => False,          -- RX Complete Interrupt Enable
                     others  => <>
                    );
