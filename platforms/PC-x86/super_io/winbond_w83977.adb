@@ -74,9 +74,11 @@ package body Winbond_W83977
       -- Console.Print (Interfaces.Unsigned_8'(CPU.IO.PortIn (EFDR)), Prefix => "ID:  ", NL => True);
       -- CPU.IO.PortOut (EFIR, CR21);
       -- Console.Print (Interfaces.Unsigned_8'(CPU.IO.PortIn (EFDR)), Prefix => "Rev: ", NL => True);
+      -- soft reset
       CPU.IO.PortOut (EFIR, CR02);
       CPU.IO.PortOut (EFDR, Interfaces.Unsigned_8'(1));
       CPU.IO.PortOut (EFDR, Interfaces.Unsigned_8'(0));
+      -- configuration
       for Index in W83977_InitData'Range loop
          CPU.IO.PortOut (EFIR, CR07);
          CPU.IO.PortOut (EFDR, W83977_InitData (Index).Logical_Device);
