@@ -52,7 +52,7 @@ LD_SWITCHES_PLATFORM           += --undefined=_vcdtrace
 LOWLEVEL_FILES_PLATFORM        += simavr.c
 GCC_SWITCHES_LOWLEVEL_PLATFORM += -I $(SIMAVR_PREFIX)/include
 POSTBUILD_ROMFILE              :=
-CLEAN_OBJECTS_COMMON           += simavr.vcd simavr.vcd.idx
+CLEAN_OBJECTS_COMMON           += *.vcd *.vcd.idx
 endif
 
 ################################################################################
