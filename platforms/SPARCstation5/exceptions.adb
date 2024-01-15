@@ -29,7 +29,8 @@ with BSP;
 with IOEMU;
 with Console;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -59,7 +60,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process is
+   procedure Exception_Process
+      is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
       System_Abort;
@@ -68,7 +70,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process is
+   procedure Irq_Process
+      is
    begin
       if Sun4m.SIPR.T then
          BSP.Tick_Count := @ + 1;
@@ -93,7 +96,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
       Trap_Template  : TrapTable_Item_Type;
       Vector_Address : Address;
       Displacement   : Storage_Offset;

@@ -31,7 +31,8 @@ with Exceptions;
 with Console;
 with CPU;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -51,12 +52,14 @@ package body BSP is
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_get_secondary_stack";
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_get_secondary_stack";
 
-   function QEMU_Detect return Boolean;
+   function QEMU_Detect
+      return Boolean;
 
    --========================================================================--
    --                                                                        --
@@ -69,7 +72,9 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      is
    begin
       return BSP_SS_Stack;
    end Get_Sec_Stack;
@@ -78,7 +83,9 @@ package body BSP is
    -- Check if we are running under QEMU.
    -- QEMU creates a configuration signature @ 0x2D00000510.
    ----------------------------------------------------------------------------
-   function QEMU_Detect return Boolean is
+   function QEMU_Detect
+      return Boolean
+      is
       Result : Unsigned_32;
    begin
       Asm (
@@ -124,12 +131,16 @@ package body BSP is
 
    -- serial port "A"
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       Z8530.TX (SCC_Descriptor, Z8530.CHANNELA, To_U8 (C));
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       Z8530.RX (SCC_Descriptor, Z8530.CHANNELA, Data);
@@ -139,7 +150,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
@@ -181,20 +193,20 @@ package body BSP is
       Am7990_Descriptor.Write_16      := MMIO.WriteA'Access;
       -------------------------------------------------------------------------
       SITMS := (
-                SBusIrq => 0,
-                K       => False,
-                S       => True,  -- serial port
-                E       => False,
-                SC      => False,
-                T       => True,  -- timer
-                V       => False,
-                F       => False,
-                M       => False,
-                I       => False,
-                ME      => False,
-                MA      => True,
-                others  => <>
-               );
+         SBusIrq => 0,
+         K       => False,
+         S       => True,  -- serial port
+         E       => False,
+         SC      => False,
+         T       => True,  -- timer
+         V       => False,
+         F       => False,
+         M       => False,
+         I       => False,
+         ME      => False,
+         MA      => True,
+         others  => <>
+         );
       SPARC.Irq_Enable;
       Tclk_Init;
       -------------------------------------------------------------------------

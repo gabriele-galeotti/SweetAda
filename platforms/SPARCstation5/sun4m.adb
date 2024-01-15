@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body Sun4m is
+package body Sun4m
+   is
 
    --========================================================================--
    --                                                                        --
@@ -32,7 +33,8 @@ package body Sun4m is
    -- "The interrupt is cleared and the limit bits reset by reading the
    -- appropriate limit register."
    ----------------------------------------------------------------------------
-   procedure System_Timer_ClearLR is
+   procedure System_Timer_ClearLR
+      is
       Unused : Slavio_Timer_Limit_Type with Unreferenced => True;
    begin
       Unused := System_Timer.Limit;
@@ -43,7 +45,8 @@ package body Sun4m is
    -- The 31-bit counter is incremented every 500ns.
    -- interrupt_level_10 22 0x1A
    ----------------------------------------------------------------------------
-   procedure Tclk_Init is
+   procedure Tclk_Init
+      is
    begin
       System_Timer.Limit.Limit := 2000; -- 1 ms
    end Tclk_Init;

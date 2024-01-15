@@ -21,7 +21,8 @@ with Interfaces;
 with Ada.Unchecked_Conversion;
 with Bits;
 
-package Sun4m is
+package Sun4m
+   is
 
    --========================================================================--
    --                                                                        --
@@ -54,40 +55,38 @@ package Sun4m is
    -- pp. 2-25 DMA2 Internal ID Register
    ----------------------------------------------------------------------------
 
-   DMA2_INTERNAL_IDREGISTER : aliased Unsigned_32 with
-      Address              => To_Address (DMA2_INTERNAL_IDREGISTER_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   DMA2_INTERNAL_IDREGISTER : aliased Unsigned_32
+      with Address              => To_Address (DMA2_INTERNAL_IDREGISTER_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 89C105 SLAVIO System Status and System Control Register
    ----------------------------------------------------------------------------
 
-   type Slavio_SS_SC_Type is
-   record
+   type Slavio_SS_SC_Type is record
       SR        : Boolean;
       RS        : Boolean;
       Reserved1 : Bits_2;
       WD        : Boolean;
       Reserved2 : Bits_27;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Slavio_SS_SC_Type use
-   record
-      SR        at 0 range 0 .. 0;
-      RS        at 0 range 1 .. 1;
-      Reserved1 at 0 range 2 .. 3;
-      WD        at 0 range 4 .. 4;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Slavio_SS_SC_Type use record
+      SR        at 0 range 0 ..  0;
+      RS        at 0 range 1 ..  1;
+      Reserved1 at 0 range 2 ..  3;
+      WD        at 0 range 4 ..  4;
       Reserved2 at 0 range 5 .. 31;
    end record;
 
-   System_Status_Control : aliased Slavio_SS_SC_Type with
-      Address              => To_Address (SLAVIO_SS_SCR_BASEADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   System_Status_Control : aliased Slavio_SS_SC_Type
+      with Address              => To_Address (SLAVIO_SS_SCR_BASEADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 89C105 SLAVIO Interrupt Controller
@@ -95,8 +94,7 @@ package Sun4m is
 
    -- pp. 6-39 System Interrupt Pending Register
 
-   type SI_Type is
-   record
+   type SI_Type is record
       Reserved1 : Bits_7 := 0;
       SBusIrq   : Bits_7;      -- Gives a direct indication of which SBus level interrupts are active.
       K         : Boolean;     -- Keyboard/Mouse interrupt
@@ -113,13 +111,12 @@ package Sun4m is
       I         : Boolean;     -- MSI (MBus-SBus Interface) interrupt
       ME        : Boolean;     -- Module Error (asynchronous fault)
       MA        : Boolean;     -- Mask All interrupts.
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SI_Type use
-   record
-      Reserved1 at 0 range 0 .. 6;
-      SBusIrq   at 0 range 7 .. 13;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SI_Type use record
+      Reserved1 at 0 range  0 ..  6;
+      SBusIrq   at 0 range  7 .. 13;
       K         at 0 range 14 .. 14;
       S         at 0 range 15 .. 15;
       E         at 0 range 16 .. 16;
@@ -140,32 +137,32 @@ package Sun4m is
    -- pp. 6-39 System Interrupt Target Mask Register (Read Only), and Mask Set and Mask Clear Registers (Write Only)
 
    -- Pending
-   SIPR : aliased SI_Type with
-      Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0000#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SIPR : aliased SI_Type
+      with Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Target Mask Read
-   SITM  : aliased SI_Type with
-      Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0004#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SITM  : aliased SI_Type
+      with Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0004#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Target Mask Set
-   SITMS : aliased SI_Type with
-      Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0008#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SITMS : aliased SI_Type
+      with Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0008#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Target Mask Clear
-   SITMC : aliased SI_Type with
-      Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_000C#),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SITMC : aliased SI_Type
+      with Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_000C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 89C105 SLAVIO Timers
@@ -173,60 +170,54 @@ package Sun4m is
 
    -- pp. 6-43 Counter/Timer Limit Register
 
-   type Slavio_Timer_Limit_Type is
-   record
+   type Slavio_Timer_Limit_Type is record
       Reserved1 : Bits_9;
       Limit     : Bits_22;
       Reserved2 : Bits_1;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Slavio_Timer_Limit_Type use
-   record
-      Reserved1 at 0 range 0 .. 8;
-      Limit     at 0 range 9 .. 30;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Slavio_Timer_Limit_Type use record
+      Reserved1 at 0 range  0 ..  8;
+      Limit     at 0 range  9 .. 30;
       Reserved2 at 0 range 31 .. 31;
    end record;
 
    -- pp. 6-44 User Timer Count Register Field Definitions
 
-   type Slavio_Timer_Counter_Type is
-   record
+   type Slavio_Timer_Counter_Type is record
       Reserved : Bits_9;
       Count    : Bits_22;
       L        : Bits_1;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Slavio_Timer_Counter_Type use
-   record
-      Reserved at 0 range 0 .. 8;
-      Count    at 0 range 9 .. 30;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Slavio_Timer_Counter_Type use record
+      Reserved at 0 range  0 ..  8;
+      Count    at 0 range  9 .. 30;
       L        at 0 range 31 .. 31;
    end record;
 
-   type Slavio_Timer_Type is
-   record
+   type Slavio_Timer_Type is record
       Limit      : Slavio_Timer_Limit_Type   with Volatile_Full_Access => True;
       Counter    : Slavio_Timer_Counter_Type with Volatile_Full_Access => True;
       Counter_NR : Slavio_Timer_Limit_Type   with Volatile_Full_Access => True;
-   end record with
-      Size => 3 * 32;
-   for Slavio_Timer_Type use
-   record
+   end record
+      with Size => 3 * 32;
+   for Slavio_Timer_Type use record
       Limit      at 0 range 0 .. 31;
       Counter    at 4 range 0 .. 31;
       Counter_NR at 8 range 0 .. 31;
    end record;
 
-   System_Timer : aliased Slavio_Timer_Type with
-      Address    => To_Address (SLAVIO_TIMER_SYS_BASEADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   System_Timer : aliased Slavio_Timer_Type
+      with Address    => To_Address (SLAVIO_TIMER_SYS_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   procedure System_Timer_ClearLR with
-      Inline => True;
+   procedure System_Timer_ClearLR
+      with Inline => True;
 
    procedure Tclk_Init;
 
@@ -243,8 +234,7 @@ package Sun4m is
 
    -- Control/Status Register
 
-   type E_CSR_Type is
-   record
+   type E_CSR_Type is record
       E_INT_PEND      : Boolean;     -- R   Set when e_irq_ active, cleared when e_irq_ inactive
       E_ERR_PEND      : Boolean;     -- R   Set when memory time-out, protection or late error detected on a ENET transfer.
       E_DRAINING      : Bits_2;      -- R   Both bits set when E-cache draining dirty data to memory, otherwise both bits are 0.
@@ -266,19 +256,18 @@ package Sun4m is
       E_TP_AUI_x      : Boolean;     -- R/W When E_LOOP_TEST = 0, selects TP or AUI Ethernet by driving TP_AUI to 1 or 0.
       Unused4         : Bits_5 := 0;
       E_DEV_ID        : Bits_4;      -- R   Device ID (For DMA2, E_DEV_ID=1010)
-   end record with
-      Bit_Order => High_Order_First,
-      Size      => 32;
-   for E_CSR_Type use
-   record
-      E_INT_PEND      at 0 range 0 .. 0;
-      E_ERR_PEND      at 0 range 1 .. 1;
-      E_DRAINING      at 0 range 2 .. 3;
-      E_INT_EN        at 0 range 4 .. 4;
-      E_INVALIDATE    at 0 range 5 .. 5;
-      E_SLAVE_ERR     at 0 range 6 .. 6;
-      E_RESET         at 0 range 7 .. 7;
-      Unused1         at 0 range 8 .. 9;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for E_CSR_Type use record
+      E_INT_PEND      at 0 range  0 ..  0;
+      E_ERR_PEND      at 0 range  1 ..  1;
+      E_DRAINING      at 0 range  2 ..  3;
+      E_INT_EN        at 0 range  4 ..  4;
+      E_INVALIDATE    at 0 range  5 ..  5;
+      E_SLAVE_ERR     at 0 range  6 ..  6;
+      E_RESET         at 0 range  7 ..  7;
+      Unused1         at 0 range  8 ..  9;
       E_DRAIN         at 0 range 10 .. 10;
       E_DSBL_WR_DRN   at 0 range 11 .. 11;
       E_DSBL_RD_DRN   at 0 range 12 .. 12;
@@ -296,11 +285,11 @@ package Sun4m is
 
    E_CSR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#0#;
 
-   E_CSR : aliased E_CSR_Type with
-      Address              => To_Address (E_CSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   E_CSR : aliased E_CSR_Type
+      with Address              => To_Address (E_CSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 pragma Warnings (Off, "volatile actual passed by copy");
    function To_U32 is new Ada.Unchecked_Conversion (E_CSR_Type, Unsigned_32);
@@ -311,31 +300,31 @@ pragma Warnings (On, "volatile actual passed by copy");
 
    E_TST_CSR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#4#;
 
-   E_TST_CSR : aliased Unsigned_32 with
-      Address              => To_Address (E_TST_CSR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   E_TST_CSR : aliased Unsigned_32
+      with Address              => To_Address (E_TST_CSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Cache Valid Bits
 
    E_VLD_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#8#;
 
-   E_VLD : aliased Unsigned_32 with
-      Address              => To_Address (E_VLD_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   E_VLD : aliased Unsigned_32
+      with Address              => To_Address (E_VLD_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Base Address Reg
    -- High Order 8 bits of address for Ethernet DMA transfers (defaults to 0xFF).
 
    E_BASE_ADDR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#C#;
 
-   E_BASE_ADDR : aliased Unsigned_8 with
-      Address              => To_Address (E_BASE_ADDR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   E_BASE_ADDR : aliased Unsigned_8
+      with Address              => To_Address (E_BASE_ADDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end Sun4m;
