@@ -7,6 +7,7 @@ with CPU.IO;
 with PC;
 with VGA;
 with BSP;
+with Console;
 with IOEMU;
 
 package body Application is
@@ -47,6 +48,7 @@ package body Application is
             loop
                -- roll characters on VGA since modern machines do not have I/O
                -- VGA.Print (0, 5, To_Ch (32 + (Value and 16#1F#)));
+               Console.Print ("hello, SweetAda", NL => True);
                if Configure.USE_QEMU_IOEMU then
                   -- IOEMU GPIO test
                   PortOut (IOEMU.IO0_ADDRESS, Value);
