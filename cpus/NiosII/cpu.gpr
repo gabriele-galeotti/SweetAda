@@ -30,8 +30,8 @@ library project Cpu is
       when others =>
          for Languages use ("Ada");
          for Source_Files use (
-                               "libgcc.adb", "libgcc.ads",
                                "gcc_types.ads",
+                               "libgcc.adb", "libgcc.ads",
                                "libgcc-udivmodsi4.adb",
                                "libgcc-divsi3.adb",
                                "libgcc-modsi3.adb",
