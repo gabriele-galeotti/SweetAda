@@ -12,6 +12,8 @@ RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
+USE_APPLICATION := test-QEMU-PPC64
+
 ################################################################################
 # CPU.                                                                         #
 #                                                                              #
