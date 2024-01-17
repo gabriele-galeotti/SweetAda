@@ -576,13 +576,13 @@ ifneq ($(PLATFORM),)
 ifneq ($(CPU),)
 # head-insert CPU directory
 INCLUDE_DIRECTORIES := $(CPU_DIRECTORY) $(INCLUDE_DIRECTORIES)
-# head-insert CPU_MODEL directory
-ifneq ($(CPU_MODEL_DIRECTORY),)
-INCLUDE_DIRECTORIES := $(CPU_MODEL_DIRECTORY) $(INCLUDE_DIRECTORIES)
-endif
 # head-insert optional directories
 ifneq ($(CPU_INCLUDE_DIRECTORIES),)
 INCLUDE_DIRECTORIES := $(CPU_INCLUDE_DIRECTORIES) $(INCLUDE_DIRECTORIES)
+endif
+# head-insert CPU_MODEL directory
+ifneq ($(CPU_MODEL_DIRECTORY),)
+INCLUDE_DIRECTORIES := $(CPU_MODEL_DIRECTORY) $(INCLUDE_DIRECTORIES)
 endif
 endif
 # head-insert PLATFORM directory
