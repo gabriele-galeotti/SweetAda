@@ -18,6 +18,15 @@
                 .global _start
 _start:
 
+#define SPR_PIR     0x3FF
+#define BOOTCORE_ID 0x8
+                mfspr   r1,SPR_PIR
+                cmpli   cr0,1,r1,BOOTCORE_ID
+                beq     bootcore
+1:              doze
+                b       1b
+
+bootcore:
                 //
                 // Setup stack pointer.
                 //

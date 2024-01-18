@@ -83,7 +83,7 @@ TILTIMEOUT=3
 
 # QEMU machine
 ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
-  -M powernv8 \
+  -M powernv8 -smp cores=4 \
   -bios ${KERNEL_ROMFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -chardev "socket,id=SERIALPORT0,port=${SERIALPORT0},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \
@@ -137,7 +137,7 @@ elif [ "x$1" = "x-debug" ] ; then
     -q \
     -iex "set basenames-may-differ" \
     ${KERNEL_OUTFILE} \
-    -ex "target remote tcp:localhost:1234"
+    -ex "target extended-remote tcp:localhost:1234"
 fi
 
 exit $?
