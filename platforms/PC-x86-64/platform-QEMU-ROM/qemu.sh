@@ -88,7 +88,7 @@ export QEMU_IPADDRESS="192.168.3.1"
 
 # QEMU machine
 ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
-  -M q35 -cpu core2duo -m 256 -vga std \
+  -M q35 -cpu core2duo -smp cores=4 -m 256 -vga std \
   -bios ${KERNEL_ROMFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -rtc "base=utc,clock=host" \
@@ -144,7 +144,7 @@ elif [ "x$1" = "x-debug" ] ; then
     -iex "set basenames-may-differ" \
     -iex "set architecture i386:x86-64" \
     ${KERNEL_OUTFILE} \
-    -ex "target remote tcp:localhost:1234" \
+    -ex "target extended-remote tcp:localhost:1234" \
     -ex "break _longmode" -ex "continue"
 fi
 

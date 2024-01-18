@@ -59,6 +59,17 @@ _start:
                 movw    %ax,%gs
                 movw    %ax,%ss
 
+                //
+                // Check for BSP or AP.
+                //
+                movl    $0x1B,%ecx
+                rdmsr
+                testl   $(1<<8),%eax
+                jne     2f
+1:              hlt
+                jmp     1b
+2:
+
 #if defined(ENABLE_A20)
                 //
                 // Enable A20 line.
@@ -257,6 +268,19 @@ _longmode:
                 movq    %cr4,%rax
                 orw     $(3<<9),%ax             // set CR4.OSFXSR and CR4.OSXMMEXCPT
                 movq    %rax,%cr4
+
+smpboot:
+#define AP_ENTRYPOINT 0x000F0000
+                //
+                // IPI broadcast INIT, all-except-self
+                //
+                movl    $0x000C4500,%eax
+                movl    %eax,0xFEE00300
+                //
+                // IPI broadcast Startup, all-except-self
+                //
+                movl    $(0x000C4600|(AP_ENTRYPOINT>>12)),%eax
+                movl    %eax,0xFEE00300
 
                 //
                 // Jump to high-level code.
