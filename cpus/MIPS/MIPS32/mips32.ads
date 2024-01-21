@@ -321,9 +321,16 @@ package MIPS32
    -- Interrupts
    ----------------------------------------------------------------------------
 
-   type Irq_State_Type is new Natural;
+   type Intcontext_Type is new Natural;
    type Irq_Id_Type is new Natural;
    subtype Irq_Level_Type is Unsigned_16 range 0 .. 63;
+
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      with Inline => True;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
@@ -331,12 +338,6 @@ package MIPS32
       with Inline => True;
    procedure Irq_Level_Set
       (Irq_Level : in Irq_Level_Type)
-      with Inline => True;
-   function Irq_State_Get
-      return Irq_State_Type
-      with Inline => True;
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
       with Inline => True;
 
    ----------------------------------------------------------------------------

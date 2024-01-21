@@ -910,7 +910,7 @@ package body NE2000
       BAR        : Unsigned_16;
       Byte_Idx   : Integer;
       Data       : Unsigned_32;
-      Irq_State  : CPU.Irq_State_Type;
+      Intcontext : CPU.Intcontext_Type;
       function In8
          (Port : Unsigned_16)
          return Unsigned_8
@@ -931,7 +931,7 @@ package body NE2000
          Console.Print_Memory (Payload_Address (P), Bits.Bytesize (P.all.Size));
       end Packet_Dump;
    begin
-      Irq_State := CPU.Irq_State_Get;
+      CPU.Intcontext_Get (Intcontext);
       CPU.Irq_Disable;
       BAR := D.BAR;
       -- Page 0 NODMA
@@ -971,7 +971,7 @@ package body NE2000
       Out8 (PA (BAR, TBCR1), 16#00#);                  -- TBCR1: set byte count HI
       -- Page 0 TX
       Out8 (PA (BAR, CR), To_U8 (CR_TX));
-      CPU.Irq_State_Set (Irq_State);
+      CPU.Intcontext_Set (Intcontext);
    end Transmit;
 
    ----------------------------------------------------------------------------

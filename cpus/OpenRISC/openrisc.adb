@@ -51,33 +51,41 @@ package body OpenRISC
    end NOP;
 
    ----------------------------------------------------------------------------
-   -- Irq_Enable/Disable
+   -- Intcontext_Get
    ----------------------------------------------------------------------------
+   function Intcontext_Get
+      return Intcontext_Type
+      is
+   begin
+      return 0; -- __TBD__
+   end Intcontext_Get;
 
+   ----------------------------------------------------------------------------
+   -- Intcontext_Set
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      is
+   begin
+      null; -- __TBD__
+   end Intcontext_Set;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Enable
+   ----------------------------------------------------------------------------
    procedure Irq_Enable
       is
    begin
       null; -- __TBD__
    end Irq_Enable;
 
+   ----------------------------------------------------------------------------
+   -- Irq_Disable
+   ----------------------------------------------------------------------------
    procedure Irq_Disable
       is
    begin
       null; -- __TBD__
    end Irq_Disable;
-
-   function Irq_State_Get
-      return Irq_State_Type
-      is
-   begin
-      return 0; -- __TBD__
-   end Irq_State_Get;
-
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
-      is
-   begin
-      null; -- __TBD__
-   end Irq_State_Set;
 
 end OpenRISC;

@@ -45,12 +45,13 @@ package CPU
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is R3000.Irq_State_Type;
-   subtype Irq_Id_Type    is R3000.Irq_Id_Type;
+   subtype Intcontext_Type is R3000.Intcontext_Type;
+   subtype Irq_Id_Type     is R3000.Irq_Id_Type;
 
-   procedure Irq_Enable                                    renames R3000.Irq_Enable;
-   procedure Irq_Disable                                   renames R3000.Irq_Disable;
-   function Irq_State_Get return Irq_State_Type            renames R3000.Irq_State_Get;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames R3000.Irq_State_Set;
+   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames R3000.Intcontext_Get;
+   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames R3000.Intcontext_Set;
+
+   procedure Irq_Enable  renames R3000.Irq_Enable;
+   procedure Irq_Disable renames R3000.Irq_Disable;
 
 end CPU;

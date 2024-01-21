@@ -42,17 +42,18 @@ package SH
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   type Irq_State_Type is new Integer;
+   type Intcontext_Type is new Integer;
+
+   procedure Intcontext_Set
+      (Intcontext : out Intcontext_Type)
+      with Inline => True;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
    procedure Irq_Disable
-      with Inline => True;
-   function Irq_State_Get
-      return Irq_State_Type
-      with Inline => True;
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
       with Inline => True;
 
    ----------------------------------------------------------------------------

@@ -157,6 +157,60 @@ package body R3000
    end CP0_PRId_Read;
 
    ----------------------------------------------------------------------------
+   -- Intcontext_Get
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      is
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       Register_Equates            &
+                       "        .set    push     " & CRLF &
+                       "        .set    reorder  " & CRLF &
+                       "        mfc0    %0,CP0_SR" & CRLF &
+                       "        .set    pop      " & CRLF &
+                       "",
+           Outputs  => Intcontext_Type'Asm_Output ("=r", Intcontext),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end Intcontext_Get;
+
+   ----------------------------------------------------------------------------
+   -- Intcontext_Set
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      is
+      CP0R12_R : Unsigned_32;
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       Register_Equates            &
+                       "        .set    push     " & CRLF &
+                       "        .set    noreorder" & CRLF &
+                       "        .set    noat     " & CRLF &
+                       "        mfc0    $1,CP0_SR" & CRLF &
+                       "        andi    %0,1     " & CRLF &
+                       "        ori     $1,1     " & CRLF &
+                       "        xori    $1,1     " & CRLF &
+                       "        or      %0,$1    " & CRLF &
+                       "        mtc0    %0,CP0_SR" & CRLF &
+                       "        nop              " & CRLF &
+                       "        nop              " & CRLF &
+                       "        nop              " & CRLF &
+                       "        .set    pop      " & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", CP0R12_R),
+           Inputs   => Intcontext_Type'Asm_Input ("0", Intcontext),
+           Clobber  => "$1,memory",
+           Volatile => True
+          );
+   end Intcontext_Set;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable is
@@ -207,61 +261,5 @@ package body R3000
            Volatile => True
           );
    end Irq_Disable;
-
-   ----------------------------------------------------------------------------
-   -- Irq_State_Get
-   ----------------------------------------------------------------------------
-   function Irq_State_Get
-      return Irq_State_Type
-      is
-      Irq_State : Irq_State_Type;
-   begin
-      Asm (
-           Template => ""                          & CRLF &
-                       Register_Equates            &
-                       "        .set    push     " & CRLF &
-                       "        .set    reorder  " & CRLF &
-                       "        mfc0    %0,CP0_SR" & CRLF &
-                       "        .set    pop      " & CRLF &
-                       "",
-           Outputs  => Irq_State_Type'Asm_Output ("=r", Irq_State),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Irq_State;
-   end Irq_State_Get;
-
-   ----------------------------------------------------------------------------
-   -- Irq_State_Set
-   ----------------------------------------------------------------------------
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
-      is
-      CP0R12_R : Unsigned_32;
-   begin
-      Asm (
-           Template => ""                          & CRLF &
-                       Register_Equates            &
-                       "        .set    push     " & CRLF &
-                       "        .set    noreorder" & CRLF &
-                       "        .set    noat     " & CRLF &
-                       "        mfc0    $1,CP0_SR" & CRLF &
-                       "        andi    %0,1     " & CRLF &
-                       "        ori     $1,1     " & CRLF &
-                       "        xori    $1,1     " & CRLF &
-                       "        or      %0,$1    " & CRLF &
-                       "        mtc0    %0,CP0_SR" & CRLF &
-                       "        nop              " & CRLF &
-                       "        nop              " & CRLF &
-                       "        nop              " & CRLF &
-                       "        .set    pop      " & CRLF &
-                       "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", CP0R12_R),
-           Inputs   => Irq_State_Type'Asm_Input ("0", Irq_State),
-           Clobber  => "$1,memory",
-           Volatile => True
-          );
-   end Irq_State_Set;
 
 end R3000;

@@ -36,9 +36,9 @@ package body FIFO
        Data    : in     Interfaces.Unsigned_8;
        Success :    out Boolean)
       is
-      Irq_State : CPU.Irq_State_Type;
+      Intcontext : CPU.Intcontext_Type;
    begin
-      Irq_State := CPU.Irq_State_Get;
+      CPU.Intcontext_Get (Intcontext);
       CPU.Irq_Disable;
       if Q.all.Count >= QUEUE_SIZE then
          Success := False;
@@ -48,7 +48,7 @@ package body FIFO
          Q.all.Count := @ + 1;
          Success := True;
       end if;
-      CPU.Irq_State_Set (Irq_State);
+      CPU.Intcontext_Set (Intcontext);
    end Put;
 
    ----------------------------------------------------------------------------
@@ -59,9 +59,9 @@ package body FIFO
        Data    : out    Interfaces.Unsigned_8;
        Success : out    Boolean)
       is
-      Irq_State : CPU.Irq_State_Type;
+      Intcontext : CPU.Intcontext_Type;
    begin
-      Irq_State := CPU.Irq_State_Get;
+      CPU.Intcontext_Get (Intcontext);
       CPU.Irq_Disable;
       if Q.all.Count = 0 then
          Data := 0;
@@ -72,7 +72,7 @@ package body FIFO
          Q.all.Count := @ - 1;
          Success := True;
       end if;
-      CPU.Irq_State_Set (Irq_State);
+      CPU.Intcontext_Set (Intcontext);
    end Get;
 
 end FIFO;

@@ -42,13 +42,14 @@ package CPU
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type    is x86.Irq_State_Type;
+   subtype Intcontext_Type   is x86.Intcontext_Type;
    subtype Exception_Id_Type is x86.Exception_Id_Type;
    subtype Irq_Id_Type       is x86.Irq_Id_Type;
 
-   procedure Irq_Enable                                    renames x86.Irq_Enable;
-   procedure Irq_Disable                                   renames x86.Irq_Disable;
-   function Irq_State_Get return Irq_State_Type            renames x86.Irq_State_Get;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames x86.Irq_State_Set;
+   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames x86.Intcontext_Get;
+   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames x86.Intcontext_Set;
+
+   procedure Irq_Enable  renames x86.Irq_Enable;
+   procedure Irq_Disable renames x86.Irq_Disable;
 
 end CPU;

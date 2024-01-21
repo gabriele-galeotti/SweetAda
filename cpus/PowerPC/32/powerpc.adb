@@ -201,9 +201,8 @@ package body PowerPC
    end PVR_Read;
 
    ----------------------------------------------------------------------------
-   -- Exceptions
+   -- Setup_Exception_Stack
    ----------------------------------------------------------------------------
-
    procedure Setup_Exception_Stack
       is
    begin
@@ -220,9 +219,29 @@ package body PowerPC
    end Setup_Exception_Stack;
 
    ----------------------------------------------------------------------------
-   -- Irq_Enable/Disable
+   -- Intcontext_Get
    ----------------------------------------------------------------------------
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      is
+   begin
+      Intcontext := 0; -- __TBD__
+   end Intcontext_Get;
 
+   ----------------------------------------------------------------------------
+   -- Intcontext_Set
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      is
+      pragma Unreferenced (Intcontext);
+   begin
+      null; -- __TBD__
+   end Intcontext_Set;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Enable
+   ----------------------------------------------------------------------------
    procedure Irq_Enable
       is
       MSR : MSR_Type;
@@ -233,6 +252,9 @@ package body PowerPC
       MSR_Write (MSR);
    end Irq_Enable;
 
+   ----------------------------------------------------------------------------
+   -- Irq_Disable
+   ----------------------------------------------------------------------------
    procedure Irq_Disable
       is
       MSR : MSR_Type;
@@ -242,20 +264,5 @@ package body PowerPC
       SYNC;
       MSR_Write (MSR);
    end Irq_Disable;
-
-   function Irq_State_Get
-      return Irq_State_Type
-      is
-   begin
-      return 0; -- __TBD__
-   end Irq_State_Get;
-
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
-      is
-      pragma Unreferenced (Irq_State);
-   begin
-      null; -- __TBD__
-   end Irq_State_Set;
 
 end PowerPC;

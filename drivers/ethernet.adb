@@ -176,9 +176,9 @@ package body Ethernet
        P       : in     Pbuf_Ptr;
        Success :    out Boolean)
       is
-      Irq_State : CPU.Irq_State_Type;
+      Intcontext : CPU.Intcontext_Type;
    begin
-      Irq_State := CPU.Irq_State_Get;
+      CPU.Intcontext_Get (Intcontext);
       CPU.Irq_Disable;
       if (Q.all.Head + 1) = Q.all.Tail then
          Success := False;
@@ -188,7 +188,7 @@ package body Ethernet
          Q.all.Count := Q.all.Count + 1;
          Success := True;
       end if;
-      CPU.Irq_State_Set (Irq_State);
+      CPU.Intcontext_Set (Intcontext);
    end Enqueue;
 
    ----------------------------------------------------------------------------
@@ -199,9 +199,9 @@ package body Ethernet
        P       : out    Pbuf_Ptr;
        Success : out    Boolean)
       is
-      Irq_State : CPU.Irq_State_Type;
+      Intcontext : CPU.Intcontext_Type;
    begin
-      Irq_State := CPU.Irq_State_Get;
+      CPU.Intcontext_Get (Intcontext);
       CPU.Irq_Disable;
       if Q.all.Tail = Q.all.Head then
          P := null;
@@ -212,7 +212,7 @@ package body Ethernet
          Q.all.Count := Q.all.Count - 1;
          Success := True;
       end if;
-      CPU.Irq_State_Set (Irq_State);
+      CPU.Intcontext_Set (Intcontext);
    end Dequeue;
 
 end Ethernet;

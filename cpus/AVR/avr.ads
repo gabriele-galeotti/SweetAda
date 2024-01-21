@@ -47,7 +47,7 @@ package AVR
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is Integer;
+   subtype Intcontext_Type is Integer;
 
    procedure Irq_Enable
       with Inline => True;

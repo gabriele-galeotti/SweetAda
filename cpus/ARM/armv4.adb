@@ -76,6 +76,42 @@ package body ARMv4
    end BREAKPOINT;
 
    ----------------------------------------------------------------------------
+   -- Intcontext_Get
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      is
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        mrs     %0,cpsr" & CRLF &
+                       "",
+           Outputs  => Intcontext_Type'Asm_Output ("=r", Intcontext),
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end Intcontext_Get;
+
+   ----------------------------------------------------------------------------
+   -- Intcontext_Set
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      is
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       "        msr     cpsr_c,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Intcontext_Type'Asm_Input  ("r", Intcontext),
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end Intcontext_Set;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
@@ -154,44 +190,6 @@ package body ARMv4
            Volatile => True
           );
    end Fiq_Disable;
-
-   ----------------------------------------------------------------------------
-   -- Irq_State_Get
-   ----------------------------------------------------------------------------
-   function Irq_State_Get
-      return Irq_State_Type
-      is
-      Irq_State : Irq_State_Type;
-   begin
-      Asm (
-           Template => ""                        & CRLF &
-                       "        mrs     %0,cpsr" & CRLF &
-                       "",
-           Outputs  => Irq_State_Type'Asm_Output ("=r", Irq_State),
-           Inputs   => No_Input_Operands,
-           Clobber  => "memory",
-           Volatile => True
-          );
-      return Irq_State;
-   end Irq_State_Get;
-
-   ----------------------------------------------------------------------------
-   -- Irq_State_Set
-   ----------------------------------------------------------------------------
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
-      is
-   begin
-      Asm (
-           Template => ""                          & CRLF &
-                       "        msr     cpsr_c,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Irq_State_Type'Asm_Input  ("r", Irq_State),
-           Clobber  => "memory",
-           Volatile => True
-          );
-   end Irq_State_Set;
 
    ----------------------------------------------------------------------------
    -- Memory synchronization

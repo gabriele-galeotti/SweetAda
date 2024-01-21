@@ -137,13 +137,18 @@ package SPARC
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is Natural;
+   subtype Intcontext_Type is Natural;
 
-   procedure Irq_Enable;
-   procedure Irq_Disable;
-   function Irq_State_Get
-      return Irq_State_Type;
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type);
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      with Inline => True;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      with Inline => True;
+
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
+      with Inline => True;
 
 end SPARC;

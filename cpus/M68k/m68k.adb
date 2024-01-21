@@ -271,9 +271,31 @@ package body M68k
    end Asm_Call;
 
    ----------------------------------------------------------------------------
-   -- Irq_Enable/Disable
+   -- Intcontext_Get
    ----------------------------------------------------------------------------
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      is
+   begin
+      Intcontext := SR_Read.ILEVEL;
+   end Intcontext_Get;
 
+   ----------------------------------------------------------------------------
+   -- Intcontext_Set
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      is
+      Value : SR_Type;
+   begin
+      Value        := SR_Read;
+      Value.ILEVEL := Intcontext;
+      SR_Write (Value);
+   end Intcontext_Set;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Enable
+   ----------------------------------------------------------------------------
    procedure Irq_Enable
       is
    begin
@@ -288,6 +310,9 @@ package body M68k
           );
    end Irq_Enable;
 
+   ----------------------------------------------------------------------------
+   -- Irq_Disable
+   ----------------------------------------------------------------------------
    procedure Irq_Disable
       is
    begin
@@ -301,23 +326,6 @@ package body M68k
            Volatile => True
           );
    end Irq_Disable;
-
-   function Irq_State_Get
-      return Irq_State_Type
-      is
-   begin
-      return SR_Read.ILEVEL;
-   end Irq_State_Get;
-
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
-      is
-      Value : SR_Type;
-   begin
-      Value        := SR_Read;
-      Value.ILEVEL := Irq_State;
-      SR_Write (Value);
-   end Irq_State_Set;
 
    ----------------------------------------------------------------------------
    -- Locking subprograms

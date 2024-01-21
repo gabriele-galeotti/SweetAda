@@ -281,9 +281,8 @@ package body NiosII
    end Asm_Call;
 
    ----------------------------------------------------------------------------
-   -- Irq_Enable/Disable
+   -- PIE_Set
    ----------------------------------------------------------------------------
-
    procedure PIE_Set
       (PIE : in Boolean)
       is
@@ -294,30 +293,42 @@ package body NiosII
       status_Write (status);
    end PIE_Set;
 
+   ----------------------------------------------------------------------------
+   -- Intcontext_Get
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      is
+   begin
+      Intcontext := status_Read.PIE;
+   end Intcontext_Get;
+
+   ----------------------------------------------------------------------------
+   -- Intcontext_Set
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      is
+   begin
+      PIE_Set (Intcontext);
+   end Intcontext_Set;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Enable
+   ----------------------------------------------------------------------------
    procedure Irq_Enable
       is
    begin
       PIE_Set (True);
    end Irq_Enable;
 
+   ----------------------------------------------------------------------------
+   -- Irq_Disable
+   ----------------------------------------------------------------------------
    procedure Irq_Disable
       is
    begin
       PIE_Set (False);
    end Irq_Disable;
-
-   function Irq_State_Get
-      return Irq_State_Type
-      is
-   begin
-      return status_Read.PIE;
-   end Irq_State_Get;
-
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
-      is
-   begin
-      PIE_Set (Irq_State);
-   end Irq_State_Set;
 
 end NiosII;

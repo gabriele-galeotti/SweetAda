@@ -39,11 +39,12 @@ package CPU
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is OpenRISC.Irq_State_Type;
+   subtype Intcontext_Type is OpenRISC.Intcontext_Type;
 
-   procedure Irq_Enable                                    renames OpenRISC.Irq_Enable;
-   procedure Irq_Disable                                   renames OpenRISC.Irq_Disable;
-   function Irq_State_Get return Irq_State_Type            renames OpenRISC.Irq_State_Get;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames OpenRISC.Irq_State_Set;
+   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames OpenRISC.Intcontext_Get;
+   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames OpenRISC.Intcontext_Set;
+
+   procedure Irq_Enable  renames OpenRISC.Irq_Enable;
+   procedure Irq_Disable renames OpenRISC.Irq_Disable;
 
 end CPU;

@@ -44,12 +44,13 @@ package CPU
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is M68k.Irq_State_Type;
+   subtype Intcontext_Type is M68k.Intcontext_Type;
 
-   procedure Irq_Enable                                    renames M68k.Irq_Enable;
-   procedure Irq_Disable                                   renames M68k.Irq_Disable;
-   function Irq_State_Get return Irq_State_Type            renames M68k.Irq_State_Get;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames M68k.Irq_State_Set;
+   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames M68k.Intcontext_Get;
+   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames M68k.Intcontext_Set;
+
+   procedure Irq_Enable  renames M68k.Irq_Enable;
+   procedure Irq_Disable renames M68k.Irq_Disable;
 
    ----------------------------------------------------------------------------
    -- Locking

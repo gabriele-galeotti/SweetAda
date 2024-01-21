@@ -151,6 +151,15 @@ package ARMv4
    IRQ                   : constant := 16#18#;
    FIQ                   : constant := 16#1C#;
 
+   type Intcontext_Type is new Bits_32;
+
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      with Inline => True;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      with Inline => True;
+
    procedure Irq_Enable
       with Inline => True;
    procedure Irq_Disable
@@ -158,15 +167,6 @@ package ARMv4
    procedure Fiq_Enable
       with Inline => True;
    procedure Fiq_Disable
-      with Inline => True;
-
-   type Irq_State_Type is new Bits_32;
-
-   function Irq_State_Get
-      return Irq_State_Type
-      with Inline => True;
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
       with Inline => True;
 
    ----------------------------------------------------------------------------

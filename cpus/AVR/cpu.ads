@@ -44,7 +44,7 @@ package CPU
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is AVR.Irq_State_Type;
+   subtype Intcontext_Type is AVR.Intcontext_Type;
 
    procedure Irq_Enable  renames AVR.Irq_Enable;
    procedure Irq_Disable renames AVR.Irq_Disable;

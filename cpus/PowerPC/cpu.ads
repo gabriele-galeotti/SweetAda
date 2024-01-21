@@ -39,11 +39,12 @@ package CPU
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is PowerPC.Irq_State_Type;
+   subtype Intcontext_Type is PowerPC.Intcontext_Type;
 
-   procedure Irq_Enable                                    renames PowerPC.Irq_Enable;
-   procedure Irq_Disable                                   renames PowerPC.Irq_Disable;
-   function Irq_State_Get return Irq_State_Type            renames PowerPC.Irq_State_Get;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames PowerPC.Irq_State_Set;
+   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames PowerPC.Intcontext_Get;
+   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames PowerPC.Intcontext_Set;
+
+   procedure Irq_Enable  renames PowerPC.Irq_Enable;
+   procedure Irq_Disable renames PowerPC.Irq_Disable;
 
 end CPU;

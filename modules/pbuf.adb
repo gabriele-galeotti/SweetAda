@@ -94,10 +94,10 @@ package body PBUF
    function Allocate_Simple
       return Pbuf_Ptr
       is
-      Irq_State : CPU.Irq_State_Type;
-      Result    : Pbuf_Ptr;
+      Intcontext : CPU.Intcontext_Type;
+      Result     : Pbuf_Ptr;
    begin
-      Irq_State := CPU.Irq_State_Get;
+      CPU.Intcontext_Get (Intcontext);
       CPU.Irq_Disable;
       if Pool_Pointer /= null then
          declare
@@ -109,7 +109,7 @@ package body PBUF
             T_Result.all.Nref := T_Result.all.Nref + 1; -- increment reference count
          end;
       end if;
-      CPU.Irq_State_Set (Irq_State);
+      CPU.Intcontext_Set (Intcontext);
       return Result;
    end Allocate_Simple;
 
@@ -171,11 +171,11 @@ package body PBUF
    procedure Free
       (Item : in Pbuf_Ptr)
       is
-      Irq_State : CPU.Irq_State_Type;
-      P         : Pbuf_Ptr;
-      Q         : Pbuf_Ptr;
+      Intcontext : CPU.Intcontext_Type;
+      P          : Pbuf_Ptr;
+      Q          : Pbuf_Ptr;
    begin
-      Irq_State := CPU.Irq_State_Get;
+      CPU.Intcontext_Get (Intcontext);
       CPU.Irq_Disable;
       P := Item;
       while P /= null loop
@@ -196,7 +196,7 @@ package body PBUF
             P := null;
          end if;
       end loop;
-      CPU.Irq_State_Set (Irq_State);
+      CPU.Intcontext_Set (Intcontext);
    end Free;
 
    ----------------------------------------------------------------------------

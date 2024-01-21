@@ -154,6 +154,26 @@ package body MicroBlaze
    end DCache_Enable;
 
    ----------------------------------------------------------------------------
+   -- Intcontext_Get
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      is
+   begin
+      Intcontext := 0; -- __TBD__
+   end Intcontext_Get;
+
+   ----------------------------------------------------------------------------
+   -- Intcontext_Set
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      is
+   begin
+      null; -- __TBD__
+   end Intcontext_Set;
+
+   ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
@@ -196,24 +216,5 @@ package body MicroBlaze
            Volatile => True
           );
    end Irq_Disable;
-
-   ----------------------------------------------------------------------------
-   -- Irq_State_Get
-   ----------------------------------------------------------------------------
-   function Irq_State_Get return Irq_State_Type
-      is
-   begin
-      return 0; -- __TBD__
-   end Irq_State_Get;
-
-   ----------------------------------------------------------------------------
-   -- Irq_State_Set
-   ----------------------------------------------------------------------------
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
-      is
-   begin
-      null; -- __TBD__
-   end Irq_State_Set;
 
 end MicroBlaze;

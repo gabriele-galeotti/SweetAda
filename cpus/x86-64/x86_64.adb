@@ -73,15 +73,15 @@ package body x86_64
        IDT_Address    : in     Address;
        IDT_Length     : in     IDT_Length_Type)
       is
-      Irq_State : Irq_State_Type;
+      Intcontext : Intcontext_Type;
    begin
       IDT_Descriptor.Base_LO := Unsigned_16 (Select_Address_Bits (IDT_Address, 0, 15));
       IDT_Descriptor.Base_MI := Unsigned_16 (Select_Address_Bits (IDT_Address, 16, 31));
       IDT_Descriptor.Base_HI := Unsigned_32 (Select_Address_Bits (IDT_Address, 32, 63));
       IDT_Descriptor.Limit   := Unsigned_16 (IDT_Length * IDT_Descriptor'Size - 1);
-      Irq_State := Irq_State_Get;
+      Intcontext_Get (Intcontext);
       LIDTR (IDT_Descriptor);
-      Irq_State_Set (Irq_State);
+      Intcontext_Set (Intcontext);
    end IDT_Set;
 
    ----------------------------------------------------------------------------
@@ -197,9 +197,46 @@ package body x86_64
    end Asm_Call;
 
    ----------------------------------------------------------------------------
-   -- Irq_Enable/Disable
+   -- Intcontext_Get
    ----------------------------------------------------------------------------
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        pushfq    " & CRLF &
+                       "        popq    %0" & CRLF &
+                       "",
+           Outputs  => Intcontext_Type'Asm_Output ("=a", Intcontext),
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end Intcontext_Get;
 
+   ----------------------------------------------------------------------------
+   -- Intcontext_Set
+   ----------------------------------------------------------------------------
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        pushq   %0" & CRLF &
+                       "        popfq     " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Intcontext_Type'Asm_Input ("a", Intcontext),
+           Clobber  => "memory,cc",
+           Volatile => True
+          );
+   end Intcontext_Set;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Enable
+   ----------------------------------------------------------------------------
    procedure Irq_Enable
       is
    begin
@@ -214,6 +251,9 @@ package body x86_64
           );
    end Irq_Enable;
 
+   ----------------------------------------------------------------------------
+   -- Irq_Disable
+   ----------------------------------------------------------------------------
    procedure Irq_Disable
       is
    begin
@@ -227,39 +267,5 @@ package body x86_64
            Volatile => True
           );
    end Irq_Disable;
-
-   function Irq_State_Get
-      return Irq_State_Type
-      is
-      Irq_State : Irq_State_Type;
-   begin
-      Asm (
-           Template => ""                   & CRLF &
-                       "        pushfq    " & CRLF &
-                       "        popq    %0" & CRLF &
-                       "",
-           Outputs  => Irq_State_Type'Asm_Output ("=a", Irq_State),
-           Inputs   => No_Input_Operands,
-           Clobber  => "memory",
-           Volatile => True
-          );
-      return Irq_State;
-   end Irq_State_Get;
-
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
-      is
-   begin
-      Asm (
-           Template => ""                   & CRLF &
-                       "        pushq   %0" & CRLF &
-                       "        popfq     " & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Irq_State_Type'Asm_Input ("a", Irq_State),
-           Clobber  => "memory,cc",
-           Volatile => True
-          );
-   end Irq_State_Set;
 
 end x86_64;

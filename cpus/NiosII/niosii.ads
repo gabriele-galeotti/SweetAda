@@ -178,22 +178,22 @@ package NiosII
    -- Irq handling
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is Boolean;
+   subtype Intcontext_Type is Boolean;
 
    procedure PIE_Set
       (PIE : in Boolean)
       with Inline => True;
 
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      with Inline => True;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      with Inline => True;
+
    procedure Irq_Enable
       with Inline => True;
    procedure Irq_Disable
-      with Inline => True;
-
-   function Irq_State_Get
-      return Irq_State_Type
-      with Inline => True;
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
       with Inline => True;
 
 end NiosII;

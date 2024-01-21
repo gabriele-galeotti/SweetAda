@@ -45,13 +45,14 @@ package CPU
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Irq_State_Type is MIPS32.Irq_State_Type;
-   subtype Irq_Id_Type    is MIPS32.Irq_Id_Type;
+   subtype Intcontext_Type is MIPS32.Intcontext_Type;
+   subtype Irq_Id_Type     is MIPS32.Irq_Id_Type;
 
-   procedure Irq_Enable                                    renames MIPS32.Irq_Enable;
-   procedure Irq_Disable                                   renames MIPS32.Irq_Disable;
-   function Irq_State_Get return Irq_State_Type            renames MIPS32.Irq_State_Get;
-   procedure Irq_State_Set (Irq_State : in Irq_State_Type) renames MIPS32.Irq_State_Set;
+   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames MIPS32.Intcontext_Get;
+   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames MIPS32.Intcontext_Set;
+
+   procedure Irq_Enable  renames MIPS32.Irq_Enable;
+   procedure Irq_Disable renames MIPS32.Irq_Disable;
 
    ----------------------------------------------------------------------------
    -- Locking

@@ -288,7 +288,7 @@ package x86_64
 
    EXCEPTION_ITEMS : constant := 256;
 
-   type Irq_State_Type is new CPU_Unsigned;
+   type Intcontext_Type is new CPU_Unsigned;
    -- Exception_Id_Type is a subtype of Unsigned_32, allowing handlers to
    -- accept the 32-bit parameter code from low-level exception frames
    subtype Exception_Id_Type is Unsigned_32 range 0 .. EXCEPTION_ITEMS - 1;
@@ -694,15 +694,16 @@ package x86_64
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      with Inline => True;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      with Inline => True;
+
    procedure Irq_Enable
       with Inline => True;
    procedure Irq_Disable
-      with Inline => True;
-   function Irq_State_Get
-      return Irq_State_Type
-      with Inline => True;
-   procedure Irq_State_Set
-      (Irq_State : in Irq_State_Type)
       with Inline => True;
 
 end x86_64;
