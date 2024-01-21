@@ -178,7 +178,7 @@ package GT64120
 
    -- 20.2 Register Maps
 
-pragma Warnings (Off, "bits of * unused");
+pragma Warnings (Off, "* bits of ""GT64120_Type"" unused");
    type GT64120_Type is record
       CPU_Interface_Configuration    : CPU_Interface_Configuration_Type with Volatile_Full_Access => True;
       PCI_0_IO_Low_Decode_Address    : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
@@ -225,7 +225,7 @@ pragma Warnings (Off, "bits of * unused");
       SDRAMAD                        at 16#47C# range 0 .. 31;
       PCI_0_Command                  at 16#C00# range 0 .. 31;
    end record;
-pragma Warnings (On, "bits of * unused");
+pragma Warnings (On, "* bits of ""GT64120_Type"" unused");
 
    -- Subprograms
 

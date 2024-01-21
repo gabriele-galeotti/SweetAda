@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# Xilinx Zynq A9 (QEMU emulator).
+# Xilinx® Zynq® A9 (QEMU emulator).
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.

@@ -2,7 +2,7 @@
 #
 # STM32VLDISCOVERY (QEMU emulator)
 #
-# STM32F100xx/STM32F405 ARM Cortex-M3 LE (ARMv7-M)
+# STM32F100xx/STM32F405 ARM® Cortex-M3 LE (ARMv7-M)
 #
 
 ################################################################################

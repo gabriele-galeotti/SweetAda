@@ -139,9 +139,6 @@ package body Malloc
    ----------------------------------------------------------------------------
    -- Realloc
    ----------------------------------------------------------------------------
-   -- Realloc (Null_Address, Size) is the same as Malloc (Size)
-   -- Realloc (Memory_Address, 0) is the same as Free (Memory_Address)
-   ----------------------------------------------------------------------------
    function Realloc
       (Memory_Address : Address;
        Size           : size_t)

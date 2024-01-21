@@ -31,11 +31,17 @@ package Malloc
    --                                                                        --
    --========================================================================--
 
+   ----------------------------------------------------------------------------
+   -- Init
+   ----------------------------------------------------------------------------
    procedure Init
       (Memory_Address : in System.Address;
        Size           : in Bits.Bytesize;
        Debug_Flag     : in Boolean);
 
+   ----------------------------------------------------------------------------
+   -- Malloc
+   ----------------------------------------------------------------------------
    function Malloc
       (Size : Interfaces.C.size_t)
       return System.Address
@@ -43,12 +49,18 @@ package Malloc
            Convention    => C,
            External_Name => "__gnat_malloc";
 
+   ----------------------------------------------------------------------------
+   -- Free
+   ----------------------------------------------------------------------------
    procedure Free
       (Memory_Address : in System.Address)
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_free";
 
+   ----------------------------------------------------------------------------
+   -- Calloc
+   ----------------------------------------------------------------------------
    function Calloc
       (Nmemb : Interfaces.C.size_t;
        Size  : Interfaces.C.size_t)
@@ -57,6 +69,12 @@ package Malloc
            Convention    => Ada,
            External_Name => "malloc__calloc";
 
+   ----------------------------------------------------------------------------
+   -- Realloc
+   ----------------------------------------------------------------------------
+   -- Realloc (Null_Address, Size) is the same as Malloc (Size)
+   -- Realloc (Memory_Address, 0) is the same as Free (Memory_Address)
+   ----------------------------------------------------------------------------
    function Realloc
       (Memory_Address : System.Address;
        Size : Interfaces.C.size_t)
