@@ -42,6 +42,7 @@ CLEAN_OBJECTS_COMMON += pcbootusbkey.dsk
 ################################################################################
 
 export KERNEL_STACK_SIZE := 4096
+export USE_QEMU_IOEMU    := False
 
 ################################################################################
 # Run/debug interface.                                                         #
