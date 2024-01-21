@@ -46,7 +46,7 @@ _start16:
                 // flush prefetch queue (invalidate old-mode already-decoded
                 // instructions) and load code segment descriptor
                 .extern _start
-                ljmpl   $SELECTOR_KCODE,$_start
+                jmpl    $SELECTOR_KCODE,$_start
 
                 .balign 2,0
 gdtdsc32:       .word   3*8-1                   // bytes 0..1 GDT limit in bytes
