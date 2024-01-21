@@ -7,5 +7,6 @@
 #define CPU               "@CPU@"
 #define CPU_MODEL         "@CPU_MODEL@"
 #define KERNEL_STACK_SIZE @KERNEL_STACK_SIZE@
+#define AP_ENTRYPOINT     0x00040000
 
 #endif /* _CONFIGURE_H */

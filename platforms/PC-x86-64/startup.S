@@ -270,7 +270,6 @@ _longmode:
                 movq    %rax,%cr4
 
 smpboot:
-#define AP_ENTRYPOINT 0x000F0000
                 //
                 // IPI broadcast INIT, all-except-self
                 //
