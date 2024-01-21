@@ -114,4 +114,36 @@ package LibGCC
            Convention    => C,
            External_Name => "__umodsi3";
 
+   function DivDI3
+      (N : GCC_Types.DI_Type;
+       D : GCC_Types.DI_Type)
+      return GCC_Types.DI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__divdi3";
+
+   function ModDI3
+      (N : GCC_Types.DI_Type;
+       D : GCC_Types.DI_Type)
+      return GCC_Types.DI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__moddi3";
+
+   function UDivDI3
+      (N : GCC_Types.UDI_Type;
+       D : GCC_Types.UDI_Type)
+      return GCC_Types.UDI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__udivdi3";
+
+   function UModDI3
+      (N : GCC_Types.UDI_Type;
+       D : GCC_Types.UDI_Type)
+      return GCC_Types.UDI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__umoddi3";
+
 end LibGCC;
