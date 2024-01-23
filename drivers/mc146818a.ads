@@ -52,13 +52,13 @@ package MC146818A
    end record;
 
    DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      [
+      (
        Base_Address  => Null_Address,
        Scale_Address => 0,
        Flags         => (PC_RTC => False),
        Read_8        => MMIO.ReadN_U8'Access,
        Write_8       => MMIO.WriteN_U8'Access
-      ];
+      );
 
    procedure Handle
       (Data_Address : in System.Address);
