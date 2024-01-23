@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package Exceptions is
+package Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
