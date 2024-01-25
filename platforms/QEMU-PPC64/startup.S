@@ -19,7 +19,7 @@
 _start:
 
 #define SPR_PIR     0x3FF
-#define BOOTCORE_ID 0x8
+#define BOOTCORE_ID (1<<3)
                 mfspr   r1,SPR_PIR
                 cmpli   cr0,1,r1,BOOTCORE_ID
                 beq     bootcore
