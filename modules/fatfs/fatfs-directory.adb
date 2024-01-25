@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with LLutils;
 with FATFS.Cluster;
 with FATFS.Filename;
 
@@ -29,57 +30,109 @@ package body FATFS.Directory
    --                                                                        --
    --========================================================================--
 
+   use LLutils;
+
+   ----------------------------------------------------------------------------
+   -- Is_Valid
+   ----------------------------------------------------------------------------
+   -- Return True if DCB is valid (and open it).
+   ----------------------------------------------------------------------------
    function Is_Valid
       (D   : in Descriptor_Type;
        DCB : in DCB_Type)
       return Boolean
       with Inline => True;
 
+   ----------------------------------------------------------------------------
+   -- Is_Deleted
+   ----------------------------------------------------------------------------
+   -- Return true if directory entry has been deleted.
+   ----------------------------------------------------------------------------
    function Is_Deleted
       (DE : in Directory_Entry_Type)
       return Boolean
       with Inline => True;
 
+   ----------------------------------------------------------------------------
+   -- Is_End
+   ----------------------------------------------------------------------------
+   -- Check for directory EOF.
+   ----------------------------------------------------------------------------
    function Is_End
       (D   : in Descriptor_Type;
        DCB : in DCB_Type)
-      return Boolean;
+      return Boolean
+      with Inline => True;
 
+   ----------------------------------------------------------------------------
+   -- Is_End
+   ----------------------------------------------------------------------------
+   -- Return True if directory entry is EOF.
+   ----------------------------------------------------------------------------
    function Is_End
       (DE : in Directory_Entry_Type)
-      return Boolean;
+      return Boolean
+      with Inline => True;
 
-   procedure Init_Entry
-      (D    : in     Descriptor_Type;
-       DE   :    out Directory_Entry_Type;
-       Last : in     Boolean);
+   ----------------------------------------------------------------------------
+   -- Rewind
+   ----------------------------------------------------------------------------
+   -- Rewind a directory.
+   ----------------------------------------------------------------------------
+   procedure Rewind
+      (D   : in     Descriptor_Type;
+       DCB : in out DCB_Type);
 
-   procedure Init_Cluster
+   ----------------------------------------------------------------------------
+   -- Cluster_Init
+   ----------------------------------------------------------------------------
+   -- Initialize a directory block to be full of end entries.
+   ----------------------------------------------------------------------------
+   procedure Cluster_Init
       (D       : in     Descriptor_Type;
        B       :    out Block_Type;
        C       : in     Cluster_Type;
        Success :    out Boolean);
 
-   procedure Allocate_Entry
+   ----------------------------------------------------------------------------
+   -- Entry_Init
+   ----------------------------------------------------------------------------
+   -- Initialize a new directory entry.
+   ----------------------------------------------------------------------------
+   procedure Entry_Init
+      (D    : in     Descriptor_Type;
+       DE   :    out Directory_Entry_Type;
+       Last : in     Boolean);
+
+   ----------------------------------------------------------------------------
+   -- Entry_Get_Raw
+   ----------------------------------------------------------------------------
+   -- Return the current directory entry.
+   ----------------------------------------------------------------------------
+   procedure Entry_Get_Raw
+      (D       : in     Descriptor_Type;
+       DCB     : in out DCB_Type;
+       DE      :    out Directory_Entry_Type;
+       Success :    out Boolean);
+
+   ----------------------------------------------------------------------------
+   -- Entry_Next_Raw
+   ----------------------------------------------------------------------------
+   -- Return the next directory entry.
+   ----------------------------------------------------------------------------
+   procedure Entry_Next_Raw
+      (D       : in     Descriptor_Type;
+       DCB     : in out DCB_Type;
+       DE      :    out Directory_Entry_Type;
+       Success :    out Boolean);
+
+   ----------------------------------------------------------------------------
+   -- Entry_Allocate
+   ----------------------------------------------------------------------------
+   procedure Entry_Allocate
       (D       : in out Descriptor_Type;
        DCB     : in out DCB_Type;
        B       : in out Block_Type;
-       DE      :    out Directory_Entry_Type;
-       Success :    out Boolean);
-
-   procedure Rewind
-      (D   : in     Descriptor_Type;
-       DCB : in out DCB_Type);
-
-   procedure Get_Entry_Raw
-      (D       : in     Descriptor_Type;
-       DCB     : in out DCB_Type;
-       DE      :    out Directory_Entry_Type;
-       Success :    out Boolean);
-
-   procedure Next_Entry_Raw
-      (D       : in     Descriptor_Type;
-       DCB     : in out DCB_Type;
        DE      :    out Directory_Entry_Type;
        Success :    out Boolean);
 
@@ -93,8 +146,6 @@ package body FATFS.Directory
 
    ----------------------------------------------------------------------------
    -- Is_Valid
-   ----------------------------------------------------------------------------
-   -- Return True if DCB is valid (and open it).
    ----------------------------------------------------------------------------
    function Is_Valid
       (D   : in Descriptor_Type;
@@ -112,20 +163,16 @@ package body FATFS.Directory
    ----------------------------------------------------------------------------
    -- Is_Deleted
    ----------------------------------------------------------------------------
-   -- Return true if directory entry has been deleted.
-   ----------------------------------------------------------------------------
    function Is_Deleted
       (DE : in Directory_Entry_Type)
       return Boolean
       is
    begin
-      return Character'Pos (DE.Filename (DE.Filename'First)) = 16#E5#;
+      return Character'Pos (DE.File_Name (DE.File_Name'First)) = 16#E5#;
    end Is_Deleted;
 
    ----------------------------------------------------------------------------
    -- Is_End
-   ----------------------------------------------------------------------------
-   -- Check for directory EOF.
    ----------------------------------------------------------------------------
    function Is_End
       (D   : in Descriptor_Type;
@@ -134,7 +181,7 @@ package body FATFS.Directory
       is
    begin
       if not Is_Valid (D, DCB) then
-         return False; -- bad directory entry
+         return False;
       elsif DCB.CCB.First_Cluster < 2 then
          return DCB.Current_Index >= DCB.Directory_Entries;
       else
@@ -145,165 +192,16 @@ package body FATFS.Directory
    ----------------------------------------------------------------------------
    -- Is_End
    ----------------------------------------------------------------------------
-   -- Return True if directory entry is EOF.
-   ----------------------------------------------------------------------------
    function Is_End
       (DE : in Directory_Entry_Type)
       return Boolean
       is
    begin
-      return Character'Pos (DE.Filename (DE.Filename'First)) = 0;
+      return Character'Pos (DE.File_Name (DE.File_Name'First)) = 0;
    end Is_End;
 
    ----------------------------------------------------------------------------
-   -- Get_Entry_Raw
-   ----------------------------------------------------------------------------
-   -- Return the current directory entry.
-   ----------------------------------------------------------------------------
-   procedure Get_Entry_Raw
-      (D       : in     Descriptor_Type;
-       DCB     : in out DCB_Type;
-       DE      :    out Directory_Entry_Type;
-       Success :    out Boolean)
-      is
-      B : aliased Block_Type (0 .. 511);
-   begin
-      if Is_End (D, DCB) then
-         Cluster.Advance (D, DCB.CCB, B, Success);
-         if not Success then
-            DE.Filename (1) := Character'Val (1); -- non-end directory character
-            return;
-         end if;
-      end if;
-      Cluster.Peek (D, DCB.CCB, B, Success);
-      if not Success then
-         DE.Filename (1) := Character'Val (1); -- non-end directory character
-         return;
-      end if;
-      declare
-         DEA   : aliased Directory_Entry_Array (0 .. D.Sector_Size / 32 - 1)
-            with Alignment  => BLOCK_ALIGNMENT,
-                 Address    => B'Address,
-                 Import     => True,
-                 Convention => Ada;
-         Index : constant Unsigned_16 := DCB.Current_Index mod (D.Sector_Size / 32);
-      begin
-         -- __PTC__ endian
-         DEA (Index).Cluster_High  := LE_To_CPUE (DEA (Index).Cluster_High);
-         DEA (Index).First_Cluster := LE_To_CPUE (DEA (Index).First_Cluster);
-         DEA (Index).Size          := LE_To_CPUE (DEA (Index).Size);
-         -- __PTC__ endian
-         DE := DEA (Index);
-      end;
-      if Is_End (DE) then
-         Success := False; -- end of directory
-      else
-         Success := True;
-      end if;
-   end Get_Entry_Raw;
-
-   ----------------------------------------------------------------------------
-   -- Next_Entry_Raw
-   ----------------------------------------------------------------------------
-   -- Return the next directory entry.
-   ----------------------------------------------------------------------------
-   procedure Next_Entry_Raw
-      (D       : in     Descriptor_Type;
-       DCB     : in out DCB_Type;
-       DE      :    out Directory_Entry_Type;
-       Success :    out Boolean)
-      is
-      B : Block_Type (0 .. 511);
-   begin
-      if Is_End (D, DCB) then
-         Cluster.Advance (D, DCB.CCB, B, Success);
-         if not Success then
-            DE.Filename (1) := Character'Val (1); -- non-end directory character
-            return;
-         end if;
-      end if;
-      DCB.Current_Index := DCB.Current_Index + 1;
-      if DCB.Current_Index mod (D.Sector_Size / 32) = 0 then
-         Cluster.Advance (D, DCB.CCB, B, Success);
-      else
-         Success := True;
-      end if;
-      if Success then
-         Get_Entry_Raw (D, DCB, DE, Success);
-      end if;
-   end Next_Entry_Raw;
-
-   ----------------------------------------------------------------------------
-   -- Open_Root
-   ----------------------------------------------------------------------------
-   -- Open the root directory.
-   ----------------------------------------------------------------------------
-   procedure Open_Root
-      (D       : in     Descriptor_Type;
-       DCB     :    out DCB_Type;
-       Success :    out Boolean)
-      is
-   begin
-      Success := False;
-      if not D.FAT_Is_Open then
-         DCB.Magic := 0;
-         return;
-      end if;
-      if D.Root_Directory_Cluster = 0 then
-         Cluster.Map (DCB.CCB, D.Root_Directory_Start, D.Root_Directory_Entries * 32 / D.Sector_Size);
-         DCB.Directory_Entries := D.Root_Directory_Entries;
-      else
-         Cluster.Open (D, DCB.CCB, D.Root_Directory_Cluster, Keep_First => False);
-         DCB.Directory_Entries := D.Sectors_Per_Cluster * D.Sector_Size / 32;
-      end if;
-      DCB.Current_Index := 0;
-      DCB.Magic         := MAGIC_DIR;
-      Success := True;
-   end Open_Root;
-
-   ----------------------------------------------------------------------------
-   -- Get_Entry
-   ----------------------------------------------------------------------------
-   -- Return the current directory entry (application).
-   ----------------------------------------------------------------------------
-   procedure Get_Entry
-      (D       : in     Descriptor_Type;
-       DCB     : in out DCB_Type;
-       DE      :    out Directory_Entry_Type;
-       Success :    out Boolean)
-      is
-   begin
-      Get_Entry_Raw (D, DCB, DE, Success);
-      loop
-         exit when not Success;
-         exit when not Is_Deleted (DE) and then not DE.File_Attributes.Volume_Name;
-         Next_Entry_Raw (D, DCB, DE, Success);
-      end loop;
-   end Get_Entry;
-
-   ----------------------------------------------------------------------------
-   -- Next_Entry
-   ----------------------------------------------------------------------------
-   -- Return the next directory entry (application).
-   ----------------------------------------------------------------------------
-   procedure Next_Entry
-      (D       : in     Descriptor_Type;
-       DCB     : in out DCB_Type;
-       DE      :    out Directory_Entry_Type;
-       Success :    out Boolean)
-      is
-   begin
-      loop
-         Next_Entry_Raw (D, DCB, DE, Success);
-         exit when not Success;
-         exit when not Is_Deleted (DE) and then not DE.File_Attributes.Volume_Name;
-      end loop;
-   end Next_Entry;
-
-   ----------------------------------------------------------------------------
    -- Rewind
-   ----------------------------------------------------------------------------
-   -- Rewind a directory.
    ----------------------------------------------------------------------------
    procedure Rewind
       (D   : in     Descriptor_Type;
@@ -317,76 +215,9 @@ package body FATFS.Directory
    end Rewind;
 
    ----------------------------------------------------------------------------
-   -- Search
+   -- Cluster_Init
    ----------------------------------------------------------------------------
-   -- Search a directory for a file name or subdirectory name.
-   ----------------------------------------------------------------------------
-   procedure Search
-      (D              : in     Descriptor_Type;
-       DCB            : in out DCB_Type;
-       DE             :    out Directory_Entry_Type;
-       Directory_Name : in     String;
-       Success        :    out Boolean)
-      is
-   begin
-      if not Is_Valid (D, DCB) then
-         Success := False;
-         return;
-      end if;
-      Rewind (D, DCB);
-      Get_Entry (D, DCB, DE, Success);
-      loop
-         exit when not Success;
-         declare
-            Entry_Name : String (1 .. 12);
-         begin
-            Filename.Get_Name (DE, Entry_Name);
-            -- __FIX__ ???
-            -- Charutils.UcaseString (Entry_Name);
-            -- if String_Equal_Nocase (Entry_Name, Directory_Name) then
-            if Entry_Name = Directory_Name then
-               return;
-            end if;
-         end;
-         Next_Entry (D, DCB, DE, Success);
-      end loop;
-      Success := False; -- not found
-   end Search;
-
-   ----------------------------------------------------------------------------
-   -- Init_Entry
-   ----------------------------------------------------------------------------
-   -- Initialize a new directory entry.
-   ----------------------------------------------------------------------------
-   procedure Init_Entry
-      (D    : in     Descriptor_Type;
-       DE   :    out Directory_Entry_Type;
-       Last : in     Boolean)
-      is
-   begin
-      DE.Filename        := [others => ' '];
-      DE.Extension       := [others => ' '];
-      DE.File_Attributes := [others => False];
-      DE.Reserved        := [others => 0];
-      DE.HMS.Hour        := D.FS_Time.Hour;
-      DE.HMS.Minute      := D.FS_Time.Minute;
-      DE.HMS.Second      := D.FS_Time.Second;
-      DE.YMD.Year        := D.FS_Time.Year;
-      DE.YMD.Month       := D.FS_Time.Month;
-      DE.YMD.Day         := D.FS_Time.Day;
-      DE.Size            := 0;
-      Cluster.Put_First (D, DE, Cluster.File_EOF (D.FAT_Style));
-      if Last then
-         DE.Filename (1) := Character'Val (0); -- end of directory marker
-      end if;
-   end Init_Entry;
-
-   ----------------------------------------------------------------------------
-   -- Init_Cluster
-   ----------------------------------------------------------------------------
-   -- Initialize a directory block to be full of end entries.
-   ----------------------------------------------------------------------------
-   procedure Init_Cluster
+   procedure Cluster_Init
       (D       : in     Descriptor_Type;
        B       :    out Block_Type;
        C       : in     Cluster_Type;
@@ -401,16 +232,124 @@ package body FATFS.Directory
          exit when S > E;
          IDE.Write (D.Device.all, Physical_Sector (D, S), B, Success);
          exit when not Success;
-         S := S + 1;
+         S := @ + 1;
       end loop;
-   end Init_Cluster;
+   end Cluster_Init;
 
    ----------------------------------------------------------------------------
-   -- Allocate_Entry
+   -- Entry_Init
    ----------------------------------------------------------------------------
-   -- Locate a deleted directory or allocate a new one.
+   procedure Entry_Init
+      (D    : in     Descriptor_Type;
+       DE   :    out Directory_Entry_Type;
+       Last : in     Boolean)
+      is
+   begin
+      DE.File_Name        := [others => ' '];
+      DE.Extension        := [others => ' '];
+      DE.File_Attributes  := (others => False);
+      DE.Reserved         := 0;
+      DE.Ctime_HMS.Hour   := D.FS_Time.Hour;
+      DE.Ctime_HMS.Minute := D.FS_Time.Minute;
+      DE.Ctime_HMS.Second := D.FS_Time.Second;
+      DE.Ctime_YMD.Year   := D.FS_Time.Year;
+      DE.Ctime_YMD.Month  := D.FS_Time.Month;
+      DE.Ctime_YMD.Day    := D.FS_Time.Day;
+      DE.Size             := 0;
+      Cluster.Put_First (D, DE, Cluster.File_EOF (D.FAT_Style));
+      if Last then
+         -- end of directory marker
+         DE.File_Name (1) := Character'Val (0);
+      end if;
+   end Entry_Init;
+
    ----------------------------------------------------------------------------
-   procedure Allocate_Entry
+   -- Entry_Get_Raw
+   ----------------------------------------------------------------------------
+   procedure Entry_Get_Raw
+      (D       : in     Descriptor_Type;
+       DCB     : in out DCB_Type;
+       DE      :    out Directory_Entry_Type;
+       Success :    out Boolean)
+      is
+      B : aliased Block_Type (0 .. 511);
+   begin
+      if Is_End (D, DCB) then
+         Cluster.Advance (D, DCB.CCB, B, Success);
+         if not Success then
+            -- non-end directory character
+            DE.File_Name (1) := Character'Val (1);
+            return;
+         end if;
+      end if;
+      Cluster.Peek (D, DCB.CCB, B, Success);
+      if not Success then
+         -- non-end directory character
+         DE.File_Name (1) := Character'Val (1);
+         return;
+      end if;
+      declare
+         DEA   : aliased Directory_Entry_Array (0 .. D.Sector_Size / DIRECTORY_ENTRY_SIZE - 1)
+            with Alignment  => BLOCK_ALIGNMENT,
+                 Address    => B'Address,
+                 Import     => True,
+                 Convention => Ada;
+         Index : constant Unsigned_16 := DCB.Current_Index mod (D.Sector_Size / DIRECTORY_ENTRY_SIZE);
+      begin
+         if BigEndian then
+            Byte_Swap_16 (DEA (Index).File_Attributes'Address);
+            Byte_Swap_16 (DEA (Index).Ctime_HMS'Address);
+            Byte_Swap_16 (DEA (Index).Ctime_YMD'Address);
+            Byte_Swap_16 (DEA (Index).Atime_YMD'Address);
+            Byte_Swap_16 (DEA (Index).Cluster_H'Address);
+            Byte_Swap_16 (DEA (Index).Wtime_HMS'Address);
+            Byte_Swap_16 (DEA (Index).Wtime_YMD'Address);
+            Byte_Swap_16 (DEA (Index).Cluster_1st'Address);
+            Byte_Swap_32 (DEA (Index).Size'Address);
+         end if;
+         DE := DEA (Index);
+      end;
+      if Is_End (DE) then
+         Success := False;
+      else
+         Success := True;
+      end if;
+   end Entry_Get_Raw;
+
+   ----------------------------------------------------------------------------
+   -- Entry_Next_Raw
+   ----------------------------------------------------------------------------
+   procedure Entry_Next_Raw
+      (D       : in     Descriptor_Type;
+       DCB     : in out DCB_Type;
+       DE      :    out Directory_Entry_Type;
+       Success :    out Boolean)
+      is
+      B : Block_Type (0 .. 511);
+   begin
+      if Is_End (D, DCB) then
+         Cluster.Advance (D, DCB.CCB, B, Success);
+         if not Success then
+            -- non-end directory character
+            DE.File_Name (1) := Character'Val (1);
+            return;
+         end if;
+      end if;
+      DCB.Current_Index := @ + 1;
+      if DCB.Current_Index mod (D.Sector_Size / DIRECTORY_ENTRY_SIZE) = 0 then
+         Cluster.Advance (D, DCB.CCB, B, Success);
+      else
+         Success := True;
+      end if;
+      if Success then
+         Entry_Get_Raw (D, DCB, DE, Success);
+      end if;
+   end Entry_Next_Raw;
+
+   ----------------------------------------------------------------------------
+   -- Entry_Allocate
+   ----------------------------------------------------------------------------
+   procedure Entry_Allocate
       (D       : in out Descriptor_Type;
        DCB     : in out DCB_Type;
        B       : in out Block_Type;
@@ -421,16 +360,16 @@ package body FATFS.Directory
    begin
       -- locate a deleted entry, if any
       Rewind (D, DCB);
-      Get_Entry_Raw (D, DCB, DE, Success);
+      Entry_Get_Raw (D, DCB, DE, Success);
       loop
          exit when not Success;
          exit when Is_Deleted (DE);
-         Next_Entry_Raw (D, DCB, DE, Success);
+         Entry_Next_Raw (D, DCB, DE, Success);
       end loop;
       if Success then
          -- reuse a deleted entry
-         Init_Entry (D, DE, False);
-         Update_Entry
+         Entry_Init (D, DE, False);
+         Entry_Update
             (D,
              DCB.CCB.Current_Sector,
              DE,
@@ -438,26 +377,32 @@ package body FATFS.Directory
              Success);
          return;
       end if;
-      -- must allocate a new directory entry
-      Init_Entry (D, DE, True);
+      -- allocate a new directory entry
+      Entry_Init (D, DE, True);
       if not Is_End (D, DCB) and then Is_End (DE) then
          Success := True;
-         return; -- use end marker entry
+         -- use end marker entry
+         return;
       end if;
       -- see if there is a next cluster, or extend if necessary
       if DCB.CCB.First_Cluster >= 2 then
-         New_Cluster := D.Next_Writable_Cluster;                         -- claim reserved cluster
+         -- claim reserved cluster
+         New_Cluster := D.Next_Writable_Cluster;
          if New_Cluster >= 2 then
-            Cluster.Claim (D, B, New_Cluster, Cluster.File_EOF (D.FAT_Style), Success); -- put EOF marker in FAT to claim it
+            -- put EOF marker in FAT to claim it
+            Cluster.Claim (D, B, New_Cluster, Cluster.File_EOF (D.FAT_Style), Success);
          else
-            Success := False;                                          -- no space left
+            -- no space left
+            Success := False;
          end if;
          if not Success then
             return;
          end if;
-         Init_Cluster (D, B, New_Cluster, Success); -- init as new directory cluster
+         -- init as new directory cluster
+         Cluster_Init (D, B, New_Cluster, Success);
          if Success then
-            Cluster.Claim (D, B, DCB.CCB.Cluster, New_Cluster, Success); -- link current cluster to next
+            -- link current cluster to next
+            Cluster.Claim (D, B, DCB.CCB.Cluster, New_Cluster, Success);
          end if;
          if not Success then
             return;
@@ -465,25 +410,129 @@ package body FATFS.Directory
          Cluster.Open (D, DCB.CCB, New_Cluster, Keep_First => True);
          D.Next_Writable_Cluster := 0;
       else
-         Cluster.Advance (D, DCB.CCB, B, Success); -- fixed size directory
+         -- fixed size directory
+         Cluster.Advance (D, DCB.CCB, B, Success);
          if not Success then
-            return; -- no space or I/O error
+            -- no space or I/O error
+            return;
          end if;
       end if;
-      Update_Entry
+      Entry_Update
          (D,
           DCB.CCB.Current_Sector,
           DE,
           DCB.Current_Index + 0,
-          Success); -- new entry for now ...
-   end Allocate_Entry;
+          Success);
+   end Entry_Allocate;
 
    ----------------------------------------------------------------------------
-   -- Create_Entry
+   -- Open_Root
    ----------------------------------------------------------------------------
-   -- Create a new directory entry by name.
+   procedure Open_Root
+      (D       : in     Descriptor_Type;
+       DCB     :    out DCB_Type;
+       Success :    out Boolean)
+      is
+   begin
+      Success := False;
+      if not D.FAT_Is_Open then
+         DCB.Magic := 0;
+         return;
+      end if;
+      if D.Root_Directory_Cluster = 0 then
+         Cluster.Map (
+            DCB.CCB,
+            D.Root_Directory_Start,
+            D.Root_Directory_Entries * DIRECTORY_ENTRY_SIZE / D.Sector_Size
+            );
+         DCB.Directory_Entries := D.Root_Directory_Entries;
+      else
+         Cluster.Open (D, DCB.CCB, D.Root_Directory_Cluster, Keep_First => False);
+         DCB.Directory_Entries := D.Sectors_Per_Cluster * D.Sector_Size / DIRECTORY_ENTRY_SIZE;
+      end if;
+      DCB.Current_Index := 0;
+      DCB.Magic         := MAGIC_DIR;
+      Success := True;
+   end Open_Root;
+
    ----------------------------------------------------------------------------
-   procedure Create_Entry
+   -- Entry_Get
+   ----------------------------------------------------------------------------
+   procedure Entry_Get
+      (D       : in     Descriptor_Type;
+       DCB     : in out DCB_Type;
+       DE      :    out Directory_Entry_Type;
+       Success :    out Boolean)
+      is
+   begin
+      Entry_Get_Raw (D, DCB, DE, Success);
+      loop
+         exit when not Success
+                   or else
+                   (not Is_Deleted (DE) and then
+                    not DE.File_Attributes.Volume_Name);
+         Entry_Next_Raw (D, DCB, DE, Success);
+      end loop;
+   end Entry_Get;
+
+   ----------------------------------------------------------------------------
+   -- Entry_Next
+   ----------------------------------------------------------------------------
+   procedure Entry_Next
+      (D       : in     Descriptor_Type;
+       DCB     : in out DCB_Type;
+       DE      :    out Directory_Entry_Type;
+       Success :    out Boolean)
+      is
+   begin
+      loop
+         Entry_Next_Raw (D, DCB, DE, Success);
+         exit when not Success
+                   or else
+                   (not Is_Deleted (DE) and then
+                    not DE.File_Attributes.Volume_Name);
+      end loop;
+   end Entry_Next;
+
+   ----------------------------------------------------------------------------
+   -- Search
+   ----------------------------------------------------------------------------
+   procedure Search
+      (D              : in     Descriptor_Type;
+       DCB            : in out DCB_Type;
+       DE             :    out Directory_Entry_Type;
+       Directory_Name : in     String;
+       Success        :    out Boolean)
+      is
+   begin
+      if not Is_Valid (D, DCB) then
+         Success := False;
+         return;
+      end if;
+      Rewind (D, DCB);
+      Entry_Get (D, DCB, DE, Success);
+      loop
+         exit when not Success;
+         declare
+            Entry_Name : String (1 .. 12);
+         begin
+            Filename.Get (DE, Entry_Name);
+            -- __FIX__ ???
+            -- Charutils.UcaseString (Entry_Name);
+            -- if String_Equal_Nocase (Entry_Name, Directory_Name) then
+            if Entry_Name = Directory_Name then
+               return;
+            end if;
+         end;
+         Entry_Next (D, DCB, DE, Success);
+      end loop;
+      Success := False;
+   end Search;
+
+   ----------------------------------------------------------------------------
+   -- Entry_Create
+   ----------------------------------------------------------------------------
+   procedure Entry_Create
       (D              : in out Descriptor_Type;
        DCB            : in out DCB_Type;
        DE             :    out Directory_Entry_Type;
@@ -495,10 +544,12 @@ package body FATFS.Directory
    begin
       Search (D, DCB, DE, Directory_Name, Success);
       if Success then
-         Success := False; -- file already exists
+         -- file already exists
+         Success := False;
          return;
       end if;
-      Filename.Parse (Base, Ext, Directory_Name, Success); -- parse file name into directory format
+      -- parse file name into directory format
+      Filename.Parse (Base, Ext, Directory_Name, Success);
       if not Success then
          return;
       end if;
@@ -506,22 +557,22 @@ package body FATFS.Directory
          B : Block_Type (0 .. 511);
       begin
          Cluster.Prelocate (D, B);
-         Allocate_Entry (D, DCB, B, DE, Success); -- locate deleted entry or make new entry
+         -- locate a deleted entry or make a new entry
+         Entry_Allocate (D, DCB, B, DE, Success);
          if not Success then
-            return; -- no space left
+            -- no space left
+            return;
          end if;
       end;
-      DE.Filename                := Base;
+      DE.File_Name               := Base;
       DE.Extension               := Ext;
       DE.File_Attributes.Archive := True;
-   end Create_Entry;
+   end Entry_Create;
 
    ----------------------------------------------------------------------------
-   -- Update_Entry
+   -- Entry_Update
    ----------------------------------------------------------------------------
-   -- Perform a directory sector update.
-   ----------------------------------------------------------------------------
-   procedure Update_Entry
+   procedure Entry_Update
       (D       : in     Descriptor_Type;
        Sector  : in     Sector_Type;
        DE      : in     Directory_Entry_Type;
@@ -539,14 +590,12 @@ package body FATFS.Directory
          Dir_Entries (Index mod 16) := DE;
          IDE.Write (D.Device.all, Physical_Sector (D, Sector), B, Success);
       end if;
-   end Update_Entry;
+   end Entry_Update;
 
    ----------------------------------------------------------------------------
-   -- Create_Subdirectory
+   -- Subdirectory_Create
    ----------------------------------------------------------------------------
-   -- Create a subdirectory.
-   ----------------------------------------------------------------------------
-   procedure Create_Subdirectory
+   procedure Subdirectory_Create
       (D              : in out Descriptor_Type;
        DCB            : in out DCB_Type;
        Directory_Name : in     String;
@@ -555,27 +604,33 @@ package body FATFS.Directory
       DE          : Directory_Entry_Type;
       New_Cluster : Cluster_Type := 0;
    begin
-      Create_Entry (D, DCB, DE, Directory_Name, Success);
+      Entry_Create (D, DCB, DE, Directory_Name, Success);
       if not Success then
          return;
       end if;
       declare
          B : Block_Type (0 .. 511) with Unreferenced => True;
       begin
-         Cluster.Prelocate (D, B);            -- get a free cluster for subdirectory
+         -- get a free cluster for subdirectory
+         Cluster.Prelocate (D, B);
          if D.Next_Writable_Cluster = 0 then
-            Success := False;              -- no space
+            -- no space
+            Success := False;
             return;
          end if;
          New_Cluster := D.Next_Writable_Cluster;
-         Cluster.Put_First (D, DE, D.Next_Writable_Cluster);             -- assign cluster to subdirectory entry
-         Cluster.Claim (D, B, New_Cluster, Cluster.File_EOF (D.FAT_Style), Success); -- mark it as in use with FFF8 entry
+         -- assign cluster to subdirectory entry
+         Cluster.Put_First (D, DE, D.Next_Writable_Cluster);
+         -- mark it as in use
+         Cluster.Claim (D, B, New_Cluster, Cluster.File_EOF (D.FAT_Style), Success);
          if Success then
-            Cluster.Prelocate (D, B);                                  -- replace free cluster, that we used
-            Init_Cluster (D, B, New_Cluster, Success);                 -- initialize with "end dir" entries
+            -- replace free cluster, that we used
+            Cluster.Prelocate (D, B);
+            -- initialize with end directory entries
+            Cluster_Init (D, B, New_Cluster, Success);
             if Success then
                DE.File_Attributes.Subdirectory := True;
-               Update_Entry
+               Entry_Update
                   (D,
                    DCB.CCB.Current_Sector,
                    DE,
@@ -584,12 +639,10 @@ package body FATFS.Directory
             end if;
          end if;
       end;
-   end Create_Subdirectory;
+   end Subdirectory_Create;
 
    ----------------------------------------------------------------------------
    -- Close
-   ----------------------------------------------------------------------------
-   -- Close a directory.
    ----------------------------------------------------------------------------
    procedure Close
       (DCB : in out DCB_Type)

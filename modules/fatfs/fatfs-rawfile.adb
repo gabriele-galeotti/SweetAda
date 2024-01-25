@@ -29,11 +29,21 @@ package body FATFS.Rawfile
    --                                                                        --
    --========================================================================--
 
+   ----------------------------------------------------------------------------
+   -- Is_Valid
+   ----------------------------------------------------------------------------
+   -- Return True if FCB is valid.
+   ----------------------------------------------------------------------------
    function Is_Valid
       (FCB : in FCB_Type)
       return Boolean
       with Inline => True;
 
+   ----------------------------------------------------------------------------
+   -- Finalize_IO
+   ----------------------------------------------------------------------------
+   -- Finalize a file I/O operation.
+   ----------------------------------------------------------------------------
    procedure Finalize_IO
       (File        : in     FCB_Type;
        Sector_Size : in     Unsigned_16;
@@ -50,8 +60,6 @@ package body FATFS.Rawfile
    ----------------------------------------------------------------------------
    -- Is_Valid
    ----------------------------------------------------------------------------
-   -- Return True if FCB is valid.
-   ----------------------------------------------------------------------------
    function Is_Valid
       (FCB : in FCB_Type)
       return Boolean
@@ -61,22 +69,7 @@ package body FATFS.Rawfile
    end Is_Valid;
 
    ----------------------------------------------------------------------------
-   -- Is_Valid
-   ----------------------------------------------------------------------------
-   -- Return True if WCB is valid.
-   ----------------------------------------------------------------------------
-   function Is_Valid
-      (WCB : in WCB_Type)
-      return Boolean
-      is
-   begin
-      return WCB.Magic = MAGIC_WCB;
-   end Is_Valid;
-
-   ----------------------------------------------------------------------------
    -- Finalize_IO
-   ----------------------------------------------------------------------------
-   -- Finalize a file I/O operation.
    ----------------------------------------------------------------------------
    procedure Finalize_IO
       (File        : in     FCB_Type;
@@ -92,9 +85,18 @@ package body FATFS.Rawfile
    end Finalize_IO;
 
    ----------------------------------------------------------------------------
-   -- Open
+   -- Is_Valid
    ----------------------------------------------------------------------------
-   -- Open a file for I/O.
+   function Is_Valid
+      (WCB : in WCB_Type)
+      return Boolean
+      is
+   begin
+      return WCB.Magic = MAGIC_WCB;
+   end Is_Valid;
+
+   ----------------------------------------------------------------------------
+   -- Open
    ----------------------------------------------------------------------------
    procedure Open
       (D       : in     Descriptor_Type;
@@ -114,9 +116,7 @@ package body FATFS.Rawfile
    end Open;
 
    ----------------------------------------------------------------------------
-   -- Open
-   ----------------------------------------------------------------------------
-   -- Open a file by name.
+   -- Open (READ)
    ----------------------------------------------------------------------------
    procedure Open
       (D         : in     Descriptor_Type;
@@ -135,8 +135,6 @@ package body FATFS.Rawfile
 
    ----------------------------------------------------------------------------
    -- Rewind
-   ----------------------------------------------------------------------------
-   -- Rewind a file.
    ----------------------------------------------------------------------------
    procedure Rewind
       (D    : in     Descriptor_Type;
@@ -175,8 +173,6 @@ package body FATFS.Rawfile
    ----------------------------------------------------------------------------
    -- Reread
    ----------------------------------------------------------------------------
-   -- Reread the last read sector.
-   ----------------------------------------------------------------------------
    procedure Reread
       (D       : in     Descriptor_Type;
        File    : in out FCB_Type;
@@ -197,9 +193,7 @@ package body FATFS.Rawfile
    end Reread;
 
    ----------------------------------------------------------------------------
-   -- Close
-   ----------------------------------------------------------------------------
-   -- Close a file.
+   -- Close (READ)
    ----------------------------------------------------------------------------
    procedure Close
       (D    : in     Descriptor_Type;
@@ -213,20 +207,18 @@ package body FATFS.Rawfile
    end Close;
 
    ----------------------------------------------------------------------------
-   -- Open
-   ----------------------------------------------------------------------------
-   -- Open a file by name.
+   -- Open (WRITE)
    ----------------------------------------------------------------------------
    procedure Open
       (D         : in out Descriptor_Type;
        File      :    out WCB_Type;
-       DCB       : in out DCB_Type;
+       Dir       : in out DCB_Type;
        File_Name : in     String;
        Success   :    out Boolean)
       is
       DE : Directory_Entry_Type;
    begin
-      Directory.Search (D, DCB, DE, File_Name, Success);
+      Directory.Search (D, Dir, DE, File_Name, Success);
       if Success then
          if DE.File_Attributes.Volume_Name or else DE.File_Attributes.Subdirectory then
             Success := False;
@@ -236,12 +228,14 @@ package body FATFS.Rawfile
             B : Block_Type (0 .. 511);
          begin
             Cluster.Release_Chain (D, Cluster.Get_First (D, DE), B);
-            Cluster.Prelocate (D, B); -- keep one free cluster at hand
+            -- keep one available free cluster
+            Cluster.Prelocate (D, B);
          end;
          Cluster.Put_First (D, DE, Cluster.File_EOF (D.FAT_Style));
          Cluster.Open (D, File.CCB, Cluster.Get_First (D, DE), Keep_First => False);
-         File.Directory_Index  := DCB.Current_Index;      -- remember which directory entry this is
-         File.Directory_Sector := DCB.CCB.Current_Sector; -- remember where directory entry is
+         -- remember directory entry
+         File.Directory_Index  := Dir.Current_Index;
+         File.Directory_Sector := Dir.CCB.Current_Sector;
          File.Magic            := MAGIC_WCB;
          File.Last_Sector      := 0;
          Success := True;
@@ -251,36 +245,36 @@ package body FATFS.Rawfile
    ----------------------------------------------------------------------------
    -- Create
    ----------------------------------------------------------------------------
-   -- Create a new file.
-   ----------------------------------------------------------------------------
    procedure Create
       (D         : in out Descriptor_Type;
        File      :    out WCB_Type;
-       DCB       : in out DCB_Type;
+       Dir       : in out DCB_Type;
        File_Name : in     String;
        Success   :    out Boolean)
       is
       DE : Directory_Entry_Type;
    begin
-      Directory.Create_Entry (D, DCB, DE, File_Name, Success); -- allocate and create a new directory entry
+      Directory.Entry_Create (D, Dir, DE, File_Name, Success);
       if not Success then
          return;
       end if;
       declare
          B : Block_Type (0 .. 511) with Unreferenced => True;
       begin
-         Directory.Update_Entry
+         Directory.Entry_Update
             (D,
-             DCB.CCB.Current_Sector,
+             Dir.CCB.Current_Sector,
              DE,
-             DCB.Current_Index,
+             Dir.Current_Index,
              Success);
-         Cluster.Prelocate (D, B); -- keep next free cluster
+         -- keep next free cluster
+         Cluster.Prelocate (D, B);
       end;
       if Success then
          Cluster.Open (D, File.CCB, Cluster.Get_First (D, DE), Keep_First => False);
-         File.Directory_Index  := DCB.Current_Index;      -- remember which directory entry this is
-         File.Directory_Sector := DCB.CCB.Current_Sector; -- remember where directory entry is
+         -- remember directory entry
+         File.Directory_Index  := Dir.Current_Index;
+         File.Directory_Sector := Dir.CCB.Current_Sector;
          File.Magic            := MAGIC_WCB;
          File.Last_Sector      := 0;
          Success := True;
@@ -289,8 +283,6 @@ package body FATFS.Rawfile
 
    ----------------------------------------------------------------------------
    -- Write
-   ----------------------------------------------------------------------------
-   -- Write to the open file.
    ----------------------------------------------------------------------------
    procedure Write
       (D       : in out Descriptor_Type;
@@ -317,8 +309,6 @@ package body FATFS.Rawfile
    ----------------------------------------------------------------------------
    -- Rewrite
    ----------------------------------------------------------------------------
-   -- Rewrite the last written block.
-   ----------------------------------------------------------------------------
    procedure Rewrite
       (D       : in     Descriptor_Type;
        File    : in out WCB_Type;
@@ -338,9 +328,7 @@ package body FATFS.Rawfile
    end Rewrite;
 
    ----------------------------------------------------------------------------
-   -- Close
-   ----------------------------------------------------------------------------
-   -- Close a file opened for write.
+   -- Close (WRITE)
    ----------------------------------------------------------------------------
    procedure Close
       (D       : in     Descriptor_Type;
@@ -380,12 +368,13 @@ package body FATFS.Rawfile
       IDE.Read (D.Device.all, Physical_Sector (D, File.Directory_Sector), B, Success);
       if Success then
          Index := File.Directory_Index mod 16;
-         DE (Index).YMD.Year                := D.FS_Time.Year;
-         DE (Index).YMD.Month               := D.FS_Time.Month;
-         DE (Index).YMD.Day                 := D.FS_Time.Day;
-         DE (Index).HMS.Hour                := D.FS_Time.Hour;
-         DE (Index).HMS.Minute              := D.FS_Time.Minute;
-         DE (Index).HMS.Second              := D.FS_Time.Second;
+         -- __FIX__ endian
+         DE (Index).Wtime_YMD.Year          := D.FS_Time.Year;
+         DE (Index).Wtime_YMD.Month         := D.FS_Time.Month;
+         DE (Index).Wtime_YMD.Day           := D.FS_Time.Day;
+         DE (Index).Wtime_HMS.Hour          := D.FS_Time.Hour;
+         DE (Index).Wtime_HMS.Minute        := D.FS_Time.Minute;
+         DE (Index).Wtime_HMS.Second        := D.FS_Time.Second;
          DE (Index).File_Attributes.Archive := True;
          if File.Last_Sector > 0 and then File.Last_Sector /= D.Sector_Size then
             DE (Index).Size := File.CCB.IO_Bytes -
@@ -400,8 +389,6 @@ package body FATFS.Rawfile
 
    ----------------------------------------------------------------------------
    -- Delete
-   ----------------------------------------------------------------------------
-   -- Delete a file by name.
    ----------------------------------------------------------------------------
    procedure Delete
       (D         : in     Descriptor_Type;
@@ -423,10 +410,10 @@ package body FATFS.Rawfile
          B : Block_Type (0 .. 511);
          C : constant Cluster_Type := Cluster.Get_First (D, DE);
       begin
-         DE.Filename (1) := Character'Val (16#E5#);
-         DE.Size         := 0;
+         DE.File_Name (1) := Character'Val (16#E5#);
+         DE.Size          := 0;
          Cluster.Put_First (D, DE, Cluster.File_EOF (D.FAT_Style));
-         Directory.Update_Entry
+         Directory.Entry_Update
             (D,
              DCB.CCB.Current_Sector,
              DE,

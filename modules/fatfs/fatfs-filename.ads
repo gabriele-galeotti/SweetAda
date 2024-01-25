@@ -26,14 +26,24 @@ package FATFS.Filename
    --                                                                        --
    --========================================================================--
 
-   procedure Get_Name
-      (DE    : in     Directory_Entry_Type;
-       FName :    out String);
+   ----------------------------------------------------------------------------
+   -- Get
+   ----------------------------------------------------------------------------
+   -- Return the directory entry filename.
+   ----------------------------------------------------------------------------
+   procedure Get
+      (DE        : in     Directory_Entry_Type;
+       File_Name :    out String);
 
+   ----------------------------------------------------------------------------
+   -- Parse
+   ----------------------------------------------------------------------------
+   -- Parse a filename in an 8.3 format.
+   ----------------------------------------------------------------------------
    procedure Parse
-      (Base    :    out String;
-       Ext     :    out String;
-       FName   : in     String;
-       Success :    out Boolean);
+      (Base      :    out String;
+       Ext       :    out String;
+       File_Name : in     String;
+       Success   :    out Boolean);
 
 end FATFS.Filename;

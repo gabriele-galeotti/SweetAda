@@ -26,6 +26,12 @@ package body FATFS.Filename
    --                                                                        --
    --========================================================================--
 
+   ----------------------------------------------------------------------------
+   -- To_Upper
+   ----------------------------------------------------------------------------
+   -- Implemented in order to avoid the use of Ada.Characters.Handling with a
+   -- ZFP-style RTS.
+   ----------------------------------------------------------------------------
    function To_Upper
       (C : in Character)
       return Character
@@ -42,9 +48,6 @@ package body FATFS.Filename
    ----------------------------------------------------------------------------
    -- To_Upper
    ----------------------------------------------------------------------------
-   -- Implemented in order to avoid the use of Ada.Characters.Handling with a
-   -- ZFP-style RTS.
-   ----------------------------------------------------------------------------
    function To_Upper
       (C : in Character)
       return Character
@@ -59,72 +62,68 @@ package body FATFS.Filename
    end To_Upper;
 
    ----------------------------------------------------------------------------
-   -- Get_Name
+   -- Get
    ----------------------------------------------------------------------------
-   -- Return the directory entry filename.
-   ----------------------------------------------------------------------------
-   procedure Get_Name
-      (DE    : in     Directory_Entry_Type;
-       FName :    out String)
+   procedure Get
+      (DE        : in     Directory_Entry_Type;
+       File_Name :    out String)
       is
-      FIndex : Integer;
+      Index : Natural;
    begin
-      FIndex := FName'First;
+      Index := File_Name'First;
       -- __FIX__
       -- if Directory.Is_Deleted (DE) then
       --    FName := (others => ' ');
       -- end if;
-      for I in DE.Filename'Range loop
-         exit when DE.Filename (I) = ' ';
-         FName (FIndex) := To_Upper (DE.Filename (I));
-         FIndex := FIndex + 1;
+      for I in DE.File_Name'Range loop
+         exit when DE.File_Name (I) = ' ';
+         File_Name (Index) := To_Upper (DE.File_Name (I));
+         Index := @ + 1;
       end loop;
       if DE.Extension (DE.Extension'First) /= ' ' then
-         FName (FIndex) := '.';
-         FIndex := FIndex + 1;
+         File_Name (Index) := '.';
+         Index := @ + 1;
          for I in DE.Extension'Range loop
             exit when DE.Extension (I) = ' ';
-            FName (FIndex) := To_Upper (DE.Extension (I));
-            FIndex := FIndex + 1;
+            File_Name (Index) := To_Upper (DE.Extension (I));
+            Index := @ + 1;
          end loop;
       end if;
-      if Character'Pos (FName (FName'First)) = 16#05# then
-         FName (FName'First) := Character'Val (16#E5#);
+      if Character'Pos (File_Name (File_Name'First)) = 16#05# then
+         File_Name (File_Name'First) := Character'Val (16#E5#);
       end if;
-   end Get_Name;
+   end Get;
 
    ----------------------------------------------------------------------------
    -- Parse
    ----------------------------------------------------------------------------
-   -- Parse a file name in an 8.3 format.
-   ----------------------------------------------------------------------------
    procedure Parse
-      (Base    :    out String;
-       Ext     :    out String;
-       FName   : in     String;
-       Success :    out Boolean)
+      (Base      :    out String;
+       Ext       :    out String;
+       File_Name : in     String;
+       Success   :    out Boolean)
       is
       Index : Natural;
    begin
       Base := [others => ' '];
       Ext  := [others => ' '];
-      Index := FName'First;
+      Index := File_Name'First;
       for I in Base'Range loop
-         exit when Index > FName'Last;
-         exit when FName (Index) = '.';
-         Base (I) := To_Upper (FName (Index));
-         Index := Index + 1;
+         exit when Index > File_Name'Last;
+         exit when File_Name (Index) = '.';
+         Base (I) := To_Upper (File_Name (Index));
+         Index := @ + 1;
       end loop;
-      if Index <= FName'Last and then FName (Index) = '.' then
-         Index := Index + 1;
+      if Index <= File_Name'Last and then File_Name (Index) = '.' then
+         Index := @ + 1;
          for I in Ext'Range loop
-            exit when Index > FName'Last;
-            exit when FName (Index) = '.';
-            Ext (I) := To_Upper (FName (Index));
-            Index := Index + 1;
+            exit when Index > File_Name'Last;
+            exit when File_Name (Index) = '.';
+            Ext (I) := To_Upper (File_Name (Index));
+            Index := @ + 1;
          end loop;
       end if;
-      Success := Index = FName'Last + 1;
+      Success := Index = File_Name'Last + 1;
    end Parse;
 
 end FATFS.Filename;

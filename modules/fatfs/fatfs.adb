@@ -39,6 +39,7 @@ package body FATFS
 
    procedure Block_Swap_16
       (B : in out Block_Type);
+
    procedure Block_Swap_32
       (B : in out Block_Type);
 
@@ -83,8 +84,6 @@ package body FATFS
    ----------------------------------------------------------------------------
    -- Is_Separator
    ----------------------------------------------------------------------------
-   -- Return True if C is a pathname separator.
-   ----------------------------------------------------------------------------
    function Is_Separator
       (C : in Character)
       return Boolean
@@ -92,6 +91,17 @@ package body FATFS
    begin
       return C = '/' or else C = '\';
    end Is_Separator;
+
+   ----------------------------------------------------------------------------
+   -- Time_Get
+   ----------------------------------------------------------------------------
+   procedure Time_Get
+      (D : in     Descriptor_Type;
+       T :    out Time_Type)
+      is
+   begin
+      T := D.FS_Time;
+   end Time_Get;
 
    ----------------------------------------------------------------------------
    -- Time_Set
@@ -105,19 +115,7 @@ package body FATFS
    end Time_Set;
 
    ----------------------------------------------------------------------------
-   -- Time_Get
-   ----------------------------------------------------------------------------
-   procedure Time_Get
-      (D : in     Descriptor_Type;
-       T :    out Time_Type) is
-   begin
-      T := D.FS_Time;
-   end Time_Get;
-
-   ----------------------------------------------------------------------------
    -- Physical_Sector
-   ----------------------------------------------------------------------------
-   -- Compute a physical sector number, starting from a logical one.
    ----------------------------------------------------------------------------
    function Physical_Sector
       (D      : in Descriptor_Type;
@@ -129,46 +127,39 @@ package body FATFS
    end Physical_Sector;
 
    ----------------------------------------------------------------------------
-   -- FAT_Is_End
+   -- Is_End
    ----------------------------------------------------------------------------
-   -- Return True if sector points past end of current FAT.
-   ----------------------------------------------------------------------------
-   function FAT_Is_End
+   function Is_End
       (D : in Descriptor_Type;
        S : in Sector_Type)
       return Boolean
       is
    begin
       return S >= D.FAT_Start (D.FAT_Index) + Sector_Type (D.Sectors_Per_FAT);
-   end FAT_Is_End;
+   end Is_End;
 
    ----------------------------------------------------------------------------
-   -- FAT_Sector
+   -- To_Table_Sector
    ----------------------------------------------------------------------------
-   -- Return the sector # based upon cluster #.
-   ----------------------------------------------------------------------------
-   function FAT_Sector
+   function To_Table_Sector
       (D : in Descriptor_Type;
-       F : in FAT_Type;
        C : in Cluster_Type)
       return Sector_Type
       is
       FAT_Modulus_Order : Natural;
    begin
-      case F is
+      case D.FAT_Style is
          when FAT16  => FAT_Modulus_Order := 8;
          when FAT32  => FAT_Modulus_Order := 7;
          when others => FAT_Modulus_Order := 0;
       end case;
       return D.FAT_Start (D.FAT_Index) + Sector_Type (C / 2**FAT_Modulus_Order);
-   end FAT_Sector;
+   end To_Table_Sector;
 
    ----------------------------------------------------------------------------
-   -- FAT_Entry_Index
+   -- Entry_Index
    ----------------------------------------------------------------------------
-   -- Return FAT entry index within a FAT sector.
-   ----------------------------------------------------------------------------
-   function FAT_Entry_Index
+   function Entry_Index
       (F : in FAT_Type;
        C : in Cluster_Type)
       return Natural
@@ -181,14 +172,12 @@ package body FATFS
          when others => FAT_Modulus_Order := 0;
       end case;
       return Natural (C mod 2**FAT_Modulus_Order);
-   end FAT_Entry_Index;
+   end Entry_Index;
 
    ----------------------------------------------------------------------------
-   -- FAT_Entry
+   -- Entry_Get
    ----------------------------------------------------------------------------
-   -- Return a FAT entry based upon cluster #.
-   ----------------------------------------------------------------------------
-   function FAT_Entry
+   function Entry_Get
       (D : in Descriptor_Type;
        B : in Block_Type;
        C : in Cluster_Type)
@@ -203,7 +192,7 @@ package body FATFS
                        Import     => True,
                        Convention => Ada;
             begin
-               return Cluster_Type (LE_To_CPUE (FAT16_Table (FAT_Entry_Index (D.FAT_Style, C))));
+               return Cluster_Type (LE_To_CPUE (FAT16_Table (Entry_Index (D.FAT_Style, C))));
             end;
          when FAT32 =>
             declare
@@ -212,19 +201,17 @@ package body FATFS
                        Import     => True,
                        Convention => Ada;
             begin
-               return Cluster_Type (LE_To_CPUE (FAT32_Table (FAT_Entry_Index (D.FAT_Style, C))));
+               return Cluster_Type (LE_To_CPUE (FAT32_Table (Entry_Index (D.FAT_Style, C))));
             end;
          when others =>
             return 0; -- unsupported
       end case;
-   end FAT_Entry;
+   end Entry_Get;
 
    ----------------------------------------------------------------------------
-   -- FAT_Put_Entry
+   -- Entry_Update
    ----------------------------------------------------------------------------
-   -- Update a FAT entry based upon cluster #.
-   ----------------------------------------------------------------------------
-   procedure FAT_Put_Entry
+   procedure Entry_Update
       (D     : in     Descriptor_Type;
        B     : in out Block_Type;
        Index : in     Cluster_Type;
@@ -239,7 +226,7 @@ package body FATFS
                        Import     => True,
                        Convention => Ada;
             begin
-               FAT16_Table (FAT_Entry_Index (D.FAT_Style, Index)) := Unsigned_16 (C);
+               FAT16_Table (Entry_Index (D.FAT_Style, Index)) := Unsigned_16 (C);
             end;
          when FAT32 =>
             declare
@@ -248,19 +235,17 @@ package body FATFS
                        Import     => True,
                        Convention => Ada;
             begin
-               FAT32_Table (FAT_Entry_Index (D.FAT_Style, Index)) := Unsigned_32 (C);
+               FAT32_Table (Entry_Index (D.FAT_Style, Index)) := Unsigned_32 (C);
             end;
          when others =>
             null;
       end case;
-   end FAT_Put_Entry;
+   end Entry_Update;
 
    ----------------------------------------------------------------------------
-   -- FAT_Update
+   -- Update
    ----------------------------------------------------------------------------
-   -- Update a sector in all FAT copies.
-   ----------------------------------------------------------------------------
-   procedure FAT_Update
+   procedure Update
       (D       : in     Descriptor_Type;
        S       : in     Sector_Type;
        B       : in     Block_Type;
@@ -280,12 +265,10 @@ package body FATFS
             exit when not Success;
          end if;
       end loop;
-   end FAT_Update;
+   end Update;
 
    ----------------------------------------------------------------------------
    -- Open
-   ----------------------------------------------------------------------------
-   -- Open FAT filesystem.
    ----------------------------------------------------------------------------
    procedure Open
       (D               : in out Descriptor_Type;
@@ -294,7 +277,7 @@ package body FATFS
       is
       Bootrecord             : Bootrecord_Type;
       Tmp_Sector_Size        : Unsigned_16;
-      Tmp_FAT_Copies         : FAT_Copies_Type;
+      Tmp_NFATs              : NFATs_Type;
       Tmp_Number_Of_Clusters : Unsigned_32;
       Sector                 : Sector_Type;
       FAT32_Flag             : Boolean;
@@ -323,7 +306,7 @@ package body FATFS
          Byte_Swap_16 (Values (Bootrecord.Total_Sectors_in_FS'Position)'Address);
          Byte_Swap_16 (Values (Bootrecord.Sectors_Per_FAT'Position)'Address);
          Byte_Swap_16 (Values (Bootrecord.Sectors_Per_Track'Position)'Address);
-         Byte_Swap_16 (Values (Bootrecord.No_Of_Heads'Position)'Address);
+         Byte_Swap_16 (Values (Bootrecord.Disk_Heads'Position)'Address);
          Byte_Swap_32 (Values (Bootrecord.Hidden_Sectors_32'Position)'Address);
          Byte_Swap_32 (Values (Bootrecord.Total_Sectors_32'Position)'Address);
          Byte_Swap_32 (Values (Bootrecord.Sectors_Per_FAT_32'Position)'Address);
@@ -369,7 +352,7 @@ package body FATFS
       begin
          return (
                  BR_Total_Sectors -
-                 BR_Sectors_Per_FAT * Unsigned_32 (Bootrecord.FAT_Copies) -
+                 BR_Sectors_Per_FAT * Unsigned_32 (Bootrecord.NFATs) -
                  Unsigned_32 (Bootrecord.Reserved_Sectors)
                 ) / Unsigned_32 (Bootrecord.Sectors_Per_Cluster);
       end BR_Total_Clusters;
@@ -388,10 +371,9 @@ package body FATFS
          if BigEndian then
             Swap_Data (B);
          end if;
-         -- Console.Print_Memory (B'Address, 512);
       end;
       if not Success then
-         Console.Print ("Filesystem_Open: unable to read bootrecord.", NL => True);
+         Console.Print ("Open: unable to read bootrecord.", NL => True);
          return;
       end if;
       ------------------------
@@ -401,14 +383,14 @@ package body FATFS
       Tmp_Sector_Size := Bootrecord.Bytes_Per_Sector;
       if Tmp_Sector_Size /= 512 then
          Success := False;
-         Console.Print ("Filesystem_Open: sector size is not 512.", NL => True);
+         Console.Print ("Open: sector size is not 512.", NL => True);
          return;
       end if;
-      -- check: 0 < FAT_Copies <= FAT_Start'Length
-      Tmp_FAT_Copies := FAT_Copies_Type (Bootrecord.FAT_Copies);
-      if Tmp_FAT_Copies < 1 or else Tmp_FAT_Copies > D.FAT_Start'Length then
+      -- check: 0 < NFATs <= FAT_Start'Length
+      Tmp_NFATs := NFATs_Type (Bootrecord.NFATs);
+      if Tmp_NFATs < 1 or else Tmp_NFATs > D.FAT_Start'Length then
          Success := False;
-         Console.Print ("Filesystem_Open: wrong # of FATs.", NL => True);
+         Console.Print ("Open: wrong # of FATs.", NL => True);
          return;
       end if;
       -- check: FAT32
@@ -419,15 +401,15 @@ package body FATFS
          Console.Print ("Filesystem_Open: FAT16 detected.", NL => True);
       elsif Tmp_Number_Of_Clusters < 268_435_457 then
          D.FAT_Style := FAT32;
-         Console.Print ("Filesystem_Open: FAT32 detected.", NL => True);
+         Console.Print ("Open: FAT32 detected.", NL => True);
       else
          Success := False;
-         Console.Print ("Filesystem_Open: FAT unknown.", NL => True);
+         Console.Print ("Open: FAT unknown.", NL => True);
          return;
       end if;
       -- filesystem looks correct, validate definitions
       D.Sector_Size := Tmp_Sector_Size;
-      D.FAT_Copies := Tmp_FAT_Copies;
+      D.NFATs := Tmp_NFATs;
       -- Number_Of_Clusters := Tmp_Number_Of_Clusters;
       ----------------------------------------------------------------------
       -- Compute vital informations about filesystem layout.
@@ -439,7 +421,7 @@ package body FATFS
       -- compute the start of each FAT table
       Sector := Sector_Type (Bootrecord.Reserved_Sectors);
       for Index in D.FAT_Start'Range loop
-         if Index <= D.FAT_Copies then
+         if Index <= D.NFATs then
             D.FAT_Start (Index) := Sector;
             Sector := @ + Sector_Type (D.Sectors_Per_FAT);
          else
@@ -490,8 +472,6 @@ package body FATFS
 
    ----------------------------------------------------------------------------
    -- Close
-   ----------------------------------------------------------------------------
-   -- Close FAT filesystem.
    ----------------------------------------------------------------------------
    procedure Close
       (D : in out Descriptor_Type)

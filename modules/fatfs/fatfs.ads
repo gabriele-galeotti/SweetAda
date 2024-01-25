@@ -42,9 +42,9 @@ package FATFS
    ----------------------------------------------------------------------------
 
    type FAT_Type is (FATNONE, FAT16, FAT32);
-   type FAT_Copies_Type is new Unsigned_8;                               -- # of FAT tables
+   type NFATs_Type is new Unsigned_8;                                    -- # of FAT tables
    type Cluster_Type is new Sector_Type;                                 -- cluster #
-   type Sector_Array is array (FAT_Copies_Type range <>) of Sector_Type;
+   type Sector_Array is array (NFATs_Type range <>) of Sector_Type;
 
    ----------------------------------------------------------------------------
    -- FAT bootrecord
@@ -57,14 +57,14 @@ package FATFS
       Bytes_Per_Sector             : Unsigned_16;           -- 0x00B 11 .. 12  : bytes per sector (normally 512)
       Sectors_Per_Cluster          : Unsigned_8;            -- 0x00D 13        : 1, 2, 3, 8, 16, 32, 64, 128
       Reserved_Sectors             : Unsigned_16;           -- 0x00E 14 .. 15  : FAT16 = 1, FAT32 = 32
-      FAT_Copies                   : Unsigned_8;            -- 0x010 16        : 2
+      NFATs                        : Unsigned_8;            -- 0x010 16        : 2
       Root_Directory_Entries       : Unsigned_16;           -- 0x011 17 .. 18  : FAT16 = 512 (recommended), FAT32 = 0
       Total_Sectors_in_FS          : Unsigned_16;           -- 0x013 19 .. 20  : 2880 when not FAT32 and < 32 MiB
       Media_Descriptor             : Unsigned_8;            -- 0x015 21        : F0 = 1.44 MiB floppy, F8 = HD
       Sectors_Per_FAT              : Unsigned_16;           -- 0x016 22 .. 23  : 9, FAT32 = 0
       -- DOS 3.31 BPB
       Sectors_Per_Track            : Unsigned_16;           -- 0x018 24 .. 25  : 12
-      No_Of_Heads                  : Unsigned_16;           -- 0x01A 26 .. 27  : 2 for double sided floppy disk
+      Disk_Heads                   : Unsigned_16;           -- 0x01A 26 .. 27  : 2 for double sided floppy disk
       Hidden_Sectors_32            : Unsigned_32;           -- 0x01C 28 .. 31  : FAT32
       Total_Sectors_32             : Unsigned_32;           -- 0x020 32 .. 35  : FAT32
       -- FAT32 Extended BPB
@@ -88,14 +88,14 @@ package FATFS
       Bytes_Per_Sector             at  11 range 0 .. 15;
       Sectors_Per_Cluster          at  13 range 0 ..  7;
       Reserved_Sectors             at  14 range 0 .. 15;
-      FAT_Copies                   at  16 range 0 ..  7;
+      NFATs                        at  16 range 0 ..  7;
       Root_Directory_Entries       at  17 range 0 .. 15;
       Total_Sectors_in_FS          at  19 range 0 .. 15;
       Media_Descriptor             at  21 range 0 ..  7;
       Sectors_Per_FAT              at  22 range 0 .. 15;
       -- DOS 3.31 BPB
       Sectors_Per_Track            at  24 range 0 .. 15;
-      No_Of_Heads                  at  26 range 0 .. 15;
+      Disk_Heads                   at  26 range 0 .. 15;
       Hidden_Sectors_32            at  28 range 0 .. 31;
       Total_Sectors_32             at  32 range 0 .. 31;
       -- FAT32 Extended BPB
@@ -180,32 +180,41 @@ package FATFS
       Reserved2    at 0 range 7 .. 7;
    end record;
 
+   DIRECTORY_ENTRY_SIZE : constant := 32;
    type Directory_Entry_Type is record
-      Filename        : String (1 .. 8);
-      Extension       : String (1 .. 3);
-      File_Attributes : File_Attributes_Type;
-      Reserved        : Byte_Array (0 .. 7);
-      Cluster_High    : Unsigned_16;          -- FAT32 only
-      HMS             : HMS_Type;
-      YMD             : YMD_Type;
-      First_Cluster   : Unsigned_16;
-      Size            : Unsigned_32;
+      File_Name        : String (1 .. 8);
+      Extension        : String (1 .. 3);
+      File_Attributes  : File_Attributes_Type;
+      Reserved         : Unsigned_8;           -- WinNT reserved
+      Ctime_Hundredths : Unsigned_8;           -- time creation 1/100 s
+      Ctime_HMS        : HMS_Type;             -- time creation HMS
+      Ctime_YMD        : YMD_Type;             -- time creation YMD
+      Atime_YMD        : YMD_Type;             -- time access YMD
+      Cluster_H        : Unsigned_16;          -- FAT32 only
+      Wtime_HMS        : HMS_Type;             -- time write HMS
+      Wtime_YMD        : YMD_Type;             -- time write YMD
+      Cluster_1st      : Unsigned_16;
+      Size             : Unsigned_32;
    end record
-      with Size => 32 * Storage_Unit;
+      with Size => DIRECTORY_ENTRY_SIZE * Storage_Unit;
    for Directory_Entry_Type use record
-      Filename        at  0 range 0 .. 63;
-      Extension       at  8 range 0 .. 23;
-      File_Attributes at 11 range 0 .. 7;
-      Reserved        at 12 range 0 .. 63;
-      Cluster_High    at 20 range 0 .. 15;
-      HMS             at 22 range 0 .. 15;
-      YMD             at 24 range 0 .. 15;
-      First_Cluster   at 26 range 0 .. 15;
-      Size            at 28 range 0 .. 31;
+      File_Name        at  0 range 0 .. 63;
+      Extension        at  8 range 0 .. 23;
+      File_Attributes  at 11 range 0 ..  7;
+      Reserved         at 12 range 0 ..  7;
+      Ctime_Hundredths at 13 range 0 ..  7;
+      Ctime_HMS        at 14 range 0 .. 15;
+      Ctime_YMD        at 16 range 0 .. 15;
+      Atime_YMD        at 18 range 0 .. 15;
+      Cluster_H        at 20 range 0 .. 15;
+      Wtime_HMS        at 22 range 0 .. 15;
+      Wtime_YMD        at 24 range 0 .. 15;
+      Cluster_1st      at 26 range 0 .. 15;
+      Size             at 28 range 0 .. 31;
    end record;
 
    type Directory_Entry_Array is array (Unsigned_16 range <>) of Directory_Entry_Type
-      with Component_Size => 32 * Storage_Unit;
+      with Component_Size => DIRECTORY_ENTRY_SIZE * Storage_Unit;
 
    -- Cluster Control Block
    type CCB_Type is record
@@ -243,9 +252,9 @@ package FATFS
       Sectors_Per_FAT        : Unsigned_32;           -- sectors per FAT
       Root_Directory_Cluster : Cluster_Type;          -- first cluster for root directory
       Root_Directory_Start   : Sector_Type;           -- where the root directory starts
-      FAT_Copies             : FAT_Copies_Type;       -- # of FATs
-      FAT_Start              : Sector_Array (1 .. 4); -- maximum 4 FAT copies
-      FAT_Index              : FAT_Copies_Type;       -- which FAT to use
+      NFATs                  : NFATs_Type;            -- # of FATs
+      FAT_Start              : Sector_Array (1 .. 4); -- maximum 4 FATs
+      FAT_Index              : NFATs_Type;            -- which FAT to use
       Root_Directory_Entries : Unsigned_16;           -- bootrecord Root_Directory_Entries
       Cluster_Start          : Sector_Type;           -- where data clusters start
       Sectors_Per_Cluster    : Unsigned_16;           -- sectors per cluster
@@ -258,60 +267,105 @@ package FATFS
    -- utilities API
    ----------------------------------------------------------------------------
 
+   ----------------------------------------------------------------------------
+   -- Is_Separator
+   ----------------------------------------------------------------------------
+   -- Return True if C is a pathname separator.
+   ----------------------------------------------------------------------------
    function Is_Separator
       (C : in Character)
       return Boolean
       with Inline => True;
 
-   procedure Time_Set
-      (D : in out Descriptor_Type;
-       T : in     Time_Type)
-      with Inline => True;
-
+   ----------------------------------------------------------------------------
+   -- Time_Get
+   ----------------------------------------------------------------------------
    procedure Time_Get
       (D : in     Descriptor_Type;
        T :    out Time_Type)
       with Inline => True;
 
+   ----------------------------------------------------------------------------
+   -- Time_Set
+   ----------------------------------------------------------------------------
+   procedure Time_Set
+      (D : in out Descriptor_Type;
+       T : in     Time_Type)
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- Physical_Sector
+   ----------------------------------------------------------------------------
+   -- Compute a physical sector number, starting from a logical one.
+   ----------------------------------------------------------------------------
    function Physical_Sector
       (D      : in Descriptor_Type;
        Sector : in Sector_Type)
       return Sector_Type
       with Inline => True;
 
-   function FAT_Is_End
+   ----------------------------------------------------------------------------
+   -- Is_End
+   ----------------------------------------------------------------------------
+   -- Return True if sector points past end of current FAT.
+   ----------------------------------------------------------------------------
+   function Is_End
       (D : in Descriptor_Type;
        S : in Sector_Type)
       return Boolean
       with Inline => True;
 
-   function FAT_Sector
+   ----------------------------------------------------------------------------
+   -- To_Table_Sector
+   ----------------------------------------------------------------------------
+   -- Return the table entry sector # based upon cluster #.
+   ----------------------------------------------------------------------------
+   function To_Table_Sector
       (D : in Descriptor_Type;
-       F : in FAT_Type;
        C : in Cluster_Type)
       return Sector_Type
       with Inline => True;
 
-   function FAT_Entry_Index
+   ----------------------------------------------------------------------------
+   -- Entry_Index
+   ----------------------------------------------------------------------------
+   -- Return the FAT entry index within a sector.
+   ----------------------------------------------------------------------------
+   function Entry_Index
       (F : in FAT_Type;
        C : in Cluster_Type)
       return Natural
       with Inline => True;
 
-   function FAT_Entry
+   ----------------------------------------------------------------------------
+   -- Entry_Get
+   ----------------------------------------------------------------------------
+   -- Return a FAT entry based upon cluster #.
+   ----------------------------------------------------------------------------
+   function Entry_Get
       (D : in Descriptor_Type;
        B : in Block_Type;
        C : in Cluster_Type)
       return Cluster_Type
       with Inline => True;
 
-   procedure FAT_Put_Entry
+   ----------------------------------------------------------------------------
+   -- Entry_Update
+   ----------------------------------------------------------------------------
+   -- Update a FAT entry based upon cluster #.
+   ----------------------------------------------------------------------------
+   procedure Entry_Update
       (D     : in     Descriptor_Type;
        B     : in out Block_Type;
        Index : in     Cluster_Type;
        C     : in     Cluster_Type);
 
-   procedure FAT_Update
+   ----------------------------------------------------------------------------
+   -- Update
+   ----------------------------------------------------------------------------
+   -- Update a sector in all FATs.
+   ----------------------------------------------------------------------------
+   procedure Update
       (D       : in     Descriptor_Type;
        S       : in     Sector_Type;
        B       : in     Block_Type;
@@ -321,11 +375,21 @@ package FATFS
    -- Open/Close filesystem API
    ----------------------------------------------------------------------------
 
+   ----------------------------------------------------------------------------
+   -- Open
+   ----------------------------------------------------------------------------
+   -- Open a FAT filesystem.
+   ----------------------------------------------------------------------------
    procedure Open
       (D               : in out Descriptor_Type;
        Partition_Start : in     Sector_Type;
        Success         :    out Boolean);
 
+   ----------------------------------------------------------------------------
+   -- Close
+   ----------------------------------------------------------------------------
+   -- Close a FAT filesystem.
+   ----------------------------------------------------------------------------
    procedure Close
       (D : in out Descriptor_Type);
 
