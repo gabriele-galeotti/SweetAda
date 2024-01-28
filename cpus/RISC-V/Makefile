@@ -47,10 +47,9 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
 configure:
+	@$(RM) $(INSTALLED_FILENAMES) Makefile.if.in
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
-ifneq ($(CPU_SUPPORT_DEFLIST),)
-	@$(CREATESYMLINK) -v -m Makefile.if.in $(CPU_SUPPORT_DEFLIST)
-endif
+	@$(CREATESYMLINK) -v -m Makefile.if.in $(MMIO_FUNCTIONS)
 
 .PHONY: clean
 clean:
