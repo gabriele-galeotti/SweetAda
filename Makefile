@@ -56,7 +56,7 @@ SERVICE_GOALS := help              \
 
 RTS_GOAL := rts
 
-NON_PLATFORM_GOALS := $(SERVICE_GOALS) \
+NOT_PLATFORM_GOALS := $(SERVICE_GOALS) \
                       $(RTS_GOAL)
 
 PLATFORM_GOALS := configure          \
@@ -71,13 +71,13 @@ PLATFORM_GOALS := configure          \
                   run                \
                   debug
 
-ALL_GOALS := $(NON_PLATFORM_GOALS) \
+ALL_GOALS := $(NOT_PLATFORM_GOALS) \
              $(PLATFORM_GOALS)
 
 # check Makefile target
-NON_MAKEFILE_TARGETS := $(filter-out $(ALL_GOALS),$(MAKECMDGOALS))
-ifneq ($(NON_MAKEFILE_TARGETS),)
-$(error Error: $(NON_MAKEFILE_TARGETS): no known Makefile target)
+NOT_MAKEFILE_TARGETS := $(filter-out $(ALL_GOALS),$(MAKECMDGOALS))
+ifneq ($(NOT_MAKEFILE_TARGETS),)
+$(error Error: $(NOT_MAKEFILE_TARGETS): no known Makefile target)
 endif
 
 # detect OS type
