@@ -182,7 +182,7 @@ if ($fileindex -ge $args.length)
 # create filelist if specified
 if (![string]::IsNullOrEmpty($filelist_filename))
 {
-  if (-not Test-Path $filelist_filename)
+  if (-not (Test-Path $filelist_filename))
   {
     "INSTALLED_FILENAMES :=" | Set-Content $filelist_filename
   }
@@ -205,7 +205,10 @@ while ($fileindex -lt $args.length)
     $link_name = $args[$fileindex + 1]
     Remove-Item -Path $link_name -Force -ErrorAction Ignore
     New-Item -ItemType SymbolicLink -Path $link_name -Target $target | Out-Null
-    SetTimeOfSymlink $link_name $target
+    if ($IsWindows)
+    {
+      SetTimeOfSymlink $link_name $target
+    }
     if ($verbose -eq "Y")
     {
       Write-Host "${link_name} -> ${target}"
@@ -223,7 +226,10 @@ while ($fileindex -lt $args.length)
     {
       Remove-Item -Path $link_directory\$f -Force -ErrorAction Ignore
       New-Item -ItemType SymbolicLink -Path $link_directory\$f -Target $target\$f | Out-Null
-      SetTimeOfSymlink $link_directory\$f $target\$f
+      if ($IsWindows)
+      {
+        SetTimeOfSymlink $link_name $target
+      }
       if ($verbose -eq "Y")
       {
         Write-Host "${link_directory}\${f} -> ${target}\${f}"
