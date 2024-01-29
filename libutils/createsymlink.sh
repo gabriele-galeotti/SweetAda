@@ -104,15 +104,17 @@ else
   VERBOSE_OPTION=""
 fi
 
-# create filelist if specified
-if [ "x${FILELIST_FILENAME}" != "x" ] ; then
-  printf "%s\n" "INSTALLED_FILENAMES :=" > ${FILELIST_FILENAME}
-fi
-
 # check for at least one symlink target
 if [ "x$1" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no symlink target specified."
   exit 1
+fi
+
+# create filelist if specified
+if [ "x${FILELIST_FILENAME}" != "x" ] ; then
+  if [ ! -f "${FILELIST_FILENAME}" ] ; then
+    printf "%s\n" "INSTALLED_FILENAMES :=" > ${FILELIST_FILENAME}
+  fi
 fi
 
 # loop as long as an argument exists

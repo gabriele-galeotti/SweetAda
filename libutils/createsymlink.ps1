@@ -172,17 +172,20 @@ while ($fileindex -lt $args.length)
   $fileindex++
 }
 
-# create filelist if specified
-if (![string]::IsNullOrEmpty($filelist_filename))
-{
-  "INSTALLED_FILENAMES :=" | Set-Content $filelist_filename
-}
-
 # check for at least one symlink target
 if ($fileindex -ge $args.length)
 {
   Write-Host "${scriptname}: *** Error: no symlink target specified."
   ExitWithCode 1
+}
+
+# create filelist if specified
+if (![string]::IsNullOrEmpty($filelist_filename))
+{
+  if (-not Test-Path $filelist_filename)
+  {
+    "INSTALLED_FILENAMES :=" | Set-Content $filelist_filename
+  }
 }
 
 # loop as long as an argument exists
