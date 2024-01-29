@@ -37,3 +37,38 @@ ReservedExcD:   .long   0                       // 13
 PendSV:         .long   0                       // 14
 SysTick:        .long   0                       // 15
 
+// non-core vectors
+
+Interrupt0:     .long   0                       // 16
+Interrupt1:     .long   0                       // 17
+Interrupt2:     .long   0                       // 18
+Interrupt3:     .long   0                       // 19
+Interrupt4:     .long   0                       // 20
+Interrupt5:     .long   0                       // 21
+Interrupt6:     .long   0                       // 22
+Interrupt7:     .long   0                       // 23
+Interrupt8:     .long   0                       // 24
+Interrupt9:     .long   0                       // 25
+Interrupt10:    .long   0                       // 26
+Interrupt11:    .long   0                       // 27
+Interrupt12:    .long   0                       // 28
+Interrupt13:    .long   0                       // 29
+Interrupt14:    .long   0                       // 30
+Interrupt15:    .long   0                       // 31
+Interrupt16:    .long   0                       // 32
+Interrupt17:    .long   0                       // 33
+Interrupt18:    .long   0                       // 34
+Interrupt19:    .long   0                       // 35
+Interrupt20:    .long   0                       // 36
+Interrupt21:    .long   0                       // 37
+Interrupt22:    .long   0                       // 38
+Interrupt23:    .long   0                       // 39
+Interrupt24:    .long   0                       // 40
+Interrupt25:    .long   0                       // 41
+Interrupt26:    .long   0                       // 42
+Interrupt27:    .long   0                       // 43
+Interrupt28:    .long   0                       // 44
+Interrupt29:    .long   0                       // 45
+Interrupt30:    .long   0                       // 46
+Interrupt31:    .long   0                       // 47
+
