@@ -40,6 +40,8 @@ package body Gdbstub
 
    type Packet_Source_Type is (HOST, STUB);
 
+   type Halt_Reason_Type is (STOP, TRAP);
+
    RESPONSE_OK    : constant String := "OK";
    RESPONSE_ERROR : constant String := "E00";
 
@@ -409,11 +411,12 @@ package body Gdbstub
    ----------------------------------------------------------------------------
    procedure Notify_Halt_Reason
       is
+      Reason : constant Halt_Reason_Type := STOP;
    begin
-      -- TX_Packet_Copy_Response ("T__thread:__;");
-      -- TX_Packet_Buffer (2 .. 3)   := "05"; -- GDB TRAP signal
-      -- TX_Packet_Buffer (11 .. 12) := "01"; -- thread #1 __FIX__ hardwired
-      TX_Packet_Copy_Response ("S00");
+      case Reason is
+         when STOP => TX_Packet_Copy_Response ("S00");
+         when TRAP => TX_Packet_Copy_Response ("S05");
+      end case;
       TX_Packet;
    end Notify_Halt_Reason;
 
@@ -540,11 +543,11 @@ package body Gdbstub
       if Success then
          for Index in 0 .. Storage_Offset (Memory_Length - 1) loop
             declare
-               Value      : aliased Unsigned_8 with
-                  Address    => To_Address (Memory_Address) + Index,
-                  Volatile   => True,
-                  Import     => True,
-                  Convention => Ada;
+               Value      : aliased Unsigned_8
+                  with Address    => To_Address (Memory_Address) + Index,
+                       Volatile   => True,
+                       Import     => True,
+                       Convention => Ada;
                Digit1_Idx : constant Integer := TX_Packet_Index + 1;
                Digit2_Idx : constant Integer := TX_Packet_Index + 2;
             begin
@@ -615,11 +618,11 @@ package body Gdbstub
             when PARSE_MEMORY_BYTES =>
                for Index in 0 .. Storage_Offset (Memory_Length - 1) loop
                   declare
-                     Value : aliased Unsigned_8 with
-                        Address    => To_Address (Memory_Address) + Index,
-                        Volatile   => True,
-                        Import     => True,
-                        Convention => Ada;
+                     Value : aliased Unsigned_8
+                        with Address    => To_Address (Memory_Address) + Index,
+                             Volatile   => True,
+                             Import     => True,
+                             Convention => Ada;
                   begin
                      Parse_Byte (Byte_Value, Success);
                      exit when not Success;
