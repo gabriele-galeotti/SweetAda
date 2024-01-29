@@ -37,6 +37,247 @@ package STM32F769I
    use Bits;
 
    ----------------------------------------------------------------------------
+   -- 3 Embedded Flash memory (FLASH)
+   ----------------------------------------------------------------------------
+
+   -- 3.7.1 FLASH registers Flash access control register (FLASH_ACR)
+
+   type FLASH_ACR_Type is record
+      LATENCY   : Bits_4;       -- Latency
+      Reserved1 : Bits_4 := 0;
+      PRFTEN    : Boolean;      -- Prefetch enable
+      ARTEN     : Boolean;      -- ART Accelerator Enable
+      Reserved2 : Bits_1 := 0;
+      ARTRST    : Boolean;      -- ART Accelerator reset
+      Reserved3 : Bits_20 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLASH_ACR_Type use record
+      LATENCY   at 0 range  0 ..  3;
+      Reserved1 at 0 range  4 ..  7;
+      PRFTEN    at 0 range  8 ..  8;
+      ARTEN     at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 10;
+      ARTRST    at 0 range 11 .. 11;
+      Reserved3 at 0 range 12 .. 31;
+   end record;
+
+   FLASH_ACR_ADDRESS : constant := 16#4002_3C00#;
+
+   FLASH_ACR : aliased FLASH_ACR_Type
+      with Address              => To_Address (FLASH_ACR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 3.7.2 Flash key register (FLASH_KEYR)
+
+   FKEYR_KEY1 : constant := 16#4567_0123#;
+   FKEYR_KEY2 : constant := 16#CDEF_89AB#;
+
+   type FLASH_KEYR_Type is record
+      FKEYR : Unsigned_32; -- FPEC key
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLASH_KEYR_Type use record
+      FKEYR at 0 range 0 .. 31;
+   end record;
+
+   FLASH_KEYR_ADDRESS : constant := 16#4002_3C04#;
+
+   FLASH_KEYR : aliased FLASH_KEYR_Type
+      with Address              => To_Address (FLASH_KEYR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 3.7.3 Flash option key register (FLASH_OPTKEYR)
+
+   OPTKEYR_OPTKEY1 : constant := 16#0819_2A3B#;
+   OPTKEYR_OPTKEY2 : constant := 16#4C5D_6E7F#;
+
+   type FLASH_OPTKEYR_Type is record
+      OPTKEYR : Unsigned_32; -- Option byte key
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLASH_OPTKEYR_Type use record
+      OPTKEYR at 0 range 0 .. 31;
+   end record;
+
+   FLASH_OPTKEYR_ADDRESS : constant := 16#4002_3C08#;
+
+   FLASH_OPTKEYR : aliased FLASH_OPTKEYR_Type
+      with Address              => To_Address (FLASH_OPTKEYR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 3.7.4 Flash status register (FLASH_SR)
+
+   type FLASH_SR_Type is record
+      EOP       : Boolean;      -- End of operation
+      OPERR     : Boolean;      -- Operation error
+      Reserved1 : Bits_2 := 0;
+      WRPERR    : Boolean;      -- Write protection error
+      PGAERR    : Boolean;      -- Programming alignment error
+      PGPERR    : Boolean;      -- Programming parallelism error
+      ERSERR    : Boolean;      -- Erase Sequence Error
+      Reserved2 : Bits_8 := 0;
+      BSY       : Boolean;      -- Busy
+      Reserved3 : Bits_15 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLASH_SR_Type use record
+      EOP       at 0 range  0 ..  0;
+      OPERR     at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  3;
+      WRPERR    at 0 range  4 ..  4;
+      PGAERR    at 0 range  5 ..  5;
+      PGPERR    at 0 range  6 ..  6;
+      ERSERR    at 0 range  7 ..  7;
+      Reserved2 at 0 range  8 .. 15;
+      BSY       at 0 range 16 .. 16;
+      Reserved3 at 0 range 17 .. 31;
+   end record;
+
+   FLASH_SR_ADDRESS : constant := 16#4002_3C0C#;
+
+   FLASH_SR : aliased FLASH_SR_Type
+      with Address              => To_Address (FLASH_SR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 3.7.5 Flash control register (FLASH_CR)
+
+   PSIZE_x8  : constant := 2#00#; -- program x8
+   PSIZE_x16 : constant := 2#01#; -- program x16
+   PSIZE_x32 : constant := 2#10#; -- program x32
+   PSIZE_x64 : constant := 2#11#; -- program x64
+
+   type FLASH_CR_Type is record
+      PG        : Boolean;     -- Programming
+      SER       : Boolean;     -- Sector Erase
+      MER_MER1  : Boolean;     -- Mass Erase/Bank 1 Mass Erase
+      SNB       : Bits_5;      -- Sector number
+      PSIZE     : Bits_2;      -- Program size
+      Reserved1 : Bits_5 := 0;
+      MER2      : Boolean;     -- Bank 2 Mass Erase
+      STRT      : Boolean;     -- Start
+      Reserved2 : Bits_7 := 0;
+      EOPIE     : Boolean;     -- End of operation interrupt enable
+      ERRIE     : Boolean;     -- Error interrupt enable
+      Reserved3 : Bits_5 := 0;
+      LOCK      : Boolean;     -- Lock
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLASH_CR_Type use record
+      PG        at 0 range  0 ..  0;
+      SER       at 0 range  1 ..  1;
+      MER_MER1  at 0 range  2 ..  2;
+      SNB       at 0 range  3 ..  7;
+      PSIZE     at 0 range  8 ..  9;
+      Reserved1 at 0 range 10 .. 14;
+      MER2      at 0 range 15 .. 15;
+      STRT      at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 23;
+      EOPIE     at 0 range 24 .. 24;
+      ERRIE     at 0 range 25 .. 25;
+      Reserved3 at 0 range 26 .. 30;
+      LOCK      at 0 range 31 .. 31;
+   end record;
+
+   FLASH_CR_ADDRESS : constant := 16#4002_3C10#;
+
+   FLASH_CR : aliased FLASH_CR_Type
+      with Address              => To_Address (FLASH_CR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 3.7.6 Flash option control register (FLASH_OPTCR)
+
+   BOR_LEV_3   : constant := 2#00#; -- BOR Level 3 (VBOR3), brownout threshold level 3
+   BOR_LEV_2   : constant := 2#01#; -- BOR Level 2 (VBOR2), brownout threshold level 2
+   BOR_LEV_1   : constant := 2#10#; -- BOR Level 1 (VBOR1), brownout threshold level 1
+   BOR_LEV_off : constant := 2#11#; -- BOR off, POR/PDR reset threshold level is applied
+
+   type FLASH_OPTCR_Type is record
+      OPTLOCK    : Boolean; -- Option lock
+      OPTSTRT    : Boolean; -- Option start
+      BOR_LEV    : Bits_2;  -- BOR reset Level
+      WWDG_SW    : Boolean;
+      IWDG_SW    : Boolean;
+      nRST_STOP  : Boolean;
+      nRST_STDBY : Boolean;
+      RDP        : Bits_8;  -- Read protect
+      nWRP       : Bits_12; -- Not write protect
+      nDBOOT     : Boolean; -- Dual Boot mode
+      nDBANK     : Boolean; -- Not dual bank mode
+      IWDG_STDBY : Boolean; -- Independent watchdog counter freeze in standby mode
+      IWDG_STOP  : Boolean; -- Independent watchdog counter freeze in Stop mode
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLASH_OPTCR_Type use record
+      OPTLOCK    at 0 range  0 ..  0;
+      OPTSTRT    at 0 range  1 ..  1;
+      BOR_LEV    at 0 range  2 ..  3;
+      WWDG_SW    at 0 range  4 ..  4;
+      IWDG_SW    at 0 range  5 ..  5;
+      nRST_STOP  at 0 range  6 ..  6;
+      nRST_STDBY at 0 range  7 ..  7;
+      RDP        at 0 range  8 .. 15;
+      nWRP       at 0 range 16 .. 27;
+      nDBOOT     at 0 range 28 .. 28;
+      nDBANK     at 0 range 29 .. 29;
+      IWDG_STDBY at 0 range 30 .. 30;
+      IWDG_STOP  at 0 range 31 .. 31;
+   end record;
+
+   FLASH_OPTCR_ADDRESS : constant := 16#4002_3C14#;
+
+   FLASH_OPTCR : aliased FLASH_OPTCR_Type
+      with Address              => To_Address (FLASH_OPTCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 3.7.7 Flash option control register (FLASH_OPTCR1)
+
+   BOOT_ADD_ITCMRAM      : constant := 16#0000#; -- Boot from ITCM RAM (0x0000 0000)
+   BOOT_ADD_SysMemBL     : constant := 16#0040#; -- Boot from System memory bootloader (0x0010 0000)
+   BOOT_ADD_ITCMIntFlash : constant := 16#0080#; -- Boot from Flash on ITCM interface (0x0020 0000)
+   BOOT_ADD_AXIMInt      : constant := 16#2000#; -- Boot from Flash on AXIM interface (0x0800 0000)
+   BOOT_ADD_DTCMRAM      : constant := 16#8000#; -- Boot from DTCM RAM (0x2000 0000)
+   BOOT_ADD_SRAM1        : constant := 16#8004#; -- Boot from SRAM1 (0x2002 0000)
+   BOOT_ADD_SRAM2        : constant := 16#8013#; -- Boot from SRAM2 (0x2004 C000)
+
+   type FLASH_OPTCR1_Type is record
+      BOOT_ADD0 : Unsigned_16; -- Boot base address when Boot pin =0
+      BOOT_ADD1 : Unsigned_16; -- Boot base address when Boot pin =1
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLASH_OPTCR1_Type use record
+      BOOT_ADD0 at 0 range  0 .. 15;
+      BOOT_ADD1 at 0 range 16 .. 31;
+   end record;
+
+   FLASH_OPTCR1_ADDRESS : constant := 16#4002_3C18#;
+
+   FLASH_OPTCR1 : aliased FLASH_OPTCR1_Type
+      with Address              => To_Address (FLASH_OPTCR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 4 Power controller (PWR)
    ----------------------------------------------------------------------------
 

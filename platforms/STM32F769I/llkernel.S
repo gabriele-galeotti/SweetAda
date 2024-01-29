@@ -39,249 +39,116 @@ ReservedExcD:   .long   0                       //  13
 PendSV:         .long   0                       //  14
 SysTick:        .long   systick_handler         //  15
 
-Interrupt0:     .long   0                       //  16
-Interrupt1:     .long   0                       //  17
-Interrupt2:     .long   0                       //  18
-Interrupt3:     .long   0                       //  19
-Interrupt4:     .long   0                       //  20
-Interrupt5:     .long   0                       //  21
-Interrupt6:     .long   0                       //  22
-Interrupt7:     .long   0                       //  23
-Interrupt8:     .long   0                       //  24
-Interrupt9:     .long   0                       //  25
-Interrupt10:    .long   0                       //  26
-Interrupt11:    .long   0                       //  27
-Interrupt12:    .long   0                       //  28
-Interrupt13:    .long   0                       //  29
-Interrupt14:    .long   0                       //  30
-Interrupt15:    .long   0                       //  31
-Interrupt16:    .long   0                       //  32
-Interrupt17:    .long   0                       //  33
-Interrupt18:    .long   0                       //  34
-Interrupt19:    .long   0                       //  35
-Interrupt20:    .long   0                       //  36
-Interrupt21:    .long   0                       //  37
-Interrupt22:    .long   0                       //  38
-Interrupt23:    .long   0                       //  39
-Interrupt24:    .long   0                       //  40
-Interrupt25:    .long   0                       //  41
-Interrupt26:    .long   0                       //  42
-Interrupt27:    .long   0                       //  43
-Interrupt28:    .long   0                       //  44
-Interrupt29:    .long   0                       //  45
-Interrupt30:    .long   0                       //  46
-Interrupt31:    .long   0                       //  47
-Interrupt32:    .long   0                       //  48
-Interrupt33:    .long   0                       //  49
-Interrupt34:    .long   0                       //  50
-Interrupt35:    .long   0                       //  51
-Interrupt36:    .long   0                       //  52
-Interrupt37:    .long   0                       //  53
-Interrupt38:    .long   0                       //  54
-Interrupt39:    .long   0                       //  55
-Interrupt40:    .long   0                       //  56
-Interrupt41:    .long   0                       //  57
-Interrupt42:    .long   0                       //  58
-Interrupt43:    .long   0                       //  59
-Interrupt44:    .long   0                       //  60
-Interrupt45:    .long   0                       //  61
-Interrupt46:    .long   0                       //  62
-Interrupt47:    .long   0                       //  63
-Interrupt48:    .long   0                       //  64
-Interrupt49:    .long   0                       //  65
-Interrupt50:    .long   0                       //  66
-Interrupt51:    .long   0                       //  67
-Interrupt52:    .long   0                       //  68
-Interrupt53:    .long   0                       //  69
-Interrupt54:    .long   0                       //  70
-Interrupt55:    .long   0                       //  71
-Interrupt56:    .long   0                       //  72
-Interrupt57:    .long   0                       //  73
-Interrupt58:    .long   0                       //  74
-Interrupt59:    .long   0                       //  75
-Interrupt60:    .long   0                       //  76
-Interrupt61:    .long   0                       //  77
-Interrupt62:    .long   0                       //  78
-Interrupt63:    .long   0                       //  79
-Interrupt64:    .long   0                       //  80
-Interrupt65:    .long   0                       //  81
-Interrupt66:    .long   0                       //  82
-Interrupt67:    .long   0                       //  83
-Interrupt68:    .long   0                       //  84
-Interrupt69:    .long   0                       //  85
-Interrupt70:    .long   0                       //  86
-Interrupt71:    .long   0                       //  87
-Interrupt72:    .long   0                       //  88
-Interrupt73:    .long   0                       //  89
-Interrupt74:    .long   0                       //  90
-Interrupt75:    .long   0                       //  91
-Interrupt76:    .long   0                       //  92
-Interrupt77:    .long   0                       //  93
-Interrupt78:    .long   0                       //  94
-Interrupt79:    .long   0                       //  95
-Interrupt80:    .long   0                       //  96
-Interrupt81:    .long   0                       //  97
-Interrupt82:    .long   0                       //  98
-Interrupt83:    .long   0                       //  99
-Interrupt84:    .long   0                       // 100
-Interrupt85:    .long   0                       // 101
-Interrupt86:    .long   0                       // 102
-Interrupt87:    .long   0                       // 103
-Interrupt88:    .long   0                       // 104
-Interrupt89:    .long   0                       // 105
-Interrupt90:    .long   0                       // 106
-Interrupt91:    .long   0                       // 107
-Interrupt92:    .long   0                       // 108
-Interrupt93:    .long   0                       // 109
-Interrupt94:    .long   0                       // 110
-Interrupt95:    .long   0                       // 111
-
-// unused interrupts
-
-Interrupt96:    .long   0                       // 112
-Interrupt97:    .long   0                       // 113
-Interrupt98:    .long   0                       // 114
-Interrupt99:    .long   0                       // 115
-Interrupt100:   .long   0                       // 116
-Interrupt101:   .long   0                       // 117
-Interrupt102:   .long   0                       // 118
-Interrupt103:   .long   0                       // 119
-Interrupt104:   .long   0                       // 120
-Interrupt105:   .long   0                       // 121
-Interrupt106:   .long   0                       // 122
-Interrupt107:   .long   0                       // 123
-Interrupt108:   .long   0                       // 124
-Interrupt109:   .long   0                       // 125
-Interrupt110:   .long   0                       // 126
-Interrupt111:   .long   0                       // 127
-Interrupt112:   .long   0                       // 128
-Interrupt113:   .long   0                       // 129
-Interrupt114:   .long   0                       // 130
-Interrupt115:   .long   0                       // 131
-Interrupt116:   .long   0                       // 132
-Interrupt117:   .long   0                       // 133
-Interrupt118:   .long   0                       // 134
-Interrupt119:   .long   0                       // 135
-Interrupt120:   .long   0                       // 136
-Interrupt121:   .long   0                       // 137
-Interrupt122:   .long   0                       // 138
-Interrupt123:   .long   0                       // 139
-Interrupt124:   .long   0                       // 140
-Interrupt125:   .long   0                       // 141
-Interrupt126:   .long   0                       // 142
-Interrupt127:   .long   0                       // 143
-Interrupt128:   .long   0                       // 144
-Interrupt129:   .long   0                       // 145
-Interrupt130:   .long   0                       // 146
-Interrupt131:   .long   0                       // 147
-Interrupt132:   .long   0                       // 148
-Interrupt133:   .long   0                       // 149
-Interrupt134:   .long   0                       // 150
-Interrupt135:   .long   0                       // 151
-Interrupt136:   .long   0                       // 152
-Interrupt137:   .long   0                       // 153
-Interrupt138:   .long   0                       // 154
-Interrupt139:   .long   0                       // 155
-Interrupt140:   .long   0                       // 156
-Interrupt141:   .long   0                       // 157
-Interrupt142:   .long   0                       // 158
-Interrupt143:   .long   0                       // 159
-Interrupt144:   .long   0                       // 160
-Interrupt145:   .long   0                       // 161
-Interrupt146:   .long   0                       // 162
-Interrupt147:   .long   0                       // 163
-Interrupt148:   .long   0                       // 164
-Interrupt149:   .long   0                       // 165
-Interrupt150:   .long   0                       // 166
-Interrupt151:   .long   0                       // 167
-Interrupt152:   .long   0                       // 168
-Interrupt153:   .long   0                       // 169
-Interrupt154:   .long   0                       // 170
-Interrupt155:   .long   0                       // 171
-Interrupt156:   .long   0                       // 172
-Interrupt157:   .long   0                       // 173
-Interrupt158:   .long   0                       // 174
-Interrupt159:   .long   0                       // 175
-Interrupt160:   .long   0                       // 176
-Interrupt161:   .long   0                       // 177
-Interrupt162:   .long   0                       // 178
-Interrupt163:   .long   0                       // 179
-Interrupt164:   .long   0                       // 180
-Interrupt165:   .long   0                       // 181
-Interrupt166:   .long   0                       // 182
-Interrupt167:   .long   0                       // 183
-Interrupt168:   .long   0                       // 184
-Interrupt169:   .long   0                       // 185
-Interrupt170:   .long   0                       // 186
-Interrupt171:   .long   0                       // 187
-Interrupt172:   .long   0                       // 188
-Interrupt173:   .long   0                       // 189
-Interrupt174:   .long   0                       // 190
-Interrupt175:   .long   0                       // 191
-Interrupt176:   .long   0                       // 192
-Interrupt177:   .long   0                       // 193
-Interrupt178:   .long   0                       // 194
-Interrupt179:   .long   0                       // 195
-Interrupt180:   .long   0                       // 196
-Interrupt181:   .long   0                       // 197
-Interrupt182:   .long   0                       // 198
-Interrupt183:   .long   0                       // 199
-Interrupt184:   .long   0                       // 200
-Interrupt185:   .long   0                       // 201
-Interrupt186:   .long   0                       // 202
-Interrupt187:   .long   0                       // 203
-Interrupt188:   .long   0                       // 204
-Interrupt189:   .long   0                       // 205
-Interrupt190:   .long   0                       // 206
-Interrupt191:   .long   0                       // 207
-Interrupt192:   .long   0                       // 208
-Interrupt193:   .long   0                       // 209
-Interrupt194:   .long   0                       // 210
-Interrupt195:   .long   0                       // 211
-Interrupt196:   .long   0                       // 212
-Interrupt197:   .long   0                       // 213
-Interrupt198:   .long   0                       // 214
-Interrupt199:   .long   0                       // 215
-Interrupt200:   .long   0                       // 216
-Interrupt201:   .long   0                       // 217
-Interrupt202:   .long   0                       // 218
-Interrupt203:   .long   0                       // 219
-Interrupt204:   .long   0                       // 220
-Interrupt205:   .long   0                       // 221
-Interrupt206:   .long   0                       // 222
-Interrupt207:   .long   0                       // 223
-Interrupt208:   .long   0                       // 224
-Interrupt209:   .long   0                       // 225
-Interrupt210:   .long   0                       // 226
-Interrupt211:   .long   0                       // 227
-Interrupt212:   .long   0                       // 228
-Interrupt213:   .long   0                       // 229
-Interrupt214:   .long   0                       // 230
-Interrupt215:   .long   0                       // 231
-Interrupt216:   .long   0                       // 232
-Interrupt217:   .long   0                       // 233
-Interrupt218:   .long   0                       // 234
-Interrupt219:   .long   0                       // 235
-Interrupt220:   .long   0                       // 236
-Interrupt221:   .long   0                       // 237
-Interrupt222:   .long   0                       // 238
-Interrupt223:   .long   0                       // 239
-Interrupt224:   .long   0                       // 240
-Interrupt225:   .long   0                       // 241
-Interrupt226:   .long   0                       // 242
-Interrupt227:   .long   0                       // 243
-Interrupt228:   .long   0                       // 244
-Interrupt229:   .long   0                       // 245
-Interrupt230:   .long   0                       // 246
-Interrupt231:   .long   0                       // 247
-Interrupt232:   .long   0                       // 248
-Interrupt233:   .long   0                       // 249
-Interrupt234:   .long   0                       // 250
-Interrupt235:   .long   0                       // 251
-Interrupt236:   .long   0                       // 252
-Interrupt237:   .long   0                       // 253
-Interrupt238:   .long   0                       // 254
-Interrupt239:   .long   0                       // 255
+Interrupt0:     .long   0                       //  16 WWDG               Window Watchdog interrupt
+Interrupt1:     .long   0                       //  17 PVD                PVD through EXTI line detection interrupt
+Interrupt2:     .long   0                       //  18 TAMP_STAMP         Tamper and TimeStamp interrupts through the EXTI line
+Interrupt3:     .long   0                       //  19 RTC_WKUP           RTC Wakeup interrupt through the EXTI line
+Interrupt4:     .long   0                       //  20 FLASH              Flash global interrupt
+Interrupt5:     .long   0                       //  21 RCC                RCC global interrupt
+Interrupt6:     .long   0                       //  22 EXTI0              EXTI Line0 interrupt
+Interrupt7:     .long   0                       //  23 EXTI1              EXTI Line1 interrupt
+Interrupt8:     .long   0                       //  24 EXTI2              EXTI Line2 interrupt
+Interrupt9:     .long   0                       //  25 EXTI3              EXTI Line3 interrupt
+Interrupt10:    .long   0                       //  26 EXTI4              EXTI Line4 interrupt
+Interrupt11:    .long   0                       //  27 DMA1_Stream0       DMA1 Stream0 global interrupt
+Interrupt12:    .long   0                       //  28 DMA1_Stream1       DMA1 Stream1 global interrupt
+Interrupt13:    .long   0                       //  29 DMA1_Stream2       DMA1 Stream2 global interrupt
+Interrupt14:    .long   0                       //  30 DMA1_Stream3       DMA1 Stream3 global interrupt
+Interrupt15:    .long   0                       //  31 DMA1_Stream4       DMA1 Stream4 global interrupt
+Interrupt16:    .long   0                       //  32 DMA1_Stream5       DMA1 Stream5 global interrupt
+Interrupt17:    .long   0                       //  33 DMA1_Stream6       DMA1 Stream6 global interrupt
+Interrupt18:    .long   0                       //  34 ADC                ADC1, ADC2 and ADC3 global interrupts
+Interrupt19:    .long   0                       //  35 CAN1_TX            CAN1 TX interrupts
+Interrupt20:    .long   0                       //  36 CAN1_RX0           CAN1 RX0 interrupts
+Interrupt21:    .long   0                       //  37 CAN1_RX1           CAN1 RX1 interrupt
+Interrupt22:    .long   0                       //  38 CAN1_SCE           CAN1 SCE interrupt
+Interrupt23:    .long   0                       //  39 EXTI9_5            EXTI Line[9:5] interrupts
+Interrupt24:    .long   0                       //  40 TIM1_BRK_TIM9      TIM1 Break interrupt and TIM9 global interrupt
+Interrupt25:    .long   0                       //  41 TIM1_UP_TIM10      TIM1 Update interrupt and TIM10 global interrupt
+Interrupt26:    .long   0                       //  42 TIM1_TRG_COM_TIM11 TIM1 Trigger and Commutation interrupts and TIM11 global interrupt
+Interrupt27:    .long   0                       //  43 TIM1_CC            TIM1 Capture Compare interrupt
+Interrupt28:    .long   0                       //  44 TIM2               TIM2 global interrupt
+Interrupt29:    .long   0                       //  45 TIM3               TIM3 global interrupt
+Interrupt30:    .long   0                       //  46 TIM4               TIM4 global interrupt
+Interrupt31:    .long   0                       //  47 I2C1_EV            I2C1 event interrupt
+Interrupt32:    .long   0                       //  48 I2C1_ER            I2C1 error interrupt
+Interrupt33:    .long   0                       //  49 I2C2_EV            I2C2 event interrupt
+Interrupt34:    .long   0                       //  50 I2C2_ER            I2C2 error interrupt
+Interrupt35:    .long   0                       //  51 SPI1               SPI1 global interrupt
+Interrupt36:    .long   0                       //  52 SPI2               SPI2 global interrupt
+Interrupt37:    .long   0                       //  53 USART1             USART1 global interrupt
+Interrupt38:    .long   0                       //  54 USART2             USART2 global interrupt
+Interrupt39:    .long   0                       //  55 USART3             USART3 global interrupt
+Interrupt40:    .long   0                       //  56 EXTI15_10          EXTI Line[15:10] interrupts
+Interrupt41:    .long   0                       //  57 RTC_Alarm          RTC Alarms (A and B) through EXTI line interrupt
+Interrupt42:    .long   0                       //  58 OTG_FS_WKUP USB    On-The-Go FS Wakeup through EXTI line interrupt
+Interrupt43:    .long   0                       //  59 TIM8_BRK_TIM12     TIM8 Break interrupt and TIM12 global interrupt
+Interrupt44:    .long   0                       //  60 TIM8_UP_TIM13      TIM8 Update interrupt and TIM13 global interrupt
+Interrupt45:    .long   0                       //  61 TIM8_TRG_COM_TIM14 TIM8 Trigger and Commutation interrupts and TIM14 global interrupt
+Interrupt46:    .long   0                       //  62 TIM8_CC            TIM8 Capture Compare interrupt
+Interrupt47:    .long   0                       //  63 DMA1_Stream7       DMA1 Stream7 global interrupt
+Interrupt48:    .long   0                       //  64 FMC                FMC global interrupt
+Interrupt49:    .long   0                       //  65 SDMMC1             SDMMC1 global interrupt
+Interrupt50:    .long   0                       //  66 TIM5               TIM5 global interrupt
+Interrupt51:    .long   0                       //  67 SPI3               SPI3 global interrupt
+Interrupt52:    .long   0                       //  68 UART4              UART4 global interrupt
+Interrupt53:    .long   0                       //  69 UART5              UART5 global interrupt
+Interrupt54:    .long   0                       //  70 TIM6_DAC           TIM6 global interrupt, DAC1 and DAC2 underrun error interrupts
+Interrupt55:    .long   0                       //  71 TIM7               TIM7 global interrupt
+Interrupt56:    .long   0                       //  72 DMA2_Stream0       DMA2 Stream0 global interrupt
+Interrupt57:    .long   0                       //  73 DMA2_Stream1       DMA2 Stream1 global interrupt
+Interrupt58:    .long   0                       //  74 DMA2_Stream2       DMA2 Stream2 global interrupt
+Interrupt59:    .long   0                       //  75 DMA2_Stream3       DMA2 Stream3 global interrupt
+Interrupt60:    .long   0                       //  76 DMA2_Stream4       DMA2 Stream4 global interrupt
+Interrupt61:    .long   0                       //  77 ETH                Ethernet global interrupt
+Interrupt62:    .long   0                       //  78 ETH_WKUP           Ethernet Wakeup through EXTI line interrupt
+Interrupt63:    .long   0                       //  79 CAN2_TX            CAN2 TX interrupts
+Interrupt64:    .long   0                       //  80 CAN2_RX0           CAN2 RX0 interrupts
+Interrupt65:    .long   0                       //  81 CAN2_RX1           CAN2 RX1 interrupt
+Interrupt66:    .long   0                       //  82 CAN2_SCE           CAN2 SCE interrupt
+Interrupt67:    .long   0                       //  83 OTG_FS             USB On The Go FS global interrupt
+Interrupt68:    .long   0                       //  84 DMA2_Stream5       DMA2 Stream5 global interrupt
+Interrupt69:    .long   0                       //  85 DMA2_Stream6       DMA2 Stream6 global interrupt
+Interrupt70:    .long   0                       //  86 DMA2_Stream7       DMA2 Stream7 global interrupt
+Interrupt71:    .long   0                       //  87 USART6             USART6 global interrupt
+Interrupt72:    .long   0                       //  88 I2C3_EV            I2C3 event interrupt
+Interrupt73:    .long   0                       //  89 I2C3_ER            I2C3 error interrupt
+Interrupt74:    .long   0                       //  90 OTG_HS_EP1_OUT     USB On The Go HS End Point 1 Out global interrupt
+Interrupt75:    .long   0                       //  91 OTG_HS_EP1_IN      USB On The Go HS End Point 1 In global interrupt
+Interrupt76:    .long   0                       //  92 OTG_HS_WKUP        USB On The Go HS Wakeup through EXTI interrupt
+Interrupt77:    .long   0                       //  93 OTG_HS             USB On The Go HS global interrupt
+Interrupt78:    .long   0                       //  94 DCMI               DCMI global interrupt
+Interrupt79:    .long   0                       //  95 CRYP               CRYP crypto global interrupt
+Interrupt80:    .long   0                       //  96 HASH_RNG           Hash and Rng global interrupt
+Interrupt81:    .long   0                       //  97 FPU                FPU global interrupt
+Interrupt82:    .long   0                       //  98 UART7              UART7 global interrupt
+Interrupt83:    .long   0                       //  99 UART8              UART8 global interrupt
+Interrupt84:    .long   0                       // 100 SPI4               SPI4 global interrupt
+Interrupt85:    .long   0                       // 101 SPI5               SPI5 global interrupt
+Interrupt86:    .long   0                       // 102 SPI6               SPI6 global interrupt
+Interrupt87:    .long   0                       // 103 SAI1               SAI1 global interrupt
+Interrupt88:    .long   0                       // 104 LCD-TFT            LCD-TFT global interrupt
+Interrupt89:    .long   0                       // 105 LCD-TFT            LCD-TFT global Error interrupt
+Interrupt90:    .long   0                       // 106 DMA2D              DMA2D global interrupt
+Interrupt91:    .long   0                       // 107 SAI2               SAI2 global interrupt
+Interrupt92:    .long   0                       // 108 QuadSPI            QuadSPI global interrupt
+Interrupt93:    .long   0                       // 109 LP Timer1          LP Timer1 global interrupt
+Interrupt94:    .long   0                       // 110 HDMI-CEC           HDMI-CEC global interrupt
+Interrupt95:    .long   0                       // 111 I2C4_EV            I2C4 event interrupt
+Interrupt96:    .long   0                       // 112 I2C4_ER            I2C4 Error interrupt
+Interrupt97:    .long   0                       // 113 SPDIFRX            SPDIFRX global interrupt
+Interrupt98:    .long   0                       // 114 DSIHOST            DSI host global interrupt
+Interrupt99:    .long   0                       // 115 DFSDM1_FLT0        DFSDM1 Filter 0 global interrupt
+Interrupt100:   .long   0                       // 116 DFSDM1_FLT1        DFSDM1 Filter 1 global interrupt
+Interrupt101:   .long   0                       // 117 DFSDM1_FLT2        DFSDM1 Filter 2 global interrupt
+Interrupt102:   .long   0                       // 118 DFSDM1_FLT3        DFSDM1 Filter 3 global interrupt
+Interrupt103:   .long   0                       // 119 SDMMC2             SDMMC2 global interrupt
+Interrupt104:   .long   0                       // 120 CAN3_TX            CAN3 TX interrupt
+Interrupt105:   .long   0                       // 121 CAN3_RX0           CAN3 RX0 interrupt
+Interrupt106:   .long   0                       // 122 CAN3_RX1           CAN3 RX1 interrupt
+Interrupt107:   .long   0                       // 123 CAN3_SCE           CAN3 SCE interrupt
+Interrupt108:   .long   0                       // 124 JPEG               JPEG global interrupt
+Interrupt109:   .long   0                       // 125 MDIOS              MDIO slave global interrupt
 
                 .thumb_func
 systick_handler:
