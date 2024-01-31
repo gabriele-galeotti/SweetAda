@@ -55,7 +55,7 @@ SET TILTIMEOUT=3
 
 REM QEMU machine
 START "" "%QEMU_EXECUTABLE%" ^
-  -M virt -cpu %CPU% -smp 4 ^
+  -M virt -cpu %CPU% -smp cores=4 ^
   -bios %KERNEL_ROMFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
@@ -78,7 +78,7 @@ IF "%1"=="-debug" (
   -iex "set new-console on" ^
   -iex "set basenames-may-differ" ^
   %KERNEL_OUTFILE% ^
-  -ex "target remote tcp:localhost:1234" ^
+  -ex "target extended-remote tcp:localhost:1234" ^
   -ex "break *0x80000000" ^
   -ex "continue"
   ) ELSE (
