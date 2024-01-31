@@ -19,23 +19,27 @@ a copy of the GCC Runtime Library Exception along with this program;
 see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
-#define FUNC_TYPE(X)	.type X,@function
-#define FUNC_SIZE(X)	.size X,.-X
+/* SweetAda version, reformatted and cleaned                    */
+/* __INF__ original: gcc-13.2.0/libgcc/config/riscv/riscv-asm.h */
 
-#define FUNC_BEGIN(X)		\
-	.globl X;		\
-	FUNC_TYPE (X);		\
+#define FUNC_TYPE(X) .type   X,@function
+#define FUNC_SIZE(X) .size   X,.-X
+
+#define FUNC_BEGIN(X)           \
+                .global X     ; \
+                FUNC_TYPE (X) ; \
 X:
 
-#define FUNC_END(X)		\
-	FUNC_SIZE(X)
+#define FUNC_END(X) FUNC_SIZE(X)
 
-#define FUNC_ALIAS(X,Y)		\
-	.globl X;		\
-	X = Y
+#define FUNC_ALIAS(X,Y)     \
+                .global X ; \
+                X = Y
 
-#define CONCAT1(a, b)		CONCAT2(a, b)
-#define CONCAT2(a, b)		a ## b
-#define HIDDEN_JUMPTARGET(X)	CONCAT1(__hidden_, X)
-#define HIDDEN_DEF(X)		FUNC_ALIAS(HIDDEN_JUMPTARGET(X), X);     \
-				.hidden HIDDEN_JUMPTARGET(X)
+#define CONCAT1(a, b)        CONCAT2(a, b)
+#define CONCAT2(a, b)        a ## b
+#define HIDDEN_JUMPTARGET(X) CONCAT1(__hidden_, X)
+#define HIDDEN_DEF(X)                                 \
+                FUNC_ALIAS(HIDDEN_JUMPTARGET(X), X) ; \
+                .hidden HIDDEN_JUMPTARGET(X)
+
