@@ -99,6 +99,7 @@ if [ "x${phase_configure}" = "xY" ] ; then
   CONFIGURE_VARS+=("LEX=\"missing \"")
   CONFIGURE_VARS+=("FLEX=\"missing \"")
   CONFIGURE_VARS+=("CFLAGS=\"-g\"")
+  CONFIGURE_VARS+=("CXXFLAGS=\"-g\"")
   CONFIGURE_VARS+=("LDFLAGS=\"-g\"")
   CONFIGURE_OPTS+=("--with-pkgversion='SweetAda GNU toolchain 1.0'")
   CONFIGURE_OPTS+=("--build=${BUILD_SYSTEM}")

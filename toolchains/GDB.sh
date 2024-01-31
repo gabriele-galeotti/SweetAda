@@ -95,6 +95,7 @@ if [ "x${phase_configure}" = "xY" ] ; then
   CONFIGURE_OPTS=()
   EXEC_PREFIX=${PREFIX}
   CONFIGURE_VARS+=("CFLAGS=\"-g\"")
+  CONFIGURE_VARS+=("CXXFLAGS=\"-g\"")
   CONFIGURE_VARS+=("LDFLAGS=\"-g\"")
   CONFIGURE_OPTS+=("--with-pkgversion='SweetAda GNU toolchain 1.0'")
   CONFIGURE_OPTS+=("--build=${BUILD_SYSTEM}")
