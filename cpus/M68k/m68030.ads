@@ -42,12 +42,12 @@ package M68030
    type PS_Type is new Bits_4;
    PS_256 : constant PS_Type := 2#1000#; -- 256 bytes
    PS_512 : constant PS_Type := 2#1001#; -- 512 bytes
-   PS_1k  : constant PS_Type := 2#1010#; -- 1K bytes
-   PS_2k  : constant PS_Type := 2#1011#; -- 2K bytes
-   PS_4k  : constant PS_Type := 2#1100#; -- 4K bytes
-   PS_8k  : constant PS_Type := 2#1101#; -- 8K bytes
-   PS_16k : constant PS_Type := 2#1110#; -- 16K bytes
-   PS_32k : constant PS_Type := 2#1111#; -- 32K bytes
+   PS_1k  : constant PS_Type := 2#1010#; -- 1k bytes
+   PS_2k  : constant PS_Type := 2#1011#; -- 2k bytes
+   PS_4k  : constant PS_Type := 2#1100#; -- 4k bytes
+   PS_8k  : constant PS_Type := 2#1101#; -- 8k bytes
+   PS_16k : constant PS_Type := 2#1110#; -- 16k bytes
+   PS_32k : constant PS_Type := 2#1111#; -- 32k bytes
 
    type DT_Type is new Bits_2;
    DT_INVALID : constant := 2#00#; -- invalid descriptor

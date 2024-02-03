@@ -43,8 +43,8 @@ package M68040
    --                                                                        --
    --========================================================================--
 
-   PAGESIZE4k : constant Bits_1 := 0; -- 4 Kbytes
-   PAGESIZE8k : constant Bits_1 := 1; -- 8 Kbytes
+   PAGESIZE4k : constant Bits_1 := 0; -- 4 kbytes
+   PAGESIZE8k : constant Bits_1 := 1; -- 8 kbytes
 
    CM_WT  : constant := 2#00#; -- Cachable, Write-through
    CM_CB  : constant := 2#01#; -- Cachable, Copyback
