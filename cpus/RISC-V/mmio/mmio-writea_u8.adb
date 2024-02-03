@@ -15,12 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with GCC_Defines;
+
 separate (MMIO)
 procedure WriteA_U8
    (Memory_Address : in System.Address;
     Value          : in Interfaces.Unsigned_8)
    is
-   ATOMIC_SEQ_CST : constant Integer := 5;
    procedure Atomic_Store
       (Ptr      : System.Address;
        Val      : Interfaces.Unsigned_8;
@@ -29,5 +30,5 @@ procedure WriteA_U8
            Convention    => Intrinsic,
            External_Name => "__atomic_store_1";
 begin
-   Atomic_Store (Memory_Address, Value, ATOMIC_SEQ_CST);
+   Atomic_Store (Memory_Address, Value, GCC_Defines.ATOMIC_SEQ_CST);
 end WriteA_U8;

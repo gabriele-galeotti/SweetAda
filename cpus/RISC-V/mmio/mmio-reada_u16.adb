@@ -15,12 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with GCC_Defines;
+
 separate (MMIO)
 function ReadA_U16
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_16
    is
-   ATOMIC_SEQ_CST : constant Integer := 5;
    function Atomic_Load
       (Ptr      : System.Address;
        Memorder : Integer)
@@ -29,5 +30,5 @@ function ReadA_U16
            Convention    => Intrinsic,
            External_Name => "__atomic_load_2";
 begin
-   return Atomic_Load (Memory_Address, ATOMIC_SEQ_CST);
+   return Atomic_Load (Memory_Address, GCC_Defines.ATOMIC_SEQ_CST);
 end ReadA_U16;
