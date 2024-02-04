@@ -65,9 +65,9 @@ package KN02BA
    -- IM2 TURBOchannel SLOT 0
    -- IM3 TURBOchannel SLOT 1
    -- IM4 TURBOchannel SLOT 2
-   -- IM5 I/O ASIC cascade
+   -- IM5 TURBOchannel SLOT 3 - I/O ASIC cascade
    -- IM6 HALT button
-   -- IM7 FPU/R4k timer
+   -- IM7 FPU
 
    -- SSR System Support Register ---------------------------------------------
 
@@ -140,7 +140,7 @@ package KN02BA
       BUS       : Boolean;      -- memory, I/O bus read/write errors (timeout)
       Unused3   : Bits_1 := 0;
       NVRAM     : Boolean;      -- (*) NVRAM clear jumper
-      Unused_4  : Bits_17 := 0;
+      Unused4   : Bits_17 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -160,7 +160,7 @@ package KN02BA
       BUS       at 0 range 12 .. 12;
       Unused3   at 0 range 13 .. 13;
       NVRAM     at 0 range 14 .. 14;
-      Unused_4  at 0 range 15 .. 31;
+      Unused4   at 0 range 15 .. 31;
    end record;
 
    IOASIC_SIR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0110#;
