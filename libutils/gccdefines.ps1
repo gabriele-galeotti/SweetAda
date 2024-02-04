@@ -175,6 +175,7 @@ Add-Content -Path $output_filename -Value "package GCC_Defines"
 Add-Content -Path $output_filename -Value "$($indent)with Pure => True"
 Add-Content -Path $output_filename -Value "$($indent)is"
 Add-Content -Path $output_filename -Value ""
+
 foreach ($i in $items)
 {
   $i_splitted = $i.Split(":")
