@@ -39,7 +39,6 @@ endif
 
 ifeq ($(OSTYPE),msys)
 CREATECONFIGUREGPR := createconfiguregpr$(SCREXT_cmd)
-CREATEDEFINITIONS  := createdefinitions$(SCREXT_cmd)
 CREATEGNATADC      := creategnatadc$(SCREXT_cmd)
 CREATESYMLINK      := createsymlink$(SCREXT_cmd)
 DOS2UNIX           := dos2unix$(SCREXT_cmd)
@@ -51,7 +50,6 @@ PROCESSCFG         := processcfg$(SCREXT_cmd)
 UPDATETM           := updatetm$(SCREXT_cmd)
 else
 CREATECONFIGUREGPR := createconfiguregpr$(SCREXT)
-CREATEDEFINITIONS  := createdefinitions$(SCREXT)
 CREATEGNATADC      := creategnatadc$(SCREXT)
 CREATESYMLINK      := createsymlink$(SCREXT)
 FILEPAD            := filepad$(SCREXT)
