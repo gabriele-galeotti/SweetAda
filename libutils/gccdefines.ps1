@@ -14,7 +14,9 @@
 # $2..$n = list of GCC macro define specifications
 #
 # Environment variables:
-# CC
+# TOOLCHAIN_CC
+# CC_SWITCHES_RTS
+# GCC_SWITCHES_PLATFORM
 #
 
 #
@@ -127,9 +129,11 @@ $bseparator = " " * ($max_type_length - "Boolean".length)
 
 $indent = "   "
 
-$env_gcc = $(GetEnvVar "CC").Split(" ", 2)
-$gcc = $env_gcc[0]
-$gcc_args = $env_gcc[1]
+$toolchain_cc = $(GetEnvVar "TOOLCHAIN_CC").Split(" ", 2)
+$gcc = $toolchain_cc[0]
+$gcc_args = $toolchain_cc[1]
+$gcc_args = $gcc_args + " " + $(GetEnvVar "CC_SWITCHES_RTS")
+$gcc_args = $gcc_args + " " + $(GetEnvVar "GCC_SWITCHES_PLATFORM")
 
 $pinfo = New-Object System.Diagnostics.ProcessStartInfo
 $pinfo.CreateNoWindow = $true
@@ -138,7 +142,7 @@ $pinfo.RedirectStandardInput = $true
 $pinfo.RedirectStandardError = $true
 $pinfo.RedirectStandardOutput = $true
 $pinfo.FileName = $gcc
-$pinfo.Arguments = "$gcc_args -E -P -dM -c -"
+$pinfo.Arguments = $gcc_args + " -E -P -dM -c -"
 $p = New-Object System.Diagnostics.Process
 $p.StartInfo = $pinfo
 try

@@ -11,11 +11,13 @@
 
 #
 # Arguments:
-# $1    = output filename
-# $2..n = list of GCC macro define specifications
+# $1     = output filename
+# $2..$n = list of GCC macro define specifications
 #
 # Environment variables:
-# CC
+# TOOLCHAIN_CC
+# CC_SWITCHES_RTS
+# GCC_SWITCHES_PLATFORM
 #
 
 #
@@ -125,10 +127,10 @@ fi
 indent="   "
 format_string="%-${max_tmacro_length}s : constant %-${max_type_length}s:= %s;"
 
-gcc_output=$(                                                                     \
-             printf "%s\n" "void ___(void) { }"                                 | \
-             eval ${CC} -E -P -dM -c -                                          | \
-             sed -e "s|^\(#define *\)\([A-Za-z_][0-9A-Za-z_]*\) *\(.*\)|\2=\3|"   \
+gcc_output=$(                                                                             \
+             printf "%s\n" "void ___(void) { }"                                         | \
+             ${TOOLCHAIN_CC} ${CC_SWITCHES_RTS} ${GCC_SWITCHES_PLATFORM} -E -P -dM -c - | \
+             sed -e "s|^\(#define *\)\([A-Za-z_][0-9A-Za-z_]*\) *\(.*\)|\2=\3|"           \
             )
 
 rm -f ${OUTPUT_FILENAME}
