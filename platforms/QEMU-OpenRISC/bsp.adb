@@ -23,6 +23,7 @@ with Configure;
 with Definitions;
 with Bits;
 with MMIO;
+with OpenRISC;
 with Exceptions;
 with Virt;
 with Console;
@@ -112,6 +113,7 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("OpenRISC " & Configure.CPU_MODEL & " (QEMU emulator)", NL => True);
+      Console.Print (OpenRISC.To_U32 (OpenRISC.VR_Read), Prefix => "VR: ", NL => True);
       -------------------------------------------------------------------------
    end Setup;
 
