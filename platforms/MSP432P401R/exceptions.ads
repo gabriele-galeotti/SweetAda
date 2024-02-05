@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ msp432p401r.ads                                                                                           --
+-- __FLN__ exceptions.ads                                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,11 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
-with Interfaces;
-
-package MSP432P401R
+package Exceptions
    is
 
    --========================================================================--
@@ -30,37 +26,16 @@ package MSP432P401R
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
-   use Interfaces;
+   procedure Exception_Process
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "exception_process";
 
-   WDTCTL : aliased Unsigned_16
-      with Address    => To_Address (16#4000_480C#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+   procedure Irq_Process
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "irq_process";
 
-   PORT_BASE : constant := 16#4000_4C00#;
+   procedure Init;
 
-   P1OUT_L : aliased Unsigned_8
-      with Address    => To_Address (PORT_BASE + 16#02#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   P1DIR_L : aliased Unsigned_8
-      with Address    => To_Address (PORT_BASE + 16#04#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   P2OUT_L : aliased Unsigned_8
-      with Address    => To_Address (PORT_BASE + 16#03#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   P2DIR_L : aliased Unsigned_8
-      with Address    => To_Address (PORT_BASE + 16#05#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-
-end MSP432P401R;
+end Exceptions;

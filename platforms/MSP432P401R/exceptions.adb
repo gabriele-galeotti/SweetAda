@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ msp432p401r.ads                                                                                           --
+-- __FLN__ exceptions.adb                                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,52 +15,70 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
 with Interfaces;
+with Bits;
+with LLutils;
+with Abort_Library;
+with ARMv7M;
+with CPU;
+with MSP432P401R;
+with BSP;
 
-package MSP432P401R
+package body Exceptions
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                               Public part                              --
+   --                           Local declarations                           --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
-   WDTCTL : aliased Unsigned_16
-      with Address    => To_Address (16#4000_480C#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Package subprograms                          --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
 
-   PORT_BASE : constant := 16#4000_4C00#;
+   ----------------------------------------------------------------------------
+   -- Exception_Process
+   ----------------------------------------------------------------------------
+   procedure Exception_Process
+      is
+   begin
+      Abort_Library.System_Abort;
+   end Exception_Process;
 
-   P1OUT_L : aliased Unsigned_8
-      with Address    => To_Address (PORT_BASE + 16#02#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   P1DIR_L : aliased Unsigned_8
-      with Address    => To_Address (PORT_BASE + 16#04#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   P2OUT_L : aliased Unsigned_8
-      with Address    => To_Address (PORT_BASE + 16#03#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   P2DIR_L : aliased Unsigned_8
-      with Address    => To_Address (PORT_BASE + 16#05#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+   ----------------------------------------------------------------------------
+   -- Irq_Process
+   ----------------------------------------------------------------------------
+   procedure Irq_Process
+      is
+   begin
+      BSP.Tick_Count := @ + 1;
+      if BSP.Tick_Count mod 1_000 = 0 then
+         -- LED1
+         MSP432P401R.P1DIR_L := MSP432P401R.P1DIR_L or 16#01#;
+         MSP432P401R.P1OUT_L := MSP432P401R.P1OUT_L xor 16#01#;
+      end if;
+   end Irq_Process;
 
-end MSP432P401R;
+   ----------------------------------------------------------------------------
+   -- Init
+   ----------------------------------------------------------------------------
+   procedure Init
+      is
+      Vector_Table : constant Asm_Entry_Point
+         with Import        => True,
+              External_Name => "vectors";
+   begin
+      ARMv7M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
+   end Init;
+
+end Exceptions;

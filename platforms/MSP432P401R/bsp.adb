@@ -15,8 +15,25 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Bits;
+with ARMv7M;
+with MSP432P401R;
+with Exceptions;
+
 package body BSP
    is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use Bits;
+
+   procedure SysTick_Init;
 
    --========================================================================--
    --                                                                        --
@@ -25,6 +42,23 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- SysTick_Init
+   ----------------------------------------------------------------------------
+   procedure SysTick_Init
+      is
+   begin
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (16#800#);
+      ARMv7M.SHPR3.PRI_15 := 16#01#;
+      ARMv7M.SYST_CVR.CURRENT := 0;
+      ARMv7M.SYST_CSR :=
+         (ENABLE    => True,
+          TICKINT   => True,
+          CLKSOURCE => ARMv7M.CLKSOURCE_CPU,
+          COUNTFLAG => False,
+          others    => <>);
+   end SysTick_Init;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -50,11 +84,18 @@ package body BSP
    procedure Setup
       is
    begin
+      -------------------------------------------------------------------------
+      Exceptions.Init;
+      -- stop WDT -------------------------------------------------------------
+      MSP432P401R.WDTCTL := 16#5A84#;
       -- Console --------------------------------------------------------------
       -- Console.Console_Descriptor.Write := Console_Putchar'Access;
       -- Console.Console_Descriptor.Read  := Console_Getchar'Access;
       -------------------------------------------------------------------------
-      null;
+      ARMv7M.Irq_Enable;
+      ARMv7M.Fault_Irq_Enable;
+      SysTick_Init;
+      -------------------------------------------------------------------------
    end Setup;
 
 end BSP;

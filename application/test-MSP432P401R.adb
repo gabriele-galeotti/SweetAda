@@ -28,16 +28,18 @@ package body Application is
    -- Run
    ----------------------------------------------------------------------------
    procedure Run is
-      Delay_Count : constant := 100_000;
+      Delay_Count : constant := 300_000;
       Dummy       : Unsigned_8;
    begin
-      WDTCTL := 16#5A84#; -- stop WDT
-      -- blink on-board LED1
-      PADIR_L := PADIR_L or 16#01#;
-      Dummy := PAOUT_L;
+      -- blink on-board LED2
+      P2DIR_L := P2DIR_L or 16#07#;
+      Dummy := 0;
       while True loop
-         Dummy := Dummy xor 1;
-         PAOUT_L := Dummy;
+         P2OUT_L := Dummy;
+         Dummy := @ + 1;
+         if Dummy > 7 then
+            Dummy := 0;
+         end if;
          for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
       end loop;
       -------------------------------------------------------------------------
