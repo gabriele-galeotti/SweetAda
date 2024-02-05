@@ -127,7 +127,7 @@ format_string="%-${max_tmacro_length}s : constant %-${max_type_length}s:= %s;"
 
 gcc_output=$(                                                                     \
              printf "%s\n" "void ___(void) { }"                                 | \
-             ${CC} -E -P -dM -c -                                               | \
+             eval ${CC} -E -P -dM -c -                                          | \
              sed -e "s|^\(#define *\)\([A-Za-z_][0-9A-Za-z_]*\) *\(.*\)|\2=\3|"   \
             )
 
