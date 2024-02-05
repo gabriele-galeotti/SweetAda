@@ -38,8 +38,8 @@ OBJECTS :=
 ifneq ($(USE_LIBGCC),Y)
 LIB1ASMSRC       := lib1funcs.S
 LIBGCC_FUNCTIONS := mulsi3 udivsi3 umodsi3 divsi3 modsi3
-LIBGCC_SOURCES   := $(foreach f,$(LIBGCC_FUNCTIONS),L_$(f).S)
-OBJECTS          += $(foreach f,$(LIBGCC_FUNCTIONS),$(OBJ_DIRECTORY)/L_$(f).o)
+LIBGCC_SOURCES   := $(foreach f,$(LIBGCC_FUNCTIONS),L__$(f).S)
+OBJECTS          += $(foreach f,$(LIBGCC_FUNCTIONS),$(OBJ_DIRECTORY)/L__$(f).o)
 $(LIBGCC_SOURCES): %.S : $(LIB1ASMSRC)
 	$(call brief-command, \
         $(CPP) -o $@ -x assembler-with-cpp -P -CC -D$* $(LIB1ASMSRC) \

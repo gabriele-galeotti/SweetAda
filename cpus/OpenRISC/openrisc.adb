@@ -34,6 +34,68 @@ package body OpenRISC
    CRLF : String renames Definitions.CRLF;
 
    ----------------------------------------------------------------------------
+   -- SPRs generics
+   ----------------------------------------------------------------------------
+
+   generic
+      SPR : in SPR_Type;
+      type Register_Type is private;
+   function MFSPR
+      return Register_Type
+      with Inline => True;
+
+   generic
+      SPR : in SPR_Type;
+      type Register_Type is private;
+   procedure MTSPR
+      (Value : in Register_Type)
+      with Inline => True;
+
+   function MFSPR
+      return Register_Type
+      is
+      Result : Register_Type;
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        l.mfspr %0,r0,%1" & CRLF &
+                       "",
+           Outputs  => Register_Type'Asm_Output ("=r", Result),
+           Inputs   => SPR_Type'Asm_Input ("i", SPR),
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end MFSPR;
+
+   procedure MTSPR
+      (Value : in Register_Type)
+      is
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        l.mtspr r0,%0,%1" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Register_Type'Asm_Input ("r", Value),
+                        SPR_Type'Asm_Input ("i", SPR)
+                       ],
+           Clobber  => "",
+           Volatile => True
+          );
+   end MTSPR;
+
+pragma Style_Checks (Off);
+   function SR_Read return SR_Type
+      is function SPR_Read is new MFSPR (SR_REGNO, SR_Type); begin return SPR_Read; end SR_Read;
+   procedure SR_Write (Value : in SR_Type)
+      is procedure SPR_Write is new MTSPR (SR_REGNO, SR_Type); begin SPR_Write (Value); end SR_Write;
+   function VR_Read return VR_Type
+      is function SPR_Read is new MFSPR (VR_REGNO, VR_Type); begin return SPR_Read; end VR_Read;
+pragma Style_Checks (On);
+
+   ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
@@ -53,11 +115,11 @@ package body OpenRISC
    ----------------------------------------------------------------------------
    -- Intcontext_Get
    ----------------------------------------------------------------------------
-   function Intcontext_Get
-      return Intcontext_Type
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
       is
    begin
-      return 0; -- __TBD__
+      Intcontext := 0; -- __TBD__
    end Intcontext_Get;
 
    ----------------------------------------------------------------------------

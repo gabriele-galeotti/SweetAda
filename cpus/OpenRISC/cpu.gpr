@@ -30,11 +30,11 @@ library project Cpu is
       when others =>
          for Languages use ("Asm_Cpp");
          for Source_Files use (
-                               "L_mulsi3.S",
-                               "L_udivsi3.S",
-                               "L_umodsi3.S",
-                               "L_divsi3.S",
-                               "L_modsi3.S"
+                               "L__mulsi3.S",
+                               "L__udivsi3.S",
+                               "L__umodsi3.S",
+                               "L__divsi3.S",
+                               "L__modsi3.S"
                               );
    end case;
 
