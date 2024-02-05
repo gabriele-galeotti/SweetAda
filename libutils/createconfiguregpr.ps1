@@ -138,7 +138,7 @@ function LFPL_list
   $LFP_S_files = $false
   $LFP_C_files = $false
   $LFPL = ""
-  foreach ($f in $list)
+  foreach ($f in $list.Split(" "))
   {
      if ($f.Trim().EndsWith(".S") -and -not $LFP_S_files)
      {
