@@ -283,6 +283,8 @@ Interrupt237:   .long   0                       // 253
 Interrupt238:   .long   0                       // 254
 Interrupt239:   .long   0                       // 255
 
+                .sect   .text,"ax"
+
                 .thumb_func
                 .global systick_handler
 systick_handler:
