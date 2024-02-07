@@ -10,6 +10,8 @@
 
 #define __ASSEMBLER__ 1
 
+#include <configure.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 
                 .option arch,+zicsr,+zifencei
@@ -39,10 +41,13 @@ _start:
                 csrw    mideleg,zero
 
                 //
-                // Allow only hart #0.
+                // Boot the selected hart.
                 //
+                li      t1,BOOT_HART
                 csrr    t0,mhartid
-                bnez    t0,hart_idle
+                beq     t0,t1,1f
+                j       hart_idle
+1:
 
                 //
                 // Setup stack pointer.
@@ -54,12 +59,12 @@ _start:
                 //
                 .extern _sbss
                 .extern _ebss
-                la      a0,_sbss
-                la      a1,_ebss
-                ble     a1,a0,2f
-1:              sw      zero,(a0)
-                add     a0,a0,__SIZEOF_POINTER__
-                blt     a0,a1,1b
+                la      t0,_sbss
+                la      t1,_ebss
+                ble     t1,t0,2f
+1:              sw      zero,(t0)
+                add     t0,t0,__SIZEOF_POINTER__
+                blt     t0,t1,1b
 2:
 
                 //

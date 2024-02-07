@@ -9,6 +9,7 @@ package Configure
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
+   BOOT_HART      : constant := @BOOT_HART@;
    TICK_FREQUENCY : constant := 1_000;
 
    -- IOEMU
