@@ -14,7 +14,7 @@
 
                 .syntax unified
 
-                .sect   .text,"ax"
+                .sect   .vectors,"ax"
 
                 .align  7
 
@@ -149,6 +149,8 @@ Interrupt106:   .long   0                       // 122 CAN3_RX1           CAN3 R
 Interrupt107:   .long   0                       // 123 CAN3_SCE           CAN3 SCE interrupt
 Interrupt108:   .long   0                       // 124 JPEG               JPEG global interrupt
 Interrupt109:   .long   0                       // 125 MDIOS              MDIO slave global interrupt
+
+                .sect   .text,"ax"
 
                 .thumb_func
 systick_handler:
