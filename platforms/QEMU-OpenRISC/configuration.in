@@ -31,8 +31,9 @@ OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 POSTBUILD_ROMFILE         :=
 
-CONFIGURE_FILES_PLATFORM := configure.ads configure.h
-LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+CONFIGURE_FILES_PLATFORM       := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S
+GCC_SWITCHES_LOWLEVEL_PLATFORM := -Wa,-g
 
 ################################################################################
 # User parameters.                                                             #

@@ -25,6 +25,23 @@ _start:
                 l.ori   r1,r1,lo(kernel_stack)
 
                 //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                l.movhi r13,hi(_sbss)
+                l.ori   r13,r13,lo(_sbss)
+                l.movhi r15,hi(_ebss)
+                l.ori   r15,r15,lo(_ebss)
+1:              l.sfgeu r13,r15
+                l.bf    2f
+                l.addi  r13,r13,4
+                l.sw    0(r13),r0
+                l.j     1b
+                l.nop
+2:
+
+                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main
