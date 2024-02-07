@@ -375,9 +375,9 @@ endif
 export GCC_WRAPPER_TIMESTAMP_FILENAME
 export GNAT_WRAPPER_TIMESTAMP_FILENAME
 
-ifeq ($(BUILD_MODE),GNATMAKE)
 ADAC     += -wrapper "$(GCC_WRAPPER)"
 CC       += -wrapper "$(GCC_WRAPPER)"
+ifeq ($(BUILD_MODE),GNATMAKE)
 GNATMAKE += --GCC="$(GNAT_WRAPPER)" -cargs -wrapper "$(GCC_WRAPPER)" -margs
 endif
 
