@@ -41,7 +41,8 @@ package body Application is
       -------------------------------------------------------------------------
       if True then
          declare
-            Value : Unsigned_8 := 16#10#;
+            Value          : Unsigned_8 := 16#10#;
+            Direction_Left : Boolean := True;
             procedure Wait;
             procedure Wait is
                X : Unsigned_32 with Volatile => True;
@@ -49,15 +50,22 @@ package body Application is
                X := 0;
                loop
                   X := @ + 1;
-                  exit when X = 16#8000#;
+                  exit when X = 16#4000#;
                end loop;
             end Wait;
          begin
             loop
                LEDPORT := not Value;
-               Value := Rotate_Left (Value, 1);
-               if Value = 1 then
-                  Value := 16#10#;
+               if Direction_Left = True then
+                  Value := Rotate_Left (Value, 1);
+               else
+                  Value := Rotate_Right (Value, 1);
+               end if;
+               if Value = 16#80# then
+                  Direction_Left := False;
+               end if;
+               if Value = 16#10# then
+                  Direction_Left := True;
                end if;
                UART16x50.TX (BSP.UART_Descriptor, To_U8 ('.'));
                Wait;
