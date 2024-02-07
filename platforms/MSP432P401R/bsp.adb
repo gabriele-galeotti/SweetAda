@@ -32,6 +32,7 @@ package body BSP
    --========================================================================--
 
    use Bits;
+   use MSP432P401R;
 
    procedure SysTick_Init;
 
@@ -87,7 +88,14 @@ package body BSP
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- stop WDT -------------------------------------------------------------
-      MSP432P401R.WDTCTL := 16#5A84#;
+      MSP432P401R.WDTCTL := (
+         WDTIS    => WDTIS_DIV2E15,
+         WDTCNTCL => False,
+         WDTTMSEL => WDTTMSEL_WATCHDOG,
+         WDTSSEL  => WDTSSEL_SMCLK,
+         WDTHOLD  => True,
+         WDTPW    => WDTPW_PASSWD
+         );
       -- Console --------------------------------------------------------------
       -- Console.Console_Descriptor.Write := Console_Putchar'Access;
       -- Console.Console_Descriptor.Read  := Console_Getchar'Access;
