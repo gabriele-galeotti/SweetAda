@@ -91,6 +91,14 @@ pragma Style_Checks (Off);
       is function SPR_Read is new MFSPR (SR_REGNO, SR_Type); begin return SPR_Read; end SR_Read;
    procedure SR_Write (Value : in SR_Type)
       is procedure SPR_Write is new MTSPR (SR_REGNO, SR_Type); begin SPR_Write (Value); end SR_Write;
+   function TTMR_Read return TTMR_Type
+      is function SPR_Read is new MFSPR (TTMR_REGNO, TTMR_Type); begin return SPR_Read; end TTMR_Read;
+   procedure TTMR_Write (Value : in TTMR_Type)
+      is procedure SPR_Write is new MTSPR (TTMR_REGNO, TTMR_Type); begin SPR_Write (Value); end TTMR_Write;
+   function TTCR_Read return Unsigned_32
+      is function SPR_Read is new MFSPR (TTCR_REGNO, Unsigned_32); begin return SPR_Read; end TTCR_Read;
+   procedure TTCR_Write (Value : in Unsigned_32)
+      is procedure SPR_Write is new MTSPR (TTCR_REGNO, Unsigned_32); begin SPR_Write (Value); end TTCR_Write;
    function VR_Read return VR_Type
       is function SPR_Read is new MFSPR (VR_REGNO, VR_Type); begin return SPR_Read; end VR_Read;
 pragma Style_Checks (On);

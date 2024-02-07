@@ -110,6 +110,44 @@ package OpenRISC
    function To_U32 is new Ada.Unchecked_Conversion (SR_Type, Unsigned_32);
    function To_SR is new Ada.Unchecked_Conversion (Unsigned_32, SR_Type);
 
+   -- 15.4 Tick Timer Mode Register (TTMR)
+
+   M_DISABLED : constant := 2#00#; -- Tick timer is disabled
+   M_RESTART  : constant := 2#01#; -- Timer is restarted when TTMR[TP] matches TTCR[27:0]
+   M_STOP     : constant := 2#10#; -- Timer stops when TTMR[TP] matches TTCR[27:0] (change TTCR to resume counting)
+   M_NONSTOP  : constant := 2#11#; -- Timer does not stop when TTMR[TP] matches TTCR[27:0]
+
+   type TTMR_Type is record
+      TP : Bits_28; -- Time Period
+      IP : Boolean; -- Interrupt Pending
+      IE : Boolean; -- Interrupt Enable
+      M  : Bits_2;  -- Mode
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TTMR_Type use record
+      TP at 0 range  0 .. 27;
+      IP at 0 range 28 .. 28;
+      IE at 0 range 29 .. 29;
+      M  at 0 range 30 .. 31;
+   end record;
+
+   function TTMR_Read
+      return TTMR_Type
+      with Inline => True;
+   procedure TTMR_Write
+      (Value : in TTMR_Type)
+      with Inline => True;
+
+   -- 15.5 Tick Timer Count Register (TTCR)
+
+   function TTCR_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure TTCR_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
+
    -- 16.2 Version Register (VR)
 
    type VR_Type is record
