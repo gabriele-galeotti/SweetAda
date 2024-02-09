@@ -150,9 +150,9 @@ elif [ "x$1" = "x-debug" ] ; then
     -q \
     -iex "set basenames-may-differ" \
     -iex "set architecture i386" \
-    ${KERNEL_OUTFILE} \
     -ex "target remote tcp:localhost:1234" \
-    -ex "break _start" -ex "continue"
+    -ex "break _start" -ex "continue" \
+    ${KERNEL_OUTFILE}
 fi
 
 exit $?

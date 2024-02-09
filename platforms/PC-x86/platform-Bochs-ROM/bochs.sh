@@ -93,9 +93,9 @@ elif [ "x$1" = "x-debug" ] ; then
   GDB_ARGS=()
   GDB_ARGS+=("-iex" "set basenames-may-differ")
   GDB_ARGS+=("-iex" "set architecture i386")
-  GDB_ARGS+=(${KERNEL_OUTFILE})
   GDB_ARGS+=("-ex" "target remote tcp:localhost:1234")
-  GDB_ARGS+=("-ex" "break _start" "-ex" "continue")
+  GDB_ARGS+=("-ex" "tbreak _start" "-ex" "continue")
+  GDB_ARGS+=(${KERNEL_OUTFILE})
   "${GDB_EXEC}" "${GDB_ARGS[@]}"
 fi
 

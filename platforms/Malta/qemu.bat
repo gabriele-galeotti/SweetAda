@@ -77,8 +77,8 @@ IF "%1"=="-debug" (
   -iex "set new-console on" ^
   -iex "set basenames-may-differ" ^
   -iex "set architecture %GDB_ARCH%" ^
-  %KERNEL_OUTFILE% ^
-  -ex "target remote tcp:localhost:1234"
+  -ex "target remote tcp:localhost:1234" ^
+  %KERNEL_OUTFILE%
   ) ELSE (
   CALL :QEMUWAIT
   )

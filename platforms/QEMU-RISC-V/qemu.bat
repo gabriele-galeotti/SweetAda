@@ -77,10 +77,10 @@ IF "%1"=="-debug" (
   "%GDB%" -q ^
   -iex "set new-console on" ^
   -iex "set basenames-may-differ" ^
-  %KERNEL_OUTFILE% ^
   -ex "target extended-remote tcp:localhost:1234" ^
-  -ex "break *0x80000000" ^
-  -ex "continue"
+  -ex "tbreak *0x80000000" ^
+  -ex "continue" ^
+  %KERNEL_OUTFILE%
   ) ELSE (
   CALL :QEMUWAIT
   )

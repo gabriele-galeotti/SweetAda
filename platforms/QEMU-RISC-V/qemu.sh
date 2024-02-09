@@ -147,10 +147,10 @@ elif [ "x$1" = "x-debug" ] ; then
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
-    ${KERNEL_OUTFILE} \
     -ex "target extended-remote tcp:localhost:1234" \
-    -ex "break *0x80000000" \
-    -ex "continue"
+    -ex "tbreak *0x80000000" \
+    -ex "continue" \
+    ${KERNEL_OUTFILE}
 fi
 
 exit $?

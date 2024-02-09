@@ -139,8 +139,8 @@ elif [ "x$1" = "x-debug" ] ; then
     -iex "set basenames-may-differ" \
     -iex "set architecture armv5te" \
     -iex "set endian little" \
-    ${KERNEL_OUTFILE} \
-    -ex "target remote tcp:localhost:1234"
+    -ex "target remote tcp:localhost:1234" \
+    ${KERNEL_OUTFILE}
 fi
 
 exit $?

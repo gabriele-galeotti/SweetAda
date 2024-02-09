@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# Integrator/CP (QEMU emulator).
+# QEMU-OpenRISC (QEMU emulator).
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
@@ -137,8 +137,8 @@ elif [ "x$1" = "x-debug" ] ; then
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
-    ${KERNEL_OUTFILE} \
-    -ex "target remote tcp:localhost:1234"
+    -ex "target remote tcp:localhost:1234" \
+    ${KERNEL_OUTFILE}
 fi
 
 exit $?

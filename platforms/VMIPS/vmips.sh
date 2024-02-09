@@ -55,8 +55,8 @@ elif [ "x$1" = "x-debug" ] ; then
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
-    ${KERNEL_OUTFILE} \
-    -ex "target remote tcp:localhost:1234"
+    -ex "target remote tcp:localhost:1234" \
+    ${KERNEL_OUTFILE}
 fi
 
 exit 0
