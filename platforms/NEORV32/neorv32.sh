@@ -36,7 +36,7 @@ SCRIPT_FILENAME=$(basename "$0")
 
 # as a prerequisite, go into the "<NEORV32_HOME>/sw/example/hello_world"
 # directory an do a "make ../../../sw/image_gen/image_gen" to create the
-# executable used in translating the Sweetada binary image
+# executable used in translating the SweetAda binary image
 
 # paths and filenames extracted from "<NEORV32_HOME>/sw/common/common.mk"
 NEORV32_RTL_PATH="${NEORV32_HOME}"/rtl/core

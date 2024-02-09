@@ -89,7 +89,7 @@ if [ "x${OUTPUT_FILENAME}" = "x" ] ; then
 fi
 shift
 if [ "x$1" = "x" ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: no items supplied."
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no items specified."
   exit 1
 fi
 
