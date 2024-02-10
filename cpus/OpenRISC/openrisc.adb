@@ -120,6 +120,16 @@ pragma Style_Checks (On);
           );
    end NOP;
 
+   procedure TEE_Enable
+      (Enable : in Boolean)
+      is
+      SR : SR_Type;
+   begin
+      SR := SR_Read;
+      SR.TEE := Enable;
+      SR_Write (SR);
+   end TEE_Enable;
+
    ----------------------------------------------------------------------------
    -- Intcontext_Get
    ----------------------------------------------------------------------------

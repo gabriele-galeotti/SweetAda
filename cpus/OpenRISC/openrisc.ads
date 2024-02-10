@@ -180,6 +180,10 @@ package OpenRISC
    procedure NOP
       with Inline => True;
 
+   procedure TEE_Enable
+      (Enable : in Boolean)
+      with Inline => True;
+
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------

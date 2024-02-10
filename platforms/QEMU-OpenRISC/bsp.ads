@@ -37,6 +37,7 @@ package BSP
 
    UART_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
 
+   procedure Tick_Timer_Init;
    procedure Console_Putchar
       (C : in Character);
    procedure Console_Getchar

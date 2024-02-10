@@ -15,8 +15,23 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+with OpenRISC;
+with BSP;
+with Console;
+
 package body Exceptions
    is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use Interfaces;
 
    --========================================================================--
    --                                                                        --
@@ -25,6 +40,26 @@ package body Exceptions
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Irq_Process
+   ----------------------------------------------------------------------------
+   procedure Irq_Process
+      is
+      TTMR : OpenRISC.TTMR_Type;
+   begin
+      OpenRISC.TTMR_Write ((
+         TP => 0,
+         IP => False,
+         IE => False,
+         M  => OpenRISC.M_DISABLED
+         ));
+      BSP.Tick_Count := @ + 1;
+      if (BSP.Tick_Count and 16#FF#) = 1 then
+         Console.Print ("*** T ***", NL => True);
+      end if;
+      BSP.Tick_Timer_Init;
+   end Irq_Process;
 
    ----------------------------------------------------------------------------
    -- Init

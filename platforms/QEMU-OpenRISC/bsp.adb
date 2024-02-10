@@ -71,6 +71,21 @@ package body BSP
    end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
+   -- Tick_Timer_Init
+   ----------------------------------------------------------------------------
+   procedure Tick_Timer_Init
+      is
+   begin
+      OpenRISC.TTMR_Write ((
+         TP => 16#0008_0000#,
+         IP => False,
+         IE => True,
+         M  => OpenRISC.M_STOP
+         ));
+      OpenRISC.TTCR_Write (0);
+   end Tick_Timer_Init;
+
+   ----------------------------------------------------------------------------
    -- Console wrappers
    ----------------------------------------------------------------------------
 
@@ -114,6 +129,9 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print ("OpenRISC " & Configure.CPU_MODEL & " (QEMU emulator)", NL => True);
       Console.Print (OpenRISC.To_U32 (OpenRISC.VR_Read), Prefix => "VR: ", NL => True);
+      -------------------------------------------------------------------------
+      OpenRISC.TEE_Enable (True);
+      Tick_Timer_Init;
       -------------------------------------------------------------------------
    end Setup;
 
