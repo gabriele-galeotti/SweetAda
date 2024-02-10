@@ -17,7 +17,6 @@
 
 with System;
 with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Interfaces.C;
 
@@ -678,18 +677,6 @@ package Bits
        Amount : Natural)
       return Interfaces.Unsigned_64
       renames Interfaces.Rotate_Right;
-
-   -- Unsigned => Signed
-   function Signed is new Ada.Unchecked_Conversion (Interfaces.Unsigned_8, Interfaces.Integer_8);
-   function Signed is new Ada.Unchecked_Conversion (Interfaces.Unsigned_16, Interfaces.Integer_16);
-   function Signed is new Ada.Unchecked_Conversion (Interfaces.Unsigned_32, Interfaces.Integer_32);
-   function Signed is new Ada.Unchecked_Conversion (Interfaces.Unsigned_64, Interfaces.Integer_64);
-
-   -- Signed => Unsigned
-   function Unsigned is new Ada.Unchecked_Conversion (Interfaces.Integer_8, Interfaces.Unsigned_8);
-   function Unsigned is new Ada.Unchecked_Conversion (Interfaces.Integer_16, Interfaces.Unsigned_16);
-   function Unsigned is new Ada.Unchecked_Conversion (Interfaces.Integer_32, Interfaces.Unsigned_32);
-   function Unsigned is new Ada.Unchecked_Conversion (Interfaces.Integer_64, Interfaces.Unsigned_64);
 
    -- CPU_Unsigned
    function Shift_Left
