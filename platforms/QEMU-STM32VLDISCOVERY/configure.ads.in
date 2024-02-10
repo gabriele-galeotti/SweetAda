@@ -8,7 +8,7 @@ package Configure
    use Definitions;
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "STM32VLDISCOVERY";
+   PLATFORM  : constant String := "QEMU-STM32VLDISCOVERY";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
