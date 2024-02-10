@@ -237,7 +237,8 @@ foreach ($i in $items)
       }
     }
   }
-  $declstring = "$($indent)$($i_tmacro)$($mseparator) : constant $($i_type)$($tseparator):= $($value);"
+  $declstring = `
+    "$($indent)$($i_tmacro)$($mseparator) : constant $($i_type)$($tseparator):= $($value);"
   Add-Content -Path $output_filename -Value "$($declstring)"
 }
 

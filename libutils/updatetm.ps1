@@ -68,7 +68,8 @@ if ([string]::IsNullOrEmpty($input_filename))
 $file = Get-Item -Path $input_filename
 if ($reffile)
 {
-  $file.LastWriteTime = (Get-ChildItem -Path $reffile_filename | Select LastWriteTime | Get-Date)
+  $file.LastWriteTime = `
+    (Get-ChildItem -Path $reffile_filename | Select LastWriteTime | Get-Date)
 }
 else
 {
