@@ -153,6 +153,8 @@ Interrupt109:   .long   0                       // 125 MDIOS              MDIO s
                 .sect   .text,"ax"
 
                 .thumb_func
+                .type   systick_handler,%function
+                .global systick_handler
 systick_handler:
                 push    {lr}
                 .extern irq_process
