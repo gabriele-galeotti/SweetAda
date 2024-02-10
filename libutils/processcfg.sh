@@ -106,7 +106,7 @@ if [ "x${SYMBOLS}" != "x" ] ; then
       *)
         ;;
     esac
-    value=$(eval printf \"%s\" \"\$${variable}\")
+    value=$(eval printf \"%s\" \"\$${variable}\" 2> /dev/null)
     if [ "x${value}" = "x" ] ; then
       if [ "x${optional}" != "xY" ] ; then
         log_print_error "${SCRIPT_FILENAME}: *** Warning: variable \"${variable}\" has no value."
