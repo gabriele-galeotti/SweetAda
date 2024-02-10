@@ -141,6 +141,19 @@ function SetTimeOfSymlink
 #                                                                              #
 ################################################################################
 
+# check if we can use $IsWindows
+if ($PSVersionTable.PSVersion.Major -eq "5")
+{
+  if ([System.Environment]::OSVersion.Platform -eq "Win32NT")
+  {
+    $IsWindows = $true
+  }
+  else
+  {
+    $IsWindows = $false
+  }
+}
+
 # check environment variable for verbosity
 $verbose = $(GetEnvVar VERBOSE)
 
@@ -205,10 +218,10 @@ while ($fileindex -lt $args.length)
     $link_name = $args[$fileindex + 1]
     Remove-Item -Path $link_name -Force -ErrorAction Ignore
     New-Item -ItemType SymbolicLink -Path $link_name -Target $target | Out-Null
-    #if ($IsWindows)
-    #{
+    if ($IsWindows)
+    {
       SetTimeOfSymlink $link_name $target
-    #}
+    }
     if ($verbose -eq "Y")
     {
       Write-Host "${link_name} -> ${target}"
@@ -221,22 +234,28 @@ while ($fileindex -lt $args.length)
   else
   {
     $link_directory = $args[$fileindex + 1]
-    $files = Get-ChildItem $target
+    $files = (Get-ChildItem -File $target).Name
     foreach ($f in $files)
     {
-      Remove-Item -Path $link_directory\$f -Force -ErrorAction Ignore
-      New-Item -ItemType SymbolicLink -Path $link_directory\$f -Target $target\$f | Out-Null
-      #if ($IsWindows)
-      #{
+      Remove-Item                                             `
+        -Path (Join-Path -Path $link_directory -ChildPath $f) `
+        -Force -ErrorAction Ignore
+      New-Item                                                                       `
+        -ItemType SymbolicLink -Path (Join-Path -Path $link_directory -ChildPath $f) `
+        -Target (Join-Path -Path $target -ChildPath $f)                              `
+        | Out-Null
+      if ($IsWindows)
+      {
         SetTimeOfSymlink $link_name $target
-      #}
+      }
       if ($verbose -eq "Y")
       {
-        Write-Host "${link_directory}\${f} -> ${target}\${f}"
+        Write-Host "${link_directory}/${f} -> ${target}/${f}"
       }
       if (![string]::IsNullOrEmpty($filelist_filename))
       {
-        "INSTALLED_FILENAMES += ${link_directory}\${f}" | Add-Content $filelist_filename
+        "INSTALLED_FILENAMES += $(Join-Path -Path $link_directory -ChildPath $f)" `
+        | Add-Content $filelist_filename
       }
     }
   }
