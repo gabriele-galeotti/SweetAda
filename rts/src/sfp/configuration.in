@@ -27,6 +27,7 @@ LIBGNAT_SRCS_COMMON += s-imagei.ads s-imagei.adb
 LIBGNAT_SRCS_COMMON += s-imgboo.ads s-imgboo.adb
 LIBGNAT_SRCS_COMMON += s-imgint.ads
 LIBGNAT_SRCS_COMMON += s-imglli.ads
+LIBGNAT_SRCS_COMMON += s-imguns.ads s-imguns.adb
 LIBGNAT_SRCS_COMMON += ../common/s-maccod.ads
 LIBGNAT_SRCS_COMMON += s-multip.ads s-multip.adb
 LIBGNAT_SRCS_COMMON += s-parame.ads
