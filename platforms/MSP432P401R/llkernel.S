@@ -286,6 +286,7 @@ Interrupt239:   .long   0                       // 255
                 .sect   .text,"ax"
 
                 .thumb_func
+                .type   systick_handler,%function
                 .global systick_handler
 systick_handler:
                 push    {lr}
