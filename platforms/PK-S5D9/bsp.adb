@@ -23,7 +23,8 @@ with CortexM4;
 with S5D9;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -54,7 +55,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- CLK_Init
    ----------------------------------------------------------------------------
-   procedure CLK_Init is
+   procedure CLK_Init
+      is
    begin
       -- select MOCO
       SCKSCR.CKSEL := CLK_MOCO;
@@ -118,7 +120,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- SysTick_Init
    ----------------------------------------------------------------------------
-   procedure SysTick_Init is
+   procedure SysTick_Init
+      is
    begin
       ARMv7M.SYST_RVR.RELOAD := 16#8000#;
       ARMv7M.SHPR3.PRI_15 := 16#FF#;
@@ -136,7 +139,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- UART on J7: UART_RXD3 port P706, UART_TXD3 port P707
    ----------------------------------------------------------------------------
-   procedure Serial_Console_Init is
+   procedure Serial_Console_Init
+      is
    begin
       -- 34.3.7 SCI Initialization in Asynchronous Mode
       SCI (3).SCR := (
@@ -205,7 +209,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- QSPI_Init
    ----------------------------------------------------------------------------
-   procedure QSPI_Init is
+   procedure QSPI_Init
+      is
    begin
       -- pins 500..505 function = QSPI
       for P5x in P500 .. P505 loop
@@ -216,7 +221,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- QSPI_Test
    ----------------------------------------------------------------------------
-   procedure QSPI_Test is
+   procedure QSPI_Test
+      is
       RDID  : constant := 16#9F#;
       mfid  : Unsigned_8; -- “Manufacturer Identification”
       mtype : Unsigned_8; -- “Memory Type”
@@ -238,7 +244,9 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       -- wait for transmitter available
       loop
@@ -247,7 +255,9 @@ package body BSP is
       SCI (3).TDR := To_U8 (C);
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       -- wait for receiver available
@@ -261,7 +271,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -- unlock registers -----------------------------------------------------
       PRCR := (

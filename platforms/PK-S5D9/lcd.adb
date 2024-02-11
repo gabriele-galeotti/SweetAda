@@ -17,7 +17,8 @@
 
 with S5D9;
 
-package body LCD is
+package body LCD
+   is
 
    --========================================================================--
    --                                                                        --
@@ -54,7 +55,8 @@ package body LCD is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
       Delay_Count : constant := 10_000_000;
    begin
       -- configure simple SPI on SCI0

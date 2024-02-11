@@ -17,7 +17,8 @@
 
 with S5D9;
 
-package body Touchscreen is
+package body Touchscreen
+   is
 
    --========================================================================--
    --                                                                        --
@@ -42,7 +43,8 @@ package body Touchscreen is
    ----------------------------------------------------------------------------
    -- SX8676IWLTRT
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
       Pinf : PFSR_Type;
    begin
       -- ADDRESS = 0x48

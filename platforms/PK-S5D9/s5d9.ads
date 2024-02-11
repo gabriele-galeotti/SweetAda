@@ -47,19 +47,17 @@ package S5D9 is
 
    -- 6.2.1 Reset Status Register 0 (RSTSR0)
 
-   type RSTSR0_Type is
-   record
+   type RSTSR0_Type is record
       PORF     : Boolean;     -- Power-On Reset Detect Flag
       LVD0RF   : Boolean;     -- Voltage Monitor 0 Reset Detect Flag
       LVD1RF   : Boolean;     -- Voltage Monitor 1 Reset Detect Flag
       LVD2RF   : Boolean;     -- Voltage Monitor 2 Reset Detect Flag
       Reserved : Bits_3 := 0;
       DPSRSTF  : Boolean;     -- Deep Software Standby Reset Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RSTSR0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RSTSR0_Type use record
       PORF     at 0 range 0 .. 0;
       LVD0RF   at 0 range 1 .. 1;
       LVD1RF   at 0 range 2 .. 2;
@@ -70,16 +68,15 @@ package S5D9 is
 
    RSTSR0_ADDRESS : constant := 16#4001_E410#;
 
-   RSTSR0 : aliased RSTSR0_Type with
-      Address              => To_Address (RSTSR0_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RSTSR0 : aliased RSTSR0_Type
+      with Address              => To_Address (RSTSR0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 6.2.2 Reset Status Register 1 (RSTSR1)
 
-   type RSTSR1_Type is
-   record
+   type RSTSR1_Type is record
       IWDTRF    : Boolean;     -- Independent Watchdog Timer Reset Detect Flag
       WDTRF     : Boolean;     -- Watchdog Timer Reset Detect Flag
       SWRF      : Boolean;     -- Software Reset Detect Flag
@@ -90,11 +87,10 @@ package S5D9 is
       BUSMRF    : Boolean;     -- Bus Master MPU Error Reset Detect Flag
       SPERF     : Boolean;     -- SP Error Reset Detect Flag
       Reserved2 : Bits_3 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for RSTSR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RSTSR1_Type use record
       IWDTRF    at 0 range  0 ..  0;
       WDTRF     at 0 range  1 ..  1;
       SWRF      at 0 range  2 ..  2;
@@ -117,26 +113,24 @@ package S5D9 is
 
    -- 6.2.3 Reset Status Register 2 (RSTSR2)
 
-   type RSTSR2_Type is
-   record
+   type RSTSR2_Type is record
       CWSF     : Boolean;     -- Cold/Warm Start Determination Flag
       Reserved : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for RSTSR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RSTSR2_Type use record
       CWSF     at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
 
    RSTSR2_ADDRESS : constant := 16#4001_E411#;
 
-   RSTSR2 : aliased RSTSR2_Type with
-      Address              => To_Address (RSTSR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RSTSR2 : aliased RSTSR2_Type
+      with Address              => To_Address (RSTSR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 9. Clock Generation Circuit
@@ -152,8 +146,7 @@ package S5D9 is
    CLOCK_DIV_32 : constant := 2#101#; -- ×1/32
    CLOCK_DIV_64 : constant := 2#110#; -- ×1/64.
 
-   type SCKDIVCR_Type is
-   record
+   type SCKDIVCR_Type is record
       PCKD      : Bits_3;      -- Peripheral Module Clock D
       Reserved1 : Bits_1 := 0;
       PCKC      : Bits_3;      -- Peripheral Module Clock C
@@ -168,11 +161,10 @@ package S5D9 is
       Reserved6 : Bits_1 := 0;
       FCK       : Bits_3;      -- Flash Interface Clock
       Reserved7 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SCKDIVCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SCKDIVCR_Type use record
       PCKD      at 0 range  0 ..  2;
       Reserved1 at 0 range  3 ..  3;
       PCKC      at 0 range  4 ..  6;
@@ -191,11 +183,11 @@ package S5D9 is
 
    SCKDIVCR_ADDRESS : constant := 16#4001_E020#;
 
-   SCKDIVCR : aliased SCKDIVCR_Type with
-      Address              => To_Address (SCKDIVCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SCKDIVCR : aliased SCKDIVCR_Type
+      with Address              => To_Address (SCKDIVCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.2 System Clock Division Control Register 2 (SCKDIVCR2)
 
@@ -203,16 +195,14 @@ package S5D9 is
    UCK_DIV4 : constant := 2#011#; -- ×1/4
    UCK_DIV5 : constant := 2#100#; -- ×1/5.
 
-   type SCKDIVCR2_Type is
-   record
+   type SCKDIVCR2_Type is record
       Reserved1 : Bits_4 := 0;
       UCK       : Bits_3;      -- USB Clock (UCLK) Select
       Reserved2 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SCKDIVCR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SCKDIVCR2_Type use record
       Reserved1 at 0 range 0 .. 3;
       UCK       at 0 range 4 .. 6;
       Reserved2 at 0 range 7 .. 7;
@@ -220,11 +210,11 @@ package S5D9 is
 
    SCKDIVCR2_ADDRESS : constant := 16#4001_E024#;
 
-   SCKDIVCR2 : aliased SCKDIVCR2_Type with
-      Address              => To_Address (SCKDIVCR2_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SCKDIVCR2 : aliased SCKDIVCR2_Type
+      with Address              => To_Address (SCKDIVCR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.3 System Clock Source Control Register (SCKSCR)
 
@@ -235,26 +225,24 @@ package S5D9 is
    CLK_SOSC : constant := 2#100#; -- Sub-clock oscillator
    CLK_PLL  : constant := 2#101#; -- PLL
 
-   type SCKSCR_Type is
-   record
+   type SCKSCR_Type is record
       CKSEL     : Bits_3;      -- Clock Source Select
       Reserved1 : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SCKSCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SCKSCR_Type use record
       CKSEL     at 0 range 0 .. 2;
       Reserved1 at 0 range 3 .. 7;
    end record;
 
    SCKSCR_ADDRESS : constant := 16#4001_E026#;
 
-   SCKSCR : aliased SCKSCR_Type with
-      Address              => To_Address (SCKSCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SCKSCR : aliased SCKSCR_Type
+      with Address              => To_Address (SCKSCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.4 PLL Clock Control Register (PLLCCR)
 
@@ -307,19 +295,17 @@ package S5D9 is
    PLLMUL_x_29_5 : constant := 2#111010#;
    PLLMUL_x_30_0 : constant := 2#111011#;
 
-   type PLLCCR_Type is
-   record
+   type PLLCCR_Type is record
       PLIDIV    : Bits_2;      -- PLL Input Frequency Division Ratio Select
       Reserved1 : Bits_2 := 0;
       PLSRCSEL  : Bits_1;      -- PLL Clock Source Select
       Reserved2 : Bits_3 := 0;
       PLLMUL    : Bits_6;      -- PLL Frequency Multiplication Factor Select
       Reserved3 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for PLLCCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PLLCCR_Type use record
       PLIDIV    at 0 range  0 ..  1;
       Reserved1 at 0 range  2 ..  3;
       PLSRCSEL  at 0 range  4 ..  4;
@@ -330,142 +316,130 @@ package S5D9 is
 
    PLLCCR_ADDRESS : constant := 16#4001_E028#;
 
-   PLLCCR : aliased PLLCCR_Type with
-      Address              => To_Address (PLLCCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PLLCCR : aliased PLLCCR_Type
+      with Address              => To_Address (PLLCCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.5 PLL Control Register (PLLCR)
 
-   type PLLCR_Type is
-   record
+   type PLLCR_Type is record
       PLLSTP   : Boolean;     -- PLL Stop Control
       Reserved : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PLLCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PLLCR_Type use record
       PLLSTP   at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
 
    PLLCR_ADDRESS : constant := 16#4001_E02A#;
 
-   PLLCR : aliased PLLCR_Type with
-      Address              => To_Address (PLLCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PLLCR : aliased PLLCR_Type
+      with Address              => To_Address (PLLCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.7 Main Clock Oscillator Control Register (MOSCCR)
 
-   type MOSCCR_Type is
-   record
+   type MOSCCR_Type is record
       MOSTP    : Boolean;     -- Main Clock Oscillator Stop
       Reserved : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MOSCCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MOSCCR_Type use record
       MOSTP    at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
 
    MOSCCR_ADDRESS : constant := 16#4001_E032#;
 
-   MOSCCR : aliased MOSCCR_Type with
-      Address              => To_Address (MOSCCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MOSCCR : aliased MOSCCR_Type
+      with Address              => To_Address (MOSCCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.8 Subclock Oscillator Control Register (SOSCCR)
 
-   type SOSCCR_Type is
-   record
+   type SOSCCR_Type is record
       SOSTP    : Boolean;     -- Sub-Clock Oscillator Stop
       Reserved : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SOSCCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SOSCCR_Type use record
       SOSTP    at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
 
    SOSCCR_ADDRESS : constant := 16#4001_E480#;
 
-   SOSCCR : aliased SOSCCR_Type with
-      Address              => To_Address (SOSCCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SOSCCR : aliased SOSCCR_Type
+      with Address              => To_Address (SOSCCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.9 Low-Speed On-Chip Oscillator Control Register (LOCOCR)
 
-   type LOCOCR_Type is
-   record
+   type LOCOCR_Type is record
       LCSTP    : Boolean;     -- LOCO Stop
       Reserved : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for LOCOCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LOCOCR_Type use record
       LCSTP    at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
 
    LOCOCR_ADDRESS : constant := 16#4001_E490#;
 
-   LOCOCR : aliased LOCOCR_Type with
-      Address              => To_Address (LOCOCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   LOCOCR : aliased LOCOCR_Type
+      with Address              => To_Address (LOCOCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.10 High-Speed On-Chip Oscillator Control Register (HOCOCR)
 
-   type HOCOCR_Type is
-   record
+   type HOCOCR_Type is record
       HCSTP    : Boolean;     -- HOCO Stop
       Reserved : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for HOCOCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for HOCOCR_Type use record
       HCSTP    at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
 
    HOCOCR_ADDRESS : constant := 16#4001_E036#;
 
-   HOCOCR : aliased HOCOCR_Type with
-      Address              => To_Address (HOCOCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   HOCOCR : aliased HOCOCR_Type
+      with Address              => To_Address (HOCOCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.15 Oscillation Stabilization Flag Register (OSCSF)
 
-   type OSCSF_Type is
-   record
+   type OSCSF_Type is record
       HOCOSF    : Boolean;     -- HOCO Clock Oscillation Stabilization Flag
       Reserved1 : Bits_2 := 0;
       MOSCSF    : Boolean;     -- Main Clock Oscillation Stabilization Flag
       Reserved2 : Bits_1 := 0;
       PLLSF     : Boolean;     -- PLL Clock Oscillation Stabilization Flag
       Reserved3 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for OSCSF_Type use
-      record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for OSCSF_Type use record
       HOCOSF    at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 2;
       MOSCSF    at 0 range 3 .. 3;
@@ -476,11 +450,11 @@ package S5D9 is
 
    OSCSF_ADDRESS : constant := 16#4001_E03C#;
 
-   OSCSF : aliased OSCSF_Type with
-      Address              => To_Address (OSCSF_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   OSCSF : aliased OSCSF_Type
+      with Address              => To_Address (OSCSF_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.18 Main Clock Oscillator Wait Control Register (MOSCWTCR)
 
@@ -495,26 +469,24 @@ package S5D9 is
    MSTS_8 : constant := 2#1000#; -- Wait time = 4291 cycles (16368.9 μs)   4292 cycles (16372.7 μs)
    MSTS_9 : constant := 2#1001#; -- Wait time = 8163 cycles (31139.4 μs).  8164 cycles (31143.2 μs).
 
-   type MOSCWTCR_Type is
-   record
+   type MOSCWTCR_Type is record
       MSTS      : Bits_4;      -- Main Clock Oscillator Wait Time Setting
       Reserved  : Bits_4 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MOSCWTCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MOSCWTCR_Type use record
       MSTS      at 0 range 0 .. 3;
       Reserved  at 0 range 4 .. 7;
    end record;
 
    MOSCWTCR_ADDRESS : constant := 16#4001_E0A2#;
 
-   MOSCWTCR : aliased MOSCWTCR_Type with
-      Address              => To_Address (MOSCWTCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MOSCWTCR : aliased MOSCWTCR_Type
+      with Address              => To_Address (MOSCWTCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 9.2.19 Main Clock Oscillator Mode Oscillation Control Register (MOMCR)
 
@@ -526,17 +498,15 @@ package S5D9 is
    MOSEL_RES : constant := 0; -- Resonator
    MOSEL_EXT : constant := 1; -- External clock input.
 
-   type MOMCR_Type is
-   record
+   type MOMCR_Type is record
       Reserved  : Bits_4 := 0;
       MODRV     : Bits_2;      -- Main Clock Oscillator Drive Capability 0 Switching
       MOSEL     : Bits_1;      -- Main Clock Oscillator Switching
       AUTODRVEN : Boolean;     -- PLL Clock Oscillation Stabilization Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for MOMCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MOMCR_Type use record
       Reserved  at 0 range 0 .. 3;
       MODRV     at 0 range 4 .. 5;
       MOSEL     at 0 range 6 .. 6;
@@ -545,11 +515,11 @@ package S5D9 is
 
    MOMCR_ADDRESS : constant := 16#4001_E413#;
 
-   MOMCR : aliased MOMCR_Type with
-      Address              => To_Address (MOMCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MOMCR : aliased MOMCR_Type
+      with Address              => To_Address (MOMCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 11. Low Power Modes
@@ -557,16 +527,14 @@ package S5D9 is
 
    -- 11.2.1 Standby Control Register (SBYCR)
 
-   type SBYCR_Type is
-   record
+   type SBYCR_Type is record
       Reserved : Bits_14 := 0;
       OPE      : Boolean;      -- Output Port Enable
       SSBY     : Boolean;      -- Software Standby
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SBYCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SBYCR_Type use record
       Reserved at 0 range  0 .. 13;
       OPE      at 0 range 14 .. 14;
       SSBY     at 0 range 15 .. 15;
@@ -574,16 +542,15 @@ package S5D9 is
 
    SBYCR_ADDRESS : constant := 16#4001_E00C#;
 
-   SBYCR : aliased SBYCR_Type with
-      Address              => To_Address (SBYCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   SBYCR : aliased SBYCR_Type
+      with Address              => To_Address (SBYCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 11.2.2 Module Stop Control Register A (MSTPCRA)
 
-   type MSTPCRA_Type is
-   record
+   type MSTPCRA_Type is record
       MSTPA0    : Boolean;             -- SRAM0 Module Stop
       MSTPA1    : Boolean;             -- SRAM1 Module Stop
       Reserved1 : Bits_3 := 16#07#;
@@ -593,11 +560,10 @@ package S5D9 is
       Reserved2 : Bits_14 := 16#3FFF#;
       MSTPA22   : Boolean;             -- DMA Controller/Data Transfer Controller Module Stop
       Reserved3 : Bits_9 := 16#1FF#;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for MSTPCRA_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MSTPCRA_Type use record
       MSTPA0    at 0 range  0 ..  0;
       MSTPA1    at 0 range  1 ..  1;
       Reserved1 at 0 range  2 ..  4;
@@ -611,16 +577,15 @@ package S5D9 is
 
    MSTPCRA_ADDRESS : constant := 16#4001_E01C#;
 
-   MSTPCRA : aliased MSTPCRA_Type with
-      Address              => To_Address (MSTPCRA_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MSTPCRA : aliased MSTPCRA_Type
+      with Address              => To_Address (MSTPCRA_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 11.2.3 Module Stop Control Register B (MSTPCRB)
 
-   type MSTPCRB_Type is
-   record
+   type MSTPCRB_Type is record
       Reserved1 : Bits_1 := 1;
       MSTPB1    : Boolean;         -- Controller Area Network 1 Module Stop
       MSTPB2    : Boolean;         -- Controller Area Network 0 Module Stop
@@ -650,11 +615,10 @@ package S5D9 is
       MSTPB29   : Boolean;         -- Serial Communication Interface 2 Module Stop
       MSTPB30   : Boolean;         -- Serial Communication Interface 1 Module Stop
       MSTPB31   : Boolean;         -- Serial Communication Interface 0 Module Stop
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for MSTPCRB_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MSTPCRB_Type use record
       Reserved1 at 0 range  0 ..  0;
       MSTPB1    at 0 range  1 ..  1;
       MSTPB2    at 0 range  2 ..  2;
@@ -688,16 +652,15 @@ package S5D9 is
 
    MSTPCRB_ADDRESS : constant := 16#4004_7000#;
 
-   MSTPCRB : aliased MSTPCRB_Type with
-      Address              => To_Address (MSTPCRB_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MSTPCRB : aliased MSTPCRB_Type
+      with Address              => To_Address (MSTPCRB_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 11.2.4 Module Stop Control Register C (MSTPCRC)
 
-   type MSTPCRC_Type is
-   record
+   type MSTPCRC_Type is record
       MSTPC0    : Boolean;             -- Clock Frequency Accuracy Measurement Circuit Module Stop
       MSTPC1    : Boolean;             -- Cyclic Redundancy Check Calculator Module Stop
       MSTPC2    : Boolean;             -- Parallel Data Capture Module Stop
@@ -716,11 +679,10 @@ package S5D9 is
       Reserved2 : Bits_1 := 1;
       Reserved3 : Bits_15 := 16#7FFF#;
       MSTPC31   : Boolean;             -- SCE7 Module Stop
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for MSTPCRC_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MSTPCRC_Type use record
       MSTPC0    at 0 range  0 ..  0;
       MSTPC1    at 0 range  1 ..  1;
       MSTPC2    at 0 range  2 ..  2;
@@ -743,16 +705,15 @@ package S5D9 is
 
    MSTPCRC_ADDRESS : constant := 16#4004_7004#;
 
-   MSTPCRC : aliased MSTPCRC_Type with
-      Address              => To_Address (MSTPCRC_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MSTPCRC : aliased MSTPCRC_Type
+      with Address              => To_Address (MSTPCRC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 11.2.5 Module Stop Control Register D (MSTPCRD)
 
-   type MSTPCRD_Type is
-   record
+   type MSTPCRD_Type is record
       Reserved1 : Bits_2 := 2#11#;
       MSTPD2    : Boolean;          -- Asynchronous General Purpose Timer 1 Module Stop
       MSTPD3    : Boolean;          -- Asynchronous General Purpose Timer 0 Module Stop
@@ -774,11 +735,10 @@ package S5D9 is
       MSTPD27   : Boolean;          -- High-Speed Analog Comparator 1 Module Stop
       MSTPD28   : Boolean;          -- High-Speed Analog Comparator 0 Module Stop
       Reserved6 : Bits_3 := 16#7#;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for MSTPCRD_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MSTPCRD_Type use record
       Reserved1 at 0 range  0 ..  1;
       MSTPD2    at 0 range  2 ..  2;
       MSTPD3    at 0 range  3 ..  3;
@@ -804,11 +764,11 @@ package S5D9 is
 
    MSTPCRD_ADDRESS : constant := 16#4004_7008#;
 
-   MSTPCRD : aliased MSTPCRD_Type with
-      Address              => To_Address (MSTPCRD_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   MSTPCRD : aliased MSTPCRD_Type
+      with Address              => To_Address (MSTPCRD_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 13. Register Write Protection
@@ -818,19 +778,17 @@ package S5D9 is
 
    PRCR_KEY_CODE : constant := 16#A5#;
 
-   type PRCR_Type is
-   record
+   type PRCR_Type is record
       PRC0      : Boolean;     -- Protect Bit 0
       PRC1      : Boolean;     -- Protect Bit 1
       Reserved1 : Bits_1 := 0;
       PRC3      : Boolean;     -- Protect Bit 3
       Reserved2 : Bits_4 := 0;
       PRKEY     : Unsigned_8;  -- PRC Key Code
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for PRCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PRCR_Type use record
       PRC0      at 0 range 0 ..  0;
       PRC1      at 0 range 1 ..  1;
       Reserved1 at 0 range 2 ..  2;
@@ -841,11 +799,11 @@ package S5D9 is
 
    PRCR_ADDRESS : constant := 16#4001_E3FE#;
 
-   PRCR : aliased PRCR_Type with
-      Address              => To_Address (PRCR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PRCR : aliased PRCR_Type
+      with Address              => To_Address (PRCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 14. Interrupt Controller Unit (ICU)
@@ -853,19 +811,17 @@ package S5D9 is
 
    -- 14.2.1 IRQ Control Register i (IRQCRi) (i = 0 to 15)
 
-   type IRQCR_Type is
-   record
+   type IRQCR_Type is record
       IRQMD     : Bits_2;      -- IRQi Detection Sense Select
       Reserved1 : Bits_2 := 0;
       FCLKSEL   : Bits_2;      -- IRQi Digital Filter Sampling Clock Select
       Reserved2 : Bits_1 := 0;
       FLTEN     : Boolean;     -- IRQi Digital Filter Enable
-   end record with
-      Bit_Order            => Low_Order_First,
-      Size                 => 8,
-      Volatile_Full_Access => True;
-   for IRQCR_Type use
-   record
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 8,
+           Volatile_Full_Access => True;
+   for IRQCR_Type use record
       IRQMD     at 0 range 0 .. 1;
       Reserved1 at 0 range 2 .. 3;
       FCLKSEL   at 0 range 4 .. 5;
@@ -875,8 +831,7 @@ package S5D9 is
 
    -- 14.2.2 Non-Maskable Interrupt Status Register (NMISR)
 
-   type NMISR_Type is
-   record
+   type NMISR_Type is record
       IWDTST    : Boolean; -- IWDT Underflow/Refresh Error Status Flag
       WDTST     : Boolean; -- WDT Underflow/Refresh Error Status Flag
       LVD1ST    : Boolean; -- Voltage Monitor 1 Interrupt Status Flag
@@ -890,11 +845,10 @@ package S5D9 is
       BUSMST    : Boolean; -- MPU Bus Master Error Interrupt Status Flag
       SPEST     : Boolean; -- CPU Stack Pointer Monitor Interrupt Status Flag
       Reserved2 : Bits_3;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for NMISR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for NMISR_Type use record
       IWDTST    at 0 range  0 ..  0;
       WDTST     at 0 range  1 ..  1;
       LVD1ST    at 0 range  2 ..  2;
@@ -912,8 +866,7 @@ package S5D9 is
 
    -- 14.2.3 Non-Maskable Interrupt Enable Register (NMIER)
 
-   type NMIER_Type is
-   record
+   type NMIER_Type is record
       IWDTEN    : Boolean;     -- IWDT Underflow/Refresh Error Interrupt Enable
       WDTEN     : Boolean;     -- WDT Underflow/Refresh Error Interrupt Enable
       LVD1EN    : Boolean;     -- Voltage Monitor 1 Interrupt Enable
@@ -927,11 +880,10 @@ package S5D9 is
       BUSMEN    : Boolean;     -- MPU Bus Master Error Interrupt Enable
       SPEEN     : Boolean;     -- CPU Stack Pointer Monitor Interrupt Enable
       Reserved2 : Bits_3 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for NMIER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for NMIER_Type use record
       IWDTEN    at 0 range  0 ..  0;
       WDTEN     at 0 range  1 ..  1;
       LVD1EN    at 0 range  2 ..  2;
@@ -949,8 +901,7 @@ package S5D9 is
 
    -- 14.2.4 Non-Maskable Interrupt Status Clear Register (NMICLR)
 
-   type NMICLR_Type is
-   record
+   type NMICLR_Type is record
       IWDTCLR   : Boolean;     -- IWDT Clear
       WDTCLR    : Boolean;     -- WDT Clear
       LVD1CLR   : Boolean;     -- LVD1 Clear
@@ -964,11 +915,10 @@ package S5D9 is
       BUSMCLR   : Boolean;     -- Bus Master Error Clear
       SPECLR    : Boolean;     -- CPU Stack Pointer Monitor Interrupt Clear
       Reserved2 : Bits_3 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for NMICLR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for NMICLR_Type use record
       IWDTCLR   at 0 range  0 ..  0;
       WDTCLR    at 0 range  1 ..  1;
       LVD1CLR   at 0 range  2 ..  2;
@@ -986,18 +936,16 @@ package S5D9 is
 
    -- 14.2.5 NMI Pin Interrupt Control Register (NMICR)
 
-   type NMICR_Type is
-   record
+   type NMICR_Type is record
       NMIMD     : Bits_1;      -- NMI Detection Set
       Reserved1 : Bits_3 := 0;
       NFCLKSEL  : Bits_2;      -- NMI Digital Filter Sampling Clock Select
       Reserved2 : Bits_1 := 0;
       NFLTEN    : Boolean;     -- NMI Digital Filter Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for NMICR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for NMICR_Type use record
       NMIMD     at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 3;
       NFCLKSEL  at 0 range 4 .. 5;
@@ -1007,20 +955,18 @@ package S5D9 is
 
    -- 14.2.6 ICU Event Link Setting Register n (IELSRn) (n = 0 to 95)
 
-   type IELSR_Type is
-   record
+   type IELSR_Type is record
       IELS      : Bits_9;      -- ICU Event Link Select
       Reserved1 : Bits_7 := 0;
       IR        : Boolean;     -- Interrupt Status Flag
       Reserved2 : Bits_7 := 0;
       DTCE      : Boolean;     -- DTC Activation Enable
       Reserved3 : Bits_7 := 0;
-   end record with
-      Bit_Order            => Low_Order_First,
-      Size                 => 32,
-      Volatile_Full_Access => True;
-   for IELSR_Type use
-   record
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 32,
+           Volatile_Full_Access => True;
+   for IELSR_Type use record
       IELS      at 0 range  0 ..  8;
       Reserved1 at 0 range  9 .. 15;
       IR        at 0 range 16 .. 16;
@@ -1031,18 +977,16 @@ package S5D9 is
 
    -- 14.2.7 DMAC Event Link Setting Register n (DELSRn) (n = 0 to 7)
 
-   type DELSR_Type is
-   record
+   type DELSR_Type is record
       IELS      : Bits_9;       -- DMAC Event Link Select
       Reserved1 : Bits_7 := 0;
       IR        : Boolean;      -- Interrupt Status Flag for DMAC
       Reserved2 : Bits_15 := 0;
-   end record with
-      Bit_Order            => Low_Order_First,
-      Size                 => 32,
-      Volatile_Full_Access => True;
-   for DELSR_Type use
-   record
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 32,
+           Volatile_Full_Access => True;
+   for DELSR_Type use record
       IELS      at 0 range  0 ..  8;
       Reserved1 at 0 range  9 .. 15;
       IR        at 0 range 16 .. 16;
@@ -1051,23 +995,20 @@ package S5D9 is
 
    -- 14.2.8 SYS Event Link Setting Register (SELSR0)
 
-   type SELSR0_Type is
-   record
+   type SELSR0_Type is record
       SELS     : Bits_9;      -- SYS Event Link Select
       Reserved : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for SELSR0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SELSR0_Type use record
       SELS     at 0 range 0 ..  8;
       Reserved at 0 range 9 .. 15;
    end record;
 
    -- 14.2.9 Wake Up Interrupt Enable Register (WUPEN)
 
-   type WUPEN_Type is
-   record
+   type WUPEN_Type is record
       IRQWUPEN     : Bitmap_16;   -- IRQ Interrupt Software Standby Returns Enable
       IWDTWUPEN    : Boolean;     -- IWDT Interrupt Software Standby Returns Enable
       KEYWUPEN     : Boolean;     -- Key Interrupt Software Standby Returns Enable
@@ -1084,11 +1025,10 @@ package S5D9 is
       AGT1CAWUPEN  : Boolean;     -- AGT1 Compare Match A Interrupt Software Standby Returns Enable
       AGT1CBWUPEN  : Boolean;     -- AGT1 Compare Match B Interrupt Software Standby Returns Enable
       IIC0WUPEN    : Boolean;     -- IIC0 Address Match Interrupt Software Standby Returns Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for WUPEN_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for WUPEN_Type use record
       IRQWUPEN     at 0 range  0 .. 15;
       IWDTWUPEN    at 0 range 16 .. 16;
       KEYWUPEN     at 0 range 17 .. 17;
@@ -1443,15 +1383,14 @@ package S5D9 is
 
    -- ICU layout
 
-   type IRQCR_Array_Type is array (0 .. 15) of IRQCR_Type with
-      Pack => True;
-   type IELSR_Array_Type is array (0 .. 95) of IELSR_Type with
-      Pack => True;
-   type DELSR_Array_Type is array (0 .. 7) of DELSR_Type with
-      Pack => True;
+   type IRQCR_Array_Type is array (0 .. 15) of IRQCR_Type
+      with Pack => True;
+   type IELSR_Array_Type is array (0 .. 95) of IELSR_Type
+      with Pack => True;
+   type DELSR_Array_Type is array (0 .. 7) of DELSR_Type
+      with Pack => True;
 
-   type ICU_Type is
-   record
+   type ICU_Type is record
       IRQCR  : IRQCR_Array_Type;
       NMICR  : NMICR_Type        with Volatile_Full_Access => True;
       NMIER  : NMIER_Type        with Volatile_Full_Access => True;
@@ -1461,10 +1400,9 @@ package S5D9 is
       SELSR0 : SELSR0_Type       with Volatile_Full_Access => True;
       DELSR  : DELSR_Array_Type;
       IELSR  : IELSR_Array_Type;
-   end record with
-      Size => 16#F00# * 8;
-   for ICU_Type use
-   record
+   end record
+      with Size => 16#F00# * 8;
+   for ICU_Type use record
       IRQCR  at 0        range 0 .. 16 * 8 - 1;
       NMICR  at 16#0100# range 0 ..  7;
       NMIER  at 16#0120# range 0 .. 15;
@@ -1478,10 +1416,10 @@ package S5D9 is
 
    ICU_ADDRESS : constant := 16#4000_6000#;
 
-   ICU : aliased ICU_Type with
-      Address    => To_Address (ICU_ADDRESS),
-      Import     => True,
-      Convention => Ada;
+   ICU : aliased ICU_Type
+      with Address    => To_Address (ICU_ADDRESS),
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 20. I/O Ports
@@ -1489,8 +1427,7 @@ package S5D9 is
 
    -- 20.2.1 Port Control Register 1 (PCNTR1/PODR/PDR)
 
-   type PODR_Type is
-   record
+   type PODR_Type is record
       PODR00 : Boolean;
       PODR01 : Boolean;
       PODR02 : Boolean;
@@ -1507,11 +1444,10 @@ package S5D9 is
       PODR13 : Boolean;
       PODR14 : Boolean;
       PODR15 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for PODR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PODR_Type use record
       PODR00 at 0 range  0 ..  0;
       PODR01 at 0 range  1 ..  1;
       PODR02 at 0 range  2 ..  2;
@@ -1530,8 +1466,7 @@ package S5D9 is
       PODR15 at 0 range 15 .. 15;
    end record;
 
-   type PDR_Type is
-   record
+   type PDR_Type is record
       PDR00 : Boolean;
       PDR01 : Boolean;
       PDR02 : Boolean;
@@ -1548,11 +1483,10 @@ package S5D9 is
       PDR13 : Boolean;
       PDR14 : Boolean;
       PDR15 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for PDR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PDR_Type use record
       PDR00 at 0 range  0 ..  0;
       PDR01 at 0 range  1 ..  1;
       PDR02 at 0 range  2 ..  2;
@@ -1573,8 +1507,7 @@ package S5D9 is
 
    -- PORT0 .. PORTB memory-mapped array
 
-   type PORT_Type is
-   record
+   type PORT_Type is record
       PODR : PODR_Type   with Volatile_Full_Access => True;
       PDR  : PDR_Type    with Volatile_Full_Access => True;
       EIDR : Unsigned_16 with Volatile_Full_Access => True;
@@ -1583,11 +1516,10 @@ package S5D9 is
       POSR : Unsigned_16 with Volatile_Full_Access => True;
       EORR : Unsigned_16 with Volatile_Full_Access => True;
       EOSR : Unsigned_16 with Volatile_Full_Access => True;
-   end record with
-      Size                    => 16#20# * 8,
-      Suppress_Initialization => True;
-   for PORT_Type use
-   record
+   end record
+      with Size                    => 16#20# * 8,
+           Suppress_Initialization => True;
+   for PORT_Type use record
       PODR at 16#00# range 0 .. 15;
       PDR  at 16#02# range 0 .. 15;
       EIDR at 16#04# range 0 .. 15;
@@ -1600,11 +1532,11 @@ package S5D9 is
 
    PORT_ADDRESS : constant := 16#4004_0000#;
 
-   PORT : aliased array (0 .. 11) of PORT_Type with
-      Address    => To_Address (PORT_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   PORT : aliased array (0 .. 11) of PORT_Type
+      with Address    => To_Address (PORT_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- 20.2.5 Port mn Pin Function Select Register (PmnPFS/PmnPFS_HA/PmnPFS_BY) (m = 0 to 9, A, B; n = 00 to 15)
 
@@ -1649,8 +1581,7 @@ package S5D9 is
    PSEL_GLCDC             : constant := 2#11001#; -- - X X X - X X - X X X -
    PSEL_TraceDebug        : constant := 2#11010#; -- - - - - - - - - - - - -
 
-   type PFSR_Type is
-   record
+   type PFSR_Type is record
       PODR      : Boolean := False;          -- Port Output Data
       PIDR      : Boolean := False;          -- Pmn State
       PDR       : Bits_1 := PDR_PORTIN;      -- Port Direction
@@ -1667,13 +1598,12 @@ package S5D9 is
       Reserved4 : Bits_7 := 0;
       PSEL      : Bits_5;                    -- Peripheral Select
       Reserved5 : Bits_3 := 0;
-   end record with
-      Bit_Order               => Low_Order_First,
-      Size                    => 32,
-      Volatile_Full_Access    => True,
-      Suppress_Initialization => True;
-   for PFSR_Type use
-   record
+   end record
+      with Bit_Order               => Low_Order_First,
+           Size                    => 32,
+           Volatile_Full_Access    => True,
+           Suppress_Initialization => True;
+   for PFSR_Type use record
       PODR      at 0 range  0 ..  0;
       PIDR      at 0 range  1 ..  1;
       PDR       at 0 range  2 ..  2;
@@ -1766,24 +1696,22 @@ package S5D9 is
 
    PFSR_ADDRESS : constant := 16#4004_0800#;
 
-   PFSR : aliased array (0 .. 191) of PFSR_Type with
-      Address    => To_Address (PFSR_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   PFSR : aliased array (0 .. 191) of PFSR_Type
+      with Address    => To_Address (PFSR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- 20.2.6 Write-Protect Register (PWPR)
 
-   type PWPR_Type is
-   record
+   type PWPR_Type is record
       Reserved : Bits_6 := 0;
       PFSWE    : Boolean;     -- PmnPFS Register Write Enable
       B0WI     : Boolean;     -- PFSWE Bit Write Disable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for PWPR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PWPR_Type use record
       Reserved at 0 range 0 .. 5;
       PFSWE    at 0 range 6 .. 6;
       B0WI     at 0 range 7 .. 7;
@@ -1791,11 +1719,11 @@ package S5D9 is
 
    PWPR_ADDRESS : constant := 16#4004_0D03#;
 
-   PWPR : aliased PWPR_Type with
-      Address              => To_Address (PWPR_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   PWPR : aliased PWPR_Type
+      with Address              => To_Address (PWPR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 25. Asynchronous General-Purpose Timer (AGT)
@@ -1812,8 +1740,7 @@ package S5D9 is
    AGTCR_TSTOP_WINV : constant := 0;
    AGTCR_TSTOP_STOP : constant := 1;
 
-   type AGTCR_Type is
-   record
+   type AGTCR_Type is record
       TSTART   : Bits_1;      -- AGT Count Start
       TCSTF    : Bits_1;      -- AGT Count Status Flag
       TSTOP    : Bits_1;      -- AGT Count Forced Stop
@@ -1822,11 +1749,10 @@ package S5D9 is
       TUNDF    : Boolean;     -- Underflow Flag
       TCMAF    : Boolean;     -- Compare Match A Flag
       TCMBF    : Boolean;     -- Compare Match B Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for AGTCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for AGTCR_Type use record
       TSTART   at 0 range 0 .. 0;
       TCSTF    at 0 range 1 .. 1;
       TSTOP    at 0 range 2 .. 2;
@@ -1855,17 +1781,15 @@ package S5D9 is
    AGTMR1_TCK_AGT0    : constant := 2#101#;
    AGTMR1_TCK_AGTSCLK : constant := 2#110#;
 
-   type AGTMR1_Type is
-   record
+   type AGTMR1_Type is record
       TMOD     : Bits_3;      -- Operating Mode
       TEDGPL   : Bits_1;      -- Edge Polarity
       TCK      : Bits_3;      -- Count Source
       Reserved : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for AGTMR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for AGTMR1_Type use record
       TMOD     at 0 range 0 .. 2;
       TEDGPL   at 0 range 3 .. 3;
       TCK      at 0 range 4 .. 6;
@@ -1883,16 +1807,14 @@ package S5D9 is
    AGTMR2_FDIV64  : constant := 2#110#;
    AGTMR2_FDIV128 : constant := 2#111#;
 
-   type AGTMR2_Type is
-   record
+   type AGTMR2_Type is record
       CKS      : Bits_3;      -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
       Reserved : Bits_4 := 0;
       LPM      : Boolean;     -- Low Power Mode
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for AGTMR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for AGTMR2_Type use record
       CKS      at 0 range 0 .. 2;
       Reserved at 0 range 3 .. 6;
       LPM      at 0 range 7 .. 7;
@@ -1900,8 +1822,7 @@ package S5D9 is
 
    -- 25.2.9 AGT Compare Match Function Select Register (AGTCMSR)
 
-   type AGTCMSR_Type is
-   record
+   type AGTCMSR_Type is record
       TCMEA     : Boolean;     -- Compare Match A Register Enable
       TOEA      : Boolean;     -- AGTOAn Output Enable
       TOPOLA    : Boolean;     -- AGTOAn Polarity Select
@@ -1910,11 +1831,10 @@ package S5D9 is
       TOEB      : Boolean;     -- AGTOBn Output Enable
       TOPOLB    : Boolean;     -- AGTOBn Polarity Select
       Reserved2 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for AGTCMSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for AGTCMSR_Type use record
       TCMEA     at 0 range 0 .. 0;
       TOEA      at 0 range 1 .. 1;
       TOPOLA    at 0 range 2 .. 2;
@@ -1927,8 +1847,7 @@ package S5D9 is
 
    -- AGT0 .. 1
 
-   type AGT_Type is
-   record
+   type AGT_Type is record
       AGTC     : Unsigned_16;
       AGTCMA   : Unsigned_16;
       AGTCMB   : Unsigned_16;
@@ -1941,10 +1860,9 @@ package S5D9 is
       AGTISR   : Unsigned_8;
       AGTCMSR  : AGTCMSR_Type;
       AGTIOSEL : Unsigned_8;
-   end record with
-      Size => 16 * 8;
-   for AGT_Type use
-   record
+   end record
+      with Size => 16 * 8;
+   for AGT_Type use record
       AGTC     at 16#00# range 0 .. 15;
       AGTCMA   at 16#02# range 0 .. 15;
       AGTCMB   at 16#04# range 0 .. 15;
@@ -1961,17 +1879,17 @@ package S5D9 is
 
    AGT_ADDRESS : constant := 16#4008_4000#;
 
-   AGT0 : aliased AGT_Type with
-      Address    => To_Address (AGT_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   AGT0 : aliased AGT_Type
+      with Address    => To_Address (AGT_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   AGT1 : aliased AGT_Type with
-      Address    => To_Address (AGT_ADDRESS + 16#0100#),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   AGT1 : aliased AGT_Type
+      with Address    => To_Address (AGT_ADDRESS + 16#0100#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 34. Serial Communications Interface (SCI)
@@ -1979,8 +1897,7 @@ package S5D9 is
 
    type SCI_Kind is (NORMAL, FIFO, SMIF);
 
-   type CHR_Data_Length_Type is
-   record
+   type CHR_Data_Length_Type is record
       CHR  : Bits_1;
       CHR1 : Bits_1;
    end record;
@@ -1989,8 +1906,7 @@ package S5D9 is
    CHR_8 : constant CHR_Data_Length_Type := (0, 1); -- Transmit/receive in 8-bit data length
    CHR_7 : constant CHR_Data_Length_Type := (1, 1); -- Transmit/receive in 7-bit data length
 
-   type BCP_Type is
-   record
+   type BCP_Type is record
       BCP10 : Bits_2;
       BCP2  : Bits_1;
    end record;
@@ -2021,8 +1937,7 @@ package S5D9 is
    SMR_CM_ASYNC : constant := 0; -- Asynchronous mode or simple IIC mode
    SMR_CM_SYNC  : constant := 1; -- Clock synchronous mode or simple SPI mode
 
-   type SMR_NORMAL_Type is
-   record
+   type SMR_NORMAL_Type is record
       CKS  : Bits_2;  -- Clock Select
       MP   : Boolean; -- Multi-Processor Mode
       STOP : Bits_1;  -- Stop Bit Length
@@ -2030,11 +1945,10 @@ package S5D9 is
       PE   : Boolean; -- Parity Enable
       CHR  : Bits_1;  -- Character Length
       CM   : Bits_1;  -- Communication Mode
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SMR_NORMAL_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SMR_NORMAL_Type use record
       CKS  at 0 range 0 .. 1;
       MP   at 0 range 2 .. 2;
       STOP at 0 range 3 .. 3;
@@ -2044,19 +1958,17 @@ package S5D9 is
       CM   at 0 range 7 .. 7;
    end record;
 
-   type SMR_SMIF_Type is
-   record
+   type SMR_SMIF_Type is record
       CKS   : Bits_2;                 -- Clock Select
       BCP10 : Bits_2 := BCP_32.BCP10; -- Base Clock Pulse
       PM    : Bits_1;                 -- Parity Mode
       PE    : Boolean;                -- Parity Enable
       BLK   : Boolean;                -- Block Transfer Mode
       GM    : Boolean;                -- GSM Mode
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SMR_SMIF_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SMR_SMIF_Type use record
       CKS   at 0 range 0 .. 1;
       BCP10 at 0 range 2 .. 3;
       PM    at 0 range 4 .. 4;
@@ -2065,15 +1977,14 @@ package S5D9 is
       GM    at 0 range 7 .. 7;
    end record;
 
-   type SMR_Type (S : SCI_Kind := NORMAL) is
-   record
+   type SMR_Type (S : SCI_Kind := NORMAL) is record
       case S is
          when NORMAL | FIFO => NORMAL : SMR_NORMAL_Type;
          when SMIF          => SMIF   : SMR_SMIF_Type;
       end case;
-   end record with
-      Pack            => True,
-      Unchecked_Union => True;
+   end record
+      with Pack            => True,
+           Unchecked_Union => True;
 
    -- 34.2.11 Serial Control Register (SCR) for Non-Smart Card Interface Mode (SCMR.SMIF = 0)
    -- 34.2.12 Serial Control Register for Smart Card Interface Mode (SCR_SMCI) (SCMR.SMIF = 1)
@@ -2084,8 +1995,7 @@ package S5D9 is
    CKE_Sync_Int_CLK              : constant := 2#00#; -- also 2#01#
    CKE_Sync_Ext_CLK              : constant := 2#10#; -- also 2#11#
 
-   type SCR_Type is
-   record
+   type SCR_Type is record
       CKE  : Bits_2;           -- Clock Enable
       TEIE : Boolean;          -- Transmit End Interrupt Enable
       MPIE : Boolean := False; -- Multi-Processor Interrupt Enable
@@ -2093,11 +2003,10 @@ package S5D9 is
       TE   : Boolean;          -- Transmit Enable
       RIE  : Boolean;          -- Receive Interrupt Enable
       TIE  : Boolean;          -- Transmit Interrupt Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SCR_Type use record
       CKE  at 0 range 0 .. 1;
       TEIE at 0 range 2 .. 2;
       MPIE at 0 range 3 .. 3;
@@ -2125,11 +2034,10 @@ package S5D9 is
       ORER : Boolean; -- Overrun Error Flag
       RDRF : Boolean; -- Receive Data Full Flag
       TDRE : Boolean; -- Transmit Data Empty Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SSR_NORMAL_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SSR_NORMAL_Type use record
       MPBT at 0 range 0 .. 0;
       MPB  at 0 range 1 .. 1;
       TEND at 0 range 2 .. 2;
@@ -2142,8 +2050,7 @@ package S5D9 is
 
    -- 34.2.14 Serial Status Register for Non-Smart Card Interface and FIFO Mode (SSR_FIFO) (SCMR.SMIF = 0 and FCR.FM = 1)
 
-   type SSR_FIFO_Type is
-   record
+   type SSR_FIFO_Type is record
       DR       : Boolean;     -- Receive Data Ready Flag
       Reserved : Bits_1 := 1;
       TEND     : Boolean;     -- Transmit End Flag
@@ -2152,11 +2059,10 @@ package S5D9 is
       ORER     : Boolean;     -- Overrun Error Flag
       RDF      : Boolean;     -- Receive FIFO Data Full Flag
       TDFE     : Boolean;     -- Transmit FIFO Data Empty Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SSR_FIFO_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SSR_FIFO_Type use record
       DR       at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 1;
       TEND     at 0 range 2 .. 2;
@@ -2169,8 +2075,7 @@ package S5D9 is
 
    -- 34.2.15 Serial Status Register for Smart Card Interface Mode (SSR_SMCI) (SCMR.SMIF = 1)
 
-   type SSR_SMIF_Type is
-   record
+   type SSR_SMIF_Type is record
       MPBT : Bits_1;  -- Multi-Processor Bit Transfer
       MPB  : Bits_1;  -- Multi-Processor
       TEND : Boolean; -- Transmit End Flag
@@ -2179,9 +2084,9 @@ package S5D9 is
       ORER : Boolean; -- Overrun Error Flag
       RDRF : Boolean; -- Receive Data Full Flag
       TDRE : Boolean; -- Transmit Data Empty Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
    for SSR_SMIF_Type use
    record
       MPBT  at 0 range 0 .. 0;
@@ -2194,16 +2099,15 @@ package S5D9 is
       TDRE  at 0 range 7 .. 7;
    end record;
 
-   type SSR_Type (S : SCI_Kind := NORMAL) is
-   record
+   type SSR_Type (S : SCI_Kind := NORMAL) is record
       case S is
          when NORMAL => NORMAL : SSR_NORMAL_Type;
          when FIFO   => FIFO   : SSR_FIFO_Type;
          when SMIF   => SMIF   : SSR_SMIF_Type;
       end case;
-   end record with
-      Pack            => True,
-      Unchecked_Union => True;
+   end record
+      with Pack            => True,
+           Unchecked_Union => True;
 
    -- 34.2.16 Smart Card Mode Register (SCMR)
 
@@ -2213,8 +2117,7 @@ package S5D9 is
    SCMR_SDIR_LSB : constant := 0;
    SCMR_SDIR_MSB : constant := 1;
 
-   type SCMR_Type is
-   record
+   type SCMR_Type is record
       SMIF      : Boolean;               -- Smart Card Interface Mode Select
       Reserved1 : Bits_1 := 1;
       SINV      : Bits_1;                -- Transmitted/Received Data Invert
@@ -2222,11 +2125,10 @@ package S5D9 is
       CHR1      : Bits_1;                -- Character Length 1
       Reserved2 : Bits_2 := 2#11#;
       BCP2      : Bits_1 := BCP_32.BCP2; -- Base Clock Pulse 2
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SCMR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SCMR_Type use record
       SMIF      at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 1;
       SINV      at 0 range 2 .. 2;
@@ -2238,8 +2140,7 @@ package S5D9 is
 
    -- 34.2.19 Serial Extended Mode Register (SEMR)
 
-   type SEMR_Type is
-   record
+   type SEMR_Type is record
       Reserved : Bits_2 := 0;
       BRME     : Boolean;     -- Bit Rate Modulation Enable
       ABCSE    : Boolean;     -- Asynchronous Mode Extended Base Clock Select 1
@@ -2247,11 +2148,10 @@ package S5D9 is
       NFEN     : Boolean;     -- Digital Noise Filter Function Enable
       BGDM     : Boolean;     -- Baud Rate Generator Double-Speed Mode Select
       RXDESEL  : Boolean;     -- Asynchronous Start Bit Edge Detection Select
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SEMR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SEMR_Type use record
       Reserved at 0 range 0 .. 1;
       BRME     at 0 range 2 .. 2;
       ABCSE    at 0 range 3 .. 3;
@@ -2269,31 +2169,27 @@ package S5D9 is
    SNFR_NFCS_IIC_4   : constant := 2#011#; -- Use clock signal divided by 4 with noise filter
    SNFR_NFCS_IIC_8   : constant := 2#100#; -- Use clock signal divided by 8 with noise filter.
 
-   type SNFR_Type is
-   record
+   type SNFR_Type is record
       NFCS     : Bits_3;      -- Noise Filter Clock Select
       Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SNFR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SNFR_Type use record
       NFCS     at 0 range 0 .. 2;
       Reserved at 0 range 3 .. 7;
    end record;
 
    -- 34.2.21 IIC Mode Register 1 (SIMR1)
 
-   type SIMR1_Type is
-   record
+   type SIMR1_Type is record
       IICM     : Boolean;     -- Simple IIC Mode Select
       Reserved : Bits_2 := 0;
       IICDL    : Bits_5;      -- SDA Delay Output Select
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SIMR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SIMR1_Type use record
       IICM     at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 2;
       IICDL    at 0 range 3 .. 7;
@@ -2307,18 +2203,16 @@ package S5D9 is
    SIMR2_IICACKT_ACK  : constant := 0;
    SIMR2_IICACKT_NACK : constant := 1;
 
-   type SIMR2_Type is
-   record
+   type SIMR2_Type is record
       IICINTM   : Bits_1;      -- IIC Interrupt Mode Select
       IICCSC    : Boolean;     -- Clock Synchronization
       Reserved1 : Bits_3 := 0;
       IICACKT   : Bits_1;      -- ACK Transmission Data
       Reserved2 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SIMR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SIMR2_Type use record
       IICINTM   at 0 range 0 .. 0;
       IICCSC    at 0 range 1 .. 1;
       Reserved1 at 0 range 2 .. 4;
@@ -2338,19 +2232,17 @@ package S5D9 is
    SIMR3_IICSCLS_SDALOW : constant := 2#10#;
    SIMR3_IICSCLS_SDAHIZ : constant := 2#11#;
 
-   type SIMR3_Type is
-   record
+   type SIMR3_Type is record
       IICSTAREQ  : Boolean; -- Start Condition Generation
       IICRSTAREQ : Boolean; -- Restart Condition Generation
       IICSTPREQ  : Boolean; -- Stop Condition Generation
       IICSTIF    : Boolean; -- Issuing of Start, Restart, or Stop Condition Completed Flag
       IICSDAS    : Bits_2;  -- SDA Output Select
       IICSCLS    : Bits_2;  -- SCL Output Select
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SIMR3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SIMR3_Type use record
       IICSTAREQ  at 0 range 0 .. 0;
       IICRSTAREQ at 0 range 1 .. 1;
       IICSTPREQ  at 0 range 2 .. 2;
@@ -2361,15 +2253,13 @@ package S5D9 is
 
    -- 34.2.24 IIC Status Register (SISR)
 
-   type SISR_Type is
-   record
+   type SISR_Type is record
       IICACKR  : Boolean;          -- ACK Reception Data Flag
       Reserved : Bits_7 := 16#7F#;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SISR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SISR_Type use record
       IICACKR  at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
    end record;
@@ -2385,8 +2275,7 @@ package S5D9 is
    SPMR_CKPH_NORMAL : constant := 0;
    SPMR_CKPH_DELAY  : constant := 1;
 
-   type SPMR_Type is
-   record
+   type SPMR_Type is record
       SSE       : Boolean;     -- SSn Pin Function Enable
       CTSE      : Boolean;     -- CTS Enable
       MSS       : Bits_1;      -- Master Slave Select
@@ -2395,11 +2284,10 @@ package S5D9 is
       Reserved2 : Bits_1 := 0;
       CKPOL     : Bits_1;      -- Clock Polarity Select
       CKPH      : Bits_1;      -- Clock Phase Select
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPMR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPMR_Type use record
       SSE       at 0 range 0 .. 0;
       CTSE      at 0 range 1 .. 1;
       MSS       at 0 range 2 .. 2;
@@ -2412,8 +2300,7 @@ package S5D9 is
 
    -- 34.2.26 FIFO Control Register (FCR)
 
-   type FCR_Type is
-   record
+   type FCR_Type is record
       FM    : Boolean; -- FIFO Mode Select
       RFRST : Boolean; -- Receive FIFO Data Register Reset
       TFRST : Boolean; -- Transmit FIFO Data Register Reset
@@ -2421,11 +2308,10 @@ package S5D9 is
       TTRG  : Bits_4;  -- Transmit FIFO Data Trigger Number
       RTRG  : Bits_4;  -- Receive FIFO Data Trigger Number
       RSTRG : Bits_4;  -- RTS Output Active Trigger Number Select
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for FCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for FCR_Type use record
       FM    at 0 range  0 ..  0;
       RFRST at 0 range  1 ..  1;
       TFRST at 0 range  2 ..  2;
@@ -2437,17 +2323,15 @@ package S5D9 is
 
    -- 34.2.27 FIFO Data Count Register (FDR)
 
-   type FDR_Type is
-   record
+   type FDR_Type is record
       R         : Bits_5;      -- Receive FIFO Data Count
       Reserved1 : Bits_3 := 0;
       T         : Bits_5;      -- Transmit FIFO Data Count
       Reserved2 : Bits_3 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for FDR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for FDR_Type use record
       R         at 0 range  0 ..  4;
       Reserved1 at 0 range  5 ..  7;
       T         at 0 range  8 .. 12;
@@ -2456,19 +2340,17 @@ package S5D9 is
 
    -- 34.2.28 Line Status Register (LSR)
 
-   type LSR_Type is
-   record
+   type LSR_Type is record
       ORER      : Boolean;     -- Overrun Error Flag
       Reserved1 : Bits_1 := 0;
       FNUM      : Bits_5;      -- Framing Error Count
       Reserved2 : Bits_1 := 0;
       PNUM      : Bits_5;      -- Parity Error Count
       Reserved3 : Bits_3 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for LSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for LSR_Type use record
       ORER      at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  1;
       FNUM      at 0 range  2 ..  6;
@@ -2479,15 +2361,13 @@ package S5D9 is
 
    -- 34.2.29 Compare Match Data Register (CDR)
 
-   type CDR_Type is
-   record
+   type CDR_Type is record
       CMPD     : Bits_9;      -- Compare Match Data
       Reserved : Bits_7 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 16;
-   for CDR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for CDR_Type use record
       CMPD     at 0 range 0 ..  8;
       Reserved at 0 range 9 .. 15;
    end record;
@@ -2497,8 +2377,7 @@ package S5D9 is
    DCCR_IDSEL_Always  : constant := 0;
    DCCR_IDSEL_IDFrame : constant := 1;
 
-   type DCCR_Type is
-   record
+   type DCCR_Type is record
       DCMF      : Boolean;     -- Data Compare Match Flag
       Reserved1 : Bits_2 := 0;
       DPER      : Boolean;     -- Data Compare Match Parity Error Flag
@@ -2506,11 +2385,10 @@ package S5D9 is
       Reserved2 : Bits_1 := 0;
       IDSEL     : Bits_1;      -- ID Frame Select
       DCME      : Boolean;     -- Data Compare Match Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for DCCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DCCR_Type use record
       DCMF      at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 2;
       DPER      at 0 range 3 .. 3;
@@ -2522,17 +2400,15 @@ package S5D9 is
 
    -- 34.2.31 Serial Port Register (SPTR)
 
-   type SPTR_Type is
-   record
+   type SPTR_Type is record
       RXDMON   : Boolean;     -- Serial Input Data Monitor
       SPB2DT   : Boolean;     -- Serial Port Break Data Select
       SPB2IO   : Boolean;     -- Serial Port Break I/O
       Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPTR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPTR_Type use record
       RXDMON   at 0 range 0 .. 0;
       SPB2DT   at 0 range 1 .. 1;
       SPB2IO   at 0 range 2 .. 2;
@@ -2541,8 +2417,7 @@ package S5D9 is
 
    -- SCI0 .. SCI9 memory-mapped array
 
-   type SCI_Type is
-   record
+   type SCI_Type is record
       SMR      : SMR_Type    with Volatile_Full_Access => True;
       BRR      : Unsigned_8  with Volatile_Full_Access => True;
       SCR      : SCR_Type    with Volatile_Full_Access => True;
@@ -2567,11 +2442,10 @@ package S5D9 is
       CDR      : CDR_Type    with Volatile_Full_Access => True;
       SPTR     : SPTR_Type   with Volatile_Full_Access => True;
       Reserved : Bits_24;
-   end record with
-      Size                    => 16#20# * 8,
-      Suppress_Initialization => True;
-   for SCI_Type use
-   record
+   end record
+      with Size                    => 16#20# * 8,
+           Suppress_Initialization => True;
+   for SCI_Type use record
       SMR      at 16#00# range 0 ..  7;
       BRR      at 16#01# range 0 ..  7;
       SCR      at 16#02# range 0 ..  7;
@@ -2600,11 +2474,11 @@ package S5D9 is
 
    SCI_ADDRESS : constant := 16#4007_0000#;
 
-   SCI : aliased array (0 .. 9) of SCI_Type with
-      Address    => To_Address (SCI_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   SCI : aliased array (0 .. 9) of SCI_Type
+      with Address    => To_Address (SCI_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 36. I2C Bus Interface (IIC)
@@ -2612,8 +2486,7 @@ package S5D9 is
 
    -- 36.2.1 I2C Bus Control Register 1 (ICCR1)
 
-   type ICCR1_Type is
-   record
+   type ICCR1_Type is record
       SDAI   : Boolean; -- SDA Line Monitor
       SCLI   : Boolean; -- SCL Line Monitor
       SDAO   : Boolean; -- SDA Output Control/Monitor
@@ -2622,11 +2495,10 @@ package S5D9 is
       CLO    : Boolean; -- Extra SCL Clock Cycle Output
       IICRST : Boolean; -- IIC-Bus Interface Internal Reset
       ICE    : Boolean; -- IIC-Bus Interface Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICCR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICCR1_Type use record
       SDAI   at 0 range 0 .. 0;
       SCLI   at 0 range 1 .. 1;
       SDAO   at 0 range 2 .. 2;
@@ -2639,8 +2511,7 @@ package S5D9 is
 
    -- 36.2.2 I2C Bus Control Register 2 (ICCR2)
 
-   type ICCR2_Type is
-   record
+   type ICCR2_Type is record
       Reserved1 : Bits_1 := 0;
       ST        : Boolean;     -- Start Condition Issuance Request
       RS        : Boolean;     -- Restart Condition Issuance Request
@@ -2649,11 +2520,10 @@ package S5D9 is
       TRS       : Boolean;     -- Transmit/Receive Mode
       MST       : Boolean;     -- Master/Slave Mode
       BBSY      : Boolean;     -- Bus Busy Detection Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICCR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICCR2_Type use record
       Reserved1 at 0 range 0 .. 0;
       ST        at 0 range 1 .. 1;
       RS        at 0 range 2 .. 2;
@@ -2666,17 +2536,15 @@ package S5D9 is
 
    -- 36.2.3 I2C Bus Mode Register 1 (ICMR1)
 
-   type ICMR1_Type is
-   record
+   type ICMR1_Type is record
       BC   : Bits_3;  -- Bit Counter
       BCWP : Boolean; -- BC Write Protect
       CKS  : Bits_3;  -- Internal Reference Clock Select
       MTWP : Boolean; -- MST/TRS Write Protect
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICMR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICMR1_Type use record
       BC   at 0 range 0 .. 2;
       BCWP at 0 range 3 .. 3;
       CKS  at 0 range 4 .. 6;
@@ -2685,19 +2553,17 @@ package S5D9 is
 
    -- 36.2.4 I2C Bus Mode Register 2 (ICMR2)
 
-   type ICMR2_Type is
-   record
+   type ICMR2_Type is record
       TMOS     : Boolean;     -- Timeout Detection Time Select
       TMOL     : Boolean;     -- Timeout L Count Control
       TMOH     : Boolean;     -- Timeout H Count Control
       Reserved : Bits_1 := 0;
       SDDL     : Bits_3;      -- SDA Output Delay Counter
       DLCS     : Boolean;     -- SDA Output Delay Clock Source Select
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICMR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICMR2_Type use record
       TMOS     at 0 range 0 .. 0;
       TMOL     at 0 range 1 .. 1;
       TMOH     at 0 range 2 .. 2;
@@ -2713,8 +2579,7 @@ package S5D9 is
    NF_3 : constant := 2#10#; -- Filter out noise of up to 3 IIC cycles (3-stage filter)
    NF_4 : constant := 2#11#; -- Filter out noise of up to 4 IIC cycles (4-stage filter).
 
-   type ICMR3_Type is
-   record
+   type ICMR3_Type is record
       NF    : Bits_2;  -- Noise Filter Stage Select
       ACKBR : Boolean; -- Receive Acknowledge
       ACKBT : Boolean; -- Transmit Acknowledge
@@ -2722,11 +2587,10 @@ package S5D9 is
       RDRFS : Boolean; -- RDRF Flag Set Timing Select
       WAIT  : Boolean; -- WAIT
       SMBS  : Boolean; -- SMBus/IIC-Bus Select
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICMR3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICMR3_Type use record
       NF    at 0 range 0 .. 1;
       ACKBR at 0 range 2 .. 2;
       ACKBT at 0 range 3 .. 3;
@@ -2738,8 +2602,7 @@ package S5D9 is
 
    -- 36.2.6 I2C Bus Function Enable Register (ICFER)
 
-   type ICFER_Type is
-   record
+   type ICFER_Type is record
       TMOE  : Boolean; -- Timeout Function Enable
       MALE  : Boolean; -- Master Arbitration-Lost Detection Enable
       NALE  : Boolean; -- NACK Transmission Arbitration-Lost Detection Enable
@@ -2748,11 +2611,10 @@ package S5D9 is
       NFE   : Boolean; -- Digital Noise Filter Circuit Enable
       SCLE  : Boolean; -- SCL Synchronous Circuit Enable
       FMPE  : Boolean; -- Fast-Mode Plus Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICFER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICFER_Type use record
       TMOE  at 0 range 0 .. 0;
       MALE  at 0 range 1 .. 1;
       NALE  at 0 range 2 .. 2;
@@ -2765,8 +2627,7 @@ package S5D9 is
 
    -- 36.2.7 I2C Bus Status Enable Register (ICSER)
 
-   type ICSER_Type is
-   record
+   type ICSER_Type is record
       SAR0E     : Boolean;     -- Slave Address Register 0 Enable
       SAR1E     : Boolean;     -- Slave Address Register 1 Enable
       SAR2E     : Boolean;     -- Slave Address Register 2 Enable
@@ -2775,11 +2636,10 @@ package S5D9 is
       DIDE      : Boolean;     -- Device-ID Address Detection Enable
       Reserved2 : Bits_1 := 0;
       HOAE      : Boolean;     -- Host Address Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICSER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICSER_Type use record
       SAR0E     at 0 range 0 .. 0;
       SAR1E     at 0 range 1 .. 1;
       SAR2E     at 0 range 2 .. 2;
@@ -2792,8 +2652,7 @@ package S5D9 is
 
    -- 36.2.8 I2C Bus Interrupt Enable Register (ICIER)
 
-   type ICIER_Type is
-   record
+   type ICIER_Type is record
       TMOIE  : Boolean; -- Timeout Interrupt Request Enable
       ALIE   : Boolean; -- Arbitration-Lost Interrupt Request Enable
       STIE   : Boolean; -- Start Condition Detection Interrupt Request Enable
@@ -2802,11 +2661,10 @@ package S5D9 is
       RIE    : Boolean; -- Receive Data Full Interrupt Request Enable
       TEIE   : Boolean; -- Transmit End Interrupt Request Enable
       TIE    : Boolean; -- Transmit Data Empty Interrupt Request Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICIER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICIER_Type use record
       TMOIE  at 0 range 0 .. 0;
       ALIE   at 0 range 1 .. 1;
       STIE   at 0 range 2 .. 2;
@@ -2819,8 +2677,7 @@ package S5D9 is
 
    -- 36.2.9 I2C Bus Status Register 1 (ICSR1)
 
-   type ICSR1_Type is
-   record
+   type ICSR1_Type is record
       AAS0      : Boolean;     -- Slave Address 0 Detection Flag
       AAS1      : Boolean;     -- Slave Address 1 Detection Flag
       AAS2      : Boolean;     -- Slave Address 2 Detection Flag
@@ -2829,11 +2686,10 @@ package S5D9 is
       DID       : Boolean;     -- Device-ID Address Detection Flag
       Reserved2 : Bits_1 := 0;
       HOA       : Boolean;     -- Host Address Detection Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICSR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICSR1_Type use record
       AAS0      at 0 range 0 .. 0;
       AAS1      at 0 range 1 .. 1;
       AAS2      at 0 range 2 .. 2;
@@ -2846,8 +2702,7 @@ package S5D9 is
 
    -- 36.2.10 I2C Bus Status Register 2 (ICSR2)
 
-   type ICSR2_Type is
-   record
+   type ICSR2_Type is record
       TMOF  : Boolean; -- Timeout Detection Flag
       AL    : Boolean; -- Arbitration-Lost Flag
       START : Boolean; -- Start Condition Detection Flag
@@ -2856,11 +2711,10 @@ package S5D9 is
       RDRF  : Boolean; -- Receive Data Full Flag
       TEND  : Boolean; -- Transmit End Flag
       TDRE  : Boolean; -- Transmit Data Empty Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICSR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICSR2_Type use record
       TMOF  at 0 range 0 .. 0;
       AL    at 0 range 1 .. 1;
       START at 0 range 2 .. 2;
@@ -2873,19 +2727,17 @@ package S5D9 is
 
    -- 36.2.11 I2C Bus Wakeup Unit Register (ICWUR)
 
-   type ICWUR_Type is
-   record
+   type ICWUR_Type is record
       WUAFA    : Boolean;     -- Wakeup Analog Filter Additional Selection
       Reserved : Bits_3 := 0;
       WUACK    : Boolean;     -- ACK Bit for Wakeup Mode
       WUF      : Boolean;     -- Wakeup Event Occurrence Flag
       WUIE     : Boolean;     -- Wakeup Interrupt Request Enable
       WUE      : Boolean;     -- Wakeup Function Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICWUR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICWUR_Type use record
       WUAFA    at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 3;
       WUACK    at 0 range 4 .. 4;
@@ -2896,17 +2748,15 @@ package S5D9 is
 
    -- 36.2.12 I2C Bus Wakeup Unit Register 2 (ICWUR2)
 
-   type ICWUR2_Type is
-   record
+   type ICWUR2_Type is record
       WUSEN    : Boolean;          -- Wakeup Analog Filter Additional Selection
       WUASYF   : Boolean;          -- Wakeup Analog Filter Additional Selection
       WUSYF    : Boolean;          -- Wakeup Analog Filter Additional Selection
       Reserved : Bits_5 := 16#1F#;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for ICWUR2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICWUR2_Type use record
       WUSEN    at 0 range 0 .. 0;
       WUASYF   at 0 range 1 .. 1;
       WUSYF    at 0 range 2 .. 2;
@@ -2928,8 +2778,7 @@ package S5D9 is
    MSTR_SLAVE  : constant := 0; -- Select slave mode
    MSTR_MASTER : constant := 1; -- Select master mode.
 
-   type SPCR_Type is
-   record
+   type SPCR_Type is record
       SPMS   : Bits_1;  -- SPI Mode Select
       TXMD   : Bits_1;  -- Communications Operating Mode Select
       MODFEN : Boolean; -- Mode Fault Error Detection Enable
@@ -2938,11 +2787,10 @@ package S5D9 is
       SPTIE  : Boolean; -- Transmit Buffer Empty Interrupt Enable
       SPE    : Boolean; -- SPI Function Enable
       SPRIE  : Boolean; -- SPI Receive Buffer Full Interrupt Enable
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPCR_Type use record
       SPMS   at 0 range 0 .. 0;
       TXMD   at 0 range 1 .. 1;
       MODFEN at 0 range 2 .. 2;
@@ -2967,18 +2815,16 @@ package S5D9 is
    SSL3P_LOW  : constant := 0; -- Set SSL3 signal to active low
    SSL3P_HIGH : constant := 1; -- Set SSL3 signal to active high.
 
-   type SSLP_Type is
-   record
+   type SSLP_Type is record
       SSL0P    : Bits_1;      -- SSL0 Signal Polarity Setting
       SSL1P    : Bits_1;      -- SSL1 Signal Polarity Setting
       SSL2P    : Bits_1;      -- SSL2 Signal Polarity Setting
       SSL3P    : Bits_1;      -- SSL3 Signal Polarity Setting
       Reserved : Bits_4 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SSLP_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SSLP_Type use record
       SSL0P    at 0 range 0 .. 0;
       SSL1P    at 0 range 1 .. 1;
       SSL2P    at 0 range 2 .. 2;
@@ -3000,19 +2846,17 @@ package S5D9 is
    MOIFE_PREVIOUS : constant := 0; -- Set MOSI output value to equal final data from previous transfer
    MOIFE_MOIFV    : constant := 1; -- Set MOSI output value to equal value set in the MOIFV bit.
 
-   type SPPCR_Type is
-   record
+   type SPPCR_Type is record
       SPLP      : Bits_1;      -- SPI Loopback
       SPLP2     : Bits_1;      -- SPI Loopback 2
       Reserved1 : Bits_2 := 0;
       MOIFV     : Bits_1;      -- MOSI Idle Fixed Value
       MOIFE     : Bits_1;      -- MOSI Idle Value Fixing Enable
       Reserved2 : Bits_2 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPPCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPPCR_Type use record
       SPLP      at 0 range 0 .. 0;
       SPLP2     at 0 range 1 .. 1;
       Reserved1 at 0 range 2 .. 3;
@@ -3023,8 +2867,7 @@ package S5D9 is
 
    -- 38.2.4 SPI Status Register (SPSR)
 
-   type SPSR_Type is
-   record
+   type SPSR_Type is record
       OVRF     : Boolean;     -- Overrun Error Flag
       IDLNF    : Boolean;     -- SPI Idle Flag
       MODF     : Boolean;     -- Mode Fault Error Flag
@@ -3033,11 +2876,10 @@ package S5D9 is
       SPTEF    : Boolean;     -- SPI Transmit Buffer Empty Flag
       Reserved : Bits_1 := 0;
       SPRF     : Boolean;     -- SPI Receive Buffer Full Flag
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPSR_Type use record
       OVRF     at 0 range 0 .. 0;
       IDLNF    at 0 range 1 .. 1;
       MODF     at 0 range 2 .. 2;
@@ -3059,15 +2901,13 @@ package S5D9 is
    SPSLN6 : constant := 2#110#; -- 0-->...>6-->0
    SPSLN7 : constant := 2#111#; -- 0-->...>7-->0
 
-   type SPSCR_Type is
-   record
+   type SPSCR_Type is record
       SPSLN    : Bits_3;      -- SPI Sequence Length Specification
       Reserved : Bits_5 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPSCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPSCR_Type use record
       SPSLN    at 0 range 0 .. 2;
       Reserved at 0 range 3 .. 7;
    end record;
@@ -3083,17 +2923,15 @@ package S5D9 is
    SPCMD6 : constant := 2#110#;
    SPCMD7 : constant := 2#111#;
 
-   type SPSSR_Type is
-   record
+   type SPSSR_Type is record
       SPCP      : Bits_3;      -- SPI Command Pointer
       Reserved1 : Bits_1 := 0;
       SPECM     : Bits_3;      -- SPI Error Command
       Reserved2 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPSSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPSSR_Type use record
       SPCP      at 0 range 0 .. 2;
       Reserved1 at 0 range 3 .. 3;
       SPECM     at 0 range 4 .. 6;
@@ -3116,19 +2954,17 @@ package S5D9 is
    SPBYT_WORD : constant := 0; -- SPDR is accessed in halfword or word (SPLW is valid)
    SPBYT_BYTE : constant := 1; -- SPDR is accessed in byte (SPLW is invalid).
 
-   type SPDCR_Type is
-   record
+   type SPDCR_Type is record
       SPFC      : Bits_2;      -- Number of Frames Specification
       Reserved1 : Bits_2 := 0;
       SPRDTD    : Bits_1;      -- SPI Receive/Transmit Data Select
       SPLW      : Bits_1;      -- SPI Word Access/Halfword Access Specification
       SPBYT     : Bits_1;      -- SPI Byte Access Specification
       Reserved2 : Bits_1 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for SPDCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPDCR_Type use record
       SPFC      at 0 range 0 .. 1;
       Reserved1 at 0 range 2 .. 3;
       SPRDTD    at 0 range 4 .. 4;
@@ -3143,15 +2979,13 @@ package S5D9 is
 
    -- 39.2.5 Communication Port Register (SFMCOM)
 
-   type SFMCOM_Type is
-   record
+   type SFMCOM_Type is record
       SFMD     : Unsigned_8;   -- Port select for direct communication with the SPI bus
       Reserved : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SFMCOM_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMCOM_Type use record
       SFMD     at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
@@ -3161,40 +2995,36 @@ package S5D9 is
    DCOM_ROM    : constant := 0; -- ROM access mode
    DCOM_DIRECT : constant := 1; -- Direct communication mode.
 
-   type SFMCMD_Type is
-   record
+   type SFMCMD_Type is record
       DCOM     : Bits_1;       -- Mode select for communication with the SPI bus
       Reserved : Bits_31 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for SFMCMD_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMCMD_Type use record
       DCOM     at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
 
    -- QSPI
 
-   type QSPI_Type is
-   record
+   type QSPI_Type is record
       SFMCOM : SFMCOM_Type with Volatile_Full_Access => True;
       SFMCMD : SFMCMD_Type with Volatile_Full_Access => True;
-   end record with
-      Size                    => 16#38# * 8,
-      Suppress_Initialization => True;
-   for QSPI_Type use
-   record
+   end record
+      with Size                    => 16#38# * 8,
+           Suppress_Initialization => True;
+   for QSPI_Type use record
       SFMCOM   at 16#10# range 0 .. 31;
       SFMCMD   at 16#14# range 0 .. 31;
    end record;
 
    QSPI_ADDRESS : constant := 16#6400_0000#;
 
-   QSPI : aliased QSPI_Type with
-      Address    => To_Address (QSPI_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   QSPI : aliased QSPI_Type
+      with Address    => To_Address (QSPI_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end S5D9;
