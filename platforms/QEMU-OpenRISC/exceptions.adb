@@ -55,7 +55,7 @@ package body Exceptions
          M  => OpenRISC.M_DISABLED
          ));
       BSP.Tick_Count := @ + 1;
-      if (BSP.Tick_Count and 16#FF#) = 1 then
+      if BSP.Tick_Count mod 1_000 = 0 then
          Console.Print ("*** T ***", NL => True);
       end if;
       BSP.Tick_Timer_Init;
