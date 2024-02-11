@@ -1,19 +1,15 @@
 
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_RISCV)
 
-MMIO_FUNCTIONS := ./mmio/mmio-reada_u8.adb   mmio-reada_u8.adb   \
-                  ./mmio/mmio-reada_u16.adb  mmio-reada_u16.adb  \
-                  ./mmio/mmio-reada_u32.adb  mmio-reada_u32.adb  \
-                  ./mmio/mmio-writea_u8.adb  mmio-writea_u8.adb  \
-                  ./mmio/mmio-writea_u16.adb mmio-writea_u16.adb \
-                  ./mmio/mmio-writea_u32.adb mmio-writea_u32.adb
+MMIO_FUNCTIONS := mmio-reada_u8.adb  mmio-writea_u8.adb  \
+                  mmio-reada_u16.adb mmio-writea_u16.adb \
+                  mmio-reada_u32.adb mmio-writea_u32.adb
 
 ifeq      ($(findstring RV32,$(CPU_MODEL)),RV32)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/32
 else ifeq ($(findstring RV64,$(CPU_MODEL)),RV64)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/64
-  MMIO_FUNCTIONS += ./mmio/mmio-reada_u64.adb  mmio-reada_u64.adb  \
-                    ./mmio/mmio-writea_u64.adb mmio-writea_u64.adb
+  MMIO_FUNCTIONS += mmio-reada_u64.adb mmio-writea_u64.adb
 endif
 
 export MMIO_FUNCTIONS
