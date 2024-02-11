@@ -59,9 +59,9 @@ package body BSP
    begin
       -- wait for transmitter available
       loop
-         exit when not UART0.CTRL.TX_FULL;
+         exit when not UART0.CTRL.UART_CTRL_TX_FULL;
       end loop;
-      UART0.DATA.RTX := To_U8 (C);
+      UART0.DATA.UART_DATA_RTX := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -71,9 +71,9 @@ package body BSP
    begin
       -- wait for receiver available
       loop
-         exit when UART0.CTRL.RX_NEMPTY;
+         exit when UART0.CTRL.UART_CTRL_RX_NEMPTY;
       end loop;
-      Data := UART0.DATA.RTX;
+      Data := UART0.DATA.UART_DATA_RTX;
       C := To_Ch (Data);
    end Console_Getchar;
 
@@ -85,25 +85,25 @@ package body BSP
    begin
       -- UART0 ----------------------------------------------------------------
       UART0.CTRL := (
-         EN            => True,
-         SIM_MODE      => True,
-         HWFC_EN       => True,
-         PRSC          => 2#1#,
-         BAUD          => 1,
-         RX_NEMPTY     => False,
-         RX_HALF       => False,
-         RX_FULL       => False,
-         TX_EMPTY      => False,
-         TX_NHALF      => False,
-         TX_FULL       => False,
-         IRQ_RX_NEMPTY => False,
-         IRQ_RX_HALF   => False,
-         IRQ_RX_FULL   => False,
-         IRQ_TX_EMPTY  => False,
-         IRQ_TX_NHALF  => False,
-         RX_OVER       => False,
-         TX_BUSY       => False,
-         others        => <>
+         UART_CTRL_EN            => True,
+         UART_CTRL_SIM_MODE      => True,
+         UART_CTRL_HWFC_EN       => True,
+         UART_CTRL_PRSC          => 2#1#,
+         UART_CTRL_BAUD          => 1,
+         UART_CTRL_RX_NEMPTY     => False,
+         UART_CTRL_RX_HALF       => False,
+         UART_CTRL_RX_FULL       => False,
+         UART_CTRL_TX_EMPTY      => False,
+         UART_CTRL_TX_NHALF      => False,
+         UART_CTRL_TX_FULL       => False,
+         UART_CTRL_IRQ_RX_NEMPTY => False,
+         UART_CTRL_IRQ_RX_HALF   => False,
+         UART_CTRL_IRQ_RX_FULL   => False,
+         UART_CTRL_IRQ_TX_EMPTY  => False,
+         UART_CTRL_IRQ_TX_NHALF  => False,
+         UART_CTRL_RX_OVER       => False,
+         UART_CTRL_TX_BUSY       => False,
+         others                  => <>
          );
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;

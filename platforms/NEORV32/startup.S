@@ -60,12 +60,12 @@ _start:
                 //
                 .extern _sbss
                 .extern _ebss
-                la      a3,_sbss
-                la      a4,_ebss
-                ble     a4,a3,2f
-1:              sw      zero,(a3)
-                add     a3,a3,__SIZEOF_POINTER__
-                blt     a3,a4,1b
+                la      t0,_sbss
+                la      t1,_ebss
+                ble     t1,t0,2f
+1:              sw      zero,(t0)
+                add     t0,t0,__SIZEOF_POINTER__
+                blt     t0,t1,1b
 2:
 
                 //
