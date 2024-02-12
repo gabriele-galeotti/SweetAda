@@ -140,8 +140,6 @@ package body BSP
          );
       PIC_IRQ_ENABLESET.TIMERINT0 := True;
       CPU.Irq_Enable;
-      -- PIC_FIQ_ENABLESET.TIMERINT0 := True;
-      -- ARMv4.Fiq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 

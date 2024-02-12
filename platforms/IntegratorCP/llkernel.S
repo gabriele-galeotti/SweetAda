@@ -35,11 +35,16 @@ V_AbortP:       .long   0
 V_AbortD:       .long   0
 V_AddrExc:      .long   0
 V_IRQ:          .long   irq_handler
-V_FIQ:          .long   irq_handler
+V_FIQ:          .long   fiq_handler
 
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .text,"ax"
+
+                .type   fiq_handler,%function
+                .global fiq_handler
+fiq_handler:
+                subs    pc,lr,#4
 
                 .type   irq_handler,%function
                 .global irq_handler
