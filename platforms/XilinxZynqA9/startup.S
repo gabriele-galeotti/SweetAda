@@ -99,16 +99,16 @@ movdata:
 
                 .align  8
                 .space  1024
-FIQ_stack:
-                .align  8
-                .space  1024
 IRQ_stack:
                 .align  8
                 .space  1024
-ABT_stack:
+FIQ_stack:
                 .align  8
                 .space  1024
 UND_stack:
+                .align  8
+                .space  1024
+ABT_stack:
                 .align  8
                 .space  2048
 SVC_stack:

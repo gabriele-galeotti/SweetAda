@@ -1,12 +1,20 @@
 
+with Definitions;
+
 package Configure
    with Pure => True
    is
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM  : constant String := "XilinxZynqA9";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   CLK_FREQUENCY  : constant := 33333333; -- 33.333333 MHz
+   TICK_FREQUENCY : constant := 1 * kHz1;
 
    -- IOEMU
    USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;

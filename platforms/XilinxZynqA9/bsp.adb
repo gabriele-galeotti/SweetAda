@@ -17,6 +17,7 @@
 
 with System.Parameters;
 with System.Secondary_Stack;
+with Configure;
 with Definitions;
 with Bits;
 with Core;
@@ -152,6 +153,8 @@ package body BSP
          (Enable_secure     => True,
           Enable_Non_secure => True,
           others            => <>);
+      -------------------------------------------------------------------------
+      CPU.Irq_Enable;
       -- ttc timer ------------------------------------------------------------
       TTC0.CNT_CNTRL (0) :=
          (DIS      => False,
@@ -162,13 +165,15 @@ package body BSP
           EN_WAVE  => False,
           POL_WAVE => POL_WAVE_L2H,
           others   => <>);
-      TTC0.INTERVAL_VAL (0).COUNT_VALUE := 16#8000#;
+      TTC0.INTERVAL_VAL (0).COUNT_VALUE :=
+         Unsigned_16 (Configure.CLK_FREQUENCY / Configure.TICK_FREQUENCY);
       TTC0.CLK_CNTRL (0) :=
          (PS_EN    => True,
-          PS_VAL   => 8,
+          PS_VAL   => 1,
           SRC      => SRC_PCLK,
           EXT_EDGE => False,
           others   => <>);
+      TTC0.IER (0).IXR_CNT_OVR_IEN := True;
       -------------------------------------------------------------------------
    end Setup;
 

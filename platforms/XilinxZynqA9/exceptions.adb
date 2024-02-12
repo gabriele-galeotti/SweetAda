@@ -15,8 +15,24 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+with Configure;
+with ZynqA9;
+with BSP;
+with IOEMU;
+
 package body Exceptions
    is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use Interfaces;
 
    --========================================================================--
    --                                                                        --
@@ -32,7 +48,17 @@ package body Exceptions
    procedure Irq_Process
       is
    begin
-      null;
+      -- ttc
+      declare
+         Unused : ZynqA9.XTTCPS_ISR_Type;
+      begin
+         Unused := ZynqA9.TTC0.ISR (0);
+      end;
+      BSP.Tick_Count := @ + 1;
+      if Configure.USE_QEMU_IOEMU then
+         -- IRQ pulsemeter
+         IOEMU.IO0 := 1;
+      end if;
    end Irq_Process;
 
    ----------------------------------------------------------------------------
