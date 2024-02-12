@@ -119,13 +119,13 @@ package body ARMv4
       CPSR_R : CPSR_Type;
    begin
       Asm (
-           Template => ""                            & CRLF &
-                       "        mrs     %0,cpsr    " & CRLF &
-                       "        bic     %0,%0,#0x80" & CRLF &
-                       "        msr     cpsr_c,%0  " & CRLF &
+           Template => ""                          & CRLF &
+                       "        mrs     %0,cpsr  " & CRLF &
+                       "        bic     %0,%0,%1 " & CRLF &
+                       "        msr     cpsr_c,%0" & CRLF &
                        "",
            Outputs  => CPSR_Type'Asm_Output ("=r", CPSR_R),
-           Inputs   => No_Input_Operands,
+           Inputs   => Integer'Asm_Input ("i", IRQ_Bit),
            Clobber  => "memory",
            Volatile => True
           );
@@ -139,13 +139,13 @@ package body ARMv4
       CPSR_R : CPSR_Type;
    begin
       Asm (
-           Template => ""                            & CRLF &
-                       "        mrs     %0,cpsr    " & CRLF &
-                       "        orr     %0,%0,#0x80" & CRLF &
-                       "        msr     cpsr_c,%0  " & CRLF &
+           Template => ""                          & CRLF &
+                       "        mrs     %0,cpsr  " & CRLF &
+                       "        orr     %0,%0,%1 " & CRLF &
+                       "        msr     cpsr_c,%0" & CRLF &
                        "",
            Outputs  => CPSR_Type'Asm_Output ("=r", CPSR_R),
-           Inputs   => No_Input_Operands,
+           Inputs   => Integer'Asm_Input ("i", IRQ_Bit),
            Clobber  => "memory",
            Volatile => True
           );
@@ -159,13 +159,13 @@ package body ARMv4
       CPSR_R : CPSR_Type;
    begin
       Asm (
-           Template => ""                            & CRLF &
-                       "        mrs     %0,cpsr    " & CRLF &
-                       "        bic     %0,%0,#0x40" & CRLF &
-                       "        msr     cpsr_c,%0  " & CRLF &
+           Template => ""                          & CRLF &
+                       "        mrs     %0,cpsr  " & CRLF &
+                       "        bic     %0,%0,%1 " & CRLF &
+                       "        msr     cpsr_c,%0" & CRLF &
                        "",
            Outputs  => CPSR_Type'Asm_Output ("=r", CPSR_R),
-           Inputs   => No_Input_Operands,
+           Inputs   => Integer'Asm_Input ("i", FIQ_Bit),
            Clobber  => "memory",
            Volatile => True
           );
@@ -179,13 +179,13 @@ package body ARMv4
       CPSR_R : CPSR_Type;
    begin
       Asm (
-           Template => ""                            & CRLF &
-                       "        mrs     %0,cpsr    " & CRLF &
-                       "        orr     %0,%0,#0x40" & CRLF &
-                       "        msr     cpsr_c,%0  " & CRLF &
+           Template => ""                          & CRLF &
+                       "        mrs     %0,cpsr  " & CRLF &
+                       "        orr     %0,%0,%1 " & CRLF &
+                       "        msr     cpsr_c,%0" & CRLF &
                        "",
            Outputs  => CPSR_Type'Asm_Output ("=r", CPSR_R),
-           Inputs   => No_Input_Operands,
+           Inputs   => Integer'Asm_Input ("i", FIQ_Bit),
            Clobber  => "memory",
            Volatile => True
           );

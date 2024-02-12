@@ -100,6 +100,9 @@ package ARMv4
    MODE_UND : constant CPU_Mode_Type := 2#11011#;
    MODE_SYS : constant CPU_Mode_Type := 2#11111#;
 
+   FIQ_Bit : constant := 16#40#;
+   IRQ_Bit : constant := 16#80#;
+
    type CPSR_Type is record
       M      : CPU_Mode_Type;
       T      : Boolean;
