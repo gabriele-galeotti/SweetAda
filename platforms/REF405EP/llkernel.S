@@ -22,6 +22,10 @@
 #define UART0_BASE 0xEF600300
 #define UART0_RHR  (UART0_BASE + 0)
 
+#define EXCEPTION(x, name) \
+                . = x    ; \
+name:
+
 //
 // - use SPRG1 as a scratch register for r1
 // - exception stack in SPRG0
@@ -96,145 +100,81 @@
 
                 .sect   .text,"ax"
 
-                //
-                // Interrupts:
-                // - waits for current instruction to complete
-                // - save MSR[EE] to SRR1, clears MSR[EE]
-                // - save PC to SRR0
-                // - transfer control to n+0x100, etc
-                //
-
-                //
-                // Interrupt vector table.
-                // __REF__ PPC405EP Embedded Processor User’s Manual
-                // 10.10 Critical and Noncritical Interrupts
-                // __REF__
-                // The Programming Environments For 32-Bit Microprocessors
-                //
-
                 .align  16
                 .global ivtable
+                .extern exception_fatal
 ivtable:
 
-                //////////////////////////////////////////////////////////////
-
-                // System Reset Exception
-                // asynchronous/nonmaskable
-                . = 0x0100
+                // Critical input interrupt
+                EXCEPTION(0x0100, E_CriticalInputInterrupt)
                 li      r1,10
-                b       irq_entry
+                b       exception_fatal
 
-                //////////////////////////////////////////////////////////////
-
-                // Machine Check Exception
-                // asynchronous/nonmaskable
-                . = 0x0200
+                // Machine check
+                EXCEPTION(0x0200, E_MachineCheck)
                 li      r0,11
-                b       irq_entry
+                b       exception_fatal
 
-                //////////////////////////////////////////////////////////////
-
-                // DSI (data storage) Exception
-                . = 0x0300
+                // Data storage interrupt
+                EXCEPTION(0x0300, E_DataStorageInterrupt)
                 li      r0,12
-                b       irq_entry
+                b       exception_fatal
 
-                //////////////////////////////////////////////////////////////
-
-                // ISI (instruction storage) Exception
-                . = 0x0400
+                // Instruction storage interrupt
+                EXCEPTION(0x0400, E_InstructionStorageInterrupt)
                 li      r0,13
-                b       irq_entry
-
-                //////////////////////////////////////////////////////////////
+                b       exception_fatal
 
                 // External interrupt
-                // asynchronous/maskable
-                . = 0x0500
+                EXCEPTION(0x0500, E_ExternalInterrupt)
                 b       EXTINT_handler
 
-                //////////////////////////////////////////////////////////////
+                // Alignment
+                EXCEPTION(0x0600, E_Alignment)
+                li      r0,16
+                b       exception_fatal
 
-                // Alignment Exception
-                . = 0x0600
-                li      r0,14
-                b       irq_entry
+                // Program
+                EXCEPTION(0x0700, E_Program)
+                li      r0,16
+                b       exception_fatal
 
-                //////////////////////////////////////////////////////////////
+                // FPU Unavailable
+                EXCEPTION(0x0800, E_FPUUnavailable)
+                li      r0,16
+                b       exception_fatal
 
-                // Program Exception
-                // synchronous/precise
-                // happens with trap instructions
-                . = 0x0700
-                //SAVE_REGISTERS
-                //li      r3,0x0700
-                //b       irq_entry
-                rfi
-
-                //////////////////////////////////////////////////////////////
-
-                // Floating-Point Unavailable Exception
-                . = 0x0800
-                b       irq_entry
-
-                //////////////////////////////////////////////////////////////
-
-                // Decrementer Exception
-                // asynchronous/maskable
-                . = 0x0900
-                b       irq_entry
-
-                //////////////////////////////////////////////////////////////
-
-                // System Call Exception
-                . = 0x0C00
+                // System Call
+                EXCEPTION(0x0C00, E_SystemCall)
                 li      r0,16
                 b       irq_entry
 
-                //////////////////////////////////////////////////////////////
-
-                // Trace Exception (optional)
-                . = 0x0D00
-                b       irq_entry
-
-                //////////////////////////////////////////////////////////////
-
-                // Floating-Point Assist Exception (optional)
-                . = 0x0E00
-                b       irq_entry
-
-                //////////////////////////////////////////////////////////////
-
-                // PIT interrupt
-                . = 0x1000
+                // PIT
+                EXCEPTION(0x1000, E_PIT)
                 b       PIT_handler
 
-                //////////////////////////////////////////////////////////////
-
-                // FIT interrupt
-                . = 0x1010
+                // FIT
+                EXCEPTION(0x1010, E_FIT)
                 b       FIT_handler
 
-                //////////////////////////////////////////////////////////////
+                // Watchdog timer
+                EXCEPTION(0x1020, E_WatchdogTimer)
+                b       FIT_handler
 
                 // Data TLB miss
-                . = 0x1100
+                EXCEPTION(0x1100, E_DTLBMiss)
                 li      r0,17
-                b       irq_entry
-
-                //////////////////////////////////////////////////////////////
+                b       exception_fatal
 
                 // Instruction TLB miss
-                . = 0x1200
+                EXCEPTION(0x1200, E_ITLBMiss)
                 li      r0,18
-                b       irq_entry
+                b       exception_fatal
 
-                //////////////////////////////////////////////////////////////
-
-                // Debug offset
-                . = 0x2000
+                // Debug
+                EXCEPTION(0x2000, E_Debug)
                 li      r0,19
-                b       irq_entry
+                b       exception_fatal
 
                 //////////////////////////////////////////////////////////////
                 //

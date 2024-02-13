@@ -35,6 +35,11 @@ package Exceptions
    PIT_IRQ_ID   : constant := 16#1000#;
    FIT_IRQ_ID   : constant := 16#1010#;
 
+   procedure Exception_Fatal (Identifier : in Unsigned_32)
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "exception_fatal";
+
    procedure Exception_Process (Identifier : in Unsigned_32)
       with Export        => True,
            Convention    => Asm,

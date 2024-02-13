@@ -18,6 +18,7 @@
 with System.Machine_Code;
 with Definitions;
 with Configure;
+with Abort_Library;
 with BSP;
 with IOEMU;
 with Console;
@@ -43,6 +44,15 @@ package body Exceptions
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Exception_Fatal
+   ----------------------------------------------------------------------------
+   procedure Exception_Fatal (Identifier : in Unsigned_32)
+      is
+   begin
+      Abort_Library.System_Abort;
+   end Exception_Fatal;
 
    ----------------------------------------------------------------------------
    -- Exception_Process
