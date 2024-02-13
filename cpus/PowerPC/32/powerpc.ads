@@ -397,10 +397,10 @@ package PowerPC
    subtype Intcontext_Type is Integer;
 
    procedure Intcontext_Get
-      (Intcontext : out IntcontextType)
+      (Intcontext : out Intcontext_Type)
       with Inline_Always => True;
    procedure Intcontext_Set
-      (Intcontext : in IntcontextType)
+      (Intcontext : in Intcontext_Type)
       with Inline_Always => True;
 
    procedure Irq_Enable
