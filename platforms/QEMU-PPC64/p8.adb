@@ -127,7 +127,8 @@ package body P8
    ----------------------------------------------------------------------------
    procedure XSCOM_Wait_Done
       is
-      HMER : Unsigned_64 with Volatile => True;
+      HMER : Unsigned_64
+         with Volatile => True;
    begin
       loop
          exit when (HMER_Read and 16#0040_0000_0000_0000#) /= 0;
