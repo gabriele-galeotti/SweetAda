@@ -22,6 +22,16 @@
 _start:
 
                 //
+                // Disable interrupts and SIM COPC watchdog.
+                //
+                cpsid   f
+                cpsid   i
+#define SIM_COPC 0x40048100
+                ldr     r1,=SIM_COPC
+                movs    r0,#0
+                str     r0,[r1]
+
+                //
                 // Setup stack pointer.
                 //
                 ldr     r0,=kernel_stack

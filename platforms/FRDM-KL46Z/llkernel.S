@@ -14,7 +14,9 @@
 
                 .syntax unified
 
-                .sect   .text,"ax"
+                .sect   .vectors,"ax"
+
+                .p2align 8
 
                 .global vectors
 vectors:
@@ -37,38 +39,38 @@ ReservedExcD:   .long   0                       // 13
 PendSV:         .long   0                       // 14
 SysTick:        .long   0                       // 15
 
-// non-core vectors
+// Non-Core vectors
 
-Interrupt0:     .long   0                       // 16
-Interrupt1:     .long   0                       // 17
-Interrupt2:     .long   0                       // 18
-Interrupt3:     .long   0                       // 19
-Interrupt4:     .long   0                       // 20
-Interrupt5:     .long   0                       // 21
-Interrupt6:     .long   0                       // 22
-Interrupt7:     .long   0                       // 23
-Interrupt8:     .long   0                       // 24
-Interrupt9:     .long   0                       // 25
-Interrupt10:    .long   0                       // 26
-Interrupt11:    .long   0                       // 27
-Interrupt12:    .long   0                       // 28
-Interrupt13:    .long   0                       // 29
-Interrupt14:    .long   0                       // 30
-Interrupt15:    .long   0                       // 31
-Interrupt16:    .long   0                       // 32
-Interrupt17:    .long   0                       // 33
-Interrupt18:    .long   0                       // 34
-Interrupt19:    .long   0                       // 35
-Interrupt20:    .long   0                       // 36
-Interrupt21:    .long   0                       // 37
-Interrupt22:    .long   0                       // 38
-Interrupt23:    .long   0                       // 39
-Interrupt24:    .long   0                       // 40
-Interrupt25:    .long   0                       // 41
-Interrupt26:    .long   0                       // 42
-Interrupt27:    .long   0                       // 43
-Interrupt28:    .long   0                       // 44
-Interrupt29:    .long   0                       // 45
-Interrupt30:    .long   0                       // 46
-Interrupt31:    .long   0                       // 47
+Interrupt0:     .long   0                       // 16 DMA DMA channel 0 transfer complete and error
+Interrupt1:     .long   0                       // 17 DMA DMA channel 1 transfer complete and error
+Interrupt2:     .long   0                       // 18 DMA DMA channel 2 transfer complete and error
+Interrupt3:     .long   0                       // 19 DMA DMA channel 3 transfer complete and error
+Interrupt4:     .long   0                       // 20 -
+Interrupt5:     .long   0                       // 21 FTFA Command complete and read collision
+Interrupt6:     .long   0                       // 22 PMC Low-voltage detect, low-voltage warning
+Interrupt7:     .long   0                       // 23 LLWU Low Leakage Wakeup
+Interrupt8:     .long   0                       // 24 I2C0
+Interrupt9:     .long   0                       // 25 I2C1
+Interrupt10:    .long   0                       // 26 SPI0 Single interrupt vector for all sources
+Interrupt11:    .long   0                       // 27 SPI1 Single interrupt vector for all sources
+Interrupt12:    .long   0                       // 28 UART0 Status and error
+Interrupt13:    .long   0                       // 29 UART1 Status and error
+Interrupt14:    .long   0                       // 30 UART2 Status and error
+Interrupt15:    .long   0                       // 31 ADC0
+Interrupt16:    .long   0                       // 32 CMP0
+Interrupt17:    .long   0                       // 33 TPM0
+Interrupt18:    .long   0                       // 34 TPM1
+Interrupt19:    .long   0                       // 35 TPM2
+Interrupt20:    .long   0                       // 36 RTC Alarm interrupt
+Interrupt21:    .long   0                       // 37 RTC Seconds interrupt
+Interrupt22:    .long   0                       // 38 PIT Single interrupt vector for all channels
+Interrupt23:    .long   0                       // 39 I2S0 Single interrupt vector for all sources
+Interrupt24:    .long   0                       // 40 USB OTG
+Interrupt25:    .long   0                       // 41 DAC0
+Interrupt26:    .long   0                       // 42 TSI0
+Interrupt27:    .long   0                       // 43 MCG
+Interrupt28:    .long   0                       // 44 LPTMR0
+Interrupt29:    .long   0                       // 45 SLCD
+Interrupt30:    .long   0                       // 46 Port control module Pin detect (Port A)
+Interrupt31:    .long   0                       // 47 Port control module Pin detect (Single interrupt vector for Port C and Port D)
 
