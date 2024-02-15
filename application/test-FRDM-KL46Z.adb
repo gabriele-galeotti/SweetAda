@@ -14,6 +14,7 @@ package body Application is
    --========================================================================--
 
    use Interfaces;
+   use KL46Z;
 
    --========================================================================--
    --                                                                        --
@@ -33,17 +34,17 @@ package body Application is
       declare
          Delay_Count : constant := 3_000_000;
       begin
-         KL46Z.SIM_SCGC5.PORTD := True;
-         KL46Z.SIM_SCGC5.PORTE := True;
+         SIM_SCGC5.PORTD := True;
+         SIM_SCGC5.PORTE := True;
          -- LED1 (GREEN)
-         KL46Z.PORTD_PCR05.MUX := KL46Z.MUX_ALT1_GPIO;
-         KL46Z.GPIOD_PDDR.PDD05 := True;
+         PORTD_PCR (5).MUX := MUX_ALT1_GPIO;
+         GPIOD_PDDR (5) := True;
          -- LED2 (RED)
-         KL46Z.PORTE_PCR29.MUX := KL46Z.MUX_ALT1_GPIO;
-         KL46Z.GPIOE_PDDR.PDD29 := True;
+         PORTE_PCR (29).MUX := MUX_ALT1_GPIO;
+         GPIOE_PDDR (29) := True;
          while True loop
-            KL46Z.GPIOD_PTOR.PTTO05 := True;
-            KL46Z.GPIOE_PTOR.PTTO29 := True;
+            GPIOD_PTOR (5) := True;
+            GPIOE_PTOR (29) := True;
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
          end loop;
       end;
