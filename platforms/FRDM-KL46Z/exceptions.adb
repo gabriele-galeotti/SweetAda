@@ -15,8 +15,26 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+with LLutils;
+with Abort_Library;
+with ARMv6M;
+with KL46Z;
+with BSP;
+
 package body Exceptions
    is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use Interfaces;
+   use KL46Z;
 
    --========================================================================--
    --                                                                        --
@@ -27,12 +45,42 @@ package body Exceptions
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- Exception_Process
+   ----------------------------------------------------------------------------
+   procedure Exception_Process
+      is
+   begin
+      Abort_Library.System_Abort;
+   end Exception_Process;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Process
+   ----------------------------------------------------------------------------
+   procedure Irq_Process
+      is
+   begin
+      BSP.Tick_Count := @ + 1;
+      -- blink on-board RED LED
+      if (BSP.Tick_Count and 16#FFF#) = 0 then
+         GPIOE_PTOR (29) := True;
+      end if;
+   end Irq_Process;
+
+   ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
       is
+      Vector_Table : constant Asm_Entry_Point
+         with Import        => True,
+              External_Name => "vectors";
    begin
-      null;
+      ARMv6M.NVIC_ICER := [others => True];
+      ARMv6M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
+      -- LED2 (RED)
+      SIM_SCGC5.PORTE := True;
+      PORTE_PCR (29).MUX := MUX_ALT1_GPIO;
+      GPIOE_PDDR (29) := True;
    end Init;
 
 end Exceptions;

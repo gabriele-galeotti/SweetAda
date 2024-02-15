@@ -37,7 +37,7 @@ SVCall:         .long   0                       // 11
 ReservedExcC:   .long   0                       // 12
 ReservedExcD:   .long   0                       // 13
 PendSV:         .long   0                       // 14
-SysTick:        .long   0                       // 15
+SysTick:        .long   systick_handler         // 15
 
 // Non-Core vectors
 
@@ -73,4 +73,15 @@ Interrupt28:    .long   0                       // 44 LPTMR0
 Interrupt29:    .long   0                       // 45 SLCD
 Interrupt30:    .long   0                       // 46 Port control module Pin detect (Port A)
 Interrupt31:    .long   0                       // 47 Port control module Pin detect (Single interrupt vector for Port C and Port D)
+
+                .sect   .text,"ax"
+
+                .thumb_func
+                .type   systick_handler,%function
+                .global systick_handler
+systick_handler:
+                push    {lr}
+                .extern irq_process
+                bl      irq_process
+                pop     {pc}
 
