@@ -50,6 +50,17 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 #                                                                              #
 ################################################################################
 
+#
+# NEORV32_HOME is the top-level directory created when NEORV32 is checked out
+# from the repository. Currently SweetAda refers to main-6863fd9.
+#
+# GHDL_PATH is the prefix of the GHDL installation.
+#
+# As a prerequisite, go into the "<NEORV32_HOME>/sw/example/hello_world"
+# directory an do a "make ../../../sw/image_gen/image_gen" to create the
+# executable that will be used in translating the SweetAda binary image.
+#
+
 export NEORV32_HOME := /root/workspace/hardware/NEORV32/neorv32-main
 export GHDL_PATH    := /opt/GHDL
 

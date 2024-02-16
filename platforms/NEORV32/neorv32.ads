@@ -79,15 +79,16 @@ package NEORV32
       RESET at 4 range 0 .. 31;
    end record;
 
-   WDT_BASEADDRESS : constant := 16#FFFF_FB00#;
+   WDT_ADDRESS : constant := 16#FFFF_FB00#;
 
    WDT : aliased WDT_Type
-      with Address    => To_Address (WDT_BASEADDRESS),
+      with Address    => To_Address (WDT_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    -- 2.7.13. Primary Universal Asynchronous Receiver and Transmitter (UART0)
+   -- 2.7.14. Secondary Universal Asynchronous Receiver and Transmitter (UART1)
 
    type UART_CTRL_Type is record
       UART_CTRL_EN            : Boolean;     -- UART global enable
@@ -166,5 +167,108 @@ package NEORV32
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   UART1_BASEADDRESS : constant := 16#FFFF_F600#;
+
+   UART1 : aliased UART_Type
+      with Address    => To_Address (UART1_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   -- 2.7.23. External Interrupt Controller (XIRQ)
+
+   XIRQ_NONE : constant := 0;
+   XIRQ_CH0  : constant := 2**0;
+   XIRQ_CH1  : constant := 2**1;
+   XIRQ_CH2  : constant := 2**2;
+   XIRQ_CH3  : constant := 2**3;
+   XIRQ_CH4  : constant := 2**4;
+   XIRQ_CH5  : constant := 2**5;
+   XIRQ_CH6  : constant := 2**6;
+   XIRQ_CH7  : constant := 2**7;
+   XIRQ_CH8  : constant := 2**8;
+   XIRQ_CH9  : constant := 2**9;
+   XIRQ_CH10 : constant := 2**10;
+   XIRQ_CH11 : constant := 2**11;
+   XIRQ_CH12 : constant := 2**12;
+   XIRQ_CH13 : constant := 2**13;
+   XIRQ_CH14 : constant := 2**14;
+   XIRQ_CH15 : constant := 2**15;
+   XIRQ_CH16 : constant := 2**16;
+   XIRQ_CH17 : constant := 2**17;
+   XIRQ_CH18 : constant := 2**18;
+   XIRQ_CH19 : constant := 2**19;
+   XIRQ_CH20 : constant := 2**20;
+   XIRQ_CH21 : constant := 2**21;
+   XIRQ_CH22 : constant := 2**22;
+   XIRQ_CH23 : constant := 2**23;
+   XIRQ_CH24 : constant := 2**24;
+   XIRQ_CH25 : constant := 2**25;
+   XIRQ_CH26 : constant := 2**26;
+   XIRQ_CH27 : constant := 2**27;
+   XIRQ_CH28 : constant := 2**28;
+   XIRQ_CH29 : constant := 2**29;
+   XIRQ_CH30 : constant := 2**30;
+   XIRQ_CH31 : constant := 2**31;
+   XIRQ_ALL  : constant := 16#FFFF_FFFF#;
+
+   -- EIE External interrupt enable register
+
+   EIE_ADDRESS : constant := 16#FFFF_F300#;
+
+   EIE : aliased Bits_32
+      with Address              => To_Address (EIE_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   procedure EIE_Read
+      (XIRQ_CH : out Bits_32)
+      with Inline => True;
+
+   procedure EIE_Enable
+      (XIRQ_CH : in Bits_32)
+      with Inline => True;
+
+   procedure EIE_Disable
+      (XIRQ_CH : in Bits_32)
+      with Inline => True;
+
+   -- EIP External interrupt pending register
+
+   EIP_ADDRESS : constant := 16#FFFF_F304#;
+
+   EIP : aliased Bits_32
+      with Address              => To_Address (EIP_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   procedure EIP_Read
+      (XIRQ_CH : out Bits_32)
+      with Inline => True;
+
+   procedure EIP_Clear
+      (XIRQ_CH : in Bits_32)
+      with Inline => True;
+
+   -- ESC Interrupt source ID
+
+   ESC_ADDRESS : constant := 16#FFFF_F308#;
+
+   ESC : aliased Bits_32
+      with Address              => To_Address (ESC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   procedure ESC_Read
+      (XIRQ_CH : out Bits_32)
+      with Inline => True;
+
+   procedure ESC_Ack
+      (XIRQ_CH : in Bits_32)
+      with Inline => True;
 
 end NEORV32;
