@@ -2,11 +2,6 @@
 #
 # Toolchain sub-Makefile (ADAC/GNATMAKE compiler switches)
 #
-# Copyright (C) 2020-2024 Gabriele Galeotti
-#
-# This work is licensed under the terms of the MIT License.
-# Please consult the LICENSE.txt file located in the top-level directory.
-#
 
 #
 # Environment variables:
@@ -41,18 +36,6 @@ ifeq ($(USE_UNPREFIXED_GNATMAKE),Y)
 TOOLCHAIN_GNATMAKE := gnatmake$(EXEEXT)
 else
 TOOLCHAIN_GNATMAKE := $(TOOLCHAIN_PROGRAM_PREFIX)gnatmake$(EXEEXT)
-endif
-
-ifeq      ($(ADA_MODE),ADA95)
-TOOLCHAIN_GNATMAKE += -gnat95
-else ifeq ($(ADA_MODE),ADA05)
-TOOLCHAIN_GNATMAKE += -gnat2005
-else ifeq ($(ADA_MODE),ADA12)
-TOOLCHAIN_GNATMAKE += -gnat2012
-else ifeq ($(ADA_MODE),ADA22)
-TOOLCHAIN_GNATMAKE += -gnat2022
-else
-$(warning *** Warning: no valid ADA_MODE.)
 endif
 
 GNATMAKE := $(TOOLCHAIN_GNATMAKE) --RTS="$(RTS_PATH)"
