@@ -40,6 +40,8 @@ package body Application is
          GPIOD_PDDR (5) := True;
          while True loop
             GPIOD_PTOR (5) := True;
+            -- "F" on UART0
+            UART0.D := 16#46#;
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
          end loop;
       end;

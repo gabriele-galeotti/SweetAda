@@ -17,6 +17,7 @@
 
 with Bits;
 with ARMv6M;
+with KL46Z;
 with Exceptions;
 
 package body BSP
@@ -31,6 +32,7 @@ package body BSP
    --========================================================================--
 
    use Bits;
+   use KL46Z;
 
    procedure SysTick_Init;
 
@@ -85,6 +87,23 @@ package body BSP
    begin
       -------------------------------------------------------------------------
       Exceptions.Init;
+      -------------------------------------------------------------------------
+      SIM_SOPT2 := (
+         RTCCLKOUTSEL => RTCCLKOUTSEL_OSCERCLK,
+         CLKOUTSEL    => CLKOUTSEL_OSCERCLK,
+         PLLFLLSEL    => PLLFLLSEL_MCGFLLCLKDIV2,
+         USBSRC       => USBSRC_MCGxLL,
+         TPMSRC       => TPMSRC_DISABLED,
+         UART0SRC     => UART0SRC_OSCERCLK,
+         others       => <>
+         );
+      -- UART0 ----------------------------------------------------------------
+      SIM_SCGC4.UART0 := True;
+      PORTA_PCR (1).MUX := MUX_ALT2;
+      PORTA_PCR (2).MUX := MUX_ALT2;
+      UART0.BDL := 16#34#;
+      UART0.BDH.SBR := 16#00#;
+      UART0.C2.TE := True;
       -- Console --------------------------------------------------------------
       -- Console.Console_Descriptor.Write := Console_Putchar'Access;
       -- Console.Console_Descriptor.Read  := Console_Getchar'Access;
