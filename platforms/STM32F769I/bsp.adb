@@ -125,9 +125,9 @@ package body BSP
    begin
       -- wait for transmitter available
       loop
-         exit when USART6.USART_ISR.TXE;
+         exit when USART1.USART_ISR.TXE;
       end loop;
-      USART6.USART_TDR.DR := To_U8 (C);
+      USART1.USART_TDR.DR := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -137,9 +137,9 @@ package body BSP
    begin
       -- wait for receiver available
       loop
-         exit when USART6.USART_ISR.RXNE;
+         exit when USART1.USART_ISR.RXNE;
       end loop;
-      Data := USART6.USART_TDR.DR;
+      Data := USART1.USART_TDR.DR;
       C := To_Ch (Data);
    end Console_Getchar;
 
@@ -157,19 +157,20 @@ package body BSP
       RCC_APB1RSTR.PWRRST := False;
       -- CLK ------------------------------------------------------------------
       CLK_Init;
-      -- USART6 ---------------------------------------------------------------
-      -- USART6_TX PC6 (H15) CN13-2 D1
-      -- USART6_RX PC7 (G15) CN13-1 D0
-      RCC_DCKCFGR2.USART6SEL := USART6SEL_APB2;
-      RCC_APB2ENR.USART6EN := True;
-      GPIOC.AFRL (6) := AF8;
-      GPIOC.AFRL (7) := AF8;
-      GPIOC.MODER := [6 | 7 => GPIO_ALT, others => <>];
-      USART6.USART_CR1.UE := False;
-      -- USART6.USART_BRR.BRR := Unsigned_16 (96 * MHz1 / 9_600); -- assume HSI192, fck = 96 MHz, 9600 baud
-      USART6.USART_BRR.BRR := Unsigned_16 (100 * MHz1 / 9_600); -- assume HSE200, fck = 100 MHz, 9600 baud
-      USART6.USART_CR1.TE := True;
-      USART6.USART_CR1.UE := True;
+      -- USART1 ---------------------------------------------------------------
+      -- USART1_TX PA9 (E15) Virtual COM port
+      -- USART1_RX PA10 (D15) Virtual COM port
+      RCC_DCKCFGR2.USART1SEL := USART1SEL_APB2;
+      RCC_APB2ENR.USART1EN := True;
+      GPIOA.AFRH (9) := AF7;
+      GPIOA.AFRH (10) := AF7;
+      GPIOA.MODER (9) := GPIO_ALT;
+      GPIOA.MODER (10) := GPIO_ALT;
+      USART1.USART_CR1.UE := False;
+      -- USART1.USART_BRR.BRR := Unsigned_16 (96 * MHz1 / 115_200); -- assume HSI192, fck = 96 MHz, 115200 baud
+      USART1.USART_BRR.BRR := Unsigned_16 (100 * MHz1 / 115_200); -- assume HSE200, fck = 100 MHz, 115200 baud
+      USART1.USART_CR1.TE := True;
+      USART1.USART_CR1.UE := True;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
@@ -178,7 +179,7 @@ package body BSP
       Console.Print ("STM32F769I", NL => True);
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
-      ARMv7M.Fault_Irq_Enable;
+      -- ARMv7M.Fault_Irq_Enable;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;
