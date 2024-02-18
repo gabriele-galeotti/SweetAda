@@ -122,9 +122,9 @@ package body BSP
       CLK_Init;
       -- Initialize GPIO, enable UARTs ----------------------------------------
       -- 16 -> UART0_RX, 17 -> UART0_TX, 18 -> UART1_TX, 23 -> UART1_RX
-      IOFSEL := [16 | 17 | 18 | 23 => False, others => <>];
-      IOFEN  := [16 | 17 | 18 | 23 => True, others => <>];
-      OEN    := [16 | 17 | 18 | 23 => True, others => <>];
+      iof_sel   := [16 | 17 | 18 | 23 => False, others => <>];
+      iof_en    := [16 | 17 | 18 | 23 => True, others => <>];
+      output_en := [16 | 17 | 18 | 23 => True, others => <>];
       -- UART0 ----------------------------------------------------------------
       -- UART0.div.div := 16#008A#; -- 115200 bps @ 16 MHz
       -- UART0.div.div := 16#0115#; -- 115200 bps @ 32 MHz

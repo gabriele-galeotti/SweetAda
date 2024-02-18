@@ -761,26 +761,135 @@ package HiFive1
 
       GPIO_BASEADDRESS : constant := 16#1001_2000#;
 
-      OEN : aliased Bitmap_32
+      -- Pin value
+      input_val : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#00#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Pin input enable
+      input_en : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#04#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Pin output enable
+      output_en : aliased Bitmap_32
          with Address              => To_Address (GPIO_BASEADDRESS + 16#08#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
-      PORT : aliased Bitmap_32
+      -- Output value
+      output_val : aliased Bitmap_32
          with Address              => To_Address (GPIO_BASEADDRESS + 16#0C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
-      IOFEN : aliased Bitmap_32
+      -- Internal pull-up enable
+      pue : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#10#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Pin drive strength
+      ds : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#14#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Rise interrupt enable
+      rise_ie : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#18#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Rise interrupt pending
+      rise_ip : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#1C#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Fall interrupt enable
+      fall_ie : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#20#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Fall interrupt pending
+      fall_ip : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#24#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- High interrupt enable
+      high_ie : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#28#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- High interrupt pending
+      high_ip : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#2C#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Low interrupt enable
+      low_ie : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#30#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Low interrupt pending
+      low_ip : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#34#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- I/O function enable
+      iof_en : aliased Bitmap_32
          with Address              => To_Address (GPIO_BASEADDRESS + 16#38#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
-      IOFSEL : aliased Bitmap_32
+      -- I/O function select
+      iof_sel : aliased Bitmap_32
          with Address              => To_Address (GPIO_BASEADDRESS + 16#3C#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Output XOR (invert)
+      out_xor : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#40#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Pass-through active-high interrupt enable
+      passthru_high_ie : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#44#),
+              Volatile_Full_Access => True,
+              Import               => True,
+              Convention           => Ada;
+
+      -- Pass-through active-low interrupt enable
+      passthru_low_ie : aliased Bitmap_32
+         with Address              => To_Address (GPIO_BASEADDRESS + 16#48#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
