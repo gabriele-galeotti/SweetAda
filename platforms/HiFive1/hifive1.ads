@@ -514,8 +514,8 @@ package HiFive1
       -- 14.4 Watchdog Compare Register (wdogcmp)
 
       type wdogcmp_Type is record
-         wdogcmp0 : Unsigned_16;      -- Comparator 0
-         Reserved : Unsigned_16 := 0;
+         wdogcmp0 : Unsigned_16;  -- Comparator 0
+         Reserved : Bits_16 := 0;
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1135,8 +1135,8 @@ package HiFive1
       -- 19.15 SPI Interrupt Registers (ie and ip)
 
       type ie_Type is record
-         txwm   : Boolean;        -- Transmit watermark enable
-         rxwm   : Boolean;        -- Receive watermark enable
+         txwm     : Boolean;      -- Transmit watermark enable
+         rxwm     : Boolean;      -- Receive watermark enable
          Reserved : Bits_30 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1148,8 +1148,8 @@ package HiFive1
       end record;
 
       type ip_Type is record
-         txwm   : Boolean;        -- Transmit watermark pending
-         rxwm   : Boolean;        -- Receive watermark pending
+         txwm     : Boolean;      -- Transmit watermark pending
+         rxwm     : Boolean;      -- Receive watermark pending
          Reserved : Bits_30 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1408,13 +1408,13 @@ package HiFive1
 
       type pwm_cmpwidth8_Type is record
          pwmcfg    : pwmcfg_Type    with Volatile_Full_Access => True;
-         Reserved1 : Unsigned_32;
+         Reserved1 : Bits_32;
          pwmcount  : pwmcount8_Type with Volatile_Full_Access => True;
-         Reserved2 : Unsigned_32;
+         Reserved2 : Bits_32;
          pwms      : pwms8_Type     with Volatile_Full_Access => True;
-         Reserved3 : Unsigned_32;
-         Reserved4 : Unsigned_32;
-         Reserved5 : Unsigned_32;
+         Reserved3 : Bits_32;
+         Reserved4 : Bits_32;
+         Reserved5 : Bits_32;
          pwmcmp0   : pwmcmp8_Type   with Volatile_Full_Access => True;
          pwmcmp1   : pwmcmp8_Type   with Volatile_Full_Access => True;
          pwmcmp2   : pwmcmp8_Type   with Volatile_Full_Access => True;
@@ -1446,13 +1446,13 @@ package HiFive1
 
       type pwm_cmpwidth16_Type is record
          pwmcfg    : pwmcfg_Type     with Volatile_Full_Access => True;
-         Reserved1 : Unsigned_32;
+         Reserved1 : Bits_32;
          pwmcount  : pwmcount16_Type with Volatile_Full_Access => True;
-         Reserved2 : Unsigned_32;
+         Reserved2 : Bits_32;
          pwms      : pwms16_Type     with Volatile_Full_Access => True;
-         Reserved3 : Unsigned_32;
-         Reserved4 : Unsigned_32;
-         Reserved5 : Unsigned_32;
+         Reserved3 : Bits_32;
+         Reserved4 : Bits_32;
+         Reserved5 : Bits_32;
          pwmcmp0   : pwmcmp16_Type   with Volatile_Full_Access => True;
          pwmcmp1   : pwmcmp16_Type   with Volatile_Full_Access => True;
          pwmcmp2   : pwmcmp16_Type   with Volatile_Full_Access => True;
