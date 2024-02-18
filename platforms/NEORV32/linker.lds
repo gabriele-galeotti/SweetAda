@@ -18,6 +18,7 @@ SECTIONS
                 *(.startup)
                 *(.text)
                 *(.text.*)
+                *(.vectors)
                 *(.rodata)
                 *(.rodata.*)
                 *(.srodata)
