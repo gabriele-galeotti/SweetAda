@@ -766,12 +766,6 @@ MAKE_PLATFORMS   := SHELL="$(SHELL)" KERNEL_PARENT_PATH=../.. -C $(PLATFORM_BASE
 MAKE_PLATFORM    := $(MAKE_PLATFORMS)/$(PLATFORM)
 MAKE_RTS         := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(RTS_DIRECTORY)
 
-INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(d))
-
-ifeq ($(BUILD_MODE),GNATMAKE)
-IMPLICIT_ALI_UNITS_GNATMAKE := $(patsubst %,$(OBJECT_DIRECTORY)/%.ali,$(IMPLICIT_ALI_UNITS))
-endif
-
 CLEAN_OBJECTS     := $(KERNEL_OBJFILE)       \
                      $(KERNEL_OUTFILE)       \
                      $(KERNEL_ROMFILE)       \
@@ -900,14 +894,14 @@ endif
 .PHONY: FORCE
 FORCE:
 
-$(OBJECT_DIRECTORY)/libcore.a: FORCE
-	$(MAKE) $(MAKE_CORE) all
+$(OBJECT_DIRECTORY)/libplatform.a: FORCE
+	$(MAKE) $(MAKE_PLATFORM) all
 
 $(OBJECT_DIRECTORY)/libcpu.a: FORCE
 	$(MAKE) $(MAKE_CPU) all
 
-$(OBJECT_DIRECTORY)/libplatform.a: FORCE
-	$(MAKE) $(MAKE_PLATFORM) all
+$(OBJECT_DIRECTORY)/libcore.a: FORCE
+	$(MAKE) $(MAKE_CORE) all
 
 $(CLIBRARY_OBJECT): FORCE
 ifeq ($(USE_CLIBRARY),Y)
@@ -922,7 +916,10 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                     -c                          \
                     -gnatec=$(GNATADC_FILENAME) \
                     -D $(OBJECT_DIRECTORY)      \
-                    $(INCLUDES)                 \
+                    $(foreach                   \
+                      d,$(INCLUDE_DIRECTORIES), \
+                      -I$(d)                    \
+                      )                         \
                     main.adb                    \
         ,[GNATMAKE],main.adb)
 else ifeq ($(BUILD_MODE),GPRbuild)
@@ -939,9 +936,9 @@ endif
 #
 
 B__MAIN_ADB_DEPS :=
-B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libcore.a
-B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libcpu.a
 B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libplatform.a
+B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libcpu.a
+B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libcore.a
 B__MAIN_ADB_DEPS += $(CLIBRARY_OBJECT)
 B__MAIN_ADB_DEPS += $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME)
 $(OBJECT_DIRECTORY)/b__main.adb: $(B__MAIN_ADB_DEPS)
@@ -953,9 +950,14 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                     -F -e -l -n -s                 \
                     -A=gnatbind_alis.lst           \
                     -O=gnatbind_objs.lst           \
-                    $(INCLUDES)                    \
-                    $(OBJECT_DIRECTORY)/main.ali   \
-                    $(IMPLICIT_ALI_UNITS_GNATMAKE) \
+                    $(foreach                      \
+                      d,$(INCLUDE_DIRECTORIES),    \
+                      -I$(d)                       \
+                      )                            \
+                    $(patsubst                     \
+                      %,$(OBJECT_DIRECTORY)/%.ali, \
+                      main $(IMPLICIT_ALI_UNITS)   \
+                      )                            \
                     > gnatbind_elab.lst            \
         ,[GNATBIND],b__main.adb)
 ifeq ($(OSTYPE),cmd)

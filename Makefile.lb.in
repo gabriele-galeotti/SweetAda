@@ -69,7 +69,6 @@ $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a: $(OBJECTS)
         ,[RANLIB],$(notdir $@))
 
 %.o: %.adb
-%.o: %.ads
 $(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
         $(GNATMAKE)                             \
@@ -102,6 +101,7 @@ endif
 	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
+%.o: %.ads
 $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
         $(GNATMAKE)                             \
@@ -136,7 +136,6 @@ endif
 endif
 
 %.o: %.S
-%.o: %.c
 $(OBJ_DIRECTORY)/%.o: %.S $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
         $(CC)                            \
@@ -174,6 +173,7 @@ else
 endif
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
+%.o: %.c
 $(OBJ_DIRECTORY)/%.o: %.c $(DEP_DIRECTORY)/%.d
 	$(call brief-command, \
         $(CC)                            \
