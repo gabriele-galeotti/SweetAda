@@ -41,7 +41,8 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 .PHONY: configure
 configure:
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
-	@$(GCCDEFINES) gcc_defines.ads        \
+	@$(GCCDEFINES)                        \
+          GCC_Defines gcc_defines.ads         \
           __VERSION__:VERSION:String:S        \
           __aarch64__:AARCH64:Boolean:H       \
           __arm__:ARM:Boolean:H               \

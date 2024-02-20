@@ -11,8 +11,9 @@
 
 #
 # Arguments:
-# $1     = output filename
-# $2..$n = list of GCC macro define specifications
+# $1     = package name
+# $2     = output filename
+# $3..$n = list of GCC macro define specifications
 #
 # Environment variables:
 # TOOLCHAIN_CC
@@ -82,6 +83,12 @@ return 0
 #
 # Basic input parameters check.
 #
+PACKAGE_NAME="$1"
+if [ "x${PACKAGE_NAME}" = "x" ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no package name specified."
+  exit 1
+fi
+shift
 OUTPUT_FILENAME="$1"
 if [ "x${OUTPUT_FILENAME}" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no output filename specified."
@@ -138,7 +145,7 @@ touch ${OUTPUT_FILENAME}
 
 {                                                  \
  printf "%s\n" ""                                ; \
- printf "%s\n" "package GCC_Defines"             ; \
+ printf "%s\n" "package ${PACKAGE_NAME}"         ; \
  printf "%s%s\n" "${indent}" "with Pure => True" ; \
  printf "%s%s\n" "${indent}" "is"                ; \
  printf "%s\n" ""                                ; \

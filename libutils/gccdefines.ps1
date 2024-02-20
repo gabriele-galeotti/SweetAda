@@ -10,8 +10,9 @@
 
 #
 # Arguments:
-# $1     = output filename
-# $2..$n = list of GCC macro define specifications
+# $1     = package name
+# $2     = output filename
+# $3..$n = list of GCC macro define specifications
 #
 # Environment variables:
 # TOOLCHAIN_CC
@@ -76,7 +77,12 @@ function GetEnvVar
 #
 # Basic input parameters check.
 #
-$output_filename, $items = $args
+$package_name, $output_filename, $items = $args
+if ([string]::IsNullOrEmpty($package_name))
+{
+  Write-Host "${scriptname}: *** Error: no package name specified."
+  ExitWithCode 1
+}
 if ([string]::IsNullOrEmpty($output_filename))
 {
   Write-Host "${scriptname}: *** Error: no output filename specified."
@@ -175,7 +181,7 @@ Remove-Item -Path $output_filename -Force -ErrorAction Ignore
 New-Item -Name $output_filename -ItemType File | Out-Null
 
 Add-Content -Path $output_filename -Value ""
-Add-Content -Path $output_filename -Value "package GCC_Defines"
+Add-Content -Path $output_filename -Value "package $($package_name)"
 Add-Content -Path $output_filename -Value "$($indent)with Pure => True"
 Add-Content -Path $output_filename -Value "$($indent)is"
 Add-Content -Path $output_filename -Value ""
