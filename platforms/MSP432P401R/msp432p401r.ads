@@ -311,7 +311,7 @@ package MSP432P401R
    LFXTDRIVE_0 : constant := 0; -- Lowest drive strength and current consumption LFXT oscillator.
    LFXTDRIVE_1 : constant := 1; -- Increased drive strength LFXT oscillator.
    LFXTDRIVE_2 : constant := 2; -- Increased drive strength LFXT oscillator.
-   LFXTDRIVE_4 : constant := 3; -- Maximum drive strength and maximum current consumption LFXT oscillator.
+   LFXTDRIVE_3 : constant := 3; -- Maximum drive strength and maximum current consumption LFXT oscillator.
 
    LFXTBYPASS_EXTAL : constant := 0; -- LFXT sourced by external crystal.
    LFXTBYPASS_SQRWV : constant := 1; -- LFXT sourced by external square wave.
