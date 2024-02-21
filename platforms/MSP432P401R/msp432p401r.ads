@@ -103,46 +103,43 @@ package MSP432P401R
    -- 3.3.5 RSTCTL_SOFTRESET_STAT
    -- 3.3.6 RSTCTL_SOFTRESET_CLR
    -- 3.3.7 RSTCTL_SOFTRESET_SET
+   -- Table 6-32. Debug Zone Memory Map
+   -- Table 6-33. RSTCTL Registers
 
-   RSTCTL_HARDRESET_STAT_ADDRESS : constant := 16#E004_2004#;
-   RSTCTL_HARDRESET_CLR_ADDRESS  : constant := 16#E004_2008#;
-   RSTCTL_HARDRESET_SET_ADDRESS  : constant := 16#E004_200C#;
-   RSTCTL_SOFTRESET_STAT_ADDRESS : constant := 16#E004_2010#;
-   RSTCTL_SOFTRESET_CLR_ADDRESS  : constant := 16#E004_2014#;
-   RSTCTL_SOFTRESET_SET_ADDRESS  : constant := 16#E004_2018#;
+   RSTCTL_BASEADDRESS : constant := 16#E004_2000#;
 
    RSTCTL_HARDRESET_STAT : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_HARDRESET_STAT_ADDRESS),
+      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_HARDRESET_CLR : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_HARDRESET_CLR_ADDRESS),
+      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#08#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_HARDRESET_SET : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_HARDRESET_SET_ADDRESS),
+      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#0C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_SOFTRESET_STAT : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_SOFTRESET_STAT_ADDRESS),
+      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#10#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_SOFTRESET_CLR : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_SOFTRESET_CLR_ADDRESS),
+      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#14#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_SOFTRESET_SET : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_SOFTRESET_SET_ADDRESS),
+      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#18#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -309,6 +306,426 @@ package MSP432P401R
       Reserved8 at 0 range 31 .. 31;
    end record;
 
+   -- 6.3.4 CSCTL2 Register Clock System Control 2 Register
+
+   LFXTDRIVE_0 : constant := 0; -- Lowest drive strength and current consumption LFXT oscillator.
+   LFXTDRIVE_1 : constant := 1; -- Increased drive strength LFXT oscillator.
+   LFXTDRIVE_2 : constant := 2; -- Increased drive strength LFXT oscillator.
+   LFXTDRIVE_4 : constant := 3; -- Maximum drive strength and maximum current consumption LFXT oscillator.
+
+   LFXTBYPASS_EXTAL : constant := 0; -- LFXT sourced by external crystal.
+   LFXTBYPASS_SQRWV : constant := 1; -- LFXT sourced by external square wave.
+
+   HFXTDRIVE_1_4   : constant := 0; -- To be used for HFXTFREQ setting 000b
+   HFXTDRIVE_OTHER : constant := 1; -- To be used for HFXTFREQ settings 001b to 110b
+
+   HFXTFREQ_1_4      : constant := 2#000#; -- 1 MHz to 4 MHz
+   HFXTFREQ_4_8      : constant := 2#001#; -- >4 MHz to 8 MHz
+   HFXTFREQ_8_16     : constant := 2#010#; -- >8 MHz to 16 MHz
+   HFXTFREQ_16_24    : constant := 2#011#; -- >16 MHz to 24 MHz
+   HFXTFREQ_24_32    : constant := 2#100#; -- >24 MHz to 32 MHz
+   HFXTFREQ_32_40    : constant := 2#101#; -- >32 MHz to 40 MHz
+   HFXTFREQ_40_48    : constant := 2#110#; -- >40 MHz to 48 MHz
+   HFXTFREQ_RESERVED : constant := 2#111#; -- Reserved for future use.
+
+   HFXTBYPASS_EXTAL : constant := 0; -- HFXT sourced by external crystal.
+   HFXTBYPASS_SQRWV : constant := 1; -- HFXT sourced by external square wave.
+
+   type CSCTL2_Type is record
+      LFXTDRIVE  : Bits_2;      -- The LFXT oscillator current can be adjusted to its drive needs.
+      Reserved1  : Bits_1 := 0;
+      Reserved2  : Bits_4 := 0;
+      Reserved3  : Bits_1 := 0;
+      LFXT_EN    : Boolean;     -- Turns on the LFXT oscillator regardless if used as a clock resource.
+      LFXTBYPASS : Bits_1;      -- LFXT bypass select.
+      Reserved4  : Bits_6 := 0;
+      HFXTDRIVE  : Bits_1;      -- HFXT oscillator drive selection.
+      Reserved5  : Bits_2 := 0;
+      Reserved6  : Bits_1 := 0;
+      HFXTFREQ   : Bits_3;      -- HFXT frequency selection.
+      Reserved7  : Bits_1 := 0;
+      HFXT_EN    : Boolean;     -- Turns on the HFXT oscillator regardless if used as a clock resource.
+      HFXTBYPASS : Bits_1;      -- HFXT bypass select.
+      Reserved8  : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CSCTL2_Type use record
+      LFXTDRIVE  at 0 range  0 ..  1;
+      Reserved1  at 0 range  2 ..  2;
+      Reserved2  at 0 range  3 ..  6;
+      Reserved3  at 0 range  7 ..  7;
+      LFXT_EN    at 0 range  8 ..  8;
+      LFXTBYPASS at 0 range  9 ..  9;
+      Reserved4  at 0 range 10 .. 15;
+      HFXTDRIVE  at 0 range 16 .. 16;
+      Reserved5  at 0 range 17 .. 18;
+      Reserved6  at 0 range 19 .. 19;
+      HFXTFREQ   at 0 range 20 .. 22;
+      Reserved7  at 0 range 23 .. 23;
+      HFXT_EN    at 0 range 24 .. 24;
+      HFXTBYPASS at 0 range 25 .. 25;
+      Reserved8  at 0 range 26 .. 31;
+   end record;
+
+   -- 6.3.5 CSCTL3 Register Clock System Control 3 Register
+
+   FCNTLF_4k  : constant := 2#00#; -- 4096 cycles
+   FCNTLF_8k  : constant := 2#01#; -- 8192 cycles
+   FCNTLF_16k : constant := 2#10#; -- 16384 cycles
+   FCNTLF_32k : constant := 2#11#; -- 32768 cycles
+
+   FCNTHF_4k  : constant := 2#00#; -- 4096 cycles
+   FCNTHF_8k  : constant := 2#01#; -- 8192 cycles
+   FCNTHF_16k : constant := 2#10#; -- 16384 cycles
+   FCNTHF_32k : constant := 2#11#; -- 32768 cycles
+
+   type CSCTL3_Type is record
+      FCNTLF    : Bits_2;       -- Start flag counter for LFXT.
+      RFCNTLF   : Boolean;      -- Reset start fault counter for LFXT.
+      FCNTLF_EN : Boolean;      -- Enable start fault counter for LFXT.
+      FCNTHF    : Bits_2;       -- Start flag counter for HFXT.
+      RFCNTHF   : Boolean;      -- Reset start fault counter for HFXT.
+      FCNTHF_EN : Boolean;      -- Enable start fault counter for HFXT.
+      Reserved  : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CSCTL3_Type use record
+      FCNTLF    at 0 range 0 ..  1;
+      RFCNTLF   at 0 range 2 ..  2;
+      FCNTLF_EN at 0 range 3 ..  3;
+      FCNTHF    at 0 range 4 ..  5;
+      RFCNTHF   at 0 range 6 ..  6;
+      FCNTHF_EN at 0 range 7 ..  7;
+      Reserved  at 0 range 8 .. 31;
+   end record;
+
+   -- 6.3.6 CSCLKEN Register Clock System Clock Enable Register
+
+   REFOFSEL_32k  : constant := 0; -- 32.768 kHz
+   REFOFSEL_128k : constant := 1; -- 128 kHz
+
+   type CSCLKEN_Type is record
+      ACLK_EN   : Boolean;      -- ACLK system clock conditional request enable
+      MCLK_EN   : Boolean;      -- MCLK system clock conditional request enable
+      HSMCLK_EN : Boolean;      -- HSMCLK system clock conditional request enable
+      SMCLK_EN  : Boolean;      -- SMCLK system clock conditional request enable
+      Reserved1 : Bits_4 := 0;
+      VLO_EN    : Boolean;      -- Turns on the VLO oscillator regardless if used as a clock resource.
+      REFO_EN   : Boolean;      -- Turns on the REFO oscillator regardless if used as a clock resource.
+      MODOSC_EN : Boolean;      -- Turns on the MODOSC oscillator regardless if used as a clock resource.
+      Reserved2 : Bits_4 := 0;
+      REFOFSEL  : Bits_1;       -- Selects REFO nominal frequency.
+      Reserved3 : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CSCLKEN_Type use record
+      ACLK_EN   at 0 range  0 ..  0;
+      MCLK_EN   at 0 range  1 ..  1;
+      HSMCLK_EN at 0 range  2 ..  2;
+      SMCLK_EN  at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 ..  7;
+      VLO_EN    at 0 range  8 ..  8;
+      REFO_EN   at 0 range  9 ..  9;
+      MODOSC_EN at 0 range 10 .. 10;
+      Reserved2 at 0 range 11 .. 14;
+      REFOFSEL  at 0 range 15 .. 15;
+      Reserved3 at 0 range 16 .. 31;
+   end record;
+
+   -- 6.3.7 CSSTAT Register Clock System Status Register
+
+   type CSSTAT_Type is record
+      DCO_ON       : Boolean; -- DCO status
+      DCOBIAS_ON   : Boolean; -- DCO bias status
+      HFXT_ON      : Boolean; -- HFXT status.
+      Reserved1    : Bits_1;
+      MODOSC_ON    : Boolean; -- MODOSC status
+      VLO_ON       : Boolean; -- VLO status
+      LFXT_ON      : Boolean; -- LFXT status.
+      REFO_ON      : Boolean; -- REFO status
+      Reserved2    : Bits_8;
+      ACLK_ON      : Boolean; -- ACLK system clock status
+      MCLK_ON      : Boolean; -- MCLK system clock status
+      HSMCLK_ON    : Boolean; -- HSMCLK system clock status
+      SMCLK_ON     : Boolean; -- SMCLK system clock status
+      MODCLK_ON    : Boolean; -- MODCLK system clock status
+      VLOCLK_ON    : Boolean; -- VLOCLK system clock status
+      LFXTCLK_ON   : Boolean; -- LFXTCLK system clock status
+      REFOCLK_ON   : Boolean; -- REFOCLK system clock status
+      ACLK_READY   : Boolean; -- ACLK Ready status.
+      MCLK_READY   : Boolean; -- MCLK Ready status.
+      HSMCLK_READY : Boolean; -- HSMCLK Ready status.
+      SMCLK_READY  : Boolean; -- SMCLK Ready status.
+      BCLK_READY   : Boolean; -- BCLK Ready status.
+      Reserved3    : Bits_3;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CSSTAT_Type use record
+      DCO_ON       at 0 range  0 ..  0;
+      DCOBIAS_ON   at 0 range  1 ..  1;
+      HFXT_ON      at 0 range  2 ..  2;
+      Reserved1    at 0 range  3 ..  3;
+      MODOSC_ON    at 0 range  4 ..  4;
+      VLO_ON       at 0 range  5 ..  5;
+      LFXT_ON      at 0 range  6 ..  6;
+      REFO_ON      at 0 range  7 ..  7;
+      Reserved2    at 0 range  8 .. 15;
+      ACLK_ON      at 0 range 16 .. 16;
+      MCLK_ON      at 0 range 17 .. 17;
+      HSMCLK_ON    at 0 range 18 .. 18;
+      SMCLK_ON     at 0 range 19 .. 19;
+      MODCLK_ON    at 0 range 20 .. 20;
+      VLOCLK_ON    at 0 range 21 .. 21;
+      LFXTCLK_ON   at 0 range 22 .. 22;
+      REFOCLK_ON   at 0 range 23 .. 23;
+      ACLK_READY   at 0 range 24 .. 24;
+      MCLK_READY   at 0 range 25 .. 25;
+      HSMCLK_READY at 0 range 26 .. 26;
+      SMCLK_READY  at 0 range 27 .. 27;
+      BCLK_READY   at 0 range 28 .. 28;
+      Reserved3    at 0 range 29 .. 31;
+   end record;
+
+   -- 6.3.8 CSIE Register Clock System Interrupt Enable Register
+
+   type CSIE_Type is record
+      LFXTIE     : Boolean;      -- LFXT oscillator fault flag interrupt enable.
+      HFXTIE     : Boolean;      -- HFXT oscillator fault flag interrupt enable.
+      Reserved1  : Bits_1 := 0;
+      Reserved2  : Bits_1 := 0;
+      Reserved3  : Bits_1 := 0;
+      Reserved4  : Bits_1 := 0;
+      DCOR_OPNIE : Boolean;      -- DCO external resistor open circuit fault flag interrupt enable.
+      Reserved5  : Bits_1 := 0;
+      FCNTLFIE   : Boolean;      -- Start fault counter interrupt enable LFXT.
+      FCNTHFIE   : Boolean;      -- Start fault counter interrupt enable HFXT.
+      Reserved6  : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CSIE_Type use record
+      LFXTIE     at 0 range  0 ..  0;
+      HFXTIE     at 0 range  1 ..  1;
+      Reserved1  at 0 range  2 ..  2;
+      Reserved2  at 0 range  3 ..  3;
+      Reserved3  at 0 range  4 ..  4;
+      Reserved4  at 0 range  5 ..  5;
+      DCOR_OPNIE at 0 range  6 ..  6;
+      Reserved5  at 0 range  7 ..  7;
+      FCNTLFIE   at 0 range  8 ..  8;
+      FCNTHFIE   at 0 range  9 ..  9;
+      Reserved6  at 0 range 10 .. 31;
+   end record;
+
+   -- 6.3.9 CSIFG Register Clock System Interrupt Flag Register
+
+   type CSIFG_Type is record
+      LFXTIFG     : Boolean; -- LFXT oscillator fault flag.
+      HFXTIFG     : Boolean; -- HFXT oscillator fault flag.
+      Reserved1   : Bits_1;
+      Reserved2   : Bits_1;
+      Reserved3   : Bits_1;
+      DCOR_SHTIFG : Boolean; -- DCO external resistor short circuit fault flag.
+      DCOR_OPNIFG : Boolean; -- DCO external resistor open circuit fault flag.
+      Reserved4   : Bits_1;
+      FCNTLFIFG   : Boolean; -- Start fault counter interrupt flag LFXT.
+      FCNTHFIFG   : Boolean; -- Start fault counter interrupt flag HFXT.
+      Reserved5   : Bits_22;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CSIFG_Type use record
+      LFXTIFG     at 0 range  0 ..  0;
+      HFXTIFG     at 0 range  1 ..  1;
+      Reserved1   at 0 range  2 ..  2;
+      Reserved2   at 0 range  3 ..  3;
+      Reserved3   at 0 range  4 ..  4;
+      DCOR_SHTIFG at 0 range  5 ..  5;
+      DCOR_OPNIFG at 0 range  6 ..  6;
+      Reserved4   at 0 range  7 ..  7;
+      FCNTLFIFG   at 0 range  8 ..  8;
+      FCNTHFIFG   at 0 range  9 ..  9;
+      Reserved5   at 0 range 10 .. 31;
+   end record;
+
+   -- 6.3.10 CSCLRIFG Register Clock System Clear Interrupt Flag Register
+
+   type CSCLRIFG_Type is record
+      CLR_LFXTIFG     : Boolean;      -- Clear LFXT oscillator fault interrupt flag.
+      CLR_HFXTIFG     : Boolean;      -- Clear HFXT oscillator fault interrupt flag.
+      Reserved1       : Bits_1 := 0;
+      Reserved2       : Bits_1 := 0;
+      Reserved3       : Bits_1 := 0;
+      Reserved4       : Bits_1 := 0;
+      CLR_DCOR_OPNIFG : Boolean;      -- Clear DCO external resistor open circuit fault interrupt flag.
+      Reserved5       : Bits_1 := 0;
+      CLR_FCNTLFIFG   : Boolean;      -- Start fault counter clear interrupt flag LFXT.
+      CLR_FCNTHFIFG   : Boolean;      -- Start fault counter clear interrupt flag HFXT.
+      Reserved6       : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CSCLRIFG_Type use record
+      CLR_LFXTIFG     at 0 range  0 ..  0;
+      CLR_HFXTIFG     at 0 range  1 ..  1;
+      Reserved1       at 0 range  2 ..  2;
+      Reserved2       at 0 range  3 ..  3;
+      Reserved3       at 0 range  4 ..  4;
+      Reserved4       at 0 range  5 ..  5;
+      CLR_DCOR_OPNIFG at 0 range  6 ..  6;
+      Reserved5       at 0 range  7 ..  7;
+      CLR_FCNTLFIFG   at 0 range  8 ..  8;
+      CLR_FCNTHFIFG   at 0 range  9 ..  9;
+      Reserved6       at 0 range 10 .. 31;
+   end record;
+
+   -- 6.3.11 CSSETIFG Register Clock System Clear Interrupt Flag Register
+
+   type CSSETIFG_Type is record
+      SET_LFXTIFG     : Boolean;      -- Set LFXT oscillator fault interrupt flag.
+      SET_HFXTIFG     : Boolean;      -- Set HFXT oscillator fault interrupt flag.
+      Reserved1       : Bits_1 := 0;
+      Reserved2       : Bits_1 := 0;
+      Reserved3       : Bits_1 := 0;
+      Reserved4       : Bits_1 := 0;
+      SET_DCOR_OPNIFG : Boolean;      -- Set DCO external resistor open circuit fault interrupt flag.
+      Reserved5       : Bits_1 := 0;
+      SET_FCNTLFIFG   : Boolean;      -- Start fault counter set interrupt flag LFXT.
+      SET_FCNTHFIFG   : Boolean;      -- Start fault counter set interrupt flag HFXT.
+      Reserved6       : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CSSETIFG_Type use record
+      SET_LFXTIFG     at 0 range  0 ..  0;
+      SET_HFXTIFG     at 0 range  1 ..  1;
+      Reserved1       at 0 range  2 ..  2;
+      Reserved2       at 0 range  3 ..  3;
+      Reserved3       at 0 range  4 ..  4;
+      Reserved4       at 0 range  5 ..  5;
+      SET_DCOR_OPNIFG at 0 range  6 ..  6;
+      Reserved5       at 0 range  7 ..  7;
+      SET_FCNTLFIFG   at 0 range  8 ..  8;
+      SET_FCNTHFIFG   at 0 range  9 ..  9;
+      Reserved6       at 0 range 10 .. 31;
+   end record;
+
+   -- 6.3.12 CSDCOERCAL0 Register DCO External Resistor Calibration 0 Register
+
+   type CSDCOERCAL0_Type is record
+      DCO_TCCAL       : Bits_2;       -- DCO Temperature compensation calibration.
+      Reserved1       : Bits_14 := 0;
+      DCO_FCAL_RSEL04 : Bits_10;      -- DCO frequency calibration for DCO frequency range (DCORSEL) 0 to 4.
+      Reserved2       : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CSDCOERCAL0_Type use record
+      DCO_TCCAL       at 0 range  0 ..  1;
+      Reserved1       at 0 range  2 .. 15;
+      DCO_FCAL_RSEL04 at 0 range 16 .. 25;
+      Reserved2       at 0 range 26 .. 31;
+   end record;
+
+   -- 6.3.13 CSDCOERCAL1 Register DCO External Resistor Calibration 1 Register
+
+   type CSDCOERCAL1_Type is record
+      DCO_FCAL_RSEL5 : Bits_10;      -- DCO frequency calibration for DCO frequency range (DCORSEL) 5.
+      Reserved       : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CSDCOERCAL1_Type use record
+      DCO_FCAL_RSEL5 at 0 range  0 ..  9;
+      Reserved       at 0 range 10 .. 31;
+   end record;
+
+   -- Table 6-28. CS Registers (Base Address: 0x4001_0400)
+
+   CS_BASEADDRESS : constant := 16#4001_0400#;
+
+   CSKEY : aliased CSKEY_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSCTL0 : aliased CSCTL0_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSCTL1 : aliased CSCTL1_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSCTL2 : aliased CSCTL2_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSCTL3 : aliased CSCTL3_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#10#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSCLKEN : aliased CSCLKEN_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#30#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSSTAT : aliased CSSTAT_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#34#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSIE : aliased CSIE_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#40#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSIFG : aliased CSIFG_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#48#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSCLRIFG : aliased CSCLRIFG_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#50#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSSETIFG : aliased CSSETIFG_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#58#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSDCOERCAL0 : aliased CSDCOERCAL0_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#60#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CSDCOERCAL1 : aliased CSDCOERCAL1_Type
+      with Address              => To_Address (CS_BASEADDRESS + 16#64#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    ----------------------------------------------------------------------------
    -- 12 Digital I/O
    ----------------------------------------------------------------------------
@@ -427,27 +844,27 @@ package MSP432P401R
       PxIV   at 16#1E# range 0 .. 15;
    end record;
 
-   -- 12.4 Digital I/O Registers
+   -- Table 6-21. Port Registers (Base Address: 0x4000_4C00)
 
-   PORT_BASE : constant := 16#4000_4C00#;
+   PORT_BASEADDRESS : constant := 16#4000_4C00#;
 
 pragma Style_Checks (Off);
-   PA  : aliased PORT16_Type with Address => To_Address (PORT_BASE + 16#000#), Volatile => True, Import => True, Convention => Ada;
-   PB  : aliased PORT16_Type with Address => To_Address (PORT_BASE + 16#020#), Volatile => True, Import => True, Convention => Ada;
-   PC  : aliased PORT16_Type with Address => To_Address (PORT_BASE + 16#040#), Volatile => True, Import => True, Convention => Ada;
-   PD  : aliased PORT16_Type with Address => To_Address (PORT_BASE + 16#060#), Volatile => True, Import => True, Convention => Ada;
-   PE  : aliased PORT16_Type with Address => To_Address (PORT_BASE + 16#080#), Volatile => True, Import => True, Convention => Ada;
-   P1  : aliased PORTL8_Type with Address => To_Address (PORT_BASE + 16#000#), Volatile => True, Import => True, Convention => Ada;
-   P2  : aliased PORTH8_Type with Address => To_Address (PORT_BASE + 16#000#), Volatile => True, Import => True, Convention => Ada;
-   P3  : aliased PORTL8_Type with Address => To_Address (PORT_BASE + 16#020#), Volatile => True, Import => True, Convention => Ada;
-   P4  : aliased PORTH8_Type with Address => To_Address (PORT_BASE + 16#020#), Volatile => True, Import => True, Convention => Ada;
-   P5  : aliased PORTL8_Type with Address => To_Address (PORT_BASE + 16#040#), Volatile => True, Import => True, Convention => Ada;
-   P6  : aliased PORTH8_Type with Address => To_Address (PORT_BASE + 16#040#), Volatile => True, Import => True, Convention => Ada;
-   P7  : aliased PORTL8_Type with Address => To_Address (PORT_BASE + 16#060#), Volatile => True, Import => True, Convention => Ada;
-   P8  : aliased PORTH8_Type with Address => To_Address (PORT_BASE + 16#060#), Volatile => True, Import => True, Convention => Ada;
-   P9  : aliased PORTL8_Type with Address => To_Address (PORT_BASE + 16#080#), Volatile => True, Import => True, Convention => Ada;
-   P10 : aliased PORTH8_Type with Address => To_Address (PORT_BASE + 16#080#), Volatile => True, Import => True, Convention => Ada;
-   PJ  : aliased PORT16_Type with Address => To_Address (PORT_BASE + 16#120#), Volatile => True, Import => True, Convention => Ada;
+   PA  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
+   PB  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
+   PC  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
+   PD  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
+   PE  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
+   P1  : aliased PORTL8_Type with Address => To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
+   P2  : aliased PORTH8_Type with Address => To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
+   P3  : aliased PORTL8_Type with Address => To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
+   P4  : aliased PORTH8_Type with Address => To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
+   P5  : aliased PORTL8_Type with Address => To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
+   P6  : aliased PORTH8_Type with Address => To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
+   P7  : aliased PORTL8_Type with Address => To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
+   P8  : aliased PORTH8_Type with Address => To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
+   P9  : aliased PORTL8_Type with Address => To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
+   P10 : aliased PORTH8_Type with Address => To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
+   PJ  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#120#), Volatile => True, Import => True, Convention => Ada;
 pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
@@ -493,6 +910,8 @@ pragma Style_Checks (On);
       WDTHOLD  at 0 range 7 ..  7;
       WDTPW    at 0 range 8 .. 15;
    end record;
+
+   -- Table 6-20. WDT_A Registers (Base Address: 0x4000_4800)
 
    WDTCTL_ADDRESS : constant := 16#4000_480C#;
 
