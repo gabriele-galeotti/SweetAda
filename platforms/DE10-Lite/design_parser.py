@@ -102,8 +102,9 @@ for connection in root.findall('connection'):
 for i in items:
     padstring = ' ' * (max_name_length - len(i['name']))
     print(indent + '{0:s}_ADDRESS {1:s}: constant := 16#{2:s}#;'.format(i['name'], padstring, i['address']))
+if len(items) > 0:
+    print('')
 
-print('')
 print('end {0:s};'.format(package_name))
 
 fdout.close()
