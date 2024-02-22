@@ -10,7 +10,7 @@
 
 #
 # Arguments:
-# optional starting "-r" = removes CR from processed text
+# optional starting "-r" = remove CR from processed text
 # $1 = input filename
 # $2 = output filename
 #

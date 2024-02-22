@@ -31,15 +31,15 @@
                 .global irq_entry
 irq_entry:
                 addi    sp,sp,-72
-                stw     r1,0(sp)                // at
-                stw     r2,4(sp)
-                stw     r3,8(sp)
-                stw     r4,12(sp)
-                stw     r5,16(sp)
-                stw     r6,20(sp)
-                stw     r7,24(sp)
-                stw     r8,28(sp)
-                stw     r9,32(sp)
+                stw     r1,  0(sp)              // at
+                stw     r2,  4(sp)
+                stw     r3,  8(sp)
+                stw     r4, 12(sp)
+                stw     r5, 16(sp)
+                stw     r6, 20(sp)
+                stw     r7, 24(sp)
+                stw     r8, 28(sp)
+                stw     r9, 32(sp)
                 stw     r10,36(sp)
                 stw     r11,40(sp)
                 stw     r12,44(sp)
@@ -60,15 +60,15 @@ irq_entry:
                 ldw     r12,44(sp)
                 ldw     r11,40(sp)
                 ldw     r10,36(sp)
-                ldw     r9,32(sp)
-                ldw     r8,28(sp)
-                ldw     r7,24(sp)
-                ldw     r6,20(sp)
-                ldw     r5,16(sp)
-                ldw     r4,12(sp)
-                ldw     r3,8(sp)
-                ldw     r2,4(sp)
-                ldw     r1,0(sp)
+                ldw     r9, 32(sp)
+                ldw     r8, 28(sp)
+                ldw     r7, 24(sp)
+                ldw     r6, 20(sp)
+                ldw     r5, 16(sp)
+                ldw     r4, 12(sp)
+                ldw     r3,  8(sp)
+                ldw     r2,  4(sp)
+                ldw     r1,  0(sp)
                 addi    sp,sp,72
                 subi    ea,ea,4
                 eret

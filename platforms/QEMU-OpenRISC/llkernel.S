@@ -94,9 +94,9 @@ Trap:
 
 timer_handler:
                 l.addi  r1,r1,-76
-                l.sw    0(r1), r3
-                l.sw    4(r1), r4
-                l.sw    8(r1), r5
+                l.sw     0(r1),r3
+                l.sw     4(r1),r4
+                l.sw     8(r1),r5
                 l.sw    12(r1),r6
                 l.sw    16(r1),r7
                 l.sw    20(r1),r8
@@ -115,9 +115,9 @@ timer_handler:
                 l.sw    72(r1),r31
                 l.jal   irq_process
                 l.nop
-                l.lwz   r3, 0(r1)
-                l.lwz   r4, 4(r1)
-                l.lwz   r5, 8(r1)
+                l.lwz   r3,  0(r1)
+                l.lwz   r4,  4(r1)
+                l.lwz   r5,  8(r1)
                 l.lwz   r6, 12(r1)
                 l.lwz   r7, 16(r1)
                 l.lwz   r8, 20(r1)
