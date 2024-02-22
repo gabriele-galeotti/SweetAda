@@ -37,6 +37,10 @@ package KL46Z
    use Interfaces;
    use Bits;
 
+   ----------------------------------------------------------------------------
+   -- 4 Memory Map
+   ----------------------------------------------------------------------------
+
    -- 4.6.2 Peripheral bridge (AIPS-lite) memory map
 
    SIM_BASEADDRESS       : constant := 16#4004_7000#;
@@ -44,103 +48,9 @@ package KL46Z
    PORTx_MUX_BASEADDRESS : constant := 16#4004_9000#;
    GPIO_BASEADDRESS      : constant := 16#400F_F000#;
 
-   -- 12.2.8 System Clock Gating Control Register 4 (SIM_SCGC4)
-
-   type SIM_SCGC4_Type is record
-      Reserved1 : Bits_4 := 0;
-      Reserved2 : Bits_2 := 2#11#;
-      I2C0      : Boolean;           -- I2C0 Clock Gate Control
-      I2C1      : Boolean;           -- I2C1 Clock Gate Control
-      Reserved3 : Bits_2 := 0;
-      UART0     : Boolean;           -- UART0 Clock Gate Control
-      UART1     : Boolean;           -- UART1 Clock Gate Control
-      UART2     : Boolean;           -- UART2 Clock Gate Control
-      Reserved4 : Bits_1 := 0;
-      Reserved5 : Bits_4 := 0;
-      USBOTG    : Boolean;           -- USB Clock Gate Control
-      CMP       : Boolean;           -- Comparator Clock Gate Control
-      Reserved6 : Bits_2 := 0;
-      SPI0      : Boolean;           -- SPI0 Clock Gate Control
-      SPI1      : Boolean;           -- SPI1 Clock Gate Control
-      Reserved7 : Bits_4 := 0;
-      Reserved8 : Bits_4 := 2#1111#;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
-   for SIM_SCGC4_Type use record
-      Reserved1 at 0 range  0 ..  3;
-      Reserved2 at 0 range  4 ..  5;
-      I2C0      at 0 range  6 ..  6;
-      I2C1      at 0 range  7 ..  7;
-      Reserved3 at 0 range  8 ..  9;
-      UART0     at 0 range 10 .. 10;
-      UART1     at 0 range 11 .. 11;
-      UART2     at 0 range 12 .. 12;
-      Reserved4 at 0 range 13 .. 13;
-      Reserved5 at 0 range 14 .. 17;
-      USBOTG    at 0 range 18 .. 18;
-      CMP       at 0 range 19 .. 19;
-      Reserved6 at 0 range 20 .. 21;
-      SPI0      at 0 range 22 .. 22;
-      SPI1      at 0 range 23 .. 23;
-      Reserved7 at 0 range 24 .. 27;
-      Reserved8 at 0 range 28 .. 31;
-   end record;
-
-   SIM_SCGC4_ADDRESS : constant := SIM_BASEADDRESS + 16#1034#;
-
-   SIM_SCGC4 : aliased SIM_SCGC4_Type
-      with Address              => To_Address (SIM_SCGC4_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
-
-   -- 12.2.9 System Clock Gating Control Register 5
-
-   type SIM_SCGC5_Type is record
-      LPTMR     : Boolean;         -- Low Power Timer Access Control
-      Reserved1 : Bits_1 := 1;
-      Reserved2 : Bits_3 := 0;
-      TSI       : Boolean;         -- TSI Access Control
-      Reserved3 : Bits_1 := 0;
-      Reserved4 : Bits_2 := 2#11#;
-      PORTA     : Boolean;         -- PORTA Clock Gate Control
-      PORTB     : Boolean;         -- PORTB Clock Gate Control
-      PORTC     : Boolean;         -- PORTC Clock Gate Control
-      PORTD     : Boolean;         -- PORTD Clock Gate Control
-      PORTE     : Boolean;         -- PORTE Clock Gate Control
-      Reserved5 : Bits_5 := 0;
-      SLCD      : Boolean;         -- Segment LCD Clock Gate Control
-      Reserved6 : Bits_12 := 0;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
-   for SIM_SCGC5_Type use record
-      LPTMR     at 0 range  0 ..  0;
-      Reserved1 at 0 range  1 ..  1;
-      Reserved2 at 0 range  2 ..  4;
-      TSI       at 0 range  5 ..  5;
-      Reserved3 at 0 range  6 ..  6;
-      Reserved4 at 0 range  7 ..  8;
-      PORTA     at 0 range  9 ..  9;
-      PORTB     at 0 range 10 .. 10;
-      PORTC     at 0 range 11 .. 11;
-      PORTD     at 0 range 12 .. 12;
-      PORTE     at 0 range 13 .. 13;
-      Reserved5 at 0 range 14 .. 18;
-      SLCD      at 0 range 19 .. 19;
-      Reserved6 at 0 range 20 .. 31;
-   end record;
-
-   SIM_SCGC5_ADDRESS : constant := SIM_BASEADDRESS + 16#1038#;
-
-   SIM_SCGC5 : aliased SIM_SCGC5_Type
-      with Address              => To_Address (SIM_SCGC5_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
-
-   -- Port x multiplexing control
+   ----------------------------------------------------------------------------
+   -- 11 Port Control and Interrupts (PORT)
+   ----------------------------------------------------------------------------
 
    -- 11.5.1 Pin Control Register n
    -- base address + 0h offset + (4d x i), i = 0 .. 31
@@ -240,6 +150,46 @@ package KL46Z
            Import     => True,
            Convention => Ada;
 
+   ----------------------------------------------------------------------------
+   -- 12 System Integration Module (SIM)
+   ----------------------------------------------------------------------------
+
+   -- 12.2.1 System Options Register 1 (SIM_SOPT1)
+
+   OSC32KSEL_SYS  : constant := 2#00#; -- System oscillator (OSC32KCLK)
+   OSC32KSEL_RSVD : constant := 2#01#; -- Reserved
+   OSC32KSEL_RTC  : constant := 2#10#; -- RTC_CLKIN
+   OSC32KSEL_LPO  : constant := 2#11#; -- LPO 1kHz
+
+   type SIM_SOPT1_Type is record
+      Reserved1 : Bits_6;
+      Reserved2 : Bits_12 := 0;
+      OSC32KSEL : Bits_2;       -- 32K oscillator clock select
+      Reserved3 : Bits_9 := 0;
+      USBVSTBY  : Boolean;      -- USB voltage regulator in standby mode during VLPR and VLPW modes
+      USBSSTBY  : Boolean;      -- USB voltage regulator in standby mode during Stop, VLPS, LLS and VLLS modes.
+      USBREGEN  : Boolean;      -- USB voltage regulator enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SOPT1_Type use record
+      Reserved1 at 0 range  0 ..  5;
+      Reserved2 at 0 range  6 .. 17;
+      OSC32KSEL at 0 range 18 .. 19;
+      Reserved3 at 0 range 20 .. 28;
+      USBVSTBY  at 0 range 29 .. 29;
+      USBSSTBY  at 0 range 30 .. 30;
+      USBREGEN  at 0 range 31 .. 31;
+   end record;
+
+   SIM_SOPT1_ADDRESS : constant := 16#4004_7000#;
+
+   SIM_SOPT1 : aliased SIM_SOPT1_Type
+      with Address              => To_Address (SIM_SOPT1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.2.3 System Options Register 2 (SIM_SOPT2)
 
    RTCCLKOUTSEL_RTC      : constant := 0; -- RTC 1 Hz clock is output on the RTC_CLKOUT pin.
@@ -299,13 +249,109 @@ package KL46Z
       Reserved5    at 0 range 28 .. 31;
    end record;
 
-   SIM_SOPT2_BASEADDRESS : constant := 16#4004_8004#;
+   SIM_SOPT2_ADDRESS : constant := 16#4004_8004#;
 
    SIM_SOPT2 : aliased SIM_SOPT2_Type
-      with Address              => To_Address (SIM_SOPT2_BASEADDRESS),
+      with Address              => To_Address (SIM_SOPT2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+   -- 12.2.8 System Clock Gating Control Register 4 (SIM_SCGC4)
+
+   type SIM_SCGC4_Type is record
+      Reserved1 : Bits_4 := 0;
+      Reserved2 : Bits_2 := 2#11#;
+      I2C0      : Boolean;           -- I2C0 Clock Gate Control
+      I2C1      : Boolean;           -- I2C1 Clock Gate Control
+      Reserved3 : Bits_2 := 0;
+      UART0     : Boolean;           -- UART0 Clock Gate Control
+      UART1     : Boolean;           -- UART1 Clock Gate Control
+      UART2     : Boolean;           -- UART2 Clock Gate Control
+      Reserved4 : Bits_1 := 0;
+      Reserved5 : Bits_4 := 0;
+      USBOTG    : Boolean;           -- USB Clock Gate Control
+      CMP       : Boolean;           -- Comparator Clock Gate Control
+      Reserved6 : Bits_2 := 0;
+      SPI0      : Boolean;           -- SPI0 Clock Gate Control
+      SPI1      : Boolean;           -- SPI1 Clock Gate Control
+      Reserved7 : Bits_4 := 0;
+      Reserved8 : Bits_4 := 2#1111#;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SCGC4_Type use record
+      Reserved1 at 0 range  0 ..  3;
+      Reserved2 at 0 range  4 ..  5;
+      I2C0      at 0 range  6 ..  6;
+      I2C1      at 0 range  7 ..  7;
+      Reserved3 at 0 range  8 ..  9;
+      UART0     at 0 range 10 .. 10;
+      UART1     at 0 range 11 .. 11;
+      UART2     at 0 range 12 .. 12;
+      Reserved4 at 0 range 13 .. 13;
+      Reserved5 at 0 range 14 .. 17;
+      USBOTG    at 0 range 18 .. 18;
+      CMP       at 0 range 19 .. 19;
+      Reserved6 at 0 range 20 .. 21;
+      SPI0      at 0 range 22 .. 22;
+      SPI1      at 0 range 23 .. 23;
+      Reserved7 at 0 range 24 .. 27;
+      Reserved8 at 0 range 28 .. 31;
+   end record;
+
+   -- 12.2.9 System Clock Gating Control Register 5 (SIM_SCGC5)
+
+   type SIM_SCGC5_Type is record
+      LPTMR     : Boolean;         -- Low Power Timer Access Control
+      Reserved1 : Bits_1 := 1;
+      Reserved2 : Bits_3 := 0;
+      TSI       : Boolean;         -- TSI Access Control
+      Reserved3 : Bits_1 := 0;
+      Reserved4 : Bits_2 := 2#11#;
+      PORTA     : Boolean;         -- PORTA Clock Gate Control
+      PORTB     : Boolean;         -- PORTB Clock Gate Control
+      PORTC     : Boolean;         -- PORTC Clock Gate Control
+      PORTD     : Boolean;         -- PORTD Clock Gate Control
+      PORTE     : Boolean;         -- PORTE Clock Gate Control
+      Reserved5 : Bits_5 := 0;
+      SLCD      : Boolean;         -- Segment LCD Clock Gate Control
+      Reserved6 : Bits_12 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SCGC5_Type use record
+      LPTMR     at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      Reserved2 at 0 range  2 ..  4;
+      TSI       at 0 range  5 ..  5;
+      Reserved3 at 0 range  6 ..  6;
+      Reserved4 at 0 range  7 ..  8;
+      PORTA     at 0 range  9 ..  9;
+      PORTB     at 0 range 10 .. 10;
+      PORTC     at 0 range 11 .. 11;
+      PORTD     at 0 range 12 .. 12;
+      PORTE     at 0 range 13 .. 13;
+      Reserved5 at 0 range 14 .. 18;
+      SLCD      at 0 range 19 .. 19;
+      Reserved6 at 0 range 20 .. 31;
+   end record;
+
+   SIM_SCGC4 : aliased SIM_SCGC4_Type
+      with Address              => To_Address (SIM_BASEADDRESS + 16#1034#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SIM_SCGC5 : aliased SIM_SCGC5_Type
+      with Address              => To_Address (SIM_BASEADDRESS + 16#1038#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 39 Universal Asynchronous Receiver/Transmitter (UART0)
+   ----------------------------------------------------------------------------
 
    -- 39.2.1 UART Baud Rate Register High (UARTx_BDH)
 
@@ -507,6 +553,10 @@ package KL46Z
            Import     => True,
            Convention => Ada;
 
+   ----------------------------------------------------------------------------
+   -- 40 Universal Asynchronous Receiver/Transmitter (UART1 and UART2)
+   ----------------------------------------------------------------------------
+
    -- 40.2.9 UART Control Register 4 (UARTx_C4)
 
    type UARTx_C4_Type is record
@@ -569,6 +619,10 @@ package KL46Z
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 42 General-Purpose Input/Output (GPIO)
+   ----------------------------------------------------------------------------
 
    -- 42.2.1 Port Data Output Register
 
