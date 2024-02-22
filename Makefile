@@ -510,8 +510,7 @@ endif
 
 ifneq ($(CPU),)
 # CPU known
-CPU_DIRECTORY     := $(CPU_BASE_DIRECTORY)/$(CPU)
-CPU_DIRECTORY_CMD := $(CPU_BASE_DIRECTORY)\$(CPU)
+CPU_DIRECTORY := $(CPU_BASE_DIRECTORY)/$(CPU)
 include $(CPU_DIRECTORY)/configuration.in
 CONFIGURE_DEPS += $(CPU_DIRECTORY)/configuration.in
 endif
@@ -533,18 +532,18 @@ CONFIGURE_DEPS += $(MODULES_DIRECTORY)/configuration.in
 # GPRbuild configuration dependencies
 ifeq ($(BUILD_MODE),GPRbuild)
 ifeq ($(OSTYPE),cmd)
-GPRBUILD_DEPS += $(sort $(shell                                                   \
-                                SET "PATH=$(PATH)"                             && \
-                                SET "SWEETADA_PATH=$(SWEETADA_PATH)"           && \
-                                SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)" && \
-                                $(GPRDEPS) $(KERNEL_GPRFILE)                      \
+GPRBUILD_DEPS += $(sort $(shell                                                 \
+                                SET "PATH=$(PATH)"                           && \
+                                SET "SWEETADA_PATH=$(SWEETADA_PATH)"         && \
+                                SET LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY) && \
+                                $(GPRDEPS) $(KERNEL_GPRFILE)                    \
                                 2> nul))
 else
-GPRBUILD_DEPS += $(sort $(shell                                               \
-                                PATH="$(PATH)"                             && \
-                                SWEETADA_PATH="$(SWEETADA_PATH)"           && \
-                                LIBUTILS_DIRECTORY="$(LIBUTILS_DIRECTORY)" && \
-                                $(GPRDEPS) $(KERNEL_GPRFILE)                  \
+GPRBUILD_DEPS += $(sort $(shell                                             \
+                                PATH="$(PATH)"                           && \
+                                SWEETADA_PATH="$(SWEETADA_PATH)"         && \
+                                LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY) && \
+                                $(GPRDEPS) $(KERNEL_GPRFILE)                \
                                 2> /dev/null))
 endif
 endif
@@ -624,7 +623,6 @@ export                           \
        CPUS                      \
        CPU_BASE_DIRECTORY        \
        CPU_DIRECTORY             \
-       CPU_DIRECTORY_CMD         \
        CPU_MODEL_DIRECTORY       \
        APPLICATION_DIRECTORY     \
        CLIBRARY_DIRECTORY        \
@@ -658,6 +656,7 @@ export                           \
        TOOLCHAIN_NAME_MIPS64     \
        TOOLCHAIN_NAME_MicroBlaze \
        TOOLCHAIN_NAME_NiosII     \
+       TOOLCHAIN_NAME_OpenRISC   \
        TOOLCHAIN_NAME_PowerPC    \
        TOOLCHAIN_NAME_RISCV      \
        TOOLCHAIN_NAME_SPARC      \
