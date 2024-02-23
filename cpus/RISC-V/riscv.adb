@@ -32,7 +32,6 @@ package body RISCV
 
    use System.Machine_Code;
    use Definitions;
-   use RISCV_Definitions;
 
    ZICSR_ZIFENCEI_ASM : constant String := "        .option arch,+zicsr,+zifencei";
 
