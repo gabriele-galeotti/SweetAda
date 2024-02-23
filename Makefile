@@ -488,11 +488,15 @@ ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
 -include $(KERNEL_CFGFILE)
 endif
 
-# declare all toolchain-related informations
+# PLATFORM processing
 ifneq ($(PLATFORM),)
-# platform known
+ifeq ($(filter $(PLATFORM),$(PLATFORMS)),)
+$(error Error: no valid PLATFORM)
+endif
 PLATFORM_DIRECTORY     := $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
+ifeq ($(OSTYPE),cmd)
 PLATFORM_DIRECTORY_CMD := $(PLATFORM_BASE_DIRECTORY)\$(PLATFORM)
+endif
 ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
 ifeq ($(filter distclean,$(MAKECMDGOALS)),distclean)
 -include $(PLATFORM_DIRECTORY)/configuration.in
@@ -508,11 +512,18 @@ $(error Error: no valid PLATFORM)
 endif
 endif
 
+# CPU processing
 ifneq ($(CPU),)
-# CPU known
+ifeq ($(filter $(CPU),$(CPUS)),)
+$(error Error: no valid CPU)
+endif
 CPU_DIRECTORY := $(CPU_BASE_DIRECTORY)/$(CPU)
 include $(CPU_DIRECTORY)/configuration.in
 CONFIGURE_DEPS += $(CPU_DIRECTORY)/configuration.in
+else
+ifeq ($(filter $(RTS_GOAL),$(MAKECMDGOALS)),$(RTS_GOAL))
+$(error Error: no valid CPU)
+endif
 endif
 
 # standard components
