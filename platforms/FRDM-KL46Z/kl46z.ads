@@ -190,6 +190,33 @@ package KL46Z
            Import               => True,
            Convention           => Ada;
 
+   -- 12.2.2 SOPT1 Configuration Register (SIM_SOPT1CFG)
+
+   type SIM_SOPT1CFG_Type is record
+      Reserved1 : Bits_24 := 0;
+      URWE      : Boolean;      -- USB voltage regulator enable write enable
+      UVSWE     : Boolean;      -- USB voltage regulator VLP standby write enable
+      USSWE     : Boolean;      -- USB voltage regulator stop standby write enable
+      Reserved2 : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SOPT1CFG_Type use record
+      Reserved1 at 0 range  0 .. 23;
+      URWE      at 0 range 24 .. 24;
+      UVSWE     at 0 range 25 .. 25;
+      USSWE     at 0 range 26 .. 26;
+      Reserved2 at 0 range 27 .. 31;
+   end record;
+
+   SIM_SOPT1CFG_ADDRESS : constant := 16#4004_7004#;
+
+   SIM_SOPT1CFG : aliased SIM_SOPT1CFG_Type
+      with Address              => To_Address (SIM_SOPT1CFG_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.2.3 System Options Register 2 (SIM_SOPT2)
 
    RTCCLKOUTSEL_RTC      : constant := 0; -- RTC 1 Hz clock is output on the RTC_CLKOUT pin.
@@ -257,6 +284,95 @@ package KL46Z
            Import               => True,
            Convention           => Ada;
 
+   -- 12.2.4 System Options Register 4 (SIM_SOPT4)
+
+   TPM1CH0SRC_TPM1_CH0 : constant := 2#00#; -- TPM1_CH0 signal
+   TPM1CH0SRC_CMP0     : constant := 2#01#; -- CMP0 output
+   TPM1CH0SRC_RSVD     : constant := 2#10#; -- Reserved
+   TPM1CH0SRC_USB_SFRM : constant := 2#11#; -- USB start of frame pulse
+
+   TPM2CH0SRC_TPM2_CH0 : constant := 0; -- TPM2_CH0 signal
+   TPM2CH0SRC_CMP0     : constant := 1; -- CMP0 output
+
+   TPM0CLKSEL_TPM_CLKIN0 : constant := 0; -- TPM0 external clock driven by TPM_CLKIN0 pin.
+   TPM0CLKSEL_TPM_CLKIN1 : constant := 1; -- TPM0 external clock driven by TPM_CLKIN1 pin.
+
+   TPM1CLKSEL_TPM_CLKIN0 : constant := 0; -- TPM1 external clock driven by TPM_CLKIN0 pin.
+   TPM1CLKSEL_TPM_CLKIN1 : constant := 1; -- TPM1 external clock driven by TPM_CLKIN1 pin.
+
+   TPM2CLKSEL_TPM_CLKIN0 : constant := 0; -- TPM2 external clock driven by TPM_CLKIN0 pin.
+   TPM2CLKSEL_TPM_CLKIN1 : constant := 1; -- TPM2 external clock driven by TPM_CLKIN1 pin.
+
+   type SIM_SOPT4_Type is record
+      Reserved1  : Bits_18 := 0;
+      TPM1CH0SRC : Bits_2;       -- TPM1 channel 0 input capture source select
+      TPM2CH0SRC : Bits_1;       -- TPM2 channel 0 input capture source select
+      Reserved2  : Bits_3 := 0;
+      TPM0CLKSEL : Bits_1;       -- TPM0 External Clock Pin Select
+      TPM1CLKSEL : Bits_1;       -- TPM1 External Clock Pin Select
+      TPM2CLKSEL : Bits_1;       -- TPM2 External Clock Pin Select
+      Reserved3  : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SOPT4_Type use record
+      Reserved1  at 0 range  0 .. 17;
+      TPM1CH0SRC at 0 range 18 .. 19;
+      TPM2CH0SRC at 0 range 20 .. 20;
+      Reserved2  at 0 range 21 .. 23;
+      TPM0CLKSEL at 0 range 24 .. 24;
+      TPM1CLKSEL at 0 range 25 .. 25;
+      TPM2CLKSEL at 0 range 26 .. 26;
+      Reserved3  at 0 range 27 .. 31;
+   end record;
+
+   SIM_SOPT4_ADDRESS : constant := 16#4004_800C#;
+
+   SIM_SOPT4 : aliased SIM_SOPT4_Type
+      with Address              => To_Address (SIM_SOPT4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.5 System Options Register 5 (SIM_SOPT5)
+
+   type SIM_SOPT5_Type is record
+      UART0TXSRC : Bits_2;       -- UART0 Transmit Data Source Select
+      UART0RXSRC : Bits_1;       -- UART0 Receive Data Source Select
+      Reserved1  : Bits_1 := 0;
+      UART1TXSRC : Bits_2;       -- UART1 Transmit Data Source Select
+      UART1RXSRC : Bits_1;       -- UART1 Receive Data Source Select
+      Reserved2  : Bits_9 := 0;
+      UART0ODE   : Boolean;      -- UART0 Open Drain Enable
+      UART1ODE   : Boolean;      -- UART1 Open Drain Enable
+      UART2ODE   : Boolean;      -- UART2 Open Drain Enable
+      Reserved3  : Bits_1 := 0;
+      Reserved4  : Bits_12 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SOPT5_Type use record
+      UART0TXSRC at 0 range  0 ..  1;
+      UART0RXSRC at 0 range  2 ..  2;
+      Reserved1  at 0 range  3 ..  3;
+      UART1TXSRC at 0 range  4 ..  5;
+      UART1RXSRC at 0 range  6 ..  6;
+      Reserved2  at 0 range  7 .. 15;
+      UART0ODE   at 0 range 16 .. 16;
+      UART1ODE   at 0 range 17 .. 17;
+      UART2ODE   at 0 range 18 .. 18;
+      Reserved3  at 0 range 19 .. 19;
+      Reserved4  at 0 range 20 .. 31;
+   end record;
+
+   SIM_SOPT5_ADDRESS : constant := 16#4004_8010#;
+
+   SIM_SOPT5 : aliased SIM_SOPT5_Type
+      with Address              => To_Address (SIM_SOPT5_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.2.8 System Clock Gating Control Register 4 (SIM_SCGC4)
 
    type SIM_SCGC4_Type is record
@@ -300,6 +416,14 @@ package KL46Z
       Reserved8 at 0 range 28 .. 31;
    end record;
 
+   SIM_SCGC4_ADDRESS : constant := SIM_BASEADDRESS + 16#1034#;
+
+   SIM_SCGC4 : aliased SIM_SCGC4_Type
+      with Address              => To_Address (SIM_SCGC4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.2.9 System Clock Gating Control Register 5 (SIM_SCGC5)
 
    type SIM_SCGC5_Type is record
@@ -337,14 +461,61 @@ package KL46Z
       Reserved6 at 0 range 20 .. 31;
    end record;
 
-   SIM_SCGC4 : aliased SIM_SCGC4_Type
-      with Address              => To_Address (SIM_BASEADDRESS + 16#1034#),
+   SIM_SCGC5_ADDRESS : constant := SIM_BASEADDRESS + 16#1038#;
+
+   SIM_SCGC5 : aliased SIM_SCGC5_Type
+      with Address              => To_Address (SIM_SCGC5_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   SIM_SCGC5 : aliased SIM_SCGC5_Type
-      with Address              => To_Address (SIM_BASEADDRESS + 16#1038#),
+   -- 12.2.12 System Clock Divider Register 1 (SIM_CLKDIV1)
+
+   OUTDIV4_DIV1 : constant := 2#000#; -- Divide-by-1.
+   OUTDIV4_DIV2 : constant := 2#001#; -- Divide-by-2.
+   OUTDIV4_DIV3 : constant := 2#010#; -- Divide-by-3.
+   OUTDIV4_DIV4 : constant := 2#011#; -- Divide-by-4.
+   OUTDIV4_DIV5 : constant := 2#100#; -- Divide-by-5.
+   OUTDIV4_DIV6 : constant := 2#101#; -- Divide-by-6.
+   OUTDIV4_DIV7 : constant := 2#110#; -- Divide-by-7.
+   OUTDIV4_DIV8 : constant := 2#111#; -- Divide-by-8.
+
+   OUTDIV1_DIV1  : constant := 2#0000#; -- Divide-by-1.
+   OUTDIV1_DIV2  : constant := 2#0001#; -- Divide-by-2.
+   OUTDIV1_DIV3  : constant := 2#0010#; -- Divide-by-3.
+   OUTDIV1_DIV4  : constant := 2#0011#; -- Divide-by-4.
+   OUTDIV1_DIV5  : constant := 2#0100#; -- Divide-by-5.
+   OUTDIV1_DIV6  : constant := 2#0101#; -- Divide-by-6.
+   OUTDIV1_DIV7  : constant := 2#0110#; -- Divide-by-7.
+   OUTDIV1_DIV8  : constant := 2#0111#; -- Divide-by-8.
+   OUTDIV1_DIV9  : constant := 2#1000#; -- Divide-by-9.
+   OUTDIV1_DIV10 : constant := 2#1001#; -- Divide-by-10.
+   OUTDIV1_DIV11 : constant := 2#1010#; -- Divide-by-11.
+   OUTDIV1_DIV12 : constant := 2#1011#; -- Divide-by-12.
+   OUTDIV1_DIV13 : constant := 2#1100#; -- Divide-by-13.
+   OUTDIV1_DIV14 : constant := 2#1101#; -- Divide-by-14.
+   OUTDIV1_DIV15 : constant := 2#1110#; -- Divide-by-15.
+   OUTDIV1_DIV16 : constant := 2#1111#; -- Divide-by-16.
+
+   type SIM_CLKDIV1_Type is record
+      Reserved1 : Bits_16 := 0;
+      OUTDIV4   : Bits_3;       -- Clock 4 Output Divider value
+      Reserved2 : Bits_9 := 0;
+      OUTDIV1   : Bits_4;       -- Clock 1 Output Divider value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_CLKDIV1_Type use record
+      Reserved1 at 0 range  0 .. 15;
+      OUTDIV4   at 0 range 16 .. 18;
+      Reserved2 at 0 range 19 .. 27;
+      OUTDIV1   at 0 range 28 .. 31;
+   end record;
+
+   SIM_CLKDIV1_ADDRESS : constant := 16#4004_8044#;
+
+   SIM_CLKDIV1 : aliased SIM_CLKDIV1_Type
+      with Address              => To_Address (SIM_CLKDIV1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
