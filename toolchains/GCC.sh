@@ -77,7 +77,8 @@ LOG_DIRECTORY=$(pwd)
 #TARGET=or1k-elf
 #TARGET=powerpc-elf
 #TARGET=powerpc64-linux
-#TARGET=riscv-elf
+#TARGET=riscv32-elf
+#TARGET=riscv64-elf
 #TARGET=sparc-elf
 #TARGET=sparc64-elf
 #TARGET=sh-elf
@@ -95,12 +96,13 @@ LOG_DIRECTORY=$(pwd)
 #phase_make_install_gcc="Y"
 #phase_make_install_target_libgcc="Y"
 
+export PATH=${PREFIX}/bin:${PATH}
+
 if [ "x${phase_configure}" = "xY" ] ; then
   EXEC_PREFIX=${PREFIX}
   LIBDIR=lib
   CONFIGURE_VARS=()
   CONFIGURE_OPTS=()
-  CONFIGURE_VARS+=("PATH=${PREFIX}/bin:$PATH")
   CONFIGURE_VARS+=("CFLAGS=\"-g\"")
   CONFIGURE_VARS+=("CXXFLAGS=\"-g\"")
   CONFIGURE_VARS+=("LDFLAGS=\"-g\"")
@@ -166,7 +168,6 @@ if [ "x${phase_configure}" = "xY" ] ; then
     printf "%s" "Press <ENTER> to continue or <CTRL-C> to abort: "
     read answer
   fi
-  export PATH=${PREFIX}/bin:${PATH}
   configure || exit $?
 fi
 if [ "x${phase_make_configure_gcc}" = "xY" ] ; then
@@ -174,7 +175,6 @@ if [ "x${phase_make_configure_gcc}" = "xY" ] ; then
   MAKE_OPTS=()
   MAKE_VARS+=("V=1")
   MAKE_TARGET=configure-gcc
-  export PATH=${PREFIX}/bin:${PATH}
   make_a_target || exit $?
 fi
 if [ "x${phase_make_all_gcc}" = "xY" ] ; then
@@ -182,7 +182,6 @@ if [ "x${phase_make_all_gcc}" = "xY" ] ; then
   MAKE_OPTS=()
   MAKE_VARS+=("V=1")
   MAKE_TARGET=all-gcc
-  export PATH=${PREFIX}/bin:${PATH}
   make_a_target || exit $?
 fi
 if [ "x${phase_make_all_target_libgcc}" = "xY" ] ; then
@@ -190,7 +189,6 @@ if [ "x${phase_make_all_target_libgcc}" = "xY" ] ; then
   MAKE_OPTS=()
   MAKE_VARS+=("V=1")
   MAKE_TARGET=all-target-libgcc
-  export PATH=${PREFIX}/bin:${PATH}
   make_a_target || exit $?
 fi
 if [ "x${phase_make_cross_gnattools}" = "xY" ] ; then
@@ -199,7 +197,6 @@ if [ "x${phase_make_cross_gnattools}" = "xY" ] ; then
   MAKE_VARS+=("V=1")
   MAKE_OPTS+=("-C" "gcc")
   MAKE_TARGET=cross-gnattools
-  export PATH=${PREFIX}/bin:${PATH}
   make_a_target || exit $?
 fi
 if [ "x${phase_make_ada_all_cross}" = "xY" ] ; then
@@ -208,7 +205,6 @@ if [ "x${phase_make_ada_all_cross}" = "xY" ] ; then
   MAKE_VARS+=("V=1")
   MAKE_OPTS+=("-C" "gcc")
   MAKE_TARGET=ada.all.cross
-  export PATH=${PREFIX}/bin:${PATH}
   make_a_target || exit $?
 fi
 if [ "x${phase_make_install_gcc}" = "xY" ] ; then
@@ -217,7 +213,6 @@ if [ "x${phase_make_install_gcc}" = "xY" ] ; then
   MAKE_VARS+=("V=1")
   MAKE_VARS+=("DESTDIR=${DESTDIR}")
   MAKE_TARGET=install-gcc
-  export PATH=${PREFIX}/bin:${PATH}
   make_a_target || exit $?
 fi
 if [ "x${phase_make_install_target_libgcc}" = "xY" ] ; then
@@ -226,7 +221,6 @@ if [ "x${phase_make_install_target_libgcc}" = "xY" ] ; then
   MAKE_VARS+=("V=1")
   MAKE_VARS+=("DESTDIR=${DESTDIR}")
   MAKE_TARGET=install-target-libgcc
-  export PATH=${PREFIX}/bin:${PATH}
   make_a_target || exit $?
 fi
 
