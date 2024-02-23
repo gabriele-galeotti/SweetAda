@@ -138,11 +138,11 @@ package body BSP
          S : R3000.Status_Type;
       begin
          S := R3000.CP0_SR_Read;
-         S.IM3 := True; -- Keyboard #1
+         S.IM2 := True; -- SPIM Clock
          R3000.CP0_SR_Write (S);
       end;
-      VMIPS.SPIMCONSOLE.KEYBOARD1_CONTROL.CTL_IE := True;
-      -- R3000.Irq_Enable;
+      VMIPS.SPIMCLOCK.CTL_IE := True;
+      R3000.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 

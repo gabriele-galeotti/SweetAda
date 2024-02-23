@@ -47,7 +47,7 @@ package VMIPS
    -- IM4 Interrupt line 4 (Cause bit 0x1000) is wired to the #1 Display
    -- IM5 Interrupt line 5 (Cause bit 0x2000) is wired to the #2 Keyboard
    -- IM6 Interrupt line 6 (Cause bit 0x4000) is wired to the #2 Display
-   -- IM7
+   -- IM7 Interrupt line 6 (Cause bit 0x4000) is wired to the High-Resolution Clock
 
    ----------------------------------------------------------------------------
    -- 11.1 SPIM-compatible console device

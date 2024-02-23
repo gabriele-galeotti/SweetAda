@@ -15,8 +15,23 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+with VMIPS;
+with BSP;
+with Console;
+
 package body Exceptions
    is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use Interfaces;
 
    --========================================================================--
    --                                                                        --
@@ -40,8 +55,11 @@ package body Exceptions
    ----------------------------------------------------------------------------
    procedure Irq_Process
       is
+      Spimclock : VMIPS.Device_Control_Type with Unreferenced => True;
    begin
-      null;
+      Spimclock := VMIPS.SPIMCLOCK;
+      BSP.Tick_Count := @ + 1;
+      Console.Print ("T", NL => True);
    end Irq_Process;
 
    ----------------------------------------------------------------------------
