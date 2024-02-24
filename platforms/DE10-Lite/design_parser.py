@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #
-# Intel(R) Quartus design file parser.
+# Intel® Quartus® design file parser.
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
@@ -65,6 +65,35 @@ end_list = []
 for el in sys.argv[3:]:
     end_list.append(el)
 
+items = []
+max_name_length = 0
+tree = ET.parse(qsys_filename)
+root = tree.getroot()
+connections = root.findall('connection')
+for e in end_list:
+    found = False
+    for c in connections:
+        if c.get('end') == e:
+            end = e.replace('.', '_')
+            parameters = c.findall('parameter')
+            for p in parameters:
+                name = p.get('name')
+                if name == 'baseAddress':
+                    found = True
+                    address = p.get('value').replace('0x', '')
+                    address = '{0:s}_{1:s}'.format(address[:4], address[4:])
+                    items.append({
+                       'name'    : end,
+                       'address' : address
+                       })
+                    l = len(end)
+                    if l > max_name_length:
+                        max_name_length = l
+                    break
+    if not found:
+        errprintf('%s: *** Error: %s not found.\n', SCRIPT_FILENAME, e)
+        exit(1)
+
 ads_filename = package_name.lower() + '.ads'
 
 fdout = open(ads_filename, 'w')
@@ -78,27 +107,6 @@ print(indent + 'with Pure => True')
 print(indent + 'is')
 print('')
 
-items = []
-max_name_length = 0
-tree = ET.parse(qsys_filename)
-root = tree.getroot()
-for connection in root.findall('connection'):
-    end = connection.get('end')
-    if end in end_list:
-        end = end.replace('.', '_')
-        for parameter in connection.findall('parameter'):
-            name = parameter.get('name')
-            if name == 'baseAddress':
-                address = parameter.get('value').replace('0x', '')
-                address = '{0:s}_{1:s}'.format(address[:4], address[4:])
-                items.append({
-                   'name'    : end,
-                   'address' : address
-                   })
-                l = len(end)
-                if l > max_name_length:
-                    max_name_length = l
-                break
 for i in items:
     padstring = ' ' * (max_name_length - len(i['name']))
     print(indent + '{0:s}_ADDRESS {1:s}: constant := 16#{2:s}#;'.format(i['name'], padstring, i['address']))
