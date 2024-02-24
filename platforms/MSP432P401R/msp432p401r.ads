@@ -42,6 +42,8 @@ package MSP432P401R
 
    -- 3.3.1 RSTCTL_RESET_REQ
 
+   RSTCTL_RESET_REQ_RSTKEY : constant := 16#69#;
+
    type RSTCTL_RESET_REQ_Type is record
       SOFT_REQ  : Boolean;      -- If written with 1, generates a Hard Reset request to the Reset Controller
       HARD_REQ  : Boolean;      -- If written with 1, generates a Soft Reset request to the Reset Controller
@@ -69,6 +71,7 @@ package MSP432P401R
 
    -- common definitions for RSTCTL_[HARD|SOFT]RESET_[STAT|CLR|SET]
 
+   -- indexes into bitmaps
    SRC0  : constant := 0;
    SRC1  : constant := 1;
    SRC2  : constant := 2;
@@ -140,6 +143,39 @@ package MSP432P401R
 
    RSTCTL_SOFTRESET_SET : aliased RSTCTL_RESET_Type
       with Address              => To_Address (RSTCTL_BASEADDRESS + 16#18#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 4 System Controller (SYSCTL)
+   ----------------------------------------------------------------------------
+
+   -- 4.11.1 SYS_REBOOT_CTL Register Reboot Control Register
+
+   SYS_REBOOT_CTL_WKEY : constant := 16#69#;
+
+   type SYS_REBOOT_CTL_Type is record
+      REBOOT    : Boolean;      -- Write 1 initiates a Reboot of the device
+      Reserved1 : Bits_7 := 0;
+      WKEY      : Bits_8;       -- Key to enable writes to bit 0.
+      Reserved2 : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_REBOOT_CTL_Type use record
+      REBOOT    at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  7;
+      WKEY      at 0 range  8 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   -- Table 6-34. SYSCTL Registers
+
+   SYSCTL_BASEADDRESS : constant := 16#E004_3000#;
+
+   SYS_REBOOT_CTL : aliased SYS_REBOOT_CTL_Type
+      with Address              => To_Address (SYSCTL_BASEADDRESS + 16#0000#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
