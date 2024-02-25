@@ -74,12 +74,13 @@ package body BSP
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -- UART -----------------------------------------------------------------
       UART_Descriptor.Base_Address  := To_Address (UART_BASEADDRESS);
       UART_Descriptor.Scale_Address := 2;
-      UART_Descriptor.Baud_Clock    := 1_843_200;
+      UART_Descriptor.Baud_Clock    := CLK_UART1M8;
       UART_Descriptor.Read_8        := MMIO.Read'Access;
       UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (UART_Descriptor);

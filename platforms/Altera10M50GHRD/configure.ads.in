@@ -19,7 +19,4 @@ package Configure
    EXCEPTION_ADDRESS     : constant := @EXCEPTION_ADDRESS@;
    FAST_TLB_MISS_ADDRESS : constant := @FAST_TLB_MISS_ADDRESS@;
 
-   -- IOEMU
-   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
-
 end Configure;

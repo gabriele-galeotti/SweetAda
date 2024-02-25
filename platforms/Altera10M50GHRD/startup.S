@@ -86,9 +86,9 @@ _start:
                 // Jump to high-level code.
                 //
                 .extern _ada_main
-                movhi   r2,%hi(_ada_main)
-                ori     r2,r2,%lo(_ada_main)
-                callr   r2
+                movhi   r1,%hi(_ada_main)
+                ori     r1,r1,%lo(_ada_main)
+                callr   r1
 
 dead:           break
 

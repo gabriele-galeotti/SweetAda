@@ -19,7 +19,6 @@ with Interfaces;
 with Configure;
 with GHRD;
 with BSP;
-with IOEMU;
 
 package body Exceptions
    is
@@ -42,10 +41,6 @@ package body Exceptions
    begin
       if GHRD.Timer.Status.TO then
          BSP.Tick_Count := @ + 1;
-         if Configure.USE_QEMU_IOEMU then
-            -- IRQ pulsemeter
-            IOEMU.IO0 := 1;
-         end if;
          GHRD.Timer.Status.TO := False;
       end if;
    end Irq_Process;
