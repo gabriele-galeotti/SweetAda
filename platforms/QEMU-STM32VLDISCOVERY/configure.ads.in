@@ -16,7 +16,4 @@ package Configure
    SYSCLK_FREQUENCY : constant := 24 * MHz1; -- QEMU
    TICK_FREQUENCY   : constant := 1 * kHz1;
 
-   -- IOEMU
-   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
-
 end Configure;
