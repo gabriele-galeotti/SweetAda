@@ -468,7 +468,6 @@ IMPLICIT_CLIBRARY_UNITS :=
 #
 GNATBIND_SECSTACK       :=
 USE_UNPREFIXED_GNATMAKE :=
-CPU_SUPPORT_DEFLIST     :=
 ENABLE_SPLIT_DWARF      :=
 
 ################################################################################
@@ -741,8 +740,7 @@ export                                \
        EXTERNAL_OBJECTS               \
        STACK_LIMIT                    \
        GNATBIND_SECSTACK              \
-       POSTBUILD_COMMAND              \
-       CPU_SUPPORT_DEFLIST
+       POSTBUILD_COMMAND
 
 export USE_ELFTOOL
 ifeq ($(USE_ELFTOOL),Y)
