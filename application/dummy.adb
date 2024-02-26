@@ -1,5 +1,6 @@
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
