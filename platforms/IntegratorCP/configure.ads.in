@@ -18,7 +18,4 @@ package Configure
    TIMER2_CLK     : constant := 1 * MHz1;
    TICK_FREQUENCY : constant := 1 * kHz1;
 
-   -- IOEMU
-   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
-
 end Configure;

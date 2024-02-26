@@ -16,10 +16,8 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
-with Configure;
 with IntegratorCP;
 with BSP;
-with IOEMU;
 
 package body Exceptions
    is
@@ -50,10 +48,6 @@ package body Exceptions
    begin
       IntegratorCP.Timer (0).IntClr := 0;
       BSP.Tick_Count := @ + 1;
-      if Configure.USE_QEMU_IOEMU then
-         -- IRQ pulsemeter
-         IOEMU.IO0 := 1;
-      end if;
    end Irq_Process;
 
    ----------------------------------------------------------------------------
