@@ -54,15 +54,6 @@ package SPARC
    -- PSR
    ----------------------------------------------------------------------------
 
-   type icc_Type is record
-      N : Boolean; -- negative
-      Z : Boolean; -- zero
-      V : Boolean; -- overflow
-      C : Boolean; -- carry
-   end record
-      with Size => 4,
-           Pack => True;
-
    type PSR_Type is record
       CWP      : Natural range 0 .. 31; -- current_window_pointer
       ET       : Boolean;               -- enable_traps
@@ -72,7 +63,10 @@ package SPARC
       EF       : Boolean;               -- enable_floating-point
       EC       : Boolean;               -- enable_coprocessor
       Reserved : Bits_6 := 0;
-      icc      : icc_Type;              -- integer_cond_codes
+      c        : Boolean;               -- icc: carry
+      v        : Boolean;               -- icc: overflow
+      z        : Boolean;               -- icc: zero
+      n        : Boolean;               -- icc: negative
       ver      : Bits_4;                -- version
       impl     : Bits_4;                -- implementation
    end record
@@ -87,7 +81,10 @@ package SPARC
       EF       at 0 range 12 .. 12;
       EC       at 0 range 13 .. 13;
       Reserved at 0 range 14 .. 19;
-      icc      at 0 range 20 .. 23;
+      c        at 0 range 20 .. 20;
+      v        at 0 range 21 .. 21;
+      z        at 0 range 22 .. 22;
+      n        at 0 range 23 .. 23;
       ver      at 0 range 24 .. 27;
       impl     at 0 range 28 .. 31;
    end record;
@@ -106,10 +103,12 @@ package SPARC
    subtype Register_Number_Type is Natural range 0 .. 31;
 
    Register_Size : constant array (0 .. 31) of Positive :=
-      [ 0 => 4,  1 => 4,  2 => 4,  3 => 4,  4 => 4,  5 => 4,  6 => 4,  7 => 4,
+      [
+        0 => 4,  1 => 4,  2 => 4,  3 => 4,  4 => 4,  5 => 4,  6 => 4,  7 => 4,
         8 => 4,  9 => 4, 10 => 4, 11 => 4, 12 => 4, 13 => 4, 14 => 4, 15 => 4,
        16 => 4, 17 => 4, 18 => 4, 19 => 4, 20 => 4, 21 => 4, 22 => 4, 23 => 4,
-       24 => 4, 25 => 4, 26 => 4, 27 => 4, 28 => 4, 29 => 4, 30 => 4, 31 => 4];
+       24 => 4, 25 => 4, 26 => 4, 27 => 4, 28 => 4, 29 => 4, 30 => 4, 31 => 4
+      ];
 
    Maximum_Register_Size : constant := 4;
 
