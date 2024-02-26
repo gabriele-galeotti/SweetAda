@@ -52,6 +52,8 @@ VPATH    := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
 
 ifeq      ($(LIBRARY_NAME),clibrary)
 GCC_SWITCHES_LIBRARY :=
+else ifeq ($(LIBRARY_NAME),core)
+GCC_SWITCHES_LIBRARY :=
 else ifeq ($(LIBRARY_NAME),cpu)
 GCC_SWITCHES_LIBRARY :=
 else ifeq ($(LIBRARY_NAME),platform)
@@ -101,6 +103,7 @@ endif
 	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
+
 %.o: %.ads
 $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
@@ -173,6 +176,7 @@ else
 endif
 	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
 endif
+
 %.o: %.c
 $(OBJ_DIRECTORY)/%.o: %.c $(DEP_DIRECTORY)/%.d
 	$(call brief-command, \

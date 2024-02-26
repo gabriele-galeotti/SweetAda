@@ -69,7 +69,7 @@ export GCC_WRAPPER
 export PROCESSCFG
 # needed by Makefile.lb.in
 export UPDATETM
-# utilities useful in user scripts
+# useful utilities in user scripts
 export FILEPAD FILEPATCH
 # useful utility
 export DOS2UNIX
