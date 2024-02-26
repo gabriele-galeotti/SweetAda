@@ -49,17 +49,12 @@ else
 LIBGCC_SOURCES :=
 endif
 
--include Makefile.if.in
-
 .PHONY: all
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
 configure: $(LIBGCC_SOURCES)
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
-ifneq ($(CPU_SUPPORT_DEFLIST),)
-	@$(CREATESYMLINK) -v -m Makefile.if.in $(CPU_SUPPORT_DEFLIST)
-endif
 
 .PHONY: clean
 clean:
@@ -67,8 +62,7 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON)           \
-              $(INSTALLED_FILENAMES) Makefile.if.in
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 ifneq ($(USE_LIBGCC),Y)
 	$(RM) $(LIBGCC_SOURCES)
 endif
