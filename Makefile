@@ -992,6 +992,27 @@ else
 	-@$(MV) $(OBJECT_DIRECTORY)/gnatbind_objs.lst ./ 2> /dev/null
 endif
 endif
+ifeq      ($(OSTYPE),cmd)
+	@$(SED) -i                                                \
+                -e "s|\\|/|g" -e "s| |\\ |g"                      \
+                $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
+                gnatbind_objs.lst
+else ifeq ($(OSTYPE),msys)
+	@$(SED) -i                                                \
+                -e "s|\\\\|/|g" -e "s| |\\\\ |g"                  \
+                $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
+                gnatbind_objs.lst
+else ifeq ($(OSTYPE),darwin)
+	@$(SED) -i ''                                             \
+                -e "s| |\\\\ |g"                                  \
+                $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
+                gnatbind_objs.lst
+else
+	@$(SED) -i                                                \
+                -e "s| |\\\\ |g"                                  \
+                $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
+                gnatbind_objs.lst
+endif
 
 #
 # Compile the binder-generated source file.
@@ -1015,17 +1036,6 @@ else
                          $(OBJECT_DIRECTORY)/b__main.adb  \
         ,[ADAC],$(<F))
 endif
-else ifeq ($(BUILD_MODE),GPRbuild)
-	-@$(RM) $(GCC_WRAPPER_TIMESTAMP_FILENAME)
-endif
-ifeq      ($(OSTYPE),cmd)
-	@$(SED) -i -e "s|\\|/|g" -e "s| |\\ |g" gnatbind_objs.lst
-else ifeq ($(OSTYPE),msys)
-	@$(SED) -i -e "s|\\\\|/|g" -e "s| |\\\\ |g" gnatbind_objs.lst
-else ifeq ($(OSTYPE),darwin)
-	@$(SED) -i '' -e "s| |\\\\ |g" gnatbind_objs.lst
-else
-	@$(SED) -i -e "s| |\\\\ |g" gnatbind_objs.lst
 endif
 
 #
