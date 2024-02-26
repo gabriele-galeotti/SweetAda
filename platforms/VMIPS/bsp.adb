@@ -42,8 +42,6 @@ package body BSP
    use Interfaces;
    use Definitions;
    use Bits;
-   -- use MIPS;
-   -- use R3000;
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
