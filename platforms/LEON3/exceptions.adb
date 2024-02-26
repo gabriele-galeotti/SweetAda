@@ -19,13 +19,11 @@ with System;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
-with Configure;
 with Abort_Library;
 with LLutils;
 with SPARC;
 with LEON3;
 with BSP;
-with IOEMU;
 
 package body Exceptions
    is
@@ -71,10 +69,6 @@ package body Exceptions
       is
    begin
       BSP.Tick_Count := @ + 1;
-      if Configure.USE_QEMU_IOEMU then
-         -- IRQ pulsemeter
-         IOEMU.IO0 := 1;
-      end if;
       LEON3.GPTIMER.Control_Register_1.IP := False;
       LEON3.INTC_CLEAR.IC (10) := True;
    end Irq_Process;
