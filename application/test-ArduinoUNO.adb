@@ -1,15 +1,15 @@
 
 with System;
 with System.Storage_Elements;
-
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Configure;
 with Bits;
 with AVR;
 with ATmega328P;
-with Configure;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -21,7 +21,8 @@ package body Application is
 
    use ATmega328P;
 
-   procedure Delay_Simple (NLoops : in Natural);
+   procedure Delay_Simple
+      (NLoops : in Natural);
 
    NBlinks : Integer := 6;
 
@@ -42,7 +43,9 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Delay_Simple
    ----------------------------------------------------------------------------
-   procedure Delay_Simple (NLoops : in Natural) is
+   procedure Delay_Simple
+      (NLoops : in Natural)
+      is
    begin
       for L in 1 .. NLoops loop
          for Delay_Loop_Count in Integer'First .. Integer'Last loop
@@ -54,7 +57,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
    begin
       -------------------------------------------------------------------------
       -- GPIO PIN 13 startup blink test, to verify .data relocation -----------
