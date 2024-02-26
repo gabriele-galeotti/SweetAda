@@ -16,7 +16,4 @@ package Configure
    CLK_FREQUENCY  : constant := 33333333; -- 33.333333 MHz
    TICK_FREQUENCY : constant := 1 * kHz1;
 
-   -- IOEMU
-   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
-
 end Configure;

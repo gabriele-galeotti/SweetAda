@@ -16,10 +16,8 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
-with Configure;
 with ZynqA9;
 with BSP;
-with IOEMU;
 
 package body Exceptions
    is
@@ -55,10 +53,6 @@ package body Exceptions
          Unused := ZynqA9.TTC0.ISR (0);
       end;
       BSP.Tick_Count := @ + 1;
-      if Configure.USE_QEMU_IOEMU then
-         -- IRQ pulsemeter
-         IOEMU.IO0 := 1;
-      end if;
    end Irq_Process;
 
    ----------------------------------------------------------------------------
