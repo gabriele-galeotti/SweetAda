@@ -76,7 +76,7 @@ package body BSP
       -- UART1 ----------------------------------------------------------------
       UART1_Descriptor.Base_Address  := To_Address (UART1_BASEADDRESS);
       UART1_Descriptor.Scale_Address := 0;
-      UART1_Descriptor.Baud_Clock    := 1_843_200;
+      UART1_Descriptor.Baud_Clock    := CLK_UART1M8;
       UART1_Descriptor.Read_8        := MMIO.Read'Access;
       UART1_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (UART1_Descriptor);
@@ -87,7 +87,7 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print ("Atlas", NL => True);
       declare
-         Delay_Count : constant := 10000000;
+         Delay_Count : constant := 10_000_000;
       begin
          loop
             UART16x50.TX (UART1_Descriptor, 16#36#);
