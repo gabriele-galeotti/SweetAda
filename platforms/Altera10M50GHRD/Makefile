@@ -45,11 +45,6 @@ all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 configure: configure-files-clean $(CONFIGURE_FILES_PLATFORM)
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
-configure-files-clean:
-ifneq ($(CONFIGURE_FILES_PLATFORM),)
-	$(RM) $(CONFIGURE_FILES_PLATFORM)
-endif
-
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 $(CONFIGURE_FILES_PLATFORM): % : %.in
 	$(PROCESSCFG) $< $@
@@ -59,6 +54,12 @@ endif
 postbuild:
 ifneq ($(POSTBUILD_COMMAND),)
 	$(POSTBUILD_COMMAND)
+endif
+
+.PHONY: configure-files-clean
+configure-files-clean:
+ifneq ($(CONFIGURE_FILES_PLATFORM),)
+	$(RM) $(CONFIGURE_FILES_PLATFORM)
 endif
 
 .PHONY: clean

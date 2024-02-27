@@ -39,27 +39,15 @@ OBJECTS_XFORM_3 := $(OBJECTS_XFORM_2:.c=.o)
 OBJECTS := $(foreach f,$(OBJECTS_XFORM_3),$(OBJ_DIRECTORY)/$(f))
 
 .PHONY: all
-all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
-configure:
+configure: configure-files-clean $(CONFIGURE_FILES_PLATFORM)
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
-ifeq ($(OSTYPE),cmd)
-	@FOR %%F IN ($(CONFIGURE_FILES_PLATFORM)) DO \
-          @ECHO OFF &&                               \
-          IF EXIST %%F.in (                          \
-            $(PROCESSCFG) %%F.in %%F || EXIT /B 1    \
-          ) ELSE (                                   \
-            EXIT /B 1                                \
-          )
-else
-	@for f in $(CONFIGURE_FILES_PLATFORM) ; do \
-          if [ -e $$f.in ] ; then                  \
-            $(PROCESSCFG) $$f.in $$f || exit $$? ; \
-          else                                     \
-            exit 1 ;                               \
-          fi ;                                     \
-        done
+
+ifneq ($(CONFIGURE_FILES_PLATFORM),)
+$(CONFIGURE_FILES_PLATFORM): % : %.in
+	$(PROCESSCFG) $< $@
 endif
 
 .PHONY: postbuild
@@ -73,6 +61,12 @@ postbuild:
         ,[OBJCOPY],$(KERNEL_BASENAME).srec)
 ifneq ($(OSTYPE),cmd)
 	@chmod a-x $(KERNEL_PARENT_PATH)/$(KERNEL_BASENAME).srec
+endif
+
+.PHONY: configure-files-clean
+configure-files-clean:
+ifneq ($(CONFIGURE_FILES_PLATFORM),)
+	$(RM) $(CONFIGURE_FILES_PLATFORM)
 endif
 
 .PHONY: clean
