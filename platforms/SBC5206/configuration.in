@@ -39,7 +39,6 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 
 # Arnewsh SBC5206 board default
 export MBAR_VALUE     := 0x10000000
-export USE_QEMU_IOEMU := False
 
 ################################################################################
 # Run/debug interface.                                                         #

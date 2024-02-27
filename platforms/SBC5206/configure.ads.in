@@ -11,7 +11,4 @@ package Configure
    -- basic configuration parameters
    MBAR_VALUE : constant := @MBAR_VALUE@;
 
-   -- IOEMU
-   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
-
 end Configure;
