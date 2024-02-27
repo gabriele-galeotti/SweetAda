@@ -20,7 +20,8 @@ with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
-package RPI3 is
+package RPI3
+   is
 
    --========================================================================--
    --                                                                        --

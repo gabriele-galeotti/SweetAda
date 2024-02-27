@@ -17,7 +17,8 @@
 
 with BSP;
 
-package body RPI3 is
+package body RPI3
+   is
 
    --========================================================================--
    --                                                                        --
@@ -30,7 +31,8 @@ package body RPI3 is
    ----------------------------------------------------------------------------
    -- Timer_Reload
    ----------------------------------------------------------------------------
-   procedure Timer_Reload is
+   procedure Timer_Reload
+      is
    begin
       SYSTEM_TIMER.C1 := SYSTEM_TIMER.CLO + BSP.Timer_Constant;
    end Timer_Reload;

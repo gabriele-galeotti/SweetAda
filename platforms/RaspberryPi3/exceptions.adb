@@ -23,7 +23,8 @@ with ARMv8A;
 with RPI3;
 with BSP;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
