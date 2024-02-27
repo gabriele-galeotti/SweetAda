@@ -23,7 +23,8 @@ with MMIO;
 with MVME162FX;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -42,12 +43,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       Z8530.TX (SCC_Descriptor, Z8530.CHANNELA, To_U8 (C));
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
    begin
       C := Character'Val (0);
    end Console_Getchar;
@@ -55,7 +60,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -- SCC ------------------------------------------------------------------
       SCC_Descriptor.Base_Address             := To_Address (SCC_BASEADDRESS);
