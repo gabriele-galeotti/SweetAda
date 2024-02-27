@@ -26,7 +26,8 @@ with RPI3;
 with Exceptions;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -42,12 +43,14 @@ package body BSP is
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
-   function Number_Of_CPUs return Interfaces.C.int
+   function Number_Of_CPUs
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_number_of_cpus";
 
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_get_secondary_stack";
@@ -63,7 +66,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Number_Of_CPUs
    ----------------------------------------------------------------------------
-   function Number_Of_CPUs return Interfaces.C.int
+   function Number_Of_CPUs
+      return Interfaces.C.int
       is
    begin
       return 4;
