@@ -162,7 +162,7 @@ package body BSP
       SCC_Descriptor.Base_Address   := To_Address (SCC_BASEADDRESS);
       SCC_Descriptor.AB_Address_Bit := 2;
       SCC_Descriptor.CD_Address_Bit := 1;
-      SCC_Descriptor.Baud_Clock     := 4_915_200;
+      SCC_Descriptor.Baud_Clock     := CLK_UART4M9;
       SCC_Descriptor.Read_8         := MMIO.Read'Access;
       SCC_Descriptor.Write_8        := MMIO.Write'Access;
       Z8530.Init (SCC_Descriptor, Z8530.CHANNELA);
