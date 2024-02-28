@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu-mmio.ads                                                                                              --
+-- __FLN__ mmio-write_u32.adb                                                                                        --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,49 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with Interfaces;
+with CPU.MMIO;
 
-package CPU.MMIO
-   with Preelaborate => True
+separate (MMIO)
+procedure Write_U32
+   (Memory_Address : in System.Address;
+    Value          : in Interfaces.Unsigned_32)
    is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                               Public part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   function Read_U8
-      (Memory_Address : System.Address)
-      return Interfaces.Unsigned_8
-      with Inline_Always => True;
-
-   function Read_U16
-      (Memory_Address : System.Address)
-      return Interfaces.Unsigned_16
-      with Inline_Always => True;
-
-   function Read_U32
-      (Memory_Address : System.Address)
-      return Interfaces.Unsigned_32
-      with Inline_Always => True;
-
-   procedure Write_U8
-      (Memory_Address : in System.Address;
-       Value          : in Interfaces.Unsigned_8)
-      with Inline_Always => True;
-
-   procedure Write_U16
-      (Memory_Address : in System.Address;
-       Value          : in Interfaces.Unsigned_16)
-      with Inline_Always => True;
-
-   procedure Write_U32
-      (Memory_Address : in System.Address;
-       Value          : in Interfaces.Unsigned_32)
-      with Inline_Always => True;
-
-end CPU.MMIO;
+begin
+   CPU.MMIO.Write_U32 (Memory_Address, Value);
+end Write_U32;

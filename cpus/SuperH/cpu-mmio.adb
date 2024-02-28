@@ -98,12 +98,61 @@ package body CPU.MMIO
       return Result;
    end Read_U32;
 
-   function Read_U64
-      (Memory_Address : System.Address)
-      return Interfaces.Unsigned_64
+   procedure Write_U8
+      (Memory_Address : in System.Address;
+       Value          : in Interfaces.Unsigned_8)
       is
    begin
-      return Bits.Make_Word (Read_U32 (Memory_Address), Read_U32 (Memory_Address + 4));
-   end Read_U64;
+      Asm (
+           Template => ""                       & CRLF &
+                       "        mov.b   %0,@%1" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Interfaces.Unsigned_8'Asm_Input ("r", Value),
+                        System.Address'Asm_Input ("r", Memory_Address)
+                       ],
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end Write_U8;
+
+   procedure Write_U16
+      (Memory_Address : in System.Address;
+       Value          : in Interfaces.Unsigned_16)
+      is
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        mov.w   %0,@%1" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Interfaces.Unsigned_16'Asm_Input ("r", Value),
+                        System.Address'Asm_Input ("r", Memory_Address)
+                       ],
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end Write_U16;
+
+   procedure Write_U32
+      (Memory_Address : in System.Address;
+       Value          : in Interfaces.Unsigned_32)
+      is
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        mov.l   %0,@%1" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Interfaces.Unsigned_32'Asm_Input ("r", Value),
+                        System.Address'Asm_Input ("r", Memory_Address)
+                       ],
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end Write_U32;
 
 end CPU.MMIO;

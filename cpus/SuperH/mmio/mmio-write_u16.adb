@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ mmio-read_u64.adb                                                                                         --
+-- __FLN__ mmio-write_u16.adb                                                                                        --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -18,10 +18,10 @@
 with CPU.MMIO;
 
 separate (MMIO)
-function Read_U64
-   (Memory_Address : System.Address)
-   return Interfaces.Unsigned_64
+procedure Write_U16
+   (Memory_Address : in System.Address;
+    Value          : in Interfaces.Unsigned_16)
    is
 begin
-   return CPU.MMIO.Read_U64 (Memory_Address);
-end Read_U64;
+   CPU.MMIO.Write_U16 (Memory_Address, Value);
+end Write_U16;
