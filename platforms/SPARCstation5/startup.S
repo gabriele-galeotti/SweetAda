@@ -31,11 +31,9 @@ _start:
                 // aliased @ 0x70000000.
                 //
                 lda     [%g0]ASI_N,%g2
-                sethi   %hi(~(MMU_CR_BM|MMU_CR_E)),%g3
-                or      %g3,%lo(~(MMU_CR_BM|MMU_CR_E)),%g3
+                set     ~(MMU_CR_BM|MMU_CR_E),%g3
                 and     %g2,%g3,%g2
-                sethi   %hi(_init),%g1
-                or      %g1,%lo(_init),%g1
+                set     _init,%g1
                 jmp     %g1
                 sta     %g2,[%g0]ASI_N
 
@@ -54,10 +52,8 @@ _init:
                 //
 #define PSR_INIT (PSR_EF|PSR_PIL(0xF)|PSR_S|PSR_PS|PSR_ET|PSR_CWP(0))
                 rd      %psr,%g1
-                sethi   %hi(PSR_impl|PSR_ver|PSR_S),%g2       // preserve ver, impl
-                or      %g2,%lo(PSR_impl|PSR_ver|PSR_S),%g2
-                sethi   %hi(PSR_INIT),%g3
-                or      %g3,%lo(PSR_INIT),%g3
+                set     (PSR_impl|PSR_ver|PSR_S),%g2            // preserve ver, impl
+                set     PSR_INIT,%g3
                 and     %g1,%g2,%g1
                 or      %g1,%g3,%g1
                 wr      %g1,%psr
@@ -66,8 +62,7 @@ _init:
                 // Setup TBR.
                 //
                 .extern trap_table
-                sethi   %hi(trap_table),%g1
-                or      %g1,%lo(trap_table),%g1
+                set     trap_table,%g1
                 wr      %g1,%tbr
                 NOP3
                 //
@@ -91,50 +86,72 @@ _init:
                 // a bit vector in which the implemented windows (and only the
                 // implemented windows) are indicated by 1s.
                 //
-                // g1: working register (number of windows)
-                // g2: working register (nwindows pointer)
-                // g3: working register (window mask)
-                // g4: window mask
-                // g5: 0xFFFFFFFF
-                //
-                sethi   %hi(0xFFFFFFFF),%g5
-                or      %g3,%lo(0xFFFFFFFF),%g5
-                wr      %g5,%wim
+                set     0xFFFFFFFF,%g1
+                mov     %g1,%g3
+                wr      %g1,%wim
                 NOP3
-                rd      %wim,%g4                        // now g4 contains a mask of all windows
-                mov     %g4,%g3                         // use g3 for counting
-                mov     %g0,%g1                         // clear NWINDOWS
-                mov     %g0,%g2                         // g2 will add to g1
-1:              and     %g3,1,%g2                       // check if this window is implemented
-                add     %g1,%g2,%g1                     // add result to g1
-                tst     %g2                             // g2 == 0?
-                bne     1b                              // y -> windows exahusted
-                srl     %g3,1,%g3                       // shift g3 in the delay slot and cycle
-                // g1 contains NWINDOWS
-                sethi   %hi(nwindows),%g2
-                or      %g2,%lo(nwindows),%g2
-                sta     %g1,[%g2]ASI_SCRATCHPAD
-                // invert the mask and write back to WIM
-                xor     %g4,%g5,%g3
-                wr      %g3,%wim
+                rd      %wim,%g1
+                xor     %g1,%g3,%g3
+                clr     %g2
+1:              cmp     %g1,0
+                beq     2f
+                nop
+                inc     %g2
+                b       1b
+                srl     %g1,1,%g1
+2:
+
+                //
+                // Save NWINDOWS.
+                // %g2=NWINDOWS
+                //
+                set     nwindows,%g1
+                sta     %g2,[%g1]ASI_SCRATCHPAD
+
+                //
+                // Recover ~WIM and create and inverse mask, 1st window is
+                // invalid.
+                // %g3=~WIM
+                //
+                sra     %g3,1,%g1
+                wr      %g1,%wim
                 NOP3
 
                 //
-                // Setup stack pointer for CWP = NWINDOWS-1.
-                // g1 = NWINDOWS on entry
+                // Update PSR with CWP=NWINDOWS-1 and stack=trap_stack.
+                // %g2=NWINDOWS
                 //
-                add     %g1,-1,%g2
                 rd      %psr,%g1
+                set     PSR_CWP(-1),%g3
+                andn    %g1,%g3,%g1
+                sub     %g2,1,%g2
                 or      %g1,%g2,%g1
                 wr      %g1,%psr
                 NOP3
                 .extern trap_stack
-                sethi   %hi(trap_stack),%sp
-                or      %sp,%lo(trap_stack),%sp
-                // CWP = 0
-                xor     %g1,%g2,%g1
+                set     trap_stack,%sp
+
+                //
+                // update PSR with CWP=0.
+                //
+                rd      %psr,%g1
+                set     PSR_CWP(-1),%g3
+                andn    %g1,%g3,%g1
                 wr      %g1,%psr
                 NOP3
+
+                //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                set     _sbss,%g1
+                set     _ebss,%g2
+                add     %g1,1,%g1
+1:              stb     %g0,[%g1]
+                subcc   %g1,%g2,%g0
+                bl      1b
+                add     %g1,1,%g1
 
                 //
                 // Clear registers.
@@ -150,8 +167,7 @@ _init:
                 //
                 // Setup stack pointer.
                 //
-                sethi   %hi(kernel_stack),%sp
-                or      %sp,%lo(kernel_stack),%sp
+                set     kernel_stack,%sp
 
                 //
                 // Create a stack frame.
