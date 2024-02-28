@@ -44,7 +44,7 @@ package SH
 
    type Intcontext_Type is new Integer;
 
-   procedure Intcontext_Set
+   procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
    procedure Intcontext_Set
