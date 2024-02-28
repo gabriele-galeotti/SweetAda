@@ -15,10 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
-with Interfaces;
 with Configure;
 with Abort_Library;
 with LLutils;
@@ -40,9 +38,7 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use System;
    use System.Storage_Elements;
-   use Interfaces;
    use Abort_Library;
    use LLutils;
    use SPARC;
@@ -61,9 +57,13 @@ package body Exceptions
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process
+      (Code         : in Unsigned_32;
+       Trap_Address : in Address)
       is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
+      Console.Print (Code,         Prefix => "CODE:    ", NL => True);
+      Console.Print (Trap_Address, Prefix => "ADDRESS: ", NL => True);
       System_Abort;
    end Exception_Process;
 
@@ -71,6 +71,7 @@ package body Exceptions
    -- Irq_Process
    ----------------------------------------------------------------------------
    procedure Irq_Process
+      (Code : in Unsigned_32)
       is
    begin
       if Sun4m.SIPR.T then
