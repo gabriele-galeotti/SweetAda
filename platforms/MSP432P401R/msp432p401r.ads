@@ -763,6 +763,84 @@ package MSP432P401R
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 7 Power Supply System (PSS)
+   ----------------------------------------------------------------------------
+
+   -- 7.3.1 PSSKEY Register PSS Key Register
+
+   PSSKEY_KEY : constant := 16#A596#;
+
+   type PSSKEY_Type is record
+      PSSKEY   : Unsigned_16;  -- PSS key.
+      Reserved : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PSSKEY_Type use record
+      PSSKEY   at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 7.3.2 PSSCTL0 Register PSS Control 0 Register
+
+   SVSMHS_SVSH : constant := 0; -- Configure as SVSH
+   SVSMHS_SVMH : constant := 1; -- Configure as SVMH
+
+   SVSMHTH_0 : constant := 2#000#; -- Table 5-22. PSS, SVSMH
+   SVSMHTH_1 : constant := 2#001#; -- ''
+   SVSMHTH_2 : constant := 2#010#; -- ''
+   SVSMHTH_3 : constant := 2#011#; -- ''
+   SVSMHTH_4 : constant := 2#100#; -- ''
+   SVSMHTH_5 : constant := 2#101#; -- ''
+   SVSMHTH_6 : constant := 2#110#; -- ''
+   SVSMHTH_7 : constant := 2#111#; -- ''
+
+   type PSSCTL0_Type is record
+      SVSMHOFF     : Boolean;      -- SVSM high-side off
+      SVSMHLP      : Boolean;      -- SVSM high-side low power normal performance mode
+      SVSMHS       : Bits_1;       -- Supply supervisor or monitor selection for the high-side
+      SVSMHTH      : Bits_3;       -- SVSM high-side reset voltage level.
+      SVMHOE       : Boolean;      -- SVSM high-side output enable
+      SVMHOUTPOLAL : Boolean;      -- SVMHOUT pin polarity active low.
+      Reserved1    : Bits_2 := 0;
+      DCDC_FORCE   : Boolean;      -- Force DC/DC regulator operation.
+      Reserved2    : Bits_1 := 0;
+      Reserved3    : Bits_2 := 2;
+      Reserved4    : Bits_18 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PSSCTL0_Type use record
+      SVSMHOFF     at 0 range  0 ..  0;
+      SVSMHLP      at 0 range  1 ..  1;
+      SVSMHS       at 0 range  2 ..  2;
+      SVSMHTH      at 0 range  3 ..  5;
+      SVMHOE       at 0 range  6 ..  6;
+      SVMHOUTPOLAL at 0 range  7 ..  7;
+      Reserved1    at 0 range  8 ..  9;
+      DCDC_FORCE   at 0 range 10 .. 10;
+      Reserved2    at 0 range 11 .. 11;
+      Reserved3    at 0 range 12 .. 13;
+      Reserved4    at 0 range 14 .. 31;
+   end record;
+
+   -- Table 6-29. PSS Registers
+
+   PSS_BASEADDRESS : constant := 16#4001_0800#;
+
+   PSSKEY : aliased PSSKEY_Type
+      with Address              => To_Address (PSS_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PSSCTL0 : aliased PSSCTL0_Type
+      with Address              => To_Address (PSS_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 12 Digital I/O
    ----------------------------------------------------------------------------
 
