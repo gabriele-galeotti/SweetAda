@@ -95,6 +95,19 @@ _start:
                 NOP3
 
                 //
+                // Initialize .bss section.
+                //
+                .extern _sbss
+                .extern _ebss
+                set     _sbss,%g1
+                set     _ebss,%g2
+                add     %g1,1,%g1
+1:              stb     %g0,[%g1]
+                subcc   %g1,%g2,%g0
+                bl      1b
+                add     %g1,1,%g1
+
+                //
                 // Clear registers.
                 //
                 clr     %g1
