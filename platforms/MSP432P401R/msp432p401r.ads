@@ -824,6 +824,51 @@ package MSP432P401R
       Reserved4    at 0 range 14 .. 31;
    end record;
 
+   -- 7.3.3 PSSIE Register PSS Interrupt Enable Register
+
+   type PSSIE_Type is record
+      Reserved1 : Bits_1 := 0;
+      SVSMHIE   : Boolean;      -- High-side SVSM interrupt enable, when set as a monitor (SVSMHS = 1).
+      Reserved2 : Bits_30 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PSSIE_Type use record
+      Reserved1 at 0 range 0 ..  0;
+      SVSMHIE   at 0 range 1 ..  1;
+      Reserved2 at 0 range 2 .. 31;
+   end record;
+
+   -- 7.3.4 PSSIFG Register PSS Interrupt Flag Register
+
+   type PSSIFG_Type is record
+      Reserved1 : Bits_1 := 0;
+      SVSMHIFG  : Boolean;      -- High-side SVSM interrupt flag.
+      Reserved2 : Bits_30 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PSSIFG_Type use record
+      Reserved1 at 0 range 0 ..  0;
+      SVSMHIFG  at 0 range 1 ..  1;
+      Reserved2 at 0 range 2 .. 31;
+   end record;
+
+   -- 7.3.5 PSSCLRIFG Register PSS Clear Interrupt Flag Register
+
+   type PSSCLRIFG_Type is record
+      Reserved1   : Bits_1 := 0;
+      CLRSVSMHIFG : Boolean;      -- SVSMH clear interrupt flag
+      Reserved2   : Bits_30 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PSSCLRIFG_Type use record
+      Reserved1   at 0 range 0 ..  0;
+      CLRSVSMHIFG at 0 range 1 ..  1;
+      Reserved2   at 0 range 2 .. 31;
+   end record;
+
    -- Table 6-29. PSS Registers
 
    PSS_BASEADDRESS : constant := 16#4001_0800#;
@@ -836,6 +881,24 @@ package MSP432P401R
 
    PSSCTL0 : aliased PSSCTL0_Type
       with Address              => To_Address (PSS_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PSSIE : aliased PSSIE_Type
+      with Address              => To_Address (PSS_BASEADDRESS + 16#34#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PSSIFG : aliased PSSIFG_Type
+      with Address              => To_Address (PSS_BASEADDRESS + 16#38#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PSSCLRIFG : aliased PSSCLRIFG_Type
+      with Address              => To_Address (PSS_BASEADDRESS + 16#3C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
