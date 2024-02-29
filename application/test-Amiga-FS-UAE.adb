@@ -19,7 +19,8 @@ with FATFS.Applications;
 with IOEMU;
 with Console;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -39,7 +40,10 @@ package body Application is
 
    Fatfs_Object : FATFS.Descriptor_Type;
 
-   function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean;
+   function Tick_Count_Expired
+      (Flash_Count : Unsigned_32;
+       Timeout     : Unsigned_32)
+      return Boolean;
    procedure Handle_Ethernet;
 
    --========================================================================--
@@ -53,7 +57,11 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Tick_Count_Expired
    ----------------------------------------------------------------------------
-   function Tick_Count_Expired (Flash_Count : Unsigned_32; Timeout : Unsigned_32) return Boolean is
+   function Tick_Count_Expired
+      (Flash_Count : Unsigned_32;
+       Timeout     : Unsigned_32)
+      return Boolean
+      is
    begin
       return (BSP.Tick_Count - Flash_Count) > Timeout;
    end Tick_Count_Expired;
@@ -61,7 +69,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Handle_Ethernet
    ----------------------------------------------------------------------------
-   procedure Handle_Ethernet is
+   procedure Handle_Ethernet
+      is
       P       : PBUF.Pbuf_Ptr;
       Success : Boolean;
    begin
@@ -79,7 +88,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
    begin
       -------------------------------------------------------------------------
       if True then

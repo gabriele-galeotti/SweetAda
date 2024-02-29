@@ -17,7 +17,8 @@ with SweetAda;
 with IOEMU;
 with Console;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -46,7 +47,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
    begin
       -------------------------------------------------------------------------
       if True then

@@ -3,7 +3,8 @@ with CPU;
 with ATmega328P;
 with Console;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -26,7 +27,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
       Delay_Count : constant Long_Integer := 5_000_000;
    begin
       -------------------------------------------------------------------------

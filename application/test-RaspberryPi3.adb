@@ -9,7 +9,8 @@ with CPU;
 with RPI3;
 with Console;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -24,10 +25,18 @@ package body Application is
    use Interfaces;
    use Bits;
 
-   function Clock_Get (Clock_ID : Unsigned_32) return Integer;
-   procedure Clock_Set (Clock_ID : in Unsigned_32; Value : in Unsigned_32);
-   function Voltage_Get (Voltage_ID : Unsigned_32) return Integer;
-   function Temperature_Get (Temperature_ID : Unsigned_32) return Integer;
+   function Clock_Get
+      (Clock_ID : Unsigned_32)
+      return Integer;
+   procedure Clock_Set
+      (Clock_ID : in Unsigned_32;
+       Value    : in Unsigned_32);
+   function Voltage_Get
+      (Voltage_ID : Unsigned_32)
+      return Integer;
+   function Temperature_Get
+      (Temperature_ID : Unsigned_32)
+      return Integer;
 
    --========================================================================--
    --                                                                        --
@@ -40,14 +49,17 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Clock_Get
    ----------------------------------------------------------------------------
-   function Clock_Get (Clock_ID : Unsigned_32) return Integer is
-      type Message_Data_Type is array (0 .. 7) of Unsigned_32 with
-         Alignment => 16,
-         Size      => 8 * 32;
-      M_Data : aliased Message_Data_Type with
-         Volatile => True;
-      M      : RPI3.Message_Type with
-         Unreferenced => True;
+   function Clock_Get
+      (Clock_ID : Unsigned_32)
+      return Integer
+      is
+      type Message_Data_Type is array (0 .. 7) of Unsigned_32
+         with Alignment => 16,
+              Size      => 8 * 32;
+      M_Data : aliased Message_Data_Type
+         with Volatile => True;
+      M      : RPI3.Message_Type
+         with Unreferenced => True;
       function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
    begin
       while RPI3.MAIL0_Status.Full loop null; end loop;
@@ -71,14 +83,17 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Clock_Set
    ----------------------------------------------------------------------------
-   procedure Clock_Set (Clock_ID : in Unsigned_32; Value : in Unsigned_32) is
-      type Message_Data_Type is array (0 .. 11) of Unsigned_32 with
-         Alignment => 16,
-         Size      => 12 * 32;
-      M_Data : aliased Message_Data_Type with
-         Volatile => True;
-      M      : RPI3.Message_Type with
-         Unreferenced => True;
+   procedure Clock_Set
+      (Clock_ID : in Unsigned_32;
+       Value    : in Unsigned_32)
+      is
+      type Message_Data_Type is array (0 .. 11) of Unsigned_32
+         with Alignment => 16,
+              Size      => 12 * 32;
+      M_Data : aliased Message_Data_Type
+         with Volatile => True;
+      M      : RPI3.Message_Type
+         with Unreferenced => True;
       function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
    begin
       while RPI3.MAIL0_Status.Full loop null; end loop;
@@ -105,14 +120,17 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Voltage_Get
    ----------------------------------------------------------------------------
-   function Voltage_Get (Voltage_ID : Unsigned_32) return Integer is
-      type Message_Data_Type is array (0 .. 7) of Unsigned_32 with
-         Alignment => 16,
-         Size      => 8 * 32;
-      M_Data : aliased Message_Data_Type with
-         Volatile => True;
-      M      : RPI3.Message_Type with
-         Unreferenced => True;
+   function Voltage_Get
+      (Voltage_ID : Unsigned_32)
+      return Integer
+      is
+      type Message_Data_Type is array (0 .. 7) of Unsigned_32
+         with Alignment => 16,
+              Size      => 8 * 32;
+      M_Data : aliased Message_Data_Type
+         with Volatile => True;
+      M      : RPI3.Message_Type
+         with Unreferenced => True;
       function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
    begin
       while RPI3.MAIL0_Status.Full loop null; end loop;
@@ -136,14 +154,17 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Temperature_Get
    ----------------------------------------------------------------------------
-   function Temperature_Get (Temperature_ID : Unsigned_32) return Integer is
-      type Message_Data_Type is array (0 .. 7) of Unsigned_32 with
-         Alignment => 16,
-         Size      => 8 * 32;
-      M_Data : aliased Message_Data_Type with
-         Volatile => True;
-      M      : RPI3.Message_Type with
-         Unreferenced => True;
+   function Temperature_Get
+      (Temperature_ID : Unsigned_32)
+      return Integer
+      is
+      type Message_Data_Type is array (0 .. 7) of Unsigned_32
+         with Alignment => 16,
+              Size      => 8 * 32;
+      M_Data : aliased Message_Data_Type
+         with Volatile => True;
+      M      : RPI3.Message_Type
+         with Unreferenced => True;
       function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
    begin
       while RPI3.MAIL0_Status.Full loop null; end loop;
@@ -167,7 +188,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
    begin
       -------------------------------------------------------------------------
       declare

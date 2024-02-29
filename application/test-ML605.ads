@@ -1,5 +1,6 @@
 
-package Application is
+package Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -9,7 +10,7 @@ package Application is
    --                                                                        --
    --========================================================================--
 
-   procedure Run with
-      No_Return => True;
+   procedure Run
+      with No_Return => True;
 
 end Application;

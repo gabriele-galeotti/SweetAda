@@ -2,7 +2,8 @@
 with CPU;
 with Console;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --

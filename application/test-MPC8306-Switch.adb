@@ -5,7 +5,8 @@ with MPC83XX;
 with Switch;
 with Console;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -21,7 +22,8 @@ package body Application is
    procedure SETW;
    procedure SETACK;
    procedure SETNOACK;
-   procedure TX (Code : in Unsigned_8);
+   procedure TX
+      (Code : in Unsigned_8);
 
    --========================================================================--
    --                                                                        --
@@ -31,27 +33,33 @@ package body Application is
    --                                                                        --
    --========================================================================--
 
-   procedure SETR is
+   procedure SETR
+      is
    begin
       MPC83XX.I2C.CR.MTX := MPC83XX.MTX_Receive;
    end SETR;
 
-   procedure SETW is
+   procedure SETW
+      is
    begin
       MPC83XX.I2C.CR.MTX := MPC83XX.MTX_Transmit;
    end SETW;
 
-   procedure SETACK is
+   procedure SETACK
+      is
    begin
       MPC83XX.I2C.CR.TXAK := False;
    end SETACK;
 
-   procedure SETNOACK is
+   procedure SETNOACK
+      is
    begin
       MPC83XX.I2C.CR.TXAK := True;
    end SETNOACK;
 
-   procedure TX (Code : in Unsigned_8) is
+   procedure TX
+      (Code : in Unsigned_8)
+      is
    begin
       MPC83XX.I2C.DR := Code;
       loop
@@ -66,7 +74,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
    begin
       -- GPIO test ------------------------------------------------------------
       if False then
@@ -136,4 +145,5 @@ package body Application is
       loop null; end loop;
       -------------------------------------------------------------------------
    end Run;
+
 end Application;

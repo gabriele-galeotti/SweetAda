@@ -3,7 +3,8 @@ with Interfaces;
 with CPU;
 with KL46Z;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,7 +28,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
    begin
       -------------------------------------------------------------------------
       -- blink on-board GREEN LED

@@ -3,7 +3,8 @@ with Interfaces;
 with MSP432P401R;
 with CPU;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -27,7 +28,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
       Delay_Count : constant := 300_000;
       Dummy       : Unsigned_8;
    begin

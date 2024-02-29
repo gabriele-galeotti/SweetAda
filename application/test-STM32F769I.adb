@@ -5,7 +5,8 @@ with STM32F769I;
 with CPU;
 with Console;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -30,7 +31,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
       Delay_Count : constant := 50_000_000;
    begin
       -- blink user LEDs alternately ------------------------------------------

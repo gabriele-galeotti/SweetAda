@@ -12,7 +12,8 @@ with Sun4m;
 with IOEMU;
 with Console;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -37,9 +38,13 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
-      procedure CHANNELB_Putchar (C : in Character);
-      procedure CHANNELB_Putchar (C : in Character) is
+   procedure Run
+      is
+      procedure CHANNELB_Putchar
+         (C : in Character);
+      procedure CHANNELB_Putchar
+         (C : in Character)
+         is
       begin
          Z8530.TX (BSP.SCC_Descriptor, Z8530.CHANNELB, To_U8 (C));
       end CHANNELB_Putchar;

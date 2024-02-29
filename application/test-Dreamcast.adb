@@ -7,7 +7,8 @@ with IOEMU;
 with BSP;
 with Console;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -19,8 +20,14 @@ package body Application is
 
    use Interfaces;
 
-   procedure Video with Import => True, Convention => Asm, External_Name => "video";
-   procedure Roto with Import => True, Convention => Asm, External_Name => "roto";
+   procedure Video
+      with Import        => True,
+           Convention    => Asm,
+           External_Name => "video";
+   procedure Roto
+      with Import        => True,
+           Convention    => Asm,
+           External_Name => "roto";
 
    --========================================================================--
    --                                                                        --
@@ -33,7 +40,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
    begin
       -------------------------------------------------------------------------
       if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then

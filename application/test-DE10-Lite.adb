@@ -4,7 +4,8 @@ with CPU;
 with DE10Lite;
 with Console;
 
-package body Application is
+package body Application
+   is
 
    --========================================================================--
    --                                                                        --
@@ -28,7 +29,8 @@ package body Application is
    ----------------------------------------------------------------------------
    -- Run
    ----------------------------------------------------------------------------
-   procedure Run is
+   procedure Run
+      is
    begin
       -- GPIO test ------------------------------------------------------------
       if True then
