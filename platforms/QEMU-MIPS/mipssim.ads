@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ exceptions.adb                                                                                            --
+-- __FLN__ mipssim.ads                                                                                               --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,47 +15,23 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with MIPS32;
-with MIPSSIM;
-with BSP;
+with Configure;
 
-package body Exceptions
+package MIPSSIM
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
+   -- CP0 Count runs at half the pipeline CPU clock (QEMU CPU CLK = 320 MHz)
+   CP0_TIMER_COUNT : constant :=
+      (Configure.CLOCK_FREQUENCY / Configure.TICK_FREQUENCY) / 2;
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
+   procedure Tclk_Init;
 
-   ----------------------------------------------------------------------------
-   -- Exception_Process
-   ----------------------------------------------------------------------------
-   procedure Exception_Process
-      is
-      Count : Unsigned_32;
-   begin
-      BSP.Tick_Count := @ + 1;
-      Count := MIPS32.CP0_Count_Read;
-      MIPS32.CP0_Compare_Write (Count + MIPSSIM.CP0_TIMER_COUNT);
-   end Exception_Process;
-
-   ----------------------------------------------------------------------------
-   -- Init
-   ----------------------------------------------------------------------------
-   procedure Init is null;
-
-end Exceptions;
+end MIPSSIM;

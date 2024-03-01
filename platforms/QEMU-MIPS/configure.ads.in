@@ -1,11 +1,19 @@
 
+with Definitions;
+
 package Configure
    with Pure => True
    is
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM  : constant String := "QEMU-MIPS";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   CLOCK_FREQUENCY : constant := 12 * MHz1;
+   TICK_FREQUENCY  : constant := 100;
 
 end Configure;

@@ -26,6 +26,11 @@ package Exceptions
    --                                                                        --
    --========================================================================--
 
+   procedure Exception_Process
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "exception_process";
+
    procedure Init;
 
 end Exceptions;
