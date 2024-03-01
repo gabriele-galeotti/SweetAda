@@ -32,7 +32,12 @@ library project Cpu is
          case CPU_Model is
             when "R3000" =>
                for Languages use ("Ada");
-               for Source_Files use ("libgcc.adb", "libgcc.ads");
+               for Source_Files use (
+                                     "gcc_types.ads",
+                                     "libgcc.adb", "libgcc.ads",
+                                     "libgcc-bswapsi2.adb",
+                                     "libgcc-bswapdi2.adb"
+                                    );
             when others  =>
                null;
          end case;
