@@ -336,6 +336,14 @@ package KL46Z
 
    -- 12.2.5 System Options Register 5 (SIM_SOPT5)
 
+   UARTnTXSRC_TX         : constant := 2#00#; -- UARTn_TX pin
+   UARTnTXSRC_TXMODTPM10 : constant := 2#01#; -- UARTn_TX pin modulated with TPM1 channel 0 output
+   UARTnTXSRC_TXMODTPM20 : constant := 2#10#; -- UARTn_TX pin modulated with TPM2 channel 0 output
+   UARTnTXSRC_RSVD       : constant := 2#11#; -- Reserved
+
+   UARTnRXSRC_RX   : constant := 0; -- UARTn_RX pin
+   UARTnRXSRC_CMP0 : constant := 1; -- CMP0 output
+
    type SIM_SOPT5_Type is record
       UART0TXSRC : Bits_2;       -- UART0 Transmit Data Source Select
       UART0RXSRC : Bits_1;       -- UART0 Receive Data Source Select
@@ -369,6 +377,126 @@ package KL46Z
 
    SIM_SOPT5 : aliased SIM_SOPT5_Type
       with Address              => To_Address (SIM_SOPT5_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.6 System Options Register 7 (SIM_SOPT7)
+
+   ADC0TRGSEL_EXTRG     : constant := 2#0000#; -- External trigger pin input (EXTRG_IN)
+   ADC0TRGSEL_CMP0      : constant := 2#0001#; -- CMP0 output
+   ADC0TRGSEL_RSVD1     : constant := 2#0010#; -- Reserved
+   ADC0TRGSEL_RSVD2     : constant := 2#0011#; -- Reserved
+   ADC0TRGSEL_PITTRG0   : constant := 2#0100#; -- PIT trigger 0
+   ADC0TRGSEL_PITTRG1   : constant := 2#0101#; -- PIT trigger 1
+   ADC0TRGSEL_RSVD3     : constant := 2#0110#; -- Reserved
+   ADC0TRGSEL_RSVD4     : constant := 2#0111#; -- Reserved
+   ADC0TRGSEL_TPM0OVF   : constant := 2#1000#; -- TPM0 overflow
+   ADC0TRGSEL_TPM1OVF   : constant := 2#1001#; -- TPM1 overflow
+   ADC0TRGSEL_TPM2OVF   : constant := 2#1010#; -- TPM2 overflow
+   ADC0TRGSEL_RSVD5     : constant := 2#1011#; -- Reserved
+   ADC0TRGSEL_RTCALM    : constant := 2#1100#; -- RTC alarm
+   ADC0TRGSEL_RTCSEC    : constant := 2#1101#; -- RTC seconds
+   ADC0TRGSEL_LPTMR0TRG : constant := 2#1110#; -- LPTMR0 trigger
+   ADC0TRGSEL_RSVD6     : constant := 2#1111#; -- Reserved
+
+   ADC0PRETRGSEL_A : constant := 0; -- Pre-trigger A
+   ADC0PRETRGSEL_B : constant := 1; -- Pre-trigger B
+
+   type SIM_SOPT7_Type is record
+      ADC0TRGSEL    : Bits_4;       -- ADC0 trigger select
+      ADC0PRETRGSEL : Bits_1;       -- ADC0 Pretrigger Select
+      Reserved1     : Bits_2 := 0;
+      ADC0ALTTRGEN  : Boolean;      -- ADC0 Alternate Trigger Enable
+      Reserved2     : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SOPT7_Type use record
+      ADC0TRGSEL    at 0 range 0 ..  3;
+      ADC0PRETRGSEL at 0 range 4 ..  4;
+      Reserved1     at 0 range 5 ..  6;
+      ADC0ALTTRGEN  at 0 range 7 ..  7;
+      Reserved2     at 0 range 8 .. 31;
+   end record;
+
+   SIM_SOPT7_ADDRESS : constant := 16#4004_8018#;
+
+   SIM_SOPT7 : aliased SIM_SOPT7_Type
+      with Address              => To_Address (SIM_SOPT7_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.7 System Device Identification Register (SIM_SDID)
+
+   PINID_16    : constant := 2#0000#; -- 16-pin
+   PINID_24    : constant := 2#0001#; -- 24-pin
+   PINID_32    : constant := 2#0010#; -- 32-pin
+   PINID_36    : constant := 2#0011#; -- 36-pin
+   PINID_48    : constant := 2#0100#; -- 48-pin
+   PINID_64    : constant := 2#0101#; -- 64-pin
+   PINID_80    : constant := 2#0110#; -- 80-pin
+   PINID_RSVD1 : constant := 2#0111#; -- Reserved
+   PINID_100   : constant := 2#1000#; -- 100-pin
+   PINID_RSVD2 : constant := 2#1001#; -- Reserved
+   PINID_RSVD3 : constant := 2#1010#; -- Reserved
+   PINID_WLCSP : constant := 2#1011#; -- Custom pinout (WLCSP)
+   PINID_RSVD4 : constant := 2#1100#; -- Reserved
+   PINID_RSVD5 : constant := 2#1101#; -- Reserved
+   PINID_RSVD6 : constant := 2#1110#; -- Reserved
+   PINID_RSVD7 : constant := 2#1111#; -- Reserved
+
+   SRAMSIZE_0K5 : constant := 2#0000#; -- 0.5 KB
+   SRAMSIZE_1K  : constant := 2#0001#; -- 1 KB
+   SRAMSIZE_2K  : constant := 2#0010#; -- 2 KB
+   SRAMSIZE_4K  : constant := 2#0011#; -- 4 KB
+   SRAMSIZE_8K  : constant := 2#0100#; -- 8 KB
+   SRAMSIZE_16K : constant := 2#0101#; -- 16 KB
+   SRAMSIZE_32K : constant := 2#0110#; -- 32 KB
+   SRAMSIZE_64K : constant := 2#0111#; -- 64 KB
+
+   SERIESID_KL : constant := 2#0001#; -- KL family
+
+   SUBFAMID_KLx2 : constant := 2#0010#; -- KLx2 Subfamily (low end)
+   SUBFAMID_KLx4 : constant := 2#0100#; -- KLx4 Subfamily (basic analog)
+   SUBFAMID_KLx5 : constant := 2#0101#; -- KLx5 Subfamily (advanced analog)
+   SUBFAMID_KLx6 : constant := 2#0110#; -- KLx6 Subfamily (advanced analog with I2S)
+   SUBFAMID_KLx7 : constant := 2#0111#; -- KLx7 Subfamily (advanced analog with I2S and extended RAM)
+
+   FAMID_KL0x : constant := 2#0000#; -- KL0x Family (low end)
+   FAMID_KL1x : constant := 2#0001#; -- KL1x Family (basic)
+   FAMID_KL2x : constant := 2#0010#; -- KL2x Family (USB)
+   FAMID_KL3x : constant := 2#0011#; -- KL3x Family (Segment LCD)
+   FAMID_KL4x : constant := 2#0100#; -- KL4x Family (USB and Segment LCD)
+
+   type SIM_SDID_Type is record
+      PINID    : Bits_4;      -- Pincount Identification
+      Reserved : Bits_3 := 0;
+      DIEID    : Bits_5;      -- Device Die Number
+      REVID    : Bits_4;      -- Device Revision Number
+      SRAMSIZE : Bits_4;      -- System SRAM Size
+      SERIESID : Bits_4;      -- Kinetis Series ID
+      SUBFAMID : Bits_4;      -- Kinetis Sub-Family ID
+      FAMID    : Bits_4;      -- Kinetis family ID
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SDID_Type use record
+      PINID    at 0 range  0 ..  3;
+      Reserved at 0 range  4 ..  6;
+      DIEID    at 0 range  7 .. 11;
+      REVID    at 0 range 12 .. 15;
+      SRAMSIZE at 0 range 16 .. 19;
+      SERIESID at 0 range 20 .. 23;
+      SUBFAMID at 0 range 24 .. 27;
+      FAMID    at 0 range 28 .. 31;
+   end record;
+
+   SIM_SDID_ADDRESS : constant := 16#4004_8024#;
+
+   SIM_SDID : aliased SIM_SDID_Type
+      with Address              => To_Address (SIM_SDID_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
