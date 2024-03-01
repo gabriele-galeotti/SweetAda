@@ -132,7 +132,7 @@ _init:
                 set     trap_stack,%sp
 
                 //
-                // update PSR with CWP=0.
+                // Update PSR with CWP=0.
                 //
                 rd      %psr,%g1
                 set     PSR_CWP(-1),%g3
