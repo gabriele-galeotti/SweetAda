@@ -20,7 +20,8 @@ with Interfaces;
 with Bits;
 with M68k;
 
-package Exceptions is
+package Exceptions
+   is
 
    --========================================================================--
    --                                                                        --

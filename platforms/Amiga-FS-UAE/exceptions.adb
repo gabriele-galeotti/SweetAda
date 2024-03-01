@@ -27,7 +27,8 @@ with IOEMU;
 with A2065;
 with Console;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -53,7 +54,10 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process (Exception_Number : in Unsigned_32; Frame_Address : in Address) is
+   procedure Exception_Process
+      (Exception_Number : in Unsigned_32;
+       Frame_Address    : in Address)
+      is
    begin
       case Exception_Number is
          when Illegal_Instruction =>
@@ -83,7 +87,9 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process (Irq_Identifier : in Exception_Vector_Id_Type) is
+   procedure Irq_Process
+      (Irq_Identifier : in Exception_Vector_Id_Type)
+      is
       Unused : Unsigned_8 with Unreferenced => True;
    begin
       if Irq_Identifier = Level_1_Interrupt_Autovector then
@@ -128,7 +134,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
    begin
       for Index in IVT'Range loop
          IVT (Index) := Null_Address;

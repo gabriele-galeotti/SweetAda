@@ -19,7 +19,8 @@ with System;
 with System.Storage_Elements;
 with Bits;
 
-package Gayle is
+package Gayle
+   is
 
    --========================================================================--
    --                                                                        --
@@ -35,17 +36,15 @@ package Gayle is
 
    GAYLE_IDE_BASEADDRESS : constant := 16#00DD_2020#;
 
-   type IDE_Devcon_Type is
-   record
+   type IDE_Devcon_Type is record
       Unused1    : Bits_1;
       IRQDISABLE : Boolean;
       RESET      : Boolean;
       Unused2    : Bits_5;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 8;
-   for IDE_Devcon_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for IDE_Devcon_Type use record
       Unused1    at 0 range 0 .. 0;
       IRQDISABLE at 0 range 1 .. 1;
       RESET      at 0 range 2 .. 2;
@@ -55,10 +54,10 @@ package Gayle is
    -- address shift = 2
    IDE_DEVCON_ADDRESS : constant := GAYLE_IDE_BASEADDRESS + 16#0406# * 2**2;
 
-   IDE_Devcon : aliased IDE_Devcon_Type with
-      Address    => To_Address (IDE_DEVCON_ADDRESS),
-      Volatile   => True,
-      Import     => True,
-      Convention => Ada;
+   IDE_Devcon : aliased IDE_Devcon_Type
+      with Address    => To_Address (IDE_DEVCON_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end Gayle;
