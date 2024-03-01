@@ -179,7 +179,7 @@ package body BSP
       -- CBUS UART ------------------------------------------------------------
       CBUS_UART_Descriptor.Base_Address  := To_Address (CBUS_UART_BASEADDRESS);
       CBUS_UART_Descriptor.Scale_Address := 3;
-      CBUS_UART_Descriptor.Baud_Clock    := 3_686_400;
+      CBUS_UART_Descriptor.Baud_Clock    := CLK_UART3M6;
       CBUS_UART_Descriptor.Read_8        := MMIO.Read'Access;
       CBUS_UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (CBUS_UART_Descriptor);

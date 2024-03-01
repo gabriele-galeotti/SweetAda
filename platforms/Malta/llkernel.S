@@ -68,8 +68,8 @@
                 .set    noreorder
                 .set    noat
 
-                .global _reset
-_reset:
+                .global reset
+reset:
 
                 //
                 // Reset
