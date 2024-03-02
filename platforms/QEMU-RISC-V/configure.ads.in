@@ -12,7 +12,4 @@ package Configure
    BOOT_HART      : constant := @BOOT_HART@;
    TICK_FREQUENCY : constant := 1_000;
 
-   -- IOEMU
-   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
-
 end Configure;

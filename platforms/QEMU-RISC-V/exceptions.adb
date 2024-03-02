@@ -20,10 +20,8 @@ with Bits;
 with LLutils;
 with RISCV;
 with MTIME;
-with Configure;
 with BSP;
 with Console;
-with IOEMU;
 
 package body Exceptions
    is
@@ -58,10 +56,6 @@ package body Exceptions
       mcause := mcause_Read;
       if mcause.Interrupt then
          BSP.Tick_Count := @ + 1;
-         if Configure.USE_QEMU_IOEMU then
-            -- IRQ pulsemeter
-            IOEMU.IO0 := 1;
-         end if;
          BSP.Timer_Value := @ + BSP.Timer_Constant;
          MTIME.mtimecmp_Write (BSP.Timer_Value);
       else
