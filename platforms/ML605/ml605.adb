@@ -83,11 +83,11 @@ package body ML605
       INTC.CIE := [others => False];
       INTC.IVR := 0;
       INTC.MER :=
-         [
+         (
           HIE    => True,
           ME     => True,
           others => 0
-         ];
+         );
    end INTC_Init;
 
 end ML605;
