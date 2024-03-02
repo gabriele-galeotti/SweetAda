@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2023 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2024 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -21,6 +21,7 @@ with Interfaces;
 with Bits;
 
 package APIC
+   with Preelaborate => True
    is
 
    --========================================================================--
@@ -116,6 +117,57 @@ package APIC
       TM        at 0 range 15 .. 15;
       Mask      at 0 range 16 .. 16;
       Reserved2 at 0 range 17 .. 31;
+   end record;
+
+   -- 11.6.1 Interrupt Command Register (ICR)
+
+   type ICR_LOW_Type is record
+      Vector                : Unsigned_8; -- The vector number of the interrupt being sent.
+      Delivery_Mode         : Bits_3;     -- Specifies the type of IPI to be sent.
+      Destination_Mode      : Bits_1;     -- Selects either physical (0) or logical (1) destination mode
+      Delivery_Status       : Boolean;    -- Indicates the IPI delivery status, as follows: ...
+      Reserved1             : Bits_1;
+      Level                 : Bits_1;     -- For the INIT level de-assert delivery mode this flag must be set to 0; ...
+      Trigger_Mode          : Bits_1;     -- Selects the trigger mode when using the INIT level de-assert delivery mode: ...
+      Reserved2             : Bits_2;
+      Destination_Shorthand : Bits_2;     -- Indicates whether a shorthand notation is used to specify the destination of ...
+      Reserved3             : Bits_12;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ICR_LOW_Type use record
+      Vector                at 0 range  0 ..  7;
+      Delivery_Mode         at 0 range  8 .. 10;
+      Destination_Mode      at 0 range 11 .. 11;
+      Delivery_Status       at 0 range 12 .. 12;
+      Reserved1             at 0 range 13 .. 13;
+      Level                 at 0 range 14 .. 14;
+      Trigger_Mode          at 0 range 15 .. 15;
+      Reserved2             at 0 range 16 .. 17;
+      Destination_Shorthand at 0 range 18 .. 19;
+      Reserved3             at 0 range 20 .. 31;
+   end record;
+
+   type ICR_HIGH_Type is record
+      Reserved          : Bits_24;
+      Destination_Field : Unsigned_8; -- Specifies the target processor or processors.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ICR_HIGH_Type use record
+      Reserved          at 0 range  0 .. 23;
+      Destination_Field at 0 range 24 .. 31;
+   end record;
+
+   type ICR_Type is record
+      ICR_LOW  : ICR_LOW_Type;
+      ICR_HIGH : ICR_HIGH_Type;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ICR_Type use record
+      ICR_LOW  at 0 range 0 .. 31;
+      ICR_HIGH at 4 range 0 .. 31;
    end record;
 
    -- LAPIC

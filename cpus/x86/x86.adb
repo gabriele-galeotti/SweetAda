@@ -43,6 +43,26 @@ package body x86
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- ESP_Read
+   ----------------------------------------------------------------------------
+   function ESP_Read
+      return Address
+      is
+      Result : Address;
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movl    %%esp,%0" & CRLF &
+                       "",
+           Outputs  => Address'Asm_Output ("=a", Result),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end ESP_Read;
+
+   ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
@@ -75,26 +95,6 @@ package body x86
            Volatile => True
           );
    end BREAKPOINT;
-
-   ----------------------------------------------------------------------------
-   -- ESP_Read
-   ----------------------------------------------------------------------------
-   function ESP_Read
-      return Address
-      is
-      Result : Address;
-   begin
-      Asm (
-           Template => ""                         & CRLF &
-                       "        movl    %%esp,%0" & CRLF &
-                       "",
-           Outputs  => Address'Asm_Output ("=a", Result),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Result;
-   end ESP_Read;
 
    ----------------------------------------------------------------------------
    -- CRX registers
@@ -180,8 +180,6 @@ package body x86
            Volatile => True
           );
    end CR3_Write;
-
-   -- 386s do not have CR4
 
    ----------------------------------------------------------------------------
    -- LGDTR

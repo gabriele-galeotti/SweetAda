@@ -139,6 +139,102 @@ package x86
    GRANULARITY_4k   : constant := 1;
 
    ----------------------------------------------------------------------------
+   -- Registers
+   ----------------------------------------------------------------------------
+
+   EAX    : constant := 16#00#; -- 0
+   EBX    : constant := 16#01#; -- 1
+   ECX    : constant := 16#02#; -- 2
+   EDX    : constant := 16#03#; -- 3
+   ESP    : constant := 16#04#; -- 4
+   EBP    : constant := 16#05#; -- 5
+   ESI    : constant := 16#06#; -- 6
+   EDI    : constant := 16#07#; -- 7
+   EIP    : constant := 16#08#; -- 8
+   EFLAGS : constant := 16#09#; -- 9
+   CS     : constant := 16#0A#; -- 10
+   SS     : constant := 16#0B#; -- 11
+   DS     : constant := 16#0C#; -- 12
+   ES     : constant := 16#0D#; -- 13
+   FS     : constant := 16#0E#; -- 14
+   GS     : constant := 16#0F#; -- 15
+   ST0    : constant := 16#10#; -- 16
+   ST1    : constant := 16#11#; -- 17
+   ST2    : constant := 16#12#; -- 18
+   ST3    : constant := 16#13#; -- 19
+   ST4    : constant := 16#14#; -- 20
+   ST5    : constant := 16#15#; -- 21
+   ST6    : constant := 16#16#; -- 22
+   ST7    : constant := 16#17#; -- 23
+   FCTRL  : constant := 16#18#; -- 24
+   FSTAT  : constant := 16#19#; -- 25
+   FTAG   : constant := 16#1A#; -- 26
+   FISEG  : constant := 16#1B#; -- 27
+   FIOFF  : constant := 16#1C#; -- 28
+   FOSEG  : constant := 16#1D#; -- 29
+   FOOFF  : constant := 16#1E#; -- 30
+   FOP    : constant := 16#1F#; -- 31
+
+   subtype Register_Number_Type is Natural range EAX .. FOP;
+
+   -- ST0 .. ST7 registers
+   ST_REGISTER_SIZE : constant := 10;
+   subtype ST_Register_Type is Byte_Array (0 .. ST_REGISTER_SIZE - 1);
+
+   -- EFLAGS
+
+   type EFLAGS_Type is record
+      CF        : Boolean; -- Carry Flag
+      Reserved1 : Bits_1;
+      PF        : Boolean; -- Parity Flag
+      Reserved2 : Bits_1;
+      AF        : Boolean; -- Auxiliary Carry Flag
+      Reserved3 : Bits_1;
+      ZF        : Boolean; -- Zero Flag
+      SF        : Boolean; -- Sign Flag
+      TF        : Boolean; -- Trap Flag
+      IFlag     : Boolean; -- Interrupt Enable Flag
+      DF        : Boolean; -- Direction Flag
+      OFlag     : Boolean; -- Overflow Flag
+      IOPL      : PL_Type; -- I/O Privilege Level
+      NT        : Boolean; -- Nested Task Flag
+      Reserved4 : Bits_1;
+      RF        : Boolean; -- Resume Flag
+      VM        : Boolean; -- Virtual-8086 Mode
+      AC        : Boolean; -- Alignment Check / Access Control
+      VIF       : Boolean; -- Virtual Interrupt Flag
+      VIP       : Boolean; -- Virtual Interrupt Pending
+      ID        : Boolean; -- Identification Flag
+      Reserved5 : Bits_10;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EFLAGS_Type use record
+      CF        at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      PF        at 0 range  2 ..  2;
+      Reserved2 at 0 range  3 ..  3;
+      AF        at 0 range  4 ..  4;
+      Reserved3 at 0 range  5 ..  5;
+      ZF        at 0 range  6 ..  6;
+      SF        at 0 range  7 ..  7;
+      TF        at 0 range  8 ..  8;
+      IFlag     at 0 range  9 ..  9;
+      DF        at 0 range 10 .. 10;
+      OFlag     at 0 range 11 .. 11;
+      IOPL      at 0 range 12 .. 13;
+      NT        at 0 range 14 .. 14;
+      Reserved4 at 0 range 15 .. 15;
+      RF        at 0 range 16 .. 16;
+      VM        at 0 range 17 .. 17;
+      AC        at 0 range 18 .. 18;
+      VIF       at 0 range 19 .. 19;
+      VIP       at 0 range 20 .. 20;
+      ID        at 0 range 21 .. 21;
+      Reserved5 at 0 range 22 .. 31;
+   end record;
+
+   ----------------------------------------------------------------------------
    -- Segment descriptor
    ----------------------------------------------------------------------------
 
@@ -576,100 +672,8 @@ package x86
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Registers
+   -- CRX registers
    ----------------------------------------------------------------------------
-
-   EAX    : constant := 16#00#; -- 0
-   EBX    : constant := 16#01#; -- 1
-   ECX    : constant := 16#02#; -- 2
-   EDX    : constant := 16#03#; -- 3
-   ESP    : constant := 16#04#; -- 4
-   EBP    : constant := 16#05#; -- 5
-   ESI    : constant := 16#06#; -- 6
-   EDI    : constant := 16#07#; -- 7
-   EIP    : constant := 16#08#; -- 8
-   EFLAGS : constant := 16#09#; -- 9
-   CS     : constant := 16#0A#; -- 10
-   SS     : constant := 16#0B#; -- 11
-   DS     : constant := 16#0C#; -- 12
-   ES     : constant := 16#0D#; -- 13
-   FS     : constant := 16#0E#; -- 14
-   GS     : constant := 16#0F#; -- 15
-   ST0    : constant := 16#10#; -- 16
-   ST1    : constant := 16#11#; -- 17
-   ST2    : constant := 16#12#; -- 18
-   ST3    : constant := 16#13#; -- 19
-   ST4    : constant := 16#14#; -- 20
-   ST5    : constant := 16#15#; -- 21
-   ST6    : constant := 16#16#; -- 22
-   ST7    : constant := 16#17#; -- 23
-   FCTRL  : constant := 16#18#; -- 24
-   FSTAT  : constant := 16#19#; -- 25
-   FTAG   : constant := 16#1A#; -- 26
-   FISEG  : constant := 16#1B#; -- 27
-   FIOFF  : constant := 16#1C#; -- 28
-   FOSEG  : constant := 16#1D#; -- 29
-   FOOFF  : constant := 16#1E#; -- 30
-   FOP    : constant := 16#1F#; -- 31
-
-   subtype Register_Number_Type is Natural range EAX .. FOP;
-
-   -- ST0 .. ST7 registers
-   ST_REGISTER_SIZE : constant := 10;
-   subtype ST_Register_Type is Byte_Array (0 .. ST_REGISTER_SIZE - 1);
-
-   -- EFLAGS
-
-   type EFLAGS_Type is record
-      CF        : Boolean; -- Carry Flag
-      Reserved1 : Bits_1;
-      PF        : Boolean; -- Parity Flag
-      Reserved2 : Bits_1;
-      AF        : Boolean; -- Auxiliary Carry Flag
-      Reserved3 : Bits_1;
-      ZF        : Boolean; -- Zero Flag
-      SF        : Boolean; -- Sign Flag
-      TF        : Boolean; -- Trap Flag
-      IFlag     : Boolean; -- Interrupt Enable Flag
-      DF        : Boolean; -- Direction Flag
-      OFlag     : Boolean; -- Overflow Flag
-      IOPL      : PL_Type; -- I/O Privilege Level
-      NT        : Boolean; -- Nested Task Flag
-      Reserved4 : Bits_1;
-      RF        : Boolean; -- Resume Flag
-      VM        : Boolean; -- Virtual-8086 Mode
-      AC        : Boolean; -- Alignment Check / Access Control
-      VIF       : Boolean; -- Virtual Interrupt Flag
-      VIP       : Boolean; -- Virtual Interrupt Pending
-      ID        : Boolean; -- Identification Flag
-      Reserved5 : Bits_10;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
-   for EFLAGS_Type use record
-      CF        at 0 range  0 ..  0;
-      Reserved1 at 0 range  1 ..  1;
-      PF        at 0 range  2 ..  2;
-      Reserved2 at 0 range  3 ..  3;
-      AF        at 0 range  4 ..  4;
-      Reserved3 at 0 range  5 ..  5;
-      ZF        at 0 range  6 ..  6;
-      SF        at 0 range  7 ..  7;
-      TF        at 0 range  8 ..  8;
-      IFlag     at 0 range  9 ..  9;
-      DF        at 0 range 10 .. 10;
-      OFlag     at 0 range 11 .. 11;
-      IOPL      at 0 range 12 .. 13;
-      NT        at 0 range 14 .. 14;
-      Reserved4 at 0 range 15 .. 15;
-      RF        at 0 range 16 .. 16;
-      VM        at 0 range 17 .. 17;
-      AC        at 0 range 18 .. 18;
-      VIF       at 0 range 19 .. 19;
-      VIP       at 0 range 20 .. 20;
-      ID        at 0 range 21 .. 21;
-      Reserved5 at 0 range 22 .. 31;
-   end record;
 
    -- CR0
 
@@ -731,9 +735,6 @@ package x86
 
    -- subprograms
 
-   function ESP_Read
-      return Address
-      with Inline => True;
    function CR0_Read
       return CR0_Type
       with Inline => True;
@@ -760,6 +761,9 @@ package x86
 
    BREAKPOINT_Asm_String : constant String := ".byte   0xCC";
 
+   function ESP_Read
+      return Address
+      with Inline => True;
    procedure NOP
       with Inline => True;
    procedure BREAKPOINT
