@@ -21,7 +21,8 @@ with Interfaces;
 with Configure;
 with Bits;
 
-package GHRD is
+package GHRD
+   is
 
    --========================================================================--
    --                                                                        --
@@ -86,8 +87,8 @@ package GHRD is
       PeriodH : Unsigned_32        with Volatile_Full_Access => True; -- 16-bit
       SnapL   : Unsigned_32        with Volatile_Full_Access => True; -- 16-bit
       SnapH   : Unsigned_32        with Volatile_Full_Access => True; -- 16-bit
-   end record with
-      Size => 6 * 32;
+   end record
+      with Size => 6 * 32;
    for Timer_Type use record
       Status  at 16#00# range 0 .. 31;
       Control at 16#04# range 0 .. 31;
