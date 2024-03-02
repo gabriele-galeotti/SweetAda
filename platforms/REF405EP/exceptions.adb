@@ -17,10 +17,8 @@
 
 with System.Machine_Code;
 with Definitions;
-with Configure;
 with Abort_Library;
 with BSP;
-with IOEMU;
 with Console;
 
 package body Exceptions
@@ -62,17 +60,6 @@ package body Exceptions
    begin
       if Identifier = PIT_IRQ_ID then
          BSP.Tick_Count := @ + 1;
-         if Configure.USE_QEMU_IOEMU then
-            if BSP.Tick_Count mod 1_000 = 0 then
-               -- loop
-               --    exit when (MFSPR_TSR and PIS) = 0;
-               -- end loop;
-               -- Console.Print ("PIT interrupt", NL => True);
-               -- IOEMU "TIMER" LED blinking
-               IOEMU.IO0 := 1;
-               IOEMU.IO0 := 0;
-            end if;
-         end if;
       end if;
       -- if Identifier = FIT_IRQ_ID then
       --    Console.Print ("FIT interrupt", NL => True);

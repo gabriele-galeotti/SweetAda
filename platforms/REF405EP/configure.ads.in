@@ -13,7 +13,4 @@ package Configure
    TIMER_SYSCLK   : constant := 200_000_000;
    TICK_FREQUENCY : constant := 1_000;
 
-   -- IOEMU
-   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
-
 end Configure;
