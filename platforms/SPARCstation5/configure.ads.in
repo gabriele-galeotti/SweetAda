@@ -11,7 +11,4 @@ package Configure
    BOOT_FROM_NETWORK : constant Boolean := @BOOT_FROM_NETWORK@;
    USE_QEMU          : constant Boolean := @USE_QEMU@;
 
-   -- IOEMU
-   USE_QEMU_IOEMU : constant Boolean := @USE_QEMU_IOEMU@;
-
 end Configure;

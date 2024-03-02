@@ -9,7 +9,6 @@ with BSP;
 with CPU;
 with Z8530;
 with Sun4m;
-with IOEMU;
 with Console;
 
 package body Application
@@ -65,9 +64,6 @@ package body Application
                   Delay_Count := 50_000;
                end if;
             end if;
-            if Configure.USE_QEMU_IOEMU then
-               IOEMU.IO1 := 0;
-            end if;
             loop
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
                Console.Print ("hello, SweetAda", NL => True);
@@ -75,10 +71,6 @@ package body Application
                CHANNELB_Putchar ('K');
                CHANNELB_Putchar (Ada.Characters.Latin_1.CR);
                CHANNELB_Putchar (Ada.Characters.Latin_1.LF);
-               if Configure.USE_QEMU_IOEMU then
-                  -- IOEMU GPIO test
-                  IOEMU.IO1 := @ + 1;
-               end if;
             end loop;
          end;
       end if;

@@ -17,14 +17,12 @@
 
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
-with Configure;
 with Abort_Library;
 with LLutils;
 with SPARC;
 with Sun4m;
 with Z8530;
 with BSP;
-with IOEMU;
 with Console;
 
 package body Exceptions
@@ -76,13 +74,6 @@ package body Exceptions
    begin
       if Sun4m.SIPR.T then
          BSP.Tick_Count := @ + 1;
-         if Configure.USE_QEMU_IOEMU then
-            if BSP.Tick_Count mod 1_000 = 0 then
-               -- IOEMU "TIMER" LED blinking
-               IOEMU.IO0 := 1;
-               IOEMU.IO0 := 0;
-            end if;
-         end if;
          Sun4m.System_Timer_ClearLR;
       elsif Sun4m.SIPR.S then
          declare
