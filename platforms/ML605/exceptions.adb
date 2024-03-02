@@ -17,12 +17,10 @@
 
 with System.Storage_Elements;
 with Interfaces;
-with Configure;
 with Linker;
 with Memory_Functions;
 with ML605;
 with BSP;
-with IOEMU;
 
 package body Exceptions
    is
@@ -54,12 +52,8 @@ package body Exceptions
    procedure Exception_Process
       is
    begin
-      Timer.TCSR0.T0INT := False; -- clear Timer flag
       BSP.Tick_Count := @ + 1;
-      if Configure.USE_QEMU_IOEMU then
-         -- IRQ pulsemeter
-         IOEMU.IO0 := 1;
-      end if;
+      Timer.TCSR0.T0INT := False; -- clear Timer flag
       INTC.IAR (TIMER_IRQ) := True; -- clear INTC flag
    end Exception_Process;
 
