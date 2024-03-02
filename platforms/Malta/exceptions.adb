@@ -16,12 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
-with Configure;
 with Bits;
 with MIPS32;
 with Malta;
 with BSP;
-with IOEMU;
 
 package body Exceptions
    is
@@ -52,13 +50,9 @@ package body Exceptions
       is
       Count : Unsigned_32;
    begin
+      BSP.Tick_Count := @ + 1;
       Count := MIPS32.CP0_Count_Read;
       MIPS32.CP0_Compare_Write (Count + Malta.CP0_TIMER_COUNT);
-      BSP.Tick_Count := @ + 1;
-      if Configure.USE_QEMU_IOEMU then
-         -- IRQ pulsemeter
-         IOEMU.IO0 := 1;
-      end if;
    end Exception_Process;
 
    ----------------------------------------------------------------------------

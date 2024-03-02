@@ -2,7 +2,6 @@
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
-with Configure;
 with Core;
 with MIPS;
 with MIPS32;
@@ -14,7 +13,6 @@ with FATFS;
 with FATFS.Applications;
 with VGA;
 with SweetAda;
-with IOEMU;
 with Console;
 
 package body Application
@@ -90,10 +88,6 @@ package body Application
             Value := 0;
             loop
                LEDBAR := Byte_Reverse (Value);
-               if Configure.USE_QEMU_IOEMU then
-                  -- IOEMU GPIO test
-                  IOEMU.IO1 := Value;
-               end if;
                Value := @ + 1;
                for Delay_Loop_Count in 1 .. Delay_Count loop MIPS.NOP; end loop;
             end loop;
