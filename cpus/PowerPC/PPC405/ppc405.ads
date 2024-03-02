@@ -35,7 +35,8 @@ package PPC405
    use System;
    use Interfaces;
    use Bits;
-   use PowerPC;
+
+   subtype SPR_Type is PowerPC.SPR_Type;
 
    ----------------------------------------------------------------------------
    -- SPRs

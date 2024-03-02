@@ -87,7 +87,7 @@ package body PPC405
    function TSR_Read
       return TSR_Register_Type
       is
-      function SPR_Read is new MFSPR (TSR, TSR_Register_Type);
+      function SPR_Read is new PowerPC.MFSPR (TSR, TSR_Register_Type);
    begin
       return SPR_Read;
    end TSR_Read;
@@ -95,7 +95,7 @@ package body PPC405
    procedure TSR_Write
       (Value : in TSR_Register_Type)
       is
-      procedure SPR_Write is new MTSPR (TSR, TSR_Register_Type);
+      procedure SPR_Write is new PowerPC.MTSPR (TSR, TSR_Register_Type);
    begin
       SPR_Write (Value);
    end TSR_Write;
@@ -103,7 +103,7 @@ package body PPC405
    function TCR_Read
       return TCR_Register_Type
       is
-      function SPR_Read is new MFSPR (TCR, TCR_Register_Type);
+      function SPR_Read is new PowerPC.MFSPR (TCR, TCR_Register_Type);
    begin
       return SPR_Read;
    end TCR_Read;
@@ -111,7 +111,7 @@ package body PPC405
    procedure TCR_Write
       (Value : in TCR_Register_Type)
       is
-      procedure SPR_Write is new MTSPR (TCR, TCR_Register_Type);
+      procedure SPR_Write is new PowerPC.MTSPR (TCR, TCR_Register_Type);
    begin
       SPR_Write (Value);
    end TCR_Write;
@@ -119,7 +119,7 @@ package body PPC405
    function PIT_Read
       return Unsigned_32
       is
-      function SPR_Read is new MFSPR (PIT, Unsigned_32);
+      function SPR_Read is new PowerPC.MFSPR (PIT, Unsigned_32);
    begin
       return SPR_Read;
    end PIT_Read;
@@ -127,7 +127,7 @@ package body PPC405
    procedure PIT_Write
       (Value : in Unsigned_32)
       is
-      procedure SPR_Write is new MTSPR (PIT, Unsigned_32);
+      procedure SPR_Write is new PowerPC.MTSPR (PIT, Unsigned_32);
    begin
       SPR_Write (Value);
    end PIT_Write;
@@ -196,7 +196,7 @@ package body PPC405
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Enable;
@@ -213,7 +213,7 @@ package body PPC405
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Disable;
