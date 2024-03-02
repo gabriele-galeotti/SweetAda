@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Multiprocessors.Spin_Locks;
 with Ada.Unchecked_Conversion;
 with LLutils;
 with CPU;
@@ -31,7 +30,6 @@ package body MC146818A
    --                                                                        --
    --========================================================================--
 
-   use System.Multiprocessors.Spin_Locks;
    use LLutils;
 
    ----------------------------------------------------------------------------
@@ -180,9 +178,6 @@ package body MC146818A
 
    function To_RD is new Ada.Unchecked_Conversion (Unsigned_8, RegisterD_Type);
 
-   -- Register locking
-   RTC_Lock : Spin_Lock;
-
    -- PC-specific
    PC_INDEX       : constant := 0;
    PC_DATA        : constant := 1;
@@ -273,6 +268,7 @@ package body MC146818A
       (D : in     Descriptor_Type;
        T : in out Time.TM_Time)
       is
+      Intcontext     : CPU.Intcontext_Type;
       RTC_RB         : RegisterB_Type;
       RTC_BCD        : Boolean;
       RTC_Second     : Unsigned_8;
@@ -299,7 +295,8 @@ package body MC146818A
          end if;
       end Adjust_BCD;
    begin
-      -- CPU.Irq_Disable; __FIX__
+      CPU.Intcontext_Get (Intcontext);
+      CPU.Irq_Disable;
       while True loop
          exit when not To_RA (Register_Read (D, RegisterA)).UIP;
       end loop;
@@ -312,7 +309,7 @@ package body MC146818A
       RTC_Month      := Register_Read (D, Month);
       RTC_Year       := Register_Read (D, Year);
       RTC_RB         := To_RB (Register_Read (D, RegisterB));
-      -- CPU.Irq_Enable; __FIX__
+      CPU.Intcontext_Set (Intcontext);
       RTC_BCD := not RTC_RB.DM;
       T.IsDST := (if RTC_RB.DSE then 1 else 0);
       T.Sec   := Natural (Adjust_BCD (RTC_Second, RTC_BCD));
