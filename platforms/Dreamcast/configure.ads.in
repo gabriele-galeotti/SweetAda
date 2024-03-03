@@ -12,7 +12,4 @@ package Configure
    BOOT_TYPE : constant String := "@BOOT_TYPE@";
    GXEMUL    : constant String := "@GXEMUL@";
 
-   -- IOEMU
-   USE_GXEMUL_IOEMU : constant Boolean := @USE_GXEMUL_IOEMU@;
-
 end Configure;

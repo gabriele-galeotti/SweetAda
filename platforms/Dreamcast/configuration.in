@@ -62,8 +62,6 @@ LD_SCRIPT := linker-networkboot.lds
 export GXEMUL := N
 endif
 
-export USE_GXEMUL_IOEMU := False
-
 ################################################################################
 # Run/debug interface.                                                         #
 #                                                                              #

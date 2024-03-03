@@ -25,7 +25,6 @@ with SH7750;
 with MMIO;
 with Dreamcast;
 with Exceptions;
-with IOEMU;
 with Console;
 
 package body BSP
