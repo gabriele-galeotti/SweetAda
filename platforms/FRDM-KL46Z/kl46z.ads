@@ -597,6 +597,74 @@ package KL46Z
            Import               => True,
            Convention           => Ada;
 
+   -- 12.2.10 System Clock Gating Control Register 6 (SIM_SCGC6)
+
+   type SIM_SCGC6_Type is record
+      FTF       : Boolean;      -- Flash Memory Clock Gate Control
+      DMAMUX    : Boolean;      -- DMA Mux Clock Gate Control
+      Reserved1 : Bits_13 := 0;
+      I2S       : Boolean;      -- I2S Clock Gate Control
+      Reserved2 : Bits_7 := 0;
+      PIT       : Boolean;      -- PIT Clock Gate Control
+      TPM0      : Boolean;      -- TPM0 Clock Gate Control
+      TPM1      : Boolean;      -- TPM1 Clock Gate Control
+      TPM2      : Boolean;      -- TPM2 Clock Gate Control
+      ADC0      : Boolean;      -- ADC0 Clock Gate Control
+      Reserved3 : Bits_1 := 0;
+      RTC       : Boolean;      -- RTC Access Control
+      Reserved4 : Bits_1 := 0;
+      DAC0      : Boolean;      -- DAC0 Clock Gate Control
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SCGC6_Type use record
+      FTF       at 0 range  0 ..  0;
+      DMAMUX    at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 .. 14;
+      I2S       at 0 range 15 .. 15;
+      Reserved2 at 0 range 16 .. 22;
+      PIT       at 0 range 23 .. 23;
+      TPM0      at 0 range 24 .. 24;
+      TPM1      at 0 range 25 .. 25;
+      TPM2      at 0 range 26 .. 26;
+      ADC0      at 0 range 27 .. 27;
+      Reserved3 at 0 range 28 .. 28;
+      RTC       at 0 range 29 .. 29;
+      Reserved4 at 0 range 30 .. 30;
+      DAC0      at 0 range 31 .. 31;
+   end record;
+
+   SIM_SCGC6_ADDRESS : constant := SIM_BASEADDRESS + 16#103C#;
+
+   SIM_SCGC6 : aliased SIM_SCGC6_Type
+      with Address              => To_Address (SIM_SCGC6_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.11 System Clock Gating Control Register 7 (SIM_SCGC7)
+
+   type SIM_SCGC7_Type is record
+      Reserved1 : Bits_8 := 0;
+      DMA       : Boolean;      -- DMA Clock Gate Control
+      Reserved2 : Bits_23 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SCGC7_Type use record
+      Reserved1 at 0 range 0 ..  7;
+      DMA       at 0 range 8 ..  8;
+      Reserved2 at 0 range 9 .. 31;
+   end record;
+
+   SIM_SCGC7_ADDRESS : constant := SIM_BASEADDRESS + 16#1040#;
+
+   SIM_SCGC7 : aliased SIM_SCGC7_Type
+      with Address              => To_Address (SIM_SCGC7_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.2.12 System Clock Divider Register 1 (SIM_CLKDIV1)
 
    OUTDIV4_DIV1 : constant := 2#000#; -- Divide-by-1.
