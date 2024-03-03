@@ -29,7 +29,8 @@ with PBUF;
 with NE2000;
 with Console;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -47,8 +48,7 @@ package body Exceptions is
    IDT_Descriptor : aliased IDT_Descriptor_Type := IDT_DESCRIPTOR_INVALID;
    IDT            : aliased IDT_Type (Exception_DE .. PC.PIC_Irq15) := [others => EXCEPTION_DESCRIPTOR_INVALID];
 
-   type Exception_Vector_Type is
-   record
+   type Exception_Vector_Type is record
       Handler_Address : Address;
       Selector        : Selector_Type;
       Gate            : Segment_Gate_Type;
@@ -117,14 +117,14 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process (
-                                Exception_Identifier          : in Exception_Id_Type;
-                                Exception_Stack_Frame_Address : in Address
-                               ) is
-      Exception_Frame : aliased Exception_Stack_Frame_Type with
-         Address    => Exception_Stack_Frame_Address,
-         Import     => True,
-         Convention => Ada;
+   procedure Exception_Process
+      (Exception_Identifier          : in Exception_Id_Type;
+       Exception_Stack_Frame_Address : in Address)
+      is
+      Exception_Frame : aliased Exception_Stack_Frame_Type
+         with Address    => Exception_Stack_Frame_Address,
+              Import     => True,
+              Convention => Ada;
       MsgPtr          : access constant String;
    begin
       Console.Print_NewLine;
@@ -158,7 +158,9 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process (Irq_Identifier : in Irq_Id_Type) is
+   procedure Irq_Process
+      (Irq_Identifier : in Irq_Id_Type)
+      is
    begin
       case Irq_Identifier is
          when PC.PIT_Interrupt =>
@@ -201,7 +203,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
    begin
       for Exception_Id in Exception_Vectors'Range loop
          IDT_Set_Handler (

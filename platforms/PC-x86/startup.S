@@ -105,8 +105,6 @@ post_kbdinit:
                 je      1b
 #endif
 
-////////////////////////////////////////////////////////////////////////////////
-
 #if defined(CODE_RELOC)
                 fcall   movcode
 #endif
