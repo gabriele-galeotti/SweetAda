@@ -435,7 +435,6 @@ package body VGA
    procedure DAC_Init
       is
    begin
-      -- __FIX__ disable interrupts
       CPU.IO.PortOut (PEL_MASK, Unsigned_8'(16#FF#));
       -- data
       for Index in DAC_Palette'Range loop
@@ -451,7 +450,6 @@ package body VGA
          CPU.IO.PortOut (PEL_DATA, Unsigned_8'(0));
          CPU.IO.PortOut (PEL_DATA, Unsigned_8'(0));
       end loop;
-      -- __FIX__ restore interrupts
    end DAC_Init;
 
    ----------------------------------------------------------------------------
