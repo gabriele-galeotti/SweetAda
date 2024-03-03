@@ -17,7 +17,6 @@
 
 with System;
 with Interfaces;
-with Configure;
 with Abort_Library;
 with GDT_Simple;
 with BSP;
@@ -148,14 +147,14 @@ package body Exceptions is
    begin
       -- increment system tick counter
       BSP.Tick_Count := @ + 1;
-      -- LED ignition QEMU/IOEMU or physical PC
-      if QEMU then
-         if Configure.USE_QEMU_IOEMU then
-            -- IOEMU "TIMER" LED blinking
-            if BSP.Tick_Count mod 1_000 = 0 then
-               PC.PPI_ControlOut (PC.To_PPI_Control (16#FF#));
-               PC.PPI_ControlOut (PC.To_PPI_Control (16#00#));
-            end if;
+      -- LED ignition on a physical machine
+      -- turn on/off the PPI INIT signal at a "human" rate
+      if not QEMU then
+         if BSP.Tick_Count mod 1_000 = 0 then
+            PC.PPI_ControlOut (PC.To_PPI_Control (16#04#));
+         end if;
+         if (BSP.Tick_Count + 500) mod 1_000 = 0 then
+            PC.PPI_ControlOut (PC.To_PPI_Control (0));
          end if;
       end if;
       PC.PIC1_EOI;
