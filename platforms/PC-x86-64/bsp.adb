@@ -34,7 +34,8 @@ with Exceptions;
 with APIC;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -54,15 +55,17 @@ package body BSP is
 
    BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
-   function Number_Of_CPUs return Interfaces.C.int with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_number_of_cpus";
+   function Number_Of_CPUs
+      return Interfaces.C.int
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_number_of_cpus";
 
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_get_secondary_stack";
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -75,7 +78,9 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Number_Of_CPUs
    ----------------------------------------------------------------------------
-   function Number_Of_CPUs return Interfaces.C.int is
+   function Number_Of_CPUs
+      return Interfaces.C.int
+      is
    begin
       return 1;
    end Number_Of_CPUs;
@@ -83,7 +88,9 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Get_Sec_Stack
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
+   function Get_Sec_Stack
+      return System.Secondary_Stack.SS_Stack_Ptr
+      is
    begin
       return BSP_SS_Stack;
    end Get_Sec_Stack;
@@ -91,7 +98,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Tclk_Init
    ----------------------------------------------------------------------------
-   procedure Tclk_Init is
+   procedure Tclk_Init
+      is
       Count : Unsigned_16;
    begin
       Count := Unsigned_16 ((PC.PIT_CLK + Configure.TICK_FREQUENCY / 2) / Configure.TICK_FREQUENCY);
@@ -102,12 +110,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       UART16x50.TX (UART_Descriptors (1), To_U8 (C));
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       UART16x50.RX (UART_Descriptors (1), Data);
@@ -117,7 +129,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
