@@ -5,7 +5,6 @@ with System.Machine_Code;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Interfaces.C;
-with Configure;
 with Definitions;
 with Core;
 with Bits;
@@ -28,7 +27,6 @@ with PBUF;
 with Ethernet;
 with Time;
 with PCICAN;
-with IOEMU;
 with Console;
 
 package body Application
@@ -193,9 +191,8 @@ package body Application
       -------------------------------------------------------------------------
       if True then
          declare
-            TC1   : Unsigned_32 := BSP.Tick_Count;
-            TC2   : Unsigned_32 := BSP.Tick_Count;
-            Value : Unsigned_8 := 0;
+            TC1 : Unsigned_32 := BSP.Tick_Count;
+            TC2 : Unsigned_32 := BSP.Tick_Count;
          begin
             loop
                if Tick_Count_Expired (TC1, 50) then
@@ -203,14 +200,6 @@ package body Application
                   TC1 := BSP.Tick_Count;
                end if;
                if Tick_Count_Expired (TC2, 300) then
-                  if Configure.USE_QEMU_IOEMU then
-                     -- IOEMU GPIO test
-                     PortOut (IOEMU.IO0_ADDRESS, Unsigned_8'(Value * 1));
-                     PortOut (IOEMU.IO1_ADDRESS, Unsigned_8'(Value * 2));
-                     PortOut (IOEMU.IO2_ADDRESS, Unsigned_8'(Value * 3));
-                     PortOut (IOEMU.IO3_ADDRESS, Unsigned_8'(Value * 4));
-                  end if;
-                  Value := @ + 1;
                   TC2 := BSP.Tick_Count;
                end if;
             end loop;
