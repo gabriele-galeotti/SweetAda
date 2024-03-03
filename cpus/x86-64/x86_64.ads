@@ -133,6 +133,65 @@ package x86_64
    GRANULARITY_4k   : constant := 1;
 
    ----------------------------------------------------------------------------
+   -- Registers
+   ----------------------------------------------------------------------------
+
+   -- RFLAGS
+
+   type RFLAGS_Type is record
+      CF        : Boolean; -- Carry Flag
+      Reserved1 : Bits_1;
+      PF        : Boolean; -- Parity Flag
+      Reserved2 : Bits_1;
+      AF        : Boolean; -- Auxiliary Carry Flag
+      Reserved3 : Bits_1;
+      ZF        : Boolean; -- Zero Flag
+      SF        : Boolean; -- Sign Flag
+      TF        : Boolean; -- Trap Flag
+      IFlag     : Boolean; -- Interrupt Enable Flag
+      DF        : Boolean; -- Direction Flag
+      OFlag     : Boolean; -- Overflow Flag
+      IOPL      : PL_Type; -- I/O Privilege Level
+      NT        : Boolean; -- Nested Task Flag
+      Reserved4 : Bits_1;
+      RF        : Boolean; -- Resume Flag
+      VM        : Boolean; -- Virtual-8086 Mode
+      AC        : Boolean; -- Alignment Check / Access Control
+      VIF       : Boolean; -- Virtual Interrupt Flag
+      VIP       : Boolean; -- Virtual Interrupt Pending
+      ID        : Boolean; -- Identification Flag
+      Reserved5 : Bits_10;
+      Reserved6 : Bits_32;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for RFLAGS_Type use record
+      CF        at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      PF        at 0 range  2 ..  2;
+      Reserved2 at 0 range  3 ..  3;
+      AF        at 0 range  4 ..  4;
+      Reserved3 at 0 range  5 ..  5;
+      ZF        at 0 range  6 ..  6;
+      SF        at 0 range  7 ..  7;
+      TF        at 0 range  8 ..  8;
+      IFlag     at 0 range  9 ..  9;
+      DF        at 0 range 10 .. 10;
+      OFlag     at 0 range 11 .. 11;
+      IOPL      at 0 range 12 .. 13;
+      NT        at 0 range 14 .. 14;
+      Reserved4 at 0 range 15 .. 15;
+      RF        at 0 range 16 .. 16;
+      VM        at 0 range 17 .. 17;
+      AC        at 0 range 18 .. 18;
+      VIF       at 0 range 19 .. 19;
+      VIP       at 0 range 20 .. 20;
+      ID        at 0 range 21 .. 21;
+      Reserved5 at 0 range 22 .. 31;
+      Reserved6 at 0 range 32 .. 63;
+   end record;
+
+   ----------------------------------------------------------------------------
    -- Segment descriptor
    ----------------------------------------------------------------------------
 
@@ -391,63 +450,8 @@ package x86_64
        SegType           : in     Segment_Gate_Type);
 
    ----------------------------------------------------------------------------
-   -- Registers
+   -- CRX registers
    ----------------------------------------------------------------------------
-
-   -- RFLAGS
-
-   type RFLAGS_Type is record
-      CF        : Boolean; -- Carry Flag
-      Reserved1 : Bits_1;
-      PF        : Boolean; -- Parity Flag
-      Reserved2 : Bits_1;
-      AF        : Boolean; -- Auxiliary Carry Flag
-      Reserved3 : Bits_1;
-      ZF        : Boolean; -- Zero Flag
-      SF        : Boolean; -- Sign Flag
-      TF        : Boolean; -- Trap Flag
-      IFlag     : Boolean; -- Interrupt Enable Flag
-      DF        : Boolean; -- Direction Flag
-      OFlag     : Boolean; -- Overflow Flag
-      IOPL      : PL_Type; -- I/O Privilege Level
-      NT        : Boolean; -- Nested Task Flag
-      Reserved4 : Bits_1;
-      RF        : Boolean; -- Resume Flag
-      VM        : Boolean; -- Virtual-8086 Mode
-      AC        : Boolean; -- Alignment Check / Access Control
-      VIF       : Boolean; -- Virtual Interrupt Flag
-      VIP       : Boolean; -- Virtual Interrupt Pending
-      ID        : Boolean; -- Identification Flag
-      Reserved5 : Bits_10;
-      Reserved6 : Bits_32;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 64;
-   for RFLAGS_Type use record
-      CF        at 0 range  0 ..  0;
-      Reserved1 at 0 range  1 ..  1;
-      PF        at 0 range  2 ..  2;
-      Reserved2 at 0 range  3 ..  3;
-      AF        at 0 range  4 ..  4;
-      Reserved3 at 0 range  5 ..  5;
-      ZF        at 0 range  6 ..  6;
-      SF        at 0 range  7 ..  7;
-      TF        at 0 range  8 ..  8;
-      IFlag     at 0 range  9 ..  9;
-      DF        at 0 range 10 .. 10;
-      OFlag     at 0 range 11 .. 11;
-      IOPL      at 0 range 12 .. 13;
-      NT        at 0 range 14 .. 14;
-      Reserved4 at 0 range 15 .. 15;
-      RF        at 0 range 16 .. 16;
-      VM        at 0 range 17 .. 17;
-      AC        at 0 range 18 .. 18;
-      VIF       at 0 range 19 .. 19;
-      VIP       at 0 range 20 .. 20;
-      ID        at 0 range 21 .. 21;
-      Reserved5 at 0 range 22 .. 31;
-      Reserved6 at 0 range 32 .. 63;
-   end record;
 
    -- CR0
 
