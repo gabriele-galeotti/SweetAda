@@ -542,18 +542,18 @@ CONFIGURE_DEPS += $(MODULES_DIRECTORY)/configuration.in
 # GPRbuild configuration dependencies
 ifeq ($(BUILD_MODE),GPRbuild)
 ifeq ($(OSTYPE),cmd)
-GPRBUILD_DEPS += $(sort $(shell                                                 \
-                                SET "PATH=$(PATH)"                           && \
-                                SET "SWEETADA_PATH=$(SWEETADA_PATH)"         && \
-                                SET LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY) && \
-                                $(GPRDEPS) $(KERNEL_GPRFILE)                    \
+GPRBUILD_DEPS += $(sort $(shell                                                   \
+                                SET "PATH=$(PATH)"                             && \
+                                SET "SWEETADA_PATH=$(SWEETADA_PATH)"           && \
+                                SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)" && \
+                                $(GPRDEPS) $(KERNEL_GPRFILE)                      \
                                 2> nul))
 else
-GPRBUILD_DEPS += $(sort $(shell                                             \
-                                PATH="$(PATH)"                           && \
-                                SWEETADA_PATH="$(SWEETADA_PATH)"         && \
-                                LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY) && \
-                                $(GPRDEPS) $(KERNEL_GPRFILE)                \
+GPRBUILD_DEPS += $(sort $(shell                                               \
+                                PATH="$(PATH)"                             && \
+                                SWEETADA_PATH="$(SWEETADA_PATH)"           && \
+                                LIBUTILS_DIRECTORY="$(LIBUTILS_DIRECTORY)" && \
+                                $(GPRDEPS) $(KERNEL_GPRFILE)                  \
                                 2> /dev/null))
 endif
 endif
