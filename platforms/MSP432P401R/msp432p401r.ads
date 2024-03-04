@@ -591,16 +591,16 @@ package MSP432P401R
    -- 6.3.10 CSCLRIFG Register Clock System Clear Interrupt Flag Register
 
    type CSCLRIFG_Type is record
-      CLR_LFXTIFG     : Boolean;      -- Clear LFXT oscillator fault interrupt flag.
-      CLR_HFXTIFG     : Boolean;      -- Clear HFXT oscillator fault interrupt flag.
+      CLR_LFXTIFG     : Boolean := False; -- Clear LFXT oscillator fault interrupt flag.
+      CLR_HFXTIFG     : Boolean := False; -- Clear HFXT oscillator fault interrupt flag.
       Reserved1       : Bits_1 := 0;
       Reserved2       : Bits_1 := 0;
       Reserved3       : Bits_1 := 0;
       Reserved4       : Bits_1 := 0;
-      CLR_DCOR_OPNIFG : Boolean;      -- Clear DCO external resistor open circuit fault interrupt flag.
+      CLR_DCOR_OPNIFG : Boolean := False; -- Clear DCO external resistor open circuit fault interrupt flag.
       Reserved5       : Bits_1 := 0;
-      CLR_FCNTLFIFG   : Boolean;      -- Start fault counter clear interrupt flag LFXT.
-      CLR_FCNTHFIFG   : Boolean;      -- Start fault counter clear interrupt flag HFXT.
+      CLR_FCNTLFIFG   : Boolean := False; -- Start fault counter clear interrupt flag LFXT.
+      CLR_FCNTHFIFG   : Boolean := False; -- Start fault counter clear interrupt flag HFXT.
       Reserved6       : Bits_22 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -680,7 +680,7 @@ package MSP432P401R
       Reserved       at 0 range 10 .. 31;
    end record;
 
-   -- Table 6-28. CS Registers (Base Address: 0x4001_0400)
+   -- Table 6-28. CS Registers
 
    CS_BASEADDRESS : constant := 16#4001_0400#;
 
@@ -904,6 +904,199 @@ package MSP432P401R
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 8 Power Control Manager (PCM)
+   ----------------------------------------------------------------------------
+
+   PCMKEY_KEY : constant := 16#695A#;
+
+   -- 8.26.1 PCMCTL0 Register PCM Control 0 Register
+
+   AMR_AM_LDO_VCORE0  : constant := 16#0#; -- LDO based Active Mode at Core voltage setting 0.
+   AMR_AM_LDO_VCORE1  : constant := 16#1#; -- LDO based Active Mode at Core voltage setting 1.
+   AMR_RSVD1          : constant := 16#2#; -- Reserved
+   AMR_RSVD2          : constant := 16#3#; -- Reserved
+   AMR_AM_DCDC_VCORE0 : constant := 16#4#; -- DC-DC based Active Mode at Core voltage setting 0.
+   AMR_AM_DCDC_VCORE1 : constant := 16#5#; -- DC-DC based Active Mode at Core voltage setting 1.
+   AMR_RSVD3          : constant := 16#6#; -- Reserved
+   AMR_RSVD4          : constant := 16#7#; -- Reserved
+   AMR_AM_LF_VCORE0   : constant := 16#8#; -- Low-Frequency Active Mode at Core voltage setting 0.
+   AMR_AM_LF_VCORE1   : constant := 16#9#; -- Low-Frequency Active Mode at Core voltage setting 1.
+   AMR_RSVD5          : constant := 16#A#; -- Reserved
+   AMR_RSVD6          : constant := 16#B#; -- Reserved
+   AMR_RSVD7          : constant := 16#C#; -- Reserved
+   AMR_RSVD8          : constant := 16#D#; -- Reserved
+   AMR_RSVD9          : constant := 16#E#; -- Reserved
+   AMR_RSVD10         : constant := 16#F#; -- Reserved
+
+   LPMR_LPM3   : constant := 16#0#; -- LPM3. Core voltage setting is similar to the mode from which LPM3 is entered.
+   LPMR_RSVD1  : constant := 16#1#; -- Reserved.
+   LPMR_RSVD2  : constant := 16#2#; -- Reserved.
+   LPMR_RSVD3  : constant := 16#3#; -- Reserved.
+   LPMR_RSVD4  : constant := 16#4#; -- Reserved.
+   LPMR_RSVD5  : constant := 16#5#; -- Reserved.
+   LPMR_RSVD6  : constant := 16#6#; -- Reserved.
+   LPMR_RSVD7  : constant := 16#7#; -- Reserved.
+   LPMR_RSVD8  : constant := 16#8#; -- Reserved.
+   LPMR_RSVD9  : constant := 16#9#; -- Reserved.
+   LPMR_LPM35  : constant := 16#A#; -- LPM3.5. Core voltage setting 0.
+   LPMR_RSVD10 : constant := 16#B#; -- Reserved.
+   LPMR_LPM45  : constant := 16#C#; -- LPM4.5.
+   LPMR_RSVD11 : constant := 16#D#; -- Reserved.
+   LPMR_RSVD12 : constant := 16#E#; -- Reserved.
+   LPMR_RSVD13 : constant := 16#F#; -- Reserved.
+
+   CPM_AM_LDO_VCORE0    : constant := 16#00#; -- LDO based Active Mode at Core voltage setting 0.
+   CPM_AM_LDO_VCORE1    : constant := 16#01#; -- LDO based Active Mode at Core voltage setting 1.
+   CPM_AM_DCDC_VCORE0   : constant := 16#04#; -- DC-DC based Active Mode at Core voltage setting 0.
+   CPM_AM_DCDC_VCORE1   : constant := 16#05#; -- DC-DC based Active Mode at Core voltage setting 1.
+   CPM_AM_LF_VCORE0     : constant := 16#08#; -- Low-Frequency Active Mode at Core voltage setting 0.
+   CPM_AM_LF_VCORE1     : constant := 16#09#; -- Low-Frequency Active Mode at Core voltage setting 1.
+   CPM_LPM0_LDO_VCORE0  : constant := 16#10#; -- LDO based LPM0 at Core voltage setting 0.
+   CPM_LPM0_LDO_VCORE1  : constant := 16#11#; -- LDO based LPM0 at Core voltage setting 1.
+   CPM_LPM0_DCDC_VCORE0 : constant := 16#14#; -- DC-DC based LPM0 at Core voltage setting 0.
+   CPM_LPM0_DCDC_VCORE1 : constant := 16#15#; -- DC-DC based LPM0 at Core voltage setting 1.
+   CPM_LPM0_LF_VCORE0   : constant := 16#18#; -- Low-Frequency LPM0 at Core voltage setting 0.
+   CPM_LPM0_LF_VCORE1   : constant := 16#19#; -- Low-Frequency LPM0 at Core voltage setting 1.
+   CPM_LPM3             : constant := 16#20#; -- LPM3
+
+   type PCMCTL0_Type is record
+      AMR      : Bits_4;      -- Active Mode Request.
+      LPMR     : Bits_4;      -- Low Power Mode Request.
+      CPM      : Bits_6;      -- Current Power Mode.
+      Reserved : Bits_2 := 0;
+      PCMKEY   : Unsigned_16; -- PCM key.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PCMCTL0_Type use record
+      AMR      at 0 range  0 ..  3;
+      LPMR     at 0 range  4 ..  7;
+      CPM      at 0 range  8 .. 13;
+      Reserved at 0 range 14 .. 15;
+      PCMKEY   at 0 range 16 .. 31;
+   end record;
+
+   -- 8.26.2 PCMCTL1 Register PCM Control 1 Register
+
+   type PCMCTL1_Type is record
+      LOCKLPM5        : Boolean;     -- Lock LPM5.
+      LOCKBKUP        : Boolean;     -- Lock Backup.
+      FORCE_LPM_ENTRY : Boolean;     -- Bit selection for the application to determine whether the entry into LPM3/LPMx.5 ...
+      Reserved1       : Bits_5 := 0;
+      PMR_BUSY        : Boolean;     -- Power mode request busy flag.
+      Reserved2       : Bits_7 := 0;
+      PCMKEY          : Unsigned_16; -- PCM key.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PCMCTL1_Type use record
+      LOCKLPM5        at 0 range  0 ..  0;
+      LOCKBKUP        at 0 range  1 ..  1;
+      FORCE_LPM_ENTRY at 0 range  2 ..  2;
+      Reserved1       at 0 range  3 ..  7;
+      PMR_BUSY        at 0 range  8 ..  8;
+      Reserved2       at 0 range  9 .. 15;
+      PCMKEY          at 0 range 16 .. 31;
+   end record;
+
+   -- 8.26.3 PCMIE Register PCM Interrupt Enable Register
+
+   type PCMIE_Type is record
+      LPM_INVALID_TR_IE  : Boolean;      -- LPM invalid transition interrupt enable.
+      LPM_INVALID_CLK_IE : Boolean;      -- LPM invalid clock interrupt enable.
+      AM_INVALID_TR_IE   : Boolean;      -- Active mode invalid transition interrupt enable.
+      Reserved1          : Bits_3 := 0;
+      DCDC_ERROR_IE      : Boolean;      -- DC-DC error interrupt enable.
+      Reserved2          : Bits_25 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PCMIE_Type use record
+      LPM_INVALID_TR_IE  at 0 range 0 ..  0;
+      LPM_INVALID_CLK_IE at 0 range 1 ..  1;
+      AM_INVALID_TR_IE   at 0 range 2 ..  2;
+      Reserved1          at 0 range 3 ..  5;
+      DCDC_ERROR_IE      at 0 range 6 ..  6;
+      Reserved2          at 0 range 7 .. 31;
+   end record;
+
+   -- 8.26.4 PCMIFG Register PCM Interrupt Flag Register
+
+   type PCMIFG_Type is record
+      LPM_INVALID_TR_IFG  : Boolean;      -- LPM invalid transition flag.
+      LPM_INVALID_CLK_IFG : Boolean;      -- LPM invalid clock flag.
+      AM_INVALID_TR_IFG   : Boolean;      -- Active mode invalid transition flag.
+      Reserved1           : Bits_3 := 0;
+      DCDC_ERROR_IFG      : Boolean;      -- DC-DC error flag.
+      Reserved2           : Bits_25 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PCMIFG_Type use record
+      LPM_INVALID_TR_IFG  at 0 range 0 ..  0;
+      LPM_INVALID_CLK_IFG at 0 range 1 ..  1;
+      AM_INVALID_TR_IFG   at 0 range 2 ..  2;
+      Reserved1           at 0 range 3 ..  5;
+      DCDC_ERROR_IFG      at 0 range 6 ..  6;
+      Reserved2           at 0 range 7 .. 31;
+   end record;
+
+   -- 8.26.5 PCMCLRIFG Register PCM Clear Interrupt Flag Register
+
+   type PCMCLRIFG_Type is record
+      CLR_LPM_INVALID_TR_IFG  : Boolean := False;        -- Clear LPM invalid transition flag.
+      CLR_LPM_INVALID_CLK_IFG : Boolean := False;        -- Clear LPM invalid clock flag.
+      CLR_AM_INVALID_TR_IFG   : Boolean := False;        -- Clear active mode invalid transition flag.
+      Reserved1               : Bits_3 := 2#11#;
+      CLR_DCDC_ERROR_IFG      : Boolean := False;        -- Clear DC-DC error flag.
+      Reserved2               : Bits_25 := 16#1FF_FFFF#;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PCMCLRIFG_Type use record
+      CLR_LPM_INVALID_TR_IFG  at 0 range 0 ..  0;
+      CLR_LPM_INVALID_CLK_IFG at 0 range 1 ..  1;
+      CLR_AM_INVALID_TR_IFG   at 0 range 2 ..  2;
+      Reserved1               at 0 range 3 ..  5;
+      CLR_DCDC_ERROR_IFG      at 0 range 6 ..  6;
+      Reserved2               at 0 range 7 .. 31;
+   end record;
+
+   -- Table 6-27. PCM Registers
+
+   PCM_BASEADDRESS : constant := 16#4001_0000#;
+
+   PCMCTL0 : aliased PCMCTL0_Type
+      with Address              => To_Address (PCM_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PCMCTL1 : aliased PCMCTL1_Type
+      with Address              => To_Address (PCM_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PCMIE : aliased PCMIE_Type
+      with Address              => To_Address (PCM_BASEADDRESS + 16#08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PCMIFG : aliased PCMIFG_Type
+      with Address              => To_Address (PCM_BASEADDRESS + 16#0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PCMCLRIFG : aliased PCMCLRIFG_Type
+      with Address              => To_Address (PCM_BASEADDRESS + 16#10#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 12 Digital I/O
    ----------------------------------------------------------------------------
 
@@ -1021,7 +1214,7 @@ package MSP432P401R
       PxIV   at 16#1E# range 0 .. 15;
    end record;
 
-   -- Table 6-21. Port Registers (Base Address: 0x4000_4C00)
+   -- Table 6-21. Port Registers
 
    PORT_BASEADDRESS : constant := 16#4000_4C00#;
 
@@ -1088,12 +1281,12 @@ pragma Style_Checks (On);
       WDTPW    at 0 range 8 .. 15;
    end record;
 
-   -- Table 6-20. WDT_A Registers (Base Address: 0x4000_4800)
+   -- Table 6-20. WDT_A Registers
 
-   WDTCTL_ADDRESS : constant := 16#4000_480C#;
+   WDT_A_BASEADDRESS : constant := 16#4000_4800#;
 
    WDTCTL : aliased WDTCTL_Type
-      with Address    => To_Address (WDTCTL_ADDRESS),
+      with Address    => To_Address (WDT_A_BASEADDRESS + 16#0C#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1347,5 +1540,47 @@ pragma Style_Checks (On);
    UCAxIV_TXEMPTY : constant := 16#04#; -- Interrupt Source: Transmit buffer empty; Interrupt Flag: UCTXIFG
    UCAxIV_START   : constant := 16#06#; -- Interrupt Source: Start bit received; Interrupt Flag: UCSTTIFG
    UCAxIV_TXDONE  : constant := 16#08#; -- Interrupt Source: Transmit complete; Interrupt Flag: UCTXCPTIFG; ...: Lowest
+
+   -- 24.4 eUSCI_A UART Registers
+
+   type eUSCI_Ax_Type is record
+      UCAxCTLW0 : UCAxCTLW0_Type with Volatile_Full_Access => True;
+      UCAxCTLW1 : UCAxCTLW1_Type with Volatile_Full_Access => True;
+      UCAxBRW   : Unsigned_16    with Volatile_Full_Access => True;
+      UCAxMCTLW : UCAxMCTLW_Type with Volatile_Full_Access => True;
+      UCAxSTATW : UCAxSTATW_Type with Volatile_Full_Access => True;
+      UCAxRXBUF : UCAxRXBUF_Type with Volatile_Full_Access => True;
+      UCAxTXBUF : UCAxTXBUF_Type with Volatile_Full_Access => True;
+      UCAxABCTL : UCAxABCTL_Type with Volatile_Full_Access => True;
+      UCAxIRCTL : UCAxIRCTL_Type with Volatile_Full_Access => True;
+      UCAxIE    : UCAxIE_Type    with Volatile_Full_Access => True;
+      UCAxIFG   : UCAxIFG_Type   with Volatile_Full_Access => True;
+      UCAxIV    : Unsigned_16    with Volatile_Full_Access => True;
+   end record
+      with Size => 16#20# * 8;
+   for eUSCI_Ax_Type use record
+      UCAxCTLW0 at 16#00# range 0 .. 15;
+      UCAxCTLW1 at 16#02# range 0 .. 15;
+      UCAxBRW   at 16#06# range 0 .. 15;
+      UCAxMCTLW at 16#08# range 0 .. 15;
+      UCAxSTATW at 16#0A# range 0 .. 15;
+      UCAxRXBUF at 16#0C# range 0 .. 15;
+      UCAxTXBUF at 16#0E# range 0 .. 15;
+      UCAxABCTL at 16#10# range 0 .. 15;
+      UCAxIRCTL at 16#12# range 0 .. 15;
+      UCAxIE    at 16#1A# range 0 .. 15;
+      UCAxIFG   at 16#1C# range 0 .. 15;
+      UCAxIV    at 16#1E# range 0 .. 15;
+   end record;
+
+   -- Table 6-6. eUSCI_A0 Registers
+
+   eUSCI_A0_ADDRESS : constant := 16#4000_1000#;
+
+   eUSCI_A0 : aliased eUSCI_Ax_Type
+      with Address    => To_Address (eUSCI_A0_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end MSP432P401R;
