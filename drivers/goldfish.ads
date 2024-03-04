@@ -45,7 +45,7 @@ package Goldfish
       ALARM_STATUS    : Unsigned_32 with Volatile_Full_Access => True;
       CLEAR_INTERRUPT : Unsigned_32 with Volatile_Full_Access => True;
    end record
-      with Size => 16#20# * 8;
+      with Size => 8 * 32;
    for RTC_Type use record
       TIME_LOW        at 16#00# range 0 .. 31;
       TIME_HIGH       at 16#04# range 0 .. 31;
