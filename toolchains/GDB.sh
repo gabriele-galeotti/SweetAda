@@ -84,6 +84,7 @@ LOG_DIRECTORY=$(pwd)
 #TARGET=sh-elf
 #TARGET=sh4le-elf
 #TARGET=s390-linux
+#TARGET=s390x-linux
 #TARGET=i686-elf
 #TARGET=x86_64-elf
 
