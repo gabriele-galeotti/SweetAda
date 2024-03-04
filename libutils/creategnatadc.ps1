@@ -70,20 +70,20 @@ foreach ($textline in Get-Content "${gnatadc_filename}.in")
   $textlinearray = $textline -Split "--"
   $pragma = $textlinearray[0].Trim(" ")
   $profiles = $textlinearray[1]
-  if ("$pragma" -eq "")
+  if ($pragma -eq "")
   {
     continue
   }
-  if ("$profiles" -eq "")
+  if ($profiles -eq "")
   {
     continue
   }
   $profilesarray = $profiles.Split(" ").Trim(" ")
   foreach ($p in $profilesarray)
   {
-    if ("$p" -eq "$profile")
+    if ($p -eq $profile)
     {
-      Add-Content -Path $gnatadc_filename -Value "$pragma"
+      Add-Content -Path $gnatadc_filename -Value "${pragma}"
       break
     }
   }
