@@ -25,6 +25,8 @@
 # symlink (with the same filename).
 #
 
+# shellcheck disable=SC2045,SC2046,SC2268,SC2317
+
 ################################################################################
 # Script initialization.                                                       #
 #                                                                              #
@@ -113,7 +115,7 @@ fi
 # create filelist if specified
 if [ "x${FILELIST_FILENAME}" != "x" ] ; then
   if [ ! -f "${FILELIST_FILENAME}" ] ; then
-    printf "%s\n" "INSTALLED_FILENAMES :=" > ${FILELIST_FILENAME}
+    printf "%s\n" "INSTALLED_FILENAMES :=" > "${FILELIST_FILENAME}"
   fi
 fi
 
@@ -135,7 +137,7 @@ while true ; do
     rm -f "${LINK_NAME}"
     ln -s ${VERBOSE_OPTION} "${TARGET}" "${LINK_NAME}" || exit $?
     if [ "x${FILELIST_FILENAME}" != "x" ] ; then
-      printf "%s\n" "INSTALLED_FILENAMES += ${LINK_NAME}" >> ${FILELIST_FILENAME}
+      printf "%s\n" "INSTALLED_FILENAMES += ${LINK_NAME}" >> "${FILELIST_FILENAME}"
     fi
   else
     LINK_DIRECTORY="$2"
@@ -143,7 +145,7 @@ while true ; do
       rm -f "${f}"
       ln -s ${VERBOSE_OPTION} "${TARGET}"/"${f}" "${LINK_DIRECTORY}"/"${f}" || exit $?
       if [ "x${FILELIST_FILENAME}" != "x" ] ; then
-        printf "%s\n" "INSTALLED_FILENAMES += ${LINK_DIRECTORY}/${f}" >> ${FILELIST_FILENAME}
+        printf "%s\n" "INSTALLED_FILENAMES += ${LINK_DIRECTORY}/${f}" >> "${FILELIST_FILENAME}"
       fi
     done
   fi

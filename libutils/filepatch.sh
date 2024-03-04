@@ -22,6 +22,8 @@
 # filepatch.sh mbr.bin 1FE "55 AA"
 #
 
+# shellcheck disable=SC2181,SC2268
+
 ################################################################################
 # Script initialization.                                                       #
 #                                                                              #

@@ -18,6 +18,8 @@
 # every variable referenced
 #
 
+# shellcheck disable=SC2268
+
 ################################################################################
 # Script initialization.                                                       #
 #                                                                              #

@@ -19,6 +19,8 @@
 # every variable referenced in the input file
 #
 
+# shellcheck disable=SC2181,SC2268
+
 ################################################################################
 # Script initialization.                                                       #
 #                                                                              #
