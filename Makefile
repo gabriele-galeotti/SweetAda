@@ -1420,7 +1420,7 @@ endif
 #
 
 .PHONY: rts
-rts: clean
+rts: configure-delete clean
 ifeq ($(OSTYPE),cmd)
 	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
           (                                                                  \
