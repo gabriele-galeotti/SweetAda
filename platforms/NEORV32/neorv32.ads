@@ -37,6 +37,56 @@ package NEORV32
    use Interfaces;
    use Bits;
 
+   -- 2.7.10. Cyclic Redundancy Check (CRC)
+
+   CRC_MODE_CRC8  : constant := 2#00#; -- CRC8
+   CRC_MODE_CRC16 : constant := 2#01#; -- CRC16
+   CRC_MODE_CRC32 : constant := 2#10#; -- CRC32
+
+   type CRC_CTRL_Type is record
+      MODE     : Bits_2;       -- CRC mode select
+      Reserved : Bits_30 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CRC_CTRL_Type use record
+      MODE     at 0 range 0 ..  1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
+   type CRC_DATA_Type is record
+      DATA     : Unsigned_8;   -- data input
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CRC_DATA_Type use record
+      DATA     at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   type CRC_Type is record
+      CTRL : CRC_CTRL_Type with Volatile_Full_Access => True;
+      POLY : Unsigned_32   with Volatile_Full_Access => True;
+      DATA : CRC_DATA_Type with Volatile_Full_Access => True;
+      SREG : Unsigned_32   with Volatile_Full_Access => True;
+   end record
+      with Size => 4 * 32;
+   for CRC_Type use record
+      CTRL  at 16#0# range 0 .. 31;
+      POLY  at 16#4# range 0 .. 31;
+      DATA  at 16#8# range 0 .. 31;
+      SREG  at 16#C# range 0 .. 31;
+   end record;
+
+   CRC_BASEADDRESS : constant := 16#FFFF_EE00#;
+
+   CRC : aliased CRC_Type
+      with Address    => To_Address (CRC_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 2.7.11. Watchdog Timer (WDT)
 
    WDT_CTRL_RCAUSE_EXTRST : constant := 2#00#; -- external reset
@@ -72,8 +122,7 @@ package NEORV32
       CTRL  : WDT_CTRL_Type with Volatile_Full_Access => True;
       RESET : Unsigned_32   with Volatile_Full_Access => True;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 2 * 32;
+      with Size => 2 * 32;
    for WDT_Type use record
       CTRL  at 0 range 0 .. 31;
       RESET at 4 range 0 .. 31;
