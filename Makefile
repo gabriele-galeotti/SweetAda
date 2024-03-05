@@ -980,12 +980,25 @@ ifeq ($(OSTYPE),cmd)
 else
 	-@$(RM) $(OBJECT_DIRECTORY)/main.bexch
 endif
-	$(call brief-command, \
-        $(GPRBUILD)                      \
-                    -b                   \
-                    -P $(KERNEL_GPRFILE) \
-                    > gnatbind_elab.lst  \
+ifeq ($(OSTYPE),cmd)
+	$(call brief-command,                \
+        (                                    \
+         $(GPRBUILD)                         \
+                     -b                      \
+                     -P $(KERNEL_GPRFILE)    \
+         || $(ECHO) __exitstatus__=1         \
+        ) | $(GPRBINDFILT) gnatbind_elab.lst \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
+else
+	$(call brief-command,                \
+        (                                    \
+         $(GPRBUILD)                         \
+                     -b                      \
+                     -P $(KERNEL_GPRFILE)    \
+         || $(ECHO) "__exitstatus__=$$?"     \
+        ) | $(GPRBINDFILT) gnatbind_elab.lst \
+        ,[GPRBUILD-B],$(KERNEL_GPRFILE))
+endif
 ifeq ($(OSTYPE),cmd)
 	-@$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ 2> nul
 else
