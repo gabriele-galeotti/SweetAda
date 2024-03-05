@@ -1,7 +1,11 @@
 
+with Definitions;
+
 package Configure
    with Pure => True
    is
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM    : constant String := "Malta";
@@ -9,6 +13,7 @@ package Configure
    CPU_MODEL   : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
+   CLK_FREQUENCY  : constant := 320 * MHz1;
    TICK_FREQUENCY : constant := 100;
 
 end Configure;
