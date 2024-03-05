@@ -16,6 +16,7 @@
 # GDB
 # KERNEL_OUTFILE
 # KERNEL_ROMFILE
+# CPU_MODEL
 #
 
 ################################################################################
@@ -61,7 +62,18 @@ return 0
 ################################################################################
 
 # QEMU executable
-QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-mips"
+case ${CPU_MODEL} in
+  MIPS32-24K)
+    QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-mips"
+    QEMU_CPU=24Kf
+    GDB_ARCH="mips:isa32"
+    ;;
+  MIPS64-5K)
+    QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-mips64"
+    QEMU_CPU=5Kf
+    GDB_ARCH="mips:isa64"
+    ;;
+esac
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
@@ -82,7 +94,7 @@ TILTIMEOUT=3
 
 # QEMU machine
 ${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
-  -M mipssim -m 16 \
+  -M mipssim -cpu ${QEMU_CPU} -m 16 \
   -bios ${KERNEL_ROMFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -chardev "socket,id=SERIALPORT0,port=${SERIALPORT0},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \
@@ -116,6 +128,7 @@ elif [ "x$1" = "x-debug" ] ; then
   "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
+    -iex "set architecture ${GDB_ARCH}" \
     -ex "target remote tcp:localhost:1234" \
     ${KERNEL_OUTFILE}
 fi

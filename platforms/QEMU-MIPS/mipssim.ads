@@ -28,7 +28,7 @@ package MIPSSIM
    --                                                                        --
    --========================================================================--
 
-   -- CP0 Count runs at half the pipeline CPU clock (QEMU CPU CLK = 320 MHz)
+   -- CP0 Count runs at half the pipeline CPU clock
    CP0_TIMER_COUNT : constant :=
       (Configure.CLOCK_FREQUENCY / Configure.TICK_FREQUENCY) / 2;
 

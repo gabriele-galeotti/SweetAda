@@ -2,7 +2,7 @@
 #
 # QEMU-MIPS (QEMU emulator)
 #
-# MIPS 24kf BE
+# MIPS 24kf/5Kf BE
 #
 
 ################################################################################
@@ -18,14 +18,19 @@ USE_APPLICATION := test-QEMU-MIPS
 ################################################################################
 
 CPU       := MIPS
-CPU_MODEL := MIPS32-24K
+#CPU_MODEL := MIPS32-24K
+CPU_MODEL := MIPS64-5K
 
 ################################################################################
 # Build system parameters.                                                     #
 #                                                                              #
 ################################################################################
 
+ifeq      ($(CPU_MODEL),MIPS32-24K)
 GCC_SWITCHES_PLATFORM     := -march=24kf -mno-extern-sdata
+else ifeq ($(CPU_MODEL),MIPS64-5K)
+GCC_SWITCHES_PLATFORM     := -march=5kf -mno-extern-sdata
+endif
 LD_SWITCHES_PLATFORM      := --undefined=reset
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM := -O binary

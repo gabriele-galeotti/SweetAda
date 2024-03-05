@@ -18,6 +18,7 @@ REM TOOLCHAIN_PREFIX
 REM GDB
 REM KERNEL_OUTFILE
 REM KERNEL_ROMFILE
+REM CPU_MODEL
 REM
 
 REM ############################################################################
@@ -26,7 +27,16 @@ REM #                                                                          #
 REM ############################################################################
 
 REM QEMU executable
-SET "QEMU_FILENAME=qemu-system-mipsw.exe"
+IF "%CPU_MODEL%"=="MIPS32-24K" (
+  SET "QEMU_FILENAME=qemu-system-mipsw"
+  SET "QEMU_CPU=24Kf"
+  SET "GDB_ARCH=mips:isa32"
+  )
+IF "%CPU_MODEL%"=="MIPS64-5K" (
+  SET "QEMU_FILENAME=qemu-system-mips64w"
+  SET "QEMU_CPU=5Kf"
+  SET "GDB_ARCH=mips:isa64"
+  )
 SET "QEMU_EXECUTABLE=C:\Program Files\QEMU\%QEMU_FILENAME%"
 
 REM debug options
@@ -60,6 +70,7 @@ IF "%1"=="-debug" (
   "%GDB%" -q ^
   -iex "set new-console on" ^
   -iex "set basenames-may-differ" ^
+  -iex "set architecture %GDB_ARCH%" ^
   -ex "target remote tcp:localhost:1234" ^
   %KERNEL_OUTFILE%
   ) ELSE (
