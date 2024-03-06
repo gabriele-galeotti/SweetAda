@@ -93,16 +93,16 @@ package KN02BA
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for IOASIC_SSR_Type use record
-      LED0        at 0 range 0 .. 0;
-      LED1        at 0 range 1 .. 1;
-      LED2        at 0 range 2 .. 2;
-      LED3        at 0 range 3 .. 3;
-      LED4        at 0 range 4 .. 4;
-      LED5        at 0 range 5 .. 5;
-      LED6        at 0 range 6 .. 6;
-      LED7        at 0 range 7 .. 7;
-      LANCE_RESET at 0 range 8 .. 8;
-      SCSI_RESET  at 0 range 9 .. 9;
+      LED0        at 0 range  0 ..  0;
+      LED1        at 0 range  1 ..  1;
+      LED2        at 0 range  2 ..  2;
+      LED3        at 0 range  3 ..  3;
+      LED4        at 0 range  4 ..  4;
+      LED5        at 0 range  5 ..  5;
+      LED6        at 0 range  6 ..  6;
+      LED7        at 0 range  7 ..  7;
+      LANCE_RESET at 0 range  8 ..  8;
+      SCSI_RESET  at 0 range  9 ..  9;
       RTC_RESET   at 0 range 10 .. 10;
       SCC_RESET   at 0 range 11 .. 11;
       Unused1     at 0 range 12 .. 12;

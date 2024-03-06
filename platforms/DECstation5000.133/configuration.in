@@ -36,7 +36,7 @@ else
 LD_SCRIPT                 := linker-ROM.lds
 #LD_SCRIPT                 := linker-RAM.lds
 endif
-OBJDUMP_SWITCHES_PLATFORM := --disassembler-options=hwr-names=r3000,reg-names=r3000
+OBJDUMP_SWITCHES_PLATFORM := -z --disassembler-options=hwr-names=r3000,reg-names=r3000
 OBJCOPY_SWITCHES_PLATFORM := -O binary
 POSTBUILD_ROMFILE         := Y
 
