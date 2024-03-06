@@ -29,15 +29,43 @@ package body BSP
    --========================================================================--
    --                                                                        --
    --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   use System;
+   use System.Storage_Elements;
+   use Interfaces;
+   use Definitions;
+   use Bits;
+   use MVME162FX;
+
+   procedure SCC_Write_8
+      (Port  : in Address;
+       Value : in Unsigned_8);
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
    --                           Package subprograms                          --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
-   use Definitions;
-   use Bits;
-   use MVME162FX;
+   ----------------------------------------------------------------------------
+   -- SCC_Write_8
+   ----------------------------------------------------------------------------
+   -- MVME162FX MC2 revision 1 bug
+   ----------------------------------------------------------------------------
+   procedure SCC_Write_8
+      (Port  : in Address;
+       Value : in Unsigned_8)
+      is
+   begin
+      MMIO.Write_U8 (Port, 16#08#);
+      MMIO.Write_U8 (Port, Value);
+   end SCC_Write_8;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -64,13 +92,12 @@ package body BSP
       is
    begin
       -- SCC ------------------------------------------------------------------
-      SCC_Descriptor.Base_Address             := To_Address (SCC_BASEADDRESS);
-      SCC_Descriptor.AB_Address_Bit           := 2;                            -- address bit2 --> A//B channel selector
-      SCC_Descriptor.CD_Address_Bit           := 1;                            -- address bit1 --> D//C data/command selector
-      SCC_Descriptor.Baud_Clock               := 10_000_000; -- __FIX__
-      SCC_Descriptor.Flags.MVME162FX_TX_Quirk := True;
-      SCC_Descriptor.Read_8                   := MMIO.Read'Access;
-      SCC_Descriptor.Write_8                  := MMIO.Write'Access;
+      SCC_Descriptor.Base_Address   := To_Address (SCC_BASEADDRESS);
+      SCC_Descriptor.AB_Address_Bit := 2;                            -- address bit2 --> A//B channel selector
+      SCC_Descriptor.CD_Address_Bit := 1;                            -- address bit1 --> D//C data/command selector
+      SCC_Descriptor.Baud_Clock     := 10_000_000; -- __FIX__
+      SCC_Descriptor.Read_8         := MMIO.Read'Access;
+      SCC_Descriptor.Write_8        := SCC_Write_8'Access;
       Z8530.Init (SCC_Descriptor, Z8530.CHANNELA);
       Z8530.Init (SCC_Descriptor, Z8530.CHANNELB);
       -- Console --------------------------------------------------------------
@@ -79,8 +106,8 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("MVME162-510A", NL => True);
-      Console.Print (MMIO.Read_U8 (MC2.ID'Address), Prefix => "MC2 ID      : ", NL => True);
-      Console.Print (MMIO.Read_U8 (MC2.Revision'Address), Prefix => "MC2 Revision: ", NL => True);
+      Console.Print (Prefix => "MC2 ID      : ", Value => MMIO.Read_U8 (MC2.ID'Address), NL => True);
+      Console.Print (Prefix => "MC2 Revision: ", Value => MMIO.Read_U8 (MC2.Revision'Address), NL => True);
       -------------------------------------------------------------------------
    end Setup;
 
