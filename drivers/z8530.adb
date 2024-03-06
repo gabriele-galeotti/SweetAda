@@ -867,13 +867,7 @@ package body Z8530
       loop
          exit when To_RR0 (Register_Read (Descriptor, Channel, RR0)).TXBE;
       end loop;
-      if Descriptor.Flags.MVME162FX_TX_Quirk then
-         -- MVME162FX MC2 revision 1 bug
-         Descriptor.Write_8 (Descriptor.Control_Port (Channel), 16#08#);
-         Descriptor.Write_8 (Descriptor.Control_Port (Channel), Data);
-      else
-         Descriptor.Write_8 (Descriptor.Data_Port (Channel), Data);
-      end if;
+      Descriptor.Write_8 (Descriptor.Data_Port (Channel), Data);
    end TX;
 
    ----------------------------------------------------------------------------

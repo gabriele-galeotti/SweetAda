@@ -37,10 +37,8 @@ package Z8530
 
    type Channel_Type is (CHANNELA, CHANNELB);
 
-   type Flags_Type is
-   record
-      DECstation5000133  : Boolean;
-      MVME162FX_TX_Quirk : Boolean;
+   type Flags_Type is record
+      DECstation5000133 : Boolean;
    end record;
 
    type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;
@@ -48,8 +46,7 @@ package Z8530
    type Control_Ports_Type is array (Channel_Type) of Address;
    type Data_Ports_Type is array (Channel_Type) of Address;
 
-   type Descriptor_Type is
-   record
+   type Descriptor_Type is record
       Base_Address   : Address;
       AB_Address_Bit : Address_Bit_Number;
       CD_Address_Bit : Address_Bit_Number;
