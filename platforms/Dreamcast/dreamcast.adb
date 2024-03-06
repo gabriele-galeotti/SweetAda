@@ -48,12 +48,12 @@ package body Dreamcast
    function Video_Cable
       return Video_Cable_Type
       is
-      PortA : Unsigned_32
+      PortA : aliased Unsigned_32
          with Address              => To_Address (16#FF80_002C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
-      Port89 : Unsigned_16
+      Port89 : aliased Unsigned_16
          with Address              => To_Address (16#FF80_0030#),
               Volatile_Full_Access => True,
               Import               => True,
