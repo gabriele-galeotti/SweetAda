@@ -717,6 +717,154 @@ package KL46Z
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 13 System Mode Controller (SMC)
+   ----------------------------------------------------------------------------
+
+   -- 13.3.1 Power Mode Protection register (SMC_PMPROT)
+
+   type SMC_PMPROT_Type is record
+      Reserved1 : Bits_1 := 0;
+      AVLLS     : Boolean;     -- Allow Very-Low-Leakage Stop Mode
+      Reserved2 : Bits_1 := 0;
+      ALLS      : Boolean;     -- Allow Low-Leakage Stop Mode
+      Reserved3 : Bits_1 := 0;
+      AVLP      : Boolean;     -- Allow Very-Low-Power Modes
+      Reserved4 : Bits_1 := 0;
+      Reserved5 : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SMC_PMPROT_Type use record
+      Reserved1 at 0 range 0 .. 0;
+      AVLLS     at 0 range 1 .. 1;
+      Reserved2 at 0 range 2 .. 2;
+      ALLS      at 0 range 3 .. 3;
+      Reserved3 at 0 range 4 .. 4;
+      AVLP      at 0 range 5 .. 5;
+      Reserved4 at 0 range 6 .. 6;
+      Reserved5 at 0 range 7 .. 7;
+   end record;
+
+   SMC_PMPROT_ADDRESS : constant := 16#4007_E000#;
+
+   SMC_PMPROT : aliased SMC_PMPROT_Type
+      with Address              => To_Address (SMC_PMPROT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 13.3.2 Power Mode Control register (SMC_PMCTRL)
+
+   STOPM_STOP  : constant := 2#000#; -- Normal Stop (STOP)
+   STOPM_RSVD1 : constant := 2#001#; -- Reserved
+   STOPM_VLPS  : constant := 2#010#; -- Very-Low-Power Stop (VLPS)
+   STOPM_LLS   : constant := 2#011#; -- Low-Leakage Stop (LLS)
+   STOPM_VLLSx : constant := 2#100#; -- Very-Low-Leakage Stop (VLLSx)
+   STOPM_RSVD2 : constant := 2#101#; -- Reserved
+   STOPM_RSVD3 : constant := 2#110#; -- Reserved
+   STOPM_RSVD4 : constant := 2#111#; -- Reserved
+
+   RUNM_RUN   : constant := 2#00#; -- Normal Run mode (RUN)
+   RUNM_RSVD1 : constant := 2#01#; -- Reserved
+   RUNM_VLPR  : constant := 2#10#; -- Very-Low-Power Run mode (VLPR)
+   RUNM_RSVD2 : constant := 2#11#; -- Reserved
+
+   type SMC_PMCTRL_Type is record
+      STOPM     : Bits_3;           -- Stop Mode Control
+      STOPA     : Boolean := False;
+      Reserved1 : Bits_1 := 0;
+      RUNM      : Bits_2;           -- Run Mode Control
+      Reserved2 : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SMC_PMCTRL_Type use record
+      STOPM     at 0 range 0 .. 2;
+      STOPA     at 0 range 3 .. 3;
+      Reserved1 at 0 range 4 .. 4;
+      RUNM      at 0 range 5 .. 6;
+      Reserved2 at 0 range 7 .. 7;
+   end record;
+
+   SMC_PMCTRL_ADDRESS : constant := 16#4007_E001#;
+
+   SMC_PMCTRL : aliased SMC_PMCTRL_Type
+      with Address              => To_Address (SMC_PMCTRL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 13.3.3 Stop Control Register (SMC_STOPCTRL)
+
+   VLLSM_VLLS0 : constant := 2#000#; -- VLLS0
+   VLLSM_VLLS1 : constant := 2#001#; -- VLLS1
+   VLLSM_RSVD1 : constant := 2#010#; -- Reserved
+   VLLSM_VLLS3 : constant := 2#011#; -- VLLS3
+   VLLSM_RSVD2 : constant := 2#100#; -- Reserved
+   VLLSM_RSVD3 : constant := 2#101#; -- Reserved
+   VLLSM_RSVD4 : constant := 2#110#; -- Reserved
+   VLLSM_RSVD5 : constant := 2#111#; -- Reserved
+
+   PSTOPO_STOP   : constant := 2#00#; -- STOP - Normal Stop mode
+   PSTOPO_PSTOP1 : constant := 2#01#; -- PSTOP1 - Partial Stop with both system and bus clocks disabled
+   PSTOPO_PSTOP2 : constant := 2#10#; -- PSTOP2 - Partial Stop with system clock disabled and bus clock enabled
+   PSTOPO_RSVD   : constant := 2#11#; -- Reserved
+
+   type SMC_STOPCTRL_Type is record
+      VLLSM     : Bits_3;      -- VLLS Mode Control
+      Reserved1 : Bits_1 := 0;
+      Reserved2 : Bits_1 := 0;
+      PORPO     : Boolean;     -- POR Power Option
+      PSTOPO    : Bits_2;      -- Partial Stop Option
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SMC_STOPCTRL_Type use record
+      VLLSM     at 0 range 0 .. 2;
+      Reserved1 at 0 range 3 .. 3;
+      Reserved2 at 0 range 4 .. 4;
+      PORPO     at 0 range 5 .. 5;
+      PSTOPO    at 0 range 6 .. 7;
+   end record;
+
+   SMC_STOPCTRL_ADDRESS : constant := 16#4007_E002#;
+
+   SMC_STOPCTRL : aliased SMC_STOPCTRL_Type
+      with Address              => To_Address (SMC_STOPCTRL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 13.3.4 Power Mode Status register (SMC_PMSTAT)
+
+   PMSTAT_RUN  : constant := 2#000_0001#; -- Current power mode is RUN
+   PMSTAT_STOP : constant := 2#000_0010#; -- Current power mode is STOP
+   PMSTAT_VLPR : constant := 2#000_0100#; -- Current power mode is VLPR
+   PMSTAT_VLPW : constant := 2#000_1000#; -- Current power mode is VLPW
+   PMSTAT_VLPS : constant := 2#001_0000#; -- Current power mode is VLPS
+   PMSTAT_LLS  : constant := 2#010_0000#; -- Current power mode is LLS
+   PMSTAT_VLLS : constant := 2#100_0000#; -- Current power mode is VLLS
+
+   type SMC_PMSTAT_Type is record
+      PMSTAT   : Bits_7; -- Current power mode
+      Reserved : Bits_1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SMC_PMSTAT_Type use record
+      PMSTAT   at 0 range 0 .. 6;
+      Reserved at 0 range 7 .. 7;
+   end record;
+
+   SMC_PMSTAT_ADDRESS : constant := 16#4007_E003#;
+
+   SMC_PMSTAT : aliased SMC_PMSTAT_Type
+      with Address              => To_Address (SMC_PMSTAT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 39 Universal Asynchronous Receiver/Transmitter (UART0)
    ----------------------------------------------------------------------------
 
