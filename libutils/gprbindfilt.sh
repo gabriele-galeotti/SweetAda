@@ -112,7 +112,7 @@ while IFS= read -r line ; do
       fi
       ;;
     1)
-        line="
+      line="
 ${line}"
       if [ "${ELABORATION}" = "Y" ] ; then
         if [ "x${ELABORATION_CREATEFILE}" = "x" ] ; then
