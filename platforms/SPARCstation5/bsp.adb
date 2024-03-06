@@ -159,13 +159,12 @@ package body BSP
       -- Exceptions.Init;
       -- SPARC.TBR_Set (To_Address (0));
       -- SCC ------------------------------------------------------------------
-      SCC_Descriptor.Base_Address             := To_Address (SCC_BASEADDRESS);
-      SCC_Descriptor.AB_Address_Bit           := 2;
-      SCC_Descriptor.CD_Address_Bit           := 1;
-      SCC_Descriptor.Baud_Clock               := CLK_UART4M9;
-      SCC_Descriptor.Flags.MVME162FX_TX_Quirk := False;
-      SCC_Descriptor.Read_8                   := MMIO.Read'Access;
-      SCC_Descriptor.Write_8                  := MMIO.Write'Access;
+      SCC_Descriptor.Base_Address   := To_Address (SCC_BASEADDRESS);
+      SCC_Descriptor.AB_Address_Bit := 2;
+      SCC_Descriptor.CD_Address_Bit := 1;
+      SCC_Descriptor.Baud_Clock     := CLK_UART4M9;
+      SCC_Descriptor.Read_8         := MMIO.Read'Access;
+      SCC_Descriptor.Write_8        := MMIO.Write'Access;
       Z8530.Init (SCC_Descriptor, Z8530.CHANNELA);
       Z8530.Init (SCC_Descriptor, Z8530.CHANNELB);
       Z8530.Baud_Rate_Set (SCC_Descriptor, Z8530.CHANNELA, BR_9600);
