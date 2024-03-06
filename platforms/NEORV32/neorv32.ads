@@ -73,10 +73,10 @@ package NEORV32
    end record
       with Size => 4 * 32;
    for CRC_Type use record
-      CTRL  at 16#0# range 0 .. 31;
-      POLY  at 16#4# range 0 .. 31;
-      DATA  at 16#8# range 0 .. 31;
-      SREG  at 16#C# range 0 .. 31;
+      CTRL at 16#0# range 0 .. 31;
+      POLY at 16#4# range 0 .. 31;
+      DATA at 16#8# range 0 .. 31;
+      SREG at 16#C# range 0 .. 31;
    end record;
 
    CRC_BASEADDRESS : constant := 16#FFFF_EE00#;
