@@ -17,6 +17,7 @@
 
 with System;
 with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with MIPS;
@@ -49,9 +50,7 @@ package VMIPS
    -- IM6 Interrupt line 6 (Cause bit 0x4000) is wired to the #2 Display
    -- IM7 Interrupt line 6 (Cause bit 0x4000) is wired to the High-Resolution Clock
 
-   ----------------------------------------------------------------------------
-   -- 11.1 SPIM-compatible console device
-   ----------------------------------------------------------------------------
+   -- types for devices
 
    type Device_Control_Type is record
       CTL_RDY : Boolean;
@@ -66,6 +65,9 @@ package VMIPS
       Unused  at 0 range 2 .. 31;
    end record;
 
+   function To_U32 is new Ada.Unchecked_Conversion (Device_Control_Type, Unsigned_32);
+   function To_DCT is new Ada.Unchecked_Conversion (Unsigned_32, Device_Control_Type);
+
    type Device_Data_Type is record
       DATA   : Unsigned_8;
       Unused : Bits_24;
@@ -77,18 +79,35 @@ package VMIPS
       Unused at 0 range 8 .. 31;
    end record;
 
+   function To_U32 is new Ada.Unchecked_Conversion (Device_Data_Type, Unsigned_32);
+   function To_DDT is new Ada.Unchecked_Conversion (Unsigned_32, Device_Data_Type);
+
+   ----------------------------------------------------------------------------
+   -- 11.1 SPIM-compatible console device
+   ----------------------------------------------------------------------------
+
    type SPIMCONSOLE_Type is record
-      KEYBOARD1_CONTROL : Device_Control_Type;
-      KEYBOARD1_DATA    : Device_Data_Type;
-      DISPLAY1_CONTROL  : Device_Control_Type;
-      DISPLAY1_DATA     : Device_Data_Type;
+      KEYBOARD1_CONTROL : Device_Control_Type with Volatile_Full_Access => True;
+      KEYBOARD1_DATA    : Device_Data_Type    with Volatile_Full_Access => True;
+      DISPLAY1_CONTROL  : Device_Control_Type with Volatile_Full_Access => True;
+      DISPLAY1_DATA     : Device_Data_Type    with Volatile_Full_Access => True;
+      KEYBOARD2_CONTROL : Device_Control_Type with Volatile_Full_Access => True;
+      KEYBOARD2_DATA    : Device_Data_Type    with Volatile_Full_Access => True;
+      DISPLAY2_CONTROL  : Device_Control_Type with Volatile_Full_Access => True;
+      DISPLAY2_DATA     : Device_Data_Type    with Volatile_Full_Access => True;
+      CLOCK_CONTROL     : Device_Control_Type with Volatile_Full_Access => True;
    end record
-      with Size => 4 * 32;
+      with Size => 9 * 32;
    for SPIMCONSOLE_Type use record
-      KEYBOARD1_CONTROL at 0  range 0 .. 31;
-      KEYBOARD1_DATA    at 4  range 0 .. 31;
-      DISPLAY1_CONTROL  at 8  range 0 .. 31;
-      DISPLAY1_DATA     at 12 range 0 .. 31;
+      KEYBOARD1_CONTROL at 16#00# range 0 .. 31;
+      KEYBOARD1_DATA    at 16#04# range 0 .. 31;
+      DISPLAY1_CONTROL  at 16#08# range 0 .. 31;
+      DISPLAY1_DATA     at 16#0C# range 0 .. 31;
+      KEYBOARD2_CONTROL at 16#10# range 0 .. 31;
+      KEYBOARD2_DATA    at 16#14# range 0 .. 31;
+      DISPLAY2_CONTROL  at 16#18# range 0 .. 31;
+      DISPLAY2_DATA     at 16#1C# range 0 .. 31;
+      CLOCK_CONTROL     at 16#20# range 0 .. 31;
    end record;
 
    SPIMCONSOLE_BASEADDRESS : constant := 16#0200_0000#;
@@ -99,14 +118,30 @@ package VMIPS
            Import     => True,
            Convention => Ada;
 
-   -- 11.1.4 Clock
+   -- 11.2 Standard clock device
 
-   SPIMCLOCK_ADDRESS : constant := SPIMCONSOLE_BASEADDRESS + 16#20#;
+   type CLOCK_Type is record
+      SECONDS_RT   : Unsigned_32         with Volatile_Full_Access => True;
+      USECONDS_RT  : Unsigned_32         with Volatile_Full_Access => True;
+      SECONDS_ST   : Unsigned_32         with Volatile_Full_Access => True;
+      USECONDS_ST  : Unsigned_32         with Volatile_Full_Access => True;
+      CONTROL_WORD : Device_Control_Type with Volatile_Full_Access => True;
+   end record
+      with Size => 5 * 32;
+   for CLOCK_Type use record
+      SECONDS_RT   at 16#00# range 0 .. 31;
+      USECONDS_RT  at 16#04# range 0 .. 31;
+      SECONDS_ST   at 16#08# range 0 .. 31;
+      USECONDS_ST  at 16#0C# range 0 .. 31;
+      CONTROL_WORD at 16#10# range 0 .. 31;
+   end record;
 
-   SPIMCLOCK : aliased Device_Control_Type
-      with Address              => To_Address (MIPS.KSEG1_ADDRESS + SPIMCLOCK_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+   CLOCK_ADDRESS : constant := 16#0101_0000#;
+
+   CLOCK : aliased CLOCK_Type
+      with Address    => To_Address (MIPS.KSEG1_ADDRESS + CLOCK_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
 end VMIPS;

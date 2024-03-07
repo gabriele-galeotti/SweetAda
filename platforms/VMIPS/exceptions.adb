@@ -55,11 +55,13 @@ package body Exceptions
    ----------------------------------------------------------------------------
    procedure Irq_Process
       is
-      Spimclock : VMIPS.Device_Control_Type with Unreferenced => True;
+      Clock : VMIPS.Device_Control_Type with Unreferenced => True;
    begin
-      Spimclock := VMIPS.SPIMCLOCK;
+      Clock := VMIPS.CLOCK.CONTROL_WORD;
       BSP.Tick_Count := @ + 1;
-      Console.Print ("T", NL => True);
+      if BSP.Tick_Count mod 1_000 = 0 then
+         Console.Print ("T", NL => True);
+      end if;
    end Irq_Process;
 
    ----------------------------------------------------------------------------

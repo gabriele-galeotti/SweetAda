@@ -24,7 +24,7 @@
 _start:
 
                 //
-                // Initialize essential CP0 registers.
+                // Initialize CP0 registers.
                 //
                 mtc0    $zero,C0_CONTEXT
                 nop

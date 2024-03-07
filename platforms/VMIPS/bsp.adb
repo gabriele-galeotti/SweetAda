@@ -136,10 +136,16 @@ package body BSP
          S : R3000.Status_Type;
       begin
          S := R3000.CP0_SR_Read;
-         S.IM2 := True; -- SPIM Clock
+         S.IM7 := True; -- High-Resolution Clock
          R3000.CP0_SR_Write (S);
       end;
-      VMIPS.SPIMCLOCK.CTL_IE := True;
+      declare
+         DCT : VMIPS.Device_Control_Type;
+      begin
+         DCT := VMIPS.To_DCT (Byte_Swap (VMIPS.To_U32 (VMIPS.CLOCK.CONTROL_WORD)));
+         DCT.CTL_IE := True;
+         VMIPS.CLOCK.CONTROL_WORD := VMIPS.To_DCT (Byte_Swap (VMIPS.To_U32 (DCT)));
+      end;
       R3000.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
