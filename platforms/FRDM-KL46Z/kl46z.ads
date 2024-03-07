@@ -865,6 +865,144 @@ package KL46Z
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 14 Power Management Controller (PMC)
+   ----------------------------------------------------------------------------
+
+   -- 14.5.1 Low Voltage Detect Status And Control 1 register (PMC_LVDSC1)
+
+   LVDV_LOW   : constant := 2#00#; -- Low trip point selected (V LVD = V LVDL )
+   LVDV_HIGH  : constant := 2#01#; -- High trip point selected (V LVD = V LVDH )
+   LVDV_RSVD1 : constant := 2#10#; -- Reserved
+   LVDV_RSVD2 : constant := 2#11#; -- Reserved
+
+   type PMC_LVDSC1_Type is record
+      LVDV     : Bits_2;           -- Low-Voltage Detect Voltage Select
+      Reserved : Bits_2 := 0;
+      LVDRE    : Boolean;          -- Low-Voltage Detect Reset Enable
+      LVDIE    : Boolean;          -- Low-Voltage Detect Interrupt Enable
+      LVDACK   : Boolean := False; -- Low-Voltage Detect Acknowledge
+      LVDF     : Boolean := False; -- Low-Voltage Detect Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PMC_LVDSC1_Type use record
+      LVDV     at 0 range 0 .. 1;
+      Reserved at 0 range 2 .. 3;
+      LVDRE    at 0 range 4 .. 4;
+      LVDIE    at 0 range 5 .. 5;
+      LVDACK   at 0 range 6 .. 6;
+      LVDF     at 0 range 7 .. 7;
+   end record;
+
+   PMC_LVDSC1_ADDRESS : constant := 16#4007_D000#;
+
+   PMC_LVDSC1 : aliased PMC_LVDSC1_Type
+      with Address              => To_Address (PMC_LVDSC1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.2 Low Voltage Detect Status And Control 2 register (PMC_LVDSC2)
+
+   LVWV_LOW  : constant := 2#00#; -- Low trip point selected (VLVW = VLVW1)
+   LVWV_MID1 : constant := 2#01#; -- Mid 1 trip point selected (VLVW = VLVW2)
+   LVWV_MID2 : constant := 2#10#; -- Mid 2 trip point selected (VLVW = VLVW3)
+   LVWV_HIGH : constant := 2#11#; -- High trip point selected (VLVW = VLVW4)
+
+   type PMC_LVDSC2_Type is record
+      LVWV     : Bits_2;           -- Low-Voltage Warning Voltage Select
+      Reserved : Bits_3 := 0;
+      LVWIE    : Boolean;          -- Low-Voltage Warning Interrupt Enable
+      LVWACK   : Boolean := False; -- Low-Voltage Warning Acknowledge
+      LVWF     : Boolean := False; -- Low-Voltage Warning Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PMC_LVDSC2_Type use record
+      LVWV     at 0 range 0 .. 1;
+      Reserved at 0 range 2 .. 4;
+      LVWIE    at 0 range 5 .. 5;
+      LVWACK   at 0 range 6 .. 6;
+      LVWF     at 0 range 7 .. 7;
+   end record;
+
+   PMC_LVDSC2_ADDRESS : constant := 16#4007_D001#;
+
+   PMC_LVDSC2 : aliased PMC_LVDSC2_Type
+      with Address              => To_Address (PMC_LVDSC2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.3 Regulator Status And Control register (PMC_REGSC)
+
+   type PMC_REGSC_Type is record
+      BGBE      : Boolean;          -- Bandgap Buffer Enable
+      Reserved1 : Bits_1 := 0;
+      REGONS    : Boolean := False; -- Regulator In Run Regulation Status
+      ACKISO    : Boolean := False; -- Acknowledge Isolation
+      BGEN      : Boolean;          -- Bandgap Enable In VLPx Operation
+      Reserved2 : Bits_1 := 0;
+      Reserved3 : Bits_2 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PMC_REGSC_Type use record
+      BGBE      at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 1;
+      REGONS    at 0 range 2 .. 2;
+      ACKISO    at 0 range 3 .. 3;
+      BGEN      at 0 range 4 .. 4;
+      Reserved2 at 0 range 5 .. 5;
+      Reserved3 at 0 range 6 .. 7;
+   end record;
+
+   PMC_REGSC_ADDRESS : constant := 16#4007_D002#;
+
+   PMC_REGSC : aliased PMC_REGSC_Type
+      with Address              => To_Address (PMC_REGSC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 25 Oscillator (OSC)
+   ----------------------------------------------------------------------------
+
+   -- 25.71.1 OSC Control Register (OSCx_CR)
+
+   type OSCx_CR_Type is record
+      SC16P     : Boolean;     -- Oscillator 16 pF Capacitor Load Configure
+      SC8P      : Boolean;     -- Oscillator 8 pF Capacitor Load Configure
+      SC4P      : Boolean;     -- Oscillator 4 pF Capacitor Load Configure
+      SC2P      : Boolean;     -- Oscillator 2 pF Capacitor Load Configure
+      Reserved1 : Bits_1 := 0;
+      EREFSTEN  : Boolean;     -- External Reference Stop Enable
+      Reserved2 : Bits_1 := 0;
+      ERCLKEN   : Boolean;     -- External Reference Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for OSCx_CR_Type use record
+      SC16P     at 0 range 0 .. 0;
+      SC8P      at 0 range 1 .. 1;
+      SC4P      at 0 range 2 .. 2;
+      SC2P      at 0 range 3 .. 3;
+      Reserved1 at 0 range 4 .. 4;
+      EREFSTEN  at 0 range 5 .. 5;
+      Reserved2 at 0 range 6 .. 6;
+      ERCLKEN   at 0 range 7 .. 7;
+   end record;
+
+   OSCx_CR_ADDRESS : constant := 16#4006_5000#;
+
+   OSCx_CR : aliased OSCx_CR_Type
+      with Address              => To_Address (OSCx_CR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 39 Universal Asynchronous Receiver/Transmitter (UART0)
    ----------------------------------------------------------------------------
 
