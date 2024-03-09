@@ -17,14 +17,14 @@
 
 separate (Console)
 procedure Print
-   (c : in Interfaces.C.char)
+   (c : in Bits.C.char)
    is
    -- borrowed from i-c.adb, avoid using a non-ZFP unit
    function To_Ada
-      (Item : Interfaces.C.char)
+      (Item : Bits.C.char)
       return Character
       is
-      (Character'Val (Interfaces.C.char'Pos (Item)))
+      (Character'Val (Bits.C.char'Pos (Item)))
       with Inline => True;
 begin
    Print (To_Ada (c));

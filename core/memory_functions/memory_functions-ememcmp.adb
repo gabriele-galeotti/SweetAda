@@ -19,10 +19,12 @@ separate (Memory_Functions)
 function EMemcmp
    (S1 : System.Address;
     S2 : System.Address;
-    N  : Interfaces.C.size_t)
-   return Interfaces.C.int
+    N  : Bits.C.size_t)
+   return Bits.C.int
    is
    pragma Suppress (Access_Check);
+   use type Bits.Bytesize;
+   use type Bits.C.int;
    function To_MAP is new Ada.Unchecked_Conversion (System.Address, Memory_Area_Ptr);
    P_S1 : constant Memory_Area_Ptr := To_MAP (S1);
    P_S2 : constant Memory_Area_Ptr := To_MAP (S2);
@@ -30,9 +32,9 @@ begin
    -- avoid underflow since size_t is a modular type
    if N > 0 then
       for Index in 0 .. N - 1 loop
-         if    Interfaces.C.char'Pos (P_S1.all (Index)) < Interfaces.C.char'Pos (P_S2.all (Index)) then
+         if    Bits.C.char'Pos (P_S1.all (Index)) < Bits.C.char'Pos (P_S2.all (Index)) then
             return -1;
-         elsif Interfaces.C.char'Pos (P_S1.all (Index)) > Interfaces.C.char'Pos (P_S2.all (Index)) then
+         elsif Bits.C.char'Pos (P_S1.all (Index)) > Bits.C.char'Pos (P_S2.all (Index)) then
             return 1;
          end if;
       end loop;

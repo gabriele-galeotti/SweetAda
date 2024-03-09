@@ -19,10 +19,11 @@ separate (Memory_Functions)
 function EMemmove
    (S1 : System.Address;
     S2 : System.Address;
-    N  : Interfaces.C.size_t)
+    N  : Bits.C.size_t)
    return System.Address
    is
    pragma Suppress (Access_Check);
+   use type Bits.Bytesize;
    function To_MAP is new Ada.Unchecked_Conversion (System.Address, Memory_Area_Ptr);
    P_S1 : constant Memory_Area_Ptr := To_MAP (S1);
    P_S2 : constant Memory_Area_Ptr := To_MAP (S2);

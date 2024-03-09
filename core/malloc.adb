@@ -35,8 +35,8 @@ package body Malloc
    use System;
    use System.Storage_Elements;
    use Interfaces;
-   use Interfaces.C;
    use Bits;
+   use Bits.C;
    use Integer_Math;
 
    type Memory_Block_Type;

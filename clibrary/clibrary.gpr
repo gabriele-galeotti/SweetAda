@@ -24,7 +24,16 @@ library project CLibrary is
    for Source_Dirs use Include_Directories & (".");
    for Languages use ("Ada", "C");
 
-   Ada_Files := ("c_wrappers.adb", "c_wrappers.ads");
+   Ada_Files := (
+                 "c_wrappers.adb", "c_wrappers.ads",
+                 "bits.adb", "bits.ads",
+                 "bits-byte_reverse.adb",
+                 "bits-byte_swap_8.adb",
+                 "bits-byte_swap_16.adb",
+                 "bits-byte_swap_32.adb",
+                 "bits-byte_swap_64.adb",
+                 "bits-c.ads"
+                );
    C_Files := (
                "assert.c",
                "ctype.c",

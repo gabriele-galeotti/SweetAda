@@ -16,8 +16,8 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Interfaces.C;
 with Bits;
+with Bits.C;
 
 package Malloc
    with Preelaborate => True
@@ -43,7 +43,7 @@ package Malloc
    -- Malloc
    ----------------------------------------------------------------------------
    function Malloc
-      (Size : Interfaces.C.size_t)
+      (Size : Bits.C.size_t)
       return System.Address
       with Export        => True,
            Convention    => C,
@@ -62,8 +62,8 @@ package Malloc
    -- Calloc
    ----------------------------------------------------------------------------
    function Calloc
-      (Nmemb : Interfaces.C.size_t;
-       Size  : Interfaces.C.size_t)
+      (Nmemb : Bits.C.size_t;
+       Size  : Bits.C.size_t)
       return System.Address
       with Export        => True,
            Convention    => Ada,
@@ -77,7 +77,7 @@ package Malloc
    ----------------------------------------------------------------------------
    function Realloc
       (Memory_Address : System.Address;
-       Size : Interfaces.C.size_t)
+       Size           : Bits.C.size_t)
       return System.Address
       with Export        => True,
            Convention    => Ada,

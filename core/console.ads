@@ -18,8 +18,8 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
-with Interfaces.C;
 with Bits;
+with Bits.C;
 
 package Console
    with Preelaborate => True
@@ -66,7 +66,7 @@ package Console
    -- Print (cchar)
    ----------------------------------------------------------------------------
    procedure Print
-      (c : in Interfaces.C.char)
+      (c : in Bits.C.char)
       with Export        => True,
            Convention    => Ada,
            External_Name => "console__print__cchar";
@@ -228,12 +228,12 @@ package Console
    -- Print[_sizet]
    ----------------------------------------------------------------------------
    procedure Print_sizet
-      (s      : in Interfaces.C.size_t;
+      (s      : in Bits.C.size_t;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "");
    procedure Print
-      (s      : in Interfaces.C.size_t;
+      (s      : in Bits.C.size_t;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")

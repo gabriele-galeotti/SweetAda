@@ -22,20 +22,21 @@ procedure Print_ASCIIZ_String
     Prefix         : in String := "";
     Suffix         : in String := "")
    is
-   SA : System.Address := String_Address;
+   nul : constant Bits.C.char := Bits.C.char'First;
+   SA  : System.Address := String_Address;
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);
    end if;
    if SA /= System.Null_Address then
-      for Index in Interfaces.C.size_t range 0 .. Maximum_String_Length - 1 loop
+      for Index in Bits.C.size_t range 0 .. Maximum_String_Length - 1 loop
          declare
-            c : aliased Interfaces.C.char
+            c : aliased Bits.C.char
                with Address    => SA,
                     Import     => True,
                     Convention => Ada;
          begin
-            exit when c = Interfaces.C.nul;
+            exit when c = nul;
             Print (c);
          end;
          SA := @ + 1;

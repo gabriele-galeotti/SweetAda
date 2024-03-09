@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ memory_functions.ads                                                                                      --
+-- __FLN__ bits-c.ads                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,15 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-pragma Restrictions (No_Elaboration_Code);
-
-with System;
-with Interfaces;
-with Bits;
-with Bits.C;
-
-package Memory_Functions
-   with Preelaborate => True
+package Bits.C
+   with Pure => True
    is
 
    --========================================================================--
@@ -34,67 +27,15 @@ package Memory_Functions
    --                                                                        --
    --========================================================================--
 
-   ----------------------------------------------------------------------------
-   -- C-style function subprograms, with the same semantics and argument order
-   -- (destination address first).
-   ----------------------------------------------------------------------------
+   CHAR_BIT : constant := 8;
 
-   function Memcmp
-      (S1 : System.Address;
-       S2 : System.Address;
-       N  : Bits.C.size_t)
-      return Bits.C.int
-      with Inline => True;
+   type int is new Integer;
 
-   function Memcpy
-      (S1 : System.Address;
-       S2 : System.Address;
-       N  : Bits.C.size_t)
-      return System.Address
-      with Inline => True;
+   type char is new Character;
 
-   function Memmove
-      (S1 : System.Address;
-       S2 : System.Address;
-       N  : Bits.C.size_t)
-      return System.Address
-      with Inline => True;
+   subtype size_t is Bytesize;
 
-   function Memset
-      (S : System.Address;
-       C : Bits.C.int;
-       N : Bits.C.size_t)
-      return System.Address
-      with Inline => True;
+   type char_array is array (size_t range <>) of aliased char
+      with Component_Size => CHAR_BIT;
 
-   ----------------------------------------------------------------------------
-   -- C-style procedure subprograms with inverted arguments (source address
-   -- first).
-   ----------------------------------------------------------------------------
-
-   procedure Cmpmem
-      (S1 : in     System.Address;
-       S2 : in     System.Address;
-       N  : in     Bits.Bytesize;
-       R  : in out Integer)
-      with Inline => True;
-
-   procedure Cpymem
-      (S1 : in System.Address;
-       S2 : in System.Address;
-       N  : in Bits.Bytesize)
-      with Inline => True;
-
-   procedure Movemem
-      (S1 : in System.Address;
-       S2 : in System.Address;
-       N  : in Bits.Bytesize)
-      with Inline => True;
-
-   procedure Setmem
-      (S : in System.Address;
-       V : in Interfaces.Unsigned_8;
-       N : in Bits.Bytesize)
-      with Inline => True;
-
-end Memory_Functions;
+end Bits.C;

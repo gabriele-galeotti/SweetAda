@@ -32,8 +32,8 @@ package body Console
    use type SSE.Storage_Offset;
    use type SSE.Integer_Address;
    use type Interfaces.Unsigned_8;
-   use type Interfaces.C.char;
-   use type Interfaces.C.size_t;
+   use type Bits.C.char;
+   use type Bits.C.size_t;
    use Definitions;
    use type Bits.Bits_1;
 
@@ -79,10 +79,10 @@ package body Console
    end Print;
 
    ----------------------------------------------------------------------------
-   -- Print (Interfaces.C.char)
+   -- Print (Bits.C.char)
    ----------------------------------------------------------------------------
    procedure Print
-      (c : in Interfaces.C.char)
+      (c : in Bits.C.char)
       is
    separate;
 
@@ -214,7 +214,7 @@ package body Console
    -- Print_sizet
    ----------------------------------------------------------------------------
    procedure Print_sizet
-      (s      : in Interfaces.C.size_t;
+      (s      : in Bits.C.size_t;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")

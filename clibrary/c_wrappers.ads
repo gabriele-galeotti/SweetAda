@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Interfaces.C;
+with Bits.C;
 
 package C_Wrappers
    with Preelaborate => True
@@ -37,13 +37,13 @@ package C_Wrappers
            No_Return     => True;
 
    procedure Ada_Print_Character
-      (c : in Interfaces.C.char)
+      (c : in Bits.C.char)
       with Export        => True,
            Convention    => C,
            External_Name => "ada_print_character";
 
    function Ada_Malloc
-      (S : Interfaces.C.size_t)
+      (S : Bits.C.size_t)
       return System.Address
       with Export        => True,
            Convention    => C,
@@ -56,8 +56,8 @@ package C_Wrappers
            External_Name => "ada_free";
 
    function Ada_Calloc
-      (N : Interfaces.C.size_t;
-       S : Interfaces.C.size_t)
+      (N : Bits.C.size_t;
+       S : Bits.C.size_t)
       return System.Address
       with Export        => True,
            Convention    => C,
@@ -65,7 +65,7 @@ package C_Wrappers
 
    function Ada_Realloc
       (A : System.Address;
-       S : Interfaces.C.size_t)
+       S : Bits.C.size_t)
       return System.Address
       with Export        => True,
            Convention    => C,

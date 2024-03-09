@@ -38,10 +38,10 @@ package body C_Wrappers
    end Ada_Abort;
 
    procedure Ada_Print_Character
-      (c : in Interfaces.C.char)
+      (c : in Bits.C.char)
       is
       procedure Print
-         (cc : in Interfaces.C.char)
+         (cc : in Bits.C.char)
          with Import        => True,
               Convention    => Ada,
               External_Name => "console__print__cchar";
@@ -50,10 +50,11 @@ package body C_Wrappers
    end Ada_Print_Character;
 
    function Ada_Malloc
-      (S : Interfaces.C.size_t) return System.Address
+      (S : Bits.C.size_t)
+      return System.Address
       is
       function Malloc
-         (SS : Interfaces.C.size_t)
+         (SS : Bits.C.size_t)
          return System.Address
          with Import        => True,
               Convention    => C,
@@ -75,13 +76,13 @@ package body C_Wrappers
    end Ada_Free;
 
    function Ada_Calloc
-      (N : Interfaces.C.size_t;
-       S : Interfaces.C.size_t)
+      (N : Bits.C.size_t;
+       S : Bits.C.size_t)
       return System.Address
       is
       function Calloc
-         (NN : Interfaces.C.size_t;
-          SS : Interfaces.C.size_t)
+         (NN : Bits.C.size_t;
+          SS : Bits.C.size_t)
          return System.Address
          with Import        => True,
               Convention    => Ada,
@@ -92,12 +93,12 @@ package body C_Wrappers
 
    function Ada_Realloc
       (A : System.Address;
-       S : Interfaces.C.size_t)
+       S : Bits.C.size_t)
       return System.Address
       is
       function Realloc
          (AA : System.Address;
-          SS : Interfaces.C.size_t)
+          SS : Bits.C.size_t)
          return System.Address
          with Import        => True,
               Convention    => Ada,

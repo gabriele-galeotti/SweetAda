@@ -19,12 +19,12 @@ with LLutils;
 
 separate (Console)
 procedure Print_sizet
-   (s      : in Interfaces.C.size_t;
+   (s      : in Bits.C.size_t;
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
    is
-   Number         : Interfaces.C.size_t := s;
+   Number         : Bits.C.size_t := s;
    Number_Literal : String (1 .. 16);
    Literal_Index  : Natural := 0;
 begin
