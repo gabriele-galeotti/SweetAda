@@ -17,7 +17,6 @@
 
 with Ada.Characters.Latin_1;
 with Ada.Unchecked_Conversion;
-with Interfaces.C;
 with Configure;
 with Memory_Functions;
 with MMIO;
@@ -31,8 +30,6 @@ package body Amiga is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   use type Interfaces.C.size_t;
 
    BYTES_PER_RASTER   : constant := 80;
    BYTES_PER_TEXTLINE : constant := BYTES_PER_RASTER * 8;
