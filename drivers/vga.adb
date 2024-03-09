@@ -17,7 +17,6 @@
 
 with System;
 with Interfaces;
-with Interfaces.C;
 with Bits;
 with Memory_Functions;
 with CPU.IO;
@@ -36,7 +35,6 @@ package body VGA
 
    use System;
    use Interfaces;
-   use type Interfaces.C.size_t;
    use Bits;
 
    Video_Buffer_BaseAddress : Integer_Address := 16#000A_0000#;
