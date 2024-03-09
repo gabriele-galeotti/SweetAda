@@ -210,7 +210,7 @@ package body A2065
              ERR  => False,
              OWN  => False
             );
-         Receive_Ring (Index).RMD2 := [BCNT => Bits_12'(-PACKET_BUFFER_SIZE), others => <>];
+         Receive_Ring (Index).RMD2 := (BCNT => Bits_12'(-PACKET_BUFFER_SIZE), others => <>);
       end loop;
       -- Receive Message Descriptors ownership assigned to LANCE
       for Index in Receive_Ring'Range loop
@@ -228,7 +228,7 @@ package body A2065
              ENP => False, STP => False, DEF => False, ONE => False,
              MORE => False, ADD_FCS => False, ERR => False, OWN => False
             );
-         Transmit_Ring (Index).TMD2 := [BCNT => Bits_12'(-PACKET_BUFFER_SIZE), others => <>];
+         Transmit_Ring (Index).TMD2 := (BCNT => Bits_12'(-PACKET_BUFFER_SIZE), others => <>);
       end loop;
       -- Transmit Message Descriptors ownership assigned to HOST
       for Index in Transmit_Ring'Range loop
