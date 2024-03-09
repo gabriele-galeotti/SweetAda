@@ -17,8 +17,8 @@
 
 with System;
 with System.Storage_Elements;
-with Interfaces.C;
 with Definitions;
+with Bits;
 with Malloc;
 with S390;
 
@@ -35,8 +35,8 @@ package body BSP
 
    use System;
    use System.Storage_Elements;
-   use Interfaces.C;
    use Definitions;
+   use Bits;
    use S390;
 
    -- Malloc memory area
