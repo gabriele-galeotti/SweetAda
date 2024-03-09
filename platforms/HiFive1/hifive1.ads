@@ -451,6 +451,69 @@ package HiFive1
    end PLIC;
 
    ----------------------------------------------------------------------------
+   -- 12 One-Time Programmable Memory (OTP) Peripheral
+   ----------------------------------------------------------------------------
+
+   package OTP
+      is
+
+   -- 12.4 Read sequencer control register (otp_rsctrl)
+
+      type rsctrl_Type is record
+         scale    : Bits_3;       -- OTP timescale
+         tas      : Boolean;      -- Address setup time
+         trp      : Boolean;      -- Read pulse time
+         tacc     : Boolean;      -- Read access time
+         Reserved : Bits_26 := 0;
+      end record
+         with Bit_Order => Low_Order_First,
+              Size      => 32;
+      for rsctrl_Type use record
+         scale    at 0 range 0 ..  2;
+         tas      at 0 range 3 ..  3;
+         trp      at 0 range 4 ..  4;
+         tacc     at 0 range 5 ..  5;
+         Reserved at 0 range 6 .. 31;
+      end record;
+
+      OTP_BASEADDRESS : constant := 16#1001_0000#;
+
+      -- 12.1 Memory Map
+
+pragma Style_Checks (Off);
+      -- Programmed-I/O lock register
+      lock   : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#00#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP device output-enable signal
+      ck     : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#04#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP device output-enable signal
+      oe     : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#08#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP device chip-select signal
+      sel    : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#0C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP device write-enable signal
+      we     : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#10#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP device mode register
+      mr     : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#14#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP read-voltage regulator control
+      mrr    : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#18#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP write-voltage charge pump control
+      mpp    : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#1C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP read-voltage enable
+      vrren  : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#20#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP write-voltage enable
+      vppen  : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#24#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP device address
+      otp_a  : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#28#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP device data input
+      otp_d  : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#2C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP device data output
+      otp_q  : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#30#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      -- OTP read sequencer control
+      rsctrl : aliased rsctrl_Type with Address => To_Address (OTP_BASEADDRESS + 16#34#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+pragma Style_Checks (On);
+
+   end OTP;
+
+   ----------------------------------------------------------------------------
    -- 13 Always-On (AON) Domain
    ----------------------------------------------------------------------------
 
