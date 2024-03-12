@@ -207,7 +207,8 @@ GNATLINK_SWITCHES_DEFAULT +=
 GNATLS_SWITCHES_DEFAULT   +=
 
 # GNATPREP
-GNATPREP_SWITCHES_DEFAULT += -c # retain all lines in the output source
+# retain all lines in the output source
+GNATPREP_SWITCHES_DEFAULT += -c
 
 # GNATXREF
 GNATXREF_SWITCHES_DEFAULT +=
@@ -239,7 +240,8 @@ RANLIB_SWITCHES_DEFAULT   +=
 
 # READELF
 READELF_SWITCHES_DEFAULT  += --wide # Allow output width to exceed 80 characters
-#READELF_SWITCHES_DEFAULT  += -t    # Display the section details
+# display the section details
+#READELF_SWITCHES_DEFAULT  += -t
 READELF_SWITCHES_DEFAULT  += --all # Equivalent to: -h -l -S -s -r -d -V -A -I
 
 # SIZE
