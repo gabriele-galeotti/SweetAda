@@ -118,3 +118,57 @@ persists, try to discover potential issues by checking if python-config
 (usually located in /usr/bin) provides correct responses and change parameters
 thereof.
 
+GNATTOOLS
+--------------------------------------------------------------------------------
+
+If you are building a GNAT toolchain, the provided GCC.sh script builds also
+the GNAT tools as integral components of the toolchain, i.e., the various
+GNATMAKE, GNATPREP, etc.
+
+If, instead, you are using a ready-to-use toolchain from your preferred
+provider, those tools unfortunately could not be present, because the provider
+implicitly states that you should use other tools in order to manage your
+projects (e.g., GPRbuild).
+
+SweetAda does use these tools, because GNATMAKE is the original native tool
+used to handle the various phases of compilation, so this kind of toolchains
+prevent the use of the GNATMAKE build mode. Because of this, SweetAda has an
+alternate mode which lets you use GPRbuild (and which is the default since its
+use is more or less mainstream).
+
+GNATMAKE build mode anyway is an optimal choice, because it offers a more
+low-level view of the build process, besides being fast. But using a random
+GNATMAKE coupled with an external toolchain could not work straight 100% of
+the times, since most likely there will be a discrepancy in ALI library
+versioning. This leads to not-perfect resolution of dependencies and forces a
+rebuild from scratch of the project even if you change only one source file.
+
+So, if you want to use the toolchain from your provider, and, at the same
+time, want to use the GNATMAKE build mode, then this script allows you to
+build only the GNAT tool executables that are needed, without a full compiler
+build (which is a rather tedious process). The script patches the string which
+defines the ALI version, so that the GNATMAKE executable will agree with the
+compiler frontend.
+
+Obviously this requires a very high degree of compatibility -- in a strict
+sense -- between two different entities, but problems are unlikely to happen
+since those entities share nearly everything of a common heritage.
+
+It is worth noting that, theoretically, even a GNATMAKE built for a different
+target should work equally well, as far as the RTS path is well defined and is
+different from the default RTS wrapped inside the executable by the GCC
+configure build system, which is true in SweetAda.
+
+In order to run GNATTOOLS.sh successfully, you should have online the GCC
+source package, with the same prerequisites as the GCC.sh script wants.
+
+Then, you should know the ALI version emitted by the compiler toolchain which
+you are using, and you have to specify the ALI string in the script, where some
+examples are outlined. The best method is to compile something and inspect the
+.ali file generated (the "V" line" which comes first).
+
+Finally, choose your target (of course the toolchain names have to match
+exactly), uncomment all the various phases, and run the script. If everything
+goes well, you should find a (prefixed-)gnatmake executable in the
+installation directory.
+
