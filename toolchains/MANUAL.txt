@@ -165,7 +165,7 @@ source package, with the same prerequisites as the GCC.sh script wants.
 Then, you should know the ALI version emitted by the compiler toolchain which
 you are using, and you have to specify the ALI string in the script, where some
 examples are outlined. The best method is to compile something and inspect the
-.ali file generated (the "V" line" which comes first).
+.ali file generated (the "V" line which comes first).
 
 Finally, choose your target (of course the toolchain names have to match
 exactly), uncomment all the various phases, and run the script. If everything
