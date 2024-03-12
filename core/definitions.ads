@@ -85,9 +85,9 @@ package Definitions
    CLK_PAL      : constant :=  4_433_619; -- 283.75 * 15625 + 25
    CLK_UART4M9  : constant :=  4_915_200; -- CLK_UART1M8 * 8/3
    CLK_PALAmiga : constant :=  7_093_790; -- CLK_PAL28M / 4
-   CLK_NTSCx2   : constant :=  7_159_090;
+   CLK_NTSCx2   : constant :=  7_159_090; -- CLK_NTSC * 2
    CLK_UART7M3  : constant :=  7_372_800; -- CLK_UART1M8 * 4
-   CLK_NTSCx4   : constant := 14_318_182;
+   CLK_NTSCx4   : constant := 14_318_182; -- CLK_NTSC * 4
    CLK_UART14M  : constant := 14_745_600; -- CLK_UART1M8 * 8
    CLK_UART18M  : constant := 18_432_000; -- CLK_UART1M8 * 10
    CLK_PAL28M   : constant := 28_375_160; -- CLK_PAL * 64/10

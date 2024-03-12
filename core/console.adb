@@ -32,10 +32,10 @@ package body Console
    use type SSE.Storage_Offset;
    use type SSE.Integer_Address;
    use type Interfaces.Unsigned_8;
+   use type Bits.Bits_1;
    use type Bits.C.char;
    use type Bits.C.size_t;
    use Definitions;
-   use type Bits.Bits_1;
 
    -- helper subprogram
    procedure Print_UnsignedHex8
