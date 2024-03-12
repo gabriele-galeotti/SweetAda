@@ -15,7 +15,6 @@
 # $2 = output filename
 #
 # Environment variables:
-# SED
 # every variable referenced in the input file
 #
 
@@ -83,20 +82,26 @@ if ([string]::IsNullOrEmpty($output_filename))
   ExitWithCode 1
 }
 
-$sed = (Get-Item env:SED).Value
+$nl = [Environment]::NewLine
 
-$symbols = Select-String -Pattern "@-?[_A-Za-z][_A-Za-z0-9]*@" $input_filename | `
-  foreach {$_.Matches} | Select-Object -ExpandProperty Value
-
-$pinfo = New-Object System.Diagnostics.ProcessStartInfo
-$pinfo.CreateNoWindow = $true
-$pinfo.UseShellExecute = $false
-$pinfo.RedirectStandardError = $true
-$pinfo.RedirectStandardOutput = $true
-$pinfo.FileName = "$sed"
-$pinfo.Arguments = ""
-if ($symbols.Count -gt 0)
+try
 {
+  $textlines = [System.IO.File]::ReadAllText($input_filename).Split($nl)
+}
+catch
+{
+  Write-Host "${scriptname}: *** Error: processing ${input_filename}."
+  ExitWithCode 1
+}
+
+[string]$stdout = ""
+[int]$count = 0
+$textlines | ForEach-Object `
+{
+  $count = $count + 1
+  $textline = $_
+  $symbols = $textline | Select-String -Pattern "@-?[_A-Za-z][_A-Za-z0-9]*@" -AllMatches | `
+    foreach {$_.Matches} | Select-Object -ExpandProperty Value
   foreach ($symbol in $symbols)
   {
     $variable = $symbol.Trim("@")
@@ -124,34 +129,16 @@ if ($symbols.Count -gt 0)
       $hexvalue = $value.Substring(2)
       $value = "16#$hexvalue#"
     }
-    $pinfo.Arguments += " -e"
-    $pinfo.Arguments += " `"s|$symbol|$value|`""
+    $textline = $textline -Replace "$symbol","$value"
   }
-}
-else
-{
-  $pinfo.Arguments += " -e"
-  $pinfo.Arguments += " `"`""
-}
-$pinfo.Arguments += " $input_filename"
-$p = New-Object System.Diagnostics.Process
-$p.StartInfo = $pinfo
-try
-{
-  $p.Start() | Out-Null
-  $stdout = $p.StandardOutput.ReadToEnd()
-  $stderr = $p.StandardError.ReadToEnd()
-  $p.WaitForExit()
-  if ($p.ExitCode -ne 0)
+  if ($count -lt $textlines.Count)
   {
-    Write-Host "${scriptname}: *** Error: executing ${sed}."
-    ExitWithCode $p.ExitCode
+    $stdout = "${stdout}${textline}${nl}"
   }
-}
-catch
-{
-  Write-Host "${scriptname}: *** Error: executing ${sed}."
-  ExitWithCode 1
+  else
+  {
+    $stdout = "${stdout}${textline}"
+  }
 }
 
 if ($remove_cr)
