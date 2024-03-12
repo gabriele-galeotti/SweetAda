@@ -53,6 +53,7 @@ $exit_status = 0
 
 $state = 0
 $elaboration_createfile = $false
+$nl = [Environment]::NewLine
 foreach ($line in $input)
 {
   $elaboration = $false
@@ -91,8 +92,7 @@ foreach ($line in $input)
     }
     1
     {
-      $line = "
-${line}"
+      $line = "${nl}${line}"
       if ($elaboration)
       {
         if (-not ($elaboration_createfile))
