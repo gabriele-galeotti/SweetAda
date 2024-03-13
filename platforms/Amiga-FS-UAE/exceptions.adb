@@ -17,13 +17,11 @@
 
 with System.Storage_Elements;
 with Abort_Library;
-with Configure;
 with Core;
 with MMIO;
 with Amiga;
 with BSP;
 with Gdbstub;
-with IOEMU;
 with A2065;
 with Console;
 
@@ -100,10 +98,6 @@ package body Exceptions
          -- check if A2065 interrupt
          if not A2065.Receive then
             BSP.Tick_Count := @ + 1;
-            if Configure.USE_FS_UAE_IOEMU then
-               -- IRQ pulsemeter
-               IOEMU.CIA_IO0 := 1;
-            end if;
             -- use power LED as tick IRQ monitoring
             if BSP.Tick_Count mod 500 = 0 then
                CIAA.PRA.PA1 := not @;

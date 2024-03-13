@@ -17,7 +17,4 @@ package Configure
    TIMER_SYSCLK   : constant := CLK_PALAmiga;
    TICK_FREQUENCY : constant := 1 * kHz1;
 
-   -- IOEMU
-   USE_FS_UAE_IOEMU : constant Boolean := @USE_FS_UAE_IOEMU@;
-
 end Configure;

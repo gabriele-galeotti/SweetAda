@@ -2,7 +2,6 @@
 with System.Machine_Code;
 with Ada.Unchecked_Conversion;
 with Interfaces;
-with Configure;
 with Bits;
 with MMIO;
 with M68k;
@@ -16,7 +15,6 @@ with BlockDevices;
 with MBR;
 with FATFS;
 with FATFS.Applications;
-with IOEMU;
 with Console;
 
 package body Application
@@ -32,7 +30,6 @@ package body Application
 
    use System.Machine_Code;
    use Interfaces;
-   use Configure;
    use Bits;
    use MMIO;
    use M68k;
@@ -74,10 +71,6 @@ package body Application
       P       : PBUF.Pbuf_Ptr;
       Success : Boolean;
    begin
-      if Configure.USE_FS_UAE_IOEMU then
-         IOEMU.CIA_IO1 := (Unsigned_8 (Ethernet.Nqueue (Ethernet.Packet_Queue'Access))); -- # of items in queue
-         -- IOEMU.CIA_IO2 := (Unsigned_8 (PBUF.Nalloc));                                    -- # of PBUFs allocated
-      end if;
       Ethernet.Dequeue (Ethernet.Packet_Queue'Access, P, Success);
       if Success then
          Ethernet.Packet_Handler (P);
@@ -138,10 +131,9 @@ package body Application
       -------------------------------------------------------------------------
       if True then
          declare
-            TC1   : Unsigned_32 := BSP.Tick_Count;
-            TC2   : Unsigned_32 := BSP.Tick_Count;
-            TC3   : Unsigned_32 := BSP.Tick_Count;
-            Value : Unsigned_8 := 0;
+            TC1 : Unsigned_32 := BSP.Tick_Count;
+            TC2 : Unsigned_32 := BSP.Tick_Count;
+            TC3 : Unsigned_32 := BSP.Tick_Count;
          begin
             loop
                if Tick_Count_Expired (TC1, 50) then
@@ -149,10 +141,6 @@ package body Application
                   TC1 := BSP.Tick_Count;
                end if;
                if Tick_Count_Expired (TC2, 300) then
-                  if Configure.USE_FS_UAE_IOEMU then
-                     IOEMU.CIA_IO5 := Value;
-                  end if;
-                  Value := @ + 1;
                   TC2 := BSP.Tick_Count;
                end if;
                if Tick_Count_Expired (TC3, 2000) then
