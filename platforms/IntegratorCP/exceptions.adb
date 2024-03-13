@@ -15,7 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
+with Abort_Library;
+with Console;
+with ARMv4;
 with IntegratorCP;
 with BSP;
 
@@ -30,7 +32,9 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
+   use ARMv4;
+   use IntegratorCP;
+   use BSP;
 
    --========================================================================--
    --                                                                        --
@@ -41,13 +45,36 @@ package body Exceptions
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- Exception_Process
+   ----------------------------------------------------------------------------
+   procedure Exception_Process
+      (Reason    : in Unsigned_32;
+       E_Address : in Integer_Address)
+      is
+      Message : access constant String;
+   begin
+      Console.Print ("*** EXCEPTION", NL => True);
+      case Reason is
+         when UNDEFINED_INSTRUCTION => Message := MsgPtr_UNDEFINED_INSTRUCTION;
+         when SWI_EXCEPTION         => Message := MsgPtr_SWI_EXCEPTION;
+         when ABORT_PREFETCH        => Message := MsgPtr_ABORT_PREFETCH;
+         when ABORT_DATA            => Message := MsgPtr_ABORT_DATA;
+         when ADDRESS_EXCEPTION     => Message := MsgPtr_ADDRESS_EXCEPTION;
+         when others                => Message := MsgPtr_UNKNOWN_EXCEPTION;
+      end case;
+      Console.Print (Message.all, NL => True);
+      Console.Print (E_Address, Prefix => "ADDRESS: ", NL => True);
+      Abort_Library.System_Abort;
+   end Exception_Process;
+
+   ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
    procedure Irq_Process
       is
    begin
-      IntegratorCP.Timer (0).IntClr := 0;
-      BSP.Tick_Count := @ + 1;
+      Timer (0).IntClr := 0;
+      Tick_Count := @ + 1;
    end Irq_Process;
 
    ----------------------------------------------------------------------------

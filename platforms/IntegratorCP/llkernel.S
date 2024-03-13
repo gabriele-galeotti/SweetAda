@@ -29,11 +29,11 @@
 
                 .extern _start
 V_Reset:        .long   _start
-V_UndInstr:     .long   0
-V_SWI:          .long   0
-V_AbortP:       .long   0
-V_AbortD:       .long   0
-V_AddrExc:      .long   0
+V_UndInstr:     .long   und_handler
+V_SWI:          .long   swi_handler
+V_AbortP:       .long   abortp_handler
+V_AbortD:       .long   abortd_handler
+V_AddrExc:      .long   addrexc_handler
 V_IRQ:          .long   irq_handler
 V_FIQ:          .long   fiq_handler
 
@@ -41,10 +41,32 @@ V_FIQ:          .long   fiq_handler
 
                 .sect   .text,"ax"
 
-                .type   fiq_handler,%function
-                .global fiq_handler
-fiq_handler:
-                subs    pc,lr,#4
+und_handler:
+                mov     r0,#UNDEFINSTR_CODE
+                b       exc_handler
+swi_handler:
+                mov     r0,#SWI_CODE
+                b       exc_handler
+abortp_handler:
+                mov     r0,#ABORT_PREFETCH_CODE
+                b       exc_handler
+abortd_handler:
+                mov     r0,#ABORT_DATA_CODE
+                b       exc_handler
+addrexc_handler:
+                mov     r0,#ADDRESS_EXCEPTION_CODE
+                b       exc_handler
+
+                .type   exc_handler,%function
+                .global exc_handler
+exc_handler:
+                mov     r1,lr
+                mov     r13,#IR|Mode_SVC
+                msr     spsr_c,r13
+                .extern exception_process
+                ldr     lr,=exception_process
+                movs    pc,lr
+                .size   exc_handler,.-exc_handler
 
                 .type   irq_handler,%function
                 .global irq_handler
@@ -54,4 +76,11 @@ irq_handler:
                 bl      irq_process
                 ldmfd   sp!,{r0-r3,r9,r12,lr}
                 subs    pc,lr,#4
+                .size   irq_handler,.-irq_handler
+
+                .type   fiq_handler,%function
+                .global fiq_handler
+fiq_handler:
+                subs    pc,lr,#4
+                .size   fiq_handler,.-fiq_handler
 

@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Storage_Elements;
+with Interfaces;
+
 package Exceptions
    is
 
@@ -25,6 +28,16 @@ package Exceptions
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use System.Storage_Elements;
+   use Interfaces;
+
+   procedure Exception_Process
+      (Reason    : in Unsigned_32;
+       E_Address : in Integer_Address)
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "exception_process";
 
    procedure Irq_Process
       with Export        => True,
