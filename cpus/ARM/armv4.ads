@@ -146,13 +146,35 @@ package ARMv4
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
+   -- these definitions are both codes for exception and vector offsets
+   RESET_EXCEPTION       : constant := 16#00#;
    UNDEFINED_INSTRUCTION : constant := 16#04#;
-   SWI                   : constant := 16#08#;
+   SWI_EXCEPTION         : constant := 16#08#;
    ABORT_PREFETCH        : constant := 16#0C#;
    ABORT_DATA            : constant := 16#10#;
    ADDRESS_EXCEPTION     : constant := 16#14#;
    IRQ                   : constant := 16#18#;
    FIQ                   : constant := 16#1C#;
+
+   String_RESET_EXCEPTION       : aliased constant String := "RESET EXCEPTION";
+   String_UNDEFINED_INSTRUCTION : aliased constant String := "UNDEFINED INSTRUCTION";
+   String_SWI_EXCEPTION         : aliased constant String := "SWI EXCEPTION";
+   String_ABORT_PREFETCH        : aliased constant String := "ABORT PREFETCH";
+   String_ABORT_DATA            : aliased constant String := "ABORT DATA";
+   String_ADDRESS_EXCEPTION     : aliased constant String := "ADDRESS EXCEPTION";
+   String_IRQ                   : aliased constant String := "IRQ";
+   String_FIQ                   : aliased constant String := "FIQ";
+   String_UNKNOWN_EXCEPTION     : aliased constant String := "UNKNOWN EXCEPTION";
+
+   MsgPtr_RESET_EXCEPTION       : constant access constant String := String_RESET_EXCEPTION'Access;
+   MsgPtr_UNDEFINED_INSTRUCTION : constant access constant String := String_UNDEFINED_INSTRUCTION'Access;
+   MsgPtr_SWI_EXCEPTION         : constant access constant String := String_SWI_EXCEPTION'Access;
+   MsgPtr_ABORT_PREFETCH        : constant access constant String := String_ABORT_PREFETCH'Access;
+   MsgPtr_ABORT_DATA            : constant access constant String := String_ABORT_DATA'Access;
+   MsgPtr_ADDRESS_EXCEPTION     : constant access constant String := String_ADDRESS_EXCEPTION'Access;
+   MsgPtr_IRQ                   : constant access constant String := String_IRQ'Access;
+   MsgPtr_FIQ                   : constant access constant String := String_FIQ'Access;
+   MsgPtr_UNKNOWN_EXCEPTION     : constant access constant String := String_UNKNOWN_EXCEPTION'Access;
 
    type Intcontext_Type is new Bits_32;
 

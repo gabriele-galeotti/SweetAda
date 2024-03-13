@@ -27,14 +27,14 @@
 #define C_FLAG(x) ((((x) >> 29) & 0x1) != 0)
 #define V_FLAG(x) ((((x) >> 28) & 0x1) != 0)
 
-#define RESET_VECTOR_ADDRESS                 0x00
-#define UNDEFINED_INSTRUCTION_VECTOR_ADDRESS 0x04
-#define SOFTWARE_INTERRUPT_VECTOR_ADDRESS    0x08
-#define ABORT_PREFETCH_VECTOR_ADDRESS        0x0C
-#define ABORT_DATA_VECTOR_ADDRESS            0x10
-#define ADDRESS_EXCEPTION_VECTOR_ADDRESS     0x14
-#define IRQ_VECTOR_ADDRESS                   0x18
-#define FIQ_VECTOR_ADDRESS                   0x1C
+#define RESET_CODE             0x00
+#define UNDEFINSTR_CODE        0x04
+#define SWI_CODE               0x08
+#define ABORT_PREFETCH_CODE    0x0C
+#define ABORT_DATA_CODE        0x10
+#define ADDRESS_EXCEPTION_CODE 0x14
+#define IRQ_CODE               0x18
+#define FIQ_CODE               0x1C
 
 #define OPCODE_NOP             0xE1A00000
 #define OPCODE_BREAKPOINT      0xE7FFDEFE
