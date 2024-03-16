@@ -42,40 +42,6 @@ package body M68k
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- NOP
-   ----------------------------------------------------------------------------
-   procedure NOP
-      is
-   begin
-      Asm (
-           Template => ""            & CRLF &
-                       "        nop" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end NOP;
-
-   ----------------------------------------------------------------------------
-   -- BREAKPOINT
-   ----------------------------------------------------------------------------
-   procedure BREAKPOINT
-      is
-   begin
-      Asm (
-           Template => ""                                 & CRLF &
-                       "        " & BREAKPOINT_Asm_String & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end BREAKPOINT;
-
-   ----------------------------------------------------------------------------
    -- Status Register (Condition Code Register)
    ----------------------------------------------------------------------------
 
@@ -253,6 +219,40 @@ package body M68k
    end MoveSLong;
 
    ----------------------------------------------------------------------------
+   -- NOP
+   ----------------------------------------------------------------------------
+   procedure NOP
+      is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end NOP;
+
+   ----------------------------------------------------------------------------
+   -- BREAKPOINT
+   ----------------------------------------------------------------------------
+   procedure BREAKPOINT
+      is
+   begin
+      Asm (
+           Template => ""                                 & CRLF &
+                       "        " & BREAKPOINT_Asm_String & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end BREAKPOINT;
+
+   ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
    procedure Asm_Call
@@ -277,7 +277,15 @@ package body M68k
       (Intcontext : out Intcontext_Type)
       is
    begin
-      Intcontext := SR_Read.ILEVEL;
+      Asm (
+           Template => ""                        & CRLF &
+                       "        move.w  %%sr,%0" & CRLF &
+                       "",
+           Outputs  => Intcontext_Type'Asm_Output ("=d", Intcontext),
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
    end Intcontext_Get;
 
    ----------------------------------------------------------------------------
@@ -288,9 +296,15 @@ package body M68k
       is
       Value : SR_Type;
    begin
-      Value        := SR_Read;
-      Value.ILEVEL := Intcontext;
-      SR_Write (Value);
+      Asm (
+           Template => ""                        & CRLF &
+                       "        move.w  %0,%%sr" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Intcontext_Type'Asm_Input ("d", Intcontext),
+           Clobber  => "memory",
+           Volatile => True
+          );
    end Intcontext_Set;
 
    ----------------------------------------------------------------------------
@@ -300,11 +314,11 @@ package body M68k
       is
    begin
       Asm (
-           Template => ""                             & CRLF &
-                       "        andi.w  #0xF8FF,%%sr" & CRLF &
+           Template => ""                        & CRLF &
+                       "        andi.w  %0,%%sr" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
+           Inputs   => Integer'Asm_Input ("i", 16#F8FF#),
            Clobber  => "memory",
            Volatile => True
           );
@@ -317,11 +331,11 @@ package body M68k
       is
    begin
       Asm (
-           Template => ""                             & CRLF &
-                       "        ori.w   #0x0700,%%sr" & CRLF &
+           Template => ""                        & CRLF &
+                       "        ori.w   %0,%%sr" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
+           Inputs   => Integer'Asm_Input ("i", 16#0700#),
            Clobber  => "memory",
            Volatile => True
           );

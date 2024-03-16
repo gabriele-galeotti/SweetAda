@@ -45,46 +45,6 @@ package M68k
    BREAKPOINT_Asm_String : constant String := ".word   0x4E4F";
 
    ----------------------------------------------------------------------------
-   -- M680X0 registers
-   ----------------------------------------------------------------------------
-
-   D0        : constant := 16#00#; -- 0
-   D1        : constant := 16#01#; -- 1
-   D2        : constant := 16#02#; -- 2
-   D3        : constant := 16#03#; -- 3
-   D4        : constant := 16#04#; -- 4
-   D5        : constant := 16#05#; -- 5
-   D6        : constant := 16#06#; -- 6
-   D7        : constant := 16#07#; -- 7
-   A0        : constant := 16#08#; -- 8
-   A1        : constant := 16#09#; -- 9
-   A2        : constant := 16#0A#; -- 10
-   A3        : constant := 16#0B#; -- 11
-   A4        : constant := 16#0C#; -- 12
-   A5        : constant := 16#0D#; -- 13
-   A6        : constant := 16#0E#; -- 14
-   A7        : constant := 16#0F#; -- 15
-   SR        : constant := 16#10#; -- 16
-   PC        : constant := 16#11#; -- 17
-   FP0       : constant := 16#12#; -- 18
-   FP1       : constant := 16#13#; -- 19
-   FP2       : constant := 16#14#; -- 20
-   FP3       : constant := 16#15#; -- 21
-   FP4       : constant := 16#16#; -- 22
-   FP5       : constant := 16#17#; -- 23
-   FP6       : constant := 16#18#; -- 24
-   FP7       : constant := 16#19#; -- 25
-   FPCONTROL : constant := 16#1A#; -- 26
-   FPSTATUS  : constant := 16#1B#; -- 27
-   FPIADDR   : constant := 16#1C#; -- 28
-   -- aliases
-   FP        : constant := A6;
-   SP        : constant := A7;
-   PS        : constant := SR;
-
-   subtype Register_Number_Type is Natural range D0 .. FPIADDR;
-
-   ----------------------------------------------------------------------------
    -- Basic types
    ----------------------------------------------------------------------------
 
@@ -179,14 +139,48 @@ package M68k
    end record;
 
    ----------------------------------------------------------------------------
-   -- CPU helper subprograms
+   -- M680X0 registers
    ----------------------------------------------------------------------------
 
-   procedure NOP
-      with Inline => True;
+   D0        : constant := 16#00#; -- 0
+   D1        : constant := 16#01#; -- 1
+   D2        : constant := 16#02#; -- 2
+   D3        : constant := 16#03#; -- 3
+   D4        : constant := 16#04#; -- 4
+   D5        : constant := 16#05#; -- 5
+   D6        : constant := 16#06#; -- 6
+   D7        : constant := 16#07#; -- 7
+   A0        : constant := 16#08#; -- 8
+   A1        : constant := 16#09#; -- 9
+   A2        : constant := 16#0A#; -- 10
+   A3        : constant := 16#0B#; -- 11
+   A4        : constant := 16#0C#; -- 12
+   A5        : constant := 16#0D#; -- 13
+   A6        : constant := 16#0E#; -- 14
+   A7        : constant := 16#0F#; -- 15
+   SR        : constant := 16#10#; -- 16
+   PC        : constant := 16#11#; -- 17
+   FP0       : constant := 16#12#; -- 18
+   FP1       : constant := 16#13#; -- 19
+   FP2       : constant := 16#14#; -- 20
+   FP3       : constant := 16#15#; -- 21
+   FP4       : constant := 16#16#; -- 22
+   FP5       : constant := 16#17#; -- 23
+   FP6       : constant := 16#18#; -- 24
+   FP7       : constant := 16#19#; -- 25
+   FPCONTROL : constant := 16#1A#; -- 26
+   FPSTATUS  : constant := 16#1B#; -- 27
+   FPIADDR   : constant := 16#1C#; -- 28
+   -- aliases
+   FP        : constant := A6;
+   SP        : constant := A7;
+   PS        : constant := SR;
 
-   procedure BREAKPOINT
-      with Inline => True;
+   subtype Register_Number_Type is Natural range D0 .. FPIADDR;
+
+   ----------------------------------------------------------------------------
+   -- CPU helper subprograms
+   ----------------------------------------------------------------------------
 
    function SR_Read
       return SR_Type
@@ -225,6 +219,12 @@ package M68k
    procedure MoveSLong
       (A : in Address;
        L : in Unsigned_32)
+      with Inline => True;
+
+   procedure NOP
+      with Inline => True;
+
+   procedure BREAKPOINT
       with Inline => True;
 
    procedure Asm_Call
@@ -498,7 +498,7 @@ package M68k
       with Alignment => 2**10,
            Size      => 256 * 32;
 
-   subtype Intcontext_Type is ILEVEL_Type;
+   subtype Intcontext_Type is SR_Type;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
