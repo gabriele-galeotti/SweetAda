@@ -44,65 +44,101 @@ package body RISCV
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- mtvec_Write
+   -- CSRs generics
    ----------------------------------------------------------------------------
-   procedure mtvec_Write
-      (mtvec : in mtvec_Type)
-      is
-   begin
-      Asm (
-           Template => ""                         & CRLF &
-                       ZICSR_ZIFENCEI_ASM         & CRLF &
-                       "        csrw    mtvec,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => mtvec_Type'Asm_Input ("r", mtvec),
-           Clobber  => "",
-           Volatile => True
-          );
-   end mtvec_Write;
 
-   ----------------------------------------------------------------------------
-   -- mepc_Read
-   ----------------------------------------------------------------------------
-   function mepc_Read
-      return MXLEN_Type
-      is
-      mepc : MXLEN_Type;
-   begin
-      Asm (
-           Template => ""                        & CRLF &
-                       ZICSR_ZIFENCEI_ASM        & CRLF &
-                       "        csrr    %0,mepc" & CRLF &
-                       "",
-           Outputs  => MXLEN_Type'Asm_Output ("=r", mepc),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return mepc;
-   end mepc_Read;
+   generic
+      CSR : in String;
+      type Register_Type is private;
+   function CSR_Read
+      return Register_Type
+      with Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- mcause_Read
-   ----------------------------------------------------------------------------
-   function mcause_Read
-      return mcause_Type
+   function CSR_Read
+      return Register_Type
       is
-      mcause : mcause_Type;
+      Result : Register_Type;
    begin
       Asm (
            Template => ""                          & CRLF &
                        ZICSR_ZIFENCEI_ASM          & CRLF &
-                       "        csrr    %0,mcause" & CRLF &
+                       "        csrr    %0," & CSR & CRLF &
                        "",
-           Outputs  => mcause_Type'Asm_Output ("=r", mcause),
+           Outputs  => Register_Type'Asm_Output ("=r", Result),
            Inputs   => No_Input_Operands,
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
-      return mcause;
-   end mcause_Read;
+      return Result;
+   end CSR_Read;
+
+   generic
+      CSR : in String;
+      type Register_Type is private;
+   procedure CSR_Write
+      (Value : in Register_Type)
+      with Inline => True;
+
+   procedure CSR_Write
+      (Value : in Register_Type)
+      is
+   begin
+      Asm (
+           Template => ""                               & CRLF &
+                       ZICSR_ZIFENCEI_ASM               & CRLF &
+                       "        csrw    " & CSR & ",%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Register_Type'Asm_Input ("r", Value),
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end CSR_Write;
+
+   generic
+      CSR : in String;
+      type Register_Type is private;
+   procedure CSR_Set
+      (Value : in Register_Type)
+      with Inline => True;
+
+   procedure CSR_Set
+      (Value : in Register_Type)
+      is
+   begin
+      Asm (
+           Template => ""                               & CRLF &
+                       ZICSR_ZIFENCEI_ASM               & CRLF &
+                       "        csrs    " & CSR & ",%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Register_Type'Asm_Input ("r", Value),
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end CSR_Set;
+
+pragma Style_Checks (Off);
+
+   function mstatus_Read return mstatus_Type
+      is function CSRR is new CSR_Read ("mstatus", mstatus_Type); begin return CSRR; end mstatus_Read;
+
+   procedure mstatus_Write (mstatus : in mstatus_Type)
+      is procedure CSRW is new CSR_Write ("mstatus", mstatus_Type); begin CSRW (mstatus); end mstatus_Write;
+
+   procedure mstatus_Set (mstatus : in mstatus_Type)
+      is procedure CSRS is new CSR_Set ("mstatus", mstatus_Type); begin CSRS (mstatus); end mstatus_Set;
+
+   procedure mtvec_Write (mtvec : in mtvec_Type)
+      is procedure CSRW is new CSR_Write ("mtvec", mtvec_Type); begin CSRW (mtvec); end mtvec_Write;
+
+   function mepc_Read return MXLEN_Type
+      is function CSRR is new CSR_Read ("mepc", MXLEN_Type); begin return CSRR; end mepc_Read;
+
+   function mcause_Read return mcause_Type
+      is function CSRR is new CSR_Read ("mcause", mcause_Type); begin return CSRR; end mcause_Read;
+
+pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
    -- NOP
@@ -134,7 +170,7 @@ package body RISCV
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => Address'Asm_Input ("r", Target_Address),
-           Clobber  => "",
+           Clobber  => "x1",
            Volatile => True
           );
    end Asm_Call;
@@ -146,7 +182,7 @@ package body RISCV
       (Intcontext : out Intcontext_Type)
       is
    begin
-      Intcontext := 0; -- __TBD__
+      Intcontext := mstatus_Read.MIE;
    end Intcontext_Get;
 
    ----------------------------------------------------------------------------
@@ -155,8 +191,11 @@ package body RISCV
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       is
+      function To_mstatus is new Ada.Unchecked_Conversion (MXLEN_Type, mstatus_Type);
+      mstatus : mstatus_Type := To_mstatus (0);
    begin
-      null; -- __TBD__
+      mstatus.MIE := Intcontext;
+      mstatus_Set (mstatus);
    end Intcontext_Set;
 
    ----------------------------------------------------------------------------
@@ -173,7 +212,7 @@ package body RISCV
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => mie_Type'Asm_Input ("r", mie),
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end mie_Set_Interrupt;
@@ -194,7 +233,7 @@ package body RISCV
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => mstatus_Type'Asm_Input ("r", mstatus),
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Enable;
@@ -215,7 +254,7 @@ package body RISCV
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => mstatus_Type'Asm_Input ("r", mstatus),
-           Clobber  => "",
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Disable;

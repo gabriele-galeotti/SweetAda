@@ -49,6 +49,16 @@ package RISCV
    subtype mstatus_Type is RISCV_Definitions.mstatus_Type;
    subtype mstatush_Type is RISCV_Definitions.mstatush_Type;
 
+   function mstatus_Read
+      return mstatus_Type
+      with Inline => True;
+   procedure mstatus_Write
+      (mstatus : in mstatus_Type)
+      with Inline => True;
+   procedure mstatus_Set
+      (mstatus : in mstatus_Type)
+      with Inline => True;
+
    ----------------------------------------------------------------------------
    -- 3.1.7 Machine Trap-Vector Base-Address Register (mtvec)
    ----------------------------------------------------------------------------
@@ -132,7 +142,7 @@ package RISCV
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Intcontext_Type is Integer;
+   subtype Intcontext_Type is Boolean;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
