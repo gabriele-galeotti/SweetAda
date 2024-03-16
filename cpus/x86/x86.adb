@@ -43,6 +43,57 @@ package body x86
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- NOP
+   ----------------------------------------------------------------------------
+   procedure NOP
+      is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        nop" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end NOP;
+
+   ----------------------------------------------------------------------------
+   -- HLT
+   ----------------------------------------------------------------------------
+   procedure HLT
+      is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        hlt" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end HLT;
+
+   ----------------------------------------------------------------------------
+   -- BREAKPOINT
+   ----------------------------------------------------------------------------
+   procedure BREAKPOINT
+      is
+   begin
+      Asm (
+           Template => ""                                 & CRLF &
+                       "        " & BREAKPOINT_Asm_String & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end BREAKPOINT;
+
+   ----------------------------------------------------------------------------
    -- ESP_Read
    ----------------------------------------------------------------------------
    function ESP_Read
@@ -61,40 +112,6 @@ package body x86
           );
       return Result;
    end ESP_Read;
-
-   ----------------------------------------------------------------------------
-   -- NOP
-   ----------------------------------------------------------------------------
-   procedure NOP
-      is
-   begin
-      Asm (
-           Template => ""            & CRLF &
-                       "        nop" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end NOP;
-
-   ----------------------------------------------------------------------------
-   -- BREAKPOINT
-   ----------------------------------------------------------------------------
-   procedure BREAKPOINT
-      is
-   begin
-      Asm (
-           Template => ""                                 & CRLF &
-                       "        " & BREAKPOINT_Asm_String & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end BREAKPOINT;
 
    ----------------------------------------------------------------------------
    -- CRX registers
@@ -395,7 +412,7 @@ package body x86
                        "        pushfl    " & CRLF &
                        "        popl    %0" & CRLF &
                        "",
-           Outputs  => Intcontext_Type'Asm_Output ("=rm", Intcontext),
+           Outputs  => Intcontext_Type'Asm_Output ("=g", Intcontext),
            Inputs   => No_Input_Operands,
            Clobber  => "memory",
            Volatile => True

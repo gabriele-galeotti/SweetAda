@@ -761,12 +761,14 @@ package x86
 
    BREAKPOINT_Asm_String : constant String := ".byte   0xCC";
 
-   function ESP_Read
-      return Address
-      with Inline => True;
    procedure NOP
       with Inline => True;
+   procedure HLT
+      with Inline => True;
    procedure BREAKPOINT
+      with Inline => True;
+   function ESP_Read
+      return Address
       with Inline => True;
    procedure Asm_Call
       (Target_Address : in Address)
