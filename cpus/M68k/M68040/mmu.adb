@@ -102,7 +102,9 @@ pragma Warnings (On, "pragma Pack affects convention ""C"" components");
 
    -- local subprograms
 
-   procedure Page_Setup (P : in Page4k_Ptr; BA : in Address);
+   procedure Page_Setup
+      (P  : in Page4k_Ptr;
+       BA : in Address);
 
    --========================================================================--
    --                                                                        --
