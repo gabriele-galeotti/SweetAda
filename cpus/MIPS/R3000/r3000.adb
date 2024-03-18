@@ -52,6 +52,11 @@ package body R3000
       "        .equ    CP0_XContext,$20" & CRLF &
       "        .equ    CP0_Debug,   $23" & CRLF;
 
+   NOP3 : constant String :=
+      "        nop" & CRLF &
+      "        nop" & CRLF &
+      "        nop" & CRLF;
+
    type CP0_Register_Type is range 0 .. 31; -- 32 CP0 registers
 
    --========================================================================--
@@ -73,6 +78,7 @@ package body R3000
    function MFC0
       return Unsigned_32
       with Inline => True;
+
    function MFC0
       return Unsigned_32
       is
@@ -83,7 +89,6 @@ package body R3000
                        "        .set    push     " & CRLF &
                        "        .set    noreorder" & CRLF &
                        "        mfc0    %0,$%1   " & CRLF &
-                       "        nop              " & CRLF &
                        "        .set    pop      " & CRLF &
                        "",
            Outputs  => Unsigned_32'Asm_Output ("=r", Result),
@@ -99,6 +104,7 @@ package body R3000
    procedure MTC0
       (Register_Value : in Unsigned_32)
       with Inline => True;
+
    procedure MTC0
       (Register_Value : in Unsigned_32)
       is
@@ -108,7 +114,7 @@ package body R3000
                        "        .set    push     " & CRLF &
                        "        .set    noreorder" & CRLF &
                        "        mtc0    %0,$%1   " & CRLF &
-                       "        nop              " & CRLF &
+                       NOP3                               &
                        "        .set    pop      " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
@@ -165,7 +171,7 @@ package body R3000
    begin
       Asm (
            Template => ""                          & CRLF &
-                       Register_Equates            &
+                       Register_Equates                   &
                        "        .set    push     " & CRLF &
                        "        .set    reorder  " & CRLF &
                        "        mfc0    %0,CP0_SR" & CRLF &
@@ -188,7 +194,7 @@ package body R3000
    begin
       Asm (
            Template => ""                          & CRLF &
-                       Register_Equates            &
+                       Register_Equates                   &
                        "        .set    push     " & CRLF &
                        "        .set    noreorder" & CRLF &
                        "        .set    noat     " & CRLF &
@@ -198,9 +204,7 @@ package body R3000
                        "        xori    $1,1     " & CRLF &
                        "        or      %0,$1    " & CRLF &
                        "        mtc0    %0,CP0_SR" & CRLF &
-                       "        nop              " & CRLF &
-                       "        nop              " & CRLF &
-                       "        nop              " & CRLF &
+                       NOP3                               &
                        "        .set    pop      " & CRLF &
                        "",
            Outputs  => Unsigned_32'Asm_Output ("=r", CP0R12_R),
@@ -214,6 +218,7 @@ package body R3000
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable is
+      R : Unsigned_32;
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -221,15 +226,16 @@ package body R3000
                        "        .set    push     " & CRLF &
                        "        .set    reorder  " & CRLF &
                        "        .set    noat     " & CRLF &
-                       "        mfc0    $1,CP0_SR" & CRLF &
-                       "        ori     $1,0x1F  " & CRLF &
-                       "        xori    $1,0x1E  " & CRLF &
-                       "        mtc0    $1,CP0_SR" & CRLF &
+                       "        mfc0    %0,CP0_SR" & CRLF &
+                       "        ori     %0,0x1F  " & CRLF &
+                       "        xori    %0,0x1E  " & CRLF &
+                       "        mtc0    %0,CP0_SR" & CRLF &
+                       NOP3                               &
                        "        .set    pop      " & CRLF &
                        "",
-           Outputs  => No_Output_Operands,
+           Outputs  => Unsigned_32'Asm_Output ("=r", R),
            Inputs   => No_Input_Operands,
-           Clobber  => "$1,memory",
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Enable;
@@ -238,6 +244,7 @@ package body R3000
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable is
+      R : Unsigned_32;
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -245,19 +252,17 @@ package body R3000
                        "        .set    push     " & CRLF &
                        "        .set    reorder  " & CRLF &
                        "        .set    noat     " & CRLF &
-                       "        mfc0    $1,CP0_SR" & CRLF &
-                       "        ori     $1,1     " & CRLF &
-                       "        xori    $1,1     " & CRLF &
+                       "        mfc0    %0,CP0_SR" & CRLF &
+                       "        ori     %0,1     " & CRLF &
+                       "        xori    %0,1     " & CRLF &
                        "        .set    noreorder" & CRLF &
-                       "        mtc0    $1,CP0_SR" & CRLF &
-                       "        nop              " & CRLF &
-                       "        nop              " & CRLF &
-                       "        nop              " & CRLF &
+                       "        mtc0    %0,CP0_SR" & CRLF &
+                       NOP3                               &
                        "        .set    pop      " & CRLF &
                        "",
-           Outputs  => No_Output_Operands,
+           Outputs  => Unsigned_32'Asm_Output ("=r", R),
            Inputs   => No_Input_Operands,
-           Clobber  => "$1,memory",
+           Clobber  => "memory",
            Volatile => True
           );
    end Irq_Disable;
