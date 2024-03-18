@@ -4,7 +4,6 @@ with System.Storage_Elements;
 with System.Machine_Code;
 with Ada.Unchecked_Conversion;
 with Interfaces;
-with Interfaces.C;
 with Definitions;
 with Core;
 with Bits;
@@ -50,9 +49,6 @@ package body Application
    use Exceptions;
    use PCI;
    use PIIX;
-
-   use type Interfaces.C.size_t; -- directly useing this unit creates problem with
-                                 -- visibility of False/True due to C_bool
 
    -- Malloc memory area
    Heap : aliased Storage_Array (0 .. Definitions.kB64 - 1)
