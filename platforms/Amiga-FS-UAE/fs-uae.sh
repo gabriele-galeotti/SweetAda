@@ -45,6 +45,9 @@ setsid /usr/bin/xterm \
   "stty -icanon -echo ; while ! nc localhost ${SERIALPORT} 2> /dev/null ; do sleep 0.1 ; done" \
   &
 
+# FS-UAE caches .adf disks
+rm -f ~/"Documents/FS-UAE/Save States/fs-uae/boot.adf"
+
 "${FS_UAE_EXECUTABLE}" \
   fs-uae.conf \
   &

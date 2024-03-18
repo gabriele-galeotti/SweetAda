@@ -81,18 +81,13 @@ _start:
                 //
                 // Code relocation.
                 //
-                fjsr    movcode
+                //fjsr    movcode
 #endif
 
                 //
                 // Static data relocation.
                 //
-                fjsr    movdata
-
-                //
-                // Initialize .bss section.
-                //
-                //fjsr    zerobss
+                //fjsr    movdata
 
                 //
                 // Setup stack pointers (ISP and/or MSP).
@@ -139,6 +134,7 @@ dead:           jmp     .
 // A6 = return address                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 
+#if 0
 movcode:
                 .extern _text_start
                 .extern _stext
@@ -151,6 +147,7 @@ movcode:
                 move.b  %a0@+,%a1@+
                 bra.s   1b
 2:              frts
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // movdata                                                                    //
@@ -158,6 +155,7 @@ movcode:
 // A6 = return address                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 
+#if 0
 movdata:
                 .extern _data_start
                 .extern _sdata
@@ -172,6 +170,7 @@ movdata:
                 move.b  %a0@+,%a1@+
                 bra.s   1b
 2:              frts
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 

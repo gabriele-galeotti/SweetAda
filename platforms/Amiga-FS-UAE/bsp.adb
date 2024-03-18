@@ -16,14 +16,13 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Parameters;
-with System.Secondary_Stack;
 with System.Storage_Elements;
 with Configure;
 with Definitions;
 with Core;
 with Bits;
 with MMIO;
+with Secondary_Stack;
 with M68k;
 with Amiga;
 with ZorroII;
@@ -51,13 +50,6 @@ package body BSP is
    use M68k;
    use Amiga;
 
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr with
-      Export        => True,
-      Convention    => C,
-      External_Name => "__gnat_get_secondary_stack";
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -65,14 +57,6 @@ package body BSP is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack return System.Secondary_Stack.SS_Stack_Ptr is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -94,7 +78,7 @@ package body BSP is
    procedure Setup is
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -- exceptions initialization --------------------------------------------
       Exceptions.Init;
       -- basic hardware initialization ----------------------------------------
@@ -111,47 +95,24 @@ package body BSP is
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Amiga/FS-UAE", NL => True);
-      -------------------------------------------------------------------------
-      if True then
-         declare
-            Success : Boolean;
-            PIC     : ZorroII.PIC_Type;
-         begin
-            Console.Print ("Zorro II scan:", NL => True);
-            loop
-               PIC := ZorroII.Read;
-               if PIC.Board /= 0 then
-                  Console.Print (PIC.Board,           Prefix => "Board: ", NL => True);
-                  Console.Print (PIC.ID_Product,      Prefix => "ID:    ", NL => True);
-                  Console.Print (PIC.ID_Manufacturer, Prefix => "Manu:  ", NL => True);
-                  if (PIC.Board and 16#F8#) = 16#E0# then
-                     -- A2630 "FS-UAE hackers_id" E7 51 07DB
-                     ZorroII.Setup (16#0020_0000#);
-                  end if;
-                  if PIC.Board = 16#C1# then
-                     -- A2065 C1 70 0202
-                     ZorroII.Setup (16#00EA_0000#);
-                     A2065.Probe (PIC, Success);
-                     exit;
-                  end if;
-               else
-                  exit;
-               end if;
-            end loop;
-         end;
-      end if;
+      -- A2065 ----------------------------------------------------------------
+      declare
+         Success : Boolean;
+         PIC     : ZorroII.PIC_Type;
+      begin
+         ZorroII.Setup (A2065.A2065_BASEADDRESS);
+         A2065.Probe (PIC, Success);
+      end;
       -- Gayle IDE ------------------------------------------------------------
-      if True then
-         IDE_Descriptor.Base_Address  := To_Address (Gayle.GAYLE_IDE_BASEADDRESS);
-         IDE_Descriptor.Scale_Address := 2;
-         IDE_Descriptor.Read_8        := MMIO.Read'Access;
-         IDE_Descriptor.Write_8       := MMIO.Write'Access;
-         IDE_Descriptor.Read_16       := MMIO.ReadA'Access;
-         IDE_Descriptor.Write_16      := MMIO.WriteA'Access;
-         IDE.Init (IDE_Descriptor);
-         -- disable IDE interrupts
-         Gayle.IDE_Devcon.IRQDISABLE := True;
-      end if;
+      IDE_Descriptor.Base_Address  := To_Address (Gayle.GAYLE_IDE_BASEADDRESS);
+      IDE_Descriptor.Scale_Address := 2;
+      IDE_Descriptor.Read_8        := MMIO.Read'Access;
+      IDE_Descriptor.Write_8       := MMIO.Write'Access;
+      IDE_Descriptor.Read_16       := MMIO.ReadA'Access;
+      IDE_Descriptor.Write_16      := MMIO.WriteA'Access;
+      IDE.Init (IDE_Descriptor);
+      -- disable IDE interrupts
+      Gayle.IDE_Devcon.IRQDISABLE := True;
       -- system timer initialization ------------------------------------------
       Tclk_Init;
       MMU.Init;

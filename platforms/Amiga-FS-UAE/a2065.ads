@@ -47,7 +47,8 @@ package A2065
    -- A2065 Zorro II Ethernet Card
    ----------------------------------------------------------------------------
 
-   A2065_BASEADDRESS : constant := 16#00EA_0000#;
+   -- A2065_BASEADDRESS : constant := 16#00EA_0000#;
+   A2065_BASEADDRESS : constant := 16#00E9_0000#;
    A2065_CHIP_OFFSET : constant := 16#0000_4000#;
    A2065_RAM_OFFSET  : constant := 16#0000_8000#;
    A2065_RAM_SIZE    : constant := 16#0000_8000#;

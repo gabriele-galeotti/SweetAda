@@ -41,7 +41,7 @@ package body A2065
    use PBUF;
 
    ----------------------------------------------------------------------------
-   -- The Am7990 LANCE chip in Amiga's A2065 is wrapped with D0..D15 data lines
+   -- The Am7990 LANCE chip in the A2065 is wrapped with D0..D15 data lines
    -- (internally LE) connected to the D16..D31 data lines of the M68k
    -- processor (BE). The 16-bit halves of 32-bit values have to be swapped
    -- because memory is read differently on the two sides.
@@ -66,14 +66,16 @@ package body A2065
 
    -- size = 64 * 8 = 512 = 0x200
    Receive_Ring : aliased Receive_Ring_Type (0 .. 2**RDR_ORDER - 1)
-      with Address    => To_Address (16#00EA_8100#),
+      -- with Address    => To_Address (16#00EA_8100#),
+      with Address    => To_Address (16#00E9_8100#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    -- size = 2048 * 8 = 16384 = 0x4000
    Receive_Buffers : array (0 .. 2**RDR_ORDER - 1) of aliased Packet_Buffer_Type
-      with Address    => To_Address (16#00EA_8800#),
+      -- with Address    => To_Address (16#00EA_8800#),
+      with Address    => To_Address (16#00E9_8800#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -85,13 +87,15 @@ package body A2065
    TDR_ORDER : constant := 0; -- 2^0 = 1 entry
 
    Transmit_Ring : aliased Transmit_Ring_Type (0 .. 2**TDR_ORDER - 1)
-      with Address    => To_Address (16#00EA_E000#),
+      -- with Address    => To_Address (16#00EA_E000#),
+      with Address    => To_Address (16#00E9_E000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    Transmit_Buffers : array (0 .. 2**TDR_ORDER - 1) of aliased Packet_Buffer_Type
-      with Address    => To_Address (16#00EA_E100#),
+      -- with Address    => To_Address (16#00EA_E100#),
+      with Address    => To_Address (16#00E9_E100#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
