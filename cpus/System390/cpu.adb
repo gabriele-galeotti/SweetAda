@@ -88,14 +88,14 @@ package body CPU
            Template => ""                            & CRLF &
                        "        cs      %0,%3,0(%2)" & CRLF &
                        "",
-           Outputs  => (
+           Outputs  => [
                         CPU_Unsigned'Asm_Output ("+d", Lock_Flag),
                         Lock_Type'Asm_Output ("+m", Lock_Object)
-                       ),
-           Inputs   => (
+                       ],
+           Inputs   => [
                         Address'Asm_Input ("a", Lock_Object'Address),
                         CPU_Unsigned'Asm_Input ("d", 1)
-                       ),
+                       ],
            Clobber  => "memory,cc",
            Volatile => True
           );

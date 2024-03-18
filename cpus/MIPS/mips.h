@@ -36,8 +36,8 @@
 #define C0_XCONTEXT $20
 #define C0_DEBUG    $23
 
-#define SR_SR  0x00100000       // Soft Reset
-#define SR_BEV 0x00400000       // Bootstrap Exception Vector
+#define SR_SR  (1 << 20)        // Soft Reset
+#define SR_BEV (1 << 22)        // Bootstrap Exception Vector
 
 #endif /* _MIPS_H */
 
