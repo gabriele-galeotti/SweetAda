@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-${FILEPAD} ${KERNEL_PARENT_PATH}/${KERNEL_ROMFILE} 512
+${FILEPAD} ${KERNEL_PARENT_PATH}/${KERNEL_ROMFILE} 512 || exit $?
 
 "${PYTHON}"                                                 \
   ${KERNEL_PARENT_PATH}/${SHARE_DIRECTORY}/pc-x86-bootfd.py \
@@ -13,5 +13,5 @@ ${FILEPAD} ${KERNEL_PARENT_PATH}/${KERNEL_ROMFILE} 512
 #  0x4000                                                     \
 #  ""
 
-exit 0
+exit $?
 
