@@ -28,7 +28,7 @@ with Amiga;
 with ZorroII;
 with A2065;
 with Gayle;
-with MMU;
+with MMU.Amiga;
 with Exceptions;
 with Console;
 
@@ -87,6 +87,7 @@ package body BSP is
       OCS_Print ("Press mouse-MB to un-grab the pointer." & CRLF);
       OCS_Print ("F12+D to activate the debugger." & CRLF);
       OCS_Print ("Close this window to shutdown the emulator." & CRLF);
+      MMU.Amiga.Setup;
       -- Serialport -----------------------------------------------------------
       Serialport_Init;
       -- Console --------------------------------------------------------------
@@ -115,8 +116,7 @@ package body BSP is
       Gayle.IDE_Devcon.IRQDISABLE := True;
       -- system timer initialization ------------------------------------------
       Tclk_Init;
-      MMU.Init;
-      -- preliminary interrupt setup
+      -- interrupt setup ------------------------------------------------------
       INTENA_ClearAll;
       INTREQ_ClearAll;
       INTENA_SetBitMask (INTEN);

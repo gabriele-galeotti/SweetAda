@@ -1,0 +1,81 @@
+
+#
+# Amiga (FS-UAE emulator)
+#
+# Motorola® M68010/M68020/M68030/M68040
+#
+
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+USE_APPLICATION := test-Amiga-FS-UAE
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
+CPU := M68k
+
+#CPU_MODEL := M68010
+#CPU_MODEL := M68020
+#CPU_MODEL := M68030
+CPU_MODEL := M68040
+
+#FPU_MODEL := M68881
+FPU_MODEL := M68040
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+#GCC_SWITCHES_PLATFORM     := -mcpu=68010
+#GCC_SWITCHES_PLATFORM     := -mcpu=68020 -m68881
+#GCC_SWITCHES_PLATFORM     := -mcpu=68030 -m68881
+GCC_SWITCHES_PLATFORM     := -mcpu=68040
+
+LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
+#LD_SCRIPT                 := linker-rom.lds
+LD_SCRIPT                 := linker-chipram.lds
+#LD_SCRIPT                 := linker-fastram.lds
+OBJDUMP_SWITCHES_PLATFORM := -m m68k:$(CPU_MODEL:M%=%)
+OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+POSTBUILD_ROMFILE         := Y
+POSTBUILD_COMMAND         := $(SHELL_EXEC) postbuild-adfcreate$(SCREXT)
+
+CONFIGURE_FILES_PLATFORM       := fs-uae.conf configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S
+GCC_SWITCHES_LOWLEVEL_PLATFORM := -DCODE_RAM=1
+
+CLEAN_OBJECTS_COMMON += debug.uae fs-uae.log.txt adfboot.* boot.adf
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+# FS-UAE parameters
+
+#export AMIGA_MODEL := A1000
+export AMIGA_MODEL := A4000/040
+#export KICKSTART_FILE := $(SWEETADA_PATH)/$(KERNEL_ROMFILE)
+export KICKSTART_FILE := /root/workspace/devices/Amiga-FS-UAE/Kickstart/kickstart_13_345.rom
+export CPU_FSUAE := $(CPU_MODEL:M%=%)
+export FPU_FSUAE := $(FPU_MODEL:M%=%)
+export FLOPPY_DRIVE_0 := boot.adf
+export HARD_DRIVE_0 := disk.hdf
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/fs-uae$(SCREXT)
+DEBUG_COMMAND := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/fs-uae$(SCREXT) -debug
+

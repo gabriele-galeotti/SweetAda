@@ -1,0 +1,19 @@
+
+with Definitions;
+
+package Configure
+   with Pure => True
+   is
+
+   use Definitions;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM  : constant String := "Amiga-FS-UAE";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   TIMER_SYSCLK   : constant := CLK_PALAmiga;
+   TICK_FREQUENCY : constant := 1 * kHz1;
+
+end Configure;

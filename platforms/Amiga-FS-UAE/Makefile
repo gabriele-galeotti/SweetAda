@@ -47,6 +47,9 @@ installfiles:
 .PHONY: configure
 configure: configure-files-clean $(CONFIGURE_FILES_PLATFORM)
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+	@$(CREATESYMLINK)                                                   \
+                          mmu/mmu-amiga-$(CPU_MODEL:M%=%).adb mmu-amiga.adb \
+                          mmu/mmu-amiga-$(CPU_MODEL:M%=%).ads mmu-amiga.ads
 
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 $(CONFIGURE_FILES_PLATFORM): % : %.in
@@ -72,7 +75,8 @@ clean:
 .PHONY: distclean
 distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-              $(CONFIGURE_FILES_PLATFORM)
+              $(CONFIGURE_FILES_PLATFORM) \
+              mmu-amiga.adb mmu-amiga.ads
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
