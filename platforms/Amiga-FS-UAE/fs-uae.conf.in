@@ -1,0 +1,23 @@
+[config]
+logs_dir = .
+console_debugger = 1
+amiga_model = @AMIGA_MODEL@
+cpu = @CPU_FSUAE@
+fpu = @-FPU_FSUAE@
+uae_chipset = ecs
+chip_memory = 1024
+fast_memory = 4096
+uae_rtc = MSM6242B
+serial_port = tcp://127.0.0.1:1235
+uae_a2065 = slirp
+slirp_implementation = builtin
+kickstart_file = @KICKSTART_FILE@
+floppy_drive_0 = @FLOPPY_DRIVE_0@
+hard_drive_0_controller = ide
+hard_drive_0 = @HARD_DRIVE_0@
+automatic_input_grab = 0
+ntsc_mode = false
+fullscreen = false
+sound_auto = false
+sound_output = false
+theme = led-bars-edge
