@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+with M68030;
+
 package MMU
    is
 
@@ -25,6 +28,16 @@ package MMU
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use Interfaces;
+   use M68030;
+
+   procedure Page_Setup
+      (Idx : in Natural;
+       DT  : in DT_Type;
+       BA  : in Unsigned_32);
+
+   procedure Enable;
 
    procedure Init;
 

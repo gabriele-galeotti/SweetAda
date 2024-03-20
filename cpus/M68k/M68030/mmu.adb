@@ -18,9 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
-with Interfaces;
 with Bits;
-with M68030;
 
 package body MMU
    is
@@ -35,11 +33,7 @@ package body MMU
 
    use System;
    use System.Storage_Elements;
-   use Interfaces;
    use Bits;
-   use M68030;
-
-   Root_Pointer : aliased RPDSC_Type;
 
    type Table4k_Type is array (Natural range <>) of SFPDSC_Type
       with Alignment => 16,
@@ -48,6 +42,8 @@ package body MMU
    Table_1 : aliased Table4k_Type (0 .. 4095)
       with Volatile                => True,
            Suppress_Initialization => True;
+
+   Root_Pointer : aliased RPDSC_Type;
 
    --========================================================================--
    --                                                                        --
@@ -58,65 +54,37 @@ package body MMU
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Init
+   -- Page_Setup
    ----------------------------------------------------------------------------
-   procedure Init
+   procedure Page_Setup
+      (Idx : in Natural;
+       DT  : in DT_Type;
+       BA  : in Unsigned_32)
       is
-      A   : Unsigned_32;
+   begin
+      -- the right shift is equivalent to mask off the first 8 bits of the
+      -- address, which are occupied by the flags; this way the address
+      -- (masked) appears "normally" laid out, with LSB in the 0 position
+      Table_1 (Idx) := (
+         DT     => DT,
+         WP     => False,
+         U      => False,
+         M      => False,
+         CI     => False,
+         PA     => Bits_24 (Shift_Right (BA, 8) and 16#00FF_FFFF#),
+         others => <>
+         );
+   end Page_Setup;
+
+   ----------------------------------------------------------------------------
+   -- Enable
+   ----------------------------------------------------------------------------
+   procedure Enable
+      is
       TA  : Unsigned_32;
       TCR : TCR_Type;
       function To_U32 is new Ada.Unchecked_Conversion (Integer_Address, Unsigned_32);
-      procedure Page_Setup
-         (Idx : in Natural;
-          DT  : in DT_Type;
-          BA  : in Unsigned_32);
-      procedure Page_Setup
-         (Idx : in Natural;
-          DT  : in DT_Type;
-          BA  : in Unsigned_32)
-         is
-      begin
-         -- the right shift is equivalent to mask off the first 8 bits of the
-         -- address, which are occupied by the flags; this way the address
-         -- (masked) appears "normally" laid out, with LSB in the 0 position
-         Table_1 (Idx) := (
-            DT     => DT,
-            WP     => False,
-            U      => False,
-            M      => False,
-            CI     => False,
-            PA     => Bits_24 (Shift_Right (BA, 8) and 16#00FF_FFFF#),
-            others => <>
-            );
-      end Page_Setup;
    begin
-      -- cleanup
-      for Idx in Table_1'Range loop
-         Page_Setup (Idx, DT_INVALID, 0);
-      end loop;
-      -- RAM 1st MByte (256 * 4k)
-      A := 0;
-      for Idx in 0 .. 255 loop
-         Page_Setup (Idx, DT_PAGEDSC, A);
-         A := @ + 16#1000#;
-      end loop;
-      Page_Setup (16#BFD#, DT_PAGEDSC, 16#00BF_D000#); -- CIAB
-      Page_Setup (16#BFE#, DT_PAGEDSC, 16#00BF_E000#); -- CIAA
-      Page_Setup (16#DD2#, DT_PAGEDSC, 16#00DD_2000#); -- Gayle
-      Page_Setup (16#DFF#, DT_PAGEDSC, 16#00DF_F000#); -- CUSTOM
-      -- ZORROII
-      A := 16#00E8_0000#;
-      for Idx in 16#E80# .. 16#EFF# loop
-         Page_Setup (Idx, DT_PAGEDSC, A);
-         A := @ + 16#1000#;
-      end loop;
-      -- ROM
-      A := 16#00FC_0000#;
-      for Idx in 16#FC0# .. 16#FFF# loop
-         Page_Setup (Idx, DT_PAGEDSC, A);
-         A := @ + 16#1000#;
-      end loop;
-      -- enable MMU
       TA := To_U32 (To_Integer (Table_1 (0)'Address));
       Root_Pointer := (
          TA_LO  => Bits_12 (Shift_Right (LWord (TA), 4)), -- Table Address 4 .. 15
@@ -140,6 +108,17 @@ package body MMU
          others => <>
          );
       TCR_Set (TCR);
+   end Enable;
+
+   ----------------------------------------------------------------------------
+   -- Init
+   ----------------------------------------------------------------------------
+   procedure Init
+      is
+   begin
+      for Idx in Table_1'Range loop
+         Page_Setup (Idx, DT_INVALID, 0);
+      end loop;
    end Init;
 
 end MMU;
