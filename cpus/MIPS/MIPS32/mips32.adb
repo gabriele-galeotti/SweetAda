@@ -73,6 +73,7 @@ package body MIPS32
    function MFC0
       return Unsigned_32
       with Inline => True;
+
    function MFC0
       return Unsigned_32
       is
@@ -100,6 +101,7 @@ package body MIPS32
    procedure MTC0
       (Register_Value : in Unsigned_32)
       with Inline => True;
+
    procedure MTC0
       (Register_Value : in Unsigned_32)
       is
@@ -167,19 +169,19 @@ package body MIPS32
    function CP0_SR_Read
       return Status_Type
       is
-      function U32_To_SRT is new Ada.Unchecked_Conversion (Unsigned_32, Status_Type);
+      function To_ST is new Ada.Unchecked_Conversion (Unsigned_32, Status_Type);
       function CP0_Read is new MFC0 (12, 0);
    begin
-      return U32_To_SRT (CP0_Read);
+      return To_ST (CP0_Read);
    end CP0_SR_Read;
 
    procedure CP0_SR_Write
       (Value : in Status_Type)
       is
-      function SRT_To_U32 is new Ada.Unchecked_Conversion (Status_Type, Unsigned_32);
+      function To_U32 is new Ada.Unchecked_Conversion (Status_Type, Unsigned_32);
       procedure CP0_Write is new MTC0 (12, 0);
    begin
-      CP0_Write (SRT_To_U32 (Value));
+      CP0_Write (To_U32 (Value));
    end CP0_SR_Write;
 
    ----------------------------------------------------------------------------
@@ -229,10 +231,10 @@ package body MIPS32
    function CP0_PRId_Read
       return PRId_Type
       is
-      function U32_To_PRId is new Ada.Unchecked_Conversion (Unsigned_32, PRId_Type);
+      function To_PRId is new Ada.Unchecked_Conversion (Unsigned_32, PRId_Type);
       function CP0_Read is new MFC0 (15, 0);
    begin
-      return U32_To_PRId (CP0_Read);
+      return To_PRId (CP0_Read);
    end CP0_PRId_Read;
 
    ----------------------------------------------------------------------------
