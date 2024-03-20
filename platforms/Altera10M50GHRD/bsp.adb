@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with System;
 with Definitions;
 with Bits;
 with Core;
@@ -37,7 +37,6 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -78,7 +77,7 @@ package body BSP
       is
    begin
       -- UART -----------------------------------------------------------------
-      UART_Descriptor.Base_Address  := To_Address (UART_BASEADDRESS);
+      UART_Descriptor.Base_Address  := System'To_Address (UART_BASEADDRESS);
       UART_Descriptor.Scale_Address := 2;
       UART_Descriptor.Baud_Clock    := CLK_UART1M8;
       UART_Descriptor.Read_8        := MMIO.Read'Access;

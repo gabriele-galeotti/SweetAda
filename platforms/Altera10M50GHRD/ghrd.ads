@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Configure;
 with Bits;
@@ -33,7 +32,6 @@ package GHRD
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -101,7 +99,7 @@ package GHRD
    TIMER_ADDRESS : constant := 16#F800_1440#;
 
    Timer : aliased Timer_Type
-      with Address    => To_Address (TIMER_ADDRESS),
+      with Address    => System'To_Address (TIMER_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -109,7 +107,7 @@ package GHRD
    TIMER_1_ADDRESS : constant := 16#E000_0880#;
 
    Timer_1 : aliased Timer_Type
-      with Address    => To_Address (TIMER_1_ADDRESS),
+      with Address    => System'To_Address (TIMER_1_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
