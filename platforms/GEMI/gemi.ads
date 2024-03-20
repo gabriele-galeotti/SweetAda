@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 
 package GEMI
@@ -32,7 +31,6 @@ package GEMI
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
 
    LEDPORT_ADDRESS  : constant := 16#0600_0000#;
@@ -40,7 +38,7 @@ package GEMI
    RTC_BASEADDRESS  : constant := 16#0600_3000#;
 
    LEDPORT : aliased Unsigned_8
-      with Address              => To_Address (LEDPORT_ADDRESS),
+      with Address              => System'To_Address (LEDPORT_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
