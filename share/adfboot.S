@@ -15,17 +15,14 @@
 // ENTRYPOINT is the the target address of the binary executable
 //
 
-#define EXECBASE        4
-#define SUPERSTATE      -150    // 0xFFFFFF6A
-#define LVOAllocSignal  -330    // 0xFFFFFEB6
-#define LVOFindTask     -294    // 0xFFFFFEDA
-#define LVOOpenDevice   -444    // 0xFFFFFE44
-#define LVODoIO         -456    // 0xFFFFFE38
-#define CMD_READ        2
-#define IO_COMMAND      28
-#define IO_LENGTH       36
-#define IO_DATA         40
-#define IO_OFFSET       44
+#define EXECBASE   4
+#define SUPERSTATE -150 // 0xFFFFFF6A
+#define LVODoIO    -456 // 0xFFFFFE38
+#define CMD_READ   2
+#define IO_COMMAND 28
+#define IO_LENGTH  36
+#define IO_DATA    40
+#define IO_OFFSET  44
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -41,9 +38,9 @@ _start:
 
                 // offset 0x12
 
+                move.w  #CMD_READ,IO_COMMAND(%a1)
                 // address of data
                 move.l  #LOADADDRESS,IO_DATA(%a1)
-                move.w  #CMD_READ,IO_COMMAND(%a1)
                 // amount of data
                 move.l  #(NSECTORS*512),IO_LENGTH(%a1)
                 // offset of data start (sector 2)
