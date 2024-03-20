@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with RISCV;
@@ -35,10 +34,9 @@ package HiFive1
 
    -- PLIC.priority clashes with System.Priority, so we use a renaming on
    -- System.Low_Order_First, which is the only object imported from the unit,
-   -- avoiding a use-ing clause
+   -- avoiding a use clause
    -- use System;
    Low_Order_First : System.Bit_Order renames System.Low_Order_First;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -226,37 +224,37 @@ package HiFive1
       PRCI_BASEADDRESS : constant := 16#1000_8000#;
 
       hfrosccfg : aliased hfrosccfg_Type
-         with Address              => To_Address (PRCI_BASEADDRESS + 16#00#),
+         with Address              => System'To_Address (PRCI_BASEADDRESS + 16#00#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       hfxosccfg : aliased hfxosccfg_Type
-         with Address              => To_Address (PRCI_BASEADDRESS + 16#04#),
+         with Address              => System'To_Address (PRCI_BASEADDRESS + 16#04#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       pllcfg : aliased pllcfg_Type
-         with Address              => To_Address (PRCI_BASEADDRESS + 16#08#),
+         with Address              => System'To_Address (PRCI_BASEADDRESS + 16#08#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       plloutdiv : aliased plloutdiv_Type
-         with Address              => To_Address (PRCI_BASEADDRESS + 16#0C#),
+         with Address              => System'To_Address (PRCI_BASEADDRESS + 16#0C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       lfrosccfg : aliased lfrosccfg_Type
-         with Address              => To_Address (PRCI_BASEADDRESS + 16#70#),
+         with Address              => System'To_Address (PRCI_BASEADDRESS + 16#70#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       lfclkmux : aliased lfclkmux_Type
-         with Address              => To_Address (PRCI_BASEADDRESS + 16#7C#),
+         with Address              => System'To_Address (PRCI_BASEADDRESS + 16#7C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -286,7 +284,7 @@ package HiFive1
       msip_ADDRESS : constant := 16#0200_0000#;
 
       msip : aliased msip_Type
-         with Address              => To_Address (msip_ADDRESS),
+         with Address              => System'To_Address (msip_ADDRESS),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -387,7 +385,7 @@ package HiFive1
       end record;
 
       priority : aliased array (0 .. 52) of priority_Type
-         with Address    => To_Address (PLIC_BASEADDRESS + 16#0000_0000#),
+         with Address    => System'To_Address (PLIC_BASEADDRESS + 16#0000_0000#),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -395,13 +393,13 @@ package HiFive1
       -- 10.4 Interrupt Pending Bits
 
       pending1 : aliased Bitmap_32
-         with Address    => To_Address (PLIC_BASEADDRESS + 16#0000_1000#),
+         with Address    => System'To_Address (PLIC_BASEADDRESS + 16#0000_1000#),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
 
       pending2 : aliased Bitmap_32
-         with Address    => To_Address (PLIC_BASEADDRESS + 16#0000_1004#),
+         with Address    => System'To_Address (PLIC_BASEADDRESS + 16#0000_1004#),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -409,13 +407,13 @@ package HiFive1
       -- 10.5 Interrupt Enables
 
       enable1 : aliased Bitmap_32
-         with Address    => To_Address (PLIC_BASEADDRESS + 16#0000_2000#),
+         with Address    => System'To_Address (PLIC_BASEADDRESS + 16#0000_2000#),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
 
       enable2 : aliased Bitmap_32
-         with Address    => To_Address (PLIC_BASEADDRESS + 16#0000_2004#),
+         with Address    => System'To_Address (PLIC_BASEADDRESS + 16#0000_2004#),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -434,7 +432,7 @@ package HiFive1
       end record;
 
       threshold : aliased threshold_Type
-         with Address              => To_Address (PLIC_BASEADDRESS + 16#0020_0000#),
+         with Address              => System'To_Address (PLIC_BASEADDRESS + 16#0020_0000#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -443,7 +441,7 @@ package HiFive1
       -- 10.8 Interrupt Completion
 
       claim : aliased Unsigned_32
-         with Address              => To_Address (PLIC_BASEADDRESS + 16#0020_0004#),
+         with Address              => System'To_Address (PLIC_BASEADDRESS + 16#0020_0004#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -482,33 +480,33 @@ package HiFive1
 
 pragma Style_Checks (Off);
       -- Programmed-I/O lock register
-      lock   : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#00#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      lock   : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#00#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP device output-enable signal
-      ck     : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#04#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      ck     : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#04#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP device output-enable signal
-      oe     : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#08#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      oe     : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#08#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP device chip-select signal
-      sel    : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#0C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      sel    : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#0C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP device write-enable signal
-      we     : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#10#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      we     : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#10#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP device mode register
-      mr     : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#14#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      mr     : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#14#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP read-voltage regulator control
-      mrr    : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#18#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      mrr    : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#18#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP write-voltage charge pump control
-      mpp    : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#1C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      mpp    : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#1C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP read-voltage enable
-      vrren  : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#20#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      vrren  : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#20#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP write-voltage enable
-      vppen  : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#24#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      vppen  : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#24#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP device address
-      otp_a  : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#28#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      otp_a  : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#28#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP device data input
-      otp_d  : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#2C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      otp_d  : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#2C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP device data output
-      otp_q  : aliased Unsigned_32 with Address => To_Address (OTP_BASEADDRESS + 16#30#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      otp_q  : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#30#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP read sequencer control
-      rsctrl : aliased rsctrl_Type with Address => To_Address (OTP_BASEADDRESS + 16#34#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+      rsctrl : aliased rsctrl_Type with Address => System'To_Address (OTP_BASEADDRESS + 16#34#), Volatile_Full_Access => True, Import => True, Convention => Ada;
 pragma Style_Checks (On);
 
    end OTP;
@@ -528,7 +526,7 @@ pragma Style_Checks (On);
          with Volatile_Full_Access => True;
 
       backup : aliased array (0 .. 15) of backup_Type
-         with Address    => To_Address (AON.AON_BASEADDRESS + 16#80#),
+         with Address    => System'To_Address (AON.AON_BASEADDRESS + 16#80#),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -588,37 +586,37 @@ pragma Style_Checks (On);
       end record;
 
       wdogcfg : aliased wdogcfg_Type
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#00#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#00#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       wdogcount : aliased Unsigned_32
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#08#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#08#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       wdogs : aliased Unsigned_16
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#10#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#10#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       wdogfeed : aliased Unsigned_32
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#18#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#18#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       wdogkey : aliased Unsigned_32
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#1C#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#1C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       wdogcmp0 : aliased wdogcmp_Type
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#20#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#20#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -637,7 +635,7 @@ pragma Style_Checks (On);
       pmukey_Value : constant := 16#0051_F15E#;
 
       pmukey : aliased Bits_32
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#14C#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#14C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -667,13 +665,13 @@ pragma Style_Checks (On);
       end record;
 
       pmuwakeupi : aliased array (0 .. 7) of pmu_sleep_wakeup_iX_Type
-         with Address    => To_Address (AON.AON_BASEADDRESS + 16#100#),
+         with Address    => System'To_Address (AON.AON_BASEADDRESS + 16#100#),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
 
       pmusleepi : aliased array (0 .. 7) of pmu_sleep_wakeup_iX_Type
-         with Address    => To_Address (AON.AON_BASEADDRESS + 16#120#),
+         with Address    => System'To_Address (AON.AON_BASEADDRESS + 16#120#),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -681,7 +679,7 @@ pragma Style_Checks (On);
       -- 15.5 Initiate Sleep Sequence Register (pmusleep)
 
       pmusleep : aliased Bits_32
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#148#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#148#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -704,7 +702,7 @@ pragma Style_Checks (On);
       end record;
 
       pmuie : aliased pmuie_Type
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#140#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#140#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -733,7 +731,7 @@ pragma Style_Checks (On);
       end record;
 
       pmucause : aliased pmucause_Type
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#144#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#144#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -784,31 +782,31 @@ pragma Style_Checks (On);
       end record;
 
       rtccfg : aliased rtccfg_Type
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#40#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#40#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       rtccountlo : aliased Unsigned_32
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#48#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#48#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       rtccounthi : aliased Unsigned_32
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#4C#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#4C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       rtcs : aliased Unsigned_32
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#50#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#50#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       rtccmp0 : aliased Unsigned_32
-         with Address              => To_Address (AON.AON_BASEADDRESS + 16#60#),
+         with Address              => System'To_Address (AON.AON_BASEADDRESS + 16#60#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -826,133 +824,133 @@ pragma Style_Checks (On);
 
       -- Pin value
       input_val : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#00#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#00#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Pin input enable
       input_en : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#04#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#04#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Pin output enable
       output_en : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#08#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#08#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Output value
       output_val : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#0C#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#0C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Internal pull-up enable
       pue : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#10#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#10#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Pin drive strength
       ds : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#14#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#14#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Rise interrupt enable
       rise_ie : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#18#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#18#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Rise interrupt pending
       rise_ip : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#1C#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#1C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Fall interrupt enable
       fall_ie : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#20#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#20#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Fall interrupt pending
       fall_ip : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#24#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#24#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- High interrupt enable
       high_ie : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#28#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#28#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- High interrupt pending
       high_ip : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#2C#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#2C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Low interrupt enable
       low_ie : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#30#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#30#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Low interrupt pending
       low_ip : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#34#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#34#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- I/O function enable
       iof_en : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#38#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#38#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- I/O function select
       iof_sel : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#3C#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#3C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Output XOR (invert)
       out_xor : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#40#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#40#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Pass-through active-high interrupt enable
       passthru_high_ie : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#44#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#44#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
 
       -- Pass-through active-low interrupt enable
       passthru_low_ie : aliased Bitmap_32
-         with Address              => To_Address (GPIO_BASEADDRESS + 16#48#),
+         with Address              => System'To_Address (GPIO_BASEADDRESS + 16#48#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -1101,7 +1099,7 @@ pragma Style_Checks (On);
       UART0_BASEADDRESS : constant := 16#1001_3000#;
 
       UART0 : aliased UART_Type
-         with Address    => To_Address (UART0_BASEADDRESS),
+         with Address    => System'To_Address (UART0_BASEADDRESS),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -1109,7 +1107,7 @@ pragma Style_Checks (On);
       UART1_BASEADDRESS : constant := 16#1002_3000#;
 
       UART1 : aliased UART_Type
-         with Address    => To_Address (UART1_BASEADDRESS),
+         with Address    => System'To_Address (UART1_BASEADDRESS),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -1417,7 +1415,7 @@ pragma Style_Checks (On);
       QSPI0_BASEADDRESS : constant := 16#1001_4000#;
 
       QSPI0 : aliased SPI_Type
-         with Address    => To_Address (QSPI0_BASEADDRESS),
+         with Address    => System'To_Address (QSPI0_BASEADDRESS),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -1427,7 +1425,7 @@ pragma Style_Checks (On);
       SPI1_BASEADDRESS : constant := 16#1002_4000#;
 
       SPI1 : aliased SPI_Type
-         with Address    => To_Address (SPI1_BASEADDRESS),
+         with Address    => System'To_Address (SPI1_BASEADDRESS),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -1437,7 +1435,7 @@ pragma Style_Checks (On);
       SPI2_BASEADDRESS : constant := 16#1003_4000#;
 
       SPI2 : aliased SPI_Type
-         with Address    => To_Address (SPI2_BASEADDRESS),
+         with Address    => System'To_Address (SPI2_BASEADDRESS),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -1611,7 +1609,7 @@ pragma Style_Checks (On);
       PWM0_BASEADDRESS : constant := 16#1001_5000#;
 
       PWM0 : aliased pwm_cmpwidth8_Type
-         with Address    => To_Address (PWM0_BASEADDRESS),
+         with Address    => System'To_Address (PWM0_BASEADDRESS),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -1649,7 +1647,7 @@ pragma Style_Checks (On);
       PWM1_BASEADDRESS : constant := 16#1002_5000#;
 
       PWM1 : aliased pwm_cmpwidth16_Type
-         with Address    => To_Address (PWM1_BASEADDRESS),
+         with Address    => System'To_Address (PWM1_BASEADDRESS),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -1657,7 +1655,7 @@ pragma Style_Checks (On);
       PWM2_BASEADDRESS : constant := 16#1003_5000#;
 
       PWM2 : aliased pwm_cmpwidth16_Type
-         with Address    => To_Address (PWM2_BASEADDRESS),
+         with Address    => System'To_Address (PWM2_BASEADDRESS),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
