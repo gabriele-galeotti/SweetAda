@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with System;
 with Goldfish;
 
 package Virt
@@ -30,8 +30,6 @@ package Virt
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
-
    -- UART 16x50-style
 
    UART0_BASEADDRESS : constant := 16#1000_0000#;
@@ -41,7 +39,7 @@ package Virt
    Goldfish_RTC_BASEADDRESS : constant := 16#0010_1000#;
 
    Goldfish_RTC : aliased Goldfish.RTC_Type
-      with Address    => To_Address (Goldfish_RTC_BASEADDRESS),
+      with Address    => System'To_Address (Goldfish_RTC_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
