@@ -62,12 +62,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       Serialport_TX (C);
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
    begin
       Serialport_RX (C);
    end Console_Getchar;
@@ -75,7 +79,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
       -------------------------------------------------------------------------
       Secondary_Stack.Init;
