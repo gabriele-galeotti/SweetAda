@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package IntegratorCP
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -94,37 +92,37 @@ package IntegratorCP
    end record;
 
    PIC_IRQ_STATUS    : aliased PIC_IRQ_ITEMS_Type
-      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#00#),
+      with Address              => System'To_Address (PIC_PRIMARY_BASEADDRESS + 16#00#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PIC_IRQ_RAWSTAT   : aliased PIC_IRQ_ITEMS_Type
-      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (PIC_PRIMARY_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PIC_IRQ_ENABLESET : aliased PIC_IRQ_ITEMS_Type
-      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#08#),
+      with Address              => System'To_Address (PIC_PRIMARY_BASEADDRESS + 16#08#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PIC_IRQ_ENABLECLR : aliased PIC_IRQ_ITEMS_Type
-      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#0C#),
+      with Address              => System'To_Address (PIC_PRIMARY_BASEADDRESS + 16#0C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PIC_FIQ_ENABLESET : aliased PIC_IRQ_ITEMS_Type
-      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#28#),
+      with Address              => System'To_Address (PIC_PRIMARY_BASEADDRESS + 16#28#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PIC_FIQ_ENABLECLR : aliased PIC_IRQ_ITEMS_Type
-      with Address              => To_Address (PIC_PRIMARY_BASEADDRESS + 16#2C#),
+      with Address              => System'To_Address (PIC_PRIMARY_BASEADDRESS + 16#2C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -207,7 +205,7 @@ package IntegratorCP
    end record;
 
    Timer : aliased array (0 .. 2) of Timer_Type
-      with Address    => To_Address (COUNTERTIMER_BASEADDRESS),
+      with Address    => System'To_Address (COUNTERTIMER_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
