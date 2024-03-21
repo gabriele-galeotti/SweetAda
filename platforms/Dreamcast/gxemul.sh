@@ -55,8 +55,7 @@ esac
 "${GXEMUL_EXECUTABLE}" \
   -X                   \
   -E dreamcast         \
-  ${GXEMUL_BOOT}       \
-  &
+  ${GXEMUL_BOOT}
 
 exit $?
 
