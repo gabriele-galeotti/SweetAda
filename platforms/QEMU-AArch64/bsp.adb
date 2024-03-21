@@ -18,7 +18,6 @@
 with System;
 with System.Parameters;
 with System.Secondary_Stack;
-with System.Storage_Elements;
 with Configure;
 with Definitions;
 with Core;
@@ -41,7 +40,6 @@ package body BSP
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -119,7 +117,7 @@ package body BSP
       PL011_Descriptor.Write_8      := MMIO.Write'Access;
       PL011_Descriptor.Read_16      := MMIO.Read'Access;
       PL011_Descriptor.Write_16     := MMIO.Write'Access;
-      PL011_Descriptor.Base_Address := To_Address (PL011_UART0_BASEADDRESS);
+      PL011_Descriptor.Base_Address := System'To_Address (PL011_UART0_BASEADDRESS);
       PL011_Descriptor.Baud_Clock   := CLK_UART14M;
       PL011.Init (PL011_Descriptor);
       -- Console --------------------------------------------------------------

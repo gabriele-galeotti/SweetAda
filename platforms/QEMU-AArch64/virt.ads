@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with System;
 with Bits;
 with GICv2;
 
@@ -31,19 +31,18 @@ package Virt
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Bits;
    use GICv2;
 
    GIC_BASEADDRESS : constant := 16#0800_0000#;
 
    GICD : aliased GICD_Type
-      with Address    => To_Address (GIC_BASEADDRESS),
+      with Address    => System'To_Address (GIC_BASEADDRESS),
            Import     => True,
            Convention => Ada;
 
    GICC : aliased GICC_Type
-      with Address    => To_Address (GIC_BASEADDRESS + 16#0001_0000#),
+      with Address    => System'To_Address (GIC_BASEADDRESS + 16#0001_0000#),
            Import     => True,
            Convention => Ada;
 
