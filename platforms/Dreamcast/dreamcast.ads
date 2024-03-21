@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Bits;
 
 package Dreamcast
@@ -32,14 +31,13 @@ package Dreamcast
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
 
    VIDEO_BASEADDRESS    : constant := 16#A500_0000#;
    VIDEO_FRAME_BYTESIZE : constant := 640 * 480 * 2; -- VGA 640x480
 
    VIDEO_FRAME : aliased Bits.U8_Array (0 .. VIDEO_FRAME_BYTESIZE - 1)
       with Alignment  => 4,
-           Address    => To_Address (VIDEO_BASEADDRESS),
+           Address    => System'To_Address (VIDEO_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;

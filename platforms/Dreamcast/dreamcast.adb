@@ -49,12 +49,12 @@ package body Dreamcast
       return Video_Cable_Type
       is
       PortA : aliased Unsigned_32
-         with Address              => To_Address (16#FF80_002C#),
+         with Address              => System'To_Address (16#FF80_002C#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
       Port89 : aliased Unsigned_16
-         with Address              => To_Address (16#FF80_0030#),
+         with Address              => System'To_Address (16#FF80_0030#),
               Volatile_Full_Access => True,
               Import               => True,
               Convention           => Ada;
@@ -85,7 +85,7 @@ package body Dreamcast
                        "        mov     r0,%0 " & CRLF &
                        "",
            Outputs  => Address'Asm_Output ("=r", Result),
-           Inputs   => Address'Asm_Input ("r", To_Address (16#8C00_00B4#)),
+           Inputs   => Address'Asm_Input ("r", System'To_Address (16#8C00_00B4#)),
            Clobber  => "pr,r0,r1",
            Volatile => True
           );
