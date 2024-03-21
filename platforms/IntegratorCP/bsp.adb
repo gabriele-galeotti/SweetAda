@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Configure;
 with Definitions;
 with Core;
@@ -41,7 +40,6 @@ package body BSP
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -86,7 +84,7 @@ package body BSP
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- PL011 UART0 ----------------------------------------------------------
-      PL011_Descriptor.Base_Address := To_Address (PL011_UART0_BASEADDRESS);
+      PL011_Descriptor.Base_Address := System'To_Address (PL011_UART0_BASEADDRESS);
       PL011_Descriptor.Baud_Clock   := CLK_UART14M;
       PL011_Descriptor.Read_8       := MMIO.Read'Access;
       PL011_Descriptor.Write_8      := MMIO.Write'Access;
@@ -104,7 +102,7 @@ package body BSP
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -- PL110 LCD ------------------------------------------------------------
-      PL110_Descriptor.Base_Address := To_Address (PL110_BASEADDRESS);
+      PL110_Descriptor.Base_Address := System'To_Address (PL110_BASEADDRESS);
       PL110.Init (PL110_Descriptor);
       -- Timer ----------------------------------------------------------------
       -- Timer0 runs @ 40 MHz, prescale 16 = 2.5 MHz
