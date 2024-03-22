@@ -11,7 +11,7 @@
 #include <ctype.h>
 
 /*
- * ISO 8859-1 and Microsoft� Windows Latin-1 increased characters.
+ * ISO 8859-1 and Microsoft® Windows® Latin-1 increased characters.
  *
  * _CTYPE_U 0x01 UPPERCASE SYMBOL
  * _CTYPE_L 0x02 LOWERCASE SYMBOL
