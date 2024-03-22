@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -32,7 +31,6 @@ package STM32F769I
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -66,7 +64,7 @@ package STM32F769I
    FLASH_ACR_ADDRESS : constant := 16#4002_3C00#;
 
    FLASH_ACR : aliased FLASH_ACR_Type
-      with Address              => To_Address (FLASH_ACR_ADDRESS),
+      with Address              => System'To_Address (FLASH_ACR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -88,7 +86,7 @@ package STM32F769I
    FLASH_KEYR_ADDRESS : constant := 16#4002_3C04#;
 
    FLASH_KEYR : aliased FLASH_KEYR_Type
-      with Address              => To_Address (FLASH_KEYR_ADDRESS),
+      with Address              => System'To_Address (FLASH_KEYR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -110,7 +108,7 @@ package STM32F769I
    FLASH_OPTKEYR_ADDRESS : constant := 16#4002_3C08#;
 
    FLASH_OPTKEYR : aliased FLASH_OPTKEYR_Type
-      with Address              => To_Address (FLASH_OPTKEYR_ADDRESS),
+      with Address              => System'To_Address (FLASH_OPTKEYR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -147,7 +145,7 @@ package STM32F769I
    FLASH_SR_ADDRESS : constant := 16#4002_3C0C#;
 
    FLASH_SR : aliased FLASH_SR_Type
-      with Address              => To_Address (FLASH_SR_ADDRESS),
+      with Address              => System'To_Address (FLASH_SR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -195,7 +193,7 @@ package STM32F769I
    FLASH_CR_ADDRESS : constant := 16#4002_3C10#;
 
    FLASH_CR : aliased FLASH_CR_Type
-      with Address              => To_Address (FLASH_CR_ADDRESS),
+      with Address              => System'To_Address (FLASH_CR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -243,7 +241,7 @@ package STM32F769I
    FLASH_OPTCR_ADDRESS : constant := 16#4002_3C14#;
 
    FLASH_OPTCR : aliased FLASH_OPTCR_Type
-      with Address              => To_Address (FLASH_OPTCR_ADDRESS),
+      with Address              => System'To_Address (FLASH_OPTCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -272,7 +270,7 @@ package STM32F769I
    FLASH_OPTCR1_ADDRESS : constant := 16#4002_3C18#;
 
    FLASH_OPTCR1 : aliased FLASH_OPTCR1_Type
-      with Address              => To_Address (FLASH_OPTCR1_ADDRESS),
+      with Address              => System'To_Address (FLASH_OPTCR1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -346,7 +344,7 @@ package STM32F769I
    PWR_CR1_ADDRESS : constant := 16#4000_7000#;
 
    PWR_CR1 : aliased PWR_CR1_Type
-      with Address              => To_Address (PWR_CR1_ADDRESS),
+      with Address              => System'To_Address (PWR_CR1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -397,7 +395,7 @@ package STM32F769I
    PWR_CSR1_ADDRESS : constant := 16#4000_7004#;
 
    PWR_CSR1 : aliased PWR_CSR1_Type
-      with Address              => To_Address (PWR_CSR1_ADDRESS),
+      with Address              => System'To_Address (PWR_CSR1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -445,7 +443,7 @@ package STM32F769I
    PWR_CR2_ADDRESS : constant := 16#4000_7008#;
 
    PWR_CR2 : aliased PWR_CR2_Type
-      with Address              => To_Address (PWR_CR2_ADDRESS),
+      with Address              => System'To_Address (PWR_CR2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -490,7 +488,7 @@ package STM32F769I
    PWR_CSR2_ADDRESS : constant := 16#4000_700C#;
 
    PWR_CSR2 : aliased PWR_CSR2_Type
-      with Address              => To_Address (PWR_CSR2_ADDRESS),
+      with Address              => System'To_Address (PWR_CSR2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -545,7 +543,7 @@ package STM32F769I
    RCC_CR_ADDRESS : constant := 16#4002_3800#;
 
    RCC_CR : aliased RCC_CR_Type
-      with Address              => To_Address (RCC_CR_ADDRESS),
+      with Address              => System'To_Address (RCC_CR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -590,7 +588,7 @@ package STM32F769I
    RCC_PLLCFGR_ADDRESS : constant := 16#4002_3804#;
 
    RCC_PLLCFGR : aliased RCC_PLLCFGR_Type
-      with Address              => To_Address (RCC_PLLCFGR_ADDRESS),
+      with Address              => System'To_Address (RCC_PLLCFGR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -668,7 +666,7 @@ package STM32F769I
    RCC_CFGR_ADDRESS : constant := 16#4002_3808#;
 
    RCC_CFGR : aliased RCC_CFGR_Type
-      with Address              => To_Address (RCC_CFGR_ADDRESS),
+      with Address              => System'To_Address (RCC_CFGR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -735,7 +733,7 @@ package STM32F769I
    RCC_CIR_ADDRESS : constant := 16#4002_380C#;
 
    RCC_CIR : aliased RCC_CIR_Type
-      with Address              => To_Address (RCC_CIR_ADDRESS),
+      with Address              => System'To_Address (RCC_CIR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -796,7 +794,7 @@ package STM32F769I
    RCC_AHB1RSTR_ADDRESS : constant := 16#4002_3810#;
 
    RCC_AHB1RSTR : aliased RCC_AHB1RSTR_Type
-      with Address              => To_Address (RCC_AHB1RSTR_ADDRESS),
+      with Address              => System'To_Address (RCC_AHB1RSTR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -829,7 +827,7 @@ package STM32F769I
    RCC_AHB2RSTR_ADDRESS : constant := 16#4002_3814#;
 
    RCC_AHB2RSTR : aliased RCC_AHB2RSTR_Type
-      with Address              => To_Address (RCC_AHB2RSTR_ADDRESS),
+      with Address              => System'To_Address (RCC_AHB2RSTR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -852,7 +850,7 @@ package STM32F769I
    RCC_AHB3RSTR_ADDRESS : constant := 16#4002_3818#;
 
    RCC_AHB3RSTR : aliased RCC_AHB3RSTR_Type
-      with Address              => To_Address (RCC_AHB3RSTR_ADDRESS),
+      with Address              => System'To_Address (RCC_AHB3RSTR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -933,7 +931,7 @@ package STM32F769I
    RCC_APB1RSTR_ADDRESS : constant := 16#4002_3820#;
 
    RCC_APB1RSTR : aliased RCC_APB1RSTR_Type
-      with Address              => To_Address (RCC_APB1RSTR_ADDRESS),
+      with Address              => System'To_Address (RCC_APB1RSTR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1008,7 +1006,7 @@ package STM32F769I
    RCC_APB2RSTR_ADDRESS : constant := 16#4002_3824#;
 
    RCC_APB2RSTR : aliased RCC_APB2RSTR_Type
-      with Address              => To_Address (RCC_APB2RSTR_ADDRESS),
+      with Address              => System'To_Address (RCC_APB2RSTR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1081,7 +1079,7 @@ package STM32F769I
    RCC_AHB1ENR_ADDRESS : constant := 16#4002_3830#;
 
    RCC_AHB1ENR : aliased RCC_AHB1ENR_Type
-      with Address              => To_Address (RCC_AHB1ENR_ADDRESS),
+      with Address              => System'To_Address (RCC_AHB1ENR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1114,7 +1112,7 @@ package STM32F769I
    RCC_AHB2ENR_ADDRESS : constant := 16#4002_3834#;
 
    RCC_AHB2ENR : aliased RCC_AHB2ENR_Type
-      with Address              => To_Address (RCC_AHB2ENR_ADDRESS),
+      with Address              => System'To_Address (RCC_AHB2ENR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1137,7 +1135,7 @@ package STM32F769I
    RCC_AHB3ENR_ADDRESS : constant := 16#4002_3838#;
 
    RCC_AHB3ENR : aliased RCC_AHB3ENR_Type
-      with Address              => To_Address (RCC_AHB3ENR_ADDRESS),
+      with Address              => System'To_Address (RCC_AHB3ENR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1218,7 +1216,7 @@ package STM32F769I
    RCC_APB1ENR_ADDRESS : constant := 16#4002_3840#;
 
    RCC_APB1ENR : aliased RCC_APB1ENR_Type
-      with Address              => To_Address (RCC_APB1ENR_ADDRESS),
+      with Address              => System'To_Address (RCC_APB1ENR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1295,7 +1293,7 @@ package STM32F769I
    RCC_APB2ENR_ADDRESS : constant := 16#4002_3844#;
 
    RCC_APB2ENR : aliased RCC_APB2ENR_Type
-      with Address              => To_Address (RCC_APB2ENR_ADDRESS),
+      with Address              => System'To_Address (RCC_APB2ENR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1376,7 +1374,7 @@ package STM32F769I
    RCC_AHB1LPENR_ADDRESS : constant := 16#4002_3850#;
 
    RCC_AHB1LPENR : aliased RCC_AHB1LPENR_Type
-      with Address              => To_Address (RCC_AHB1LPENR_ADDRESS),
+      with Address              => System'To_Address (RCC_AHB1LPENR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1409,7 +1407,7 @@ package STM32F769I
    RCC_AHB2LPENR_ADDRESS : constant := 16#4002_3854#;
 
    RCC_AHB2LPENR : aliased RCC_AHB2LPENR_Type
-      with Address              => To_Address (RCC_AHB2LPENR_ADDRESS),
+      with Address              => System'To_Address (RCC_AHB2LPENR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1432,7 +1430,7 @@ package STM32F769I
    RCC_AHB3LPENR_ADDRESS : constant := 16#4002_3858#;
 
    RCC_AHB3LPENR : aliased RCC_AHB3LPENR_Type
-      with Address              => To_Address (RCC_AHB3LPENR_ADDRESS),
+      with Address              => System'To_Address (RCC_AHB3LPENR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1513,7 +1511,7 @@ package STM32F769I
    RCC_APB1LPENR_ADDRESS : constant := 16#4002_3860#;
 
    RCC_APB1LPENR : aliased RCC_APB1LPENR_Type
-      with Address              => To_Address (RCC_APB1LPENR_ADDRESS),
+      with Address              => System'To_Address (RCC_APB1LPENR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1590,7 +1588,7 @@ package STM32F769I
    RCC_APB2LPENR_ADDRESS : constant := 16#4002_3864#;
 
    RCC_APB2LPENR : aliased RCC_APB2LPENR_Type
-      with Address              => To_Address (RCC_APB2LPENR_ADDRESS),
+      with Address              => System'To_Address (RCC_APB2LPENR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1637,7 +1635,7 @@ package STM32F769I
    RCC_BDCR_ADDRESS : constant := 16#4002_3870#;
 
    RCC_BDCR : aliased RCC_BDCR_Type
-      with Address              => To_Address (RCC_BDCR_ADDRESS),
+      with Address              => System'To_Address (RCC_BDCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1676,10 +1674,10 @@ package STM32F769I
    RCC_CSR_ADDRESS : constant := 16#4002_3874#;
 
    RCC_CSR : aliased RCC_CSR_Type
-      with Address              => To_Address (RCC_CSR_ADDRESS),
+      with Address              => System'To_Address (RCC_CSR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
-      Convention           => Ada;
+           Convention           => Ada;
 
    -- 5.3.22 RCC spread spectrum clock generation register (RCC_SSCGR)
 
@@ -1706,7 +1704,7 @@ package STM32F769I
    RCC_SSCGR_ADDRESS : constant := 16#4002_3880#;
 
    RCC_SSCGR : aliased RCC_SSCGR_Type
-      with Address              => To_Address (RCC_SSCGR_ADDRESS),
+      with Address              => System'To_Address (RCC_SSCGR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1766,7 +1764,7 @@ package STM32F769I
    RCC_PLLI2SCFGR_ADDRESS : constant := 16#4002_3884#;
 
    RCC_PLLI2SCFGR : aliased RCC_PLLI2SCFGR_Type
-      with Address              => To_Address (RCC_PLLI2SCFGR_ADDRESS),
+      with Address              => System'To_Address (RCC_PLLI2SCFGR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1826,7 +1824,7 @@ package STM32F769I
    RCC_PLLSAICFGR_ADDRESS : constant := 16#4002_3888#;
 
    RCC_PLLSAICFGR : aliased RCC_PLLSAICFGR_Type
-      with Address              => To_Address (RCC_PLLSAICFGR_ADDRESS),
+      with Address              => System'To_Address (RCC_PLLSAICFGR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1919,7 +1917,7 @@ package STM32F769I
    RCC_DCKCFGR1_ADDRESS : constant := 16#4002_388C#;
 
    RCC_DCKCFGR1 : aliased RCC_DCKCFGR1_Type
-      with Address              => To_Address (RCC_DCKCFGR1_ADDRESS),
+      with Address              => System'To_Address (RCC_DCKCFGR1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2035,7 +2033,7 @@ package STM32F769I
    RCC_DCKCFGR2_ADDRESS : constant := 16#4002_3890#;
 
    RCC_DCKCFGR2 : aliased RCC_DCKCFGR2_Type
-      with Address              => To_Address (RCC_DCKCFGR2_ADDRESS),
+      with Address              => System'To_Address (RCC_DCKCFGR2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2212,7 +2210,7 @@ pragma Warnings (On);
    GPIOA_BASEADDRESS : constant := 16#4002_0000#;
 
    GPIOA : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOA_BASEADDRESS),
+      with Address    => System'To_Address (GPIOA_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2220,7 +2218,7 @@ pragma Warnings (On);
    GPIOB_BASEADDRESS : constant := 16#4002_0400#;
 
    GPIOB : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOB_BASEADDRESS),
+      with Address    => System'To_Address (GPIOB_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2228,7 +2226,7 @@ pragma Warnings (On);
    GPIOC_BASEADDRESS : constant := 16#4002_0800#;
 
    GPIOC : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOC_BASEADDRESS),
+      with Address    => System'To_Address (GPIOC_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2236,7 +2234,7 @@ pragma Warnings (On);
    GPIOD_BASEADDRESS : constant := 16#4002_0C00#;
 
    GPIOD : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOD_BASEADDRESS),
+      with Address    => System'To_Address (GPIOD_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2244,7 +2242,7 @@ pragma Warnings (On);
    GPIOE_BASEADDRESS : constant := 16#4002_1000#;
 
    GPIOE : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOE_BASEADDRESS),
+      with Address    => System'To_Address (GPIOE_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2252,7 +2250,7 @@ pragma Warnings (On);
    GPIOF_BASEADDRESS : constant := 16#4002_1400#;
 
    GPIOF : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOF_BASEADDRESS),
+      with Address    => System'To_Address (GPIOF_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2260,7 +2258,7 @@ pragma Warnings (On);
    GPIOG_BASEADDRESS : constant := 16#4002_1800#;
 
    GPIOG : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOG_BASEADDRESS),
+      with Address    => System'To_Address (GPIOG_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2268,7 +2266,7 @@ pragma Warnings (On);
    GPIOH_BASEADDRESS : constant := 16#4002_1C00#;
 
    GPIOH : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOH_BASEADDRESS),
+      with Address    => System'To_Address (GPIOH_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2276,7 +2274,7 @@ pragma Warnings (On);
    GPIOI_BASEADDRESS : constant := 16#4002_2000#;
 
    GPIOI : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOI_BASEADDRESS),
+      with Address    => System'To_Address (GPIOI_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2284,7 +2282,7 @@ pragma Warnings (On);
    GPIOJ_BASEADDRESS : constant := 16#4002_2400#;
 
    GPIOJ : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOJ_BASEADDRESS),
+      with Address    => System'To_Address (GPIOJ_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2292,7 +2290,7 @@ pragma Warnings (On);
    GPIOK_BASEADDRESS : constant := 16#4002_2800#;
 
    GPIOK : aliased GPIO_PORT_Type
-      with Address    => To_Address (GPIOK_BASEADDRESS),
+      with Address    => System'To_Address (GPIOK_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2331,7 +2329,7 @@ pragma Warnings (On);
    SYSCFG_MEMRMP_ADDRESS : constant := 16#4001_3800#;
 
    SYSCFG_MEMRMP : aliased SYSCFG_MEMRMP_Type
-      with Address              => To_Address (SYSCFG_MEMRMP_ADDRESS),
+      with Address              => System'To_Address (SYSCFG_MEMRMP_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2381,7 +2379,7 @@ pragma Warnings (On);
    SYSCFG_PMC_ADDRESS : constant := 16#4001_3804#;
 
    SYSCFG_PMC : aliased SYSCFG_MEMRMP_Type
-      with Address              => To_Address (SYSCFG_PMC_ADDRESS),
+      with Address              => System'To_Address (SYSCFG_PMC_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2423,7 +2421,7 @@ pragma Warnings (On);
    SYSCFG_EXTICR1_ADDRESS : constant := 16#4001_3808#;
 
    SYSCFG_EXTICR1 : aliased SYSCFG_EXTICR1_Type
-      with Address              => To_Address (SYSCFG_EXTICR1_ADDRESS),
+      with Address              => System'To_Address (SYSCFG_EXTICR1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2448,7 +2446,7 @@ pragma Warnings (On);
    SYSCFG_EXTICR2_ADDRESS : constant := 16#4001_380C#;
 
    SYSCFG_EXTICR2 : aliased SYSCFG_EXTICR2_Type
-      with Address              => To_Address (SYSCFG_EXTICR2_ADDRESS),
+      with Address              => System'To_Address (SYSCFG_EXTICR2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2473,7 +2471,7 @@ pragma Warnings (On);
    SYSCFG_EXTICR3_ADDRESS : constant := 16#4001_3810#;
 
    SYSCFG_EXTICR3 : aliased SYSCFG_EXTICR3_Type
-      with Address              => To_Address (SYSCFG_EXTICR3_ADDRESS),
+      with Address              => System'To_Address (SYSCFG_EXTICR3_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2498,7 +2496,7 @@ pragma Warnings (On);
    SYSCFG_EXTICR4_ADDRESS : constant := 16#4001_3814#;
 
    SYSCFG_EXTICR4 : aliased SYSCFG_EXTICR4_Type
-      with Address              => To_Address (SYSCFG_EXTICR4_ADDRESS),
+      with Address              => System'To_Address (SYSCFG_EXTICR4_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2523,7 +2521,7 @@ pragma Warnings (On);
    SYSCFG_CBR_ADDRESS : constant := 16#4001_381C#;
 
    SYSCFG_CBR : aliased SYSCFG_CBR_Type
-      with Address              => To_Address (SYSCFG_CBR_ADDRESS),
+      with Address              => System'To_Address (SYSCFG_CBR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2548,7 +2546,7 @@ pragma Warnings (On);
    SYSCFG_CMPCR_ADDRESS : constant := 16#4001_3820#;
 
    SYSCFG_CMPCR : aliased SYSCFG_CMPCR_Type
-      with Address              => To_Address (SYSCFG_CMPCR_ADDRESS),
+      with Address              => System'To_Address (SYSCFG_CMPCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2809,7 +2807,7 @@ pragma Warnings (On);
    TIM6_BASEADDRESS : constant := 16#4000_1000#;
 
    TIM6 : aliased Basic_Timers_Type
-      with Address    => To_Address (TIM6_BASEADDRESS),
+      with Address    => System'To_Address (TIM6_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2817,8 +2815,695 @@ pragma Warnings (On);
    TIM7_BASEADDRESS : constant := 16#4000_1400#;
 
    TIM7 : aliased Basic_Timers_Type
-      with Address    => To_Address (TIM7_BASEADDRESS),
+      with Address    => System'To_Address (TIM7_BASEADDRESS),
            Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 32 Real-time clock (RTC)
+   ----------------------------------------------------------------------------
+
+   PM_AM : constant := 0; -- AM or 24-hour format
+   PM_PM : constant := 1; -- PM
+
+   MSK_MATCH    : constant := 0; -- ??? set if ??? match
+   MSK_DONTCARE : constant := 1; -- ??? don’t care in ??? comparison
+
+   WDSEL_DATE    : constant := 0; -- ??? represents the date units
+   WDSEL_WEEKDAY : constant := 1; -- ??? represents the week day.
+
+   -- 32.6.1 RTC time register (RTC_TR)
+
+   type RTC_TR_Type is record
+      SU        : Bits_4;      -- Second units in BCD format
+      ST        : Bits_3;      -- Second tens in BCD format
+      Reserved1 : Bits_1 := 0;
+      MNU       : Bits_4;      -- Minute units in BCD format
+      MNT       : Bits_3;      -- Minute tens in BCD format
+      Reserved2 : Bits_1 := 0;
+      HU        : Bits_4;      -- Hour units in BCD format
+      HT        : Bits_2;      -- Hour tens in BCD format
+      PM        : Bits_1;      -- AM/PM notation
+      Reserved3 : Bits_9 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_TR_Type use record
+      SU        at 0 range  0 ..  3;
+      ST        at 0 range  4 ..  6;
+      Reserved1 at 0 range  7 ..  7;
+      MNU       at 0 range  8 .. 11;
+      MNT       at 0 range 12 .. 14;
+      Reserved2 at 0 range 15 .. 15;
+      HU        at 0 range 16 .. 19;
+      HT        at 0 range 20 .. 21;
+      PM        at 0 range 22 .. 22;
+      Reserved3 at 0 range 23 .. 31;
+   end record;
+
+   -- 32.6.2 RTC date register (RTC_DR)
+
+   type RTC_DR_Type is record
+      DU        : Bits_4;      -- Date units in BCD format
+      DT        : Bits_2;      -- Date tens in BCD format
+      Reserved1 : Bits_2 := 0;
+      MU        : Bits_4;      -- Month units in BCD format
+      MT        : Bits_1;      -- Month tens in BCD format
+      WDU       : Bits_3;      -- Week day units
+      YU        : Bits_4;      -- Year units in BCD format
+      YT        : Bits_4;      -- Year tens in BCD format
+      Reserved2 : Bits_8 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_DR_Type use record
+      DU        at 0 range  0 ..  3;
+      DT        at 0 range  4 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      MU        at 0 range  8 .. 11;
+      MT        at 0 range 12 .. 12;
+      WDU       at 0 range 13 .. 15;
+      YU        at 0 range 16 .. 19;
+      YT        at 0 range 20 .. 23;
+      Reserved2 at 0 range 24 .. 31;
+   end record;
+
+   -- 32.6.3 RTC control register (RTC_CR)
+
+   WUCKSEL_DIV16   : constant := 2#000#; -- RTC/16 clock is selected
+   WUCKSEL_DIV8    : constant := 2#001#; -- RTC/8 clock is selected
+   WUCKSEL_DIV4    : constant := 2#010#; -- RTC/4 clock is selected
+   WUCKSEL_DIV2    : constant := 2#011#; -- RTC/2 clock is selected
+   WUCKSEL_SPRE    : constant := 2#100#; -- ck_spre (usually 1 Hz) clock is selected
+   WUCKSEL_SPRE216 : constant := 2#110#; -- ck_spre (usually 1 Hz) clock is selected and 216 is added to the WUT counter value
+
+   TSEDGE_RISING  : constant := 0; -- RTC_TS input rising edge generates a time-stamp event
+   TSEDGE_FALLING : constant := 1; -- RTC_TS input falling edge generates a time-stamp event
+
+   FMT_24   : constant := 0; -- 24 hour/day format
+   FMT_AMPM : constant := 1; -- AM/PM hour format
+
+   COSEL_512 : constant := 0; -- Calibration output is 512 Hz (with default prescaler setting)
+   COSEL_1   : constant := 1; -- Calibration output is 1 Hz (with default prescaler setting)
+
+   POL_HI : constant := 0; -- The pin is high when ALRAF/ALRBF/WUTF is asserted (depending on OSEL[1:0])
+   POL_LO : constant := 1; -- The pin is low when ALRAF/ALRBF/WUTF is asserted (depending on OSEL[1:0]).
+
+   OSEL_DISABLE : constant := 2#00#; -- Output disabled
+   OSEL_ALARMA  : constant := 2#01#; -- Alarm A output enabled
+   OSEL_ALARMB  : constant := 2#10#; -- Alarm B output enabled
+   OSEL_WAKEUP  : constant := 2#11#; -- Wakeup output enabled
+
+   type RTC_CR_Type is record
+      WUCKSEL   : Bits_3;      -- Wakeup clock selection
+      TSEDGE    : Bits_1;      -- Time-stamp event active edge
+      REFCKON   : Boolean;     -- RTC_REFIN reference clock detection enable (50 or 60 Hz)
+      BYPSHAD   : Boolean;     -- Bypass the shadow registers
+      FMT       : Bits_1;      -- Hour format
+      Reserved1 : Bits_1 := 0;
+      ALRAE     : Boolean;     -- Alarm A enable
+      ALRBE     : Boolean;     -- Alarm B enable
+      WUTE      : Boolean;     -- Wakeup timer enable
+      TSE       : Boolean;     -- timestamp enable
+      ALRAIE    : Boolean;     -- Alarm A interrupt enable
+      ALRBIE    : Boolean;     -- Alarm B interrupt enable
+      WUTIE     : Boolean;     -- Wakeup timer interrupt enable
+      TSIE      : Boolean;     -- Time-stamp interrupt enable
+      ADD1H     : Boolean;     -- Add 1 hour (summer time change)
+      SUB1H     : Boolean;     -- Subtract 1 hour (winter time change)
+      BKP       : Boolean;     -- Backup
+      COSEL     : Bits_1;      -- Calibration output selection
+      POL       : Bits_1;      -- Output polarity
+      OSEL      : Bits_2;      -- Output selection
+      COE       : Boolean;     -- Calibration output enable
+      ITSE      : Boolean;     -- timestamp on internal event enable
+      Reserved2 : Bits_7 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_CR_Type use record
+      WUCKSEL   at 0 range  0 ..  2;
+      TSEDGE    at 0 range  3 ..  3;
+      REFCKON   at 0 range  4 ..  4;
+      BYPSHAD   at 0 range  5 ..  5;
+      FMT       at 0 range  6 ..  6;
+      Reserved1 at 0 range  7 ..  7;
+      ALRAE     at 0 range  8 ..  8;
+      ALRBE     at 0 range  9 ..  9;
+      WUTE      at 0 range 10 .. 10;
+      TSE       at 0 range 11 .. 11;
+      ALRAIE    at 0 range 12 .. 12;
+      ALRBIE    at 0 range 13 .. 13;
+      WUTIE     at 0 range 14 .. 14;
+      TSIE      at 0 range 15 .. 15;
+      ADD1H     at 0 range 16 .. 16;
+      SUB1H     at 0 range 17 .. 17;
+      BKP       at 0 range 18 .. 18;
+      COSEL     at 0 range 19 .. 19;
+      POL       at 0 range 20 .. 20;
+      OSEL      at 0 range 21 .. 22;
+      COE       at 0 range 23 .. 23;
+      ITSE      at 0 range 24 .. 24;
+      Reserved2 at 0 range 25 .. 31;
+   end record;
+
+   -- 32.6.4 RTC initialization and status register (RTC_ISR)
+
+   INIT_FREERUN  : constant := 0; -- Free running mode
+   INIT_INITMODE : constant := 1; -- Initialization mode used to program time and date register (RTC_TR and RTC_DR), and ...
+
+   type RTC_ISR_Type is record
+      ALRAWF   : Boolean;      -- Alarm A write flag
+      ALRBWF   : Boolean;      -- Alarm B write flag
+      WUTWF    : Boolean;      -- Wakeup timer write flag
+      SHPF     : Boolean;      -- Shift operation pending
+      INITS    : Boolean;      -- Initialization status flag
+      RSF      : Boolean;      -- Registers synchronization flag
+      INITF    : Boolean;      -- Initialization flag
+      INIT     : Bits_1;       -- Initialization mode
+      ALRAF    : Boolean;      -- Alarm A flag
+      ALRBF    : Boolean;      -- Alarm B flag
+      WUTF     : Boolean;      -- Wakeup timer flag
+      TSF      : Boolean;      -- Time-stamp flag
+      TSOVF    : Boolean;      -- Time-stamp overflow flag
+      TAMP1F   : Boolean;      -- RTC_TAMP1 detection flag
+      TAMP2F   : Boolean;      -- RTC_TAMP2 detection flag
+      TAMP3F   : Boolean;      -- RTC_TAMP3 detection flag
+      RECALPF  : Boolean;      -- Recalibration pending Flag
+      ITSF     : Boolean;      -- Internal tTime-stamp flag
+      Reserved : Bits_14 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_ISR_Type use record
+      ALRAWF   at 0 range  0 ..  0;
+      ALRBWF   at 0 range  1 ..  1;
+      WUTWF    at 0 range  2 ..  2;
+      SHPF     at 0 range  3 ..  3;
+      INITS    at 0 range  4 ..  4;
+      RSF      at 0 range  5 ..  5;
+      INITF    at 0 range  6 ..  6;
+      INIT     at 0 range  7 ..  7;
+      ALRAF    at 0 range  8 ..  8;
+      ALRBF    at 0 range  9 ..  9;
+      WUTF     at 0 range 10 .. 10;
+      TSF      at 0 range 11 .. 11;
+      TSOVF    at 0 range 12 .. 12;
+      TAMP1F   at 0 range 13 .. 13;
+      TAMP2F   at 0 range 14 .. 14;
+      TAMP3F   at 0 range 15 .. 15;
+      RECALPF  at 0 range 16 .. 16;
+      ITSF     at 0 range 17 .. 17;
+      Reserved at 0 range 18 .. 31;
+   end record;
+
+   -- 32.6.5 RTC prescaler register (RTC_PRER)
+
+   type RTC_PRER_Type is record
+      PREDIV_S  : Bits_15;     -- Synchronous prescaler factor
+      Reserved1 : Bits_1 := 0;
+      PREDIV_A  : Bits_7;      -- Asynchronous prescaler factor
+      Reserved2 : Bits_9 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_PRER_Type use record
+      PREDIV_S  at 0 range  0 .. 14;
+      Reserved1 at 0 range 15 .. 15;
+      PREDIV_A  at 0 range 16 .. 22;
+      Reserved2 at 0 range 23 .. 31;
+   end record;
+
+   -- 32.6.6 RTC wakeup timer register (RTC_WUTR)
+
+   type RTC_WUTR_Type is record
+      WUT      : Bits_16;      -- Wakeup auto-reload value bits
+      Reserved : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_WUTR_Type use record
+      WUT      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 32.6.7 RTC alarm A register (RTC_ALRMAR)
+   -- 32.6.8 RTC alarm B register (RTC_ALRMBR)
+
+   type RTC_ALRMxR_Type is record
+      SU    : Bits_4; -- Second units in BCD format.
+      ST    : Bits_3; -- Second tens in BCD format.
+      MSK1  : Bits_1; -- Alarm x seconds mask
+      MNU   : Bits_4; -- Minute units in BCD format.
+      MNT   : Bits_3; -- Minute tens in BCD format.
+      MSK2  : Bits_1; -- Alarm x minutes mask
+      HU    : Bits_4; -- Hour units in BCD format.
+      HT    : Bits_2; -- Hour tens in BCD format.
+      PM    : Bits_1; -- AM/PM notation
+      MSK3  : Bits_1; -- Alarm x hours mask
+      DU    : Bits_4; -- Date units or day in BCD format.
+      DT    : Bits_2; -- Date tens in BCD format.
+      WDSEL : Bits_1; -- Week day selection
+      MSK4  : Bits_1; -- Alarm x date mask
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_ALRMxR_Type use record
+      SU    at 0 range  0 ..  3;
+      ST    at 0 range  4 ..  6;
+      MSK1  at 0 range  7 ..  7;
+      MNU   at 0 range  8 .. 11;
+      MNT   at 0 range 12 .. 14;
+      MSK2  at 0 range 15 .. 15;
+      HU    at 0 range 16 .. 19;
+      HT    at 0 range 20 .. 21;
+      PM    at 0 range 22 .. 22;
+      MSK3  at 0 range 23 .. 23;
+      DU    at 0 range 24 .. 27;
+      DT    at 0 range 28 .. 29;
+      WDSEL at 0 range 30 .. 30;
+      MSK4  at 0 range 31 .. 31;
+   end record;
+
+   -- 32.6.9 RTC write protection register (RTC_WPR)
+
+   KEY_KEY1 : constant := 16#CA#;
+   KEY_KEY2 : constant := 16#53#;
+
+   type RTC_WPR_Type is record
+      KEY      : Unsigned_8;   -- Write protection key
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_WPR_Type use record
+      KEY      at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   -- 32.6.10 RTC sub second register (RTC_SSR)
+
+   type RTC_SSR_Type is record
+      SS       : Unsigned_16; -- Sub second value
+      Reserved : Bits_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_SSR_Type use record
+      SS       at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 32.6.11 RTC shift control register (RTC_SHIFTR)
+
+   type RTC_SHIFTR_Type is record
+      SUBFS    : Bits_15; -- Subtract a fraction of a second
+      Reserved : Bits_16;
+      ADD1S    : Boolean; -- Add one second
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_SHIFTR_Type use record
+      SUBFS    at 0 range  0 .. 14;
+      Reserved at 0 range 15 .. 30;
+      ADD1S    at 0 range 31 .. 31;
+   end record;
+
+   -- 32.6.12 RTC timestamp time register (RTC_TSTR)
+
+   type RTC_TSTR_Type is record
+      SU        : Bits_4; -- Second units in BCD format.
+      ST        : Bits_3; -- Second tens in BCD format.
+      Reserved1 : Bits_1;
+      MNU       : Bits_4; -- Minute units in BCD format.
+      MNT       : Bits_3; -- Minute tens in BCD format.
+      Reserved2 : Bits_1;
+      HU        : Bits_4; -- Hour units in BCD format.
+      HT        : Bits_2; -- Hour tens in BCD format.
+      PM        : Bits_1; -- AM/PM notation
+      Reserved3 : Bits_9;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_TSTR_Type use record
+      SU        at 0 range  0 ..  3;
+      ST        at 0 range  4 ..  6;
+      Reserved1 at 0 range  7 ..  7;
+      MNU       at 0 range  8 .. 11;
+      MNT       at 0 range 12 .. 14;
+      Reserved2 at 0 range 15 .. 15;
+      HU        at 0 range 16 .. 19;
+      HT        at 0 range 20 .. 21;
+      PM        at 0 range 22 .. 22;
+      Reserved3 at 0 range 23 .. 31;
+   end record;
+
+   -- 32.6.13 RTC timestamp date register (RTC_TSDR)
+
+   type RTC_TSDR_Type is record
+      DU        : Bits_4;      -- Date units in BCD format
+      DT        : Bits_2;      -- Date tens in BCD format
+      Reserved1 : Bits_2 := 0;
+      MU        : Bits_4;      -- Month units in BCD format
+      MT        : Bits_1;      -- Month tens in BCD format
+      WDU       : Bits_3;      -- Week day units
+      YU        : Bits_4;      -- Year units in BCD format
+      YT        : Bits_4;      -- Year tens in BCD format
+      Reserved2 : Bits_8 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_TSDR_Type use record
+      DU        at 0 range  0 ..  3;
+      DT        at 0 range  4 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      MU        at 0 range  8 .. 11;
+      MT        at 0 range 12 .. 12;
+      WDU       at 0 range 13 .. 15;
+      YU        at 0 range 16 .. 19;
+      YT        at 0 range 20 .. 23;
+      Reserved2 at 0 range 24 .. 31;
+   end record;
+
+   -- 32.6.14 RTC time-stamp sub second register (RTC_TSSSR)
+
+   type RTC_TSSSR_Type is record
+      SS       : Unsigned_16; -- Sub second value
+      Reserved : Bits_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_TSSSR_Type use record
+      SS       at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 32.6.15 RTC calibration register (RTC_CALR)
+
+   type RTC_CALR_Type is record
+      CALM      : Bits_9;       -- Calibration minus
+      Reserved1 : Bits_4 := 0;
+      CALW16    : Boolean;      -- Use a 16-second calibration cycle period
+      CALW8     : Boolean;      -- Use an 8-second calibration cycle period
+      CALP      : Boolean;      -- Increase frequency of RTC by 488.5 ppm
+      Reserved2 : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_CALR_Type use record
+      CALM      at 0 range  0 ..  8;
+      Reserved1 at 0 range  9 .. 12;
+      CALW16    at 0 range 13 .. 13;
+      CALW8     at 0 range 14 .. 14;
+      CALP      at 0 range 15 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   -- 32.6.16 RTC tamper configuration register (RTC_TAMPCR)
+
+   TAMPTRG_LO      : constant := 0; -- RTC_TAMPx input staying low triggers a tamper detection event.
+   TAMPTRG_HI      : constant := 1; -- RTC_TAMPx input staying high triggers a tamper detection event.
+   TAMPTRG_RISING  : constant := 0; -- RTC_TAMPx input rising edge triggers a tamper detection event.
+   TAMPTRG_FALLING : constant := 1; -- RTC_TAMPx input falling edge triggers a tamper detection event.
+
+   TAMPFREQ_DIV32k : constant := 16#0#; -- RTCCLK / 32768 (1 Hz when RTCCLK = 32768 Hz)
+   TAMPFREQ_DIV16k : constant := 16#1#; -- RTCCLK / 16384 (2 Hz when RTCCLK = 32768 Hz)
+   TAMPFREQ_DIV8k  : constant := 16#2#; -- RTCCLK / 8192 (4 Hz when RTCCLK = 32768 Hz)
+   TAMPFREQ_DIV4k  : constant := 16#3#; -- RTCCLK / 4096 (8 Hz when RTCCLK = 32768 Hz)
+   TAMPFREQ_DIV2k  : constant := 16#4#; -- RTCCLK / 2048 (16 Hz when RTCCLK = 32768 Hz)
+   TAMPFREQ_DIV1k  : constant := 16#5#; -- RTCCLK / 1024 (32 Hz when RTCCLK = 32768 Hz)
+   TAMPFREQ_DIV512 : constant := 16#6#; -- RTCCLK / 512 (64 Hz when RTCCLK = 32768 Hz)
+   TAMPFREQ_DIV256 : constant := 16#7#; -- RTCCLK / 256 (128 Hz when RTCCLK = 32768 Hz)
+
+   TAMPFLT_EDGE : constant := 16#0#; -- Tamper event is activated on edge of RTC_TAMPx input transitions ...
+   TAMPFLT_SMP2 : constant := 16#1#; -- Tamper event is activated after 2 consecutive samples at the active level.
+   TAMPFLT_SMP4 : constant := 16#2#; -- Tamper event is activated after 4 consecutive samples at the active level.
+   TAMPFLT_SMP8 : constant := 16#3#; -- Tamper event is activated after 8 consecutive samples at the active level.
+
+   TAMPPRCH_CYC1 : constant := 16#0#; -- 1 RTCCLK cycle
+   TAMPPRCH_CYC2 : constant := 16#1#; -- 2 RTCCLK cycles
+   TAMPPRCH_CYC4 : constant := 16#2#; -- 4 RTCCLK cycles
+   TAMPPRCH_CYC8 : constant := 16#3#; -- 8 RTCCLK cycles
+
+   type RTC_TAMPCR_Type is record
+      TAMP1E       : Boolean;     -- RTC_TAMP1 input detection enable
+      TAMP1TRG     : Bits_1;      -- Active level for RTC_TAMP1 input
+      TAMPIE       : Boolean;     -- Tamper interrupt enable
+      TAMP2E       : Boolean;     -- RTC_TAMP2 input detection enable
+      TAMP2TRG     : Bits_1;      -- Active level for RTC_TAMP2 input
+      TAMP3E       : Boolean;     -- RTC_TAMP3 detection enable
+      TAMP3TRG     : Bits_1;      -- Active level for RTC_TAMP3 input
+      TAMPTS       : Boolean;     -- Activate timestamp on tamper detection event
+      TAMPFREQ     : Bits_3;      -- Tamper sampling frequency
+      TAMPFLT      : Bits_2;      -- RTC_TAMPx filter count
+      TAMPPRCH     : Bits_2;      -- RTC_TAMPx precharge duration
+      TAMPPUDIS    : Boolean;     -- RTC_TAMPx pull-up disable
+      TAMP1IE      : Boolean;     -- Tamper 1 interrupt enable
+      TAMP1NOERASE : Boolean;     -- Tamper 1 no erase
+      TAMP1MF      : Boolean;     -- Tamper 1 mask flag
+      TAMP2IE      : Boolean;     -- Tamper 2 interrupt enable
+      TAMP2NOERASE : Boolean;     -- Tamper 2 no erase
+      TAMP2MF      : Boolean;     -- Tamper 2 mask flag
+      TAMP3IE      : Boolean;     -- Tamper 3 interrupt enable
+      TAMP3NOERASE : Boolean;     -- Tamper 3 no erase
+      TAMP3MF      : Boolean;     -- Tamper 3 mask flag
+      Reserved     : Bits_7 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_TAMPCR_Type use record
+      TAMP1E       at 0 range  0 ..  0;
+      TAMP1TRG     at 0 range  1 ..  1;
+      TAMPIE       at 0 range  2 ..  2;
+      TAMP2E       at 0 range  3 ..  3;
+      TAMP2TRG     at 0 range  4 ..  4;
+      TAMP3E       at 0 range  5 ..  5;
+      TAMP3TRG     at 0 range  6 ..  6;
+      TAMPTS       at 0 range  7 ..  7;
+      TAMPFREQ     at 0 range  8 .. 10;
+      TAMPFLT      at 0 range 11 .. 12;
+      TAMPPRCH     at 0 range 13 .. 14;
+      TAMPPUDIS    at 0 range 15 .. 15;
+      TAMP1IE      at 0 range 16 .. 16;
+      TAMP1NOERASE at 0 range 17 .. 17;
+      TAMP1MF      at 0 range 18 .. 18;
+      TAMP2IE      at 0 range 19 .. 19;
+      TAMP2NOERASE at 0 range 20 .. 20;
+      TAMP2MF      at 0 range 21 .. 21;
+      TAMP3IE      at 0 range 22 .. 22;
+      TAMP3NOERASE at 0 range 23 .. 23;
+      TAMP3MF      at 0 range 24 .. 24;
+      Reserved     at 0 range 25 .. 31;
+   end record;
+
+   -- 32.6.17 RTC alarm A sub second register (RTC_ALRMASSR)
+   -- 32.6.18 RTC alarm B sub second register (RTC_ALRMBSSR)
+
+   type RTC_ALRMxSSR_Type is record
+      SS        : Bits_15;     -- Sub seconds value
+      Reserved1 : Bits_9 := 0;
+      MASKSS    : Bits_4;      -- Mask the most-significant bits starting at this bit
+      Reserved2 : Bits_4 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_ALRMxSSR_Type use record
+      SS        at 0 range  0 .. 14;
+      Reserved1 at 0 range 15 .. 23;
+      MASKSS    at 0 range 24 .. 27;
+      Reserved2 at 0 range 28 .. 31;
+   end record;
+
+   -- 32.6.19 RTC option register (RTC_OR)
+
+   TSINSEL_PC13   : constant := 2#00#; -- TIMESTAMP is mapped on PC13
+   TSINSEL_PI8    : constant := 2#01#; -- TIMESTAMP is mapped on PI8
+   TSINSEL_PC1    : constant := 2#10#; -- TIMESTAMP is mapped on PC1
+   TSINSEL_PC1ALT : constant := 2#11#; -- TIMESTAMP is mapped on PC1
+
+   RTC_ALARM_TYPE_OD : constant := 0; -- RTC_ALARM, when mapped on PC13, is open-drain output
+   RTC_ALARM_TYPE_PP : constant := 1; -- RTC_ALARM, when mapped on PC13, is push-pull output
+
+   type RTC_OR_Type is record
+      Reserved1      : Bits_1 := 0;
+      TSINSEL        : Bits_2;       -- TIMESTAMP mapping
+      RTC_ALARM_TYPE : Bits_1;       -- RTC_ALARM on PC13 output type
+      Reserved2      : Bits_28 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RTC_OR_Type use record
+      Reserved1      at 0 range 0 ..  0;
+      TSINSEL        at 0 range 1 ..  2;
+      RTC_ALARM_TYPE at 0 range 3 ..  3;
+      Reserved2      at 0 range 4 .. 31;
+   end record;
+
+   -- 32.6.20 RTC backup registers (RTC_BKPxR)
+
+   type RTC_BKPxR_Type is array (0 .. 31) of Unsigned_32
+      with Pack                => True,
+           Volatile_Components => True;
+
+   -- 32.6 RTC registers
+
+   RTC_TR_ADDRESS : constant := 16#4000_2800#;
+
+   RTC_TR : aliased RTC_TR_Type
+      with Address              => System'To_Address (RTC_TR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_DR_ADDRESS : constant := 16#4000_2804#;
+
+   RTC_DR : aliased RTC_DR_Type
+      with Address              => System'To_Address (RTC_DR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_CR_ADDRESS : constant := 16#4000_2808#;
+
+   RTC_CR : aliased RTC_CR_Type
+      with Address              => System'To_Address (RTC_CR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_ISR_ADDRESS : constant := 16#4000_280C#;
+
+   RTC_ISR : aliased RTC_ISR_Type
+      with Address              => System'To_Address (RTC_ISR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_PRER_ADDRESS : constant := 16#4000_2810#;
+
+   RTC_PRER : aliased RTC_PRER_Type
+      with Address              => System'To_Address (RTC_PRER_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_WUTR_ADDRESS : constant := 16#4000_2814#;
+
+   RTC_WUTR : aliased RTC_WUTR_Type
+      with Address              => System'To_Address (RTC_WUTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_ALRMAR_ADDRESS : constant := 16#4000_281C#;
+
+   RTC_ALRMAR : aliased RTC_ALRMxR_Type
+      with Address              => System'To_Address (RTC_ALRMAR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_ALRMBR_ADDRESS : constant := 16#4000_2820#;
+
+   RTC_ALRMBR : aliased RTC_ALRMxR_Type
+      with Address              => System'To_Address (RTC_ALRMBR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_WPR_ADDRESS : constant := 16#4000_2824#;
+
+   RTC_WPR : aliased RTC_WPR_Type
+      with Address              => System'To_Address (RTC_WPR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_SSR_ADDRESS : constant := 16#4000_2828#;
+
+   RTC_SSR : aliased RTC_SSR_Type
+      with Address              => System'To_Address (RTC_SSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_SHIFTR_ADDRESS : constant := 16#4000_282C#;
+
+   RTC_SHIFTR : aliased RTC_SHIFTR_Type
+      with Address              => System'To_Address (RTC_SHIFTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_TSTR_ADDRESS : constant := 16#4000_2830#;
+
+   RTC_TSTR : aliased RTC_TSTR_Type
+      with Address              => System'To_Address (RTC_TSTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_TSDR_ADDRESS : constant := 16#4000_2834#;
+
+   RTC_TSDR : aliased RTC_TSDR_Type
+      with Address              => System'To_Address (RTC_TSDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_TSSSR_ADDRESS : constant := 16#4000_2838#;
+
+   RTC_TSSSR : aliased RTC_TSSSR_Type
+      with Address              => System'To_Address (RTC_TSSSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_CALR_ADDRESS : constant := 16#4000_283C#;
+
+   RTC_CALR : aliased RTC_CALR_Type
+      with Address              => System'To_Address (RTC_CALR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_TAMPCR_ADDRESS : constant := 16#4000_2840#;
+
+   RTC_TAMPCR : aliased RTC_TAMPCR_Type
+      with Address              => System'To_Address (RTC_TAMPCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_ALRMASSR_ADDRESS : constant := 16#4000_2844#;
+
+   RTC_ALRMASSR : aliased RTC_ALRMxSSR_Type
+      with Address              => System'To_Address (RTC_ALRMASSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_ALRMBSSR_ADDRESS : constant := 16#4000_2848#;
+
+   RTC_ALRMBSSR : aliased RTC_ALRMxSSR_Type
+      with Address              => System'To_Address (RTC_ALRMBSSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_OR_ADDRESS : constant := 16#4000_284C#;
+
+   RTC_OR : aliased RTC_OR_Type
+      with Address              => System'To_Address (RTC_OR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_BKPR_ADDRESS : constant := 16#4000_2850#;
+
+   RTC_BKPR : RTC_BKPxR_Type
+      with Address    => System'To_Address (RTC_BKPR_ADDRESS),
            Import     => True,
            Convention => Ada;
 
@@ -3252,7 +3937,7 @@ pragma Warnings (On);
    USART1_BASEADDRESS : constant := 16#4001_1000#;
 
    USART1 : aliased USART_Type
-      with Address    => To_Address (USART1_BASEADDRESS),
+      with Address    => System'To_Address (USART1_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -3260,7 +3945,7 @@ pragma Warnings (On);
    USART2_BASEADDRESS : constant := 16#4000_4400#;
 
    USART2 : aliased USART_Type
-      with Address    => To_Address (USART2_BASEADDRESS),
+      with Address    => System'To_Address (USART2_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -3268,7 +3953,7 @@ pragma Warnings (On);
    USART3_BASEADDRESS : constant := 16#4000_4800#;
 
    USART3 : aliased USART_Type
-      with Address    => To_Address (USART3_BASEADDRESS),
+      with Address    => System'To_Address (USART3_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -3276,7 +3961,7 @@ pragma Warnings (On);
    UART4_BASEADDRESS : constant := 16#4000_4C00#;
 
    UART4 : aliased USART_Type
-      with Address    => To_Address (UART4_BASEADDRESS),
+      with Address    => System'To_Address (UART4_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -3284,7 +3969,7 @@ pragma Warnings (On);
    UART5_BASEADDRESS : constant := 16#4000_5000#;
 
    UART5 : aliased USART_Type
-      with Address    => To_Address (UART5_BASEADDRESS),
+      with Address    => System'To_Address (UART5_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -3292,7 +3977,7 @@ pragma Warnings (On);
    USART6_BASEADDRESS : constant := 16#4001_1400#;
 
    USART6 : aliased USART_Type
-      with Address    => To_Address (USART6_BASEADDRESS),
+      with Address    => System'To_Address (USART6_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -3300,7 +3985,7 @@ pragma Warnings (On);
    UART7_BASEADDRESS : constant := 16#4000_7800#;
 
    UART7 : aliased USART_Type
-      with Address    => To_Address (UART7_BASEADDRESS),
+      with Address    => System'To_Address (UART7_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -3308,7 +3993,7 @@ pragma Warnings (On);
    UART8_BASEADDRESS : constant := 16#4000_7C00#;
 
    UART8 : aliased USART_Type
-      with Address    => To_Address (UART8_BASEADDRESS),
+      with Address    => System'To_Address (UART8_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
