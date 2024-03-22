@@ -239,10 +239,12 @@ OBJDUMP_SWITCHES_DEFAULT  += --demangle=gnat
 RANLIB_SWITCHES_DEFAULT   +=
 
 # READELF
-READELF_SWITCHES_DEFAULT  += --wide # Allow output width to exceed 80 characters
+# Allow output width to exceed 80 characters
+READELF_SWITCHES_DEFAULT  += --wide
 # display the section details
 #READELF_SWITCHES_DEFAULT  += -t
-READELF_SWITCHES_DEFAULT  += --all # Equivalent to: -h -l -S -s -r -d -V -A -I
+# Equivalent to: -h -l -S -s -r -d -V -A -I
+READELF_SWITCHES_DEFAULT  += --all
 
 # SIZE
 SIZE_SWITCHES_DEFAULT     += --format=sysv
