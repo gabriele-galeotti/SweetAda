@@ -18,8 +18,6 @@
 with System;
 with Console;
 
-use type System.Address;
-
 separate (Abort_Library)
 procedure System_Abort_Parameterized
    (File    : in System.Address;
@@ -27,6 +25,7 @@ procedure System_Abort_Parameterized
     Column  : in Integer;
     Message : in System.Address)
    is
+   use type System.Address;
 begin
    Console.Print_NewLine;
    Console.Print ("*** SYSTEM ABORT", NL => True);
