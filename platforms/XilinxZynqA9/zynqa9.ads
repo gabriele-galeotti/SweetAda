@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package ZynqA9
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -307,7 +305,7 @@ package ZynqA9
    APU_BASEADDRESS : constant := 16#F8F0_0000#;
 
    APU : aliased APU_Type
-      with Address    => To_Address (APU_BASEADDRESS),
+      with Address    => System'To_Address (APU_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -376,7 +374,7 @@ package ZynqA9
    SLCR_BASEADDRESS : constant := 16#F800_0000#;
 
    SLCR : aliased SLCR_Type
-      with Address    => To_Address (SLCR_BASEADDRESS),
+      with Address    => System'To_Address (SLCR_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -607,7 +605,7 @@ package ZynqA9
    TTC0_BASEADDRESS : constant := 16#F800_1000#;
 
    TTC0 : aliased TTC_Type
-      with Address    => To_Address (TTC0_BASEADDRESS),
+      with Address    => System'To_Address (TTC0_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -615,7 +613,7 @@ package ZynqA9
    TTC1_BASEADDRESS : constant := 16#F800_2000#;
 
    TTC1 : aliased TTC_Type
-      with Address    => To_Address (TTC1_BASEADDRESS),
+      with Address    => System'To_Address (TTC1_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -903,7 +901,7 @@ package ZynqA9
    UART0_BASEADDRESS : constant := 16#E000_0000#;
 
    UART0 : aliased UART_Type
-      with Address    => To_Address (UART0_BASEADDRESS),
+      with Address    => System'To_Address (UART0_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
