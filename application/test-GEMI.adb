@@ -58,7 +58,7 @@ package body Application
          begin
             loop
                LEDPORT := not Value;
-               if Direction_Left = True then
+               if Direction_Left then
                   Value := Rotate_Left (Value, 1);
                else
                   Value := Rotate_Right (Value, 1);
