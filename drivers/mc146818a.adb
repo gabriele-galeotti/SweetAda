@@ -221,7 +221,7 @@ package body MC146818A
          D.Write_8 (Build_Address (D.Base_Address, PC_INDEX, D.Scale_Address), RegN);
          Value := D.Read_8 (Build_Address (D.Base_Address, PC_DATA, D.Scale_Address));
       else
-         Value := 0;
+         Value := 0; -- __TBD__
       end if;
       return Value;
    end Register_Read;
@@ -241,7 +241,7 @@ package body MC146818A
          D.Write_8 (Build_Address (D.Base_Address, PC_INDEX, D.Scale_Address), RegN);
          D.Write_8 (Build_Address (D.Base_Address, PC_DATA, D.Scale_Address), Value);
       else
-         null;
+         null; -- __TBD__
       end if;
    end Register_Write;
 
@@ -266,7 +266,7 @@ package body MC146818A
    ----------------------------------------------------------------------------
    procedure Read_Clock
       (D : in     Descriptor_Type;
-       T : in out Time.TM_Time)
+       T :    out Time.TM_Time)
       is
       Intcontext     : CPU.Intcontext_Type;
       RTC_RB         : RegisterB_Type;
@@ -319,6 +319,7 @@ package body MC146818A
       T.MDay  := Natural (Adjust_BCD (RTC_DayOfMonth, RTC_BCD));
       T.Mon   := Natural (Adjust_BCD (RTC_Month - 1, RTC_BCD));
       T.Year  := Natural (Adjust_BCD (RTC_Year, RTC_BCD));
+      T.Year  := @ + (if @ < 70 then 100 else 0);
       T.YDay  := 0;
    end Read_Clock;
 

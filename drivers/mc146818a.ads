@@ -65,7 +65,7 @@ package MC146818A
 
    procedure Read_Clock
       (D : in     Descriptor_Type;
-       T : in out Time.TM_Time);
+       T :    out Time.TM_Time);
 
    procedure Init
       (D : in Descriptor_Type);
