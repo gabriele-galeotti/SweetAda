@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package STM32VLDISCOVERY
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -280,7 +278,7 @@ package STM32VLDISCOVERY
    USART1_BASEADDRESS : constant := 16#4001_3800#;
 
    USART1 : aliased USART_Type
-      with Address    => To_Address (USART1_BASEADDRESS),
+      with Address    => System'To_Address (USART1_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
