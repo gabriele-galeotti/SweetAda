@@ -113,11 +113,7 @@ package body Application
          begin
             Console.Print ("Current date: ", NL => False);
             MC146818A.Read_Clock (BSP.RTC_Descriptor, TM);
-            if TM.Year < 70 then
-               Console.Print (TM.Year + 2_000, NL => False);
-            else
-               Console.Print (TM.Year + 1_900, NL => False);
-            end if;
+            Console.Print (TM.Year + 1_900, NL => False);
             Console.Print ("-", NL => False);
             Console.Print (TM.Mon + 1, NL => False);
             Console.Print ("-", NL => False);
