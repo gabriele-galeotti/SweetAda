@@ -144,6 +144,8 @@ while prechecksum > 0xFFFFFFFF:
     prechecksum = (prechecksum & 0xFFFFFFFF) + (prechecksum >> 32)
 checksum = 0xFFFFFFFF - prechecksum
 
+printf('%s: creating floppy disk ...\n', SCRIPT_FILENAME)
+
 fd_adf = open(adf_filename, 'wb')
 fd_adf.write(bootdata[0:4])
 fd_adf.write(checksum.to_bytes(4, byteorder='big'))
