@@ -15,10 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
 with Interfaces;
+with Bits;
+with MMIO;
+with Time;
 
 package Goldfish
-   with Pure => True
    is
 
    --========================================================================--
@@ -29,32 +32,30 @@ package Goldfish
    --                                                                        --
    --========================================================================--
 
+   use System;
    use Interfaces;
+   use Bits;
 
-   ----------------------------------------------------------------------------
-   -- RTC
-   ----------------------------------------------------------------------------
+   type Port_Read_32_Ptr is access function (Port : Address) return Unsigned_32;
+   type Port_Write_32_Ptr is access procedure (Port : in Address; Value : in Unsigned_32);
 
-   type RTC_Type is record
-      TIME_LOW        : Unsigned_32 with Volatile_Full_Access => True;
-      TIME_HIGH       : Unsigned_32 with Volatile_Full_Access => True;
-      ALARM_LOW       : Unsigned_32 with Volatile_Full_Access => True;
-      ALARM_HIGH      : Unsigned_32 with Volatile_Full_Access => True;
-      IRQ_ENABLED     : Unsigned_32 with Volatile_Full_Access => True;
-      CLEAR_ALARM     : Unsigned_32 with Volatile_Full_Access => True;
-      ALARM_STATUS    : Unsigned_32 with Volatile_Full_Access => True;
-      CLEAR_INTERRUPT : Unsigned_32 with Volatile_Full_Access => True;
-   end record
-      with Size => 8 * 32;
-   for RTC_Type use record
-      TIME_LOW        at 16#00# range 0 .. 31;
-      TIME_HIGH       at 16#04# range 0 .. 31;
-      ALARM_LOW       at 16#08# range 0 .. 31;
-      ALARM_HIGH      at 16#0C# range 0 .. 31;
-      IRQ_ENABLED     at 16#10# range 0 .. 31;
-      CLEAR_ALARM     at 16#14# range 0 .. 31;
-      ALARM_STATUS    at 16#18# range 0 .. 31;
-      CLEAR_INTERRUPT at 16#1C# range 0 .. 31;
+   type Descriptor_Type is record
+      Base_Address  : Address;
+      Scale_Address : Address_Shift;
+      Read_32       : not null Port_Read_32_Ptr := MMIO.ReadN_U32'Access;
+      Write_32      : not null Port_Write_32_Ptr := MMIO.WriteN_U32'Access;
    end record;
+
+   DESCRIPTOR_INVALID : constant Descriptor_Type :=
+      (
+       Base_Address  => Null_Address,
+       Scale_Address => 0,
+       Read_32       => MMIO.ReadN_U32'Access,
+       Write_32      => MMIO.WriteN_U32'Access
+      );
+
+   procedure Read_Clock
+      (D : in     Descriptor_Type;
+       T :    out Time.TM_Time);
 
 end Goldfish;
