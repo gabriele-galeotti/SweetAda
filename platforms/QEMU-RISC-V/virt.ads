@@ -15,11 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with Goldfish;
-
 package Virt
-   with Preelaborate => True
+   with Pure => True
    is
 
    --========================================================================--
@@ -31,17 +28,9 @@ package Virt
    --========================================================================--
 
    -- UART 16x50-style
-
    UART0_BASEADDRESS : constant := 16#1000_0000#;
 
-   -- Goldfish RTC
-
-   Goldfish_RTC_BASEADDRESS : constant := 16#0010_1000#;
-
-   Goldfish_RTC : aliased Goldfish.RTC_Type
-      with Address    => System'To_Address (Goldfish_RTC_BASEADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+   -- Goldfish Real-Time clock
+   RTC_BASEADDRESS : constant := 16#0010_1000#;
 
 end Virt;

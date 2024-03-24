@@ -4,8 +4,10 @@ with Interfaces;
 with Bits;
 with CPU;
 with Virt;
-with Time;
 with Console;
+with BSP;
+with Goldfish;
+with Time;
 
 package body Application
    is
@@ -39,24 +41,17 @@ package body Application
       if True then
          declare
             Delay_Count : constant := 300_000_000;
-            Time_L      : Unsigned_32;
-            Time_H      : Unsigned_32;
-            Time_ns     : Integer_64;
             TM          : Time.TM_Time;
          begin
             loop
-               -- strictly adhere to Goldfish RTC specifications
-               Time_L  := Virt.Goldfish_RTC.TIME_LOW;
-               Time_H  := Virt.Goldfish_RTC.TIME_HIGH;
-               Time_ns := Integer_64 (Bits.Make_Word (Time_H, Time_L));
-               Time.Make_Time (Unsigned_32 (Time_ns / 10**9), TM);
-               Console.Print (Time.Day_Of_Week (Time.NDay_Of_Week (TM.MDay, TM.Mon + 1, TM.Year + 1900)));
+               Goldfish.Read_Clock (BSP.RTC_Descriptor, TM);
+               Console.Print (Time.Day_Of_Week (Time.NDay_Of_Week (TM.MDay, TM.Mon + 1, TM.Year + 1_900)));
                Console.Print (" ");
                Console.Print (Time.Month_Name (TM.Mon + 1));
                Console.Print (" ");
                Console.Print (TM.MDay);
                Console.Print (" ");
-               Console.Print (TM.Year + 1900);
+               Console.Print (TM.Year + 1_900);
                Console.Print (" ");
                Console.Print (TM.Hour);
                Console.Print (":");

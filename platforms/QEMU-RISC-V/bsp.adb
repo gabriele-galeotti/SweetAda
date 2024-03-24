@@ -84,6 +84,11 @@ package body BSP
       UART_Descriptor.Scale_Address := 0;
       UART_Descriptor.Baud_Clock    := CLK_UART3M6;
       UART16x50.Init (UART_Descriptor);
+      -- Goldfish RTC ---------------------------------------------------------
+      RTC_Descriptor.Read_32       := MMIO.Read'Access;
+      RTC_Descriptor.Write_32      := MMIO.Write'Access;
+      RTC_Descriptor.Base_Address  := System'To_Address (Virt.RTC_BASEADDRESS);
+      RTC_Descriptor.Scale_Address := 0;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;

@@ -20,6 +20,7 @@ with Configure;
 with Definitions;
 with Virt;
 with UART16x50;
+with Goldfish;
 
 package BSP
    is
@@ -43,6 +44,8 @@ package BSP
    Timer_Value     : Interfaces.Unsigned_64;
 
    UART_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
+
+   RTC_Descriptor : aliased Goldfish.Descriptor_Type := Goldfish.DESCRIPTOR_INVALID;
 
    procedure Console_Putchar
       (C : in Character);
