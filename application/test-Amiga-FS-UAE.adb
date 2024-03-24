@@ -4,8 +4,10 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with MMIO;
+with CPU;
 with M68k;
 with Amiga;
+with RTC;
 with BSP;
 with PBUF;
 with Ethernet;
@@ -16,6 +18,7 @@ with MBR;
 with FATFS;
 with FATFS.Applications;
 with Console;
+with Time;
 
 package body Application
    is
@@ -85,7 +88,7 @@ package body Application
       is
    begin
       -------------------------------------------------------------------------
-      if True then
+      if False then
          declare
             Ethernet_Descriptor : Ethernet.Descriptor_Type;
          begin
@@ -100,7 +103,7 @@ package body Application
          end;
       end if;
       -------------------------------------------------------------------------
-      if True then
+      if False then
          declare
             Success   : Boolean;
             Partition : MBR.Partition_Entry_Type;
@@ -131,20 +134,27 @@ package body Application
       -------------------------------------------------------------------------
       if True then
          declare
-            TC1 : Unsigned_32 := BSP.Tick_Count;
-            TC2 : Unsigned_32 := BSP.Tick_Count;
+            -- TC1 : Unsigned_32 := BSP.Tick_Count;
+            -- TC2 : Unsigned_32 := BSP.Tick_Count;
             TC3 : Unsigned_32 := BSP.Tick_Count;
+            TM  : Time.TM_Time;
          begin
             loop
-               if Tick_Count_Expired (TC1, 50) then
-                  Handle_Ethernet;
-                  TC1 := BSP.Tick_Count;
-               end if;
-               if Tick_Count_Expired (TC2, 300) then
-                  TC2 := BSP.Tick_Count;
-               end if;
-               if Tick_Count_Expired (TC3, 2000) then
-                  Serialport_TX ('.');
+               -- if Tick_Count_Expired (TC1, 50) then
+               --    Handle_Ethernet;
+               --    TC1 := BSP.Tick_Count;
+               -- end if;
+               -- if Tick_Count_Expired (TC2, 300) then
+               --    TC2 := BSP.Tick_Count;
+               -- end if;
+               if Tick_Count_Expired (TC3, 1000) then
+                  RTC.Read_Clock (TM);
+                  Console.Print (TM.Year + 1_900);
+                  Console.Print (TM.Mon, Prefix => "-");
+                  Console.Print (TM.MDay, Prefix => "-");
+                  Console.Print (TM.Hour, Prefix => " ");
+                  Console.Print (TM.Min, Prefix => ":");
+                  Console.Print (TM.Sec, Prefix => ":", NL => True);
                   TC3 := BSP.Tick_Count;
                end if;
             end loop;

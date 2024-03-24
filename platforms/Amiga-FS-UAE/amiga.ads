@@ -53,15 +53,15 @@ package Amiga
    ----------------------------------------------------------------------------
 
    type SERDATR_Type is record
-      DB      : Unsigned_8; -- Data bits
-      STP_DB8 : Bits_1;     -- Stop bit if LONG, data bit if not
-      STP     : Bits_1;     -- Stop bit
-      Unused  : Bits_1;
-      RXD     : Bits_1;     -- RXD pin receives UART serial data for direct bit test by the micro.
-      TSRE    : Boolean;    -- Serial port transmit shift reg. empty
-      TBE     : Boolean;    -- Serial port transmit buffer empty (mirror)
-      RBF     : Boolean;    -- Serial port receive buffer full (mirror)
-      OVRUN   : Boolean;    -- Serial port receiver overun
+      DB      : Unsigned_8;  -- Data bits
+      STP_DB8 : Bits_1;      -- Stop bit if LONG, data bit if not
+      STP     : Bits_1;      -- Stop bit
+      Unused  : Bits_1 := 0;
+      RXD     : Bits_1;      -- RXD pin receives UART serial data for direct bit test by the micro.
+      TSRE    : Boolean;     -- Serial port transmit shift reg. empty
+      TBE     : Boolean;     -- Serial port transmit buffer empty (mirror)
+      RBF     : Boolean;     -- Serial port receive buffer full (mirror)
+      OVRUN   : Boolean;     -- Serial port receiver overun
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -121,7 +121,8 @@ package Amiga
       COLOR00 : Unsigned_16  with Volatile_Full_Access => True;
       COLOR01 : Unsigned_16  with Volatile_Full_Access => True;
       COLOR02 : Unsigned_16  with Volatile_Full_Access => True;
-   end record;
+   end record
+      with Size => 16#0186# * 8;
    for CUSTOM_Type use record
       SERDATR at 16#0018# range 0 .. 15;
       INTENAR at 16#001C# range 0 .. 15;
@@ -146,10 +147,10 @@ package Amiga
       COLOR02 at 16#0184# range 0 .. 15;
    end record;
 
-   CUSTOM_BASEADDRESS : constant := 16#00DF_F000#;
+   CUSTOM_ADDRESS : constant := 16#00DF_F000#;
 
    CUSTOM : aliased CUSTOM_Type
-      with Address    => To_Address (CUSTOM_BASEADDRESS),
+      with Address    => System'To_Address (CUSTOM_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -228,7 +229,7 @@ package Amiga
    FRAMEBUFFER_BASEADDRESS : constant := 16#0003_0000#;
 
    Framebuffer : aliased Byte_Array (0 .. VIDEO_WIDTH * VIDEO_HEIGHT - 1)
-      with Address    => To_Address (FRAMEBUFFER_BASEADDRESS),
+      with Address    => System'To_Address (FRAMEBUFFER_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -259,14 +260,15 @@ package Amiga
    ----------------------------------------------------------------------------
 
    type CIA_PRA_Type is record
-      PA0 : Boolean;
-      PA1 : Boolean;
-      PA2 : Boolean;
-      PA3 : Boolean;
-      PA4 : Boolean;
-      PA5 : Boolean;
-      PA6 : Boolean;
-      PA7 : Boolean;
+                     -- CIA A                           CIA B
+      PA0 : Boolean; -- OVL   - Gary OVL                BUSY - Centronics busy (pin 11)
+      PA1 : Boolean; -- LED   - Power LED output        POUT - Centronics paper out (pin 12)
+      PA2 : Boolean; -- CHNG  - floppy disk change      SEL  - Centronics select (pin 13)
+      PA3 : Boolean; -- WPROT - floppy disk write prot  DSR  - RS232 data set ready (pin 6)
+      PA4 : Boolean; -- TRK0  - floppy disk TRK 0       CTS  - RS232 clear to send (pin 5)
+      PA5 : Boolean; -- RDY   - floppy disk RDY         DCD  - RS232 carrier detect (pin 8)
+      PA6 : Boolean; -- FIR0  - joystick 0 FIRE         RTS  - RS232 request to send (pin 4)
+      PA7 : Boolean; -- FIR1  - joystick 1 FIRE         DTR  - RS232 data terminal ready (pin 20)
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -282,14 +284,15 @@ package Amiga
    end record;
 
    type CIA_PRB_Type is record
-      PB0 : Boolean;
-      PB1 : Boolean;
-      PB2 : Boolean;
-      PB3 : Boolean;
-      PB4 : Boolean;
-      PB5 : Boolean;
-      PB6 : Boolean;
-      PB7 : Boolean;
+                     -- CIA A                   CIA B
+      PB0 : Boolean; -- D0 - Centronics DATA0   STEP - move drive head by one track
+      PB1 : Boolean; -- D1 - Centronics DATA1   DIR  - direction to move drive head: 1 = out to 0, 0 = in to track 79+
+      PB2 : Boolean; -- D2 - Centronics DATA2   SIDE - select drive head: 1 = bottom, 0 = top
+      PB3 : Boolean; -- D3 - Centronics DATA3   SEL0 - 0 = select DF0: 1 = not selected
+      PB4 : Boolean; -- D4 - Centronics DATA4   SEL1 - 0 = select DF1:
+      PB5 : Boolean; -- D5 - Centronics DATA5   SEL2 - 0 = select DF2:
+      PB6 : Boolean; -- D6 - Centronics DATA6   SEL3 - 0 = select DF3:
+      PB7 : Boolean; -- D7 - Centronics DATA7   MTR  - motor on/off status: 1 = off
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -350,13 +353,40 @@ package Amiga
       DPB7 at 0 range 7 .. 7;
    end record;
 
-   -- type CIA_ICR_Type is record
-   -- end record with
-   --    Bit_Order => Low_Order_First,
-   --    Size      => 8;
-   -- for CIA_ICR_Type use
-   -- record
-   -- end record;
+   OUTMODE_PULSE  : constant := 0; -- pulse
+   OUTMODE_TOGGLE : constant := 1; -- toggle
+
+   RUNMODE_RUN     : constant := 0; -- continuous mode
+   RUNMODE_ONESHOT : constant := 1; -- one-shot mode
+
+   INMODE_02  : constant := 0; -- Timer A counts 02 pulses
+   INMODE_CNT : constant := 1; -- Timer A counts positive CNT transitions
+
+   SPMODE_IN   : constant := 0; -- Serial port=input  (external shift clock is required)
+   SPMODE_OUT  : constant := 1; -- Serial port=output (CNT is the source of the shift clock)
+
+   type CIA_CRA_Type is record
+      START   : Boolean;     -- start/stop Timer A
+      PBON    : Boolean;     -- Timer A output on PB6
+      OUTMODE : Bits_1;      -- OUTMODE
+      RUNMODE : Bits_1;      -- RUNMODE
+      LOAD    : Boolean;     -- force load
+      INMODE  : Bits_1;      -- IMODE
+      SPMODE  : Bits_1;      -- SPMODE
+      Unused  : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CIA_CRA_Type use record
+      START   at 0 range 0 .. 0;
+      PBON    at 0 range 1 .. 1;
+      OUTMODE at 0 range 2 .. 2;
+      RUNMODE at 0 range 3 .. 3;
+      LOAD    at 0 range 4 .. 4;
+      INMODE  at 0 range 5 .. 5;
+      SPMODE  at 0 range 6 .. 6;
+      Unused  at 0 range 7 .. 7;
+   end record;
 
    type CIA_Type is record
       PRA      : CIA_PRA_Type  with Volatile_Full_Access => True;
@@ -373,9 +403,10 @@ package Amiga
       TODHR    : Unsigned_8    with Volatile_Full_Access => True; -- not connected
       SDR      : Unsigned_8    with Volatile_Full_Access => True; -- Serial Data Register
       ICR      : Unsigned_8    with Volatile_Full_Access => True;
-      CRA      : Unsigned_8    with Volatile_Full_Access => True;
+      CRA      : CIA_CRA_Type  with Volatile_Full_Access => True;
       CRB      : Unsigned_8    with Volatile_Full_Access => True;
-   end record;
+   end record
+      with Size => 16#0F01# * 8;
    for CIA_Type use record
       PRA      at 16#0000# range 0 .. 7;
       PRB      at 16#0100# range 0 .. 7;
@@ -395,106 +426,49 @@ package Amiga
       CRB      at 16#0F00# range 0 .. 7;
    end record;
 
-   -- CIA A U300, wired on D0..D7
-   -- PRA
-   -- 0 OVL   - Gary OVL
-   -- 1 LED   - Power LED output
-   -- 2 CHNG  - floppy disk change
-   -- 3 WPROT - floppy disk write protection
-   -- 4 TRK0  - floppy disk TRK 0
-   -- 5 RDY   - floppy disk RDY
-   -- 6 FIR0  - joystick 0 FIRE
-   -- 7 FIR1  - joystick 1 FIRE
-   -- PRB
-   -- 0 D0    - Centronics DATA0
-   -- 1 D1    - Centronics DATA1
-   -- 2 D2    - Centronics DATA2
-   -- 3 D3    - Centronics DATA3
-   -- 4 D4    - Centronics DATA4
-   -- 5 D5    - Centronics DATA5
-   -- 6 D6    - Centronics DATA6
-   -- 7 D7    - Centronics DATA7
+   -- MOS8520 CIA A U300, wired on D0..D7
 
-   CIAA_BASEADDRESS : constant := 16#00BF_E001#;
+   CIAA_ADDRESS : constant := 16#00BF_E001#;
 
    CIAA : aliased CIA_Type
-      with Address    => To_Address (CIAA_BASEADDRESS),
+      with Address    => System'To_Address (CIAA_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
-   -- CIA B U301, wired on D8..D15
-   -- PRA
-   -- 0 BUSY - Centronics busy (parallel port pin 11)
-   -- 1 POUT - Centronics paper out (pin 12)
-   -- 2 SEL  - Centronics select (pin 13)
-   -- 3 DSR  - RS232 data set ready (serial port pin 6)
-   -- 4 CTS  - RS232 clear to send (pin 5)
-   -- 5 DCD  - RS232 carrier detect (pin 8)
-   -- 6 RTS  - RS232 request to send (pin 4)
-   -- 7 DTR  - RS232 data terminal ready (pin 20)
-   -- PRB
-   -- 0 STEP - move drive head by one track in direction specified by the DIR bit
-   -- 1 DIR  - direction to move drive head (1 = out to 0, 0 = in to track 79+)
-   -- 2 SIDE - select drive head (1 = bottom, 0 = top)
-   -- 3 SEL0 - 0 = select DF0:  1 = not selected
-   -- 4 SEL1 - 0 = select DF1:
-   -- 5 SEL2 - 0 = select DF2:
-   -- 6 SEL3 - 0 = select DF3:
-   -- 7 MTR  - motor on/off status (1 = motor off, 0 = motor on)
+   -- MOS8520 CIA B U301, wired on D8..D15
 
-   CIAB_BASEADDRESS : constant := 16#00BF_D000#;
+   CIAB_ADDRESS : constant := 16#00BF_D000#;
 
    CIAB : aliased CIA_Type
-      with Address    => To_Address (CIAB_BASEADDRESS),
+      with Address    => System'To_Address (CIAB_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    procedure CIAA_ICR_ClearAll
       with Inline => True;
-
    procedure CIAA_ICR_ClearBitMask
       (Value : in Unsigned_8)
       with Inline => True;
-
    procedure CIAA_ICR_SetBitMask
       (Value : in Unsigned_8)
       with Inline => True;
 
-   procedure Serialport_Init;
+   ----------------------------------------------------------------------------
+   -- Serial port
+   ----------------------------------------------------------------------------
 
+   procedure Serialport_Init;
    procedure Serialport_RX
       (C : out Character);
-
    procedure Serialport_TX
       (C : in Character);
 
+   ----------------------------------------------------------------------------
+   -- Timer clock
+   ----------------------------------------------------------------------------
+
    procedure Tclk_Init;
-
-   ----------------------------------------------------------------------------
-   -- MSM6242 RTC
-   ----------------------------------------------------------------------------
-
-   type MSM6242_Type is record
-      S1   : Unsigned_8 with Volatile_Full_Access => True; -- 1-second digit register
-      S10  : Unsigned_8 with Volatile_Full_Access => True; -- 10-second digit register
-      MI1  : Unsigned_8 with Volatile_Full_Access => True; -- 1-minute digit register
-      MI10 : Unsigned_8 with Volatile_Full_Access => True; -- 10-minute digit register
-   end record;
-   for MSM6242_Type use record
-      S1   at 16#0000# range 0 .. 7;
-      S10  at 16#0002# range 0 .. 7;
-      MI1  at 16#0004# range 0 .. 7;
-      MI10 at 16#0006# range 0 .. 7;
-   end record;
-
-   MSM6242_BASEADDRESS : constant := 16#00DC_0001#; -- wired on D0..D7
-
-   MSM6242 : aliased MSM6242_Type
-      with Address    => To_Address (MSM6242_BASEADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
 
 end Amiga;

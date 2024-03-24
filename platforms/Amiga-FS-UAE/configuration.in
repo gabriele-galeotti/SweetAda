@@ -21,11 +21,11 @@ CPU := M68k
 
 #CPU_MODEL := M68010
 #CPU_MODEL := M68020
-#CPU_MODEL := M68030
-CPU_MODEL := M68040
+CPU_MODEL := M68030
+#CPU_MODEL := M68040
 
-#FPU_MODEL := M68881
-FPU_MODEL := M68040
+FPU_MODEL := M68881
+#FPU_MODEL := M68040
 
 ################################################################################
 # Build system parameters.                                                     #
@@ -34,8 +34,8 @@ FPU_MODEL := M68040
 
 #GCC_SWITCHES_PLATFORM     := -mcpu=68010
 #GCC_SWITCHES_PLATFORM     := -mcpu=68020 -m68881
-#GCC_SWITCHES_PLATFORM     := -mcpu=68030 -m68881
-GCC_SWITCHES_PLATFORM     := -mcpu=68040
+GCC_SWITCHES_PLATFORM     := -mcpu=68030 -m68881
+#GCC_SWITCHES_PLATFORM     := -mcpu=68040
 
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 #LD_SCRIPT                 := linker-rom.lds

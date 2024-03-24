@@ -41,6 +41,7 @@ package body MMU.Amiga
          end loop;
          Page_Setup (16#BFD#, DT_PAGEDSC, 16#00BF_D000#); -- CIAB
          Page_Setup (16#BFE#, DT_PAGEDSC, 16#00BF_E000#); -- CIAA
+         Page_Setup (16#DC0#, DT_PAGEDSC, 16#00DC_0000#); -- RTC
          Page_Setup (16#DD2#, DT_PAGEDSC, 16#00DD_2000#); -- Gayle
          Page_Setup (16#DFF#, DT_PAGEDSC, 16#00DF_F000#); -- CUSTOM
          -- ZORROII

@@ -4,6 +4,7 @@ console_debugger = 1
 amiga_model = @AMIGA_MODEL@
 cpu = @CPU_FSUAE@
 fpu = @-FPU_FSUAE@
+uae_chipset_compatible = -
 uae_chipset = ecs
 chip_memory = 1024
 fast_memory = 4096

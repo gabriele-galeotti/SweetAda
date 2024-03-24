@@ -96,7 +96,8 @@ package body Exceptions
       if Irq_Identifier = Level_2_Interrupt_Autovector then
          -- Console.Print ("Level 2 IRQ", NL => True);
          -- check if A2065 interrupt
-         if not A2065.Receive then
+         -- if not A2065.Receive then
+         if True then
             BSP.Tick_Count := @ + 1;
             -- use power LED as tick IRQ monitoring
             if BSP.Tick_Count mod 500 = 0 then

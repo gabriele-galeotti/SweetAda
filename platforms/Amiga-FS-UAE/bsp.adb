@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Configure;
 with Definitions;
 with Core;
@@ -43,7 +42,6 @@ package body BSP is
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -102,23 +100,27 @@ package body BSP is
       -------------------------------------------------------------------------
       Console.Print ("Amiga/FS-UAE", NL => True);
       -- A2065 ----------------------------------------------------------------
-      declare
-         Success : Boolean;
-         PIC     : ZorroII.PIC_Type;
-      begin
-         ZorroII.Setup (A2065.A2065_BASEADDRESS);
-         A2065.Probe (PIC, Success);
-      end;
+      if False then
+         declare
+            Success : Boolean;
+            PIC     : ZorroII.PIC_Type;
+         begin
+            ZorroII.Setup (A2065.A2065_BASEADDRESS);
+            A2065.Probe (PIC, Success);
+         end;
+      end if;
       -- Gayle IDE ------------------------------------------------------------
-      IDE_Descriptor.Base_Address  := To_Address (Gayle.GAYLE_IDE_BASEADDRESS);
-      IDE_Descriptor.Scale_Address := 2;
-      IDE_Descriptor.Read_8        := MMIO.Read'Access;
-      IDE_Descriptor.Write_8       := MMIO.Write'Access;
-      IDE_Descriptor.Read_16       := MMIO.ReadA'Access;
-      IDE_Descriptor.Write_16      := MMIO.WriteA'Access;
-      IDE.Init (IDE_Descriptor);
-      -- disable IDE interrupts
-      Gayle.IDE_Devcon.IRQDISABLE := True;
+      if False then
+         IDE_Descriptor.Base_Address  := System'To_Address (Gayle.GAYLE_IDE_BASEADDRESS);
+         IDE_Descriptor.Scale_Address := 2;
+         IDE_Descriptor.Read_8        := MMIO.Read'Access;
+         IDE_Descriptor.Write_8       := MMIO.Write'Access;
+         IDE_Descriptor.Read_16       := MMIO.ReadA'Access;
+         IDE_Descriptor.Write_16      := MMIO.WriteA'Access;
+         IDE.Init (IDE_Descriptor);
+         -- disable IDE interrupts
+         Gayle.IDE_Devcon.IRQDISABLE := True;
+      end if;
       -- system timer initialization ------------------------------------------
       Tclk_Init;
       -- interrupt setup ------------------------------------------------------

@@ -21,7 +21,8 @@ with Configure;
 with Memory_Functions;
 with MMIO;
 
-package body Amiga is
+package body Amiga
+   is
 
    --========================================================================--
    --                                                                        --
@@ -35,11 +36,10 @@ package body Amiga is
    BYTES_PER_TEXTLINE : constant := BYTES_PER_RASTER * 8;
 
    procedure OCS_Scroll;
-   procedure OCS_Print (
-                        X : in Video_X_Coordinate_Type;
-                        Y : in Video_Y_Coordinate_Type;
-                        C : in Character
-                       );
+   procedure OCS_Print
+      (X : in Video_X_Coordinate_Type;
+       Y : in Video_Y_Coordinate_Type;
+       C : in Character);
 
    --========================================================================--
    --                                                                        --
@@ -53,17 +53,22 @@ package body Amiga is
    -- INTENA subprograms
    ----------------------------------------------------------------------------
 
-   procedure INTENA_ClearAll is
+   procedure INTENA_ClearAll
+      is
    begin
       CUSTOM.INTENA := 16#7FFF#;
    end INTENA_ClearAll;
 
-   procedure INTENA_ClearBitMask (Value : in Unsigned_16) is
+   procedure INTENA_ClearBitMask
+      (Value : in Unsigned_16)
+      is
    begin
       CUSTOM.INTENA := Value and 16#7FFF#;
    end INTENA_ClearBitMask;
 
-   procedure INTENA_SetBitMask (Value : in Unsigned_16) is
+   procedure INTENA_SetBitMask
+      (Value : in Unsigned_16)
+      is
    begin
       CUSTOM.INTENA := Value or 16#8000#;
    end INTENA_SetBitMask;
@@ -72,17 +77,22 @@ package body Amiga is
    -- INTREQ subprograms
    ----------------------------------------------------------------------------
 
-   procedure INTREQ_ClearAll is
+   procedure INTREQ_ClearAll
+      is
    begin
       CUSTOM.INTREQ := 16#7FFF#;
    end INTREQ_ClearAll;
 
-   procedure INTREQ_ClearBitMask (Value : in Unsigned_16) is
+   procedure INTREQ_ClearBitMask
+      (Value : in Unsigned_16)
+      is
    begin
       CUSTOM.INTREQ := Value and 16#7FFF#;
    end INTREQ_ClearBitMask;
 
-   procedure INTREQ_SetBitMask (Value : in Unsigned_16) is
+   procedure INTREQ_SetBitMask
+      (Value : in Unsigned_16)
+      is
    begin
       CUSTOM.INTREQ := Value or 16#8000#;
    end INTREQ_SetBitMask;
@@ -92,18 +102,19 @@ package body Amiga is
    ----------------------------------------------------------------------------
    -- Print character C @ X, Y.
    ----------------------------------------------------------------------------
-   procedure OCS_Print (
-                        X : in Video_X_Coordinate_Type;
-                        Y : in Video_Y_Coordinate_Type;
-                        C : in Character
-                       ) is
+   procedure OCS_Print
+      (X : in Video_X_Coordinate_Type;
+       Y : in Video_Y_Coordinate_Type;
+       C : in Character)
+      is
       Framebuffer_Offset : Natural;
       Pattern_Offset     : Natural;
    begin
       Framebuffer_Offset := X + Y * BYTES_PER_TEXTLINE;
       for Index in Storage_Offset range 0 .. Videofont8x8.Font_Height - 1 loop
          Pattern_Offset := BYTES_PER_RASTER * Natural (Index);
-         Framebuffer (Framebuffer_Offset + Pattern_Offset) := To_U8 (Videofont8x8.Font (Character'Pos (C)) (Index));
+         Framebuffer (Framebuffer_Offset + Pattern_Offset) :=
+            To_U8 (Videofont8x8.Font (Character'Pos (C)) (Index));
       end loop;
    end OCS_Print;
 
@@ -112,7 +123,8 @@ package body Amiga is
    ----------------------------------------------------------------------------
    -- Scroll a line of text.
    ----------------------------------------------------------------------------
-   procedure OCS_Scroll is
+   procedure OCS_Scroll
+      is
    begin
       Memory_Functions.Movemem (
          Framebuffer'Address + BYTES_PER_TEXTLINE,
@@ -127,7 +139,8 @@ package body Amiga is
    ----------------------------------------------------------------------------
    -- OCS_Clear_Screen
    ----------------------------------------------------------------------------
-   procedure OCS_Clear_Screen is
+   procedure OCS_Clear_Screen
+      is
    begin
       for Y in Video_Y_Coordinate_Type'Range loop
          for X in Video_X_Coordinate_Type'Range loop
@@ -143,9 +156,12 @@ package body Amiga is
    ----------------------------------------------------------------------------
    -- Print character C @ Cursor.
    ----------------------------------------------------------------------------
-   procedure OCS_Print (C : in Character) is
+   procedure OCS_Print
+      (C : in Character)
+      is
       procedure Y_Increment;
-      procedure Y_Increment is
+      procedure Y_Increment
+         is
       begin
          if Cursor.Y = Video_Y_Coordinate_Type'Last then
             OCS_Scroll;
@@ -175,7 +191,9 @@ package body Amiga is
    ----------------------------------------------------------------------------
    -- Print string S.
    ----------------------------------------------------------------------------
-   procedure OCS_Print (S : in String) is
+   procedure OCS_Print
+      (S : in String)
+      is
    begin
       for Index in S'Range loop
          OCS_Print (S (Index));
@@ -185,7 +203,8 @@ package body Amiga is
    ----------------------------------------------------------------------------
    -- OCS_Setup
    ----------------------------------------------------------------------------
-   procedure OCS_Setup is
+   procedure OCS_Setup
+      is
       function To_U32 is new Ada.Unchecked_Conversion (Address, Unsigned_32);
       Unused : Unsigned_16 with Unreferenced => True;
    begin
@@ -248,17 +267,22 @@ package body Amiga is
    -- CIAA ICR
    ----------------------------------------------------------------------------
 
-   procedure CIAA_ICR_ClearAll is
+   procedure CIAA_ICR_ClearAll
+      is
    begin
       CIAA.ICR := 16#7F#;
    end CIAA_ICR_ClearAll;
 
-   procedure CIAA_ICR_ClearBitMask (Value : in Unsigned_8) is
+   procedure CIAA_ICR_ClearBitMask
+      (Value : in Unsigned_8)
+      is
    begin
       CIAA.ICR := Value and 16#7F#;
    end CIAA_ICR_ClearBitMask;
 
-   procedure CIAA_ICR_SetBitMask (Value : in Unsigned_8) is
+   procedure CIAA_ICR_SetBitMask
+      (Value : in Unsigned_8)
+      is
    begin
       CIAA.ICR := Value or 16#80#;
    end CIAA_ICR_SetBitMask;
@@ -272,15 +296,9 @@ package body Amiga is
    -- 14..00 baud rate
    ----------------------------------------------------------------------------
 
-   procedure Serialport_Init is
-   begin
-      -- CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC clock, 9600 bps
-      CUSTOM.SERPER := (RATE => 16#005C#, LONG => False); -- NTSC clock, 38400 bps
-      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL clock, 9600 bps
-      -- CUSTOM.SERPER := (RATE => 16#005B#, LONG => False); -- PAL clock, 38400 bps
-   end Serialport_Init;
-
-   procedure Serialport_RX (C : out Character) is
+   procedure Serialport_RX
+      (C : out Character)
+      is
       R : SERDATR_Type;
    begin
       loop
@@ -293,7 +311,9 @@ package body Amiga is
       end loop;
    end Serialport_RX;
 
-   procedure Serialport_TX (C : in Character) is
+   procedure Serialport_TX
+      (C : in Character)
+      is
    begin
       loop
          exit when CUSTOM.SERDATR.TBE;
@@ -301,12 +321,23 @@ package body Amiga is
       CUSTOM.SERDAT := (D => To_U8 (C), S => 16#01#);
    end Serialport_TX;
 
+   procedure Serialport_Init
+      is
+   begin
+      -- CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC clock, 9600 bps
+      CUSTOM.SERPER := (RATE => 16#005C#, LONG => False); -- NTSC clock, 38400 bps
+      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL clock, 9600 bps
+      -- CUSTOM.SERPER := (RATE => 16#005B#, LONG => False); -- PAL clock, 38400 bps
+   end Serialport_Init;
+
    ----------------------------------------------------------------------------
    -- Tclk_Init
    ----------------------------------------------------------------------------
-   procedure Tclk_Init is
-      Tclk_Value : constant := (Configure.TIMER_SYSCLK + (Configure.TICK_FREQUENCY * 10) / 2) /
-                               (Configure.TICK_FREQUENCY * 10);
+   procedure Tclk_Init
+      is
+      Tclk_Value : constant :=
+         (Configure.TIMER_SYSCLK + (Configure.TICK_FREQUENCY * 10) / 2) /
+         (Configure.TICK_FREQUENCY * 10);
    begin
       --
       -- Time = Latch Value / Count Speed
@@ -320,9 +351,19 @@ package body Amiga is
       --
       -- CIAA uses interrupt on Level 2 (PORTS).
       --
+      CIAA.CRA  := (
+                    START   => False,
+                    PBON    => False,
+                    OUTMODE => OUTMODE_PULSE,
+                    RUNMODE => RUNMODE_RUN,
+                    LOAD    => False,
+                    INMODE  => INMODE_02,
+                    SPMODE  => SPMODE_IN,
+                    others  => <>
+                   );
       CIAA.TALO := Unsigned_8 (Tclk_Value mod 2**8);
       CIAA.TAHI := Unsigned_8 (Tclk_Value / 2**8);
-      CIAA.CRA  := @ or 1; -- start Timer A
+      CIAA.CRA.START := True;
    end Tclk_Init;
 
 end Amiga;
