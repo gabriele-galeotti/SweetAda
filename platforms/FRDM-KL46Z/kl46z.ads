@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package KL46Z
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -113,7 +111,7 @@ package KL46Z
    PORTA_PCR_BASEADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#0000#;
 
    PORTA_PCR : aliased array (0 .. 31) of PORTx_PCRn_Type
-      with Address    => To_Address (PORTA_PCR_BASEADDRESS),
+      with Address    => System'To_Address (PORTA_PCR_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -121,7 +119,7 @@ package KL46Z
    PORTB_PCR_BASEADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#1000#;
 
    PORTB_PCR : aliased array (0 .. 31) of PORTx_PCRn_Type
-      with Address    => To_Address (PORTB_PCR_BASEADDRESS),
+      with Address    => System'To_Address (PORTB_PCR_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -129,7 +127,7 @@ package KL46Z
    PORTC_PCR_BASEADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#2000#;
 
    PORTC_PCR : aliased array (0 .. 31) of PORTx_PCRn_Type
-      with Address    => To_Address (PORTC_PCR_BASEADDRESS),
+      with Address    => System'To_Address (PORTC_PCR_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -137,7 +135,7 @@ package KL46Z
    PORTD_PCR_BASEADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#3000#;
 
    PORTD_PCR : aliased array (0 .. 31) of PORTx_PCRn_Type
-      with Address    => To_Address (PORTD_PCR_BASEADDRESS),
+      with Address    => System'To_Address (PORTD_PCR_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -145,7 +143,7 @@ package KL46Z
    PORTE_PCR_BASEADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#4000#;
 
    PORTE_PCR : aliased array (0 .. 31) of PORTx_PCRn_Type
-      with Address    => To_Address (PORTE_PCR_BASEADDRESS),
+      with Address    => System'To_Address (PORTE_PCR_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -185,7 +183,7 @@ package KL46Z
    SIM_SOPT1_ADDRESS : constant := 16#4004_7000#;
 
    SIM_SOPT1 : aliased SIM_SOPT1_Type
-      with Address              => To_Address (SIM_SOPT1_ADDRESS),
+      with Address              => System'To_Address (SIM_SOPT1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -212,7 +210,7 @@ package KL46Z
    SIM_SOPT1CFG_ADDRESS : constant := 16#4004_7004#;
 
    SIM_SOPT1CFG : aliased SIM_SOPT1CFG_Type
-      with Address              => To_Address (SIM_SOPT1CFG_ADDRESS),
+      with Address              => System'To_Address (SIM_SOPT1CFG_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -279,7 +277,7 @@ package KL46Z
    SIM_SOPT2_ADDRESS : constant := 16#4004_8004#;
 
    SIM_SOPT2 : aliased SIM_SOPT2_Type
-      with Address              => To_Address (SIM_SOPT2_ADDRESS),
+      with Address              => System'To_Address (SIM_SOPT2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -329,7 +327,7 @@ package KL46Z
    SIM_SOPT4_ADDRESS : constant := 16#4004_800C#;
 
    SIM_SOPT4 : aliased SIM_SOPT4_Type
-      with Address              => To_Address (SIM_SOPT4_ADDRESS),
+      with Address              => System'To_Address (SIM_SOPT4_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -376,7 +374,7 @@ package KL46Z
    SIM_SOPT5_ADDRESS : constant := 16#4004_8010#;
 
    SIM_SOPT5 : aliased SIM_SOPT5_Type
-      with Address              => To_Address (SIM_SOPT5_ADDRESS),
+      with Address              => System'To_Address (SIM_SOPT5_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -423,7 +421,7 @@ package KL46Z
    SIM_SOPT7_ADDRESS : constant := 16#4004_8018#;
 
    SIM_SOPT7 : aliased SIM_SOPT7_Type
-      with Address              => To_Address (SIM_SOPT7_ADDRESS),
+      with Address              => System'To_Address (SIM_SOPT7_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -496,7 +494,7 @@ package KL46Z
    SIM_SDID_ADDRESS : constant := 16#4004_8024#;
 
    SIM_SDID : aliased SIM_SDID_Type
-      with Address              => To_Address (SIM_SDID_ADDRESS),
+      with Address              => System'To_Address (SIM_SDID_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -547,7 +545,7 @@ package KL46Z
    SIM_SCGC4_ADDRESS : constant := SIM_BASEADDRESS + 16#1034#;
 
    SIM_SCGC4 : aliased SIM_SCGC4_Type
-      with Address              => To_Address (SIM_SCGC4_ADDRESS),
+      with Address              => System'To_Address (SIM_SCGC4_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -592,7 +590,7 @@ package KL46Z
    SIM_SCGC5_ADDRESS : constant := SIM_BASEADDRESS + 16#1038#;
 
    SIM_SCGC5 : aliased SIM_SCGC5_Type
-      with Address              => To_Address (SIM_SCGC5_ADDRESS),
+      with Address              => System'To_Address (SIM_SCGC5_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -637,7 +635,7 @@ package KL46Z
    SIM_SCGC6_ADDRESS : constant := SIM_BASEADDRESS + 16#103C#;
 
    SIM_SCGC6 : aliased SIM_SCGC6_Type
-      with Address              => To_Address (SIM_SCGC6_ADDRESS),
+      with Address              => System'To_Address (SIM_SCGC6_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -660,7 +658,7 @@ package KL46Z
    SIM_SCGC7_ADDRESS : constant := SIM_BASEADDRESS + 16#1040#;
 
    SIM_SCGC7 : aliased SIM_SCGC7_Type
-      with Address              => To_Address (SIM_SCGC7_ADDRESS),
+      with Address              => System'To_Address (SIM_SCGC7_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -711,7 +709,7 @@ package KL46Z
    SIM_CLKDIV1_ADDRESS : constant := 16#4004_8044#;
 
    SIM_CLKDIV1 : aliased SIM_CLKDIV1_Type
-      with Address              => To_Address (SIM_CLKDIV1_ADDRESS),
+      with Address              => System'To_Address (SIM_CLKDIV1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -748,7 +746,7 @@ package KL46Z
    SMC_PMPROT_ADDRESS : constant := 16#4007_E000#;
 
    SMC_PMPROT : aliased SMC_PMPROT_Type
-      with Address              => To_Address (SMC_PMPROT_ADDRESS),
+      with Address              => System'To_Address (SMC_PMPROT_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -789,7 +787,7 @@ package KL46Z
    SMC_PMCTRL_ADDRESS : constant := 16#4007_E001#;
 
    SMC_PMCTRL : aliased SMC_PMCTRL_Type
-      with Address              => To_Address (SMC_PMCTRL_ADDRESS),
+      with Address              => System'To_Address (SMC_PMCTRL_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -830,7 +828,7 @@ package KL46Z
    SMC_STOPCTRL_ADDRESS : constant := 16#4007_E002#;
 
    SMC_STOPCTRL : aliased SMC_STOPCTRL_Type
-      with Address              => To_Address (SMC_STOPCTRL_ADDRESS),
+      with Address              => System'To_Address (SMC_STOPCTRL_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -859,7 +857,7 @@ package KL46Z
    SMC_PMSTAT_ADDRESS : constant := 16#4007_E003#;
 
    SMC_PMSTAT : aliased SMC_PMSTAT_Type
-      with Address              => To_Address (SMC_PMSTAT_ADDRESS),
+      with Address              => System'To_Address (SMC_PMSTAT_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -897,7 +895,7 @@ package KL46Z
    PMC_LVDSC1_ADDRESS : constant := 16#4007_D000#;
 
    PMC_LVDSC1 : aliased PMC_LVDSC1_Type
-      with Address              => To_Address (PMC_LVDSC1_ADDRESS),
+      with Address              => System'To_Address (PMC_LVDSC1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -929,7 +927,7 @@ package KL46Z
    PMC_LVDSC2_ADDRESS : constant := 16#4007_D001#;
 
    PMC_LVDSC2 : aliased PMC_LVDSC2_Type
-      with Address              => To_Address (PMC_LVDSC2_ADDRESS),
+      with Address              => System'To_Address (PMC_LVDSC2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -960,7 +958,7 @@ package KL46Z
    PMC_REGSC_ADDRESS : constant := 16#4007_D002#;
 
    PMC_REGSC : aliased PMC_REGSC_Type
-      with Address              => To_Address (PMC_REGSC_ADDRESS),
+      with Address              => System'To_Address (PMC_REGSC_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -997,7 +995,7 @@ package KL46Z
    OSCx_CR_ADDRESS : constant := 16#4006_5000#;
 
    OSCx_CR : aliased OSCx_CR_Type
-      with Address              => To_Address (OSCx_CR_ADDRESS),
+      with Address              => System'To_Address (OSCx_CR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1201,7 +1199,7 @@ package KL46Z
    UART0_BASEADDRESS : constant := 16#4006_A000#;
 
    UART0 : aliased UART_0_Type
-      with Address    => To_Address (UART0_BASEADDRESS),
+      with Address    => System'To_Address (UART0_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1260,7 +1258,7 @@ package KL46Z
    UART1_BASEADDRESS : constant := 16#4006_B000#;
 
    UART1 : aliased UART_12_Type
-      with Address    => To_Address (UART1_BASEADDRESS),
+      with Address    => System'To_Address (UART1_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1268,7 +1266,7 @@ package KL46Z
    UART2_BASEADDRESS : constant := 16#4006_C000#;
 
    UART2 : aliased UART_12_Type
-      with Address    => To_Address (UART2_BASEADDRESS),
+      with Address    => System'To_Address (UART2_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1311,32 +1309,32 @@ package KL46Z
    GPIOA_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#14#;
 
    GPIOA_PDOR : aliased GPIOx_PDOR_Type
-      with Address    => To_Address (GPIOD_PDOR_ADDRESS),
+      with Address    => System'To_Address (GPIOD_PDOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOA_PSOR : aliased GPIOx_PSOR_Type
-      with Address    => To_Address (GPIOA_PSOR_ADDRESS),
+      with Address    => System'To_Address (GPIOA_PSOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOA_PCOR : aliased GPIOx_PCOR_Type
-      with Address    => To_Address (GPIOA_PCOR_ADDRESS),
+      with Address    => System'To_Address (GPIOA_PCOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOA_PTOR : aliased GPIOx_PTOR_Type
-      with Address    => To_Address (GPIOA_PTOR_ADDRESS),
+      with Address    => System'To_Address (GPIOA_PTOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOA_PDIR : aliased GPIOx_PDIR_Type
-      with Address    => To_Address (GPIOA_PDIR_ADDRESS),
+      with Address    => System'To_Address (GPIOA_PDIR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOA_PDDR : aliased GPIOx_PDDR_Type
-      with Address    => To_Address (GPIOA_PDDR_ADDRESS),
+      with Address    => System'To_Address (GPIOA_PDDR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1351,32 +1349,32 @@ package KL46Z
    GPIOB_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#54#;
 
    GPIOB_PDOR : aliased GPIOx_PDOR_Type
-      with Address    => To_Address (GPIOD_PDOR_ADDRESS),
+      with Address    => System'To_Address (GPIOD_PDOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOB_PSOR : aliased GPIOx_PSOR_Type
-      with Address    => To_Address (GPIOB_PSOR_ADDRESS),
+      with Address    => System'To_Address (GPIOB_PSOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOB_PCOR : aliased GPIOx_PCOR_Type
-      with Address    => To_Address (GPIOB_PCOR_ADDRESS),
+      with Address    => System'To_Address (GPIOB_PCOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOB_PTOR : aliased GPIOx_PTOR_Type
-      with Address    => To_Address (GPIOB_PTOR_ADDRESS),
+      with Address    => System'To_Address (GPIOB_PTOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOB_PDIR : aliased GPIOx_PDIR_Type
-      with Address    => To_Address (GPIOB_PDIR_ADDRESS),
+      with Address    => System'To_Address (GPIOB_PDIR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOB_PDDR : aliased GPIOx_PDDR_Type
-      with Address    => To_Address (GPIOB_PDDR_ADDRESS),
+      with Address    => System'To_Address (GPIOB_PDDR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1391,32 +1389,32 @@ package KL46Z
    GPIOC_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#94#;
 
    GPIOC_PDOR : aliased GPIOx_PDOR_Type
-      with Address    => To_Address (GPIOC_PDOR_ADDRESS),
+      with Address    => System'To_Address (GPIOC_PDOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOC_PSOR : aliased GPIOx_PSOR_Type
-      with Address    => To_Address (GPIOC_PSOR_ADDRESS),
+      with Address    => System'To_Address (GPIOC_PSOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOC_PCOR : aliased GPIOx_PCOR_Type
-      with Address    => To_Address (GPIOC_PCOR_ADDRESS),
+      with Address    => System'To_Address (GPIOC_PCOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOC_PTOR : aliased GPIOx_PTOR_Type
-      with Address    => To_Address (GPIOC_PTOR_ADDRESS),
+      with Address    => System'To_Address (GPIOC_PTOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOC_PDIR : aliased GPIOx_PDIR_Type
-      with Address    => To_Address (GPIOC_PDIR_ADDRESS),
+      with Address    => System'To_Address (GPIOC_PDIR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOC_PDDR : aliased GPIOx_PDDR_Type
-      with Address    => To_Address (GPIOC_PDDR_ADDRESS),
+      with Address    => System'To_Address (GPIOC_PDDR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1431,32 +1429,32 @@ package KL46Z
    GPIOD_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#D4#;
 
    GPIOD_PDOR : aliased GPIOx_PDOR_Type
-      with Address    => To_Address (GPIOD_PDOR_ADDRESS),
+      with Address    => System'To_Address (GPIOD_PDOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOD_PSOR : aliased GPIOx_PSOR_Type
-      with Address    => To_Address (GPIOD_PSOR_ADDRESS),
+      with Address    => System'To_Address (GPIOD_PSOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOD_PCOR : aliased GPIOx_PCOR_Type
-      with Address    => To_Address (GPIOD_PCOR_ADDRESS),
+      with Address    => System'To_Address (GPIOD_PCOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOD_PTOR : aliased GPIOx_PTOR_Type
-      with Address    => To_Address (GPIOD_PTOR_ADDRESS),
+      with Address    => System'To_Address (GPIOD_PTOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOD_PDIR : aliased GPIOx_PDIR_Type
-      with Address    => To_Address (GPIOD_PDIR_ADDRESS),
+      with Address    => System'To_Address (GPIOD_PDIR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOD_PDDR : aliased GPIOx_PDDR_Type
-      with Address    => To_Address (GPIOD_PDDR_ADDRESS),
+      with Address    => System'To_Address (GPIOD_PDDR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1471,32 +1469,32 @@ package KL46Z
    GPIOE_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#114#;
 
    GPIOE_PDOR : aliased GPIOx_PDOR_Type
-      with Address    => To_Address (GPIOE_PDOR_ADDRESS),
+      with Address    => System'To_Address (GPIOE_PDOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOE_PSOR : aliased GPIOx_PSOR_Type
-      with Address    => To_Address (GPIOE_PSOR_ADDRESS),
+      with Address    => System'To_Address (GPIOE_PSOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOE_PCOR : aliased GPIOx_PCOR_Type
-      with Address    => To_Address (GPIOE_PCOR_ADDRESS),
+      with Address    => System'To_Address (GPIOE_PCOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOE_PTOR : aliased GPIOx_PTOR_Type
-      with Address    => To_Address (GPIOE_PTOR_ADDRESS),
+      with Address    => System'To_Address (GPIOE_PTOR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOE_PDIR : aliased GPIOx_PDIR_Type
-      with Address    => To_Address (GPIOE_PDIR_ADDRESS),
+      with Address    => System'To_Address (GPIOE_PDIR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOE_PDDR : aliased GPIOx_PDDR_Type
-      with Address    => To_Address (GPIOE_PDDR_ADDRESS),
+      with Address    => System'To_Address (GPIOE_PDDR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
