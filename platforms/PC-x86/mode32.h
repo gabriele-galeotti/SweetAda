@@ -27,7 +27,8 @@ _start16:
                 //
                 // Protected mode driver.
                 //
-                cli                             // disable interrupts
+                pushl   $0                      // EFLAGS = all 0
+                popfl
                 movw    %cs,%ax                 // DS = CS
                 movw    %ax,%ds
 #if defined(__i586__)
