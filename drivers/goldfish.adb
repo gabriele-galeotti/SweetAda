@@ -109,7 +109,7 @@ package body Goldfish
    begin
       Time_L  := Register_Read (D, TIME_LOW);
       Time_H  := Register_Read (D, TIME_HIGH);
-      Time_ns := Integer_64 (Bits.Make_Word (Time_H, Time_L));
+      Time_ns := Integer_64 (Make_Word (Time_H, Time_L));
       Time.Make_Time (Unsigned_32 (Time_ns / 10**9), T);
       T.IsDST := 0;
       T.YDay  := 0;
