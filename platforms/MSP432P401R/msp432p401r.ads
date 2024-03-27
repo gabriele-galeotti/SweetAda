@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -32,7 +31,6 @@ package MSP432P401R
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -64,7 +62,7 @@ package MSP432P401R
    RSTCTL_RESET_REQ_ADDRESS : constant := 16#E004_2000#;
 
    RSTCTL_RESET_REQ : aliased RSTCTL_RESET_REQ_Type
-      with Address              => To_Address (RSTCTL_RESET_REQ_ADDRESS),
+      with Address              => System'To_Address (RSTCTL_RESET_REQ_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -112,37 +110,37 @@ package MSP432P401R
    RSTCTL_BASEADDRESS : constant := 16#E004_2000#;
 
    RSTCTL_HARDRESET_STAT : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_HARDRESET_CLR : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#08#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#08#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_HARDRESET_SET : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#0C#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#0C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_SOFTRESET_STAT : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#10#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#10#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_SOFTRESET_CLR : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#14#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#14#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_SOFTRESET_SET : aliased RSTCTL_RESET_Type
-      with Address              => To_Address (RSTCTL_BASEADDRESS + 16#18#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#18#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -175,7 +173,7 @@ package MSP432P401R
    SYSCTL_BASEADDRESS : constant := 16#E004_3000#;
 
    SYS_REBOOT_CTL : aliased SYS_REBOOT_CTL_Type
-      with Address              => To_Address (SYSCTL_BASEADDRESS + 16#0000#),
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0000#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -685,79 +683,79 @@ package MSP432P401R
    CS_BASEADDRESS : constant := 16#4001_0400#;
 
    CSKEY : aliased CSKEY_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#00#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#00#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSCTL0 : aliased CSCTL0_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSCTL1 : aliased CSCTL1_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#08#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#08#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSCTL2 : aliased CSCTL2_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#0C#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#0C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSCTL3 : aliased CSCTL3_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#10#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#10#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSCLKEN : aliased CSCLKEN_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#30#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#30#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSSTAT : aliased CSSTAT_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#34#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#34#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSIE : aliased CSIE_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#40#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#40#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSIFG : aliased CSIFG_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#48#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#48#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSCLRIFG : aliased CSCLRIFG_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#50#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#50#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSSETIFG : aliased CSSETIFG_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#58#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#58#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSDCOERCAL0 : aliased CSDCOERCAL0_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#60#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#60#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    CSDCOERCAL1 : aliased CSDCOERCAL1_Type
-      with Address              => To_Address (CS_BASEADDRESS + 16#64#),
+      with Address              => System'To_Address (CS_BASEADDRESS + 16#64#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -874,31 +872,31 @@ package MSP432P401R
    PSS_BASEADDRESS : constant := 16#4001_0800#;
 
    PSSKEY : aliased PSSKEY_Type
-      with Address              => To_Address (PSS_BASEADDRESS + 16#00#),
+      with Address              => System'To_Address (PSS_BASEADDRESS + 16#00#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PSSCTL0 : aliased PSSCTL0_Type
-      with Address              => To_Address (PSS_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (PSS_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PSSIE : aliased PSSIE_Type
-      with Address              => To_Address (PSS_BASEADDRESS + 16#34#),
+      with Address              => System'To_Address (PSS_BASEADDRESS + 16#34#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PSSIFG : aliased PSSIFG_Type
-      with Address              => To_Address (PSS_BASEADDRESS + 16#38#),
+      with Address              => System'To_Address (PSS_BASEADDRESS + 16#38#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PSSCLRIFG : aliased PSSCLRIFG_Type
-      with Address              => To_Address (PSS_BASEADDRESS + 16#3C#),
+      with Address              => System'To_Address (PSS_BASEADDRESS + 16#3C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1067,31 +1065,31 @@ package MSP432P401R
    PCM_BASEADDRESS : constant := 16#4001_0000#;
 
    PCMCTL0 : aliased PCMCTL0_Type
-      with Address              => To_Address (PCM_BASEADDRESS + 16#00#),
+      with Address              => System'To_Address (PCM_BASEADDRESS + 16#00#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PCMCTL1 : aliased PCMCTL1_Type
-      with Address              => To_Address (PCM_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (PCM_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PCMIE : aliased PCMIE_Type
-      with Address              => To_Address (PCM_BASEADDRESS + 16#08#),
+      with Address              => System'To_Address (PCM_BASEADDRESS + 16#08#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PCMIFG : aliased PCMIFG_Type
-      with Address              => To_Address (PCM_BASEADDRESS + 16#0C#),
+      with Address              => System'To_Address (PCM_BASEADDRESS + 16#0C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    PCMCLRIFG : aliased PCMCLRIFG_Type
-      with Address              => To_Address (PCM_BASEADDRESS + 16#10#),
+      with Address              => System'To_Address (PCM_BASEADDRESS + 16#10#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1219,22 +1217,22 @@ package MSP432P401R
    PORT_BASEADDRESS : constant := 16#4000_4C00#;
 
 pragma Style_Checks (Off);
-   PA  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
-   PB  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
-   PC  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
-   PD  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
-   PE  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
-   P1  : aliased PORTL8_Type with Address => To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
-   P2  : aliased PORTH8_Type with Address => To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
-   P3  : aliased PORTL8_Type with Address => To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
-   P4  : aliased PORTH8_Type with Address => To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
-   P5  : aliased PORTL8_Type with Address => To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
-   P6  : aliased PORTH8_Type with Address => To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
-   P7  : aliased PORTL8_Type with Address => To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
-   P8  : aliased PORTH8_Type with Address => To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
-   P9  : aliased PORTL8_Type with Address => To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
-   P10 : aliased PORTH8_Type with Address => To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
-   PJ  : aliased PORT16_Type with Address => To_Address (PORT_BASEADDRESS + 16#120#), Volatile => True, Import => True, Convention => Ada;
+   PA  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
+   PB  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
+   PC  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
+   PD  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
+   PE  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
+   P1  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
+   P2  : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
+   P3  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
+   P4  : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
+   P5  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
+   P6  : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
+   P7  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
+   P8  : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
+   P9  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
+   P10 : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
+   PJ  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#120#), Volatile => True, Import => True, Convention => Ada;
 pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
@@ -1286,7 +1284,7 @@ pragma Style_Checks (On);
    WDT_A_BASEADDRESS : constant := 16#4000_4800#;
 
    WDTCTL : aliased WDTCTL_Type
-      with Address    => To_Address (WDT_A_BASEADDRESS + 16#0C#),
+      with Address    => System'To_Address (WDT_A_BASEADDRESS + 16#0C#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1578,7 +1576,7 @@ pragma Style_Checks (On);
    eUSCI_A0_ADDRESS : constant := 16#4000_1000#;
 
    eUSCI_A0 : aliased eUSCI_Ax_Type
-      with Address    => To_Address (eUSCI_A0_ADDRESS),
+      with Address    => System'To_Address (eUSCI_A0_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
