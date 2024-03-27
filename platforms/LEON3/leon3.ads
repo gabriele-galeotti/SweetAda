@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package LEON3
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -63,7 +61,7 @@ package LEON3
    INTC_LEVEL_ADDRESS : constant := 16#8000_0200#;
 
    INTC_LEVEL : aliased INTC_LEVEL_Type
-      with Address              => To_Address (INTC_LEVEL_ADDRESS),
+      with Address              => System'To_Address (INTC_LEVEL_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -86,7 +84,7 @@ package LEON3
    INTC_PENDING_ADDRESS : constant := 16#8000_0204#;
 
    INTC_PENDING : aliased INTC_PENDING_Type
-      with Address              => To_Address (INTC_PENDING_ADDRESS),
+      with Address              => System'To_Address (INTC_PENDING_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -109,7 +107,7 @@ package LEON3
    INTC_P0FORCE_ADDRESS : constant := 16#8000_0208#;
 
    INTC_P0FORCE : aliased INTC_P0FORCE_Type
-      with Address              => To_Address (INTC_P0FORCE_ADDRESS),
+      with Address              => System'To_Address (INTC_P0FORCE_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -132,7 +130,7 @@ package LEON3
    INTC_CLEAR_ADDRESS : constant := 16#8000_020C#;
 
    INTC_CLEAR : aliased INTC_CLEAR_Type
-      with Address              => To_Address (INTC_CLEAR_ADDRESS),
+      with Address              => System'To_Address (INTC_CLEAR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -159,7 +157,7 @@ package LEON3
    MULTIPROC_STATUS_ADDRESS : constant := 16#8000_0210#;
 
    MULTIPROC_STATUS : aliased MULTIPROC_STATUS_Type
-      with Address              => To_Address (MULTIPROC_STATUS_ADDRESS),
+      with Address              => System'To_Address (MULTIPROC_STATUS_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -182,7 +180,7 @@ package LEON3
    INTC_PROCMASK0_ADDRESS : constant := 16#8000_0240#;
 
    INTC_PROCMASK0 : aliased INTC_PROCMASK_Type
-      with Address              => To_Address (INTC_PROCMASK0_ADDRESS),
+      with Address              => System'To_Address (INTC_PROCMASK0_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -190,7 +188,7 @@ package LEON3
    INTC_PROCMASK1_ADDRESS : constant := 16#8000_0244#;
 
    INTC_PROCMASK1 : aliased INTC_PROCMASK_Type
-      with Address              => To_Address (INTC_PROCMASK1_ADDRESS),
+      with Address              => System'To_Address (INTC_PROCMASK1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -213,7 +211,7 @@ package LEON3
    INTC_BROADCAST_ADDRESS : constant := 16#8000_0214#;
 
    INTC_BROADCAST : aliased INTC_BROADCAST_Type
-      with Address              => To_Address (INTC_BROADCAST_ADDRESS),
+      with Address              => System'To_Address (INTC_BROADCAST_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -238,7 +236,7 @@ package LEON3
    INTC_FORCE0_ADDRESS : constant := 16#8000_0280#;
 
    INTC_FORCE0 : aliased INTC_FORCE_Type
-      with Address              => To_Address (INTC_FORCE0_ADDRESS),
+      with Address              => System'To_Address (INTC_FORCE0_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -246,7 +244,7 @@ package LEON3
    INTC_FORCE1_ADDRESS : constant := 16#8000_0284#;
 
    INTC_FORCE1 : aliased INTC_FORCE_Type
-      with Address              => To_Address (INTC_FORCE1_ADDRESS),
+      with Address              => System'To_Address (INTC_FORCE1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -267,7 +265,7 @@ package LEON3
    INTC_EXTINTID0_ADDRESS : constant := 16#8000_02C0#;
 
    INTC_EXTINTID0 : aliased INTC_EXTINTID_Type
-      with Address              => To_Address (INTC_EXTINTID0_ADDRESS),
+      with Address              => System'To_Address (INTC_EXTINTID0_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -275,7 +273,7 @@ package LEON3
    INTC_EXTINTID1_ADDRESS : constant := 16#8000_02C4#;
 
    INTC_EXTINTID1 : aliased INTC_EXTINTID_Type
-      with Address              => To_Address (INTC_EXTINTID1_ADDRESS),
+      with Address              => System'To_Address (INTC_EXTINTID1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -374,7 +372,7 @@ package LEON3
    GPTIMER_BASEADDRESS : constant := 16#8000_0300#;
 
    GPTIMER : aliased GPTimer_Type
-      with Address    => To_Address (GPTIMER_BASEADDRESS),
+      with Address    => System'To_Address (GPTIMER_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -486,7 +484,7 @@ package LEON3
    APB_UART1_BASEADDRESS : constant := 16#8000_0100#;
 
    UART1 : aliased APB_UART_Type
-      with Address    => To_Address (APB_UART1_BASEADDRESS),
+      with Address    => System'To_Address (APB_UART1_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
