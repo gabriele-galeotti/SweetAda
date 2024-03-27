@@ -15,12 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Parameters;
-with System.Secondary_Stack;
-with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
-with Definitions;
 with Bits;
+with Secondary_Stack;
 with MIPS;
 with R3000;
 with VMIPS;
@@ -38,18 +34,8 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
-   use Definitions;
    use Bits;
-
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -58,16 +44,6 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -104,7 +80,7 @@ package body BSP
       is
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- Console --------------------------------------------------------------

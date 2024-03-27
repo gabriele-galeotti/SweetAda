@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
@@ -35,7 +34,6 @@ package VMIPS
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -113,7 +111,7 @@ package VMIPS
    SPIMCONSOLE_BASEADDRESS : constant := 16#0200_0000#;
 
    SPIMCONSOLE : aliased SPIMCONSOLE_Type
-      with Address    => To_Address (MIPS.KSEG1_ADDRESS + SPIMCONSOLE_BASEADDRESS),
+      with Address    => System'To_Address (MIPS.KSEG1_ADDRESS + SPIMCONSOLE_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -139,7 +137,7 @@ package VMIPS
    CLOCK_ADDRESS : constant := 16#0101_0000#;
 
    CLOCK : aliased CLOCK_Type
-      with Address    => To_Address (MIPS.KSEG1_ADDRESS + CLOCK_ADDRESS),
+      with Address    => System'To_Address (MIPS.KSEG1_ADDRESS + CLOCK_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
