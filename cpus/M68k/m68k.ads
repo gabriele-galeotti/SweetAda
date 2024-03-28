@@ -224,6 +224,9 @@ package M68k
    procedure NOP
       with Inline => True;
 
+   procedure RESET
+      with Inline => True;
+
    procedure BREAKPOINT
       with Inline => True;
 

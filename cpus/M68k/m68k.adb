@@ -236,6 +236,23 @@ package body M68k
    end NOP;
 
    ----------------------------------------------------------------------------
+   -- RESET
+   ----------------------------------------------------------------------------
+   procedure RESET
+      is
+   begin
+      Asm (
+           Template => ""              & CRLF &
+                       "        reset" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end RESET;
+
+   ----------------------------------------------------------------------------
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
@@ -302,7 +319,7 @@ package body M68k
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => Intcontext_Type'Asm_Input ("d", Intcontext),
-           Clobber  => "memory",
+           Clobber  => "cc,memory",
            Volatile => True
           );
    end Intcontext_Set;
