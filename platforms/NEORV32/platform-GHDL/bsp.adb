@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
 with Definitions;
 with Bits;
 with RISCV;
@@ -82,6 +83,7 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
+      function To_U32 is new Ada.Unchecked_Conversion (UART_CTRL_Type, Unsigned_32);
    begin
       -- UART0 ----------------------------------------------------------------
       UART0.CTRL := (
@@ -110,7 +112,7 @@ package body BSP
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
-      Console.Print ("NEORV32 (main-6863fd9)", NL => True);
+      Console.Print ("NEORV32 (GHDL/main-6863fd9)", NL => True);
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------

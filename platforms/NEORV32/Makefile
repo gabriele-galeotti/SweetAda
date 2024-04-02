@@ -38,11 +38,17 @@ OBJECTS_XFORM_2 := $(OBJECTS_XFORM_1:.S=.o)
 OBJECTS_XFORM_3 := $(OBJECTS_XFORM_2:.c=.o)
 OBJECTS := $(foreach f,$(OBJECTS_XFORM_3),$(OBJ_DIRECTORY)/$(f))
 
+-include Makefile.if.in
+
 .PHONY: all
 all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: installfiles
 installfiles:
+	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
+	@$(CREATESYMLINK) -v -m Makefile.if.in platform-$(SUBPLATFORM) .
+	@$(call echo-print,"installfiles: done")
+	@$(call echo-print,"")
 
 .PHONY: configure
 configure: configure-files-clean $(CONFIGURE_FILES_PLATFORM)
@@ -71,7 +77,8 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)           \
+              $(INSTALLED_FILENAMES) Makefile.if.in \
               $(CONFIGURE_FILES_PLATFORM)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in

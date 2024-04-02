@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.ads                                                                                                   --
+-- __FLN__ neorv32.adb                                                                                               --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,32 +15,66 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-
-package BSP
+package body NEORV32
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                               Public part                              --
+   --                           Package subprograms                          --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   Tick_Count : aliased Interfaces.Unsigned_32 := 0
-      with Atomic        => True,
-           Export        => True,
-           Convention    => Asm,
-           External_Name => "tick_count";
+   -- XIRQ module
 
-   Timer_Constant : constant := 16#10_000#;
-   Timer_Value    : Interfaces.Unsigned_64;
+   procedure EIE_Read
+      (XIRQ_CH : out Bits_32)
+      is
+   begin
+      XIRQ_CH := EIE;
+   end EIE_Read;
 
-   procedure Console_Putchar
-      (C : in Character);
-   procedure Console_Getchar
-      (C : out Character);
-   procedure Setup;
+   procedure EIE_Enable
+      (XIRQ_CH : in Bits_32)
+      is
+   begin
+      EIE := @ or XIRQ_CH;
+   end EIE_Enable;
 
-end BSP;
+   procedure EIE_Disable
+      (XIRQ_CH : in Bits_32)
+      is
+   begin
+      EIE := @ and not XIRQ_CH;
+   end EIE_Disable;
+
+   procedure EIP_Read
+      (XIRQ_CH : out Bits_32)
+      is
+   begin
+      XIRQ_CH := EIP;
+   end EIP_Read;
+
+   procedure EIP_Clear
+      (XIRQ_CH : in Bits_32)
+      is
+   begin
+      EIP := not XIRQ_CH;
+   end EIP_Clear;
+
+   procedure ESC_Read
+      (XIRQ_CH : out Bits_32)
+      is
+   begin
+      XIRQ_CH := ESC;
+   end ESC_Read;
+
+   procedure ESC_Ack
+      (XIRQ_CH : in Bits_32)
+      is
+   begin
+      ESC := XIRQ_CH;
+   end ESC_Ack;
+
+end NEORV32;
