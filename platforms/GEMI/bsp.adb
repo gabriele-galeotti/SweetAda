@@ -102,9 +102,10 @@ package body BSP
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
    begin
-      -- UART -----------------------------------------------------------------
+      -- UART 16x50 -----------------------------------------------------------
       UART_Descriptor.Base_Address  := To_Address (GEMI.UART_BASEADDRESS);
       UART_Descriptor.Scale_Address := 4;
       UART_Descriptor.Baud_Clock    := Configure.CLK_FREQUENCY;
@@ -112,6 +113,12 @@ package body BSP
       UART_Descriptor.Write_8       := MMIO.Write'Access;
       UART_Descriptor.Data_Queue    := ([others => 0], 0, 0, 0);
       UART16x50.Init (UART_Descriptor);
+      -- RTC uPD4991A ---------------------------------------------------------
+      RTC_Descriptor.Base_Address  := To_Address (GEMI.RTC_BASEADDRESS);
+      RTC_Descriptor.Scale_Address := 0;
+      RTC_Descriptor.Read_8        := MMIO.Read'Access;
+      RTC_Descriptor.Write_8       := MMIO.Write'Access;
+      uPD4991A.Init (RTC_Descriptor);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;

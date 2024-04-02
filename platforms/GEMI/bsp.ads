@@ -17,6 +17,7 @@
 
 with Interfaces;
 with UART16x50;
+with uPD4991A;
 
 package BSP
    is
@@ -36,6 +37,8 @@ package BSP
            External_Name => "tick_count";
 
    UART_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
+
+   RTC_Descriptor : aliased uPD4991A.Descriptor_Type := uPD4991A.DESCRIPTOR_INVALID;
 
    procedure Console_Putchar
       (C : in Character);

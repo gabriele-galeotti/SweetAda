@@ -5,9 +5,12 @@ with Interfaces;
 with Bits;
 with MMIO;
 with UART16x50;
+with uPD4991A;
 with SH;
 with GEMI;
+with Time;
 with BSP;
+with Console;
 
 package body Application
    is
@@ -45,8 +48,10 @@ package body Application
          declare
             Value          : Unsigned_8 := 16#10#;
             Direction_Left : Boolean := True;
+            TM             : Time.TM_Time;
             procedure Wait;
-            procedure Wait is
+            procedure Wait
+               is
                X : Unsigned_32 with Volatile => True;
             begin
                X := 0;
@@ -69,7 +74,14 @@ package body Application
                if Value = 16#10# then
                   Direction_Left := True;
                end if;
-               UART16x50.TX (BSP.UART_Descriptor, To_U8 ('.'));
+               -- UART16x50.TX (BSP.UART_Descriptor, To_U8 ('.'));
+               uPD4991A.Read_Clock (BSP.RTC_Descriptor, TM);
+               Console.Print (TM.Year + 1_900);
+               Console.Print (TM.Mon, Prefix => "-");
+               Console.Print (TM.MDay, Prefix => "-");
+               Console.Print (TM.Hour, Prefix => " ");
+               Console.Print (TM.Min, Prefix => ":");
+               Console.Print (TM.Sec, Prefix => ":", NL => True);
                Wait;
             end loop;
          end;
