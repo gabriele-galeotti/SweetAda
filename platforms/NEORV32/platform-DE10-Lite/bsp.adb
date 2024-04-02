@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Ada.Unchecked_Conversion;
 with Definitions;
 with Bits;
 with RISCV;
@@ -83,7 +82,6 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
-      function To_U32 is new Ada.Unchecked_Conversion (UART_CTRL_Type, Unsigned_32);
    begin
       -- UART0 ----------------------------------------------------------------
       -- serial port wiring:
