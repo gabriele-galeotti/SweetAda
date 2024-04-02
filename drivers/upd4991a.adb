@@ -242,6 +242,7 @@ package body uPD4991A
                  Natural (Register_Read (D, MO10) and 16#0F#) * 10;
       T.Year  := Natural (Register_Read (D, Y1) and 16#0F#) +
                  Natural (Register_Read (D, Y10) and 16#0F#) * 10;
+      T.Year  := @ + (if @ < 70 then 100 else 0);
       T.WDay  := 0;
       T.YDay  := 0;
       T.IsDST := 0;
