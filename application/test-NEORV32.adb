@@ -1,4 +1,5 @@
 
+with CPU;
 with MTIME;
 with Console;
 
@@ -29,9 +30,15 @@ package body Application
    begin
       -------------------------------------------------------------------------
       if True then
-         loop
-            Console.Print (MTIME.mtime_Read, Prefix => "", NL => True);
-         end loop;
+         declare
+            Delay_Count : constant := 5_000_000;
+         begin
+            loop
+               Console.Print (MTIME.mtime_Read, Prefix => "", NL => True);
+               -- Console.Print (".", NL => False);
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+            end loop;
+         end;
       end if;
       -------------------------------------------------------------------------
       loop null; end loop;
