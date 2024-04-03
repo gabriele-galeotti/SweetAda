@@ -35,8 +35,6 @@ SCRIPT_FILENAME=$(basename "$0")
 ################################################################################
 
 # paths and filenames extracted from "<NEORV32_HOME>/sw/common/common.mk"
-NEORV32_RTL_PATH="${NEORV32_HOME}"/rtl/core
-NEORV32_SIM_PATH="${NEORV32_HOME}"/sim
 IMAGE_GEN="${NEORV32_HOME}"/sw/image_gen/image_gen
 APP_BIN=neorv32_exe.bin
 SERIALPORT_DEVICE=/dev/ttyUSB-PL2303
