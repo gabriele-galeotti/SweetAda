@@ -11,6 +11,7 @@
 #
 # Environment variables:
 # NULL
+# SPACE
 # OSTYPE
 # VERBOSE
 # ECHO
@@ -26,6 +27,16 @@ BRIEFTEXT_SPACES := $(NULL)            $(NULL)
 BRIEFTEXT_CHRMSK := $(NULL)............$(NULL)
 
 #
+# unquote
+#
+# Usage:
+# $(call unquote,"text")
+#
+# Remove delimiting double-quotes from a text string.
+#
+unquote = $(subst @__SPACE__@,$(SPACE),$(patsubst "%",%,$(subst $(SPACE),@__SPACE__@,$1)))
+
+#
 # echo-print
 #
 # Usage:
@@ -35,10 +46,10 @@ BRIEFTEXT_CHRMSK := $(NULL)............$(NULL)
 # double-quotes.
 #
 ifeq ($(OSTYPE),cmd)
-# discard delimiting double-quotes
-echo-print = $(ECHO) $1| $(SED) -e "s|^""""\(.*\)""""$$|\1|"
+echo-print-xform = $(subst <,^<,$(subst >,^>,$(subst &,^&,$(subst |,^|,$(call unquote,$1)))))
+echo-print = $(if $(call echo-print-xform,$1),$(ECHO) $(call echo-print-xform,$1),$(ECHO).&)
 else
-echo-print = $(ECHO) $1
+echo-print = $(ECHO) "$(call unquote,$1)"
 endif
 
 #
