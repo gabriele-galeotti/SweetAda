@@ -28,12 +28,12 @@ CPU_MODEL := R3000
 # big-endian
 GCC_SWITCHES_PLATFORM     := -march=r3000 -meb
 LD_SWITCHES_PLATFORM      := -EB
-export VMIPS_ENDIAN       := -o bigendian
+export VMIPS_ENDIAN       := big
 
 # little-endian
 #GCC_SWITCHES_PLATFORM     := -march=r3000 -mel
 #LD_SWITCHES_PLATFORM      := -EL
-#export VMIPS_ENDIAN       := -o nobigendian
+#export VMIPS_ENDIAN       := little
 
 LD_SWITCHES_PLATFORM      += --undefined=vectors
 OBJDUMP_SWITCHES_PLATFORM := -z --disassembler-options=hwr-names=r3000,reg-names=r3000

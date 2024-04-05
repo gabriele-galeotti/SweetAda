@@ -34,6 +34,11 @@ SCRIPT_FILENAME=$(basename "$0")
 
 VMIPS_EXECUTABLE=/opt/VMIPS/bin/vmips
 
+case ${VMIPS_ENDIAN} in
+  BIG|big)       VMIPS_ENDIAN_OPT="-o bigendian" ;;
+  LITTLE|little) VMIPS_ENDIAN_OPT="-o nobigendian" ;;
+esac
+
 if [ "x$1" = "x-debug" ] ; then
   VMIPS_DEBUG="-o debug -o debugport=1234"
 fi
@@ -41,7 +46,7 @@ fi
 setsid /usr/bin/xterm \
   -T "QEMU-2" -geometry 120x50 -bg blue -fg white -sl 1024 -e \
   ${VMIPS_EXECUTABLE}                                         \
-    ${VMIPS_ENDIAN}                                           \
+    ${VMIPS_ENDIAN_OPT}                                       \
     -o clockdevice                                            \
     -o clockdeviceirq=7                                       \
     -o clockintr=100000000                                    \

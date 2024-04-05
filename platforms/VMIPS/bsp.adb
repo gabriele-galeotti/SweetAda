@@ -118,9 +118,17 @@ package body BSP
       declare
          DCT : VMIPS.Device_Control_Type;
       begin
-         DCT := VMIPS.To_DCT (Byte_Swap (VMIPS.To_U32 (VMIPS.CLOCK.CONTROL_WORD)));
+         if BigEndian then
+            DCT := VMIPS.To_DCT (Byte_Swap (VMIPS.To_U32 (VMIPS.CLOCK.CONTROL_WORD)));
+         else
+            DCT := VMIPS.CLOCK.CONTROL_WORD;
+         end if;
          DCT.CTL_IE := True;
-         VMIPS.CLOCK.CONTROL_WORD := VMIPS.To_DCT (Byte_Swap (VMIPS.To_U32 (DCT)));
+         if BigEndian then
+            VMIPS.CLOCK.CONTROL_WORD := VMIPS.To_DCT (Byte_Swap (VMIPS.To_U32 (DCT)));
+         else
+            VMIPS.CLOCK.CONTROL_WORD := DCT;
+         end if;
       end;
       R3000.Irq_Enable;
       -------------------------------------------------------------------------
