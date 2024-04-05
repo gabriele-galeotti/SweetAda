@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,9 +32,32 @@ package NEORV32
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
+
+   -- 2.7.9. General Purpose Input and Output Port (GPIO)
+
+   type GPIO_Type is record
+      INPUT_LO  : Bitmap_32 with Volatile_Full_Access => True;
+      INPUT_HI  : Bitmap_32 with Volatile_Full_Access => True;
+      OUTPUT_LO : Bitmap_32 with Volatile_Full_Access => True;
+      OUTPUT_HI : Bitmap_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 4 * 32;
+   for GPIO_Type use record
+      INPUT_LO  at 16#0# range 0 .. 31;
+      INPUT_HI  at 16#4# range 0 .. 31;
+      OUTPUT_LO at 16#8# range 0 .. 31;
+      OUTPUT_HI at 16#C# range 0 .. 31;
+   end record;
+
+   GPIO_ADDRESS : constant := 16#FFFF_FFC0#;
+
+   GPIO : aliased GPIO_Type
+      with Address    => System'To_Address (GPIO_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    -- 2.7.10. Cyclic Redundancy Check (CRC)
 
@@ -43,49 +65,49 @@ package NEORV32
    CRC_MODE_CRC16 : constant := 2#01#; -- CRC16
    CRC_MODE_CRC32 : constant := 2#10#; -- CRC32
 
-   type CRC_CTRL_Type is record
-      MODE     : Bits_2;       -- CRC mode select
-      Reserved : Bits_30 := 0;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
-   for CRC_CTRL_Type use record
-      MODE     at 0 range 0 ..  1;
-      Reserved at 0 range 2 .. 31;
-   end record;
+   -- type CRC_CTRL_Type is record
+   --    MODE     : Bits_2;       -- CRC mode select
+   --    Reserved : Bits_30 := 0;
+   -- end record
+   --    with Bit_Order => Low_Order_First,
+   --         Size      => 32;
+   -- for CRC_CTRL_Type use record
+   --    MODE     at 0 range 0 ..  1;
+   --    Reserved at 0 range 2 .. 31;
+   -- end record;
 
-   type CRC_DATA_Type is record
-      DATA     : Unsigned_8;   -- data input
-      Reserved : Bits_24 := 0;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
-   for CRC_DATA_Type use record
-      DATA     at 0 range 0 ..  7;
-      Reserved at 0 range 8 .. 31;
-   end record;
+   -- type CRC_DATA_Type is record
+   --    DATA     : Unsigned_8;   -- data input
+   --    Reserved : Bits_24 := 0;
+   -- end record
+   --    with Bit_Order => Low_Order_First,
+   --         Size      => 32;
+   -- for CRC_DATA_Type use record
+   --    DATA     at 0 range 0 ..  7;
+   --    Reserved at 0 range 8 .. 31;
+   -- end record;
 
-   type CRC_Type is record
-      CTRL : CRC_CTRL_Type with Volatile_Full_Access => True;
-      POLY : Unsigned_32   with Volatile_Full_Access => True;
-      DATA : CRC_DATA_Type with Volatile_Full_Access => True;
-      SREG : Unsigned_32   with Volatile_Full_Access => True;
-   end record
-      with Size => 4 * 32;
-   for CRC_Type use record
-      CTRL at 16#0# range 0 .. 31;
-      POLY at 16#4# range 0 .. 31;
-      DATA at 16#8# range 0 .. 31;
-      SREG at 16#C# range 0 .. 31;
-   end record;
+   -- type CRC_Type is record
+   --    CTRL : CRC_CTRL_Type with Volatile_Full_Access => True;
+   --    POLY : Unsigned_32   with Volatile_Full_Access => True;
+   --    DATA : CRC_DATA_Type with Volatile_Full_Access => True;
+   --    SREG : Unsigned_32   with Volatile_Full_Access => True;
+   -- end record
+   --    with Size => 4 * 32;
+   -- for CRC_Type use record
+   --    CTRL at 16#0# range 0 .. 31;
+   --    POLY at 16#4# range 0 .. 31;
+   --    DATA at 16#8# range 0 .. 31;
+   --    SREG at 16#C# range 0 .. 31;
+   -- end record;
 
-   CRC_BASEADDRESS : constant := 16#FFFF_EE00#;
+   -- CRC_BASEADDRESS : constant := 16#FFFF_EE00#;
 
-   CRC : aliased CRC_Type
-      with Address    => To_Address (CRC_BASEADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+   -- CRC : aliased CRC_Type
+   --    with Address    => System'To_Address (CRC_BASEADDRESS),
+   --         Volatile   => True,
+   --         Import     => True,
+   --         Convention => Ada;
 
    -- 2.7.11. Watchdog Timer (WDT)
 
@@ -128,16 +150,25 @@ package NEORV32
       RESET at 4 range 0 .. 31;
    end record;
 
-   WDT_ADDRESS : constant := 16#FFFF_FB00#;
+   WDT_ADDRESS : constant := 16#FFFF_FFBC#;
 
    WDT : aliased WDT_Type
-      with Address    => To_Address (WDT_ADDRESS),
+      with Address    => System'To_Address (WDT_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    -- 2.7.13. Primary Universal Asynchronous Receiver and Transmitter (UART0)
    -- 2.7.14. Secondary Universal Asynchronous Receiver and Transmitter (UART1)
+
+   UART_CTRL_PRSC_DIV2    : constant := 2#000#; -- Resulting clock_prescaler = 2
+   UART_CTRL_PRSC_DIV4    : constant := 2#001#; -- Resulting clock_prescaler = 4
+   UART_CTRL_PRSC_DIV8    : constant := 2#010#; -- Resulting clock_prescaler = 8
+   UART_CTRL_PRSC_DIV64   : constant := 2#011#; -- Resulting clock_prescaler = 64
+   UART_CTRL_PRSC_DIV128  : constant := 2#100#; -- Resulting clock_prescaler = 128
+   UART_CTRL_PRSC_DIV1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
+   UART_CTRL_PRSC_DIV2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
+   UART_CTRL_PRSC_DIV4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
 
    type UART_CTRL_Type is record
       UART_CTRL_EN            : Boolean;     -- UART global enable
@@ -212,15 +243,15 @@ package NEORV32
    UART0_BASEADDRESS : constant := 16#FFFF_FFA0#;
 
    UART0 : aliased UART_Type
-      with Address    => To_Address (UART0_BASEADDRESS),
+      with Address    => System'To_Address (UART0_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
-   UART1_BASEADDRESS : constant := 16#FFFF_F600#;
+   UART1_BASEADDRESS : constant := 16#FFFF_FFD0#;
 
    UART1 : aliased UART_Type
-      with Address    => To_Address (UART1_BASEADDRESS),
+      with Address    => System'To_Address (UART1_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -264,10 +295,10 @@ package NEORV32
 
    -- EIE External interrupt enable register
 
-   EIE_ADDRESS : constant := 16#FFFF_F300#;
+   EIE_ADDRESS : constant := 16#FFFF_FF80#;
 
    EIE : aliased Bits_32
-      with Address              => To_Address (EIE_ADDRESS),
+      with Address              => System'To_Address (EIE_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -286,10 +317,10 @@ package NEORV32
 
    -- EIP External interrupt pending register
 
-   EIP_ADDRESS : constant := 16#FFFF_F304#;
+   EIP_ADDRESS : constant := 16#FFFF_FF84#;
 
    EIP : aliased Bits_32
-      with Address              => To_Address (EIP_ADDRESS),
+      with Address              => System'To_Address (EIP_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -304,10 +335,10 @@ package NEORV32
 
    -- ESC Interrupt source ID
 
-   ESC_ADDRESS : constant := 16#FFFF_F308#;
+   ESC_ADDRESS : constant := 16#FFFF_FF88#;
 
    ESC : aliased Bits_32
-      with Address              => To_Address (ESC_ADDRESS),
+      with Address              => System'To_Address (ESC_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
