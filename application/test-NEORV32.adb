@@ -1,6 +1,7 @@
 
 with CPU;
 with MTIME;
+with NEORV32;
 with Console;
 
 package body Application
@@ -13,6 +14,8 @@ package body Application
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use NEORV32;
 
    --========================================================================--
    --                                                                        --
@@ -32,11 +35,18 @@ package body Application
       if True then
          declare
             Delay_Count : constant := 5_000_000;
+            LED_n       : Natural := 0;
          begin
             loop
                Console.Print (MTIME.mtime_Read, Prefix => "", NL => True);
                -- Console.Print (".", NL => False);
+               GPIO.OUTPUT_LO (LED_n) := True;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+               GPIO.OUTPUT_LO (LED_n) := False;
+               LED_n := @ + 1;
+               if LED_n > 7 then
+                  LED_n := 0;
+               end if;
             end loop;
          end;
       end if;
