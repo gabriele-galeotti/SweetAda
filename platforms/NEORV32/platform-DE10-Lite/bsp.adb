@@ -89,12 +89,13 @@ package body BSP
       -- RXD = GPIO-33
       -- TXD = GPIO-34
       -- 19200 baud @ clk_i = 90 MHz
+      -- Baud rate = (fmain[Hz] / clock_prescaler) / (baud_div + 1)
       UART0.CTRL := (
          UART_CTRL_EN            => True,
          UART_CTRL_SIM_MODE      => False,
          UART_CTRL_HWFC_EN       => False,
-         UART_CTRL_PRSC          => 2#10#,
-         UART_CTRL_BAUD          => 584,
+         UART_CTRL_PRSC          => UART_CTRL_PRSC_DIV8,
+         UART_CTRL_BAUD          => Bits_10 (90 * MHz1 / (8 * 19_200) - 1),
          UART_CTRL_RX_NEMPTY     => False,
          UART_CTRL_RX_HALF       => False,
          UART_CTRL_RX_FULL       => False,
