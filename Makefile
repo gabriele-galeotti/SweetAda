@@ -41,38 +41,43 @@ export NULL SPACE
 
 KERNEL_BASENAME := kernel
 
-LIBUTILS_GOALS := libutils-elftool      \
-                  libutils-gcc-wrapper  \
-                  libutils-gnat-wrapper
+RTS_GOAL           := rts
+CONFIGURE_GOAL     := configure
+INFODUMP_GOAL      := infodump
+PROBEVARIABLE_GOAL := probevariable
+LIBUTILS_GOALS     := libutils-elftool      \
+                      libutils-gcc-wrapper  \
+                      libutils-gnat-wrapper
 
-SERVICE_GOALS := help              \
-                 $(LIBUTILS_GOALS) \
-                 infodump          \
-                 createkernelcfg   \
-                 clean             \
-                 distclean         \
-                 freeze            \
-                 probevariable
+SERVICE_GOALS      := help                  \
+                      $(PROBEVARIABLE_GOAL) \
+                      $(LIBUTILS_GOALS)     \
+                      $(INFODUMP_GOAL)      \
+                      createkernelcfg       \
+                      clean                 \
+                      distclean             \
+                      freeze
 
-RTS_GOAL := rts
+INFOCONFIG_GOALS   := $(PROBEVARIABLE_GOAL) \
+                      $(CONFIGURE_GOAL)     \
+                      $(INFODUMP_GOAL)
 
 NOT_PLATFORM_GOALS := $(SERVICE_GOALS) \
                       $(RTS_GOAL)
 
-PLATFORM_GOALS := configure          \
-                  configure-subdirs  \
-                  all                \
-                  $(KERNEL_BASENAME) \
-                  kernel_libinfo     \
-                  kernel_info        \
-                  postbuild          \
-                  session-start      \
-                  session-end        \
-                  run                \
-                  debug
+PLATFORM_GOALS     := $(CONFIGURE_GOAL)  \
+                      all                \
+                      $(KERNEL_BASENAME) \
+                      kernel_libinfo     \
+                      kernel_info        \
+                      postbuild          \
+                      session-start      \
+                      session-end        \
+                      run                \
+                      debug
 
-ALL_GOALS := $(NOT_PLATFORM_GOALS) \
-             $(PLATFORM_GOALS)
+ALL_GOALS          := $(NOT_PLATFORM_GOALS) \
+                      $(PLATFORM_GOALS)
 
 # check Makefile target
 NOT_MAKEFILE_TARGETS := $(filter-out $(ALL_GOALS),$(MAKECMDGOALS))
@@ -222,6 +227,7 @@ endif
 endif
 
 # add GPRBUILD_PREFIX to PATH
+ifeq ($(BUILD_MODE),GPRbuild)
 ifneq ($(GPRBUILD_PREFIX),)
 ifeq      ($(OSTYPE),cmd)
 PATH := $(GPRBUILD_PREFIX)\bin;$(PATH)
@@ -230,6 +236,7 @@ GPRBUILD_PREFIX_MSYS := $(shell cygpath.exe -u "$(GPRBUILD_PREFIX)" 2> /dev/null
 PATH := $(GPRBUILD_PREFIX_MSYS)/bin:$(PATH)
 else
 PATH := $(GPRBUILD_PREFIX)/bin:$(PATH)
+endif
 endif
 endif
 
@@ -242,10 +249,12 @@ ifeq ($(TOOLS_CHECK),Y)
 endif
 
 # detect Make version
+ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
 MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2> nul| $(SED) -e "2,$$d")
 else
 MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
 endif
 
 ################################################################################
@@ -466,9 +475,8 @@ IMPLICIT_CLIBRARY_UNITS :=
 #
 # Various features.
 #
-GNATBIND_SECSTACK       :=
-USE_UNPREFIXED_GNATMAKE :=
-ENABLE_SPLIT_DWARF      :=
+GNATBIND_SECSTACK  :=
+ENABLE_SPLIT_DWARF :=
 
 ################################################################################
 #                                                                              #
@@ -1124,9 +1132,6 @@ endif
 
 .PHONY: kernel_start
 kernel_start:
-ifeq ($(GCC_VERSION),)
-	$(error Error: no valid toolchain)
-endif
 ifneq ($(RTS_INSTALLED),Y)
 	$(error Error: no RTS available)
 endif

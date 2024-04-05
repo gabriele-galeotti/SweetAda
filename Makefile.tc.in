@@ -18,6 +18,7 @@
 # RTS_GOAL
 # PLATFORM_GOALS
 # MAKECMDGOALS
+# INFOCONFIG_GOALS
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
@@ -33,7 +34,6 @@
 # GNATADC_FILENAME
 # GCC_WRAPPER
 # GNAT_WRAPPER
-# USE_UNPREFIXED_GNATMAKE
 # ENABLE_SPLIT_DWARF
 # CONFIGURE_DEPS
 #
@@ -53,6 +53,19 @@ endif
 # NOTE: this is not the same as TOOLCHAIN_CC, which is possibly used to
 # compile C source files
 TOOLCHAIN_GCC := $(TOOLCHAIN_PROGRAM_PREFIX)gcc$(EXEEXT)
+
+# detect GCC compiler
+ifeq ($(OSTYPE),cmd)
+GCC_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -dumpversion 2> nul)
+else
+GCC_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) -dumpversion 2> /dev/null)
+endif
+ifeq ($(GCC_VERSION),)
+# no valid toolchain found, output a warning message
+ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+$(warning *** Warning: no valid toolchain.)
+endif
+endif
 
 # these must be computed after configuration variables are set; different
 # options could lead to different multilib library directories
@@ -78,19 +91,6 @@ else
 RTS_INSTALLED := $(shell if [ -e "$(RTS_PATH)"/adainclude/system.ads ] ; then echo "Y" ; else echo "N" ; fi)
 endif
 
-# detect GCC compiler
-ifeq ($(OSTYPE),cmd)
-GCC_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -dumpversion 2> nul)
-else
-GCC_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) -dumpversion 2> /dev/null)
-endif
-ifeq ($(GCC_VERSION),)
-# no valid toolchain found, output a warning message
-ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
-$(warning *** Warning: no valid toolchain.)
-endif
-endif
-
 ################################################################################
 #                                                                              #
 # Define toolchain components.                                                 #
@@ -110,8 +110,6 @@ TOOLCHAIN_GNATPREP := $(TOOLCHAIN_PROGRAM_PREFIX)gnatprep$(EXEEXT)
 TOOLCHAIN_GNATXREF := $(TOOLCHAIN_PROGRAM_PREFIX)gnatxref$(EXEEXT)
 TOOLCHAIN_AR       := $(TOOLCHAIN_PROGRAM_PREFIX)ar$(EXEEXT)
 TOOLCHAIN_GDB      := $(TOOLCHAIN_PROGRAM_PREFIX)gdb$(EXEEXT)
-# some GNAT x86-64 cross-toolchains do not provide ld in a standard location
-#TOOLCHAIN_LD       := $(TOOLCHAIN_PREFIX)/libexec/gcc/$(TOOLCHAIN_NAME)/$(GCC_VERSION)/ld$(EXEEXT)
 TOOLCHAIN_LD       := $(TOOLCHAIN_PROGRAM_PREFIX)ld$(EXEEXT)
 TOOLCHAIN_NM       := $(TOOLCHAIN_PROGRAM_PREFIX)nm$(EXEEXT)
 TOOLCHAIN_OBJCOPY  := $(TOOLCHAIN_PROGRAM_PREFIX)objcopy$(EXEEXT)
@@ -121,12 +119,14 @@ TOOLCHAIN_READELF  := $(TOOLCHAIN_PROGRAM_PREFIX)readelf$(EXEEXT)
 TOOLCHAIN_SIZE     := $(TOOLCHAIN_PROGRAM_PREFIX)size$(EXEEXT)
 TOOLCHAIN_STRIP    := $(TOOLCHAIN_PROGRAM_PREFIX)strip$(EXEEXT)
 
+ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
 AS_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_AS) --version 2> nul| $(SED) -e "2,$$d")
 LD_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_LD) --version 2> nul| $(SED) -e "2,$$d")
 else
 AS_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_AS) --version 2> /dev/null | $(SED) -e "2,\$$d")
 LD_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_LD) --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
 endif
 
 # nature of compilers
@@ -263,17 +263,21 @@ STRIP_SWITCHES_DEFAULT    +=
 ifeq      ($(BUILD_MODE),GNATMAKE)
 include gnatmake.tc.in
 CONFIGURE_DEPS += gnatmake.tc.in
+ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
 GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GNATMAKE) --version 2> nul|$(SED) -e "2,$$d")
 else
 GNATMAKE_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_GNATMAKE) --version 2> /dev/null | $(SED) -e "2,\$$d")
 endif
+endif
 else ifeq ($(BUILD_MODE),GPRbuild)
 GPRBUILD := gprbuild$(EXEEXT)
+ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
 GPRBUILD_VERSION := $(shell SET "PATH=$(PATH)" && $(GPRBUILD) --version 2> nul|$(SED) -e "2,$$d")
 else
 GPRBUILD_VERSION := $(shell PATH="$(PATH)" $(GPRBUILD) --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
 endif
 endif
 
