@@ -1169,8 +1169,49 @@ package KL46Z
 
    -- 39.2.9 UART Match Address Registers 1 (UARTx_MA1)
    -- 39.2.10 UART Match Address Registers 2 (UARTx_MA2)
+
    -- 39.2.11 UART Control Register 4 (UARTx_C4)
+
+   OSR_4x  : constant := 2#00011#; -- oversampling ratio for the receiver = 4x
+   OSR_8x  : constant := 2#00111#; -- oversampling ratio for the receiver = 8x
+   OSR_16x : constant := 2#01111#; -- oversampling ratio for the receiver = 16x
+   OSR_32x : constant := 2#11111#; -- oversampling ratio for the receiver = 32x
+
+   type UART0_C4_Type is record
+      OSR   : Bits_5;  -- Over Sampling Ratio
+      M10   : Boolean; -- 10-bit Mode select
+      MAEN2 : Boolean; -- Match Address Mode Enable 2
+      MAEN1 : Boolean; -- Match Address Mode Enable 1
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UART0_C4_Type use record
+      OSR   at 0 range 0 .. 4;
+      M10   at 0 range 5 .. 5;
+      MAEN2 at 0 range 6 .. 6;
+      MAEN1 at 0 range 7 .. 7;
+   end record;
+
    -- 39.2.12 UART Control Register 5 (UARTx_C5)
+
+   type UART0_C5_Type is record
+      RESYNCDIS : Boolean;     -- Resynchronization Disable
+      BOTHEDGE  : Boolean;     -- Both Edge Sampling
+      Reserved1 : Bits_3 := 0;
+      RDMAE     : Boolean;     -- Receiver Full DMA Enable
+      Reserved2 : Bits_1 := 0;
+      TDMAE     : Boolean;     -- Transmitter DMA Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UART0_C5_Type use record
+      RESYNCDIS at 0 range 0 .. 0;
+      BOTHEDGE  at 0 range 1 .. 1;
+      Reserved1 at 0 range 2 .. 4;
+      RDMAE     at 0 range 5 .. 5;
+      Reserved2 at 0 range 6 .. 6;
+      TDMAE     at 0 range 7 .. 7;
+   end record;
 
    -- 39.2 Register definition
 
@@ -1179,21 +1220,29 @@ package KL46Z
         BDL : Unsigned_8     with Volatile_Full_Access => True;
         C1  : UARTx_C1_Type  with Volatile_Full_Access => True;
         C2  : UARTx_C2_Type  with Volatile_Full_Access => True;
-        S1  : UARTx_C1_Type  with Volatile_Full_Access => True;
-        S2  : UARTx_C2_Type  with Volatile_Full_Access => True;
+        S1  : UARTx_S1_Type  with Volatile_Full_Access => True;
+        S2  : UARTx_S2_Type  with Volatile_Full_Access => True;
         C3  : UARTx_C3_Type  with Volatile_Full_Access => True;
         D   : Unsigned_8     with Volatile_Full_Access => True;
+        MA1 : Unsigned_8     with Volatile_Full_Access => True;
+        MA2 : Unsigned_8     with Volatile_Full_Access => True;
+        C4  : UART0_C4_Type  with Volatile_Full_Access => True;
+        C5  : UART0_C5_Type  with Volatile_Full_Access => True;
    end record
-      with Size => 8 * 8;
+      with Size => 16#C# * 8;
    for UART_0_Type use record
-        BDH at 0 range 0 .. 7;
-        BDL at 1 range 0 .. 7;
-        C1  at 2 range 0 .. 7;
-        C2  at 3 range 0 .. 7;
-        S1  at 4 range 0 .. 7;
-        S2  at 5 range 0 .. 7;
-        C3  at 6 range 0 .. 7;
-        D   at 7 range 0 .. 7;
+        BDH at 16#0# range 0 .. 7;
+        BDL at 16#1# range 0 .. 7;
+        C1  at 16#2# range 0 .. 7;
+        C2  at 16#3# range 0 .. 7;
+        S1  at 16#4# range 0 .. 7;
+        S2  at 16#5# range 0 .. 7;
+        C3  at 16#6# range 0 .. 7;
+        D   at 16#7# range 0 .. 7;
+        MA1 at 16#8# range 0 .. 7;
+        MA2 at 16#9# range 0 .. 7;
+        C4  at 16#A# range 0 .. 7;
+        C5  at 16#B# range 0 .. 7;
    end record;
 
    UART0_BASEADDRESS : constant := 16#4006_A000#;
@@ -1210,7 +1259,7 @@ package KL46Z
 
    -- 40.2.9 UART Control Register 4 (UARTx_C4)
 
-   type UARTx_C4_Type is record
+   type UART12_C4_Type is record
       Reserved1 : Bits_3 := 0;
       Reserved2 : Bits_1 := 0;
       Reserved3 : Bits_1 := 0;
@@ -1220,7 +1269,7 @@ package KL46Z
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
-   for UARTx_C4_Type use record
+   for UART12_C4_Type use record
       Reserved1 at 0 range 0 .. 2;
       Reserved2 at 0 range 3 .. 3;
       Reserved3 at 0 range 4 .. 4;
@@ -1236,11 +1285,11 @@ package KL46Z
         BDL : Unsigned_8     with Volatile_Full_Access => True;
         C1  : UARTx_C1_Type  with Volatile_Full_Access => True;
         C2  : UARTx_C2_Type  with Volatile_Full_Access => True;
-        S1  : UARTx_C1_Type  with Volatile_Full_Access => True;
-        S2  : UARTx_C2_Type  with Volatile_Full_Access => True;
+        S1  : UARTx_S1_Type  with Volatile_Full_Access => True;
+        S2  : UARTx_S2_Type  with Volatile_Full_Access => True;
         C3  : UARTx_C3_Type  with Volatile_Full_Access => True;
         D   : Unsigned_8     with Volatile_Full_Access => True;
-        C4  : UARTx_C4_Type  with Volatile_Full_Access => True;
+        C4  : UART12_C4_Type with Volatile_Full_Access => True;
    end record
       with Size => 9 * 8;
    for UART_12_Type use record
