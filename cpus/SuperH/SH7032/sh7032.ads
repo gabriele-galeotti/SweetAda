@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package SH7032
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -71,7 +69,7 @@ package SH7032
    BCR_ADDRESS : constant := 16#05FF_FFA0#;
 
    BCR : aliased Bus_Control_Register_Type
-      with Address              => To_Address (BCR_ADDRESS),
+      with Address              => System'To_Address (BCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -137,13 +135,13 @@ package SH7032
    end record;
 
    SCI0 : aliased SCI_Type
-      with Address    => To_Address (16#05FF_FEC0#),
+      with Address    => System'To_Address (16#05FF_FEC0#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    SCI1 : aliased SCI_Type
-      with Address    => To_Address (16#05FF_FEC8#),
+      with Address    => System'To_Address (16#05FF_FEC8#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;

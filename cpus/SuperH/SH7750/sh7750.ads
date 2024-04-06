@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package SH7750
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -342,7 +340,7 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
    TMU_BASEADDRESS : constant := 16#FFD8_0000#; -- P4 area
 
    TMU : aliased TMU_Type
-      with Address    => To_Address (TMU_BASEADDRESS),
+      with Address    => System'To_Address (TMU_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -589,7 +587,7 @@ pragma Warnings (On, "* bits of ""SCIF_Type"" unused");
    SCIF_BASEADDRESS : constant := 16#FFE8_0000#; -- P4 area
 
    SCIF : aliased SCIF_Type
-      with Address    => To_Address (SCIF_BASEADDRESS),
+      with Address    => System'To_Address (SCIF_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
