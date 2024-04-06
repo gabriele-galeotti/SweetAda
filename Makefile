@@ -45,39 +45,40 @@ RTS_GOAL           := rts
 CONFIGURE_GOAL     := configure
 INFODUMP_GOAL      := infodump
 PROBEVARIABLE_GOAL := probevariable
-LIBUTILS_GOALS     := libutils-elftool      \
-                      libutils-gcc-wrapper  \
-                      libutils-gnat-wrapper
 
-SERVICE_GOALS      := help                  \
-                      $(PROBEVARIABLE_GOAL) \
-                      $(LIBUTILS_GOALS)     \
-                      $(INFODUMP_GOAL)      \
-                      createkernelcfg       \
-                      clean                 \
-                      distclean             \
-                      freeze
+LIBUTILS_GOALS := libutils-elftool      \
+                  libutils-gcc-wrapper  \
+                  libutils-gnat-wrapper
 
-INFOCONFIG_GOALS   := $(PROBEVARIABLE_GOAL) \
-                      $(CONFIGURE_GOAL)     \
-                      $(INFODUMP_GOAL)
+SERVICE_GOALS := help                  \
+                 $(PROBEVARIABLE_GOAL) \
+                 $(LIBUTILS_GOALS)     \
+                 $(INFODUMP_GOAL)      \
+                 createkernelcfg       \
+                 clean                 \
+                 distclean             \
+                 freeze
+
+INFOCONFIG_GOALS := $(PROBEVARIABLE_GOAL) \
+                    $(CONFIGURE_GOAL)     \
+                    $(INFODUMP_GOAL)
 
 NOT_PLATFORM_GOALS := $(SERVICE_GOALS) \
                       $(RTS_GOAL)
 
-PLATFORM_GOALS     := $(CONFIGURE_GOAL)  \
-                      all                \
-                      $(KERNEL_BASENAME) \
-                      kernel_libinfo     \
-                      kernel_info        \
-                      postbuild          \
-                      session-start      \
-                      session-end        \
-                      run                \
-                      debug
+PLATFORM_GOALS := $(CONFIGURE_GOAL)  \
+                  all                \
+                  $(KERNEL_BASENAME) \
+                  kernel_libinfo     \
+                  kernel_info        \
+                  postbuild          \
+                  session-start      \
+                  session-end        \
+                  run                \
+                  debug
 
-ALL_GOALS          := $(NOT_PLATFORM_GOALS) \
-                      $(PLATFORM_GOALS)
+ALL_GOALS := $(NOT_PLATFORM_GOALS) \
+             $(PLATFORM_GOALS)
 
 # check Makefile target
 NOT_MAKEFILE_TARGETS := $(filter-out $(ALL_GOALS),$(MAKECMDGOALS))
