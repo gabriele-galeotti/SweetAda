@@ -15,10 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+with Definitions;
 with Bits;
+with CPU;
 with ARMv6M;
 with KL46Z;
 with Exceptions;
+with Console;
 
 package body BSP
    is
@@ -31,6 +35,8 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
+   use Interfaces;
+   use Definitions;
    use Bits;
    use KL46Z;
 
@@ -69,7 +75,11 @@ package body BSP
       (C : in Character)
       is
    begin
-      null;
+      -- wait for transmitter available
+      loop
+         exit when UART0.S1.TDRE;
+      end loop;
+      UART0.D := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -101,12 +111,21 @@ package body BSP
       SIM_SCGC4.UART0 := True;
       PORTA_PCR (1).MUX := MUX_ALT2;
       PORTA_PCR (2).MUX := MUX_ALT2;
-      UART0.BDL := 16#34#;
+      UART0.C4 := (
+         OSR    => 16 - 1,
+         M10    => False,
+         MAEN2  => False,
+         MAEN1  => False
+         );
+      UART0.BDL := Unsigned_8 ((8 * MHz1 / 16) / 9_600);
       UART0.BDH.SBR := 16#00#;
       UART0.C2.TE := True;
       -- Console --------------------------------------------------------------
-      -- Console.Console_Descriptor.Write := Console_Putchar'Access;
-      -- Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor.Write := Console_Putchar'Access;
+      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
+      -------------------------------------------------------------------------
+      Console.Print ("FRDM-KL46Z", NL => True);
       -------------------------------------------------------------------------
       ARMv6M.Irq_Enable;
       -- ARMv6M.Fault_Irq_Enable;

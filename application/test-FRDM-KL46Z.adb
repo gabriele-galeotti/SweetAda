@@ -2,6 +2,7 @@
 with Interfaces;
 with CPU;
 with KL46Z;
+with Console;
 
 package body Application
    is
@@ -42,8 +43,7 @@ package body Application
          GPIOD_PDDR (5) := True;
          while True loop
             GPIOD_PTOR (5) := True;
-            -- "F" on UART0
-            UART0.D := 16#46#;
+            Console.Print (".");
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
          end loop;
       end;
