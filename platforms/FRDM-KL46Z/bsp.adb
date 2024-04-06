@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
 with Definitions;
 with Bits;
 with CPU;
@@ -112,13 +111,13 @@ package body BSP
       PORTA_PCR (1).MUX := MUX_ALT2;
       PORTA_PCR (2).MUX := MUX_ALT2;
       UART0.C4 := (
-         OSR    => 16 - 1,
+         OSR    => OSR_16x,
          M10    => False,
          MAEN2  => False,
          MAEN1  => False
          );
-      UART0.BDL := Unsigned_8 ((8 * MHz1 / 16) / 9_600);
-      UART0.BDH.SBR := 16#00#;
+      UART0.BDL     := Unsigned_8 ((8 * MHz1 / 16) / 9_600);
+      UART0.BDH.SBR := 0;
       UART0.C2.TE := True;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
