@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with System;
 with Interfaces;
 
 package MVME162FX
@@ -29,7 +29,6 @@ package MVME162FX
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
 
    ----------------------------------------------------------------------------
@@ -41,7 +40,7 @@ package MVME162FX
    LCSR_ADDRESS : constant := 16#FFF4_0060#;
 
    LCSR : aliased Unsigned_32
-      with Address              => To_Address (LCSR_ADDRESS),
+      with Address              => System'To_Address (LCSR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -51,7 +50,7 @@ package MVME162FX
    RESET_SCR_ADDRESS : constant := 16#FFF4_2044#;
 
    RESET_SCR : aliased Unsigned_8
-      with Address              => To_Address (RESET_SCR_ADDRESS),
+      with Address              => System'To_Address (RESET_SCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -78,7 +77,7 @@ package MVME162FX
    end record;
 
    MC2 : aliased MC2_Type
-      with Address              => To_Address (MC2_BASEADDRESS),
+      with Address              => System'To_Address (MC2_BASEADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
