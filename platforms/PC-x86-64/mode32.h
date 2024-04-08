@@ -10,9 +10,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .code16
-
                 .sect   .init16,"ax"
+
+                .code16
 
                 //
                 // _start16 *MUST* be in the form:
@@ -40,7 +40,7 @@ _start16:
                 movl    %eax,%cr0
                 xorl    %eax,%eax               // invalidate TLB
                 movl    %eax,%cr3
-                lgdt    gdtdsc32-_start16
+                lgdtl   gdtdsc32-_start16
                 movl    %cr0,%eax
                 orl     $CR0_PE,%eax            // turn on protected mode
                 movl    %eax,%cr0
