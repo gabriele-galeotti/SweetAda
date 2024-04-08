@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package NEORV32
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -82,7 +80,7 @@ package NEORV32
    CRC_BASEADDRESS : constant := 16#FFFF_EE00#;
 
    CRC : aliased CRC_Type
-      with Address    => To_Address (CRC_BASEADDRESS),
+      with Address    => System'To_Address (CRC_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -131,7 +129,7 @@ package NEORV32
    WDT_ADDRESS : constant := 16#FFFF_FB00#;
 
    WDT : aliased WDT_Type
-      with Address    => To_Address (WDT_ADDRESS),
+      with Address    => System'To_Address (WDT_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -212,7 +210,7 @@ package NEORV32
    UART0_BASEADDRESS : constant := 16#FFFF_F500#;
 
    UART0 : aliased UART_Type
-      with Address    => To_Address (UART0_BASEADDRESS),
+      with Address    => System'To_Address (UART0_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -220,7 +218,7 @@ package NEORV32
    UART1_BASEADDRESS : constant := 16#FFFF_F600#;
 
    UART1 : aliased UART_Type
-      with Address    => To_Address (UART1_BASEADDRESS),
+      with Address    => System'To_Address (UART1_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -267,7 +265,7 @@ package NEORV32
    EIE_ADDRESS : constant := 16#FFFF_F300#;
 
    EIE : aliased Bits_32
-      with Address              => To_Address (EIE_ADDRESS),
+      with Address              => System'To_Address (EIE_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -289,7 +287,7 @@ package NEORV32
    EIP_ADDRESS : constant := 16#FFFF_F304#;
 
    EIP : aliased Bits_32
-      with Address              => To_Address (EIP_ADDRESS),
+      with Address              => System'To_Address (EIP_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -307,7 +305,7 @@ package NEORV32
    ESC_ADDRESS : constant := 16#FFFF_F308#;
 
    ESC : aliased Bits_32
-      with Address              => To_Address (ESC_ADDRESS),
+      with Address              => System'To_Address (ESC_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
