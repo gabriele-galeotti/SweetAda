@@ -1076,7 +1076,7 @@ pragma Style_Checks (Off);
    RSTFLTSEL_CNT6  : constant := 2#00101#; -- Bus clock filter count is 6
    RSTFLTSEL_CNT7  : constant := 2#00110#; -- Bus clock filter count is 7
    RSTFLTSEL_CNT8  : constant := 2#00111#; -- Bus clock filter count is 8
-   RSTFLTSEL_CNT9  : constant := 2#01000#; -- Bus clock filter count is 0
+   RSTFLTSEL_CNT9  : constant := 2#01000#; -- Bus clock filter count is 9
    RSTFLTSEL_CNT10 : constant := 2#01001#; -- Bus clock filter count is 10
    RSTFLTSEL_CNT11 : constant := 2#01010#; -- Bus clock filter count is 11
    RSTFLTSEL_CNT12 : constant := 2#01011#; -- Bus clock filter count is 12
