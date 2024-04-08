@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# NEORV32 GHDL front-end script.
+# NEORV32 DE10-Lite front-end script.
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
@@ -19,7 +19,6 @@
 # KERNEL_OUTFILE
 # OBJCOPY
 # NEORV32_HOME
-# GHDL_PATH
 #
 
 ################################################################################
