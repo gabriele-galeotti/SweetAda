@@ -35,6 +35,8 @@ package KL46Z
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- 4 Memory Map
    ----------------------------------------------------------------------------
@@ -964,6 +966,470 @@ package KL46Z
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 24 Multipurpose Clock Generator (MCG)
+   ----------------------------------------------------------------------------
+
+   -- 24.3.1 MCG Control 1 Register (MCG_C1)
+
+   IREFS_EXT : constant := 0; -- External reference clock is selected.
+   IREFS_INT : constant := 1; -- The slow internal reference clock is selected.
+
+   FRDIV_1_32     : constant := 2#000#; -- If RANGE 0 = 0 or OSCSEL=1 , Divide Factor is 1; for all other RANGE 0 values, Divide Factor is 32.
+   FRDIV_2_64     : constant := 2#001#; -- If RANGE 0 = 0 or OSCSEL=1 , Divide Factor is 2; for all other RANGE 0 values, Divide Factor is 64.
+   FRDIV_4_128    : constant := 2#010#; -- If RANGE 0 = 0 or OSCSEL=1 , Divide Factor is 4; for all other RANGE 0 values, Divide Factor is 128.
+   FRDIV_8_256    : constant := 2#011#; -- If RANGE 0 = 0 or OSCSEL=1 , Divide Factor is 8; for all other RANGE 0 values, Divide Factor is 256.
+   FRDIV_16_512   : constant := 2#100#; -- If RANGE 0 = 0 or OSCSEL=1 , Divide Factor is 16; for all other RANGE 0 values, Divide Factor is 512.
+   FRDIV_32_1024  : constant := 2#101#; -- If RANGE 0 = 0 or OSCSEL=1 , Divide Factor is 32; for all other RANGE 0 values, Divide Factor is 1024.
+   FRDIV_64_1280  : constant := 2#110#; -- If RANGE 0 = 0 or OSCSEL=1 , Divide Factor is 64; for all other RANGE 0 values, Divide Factor is 1280 .
+   FRDIV_128_1536 : constant := 2#111#; -- If RANGE 0 = 0 or OSCSEL=1 , Divide Factor is 128; for all other RANGE 0 values, Divide Factor is 1536 .
+
+   CLKS_FLLPLL : constant := 2#00#; -- Encoding 0 — Output of FLL or PLL is selected (depends on PLLS control bit).
+   CLKS_INT    : constant := 2#01#; -- Encoding 1 — Internal reference clock is selected.
+   CLKS_EXT    : constant := 2#10#; -- Encoding 2 — External reference clock is selected.
+   CLKS_RSVD   : constant := 2#11#; -- Encoding 3 — Reserved.
+
+   type MCG_C1_Type is record
+      IREFSTEN : Boolean; -- Internal Reference Stop Enable
+      IRCLKEN  : Boolean; -- Internal Reference Clock Enable
+      IREFS    : Bits_1;  -- Internal Reference Select
+      FRDIV    : Bits_3;  -- FLL External Reference Divider
+      CLKS     : Bits_2;  -- Clock Source Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_C1_Type use record
+      IREFSTEN at 0 range 0 .. 0;
+      IRCLKEN  at 0 range 1 .. 1;
+      IREFS    at 0 range 2 .. 2;
+      FRDIV    at 0 range 3 .. 5;
+      CLKS     at 0 range 6 .. 7;
+   end record;
+
+   MCG_C1_ADDRESS : constant := 16#4006_4000#;
+
+   MCG_C1 : aliased MCG_C1_Type
+      with Address              => System'To_Address (MCG_C1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.2 MCG Control 2 Register (MCG_C2)
+
+   IRCS_SLOW : constant := 0; -- Slow internal reference clock selected.
+   IRCS_FAST : constant := 1; -- Fast internal reference clock selected.
+
+   EREFS0_EXT : constant := 0; -- External reference clock requested.
+   EREFS0_OSC : constant := 1; -- Oscillator requested.
+
+   RANGE0_LO   : constant := 2#00#; -- Encoding 0 — Low frequency range selected for the crystal oscillator .
+   RANGE0_HI   : constant := 2#01#; -- Encoding 1 — High frequency range selected for the crystal oscillator .
+   RANGE0_VHI1 : constant := 2#10#; -- Encoding 2 — Very high frequency range selected for the crystal oscillator .
+   RANGE0_VHI2 : constant := 2#11#; -- Encoding 2 — Very high frequency range selected for the crystal oscillator .
+
+   LOCRE0_IRQ : constant := 0; -- Interrupt request is generated on a loss of OSC0 external reference clock.
+   LOCRE0_RES : constant := 1; -- Generate a reset request on a loss of OSC0 external reference clock.
+
+   type MCG_C2_Type is record
+      IRCS    : Bits_1;  -- Internal Reference Clock Select
+      LP      : Boolean; -- Low Power Select
+      EREFS0  : Bits_1;  -- External Reference Select
+      HGO0    : Boolean; -- High Gain Oscillator Select
+      RANGE0  : Bits_2;  -- Frequency Range Select
+      FCFTRIM : Boolean; -- Fast Internal Reference Clock Fine Trim
+      LOCRE0  : Bits_1;  -- Loss of Clock Reset Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_C2_Type use record
+      IRCS    at 0 range 0 .. 0;
+      LP      at 0 range 1 .. 1;
+      EREFS0  at 0 range 2 .. 2;
+      HGO0    at 0 range 3 .. 3;
+      RANGE0  at 0 range 4 .. 5;
+      FCFTRIM at 0 range 6 .. 6;
+      LOCRE0  at 0 range 7 .. 7;
+   end record;
+
+   MCG_C2_ADDRESS : constant := 16#4006_4001#;
+
+   MCG_C2 : aliased MCG_C2_Type
+      with Address              => System'To_Address (MCG_C2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.3 MCG Control 3 Register (MCG_C3)
+
+   type MCG_C3_Type is record
+      SCTRIM : Bits_8; -- Slow Internal Reference Clock Trim Setting
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_C3_Type use record
+      SCTRIM at 0 range 0 .. 7;
+   end record;
+
+   MCG_C3_ADDRESS : constant := 16#4006_4002#;
+
+   MCG_C3 : aliased MCG_C3_Type
+      with Address              => System'To_Address (MCG_C3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.4 MCG Control 4 Register (MCG_C4)
+
+                                   -- DMX32  Reference Range    FLL Factor  DCO Range
+   DRST_DRS_1 : constant := 2#00#; -- 0      31.25–39.0625 kHz  640         20–25 MHz
+                                   -- 1      32.768 kHz         732         24 MHz
+   DRST_DRS_2 : constant := 2#01#; -- 0      31.25–39.0625 kHz  1280        40–50 MHz
+                                   -- 1      32.768 kHz         1464        48 MHz
+   DRST_DRS_3 : constant := 2#10#; -- 0      31.25–39.0625 kHz  1920        60–75 MHz
+                                   -- 1      32.768 kHz         2197        72 MHz
+   DRST_DRS_4 : constant := 2#11#; -- 0      31.25–39.0625 kHz  2560        80–100 MHz
+                                   -- 1      32.768 kHz         2929        96 MHz
+
+   type MCG_C4_Type is record
+      SCFTRIM  : Boolean; -- Slow Internal Reference Clock Fine Trim
+      FCTRIM   : Bits_4;  -- Fast Internal Reference Clock Trim Setting
+      DRST_DRS : Bits_2;  -- DCO Range Select
+      DMX32    : Boolean; -- DCO Maximum Frequency with 32.768 kHz Reference
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_C4_Type use record
+      SCFTRIM  at 0 range 0 .. 0;
+      FCTRIM   at 0 range 1 .. 4;
+      DRST_DRS at 0 range 5 .. 6;
+      DMX32    at 0 range 7 .. 7;
+   end record;
+
+   MCG_C4_ADDRESS : constant := 16#4006_4003#;
+
+   MCG_C4 : aliased MCG_C4_Type
+      with Address              => System'To_Address (MCG_C4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.5 MCG Control 5 Register (MCG_C5)
+
+   PRDIV0_DIV1  : constant := 2#00000#; -- Divide Factor 1
+   PRDIV0_DIV2  : constant := 2#00001#; -- Divide Factor 2
+   PRDIV0_DIV3  : constant := 2#00010#; -- Divide Factor 3
+   PRDIV0_DIV4  : constant := 2#00011#; -- Divide Factor 4
+   PRDIV0_DIV5  : constant := 2#00100#; -- Divide Factor 5
+   PRDIV0_DIV6  : constant := 2#00101#; -- Divide Factor 6
+   PRDIV0_DIV7  : constant := 2#00110#; -- Divide Factor 7
+   PRDIV0_DIV8  : constant := 2#00111#; -- Divide Factor 8
+   PRDIV0_DIV9  : constant := 2#01000#; -- Divide Factor 9
+   PRDIV0_DIV10 : constant := 2#01001#; -- Divide Factor 10
+   PRDIV0_DIV11 : constant := 2#01010#; -- Divide Factor 11
+   PRDIV0_DIV12 : constant := 2#01011#; -- Divide Factor 12
+   PRDIV0_DIV13 : constant := 2#01100#; -- Divide Factor 13
+   PRDIV0_DIV14 : constant := 2#01101#; -- Divide Factor 14
+   PRDIV0_DIV15 : constant := 2#01110#; -- Divide Factor 15
+   PRDIV0_DIV16 : constant := 2#01111#; -- Divide Factor 16
+   PRDIV0_DIV17 : constant := 2#10000#; -- Divide Factor 17
+   PRDIV0_DIV18 : constant := 2#10001#; -- Divide Factor 18
+   PRDIV0_DIV19 : constant := 2#10010#; -- Divide Factor 19
+   PRDIV0_DIV20 : constant := 2#10011#; -- Divide Factor 20
+   PRDIV0_DIV21 : constant := 2#10100#; -- Divide Factor 21
+   PRDIV0_DIV22 : constant := 2#10101#; -- Divide Factor 22
+   PRDIV0_DIV23 : constant := 2#10110#; -- Divide Factor 23
+   PRDIV0_DIV24 : constant := 2#10111#; -- Divide Factor 24
+   PRDIV0_DIV25 : constant := 2#11000#; -- Divide Factor 25
+
+   type MCG_C5_Type is record
+      PRDIV0    : Bits_5;      -- PLL External Reference Divider
+      PLLSTEN0  : Boolean;     -- PLL Stop Enable
+      PLLCLKEN0 : Boolean;     -- PLL Clock Enable
+      Reserved  : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_C5_Type use record
+      PRDIV0    at 0 range 0 .. 4;
+      PLLSTEN0  at 0 range 5 .. 5;
+      PLLCLKEN0 at 0 range 6 .. 6;
+      Reserved  at 0 range 7 .. 7;
+   end record;
+
+   MCG_C5_ADDRESS : constant := 16#4006_4004#;
+
+   MCG_C5 : aliased MCG_C5_Type
+      with Address              => System'To_Address (MCG_C5_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.6 MCG Control 6 Register (MCG_C6)
+
+   VDIV0_x24 : constant := 2#00000#; -- Multiply Factor 24
+   VDIV0_x25 : constant := 2#00001#; -- Multiply Factor 25
+   VDIV0_x26 : constant := 2#00010#; -- Multiply Factor 26
+   VDIV0_x27 : constant := 2#00011#; -- Multiply Factor 27
+   VDIV0_x28 : constant := 2#00100#; -- Multiply Factor 28
+   VDIV0_x29 : constant := 2#00101#; -- Multiply Factor 29
+   VDIV0_x30 : constant := 2#00110#; -- Multiply Factor 30
+   VDIV0_x31 : constant := 2#00111#; -- Multiply Factor 31
+   VDIV0_x32 : constant := 2#01000#; -- Multiply Factor 32
+   VDIV0_x33 : constant := 2#01001#; -- Multiply Factor 33
+   VDIV0_x34 : constant := 2#01010#; -- Multiply Factor 34
+   VDIV0_x35 : constant := 2#01011#; -- Multiply Factor 35
+   VDIV0_x36 : constant := 2#01100#; -- Multiply Factor 36
+   VDIV0_x37 : constant := 2#01101#; -- Multiply Factor 37
+   VDIV0_x38 : constant := 2#01110#; -- Multiply Factor 38
+   VDIV0_x39 : constant := 2#01111#; -- Multiply Factor 39
+   VDIV0_x40 : constant := 2#10000#; -- Multiply Factor 40
+   VDIV0_x41 : constant := 2#10001#; -- Multiply Factor 41
+   VDIV0_x42 : constant := 2#10010#; -- Multiply Factor 42
+   VDIV0_x43 : constant := 2#10011#; -- Multiply Factor 43
+   VDIV0_x44 : constant := 2#10100#; -- Multiply Factor 44
+   VDIV0_x45 : constant := 2#10101#; -- Multiply Factor 45
+   VDIV0_x46 : constant := 2#10110#; -- Multiply Factor 46
+   VDIV0_x47 : constant := 2#10111#; -- Multiply Factor 47
+   VDIV0_x48 : constant := 2#11000#; -- Multiply Factor 48
+   VDIV0_x49 : constant := 2#11001#; -- Multiply Factor 49
+   VDIV0_x50 : constant := 2#11010#; -- Multiply Factor 50
+   VDIV0_x51 : constant := 2#11011#; -- Multiply Factor 51
+   VDIV0_x52 : constant := 2#11100#; -- Multiply Factor 52
+   VDIV0_x53 : constant := 2#11101#; -- Multiply Factor 53
+   VDIV0_x54 : constant := 2#11110#; -- Multiply Factor 54
+   VDIV0_x55 : constant := 2#11111#; -- Multiply Factor 55
+
+   PLLS_FLL : constant := 0; -- FLL is selected.
+   PLLS_PLL : constant := 1; -- PLL is selected.
+
+   type MCG_C6_Type is record
+      VDIV0  : Bits_5;  -- VCO 0 Divider
+      CME0   : Boolean; -- Clock Monitor Enable
+      PLLS   : Bits_1;  -- PLL Select
+      LOLIE0 : Boolean; -- Loss of Lock Interrrupt Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_C6_Type use record
+      VDIV0  at 0 range 0 .. 4;
+      CME0   at 0 range 5 .. 5;
+      PLLS   at 0 range 6 .. 6;
+      LOLIE0 at 0 range 7 .. 7;
+   end record;
+
+   MCG_C6_ADDRESS : constant := 16#4006_4005#;
+
+   MCG_C6 : aliased MCG_C6_Type
+      with Address              => System'To_Address (MCG_C6_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.7 MCG Status Register (MCG_S)
+
+   IRCST_SLOW : constant := 0; -- Source of internal reference clock is the slow clock (32 kHz IRC).
+   IRCST_FAST : constant := 1; -- Source of internal reference clock is the fast clock (4 MHz IRC).
+
+   CLKST_FLL : constant := 2#00#; -- Encoding 0 — Output of the FLL is selected (reset default).
+   CLKST_INT : constant := 2#01#; -- Encoding 1 — Internal reference clock is selected.
+   CLKST_EXT : constant := 2#10#; -- Encoding 2 — External reference clock is selected.
+   CLKST_PLL : constant := 2#11#; -- Encoding 3 — Output of the PLL is selected.
+
+   IREFST_EXT : constant := 0; -- Source of FLL reference clock is the external reference clock.
+   IREFST_INT : constant := 1; -- Source of FLL reference clock is the internal reference clock.
+
+   PLLST_FLL : constant := 0; -- Source of PLLS clock is FLL clock.
+   PLLST_PLL : constant := 1; -- Source of PLLS clock is PLL output clock.
+
+   type MCG_S_Type is record
+      IRCST    : Bits_1;  -- Internal Reference Clock Status
+      OSCINIT0 : Boolean; -- OSC Initialization
+      CLKST    : Bits_2;  -- Clock Mode Status
+      IREFST   : Bits_1;  -- Internal Reference Status
+      PLLST    : Bits_1;  -- PLL Select Status
+      LOCK0    : Boolean; -- Lock Status
+      LOLS0    : Boolean; -- Loss of Lock Status
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_S_Type use record
+      IRCST    at 0 range 0 .. 0;
+      OSCINIT0 at 0 range 1 .. 1;
+      CLKST    at 0 range 2 .. 3;
+      IREFST   at 0 range 4 .. 4;
+      PLLST    at 0 range 5 .. 5;
+      LOCK0    at 0 range 6 .. 6;
+      LOLS0    at 0 range 7 .. 7;
+   end record;
+
+   MCG_S_ADDRESS : constant := 16#4006_4006#;
+
+   MCG_S : aliased MCG_S_Type
+      with Address              => System'To_Address (MCG_S_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.8 MCG Status and Control Register (MCG_SC)
+
+   FCRDIV_DIV1   : constant := 2#000#; -- Divide Factor is 1
+   FCRDIV_DIV2   : constant := 2#001#; -- Divide Factor is 2.
+   FCRDIV_DIV4   : constant := 2#010#; -- Divide Factor is 4.
+   FCRDIV_DIV8   : constant := 2#011#; -- Divide Factor is 8.
+   FCRDIV_DIV16  : constant := 2#100#; -- Divide Factor is 16
+   FCRDIV_DIV32  : constant := 2#101#; -- Divide Factor is 32
+   FCRDIV_DIV64  : constant := 2#110#; -- Divide Factor is 64
+   FCRDIV_DIV128 : constant := 2#111#; -- Divide Factor is 128.
+
+   ATMS_32k : constant := 0; -- 32 kHz Internal Reference Clock selected.
+   ATMS_4M  : constant := 1; -- 4 MHz Internal Reference Clock selected.
+
+   type MCG_SC_Type is record
+      LOCS0    : Boolean; -- OSC0 Loss of Clock Status
+      FCRDIV   : Bits_3;  -- Fast Clock Internal Reference Divider
+      FLTPRSRV : Boolean; -- FLL Filter Preserve Enable
+      ATMF     : Boolean; -- Automatic Trim Machine Fail Flag
+      ATMS     : Bits_1;  -- Automatic Trim Machine Select
+      ATME     : Boolean; -- Automatic Trim Machine Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_SC_Type use record
+      LOCS0    at 0 range 0 .. 0;
+      FCRDIV   at 0 range 1 .. 3;
+      FLTPRSRV at 0 range 4 .. 4;
+      ATMF     at 0 range 5 .. 5;
+      ATMS     at 0 range 6 .. 6;
+      ATME     at 0 range 7 .. 7;
+   end record;
+
+   MCG_SC_ADDRESS : constant := 16#4006_4008#;
+
+   MCG_SC : aliased MCG_SC_Type
+      with Address              => System'To_Address (MCG_SC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.9 MCG Auto Trim Compare Value High Register (MCG_ATCVH)
+
+   MCG_ATCVH_ADDRESS : constant := 16#4006_400A#;
+
+   MCG_ATCVH : aliased Unsigned_8
+      with Address              => System'To_Address (MCG_ATCVH_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.10 MCG Auto Trim Compare Value Low Register (MCG_ATCVL)
+
+   MCG_ATCVL_ADDRESS : constant := 16#4006_400B#;
+
+   MCG_ATCVL : aliased Unsigned_8
+      with Address              => System'To_Address (MCG_ATCVL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.11 MCG Control 7 Register (MCG_C7)
+
+   OSCSEL_OSC : constant := 0; -- Selects Oscillator (OSCCLK).
+   OSCSEL_RTC : constant := 1; -- Selects 32 kHz RTC Oscillator.
+
+   type MCG_C7_Type is record
+      OSCSEL    : Bits_1;      -- MCG OSC Clock Select
+      Reserved1 : Bits_5 := 0;
+      Reserved2 : Bits_2 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_C7_Type use record
+      OSCSEL    at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 5;
+      Reserved2 at 0 range 6 .. 7;
+   end record;
+
+   MCG_C7_ADDRESS : constant := 16#4006_400C#;
+
+   MCG_C7 : aliased MCG_C7_Type
+      with Address              => System'To_Address (MCG_C7_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.12 MCG Control 8 Register (MCG_C8)
+
+   type MCG_C8_Type is record
+      Reserved1 : Bits_1 := 0;
+      Reserved2 : Bits_4 := 0;
+      Reserved3 : Bits_1 := 0;
+      LOLRE     : Boolean;     -- PLL Loss of Lock Reset Enable
+      Reserved4 : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_C8_Type use record
+      Reserved1 at 0 range 0 .. 0;
+      Reserved2 at 0 range 1 .. 4;
+      Reserved3 at 0 range 5 .. 5;
+      LOLRE     at 0 range 6 .. 6;
+      Reserved4 at 0 range 7 .. 7;
+   end record;
+
+   MCG_C8_ADDRESS : constant := 16#4006_400D#;
+
+   MCG_C8 : aliased MCG_C8_Type
+      with Address              => System'To_Address (MCG_C8_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.13 MCG Control 9 Register (MCG_C9)
+
+   type MCG_C9_Type is record
+      Reserved1 : Bits_1 := 0;
+      Reserved2 : Bits_3 := 0;
+      Reserved3 : Bits_2 := 0;
+      Reserved4 : Bits_2 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_C9_Type use record
+      Reserved1 at 0 range 0 .. 0;
+      Reserved2 at 0 range 1 .. 3;
+      Reserved3 at 0 range 4 .. 5;
+      Reserved4 at 0 range 6 .. 7;
+   end record;
+
+   MCG_C9_ADDRESS : constant := 16#4006_400E#;
+
+   MCG_C9 : aliased MCG_C9_Type
+      with Address              => System'To_Address (MCG_C9_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 24.3.14 MCG Control 10 Register (MCG_C10)
+
+   type MCG_C10_Type is record
+      Reserved1 : Bits_4 := 0;
+      Reserved2 : Bits_4 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCG_C10_Type use record
+      Reserved1 at 0 range 0 .. 3;
+      Reserved2 at 0 range 4 .. 7;
+   end record;
+
+   MCG_C10_ADDRESS : constant := 16#4006_400F#;
+
+   MCG_C10 : aliased MCG_C10_Type
+      with Address              => System'To_Address (MCG_C10_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 25 Oscillator (OSC)
    ----------------------------------------------------------------------------
 
@@ -1547,5 +2013,7 @@ package KL46Z
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+pragma Style_Checks (On);
 
 end KL46Z;
