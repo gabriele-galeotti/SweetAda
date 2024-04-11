@@ -26,11 +26,11 @@ _start:
                 //
                 // Initialize CP0 registers.
                 //
-                mtc0    $0,C0_CAUSE
+                mtc0    $0,CP0_CAUSE
                 nop
-                mtc0    $0,C0_WATCHLO
+                mtc0    $0,CP0_WATCHLO
                 nop
-                mtc0    $0,C0_WATCHHI
+                mtc0    $0,CP0_WATCHHI
                 nop
 
                 //

@@ -141,6 +141,6 @@ irq_handler:
                 nop
                 RESTORE_REGS
                 addu    $sp,$sp,REGSAREA_SIZE
-                mtc0    $0,C0_CAUSE
+                mtc0    $0,CP0_CAUSE
                 eret
 
