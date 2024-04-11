@@ -163,6 +163,43 @@ package body R3000
    end CP0_PRId_Read;
 
    ----------------------------------------------------------------------------
+   -- Cache_Size
+   ----------------------------------------------------------------------------
+   function Cache_Size
+      (ICache : Boolean)
+      return Unsigned_32
+      is
+      SwC  : Unsigned_32;
+      Size : Unsigned_32;
+   begin
+      SwC := 0;
+      if ICache then
+         SwC := 16#0002_0000#;
+      end if;
+      Asm (
+           Template => ""                           & CRLF &
+                       "        .set    push      " & CRLF &
+                       "        .set    noreorder " & CRLF &
+                       "        subu    $sp,4     " & CRLF &
+                       "        sw      $ra,0($sp)" & CRLF &
+                       "        move    $a0,%1    " & CRLF &
+                       "        .extern size_cache" & CRLF &
+                       "        jal     size_cache" & CRLF &
+                       "        nop               " & CRLF &
+                       "        move    %0,$v0    " & CRLF &
+                       "        lw      $ra,0($sp)" & CRLF &
+                       "        addu    $sp,4     " & CRLF &
+                       "        .set    pop       " & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", Size),
+           Inputs   => Unsigned_32'Asm_Input ("r", SwC),
+           Clobber  => "memory,$v0,$v1,$a0,$t0,$t1,$t2",
+           Volatile => True
+          );
+      return Size;
+   end Cache_Size;
+
+   ----------------------------------------------------------------------------
    -- Intcontext_Get
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
