@@ -101,11 +101,11 @@ exception0380:  j       irqhandle
                 nop
 
 tlbmiss:
-                mfc0    $k1,C0_CONTEXT
+                mfc0    $k1,CP0_CONTEXT
                 lw      $k0,0($k1)              // EntryLo0
                 lw      $k1,8($k1)              // EntryLo1
-                mtc0    $k0,C0_ENTRYLO0
-                mtc0    $k1,C0_ENTRYLO1
+                mtc0    $k0,CP0_ENTRYLO0
+                mtc0    $k1,CP0_ENTRYLO1
                 ehb
                 tlbwr
                 eret
@@ -118,7 +118,7 @@ irqhandle:
                 jalr    $t0
                 nop
                 RESTORE_REGS
-                mtc0    $0,C0_CAUSE
+                mtc0    $0,CP0_CAUSE
                 eret
 
 ////////////////////////////////////////////////////////////////////////////////

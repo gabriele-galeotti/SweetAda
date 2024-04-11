@@ -70,34 +70,34 @@ _start:
                 move    $31,$0
 
                 // KSU=0, ERL=0, EXL=0
-                mfc0    $t0,C0_SR
+                mfc0    $t0,CP0_SR
                 nop
                 la      $t1,~(0x18|0x6)
                 and     $t0,$t1
-                mtc0    $t0,C0_SR
+                mtc0    $t0,CP0_SR
                 nop
                 // clear Cause, WatchLo, WatchHi
-                mtc0    $0,C0_CAUSE
+                mtc0    $0,CP0_CAUSE
                 nop
-                mtc0    $0,C0_WATCHLO
+                mtc0    $0,CP0_WATCHLO
                 nop
-                mtc0    $0,C0_WATCHHI
+                mtc0    $0,CP0_WATCHHI
                 nop
                 // disable cacheability in kseg2/kseg3, kuseg/useg, kseg0
-                mfc0    $t0,C0_CONFIG
+                mfc0    $t0,CP0_CONFIG
                 nop
                 la      $t1,~(CONFIG_K0_MASK|CONFIG_KU_MASK|CONFIG_K23_MASK)
                 and     $t0,$t1
                 la      $t1,(CACHE_ATTRIBUTE_UNCACHED<<28)|(CACHE_ATTRIBUTE_UNCACHED<<25)|(CACHE_ATTRIBUTE_UNCACHED<<0)
                 or      $t0,$t1
-                mtc0    $t0,C0_CONFIG
+                mtc0    $t0,CP0_CONFIG
                 nop
                 // IV=0, use the general exception vector (0x0180)
-                mfc0    $t0,C0_CAUSE
+                mfc0    $t0,CP0_CAUSE
                 nop
                 la      $t1,~(0x00800000)
                 and     $t0,$t1
-                mtc0    $t0,C0_CONFIG
+                mtc0    $t0,CP0_CONFIG
                 nop
 
                 //
@@ -231,14 +231,14 @@ movdata:
 ////////////////////////////////////////////////////////////////////////////////
 
 tlb_reset:
-                mfc0    $t0,C0_CONFIG1          // extract MMU size
+                mfc0    $t0,CP0_CONFIG1         // extract MMU size
                 ext     $t1,$t0,25,6            // highest # TLB entry
-                mtc0    $zero,C0_ENTRYLO0
-                mtc0    $zero,C0_ENTRYLO1
-                mtc0    $zero,C0_PAGEMASK       // 4k
-                mtc0    $zero,C0_WIRED
-                mtc0    $zero,C0_ENTRYHI
-1:              mtc0    $t1,C0_INDEX
+                mtc0    $zero,CP0_ENTRYLO0
+                mtc0    $zero,CP0_ENTRYLO1
+                mtc0    $zero,CP0_PAGEMASK      // 4k
+                mtc0    $zero,CP0_WIRED
+                mtc0    $zero,CP0_ENTRYHI
+1:              mtc0    $t1,CP0_INDEX
                 ehb
                 tlbwi
                 bne     $t1,$zero,1b
