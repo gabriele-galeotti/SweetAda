@@ -101,9 +101,9 @@ exc_handler:
                 nop
                 RESTORE_REGS
                 addu    $sp,$sp,REGSAREA_SIZE
-                mtc0    $0,C0_CAUSE
+                mtc0    $0,CP0_CAUSE
                 nop
-                mfc0    $k0,C0_EPC
+                mfc0    $k0,CP0_EPC
                 nop
                 rfe
                 jr      $k0

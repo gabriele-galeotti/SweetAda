@@ -26,11 +26,11 @@ _start:
                 //
                 // Initialize CP0 registers.
                 //
-                mtc0    $zero,C0_CONTEXT
+                mtc0    $zero,CP0_CONTEXT
                 nop
-                mtc0    $zero,C0_BADVADDR
+                mtc0    $zero,CP0_BADVADDR
                 nop
-                mtc0    $zero,C0_EPC
+                mtc0    $zero,CP0_EPC
                 nop
 
 #define NTLBENTRIES 64
@@ -42,18 +42,18 @@ _start:
                 li      $t4,0x00000700          // t4 = (PFN 0x0, DVG)
 1:              addiu   $t2,$t2,-1              // decrement TLB entry number
                 sll     $t1,$t2,8               // shift entry number into Index field position
-                mtc0    $t1,C0_INDEX            // set Index
+                mtc0    $t1,CP0_INDEX           // set Index
                 nop
-                mtc0    $t4,C0_ENTRYLO          // clear EntryLo
+                mtc0    $t4,CP0_ENTRYLO         // clear EntryLo
                 nop
-                mtc0    $t3,C0_ENTRYHI          // set EntryHi
+                mtc0    $t3,CP0_ENTRYHI         // set EntryHi
                 nop
                 tlbwi                           // write TLB[Index] with (EntryHi, EntryLo)
                 addiu   $t3,$t3,0x1000          // increment VPN
                 addiu   $t4,$t4,0x1000          // increment PFN
                 bnez    $t2,1b                  // go back if we''re not done yet
                 nop
-                mtc0    $zero,C0_ENTRYHI        // clear EntryHi (sets effective ASID=0x0)
+                mtc0    $zero,CP0_ENTRYHI       // clear EntryHi (sets effective ASID=0x0)
                 nop
 
                 //
