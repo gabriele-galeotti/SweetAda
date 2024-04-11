@@ -1315,30 +1315,28 @@ endif
 	@$(call echo-print,"SHELL:                   $(SHELL)")
 	@$(call echo-print,"SWEETADA PATH:           $(SWEETADA_PATH)")
 	@$(call echo-print,"TOOLCHAIN PREFIX:        $(TOOLCHAIN_PREFIX)")
-ifeq ($(BUILD_MODE),GPRbuild)
-	@$(call echo-print,"GPRBUILD PREFIX:         $(GPRBUILD_PREFIX)")
-endif
 	@$(call echo-print,"TOOLCHAIN NAME:          $(TOOLCHAIN_NAME)")
 	@$(call echo-print,"MAKE VERSION:            $(MAKE_VERSION)")
 	@$(call echo-print,"BUILD MODE:              $(BUILD_MODE)")
+ifeq      ($(BUILD_MODE),GNATMAKE)
+	@$(call echo-print,"GNATMAKE VERSION:        $(GNATMAKE_VERSION)")
+else ifeq ($(BUILD_MODE),GPRbuild)
+	@$(call echo-print,"GPRBUILD PREFIX:         $(GPRBUILD_PREFIX)")
+	@$(call echo-print,"GPRBUILD VERSION:        $(GPRBUILD_VERSION)")
+endif
 ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"GCC VERSION:             $(GCC_VERSION)")
 	@$(call echo-print,"AS VERSION:              $(AS_VERSION)")
 	@$(call echo-print,"LD VERSION:              $(LD_VERSION)")
-endif
-ifeq      ($(BUILD_MODE),GNATMAKE)
-	@$(call echo-print,"GNATMAKE VERSION:        $(GNATMAKE_VERSION)")
-else ifeq ($(BUILD_MODE),GPRbuild)
-	@$(call echo-print,"GPRBUILD VERSION:        $(GPRBUILD_VERSION)")
-endif
 	@$(call echo-print,"GCC MULTIDIR:            $(GCC_MULTIDIR)")
+endif
 	@$(call echo-print,"RTS:                     $(RTS)")
 	@$(call echo-print,"GNAT.ADC PROFILE:        $(PROFILE)")
+	@$(call echo-print,"ADA MODE:                $(ADA_MODE)")
 ifneq ($(RTS),)
 	@$(call echo-print,"RTS ROOT PATH:           $(RTS_ROOT_PATH)")
 	@$(call echo-print,"RTS PATH:                $(RTS_PATH)")
 endif
-	@$(call echo-print,"ADA MODE:                $(ADA_MODE)")
 ifeq ($(USE_LIBGCC),Y)
 	@$(call echo-print,"LIBGCC FILENAME:         $(LIBGCC_OBJECT)")
 endif
