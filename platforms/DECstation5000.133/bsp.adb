@@ -150,21 +150,33 @@ package body BSP
       Console.Print ("DECstation 5000/133", NL => True);
       -------------------------------------------------------------------------
       declare
-         PRId : R3000.PRId_Type;
+         PRId        : R3000.PRId_Type;
+         -- DCache_Size : Unsigned_32;
+         -- ICache_Size : Unsigned_32;
       begin
          PRId := R3000.CP0_PRId_Read;
+         case PRId.Imp is
+            -- some datasheets indicate "3" as the value for an R3000A
+            when 2      => Console.Print ("R3000/R3000A", NL => True);
+            when 3      => Console.Print ("R3000A/R3051/R3052/R3071/R3081", NL => True);
+            when 7      => Console.Print ("R3041", NL => True);
+            when others => Console.Print ("CPU unknown", NL => True);
+         end case;
          Console.Print ("PRId: ", NL => False);
          Console.Print (PRId.Imp, NL => False);
          Console.Print (".", NL => False);
          Console.Print (PRId.Rev, NL => False);
          Console.Print_NewLine;
-         case PRId.Imp is
-            -- some datasheets indicate "3" as the value for an R3000A
-            when 2      => Console.Print ("R3000A", NL => True);
-            when 3      => Console.Print ("R3000A/R3051/R3052/R3071/R3081", NL => True);
-            when 7      => Console.Print ("R3041", NL => True);
-            when others => Console.Print ("CPU unknown", NL => True);
-         end case;
+         Console.Print (
+            Prefix => "D cache size (kB): ",
+            Value => Natural (R3000.Cache_Size (ICache => False) / 1024),
+            NL => True
+            );
+         Console.Print (
+            Prefix => "I cache size (kB): ",
+            Value => Natural (R3000.Cache_Size (ICache => True) / 1024),
+            NL => True
+            );
       end;
       -------------------------------------------------------------------------
       declare

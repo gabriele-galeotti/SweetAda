@@ -116,9 +116,9 @@ irq_handler:
                 jalr    $t0
                 nop
                 RESTORE_REGS
-                mtc0    $0,C0_CAUSE
+                mtc0    $0,CP0_CAUSE
                 nop
-                mfc0    $k0,C0_EPC
+                mfc0    $k0,CP0_EPC
                 nop
                 jr      $k0
                 rfe

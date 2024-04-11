@@ -26,8 +26,8 @@ _start:
                 //
                 // CPU initialization.
                 //
-                mtc0    $zero,C0_SR
-                mtc0    $zero,C0_CAUSE
+                mtc0    $zero,CP0_SR
+                mtc0    $zero,CP0_CAUSE
                 nop
                 nop
 
