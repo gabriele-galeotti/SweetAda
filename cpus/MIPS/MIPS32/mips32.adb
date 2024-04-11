@@ -35,22 +35,22 @@ package body MIPS32
    CRLF : String renames Definitions.CRLF;
 
    Register_Equates : constant String :=
-      "        .equ    C0_INDEX,   $0 " & CRLF &
-      "        .equ    C0_ENTRYLO, $2 " & CRLF &
-      "        .equ    C0_CONTEXT, $4 " & CRLF &
-      "        .equ    C0_BADVADDR,$8 " & CRLF &
-      "        .equ    C0_COUNT,   $9 " & CRLF &
-      "        .equ    C0_ENTRYHI, $10" & CRLF &
-      "        .equ    C0_COMPARE, $11" & CRLF &
-      "        .equ    C0_SR,      $12" & CRLF &
-      "        .equ    C0_CAUSE,   $13" & CRLF &
-      "        .equ    C0_EPC,     $14" & CRLF &
-      "        .equ    C0_PRID,    $15" & CRLF &
-      "        .equ    C0_CONFIG,  $16" & CRLF &
-      "        .equ    C0_WATCHLO, $18" & CRLF &
-      "        .equ    C0_WATCHHI, $19" & CRLF &
-      "        .equ    C0_XCONTEXT,$20" & CRLF &
-      "        .equ    C0_DEBUG,   $23" & CRLF;
+      "        .equ    CP0_INDEX,   $0 " & CRLF &
+      "        .equ    CP0_ENTRYLO, $2 " & CRLF &
+      "        .equ    CP0_CONTEXT, $4 " & CRLF &
+      "        .equ    CP0_BADVADDR,$8 " & CRLF &
+      "        .equ    CP0_COUNT,   $9 " & CRLF &
+      "        .equ    CP0_ENTRYHI, $10" & CRLF &
+      "        .equ    CP0_COMPARE, $11" & CRLF &
+      "        .equ    CP0_SR,      $12" & CRLF &
+      "        .equ    CP0_CAUSE,   $13" & CRLF &
+      "        .equ    CP0_EPC,     $14" & CRLF &
+      "        .equ    CP0_PRID,    $15" & CRLF &
+      "        .equ    CP0_CONFIG,  $16" & CRLF &
+      "        .equ    CP0_WATCHLO, $18" & CRLF &
+      "        .equ    CP0_WATCHHI, $19" & CRLF &
+      "        .equ    CP0_XCONTEXT,$20" & CRLF &
+      "        .equ    CP0_DEBUG,   $23" & CRLF;
 
    type CP0_Register_Type is range 16#00# .. 16#1F#;        -- 32 CP0 registers
    type CP0_Register_Select_Type is range 2#000# .. 2#111#; -- 3-bit select field
@@ -324,13 +324,13 @@ package body MIPS32
       is
    begin
       Asm (
-           Template => ""                            & CRLF &
-                       Register_Equates                     &
-                       "        mfc0    $t0,C0_SR,0" & CRLF &
-                       "        nop                " & CRLF &
-                       "        ori     $t0,$t0,1  " & CRLF &
-                       "        mtc0    $t0,C0_SR,0" & CRLF &
-                       "        nop                " & CRLF &
+           Template => ""                             & CRLF &
+                       Register_Equates                      &
+                       "        mfc0    $t0,CP0_SR,0" & CRLF &
+                       "        nop                 " & CRLF &
+                       "        ori     $t0,$t0,1   " & CRLF &
+                       "        mtc0    $t0,CP0_SR,0" & CRLF &
+                       "        nop                 " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
@@ -346,15 +346,15 @@ package body MIPS32
       is
    begin
       Asm (
-           Template => ""                            & CRLF &
-                       Register_Equates                     &
-                       "        mfc0    $t0,C0_SR,0" & CRLF &
-                       "        nop                " & CRLF &
-                       "        li      $t1,1      " & CRLF &
-                       "        not     $t1,$t1    " & CRLF &
-                       "        and     $t0,$t0,$t1" & CRLF &
-                       "        mtc0    $t0,C0_SR,0" & CRLF &
-                       "        nop                " & CRLF &
+           Template => ""                             & CRLF &
+                       Register_Equates                      &
+                       "        mfc0    $t0,CP0_SR,0" & CRLF &
+                       "        nop                 " & CRLF &
+                       "        li      $t1,1       " & CRLF &
+                       "        not     $t1,$t1     " & CRLF &
+                       "        and     $t0,$t0,$t1 " & CRLF &
+                       "        mtc0    $t0,CP0_SR,0" & CRLF &
+                       "        nop                 " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => No_Input_Operands,
@@ -368,17 +368,17 @@ package body MIPS32
       is
    begin
       Asm (
-           Template => ""                            & CRLF &
-                       Register_Equates                     &
-                       "        mfc0    $t0,C0_SR,0" & CRLF &
-                       "        nop                " & CRLF &
-                       "        li      $t1,0xFC   " & CRLF &
-                       "        not     $t1,$t1    " & CRLF &
-                       "        and     $t0,$t0,$t1" & CRLF &
-                       "        sll     $t1,%0,10  " & CRLF &
-                       "        or      $t0,$t0,$t1" & CRLF &
-                       "        mtc0    $t0,C0_SR,0" & CRLF &
-                       "        nop                " & CRLF &
+           Template => ""                             & CRLF &
+                       Register_Equates                      &
+                       "        mfc0    $t0,CP0_SR,0" & CRLF &
+                       "        nop                 " & CRLF &
+                       "        li      $t1,0xFC    " & CRLF &
+                       "        not     $t1,$t1     " & CRLF &
+                       "        and     $t0,$t0,$t1 " & CRLF &
+                       "        sll     $t1,%0,10   " & CRLF &
+                       "        or      $t0,$t0,$t1 " & CRLF &
+                       "        mtc0    $t0,CP0_SR,0" & CRLF &
+                       "        nop                 " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => Irq_Level_Type'Asm_Input ("r", Irq_Level),
