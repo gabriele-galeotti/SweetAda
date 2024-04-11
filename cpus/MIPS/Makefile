@@ -34,8 +34,9 @@ endif
 LIBRARY_NAME := cpu
 
 OBJECTS :=
-ifneq ($(USE_LIBGCC),Y)
 ifeq ($(CPU_MODEL),R3000)
+OBJECTS += $(OBJ_DIRECTORY)/cache.o
+ifneq ($(USE_LIBGCC),Y)
 OBJECTS += $(OBJ_DIRECTORY)/libgcc.o
 endif
 endif

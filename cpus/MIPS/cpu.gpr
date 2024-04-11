@@ -20,27 +20,51 @@ library project Cpu is
    Kernel_Parent_Path := external ("KERNEL_PARENT_PATH", ".");
    Include_Directories := Split (external ("GPR_INCLUDES", ""), " ");
 
-   CPU_Model := external ("CPU_MODEL");
+   -- shorthands
+   Obj_Dir := Kernel_Parent_Path & "/" & Configure.Object_Directory;
+   Lib_Dir := Kernel_Parent_Path & "/" & Configure.Library_Directory;
 
    for Target use Configure.Toolchain_Name;
    for Source_Dirs use Include_Directories & (".");
 
+   CPU_Model := external ("CPU_MODEL");
+
+   Asm := "";
+   Asm_Files := ();
+   Ada := "";
+   Ada_Files := ();
+
+   case CPU_Model is
+      when "R3000" => Asm := "Y";
+                      Asm_Files := Asm_Files &
+                                   ("cache.S");
+      when others  => null;
+   end case;
+
    case Configure.Use_LibGCC is
-      when "Y" =>
-         null;
+      when "Y"    => null;
       when others =>
          case CPU_Model is
-            when "R3000" =>
-               for Languages use ("Ada");
-               for Source_Files use (
-                                     "gcc_types.ads",
-                                     "libgcc.adb", "libgcc.ads",
-                                     "libgcc-bswapsi2.adb",
-                                     "libgcc-bswapdi2.adb"
-                                    );
-            when others  =>
-               null;
+            when "R3000" => Ada := "Y";
+                            Ada_Files := Ada_Files &
+                                         ("gcc_types.ads",
+                                          "libgcc.adb", "libgcc.ads",
+                                          "libgcc-bswapsi2.adb",
+                                          "libgcc-bswapdi2.adb");
+            when others  => null;
          end case;
+   end case;
+
+   case Asm is
+      when "Y"    => for Languages use project'Languages & ("Asm_Cpp");
+                     for Source_Files use project'Source_Files & Asm_Files;
+      when others => null;
+   end case;
+
+   case Ada is
+      when "Y"    => for Languages use project'Languages & ("Ada");
+                     for Source_Files use project'Source_Files & Ada_Files;
+      when others => null;
    end case;
 
    ----------------------------------------------------------------------------
@@ -65,13 +89,13 @@ library project Cpu is
    -- Library
    ----------------------------------------------------------------------------
 
+   for Library_Name use "cpu";
+
    for Library_Kind use Gprbuild_Tc.Library_Kind;
    for Library_Support use Gprbuild_Tc.Library_Support;
    for Library_Builder use Gprbuild_Tc.Library_Builder;
    for Archive_Builder use Gprbuild_Tc.Archive_Builder;
-   for Object_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Object_Directory;
-   for Library_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Library_Directory;
-
-   for Library_Name use "cpu";
+   for Object_Dir use project'Project_Dir & Obj_Dir;
+   for Library_Dir use project'Project_Dir & Lib_Dir;
 
 end Cpu;
