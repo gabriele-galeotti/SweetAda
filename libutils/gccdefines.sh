@@ -35,7 +35,7 @@
 #  S - String: value, else ""
 #
 
-# shellcheck disable=SC2268
+# shellcheck disable=SC2181,SC2268
 
 ################################################################################
 # Script initialization.                                                       #
@@ -138,8 +138,15 @@ format_string="%-${max_tmacro_length}s : constant %-${max_type_length}s:= %s;"
 
 gcc_output=$(                                                                             \
              printf "%s\n" "void ___(void) { }"                                         | \
-             ${TOOLCHAIN_CC} ${CC_SWITCHES_RTS} ${GCC_SWITCHES_PLATFORM} -E -P -dM -c - | \
-             sed -e "s|^\(#define *\)\([A-Za-z_][0-9A-Za-z_]*\) *\(.*\)|\2=\3|"           \
+             ${TOOLCHAIN_CC} ${CC_SWITCHES_RTS} ${GCC_SWITCHES_PLATFORM} -E -P -dM -c -
+            )
+if [ "$?" != "0" ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Error: GCC error."
+  exit 1
+fi
+gcc_output=$(                                                                     \
+             printf "%s" "${gcc_output}"                                        | \
+             sed -e "s|^\(#define *\)\([A-Za-z_][0-9A-Za-z_]*\) *\(.*\)|\2=\3|"   \
             )
 
 rm -f ${OUTPUT_FILENAME}
