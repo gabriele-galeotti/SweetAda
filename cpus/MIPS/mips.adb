@@ -83,9 +83,10 @@ package body MIPS
       is
    begin
       Asm (
-           Template => ""                   & CRLF &
-                       "        jal     %0" & CRLF &
-                       "        nop       " & CRLF &
+           Template => ""                          & CRLF &
+                       "        .set    noreorder" & CRLF &
+                       "        jal     %0       " & CRLF &
+                       "        nop              " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => System.Address'Asm_Input ("r", Target_Address),
