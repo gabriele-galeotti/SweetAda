@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Abort_Library;
 with Bits;
 with LLutils;
 with RISCV;
@@ -55,13 +56,45 @@ package body Exceptions
    begin
       mcause := mcause_Read;
       if mcause.Interrupt then
-         BSP.Tick_Count := @ + 1;
-         BSP.Timer_Value := @ + BSP.Timer_Constant;
-         MTIME.mtimecmp_Write (BSP.Timer_Value);
+         case mcause.Exception_Code is
+            when EXC_TIMERINT =>
+               -- Machine timer interrupt
+               BSP.Tick_Count := @ + 1;
+               BSP.Timer_Value := @ + BSP.Timer_Constant;
+               MTIME.mtimecmp_Write (BSP.Timer_Value);
+            when EXC_SWINT    =>
+               -- Machine software interrupt
+               null;
+            when EXC_EXTINT   =>
+               -- Machine external interrupt
+               null;
+            when others       =>
+               Console.Print (MXLEN_Type (mcause.Exception_Code), Prefix => "*** EXCEPTION #", NL => True);
+               Abort_Library.System_Abort;
+         end case;
       else
-         Console.Print (MXLEN_Type (mcause.Exception_Code), Prefix => "***", NL => True);
-         Console.Print (mepc_Read, Prefix => "***", NL => True);
-         loop null; end loop;
+         declare
+            MsgPtr : access constant String;
+         begin
+            case mcause.Exception_Code is
+               when EXC_INSTRADDRMIS  => MsgPtr := MsgPtr_EXC_INSTRADDRMIS;
+               when EXC_INSTRACCFAULT => MsgPtr := MsgPtr_EXC_INSTRACCFAULT;
+               when EXC_INSTRILL      => MsgPtr := MsgPtr_EXC_INSTRILL;
+               when EXC_BREAKPT       => MsgPtr := MsgPtr_EXC_BREAKPT;
+               when EXC_LOADADDRMIS   => MsgPtr := MsgPtr_EXC_LOADADDRMIS;
+               when EXC_LOADACCFAULT  => MsgPtr := MsgPtr_EXC_LOADACCFAULT;
+               when EXC_STAMOADDRMIS  => MsgPtr := MsgPtr_EXC_STAMOADDRMIS;
+               when EXC_STAMOACCFAULT => MsgPtr := MsgPtr_EXC_STAMOACCFAULT;
+               when EXC_ENVCALLUMODE  => MsgPtr := MsgPtr_EXC_ENVCALLUMODE;
+               when EXC_ENVCALLMMODE  => MsgPtr := MsgPtr_EXC_ENVCALLMMODE;
+               when others            => MsgPtr := MsgPtr_EXC_UNKNOWN;
+            end case;
+            Console.Print (MXLEN_Type (mcause.Exception_Code), Prefix => "*** EXCEPTION #", NL => True);
+            Console.Print (MsgPtr.all);
+            Console.Print_NewLine;
+            Console.Print (mepc_Read, Prefix => "MEPC: ", NL => True);
+            Abort_Library.System_Abort;
+         end;
       end if;
    end Exception_Process;
 
