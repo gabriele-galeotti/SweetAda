@@ -34,8 +34,11 @@ package body Application
    begin
       -------------------------------------------------------------------------
       declare
-         procedure SetPin (Pin : in Integer);
-         procedure SetPin (Pin : in Integer) is
+         procedure SetPin
+            (Pin : in Integer);
+         procedure SetPin
+            (Pin : in Integer)
+            is
          begin
             -- GPIO #19/21/22 = IOF0, output, enabled
             iof_sel (Pin) := False;
