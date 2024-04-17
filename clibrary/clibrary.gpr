@@ -20,8 +20,13 @@ library project CLibrary is
    Kernel_Parent_Path := external ("KERNEL_PARENT_PATH", ".");
    Include_Directories := Split (external ("GPR_INCLUDES", ""), " ");
 
+   -- shorthands
+   Obj_Dir := Kernel_Parent_Path & "/" & Configure.Object_Directory;
+   Lib_Dir := Kernel_Parent_Path & "/" & Configure.Library_Directory;
+
    for Target use Configure.Toolchain_Name;
    for Source_Dirs use Include_Directories & (".");
+
    for Languages use ("Ada", "C");
 
    Ada_Files := (
@@ -68,13 +73,13 @@ library project CLibrary is
    -- Library
    ----------------------------------------------------------------------------
 
+   for Library_Name use "clibrary";
+
    for Library_Kind use Gprbuild_Tc.Library_Kind;
    for Library_Support use Gprbuild_Tc.Library_Support;
    for Library_Builder use Gprbuild_Tc.Library_Builder;
    for Archive_Builder use Gprbuild_Tc.Archive_Builder;
-   for Object_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Object_Directory;
-   for Library_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Library_Directory;
-
-   for Library_Name use "clibrary";
+   for Object_Dir use project'Project_Dir & Obj_Dir;
+   for Library_Dir use project'Project_Dir & Lib_Dir;
 
 end CLibrary;
