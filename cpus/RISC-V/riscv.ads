@@ -115,6 +115,30 @@ package RISCV
    EXC_ENVCALLUMODE  : constant := 8;  -- Environment call from U-mode
    EXC_ENVCALLMMODE  : constant := 11; -- Environment call from M-mode
 
+   String_EXC_INSTRADDRMIS  : aliased constant String := "Instruction address misaligned";
+   String_EXC_INSTRACCFAULT : aliased constant String := "Instruction access fault";
+   String_EXC_INSTRILL      : aliased constant String := "Illegal instruction";
+   String_EXC_BREAKPT       : aliased constant String := "Breakpoint";
+   String_EXC_LOADADDRMIS   : aliased constant String := "Load address misaligned";
+   String_EXC_LOADACCFAULT  : aliased constant String := "Load access fault";
+   String_EXC_STAMOADDRMIS  : aliased constant String := "Store/AMO address misaligned";
+   String_EXC_STAMOACCFAULT : aliased constant String := "Store/AMO access fault";
+   String_EXC_ENVCALLUMODE  : aliased constant String := "Environment call from U-mode";
+   String_EXC_ENVCALLMMODE  : aliased constant String := "Environment call from M-mode";
+   String_EXC_UNKNOWN       : aliased constant String := "UNKNOWN";
+
+   MsgPtr_EXC_INSTRADDRMIS  : constant access constant String := String_EXC_INSTRADDRMIS'Access;
+   MsgPtr_EXC_INSTRACCFAULT : constant access constant String := String_EXC_INSTRACCFAULT'Access;
+   MsgPtr_EXC_INSTRILL      : constant access constant String := String_EXC_INSTRILL'Access;
+   MsgPtr_EXC_BREAKPT       : constant access constant String := String_EXC_BREAKPT'Access;
+   MsgPtr_EXC_LOADADDRMIS   : constant access constant String := String_EXC_LOADADDRMIS'Access;
+   MsgPtr_EXC_LOADACCFAULT  : constant access constant String := String_EXC_LOADACCFAULT'Access;
+   MsgPtr_EXC_STAMOADDRMIS  : constant access constant String := String_EXC_STAMOADDRMIS'Access;
+   MsgPtr_EXC_STAMOACCFAULT : constant access constant String := String_EXC_STAMOACCFAULT'Access;
+   MsgPtr_EXC_ENVCALLUMODE  : constant access constant String := String_EXC_ENVCALLUMODE'Access;
+   MsgPtr_EXC_ENVCALLMMODE  : constant access constant String := String_EXC_ENVCALLMMODE'Access;
+   MsgPtr_EXC_UNKNOWN       : constant access constant String := String_EXC_UNKNOWN'Access;
+
    subtype mcause_Type                is RISCV_Definitions.mcause_Type;
    subtype mcause_Exception_Code_Type is RISCV_Definitions.mcause_Exception_Code_Type;
 
