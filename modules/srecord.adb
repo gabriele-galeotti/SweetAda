@@ -228,10 +228,10 @@ package body Srecord
                         when S1 .. S3 =>
                            -- commit data to memory
                            Memory_Functions.Cpymem (
-                                                    Data'Address,
-                                                    To_Address (Addressvalue),
-                                                    Bytesize (Bytecount)
-                                                   );
+                              Data'Address,
+                              To_Address (Addressvalue),
+                              Bytesize (Bytecount)
+                              );
                         when S7 .. S9 =>
                            -- start address
                            TX_Character.all ('R');
