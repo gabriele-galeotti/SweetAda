@@ -61,9 +61,9 @@ package NEORV32
 
    -- 2.7.10. Cyclic Redundancy Check (CRC)
 
-   CRC_MODE_CRC8  : constant := 2#00#; -- CRC8
-   CRC_MODE_CRC16 : constant := 2#01#; -- CRC16
-   CRC_MODE_CRC32 : constant := 2#10#; -- CRC32
+   -- CRC_MODE_CRC8  : constant := 2#00#; -- CRC8
+   -- CRC_MODE_CRC16 : constant := 2#01#; -- CRC16
+   -- CRC_MODE_CRC32 : constant := 2#10#; -- CRC32
 
    -- type CRC_CTRL_Type is record
    --    MODE     : Bits_2;       -- CRC mode select
