@@ -46,6 +46,7 @@ ${OBJCOPY}                                     \
 # elaborate a SweetAda executable
 cd ${PLATFORM_DIRECTORY}
 "${IMAGE_GEN}" -app_bin sweetada.bin ${APP_BIN}
+# send executable to bootloader (which is waiting in "u" mode)
 cat ${APP_BIN} > ${SERIALPORT_DEVICE}
 
 exit 0
