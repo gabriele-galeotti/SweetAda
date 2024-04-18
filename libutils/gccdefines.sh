@@ -140,9 +140,10 @@ gcc_output=$(                                                                   
              printf "%s\n" "void ___(void) { }"                                         | \
              ${TOOLCHAIN_CC} ${CC_SWITCHES_RTS} ${GCC_SWITCHES_PLATFORM} -E -P -dM -c -
             )
-if [ "$?" != "0" ] ; then
+exit_status=$?
+if [ "${exit_status}" != "0" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: GCC error."
-  exit 1
+  exit ${exit_status}
 fi
 gcc_output=$(                                                                     \
              printf "%s" "${gcc_output}"                                        | \
