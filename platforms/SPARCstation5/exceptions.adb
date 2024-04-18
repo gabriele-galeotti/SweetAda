@@ -37,7 +37,6 @@ package body Exceptions
    --========================================================================--
 
    use System.Storage_Elements;
-   use Abort_Library;
    use LLutils;
    use SPARC;
 
@@ -62,7 +61,7 @@ package body Exceptions
       Console.Print ("*** EXCEPTION", NL => True);
       Console.Print (Code,         Prefix => "CODE:    ", NL => True);
       Console.Print (Trap_Address, Prefix => "ADDRESS: ", NL => True);
-      System_Abort;
+      Abort_Library.System_Abort;
    end Exception_Process;
 
    ----------------------------------------------------------------------------
