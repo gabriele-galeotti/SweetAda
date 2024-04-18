@@ -466,12 +466,12 @@ repeat:
                                 pbuffer = number_to_literal(
                                                 pbuffer,
                                                 pbuffer_end,
-                                                           (unsigned long)va_arg(ap, void *),
-                                                           16,
-                                                           field_width,
-                                                           precision,
-                                                           flags
-                                                          );
+                                                (unsigned long)va_arg(ap, void *),
+                                                16,
+                                                field_width,
+                                                precision,
+                                                flags
+                                                );
                                 continue;
                                 break;
                         case 's':
@@ -586,12 +586,12 @@ repeat:
                 pbuffer = number_to_literal(
                                 pbuffer,
                                 pbuffer_end,
-                                           number,
-                                           base,
-                                           field_width,
-                                           precision,
-                                           flags
-                                          );
+                                number,
+                                base,
+                                field_width,
+                                precision,
+                                flags
+                                );
         }
 
         if (pbuffer <= pbuffer_end)
