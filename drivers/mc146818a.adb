@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with LLutils;
 with CPU;
@@ -30,6 +31,7 @@ package body MC146818A
    --                                                                        --
    --========================================================================--
 
+   use System.Storage_Elements;
    use LLutils;
 
    ----------------------------------------------------------------------------
@@ -116,10 +118,16 @@ package body MC146818A
 
    -- REGISTER B ($0B)
 
+   Hour24_12 : constant := 0; -- 12-hour mode
+   Hour24_24 : constant := 1; -- 24-hour mode
+
+   DM_BCD    : constant := 0; -- binary-coded-decimal (BCD) data
+   DM_BINARY : constant := 1; -- binary data
+
    type RegisterB_Type is record
       DSE    : Boolean; -- daylight savings enable
-      Hour24 : Boolean; -- format of the hours bytes
-      DM     : Boolean; -- data mode
+      Hour24 : Bits_1;  -- format of the hours bytes
+      DM     : Bits_1;  -- data mode
       SQWE   : Boolean; -- square-wave enable
       UIE    : Boolean; -- update-ended interrupt enable)
       AIE    : Boolean; -- alarm interrupt enable
@@ -178,11 +186,6 @@ package body MC146818A
 
    function To_RD is new Ada.Unchecked_Conversion (Unsigned_8, RegisterD_Type);
 
-   -- PC-specific
-   PC_INDEX       : constant := 0;
-   PC_DATA        : constant := 1;
-   PC_NMI_DISABLE : constant := 16#80#;
-
    -- Register_Read/Write
 
    function Register_Read
@@ -213,17 +216,12 @@ package body MC146818A
        R : Register_Type)
       return Unsigned_8
       is
-      RegN  : Unsigned_8;
-      Value : Unsigned_8;
    begin
-      if D.Flags.PC_RTC then
-         RegN := Unsigned_8 (Register_Type'Enum_Rep (R) + PC_NMI_DISABLE);
-         D.Write_8 (Build_Address (D.Base_Address, PC_INDEX, D.Scale_Address), RegN);
-         Value := D.Read_8 (Build_Address (D.Base_Address, PC_DATA, D.Scale_Address));
-      else
-         Value := 0; -- __TBD__
-      end if;
-      return Value;
+      return D.Read_8 (Build_Address (
+         D.Base_Address,
+         Storage_Offset (Register_Type'Enum_Rep (R)),
+         D.Scale_Address
+         ));
    end Register_Read;
 
    ----------------------------------------------------------------------------
@@ -234,15 +232,12 @@ package body MC146818A
        R     : in Register_Type;
        Value : in Unsigned_8)
       is
-      RegN : Unsigned_8;
    begin
-      if D.Flags.PC_RTC then
-         RegN := Unsigned_8 (Register_Type'Enum_Rep (R) + PC_NMI_DISABLE);
-         D.Write_8 (Build_Address (D.Base_Address, PC_INDEX, D.Scale_Address), RegN);
-         D.Write_8 (Build_Address (D.Base_Address, PC_DATA, D.Scale_Address), Value);
-      else
-         null; -- __TBD__
-      end if;
+      D.Write_8 (Build_Address (
+         D.Base_Address,
+         Storage_Offset (Register_Type'Enum_Rep (R)),
+         D.Scale_Address
+         ), Value);
    end Register_Write;
 
    ----------------------------------------------------------------------------
@@ -310,7 +305,7 @@ package body MC146818A
       RTC_Year       := Register_Read (D, Year);
       RTC_RB         := To_RB (Register_Read (D, RegisterB));
       CPU.Intcontext_Set (Intcontext);
-      RTC_BCD := not RTC_RB.DM;
+      RTC_BCD := RTC_RB.DM = DM_BCD;
       T.IsDST := (if RTC_RB.DSE then 1 else 0);
       T.Sec   := Natural (Adjust_BCD (RTC_Second, RTC_BCD));
       T.Min   := Natural (Adjust_BCD (RTC_Minute, RTC_BCD));
@@ -322,6 +317,28 @@ package body MC146818A
       T.Year  := @ + (if @ < 70 then 100 else 0);
       T.YDay  := 0;
    end Read_Clock;
+
+   ----------------------------------------------------------------------------
+   -- Set_Clock
+   ----------------------------------------------------------------------------
+   procedure Set_Clock
+      (D : in Descriptor_Type;
+       T : in Time.TM_Time)
+      is
+      RB : RegisterB_Type;
+   begin
+      RB := To_RB (Register_Read (D, RegisterB));
+      RB.SET := True;
+      Register_Write (D, RegisterB, To_U8 (RB));
+      Register_Write (D, Seconds, Unsigned_8 (T.Sec));
+      Register_Write (D, Minutes, Unsigned_8 (T.Min));
+      Register_Write (D, Hours, Unsigned_8 (T.Hour));
+      Register_Write (D, DayOfMonth, Unsigned_8 (T.MDay));
+      Register_Write (D, Month, Unsigned_8 (T.Mon) + 1);
+      Register_Write (D, Year, Unsigned_8 (T.Year));
+      RB.SET := False;
+      Register_Write (D, RegisterB, To_U8 (RB));
+   end Set_Clock;
 
    ----------------------------------------------------------------------------
    -- Init
@@ -340,7 +357,9 @@ package body MC146818A
       Unused := Register_Read (D, RegisterC);
       -- enable PIE interrupt in Register B
       RB := To_RB (Register_Read (D, RegisterB));
+      RB.DM  := DM_BINARY;
       RB.PIE := True;
+      RB.SET := False;
       Register_Write (D, RegisterB, To_U8 (RB));
    end Init;
 

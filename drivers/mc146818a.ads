@@ -36,9 +36,7 @@ package MC146818A
    use Interfaces;
    use Bits;
 
-   type Flags_Type is record
-      PC_RTC : Boolean;
-   end record;
+   type Flags_Type is null record;
 
    type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
@@ -55,7 +53,7 @@ package MC146818A
       (
        Base_Address  => Null_Address,
        Scale_Address => 0,
-       Flags         => (PC_RTC => False),
+       Flags         => (null record),
        Read_8        => MMIO.ReadN_U8'Access,
        Write_8       => MMIO.WriteN_U8'Access
       );
@@ -66,6 +64,10 @@ package MC146818A
    procedure Read_Clock
       (D : in     Descriptor_Type;
        T :    out Time.TM_Time);
+
+   procedure Set_Clock
+      (D : in Descriptor_Type;
+       T : in Time.TM_Time);
 
    procedure Init
       (D : in Descriptor_Type);
