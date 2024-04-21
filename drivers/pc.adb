@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Storage_Elements;
 with System.Multiprocessors.Spin_Locks;
 with CPU.IO;
 
@@ -29,6 +30,7 @@ package body PC
    --                                                                        --
    --========================================================================--
 
+   use System.Storage_Elements;
    use System.Multiprocessors.Spin_Locks;
    use type CPU.Irq_Id_Type;
 
@@ -207,6 +209,40 @@ package body PC
       end loop;
       Unlock (PIT_Lock);
    end PIT_Counter1_Delay;
+
+pragma Warnings (Off, "types for unchecked conversion have different sizes");
+
+   ----------------------------------------------------------------------------
+   -- RTC_Register_Read
+   ----------------------------------------------------------------------------
+   function RTC_Register_Read
+      (Port_Address : Address)
+      return Unsigned_8
+      is
+      Register_Address : Unsigned_8;
+      function To_U8 is new Ada.Unchecked_Conversion (Address, Unsigned_8);
+   begin
+      Register_Address := To_U8 (Port_Address) - RTC_BASEADDRESS;
+      CPU.IO.IO_Write (To_Address (RTC_BASEADDRESS) + RTC_INDEX, Register_Address + RTC_NMI_DISABLE);
+      return CPU.IO.IO_Read (To_Address (RTC_BASEADDRESS) + RTC_DATA);
+   end RTC_Register_Read;
+
+   ----------------------------------------------------------------------------
+   -- RTC_Register_Write
+   ----------------------------------------------------------------------------
+   procedure RTC_Register_Write
+      (Port_Address : Address;
+       Value        : in Unsigned_8)
+      is
+      Register_Address : Unsigned_8;
+      function To_U8 is new Ada.Unchecked_Conversion (Address, Unsigned_8);
+   begin
+      Register_Address := To_U8 (Port_Address) - RTC_BASEADDRESS;
+      CPU.IO.IO_Write (To_Address (RTC_BASEADDRESS) + RTC_INDEX, Register_Address + RTC_NMI_DISABLE);
+      CPU.IO.IO_Write (To_Address (RTC_BASEADDRESS) + RTC_DATA, Value);
+   end RTC_Register_Write;
+
+pragma Warnings (On, "types for unchecked conversion have different sizes");
 
    ----------------------------------------------------------------------------
    -- PPI_DataIn

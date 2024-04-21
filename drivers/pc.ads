@@ -260,7 +260,18 @@ package PC
    -- MC146818A RTC
    ----------------------------------------------------------------------------
 
+   RTC_INDEX       : constant := 0;
+   RTC_DATA        : constant := 1;
+   RTC_NMI_DISABLE : constant := 16#80#;
+
    RTC_Interrupt : constant CPU.Irq_Id_Type := PIC_Irq8;
+
+   function RTC_Register_Read
+      (Port_Address : System.Address)
+      return Unsigned_8;
+   procedure RTC_Register_Write
+      (Port_Address : System.Address;
+       Value        : in Unsigned_8);
 
    ----------------------------------------------------------------------------
    -- Parallel Port Interface PPI
