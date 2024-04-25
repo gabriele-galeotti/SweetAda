@@ -249,6 +249,7 @@ package body Console
    ----------------------------------------------------------------------------
    procedure Print_ASCIIZ_String
       (String_Address : in System.Address;
+       Limit          : in Bits.C.size_t := Maximum_String_Length;
        NL             : in Boolean := False;
        Prefix         : in String := "";
        Suffix         : in String := "")

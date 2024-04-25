@@ -18,6 +18,7 @@
 separate (Console)
 procedure Print_ASCIIZ_String
    (String_Address : in System.Address;
+    Limit          : in Bits.C.size_t := Maximum_String_Length;
     NL             : in Boolean := False;
     Prefix         : in String := "";
     Suffix         : in String := "")
@@ -29,7 +30,7 @@ begin
       Print (Prefix);
    end if;
    if SA /= System.Null_Address then
-      for Index in Bits.C.size_t range 0 .. Maximum_String_Length - 1 loop
+      for Index in Bits.C.size_t range 0 .. Limit - 1 loop
          declare
             c : aliased Bits.C.char
                with Address    => SA,
