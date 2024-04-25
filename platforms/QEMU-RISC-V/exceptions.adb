@@ -90,8 +90,7 @@ package body Exceptions
                when others            => MsgPtr := MsgPtr_EXC_UNKNOWN;
             end case;
             Console.Print (MXLEN_Type (mcause.Exception_Code), Prefix => "*** EXCEPTION #", NL => True);
-            Console.Print (MsgPtr.all);
-            Console.Print_NewLine;
+            Console.Print (MsgPtr.all, NL => True);
             Console.Print (mepc_Read, Prefix => "MEPC: ", NL => True);
             Abort_Library.System_Abort;
          end;
