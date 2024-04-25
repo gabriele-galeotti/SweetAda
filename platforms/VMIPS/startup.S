@@ -24,14 +24,16 @@
 _start:
 
                 //
-                // Initialize CP0 registers.
+                // CPU initialization.
                 //
+                li      $t0,SR_BEV
+                mtc0    $t0,CP0_SR
                 mtc0    $zero,CP0_CONTEXT
-                nop
                 mtc0    $zero,CP0_BADVADDR
-                nop
+                mtc0    $zero,CP0_CAUSE
                 mtc0    $zero,CP0_EPC
-                nop
+                mtc0    $zero,CP0_WATCHLO
+                mtc0    $zero,CP0_WATCHHI
 
 #define NTLBENTRIES 64
                 //
