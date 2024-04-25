@@ -26,10 +26,14 @@ _start:
                 //
                 // CPU initialization.
                 //
-                mtc0    $zero,CP0_SR
+                li      $t0,SR_BEV
+                mtc0    $t0,CP0_SR
+                mtc0    $zero,CP0_CONTEXT
+                mtc0    $zero,CP0_BADVADDR
                 mtc0    $zero,CP0_CAUSE
-                nop
-                nop
+                mtc0    $zero,CP0_EPC
+                mtc0    $zero,CP0_WATCHLO
+                mtc0    $zero,CP0_WATCHHI
 
                 //
                 // Setup stack pointer.

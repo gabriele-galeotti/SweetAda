@@ -19,6 +19,7 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 with CPU;
 with KN02BA;
+with MC146818A;
 with Console;
 with BSP;
 
@@ -59,7 +60,11 @@ package body Exceptions
    procedure Irq_Process
       is
    begin
-      null;
+      if IOASIC_SIR.RTC then
+         BSP.Tick_Count := @ + 1;
+         MC146818A.Handle (BSP.RTC_Descriptor'Address);
+         IOASIC_SIR.RTC := True;
+      end if;
    end Irq_Process;
 
    ----------------------------------------------------------------------------

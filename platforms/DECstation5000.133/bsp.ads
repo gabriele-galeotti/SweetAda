@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with MC146818A;
 with Z8530;
 
 package BSP
@@ -35,6 +36,8 @@ package BSP
            Convention    => Asm,
            External_Name => "tick_count";
 
+   -- MC146818A RTC
+   RTC_Descriptor : aliased MC146818A.Descriptor_Type := MC146818A.DESCRIPTOR_INVALID;
    -- serial port "2"
    SCC_Descriptor1 : aliased Z8530.Descriptor_Type := Z8530.DESCRIPTOR_INVALID;
    -- serial port "3"

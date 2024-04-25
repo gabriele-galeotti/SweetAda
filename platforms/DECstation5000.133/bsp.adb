@@ -115,14 +115,24 @@ package body BSP
          LED5        => False, -- ON
          LED6        => False, -- ON
          LED7        => False, -- ON
-         LANCE_RESET => False, -- reset state
-         SCSI_RESET  => False, -- reset state
+         LANCE_RESET => True,  -- bring out of reset
+         SCSI_RESET  => True,  -- bring out of reset
          RTC_RESET   => True,  -- bring out of reset
          SCC_RESET   => True,  -- bring out of reset
          TXDIS0      => False, -- enable SCC EIA drivers
          TXDIS1      => False, -- enable SCC EIA drivers
          others      => <>
          );
+      -- RTC ------------------------------------------------------------------
+      RTC_Descriptor :=
+         (
+          Base_Address  => To_Address (MIPS.KSEG1_ADDRESS + RTC_BASEADDRESS),
+          Scale_Address => 2,
+          Flags         => (null record),
+          Read_8        => MMIO.Read'Access,
+          Write_8       => MMIO.Write'Access
+         );
+      MC146818A.Init (RTC_Descriptor);
       -- SCCs -----------------------------------------------------------------
       SCC_Descriptor1.Base_Address            := To_Address (MIPS.KSEG1_ADDRESS + SCC0_BASEADDRESS);
       SCC_Descriptor1.AB_Address_Bit          := 3;
@@ -150,9 +160,7 @@ package body BSP
       Console.Print ("DECstation 5000/133", NL => True);
       -------------------------------------------------------------------------
       declare
-         PRId        : R3000.PRId_Type;
-         -- DCache_Size : Unsigned_32;
-         -- ICache_Size : Unsigned_32;
+         PRId : R3000.PRId_Type;
       begin
          PRId := R3000.CP0_PRId_Read;
          case PRId.Imp is
@@ -191,7 +199,7 @@ package body BSP
          PBNC      => False,
          SCSI_FIFO => False,
          PSU       => False,
-         RTC       => False,
+         RTC       => True,
          SCC0      => False,
          SCC1      => True,
          LANCE     => False,
@@ -201,7 +209,7 @@ package body BSP
          NVRAM     => False,
          others    => <>);
       -------------------------------------------------------------------------
-      -- R3000.Irq_Enable;
+      R3000.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 

@@ -14,67 +14,52 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define SAVE_REGS                        \
-                sw      $at,  0($k1)    ;\
-                sw      $v0,  4($k1)    ;\
-                sw      $v1,  8($k1)    ;\
-                sw      $a0, 12($k1)    ;\
-                sw      $a1, 16($k1)    ;\
-                sw      $a2, 20($k1)    ;\
-                sw      $a3, 24($k1)    ;\
-                sw      $t0, 28($k1)    ;\
-                sw      $t1, 32($k1)    ;\
-                sw      $t2, 36($k1)    ;\
-                sw      $t3, 40($k1)    ;\
-                sw      $t4, 44($k1)    ;\
-                sw      $t5, 48($k1)    ;\
-                sw      $t6, 52($k1)    ;\
-                sw      $t7, 56($k1)    ;\
-                sw      $s0, 60($k1)    ;\
-                sw      $s1, 64($k1)    ;\
-                sw      $s2, 68($k1)    ;\
-                sw      $s3, 72($k1)    ;\
-                sw      $s4, 76($k1)    ;\
-                sw      $s5, 80($k1)    ;\
-                sw      $s6, 84($k1)    ;\
-                sw      $s7, 88($k1)    ;\
-                sw      $t8, 92($k1)    ;\
-                sw      $t9, 96($k1)    ;\
-                sw      $gp,100($k1)    ;\
-                sw      $sp,104($k1)    ;\
-                sw      $fp,108($k1)    ;\
-                sw      $ra,112($k1)
+#define SAVEREG sw
+#define LOADREG lw
 
-#define RESTORE_REGS                     \
-                lw      $at,  0($k1)    ;\
-                lw      $v0,  4($k1)    ;\
-                lw      $v1,  8($k1)    ;\
-                lw      $a0, 12($k1)    ;\
-                lw      $a1, 16($k1)    ;\
-                lw      $a2, 20($k1)    ;\
-                lw      $a3, 24($k1)    ;\
-                lw      $t0, 28($k1)    ;\
-                lw      $t1, 32($k1)    ;\
-                lw      $t2, 36($k1)    ;\
-                lw      $t3, 40($k1)    ;\
-                lw      $t4, 44($k1)    ;\
-                lw      $t5, 48($k1)    ;\
-                lw      $t6, 52($k1)    ;\
-                lw      $t7, 56($k1)    ;\
-                lw      $s0, 60($k1)    ;\
-                lw      $s1, 64($k1)    ;\
-                lw      $s2, 68($k1)    ;\
-                lw      $s3, 72($k1)    ;\
-                lw      $s4, 76($k1)    ;\
-                lw      $s5, 80($k1)    ;\
-                lw      $s6, 84($k1)    ;\
-                lw      $s7, 88($k1)    ;\
-                lw      $t8, 92($k1)    ;\
-                lw      $t9, 96($k1)    ;\
-                lw      $gp,100($k1)    ;\
-                lw      $sp,104($k1)    ;\
-                lw      $fp,108($k1)    ;\
-                lw      $ra,112($k1)
+#define REGSAREA_SIZE 76
+
+#define SAVE_REGS                                \
+                SAVEREG $at, 0($sp)             ;\
+                SAVEREG $v0, 4($sp)             ;\
+                SAVEREG $v1, 8($sp)             ;\
+                SAVEREG $a0,12($sp)             ;\
+                SAVEREG $a1,16($sp)             ;\
+                SAVEREG $a2,20($sp)             ;\
+                SAVEREG $a3,24($sp)             ;\
+                SAVEREG $t0,28($sp)             ;\
+                SAVEREG $t1,32($sp)             ;\
+                SAVEREG $t2,36($sp)             ;\
+                SAVEREG $t3,40($sp)             ;\
+                SAVEREG $t4,44($sp)             ;\
+                SAVEREG $t5,48($sp)             ;\
+                SAVEREG $t6,52($sp)             ;\
+                SAVEREG $t7,56($sp)             ;\
+                SAVEREG $t8,60($sp)             ;\
+                SAVEREG $t9,64($sp)             ;\
+                SAVEREG $gp,68($sp)             ;\
+                SAVEREG $ra,72($sp)
+
+#define RESTORE_REGS                             \
+                LOADREG $at, 0($sp)             ;\
+                LOADREG $v0, 4($sp)             ;\
+                LOADREG $v1, 8($sp)             ;\
+                LOADREG $a0,12($sp)             ;\
+                LOADREG $a1,16($sp)             ;\
+                LOADREG $a2,20($sp)             ;\
+                LOADREG $a3,24($sp)             ;\
+                LOADREG $t0,28($sp)             ;\
+                LOADREG $t1,32($sp)             ;\
+                LOADREG $t2,36($sp)             ;\
+                LOADREG $t3,40($sp)             ;\
+                LOADREG $t4,44($sp)             ;\
+                LOADREG $t5,48($sp)             ;\
+                LOADREG $t6,52($sp)             ;\
+                LOADREG $t7,56($sp)             ;\
+                LOADREG $t8,60($sp)             ;\
+                LOADREG $t9,64($sp)             ;\
+                LOADREG $gp,68($sp)             ;\
+                LOADREG $ra,72($sp)
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -109,23 +94,18 @@ vectors:
                 nop
 
 irq_handler:
-                la      $k1,savearea
+                subu    $sp,$sp,REGSAREA_SIZE
                 SAVE_REGS
                 .extern irq_process
                 la      $t0,irq_process
                 jalr    $t0
                 nop
                 RESTORE_REGS
-                mtc0    $0,CP0_CAUSE
+                addu    $sp,$sp,REGSAREA_SIZE
+                mtc0    $zero,CP0_CAUSE
                 nop
                 mfc0    $k0,CP0_EPC
                 nop
                 jr      $k0
                 rfe
-
-////////////////////////////////////////////////////////////////////////////////
-
-                .sect   .bss
-
-savearea:       .space  29*4
 
