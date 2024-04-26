@@ -20,6 +20,8 @@ library project Cpu is
    Kernel_Parent_Path := External ("KERNEL_PARENT_PATH", ".");
    Include_Directories := Split (External ("GPR_INCLUDES", ""), " ");
 
+   RiscV := External ("RISCV");
+
    -- shorthands
    Obj_Dir := Kernel_Parent_Path & "/" & Configure.Object_Directory;
    Lib_Dir := Kernel_Parent_Path & "/" & Configure.Library_Directory;
@@ -27,15 +29,47 @@ library project Cpu is
    for Target use Configure.Toolchain_Name;
    for Source_Dirs use Include_Directories & (".");
 
+   Asm := "";
+   Asm_Files := ();
+   Ada := "";
+   Ada_Files := ();
+
    case Configure.Use_LibGCC is
       when "Y"    =>
-         for Languages use ("Ada");
-         for Source_Files use ();
+         null;
       when others =>
-         for Languages use ("Asm_Cpp");
-         for Source_Files use (
-                               "div.S"
-                              );
+         Asm := "Y";
+         Asm_Files := Asm_Files & ("div.S");
+         case RiscV is
+            when "RV32" =>
+               Ada := "Y";
+               Ada_Files := Ada_Files & (
+                  "gcc_types.ads",
+                  "libgcc.adb", "libgcc.ads",
+                  "libgcc-udivmoddi4.adb",
+                  "libgcc-divdi3.adb",
+                  "libgcc-moddi3.adb",
+                  "libgcc-udivdi3.adb",
+                  "libgcc-umoddi3.adb"
+                  );
+            when others => null;
+         end case;
+   end case;
+
+   case Asm is
+      when "Y"    =>
+         for Languages use project'Languages & ("Asm_Cpp");
+         for Source_Files use project'Source_Files & Asm_Files;
+      when others =>
+         null;
+   end case;
+
+   case Ada is
+      when "Y"    =>
+         for Languages use project'Languages & ("Ada");
+         for Source_Files use project'Source_Files & Ada_Files;
+      when others =>
+         null;
    end case;
 
    ----------------------------------------------------------------------------

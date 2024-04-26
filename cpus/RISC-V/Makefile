@@ -38,6 +38,9 @@ OBJECTS :=
 ifneq ($(USE_LIBGCC),Y)
 LIBGCC_SOURCES := div.S
 OBJECTS        += $(LIBGCC_SOURCES:%.S=$(OBJ_DIRECTORY)/%.o)
+ifeq ($(RISCV),RV32)
+OBJECTS        += $(OBJ_DIRECTORY)/libgcc.o
+endif
 endif
 
 -include Makefile.if.in
