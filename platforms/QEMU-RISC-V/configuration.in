@@ -10,8 +10,7 @@
 #                                                                              #
 ################################################################################
 
-# force linking with LibGCC (__divdi3)
-USE_LIBGCC := Y
+#USE_LIBGCC := Y
 
 USE_APPLICATION := test-QEMU-RISC-V
 
