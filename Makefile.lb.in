@@ -78,7 +78,7 @@ $(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
                     -D $(OBJ_DIRECTORY)         \
                     $(GCC_SWITCHES_LIBRARY)     \
                     -c $(INCLUDES) $<           \
-        ,[GNATMAKE],$<)
+        ,[GNATMAKE],$(notdir $<))
 	$(call brief-command,\
         $(GNATMAKE_DEPEND)                             \
                            -M                          \
@@ -112,7 +112,7 @@ $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
                     -D $(OBJ_DIRECTORY)         \
                     $(GCC_SWITCHES_LIBRARY)     \
                     -c $(INCLUDES) $<           \
-        ,[GNATMAKE],$<)
+        ,[GNATMAKE],$(notdir $<))
 	$(call brief-command,\
         $(GNATMAKE_DEPEND)                             \
                            -M                          \
@@ -147,7 +147,7 @@ $(OBJ_DIRECTORY)/%.o: %.S $(DEP_DIRECTORY)/%.d
               -MF $(DEP_DIRECTORY)/$*.td \
               $(GCC_SWITCHES_LIBRARY)    \
               -c $(INCLUDES) $<          \
-        ,[CC/AS],$<)
+        ,[CC/AS],$(notdir $<))
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(SED)                                                                      \
@@ -186,7 +186,7 @@ $(OBJ_DIRECTORY)/%.o: %.c $(DEP_DIRECTORY)/%.d
               -MF $(DEP_DIRECTORY)/$*.td \
               $(GCC_SWITCHES_LIBRARY)    \
               -c $(INCLUDES) $<          \
-        ,[CC/AS],$<)
+        ,[CC/AS],$(notdir $<))
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(SED)                                                                      \
