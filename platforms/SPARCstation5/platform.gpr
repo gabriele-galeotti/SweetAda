@@ -20,6 +20,10 @@ library project Platform is
    Kernel_Parent_Path := External ("KERNEL_PARENT_PATH", ".");
    Include_Directories := Split (External ("GPR_INCLUDES", ""), " ");
 
+   -- shorthands
+   Obj_Dir := Kernel_Parent_Path & "/" & Configure.Object_Directory;
+   Lib_Dir := Kernel_Parent_Path & "/" & Configure.Library_Directory;
+
    for Target use Configure.Toolchain_Name;
    for Source_Dirs use (".") & Include_Directories;
    for Languages use Configure.Lowlevel_Files_Platform_Languages;
@@ -46,22 +50,24 @@ library project Platform is
 
    package Compiler extends Gprbuild_Tc.Compiler is
       -- Asm_Cpp
-      for Switches ("Asm_Cpp") use Compiler'Switches ("Asm_Cpp") & Configure.GCC_Switches_Lowlevel_Platform;
+      for Switches ("Asm_Cpp") use Compiler'Switches ("Asm_Cpp")            &
+                                   Configure.GCC_Switches_Lowlevel_Platform;
       -- C
-      for Switches ("C") use Compiler'Switches ("C") & Configure.GCC_Switches_Lowlevel_Platform;
+      for Switches ("C") use Compiler'Switches ("C")                  &
+                             Configure.GCC_Switches_Lowlevel_Platform;
    end Compiler;
 
    ----------------------------------------------------------------------------
    -- Library
    ----------------------------------------------------------------------------
 
+   for Library_Name use "platform";
+
    for Library_Kind use Gprbuild_Tc.Library_Kind;
    for Library_Support use Gprbuild_Tc.Library_Support;
    for Library_Builder use Gprbuild_Tc.Library_Builder;
    for Archive_Builder use Gprbuild_Tc.Archive_Builder;
-   for Object_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Object_Directory;
-   for Library_Dir use project'Project_Dir & Kernel_Parent_Path & "/" & Configure.Library_Directory;
-
-   for Library_Name use "platform";
+   for Object_Dir use project'Project_Dir & Obj_Dir;
+   for Library_Dir use project'Project_Dir & Lib_Dir;
 
 end Platform;
