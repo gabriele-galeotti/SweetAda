@@ -88,8 +88,8 @@ fi
 OFFSET=$(echo "ibase=16;$2" | bc)
 
 BYTES_STRING=""
-for BYTE in $3 ; do
-  BYTES_STRING="${BYTES_STRING}\x${BYTE}"
+for b in $3 ; do
+  BYTES_STRING="${BYTES_STRING}\x${b}"
 done
 
 log_print "${SCRIPT_FILENAME}: patching file \"$(basename $1)\"."
