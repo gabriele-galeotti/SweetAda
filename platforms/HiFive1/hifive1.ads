@@ -455,7 +455,7 @@ package HiFive1
    package OTP
       is
 
-   -- 12.4 Read sequencer control register (otp_rsctrl)
+      -- 12.4 Read sequencer control register (otp_rsctrl)
 
       type rsctrl_Type is record
          scale    : Bits_3;       -- OTP timescale
