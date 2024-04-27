@@ -146,4 +146,20 @@ package LibGCC
            Convention    => C,
            External_Name => "__umoddi3";
 
+   function CmpDI2
+      (A : GCC_Types.DI_Type;
+       B : GCC_Types.DI_Type)
+      return GCC_Types.SI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__cmpdi2";
+
+   function UCmpDI2
+      (A : GCC_Types.UDI_Type;
+       B : GCC_Types.UDI_Type)
+      return GCC_Types.SI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__ucmpdi2";
+
 end LibGCC;
