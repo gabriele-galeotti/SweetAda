@@ -44,7 +44,9 @@ library project Cpu is
             "libgcc-divdi3.adb",
             "libgcc-moddi3.adb",
             "libgcc-udivdi3.adb",
-            "libgcc-umoddi3.adb"
+            "libgcc-umoddi3.adb",
+            "libgcc-cmpdi2.adb",
+            "libgcc-ucmpdi2.adb"
             );
    end case;
 
