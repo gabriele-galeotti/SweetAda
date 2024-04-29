@@ -222,24 +222,24 @@ pragma Warnings (Off, "types for unchecked conversion have different sizes");
       Register_Address : Unsigned_8;
       function To_U8 is new Ada.Unchecked_Conversion (Address, Unsigned_8);
    begin
-      Register_Address := To_U8 (Port_Address) - RTC_BASEADDRESS;
-      CPU.IO.IO_Write (To_Address (RTC_BASEADDRESS) + RTC_INDEX, Register_Address + RTC_NMI_DISABLE);
-      return CPU.IO.IO_Read (To_Address (RTC_BASEADDRESS) + RTC_DATA);
+      Register_Address := To_U8 (Port_Address - RTC_BASEADDRESS);
+      CPU.IO.PortOut (RTC_BASEADDRESS + RTC_INDEX, Register_Address + RTC_NMI_DISABLE);
+      return CPU.IO.PortIn (RTC_BASEADDRESS + RTC_DATA);
    end RTC_Register_Read;
 
    ----------------------------------------------------------------------------
    -- RTC_Register_Write
    ----------------------------------------------------------------------------
    procedure RTC_Register_Write
-      (Port_Address : Address;
+      (Port_Address : in Address;
        Value        : in Unsigned_8)
       is
       Register_Address : Unsigned_8;
       function To_U8 is new Ada.Unchecked_Conversion (Address, Unsigned_8);
    begin
-      Register_Address := To_U8 (Port_Address) - RTC_BASEADDRESS;
-      CPU.IO.IO_Write (To_Address (RTC_BASEADDRESS) + RTC_INDEX, Register_Address + RTC_NMI_DISABLE);
-      CPU.IO.IO_Write (To_Address (RTC_BASEADDRESS) + RTC_DATA, Value);
+      Register_Address := To_U8 (Port_Address - RTC_BASEADDRESS);
+      CPU.IO.PortOut (RTC_BASEADDRESS + RTC_INDEX, Register_Address + RTC_NMI_DISABLE);
+      CPU.IO.PortOut (RTC_BASEADDRESS + RTC_DATA, Value);
    end RTC_Register_Write;
 
 pragma Warnings (On, "types for unchecked conversion have different sizes");

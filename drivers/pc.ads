@@ -270,7 +270,7 @@ package PC
       (Port_Address : System.Address)
       return Unsigned_8;
    procedure RTC_Register_Write
-      (Port_Address : System.Address;
+      (Port_Address : in System.Address;
        Value        : in Unsigned_8);
 
    ----------------------------------------------------------------------------
