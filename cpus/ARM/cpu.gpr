@@ -28,19 +28,19 @@ library project Cpu is
    for Source_Dirs use Include_Directories & (".");
 
    case Configure.Use_LibGCC is
-      when "Y"    =>
+      when "Y" =>
          for Languages use ("Ada");
          for Source_Files use ();
       when others =>
          for Languages use ("Asm_Cpp", "Ada");
          for Source_Files use (
-                               "L_divsi3.S",
-                               "L_dvmd_tls.S",
-                               "L_udivsi3.S",
-                               "L_muldi3.S",
-                               "L_muldi3.S",
-                               "unwind.adb", "unwind.ads"
-                              );
+            "L_divsi3.S",
+            "L_dvmd_tls.S",
+            "L_udivsi3.S",
+            "L_muldi3.S",
+            "L_muldi3.S",
+            "unwind.adb", "unwind.ads"
+            );
    end case;
 
    ----------------------------------------------------------------------------

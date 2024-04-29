@@ -28,7 +28,7 @@ library project Cpu is
    for Source_Dirs use Include_Directories & (".");
 
    case Configure.Use_LibGCC is
-      when "Y"    =>
+      when "Y" =>
          null;
       when others =>
          for Languages use ("Asm_Cpp", "Ada");

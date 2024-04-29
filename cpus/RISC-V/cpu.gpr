@@ -35,7 +35,7 @@ library project Cpu is
    Ada_Files := ();
 
    case Configure.Use_LibGCC is
-      when "Y"    =>
+      when "Y" =>
          null;
       when others =>
          Asm := "Y";
@@ -52,7 +52,8 @@ library project Cpu is
                   "libgcc-udivdi3.adb",
                   "libgcc-umoddi3.adb"
                   );
-            when others => null;
+            when others =>
+               null;
          end case;
    end case;
 

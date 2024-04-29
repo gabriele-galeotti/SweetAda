@@ -28,21 +28,21 @@ library project Cpu is
    for Source_Dirs use Include_Directories & (".");
 
    case Configure.Use_LibGCC is
-      when "Y"    =>
+      when "Y" =>
          for Languages use ("Ada");
          for Source_Files use ();
       when others =>
          for Languages use ("Ada");
          for Source_Files use (
-                               "gcc_types.ads",
-                               "libgcc.adb", "libgcc.ads",
-                               "libgcc-udivmodsi4.adb",
-                               "libgcc-divsi3.adb",
-                               "libgcc-modsi3.adb",
-                               "libgcc-udivsi3.adb",
-                               "libgcc-umodsi3.adb",
-                               "divsi3table.ads"
-                              );
+            "gcc_types.ads",
+            "libgcc.adb", "libgcc.ads",
+            "libgcc-udivmodsi4.adb",
+            "libgcc-divsi3.adb",
+            "libgcc-modsi3.adb",
+            "libgcc-udivsi3.adb",
+            "libgcc-umodsi3.adb",
+            "divsi3table.ads"
+            );
    end case;
 
    ----------------------------------------------------------------------------

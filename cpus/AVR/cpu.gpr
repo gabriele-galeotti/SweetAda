@@ -28,34 +28,34 @@ library project Cpu is
    for Source_Dirs use Include_Directories & (".");
 
    case Configure.Use_LibGCC is
-      when "Y"    =>
+      when "Y" =>
          for Languages use ("Ada");
          for Source_Files use ();
       when others =>
          for Languages use ("Asm_Cpp");
          for Source_Files use (
-                               "L_adddi3_s8.S",
-                               "L_ashrdi3.S",
-                               "L_cmpdi2.S",
-                               "L_cmpdi2_s8.S",
-                               "L_divmodhi4.S",
-                               "L_divmodsi4.S",
-                               "L_muldi3_6.S",
-                               "L_mulsidi3.S",
-                               "L_negsi2.S",
-                               "L_subdi3.S",
-                               "L_udivmodhi4.S",
-                               "L_udivmodsi4.S",
-                               "L_umulhisi3.S",
-                               "L_umulsidi3.S",
-                               "L_negdi2.S",
-                               "L_divdi3.S",
-                               "L_moddi3.S",
-                               "L_udivdi3.S",
-                               "L_udivmod64.S",
-                               "L_prologue.S",
-                               "L_epilogue.S"
-                              );
+            "L_adddi3_s8.S",
+            "L_ashrdi3.S",
+            "L_cmpdi2.S",
+            "L_cmpdi2_s8.S",
+            "L_divmodhi4.S",
+            "L_divmodsi4.S",
+            "L_muldi3_6.S",
+            "L_mulsidi3.S",
+            "L_negsi2.S",
+            "L_subdi3.S",
+            "L_udivmodhi4.S",
+            "L_udivmodsi4.S",
+            "L_umulhisi3.S",
+            "L_umulsidi3.S",
+            "L_negdi2.S",
+            "L_divdi3.S",
+            "L_moddi3.S",
+            "L_udivdi3.S",
+            "L_udivmod64.S",
+            "L_prologue.S",
+            "L_epilogue.S"
+            );
    end case;
 
    ----------------------------------------------------------------------------

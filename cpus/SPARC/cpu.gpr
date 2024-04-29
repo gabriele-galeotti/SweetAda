@@ -28,16 +28,16 @@ library project Cpu is
    for Source_Dirs use Include_Directories & (".");
 
    case Configure.Use_LibGCC is
-      when "Y"    =>
+      when "Y" =>
          for Languages use ("Ada");
          for Source_Files use ();
       when others =>
          for Languages use ("Asm_Cpp");
          for Source_Files use (
-                               "L_mulsi3.S",
-                               "L_divsi3.S",
-                               "L_modsi3.S"
-                              );
+            "L_mulsi3.S",
+            "L_divsi3.S",
+            "L_modsi3.S"
+            );
    end case;
 
    ----------------------------------------------------------------------------
