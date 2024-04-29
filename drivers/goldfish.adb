@@ -35,7 +35,14 @@ package body Goldfish
    ----------------------------------------------------------------------------
 
    type Register_Type is
-      (TIME_LOW, TIME_HIGH, ALARM_LOW, ALARM_HIGH, IRQ_ENABLED, CLEAR_ALARM, ALARM_STATUS, CLEAR_INTERRUPT);
+      (TIME_LOW,
+       TIME_HIGH,
+       ALARM_LOW,
+       ALARM_HIGH,
+       IRQ_ENABLED,
+       CLEAR_ALARM,
+       ALARM_STATUS,
+       CLEAR_INTERRUPT);
    for Register_Type use
       (16#00#, 16#04#, 16#08#, 16#0C#, 16#10#, 16#14#, 16#18#, 16#1C#);
 
@@ -71,10 +78,10 @@ package body Goldfish
       is
    begin
       return D.Read_32 (Build_Address (
-                D.Base_Address,
-                Register_Type'Enum_Rep (R),
-                D.Scale_Address
-                ));
+         D.Base_Address,
+         Register_Type'Enum_Rep (R),
+         D.Scale_Address
+         ));
    end Register_Read;
 
    ----------------------------------------------------------------------------

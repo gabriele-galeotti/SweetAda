@@ -47,12 +47,10 @@ package Goldfish
    end record;
 
    DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Base_Address  => Null_Address,
+      (Base_Address  => Null_Address,
        Scale_Address => 0,
        Read_32       => MMIO.ReadN_U32'Access,
-       Write_32      => MMIO.WriteN_U32'Access
-      );
+       Write_32      => MMIO.WriteN_U32'Access);
 
    procedure Read_Clock
       (D : in     Descriptor_Type;
