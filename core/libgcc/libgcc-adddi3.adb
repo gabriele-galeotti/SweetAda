@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with Bits;
 
 separate (LibGCC)
 function AddDI3
@@ -28,13 +27,13 @@ function AddDI3
    function To_UDI is new Ada.Unchecked_Conversion (USI_2, GCC_Types.UDI_Type);
    T_A1    : constant USI_2 := To_USI_2 (A1);
    T_A2    : constant USI_2 := To_USI_2 (A2);
-   A1_HIGH : GCC_Types.USI_Type renames T_A1 (Bits.H64_32_IDX);
-   A1_LOW  : GCC_Types.USI_Type renames T_A1 (Bits.L64_32_IDX);
-   A2_HIGH : GCC_Types.USI_Type renames T_A2 (Bits.H64_32_IDX);
-   A2_LOW  : GCC_Types.USI_Type renames T_A2 (Bits.L64_32_IDX);
+   A1_HIGH : GCC_Types.USI_Type renames T_A1 (HI64);
+   A1_LOW  : GCC_Types.USI_Type renames T_A1 (LO64);
+   A2_HIGH : GCC_Types.USI_Type renames T_A2 (HI64);
+   A2_LOW  : GCC_Types.USI_Type renames T_A2 (LO64);
    R       : USI_2;
-   R_HIGH  : GCC_Types.USI_Type renames R (Bits.H64_32_IDX);
-   R_LOW   : GCC_Types.USI_Type renames R (Bits.L64_32_IDX);
+   R_HIGH  : GCC_Types.USI_Type renames R (HI64);
+   R_LOW   : GCC_Types.USI_Type renames R (LO64);
 begin
    R_LOW  := A1_LOW  + A2_LOW;
    R_HIGH := A1_HIGH + A2_HIGH;
