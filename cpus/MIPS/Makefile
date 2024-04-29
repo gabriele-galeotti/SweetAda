@@ -36,7 +36,13 @@ LIBRARY_NAME := cpu
 OBJECTS :=
 ifeq ($(CPU_MODEL),R3000)
 OBJECTS += $(OBJ_DIRECTORY)/cache.o
+endif
 ifneq ($(USE_LIBGCC),Y)
+ifeq ($(or                                        \
+  $(if $(findstring R3000,     $(CPU_MODEL)),Y,), \
+  $(if $(findstring MIPS32-24K,$(CPU_MODEL)),Y,), \
+  $(if $(findstring MIPS64-20K,$(CPU_MODEL)),Y,)  \
+  ),Y)
 OBJECTS += $(OBJ_DIRECTORY)/libgcc.o
 endif
 endif

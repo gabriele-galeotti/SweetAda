@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ libgcc.adb                                                                                                --
+-- __FLN__ cpu.ads                                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,102 +15,53 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body LibGCC
+with System;
+with MIPS;
+with MIPS32;
+
+package CPU
+   with Preelaborate => True
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use type GCC_Types.USI_Type;
-   use type GCC_Types.DI_Type;
-   use type GCC_Types.UDI_Type;
-
-   function UDivModDI4
-      (N : in     GCC_Types.UDI_Type;
-       D : in     GCC_Types.UDI_Type;
-       R : in out GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type;
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
+   use System;
 
    ----------------------------------------------------------------------------
-   -- BswapSI2
+   -- CPU helper subprograms
    ----------------------------------------------------------------------------
-   function BswapSI2
-      (V : GCC_Types.USI_Type)
-      return GCC_Types.USI_Type
-      is
-   separate;
+
+   procedure NOP renames MIPS.NOP;
+
+   procedure Asm_Call (Target_Address : in Address) renames MIPS.Asm_Call;
 
    ----------------------------------------------------------------------------
-   -- BswapDI2
+   -- Exceptions and interrupts
    ----------------------------------------------------------------------------
-   function BswapDI2
-      (V : GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
-      is
-   separate;
+
+   subtype Intcontext_Type is MIPS32.Intcontext_Type;
+   subtype Irq_Id_Type     is MIPS32.Irq_Id_Type;
+
+   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames MIPS32.Intcontext_Get;
+   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames MIPS32.Intcontext_Set;
+
+   procedure Irq_Enable  renames MIPS32.Irq_Enable;
+   procedure Irq_Disable renames MIPS32.Irq_Disable;
 
    ----------------------------------------------------------------------------
-   -- UDivModDI4
+   -- Locking
    ----------------------------------------------------------------------------
-   function UDivModDI4
-      (N : in     GCC_Types.UDI_Type;
-       D : in     GCC_Types.UDI_Type;
-       R : in out GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
-      is
-   separate;
 
-   ----------------------------------------------------------------------------
-   -- DivDI3
-   ----------------------------------------------------------------------------
-   function DivDI3
-      (N : GCC_Types.DI_Type;
-       D : GCC_Types.DI_Type)
-      return GCC_Types.DI_Type
-      is
-   separate;
+   subtype Lock_Type is MIPS.Lock_Type;
 
-   ----------------------------------------------------------------------------
-   -- ModDI3
-   ----------------------------------------------------------------------------
-   function ModDI3
-      (N : GCC_Types.DI_Type;
-       D : GCC_Types.DI_Type)
-      return GCC_Types.DI_Type
-      is
-   separate;
+   procedure Lock_Try (Lock_Object : in out MIPS.Lock_Type; Success : out Boolean) renames MIPS32.Lock_Try;
+   procedure Lock (Lock_Object : in out MIPS.Lock_Type)                            renames MIPS32.Lock;
+   procedure Unlock (Lock_Object : out MIPS.Lock_Type)                             renames MIPS32.Unlock;
 
-   ----------------------------------------------------------------------------
-   -- UDivDI3
-   ----------------------------------------------------------------------------
-   function UDivDI3
-      (N : GCC_Types.UDI_Type;
-       D : GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
-      is
-   separate;
-
-   ----------------------------------------------------------------------------
-   -- UModDI3
-   ----------------------------------------------------------------------------
-   function UModDI3
-      (N : GCC_Types.UDI_Type;
-       D : GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
-      is
-   separate;
-
-end LibGCC;
+end CPU;

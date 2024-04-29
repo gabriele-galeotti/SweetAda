@@ -29,20 +29,6 @@ package LibGCC
    --                                                                        --
    --========================================================================--
 
-   function BswapSI2
-      (V : GCC_Types.USI_Type)
-      return GCC_Types.USI_Type
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__bswapsi2";
-
-   function BswapDI2
-      (V : GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__bswapdi2";
-
    function DivDI3
       (N : GCC_Types.DI_Type;
        D : GCC_Types.DI_Type)

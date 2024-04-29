@@ -35,36 +35,58 @@ library project Cpu is
    Ada_Files := ();
 
    case CPU_Model is
-      when "R3000" => Asm := "Y";
-                      Asm_Files := Asm_Files &
-                                   ("cache.S");
-      when others  => null;
+      when "R3000" =>
+         Asm := "Y";
+         Asm_Files := Asm_Files & ("cache.S");
+      when others =>
+         null;
    end case;
 
    case Configure.Use_LibGCC is
-      when "Y"    => null;
+      when "Y" =>
+         null;
       when others =>
          case CPU_Model is
-            when "R3000" => Ada := "Y";
-                            Ada_Files := Ada_Files &
-                                         ("gcc_types.ads",
-                                          "libgcc.adb", "libgcc.ads",
-                                          "libgcc-bswapsi2.adb",
-                                          "libgcc-bswapdi2.adb");
-            when others  => null;
+            when "R3000" | "MIPS32-24K" =>
+               Ada := "Y";
+               Ada_Files := Ada_Files & (
+                  "gcc_types.ads",
+                  "libgcc.adb", "libgcc.ads",
+                  "libgcc-bswapsi2.adb",
+                  "libgcc-bswapdi2.adb",
+                  "libgcc-udivmoddi4.adb",
+                  "libgcc-divdi3.adb",
+                  "libgcc-moddi3.adb",
+                  "libgcc-udivdi3.adb",
+                  "libgcc-umoddi3.adb"
+                  );
+            when "MIPS64-20K" =>
+               Ada := "Y";
+               Ada_Files := Ada_Files & (
+                  "gcc_types.ads",
+                  "libgcc.adb", "libgcc.ads",
+                  "libgcc-bswapsi2.adb",
+                  "libgcc-bswapdi2.adb"
+                  );
+            when others =>
+               null;
          end case;
    end case;
 
    case Asm is
-      when "Y"    => for Languages use project'Languages & ("Asm_Cpp");
-                     for Source_Files use project'Source_Files & Asm_Files;
-      when others => null;
+      when "Y" =>
+         for Languages use project'Languages & ("Asm_Cpp");
+         for Source_Files use project'Source_Files & Asm_Files;
+      when others =>
+         null;
    end case;
 
    case Ada is
-      when "Y"    => for Languages use project'Languages & ("Ada");
-                     for Source_Files use project'Source_Files & Ada_Files;
-      when others => null;
+      when "Y"    =>
+         for Languages use project'Languages & ("Ada");
+         for Source_Files use project'Source_Files & Ada_Files;
+      when others =>
+         null;
    end case;
 
    ----------------------------------------------------------------------------
