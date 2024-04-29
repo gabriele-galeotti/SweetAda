@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
 with Bits;
 with MMIO;
 with MIPS32;
@@ -183,5 +184,45 @@ package body Malta
    begin
       PC.PIC_Init (0, 8);
    end PIIX4_PIC_Init;
+
+pragma Warnings (Off, "types for unchecked conversion have different sizes");
+
+   ----------------------------------------------------------------------------
+   -- RTC_Register_Read
+   ----------------------------------------------------------------------------
+   function RTC_Register_Read
+      (Port_Address : Address)
+      return Unsigned_8
+      is
+      Register_Address : Unsigned_8;
+      function To_U8 is new Ada.Unchecked_Conversion (Storage_Offset, Unsigned_8);
+   begin
+      Register_Address := To_U8 (Port_Address - PIIX4_RTC_Descriptor.Base_Address);
+      MMIO.Write (
+         PIIX4_RTC_Descriptor.Base_Address + PC.RTC_INDEX,
+         Register_Address + PC.RTC_NMI_DISABLE
+         );
+      return MMIO.Read (PIIX4_RTC_Descriptor.Base_Address + PC.RTC_DATA);
+   end RTC_Register_Read;
+
+   ----------------------------------------------------------------------------
+   -- RTC_Register_Write
+   ----------------------------------------------------------------------------
+   procedure RTC_Register_Write
+      (Port_Address : in Address;
+       Value        : in Unsigned_8)
+      is
+      Register_Address : Unsigned_8;
+      function To_U8 is new Ada.Unchecked_Conversion (Storage_Offset, Unsigned_8);
+   begin
+      Register_Address := To_U8 (Port_Address - PIIX4_RTC_Descriptor.Base_Address);
+      MMIO.Write (
+         PIIX4_RTC_Descriptor.Base_Address + PC.RTC_INDEX,
+         Register_Address + PC.RTC_NMI_DISABLE
+         );
+      MMIO.Write (PIIX4_RTC_Descriptor.Base_Address + PC.RTC_DATA, Value);
+   end RTC_Register_Write;
+
+pragma Warnings (On, "types for unchecked conversion have different sizes");
 
 end Malta;

@@ -22,6 +22,7 @@ with Configure;
 with MIPS;
 with PCI;
 with GT64120;
+with MC146818A;
 with UART16x50;
 with IDE;
 
@@ -95,6 +96,7 @@ package Malta
    -- PIIX4 devices
    ----------------------------------------------------------------------------
 
+   PIIX4_RTC_Descriptor   : aliased MC146818A.Descriptor_Type := MC146818A.DESCRIPTOR_INVALID;
    PIIX4_UART1_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
    PIIX4_UART2_Descriptor : aliased UART16x50.Descriptor_Type := UART16x50.DESCRIPTOR_INVALID;
    PIIX4_IDE_Descriptor   : aliased IDE.Descriptor_Type := IDE.DESCRIPTOR_INVALID;
@@ -115,11 +117,27 @@ package Malta
    function PCI_PortIn
       (Port : Unsigned_16)
       return Unsigned_32;
+
    procedure PCI_PortOut
       (Port  : in Unsigned_16;
        Value : in Unsigned_32);
+
    procedure PCI_Init;
+
    procedure PCI_Devices_Detect;
+
    procedure PIIX4_PIC_Init;
+
+   ----------------------------------------------------------------------------
+   -- RTC accessors
+   ----------------------------------------------------------------------------
+
+   function RTC_Register_Read
+      (Port_Address : Address)
+      return Unsigned_8;
+
+   procedure RTC_Register_Write
+      (Port_Address : in Address;
+       Value        : in Unsigned_8);
 
 end Malta;

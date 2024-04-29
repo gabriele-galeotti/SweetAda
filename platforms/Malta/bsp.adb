@@ -28,6 +28,7 @@ with Malta;
 with VGA;
 with Exceptions;
 with PCI;
+with MC146818A;
 with UART16x50;
 with IDE;
 with FATFS;
@@ -117,6 +118,12 @@ package body BSP
       HEX_DISPLAY := BOARD_REVISION;
       PCI_Init;
       PIIX4_PIC_Init;
+      -- PIIX4 MC146818A RTC --------------------------------------------------
+      PIIX4_RTC_Descriptor.Base_Address  := To_Address (PIIX4_BASEADDRESS + 16#0000_0070#);
+      PIIX4_RTC_Descriptor.Scale_Address := 0;
+      PIIX4_RTC_Descriptor.Read_8        := Malta.RTC_Register_Read'Access;
+      PIIX4_RTC_Descriptor.Write_8       := Malta.RTC_Register_Write'Access;
+      MC146818A.Init (PIIX4_RTC_Descriptor);
       -- PIIX4 UARTs ----------------------------------------------------------
       PIIX4_UART1_Descriptor.Base_Address  := To_Address (PIIX4_BASEADDRESS + 16#0000_03F8#);
       PIIX4_UART1_Descriptor.Scale_Address := 0;

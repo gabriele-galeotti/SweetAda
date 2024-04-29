@@ -14,6 +14,8 @@ with FATFS.Applications;
 with VGA;
 with SweetAda;
 with Console;
+with MC146818A;
+with Time;
 
 package body Application
    is
@@ -48,6 +50,27 @@ package body Application
    procedure Run
       is
    begin
+      -------------------------------------------------------------------------
+      if True then
+         declare
+            TM : Time.TM_Time;
+         begin
+            Console.Print ("Current date: ", NL => False);
+            MC146818A.Read_Clock (Malta.PIIX4_RTC_Descriptor, TM);
+            Console.Print (TM.Year + 1_900, NL => False);
+            Console.Print ("-", NL => False);
+            Console.Print (TM.Mon + 1, NL => False);
+            Console.Print ("-", NL => False);
+            Console.Print (TM.MDay, NL => False);
+            Console.Print (" ", NL => False);
+            Console.Print (TM.Hour, NL => False);
+            Console.Print (":", NL => False);
+            Console.Print (TM.Min, NL => False);
+            Console.Print (":", NL => False);
+            Console.Print (TM.Sec, NL => False);
+            Console.Print_NewLine;
+         end;
+      end if;
       -------------------------------------------------------------------------
       if True then
          PCI_Devices_Detect;

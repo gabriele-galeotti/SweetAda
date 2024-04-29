@@ -71,7 +71,7 @@ case ${CPU_MODEL} in
     QEMU_CPU=24Kf
     GDB_ARCH="mips:isa32"
     ;;
-  MIPS64-5K)
+  MIPS64-5K|MIPS64-20K)
     QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-mips64"
     QEMU_CPU=5Kc
     GDB_ARCH="mips:isa64"

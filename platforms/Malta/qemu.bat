@@ -32,7 +32,7 @@ IF "%CPU_MODEL%"=="MIPS32-24K" (
   SET "QEMU_CPU=24Kf"
   SET "GDB_ARCH=mips:isa32"
   )
-IF "%CPU_MODEL%"=="MIPS64-5K" (
+IF "%CPU_MODEL%"=="MIPS64-20K" (
   SET "QEMU_FILENAME=qemu-system-mips64w"
   SET "QEMU_CPU=5Kc"
   SET "GDB_ARCH=mips:isa64"

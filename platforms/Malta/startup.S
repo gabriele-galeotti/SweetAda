@@ -231,8 +231,14 @@ movdata:
 ////////////////////////////////////////////////////////////////////////////////
 
 tlb_reset:
-                mfc0    $t0,CP0_CONFIG1         // extract MMU size
-                ext     $t1,$t0,25,6            // highest # TLB entry
+                mfc0    $t0,CP0_CONFIG1         // extract MMU size and highest # TLB entry
+#if __mips_isa_rev > 1
+                ext     $t1,$t0,25,6
+#else
+                srl     $t0,$t0,25
+                li      $t1,0x3F
+                and     $t1,$t1,$t0
+#endif
                 mtc0    $zero,CP0_ENTRYLO0
                 mtc0    $zero,CP0_ENTRYLO1
                 mtc0    $zero,CP0_PAGEMASK      // 4k
