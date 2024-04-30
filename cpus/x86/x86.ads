@@ -46,6 +46,7 @@ package x86
    -- Privilege Levels
 
    type PL_Type is new Bits_2;
+
    PL0 : constant PL_Type := 2#00#; -- RING0
    PL1 : constant PL_Type := 2#01#; -- RING1
    PL2 : constant PL_Type := 2#10#; -- RING2
@@ -54,6 +55,7 @@ package x86
    -- Table Indicator
 
    type TI_Type is new Bits_1;
+
    TI_GDT : constant TI_Type := 0; -- GDT
    TI_LDT : constant TI_Type := 1; -- current LDT
 
@@ -62,9 +64,9 @@ package x86
    type Selector_Index_Type is new Bits_13; -- theoretically GDT could have 8192 entries
 
    type Selector_Type is record
-      RPL   : PL_Type;             -- requested Privilege Level
-      TI    : TI_Type;             -- GDT or LDT
-      Index : Selector_Index_Type; -- index into table
+      RPL   : PL_Type             := PL0;    -- requested Privilege Level
+      TI    : TI_Type             := TI_GDT; -- GDT or LDT
+      Index : Selector_Index_Type := 0;      -- index into table
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -82,12 +84,14 @@ package x86
    -- Descriptor type
 
    type Descriptor_Type is new Bits_1;
+
    DESCRIPTOR_SYSTEM   : constant := 0; -- "system" TSS/GATE segment (system objects)
    DESCRIPTOR_CODEDATA : constant := 1; -- "storage application" code/data segment (memory objects)
 
    -- Segment/Gate descriptor type
 
    type Segment_Gate_Type is new Bits_4;
+
    -- Code- and Data-Segment Types
    --                         EWA
    DATA_R    : constant := 2#0000#; -- Data Read-Only
@@ -129,12 +133,14 @@ package x86
    -- Default Operand Size
 
    type Default_OpSize_Type is new Bits_1;
+
    DEFAULT_OPSIZE16 : constant := 0;
    DEFAULT_OPSIZE32 : constant := 1;
 
    -- Segment Granularity
 
    type Granularity_Type is new Bits_1;
+
    GRANULARITY_BYTE : constant := 0;
    GRANULARITY_4k   : constant := 1;
 
@@ -184,28 +190,28 @@ package x86
    -- EFLAGS
 
    type EFLAGS_Type is record
-      CF        : Boolean; -- Carry Flag
-      Reserved1 : Bits_1;
-      PF        : Boolean; -- Parity Flag
-      Reserved2 : Bits_1;
-      AF        : Boolean; -- Auxiliary Carry Flag
-      Reserved3 : Bits_1;
-      ZF        : Boolean; -- Zero Flag
-      SF        : Boolean; -- Sign Flag
-      TF        : Boolean; -- Trap Flag
-      IFlag     : Boolean; -- Interrupt Enable Flag
-      DF        : Boolean; -- Direction Flag
-      OFlag     : Boolean; -- Overflow Flag
-      IOPL      : PL_Type; -- I/O Privilege Level
-      NT        : Boolean; -- Nested Task Flag
-      Reserved4 : Bits_1;
-      RF        : Boolean; -- Resume Flag
-      VM        : Boolean; -- Virtual-8086 Mode
-      AC        : Boolean; -- Alignment Check / Access Control
-      VIF       : Boolean; -- Virtual Interrupt Flag
-      VIP       : Boolean; -- Virtual Interrupt Pending
-      ID        : Boolean; -- Identification Flag
-      Reserved5 : Bits_10;
+      CF        : Boolean;      -- Carry Flag
+      Reserved1 : Bits_1  := 1;
+      PF        : Boolean;      -- Parity Flag
+      Reserved2 : Bits_1  := 0;
+      AF        : Boolean;      -- Auxiliary Carry Flag
+      Reserved3 : Bits_1  := 0;
+      ZF        : Boolean;      -- Zero Flag
+      SF        : Boolean;      -- Sign Flag
+      TF        : Boolean;      -- Trap Flag
+      IFlag     : Boolean;      -- Interrupt Enable Flag
+      DF        : Boolean;      -- Direction Flag
+      OFlag     : Boolean;      -- Overflow Flag
+      IOPL      : PL_Type;      -- I/O Privilege Level
+      NT        : Boolean;      -- Nested Task Flag
+      Reserved4 : Bits_1  := 0;
+      RF        : Boolean;      -- Resume Flag
+      VM        : Boolean;      -- Virtual-8086 Mode
+      AC        : Boolean;      -- Alignment Check / Access Control
+      VIF       : Boolean;      -- Virtual Interrupt Flag
+      VIP       : Boolean;      -- Virtual Interrupt Pending
+      ID        : Boolean;      -- Identification Flag
+      Reserved5 : Bits_10 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -241,19 +247,19 @@ package x86
    SEGMENT_DESCRIPTOR_ALIGNMENT : constant := 8;
 
    type Segment_Descriptor_Type is record
-      Limit_LO : Unsigned_16;         -- Segment Limit 0 .. 15
-      Base_LO  : Unsigned_16;         -- Segment base address 0 .. 15
-      Base_MI  : Unsigned_8;          -- Segment base address 16 .. 23
-      SegType  : Segment_Gate_Type;   -- Segment type
-      S        : Descriptor_Type;     -- Descriptor type
-      DPL      : PL_Type;             -- Descriptor privilege level
-      P        : Boolean;             -- Segment present
-      Limit_HI : Bits_4;              -- Segment Limit 16 .. 19
-      AVL      : Bits_1;              -- Available for use by system software
-      L        : Boolean;             -- 64-bit code segment (IA-32e mode only)
-      D_B      : Default_OpSize_Type; -- Default operation size
-      G        : Granularity_Type;    -- Granularity
-      Base_HI  : Unsigned_8;          -- Segment base address 24 .. 31
+      Limit_LO : Unsigned_16         := 0;                 -- Segment Limit 0 .. 15
+      Base_LO  : Unsigned_16         := 0;                 -- Segment base address 0 .. 15
+      Base_MI  : Unsigned_8          := 0;                 -- Segment base address 16 .. 23
+      SegType  : Segment_Gate_Type   := SYSGATE_RES1;      -- Segment type
+      S        : Descriptor_Type     := DESCRIPTOR_SYSTEM; -- Descriptor type
+      DPL      : PL_Type             := PL0;               -- Descriptor privilege level
+      P        : Boolean             := False;             -- Segment present
+      Limit_HI : Bits_4              := 0;                 -- Segment Limit 16 .. 19
+      AVL      : Bits_1              := 0;                 -- Available for use by system software
+      L        : Boolean             := False;             -- 64-bit code segment (IA-32e mode only)
+      D_B      : Default_OpSize_Type := DEFAULT_OPSIZE32;  -- Default operation size
+      G        : Granularity_Type    := GRANULARITY_4k;    -- Granularity
+      Base_HI  : Unsigned_8          := 0;                 -- Segment base address 24 .. 31
    end record
       with Alignment => SEGMENT_DESCRIPTOR_ALIGNMENT,
            Bit_Order => Low_Order_First,
@@ -286,7 +292,7 @@ package x86
        Limit_HI => 0,
        AVL      => 0,
        L        => False,
-       D_B      => DEFAULT_OPSIZE16,
+       D_B      => DEFAULT_OPSIZE32,
        G        => GRANULARITY_4k,
        Base_HI  => 0
       );
@@ -296,9 +302,9 @@ package x86
    ----------------------------------------------------------------------------
 
    type GDT_Descriptor_Type is record
-      Limit   : Unsigned_16;
-      Base_LO : Unsigned_16;
-      Base_HI : Unsigned_16;
+      Limit   : Unsigned_16 := 0;
+      Base_LO : Unsigned_16 := 0;
+      Base_HI : Unsigned_16 := 0;
    end record
       with Alignment => 2,
            Bit_Order => Low_Order_First,
@@ -535,6 +541,7 @@ package x86
    PAGESIZE4M : constant := Definitions.MB4;
 
    type Page_Select_Type is new Bits_1;
+
    PAGESELECT4k : constant Page_Select_Type := 0;
    PAGESELECT4M : constant Page_Select_Type := 1;
 
@@ -628,6 +635,7 @@ package x86
        A   => False,
        PTA => 0
       );
+
    PDENTRY_4M_INVALID : constant PDEntry_Type :=
       (
        PS    => PAGESELECT4M,
