@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Configure;
 with MIPS;
@@ -38,7 +37,6 @@ package Malta
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use MIPS;
    use PCI;
@@ -60,19 +58,19 @@ package Malta
    ----------------------------------------------------------------------------
 
    BOARD_REVISION : aliased Unsigned_32
-      with Address    => To_Address (BOARD_REVISION_ADDRESS),
+      with Address    => System'To_Address (BOARD_REVISION_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    LEDBAR : aliased Unsigned_8
-      with Address    => To_Address (LEDBAR_ADDRESS),
+      with Address    => System'To_Address (LEDBAR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    HEX_DISPLAY : aliased Unsigned_32
-      with Address    => To_Address (HEX_DISPLAY_ADDRESS),
+      with Address    => System'To_Address (HEX_DISPLAY_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -87,7 +85,7 @@ package Malta
    GT64120_DEVICE_NUMBER : constant Device_Number_Type := 0;
 
    GT_64120 : aliased GT64120_Type
-      with Address    => To_Address (GT64120_BASEADDRESS),
+      with Address    => System'To_Address (GT64120_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -129,7 +127,7 @@ package Malta
    procedure PIIX4_PIC_Init;
 
    ----------------------------------------------------------------------------
-   -- RTC accessors
+   -- MC146818A RTC accessors
    ----------------------------------------------------------------------------
 
    function RTC_Register_Read

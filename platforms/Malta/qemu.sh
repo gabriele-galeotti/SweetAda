@@ -66,14 +66,14 @@ return 0
 
 # QEMU executable
 case ${CPU_MODEL} in
-  MIPS32-24K)
+  MIPS32*)
     QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-mips"
     QEMU_CPU=24Kf
     GDB_ARCH="mips:isa32"
     ;;
-  MIPS64-5K|MIPS64-20K)
+  MIPS64*)
     QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-mips64"
-    QEMU_CPU=5Kc
+    QEMU_CPU=20Kc
     GDB_ARCH="mips:isa64"
     ;;
 esac

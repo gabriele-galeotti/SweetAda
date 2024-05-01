@@ -27,16 +27,17 @@ REM #                                                                          #
 REM ############################################################################
 
 REM QEMU executable
-IF "%CPU_MODEL%"=="MIPS32-24K" (
+IF "%CPU_MODEL:~0,5"=="MIPS32" (
   SET "QEMU_FILENAME=qemu-system-mipsw"
   SET "QEMU_CPU=24Kf"
   SET "GDB_ARCH=mips:isa32"
-  )
-IF "%CPU_MODEL%"=="MIPS64-20K" (
+  ) ELSE (
+IF "%CPU_MODEL:~0,5"=="MIPS64" (
   SET "QEMU_FILENAME=qemu-system-mips64w"
-  SET "QEMU_CPU=5Kc"
+  SET "QEMU_CPU=20Kc"
   SET "GDB_ARCH=mips:isa64"
   )
+)
 SET "QEMU_EXECUTABLE=C:\Program Files\QEMU\%QEMU_FILENAME%"
 
 REM debug options
