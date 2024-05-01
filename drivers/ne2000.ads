@@ -49,7 +49,7 @@ package NE2000
       Device_Number : PCI.Device_Number_Type;
       BAR           : Unsigned_16;
       PCI_Irq_Line  : Unsigned_8;
-      Base_Address  : Unsigned_16;
+      Base_Address  : Address;
       MAC           : Ethernet.MAC_Address_Type;
       Read_8        : Port_Read_8_Ptr;
       Write_8       : Port_Write_8_Ptr;
@@ -66,7 +66,7 @@ package NE2000
        Device_Number => 0,
        BAR           => 0,
        PCI_Irq_Line  => 0,
-       Base_Address  => 0,
+       Base_Address  => Null_Address,
        MAC           => [0, 0, 0, 0, 0, 0],
        Read_8        => null,
        Write_8       => null,

@@ -974,15 +974,18 @@ package body NE2000
       CPU.Intcontext_Set (Intcontext);
    end Transmit;
 
+pragma Warnings (Off, "types for unchecked conversion have different sizes");
+
    ----------------------------------------------------------------------------
    -- Init (ISA)
    ----------------------------------------------------------------------------
    procedure Init
       (D : in out Descriptor_Type)
       is
+      function To_U16 is new Ada.Unchecked_Conversion (Address, Unsigned_16);
    begin
       D.NE2000PCI := False;
-      D.BAR       := D.Base_Address;
+      D.BAR       := To_U16 (D.Base_Address);
       Setup (D);
    end Init;
 
@@ -993,17 +996,20 @@ package body NE2000
       (D : in out Descriptor_Type)
       is
       use PCI;
+      function To_U16 is new Ada.Unchecked_Conversion (Address, Unsigned_16);
    begin
       -- initialize PCI interface, setup BAR
-      Cfg_Write (BUS0, D.Device_Number, 0, BAR0_Register_Offset, D.Base_Address);
+      Cfg_Write (BUS0, D.Device_Number, 0, BAR0_Register_Offset, To_U16 (D.Base_Address));
       -- enable MEMEN/IOEN
       Cfg_Write (BUS0, D.Device_Number, 0, CR_Register_Offset, Unsigned_8'(16#03#));
       -- interrupt routing line
       Cfg_Write (BUS0, D.Device_Number, 0, ILR_Register_Offset, D.PCI_Irq_Line);
       -- initialize NE2000
       D.NE2000PCI := True;
-      D.BAR       := D.Base_Address and 16#FFE0#;
+      D.BAR       := To_U16 (D.Base_Address) and 16#FFE0#;
       Setup (D);
    end Init_PCI;
+
+pragma Warnings (On, "types for unchecked conversion have different sizes");
 
 end NE2000;
