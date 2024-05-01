@@ -264,7 +264,7 @@ package body MC146818A
        T :    out Time.TM_Time)
       is
       Intcontext     : CPU.Intcontext_Type;
-      RTC_RB         : RegisterB_Type;
+      RB             : RegisterB_Type;
       RTC_BCD        : Boolean;
       RTC_Second     : Unsigned_8;
       RTC_Minute     : Unsigned_8;
@@ -276,18 +276,15 @@ package body MC146818A
       function Adjust_BCD
          (V   : Unsigned_8;
           BCD : Boolean)
-         return Unsigned_8;
+         return Unsigned_8
+         with Inline => True;
       function Adjust_BCD
          (V   : Unsigned_8;
           BCD : Boolean)
          return Unsigned_8
          is
       begin
-         if BCD then
-            return (V and 16#0F#) + ShR (V, 4) * 10;
-         else
-            return V;
-         end if;
+         return (if BCD then BCD2U8 (V) else V);
       end Adjust_BCD;
    begin
       CPU.Intcontext_Get (Intcontext);
@@ -303,10 +300,10 @@ package body MC146818A
       RTC_DayOfMonth := Register_Read (D, DayOfMonth);
       RTC_Month      := Register_Read (D, Month);
       RTC_Year       := Register_Read (D, Year);
-      RTC_RB         := To_RB (Register_Read (D, RegisterB));
+      RB := To_RB (Register_Read (D, RegisterB));
       CPU.Intcontext_Set (Intcontext);
-      RTC_BCD := RTC_RB.DM = DM_BCD;
-      T.IsDST := (if RTC_RB.DSE then 1 else 0);
+      RTC_BCD := RB.DM = DM_BCD;
+      T.IsDST := (if RB.DSE then 1 else 0);
       T.Sec   := Natural (Adjust_BCD (RTC_Second, RTC_BCD));
       T.Min   := Natural (Adjust_BCD (RTC_Minute, RTC_BCD));
       T.Hour  := Natural (Adjust_BCD (RTC_Hour, RTC_BCD));
@@ -325,17 +322,33 @@ package body MC146818A
       (D : in Descriptor_Type;
        T : in Time.TM_Time)
       is
-      RB : RegisterB_Type;
+      RB      : RegisterB_Type;
+      RTC_BCD : Boolean;
+      function Adjust_BCD
+         (V   : Unsigned_8;
+          BCD : Boolean)
+         return Unsigned_8
+         with Inline => True;
+      function Adjust_BCD
+         (V   : Unsigned_8;
+          BCD : Boolean)
+         return Unsigned_8
+         is
+      begin
+         return (if BCD then U82BCD (V) else V);
+      end Adjust_BCD;
    begin
       RB := To_RB (Register_Read (D, RegisterB));
       RB.SET := True;
+      RTC_BCD := RB.DM = DM_BCD;
       Register_Write (D, RegisterB, To_U8 (RB));
-      Register_Write (D, Seconds, Unsigned_8 (T.Sec));
-      Register_Write (D, Minutes, Unsigned_8 (T.Min));
-      Register_Write (D, Hours, Unsigned_8 (T.Hour));
-      Register_Write (D, DayOfMonth, Unsigned_8 (T.MDay));
-      Register_Write (D, Month, Unsigned_8 (T.Mon) + 1);
-      Register_Write (D, Year, Unsigned_8 (T.Year));
+      Register_Write (D, Seconds, Adjust_BCD (Unsigned_8 (T.Sec), RTC_BCD));
+      Register_Write (D, Minutes, Adjust_BCD (Unsigned_8 (T.Min), RTC_BCD));
+      Register_Write (D, Hours, Adjust_BCD (Unsigned_8 (T.Hour), RTC_BCD));
+      Register_Write (D, DayOfMonth, Adjust_BCD (Unsigned_8 (T.MDay), RTC_BCD));
+      Register_Write (D, Month, Adjust_BCD (Unsigned_8 (T.Mon) + 1, RTC_BCD));
+      Register_Write (D, Year, Adjust_BCD (Unsigned_8 (T.Year), RTC_BCD));
+      RB.DSE := T.IsDST > 0;
       RB.SET := False;
       Register_Write (D, RegisterB, To_U8 (RB));
    end Set_Clock;
@@ -357,7 +370,8 @@ package body MC146818A
       Unused := Register_Read (D, RegisterC);
       -- enable PIE interrupt in Register B
       RB := To_RB (Register_Read (D, RegisterB));
-      RB.DM  := DM_BINARY;
+      RB.DM  := DM_BCD;
+      RB.AIE := False;
       RB.PIE := True;
       RB.SET := False;
       Register_Write (D, RegisterB, To_U8 (RB));
