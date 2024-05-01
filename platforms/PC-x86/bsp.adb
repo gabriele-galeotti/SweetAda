@@ -313,7 +313,7 @@ package body BSP
                    Device_Number => PCI_Device_Number,
                    BAR           => 0,
                    PCI_Irq_Line  => 5,
-                   Base_Address  => 16#C000#,
+                   Base_Address  => System'To_Address (16#C000#),
                    MAC           => [16#02#, 16#00#, 16#00#, 16#11#, 16#22#, 16#33#],
                    Read_8        => PortIn'Access,
                    Write_8       => PortOut'Access,
