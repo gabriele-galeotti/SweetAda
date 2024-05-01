@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Interfaces;
 with Bits;
 with Memory_Functions;
 with CPU.IO;
@@ -34,7 +33,6 @@ package body VGA
    --========================================================================--
 
    use System;
-   use Interfaces;
    use Bits;
 
    Video_Buffer_BaseAddress : Integer_Address := 16#000A_0000#;
@@ -44,14 +42,17 @@ package body VGA
    -- VGA registers
    ----------------------------------------------------------------------------
 
-   ATTRIBUTE              : constant := 16#03C0#;
-   -- ATTRIBUTE_READ         : constant := 16#03C1#;
+   ATTRIBUTE_INDEX        : constant := 16#03C0#;
+   ATTRIBUTE_DATA_W       : constant := 16#03C0#;
+   ATTRIBUTE_DATA_R       : constant := 16#03C1#;
    MISCELLANEOUS_OUTPUT   : constant := 16#03C2#;
+   INPUT_STATUS_0         : constant := 16#03C2#;
    VIDEO_SUBSYSTEM_ENABLE : constant := 16#03C3#;
    SEQUENCER_INDEX        : constant := 16#03C4#;
    SEQUENCER_DATA         : constant := 16#03C5#;
    PEL_MASK               : constant := 16#03C6#;
-   -- PEL_READ_INDEX         : constant := 16#03C7#;
+   DAC_STATE              : constant := 16#03C7#;
+   PEL_READ_INDEX         : constant := 16#03C7#;
    PEL_WRITE_INDEX        : constant := 16#03C8#;
    PEL_DATA               : constant := 16#03C9#;
    GRAPHICS_INDEX         : constant := 16#03CE#;
@@ -59,6 +60,8 @@ package body VGA
    CRTC6845_INDEX         : constant := 16#03D4#; -- EGA/VGA rather than MDA (0x3B4)
    CRTC6845_DATA          : constant := 16#03D5#; -- EGA/VGA rather than MDA (0x3B5)
    INPUT_STATUS_1         : constant := 16#03DA#; -- EGA/VGA rather than MDA (0x3BA)
+   FEATURE_CONTROL_R      : constant := 16#03CA#;
+   FEATURE_CONTROL_W      : constant := 16#03DA#; -- EGA/VGA rather than MDA (0x3BA)
 
    ----------------------------------------------------------------------------
    -- SEQUENCER
@@ -81,7 +84,7 @@ package body VGA
        16#01#, -- 01 Clocking Mode: bit0 = 0 --> 9 dots, bit0 = 1 --> 8 dots
        16#0F#, -- 02 Map Mask:
        16#00#, -- 03 Character Map Select:
-       16#02#  -- 04 Sequencer Memory Mode:
+       16#06#  -- 04 Sequencer Memory Mode:
       ];
 
    ----------------------------------------------------------------------------
@@ -131,14 +134,14 @@ package body VGA
        16#3E#, -- 07 Overflow:
        16#00#, -- 08 Preset Row Scan:
        16#40#, -- 09 Maximum Scan Line:
-       16#2E#, -- 0A Cursor Start: bit5 on --> disable cursor
-       16#0F#, -- 0B Cursor End:
+       16#00#, -- 0A Cursor Start: bit5 on --> disable cursor
+       16#00#, -- 0B Cursor End:
        16#00#, -- 0C Start Address High:
        16#00#, -- 0D Start Address Low:
        16#00#, -- 0E Cursor Location High:
-       16#00#, -- 0F Cursor Location Low:
+       16#59#, -- 0F Cursor Location Low:
        16#EA#, -- 10 Vertical Retrace Start:
-       16#AC#, -- 11 Vertical Retrace End: bit 4 on --> clear irq, bit5 on --> disable irq, bit7 on --> protect
+       16#8C#, -- 11 Vertical Retrace End: bit 4 on --> clear irq, bit5 on --> disable irq, bit7 on --> protect
        16#DF#, -- 12 Vertical Display End:
        16#28#, -- 13 Offset:
        16#00#, -- 14 Underline Location:
@@ -322,10 +325,6 @@ package body VGA
        Value : in Unsigned_8);
    procedure DAC_Init;
    procedure Load_Font;
-   procedure Draw_Pixel
-      (X     : in Natural;
-       Y     : in Natural;
-       Color : in Unsigned_8);
 
    --========================================================================--
    --                                                                        --
@@ -418,12 +417,12 @@ package body VGA
    begin
       Unused := CPU.IO.PortIn (INPUT_STATUS_1);
       if (Unsigned_8 (R) and 16#20#) /= 0 then
-         CPU.IO.PortOut (ATTRIBUTE, Unsigned_8 (R));
+         CPU.IO.PortOut (ATTRIBUTE_INDEX, Unsigned_8 (R));
          -- avoid unintentionally writing something to a register
          Unused := Value;
       else
-         CPU.IO.PortOut (ATTRIBUTE, Unsigned_8 (R));
-         CPU.IO.PortOut (ATTRIBUTE, Value);
+         CPU.IO.PortOut (ATTRIBUTE_INDEX, Unsigned_8 (R));
+         CPU.IO.PortOut (ATTRIBUTE_DATA_W, Value);
       end if;
    end ATC_Register_Write;
 
