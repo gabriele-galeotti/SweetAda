@@ -26,18 +26,22 @@ REM # Main loop.                                                               #
 REM #                                                                          #
 REM ############################################################################
 
-REM QEMU executable
-SET "QEMU_FILENAME="
+REM QEMU executable and CPU model
 IF /I "%CPU_MODEL:~0,4%"=="RV32" (
   SET "QEMU_FILENAME=qemu-system-riscv32w"
-  SET "CPU=rv32"
+  SET "QEMU_CPU=rv32"
+  GOTO :QEMU_OK
   )
 IF /I "%CPU_MODEL:~0,4%"=="RV64" (
   SET "QEMU_FILENAME=qemu-system-riscv64w"
-  SET "CPU=rv64"
+  SET "QEMU_CPU=rv64"
+  GOTO :QEMU_OK
   )
-IF "%QEMU_FILENAME%"=="" GOTO :L_EXIT
-SET "QEMU_EXECUTABLE=C:\Program Files\QEMU\%QEMU_FILENAME%"
+ECHO %~nx0: *** Error: %CPU_MODEL%: no CPU or CPU unsupported.
+SET ERRORLEVEL=1
+GOTO :SCRIPTEXIT
+:QEMU_OK
+SET "QEMU_EXECUTABLE=C:\Program Files\qemu\%QEMU_FILENAME%"
 
 REM debug options
 IF "%1"=="-debug" (
@@ -55,7 +59,7 @@ SET TILTIMEOUT=3
 
 REM QEMU machine
 START "" "%QEMU_EXECUTABLE%" ^
-  -M virt -cpu %CPU% -smp cores=4 ^
+  -M virt -cpu %QEMU_CPU% -smp cores=4 ^
   -bios %KERNEL_ROMFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
@@ -85,7 +89,7 @@ IF "%1"=="-debug" (
   CALL :QEMUWAIT
   )
 
-:L_EXIT
+:SCRIPTEXIT
 EXIT /B %ERRORLEVEL%
 
 REM ############################################################################
@@ -97,7 +101,7 @@ SET "PORTOK=N"
 SET "NLOOPS=0"
 :TIL_LOOP
   timeout.exe /NOBREAK /T 1 >NUL
-  FOR /F "tokens=*" %%I in ('NETSTAT.EXE -an ^| find.exe ":%1" ^| find.exe /C "LISTENING"') DO SET VAR=%%I
+  FOR /F "tokens=*" %%I IN ('NETSTAT.EXE -an ^| find.exe ":%1" ^| find.exe /C "LISTENING"') DO SET VAR=%%I
   IF "%VAR%" NEQ "0" (
     SET "PORTOK=Y"
     GOTO :TIL_LOOPEND

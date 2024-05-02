@@ -46,7 +46,7 @@ while true ; do
     _time_current=$(date +%s)
     if [ $((_time_current-_time_start)) -gt $2 ] ; then
       if [ "x$3" != "x" ] ; then
-        printf "%s\n" "$3: timeout waiting for port $1."
+        printf "%s\n" "$3: timeout waiting for port $1." 1>&2
       fi
       return 1
     fi
@@ -61,7 +61,7 @@ return 0
 #                                                                              #
 ################################################################################
 
-# QEMU executable
+# QEMU executable and CPU model
 QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-nios2"
 
 # debug options

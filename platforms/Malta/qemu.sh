@@ -49,7 +49,7 @@ while true ; do
     _time_current=$(date +%s)
     if [ $((_time_current-_time_start)) -gt $2 ] ; then
       if [ "x$3" != "x" ] ; then
-        printf "%s\n" "$3: timeout waiting for port $1."
+        printf "%s\n" "$3: timeout waiting for port $1." 1>&2
       fi
       return 1
     fi
@@ -64,7 +64,7 @@ return 0
 #                                                                              #
 ################################################################################
 
-# QEMU executable
+# QEMU executable and CPU model
 case ${CPU_MODEL} in
   MIPS32*)
     QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-mips"
@@ -75,6 +75,10 @@ case ${CPU_MODEL} in
     QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-mips64"
     QEMU_CPU=20Kc
     GDB_ARCH="mips:isa64"
+    ;;
+  *)
+    printf "%s\n" "${SCRIPT_FILENAME}: *** Error: ${CPU_MODEL}: no CPU or CPU unsupported." 1>&2
+    exit 1
     ;;
 esac
 

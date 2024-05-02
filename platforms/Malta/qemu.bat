@@ -26,19 +26,24 @@ REM # Main loop.                                                               #
 REM #                                                                          #
 REM ############################################################################
 
-REM QEMU executable
-IF "%CPU_MODEL:~0,5%"=="MIPS32" (
+REM QEMU executable and CPU model
+IF /I "%CPU_MODEL:~0,6%"=="MIPS32" (
   SET "QEMU_FILENAME=qemu-system-mipsw"
   SET "QEMU_CPU=24Kf"
   SET "GDB_ARCH=mips:isa32"
-  ) ELSE (
-IF "%CPU_MODEL:~0,5%"=="MIPS64" (
+  GOTO :QEMU_OK
+  )
+IF /I "%CPU_MODEL:~0,6%"=="MIPS64" (
   SET "QEMU_FILENAME=qemu-system-mips64w"
   SET "QEMU_CPU=20Kc"
   SET "GDB_ARCH=mips:isa64"
+  GOTO :QEMU_OK
   )
-)
-SET "QEMU_EXECUTABLE=C:\Program Files\QEMU\%QEMU_FILENAME%"
+ECHO %~nx0: *** Error: %CPU_MODEL%: no CPU or CPU unsupported.
+SET ERRORLEVEL=1
+GOTO :SCRIPTEXIT
+:QEMU_OK
+SET "QEMU_EXECUTABLE=C:\Program Files\qemu\%QEMU_FILENAME%"
 
 REM debug options
 IF "%1"=="-debug" (
@@ -84,6 +89,7 @@ IF "%1"=="-debug" (
   CALL :QEMUWAIT
   )
 
+:SCRIPTEXIT
 EXIT /B %ERRORLEVEL%
 
 REM ############################################################################
@@ -95,7 +101,7 @@ SET "PORTOK=N"
 SET "NLOOPS=0"
 :TIL_LOOP
   timeout.exe /NOBREAK /T 1 >NUL
-  FOR /F "tokens=*" %%I in ('NETSTAT.EXE -an ^| find.exe ":%1" ^| find.exe /C "LISTENING"') DO SET VAR=%%I
+  FOR /F "tokens=*" %%I IN ('NETSTAT.EXE -an ^| find.exe ":%1" ^| find.exe /C "LISTENING"') DO SET VAR=%%I
   IF "%VAR%" NEQ "0" (
     SET "PORTOK=Y"
     GOTO :TIL_LOOPEND

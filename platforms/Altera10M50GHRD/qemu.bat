@@ -24,9 +24,9 @@ REM # Main loop.                                                               #
 REM #                                                                          #
 REM ############################################################################
 
-REM QEMU executable
+REM QEMU executable and CPU model
 SET "QEMU_FILENAME=qemu-system-nios2w.exe"
-SET "QEMU_EXECUTABLE=C:\Program Files\QEMU\%QEMU_FILENAME%"
+SET "QEMU_EXECUTABLE=C:\Program Files\qemu\%QEMU_FILENAME%"
 
 REM debug options
 IF "%1"=="-debug" (
@@ -65,6 +65,7 @@ IF "%1"=="-debug" (
   CALL :QEMUWAIT
   )
 
+:SCRIPTEXIT
 EXIT /B %ERRORLEVEL%
 
 REM ############################################################################
@@ -76,7 +77,7 @@ SET "PORTOK=N"
 SET "NLOOPS=0"
 :TIL_LOOP
   timeout.exe /NOBREAK /T 1 >NUL
-  FOR /F "tokens=*" %%I in ('NETSTAT.EXE -an ^| find.exe ":%1" ^| find.exe /C "LISTENING"') DO SET VAR=%%I
+  FOR /F "tokens=*" %%I IN ('NETSTAT.EXE -an ^| find.exe ":%1" ^| find.exe /C "LISTENING"') DO SET VAR=%%I
   IF "%VAR%" NEQ "0" (
     SET "PORTOK=Y"
     GOTO :TIL_LOOPEND
