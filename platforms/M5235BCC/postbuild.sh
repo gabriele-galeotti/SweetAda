@@ -6,3 +6,5 @@ ${OBJCOPY}                                 \
   ${SWEETADA_PATH}/${KERNEL_OUTFILE}       \
   ${SWEETADA_PATH}/${KERNEL_BASENAME}.srec
 
+exit $?
+

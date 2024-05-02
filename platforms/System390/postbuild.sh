@@ -13,5 +13,5 @@ case ${IPL_MODE} in
     ;;
 esac
 
-exit 0
+exit $?
 
