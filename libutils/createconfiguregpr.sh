@@ -25,6 +25,7 @@
 # OBJECT_DIRECTORY
 # PLATFORM
 # CPU
+# CPU_MODEL
 # RTS_PATH
 # RTS
 # PROFILE
@@ -225,6 +226,7 @@ print_I "Library_Directory                 := \"${LIBRARY_DIRECTORY}\";"
 print_I "Object_Directory                  := \"${OBJECT_DIRECTORY}\";"
 print_I "Platform                          := \"${PLATFORM}\";"
 print_I "Cpu                               := \"${CPU}\";"
+print_I "Cpu_Model                         := \"${CPU_MODEL}\";"
 print_I "RTS_Path                          := \"${RTS_PATH}\";"
 print_I "RTS                               := \"${RTS}\";"
 print_I "Profile                           := \"${PROFILE}\";"

@@ -24,6 +24,7 @@
 # OBJECT_DIRECTORY
 # PLATFORM
 # CPU
+# CPU_MODEL
 # RTS_PATH
 # RTS
 # PROFILE
@@ -215,6 +216,7 @@ print_I $configure_filename "Library_Directory                 := `"$(GetEnvVar 
 print_I $configure_filename "Object_Directory                  := `"$(GetEnvVar OBJECT_DIRECTORY)`";"
 print_I $configure_filename "Platform                          := `"$(GetEnvVar PLATFORM)`";"
 print_I $configure_filename "Cpu                               := `"$(GetEnvVar CPU)`";"
+print_I $configure_filename "Cpu_Model                         := `"$(GetEnvVar CPU_MODEL)`";"
 print_I $configure_filename "RTS_Path                          := `"$(GetEnvVar RTS_PATH)`";"
 print_I $configure_filename "RTS                               := `"$(GetEnvVar RTS)`";"
 print_I $configure_filename "Profile                           := `"$(GetEnvVar PROFILE)`";"
