@@ -61,7 +61,7 @@ package Integer_Math
       return Natural;
 
    ----------------------------------------------------------------------------
-   -- Rounddown - round down up x modulo m
+   -- Rounddown - round down x modulo m
    ----------------------------------------------------------------------------
    function Rounddown
       (Value  : Natural;
