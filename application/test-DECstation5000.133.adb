@@ -58,6 +58,7 @@ package body Application
                MDay   => 1,
                Mon    => 1 - 1,
                Year   => 24,
+               IsDST  => 0,
                others => 0
                );
             MC146818A.Set_Clock (BSP.RTC_Descriptor, TM);
