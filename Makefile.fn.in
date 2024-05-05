@@ -112,7 +112,7 @@ endif
 ifeq ($(OSTYPE),cmd)
 update-timestamp = $(UPDATETM) $1
 else
-update-timestamp = $(TOUCH) $1
+update-timestamp = touch $1
 endif
 
 #
@@ -126,7 +126,7 @@ endif
 ifeq ($(OSTYPE),cmd)
 update-timestamp-reffile = $(UPDATETM) -r $1 $2
 else
-update-timestamp-reffile = $(TOUCH) -r $1 $2
+update-timestamp-reffile = touch -r $1 $2
 endif
 
 #
@@ -147,5 +147,19 @@ ifeq ($(OSTYPE),cmd)
 remove-basename = $(eval $1 := $(shell $(ECHO) $($1)| $(SED) -e "s|[^ ]*$2||"))
 else
 remove-basename = $(eval $1 := $(shell $(ECHO) "$($1)" | $(SED) -e "s|[^ ]*$2||"))
+endif
+
+#
+# remove-nulfile
+#
+# Usage:
+# $(call remove-nulfile)
+#
+# Remove the spurios "nul" file in a cmd/msys environment.
+#
+ifeq      ($(OSTYPE),cmd)
+remove-nulfile = -@RENAME \\.\"$(shell cd)"\nul. deletefile.tmp 2> nul
+else ifeq ($(OSTYPE),msys)
+remove-nulfile = -@cmd.exe /C "RENAME \\\\.\\\"$$(cygpath.exe -w "$$(pwd)")\"\\nul. deletefile.tmp" 2> /dev/null
 endif
 

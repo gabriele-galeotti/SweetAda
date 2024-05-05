@@ -287,7 +287,6 @@ MKDIR := MKDIR
 MV    := MOVE /Y 1> nul
 RM    := DEL /F /Q 2> nul
 RMDIR := RMDIR /Q /S 2> nul
-TOUCH := TYPE nul >
 else
 # POSIX
 CAT   := cat
@@ -298,7 +297,6 @@ MKDIR := mkdir -p
 MV    := mv -f
 RM    := rm -f
 RMDIR := $(RM) -r
-TOUCH := touch
 endif
 ifeq ($(OSTYPE),msys)
 CP += --preserve=all
@@ -319,7 +317,7 @@ endif
 GNUMAKEFLAGS += --no-print-directory
 endif
 
-export CAT CD CP LS MKDIR MV RM RMDIR TOUCH
+export CAT CD CP LS MKDIR MV RM RMDIR
 
 ################################################################################
 #                                                                              #
@@ -1204,7 +1202,7 @@ createkernelcfg:
 	$(MAKE) distclean
 ifneq ($(PLATFORM),)
 	@$(RM) $(KERNEL_CFGFILE)
-	@$(TOUCH) $(KERNEL_CFGFILE)
+	@$(call echo-print,"")> $(KERNEL_CFGFILE)
 	@$(call echo-print,"PLATFORM := $(PLATFORM)")>> $(KERNEL_CFGFILE)
 ifneq ($(SUBPLATFORM),)
 	@$(call echo-print,"SUBPLATFORM := $(SUBPLATFORM)")>> $(KERNEL_CFGFILE)
@@ -1239,7 +1237,7 @@ endif
 ./$(DOTSWEETADA): $(DOTSWEETADA_DEPS)
 	$(MAKE) clean
 	$(configure-subdirs-command)
-	$(TOUCH) $@
+	$(call update-timestamp,$@)
 
 .PHONY: configure-gnatadc
 configure-gnatadc: $(GNATADC_FILENAME)
@@ -1295,7 +1293,7 @@ configure-aux: $(CONFIGURE_AUX_DEPS)
 
 .PHONY: configure
 configure: clean configure-delete configure-aux infodump
-	$(TOUCH) $(DOTSWEETADA)
+	$(call update-timestamp,$(DOTSWEETADA))
 
 .PHONY: infodump
 infodump:
@@ -1463,9 +1461,9 @@ endif
 .PHONY: clean
 clean:
 ifeq      ($(OSTYPE),cmd)
-	-@RENAME \\.\"$(shell cd)"\nul. deletefile.tmp 2> nul
+	$(call remove-nulfile)
 else ifeq ($(OSTYPE),msys)
-	-@cmd.exe /C "RENAME \\\\.\\\"$$(cygpath.exe -w "$$(pwd)")\"\\nul. deletefile.tmp" 2> /dev/null
+	$(call remove-nulfile)
 endif
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean
