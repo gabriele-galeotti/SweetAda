@@ -65,11 +65,11 @@ if ([string]::IsNullOrEmpty($input_filename))
   ExitWithCode 1
 }
 
-$file = Get-ChildItem -Hidden -Path $input_filename
+$file = Get-ChildItem -Force -Path $input_filename
 if ($reffile)
 {
   $file.LastWriteTime = `
-    (Get-ChildItem -Hidden -Path $reffile_filename | Select LastWriteTime | Get-Date)
+    (Get-ChildItem -Force -Path $reffile_filename | Select LastWriteTime | Get-Date)
 }
 else
 {

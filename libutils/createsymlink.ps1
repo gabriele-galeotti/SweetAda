@@ -234,7 +234,7 @@ while ($fileindex -lt $args.length)
   else
   {
     $link_directory = $args[$fileindex + 1]
-    $files = (Get-ChildItem -Hidden -File $target).Name
+    $files = (Get-ChildItem -Force -File $target).Name
     foreach ($f in $files)
     {
       Remove-Item                                             `
