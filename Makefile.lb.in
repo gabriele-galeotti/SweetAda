@@ -233,11 +233,11 @@ ifeq ($(OBJECTS)$(GPRBUILD_ENABLE_$(LIBRARY_NAME)),)
 $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a:
 ifeq ($(OSTYPE),cmd)
 	$(call brief-command,\
-        $(TOUCH) $(LIB_DIRECTORY_CMD)\lib$(LIBRARY_NAME).a \
+        $(call create-emptyfile,$(LIB_DIRECTORY_CMD)\lib$(LIBRARY_NAME).a) \
         ,[NULL],$(notdir $@))
 else
 	$(call brief-command,\
-        $(TOUCH) $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a \
+        $(call create-emptyfile,$(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a) \
         ,[NULL],$(notdir $@))
 endif
 

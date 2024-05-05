@@ -1202,8 +1202,7 @@ createkernelcfg:
 	$(MAKE) distclean
 ifneq ($(PLATFORM),)
 	@$(RM) $(KERNEL_CFGFILE)
-	@$(call echo-print,"")> $(KERNEL_CFGFILE)
-	@$(call echo-print,"PLATFORM := $(PLATFORM)")>> $(KERNEL_CFGFILE)
+	@$(call echo-print,"PLATFORM := $(PLATFORM)")> $(KERNEL_CFGFILE)
 ifneq ($(SUBPLATFORM),)
 	@$(call echo-print,"SUBPLATFORM := $(SUBPLATFORM)")>> $(KERNEL_CFGFILE)
 endif

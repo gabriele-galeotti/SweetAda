@@ -112,7 +112,7 @@ endif
 ifeq ($(OSTYPE),cmd)
 update-timestamp = $(UPDATETM) $1
 else
-update-timestamp = touch $1
+update-timestamp = touch -c $1
 endif
 
 #
@@ -127,6 +127,20 @@ ifeq ($(OSTYPE),cmd)
 update-timestamp-reffile = $(UPDATETM) -r $1 $2
 else
 update-timestamp-reffile = touch -r $1 $2
+endif
+
+#
+# create-emptyfile
+#
+# Usage:
+# $(call create-emptyfile,filename)
+#
+# Create an empty file.
+#
+ifeq ($(OSTYPE),cmd)
+create-emptyfile = TYPE nul > $1
+else
+create-emptyfile = touch $1
 endif
 
 #
