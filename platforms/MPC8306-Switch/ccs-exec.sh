@@ -45,13 +45,13 @@ while true ; do
   if   [ "${_exit_status}" -eq 0 ] ; then
     break
   elif [ "${_exit_status}" -eq 2 ] ; then
-    printf "%s\n" "$3: command error."
+    printf "%s\n" "$3: command error." 1>&2
     return 1
   fi
   _time_current=$(date +%s)
   if [ $((_time_current-_time_start)) -gt $2 ] ; then
     if [ "x$3" != "x" ] ; then
-      printf "%s\n" "$3: timeout waiting for port $1."
+      printf "%s\n" "$3: timeout waiting for port $1." 1>&2
     fi
     return 1
   fi
