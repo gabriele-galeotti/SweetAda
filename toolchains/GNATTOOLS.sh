@@ -80,6 +80,7 @@ LOG_DIRECTORY=$(pwd)
 #TARGET=arm-eabi
 #TARGET=armeb-eabi
 #TARGET=avr-elf
+#TARGET=i686-elf
 #TARGET=m68k-elf
 #TARGET=mips-elf
 #TARGET=mips64-elf
@@ -96,7 +97,6 @@ LOG_DIRECTORY=$(pwd)
 #TARGET=sh4le-elf
 #TARGET=s390-linux
 #TARGET=s390x-linux
-#TARGET=i686-elf
 #TARGET=x86_64-elf
 
 #phase_patchgnat="Y"
