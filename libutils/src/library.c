@@ -497,15 +497,12 @@ file_length(const char *filename)
 const char *
 file_basename_simple(const char *path)
 {
-        const char *msys;
-        size_t      idx;
+        size_t idx;
 
         if (path == NULL)
         {
                 return NULL;
         }
-
-        msys = env_get("MSYSTEM");
 
         idx = STRING_LENGTH(path);
         while (idx > 0)
@@ -518,7 +515,7 @@ file_basename_simple(const char *path)
                 }
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
-                if (msys != NULL && c == PATH_SEPARATOR_UNIX)
+                if (c == PATH_SEPARATOR_UNIX)
                 {
                         break;
                 }
@@ -531,9 +528,6 @@ file_basename_simple(const char *path)
 #endif
                 --idx;
         }
-
-        lib_free((void *)msys);
-        msys = NULL;
 
         return &path[idx];
 }
