@@ -279,7 +279,6 @@ include Makefile.fn.in
 
 # define every other OS command
 ifeq ($(OSTYPE),cmd)
-CAT   := TYPE
 CD    := CD
 CP    := COPY /B /Y 1> nul
 LS    := DIR /B
@@ -289,7 +288,6 @@ RM    := DEL /F /Q 2> nul
 RMDIR := RMDIR /Q /S 2> nul
 else
 # POSIX
-CAT   := cat
 CD    := cd
 CP    := cp -f
 LS    := ls -A
@@ -317,7 +315,7 @@ endif
 GNUMAKEFLAGS += --no-print-directory
 endif
 
-export CAT CD CP LS MKDIR MV RM RMDIR
+export CD CP LS MKDIR MV RM RMDIR
 
 ################################################################################
 #                                                                              #
