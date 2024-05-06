@@ -60,7 +60,7 @@ SET TILTIMEOUT=3
 
 REM QEMU machine
 START "" "%QEMU_EXECUTABLE%" ^
-  -M mipssim -m 16 ^
+  -M mipssim -cpu %QEMU_CPU% -m 16 ^
   -bios %KERNEL_ROMFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
