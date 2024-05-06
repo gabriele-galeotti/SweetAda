@@ -158,6 +158,8 @@ package RISCV
 
    procedure NOP
       with Inline => True;
+   procedure FENCE
+      with Inline => True;
    procedure Asm_Call
       (Target_Address : in Address)
       with Inline => True;

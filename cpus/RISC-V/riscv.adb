@@ -158,6 +158,23 @@ pragma Style_Checks (On);
    end NOP;
 
    ----------------------------------------------------------------------------
+   -- FENCE
+   ----------------------------------------------------------------------------
+   procedure FENCE
+      is
+   begin
+      Asm (
+           Template => ""              & CRLF &
+                       "        fence" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end FENCE;
+
+   ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
    procedure Asm_Call
