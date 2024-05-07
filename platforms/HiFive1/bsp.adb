@@ -21,6 +21,7 @@ with RISCV;
 with MTIME;
 with HiFive1;
 with Exceptions;
+with QSPI;
 with Console;
 
 package body BSP
@@ -150,6 +151,8 @@ package body BSP
       mtimecmp_Write (Timer_Value);
       mie_Set_Interrupt ((MTIE => True, others => <>));
       Irq_Enable;
+      -------------------------------------------------------------------------
+      QSPI.Init;
       -------------------------------------------------------------------------
    end Setup;
 

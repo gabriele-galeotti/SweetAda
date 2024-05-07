@@ -61,9 +61,9 @@ package body Exceptions
       mcause := mcause_Read;
       if mcause.Interrupt then
          BSP.Tick_Count := @ + 1;
-         if BSP.Tick_Count mod 1_000 = 0 then
-            Console.Print ("T", NL => False);
-         end if;
+         -- if BSP.Tick_Count mod 1_000 = 0 then
+         --    Console.Print ("T", NL => False);
+         -- end if;
          BSP.Timer_Value := @ + BSP.Timer_Constant;
          mtimecmp_Write (BSP.Timer_Value);
       else
