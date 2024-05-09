@@ -18,7 +18,6 @@
 with System;
 with System.Parameters;
 with System.Secondary_Stack;
-with System.Storage_Elements;
 with Interfaces.C;
 with Configure;
 with Definitions;
@@ -46,7 +45,6 @@ package body BSP
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -137,25 +135,34 @@ package body BSP
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- UARTs ----------------------------------------------------------------
-      UART_Descriptors (1).Base_Address  := To_Address (PC.UART1_BASEADDRESS);
-      UART_Descriptors (1).Scale_Address := 0;
-      UART_Descriptors (1).Baud_Clock    := CLK_UART1M8;
-      UART_Descriptors (1).Read_8        := IO_Read'Access;
-      UART_Descriptors (1).Write_8       := IO_Write'Access;
-      UART_Descriptors (1).Data_Queue    := ([others => 0], 0, 0, 0);
+      UART_Descriptors (1) :=
+         (
+          Uart_Model    => UART16x50.UART16450,
+          Base_Address  => System'To_Address (PC.UART1_BASEADDRESS),
+          Scale_Address => 0,
+          Baud_Clock    => CLK_UART1M8,
+          Flags         => (PC_UART => True),
+          Read_8        => IO_Read'Access,
+          Write_8       => IO_Write'Access,
+          Data_Queue    => ([others => 0], 0, 0, 0)
+         );
       UART16x50.Init (UART_Descriptors (1));
       UART16x50.Baud_Rate_Set (UART_Descriptors (1), Baud_Rate_Type'Enum_Rep (BR_19200));
-      UART_Descriptors (2).Base_Address  := To_Address (PC.UART2_BASEADDRESS);
-      UART_Descriptors (2).Scale_Address := 0;
-      UART_Descriptors (2).Baud_Clock    := CLK_UART1M8;
-      UART_Descriptors (2).Read_8        := IO_Read'Access;
-      UART_Descriptors (2).Write_8       := IO_Write'Access;
-      UART_Descriptors (2).Data_Queue    := ([others => 0], 0, 0, 0);
+      UART_Descriptors (2) :=
+         (
+          Uart_Model    => UART16x50.UART16450,
+          Base_Address  => System'To_Address (PC.UART2_BASEADDRESS),
+          Scale_Address => 0,
+          Baud_Clock    => CLK_UART1M8,
+          Flags         => (PC_UART => True),
+          Read_8        => IO_Read'Access,
+          Write_8       => IO_Write'Access,
+          Data_Queue    => ([others => 0], 0, 0, 0)
+         );
       UART16x50.Init (UART_Descriptors (2));
       UART16x50.Baud_Rate_Set (UART_Descriptors (2), Baud_Rate_Type'Enum_Rep (BR_19200));
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read := Console_Getchar'Access;
+      Console.Console_Descriptor := (Console_Putchar'Access, Console_Getchar'Access);
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -- CPU ------------------------------------------------------------------
       Console.Print ("PC-x86-64", NL => True);
