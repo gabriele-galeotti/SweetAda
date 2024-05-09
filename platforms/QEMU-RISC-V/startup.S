@@ -11,6 +11,7 @@
 #define __ASSEMBLER__ 1
 
 #include <configure.h>
+#include <riscv.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -62,8 +63,8 @@ _start:
                 la      t0,_sbss
                 la      t1,_ebss
                 ble     t1,t0,2f
-1:              sw      zero,(t0)
-                add     t0,t0,__SIZEOF_POINTER__
+1:              SAVEREG zero,(t0)
+                addi    t0,t0,__SIZEOF_POINTER__
                 blt     t0,t1,1b
 2:
 

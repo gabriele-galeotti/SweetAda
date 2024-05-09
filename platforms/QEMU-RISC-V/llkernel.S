@@ -10,15 +10,13 @@
 
 #define __ASSEMBLER__ 1
 
+#include <riscv.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #if   __riscv_xlen == 32
-# define SAVEREG sw
-# define LOADREG lw
 # define X2 1
 #elif __riscv_xlen == 64
-# define SAVEREG sd
-# define LOADREG ld
 # define X2 2
 #endif
 
