@@ -43,6 +43,14 @@ package RISCV
    subtype MXLEN_Type is RISCV_Definitions.MXLEN_Type;
 
    ----------------------------------------------------------------------------
+   -- 3.1.5 Hart ID Register mhartid
+   ----------------------------------------------------------------------------
+
+   function mhartid_Read
+      return MXLEN_Type
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
    -- 3.1.6 Machine Status Registers (mstatus and mstatush)
    ----------------------------------------------------------------------------
 

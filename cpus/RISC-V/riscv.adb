@@ -120,6 +120,9 @@ package body RISCV
 
 pragma Style_Checks (Off);
 
+   function mhartid_Read return MXLEN_Type
+      is function CSRR is new CSR_Read ("mhartid", MXLEN_Type); begin return CSRR; end mhartid_Read;
+
    function mstatus_Read return mstatus_Type
       is function CSRR is new CSR_Read ("mstatus", mstatus_Type); begin return CSRR; end mstatus_Read;
 
