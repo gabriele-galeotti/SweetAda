@@ -47,7 +47,7 @@ _start:
                 li      t1,BOOT_HART
                 csrr    t0,mhartid
                 beq     t0,t1,1f
-                j       hart_idle
+                j       hart_is_ap
 1:
 
                 //
@@ -76,9 +76,19 @@ _start:
 
 dead:           j       .
 
-hart_idle:
-                wfi
-                j       hart_idle
+hart_is_ap:
+                .extern ap_sp
+                .extern ap_pc
+                la      t1,ap_sp
+                la      t2,ap_pc
+                slli    t0,t0,XLEN_ORDER
+                add     t1,t1,t0
+                add     t2,t2,t0
+1:              LOADREG sp,(t1)
+                LOADREG t3,(t2)
+                beqz    sp,1b
+                beqz    t3,1b
+                jalr    (t3)
 
                 .size   _start,.-_start
 
