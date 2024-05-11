@@ -58,7 +58,7 @@ library project Cpu is
    end case;
 
    case Asm is
-      when "Y"    =>
+      when "Y" =>
          for Languages use project'Languages & ("Asm_Cpp");
          for Source_Files use project'Source_Files & Asm_Files;
       when others =>
@@ -66,7 +66,7 @@ library project Cpu is
    end case;
 
    case Ada is
-      when "Y"    =>
+      when "Y" =>
          for Languages use project'Languages & ("Ada");
          for Source_Files use project'Source_Files & Ada_Files;
       when others =>
