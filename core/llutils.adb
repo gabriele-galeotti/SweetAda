@@ -246,4 +246,21 @@ package body LLutils
       end if;
    end To_HexDigit;
 
+   ----------------------------------------------------------------------------
+   -- Atomic_Clear
+   ----------------------------------------------------------------------------
+   procedure Atomic_Clear
+      (Object : aliased in out Atomic_Type)
+      is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Atomic_Test_And_Set
+   ----------------------------------------------------------------------------
+   function Atomic_Test_And_Set
+      (Object : aliased in out Atomic_Type)
+      return Boolean
+      is
+   separate;
+
 end LLutils;

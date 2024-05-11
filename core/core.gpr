@@ -90,6 +90,8 @@ library project Core is
    LLutils_Files := (
                      "llutils.adb", "llutils.ads",
                      "llutils-address_displacement.adb",
+                     "llutils-atomic_clear.adb",
+                     "llutils-atomic_test_and_set.adb",
                      "llutils-be_to_cpue_16.adb",
                      "llutils-be_to_cpue_32.adb",
                      "llutils-be_to_cpue_64.adb",

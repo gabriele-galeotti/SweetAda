@@ -183,4 +183,25 @@ package LLutils
        LCase : in     Boolean;
        C     :    out Character);
 
+   ----------------------------------------------------------------------------
+   -- Synchronization primitives
+   ----------------------------------------------------------------------------
+
+   type Atomic_Type is new Interfaces.Unsigned_8;
+
+   ----------------------------------------------------------------------------
+   -- Atomic test and set
+   ----------------------------------------------------------------------------
+   function Atomic_Test_And_Set
+      (Object : aliased in out Atomic_Type)
+      return Boolean
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- Atomic clear
+   ----------------------------------------------------------------------------
+   procedure Atomic_Clear
+      (Object : aliased in out Atomic_Type)
+      with Inline => True;
+
 end LLutils;
