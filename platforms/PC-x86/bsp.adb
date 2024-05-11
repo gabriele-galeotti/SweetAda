@@ -195,8 +195,7 @@ package body BSP
          );
       UART16x50.Init (UART_Descriptors (2));
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (Console_Putchar'Access, Console_Getchar'Access);
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -- CPU ------------------------------------------------------------------
       Console.Print ("PC-x86", NL => True);
