@@ -19,6 +19,7 @@ library project Core is
 
    Kernel_Parent_Path := External ("KERNEL_PARENT_PATH", ".");
    Include_Directories := Split (External ("GPR_INCLUDES", ""), " ");
+   CPU_Files := Split (External ("GPR_CORE_CPU", ""), " ");
 
    -- shorthands
    Obj_Dir := Kernel_Parent_Path & "/" & Configure.Object_Directory;
@@ -71,6 +72,8 @@ library project Core is
 
    Definitions_Files := ("definitions.ads");
 
+   GCC_Defines_Files := ("gcc_defines.ads");
+
    Gnat_Exceptions_Files := ("gnat_exceptions.adb", "gnat_exceptions.ads");
 
    Integer_Math_Files := (
@@ -105,6 +108,50 @@ library project Core is
                      "llutils-select_address_bits.adb"
                     );
 
+   MMIO_Files := (
+                  "mmio.adb", "mmio.ads",
+                  "mmio-read_u16.adb",
+                  "mmio-read_u32.adb",
+                  "mmio-read_u64.adb",
+                  "mmio-read_u8.adb",
+                  "mmio-reada_u16.adb",
+                  "mmio-reada_u32.adb",
+                  "mmio-reada_u64.adb",
+                  "mmio-reada_u8.adb",
+                  "mmio-readas_u16.adb",
+                  "mmio-readas_u32.adb",
+                  "mmio-readas_u64.adb",
+                  "mmio-readas_u8.adb",
+                  "mmio-readn_u16.adb",
+                  "mmio-readn_u32.adb",
+                  "mmio-readn_u64.adb",
+                  "mmio-readn_u8.adb",
+                  "mmio-reads_u16.adb",
+                  "mmio-reads_u32.adb",
+                  "mmio-reads_u64.adb",
+                  "mmio-reads_u8.adb",
+                  "mmio-write_u16.adb",
+                  "mmio-write_u32.adb",
+                  "mmio-write_u64.adb",
+                  "mmio-write_u8.adb",
+                  "mmio-writea_u16.adb",
+                  "mmio-writea_u32.adb",
+                  "mmio-writea_u64.adb",
+                  "mmio-writea_u8.adb",
+                  "mmio-writeas_u16.adb",
+                  "mmio-writeas_u32.adb",
+                  "mmio-writeas_u64.adb",
+                  "mmio-writeas_u8.adb",
+                  "mmio-writen_u16.adb",
+                  "mmio-writen_u32.adb",
+                  "mmio-writen_u64.adb",
+                  "mmio-writen_u8.adb",
+                  "mmio-writes_u16.adb",
+                  "mmio-writes_u32.adb",
+                  "mmio-writes_u64.adb",
+                  "mmio-writes_u8.adb"
+                 );
+
    Malloc_Files := (
                     "malloc.adb", "malloc.ads",
                     "malloc-calloc.adb",
@@ -121,18 +168,24 @@ library project Core is
                               "memory_functions-ememset.adb"
                              );
 
+   Mutex_Files := ("mutex.adb", "mutex.ads");
+
    for Source_Files use
                         Abort_Library_Files       &
                         Bits_Files                &
+                        CPU_Files                 &
                         Console_Files             &
                         Core_Files                &
                         Definitions_Files         &
+                        GCC_Defines_Files         &
                         Gnat_Exceptions_Files     &
                         Integer_Math_Files        &
                         Last_Chance_Handler_Files &
                         LLutils_Files             &
+                        MMIO_Files                &
                         Malloc_Files              &
-                        Memory_Functions_Files;
+                        Memory_Functions_Files    &
+                        Mutex_Files;
 
    ----------------------------------------------------------------------------
    -- Naming

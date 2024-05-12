@@ -47,5 +47,6 @@ IMPLICIT_CORE_UNITS += abort_library       \
                        last_chance_handler \
                        llutils             \
                        malloc              \
-                       memory_functions
+                       memory_functions    \
+                       mutex
 
