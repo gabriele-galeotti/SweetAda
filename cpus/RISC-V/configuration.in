@@ -20,3 +20,8 @@ endif
 
 export MMIO_FUNCTIONS
 
+export GPR_CORE_CPU := cpu.ads               \
+                       riscv.adb             \
+                       riscv.ads             \
+                       riscv_definitions.ads
+
