@@ -11,6 +11,8 @@ with Console;
 with BSP;
 with Goldfish;
 with Time;
+with LLutils;
+with Mutex;
 
 package body Application
    is
@@ -46,6 +48,9 @@ package body Application
    SP2 : aliased array (0 .. 2**12 - 1) of MXLEN_Type;
    SP3 : aliased array (0 .. 2**12 - 1) of MXLEN_Type;
 
+   -- Console mutex
+   M : Mutex.Semaphore_Binary := Mutex.SEMAPHORE_UNLOCKED;
+
    procedure StartAP;
 
    --========================================================================--
@@ -61,20 +66,28 @@ package body Application
    ----------------------------------------------------------------------------
    procedure StartAP
       is
-      Delay_Count : constant := 100_000_000;
       HartID      : MXLEN_Type;
       C           : Character;
+      Delay_Count : Integer;
+      Count       : Unsigned_32;
    begin
       HartID := mhartid_Read;
       case HartID is
-         when 1      => C := '1';
-         when 2      => C := '2';
-         when 3      => C := '3';
-         when others => C := 'X';
+         when 1      => C := '1'; Delay_Count := 27_000_000;
+         when 2      => C := '2'; Delay_Count := 28_000_000;
+         when 3      => C := '3'; Delay_Count := 29_000_000;
+         when others => C := 'X'; Delay_Count := 30_000_000;
       end case;
+      Count := 0;
       loop
-         -- need a lock on the device, just use it for a demo
-         BSP.Console_Putchar (C);
+         Mutex.Acquire (M);
+         Console.Print ("Hart #");
+         Console.Print (C);
+         Console.Print (": ");
+         Console.Print (Count);
+         Console.Print_NewLine;
+         Mutex.Release (M);
+         Count := @ + 1;
          for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
       end loop;
    end StartAP;
@@ -106,6 +119,7 @@ package body Application
          begin
             loop
                Goldfish.Read_Clock (BSP.RTC_Descriptor, TM);
+               Mutex.Acquire (M);
                Console.Print (Time.Day_Of_Week (Time.NDay_Of_Week (TM.MDay, TM.Mon + 1, TM.Year + 1_900)));
                Console.Print (" ");
                Console.Print (Time.Month_Name (TM.Mon + 1));
@@ -120,6 +134,7 @@ package body Application
                Console.Print (":");
                Console.Print (TM.Sec);
                Console.Print_NewLine;
+               Mutex.Release (M);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
