@@ -65,8 +65,8 @@ package body MBR
             -- explicit assignment could cause misaligned access (e.g., MIPS)
             Memory_Functions.Cpymem (Block'Address + Offset, Partition'Address, PARTITION_ENTRY_SIZE);
             if BigEndian then
-               Partition.LBA_Start := Byte_Swap_32 (@);
-               Partition.LBA_Size  := Byte_Swap_32 (@);
+               Partition.LBA_Start := Byte_Swap (@);
+               Partition.LBA_Size  := Byte_Swap (@);
             end if;
          else
             Success := False;
