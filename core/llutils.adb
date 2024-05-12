@@ -250,7 +250,8 @@ package body LLutils
    -- Atomic_Clear
    ----------------------------------------------------------------------------
    procedure Atomic_Clear
-      (Object : aliased in out Atomic_Type)
+      (Object_Address : in System.Address;
+       Memory_Order   : in Integer)
       is
    separate;
 
@@ -258,7 +259,8 @@ package body LLutils
    -- Atomic_Test_And_Set
    ----------------------------------------------------------------------------
    function Atomic_Test_And_Set
-      (Object : aliased in out Atomic_Type)
+      (Object_Address : System.Address;
+       Memory_Order   : Integer)
       return Boolean
       is
    separate;

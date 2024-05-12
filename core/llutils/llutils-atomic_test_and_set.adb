@@ -15,20 +15,19 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with GCC_Defines;
-
 separate (LLutils)
 function Atomic_Test_And_Set
-   (Object : aliased in out Atomic_Type)
+   (Object_Address : System.Address;
+    Memory_Order   : Integer)
    return Boolean
    is
    function ATAS
-      (A : System.Address;
-       M : Integer)
+      (OA : System.Address;
+       MO : Integer)
       return Boolean
       with Import        => True,
            Convention    => Intrinsic,
            External_Name => "__atomic_test_and_set";
 begin
-   return ATAS (Object'Address, GCC_Defines.ATOMIC_SEQ_CST);
+   return ATAS (Object_Address, Memory_Order);
 end Atomic_Test_And_Set;

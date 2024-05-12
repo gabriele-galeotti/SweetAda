@@ -15,18 +15,17 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with GCC_Defines;
-
 separate (LLutils)
 procedure Atomic_Clear
-   (Object : aliased in out Atomic_Type)
+   (Object_Address : in System.Address;
+    Memory_Order   : in Integer)
    is
    procedure AC
-      (A : System.Address;
-       M : Integer)
+      (OA : in System.Address;
+       MO : in Integer)
       with Import        => True,
            Convention    => Intrinsic,
            External_Name => "__atomic_clear";
 begin
-   AC (Object'Address, GCC_Defines.ATOMIC_SEQ_CST);
+   AC (Object_Address, Memory_Order);
 end Atomic_Clear;

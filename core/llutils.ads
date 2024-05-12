@@ -187,21 +187,23 @@ package LLutils
    -- Synchronization primitives
    ----------------------------------------------------------------------------
 
-   type Atomic_Type is new Interfaces.Unsigned_8;
-
-   ----------------------------------------------------------------------------
-   -- Atomic test and set
-   ----------------------------------------------------------------------------
-   function Atomic_Test_And_Set
-      (Object : aliased in out Atomic_Type)
-      return Boolean
-      with Inline => True;
+   subtype Atomic_Type is Interfaces.Unsigned_8;
 
    ----------------------------------------------------------------------------
    -- Atomic clear
    ----------------------------------------------------------------------------
    procedure Atomic_Clear
-      (Object : aliased in out Atomic_Type)
-      with Inline => True;
+      (Object_Address : in System.Address;
+       Memory_Order   : in Integer)
+      with Inline_Always => True;
+
+   ----------------------------------------------------------------------------
+   -- Atomic test and set
+   ----------------------------------------------------------------------------
+   function Atomic_Test_And_Set
+      (Object_Address : System.Address;
+       Memory_Order   : Integer)
+      return Boolean
+      with Inline_Always => True;
 
 end LLutils;
