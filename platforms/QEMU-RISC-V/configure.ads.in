@@ -1,7 +1,11 @@
 
+with Definitions;
+
 package Configure
    with Pure => True
    is
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM  : constant String := "QEMU-RISC-V";
@@ -10,6 +14,6 @@ package Configure
 
    -- basic configuration parameters
    BOOT_HART      : constant := @BOOT_HART@;
-   TICK_FREQUENCY : constant := 1_000;
+   TICK_FREQUENCY : constant := 1 * kHz1;
 
 end Configure;
