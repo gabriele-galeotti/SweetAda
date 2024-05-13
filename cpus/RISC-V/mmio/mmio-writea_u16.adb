@@ -23,9 +23,9 @@ procedure WriteA_U16
     Value          : in Interfaces.Unsigned_16)
    is
    procedure Atomic_Store
-      (Ptr      : System.Address;
-       Val      : Interfaces.Unsigned_16;
-       Memorder : Integer)
+      (Object_Address : System.Address;
+       Data           : Interfaces.Unsigned_16;
+       Memory_Order   : Integer)
       with Import        => True,
            Convention    => Intrinsic,
            External_Name => "__atomic_store_2";

@@ -23,8 +23,8 @@ function ReadA_U32
    return Interfaces.Unsigned_32
    is
    function Atomic_Load
-      (Ptr      : System.Address;
-       Memorder : Integer)
+      (Object_Address : System.Address;
+       Memory_Order   : Integer)
       return Interfaces.Unsigned_32
       with Import        => True,
            Convention    => Intrinsic,

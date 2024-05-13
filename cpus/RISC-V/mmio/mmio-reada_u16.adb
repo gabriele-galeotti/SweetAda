@@ -23,8 +23,8 @@ function ReadA_U16
    return Interfaces.Unsigned_16
    is
    function Atomic_Load
-      (Ptr      : System.Address;
-       Memorder : Integer)
+      (Object_Address : System.Address;
+       Memory_Order   : Integer)
       return Interfaces.Unsigned_16
       with Import        => True,
            Convention    => Intrinsic,

@@ -23,8 +23,8 @@ function ReadA_U64
    return Interfaces.Unsigned_64
    is
    function Atomic_Load
-      (Ptr      : System.Address;
-       Memorder : Integer)
+      (Object_Address : System.Address;
+       Memory_Order   : Integer)
       return Interfaces.Unsigned_64
       with Import        => True,
            Convention    => Intrinsic,

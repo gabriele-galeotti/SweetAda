@@ -23,9 +23,9 @@ procedure WriteA_U8
     Value          : in Interfaces.Unsigned_8)
    is
    procedure Atomic_Store
-      (Ptr      : System.Address;
-       Val      : Interfaces.Unsigned_8;
-       Memorder : Integer)
+      (Object_Address : System.Address;
+       Data           : Interfaces.Unsigned_8;
+       Memory_Order   : Integer)
       with Import        => True,
            Convention    => Intrinsic,
            External_Name => "__atomic_store_1";

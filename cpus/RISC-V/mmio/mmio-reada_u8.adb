@@ -23,8 +23,8 @@ function ReadA_U8
    return Interfaces.Unsigned_8
    is
    function Atomic_Load
-      (Ptr      : System.Address;
-       Memorder : Integer)
+      (Object_Address : System.Address;
+       Memory_Order   : Integer)
       return Interfaces.Unsigned_8
       with Import        => True,
            Convention    => Intrinsic,
