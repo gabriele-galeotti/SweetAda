@@ -11,3 +11,6 @@ else ifeq ($(CPU_MODEL),i686)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/i686
 endif
 
+export GPR_CORE_CPU := cpu.ads         \
+                       x86.adb x86.ads
+
