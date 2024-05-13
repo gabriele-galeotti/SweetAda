@@ -123,13 +123,13 @@ if [ "x${INPUT_FILENAME}" = "x" ] ; then
   exit 1
 fi
 
-GPR_LIST=$(parse_recursive "${INPUT_FILENAME}")
+gprdeps=$(parse_recursive "${INPUT_FILENAME}")
 
 if [ "x${UNIQ_OUTPUT}" = "xY" ] ; then
-  GPR_LIST=$(printf "%s\n" "${GPR_LIST}" | tr " " "\n" | sort -u | tr "\n" " ")
+  gprdeps=$(printf "%s\n" "${gprdeps}" | tr " " "\n" | sort -u | tr "\n" " ")
 fi
 
-printf "%s\n" "${GPR_LIST}"
+printf "%s\n" "${gprdeps}"
 
 exit 0
 
