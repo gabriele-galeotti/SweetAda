@@ -3015,8 +3015,8 @@ package S5D9 is
       with Size                    => 16#38# * 8,
            Suppress_Initialization => True;
    for QSPI_Type use record
-      SFMCOM   at 16#10# range 0 .. 31;
-      SFMCMD   at 16#14# range 0 .. 31;
+      SFMCOM at 16#10# range 0 .. 31;
+      SFMCMD at 16#14# range 0 .. 31;
    end record;
 
    QSPI_ADDRESS : constant := 16#6400_0000#;
