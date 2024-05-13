@@ -194,14 +194,4 @@ package ARMv4
    procedure Fiq_Disable
       with Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   procedure Memory_Synchronization
-      with Inline        => True,
-           Export        => True,
-           Convention    => C,
-           External_Name => "__sync_synchronize";
-
 end ARMv4;

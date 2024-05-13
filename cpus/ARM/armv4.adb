@@ -191,21 +191,4 @@ package body ARMv4
           );
    end Fiq_Disable;
 
-   ----------------------------------------------------------------------------
-   -- Memory synchronization
-   ----------------------------------------------------------------------------
-   procedure Memory_Synchronization
-      is
-   begin
-      Asm (
-           Template => ""            & CRLF &
-                       "        nop" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "memory",
-           Volatile => True
-          );
-   end Memory_Synchronization;
-
 end ARMv4;

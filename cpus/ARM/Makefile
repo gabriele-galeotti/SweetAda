@@ -49,6 +49,8 @@ else
 LIBGCC_SOURCES :=
 endif
 
+OBJECTS += $(OBJ_DIRECTORY)/memory_barriers.o
+
 .PHONY: all
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
