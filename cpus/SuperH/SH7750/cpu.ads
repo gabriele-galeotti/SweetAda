@@ -34,21 +34,31 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames SH.NOP;
+   procedure NOP
+      renames SH.NOP;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames SH.Irq_Enable;
-   procedure Irq_Disable renames SH.Irq_Disable;
+   procedure Irq_Enable
+      renames SH.Irq_Enable;
+   procedure Irq_Disable
+      renames SH.Irq_Disable;
 
    ----------------------------------------------------------------------------
    -- Locking
    ----------------------------------------------------------------------------
 
-   procedure Lock_Try (Lock_Object : in out SH.Lock_Type; Success : out Boolean) renames SH.Lock_Try;
-   procedure Lock (Lock_Object : in out SH.Lock_Type)                            renames SH.Lock;
-   procedure Unlock (Lock_Object : out SH.Lock_Type)                             renames SH.Unlock;
+   procedure Lock_Try
+      (Lock_Object : in out SH.Lock_Type;
+       Success     :    out Boolean)
+      renames SH.Lock_Try;
+   procedure Lock
+      (Lock_Object : in out SH.Lock_Type)
+      renames SH.Lock;
+   procedure Unlock
+      (Lock_Object : out SH.Lock_Type)
+      renames SH.Unlock;
 
 end CPU;

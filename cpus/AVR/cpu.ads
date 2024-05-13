@@ -36,9 +36,12 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames AVR.NOP;
+   procedure NOP
+      renames AVR.NOP;
 
-   procedure Asm_Call (Target_Address : in Address) renames AVR.Asm_Call;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      renames AVR.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -46,7 +49,9 @@ package CPU
 
    subtype Intcontext_Type is AVR.Intcontext_Type;
 
-   procedure Irq_Enable  renames AVR.Irq_Enable;
-   procedure Irq_Disable renames AVR.Irq_Disable;
+   procedure Irq_Enable
+      renames AVR.Irq_Enable;
+   procedure Irq_Disable
+      renames AVR.Irq_Disable;
 
 end CPU;

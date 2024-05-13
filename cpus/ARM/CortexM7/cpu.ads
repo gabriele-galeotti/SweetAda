@@ -33,13 +33,16 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames ARMv7M.NOP;
+   procedure NOP
+      renames ARMv7M.NOP;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames ARMv7M.Irq_Enable;
-   procedure Irq_Disable renames ARMv7M.Irq_Disable;
+   procedure Irq_Enable
+      renames ARMv7M.Irq_Enable;
+   procedure Irq_Disable
+      renames ARMv7M.Irq_Disable;
 
 end CPU;

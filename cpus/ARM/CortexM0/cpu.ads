@@ -33,13 +33,16 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames ARMv6M.NOP;
+   procedure NOP
+      renames ARMv6M.NOP;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable  renames ARMv6M.Irq_Enable;
-   procedure Irq_Disable renames ARMv6M.Irq_Disable;
+   procedure Irq_Enable
+      renames ARMv6M.Irq_Enable;
+   procedure Irq_Disable
+      renames ARMv6M.Irq_Disable;
 
 end CPU;

@@ -45,11 +45,19 @@ package ARMv7M
 
    -- B1.4.1 The Arm core registers
 
-   function MSP_Read return Unsigned_32         renames ARMv6M.MSP_Read;
-   procedure MSP_Write (Value : in Unsigned_32) renames ARMv6M.MSP_Write;
+   function MSP_Read
+      return Unsigned_32
+      renames ARMv6M.MSP_Read;
+   procedure MSP_Write
+      (Value : in Unsigned_32)
+      renames ARMv6M.MSP_Write;
 
-   function PSP_Read return Unsigned_32         renames ARMv6M.PSP_Read;
-   procedure PSP_Write (Value : in Unsigned_32) renames ARMv6M.PSP_Write;
+   function PSP_Read
+      return Unsigned_32
+      renames ARMv6M.PSP_Read;
+   procedure PSP_Write
+      (Value : in Unsigned_32)
+      renames ARMv6M.PSP_Write;
 
    -- B1.4.2 The special-purpose Program Status Registers, xPSR
 
@@ -141,8 +149,12 @@ package ARMv7M
    -- B1.4.3 The special-purpose mask registers
 
    subtype PRIMASK_Type is ARMv6M.PRIMASK_Type;
-   function PRIMASK_Read return PRIMASK_Type         renames ARMv6M.PRIMASK_Read;
-   procedure PRIMASK_Write (Value : in PRIMASK_Type) renames ARMv6M.PRIMASK_Write;
+   function PRIMASK_Read
+      return PRIMASK_Type
+      renames ARMv6M.PRIMASK_Read;
+   procedure PRIMASK_Write
+      (Value : in PRIMASK_Type)
+      renames ARMv6M.PRIMASK_Write;
 
    type BASEPRI_Type is record
       BASEPRI  : Unsigned_8;   -- The base priority mask
@@ -240,7 +252,10 @@ package ARMv7M
 
    subtype CPUID_Type is ARMv6M.CPUID_Type;
    CPUID : CPUID_Type renames ARMv6M.CPUID;
-   function To_U32 (S : CPUID_Type) return Unsigned_32 renames ARMv6M.To_U32;
+   function To_U32
+      (S : CPUID_Type)
+      return Unsigned_32
+      renames ARMv6M.To_U32;
 
    -- B3.2.4 Interrupt Control and State Register, ICSR
 
@@ -754,15 +769,20 @@ package ARMv7M
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames ARMv6M.NOP;
+   procedure NOP
+      renames ARMv6M.NOP;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   procedure Irq_Enable        renames ARMv6M.Irq_Enable;
-   procedure Irq_Disable       renames ARMv6M.Irq_Disable;
-   procedure Fault_Irq_Enable  renames ARMv6M.Fault_Irq_Enable;
-   procedure Fault_Irq_Disable renames ARMv6M.Fault_Irq_Disable;
+   procedure Irq_Enable
+      renames ARMv6M.Irq_Enable;
+   procedure Irq_Disable
+      renames ARMv6M.Irq_Disable;
+   procedure Fault_Irq_Enable
+      renames ARMv6M.Fault_Irq_Enable;
+   procedure Fault_Irq_Disable
+      renames ARMv6M.Fault_Irq_Disable;
 
 end ARMv7M;

@@ -37,9 +37,12 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames MIPS.NOP;
+   procedure NOP
+      renames MIPS.NOP;
 
-   procedure Asm_Call (Target_Address : in Address) renames MIPS.Asm_Call;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      renames MIPS.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -48,10 +51,16 @@ package CPU
    subtype Intcontext_Type is R3000.Intcontext_Type;
    subtype Irq_Id_Type     is R3000.Irq_Id_Type;
 
-   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames R3000.Intcontext_Get;
-   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames R3000.Intcontext_Set;
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      renames R3000.Intcontext_Get;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      renames R3000.Intcontext_Set;
 
-   procedure Irq_Enable  renames R3000.Irq_Enable;
-   procedure Irq_Disable renames R3000.Irq_Disable;
+   procedure Irq_Enable
+      renames R3000.Irq_Enable;
+   procedure Irq_Disable
+      renames R3000.Irq_Disable;
 
 end CPU;

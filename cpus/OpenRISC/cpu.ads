@@ -33,7 +33,8 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames OpenRISC.NOP;
+   procedure NOP
+      renames OpenRISC.NOP;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -41,10 +42,16 @@ package CPU
 
    subtype Intcontext_Type is OpenRISC.Intcontext_Type;
 
-   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames OpenRISC.Intcontext_Get;
-   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames OpenRISC.Intcontext_Set;
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      renames OpenRISC.Intcontext_Get;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      renames OpenRISC.Intcontext_Set;
 
-   procedure Irq_Enable  renames OpenRISC.Irq_Enable;
-   procedure Irq_Disable renames OpenRISC.Irq_Disable;
+   procedure Irq_Enable
+      renames OpenRISC.Irq_Enable;
+   procedure Irq_Disable
+      renames OpenRISC.Irq_Disable;
 
 end CPU;

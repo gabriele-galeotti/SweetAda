@@ -36,9 +36,12 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames NiosII.NOP;
+   procedure NOP
+      renames NiosII.NOP;
 
-   procedure Asm_Call (Target_Address : in Address) renames NiosII.Asm_Call;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      renames NiosII.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -46,10 +49,16 @@ package CPU
 
    subtype Intcontext_Type is NiosII.Intcontext_Type;
 
-   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames NiosII.Intcontext_Get;
-   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames NiosII.Intcontext_Set;
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      renames NiosII.Intcontext_Get;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      renames NiosII.Intcontext_Set;
 
-   procedure Irq_Enable  renames NiosII.Irq_Enable;
-   procedure Irq_Disable renames NiosII.Irq_Disable;
+   procedure Irq_Enable
+      renames NiosII.Irq_Enable;
+   procedure Irq_Disable
+      renames NiosII.Irq_Disable;
 
 end CPU;

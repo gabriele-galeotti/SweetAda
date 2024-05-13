@@ -36,9 +36,12 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames SPARC.NOP;
+   procedure NOP
+      renames SPARC.NOP;
 
-   procedure Asm_Call (Target_Address : in Address) renames SPARC.Asm_Call;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      renames SPARC.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -46,10 +49,16 @@ package CPU
 
    subtype Intcontext_Type is SPARC.Intcontext_Type;
 
-   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames SPARC.Intcontext_Get;
-   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames SPARC.Intcontext_Set;
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      renames SPARC.Intcontext_Get;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      renames SPARC.Intcontext_Set;
 
-   procedure Irq_Enable  renames SPARC.Irq_Enable;
-   procedure Irq_Disable renames SPARC.Irq_Disable;
+   procedure Irq_Enable
+      renames SPARC.Irq_Enable;
+   procedure Irq_Disable
+      renames SPARC.Irq_Disable;
 
 end CPU;

@@ -36,9 +36,12 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames RISCV.NOP;
+   procedure NOP
+      renames RISCV.NOP;
 
-   procedure Asm_Call (Target_Address : in Address) renames RISCV.Asm_Call;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      renames RISCV.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -46,10 +49,16 @@ package CPU
 
    subtype Intcontext_Type is RISCV.Intcontext_Type;
 
-   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames RISCV.Intcontext_Get;
-   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames RISCV.Intcontext_Set;
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      renames RISCV.Intcontext_Get;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      renames RISCV.Intcontext_Set;
 
-   procedure Irq_Enable  renames RISCV.Irq_Enable;
-   procedure Irq_Disable renames RISCV.Irq_Disable;
+   procedure Irq_Enable
+      renames RISCV.Irq_Enable;
+   procedure Irq_Disable
+      renames RISCV.Irq_Disable;
 
 end CPU;

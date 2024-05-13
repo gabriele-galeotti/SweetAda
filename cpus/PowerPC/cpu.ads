@@ -33,7 +33,8 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames PowerPC.NOP;
+   procedure NOP
+      renames PowerPC.NOP;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -41,10 +42,16 @@ package CPU
 
    subtype Intcontext_Type is PowerPC.Intcontext_Type;
 
-   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames PowerPC.Intcontext_Get;
-   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames PowerPC.Intcontext_Set;
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      renames PowerPC.Intcontext_Get;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      renames PowerPC.Intcontext_Set;
 
-   procedure Irq_Enable  renames PowerPC.Irq_Enable;
-   procedure Irq_Disable renames PowerPC.Irq_Disable;
+   procedure Irq_Enable
+      renames PowerPC.Irq_Enable;
+   procedure Irq_Disable
+      renames PowerPC.Irq_Disable;
 
 end CPU;

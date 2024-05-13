@@ -34,8 +34,11 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames x86_64.NOP;
-   procedure Asm_Call (Target_Address : in System.Address) renames x86_64.Asm_Call;
+   procedure NOP
+      renames x86_64.NOP;
+   procedure Asm_Call
+      (Target_Address : in System.Address)
+      renames x86_64.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -44,10 +47,16 @@ package CPU
    subtype Intcontext_Type is x86_64.Intcontext_Type;
    subtype Irq_Id_Type     is x86_64.Exception_Id_Type;
 
-   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames x86_64.Intcontext_Get;
-   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames x86_64.Intcontext_Set;
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      renames x86_64.Intcontext_Get;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      renames x86_64.Intcontext_Set;
 
-   procedure Irq_Enable  renames x86_64.Irq_Enable;
-   procedure Irq_Disable renames x86_64.Irq_Disable;
+   procedure Irq_Enable
+      renames x86_64.Irq_Enable;
+   procedure Irq_Disable
+      renames x86_64.Irq_Disable;
 
 end CPU;

@@ -33,7 +33,8 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames MicroBlaze.NOP;
+   procedure NOP
+      renames MicroBlaze.NOP;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -41,10 +42,16 @@ package CPU
 
    subtype Intcontext_Type is MicroBlaze.Intcontext_Type;
 
-   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames MicroBlaze.Intcontext_Get;
-   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames MicroBlaze.Intcontext_Set;
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      renames MicroBlaze.Intcontext_Get;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      renames MicroBlaze.Intcontext_Set;
 
-   procedure Irq_Enable  renames MicroBlaze.Irq_Enable;
-   procedure Irq_Disable renames MicroBlaze.Irq_Disable;
+   procedure Irq_Enable
+      renames MicroBlaze.Irq_Enable;
+   procedure Irq_Disable
+      renames MicroBlaze.Irq_Disable;
 
 end CPU;

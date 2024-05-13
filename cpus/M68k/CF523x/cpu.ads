@@ -33,6 +33,7 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames CFv2.NOP;
+   procedure NOP
+      renames CFv2.NOP;
 
 end CPU;

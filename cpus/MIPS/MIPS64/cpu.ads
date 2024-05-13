@@ -37,9 +37,12 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames MIPS.NOP;
+   procedure NOP
+      renames MIPS.NOP;
 
-   procedure Asm_Call (Target_Address : in Address) renames MIPS.Asm_Call;
+   procedure Asm_Call
+      (Target_Address : in Address)
+      renames MIPS.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -48,11 +51,17 @@ package CPU
    subtype Intcontext_Type is MIPS32.Intcontext_Type;
    subtype Irq_Id_Type     is MIPS32.Irq_Id_Type;
 
-   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames MIPS32.Intcontext_Get;
-   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames MIPS32.Intcontext_Set;
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      renames MIPS32.Intcontext_Get;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      renames MIPS32.Intcontext_Set;
 
-   procedure Irq_Enable  renames MIPS32.Irq_Enable;
-   procedure Irq_Disable renames MIPS32.Irq_Disable;
+   procedure Irq_Enable
+      renames MIPS32.Irq_Enable;
+   procedure Irq_Disable
+      renames MIPS32.Irq_Disable;
 
    ----------------------------------------------------------------------------
    -- Locking
@@ -60,8 +69,15 @@ package CPU
 
    subtype Lock_Type is MIPS.Lock_Type;
 
-   procedure Lock_Try (Lock_Object : in out MIPS.Lock_Type; Success : out Boolean) renames MIPS32.Lock_Try;
-   procedure Lock (Lock_Object : in out MIPS.Lock_Type)                            renames MIPS32.Lock;
-   procedure Unlock (Lock_Object : out MIPS.Lock_Type)                             renames MIPS32.Unlock;
+   procedure Lock_Try
+      (Lock_Object : in out MIPS.Lock_Type;
+       Success     :    out Boolean)
+      renames MIPS32.Lock_Try;
+   procedure Lock
+      (Lock_Object : in out MIPS.Lock_Type)
+      renames MIPS32.Lock;
+   procedure Unlock
+      (Lock_Object : out MIPS.Lock_Type)
+      renames MIPS32.Unlock;
 
 end CPU;

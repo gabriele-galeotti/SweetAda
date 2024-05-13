@@ -33,7 +33,8 @@ package CPU
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP renames ARMv4.NOP;
+   procedure NOP
+      renames ARMv4.NOP;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -41,10 +42,16 @@ package CPU
 
    subtype Intcontext_Type is ARMv4.Intcontext_Type;
 
-   procedure Intcontext_Get (Intcontext : out Intcontext_Type) renames ARMv4.Intcontext_Get;
-   procedure Intcontext_Set (Intcontext : in Intcontext_Type)  renames ARMv4.Intcontext_Set;
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      renames ARMv4.Intcontext_Get;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      renames ARMv4.Intcontext_Set;
 
-   procedure Irq_Enable  renames ARMv4.Irq_Enable;
-   procedure Irq_Disable renames ARMv4.Irq_Disable;
+   procedure Irq_Enable
+      renames ARMv4.Irq_Enable;
+   procedure Irq_Disable
+      renames ARMv4.Irq_Disable;
 
 end CPU;
