@@ -80,7 +80,7 @@ library project Cpu is
    end case;
 
    case Ada is
-      when "Y"    =>
+      when "Y" =>
          for Languages use project'Languages & ("Ada");
          for Source_Files use project'Source_Files & Ada_Files;
       when others =>

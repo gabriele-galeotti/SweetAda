@@ -1026,10 +1026,10 @@ package RPI3
       Size      => 32;
    for CS_Type use
    record
-      M0       at 0 range 0 .. 0;
-      M1       at 0 range 1 .. 1;
-      M2       at 0 range 2 .. 2;
-      M3       at 0 range 3 .. 3;
+      M0       at 0 range 0 ..  0;
+      M1       at 0 range 1 ..  1;
+      M2       at 0 range 2 ..  2;
+      M3       at 0 range 3 ..  3;
       Reserved at 0 range 4 .. 31;
    end record;
 

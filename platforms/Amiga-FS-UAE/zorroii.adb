@@ -78,7 +78,10 @@ package body ZorroII
    begin
       PIC.Board           := Byte_Read (16#00#);
       PIC.ID_Product      := Byte_Read (16#04#);
-      PIC.ID_Manufacturer := Bits.Make_Word (Byte_Read (16#10#), Byte_Read (16#14#));
+      PIC.ID_Manufacturer := Bits.Make_Word (
+                                Byte_Read (16#10#),
+                                Byte_Read (16#14#)
+                                );
       PIC.Serial_Number   := Bits.Make_Word (
                                 Byte_Read (16#18#),
                                 Byte_Read (16#1C#),
