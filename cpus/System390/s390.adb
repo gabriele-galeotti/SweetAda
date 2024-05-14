@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu.adb                                                                                                   --
+-- __FLN__ s390.adb                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -18,7 +18,7 @@
 with System.Machine_Code;
 with Definitions;
 
-package body CPU
+package body S390
    is
 
    --========================================================================--
@@ -120,4 +120,4 @@ package body CPU
       Lock_Object.Lock := LOCK_UNLOCK;
    end Unlock;
 
-end CPU;
+end S390;

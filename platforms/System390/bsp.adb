@@ -16,11 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with System.Machine_Code;
 with System.Storage_Elements;
 with Definitions;
 with Bits;
 with Malloc;
-with S390;
 
 package body BSP
    is
@@ -34,15 +34,18 @@ package body BSP
    --========================================================================--
 
    use System;
+   use System.Machine_Code;
    use System.Storage_Elements;
+   use Interfaces;
    use Definitions;
    use Bits;
-   use S390;
 
    -- Malloc memory area
    Heap : aliased Storage_Array (0 .. kB64 - 1)
       with Alignment               => 16#1000#,
            Suppress_Initialization => True; -- pragma Initialize_Scalars
+
+   procedure Tclk_Init;
 
    --========================================================================--
    --                                                                        --
@@ -51,6 +54,29 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Tclk_Init
+   ----------------------------------------------------------------------------
+   -- TOD clock
+   ----------------------------------------------------------------------------
+   procedure Tclk_Init
+      is
+      init_timer_cc : Unsigned_64;
+      cc            : Unsigned_32;
+   begin
+      Asm (
+           Template => ""                      & CRLF &
+                       "        stck    %1   " & CRLF &
+                       "        ipm     %0   " & CRLF &
+                       "        srl     %0,28" & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=r", cc),
+           Inputs   => Unsigned_64'Asm_Input ("m", init_timer_cc),
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end Tclk_Init;
 
    ----------------------------------------------------------------------------
    -- Setup

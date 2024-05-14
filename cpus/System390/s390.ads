@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ s390.adb                                                                                                  --
+-- __FLN__ s390.ads                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,57 +16,71 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Machine_Code;
-with System.Storage_Elements;
-with Interfaces;
-with Definitions;
 with Bits;
-with EBCDIC;
 
-package body S390
+package S390
+   with Preelaborate => True
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use System.Machine_Code;
-   use Interfaces;
-   use Definitions;
+   use System;
+   use Bits;
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
+   type PSWT is record
+      Reserved1   : Bits_32;
+      Reserved2   : Bits_1;
+      New_Address : Bits_31;
+   end record
+      with Alignment => 8,
+           Bit_Order => High_Order_First,
+           Size      => 64;
+   for PSWT use record
+      Reserved1   at 0 range  0 .. 31;
+      Reserved2   at 0 range 32 .. 32;
+      New_Address at 0 range 33 .. 63;
+   end record;
 
    ----------------------------------------------------------------------------
-   -- Tclk_Init
+   -- CPU helper subprograms
    ----------------------------------------------------------------------------
-   -- TOD clock
+
+   procedure NOP
+      with Inline => True;
+
    ----------------------------------------------------------------------------
-   procedure Tclk_Init
-      is
-      init_timer_cc : Unsigned_64;
-      cc            : Unsigned_32;
-   begin
-      Asm (
-           Template => ""                      & CRLF &
-                       "        stck    %1   " & CRLF &
-                       "        ipm     %0   " & CRLF &
-                       "        srl     %0,28" & CRLF &
-                       "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", cc),
-           Inputs   => Unsigned_64'Asm_Input ("m", init_timer_cc),
-           Clobber  => "memory",
-           Volatile => True
-          );
-   end Tclk_Init;
+   -- Exceptions and interrupts
+   ----------------------------------------------------------------------------
+
+   subtype Intcontext_Type is Integer;
+
+   procedure Irq_Enable;
+   procedure Irq_Disable;
+
+   ----------------------------------------------------------------------------
+   -- Locking
+   ----------------------------------------------------------------------------
+
+   LOCK_UNLOCK : constant CPU_Unsigned := 0;
+   LOCK_LOCK   : constant CPU_Unsigned := 1;
+
+   type Lock_Type is record
+      Lock : aliased CPU_Unsigned := LOCK_UNLOCK with Atomic => True;
+   end record
+      with Size => CPU_Unsigned'Size;
+
+   procedure Lock_Try
+      (Lock_Object : in out Lock_Type;
+       Success     :    out Boolean);
+   procedure Lock
+      (Lock_Object : in out Lock_Type);
+   procedure Unlock
+      (Lock_Object : out Lock_Type);
 
 end S390;
