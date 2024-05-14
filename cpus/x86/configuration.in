@@ -9,8 +9,11 @@ else ifeq ($(CPU_MODEL),i586)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/i586
 else ifeq ($(CPU_MODEL),i686)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/i686
+else
+  $(error Error: $(CPU_MODEL): no CPU model supported)
 endif
 
-export GPR_CORE_CPU := cpu.ads         \
-                       x86.adb x86.ads
+GPR_CORE_CPU := cpu.ads         \
+                x86.adb x86.ads
+export GPR_CORE_CPU
 

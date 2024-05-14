@@ -4,3 +4,8 @@ TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_SPARC)
 # override core MMIO
 CPU_INCLUDE_DIRECTORIES := $(CPU_DIRECTORY)/mmio
 
+GPR_CORE_CPU := cpu.ads                   \
+                sparc.adb sparc.ads       \
+                cpu-mmio.adb cpu-mmio.ads
+export GPR_CORE_CPU
+

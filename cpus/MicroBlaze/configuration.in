@@ -1,3 +1,7 @@
 
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_MicroBlaze)
 
+GPR_CORE_CPU := cpu.ads                       \
+                microblaze.adb microblaze.ads
+export GPR_CORE_CPU
+

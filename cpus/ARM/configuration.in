@@ -9,27 +9,43 @@ ifeq      ($(or                                 \
   $(if $(findstring ARM7TDMI,$(CPU_MODEL)),Y,)  \
   ),Y)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/ARMv4
+  GPR_CORE_CPU := armv4.adb armv4.ads
 else ifeq ($(or                                   \
   $(if $(findstring ARMv5,     $(CPU_MODEL)),Y,), \
   $(if $(findstring ARM926EJ-S,$(CPU_MODEL)),Y,)  \
   ),Y)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/ARMv5
+  GPR_CORE_CPU := armv4.adb armv4.ads \
+                  armv5te.ads
 else ifeq ($(CPU_MODEL),CORTEXA7)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexA7
+  GPR_CORE_CPU := armv7a.adb armv7a.ads
 else ifeq ($(CPU_MODEL),CORTEXA9)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexA9
+  GPR_CORE_CPU := armv7a.adb armv7a.ads
 else ifeq ($(CPU_MODEL),CORTEXM0)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM0
+  GPR_CORE_CPU := armv6m.adb armv6m.ads
 else ifeq ($(CPU_MODEL),CORTEXM3)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM3
+  GPR_CORE_CPU := armv6m.adb armv6m.ads \
+                  armv7m.adb armv7m.ads
 else ifeq ($(CPU_MODEL),CORTEXM4)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM4
+  GPR_CORE_CPU := armv6m.adb armv6m.ads \
+                  armv7m.adb armv7m.ads
 else ifeq ($(CPU_MODEL),CORTEXM7)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM7
+  GPR_CORE_CPU := armv6m.adb armv6m.ads \
+                  armv7m.adb armv7m.ads
 else
   $(error Error: $(CPU_MODEL): no CPU model supported)
 endif
 
 # override core MMIO
 CPU_INCLUDE_DIRECTORIES += $(CPU_DIRECTORY)/mmio
+
+GPR_CORE_CPU += cpu.ads                   \
+                cpu-mmio.adb cpu-mmio.ads
+export GPR_CORE_CPU
 

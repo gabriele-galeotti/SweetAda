@@ -7,6 +7,8 @@ else ifeq ($(findstring RV64,$(CPU_MODEL)),RV64)
   RISCV               := RV64
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_RISCV64)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/64
+else
+  $(error Error: $(CPU_MODEL): no CPU model supported)
 endif
 
 export RISCV
@@ -17,11 +19,11 @@ MMIO_FUNCTIONS := mmio-reada_u8.adb  mmio-writea_u8.adb  \
 ifeq ($(RISCV),RV64)
   MMIO_FUNCTIONS += mmio-reada_u64.adb mmio-writea_u64.adb
 endif
-
 export MMIO_FUNCTIONS
 
-export GPR_CORE_CPU := cpu.ads               \
-                       riscv.adb             \
-                       riscv.ads             \
-                       riscv_definitions.ads
+GPR_CORE_CPU := cpu.ads               \
+                riscv.adb             \
+                riscv.ads             \
+                riscv_definitions.ads
+export GPR_CORE_CPU
 

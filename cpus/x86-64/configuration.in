@@ -3,3 +3,7 @@ TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_x86_64)
 
 INCLUDE_DIRECTORIES += $(CPU_BASE_DIRECTORY)/x86
 
+GPR_CORE_CPU := cpu.ads               \
+                x86_64.adb x86_64.ads
+export GPR_CORE_CPU
+

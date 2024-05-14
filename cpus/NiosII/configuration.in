@@ -1,3 +1,7 @@
 
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_NiosII)
 
+GPR_CORE_CPU := cpu.ads               \
+                niosii.adb niosii.ads
+export GPR_CORE_CPU
+

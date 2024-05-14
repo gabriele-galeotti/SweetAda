@@ -3,19 +3,32 @@ TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_M68k)
 
 ifeq      ($(CPU_MODEL),M68010)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68010
+  GPR_CORE_CPU := m68k.adb m68k.ads
 else ifeq ($(CPU_MODEL),M68020)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68020
+  GPR_CORE_CPU := m68k.adb m68k.ads
 else ifeq ($(CPU_MODEL),M68030)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68030
+  GPR_CORE_CPU := m68k.adb m68k.ads
 else ifeq ($(CPU_MODEL),M68040)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68040
+  GPR_CORE_CPU += m68k.adb m68k.ads
 else ifeq ($(CPU_MODEL),CF5206)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CF5206
+  GPR_CORE_CPU += cfv2.adb cfv2.ads
 else ifeq ($(CPU_MODEL),CF5235)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CF523x
+  GPR_CORE_CPU += cfv2.adb cfv2.ads
 else ifeq ($(CPU_MODEL),CF5373)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CF5373
+  GPR_CORE_CPU += cfv2.adb cfv2.ads
 else ifeq ($(CPU_MODEL),CFv2)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CFv2
+  GPR_CORE_CPU += cfv2.adb cfv2.ads
+else
+  $(error Error: $(CPU_MODEL): no CPU model supported)
 endif
+
+GPR_CORE_CPU += cpu.ads
+export GPR_CORE_CPU
 

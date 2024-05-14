@@ -1,3 +1,7 @@
 
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_AArch64)
 
+GPR_CORE_CPU := cpu.ads               \
+                armv8a.adb armv8a.ads
+export GPR_CORE_CPU
+

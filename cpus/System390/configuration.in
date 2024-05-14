@@ -1,3 +1,7 @@
 
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_System390)
 
+GPR_CORE_CPU := cpu.ads           \
+                s390.adb s390.ads
+export GPR_CORE_CPU
+

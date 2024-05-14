@@ -6,22 +6,29 @@ ifeq      ($(or                               \
   ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/R3000
+  GPR_CORE_CPU := mips.adb mips.ads r3000.adb r3000.ads
 else ifeq ($(or                                  \
   $(if $(findstring MIPS32-24K,$(CPU_MODEL)),Y,) \
   ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MIPS32
+  GPR_CORE_CPU := mips.adb mips.ads mips32.adb mips32.ads
 else ifeq ($(or                                 \
   $(if $(findstring MIPS64-5K,$(CPU_MODEL)),Y,) \
   ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS64)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MIPS64
+  GPR_CORE_CPU := mips.adb mips.ads mips32.adb mips32.ads
 else ifeq ($(or                                  \
   $(if $(findstring MIPS64-20K,$(CPU_MODEL)),Y,) \
   ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS64)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MIPS64
+  GPR_CORE_CPU := mips.adb mips.ads mips32.adb mips32.ads
 else
-  TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS)
+  $(error Error: $(CPU_MODEL): no CPU model supported)
 endif
+
+GPR_CORE_CPU += cpu.ads
+export GPR_CORE_CPU
 
