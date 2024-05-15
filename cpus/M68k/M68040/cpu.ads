@@ -61,21 +61,4 @@ package CPU
    procedure Irq_Disable
       renames M68k.Irq_Disable;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   subtype Lock_Type is M68k.Lock_Type;
-
-   procedure Lock_Try
-      (Lock_Object : in out M68k.Lock_Type;
-       Success     :    out Boolean)
-      renames M68k.Lock_Try;
-   procedure Lock
-      (Lock_Object : in out M68k.Lock_Type)
-      renames M68k.Lock;
-   procedure Unlock
-      (Lock_Object : out M68k.Lock_Type)
-      renames M68k.Unlock;
-
 end CPU;

@@ -358,32 +358,4 @@ package body M68k
           );
    end Irq_Disable;
 
-   ----------------------------------------------------------------------------
-   -- Locking subprograms
-   ----------------------------------------------------------------------------
-
-   procedure Lock_Try
-      (Lock_Object : in out Lock_Type;
-       Success     :    out Boolean)
-      is
-   separate;
-
-   procedure Lock
-      (Lock_Object : in out Lock_Type)
-      is
-      Success : Boolean;
-   begin
-      loop
-         Lock_Try (Lock_Object, Success);
-         exit when Success;
-      end loop;
-   end Lock;
-
-   procedure Unlock
-      (Lock_Object : out Lock_Type)
-      is
-   begin
-      Lock_Object.Lock := LOCK_UNLOCK;
-   end Unlock;
-
 end M68k;
