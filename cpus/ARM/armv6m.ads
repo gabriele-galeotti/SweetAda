@@ -669,14 +669,4 @@ package ARMv6M
    procedure Fault_Irq_Disable
       with Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   procedure Memory_Synchronization
-      with Inline        => True,
-           Export        => True,
-           Convention    => C,
-           External_Name => "__sync_synchronize";
-
 end ARMv6M;

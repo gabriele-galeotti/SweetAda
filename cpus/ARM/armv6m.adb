@@ -459,13 +459,4 @@ package body ARMv6M
           );
    end Fault_Irq_Disable;
 
-   ----------------------------------------------------------------------------
-   -- Memory synchronization
-   ----------------------------------------------------------------------------
-   procedure Memory_Synchronization
-      is
-   begin
-      null;
-   end Memory_Synchronization;
-
 end ARMv6M;
