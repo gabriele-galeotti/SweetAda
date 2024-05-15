@@ -123,15 +123,6 @@ package body Application
          end;
       end if;
       -------------------------------------------------------------------------
-      if False then
-         declare
-            L       : Lock_Type;
-            Success : Boolean;
-         begin
-            Lock_Try (L, Success);
-         end;
-      end if;
-      -------------------------------------------------------------------------
       if True then
          declare
             -- TC1 : Unsigned_32 := BSP.Tick_Count;
