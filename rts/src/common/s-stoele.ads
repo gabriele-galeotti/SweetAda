@@ -92,7 +92,7 @@ package System.Storage_Elements is
 
    function "mod"
      (Left  : Address;
-      Right : Storage_Offset) return  Storage_Offset;
+      Right : Storage_Offset) return Storage_Offset;
    pragma Convention (Intrinsic, "mod");
    pragma Inline_Always ("mod");
    pragma Pure_Function ("mod");
