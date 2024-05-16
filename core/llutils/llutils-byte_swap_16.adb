@@ -21,7 +21,6 @@ procedure Byte_Swap_16
    is
    Object : aliased Bits.Byte_Array (0 .. 1)
       with Address    => Object_Address,
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    Value  : Interfaces.Unsigned_8;
