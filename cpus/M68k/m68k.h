@@ -17,12 +17,12 @@
 
 #define RESET_INITIAL_INTERRUPT_STACK_POINTER   0
 #define RESET_INITIAL_PROGRAM_COUNTER           1
-#define BUS_ERROR                               2
+#define ACCESS_FAULT                            2
 #define ADDRESS_ERROR                           3
 #define ILLEGAL_INSTRUCTION                     4
-#define ZERO_DIVIDE                             5
+#define INTEGER_DIVIDE_BY_ZERO                  5
 #define CHK_CHK2_INSTRUCTION                    6
-#define CPTRAPCC_TRAPCC_TRAPV_INSTRUCTIONS      7
+#define FTRAPcc_TRAPcc_TRAPV_INSTRUCTIONS       7
 #define PRIVILEGE_VIOLATION                     8
 #define TRACE                                   9
 #define LINE_1010_EMULATOR                      10
