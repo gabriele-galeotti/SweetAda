@@ -1,10 +1,10 @@
 
-                .extern buserr_handler
+                .extern accfault_handler
                 .extern addrerr_handler
                 .extern illinstr_handler
                 .extern div0_handler
                 .extern chkinstr_handler
-                .extern trapc_handler
+                .extern ftrapcc_handler
                 .extern privilegev_handler
                 .extern trace_handler
                 .extern line1010_handler
@@ -42,12 +42,12 @@ interrupt_vector_table:
 
 initialsp:      .long   INITIALSP               // 000 0x0000 -
 initialpc:      .long   INITIALPC               // 001 0x0004 -
-buserr:         .long   buserr_handler          // 002 0x0008 -
+accfault:       .long   accfault_handler        // 002 0x0008 -
 addrerr:        .long   addrerr_handler         // 003 0x000C -
 illinstr:       .long   illinstr_handler        // 004 0x0010 -
 div0:           .long   div0_handler            // 005 0x0014 -
 chkinstr:       .long   chkinstr_handler        // 006 0x0018 -
-trapc:          .long   trapc_handler           // 007 0x001C -
+ftrapcc:        .long   ftrapcc_handler         // 007 0x001C -
 privilegev:     .long   privilegev_handler      // 008 0x0020 -
 trace:          .long   trace_handler           // 009 0x0024 -
 line1010:       .long   line1010_handler        // 010 0x0028 -

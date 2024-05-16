@@ -42,12 +42,12 @@ switch_context:
 // Exception handlers.
 //
 
-                .global buserr_handler
+                .global accfault_handler
                 .global addrerr_handler
                 .global illinstr_handler
                 .global div0_handler
                 .global chkinstr_handler
-                .global trapc_handler
+                .global ftrapcc_handler
                 .global privilegev_handler
                 .global trace_handler
                 .global line1010_handler
@@ -84,8 +84,8 @@ switch_context:
 // Error handlers.
 //
 
-buserr_handler:
-                pea     BUS_ERROR
+accfault_handler:
+                pea     ACCESS_FAULT
                 jmp     exception_entry
 
 addrerr_handler:
@@ -97,15 +97,15 @@ illinstr_handler:
                 jmp     exception_entry
 
 div0_handler:
-                //pea     DIVISION_BY_ZERO
+                //pea     INTEGER_DIVIDE_BY_ZERO
                 jmp     exception_entry
 
 chkinstr_handler:
-                //pea     CHECK_INSTRUCTION
+                //pea     CHK_CHK2_INSTRUCTION
                 jmp     exception_entry
 
-trapc_handler:
-                //pea     TRAP_CONDITION
+ftrapcc_handler:
+                //pea     FTRAPcc_TRAPcc_TRAPV_INSTRUCTIONS
                 jmp     exception_entry
 
 privilegev_handler:
@@ -117,15 +117,15 @@ trace_handler:
                 jmp     exception_entry
 
 line1010_handler:
-                //pea     ALINE_EXCEPTION
+                //pea     LINE_1010_EMULATOR
                 jmp     exception_entry
 
 line1111_handler:
-                //pea     FLINE_EXCEPTION
+                //pea     LINE_1111_EMULATOR
                 jmp     exception_entry
 
 cprotocolv_handler:
-                //pea     CP_PROTOCOL
+                //pea     COPROCESSOR_PROTOCOL_VIOLATION
                 jmp     exception_entry
 
 formaterr_handler:
