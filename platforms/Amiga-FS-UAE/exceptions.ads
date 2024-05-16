@@ -48,8 +48,8 @@ package Exceptions
 
    -- 000 stack pointer
    -- 001 reset vector
-   Buserr_Handler                       : aliased Asm_Entry_Point -- 002
-      with Import => True, External_Name => "buserr_handler";
+   Accfault_Handler                     : aliased Asm_Entry_Point -- 002
+      with Import => True, External_Name => "accfault_handler";
    Addrerr_Handler                      : aliased Asm_Entry_Point -- 003
       with Import => True, External_Name => "addrerr_handler";
    Illinstr_Handler                     : aliased Asm_Entry_Point -- 004
@@ -58,8 +58,8 @@ package Exceptions
       with Import => True, External_Name => "div0_handler";
    Chkinstr_Handler                     : aliased Asm_Entry_Point -- 006
       with Import => True, External_Name => "chkinstr_handler";
-   Trapc_Handler                        : aliased Asm_Entry_Point -- 007
-      with Import => True, External_Name => "trapc_handler";
+   FTrapcc_Handler                      : aliased Asm_Entry_Point -- 007
+      with Import => True, External_Name => "ftrapcc_handler";
    PrivilegeV_Handler                   : aliased Asm_Entry_Point -- 008
       with Import => True, External_Name => "privilegev_handler";
    Trace_Handler                        : aliased Asm_Entry_Point -- 009

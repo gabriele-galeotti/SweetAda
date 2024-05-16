@@ -137,12 +137,12 @@ package body Exceptions
       end loop;
       -- IVT (Reset_Initial_Int_Stack_Pointer)
       -- IVT (Reset_Initial_Program_Counter)
-      IVT (Bus_Error)                          := Buserr_Handler'Address;
+      IVT (Access_Fault)                       := Accfault_Handler'Address;
       IVT (Address_Error)                      := Addrerr_Handler'Address;
       IVT (Illegal_Instruction)                := Illinstr_Handler'Address;
-      IVT (Zero_Divide)                        := Div0_Handler'Address;
+      IVT (Integer_Divide_By_Zero)             := Div0_Handler'Address;
       IVT (CHK_CHK2_Instruction)               := Chkinstr_Handler'Address;
-      IVT (CPTRAPcc_TRAPcc_TRAPV_Instructions) := Trapc_Handler'Address;
+      IVT (FTRAPcc_TRAPcc_TRAPV_Instructions)  := FTrapcc_Handler'Address;
       IVT (Privilege_Violation)                := PrivilegeV_Handler'Address;
       IVT (Trace)                              := Trace_Handler'Address;
       IVT (Line_1010_Emulator)                 := Line1010_Handler'Address;

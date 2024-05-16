@@ -26,9 +26,9 @@
                 //
 
                 .align  4
-                .global buserr_handler
-buserr_handler:
-                pea     BUS_ERROR
+                .global accfault_handler
+accfault_handler:
+                pea     ACCESS_FAULT
                 jmp     exception_entry
 
                 .align  4
@@ -46,7 +46,7 @@ illinstr_handler:
                 .align  4
                 .global div0_handler
 div0_handler:
-                pea     ZERO_DIVIDE
+                pea     INTEGER_DIVIDE_BY_ZERO
                 jmp     exception_entry
 
                 .align  4
@@ -56,9 +56,9 @@ chkinstr_handler:
                 jmp     exception_entry
 
                 .align  4
-                .global trapc_handler
-trapc_handler:
-                pea     CPTRAPCC_TRAPCC_TRAPV_INSTRUCTIONS
+                .global ftrapcc_handler
+ftrapcc_handler:
+                pea     FTRAPcc_TRAPcc_TRAPV_INSTRUCTIONS
                 jmp     exception_entry
 
                 .align  4

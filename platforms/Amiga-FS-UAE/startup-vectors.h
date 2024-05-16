@@ -6,8 +6,8 @@ interrupt_vector_table:
 initialsp:      .long   INITIALSP               // 000 0x0000 -
 
 initialpc:      .long   INITIALPC               // 001 0x0004 -
-                .extern buserr_handler
-buserr:         .long   buserr_handler          // 002 0x0008 -
+                .extern accfault_handler
+accfault:       .long   accfault_handler        // 002 0x0008 -
                 .extern addrerr_handler
 addrerr:        .long   addrerr_handler         // 003 0x000C -
                 .extern illinstr_handler
@@ -16,8 +16,8 @@ illinstr:       .long   illinstr_handler        // 004 0x0010 -
 div0:           .long   div0_handler            // 005 0x0014 -
                 .extern chkinstr_handler
 chkinstr:       .long   chkinstr_handler        // 006 0x0018 -
-                .extern trapc_handler
-trapc:          .long   trapc_handler           // 007 0x001C -
+                .extern ftrapcc_handler
+ftrapcc:        .long   ftrapcc_handler         // 007 0x001C -
                 .extern privilegev_handler
 privilegev:     .long   privilegev_handler      // 008 0x0020 -
                 .extern trace_handler
