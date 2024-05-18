@@ -103,69 +103,11 @@ package body uPD4991A
       Unused at 0 range 1 .. 7;
    end record;
 
-   -- register type for CD
-   type CD_Type is record
-      HOLD     : Boolean;     -- inhibits the 1Hz clock to the S1 counter
-      BUSY     : Boolean;     -- shows the interface condition with microcontroller/microprocessors.
-      IRQ_FLAG : Boolean;     -- indicates that an interrupt has occurred to the microcomputer if IRQ = 1.
-      ADJ30    : Boolean;     -- 30-second adjustment
-      Unused   : Bits_4 := 0;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
-   for CD_Type use record
-      HOLD     at 0 range 0 .. 0;
-      BUSY     at 0 range 1 .. 1;
-      IRQ_FLAG at 0 range 2 .. 2;
-      ADJ30    at 0 range 3 .. 3;
-      Unused   at 0 range 4 .. 7;
-   end record;
-
-   -- constants for CE
-   ITRPT_STND_STD : constant := 0; -- fixed cycle wave-form with a low-level pulse width of 7.8125ms ...
-   ITRPT_STND_INT : constant := 1; -- no fixed cycle
-   T_2      : constant := 2#00#; -- Duty CYCLE of "0" level when ITRPT/STND bit is "0".
-   T_128    : constant := 2#01#; -- ''
-   T_7680   : constant := 2#10#; -- ''
-   T_460800 : constant := 2#11#; -- ''
-
-   -- register type for CE
-   type CE_Type is record
-      MASK       : Boolean;     -- This bit controls the STD.P output.
-      ITRPT_STND : Bits_1;      -- used to switch the STD.P output between its two modes of operation
-      T          : Bits_2;      -- determine the period of the STD.P output in both interrupt and Fixed timing ...
-      Unused     : Bits_4 := 0;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
-   for CE_Type use record
-      MASK       at 0 range 0 .. 0;
-      ITRPT_STND at 0 range 1 .. 1;
-      T          at 0 range 2 .. 3;
-      Unused     at 0 range 4 .. 7;
-   end record;
-
-   -- constants for CF
-   HOUR_MODE_12 : constant := 0; -- 12 hour mode is selected and the PM/AM bit is valid.
-   HOUR_MODE_24 : constant := 1; -- 24 hour mode is selected and the PM/AM bit is invalid.
-
-   -- register type for CF
-   type CF_Type is record
-      REST      : Boolean;     -- used to clear the clock's internal divider/counter of less than a second.
-      STOP      : Boolean;     -- inhibits carries into the 8192Hz divider stage.
-      HOUR_MODE : Bits_1;      -- selection of 24/12 hour time modes.
-      TEST      : Boolean;     -- the input to the SECONDS counter comes from the counter/divider stage instead of ...
-      Unused    : Bits_4 := 0;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
-   for CF_Type use record
-      REST      at 0 range 0 .. 0;
-      STOP      at 0 range 1 .. 1;
-      HOUR_MODE at 0 range 2 .. 2;
-      TEST      at 0 range 3 .. 3;
-      Unused    at 0 range 4 .. 7;
-   end record;
+   MODE_BASIC1    : constant := 2#0000#; -- 0 * 0 0 BASIC TIME MODE
+   MODE_ALRMTP1   : constant := 2#0001#; -- 0 * 0 1 ALARM SET & TP1 CONTROL MODE
+   MODE_ALRMTP2   : constant := 2#0010#; -- 0 * 1 0 ALARM SET & TP2 CONTROL MODE
+   MODE_BASIC2    : constant := 2#0011#; -- 0 * 1 1 BASIC TIME MODE
+   MODE_INHIBITED : constant := 2#1000#; -- 1 * * * Inhibited
 
    -- Register_Read/Write
 
