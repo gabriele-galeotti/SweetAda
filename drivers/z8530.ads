@@ -54,8 +54,8 @@ package Z8530
       Flags          : Flags_Type;
       Read_8         : Port_Read_8_Ptr;
       Write_8        : Port_Write_8_Ptr;
-      Control_Port   : Control_Ports_Type;
-      Data_Port      : Data_Ports_Type;
+      Control_Port   : Control_Ports_Type := [Null_Address, Null_Address];
+      Data_Port      : Data_Ports_Type    := [Null_Address, Null_Address];
    end record;
 
    DESCRIPTOR_INVALID : constant Descriptor_Type :=
@@ -67,8 +67,7 @@ package Z8530
        Flags          => (others => False),
        Read_8         => null,
        Write_8        => null,
-       Control_Port   => [Null_Address, Null_Address],
-       Data_Port      => [Null_Address, Null_Address]
+       others         => <>
       );
 
    procedure Baud_Rate_Set
