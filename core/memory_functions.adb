@@ -31,7 +31,6 @@ package body Memory_Functions
    --========================================================================--
 
    use type System.Address;
-   use type Bits.C.char_array;
 
    -- generic external memory area
    subtype Memory_Area_Type is Bits.C.char_array (Bits.C.size_t);
