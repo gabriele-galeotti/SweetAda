@@ -51,9 +51,9 @@ _start:
                 jsr     SUPERSTATE(%a6)
                 // entry point
                 move.l  #ENTRYPOINT,%a6
-                // pass in A0 the entry point
+                // pass the entry point in A0
                 move.l  %a6,%a0
-                // jmp to payload
+                // jump to payload
                 jmp     (%a6)
 
                 .space  1024-(.-_start)
