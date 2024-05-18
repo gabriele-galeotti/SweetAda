@@ -78,8 +78,7 @@ exit_status=0
 
 STATE=0
 ELABORATION_CREATEFILE=
-NL="$(printf '\n_')"
-NL=${NL%_}
+NL=$(printf "\n%s" "_") ; NL=${NL%_}
 while IFS= read -r line ; do
   ELABORATION=
   ELABORATION_ORDER_DEPS=
