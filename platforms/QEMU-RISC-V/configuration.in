@@ -10,8 +10,6 @@
 #                                                                              #
 ################################################################################
 
-#USE_LIBGCC := Y
-
 USE_APPLICATION := test-QEMU-RISC-V
 
 export BOOT_HART := 0
