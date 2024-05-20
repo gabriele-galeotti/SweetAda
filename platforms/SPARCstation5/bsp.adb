@@ -159,7 +159,7 @@ package body BSP
       -- Exceptions.Init;
       -- SPARC.TBR_Set (To_Address (0));
       -- SCC ------------------------------------------------------------------
-      SCC_Descriptor.Base_Address   := To_Address (SCC_BASEADDRESS);
+      SCC_Descriptor.Base_Address   := System'To_Address (SCC_BASEADDRESS);
       SCC_Descriptor.AB_Address_Bit := 2;
       SCC_Descriptor.CD_Address_Bit := 1;
       SCC_Descriptor.Baud_Clock     := CLK_UART4M9;
@@ -187,25 +187,26 @@ package body BSP
          Console.Print (QEMU,                     Prefix => "QEMU:             ", NL => True);
       end if;
       -- Am7990 ---------------------------------------------------------------
-      Am7990_Descriptor.Base_Address  := To_Address (ETHERNET_CONTROLLER_REGISTERS_BASEADDRESS);
+      Am7990_Descriptor.Base_Address  := System'To_Address (ETHERNET_CONTROLLER_REGISTERS_BASEADDRESS);
       Am7990_Descriptor.Scale_Address := 0;
       Am7990_Descriptor.Read_16       := MMIO.ReadA'Access;
       Am7990_Descriptor.Write_16      := MMIO.WriteA'Access;
       -------------------------------------------------------------------------
-      SITMS := (
-         SBusIrq => 0,
-         K       => False,
-         S       => True,  -- serial port
-         E       => False,
-         SC      => False,
-         T       => True,  -- timer
-         V       => False,
-         F       => False,
-         M       => False,
-         I       => False,
-         ME      => False,
-         MA      => True,
-         others  => <>
+      SITMS :=
+         (
+          SBusIrq => 0,
+          K       => False,
+          S       => True,  -- serial port
+          E       => False,
+          SC      => False,
+          T       => True,  -- timer
+          V       => False,
+          F       => False,
+          M       => False,
+          I       => False,
+          ME      => False,
+          MA      => True,
+          others  => <>
          );
       SPARC.Irq_Enable;
       Tclk_Init;

@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Ada.Unchecked_Conversion;
 with Bits;
@@ -33,7 +32,6 @@ package Sun4m
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -56,7 +54,7 @@ package Sun4m
    ----------------------------------------------------------------------------
 
    DMA2_INTERNAL_IDREGISTER : aliased Unsigned_32
-      with Address              => To_Address (DMA2_INTERNAL_IDREGISTER_ADDRESS),
+      with Address              => System'To_Address (DMA2_INTERNAL_IDREGISTER_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -83,7 +81,7 @@ package Sun4m
    end record;
 
    System_Status_Control : aliased Slavio_SS_SC_Type
-      with Address              => To_Address (SLAVIO_SS_SCR_BASEADDRESS),
+      with Address              => System'To_Address (SLAVIO_SS_SCR_BASEADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -95,22 +93,22 @@ package Sun4m
    -- pp. 6-39 System Interrupt Pending Register
 
    type SI_Type is record
-      Reserved1 : Bits_7 := 0;
-      SBusIrq   : Bits_7;      -- Gives a direct indication of which SBus level interrupts are active.
-      K         : Boolean;     -- Keyboard/Mouse interrupt
-      S         : Boolean;     -- Serial Port interrupt
-      E         : Boolean;     -- Ethernet interrupt
-      Reserved2 : Bits_1 := 0;
-      SC        : Boolean;     -- SCSI interrupt
-      T         : Boolean;     -- Level 10 Counter/Timer
-      V         : Boolean;     -- Video interrupt
-      Reserved3 : Bits_1 := 0;
-      F         : Boolean;     -- Floppy interrupt
-      Reserved4 : Bits_5 := 0;
-      M         : Boolean;     -- EMC (ECC Memory Controller) interrupt
-      I         : Boolean;     -- MSI (MBus-SBus Interface) interrupt
-      ME        : Boolean;     -- Module Error (asynchronous fault)
-      MA        : Boolean;     -- Mask All interrupts.
+      Reserved1 : Bits_7  := 0;
+      SBusIrq   : Bits_7;       -- Gives a direct indication of which SBus level interrupts are active.
+      K         : Boolean;      -- Keyboard/Mouse interrupt
+      S         : Boolean;      -- Serial Port interrupt
+      E         : Boolean;      -- Ethernet interrupt
+      Reserved2 : Bits_1  := 0;
+      SC        : Boolean;      -- SCSI interrupt
+      T         : Boolean;      -- Level 10 Counter/Timer
+      V         : Boolean;      -- Video interrupt
+      Reserved3 : Bits_1  := 0;
+      F         : Boolean;      -- Floppy interrupt
+      Reserved4 : Bits_5  := 0;
+      M         : Boolean;      -- EMC (ECC Memory Controller) interrupt
+      I         : Boolean;      -- MSI (MBus-SBus Interface) interrupt
+      ME        : Boolean;      -- Module Error (asynchronous fault)
+      MA        : Boolean;      -- Mask All interrupts.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -138,28 +136,28 @@ package Sun4m
 
    -- Pending
    SIPR : aliased SI_Type
-      with Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0000#),
+      with Address              => System'To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0000#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- Target Mask Read
    SITM  : aliased SI_Type
-      with Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0004#),
+      with Address              => System'To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0004#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- Target Mask Set
    SITMS : aliased SI_Type
-      with Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0008#),
+      with Address              => System'To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_0008#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- Target Mask Clear
    SITMC : aliased SI_Type
-      with Address              => To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_000C#),
+      with Address              => System'To_Address (SLAVIO_INTC_BASEADDRESS + 16#0001_000C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -211,7 +209,7 @@ package Sun4m
    end record;
 
    System_Timer : aliased Slavio_Timer_Type
-      with Address    => To_Address (SLAVIO_TIMER_SYS_BASEADDRESS),
+      with Address    => System'To_Address (SLAVIO_TIMER_SYS_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -235,27 +233,27 @@ package Sun4m
    -- Control/Status Register
 
    type E_CSR_Type is record
-      E_INT_PEND      : Boolean;     -- R   Set when e_irq_ active, cleared when e_irq_ inactive
-      E_ERR_PEND      : Boolean;     -- R   Set when memory time-out, protection or late error detected on a ENET transfer.
-      E_DRAINING      : Bits_2;      -- R   Both bits set when E-cache draining dirty data to memory, otherwise both bits are 0.
-      E_INT_EN        : Boolean;     -- R/W When set, enables sb_e_irq_ to assert when E_INT_PEND or E_ERR_PEND is set.
-      E_INVALIDATE    : Boolean;     -- W   When set, marks all bytes in E-cache as invalid.  Resets itself. Reads as zero.
-      E_SLAVE_ERR     : Boolean;     -- R/W Set on slave access size error to a ENET-related register.  Reset on write of 1.
-      E_RESET         : Boolean;     -- R/W When set, invalidates the E-cache, resets the ENET interface, and asserts e_reset.
-      Unused1         : Bits_2 := 0;
-      E_DRAIN         : Boolean;     -- R/W When set, forces draining of E-cache Resets itself when draining complete
-      E_DSBL_WR_DRN   : Boolean;     -- R/W When set, disables draining of E-cache on descriptor writes from ENET.
-      E_DSBL_RD_DRN   : Boolean;     -- R/W When set, disables draining of E-cache on slave reads to ENET.
-      Unused2         : Bits_2 := 0;
-      E_ILACC         : Boolean;     -- R/W When set, modifies ENET DMA cycle.
-      E_DSBL_BUF_WR   : Boolean;     -- R/W When set, disables buffering of slave writes to ENET.
-      E_DSBL_WR_INVAL : Boolean;     -- R/W Defines whether E-cache is invalidated on slave writes to ENET 1 = no invalidate
-      E_BURST_SIZE    : Bits_2;      -- R/W Defines size of SBus read and write bursts for ENET transfers (see table below).
-      Unused3         : Bits_1 := 0;
-      E_LOOP_TEST     : Boolean;     -- R/W When set, enables Ethernet loop-back mode by tristating TP_AUI_ output.
-      E_TP_AUI_x      : Boolean;     -- R/W When E_LOOP_TEST = 0, selects TP or AUI Ethernet by driving TP_AUI to 1 or 0.
-      Unused4         : Bits_5 := 0;
-      E_DEV_ID        : Bits_4;      -- R   Device ID (For DMA2, E_DEV_ID=1010)
+      E_INT_PEND      : Boolean;      -- R   Set when e_irq_ active, cleared when e_irq_ inactive
+      E_ERR_PEND      : Boolean;      -- R   Set when memory time-out, protection or late error detected on a ENET transfer.
+      E_DRAINING      : Bits_2;       -- R   Both bits set when E-cache draining dirty data to memory, otherwise both bits are 0.
+      E_INT_EN        : Boolean;      -- R/W When set, enables sb_e_irq_ to assert when E_INT_PEND or E_ERR_PEND is set.
+      E_INVALIDATE    : Boolean;      -- W   When set, marks all bytes in E-cache as invalid.  Resets itself. Reads as zero.
+      E_SLAVE_ERR     : Boolean;      -- R/W Set on slave access size error to a ENET-related register.  Reset on write of 1.
+      E_RESET         : Boolean;      -- R/W When set, invalidates the E-cache, resets the ENET interface, and asserts e_reset.
+      Unused1         : Bits_2  := 0;
+      E_DRAIN         : Boolean;      -- R/W When set, forces draining of E-cache Resets itself when draining complete
+      E_DSBL_WR_DRN   : Boolean;      -- R/W When set, disables draining of E-cache on descriptor writes from ENET.
+      E_DSBL_RD_DRN   : Boolean;      -- R/W When set, disables draining of E-cache on slave reads to ENET.
+      Unused2         : Bits_2  := 0;
+      E_ILACC         : Boolean;      -- R/W When set, modifies ENET DMA cycle.
+      E_DSBL_BUF_WR   : Boolean;      -- R/W When set, disables buffering of slave writes to ENET.
+      E_DSBL_WR_INVAL : Boolean;      -- R/W Defines whether E-cache is invalidated on slave writes to ENET 1 = no invalidate
+      E_BURST_SIZE    : Bits_2;       -- R/W Defines size of SBus read and write bursts for ENET transfers (see table below).
+      Unused3         : Bits_1  := 0;
+      E_LOOP_TEST     : Boolean;      -- R/W When set, enables Ethernet loop-back mode by tristating TP_AUI_ output.
+      E_TP_AUI_x      : Boolean;      -- R/W When E_LOOP_TEST = 0, selects TP or AUI Ethernet by driving TP_AUI to 1 or 0.
+      Unused4         : Bits_5  := 0;
+      E_DEV_ID        : Bits_4;       -- R   Device ID (For DMA2, E_DEV_ID=1010)
    end record
       with Bit_Order => High_Order_First,
            Size      => 32;
@@ -286,7 +284,7 @@ package Sun4m
    E_CSR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#0#;
 
    E_CSR : aliased E_CSR_Type
-      with Address              => To_Address (E_CSR_ADDRESS),
+      with Address              => System'To_Address (E_CSR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -301,7 +299,7 @@ pragma Warnings (On, "volatile actual passed by copy");
    E_TST_CSR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#4#;
 
    E_TST_CSR : aliased Unsigned_32
-      with Address              => To_Address (E_TST_CSR_ADDRESS),
+      with Address              => System'To_Address (E_TST_CSR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -311,7 +309,7 @@ pragma Warnings (On, "volatile actual passed by copy");
    E_VLD_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#8#;
 
    E_VLD : aliased Unsigned_32
-      with Address              => To_Address (E_VLD_ADDRESS),
+      with Address              => System'To_Address (E_VLD_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -322,7 +320,7 @@ pragma Warnings (On, "volatile actual passed by copy");
    E_BASE_ADDR_ADDRESS : constant := DMA2_ETHERNET_REGISTERS_BASEADDRESS + 16#C#;
 
    E_BASE_ADDR : aliased Unsigned_8
-      with Address              => To_Address (E_BASE_ADDR_ADDRESS),
+      with Address              => System'To_Address (E_BASE_ADDR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
