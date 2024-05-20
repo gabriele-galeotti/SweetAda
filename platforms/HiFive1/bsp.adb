@@ -139,8 +139,10 @@ package body BSP
       UART1.txctrl  := (txen => True, nstop => 1, txcnt => 1, others => <>);
       UART1.rxctrl  := (rxen => True, rxcnt => 0, others => <>);
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("SiFive HiFive 1", NL => True);

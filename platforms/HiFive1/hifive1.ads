@@ -64,7 +64,7 @@ package HiFive1
          hfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
          Reserved1  : Bits_10 := 0;
          hfrosctrim : Bits_5;           -- Ring Oscillator Trim Register
-         Reserved2  : Bits_9 := 0;
+         Reserved2  : Bits_9  := 0;
          hfroscen   : Boolean;          -- Ring Oscillator Enable
          hfroscrdy  : Boolean := False; -- Ring Oscillator Ready
       end record
@@ -122,10 +122,10 @@ package HiFive1
 
       type pllcfg_Type is record
          pllr      : Bits_3;           -- PLL R Value
-         Reserved1 : Bits_1 := 0;
+         Reserved1 : Bits_1  := 0;
          pllf      : Bits_6;           -- PLL F Value
          pllq      : Bits_2;           -- PLL Q Value
-         Reserved2 : Bits_4 := 0;
+         Reserved2 : Bits_4  := 0;
          pllsel    : Bits_1;           -- PLL Select
          pllrefsel : Bits_1;           -- PLL Reference Select
          pllbypass : Boolean;          -- PLL Bypass
@@ -161,8 +161,8 @@ package HiFive1
       plloutdivby1_SET : constant := 1; -- PLL Final Divide By 1
 
       type plloutdiv_Type is record
-         plloutdiv    : Bits_6 := 0;  -- PLL Final Divider Value (default = divide by 2)
-         Reserved1    : Bits_2 := 0;
+         plloutdiv    : Bits_6  := 0; -- PLL Final Divider Value (default = divide by 2)
+         Reserved1    : Bits_2  := 0;
          plloutdivby1 : Bits_6;       -- PLL Final Divide By 1
          Reserved2    : Bits_18 := 0;
       end record
@@ -188,7 +188,7 @@ package HiFive1
          lfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
          Reserved1  : Bits_10 := 0;
          lfrosctrim : Bits_5;           -- Ring Oscillator Trim Register
-         Reserved2  : Bits_9 := 0;
+         Reserved2  : Bits_9  := 0;
          lfroscen   : Boolean;          -- Ring Oscillator Enable
          lfroscrdy  : Boolean := False; -- Ring Oscillator Ready
       end record
@@ -547,15 +547,15 @@ pragma Style_Checks (On);
 
       type wdogcfg_Type is record
          wdogscale     : Bits_4;       -- Counter scale value.
-         Reserved1     : Bits_4 := 0;
+         Reserved1     : Bits_4  := 0;
          wdogrsten     : Boolean;      -- Controls whether the comp output can set the wdogrst bit and hence cause a full reset.
          wdogzerocmp   : Boolean;
-         Reserved2     : Bits_2 := 0;
+         Reserved2     : Bits_2  := 0;
          wdogenalways  : Boolean;      -- Enable Always - run continuously
          wdogcoreawake : Boolean;      -- Increment the watchdog counter if the processor is not asleep
          Reserved3     : Bits_14 := 0;
          wdogip0       : Boolean;      -- Interrupt 0 Pending
-         Reserved4     : Bits_3 := 0;
+         Reserved4     : Bits_3  := 0;
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -575,8 +575,8 @@ pragma Style_Checks (On);
       -- 14.4 Watchdog Compare Register (wdogcmp)
 
       type wdogcmp_Type is record
-         wdogcmp0 : Unsigned_16;  -- Comparator 0
-         Reserved : Bits_16 := 0;
+         wdogcmp0 : Unsigned_16;      -- Comparator 0
+         Reserved : Bits_16     := 0;
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -764,11 +764,11 @@ pragma Style_Checks (On);
 
       type rtccfg_Type is record
          rtcscale    : Bits_4;       -- Counter scale value.
-         Reserved1   : Bits_8 := 0;
+         Reserved1   : Bits_8  := 0;
          rtcenalways : Boolean;      -- Enable Always - run continuously
          Reserved2   : Bits_15 := 0;
          rtcip0      : Boolean;      -- Interrupt 0 Pending
-         Reserved3   : Bits_3 := 0;
+         Reserved3   : Bits_3  := 0;
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -967,9 +967,9 @@ pragma Style_Checks (On);
       -- 18.4 Transmit Data Register (txdata)
 
       type txdata_Type is record
-         txdata   : Unsigned_8;       -- Transmit data
-         Reserved : Bits_23 := 0;
-         full     : Boolean := False; -- Transmit FIFO full (RO)
+         txdata   : Unsigned_8;          -- Transmit data
+         Reserved : Bits_23    := 0;
+         full     : Boolean    := False; -- Transmit FIFO full (RO)
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -982,9 +982,9 @@ pragma Style_Checks (On);
       -- 18.5 Receive Data Register (rxdata)
 
       type rxdata_Type is record
-         rxdata   : Unsigned_8;       -- Received data (RO)
-         Reserved : Bits_23 := 0;
-         empty    : Boolean := False; -- Receive FIFO empty (RO)
+         rxdata   : Unsigned_8;          -- Received data (RO)
+         Reserved : Bits_23    := 0;
+         empty    : Boolean    := False; -- Receive FIFO empty (RO)
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1064,8 +1064,8 @@ pragma Style_Checks (On);
       -- 18.9 Baud Rate Divisor Register (div)
 
       type div_Type is record
-         div      : Unsigned_16;  -- Baud rate divisor.
-         Reserved : Bits_16 := 0;
+         div      : Unsigned_16;      -- Baud rate divisor.
+         Reserved : Bits_16     := 0;
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1158,8 +1158,8 @@ pragma Style_Checks (On);
       pol_INACTIVE1 : constant := 1; -- Inactive state of SCK is logical 1
 
       type sckmode_Type is record
-         pha      : Bits_1 := 0;  -- Serial clock phase
-         pol      : Bits_1 := 0;  -- Serial clock polarity
+         pha      : Bits_1  := 0; -- Serial clock phase
+         pol      : Bits_1  := 0; -- Serial clock polarity
          Reserved : Bits_30 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1177,7 +1177,7 @@ pragma Style_Checks (On);
       mode_OFF  : constant := 2#11#; -- Disable hardware control of the CS pin
 
       type csmode_Type is record
-         mode     : Bits_2 := 0;  -- Chip select mode
+         mode     : Bits_2  := 0; -- Chip select mode
          Reserved : Bits_30 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1191,9 +1191,9 @@ pragma Style_Checks (On);
 
       type delay0_Type is record
          cssck     : Unsigned_8 := 1; -- CS to SCK Delay
-         Reserved1 : Bits_8 := 0;
+         Reserved1 : Bits_8     := 0;
          sckcs     : Unsigned_8 := 1; -- SCK to CS Delay
-         Reserved2 : Bits_8 := 0;
+         Reserved2 : Bits_8     := 0;
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1206,9 +1206,9 @@ pragma Style_Checks (On);
 
       type delay1_Type is record
          intercs   : Unsigned_8 := 1; -- Minimum CS inactive time
-         Reserved1 : Bits_8 := 0;
+         Reserved1 : Bits_8     := 0;
          interxfr  : Unsigned_8 := 0; -- Maximum interframe delay
-         Reserved2 : Bits_8 := 0;
+         Reserved2 : Bits_8     := 0;
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1228,11 +1228,11 @@ pragma Style_Checks (On);
       dir_TX : constant := 1; -- The receive FIFO is not populated.
 
       type fmt_Type is record
-         proto     : Bits_2 := 0;  -- SPI protocol
-         endian    : Bits_1 := 0;  -- SPI endianness
-         dir       : Bits_1 := 0;  -- SPI I/O direction.
+         proto     : Bits_2  := 0; -- SPI protocol
+         endian    : Bits_1  := 0; -- SPI endianness
+         dir       : Bits_1  := 0; -- SPI I/O direction.
          Reserved1 : Bits_12 := 0;
-         len       : Bits_4 := 8;  -- Number of bits per frame
+         len       : Bits_4  := 8; -- Number of bits per frame
          Reserved2 : Bits_12 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1249,9 +1249,9 @@ pragma Style_Checks (On);
       -- 19.11 Transmit Data Register (txdata)
 
       type txdata_Type is record
-         txdata   : Unsigned_8;       -- Transmit data
-         Reserved : Bits_23 := 0;
-         full     : Boolean := False; -- FIFO full flag (RO)
+         txdata   : Unsigned_8;          -- Transmit data
+         Reserved : Bits_23    := 0;
+         full     : Boolean    := False; -- FIFO full flag (RO)
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1264,9 +1264,9 @@ pragma Style_Checks (On);
       -- 19.12 Receive Data Register (rxdata)
 
       type rxdata_Type is record
-         rxdata   : Unsigned_8;       -- Received data (RO)
-         Reserved : Bits_23 := 0;
-         empty    : Boolean := False; -- FIFO empty flag (RO)
+         rxdata   : Unsigned_8;          -- Received data (RO)
+         Reserved : Bits_23    := 0;
+         empty    : Boolean    := False; -- FIFO empty flag (RO)
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1346,15 +1346,15 @@ pragma Style_Checks (On);
       -- 19.17 SPI Flash Instruction Format Register (ffmt)
 
       type ffmt_Type is record
-         cmd_en     : Boolean;     -- Enable sending of command
-         addr_len   : Bits_3;      -- Number of address bytes (0 to 4)
-         pad_cnt    : Bits_4;      -- Number of dummy cycles
-         cmd_proto  : Bits_2;      -- Protocol for transmitting command
-         addr_proto : Bits_2;      -- Protocol for transmitting address and padding
-         data_proto : Bits_2;      -- Protocol for receiving data bytes
-         Reserved   : Bits_2 := 0;
-         cmd_code   : Unsigned_8;  -- Value of command byte
-         pad_code   : Unsigned_8;  -- First 8 bits to transmit during dummy cycles
+         cmd_en     : Boolean;         -- Enable sending of command
+         addr_len   : Bits_3;          -- Number of address bytes (0 to 4)
+         pad_cnt    : Bits_4;          -- Number of dummy cycles
+         cmd_proto  : Bits_2;          -- Protocol for transmitting command
+         addr_proto : Bits_2;          -- Protocol for transmitting address and padding
+         data_proto : Bits_2;          -- Protocol for receiving data bytes
+         Reserved   : Bits_2     := 0;
+         cmd_code   : Unsigned_8;      -- Value of command byte
+         pad_code   : Unsigned_8;      -- First 8 bits to transmit during dummy cycles
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1452,8 +1452,8 @@ pragma Style_Checks (On);
       -- 20.4 PWM Count Register (pwmcount)
 
       type pwmcount8_Type is record
-         pwmcount : Bits_23;     -- PWM count register. cmpwidth + 15 bits wide.
-         Reserved : Bits_9 := 0;
+         pwmcount : Bits_23;      -- PWM count register. cmpwidth + 15 bits wide.
+         Reserved : Bits_9  := 0;
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1463,8 +1463,8 @@ pragma Style_Checks (On);
       end record;
 
       type pwmcount16_Type is record
-         pwmcount : Bits_31;     -- PWM count register. cmpwidth + 15 bits wide.
-         Reserved : Bits_1 := 0;
+         pwmcount : Bits_31;      -- PWM count register. cmpwidth + 15 bits wide.
+         Reserved : Bits_1  := 0;
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1476,28 +1476,28 @@ pragma Style_Checks (On);
       -- 20.5 PWM Configuration Register (pwmcfg)
 
       type pwmcfg_Type is record
-         pwmscale      : Bits_4;      -- PWM Counter scale
-         Reserved1     : Bits_4 := 0;
-         pwmsticky     : Boolean;     -- PWM Sticky - disallow clearing pwmcmp ip bits
-         pwmzerocmp    : Boolean;     -- PWM Zero - counter resets to zero after match
-         pwmdeglitch   : Boolean;     -- PWM Deglitch - latch pwmcmp ip within same cycle
-         Reserved2     : Bits_1 := 0;
-         pwmenalways   : Boolean;     -- PWM enable always - run continuously
-         pwmenoneshot  : Boolean;     -- PWM enable one shot - run one cycle
-         Reserved3     : Bits_2 := 0;
-         pwmcmp0center : Boolean;     -- PWM0 Compare Center
-         pwmcmp1center : Boolean;     -- PWM1 Compare Center
-         pwmcmp2center : Boolean;     -- PWM2 Compare Center
-         pwmcmp3center : Boolean;     -- PWM3 Compare Center
-         Reserved4     : Bits_4 := 0;
-         pwmcmp0gang   : Boolean;     -- PWM0/PWM1 Compare Gang
-         pwmcmp1gang   : Boolean;     -- PWM1/PWM2 Compare Gang
-         pwmcmp2gang   : Boolean;     -- PWM2/PWM3 Compare Gang
-         pwmcmp3gang   : Boolean;     -- PWM3/PWM0 Compare Gang
-         pwmcmp0ip     : Boolean;     -- PWM0 Interrupt Pending
-         pwmcmp1ip     : Boolean;     -- PWM1 Interrupt Pending
-         pwmcmp2ip     : Boolean;     -- PWM2 Interrupt Pending
-         pwmcmp3ip     : Boolean;     -- PWM3 Interrupt Pending
+         pwmscale      : Bits_4;       -- PWM Counter scale
+         Reserved1     : Bits_4  := 0;
+         pwmsticky     : Boolean;      -- PWM Sticky - disallow clearing pwmcmp ip bits
+         pwmzerocmp    : Boolean;      -- PWM Zero - counter resets to zero after match
+         pwmdeglitch   : Boolean;      -- PWM Deglitch - latch pwmcmp ip within same cycle
+         Reserved2     : Bits_1  := 0;
+         pwmenalways   : Boolean;      -- PWM enable always - run continuously
+         pwmenoneshot  : Boolean;      -- PWM enable one shot - run one cycle
+         Reserved3     : Bits_2  := 0;
+         pwmcmp0center : Boolean;      -- PWM0 Compare Center
+         pwmcmp1center : Boolean;      -- PWM1 Compare Center
+         pwmcmp2center : Boolean;      -- PWM2 Compare Center
+         pwmcmp3center : Boolean;      -- PWM3 Compare Center
+         Reserved4     : Bits_4  := 0;
+         pwmcmp0gang   : Boolean;      -- PWM0/PWM1 Compare Gang
+         pwmcmp1gang   : Boolean;      -- PWM1/PWM2 Compare Gang
+         pwmcmp2gang   : Boolean;      -- PWM2/PWM3 Compare Gang
+         pwmcmp3gang   : Boolean;      -- PWM3/PWM0 Compare Gang
+         pwmcmp0ip     : Boolean;      -- PWM0 Interrupt Pending
+         pwmcmp1ip     : Boolean;      -- PWM1 Interrupt Pending
+         pwmcmp2ip     : Boolean;      -- PWM2 Interrupt Pending
+         pwmcmp3ip     : Boolean;      -- PWM3 Interrupt Pending
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
