@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Definitions;
 with Bits;
 with MMIO;
@@ -35,7 +34,6 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -79,19 +77,24 @@ package body BSP
       -------------------------------------------------------------------------
       Quadra800.Init;
       -- SCC ------------------------------------------------------------------
-      SCC_Descriptor.Base_Address   := To_Address (Quadra800.SCC_BASEADDRESS);
-      SCC_Descriptor.AB_Address_Bit := 1;
-      SCC_Descriptor.CD_Address_Bit := 2;
-      SCC_Descriptor.Baud_Clock     := CLK_UART4M9;
-      SCC_Descriptor.Read_8         := MMIO.Read'Access;
-      SCC_Descriptor.Write_8        := MMIO.Write'Access;
+      SCC_Descriptor := (
+         Base_Address   => System'To_Address (Quadra800.SCC_BASEADDRESS),
+         AB_Address_Bit => 1,
+         CD_Address_Bit => 2,
+         Baud_Clock     => CLK_UART4M9,
+         Read_8         => MMIO.Read'Access,
+         Write_8        => MMIO.Write'Access,
+         others         => <>
+         );
       Z8530.Init (SCC_Descriptor, Z8530.CHANNELA);
       Z8530.Init (SCC_Descriptor, Z8530.CHANNELB);
       Z8530.Baud_Rate_Set (SCC_Descriptor, Z8530.CHANNELA, BR_9600);
       Z8530.Baud_Rate_Set (SCC_Descriptor, Z8530.CHANNELB, BR_9600);
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Quadra 800 (QEMU emulator)", NL => True);
