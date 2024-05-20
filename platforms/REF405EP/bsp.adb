@@ -15,17 +15,16 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Parameters;
-with System.Secondary_Stack;
-with System.Storage_Elements;
+with System;
 with Definitions;
 with Configure;
 with Bits;
 with Core;
+with MMIO;
+with Secondary_Stack;
 with PowerPC;
 with PPC405;
 with Exceptions;
-with MMIO;
 with REF405EP;
 with Console;
 
@@ -40,21 +39,12 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
    use PowerPC;
    use PPC405;
    use REF405EP;
-
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -63,16 +53,6 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -101,21 +81,33 @@ package body BSP
       is
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- UARTs ----------------------------------------------------------------
-      UART1_Descriptor.Base_Address  := To_Address (UART1_BASEADDRESS);
-      UART1_Descriptor.Scale_Address := 0;
-      UART1_Descriptor.Baud_Clock    := CLK_UART1M8;
-      UART1_Descriptor.Read_8        := MMIO.Read'Access;
-      UART1_Descriptor.Write_8       := MMIO.Write'Access;
+      UART1_Descriptor :=
+         (
+          Uart_Model    => UART16x50.UART16450,
+          Base_Address  => System'To_Address (UART1_BASEADDRESS),
+          Scale_Address => 0,
+          Baud_Clock    => CLK_UART1M8,
+          Read_8        => MMIO.Read'Access,
+          Write_8       => MMIO.Write'Access,
+          Data_Queue    => ([others => 0], 0, 0, 0),
+          others        => <>
+         );
       UART16x50.Init (UART1_Descriptor);
-      UART2_Descriptor.Base_Address  := To_Address (UART2_BASEADDRESS);
-      UART2_Descriptor.Scale_Address := 0;
-      UART2_Descriptor.Baud_Clock    := CLK_UART1M8;
-      UART2_Descriptor.Read_8        := MMIO.Read'Access;
-      UART2_Descriptor.Write_8       := MMIO.Write'Access;
+      UART2_Descriptor :=
+         (
+          Uart_Model    => UART16x50.UART16450,
+          Base_Address  => System'To_Address (UART2_BASEADDRESS),
+          Scale_Address => 0,
+          Baud_Clock    => CLK_UART1M8,
+          Read_8        => MMIO.Read'Access,
+          Write_8       => MMIO.Write'Access,
+          Data_Queue    => ([others => 0], 0, 0, 0),
+          others        => <>
+         );
       UART16x50.Init (UART2_Descriptor);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
