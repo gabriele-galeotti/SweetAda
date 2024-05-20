@@ -365,15 +365,15 @@ package x86
    EXCEPTION_DESCRIPTOR_ALIGNMENT : constant := 8;
 
    type Exception_Descriptor_Type is record
-      Offset_LO : Unsigned_16;       -- Offset to procedure entry point 0 .. 15
-      Selector  : Selector_Type;     -- Segment Selector for destination code segment
-      Reserved1 : Bits_5 := 0;
-      Reserved2 : Bits_3 := 0;
-      SegType   : Segment_Gate_Type; -- (D is implicit)
-      Reserved3 : Bits_1 := 0;       -- (Descriptor_Type := DESCRIPTOR_SYSTEM)
-      DPL       : PL_Type;           -- Descriptor Privilege Level
-      P         : Boolean;           -- Segment Present flag
-      Offset_HI : Unsigned_16;       -- Offset to procedure entry point 16 .. 31
+      Offset_LO : Unsigned_16;            -- Offset to procedure entry point 0 .. 15
+      Selector  : Selector_Type;          -- Segment Selector for destination code segment
+      Reserved1 : Bits_5            := 0;
+      Reserved2 : Bits_3            := 0;
+      SegType   : Segment_Gate_Type;      -- (D is implicit)
+      Reserved3 : Bits_1            := 0; -- (Descriptor_Type := DESCRIPTOR_SYSTEM)
+      DPL       : PL_Type;                -- Descriptor Privilege Level
+      P         : Boolean;                -- Segment Present flag
+      Offset_HI : Unsigned_16;            -- Offset to procedure entry point 16 .. 31
    end record
       with Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
            Bit_Order => Low_Order_First,

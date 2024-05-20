@@ -62,7 +62,7 @@ package APIC
       VECTOR    : Bits_8;       -- Spurious Vector
       ENABLE    : Boolean;      -- APIC Software Enable/Disable
       FPC       : Boolean;      -- Focus Processor Checking
-      Reserved1 : Bits_2 := 0;
+      Reserved1 : Bits_2  := 0;
       EOIBS     : Boolean;      -- EOI-Broadcast Suppression
       Reserved2 : Bits_19 := 0;
    end record
@@ -97,7 +97,7 @@ package APIC
    type LVT_Type is record
       VECTOR    : Bits_8;       -- Vector
       DM        : Bits_3;       -- Delivery Mode
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       DS        : Bits_1;       -- Delivery Status
       IIPP      : Bits_1;       -- Interrupt Input Pin Polarity
       RIRR      : Boolean;      -- Remote IRR Flag
