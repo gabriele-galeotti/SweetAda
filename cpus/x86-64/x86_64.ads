@@ -273,17 +273,17 @@ package x86_64
    EXCEPTION_DESCRIPTOR_ALIGNMENT : constant := 16;
 
    type Exception_Descriptor_Type is record
-      Offset_LO : Unsigned_16;       -- Offset to procedure entry point 0 .. 15
-      Selector  : Selector_Type;     -- Segment Selector for destination code segment
-      IST       : Bits_3 := 0;       -- Interrupt Stack Table
-      Reserved1 : Bits_2 := 0;
-      Reserved2 : Bits_3 := 0;
-      SegType   : Segment_Gate_Type; -- (D is implicit)
-      Reserved3 : Bits_1 := 0;       -- (Descriptor_Type := DESCRIPTOR_SYSTEM)
-      DPL       : PL_Type;           -- Descriptor Privilege Level
-      P         : Boolean;           -- Segment Present flag
-      Offset_MI : Unsigned_16;       -- Offset to procedure entry point 16 .. 31
-      Offset_HI : Unsigned_32;       -- Offset to procedure entry point 32 .. 63
+      Offset_LO : Unsigned_16;            -- Offset to procedure entry point 0 .. 15
+      Selector  : Selector_Type;          -- Segment Selector for destination code segment
+      IST       : Bits_3            := 0; -- Interrupt Stack Table
+      Reserved1 : Bits_2            := 0;
+      Reserved2 : Bits_3            := 0;
+      SegType   : Segment_Gate_Type;      -- (D is implicit)
+      Reserved3 : Bits_1            := 0; -- (Descriptor_Type := DESCRIPTOR_SYSTEM)
+      DPL       : PL_Type;                -- Descriptor Privilege Level
+      P         : Boolean;                -- Segment Present flag
+      Offset_MI : Unsigned_16;            -- Offset to procedure entry point 16 .. 31
+      Offset_HI : Unsigned_32;            -- Offset to procedure entry point 32 .. 63
       Reserved4 : Unsigned_32;
    end record
       with Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
@@ -609,6 +609,9 @@ package x86_64
    IA32_SYSENTER_CS         : constant MSR_Type := 16#0000_0174#;
    IA32_SYSENTER_ESP        : constant MSR_Type := 16#0000_0175#;
    IA32_SYSENTER_EIP        : constant MSR_Type := 16#0000_0176#;
+   IA32_MCG_CAP             : constant MSR_Type := 16#0000_0179#;
+   IA32_MCG_STATUS          : constant MSR_Type := 16#0000_017A#;
+   IA32_MCG_CTL             : constant MSR_Type := 16#0000_017B#;
    IA32_EFER                : constant MSR_Type := 16#C000_0080#;
 
    -- IA32_APIC_BASE
