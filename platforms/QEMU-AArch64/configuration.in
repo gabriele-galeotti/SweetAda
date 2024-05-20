@@ -28,7 +28,7 @@ ABI := lp64
 
 ifeq      ($(ABI),lp64)
 # -mabi=lp64 (default)
-GCC_SWITCHES_PLATFORM     := -mcpu=cortex-a53 -mabi=lp64
+GCC_SWITCHES_PLATFORM     := -mcpu=cortex-a53 -mabi=lp64 -mstrict-align
 LD_SWITCHES_PLATFORM      :=
 else ifeq ($(ABI),ilp32)
 # -mabi=ilp32

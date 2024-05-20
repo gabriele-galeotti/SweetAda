@@ -113,12 +113,14 @@ package body BSP
       -------------------------------------------------------------------------
       System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
       -- PL011 hardware initialization ----------------------------------------
-      PL011_Descriptor.Read_8       := MMIO.Read'Access;
-      PL011_Descriptor.Write_8      := MMIO.Write'Access;
-      PL011_Descriptor.Read_16      := MMIO.Read'Access;
-      PL011_Descriptor.Write_16     := MMIO.Write'Access;
-      PL011_Descriptor.Base_Address := System'To_Address (PL011_UART0_BASEADDRESS);
-      PL011_Descriptor.Baud_Clock   := CLK_UART14M;
+      PL011_Descriptor := (
+         Base_Address => System'To_Address (PL011_UART0_BASEADDRESS),
+         Baud_Clock   => CLK_UART14M,
+         Read_8       => MMIO.Read'Access,
+         Write_8      => MMIO.Write'Access,
+         Read_16      => MMIO.Read'Access,
+         Write_16     => MMIO.Write'Access
+         );
       PL011.Init (PL011_Descriptor);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
