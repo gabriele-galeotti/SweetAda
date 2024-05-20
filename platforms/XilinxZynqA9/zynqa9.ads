@@ -63,8 +63,8 @@ package ZynqA9
    -- ICCPMR
 
    type ICCPMR_Type is record
-      Priority : Unsigned_8;   -- The priority mask level for the CPU interface.
-      Reserved : Bits_24 := 0;
+      Priority : Unsigned_8;      -- The priority mask level for the CPU interface.
+      Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -119,8 +119,8 @@ package ZynqA9
    -- ICCRPR
 
    type ICCRPR_Type is record
-      Priority : Unsigned_8;   -- The priority value of the highest priority interrupt that is active on the CPU interface.
-      Reserved : Bits_24 := 0;
+      Priority : Unsigned_8;      -- The priority value of the highest priority interrupt that is active on the CPU interface.
+      Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -332,8 +332,8 @@ package ZynqA9
    LOCK_KEY_VALUE : constant := 16#767B#;
 
    type SLCR_LOCK_Type is record
-      LOCK_KEY : Unsigned_16;  -- Write the lock key, 0x767B, to write protect the slcr registers
-      Reserved : Bits_16 := 0;
+      LOCK_KEY : Unsigned_16;      -- Write the lock key, 0x767B, to write protect the slcr registers
+      Reserved : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -347,8 +347,8 @@ package ZynqA9
    UNLOCK_KEY_VALUE : constant := 16#DF0D#;
 
    type SLCR_UNLOCK_Type is record
-      UNLOCK_KEY : Unsigned_16;  -- Write the unlock key, 0xDF0D, to enable writes to the slcr registers.
-      Reserved   : Bits_16 := 0;
+      UNLOCK_KEY : Unsigned_16;      -- Write the unlock key, 0xDF0D, to enable writes to the slcr registers.
+      Reserved   : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -456,7 +456,7 @@ package ZynqA9
 
    type XTTCPS_INTERVAL_VAL_Type is record
       COUNT_VALUE : Unsigned_16;
-      Unused      : Bits_16 := 0;
+      Unused      : Bits_16     := 0;
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 32,
@@ -470,7 +470,7 @@ package ZynqA9
 
    type XTTCPS_MATCH_Type is record
       MATCH  : Unsigned_16;
-      Unused : Bits_16 := 0;
+      Unused : Bits_16     := 0;
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 32,
@@ -747,8 +747,8 @@ package ZynqA9
    -- XUARTPS_RXTOUT
 
    type XUARTPS_RXTOUT_Type is record
-      RTO      : Unsigned_8;   -- Receiver timeout value
-      Reserved : Bits_24 := 0;
+      RTO      : Unsigned_8;      -- Receiver timeout value
+      Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -775,7 +775,7 @@ package ZynqA9
    type XUARTPS_MODEMCR_Type is record
       DTR       : Boolean;
       RTS       : Boolean;
-      Reserved1 : Bits_3 := 0;
+      Reserved1 : Bits_3  := 0;
       FCM       : Boolean;
       Reserved2 : Bits_26 := 0;
    end record
@@ -826,7 +826,7 @@ package ZynqA9
       RXFULL    : Boolean;
       TXEMPTY   : Boolean;
       TXFULL    : Boolean;
-      Reserved1 : Bits_5 := 0;
+      Reserved1 : Bits_5  := 0;
       RACTIVE   : Boolean;
       TACTIVE   : Boolean;
       FLOWDEL   : Boolean;
@@ -855,7 +855,7 @@ package ZynqA9
 
    type XUARTPS_FIFO_Type is record
       FIFO     : Unsigned_8;
-      Reserved : Bits_24 := 0;
+      Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;

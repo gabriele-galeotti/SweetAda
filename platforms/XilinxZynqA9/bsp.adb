@@ -112,13 +112,14 @@ package body BSP
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -- GIC ------------------------------------------------------------------
-      ZynqA9.APU.ICCICR :=
-         (EnableS  => False,
-          EnableNS => False,
-          AckCtl   => False,
-          FIQEn    => False,
-          SBPR     => False,
-          others   => <>);
+      ZynqA9.APU.ICCICR := (
+         EnableS  => False,
+         EnableNS => False,
+         AckCtl   => False,
+         FIQEn    => False,
+         SBPR     => False,
+         others   => <>
+         );
       ZynqA9.APU.ICDISR0 := [others => True];
       ZynqA9.APU.ICDISR1 := [others => True];
       ZynqA9.APU.ICDISR2 := [others => True];
@@ -142,37 +143,41 @@ package body BSP
       ZynqA9.APU.ICDIPTR (22) := [others => ICDIPTR_CPU0];
       ZynqA9.APU.ICDIPTR (23) := [others => ICDIPTR_CPU0];
       ZynqA9.APU.ICCPMR.Priority := 16#FF#;
-      ZynqA9.APU.ICCICR :=
-         (EnableS  => True,
-          EnableNS => True,
-          AckCtl   => True,
-          FIQEn    => False,
-          SBPR     => False,
-          others   => <>);
-      ZynqA9.APU.ICDDCR :=
-         (Enable_secure     => True,
-          Enable_Non_secure => True,
-          others            => <>);
+      ZynqA9.APU.ICCICR := (
+         EnableS  => True,
+         EnableNS => True,
+         AckCtl   => True,
+         FIQEn    => False,
+         SBPR     => False,
+         others   => <>
+         );
+      ZynqA9.APU.ICDDCR := (
+         Enable_secure     => True,
+         Enable_Non_secure => True,
+         others            => <>
+         );
       -------------------------------------------------------------------------
       CPU.Irq_Enable;
       -- ttc timer ------------------------------------------------------------
-      TTC0.CNT_CNTRL (0) :=
-         (DIS      => False,
-          INT      => INT_OVERFLOW,
-          DECR     => True,
-          MATCH    => False,
-          RST      => False,
-          EN_WAVE  => False,
-          POL_WAVE => POL_WAVE_L2H,
-          others   => <>);
+      TTC0.CNT_CNTRL (0) := (
+         DIS      => False,
+         INT      => INT_OVERFLOW,
+         DECR     => True,
+         MATCH    => False,
+         RST      => False,
+         EN_WAVE  => False,
+         POL_WAVE => POL_WAVE_L2H,
+         others   => <>
+         );
       TTC0.INTERVAL_VAL (0).COUNT_VALUE :=
          Unsigned_16 (Configure.CLK_FREQUENCY / Configure.TICK_FREQUENCY);
-      TTC0.CLK_CNTRL (0) :=
-         (PS_EN    => True,
-          PS_VAL   => 1,
-          SRC      => SRC_PCLK,
-          EXT_EDGE => False,
-          others   => <>);
+      TTC0.CLK_CNTRL (0) := (
+         PS_EN    => True,
+         PS_VAL   => 1,
+         SRC      => SRC_PCLK,
+         EXT_EDGE => False,
+         others   => <>
+         );
       TTC0.IER (0).IXR_CNT_OVR_IEN := True;
       -------------------------------------------------------------------------
    end Setup;

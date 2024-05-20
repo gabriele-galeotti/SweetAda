@@ -60,17 +60,18 @@ package body ZynqA9
    procedure UART_Init
       is
    begin
-      UART0.CR :=
-         (RXRST    => False,
-          TXRST    => False,
-          RX_EN    => True,
-          RX_DIS   => False,
-          TX_EN    => True,
-          TX_DIS   => False,
-          TORST    => False,
-          STARTBRK => False,
-          STOPBRK  => False,
-          others   => <>);
+      UART0.CR := (
+         RXRST    => False,
+         TXRST    => False,
+         RX_EN    => True,
+         RX_DIS   => False,
+         TX_EN    => True,
+         TX_DIS   => False,
+         TORST    => False,
+         STARTBRK => False,
+         STOPBRK  => False,
+         others   => <>
+         );
    end UART_Init;
 
 end ZynqA9;
