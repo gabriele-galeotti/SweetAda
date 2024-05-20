@@ -50,8 +50,8 @@ package UART16x50
       Base_Address  : Address;
       Scale_Address : Address_Shift;
       Baud_Clock    : Positive;
-      Flags         : Flags_Type;
-      Read_8        : not null Port_Read_8_Ptr := MMIO.ReadN_U8'Access;
+      Flags         : Flags_Type                := (PC_UART => False);
+      Read_8        : not null Port_Read_8_Ptr  := MMIO.ReadN_U8'Access;
       Write_8       : not null Port_Write_8_Ptr := MMIO.WriteN_U8'Access;
       Data_Queue    : aliased FIFO.Queue_Type;
    end record;
