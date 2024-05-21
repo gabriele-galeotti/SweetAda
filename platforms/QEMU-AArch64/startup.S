@@ -48,8 +48,15 @@ bootcore:
                 //
                 // Setup stack pointer.
                 //
+#if   __LP64__ == 1
                 ldr     x0,=kernel_stack
                 mov     sp,x0
+#elif __ILP32__ == 1
+                ldr     w0,=kernel_stack
+                mov     wsp,w0
+#else
+#error no ABI defined
+#endif
 
                 //
                 // Static data relocation.
@@ -57,6 +64,7 @@ bootcore:
                 .extern _etext
                 .extern _sdata
                 .extern _edata
+#if   __LP64__ == 1
                 ldr     x1,=_etext
                 ldr     x2,=_sdata
                 ldr     x3,=_edata
@@ -65,12 +73,25 @@ bootcore:
                 str     x0,[x2],#8
 2:              cmp     x2,x3
                 blt     1b
+#elif __ILP32__ == 1
+                ldr     w1,=_etext
+                ldr     w2,=_sdata
+                ldr     w3,=_edata
+                b       2f
+1:              ldr     w0,[x1],#4
+                str     w0,[x2],#4
+2:              cmp     w2,w3
+                blt     1b
+#else
+#error no ABI defined
+#endif
 
                 //
                 // Initialize .bss section.
                 //
                 .extern _sbss
                 .extern _ebss
+#if   __LP64__ == 1
                 ldr     x1,=_sbss
                 ldr     x2,=_ebss
                 mov     x0,#0
@@ -78,6 +99,17 @@ bootcore:
 1:              str     x0,[x1],#8
 2:              cmp     x1,x2
                 blt     1b
+#elif __ILP32__ == 1
+                ldr     w1,=_sbss
+                ldr     w2,=_ebss
+                mov     w0,#0
+                b       2f
+1:              str     w0,[x1],#4
+2:              cmp     w1,w2
+                blt     1b
+#else
+#error no ABI defined
+#endif
 
                 //
                 // Jump to high-level code.
