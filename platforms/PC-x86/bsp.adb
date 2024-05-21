@@ -16,15 +16,13 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Parameters;
-with System.Secondary_Stack;
-with System.Storage_Elements;
-with Interfaces.C;
 with Ada.Unchecked_Conversion;
 with Configure;
 with Definitions;
 with Core;
 with Bits;
+with Bits.C;
+with Secondary_Stack;
 with CPU;
 with CPU.IO;
 with i586;
@@ -53,7 +51,6 @@ package body BSP
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -62,19 +59,11 @@ package body BSP
    use i586;
    use APIC;
 
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
    function Number_Of_CPUs
-      return Interfaces.C.int
+      return Bits.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_number_of_cpus";
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
 
    procedure Board_Init;
 
@@ -90,21 +79,11 @@ package body BSP
    -- Number_Of_CPUs
    ----------------------------------------------------------------------------
    function Number_Of_CPUs
-      return Interfaces.C.int
+      return Bits.C.int
       is
    begin
       return 1;
    end Number_Of_CPUs;
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Tclk_Init
@@ -153,49 +132,49 @@ package body BSP
       is
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
       GDT_Simple.Setup;
       Exceptions.Init;
       MMU.Init;
       Board_Init;
       -- RTC ------------------------------------------------------------------
-      RTC_Descriptor :=
-         (
-          Base_Address  => To_Address (PC.RTC_BASEADDRESS),
-          Scale_Address => 0,
-          Flags         => (null record),
-          Read_8        => PC.RTC_Register_Read'Access,
-          Write_8       => PC.RTC_Register_Write'Access
+      RTC_Descriptor := (
+         Base_Address  => System'To_Address (PC.RTC_BASEADDRESS),
+         Scale_Address => 0,
+         Flags         => (null record),
+         Read_8        => PC.RTC_Register_Read'Access,
+         Write_8       => PC.RTC_Register_Write'Access
          );
       MC146818A.Init (RTC_Descriptor);
       -- UARTs ----------------------------------------------------------------
-      UART_Descriptors (1) :=
-         (
-          Uart_Model    => UART16x50.UART16450,
-          Base_Address  => To_Address (PC.UART1_BASEADDRESS),
-          Scale_Address => 0,
-          Baud_Clock    => CLK_UART1M8,
-          Flags         => (PC_UART => True),
-          Read_8        => IO_Read'Access,
-          Write_8       => IO_Write'Access,
-          Data_Queue    => ([others => 0], 0, 0, 0)
+      UART_Descriptors (1) := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (PC.UART1_BASEADDRESS),
+         Scale_Address => 0,
+         Baud_Clock    => CLK_UART1M8,
+         Flags         => (PC_UART => True),
+         Read_8        => IO_Read'Access,
+         Write_8       => IO_Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptors (1));
-      UART_Descriptors (2) :=
-         (
-          Uart_Model    => UART16x50.UART16450,
-          Base_Address  => To_Address (PC.UART2_BASEADDRESS),
-          Scale_Address => 0,
-          Baud_Clock    => CLK_UART1M8,
-          Flags         => (PC_UART => True),
-          Read_8        => IO_Read'Access,
-          Write_8       => IO_Write'Access,
-          Data_Queue    => ([others => 0], 0, 0, 0)
+      UART_Descriptors (2) := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (PC.UART2_BASEADDRESS),
+         Scale_Address => 0,
+         Baud_Clock    => CLK_UART1M8,
+         Flags         => (PC_UART => True),
+         Read_8        => IO_Read'Access,
+         Write_8       => IO_Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptors (2));
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor := (Console_Putchar'Access, Console_Getchar'Access);
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -- CPU ------------------------------------------------------------------
       Console.Print ("PC-x86", NL => True);
@@ -266,7 +245,13 @@ package body BSP
          Success       : Boolean;
          Device_Number : PCI.Device_Number_Type with Unreferenced => True;
       begin
-         PCI.Cfg_Find_Device_By_Id (0, PCI.VENDOR_ID_QEMU, PCI.DEVICE_ID_QEMU_VGA, Device_Number, Success);
+         PCI.Cfg_Find_Device_By_Id (
+            0,
+            PCI.VENDOR_ID_QEMU,
+            PCI.DEVICE_ID_QEMU_VGA,
+            Device_Number,
+            Success
+            );
          if Success then
             QEMU := True;
          end if;
@@ -288,14 +273,13 @@ package body BSP
          VGA.Print (0, 2, "Close this window to shutdown the emulator.");
       end if;
       -- IDE ------------------------------------------------------------------
-      IDE_Descriptors (1) :=
-         (
-          Base_Address  => To_Address (PC.IDE1_BASEADDRESS),
-          Scale_Address => 0,
-          Read_8        => IO_Read'Access,
-          Write_8       => IO_Write'Access,
-          Read_16       => IO_Read'Access,
-          Write_16      => IO_Write'Access
+      IDE_Descriptors (1) := (
+         Base_Address  => System'To_Address (PC.IDE1_BASEADDRESS),
+         Scale_Address => 0,
+         Read_8        => IO_Read'Access,
+         Write_8       => IO_Write'Access,
+         Read_16       => IO_Read'Access,
+         Write_16      => IO_Write'Access
          );
       IDE.Init (IDE_Descriptors (1));
       -- NE2000 (PCI) ---------------------------------------------------------
@@ -306,36 +290,33 @@ package body BSP
          begin
             NE2000.Probe (PCI_Device_Number, Success);
             if Success then
-               NE2000_Descriptors (1) :=
-                  (
-                   NE2000PCI     => True,
-                   Device_Number => PCI_Device_Number,
-                   BAR           => 0,
-                   PCI_Irq_Line  => 5,
-                   Base_Address  => System'To_Address (16#C000#),
-                   MAC           => [16#02#, 16#00#, 16#00#, 16#11#, 16#22#, 16#33#],
-                   Read_8        => PortIn'Access,
-                   Write_8       => PortOut'Access,
-                   Read_16       => PortIn'Access,
-                   Write_16      => PortOut'Access,
-                   Read_32       => PortIn'Access,
-                   Write_32      => PortOut'Access,
-                   Next_Ptr      => 0
+               NE2000_Descriptors (1) := (
+                  NE2000PCI     => True,
+                  Device_Number => PCI_Device_Number,
+                  BAR           => 0,
+                  PCI_Irq_Line  => 5,
+                  Base_Address  => System'To_Address (16#C000#),
+                  MAC           => [16#02#, 16#00#, 16#00#, 16#11#, 16#22#, 16#33#],
+                  Read_8        => PortIn'Access,
+                  Write_8       => PortOut'Access,
+                  Read_16       => PortIn'Access,
+                  Write_16      => PortOut'Access,
+                  Read_32       => PortIn'Access,
+                  Write_32      => PortOut'Access,
+                  Next_Ptr      => 0
                   );
                NE2000.Init_PCI (NE2000_Descriptors (1));
             end if;
          end;
       end if;
       -- Ethernet module ------------------------------------------------------
-      Ethernet_Descriptor.Haddress     := NE2000_Descriptors (1).MAC;
-      if QEMU then
-         Ethernet_Descriptor.Paddress := [192, 168, 3, 2];
-      else
-         Ethernet_Descriptor.Paddress := [192, 168, 2, 2];
-      end if;
-      -- Ethernet_Descriptor.RX           := NE2000.Receive'Access;
-      Ethernet_Descriptor.TX           := NE2000.Transmit'Access;
-      Ethernet_Descriptor.Data_Address := NE2000_Descriptors (1)'Address;
+      Ethernet_Descriptor := (
+         Haddress     => NE2000_Descriptors (1).MAC,
+         Paddress     => (if QEMU then [192, 168, 3, 2] else [192, 168, 2, 2]),
+         RX           => null,
+         TX           => NE2000.Transmit'Access,
+         Data_Address => NE2000_Descriptors (1)'Address
+         );
       Ethernet.Init (Ethernet_Descriptor);
       -- CAN (PCI) ------------------------------------------------------------
       declare
@@ -364,11 +345,10 @@ package body BSP
       PC.PIC_Irq_Enable (PC.PIC_Irq5);
       Interrupts.Install (PC.PIC_Irq5, NE2000.Interrupt_Handler'Access, NE2000_Descriptors (1)'Address);
       declare
-         Pirqc : constant PIIX.PIRQC_Type :=
-            (
-             IRQROUTE   => PIIX.IRQROUTE_IRQ5,
-             IRQROUTEEN => NTrue,
-             others     => <>
+         Pirqc : constant PIIX.PIRQC_Type := (
+            IRQROUTE   => PIIX.IRQROUTE_IRQ5,
+            IRQROUTEEN => NTrue,
+            others     => <>
             );
       begin
          -- PIC ELCR
@@ -385,10 +365,6 @@ package body BSP
    ----------------------------------------------------------------------------
    -- Reset
    ----------------------------------------------------------------------------
-   procedure Reset
-      is
-   begin
-      null;
-   end Reset;
+   procedure Reset is null;
 
 end BSP;
