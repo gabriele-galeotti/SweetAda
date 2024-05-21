@@ -59,7 +59,7 @@ function ParseGpr
       $unit = $textline -Replace "`t"," " -Replace "with *`"","" -Replace "`" *;.*",""
       if ($unit.Length -gt 0)
       {
-        $units = "$units ${unit}.gpr"
+        $units = "$units $($unit).gpr"
       }
     }
     else
@@ -110,7 +110,7 @@ if ([string]$args[$argc] -eq "-u")
 $input_filename = $args[$argc]
 if ([string]::IsNullOrEmpty($input_filename))
 {
-  Write-Host "${scriptname}: *** Error: no input file specified."
+  Write-Host "$($scriptname): *** Error: no input file specified."
   ExitWithCode 1
 }
 

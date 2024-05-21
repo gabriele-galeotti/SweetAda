@@ -72,13 +72,13 @@ if ([string]$args[$argc] -eq "-r")
 $input_filename = $args[$argc]
 if ([string]::IsNullOrEmpty($input_filename))
 {
-  Write-Host "${scriptname}: *** Error: no input file specified."
+  Write-Host "$($scriptname): *** Error: no input file specified."
   ExitWithCode 1
 }
 $output_filename = $args[$argc + 1]
 if ([string]::IsNullOrEmpty($output_filename))
 {
-  Write-Host "${scriptname}: *** Error: no output file specified."
+  Write-Host "$($scriptname): *** Error: no output file specified."
   ExitWithCode 1
 }
 
@@ -90,7 +90,7 @@ try
 }
 catch
 {
-  Write-Host "${scriptname}: *** Error: processing ${input_filename}."
+  Write-Host "$($scriptname): *** Error: processing $($input_filename)."
   ExitWithCode 1
 }
 
@@ -133,11 +133,11 @@ $textlines | ForEach-Object `
   }
   if ($count -lt $textlines.Count)
   {
-    $stdout = "${stdout}${textline}${nl}"
+    $stdout = "$($stdout)$($textline)$($nl)"
   }
   else
   {
-    $stdout = "${stdout}${textline}"
+    $stdout = "$($stdout)$($textline)"
   }
 }
 
@@ -147,7 +147,7 @@ if ($remove_cr)
 }
 Set-Content -Path $output_filename -Value $stdout -NoNewLine -Force
 
-Write-Host "${scriptname}: ${output_filename}: done."
+Write-Host "$($scriptname): $($output_filename): done."
 
 ExitWithCode 0
 

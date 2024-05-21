@@ -46,13 +46,13 @@ function ExitWithCode
 $filename = $args[0]
 if ([string]::IsNullOrEmpty($filename))
 {
-  Write-Host "${scriptname}: *** Error: no input file specified."
+  Write-Host "$($scriptname): *** Error: no input file specified."
   ExitWithCode 1
 }
 $padstring = [string]$args[1]
 if ([string]::IsNullOrEmpty($padstring))
 {
-  Write-Host "${scriptname}: *** Error: no padding specified."
+  Write-Host "$($scriptname): *** Error: no padding specified."
   ExitWithCode 1
 }
 
@@ -88,7 +88,7 @@ else
 
 $filebytes += $padbytes
 
-Write-Host "${scriptname}: padding file `"$(Split-Path -Path $filename -Leaf -Resolve)`"."
+Write-Host "$($scriptname): padding file `"$(Split-Path -Path $filename -Leaf -Resolve)`"."
 
 [System.IO.File]::WriteAllBytes($filename, $filebytes)
 

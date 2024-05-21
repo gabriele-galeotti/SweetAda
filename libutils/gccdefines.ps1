@@ -80,17 +80,17 @@ function GetEnvVar
 $package_name, $output_filename, $items = $args
 if ([string]::IsNullOrEmpty($package_name))
 {
-  Write-Host "${scriptname}: *** Error: no package name specified."
+  Write-Host "$($scriptname): *** Error: no package name specified."
   ExitWithCode 1
 }
 if ([string]::IsNullOrEmpty($output_filename))
 {
-  Write-Host "${scriptname}: *** Error: no output filename specified."
+  Write-Host "$($scriptname): *** Error: no output filename specified."
   ExitWithCode 1
 }
 if ($items.length -lt 1)
 {
-  Write-Host "${scriptname}: *** Error: no items specified."
+  Write-Host "$($scriptname): *** Error: no items specified."
   ExitWithCode 1
 }
 
@@ -105,16 +105,16 @@ foreach ($i in $items)
   $spec   = $i_splitted[3]
   if ([string]::IsNullOrEmpty($macro) -or [string]::IsNullOrEmpty($tmacro))
   {
-    Write-Host "${scriptname}: *** Error: no item definition."
+    Write-Host "$($scriptname): *** Error: no item definition."
     ExitWithCode 1
   }
-  switch (${spec})
+  switch ($spec)
   {
     { ($_ -eq "B") -or ($_ -eq "H") -or ($_ -eq "N") -or ($_ -eq "P") -or ($_ -eq "S") }
       { }
     default
       {
-        Write-Host "${scriptname}: *** Error: no item specifier."
+        Write-Host "$($scriptname): *** Error: no item specifier."
         ExitWithCode 1
       }
   }
@@ -165,13 +165,13 @@ try
   $p.WaitForExit()
   if ($p.ExitCode -ne 0)
   {
-    Write-Host "${scriptname}: *** Error: executing ${gcc}."
+    Write-Host "$($scriptname): *** Error: executing $($gcc)."
     ExitWithCode $p.ExitCode
   }
 }
 catch
 {
-  Write-Host "${scriptname}: *** Error: executing ${gcc}."
+  Write-Host "$($scriptname): *** Error: executing $($gcc)."
   ExitWithCode 1
 }
 
@@ -205,7 +205,7 @@ foreach ($i in $items)
     if ($i_macro -eq $macro)
     {
       $found = "Y"
-      switch ("${i_spec}${i_type}")
+      switch ("$($i_spec)$($i_type)")
       {
         { $_ -eq "BBoolean" }
           { $value = "True" }
@@ -219,7 +219,7 @@ foreach ($i in $items)
           { if ([string]::IsNullOrEmpty($value)) { $value = "`"`"" } }
         default
           {
-            Write-Host "${scriptname}: *** Error: inconsistent item specification."
+            Write-Host "$($scriptname): *** Error: inconsistent item specification."
             ExitWithCode 1
           }
       }
@@ -228,7 +228,7 @@ foreach ($i in $items)
   }
   if ([string]::IsNullOrEmpty($found))
   {
-    switch ("${i_spec}${i_type}")
+    switch ("$($i_spec)$($i_type)")
     {
       { ($_ -eq "BBoolean") -or ($_ -eq "HBoolean") }
         { $value = "False" }
@@ -238,7 +238,7 @@ foreach ($i in $items)
         { $value = "`"`"" }
       default
       {
-        Write-Host "${scriptname}: *** Error: inconsistent item specification."
+        Write-Host "$($scriptname): *** Error: inconsistent item specification."
         ExitWithCode 1
       }
     }
@@ -251,7 +251,7 @@ foreach ($i in $items)
 Add-Content -Path $output_filename -Value ""
 Add-Content -Path $output_filename -Value "end GCC_Defines;"
 
-Write-Host "${scriptname}: ${output_filename}: done."
+Write-Host "$($scriptname): $($output_filename): done."
 
 ExitWithCode 0
 

@@ -46,26 +46,26 @@ function ExitWithCode
 $profile = $args[0]
 if ([string]::IsNullOrEmpty($profile))
 {
-  Write-Host "${scriptname}: *** Error: no PROFILE specified."
+  Write-Host "$($scriptname): *** Error: no PROFILE specified."
   ExitWithCode 1
 }
 $gnatadc_filename = $args[1]
 if ([string]::IsNullOrEmpty($gnatadc_filename))
 {
-  Write-Host "${scriptname}: *** Error: no GNATADC_FILENAME specified."
+  Write-Host "$($scriptname): *** Error: no GNATADC_FILENAME specified."
   ExitWithCode 1
 }
 
-if (-not (Test-Path -Path "${gnatadc_filename}.in"))
+if (-not (Test-Path -Path "$($gnatadc_filename).in"))
 {
-  Write-Host "${scriptname}: *** Error: ${gnatadc_filename}.in not found."
+  Write-Host "$($scriptname): *** Error: $($gnatadc_filename).in not found."
   ExitWithCode 1
 }
 
 Remove-Item -Path $gnatadc_filename -Force -ErrorAction Ignore
 New-Item -Name $gnatadc_filename -ItemType File | Out-Null
 
-foreach ($textline in Get-Content "${gnatadc_filename}.in")
+foreach ($textline in Get-Content "$($gnatadc_filename).in")
 {
   $textlinearray = $textline -Split "--"
   $pragma = $textlinearray[0].Trim(" ")
@@ -83,13 +83,13 @@ foreach ($textline in Get-Content "${gnatadc_filename}.in")
   {
     if ($p -eq $profile)
     {
-      Add-Content -Path $gnatadc_filename -Value "${pragma}"
+      Add-Content -Path $gnatadc_filename -Value "$($pragma)"
       break
     }
   }
 }
 
-Write-Host "${scriptname}: ${gnatadc_filename}: done."
+Write-Host "$($scriptname): $($gnatadc_filename): done."
 
 ExitWithCode 0
 

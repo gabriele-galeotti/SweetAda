@@ -53,7 +53,7 @@ if ([string]$args[$argc] -eq "-r")
   $reffile_filename = $args[$argc]
   if ([string]::IsNullOrEmpty($reffile_filename))
   {
-    Write-Host "${scriptname}: *** Error: no reference file specified."
+    Write-Host "$($scriptname): *** Error: no reference file specified."
     ExitWithCode 1
   }
   $argc = $argc + 1
@@ -61,7 +61,7 @@ if ([string]$args[$argc] -eq "-r")
 $input_filename = $args[$argc]
 if ([string]::IsNullOrEmpty($input_filename))
 {
-  Write-Host "${scriptname}: *** Error: no input file specified."
+  Write-Host "$($scriptname): *** Error: no input file specified."
   ExitWithCode 1
 }
 

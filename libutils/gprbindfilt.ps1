@@ -45,7 +45,7 @@ function ExitWithCode
 $elaboration_filename = $args[0]
 if ([string]::IsNullOrEmpty($elaboration_filename))
 {
-  Write-Host "${scriptname}: *** Notice: no elaboration dump file specified."
+  Write-Host "$($scriptname): *** Notice: no elaboration dump file specified."
   $elaboration_filename = "gnatbind_elab.lst"
 }
 
@@ -92,7 +92,7 @@ foreach ($line in $input)
     }
     1
     {
-      $line = "${nl}${line}"
+      $line = "$($nl)$($line)"
       if ($elaboration)
       {
         if (-not ($elaboration_createfile))

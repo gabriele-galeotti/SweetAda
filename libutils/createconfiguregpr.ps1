@@ -174,13 +174,13 @@ function LFPL_list
 $configure_project = $args[0]
 if ([string]::IsNullOrEmpty($configure_project))
 {
-  Write-Host "${scriptname}: *** Error: no project name specified."
+  Write-Host "$($scriptname): *** Error: no project name specified."
   ExitWithCode 1
 }
 $configure_filename = $args[1]
 if ([string]::IsNullOrEmpty($configure_filename))
 {
-  Write-Host "${scriptname}: *** Error: no project file specified."
+  Write-Host "$($scriptname): *** Error: no project file specified."
   ExitWithCode 1
 }
 
@@ -261,7 +261,7 @@ print_V $configure_filename
 $indentation_level--
 print_I $configure_filename "end $configure_project;"
 
-Write-Host "${scriptname}: ${configure_filename}: done."
+Write-Host "$($scriptname): $($configure_filename): done."
 
 ExitWithCode 0
 

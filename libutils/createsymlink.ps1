@@ -174,7 +174,7 @@ while ($fileindex -lt $args.length)
     }
     else
     {
-      Write-Host "${scriptname}: *** Error: unknown option $($args[$fileindex])."
+      Write-Host "$($scriptname): *** Error: unknown option $($args[$fileindex])."
       ExitWithCode 1
     }
   }
@@ -188,7 +188,7 @@ while ($fileindex -lt $args.length)
 # check for at least one symlink target
 if ($fileindex -ge $args.length)
 {
-  Write-Host "${scriptname}: *** Error: no symlink target specified."
+  Write-Host "$($scriptname): *** Error: no symlink target specified."
   ExitWithCode 1
 }
 
@@ -209,7 +209,7 @@ while ($fileindex -lt $args.length)
   # then, the 2nd argument of the pair should exist
   if (($fileindex + 1) -ge $args.length)
   {
-    Write-Host "${scriptname}: *** Error: no symlink link name specified."
+    Write-Host "$($scriptname): *** Error: no symlink link name specified."
     ExitWithCode 1
   }
   $isfolder = (Test-Path -Path $target -PathType Container)
@@ -224,11 +224,11 @@ while ($fileindex -lt $args.length)
     }
     if ($verbose -eq "Y")
     {
-      Write-Host "${link_name} -> ${target}"
+      Write-Host "$($link_name) -> $($target)"
     }
     if (![string]::IsNullOrEmpty($filelist_filename))
     {
-      "INSTALLED_FILENAMES += ${link_name}" | Add-Content $filelist_filename
+      "INSTALLED_FILENAMES += $($link_name)" | Add-Content $filelist_filename
     }
   }
   else
@@ -250,7 +250,7 @@ while ($fileindex -lt $args.length)
       }
       if ($verbose -eq "Y")
       {
-        Write-Host "${link_directory}/${f} -> ${target}/${f}"
+        Write-Host "$($link_directory)/$($f) -> $($target)/$($f)"
       }
       if (![string]::IsNullOrEmpty($filelist_filename))
       {
