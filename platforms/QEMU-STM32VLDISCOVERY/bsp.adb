@@ -60,12 +60,13 @@ package body BSP
       ARMv7M.SYST_RVR.RELOAD := Bits_24 (Configure.SYSCLK_FREQUENCY / Configure.TICK_FREQUENCY);
       ARMv7M.SHPR3.PRI_15 := 16#01#;
       ARMv7M.SYST_CVR.CURRENT := 0;
-      ARMv7M.SYST_CSR :=
-         (ENABLE    => True,
-          TICKINT   => True,
-          CLKSOURCE => ARMv7M.CLKSOURCE_CPU,
-          COUNTFLAG => False,
-          others    => <>);
+      ARMv7M.SYST_CSR := (
+         ENABLE    => True,
+         TICKINT   => True,
+         CLKSOURCE => ARMv7M.CLKSOURCE_CPU,
+         COUNTFLAG => False,
+         others    => <>
+         );
    end SysTick_Init;
 
    ----------------------------------------------------------------------------
@@ -105,8 +106,10 @@ package body BSP
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("STM32VLDISCOVERY (QEMU emulator)", NL => True);

@@ -73,9 +73,9 @@ package STM32VLDISCOVERY
    -- 23.6.2 Data register (USART_DR)
 
    type USART_DR_Type is record
-      DR       : Unsigned_8;   -- Data value
-      DR8      : Bits_1;       -- 9th bit
-      Reserved : Bits_23 := 0;
+      DR       : Unsigned_8;      -- Data value
+      DR8      : Bits_1;          -- 9th bit
+      Reserved : Bits_23    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -129,7 +129,7 @@ package STM32VLDISCOVERY
       WAKE      : Bits_1;       -- Receiver wakeup method
       M         : Bits_1;       -- Word length
       UE        : Boolean;      -- USART enable
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       OVER8     : Bits_1;       -- Oversampling mode
       Reserved2 : Bits_16 := 0;
    end record
@@ -173,10 +173,10 @@ package STM32VLDISCOVERY
 
    type USART_CR2_Type is record
       ADD       : Bits_4;       -- Address of the USART node
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       LBDL      : Bits_1;       -- lin break detection length
       LBDIE     : Boolean;      -- LIN break detection interrupt enable
-      Reserved2 : Bits_1 := 0;
+      Reserved2 : Bits_1  := 0;
       LBCL      : Boolean;      -- Last bit clock pulse
       CPHA      : Bits_1;       -- Clock phase
       CPOL      : Bits_1;       -- Clock polarity
@@ -240,9 +240,9 @@ package STM32VLDISCOVERY
    -- 23.6.7 Guard time and prescaler register (USART_GTPR)
 
    type USART_GTPR_Type is record
-      PSC      : Unsigned_8;   -- Prescaler value
-      GT       : Unsigned_8;   -- Guard time value
-      Reserved : Bits_16 := 0;
+      PSC      : Unsigned_8;      -- Prescaler value
+      GT       : Unsigned_8;      -- Guard time value
+      Reserved : Bits_16    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
