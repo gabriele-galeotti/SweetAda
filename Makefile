@@ -201,9 +201,9 @@ IMPLICIT_ALI_UNITS :=
 EXTERNAL_OBJECTS   :=
 
 # initialize configuration dependencies
-CONFIGURE_FILES_PLATFORM :=
-CONFIGURE_DEPS           :=
+CONFIGURE_DEPS           := Makefile.fn.in Makefile.lb.in Makefile.tc.in Makefile.ut.in
 GPRBUILD_DEPS            :=
+CONFIGURE_FILES_PLATFORM :=
 
 # read the master configuration file
 include configuration.in
