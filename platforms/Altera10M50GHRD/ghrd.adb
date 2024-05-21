@@ -36,13 +36,13 @@ package body GHRD
          Configure.TICK_FREQUENCY
          - 1;
    begin
-      GHRD.Timer.Control := (
+      Timer.Control := (
          STOP   => True,
          others => <>
          );
-      GHRD.Timer.PeriodH := Period / 2**16;
-      GHRD.Timer.PeriodL := Period mod 2**16;
-      GHRD.Timer.Control := (
+      Timer.PeriodH := Period / 2**16;
+      Timer.PeriodL := Period mod 2**16;
+      Timer.Control := (
          ITO    => True,
          CONT   => True,
          START  => True,

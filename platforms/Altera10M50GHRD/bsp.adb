@@ -38,9 +38,7 @@ package body BSP
    --========================================================================--
 
    use Interfaces;
-   use Definitions;
    use Bits;
-   use GHRD;
 
    --========================================================================--
    --                                                                        --
@@ -75,17 +73,26 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
+      use Definitions;
+      use GHRD;
    begin
       -- UART -----------------------------------------------------------------
-      UART_Descriptor.Base_Address  := System'To_Address (UART_BASEADDRESS);
-      UART_Descriptor.Scale_Address := 2;
-      UART_Descriptor.Baud_Clock    := CLK_UART1M8;
-      UART_Descriptor.Read_8        := MMIO.Read'Access;
-      UART_Descriptor.Write_8       := MMIO.Write'Access;
+      UART_Descriptor := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (UART_BASEADDRESS),
+         Scale_Address => 2,
+         Baud_Clock    => CLK_UART1M8,
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0),
+         others        => <>
+         );
       UART16x50.Init (UART_Descriptor);
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Altera 10M50GHRD (QEMU emulator)", NL => True);
