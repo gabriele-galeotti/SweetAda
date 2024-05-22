@@ -1,0 +1,33 @@
+# Emacs temporary files
+*~
+
+# All compilation files
+*.o
+*.ali
+*.elf
+*.elf*
+*.bin
+
+# All compiled directories
+/obj
+/lib
+/rts/sfp
+/rts/zfp
+
+# Intermediate/Compiled files
+/application/application.adb
+/application/application.ads
+
+gnat.adc
+gnatbind_alis.lst
+gnatbind_elab.lst
+gnatbind_objs.lst
+kernel.cfg
+kernel.lst
+kernel.map
+kernel.src.lst
+libgnarl.lst
+libgnat.lst
+
+configure.gpr
+core/gcc_defines.ads

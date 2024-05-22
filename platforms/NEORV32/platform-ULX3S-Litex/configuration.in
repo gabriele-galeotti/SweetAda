@@ -1,0 +1,70 @@
+
+#
+# NEORV32
+#
+# RISC-V RV32IMC
+#
+
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+RTS        := sfp
+PROFILE    := sfp
+USE_LIBADA := Y
+
+USE_APPLICATION := test-NEORV32
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
+CPU       := RISC-V
+CPU_MODEL := RV32
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+GCC_SWITCHES_PLATFORM     := -march=rv32i2p0_mc -mabi=ilp32
+LD_SWITCHES_PLATFORM      += -m elf32lriscv
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0xFFFFFF90
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtimecmp_mmap=0xFFFFFF98
+OBJDUMP_SWITCHES_PLATFORM :=
+OBJCOPY_SWITCHES_PLATFORM :=
+POSTBUILD_ROMFILE         :=
+
+OPTIMIZATION_LEVEL        := 2
+
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
+
+#
+# NEORV32_HOME is the top-level directory created when NEORV32 is checked out
+# from the repository. This implementation refers to:
+# https://github.com/emb4fun/neorv32-examples
+#
+# As a prerequisite, go into the "<NEORV32_HOME>/sw/example/hello_world"
+# directory an do a "make ../../../sw/image_gen/image_gen" to create the
+# executable that will be used in translating the SweetAda binary image.
+#
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/neorv32.sh
+DEBUG_COMMAND :=
+
