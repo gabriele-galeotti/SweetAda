@@ -46,26 +46,29 @@ CONFIGURE_GOAL     := configure
 INFODUMP_GOAL      := infodump
 PROBEVARIABLE_GOAL := probevariable
 
+# libutils goals
 LIBUTILS_GOALS := libutils-elftool      \
                   libutils-gcc-wrapper  \
                   libutils-gnat-wrapper
 
-SERVICE_GOALS := help                  \
+# goals that do not read kernel.cfg
+NOT_CONFIG_GOALS := help              \
+                    $(LIBUTILS_GOALS) \
+                    createkernelcfg
+
+# service goals
+SERVICE_GOALS := $(NOT_CONFIG_GOALS)   \
                  $(PROBEVARIABLE_GOAL) \
-                 $(LIBUTILS_GOALS)     \
                  $(INFODUMP_GOAL)      \
-                 createkernelcfg       \
                  clean                 \
                  distclean             \
                  freeze
 
-INFOCONFIG_GOALS := $(PROBEVARIABLE_GOAL) \
-                    $(CONFIGURE_GOAL)     \
-                    $(INFODUMP_GOAL)
-
+# not platform-related goals
 NOT_PLATFORM_GOALS := $(SERVICE_GOALS) \
                       $(RTS_GOAL)
 
+# platform-related goals
 PLATFORM_GOALS := $(CONFIGURE_GOAL)  \
                   all                \
                   $(KERNEL_BASENAME) \
@@ -77,13 +80,19 @@ PLATFORM_GOALS := $(CONFIGURE_GOAL)  \
                   run                \
                   debug
 
+# all goals
 ALL_GOALS := $(NOT_PLATFORM_GOALS) \
              $(PLATFORM_GOALS)
+
+# special set of goals for detection of all informations
+INFOCONFIG_GOALS := $(PROBEVARIABLE_GOAL) \
+                    $(CONFIGURE_GOAL)     \
+                    $(INFODUMP_GOAL)
 
 # check Makefile target
 NOT_MAKEFILE_TARGETS := $(filter-out $(ALL_GOALS),$(MAKECMDGOALS))
 ifneq ($(NOT_MAKEFILE_TARGETS),)
-$(error Error: $(NOT_MAKEFILE_TARGETS): no known Makefile target)
+$(error Error: $(NOT_MAKEFILE_TARGETS): no known Makefile target, try "make help")
 endif
 
 # detect OS type
@@ -488,8 +497,10 @@ ENABLE_SPLIT_DWARF :=
 #
 
 # try to read PLATFORM from configuration file
-ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
+ifneq ($(MAKECMDGOALS),)
+ifeq ($(filter $(NOT_CONFIG_GOALS),$(MAKECMDGOALS)),)
 -include $(KERNEL_CFGFILE)
+endif
 endif
 
 # PLATFORM processing
@@ -1197,7 +1208,7 @@ all: kernel_start       \
 # files (subsequent "configure" phase needs all target files in place)
 .PHONY: createkernelcfg
 createkernelcfg:
-	$(MAKE) distclean
+	-$(MAKE) distclean
 ifneq ($(PLATFORM),)
 	@$(RM) $(KERNEL_CFGFILE)
 	@$(call echo-print,"PLATFORM := $(PLATFORM)")> $(KERNEL_CFGFILE)
