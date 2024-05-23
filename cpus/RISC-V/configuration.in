@@ -8,7 +8,8 @@ else ifeq ($(findstring RV64,$(CPU_MODEL)),RV64)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_RISCV64)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/64
 else
-  $(error Error: $(CPU_MODEL): no CPU model supported)
+  $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
+    Available CPU_MODEL are: RV32[...] RV64[...].)
 endif
 
 export RISCV

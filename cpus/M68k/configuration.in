@@ -26,7 +26,8 @@ else ifeq ($(CPU_MODEL),CFv2)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CFv2
   GPR_CORE_CPU := cfv2.adb cfv2.ads
 else
-  $(error Error: $(CPU_MODEL): no CPU model supported)
+  $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
+    Available CPU_MODEL are: M680[1|2|3|4]0 CF[v2|5206|5235|5373].)
 endif
 
 GPR_CORE_CPU += cpu.ads

@@ -8,7 +8,8 @@ else ifeq ($(CPU_MODEL),SH7750)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/SH7750
   GPR_CORE_CPU := sh7750.adb sh7750.ads
 else
-  $(error Error: $(CPU_MODEL): no CPU model supported)
+  $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
+    Available CPU_MODEL are: SH[7032|7750].)
 endif
 
 # override core MMIO
