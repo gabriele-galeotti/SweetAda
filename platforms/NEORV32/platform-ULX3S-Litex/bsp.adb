@@ -59,9 +59,10 @@ package body BSP
    begin
       -- wait for transmitter available
       loop
-         exit when not UART0.CTRL.UART_CTRL_TX_FULL;
+         exit when not UART.TXFULL;
       end loop;
-      UART0.DATA.UART_DATA_RTX := To_U8 (C);
+      UART.RXTX := To_U8 (C);
+      UART.EV_PENDING.RX := True;
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -71,10 +72,11 @@ package body BSP
    begin
       -- wait for receiver available
       loop
-         exit when UART0.CTRL.UART_CTRL_RX_NEMPTY;
+         exit when not UART.RXEMPTY;
       end loop;
-      Data := UART0.DATA.UART_DATA_RTX;
+      Data := UART.RXTX;
       C := To_Ch (Data);
+      UART.EV_PENDING.TX := True;
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -83,34 +85,11 @@ package body BSP
    procedure Setup
       is
    begin
-      -- UART0 ----------------------------------------------------------------
-      -- serial port wiring:
-      -- GND = GPIO-30
-      -- RXD = GPIO-33
-      -- TXD = GPIO-34
-      -- 19200 baud @ clk_i = 90 MHz
-      -- Baud rate = (fmain[Hz] / clock_prescaler) / (baud_div + 1)
-      UART0.CTRL := (
-         UART_CTRL_EN            => True,
-         UART_CTRL_SIM_MODE      => False,
-         UART_CTRL_HWFC_EN       => False,
-         UART_CTRL_PRSC          => UART_CTRL_PRSC_DIV8,
-         UART_CTRL_BAUD          => Bits_10 (50 * MHz1 / (8 * 115_200) - 1),
-         UART_CTRL_RX_NEMPTY     => False,
-         UART_CTRL_RX_HALF       => False,
-         UART_CTRL_RX_FULL       => False,
-         UART_CTRL_TX_EMPTY      => False,
-         UART_CTRL_TX_NHALF      => False,
-         UART_CTRL_TX_FULL       => False,
-         UART_CTRL_IRQ_RX_NEMPTY => False,
-         UART_CTRL_IRQ_RX_HALF   => False,
-         UART_CTRL_IRQ_RX_FULL   => False,
-         UART_CTRL_IRQ_TX_EMPTY  => False,
-         UART_CTRL_IRQ_TX_NHALF  => False,
-         UART_CTRL_RX_OVER       => False,
-         UART_CTRL_TX_BUSY       => False,
-         others                  => <>
-         );
+      -- UART -----------------------------------------------------------------
+      -- Copied from uart.c, function uart_init()
+      UART.EV_PENDING := UART.EV_PENDING; -- uart_ev_pending_write(uart_ev_pending_read());
+      UART.EV_ENABLE := (TX => True, RX => True); -- uart_ev_enable_write(UART_EV_TX | UART_EV_RX);
+
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor.Write := Console_Putchar'Access;
       Console.Console_Descriptor.Read  := Console_Getchar'Access;
