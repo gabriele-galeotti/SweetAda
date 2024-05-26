@@ -1,0 +1,99 @@
+
+#
+# .gitignore
+#
+
+################################################################################
+# top-level directory                                                          #
+################################################################################
+
+# Eclipse
+.externalToolBuilders/
+.settings/
+.project
+# Emacs temporary files
+*~
+# GPS
+sweetada-loc.xml
+# jGRASP
+SweetAda.gpj
+# KDE Kate
+.kateproject.d/
+# Visual Studio Code
+.vscode/
+
+# Makefile fragments and main configuration
+configuration.in
+gnatmake.st.in
+gnatmake.wr.in
+gprbuild_st.gpr
+gprbuild_wr.gpr
+
+# build artifacts
+configure.gpr
+gnat.adc
+kernel.*
+*.a
+*.aout
+*.bin
+*.d
+*.dwo
+*.elf
+*.hex
+*.log
+*.lst
+*.map
+*.o
+*.out
+*.srec
+*.tmp
+core/gcc_defines.ads
+lib/
+obj/
+
+# reserved user owned directories and files
+user-*
+user_*
+user/
+
+################################################################################
+# libutils                                                                     #
+################################################################################
+
+libutils/make.exe
+libutils/sed.exe
+libutils/elftool*
+libutils/gcc-wrapper*
+libutils/gnat-wrapper*
+libutils/src/ELFtool/*.o
+libutils/src/ELFtool/elftool
+libutils/src/ELFtool/elftool.exe
+libutils/src/GCC-wrapper/*.o
+libutils/src/GCC-wrapper/gcc-wrapper
+libutils/src/GCC-wrapper/gcc-wrapper.exe
+libutils/src/GNAT-wrapper/*.o
+libutils/src/GNAT-wrapper/gnat-wrapper
+libutils/src/GNAT-wrapper/gnat-wrapper.exe
+
+################################################################################
+# RTS                                                                          #
+################################################################################
+
+rts/*.log
+rts/sfp/
+rts/zfp/
+
+################################################################################
+# cpus                                                                         #
+################################################################################
+
+cpus/**/L_*
+cpus/RISC-V/mmio-*
+
+################################################################################
+# application                                                                  #
+################################################################################
+
+application/application.adb
+application/application.ads
+
