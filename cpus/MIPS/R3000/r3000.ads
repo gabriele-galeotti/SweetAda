@@ -40,34 +40,34 @@ package R3000
    ----------------------------------------------------------------------------
 
    type Status_Type is record
-      IEc     : Boolean;     -- IEc is set 0 to prevent the CPU taking any interrupt, 1 to enable.
-      KUc     : Boolean;     -- KUc is set 1 when running with kernel privileges, 0 for user mode.
-      IEp     : Boolean;     -- IE previous
-      KUp     : Boolean;     -- KU previous
-      IEo     : Boolean;     -- IE old
-      KUo     : Boolean;     -- KU old
-      Unused1 : Bits_2 := 0;
-      IM0     : Boolean;     -- interrupt mask 0 - software interrupt
-      IM1     : Boolean;     -- interrupt mask 1 - software interrupt
-      IM2     : Boolean;     -- interrupt mask 2 - int0 - Cause bit reads 1 when pin low (active)
-      IM3     : Boolean;     -- interrupt mask 3 - int1
-      IM4     : Boolean;     -- interrupt mask 4 - int2
-      IM5     : Boolean;     -- interrupt mask 5 - int3 - Usual choice for FPA.
-      IM6     : Boolean;     -- interrupt mask 6 - int4
-      IM7     : Boolean;     -- interrupt mask 7 - int5
-      IsC     : Boolean;     -- isolate (data) cache
-      SwC     : Boolean;     -- swap caches
-      PZ      : Boolean;     -- When set, cache parity bits are written as zero and not checked.
-      CM      : Boolean;     -- shows the result of the last load operation performed with the D-cache isolated
-      PE      : Boolean;     -- set if a cache parity error has occurred.
-      TS      : Boolean;     -- TLB shutdown
-      BEV     : Boolean;     -- boot exception vectors
-      Unused2 : Bits_2 := 0;
-      RE      : Boolean;     -- reverse endianness in user mode
-      Unused3 : Bits_2 := 0;
-      CU0     : Boolean;     -- co-processor 0 usable
-      CU1     : Boolean;     -- co-processor 1 usable
-      Unused4 : Bits_2 := 0;
+      IEc     : Boolean;      -- IEc is set 0 to prevent the CPU taking any interrupt, 1 to enable.
+      KUc     : Boolean;      -- KUc is set 1 when running with kernel privileges, 0 for user mode.
+      IEp     : Boolean;      -- IE previous
+      KUp     : Boolean;      -- KU previous
+      IEo     : Boolean;      -- IE old
+      KUo     : Boolean;      -- KU old
+      Unused1 : Bits_2  := 0;
+      IM0     : Boolean;      -- interrupt mask 0 - software interrupt
+      IM1     : Boolean;      -- interrupt mask 1 - software interrupt
+      IM2     : Boolean;      -- interrupt mask 2 - int0 - Cause bit reads 1 when pin low (active)
+      IM3     : Boolean;      -- interrupt mask 3 - int1
+      IM4     : Boolean;      -- interrupt mask 4 - int2
+      IM5     : Boolean;      -- interrupt mask 5 - int3 - Usual choice for FPA.
+      IM6     : Boolean;      -- interrupt mask 6 - int4
+      IM7     : Boolean;      -- interrupt mask 7 - int5
+      IsC     : Boolean;      -- isolate (data) cache
+      SwC     : Boolean;      -- swap caches
+      PZ      : Boolean;      -- When set, cache parity bits are written as zero and not checked.
+      CM      : Boolean;      -- shows the result of the last load operation performed with the D-cache isolated
+      PE      : Boolean;      -- set if a cache parity error has occurred.
+      TS      : Boolean;      -- TLB shutdown
+      BEV     : Boolean;      -- boot exception vectors
+      Unused2 : Bits_2  := 0;
+      RE      : Boolean;      -- reverse endianness in user mode
+      Unused3 : Bits_2  := 0;
+      CU0     : Boolean;      -- co-processor 0 usable
+      CU1     : Boolean;      -- co-processor 1 usable
+      Unused4 : Bits_2  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -116,7 +116,7 @@ package R3000
    type PRId_Type is record
       Rev    : Unsigned_8;
       Imp    : Unsigned_8;
-      Unused : Bits_16 := 0;
+      Unused : Bits_16    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
