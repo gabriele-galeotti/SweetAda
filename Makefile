@@ -41,6 +41,13 @@ export NULL SPACE
 
 KERNEL_BASENAME := kernel
 
+################################################################################
+#                                                                              #
+# Partitioning of Makefile goals.                                              #
+#                                                                              #
+################################################################################
+
+# naming of recurring goals
 RTS_GOAL           := rts
 CONFIGURE_GOAL     := configure
 INFODUMP_GOAL      := infodump
@@ -80,6 +87,8 @@ PLATFORM_GOALS := $(CONFIGURE_GOAL)  \
                   run                \
                   debug
 
+# now all goals has been covered, use only variable references when grouping
+
 # all goals
 ALL_GOALS := $(NOT_PLATFORM_GOALS) \
              $(PLATFORM_GOALS)
@@ -94,6 +103,12 @@ NOT_MAKEFILE_TARGETS := $(filter-out $(ALL_GOALS),$(MAKECMDGOALS))
 ifneq ($(NOT_MAKEFILE_TARGETS),)
 $(error Error: $(NOT_MAKEFILE_TARGETS): no known Makefile target, try "make help")
 endif
+
+################################################################################
+#                                                                              #
+# Main setup.                                                                  #
+#                                                                              #
+################################################################################
 
 # detect OS type
 # detected OS names: "cmd"/"msys"/"darwin"/"linux"
