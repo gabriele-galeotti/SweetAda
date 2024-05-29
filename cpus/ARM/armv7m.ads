@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
@@ -35,7 +34,6 @@ package ARMv7M
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -320,7 +318,7 @@ package ARMv7M
    end record;
 
    CCR : aliased CCR_Type
-      with Address              => To_Address (CCR_ADDRESS),
+      with Address              => System'To_Address (CCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -343,7 +341,7 @@ package ARMv7M
    end record;
 
    SHPR1 : aliased SHPR1_Type
-      with Address              => To_Address (SHPR1_ADDRESS),
+      with Address              => System'To_Address (SHPR1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -366,7 +364,7 @@ package ARMv7M
    end record;
 
    SHPR2 : aliased SHPR2_Type
-      with Address              => To_Address (SHPR2_ADDRESS),
+      with Address              => System'To_Address (SHPR2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -389,7 +387,7 @@ package ARMv7M
    end record;
 
    SHPR3 : aliased SHPR3_Type
-      with Address              => To_Address (SHPR3_ADDRESS),
+      with Address              => System'To_Address (SHPR3_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -440,7 +438,7 @@ package ARMv7M
    end record;
 
    SHCSR : aliased SHCSR_Type
-      with Address              => To_Address (SHCSR_ADDRESS),
+      with Address              => System'To_Address (SHCSR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -533,7 +531,7 @@ package ARMv7M
    end record;
 
    CFSR : aliased CFSR_Type
-      with Address              => To_Address (CFSR_ADDRESS),
+      with Address              => System'To_Address (CFSR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -558,7 +556,7 @@ package ARMv7M
    end record;
 
    HFSR : aliased HFSR_Type
-      with Address              => To_Address (HFSR_ADDRESS),
+      with Address              => System'To_Address (HFSR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -566,7 +564,7 @@ package ARMv7M
    -- B3.2.17 MemManage Fault Address Register, MMFAR
 
    MMFAR : aliased Unsigned_32
-      with Address              => To_Address (MMFAR_ADDRESS),
+      with Address              => System'To_Address (MMFAR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -574,7 +572,7 @@ package ARMv7M
    -- B3.2.18 BusFault Address Register, BFAR
 
    BFAR : aliased Unsigned_32
-      with Address              => To_Address (BFAR_ADDRESS),
+      with Address              => System'To_Address (BFAR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -628,7 +626,7 @@ package ARMv7M
    end record;
 
    CPACR : aliased CPACR_Type
-      with Address              => To_Address (CPACR_ADDRESS),
+      with Address              => System'To_Address (CPACR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -647,7 +645,7 @@ package ARMv7M
    end record;
 
    ICTR : aliased ICTR_Type
-      with Address              => To_Address (ICTR_ADDRESS),
+      with Address              => System'To_Address (ICTR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -693,7 +691,7 @@ package ARMv7M
    end record;
 
    SYST_CVR : aliased SYST_CVR_Type
-      with Address              => To_Address (SYST_CVR_ADDRESS),
+      with Address              => System'To_Address (SYST_CVR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -726,32 +724,32 @@ package ARMv7M
    NVIC_IPR_ADDRESS  renames ARMv6M.NVIC_IPR_ADDRESS;
 
    NVIC_ISER : aliased NVIC_Array_Type (0 .. 15)
-      with Address    => To_Address (NVIC_ISER_ADDRESS),
+      with Address    => System'To_Address (NVIC_ISER_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    NVIC_ICER : aliased NVIC_Array_Type (0 .. 15)
-      with Address    => To_Address (NVIC_ICER_ADDRESS),
+      with Address    => System'To_Address (NVIC_ICER_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    NVIC_ISPR : aliased NVIC_Array_Type (0 .. 15)
-      with Address    => To_Address (NVIC_ISPR_ADDRESS),
+      with Address    => System'To_Address (NVIC_ISPR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    NVIC_ICPR : aliased NVIC_Array_Type (0 .. 15)
-      with Address    => To_Address (NVIC_ICPR_ADDRESS),
+      with Address    => System'To_Address (NVIC_ICPR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    NVIC_IABR : aliased NVIC_Array_Type (0 .. 15)
-      with Address    => To_Address (NVIC_IABR_ADDRESS),
+      with Address    => System'To_Address (NVIC_IABR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    NVIC_IPR  : aliased ARMv6M.NVIC_IPR_Array_Type (0 .. 123)
-      with Address    => To_Address (NVIC_IPR_ADDRESS),
+      with Address    => System'To_Address (NVIC_IPR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;

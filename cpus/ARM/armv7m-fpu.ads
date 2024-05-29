@@ -61,7 +61,7 @@ package ARMv7M.FPU
    end record;
 
    FPCCR : aliased FPCCR_Type
-      with Address              => To_Address (FPCCR_ADDRESS),
+      with Address              => System'To_Address (FPCCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -80,7 +80,7 @@ package ARMv7M.FPU
    end record;
 
    FPCAR : aliased FPCAR_Type
-      with Address              => To_Address (FPCAR_ADDRESS),
+      with Address              => System'To_Address (FPCAR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -160,7 +160,7 @@ package ARMv7M.FPU
    end record;
 
    FPDSCR : aliased FPDSCR_Type
-      with Address              => To_Address (FPDSCR_ADDRESS),
+      with Address              => System'To_Address (FPDSCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
