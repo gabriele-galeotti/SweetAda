@@ -15,12 +15,11 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Parameters;
-with System.Secondary_Stack;
-with System.Storage_Elements;
+with System;
 with Definitions;
 with Core;
 with Bits;
+with Secondary_Stack;
 with MMIO;
 with MIPS32;
 with MIPSSIM;
@@ -38,18 +37,9 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
-
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -58,16 +48,6 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -96,19 +76,26 @@ package body BSP
       is
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- UART -----------------------------------------------------------------
-      UART_Descriptor.Read_8        := MMIO.Read'Access;
-      UART_Descriptor.Write_8       := MMIO.Write'Access;
-      UART_Descriptor.Base_Address  := To_Address (UART_BASEADDRESS);
-      UART_Descriptor.Scale_Address := 0;
-      UART_Descriptor.Baud_Clock    := CLK_UART1M8;
+      UART_Descriptor := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (UART_BASEADDRESS),
+         Scale_Address => 0,
+         Baud_Clock    => CLK_UART1M8,
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0),
+         others        => <>
+         );
       UART16x50.Init (UART_Descriptor);
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("QEMU-MIPS", NL => True);
