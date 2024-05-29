@@ -178,7 +178,7 @@ package body EtherLinkIII
       begin
          Data := EEPROM_ID_Read (8);
          IO_Offset := Storage_Offset (Shift_Left (Data and 16#001F#, 4));
-         EtherLinkIII_Card.Base_Address := To_Address (16#0200#) + IO_Offset;
+         EtherLinkIII_Card.Base_Address := System'To_Address (16#0200#) + IO_Offset;
          EtherLinkIII_Card.IF_Port := Shift_Right (Data, 14);
          Data := EEPROM_ID_Read (9);
          EtherLinkIII_Card.IRQ := Natural (Shift_Right (Data, 12));
