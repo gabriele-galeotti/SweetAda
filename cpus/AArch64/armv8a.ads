@@ -78,22 +78,22 @@ package ARMv8A
       FIZ       : Boolean;      -- Flush Inputs to Zero. Controls whether single-precision ...
       AH        : Boolean;      -- Alternate Handling. Controls alternate handling of denormalized floating-point numbers.
       NEP       : Boolean;      -- Controls how the output elements other than the lowest element of the vector ...
-      Reserved1 : Bits_5 := 0;
+      Reserved1 : Bits_5  := 0;
       IOE       : Boolean;      -- Invalid Operation floating-point exception trap enable.
       DZE       : Boolean;      -- Divide by Zero floating-point exception trap enable.
       OFE       : Boolean;      -- Overflow floating-point exception trap enable.
       UFE       : Boolean;      -- Underflow floating-point exception trap enable.
       IXE       : Boolean;      -- Inexact floating-point exception trap enable.
-      Reserved2 : Bits_2 := 0;
+      Reserved2 : Bits_2  := 0;
       IDE       : Boolean;      -- Input Denormal floating-point exception trap enable.
-      Len       : Bits_3 := 0;  -- This field has no function in AArch64 state, and non-zero values are ignored ...
+      Len       : Bits_3  := 0;  -- This field has no function in AArch64 state, and non-zero values are ignored ...
       FZ16      : Boolean;      -- Flushing denormalized numbers to zero control bit on half-precision data-processing instructions.
-      Stride    : Bits_2 := 0;  -- This field has no function in AArch64 state, and non-zero values are ignored ...
+      Stride    : Bits_2  := 0;  -- This field has no function in AArch64 state, and non-zero values are ignored ...
       RMode     : Bits_2;       -- Rounding Mode control field.
       FZ        : Boolean;      -- Flushing denormalized numbers to zero control bit.
       DN        : Boolean;      -- Default NaN use for NaN propagation.
       AHP       : Boolean;      -- Alternative half-precision control bit.
-      Reserved3 : Bits_5 := 0;
+      Reserved3 : Bits_5  := 0;
       Reserved4 : Bits_32 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -136,7 +136,7 @@ package ARMv8A
       OFC       : Boolean;      -- Overflow cumulative exception bit.
       UFC       : Boolean;      -- Underflow cumulative exception bit.
       IXC       : Boolean;      -- Inexact cumulative exception bit.
-      Reserved1 : Bits_2 := 0;
+      Reserved1 : Bits_2  := 0;
       IDC       : Boolean;      -- Input Denormal cumulative exception bit.
       Reserved2 : Bits_19 := 0;
       QC        : Boolean;      -- Cumulative saturation bit, Advanced SIMD only.
@@ -221,7 +221,7 @@ package ARMv8A
       OFF       : Boolean;      -- Overflow floating-point exception trap enable.
       UFF       : Boolean;      -- Underflow floating-point exception trap enable.
       IXF       : Boolean;      -- Inexact floating-point exception trap enable.
-      Reserved1 : Bits_2 := 0;
+      Reserved1 : Bits_2  := 0;
       IDF       : Boolean;      -- Input Denormal floating-point exception trap enable.
       VECITR    : Bits_3;
       Reserved2 : Bits_15 := 0;
@@ -264,66 +264,66 @@ package ARMv8A
    -- D19.2.48 HCR_EL2, Hypervisor Configuration Register
 
    type HCR_EL2_Type is record
-      VM        : Boolean;     -- Virtualization enable.
-      SWIO      : Boolean;     -- Set/Way Invalidation Override.
-      PTW       : Boolean;     -- Protected Table Walk.
-      FMO       : Boolean;     -- Physical FIQ Routing.
-      IMO       : Boolean;     -- Physical IRQ Routing.
-      AMO       : Boolean;     -- Physical SError interrupt routing.
-      VF        : Boolean;     -- Virtual FIQ Interrupt
-      VI        : Boolean;     -- Virtual IRQ Interrupt.
-      VSE       : Boolean;     -- Virtual SError interrupt.
-      FB        : Boolean;     -- Force broadcast.
-      BSU       : Bits_2;      -- Barrier Shareability upgrade.
-      DC        : Boolean;     -- Default Cacheability.
-      TWI       : Boolean;     -- Traps EL0 and EL1 execution of WFI instructions to EL2, ...
-      TWE       : Boolean;     -- Traps EL0 and EL1 execution of WFE instructions to EL2, ...
-      TID0      : Boolean;     -- Trap ID group 0.
-      TID1      : Boolean;     -- Trap ID group 1.
-      TID2      : Boolean;     -- Trap ID group 2.
-      TID3      : Boolean;     -- Trap ID group 3.
-      TSC       : Boolean;     -- Trap SMC instructions.
-      TIDCP     : Boolean;     -- Trap IMPLEMENTATION DEFINED functionality.
-      TACR      : Boolean;     -- Trap Auxiliary Control Registers.
-      TSW       : Boolean;     -- Trap data or unified cache maintenance instructions that operate by Set/Way.
-      TPCP      : Boolean;     -- Trap data or unified cache mainte instrs that operate to the Point of Coherency or Persistence.
-      TPU       : Boolean;     -- Trap cache maintenance instructions that operate to the Point of Unification.
-      TTLB      : Boolean;     -- Trap TLB maintenance instructions.
-      TVM       : Boolean;     -- Trap Virtual Memory controls.
-      TGE       : Boolean;     -- Trap General Exceptions, from EL0.
-      TDZ       : Boolean;     -- Trap DC ZVA instructions.
-      HCD       : Boolean;     -- HVC instruction disable.
-      TRVM      : Boolean;     -- Trap Reads of Virtual Memory controls.
-      RV        : Boolean;     -- Execution state control for lower Exception levels
-      CD        : Boolean;     -- Stage 2 Data access cacheability disable.
-      ID        : Boolean;     -- Stage 2 Instruction access cacheability disable.
-      E2H       : Boolean;     -- EL2 Host.
-      TLOR      : Boolean;     -- Trap LOR registers.
-      TERR      : Boolean;     -- Trap Error record accesses.
-      TEA       : Boolean;     -- Route synchronous External abort exceptions to EL2.
-      MIOCNCE   : Boolean;     -- Mismatched Inner/Outer Cacheable Non-Coherency Enable, for the EL1&0 translation regimes.
-      Reserved1 : Bits_1 := 0;
-      APK       : Boolean;     -- Trap registers holding "key" values for Pointer Authentication.
-      API       : Boolean;     -- Controls the use of instructions related to Pointer Authentication
-      NV        : Boolean;     -- Nested Virtualization.
-      NV1       : Boolean;     -- Nested Virtualization.
-      AddrTr    : Boolean;     -- Address Translation.
-      NV2       : Boolean;     -- Nested Virtualization.
-      FWB       : Boolean;     -- Forced Write-Back.
-      FIEN      : Boolean;     -- Fault Injection Enable.
-      Reserved2 : Bits_1 := 0;
-      TID4      : Boolean;     -- Trap ID group 4.
-      TICAB     : Boolean;     -- Trap ICIALLUIS/IC IALLUIS cache maintenance instructions.
-      AMVOFFEN  : Boolean;     -- Activity Monitors Virtual Offsets Enable.
-      TOCU      : Boolean;     -- Trap cache maintenance instructions that operate to the Point of Unification.
-      EnSCXT    : Boolean;     -- Enable Access to the SCXTNUM_EL1 and SCXTNUM_EL0 registers.
-      TTLBIS    : Boolean;     -- Trap TLB maintenance instructions that operate on the Inner Shareable domain.
-      TTLBOS    : Boolean;     -- Trap TLB maintenance instructions that operate on the Outer Shareable domain.
-      ATA       : Boolean;     -- Allocation Tag Access.
-      DCT       : Boolean;     -- Default Cacheability Tagging.
-      TID5      : Boolean;     -- Trap ID group 5.
-      TWEDEn    : Boolean;     -- TWE Delay Enable.
-      TWEDEL    : Bits_4 := 0; -- TWE Delay.
+      VM        : Boolean;      -- Virtualization enable.
+      SWIO      : Boolean;      -- Set/Way Invalidation Override.
+      PTW       : Boolean;      -- Protected Table Walk.
+      FMO       : Boolean;      -- Physical FIQ Routing.
+      IMO       : Boolean;      -- Physical IRQ Routing.
+      AMO       : Boolean;      -- Physical SError interrupt routing.
+      VF        : Boolean;      -- Virtual FIQ Interrupt
+      VI        : Boolean;      -- Virtual IRQ Interrupt.
+      VSE       : Boolean;      -- Virtual SError interrupt.
+      FB        : Boolean;      -- Force broadcast.
+      BSU       : Bits_2;       -- Barrier Shareability upgrade.
+      DC        : Boolean;      -- Default Cacheability.
+      TWI       : Boolean;      -- Traps EL0 and EL1 execution of WFI instructions to EL2, ...
+      TWE       : Boolean;      -- Traps EL0 and EL1 execution of WFE instructions to EL2, ...
+      TID0      : Boolean;      -- Trap ID group 0.
+      TID1      : Boolean;      -- Trap ID group 1.
+      TID2      : Boolean;      -- Trap ID group 2.
+      TID3      : Boolean;      -- Trap ID group 3.
+      TSC       : Boolean;      -- Trap SMC instructions.
+      TIDCP     : Boolean;      -- Trap IMPLEMENTATION DEFINED functionality.
+      TACR      : Boolean;      -- Trap Auxiliary Control Registers.
+      TSW       : Boolean;      -- Trap data or unified cache maintenance instructions that operate by Set/Way.
+      TPCP      : Boolean;      -- Trap data or unified cache mainte instrs that operate to the Point of Coherency or Persistence.
+      TPU       : Boolean;      -- Trap cache maintenance instructions that operate to the Point of Unification.
+      TTLB      : Boolean;      -- Trap TLB maintenance instructions.
+      TVM       : Boolean;      -- Trap Virtual Memory controls.
+      TGE       : Boolean;      -- Trap General Exceptions, from EL0.
+      TDZ       : Boolean;      -- Trap DC ZVA instructions.
+      HCD       : Boolean;      -- HVC instruction disable.
+      TRVM      : Boolean;      -- Trap Reads of Virtual Memory controls.
+      RV        : Boolean;      -- Execution state control for lower Exception levels
+      CD        : Boolean;      -- Stage 2 Data access cacheability disable.
+      ID        : Boolean;      -- Stage 2 Instruction access cacheability disable.
+      E2H       : Boolean;      -- EL2 Host.
+      TLOR      : Boolean;      -- Trap LOR registers.
+      TERR      : Boolean;      -- Trap Error record accesses.
+      TEA       : Boolean;      -- Route synchronous External abort exceptions to EL2.
+      MIOCNCE   : Boolean;      -- Mismatched Inner/Outer Cacheable Non-Coherency Enable, for the EL1&0 translation regimes.
+      Reserved1 : Bits_1  := 0;
+      APK       : Boolean;      -- Trap registers holding "key" values for Pointer Authentication.
+      API       : Boolean;      -- Controls the use of instructions related to Pointer Authentication
+      NV        : Boolean;      -- Nested Virtualization.
+      NV1       : Boolean;      -- Nested Virtualization.
+      AddrTr    : Boolean;      -- Address Translation.
+      NV2       : Boolean;      -- Nested Virtualization.
+      FWB       : Boolean;      -- Forced Write-Back.
+      FIEN      : Boolean;      -- Fault Injection Enable.
+      Reserved2 : Bits_1  := 0;
+      TID4      : Boolean;      -- Trap ID group 4.
+      TICAB     : Boolean;      -- Trap ICIALLUIS/IC IALLUIS cache maintenance instructions.
+      AMVOFFEN  : Boolean;      -- Activity Monitors Virtual Offsets Enable.
+      TOCU      : Boolean;      -- Trap cache maintenance instructions that operate to the Point of Unification.
+      EnSCXT    : Boolean;      -- Enable Access to the SCXTNUM_EL1 and SCXTNUM_EL0 registers.
+      TTLBIS    : Boolean;      -- Trap TLB maintenance instructions that operate on the Inner Shareable domain.
+      TTLBOS    : Boolean;      -- Trap TLB maintenance instructions that operate on the Outer Shareable domain.
+      ATA       : Boolean;      -- Allocation Tag Access.
+      DCT       : Boolean;      -- Default Cacheability Tagging.
+      TID5      : Boolean;      -- Trap ID group 5.
+      TWEDEn    : Boolean;      -- TWE Delay Enable.
+      TWEDEL    : Bits_4  := 0; -- TWE Delay.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
@@ -437,51 +437,51 @@ package ARMv8A
    Non_Secure_Realm     : constant Non_Secure_Type := (1, 1); -- Realm.
 
    type SCR_EL3_Type is record
-      NS        : Bits_1;          -- Non-secure bit.
-      IRQ       : Boolean;         -- Physical IRQ Routing.
-      FIQ       : Boolean;         -- Physical FIQ Routing.
-      EA        : Boolean;         -- External Abort and SError interrupt routing.
-      Reserved1 : Bits_2 := 2#11#;
-      Reserved2 : Bits_1 := 0;
-      SMD       : Boolean;         -- Secure Monitor Call disable.
-      HCE       : Boolean;         -- Hypervisor Call instruction enable.
-      SIF       : Boolean;         -- Secure instruction fetch.
-      RW        : Boolean;         -- Execution state control for lower Exception levels.
-      ST        : Boolean;         -- Traps Secure EL1 accesses to the Counter-timer Physical Secure timer ...
-      TWI       : Boolean;         -- Traps EL2, EL1, and EL0 execution of WFI instructions to EL3, from any ...
-      TWE       : Boolean;         -- Traps EL2, EL1, and EL0 execution of WFE instructions to EL3, from any ...
-      TLOR      : Boolean;         -- Trap LOR registers.
-      TERR      : Boolean;         -- Trap accesses of error record registers.
-      APK       : Boolean;         -- Trap registers holding "key" values for Pointer Authentication.
-      API       : Boolean;         -- Controls the use of the following instructions related to Pointer Authentication.
-      EEL2      : Boolean;         -- Secure EL2 Enable.
-      EASE      : Boolean;         -- External aborts to SError interrupt vector.
-      NMEA      : Boolean;         -- Non-maskable External Aborts.
-      FIEN      : Boolean;         -- Fault Injection enable.
-      Reserved3 : Bits_3 := 0;
-      EnSCXT    : Boolean;         -- Enables access to the SCXTNUM_EL2, SCXTNUM_EL1, and SCXTNUM_EL0 registers.
-      ATA       : Boolean;         -- Allocation Tag Access.
-      FGTEn     : Boolean;         -- Fine-Grained Traps Enable.
-      ECVEn     : Boolean;         -- ECV Enable.
-      TWEDEn    : Boolean;         -- TWE Delay Enable.
-      TWEDEL    : Bits_4;          -- TWE Delay.
-      TME       : Boolean;         -- Enables access to the TSTART, TCOMMIT, TTEST and TCANCEL instructions at ...
-      AMVOFFEN  : Boolean;         -- Activity Monitors Virtual Offsets Enable.
-      EnAS0     : Boolean;         -- Traps execution of an ST64BV0 instruction at EL0, EL1, or EL2 to EL3.
-      ADEn      : Boolean;         -- Enables access to the ACCDATA_EL1 register at EL1 and EL2.
-      HXEn      : Boolean;         -- Enables access to the HCRX_EL2 register at EL2 from EL3.
-      Reserved4 : Bits_1 := 0;
-      TRNDR     : Boolean;         -- Controls trapping of reads of RNDR and RNDRRS.
-      EnTP2     : Boolean;         -- Traps instructions executed at EL2, EL1, and EL0 that access TPIDR2_EL0 to EL3.
-      Reserved5 : Bits_1 := 0;
-      TCR2En    : Boolean;         -- TCR2_ELx register trap control.
-      SCTLR2En  : Boolean;         -- SCTLR2_ELx register trap control.
-      Reserved6 : Bits_3 := 0;
-      GPF       : Boolean;         -- Controls the reporting of Granule protection faults at EL0, EL1 and EL2.
-      MECEn     : Boolean;         -- Enables access to the following EL2 MECID registers, from EL2: ...
+      NS        : Bits_1;           -- Non-secure bit.
+      IRQ       : Boolean;          -- Physical IRQ Routing.
+      FIQ       : Boolean;          -- Physical FIQ Routing.
+      EA        : Boolean;          -- External Abort and SError interrupt routing.
+      Reserved1 : Bits_2  := 2#11#;
+      Reserved2 : Bits_1  := 0;
+      SMD       : Boolean;          -- Secure Monitor Call disable.
+      HCE       : Boolean;          -- Hypervisor Call instruction enable.
+      SIF       : Boolean;          -- Secure instruction fetch.
+      RW        : Boolean;          -- Execution state control for lower Exception levels.
+      ST        : Boolean;          -- Traps Secure EL1 accesses to the Counter-timer Physical Secure timer ...
+      TWI       : Boolean;          -- Traps EL2, EL1, and EL0 execution of WFI instructions to EL3, from any ...
+      TWE       : Boolean;          -- Traps EL2, EL1, and EL0 execution of WFE instructions to EL3, from any ...
+      TLOR      : Boolean;          -- Trap LOR registers.
+      TERR      : Boolean;          -- Trap accesses of error record registers.
+      APK       : Boolean;          -- Trap registers holding "key" values for Pointer Authentication.
+      API       : Boolean;          -- Controls the use of the following instructions related to Pointer Authentication.
+      EEL2      : Boolean;          -- Secure EL2 Enable.
+      EASE      : Boolean;          -- External aborts to SError interrupt vector.
+      NMEA      : Boolean;          -- Non-maskable External Aborts.
+      FIEN      : Boolean;          -- Fault Injection enable.
+      Reserved3 : Bits_3  := 0;
+      EnSCXT    : Boolean;          -- Enables access to the SCXTNUM_EL2, SCXTNUM_EL1, and SCXTNUM_EL0 registers.
+      ATA       : Boolean;          -- Allocation Tag Access.
+      FGTEn     : Boolean;          -- Fine-Grained Traps Enable.
+      ECVEn     : Boolean;          -- ECV Enable.
+      TWEDEn    : Boolean;          -- TWE Delay Enable.
+      TWEDEL    : Bits_4;           -- TWE Delay.
+      TME       : Boolean;          -- Enables access to the TSTART, TCOMMIT, TTEST and TCANCEL instructions at ...
+      AMVOFFEN  : Boolean;          -- Activity Monitors Virtual Offsets Enable.
+      EnAS0     : Boolean;          -- Traps execution of an ST64BV0 instruction at EL0, EL1, or EL2 to EL3.
+      ADEn      : Boolean;          -- Enables access to the ACCDATA_EL1 register at EL1 and EL2.
+      HXEn      : Boolean;          -- Enables access to the HCRX_EL2 register at EL2 from EL3.
+      Reserved4 : Bits_1  := 0;
+      TRNDR     : Boolean;          -- Controls trapping of reads of RNDR and RNDRRS.
+      EnTP2     : Boolean;          -- Traps instructions executed at EL2, EL1, and EL0 that access TPIDR2_EL0 to EL3.
+      Reserved5 : Bits_1  := 0;
+      TCR2En    : Boolean;          -- TCR2_ELx register trap control.
+      SCTLR2En  : Boolean;          -- SCTLR2_ELx register trap control.
+      Reserved6 : Bits_3  := 0;
+      GPF       : Boolean;          -- Controls the reporting of Granule protection faults at EL0, EL1 and EL2.
+      MECEn     : Boolean;          -- Enables access to the following EL2 MECID registers, from EL2: ...
       Reserved7 : Bits_12 := 0;
-      NSE       : Bits_1;          -- This field, evaluated with SCR_EL3.NS, selects the Security state of EL2 and ...
-      Reserved8 : Bits_1 := 0;
+      NSE       : Bits_1;           -- This field, evaluated with SCR_EL3.NS, selects the Security state of EL2 and ...
+      Reserved8 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
@@ -557,64 +557,64 @@ package ARMv8A
    DSSBS_1 : constant := 1; -- PSTATE.SSBS is set to 1 on an exception to EL1.
 
    type SCTLR_EL1_Type is record
-      M          : Boolean;     -- MMU enable for EL1&0 stage 1 address translation.
-      A          : Boolean;     -- Alignment check enable.
-      C          : Boolean;     -- Stage 1 Cacheability control, for data accesses.
-      SA         : Boolean;     -- SP Alignment check enable.
-      SA0        : Boolean;     -- SP Alignment check enable for EL0.
-      CP15BEN    : Boolean;     -- System instruction memory barrier enable.
-      nAA        : Boolean;     -- Non-aligned access.
-      ITD        : Boolean;     -- IT disable.
-      SED        : Boolean;     -- SETEND instruction disable.
-      UMA        : Boolean;     -- User Mask Access.
-      EnRCTX     : Boolean;     -- Enable EL0 access to the following System instructions: ...
-      EOS        : Boolean;     -- Exception Exit is Context Synchronizing.
-      I          : Boolean;     -- Stage 1 instruction access Cacheability control, for accesses at EL0 and EL1: ...
-      EnDB       : Boolean;     -- Controls enabling of pointer authentication (using the APDBKey_EL1 key) of instruction ...
-      DZE        : Boolean;     -- Traps EL0 execution of DC ZVA instructions ...
-      UCT        : Boolean;     -- Traps EL0 accesses to the CTR_EL0 to EL1, or to EL2 when ...
-      nTWI       : Boolean;     -- Traps EL0 execution of WFI instructions to EL1, or to EL2 when ...
-      Reserved1  : Bits_1 := 0;
-      nTWE       : Boolean;     -- Traps EL0 execution of WFE instructions to EL1, or to EL2 when ...
-      WXN        : Boolean;     -- Write permission implies Execute Never (XN).
-      TSCXT      : Boolean;     -- Trap EL0 Access to the SCXTNUM_EL0 register, when EL0 is using AArch64.
-      IESB       : Boolean;     -- Implicit Error Synchronization event enable.
-      EIS        : Boolean;     -- Exception Entry is Context Synchronizing.
-      SPAN       : Boolean;     -- Set Privileged Access Never, on taking an exception to EL1.
-      E0E        : Bits_1;      -- Endianness of data accesses at EL0.
-      EE         : Bits_1;      -- Endianness of data accesses at EL1, and stage 1 translation table walks in ...
-      UCI        : Boolean;     -- Enables EL0 access to the DC CVAU, DC CIVAC, DC CVAC and IC IVAU instrs in AArch64 state.
-      EnDA       : Boolean;     -- Controls enabling of pointer authentication (using the APDAKey_EL1 key) of instruction ...
-      nTLSMD     : Boolean;     -- No Trap Load Multiple and Store Multiple to Device-nGRE/Device-nGnRE/Device-nGnRnE memory.
-      LSMAOE     : Boolean;     -- Load Multiple and Store Multiple Atomicity and Ordering Enable.
-      EnIB       : Boolean;     -- Controls enabling of pointer authentication (using the APIBKey_EL1 key) of instruction ...
-      EnIA       : Boolean;     -- Controls enabling of pointer authentication (using the APIAKey_EL1 key) of instruction ...
-      CMOW       : Boolean;     -- Controls cache maintenance instruction permission for ...
-      MSCEn      : Boolean;     -- Memory Copy and Memory Set instructions Enable.
-      Reserved2  : Bits_1 := 0;
-      BT0        : Boolean;     -- PAC Branch Type compatibility at EL0.
-      BT1        : Boolean;     -- PAC Branch Type compatibility at EL1.
-      ITFSB      : Boolean;     -- When synchronous exceptions are not being generated by Tag Check Faults, ...
-      TCF0       : Bits_2;      -- Tag Check Fault in EL0.
-      TCF        : Bits_2;      -- Tag Check Fault in EL1.
-      ATA0       : Boolean;     -- Allocation Tag Access in EL0.
-      ATA        : Boolean;     -- Allocation Tag Access in EL1.
-      DSSBS      : Bits_1;      -- Default PSTATE.SSBS value on Exception Entry.
-      TWEDEn     : Boolean;     -- TWE Delay Enable.
-      TWEDEL     : Bits_4;      -- TWE Delay.
-      TMT0       : Boolean;     -- Forces a trivial implementation of the Transactional Memory Extension at EL0.
-      TMT        : Boolean;     -- Forces a trivial implementation of the Transactional Memory Extension at EL1.
-      TME0       : Boolean;     -- Enables the Transactional Memory Extension at EL0.
-      TME        : Boolean;     -- Enables the Transactional Memory Extension at EL1.
-      EnASR      : Boolean;     -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
-      EnAS0      : Boolean;     -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
-      EnALS      : Boolean;     -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
-      EPAN       : Boolean;     -- Enhanced Privileged Access Never.
-      Reserved3  : Bits_2 := 0;
-      EnTP2      : Boolean;     -- Traps instructions executed at EL0 that access ...
-      NMI        : Boolean;     -- Non-maskable Interrupt enable.
-      SPINTMASK  : Boolean;     -- SP Interrupt Mask enable.
-      TIDCP      : Boolean;     -- Trap IMPLEMENTATION DEFINED functionality.
+      M          : Boolean;      -- MMU enable for EL1&0 stage 1 address translation.
+      A          : Boolean;      -- Alignment check enable.
+      C          : Boolean;      -- Stage 1 Cacheability control, for data accesses.
+      SA         : Boolean;      -- SP Alignment check enable.
+      SA0        : Boolean;      -- SP Alignment check enable for EL0.
+      CP15BEN    : Boolean;      -- System instruction memory barrier enable.
+      nAA        : Boolean;      -- Non-aligned access.
+      ITD        : Boolean;      -- IT disable.
+      SED        : Boolean;      -- SETEND instruction disable.
+      UMA        : Boolean;      -- User Mask Access.
+      EnRCTX     : Boolean;      -- Enable EL0 access to the following System instructions: ...
+      EOS        : Boolean;      -- Exception Exit is Context Synchronizing.
+      I          : Boolean;      -- Stage 1 instruction access Cacheability control, for accesses at EL0 and EL1: ...
+      EnDB       : Boolean;      -- Controls enabling of pointer authentication (using the APDBKey_EL1 key) of instruction ...
+      DZE        : Boolean;      -- Traps EL0 execution of DC ZVA instructions ...
+      UCT        : Boolean;      -- Traps EL0 accesses to the CTR_EL0 to EL1, or to EL2 when ...
+      nTWI       : Boolean;      -- Traps EL0 execution of WFI instructions to EL1, or to EL2 when ...
+      Reserved1  : Bits_1  := 0;
+      nTWE       : Boolean;      -- Traps EL0 execution of WFE instructions to EL1, or to EL2 when ...
+      WXN        : Boolean;      -- Write permission implies Execute Never (XN).
+      TSCXT      : Boolean;      -- Trap EL0 Access to the SCXTNUM_EL0 register, when EL0 is using AArch64.
+      IESB       : Boolean;      -- Implicit Error Synchronization event enable.
+      EIS        : Boolean;      -- Exception Entry is Context Synchronizing.
+      SPAN       : Boolean;      -- Set Privileged Access Never, on taking an exception to EL1.
+      E0E        : Bits_1;       -- Endianness of data accesses at EL0.
+      EE         : Bits_1;       -- Endianness of data accesses at EL1, and stage 1 translation table walks in ...
+      UCI        : Boolean;      -- Enables EL0 access to the DC CVAU, DC CIVAC, DC CVAC and IC IVAU instrs in AArch64 state.
+      EnDA       : Boolean;      -- Controls enabling of pointer authentication (using the APDAKey_EL1 key) of instruction ...
+      nTLSMD     : Boolean;      -- No Trap Load Multiple and Store Multiple to Device-nGRE/Device-nGnRE/Device-nGnRnE memory.
+      LSMAOE     : Boolean;      -- Load Multiple and Store Multiple Atomicity and Ordering Enable.
+      EnIB       : Boolean;      -- Controls enabling of pointer authentication (using the APIBKey_EL1 key) of instruction ...
+      EnIA       : Boolean;      -- Controls enabling of pointer authentication (using the APIAKey_EL1 key) of instruction ...
+      CMOW       : Boolean;      -- Controls cache maintenance instruction permission for ...
+      MSCEn      : Boolean;      -- Memory Copy and Memory Set instructions Enable.
+      Reserved2  : Bits_1  := 0;
+      BT0        : Boolean;      -- PAC Branch Type compatibility at EL0.
+      BT1        : Boolean;      -- PAC Branch Type compatibility at EL1.
+      ITFSB      : Boolean;      -- When synchronous exceptions are not being generated by Tag Check Faults, ...
+      TCF0       : Bits_2;       -- Tag Check Fault in EL0.
+      TCF        : Bits_2;       -- Tag Check Fault in EL1.
+      ATA0       : Boolean;      -- Allocation Tag Access in EL0.
+      ATA        : Boolean;      -- Allocation Tag Access in EL1.
+      DSSBS      : Bits_1;       -- Default PSTATE.SSBS value on Exception Entry.
+      TWEDEn     : Boolean;      -- TWE Delay Enable.
+      TWEDEL     : Bits_4;       -- TWE Delay.
+      TMT0       : Boolean;      -- Forces a trivial implementation of the Transactional Memory Extension at EL0.
+      TMT        : Boolean;      -- Forces a trivial implementation of the Transactional Memory Extension at EL1.
+      TME0       : Boolean;      -- Enables the Transactional Memory Extension at EL0.
+      TME        : Boolean;      -- Enables the Transactional Memory Extension at EL1.
+      EnASR      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
+      EnAS0      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
+      EnALS      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
+      EPAN       : Boolean;      -- Enhanced Privileged Access Never.
+      Reserved3  : Bits_2  := 0;
+      EnTP2      : Boolean;      -- Traps instructions executed at EL0 that access ...
+      NMI        : Boolean;      -- Non-maskable Interrupt enable.
+      SPINTMASK  : Boolean;      -- SP Interrupt Mask enable.
+      TIDCP      : Boolean;      -- Trap IMPLEMENTATION DEFINED functionality.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
@@ -716,8 +716,8 @@ package ARMv8A
    -- D19.12.1 CNTFRQ_EL0, Counter-timer Frequency register
 
    type CNTFRQ_EL0_Type is record
-      Clock_frequency : Unsigned_32;  -- Clock_Frequency.
-      Reserved        : Bits_32 := 0;
+      Clock_frequency : Unsigned_32;      -- Clock_Frequency.
+      Reserved        : Bits_32     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
@@ -768,8 +768,8 @@ package ARMv8A
    -- D19.12.18 CNTP_TVAL_EL0, Counter-timer Physical Timer TimerValue register
 
    type CNTP_TVAL_EL0_Type is record
-      TimerValue : Unsigned_32;  -- The TimerValue view of the EL1 physical timer.
-      Reserved   : Bits_32 := 0;
+      TimerValue : Unsigned_32;      -- The TimerValue view of the EL1 physical timer.
+      Reserved   : Bits_32     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;

@@ -59,7 +59,7 @@ package GICv2
    type GICD_TYPER_Type is record
       ITLinesNumber : Bits_5;       -- Indicates the maximum number of interrupts that the GIC supports.
       CPUNumber     : Bits_3;       -- Indicates the number of implemented CPU interfaces.
-      Reserved1     : Bits_2 := 0;
+      Reserved1     : Bits_2  := 0;
       SecurityExtn  : Boolean;      -- Indicates whether the GIC implements the Security Extensions.
       LSPI          : Bits_5;       -- If the GIC implements the Security Extensions, the value of this field is the ...
       Reserved2     : Bits_16 := 0;
@@ -210,12 +210,12 @@ package GICv2
    TargetListFilter_Reserved  : constant := 2#11#; -- Reserved.
 
    type GICD_SGIR_Type is record
-      SGIINTID         : Bits_4;       -- The Interrupt ID of the SGI to forward to the specified CPU interfaces.
-      Reserved1        : Bits_11 := 0;
-      NSATT            : Bits_1;       -- Specifies the required security value of the SGI: ...
-      CPUTargetList    : Unsigned_8;   -- When TargetList Filter = 0b00, defines the CPU interfaces to which the ...
-      TargetListFilter : Bits_2;       -- Determines how the distributor must process the requested SGI:
-      Reserved2        : Bits_6 := 0;
+      SGIINTID         : Bits_4;          -- The Interrupt ID of the SGI to forward to the specified CPU interfaces.
+      Reserved1        : Bits_11    := 0;
+      NSATT            : Bits_1;          -- Specifies the required security value of the SGI: ...
+      CPUTargetList    : Unsigned_8;      -- When TargetList Filter = 0b00, defines the CPU interfaces to which the ...
+      TargetListFilter : Bits_2;          -- Determines how the distributor must process the requested SGI:
+      Reserved2        : Bits_6     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -360,8 +360,8 @@ pragma Warnings (On, "* bits of ""GICD_Type"" unused");
    -- 4.4.2 Interrupt Priority Mask Register, GICC_PMR
 
    type GICC_PMR_Type is record
-      Priority : Unsigned_8;   -- The priority mask level for the CPU interface.
-      Reserved : Bits_24 := 0;
+      Priority : Unsigned_8;      -- The priority mask level for the CPU interface.
+      Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -416,8 +416,8 @@ pragma Warnings (On, "* bits of ""GICD_Type"" unused");
    -- 4.4.6 Running Priority Register, GICC_RPR
 
    type GICC_RPR_Type is record
-      Priority : Unsigned_8;   -- The current running priority on the CPU interface.
-      Reserved : Bits_24 := 0;
+      Priority : Unsigned_8;      -- The current running priority on the CPU interface.
+      Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
