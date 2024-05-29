@@ -173,7 +173,7 @@ package PL110
    FRAMEBUFFER_BASEADDRESS : constant := 16#0020_0000#;
 
    Framebuffer : aliased U16_Array (0 .. VIDEO_WIDTH * VIDEO_HEIGHT - 1)
-      with Address    => To_Address (FRAMEBUFFER_BASEADDRESS),
+      with Address    => System'To_Address (FRAMEBUFFER_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
