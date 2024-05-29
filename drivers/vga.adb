@@ -458,7 +458,7 @@ package body VGA
       type VGA_Character_Type is new Storage_Array (0 .. 31);
       VGA_Font_Memory : aliased array (0 .. Videofont8x16.Font_NCharacters - 1) of VGA_Character_Type
          with Alignment  => 16,
-              Address    => To_Address (Video_Buffer_BaseAddress),
+              Address    => System'To_Address (Video_Buffer_BaseAddress),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -593,7 +593,7 @@ package body VGA
       for Index in Storage_Offset range 0 .. VIDEO_TEXT_WIDTH * VIDEO_TEXT_HEIGHT * 2 - 1 loop
          declare
             Video_Cell : Unsigned_8
-               with Address    => To_Address (Text_Buffer_BaseAddress) + Index,
+               with Address    => System'To_Address (Text_Buffer_BaseAddress) + Index,
                     Import     => True,
                     Convention => Ada;
          begin
@@ -614,7 +614,7 @@ package body VGA
          of aliased Text_Character_Type
          with Pack => True;
       Video_Text_Memory : Video_Text_Memory_Type
-         with Address    => To_Address (Text_Buffer_BaseAddress),
+         with Address    => System'To_Address (Text_Buffer_BaseAddress),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
@@ -662,8 +662,8 @@ package body VGA
       BYTES_PER_TEXTLINE : constant := VIDEO_TEXT_WIDTH * TEXT_CHARACTER_SIZE;
    begin
       Memory_Functions.Movemem (
-         To_Address (Text_Buffer_BaseAddress) + BYTES_PER_TEXTLINE,
-         To_Address (Text_Buffer_BaseAddress),
+         System'To_Address (Text_Buffer_BaseAddress) + BYTES_PER_TEXTLINE,
+         System'To_Address (Text_Buffer_BaseAddress),
          (VIDEO_TEXT_HEIGHT - 1) * BYTES_PER_TEXTLINE
          );
       for X in Video_X_Coordinate_Type'Range loop
@@ -682,7 +682,7 @@ package body VGA
       type Plane_Type is array (0 .. 2**16 - 1) of Unsigned_8
          with Pack => True;
       Plane         : Plane_Type
-         with Address    => To_Address (Video_Buffer_BaseAddress),
+         with Address    => System'To_Address (Video_Buffer_BaseAddress),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
