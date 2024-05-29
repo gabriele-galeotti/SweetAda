@@ -15,12 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Parameters;
-with System.Machine_Code;
-with System.Secondary_Stack;
-with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
+with System;
 with Definitions;
+with Secondary_Stack;
 with Bits;
 with MMIO;
 with MIPS;
@@ -40,20 +37,10 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System.Machine_Code;
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
    use KN02BA;
-
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -62,16 +49,6 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -102,7 +79,7 @@ package body BSP
       is
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
@@ -124,37 +101,44 @@ package body BSP
          others      => <>
          );
       -- RTC ------------------------------------------------------------------
-      RTC_Descriptor :=
-         (
-          Base_Address  => To_Address (MIPS.KSEG1_ADDRESS + RTC_BASEADDRESS),
-          Scale_Address => 2,
-          Flags         => (null record),
-          Read_8        => MMIO.Read'Access,
-          Write_8       => MMIO.Write'Access
+      RTC_Descriptor := (
+         Base_Address  => System'To_Address (MIPS.KSEG1_ADDRESS + RTC_BASEADDRESS),
+         Scale_Address => 2,
+         Flags         => (null record),
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access
          );
       MC146818A.Init (RTC_Descriptor);
       -- SCCs -----------------------------------------------------------------
-      SCC_Descriptor1.Base_Address            := To_Address (MIPS.KSEG1_ADDRESS + SCC0_BASEADDRESS);
-      SCC_Descriptor1.AB_Address_Bit          := 3;
-      SCC_Descriptor1.CD_Address_Bit          := 2;
-      SCC_Descriptor1.Baud_Clock              := CLK_UART7M3;
-      SCC_Descriptor1.Flags.DECstation5000133 := True;
-      SCC_Descriptor1.Read_8                  := MMIO.Read'Access;
-      SCC_Descriptor1.Write_8                 := MMIO.Write'Access;
+      SCC_Descriptor1 := (
+         Base_Address   => System'To_Address (MIPS.KSEG1_ADDRESS + SCC0_BASEADDRESS),
+         AB_Address_Bit => 3,
+         CD_Address_Bit => 2,
+         Baud_Clock     => CLK_UART7M3,
+         Flags          => (DECstation5000133 => True),
+         Read_8         => MMIO.Read'Access,
+         Write_8        => MMIO.Write'Access,
+         others         => <>
+         );
       Z8530.Init (SCC_Descriptor1, Z8530.CHANNELA);
       Z8530.Init (SCC_Descriptor1, Z8530.CHANNELB);
-      SCC_Descriptor2.Base_Address            := To_Address (MIPS.KSEG1_ADDRESS + SCC1_BASEADDRESS);
-      SCC_Descriptor2.AB_Address_Bit          := 3;
-      SCC_Descriptor2.CD_Address_Bit          := 2;
-      SCC_Descriptor2.Baud_Clock              := CLK_UART7M3;
-      SCC_Descriptor2.Flags.DECstation5000133 := True;
-      SCC_Descriptor2.Read_8                  := MMIO.Read'Access;
-      SCC_Descriptor2.Write_8                 := MMIO.Write'Access;
+      SCC_Descriptor2 := (
+         Base_Address   => System'To_Address (MIPS.KSEG1_ADDRESS + SCC1_BASEADDRESS),
+         AB_Address_Bit => 3,
+         CD_Address_Bit => 2,
+         Baud_Clock     => CLK_UART7M3,
+         Flags          => (DECstation5000133 => True),
+         Read_8         => MMIO.Read'Access,
+         Write_8        => MMIO.Write'Access,
+         others         => <>
+         );
       Z8530.Init (SCC_Descriptor2, Z8530.CHANNELA);
       Z8530.Init (SCC_Descriptor2, Z8530.CHANNELB);
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("DECstation 5000/133", NL => True);
@@ -194,8 +178,8 @@ package body BSP
          S.IM5 := True; -- I/O ASIC cascade
          R3000.CP0_SR_Write (S);
       end;
-      IOASIC_SIMR :=
-        (PBNO      => False,
+      IOASIC_SIMR := (
+         PBNO      => False,
          PBNC      => False,
          SCSI_FIFO => False,
          PSU       => False,
@@ -207,7 +191,8 @@ package body BSP
          NRMOD     => False,
          BUS       => False,
          NVRAM     => False,
-         others    => <>);
+         others    => <>
+         );
       -------------------------------------------------------------------------
       R3000.Irq_Enable;
       -------------------------------------------------------------------------

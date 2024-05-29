@@ -16,11 +16,9 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with MIPS;
-with R3000;
 
 package KN02BA
    with Preelaborate => True
@@ -35,7 +33,6 @@ package KN02BA
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -84,7 +81,7 @@ package KN02BA
       SCSI_RESET  : Boolean := False;  -- active low
       RTC_RESET   : Boolean := False;  -- active low
       SCC_RESET   : Boolean := False;  -- active low, SCC 0 & 1
-      Unused1     : Bits_1 := 0;
+      Unused1     : Bits_1  := 0;
       TXDIS0      : Boolean := False;  -- active low
       TXDIS1      : Boolean := False;  -- active low
       DIAGDN      : Boolean := False;
@@ -115,7 +112,7 @@ package KN02BA
    IOASIC_SSR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0100#;
 
    IOASIC_SSR : aliased IOASIC_SSR_Type
-      with Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SSR_ADDRESS),
+      with Address              => System'To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SSR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -128,7 +125,7 @@ package KN02BA
       PBNO      : Boolean;      -- button debouncer
       PBNC      : Boolean;      -- ~HALT button debouncer
       SCSI_FIFO : Boolean;      -- <ASC_DATA> SCSI data ready (for PIO)
-      Unused1   : Bits_1 := 0;
+      Unused1   : Bits_1  := 0;
       PSU       : Boolean;      -- power supply unit warning
       RTC       : Boolean;      -- DS1287 RTC
       SCC0      : Boolean;      -- SCC (Z85C30) serial #0
@@ -136,9 +133,9 @@ package KN02BA
       LANCE     : Boolean;      -- LANCE (Am7990) Ethernet
       SCSI      : Boolean;      -- <ASC> (NCR53C94) SCSI
       NRMOD     : Boolean;      -- (*) NRMOD manufacturing jumper
-      Unused2   : Bits_1 := 0;
+      Unused2   : Bits_1  := 0;
       BUS       : Boolean;      -- memory, I/O bus read/write errors (timeout)
-      Unused3   : Bits_1 := 0;
+      Unused3   : Bits_1  := 0;
       NVRAM     : Boolean;      -- (*) NVRAM clear jumper
       Unused4   : Bits_17 := 0;
    end record
@@ -166,7 +163,7 @@ package KN02BA
    IOASIC_SIR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0110#;
 
    IOASIC_SIR : aliased IOASIC_SI_Type
-      with Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SIR_ADDRESS),
+      with Address              => System'To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SIR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -174,7 +171,7 @@ package KN02BA
    IOASIC_SIMR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0120#;
 
    IOASIC_SIMR : aliased IOASIC_SI_Type
-      with Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SIMR_ADDRESS),
+      with Address              => System'To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SIMR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -184,7 +181,7 @@ package KN02BA
    IOASIC_SAR_ADDRESS : constant := IOASIC_BASEADDRESS + 16#0000_0130#;
 
    IOASIC_SAR : aliased Unsigned_32
-      with Address              => To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SAR_ADDRESS),
+      with Address              => System'To_Address (MIPS.KSEG1_ADDRESS + IOASIC_SAR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;

@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with CPU;
 with KN02BA;
@@ -48,11 +47,7 @@ package body Exceptions
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process
-      is
-   begin
-      null;
-   end Exception_Process;
+   procedure Exception_Process is null;
 
    ----------------------------------------------------------------------------
    -- Irq_Process
@@ -70,10 +65,6 @@ package body Exceptions
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init
-      is
-   begin
-      null;
-   end Init;
+   procedure Init is null;
 
 end Exceptions;
