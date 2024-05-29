@@ -23,7 +23,6 @@ with Bits;
 with MMIO;
 with Secondary_Stack;
 with Exceptions;
-with ARMv4;
 with CPU;
 with IntegratorCP;
 with Console;
@@ -84,16 +83,20 @@ package body BSP
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- PL011 UART0 ----------------------------------------------------------
-      PL011_Descriptor.Base_Address := System'To_Address (PL011_UART0_BASEADDRESS);
-      PL011_Descriptor.Baud_Clock   := CLK_UART14M;
-      PL011_Descriptor.Read_8       := MMIO.Read'Access;
-      PL011_Descriptor.Write_8      := MMIO.Write'Access;
-      PL011_Descriptor.Read_16      := MMIO.Read'Access;
-      PL011_Descriptor.Write_16     := MMIO.Write'Access;
+      PL011_Descriptor := (
+         Base_Address => System'To_Address (PL011_UART0_BASEADDRESS),
+         Baud_Clock   => CLK_UART14M,
+         Read_8       => MMIO.Read'Access,
+         Write_8      => MMIO.Write'Access,
+         Read_16      => MMIO.Read'Access,
+         Write_16     => MMIO.Write'Access
+         );
       PL011.Init (PL011_Descriptor);
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Integrator/CP (QEMU emulator)", NL => True);

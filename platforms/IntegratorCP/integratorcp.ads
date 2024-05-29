@@ -143,7 +143,7 @@ package IntegratorCP
       ONESHOT    : Boolean;      -- Selects one-shot or wrapping counter mode
       TIMER_SIZE : Bits_1;       -- Selects 16/32 bit counter operation
       PRESCALE   : Bits_2;       -- Prescale divisor
-      Reserved1  : Bits_1 := 0;
+      Reserved1  : Bits_1  := 0;
       IE         : Boolean;      -- Interrupt enable
       MODE       : Bits_1;       -- Timer mode
       ENABLE     : Boolean;      -- Timer enable
