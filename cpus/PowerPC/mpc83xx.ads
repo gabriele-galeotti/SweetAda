@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package MPC83XX
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -50,7 +48,7 @@ package MPC83XX
    -- 4.3.2.1 Reset Configuration Word Low Register (RCWLR)
 
    RCWLR : aliased Unsigned_32
-      with Address              => To_Address (IMMRBAR + 16#0900#),
+      with Address              => System'To_Address (IMMRBAR + 16#0900#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -58,7 +56,7 @@ package MPC83XX
    -- 4.3.2.2 Reset Configuration Word High Register (RCWHR)
 
    RCWHR : aliased Unsigned_32
-      with Address              => To_Address (IMMRBAR + 16#0904#),
+      with Address              => System'To_Address (IMMRBAR + 16#0904#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -66,7 +64,7 @@ package MPC83XX
    -- 6.3.2.5 System I/O Configuration Register 1 (SICR_1)
 
    SICR_1 : aliased Unsigned_32
-      with Address              => To_Address (IMMRBAR + 16#0114#),
+      with Address              => System'To_Address (IMMRBAR + 16#0114#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -74,7 +72,7 @@ package MPC83XX
    -- 6.3.2.6 System I/O Configuration Register 2 (SICR_2)
 
    SICR_2 : aliased Unsigned_32
-      with Address              => To_Address (IMMRBAR + 16#0118#),
+      with Address              => System'To_Address (IMMRBAR + 16#0118#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -139,7 +137,7 @@ package MPC83XX
    PRSSTAT_ADDRESS : constant := eSDHC_BASEADDRESS + 16#24#;
 
    PRSSTAT : aliased PRSSTAT_Type
-      with Address              => To_Address (PRSSTAT_ADDRESS),
+      with Address              => System'To_Address (PRSSTAT_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -242,7 +240,7 @@ package MPC83XX
    end record;
 
    I2C : aliased I2C_Type
-      with Address    => To_Address (I2C1_BASEADDRESS),
+      with Address    => System'To_Address (I2C1_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -250,7 +248,7 @@ package MPC83XX
    -- 21.3.1 GPIOn Direction Register (GP1DIR–GP2DIR)
 
    GP1DIR : aliased Unsigned_32
-      with Address              => To_Address (GPIO1_BASEADDRESS + 16#00#),
+      with Address              => System'To_Address (GPIO1_BASEADDRESS + 16#00#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -258,7 +256,7 @@ package MPC83XX
    -- 21.3.2 GPIOn Open Drain Register (GP1ODR–GP2ODR)
 
    GP1ODR : aliased Unsigned_32
-      with Address              => To_Address (GPIO1_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (GPIO1_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -266,7 +264,7 @@ package MPC83XX
    -- 21.3.3 GPIOn Data Register (GP1DAT–GP2DAT)
 
    GP1DAT : aliased Unsigned_32
-      with Address              => To_Address (GPIO1_BASEADDRESS + 16#08#),
+      with Address              => System'To_Address (GPIO1_BASEADDRESS + 16#08#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
