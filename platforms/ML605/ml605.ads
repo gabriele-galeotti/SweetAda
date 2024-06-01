@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 with MicroBlaze;
@@ -34,7 +33,6 @@ package ML605
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
    use MicroBlaze;
@@ -50,13 +48,13 @@ package ML605
    AXIDMA_BASEADDRESS    : constant := 16#8460_0000#;
 
    Timer : aliased XPS_Timer_Type
-      with Address    => To_Address (TIMER_BASEADDRESS),
+      with Address    => System'To_Address (TIMER_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    INTC : aliased XPS_INTC_Type
-      with Address    => To_Address (INTC_BASEADDRESS),
+      with Address    => System'To_Address (INTC_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;

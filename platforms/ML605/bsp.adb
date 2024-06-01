@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with System;
 with Definitions;
 with Bits;
 with Core;
@@ -35,7 +35,6 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -74,15 +73,22 @@ package body BSP is
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- UART -----------------------------------------------------------------
-      UART_Descriptor.Read_8        := MMIO.Read'Access;
-      UART_Descriptor.Write_8       := MMIO.Write'Access;
-      UART_Descriptor.Base_Address  := To_Address (UART16550_BASEADDRESS);
-      UART_Descriptor.Scale_Address := 2;
-      UART_Descriptor.Baud_Clock    := CLK_UART1M8;
+      UART_Descriptor := (
+         Uart_Model    => UART16x50.UART16550,
+         Base_Address  => System'To_Address (UART16550_BASEADDRESS),
+         Scale_Address => 2,
+         Baud_Clock    => CLK_UART1M8,
+         Flags         => (PC_UART => False),
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0)
+         );
       UART16x50.Init (UART_Descriptor);
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("MicroBlaze ML605 (QEMU emulator)", NL => True);
