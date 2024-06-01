@@ -38,10 +38,10 @@ package body LEON3
       -- Timer prescaler input frequency = 40 MHz, output = 1 MHz
       GPTIMER.Scaler_Reload_Value := 40;
       -- Timers underflow @ 1 kHz
-      GPTIMER.Reload_1           := 1_000;
-      GPTIMER.Reload_2           := 1_000;
-      GPTIMER.Reload_3           := 1_000;
-      GPTIMER.Reload_4           := 1_000;
+      GPTIMER.Reload_1 := 1_000;
+      GPTIMER.Reload_2 := 1_000;
+      GPTIMER.Reload_3 := 1_000;
+      GPTIMER.Reload_4 := 1_000;
       GPTIMER.Control_Register_1 := (
          EN     => False,
          RS     => True,
