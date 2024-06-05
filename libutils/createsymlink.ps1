@@ -10,6 +10,7 @@
 
 #
 # Arguments:
+# optional initial -c physical copy instead of symlink
 # optional initial -m <filelist> to record symlinks
 # optional initial -v for verbosity
 # $1 = target filename or directory
@@ -163,18 +164,26 @@ while ($fileindex -lt $args.length)
 {
   if ($args[$fileindex][0] -eq "-")
   {
-    if ($args[$fileindex].Substring(1) -eq "v")
+    $optionchar = $args[$fileindex].Substring(1)
+    if ($optionchar -eq "c")
     {
-      $verbose = "Y"
+      if ($IsWindows)
+      {
+        $symlinkcopy = "Y"
+      }
     }
-    elseif ($args[$fileindex].Substring(1) -eq "m")
+    elseif ($optionchar -eq "m")
     {
       $fileindex++
       $filelist_filename = $args[$fileindex]
     }
+    elseif ($optionchar -eq "v")
+    {
+      $verbose = "Y"
+    }
     else
     {
-      Write-Host "$($scriptname): *** Error: unknown option $($args[$fileindex])."
+      Write-Host "$($scriptname): *** Error: unknown option `"$($optionchar)`"."
       ExitWithCode 1
     }
   }
@@ -198,6 +207,10 @@ if (![string]::IsNullOrEmpty($filelist_filename))
   if (-not (Test-Path $filelist_filename))
   {
     "INSTALLED_FILENAMES :=" | Set-Content $filelist_filename
+    if ($symlinkcopy -eq "Y")
+    {
+      "ORIGIN_FILENAMES :=" | Add-Content $filelist_filename
+    }
   }
 }
 
@@ -217,10 +230,17 @@ while ($fileindex -lt $args.length)
   {
     $link_name = $args[$fileindex + 1]
     Remove-Item -Path $link_name -Force -ErrorAction Ignore
-    New-Item -ItemType SymbolicLink -Path $link_name -Target $target | Out-Null
-    if ($IsWindows)
+    if ($symlinkcopy -eq "Y")
     {
-      SetTimeOfSymlink $link_name $target
+      Copy-Item $target -Destination $link_name | Out-Null
+    }
+    else
+    {
+      New-Item -ItemType SymbolicLink -Path $link_name -Target $target | Out-Null
+      if ($IsWindows)
+      {
+        SetTimeOfSymlink $link_name $target
+      }
     }
     if ($verbose -eq "Y")
     {
@@ -229,6 +249,10 @@ while ($fileindex -lt $args.length)
     if (![string]::IsNullOrEmpty($filelist_filename))
     {
       "INSTALLED_FILENAMES += $($link_name)" | Add-Content $filelist_filename
+      if ($symlinkcopy -eq "Y")
+      {
+        "ORIGIN_FILENAMES += $($target)" | Add-Content $filelist_filename
+      }
     }
   }
   else
@@ -240,13 +264,23 @@ while ($fileindex -lt $args.length)
       Remove-Item                                             `
         -Path (Join-Path -Path $link_directory -ChildPath $f) `
         -Force -ErrorAction Ignore
-      New-Item                                                                       `
-        -ItemType SymbolicLink -Path (Join-Path -Path $link_directory -ChildPath $f) `
-        -Target (Join-Path -Path $target -ChildPath $f)                              `
-        | Out-Null
-      if ($IsWindows)
+      if ($symlinkcopy -eq "Y")
       {
-        SetTimeOfSymlink $link_name $target
+        Copy-Item                                                      `
+          (Join-Path -Path $target -ChildPath $f)                      `
+          -Destination (Join-Path -Path $link_directory -ChildPath $f) `
+          | Out-Null
+      }
+      else
+      {
+        New-Item                                                                       `
+          -ItemType SymbolicLink -Path (Join-Path -Path $link_directory -ChildPath $f) `
+          -Target (Join-Path -Path $target -ChildPath $f)                              `
+          | Out-Null
+        if ($IsWindows)
+        {
+          SetTimeOfSymlink $link_name $target
+        }
       }
       if ($verbose -eq "Y")
       {
@@ -256,6 +290,11 @@ while ($fileindex -lt $args.length)
       {
         "INSTALLED_FILENAMES += $(Join-Path -Path $link_directory -ChildPath $f)" `
         | Add-Content $filelist_filename
+        if ($symlinkcopy -eq "Y")
+        {
+          "ORIGIN_FILENAMES += $(Join-Path -Path $target -ChildPath $f)" `
+          | Add-Content $filelist_filename
+        }
       }
     }
   }

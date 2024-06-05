@@ -11,6 +11,7 @@
 
 #
 # Arguments:
+# optional initial -c (ignored)
 # optional initial -m <filelist> to record symlinks
 # optional initial -v for verbosity
 # $1 = target filename or directory
@@ -80,6 +81,9 @@ while [ $# -gt 0 ] ; do
   if [ $(printf "%.1s" "${argument}") = "-" ] ; then
     # "-" option
     case "${argument}" in
+      "-c")
+        shift
+        ;;
       "-m")
         shift
         FILELIST_FILENAME="$1"
