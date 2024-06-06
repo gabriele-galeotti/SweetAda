@@ -16,13 +16,12 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Parameters;
-with System.Secondary_Stack;
 with Interfaces.C;
 with Configure;
 with Definitions;
 with Core;
 with Bits;
+with Secondary_Stack;
 with x86_64;
 with CPU.IO;
 with PCI;
@@ -51,19 +50,11 @@ package body BSP
    use x86_64;
    use CPU.IO;
 
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
    function Number_Of_CPUs
       return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_number_of_cpus";
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -82,16 +73,6 @@ package body BSP
    begin
       return 1;
    end Number_Of_CPUs;
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Tclk_Init
@@ -131,33 +112,31 @@ package body BSP
       is
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- UARTs ----------------------------------------------------------------
-      UART_Descriptors (1) :=
-         (
-          Uart_Model    => UART16x50.UART16450,
-          Base_Address  => System'To_Address (PC.UART1_BASEADDRESS),
-          Scale_Address => 0,
-          Baud_Clock    => CLK_UART1M8,
-          Flags         => (PC_UART => True),
-          Read_8        => IO_Read'Access,
-          Write_8       => IO_Write'Access,
-          Data_Queue    => ([others => 0], 0, 0, 0)
+      UART_Descriptors (1) := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (PC.UART1_BASEADDRESS),
+         Scale_Address => 0,
+         Baud_Clock    => CLK_UART1M8,
+         Flags         => (PC_UART => True),
+         Read_8        => IO_Read'Access,
+         Write_8       => IO_Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptors (1));
       UART16x50.Baud_Rate_Set (UART_Descriptors (1), Baud_Rate_Type'Enum_Rep (BR_19200));
-      UART_Descriptors (2) :=
-         (
-          Uart_Model    => UART16x50.UART16450,
-          Base_Address  => System'To_Address (PC.UART2_BASEADDRESS),
-          Scale_Address => 0,
-          Baud_Clock    => CLK_UART1M8,
-          Flags         => (PC_UART => True),
-          Read_8        => IO_Read'Access,
-          Write_8       => IO_Write'Access,
-          Data_Queue    => ([others => 0], 0, 0, 0)
+      UART_Descriptors (2) := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (PC.UART2_BASEADDRESS),
+         Scale_Address => 0,
+         Baud_Clock    => CLK_UART1M8,
+         Flags         => (PC_UART => True),
+         Read_8        => IO_Read'Access,
+         Write_8       => IO_Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptors (2));
       UART16x50.Baud_Rate_Set (UART_Descriptors (2), Baud_Rate_Type'Enum_Rep (BR_19200));
@@ -172,20 +151,22 @@ package body BSP
       end if;
       -------------------------------------------------------------------------
       Console.Print (
-                     To_IA32_EFER (RDMSR (IA32_EFER)).LMA,
-                     Prefix => "64-bit mode:        ", NL => True
-                    );
+         To_IA32_EFER (RDMSR (IA32_EFER)).LMA,
+         Prefix => "64-bit mode:        ", NL => True
+         );
       Console.Print (
-                     To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Global_Enable,
-                     Prefix => "APIC_Global_Enable: ", NL => True
-                    );
+         To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Global_Enable,
+         Prefix => "APIC_Global_Enable: ", NL => True
+         );
       Console.Print (
-                     Shift_Left (Unsigned_32 (To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Base), 12),
-                     Prefix => "APIC_Base:          ", NL => True
-                    );
+         Shift_Left (Unsigned_32 (To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Base), 12),
+         Prefix => "APIC_Base:          ", NL => True
+         );
       -- PCI ------------------------------------------------------------------
-      PCI.Cfg_Access_Descriptor.Read_32 := CPU.IO.PortIn'Access;
-      PCI.Cfg_Access_Descriptor.Write_32 := CPU.IO.PortOut'Access;
+      PCI.Cfg_Access_Descriptor := (
+         Read_32  => CPU.IO.PortIn'Access,
+         Write_32 => CPU.IO.PortOut'Access
+         );
       if True then
          declare
             Vendor_Id : PCI.Vendor_Id_Type;

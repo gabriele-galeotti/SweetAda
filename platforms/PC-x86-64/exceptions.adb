@@ -23,7 +23,8 @@ with BSP;
 with PC;
 with Console;
 
-package body Exceptions is
+package body Exceptions
+   is
 
    --========================================================================--
    --                                                                        --
@@ -41,8 +42,7 @@ package body Exceptions is
    IDT_Descriptor : aliased IDT_Descriptor_Type := IDT_DESCRIPTOR_INVALID;
    IDT            : aliased IDT_Type (Exception_DE .. PC.PIC_Irq15) := [others => EXCEPTION_DESCRIPTOR_INVALID];
 
-   type Exception_Vector_Type is
-   record
+   type Exception_Vector_Type is record
       Handler_Address : Address;
       Selector        : Selector_Type;
       Gate            : Segment_Gate_Type;
@@ -111,7 +111,9 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Exception_Process
    ----------------------------------------------------------------------------
-   procedure Exception_Process (Exception_Identifier : in Exception_Id_Type) is
+   procedure Exception_Process
+      (Exception_Identifier : in Exception_Id_Type)
+      is
       MsgPtr : access constant String;
    begin
       Console.Print_NewLine;
@@ -143,7 +145,8 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process is
+   procedure Irq_Process
+      is
    begin
       -- increment system tick counter
       BSP.Tick_Count := @ + 1;
@@ -163,15 +166,16 @@ package body Exceptions is
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is
+   procedure Init
+      is
    begin
       for Exception_Id in Exception_Vectors'Range loop
          IDT_Set_Handler (
-                          IDT (Exception_Id),
-                          Exception_Vectors (Exception_Id).Handler_Address,
-                          Exception_Vectors (Exception_Id).Selector,
-                          Exception_Vectors (Exception_Id).Gate
-                         );
+            IDT (Exception_Id),
+            Exception_Vectors (Exception_Id).Handler_Address,
+            Exception_Vectors (Exception_Id).Selector,
+            Exception_Vectors (Exception_Id).Gate
+            );
       end loop;
       IDT_Set (IDT_Descriptor, IDT'Address, IDT'Length);
    end Init;
