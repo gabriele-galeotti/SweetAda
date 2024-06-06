@@ -82,7 +82,6 @@ while [ $# -gt 0 ] ; do
     # "-" option
     case "${argument}" in
       "-c")
-        shift
         ;;
       "-m")
         shift
