@@ -15,11 +15,14 @@ endif
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
+-include Makefile.if.in
+
 .PHONY: configure
 configure:
 ifneq ($(USE_APPLICATION),)
-	@$(CREATESYMLINK) $(USE_APPLICATION).ads application.ads
-	@$(CREATESYMLINK) $(USE_APPLICATION).adb application.adb
+	@$(CREATESYMLINK) -c -v -m Makefile.if.in                \
+                          $(USE_APPLICATION).ads application.ads \
+                          $(USE_APPLICATION).adb application.adb
 endif
 
 .PHONY: clean
@@ -28,6 +31,11 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-              application.ad*
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
+ifneq ($(filter cmd msys,$(OSTYPE)),)
+	$(RMSYMLINK) $(INSTALLED_FILENAMES) -o $(ORIGIN_FILENAMES)
+else
+	$(RM) $(INSTALLED_FILENAMES)
+endif
+	$(RM) Makefile.if.in
 
