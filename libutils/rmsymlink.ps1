@@ -82,7 +82,7 @@ while ($ntarget -gt 0)
     $target_mtime = (Get-Item $target).LastWriteTime
     if ($destination_mtime -gt $target_mtime)
     {
-      Write-Host "file [installed/symlinked] $($destination) has timestamp more recent than file [origin] $($target)"
+      Write-Host "file [installed/symlinked] `"$($destination)`" has timestamp more recent than file [origin] `"$($target)`""
       while ($true)
       {
         $answer = Read-Host "[u]pdate or [r]emove: "
