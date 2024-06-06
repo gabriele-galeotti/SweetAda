@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with System;
 with Definitions;
 with Bits;
 with MMIO;
@@ -25,7 +25,8 @@ with MPC83XX;
 with SOM;
 with Console;
 
-package body BSP is
+package body BSP
+   is
 
    --========================================================================--
    --                                                                        --
@@ -35,7 +36,6 @@ package body BSP is
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -52,12 +52,16 @@ package body BSP is
    -- Console wrappers
    ----------------------------------------------------------------------------
 
-   procedure Console_Putchar (C : in Character) is
+   procedure Console_Putchar
+      (C : in Character)
+      is
    begin
       UART16x50.TX (UART2_Descriptor, To_U8 (C));
    end Console_Putchar;
 
-   procedure Console_Getchar (C : out Character) is
+   procedure Console_Getchar
+      (C : out Character)
+      is
       Data : Unsigned_8;
    begin
       UART16x50.RX (UART2_Descriptor, Data);
@@ -67,7 +71,8 @@ package body BSP is
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-   procedure Setup is
+   procedure Setup
+      is
       BAUDRATE_DIVISOR : constant := SOM.SYSTEM_CLOCK / (Baud_Rate_Type'Enum_Rep (BR_115200) * 16);
       CPU_PVR          : PowerPC.PVR_Type;
    begin
@@ -75,25 +80,35 @@ package body BSP is
       -- MPC83XX.SICR_1 := 16#2A81_5657#; -- UART2 mapped on I/O pads
       MPC83XX.SICR_1 := 16#0001_565F#; -- UART2 mapped on I/O pads
       -- UARTs ----------------------------------------------------------------
-      UART1_Descriptor.Base_Address  := To_Address (MPC83XX.UART1_BASEADDRESS);
-      UART1_Descriptor.Scale_Address := 0;
-      UART1_Descriptor.Baud_Clock    := SOM.SYSTEM_CLOCK;
-      UART1_Descriptor.Read_8        := MMIO.Read'Access;
-      UART1_Descriptor.Write_8       := MMIO.Write'Access;
-      UART1_Descriptor.Data_Queue    := ([others => 0], 0, 0, 0);
+      UART1_Descriptor := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (MPC83XX.UART1_BASEADDRESS),
+         Scale_Address => 0,
+         Baud_Clock    => SOM.SYSTEM_CLOCK,
+         Flags         => (PC_UART => False),
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0)
+         );
       UART16x50.Init (UART1_Descriptor);
       UART16x50.Baud_Rate_Set (UART1_Descriptor, Baud_Rate_Type'Enum_Rep (BR_115200));
-      UART2_Descriptor.Base_Address  := To_Address (MPC83XX.UART2_BASEADDRESS);
-      UART2_Descriptor.Scale_Address := 0;
-      UART2_Descriptor.Baud_Clock    := SOM.SYSTEM_CLOCK;
-      UART2_Descriptor.Read_8        := MMIO.Read'Access;
-      UART2_Descriptor.Write_8       := MMIO.Write'Access;
-      UART2_Descriptor.Data_Queue    := ([others => 0], 0, 0, 0);
+      UART2_Descriptor := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (MPC83XX.UART2_BASEADDRESS),
+         Scale_Address => 0,
+         Baud_Clock    => SOM.SYSTEM_CLOCK,
+         Flags         => (PC_UART => False),
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0)
+         );
       UART16x50.Init (UART2_Descriptor);
       UART16x50.Baud_Rate_Set (UART2_Descriptor, Baud_Rate_Type'Enum_Rep (BR_115200));
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("MPC8306 SOM", NL => True);
