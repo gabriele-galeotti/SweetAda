@@ -39,8 +39,10 @@ else ifeq ($(CPU_MODEL),CORTEXM7)
   GPR_CORE_CPU := armv6m.adb armv6m.ads \
                   armv7m.adb armv7m.ads
 else
-  $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
-    Available CPU_MODEL are: ARMv4 ARM7TDMI ARMv5 ARM926EJ-S CORTEXA[7|9] CORTEXM[0|3|4|7].)
+  ifneq ($(filter $(RTS_GOAL),$(MAKECMDGOALS)),$(RTS_GOAL))
+    $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
+      Available CPU_MODEL are: ARMv4 ARM7TDMI ARMv5 ARM926EJ-S CORTEXA[7|9] CORTEXM[0|3|4|7].)
+  endif
 endif
 
 # override core MMIO
