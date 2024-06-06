@@ -34,8 +34,8 @@ package body MemecFX12
    procedure Wait
       (Loops : in Positive)
       is
-      Value : Integer with
-         Volatile => True;
+      Value : Integer
+         with Volatile => True;
    begin
       Value := 0;
       for Delay_Loop_Count in 1 .. Loops loop Value := @ + 1; end loop;

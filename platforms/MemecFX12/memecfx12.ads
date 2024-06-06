@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 
 package MemecFX12
@@ -30,7 +29,6 @@ package MemecFX12
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
 
    -- xparameters.h
@@ -40,17 +38,17 @@ package MemecFX12
 
    -- LED
    LED_IO : aliased Unsigned_32
-      with Address    => To_Address (XPAR_XPS_GPIO_0_BASEADDR_IO),
+      with Address    => System'To_Address (XPAR_XPS_GPIO_0_BASEADDR_IO),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    LED_3STATE : aliased Unsigned_32
-      with Address    => To_Address (XPAR_XPS_GPIO_0_BASEADDR_3STATE),
+      with Address    => System'To_Address (XPAR_XPS_GPIO_0_BASEADDR_3STATE),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    LCD : aliased Unsigned_32
-      with Address    => To_Address (XPAR_LCD_CONTROLLER_0_BASEADDR),
+      with Address    => System'To_Address (XPAR_LCD_CONTROLLER_0_BASEADDR),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
