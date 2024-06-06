@@ -45,7 +45,7 @@ package MSP432P401R
    type RSTCTL_RESET_REQ_Type is record
       SOFT_REQ  : Boolean;      -- If written with 1, generates a Hard Reset request to the Reset Controller
       HARD_REQ  : Boolean;      -- If written with 1, generates a Soft Reset request to the Reset Controller
-      Reserved1 : Bits_6 := 0;
+      Reserved1 : Bits_6  := 0;
       RSTKEY    : Bits_8;       -- Must be written with 69h to enable writes to bits 1-0 (in the same write ...
       Reserved2 : Bits_16 := 0;
    end record
@@ -89,7 +89,7 @@ package MSP432P401R
 
    type RSTCTL_RESET_Type is record
       SRC      : Bitmap_16 := [others => False];
-      Reserved : Bits_16 := 0;
+      Reserved : Bits_16   := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -155,7 +155,7 @@ package MSP432P401R
 
    type SYS_REBOOT_CTL_Type is record
       REBOOT    : Boolean;      -- Write 1 initiates a Reboot of the device
-      Reserved1 : Bits_7 := 0;
+      Reserved1 : Bits_7  := 0;
       WKEY      : Bits_8;       -- Key to enable writes to bit 0.
       Reserved2 : Bits_16 := 0;
    end record
@@ -187,8 +187,8 @@ package MSP432P401R
    CSKEY_CSKEY : constant := 16#695A#;
 
    type CSKEY_Type is record
-      CSKEY    : Unsigned_16;  -- Write CSKEY = xxxx_695Ah to unlock CS registers. All 16 LSBs need to be written together.
-      Reserved : Bits_16 := 0;
+      CSKEY    : Unsigned_16;      -- Write CSKEY = xxxx_695Ah to unlock CS registers. All 16 LSBs need to be written together.
+      Reserved : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -209,15 +209,15 @@ package MSP432P401R
    DCORSEL_RSVD1OR2 : constant := 2#111#; -- Nominal DCO Frequency Range (MHz): Reserved--defaults to 1 to 2 when selected.
 
    type CSCTL0_Type is record
-      DCOTUNE   : Bits_10;     -- DCO frequency tuning select.
-      Reserved1 : Bits_3 := 0;
-      Reserved2 : Bits_3 := 0;
-      DCORSEL   : Bits_3;      -- DCO frequency range select.
-      Reserved3 : Bits_3 := 0;
-      DCORES    : Boolean;     -- Enables the DCO external resistor mode.
-      DCOEN     : Boolean;     -- Enables the DCO oscillator regardless if used as a clock resource.
-      Reserved4 : Bits_1 := 0;
-      Reserved5 : Bits_7 := 0;
+      DCOTUNE   : Bits_10;      -- DCO frequency tuning select.
+      Reserved1 : Bits_3  := 0;
+      Reserved2 : Bits_3  := 0;
+      DCORSEL   : Bits_3;       -- DCO frequency range select.
+      Reserved3 : Bits_3  := 0;
+      DCORES    : Boolean;      -- Enables the DCO external resistor mode.
+      DCOEN     : Boolean;      -- Enables the DCO oscillator regardless if used as a clock resource.
+      Reserved4 : Bits_1  := 0;
+      Reserved5 : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -366,21 +366,21 @@ package MSP432P401R
    HFXTBYPASS_SQRWV : constant := 1; -- HFXT sourced by external square wave.
 
    type CSCTL2_Type is record
-      LFXTDRIVE  : Bits_2;      -- The LFXT oscillator current can be adjusted to its drive needs.
-      Reserved1  : Bits_1 := 0;
-      Reserved2  : Bits_4 := 0;
-      Reserved3  : Bits_1 := 0;
-      LFXT_EN    : Boolean;     -- Turns on the LFXT oscillator regardless if used as a clock resource.
-      LFXTBYPASS : Bits_1;      -- LFXT bypass select.
-      Reserved4  : Bits_6 := 0;
-      HFXTDRIVE  : Bits_1;      -- HFXT oscillator drive selection.
-      Reserved5  : Bits_2 := 0;
-      Reserved6  : Bits_1 := 0;
-      HFXTFREQ   : Bits_3;      -- HFXT frequency selection.
-      Reserved7  : Bits_1 := 0;
-      HFXT_EN    : Boolean;     -- Turns on the HFXT oscillator regardless if used as a clock resource.
-      HFXTBYPASS : Bits_1;      -- HFXT bypass select.
-      Reserved8  : Bits_6 := 0;
+      LFXTDRIVE  : Bits_2;       -- The LFXT oscillator current can be adjusted to its drive needs.
+      Reserved1  : Bits_1  := 0;
+      Reserved2  : Bits_4  := 0;
+      Reserved3  : Bits_1  := 0;
+      LFXT_EN    : Boolean;      -- Turns on the LFXT oscillator regardless if used as a clock resource.
+      LFXTBYPASS : Bits_1;       -- LFXT bypass select.
+      Reserved4  : Bits_6  := 0;
+      HFXTDRIVE  : Bits_1;       -- HFXT oscillator drive selection.
+      Reserved5  : Bits_2  := 0;
+      Reserved6  : Bits_1  := 0;
+      HFXTFREQ   : Bits_3;       -- HFXT frequency selection.
+      Reserved7  : Bits_1  := 0;
+      HFXT_EN    : Boolean;      -- Turns on the HFXT oscillator regardless if used as a clock resource.
+      HFXTBYPASS : Bits_1;       -- HFXT bypass select.
+      Reserved8  : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -445,11 +445,11 @@ package MSP432P401R
       MCLK_EN   : Boolean;      -- MCLK system clock conditional request enable
       HSMCLK_EN : Boolean;      -- HSMCLK system clock conditional request enable
       SMCLK_EN  : Boolean;      -- SMCLK system clock conditional request enable
-      Reserved1 : Bits_4 := 0;
+      Reserved1 : Bits_4  := 0;
       VLO_EN    : Boolean;      -- Turns on the VLO oscillator regardless if used as a clock resource.
       REFO_EN   : Boolean;      -- Turns on the REFO oscillator regardless if used as a clock resource.
       MODOSC_EN : Boolean;      -- Turns on the MODOSC oscillator regardless if used as a clock resource.
-      Reserved2 : Bits_4 := 0;
+      Reserved2 : Bits_4  := 0;
       REFOFSEL  : Bits_1;       -- Selects REFO nominal frequency.
       Reserved3 : Bits_16 := 0;
    end record
@@ -529,12 +529,12 @@ package MSP432P401R
    type CSIE_Type is record
       LFXTIE     : Boolean;      -- LFXT oscillator fault flag interrupt enable.
       HFXTIE     : Boolean;      -- HFXT oscillator fault flag interrupt enable.
-      Reserved1  : Bits_1 := 0;
-      Reserved2  : Bits_1 := 0;
-      Reserved3  : Bits_1 := 0;
-      Reserved4  : Bits_1 := 0;
+      Reserved1  : Bits_1  := 0;
+      Reserved2  : Bits_1  := 0;
+      Reserved3  : Bits_1  := 0;
+      Reserved4  : Bits_1  := 0;
       DCOR_OPNIE : Boolean;      -- DCO external resistor open circuit fault flag interrupt enable.
-      Reserved5  : Bits_1 := 0;
+      Reserved5  : Bits_1  := 0;
       FCNTLFIE   : Boolean;      -- Start fault counter interrupt enable LFXT.
       FCNTHFIE   : Boolean;      -- Start fault counter interrupt enable HFXT.
       Reserved6  : Bits_22 := 0;
@@ -591,12 +591,12 @@ package MSP432P401R
    type CSCLRIFG_Type is record
       CLR_LFXTIFG     : Boolean := False; -- Clear LFXT oscillator fault interrupt flag.
       CLR_HFXTIFG     : Boolean := False; -- Clear HFXT oscillator fault interrupt flag.
-      Reserved1       : Bits_1 := 0;
-      Reserved2       : Bits_1 := 0;
-      Reserved3       : Bits_1 := 0;
-      Reserved4       : Bits_1 := 0;
+      Reserved1       : Bits_1  := 0;
+      Reserved2       : Bits_1  := 0;
+      Reserved3       : Bits_1  := 0;
+      Reserved4       : Bits_1  := 0;
       CLR_DCOR_OPNIFG : Boolean := False; -- Clear DCO external resistor open circuit fault interrupt flag.
-      Reserved5       : Bits_1 := 0;
+      Reserved5       : Bits_1  := 0;
       CLR_FCNTLFIFG   : Boolean := False; -- Start fault counter clear interrupt flag LFXT.
       CLR_FCNTHFIFG   : Boolean := False; -- Start fault counter clear interrupt flag HFXT.
       Reserved6       : Bits_22 := 0;
@@ -622,12 +622,12 @@ package MSP432P401R
    type CSSETIFG_Type is record
       SET_LFXTIFG     : Boolean;      -- Set LFXT oscillator fault interrupt flag.
       SET_HFXTIFG     : Boolean;      -- Set HFXT oscillator fault interrupt flag.
-      Reserved1       : Bits_1 := 0;
-      Reserved2       : Bits_1 := 0;
-      Reserved3       : Bits_1 := 0;
-      Reserved4       : Bits_1 := 0;
+      Reserved1       : Bits_1  := 0;
+      Reserved2       : Bits_1  := 0;
+      Reserved3       : Bits_1  := 0;
+      Reserved4       : Bits_1  := 0;
       SET_DCOR_OPNIFG : Boolean;      -- Set DCO external resistor open circuit fault interrupt flag.
-      Reserved5       : Bits_1 := 0;
+      Reserved5       : Bits_1  := 0;
       SET_FCNTLFIFG   : Boolean;      -- Start fault counter set interrupt flag LFXT.
       SET_FCNTHFIFG   : Boolean;      -- Start fault counter set interrupt flag HFXT.
       Reserved6       : Bits_22 := 0;
@@ -654,7 +654,7 @@ package MSP432P401R
       DCO_TCCAL       : Bits_2;       -- DCO Temperature compensation calibration.
       Reserved1       : Bits_14 := 0;
       DCO_FCAL_RSEL04 : Bits_10;      -- DCO frequency calibration for DCO frequency range (DCORSEL) 0 to 4.
-      Reserved2       : Bits_6 := 0;
+      Reserved2       : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -769,8 +769,8 @@ package MSP432P401R
    PSSKEY_KEY : constant := 16#A596#;
 
    type PSSKEY_Type is record
-      PSSKEY   : Unsigned_16;  -- PSS key.
-      Reserved : Bits_16 := 0;
+      PSSKEY   : Unsigned_16;      -- PSS key.
+      Reserved : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -800,10 +800,10 @@ package MSP432P401R
       SVSMHTH      : Bits_3;       -- SVSM high-side reset voltage level.
       SVMHOE       : Boolean;      -- SVSM high-side output enable
       SVMHOUTPOLAL : Boolean;      -- SVMHOUT pin polarity active low.
-      Reserved1    : Bits_2 := 0;
+      Reserved1    : Bits_2  := 0;
       DCDC_FORCE   : Boolean;      -- Force DC/DC regulator operation.
-      Reserved2    : Bits_1 := 0;
-      Reserved3    : Bits_2 := 2;
+      Reserved2    : Bits_1  := 0;
+      Reserved3    : Bits_2  := 2;
       Reserved4    : Bits_18 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -825,7 +825,7 @@ package MSP432P401R
    -- 7.3.3 PSSIE Register PSS Interrupt Enable Register
 
    type PSSIE_Type is record
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       SVSMHIE   : Boolean;      -- High-side SVSM interrupt enable, when set as a monitor (SVSMHS = 1).
       Reserved2 : Bits_30 := 0;
    end record
@@ -840,7 +840,7 @@ package MSP432P401R
    -- 7.3.4 PSSIFG Register PSS Interrupt Flag Register
 
    type PSSIFG_Type is record
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       SVSMHIFG  : Boolean;      -- High-side SVSM interrupt flag.
       Reserved2 : Bits_30 := 0;
    end record
@@ -855,7 +855,7 @@ package MSP432P401R
    -- 7.3.5 PSSCLRIFG Register PSS Clear Interrupt Flag Register
 
    type PSSCLRIFG_Type is record
-      Reserved1   : Bits_1 := 0;
+      Reserved1   : Bits_1  := 0;
       CLRSVSMHIFG : Boolean;      -- SVSMH clear interrupt flag
       Reserved2   : Bits_30 := 0;
    end record
@@ -958,11 +958,11 @@ package MSP432P401R
    CPM_LPM3             : constant := 16#20#; -- LPM3
 
    type PCMCTL0_Type is record
-      AMR      : Bits_4;      -- Active Mode Request.
-      LPMR     : Bits_4;      -- Low Power Mode Request.
-      CPM      : Bits_6;      -- Current Power Mode.
-      Reserved : Bits_2 := 0;
-      PCMKEY   : Unsigned_16; -- PCM key.
+      AMR      : Bits_4;           -- Active Mode Request.
+      LPMR     : Bits_4;           -- Low Power Mode Request.
+      CPM      : Bits_6;           -- Current Power Mode.
+      Reserved : Bits_2      := 0;
+      PCMKEY   : Unsigned_16;      -- PCM key.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -977,13 +977,13 @@ package MSP432P401R
    -- 8.26.2 PCMCTL1 Register PCM Control 1 Register
 
    type PCMCTL1_Type is record
-      LOCKLPM5        : Boolean;     -- Lock LPM5.
-      LOCKBKUP        : Boolean;     -- Lock Backup.
-      FORCE_LPM_ENTRY : Boolean;     -- Bit selection for the application to determine whether the entry into LPM3/LPMx.5 ...
-      Reserved1       : Bits_5 := 0;
-      PMR_BUSY        : Boolean;     -- Power mode request busy flag.
-      Reserved2       : Bits_7 := 0;
-      PCMKEY          : Unsigned_16; -- PCM key.
+      LOCKLPM5        : Boolean;          -- Lock LPM5.
+      LOCKBKUP        : Boolean;          -- Lock Backup.
+      FORCE_LPM_ENTRY : Boolean;          -- Bit selection for the application to determine whether the entry into LPM3/LPMx.5 ...
+      Reserved1       : Bits_5      := 0;
+      PMR_BUSY        : Boolean;          -- Power mode request busy flag.
+      Reserved2       : Bits_7      := 0;
+      PCMKEY          : Unsigned_16;      -- PCM key.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -1003,7 +1003,7 @@ package MSP432P401R
       LPM_INVALID_TR_IE  : Boolean;      -- LPM invalid transition interrupt enable.
       LPM_INVALID_CLK_IE : Boolean;      -- LPM invalid clock interrupt enable.
       AM_INVALID_TR_IE   : Boolean;      -- Active mode invalid transition interrupt enable.
-      Reserved1          : Bits_3 := 0;
+      Reserved1          : Bits_3  := 0;
       DCDC_ERROR_IE      : Boolean;      -- DC-DC error interrupt enable.
       Reserved2          : Bits_25 := 0;
    end record
@@ -1024,7 +1024,7 @@ package MSP432P401R
       LPM_INVALID_TR_IFG  : Boolean;      -- LPM invalid transition flag.
       LPM_INVALID_CLK_IFG : Boolean;      -- LPM invalid clock flag.
       AM_INVALID_TR_IFG   : Boolean;      -- Active mode invalid transition flag.
-      Reserved1           : Bits_3 := 0;
+      Reserved1           : Bits_3  := 0;
       DCDC_ERROR_IFG      : Boolean;      -- DC-DC error flag.
       Reserved2           : Bits_25 := 0;
    end record
@@ -1045,7 +1045,7 @@ package MSP432P401R
       CLR_LPM_INVALID_TR_IFG  : Boolean := False;        -- Clear LPM invalid transition flag.
       CLR_LPM_INVALID_CLK_IFG : Boolean := False;        -- Clear LPM invalid clock flag.
       CLR_AM_INVALID_TR_IFG   : Boolean := False;        -- Clear active mode invalid transition flag.
-      Reserved1               : Bits_3 := 2#11#;
+      Reserved1               : Bits_3  := 2#11#;
       CLR_DCDC_ERROR_IFG      : Boolean := False;        -- Clear DC-DC error flag.
       Reserved2               : Bits_25 := 16#1FF_FFFF#;
    end record
@@ -1373,10 +1373,10 @@ pragma Style_Checks (On);
    -- 24.4.4 UCAxMCTLW Register Modulation Control Word Register
 
    type UCAxMCTLW_Type is record
-      UCOS16   : Boolean;     -- Oversampling mode enabled
-      Reserved : Bits_3 := 0;
-      UCBRFx   : Bits_4;      -- First modulation stage select.
-      UCBRSx   : Bits_8;      -- Second modulation stage select.
+      UCOS16   : Boolean;      -- Oversampling mode enabled
+      Reserved : Bits_3  := 0;
+      UCBRFx   : Bits_4;       -- First modulation stage select.
+      UCBRSx   : Bits_8;       -- Second modulation stage select.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -1390,15 +1390,15 @@ pragma Style_Checks (On);
    -- 24.4.5 UCAxSTATW Register Status Register
 
    type UCAxSTATW_Type is record
-      UCBUSY        : Boolean;     -- eUSCI_A busy.
-      UCADDR_UCIDLE : Boolean;     -- UCADDR: Address received in address-bit multiprocessor mode. UCIDLE: ...
-      UCRXERR       : Boolean;     -- Receive error flag.
-      UCBRK         : Boolean;     -- Break detect flag.
-      UCPE          : Boolean;     -- Parity error flag.
-      UCOE          : Boolean;     -- Overrun error flag.
-      UCFE          : Boolean;     -- Framing error flag.
-      UCLISTEN      : Boolean;     -- Listen enable.
-      Reserved      : Bits_8 := 0;
+      UCBUSY        : Boolean;      -- eUSCI_A busy.
+      UCADDR_UCIDLE : Boolean;      -- UCADDR: Address received in address-bit multiprocessor mode. UCIDLE: ...
+      UCRXERR       : Boolean;      -- Receive error flag.
+      UCBRK         : Boolean;      -- Break detect flag.
+      UCPE          : Boolean;      -- Parity error flag.
+      UCOE          : Boolean;      -- Overrun error flag.
+      UCFE          : Boolean;      -- Framing error flag.
+      UCLISTEN      : Boolean;      -- Listen enable.
+      Reserved      : Bits_8  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -1417,8 +1417,8 @@ pragma Style_Checks (On);
    -- 24.4.6 UCAxRXBUF Register
 
    type UCAxRXBUF_Type is record
-      UCRXBUFx : Unsigned_8;  -- The receive-data buffer is user accessible and contains the last received ...
-      Reserved : Bits_8 := 0;
+      UCRXBUFx : Unsigned_8;      -- The receive-data buffer is user accessible and contains the last received ...
+      Reserved : Bits_8     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -1430,8 +1430,8 @@ pragma Style_Checks (On);
    -- 24.4.7 UCAxTXBUF Register Transmit Buffer Register
 
    type UCAxTXBUF_Type is record
-      UCTXBUFx : Unsigned_8;  -- The transmit data buffer is user accessible and holds the data waiting to be ...
-      Reserved : Bits_8 := 0;
+      UCTXBUFx : Unsigned_8;      -- The transmit data buffer is user accessible and holds the data waiting to be ...
+      Reserved : Bits_8     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -1449,7 +1449,7 @@ pragma Style_Checks (On);
 
    type UCAxABCTL_Type is record
       UCABDEN   : Boolean;      -- Automatic baud-rate detect enable
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       UCBTOE    : Boolean;      -- Break time out error
       UCSTOE    : Boolean;      -- Synch field time out error
       UCDELIMx  : Bits_2;       -- Break/synch delimiter length
