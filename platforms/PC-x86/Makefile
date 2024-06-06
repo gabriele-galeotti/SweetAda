@@ -46,7 +46,7 @@ all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 .PHONY: installfiles
 installfiles:
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
-	@$(CREATESYMLINK) -v -m Makefile.if.in platform-$(SUBPLATFORM) .
+	@$(CREATESYMLINK) -c -v -m Makefile.if.in platform-$(SUBPLATFORM) .
 	@$(call echo-print,"installfiles: done")
 	@$(call echo-print,"")
 
@@ -77,9 +77,14 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON)           \
-              $(INSTALLED_FILENAMES) Makefile.if.in \
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
               $(CONFIGURE_FILES_PLATFORM)
+ifneq ($(filter cmd msys,$(OSTYPE)),)
+	$(RMSYMLINK) $(INSTALLED_FILENAMES) -o $(ORIGIN_FILENAMES)
+else
+	$(RM) $(INSTALLED_FILENAMES)
+endif
+	$(RM) Makefile.if.in
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
