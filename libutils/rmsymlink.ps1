@@ -1,6 +1,6 @@
 
 #
-# Remove a set of (virtual) symbolic/soft link.
+# Remove a set of (virtual) symbolic/soft links.
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
@@ -16,7 +16,6 @@
 #
 # The two lists must have the same length.
 #
-
 
 ################################################################################
 # Script initialization.                                                       #
@@ -77,33 +76,36 @@ while ($ntarget -gt 0)
   $remove = $false
   $destination = $args[$destinationindex]
   $target = $args[$targetindex]
-  $destination_mtime = (Get-Item $destination).LastWriteTime
-  $target_mtime = (Get-Item $target).LastWriteTime
-  if ($destination_mtime -gt $target_mtime)
+  if (Test-Path $destination)
   {
-    Write-Host "file [installed/symlinked] $($destination) has timestamp more recent than file [origin] $($target)."
-    while ($true)
+    $destination_mtime = (Get-Item $destination).LastWriteTime
+    $target_mtime = (Get-Item $target).LastWriteTime
+    if ($destination_mtime -gt $target_mtime)
     {
-      $answer = Read-Host "[u]pdate or [r]emove: "
-      if ($answer -eq "u")
+      Write-Host "file [installed/symlinked] $($destination) has timestamp more recent than file [origin] $($target)"
+      while ($true)
       {
-        Move-Item -Path $destination -Destination $target -Force
-        break
-      }
-      elseif ($answer -eq "r")
-      {
-        $remove = $true
-        break
+        $answer = Read-Host "[u]pdate or [r]emove: "
+        if ($answer -eq "u")
+        {
+          Move-Item -Path $destination -Destination $target -Force
+          break
+        }
+        elseif ($answer -eq "r")
+        {
+          $remove = $true
+          break
+        }
       }
     }
-  }
-  else
-  {
-    $remove = $true
-  }
-  if ($remove)
-  {
-    Remove-Item -Path $destination -Force -ErrorAction Ignore
+    else
+    {
+      $remove = $true
+    }
+    if ($remove)
+    {
+      Remove-Item -Path $destination -Force -ErrorAction Ignore
+    }
   }
   $destinationindex++
   $targetindex++
