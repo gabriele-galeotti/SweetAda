@@ -58,12 +58,13 @@ package body BSP
       ARMv6M.SYST_RVR.RELOAD := Bits_24 (16#FFF#);
       ARMv6M.SHPR3.PRI_15 := 16#1#;
       ARMv6M.SYST_CVR.CURRENT := 0;
-      ARMv6M.SYST_CSR :=
-         (ENABLE    => True,
-          TICKINT   => True,
-          CLKSOURCE => ARMv6M.CLKSOURCE_CPU,
-          COUNTFLAG => False,
-          others    => <>);
+      ARMv6M.SYST_CSR := (
+         ENABLE    => True,
+         TICKINT   => True,
+         CLKSOURCE => ARMv6M.CLKSOURCE_CPU,
+         COUNTFLAG => False,
+         others    => <>
+         );
    end SysTick_Init;
 
    ----------------------------------------------------------------------------
@@ -120,8 +121,10 @@ package body BSP
       UART0.BDH.SBR := 0;
       UART0.C2.TE := True;
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("FRDM-KL46Z", NL => True);
