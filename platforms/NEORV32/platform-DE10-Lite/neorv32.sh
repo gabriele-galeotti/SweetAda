@@ -14,7 +14,6 @@
 # none
 #
 # Environment variables:
-# PATH
 # PLATFORM_DIRECTORY
 # KERNEL_OUTFILE
 # OBJCOPY
