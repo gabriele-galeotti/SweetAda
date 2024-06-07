@@ -16,12 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Parameters;
-with System.Secondary_Stack;
 with Configure;
 with Definitions;
 with Core;
 with Bits;
+with Secondary_Stack;
 with MMIO;
 with ARMv8A;
 with Virt;
@@ -45,15 +44,7 @@ package body BSP
    use Bits;
    use Virt;
 
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
    Timer_Constant : Unsigned_32;
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -62,16 +53,6 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Timer_Reload
@@ -109,9 +90,9 @@ package body BSP
       is
    begin
       -------------------------------------------------------------------------
-      Exceptions.Init;
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Exceptions.Init;
       -- PL011 hardware initialization ----------------------------------------
       PL011_Descriptor := (
          Base_Address => System'To_Address (PL011_UART0_BASEADDRESS),
