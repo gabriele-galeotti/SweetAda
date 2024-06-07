@@ -15,12 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Parameters;
-with System.Secondary_Stack;
+with System;
 with System.Storage_Elements;
 with Configure;
 with Definitions;
 with Bits;
+with Secondary_Stack;
 with MIPS;
 with MIPS32;
 with Core;
@@ -58,14 +58,6 @@ package body BSP
    use IDE;
    use FATFS;
 
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -73,16 +65,6 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -113,33 +95,48 @@ package body BSP
       PRId   : PRId_Type;
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
       HEX_DISPLAY := BOARD_REVISION;
       PCI_Init;
       PIIX4_PIC_Init;
       -- PIIX4 MC146818A RTC --------------------------------------------------
-      PIIX4_RTC_Descriptor.Base_Address  := To_Address (PIIX4_BASEADDRESS + 16#0000_0070#);
-      PIIX4_RTC_Descriptor.Scale_Address := 0;
-      PIIX4_RTC_Descriptor.Read_8        := Malta.RTC_Register_Read'Access;
-      PIIX4_RTC_Descriptor.Write_8       := Malta.RTC_Register_Write'Access;
+      PIIX4_RTC_Descriptor := (
+         Base_Address  => System'To_Address (PIIX4_BASEADDRESS + 16#0000_0070#),
+         Scale_Address => 0,
+         Flags         => (null record),
+         Read_8        => Malta.RTC_Register_Read'Access,
+         Write_8       => Malta.RTC_Register_Write'Access
+         );
       MC146818A.Init (PIIX4_RTC_Descriptor);
       -- PIIX4 UARTs ----------------------------------------------------------
-      PIIX4_UART1_Descriptor.Base_Address  := To_Address (PIIX4_BASEADDRESS + 16#0000_03F8#);
-      PIIX4_UART1_Descriptor.Scale_Address := 0;
-      PIIX4_UART1_Descriptor.Baud_Clock    := CLK_UART1M8;
-      PIIX4_UART1_Descriptor.Read_8        := MMIO.Read'Access;
-      PIIX4_UART1_Descriptor.Write_8       := MMIO.Write'Access;
+      PIIX4_UART1_Descriptor := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (PIIX4_BASEADDRESS + 16#0000_03F8#),
+         Scale_Address => 0,
+         Baud_Clock    => CLK_UART1M8,
+         Flags         => (PC_UART => True),
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0)
+         );
       UART16x50.Init (PIIX4_UART1_Descriptor);
-      PIIX4_UART2_Descriptor.Base_Address  := To_Address (PIIX4_BASEADDRESS + 16#0000_02F8#);
-      PIIX4_UART2_Descriptor.Scale_Address := 0;
-      PIIX4_UART2_Descriptor.Baud_Clock    := CLK_UART1M8;
-      PIIX4_UART2_Descriptor.Read_8        := MMIO.Read'Access;
-      PIIX4_UART2_Descriptor.Write_8       := MMIO.Write'Access;
+      PIIX4_UART2_Descriptor := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (PIIX4_BASEADDRESS + 16#0000_02F8#),
+         Scale_Address => 0,
+         Baud_Clock    => CLK_UART1M8,
+         Flags         => (PC_UART => True),
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0)
+         );
       UART16x50.Init (PIIX4_UART2_Descriptor);
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("MIPS Malta (QEMU emulator)", NL => True);
@@ -184,19 +181,26 @@ package body BSP
       end;
       Console.Print (CP0_Config_Read, Prefix => "Config: ", NL => True);
       -- CBUS UART ------------------------------------------------------------
-      CBUS_UART_Descriptor.Base_Address  := To_Address (CBUS_UART_BASEADDRESS);
-      CBUS_UART_Descriptor.Scale_Address := 3;
-      CBUS_UART_Descriptor.Baud_Clock    := CLK_UART3M6;
-      CBUS_UART_Descriptor.Read_8        := MMIO.Read'Access;
-      CBUS_UART_Descriptor.Write_8       := MMIO.Write'Access;
+      CBUS_UART_Descriptor := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (CBUS_UART_BASEADDRESS),
+         Scale_Address => 3,
+         Baud_Clock    => CLK_UART3M6,
+         Flags         => (PC_UART => False),
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0)
+         );
       UART16x50.Init (CBUS_UART_Descriptor);
       -- PIIX4 IDE ------------------------------------------------------------
-      PIIX4_IDE_Descriptor.Base_Address  := To_Address (PIIX4_BASEADDRESS + 16#0000_01F0#);
-      PIIX4_IDE_Descriptor.Scale_Address := 0;
-      PIIX4_IDE_Descriptor.Read_8        := MMIO.Read'Access;
-      PIIX4_IDE_Descriptor.Write_8       := MMIO.Write'Access;
-      PIIX4_IDE_Descriptor.Read_16       := MMIO.ReadA'Access;
-      PIIX4_IDE_Descriptor.Write_16      := MMIO.WriteA'Access;
+      PIIX4_IDE_Descriptor := (
+         Base_Address  => System'To_Address (PIIX4_BASEADDRESS + 16#0000_01F0#),
+         Scale_Address => 0,
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Read_16       => MMIO.ReadA'Access,
+         Write_16      => MMIO.WriteA'Access
+         );
       IDE.Init (PIIX4_IDE_Descriptor);
       -- VGA ------------------------------------------------------------------
       -- assume PCI0MEM0 memory space @ 0
