@@ -101,8 +101,10 @@ package body BSP
       Z8530.Init (SCC_Descriptor, Z8530.CHANNELA);
       Z8530.Init (SCC_Descriptor, Z8530.CHANNELB);
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access)
+         ;
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("MVME162-510A", NL => True);
