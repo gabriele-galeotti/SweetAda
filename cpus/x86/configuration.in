@@ -10,7 +10,7 @@ else ifeq ($(CPU_MODEL),i586)
 else ifeq ($(CPU_MODEL),i686)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/i686
 else
-  ifneq ($(filter $(RTS_GOAL),$(MAKECMDGOALS)),$(RTS_GOAL))
+  ifneq ($(filter rts,$(MAKECMDGOALS)),rts)
     $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
       Available CPU_MODEL are: i[3|4|5|6]86.)
   endif
