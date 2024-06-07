@@ -219,8 +219,10 @@ package body BSP
          end;
       end if;
       -- PCI ------------------------------------------------------------------
-      PCI.Cfg_Access_Descriptor.Read_32 := CPU.IO.PortIn'Access;
-      PCI.Cfg_Access_Descriptor.Write_32 := CPU.IO.PortOut'Access;
+      PCI.Cfg_Access_Descriptor := (
+         Read_32  => CPU.IO.PortIn'Access,
+         Write_32 => CPU.IO.PortOut'Access
+         );
       if True then
          declare
             Vendor_Id : PCI.Vendor_Id_Type;

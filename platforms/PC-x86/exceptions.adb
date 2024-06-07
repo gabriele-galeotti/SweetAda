@@ -208,11 +208,11 @@ package body Exceptions
    begin
       for Exception_Id in Exception_Vectors'Range loop
          IDT_Set_Handler (
-                          IDT (Exception_Id),
-                          Exception_Vectors (Exception_Id).Handler_Address,
-                          Exception_Vectors (Exception_Id).Selector,
-                          Exception_Vectors (Exception_Id).Gate
-                         );
+            IDT (Exception_Id),
+            Exception_Vectors (Exception_Id).Handler_Address,
+            Exception_Vectors (Exception_Id).Selector,
+            Exception_Vectors (Exception_Id).Gate
+            );
       end loop;
       IDT_Set (IDT_Descriptor, IDT'Address, IDT'Length);
    end Init;
