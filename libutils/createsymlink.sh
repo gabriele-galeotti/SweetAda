@@ -135,14 +135,14 @@ while true ; do
     exit 1
   fi
   # symlink file or whole directory
-  if [ ! -d "${TARGET}" ] ; then
+  if [ -f "${TARGET}" ] ; then
     LINK_NAME="$2"
     rm -f "${LINK_NAME}"
     ln -s ${VERBOSE_OPTION} "${TARGET}" "${LINK_NAME}" || exit $?
     if [ "x${FILELIST_FILENAME}" != "x" ] ; then
       printf "%s\n" "INSTALLED_FILENAMES += ${LINK_NAME}" >> "${FILELIST_FILENAME}"
     fi
-  else
+  elif [ -d "${TARGET}" ] ; then
     LINK_DIRECTORY="$2"
     for f in $(ls -A "${TARGET}"/) ; do
       rm -f "${f}"
@@ -151,6 +151,9 @@ while true ; do
         printf "%s\n" "INSTALLED_FILENAMES += ${LINK_DIRECTORY}/${f}" >> "${FILELIST_FILENAME}"
       fi
     done
+  else
+    log_print_error "${SCRIPT_FILENAME}: *** Error: no file or directory \"${TARGET}\"."
+    exit 1
   fi
   # shift to the next argument pair
   shift

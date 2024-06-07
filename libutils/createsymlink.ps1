@@ -225,8 +225,7 @@ while ($fileindex -lt $args.length)
     Write-Host "$($scriptname): *** Error: no symlink link name specified."
     ExitWithCode 1
   }
-  $isfolder = (Test-Path -Path $target -PathType Container)
-  if (-not $isfolder)
+  if (Test-Path -Path $target -PathType Leaf)
   {
     $link_name = $args[$fileindex + 1]
     Remove-Item -Path $link_name -Force -ErrorAction Ignore
@@ -255,7 +254,7 @@ while ($fileindex -lt $args.length)
       }
     }
   }
-  else
+  elseif (Test-Path -Path $target -PathType Container)
   {
     $link_directory = $args[$fileindex + 1]
     $files = (Get-ChildItem -Force -File $target).Name
@@ -297,6 +296,11 @@ while ($fileindex -lt $args.length)
         }
       }
     }
+  }
+  else
+  {
+    Write-Host "$($scriptname): *** Error: no file or directory `"$($target)`"."
+    ExitWithCode 1
   }
   # shift to the next argument pair
   $fileindex += 2
