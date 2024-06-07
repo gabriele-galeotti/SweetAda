@@ -15,7 +15,6 @@
 # EXEEXT
 # SCREXT
 # VERBOSE
-# RTS_GOAL
 # PLATFORM_GOALS
 # MAKECMDGOALS
 # INFOCONFIG_GOALS
@@ -60,7 +59,7 @@ GCC_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -dumpversion 2> nu
 else
 GCC_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) -dumpversion 2> /dev/null)
 endif
-ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifneq ($(filter rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(GCC_VERSION),)
 # no valid toolchain found, output a warning message
 $(warning *** Warning: no valid toolchain.)
