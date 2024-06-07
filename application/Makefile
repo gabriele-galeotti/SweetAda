@@ -20,7 +20,7 @@ include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 .PHONY: configure
 configure:
 ifneq ($(USE_APPLICATION),)
-	@$(CREATESYMLINK) -c -v -m Makefile.if.in                \
+	@$(CREATESYMLINK) -v -c -m Makefile.if.in                \
                           $(USE_APPLICATION).ads application.ads \
                           $(USE_APPLICATION).adb application.adb
 endif
