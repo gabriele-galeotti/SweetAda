@@ -63,22 +63,22 @@ package GT64120
    PCI_1_Override_Reserved : constant := 2#11#; -- Reserved
 
    type CPU_Interface_Configuration_Type is record
-      CacheOpMap         : Bits_9 := 0;      -- Cache Operation Mapping
+      CacheOpMap         : Bits_9  := 0;     -- Cache Operation Mapping
       CachePres          : Boolean := False; -- Secondary Cache support
-      Reserved1          : Bits_1 := 0;
-      WriteMode          : Bits_1 := 0;
-      Endianness         : Bits_1 := 0;      -- Byte Orientation
-      Reserved2          : Bits_1 := 0;
+      Reserved1          : Bits_1  := 0;
+      WriteMode          : Bits_1  := 0;
+      Endianness         : Bits_1  := 0;     -- Byte Orientation
+      Reserved2          : Bits_1  := 0;
       R5KL2              : Boolean := False; -- Second level cache present.
-      External_Hit_Delay : Bits_1 := 0;      -- Register Second Level Cache Hit Signal
-      CPU_WriteRate      : Bits_1 := 0;      -- CPU Data Write Rate
+      External_Hit_Delay : Bits_1  := 0;     -- Register Second Level Cache Hit Signal
+      CPU_WriteRate      : Bits_1  := 0;     -- CPU Data Write Rate
       Stop_Retry         : Boolean := False; -- Relevant only if PCI Retry was enabled (DAdr[6] was sampled 0 at reset).
       MultiGT            : Boolean := False; -- Multiple GT–64120A support
       SysADCValid        : Boolean := False; -- GT–64120A to CPU SysADC Connection
-      PCI_0_Override     : Bits_2 := 0;      -- PCI_0_Override
-      Reserved3          : Bits_2 := 0;
-      PCI_1_Override     : Bits_2 := 0;      -- PCI_1_Override
-      Reserved4          : Bits_6 := 0;
+      PCI_0_Override     : Bits_2  := 0;     -- PCI_0_Override
+      Reserved3          : Bits_2  := 0;
+      PCI_1_Override     : Bits_2  := 0;     -- PCI_1_Override
+      Reserved4          : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -121,7 +121,7 @@ package GT64120
    function To_PCILD is new Ada.Unchecked_Conversion (Unsigned_32, PCI_Low_Decode_Address_Type);
 
    type PCI_High_Decode_Address_Type is record
-      High     : Bits_7 := 0;  -- The PCI_0 I/O address space is accessed when the decoded addresses are between Low and High.
+      High     : Bits_7  := 0; -- The PCI_0 I/O address space is accessed when the decoded addresses are between Low and High.
       Reserved : Bits_25 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -147,17 +147,17 @@ package GT64120
 
    type PCI_0_Command_Type is record
       MByteSwap    : Boolean := False; -- Master Byte Swap.
-      SyncMode     : Bits_3 := 0;      -- Indicates the ratio between TClk and PClk
-      Reserved1    : Bits_4 := 0;
-      Reserved2    : Bits_2 := 0;
+      SyncMode     : Bits_3  := 0;     -- Indicates the ratio between TClk and PClk
+      Reserved1    : Bits_4  := 0;
+      Reserved2    : Bits_2  := 0;
       MWordSwap    : Boolean := False; -- Master Word Swap
       SWordSwap    : Boolean := False; -- Slave Word Swap
       SSBWordSwap  : Boolean := False; -- Slave Swap BAR Word Swap.
-      Reserved3    : Bits_3 := 0;
+      Reserved3    : Bits_3  := 0;
       SByteSwap    : Boolean := False; -- Slave Byte Swap.
-      Reserved4    : Bits_9 := 0;
-      DRAMtoPCIErr : Bits_1 := 0;      -- Propagate SDRAM ECC errors to PCI
-      Reserved5    : Bits_5 := 0;
+      Reserved4    : Bits_9  := 0;
+      DRAMtoPCIErr : Bits_1  := 0;     -- Propagate SDRAM ECC errors to PCI
+      Reserved5    : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
