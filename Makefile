@@ -47,61 +47,81 @@ KERNEL_BASENAME := kernel
 #                                                                              #
 ################################################################################
 
-# naming of recurring goals
-RTS_GOAL           := rts
-CONFIGURE_GOAL     := configure
-INFODUMP_GOAL      := infodump
-PROBEVARIABLE_GOAL := probevariable
+#
+# List of recognized goals:
+#
+# libutils-elftool      L       S       NP
+# libutils-gcc-wrapper  L       S       NP
+# libutils-gnat-wrapper L       S       NP
+# infodump              I               NP
+# probevariable         I               NP
+# clean                 C               NP
+# distclean             C               NP
+# createkernelcfg               S       NP
+# freeze                        S       NP
+# help                          S       NP
+# rts                   R               NP
+# configure                             P
+# $(KERNEL_BASENAME)                    P
+# all                                   P
+# kernel_info                           P
+# kernel_libinfo                        P
+# postbuild                             P
+# session-start                         P
+# session-end                           P
+# run                                   P
+# debug                                 P
+#
 
 # libutils goals
 LIBUTILS_GOALS := libutils-elftool      \
                   libutils-gcc-wrapper  \
                   libutils-gnat-wrapper
 
-# goals that do not read kernel.cfg
-NOT_CONFIG_GOALS := help              \
-                    $(LIBUTILS_GOALS) \
-                    createkernelcfg
+# info goals
+INFO_GOALS := infodump      \
+              probevariable
 
-# service goals
-SERVICE_GOALS := $(NOT_CONFIG_GOALS)   \
-                 $(PROBEVARIABLE_GOAL) \
-                 $(INFODUMP_GOAL)      \
-                 clean                 \
-                 distclean             \
-                 freeze
+# clean/distclean goals
+CLEANING_GOALS := clean     \
+                  distclean
 
-# not platform-related goals
-NOT_PLATFORM_GOALS := $(SERVICE_GOALS) \
-                      $(RTS_GOAL)
+# general service goals
+SERVICE_GOALS := createkernelcfg   \
+                 freeze            \
+                 help              \
+                 $(LIBUTILS_GOALS)
+
+# not-platform-related goals
+NOT_PLATFORM_GOALS := $(SERVICE_GOALS)  \
+                      $(INFO_GOALS)     \
+                      $(CLEANING_GOALS) \
+                      rts
 
 # platform-related goals
-PLATFORM_GOALS := $(CONFIGURE_GOAL)  \
-                  all                \
+PLATFORM_GOALS := configure          \
                   $(KERNEL_BASENAME) \
-                  kernel_libinfo     \
+                  all                \
                   kernel_info        \
+                  kernel_libinfo     \
                   postbuild          \
                   session-start      \
                   session-end        \
                   run                \
                   debug
 
-# now all goals has been covered, use only variable references when grouping
-
 # all goals
 ALL_GOALS := $(NOT_PLATFORM_GOALS) \
              $(PLATFORM_GOALS)
 
 # special set of goals for detection of all informations
-INFOCONFIG_GOALS := $(PROBEVARIABLE_GOAL) \
-                    $(CONFIGURE_GOAL)     \
-                    $(INFODUMP_GOAL)
+INFOCONFIG_GOALS := $(INFO_GOALS) \
+                    configure
 
 # check Makefile target
-NOT_MAKEFILE_TARGETS := $(filter-out $(ALL_GOALS),$(MAKECMDGOALS))
-ifneq ($(NOT_MAKEFILE_TARGETS),)
-$(error Error: $(NOT_MAKEFILE_TARGETS): no known Makefile target, try "make help")
+NOT_MAKEFILE_GOALS := $(filter-out $(ALL_GOALS),$(MAKECMDGOALS))
+ifneq ($(NOT_MAKEFILE_GOALS),)
+$(error Error: $(NOT_MAKEFILE_GOALS): no known Makefile target, try "make help")
 endif
 
 ################################################################################
@@ -197,7 +217,7 @@ endif
 include Makefile.ut.in
 
 # check for RTS build
-ifeq ($(MAKECMDGOALS),$(RTS_GOAL))
+ifeq ($(MAKECMDGOALS),rts)
 # before loading configuration.in (which defines the RTS type used by the
 # platform), save the RTS variable from the environment in order to correctly
 # build the RTS specified when issuing the "rts" target
@@ -233,7 +253,7 @@ CONFIGURE_FILES_PLATFORM :=
 include configuration.in
 CONFIGURE_DEPS += configuration.in
 
-ifneq ($(filter $(RTS_GOAL) $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifneq ($(filter rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(TOOLCHAIN_PREFIX),)
 $(error Error: no valid TOOLCHAIN_PREFIX)
 endif
@@ -290,12 +310,7 @@ endif
 
 # verbose output, "Y/y/1" = enabled
 VERBOSE ?=
-# normalize VERBOSE
-ifeq ($(OSTYPE),cmd)
-override VERBOSE := $(shell $(ECHO) $(VERBOSE)| $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
-else
-override VERBOSE := $(shell $(ECHO) "$(VERBOSE)" | $(SED) -e "s|\(.\).*|\1|" -e "s|[y|1]|Y|")
-endif
+override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
 export VERBOSE
 
 # load complex functions
@@ -505,57 +520,53 @@ ENABLE_SPLIT_DWARF :=
 #                                                                              #
 ################################################################################
 
-#
-# PLATFORM should be always defined, but when a generic goal is issued, no
-# diagnostic messages are shown (avoiding output text corruption with, e.g.,
-# the "probevariable" target).
-#
-
-# try to read PLATFORM from configuration file
-ifneq ($(MAKECMDGOALS),)
-ifeq ($(filter $(NOT_CONFIG_GOALS),$(MAKECMDGOALS)),)
+ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
 -include $(KERNEL_CFGFILE)
 endif
-endif
 
+ifneq ($(MAKECMDGOALS),)
 # PLATFORM processing
+ifneq ($(filter $(CLEANING_GOALS) $(INFO_GOALS) rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifneq ($(PLATFORM),)
+# PLATFORM defined
 ifeq ($(filter $(PLATFORM),$(PLATFORMS)),)
 $(error Error: no valid PLATFORM)
 endif
-PLATFORM_DIRECTORY     := $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
+PLATFORM_DIRECTORY := $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
 ifeq ($(OSTYPE),cmd)
 PLATFORM_DIRECTORY_CMD := $(PLATFORM_BASE_DIRECTORY)\$(PLATFORM)
 endif
-ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
 ifeq ($(filter distclean,$(MAKECMDGOALS)),distclean)
 -include $(PLATFORM_DIRECTORY)/configuration.in
 else
 include $(PLATFORM_DIRECTORY)/configuration.in
 endif
 CONFIGURE_DEPS += $(PLATFORM_DIRECTORY)/configuration.in
-endif
 else
-# platform not known, output an error message
+# PLATFORM unknown
 ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 $(error Error: no valid PLATFORM)
 endif
 endif
-
+endif
 # CPU processing
 ifneq ($(CPU),)
+# CPU defined
+ifneq ($(filter $(INFO_GOALS) rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(filter $(CPU),$(CPUS)),)
 $(error Error: no valid CPU)
-endif
+else
 CPU_DIRECTORY := $(CPU_BASE_DIRECTORY)/$(CPU)
 include $(CPU_DIRECTORY)/configuration.in
 CONFIGURE_DEPS += $(CPU_DIRECTORY)/configuration.in
+endif
+endif
 else
-ifeq ($(filter $(RTS_GOAL),$(MAKECMDGOALS)),$(RTS_GOAL))
+# CPU must be known for the RTS goal
+ifeq ($(filter rts,$(MAKECMDGOALS)),rts)
 $(error Error: no valid CPU)
 endif
 endif
-
 # standard components
 include $(APPLICATION_DIRECTORY)/configuration.in
 CONFIGURE_DEPS += $(APPLICATION_DIRECTORY)/configuration.in
@@ -569,24 +580,6 @@ include $(DRIVERS_DIRECTORY)/configuration.in
 CONFIGURE_DEPS += $(DRIVERS_DIRECTORY)/configuration.in
 include $(MODULES_DIRECTORY)/configuration.in
 CONFIGURE_DEPS += $(MODULES_DIRECTORY)/configuration.in
-
-# GPRbuild configuration dependencies
-ifeq ($(BUILD_MODE),GPRbuild)
-ifeq ($(OSTYPE),cmd)
-GPRBUILD_DEPS += $(sort $(shell                                                   \
-                                SET "PATH=$(PATH)"                             && \
-                                SET "SWEETADA_PATH=$(SWEETADA_PATH)"           && \
-                                SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)" && \
-                                $(GPRDEPS) $(KERNEL_GPRFILE)                      \
-                                2> nul))
-else
-GPRBUILD_DEPS += $(sort $(shell                                               \
-                                PATH="$(PATH)"                             && \
-                                SWEETADA_PATH="$(SWEETADA_PATH)"           && \
-                                LIBUTILS_DIRECTORY="$(LIBUTILS_DIRECTORY)" && \
-                                $(GPRDEPS) $(KERNEL_GPRFILE)                  \
-                                2> /dev/null))
-endif
 endif
 
 ################################################################################
@@ -632,6 +625,27 @@ endif
 # import implicit units
 IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)     \
                       $(IMPLICIT_CLIBRARY_UNITS)
+
+# GPRbuild configuration dependencies
+ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifeq ($(BUILD_MODE),GPRbuild)
+ifeq ($(OSTYPE),cmd)
+GPRBUILD_DEPS += $(sort $(shell                                                   \
+                                SET "PATH=$(PATH)"                             && \
+                                SET "SWEETADA_PATH=$(SWEETADA_PATH)"           && \
+                                SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)" && \
+                                $(GPRDEPS) $(KERNEL_GPRFILE)                      \
+                                2> nul))
+else
+GPRBUILD_DEPS += $(sort $(shell                                               \
+                                PATH="$(PATH)"                             && \
+                                SWEETADA_PATH="$(SWEETADA_PATH)"           && \
+                                LIBUTILS_DIRECTORY="$(LIBUTILS_DIRECTORY)" && \
+                                $(GPRDEPS) $(KERNEL_GPRFILE)                  \
+                                2> /dev/null))
+endif
+endif
+endif
 
 # toolchain specifications
 include Makefile.tc.in
@@ -827,7 +841,7 @@ LIBGCC_OBJECT :=
 endif
 
 ifeq ($(USE_LIBM),Y)
-LIBM_OBJECT := "$(TOOLCHAIN_PREFIX)"/$(TOOLCHAIN_NAME)/lib/$(GCC_MULTIDIR)/libm.a
+LIBM_OBJECT := "$(LIBM_FILENAME)"
 else
 LIBM_OBJECT :=
 endif
@@ -1359,10 +1373,10 @@ ifneq ($(RTS),)
 	@$(call echo-print,"RTS PATH:                $(RTS_PATH)")
 endif
 ifeq ($(USE_LIBGCC),Y)
-	@$(call echo-print,"LIBGCC FILENAME:         $(LIBGCC_OBJECT)")
+	@$(call echo-print,"LIBGCC FILENAME:         $(LIBGCC_FILENAME)")
 endif
 ifeq ($(USE_LIBM),Y)
-	@$(call echo-print,"LIBM FILENAME:           $(LIBM_OBJECT)")
+	@$(call echo-print,"LIBM FILENAME:           $(LIBM_FILENAME)")
 endif
 	@$(call echo-print,"USE LIBADA:              $(USE_LIBADA)")
 	@$(call echo-print,"USE CLIBRARY:            $(USE_CLIBRARY)")
@@ -1483,21 +1497,23 @@ endif
 
 .PHONY: clean
 clean:
-ifeq      ($(OSTYPE),cmd)
-	$(call remove-nulfile)
-else ifeq ($(OSTYPE),msys)
+ifneq ($(filter cmd msys,$(OSTYPE)),)
 	$(call remove-nulfile)
 endif
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean
 	$(MAKE) $(MAKE_CORE) clean
 ifneq ($(CPU),)
+ifeq ($(filter $(CPU),$(CPUS)),$(CPU))
 	$(MAKE) $(MAKE_CPU) clean
+endif
 endif
 	$(MAKE) $(MAKE_DRIVERS) clean
 	$(MAKE) $(MAKE_MODULES) clean
 ifneq ($(PLATFORM),)
+ifeq ($(filter $(PLATFORM),$(PLATFORMS)),$(PLATFORM))
 	$(MAKE) $(MAKE_PLATFORM) clean
+endif
 endif
 ifeq ($(OSTYPE),cmd)
 	-IF EXIST $(LIBRARY_DIRECTORY)\ \
