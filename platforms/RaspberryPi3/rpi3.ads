@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -32,7 +31,6 @@ package RPI3
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -56,17 +54,15 @@ package RPI3
 
    -- AUXENB
 
-   type AUXENB_Type is
-   record
+   type AUXENB_Type is record
       MiniUART_Enable : Boolean;      -- If set the mini UART is enabled.
       SPI1_Enable     : Boolean;      -- If set the SPI 1 module is enabled.
       SPI2_Enable     : Boolean;      -- If set the SPI 2 module is enabled.
       Reserved        : Bits_29 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUXENB_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUXENB_Type use record
       MiniUART_Enable at 0 range 0 ..  0;
       SPI1_Enable     at 0 range 1 ..  1;
       SPI2_Enable     at 0 range 2 ..  2;
@@ -74,45 +70,41 @@ package RPI3
    end record;
 
    AUXENB : aliased AUXENB_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- AUX_MU_IO
 
-   type AUX_MU_IO_Type is
-   record
-      DATA     : Unsigned_8;   -- RX DATA, TX DATA or baud rate LSB (DLAB = 1)
-      Reserved : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_IO_Type use
-   record
+   type AUX_MU_IO_Type is record
+      DATA     : Unsigned_8;      -- RX DATA, TX DATA or baud rate LSB (DLAB = 1)
+      Reserved : Bits_24    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUX_MU_IO_Type use record
       DATA     at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
    AUX_MU_IO_REG : aliased AUX_MU_IO_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#40#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#40#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- AUX_MU_IER
 
-   type AUX_MU_IER_Type is
-   record
+   type AUX_MU_IER_Type is record
       En_RX_Int  : Boolean;      -- Enable receive interrupts.
       En_TX_Int  : Boolean;      -- Enable transmit interrupts.
       Other_Ints : Bits_6;
       Reserved   : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_IER_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUX_MU_IER_Type use record
       En_RX_Int  at 0 range 0 ..  0;
       En_TX_Int  at 0 range 1 ..  1;
       Other_Ints at 0 range 2 ..  7;
@@ -120,7 +112,7 @@ package RPI3
    end record;
 
    AUX_MU_IER_REG : aliased AUX_MU_IER_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#44#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#44#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -129,10 +121,9 @@ package RPI3
 
    type AUX_MU_IIR_Kind is (READ, WRITE);
 
-   type AUX_MU_IIR_Type (Kind : AUX_MU_IIR_Kind := READ) is
-   record
+   type AUX_MU_IIR_Type (Kind : AUX_MU_IIR_Kind := READ) is record
       Int_Pend   : Boolean;      -- Interrupt pending
-      Reserved1  : Bits_3 := 0;
+      Reserved1  : Bits_3  := 0;
       FIFO_en    : Bits_2;       -- FIFO enables RO
       Reserved2  : Bits_24 := 0;
       case Kind is
@@ -143,12 +134,11 @@ package RPI3
             FIFO_RX_Clear : Boolean;
             FIFO_TX_Clear : Boolean;
       end case;
-   end record with
-      Bit_Order       => Low_Order_First,
-      Unchecked_Union => True,
-      Size            => 32;
-   for AUX_MU_IIR_Type use
-   record
+   end record
+      with Bit_Order       => Low_Order_First,
+           Unchecked_Union => True,
+           Size            => 32;
+   for AUX_MU_IIR_Type use record
       Int_Pend      at 0 range 0 ..  0;
       THRE          at 0 range 1 ..  1;
       RHVB          at 0 range 2 ..  2;
@@ -160,7 +150,7 @@ package RPI3
    end record;
 
    AUX_MU_IIR_REG : aliased AUX_MU_IIR_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#48#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#48#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -170,18 +160,16 @@ package RPI3
    UART_7BIT : constant := 2#00#; -- the UART works in 7-bit mode
    UART_8BIT : constant := 2#11#; -- the UART works in 8-bit mode
 
-   type AUX_MU_LCR_Type is
-   record
+   type AUX_MU_LCR_Type is record
       Data_Size   : Bits_2;       -- UART data size
-      Reserved1   : Bits_4 := 0;
+      Reserved1   : Bits_4  := 0;
       Break       : Boolean;      -- If set high the UART1_TX line is pulled low continuously.
       DLAB_Access : Boolean;      -- If set the first to Mini UART register give access the the Baudrate register.
       Reserved2   : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_LCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUX_MU_LCR_Type use record
       Data_Size   at 0 range 0 ..  1;
       Reserved1   at 0 range 2 ..  5;
       Break       at 0 range 6 ..  6;
@@ -190,24 +178,22 @@ package RPI3
    end record;
 
    AUX_MU_LCR_REG : aliased AUX_MU_LCR_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#4C#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#4C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- AUX_MU_MCR
 
-   type AUX_MU_MCR_Type is
-   record
-      Reserved1 : Bits_1 := 0;
+   type AUX_MU_MCR_Type is record
+      Reserved1 : Bits_1  := 0;
       RTS       : Boolean;      -- RTS
-      Reserved2 : Bits_6 := 0;
+      Reserved2 : Bits_6  := 0;
       Reserved3 : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_MCR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUX_MU_MCR_Type use record
       Reserved1 at 0 range 0 ..  0;
       RTS       at 0 range 1 ..  1;
       Reserved2 at 0 range 2 ..  7;
@@ -215,27 +201,25 @@ package RPI3
    end record;
 
    AUX_MU_MCR_REG : aliased AUX_MU_MCR_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#50#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#50#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- AUX_MU_LSR
 
-   type AUX_MU_LSR_Type is
-   record
+   type AUX_MU_LSR_Type is record
       Data_Ready        : Boolean;      -- This bit is set if the receive FIFO holds at least 1 symbol.
       Receiver_Overrun  : Boolean;      -- This bit is set if there was a receiver overrun.
-      Reserved1         : Bits_3 := 0;
+      Reserved1         : Bits_3  := 0;
       Transmitter_Empty : Boolean;      -- This bit is set if the transmit FIFO can accept at least one byte.
       Transmitter_Idle  : Boolean;      -- This bit is set if the transmit FIFO is empty and the transmitter is idle.
-      Reserved2         : Bits_1 := 0;
+      Reserved2         : Bits_1  := 0;
       Reserved3         : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_LSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUX_MU_LSR_Type use record
       Data_Ready        at 0 range 0 ..  0;
       Receiver_Overrun  at 0 range 1 ..  1;
       Reserved1         at 0 range 2 ..  4;
@@ -246,24 +230,22 @@ package RPI3
    end record;
 
    AUX_MU_LSR_REG : aliased AUX_MU_LSR_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#54#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#54#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- AUX_MU_MSR
 
-   type AUX_MU_MSR_Type is
-   record
-      Reserved1  : Bits_4 := 0;
+   type AUX_MU_MSR_Type is record
+      Reserved1  : Bits_4  := 0;
       CTS_Status : Boolean;      -- This bit is the inverse of the UART1_CTS input
-      Reserved2  : Bits_3 := 0;
+      Reserved2  : Bits_3  := 0;
       Reserved3  : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_MSR_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUX_MU_MSR_Type use record
       Reserved1  at 0 range 0 ..  3;
       CTS_Status at 0 range 4 ..  4;
       Reserved2  at 0 range 5 ..  7;
@@ -271,28 +253,26 @@ package RPI3
    end record;
 
    AUX_MU_MSR_REG : aliased AUX_MU_MSR_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#58#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#58#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- AUX_MU_SCRATCH
 
-   type AUX_MU_SCRATCH_Type is
-   record
+   type AUX_MU_SCRATCH_Type is record
       Scratch  : Unsigned_8;
-      Reserved : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_SCRATCH_Type use
-   record
+      Reserved : Bits_24    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUX_MU_SCRATCH_Type use record
       Scratch  at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
    AUX_MU_SCRATCH_REG : aliased AUX_MU_SCRATCH_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#5C#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#5C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -310,8 +290,7 @@ package RPI3
    CTS_AutoflowP : constant := 0; -- If clear the CTS auto flow assert level is high
    CTS_AutoflowN : constant := 1; -- If set the CTS auto flow assert level is low
 
-   type AUX_MU_CNTL_Type is
-   record
+   type AUX_MU_CNTL_Type is record
       Receiver_Enable    : Boolean;      -- If this bit is set the mini UART receiver is enabled.
       Transmitter_Enable : Boolean;      -- If this bit is set the mini UART transmitter is enabled.
       RTS_RX_Autoflow    : Boolean;      -- If ... the RTS line will de-assert if thereceive FIFO reaches it 'auto flow' level.
@@ -320,11 +299,10 @@ package RPI3
       RTS_Assert_Level   : Bits_1;       -- This bit allows one to invert the RTS auto flow operation polarity.
       CTS_Assert_Level   : Bits_1;       -- This bit allows one to invert the CTS auto flow operation polarity.
       Reserved           : Bits_24 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_CNTL_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUX_MU_CNTL_Type use record
       Receiver_Enable    at 0 range 0 ..  0;
       Transmitter_Enable at 0 range 1 ..  1;
       RTS_RX_Autoflow    at 0 range 2 ..  2;
@@ -336,35 +314,33 @@ package RPI3
    end record;
 
    AUX_MU_CNTL_REG : aliased AUX_MU_CNTL_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#60#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#60#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- AUX_MU_STAT
 
-   type AUX_MU_STAT_Type is
-   record
-      Sym_Avail    : Boolean;     -- Symbol available
-      SP_Avail     : Boolean;     -- Space available
-      RX_Idle      : Boolean;     -- Receiver is idle
-      TX_Idle      : Boolean;     -- Transmitter is idle
-      RX_Overrun   : Boolean;     -- Receiver overrun
-      TX_FIFOFull  : Boolean;     -- Transmit FIFO is full
-      RTS          : Boolean;     -- RTS status
-      CTS          : Boolean;     -- CTS line
-      TX_FIFOEmpty : Boolean;     -- Transmit FIFO is empty
-      TX_Done      : Boolean;     -- Transmitter done
-      Reserved1    : Bits_6 := 0;
-      RX_FIFOLevel : Bits_4;      -- Receive FIFO fill level
-      Reserved2    : Bits_4 := 0;
-      TX_FIFOLevel : Bits_4;      -- Transmit FIFO fill level
-      Reserved3    : Bits_4 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_STAT_Type use
-   record
+   type AUX_MU_STAT_Type is record
+      Sym_Avail    : Boolean;      -- Symbol available
+      SP_Avail     : Boolean;      -- Space available
+      RX_Idle      : Boolean;      -- Receiver is idle
+      TX_Idle      : Boolean;      -- Transmitter is idle
+      RX_Overrun   : Boolean;      -- Receiver overrun
+      TX_FIFOFull  : Boolean;      -- Transmit FIFO is full
+      RTS          : Boolean;      -- RTS status
+      CTS          : Boolean;      -- CTS line
+      TX_FIFOEmpty : Boolean;      -- Transmit FIFO is empty
+      TX_Done      : Boolean;      -- Transmitter done
+      Reserved1    : Bits_6  := 0;
+      RX_FIFOLevel : Bits_4;       -- Receive FIFO fill level
+      Reserved2    : Bits_4  := 0;
+      TX_FIFOLevel : Bits_4;       -- Transmit FIFO fill level
+      Reserved3    : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUX_MU_STAT_Type use record
       Sym_Avail    at 0 range  0 ..  0;
       SP_Avail     at 0 range  1 ..  1;
       RX_Idle      at 0 range  2 ..  2;
@@ -383,28 +359,26 @@ package RPI3
    end record;
 
    AUX_MU_STAT_REG : aliased AUX_MU_STAT_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#64#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#64#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- AUX_MU_BAUD
 
-   type AUX_MU_BAUD_Type is
-   record
-      Baudrate : Unsigned_16;  -- mini UART baudrate counter
-      Reserved : Bits_16 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for AUX_MU_BAUD_Type use
-   record
+   type AUX_MU_BAUD_Type is record
+      Baudrate : Unsigned_16;      -- mini UART baudrate counter
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AUX_MU_BAUD_Type use record
       Baudrate at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
    end record;
 
    AUX_MU_BAUD : aliased AUX_MU_BAUD_Type
-      with Address              => To_Address (AUX_BASEADDRESS + 16#68#),
+      with Address              => System'To_Address (AUX_BASEADDRESS + 16#68#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -422,8 +396,7 @@ package RPI3
    GPIO_ALT4   : constant := 2#011#;
    GPIO_ALT5   : constant := 2#010#;
 
-   type GPFSEL0_Type is
-   record
+   type GPFSEL0_Type is record
       FSEL0    : Bits_3;
       FSEL1    : Bits_3;
       FSEL2    : Bits_3;
@@ -435,11 +408,10 @@ package RPI3
       FSEL8    : Bits_3;
       FSEL9    : Bits_3;
       Reserved : Bits_2;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPFSEL0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPFSEL0_Type use record
       FSEL0    at 0 range  0 ..  2;
       FSEL1    at 0 range  3 ..  5;
       FSEL2    at 0 range  6 ..  8;
@@ -454,13 +426,12 @@ package RPI3
    end record;
 
    GPFSEL0 : aliased GPFSEL0_Type
-      with Address              => To_Address (GPIO_BASEADDRESS + 16#00#),
+      with Address              => System'To_Address (GPIO_BASEADDRESS + 16#00#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   type GPFSEL1_Type is
-   record
+   type GPFSEL1_Type is record
       FSEL10   : Bits_3;
       FSEL11   : Bits_3;
       FSEL12   : Bits_3;
@@ -472,11 +443,10 @@ package RPI3
       FSEL18   : Bits_3;
       FSEL19   : Bits_3;
       Reserved : Bits_2;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPFSEL1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPFSEL1_Type use record
       FSEL10   at 0 range  0 ..  2;
       FSEL11   at 0 range  3 ..  5;
       FSEL12   at 0 range  6 ..  8;
@@ -491,13 +461,12 @@ package RPI3
    end record;
 
    GPFSEL1 : aliased GPFSEL1_Type
-      with Address              => To_Address (GPIO_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (GPIO_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   type GPFSEL2_Type is
-   record
+   type GPFSEL2_Type is record
       FSEL20   : Bits_3;
       FSEL21   : Bits_3;
       FSEL22   : Bits_3;
@@ -509,11 +478,10 @@ package RPI3
       FSEL28   : Bits_3;
       FSEL29   : Bits_3;
       Reserved : Bits_2;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPFSEL2_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPFSEL2_Type use record
       FSEL20   at 0 range  0 ..  2;
       FSEL21   at 0 range  3 ..  5;
       FSEL22   at 0 range  6 ..  8;
@@ -528,13 +496,12 @@ package RPI3
    end record;
 
    GPFSEL2 : aliased GPFSEL2_Type
-      with Address              => To_Address (GPIO_BASEADDRESS + 16#08#),
+      with Address              => System'To_Address (GPIO_BASEADDRESS + 16#08#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   type GPFSEL3_Type is
-   record
+   type GPFSEL3_Type is record
       FSEL30   : Bits_3;
       FSEL31   : Bits_3;
       FSEL32   : Bits_3;
@@ -546,11 +513,10 @@ package RPI3
       FSEL38   : Bits_3;
       FSEL39   : Bits_3;
       Reserved : Bits_2;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPFSEL3_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPFSEL3_Type use record
       FSEL30   at 0 range  0 ..  2;
       FSEL31   at 0 range  3 ..  5;
       FSEL32   at 0 range  6 ..  8;
@@ -565,13 +531,12 @@ package RPI3
    end record;
 
    GPFSEL3 : aliased GPFSEL3_Type
-      with Address              => To_Address (GPIO_BASEADDRESS + 16#0C#),
+      with Address              => System'To_Address (GPIO_BASEADDRESS + 16#0C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   type GPFSEL4_Type is
-   record
+   type GPFSEL4_Type is record
       FSEL40   : Bits_3;
       FSEL41   : Bits_3;
       FSEL42   : Bits_3;
@@ -583,11 +548,10 @@ package RPI3
       FSEL48   : Bits_3;
       FSEL49   : Bits_3;
       Reserved : Bits_2;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPFSEL4_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPFSEL4_Type use record
       FSEL40   at 0 range  0 ..  2;
       FSEL41   at 0 range  3 ..  5;
       FSEL42   at 0 range  6 ..  8;
@@ -602,23 +566,21 @@ package RPI3
    end record;
 
    GPFSEL4 : aliased GPFSEL4_Type
-      with Address              => To_Address (GPIO_BASEADDRESS + 16#10#),
+      with Address              => System'To_Address (GPIO_BASEADDRESS + 16#10#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   type GPFSEL5_Type is
-   record
+   type GPFSEL5_Type is record
       FSEL50   : Bits_3;
       FSEL51   : Bits_3;
       FSEL52   : Bits_3;
       FSEL53   : Bits_3;
       Reserved : Bits_20;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPFSEL5_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPFSEL5_Type use record
       FSEL50   at 0 range  0 ..  2;
       FSEL51   at 0 range  3 ..  5;
       FSEL52   at 0 range  6 ..  8;
@@ -627,13 +589,12 @@ package RPI3
    end record;
 
    GPFSEL5 : aliased GPFSEL5_Type
-      with Address              => To_Address (GPIO_BASEADDRESS + 16#14#),
+      with Address              => System'To_Address (GPIO_BASEADDRESS + 16#14#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   type GPSET0_Type is
-   record
+   type GPSET0_Type is record
       SET0  : Boolean;
       SET1  : Boolean;
       SET2  : Boolean;
@@ -666,11 +627,10 @@ package RPI3
       SET29 : Boolean;
       SET30 : Boolean;
       SET31 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPSET0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPSET0_Type use record
       SET0  at 0 range  0 ..  0;
       SET1  at 0 range  1 ..  1;
       SET2  at 0 range  2 ..  2;
@@ -706,13 +666,12 @@ package RPI3
    end record;
 
    GPSET0 : aliased GPSET0_Type
-      with Address              => To_Address (GPIO_BASEADDRESS + 16#1C#),
+      with Address              => System'To_Address (GPIO_BASEADDRESS + 16#1C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   type GPSET1_Type is
-   record
+   type GPSET1_Type is record
       SET32    : Boolean;
       SET33    : Boolean;
       SET34    : Boolean;
@@ -736,11 +695,10 @@ package RPI3
       SET52    : Boolean;
       SET53    : Boolean;
       Reserved : Bits_10;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPSET1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPSET1_Type use record
       SET32    at 0 range  0 ..  0;
       SET33    at 0 range  1 ..  1;
       SET34    at 0 range  2 ..  2;
@@ -767,13 +725,12 @@ package RPI3
    end record;
 
    GPSET1 : aliased GPSET1_Type
-      with Address              => To_Address (GPIO_BASEADDRESS + 16#20#),
+      with Address              => System'To_Address (GPIO_BASEADDRESS + 16#20#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   type GPCLR0_Type is
-   record
+   type GPCLR0_Type is record
       CLR0  : Boolean;
       CLR1  : Boolean;
       CLR2  : Boolean;
@@ -806,11 +763,10 @@ package RPI3
       CLR29 : Boolean;
       CLR30 : Boolean;
       CLR31 : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPCLR0_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPCLR0_Type use record
       CLR0  at 0 range  0 ..  0;
       CLR1  at 0 range  1 ..  1;
       CLR2  at 0 range  2 ..  2;
@@ -846,13 +802,12 @@ package RPI3
    end record;
 
    GPCLR0 : aliased GPCLR0_Type
-      with Address              => To_Address (GPIO_BASEADDRESS + 16#28#),
+      with Address              => System'To_Address (GPIO_BASEADDRESS + 16#28#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   type GPCLR1_Type is
-   record
+   type GPCLR1_Type is record
       CLR32    : Boolean;
       CLR33    : Boolean;
       CLR34    : Boolean;
@@ -876,11 +831,10 @@ package RPI3
       CLR52    : Boolean;
       CLR53    : Boolean;
       Reserved : Bits_10;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for GPCLR1_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for GPCLR1_Type use record
       CLR32    at 0 range  0 ..  0;
       CLR33    at 0 range  1 ..  1;
       CLR34    at 0 range  2 ..  2;
@@ -907,7 +861,7 @@ package RPI3
    end record;
 
    GPCLR1 : aliased GPCLR1_Type
-      with Address              => To_Address (GPIO_BASEADDRESS + 16#2C#),
+      with Address              => System'To_Address (GPIO_BASEADDRESS + 16#2C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -960,52 +914,52 @@ package RPI3
    uart_int        : constant := 57 - 32;
 
    IRQ_basic_pending  : aliased Bitmap_32
-      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#200#),
+      with Address              => System'To_Address (INTERRUPTS_BASEADDRESS + 16#200#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    IRQ_pending_1      : aliased Bitmap_32
-      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#204#),
+      with Address              => System'To_Address (INTERRUPTS_BASEADDRESS + 16#204#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    IRQ_pending_2      : aliased Bitmap_32
-      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#208#),
+      with Address              => System'To_Address (INTERRUPTS_BASEADDRESS + 16#208#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    FIQ_control        : aliased Bitmap_32
-      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#20C#),
+      with Address              => System'To_Address (INTERRUPTS_BASEADDRESS + 16#20C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    Enable_IRQs_1      : aliased Bitmap_32
-      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#210#),
+      with Address              => System'To_Address (INTERRUPTS_BASEADDRESS + 16#210#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    Enable_IRQs_2      : aliased Bitmap_32
-      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#214#),
+      with Address              => System'To_Address (INTERRUPTS_BASEADDRESS + 16#214#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    Enable_Basic_IRQs  : aliased Bitmap_32
-      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#218#),
+      with Address              => System'To_Address (INTERRUPTS_BASEADDRESS + 16#218#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    Disable_IRQs_1     : aliased Bitmap_32
-      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#21C#),
+      with Address              => System'To_Address (INTERRUPTS_BASEADDRESS + 16#21C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    Disable_IRQs_2     : aliased Bitmap_32
-      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#220#),
+      with Address              => System'To_Address (INTERRUPTS_BASEADDRESS + 16#220#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    Disable_Basic_IRQs : aliased Bitmap_32
-      with Address              => To_Address (INTERRUPTS_BASEADDRESS + 16#224#),
+      with Address              => System'To_Address (INTERRUPTS_BASEADDRESS + 16#224#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1014,18 +968,16 @@ package RPI3
    -- 12.1 System Timer Registers
    ----------------------------------------------------------------------------
 
-   type CS_Type is
-   record
+   type CS_Type is record
       M0       : Boolean;      -- System Timer Match 0
       M1       : Boolean;      -- System Timer Match 1
       M2       : Boolean;      -- System Timer Match 2
       M3       : Boolean;      -- System Timer Match 3
       Reserved : Bits_28 := 0;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for CS_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CS_Type use record
       M0       at 0 range 0 ..  0;
       M1       at 0 range 1 ..  1;
       M2       at 0 range 2 ..  2;
@@ -1033,8 +985,7 @@ package RPI3
       Reserved at 0 range 4 .. 31;
    end record;
 
-   type System_Timer_Type is
-   record
+   type System_Timer_Type is record
       CS  : CS_Type     with Volatile_Full_Access => True; -- System Timer Control/Status
       CLO : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Counter Lower 32 bits
       CHI : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Counter Higher 32 bits
@@ -1042,10 +993,9 @@ package RPI3
       C1  : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Compare 1
       C2  : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Compare 2
       C3  : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Compare 3
-   end record with
-      Size => 7 * 32;
-   for System_Timer_Type use
-   record
+   end record
+      with Size => 7 * 32;
+   for System_Timer_Type use record
       CS  at 16#00# range 0 .. 31;
       CLO at 16#04# range 0 .. 31;
       CHI at 16#08# range 0 .. 31;
@@ -1056,7 +1006,7 @@ package RPI3
    end record;
 
    SYSTEM_TIMER : aliased System_Timer_Type
-      with Address    => To_Address (SYSTEM_TIMER_BASEADDRESS),
+      with Address    => System'To_Address (SYSTEM_TIMER_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1068,47 +1018,47 @@ package RPI3
    -- ARM SP804
 
    ARMTIMER_Load       : aliased Unsigned_32
-      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#00#),
+      with Address              => System'To_Address (ARMTIMER_BASEADDRESS + 16#00#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    ARMTIMER_Value      : aliased Unsigned_32
-      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (ARMTIMER_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    ARMTIMER_Control    : aliased Unsigned_32
-      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#08#),
+      with Address              => System'To_Address (ARMTIMER_BASEADDRESS + 16#08#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    ARMTIMER_IRQ_ClrAck : aliased Unsigned_32
-      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#0C#),
+      with Address              => System'To_Address (ARMTIMER_BASEADDRESS + 16#0C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    ARMTIMER_RAW_IRQ    : aliased Unsigned_32
-      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#10#),
+      with Address              => System'To_Address (ARMTIMER_BASEADDRESS + 16#10#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    ARMTIMER_Masked_IRQ : aliased Unsigned_32
-      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#14#),
+      with Address              => System'To_Address (ARMTIMER_BASEADDRESS + 16#14#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    ARMTIMER_Reload     : aliased Unsigned_32
-      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#18#),
+      with Address              => System'To_Address (ARMTIMER_BASEADDRESS + 16#18#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    ARMTIMER_Pre_div    : aliased Unsigned_32
-      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#1C#),
+      with Address              => System'To_Address (ARMTIMER_BASEADDRESS + 16#1C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    ARMTIMER_FreeRunCnt : aliased Unsigned_32
-      with Address              => To_Address (ARMTIMER_BASEADDRESS + 16#20#),
+      with Address              => System'To_Address (ARMTIMER_BASEADDRESS + 16#20#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1117,29 +1067,25 @@ package RPI3
    -- MAILBOX
    ----------------------------------------------------------------------------
 
-   type Message_Type is
-   record
-      Channel : Bits.Bits_4;
-      Data    : Bits.Bits_28;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Message_Type use
-   record
+   type Message_Type is record
+      Channel : Bits_4;
+      Data    : Bits_28;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Message_Type use record
       Channel at 0 range 0 ..  3;
       Data    at 0 range 4 .. 31;
    end record;
 
-   type Message_Status_Type is
-   record
-      Reserved : Bits.Bits_30 := 0;
+   type Message_Status_Type is record
+      Reserved : Bits_30 := 0;
       Empty    : Boolean;
       Full     : Boolean;
-   end record with
-      Bit_Order => Low_Order_First,
-      Size      => 32;
-   for Message_Status_Type use
-   record
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Message_Status_Type use record
       Reserved at 0 range  0 .. 29;
       Empty    at 0 range 30 .. 30;
       Full     at 0 range 31 .. 31;
@@ -1149,17 +1095,17 @@ package RPI3
    -- SENDER @ 0x14
    -- CONFIG @ 0x1C
    MAIL0_Read   : aliased Message_Type
-      with Address              => To_Address (MAILBOX_BASEADDRESS + 16#00#),
+      with Address              => System'To_Address (MAILBOX_BASEADDRESS + 16#00#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    MAIL0_Status : aliased Message_Status_Type
-      with Address              => To_Address (MAILBOX_BASEADDRESS + 16#18#),
+      with Address              => System'To_Address (MAILBOX_BASEADDRESS + 16#18#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
    MAIL0_Write  : aliased Message_Type
-      with Address              => To_Address (MAILBOX_BASEADDRESS + 16#20#),
+      with Address              => System'To_Address (MAILBOX_BASEADDRESS + 16#20#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
