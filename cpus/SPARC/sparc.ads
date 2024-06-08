@@ -55,20 +55,20 @@ package SPARC
    ----------------------------------------------------------------------------
 
    type PSR_Type is record
-      CWP      : Natural range 0 .. 31; -- current_window_pointer
-      ET       : Boolean;               -- enable_traps
-      PS       : Boolean;               -- previous_supervisor
-      S        : Boolean;               -- supervisor
-      PIL      : Natural range 0 .. 15; -- proc_interrupt_level
-      EF       : Boolean;               -- enable_floating-point
-      EC       : Boolean;               -- enable_coprocessor
+      CWP      : Bits_5;      -- current_window_pointer
+      ET       : Boolean;     -- enable_traps
+      PS       : Boolean;     -- previous_supervisor
+      S        : Boolean;     -- supervisor
+      PIL      : Bits_4;      -- proc_interrupt_level
+      EF       : Boolean;     -- enable_floating-point
+      EC       : Boolean;     -- enable_coprocessor
       Reserved : Bits_6 := 0;
-      c        : Boolean;               -- icc: carry
-      v        : Boolean;               -- icc: overflow
-      z        : Boolean;               -- icc: zero
-      n        : Boolean;               -- icc: negative
-      ver      : Bits_4;                -- version
-      impl     : Bits_4;                -- implementation
+      c        : Boolean;     -- icc: carry
+      v        : Boolean;     -- icc: overflow
+      z        : Boolean;     -- icc: zero
+      n        : Boolean;     -- icc: negative
+      ver      : Bits_4;      -- version
+      impl     : Bits_4;      -- implementation
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
