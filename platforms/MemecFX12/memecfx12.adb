@@ -64,7 +64,7 @@ package body MemecFX12
        Data         : in Unsigned_8;
        Mode         : in Unsigned_32)
       is
-      LCD_Port : Unsigned_32
+      LCD_Port      : Unsigned_32
          with Address    => Base_Address,
               Volatile   => True,
               Import     => True,
