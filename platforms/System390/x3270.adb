@@ -112,8 +112,8 @@ pragma Warnings (On, "size is not a multiple of alignment");
       Message_Header : aliased MSG_Header_Type;
       Cursor_Address : Unsigned_16;
       procedure CLS
-         (A : Address;
-          L : Natural)
+         (A : in Address;
+          L : in Natural)
          with Import        => True,
               Convention    => Asm,
               External_Name => "x3270_cls";
@@ -164,8 +164,8 @@ pragma Warnings (On, "size is not a multiple of alignment");
               Convention => Ada;
       Cursor_Address : Unsigned_16;
       procedure Write
-         (A : Address;
-          L : Natural)
+         (A : in Address;
+          L : in Natural)
          with Import        => True,
               Convention    => Asm,
               External_Name => "x3270_write";
