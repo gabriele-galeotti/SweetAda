@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 
 package ZOOM
@@ -31,7 +30,6 @@ package ZOOM
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
 
    ----------------------------------------------------------------------------
@@ -100,7 +98,7 @@ package ZOOM
            Unchecked_Union => True;
 
    LATCH_U7 : aliased LATCH_U7_Type
-      with Address    => To_Address (16#1008_0000#),
+      with Address    => System'To_Address (16#1008_0000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
