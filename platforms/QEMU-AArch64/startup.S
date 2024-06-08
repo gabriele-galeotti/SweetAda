@@ -48,10 +48,10 @@ bootcore:
                 //
                 // Setup stack pointer.
                 //
-#if   __LP64__ == 1
+#if   defined(__LP64__)
                 ldr     x0,=kernel_stack
                 mov     sp,x0
-#elif __ILP32__ == 1
+#elif defined(__ILP32__)
                 ldr     w0,=kernel_stack
                 mov     wsp,w0
 #else
@@ -64,7 +64,7 @@ bootcore:
                 .extern _etext
                 .extern _sdata
                 .extern _edata
-#if   __LP64__ == 1
+#if   defined(__LP64__)
                 ldr     x1,=_etext
                 ldr     x2,=_sdata
                 ldr     x3,=_edata
@@ -73,7 +73,7 @@ bootcore:
                 str     x0,[x2],#8
 2:              cmp     x2,x3
                 blt     1b
-#elif __ILP32__ == 1
+#elif defined(__ILP32__)
                 ldr     w1,=_etext
                 ldr     w2,=_sdata
                 ldr     w3,=_edata
@@ -91,7 +91,7 @@ bootcore:
                 //
                 .extern _sbss
                 .extern _ebss
-#if   __LP64__ == 1
+#if   defined(__LP64__)
                 ldr     x1,=_sbss
                 ldr     x2,=_ebss
                 mov     x0,#0
@@ -99,7 +99,7 @@ bootcore:
 1:              str     x0,[x1],#8
 2:              cmp     x1,x2
                 blt     1b
-#elif __ILP32__ == 1
+#elif defined(__ILP32__)
                 ldr     w1,=_sbss
                 ldr     w2,=_ebss
                 mov     w0,#0
