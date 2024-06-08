@@ -113,6 +113,8 @@ pragma Style_Checks (Off);
 
    function ISR_EL1_Read return ISR_EL1_Type is function MRS_Read is new MRS ("isr_el1", ISR_EL1_Type); begin return MRS_Read; end ISR_EL1_Read;
 
+   function MPIDR_EL1_Read return MPIDR_EL1_Type is function MRS_Read is new MRS ("mpidr_el1", MPIDR_EL1_Type); begin return MRS_Read; end MPIDR_EL1_Read;
+
    function SCR_EL3_Read return SCR_EL3_Type is function MRS_Read is new MRS ("scr_el3", SCR_EL3_Type); begin return MRS_Read; end SCR_EL3_Read;
    procedure SCR_EL3_Write (Value : in SCR_EL3_Type) is procedure MSR_Write is new MSR ("scr_el3", SCR_EL3_Type); begin MSR_Write (Value); end SCR_EL3_Write;
 

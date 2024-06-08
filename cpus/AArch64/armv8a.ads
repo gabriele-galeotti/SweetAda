@@ -424,6 +424,37 @@ package ARMv8A
       return ISR_EL1_Type
       with Inline => True;
 
+   -- D19.2.104 MPIDR_EL1, Multiprocessor Affinity Register
+
+   type MPIDR_EL1_Type is record
+      Aff0      : Unsigned_8; -- Affinity level 0.
+      Aff1      : Unsigned_8; -- Affinity level 1.
+      Aff2      : Unsigned_8; -- Affinity level 2.
+      MT        : Boolean;    -- Indicates whether the lowest level of affinity consists of logical PEs that are implemented ...
+      Reserved1 : Bits_5;
+      U         : Boolean;    -- Indicates a Uniprocessor system, as distinct from PE 0 in a multiprocessor system.
+      Reserved2 : Bits_1;
+      Aff3      : Unsigned_8; -- Affinity level 3.
+      Reserved3 : Bits_24;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for MPIDR_EL1_Type use record
+      Aff0      at 0 range  0 ..  7;
+      Aff1      at 0 range  8 .. 15;
+      Aff2      at 0 range 16 .. 23;
+      MT        at 0 range 24 .. 24;
+      Reserved1 at 0 range 25 .. 29;
+      U         at 0 range 30 .. 30;
+      Reserved2 at 0 range 31 .. 31;
+      Aff3      at 0 range 32 .. 39;
+      Reserved3 at 0 range 40 .. 63;
+   end record;
+
+   function MPIDR_EL1_Read
+      return MPIDR_EL1_Type
+      with Inline => True;
+
    -- D19.2.120 SCR_EL3, Secure Configuration Register
 
    type Non_Secure_Type is record
