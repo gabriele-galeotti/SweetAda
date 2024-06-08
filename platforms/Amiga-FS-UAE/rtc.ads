@@ -98,11 +98,11 @@ package RTC
 
    -- register type for CD
    type CD_Type is record
-      HOLD     : Boolean;     -- inhibits the 1Hz clock to the S1 counter
-      BUSY     : Boolean;     -- shows the interface condition with microcontroller/microprocessors.
-      IRQ_FLAG : Boolean;     -- indicates that an interrupt has occurred to the microcomputer if IRQ = 1.
-      ADJ30    : Boolean;     -- 30-second adjustment
-      Unused   : Bits_4 := 0;
+      HOLD     : Boolean;      -- inhibits the 1Hz clock to the S1 counter
+      BUSY     : Boolean;      -- shows the interface condition with microcontroller/microprocessors.
+      IRQ_FLAG : Boolean;      -- indicates that an interrupt has occurred to the microcomputer if IRQ = 1.
+      ADJ30    : Boolean;      -- 30-second adjustment
+      Unused   : Bits_4  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -124,10 +124,10 @@ package RTC
 
    -- register type for CE
    type CE_Type is record
-      MASK       : Boolean;     -- This bit controls the STD.P output.
-      ITRPT_STND : Bits_1;      -- used to switch the STD.P output between its two modes of operation
-      T          : Bits_2;      -- determine the period of the STD.P output in both interrupt and Fixed timing ...
-      Unused     : Bits_4 := 0;
+      MASK       : Boolean;      -- This bit controls the STD.P output.
+      ITRPT_STND : Bits_1;       -- used to switch the STD.P output between its two modes of operation
+      T          : Bits_2;       -- determine the period of the STD.P output in both interrupt and Fixed timing ...
+      Unused     : Bits_4  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -144,11 +144,11 @@ package RTC
 
    -- register type for CF
    type CF_Type is record
-      REST      : Boolean;     -- used to clear the clock's internal divider/counter of less than a second.
-      STOP      : Boolean;     -- inhibits carries into the 8192Hz divider stage.
-      HOUR_MODE : Bits_1;      -- selection of 24/12 hour time modes.
-      TEST      : Boolean;     -- the input to the SECONDS counter comes from the counter/divider stage instead of ...
-      Unused    : Bits_4 := 0;
+      REST      : Boolean;      -- used to clear the clock's internal divider/counter of less than a second.
+      STOP      : Boolean;      -- inhibits carries into the 8192Hz divider stage.
+      HOUR_MODE : Bits_1;       -- selection of 24/12 hour time modes.
+      TEST      : Boolean;      -- the input to the SECONDS counter comes from the counter/divider stage instead of ...
+      Unused    : Bits_4  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
