@@ -83,7 +83,7 @@ package body Ethernet
             end if;
          when ARP_REPLY =>
             -- "gratuitous" ARP, check for:
-            -- sender's hardware and protocol addresses (SHA and SPA)
+            -- sender''s hardware and protocol addresses (SHA and SPA)
             -- duplicated in the target fields (TPA=SPA, THA=SHA)
             -- action: update ARP cache
             -- Console.Print ("ARP_REPLY (gratuitous ARP)", NL => True);
@@ -184,8 +184,8 @@ package body Ethernet
          Success := False;
       else
          Q.all.Queue (Q.all.Head) := P;
-         Q.all.Head := Q.all.Head + 1;
-         Q.all.Count := Q.all.Count + 1;
+         Q.all.Head := @ + 1;
+         Q.all.Count := @ + 1;
          Success := True;
       end if;
       CPU.Intcontext_Set (Intcontext);
@@ -208,8 +208,8 @@ package body Ethernet
          Success := False;
       else
          P := Q.all.Queue (Q.all.Tail);
-         Q.all.Tail := Q.all.Tail + 1;
-         Q.all.Count := Q.all.Count - 1;
+         Q.all.Tail := @ + 1;
+         Q.all.Count := @ - 1;
          Success := True;
       end if;
       CPU.Intcontext_Set (Intcontext);
