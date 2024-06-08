@@ -127,26 +127,28 @@ package body BSP
       -- mini-UART (UART1) ----------------------------------------------------
       RPI3.AUXENB.MiniUART_Enable := True;
       -- baud_rate_reg = SYSTEM_CLK / 8 * baud_rate - 1
-      RPI3.AUX_MU_BAUD.Baudrate   := Unsigned_16 ((System_Clock + (Baud_Rate * 8 / 2)) / (Baud_Rate * 8) - 1);
-      RPI3.AUX_MU_LCR_REG         := (
-                                      Data_Size   => RPI3.UART_8BIT,
-                                      Break       => False,
-                                      DLAB_Access => False,
-                                      others      => <>
-                                     );
-      RPI3.AUX_MU_CNTL_REG        := (
-                                      Receiver_Enable    => True,
-                                      Transmitter_Enable => True,
-                                      RTS_RX_Autoflow    => False,
-                                      CTS_TX_Autoflow    => False,
-                                      RTS_Autoflow_Level => RPI3.RTS_Autoflow1,
-                                      RTS_Assert_Level   => RPI3.RTS_AutoflowP,
-                                      CTS_Assert_Level   => RPI3.CTS_AutoflowP,
-                                      others             => <>
-                                     );
+      RPI3.AUX_MU_BAUD.Baudrate := Unsigned_16 ((System_Clock + (Baud_Rate * 8 / 2)) / (Baud_Rate * 8) - 1);
+      RPI3.AUX_MU_LCR_REG := (
+         Data_Size   => RPI3.UART_8BIT,
+         Break       => False,
+         DLAB_Access => False,
+         others      => <>
+         );
+      RPI3.AUX_MU_CNTL_REG := (
+         Receiver_Enable    => True,
+         Transmitter_Enable => True,
+         RTS_RX_Autoflow    => False,
+         CTS_TX_Autoflow    => False,
+         RTS_Autoflow_Level => RPI3.RTS_Autoflow1,
+         RTS_Assert_Level   => RPI3.RTS_AutoflowP,
+         CTS_Assert_Level   => RPI3.CTS_AutoflowP,
+         others             => <>
+         );
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       Console.Print ("Raspberry Pi 3", NL => True);
       Console.Print (Natural (ARMv8A.CurrentEL_Read.EL), Prefix => "Current EL:   ", NL => True);
