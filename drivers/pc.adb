@@ -167,8 +167,8 @@ package body PC
          RW   => RW_BOTH_BYTE,
          SC   => SELECT_COUNTER0
          )));
-      CPU.IO.PortOut (COUNTER0, Bits.LByte (Count));
-      CPU.IO.PortOut (COUNTER0, Bits.HByte (Count));
+      CPU.IO.PortOut (COUNTER0, LByte (Count));
+      CPU.IO.PortOut (COUNTER0, HByte (Count));
    end PIT_Counter0_Init;
 
    ----------------------------------------------------------------------------
@@ -193,8 +193,8 @@ package body PC
             RW   => RW_BOTH_BYTE,
             SC   => SELECT_COUNTER1
             )));
-         CPU.IO.PortOut (COUNTER1, Bits.LByte (Unsigned_16 (US100_count)));
-         CPU.IO.PortOut (COUNTER1, Bits.HByte (Unsigned_16 (US100_count)));
+         CPU.IO.PortOut (COUNTER1, LByte (Unsigned_16 (US100_count)));
+         CPU.IO.PortOut (COUNTER1, HByte (Unsigned_16 (US100_count)));
          loop
             -- latch STATUS
             CPU.IO.PortOut (CONTROL_WORD, To_U8 (PIT_Control_Word_Type'(
