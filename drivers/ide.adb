@@ -102,9 +102,9 @@ package body IDE
    type HEAD_Type is record
       HS      : Natural range 0 .. 15; -- Head Select
       DRV     : Drive_Type;            -- MASTER/SLAVE
-      Unused1 : Bits.Bits_1;
+      Unused1 : Bits_1;
       L       : Boolean;               -- LBA mode
-      Unused2 : Bits.Bits_1;
+      Unused2 : Bits_1;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
