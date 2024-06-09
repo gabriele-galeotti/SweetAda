@@ -1,11 +1,10 @@
 
+with System;
+with Ada.Unchecked_Conversion;
 with Interfaces;
 with CPU;
+with ARMv8A;
 with Console;
-
-with System; use System;
-with Ada.Unchecked_Conversion;
-with ARMv8A; use ARMv8A;
 with Mutex;
 
 package body Application
@@ -19,6 +18,7 @@ package body Application
    --                                                                        --
    --========================================================================--
 
+   use System;
    use Interfaces;
 
    -- "application" cores
@@ -68,7 +68,7 @@ package body Application
       Delay_Count : Integer;
       Count       : Unsigned_32;
    begin
-      CoreID := MPIDR_EL1_Read.Aff0;
+      CoreID := ARMv8A.MPIDR_EL1_Read.Aff0;
       case CoreID is
          when 1      => C := '1'; Delay_Count := 47_000_000;
          when 2      => C := '2'; Delay_Count := 48_000_000;
