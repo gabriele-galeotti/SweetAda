@@ -34,7 +34,7 @@ package body ZorroII
 
    -- configuration space = 64k (32k 16-bit words)
    Cfg_Space : aliased Bits.U16_Array (0 .. 2**15 - 1)
-      with Address    => To_Address (CFGSPACE_BASEADDRESS),
+      with Address    => System'To_Address (CFGSPACE_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
