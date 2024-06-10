@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package ATmega128A
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -69,7 +67,7 @@ package ATmega128A
    SREG_ADDRESS : constant := 16#5F#;
 
    SREG : aliased SREG_Type
-      with Address              => To_Address (SREG_ADDRESS),
+      with Address              => System'To_Address (SREG_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -94,7 +92,7 @@ package ATmega128A
    XDIV_ADDRESS : constant := 16#5C#;
 
    XDIV : aliased XDIV_Type
-      with Address              => To_Address (XDIV_ADDRESS),
+      with Address              => System'To_Address (XDIV_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -104,7 +102,7 @@ package ATmega128A
    OSCCAL_ADDRESS : constant := 16#51#;
 
    OSCCAL : aliased Unsigned_8
-      with Address              => To_Address (OSCCAL_ADDRESS),
+      with Address              => System'To_Address (OSCCAL_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -117,9 +115,9 @@ package ATmega128A
    -- 16.2.1. MCUCR – MCU Control Register
 
    type MCUCR_Type is record
-      IVCE     : Boolean;     -- Interrupt Vector Change Enable
-      IVSEL    : Boolean;     -- Interrupt Vector Select
-      Reserved : Bits_6 := 0;
+      IVCE     : Boolean;      -- Interrupt Vector Change Enable
+      IVSEL    : Boolean;      -- Interrupt Vector Select
+      Reserved : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -132,7 +130,7 @@ package ATmega128A
    MCUCR_ADDRESS : constant := 16#55#;
 
    MCUCR : aliased MCUCR_Type
-      with Address              => To_Address (MCUCR_ADDRESS),
+      with Address              => System'To_Address (MCUCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -144,12 +142,12 @@ package ATmega128A
    -- 15.6.1. MCUCSR – MCU Control and Status Register
 
    type MCUCSR_Type is record
-      PORF     : Boolean;     -- Power-on Reset Flag
-      EXTRF    : Boolean;     -- External Reset Flag
-      BORF     : Boolean;     -- Brown-out Reset Flag
-      WDRF     : Boolean;     -- Watchdog Reset Flag
-      JTRF     : Boolean;     -- JTAG Reset Flag
-      Reserved : Bits_3 := 0;
+      PORF     : Boolean;      -- Power-on Reset Flag
+      EXTRF    : Boolean;      -- External Reset Flag
+      BORF     : Boolean;      -- Brown-out Reset Flag
+      WDRF     : Boolean;      -- Watchdog Reset Flag
+      JTRF     : Boolean;      -- JTAG Reset Flag
+      Reserved : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -165,7 +163,7 @@ package ATmega128A
    MCUCSR_ADDRESS : constant := 16#54#;
 
    MCUCSR : aliased MCUCSR_Type
-      with Address              => To_Address (MCUCSR_ADDRESS),
+      with Address              => System'To_Address (MCUCSR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -184,10 +182,10 @@ package ATmega128A
    WDT_2048K : constant WDT_Prescaler_Type := 2#111#;
 
    type WDTCR_Type is record
-      WDP012   : Bits_3;      -- Watchdog Timer Prescaler bit 0 .. 2
-      WDE      : Boolean;     -- Watchdog Enable
-      WDCE     : Boolean;     -- Watchdog Change Enable
-      Reserved : Bits_3 := 0;
+      WDP012   : Bits_3;       -- Watchdog Timer Prescaler bit 0 .. 2
+      WDE      : Boolean;      -- Watchdog Enable
+      WDCE     : Boolean;      -- Watchdog Change Enable
+      Reserved : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -201,7 +199,7 @@ package ATmega128A
    WDTCR_ADDRESS : constant := 16#41#;
 
    WDTCR : aliased WDTCR_Type
-      with Address              => To_Address (WDTCR_ADDRESS),
+      with Address              => System'To_Address (WDTCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -238,7 +236,7 @@ package ATmega128A
    PORTA_ADDRESS : constant := 16#3B#;
 
    PORTA : aliased PORTA_Type
-      with Address              => To_Address (PORTA_ADDRESS),
+      with Address              => System'To_Address (PORTA_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -271,7 +269,7 @@ package ATmega128A
    DDRA_ADDRESS : constant := 16#3A#;
 
    DDRA : aliased DDRA_Type
-      with Address              => To_Address (DDRA_ADDRESS),
+      with Address              => System'To_Address (DDRA_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -304,7 +302,7 @@ package ATmega128A
    PINA_ADDRESS : constant := 16#39#;
 
    PINA : aliased PINA_Type
-      with Address              => To_Address (PINA_ADDRESS),
+      with Address              => System'To_Address (PINA_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -337,7 +335,7 @@ package ATmega128A
    PORTB_ADDRESS : constant := 16#38#;
 
    PORTB : aliased PORTB_Type
-      with Address              => To_Address (PORTB_ADDRESS),
+      with Address              => System'To_Address (PORTB_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -370,7 +368,7 @@ package ATmega128A
    DDRB_ADDRESS : constant := 16#37#;
 
    DDRB : aliased DDRB_Type
-      with Address              => To_Address (DDRB_ADDRESS),
+      with Address              => System'To_Address (DDRB_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -403,7 +401,7 @@ package ATmega128A
    PINB_ADDRESS : constant := 16#36#;
 
    PINB : aliased PINB_Type
-      with Address              => To_Address (PINB_ADDRESS),
+      with Address              => System'To_Address (PINB_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -436,7 +434,7 @@ package ATmega128A
    PORTC_ADDRESS : constant := 16#35#;
 
    PORTC : aliased PORTC_Type
-      with Address              => To_Address (PORTC_ADDRESS),
+      with Address              => System'To_Address (PORTC_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -451,7 +449,7 @@ package ATmega128A
       DDC4   : Boolean;
       DDC5   : Boolean;
       DDC6   : Boolean;
-      Unused : Bits_1 := 0;
+      Unused : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -469,7 +467,7 @@ package ATmega128A
    DDRC_ADDRESS : constant := 16#34#;
 
    DDRC : aliased DDRC_Type
-      with Address              => To_Address (DDRC_ADDRESS),
+      with Address              => System'To_Address (DDRC_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -484,7 +482,7 @@ package ATmega128A
       PINC4  : Boolean;
       PINC5  : Boolean;
       PINC6  : Boolean;
-      Unused : Bits_1 := 0;
+      Unused : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -502,7 +500,7 @@ package ATmega128A
    PINC_ADDRESS : constant := 16#33#;
 
    PINC : aliased PINC_Type
-      with Address              => To_Address (PINC_ADDRESS),
+      with Address              => System'To_Address (PINC_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -535,7 +533,7 @@ package ATmega128A
    PORTD_ADDRESS : constant := 16#32#;
 
    PORTD : aliased PORTD_Type
-      with Address              => To_Address (PORTD_ADDRESS),
+      with Address              => System'To_Address (PORTD_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -568,7 +566,7 @@ package ATmega128A
    DDRD_ADDRESS : constant := 16#31#;
 
    DDRD : aliased DDRD_Type
-      with Address              => To_Address (DDRD_ADDRESS),
+      with Address              => System'To_Address (DDRD_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -601,7 +599,7 @@ package ATmega128A
    PIND_ADDRESS : constant := 16#30#;
 
    PIND : aliased PIND_Type
-      with Address              => To_Address (PIND_ADDRESS),
+      with Address              => System'To_Address (PIND_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
