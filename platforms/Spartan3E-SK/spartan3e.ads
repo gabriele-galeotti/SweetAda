@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with System;
 with Interfaces;
 
 package Spartan3E
@@ -30,7 +30,6 @@ package Spartan3E
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
 
    --========================================================================--
@@ -46,12 +45,12 @@ package Spartan3E
 
    -- LEDs
    LEDs_IO : aliased Unsigned_8
-      with Address    => To_Address (LEDS_IO_BASEADDRESS),
+      with Address    => System'To_Address (LEDS_IO_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
    LEDs_TS : aliased Unsigned_8
-      with Address    => To_Address (LEDS_TS_BASEADDRESS),
+      with Address    => System'To_Address (LEDS_TS_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
