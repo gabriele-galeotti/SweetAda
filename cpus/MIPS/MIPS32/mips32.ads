@@ -72,26 +72,26 @@ package MIPS32
    FR_ANY : constant := 1; -- FP registers can contain any datatype
 
    type Status_Type is record
-      IE        : Boolean;     -- Interrupt Enable
-      EXL       : Boolean;     -- Exception Level
-      ERL       : Boolean;     -- Error Level
-      KSU       : Bits_2;      -- base operating mode of the processor
-      Reserved1 : Bits_1 := 0; -- UX
-      Reserved2 : Bits_1 := 0; -- SX
-      Reserved3 : Bits_1 := 0; -- KX
-      IM        : Bits_8;      -- Interrupt Mask (or IPL)
-      Reserved4 : Bits_1 := 0;
-      CEE       : Boolean;     -- CorExtend Enable
-      ZERO      : Bits_1 := 0; -- Reserved
-      NMI       : Boolean;     -- entry through the reset exception vector was due to an NMI
-      SR        : Boolean;     -- entry through the reset exception vector was due to a Soft Reset
-      TS        : Boolean;     -- TLB shutdown
-      BEV       : Boolean;     -- Controls the location of exception vectors
-      Reserved5 : Bits_1 := 0;
-      MX        : Boolean;     -- Enables access to DSP ASE resources
-      RE        : Boolean;     -- enable reverse-endian memory references while the processor is running in user mode
-      FR        : Bits_1;      -- control the floating point register mode for 64-bit floating point units
-      RP        : Boolean;     -- Enables reduced power mode
+      IE        : Boolean;      -- Interrupt Enable
+      EXL       : Boolean;      -- Exception Level
+      ERL       : Boolean;      -- Error Level
+      KSU       : Bits_2;       -- base operating mode of the processor
+      Reserved1 : Bits_1  := 0; -- UX
+      Reserved2 : Bits_1  := 0; -- SX
+      Reserved3 : Bits_1  := 0; -- KX
+      IM        : Bits_8;       -- Interrupt Mask (or IPL)
+      Reserved4 : Bits_1  := 0;
+      CEE       : Boolean;      -- CorExtend Enable
+      ZERO      : Bits_1  := 0; -- Reserved
+      NMI       : Boolean;      -- entry through the reset exception vector was due to an NMI
+      SR        : Boolean;      -- entry through the reset exception vector was due to a Soft Reset
+      TS        : Boolean;      -- TLB shutdown
+      BEV       : Boolean;      -- Controls the location of exception vectors
+      Reserved5 : Bits_1  := 0;
+      MX        : Boolean;      -- Enables access to DSP ASE resources
+      RE        : Boolean;      -- enable reverse-endian memory references while the processor is running in user mode
+      FR        : Bits_1;       -- control the floating point register mode for 64-bit floating point units
+      RP        : Boolean;      -- Enables reduced power mode
       CU0       : Boolean;
       CU1       : Boolean;
       CU2       : Boolean;
@@ -174,19 +174,19 @@ package MIPS32
    IV_Interrupt : constant := 1; -- Use the special interrupt vector (16#200)
 
    type Cause_Type is record
-      Reserved1 : Bits_2 := 0;
-      ExcCode   : Bits_5 := 0;            -- Exception Code
-      Reserved2 : Bits_1 := 0;
-      IP        : Bits_8 := 0;            -- Interrupt Pending (or RIPL)
-      Reserved3 : Bits_6 := 0;
-      WP        : Boolean := False;       -- Indicates that a watch exception was deferred
-      IV        : Bits_1 := IV_Exception; -- general or special interrupt vector
-      Reserved4 : Bits_2 := 0;
-      PCI       : Boolean := False;       -- Performance Counter Interrupt
-      DC        : Boolean := False;       -- Disable Count register
-      CE        : Bits_2 := 0;            -- Coprocessor unit number referenced
-      Reserved5 : Bits_1 := 0;
-      BD        : Boolean := False;       -- Branch Delay
+      Reserved1 : Bits_2  := 0;
+      ExcCode   : Bits_5  := 0;            -- Exception Code
+      Reserved2 : Bits_1  := 0;
+      IP        : Bits_8  := 0;            -- Interrupt Pending (or RIPL)
+      Reserved3 : Bits_6  := 0;
+      WP        : Boolean := False;        -- Indicates that a watch exception was deferred
+      IV        : Bits_1  := IV_Exception; -- general or special interrupt vector
+      Reserved4 : Bits_2  := 0;
+      PCI       : Boolean := False;        -- Performance Counter Interrupt
+      DC        : Boolean := False;        -- Disable Count register
+      CE        : Bits_2  := 0;            -- Coprocessor unit number referenced
+      Reserved5 : Bits_1  := 0;
+      BD        : Boolean := False;        -- Branch Delay
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
