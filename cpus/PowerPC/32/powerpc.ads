@@ -140,7 +140,7 @@ package PowerPC
    type MSR_Type is record
       Reserved1 : Bits_13 := 0;
       POW       : Boolean;      -- Power management enable
-      Reserved2 : Bits_1 := 0;
+      Reserved2 : Bits_1  := 0;
       ILE       : Boolean;      -- Interrupt little-endian mode.
       EE        : Boolean;      -- External interrupt enable
       PR        : Bits_1;       -- Privilege level
@@ -150,11 +150,11 @@ package PowerPC
       SE        : Boolean;      -- Single-step trace enable
       BE        : Boolean;      -- Branch trace enable
       FE1       : Bits_1;       -- Floating-point exception mode 1
-      Reserved3 : Bits_1 := 0;
+      Reserved3 : Bits_1  := 0;
       IP        : Bits_1;       -- Interrupt prefix
       IR        : Boolean;      -- Instruction address translation
       DR        : Boolean;      -- Data address translation
-      Reserved4 : Bits_2 := 0;
+      Reserved4 : Bits_2  := 0;
       RI        : Boolean;      -- Recoverable interrupt
       LE        : Boolean;      -- Little-endian mode enable
    end record
@@ -216,33 +216,33 @@ package PowerPC
    RN_ToMInf  : constant := 2#11#; -- Round toward –infinity
 
    type FPSCR_Type is record
-      FX       : Boolean;     -- Floating-point exception summary.
-      FEX      : Boolean;     -- Floating-point enabled exception summary
-      VX       : Boolean;     -- Floating-point invalid operation exception summary.
-      OX       : Boolean;     -- Floating-point overflow exception.
-      UX       : Boolean;     -- Floating-point underflow exception.
-      ZX       : Boolean;     -- Floating-point zero divide exception.
-      XX       : Boolean;     -- Floating-point inexact exception.
-      VXSNAN   : Boolean;     -- Floating-point invalid operation exception for SNaN.
-      VXISI    : Boolean;     -- Floating-point invalid operation exception for ∞ – ∞.
-      VXIDI    : Boolean;     -- Floating-point invalid operation exception for ∞ ÷ ∞.
-      VXZDZ    : Boolean;     -- Floating-point invalid operation exception for 0 ÷ 0.
-      VXIMZ    : Boolean;     -- Floating-point invalid operation exception for ∞ * 0.
-      VXVC     : Boolean;     -- Floating-point invalid operation exception for invalid compare.
-      FR       : Boolean;     -- Floating-point fraction rounded.
-      FI       : Boolean;     -- Floating-point fraction inexact.
-      FPRF     : Bits_5;      -- Floating-point result flags.
-      Reserved : Bits_1 := 0;
-      VXSOFT   : Boolean;     -- Floating-point invalid operation exception for software request.
-      VXSQRT   : Boolean;     -- Floating-point invalid operation exception for invalid square root.
-      VXCVI    : Boolean;     -- Floating-point invalid operation exception for invalid integer convert.
-      VE       : Boolean;     -- Floating-point invalid operation exception enable.
-      OE       : Boolean;     -- IEEE floating-point overflow exception enable.
-      UE       : Boolean;     -- IEEE floating-point underflow exception enable.
-      ZE       : Boolean;     -- IEEE floating-point zero divide exception enable.
-      XE       : Boolean;     -- Floating-point inexact exception enable.
-      NI       : Boolean;     -- Floating-point non-IEEE mode.
-      RN       : Bits_2;      -- Floating-point rounding control.
+      FX       : Boolean;      -- Floating-point exception summary.
+      FEX      : Boolean;      -- Floating-point enabled exception summary
+      VX       : Boolean;      -- Floating-point invalid operation exception summary.
+      OX       : Boolean;      -- Floating-point overflow exception.
+      UX       : Boolean;      -- Floating-point underflow exception.
+      ZX       : Boolean;      -- Floating-point zero divide exception.
+      XX       : Boolean;      -- Floating-point inexact exception.
+      VXSNAN   : Boolean;      -- Floating-point invalid operation exception for SNaN.
+      VXISI    : Boolean;      -- Floating-point invalid operation exception for ∞ – ∞.
+      VXIDI    : Boolean;      -- Floating-point invalid operation exception for ∞ ÷ ∞.
+      VXZDZ    : Boolean;      -- Floating-point invalid operation exception for 0 ÷ 0.
+      VXIMZ    : Boolean;      -- Floating-point invalid operation exception for ∞ * 0.
+      VXVC     : Boolean;      -- Floating-point invalid operation exception for invalid compare.
+      FR       : Boolean;      -- Floating-point fraction rounded.
+      FI       : Boolean;      -- Floating-point fraction inexact.
+      FPRF     : Bits_5;       -- Floating-point result flags.
+      Reserved : Bits_1  := 0;
+      VXSOFT   : Boolean;      -- Floating-point invalid operation exception for software request.
+      VXSQRT   : Boolean;      -- Floating-point invalid operation exception for invalid square root.
+      VXCVI    : Boolean;      -- Floating-point invalid operation exception for invalid integer convert.
+      VE       : Boolean;      -- Floating-point invalid operation exception enable.
+      OE       : Boolean;      -- IEEE floating-point overflow exception enable.
+      UE       : Boolean;      -- IEEE floating-point underflow exception enable.
+      ZE       : Boolean;      -- IEEE floating-point zero divide exception enable.
+      XE       : Boolean;      -- Floating-point inexact exception enable.
+      NI       : Boolean;      -- Floating-point non-IEEE mode.
+      RN       : Bits_2;       -- Floating-point rounding control.
    end record
       with Bit_Order => High_Order_First,
            Size      => 32;
