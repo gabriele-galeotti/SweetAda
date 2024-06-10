@@ -140,7 +140,7 @@ package body Exceptions
       IVT (Access_Fault)                       := Accfault_Handler'Address;
       IVT (Address_Error)                      := Addrerr_Handler'Address;
       IVT (Illegal_Instruction)                := Illinstr_Handler'Address;
-      IVT (Integer_Divide_By_Zero)             := Div0_Handler'Address;
+      IVT (Integer_Divide_by_Zero)             := Div0_Handler'Address;
       IVT (CHK_CHK2_Instruction)               := Chkinstr_Handler'Address;
       IVT (FTRAPcc_TRAPcc_TRAPV_Instructions)  := FTrapcc_Handler'Address;
       IVT (Privilege_Violation)                := PrivilegeV_Handler'Address;
