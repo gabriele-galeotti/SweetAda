@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
@@ -34,7 +33,6 @@ package MCF523x
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -105,7 +103,7 @@ package MCF523x
    end record;
 
    SYNCR : aliased SYNCR_Type
-      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0012_0000#),
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0012_0000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -151,7 +149,7 @@ package MCF523x
    end record;
 
    SYNSR : aliased SYNSR_Type
-      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0012_0004#),
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0012_0004#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -170,7 +168,7 @@ package MCF523x
    end record;
 
    CIR : aliased CIR_Type
-      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0011_000A#),
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0011_000A#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -196,7 +194,7 @@ package MCF523x
    end record;
 
    IPSBAR : aliased IPSBAR_Type
-      with Address    => To_Address (IPSBAR_BASEADDRESS),
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -230,7 +228,7 @@ package MCF523x
    end record;
 
    USR0 : aliased USR_Type
-      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0000_0204#),
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0204#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -238,7 +236,7 @@ package MCF523x
    -- 26.3.6 UART Receive Buffers (URBn)
 
    URB0 : aliased Unsigned_8
-      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0000_020C#),
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_020C#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -246,7 +244,7 @@ package MCF523x
    -- 26.3.7 UART Transmit Buffers (UTBn)
 
    UTB0 : aliased Unsigned_8
-      with Address    => To_Address (IPSBAR_BASEADDRESS + 16#0000_020C#),
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_020C#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;

@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package MCF5373
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -139,7 +137,7 @@ package MCF5373
    end record;
 
    CIR : aliased CIR_Type
-      with Address              => To_Address (16#FC0A_000A#),
+      with Address              => System'To_Address (16#FC0A_000A#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -164,7 +162,7 @@ package MCF5373
    end record;
 
    PODR_TIMER : aliased PODR_TIMER_Type
-      with Address              => To_Address (16#FC0A_400B#),
+      with Address              => System'To_Address (16#FC0A_400B#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -189,7 +187,7 @@ package MCF5373
    end record;
 
    PDDR_TIMER : aliased PDDR_TIMER_Type
-      with Address              => To_Address (16#FC0A_401F#),
+      with Address              => System'To_Address (16#FC0A_401F#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -214,7 +212,7 @@ package MCF5373
    end record;
 
    PPDSDR_TIMER : aliased PPDSDR_TIMER_Type
-      with Address              => To_Address (16#FC0A_4033#),
+      with Address              => System'To_Address (16#FC0A_4033#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -257,7 +255,7 @@ package MCF5373
    end record;
 
    PAR_TIMER : aliased PAR_TIMER_Type
-      with Address              => To_Address (16#FC0A_405C#),
+      with Address              => System'To_Address (16#FC0A_405C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -282,7 +280,7 @@ package MCF5373
    end record;
 
    WCR : aliased WCR_Type
-      with Address              => To_Address (16#FC09_8000#),
+      with Address              => System'To_Address (16#FC09_8000#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -313,7 +311,7 @@ package MCF5373
    end record;
 
    USR0 : aliased USR_Type
-      with Address              => To_Address (16#FC06_0004#),
+      with Address              => System'To_Address (16#FC06_0004#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -321,7 +319,7 @@ package MCF5373
    -- 30.3.6 UART Receive Buffers (URBn)
 
    URB0 : aliased Unsigned_8
-      with Address              => To_Address (16#FC06_000C#),
+      with Address              => System'To_Address (16#FC06_000C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -329,7 +327,7 @@ package MCF5373
    -- 30.3.7 UART Transmit Buffers (UTBn)
 
    UTB0 : aliased Unsigned_8
-      with Address              => To_Address (16#FC06_000C#),
+      with Address              => System'To_Address (16#FC06_000C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;

@@ -62,19 +62,19 @@ package M68k
 
    type SR_Type is record
       -- CCR
-      C         : Boolean;     -- CARRY
-      V         : Boolean;     -- OVERFLOW
-      Z         : Boolean;     -- ZERO
-      N         : Boolean;     -- NEGATIVE
-      X         : Boolean;     -- EXTEND
-      Reserved1 : Bits_3 := 0;
+      C         : Boolean;          -- CARRY
+      V         : Boolean;          -- OVERFLOW
+      Z         : Boolean;          -- ZERO
+      N         : Boolean;          -- NEGATIVE
+      X         : Boolean;          -- EXTEND
+      Reserved1 : Bits_3      := 0;
       -- supervisor
-      ILEVEL    : ILEVEL_Type; -- INTERRUPT PRIORITY MASK
-      Reserved2 : Bits_1 := 0;
-      M         : Boolean;     -- MASTER/INTERRUPT STATE
-      S         : Boolean;     -- SUPERVISOR/USER STATE
-      T0        : Boolean;     -- TRACE ENABLE 0
-      T1        : Boolean;     -- TRACE ENABLE 1
+      ILEVEL    : ILEVEL_Type;      -- INTERRUPT PRIORITY MASK
+      Reserved2 : Bits_1      := 0;
+      M         : Boolean;          -- MASTER/INTERRUPT STATE
+      S         : Boolean;          -- SUPERVISOR/USER STATE
+      T0        : Boolean;          -- TRACE ENABLE 0
+      T1        : Boolean;          -- TRACE ENABLE 1
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -108,8 +108,8 @@ package M68k
    type FPCR_Type is record
       -- MODE CONTROL
       Reserved1 : Bits_4;
-      RND       : Bits_2; -- ROUNDING MODE
-      PREC      : Bits_2; -- ROUNDING PRECISION
+      RND       : Bits_2;  -- ROUNDING MODE
+      PREC      : Bits_2;  -- ROUNDING PRECISION
       -- EXCEPTION ENABLE
       INEX1     : Boolean; -- INEXACT DECIMAL INPUT
       INEX2     : Boolean; -- INEXACT OPERATION

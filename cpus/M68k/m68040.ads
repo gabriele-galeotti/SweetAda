@@ -67,11 +67,11 @@ package M68040
 
    -- ROOT TABLE DESCRIPTOR (ROOT LEVEL)
    type RTDSC_Type is record
-      UDT      : UDT_Type;    -- Upper Level Descriptor Type
-      W        : Boolean;     -- Write Protected
-      U        : Boolean;     -- Used
-      Reserved : Bits_5 := 0;
-      PTA      : Bits_23;     -- Pointer Table Address
+      UDT      : UDT_Type;      -- Upper Level Descriptor Type
+      W        : Boolean;       -- Write Protected
+      U        : Boolean;       -- Used
+      Reserved : Bits_5   := 0;
+      PTA      : Bits_23;       -- Pointer Table Address
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -85,16 +85,16 @@ package M68040
 
    -- 4K, 8K POINTER TABLE DESCRIPTOR (POINTER LEVEL)
    type PTDSC_Type (PAGESIZE : Bits_1) is record
-      UDT : UDT_Type;                -- Upper Level Descriptor Type
-      W   : Boolean;                 -- Write Protected
-      U   : Boolean;                 -- Used
+      UDT : UDT_Type;                 -- Upper Level Descriptor Type
+      W   : Boolean;                  -- Write Protected
+      U   : Boolean;                  -- Used
       case PAGESIZE is
          when PAGESIZE4k =>
-            Reserved1 : Bits_4 := 0;
-            PTA4      : Bits_24;     -- Page Table Address
+            Reserved1 : Bits_4  := 0;
+            PTA4      : Bits_24;      -- Page Table Address
          when PAGESIZE8k =>
-            Reserved2 : Bits_3 := 0;
-            PTA8      : Bits_25;     -- Page Table Address
+            Reserved2 : Bits_3  := 0;
+            PTA8      : Bits_25;      -- Page Table Address
       end case;
    end record
       with Bit_Order       => Low_Order_First,
@@ -244,18 +244,18 @@ package M68040
    S_IGN2 : constant := 2#11#; -- Ignore FC2 when matching
 
    type TTR_Type is record
-      Reserved1 : Bits_2 := 0;
-      W         : Boolean;     -- Write Protect
-      Reserved2 : Bits_2 := 0;
-      CM        : Bits_2;      -- Cache Mode
-      Reserved3 : Bits_1 := 0;
-      U0        : Bits_1;      -- User Page Attributes
-      U1        : Bits_1;      -- User Page Attributes
-      Reserved4 : Bits_3 := 0;
-      S         : Bits_2;      -- Supervisor Mode
-      E         : Boolean;     -- Enable
-      LAM       : Unsigned_8;  -- Logical Address Mask
-      LAB       : Unsigned_8;  -- Logical Address Base
+      Reserved1 : Bits_2     := 0;
+      W         : Boolean;         -- Write Protect
+      Reserved2 : Bits_2     := 0;
+      CM        : Bits_2;          -- Cache Mode
+      Reserved3 : Bits_1     := 0;
+      U0        : Bits_1;          -- User Page Attributes
+      U1        : Bits_1;          -- User Page Attributes
+      Reserved4 : Bits_3     := 0;
+      S         : Bits_2;          -- Supervisor Mode
+      E         : Boolean;         -- Enable
+      LAM       : Unsigned_8;      -- Logical Address Mask
+      LAB       : Unsigned_8;      -- Logical Address Base
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -277,18 +277,18 @@ package M68040
    -- 3.1.4 MMU Status Register
 
    type MMUSR_Type is record
-      R        : Boolean;     -- Resident
-      T        : Boolean;     -- Transparent Translation Register Hit
-      W        : Boolean;     -- Write Protect
-      Reserved : Bits_1 := 0;
-      M        : Boolean;     -- Modified
-      CM       : Bits_2;      -- Cache Mode
-      S        : Bits_1;      -- Supervisor Protection
-      U0       : Bits_1;      -- User Page Attributes
-      U1       : Bits_1;      -- User Page Attributes
-      G        : Boolean;     -- Global
-      B        : Boolean;     -- Bus Error
-      PA       : Bits_20;     -- Physical Address
+      R        : Boolean;      -- Resident
+      T        : Boolean;      -- Transparent Translation Register Hit
+      W        : Boolean;      -- Write Protect
+      Reserved : Bits_1  := 0;
+      M        : Boolean;      -- Modified
+      CM       : Bits_2;       -- Cache Mode
+      S        : Bits_1;       -- Supervisor Protection
+      U0       : Bits_1;       -- User Page Attributes
+      U1       : Bits_1;       -- User Page Attributes
+      G        : Boolean;      -- Global
+      B        : Boolean;      -- Bus Error
+      PA       : Bits_20;      -- Physical Address
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;

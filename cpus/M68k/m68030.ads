@@ -61,13 +61,13 @@ package M68030
    LU_LOWER : constant := 1; -- limit field is the unsigned lower limit of the translation table indexes
 
    type RPDSC_Type is record
-      Unused   : Bits_4 := 0;
-      TA_LO    : Bits_12;      -- Table Address
-      TA_HI    : Unsigned_16;  -- Table Address
-      DT       : Bits_2;       -- Descriptor Type
-      Reserved : Bits_14 := 0;
-      LIMIT    : Bits_15;      -- Limit
-      LU       : Bits_1;       -- Lower/Upper
+      Unused   : Bits_4      := 0;
+      TA_LO    : Bits_12;          -- Table Address
+      TA_HI    : Unsigned_16;      -- Table Address
+      DT       : Bits_2;           -- Descriptor Type
+      Reserved : Bits_14     := 0;
+      LIMIT    : Bits_15;          -- Limit
+      LU       : Bits_1;           -- Lower/Upper
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
@@ -102,14 +102,14 @@ package M68030
    -- 9.5.1.7 SHORT-FORMAT PAGE DESCRIPTOR
 
    type SFPDSC_Type is record
-      DT        : DT_Type;     -- descriptor type
-      WP        : Boolean;     -- write protection
-      U         : Boolean;     -- accessed (depends)
-      M         : Boolean;     -- Modified
-      Reserved1 : Bits_1 := 0;
-      CI        : Boolean;     -- Cache Inhibit
-      Reserved2 : Bits_1 := 0;
-      PA        : Bits_24;     -- Page Address
+      DT        : DT_Type;      -- descriptor type
+      WP        : Boolean;      -- write protection
+      U         : Boolean;      -- accessed (depends)
+      M         : Boolean;      -- Modified
+      Reserved1 : Bits_1  := 0;
+      CI        : Boolean;      -- Cache Inhibit
+      Reserved2 : Bits_1  := 0;
+      PA        : Bits_24;      -- Page Address
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -135,7 +135,7 @@ package M68030
       PS       : PS_Type;               -- Page Size
       FCL      : Boolean;               -- Function Code Lookup
       SRE      : Boolean;               -- Supervisor Root Pointer Enable
-      Reserved : Bits_5 := 0;
+      Reserved : Bits_5  := 0;
       E        : Boolean;               -- Enable
    end record
       with Bit_Order => Low_Order_First,
@@ -159,17 +159,17 @@ package M68030
    RW_R : constant := 1; -- Read accesses transparent
 
    type TTR_Type is record
-      FCMASK    : Bits_3;      -- Function Code Mask
-      Reserved1 : Bits_1 := 0;
-      FCBASE    : Bits_3;      -- Function Code Base
-      Reserved2 : Bits_1 := 0;
-      RWM       : Boolean;     -- Read/Write Mask
-      RW        : Bits_1;      -- Read/Write
-      CI        : Boolean;     -- Cache Inhibit
-      Reserved3 : Bits_4 := 0;
-      E         : Boolean;     -- Enable
-      LAM       : Unsigned_8;  -- LOGICAL ADDRESS MASK
-      LAB       : Unsigned_8;  -- LOGICAL ADDRESS BASE
+      FCMASK    : Bits_3;          -- Function Code Mask
+      Reserved1 : Bits_1     := 0;
+      FCBASE    : Bits_3;          -- Function Code Base
+      Reserved2 : Bits_1     := 0;
+      RWM       : Boolean;         -- Read/Write Mask
+      RW        : Bits_1;          -- Read/Write
+      CI        : Boolean;         -- Cache Inhibit
+      Reserved3 : Bits_4     := 0;
+      E         : Boolean;         -- Enable
+      LAM       : Unsigned_8;      -- LOGICAL ADDRESS MASK
+      LAB       : Unsigned_8;      -- LOGICAL ADDRESS BASE
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -190,17 +190,17 @@ package M68030
    -- 9.7.4 MMU Status Register
 
    type MMUSR_Type is record
-      N         : Bits_3;      -- Number of Levels
-      Reserved1 : Bits_3 := 0;
-      T         : Boolean;     -- Transparent
-      Reserved2 : Bits_2 := 0;
-      M         : Boolean;     -- Modified
-      I         : Boolean;     -- Invalid
-      W         : Boolean;     -- Write Protected
-      Reserved3 : Bits_1 := 0;
-      S         : Boolean;     -- Supervisor Violation
-      L         : Boolean;     -- Limit
-      B         : Boolean;     -- Bus Error
+      N         : Bits_3;       -- Number of Levels
+      Reserved1 : Bits_3  := 0;
+      T         : Boolean;      -- Transparent
+      Reserved2 : Bits_2  := 0;
+      M         : Boolean;      -- Modified
+      I         : Boolean;      -- Invalid
+      W         : Boolean;      -- Write Protected
+      Reserved3 : Bits_1  := 0;
+      S         : Boolean;      -- Supervisor Violation
+      L         : Boolean;      -- Limit
+      B         : Boolean;      -- Bus Error
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;

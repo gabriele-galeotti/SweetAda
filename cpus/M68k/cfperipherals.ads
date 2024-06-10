@@ -246,9 +246,9 @@ package CFPeripherals
    MISC_BRKSTOP  : constant := 2#111#; -- Stop Break
 
    type UCR_Type is record
-      RC       : Bits_2; -- Receiver Commands
-      TC       : Bits_2; -- Transmitter Commands
-      MISC     : Bits_3; -- Miscellaneous Commands
+      RC       : Bits_2;      -- Receiver Commands
+      TC       : Bits_2;      -- Transmitter Commands
+      MISC     : Bits_3;      -- Miscellaneous Commands
       Reserved : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -266,10 +266,10 @@ package CFPeripherals
    -- 11.4.1.8 INPUT PORT CHANGE REGISTER (UIPCR)
 
    type UIPCR_Type is record
-      CTS       : Bits_1;           -- Current State
-      Reserved1 : Bits_3 := 2#111#;
-      COS       : Boolean;          -- Change-of-State
-      Reserved2 : Bits_3 := 0;
+      CTS       : Bits_1;            -- Current State
+      Reserved1 : Bits_3  := 2#111#;
+      COS       : Boolean;           -- Change-of-State
+      Reserved2 : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -286,8 +286,8 @@ package CFPeripherals
    -- 11.4.1.9 AUXILIARY CONTROL REGISTER (UACR)
 
    type UACR_Type is record
-      IEC      : Boolean;     -- Input Enable Control
-      Reserved : Bits_7 := 0;
+      IEC      : Boolean;      -- Input Enable Control
+      Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -324,11 +324,11 @@ package CFPeripherals
    -- 11.4.1.11 INTERRUPT MASK REGISTER (UIMR)
 
    type UIMR_Type is record
-      TxRDY    : Boolean;     -- Transmitter Ready
-      FFULL    : Boolean;     -- FIFO Full
-      DB       : Boolean;     -- Delta Break
-      Reserved : Bits_4 := 0;
-      COS      : Boolean;     -- Change-of-State
+      TxRDY    : Boolean;      -- Transmitter Ready
+      FFULL    : Boolean;      -- FIFO Full
+      DB       : Boolean;      -- Delta Break
+      Reserved : Bits_4  := 0;
+      COS      : Boolean;      -- Change-of-State
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -408,9 +408,9 @@ package CFPeripherals
    -- 13.4.1.5 TIMER EVENT REGISTER (TER)
 
    type TER_Type is record
-      CAP      : Boolean;     -- Capture Event
-      REF      : Boolean;     -- Output Reference Event
-      Reserved : Bits_6 := 0;
+      CAP      : Boolean;      -- Capture Event
+      REF      : Boolean;      -- Output Reference Event
+      Reserved : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
