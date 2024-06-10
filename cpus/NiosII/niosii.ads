@@ -42,16 +42,16 @@ package NiosII
    -- status/estatus/bstatus
 
    type status_Type is record
-      PIE      : Boolean;     -- PIE is the processor interrupt-enable bit.
-      U        : Boolean;     -- U is the user mode bit.
-      EH       : Boolean;     -- EH is the exception handler mode bit.
-      IH       : Boolean;     -- IH is the interrupt handler mode bit.
-      IL       : Bits_6;      -- IL is the interrupt level field.
-      CRS      : Bits_6;      -- CRS is the current register set field.
-      PRS      : Bits_6;      -- PRS is the previous register set field.
-      NMI      : Boolean;     -- NMI is the nonmaskable interrupt mode bit.
-      RSIE     : Boolean;     -- RSIE is the register set interrupt-enable bit.
-      Reserved : Bits_8 := 0;
+      PIE      : Boolean;      -- PIE is the processor interrupt-enable bit.
+      U        : Boolean;      -- U is the user mode bit.
+      EH       : Boolean;      -- EH is the exception handler mode bit.
+      IH       : Boolean;      -- IH is the interrupt handler mode bit.
+      IL       : Bits_6;       -- IL is the interrupt level field.
+      CRS      : Bits_6;       -- CRS is the current register set field.
+      PRS      : Bits_6;       -- PRS is the previous register set field.
+      NMI      : Boolean;      -- NMI is the nonmaskable interrupt mode bit.
+      RSIE     : Boolean;      -- RSIE is the register set interrupt-enable bit.
+      Reserved : Bits_8  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -148,7 +148,7 @@ package NiosII
    -- exception control
 
    type exception_control_Type is record
-      Reserved1 : Bits_2 := 0;
+      Reserved1 : Bits_2  := 0;
       Cause     : Bits_5;       -- CAUSE is written by the Nios II processor when certain exceptions occur.
       Reserved2 : Bits_25 := 0;
    end record
