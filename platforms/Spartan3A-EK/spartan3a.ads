@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package Spartan3A
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
@@ -55,7 +53,7 @@ package Spartan3A
    LEDs_BASEADDRESS : constant := 16#8142_0000#;
 
    LEDs : aliased GPIO_Type
-      with Address    => To_Address (LEDs_BASEADDRESS),
+      with Address    => System'To_Address (LEDs_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
