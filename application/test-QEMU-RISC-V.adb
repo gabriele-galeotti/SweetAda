@@ -3,6 +3,7 @@ with System;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Definitions;
 with Bits;
 with CPU;
 with RISCV;
@@ -28,6 +29,7 @@ package body Application
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Definitions;
    use RISCV;
 
    -- "application" harts
@@ -44,9 +46,12 @@ package body Application
            External_Name => "ap_pc";
 
    -- AP hart stack size = 4 kB
-   SP1 : aliased array (0 .. 2**12 - 1) of MXLEN_Type;
-   SP2 : aliased array (0 .. 2**12 - 1) of MXLEN_Type;
-   SP3 : aliased array (0 .. 2**12 - 1) of MXLEN_Type;
+   SP1 : aliased array (0 .. kB4 - 1) of Unsigned_8
+      with Alignment => 8;
+   SP2 : aliased array (0 .. kB4 - 1) of Unsigned_8
+      with Alignment => 8;
+   SP3 : aliased array (0 .. kB4 - 1) of Unsigned_8
+      with Alignment => 8;
 
    -- Console mutex
    M : Mutex.Semaphore_Binary := Mutex.SEMAPHORE_UNLOCKED;
@@ -103,11 +108,11 @@ package body Application
          declare
             function To_MXLEN is new Ada.Unchecked_Conversion (Address, MXLEN_Type);
          begin
-            AP_sp (1) := To_MXLEN (SP1 (SP1'Last)'Address) + MXLEN_Type'Size / 8;
+            AP_sp (1) := To_MXLEN (SP1 (SP1'Last)'Address) + 1;
             AP_pc (1) := To_MXLEN (StartAP'Address);
-            AP_sp (2) := To_MXLEN (SP2 (SP2'Last)'Address) + MXLEN_Type'Size / 8;
+            AP_sp (2) := To_MXLEN (SP2 (SP2'Last)'Address) + 1;
             AP_pc (2) := To_MXLEN (StartAP'Address);
-            AP_sp (3) := To_MXLEN (SP3 (SP3'Last)'Address) + MXLEN_Type'Size / 8;
+            AP_sp (3) := To_MXLEN (SP3 (SP3'Last)'Address) + 1;
             AP_pc (3) := To_MXLEN (StartAP'Address);
          end;
       end if;
