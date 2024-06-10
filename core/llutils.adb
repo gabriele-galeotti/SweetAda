@@ -256,6 +256,16 @@ package body LLutils
    separate;
 
    ----------------------------------------------------------------------------
+   -- Atomic_Load
+   ----------------------------------------------------------------------------
+   function Atomic_Load
+      (Object_Address : System.Address;
+       Memory_Order   : Integer)
+      return Atomic_Type
+      is
+   separate;
+
+   ----------------------------------------------------------------------------
    -- Atomic_Test_And_Set
    ----------------------------------------------------------------------------
    function Atomic_Test_And_Set

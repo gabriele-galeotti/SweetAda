@@ -94,6 +94,7 @@ library project Core is
                      "llutils.adb", "llutils.ads",
                      "llutils-address_displacement.adb",
                      "llutils-atomic_clear.adb",
+                     "llutils-atomic_load.adb",
                      "llutils-atomic_test_and_set.adb",
                      "llutils-be_to_cpue_16.adb",
                      "llutils-be_to_cpue_32.adb",

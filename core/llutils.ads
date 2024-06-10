@@ -202,6 +202,15 @@ package LLutils
       with Inline_Always => True;
 
    ----------------------------------------------------------------------------
+   -- Atomic load
+   ----------------------------------------------------------------------------
+   function Atomic_Load
+      (Object_Address : System.Address;
+       Memory_Order   : Integer)
+      return Atomic_Type
+      with Inline_Always => True;
+
+   ----------------------------------------------------------------------------
    -- Atomic test and set
    ----------------------------------------------------------------------------
    function Atomic_Test_And_Set
