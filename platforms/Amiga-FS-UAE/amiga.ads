@@ -53,15 +53,15 @@ package Amiga
    ----------------------------------------------------------------------------
 
    type SERDATR_Type is record
-      DB      : Unsigned_8;  -- Data bits
-      STP_DB8 : Bits_1;      -- Stop bit if LONG, data bit if not
-      STP     : Bits_1;      -- Stop bit
-      Unused  : Bits_1 := 0;
-      RXD     : Bits_1;      -- RXD pin receives UART serial data for direct bit test by the micro.
-      TSRE    : Boolean;     -- Serial port transmit shift reg. empty
-      TBE     : Boolean;     -- Serial port transmit buffer empty (mirror)
-      RBF     : Boolean;     -- Serial port receive buffer full (mirror)
-      OVRUN   : Boolean;     -- Serial port receiver overun
+      DB      : Unsigned_8;      -- Data bits
+      STP_DB8 : Bits_1;          -- Stop bit if LONG, data bit if not
+      STP     : Bits_1;          -- Stop bit
+      Unused  : Bits_1     := 0;
+      RXD     : Bits_1;          -- RXD pin receives UART serial data for direct bit test by the micro.
+      TSRE    : Boolean;         -- Serial port transmit shift reg. empty
+      TBE     : Boolean;         -- Serial port transmit buffer empty (mirror)
+      RBF     : Boolean;         -- Serial port receive buffer full (mirror)
+      OVRUN   : Boolean;         -- Serial port receiver overun
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -366,14 +366,14 @@ package Amiga
    SPMODE_OUT  : constant := 1; -- Serial port=output (CNT is the source of the shift clock)
 
    type CIA_CRA_Type is record
-      START   : Boolean;     -- start/stop Timer A
-      PBON    : Boolean;     -- Timer A output on PB6
-      OUTMODE : Bits_1;      -- OUTMODE
-      RUNMODE : Bits_1;      -- RUNMODE
-      LOAD    : Boolean;     -- force load
-      INMODE  : Bits_1;      -- IMODE
-      SPMODE  : Bits_1;      -- SPMODE
-      Unused  : Bits_1 := 0;
+      START   : Boolean;      -- start/stop Timer A
+      PBON    : Boolean;      -- Timer A output on PB6
+      OUTMODE : Bits_1;       -- OUTMODE
+      RUNMODE : Bits_1;       -- RUNMODE
+      LOAD    : Boolean;      -- force load
+      INMODE  : Bits_1;       -- IMODE
+      SPMODE  : Bits_1;       -- SPMODE
+      Unused  : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;

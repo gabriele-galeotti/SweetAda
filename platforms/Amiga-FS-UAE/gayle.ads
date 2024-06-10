@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Bits;
 
 package Gayle
@@ -31,7 +30,6 @@ package Gayle
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Bits;
 
    GAYLE_IDE_BASEADDRESS : constant := 16#00DD_2020#;
@@ -55,7 +53,7 @@ package Gayle
    IDE_DEVCON_ADDRESS : constant := GAYLE_IDE_BASEADDRESS + 16#0406# * 2**2;
 
    IDE_Devcon : aliased IDE_Devcon_Type
-      with Address    => To_Address (IDE_DEVCON_ADDRESS),
+      with Address    => System'To_Address (IDE_DEVCON_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
