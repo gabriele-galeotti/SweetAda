@@ -2,6 +2,7 @@
 with System;
 with Ada.Unchecked_Conversion;
 with Interfaces;
+with Definitions;
 with CPU;
 with ARMv8A;
 with Console;
@@ -20,6 +21,7 @@ package body Application
 
    use System;
    use Interfaces;
+   use Definitions;
 
    -- "application" cores
 
@@ -41,9 +43,12 @@ package body Application
            External_Name => "ap_pc";
 
    -- AP core stack size = 4 kB
-   SP1 : aliased array (0 .. 2**12 - 1) of Unsigned_64;
-   SP2 : aliased array (0 .. 2**12 - 1) of Unsigned_64;
-   SP3 : aliased array (0 .. 2**12 - 1) of Unsigned_64;
+   SP1 : aliased array (0 .. kB4 - 1) of Unsigned_8
+      with Alignment => 8;
+   SP2 : aliased array (0 .. kB4 - 1) of Unsigned_8
+      with Alignment => 8;
+   SP3 : aliased array (0 .. kB4 - 1) of Unsigned_8
+      with Alignment => 8;
 
    -- Console mutex
    M : Mutex.Semaphore_Binary := Mutex.SEMAPHORE_UNLOCKED;
@@ -101,11 +106,11 @@ package body Application
          declare
             function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
          begin
-            AP_sp (1) := To_U64 (SP1 (SP1'Last)'Address) + 8;
+            AP_sp (1) := To_U64 (SP1 (SP1'Last)'Address) + 1;
             AP_pc (1) := To_U64 (StartAP'Address);
-            AP_sp (2) := To_U64 (SP2 (SP2'Last)'Address) + 8;
+            AP_sp (2) := To_U64 (SP2 (SP2'Last)'Address) + 1;
             AP_pc (2) := To_U64 (StartAP'Address);
-            AP_sp (3) := To_U64 (SP3 (SP3'Last)'Address) + 8;
+            AP_sp (3) := To_U64 (SP3 (SP3'Last)'Address) + 1;
             AP_pc (3) := To_U64 (StartAP'Address);
          end;
       end if;
