@@ -48,6 +48,9 @@ package RPI3
    EMMC_BASEADDRESS         : constant := PERIPHERALS_BASEADDRESS + 16#0030_0000#;
    USB_BASEADDRESS          : constant := PERIPHERALS_BASEADDRESS + 16#0098_0000#;
 
+   -- GPU
+   GPU_BASEADDRESS : constant := 16#C000_0000#;
+
    ----------------------------------------------------------------------------
    -- 2.1.1 AUX registers
    ----------------------------------------------------------------------------
