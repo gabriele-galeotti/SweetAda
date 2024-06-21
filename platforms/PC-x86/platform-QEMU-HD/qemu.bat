@@ -86,7 +86,7 @@ REM ############################################################################
 SET "PORTOK=N"
 SET "NLOOPS=0"
 :TIL_LOOP
-  %SystemRoot%\System32\timeout.exe /NOBREAK /T 1 >NUL
+  %SystemRoot%\System32\timeout.exe /NOBREAK /T 1 >nul
   FOR /F "tokens=*" %%I IN ('                    ^
     %SystemRoot%\System32\NETSTAT.EXE -an ^|     ^
     %SystemRoot%\System32\find.exe ":%1"  ^|     ^
@@ -108,11 +108,11 @@ REM #                                                                          #
 REM ############################################################################
 :QEMUWAIT
 :QW_LOOP
-%SystemRoot%\System32\tasklist.exe | %SystemRoot%\System32\find.exe /I "%QEMU_FILENAME%" >NUL 2>&1
+%SystemRoot%\System32\tasklist.exe | %SystemRoot%\System32\find.exe /I "%QEMU_FILENAME%" >nul 2>&1
 IF ERRORLEVEL 1 (
   GOTO :QW_LOOPEND
   ) ELSE (
-  %SystemRoot%\System32\timeout.exe /NOBREAK /T 5 >NUL
+  %SystemRoot%\System32\timeout.exe /NOBREAK /T 5 >nul
   GOTO :QW_LOOP
   )
 :QW_LOOPEND
