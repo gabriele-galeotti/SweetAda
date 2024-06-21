@@ -272,8 +272,8 @@ package ARMv6M
    VTOR_ADDRESS_MSB : constant := 31;
 
    type VTOR_Type is record
-      Reserved : Bits_7 := 0;
-      TBLOFF   : Bits_25;     -- Bits[31:7] of the vector table address.
+      Reserved : Bits_7  := 0;
+      TBLOFF   : Bits_25;      -- Bits[31:7] of the vector table address.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -470,8 +470,8 @@ package ARMv6M
    -- B3.3.4 SysTick Reload Value Register, SYST_RVR
 
    type SYST_RVR_Type is record
-      RELOAD   : Bits_24;     -- The value to load into the SYST_CVR register when the counter reaches 0.
-      Reserved : Bits_8 := 0;
+      RELOAD   : Bits_24;      -- The value to load into the SYST_CVR register when the counter reaches 0.
+      Reserved : Bits_8  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -489,8 +489,8 @@ package ARMv6M
    -- B3.3.5 SysTick Current Value Register, SYST_CVR
 
    type SYST_CVR_Type is record
-      CURRENT  : Bits_24;     -- Current counter value.
-      Reserved : Bits_8 := 0;
+      CURRENT  : Bits_24;      -- Current counter value.
+      Reserved : Bits_8  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;

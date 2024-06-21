@@ -155,8 +155,8 @@ package ARMv7M
       renames ARMv6M.PRIMASK_Write;
 
    type BASEPRI_Type is record
-      BASEPRI  : Unsigned_8;   -- The base priority mask
-      Reserved : Bits_24 := 0;
+      BASEPRI  : Unsigned_8;      -- The base priority mask
+      Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -204,9 +204,9 @@ package ARMv7M
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for CONTROL_Type use record
-      nPRIV    at 0 range 0 .. 0;
-      SPSEL    at 0 range 1 .. 1;
-      FPCA     at 0 range 2 .. 2;
+      nPRIV    at 0 range 0 ..  0;
+      SPSEL    at 0 range 1 ..  1;
+      FPCA     at 0 range 2 ..  2;
       Reserved at 0 range 3 .. 31;
    end record;
 
@@ -397,12 +397,12 @@ package ARMv7M
    type SHCSR_Type is record
       MEMFAULTACT    : Boolean;      -- MemManage active.
       BUSFAULTACT    : Boolean;      -- BusFault active.
-      Reserved1      : Bits_1 := 0;
+      Reserved1      : Bits_1  := 0;
       USGFAULTACT    : Boolean;      -- UsageFault active.
-      Reserved2      : Bits_3 := 0;
+      Reserved2      : Bits_3  := 0;
       SVCALLACT      : Boolean;      -- SVCall active.
       MONITORACT     : Boolean;      -- Monitor active.
-      Reserved3      : Bits_1 := 0;
+      Reserved3      : Bits_1  := 0;
       PENDSVACT      : Boolean;      -- PendSV active.
       SYSTICKACT     : Boolean;      -- SysTick active.
       USGFAULTPENDED : Boolean;      -- UsageFault pending.
@@ -447,14 +447,14 @@ package ARMv7M
 
    -- MemManage Status Register, MMFSR
    type MMFSR_Type is record
-      IACCVIOL  : Boolean;     -- MPU or Execute Never (XN) default memory map access violation on an instruction fetch ...
-      DACCVIOL  : Boolean;     -- Data access violation.
-      Reserved1 : Bits_1 := 0;
-      MUNSTKERR : Boolean;     -- A derived MemManage fault occurred on exception return.
-      MSTKERR   : Boolean;     -- A derived MemManage fault occurred on exception entry.
-      MLSPERR   : Boolean;     -- A MemManage fault occurred during FP lazy state preservation.
-      Reserved2 : Bits_1 := 0;
-      MMARVALID : Boolean;     -- MMFAR has valid contents.
+      IACCVIOL  : Boolean;      -- MPU or Execute Never (XN) default memory map access violation on an instruction fetch ...
+      DACCVIOL  : Boolean;      -- Data access violation.
+      Reserved1 : Bits_1  := 0;
+      MUNSTKERR : Boolean;      -- A derived MemManage fault occurred on exception return.
+      MSTKERR   : Boolean;      -- A derived MemManage fault occurred on exception entry.
+      MLSPERR   : Boolean;      -- A MemManage fault occurred during FP lazy state preservation.
+      Reserved2 : Bits_1  := 0;
+      MMARVALID : Boolean;      -- MMFAR has valid contents.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -471,14 +471,14 @@ package ARMv7M
 
    -- BusFault Status Register, BFSR
    type BFSR_Type is record
-      IBUSERR     : Boolean;     -- A bus fault on an instruction prefetch has occurred.
-      PRECISERR   : Boolean;     -- A precise data access error has occurred.
-      IMPRECISERR : Boolean;     -- A derived MemManage fault occurred on exception return.
-      UNSTKERR    : Boolean;     -- A derived bus fault has occurred on exception return.
-      STKERR      : Boolean;     -- A derived bus fault has occurred on exception entry.
-      LSPERR      : Boolean;     -- A bus fault occurred during FP lazy state preservation.
-      Reserved    : Bits_1 := 0;
-      BFARVALID   : Boolean;     -- BFAR has valid contents.
+      IBUSERR     : Boolean;      -- A bus fault on an instruction prefetch has occurred.
+      PRECISERR   : Boolean;      -- A precise data access error has occurred.
+      IMPRECISERR : Boolean;      -- A derived MemManage fault occurred on exception return.
+      UNSTKERR    : Boolean;      -- A derived bus fault has occurred on exception return.
+      STKERR      : Boolean;      -- A derived bus fault has occurred on exception entry.
+      LSPERR      : Boolean;      -- A bus fault occurred during FP lazy state preservation.
+      Reserved    : Bits_1  := 0;
+      BFARVALID   : Boolean;      -- BFAR has valid contents.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -495,14 +495,14 @@ package ARMv7M
 
    -- UsageFault Status Register, UFSR
    type UFSR_Type is record
-      UNDEFINSTR : Boolean;     -- The processor has attempted to execute an undefined instruction.
-      INVSTATE   : Boolean;     -- Instruction executed with invalid EPSR.T or EPSR.IT field.
-      INVPC      : Boolean;     -- An integrity check error has occurred on EXC_RETURN.
-      NOCP       : Boolean;     -- A coprocessor access error has occurred.
-      Reserved1  : Bits_4 := 0;
-      UNALIGNED  : Boolean;     -- Unaligned access error has occurred.
-      DIVBYZERO  : Boolean;     -- Divide by zero error has occurred.
-      Reserved2  : Bits_6 := 0;
+      UNDEFINSTR : Boolean;      -- The processor has attempted to execute an undefined instruction.
+      INVSTATE   : Boolean;      -- Instruction executed with invalid EPSR.T or EPSR.IT field.
+      INVPC      : Boolean;      -- An integrity check error has occurred on EXC_RETURN.
+      NOCP       : Boolean;      -- A coprocessor access error has occurred.
+      Reserved1  : Bits_4  := 0;
+      UNALIGNED  : Boolean;      -- Unaligned access error has occurred.
+      DIVBYZERO  : Boolean;      -- Divide by zero error has occurred.
+      Reserved2  : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -539,7 +539,7 @@ package ARMv7M
    -- B3.2.16 HardFault Status Register, HFSR
 
    type HFSR_Type is record
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       VECTTBL   : Boolean;      -- Vector table read fault has occurred.
       Reserved2 : Bits_28 := 0;
       FORCED    : Boolean;      -- Processor has escalated a configurable-priority exception to HardFault.

@@ -32,12 +32,12 @@ package ARMv7M.FPU
    type FPCCR_Type is record
       LSPACT    : Boolean;      -- Indicates whether Lazy preservation of the FP state is active
       USER      : Boolean;      -- Indicates the privilege level ... when the processor allocated the FP stack frame
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       THREAD    : Boolean;      -- Indicates the processor mode when it allocated the FP stack frame
       HFRDY     : Boolean;      -- Indicates whether the ... FP stack able to set the HardFault exception to pending
       MMRDY     : Boolean;      -- Indicates whether the ... FP stack frame was able to set the MemManage exception to pending
       BFRDY     : Boolean;      -- Indicates whether the ... FP stack frame was able to set the BusFault exception to pending
-      Reserved2 : Bits_1 := 0;
+      Reserved2 : Bits_1  := 0;
       MONRDY    : Boolean;      -- Indicates whether the ... FP stack frame was able to set the DebugMonitor exception to pending
       Reserved3 : Bits_21 := 0;
       LSPEN     : Boolean;      -- Enables lazy context save of FP state
@@ -69,8 +69,8 @@ package ARMv7M.FPU
    -- B3.2.22 Floating Point Context Address Register, FPCAR
 
    type FPCAR_Type is record
-      Reserved : Bits_3 := 0;
-      ADDRESS  : Bits_29;     -- The location of the unpopulated floating-point reg space allocated on an exception stack frame.
+      Reserved : Bits_3  := 0;
+      ADDRESS  : Bits_29;      -- The location of the unpopulated floating-point reg space allocated on an exception stack frame.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -98,14 +98,14 @@ package ARMv7M.FPU
       OFC       : Boolean;      -- Overflow cumulative exception bit.
       UFC       : Boolean;      -- Underflow cumulative exception bit.
       IXC       : Boolean;      -- Inexact cumulative exception bit.
-      Reserved1 : Bits_2 := 0;
+      Reserved1 : Bits_2  := 0;
       IDC       : Boolean;      -- Input Denormal cumulative exception bit.
       Reserved2 : Bits_14 := 0;
       RMode     : Bits_2;       -- Rounding mode control field.
       FZ        : Boolean;      -- Flush-to-zero mode control bit
       DN        : Boolean;      -- Default NaN mode control bit
       AHP       : Boolean;      -- Alternative half-precision control bit
-      Reserved3 : Bits_1 := 0;
+      Reserved3 : Bits_1  := 0;
       V         : Boolean;      -- Overflow condition flag.
       C         : Boolean;      -- Carry condition flag.
       Z         : Boolean;      -- Zero condition flag.
@@ -146,7 +146,7 @@ package ARMv7M.FPU
       FZ        : Boolean;      -- Default value for FPSCR.FZ.
       DN        : Boolean;      -- Default value for FPSCR.DN.
       AHP       : Boolean;      -- Default value for FPSCR.AHP.
-      Reserved2 : Bits_5 := 0;
+      Reserved2 : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
