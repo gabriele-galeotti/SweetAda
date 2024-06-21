@@ -90,14 +90,14 @@ package body Application
          DDRB.DDB4 := True;
          -- /SS in slave mode => there is no need to configure I/O pin SCK
          SPCR := (
-                  SPR  => SPR_DIV4,               -- SPI Clock Rate Select 1 and 0
-                  CPHA => CPHA_LSample_TSetup,    -- Clock Phase
-                  CPOL => CPOL_LRaising_TFalling, -- Clock Polarity
-                  MSTR => MSTR_SLAVE,             -- Master/Slave Select
-                  DORD => DORD_MSB,               -- Data Order
-                  SPE  => True,                   -- SPI Enable
-                  SPIE => False                   -- SPI Interrupt Enable
-                 );
+            SPR  => SPR_DIV4,               -- SPI Clock Rate Select 1 and 0
+            CPHA => CPHA_LSample_TSetup,    -- Clock Phase
+            CPOL => CPOL_LRaising_TFalling, -- Clock Polarity
+            MSTR => MSTR_SLAVE,             -- Master/Slave Select
+            DORD => DORD_MSB,               -- Data Order
+            SPE  => True,                   -- SPI Enable
+            SPIE => False                   -- SPI Interrupt Enable
+            );
          SPDR := 16#AA#;
       end if;
       -- USART test -----------------------------------------------------------
@@ -107,21 +107,21 @@ package body Application
          UBRR0H := 0;
          -- TX, RX, 8N1
          UCSR0B := (
-                    UCSZ0_2 => UCSZ_8.UCSZ0_2, -- Character Size bit 2
-                    TXEN0   => True,           -- Transmitter Enable
-                    RXEN0   => True,           -- Receiver Enable
-                    UDRIE0  => False,          -- USART Data register Empty Interrupt Enable
-                    TXCIE0  => True,           -- TX Complete Interrupt Enable
-                    RXCIE0  => False,          -- RX Complete Interrupt Enable
-                    others  => <>
-                   );
+            UCSZ0_2 => UCSZ_8.UCSZ0_2, -- Character Size bit 2
+            TXEN0   => True,           -- Transmitter Enable
+            RXEN0   => True,           -- Receiver Enable
+            UDRIE0  => False,          -- USART Data register Empty Interrupt Enable
+            TXCIE0  => True,           -- TX Complete Interrupt Enable
+            RXCIE0  => False,          -- RX Complete Interrupt Enable
+            others  => <>
+            );
          UCSR0C := (
-                    UCPOL0   => UCPOL_Rising,      -- Clock Polarity
-                    UCSZ0_01 => UCSZ_8.UCSZ0_01,   -- Character Size bit 0 .. 1
-                    USBS0    => USBS_1,            -- Stop Bit Select
-                    UPM0     => UPM_Disabled,      -- Parity Mode
-                    UMSEL0   => UMSEL_Asynchronous -- USART Mode Select
-                   );
+            UCPOL0   => UCPOL_Rising,      -- Clock Polarity
+            UCSZ0_01 => UCSZ_8.UCSZ0_01,   -- Character Size bit 0 .. 1
+            USBS0    => USBS_1,            -- Stop Bit Select
+            UPM0     => UPM_Disabled,      -- Parity Mode
+            UMSEL0   => UMSEL_Asynchronous -- USART Mode Select
+            );
          while True loop
             for Idx in Hello'First .. Hello'Last loop
                loop
