@@ -25,7 +25,7 @@ CPU_MODEL := Cortex-A53
 #                                                                              #
 ################################################################################
 
-GCC_SWITCHES_PLATFORM     := -mcpu=cortex-a53 -mabi=lp64
+GCC_SWITCHES_PLATFORM     := -mcpu=cortex-a53 -mabi=lp64 -mstrict-align -mno-outline-atomics
 #GCC_SWITCHES_STARTUP      := -DSTARTUP_EL1
 LD_SWITCHES_PLATFORM      := --undefined=el_table --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
