@@ -100,7 +100,7 @@ package body Application
    procedure Run
       is
    begin
-      -- start "application" harts --------------------------------------------
+      -- start "application" cores --------------------------------------------
       if True then
          AP_Key := 16#AA55_AA55#;
          declare
