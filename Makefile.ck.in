@@ -19,13 +19,13 @@
 #
 
 ifeq ($(OSTYPE),cmd)
-ifeq ($(shell SET "PATH=$(PATH)" && $(SED) --version 2> nul),)
+ifeq ($(shell SET "PATH=$(PATH)" && $(SED) --version 2>nul),)
 $(error Error: no $(SED) executable found)
 endif
-ifeq ($(shell SET "PATH=$(PATH)" && $(GCC_WRAPPER) -v 2> nul),)
+ifeq ($(shell SET "PATH=$(PATH)" && $(GCC_WRAPPER) -v 2>nul),)
 $(error Error: no $(GCC_WRAPPER) executable found)
 endif
-ifeq ($(shell SET "PATH=$(PATH)" && $(GNAT_WRAPPER) -v 2> nul),)
+ifeq ($(shell SET "PATH=$(PATH)" && $(GNAT_WRAPPER) -v 2>nul),)
 $(error Error: no $(GNAT_WRAPPER) executable found)
 endif
 else

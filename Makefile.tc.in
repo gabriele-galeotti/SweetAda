@@ -55,7 +55,7 @@ TOOLCHAIN_GCC := $(TOOLCHAIN_PROGRAM_PREFIX)gcc$(EXEEXT)
 
 # detect GCC compiler
 ifeq ($(OSTYPE),cmd)
-GCC_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -dumpversion 2> nul)
+GCC_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -dumpversion 2>nul)
 else
 GCC_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) -dumpversion 2> /dev/null)
 endif
@@ -71,9 +71,9 @@ endif
 # GCC_MULTIDIR is the multilib directory inside the library search directory
 # NOTE: this is different from "-print-multi-lib", which prints all multilibs
 ifeq ($(OSTYPE),cmd)
-GCC_MULTILIBS   := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -print-multi-lib 2> nul)
-GCC_MULTIDIR    := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-multi-directory 2> nul)
-LIBGCC_FILENAME := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-libgcc-file-name 2> nul)
+GCC_MULTILIBS   := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -print-multi-lib 2>nul)
+GCC_MULTIDIR    := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-multi-directory 2>nul)
+LIBGCC_FILENAME := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-libgcc-file-name 2>nul)
 else
 GCC_MULTILIBS   := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) -print-multi-lib 2> /dev/null)
 GCC_MULTIDIR    := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) $(GCC_SWITCHES_PLATFORM) -print-multi-directory 2> /dev/null)
@@ -123,8 +123,8 @@ TOOLCHAIN_STRIP    := $(TOOLCHAIN_PROGRAM_PREFIX)strip$(EXEEXT)
 
 ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
-AS_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_AS) --version 2> nul| $(SED) -e "2,$$d")
-LD_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_LD) --version 2> nul| $(SED) -e "2,$$d")
+AS_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_AS) --version 2>nul| $(SED) -e "2,$$d")
+LD_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_LD) --version 2>nul| $(SED) -e "2,$$d")
 else
 AS_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_AS) --version 2> /dev/null | $(SED) -e "2,\$$d")
 LD_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_LD) --version 2> /dev/null | $(SED) -e "2,\$$d")
@@ -267,7 +267,7 @@ include gnatmake.tc.in
 CONFIGURE_DEPS += gnatmake.tc.in
 ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
-GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GNATMAKE) --version 2> nul|$(SED) -e "2,$$d")
+GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GNATMAKE) --version 2>nul|$(SED) -e "2,$$d")
 else
 GNATMAKE_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_GNATMAKE) --version 2> /dev/null | $(SED) -e "2,\$$d")
 endif
@@ -276,7 +276,7 @@ else ifeq ($(BUILD_MODE),GPRbuild)
 GPRBUILD := gprbuild$(EXEEXT)
 ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
-GPRBUILD_VERSION := $(shell SET "PATH=$(PATH)" && $(GPRBUILD) --version 2> nul|$(SED) -e "2,$$d")
+GPRBUILD_VERSION := $(shell SET "PATH=$(PATH)" && $(GPRBUILD) --version 2>nul|$(SED) -e "2,$$d")
 else
 GPRBUILD_VERSION := $(shell PATH="$(PATH)" $(GPRBUILD) --version 2> /dev/null | $(SED) -e "2,\$$d")
 endif

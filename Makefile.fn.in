@@ -171,7 +171,7 @@ endif
 # Remove the spurios "nul" file in a cmd/msys environment.
 #
 ifeq      ($(OSTYPE),cmd)
-remove-nulfile = -@RENAME \\.\"$(shell cd)"\nul. deletefile.tmp 2> nul
+remove-nulfile = -@RENAME \\.\"$(shell cd)"\nul. deletefile.tmp 2>nul
 else ifeq ($(OSTYPE),msys)
 remove-nulfile = -@cmd.exe /C "RENAME \\\\.\\\"$$(cygpath.exe -w "$$(pwd)")\"\\nul. deletefile.tmp" 2> /dev/null
 endif
