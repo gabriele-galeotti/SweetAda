@@ -30,16 +30,16 @@ require another set of scripts (apart the availability of that cross-compiler)
 to handle the so-named Canadian build process, which are definitely more
 complex and hard to make available for every possible user.
 
-The scripts generate a full log of configure and build phases. Albeit very
+The scripts generate a full log during configure and build phases. Albeit very
 difficult to read, normally it is anyway rather simple to detect gross errors
 like missing tools or basic utilities not available online, especially during
 the configure phases.
 
-The scripts have default choices for a standard build. The scripts variables
-have, e.g., /usr/local/src as the home of the source packages, so this
-variable could be changed to suit your environment. DESTDIR is only useful
-for package distribution/relocation and you should not specify it for a
-standard installation.
+The scripts have default choices suited for standard builds. The scripts
+variables have, e.g., /usr/local/src as the home of the source packages, so
+this variable could be changed to suit your environment. DESTDIR is only
+useful for package distribution/relocation and you have no need to specify it
+for a standard installation.
 
 Uncomment the toolchain name useful for your needs, and all the phase_* flags.
 They are kept separate so that it is not necessary to restart everything,
@@ -159,13 +159,14 @@ target should work equally well, as far as the RTS path is well defined and is
 different from the default RTS wrapped inside the executable by the GCC
 configure build system, which is true in SweetAda.
 
-In order to run GNATTOOLS.sh successfully, you should have online the GCC
-source package, with the same prerequisites as the GCC.sh script wants.
+In order to run GNATTOOLS.sh successfully, you should have the GCC source
+package available online, with the same prerequisites as the GCC.sh script
+wants.
 
-Then, you should know the ALI version emitted by the compiler toolchain which
-you are using, and you have to specify the ALI string in the script, where some
-examples are outlined. The best method is to compile something and inspect the
-.ali file generated (the "V" line which comes first).
+Then, you should know the ALI version emitted by the compiler toolchain used,
+and you have to specify the ALI string in the script, where some examples are
+outlined. The best method is to compile something and inspect the .ali file
+generated (the "V" line which comes first).
 
 Finally, choose your target (of course the toolchain names have to match
 exactly), uncomment all the various phases, and run the script. If everything
