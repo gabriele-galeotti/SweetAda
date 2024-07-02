@@ -43,10 +43,10 @@ endif
 ifeq ($(OSTYPE),cmd)
 EXEEXT := .exe
 # cmd.exe OS commands
-CP     := COPY /B /Y 1> nul
-MV     := MOVE /Y 1> nul
+CP     := COPY /B /Y 1>nul
+MV     := MOVE /Y 1>nul
 REM    := REM
-RM     := DEL /F /Q 2> nul
+RM     := DEL /F /Q 2>nul
 else
 ifeq ($(OSTYPE),msys)
 EXEEXT := .exe
