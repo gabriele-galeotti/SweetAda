@@ -47,10 +47,10 @@ package PIIX
       BME       : Boolean := True;  -- Bus Master Enable (BME). (Not Implemented)
       SCE       : Boolean;          -- Special Cycle Enable (SCE).
       PMWE      : Boolean := False; -- Postable Memory Write Enable. (Not Implemented)
-      Reserved1 : Bits_3 := 0;
+      Reserved1 : Bits_3  := 0;
       SERRE     : Boolean;          -- SERR# Enable (SERRE).
       FBE       : Boolean := False; -- Fast Back-to-Back Enable.
-      Reserved2 : Bits_6 := 0;
+      Reserved2 : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -119,9 +119,9 @@ package PIIX
    IRQROUTE_IRQ15      : constant := 2#1111#; -- IRQ15
 
    type PIRQC_Type is record
-      IRQROUTE   : Bits_4;      -- Interrupt Routing.
-      Reserved   : Bits_3 := 0;
-      IRQROUTEEN : NBoolean;    -- Interrupt Routing Enable. 0=Enable; 1=Disable
+      IRQROUTE   : Bits_4;        -- Interrupt Routing.
+      Reserved   : Bits_3   := 0;
+      IRQROUTEEN : NBoolean;      -- Interrupt Routing Enable. 0=Enable; 1=Disable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -274,9 +274,9 @@ package PIIX
       BME       : Boolean;          -- Bus Master Enable (BME).
       SCE       : Boolean := False; -- Special Cycle Enable (SCE). (Not Implemented)
       MWI       : Boolean := False; -- Memory Write and Invalidate Enable (MWI). (Not Implemented)
-      Reserved1 : Bits_4 := 0;
+      Reserved1 : Bits_4  := 0;
       FBE       : Boolean := False; -- Fast Back to Back Enable (FBE). (Not Implemented)
-      Reserved2 : Bits_6 := 0;
+      Reserved2 : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -305,9 +305,9 @@ package PIIX
       BME       : Boolean;          -- Bus Master Enable (BME).
       SCE       : Boolean := False; -- Special Cycle Enable (SCE). (Not Implemented)
       MWI       : Boolean := False; -- Memory Write and Invalidate Enable (MWI). (Not Implemented)
-      Reserved1 : Bits_4 := 0;
+      Reserved1 : Bits_4  := 0;
       FBE       : Boolean := False; -- Fast Back to Back Enable (FBE). (Not Implemented)
-      Reserved2 : Bits_6 := 0;
+      Reserved2 : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;

@@ -397,11 +397,13 @@ package Am7990
    end record;
 
    DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (Base_Address  => Null_Address,
+      (
+       Base_Address  => Null_Address,
        Scale_Address => 0,
        Flags         => (null record),
        Read_16       => MMIO.ReadN_U16'Access,
-       Write_16      => MMIO.WriteN_U16'Access);
+       Write_16      => MMIO.WriteN_U16'Access
+      );
 
    ----------------------------------------------------------------------------
    -- Am7990 register read/write

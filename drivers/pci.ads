@@ -132,7 +132,7 @@ package PCI
       DEVNUM   : Device_Number_Type;
       BUSNUM   : Bus_Number_Type;
       Reserved : Bits_7;
-      CONE     : Boolean := True;
+      CONE     : Boolean              := True;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
