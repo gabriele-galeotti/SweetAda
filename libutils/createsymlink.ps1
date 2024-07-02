@@ -74,14 +74,22 @@ CreateFile(
   IntPtr templateFile
   );
 '@
-$CreateFile = Add-Type -MemberDefinition $CreateFile_signature -Name "Win32CreateFile" -Namespace Win32 -PassThru
+$CreateFile = Add-Type                                  `
+                -MemberDefinition $CreateFile_signature `
+                -Name "Win32CreateFile"                 `
+                -Namespace Win32                        `
+                -PassThru
 
 $CloseHandle_signature = @'
 [DllImport("kernel32.dll", SetLastError = true)]
 public static extern bool
 CloseHandle(IntPtr hHandle);
 '@
-$CloseHandle = Add-Type -MemberDefinition $CloseHandle_signature -Name "Win32CloseHandle" -Namespace Win32 -PassThru
+$CloseHandle = Add-Type                                   `
+                 -MemberDefinition $CloseHandle_signature `
+                 -Name "Win32CloseHandle"                 `
+                 -Namespace Win32                         `
+                 -PassThru
 
 $GetFileTime_signature = @'
 [DllImport("kernel32.dll", SetLastError = true)]
@@ -93,7 +101,11 @@ GetFileTime(
   ref long lpLastWriteTime
   );
 '@
-$GetFileTime = Add-Type -MemberDefinition $GetFileTime_signature -Name "Win32GetFileTime" -Namespace Win32 -PassThru
+$GetFileTime = Add-Type                                   `
+                 -MemberDefinition $GetFileTime_signature `
+                 -Name "Win32GetFileTime"                 `
+                 -Namespace Win32                         `
+                 -PassThru
 
 $SetFileTime_signature = @'
 [DllImport("kernel32.dll", SetLastError = true)]
@@ -105,7 +117,11 @@ SetFileTime(
   ref long lpLastWriteTime
   );
 '@
-$SetFileTime = Add-Type -MemberDefinition $SetFileTime_signature -Name "Win32SetFileTime" -Namespace Win32 -PassThru
+$SetFileTime = Add-Type                                   `
+                 -MemberDefinition $SetFileTime_signature `
+                 -Name "Win32SetFileTime"                 `
+                 -Namespace Win32                         `
+                 -PassThru
 
 function SetTimeOfSymlink
 {
@@ -114,26 +130,34 @@ function SetTimeOfSymlink
   [Long]$LastAccessTime = 0
   [Long]$LastWriteTime  = 0
   $handle = $CreateFile::CreateFile(
-                                  $source,
-                                  0x80,
-                                  0,
-                                  [System.IntPtr]::Zero,
-                                  3,
-                                  0x80,
-                                  [System.IntPtr]::Zero
-                                  )
-  $GetFileTime::GetFileTime($handle, [ref]$CreationTime, [ref]$LastAccessTime, [ref]$LastWriteTime) | Out-Null
+              $source,
+              0x80,
+              0,
+              [System.IntPtr]::Zero,
+              3,
+              0x80,
+              [System.IntPtr]::Zero
+              )
+  $GetFileTime::GetFileTime(
+    $handle,
+    [ref]$CreationTime,
+    [ref]$LastAccessTime,
+    [ref]$LastWriteTime) | Out-Null
   $CloseHandle::CloseHandle($handle) | Out-Null
   $handle = $CreateFile::CreateFile(
-                                  $symlink,
-                                  0x100,
-                                  0,
-                                  [System.IntPtr]::Zero,
-                                  3,
-                                  0x200000,
-                                  [System.IntPtr]::Zero
-                                  )
-  $SetFileTime::SetFileTime($handle, [ref]$CreationTime, [ref]$LastAccessTime, [ref]$LastWriteTime) | Out-Null
+              $symlink,
+              0x100,
+              0,
+              [System.IntPtr]::Zero,
+              3,
+              0x200000,
+              [System.IntPtr]::Zero
+              )
+  $SetFileTime::SetFileTime(
+    $handle,
+    [ref]$CreationTime,
+    [ref]$LastAccessTime,
+    [ref]$LastWriteTime) | Out-Null
   $CloseHandle::CloseHandle($handle) | Out-Null
 }
 
