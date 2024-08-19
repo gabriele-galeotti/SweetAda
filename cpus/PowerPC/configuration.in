@@ -14,5 +14,6 @@ endif
 
 GPR_CORE_CPU += cpu.ads                 \
                 powerpc.adb powerpc.ads \
+                powerpc_definitions.ads
 export GPR_CORE_CPU
 

@@ -201,24 +201,6 @@ package body PowerPC
    end PVR_Read;
 
    ----------------------------------------------------------------------------
-   -- Setup_Exception_Stack
-   ----------------------------------------------------------------------------
-   procedure Setup_Exception_Stack
-      is
-   begin
-      Asm (
-           Template => ""                                        & CRLF &
-                       "        lis     r1,exception_stack@ha  " & CRLF &
-                       "        ori     r1,r1,exception_stack@l" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end Setup_Exception_Stack;
-
-   ----------------------------------------------------------------------------
    -- Intcontext_Get
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
