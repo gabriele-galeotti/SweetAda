@@ -18,7 +18,6 @@
 with System;
 with GCC_Defines;
 with CPU;
-with MMIO;
 
 package body Mutex
    is
@@ -55,7 +54,7 @@ package body Mutex
          (Object_Address : in System.Address)
          is
       begin
-         while Atomic_Type'(MMIO.ReadA (Object_Address)) /= 0 loop
+         while Atomic_Load (Object_Address, GCC_Defines.ATOMIC_SEQ_CST) /= 0 loop
             CPU.NOP;
          end loop;
       end Wait;
