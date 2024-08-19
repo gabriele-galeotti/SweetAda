@@ -87,6 +87,9 @@ package body VGA
        16#06#  -- 04 Sequencer Memory Mode:
       ];
 
+   -- Clocking Mode register: When set to 1, this bit turns off the display.
+   CLKMODE_SCREEN_DISABLE : constant := 16#20#;
+
    ----------------------------------------------------------------------------
    -- CRTC
    ----------------------------------------------------------------------------
@@ -150,6 +153,10 @@ package body VGA
        16#E3#, -- 17 CRTC Mode Control:
        16#FF#  -- 18 Line Compare:
       ];
+
+   -- Vertical Retrace End register: CRTC Registers Protect Enable
+   CRTC6845_VRE         : constant := 16#11#;
+   CRTC6845_VRE_PROTECT : constant := 16#80#;
 
    ----------------------------------------------------------------------------
    -- GC
@@ -247,6 +254,9 @@ package body VGA
        16#00#, -- 13 Horizontal PEL Panning:
        16#00#  -- 14 Color Select:
       ];
+
+   -- ATC index register
+   ATC_INDEX_PAS : constant := 16#20#; -- Palette Address Source
 
    ----------------------------------------------------------------------------
    -- DAC
@@ -378,8 +388,8 @@ package body VGA
       Unused : Unsigned_8;
    begin
       -- CRTC registers 0-7 are locked by setting bit 7 of CRTC[0x11]
-      CRTC6845_Register_Read (16#11#, Unused);
-      CRTC6845_Register_Write (16#11#, Unused or 16#80#);
+      CRTC6845_Register_Read (CRTC6845_VRE, Unused);
+      CRTC6845_Register_Write (CRTC6845_VRE, Unused or CRTC6845_VRE_PROTECT);
    end CRTC6845_Registers_Lock;
 
    ----------------------------------------------------------------------------
@@ -390,8 +400,8 @@ package body VGA
       Unused : Unsigned_8;
    begin
       -- CRTC registers 0-7 are unlocked by clearing bit 7 of CRTC[0x11]
-      CRTC6845_Register_Read (16#11#, Unused);
-      CRTC6845_Register_Write (16#11#, Unused and 16#7F#);
+      CRTC6845_Register_Read (CRTC6845_VRE, Unused);
+      CRTC6845_Register_Write (CRTC6845_VRE, Unused and not CRTC6845_VRE_PROTECT);
    end CRTC6845_Registers_Unlock;
 
    ----------------------------------------------------------------------------
@@ -416,7 +426,7 @@ package body VGA
       Unused : Unsigned_8;
    begin
       Unused := CPU.IO.PortIn (INPUT_STATUS_1);
-      if (Unsigned_8 (R) and 16#20#) /= 0 then
+      if (Unsigned_8 (R) and ATC_INDEX_PAS) /= 0 then
          CPU.IO.PortOut (ATTRIBUTE_INDEX, Unsigned_8 (R));
          -- avoid unintentionally writing something to a register
          Unused := Value;
@@ -557,8 +567,8 @@ package body VGA
       -- DAC programming ------------------------------------------------------
       -- disable video (prevents memory access during DAC programming)
       case Mode is
-         when MODE03H => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE03H (1) or 16#20#);
-         when MODE12H => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE12H (1) or 16#20#);
+         when MODE03H => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE03H (1) or CLKMODE_SCREEN_DISABLE);
+         when MODE12H => SEQUENCER_Register_Write (1, SEQUENCER_Register_Values_MODE12H (1) or CLKMODE_SCREEN_DISABLE);
       end case;
       -- DAC programming
       DAC_Init;
@@ -711,10 +721,12 @@ package body VGA
    procedure Draw_Picture
       (Picture : in Storage_Array)
       is
+      PIXEL_X   : constant := 640;
+      PIXEL_Y   : constant := 480;
       Pixel_Idx : Storage_Offset := 0;
    begin
-      for Y in 0 .. 479 loop
-         for X in 0 .. 639 loop
+      for Y in 0 .. PIXEL_Y - 1 loop
+         for X in 0 .. PIXEL_X - 1 loop
             Draw_Pixel (X, Y, To_U8 (Picture (Pixel_Idx)));
             Pixel_Idx := @ + 1;
          end loop;
