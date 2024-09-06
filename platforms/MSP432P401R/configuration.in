@@ -48,19 +48,31 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 #                                                                              #
 ################################################################################
 
+ifeq ($(OSTYPE),cmd)
+OPENOCD_PREFIX := C:\Program Files\OpenOCD-20231002-0.12.0
+else
+OPENOCD_PREFIX := /opt/OpenOCD
+endif
+
+# Tcl:
+# $(TCLSH) instead of $(PYTHON)
+# openocd.tcl instead of openocd.py
+
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
-                           -p "/opt/OpenOCD"                                          \
+                           -p "$(OPENOCD_PREFIX)"                                     \
                            -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg    \
                            -server -w
 SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -shutdown
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
-                           -e $(ELFTOOL) -s _start -thumb -command "reset halt"
-DEBUG_COMMAND         := $(RUN_COMMAND) -debug &&                          \
-                         $${GDB}                                           \
-                               -ex "target extended-remote localhost:3333" \
-                               -ex "set language asm"                      \
-                               -ex "set \$$pc=_start"                      \
-                               $(KERNEL_OUTFILE)
+                           -e $(ELFTOOL)                                              \
+                           -s _start                                                  \
+                           -thumb                                                     \
+                           -command "reset halt"
+ifeq ($(OSTYPE),cmd)
+DEBUG_COMMAND         := $(RUN_COMMAND) -debug && "$(SWEETADA_PATH)"\$(PLATFORM_DIRECTORY_CMD)\openocd-gdb.bat
+else
+DEBUG_COMMAND         := $(RUN_COMMAND) -debug && "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd-gdb.sh
+endif
 
