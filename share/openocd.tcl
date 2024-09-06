@@ -205,5 +205,9 @@ if {$DEBUG_MODE eq 0} {
 
 openocd_rpc_disconnect
 
+if {$PLATFORM eq "windows"} {
+    puts ""
+}
+
 exit 0
 

@@ -216,5 +216,8 @@ if DEBUG_MODE == 0:
 
 libopenocd.openocd_rpc_disconnect()
 
+if PLATFORM == 'windows':
+    printf('\n')
+
 exit(0)
 
