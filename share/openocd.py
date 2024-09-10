@@ -11,17 +11,18 @@
 
 #
 # Arguments:
-# -c <OPENOCD_CFGFILE> OpenOCD configuration filename
-# -command <list>      semicolon-separated list of OpenOCD commands
-# -debug               enable debug mode
-# -e <ELFTOOL>         ELFTOOL executable used to extract the start symbol
-# -f <SWEETADA_ELF>    ELF executable to be downloaded via JTAG
-# -p <OPENOCD_PREFIX>  OpenOCD installation prefix
-# -s <START_SYMBOL>    start symbol ("_start") or start address if -e option not present
-# -server              start OpenOCD server
-# -shutdown            shutdown OpenOCD server
-# -thumb               ARM Thumb address handling
-# -w                   wait after OpenOCD termination
+# -c <OPENOCD_CFGFILE>    OpenOCD configuration filename
+# -commandfile <filename> source a Tcl OpenOCD command file
+# -command <list>         semicolon-separated list of OpenOCD commands
+# -debug                  enable debug mode (no autorun)
+# -e <ELFTOOL>            ELFTOOL executable used to extract the start symbol
+# -f <SWEETADA_ELF>       ELF executable to be downloaded via JTAG
+# -p <OPENOCD_PREFIX>     OpenOCD installation prefix
+# -s <START_SYMBOL>       start symbol ("_start") or start address if -e option not present
+# -server                 start OpenOCD server
+# -shutdown               shutdown OpenOCD server
+# -thumb                  ARM Thumb address handling
+# -w                      wait after OpenOCD termination
 #
 # Environment variables:
 # OSTYPE
@@ -67,6 +68,7 @@ PLATFORM = library.platform_get()
 
 OPENOCD_PREFIX  = None
 OPENOCD_CFGFILE = None
+COMMAND_FILE    = None
 COMMAND_LIST    = ''
 DEBUG_MODE      = 0
 SERVER_MODE     = 0
@@ -83,6 +85,9 @@ while argv_idx < argc:
     if   sys.argv[argv_idx] == '-c':
         argv_idx += 1
         OPENOCD_CFGFILE = sys.argv[argv_idx]
+    elif sys.argv[argv_idx] == '-commandfile':
+        argv_idx += 1
+        COMMAND_FILE = sys.argv[argv_idx]
     elif sys.argv[argv_idx] == '-command':
         argv_idx += 1
         COMMAND_LIST = sys.argv[argv_idx]
@@ -202,6 +207,13 @@ if ELFTOOL != None:
 else:
     START_ADDRESS = START_SYMBOL
 printf('START ADDRESS = %s\n', START_ADDRESS)
+
+libopenocd.openocd_rpc_tx('set start_address ' + START_ADDRESS + ' ; list')
+libopenocd.openocd_rpc_rx('echo')
+
+if COMMAND_FILE != None:
+    libopenocd.openocd_rpc_tx('source' + ' "' + COMMAND_FILE + '"')
+    libopenocd.openocd_rpc_rx('echo')
 
 for command in COMMAND_LIST.split(';'):
     libopenocd.openocd_rpc_tx(command)

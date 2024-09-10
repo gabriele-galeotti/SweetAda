@@ -11,17 +11,18 @@
 
 #
 # Arguments:
-# -c <OPENOCD_CFGFILE> OpenOCD configuration filename
-# -command <list>      semicolon-separated list of OpenOCD commands
-# -debug               enable debug mode
-# -e <ELFTOOL>         ELFTOOL executable used to extract the start symbol
-# -f <SWEETADA_ELF>    ELF executable to be downloaded via JTAG
-# -p <OPENOCD_PREFIX>  OpenOCD installation prefix
-# -s <START_SYMBOL>    start symbol ("_start") or start address if -e option not present
-# -server              start OpenOCD server
-# -shutdown            shutdown OpenOCD server
-# -thumb               ARM Thumb address handling
-# -w                   wait after OpenOCD termination
+# -c <OPENOCD_CFGFILE>    OpenOCD configuration filename
+# -commandfile <filename> source a Tcl OpenOCD command file
+# -command <list>         semicolon-separated list of OpenOCD commands
+# -debug                  enable debug mode (no autorun)
+# -e <ELFTOOL>            ELFTOOL executable used to extract the start symbol
+# -f <SWEETADA_ELF>       ELF executable to be downloaded via JTAG
+# -p <OPENOCD_PREFIX>     OpenOCD installation prefix
+# -s <START_SYMBOL>       start symbol ("_start") or start address if -e option not present
+# -server                 start OpenOCD server
+# -shutdown               shutdown OpenOCD server
+# -thumb                  ARM Thumb address handling
+# -w                      wait after OpenOCD termination
 #
 # Environment variables:
 # OSTYPE
@@ -53,6 +54,7 @@ set PLATFORM [platform_get]
 
 set OPENOCD_PREFIX  ""
 set OPENOCD_CFGFILE ""
+set COMMAND_FILE    ""
 set COMMAND_LIST    ""
 set DEBUG_MODE      0
 set SERVER_MODE     0
@@ -68,17 +70,18 @@ set argv_idx 0
 while {$argv_idx < $argv_last_idx} {
     set token [lindex $argv $argv_idx]
     switch $token {
-        -c        {incr argv_idx ; set OPENOCD_CFGFILE [lindex $argv $argv_idx]}
-        -command  {incr argv_idx ; set COMMAND_LIST [lindex $argv $argv_idx]}
-        -debug    {set DEBUG_MODE 1}
-        -e        {incr argv_idx ; set ELFTOOL [lindex $argv $argv_idx]}
-        -f        {incr argv_idx ; set SWEETADA_ELF [lindex $argv $argv_idx]}
-        -p        {incr argv_idx ; set OPENOCD_PREFIX [lindex $argv $argv_idx]}
-        -s        {incr argv_idx ; set START_SYMBOL [lindex $argv $argv_idx]}
-        -server   {set SERVER_MODE 1}
-        -shutdown {set SHUTDOWN_MODE 1}
-        -thumb    {set ARM_THUMB 1}
-        -w        {set WAIT_FLAG 1}
+        -c           {incr argv_idx ; set OPENOCD_CFGFILE [lindex $argv $argv_idx]}
+        -commandfile {incr argv_idx ; set COMMAND_FILE [lindex $argv $argv_idx]}
+        -command     {incr argv_idx ; set COMMAND_LIST [lindex $argv $argv_idx]}
+        -debug       {set DEBUG_MODE 1}
+        -e           {incr argv_idx ; set ELFTOOL [lindex $argv $argv_idx]}
+        -f           {incr argv_idx ; set SWEETADA_ELF [lindex $argv $argv_idx]}
+        -p           {incr argv_idx ; set OPENOCD_PREFIX [lindex $argv $argv_idx]}
+        -s           {incr argv_idx ; set START_SYMBOL [lindex $argv $argv_idx]}
+        -server      {set SERVER_MODE 1}
+        -shutdown    {set SHUTDOWN_MODE 1}
+        -thumb       {set ARM_THUMB 1}
+        -w           {set WAIT_FLAG 1}
         default {
             puts stderr "$SCRIPT_FILENAME: *** Error: unknown argument."
             exit 1
@@ -189,6 +192,14 @@ if {$ELFTOOL ne ""} {
     set START_ADDRESS $START_SYMBOL
 }
 puts "START ADDRESS = $START_ADDRESS"
+
+openocd_rpc_tx "set start_address $START_ADDRESS ; list"
+openocd_rpc_rx
+
+if {$COMMAND_FILE ne ""} {
+    openocd_rpc_tx "source \"$COMMAND_FILE\""
+    openocd_rpc_rx
+}
 
 foreach command [split $COMMAND_LIST ";"] {
     openocd_rpc_tx $command
