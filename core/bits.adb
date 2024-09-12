@@ -84,14 +84,16 @@ package body Bits
       (Size : in Positive)
       return Bitsize
       is
+      Result : Bitsize;
    begin
       case Size is
-         when 8      => return BIT8;
-         when 16     => return BIT16;
-         when 32     => return BIT32;
-         when 64     => return BIT64;
-         when others => return BITNONE;
+         when 8      => Result := BIT8;
+         when 16     => Result := BIT16;
+         when 32     => Result := BIT32;
+         when 64     => Result := BIT64;
+         when others => Result := BITNONE;
       end case;
+      return Result;
    end Map_Bitsize;
 
    ----------------------------------------------------------------------------
@@ -110,12 +112,14 @@ package body Bits
       (Value : in Boolean)
       return Bits_1
       is
+      Result : Bits_1;
    begin
       if Value then
-         return 1;
+         Result := 1;
       else
-         return 0;
+         Result := 0;
       end if;
+      return Result;
    end To_Bits_1;
 
    ----------------------------------------------------------------------------
@@ -457,12 +461,14 @@ package body Bits
        Bit   : Boolean)
       return Interfaces.Unsigned_8
       is
+      Result : Interfaces.Unsigned_8;
    begin
       if Bit then
-         return Value or 2**NBit;
+         Result := Value or 2**NBit;
       else
-         return Value and (not Interfaces.Unsigned_8'(2**NBit));
+         Result := Value and (not Interfaces.Unsigned_8'(2**NBit));
       end if;
+      return Result;
    end BitN;
 
    -- Unsigned_16
@@ -487,12 +493,14 @@ package body Bits
       (Value : Interfaces.Unsigned_16; NBit : Natural)
       return Boolean
       is
+      Result : Boolean;
    begin
       if BigEndian then
-         return (Value and 2**(15 - (NBit mod 16))) /= 0;
+         Result := (Value and 2**(15 - (NBit mod 16))) /= 0;
       else
-         return (Value and 2**(NBit mod 16)) /= 0;
+         Result := (Value and 2**(NBit mod 16)) /= 0;
       end if;
+      return Result;
    end BitN;
 
    -- Unsigned_32
@@ -517,12 +525,14 @@ package body Bits
       (Value : Interfaces.Unsigned_32; NBit : Natural)
       return Boolean
       is
+      Result : Boolean;
    begin
       if BigEndian then
-         return (Value and 2**(31 - (NBit mod 32))) /= 0;
+         Result := (Value and 2**(31 - (NBit mod 32))) /= 0;
       else
-         return (Value and 2**(NBit mod 32)) /= 0;
+         Result := (Value and 2**(NBit mod 32)) /= 0;
       end if;
+      return Result;
    end BitN;
 
    -- Unsigned_64
@@ -547,12 +557,14 @@ package body Bits
       (Value : Interfaces.Unsigned_64; NBit : Natural)
       return Boolean
       is
+      Result : Boolean;
    begin
       if BigEndian then
-         return (Value and 2**(63 - (NBit mod 64))) /= 0;
+         Result := (Value and 2**(63 - (NBit mod 64))) /= 0;
       else
-         return (Value and 2**(NBit mod 64)) /= 0;
+         Result := (Value and 2**(NBit mod 64)) /= 0;
       end if;
+      return Result;
    end BitN;
 
    ----------------------------------------------------------------------------
@@ -937,48 +949,56 @@ package body Bits
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       is
+      Result : Interfaces.Unsigned_16;
    begin
       if BigEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end CPUE_To_BE;
 
    function BE_To_CPUE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       is
+      Result : Interfaces.Unsigned_16;
    begin
       if BigEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end BE_To_CPUE;
 
    function CPUE_To_LE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       is
+      Result : Interfaces.Unsigned_16;
    begin
       if LittleEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end CPUE_To_LE;
 
    function LE_To_CPUE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       is
+      Result : Interfaces.Unsigned_16;
    begin
       if LittleEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end LE_To_CPUE;
 
    -- Unsigned_32
@@ -987,48 +1007,56 @@ package body Bits
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       is
+      Result : Interfaces.Unsigned_32;
    begin
       if BigEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end CPUE_To_BE;
 
    function BE_To_CPUE
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       is
+      Result : Interfaces.Unsigned_32;
    begin
       if BigEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end BE_To_CPUE;
 
    function CPUE_To_LE
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       is
+      Result : Interfaces.Unsigned_32;
    begin
       if LittleEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end CPUE_To_LE;
 
    function LE_To_CPUE
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       is
+      Result : Interfaces.Unsigned_32;
    begin
       if LittleEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end LE_To_CPUE;
 
    -- Unsigned_64
@@ -1037,48 +1065,56 @@ package body Bits
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
       is
+      Result : Interfaces.Unsigned_64;
    begin
       if BigEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end CPUE_To_BE;
 
    function BE_To_CPUE
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
       is
+      Result : Interfaces.Unsigned_64;
    begin
       if BigEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end BE_To_CPUE;
 
    function CPUE_To_LE
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
       is
+      Result : Interfaces.Unsigned_64;
    begin
       if LittleEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end CPUE_To_LE;
 
    function LE_To_CPUE
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
       is
+      Result : Interfaces.Unsigned_64;
    begin
       if LittleEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end LE_To_CPUE;
 
    ----------------------------------------------------------------------------
@@ -1091,24 +1127,28 @@ package body Bits
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       is
+      Result : Interfaces.Unsigned_16;
    begin
       if BigEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end HostToNetwork;
 
    function NetworkToHost
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       is
+      Result : Interfaces.Unsigned_16;
    begin
       if BigEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end NetworkToHost;
 
    -- Unsigned_32
@@ -1117,24 +1157,28 @@ package body Bits
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       is
+      Result : Interfaces.Unsigned_32;
    begin
       if BigEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end HostToNetwork;
 
    function NetworkToHost
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       is
+      Result : Interfaces.Unsigned_32;
    begin
       if BigEndian then
-         return Value;
+         Result := Value;
       else
-         return Byte_Swap (Value);
+         Result := Byte_Swap (Value);
       end if;
+      return Result;
    end NetworkToHost;
 
 end Bits;
