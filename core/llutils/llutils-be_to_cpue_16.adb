@@ -20,12 +20,14 @@ function BE_To_CPUE_16
    (Object_Address : System.Address)
    return Interfaces.Unsigned_16
    is
-   Value : aliased Interfaces.Unsigned_16
+   Value  : aliased Interfaces.Unsigned_16
       with Address => Object_Address;
+   Result : Interfaces.Unsigned_16;
 begin
    if Bits.LittleEndian then
-      return Bits.Word_Swap (Value);
+      Result := Bits.Word_Swap (Value);
    else
-      return Value;
+      Result := Value;
    end if;
+   return Result;
 end BE_To_CPUE_16;

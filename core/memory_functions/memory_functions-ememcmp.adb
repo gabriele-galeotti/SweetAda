@@ -26,18 +26,21 @@ function EMemcmp
    use type Bits.Bytesize;
    use type Bits.C.int;
    function To_MAP is new Ada.Unchecked_Conversion (System.Address, Memory_Area_Ptr);
-   P_S1 : constant Memory_Area_Ptr := To_MAP (S1);
-   P_S2 : constant Memory_Area_Ptr := To_MAP (S2);
+   P_S1   : constant Memory_Area_Ptr := To_MAP (S1);
+   P_S2   : constant Memory_Area_Ptr := To_MAP (S2);
+   Result : Bits.C.int := 0;
 begin
    -- avoid underflow since size_t is a modular type
    if N > 0 then
       for Index in 0 .. N - 1 loop
          if    Bits.C.char'Pos (P_S1.all (Index)) < Bits.C.char'Pos (P_S2.all (Index)) then
-            return -1;
+            Result := -1;
+            exit;
          elsif Bits.C.char'Pos (P_S1.all (Index)) > Bits.C.char'Pos (P_S2.all (Index)) then
-            return 1;
+            Result := 1;
+            exit;
          end if;
       end loop;
    end if;
-   return 0;
+   return Result;
 end EMemcmp;

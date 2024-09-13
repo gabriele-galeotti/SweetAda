@@ -24,18 +24,22 @@ function Select_Address_Bits
    return SSE.Integer_Address
    is
    Bit_Mask : SSE.Integer_Address;
+   Result   : SSE.Integer_Address;
 begin
    if Bits.LittleEndian or else (Bits.BigEndian and then not BE_Layout) then
       if MSBit < LSBit then
-         return 0;
+         Result := 0;
+      else
+         Bit_Mask := 2**(MSBit - LSBit + 1) - 1;
+         Result := (SSE.To_Integer (Address_Pattern) / 2**LSBit) and Bit_Mask;
       end if;
-      Bit_Mask := 2**(MSBit - LSBit + 1) - 1;
-      return (SSE.To_Integer (Address_Pattern) / 2**LSBit) and Bit_Mask;
    else
       if MSBit > LSBit then
-         return 0;
+         Result := 0;
+      else
+         Bit_Mask := 2**(LSBit - MSBit + 1) - 1;
+         Result := (SSE.To_Integer (Address_Pattern) / 2**(System.Address'Size - 1 - LSBit)) and Bit_Mask;
       end if;
-      Bit_Mask := 2**(LSBit - MSBit + 1) - 1;
-      return (SSE.To_Integer (Address_Pattern) / 2**(System.Address'Size - 1 - LSBit)) and Bit_Mask;
    end if;
+   return Result;
 end Select_Address_Bits;

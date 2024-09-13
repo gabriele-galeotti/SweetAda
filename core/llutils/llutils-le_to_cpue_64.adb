@@ -20,12 +20,14 @@ function LE_To_CPUE_64
    (Object_Address : System.Address)
    return Interfaces.Unsigned_64
    is
-   Value : aliased Interfaces.Unsigned_64
+   Value  : aliased Interfaces.Unsigned_64
       with Address => Object_Address;
+   Result : Interfaces.Unsigned_64;
 begin
    if Bits.BigEndian then
-      return Bits.Word_Swap (Value);
+      Result := Bits.Word_Swap (Value);
    else
-      return Value;
+      Result := Value;
    end if;
+   return Result;
 end LE_To_CPUE_64;

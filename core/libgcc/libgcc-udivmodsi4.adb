@@ -48,8 +48,7 @@ begin
       Den := GCC_Types.Shift_Right (@, 1);
    end loop;
    if M then
-      return Num;
-   else
-      return Result;
+      Result := Num;
    end if;
+   return Result;
 end UDivModSI4;

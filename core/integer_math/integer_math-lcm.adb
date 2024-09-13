@@ -21,9 +21,12 @@ function LCM
     Value2 : Integer)
    return Natural
    is
+   Result : Natural;
 begin
    if Value1 = 0 or else Value2 = 0 then
-      return 0;
+      Result := 0;
+   else
+      Result := (abs (Value1 * Value2)) / GCD (Value1, Value2);
    end if;
-   return (abs (Value1 * Value2)) / GCD (Value1, Value2);
+   return Result;
 end LCM;
