@@ -65,11 +65,12 @@ SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
                            -server -w
 SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -shutdown
-RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
-                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
-                           -e $(ELFTOOL)                                              \
-                           -s _start                                                  \
-                           -command "reset halt"
+RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py        \
+                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                           \
+                           -e $(ELFTOOL)                                                     \
+                           -s _start                                                         \
+                           -noload -noexec                                                   \
+                           -commandfile "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cmd
 ifeq ($(OSTYPE),cmd)
 DEBUG_COMMAND         := $(RUN_COMMAND) -debug && "$(SWEETADA_PATH)"\$(PLATFORM_DIRECTORY_CMD)\openocd-gdb.bat
 else
