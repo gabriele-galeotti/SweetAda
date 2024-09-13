@@ -14,15 +14,24 @@
 # -c <OPENOCD_CFGFILE>    OpenOCD configuration filename
 # -commandfile <filename> source a Tcl OpenOCD command file
 # -command <list>         semicolon-separated list of OpenOCD commands
-# -debug                  enable debug mode (no autorun)
+# -debug                  debug mode (implies -noexec)
 # -e <ELFTOOL>            ELFTOOL executable used to extract the start symbol
 # -f <SWEETADA_ELF>       ELF executable to be downloaded via JTAG
+# -noexec                 do not run target CPU
+# -noload                 do not download executable to target memory
 # -p <OPENOCD_PREFIX>     OpenOCD installation prefix
-# -s <START_SYMBOL>       start symbol ("_start") or start address if -e option not present
-# -server                 start OpenOCD server
-# -shutdown               shutdown OpenOCD server
+# -s <START_SYMBOL>       start symbol ("_start") or start address if -e option is not present
+# -server                 start OpenOCD server (no executable processing)
+# -shutdown               shutdown OpenOCD server (no executable processing)
 # -thumb                  ARM Thumb address handling
 # -w                      wait after OpenOCD termination
+#
+# The following hold inside OpenOCD command execution:
+# -debug sets $debug_mode and $noexec_flag to 1 (default 0)
+# -f <SWEETADA_ELF> sets $sweetada_elf to <SWEETADA_ELF> (default "")
+# -noexec sets $noexec_flag to 1 (default 0)
+# -noload sets $noload_flag to 1 (default 0)
+# $start_address resolves to the detected start address of the executable
 #
 # Environment variables:
 # OSTYPE
@@ -57,6 +66,8 @@ set OPENOCD_CFGFILE ""
 set COMMAND_FILE    ""
 set COMMAND_LIST    ""
 set DEBUG_MODE      0
+set NOEXEC_FLAG     0
+set NOLOAD_FLAG     0
 set SERVER_MODE     0
 set SHUTDOWN_MODE   0
 set SWEETADA_ELF    ""
@@ -73,9 +84,11 @@ while {$argv_idx < $argv_last_idx} {
         -c           {incr argv_idx ; set OPENOCD_CFGFILE [lindex $argv $argv_idx]}
         -commandfile {incr argv_idx ; set COMMAND_FILE [lindex $argv $argv_idx]}
         -command     {incr argv_idx ; set COMMAND_LIST [lindex $argv $argv_idx]}
-        -debug       {set DEBUG_MODE 1}
+        -debug       {set DEBUG_MODE 1 ; set NOEXEC_FLAG 1}
         -e           {incr argv_idx ; set ELFTOOL [lindex $argv $argv_idx]}
         -f           {incr argv_idx ; set SWEETADA_ELF [lindex $argv $argv_idx]}
+        -noexec      {set NOEXEC_FLAG 1}
+        -noload      {set NOLOAD_FLAG 1}
         -p           {incr argv_idx ; set OPENOCD_PREFIX [lindex $argv $argv_idx]}
         -s           {incr argv_idx ; set START_SYMBOL [lindex $argv $argv_idx]}
         -server      {set SERVER_MODE 1}
@@ -193,7 +206,13 @@ if {$ELFTOOL ne ""} {
 }
 puts "START ADDRESS = $START_ADDRESS"
 
+openocd_rpc_tx "set sweetada_elf $SWEETADA_ELF ; list"
+openocd_rpc_rx
 openocd_rpc_tx "set start_address $START_ADDRESS ; list"
+openocd_rpc_rx
+openocd_rpc_tx "set noload_flag $NOLOAD_FLAG ; list"
+openocd_rpc_rx
+openocd_rpc_tx "set noexec_flag $NOEXEC_FLAG ; list"
 openocd_rpc_rx
 
 if {$COMMAND_FILE ne ""} {
@@ -206,10 +225,12 @@ foreach command [split $COMMAND_LIST ";"] {
     openocd_rpc_rx
 }
 
-openocd_rpc_tx "load_image \"$SWEETADA_ELF\""
-openocd_rpc_rx
+if {$NOLOAD_FLAG eq 0} {
+    openocd_rpc_tx "load_image \"$SWEETADA_ELF\""
+    openocd_rpc_rx
+}
 
-if {$DEBUG_MODE eq 0} {
+if {$NOEXEC_FLAG eq 0} {
     openocd_rpc_tx "resume $START_ADDRESS"
     openocd_rpc_rx
 }
