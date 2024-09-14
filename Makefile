@@ -35,10 +35,6 @@
 
 .DEFAULT_GOAL := help
 
-NULL  :=
-SPACE := $(NULL) $(NULL)
-export NULL SPACE
-
 KERNEL_BASENAME := kernel
 
 ################################################################################
@@ -129,6 +125,15 @@ endif
 # Main setup.                                                                  #
 #                                                                              #
 ################################################################################
+
+NULL  :=
+SPACE := $(NULL) $(NULL)
+export NULL SPACE
+
+# verbose output, "Y/y/1" = enabled
+VERBOSE ?=
+override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
+export VERBOSE
 
 # detect OS type
 # detected OS names: "cmd"/"msys"/"darwin"/"linux"
@@ -293,14 +298,8 @@ ifeq ($(TOOLS_CHECK),Y)
 -include Makefile.ck.in
 endif
 
-# detect Make version
-ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(OSTYPE),cmd)
-MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2> nul| $(SED) -e "2,$$d")
-else
-MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
-endif
-endif
+# load complex functions
+include Makefile.fn.in
 
 ################################################################################
 #                                                                              #
@@ -308,23 +307,15 @@ endif
 #                                                                              #
 ################################################################################
 
-# verbose output, "Y/y/1" = enabled
-VERBOSE ?=
-override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
-export VERBOSE
-
-# load complex functions
-include Makefile.fn.in
-
 # define every other OS command
 ifeq ($(OSTYPE),cmd)
 CD    := CD
-CP    := COPY /B /Y 1> nul
+CP    := COPY /B /Y 1>nul
 LS    := DIR /B
 MKDIR := MKDIR
-MV    := MOVE /Y 1> nul
-RM    := DEL /F /Q 2> nul
-RMDIR := RMDIR /Q /S 2> nul
+MV    := MOVE /Y 1>nul
+RM    := DEL /F /Q 2>nul
+RMDIR := RMDIR /Q /S 2>nul
 else
 # POSIX
 CD    := cd
@@ -356,6 +347,15 @@ endif
 
 export CD CP LS MKDIR MV RM RMDIR
 
+# detect Make version
+ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
+ifeq ($(OSTYPE),cmd)
+MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2>nul| $(SED) -e "2,$$d")
+else
+MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
+endif
+
 ################################################################################
 #                                                                              #
 # Physical geometry of the build system.                                       #
@@ -375,22 +375,22 @@ OBJECT_DIRECTORY        := obj
 RTS_DIRECTORY           := rts
 SHARE_DIRECTORY         := share
 
-# RTS_BASE_PATH: where all RTSes live
-RTS_BASE_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)
-
 # PLATFORMS and CPUs
 ifeq ($(OSTYPE),cmd)
-PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2> nul)
-CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2> nul)
+PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
+CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
 else
 PLATFORMS := $(shell ($(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
 CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
 endif
 
+# RTS_BASE_PATH: where all RTSes live
+RTS_BASE_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)
+
 # RTSes
 RTS_SRC_NO_DIRS  := common targets
 ifeq ($(OSTYPE),cmd)
-RTS_SRC_ALL_DIRS := $(shell $(CD) $(RTS_DIRECTORY)\src && $(call ls-dirs) 2> nul)
+RTS_SRC_ALL_DIRS := $(shell $(CD) $(RTS_DIRECTORY)\src && $(call ls-dirs) 2>nul)
 else
 RTS_SRC_ALL_DIRS := $(shell ($(CD) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null)
 endif
@@ -635,7 +635,7 @@ GPRBUILD_DEPS += $(sort $(shell                                                 
                                 SET "SWEETADA_PATH=$(SWEETADA_PATH)"           && \
                                 SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)" && \
                                 $(GPRDEPS) $(KERNEL_GPRFILE)                      \
-                                2> nul))
+                                2>nul))
 else
 GPRBUILD_DEPS += $(sort $(shell                                               \
                                 PATH="$(PATH)"                             && \
@@ -1045,7 +1045,7 @@ else
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 endif
 ifeq ($(OSTYPE),cmd)
-	-@$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ 2> nul
+	-@$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ 2>nul
 else
 	-@$(MV) $(OBJECT_DIRECTORY)/gnatbind_objs.lst ./ 2> /dev/null
 endif
