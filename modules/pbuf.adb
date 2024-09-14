@@ -123,46 +123,46 @@ package body PBUF
       (Size : Natural)
       return Pbuf_Ptr
       is
-      P              : Pbuf_Ptr; -- first pbuf (head)
+      Result         : Pbuf_Ptr; -- first pbuf (head)
       C              : Pbuf_Ptr; -- current (last) allocated pbuf
       N              : Pbuf_Ptr; -- freshly allocated pbuf
       Remaining_Size : Natural;
    begin
-      P := Allocate_Simple;
-      if P = null then
-         return null;
-      end if;
-      -- set total length of the packet stored in this and following pbufs
-      P.all.Total_Size := Size;
-      -- if the frame is so small that can be stored in this pbuf, then set
-      -- the exact length; else the frame is bigger and the pbuf size is fully
-      -- utilized, so no change this field (which is by default set at
-      -- the maximum value)
-      if P.all.Total_Size < P.all.Size then
-         P.all.Size := Size;
-      end if;
-      -- compute the remaining size of the packet, which will be splitted in
-      -- newly allocated elements
-      Remaining_Size := P.all.Total_Size - P.all.Size;
-      C := P;
-      while Remaining_Size > 0 loop
-         N := Allocate_Simple;
-         if N = null then
-            Free (P);
-            return null;
+      Result := Allocate_Simple;
+      if Result /= null then
+         -- set total length of the packet stored in this and following pbufs
+         Result.all.Total_Size := Size;
+         -- if the frame is so small that can be stored in this pbuf, then set
+         -- the exact length; else the frame is bigger and the pbuf size is fully
+         -- utilized, so no change this field (which is by default set at
+         -- the maximum value)
+         if Result.all.Total_Size < Result.all.Size then
+            Result.all.Size := Size;
          end if;
-         -- link new pbuf at the tail of chain
-         C.all.Next := N;
-         -- make it the current item
-         C := N;
-         -- re-compute remaining size
-         C.all.Total_Size := Remaining_Size;
-         if C.all.Total_Size <= C.all.Size then
-            C.all.Size := Remaining_Size;
-         end if;
-         Remaining_Size := C.all.Total_Size - C.all.Size;
-      end loop;
-      return P;
+         -- compute the remaining size of the packet, which will be splitted in
+         -- newly allocated elements
+         Remaining_Size := Result.all.Total_Size - Result.all.Size;
+         C := Result;
+         while Remaining_Size > 0 loop
+            N := Allocate_Simple;
+            if N = null then
+               Free (Result);
+               Result := null;
+               exit;
+            end if;
+            -- link new pbuf at the tail of chain
+            C.all.Next := N;
+            -- make it the current item
+            C := N;
+            -- re-compute remaining size
+            C.all.Total_Size := Remaining_Size;
+            if C.all.Total_Size <= C.all.Size then
+               C.all.Size := Remaining_Size;
+            end if;
+            Remaining_Size := C.all.Total_Size - C.all.Size;
+         end loop;
+      end if;
+      return Result;
    end Allocate;
 
    ----------------------------------------------------------------------------
