@@ -113,21 +113,20 @@ package body PC
       Port     : Unsigned_16;
       Data     : Unsigned_8;
    begin
-      if Irq = PIC_Irq2 then
-         -- prevent disabling all PIC2 IRs at once
-         return;
+      -- prevent disabling all PIC2 IRs at once
+      if Irq /= PIC_Irq2 then
+         if Irq > PIC_Irq7 then
+            Irq_Line := Natural (Irq - PIC_Irq8);
+            Port := PIC2_OCW1;
+         else
+            Irq_Line := Natural (Irq - PIC_Irq0);
+            Port := PIC1_OCW1;
+         end if;
+         Lock (PIC_Lock);
+         Data := CPU.IO.PortIn (Port);
+         CPU.IO.PortOut (Port, Data or Shift_Left (1, Irq_Line));
+         Unlock (PIC_Lock);
       end if;
-      if Irq > PIC_Irq7 then
-         Irq_Line := Natural (Irq - PIC_Irq8);
-         Port := PIC2_OCW1;
-      else
-         Irq_Line := Natural (Irq - PIC_Irq0);
-         Port := PIC1_OCW1;
-      end if;
-      Lock (PIC_Lock);
-      Data := CPU.IO.PortIn (Port);
-      CPU.IO.PortOut (Port, Data or Shift_Left (1, Irq_Line));
-      Unlock (PIC_Lock);
    end PIC_Irq_Disable;
 
    ----------------------------------------------------------------------------

@@ -54,15 +54,17 @@ package body PCI
       is
       Offset : Unsigned_8 range 0 .. 3;
       Data   : Unsigned_32;
+      Result : Unsigned_8;
    begin
       Offset := Unsigned_8 (Register_Number and 16#03#);
       Data := Cfg_Read (Bus_Number, Device_Number, Function_Number, Register_Number);
       case Offset is
-         when 0 => return LByte (Data);
-         when 1 => return MByte (Data);
-         when 2 => return NByte (Data);
-         when 3 => return HByte (Data);
+         when 0 => Result := LByte (Data);
+         when 1 => Result := MByte (Data);
+         when 2 => Result := NByte (Data);
+         when 3 => Result := HByte (Data);
       end case;
+      return Result;
    end Cfg_Read;
 
    procedure Cfg_Write
@@ -97,15 +99,17 @@ package body PCI
       is
       Offset : Unsigned_8 range 0 .. 2;
       Data   : Unsigned_32;
+      Result : Unsigned_16;
    begin
       Offset := Unsigned_8 (Register_Number and 16#02#);
       -- pragma Assert (Offset /= 1)
       Data := Cfg_Read (Bus_Number, Device_Number, Function_Number, Register_Number);
       case Offset is
-         when 0 => return LWord (Data);
-         when 1 => return 0; -- __DNO__
-         when 2 => return HWord (Data);
+         when 0 => Result := LWord (Data);
+         when 1 => Result := 0; -- __DNO__
+         when 2 => Result := HWord (Data);
       end case;
+      return Result;
    end Cfg_Read;
 
    procedure Cfg_Write
