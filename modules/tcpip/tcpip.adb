@@ -30,12 +30,6 @@ package body TCPIP
    --                                                                        --
    --========================================================================--
 
-   -- renaming shortcuts
-   function H2N (Value : Unsigned_16) return Unsigned_16 renames HostToNetwork;
-   function N2H (Value : Unsigned_16) return Unsigned_16 renames NetworkToHost;
-   function H2N (Value : Unsigned_32) return Unsigned_32 renames HostToNetwork;
-   function N2H (Value : Unsigned_32) return Unsigned_32 renames NetworkToHost;
-
    function Checksum_Core_U32
       (Data : Byte_A2Array)
       return Unsigned_32;
@@ -81,7 +75,7 @@ package body TCPIP
          Length := @ - 2;
       end loop;
       if Length /= 0 then
-         Sum := @ + Unsigned_32 (H2N (Unsigned_16 (Data (Data'Last)) * 2**8));
+         Sum := @ + Unsigned_32 (HToN (Unsigned_16 (Data (Data'Last)) * 2**8));
       end if;
       return Sum;
    end Checksum_Core_U32;
@@ -130,7 +124,7 @@ package body TCPIP
             if Checksum (P.all.Payload (P.all.Offset .. P.all.Offset + P.all.Total_Size - 1)) /= 0 then
                Console.Print ("ICMP packet checksum error", NL => True);
             end if;
-            Console.Print (LWord (N2H (ICMP_Header.Restofheader)), Prefix => "ICMP sequence #", NL => True);
+            Console.Print (LWord (NToH (ICMP_Header.Restofheader)), Prefix => "ICMP sequence #", NL => True);
             ICMP_Header.Typ      := ICMP_ECHO_REPLY;
             ICMP_Header.Code     := 0;
             ICMP_Header.Checksum := 0;
@@ -210,8 +204,8 @@ package body TCPIP
             Console.Print (Checksum_Total, Prefix => "*** Error: UDP checksum:", NL => True);
          end if;
       end if;
-      Console.Print (N2H (UDP_Header.Src_Port), Prefix => "SRC PORT: ", NL => True);
-      Console.Print (N2H (UDP_Header.Dst_Port), Prefix => "DST PORT: ", NL => True);
+      Console.Print (NToH (UDP_Header.Src_Port), Prefix => "SRC PORT: ", NL => True);
+      Console.Print (NToH (UDP_Header.Dst_Port), Prefix => "DST PORT: ", NL => True);
       -------------------------------------------------------------------------
       -- TX a response
       -- __FIX__ exploit received packet: change src/dst IP, compute checksum
@@ -268,9 +262,9 @@ package body TCPIP
               Import     => True,
               Convention => Ada;
    begin
-      Console.Print (N2H (TCP_Header.Src_Port), Prefix => "SRC PORT: ", NL => True);
-      Console.Print (N2H (TCP_Header.Dst_Port), Prefix => "DST PORT: ", NL => True);
-      Console.Print (N2H (TCP_Header.Seq_Num), Prefix => "SEQ: ", NL => True);
+      Console.Print (NToH (TCP_Header.Src_Port), Prefix => "SRC PORT: ", NL => True);
+      Console.Print (NToH (TCP_Header.Dst_Port), Prefix => "DST PORT: ", NL => True);
+      Console.Print (NToH (TCP_Header.Seq_Num), Prefix => "SEQ: ", NL => True);
    end TCP_Handler;
 
    ----------------------------------------------------------------------------
