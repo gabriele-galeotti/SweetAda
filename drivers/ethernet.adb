@@ -38,12 +38,6 @@ package body Ethernet
 
    The_Descriptor : Descriptor_Type := DESCRIPTOR_INVALID;
 
-   -- renaming shortcuts
-   function H2N (Value : Unsigned_16) return Unsigned_16 renames HostToNetwork;
-   function N2H (Value : Unsigned_16) return Unsigned_16 renames NetworkToHost;
-   function H2N (Value : Unsigned_32) return Unsigned_32 renames HostToNetwork;
-   function N2H (Value : Unsigned_32) return Unsigned_32 renames NetworkToHost;
-
    procedure ARP_Handler
       (P : in Pbuf_Ptr);
 
@@ -66,12 +60,12 @@ package body Ethernet
               Import     => True,
               Convention => Ada;
    begin
-      case N2H (ARP_Header.Oper) is
+      case NToH (ARP_Header.Oper) is
          when ARP_REQUEST =>
             -- Console.Print ("ARP_REQUEST", NL => True);
             if ARP_Header.Tpa = The_Descriptor.Paddress then
                -- __FIX__ exploit received packet: change src/dst IP
-               ARP_Header.Oper := H2N (ARP_REPLY);                 -- reply
+               ARP_Header.Oper := HToN (ARP_REPLY);                -- reply
                ARP_Header.Tha  := ARP_Header.Sha;                  -- target IP is sender IP
                ARP_Header.Tpa  := ARP_Header.Spa;
                ARP_Header.Sha  := The_Descriptor.Haddress;         -- sender = myself
@@ -131,7 +125,7 @@ package body Ethernet
       -- Console.Print (P.all.Total_Size, Prefix => "length: ", NL => True);
       -- Console.Print_Memory (Payload_Address (P), Bytelength (P.all.Size), 16);
       Payload_Adjust (P, -ETH_HDR_SIZE);
-      case N2H (ETH_Header.Type_or_Length) is
+      case NToH (ETH_Header.Type_or_Length) is
          ---------------------
          when EtherType_ARP =>
             -- Console.Print ("ARP", NL => True);
