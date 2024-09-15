@@ -262,59 +262,6 @@ package body Bits
       return Convert (Value);
    end To_Integer;
 
-   function Suppress_LSB
-      (Value : in Integer;
-       Order : in Integer_Bit_Number)
-      return Integer
-      is
-   begin
-      return To_Integer (To_Mod (Value) and not (2**(Order + 1) - 1));
-   end Suppress_LSB;
-
-   ----------------------------------------------------------------------------
-   -- Byte_Reverse
-   ----------------------------------------------------------------------------
-   -- Reverse the bit pattern of a byte.
-   ----------------------------------------------------------------------------
-   function Byte_Reverse
-      (Value : in Interfaces.Unsigned_8)
-      return Interfaces.Unsigned_8
-      is
-   separate;
-
-   ----------------------------------------------------------------------------
-   -- FirstMSBit
-   ----------------------------------------------------------------------------
-   -- Find the first MS bit set in an 8-bit byte.
-   ----------------------------------------------------------------------------
-   function FirstMSBit
-      (Value : in Interfaces.Unsigned_8)
-      return Integer
-      is
-      -- table of floor(Log2(x))
-      MSBitArray : constant array (Interfaces.Unsigned_8 range <>) of Integer :=
-         [
-          -1, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
-           4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-           5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-           5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-           6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-           6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-           6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-           6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-           7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-           7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-           7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-           7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-           7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-           7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-           7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-           7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
-         ];
-   begin
-      return MSBitArray (Value);
-   end FirstMSBit;
-
    ----------------------------------------------------------------------------
    -- g_LSBitOn
    ----------------------------------------------------------------------------
@@ -570,8 +517,6 @@ package body Bits
    ----------------------------------------------------------------------------
    -- L/M/N/O/P/Q/R/HByte
    ----------------------------------------------------------------------------
-   -- Extract an Unsigned_8-component from a word.
-   ----------------------------------------------------------------------------
 
    -- Unsigned_16
 
@@ -752,8 +697,6 @@ package body Bits
    ----------------------------------------------------------------------------
    -- Make_Word
    ----------------------------------------------------------------------------
-   -- Assemble a 16/32/64-bit word using low-order halves.
-   ----------------------------------------------------------------------------
 
    function Make_Word
       (Value_H : Interfaces.Unsigned_8;
@@ -901,8 +844,6 @@ package body Bits
 
    ----------------------------------------------------------------------------
    -- Word_Swap
-   ----------------------------------------------------------------------------
-   -- Swap two halves of a 16/32/64-bit word.
    ----------------------------------------------------------------------------
 
    function Word_Swap
@@ -1118,67 +1059,12 @@ package body Bits
    end LE_To_CPUE;
 
    ----------------------------------------------------------------------------
-   -- Host to/from Network
+   -- Byte_Reverse
    ----------------------------------------------------------------------------
-
-   -- Unsigned_16
-
-   function HostToNetwork
-      (Value : Interfaces.Unsigned_16)
-      return Interfaces.Unsigned_16
+   function Byte_Reverse
+      (Value : in Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_8
       is
-      Result : Interfaces.Unsigned_16;
-   begin
-      if BigEndian then
-         Result := Value;
-      else
-         Result := Byte_Swap (Value);
-      end if;
-      return Result;
-   end HostToNetwork;
-
-   function NetworkToHost
-      (Value : Interfaces.Unsigned_16)
-      return Interfaces.Unsigned_16
-      is
-      Result : Interfaces.Unsigned_16;
-   begin
-      if BigEndian then
-         Result := Value;
-      else
-         Result := Byte_Swap (Value);
-      end if;
-      return Result;
-   end NetworkToHost;
-
-   -- Unsigned_32
-
-   function HostToNetwork
-      (Value : Interfaces.Unsigned_32)
-      return Interfaces.Unsigned_32
-      is
-      Result : Interfaces.Unsigned_32;
-   begin
-      if BigEndian then
-         Result := Value;
-      else
-         Result := Byte_Swap (Value);
-      end if;
-      return Result;
-   end HostToNetwork;
-
-   function NetworkToHost
-      (Value : Interfaces.Unsigned_32)
-      return Interfaces.Unsigned_32
-      is
-      Result : Interfaces.Unsigned_32;
-   begin
-      if BigEndian then
-         Result := Value;
-      else
-         Result := Byte_Swap (Value);
-      end if;
-      return Result;
-   end NetworkToHost;
+   separate;
 
 end Bits;

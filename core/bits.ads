@@ -74,9 +74,6 @@ package Bits
    -- Bytesize is a modular type representing size in bytes of large objects
    type Bytesize is mod 2**Standard'Address_Size;
 
-   -- useful for Suppress_LSB function
-   subtype Integer_Bit_Number is Natural range 0 .. Integer'Size - 1;
-
    ----------------------------------------------------------------------------
    -- Fundamental bit-level types and constants.
    ----------------------------------------------------------------------------
@@ -478,118 +475,147 @@ package Bits
    type Asm_Entry_Point is limited private;
 
    ----------------------------------------------------------------------------
-   -- Subprograms.
+   -- P/NBooleans
    ----------------------------------------------------------------------------
 
-   -- P/NBooleans
    function Inactive
       (Value : PBoolean)
       return Boolean
       with Inline => True;
+
    function Active
       (Value : PBoolean)
       return Boolean
       with Inline => True;
+
    function Inactive
       (Value : NBoolean)
       return Boolean
       with Inline => True;
+
    function Active
       (Value : NBoolean)
       return Boolean
       with Inline => True;
 
+   ----------------------------------------------------------------------------
    -- Map_Bitsize
+   ----------------------------------------------------------------------------
    function Map_Bitsize
       (Size : Positive)
       return Bitsize
       with Inline => True;
 
+   ----------------------------------------------------------------------------
    -- Bits_1 <=> Boolean conversions
+   ----------------------------------------------------------------------------
+
    function To_Boolean
       (Value : Bits_1)
       return Boolean
       with Inline => True;
+
    function To_Bits_1
       (Value : Boolean)
       return Bits_1
       with Inline => True;
 
+   ----------------------------------------------------------------------------
    -- Bits_XX <=> Bitmap_XX conversions
+   ----------------------------------------------------------------------------
+
    function To_B8
       (Value : Bitmap_8)
       return Bits_8
       with Inline => True;
+
    function To_BM8
       (Value : Bits_8)
       return Bitmap_8
       with Inline => True;
+
    function To_B16
       (Value : Bitmap_16)
       return Bits_16
       with Inline => True;
+
    function To_BM16
       (Value : Bits_16)
       return Bitmap_16
       with Inline => True;
+
    function To_B32
       (Value : Bitmap_32)
       return Bits_32
       with Inline => True;
+
    function To_BM32
       (Value : Bits_32)
       return Bitmap_32
       with Inline => True;
+
    function To_B64
       (Value : Bitmap_64)
       return Bits_64
       with Inline => True;
+
    function To_BM64
       (Value : Bits_64)
       return Bitmap_64
       with Inline => True;
 
+   ----------------------------------------------------------------------------
    -- Unsigned_8 <=> Storage_Element conversions
+   ----------------------------------------------------------------------------
+
    function To_U8
       (Value : SSE.Storage_Element)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function To_SE
       (Value : Interfaces.Unsigned_8)
       return SSE.Storage_Element
       with Inline => True;
 
    -- Unsigned_8 <=> Character conversions
+
    function To_U8
       (C : Character)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function To_Ch
       (Value : Interfaces.Unsigned_8)
       return Character
       with Inline => True;
 
    -- Unsigned_8
+
    function ShL
       (Value  : Interfaces.Unsigned_8;
        Amount : Natural)
       return Interfaces.Unsigned_8
       renames Interfaces.Shift_Left;
+
    function ShR
       (Value  : Interfaces.Unsigned_8;
        Amount : Natural)
       return Interfaces.Unsigned_8
       renames Interfaces.Shift_Right;
+
    function ShRA
       (Value  : Interfaces.Unsigned_8;
        Amount : Natural)
       return Interfaces.Unsigned_8
       renames Interfaces.Shift_Right_Arithmetic;
+
    function RoL
       (Value  : Interfaces.Unsigned_8;
        Amount : Natural)
       return Interfaces.Unsigned_8
       renames Interfaces.Rotate_Left;
+
    function RoR
       (Value  : Interfaces.Unsigned_8;
        Amount : Natural)
@@ -597,26 +623,31 @@ package Bits
       renames Interfaces.Rotate_Right;
 
    -- Unsigned_16
+
    function ShL
       (Value  : Interfaces.Unsigned_16;
        Amount : Natural)
       return Interfaces.Unsigned_16
       renames Interfaces.Shift_Left;
+
    function ShR
       (Value  : Interfaces.Unsigned_16;
        Amount : Natural)
       return Interfaces.Unsigned_16
       renames Interfaces.Shift_Right;
+
    function ShRA
       (Value  : Interfaces.Unsigned_16;
        Amount : Natural)
       return Interfaces.Unsigned_16
       renames Interfaces.Shift_Right_Arithmetic;
+
    function RoL
       (Value  : Interfaces.Unsigned_16;
        Amount : Natural)
       return Interfaces.Unsigned_16
       renames Interfaces.Rotate_Left;
+
    function RoR
       (Value  : Interfaces.Unsigned_16;
        Amount : Natural)
@@ -624,26 +655,31 @@ package Bits
       renames Interfaces.Rotate_Right;
 
    -- Unsigned_32
+
    function ShL
       (Value  : Interfaces.Unsigned_32;
        Amount : Natural)
       return Interfaces.Unsigned_32
       renames Interfaces.Shift_Left;
+
    function ShR
       (Value  : Interfaces.Unsigned_32;
        Amount : Natural)
       return Interfaces.Unsigned_32
       renames Interfaces.Shift_Right;
+
    function ShRA
       (Value  : Interfaces.Unsigned_32;
        Amount : Natural)
       return Interfaces.Unsigned_32
       renames Interfaces.Shift_Right_Arithmetic;
+
    function RoL
       (Value  : Interfaces.Unsigned_32;
        Amount : Natural)
       return Interfaces.Unsigned_32
       renames Interfaces.Rotate_Left;
+
    function RoR
       (Value  : Interfaces.Unsigned_32;
        Amount : Natural)
@@ -651,26 +687,31 @@ package Bits
       renames Interfaces.Rotate_Right;
 
    -- Unsigned_64
+
    function ShL
       (Value  : Interfaces.Unsigned_64;
        Amount : Natural)
       return Interfaces.Unsigned_64
       renames Interfaces.Shift_Left;
+
    function ShR
       (Value  : Interfaces.Unsigned_64;
        Amount : Natural)
       return Interfaces.Unsigned_64
       renames Interfaces.Shift_Right;
+
    function ShRA
       (Value  : Interfaces.Unsigned_64;
        Amount : Natural)
       return Interfaces.Unsigned_64
       renames Interfaces.Shift_Right_Arithmetic;
+
    function RoL
       (Value  : Interfaces.Unsigned_64;
        Amount : Natural)
       return Interfaces.Unsigned_64
       renames Interfaces.Rotate_Left;
+
    function RoR
       (Value  : Interfaces.Unsigned_64;
        Amount : Natural)
@@ -678,56 +719,66 @@ package Bits
       renames Interfaces.Rotate_Right;
 
    -- CPU_Unsigned
+
    function Shift_Left
       (Value  : CPU_Unsigned;
        Amount : Natural)
       return CPU_Unsigned
       with Import     => True,
            Convention => Intrinsic;
+
    function Shift_Right
       (Value  : CPU_Unsigned;
        Amount : Natural)
       return CPU_Unsigned
       with Import     => True,
            Convention => Intrinsic;
+
    function Shift_Right_Arithmetic
       (Value  : CPU_Unsigned;
        Amount : Natural)
       return CPU_Unsigned
       with Import     => True,
            Convention => Intrinsic;
+
    function Rotate_Left
       (Value  : CPU_Unsigned;
        Amount : Natural)
       return CPU_Unsigned
       with Import     => True,
            Convention => Intrinsic;
+
    function Rotate_Right
       (Value  : CPU_Unsigned;
        Amount : Natural)
       return CPU_Unsigned
       with Import     => True,
            Convention => Intrinsic;
+
    function ShL
       (Value  : CPU_Unsigned;
        Amount : Natural)
       return CPU_Unsigned
       renames Shift_Left;
+
    function ShR
       (Value  : CPU_Unsigned;
        Amount : Natural)
       return CPU_Unsigned
       renames Shift_Right;
+
    function ShRA
       (Value  : CPU_Unsigned;
        Amount : Natural)
       return CPU_Unsigned
       renames Shift_Right_Arithmetic;
+
    function RoL
       (Value  : CPU_Unsigned;
        Amount : Natural)
       return CPU_Unsigned
       renames Rotate_Left;
+
    function RoR
       (Value  : CPU_Unsigned;
        Amount : Natural)
@@ -735,138 +786,148 @@ package Bits
       renames Rotate_Right;
 
    -- Bytesize
+
    function Shift_Left
       (Value  : Bytesize;
        Amount : Natural)
       return Bytesize
       with Import     => True,
            Convention => Intrinsic;
+
    function Shift_Right
       (Value  : Bytesize;
        Amount : Natural)
       return Bytesize
       with Import     => True,
            Convention => Intrinsic;
+
    function Shift_Right_Arithmetic
       (Value  : Bytesize;
        Amount : Natural)
       return Bytesize
       with Import     => True,
            Convention => Intrinsic;
+
    function Rotate_Left
       (Value  : Bytesize;
        Amount : Natural)
       return Bytesize
       with Import     => True,
            Convention => Intrinsic;
+
    function Rotate_Right
       (Value  : Bytesize;
        Amount : Natural)
       return Bytesize
       with Import     => True,
            Convention => Intrinsic;
+
    function ShL
       (Value  : Bytesize;
        Amount : Natural)
       return Bytesize
       renames Shift_Left;
+
    function ShR
       (Value  : Bytesize;
        Amount : Natural)
       return Bytesize
       renames Shift_Right;
+
    function ShRA
       (Value  : Bytesize;
        Amount : Natural)
       return Bytesize
       renames Shift_Right_Arithmetic;
+
    function RoL
       (Value  : Bytesize;
        Amount : Natural)
       return Bytesize
       renames Rotate_Left;
+
    function RoR
       (Value  : Bytesize;
        Amount : Natural)
       return Bytesize
       renames Rotate_Right;
 
+   ----------------------------------------------------------------------------
    -- Integer <=> Mod_Integer conversions
+   ----------------------------------------------------------------------------
+
    function To_Mod
       (Value : Integer)
       return Mod_Integer
       with Inline => True;
+
    function To_Integer
       (Value : Mod_Integer)
       return Integer
       with Inline => True;
 
-   -- Suppress_LSB
-   function Suppress_LSB
-      (Value : Integer;
-       Order : Integer_Bit_Number)
-      return Integer
-      with Inline => True;
-
-   -- Byte_Reverse
-   function Byte_Reverse
-      (Value : Interfaces.Unsigned_8)
-      return Interfaces.Unsigned_8
-      with Inline => True;
-
-   -- FirstMSBit
-   function FirstMSBit
-      (Value : Interfaces.Unsigned_8)
-      return Integer;
-
+   ----------------------------------------------------------------------------
    -- LS/MSBitOn
+   ----------------------------------------------------------------------------
+
    function LSBitOn
       (Value : Interfaces.Unsigned_8)
       return Boolean
       with Inline => True;
+
    function LSBitOn
       (Value : Interfaces.Unsigned_16)
       return Boolean
       with Inline => True;
+
    function LSBitOn
       (Value : Interfaces.Unsigned_32)
       return Boolean
       with Inline => True;
+
    function LSBitOn
       (Value : Interfaces.Unsigned_64)
       return Boolean
       with Inline => True;
+
    function MSBitOn
       (Value : Interfaces.Unsigned_8)
       return Boolean
       with Inline => True;
+
    function MSBitOn
       (Value : Interfaces.Unsigned_16)
       return Boolean
       with Inline => True;
+
    function MSBitOn
       (Value : Interfaces.Unsigned_32)
       return Boolean
       with Inline => True;
+
    function MSBitOn
       (Value : Interfaces.Unsigned_64)
       return Boolean
       with Inline => True;
 
    -- LE bit order (bit numbering is always bit0 = LSb, regardless of endianness)
+
    function Bit0
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function Bit7
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function BitN
       (Value : Interfaces.Unsigned_8;
        NBit  : Natural)
       return Boolean
       with Inline => True;
+
    function BitN
       (Value : Interfaces.Unsigned_8;
        NBit  : Natural;
@@ -875,52 +936,66 @@ package Bits
       with Inline => True;
 
    -- BitX
+
    function Bit0
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function Bit7
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function BitN
       (Value : Interfaces.Unsigned_16;
        NBit  : Natural)
       return Boolean
       with Inline => True;
+
    function Bit0
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function Bit7
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function BitN
       (Value : Interfaces.Unsigned_32;
        NBit  : Natural)
       return Boolean
       with Inline => True;
+
    function Bit0
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function Bit7
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function BitN
       (Value : Interfaces.Unsigned_64;
        NBit  : Natural)
       return Boolean
       with Inline => True;
 
-   -- Byte/Word manipulation
+   ----------------------------------------------------------------------------
+   -- L/M/N/O/P/Q/R/HByte
+   ----------------------------------------------------------------------------
+   -- Extract an Unsigned_8-component from a word.
+   ----------------------------------------------------------------------------
 
    function LByte
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function HByte
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_8
@@ -930,14 +1005,17 @@ package Bits
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function MByte
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function NByte
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function HByte
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_8
@@ -947,30 +1025,37 @@ package Bits
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function MByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function NByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function OByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function PByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function QByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function RByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function HByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
@@ -980,32 +1065,44 @@ package Bits
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function HWord
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function LWord
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function HWord
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function LWord
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function HWord
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_32
       with Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- Make_Word
+   ----------------------------------------------------------------------------
+   -- Assemble a 16/32/64-bit word using low-order halves.
+   ----------------------------------------------------------------------------
 
    function Make_Word
       (Value_H : Interfaces.Unsigned_8;
        Value_L : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function Make_Word
       (Value_H : Interfaces.Unsigned_8;
        Value_N : Interfaces.Unsigned_8;
@@ -1013,18 +1110,22 @@ package Bits
        Value_L : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function Make_Word
       (Value_H : Interfaces.Unsigned_16;
        Value_L : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function Make_Word
       (Value_H : Interfaces.Unsigned_32;
        Value_L : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_64
       with Inline => True;
 
+   ----------------------------------------------------------------------------
    -- BitMask_XX
+   ----------------------------------------------------------------------------
 
    function BitMask_8
       (MSb    : Bits_3;
@@ -1054,7 +1155,9 @@ package Bits
       return Interfaces.Unsigned_64
       with Inline => True;
 
-   -- Swapping
+   ----------------------------------------------------------------------------
+   -- Byte_Swap
+   ----------------------------------------------------------------------------
 
    function Byte_Swap_8
       (Value : Interfaces.Unsigned_8)
@@ -1092,35 +1195,51 @@ package Bits
       return Interfaces.Unsigned_64
       renames Byte_Swap_64;
 
+   ----------------------------------------------------------------------------
+   -- Word_Swap
+   ----------------------------------------------------------------------------
+   -- Swap two halves of a 16/32/64-bit word.
+   ----------------------------------------------------------------------------
+
    function Word_Swap
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function Word_Swap
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function Word_Swap
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function Word_Swap
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
       with Inline => True;
 
+   ----------------------------------------------------------------------------
+   -- CPUE to/from BE/LE
+   ----------------------------------------------------------------------------
+
    function CPUE_To_BE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function BE_To_CPUE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function CPUE_To_LE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function LE_To_CPUE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
@@ -1130,14 +1249,17 @@ package Bits
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function BE_To_CPUE
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function CPUE_To_LE
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function LE_To_CPUE
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
@@ -1147,34 +1269,50 @@ package Bits
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function BE_To_CPUE
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function CPUE_To_LE
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function LE_To_CPUE
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
       with Inline => True;
 
-   function HostToNetwork
+   function HToN
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
-      with Inline => True;
-   function NetworkToHost
+      renames CPUE_To_BE;
+
+   function NToH
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
-      with Inline => True;
-   function HostToNetwork
+      renames BE_To_CPUE;
+
+   function HToN
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
-      with Inline => True;
-   function NetworkToHost
+      renames CPUE_To_BE;
+
+   function NToH
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
+      renames BE_To_CPUE;
+
+   ----------------------------------------------------------------------------
+   -- Byte_Reverse
+   ----------------------------------------------------------------------------
+   -- Reverse the bit pattern of a byte.
+   ----------------------------------------------------------------------------
+   function Byte_Reverse
+      (Value : Interfaces.Unsigned_8)
+      return Interfaces.Unsigned_8
       with Inline => True;
 
 private
