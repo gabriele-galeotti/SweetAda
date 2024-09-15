@@ -21,8 +21,8 @@ function Rounddown
     Modulo : Positive)
    return Natural
    is
-   Result    : Natural;
    Remainder : Natural;
+   Result    : Natural;
 begin
    Result := Value;
    Remainder := Result mod Modulo;
