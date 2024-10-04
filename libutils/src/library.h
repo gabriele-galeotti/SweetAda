@@ -24,7 +24,18 @@
  * System headers.                                                            *
  ******************************************************************************/
 
+#if defined(_WIN32)
+# include <windows.h>
+#endif
 #include <sys/types.h>  /* pid_t */
+
+/******************************************************************************
+ * Application headers.                                                       *
+ ******************************************************************************/
+
+/******************************************************************************
+ * Public definitions.                                                        *
+ ******************************************************************************/
 
 /******************************************************************************
  * Environment selection macros.                                              *
@@ -95,7 +106,6 @@
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
 //# define OEMRESOURCE
-# include <windows.h>
 # if defined(_WIN64)
 #  define SIZET_FORMAT PRIu64
 #  define PID_FORMAT "lld"
@@ -123,13 +133,13 @@
 #define _strconcat(a, b) a##b
 #define STRCONCAT(a, b) _strconcat(a, b)
 
-#define STRING_MEMSIZE(string)      (strlen(string) + 1)
 #define STRING_LENGTH(string)       strlen(string)
+#define STRING_MEMSIZE(string)      (STRING_LENGTH(string) + 1)
 #define STRING_EQ(string1, string2) (strcmp(string1, string2) == 0)
 #define STRING_NE(string1, string2) (strcmp(string1, string2) != 0)
 
-#define ARRAY_MEMSIZE(array) sizeof(array)
 #define ARRAY_LENGTH(array)  (sizeof(array) / sizeof((array)[0]))
+#define ARRAY_MEMSIZE(array) sizeof(array)
 
 #if !defined(MAX)
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -296,7 +306,7 @@ extern char        ebcdic_to_ascii(uint8_t);
 
 extern void *lib_malloc(size_t);
 extern void *lib_realloc(void *, size_t);
-extern void  lib_free(void *);
+extern void *lib_free(void *);
 extern char *lib_strdup(const char *);
 
 /******************************************************************************

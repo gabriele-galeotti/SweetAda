@@ -327,7 +327,7 @@ elf_begin(int fd)
         }
         size = fd_offset;
 
-        pelf = (Elf_t *)lib_malloc(sizeof(Elf_t));
+        pelf = lib_malloc(sizeof(Elf_t));
         if (pelf == NULL)
         {
                 // ERROR_NOMEM

@@ -28,10 +28,14 @@
 #include <sys/stat.h>
 
 /******************************************************************************
- * Private definitions.                                                       *
+ * Application headers.                                                       *
  ******************************************************************************/
 
 #include "library.h"
+
+/******************************************************************************
+ * Private definitions.                                                       *
+ ******************************************************************************/
 
 #if __START_IF_SELECTION__
 #elif defined(__APPLE__) || defined(__linux__)
@@ -209,13 +213,15 @@ lib_realloc(void *ptr, size_t size)
  * lib_free()                                                                 *
  *                                                                            *
  ******************************************************************************/
-void
+void *
 lib_free(void *ptr)
 {
         if (ptr != NULL)
         {
                 free(ptr);
         }
+
+        return NULL;
 }
 
 /******************************************************************************
@@ -223,11 +229,11 @@ lib_free(void *ptr)
  *                                                                            *
  ******************************************************************************/
 char *
-lib_strdup(const char *s)
+lib_strdup(const char *string)
 {
-        if (s != NULL)
+        if (string != NULL)
         {
-                return strdup(s);
+                return strdup(string);
         }
 
         return NULL;
@@ -272,7 +278,7 @@ env_get(const char *envvarname)
                 {
                         const char *result;
                         /* allocate a buffer which will receives variable */
-                        result = (const char *)lib_malloc(STRING_MEMSIZE(string));
+                        result = lib_malloc(STRING_MEMSIZE(string));
                         if (result != NULL)
                         {
                                 strcpy((char *)result, string);
@@ -301,7 +307,7 @@ env_get(const char *envvarname)
                 {
                         const char *string;
                         /* allocate a buffer which will receive variable */
-                        string = (const char *)lib_malloc(STRING_MEMSIZE(result));
+                        string = lib_malloc(STRING_MEMSIZE(result));
                         if (string != NULL)
                         {
                                 strcpy((char *)string, result);
@@ -348,7 +354,7 @@ env_put(const char *name, const char *value)
         }
 
         /* +1 "=", +1 terminating NUL */
-        env_entry = (char *)lib_malloc(STRING_LENGTH(name) + STRING_LENGTH(value) + 2);
+        env_entry = lib_malloc(STRING_LENGTH(name) + STRING_LENGTH(value) + 2);
         if (env_entry == NULL)
         {
                 log_printf(LOG_STDERR, "env_put(): lib_malloc().");
@@ -1042,7 +1048,7 @@ createblockstring(const char **argv, int flags)
         /*
          * Initialize the blockstring.
          */
-        blockstring = (char *)lib_malloc(blockstring_length);
+        blockstring = lib_malloc(blockstring_length);
         p = blockstring;
 
         /*
@@ -1101,7 +1107,7 @@ execute_create(void)
         /*
          * Allocate an execute descriptor.
          */
-        execute = (execute_t)lib_malloc(sizeof(struct _execute));
+        execute = lib_malloc(sizeof(struct _execute));
         if (execute == NULL)
         {
                 return NULL;
@@ -1310,9 +1316,9 @@ execute_exec(execute_t this)
         /*
          * Initialize process structures.
          */
-        ZeroMemory(&StartupInfo, sizeof(StartupInfo));
-        StartupInfo.cb = sizeof(StartupInfo);
-        ZeroMemory(&ProcessInformation, sizeof(ProcessInformation));
+        ZeroMemory(&StartupInfo, sizeof StartupInfo);
+        StartupInfo.cb = sizeof StartupInfo;
+        ZeroMemory(&ProcessInformation, sizeof ProcessInformation);
 
         /*
          * Define Application Name.
