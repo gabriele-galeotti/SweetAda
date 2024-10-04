@@ -1497,9 +1497,6 @@ endif
 
 .PHONY: clean
 clean:
-ifneq ($(filter cmd msys,$(OSTYPE)),)
-	$(call remove-nulfile)
-endif
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean
 	$(MAKE) $(MAKE_CORE) clean

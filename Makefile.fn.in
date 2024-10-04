@@ -162,17 +162,3 @@ else
 remove-basename = $(eval $1 := $(shell $(ECHO) "$($1)" | $(SED) -e "s|[^ ]*$2||"))
 endif
 
-#
-# remove-nulfile
-#
-# Usage:
-# $(call remove-nulfile)
-#
-# Remove the spurios "nul" file in a cmd/msys environment.
-#
-ifeq      ($(OSTYPE),cmd)
-remove-nulfile = -@RENAME \\.\"$(shell cd)"\nul. deletefile.tmp 2>nul
-else ifeq ($(OSTYPE),msys)
-remove-nulfile = -@cmd.exe /C "RENAME \\\\.\\\"$$(cygpath.exe -w "$$(pwd)")\"\\nul. deletefile.tmp" 2> /dev/null
-endif
-
