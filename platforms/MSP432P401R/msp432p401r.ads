@@ -34,6 +34,8 @@ package MSP432P401R
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- 3 Reset Controller (RSTCTL)
    ----------------------------------------------------------------------------
@@ -59,15 +61,13 @@ package MSP432P401R
       Reserved2 at 0 range 16 .. 31;
    end record;
 
-   RSTCTL_RESET_REQ_ADDRESS : constant := 16#E004_2000#;
-
-   RSTCTL_RESET_REQ : aliased RSTCTL_RESET_REQ_Type
-      with Address              => System'To_Address (RSTCTL_RESET_REQ_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
-
    -- common definitions for RSTCTL_[HARD|SOFT]RESET_[STAT|CLR|SET]
+   -- 3.3.2 RSTCTL_HARDRESET_STAT
+   -- 3.3.3 RSTCTL_HARDRESET_CLR
+   -- 3.3.4 RSTCTL_HARDRESET_SET
+   -- 3.3.5 RSTCTL_SOFTRESET_STAT
+   -- 3.3.6 RSTCTL_SOFTRESET_CLR
+   -- 3.3.7 RSTCTL_SOFTRESET_SET
 
    -- indexes into bitmaps
    SRC0  : constant := 0;
@@ -98,49 +98,92 @@ package MSP432P401R
       Reserved at 0 range 16 .. 31;
    end record;
 
-   -- 3.3.2 RSTCTL_HARDRESET_STAT
-   -- 3.3.3 RSTCTL_HARDRESET_CLR
-   -- 3.3.4 RSTCTL_HARDRESET_SET
-   -- 3.3.5 RSTCTL_SOFTRESET_STAT
-   -- 3.3.6 RSTCTL_SOFTRESET_CLR
-   -- 3.3.7 RSTCTL_SOFTRESET_SET
-   -- Table 6-32. Debug Zone Memory Map
+   -- 3.3.8 RSTCTL_PSSRESET_STAT
+
+   type RSTCTL_PSSRESET_STAT_Type is record
+      Reserved1 : Bits_1;
+      SVSMH     : Boolean; -- Indicates if POR was caused by an SVSMH trip condition in the PSS (with SVSMH enabled and set as supervisor)
+      BGREF     : Boolean; -- Indicates if POR was caused by a Band Gap Reference not okay condition in the PSS
+      VCCDET    : Boolean; -- Indicates if POR was caused by a VCCDET trip condition in the PSS
+      Reserved2 : Bits_28;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RSTCTL_PSSRESET_STAT_Type use record
+      Reserved1 at 0 range 0 ..  0;
+      SVSMH     at 0 range 1 ..  1;
+      BGREF     at 0 range 2 ..  2;
+      VCCDET    at 0 range 3 ..  3;
+      Reserved2 at 0 range 4 .. 31;
+   end record;
+
+   -- 3.3.9 RSTCTL_PSSRESET_CLR
+
+   type RSTCTL_PSSRESET_CLR_Type is record
+      CLR      : Boolean; -- Write 1 clears all PSS Reset Flags in the RSTCTL_PSSRESET_STAT
+      Reserved : Bits_31;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for RSTCTL_PSSRESET_CLR_Type use record
+      CLR      at 0 range 0 ..  0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
    -- Table 6-33. RSTCTL Registers
 
    RSTCTL_BASEADDRESS : constant := 16#E004_2000#;
 
+   RSTCTL_RESET_REQ : aliased RSTCTL_RESET_REQ_Type
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    RSTCTL_HARDRESET_STAT : aliased RSTCTL_RESET_Type
-      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#004#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_HARDRESET_CLR : aliased RSTCTL_RESET_Type
-      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#08#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#008#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_HARDRESET_SET : aliased RSTCTL_RESET_Type
-      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#0C#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#00C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_SOFTRESET_STAT : aliased RSTCTL_RESET_Type
-      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#10#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#010#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_SOFTRESET_CLR : aliased RSTCTL_RESET_Type
-      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#14#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#014#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    RSTCTL_SOFTRESET_SET : aliased RSTCTL_RESET_Type
-      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#18#),
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#018#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RSTCTL_PSSRESET_STAT : aliased RSTCTL_PSSRESET_STAT_Type
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#100#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RSTCTL_PSSRESET_CLR : aliased RSTCTL_PSSRESET_CLR_Type
+      with Address              => System'To_Address (RSTCTL_BASEADDRESS + 16#104#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1216,7 +1259,6 @@ package MSP432P401R
 
    PORT_BASEADDRESS : constant := 16#4000_4C00#;
 
-pragma Style_Checks (Off);
    PA  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
    PB  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
    PC  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
@@ -1233,7 +1275,6 @@ pragma Style_Checks (Off);
    P9  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
    P10 : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
    PJ  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#120#), Volatile => True, Import => True, Convention => Ada;
-pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
    -- 17 Watchdog Timer (WDT_A)
@@ -1580,5 +1621,7 @@ pragma Style_Checks (On);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+pragma Style_Checks (On);
 
 end MSP432P401R;
