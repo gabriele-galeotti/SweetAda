@@ -75,20 +75,20 @@ pragma Style_Checks (Off);
    IRQC_IRQ_One     : constant := 2#1100#;
 
    type PORTx_PCRn_Type is record
-      PS        : Boolean;     -- Pull Select
-      PE        : Boolean;     -- Pull Enable
-      SRE       : Boolean;     -- Slew Rate Enable
-      Reserved1 : Bits_1 := 0;
-      PFE       : Boolean;     -- Passive Filter Enable
-      Reserved2 : Bits_1 := 0;
-      DSE       : Boolean;     -- Drive Strength Enable
-      Reserved3 : Bits_1 := 0;
-      MUX       : Bits_3;      -- Pin Mux Control
-      Reserved4 : Bits_5 := 0;
-      IRQC      : Bits_4;      -- Interrupt Configuration
-      Reserved5 : Bits_4 := 0;
-      ISF       : Boolean;     -- Interrupt Status Flag
-      Reserved6 : Bits_7 := 0;
+      PS        : Boolean;      -- Pull Select
+      PE        : Boolean;      -- Pull Enable
+      SRE       : Boolean;      -- Slew Rate Enable
+      Reserved1 : Bits_1  := 0;
+      PFE       : Boolean;      -- Passive Filter Enable
+      Reserved2 : Bits_1  := 0;
+      DSE       : Boolean;      -- Drive Strength Enable
+      Reserved3 : Bits_1  := 0;
+      MUX       : Bits_3;       -- Pin Mux Control
+      Reserved4 : Bits_5  := 0;
+      IRQC      : Bits_4;       -- Interrupt Configuration
+      Reserved5 : Bits_4  := 0;
+      ISF       : Boolean;      -- Interrupt Status Flag
+      Reserved6 : Bits_7  := 0;
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 32,
@@ -165,7 +165,7 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_6;
       Reserved2 : Bits_12 := 0;
       OSC32KSEL : Bits_2;       -- 32K oscillator clock select
-      Reserved3 : Bits_9 := 0;
+      Reserved3 : Bits_9  := 0;
       USBVSTBY  : Boolean;      -- USB voltage regulator in standby mode during VLPR and VLPW modes
       USBSSTBY  : Boolean;      -- USB voltage regulator in standby mode during Stop, VLPS, LLS and VLLS modes.
       USBREGEN  : Boolean;      -- USB voltage regulator enable
@@ -197,7 +197,7 @@ pragma Style_Checks (Off);
       URWE      : Boolean;      -- USB voltage regulator enable write enable
       UVSWE     : Boolean;      -- USB voltage regulator VLP standby write enable
       USSWE     : Boolean;      -- USB voltage regulator stop standby write enable
-      Reserved2 : Bits_5 := 0;
+      Reserved2 : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -307,11 +307,11 @@ pragma Style_Checks (Off);
       Reserved1  : Bits_18 := 0;
       TPM1CH0SRC : Bits_2;       -- TPM1 channel 0 input capture source select
       TPM2CH0SRC : Bits_1;       -- TPM2 channel 0 input capture source select
-      Reserved2  : Bits_3 := 0;
+      Reserved2  : Bits_3  := 0;
       TPM0CLKSEL : Bits_1;       -- TPM0 External Clock Pin Select
       TPM1CLKSEL : Bits_1;       -- TPM1 External Clock Pin Select
       TPM2CLKSEL : Bits_1;       -- TPM2 External Clock Pin Select
-      Reserved3  : Bits_5 := 0;
+      Reserved3  : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -347,14 +347,14 @@ pragma Style_Checks (Off);
    type SIM_SOPT5_Type is record
       UART0TXSRC : Bits_2;       -- UART0 Transmit Data Source Select
       UART0RXSRC : Bits_1;       -- UART0 Receive Data Source Select
-      Reserved1  : Bits_1 := 0;
+      Reserved1  : Bits_1  := 0;
       UART1TXSRC : Bits_2;       -- UART1 Transmit Data Source Select
       UART1RXSRC : Bits_1;       -- UART1 Receive Data Source Select
-      Reserved2  : Bits_9 := 0;
+      Reserved2  : Bits_9  := 0;
       UART0ODE   : Boolean;      -- UART0 Open Drain Enable
       UART1ODE   : Boolean;      -- UART1 Open Drain Enable
       UART2ODE   : Boolean;      -- UART2 Open Drain Enable
-      Reserved3  : Bits_1 := 0;
+      Reserved3  : Bits_1  := 0;
       Reserved4  : Bits_12 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -406,7 +406,7 @@ pragma Style_Checks (Off);
    type SIM_SOPT7_Type is record
       ADC0TRGSEL    : Bits_4;       -- ADC0 trigger select
       ADC0PRETRGSEL : Bits_1;       -- ADC0 Pretrigger Select
-      Reserved1     : Bits_2 := 0;
+      Reserved1     : Bits_2  := 0;
       ADC0ALTTRGEN  : Boolean;      -- ADC0 Alternate Trigger Enable
       Reserved2     : Bits_24 := 0;
    end record
@@ -504,23 +504,23 @@ pragma Style_Checks (Off);
    -- 12.2.8 System Clock Gating Control Register 4 (SIM_SCGC4)
 
    type SIM_SCGC4_Type is record
-      Reserved1 : Bits_4 := 0;
-      Reserved2 : Bits_2 := 2#11#;
-      I2C0      : Boolean;           -- I2C0 Clock Gate Control
-      I2C1      : Boolean;           -- I2C1 Clock Gate Control
-      Reserved3 : Bits_2 := 0;
-      UART0     : Boolean;           -- UART0 Clock Gate Control
-      UART1     : Boolean;           -- UART1 Clock Gate Control
-      UART2     : Boolean;           -- UART2 Clock Gate Control
-      Reserved4 : Bits_1 := 0;
-      Reserved5 : Bits_4 := 0;
-      USBOTG    : Boolean;           -- USB Clock Gate Control
-      CMP       : Boolean;           -- Comparator Clock Gate Control
-      Reserved6 : Bits_2 := 0;
-      SPI0      : Boolean;           -- SPI0 Clock Gate Control
-      SPI1      : Boolean;           -- SPI1 Clock Gate Control
-      Reserved7 : Bits_4 := 0;
-      Reserved8 : Bits_4 := 2#1111#;
+      Reserved1 : Bits_4  := 0;
+      Reserved2 : Bits_2  := 2#11#;
+      I2C0      : Boolean;            -- I2C0 Clock Gate Control
+      I2C1      : Boolean;            -- I2C1 Clock Gate Control
+      Reserved3 : Bits_2  := 0;
+      UART0     : Boolean;            -- UART0 Clock Gate Control
+      UART1     : Boolean;            -- UART1 Clock Gate Control
+      UART2     : Boolean;            -- UART2 Clock Gate Control
+      Reserved4 : Bits_1  := 0;
+      Reserved5 : Bits_4  := 0;
+      USBOTG    : Boolean;            -- USB Clock Gate Control
+      CMP       : Boolean;            -- Comparator Clock Gate Control
+      Reserved6 : Bits_2  := 0;
+      SPI0      : Boolean;            -- SPI0 Clock Gate Control
+      SPI1      : Boolean;            -- SPI1 Clock Gate Control
+      Reserved7 : Bits_4  := 0;
+      Reserved8 : Bits_4  := 2#1111#;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -555,19 +555,19 @@ pragma Style_Checks (Off);
    -- 12.2.9 System Clock Gating Control Register 5 (SIM_SCGC5)
 
    type SIM_SCGC5_Type is record
-      LPTMR     : Boolean;         -- Low Power Timer Access Control
-      Reserved1 : Bits_1 := 1;
-      Reserved2 : Bits_3 := 0;
-      TSI       : Boolean;         -- TSI Access Control
-      Reserved3 : Bits_1 := 0;
-      Reserved4 : Bits_2 := 2#11#;
-      PORTA     : Boolean;         -- PORTA Clock Gate Control
-      PORTB     : Boolean;         -- PORTB Clock Gate Control
-      PORTC     : Boolean;         -- PORTC Clock Gate Control
-      PORTD     : Boolean;         -- PORTD Clock Gate Control
-      PORTE     : Boolean;         -- PORTE Clock Gate Control
-      Reserved5 : Bits_5 := 0;
-      SLCD      : Boolean;         -- Segment LCD Clock Gate Control
+      LPTMR     : Boolean;          -- Low Power Timer Access Control
+      Reserved1 : Bits_1  := 1;
+      Reserved2 : Bits_3  := 0;
+      TSI       : Boolean;          -- TSI Access Control
+      Reserved3 : Bits_1  := 0;
+      Reserved4 : Bits_2  := 2#11#;
+      PORTA     : Boolean;          -- PORTA Clock Gate Control
+      PORTB     : Boolean;          -- PORTB Clock Gate Control
+      PORTC     : Boolean;          -- PORTC Clock Gate Control
+      PORTD     : Boolean;          -- PORTD Clock Gate Control
+      PORTE     : Boolean;          -- PORTE Clock Gate Control
+      Reserved5 : Bits_5  := 0;
+      SLCD      : Boolean;          -- Segment LCD Clock Gate Control
       Reserved6 : Bits_12 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -604,15 +604,15 @@ pragma Style_Checks (Off);
       DMAMUX    : Boolean;      -- DMA Mux Clock Gate Control
       Reserved1 : Bits_13 := 0;
       I2S       : Boolean;      -- I2S Clock Gate Control
-      Reserved2 : Bits_7 := 0;
+      Reserved2 : Bits_7  := 0;
       PIT       : Boolean;      -- PIT Clock Gate Control
       TPM0      : Boolean;      -- TPM0 Clock Gate Control
       TPM1      : Boolean;      -- TPM1 Clock Gate Control
       TPM2      : Boolean;      -- TPM2 Clock Gate Control
       ADC0      : Boolean;      -- ADC0 Clock Gate Control
-      Reserved3 : Bits_1 := 0;
+      Reserved3 : Bits_1  := 0;
       RTC       : Boolean;      -- RTC Access Control
-      Reserved4 : Bits_1 := 0;
+      Reserved4 : Bits_1  := 0;
       DAC0      : Boolean;      -- DAC0 Clock Gate Control
    end record
       with Bit_Order => Low_Order_First,
@@ -645,7 +645,7 @@ pragma Style_Checks (Off);
    -- 12.2.11 System Clock Gating Control Register 7 (SIM_SCGC7)
 
    type SIM_SCGC7_Type is record
-      Reserved1 : Bits_8 := 0;
+      Reserved1 : Bits_8  := 0;
       DMA       : Boolean;      -- DMA Clock Gate Control
       Reserved2 : Bits_23 := 0;
    end record
@@ -696,7 +696,7 @@ pragma Style_Checks (Off);
    type SIM_CLKDIV1_Type is record
       Reserved1 : Bits_16 := 0;
       OUTDIV4   : Bits_3;       -- Clock 4 Output Divider value
-      Reserved2 : Bits_9 := 0;
+      Reserved2 : Bits_9  := 0;
       OUTDIV1   : Bits_4;       -- Clock 1 Output Divider value
    end record
       with Bit_Order => Low_Order_First,
@@ -723,14 +723,14 @@ pragma Style_Checks (Off);
    -- 13.3.1 Power Mode Protection register (SMC_PMPROT)
 
    type SMC_PMPROT_Type is record
-      Reserved1 : Bits_1 := 0;
-      AVLLS     : Boolean;     -- Allow Very-Low-Leakage Stop Mode
-      Reserved2 : Bits_1 := 0;
-      ALLS      : Boolean;     -- Allow Low-Leakage Stop Mode
-      Reserved3 : Bits_1 := 0;
-      AVLP      : Boolean;     -- Allow Very-Low-Power Modes
-      Reserved4 : Bits_1 := 0;
-      Reserved5 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
+      AVLLS     : Boolean;      -- Allow Very-Low-Leakage Stop Mode
+      Reserved2 : Bits_1  := 0;
+      ALLS      : Boolean;      -- Allow Low-Leakage Stop Mode
+      Reserved3 : Bits_1  := 0;
+      AVLP      : Boolean;      -- Allow Very-Low-Power Modes
+      Reserved4 : Bits_1  := 0;
+      Reserved5 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -772,9 +772,9 @@ pragma Style_Checks (Off);
    type SMC_PMCTRL_Type is record
       STOPM     : Bits_3;           -- Stop Mode Control
       STOPA     : Boolean := False;
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       RUNM      : Bits_2;           -- Run Mode Control
-      Reserved2 : Bits_1 := 0;
+      Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -811,11 +811,11 @@ pragma Style_Checks (Off);
    PSTOPO_RSVD   : constant := 2#11#; -- Reserved
 
    type SMC_STOPCTRL_Type is record
-      VLLSM     : Bits_3;      -- VLLS Mode Control
-      Reserved1 : Bits_1 := 0;
-      Reserved2 : Bits_1 := 0;
-      PORPO     : Boolean;     -- POR Power Option
-      PSTOPO    : Bits_2;      -- Partial Stop Option
+      VLLSM     : Bits_3;       -- VLLS Mode Control
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_1  := 0;
+      PORPO     : Boolean;      -- POR Power Option
+      PSTOPO    : Bits_2;       -- Partial Stop Option
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -877,7 +877,7 @@ pragma Style_Checks (Off);
 
    type PMC_LVDSC1_Type is record
       LVDV     : Bits_2;           -- Low-Voltage Detect Voltage Select
-      Reserved : Bits_2 := 0;
+      Reserved : Bits_2  := 0;
       LVDRE    : Boolean;          -- Low-Voltage Detect Reset Enable
       LVDIE    : Boolean;          -- Low-Voltage Detect Interrupt Enable
       LVDACK   : Boolean := False; -- Low-Voltage Detect Acknowledge
@@ -911,7 +911,7 @@ pragma Style_Checks (Off);
 
    type PMC_LVDSC2_Type is record
       LVWV     : Bits_2;           -- Low-Voltage Warning Voltage Select
-      Reserved : Bits_3 := 0;
+      Reserved : Bits_3  := 0;
       LVWIE    : Boolean;          -- Low-Voltage Warning Interrupt Enable
       LVWACK   : Boolean := False; -- Low-Voltage Warning Acknowledge
       LVWF     : Boolean := False; -- Low-Voltage Warning Flag
@@ -938,12 +938,12 @@ pragma Style_Checks (Off);
 
    type PMC_REGSC_Type is record
       BGBE      : Boolean;          -- Bandgap Buffer Enable
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       REGONS    : Boolean := False; -- Regulator In Run Regulation Status
       ACKISO    : Boolean := False; -- Acknowledge Isolation
       BGEN      : Boolean;          -- Bandgap Enable In VLPx Operation
-      Reserved2 : Bits_1 := 0;
-      Reserved3 : Bits_2 := 0;
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_2  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1296,10 +1296,10 @@ pragma Style_Checks (Off);
    PRDIV0_DIV25 : constant := 2#11000#; -- Divide Factor 25
 
    type MCG_C5_Type is record
-      PRDIV0    : Bits_5;      -- PLL External Reference Divider
-      PLLSTEN0  : Boolean;     -- PLL Stop Enable
-      PLLCLKEN0 : Boolean;     -- PLL Clock Enable
-      Reserved  : Bits_1 := 0;
+      PRDIV0    : Bits_5;       -- PLL External Reference Divider
+      PLLSTEN0  : Boolean;      -- PLL Stop Enable
+      PLLCLKEN0 : Boolean;      -- PLL Clock Enable
+      Reserved  : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1514,11 +1514,11 @@ pragma Style_Checks (Off);
    -- 24.3.12 MCG Control 8 Register (MCG_C8)
 
    type MCG_C8_Type is record
-      Reserved1 : Bits_1 := 0;
-      Reserved2 : Bits_4 := 0;
-      Reserved3 : Bits_1 := 0;
-      LOLRE     : Boolean;     -- PLL Loss of Lock Reset Enable
-      Reserved4 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_4  := 0;
+      Reserved3 : Bits_1  := 0;
+      LOLRE     : Boolean;      -- PLL Loss of Lock Reset Enable
+      Reserved4 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1591,14 +1591,14 @@ pragma Style_Checks (Off);
    -- 25.71.1 OSC Control Register (OSCx_CR)
 
    type OSCx_CR_Type is record
-      SC16P     : Boolean;     -- Oscillator 16 pF Capacitor Load Configure
-      SC8P      : Boolean;     -- Oscillator 8 pF Capacitor Load Configure
-      SC4P      : Boolean;     -- Oscillator 4 pF Capacitor Load Configure
-      SC2P      : Boolean;     -- Oscillator 2 pF Capacitor Load Configure
-      Reserved1 : Bits_1 := 0;
-      EREFSTEN  : Boolean;     -- External Reference Stop Enable
-      Reserved2 : Bits_1 := 0;
-      ERCLKEN   : Boolean;     -- External Reference Enable
+      SC16P     : Boolean;      -- Oscillator 16 pF Capacitor Load Configure
+      SC8P      : Boolean;      -- Oscillator 8 pF Capacitor Load Configure
+      SC4P      : Boolean;      -- Oscillator 4 pF Capacitor Load Configure
+      SC2P      : Boolean;      -- Oscillator 2 pF Capacitor Load Configure
+      Reserved1 : Bits_1  := 0;
+      EREFSTEN  : Boolean;      -- External Reference Stop Enable
+      Reserved2 : Bits_1  := 0;
+      ERCLKEN   : Boolean;      -- External Reference Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1638,8 +1638,8 @@ pragma Style_Checks (Off);
    -- 34.2.2 RTC Time Prescaler Register (RTC_TPR)
 
    type RTC_TPR_Type is record
-      TPR      : Unsigned_16;  -- Time Prescaler Register
-      Reserved : Bits_16 := 0;
+      TPR      : Unsigned_16;      -- Time Prescaler Register
+      Reserved : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -1699,14 +1699,14 @@ pragma Style_Checks (Off);
       SUP       : Boolean;      -- Supervisor Access
       UM        : Boolean;      -- Update Mode
       WPS       : Boolean;      -- Wakeup Pin Select
-      Reserved1 : Bits_3 := 0;
+      Reserved1 : Bits_3  := 0;
       OSCE      : Boolean;      -- Oscillator Enable
       CLKO      : Boolean;      -- Clock Output
       SC16P     : Boolean;      -- Oscillator 16pF Load Configure
       SC8P      : Boolean;      -- Oscillator 8pF Load Configure
       SC4P      : Boolean;      -- Oscillator 4pF Load Configure
       SC2P      : Boolean;      -- Oscillator 2pF Load Configure
-      Reserved2 : Bits_1 := 0;
+      Reserved2 : Bits_1  := 0;
       Reserved3 : Bits_17 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1742,7 +1742,7 @@ pragma Style_Checks (Off);
       TIF       : Boolean := False; -- Time Invalid Flag
       TOF       : Boolean := False; -- Time Overflow Flag
       TAF       : Boolean := False; -- Time Alarm Flag
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       TCE       : Boolean := False; -- Time Counter Enable
       Reserved2 : Bits_27 := 0;
    end record
@@ -1768,12 +1768,12 @@ pragma Style_Checks (Off);
    -- 34.2.7 RTC Lock Register (RTC_LR)
 
    type RTC_LR_Type is record
-      Reserved1 : Bits_3 := 2#111#;
+      Reserved1 : Bits_3  := 2#111#;
       TCL       : Boolean := True;  -- Time Compensation Lock
       CRL       : Boolean := True;  -- Control Register Lock
       SRL       : Boolean := True;  -- Status Register Lock
       LRL       : Boolean := True;  -- Lock Register Lock
-      Reserved2 : Bits_1 := 1;
+      Reserved2 : Bits_1  := 1;
       Reserved3 : Bits_24 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1802,9 +1802,9 @@ pragma Style_Checks (Off);
       TIIE      : Boolean;      -- Time Invalid Interrupt Enable
       TOIE      : Boolean;      -- Time Overflow Interrupt Enable
       TAIE      : Boolean;      -- Time Alarm Interrupt Enable
-      Reserved1 : Bits_1 := 0;
+      Reserved1 : Bits_1  := 0;
       TSIE      : Boolean;      -- Time Seconds Interrupt Enable
-      Reserved2 : Bits_2 := 0;
+      Reserved2 : Bits_2  := 0;
       WPON      : Boolean;      -- Wakeup Pin On
       Reserved3 : Bits_24 := 0;
    end record
@@ -2024,12 +2024,12 @@ pragma Style_Checks (Off);
    -- 39.2.12 UART Control Register 5 (UARTx_C5)
 
    type UART0_C5_Type is record
-      RESYNCDIS : Boolean;     -- Resynchronization Disable
-      BOTHEDGE  : Boolean;     -- Both Edge Sampling
-      Reserved1 : Bits_3 := 0;
-      RDMAE     : Boolean;     -- Receiver Full DMA Enable
-      Reserved2 : Bits_1 := 0;
-      TDMAE     : Boolean;     -- Transmitter DMA Enable
+      RESYNCDIS : Boolean;      -- Resynchronization Disable
+      BOTHEDGE  : Boolean;      -- Both Edge Sampling
+      Reserved1 : Bits_3  := 0;
+      RDMAE     : Boolean;      -- Receiver Full DMA Enable
+      Reserved2 : Bits_1  := 0;
+      TDMAE     : Boolean;      -- Transmitter DMA Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2089,12 +2089,12 @@ pragma Style_Checks (Off);
    -- 40.2.9 UART Control Register 4 (UARTx_C4)
 
    type UART12_C4_Type is record
-      Reserved1 : Bits_3 := 0;
-      Reserved2 : Bits_1 := 0;
-      Reserved3 : Bits_1 := 0;
-      RDMAS     : Boolean;     -- Receiver Full DMA Select
-      Reserved4 : Bits_1 := 0;
-      TDMAS     : Boolean;     -- Transmitter DMA Select
+      Reserved1 : Bits_3  := 0;
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_1  := 0;
+      RDMAS     : Boolean;      -- Receiver Full DMA Select
+      Reserved4 : Bits_1  := 0;
+      TDMAS     : Boolean;      -- Transmitter DMA Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
