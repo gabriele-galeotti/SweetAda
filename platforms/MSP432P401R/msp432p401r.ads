@@ -352,15 +352,16 @@ pragma Style_Checks (Off);
       SELA      : Bits_3;      -- Selects the ACLK source.
       Reserved3 : Bits_1 := 0;
       SELB      : Bits_1;      -- Selects the BCLK source.
-      Reserved4 : Bits_3 := 0;
-      DIVM      : Bits_3;      -- MCLK source divider.
+      Reserved4 : Bits_2 := 0;
       Reserved5 : Bits_1 := 0;
-      DIVHS     : Bits_3;      -- HSMCLK source divider.
+      DIVM      : Bits_3;      -- MCLK source divider.
       Reserved6 : Bits_1 := 0;
-      DIVA      : Bits_3;      -- ACLK source divider.
+      DIVHS     : Bits_3;      -- HSMCLK source divider.
       Reserved7 : Bits_1 := 0;
-      DIVS      : Bits_3;      -- SMCLK source divider.
+      DIVA      : Bits_3;      -- ACLK source divider.
       Reserved8 : Bits_1 := 0;
+      DIVS      : Bits_3;      -- SMCLK source divider.
+      Reserved9 : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -372,15 +373,16 @@ pragma Style_Checks (Off);
       SELA      at 0 range  8 .. 10;
       Reserved3 at 0 range 11 .. 11;
       SELB      at 0 range 12 .. 12;
-      Reserved4 at 0 range 13 .. 15;
+      Reserved4 at 0 range 13 .. 14;
+      Reserved5 at 0 range 15 .. 15;
       DIVM      at 0 range 16 .. 18;
-      Reserved5 at 0 range 19 .. 19;
+      Reserved6 at 0 range 19 .. 19;
       DIVHS     at 0 range 20 .. 22;
-      Reserved6 at 0 range 23 .. 23;
+      Reserved7 at 0 range 23 .. 23;
       DIVA      at 0 range 24 .. 26;
-      Reserved7 at 0 range 27 .. 27;
+      Reserved8 at 0 range 27 .. 27;
       DIVS      at 0 range 28 .. 30;
-      Reserved8 at 0 range 31 .. 31;
+      Reserved9 at 0 range 31 .. 31;
    end record;
 
    -- 6.3.4 CSCTL2 Register Clock System Control 2 Register
@@ -393,16 +395,16 @@ pragma Style_Checks (Off);
    LFXTBYPASS_EXTAL : constant := 0; -- LFXT sourced by external crystal.
    LFXTBYPASS_SQRWV : constant := 1; -- LFXT sourced by external square wave.
 
-   HFXTDRIVE_1_4   : constant := 0; -- To be used for HFXTFREQ setting 000b
-   HFXTDRIVE_OTHER : constant := 1; -- To be used for HFXTFREQ settings 001b to 110b
+   HFXTDRIVE_1_4  : constant := 0; -- To be used for HFXTFREQ setting 000b
+   HFXTDRIVE_5_48 : constant := 1; -- To be used for HFXTFREQ settings 001b to 110b
 
    HFXTFREQ_1_4      : constant := 2#000#; -- 1 MHz to 4 MHz
-   HFXTFREQ_4_8      : constant := 2#001#; -- >4 MHz to 8 MHz
-   HFXTFREQ_8_16     : constant := 2#010#; -- >8 MHz to 16 MHz
-   HFXTFREQ_16_24    : constant := 2#011#; -- >16 MHz to 24 MHz
-   HFXTFREQ_24_32    : constant := 2#100#; -- >24 MHz to 32 MHz
-   HFXTFREQ_32_40    : constant := 2#101#; -- >32 MHz to 40 MHz
-   HFXTFREQ_40_48    : constant := 2#110#; -- >40 MHz to 48 MHz
+   HFXTFREQ_5_8      : constant := 2#001#; -- >4 MHz to 8 MHz
+   HFXTFREQ_9_16     : constant := 2#010#; -- >8 MHz to 16 MHz
+   HFXTFREQ_17_24    : constant := 2#011#; -- >16 MHz to 24 MHz
+   HFXTFREQ_25_32    : constant := 2#100#; -- >24 MHz to 32 MHz
+   HFXTFREQ_33_40    : constant := 2#101#; -- >32 MHz to 40 MHz
+   HFXTFREQ_41_48    : constant := 2#110#; -- >40 MHz to 48 MHz
    HFXTFREQ_RESERVED : constant := 2#111#; -- Reserved for future use.
 
    HFXTBYPASS_EXTAL : constant := 0; -- HFXT sourced by external crystal.
@@ -1001,11 +1003,11 @@ pragma Style_Checks (Off);
    CPM_LPM3             : constant := 16#20#; -- LPM3
 
    type PCMCTL0_Type is record
-      AMR      : Bits_4;           -- Active Mode Request.
-      LPMR     : Bits_4;           -- Low Power Mode Request.
-      CPM      : Bits_6;           -- Current Power Mode.
+      AMR      : Bits_4;                    -- Active Mode Request.
+      LPMR     : Bits_4;                    -- Low Power Mode Request.
+      CPM      : Bits_6;                    -- Current Power Mode.
       Reserved : Bits_2      := 0;
-      PCMKEY   : Unsigned_16;      -- PCM key.
+      PCMKEY   : Unsigned_16 := PCMKEY_KEY; -- PCM key.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -1259,22 +1261,139 @@ pragma Style_Checks (Off);
 
    PORT_BASEADDRESS : constant := 16#4000_4C00#;
 
-   PA  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
-   PB  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
-   PC  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
-   PD  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
-   PE  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
    P1  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
    P2  : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
+   PA  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#000#), Volatile => True, Import => True, Convention => Ada;
+
    P3  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
    P4  : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
+   PB  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#020#), Volatile => True, Import => True, Convention => Ada;
+
    P5  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
    P6  : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
+   PC  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#040#), Volatile => True, Import => True, Convention => Ada;
+
    P7  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
    P8  : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
+   PD  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#060#), Volatile => True, Import => True, Convention => Ada;
+
    P9  : aliased PORTL8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
    P10 : aliased PORTH8_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
+   PE  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#080#), Volatile => True, Import => True, Convention => Ada;
+
    PJ  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#120#), Volatile => True, Import => True, Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 13 Port Mapping Controller (PMAP)
+   ----------------------------------------------------------------------------
+
+   -- 13.3.1 PMAPKEYID
+
+   PMAPKEYx_KEY : constant := 16#2D52#;
+
+   type PMAPKEYID_Type is record
+      PMAPKEYx : Unsigned_16; -- Port mapping controller write access key.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PMAPKEYID_Type use record
+      PMAPKEYx at 0 range 0 .. 15;
+   end record;
+
+   -- 13.3.2 PMAPCTL
+
+   type PMAPCTL_Type is record
+      PMAPLOCKED : Boolean := True;  -- Port mapping lock bit.
+      PMAPRECFG  : Boolean := False; -- Port mapping reconfiguration control bit
+      Reserved   : Bits_14 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PMAPCTL_Type use record
+      PMAPLOCKED at 0 range 0 ..  0;
+      PMAPRECFG  at 0 range 1 ..  1;
+      Reserved   at 0 range 2 .. 15;
+   end record;
+
+   -- 13.3.3 P1MAP0 to P1MAP7
+
+   type PMAP8_Type is record
+      PMAP : Bitmap_8;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PMAP8_Type use record
+      PMAP at 0 range 0 .. 7;
+   end record;
+
+   -- 13.3.10 PxMAPyz
+
+   type PMAP16_Type is record
+      PMAP : Bitmap_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PMAP16_Type use record
+      PMAP at 0 range 0 .. 15;
+   end record;
+
+   -- Table 6-22. PMAP Registers
+
+   PMAP_BASEADDRESS : constant := 16#4000_5000#;
+
+   PMAPKEYID : aliased PMAPKEYID_Type
+      with Address              => System'To_Address (PMAP_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PMAPCTL : aliased PMAPCTL_Type
+      with Address              => System'To_Address (PMAP_BASEADDRESS + 16#02#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   P2MAP0 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#10#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P2MAP1 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#11#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P2MAP2 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#12#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P2MAP3 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#13#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P2MAP4 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#14#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P2MAP5 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#15#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P2MAP6 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#16#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P2MAP7 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#17#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   P2MAP01 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#10#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P2MAP23 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#12#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P2MAP45 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#14#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P2MAP67 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#16#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   P3MAP0 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#18#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P3MAP1 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#19#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P3MAP2 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#1A#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P3MAP3 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#1B#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P3MAP4 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#1C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P3MAP5 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#1D#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P3MAP6 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#1E#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P3MAP7 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#1F#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   P3MAP01 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#18#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P3MAP23 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#1A#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P3MAP45 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#1C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P3MAP67 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#1E#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   P7MAP0 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#38#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P7MAP1 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#39#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P7MAP2 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3A#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P7MAP3 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3B#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P7MAP4 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P7MAP5 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3D#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P7MAP6 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3E#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P7MAP7 : aliased PMAP8_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3F#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   P7MAP01 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#38#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P7MAP23 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3A#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P7MAP45 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   P7MAP67 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3E#), Volatile_Full_Access => True, Import => True, Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 17 Watchdog Timer (WDT_A)
@@ -1341,10 +1460,10 @@ pragma Style_Checks (Off);
    UCSSELx_SMCLK   : constant := 2#10#; -- SMCLK
    UCSSELx_SMCLK_2 : constant := 2#11#; -- SMCLK
 
-   UCMODEx_UART     : constant := 2#00#; -- UART mode
-   UCMODEx_IDLEMP   : constant := 2#01#; -- Idle-line multiprocessor mode
-   UCMODEx_ADDRMP   : constant := 2#10#; -- Address-bit multiprocessor mode
-   UCMODEx_UARTAUTO : constant := 2#11#; -- UART mode with automatic baud-rate detection
+   UCMODEx_UART         : constant := 2#00#; -- UART mode
+   UCMODEx_IDLEMP       : constant := 2#01#; -- Idle-line multiprocessor mode
+   UCMODEx_ADDRMP       : constant := 2#10#; -- Address-bit multiprocessor mode
+   UCMODEx_UARTAUTOBAUD : constant := 2#11#; -- UART mode with automatic baud-rate detection
 
    UCSPB_1 : constant := 0; -- One stop bit
    UCSPB_2 : constant := 1; -- Two stop bits
@@ -1359,20 +1478,20 @@ pragma Style_Checks (Off);
    UCPAR_EVEN : constant := 1; -- Even parity
 
    type UCAxCTLW0_Type is record
-      UCSWRST  : Boolean; -- Software reset enable
-      UCTXBRK  : Boolean; -- Transmit break.
-      UCTXADDR : Boolean; -- Transmit address.
-      UCDORM   : Boolean; -- Dormant.
-      UCBRKIE  : Boolean; -- Receive break character interrupt enable
-      UCRXEIE  : Boolean; -- Receive erroneous-character interrupt enable
-      UCSSELx  : Bits_2;  -- eUSCI_A clock source select.
-      UCSYNC   : Boolean; -- Synchronous mode enable
-      UCMODEx  : Bits_2;  -- eUSCI_A mode.
-      UCSPB    : Bits_1;  -- Stop bit select.
-      UC7BIT   : Bits_1;  -- Character length.
-      UCMSB    : Bits_1;  -- MSB first select.
-      UCPAR    : Bits_1;  -- Parity select.
-      UCPEN    : Boolean; -- Parity enable
+      UCSWRST  : Boolean := False;        -- Software reset enable
+      UCTXBRK  : Boolean := False;        -- Transmit break.
+      UCTXADDR : Boolean := False;        -- Transmit address.
+      UCDORM   : Boolean := False;        -- Dormant.
+      UCBRKIE  : Boolean := False;        -- Receive break character interrupt enable
+      UCRXEIE  : Boolean := False;        -- Receive erroneous-character interrupt enable
+      UCSSELx  : Bits_2  := 0;            -- eUSCI_A clock source select.
+      UCSYNC   : Boolean := False;        -- Synchronous mode enable
+      UCMODEx  : Bits_2  := UCMODEx_UART; -- eUSCI_A mode.
+      UCSPB    : Bits_1  := UCSPB_1;      -- Stop bit select.
+      UC7BIT   : Bits_1  := UC7BIT_8;     -- Character length.
+      UCMSB    : Bits_1  := UCMSB_LSB;    -- MSB first select.
+      UCPAR    : Bits_1  := UCPAR_ODD;    -- Parity select.
+      UCPEN    : Boolean := False;        -- Parity enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -1516,12 +1635,12 @@ pragma Style_Checks (Off);
    UCIRRXPL_LO : constant := 1; -- IrDA transceiver delivers a low pulse when a light pulse is seen.
 
    type UCAxIRCTL_Type is record
-      UCIREN    : Boolean; -- IrDA encoder and decoder enable
-      UCIRTXCLK : Bits_1;  -- IrDA transmit pulse clock select
-      UCIRTXPLx : Bits_6;  -- Transmit pulse length.
-      UCIRRXFE  : Boolean; -- IrDA receive filter enabled
-      UCIRRXPL  : Bits_1;  -- IrDA receive input UCAxRXD polarity
-      UCIRRXFLx : Bits_6;  -- Receive filter length.
+      UCIREN    : Boolean := False;           -- IrDA encoder and decoder enable
+      UCIRTXCLK : Bits_1  := UCIRTXCLK_BRCLK; -- IrDA transmit pulse clock select
+      UCIRTXPLx : Bits_6  := 0;               -- Transmit pulse length.
+      UCIRRXFE  : Boolean := False;           -- IrDA receive filter enabled
+      UCIRRXPL  : Bits_1  := UCIRRXPL_HI;     -- IrDA receive input UCAxRXD polarity
+      UCIRRXFLx : Bits_6  := 0;               -- Receive filter length.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
