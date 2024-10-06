@@ -2,6 +2,7 @@
 with Interfaces;
 with MSP432P401R;
 with CPU;
+with Console;
 
 package body Application
    is
@@ -30,7 +31,7 @@ package body Application
    ----------------------------------------------------------------------------
    procedure Run
       is
-      Delay_Count : constant := 300_000;
+      Delay_Count : constant := 3_000_000;
       Dummy       : Unsigned_8;
    begin
       -- blink on-board LED2
@@ -46,6 +47,7 @@ package body Application
          if Dummy > 7 then
             Dummy := 1;
          end if;
+         Console.Print ("hello, SweetAda", NL => True);
          for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
       end loop;
       -------------------------------------------------------------------------
