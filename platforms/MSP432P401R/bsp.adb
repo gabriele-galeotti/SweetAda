@@ -101,7 +101,7 @@ package body BSP
          HFXTBYPASS => HFXTBYPASS_EXTAL,
          others     => <>
          );
-      -- wait until HFXT oscillator does not fault
+      -- wait until HFXT oscillator does not fail
       while True loop
          CSCLRIFG.CLR_HFXTIFG := True;
          for Delay_Loop_Count in 1 .. 1024 loop CPU.NOP; end loop;
@@ -212,9 +212,9 @@ package body BSP
       -- Port mapping initialization ------------------------------------------
       PMAPKEYID.PMAPKEYx := PMAPKEYx_KEY;
       PMAPCTL.PMAPRECFG := True;
-      -- Clock-----------------------------------------------------------------
+      -- Clock ----------------------------------------------------------------
       Clk_Init;
-      -- USCI -----------------------------------------------------------------
+      -- USCI_A0 --------------------------------------------------------------
       eUSCI_A0.UCAxCTLW0.UCSWRST := True;
       eUSCI_A0.UCAxIRCTL.UCIREN := False;
       eUSCI_A0.UCAxBRW := 78; -- 9600 bps @ SMCLK = 12 MHz
