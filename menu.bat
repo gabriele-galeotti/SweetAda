@@ -29,7 +29,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 
 REM hidden feature: if the script is called with -p <logfile>, it acts
 REM like a "tee"
-IF "%1"=="-p" SET LOGFILE=%2 && CALL :pipe && EXIT /B %ERRORLEVEL%
+IF "%1"=="-p" SET LOGFILE=%2 && CALL :PIPE && EXIT /B %ERRORLEVEL%
 
 IF NOT DEFINED MAKE SET MAKE=make.exe
 
@@ -37,7 +37,7 @@ SET ACTION_VALID=
 IF "%1"=="help"            SET "ACTION_VALID=Y" && %MAKE% help
 IF "%1"=="createkernelcfg" (
   SET "ACTION_VALID=Y"
-  CALL :setplatform
+  CALL :SETPLATFORM
   SET "PLATFORM=!PLATFORM!"
   SET "SUBPLATFORM=!SUBPLATFORM!"
   %MAKE% createkernelcfg
@@ -46,13 +46,13 @@ IF "%1"=="configure"       SET "ACTION_VALID=Y" && %MAKE% configure
 IF "%1"=="infodump"        SET "ACTION_VALID=Y" && %MAKE% infodump
 IF "%1"=="all" (
   SET "ACTION_VALID=Y"
-  %MAKE% all 2> make.errors.log| menu.bat -p make.log
-  CALL :showerrorlog
+  %MAKE% all 2>make.errors.log| menu.bat -p make.log
+  CALL :SHOWERRORLOG
   )
 IF "%1"=="postbuild" (
   SET "ACTION_VALID=Y"
-  %MAKE% postbuild 2> make.errors.log| menu.bat -p make.log
-  CALL :showerrorlog
+  %MAKE% postbuild 2>make.errors.log| menu.bat -p make.log
+  CALL :SHOWERRORLOG
   )
 IF "%1"=="session-start"   SET "ACTION_VALID=Y" && %MAKE% session-start
 IF "%1"=="session-end"     SET "ACTION_VALID=Y" && %MAKE% session-end
@@ -61,18 +61,18 @@ IF "%1"=="debug"           SET "ACTION_VALID=Y" && %MAKE% debug
 IF "%1"=="clean"           SET "ACTION_VALID=Y" && %MAKE% clean
 IF "%1"=="distclean"       SET "ACTION_VALID=Y" && %MAKE% distclean
 IF "%1"=="rts"             SET "ACTION_VALID=Y" && %MAKE% rts
-IF NOT "%ACTION_VALID%"=="Y" CALL :usage
+IF NOT "%ACTION_VALID%"=="Y" CALL :USAGE
 SET ACTION_VALID=
 
 EXIT /B %ERRORLEVEL%
 
 REM ############################################################################
-REM # setplatform                                                              #
+REM # SETPLATFORM                                                              #
 REM #                                                                          #
 REM ############################################################################
-:setplatform
+:SETPLATFORM
 REM select a platform
-IF NOT "%PLATFORM%"=="" GOTO :eof
+IF NOT "%PLATFORM%"=="" GOTO :EOF
 REM SET "PLATFORM=Altera10M50GHRD" && SET "SUBPLATFORM="
 REM SET "PLATFORM=ArduinoUNO" && SET "SUBPLATFORM="
 REM SET "PLATFORM=DE10-Lite" && SET "SUBPLATFORM="
@@ -88,25 +88,25 @@ REM SET "PLATFORM=SPARCstation5" && SET "SUBPLATFORM="
 REM SET "PLATFORM=System390" && SET "SUBPLATFORM="
 REM SET "PLATFORM=Taihu" && SET "SUBPLATFORM="
 REM SET "PLATFORM=XilinxZynqA9" && SET "SUBPLATFORM="
-GOTO :eof
+GOTO :EOF
 
 REM ############################################################################
-REM # pipe                                                                     #
+REM # PIPE                                                                     #
 REM #                                                                          #
 REM ############################################################################
-:pipe
-COPY /Y nul %LOGFILE% > nul 2>&1
+:PIPE
+COPY /Y nul %LOGFILE% >nul 2>&1
 FOR /F "tokens=1* delims=]" %%A IN ('FIND /N /V ""') DO (
-  > con ECHO.%%B
-  >> %LOGFILE% ECHO.%%B
+  >con ECHO.%%B
+  >>%LOGFILE% ECHO.%%B
   )
-GOTO :eof
+GOTO :EOF
 
 REM ############################################################################
-REM # showerrorlog                                                             #
+REM # SHOWERRORLOG                                                             #
 REM #                                                                          #
 REM ############################################################################
-:showerrorlog
+:SHOWERRORLOG
 FOR /F %%I IN ("make.errors.log") DO SET ERRORLOGSIZE=%%~zI
 IF %ERRORLOGSIZE% GTR 0 (
   ECHO.
@@ -115,13 +115,13 @@ IF %ERRORLOGSIZE% GTR 0 (
   TYPE make.errors.log
   ECHO.
   )
-GOTO :eof
+GOTO :EOF
 
 REM ############################################################################
-REM # usage                                                                    #
+REM # USAGE                                                                    #
 REM #                                                                          #
 REM ############################################################################
-:usage
+:USAGE
 ECHO Usage:
 ECHO menu.bat ^<action^>
 ECHO.
@@ -151,5 +151,5 @@ ECHO MAKE:                %MAKE%
 ECHO default PLATFORM:    %PLATFORM%
 ECHO default SUBPLATFORM: %SUBPLATFORM%
 ECHO.
-GOTO :eof
+GOTO :EOF
 
