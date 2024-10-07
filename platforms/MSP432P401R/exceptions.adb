@@ -66,7 +66,6 @@ package body Exceptions
          -- LED1
          MSP432P401R.P1.PxDIR (0) := True;
          MSP432P401R.P1.PxOUT (0) := not MSP432P401R.P1.PxIN (0);
-         null;
       end if;
    end Irq_Process;
 
