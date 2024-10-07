@@ -224,7 +224,7 @@ else:
     START_ADDRESS = START_SYMBOL
 printf('START ADDRESS = %s\n', START_ADDRESS)
 
-libopenocd.openocd_rpc_tx('set sweetada_elf ' + SWEETADA_ELF + ' ; list')
+libopenocd.openocd_rpc_tx('set sweetada_elf "' + SWEETADA_ELF + '" ; list')
 libopenocd.openocd_rpc_rx('echo')
 libopenocd.openocd_rpc_tx('set start_address ' + START_ADDRESS + ' ; list')
 libopenocd.openocd_rpc_rx('echo')

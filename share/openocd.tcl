@@ -206,7 +206,7 @@ if {$ELFTOOL ne ""} {
 }
 puts "START ADDRESS = $START_ADDRESS"
 
-openocd_rpc_tx "set sweetada_elf $SWEETADA_ELF ; list"
+openocd_rpc_tx "set sweetada_elf \"$SWEETADA_ELF\" ; list"
 openocd_rpc_rx
 openocd_rpc_tx "set start_address $START_ADDRESS ; list"
 openocd_rpc_rx
