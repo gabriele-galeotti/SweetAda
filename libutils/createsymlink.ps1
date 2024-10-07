@@ -43,6 +43,24 @@ function ExitWithCode
 # GetEnvVar()                                                                  #
 #                                                                              #
 ################################################################################
+
+$GetEnvironmentVariable_signature = @'
+[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+public static extern uint
+GetEnvironmentVariable(
+  string lpName,
+  [Out] System.Text.StringBuilder lpBuffer,
+  uint nSize
+  );
+'@
+Add-Type                                              `
+  -MemberDefinition $GetEnvironmentVariable_signature `
+  -Name "Win32GetEnvironmentVariable"                 `
+  -Namespace Win32
+
+$gev_buffer_size = 4096
+$gev_buffer = [System.Text.StringBuilder]::new($gev_buffer_size)
+
 function GetEnvVar
 {
   param([string]$varname)
@@ -52,7 +70,17 @@ function GetEnvVar
   }
   else
   {
-    return (Get-Item env:$varname).Value
+    $nchars = [Win32.Win32GetEnvironmentVariable]::GetEnvironmentVariable(
+                $varname,
+                $gev_buffer,
+                [uint32]$gev_buffer_size
+                )
+    if ($nchars -gt $gev_buffer_size)
+    {
+      Write-Host "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
+      ExitWithCode 1
+    }
+    return [string]$gev_buffer
   }
 }
 
@@ -74,22 +102,14 @@ CreateFile(
   IntPtr templateFile
   );
 '@
-$CreateFile = Add-Type                                  `
-                -MemberDefinition $CreateFile_signature `
-                -Name "Win32CreateFile"                 `
-                -Namespace Win32                        `
-                -PassThru
+Add-Type -MemberDefinition $CreateFile_signature -Name "Win32CreateFile" -Namespace Win32
 
 $CloseHandle_signature = @'
 [DllImport("kernel32.dll", SetLastError = true)]
 public static extern bool
 CloseHandle(IntPtr hHandle);
 '@
-$CloseHandle = Add-Type                                   `
-                 -MemberDefinition $CloseHandle_signature `
-                 -Name "Win32CloseHandle"                 `
-                 -Namespace Win32                         `
-                 -PassThru
+Add-Type -MemberDefinition $CloseHandle_signature -Name "Win32CloseHandle" -Namespace Win32
 
 $GetFileTime_signature = @'
 [DllImport("kernel32.dll", SetLastError = true)]
@@ -101,11 +121,7 @@ GetFileTime(
   ref long lpLastWriteTime
   );
 '@
-$GetFileTime = Add-Type                                   `
-                 -MemberDefinition $GetFileTime_signature `
-                 -Name "Win32GetFileTime"                 `
-                 -Namespace Win32                         `
-                 -PassThru
+Add-Type -MemberDefinition $GetFileTime_signature -Name "Win32GetFileTime" -Namespace Win32
 
 $SetFileTime_signature = @'
 [DllImport("kernel32.dll", SetLastError = true)]
@@ -117,11 +133,7 @@ SetFileTime(
   ref long lpLastWriteTime
   );
 '@
-$SetFileTime = Add-Type                                   `
-                 -MemberDefinition $SetFileTime_signature `
-                 -Name "Win32SetFileTime"                 `
-                 -Namespace Win32                         `
-                 -PassThru
+Add-Type -MemberDefinition $SetFileTime_signature -Name "Win32SetFileTime" -Namespace Win32
 
 function SetTimeOfSymlink
 {
@@ -129,7 +141,7 @@ function SetTimeOfSymlink
   [Long]$CreationTime   = 0
   [Long]$LastAccessTime = 0
   [Long]$LastWriteTime  = 0
-  $handle = $CreateFile::CreateFile(
+  $handle = [Win32.Win32CreateFile]::CreateFile(
               $source,
               0x80,
               0,
@@ -138,13 +150,13 @@ function SetTimeOfSymlink
               0x80,
               [System.IntPtr]::Zero
               )
-  $GetFileTime::GetFileTime(
+  [Win32.Win32GetFileTime]::GetFileTime(
     $handle,
     [ref]$CreationTime,
     [ref]$LastAccessTime,
     [ref]$LastWriteTime) | Out-Null
-  $CloseHandle::CloseHandle($handle) | Out-Null
-  $handle = $CreateFile::CreateFile(
+  [Win32.Win32CloseHandle]::CloseHandle($handle) | Out-Null
+  $handle = [Win32.Win32CreateFile]::CreateFile(
               $symlink,
               0x100,
               0,
@@ -153,12 +165,12 @@ function SetTimeOfSymlink
               0x200000,
               [System.IntPtr]::Zero
               )
-  $SetFileTime::SetFileTime(
+  [Win32.Win32SetFileTime]::SetFileTime(
     $handle,
     [ref]$CreationTime,
     [ref]$LastAccessTime,
     [ref]$LastWriteTime) | Out-Null
-  $CloseHandle::CloseHandle($handle) | Out-Null
+  [Win32.Win32CloseHandle]::CloseHandle($handle) | Out-Null
 }
 
 ################################################################################

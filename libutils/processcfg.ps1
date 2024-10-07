@@ -40,6 +40,24 @@ function ExitWithCode
 # GetEnvVar()                                                                  #
 #                                                                              #
 ################################################################################
+
+$GetEnvironmentVariable_signature = @'
+[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+public static extern uint
+GetEnvironmentVariable(
+  string lpName,
+  [Out] System.Text.StringBuilder lpBuffer,
+  uint nSize
+  );
+'@
+Add-Type                                              `
+  -MemberDefinition $GetEnvironmentVariable_signature `
+  -Name "Win32GetEnvironmentVariable"                 `
+  -Namespace Win32
+
+$gev_buffer_size = 4096
+$gev_buffer = [System.Text.StringBuilder]::new($gev_buffer_size)
+
 function GetEnvVar
 {
   param([string]$varname)
@@ -49,7 +67,17 @@ function GetEnvVar
   }
   else
   {
-    return (Get-Item env:$varname).Value
+    $nchars = [Win32.Win32GetEnvironmentVariable]::GetEnvironmentVariable(
+                $varname,
+                $gev_buffer,
+                [uint32]$gev_buffer_size
+                )
+    if ($nchars -gt $gev_buffer_size)
+    {
+      Write-Host "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
+      ExitWithCode 1
+    }
+    return [string]$gev_buffer
   }
 }
 
