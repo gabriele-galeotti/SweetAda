@@ -211,12 +211,47 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 16 .. 31;
    end record;
 
+   -- 4.11.2 SYS_NMI_CTLSTAT
+
+   type SYS_NMI_CTLSTAT_Type is record
+      CS_SRC    : Boolean := False; -- Enables CS interrupt as a source of NMI
+      PSS_SRC   : Boolean := False; -- Enables the PSS interrupt as a source of NMI
+      PCM_SRC   : Boolean := False; -- Enables the PCM interrupt as a source of NMI
+      PIN_SRC   : Boolean := False; -- configures the RSTn/NMI pin as a source of NMI
+      Reserved1 : Bits_12 := 0;
+      CS_FLG    : Boolean := False; -- indicates CS interrupt was the source of NMI
+      PSS_FLG   : Boolean := False; -- indicates the PSS interrupt was the source of NMI
+      PCM_FLG   : Boolean := False; -- indicates the PCM interrupt was the source of NMI
+      PIN_FLG   : Boolean := False; -- Indicates the RSTn/NMI pin was the source of NMI
+      Reserved2 : Bits_12 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_NMI_CTLSTAT_Type use record
+      CS_SRC    at 0 range  0 ..  0;
+      PSS_SRC   at 0 range  1 ..  1;
+      PCM_SRC   at 0 range  2 ..  2;
+      PIN_SRC   at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 .. 15;
+      CS_FLG    at 0 range 16 .. 16;
+      PSS_FLG   at 0 range 17 .. 17;
+      PCM_FLG   at 0 range 18 .. 18;
+      PIN_FLG   at 0 range 19 .. 19;
+      Reserved2 at 0 range 20 .. 31;
+   end record;
+
    -- Table 6-34. SYSCTL Registers
 
    SYSCTL_BASEADDRESS : constant := 16#E004_3000#;
 
    SYS_REBOOT_CTL : aliased SYS_REBOOT_CTL_Type
       with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_NMI_CTLSTAT : aliased SYS_NMI_CTLSTAT_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0004#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
