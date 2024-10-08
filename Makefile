@@ -158,10 +158,6 @@ export OSTYPE
 # workarounds for some environments
 ifeq ($(OSTYPE),cmd)
 SHELL := cmd
-ifneq ($(CLINK_DIR),)
-$(error Error: Clink is not supported - execute "clink autorun uninstall" and \
-               after a restart perform SET "CLINK_DIR=" in the cmd.exe shell)
-endif
 endif
 
 # executable and script extensions
