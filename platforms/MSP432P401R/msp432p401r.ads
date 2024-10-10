@@ -40,7 +40,7 @@ pragma Style_Checks (Off);
    -- 3 Reset Controller (RSTCTL)
    ----------------------------------------------------------------------------
 
-   -- 3.3.1 RSTCTL_RESET_REQ
+   -- 3.3.1 RSTCTL_RESET_REQ Register
 
    RSTCTL_RESET_REQ_RSTKEY : constant := 16#69#;
 
@@ -62,12 +62,12 @@ pragma Style_Checks (Off);
    end record;
 
    -- common definitions for RSTCTL_[HARD|SOFT]RESET_[STAT|CLR|SET]
-   -- 3.3.2 RSTCTL_HARDRESET_STAT
-   -- 3.3.3 RSTCTL_HARDRESET_CLR
-   -- 3.3.4 RSTCTL_HARDRESET_SET
-   -- 3.3.5 RSTCTL_SOFTRESET_STAT
-   -- 3.3.6 RSTCTL_SOFTRESET_CLR
-   -- 3.3.7 RSTCTL_SOFTRESET_SET
+   -- 3.3.2 RSTCTL_HARDRESET_STAT Register
+   -- 3.3.3 RSTCTL_HARDRESET_CLR Register
+   -- 3.3.4 RSTCTL_HARDRESET_SET Register
+   -- 3.3.5 RSTCTL_SOFTRESET_STAT Register
+   -- 3.3.6 RSTCTL_SOFTRESET_CLR Register
+   -- 3.3.7 RSTCTL_SOFTRESET_SET Register
 
    -- indexes into bitmaps
    SRC0  : constant := 0;
@@ -98,7 +98,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 16 .. 31;
    end record;
 
-   -- 3.3.8 RSTCTL_PSSRESET_STAT
+   -- 3.3.8 RSTCTL_PSSRESET_STAT Register
 
    type RSTCTL_PSSRESET_STAT_Type is record
       Reserved1 : Bits_1;
@@ -117,7 +117,7 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 4 .. 31;
    end record;
 
-   -- 3.3.9 RSTCTL_PSSRESET_CLR
+   -- 3.3.9 RSTCTL_PSSRESET_CLR Register
 
    type RSTCTL_PSSRESET_CLR_Type is record
       CLR      : Boolean; -- Write 1 clears all PSS Reset Flags in the RSTCTL_PSSRESET_STAT
@@ -192,7 +192,7 @@ pragma Style_Checks (Off);
    -- 4 System Controller (SYSCTL)
    ----------------------------------------------------------------------------
 
-   -- 4.11.1 SYS_REBOOT_CTL Register Reboot Control Register
+   -- 4.11.1 SYS_REBOOT_CTL Register
 
    SYS_REBOOT_CTL_WKEY : constant := 16#69#;
 
@@ -211,7 +211,7 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 16 .. 31;
    end record;
 
-   -- 4.11.2 SYS_NMI_CTLSTAT
+   -- 4.11.2 SYS_NMI_CTLSTAT Register
 
    type SYS_NMI_CTLSTAT_Type is record
       CS_SRC    : Boolean := False; -- Enables CS interrupt as a source of NMI
@@ -240,6 +240,27 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 20 .. 31;
    end record;
 
+   -- 4.11.3 SYS_WDTRESET_CTL Register
+
+   TIMEOUT_SOFT : constant := 0; -- WDT timeout event generates Soft reset
+   TIMEOUT_HARD : constant := 1; -- WDT timeout event generates Hard reset
+
+   VIOLATION_SOFT : constant := 0; -- WDT password violation event generates Soft reset
+   VIOLATION_HARD : constant := 1; -- WDT password violation event generates Hard reset
+
+   type SYS_WDTRESET_CTL_Type is record
+      TIMEOUT   : Bits_1  := TIMEOUT_SOFT;   -- WDT timeout event
+      VIOLATION : Bits_1  := VIOLATION_SOFT; -- WDT password violation
+      Reserved  : Bits_30 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_WDTRESET_CTL_Type use record
+      TIMEOUT   at 0 range 0 ..  0;
+      VIOLATION at 0 range 1 ..  1;
+      Reserved  at 0 range 2 .. 31;
+   end record;
+
    -- Table 6-34. SYSCTL Registers
 
    SYSCTL_BASEADDRESS : constant := 16#E004_3000#;
@@ -252,6 +273,12 @@ pragma Style_Checks (Off);
 
    SYS_NMI_CTLSTAT : aliased SYS_NMI_CTLSTAT_Type
       with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0004#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_WDTRESET_CTL : aliased SYS_WDTRESET_CTL_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0008#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
