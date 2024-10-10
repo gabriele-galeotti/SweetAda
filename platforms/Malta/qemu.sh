@@ -64,6 +64,11 @@ return 0
 #                                                                              #
 ################################################################################
 
+if [ "x${OSTYPE}" = "xmsys" ] ; then
+  exec ${PLATFORM_DIRECTORY}/qemu.bat "$@"
+  exit $?
+fi
+
 # QEMU executable and CPU model
 case ${CPU_MODEL} in
   MIPS32*)

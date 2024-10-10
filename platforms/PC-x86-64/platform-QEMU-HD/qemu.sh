@@ -62,6 +62,11 @@ return 0
 #                                                                              #
 ################################################################################
 
+if [ "x${OSTYPE}" = "xmsys" ] ; then
+  exec ${PLATFORM_DIRECTORY}/qemu.bat "$@"
+  exit $?
+fi
+
 # QEMU executable and CPU model
 QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-x86_64"
 

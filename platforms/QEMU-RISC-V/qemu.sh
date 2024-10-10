@@ -13,6 +13,7 @@
 #
 # Environment variables:
 # OSTYPE
+# PLATFORM_DIRECTORY
 # GDB
 # KERNEL_OUTFILE
 # KERNEL_ROMFILE
@@ -60,6 +61,11 @@ return 0
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
+
+if [ "x${OSTYPE}" = "xmsys" ] ; then
+  exec ${PLATFORM_DIRECTORY}/qemu.bat "$@"
+  exit $?
+fi
 
 # QEMU executable and CPU model
 case ${CPU_MODEL} in
@@ -148,7 +154,9 @@ if [ "x$1" = "x" ] ; then
   wait ${QEMU_PID}
 elif [ "x$1" = "x-debug" ] ; then
   # skip QEMU bootloader by forcing execution until CPU hits _start
-  "${GDB}" \
+  /opt/DDD/bin/ddd \
+  --debugger \
+  "${GDB}" -- \
     -q \
     -iex "set basenames-may-differ" \
     -ex "target extended-remote tcp:localhost:1234" \

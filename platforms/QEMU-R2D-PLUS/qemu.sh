@@ -13,6 +13,7 @@
 #
 # Environment variables:
 # OSTYPE
+# PLATFORM_DIRECTORY
 # GDB
 # KERNEL_OUTFILE
 # KERNEL_ROMFILE
@@ -59,6 +60,11 @@ return 0
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
+
+if [ "x${OSTYPE}" = "xmsys" ] ; then
+  exec ${PLATFORM_DIRECTORY}/qemu.bat "$@"
+  exit $?
+fi
 
 # QEMU executable and CPU model
 QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-sh4"
