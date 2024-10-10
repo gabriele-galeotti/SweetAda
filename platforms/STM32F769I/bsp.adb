@@ -104,13 +104,13 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      ARMv7M.SYST_RVR.RELOAD := Bits_24 ((Configure.SYSCLK_FREQUENCY / 8) / Configure.TICK_FREQUENCY);
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (Configure.SYSCLK_FREQUENCY / Configure.TICK_FREQUENCY);
       ARMv7M.SHPR3.PRI_15 := 16#FF#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR := (
          ENABLE    => True,
          TICKINT   => True,
-         CLKSOURCE => ARMv7M.CLKSOURCE_EXT,
+         CLKSOURCE => ARMv7M.CLKSOURCE_CPU,
          COUNTFLAG => False,
          others    => <>
          );
