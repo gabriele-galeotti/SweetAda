@@ -3,7 +3,6 @@ with Interfaces;
 with Bits;
 with STM32F769I;
 with CPU;
-with Console;
 
 package body Application
    is
@@ -57,7 +56,6 @@ package body Application
             GPIOJ.BSRR.RST := [13 => True, others => <>];
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
          end if;
-         Console.Print (".");
       end loop;
       -------------------------------------------------------------------------
       loop null; end loop;
