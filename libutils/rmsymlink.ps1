@@ -85,13 +85,14 @@ while ($ntarget -gt 0)
       Write-Host "file [installed/symlinked] `"$($destination)`" has timestamp more recent than file [origin] `"$($target)`""
       while ($true)
       {
-        $answer = Read-Host "[u]pdate or [r]emove: "
-        if ($answer -eq "u")
+        $answer = Read-Host "[U]pdate or [R]emove: "
+        $answer = $answer.ToUpper()
+        if ($answer -eq "U")
         {
           Move-Item -Path $destination -Destination $target -Force
           break
         }
-        elseif ($answer -eq "r")
+        elseif ($answer -eq "R")
         {
           $remove = $true
           break
