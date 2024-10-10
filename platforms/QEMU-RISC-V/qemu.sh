@@ -154,9 +154,7 @@ if [ "x$1" = "x" ] ; then
   wait ${QEMU_PID}
 elif [ "x$1" = "x-debug" ] ; then
   # skip QEMU bootloader by forcing execution until CPU hits _start
-  /opt/DDD/bin/ddd \
-  --debugger \
-  "${GDB}" -- \
+  "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
     -ex "target extended-remote tcp:localhost:1234" \
