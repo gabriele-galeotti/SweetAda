@@ -289,7 +289,7 @@ package body MC146818A
    begin
       CPU.Intcontext_Get (Intcontext);
       CPU.Irq_Disable;
-      while True loop
+      loop
          exit when not To_RA (Register_Read (D, RegisterA)).UIP;
       end loop;
       -- register reads within 244 us

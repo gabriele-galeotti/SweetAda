@@ -804,7 +804,7 @@ package body NE2000
       end Packet_Dump_Length;
    begin
       BAR := D.BAR;
-      while True loop
+      loop
          -- Page 0 NODMA
          Out8 (PA (BAR, CR), To_U8 (CR_PAGE0));
          exit when not To_RSR (In8 (PA (BAR, RSR))).PRX;
