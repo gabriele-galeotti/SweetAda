@@ -80,7 +80,7 @@ package body BSP
       is
    begin
       CSKEY.CSKEY := CSKEY_CSKEY;
-      while True loop
+      loop
          exit when CSSTAT.REFO_ON;
       end loop;
       -- set primary module for HFXT
@@ -102,7 +102,7 @@ package body BSP
          others     => <>
          );
       -- wait until HFXT oscillator does not fail
-      while True loop
+      loop
          CSCLRIFG.CLR_HFXTIFG := True;
          for Delay_Loop_Count in 1 .. 1024 loop CPU.NOP; end loop;
          exit when CSSTAT.HFXT_ON and then not CSIFG.HFXTIFG;
@@ -123,7 +123,7 @@ package body BSP
       declare
          Clock_Status : CSSTAT_Type;
       begin
-         while True loop
+         loop
             Clock_Status := CSSTAT;
             exit when Clock_Status.ACLK_READY   and then
                       Clock_Status.BCLK_READY   and then
@@ -148,7 +148,7 @@ package body BSP
       declare
          Clock_Status : CSSTAT_Type;
       begin
-         while True loop
+         loop
             Clock_Status := CSSTAT;
             exit when Clock_Status.ACLK_READY   and then
                       Clock_Status.BCLK_READY   and then
@@ -206,13 +206,13 @@ package body BSP
          );
       -- PCM ------------------------------------------------------------------
       PCMCTL0.AMR := AMR_AM_LDO_VCORE0;
-      while True loop
+      loop
          exit when PCMCTL0.CPM = CPM_AM_LDO_VCORE0;
       end loop;
-      -- Port mapping initialization ------------------------------------------
+      -- port mapping initialization ------------------------------------------
       PMAPKEYID.PMAPKEYx := PMAPKEYx_KEY;
       PMAPCTL.PMAPRECFG := True;
-      -- Clock ----------------------------------------------------------------
+      -- clock ----------------------------------------------------------------
       Clk_Init;
       -- USCI_A0 --------------------------------------------------------------
       eUSCI_A0.UCAxCTLW0.UCSWRST := True;
