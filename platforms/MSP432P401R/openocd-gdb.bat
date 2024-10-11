@@ -6,5 +6,5 @@
   -ex "set $pc=_start"                        ^
   %KERNEL_OUTFILE%
 
-EXIT /B %ERRORLEVEL%
+EXIT /B 0
 
