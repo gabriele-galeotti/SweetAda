@@ -769,6 +769,23 @@ package ARMv7M
 
    procedure NOP
       renames ARMv6M.NOP;
+   procedure BREAKPOINT
+      renames ARMv6M.BREAKPOINT;
+
+   ----------------------------------------------------------------------------
+   -- Specific definitions
+   ----------------------------------------------------------------------------
+
+   procedure WFE
+      renames ARMv6M.WFE;
+   procedure WFI
+      renames ARMv6M.WFI;
+   procedure DMB
+      renames ARMv6M.DMB;
+   procedure DSB
+      renames ARMv6M.DSB;
+   procedure ISB
+      renames ARMv6M.ISB;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
