@@ -324,6 +324,23 @@ package body ARMv6M
    end BREAKPOINT;
 
    ----------------------------------------------------------------------------
+   -- WFE
+   ----------------------------------------------------------------------------
+   procedure WFE
+      is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        wfe" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end WFE;
+
+   ----------------------------------------------------------------------------
    -- WFI
    ----------------------------------------------------------------------------
    procedure WFI

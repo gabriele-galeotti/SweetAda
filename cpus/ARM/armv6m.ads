@@ -645,6 +645,8 @@ package ARMv6M
    -- Specific definitions
    ----------------------------------------------------------------------------
 
+   procedure WFE
+      with Inline => True;
    procedure WFI
       with Inline => True;
    procedure DMB
