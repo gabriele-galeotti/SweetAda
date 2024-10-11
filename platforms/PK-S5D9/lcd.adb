@@ -65,22 +65,22 @@ package body LCD
       SCI (0).SCR := (CKE => CKE_Sync_Int_CLK, others => False); -- disable TE/RE
       SCI (0).FCR.FM := False;
       SCI (0).SMR.NORMAL := (
-                             CKS  => SMR_CKS_PCLKA4, -- n=1 -> CKS = 1
-                             MP   => False,
-                             STOP => SMR_STOP_1,
-                             PM   => SMR_PM_EVEN,
-                             PE   => False,
-                             CHR  => CHR_8.CHR,
-                             CM   => SMR_CM_SYNC
-                            );
+         CKS  => SMR_CKS_PCLKA4, -- n=1 -> CKS = 1
+         MP   => False,
+         STOP => SMR_STOP_1,
+         PM   => SMR_PM_EVEN,
+         PE   => False,
+         CHR  => CHR_8.CHR,
+         CM   => SMR_CM_SYNC
+         );
       SCI (0).SCMR := (
-                       SMIF   => False,
-                       SINV   => SCMR_SINV_NO,
-                       SDIR   => SCMR_SDIR_LSB,
-                       CHR1   => CHR_8.CHR1,
-                       BCP2   => 1,
-                       others => <>
-                      );
+         SMIF   => False,
+         SINV   => SCMR_SINV_NO,
+         SDIR   => SCMR_SDIR_LSB,
+         CHR1   => CHR_8.CHR1,
+         BCP2   => 1,
+         others => <>
+         );
       -- simple SPI on port 1: SCI0: MISO0, MOSI0, SCK0
       PFSR (P100).PMR  := True;
       PFSR (P100).PSEL := PSEL_SCI1;

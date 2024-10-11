@@ -21,6 +21,7 @@ with ARMv7M;
 with ARMv7M.FPU;
 with CortexM4;
 with S5D9;
+with Exceptions;
 with Console;
 
 package body BSP
@@ -40,6 +41,8 @@ package body BSP
    use S5D9;
 
    procedure CLK_Init;
+   procedure SysTick_Init;
+   procedure LED_Init;
    procedure Serial_Console_Init;
    procedure QSPI_Init;
    procedure QSPI_Test;
@@ -123,16 +126,37 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      ARMv7M.SYST_RVR.RELOAD := 16#8000#;
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (120_000_000 / 2_000);
       ARMv7M.SHPR3.PRI_15 := 16#FF#;
       ARMv7M.SYST_CVR.CURRENT := 0;
-      ARMv7M.SYST_CSR :=
-         (ENABLE    => True,
-          TICKINT   => True,
-          CLKSOURCE => ARMv7M.CLKSOURCE_EXT,
-          COUNTFLAG => False,
-          others    => <>);
+      ARMv7M.SYST_CSR := (
+         ENABLE    => True,
+         TICKINT   => True,
+         CLKSOURCE => ARMv7M.CLKSOURCE_CPU,
+         COUNTFLAG => False,
+         others    => <>
+         );
    end SysTick_Init;
+
+   ----------------------------------------------------------------------------
+   -- LED_Init
+   ----------------------------------------------------------------------------
+   procedure LED_Init
+      is
+   begin
+      -- P600 output LED1 (green) OFF
+      PFSR (P600).PMR := False;
+      PORT (6).PDR.PDR00 := True;
+      PORT (6).PODR.PODR00 := True;
+      -- P601 output LED2 (red) OFF
+      PFSR (P601).PMR := False;
+      PORT (6).PDR.PDR01 := True;
+      PORT (6).PODR.PODR01 := True;
+      -- P602 output LED3 (yellow) OFF
+      PFSR (P602).PMR := False;
+      PORT (6).PDR.PDR02 := True;
+      PORT (6).PODR.PODR02 := True;
+   end LED_Init;
 
    ----------------------------------------------------------------------------
    -- Serial_Console_Init
@@ -293,6 +317,9 @@ package body BSP
       PWPR.B0WI  := False;
       PWPR.PFSWE := True;
       -------------------------------------------------------------------------
+      Exceptions.Init;
+      -------------------------------------------------------------------------
+      LED_Init;
       Serial_Console_Init;
       QSPI_Init;
       -- Console --------------------------------------------------------------
@@ -302,15 +329,19 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print ("Synergy PK-S5D9", NL => True);
       -------------------------------------------------------------------------
-      pragma Warnings (Off, "volatile actual passed by copy");
+      pragma Warnings (Off);
       Console.Print (ARMv7M.To_U32 (ARMv7M.CPUID), Prefix => "CPUID: ", NL => True);
-      pragma Warnings (On, "volatile actual passed by copy");
+      pragma Warnings (On);
       Console.Print (CortexM4.ACTLR.DISMCYCINT, Prefix => "ACTLR: DISMCYCINT: ", NL => True);
       Console.Print (CortexM4.ACTLR.DISDEFWBUF, Prefix => "ACTLR: DISDEFWBUF: ", NL => True);
       Console.Print (CortexM4.ACTLR.DISFOLD,    Prefix => "ACTLR: DISFOLD:    ", NL => True);
       Console.Print (CortexM4.ACTLR.DISFPCA,    Prefix => "ACTLR: DISFPCA:    ", NL => True);
       Console.Print (CortexM4.ACTLR.DISOOFP,    Prefix => "ACTLR: DISOOFP:    ", NL => True);
       QSPI_Test;
+      -------------------------------------------------------------------------
+      ARMv7M.Irq_Enable;
+      ARMv7M.Fault_Irq_Enable;
+      SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;
 

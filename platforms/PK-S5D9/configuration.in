@@ -15,6 +15,7 @@
 #PROFILE    := zfp
 #USE_LIBADA := N
 USE_LIBGCC := Y
+#USE_LIBM   := Y
 
 USE_APPLICATION := test-PK-S5D9
 
@@ -47,43 +48,34 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 #                                                                              #
 ################################################################################
 
+ifeq ($(OSTYPE),cmd)
+OPENOCD_PREFIX := C:\Program Files\OpenOCD-20231002-0.12.0
+else ifeq ($(OSTYPE),msys)
+OPENOCD_PREFIX := C:/Program Files/OpenOCD-20231002-0.12.0
+else
 OPENOCD_PREFIX := /opt/OpenOCD
-#OPENOCD_PREFIX := C:\Program Files\OpenOCD-20230202-0.12.0
+endif
 
-# Python front-end
+# Tcl:
+# $(TCLSH) instead of $(PYTHON)
+# openocd.tcl instead of openocd.py
+
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -p "$(OPENOCD_PREFIX)"                                     \
                            -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg    \
                            -server -w
 SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -shutdown
-RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
-                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
-                           -e $(ELFTOOL) -s _start -thumb -command "reset halt"
-
-# Tcl front-end
-#SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
-#                           -p "$(OPENOCD_PREFIX)"                                     \
-#                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg    \
-#                           -server -w
-#SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
-#                           -shutdown
-#RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.tcl \
-#                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
-#                           -e $(ELFTOOL) -s _start -thumb -command "reset halt"
-
-# debug session in cmd.exe shell
-#DEBUG_COMMAND          := $(RUN_COMMAND) -debug &&                          \
-#                          %GDB%                                             \
-#                                -ex "target extended-remote localhost:3333" \
-#                                -ex "set language asm"                      \
-#                                -ex "set $$pc=_start"                       \
-#                                $(KERNEL_OUTFILE)
-# debug session in *sh shell
-DEBUG_COMMAND          := $(RUN_COMMAND) -debug &&                          \
-                          $${GDB}                                           \
-                                -ex "target extended-remote localhost:3333" \
-                                -ex "set language asm"                      \
-                                -ex "set \$$pc=_start"                      \
-                                $(KERNEL_OUTFILE)
+RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py        \
+                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                           \
+                           -e $(ELFTOOL)                                                     \
+                           -s _start                                                         \
+                           -thumb                                                            \
+                           -noload -noexec                                                   \
+                           -commandfile "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cmd
+ifeq ($(OSTYPE),cmd)
+DEBUG_COMMAND         := $(RUN_COMMAND) -debug && "$(SWEETADA_PATH)"\$(PLATFORM_DIRECTORY_CMD)\openocd-gdb.bat
+else
+DEBUG_COMMAND         := $(RUN_COMMAND) -debug && "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd-gdb.sh
+endif
 

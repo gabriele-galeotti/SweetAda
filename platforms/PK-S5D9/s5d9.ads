@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -30,12 +29,11 @@ package S5D9 is
    --                                                                        --
    --========================================================================--
 
-   pragma Warnings (Off);
-
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
+
+pragma Style_Checks (Off);
 
    -- S5D9 Microcontroller Group User''s Manual
    -- Renesas Synergy(TM) Platform
@@ -69,7 +67,7 @@ package S5D9 is
    RSTSR0_ADDRESS : constant := 16#4001_E410#;
 
    RSTSR0 : aliased RSTSR0_Type
-      with Address              => To_Address (RSTSR0_ADDRESS),
+      with Address              => System'To_Address (RSTSR0_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -106,7 +104,7 @@ package S5D9 is
    RSTSR1_ADDRESS : constant := 16#4001_E0C0#;
 
    RSTSR1 : aliased RSTSR1_Type with
-      Address              => To_Address (RSTSR1_ADDRESS),
+      Address              => System'To_Address (RSTSR1_ADDRESS),
       Volatile_Full_Access => True,
       Import               => True,
       Convention           => Ada;
@@ -127,7 +125,7 @@ package S5D9 is
    RSTSR2_ADDRESS : constant := 16#4001_E411#;
 
    RSTSR2 : aliased RSTSR2_Type
-      with Address              => To_Address (RSTSR2_ADDRESS),
+      with Address              => System'To_Address (RSTSR2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -184,7 +182,7 @@ package S5D9 is
    SCKDIVCR_ADDRESS : constant := 16#4001_E020#;
 
    SCKDIVCR : aliased SCKDIVCR_Type
-      with Address              => To_Address (SCKDIVCR_ADDRESS),
+      with Address              => System'To_Address (SCKDIVCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -211,7 +209,7 @@ package S5D9 is
    SCKDIVCR2_ADDRESS : constant := 16#4001_E024#;
 
    SCKDIVCR2 : aliased SCKDIVCR2_Type
-      with Address              => To_Address (SCKDIVCR2_ADDRESS),
+      with Address              => System'To_Address (SCKDIVCR2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -239,7 +237,7 @@ package S5D9 is
    SCKSCR_ADDRESS : constant := 16#4001_E026#;
 
    SCKSCR : aliased SCKSCR_Type
-      with Address              => To_Address (SCKSCR_ADDRESS),
+      with Address              => System'To_Address (SCKSCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -317,7 +315,7 @@ package S5D9 is
    PLLCCR_ADDRESS : constant := 16#4001_E028#;
 
    PLLCCR : aliased PLLCCR_Type
-      with Address              => To_Address (PLLCCR_ADDRESS),
+      with Address              => System'To_Address (PLLCCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -338,7 +336,7 @@ package S5D9 is
    PLLCR_ADDRESS : constant := 16#4001_E02A#;
 
    PLLCR : aliased PLLCR_Type
-      with Address              => To_Address (PLLCR_ADDRESS),
+      with Address              => System'To_Address (PLLCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -359,7 +357,7 @@ package S5D9 is
    MOSCCR_ADDRESS : constant := 16#4001_E032#;
 
    MOSCCR : aliased MOSCCR_Type
-      with Address              => To_Address (MOSCCR_ADDRESS),
+      with Address              => System'To_Address (MOSCCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -380,7 +378,7 @@ package S5D9 is
    SOSCCR_ADDRESS : constant := 16#4001_E480#;
 
    SOSCCR : aliased SOSCCR_Type
-      with Address              => To_Address (SOSCCR_ADDRESS),
+      with Address              => System'To_Address (SOSCCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -401,7 +399,7 @@ package S5D9 is
    LOCOCR_ADDRESS : constant := 16#4001_E490#;
 
    LOCOCR : aliased LOCOCR_Type
-      with Address              => To_Address (LOCOCR_ADDRESS),
+      with Address              => System'To_Address (LOCOCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -422,7 +420,7 @@ package S5D9 is
    HOCOCR_ADDRESS : constant := 16#4001_E036#;
 
    HOCOCR : aliased HOCOCR_Type
-      with Address              => To_Address (HOCOCR_ADDRESS),
+      with Address              => System'To_Address (HOCOCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -451,7 +449,7 @@ package S5D9 is
    OSCSF_ADDRESS : constant := 16#4001_E03C#;
 
    OSCSF : aliased OSCSF_Type
-      with Address              => To_Address (OSCSF_ADDRESS),
+      with Address              => System'To_Address (OSCSF_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -483,7 +481,7 @@ package S5D9 is
    MOSCWTCR_ADDRESS : constant := 16#4001_E0A2#;
 
    MOSCWTCR : aliased MOSCWTCR_Type
-      with Address              => To_Address (MOSCWTCR_ADDRESS),
+      with Address              => System'To_Address (MOSCWTCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -516,7 +514,7 @@ package S5D9 is
    MOMCR_ADDRESS : constant := 16#4001_E413#;
 
    MOMCR : aliased MOMCR_Type
-      with Address              => To_Address (MOMCR_ADDRESS),
+      with Address              => System'To_Address (MOMCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -543,7 +541,7 @@ package S5D9 is
    SBYCR_ADDRESS : constant := 16#4001_E00C#;
 
    SBYCR : aliased SBYCR_Type
-      with Address              => To_Address (SBYCR_ADDRESS),
+      with Address              => System'To_Address (SBYCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -578,7 +576,7 @@ package S5D9 is
    MSTPCRA_ADDRESS : constant := 16#4001_E01C#;
 
    MSTPCRA : aliased MSTPCRA_Type
-      with Address              => To_Address (MSTPCRA_ADDRESS),
+      with Address              => System'To_Address (MSTPCRA_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -653,7 +651,7 @@ package S5D9 is
    MSTPCRB_ADDRESS : constant := 16#4004_7000#;
 
    MSTPCRB : aliased MSTPCRB_Type
-      with Address              => To_Address (MSTPCRB_ADDRESS),
+      with Address              => System'To_Address (MSTPCRB_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -706,7 +704,7 @@ package S5D9 is
    MSTPCRC_ADDRESS : constant := 16#4004_7004#;
 
    MSTPCRC : aliased MSTPCRC_Type
-      with Address              => To_Address (MSTPCRC_ADDRESS),
+      with Address              => System'To_Address (MSTPCRC_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -765,7 +763,7 @@ package S5D9 is
    MSTPCRD_ADDRESS : constant := 16#4004_7008#;
 
    MSTPCRD : aliased MSTPCRD_Type
-      with Address              => To_Address (MSTPCRD_ADDRESS),
+      with Address              => System'To_Address (MSTPCRD_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -800,7 +798,7 @@ package S5D9 is
    PRCR_ADDRESS : constant := 16#4001_E3FE#;
 
    PRCR : aliased PRCR_Type
-      with Address              => To_Address (PRCR_ADDRESS),
+      with Address              => System'To_Address (PRCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1390,6 +1388,8 @@ package S5D9 is
    type DELSR_Array_Type is array (0 .. 7) of DELSR_Type
       with Pack => True;
 
+pragma Warnings (Off);
+
    type ICU_Type is record
       IRQCR  : IRQCR_Array_Type;
       NMICR  : NMICR_Type        with Volatile_Full_Access => True;
@@ -1414,10 +1414,12 @@ package S5D9 is
       IELSR  at 16#0300# range 0 .. 96 * 32 - 1;
    end record;
 
+pragma Warnings (On);
+
    ICU_ADDRESS : constant := 16#4000_6000#;
 
    ICU : aliased ICU_Type
-      with Address    => To_Address (ICU_ADDRESS),
+      with Address    => System'To_Address (ICU_ADDRESS),
            Import     => True,
            Convention => Ada;
 
@@ -1507,6 +1509,8 @@ package S5D9 is
 
    -- PORT0 .. PORTB memory-mapped array
 
+pragma Warnings (Off);
+
    type PORT_Type is record
       PODR : PODR_Type   with Volatile_Full_Access => True;
       PDR  : PDR_Type    with Volatile_Full_Access => True;
@@ -1530,10 +1534,12 @@ package S5D9 is
       EOSR at 16#0E# range 0 .. 15;
    end record;
 
+pragma Warnings (On);
+
    PORT_ADDRESS : constant := 16#4004_0000#;
 
    PORT : aliased array (0 .. 11) of PORT_Type
-      with Address    => To_Address (PORT_ADDRESS),
+      with Address    => System'To_Address (PORT_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1697,7 +1703,7 @@ package S5D9 is
    PFSR_ADDRESS : constant := 16#4004_0800#;
 
    PFSR : aliased array (0 .. 191) of PFSR_Type
-      with Address    => To_Address (PFSR_ADDRESS),
+      with Address    => System'To_Address (PFSR_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1720,7 +1726,7 @@ package S5D9 is
    PWPR_ADDRESS : constant := 16#4004_0D03#;
 
    PWPR : aliased PWPR_Type
-      with Address              => To_Address (PWPR_ADDRESS),
+      with Address              => System'To_Address (PWPR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1880,13 +1886,13 @@ package S5D9 is
    AGT_ADDRESS : constant := 16#4008_4000#;
 
    AGT0 : aliased AGT_Type
-      with Address    => To_Address (AGT_ADDRESS),
+      with Address    => System'To_Address (AGT_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    AGT1 : aliased AGT_Type
-      with Address    => To_Address (AGT_ADDRESS + 16#0100#),
+      with Address    => System'To_Address (AGT_ADDRESS + 16#0100#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2475,7 +2481,7 @@ package S5D9 is
    SCI_ADDRESS : constant := 16#4007_0000#;
 
    SCI : aliased array (0 .. 9) of SCI_Type
-      with Address    => To_Address (SCI_ADDRESS),
+      with Address    => System'To_Address (SCI_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -3008,6 +3014,8 @@ package S5D9 is
 
    -- QSPI
 
+pragma Warnings (Off);
+
    type QSPI_Type is record
       SFMCOM : SFMCOM_Type with Volatile_Full_Access => True;
       SFMCMD : SFMCMD_Type with Volatile_Full_Access => True;
@@ -3019,12 +3027,16 @@ package S5D9 is
       SFMCMD at 16#14# range 0 .. 31;
    end record;
 
+pragma Warnings (On);
+
    QSPI_ADDRESS : constant := 16#6400_0000#;
 
    QSPI : aliased QSPI_Type
-      with Address    => To_Address (QSPI_ADDRESS),
+      with Address    => System'To_Address (QSPI_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+pragma Style_Checks (On);
 
 end S5D9;

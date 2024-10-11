@@ -15,7 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+with Bits;
+with LLutils;
 with Abort_Library;
+with ARMv7M;
+with CPU;
+with S5D9;
+with BSP;
 
 package body Exceptions
    is
@@ -27,6 +34,10 @@ package body Exceptions
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use Interfaces;
+   use Bits;
+   use S5D9;
 
    --========================================================================--
    --                                                                        --
@@ -51,7 +62,11 @@ package body Exceptions
    procedure Irq_Process
       is
    begin
-      Abort_Library.System_Abort;
+      BSP.Tick_Count := @ + 1;
+      if BSP.Tick_Count mod 1_000 = 0 then
+         -- LED1 green
+         PORT (6).PODR.PODR00 := not @;
+      end if;
    end Irq_Process;
 
    ----------------------------------------------------------------------------
@@ -59,8 +74,11 @@ package body Exceptions
    ----------------------------------------------------------------------------
    procedure Init
       is
+      Vector_Table : constant Asm_Entry_Point
+         with Import        => True,
+              External_Name => "vectors";
    begin
-      null;
+      ARMv7M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
    end Init;
 
 end Exceptions;
