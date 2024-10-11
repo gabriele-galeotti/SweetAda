@@ -158,7 +158,7 @@ package body Floating_Point
          Buffer (Buffer_Idx) := S;
          -- significand
          Buffer_Idx := @ + 1;
-         while True loop
+         loop
             if M = -1 then
                Buffer (Buffer_Idx) := '.';
                Buffer_Idx := @ + 1;
