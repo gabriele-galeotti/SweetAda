@@ -309,7 +309,7 @@ package body MC146818A
       T.Hour  := Natural (Adjust_BCD (RTC_Hour, RTC_BCD));
       T.WDay  := Natural (Adjust_BCD (RTC_DayOfWeek, RTC_BCD));
       T.MDay  := Natural (Adjust_BCD (RTC_DayOfMonth, RTC_BCD));
-      T.Mon   := Natural (Adjust_BCD (RTC_Month - 1, RTC_BCD));
+      T.Mon   := Natural (Adjust_BCD (RTC_Month, RTC_BCD) - 1);
       T.Year  := Natural (Adjust_BCD (RTC_Year, RTC_BCD));
       T.Year  := @ + (if @ < 70 then 100 else 0);
       T.YDay  := 0;
