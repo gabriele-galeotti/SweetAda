@@ -130,11 +130,6 @@ NULL  :=
 SPACE := $(NULL) $(NULL)
 export NULL SPACE
 
-# verbose output, "Y/y/1" = enabled
-VERBOSE ?=
-override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
-export VERBOSE
-
 # detect OS type
 # detected OS names: "cmd"/"msys"/"darwin"/"linux"
 ifeq ($(OS),Windows_NT)
@@ -157,7 +152,7 @@ export OSTYPE
 
 # workarounds for some environments
 ifeq ($(OSTYPE),cmd)
-SHELL := cmd
+SHELL := cmd.exe
 endif
 
 # executable and script extensions
@@ -217,6 +212,11 @@ else
 PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
 include Makefile.ut.in
+
+# verbose output, "Y/y/1" = enabled
+VERBOSE ?=
+override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
+export VERBOSE
 
 # check for RTS build
 ifeq ($(MAKECMDGOALS),rts)
