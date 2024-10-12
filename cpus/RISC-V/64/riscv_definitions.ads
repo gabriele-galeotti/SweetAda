@@ -145,20 +145,20 @@ package RISCV_Definitions
    -- 3.1.9 Machine Interrupt Registers (mip and mie)
 
    type mip_Type is record
-      Reserved1 : Bits_1 := 0;  -- WARL
-      SSIP      : Boolean;      -- supervisor-level software interrupt pending
-      Reserved2 : Bits_1 := 0;  -- WARL
-      MSIP      : Boolean;      -- machine-level software interrupt pending
-      Reserved3 : Bits_1 := 0;  -- WARL
-      STIP      : Boolean;      -- supervisor-level timer interrupt pending
-      Reserved4 : Bits_1 := 0;  -- WARL
-      MTIP      : Boolean;      -- machine timer interrupt pending
-      Reserved5 : Bits_1 := 0;  -- WARL
-      SEIP      : Boolean;      -- supervisor-level external interrupt pending
-      Reserved6 : Bits_1 := 0;  -- WARL
-      MEIP      : Boolean;      -- machine-level external interrupt pending
-      Reserved7 : Bits_4 := 0;  -- WARL
-      Reserved8 : Bits_16 := 0; -- WARL
+      Reserved1 : Bits_1  := 0;  -- WARL
+      SSIP      : Boolean;       -- supervisor-level software interrupt pending
+      Reserved2 : Bits_1  := 0;  -- WARL
+      MSIP      : Boolean;       -- machine-level software interrupt pending
+      Reserved3 : Bits_1  := 0;  -- WARL
+      STIP      : Boolean;       -- supervisor-level timer interrupt pending
+      Reserved4 : Bits_1  := 0;  -- WARL
+      MTIP      : Boolean;       -- machine timer interrupt pending
+      Reserved5 : Bits_1  := 0;  -- WARL
+      SEIP      : Boolean;       -- supervisor-level external interrupt pending
+      Reserved6 : Bits_1  := 0;  -- WARL
+      MEIP      : Boolean;       -- machine-level external interrupt pending
+      Reserved7 : Bits_4  := 0;  -- WARL
+      Reserved8 : Bits_16 := 0;  -- WARL
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
@@ -180,20 +180,20 @@ package RISCV_Definitions
    end record;
 
    type mie_Type is record
-      Reserved1 : Bits_1 := 0;  -- WARL
-      SSIE      : Boolean;      -- supervisor-level software interrupt enable
-      Reserved2 : Bits_1 := 0;  -- WARL
-      MSIE      : Boolean;      -- machine-level software interrupt enable
-      Reserved3 : Bits_1 := 0;  -- WARL
-      STIE      : Boolean;      -- supervisor-level timer interrupt enable
-      Reserved4 : Bits_1 := 0;  -- WARL
-      MTIE      : Boolean;      -- machine timer interrupt enable
-      Reserved5 : Bits_1 := 0;  -- WARL
-      SEIE      : Boolean;      -- supervisor-level external interrupt enable
-      Reserved6 : Bits_1 := 0;  -- WARL
-      MEIE      : Boolean;      -- machine-level external interrupt enable
-      Reserved7 : Bits_4 := 0;  -- WARL
-      Reserved8 : Bits_48 := 0; -- WARL
+      Reserved1 : Bits_1  := 0;  -- WARL
+      SSIE      : Boolean;       -- supervisor-level software interrupt enable
+      Reserved2 : Bits_1  := 0;  -- WARL
+      MSIE      : Boolean;       -- machine-level software interrupt enable
+      Reserved3 : Bits_1  := 0;  -- WARL
+      STIE      : Boolean;       -- supervisor-level timer interrupt enable
+      Reserved4 : Bits_1  := 0;  -- WARL
+      MTIE      : Boolean;       -- machine timer interrupt enable
+      Reserved5 : Bits_1  := 0;  -- WARL
+      SEIE      : Boolean;       -- supervisor-level external interrupt enable
+      Reserved6 : Bits_1  := 0;  -- WARL
+      MEIE      : Boolean;       -- machine-level external interrupt enable
+      Reserved7 : Bits_4  := 0;  -- WARL
+      Reserved8 : Bits_48 := 0;  -- WARL
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
