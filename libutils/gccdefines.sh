@@ -105,7 +105,7 @@ fi
 max_tmacro_length=0
 max_type_length=7
 for i in "$@" ; do
-  IFS=":" read -r i_macro i_tmacro i_type i_spec << EOF
+  IFS=':' read -r i_macro i_tmacro i_type i_spec << EOF
 ${i}
 EOF
   if [ "x${i_macro}" = "x" ] || [ "x${i_tmacro}" = "x" ] ; then
@@ -147,7 +147,8 @@ if [ "${exit_status}" != "0" ] ; then
 fi
 gcc_output=$(                                                                     \
              printf "%s" "${gcc_output}"                                        | \
-             sed -e "s|^\(#define *\)\([A-Za-z_][0-9A-Za-z_]*\) *\(.*\)|\2=\3|"   \
+             sed -e "s|^\(#define *\)\([A-Za-z_][0-9A-Za-z_]*\) *\(.*\)|\2=\3|" | \
+             sed -e ":a" -e "N" -e "\$!ba" -e "s|\n|!|g"                          \
             )
 
 rm -f ${OUTPUT_FILENAME}
@@ -162,42 +163,35 @@ touch ${OUTPUT_FILENAME}
 } >> ${OUTPUT_FILENAME}
 
 for i in "$@" ; do
-  IFS=":" read -r i_macro i_tmacro i_type i_spec << EOF
+  IFS=':' read -r i_macro i_tmacro i_type i_spec << EOF
 ${i}
 EOF
-  #printf "%s-- %s\n" "${indent}" "${i_macro}" >> ${OUTPUT_FILENAME}
-  printf "%s\n" "${gcc_output}" | \
-  (
-   found=
-   while IFS= read -r line ; do
-     IFS="=" read -r macro value << EOF
-${line}
-EOF
-     if [ "${i_macro}" = "${macro}" ] ; then
-       found=Y
-       case ${i_spec}${i_type} in
-         BBoolean)   value="True" ;;
-         HBoolean)   if [ $((value)) -ne 0 ] ; then value="True" ; else value="False" ; fi ;;
-         N|NInteger) if [ "x${value}" = "x" ] ; then value="-1" ; fi ;;
-         P|PInteger) if [ $((value)) -lt 1 ] ; then value="-1" ; fi ;;
-         SString)    if [ "x${value}" = "x" ] ; then value="\"\"" ; fi ;;
-         *)
-           log_print_error "${SCRIPT_FILENAME}: *** Error: inconsistent item specification."
-           exit 1
-           ;;
-       esac
-       printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}" \
-         >> ${OUTPUT_FILENAME}
-       break
-     fi
-   done
-   if [ "x${found}" = "xY" ] ; then
-     exit 0
-   else
-     exit 1
-   fi
-  )
-  if [ $? -ne 0 ] ; then
+  BACKUP_IFS=${IFS}
+  IFS='!'
+  found=
+  for d in ${gcc_output} ; do
+    if [ "${d%%=*}" = "${i_macro}" ] ; then
+      found=Y
+      value="${d#*=}"
+      break
+    fi
+  done
+  IFS=${BACKUP_IFS}
+  if [ "x${found}" = "xY" ] ; then
+    case ${i_spec}${i_type} in
+      BBoolean)   value="True" ;;
+      HBoolean)   if [ $((value)) -ne 0 ] ; then value="True" ; else value="False" ; fi ;;
+      N|NInteger) if [ "x${value}" = "x" ] ; then value="-1" ; fi ;;
+      P|PInteger) if [ $((value)) -lt 1 ] ; then value="-1" ; fi ;;
+      SString)    if [ "x${value}" = "x" ] ; then value="\"\"" ; fi ;;
+      *)
+        log_print_error "${SCRIPT_FILENAME}: *** Error: inconsistent item specification."
+        exit 1
+        ;;
+    esac
+    printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}" \
+      >> ${OUTPUT_FILENAME}
+  else
     case ${i_spec}${i_type} in
       BBoolean|HBoolean)     value="False" ;;
       N|NInteger|P|PInteger) value="-1" ;;
