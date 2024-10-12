@@ -1107,7 +1107,7 @@ KERNEL_OUTFILE_DEPS :=
 KERNEL_OUTFILE_DEPS += $(DOTSWEETADA)
 KERNEL_OUTFILE_DEPS += $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
 KERNEL_OUTFILE_DEPS += $(OBJECT_DIRECTORY)/b__main.o
-$(KERNEL_OUTFILE): $(KERNEL_OUTFILE_DEPS)
+$(KERNEL_OUTFILE): kernel_lib_obj_dir $(KERNEL_OUTFILE_DEPS)
 endif
 	@$(REM) link phase
 	$(call brief-command, \
@@ -1221,7 +1221,6 @@ $(KERNEL_BASENAME): $(KERNEL_OUTFILE)
 
 .PHONY: all
 all: kernel_start       \
-     kernel_lib_obj_dir \
      $(KERNEL_BASENAME) \
      kernel_end         \
      kernel_info
