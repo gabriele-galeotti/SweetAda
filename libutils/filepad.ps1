@@ -36,6 +36,33 @@ function ExitWithCode
 }
 
 ################################################################################
+# Write-Stderr()                                                               #
+#                                                                              #
+################################################################################
+function Write-Stderr
+{
+  param([PSObject]$inputobject)
+  $outf = if ($host.Name -eq "ConsoleHost")
+  {
+    [Console]::Error.WriteLine
+  }
+  else
+  {
+    $host.UI.WriteErrorLine
+  }
+  if ($inputobject)
+  {
+    [void]$outf.Invoke($inputobject.ToString())
+  }
+  else
+  {
+    [string[]]$lines = @()
+    $input | % { $lines += $_.ToString() }
+    [void]$outf.Invoke($lines -join "`r`n")
+  }
+}
+
+################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
@@ -46,13 +73,13 @@ function ExitWithCode
 $filename = $args[0]
 if ([string]::IsNullOrEmpty($filename))
 {
-  Write-Host "$($scriptname): *** Error: no input file specified."
+  Write-Stderr "$($scriptname): *** Error: no input file specified."
   ExitWithCode 1
 }
 $padstring = [string]$args[1]
 if ([string]::IsNullOrEmpty($padstring))
 {
-  Write-Host "$($scriptname): *** Error: no padding specified."
+  Write-Stderr "$($scriptname): *** Error: no padding specified."
   ExitWithCode 1
 }
 
@@ -66,7 +93,16 @@ else
   $padlength = [Convert]::ToInt32($padstring)
 }
 
-$filebytes = [System.IO.File]::ReadAllBytes($filename)
+try
+{
+  $filebytes = [System.IO.File]::ReadAllBytes($filename)
+}
+catch
+{
+  Write-Stderr "$($scriptname): *** Error: reading $($filename)."
+  ExitWithCode 1
+}
+
 $filelength = $filebytes.Length
 
 if ($padlength -lt $filelength)
@@ -90,7 +126,15 @@ $filebytes += $padbytes
 
 Write-Host "$($scriptname): padding file `"$(Split-Path -Path $filename -Leaf -Resolve)`"."
 
-[System.IO.File]::WriteAllBytes($filename, $filebytes)
+try
+{
+  [System.IO.File]::WriteAllBytes($filename, $filebytes)
+}
+catch
+{
+  Write-Stderr "$($scriptname): *** Error: writing $($filename)."
+  ExitWithCode 1
+}
 
 ExitWithCode 0
 

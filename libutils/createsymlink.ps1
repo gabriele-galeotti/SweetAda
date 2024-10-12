@@ -40,6 +40,33 @@ function ExitWithCode
 }
 
 ################################################################################
+# Write-Stderr()                                                               #
+#                                                                              #
+################################################################################
+function Write-Stderr
+{
+  param([PSObject]$inputobject)
+  $outf = if ($host.Name -eq "ConsoleHost")
+  {
+    [Console]::Error.WriteLine
+  }
+  else
+  {
+    $host.UI.WriteErrorLine
+  }
+  if ($inputobject)
+  {
+    [void]$outf.Invoke($inputobject.ToString())
+  }
+  else
+  {
+    [string[]]$lines = @()
+    $input | % { $lines += $_.ToString() }
+    [void]$outf.Invoke($lines -join "`r`n")
+  }
+}
+
+################################################################################
 # GetEnvVar()                                                                  #
 #                                                                              #
 ################################################################################
@@ -77,7 +104,7 @@ function GetEnvVar
                 )
     if ($nchars -gt $gev_buffer_size)
     {
-      Write-Host "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
+      Write-Stderr "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
       ExitWithCode 1
     }
     return [string]$gev_buffer
@@ -219,7 +246,7 @@ while ($fileindex -lt $args.length)
     }
     else
     {
-      Write-Host "$($scriptname): *** Error: unknown option `"$($optionchar)`"."
+      Write-Stderr "$($scriptname): *** Error: unknown option `"$($optionchar)`"."
       ExitWithCode 1
     }
   }
@@ -233,7 +260,7 @@ while ($fileindex -lt $args.length)
 # check for at least one symlink target
 if ($fileindex -ge $args.length)
 {
-  Write-Host "$($scriptname): *** Error: no symlink target specified."
+  Write-Stderr "$($scriptname): *** Error: no symlink target specified."
   ExitWithCode 1
 }
 
@@ -258,7 +285,7 @@ while ($fileindex -lt $args.length)
   # then, the 2nd argument of the pair should exist
   if (($fileindex + 1) -ge $args.length)
   {
-    Write-Host "$($scriptname): *** Error: no symlink link name specified."
+    Write-Stderr "$($scriptname): *** Error: no symlink link name specified."
     ExitWithCode 1
   }
   if (Test-Path -Path $target -PathType Leaf)
@@ -335,7 +362,7 @@ while ($fileindex -lt $args.length)
   }
   else
   {
-    Write-Host "$($scriptname): *** Error: no file or directory `"$($target)`"."
+    Write-Stderr "$($scriptname): *** Error: no file or directory `"$($target)`"."
     ExitWithCode 1
   }
   # shift to the next argument pair

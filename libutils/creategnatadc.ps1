@@ -36,6 +36,33 @@ function ExitWithCode
 }
 
 ################################################################################
+# Write-Stderr()                                                               #
+#                                                                              #
+################################################################################
+function Write-Stderr
+{
+  param([PSObject]$inputobject)
+  $outf = if ($host.Name -eq "ConsoleHost")
+  {
+    [Console]::Error.WriteLine
+  }
+  else
+  {
+    $host.UI.WriteErrorLine
+  }
+  if ($inputobject)
+  {
+    [void]$outf.Invoke($inputobject.ToString())
+  }
+  else
+  {
+    [string[]]$lines = @()
+    $input | % { $lines += $_.ToString() }
+    [void]$outf.Invoke($lines -join "`r`n")
+  }
+}
+
+################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
@@ -46,19 +73,19 @@ function ExitWithCode
 $profile = $args[0]
 if ([string]::IsNullOrEmpty($profile))
 {
-  Write-Host "$($scriptname): *** Error: no PROFILE specified."
+  Write-Stderr "$($scriptname): *** Error: no PROFILE specified."
   ExitWithCode 1
 }
 $gnatadc_filename = $args[1]
 if ([string]::IsNullOrEmpty($gnatadc_filename))
 {
-  Write-Host "$($scriptname): *** Error: no GNATADC_FILENAME specified."
+  Write-Stderr "$($scriptname): *** Error: no GNATADC_FILENAME specified."
   ExitWithCode 1
 }
 
 if (-not (Test-Path -Path "$($gnatadc_filename).in"))
 {
-  Write-Host "$($scriptname): *** Error: $($gnatadc_filename).in not found."
+  Write-Stderr "$($scriptname): *** Error: $($gnatadc_filename).in not found."
   ExitWithCode 1
 }
 

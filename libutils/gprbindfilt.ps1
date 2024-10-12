@@ -35,6 +35,33 @@ function ExitWithCode
 }
 
 ################################################################################
+# Write-Stderr()                                                               #
+#                                                                              #
+################################################################################
+function Write-Stderr
+{
+  param([PSObject]$inputobject)
+  $outf = if ($host.Name -eq "ConsoleHost")
+  {
+    [Console]::Error.WriteLine
+  }
+  else
+  {
+    $host.UI.WriteErrorLine
+  }
+  if ($inputobject)
+  {
+    [void]$outf.Invoke($inputobject.ToString())
+  }
+  else
+  {
+    [string[]]$lines = @()
+    $input | % { $lines += $_.ToString() }
+    [void]$outf.Invoke($lines -join "`r`n")
+  }
+}
+
+################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################

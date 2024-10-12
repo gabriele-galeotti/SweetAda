@@ -37,6 +37,33 @@ function ExitWithCode
 }
 
 ################################################################################
+# Write-Stderr()                                                               #
+#                                                                              #
+################################################################################
+function Write-Stderr
+{
+  param([PSObject]$inputobject)
+  $outf = if ($host.Name -eq "ConsoleHost")
+  {
+    [Console]::Error.WriteLine
+  }
+  else
+  {
+    $host.UI.WriteErrorLine
+  }
+  if ($inputobject)
+  {
+    [void]$outf.Invoke($inputobject.ToString())
+  }
+  else
+  {
+    [string[]]$lines = @()
+    $input | % { $lines += $_.ToString() }
+    [void]$outf.Invoke($lines -join "`r`n")
+  }
+}
+
+################################################################################
 # GetEnvVar()                                                                  #
 #                                                                              #
 ################################################################################
@@ -74,7 +101,7 @@ function GetEnvVar
                 )
     if ($nchars -gt $gev_buffer_size)
     {
-      Write-Host "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
+      Write-Stderr "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
       ExitWithCode 1
     }
     return [string]$gev_buffer
@@ -100,13 +127,13 @@ if ([string]$args[$argc] -eq "-r")
 $input_filename = $args[$argc]
 if ([string]::IsNullOrEmpty($input_filename))
 {
-  Write-Host "$($scriptname): *** Error: no input file specified."
+  Write-Stderr "$($scriptname): *** Error: no input file specified."
   ExitWithCode 1
 }
 $output_filename = $args[$argc + 1]
 if ([string]::IsNullOrEmpty($output_filename))
 {
-  Write-Host "$($scriptname): *** Error: no output file specified."
+  Write-Stderr "$($scriptname): *** Error: no output file specified."
   ExitWithCode 1
 }
 
@@ -118,7 +145,7 @@ try
 }
 catch
 {
-  Write-Host "$($scriptname): *** Error: processing $($input_filename)."
+  Write-Stderr "$($scriptname): *** Error: processing $($input_filename)."
   ExitWithCode 1
 }
 
@@ -144,7 +171,7 @@ $textlines | ForEach-Object `
     {
       if (-not $optional)
       {
-        Write-Host "*** Warning: variable `"$variable`" has no value."
+        Write-Stderr "*** Warning: variable `"$variable`" has no value."
       }
     }
     if ($value.StartsWith("`"") -and $value.EndsWith("`""))

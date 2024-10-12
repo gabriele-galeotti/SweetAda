@@ -53,6 +53,33 @@ function ExitWithCode
 }
 
 ################################################################################
+# Write-Stderr()                                                               #
+#                                                                              #
+################################################################################
+function Write-Stderr
+{
+  param([PSObject]$inputobject)
+  $outf = if ($host.Name -eq "ConsoleHost")
+  {
+    [Console]::Error.WriteLine
+  }
+  else
+  {
+    $host.UI.WriteErrorLine
+  }
+  if ($inputobject)
+  {
+    [void]$outf.Invoke($inputobject.ToString())
+  }
+  else
+  {
+    [string[]]$lines = @()
+    $input | % { $lines += $_.ToString() }
+    [void]$outf.Invoke($lines -join "`r`n")
+  }
+}
+
+################################################################################
 # GetEnvVar()                                                                  #
 #                                                                              #
 ################################################################################
@@ -90,7 +117,7 @@ function GetEnvVar
                 )
     if ($nchars -gt $gev_buffer_size)
     {
-      Write-Host "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
+      Write-Stderr "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
       ExitWithCode 1
     }
     return [string]$gev_buffer
@@ -108,17 +135,17 @@ function GetEnvVar
 $package_name, $output_filename, $items = $args
 if ([string]::IsNullOrEmpty($package_name))
 {
-  Write-Host "$($scriptname): *** Error: no package name specified."
+  Write-Stderr "$($scriptname): *** Error: no package name specified."
   ExitWithCode 1
 }
 if ([string]::IsNullOrEmpty($output_filename))
 {
-  Write-Host "$($scriptname): *** Error: no output filename specified."
+  Write-Stderr "$($scriptname): *** Error: no output filename specified."
   ExitWithCode 1
 }
 if ($items.length -lt 1)
 {
-  Write-Host "$($scriptname): *** Error: no items specified."
+  Write-Stderr "$($scriptname): *** Error: no items specified."
   ExitWithCode 1
 }
 
@@ -133,7 +160,7 @@ foreach ($i in $items)
   $spec   = $i_splitted[3]
   if ([string]::IsNullOrEmpty($macro) -or [string]::IsNullOrEmpty($tmacro))
   {
-    Write-Host "$($scriptname): *** Error: no item definition."
+    Write-Stderr "$($scriptname): *** Error: no item definition."
     ExitWithCode 1
   }
   switch ($spec)
@@ -142,7 +169,7 @@ foreach ($i in $items)
       { }
     default
       {
-        Write-Host "$($scriptname): *** Error: no item specifier."
+        Write-Stderr "$($scriptname): *** Error: no item specifier."
         ExitWithCode 1
       }
   }
@@ -193,13 +220,13 @@ try
   $p.WaitForExit()
   if ($p.ExitCode -ne 0)
   {
-    Write-Host "$($scriptname): *** Error: executing $($gcc)."
+    Write-Stderr "$($scriptname): *** Error: executing $($gcc)."
     ExitWithCode $p.ExitCode
   }
 }
 catch
 {
-  Write-Host "$($scriptname): *** Error: executing $($gcc)."
+  Write-Stderr "$($scriptname): *** Error: executing $($gcc)."
   ExitWithCode 1
 }
 
@@ -247,7 +274,7 @@ foreach ($i in $items)
           { if ([string]::IsNullOrEmpty($value)) { $value = "`"`"" } }
         default
           {
-            Write-Host "$($scriptname): *** Error: inconsistent item specification."
+            Write-Stderr "$($scriptname): *** Error: inconsistent item specification."
             ExitWithCode 1
           }
       }
@@ -266,7 +293,7 @@ foreach ($i in $items)
         { $value = "`"`"" }
       default
       {
-        Write-Host "$($scriptname): *** Error: inconsistent item specification."
+        Write-Stderr "$($scriptname): *** Error: inconsistent item specification."
         ExitWithCode 1
       }
     }

@@ -36,6 +36,33 @@ function ExitWithCode
 }
 
 ################################################################################
+# Write-Stderr()                                                               #
+#                                                                              #
+################################################################################
+function Write-Stderr
+{
+  param([PSObject]$inputobject)
+  $outf = if ($host.Name -eq "ConsoleHost")
+  {
+    [Console]::Error.WriteLine
+  }
+  else
+  {
+    $host.UI.WriteErrorLine
+  }
+  if ($inputobject)
+  {
+    [void]$outf.Invoke($inputobject.ToString())
+  }
+  else
+  {
+    [string[]]$lines = @()
+    $input | % { $lines += $_.ToString() }
+    [void]$outf.Invoke($lines -join "`r`n")
+  }
+}
+
+################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
@@ -46,13 +73,13 @@ function ExitWithCode
 $input_filename = $args[0]
 if ([string]::IsNullOrEmpty($input_filename))
 {
-  Write-Host "$($scriptname): *** Error: no input file specified."
+  Write-Stderr "$($scriptname): *** Error: no input file specified."
   ExitWithCode 1
 }
 $output_filename = $args[1]
 if ([string]::IsNullOrEmpty($output_filename))
 {
-  Write-Host "$($scriptname): *** Error: no output file specified."
+  Write-Stderr "$($scriptname): *** Error: no output file specified."
   ExitWithCode 1
 }
 
@@ -62,7 +89,7 @@ try
 }
 catch
 {
-  Write-Host "$($scriptname): *** Error: processing $($input_filename)."
+  Write-Stderr "$($scriptname): *** Error: processing $($input_filename)."
   ExitWithCode 1
 }
 try
@@ -71,7 +98,7 @@ try
 }
 catch
 {
-  Write-Host "$($scriptname): *** Error: processing $($output_filename)."
+  Write-Stderr "$($scriptname): *** Error: processing $($output_filename)."
   ExitWithCode 1
 }
 
