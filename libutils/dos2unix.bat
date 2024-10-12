@@ -18,7 +18,11 @@ REM SWEETADA_PATH
 REM LIBUTILS_DIRECTORY
 REM
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/dos2unix.ps1 ""%*""
+powershell.exe                                              ^
+  -NoProfile                                                ^
+  -ExecutionPolicy Bypass                                   ^
+  -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/dos2unix.ps1 ^
+  ""%*""
 
 EXIT /B %ERRORLEVEL%
 
