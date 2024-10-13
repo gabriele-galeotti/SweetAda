@@ -56,6 +56,16 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
+ifeq      ($(OSTYPE),cmd)
+export PUTTY := "C:\Program Files"\PuTTY\putty-w64.exe
+RUN_COMMAND   := "$(SWEETADA_PATH)"\$(PLATFORM_DIRECTORY_CMD)\qemu$(SCREXT)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"\$(PLATFORM_DIRECTORY_CMD)\qemu$(SCREXT) -debug
+else ifeq ($(OSTYPE),msys)
+export PUTTY := "C:\Program Files"\PuTTY\putty-w64.exe
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT_cmd)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT_cmd) -debug
+else
 RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT)
 DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT) -debug
+endif
 
