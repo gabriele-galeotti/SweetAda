@@ -206,6 +206,15 @@ endif
 #                                                                              #
 ################################################################################
 
+# detect Make version
+ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
+ifeq ($(OSTYPE),cmd)
+MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2>nul| $(SED) -e "2,$$d")
+else
+MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
+endif
+
 # generate SWEETADA_PATH
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 SWEETADA_PATH ?= $(MAKEFILEDIR)
@@ -222,20 +231,10 @@ PATH := $(PATH):$(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY)
 else
 PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
-include Makefile.ut.in
 export PATH
 
 # load complex functions
 include Makefile.fn.in
-
-# detect Make version
-ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(OSTYPE),cmd)
-MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2>nul| $(SED) -e "2,$$d")
-else
-MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
-endif
-endif
 
 # define every other OS command
 ifeq ($(OSTYPE),cmd)
@@ -354,6 +353,9 @@ endif
 
 # export PATH so that we can use everything
 export PATH
+
+# include build system utilities
+include Makefile.ut.in
 
 # check basic utilities
 ifeq ($(TOOLS_CHECK),Y)
@@ -1500,6 +1502,17 @@ endif
 
 .PHONY: clean
 clean:
+ifeq ($(OSTYPE),cmd)
+	-IF EXIST $(LIBRARY_DIRECTORY)\ \
+          $(CD) $(LIBRARY_DIRECTORY) && \
+          $(RM) *.*
+	-IF EXIST $(OBJECT_DIRECTORY)\ \
+          $(CD) $(OBJECT_DIRECTORY) && \
+          $(RM) *.*
+else
+	-$(RM) $(LIBRARY_DIRECTORY)/*
+	-$(RM) $(OBJECT_DIRECTORY)/*
+endif
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean
 	$(MAKE) $(MAKE_CORE) clean
@@ -1514,18 +1527,6 @@ ifneq ($(PLATFORM),)
 ifeq ($(filter $(PLATFORM),$(PLATFORMS)),$(PLATFORM))
 	$(MAKE) $(MAKE_PLATFORM) clean
 endif
-endif
-ifeq ($(OSTYPE),cmd)
-	-IF EXIST $(LIBRARY_DIRECTORY)\ \
-          $(CD) $(LIBRARY_DIRECTORY) && \
-          $(RM) *.*
-	-IF EXIST $(OBJECT_DIRECTORY)\                \
-          $(CD) $(OBJECT_DIRECTORY)                && \
-          $(RM) *.*                                && \
-          $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
-else
-	-$(RM) $(LIBRARY_DIRECTORY)/*
-	-$(RMDIR) $(OBJECT_DIRECTORY)/*
 endif
 	-$(RM) $(CLEAN_OBJECTS)
 
