@@ -58,10 +58,10 @@ SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                    \
                            -e $(ELFTOOL) -s _start -command "halt"
-DEBUG_COMMAND         := $(RUN_COMMAND) -debug &&                          \
-                         $${GDB}                                           \
-                               -ex "target extended-remote localhost:3333" \
-                               -ex "set language asm"                      \
-                               -ex "set \$$pc=_start"                      \
-                               $(KERNEL_OUTFILE)
+DEBUG_COMMAND         := $(RUN_COMMAND) -debug &&                      \
+                         $${GDB}                                       \
+                           -ex "target extended-remote localhost:3333" \
+                           -ex "set language asm"                      \
+                           -ex "set \$$pc=_start"                      \
+                           $(KERNEL_OUTFILE)
 
