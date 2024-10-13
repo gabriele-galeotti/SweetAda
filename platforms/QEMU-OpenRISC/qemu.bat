@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM PC-x86 (QEMU emulator).
+REM QEMU-OpenRISC (QEMU emulator).
 REM
 REM Copyright (C) 2020-2024 Gabriele Galeotti
 REM
@@ -15,7 +15,6 @@ REM -debug
 REM
 REM Environment variables:
 REM TOOLCHAIN_PREFIX
-REM KERNEL_ROMFILE
 REM KERNEL_OUTFILE
 REM PUTTY
 REM GDB
@@ -27,7 +26,7 @@ REM #                                                                          #
 REM ############################################################################
 
 REM QEMU executable and CPU model
-SET "QEMU_FILENAME=qemu-system-i386w.exe"
+SET "QEMU_FILENAME=qemu-system-or1kw.exe"
 SET "QEMU_EXECUTABLE=C:\Program Files\qemu\%QEMU_FILENAME%"
 
 REM debug options
@@ -46,8 +45,8 @@ SET TILTIMEOUT=3
 
 REM QEMU machine
 START "" "%QEMU_EXECUTABLE%" ^
-  -M pc -cpu pentium3 -m 256 -vga std ^
-  -bios %KERNEL_ROMFILE% ^
+  -M virt ^
+  -kernel %KERNEL_OUTFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
   -serial chardev:SERIALPORT0 ^
@@ -68,9 +67,7 @@ IF "%1"=="-debug" (
     -q ^
     -iex "set new-console on" ^
     -iex "set basenames-may-differ" ^
-    -iex "set architecture i386" ^
-    -ex "target remote tcp:localhost:1234" ^
-    -ex "break _start" -ex "continue" ^
+    -ex "target extended-remote tcp:localhost:1234" ^
     %KERNEL_OUTFILE%
   ) ELSE (
   CALL :QEMUWAIT

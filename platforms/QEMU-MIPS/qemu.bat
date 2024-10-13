@@ -14,11 +14,12 @@ REM Arguments:
 REM -debug
 REM
 REM Environment variables:
+REM CPU_MODEL
 REM TOOLCHAIN_PREFIX
-REM GDB
 REM KERNEL_OUTFILE
 REM KERNEL_ROMFILE
-REM CPU_MODEL
+REM PUTTY
+REM GDB
 REM
 
 REM ############################################################################
@@ -69,16 +70,17 @@ START "" "%QEMU_EXECUTABLE%" ^
 
 REM console for serial port
 CALL :TCPPORT_IS_LISTENING %SERIALPORT0% %TILTIMEOUT%
-START "" "C:\Program Files"\PuTTY\putty-w64.exe telnet://localhost:%SERIALPORT0%/
+START "" %PUTTY% telnet://localhost:%SERIALPORT0%/
 
 REM debug session
 IF "%1"=="-debug" (
-  "%GDB%" -q ^
-  -iex "set new-console on" ^
-  -iex "set basenames-may-differ" ^
-  -iex "set architecture %GDB_ARCH%" ^
-  -ex "target remote tcp:localhost:1234" ^
-  %KERNEL_OUTFILE%
+  "%GDB%" ^
+    -q ^
+    -iex "set new-console on" ^
+    -iex "set basenames-may-differ" ^
+    -iex "set architecture %GDB_ARCH%" ^
+    -ex "target remote tcp:localhost:1234" ^
+    %KERNEL_OUTFILE%
   ) ELSE (
   CALL :QEMUWAIT
   )
