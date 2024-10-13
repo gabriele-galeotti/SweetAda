@@ -206,15 +206,6 @@ endif
 #                                                                              #
 ################################################################################
 
-# detect Make version
-ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(OSTYPE),cmd)
-MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2>nul| $(SED) -e "2,$$d")
-else
-MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
-endif
-endif
-
 # generate SWEETADA_PATH
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 SWEETADA_PATH ?= $(MAKEFILEDIR)
@@ -232,6 +223,15 @@ else
 PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
 export PATH
+
+# detect Make version
+ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
+ifeq ($(OSTYPE),cmd)
+MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2>nul| $(SED) -e "2,$$d")
+else
+MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
+endif
 
 # define every other OS command
 ifeq ($(OSTYPE),cmd)
