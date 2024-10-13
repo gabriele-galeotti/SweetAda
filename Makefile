@@ -35,7 +35,87 @@
 
 .DEFAULT_GOAL := help
 
+NULL  :=
+SPACE := $(NULL) $(NULL)
+export NULL SPACE
+
 KERNEL_BASENAME := kernel
+
+# verbose output, "Y/y/1" = enabled
+VERBOSE ?=
+override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
+export VERBOSE
+
+################################################################################
+#                                                                              #
+# Main setup.                                                                  #
+#                                                                              #
+################################################################################
+
+# detect OS type
+# detected OS names: "cmd"/"msys"/"darwin"/"linux"
+ifeq ($(OS),Windows_NT)
+ifneq ($(MSYSTEM),)
+OSTYPE := msys
+else
+OSTYPE := cmd
+endif
+else
+OSTYPE_UNAME := $(shell uname -s 2> /dev/null)
+ifeq      ($(OSTYPE_UNAME),Darwin)
+OSTYPE := darwin
+else ifeq ($(OSTYPE_UNAME),Linux)
+OSTYPE := linux
+else
+$(error Error: no valid OSTYPE)
+endif
+endif
+export OSTYPE
+
+# workarounds for some environments
+ifeq ($(OSTYPE),cmd)
+SHELL := cmd.exe
+endif
+
+# executable and script extensions
+SCREXT_cmd := .bat
+SCREXT_unx := .sh
+ifeq ($(OSTYPE),cmd)
+EXEEXT     := .exe
+SCREXT     := $(SCREXT_cmd)
+SHELL_EXEC := $(SHELL) /C
+else
+ifeq ($(OSTYPE),msys)
+EXEEXT     := .exe
+else
+EXEEXT     :=
+endif
+SCREXT     := $(SCREXT_unx)
+SHELL_EXEC := $(SHELL)
+endif
+export EXEEXT SCREXT_cmd SCREXT_unx SCREXT SHELL_EXEC
+
+# define a minimum set of variables that are required for functions and
+# various utilities
+ifeq ($(OSTYPE),cmd)
+ECHO := ECHO
+REM  := REM
+else
+ECHO := printf "%s\n"
+REM  := \#
+endif
+SED  := sed$(EXEEXT)
+export ECHO REM SED
+
+# TMPDIR handling
+ifeq      ($(OSTYPE),cmd)
+TMPDIR := $(TEMP)
+else ifeq ($(OSTYPE),msys)
+TMPDIR := $(TEMP)
+else
+TMPDIR ?= /tmp
+endif
+export TMPDIR
 
 ################################################################################
 #                                                                              #
@@ -122,78 +202,9 @@ endif
 
 ################################################################################
 #                                                                              #
-# Main setup.                                                                  #
+# Setup directories and utilities.                                             #
 #                                                                              #
 ################################################################################
-
-NULL  :=
-SPACE := $(NULL) $(NULL)
-export NULL SPACE
-
-# detect OS type
-# detected OS names: "cmd"/"msys"/"darwin"/"linux"
-ifeq ($(OS),Windows_NT)
-ifneq ($(MSYSTEM),)
-OSTYPE := msys
-else
-OSTYPE := cmd
-endif
-else
-OSTYPE_UNAME := $(shell uname -s 2> /dev/null)
-ifeq      ($(OSTYPE_UNAME),Darwin)
-OSTYPE := darwin
-else ifeq ($(OSTYPE_UNAME),Linux)
-OSTYPE := linux
-else
-$(error Error: no valid OSTYPE)
-endif
-endif
-export OSTYPE
-
-# workarounds for some environments
-ifeq ($(OSTYPE),cmd)
-SHELL := cmd.exe
-endif
-
-# executable and script extensions
-SCREXT_cmd := .bat
-SCREXT_unx := .sh
-ifeq ($(OSTYPE),cmd)
-EXEEXT     := .exe
-SCREXT     := $(SCREXT_cmd)
-SHELL_EXEC := $(SHELL) /C
-else
-ifeq ($(OSTYPE),msys)
-EXEEXT     := .exe
-else
-EXEEXT     :=
-endif
-SCREXT     := $(SCREXT_unx)
-SHELL_EXEC := $(SHELL)
-endif
-export EXEEXT SCREXT_cmd SCREXT_unx SCREXT SHELL_EXEC
-
-# define a minimum set of variables that are required for functions and
-# various utilities
-ifeq ($(OSTYPE),cmd)
-ECHO := ECHO
-REM  := REM
-else
-ECHO := printf "%s\n"
-REM  := \#
-endif
-SED  := sed$(EXEEXT)
-export ECHO REM SED
-
-# TMPDIR handling
-ifeq      ($(OSTYPE),cmd)
-TMPDIR := $(TEMP)
-else ifeq ($(OSTYPE),msys)
-TMPDIR := $(TEMP)
-else
-TMPDIR ?= /tmp
-endif
-export TMPDIR
 
 # generate SWEETADA_PATH
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
@@ -212,11 +223,65 @@ else
 PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
 include Makefile.ut.in
+export PATH
 
-# verbose output, "Y/y/1" = enabled
-VERBOSE ?=
-override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
-export VERBOSE
+# load complex functions
+include Makefile.fn.in
+
+# detect Make version
+ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
+ifeq ($(OSTYPE),cmd)
+MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2>nul| $(SED) -e "2,$$d")
+else
+MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
+endif
+endif
+
+# define every other OS command
+ifeq ($(OSTYPE),cmd)
+CD    := CD
+CP    := COPY /B /Y 1>nul
+LS    := DIR /B
+MKDIR := MKDIR
+MV    := MOVE /Y 1>nul
+RM    := DEL /F /Q 2>nul
+RMDIR := RMDIR /Q /S 2>nul
+else
+# POSIX
+CD    := cd
+CP    := cp -f
+LS    := ls -A
+MKDIR := mkdir -p
+MV    := mv -f
+RM    := rm -f
+RMDIR := $(RM) -r
+endif
+ifeq ($(OSTYPE),msys)
+CP += --preserve=all
+endif
+
+ifeq ($(VERBOSE),Y)
+ifeq ($(OSTYPE),cmd)
+# no verbosity
+else
+CP += -v
+MV += -v
+RM += -v
+endif
+else
+ifeq ($(filter $(MAKECMDGOALS),$(LIBUTILS_GOALS)),)
+MAKEFLAGS += s
+endif
+GNUMAKEFLAGS += --no-print-directory
+endif
+
+export CD CP LS MKDIR MV RM RMDIR
+
+################################################################################
+#                                                                              #
+# Setup finalization.                                                          #
+#                                                                              #
+################################################################################
 
 # check for RTS build
 ifeq ($(MAKECMDGOALS),rts)
@@ -293,64 +358,6 @@ export PATH
 # check basic utilities
 ifeq ($(TOOLS_CHECK),Y)
 -include Makefile.ck.in
-endif
-
-# load complex functions
-include Makefile.fn.in
-
-################################################################################
-#                                                                              #
-# Setup finalization.                                                          #
-#                                                                              #
-################################################################################
-
-# define every other OS command
-ifeq ($(OSTYPE),cmd)
-CD    := CD
-CP    := COPY /B /Y 1>nul
-LS    := DIR /B
-MKDIR := MKDIR
-MV    := MOVE /Y 1>nul
-RM    := DEL /F /Q 2>nul
-RMDIR := RMDIR /Q /S 2>nul
-else
-# POSIX
-CD    := cd
-CP    := cp -f
-LS    := ls -A
-MKDIR := mkdir -p
-MV    := mv -f
-RM    := rm -f
-RMDIR := $(RM) -r
-endif
-ifeq ($(OSTYPE),msys)
-CP += --preserve=all
-endif
-
-ifeq ($(VERBOSE),Y)
-ifeq ($(OSTYPE),cmd)
-# no verbosity
-else
-CP += -v
-MV += -v
-RM += -v
-endif
-else
-ifeq ($(filter $(MAKECMDGOALS),$(LIBUTILS_GOALS)),)
-MAKEFLAGS += s
-endif
-GNUMAKEFLAGS += --no-print-directory
-endif
-
-export CD CP LS MKDIR MV RM RMDIR
-
-# detect Make version
-ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(OSTYPE),cmd)
-MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2>nul| $(SED) -e "2,$$d")
-else
-MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
-endif
 endif
 
 ################################################################################
@@ -1107,7 +1114,7 @@ KERNEL_OUTFILE_DEPS :=
 KERNEL_OUTFILE_DEPS += $(DOTSWEETADA)
 KERNEL_OUTFILE_DEPS += $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
 KERNEL_OUTFILE_DEPS += $(OBJECT_DIRECTORY)/b__main.o
-$(KERNEL_OUTFILE): kernel_lib_obj_dir $(KERNEL_OUTFILE_DEPS)
+$(KERNEL_OUTFILE): $(KERNEL_OUTFILE_DEPS)
 endif
 	@$(REM) link phase
 	$(call brief-command, \
@@ -1232,7 +1239,7 @@ all: kernel_start       \
 # create KERNEL_CFGFILE file and eventually install subplatform-dependent
 # files (subsequent "configure" phase needs all target files in place)
 .PHONY: createkernelcfg
-createkernelcfg:
+createkernelcfg: kernel_lib_obj_dir
 	-$(MAKE) distclean
 ifneq ($(PLATFORM),)
 	@$(RM) $(KERNEL_CFGFILE)
