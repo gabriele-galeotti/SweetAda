@@ -233,9 +233,6 @@ PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
 export PATH
 
-# load complex functions
-include Makefile.fn.in
-
 # define every other OS command
 ifeq ($(OSTYPE),cmd)
 CD    := CD
@@ -275,6 +272,12 @@ GNUMAKEFLAGS += --no-print-directory
 endif
 
 export CD CP LS MKDIR MV RM RMDIR
+
+# include build system utilities
+include Makefile.ut.in
+
+# load complex functions
+include Makefile.fn.in
 
 ################################################################################
 #                                                                              #
@@ -353,9 +356,6 @@ endif
 
 # export PATH so that we can use everything
 export PATH
-
-# include build system utilities
-include Makefile.ut.in
 
 # check basic utilities
 ifeq ($(TOOLS_CHECK),Y)
