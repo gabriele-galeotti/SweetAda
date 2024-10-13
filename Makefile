@@ -1506,12 +1506,13 @@ ifeq ($(OSTYPE),cmd)
 	-IF EXIST $(LIBRARY_DIRECTORY)\ \
           $(CD) $(LIBRARY_DIRECTORY) && \
           $(RM) *.*
-	-IF EXIST $(OBJECT_DIRECTORY)\ \
-          $(CD) $(OBJECT_DIRECTORY) && \
-          $(RM) *.*
+	-IF EXIST $(OBJECT_DIRECTORY)\                \
+          $(CD) $(OBJECT_DIRECTORY)                && \
+          $(RM) *.*                                && \
+          $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
 else
 	-$(RM) $(LIBRARY_DIRECTORY)/*
-	-$(RM) $(OBJECT_DIRECTORY)/*
+	-$(RMDIR) $(OBJECT_DIRECTORY)/*
 endif
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean
