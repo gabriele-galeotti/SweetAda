@@ -35,6 +35,8 @@
 
 .DEFAULT_GOAL := help
 
+MAKEFILE_MASTER_INCLUDED := Y
+
 NULL  :=
 SPACE := $(NULL) $(NULL)
 export NULL SPACE

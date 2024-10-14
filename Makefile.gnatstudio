@@ -1,0 +1,42 @@
+
+#
+# GNAT Studio Makefile wrapper
+#
+# Copyright (C) 2020-2024 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+MAKEFILE_MASTER_INCLUDED := N
+-include Makefile
+ifneq ($(MAKEFILE_MASTER_INCLUDED),Y)
+$(error Error: master Makefile not loaded)
+endif
+
+help:
+
+createkernelcfg:
+
+configure:
+
+infodump:
+
+all:
+
+postbuild:
+
+session-start:
+
+session-end:
+
+run:
+
+debug:
+
+clean:
+
+distclean:
+
+rts:
+

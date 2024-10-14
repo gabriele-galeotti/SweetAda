@@ -1,4 +1,3 @@
-
 -------------------------------------------------------------------------------
 -- SweetAda GPRbuild project file
 --
@@ -74,5 +73,13 @@ project SweetAda is
 
    package Ide is
    end Ide;
+
+   ----------------------------------------------------------------------------
+   -- Make
+   ----------------------------------------------------------------------------
+
+   package Make is
+      for Makefile use "Makefile.gnatstudio";
+   end Make;
 
 end SweetAda;
