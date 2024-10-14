@@ -85,7 +85,7 @@ function Write-Stderr
   {
     [string[]]$lines = @()
     $input | % { $lines += $_.ToString() }
-    [void]$outf.Invoke($lines -join "`r`n")
+    [void]$outf.Invoke($lines -Join "`r`n")
   }
 }
 
@@ -168,7 +168,7 @@ function print_list
   param([string]$f, [string]$list, [int]$il, [string]$is)
   if ($list.Length -gt 0)
   {
-    $list_array = $list -split "\s+"
+    $list_array = $list -Split "\s+"
     $count = 0
     foreach ($s in $list_array)
     {
