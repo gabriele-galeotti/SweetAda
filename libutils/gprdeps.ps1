@@ -132,7 +132,7 @@ function ParseRecursive
 if ([string]$args[$argc] -eq "-u")
 {
   $uniq = $true
-  $argc = $argc + 1
+  $argc++
 }
 $input_filename = $args[$argc]
 if ([string]::IsNullOrEmpty($input_filename))

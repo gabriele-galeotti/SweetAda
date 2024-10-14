@@ -76,14 +76,14 @@ function Write-Stderr
 if ([string]$args[$argc] -eq "-r")
 {
   $reffile = $true
-  $argc = $argc + 1
+  $argc++
   $reffile_filename = $args[$argc]
   if ([string]::IsNullOrEmpty($reffile_filename))
   {
     Write-Stderr "$($scriptname): *** Error: no reference file specified."
     ExitWithCode 1
   }
-  $argc = $argc + 1
+  $argc++
 }
 $input_filename = $args[$argc]
 if ([string]::IsNullOrEmpty($input_filename))

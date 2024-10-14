@@ -184,7 +184,7 @@ foreach ($i in $items)
 }
 if ($max_type_length -gt 0)
 {
-  $max_type_length = $max_type_length + 1
+  $max_type_length++
 }
 $bseparator = " " * ($max_type_length - "Boolean".length)
 

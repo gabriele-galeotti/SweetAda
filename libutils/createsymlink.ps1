@@ -298,7 +298,19 @@ while ($fileindex -lt $args.length)
     }
     else
     {
-      New-Item -ItemType SymbolicLink -Path $link_name -Target $target | Out-Null
+      try
+      {
+        New-Item                       `
+          -ItemType SymbolicLink       `
+          -Path $link_name             `
+          -Target $target              `
+          -ErrorAction Stop | Out-Null
+      }
+      catch
+      {
+        Write-Stderr "$($scriptname): *** Error: New-Item."
+        ExitWithCode 1
+      }
       if ($IsWindows)
       {
         SetTimeOfSymlink $link_name $target
@@ -335,10 +347,19 @@ while ($fileindex -lt $args.length)
       }
       else
       {
-        New-Item                                                                       `
-          -ItemType SymbolicLink -Path (Join-Path -Path $link_directory -ChildPath $f) `
-          -Target (Join-Path -Path $target -ChildPath $f)                              `
-          | Out-Null
+        try
+        {
+          New-Item                                                `
+            -ItemType SymbolicLink                                `
+            -Path (Join-Path -Path $link_directory -ChildPath $f) `
+            -Target (Join-Path -Path $target -ChildPath $f)       `
+            -ErrorAction Stop | Out-Null
+        }
+        catch
+        {
+          Write-Stderr "$($scriptname): *** Error: New-Item."
+          ExitWithCode 1
+        }
         if ($IsWindows)
         {
           SetTimeOfSymlink $link_name $target

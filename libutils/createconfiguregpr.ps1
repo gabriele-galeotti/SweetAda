@@ -172,7 +172,7 @@ function print_list
     $count = 0
     foreach ($s in $list_array)
     {
-      $count = $count + 1
+      $count++
       $s = "`"$s`""
       if ($count -ne $list_array.Length)
       {

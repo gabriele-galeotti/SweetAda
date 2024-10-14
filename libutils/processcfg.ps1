@@ -122,7 +122,7 @@ function GetEnvVar
 if ([string]$args[$argc] -eq "-r")
 {
   $remove_cr = $true
-  $argc = $argc + 1
+  $argc++
 }
 $input_filename = $args[$argc]
 if ([string]::IsNullOrEmpty($input_filename))
@@ -153,7 +153,7 @@ catch
 [int]$count = 0
 $textlines | ForEach-Object `
 {
-  $count = $count + 1
+  $count++
   $textline = $_
   $symbols = $textline | Select-String -Pattern "@-?[_A-Za-z][_A-Za-z0-9]*@" -AllMatches | `
     foreach {$_.Matches} | Select-Object -ExpandProperty Value
