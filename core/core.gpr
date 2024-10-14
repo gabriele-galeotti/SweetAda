@@ -31,162 +31,172 @@ library project Core is
    for Default_Language use "Ada";
 
    Abort_Library_Files := (
-                           "abort_library.adb", "abort_library.ads",
-                           "abort_library-system_abort_parameterized.adb",
-                           "abort_library-system_abort_parameterless.adb"
-                          );
+      "abort_library.adb", "abort_library.ads",
+      "abort_library-system_abort_parameterized.adb",
+      "abort_library-system_abort_parameterless.adb"
+      );
 
    Bits_Files := (
-                  "bits.adb", "bits.ads",
-                  "bits-byte_reverse.adb",
-                  "bits-byte_swap_8.adb",
-                  "bits-byte_swap_16.adb",
-                  "bits-byte_swap_32.adb",
-                  "bits-byte_swap_64.adb",
-                  "bits-c.ads"
-                 );
+      "bits.adb", "bits.ads",
+      "bits-byte_reverse.adb",
+      "bits-byte_swap_8.adb",
+      "bits-byte_swap_16.adb",
+      "bits-byte_swap_32.adb",
+      "bits-byte_swap_64.adb",
+      "bits-c.ads"
+      );
 
    Console_Files := (
-                     "console.adb", "console.ads",
-                     "console-print.adb",
-                     "console-print_address.adb",
-                     "console-print_asciiz_string.adb",
-                     "console-print_bitimage.adb",
-                     "console-print_bits1.adb",
-                     "console-print_boolean.adb",
-                     "console-print_byte_array.adb",
-                     "console-print_integer.adb",
-                     "console-print_integer_address.adb",
-                     "console-print_memory.adb",
-                     "console-print_newline.adb",
-                     "console-print_sizet.adb",
-                     "console-print_string.adb",
-                     "console-print_unsigned16.adb",
-                     "console-print_unsigned32.adb",
-                     "console-print_unsigned64.adb",
-                     "console-print_unsigned8.adb",
-                     "console-print_unsignedhex8.adb"
-                    );
+      "console.adb", "console.ads",
+      "console-print.adb",
+      "console-print_address.adb",
+      "console-print_asciiz_string.adb",
+      "console-print_bitimage.adb",
+      "console-print_bits1.adb",
+      "console-print_boolean.adb",
+      "console-print_byte_array.adb",
+      "console-print_integer.adb",
+      "console-print_integer_address.adb",
+      "console-print_memory.adb",
+      "console-print_newline.adb",
+      "console-print_sizet.adb",
+      "console-print_string.adb",
+      "console-print_unsigned16.adb",
+      "console-print_unsigned32.adb",
+      "console-print_unsigned64.adb",
+      "console-print_unsigned8.adb",
+      "console-print_unsignedhex8.adb"
+      );
 
-   Core_Files := ("core.adb", "core.ads");
+   Core_Files := (
+      "core.adb", "core.ads"
+      );
 
-   Definitions_Files := ("definitions.ads");
+   Definitions_Files := (
+      "definitions.ads"
+      );
 
-   GCC_Defines_Files := ("gcc_defines.ads");
+   GCC_Defines_Files := (
+      "gcc_defines.ads"
+      );
 
-   Gnat_Exceptions_Files := ("gnat_exceptions.adb", "gnat_exceptions.ads");
+   Gnat_Exceptions_Files := (
+      "gnat_exceptions.adb", "gnat_exceptions.ads"
+      );
 
    Integer_Math_Files := (
-                          "integer_math.adb", "integer_math.ads",
-                          "integer_math-gcd.adb",
-                          "integer_math-lcm.adb",
-                          "integer_math-log2.adb",
-                          "integer_math-rounddown.adb",
-                          "integer_math-roundup.adb"
-                         );
+      "integer_math.adb", "integer_math.ads",
+      "integer_math-gcd.adb",
+      "integer_math-lcm.adb",
+      "integer_math-log2.adb",
+      "integer_math-rounddown.adb",
+      "integer_math-roundup.adb"
+      );
 
    Last_Chance_Handler_Files := (
-                                 "last_chance_handler.adb", "last_chance_handler.ads",
-                                 "last_chance_handler-last_chance_handler.adb"
-                                );
+      "last_chance_handler.adb", "last_chance_handler.ads",
+      "last_chance_handler-last_chance_handler.adb"
+      );
 
    LLutils_Files := (
-                     "llutils.adb", "llutils.ads",
-                     "llutils-address_displacement.adb",
-                     "llutils-atomic_clear.adb",
-                     "llutils-atomic_load.adb",
-                     "llutils-atomic_test_and_set.adb",
-                     "llutils-be_to_cpue_16.adb",
-                     "llutils-be_to_cpue_32.adb",
-                     "llutils-be_to_cpue_64.adb",
-                     "llutils-build_address.adb",
-                     "llutils-byte_swap_16.adb",
-                     "llutils-byte_swap_32.adb",
-                     "llutils-byte_swap_64.adb",
-                     "llutils-le_to_cpue_16.adb",
-                     "llutils-le_to_cpue_32.adb",
-                     "llutils-le_to_cpue_64.adb",
-                     "llutils-select_address_bits.adb"
-                    );
+      "llutils.adb", "llutils.ads",
+      "llutils-address_displacement.adb",
+      "llutils-atomic_clear.adb",
+      "llutils-atomic_load.adb",
+      "llutils-atomic_test_and_set.adb",
+      "llutils-be_to_cpue_16.adb",
+      "llutils-be_to_cpue_32.adb",
+      "llutils-be_to_cpue_64.adb",
+      "llutils-build_address.adb",
+      "llutils-byte_swap_16.adb",
+      "llutils-byte_swap_32.adb",
+      "llutils-byte_swap_64.adb",
+      "llutils-le_to_cpue_16.adb",
+      "llutils-le_to_cpue_32.adb",
+      "llutils-le_to_cpue_64.adb",
+      "llutils-select_address_bits.adb"
+      );
 
    MMIO_Files := (
-                  "mmio.adb", "mmio.ads",
-                  "mmio-read_u16.adb",
-                  "mmio-read_u32.adb",
-                  "mmio-read_u64.adb",
-                  "mmio-read_u8.adb",
-                  "mmio-reada_u16.adb",
-                  "mmio-reada_u32.adb",
-                  "mmio-reada_u64.adb",
-                  "mmio-reada_u8.adb",
-                  "mmio-readas_u16.adb",
-                  "mmio-readas_u32.adb",
-                  "mmio-readas_u64.adb",
-                  "mmio-readas_u8.adb",
-                  "mmio-readn_u16.adb",
-                  "mmio-readn_u32.adb",
-                  "mmio-readn_u64.adb",
-                  "mmio-readn_u8.adb",
-                  "mmio-reads_u16.adb",
-                  "mmio-reads_u32.adb",
-                  "mmio-reads_u64.adb",
-                  "mmio-reads_u8.adb",
-                  "mmio-write_u16.adb",
-                  "mmio-write_u32.adb",
-                  "mmio-write_u64.adb",
-                  "mmio-write_u8.adb",
-                  "mmio-writea_u16.adb",
-                  "mmio-writea_u32.adb",
-                  "mmio-writea_u64.adb",
-                  "mmio-writea_u8.adb",
-                  "mmio-writeas_u16.adb",
-                  "mmio-writeas_u32.adb",
-                  "mmio-writeas_u64.adb",
-                  "mmio-writeas_u8.adb",
-                  "mmio-writen_u16.adb",
-                  "mmio-writen_u32.adb",
-                  "mmio-writen_u64.adb",
-                  "mmio-writen_u8.adb",
-                  "mmio-writes_u16.adb",
-                  "mmio-writes_u32.adb",
-                  "mmio-writes_u64.adb",
-                  "mmio-writes_u8.adb"
-                 );
+      "mmio.adb", "mmio.ads",
+      "mmio-read_u16.adb",
+      "mmio-read_u32.adb",
+      "mmio-read_u64.adb",
+      "mmio-read_u8.adb",
+      "mmio-reada_u16.adb",
+      "mmio-reada_u32.adb",
+      "mmio-reada_u64.adb",
+      "mmio-reada_u8.adb",
+      "mmio-readas_u16.adb",
+      "mmio-readas_u32.adb",
+      "mmio-readas_u64.adb",
+      "mmio-readas_u8.adb",
+      "mmio-readn_u16.adb",
+      "mmio-readn_u32.adb",
+      "mmio-readn_u64.adb",
+      "mmio-readn_u8.adb",
+      "mmio-reads_u16.adb",
+      "mmio-reads_u32.adb",
+      "mmio-reads_u64.adb",
+      "mmio-reads_u8.adb",
+      "mmio-write_u16.adb",
+      "mmio-write_u32.adb",
+      "mmio-write_u64.adb",
+      "mmio-write_u8.adb",
+      "mmio-writea_u16.adb",
+      "mmio-writea_u32.adb",
+      "mmio-writea_u64.adb",
+      "mmio-writea_u8.adb",
+      "mmio-writeas_u16.adb",
+      "mmio-writeas_u32.adb",
+      "mmio-writeas_u64.adb",
+      "mmio-writeas_u8.adb",
+      "mmio-writen_u16.adb",
+      "mmio-writen_u32.adb",
+      "mmio-writen_u64.adb",
+      "mmio-writen_u8.adb",
+      "mmio-writes_u16.adb",
+      "mmio-writes_u32.adb",
+      "mmio-writes_u64.adb",
+      "mmio-writes_u8.adb"
+      );
 
    Malloc_Files := (
-                    "malloc.adb", "malloc.ads",
-                    "malloc-calloc.adb",
-                    "malloc-free.adb",
-                    "malloc-malloc.adb",
-                    "malloc-realloc.adb"
-                   );
+      "malloc.adb", "malloc.ads",
+      "malloc-calloc.adb",
+      "malloc-free.adb",
+      "malloc-malloc.adb",
+      "malloc-realloc.adb"
+      );
 
    Memory_Functions_Files := (
-                              "memory_functions.adb", "memory_functions.ads",
-                              "memory_functions-ememcmp.adb",
-                              "memory_functions-ememcpy.adb",
-                              "memory_functions-ememmove.adb",
-                              "memory_functions-ememset.adb"
-                             );
+      "memory_functions.adb", "memory_functions.ads",
+      "memory_functions-ememcmp.adb",
+      "memory_functions-ememcpy.adb",
+      "memory_functions-ememmove.adb",
+      "memory_functions-ememset.adb"
+      );
 
-   Mutex_Files := ("mutex.adb", "mutex.ads");
+   Mutex_Files := (
+      "mutex.adb", "mutex.ads"
+      );
 
    for Source_Files use
-                        Abort_Library_Files       &
-                        Bits_Files                &
-                        CPU_Files                 &
-                        Console_Files             &
-                        Core_Files                &
-                        Definitions_Files         &
-                        GCC_Defines_Files         &
-                        Gnat_Exceptions_Files     &
-                        Integer_Math_Files        &
-                        Last_Chance_Handler_Files &
-                        LLutils_Files             &
-                        MMIO_Files                &
-                        Malloc_Files              &
-                        Memory_Functions_Files    &
-                        Mutex_Files;
+      Abort_Library_Files       &
+      Bits_Files                &
+      CPU_Files                 &
+      Console_Files             &
+      Core_Files                &
+      Definitions_Files         &
+      GCC_Defines_Files         &
+      Gnat_Exceptions_Files     &
+      Integer_Math_Files        &
+      Last_Chance_Handler_Files &
+      LLutils_Files             &
+      MMIO_Files                &
+      Malloc_Files              &
+      Memory_Functions_Files    &
+      Mutex_Files;
 
    ----------------------------------------------------------------------------
    -- Naming

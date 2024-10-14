@@ -45,21 +45,22 @@ abstract project Gprbuild_Tc is
       for Switches ("Asm_Cpp") use Builder_Switches;
       for Switches ("C") use Builder_Switches;
       for Switches ("Ada") use (
-                                "-nostdinc",
-                                "-nostdlib",
-                                "--RTS=" & Configure.RTS_Path
-                               ) &
-                               Builder_Switches;
+         "-nostdinc",
+         "-nostdlib",
+         "--RTS=" & Configure.RTS_Path
+         ) &
+         Builder_Switches;
    end Builder;
 
    ----------------------------------------------------------------------------
    -- Compiler
    ----------------------------------------------------------------------------
 
-   GCC_FQExecutable := Configure.Toolchain_Prefix &
-                       "/bin/"                    &
-                       Configure.Toolchain_Name   &
-                       "-gcc";
+   GCC_FQExecutable :=
+      Configure.Toolchain_Prefix &
+      "/bin/"                    &
+      Configure.Toolchain_Name   &
+      "-gcc";
 
    Ada_Mode := "";
    case Configure.Ada_Mode is
@@ -76,37 +77,37 @@ abstract project Gprbuild_Tc is
    No_DOS_LT_Switch := "";
    case Ostype is
       when "cmd" | "msys" => null;
-      when others         => No_DOS_LT_Switch := "-gnatyd"; -- Check no DOS line terminators present.
+      when others         => No_DOS_LT_Switch := "-gnatyd";
    end case;
 
    package Compiler is
       -- Asm_Cpp
       for Driver ("Asm_Cpp") use GCC_FQExecutable;
       for Switches ("Asm_Cpp") use (
-                                    "-ffunction-sections",
-                                    "-fdata-sections",
-                                    "-g3", "-gdwarf-5"
-                                   )                               &
-                                   GCC_Wrapper_Switch              &
-                                   Configure.GCC_Switches_Platform;
+         "-ffunction-sections",
+         "-fdata-sections",
+         "-g3", "-gdwarf-5"
+         )                               &
+         GCC_Wrapper_Switch              &
+         Configure.GCC_Switches_Platform;
       -- C
       for Driver ("C") use GCC_FQExecutable;
       for Leading_Required_Switches ("C") use (
-                                               "-ffreestanding",
-                                               "-std=c99"
-                                              );
+         "-ffreestanding",
+         "-std=c99"
+         );
       for Switches ("C") use (
-                              "-O" & Configure.Optimization_Level,
-                              "-fno-omit-frame-pointer",
-                              "-fverbose-asm",
-                              "-ffunction-sections",
-                              "-fdata-sections",
-                              "-g3", "-gdwarf-5"
-                             )                               &
-                             GCC_Wrapper_Switch              &
-                             Configure.CC_Switches_RTS       &
-                             Configure.GCC_Switches_Platform &
-                             Gprbuild_Wr.CC_Switches_Warning;
+         "-O" & Configure.Optimization_Level,
+         "-fno-omit-frame-pointer",
+         "-fverbose-asm",
+         "-ffunction-sections",
+         "-fdata-sections",
+         "-g3", "-gdwarf-5"
+         )                               &
+         GCC_Wrapper_Switch              &
+         Configure.CC_Switches_RTS       &
+         Configure.GCC_Switches_Platform &
+         Gprbuild_Wr.CC_Switches_Warning;
       -- Ada
       for Driver ("Ada") use GCC_FQExecutable;
       for Mapping_Spec_Suffix ("Ada") use "%s";
@@ -116,32 +117,32 @@ abstract project Gprbuild_Tc is
       for Leading_Required_Switches ("Ada") use ("-x", "ada");
       for Include_Switches ("Ada") use ("-I");
       for Switches ("Ada") use (
-                                Ada_Mode,
-                                "-nostdinc",
-                                "-nostdlib",
-                                "-O" & Configure.Optimization_Level,
-                                "-fno-omit-frame-pointer",
-                                "-fverbose-asm",
-                                "-ffunction-sections",
-                                "-fdata-sections",
-                                "-g3", "-gdwarf-5",
-                                "-gnatef",
-                                "-gnatf",
-                                "-gnatU",
-                                "-gnatn",
-                                "-gnatE",
-                                "-gnato1",
-                                "-gnatVa",
-                                "-gnatX",
-                                "-fstack-usage",
-                                "-fdump-rtl-expand",
-                                No_DOS_LT_Switch
-                               )                                 &
-                               GCC_Wrapper_Switch                &
-                               Configure.ADAC_Switches_RTS       &
-                               Configure.GCC_Switches_Platform   &
-                               Gprbuild_Wr.ADAC_Switches_Warning &
-                               Gprbuild_St.ADAC_Switches_Style;
+         Ada_Mode,
+         "-nostdinc",
+         "-nostdlib",
+         "-O" & Configure.Optimization_Level,
+         "-fno-omit-frame-pointer",
+         "-fverbose-asm",
+         "-ffunction-sections",
+         "-fdata-sections",
+         "-g3", "-gdwarf-5",
+         "-gnatef",
+         "-gnatf",
+         "-gnatU",
+         "-gnatn",
+         "-gnatE",
+         "-gnato1",
+         "-gnatVa",
+         "-gnatX",
+         "-fstack-usage",
+         "-fdump-rtl-expand",
+         No_DOS_LT_Switch
+         )                                 &
+         GCC_Wrapper_Switch                &
+         Configure.ADAC_Switches_RTS       &
+         Configure.GCC_Switches_Platform   &
+         Gprbuild_Wr.ADAC_Switches_Warning &
+         Gprbuild_St.ADAC_Switches_Style;
    end Compiler;
 
    ----------------------------------------------------------------------------
@@ -152,42 +153,47 @@ abstract project Gprbuild_Tc is
 
    case Configure.Gnatbind_SecStack is
       when ""     => null;
-      when others => Binder_Switches := Binder_Switches                      &
-                                        ("-D" & Configure.Gnatbind_SecStack);
+      when others =>
+         Binder_Switches :=
+            Binder_Switches                      &
+            ("-D" & Configure.Gnatbind_SecStack);
    end case;
 
    package Binder is
       for Switches ("Ada") use (
-                                "-nostdinc",
-                                "-nostdlib",
-                                "-F",
-                                "-e",
-                                "-l",
-                                "-n",
-                                "-s",
-                                "-A=gnatbind_alis.lst",
-                                "-O=gnatbind_objs.lst"
-                               )               &
-                               Binder_Switches;
+         "-nostdinc",
+         "-nostdlib",
+         "-F",
+         "-e",
+         "-l",
+         "-n",
+         "-s",
+         "-A=gnatbind_alis.lst",
+         "-O=gnatbind_objs.lst"
+         )               &
+         Binder_Switches;
    end Binder;
 
    ----------------------------------------------------------------------------
    -- Library definitions
    ----------------------------------------------------------------------------
 
-   AR_FQExecutable := Configure.Toolchain_Prefix &
-                      "/bin/"                    &
-                      Configure.Toolchain_Name   &
-                      "-ar";
+   AR_FQExecutable :=
+      Configure.Toolchain_Prefix &
+      "/bin/"                    &
+      Configure.Toolchain_Name   &
+      "-ar";
 
    Library_Kind    := "static";
    Library_Support := "static_only";
    Library_Builder := "/libexec/gprbuild/gprlib";
    case Configure.Gprbuild_Prefix is
-      when ""     => Library_Builder := ".."            &
-                                        Library_Builder;
-      when others => Library_Builder := Configure.Gprbuild_Prefix &
-                                        Library_Builder;
+      when ""     => Library_Builder :=
+                        ".."            &
+                        Library_Builder;
+      when others => Library_Builder :=
+                        Configure.Gprbuild_Prefix &
+                        Library_Builder;
    end case;
    Archive_Builder := (AR_FQExecutable, "cr");
 
