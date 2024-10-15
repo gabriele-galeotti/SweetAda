@@ -16,8 +16,8 @@
 # Environment variables:
 # OSTYPE
 # PLATFORM_DIRECTORY
-# GDB
 # KERNEL_OUTFILE
+# GDB
 #
 
 ################################################################################

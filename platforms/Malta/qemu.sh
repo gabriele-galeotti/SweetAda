@@ -16,10 +16,10 @@
 # Environment variables:
 # OSTYPE
 # PLATFORM_DIRECTORY
-# GDB
+# CPU_MODEL
 # KERNEL_OUTFILE
 # KERNEL_ROMFILE
-# CPU_MODEL
+# GDB
 #
 
 ################################################################################

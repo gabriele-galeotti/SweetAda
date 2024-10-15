@@ -17,9 +17,9 @@
 # OSTYPE
 # PLATFORM_DIRECTORY
 # SHARE_DIRECTORY
-# GDB
-# KERNEL_ROMFILE
 # KERNEL_OUTFILE
+# KERNEL_ROMFILE
+# GDB
 #
 
 ################################################################################
