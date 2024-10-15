@@ -78,6 +78,19 @@ IF "%1"=="-debug" (
 EXIT /B %ERRORLEVEL%
 
 REM ############################################################################
+REM # SLEEP                                                                    #
+REM #                                                                          #
+REM ############################################################################
+:SLEEP
+FOR /F "tokens=1-3 delims=:." %%T IN ("%TIME%") DO ^
+  SET /A H=%%T,M=1%%B%%100,S=1%%C%%100,END=(H*60+M)*60+S+%1
+:SLEEP2
+FOR /F "tokens=1-3 delims=:." %%T IN ("%TIME%") DO ^
+  SET /A H=%%T,M=1%%B%%100,S=1%%C%%100,CUR=(H*60+M)*60+S
+IF "%CUR%" LSS "%END%" GOTO :SLEEP2
+GOTO :EOF
+
+REM ############################################################################
 REM # TCPPORT_IS_LISTENING                                                     #
 REM #                                                                          #
 REM ############################################################################
@@ -85,18 +98,18 @@ REM ############################################################################
 SET "PORTOK=N"
 SET "NLOOPS=0"
 :TIL_LOOP
-  %SystemRoot%\System32\timeout.exe /NOBREAK /T 1 >nul
-  FOR /F "tokens=*" %%I IN ('                    ^
-    %SystemRoot%\System32\NETSTAT.EXE -an ^|     ^
-    %SystemRoot%\System32\find.exe ":%1"  ^|     ^
-    %SystemRoot%\System32\find.exe /C "LISTENING"^
-    ') DO SET VAR=%%I
-  IF "%VAR%" NEQ "0" (
-    SET "PORTOK=Y"
-    GOTO :TIL_LOOPEND
-    )
-  SET /A NLOOPS += 1
-  IF "%NLOOPS%" NEQ "%2" GOTO :TIL_LOOP
+CALL :SLEEP 1
+FOR /F "tokens=*" %%I IN ('                    ^
+  %SystemRoot%\System32\NETSTAT.EXE -an ^|     ^
+  %SystemRoot%\System32\find.exe ":%1"  ^|     ^
+  %SystemRoot%\System32\find.exe /C "LISTENING"^
+  ') DO SET VAR=%%I
+IF "%VAR%" NEQ "0" (
+  SET "PORTOK=Y"
+  GOTO :TIL_LOOPEND
+  )
+SET /A NLOOPS += 1
+IF "%NLOOPS%" NEQ "%2" GOTO :TIL_LOOP
 :TIL_LOOPEND
 IF NOT "%PORTOK%"=="Y" ECHO TIMEOUT WAITING FOR PORT %1
 GOTO :EOF
@@ -111,7 +124,7 @@ REM ############################################################################
 IF ERRORLEVEL 1 (
   GOTO :QW_LOOPEND
   ) ELSE (
-  %SystemRoot%\System32\timeout.exe /NOBREAK /T 5 >nul
+  CALL :SLEEP 1
   GOTO :QW_LOOP
   )
 :QW_LOOPEND
