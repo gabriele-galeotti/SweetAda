@@ -188,12 +188,10 @@ abstract project Gprbuild_Tc is
    Library_Support := "static_only";
    Library_Builder := "/libexec/gprbuild/gprlib";
    case Configure.Gprbuild_Prefix is
-      when ""     => Library_Builder :=
-                        ".."            &
-                        Library_Builder;
-      when others => Library_Builder :=
-                        Configure.Gprbuild_Prefix &
-                        Library_Builder;
+      when ""     =>
+         Library_Builder := ".." & Library_Builder;
+      when others =>
+         Library_Builder := Configure.Gprbuild_Prefix & Library_Builder;
    end case;
    Archive_Builder := (AR_FQExecutable, "cr");
 
