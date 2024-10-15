@@ -16,6 +16,7 @@ REM
 REM Environment variables:
 REM TOOLCHAIN_PREFIX
 REM KERNEL_OUTFILE
+REM KERNEL_ROMFILE
 REM PUTTY
 REM GDB
 REM
@@ -48,8 +49,8 @@ REM EL1: -M virt
 REM EL2: -M virt,virtualization=on
 REM EL3: -M virt,secure=on
 START "" "%QEMU_EXECUTABLE%" ^
-  -M virt -cpu cortex-a53 -smp cores=4 -m 128 ^
-  -kernel %KERNEL_OUTFILE% ^
+  -M virt,secure=on -cpu cortex-a53 -smp cores=4 -m 128 ^
+  -bios %KERNEL_ROMFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
   -serial chardev:SERIALPORT0 ^
