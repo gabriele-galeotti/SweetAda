@@ -17,6 +17,7 @@
 
 with Definitions;
 with Bits;
+with ARMv8A;
 with Android;
 with Console;
 
@@ -51,7 +52,7 @@ package body BSP
       (C : in Character)
       is
    begin
-      null;
+      Android.Print_Message ("" & C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -70,9 +71,16 @@ package body BSP
       is
    begin
       -------------------------------------------------------------------------
-      Android.Print_Message ("*******************" & CRLF);
-      Android.Print_Message ("* Hello, SweetAda *" & CRLF);
-      Android.Print_Message ("*******************" & CRLF);
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
+      Console.Print ("*******************", NL => True);
+      Console.Print ("* Hello, SweetAda *", NL => True);
+      Console.Print ("*******************", NL => True);
+      Android.Uname_Get;
+      Android.Getpid;
+      Android.Gettimeofday;
       Android.System_Exit (0);
       -------------------------------------------------------------------------
    end Setup;

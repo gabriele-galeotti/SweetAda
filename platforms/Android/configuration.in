@@ -1,8 +1,8 @@
 
 #
-# Samsung® Galaxy J1
+# Samsung® GalaxyA5
 #
-# ARM® Cortex-A7 LE (ARMv7-A)
+# ARM® Cortex-A53 LE (ARMv8-A)
 #
 
 ################################################################################
@@ -19,15 +19,15 @@ USE_LIBADA := N
 #                                                                              #
 ################################################################################
 
-CPU       := ARM
-CPU_MODEL := CORTEXA7
+CPU       := AArch64
+CPU_MODEL := CORTEXA53
 
 ################################################################################
 # Build system parameters.                                                     #
 #                                                                              #
 ################################################################################
 
-GCC_SWITCHES_PLATFORM     := -mcpu=cortex-a7
+GCC_SWITCHES_PLATFORM     := -mcpu=cortex-a53
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
