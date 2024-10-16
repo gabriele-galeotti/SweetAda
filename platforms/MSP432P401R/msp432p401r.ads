@@ -261,6 +261,49 @@ pragma Style_Checks (Off);
       Reserved  at 0 range 2 .. 31;
    end record;
 
+   -- 4.11.4 SYS_PERIHALT_CTL Register
+
+   type SYS_PERIHALT_CTL_Type is record
+      HALT_T16_0 : Boolean := False; -- freezes peripheral operation when CPU is halted
+      HALT_T16_1 : Boolean := False; -- ''
+      HALT_T16_2 : Boolean := False; -- ''
+      HALT_T16_3 : Boolean := False; -- ''
+      HALT_T32_0 : Boolean := False; -- ''
+      HALT_eUA0  : Boolean := False; -- ''
+      HALT_eUA1  : Boolean := False; -- ''
+      HALT_eUA2  : Boolean := False; -- ''
+      HALT_eUA3  : Boolean := False; -- ''
+      HALT_eUB0  : Boolean := False; -- ''
+      HALT_eUB1  : Boolean := False; -- ''
+      HALT_eUB2  : Boolean := False; -- ''
+      HALT_eUB3  : Boolean := False; -- ''
+      HALT_ADC   : Boolean := False; -- ''
+      HALT_WDT   : Boolean := False; -- ''
+      HALT_DMA   : Boolean := False; -- ''
+      Reserved   : Bits_16 := 0
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_PERIHALT_CTL_Type use record
+      HALT_T16_0 : at 0 range  0 ..  0;
+      HALT_T16_1 : at 0 range  1 ..  1;
+      HALT_T16_2 : at 0 range  2 ..  2;
+      HALT_T16_3 : at 0 range  3 ..  3;
+      HALT_T32_0 : at 0 range  4 ..  4;
+      HALT_eUA0  : at 0 range  5 ..  5;
+      HALT_eUA1  : at 0 range  6 ..  6;
+      HALT_eUA2  : at 0 range  7 ..  7;
+      HALT_eUA3  : at 0 range  8 ..  8;
+      HALT_eUB0  : at 0 range  9 ..  9;
+      HALT_eUB1  : at 0 range 10 .. 10;
+      HALT_eUB2  : at 0 range 11 .. 11;
+      HALT_eUB3  : at 0 range 12 .. 12;
+      HALT_ADC   : at 0 range 13 .. 13;
+      HALT_WDT   : at 0 range 14 .. 14;
+      HALT_DMA   : at 0 range 15 .. 15;
+      Reserved   : at 0 range 16 .. 31;
+   end record;
+
    -- Table 6-34. SYSCTL Registers
 
    SYSCTL_BASEADDRESS : constant := 16#E004_3000#;
@@ -279,6 +322,18 @@ pragma Style_Checks (Off);
 
    SYS_WDTRESET_CTL : aliased SYS_WDTRESET_CTL_Type
       with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0008#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_PERIHALT_CTL : aliased SYS_PERIHALT_CTL_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#000C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_SRAM_SIZE : aliased Unsigned_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0010#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1349,7 +1404,7 @@ pragma Style_Checks (Off);
    -- 13 Port Mapping Controller (PMAP)
    ----------------------------------------------------------------------------
 
-   -- 13.3.1 PMAPKEYID
+   -- 13.3.1 PMAPKEYID Register
 
    PMAPKEYx_KEY : constant := 16#2D52#;
 
@@ -1362,7 +1417,7 @@ pragma Style_Checks (Off);
       PMAPKEYx at 0 range 0 .. 15;
    end record;
 
-   -- 13.3.2 PMAPCTL
+   -- 13.3.2 PMAPCTL Register
 
    type PMAPCTL_Type is record
       PMAPLOCKED : Boolean := True;  -- Port mapping lock bit.
@@ -1377,7 +1432,7 @@ pragma Style_Checks (Off);
       Reserved   at 0 range 2 .. 15;
    end record;
 
-   -- 13.3.3 P1MAP0 to P1MAP7
+   -- 13.3.3 P1MAP0 to P1MAP7 Register
 
    type PMAP8_Type is record
       PMAP : Bitmap_8;
@@ -1388,7 +1443,7 @@ pragma Style_Checks (Off);
       PMAP at 0 range 0 .. 7;
    end record;
 
-   -- 13.3.10 PxMAPyz
+   -- 13.3.10 PxMAPyz Register
 
    type PMAP16_Type is record
       PMAP : Bitmap_16;
