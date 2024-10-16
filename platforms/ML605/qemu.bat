@@ -82,9 +82,11 @@ REM # SLEEP                                                                    #
 REM #                                                                          #
 REM ############################################################################
 :SLEEP
-FOR /F "tokens=1-3 delims=:." %%A IN ("%TIME%") DO SET /A H=%%A,M=1%%B%%100,S=1%%C%%100,END=(H*60+M)*60+S+%1
+FOR /F "tokens=1-3 delims=:." %%A IN ("%TIME%") DO SET /A ^
+  H=%%A,M=1%%B%%100,S=1%%C%%100,END=(H*60+M)*60+S+%1
 :SLEEP2
-FOR /F "tokens=1-3 delims=:." %%A IN ("%TIME%") DO SET /A H=%%A,M=1%%B%%100,S=1%%C%%100,CUR=(H*60+M)*60+S
+FOR /F "tokens=1-3 delims=:." %%A IN ("%TIME%") DO SET /A ^
+  H=%%A,M=1%%B%%100,S=1%%C%%100,CUR=(H*60+M)*60+S
 IF "%CUR%" LSS "%END%" GOTO :SLEEP2
 GOTO :EOF
 
