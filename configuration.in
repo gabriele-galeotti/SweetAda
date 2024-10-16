@@ -15,6 +15,10 @@ ifeq      ($(OSTYPE),cmd)
   TOOLCHAIN_PREFIX := C:\Program Files\SweetAda
   #TOOLCHAIN_PREFIX := C:\Program Files\GNAT\gnat-arm-elf-windows64-12.2.0-1
   #TOOLCHAIN_PREFIX := C:\Program Files\GNAT\gnat-riscv64-elf-windows64-12.2.0-1
+  #TOOLCHAIN_PREFIX := C:\Program Files\GNAT\aarch64-elf
+  #TOOLCHAIN_PREFIX := C:\Program Files\GNAT\arm-eabi
+  #TOOLCHAIN_PREFIX := C:\Program Files\GNAT\riscv64-elf
+  #TOOLCHAIN_PREFIX := C:\Program Files\GNAT\x86_64-elf
   GPRBUILD_PREFIX  := C:\Program Files\GNAT\gprbuild-x86_64-windows64-22.0.0-1
   PYTHON           := C:\Users\Administrator\AppData\Local\Programs\Python\Python38\python.exe
   TCLSH            := C:\Tcl\bin\tclsh86.exe
@@ -25,6 +29,10 @@ else ifeq ($(OSTYPE),msys)
   TOOLCHAIN_PREFIX := C:/Program Files/SweetAda
   #TOOLCHAIN_PREFIX := C:/Program Files/GNAT/gnat-arm-elf-windows64-12.2.0-1
   #TOOLCHAIN_PREFIX := C:/Program Files/GNAT/gnat-riscv64-elf-windows64-12.2.0-1
+  #TOOLCHAIN_PREFIX := C:/Program Files/GNAT/aarch64-elf
+  #TOOLCHAIN_PREFIX := C:/Program Files/GNAT/arm-eabi
+  #TOOLCHAIN_PREFIX := C:/Program Files/GNAT/riscv64-elf
+  #TOOLCHAIN_PREFIX := C:/Program Files/GNAT/x86_64-elf
   GPRBUILD_PREFIX  := C:/Program Files/GNAT/gprbuild-x86_64-windows64-22.0.0-1
   PYTHON           := C:/Users/Administrator/AppData/Local/Programs/Python/Python38/python.exe
   TCLSH            := C:/Tcl/bin/tclsh86.exe
@@ -69,7 +77,7 @@ TOOLCHAIN_NAME_SPARC      := sparc-elf
 TOOLCHAIN_NAME_SPARC64    := sparc64-elf
 TOOLCHAIN_NAME_SuperH     := sh-elf
 TOOLCHAIN_NAME_SH4        := sh4le-elf
-TOOLCHAIN_NAME_System390  := s390-linux
+TOOLCHAIN_NAME_System390  := s390x-linux
 TOOLCHAIN_NAME_x86        := i686-elf
 TOOLCHAIN_NAME_x86_64     := x86_64-elf
 
