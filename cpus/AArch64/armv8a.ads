@@ -35,6 +35,14 @@ package ARMv8A
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- Arm® Architecture Reference Manual
+   -- for A-profile architecture
+   -- ARM DDI 0487J.a (ID042523)
+   ----------------------------------------------------------------------------
+
    ----------------------------------------------------------------------------
    -- CurrentEL
    ----------------------------------------------------------------------------
@@ -75,9 +83,9 @@ package ARMv8A
    RMode_RZ : constant := 2#11#; -- Round towards Zero (RZ) mode.
 
    type FPCR_Type is record
-      FIZ       : Boolean;      -- Flush Inputs to Zero. Controls whether single-precision ...
-      AH        : Boolean;      -- Alternate Handling. Controls alternate handling of denormalized floating-point numbers.
-      NEP       : Boolean;      -- Controls how the output elements other than the lowest element of the vector ...
+      FIZ       : Boolean;      -- Flush Inputs to Zero.
+      AH        : Boolean;      -- Alternate Handling.
+      NEP       : Boolean;      -- Controls how the output elements other than the lowest element of the vector are determined for Advanced SIMD scalar instructions.
       Reserved1 : Bits_5  := 0;
       IOE       : Boolean;      -- Invalid Operation floating-point exception trap enable.
       DZE       : Boolean;      -- Divide by Zero floating-point exception trap enable.
@@ -86,9 +94,9 @@ package ARMv8A
       IXE       : Boolean;      -- Inexact floating-point exception trap enable.
       Reserved2 : Bits_2  := 0;
       IDE       : Boolean;      -- Input Denormal floating-point exception trap enable.
-      Len       : Bits_3  := 0; -- This field has no function in AArch64 state, and non-zero values are ignored ...
+      Len       : Bits_3  := 0; -- This field has no function in AArch64 state, and nonzero values are ignored during execution in AArch64 state.
       FZ16      : Boolean;      -- Flushing denormalized numbers to zero control bit on half-precision data-processing instructions.
-      Stride    : Bits_2  := 0; -- This field has no function in AArch64 state, and non-zero values are ignored ...
+      Stride    : Bits_2  := 0; -- This field has no function in AArch64 state, and nonzero values are ignored during execution in AArch64 state.
       RMode     : Bits_2;       -- Rounding Mode control field.
       FZ        : Boolean;      -- Flushing denormalized numbers to zero control bit.
       DN        : Boolean;      -- Default NaN use for NaN propagation.
@@ -179,7 +187,7 @@ package ARMv8A
    -- D19.2.1 ACCDATA_EL1, Accelerator Data
 
    type ACCDATA_EL1_Type is record
-      ACCDATA  : Bits_32;      -- Holds the lower 32 bits of the data that is stored by an ST64BV0, ...
+      ACCDATA  : Bits_32;      -- Holds the lower 32 bits of the data that is stored by an ST64BV0, Single-copy atomic 64-byte EL0 store instruction.
       Reserved : Bits_32 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -189,6 +197,19 @@ package ARMv8A
       Reserved at 0 range 32 .. 63;
    end record;
 
+   -- D19.2.2 ACTLR_EL1, Auxiliary Control Register (EL1)
+   -- D19.2.3 ACTLR_EL2, Auxiliary Control Register (EL2)
+   -- D19.2.4 ACTLR_EL3, Auxiliary Control Register (EL3)
+   -- D19.2.5 AFSR0_EL1, Auxiliary Fault Status Register 0 (EL1)
+   -- D19.2.6 AFSR0_EL2, Auxiliary Fault Status Register 0 (EL2)
+   -- D19.2.7 AFSR0_EL3, Auxiliary Fault Status Register 0 (EL3)
+   -- D19.2.8 AFSR1_EL1, Auxiliary Fault Status Register 1 (EL1)
+   -- D19.2.9 AFSR1_EL2, Auxiliary Fault Status Register 1 (EL2)
+   -- D19.2.10 AFSR1_EL3, Auxiliary Fault Status Register 1 (EL3)
+   -- D19.2.11 AIDR_EL1, Auxiliary ID Register
+   -- D19.2.12 AMAIR_EL1, Auxiliary Memory Attribute Indirection Register (EL1)
+   -- D19.2.13 AMAIR_EL2, Auxiliary Memory Attribute Indirection Register (EL2)
+   -- D19.2.14 AMAIR_EL3, Auxiliary Memory Attribute Indirection Register (EL3)
    -- D19.2.15 APDAKeyHi_EL1, Pointer Authentication Key A for Data (bits[127:64])
    -- D19.2.16 APDAKeyLo_EL1, Pointer Authentication Key A for Data (bits[63:0])
    -- D19.2.17 APDBKeyHi_EL1, Pointer Authentication Key B for Data (bits[127:64])
@@ -203,7 +224,7 @@ package ARMv8A
    -- D19.2.25 CCSIDR2_EL1, Current Cache Size ID Register 2
 
    type CCSIDR2_EL1_Type is record
-      NumSets  : Bits_24;      -- (Number of sets in cache) - 1, therefore a value of 0 indicates 1 set in the cache. ...
+      NumSets  : Bits_24;      -- (Number of sets in cache) - 1, therefore a value of 0 indicates 1 set in the cache. The number of sets does not have to be a power of 2.
       Reserved : Bits_40 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -212,6 +233,42 @@ package ARMv8A
       NumSets  at 0 range  0 .. 23;
       Reserved at 0 range 24 .. 63;
    end record;
+
+   -- D19.2.26 CCSIDR_EL1, Current Cache Size ID Register
+
+   type CCSIDR_EL1_Type is record
+      LineSize      : Bits_3;       -- (Log2(Number of bytes in cache line)) - 4.
+      Associativity : Bits_21;      -- (Associativity of cache) - 1, therefore a value of 0 indicates an associativity of 1.
+      Reserved1     : Bits_8  := 0;
+      NumSets       : Bits_24;      -- (Number of sets in cache) - 1, therefore a value of 0 indicates 1 set in the cache. The number of sets does not have to be a power of 2.
+      Reserved2     : Bits_8  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for CCSIDR_EL1_Type use record
+      LineSize      at 0 range  0 ..  2;
+      Associativity at 0 range  3 .. 23;
+      Reserved1     at 0 range 24 .. 31;
+      NumSets       at 0 range 32 .. 55;
+      Reserved2     at 0 range 56 .. 63;
+   end record;
+
+   -- D19.2.27 CLIDR_EL1, Cache Level ID Register
+   -- D19.2.28 CONTEXTIDR_EL1, Context ID Register (EL1)
+   -- D19.2.29 CONTEXTIDR_EL2, Context ID Register (EL2)
+   -- D19.2.30 CPACR_EL1, Architectural Feature Access Control Register
+   -- D19.2.31 CPTR_EL2, Architectural Feature Trap Register (EL2)
+   -- D19.2.32 CPTR_EL3, Architectural Feature Trap Register (EL3)
+   -- D19.2.33 CSSELR_EL1, Cache Size Selection Register
+   -- D19.2.34 CTR_EL0, Cache Type Register
+   -- D19.2.35 DACR32_EL2, Domain Access Control Register
+   -- D19.2.36 DCZID_EL0, Data Cache Zero ID register
+   -- D19.2.37 ESR_EL1, Exception Syndrome Register (EL1)
+   -- D19.2.38 ESR_EL2, Exception Syndrome Register (EL2)
+   -- D19.2.39 ESR_EL3, Exception Syndrome Register (EL3)
+   -- D19.2.40 FAR_EL1, Fault Address Register (EL1)
+   -- D19.2.41 FAR_EL2, Fault Address Register (EL2)
+   -- D19.2.42 FAR_EL3, Fault Address Register (EL3)
 
    -- D19.2.43 FPEXC32_EL2, Floating-Point Exception Control register
 
@@ -229,7 +286,7 @@ package ARMv8A
       VV        : Boolean;      -- VECITR valid bit.
       FP2V      : Boolean;      -- FPINST2 instruction valid bit.
       DEX       : Boolean;      -- Defined synchronous exception on floating-point execution.
-      EN        : Boolean;      -- Enables access to the Advanced SIMD and floating-point functionality ...
+      EN        : Boolean;      -- Enables access to the Advanced SIMD and floating-point functionality from all Exception levels, except that setting this field to 0 does not disable the following: ...
       EX        : Boolean;      -- Exception bit.
       Reserved3 : Bits_32 := 0;
    end record
@@ -717,6 +774,108 @@ package ARMv8A
       (Value : in SCTLR_EL1_Type)
       with Inline => True;
 
+   -- TCR2_EL1/2 are unknown in Cortex A-53
+
+   -- D19.2.137 TCR2_EL1, Extended Translation Control Register (EL1)
+
+   -- type TCR2_EL1_Type is new Bits.Bitmap_64;
+
+   -- function TCR2_EL1_Read
+   --    return TCR2_EL1_Type
+   --    with Inline => True;
+   -- procedure TCR2_EL1_Write
+   --    (Value : in TCR2_EL1_Type)
+   --    with Inline => True;
+
+   -- D19.2.138 TCR2_EL2, Extended Translation Control Register (EL2)
+
+   -- type TCR2_EL2_Type is new Bits.Bitmap_64;
+
+   -- function TCR2_EL2_Read
+   --    return TCR2_EL2_Type
+   --    with Inline => True;
+   -- procedure TCR2_EL2_Write
+   --    (Value : in TCR2_EL2_Type)
+   --    with Inline => True;
+
+   -- D19.2.152 TTBR0_EL1, Translation Table Base Register 0 (EL1)
+   -- D19.2.153 TTBR0_EL2, Translation Table Base Register 0 (EL2)
+   -- D19.2.154 TTBR0_EL3, Translation Table Base Register 0 (EL3)
+   -- D19.2.155 TTBR1_EL1, Translation Table Base Register 1 (EL1)
+   -- D19.2.156 TTBR1_EL2, Translation Table Base Register 1 (EL2)
+
+   CnP_DIFFER : constant := 0; -- The translation table entries pointed to by ..., for the current translation ...
+   CnP_SAME   : constant := 1; -- The translation table entries pointed to by ... are the same as the translation ...
+
+   type TTBR0_EL1_Type is record
+      CnP   : Bits_1;  -- Common not Private.
+      BADDR : Bits_47; -- Translation table base address
+      ASID  : Bits_16; -- An ASID for the translation table base address.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for TTBR0_EL1_Type use record
+      CnP   at 0 range  0 ..  0;
+      BADDR at 0 range  1 .. 47;
+      ASID  at 0 range 48 .. 63;
+   end record;
+
+   function TTBR0_EL1_Read
+      return TTBR0_EL1_Type
+      with Inline => True;
+   procedure TTBR0_EL1_Write
+      (Value : in TTBR0_EL1_Type)
+      with Inline => True;
+
+   type TTBR0_EL2_Type is new TTBR0_EL1_Type;
+
+   function TTBR0_EL2_Read
+      return TTBR0_EL2_Type
+      with Inline => True;
+   procedure TTBR0_EL2_Write
+      (Value : in TTBR0_EL2_Type)
+      with Inline => True;
+
+   type TTBR0_EL3_Type is record
+      CnP      : Bits_1;       -- Common not Private.
+      BADDR    : Bits_47;      -- Translation table base address
+      Reserved : Bits_16 := 0; -- An ASID for the translation table base address.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for TTBR0_EL3_Type use record
+      CnP      at 0 range  0 ..  0;
+      BADDR    at 0 range  1 .. 47;
+      Reserved at 0 range 48 .. 63;
+   end record;
+
+   function TTBR0_EL3_Read
+      return TTBR0_EL3_Type
+      with Inline => True;
+   procedure TTBR0_EL3_Write
+      (Value : in TTBR0_EL3_Type)
+      with Inline => True;
+
+   type TTBR1_EL1_Type is new TTBR0_EL1_Type;
+
+   function TTBR1_EL1_Read
+      return TTBR1_EL1_Type
+      with Inline => True;
+   procedure TTBR1_EL1_Write
+      (Value : in TTBR1_EL1_Type)
+      with Inline => True;
+
+   -- TTBR1_EL2 is not implemented in Cortex A-53
+
+   -- type TTBR1_EL2_Type is new TTBR0_EL1_Type;
+
+   -- function TTBR1_EL2_Read
+   --    return TTBR1_EL2_Type
+   --    with Inline => True;
+   -- procedure TTBR1_EL2_Write
+   --    (Value : in TTBR1_EL2_Type)
+   --    with Inline => True;
+
    -- D19.2.157 VBAR_EL1, Vector Base Address Register (EL1)
    -- D19.2.158 VBAR_EL2, Vector Base Address Register (EL2)
    -- D19.2.159 VBAR_EL3, Vector Base Address Register (EL3)
@@ -840,5 +999,7 @@ package ARMv8A
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end ARMv8A;

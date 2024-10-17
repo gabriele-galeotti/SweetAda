@@ -121,6 +121,27 @@ pragma Style_Checks (Off);
    function SCTLR_EL1_Read return SCTLR_EL1_Type is function MRS_Read is new MRS ("sctlr_el1", SCTLR_EL1_Type); begin return MRS_Read; end SCTLR_EL1_Read;
    procedure SCTLR_EL1_Write (Value : in SCTLR_EL1_Type) is procedure MSR_Write is new MSR ("sctlr_el1", SCTLR_EL1_Type); begin MSR_Write (Value); end SCTLR_EL1_Write;
 
+   -- function TCR2_EL1_Read return TCR2_EL1_Type is function MRS_Read is new MRS ("tcr2_el1", TCR2_EL1_Type); begin return MRS_Read; end TCR2_EL1_Read;
+   -- procedure TCR2_EL1_Write (Value : in TCR2_EL1_Type) is procedure MSR_Write is new MSR ("tcr2_el1", TCR2_EL1_Type); begin MSR_Write (Value); end TCR2_EL1_Write;
+
+   -- function TCR2_EL2_Read return TCR2_EL2_Type is function MRS_Read is new MRS ("tcr2_el2", TCR2_EL2_Type); begin return MRS_Read; end TCR2_EL2_Read;
+   -- procedure TCR2_EL2_Write (Value : in TCR2_EL2_Type) is procedure MSR_Write is new MSR ("tcr2_el2", TCR2_EL2_Type); begin MSR_Write (Value); end TCR2_EL2_Write;
+
+   function TTBR0_EL1_Read return TTBR0_EL1_Type is function MRS_Read is new MRS ("ttbr0_el1", TTBR0_EL1_Type); begin return MRS_Read; end TTBR0_EL1_Read;
+   procedure TTBR0_EL1_Write (Value : in TTBR0_EL1_Type) is procedure MSR_Write is new MSR ("ttbr0_el1", TTBR0_EL1_Type); begin MSR_Write (Value); end TTBR0_EL1_Write;
+
+   function TTBR0_EL2_Read return TTBR0_EL2_Type is function MRS_Read is new MRS ("ttbr0_el2", TTBR0_EL2_Type); begin return MRS_Read; end TTBR0_EL2_Read;
+   procedure TTBR0_EL2_Write (Value : in TTBR0_EL2_Type) is procedure MSR_Write is new MSR ("ttbr0_el2", TTBR0_EL2_Type); begin MSR_Write (Value); end TTBR0_EL2_Write;
+
+   function TTBR0_EL3_Read return TTBR0_EL3_Type is function MRS_Read is new MRS ("ttbr0_el3", TTBR0_EL3_Type); begin return MRS_Read; end TTBR0_EL3_Read;
+   procedure TTBR0_EL3_Write (Value : in TTBR0_EL3_Type) is procedure MSR_Write is new MSR ("ttbr0_el3", TTBR0_EL3_Type); begin MSR_Write (Value); end TTBR0_EL3_Write;
+
+   function TTBR1_EL1_Read return TTBR1_EL1_Type is function MRS_Read is new MRS ("ttbr1_el1", TTBR1_EL1_Type); begin return MRS_Read; end TTBR1_EL1_Read;
+   procedure TTBR1_EL1_Write (Value : in TTBR1_EL1_Type) is procedure MSR_Write is new MSR ("ttbr1_el1", TTBR1_EL1_Type); begin MSR_Write (Value); end TTBR1_EL1_Write;
+
+   -- function TTBR1_EL2_Read return TTBR1_EL2_Type is function MRS_Read is new MRS ("ttbr1_el2", TTBR1_EL2_Type); begin return MRS_Read; end TTBR1_EL2_Read;
+   -- procedure TTBR1_EL2_Write (Value : in TTBR1_EL2_Type) is procedure MSR_Write is new MSR ("ttbr1_el2", TTBR1_EL2_Type); begin MSR_Write (Value); end TTBR1_EL2_Write;
+
    function VBAR_EL1_Read return Unsigned_64 is function MRS_Read is new MRS ("vbar_el1", Unsigned_64); begin return MRS_Read; end VBAR_EL1_Read;
    procedure VBAR_EL1_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("vbar_el1", Unsigned_64); begin MSR_Write (Value); end VBAR_EL1_Write;
 

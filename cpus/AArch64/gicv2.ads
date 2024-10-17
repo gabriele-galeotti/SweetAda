@@ -49,9 +49,9 @@ package GICv2
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for GICD_CTLR_Type use record
-      EnableGrp0 at 0 range  0 ..  0;
-      EnableGrp1 at 0 range  1 ..  1;
-      Reserved   at 0 range  2 .. 31;
+      EnableGrp0 at 0 range 0 ..  0;
+      EnableGrp1 at 0 range 1 ..  1;
+      Reserved   at 0 range 2 .. 31;
    end record;
 
    -- 4.3.2 Interrupt Controller Type Register, GICD_TYPER
