@@ -37,11 +37,12 @@ package body PL011
    -- Register types
    ----------------------------------------------------------------------------
 
-   type Register_Type is (
-                          UARTDR, UARTRSR, UARTECR, UARTFR, UARTILPR, UARTIBRD, UARTFBRD,
-                          UARTLCR_H, UARTCR, UARTIFLS, UARTIMSC, UARTRIS, UARTMIS, UARTICR,
-                          UARTDMACR
-                         );
+   type Register_Type is
+      (
+       UARTDR, UARTRSR, UARTECR, UARTFR, UARTILPR, UARTIBRD, UARTFBRD,
+       UARTLCR_H, UARTCR, UARTIFLS, UARTIMSC, UARTRIS, UARTMIS, UARTICR,
+       UARTDMACR
+      );
 
    Register_Offset : constant array (Register_Type) of Storage_Offset :=
       [
