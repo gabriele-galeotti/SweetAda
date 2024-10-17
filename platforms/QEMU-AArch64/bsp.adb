@@ -88,6 +88,7 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
+      EL : Bits_2;
    begin
       -------------------------------------------------------------------------
       Secondary_Stack.Init;
@@ -111,7 +112,8 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("AArch64 Cortex-A53 (QEMU emulator)", NL => True);
-      Console.Print (Natural (ARMv8A.CurrentEL_Read.EL),     Prefix => "Current EL: ", NL => True);
+      EL := ARMv8A.CurrentEL_Read.EL;
+      Console.Print (Natural (EL), Prefix => "Current EL: ", NL => True);
       Console.Print (ARMv8A.CNTFRQ_EL0_Read.Clock_frequency, Prefix => "CNTFRQ_EL0: ", NL => True);
       -------------------------------------------------------------------------
       if Core.Debug_Flag then
@@ -134,7 +136,7 @@ package body BSP
          others  => <>
          ));
       -- handle IRQs at EL3
-      if ARMv8A.CurrentEL_Read.EL = 3 then
+      if EL = ARMv8A.EL3 then
          declare
             SCR_EL3 : ARMv8A.SCR_EL3_Type;
          begin
@@ -144,7 +146,7 @@ package body BSP
          end;
       end if;
       -- handle IRQs at EL2
-      if ARMv8A.CurrentEL_Read.EL = 2 then
+      if EL = ARMv8A.EL2 then
          declare
             HCR_EL2 : ARMv8A.HCR_EL2_Type;
          begin
