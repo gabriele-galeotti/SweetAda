@@ -63,10 +63,10 @@ package body PIIX
    procedure Init
       is
       Pirqc : constant PIRQC_Type := (
-                          IRQROUTE   => IRQROUTE_RESERVED1,
-                          IRQROUTEEN => NFalse,
-                          others     => <>
-                          );
+         IRQROUTE   => IRQROUTE_RESERVED1,
+         IRQROUTEEN => NFalse,
+         others     => <>
+         );
    begin
       -- Bus_Number, Device_Number, Function_Number, Register_Number, Value
       Cfg_Write (BUS0, 1, 0, PIRQRCA, To_U8 (Pirqc));
