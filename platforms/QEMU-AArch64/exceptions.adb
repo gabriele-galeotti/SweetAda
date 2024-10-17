@@ -22,6 +22,7 @@ with Bits;
 with ARMv8A;
 with Virt;
 with BSP;
+with Console;
 
 package body Exceptions
    is
@@ -62,22 +63,34 @@ package body Exceptions
    procedure Exception_Process
       is
    begin
+      Console.Print ("*** EXCEPTION", NL => True);
+      loop null; end loop;
+   end Exception_Process;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Process
+   ----------------------------------------------------------------------------
+   procedure Irq_Process
+      is
+   begin
       BSP.Tick_Count := @ + 1;
       Virt.GICD.GICD_ICPENDR (0)(30) := True;
       BSP.Timer_Reload;
-   end Exception_Process;
+   end Irq_Process;
 
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
       is
+      EL : Bits_2;
       function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
    begin
-      if ARMv8A.CurrentEL_Read.EL = 3 then
+      EL := ARMv8A.CurrentEL_Read.EL;
+      if EL = ARMv8A.EL3 then
          ARMv8A.VBAR_EL3_Write (To_U64 (EL3_Table'Address));
       end if;
-      if ARMv8A.CurrentEL_Read.EL = 2 then
+      if EL >= ARMv8A.EL2 then
          ARMv8A.VBAR_EL2_Write (To_U64 (EL2_Table'Address));
       end if;
       ARMv8A.VBAR_EL1_Write (To_U64 (EL1_Table'Address));
