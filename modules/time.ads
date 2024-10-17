@@ -43,10 +43,11 @@ package Time
       IsDST : Integer; -- Daylight saving time
    end record;
 
-   Month_Name  : constant array (Natural range 1 .. 12) of String (1 .. 3) :=
-      ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+   -- ISO 8601 layout
    Day_Of_Week : constant array (Natural range 1 .. 7) of String (1 .. 3) :=
       ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+   Month_Name  : constant array (Natural range 1 .. 12) of String (1 .. 3) :=
+      ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
    ----------------------------------------------------------------------------
    -- Compute the number of days since 1970-01-01.
