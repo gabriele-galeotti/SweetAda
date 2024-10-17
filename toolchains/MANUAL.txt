@@ -14,7 +14,7 @@ Current versions of GNU packages are hardwired in the scripts. Download:
 and have them decompressed in the directory stated by the PACKAGE_PARENT_PATH
 variable, which is by default /usr/local/src.
 
-The scripts are Bash scripts which use array features, so they can''t be run
+The scripts are Bash scripts which use array features, so they can't be run
 in a strict POSIX environment which does not provide this facility. Besides a
 working native GCC compiler, a series of mainstream tools are needed online,
 like Bison/readline/expat, so check your environment and install them to
@@ -110,7 +110,7 @@ into the source tree of GDB as well.
 Due to not-perfect integration with all possible OS distribution layouts, a
 little helper script exists in order to detect Python 3 libraries. The option
 is specified in the configure list, but it is commented out because maybe your
-system has a 1-1 match with the GDB''s configure idea about which (if exists)
+system has a 1-1 match with the GDB's configure idea about which (if exists)
 Python is actually installed in the system.
 
 If you experience problems, try to uncomment this option, then, if the problem
