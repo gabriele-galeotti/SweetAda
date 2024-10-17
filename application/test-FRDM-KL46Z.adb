@@ -37,7 +37,6 @@ package body Application
       declare
          Delay_Count : constant := 1_000_000;
       begin
-         SIM_SCGC5.PORTD := True;
          -- LED1 (GREEN)
          PORTD_PCR (5).MUX := MUX_ALT1_GPIO;
          GPIOD_PDDR (5) := True;

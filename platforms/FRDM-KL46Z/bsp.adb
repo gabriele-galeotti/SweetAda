@@ -98,6 +98,19 @@ package body BSP
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
+      -- clock gating
+      SIM_SCGC5 := (
+         LPTMR  => False,
+         TSI    => True,
+         PORTA  => True,
+         PORTB  => True,
+         PORTC  => False,
+         PORTD  => True,
+         PORTE  => True,
+         SLCD   => False,
+         others => <>
+         );
+      -- clock selection
       SIM_SOPT2 := (
          RTCCLKOUTSEL => RTCCLKOUTSEL_OSCERCLK,
          CLKOUTSEL    => CLKOUTSEL_OSCERCLK,
