@@ -280,28 +280,59 @@ pragma Style_Checks (Off);
       HALT_ADC   : Boolean := False; -- ''
       HALT_WDT   : Boolean := False; -- ''
       HALT_DMA   : Boolean := False; -- ''
-      Reserved   : Bits_16 := 0
+      Reserved   : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for SYS_PERIHALT_CTL_Type use record
-      HALT_T16_0 : at 0 range  0 ..  0;
-      HALT_T16_1 : at 0 range  1 ..  1;
-      HALT_T16_2 : at 0 range  2 ..  2;
-      HALT_T16_3 : at 0 range  3 ..  3;
-      HALT_T32_0 : at 0 range  4 ..  4;
-      HALT_eUA0  : at 0 range  5 ..  5;
-      HALT_eUA1  : at 0 range  6 ..  6;
-      HALT_eUA2  : at 0 range  7 ..  7;
-      HALT_eUA3  : at 0 range  8 ..  8;
-      HALT_eUB0  : at 0 range  9 ..  9;
-      HALT_eUB1  : at 0 range 10 .. 10;
-      HALT_eUB2  : at 0 range 11 .. 11;
-      HALT_eUB3  : at 0 range 12 .. 12;
-      HALT_ADC   : at 0 range 13 .. 13;
-      HALT_WDT   : at 0 range 14 .. 14;
-      HALT_DMA   : at 0 range 15 .. 15;
-      Reserved   : at 0 range 16 .. 31;
+      HALT_T16_0 at 0 range  0 ..  0;
+      HALT_T16_1 at 0 range  1 ..  1;
+      HALT_T16_2 at 0 range  2 ..  2;
+      HALT_T16_3 at 0 range  3 ..  3;
+      HALT_T32_0 at 0 range  4 ..  4;
+      HALT_eUA0  at 0 range  5 ..  5;
+      HALT_eUA1  at 0 range  6 ..  6;
+      HALT_eUA2  at 0 range  7 ..  7;
+      HALT_eUA3  at 0 range  8 ..  8;
+      HALT_eUB0  at 0 range  9 ..  9;
+      HALT_eUB1  at 0 range 10 .. 10;
+      HALT_eUB2  at 0 range 11 .. 11;
+      HALT_eUB3  at 0 range 12 .. 12;
+      HALT_ADC   at 0 range 13 .. 13;
+      HALT_WDT   at 0 range 14 .. 14;
+      HALT_DMA   at 0 range 15 .. 15;
+      Reserved   at 0 range 16 .. 31;
+   end record;
+
+   -- 4.11.6 SYS_SRAM_BANKEN Register
+
+   type SYS_SRAM_BANKEN_Type is record
+      BNK0_EN   : Boolean := True;  -- When 1, enables Bank0 of the SRAM
+      BNK1_EN   : Boolean := True;  -- When set to 1, bank enable bits for all banks below this bank are set to 1 as well.
+      BNK2_EN   : Boolean := True;  -- ''
+      BNK3_EN   : Boolean := True;  -- ''
+      BNK4_EN   : Boolean := True;  -- ''
+      BNK5_EN   : Boolean := True;  -- ''
+      BNK6_EN   : Boolean := True;  -- ''
+      BNK7_EN   : Boolean := True;  -- ''
+      Reserved1 : Bits_8  := 0;
+      SRAM_RDY  : Boolean := False; -- SRAM is ready for accesses.
+      Reserved2 : Bits_15 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_SRAM_BANKEN_Type use record
+      BNK0_EN   at 0 range  0 ..  0;
+      BNK1_EN   at 0 range  1 ..  1;
+      BNK2_EN   at 0 range  2 ..  2;
+      BNK3_EN   at 0 range  3 ..  3;
+      BNK4_EN   at 0 range  4 ..  4;
+      BNK5_EN   at 0 range  5 ..  5;
+      BNK6_EN   at 0 range  6 ..  6;
+      BNK7_EN   at 0 range  7 ..  7;
+      Reserved1 at 0 range  8 .. 15;
+      SRAM_RDY  at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 31;
    end record;
 
    -- Table 6-34. SYSCTL Registers
@@ -334,6 +365,12 @@ pragma Style_Checks (Off);
 
    SYS_SRAM_SIZE : aliased Unsigned_32
       with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0010#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_SRAM_BANKEN : aliased SYS_SRAM_BANKEN_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0014#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
