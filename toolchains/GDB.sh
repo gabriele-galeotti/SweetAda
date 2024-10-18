@@ -114,7 +114,7 @@ if [ "x${phase_configure}" = "xY" ] ; then
   CONFIGURE_OPTS+=("--with-isl")
   CONFIGURE_OPTS+=("--with-readline")
   CONFIGURE_OPTS+=("--with-expat")
-  #CONFIGURE_OPTS+=("--with-python=$(pwd)/linux-python-config.sh")
+  #CONFIGURE_OPTS+=("--with-python=$(pwd)/python-config-linux.sh")
   CONFIGURE_OPTS+=("--without-auto-load-safe-path")
   CONFIGURE_OPTS+=("--disable-shared")
   CONFIGURE_OPTS+=("--disable-nls")
