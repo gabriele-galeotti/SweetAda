@@ -67,7 +67,7 @@ ifeq ($(OSTYPE),cmd)
 MULTILIB_DIRECTORY := $(shell $(ECHO) $(MULTILIB)| $(SED) -e "s|;.*$$||")
 MULTILIB_SWITCHES  := $(shell $(ECHO) $(MULTILIB)| $(SED) -e "s|^[^;]*;||" -e "s|@| -|g" -e "s|^ ||")
 else
-MULTILIB_DIRECTORY := $(shell $(ECHO) "$(MULTILIB)" | $(SED) -e "s|;.*$$||")
+MULTILIB_DIRECTORY := $(shell $(ECHO) "$(MULTILIB)" | $(SED) -e "s|;.*\$$||")
 MULTILIB_SWITCHES  := $(shell $(ECHO) "$(MULTILIB)" | $(SED) -e "s|^[^;]*;||" -e "s|@| -|g" -e "s|^ ||")
 endif
 
