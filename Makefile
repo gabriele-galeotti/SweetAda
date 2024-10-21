@@ -1538,17 +1538,13 @@ distclean: clean
 	$(MAKE) $(MAKE_APPLICATION) distclean
 	$(MAKE) $(MAKE_CLIBRARY) distclean
 	$(MAKE) $(MAKE_CORE) distclean
-ifeq ($(OSTYPE),cmd)
-	FOR %%C IN ($(CPUS)) DO "$(MAKE)" $(MAKE_CPUS)/%%C distclean
-else
-	for c in $(CPUS) ; do "$(MAKE)" $(MAKE_CPUS)/$$c distclean ; done
+ifneq ($(CPU),)
+	$(MAKE) $(MAKE_CPU) distclean
 endif
 	$(MAKE) $(MAKE_DRIVERS) distclean
 	$(MAKE) $(MAKE_MODULES) distclean
-ifeq ($(OSTYPE),cmd)
-	FOR %%P IN ($(PLATFORMS)) DO "$(MAKE)" $(MAKE_PLATFORMS)/%%P distclean
-else
-	for p in $(PLATFORMS) ; do "$(MAKE)" $(MAKE_PLATFORMS)/$$p distclean ; done
+ifneq ($(PLATFORM),)
+	$(MAKE) $(MAKE_PLATFORM) distclean
 endif
 	$(RM) $(DISTCLEAN_OBJECTS)
 
