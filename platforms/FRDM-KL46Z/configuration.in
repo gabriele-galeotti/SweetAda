@@ -14,7 +14,7 @@ RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
-USE_APPLICATION := test-FRDM-KL46Z
+USE_APPLICATION := test-frdm-kl46z
 
 ################################################################################
 # CPU.                                                                         #
