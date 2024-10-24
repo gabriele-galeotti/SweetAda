@@ -64,7 +64,7 @@ endif
 #
 brief-text = $(call echo-print,"$1 $2")|$(SED)                            \
                -e "s|^\([[:graph:]]*\)|\1$(BRIEFTEXT_SPACES)|"            \
-               -e "s|^\($(BRIEFTEXT_CHRMSK)\)[[:graph:]]* *\(.*\)|\1 \2|" \
+               -e "s|^\($(BRIEFTEXT_CHRMSK)\)[[:graph:]]* *\(.*\)|\1 \2|"
 
 #
 # brief-command
