@@ -122,8 +122,8 @@
 # define PATH_SEPARATOR PATH_SEPARATOR_UNIX
 #endif
 
-#define NORETURN __attribute__ ((noreturn))
-#define PACKED   __attribute__ ((packed))
+#define NORETURN __attribute__((noreturn))
+#define PACKED   __attribute__((packed))
 
 #define PID_INVALID ((pid_t)-1)
 
