@@ -21,7 +21,8 @@ with System;
 with Interfaces;
 
 package MMIO
-   with Preelaborate => True
+   with Preelaborate => True,
+        SPARK_Mode   => On
    is
 
    --========================================================================--

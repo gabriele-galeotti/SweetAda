@@ -23,7 +23,8 @@ with Interfaces;
 with Bits;
 
 package LLutils
-   with Preelaborate => True
+   with Preelaborate => True,
+        SPARK_Mode   => On
    is
 
    --========================================================================--

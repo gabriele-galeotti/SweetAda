@@ -22,7 +22,8 @@ with Bits;
 with Bits.C;
 
 package Console
-   with Preelaborate => True
+   with Preelaborate => True,
+        SPARK_Mode   => On
    is
 
    --========================================================================--

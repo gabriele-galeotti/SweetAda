@@ -20,7 +20,8 @@ with System.Storage_Elements;
 with Interfaces;
 
 package Bits
-   with Pure => True
+   with Pure       => True,
+        SPARK_Mode => On
    is
 
    --========================================================================--

@@ -18,7 +18,8 @@
 with System;
 
 package Last_Chance_Handler
-   with Preelaborate => True
+   with Preelaborate => True,
+        SPARK_Mode   => On
    is
 
    --========================================================================--

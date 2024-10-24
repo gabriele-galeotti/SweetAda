@@ -18,7 +18,8 @@
 with System;
 
 package Core
-   with Preelaborate => True
+   with Preelaborate => True,
+        SPARK_Mode   => On
    is
 
    --========================================================================--

@@ -18,7 +18,8 @@
 with Bits;
 
 package Linker
-   with Pure => True
+   with Pure       => True,
+        SPARK_Mode => On
    is
 
    --========================================================================--

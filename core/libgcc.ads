@@ -18,7 +18,8 @@
 with GCC_Types;
 
 package LibGCC
-   with Pure => True
+   with Pure       => True,
+        SPARK_Mode => On
    is
 
    --========================================================================--
