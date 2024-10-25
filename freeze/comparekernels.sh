@@ -17,7 +17,7 @@ SCRIPT_FILENAME=$(basename "$0")
 ################################################################################
 
 if [ ! -e .sweetada ] ; then
-  printf "%s\n" "${SCRIPT_FILENAME} can only be executed in the SweetAda directory."
+  printf "%s\n" "${SCRIPT_FILENAME} can only be executed in the SweetAda directory." 1>&2
   exit 1
 fi
 
