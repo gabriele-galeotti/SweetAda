@@ -140,8 +140,7 @@ function GetEnvVar
 ################################################################################
 function print_V
 {
-  param([string]$f)
-  Add-Content -Path $f -Value ""
+  return ""
 }
 
 ################################################################################
@@ -150,13 +149,13 @@ function print_V
 ################################################################################
 function print_I
 {
-  param([string]$f, [string]$t)
+  param([string]$t)
   $is = ""
   for ($i = 0 ; $i -lt $indentation_level ; $i++)
   {
     $is += $indentation_Ada
   }
-  Add-Content -Path $f -Value "$is$t"
+  return "$is$t"
 }
 
 ################################################################################
@@ -165,7 +164,8 @@ function print_I
 ################################################################################
 function print_list
 {
-  param([string]$f, [string]$list, [int]$il, [string]$is)
+  param([string]$list, [int]$il, [string]$is)
+  $return_string = ""
   if ($list.Length -gt 0)
   {
     $list_array = $list -Split "\s+"
@@ -178,9 +178,10 @@ function print_list
       {
         $s += ","
       }
-      print_I $f "$is$s"
+      $return_string += $(print_I "$is$s") + $nl
     }
   }
+  return $return_string
 }
 
 ################################################################################
@@ -242,79 +243,94 @@ if ([string]::IsNullOrEmpty($configure_filename))
 Remove-Item -Path $configure_filename -Force -ErrorAction Ignore
 New-Item -Name $configure_filename -ItemType File | Out-Null
 
+$nl = [Environment]::NewLine
+
 $indentation_Ada = "   " # Ada 3-space indentation style
 
 $indentation_level = 0
 
+$configuregpr = ""
+
 #
 # Initial empty line.
 #
-print_V $configure_filename
+$configuregpr += $nl
 
 #
 # Declare project.
 #
-print_I $configure_filename "abstract project $configure_project is"
+$configuregpr += $(print_I "abstract project $configure_project is") + $nl
+
 $indentation_level++
-print_V $configure_filename
+$configuregpr += $(print_V $configure_filename) + $nl
 
 #
 # Configuration declarations.
 #
-print_I $configure_filename "SweetAda_Path                     := `"$(GetEnvVar SWEETADA_PATH)`";"
-print_I $configure_filename "Toolchain_Prefix                  := `"$(GetEnvVar TOOLCHAIN_PREFIX)`";"
-print_I $configure_filename "Gprbuild_Prefix                   := `"$(GetEnvVar GPRBUILD_PREFIX)`";"
-print_I $configure_filename "Toolchain_Name                    := `"$(GetEnvVar TOOLCHAIN_NAME)`";"
-print_I $configure_filename "GCC_Wrapper                       := `"$(GetEnvVar GCC_WRAPPER)`";"
-print_I $configure_filename "GnatAdc_Filename                  := `"$(GetEnvVar GNATADC_FILENAME)`";"
-print_I $configure_filename "Library_Directory                 := `"$(GetEnvVar LIBRARY_DIRECTORY)`";"
-print_I $configure_filename "Object_Directory                  := `"$(GetEnvVar OBJECT_DIRECTORY)`";"
-print_I $configure_filename "Platform                          := `"$(GetEnvVar PLATFORM)`";"
-print_I $configure_filename "Cpu                               := `"$(GetEnvVar CPU)`";"
-print_I $configure_filename "Cpu_Model                         := `"$(GetEnvVar CPU_MODEL)`";"
-print_I $configure_filename "RTS_Path                          := `"$(GetEnvVar RTS_PATH)`";"
-print_I $configure_filename "RTS                               := `"$(GetEnvVar RTS)`";"
-print_I $configure_filename "Profile                           := `"$(GetEnvVar PROFILE)`";"
-print_I $configure_filename "Ada_Mode                          := `"$(GetEnvVar ADA_MODE)`";"
-print_I $configure_filename "Optimization_Level                := `"$(GetEnvVar OPTIMIZATION_LEVEL)`";"
-print_I $configure_filename "Stack_Limit                       := `"$(GetEnvVar STACK_LIMIT)`";"
-print_I $configure_filename "Gnatbind_SecStack                 := `"$(GetEnvVar GNATBIND_SECSTACK)`";"
-print_I $configure_filename "Use_LibGCC                        := `"$(GetEnvVar USE_LIBGCC)`";"
-print_I $configure_filename "Use_Libm                          := `"$(GetEnvVar USE_LIBM)`";"
-print_I $configure_filename "Use_LibAda                        := `"$(GetEnvVar USE_LIBADA)`";"
-print_I $configure_filename "Use_CLibrary                      := `"$(GetEnvVar USE_CLIBRARY)`";"
+$configuregpr += $(print_I "SweetAda_Path                     := `"$(GetEnvVar SWEETADA_PATH)`";") + $nl
+$configuregpr += $(print_I "Toolchain_Prefix                  := `"$(GetEnvVar TOOLCHAIN_PREFIX)`";") + $nl
+$configuregpr += $(print_I "Gprbuild_Prefix                   := `"$(GetEnvVar GPRBUILD_PREFIX)`";") + $nl
+$configuregpr += $(print_I "Toolchain_Name                    := `"$(GetEnvVar TOOLCHAIN_NAME)`";") + $nl
+$configuregpr += $(print_I "GCC_Wrapper                       := `"$(GetEnvVar GCC_WRAPPER)`";") + $nl
+$configuregpr += $(print_I "GnatAdc_Filename                  := `"$(GetEnvVar GNATADC_FILENAME)`";") + $nl
+$configuregpr += $(print_I "Library_Directory                 := `"$(GetEnvVar LIBRARY_DIRECTORY)`";") + $nl
+$configuregpr += $(print_I "Object_Directory                  := `"$(GetEnvVar OBJECT_DIRECTORY)`";") + $nl
+$configuregpr += $(print_I "Platform                          := `"$(GetEnvVar PLATFORM)`";") + $nl
+$configuregpr += $(print_I "Cpu                               := `"$(GetEnvVar CPU)`";") + $nl
+$configuregpr += $(print_I "Cpu_Model                         := `"$(GetEnvVar CPU_MODEL)`";") + $nl
+$configuregpr += $(print_I "RTS_Path                          := `"$(GetEnvVar RTS_PATH)`";") + $nl
+$configuregpr += $(print_I "RTS                               := `"$(GetEnvVar RTS)`";") + $nl
+$configuregpr += $(print_I "Profile                           := `"$(GetEnvVar PROFILE)`";") + $nl
+$configuregpr += $(print_I "Ada_Mode                          := `"$(GetEnvVar ADA_MODE)`";") + $nl
+$configuregpr += $(print_I "Optimization_Level                := `"$(GetEnvVar OPTIMIZATION_LEVEL)`";") + $nl
+$configuregpr += $(print_I "Stack_Limit                       := `"$(GetEnvVar STACK_LIMIT)`";") + $nl
+$configuregpr += $(print_I "Gnatbind_SecStack                 := `"$(GetEnvVar GNATBIND_SECSTACK)`";") + $nl
+$configuregpr += $(print_I "Use_LibGCC                        := `"$(GetEnvVar USE_LIBGCC)`";") + $nl
+$configuregpr += $(print_I "Use_Libm                          := `"$(GetEnvVar USE_LIBM)`";") + $nl
+$configuregpr += $(print_I "Use_LibAda                        := `"$(GetEnvVar USE_LIBADA)`";") + $nl
+$configuregpr += $(print_I "Use_CLibrary                      := `"$(GetEnvVar USE_CLIBRARY)`";") + $nl
 $indentl =                  "                                      "
-print_I $configure_filename "ADAC_Switches_RTS                 := ("
-print_list $configure_filename $(GetEnvVar ADAC_SWITCHES_RTS).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                                     );"
-print_I $configure_filename "CC_Switches_RTS                   := ("
-print_list $configure_filename $(GetEnvVar CC_SWITCHES_RTS).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                                     );"
-print_I $configure_filename "GCC_Switches_Platform             := ("
-print_list $configure_filename $(GetEnvVar GCC_SWITCHES_PLATFORM).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                                     );"
-print_I $configure_filename "Lowlevel_Files_Platform           := ("
-print_list $configure_filename $(GetEnvVar LOWLEVEL_FILES_PLATFORM).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                                     );"
-print_I $configure_filename "Lowlevel_Files_Platform_Languages := ("
-print_list $configure_filename $(LFPL_list $(GetEnvVar LOWLEVEL_FILES_PLATFORM)) $indentation_level $indentl
-print_I $configure_filename "                                     );"
-print_I $configure_filename "GCC_Switches_Lowlevel_Platform    := ("
-print_list $configure_filename $(GetEnvVar GCC_SWITCHES_LOWLEVEL_PLATFORM).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                                     );"
-print_I $configure_filename "Include_Directories               := ("
-print_list $configure_filename $(GetEnvVar INCLUDE_DIRECTORIES).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                                     );"
-print_I $configure_filename "Implicit_ALI_Units                := ("
-print_list $configure_filename $(GetEnvVar IMPLICIT_ALI_UNITS).Trim(" ") $indentation_level $indentl
-print_I $configure_filename "                                     );"
-print_V $configure_filename
+$configuregpr += $(print_I "ADAC_Switches_RTS                 := (") + $nl
+$configuregpr += $(print_list $(GetEnvVar ADAC_SWITCHES_RTS).Trim(" ") $indentation_level $indentl)
+$configuregpr += $(print_I "                                     );") + $nl
+$configuregpr += $(print_I "CC_Switches_RTS                   := (") + $nl
+$configuregpr += $(print_list $(GetEnvVar CC_SWITCHES_RTS).Trim(" ") $indentation_level $indentl)
+$configuregpr += $(print_I "                                     );") + $nl
+$configuregpr += $(print_I "GCC_Switches_Platform             := (") + $nl
+$configuregpr += $(print_list $(GetEnvVar GCC_SWITCHES_PLATFORM).Trim(" ") $indentation_level $indentl)
+$configuregpr += $(print_I "                                     );") + $nl
+$configuregpr += $(print_I "Lowlevel_Files_Platform           := (") + $nl
+$configuregpr += $(print_list $(GetEnvVar LOWLEVEL_FILES_PLATFORM).Trim(" ") $indentation_level $indentl)
+$configuregpr += $(print_I "                                     );") + $nl
+$configuregpr += $(print_I "Lowlevel_Files_Platform_Languages := (") + $nl
+$configuregpr += $(print_list $(LFPL_list $(GetEnvVar LOWLEVEL_FILES_PLATFORM)) $indentation_level $indentl)
+$configuregpr += $(print_I "                                     );") + $nl
+$configuregpr += $(print_I "GCC_Switches_Lowlevel_Platform    := (") + $nl
+$configuregpr += $(print_list $(GetEnvVar GCC_SWITCHES_LOWLEVEL_PLATFORM).Trim(" ") $indentation_level $indentl)
+$configuregpr += $(print_I "                                     );") + $nl
+$configuregpr += $(print_I "Include_Directories               := (") + $nl
+$configuregpr += $(print_list $(GetEnvVar INCLUDE_DIRECTORIES).Trim(" ") $indentation_level $indentl)
+$configuregpr += $(print_I "                                     );") + $nl
+$configuregpr += $(print_I "Implicit_ALI_Units                := (") + $nl
+$configuregpr += $(print_list $(GetEnvVar IMPLICIT_ALI_UNITS).Trim(" ") $indentation_level $indentl)
+$configuregpr += $(print_I "                                     );") + $nl
+$configuregpr += $(print_V) + $nl
 
 #
 # Close the project.
 #
 $indentation_level--
-print_I $configure_filename "end $configure_project;"
+$configuregpr += $(print_I "end $configure_project;") + $nl
+
+try
+{
+  Add-Content -Path $configure_filename -Value "$configuregpr" -NoNewline
+}
+catch
+{
+  Write-Stderr "$($scriptname): *** Error: writing $($configure_filename)."
+  ExitWithCode 1
+}
 
 Write-Host "$($scriptname): $($configure_filename): done."
 
