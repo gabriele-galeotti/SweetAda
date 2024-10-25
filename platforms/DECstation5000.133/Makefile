@@ -42,7 +42,7 @@ OBJECTS := $(foreach f,$(OBJECTS_XFORM_3),$(OBJ_DIRECTORY)/$(f))
 all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
-configure: configure-files-clean $(CONFIGURE_FILES_PLATFORM)
+configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM)
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
@@ -56,8 +56,8 @@ ifneq ($(POSTBUILD_COMMAND),)
 	$(POSTBUILD_COMMAND)
 endif
 
-.PHONY: configure-files-clean
-configure-files-clean:
+.PHONY: clean-configure-files
+clean-configure-files:
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 	$(RM) $(CONFIGURE_FILES_PLATFORM)
 endif
@@ -67,9 +67,8 @@ clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
 .PHONY: distclean
-distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-              $(CONFIGURE_FILES_PLATFORM)
+distclean: clean-configure-files clean
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

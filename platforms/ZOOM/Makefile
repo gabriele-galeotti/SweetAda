@@ -51,7 +51,7 @@ installfiles:
 	@$(call echo-print,"")
 
 .PHONY: configure
-configure: configure-files-clean $(CONFIGURE_FILES_PLATFORM)
+configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM)
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
@@ -69,8 +69,17 @@ ifneq ($(OSTYPE),cmd)
 	@chmod a-x $(SWEETADA_PATH)/$(KERNEL_BASENAME).srec
 endif
 
-.PHONY: configure-files-clean
-configure-files-clean:
+.PHONY: clean-installed-files
+clean-installed-files:
+ifneq ($(filter cmd msys,$(OSTYPE)),)
+	$(RMSYMLINK) $(INSTALLED_FILENAMES) -o $(ORIGIN_FILENAMES)
+else
+	$(RM) $(INSTALLED_FILENAMES)
+endif
+	$(RM) Makefile.if.in
+
+.PHONY: clean-configure-files
+clean-configure-files:
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 	$(RM) $(CONFIGURE_FILES_PLATFORM)
 endif
@@ -80,15 +89,8 @@ clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
 .PHONY: distclean
-distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-              $(CONFIGURE_FILES_PLATFORM)
-ifneq ($(filter cmd msys,$(OSTYPE)),)
-	$(RMSYMLINK) $(INSTALLED_FILENAMES) -o $(ORIGIN_FILENAMES)
-else
-	$(RM) $(INSTALLED_FILENAMES)
-endif
-	$(RM) Makefile.if.in
+distclean: clean-installed-files clean-configure-files clean
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

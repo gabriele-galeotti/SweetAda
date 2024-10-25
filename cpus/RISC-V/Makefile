@@ -49,26 +49,28 @@ endif
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
-configure:
-	@$(RM) $(INSTALLED_FILENAMES) Makefile.if.in
+configure: clean-installed-files
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 ifneq ($(MMIO_FUNCTIONS),)
 	@$(CREATESYMLINK) -v -c -m Makefile.if.in $(foreach f,$(MMIO_FUNCTIONS),./mmio/$(f) $(f))
 endif
 
-.PHONY: clean
-clean:
-	$(RM) $(CLEAN_OBJECTS_COMMON)
-
-.PHONY: distclean
-distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
+.PHONY: clean-installed-files
+clean-installed-files:
 ifneq ($(filter cmd msys,$(OSTYPE)),)
 	$(RMSYMLINK) $(INSTALLED_FILENAMES) -o $(ORIGIN_FILENAMES)
 else
 	$(RM) $(INSTALLED_FILENAMES)
 endif
 	$(RM) Makefile.if.in
+
+.PHONY: clean
+clean:
+	$(RM) $(CLEAN_OBJECTS_COMMON)
+
+.PHONY: distclean
+distclean: clean-installed-files clean
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

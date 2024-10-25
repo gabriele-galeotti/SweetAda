@@ -45,7 +45,7 @@ all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 installfiles:
 
 .PHONY: configure
-configure: configure-files-clean $(CONFIGURE_FILES_PLATFORM)
+configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM)
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 	@$(CREATESYMLINK)                                                   \
                           mmu/mmu-amiga-$(CPU_MODEL:M%=%).adb mmu-amiga.adb \
@@ -62,8 +62,8 @@ ifneq ($(POSTBUILD_COMMAND),)
 	$(POSTBUILD_COMMAND)
 endif
 
-.PHONY: configure-files-clean
-configure-files-clean:
+.PHONY: clean-configure-files
+clean-configure-files:
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 	$(RM) $(CONFIGURE_FILES_PLATFORM)
 endif
@@ -73,9 +73,8 @@ clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
 .PHONY: distclean
-distclean: clean
+distclean: clean-configure-files clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-              $(CONFIGURE_FILES_PLATFORM) \
               mmu-amiga.adb mmu-amiga.ads
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
