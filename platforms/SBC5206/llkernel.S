@@ -150,7 +150,7 @@ reserved14:     .long   0                       // 063 0x00FC -
 //
 
 buserr_handler:
-                pea     BUS_ERROR
+                pea     ACCESS_FAULT
                 jmp     exception_entry
 
 addrerr_handler:
