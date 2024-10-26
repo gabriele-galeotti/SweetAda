@@ -10,7 +10,7 @@
 #                                                                              #
 ################################################################################
 
-USE_APPLICATION := test-DECstation5000.133
+USE_APPLICATION := test-decstation5000.133
 
 export NETWORK_BOOT := N
 #export NETWORK_BOOT := Y
