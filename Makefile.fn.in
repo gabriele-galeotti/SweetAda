@@ -20,10 +20,53 @@
 # VERBOSE
 #
 
+__CHARACTERS__ :=
+__CHARACTERS__ +=    !  "  \# $$ %  &  '  (  )  *  +  ,  -  .  /
+__CHARACTERS__ += 0  1  2  3  4  5  6  7  8  9  :  ;  <  =  >  ?
+__CHARACTERS__ += @  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O
+__CHARACTERS__ += P  Q  R  S  T  U  V  W  X  Y  Z  [  \  ]  ^  _
+__CHARACTERS__ += `  a  b  c  d  e  f  g  h  i  j  k  l  m  n  o
+__CHARACTERS__ += p  q  r  s  t  u  v  w  x  y  z  {  |  }  ~
+
 BRIEFTEXT_NSPACE := 12
 #                          123456789012
 BRIEFTEXT_SPACES := $(NULL)            $(NULL)
-BRIEFTEXT_CHRMSK := $(NULL)............$(NULL)
+
+#
+# substring
+#
+# Usage:
+# $(call substring,string,start,end)
+#
+# Return a substring of string, starting at start and ending at end.
+#
+substring = $(strip \
+              $(eval __t__ := $$(subst $$(SPACE), ,$$1))\
+              $(eval \
+                $$(foreach c,$$(__CHARACTERS__),\
+                  $$(eval \
+                    __t__ := $$$$(subst $$$$c,$$$$c$$$$(SPACE),$$(__t__))\
+                    )\
+                  )\
+               )\
+              $(eval __t__ := $(wordlist $2,$3,$(__t__)))\
+             )$(subst ,$(SPACE),$(subst $(SPACE),,$(__t__)))
+
+#
+# variable list handling
+#
+# Usage:
+# $(call list-add,<variable_name>,item)
+# $(call list-append,<variable_name>,item)
+# $(call list-del,<variable_name>,item)
+#
+# list-add:    head-insert an item into a list.
+# list-append: tail-insert an item into a list.
+# list-del:    delete an item from a list.
+#
+list-add    = $(eval $$1 := $$2 $$($$1))
+list-append = $(eval $$1 := $$($$1) $$2)
+list-del    = $(eval $$1 := $$(filter-out $$2,$$($$1)))
 
 #
 # unquote
@@ -33,7 +76,7 @@ BRIEFTEXT_CHRMSK := $(NULL)............$(NULL)
 #
 # Remove delimiting double-quotes from a text string.
 #
-unquote = $(subst @__SPACE__@,$(SPACE),$(patsubst "%",%,$(subst $(SPACE),@__SPACE__@,$1)))
+unquote = $(subst ,$(SPACE),$(patsubst "%",%,$(subst $(SPACE),,$1)))
 
 #
 # echo-print
@@ -45,8 +88,8 @@ unquote = $(subst @__SPACE__@,$(SPACE),$(patsubst "%",%,$(subst $(SPACE),@__SPAC
 # double-quotes.
 #
 ifeq ($(OSTYPE),cmd)
-echo-print-xform = $(subst <,^<,$(subst >,^>,$(subst &,^&,$(subst |,^|,$(call unquote,$1)))))
-echo-print = $(if $(call echo-print-xform,$1),$(ECHO) $(call echo-print-xform,$1),$(ECHO).&)
+__echo-print-xform__ = $(subst <,^<,$(subst >,^>,$(subst &,^&,$(subst |,^|,$(call unquote,$1)))))
+echo-print = $(if $(call __echo-print-xform__,$1),$(ECHO) $(call __echo-print-xform__,$1),$(ECHO).&)
 else
 echo-print = $(ECHO) "$(call unquote,$1)"
 endif
@@ -62,9 +105,7 @@ endif
 # - a space
 # - 2nd argument
 #
-brief-text = $(call echo-print,"$1 $2")|$(SED)                            \
-               -e "s|^\([[:graph:]]*\)|\1$(BRIEFTEXT_SPACES)|"            \
-               -e "s|^\($(BRIEFTEXT_CHRMSK)\)[[:graph:]]* *\(.*\)|\1 \2|"
+brief-text = $(call echo-print,"$(call substring,$1$(BRIEFTEXT_SPACES),1,$(BRIEFTEXT_NSPACE)) $2")
 
 #
 # brief-command
@@ -97,7 +138,8 @@ endif
 ifeq ($(OSTYPE),cmd)
 ls-dirs = DIR /A:D /B *
 else
-ls-dirs = ls -A -d */ | $(SED) -e "s|/\$$||"
+__ls-dirs-ts__ = ls -A -d */
+ls-dirs = $(foreach d,$(call __ls-dirs-ts__),$(patsubst %/,%,$(d)))
 endif
 
 #
