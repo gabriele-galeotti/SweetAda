@@ -44,7 +44,7 @@ $(LIBGCC_SOURCES): %.S : $(LIB1ASMSRC)
 	$(call brief-command, \
         $(CPP) -o $@ -x assembler-with-cpp -P -CC -D$* $(LIB1ASMSRC) \
         ,[CPP],$@)
-OBJECTS          += libgcc.o
+OBJECTS          += $(OBJ_DIRECTORY)/libgcc.o
 else
 LIBGCC_SOURCES :=
 endif
