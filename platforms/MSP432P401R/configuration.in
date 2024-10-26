@@ -14,7 +14,7 @@ RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
-USE_APPLICATION := test-MSP432P401R
+USE_APPLICATION := test-msp432p401r
 
 ################################################################################
 # CPU.                                                                         #
