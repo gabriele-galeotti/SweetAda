@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# Raspberry Pi 3 boot device creation.
+# Raspberry™ Pi 3 boot device creation.
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
@@ -40,7 +40,9 @@ if [ "x${USDCARD_DEVICE}" = "x" ] ; then
   exit 1
 fi
 
-cat > config.txt << EOF
+mount ${USDCARD_DEVICE} ${USDCARD_MOUNTPOINT}
+
+cat > ${USDCARD_MOUNTPOINT}/config.txt << EOF || exit 1
 arm_64bit=1                     # ARMv8 mode
 core_freq=250                   # core clock frequency
 arm_freq=250                    # ARM clock frequency
@@ -48,9 +50,10 @@ kernel=${KERNEL_ROMFILE}
 enable_jtag_gpio=1              # enable JTAG (GPIO22..27)
 EOF
 
-mount ${USDCARD_DEVICE} ${USDCARD_MOUNTPOINT}
-cp -f -v config.txt ${SWEETADA_PATH}/${KERNEL_ROMFILE} ${USDCARD_MOUNTPOINT}/ || exit 1
+cp -f -v ${SWEETADA_PATH}/${KERNEL_ROMFILE} ${USDCARD_MOUNTPOINT}/ || exit 1
+
 sync ; sync
+
 umount ${USDCARD_MOUNTPOINT}
 
 exit 0
