@@ -12,7 +12,7 @@ RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
-USE_APPLICATION := test-QEMU-R2D-PLUS
+USE_APPLICATION := test-qemu-r2d-plus
 
 ################################################################################
 # CPU.                                                                         #
