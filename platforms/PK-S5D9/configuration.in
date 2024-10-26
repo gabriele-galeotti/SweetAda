@@ -17,7 +17,7 @@
 USE_LIBGCC := Y
 #USE_LIBM   := Y
 
-USE_APPLICATION := test-PK-S5D9
+USE_APPLICATION := test-pk-s5d9
 
 ################################################################################
 # CPU.                                                                         #
