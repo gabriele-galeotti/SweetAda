@@ -18,6 +18,7 @@
 #define RESET_INITIAL_INTERRUPT_STACK_POINTER   0
 #define RESET_INITIAL_PROGRAM_COUNTER           1
 #define ACCESS_FAULT                            2
+#define BUS_ERROR                               ACCESS_FAULT
 #define ADDRESS_ERROR                           3
 #define ILLEGAL_INSTRUCTION                     4
 #define INTEGER_DIVIDE_BY_ZERO                  5
