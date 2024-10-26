@@ -14,7 +14,7 @@ RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
-USE_APPLICATION := test-MVME162-510A
+USE_APPLICATION := test-mvme162-510a
 
 ################################################################################
 # CPU.                                                                         #
