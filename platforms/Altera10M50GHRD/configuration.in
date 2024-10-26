@@ -14,7 +14,7 @@ RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
-USE_APPLICATION := test-Altera10M50GHRD
+USE_APPLICATION := test-altera10m50ghrd
 
 ################################################################################
 # CPU.                                                                         #
