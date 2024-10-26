@@ -14,7 +14,7 @@ RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
-USE_APPLICATION := test-STM32F769I
+USE_APPLICATION := test-stm32f769i
 
 ################################################################################
 # CPU.                                                                         #
