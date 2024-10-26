@@ -14,7 +14,7 @@ RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
-USE_APPLICATION := test-Spartan3A-EK
+USE_APPLICATION := test-spartan3a-ek
 
 ################################################################################
 # CPU.                                                                         #
