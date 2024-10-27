@@ -58,7 +58,7 @@ function Write-Stderr
   {
     [string[]]$lines = @()
     $input | % { $lines += $_.ToString() }
-    [void]$outf.Invoke($lines -Join "`r`n")
+    [void]$outf.Invoke($lines -Join $nl)
   }
 }
 
