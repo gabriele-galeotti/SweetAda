@@ -91,7 +91,7 @@ while [ $# -gt 0 ] ; do
         VERBOSE=Y
         ;;
       *)
-        printf "%s\n" "${SCRIPT_FILENAME}: *** Error: unknown option \"${argument}\"."
+        log_print_error "${SCRIPT_FILENAME}: *** Error: unknown option \"${argument}\"."
         exit 1
         ;;
     esac
