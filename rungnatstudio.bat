@@ -17,8 +17,8 @@ IF "%TOOLCHAIN_PREFIX%"=="" ECHO *** Warning: no TOOLCHAIN_PREFIX detected. 1>&2
 
 REM
 REM The "--autoconf" option will generate a suitable auto.cgpr file if the
-REM gprconfig executable is present, then a --config=<cgpr> could used in the
-REM command line.
+REM gprconfig executable is present, then a --config=<cgpr_filename> could be
+REM used in the command line.
 REM
 SET "CGPR_OPTION="
 REM SET "CGPR_OPTION=auto.cgpr"

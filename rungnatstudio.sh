@@ -15,8 +15,8 @@ fi
 
 #
 # The "--autoconf" option will generate a suitable auto.cgpr file if the
-# gprconfig executable is present, then a --config=<cgpr> could used in the
-# command line.
+# gprconfig executable is present, then a --config=<cgpr_filename> could be
+# used in the command line.
 #
 CGPR_OPTION=
 #CGPR_OPTION=auto.cgpr
