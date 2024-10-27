@@ -22,6 +22,7 @@
 ################################################################################
 
 $scriptname = $MyInvocation.MyCommand.Name
+$nl = [Environment]::NewLine
 
 ################################################################################
 # ExitWithCode()                                                               #
@@ -80,7 +81,6 @@ $exit_status = 0
 
 $state = 0
 $elaboration_createfile = $false
-$nl = [Environment]::NewLine
 foreach ($line in $input)
 {
   $elaboration = $false

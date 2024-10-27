@@ -40,6 +40,7 @@
 ################################################################################
 
 $scriptname = $MyInvocation.MyCommand.Name
+$nl = [Environment]::NewLine
 
 ################################################################################
 # ExitWithCode()                                                               #
@@ -230,7 +231,7 @@ catch
   ExitWithCode 1
 }
 
-$lines = $stdout.Split([Environment]::NewLine, [StringSplitOptions]::RemoveEmptyEntries)
+$lines = $stdout.Split($nl, [StringSplitOptions]::RemoveEmptyEntries)
 
 Remove-Item -Path $output_filename -Force -ErrorAction Ignore
 New-Item -Name $output_filename -ItemType File | Out-Null

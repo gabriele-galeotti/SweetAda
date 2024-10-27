@@ -50,6 +50,7 @@
 ################################################################################
 
 $scriptname = $MyInvocation.MyCommand.Name
+$nl = [Environment]::NewLine
 
 ################################################################################
 # ExitWithCode()                                                               #
@@ -85,7 +86,7 @@ function Write-Stderr
   {
     [string[]]$lines = @()
     $input | % { $lines += $_.ToString() }
-    [void]$outf.Invoke($lines -Join "`r`n")
+    [void]$outf.Invoke($lines -Join $nl)
   }
 }
 
@@ -242,8 +243,6 @@ if ([string]::IsNullOrEmpty($configure_filename))
 
 Remove-Item -Path $configure_filename -Force -ErrorAction Ignore
 New-Item -Name $configure_filename -ItemType File | Out-Null
-
-$nl = [Environment]::NewLine
 
 $indentation_Ada = "   " # Ada 3-space indentation style
 

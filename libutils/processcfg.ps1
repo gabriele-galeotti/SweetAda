@@ -24,6 +24,7 @@
 ################################################################################
 
 $scriptname = $MyInvocation.MyCommand.Name
+$nl = [Environment]::NewLine
 
 ################################################################################
 # ExitWithCode()                                                               #
@@ -136,8 +137,6 @@ if ([string]::IsNullOrEmpty($output_filename))
   Write-Stderr "$($scriptname): *** Error: no output file specified."
   ExitWithCode 1
 }
-
-$nl = [Environment]::NewLine
 
 try
 {
