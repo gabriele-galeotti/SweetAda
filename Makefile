@@ -39,7 +39,8 @@ MAKEFILE_MASTER_INCLUDED := Y
 
 NULL  :=
 SPACE := $(NULL) $(NULL)
-export NULL SPACE
+TAB   := $(NULL)	$(NULL)
+export NULL SPACE TAB
 
 KERNEL_BASENAME := kernel
 
@@ -635,22 +636,22 @@ IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)     \
                       $(IMPLICIT_CLIBRARY_UNITS)
 
 # GPRbuild configuration dependencies
-ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(BUILD_MODE),GPRbuild)
+ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
-GPRBUILD_DEPS += $(sort $(shell                                                   \
-                                SET "PATH=$(PATH)"                             && \
-                                SET "SWEETADA_PATH=$(SWEETADA_PATH)"           && \
-                                SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)" && \
-                                $(GPRDEPS) $(KERNEL_GPRFILE)                      \
-                                2>nul))
+GPRBUILD_DEPS += $(sort $(shell                                      \
+                   SET "PATH=$(PATH)"                             && \
+                   SET "SWEETADA_PATH=$(SWEETADA_PATH)"           && \
+                   SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)" && \
+                   $(GPRDEPS) $(KERNEL_GPRFILE)                      \
+                   2>nul))
 else
-GPRBUILD_DEPS += $(sort $(shell                                               \
-                                PATH="$(PATH)"                             && \
-                                SWEETADA_PATH="$(SWEETADA_PATH)"           && \
-                                LIBUTILS_DIRECTORY="$(LIBUTILS_DIRECTORY)" && \
-                                $(GPRDEPS) $(KERNEL_GPRFILE)                  \
-                                2> /dev/null))
+GPRBUILD_DEPS += $(sort $(shell                                  \
+                   PATH="$(PATH)"                             && \
+                   SWEETADA_PATH="$(SWEETADA_PATH)"           && \
+                   LIBUTILS_DIRECTORY="$(LIBUTILS_DIRECTORY)" && \
+                   $(GPRDEPS) $(KERNEL_GPRFILE)                  \
+                   2> /dev/null))
 endif
 endif
 endif
