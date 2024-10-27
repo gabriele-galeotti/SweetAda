@@ -322,7 +322,9 @@ while [ $# -gt 0 ] ; do
         PAUSE="Y"
         ;;
       *)
-        printf "%s\n" "Unknown option \"${argument}\"." ; usage ; exit 1
+        printf "%s\n" "Unknown option \"${argument}\"." 1>&2
+        usage
+        exit 1
         ;;
     esac
   else
@@ -331,7 +333,7 @@ while [ $# -gt 0 ] ; do
       token_seen=Y
       ACTION="$1"
     else
-      printf "%s\n" "Multiple actions specified."
+      printf "%s\n" "Multiple actions specified." 1>&2
       usage
       exit 1
     fi
