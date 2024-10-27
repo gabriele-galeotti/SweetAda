@@ -21,8 +21,8 @@ REM gprconfig executable is present, then a --config=<cgpr_filename> could be
 REM used in the command line.
 REM
 SET "CGPR_OPTION="
-REM SET "CGPR_OPTION=auto.cgpr"
-REM SET "CGPR_OPTION=..."
+REM SET "CGPR_OPTION=--config=auto.cgpr"
+REM SET "CGPR_OPTION=--config=..."
 
 START "" "%GNATSTUDIO%"           ^
   --pwd="%CD%"                    ^

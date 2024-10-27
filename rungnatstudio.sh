@@ -19,8 +19,8 @@ fi
 # used in the command line.
 #
 CGPR_OPTION=
-#CGPR_OPTION=auto.cgpr
-#CGPR_OPTION=...
+#CGPR_OPTION="--config=auto.cgpr"
+#CGPR_OPTION="--config=..."
 
 "${GNATSTUDIO}"                  \
   --pwd=$(pwd)                   \
