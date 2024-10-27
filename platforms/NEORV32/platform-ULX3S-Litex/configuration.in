@@ -14,7 +14,7 @@ RTS        := sfp
 PROFILE    := sfp
 USE_LIBADA := Y
 
-USE_APPLICATION := test-NEORV32
+USE_APPLICATION := test-neorv32
 
 ################################################################################
 # CPU.                                                                         #
