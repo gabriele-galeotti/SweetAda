@@ -673,6 +673,17 @@ include Makefile.tc.in
 #                                                                              #
 ################################################################################
 
+# beautify some variables
+INCLUDE_DIRECTORIES     := $(filter-out ,$(INCLUDE_DIRECTORIES))
+IMPLICIT_CORE_UNITS     := $(filter-out ,$(IMPLICIT_CORE_UNITS))
+ifeq ($(USE_CLIBRARY),Y)
+IMPLICIT_CLIBRARY_UNITS := $(filter-out ,$(IMPLICIT_CLIBRARY_UNITS))
+endif
+IMPLICIT_ALI_UNITS      := $(filter-out ,$(IMPLICIT_ALI_UNITS))
+ifeq ($(BUILD_MODE),GPRbuild)
+GPR_CORE_CPU            := $(filter-out ,$(GPR_CORE_CPU))
+endif
+
 # build system
 export                           \
        MAKE                      \
