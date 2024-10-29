@@ -4,8 +4,10 @@
 # Start GNAT Studio.
 #
 
-# GNAT Studio executable
-GNATSTUDIO=/opt/GNAT/2021/bin/gnatstudio
+# GNAT Studio prefix and executable
+GNATSTUDIO_PREFIX=/opt/GNAT/2021
+export GNATSTUDIO_PREFIX
+GNATSTUDIO="${GNATSTUDIO_PREFIX}"/bin/gnatstudio
 
 # detect toolchain from configuration.in
 TOOLCHAIN_PREFIX=$(make PROBEVARIABLE=TOOLCHAIN_PREFIX probevariable)
@@ -22,11 +24,11 @@ CGPR_OPTION=
 #CGPR_OPTION="--config=auto.cgpr"
 #CGPR_OPTION="--config=..."
 
-"${GNATSTUDIO}"                  \
-  --pwd=$(pwd)                   \
-  --path=${TOOLCHAIN_PREFIX}/bin \
-  ${CGPR_OPTION}                 \
-  -P sweetada.gpr                \
+"${GNATSTUDIO}"                    \
+  --pwd="$(pwd)"                   \
+  --path="${TOOLCHAIN_PREFIX}"/bin \
+  ${CGPR_OPTION}                   \
+  -P sweetada.gpr                  \
   &
 
 exit 0
