@@ -233,14 +233,13 @@ catch
 
 $lines = $stdout.Split($nl, [StringSplitOptions]::RemoveEmptyEntries)
 
-Remove-Item -Path $output_filename -Force -ErrorAction Ignore
-New-Item -Name $output_filename -ItemType File | Out-Null
+$gcc_defines = ""
 
-Add-Content -Path $output_filename -Value ""
-Add-Content -Path $output_filename -Value "package $($package_name)"
-Add-Content -Path $output_filename -Value "$($indent)with Pure => True"
-Add-Content -Path $output_filename -Value "$($indent)is"
-Add-Content -Path $output_filename -Value ""
+$gcc_defines += $nl
+$gcc_defines += "package $($package_name)" + $nl
+$gcc_defines += "$($indent)with Pure => True" + $nl
+$gcc_defines += "$($indent)is" + $nl
+$gcc_defines += $nl
 
 foreach ($i in $items)
 {
@@ -251,7 +250,6 @@ foreach ($i in $items)
   $i_spec   = $i_splitted[3]
   $mseparator = " " * ($max_tmacro_length - $i_tmacro.length)
   $tseparator = " " * ($max_type_length - $i_type.length)
-  #Add-Content -Path $output_filename -Value "$($indent)-- $($i_macro)"
   $found = ""
   foreach ($line in $lines)
   {
@@ -301,11 +299,23 @@ foreach ($i in $items)
   }
   $declstring = `
     "$($indent)$($i_tmacro)$($mseparator) : constant $($i_type)$($tseparator):= $($value);"
-  Add-Content -Path $output_filename -Value "$($declstring)"
+  $gcc_defines += "$($declstring)" + $nl
 }
 
-Add-Content -Path $output_filename -Value ""
-Add-Content -Path $output_filename -Value "end GCC_Defines;"
+$gcc_defines += $nl
+$gcc_defines += "end GCC_Defines;" + $nl
+
+try
+{
+  Remove-Item -Path $output_filename -Force -ErrorAction Ignore
+  New-Item -Name $output_filename -ItemType File | Out-Null
+  Add-Content -Path $output_filename -Value $gcc_defines -NoNewLine
+}
+catch
+{
+  Write-Stderr "$($scriptname): *** Error: writing $($output_filename)."
+  ExitWithCode 1
+}
 
 Write-Host "$($scriptname): $($output_filename): done."
 

@@ -90,8 +90,7 @@ if (-not (Test-Path -Path "$($gnatadc_filename).in"))
   ExitWithCode 1
 }
 
-Remove-Item -Path $gnatadc_filename -Force -ErrorAction Ignore
-New-Item -Name $gnatadc_filename -ItemType File | Out-Null
+$gnatadc = ""
 
 foreach ($textline in Get-Content "$($gnatadc_filename).in")
 {
@@ -111,10 +110,23 @@ foreach ($textline in Get-Content "$($gnatadc_filename).in")
   {
     if ($p -eq $profile)
     {
-      Add-Content -Path $gnatadc_filename -Value "$($pragma)"
+      $gnatadc += "$($pragma)" + $nl
       break
     }
   }
+}
+
+try
+{
+  Remove-Item -Path $gnatadc_filename -Force -ErrorAction Ignore
+  New-Item -Name $gnatadc_filename -ItemType File | Out-Null
+  Add-Content -Path $gnatadc_filename -Value $gnatadc -NoNewLine
+
+}
+catch
+{
+  Write-Stderr "$($scriptname): *** Error: writing $($gnatadc_filename)."
+  ExitWithCode 1
 }
 
 Write-Host "$($scriptname): $($gnatadc_filename): done."
