@@ -3,6 +3,8 @@
 #
 # QEMU-AArch64 (QEMU emulator).
 #
+# Copyright (C) 2020-2024 Gabriele Galeotti
+#
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
 #
@@ -142,11 +144,32 @@ esac
 if [ "x$1" = "x" ] ; then
   wait ${QEMU_PID}
 elif [ "x$1" = "x-debug" ] ; then
-  "${GDB}" \
-    -q \
-    -iex "set basenames-may-differ" \
-    -ex "target extended-remote tcp:localhost:1234" \
-    ${KERNEL_OUTFILE}
+  TERMINAL_RUN_SPEC="xterm -geometry 132x50 -bg rgb:3f/3f/3f -fg rgb:ff/ff/ff -sl 1024 -sb -e"
+  #TERMINAL_RUN_SPEC="urxvt -e"
+  #TERMINAL_RUN_SPEC="xfce4-terminal -e"
+  #TERMINAL_RUN_SPEC="gnome-terminal --"
+  #TERMINAL_RUN_SPEC="konsole -e"
+  case ${XDG_CONFIG_HOME} in
+    "${GNATSTUDIO_PREFIX}"*)
+      export XDG_CONFIG_HOME=
+      ;;
+    *)
+      ;;
+  esac
+  case "${XDG_DATA_DIRS}" in
+    "${GNATSTUDIO_PREFIX}"*)
+      export XDG_DATA_DIRS=
+      ;;
+    *)
+      ;;
+  esac
+  ${TERMINAL_RUN_SPEC} \
+    "${GDB}" \
+      -q \
+      -iex "set basenames-may-differ" \
+      -ex "target extended-remote tcp:localhost:1234" \
+      ${KERNEL_OUTFILE}
+  wait $!
 fi
 
 exit $?

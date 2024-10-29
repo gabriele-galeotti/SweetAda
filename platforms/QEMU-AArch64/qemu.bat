@@ -28,7 +28,7 @@ REM ############################################################################
 
 REM QEMU executable and CPU model
 SET "QEMU_FILENAME=qemu-system-aarch64w.exe"
-SET "QEMU_EXECUTABLE=C:\Program Files\qemu\%QEMU_FILENAME%"
+SET QEMU_EXECUTABLE="C:\Program Files\qemu\%QEMU_FILENAME%"
 
 REM debug options
 IF "%1"=="-debug" (
@@ -48,7 +48,8 @@ REM QEMU machine
 REM EL1: -M virt
 REM EL2: -M virt,virtualization=on
 REM EL3: -M virt,secure=on
-START "" "%QEMU_EXECUTABLE%" ^
+REM "C:\Program Files\qemu\qemu-system-aarch64w.exe"
+START "QEMU" %QEMU_EXECUTABLE% ^
   -M virt,secure=on -cpu cortex-a53 -smp cores=4 -m 128 ^
   -bios %KERNEL_ROMFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
@@ -60,14 +61,15 @@ START "" "%QEMU_EXECUTABLE%" ^
 
 REM console for serial port
 CALL :TCPPORT_IS_LISTENING %SERIALPORT0% %TILTIMEOUT%
-START "" %PUTTY% telnet://localhost:%SERIALPORT0%/
+START "PUTTY-1" %PUTTY% telnet://localhost:%SERIALPORT0%/
 REM console for serial port
 CALL :TCPPORT_IS_LISTENING %SERIALPORT1% %TILTIMEOUT%
-START "" %PUTTY% telnet://localhost:%SERIALPORT1%/
+START "PUTTY-2" %PUTTY% telnet://localhost:%SERIALPORT1%/
 
 REM debug session
 IF "%1"=="-debug" (
-  "%GDB%" ^
+  SET "TERM="
+  START "GDB" cmd.exe /C %GDB% ^
     -q ^
     -iex "set new-console on" ^
     -iex "set basenames-may-differ" ^
@@ -91,6 +93,7 @@ FOR /F "tokens=1-3 delims=:." %%A IN ("%TIME%") DO SET /A ^
 FOR /F "tokens=1-3 delims=:." %%A IN ("%TIME%") DO SET /A ^
   H=%%A,M=1%%B%%100,S=1%%C%%100,CUR=(H*60+M)*60+S
 IF "%CUR%" LSS "%END%" GOTO :SLEEP2
+SET "H=" & SET "M=" & SET "S=" & SET "END=" & SET "CUR="
 GOTO :EOF
 
 REM ############################################################################
@@ -115,6 +118,7 @@ SET /A NLOOPS += 1
 IF "%NLOOPS%" NEQ "%2" GOTO :TIL_LOOP
 :TIL_LOOPEND
 IF NOT "%PORTOK%"=="Y" ECHO TIMEOUT WAITING FOR PORT %1
+SET "PORTOK=" & SET "NLOOPS=" & SET "VAR="
 GOTO :EOF
 
 REM ############################################################################
