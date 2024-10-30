@@ -48,7 +48,6 @@ REM QEMU machine
 REM EL1: -M virt
 REM EL2: -M virt,virtualization=on
 REM EL3: -M virt,secure=on
-REM "C:\Program Files\qemu\qemu-system-aarch64w.exe"
 START "QEMU" %QEMU_EXECUTABLE% ^
   -M virt,secure=on -cpu cortex-a53 -smp cores=4 -m 128 ^
   -bios %KERNEL_ROMFILE% ^
