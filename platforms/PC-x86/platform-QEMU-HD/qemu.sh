@@ -142,13 +142,33 @@ esac
 if [ "x$1" = "x" ] ; then
   wait ${QEMU_PID}
 elif [ "x$1" = "x-debug" ] ; then
-  "${GDB}" \
+  TERMINAL_RUN_SPEC="xterm -geometry 132x50 -bg rgb:3f/3f/3f -fg rgb:ff/ff/ff -sl 1024 -sb -e"
+  #TERMINAL_RUN_SPEC="urxvt -e"
+  #TERMINAL_RUN_SPEC="xfce4-terminal -e"
+  #TERMINAL_RUN_SPEC="gnome-terminal --"
+  #TERMINAL_RUN_SPEC="konsole -e"
+  case ${XDG_CONFIG_HOME} in
+    "${GNATSTUDIO_PREFIX}"*)
+      export XDG_CONFIG_HOME=
+      ;;
+    *)
+      ;;
+  esac
+  case "${XDG_DATA_DIRS}" in
+    "${GNATSTUDIO_PREFIX}"*)
+      export XDG_DATA_DIRS=
+      ;;
+    *)
+      ;;
+  esac
+  ${TERMINAL_RUN_SPEC} "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
     -iex "set architecture i386" \
-    -ex "target remote tcp:localhost:1234" \
+    -ex "target extended-remote tcp:localhost:1234" \
     -ex "break _start" -ex "continue" \
     ${KERNEL_OUTFILE}
+  wait $!
 fi
 
 exit $?

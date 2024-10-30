@@ -163,12 +163,11 @@ elif [ "x$1" = "x-debug" ] ; then
     *)
       ;;
   esac
-  ${TERMINAL_RUN_SPEC} \
-    "${GDB}" \
-      -q \
-      -iex "set basenames-may-differ" \
-      -ex "target extended-remote tcp:localhost:1234" \
-      ${KERNEL_OUTFILE}
+  ${TERMINAL_RUN_SPEC} "${GDB}" \
+    -q \
+    -iex "set basenames-may-differ" \
+    -ex "target extended-remote tcp:localhost:1234" \
+    ${KERNEL_OUTFILE}
   wait $!
 fi
 
