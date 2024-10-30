@@ -274,7 +274,7 @@ endif
 GNUMAKEFLAGS += --no-print-directory
 endif
 
-export CD CP LS MKDIR MV RM RMDIR
+export CHDIR CP LS MKDIR MV RM RMDIR
 
 # include build system utilities
 include Makefile.ut.in
