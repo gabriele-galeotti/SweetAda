@@ -24,7 +24,5 @@ debug:
 
 clean:
 
-distclean:
-
 rts:
 
