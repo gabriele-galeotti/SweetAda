@@ -238,7 +238,7 @@ endif
 
 # define every other OS command
 ifeq ($(OSTYPE),cmd)
-CD    := CD
+CHDIR := CD
 CP    := COPY /B /Y 1>nul
 LS    := DIR /B
 MKDIR := MKDIR
@@ -247,7 +247,7 @@ RM    := DEL /F /Q 2>nul
 RMDIR := RMDIR /Q /S 2>nul
 else
 # POSIX
-CD    := cd
+CHDIR := cd
 CP    := cp -f
 LS    := ls -A
 MKDIR := mkdir -p
@@ -386,11 +386,11 @@ SHARE_DIRECTORY         := share
 
 # PLATFORMS and CPUs
 ifeq ($(OSTYPE),cmd)
-PLATFORMS := $(shell $(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
-CPUS      := $(shell $(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
+PLATFORMS := $(shell $(CHDIR) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
+CPUS      := $(shell $(CHDIR) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
 else
-PLATFORMS := $(shell ($(CD) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
-CPUS      := $(shell ($(CD) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
+PLATFORMS := $(shell ($(CHDIR) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
+CPUS      := $(shell ($(CHDIR) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
 endif
 
 # RTS_BASE_PATH: where all RTSes live
@@ -399,9 +399,9 @@ RTS_BASE_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)
 # RTSes
 RTS_SRC_NO_DIRS  := common targets
 ifeq ($(OSTYPE),cmd)
-RTS_SRC_ALL_DIRS := $(shell $(CD) $(RTS_DIRECTORY)\src && $(call ls-dirs) 2>nul)
+RTS_SRC_ALL_DIRS := $(shell $(CHDIR) $(RTS_DIRECTORY)\src && $(call ls-dirs) 2>nul)
 else
-RTS_SRC_ALL_DIRS := $(shell ($(CD) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null)
+RTS_SRC_ALL_DIRS := $(shell ($(CHDIR) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null)
 endif
 RTSES            := $(filter-out $(RTS_SRC_NO_DIRS),$(RTS_SRC_ALL_DIRS))
 
@@ -1517,11 +1517,11 @@ endif
 .PHONY: clean
 clean:
 ifeq ($(OSTYPE),cmd)
-	-IF EXIST $(LIBRARY_DIRECTORY)\ \
-          $(CD) $(LIBRARY_DIRECTORY) && \
+	-IF EXIST $(LIBRARY_DIRECTORY)\    \
+          $(CHDIR) $(LIBRARY_DIRECTORY) && \
           $(RM) *.*
 	-IF EXIST $(OBJECT_DIRECTORY)\                \
-          $(CD) $(OBJECT_DIRECTORY)                && \
+          $(CHDIR) $(OBJECT_DIRECTORY)             && \
           $(RM) *.*                                && \
           $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
 else
