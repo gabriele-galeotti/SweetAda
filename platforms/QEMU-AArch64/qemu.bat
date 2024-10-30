@@ -35,7 +35,7 @@ IF "%1"=="-debug" (
   SET "QEMU_DEBUG=-S -gdb tcp:localhost:1234,ipv4"
   SET "PYTHONHOME=%TOOLCHAIN_PREFIX%"
   ) ELSE (
-  SET QEMU_DEBUG=
+  SET "QEMU_DEBUG="
   )
 
 REM telnet port numbers and listening timeout in s
@@ -80,6 +80,14 @@ IF "%1"=="-debug" (
   )
 
 :SCRIPTEXIT
+SET "QEMU_FILENAME="
+SET "QEMU_EXECUTABLE="
+SET "QEMU_DEBUG="
+SET "PYTHONHOME="
+SET "MONITORPORT="
+SET "SERIALPORT0="
+SET "SERIALPORT1="
+SET "TILTIMEOUT="
 EXIT /B %ERRORLEVEL%
 
 REM ############################################################################
