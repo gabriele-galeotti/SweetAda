@@ -14,21 +14,9 @@ ifneq ($(MAKEFILE_MASTER_INCLUDED),Y)
 $(error Error: master Makefile not loaded)
 endif
 
-help:
-
-createkernelcfg:
-
-configure:
-
-infodump:
-
 all:
 
 postbuild:
-
-session-start:
-
-session-end:
 
 run:
 
