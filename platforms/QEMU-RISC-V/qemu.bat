@@ -87,10 +87,13 @@ IF "%1"=="-debug" (
     -ex "target extended-remote tcp:localhost:1234" ^
     -ex "tbreak *0x80000000" ^
     -ex "continue" ^
-    %KERNEL_OUTFILE%
-  ) ELSE (
-  CALL :QEMUWAIT
+    %KERNEL_OUTFILE% ^
+    >nul 2>&1
+    CALL :SLEEP 0
   )
+
+REM wait QEMU termination
+CALL :QEMUWAIT
 
 :SCRIPTEXIT
 SET "QEMU_FILENAME="
@@ -111,10 +114,10 @@ REM ############################################################################
 :SLEEP
 FOR /F "tokens=1-3 delims=:." %%A IN ("%TIME%") DO SET /A ^
   H=%%A,M=1%%B%%100,S=1%%C%%100,END=(H*60+M)*60+S+%1
-:SLEEP2
+:SLEEP_LOOP
 FOR /F "tokens=1-3 delims=:." %%A IN ("%TIME%") DO SET /A ^
   H=%%A,M=1%%B%%100,S=1%%C%%100,CUR=(H*60+M)*60+S
-IF "%CUR%" LSS "%END%" GOTO :SLEEP2
+IF "%CUR%" LSS "%END%" GOTO :SLEEP_LOOP
 SET "H=" & SET "M=" & SET "S=" & SET "END=" & SET "CUR="
 GOTO :EOF
 
