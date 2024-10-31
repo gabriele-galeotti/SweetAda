@@ -155,10 +155,8 @@ case ${OSTYPE} in
     ;;
 esac
 
-# normal execution or debug execution
-if [ "x$1" = "x" ] ; then
-  wait ${QEMU_PID}
-elif [ "x$1" = "x-debug" ] ; then
+# debug session
+if [ "x$1" = "x-debug" ] ; then
   TERMINAL_RUN_SPEC="xterm -geometry 132x50 -bg rgb:3f/3f/3f -fg rgb:ff/ff/ff -sl 1024 -sb -e"
   #TERMINAL_RUN_SPEC="urxvt -e"
   #TERMINAL_RUN_SPEC="xfce4-terminal -e"
@@ -184,8 +182,10 @@ elif [ "x$1" = "x-debug" ] ; then
     -iex "set architecture ${GDB_ARCH}" \
     -ex "target extended-remote tcp:localhost:1234" \
     ${KERNEL_OUTFILE}
-  wait $!
 fi
+
+# wait QEMU termination
+wait ${QEMU_PID}
 
 exit $?
 
