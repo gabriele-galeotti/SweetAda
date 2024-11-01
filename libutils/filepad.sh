@@ -18,7 +18,7 @@
 # OSTYPE
 #
 
-# shellcheck disable=SC2016,SC2181,SC2268,SC3028
+# shellcheck disable=SC2016,SC2086,SC2181,SC2268,SC3028
 
 ################################################################################
 # Script initialization.                                                       #

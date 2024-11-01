@@ -46,7 +46,7 @@
 # IMPLICIT_ALI_UNITS
 #
 
-# shellcheck disable=SC2016,SC2268
+# shellcheck disable=SC2016,SC2086,SC2268
 
 ################################################################################
 # Script initialization.                                                       #
@@ -181,9 +181,6 @@ if [ "x${CONFIGURE_FILENAME}" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no project file specified."
   exit 1
 fi
-
-rm -f "${CONFIGURE_FILENAME}"
-touch "${CONFIGURE_FILENAME}"
 
 NL=$(printf "\n%s" "_") ; NL=${NL%_}
 

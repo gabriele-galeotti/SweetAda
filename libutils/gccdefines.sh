@@ -35,7 +35,7 @@
 #  S - String: value, else ""
 #
 
-# shellcheck disable=SC2181,SC2268
+# shellcheck disable=SC2086,SC2181,SC2268
 
 ################################################################################
 # Script initialization.                                                       #
