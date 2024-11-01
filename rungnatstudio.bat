@@ -24,7 +24,7 @@ SET "CGPR_OPTION="
 REM SET "CGPR_OPTION=--config=auto.cgpr"
 REM SET "CGPR_OPTION=--config=..."
 
-START "" "%GNATSTUDIO%"           ^
+START "GNATSTUDIO" "%GNATSTUDIO%" ^
   --pwd="%CD%"                    ^
   --path="%TOOLCHAIN_PREFIX%"/bin ^
   %CGPR_OPTION%                   ^
