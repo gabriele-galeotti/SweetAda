@@ -80,7 +80,7 @@ REM debug session
 REM skip QEMU bootloader by forcing execution until CPU hits _start
 IF "%1"=="-debug" (
   SET "TERM="
-  START "GDB" cmd.exe /C %GDB% ^
+  START "GDB" /wait cmd.exe /C %GDB% ^
     -q ^
     -iex "set new-console on" ^
     -iex "set basenames-may-differ" ^

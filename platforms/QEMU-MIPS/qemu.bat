@@ -75,7 +75,7 @@ START "PUTTY-1" %PUTTY% telnet://localhost:%SERIALPORT0%/
 REM debug session
 IF "%1"=="-debug" (
   SET "TERM="
-  START "GDB" cmd.exe /C %GDB% ^
+  START "GDB" /wait cmd.exe /C %GDB% ^
     -q ^
     -iex "set new-console on" ^
     -iex "set basenames-may-differ" ^
