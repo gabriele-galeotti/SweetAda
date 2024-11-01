@@ -18,7 +18,7 @@
 # every variable referenced
 #
 
-# shellcheck disable=SC2268
+# shellcheck disable=SC2086,SC2268
 
 ################################################################################
 # Script initialization.                                                       #
@@ -84,8 +84,9 @@ if [ ! -e "./${GNATADC_FILENAME}.in" ] ; then
   exit 1
 fi
 
-rm -f "${GNATADC_FILENAME}"
-touch "${GNATADC_FILENAME}"
+NL=$(printf "\n%s" "_") ; NL=${NL%_}
+
+gnatadc=""
 
 while IFS= read -r textline ; do
   # "woc" = without comments
@@ -95,10 +96,12 @@ while IFS= read -r textline ; do
     profiles=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*--\)\(.*\)|\2|")
     profile_check=$(printf "%s" "${profiles}" | grep -c -w -e "${PROFILE}" 2> /dev/null)
     if [ "x${profile_check}" != "x0" ] ; then
-      printf "%s\n" "${pragma}" >> "${GNATADC_FILENAME}"
+      gnatadc=${gnatadc}$(printf "%s" "${pragma}")${NL}
     fi
   fi
 done < "${GNATADC_FILENAME}.in"
+
+printf "%s" "${gnatadc}" > ${GNATADC_FILENAME}
 
 log_print "${SCRIPT_FILENAME}: ${GNATADC_FILENAME}: done."
 
