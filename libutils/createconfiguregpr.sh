@@ -95,24 +95,12 @@ return 0
 ################################################################################
 print_I()
 {
-_il=${INDENTATION_LEVEL}
 _is=""
-while [ "$((_il))" -gt 0 ] ; do
-  _is="${_is}""${INDENTATION_ADA}"
-  _il=$((_il-1))
+_i=0
+while [ "$((_i+=1))" -le ${INDENTATION_LEVEL} ] ; do
+  _is+="${INDENTATION_ADA}"
 done
-printf "%s\n" "${_is}$1" >> "${CONFIGURE_FILENAME}"
-return 0
-}
-
-################################################################################
-# print_V()                                                                    #
-#                                                                              #
-# Print an empty line.                                                         #
-################################################################################
-print_V()
-{
-printf "%s\n" "" >> "${CONFIGURE_FILENAME}"
+printf "%s\n" "${_is}$1"
 return 0
 }
 
@@ -123,25 +111,24 @@ return 0
 ################################################################################
 print_list()
 {
-AWK_SCRIPT_FUNCTION='\
-{                                                                        \
-        ii = "";                                                         \
-        for (i = 0; i < il; i++)                                         \
-        {                                                                \
-                ii = ii ia                                               \
-        }                                                                \
-        for (i = 1; i <= NF; i++)                                        \
-        {                                                                \
-                printf("%s%s\"%s\"%s\n", ii, is, $i, i != NF ? "," : "") \
-        }                                                                \
-}                                                                        \
-'
-printf "%s\n" "$1" |                  \
-awk                                   \
-  -v ia="${INDENTATION_ADA}"          \
-  -v il="$2"                          \
-  -v is="$3" "${AWK_SCRIPT_FUNCTION}" \
-  >> "${CONFIGURE_FILENAME}"
+_string=""
+_is=""
+_i=0
+while [ "$((_i+=1))" -le "$2" ] ; do
+  _is+="${INDENTATION_ADA}"
+done
+for _i in $1 ; do
+  _string+=$(printf "%s%s\"%s\"%s,\n_" \
+             "${_is}"                  \
+             "$3"                      \
+             "${_i}"                   \
+             )
+  _string="${_string%_}"
+done
+if [ "x${_string}" != "x" ] ; then
+  _string="${_string%?}" ; _string="${_string%,}"
+  printf "%s\n" "${_string}"
+fi
 return 0
 }
 
@@ -197,79 +184,93 @@ fi
 rm -f "${CONFIGURE_FILENAME}"
 touch "${CONFIGURE_FILENAME}"
 
+NL=$(printf "\n%s" "_") ; NL=${NL%_}
+
 INDENTATION_ADA="   " # Ada 3-space indentation style
 
 INDENTATION_LEVEL=0
 
+configuregpr=""
+
 #
 # Initial empty line.
 #
-print_V
+configuregpr+=$NL
 
 #
 # Declare project.
 #
-print_I "abstract project ${CONFIGURE_PROJECT} is"
+configuregpr+=$(print_I "abstract project ${CONFIGURE_PROJECT} is")$NL
+configuregpr+=$NL
 INDENTATION_LEVEL=$((INDENTATION_LEVEL+1))
-print_V
 
 #
 # Configuration declarations.
 #
-print_I "SweetAda_Path                     := \"${SWEETADA_PATH}\";"
-print_I "Toolchain_Prefix                  := \"${TOOLCHAIN_PREFIX}\";"
-print_I "Gprbuild_Prefix                   := \"${GPRBUILD_PREFIX}\";"
-print_I "Toolchain_Name                    := \"${TOOLCHAIN_NAME}\";"
-print_I "GCC_Wrapper                       := \"${GCC_WRAPPER}\";"
-print_I "GnatAdc_Filename                  := \"${GNATADC_FILENAME}\";"
-print_I "Library_Directory                 := \"${LIBRARY_DIRECTORY}\";"
-print_I "Object_Directory                  := \"${OBJECT_DIRECTORY}\";"
-print_I "Platform                          := \"${PLATFORM}\";"
-print_I "Cpu                               := \"${CPU}\";"
-print_I "Cpu_Model                         := \"${CPU_MODEL}\";"
-print_I "RTS_Path                          := \"${RTS_PATH}\";"
-print_I "RTS                               := \"${RTS}\";"
-print_I "Profile                           := \"${PROFILE}\";"
-print_I "Ada_Mode                          := \"${ADA_MODE}\";"
-print_I "Optimization_Level                := \"${OPTIMIZATION_LEVEL}\";"
-print_I "Stack_Limit                       := \"${STACK_LIMIT}\";"
-print_I "Gnatbind_SecStack                 := \"${GNATBIND_SECSTACK}\";"
-print_I "Use_LibGCC                        := \"${USE_LIBGCC}\";"
-print_I "Use_Libm                          := \"${USE_LIBM}\";"
-print_I "Use_LibAda                        := \"${USE_LIBADA}\";"
-print_I "Use_CLibrary                      := \"${USE_CLIBRARY}\";"
+configuregpr+=$(print_I "SweetAda_Path                     := \"${SWEETADA_PATH}\";")${NL}
+configuregpr+=$(print_I "Toolchain_Prefix                  := \"${TOOLCHAIN_PREFIX}\";")${NL}
+configuregpr+=$(print_I "Gprbuild_Prefix                   := \"${GPRBUILD_PREFIX}\";")${NL}
+configuregpr+=$(print_I "Toolchain_Name                    := \"${TOOLCHAIN_NAME}\";")${NL}
+configuregpr+=$(print_I "GCC_Wrapper                       := \"${GCC_WRAPPER}\";")${NL}
+configuregpr+=$(print_I "GnatAdc_Filename                  := \"${GNATADC_FILENAME}\";")${NL}
+configuregpr+=$(print_I "Library_Directory                 := \"${LIBRARY_DIRECTORY}\";")${NL}
+configuregpr+=$(print_I "Object_Directory                  := \"${OBJECT_DIRECTORY}\";")${NL}
+configuregpr+=$(print_I "Platform                          := \"${PLATFORM}\";")${NL}
+configuregpr+=$(print_I "Cpu                               := \"${CPU}\";")${NL}
+configuregpr+=$(print_I "Cpu_Model                         := \"${CPU_MODEL}\";")${NL}
+configuregpr+=$(print_I "RTS_Path                          := \"${RTS_PATH}\";")${NL}
+configuregpr+=$(print_I "RTS                               := \"${RTS}\";")${NL}
+configuregpr+=$(print_I "Profile                           := \"${PROFILE}\";")${NL}
+configuregpr+=$(print_I "Ada_Mode                          := \"${ADA_MODE}\";")${NL}
+configuregpr+=$(print_I "Optimization_Level                := \"${OPTIMIZATION_LEVEL}\";")${NL}
+configuregpr+=$(print_I "Stack_Limit                       := \"${STACK_LIMIT}\";")${NL}
+configuregpr+=$(print_I "Gnatbind_SecStack                 := \"${GNATBIND_SECSTACK}\";")${NL}
+configuregpr+=$(print_I "Use_LibGCC                        := \"${USE_LIBGCC}\";")${NL}
+configuregpr+=$(print_I "Use_Libm                          := \"${USE_LIBM}\";")${NL}
+configuregpr+=$(print_I "Use_LibAda                        := \"${USE_LIBADA}\";")${NL}
+configuregpr+=$(print_I "Use_CLibrary                      := \"${USE_CLIBRARY}\";")${NL}
 INDENTL="                                      "
-print_I "ADAC_Switches_RTS                 := ("
-print_list "${ADAC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                                     );"
-print_I "CC_Switches_RTS                   := ("
-print_list "${CC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                                     );"
-print_I "GCC_Switches_Platform             := ("
-print_list "${GCC_SWITCHES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                                     );"
-print_I "Lowlevel_Files_Platform           := ("
-print_list "${LOWLEVEL_FILES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                                     );"
-print_I "Lowlevel_Files_Platform_Languages := ("
-print_list "$(LFPL_list ${LOWLEVEL_FILES_PLATFORM})" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                                     );"
-print_I "GCC_Switches_Lowlevel_Platform    := ("
-print_list "${GCC_SWITCHES_LOWLEVEL_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                                     );"
-print_I "Include_Directories               := ("
-print_list "${INCLUDE_DIRECTORIES}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                                     );"
-print_I "Implicit_ALI_Units                := ("
-print_list "${IMPLICIT_ALI_UNITS}" "${INDENTATION_LEVEL}" "${INDENTL}"
-print_I "                                     );"
-print_V
+configuregpr+=$(print_I "ADAC_Switches_RTS                 := (")${NL}
+string=$(print_list "${ADAC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTL}")
+if [ "x${string}" != "x" ] ; then configuregpr+=${string}${NL} ; fi
+configuregpr+=$(print_I "                                     );")${NL}
+configuregpr+=$(print_I "CC_Switches_RTS                   := (")${NL}
+string=$(print_list "${CC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTL}")
+if [ "x${string}" != "x" ] ; then configuregpr+=${string}${NL} ; fi
+configuregpr+=$(print_I "                                     );")${NL}
+configuregpr+=$(print_I "GCC_Switches_Platform             := (")${NL}
+string=$(print_list "${GCC_SWITCHES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}")
+if [ "x${string}" != "x" ] ; then configuregpr+=${string}${NL} ; fi
+configuregpr+=$(print_I "                                     );")${NL}
+configuregpr+=$(print_I "Lowlevel_Files_Platform           := (")${NL}
+string=$(print_list "${LOWLEVEL_FILES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}")
+if [ "x${string}" != "x" ] ; then configuregpr+=${string}${NL} ; fi
+configuregpr+=$(print_I "                                     );")${NL}
+configuregpr+=$(print_I "Lowlevel_Files_Platform_Languages := (")${NL}
+string=$(print_list "$(LFPL_list ${LOWLEVEL_FILES_PLATFORM})" "${INDENTATION_LEVEL}" "${INDENTL}")
+if [ "x${string}" != "x" ] ; then configuregpr+=${string}${NL} ; fi
+configuregpr+=$(print_I "                                     );")${NL}
+configuregpr+=$(print_I "GCC_Switches_Lowlevel_Platform    := (")${NL}
+string=$(print_list "${GCC_SWITCHES_LOWLEVEL_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}")
+if [ "x${string}" != "x" ] ; then configuregpr+=${string}${NL} ; fi
+configuregpr+=$(print_I "                                     );")${NL}
+configuregpr+=$(print_I "Include_Directories               := (")${NL}
+string=$(print_list "${INCLUDE_DIRECTORIES}" "${INDENTATION_LEVEL}" "${INDENTL}")
+if [ "x${string}" != "x" ] ; then configuregpr+=${string}${NL} ; fi
+configuregpr+=$(print_I "                                     );")${NL}
+configuregpr+=$(print_I "Implicit_ALI_Units                := (")${NL}
+string=$(print_list "${IMPLICIT_ALI_UNITS}" "${INDENTATION_LEVEL}" "${INDENTL}")
+if [ "x${string}" != "x" ] ; then configuregpr+=${string}${NL} ; fi
+configuregpr+=$(print_I "                                     );")${NL}
 
 #
 # Close project.
 #
 INDENTATION_LEVEL=$((INDENTATION_LEVEL-1))
-print_I "end ${CONFIGURE_PROJECT};"
+configuregpr+=$NL
+configuregpr+=$(print_I "end ${CONFIGURE_PROJECT};")${NL}
+
+printf "%s" "${configuregpr}" > "${CONFIGURE_FILENAME}"
 
 log_print "${SCRIPT_FILENAME}: ${CONFIGURE_FILENAME}: done."
 
