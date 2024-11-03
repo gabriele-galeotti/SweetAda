@@ -9,7 +9,7 @@ SET MAKE=make.exe
 REM SET MAKE=mingw32-make.exe
 
 REM GNAT Studio executable
-SET "GNATSTUDIO=C:\GNATSTUDIO\bin\gnatstudio.exe"
+SET GNATSTUDIO="C:\Program Files"\GNATSTUDIO\bin\gnatstudio.exe
 
 REM detect toolchain from configuration.in
 FOR /F "delims=" %%A IN ('%MAKE% PROBEVARIABLE^=TOOLCHAIN_PREFIX probevariable') DO SET TOOLCHAIN_PREFIX=%%A
@@ -24,7 +24,7 @@ SET "CGPR_OPTION="
 REM SET "CGPR_OPTION=--config=auto.cgpr"
 REM SET "CGPR_OPTION=--config=..."
 
-START "GNATSTUDIO" "%GNATSTUDIO%" ^
+START "GNATSTUDIO" %GNATSTUDIO%   ^
   --pwd="%CD%"                    ^
   --path="%TOOLCHAIN_PREFIX%"/bin ^
   %CGPR_OPTION%                   ^
