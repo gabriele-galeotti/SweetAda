@@ -117,8 +117,8 @@ TOOLCHAIN_NAME_x86_64     := x86_64-elf
 #                                                                              #
 ################################################################################
 
-BUILD_MODE := GNATMAKE
-#BUILD_MODE := GPRbuild
+#BUILD_MODE := GNATMAKE
+BUILD_MODE := GPRbuild
 
 TOOLS_CHECK := Y
 
