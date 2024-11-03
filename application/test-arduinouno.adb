@@ -1,6 +1,7 @@
 
 with System;
 with System.Storage_Elements;
+with Ada.Characters.Latin_1;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Configure;
@@ -19,6 +20,7 @@ package body Application
    --                                                                        --
    --========================================================================--
 
+   use Ada.Characters.Latin_1;
    use ATmega328P;
 
    procedure Delay_Simple
@@ -30,7 +32,11 @@ package body Application
    -- type USART_Buffer_Ptr is access USART_Buffer;
    -- function To_USART_Buffer_Ptr is new Ada.Unchecked_Conversion (System.Address, USART_Buffer_Ptr);
 
-   Hello : constant USART_Buffer := ['H', 'E', 'L', 'L', 'O', Character'Val (10)];
+   Hello : constant USART_Buffer := [
+                                     'H', 'e', 'l', 'l', 'o', ',', ' ',
+                                     'S', 'w', 'e', 'e', 't', 'A', 'd', 'a',
+                                     CR, LF
+                                    ];
 
    --========================================================================--
    --                                                                        --
@@ -62,11 +68,11 @@ package body Application
    begin
       -------------------------------------------------------------------------
       -- GPIO PIN 13 startup blink test, to verify .data relocation -----------
-      DDRB := (DDB5 => True, others => False);
+      DDRB (5) := True;
       for N in 1 .. NBlinks loop
-         PORTB.PORTB5 := True;
+         PORTB (5) := True;
          Delay_Simple (4);
-         PORTB.PORTB5 := False;
+         PORTB (5) := False;
          Delay_Simple (8);
       end loop;
       Delay_Simple (32);
@@ -75,9 +81,9 @@ package body Application
       if False then
          loop
             for N in 1 .. NBlinks loop
-               PORTB.PORTB5 := True;
+               PORTB (5) := True;
                Delay_Simple (4);
-               PORTB.PORTB5 := False;
+               PORTB (5) := False;
                Delay_Simple (8);
             end loop;
             Delay_Simple (32);
@@ -86,8 +92,8 @@ package body Application
       -- SPI test -------------------------------------------------------------
       if False then
          -- configure MISO as output
-         PORTB.PORTB4 := False;
-         DDRB.DDB4 := True;
+         PORTB (4) := False;
+         DDRB (4) := True;
          -- /SS in slave mode => there is no need to configure I/O pin SCK
          SPCR := (
             SPR  => SPR_DIV4,               -- SPI Clock Rate Select 1 and 0
@@ -131,9 +137,9 @@ package body Application
                if True then
                   -- "confirm" a TX in case a terminal is not open (the MCU is
                   -- sending characters, but the TX LED is stuck on)
-                  PORTB.PORTB5 := True;
+                  PORTB (5) := True;
                   Delay_Simple (2);
-                  PORTB.PORTB5 := False;
+                  PORTB (5) := False;
                   Delay_Simple (2);
                end if;
                Delay_Simple (8);
