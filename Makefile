@@ -288,14 +288,6 @@ include Makefile.fn.in
 #                                                                              #
 ################################################################################
 
-# check for RTS build
-ifeq ($(MAKECMDGOALS),rts)
-# before loading configuration.in (which defines the RTS type used by the
-# platform), save the RTS variable from the environment in order to correctly
-# build the RTS specified when issuing the "rts" target
-RTS_BUILD := $(RTS)
-endif
-
 # default system parameters
 TOOLCHAIN_PREFIX   :=
 GPRBUILD_PREFIX    :=
@@ -310,7 +302,6 @@ USE_CLIBRARY       :=
 USE_APPLICATION    := dummy
 OPTIMIZATION_LEVEL :=
 STACK_LIMIT        := 4096
-LD_SCRIPT          := linker.lds
 POSTBUILD_ROMFILE  :=
 
 IMPLICIT_ALI_UNITS :=
@@ -324,6 +315,14 @@ CONFIGURE_FILES_PLATFORM :=
 # read the master configuration file
 include configuration.in
 CONFIGURE_DEPS += configuration.in
+
+# check for RTS build
+ifeq ($(MAKECMDGOALS),rts)
+# before loading configuration.in (which defines the RTS type used by the
+# platform), save the RTS variable from the environment in order to correctly
+# build the RTS specified when issuing the "rts" target
+RTS_BUILD := $(RTS)
+endif
 
 ifneq ($(filter rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(TOOLCHAIN_PREFIX),)
@@ -421,6 +420,9 @@ GNATADC_FILENAME := gnat.adc
 # GPRbuild filenames
 KERNEL_GPRFILE        := sweetada.gpr
 CONFIGUREGPR_FILENAME := configure.gpr
+
+# default linker script name
+LD_SCRIPT := linker.lds
 
 # cleaning
 CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
@@ -1303,7 +1305,6 @@ ifneq ($(RTS_INSTALLED),Y)
 endif
 	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
 
-ifeq ($(BUILD_MODE),GPRbuild)
 .PHONY: configure-gpr
 configure-gpr: $(CONFIGUREGPR_FILENAME)
 $(CONFIGUREGPR_FILENAME): $(CONFIGURE_DEPS)
@@ -1311,7 +1312,6 @@ ifneq ($(RTS_INSTALLED),Y)
 	$(error Error: no RTS available)
 endif
 	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
-endif
 
 .PHONY: configure-subdirs
 configure-subdirs:
@@ -1340,9 +1340,7 @@ endif
 CONFIGURE_AUX_DEPS :=
 CONFIGURE_AUX_DEPS += configure-start
 CONFIGURE_AUX_DEPS += configure-gnatadc
-ifeq ($(BUILD_MODE),GPRbuild)
 CONFIGURE_AUX_DEPS += configure-gpr
-endif
 CONFIGURE_AUX_DEPS += configure-subdirs
 CONFIGURE_AUX_DEPS += configure-end
 configure-aux: $(CONFIGURE_AUX_DEPS)
