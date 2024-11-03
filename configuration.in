@@ -8,9 +8,47 @@
 # OSTYPE
 #
 
+################################################################################
+#                                                                              #
+# System-wide definitions.                                                     #
+#                                                                              #
+################################################################################
+
 ifeq      ($(OSTYPE),cmd)
   #
-  # Windows
+  # Win64 cmd.exe
+  #
+  PYTHON := C:\Users\Administrator\AppData\Local\Programs\Python\Python38\python.exe
+  TCLSH  := C:\Tcl\bin\tclsh86.exe
+else ifeq ($(OSTYPE),msys)
+  #
+  # MSYS2
+  #
+  PYTHON := C:/Users/Administrator/AppData/Local/Programs/Python/Python38/python.exe
+  TCLSH  := C:/Tcl/bin/tclsh86.exe
+else ifeq ($(OSTYPE),darwin)
+  #
+  # OS X
+  #
+  PYTHON := python3
+  TCLSH  := tclsh
+else ifeq ($(OSTYPE),linux)
+  #
+  # Linux and other compliant environments
+  #
+  PYTHON := python3
+  TCLSH  := tclsh
+endif
+
+################################################################################
+#                                                                              #
+# Toolchains.                                                                  #
+#                                                                              #
+################################################################################
+
+ifeq      ($(OSTYPE),cmd)
+  #
+  # Win64 cmd.exe
   #
   TOOLCHAIN_PREFIX := C:\Program Files\SweetAda
   #TOOLCHAIN_PREFIX := C:\Program Files\GNAT\gnat-arm-elf-windows64-12.2.0-1
@@ -20,8 +58,6 @@ ifeq      ($(OSTYPE),cmd)
   #TOOLCHAIN_PREFIX := C:\Program Files\GNAT\riscv64-elf
   #TOOLCHAIN_PREFIX := C:\Program Files\GNAT\x86_64-elf
   GPRBUILD_PREFIX  := C:\Program Files\GNAT\gprbuild-x86_64-windows64-22.0.0-1
-  PYTHON           := C:\Users\Administrator\AppData\Local\Programs\Python\Python38\python.exe
-  TCLSH            := C:\Tcl\bin\tclsh86.exe
 else ifeq ($(OSTYPE),msys)
   #
   # MSYS2
@@ -34,16 +70,12 @@ else ifeq ($(OSTYPE),msys)
   #TOOLCHAIN_PREFIX := C:/Program Files/GNAT/riscv64-elf
   #TOOLCHAIN_PREFIX := C:/Program Files/GNAT/x86_64-elf
   GPRBUILD_PREFIX  := C:/Program Files/GNAT/gprbuild-x86_64-windows64-22.0.0-1
-  PYTHON           := C:/Users/Administrator/AppData/Local/Programs/Python/Python38/python.exe
-  TCLSH            := C:/Tcl/bin/tclsh86.exe
 else ifeq ($(OSTYPE),darwin)
   #
   # OS X
   #
   TOOLCHAIN_PREFIX := /opt/toolchains
   GPRBUILD_PREFIX  := /opt/toolchains
-  PYTHON           := python3
-  TCLSH            := tclsh
 else ifeq ($(OSTYPE),linux)
   #
   # Linux and other compliant environments
@@ -52,8 +84,6 @@ else ifeq ($(OSTYPE),linux)
   #TOOLCHAIN_PREFIX := /opt/GNAT/2021-arm-elf
   #TOOLCHAIN_PREFIX := /opt/GNAT/2021-riscv32-elf
   GPRBUILD_PREFIX  := /usr
-  PYTHON           := python3
-  TCLSH            := tclsh
 endif
 
 # standard toolchain names
@@ -81,8 +111,14 @@ TOOLCHAIN_NAME_System390  := s390x-linux
 TOOLCHAIN_NAME_x86        := i686-elf
 TOOLCHAIN_NAME_x86_64     := x86_64-elf
 
-#BUILD_MODE := GNATMAKE
-BUILD_MODE := GPRbuild
+################################################################################
+#                                                                              #
+# SweetAda definitions.                                                        #
+#                                                                              #
+################################################################################
+
+BUILD_MODE := GNATMAKE
+#BUILD_MODE := GPRbuild
 
 TOOLS_CHECK := Y
 
