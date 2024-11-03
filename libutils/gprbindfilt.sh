@@ -74,10 +74,11 @@ else
   ELABORATION_FILENAME="$1"
 fi
 
+gnatbindelab=""
+
 exit_status=0
 
 STATE=0
-ELABORATION_CREATEFILE=
 NL=$(printf "\n%s" "_") ; NL=${NL%_}
 while IFS= read -r line ; do
   ELABORATION=
@@ -115,11 +116,6 @@ while IFS= read -r line ; do
     1)
       line="${NL}${line}"
       if [ "${ELABORATION}" = "Y" ] ; then
-        if [ "x${ELABORATION_CREATEFILE}" = "x" ] ; then
-          ELABORATION_CREATEFILE=Y
-          rm -f "${ELABORATION_FILENAME}"
-          touch "${ELABORATION_FILENAME}"
-        fi
         PRINT=FILE
         if   [ "${ELABORATION_ORDER}" = "Y" ] ; then
           STATE=2
@@ -158,12 +154,16 @@ while IFS= read -r line ; do
       printf "%s\n" "${line}"
       ;;
     FILE)
-      printf "%s\n" "${line}" >> "${ELABORATION_FILENAME}"
+      gnatbindelab=${gnatbindelab}$(printf "%s\n" "${line}")${NL}
       ;;
     *)
       ;;
   esac
 done
+
+if [ "x${gnatbindelab}" != "x" ] ; then
+  printf "%s" "${gnatbindelab}" > "${ELABORATION_FILENAME}"
+fi
 
 exit ${exit_status}
 

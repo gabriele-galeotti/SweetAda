@@ -151,16 +151,15 @@ gcc_output=$(                                                                   
              sed -e ":a" -e "N" -e "\$!ba" -e "s|\n|!|g"                          \
             )
 
-rm -f ${OUTPUT_FILENAME}
-touch ${OUTPUT_FILENAME}
+NL=$(printf "\n%s" "_") ; NL=${NL%_}
 
-{                                                  \
- printf "%s\n" ""                                ; \
- printf "%s\n" "package ${PACKAGE_NAME}"         ; \
- printf "%s%s\n" "${indent}" "with Pure => True" ; \
- printf "%s%s\n" "${indent}" "is"                ; \
- printf "%s\n" ""                                ; \
-} >> ${OUTPUT_FILENAME}
+gccdefines=""
+
+gccdefines=${gccdefines}${NL}
+gccdefines=${gccdefines}$(printf "%s\n" "package ${PACKAGE_NAME}")${NL}
+gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "with Pure => True")${NL}
+gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "is")${NL}
+gccdefines=${gccdefines}${NL}
 
 for i in "$@" ; do
   IFS=':' read -r i_macro i_tmacro i_type i_spec << EOF
@@ -189,8 +188,7 @@ EOF
         exit 1
         ;;
     esac
-    printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}" \
-      >> ${OUTPUT_FILENAME}
+    gccdefines=${gccdefines}$(printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}")${NL}
   else
     case ${i_spec}${i_type} in
       BBoolean|HBoolean)     value="False" ;;
@@ -201,15 +199,14 @@ EOF
         exit 1
         ;;
     esac
-    printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}" \
-      >> ${OUTPUT_FILENAME}
+    gccdefines=${gccdefines}$(printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}")${NL}
   fi
 done
 
-{                                   \
- printf "%s\n" ""                 ; \
- printf "%s\n" "end GCC_Defines;" ; \
-} >> ${OUTPUT_FILENAME}
+gccdefines=${gccdefines}${NL}
+gccdefines=${gccdefines}$(printf "%s\n" "end GCC_Defines;")${NL}
+
+printf "%s" "${gccdefines}" > ${OUTPUT_FILENAME}
 
 log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME}: done."
 
