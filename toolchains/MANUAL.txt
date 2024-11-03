@@ -7,9 +7,9 @@ repositories in a Linux environment.
 
 Current versions of GNU packages are hardwired in the scripts. Download:
 
-- https://ftp.gnu.org/pub/gnu/binutils/binutils-2.41.tar.[bz2|gz|lz|xz]
-- https://ftp.gnu.org/pub/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.[gz|xz]
-- https://ftp.gnu.org/pub/gnu/gdb/gdb-13.2.tar.[gz|xz]
+- https://ftp.gnu.org/pub/gnu/binutils/binutils-2.43.tar.[bz2|gz|lz|xz]
+- https://ftp.gnu.org/pub/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.[gz|xz]
+- https://ftp.gnu.org/pub/gnu/gdb/gdb-15.2.tar.[gz|xz]
 
 and have them decompressed in the directory stated by the PACKAGE_PARENT_PATH
 variable, which is by default /usr/local/src.
@@ -81,7 +81,7 @@ provider. Of course you do not need the development packages but only the
 It is highly advised to integrate ISL and libiconv source libraries into the
 source tree of GCC. Download:
 
-- https://libisl.sourceforge.io/isl-0.26.tar.[bz2|gz|xz]
+- https://libisl.sourceforge.io/isl-0.27.tar.[bz2|gz|xz]
 - https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.17.tar.gz
 
 and have them decompressed so that the following layout exists:

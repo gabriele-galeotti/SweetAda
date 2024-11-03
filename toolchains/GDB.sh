@@ -54,7 +54,7 @@ return ${exit_status}
 #                                                                              #
 ################################################################################
 
-PACKAGE_NAME=gdb-13.2
+PACKAGE_NAME=gdb-15.2
 PACKAGE_NAME_SIMPLE=gdb
 PACKAGE_PARENT_PATH="/usr/local/src"
 PACKAGE_SOURCE_PATH=${PACKAGE_PARENT_PATH}/${PACKAGE_NAME}
@@ -66,6 +66,7 @@ BUILD_SYSTEM=$(gcc -dumpmachine 2> /dev/null)
 LOG_DIRECTORY=$(pwd)
 
 #TARGET=aarch64-elf
+#TARGET=aarch64-none-linux-android
 #TARGET=arm-eabi
 #TARGET=armeb-eabi
 #TARGET=avr-elf
@@ -93,9 +94,10 @@ LOG_DIRECTORY=$(pwd)
 #phase_make_install="Y"
 
 if [ "x${phase_configure}" = "xY" ] ; then
+  EXEC_PREFIX=${PREFIX}
+  LIBDIR=lib
   CONFIGURE_VARS=()
   CONFIGURE_OPTS=()
-  EXEC_PREFIX=${PREFIX}
   CONFIGURE_VARS+=("CFLAGS=\"-g\"")
   CONFIGURE_VARS+=("CXXFLAGS=\"-g\"")
   CONFIGURE_VARS+=("LDFLAGS=\"-g\"")
@@ -106,7 +108,7 @@ if [ "x${phase_configure}" = "xY" ] ; then
   CONFIGURE_OPTS+=("--prefix=${PREFIX}")
   CONFIGURE_OPTS+=("--exec-prefix=${EXEC_PREFIX}")
   CONFIGURE_OPTS+=("--bindir=${EXEC_PREFIX}/bin")
-  CONFIGURE_OPTS+=("--libdir=${EXEC_PREFIX}/lib")
+  CONFIGURE_OPTS+=("--libdir=${EXEC_PREFIX}/${LIBDIR}")
   CONFIGURE_OPTS+=("--libexecdir=${EXEC_PREFIX}/libexec")
   CONFIGURE_OPTS+=("--datarootdir=${PREFIX}/share")
   CONFIGURE_OPTS+=("--infodir=${PREFIX}/share/info")
@@ -114,6 +116,7 @@ if [ "x${phase_configure}" = "xY" ] ; then
   CONFIGURE_OPTS+=("--with-isl")
   CONFIGURE_OPTS+=("--with-readline")
   CONFIGURE_OPTS+=("--with-expat")
+  CONFIGURE_OPTS+=("--with-python=/usr/bin/python") ;;
   #CONFIGURE_OPTS+=("--with-python=$(pwd)/python-config-linux.sh")
   CONFIGURE_OPTS+=("--without-auto-load-safe-path")
   CONFIGURE_OPTS+=("--disable-shared")

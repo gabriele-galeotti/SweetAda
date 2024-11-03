@@ -54,7 +54,7 @@ return ${exit_status}
 #                                                                              #
 ################################################################################
 
-PACKAGE_NAME=binutils-2.41
+PACKAGE_NAME=binutils-2.43
 PACKAGE_NAME_SIMPLE=binutils
 PACKAGE_PARENT_PATH="/usr/local/src"
 PACKAGE_SOURCE_PATH=${PACKAGE_PARENT_PATH}/${PACKAGE_NAME}
@@ -66,6 +66,7 @@ BUILD_SYSTEM=$(gcc -dumpmachine 2> /dev/null)
 LOG_DIRECTORY=$(pwd)
 
 #TARGET=aarch64-elf
+#TARGET=aarch64-none-linux-android
 #TARGET=arm-eabi
 #TARGET=armeb-eabi
 #TARGET=avr-elf
