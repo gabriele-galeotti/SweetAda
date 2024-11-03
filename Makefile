@@ -288,6 +288,14 @@ include Makefile.fn.in
 #                                                                              #
 ################################################################################
 
+# check for RTS build
+ifeq ($(MAKECMDGOALS),rts)
+# before loading configuration.in (which defines the RTS type used by the
+# platform), save the RTS variable from the environment in order to correctly
+# build the RTS specified when issuing the "rts" target
+RTS_BUILD := $(RTS)
+endif
+
 # default system parameters
 TOOLCHAIN_PREFIX   :=
 GPRBUILD_PREFIX    :=
@@ -315,14 +323,6 @@ CONFIGURE_FILES_PLATFORM :=
 # read the master configuration file
 include configuration.in
 CONFIGURE_DEPS += configuration.in
-
-# check for RTS build
-ifeq ($(MAKECMDGOALS),rts)
-# before loading configuration.in (which defines the RTS type used by the
-# platform), save the RTS variable from the environment in order to correctly
-# build the RTS specified when issuing the "rts" target
-RTS_BUILD := $(RTS)
-endif
 
 ifneq ($(filter rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(TOOLCHAIN_PREFIX),)
@@ -427,7 +427,8 @@ LD_SCRIPT := linker.lds
 # cleaning
 CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
                             *.map *.o *.out* *.srec *.td *.tmp
-DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)
+DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)      \
+                            $(CONFIGUREGPR_FILENAME)
 
 ################################################################################
 #                                                                              #
@@ -847,7 +848,6 @@ CLEAN_OBJECTS     := $(KERNEL_OBJFILE)       \
                      $(CLEAN_OBJECTS_COMMON)
 
 DISTCLEAN_OBJECTS := $(KERNEL_CFGFILE)           \
-                     $(CONFIGUREGPR_FILENAME)    \
                      $(DISTCLEAN_OBJECTS_COMMON)
 
 ################################################################################
@@ -1332,9 +1332,7 @@ configure-end:
 .PHONY: configure-delete
 configure-delete:
 	@$(RM) $(GNATADC_FILENAME)
-ifeq ($(BUILD_MODE),GPRbuild)
 	@$(RM) $(CONFIGUREGPR_FILENAME)
-endif
 
 .PHONY: configure-aux
 CONFIGURE_AUX_DEPS :=
