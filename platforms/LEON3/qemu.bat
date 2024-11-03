@@ -111,10 +111,10 @@ SET "PORTOK=N"
 SET "NLOOPS=0"
 :TIL_LOOP
 CALL :SLEEP 1
-FOR /F "tokens=*" %%I IN ('                    ^
-  %SystemRoot%\System32\NETSTAT.EXE -an ^|     ^
-  %SystemRoot%\System32\find.exe ":%1"  ^|     ^
-  %SystemRoot%\System32\find.exe /C "LISTENING"^
+FOR /F "tokens=*" %%I IN (' ^
+  %SystemRoot%\System32\NETSTAT.EXE -an ^| ^
+  %SystemRoot%\System32\find.exe ":%1" ^| ^
+  %SystemRoot%\System32\find.exe /C "LISTENING" ^
   ') DO SET VAR=%%I
 IF "%VAR%" NEQ "0" (
   SET "PORTOK=Y"
