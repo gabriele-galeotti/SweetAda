@@ -35,9 +35,9 @@ package body Application
       if True then
          loop
             Console.Print ("hello, SweetAda", NL => True);
-            PORTB.PORTB5 := True;
+            PORTB (5) := True;
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            PORTB.PORTB5 := False;
+            PORTB (5) := False;
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
          end loop;
       end if;

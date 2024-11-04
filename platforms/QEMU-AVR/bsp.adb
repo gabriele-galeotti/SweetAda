@@ -134,7 +134,7 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print ("AVR " & Configure.CPU_MODEL & " (QEMU emulator)", NL => True);
       -- setup GPIO PIN 13 ----------------------------------------------------
-      DDRB := (DDB5 => True, others => False);
+      DDRB (5) := True;
       -------------------------------------------------------------------------
    end Setup;
 
