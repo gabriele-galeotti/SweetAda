@@ -41,9 +41,15 @@ return ${exit_status}
 function make_a_target()
 {
 pushd ${PACKAGE_BUILD_PATH} > /dev/null
+if [ "x${MAKE_TARGET}" != "x" ] ; then
+  MAKE_TARGET_NAME=${MAKE_TARGET}
+else
+  MAKE_TARGET_NAME="<none>"
+fi
+target_xform=$(printf "%s" "${MAKE_TARGET}" | sed -e "s|/|_|g")
 eval \
   "${MAKE_VARS[@]}" make "${MAKE_OPTS[@]}" ${MAKE_TARGET} 2>&1 \
-  | tee "${LOG_DIRECTORY}/make-${MAKE_TARGET}.log"
+  | tee "${LOG_DIRECTORY}/make-${target_xform}.log"
 exit_status=${PIPESTATUS[0]}
 popd > /dev/null
 return ${exit_status}

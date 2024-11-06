@@ -41,9 +41,15 @@ return ${exit_status}
 function make_a_target()
 {
 pushd ${PACKAGE_BUILD_PATH} > /dev/null
+if [ "x${MAKE_TARGET}" != "x" ] ; then
+  MAKE_TARGET_NAME=${MAKE_TARGET}
+else
+  MAKE_TARGET_NAME="<none>"
+fi
+target_xform=$(printf "%s" "${MAKE_TARGET}" | sed -e "s|/|_|g")
 eval \
   "${MAKE_VARS[@]}" make "${MAKE_OPTS[@]}" ${MAKE_TARGET} 2>&1 \
-  | tee "${LOG_DIRECTORY}/make-${MAKE_TARGET}.log"
+  | tee "${LOG_DIRECTORY}/make-${target_xform}.log"
 exit_status=${PIPESTATUS[0]}
 popd > /dev/null
 return ${exit_status}
@@ -90,9 +96,8 @@ LOG_DIRECTORY=$(pwd)
 #TARGET=x86_64-elf
 
 #phase_configure="Y"
-#phase_make_configure_binutils="Y"
-#phase_make_all_binutils="Y"
-#phase_make_install_binutils="Y"
+#phase_make_all="Y"
+#phase_make_install="Y"
 
 if [ "x${phase_configure}" = "xY" ] ; then
   EXEC_PREFIX=${PREFIX}
@@ -123,21 +128,14 @@ if [ "x${phase_configure}" = "xY" ] ; then
   CONFIGURE_OPTS+=("--enable-multilib")
   configure || exit $?
 fi
-if [ "x${phase_make_configure_binutils}" = "xY" ] ; then
-  MAKE_VARS=()
-  MAKE_OPTS=()
-  MAKE_VARS+=("V=1")
-  MAKE_TARGET=configure-binutils
-  make_a_target || exit $?
-fi
-if [ "x${phase_make_all_binutils}" = "xY" ] ; then
+if [ "x${phase_make_all}" = "xY" ] ; then
   MAKE_VARS=()
   MAKE_OPTS=()
   MAKE_VARS+=("V=1")
   MAKE_TARGET=all
   make_a_target || exit $?
 fi
-if [ "x${phase_make_install_binutils}" = "xY" ] ; then
+if [ "x${phase_make_install}" = "xY" ] ; then
   MAKE_VARS=()
   MAKE_OPTS=()
   MAKE_VARS+=("V=1")

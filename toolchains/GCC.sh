@@ -41,9 +41,15 @@ return ${exit_status}
 function make_a_target()
 {
 pushd ${PACKAGE_BUILD_PATH} > /dev/null
+if [ "x${MAKE_TARGET}" != "x" ] ; then
+  MAKE_TARGET_NAME=${MAKE_TARGET}
+else
+  MAKE_TARGET_NAME="<none>"
+fi
+target_xform=$(printf "%s" "${MAKE_TARGET}" | sed -e "s|/|_|g")
 eval \
   "${MAKE_VARS[@]}" make "${MAKE_OPTS[@]}" ${MAKE_TARGET} 2>&1 \
-  | tee "${LOG_DIRECTORY}/make-${MAKE_TARGET}.log"
+  | tee "${LOG_DIRECTORY}/make-${target_xform}.log"
 exit_status=${PIPESTATUS[0]}
 popd > /dev/null
 return ${exit_status}
@@ -90,7 +96,6 @@ LOG_DIRECTORY=$(pwd)
 #TARGET=x86_64-elf
 
 #phase_configure="Y"
-#phase_make_configure_gcc="Y"
 #phase_make_all_gcc="Y"
 #phase_make_all_target_libgcc="Y"
 #phase_make_cross_gnattools="Y"
@@ -171,13 +176,6 @@ if [ "x${phase_configure}" = "xY" ] ; then
     read answer
   fi
   configure || exit $?
-fi
-if [ "x${phase_make_configure_gcc}" = "xY" ] ; then
-  MAKE_VARS=()
-  MAKE_OPTS=()
-  MAKE_VARS+=("V=1")
-  MAKE_TARGET=configure-gcc
-  make_a_target || exit $?
 fi
 if [ "x${phase_make_all_gcc}" = "xY" ] ; then
   MAKE_VARS=()
