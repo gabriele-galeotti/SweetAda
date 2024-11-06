@@ -22,7 +22,7 @@ powershell.exe                                                ^
   -NoProfile                                                  ^
   -ExecutionPolicy Bypass                                     ^
   -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/processcfg.ps1 ^
-  ""%*""
+  %*
 
 EXIT /B %ERRORLEVEL%
 

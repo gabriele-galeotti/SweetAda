@@ -22,7 +22,7 @@ powershell.exe                                               ^
   -NoProfile                                                 ^
   -ExecutionPolicy Bypass                                    ^
   -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/filepatch.ps1 ^
-  ""%*""
+  %*
 
 EXIT /B %ERRORLEVEL%
 
