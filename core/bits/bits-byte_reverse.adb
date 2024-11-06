@@ -22,8 +22,8 @@ function Byte_Reverse
    is
    Result : Interfaces.Unsigned_8 := Value;
 begin
-   Result := ShR (Result and 16#AA#, 1) or ShL (Result and 16#55#, 1);
-   Result := ShR (Result and 16#CC#, 2) or ShL (Result and 16#33#, 2);
-   Result := ShR (Result and 16#F0#, 4) or ShL (Result and 16#0F#, 4);
+   Result := ShR (@ and 16#AA#, 1) or ShL (@ and 16#55#, 1);
+   Result := ShR (@ and 16#CC#, 2) or ShL (@ and 16#33#, 2);
+   Result := ShR (@ and 16#F0#, 4) or ShL (@ and 16#0F#, 4);
    return Result;
 end Byte_Reverse;
