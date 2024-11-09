@@ -1289,9 +1289,8 @@ endef
 DOTSWEETADA_DEPS :=
 DOTSWEETADA_DEPS += $(CONFIGURE_DEPS)
 DOTSWEETADA_DEPS += $(GNATADC_FILENAME)
-ifeq ($(BUILD_MODE),GPRbuild)
-DOTSWEETADA_DEPS += $(GPRBUILD_DEPS)
-endif
+DOTSWEETADA_DEPS += $(CONFIGUREGPR_FILENAME)
+DOTSWEETADA_DEPS += $(filter-out $(CONFIGUREGPR_FILENAME),$(GPRBUILD_DEPS))
 ./$(DOTSWEETADA): $(DOTSWEETADA_DEPS)
 	$(MAKE) clean
 	$(configure-subdirs-command)
@@ -1329,11 +1328,6 @@ configure-end:
 	@$(call echo-print,"$(PLATFORM): configuration completed.")
 	@$(call echo-print,"")
 
-.PHONY: configure-delete
-configure-delete:
-	@$(RM) $(GNATADC_FILENAME)
-	@$(RM) $(CONFIGUREGPR_FILENAME)
-
 .PHONY: configure-aux
 CONFIGURE_AUX_DEPS :=
 CONFIGURE_AUX_DEPS += configure-start
@@ -1344,7 +1338,7 @@ CONFIGURE_AUX_DEPS += configure-end
 configure-aux: $(CONFIGURE_AUX_DEPS)
 
 .PHONY: configure
-configure: clean configure-delete configure-aux infodump
+configure: clean clean-configure configure-aux infodump
 	$(call update-timestamp,$(DOTSWEETADA))
 
 .PHONY: infodump
@@ -1487,7 +1481,7 @@ endif
 #
 
 .PHONY: rts
-rts: configure-delete clean
+rts: clean clean-configure
 ifeq ($(OSTYPE),cmd)
 	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
           (                                                                  \
@@ -1540,6 +1534,11 @@ ifeq ($(filter $(PLATFORM),$(PLATFORMS)),$(PLATFORM))
 endif
 endif
 	-$(RM) $(CLEAN_OBJECTS)
+
+.PHONY: clean-configure
+clean-configure:
+	@$(RM) $(GNATADC_FILENAME)
+	@$(RM) $(CONFIGUREGPR_FILENAME)
 
 .PHONY: distclean
 distclean: clean
