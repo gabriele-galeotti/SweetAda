@@ -152,25 +152,40 @@ package body BSP
    begin
       -------------------------------------------------------------------------
       Exceptions.Init;
+      -- CLK ------------------------------------------------------------------
+      CLK_Init;
       -- PWR ------------------------------------------------------------------
       RCC_APB1ENR.PWREN := True;
       RCC_APB1RSTR.PWRRST := True;
       RCC_APB1RSTR.PWRRST := False;
-      -- CLK ------------------------------------------------------------------
-      CLK_Init;
+      -- GPIOA (USART1)
+      RCC_AHB1ENR.GPIOAEN := True;
+      RCC_AHB1RSTR.GPIOARST := True;
+      RCC_AHB1RSTR.GPIOARST := False;
+      -- USART1
+      RCC_APB2ENR.USART1EN := True;
+      RCC_APB2RSTR.USART1RST := True;
+      RCC_APB2RSTR.USART1RST := False;
       -- USART1 ---------------------------------------------------------------
       -- USART1_TX PA9 (E15) Virtual COM port
       -- USART1_RX PA10 (D15) Virtual COM port
       RCC_DCKCFGR2.USART1SEL := USART1SEL_APB2;
-      RCC_APB2ENR.USART1EN := True;
       GPIOA.AFRH (9) := AF7;
       GPIOA.AFRH (10) := AF7;
       GPIOA.MODER (9) := GPIO_ALT;
       GPIOA.MODER (10) := GPIO_ALT;
       USART1.USART_CR1.UE := False;
       -- USART1.USART_BRR.BRR := Unsigned_16 (96 * MHz1 / 115_200); -- assume HSI192, fck = 96 MHz, 115200 baud
-      USART1.USART_BRR.BRR := Unsigned_16 (100 * MHz1 / 115_200); -- assume HSE200, fck = 100 MHz, 115200 baud
-      USART1.USART_CR1.TE := True;
+      USART1.USART_BRR.BRR := Unsigned_16 (100 * MHz1 / 115_200); -- (APB2) assume HSE200, fck = 100 MHz, 115200 baud
+      USART1.USART_CR1 := (
+         RE     => True,
+         TE     => True,
+         PCE    => False,
+         M0     => M_8N1.M0,
+         M1     => M_8N1.M1,
+         OVER8  => OVER8_16,
+         others => <>
+         );
       USART1.USART_CR1.UE := True;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor := (
