@@ -34,6 +34,10 @@ package body Application
       is
       Delay_Count : constant := 50_000_000;
    begin
+      -- GPIOJ (LEDs) ---------------------------------------------------------
+      RCC_AHB1ENR.GPIOJEN := True;
+      RCC_AHB1RSTR.GPIOJRST := True;
+      RCC_AHB1RSTR.GPIOJRST := False;
       -- blink user LEDs alternately ------------------------------------------
       -- LD1: RED PJ13 (B9)
       -- LD2: GRN PJ5 (M14)
