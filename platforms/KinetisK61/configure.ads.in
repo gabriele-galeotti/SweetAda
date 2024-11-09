@@ -1,0 +1,19 @@
+
+with Definitions;
+
+package Configure
+   with Pure => True
+   is
+
+   use Definitions;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM  : constant String := "KinetisK61";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   SYSCLK_FREQUENCY : constant := 24 * MHz1;
+   TICK_FREQUENCY   : constant := 1 * kHz1;
+
+end Configure;
