@@ -3532,27 +3532,27 @@ pragma Warnings (On);
    OVER8_8  : constant := 1; -- Oversampling by 8
 
    type USART_CR1_Type is record
-      UE       : Boolean;      -- USART enable
-      UESM     : Boolean;      -- USART enable in Stop mode
-      RE       : Boolean;      -- Receiver enable
-      TE       : Boolean;      -- Transmitter enable
-      IDLEIE   : Boolean;      -- IDLE interrupt enable
-      RXNEIE   : Boolean;      -- RXNE interrupt enable
-      TCIE     : Boolean;      -- Transmission complete interrupt enable
-      TXEIE    : Boolean;      -- interrupt enable
-      PEIE     : Boolean;      -- PE interrupt enable
-      PS       : Bits_1;       -- Parity selection
-      PCE      : Boolean;      -- Parity control enable
-      WAKE     : Bits_1;       -- Receiver wakeup method
-      M0       : Bits_1;       -- Word length
-      MME      : Boolean;      -- Mute mode enable
-      CMIE     : Boolean;      -- Character match interrupt enable
-      OVER8    : Bits_1;       -- Oversampling mode
-      DEDT     : Bits_5;       -- Driver Enable de-assertion time
-      DEAT     : Bits_5;       -- Driver Enable assertion time
-      RTOIE    : Boolean;      -- Receiver timeout interrupt enable
-      EOBIE    : Boolean;      -- End of Block interrupt enable
-      M1       : Bits_1;       -- Word length
+      UE       : Boolean := False;     -- USART enable
+      UESM     : Boolean := False;     -- USART enable in Stop mode
+      RE       : Boolean := False;     -- Receiver enable
+      TE       : Boolean := False;     -- Transmitter enable
+      IDLEIE   : Boolean := False;     -- IDLE interrupt enable
+      RXNEIE   : Boolean := False;     -- RXNE interrupt enable
+      TCIE     : Boolean := False;     -- Transmission complete interrupt enable
+      TXEIE    : Boolean := False;     -- interrupt enable
+      PEIE     : Boolean := False;     -- PE interrupt enable
+      PS       : Bits_1  := PS_EVEN;   -- Parity selection
+      PCE      : Boolean := False;     -- Parity control enable
+      WAKE     : Bits_1  := WAKE_IDLE; -- Receiver wakeup method
+      M0       : Bits_1  := M_8N1.M0;  -- Word length
+      MME      : Boolean := False;     -- Mute mode enable
+      CMIE     : Boolean := False;     -- Character match interrupt enable
+      OVER8    : Bits_1  := OVER8_16;  -- Oversampling mode
+      DEDT     : Bits_5  := 0;         -- Driver Enable de-assertion time
+      DEAT     : Bits_5  := 0;         -- Driver Enable assertion time
+      RTOIE    : Boolean := False;     -- Receiver timeout interrupt enable
+      EOBIE    : Boolean := False;     -- End of Block interrupt enable
+      M1       : Bits_1  := M_8N1.M1;  -- Word length
       Reserved : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
