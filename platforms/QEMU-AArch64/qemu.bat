@@ -26,12 +26,14 @@ REM # Main loop.                                                               #
 REM #                                                                          #
 REM ############################################################################
 
+SETLOCAL ENABLEDELAYEDEXPANSION
+
 REM QEMU executable and CPU model
 SET "QEMU_FILENAME=qemu-system-aarch64w.exe"
 SET QEMU_EXECUTABLE="C:\Program Files\qemu\%QEMU_FILENAME%"
 
 REM debug options
-IF "%1"=="-debug" (
+IF "%1" == "-debug" (
   SET "QEMU_DEBUG=-S -gdb tcp:localhost:1234,ipv4"
   SET "PYTHONHOME=%TOOLCHAIN_PREFIX%"
   ) ELSE (
@@ -57,54 +59,47 @@ START "QEMU" %QEMU_EXECUTABLE% ^
   -chardev socket,id=SERIALPORT1,port=%SERIALPORT1%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
   -serial chardev:SERIALPORT1 ^
   %QEMU_DEBUG%
+IF NOT "%ERRORLEVEL%" == "0" (
+  ECHO *** Error: executing %QEMU_EXECUTABLE%.>&2
+  GOTO :SCRIPTEXIT
+  )
 
 REM console for serial port
 CALL :TCPPORT_IS_LISTENING %SERIALPORT0% %TILTIMEOUT%
 START "PUTTY-1" %PUTTY% telnet://localhost:%SERIALPORT0%/
+IF NOT "%ERRORLEVEL%" == "0" (
+  ECHO *** Error: executing %PUTTY%.>&2
+  )
 REM console for serial port
 CALL :TCPPORT_IS_LISTENING %SERIALPORT1% %TILTIMEOUT%
 START "PUTTY-2" %PUTTY% telnet://localhost:%SERIALPORT1%/
+IF NOT "%ERRORLEVEL%" == "0" (
+  ECHO *** Error: executing %PUTTY%.>&2
+  )
 
 REM debug session
-IF "%1"=="-debug" (
+IF "%1" == "-debug" (
   SET "TERM="
-  START "GDB" /wait cmd.exe /C %GDB% ^
+  START "GDB" cmd.exe /C %GDB% ^
     -q ^
     -iex "set new-console on" ^
     -iex "set basenames-may-differ" ^
+    -ex "set tcp connect-timeout 30" ^
     -ex "target extended-remote tcp:localhost:1234" ^
-    %KERNEL_OUTFILE% ^
-    >nul 2>&1
-    CALL :SLEEP 0
+    %KERNEL_OUTFILE%
+  IF NOT "!ERRORLEVEL!" == "0" (
+    ECHO *** Error: executing %GDB%.>&2
+    ) ELSE (
+    CALL :PROCESSWAIT -s %GDB%
+    CALL :PROCESSWAIT -e %GDB%
+    )
   )
 
 REM wait QEMU termination
-CALL :QEMUWAIT
+CALL :PROCESSWAIT -e %QEMU_FILENAME%
 
 :SCRIPTEXIT
-SET "QEMU_FILENAME="
-SET "QEMU_EXECUTABLE="
-SET "QEMU_DEBUG="
-SET "PYTHONHOME="
-SET "MONITORPORT="
-SET "SERIALPORT0="
-SET "SERIALPORT1="
-SET "TILTIMEOUT="
 EXIT /B %ERRORLEVEL%
-
-REM ############################################################################
-REM # SLEEP                                                                    #
-REM #                                                                          #
-REM ############################################################################
-:SLEEP
-FOR /F "tokens=1-3 delims=:." %%A IN ("%TIME%") DO SET /A ^
-  H=%%A,M=1%%B%%100,S=1%%C%%100,END=(H*60+M)*60+S+%1
-:SLEEP_LOOP
-FOR /F "tokens=1-3 delims=:." %%A IN ("%TIME%") DO SET /A ^
-  H=%%A,M=1%%B%%100,S=1%%C%%100,CUR=(H*60+M)*60+S
-IF "%CUR%" LSS "%END%" GOTO :SLEEP_LOOP
-SET "H=" & SET "M=" & SET "S=" & SET "END=" & SET "CUR="
-GOTO :EOF
 
 REM ############################################################################
 REM # TCPPORT_IS_LISTENING                                                     #
@@ -114,7 +109,6 @@ REM ############################################################################
 SET "PORTOK=N"
 SET "NLOOPS=0"
 :TIL_LOOP
-CALL :SLEEP 1
 FOR /F "tokens=*" %%I IN (' ^
   %SystemRoot%\System32\NETSTAT.EXE -an ^| ^
   %SystemRoot%\System32\find.exe ":%1" ^| ^
@@ -125,25 +119,48 @@ IF "%VAR%" NEQ "0" (
   GOTO :TIL_LOOPEND
   )
 SET /A NLOOPS += 1
-IF "%NLOOPS%" NEQ "%2" GOTO :TIL_LOOP
+IF "%NLOOPS%" LEQ "%2" (
+  CALL :SLEEP 1
+  GOTO :TIL_LOOP
+  )
 :TIL_LOOPEND
-IF NOT "%PORTOK%"=="Y" ECHO TIMEOUT WAITING FOR PORT %1
-SET "PORTOK=" & SET "NLOOPS=" & SET "VAR="
+IF NOT "%PORTOK%" == "Y" ECHO *** Error: timeout waiting for port %1.>&2
 GOTO :EOF
 
 REM ############################################################################
-REM # QEMUWAIT                                                                 #
+REM # PROCESSWAIT                                                              #
 REM #                                                                          #
 REM ############################################################################
-:QEMUWAIT
-:QW_LOOP
-%SystemRoot%\System32\tasklist.exe | %SystemRoot%\System32\find.exe /I "%QEMU_FILENAME%" >nul 2>&1
-IF ERRORLEVEL 1 (
-  GOTO :QW_LOOPEND
+:PROCESSWAIT
+IF "%1" == "-s" (
+  SET EL=0
+  ) ELSE (
+    IF "%1" == "-e" (
+      SET EL=1
+    ) ELSE (
+      ECHO *** Error: wrong PROCESSWAIT parameter.>&2
+      GOTO :EOF
+    )
+  )
+:PW_LOOP
+%SystemRoot%\System32\tasklist.exe | ^
+  %SystemRoot%\System32\find.exe /I "%2" ^
+  >nul 2>&1
+IF "%ERRORLEVEL%" == "%EL%" (
+  GOTO :PW_LOOPEND
   ) ELSE (
   CALL :SLEEP 1
-  GOTO :QW_LOOP
+  GOTO :PW_LOOP
   )
-:QW_LOOPEND
+:PW_LOOPEND
+GOTO :EOF
+
+REM ############################################################################
+REM # SLEEP                                                                    #
+REM #                                                                          #
+REM ############################################################################
+:SLEEP
+SET /A SLEEPTIME=%1+1
+%SystemRoot%\System32\PING.EXE -n %SLEEPTIME% 127.0.0.1 >nul 2>&1
 GOTO :EOF
 
