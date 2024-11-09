@@ -29,39 +29,39 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 
 REM hidden feature: if the script is called with -p <logfile>, it acts
 REM like a "tee"
-IF "%1"=="-p" SET LOGFILE=%2 && CALL :PIPE && EXIT /B %ERRORLEVEL%
+IF "%1" == "-p" SET LOGFILE=%2 && CALL :PIPE && EXIT /B %ERRORLEVEL%
 
 IF NOT DEFINED MAKE SET MAKE=make.exe
 
 SET ACTION_VALID=
-IF "%1"=="help"            SET "ACTION_VALID=Y" && %MAKE% help
-IF "%1"=="createkernelcfg" (
+IF "%1" == "help"            SET "ACTION_VALID=Y" && %MAKE% help
+IF "%1" == "createkernelcfg" (
   SET "ACTION_VALID=Y"
   CALL :SETPLATFORM
   SET "PLATFORM=!PLATFORM!"
   SET "SUBPLATFORM=!SUBPLATFORM!"
   %MAKE% createkernelcfg
   )
-IF "%1"=="configure"       SET "ACTION_VALID=Y" && %MAKE% configure
-IF "%1"=="infodump"        SET "ACTION_VALID=Y" && %MAKE% infodump
-IF "%1"=="all" (
+IF "%1" == "configure"       SET "ACTION_VALID=Y" && %MAKE% configure
+IF "%1" == "infodump"        SET "ACTION_VALID=Y" && %MAKE% infodump
+IF "%1" == "all" (
   SET "ACTION_VALID=Y"
   %MAKE% all 2>make.errors.log| menu.bat -p make.log
   CALL :SHOWERRORLOG
   )
-IF "%1"=="postbuild" (
+IF "%1" == "postbuild" (
   SET "ACTION_VALID=Y"
   %MAKE% postbuild 2>make.errors.log| menu.bat -p make.log
   CALL :SHOWERRORLOG
   )
-IF "%1"=="session-start"   SET "ACTION_VALID=Y" && %MAKE% session-start
-IF "%1"=="session-end"     SET "ACTION_VALID=Y" && %MAKE% session-end
-IF "%1"=="run"             SET "ACTION_VALID=Y" && %MAKE% run
-IF "%1"=="debug"           SET "ACTION_VALID=Y" && %MAKE% debug
-IF "%1"=="clean"           SET "ACTION_VALID=Y" && %MAKE% clean
-IF "%1"=="distclean"       SET "ACTION_VALID=Y" && %MAKE% distclean
-IF "%1"=="rts"             SET "ACTION_VALID=Y" && %MAKE% rts
-IF NOT "%ACTION_VALID%"=="Y" CALL :USAGE
+IF "%1" == "session-start"   SET "ACTION_VALID=Y" && %MAKE% session-start
+IF "%1" == "session-end"     SET "ACTION_VALID=Y" && %MAKE% session-end
+IF "%1" == "run"             SET "ACTION_VALID=Y" && %MAKE% run
+IF "%1" == "debug"           SET "ACTION_VALID=Y" && %MAKE% debug
+IF "%1" == "clean"           SET "ACTION_VALID=Y" && %MAKE% clean
+IF "%1" == "distclean"       SET "ACTION_VALID=Y" && %MAKE% distclean
+IF "%1" == "rts"             SET "ACTION_VALID=Y" && %MAKE% rts
+IF NOT "%ACTION_VALID%" == "Y" CALL :USAGE
 SET ACTION_VALID=
 
 EXIT /B %ERRORLEVEL%
@@ -72,7 +72,7 @@ REM #                                                                          #
 REM ############################################################################
 :SETPLATFORM
 REM select a platform
-IF NOT "%PLATFORM%"=="" GOTO :EOF
+IF NOT "%PLATFORM%" == "" GOTO :EOF
 REM SET "PLATFORM=Altera10M50GHRD" && SET "SUBPLATFORM="
 REM SET "PLATFORM=ArduinoUNO" && SET "SUBPLATFORM="
 REM SET "PLATFORM=DE10-Lite" && SET "SUBPLATFORM="

@@ -33,7 +33,7 @@ package body Application
    -- function To_USART_Buffer_Ptr is new Ada.Unchecked_Conversion (System.Address, USART_Buffer_Ptr);
 
    Hello : constant USART_Buffer := [
-                                     'H', 'e', 'l', 'l', 'o', ',', ' ',
+                                     'h', 'e', 'l', 'l', 'o', ',', ' ',
                                      'S', 'w', 'e', 'e', 't', 'A', 'd', 'a',
                                      CR, LF
                                     ];
