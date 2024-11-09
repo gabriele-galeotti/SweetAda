@@ -121,7 +121,7 @@ if {$SERVER_MODE ne 0} {
             append cmd_args "/C "
         }
         append cmd_args "openocd.exe -f \"$OPENOCD_CFGFILE\""
-        if {[catch {eval exec {$::env(ComSpec)} /C START {$::env(ComSpec)} $cmd_args &} result] ne 0} {
+        if {[catch {eval exec {$::env(ComSpec)} /C START "OpenOCD" {$::env(ComSpec)} $cmd_args &} result] ne 0} {
             puts stderr "$SCRIPT_FILENAME: *** Error: system failure or OpenOCD executable not found."
             exit 1
         }
@@ -204,7 +204,6 @@ if {$ELFTOOL ne ""} {
 } else {
     set START_ADDRESS $START_SYMBOL
 }
-puts "START ADDRESS = $START_ADDRESS"
 
 openocd_rpc_tx "set sweetada_elf \"$SWEETADA_ELF\" ; list"
 openocd_rpc_rx

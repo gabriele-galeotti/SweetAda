@@ -148,7 +148,7 @@ if SERVER_MODE != 0:
         else:
             cmd_exec_option = ' /C'
         try:
-            os.system('cmd.exe /C START cmd.exe' + cmd_exec_option + ' openocd.exe -f "' + OPENOCD_CFGFILE + '"')
+            os.system('cmd.exe /C START "OpenOCD" cmd.exe' + cmd_exec_option + ' openocd.exe -f "' + OPENOCD_CFGFILE + '"')
         except:
             errprintf('%s: *** Error: system failure or OpenOCD executable not found.\n', SCRIPT_FILENAME)
             exit(1)
@@ -222,7 +222,6 @@ if ELFTOOL != None:
     START_ADDRESS = '0x{:X}'.format(START_ADDRESS)
 else:
     START_ADDRESS = START_SYMBOL
-printf('START ADDRESS = %s\n', START_ADDRESS)
 
 libopenocd.openocd_rpc_tx('set sweetada_elf "' + SWEETADA_ELF + '" ; list')
 libopenocd.openocd_rpc_rx('echo')
