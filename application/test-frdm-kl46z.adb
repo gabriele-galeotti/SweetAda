@@ -35,7 +35,7 @@ package body Application
       -------------------------------------------------------------------------
       -- blink on-board GREEN LED
       declare
-         Delay_Count : constant := 1_000_000;
+         Delay_Count : constant := 10_000_000;
       begin
          -- LED1 (GREEN)
          PORTD_PCR (5).MUX := MUX_ALT1_GPIO;
