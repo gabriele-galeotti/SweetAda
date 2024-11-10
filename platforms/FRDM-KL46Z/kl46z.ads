@@ -1144,11 +1144,11 @@ pragma Style_Checks (Off);
    CLKS_RSVD   : constant := 2#11#; -- Encoding 3 — Reserved.
 
    type MCG_C1_Type is record
-      IREFSTEN : Boolean; -- Internal Reference Stop Enable
-      IRCLKEN  : Boolean; -- Internal Reference Clock Enable
-      IREFS    : Bits_1;  -- Internal Reference Select
-      FRDIV    : Bits_3;  -- FLL External Reference Divider
-      CLKS     : Bits_2;  -- Clock Source Select
+      IREFSTEN : Boolean := False;       -- Internal Reference Stop Enable
+      IRCLKEN  : Boolean := False;       -- Internal Reference Clock Enable
+      IREFS    : Bits_1  := IREFS_INT;   -- Internal Reference Select
+      FRDIV    : Bits_3  := FRDIV_1_32;  -- FLL External Reference Divider
+      CLKS     : Bits_2  := CLKS_FLLPLL; -- Clock Source Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1185,13 +1185,13 @@ pragma Style_Checks (Off);
    LOCRE0_RES : constant := 1; -- Generate a reset request on a loss of OSC0 external reference clock.
 
    type MCG_C2_Type is record
-      IRCS    : Bits_1;  -- Internal Reference Clock Select
-      LP      : Boolean; -- Low Power Select
-      EREFS0  : Bits_1;  -- External Reference Select
-      HGO0    : Boolean; -- High Gain Oscillator Select
-      RANGE0  : Bits_2;  -- Frequency Range Select
-      FCFTRIM : Boolean; -- Fast Internal Reference Clock Fine Trim
-      LOCRE0  : Bits_1;  -- Loss of Clock Reset Enable
+      IRCS    : Bits_1  := IRCS_SLOW;   -- Internal Reference Clock Select
+      LP      : Boolean := False;       -- Low Power Select
+      EREFS0  : Bits_1  := EREFS0_EXT;  -- External Reference Select
+      HGO0    : Boolean := False;       -- High Gain Oscillator Select
+      RANGE0  : Bits_2  := RANGE0_LO;   -- Frequency Range Select
+      FCFTRIM : Boolean := True;        -- Fast Internal Reference Clock Fine Trim
+      LOCRE0  : Bits_1  := LOCRE0_RES;  -- Loss of Clock Reset Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1245,10 +1245,10 @@ pragma Style_Checks (Off);
                                    -- 1      32.768 kHz         2929        96 MHz
 
    type MCG_C4_Type is record
-      SCFTRIM  : Boolean; -- Slow Internal Reference Clock Fine Trim
-      FCTRIM   : Bits_4;  -- Fast Internal Reference Clock Trim Setting
-      DRST_DRS : Bits_2;  -- DCO Range Select
-      DMX32    : Boolean; -- DCO Maximum Frequency with 32.768 kHz Reference
+      SCFTRIM  : Boolean;               -- Slow Internal Reference Clock Fine Trim
+      FCTRIM   : Bits_4;                -- Fast Internal Reference Clock Trim Setting
+      DRST_DRS : Bits_2  := DRST_DRS_1; -- DCO Range Select
+      DMX32    : Boolean := False;      -- DCO Maximum Frequency with 32.768 kHz Reference
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1296,9 +1296,9 @@ pragma Style_Checks (Off);
    PRDIV0_DIV25 : constant := 2#11000#; -- Divide Factor 25
 
    type MCG_C5_Type is record
-      PRDIV0    : Bits_5;       -- PLL External Reference Divider
-      PLLSTEN0  : Boolean;      -- PLL Stop Enable
-      PLLCLKEN0 : Boolean;      -- PLL Clock Enable
+      PRDIV0    : Bits_5  := PRDIV0_DIV1; -- PLL External Reference Divider
+      PLLSTEN0  : Boolean := False;       -- PLL Stop Enable
+      PLLCLKEN0 : Boolean := False;       -- PLL Clock Enable
       Reserved  : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1357,10 +1357,10 @@ pragma Style_Checks (Off);
    PLLS_PLL : constant := 1; -- PLL is selected.
 
    type MCG_C6_Type is record
-      VDIV0  : Bits_5;  -- VCO 0 Divider
-      CME0   : Boolean; -- Clock Monitor Enable
-      PLLS   : Bits_1;  -- PLL Select
-      LOLIE0 : Boolean; -- Loss of Lock Interrrupt Enable
+      VDIV0  : Bits_5  := VDIV0_x24; -- VCO 0 Divider
+      CME0   : Boolean := False;     -- Clock Monitor Enable
+      PLLS   : Bits_1  := PLLS_FLL;  -- PLL Select
+      LOLIE0 : Boolean := False;     -- Loss of Lock Interrrupt Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1439,12 +1439,12 @@ pragma Style_Checks (Off);
    ATMS_4M  : constant := 1; -- 4 MHz Internal Reference Clock selected.
 
    type MCG_SC_Type is record
-      LOCS0    : Boolean; -- OSC0 Loss of Clock Status
-      FCRDIV   : Bits_3;  -- Fast Clock Internal Reference Divider
-      FLTPRSRV : Boolean; -- FLL Filter Preserve Enable
-      ATMF     : Boolean; -- Automatic Trim Machine Fail Flag
-      ATMS     : Bits_1;  -- Automatic Trim Machine Select
-      ATME     : Boolean; -- Automatic Trim Machine Enable
+      LOCS0    : Boolean := False;       -- OSC0 Loss of Clock Status
+      FCRDIV   : Bits_3  := FCRDIV_DIV2; -- Fast Clock Internal Reference Divider
+      FLTPRSRV : Boolean := False;       -- FLL Filter Preserve Enable
+      ATMF     : Boolean := False;       -- Automatic Trim Machine Fail Flag
+      ATMS     : Bits_1  := ATMS_32k;    -- Automatic Trim Machine Select
+      ATME     : Boolean := False;       -- Automatic Trim Machine Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1491,7 +1491,7 @@ pragma Style_Checks (Off);
    OSCSEL_RTC : constant := 1; -- Selects 32 kHz RTC Oscillator.
 
    type MCG_C7_Type is record
-      OSCSEL    : Bits_1;      -- MCG OSC Clock Select
+      OSCSEL    : Bits_1 := OSCSEL_OSC; -- MCG OSC Clock Select
       Reserved1 : Bits_5 := 0;
       Reserved2 : Bits_2 := 0;
    end record
@@ -1517,7 +1517,7 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_1  := 0;
       Reserved2 : Bits_4  := 0;
       Reserved3 : Bits_1  := 0;
-      LOLRE     : Boolean;      -- PLL Loss of Lock Reset Enable
+      LOLRE     : Boolean := False; -- PLL Loss of Lock Reset Enable
       Reserved4 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1591,14 +1591,14 @@ pragma Style_Checks (Off);
    -- 25.71.1 OSC Control Register (OSCx_CR)
 
    type OSCx_CR_Type is record
-      SC16P     : Boolean;      -- Oscillator 16 pF Capacitor Load Configure
-      SC8P      : Boolean;      -- Oscillator 8 pF Capacitor Load Configure
-      SC4P      : Boolean;      -- Oscillator 4 pF Capacitor Load Configure
-      SC2P      : Boolean;      -- Oscillator 2 pF Capacitor Load Configure
+      SC16P     : Boolean := False; -- Oscillator 16 pF Capacitor Load Configure
+      SC8P      : Boolean := False; -- Oscillator 8 pF Capacitor Load Configure
+      SC4P      : Boolean := False; -- Oscillator 4 pF Capacitor Load Configure
+      SC2P      : Boolean := False; -- Oscillator 2 pF Capacitor Load Configure
       Reserved1 : Bits_1  := 0;
-      EREFSTEN  : Boolean;      -- External Reference Stop Enable
+      EREFSTEN  : Boolean := False; -- External Reference Stop Enable
       Reserved2 : Bits_1  := 0;
-      ERCLKEN   : Boolean;      -- External Reference Enable
+      ERCLKEN   : Boolean := False; -- External Reference Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1613,10 +1613,10 @@ pragma Style_Checks (Off);
       ERCLKEN   at 0 range 7 .. 7;
    end record;
 
-   OSCx_CR_ADDRESS : constant := 16#4006_5000#;
+   OSC0_CR_ADDRESS : constant := 16#4006_5000#;
 
-   OSCx_CR : aliased OSCx_CR_Type
-      with Address              => System'To_Address (OSCx_CR_ADDRESS),
+   OSC0_CR : aliased OSCx_CR_Type
+      with Address              => System'To_Address (OSC0_CR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
