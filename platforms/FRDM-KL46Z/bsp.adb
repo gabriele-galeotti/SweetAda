@@ -55,7 +55,7 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      ARMv6M.SYST_RVR.RELOAD := Bits_24 (16#FFF#);
+      ARMv6M.SYST_RVR.RELOAD := Bits_24 (16#3FFF#);
       ARMv6M.SHPR3.PRI_15 := 16#1#;
       ARMv6M.SYST_CVR.CURRENT := 0;
       ARMv6M.SYST_CSR := (
@@ -97,8 +97,46 @@ package body BSP
    begin
       -------------------------------------------------------------------------
       Exceptions.Init;
-      -------------------------------------------------------------------------
-      -- clock gating
+      -- clock initialization -------------------------------------------------
+      OSC0_CR.ERCLKEN := True;
+      MCG_C1 := (
+         IRCLKEN => True,
+         IREFS   => IREFS_EXT,
+         FRDIV   => FRDIV_8_256,
+         CLKS    => CLKS_FLLPLL,
+         others  => <>
+         );
+      MCG_C2 := (
+         EREFS0  => EREFS0_OSC,
+         RANGE0  => RANGE0_VHI1,
+         LOCRE0  => LOCRE0_IRQ,
+         others  => <>
+         );
+      MCG_C5.PRDIV0 := PRDIV0_DIV2;
+      MCG_C6.PLLS := PLLS_PLL;
+      MCG_C7.OSCSEL := OSCSEL_OSC;
+      SIM_SOPT2 := (
+         RTCCLKOUTSEL => RTCCLKOUTSEL_OSCERCLK,
+         CLKOUTSEL    => CLKOUTSEL_OSCERCLK,
+         PLLFLLSEL    => PLLFLLSEL_MCGFLLCLKDIV2,
+         USBSRC       => USBSRC_MCGxLL,
+         TPMSRC       => TPMSRC_DISABLED,
+         UART0SRC     => UART0SRC_OSCERCLK,
+         others       => <>
+         );
+      -- clock gating ---------------------------------------------------------
+      SIM_SCGC4 := (
+         I2C0   => False,
+         I2C1   => False,
+         UART0  => True,
+         UART1  => False,
+         UART2  => False,
+         USBOTG => False,
+         CMP    => False,
+         SPI0   => False,
+         SPI1   => False,
+         others => <>
+         );
       SIM_SCGC5 := (
          LPTMR  => False,
          TSI    => True,
@@ -110,18 +148,7 @@ package body BSP
          SLCD   => False,
          others => <>
          );
-      -- clock selection
-      SIM_SOPT2 := (
-         RTCCLKOUTSEL => RTCCLKOUTSEL_OSCERCLK,
-         CLKOUTSEL    => CLKOUTSEL_OSCERCLK,
-         PLLFLLSEL    => PLLFLLSEL_MCGFLLCLKDIV2,
-         USBSRC       => USBSRC_MCGxLL,
-         TPMSRC       => TPMSRC_DISABLED,
-         UART0SRC     => UART0SRC_OSCERCLK,
-         others       => <>
-         );
       -- UART0 ----------------------------------------------------------------
-      SIM_SCGC4.UART0 := True;
       PORTA_PCR (1).MUX := MUX_ALT2;
       PORTA_PCR (2).MUX := MUX_ALT2;
       UART0.C4 := (
