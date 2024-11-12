@@ -32,7 +32,7 @@ begin
    end if;
    while V2 /= 0 loop
       T := V2;
-      V2 := V1 mod V2;
+      V2 := V1 mod @;
       V1 := T;
    end loop;
    return V1;
