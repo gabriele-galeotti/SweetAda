@@ -78,15 +78,19 @@ HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall
 HOST_LD_SWITCHES ?= -g
 endif
 
+OBJS :=
+OBJS += elftool.o
+OBJS += library.o
+
 .PHONY: all
 all: gnat-wrapper$(EXEEXT)
 
-gnat-wrapper$(EXEEXT): gnat-wrapper.o library.o
+gnat-wrapper$(EXEEXT): $(OBJS)
 	$(HOST_CC) -o $@ $(HOST_LD_SWITCHES) $^
 gnat-wrapper.o: gnat-wrapper.c
-	$(HOST_CC) -o $@ -c -I.. $(HOST_CC_SWITCHES) $<
+	$(HOST_CC) -o $@ -c -I. -I.. $(HOST_CC_SWITCHES) $<
 library.o: ../library.c
-	$(HOST_CC) -o $@ -c -I.. -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
+	$(HOST_CC) -o $@ -c -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
 .PHONY: install
 install: gnat-wrapper$(EXEEXT)
@@ -102,5 +106,5 @@ endif
 
 .PHONY: clean
 clean:
-	$(RM) *.o gnat-wrapper$(EXEEXT)
+	$(RM) $(OBJS) gnat-wrapper$(EXEEXT)
 

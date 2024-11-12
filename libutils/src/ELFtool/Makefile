@@ -78,14 +78,14 @@ HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall
 HOST_LD_SWITCHES ?= -g
 endif
 
-OBJECTS :=
-OBJECTS += elftool.o
-OBJECTS += library.o
+OBJS :=
+OBJS += elftool.o
+OBJS += library.o
 
 .PHONY: all
 all: elftool$(EXEEXT)
 
-elftool$(EXEEXT): $(OBJECTS)
+elftool$(EXEEXT): $(OBJS)
 	$(HOST_CC) -o $@ $(HOST_LD_SWITCHES) $^
 elftool.o: elftool.c
 	$(HOST_CC) -o $@ -c -I. -I.. $(HOST_CC_SWITCHES) $<
@@ -106,5 +106,5 @@ endif
 
 .PHONY: clean
 clean:
-	$(RM) *.o elftool$(EXEEXT)
+	$(RM) $(OBJS) elftool$(EXEEXT)
 

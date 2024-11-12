@@ -1768,6 +1768,8 @@ process_terminate(pid_t pid)
 {
         bool exit_status;
 
+        exit_status = false;
+
         if (pid != PID_INVALID)
         {
 #if __START_IF_SELECTION__

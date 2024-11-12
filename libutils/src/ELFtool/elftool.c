@@ -500,6 +500,8 @@ elf_find_symbol(Elf_t *pelf, const char *symbol, uint64_t *pvalue)
         size_t      size;
         const char *symbol_name;
 
+        nsymbol = 0;
+
         if (pelf->class == ELFCLASS32)
         {
                 nsymbol = pelf->scn_symtab_size / sizeof(Elf32_Sym);
@@ -628,6 +630,7 @@ command_dumpsections(void)
                 size_t size;
                 uint64_t addr;
                 const char *scn_name;
+                name = 0;
                 if (application.pelf->class == ELFCLASS32)
                 {
                         Elf32_Shdr *shdr;
