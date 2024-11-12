@@ -24,11 +24,11 @@ CGPR_OPTION=
 #CGPR_OPTION="--config=auto.cgpr"
 #CGPR_OPTION="--config=..."
 
-"${GNATSTUDIO}"                    \
-  --pwd="$(pwd)"                   \
+"${GNATSTUDIO}" \
+  --pwd="$(pwd)" \
   --path="${TOOLCHAIN_PREFIX}"/bin \
-  ${CGPR_OPTION}                   \
-  -P sweetada.gpr                  \
+  ${CGPR_OPTION} \
+  -P sweetada.gpr \
   &
 
 exit 0
