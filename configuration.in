@@ -38,6 +38,10 @@ else ifeq ($(OSTYPE),linux)
   #
   PYTHON := python3
   TCLSH  := tclsh
+  export TERMINAL := xterm
+  #export TERMINAL := xfce4
+  #export TERMINAL := gnome
+  #export TERMINAL := konsole
 endif
 
 ################################################################################
