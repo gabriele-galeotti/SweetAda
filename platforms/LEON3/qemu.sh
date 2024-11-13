@@ -16,7 +16,9 @@
 # Environment variables:
 # OSTYPE
 # PLATFORM_DIRECTORY
+# SHARE_DIRECTORY
 # KERNEL_OUTFILE
+# TERMINAL
 # GDB
 #
 
@@ -67,18 +69,16 @@ if [ "x${OSTYPE}" = "xmsys" ] ; then
   exit $?
 fi
 
+# load terminal handling
+source ${SHARE_DIRECTORY}/terminal.sh
+
 # QEMU executable and CPU model
 QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-sparc"
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
-  case ${OSTYPE} in
-    darwin) QEMU_SETSID= ;;
-    *)      QEMU_SETSID="setsid" ;;
-  esac
   QEMU_DEBUG="-S -gdb tcp:localhost:1234,ipv4"
 else
-  QEMU_SETSID=
   QEMU_DEBUG=
 fi
 
@@ -89,7 +89,7 @@ SERIALPORT1=4447
 TILTIMEOUT=3
 
 # QEMU machine
-${QEMU_SETSID} "${QEMU_EXECUTABLE}" \
+"${QEMU_EXECUTABLE}" \
   -M leon3_generic \
   -kernel ${KERNEL_OUTFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
@@ -105,61 +105,33 @@ QEMU_PID=$!
 tcpport_is_listening ${SERIALPORT0} ${TILTIMEOUT} "*** Error"
 case ${OSTYPE} in
   darwin)
-    /usr/bin/osascript \
-      -e "tell application \"Terminal\"" \
-      -e "do script \"telnet 127.0.0.1 ${SERIALPORT0}\"" \
-      -e "end tell" \
-      &
+    osascript -e \
+      "tell application \"Terminal\" to do script \"clear ; telnet localhost ${SERIALPORT0} ; exit 0\"" \
+      > /dev/null &
     ;;
   *)
-    setsid /usr/bin/xterm \
-      -T "QEMU-1" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
-      /bin/telnet localhost ${SERIALPORT0} \
-      &
+    $(terminal ${TERMINAL}) /bin/telnet localhost ${SERIALPORT0} &
     ;;
 esac
 # console for serial port
 tcpport_is_listening ${SERIALPORT1} ${TILTIMEOUT} "*** Error"
 case ${OSTYPE} in
   darwin)
-    /usr/bin/osascript \
-      -e "tell application \"Terminal\"" \
-      -e "do script \"telnet 127.0.0.1 ${SERIALPORT1}\"" \
-      -e "end tell" \
-      &
+    osascript -e \
+      "tell application \"Terminal\" to do script \"clear ; telnet localhost ${SERIALPORT1} ; exit 0\"" \
+      > /dev/null &
     ;;
   *)
-    setsid /usr/bin/xterm \
-      -T "QEMU-2" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
-      /bin/telnet localhost ${SERIALPORT1} \
-      &
+    $(terminal ${TERMINAL}) /bin/telnet localhost ${SERIALPORT1} &
     ;;
 esac
 
 # debug session
 if [ "x$1" = "x-debug" ] ; then
-  TERMINAL_RUN_SPEC="xterm -geometry 132x50 -bg rgb:3f/3f/3f -fg rgb:ff/ff/ff -sl 1024 -sb -e"
-  #TERMINAL_RUN_SPEC="urxvt -e"
-  #TERMINAL_RUN_SPEC="xfce4-terminal -e"
-  #TERMINAL_RUN_SPEC="gnome-terminal --"
-  #TERMINAL_RUN_SPEC="konsole -e"
-  case ${XDG_CONFIG_HOME} in
-    "${GNATSTUDIO_PREFIX}"*)
-      export XDG_CONFIG_HOME=
-      ;;
-    *)
-      ;;
-  esac
-  case "${XDG_DATA_DIRS}" in
-    "${GNATSTUDIO_PREFIX}"*)
-      export XDG_DATA_DIRS=
-      ;;
-    *)
-      ;;
-  esac
-  ${TERMINAL_RUN_SPEC} "${GDB}" \
+  $(terminal ${TERMINAL}) "${GDB}" \
     -q \
     -iex "set basenames-may-differ" \
+    -ex "set tcp connect-timeout 30" \
     -ex "target extended-remote tcp:localhost:1234" \
     ${KERNEL_OUTFILE}
 fi
