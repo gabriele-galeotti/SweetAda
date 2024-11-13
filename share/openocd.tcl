@@ -24,7 +24,6 @@
 # -server                 start OpenOCD server (no executable processing)
 # -shutdown               shutdown OpenOCD server (no executable processing)
 # -thumb                  ARM Thumb address handling
-# -w                      wait after OpenOCD termination
 #
 # The following hold inside OpenOCD command execution:
 # -debug sets $debug_mode and $noexec_flag to 1 (default 0)
@@ -37,6 +36,9 @@
 # OSTYPE
 # SWEETADA_PATH
 # LIBUTILS_DIRECTORY
+# SHARE_DIRECTORY
+# TEMP
+# TERMINAL
 #
 
 ################################################################################
@@ -74,7 +76,6 @@ set SWEETADA_ELF    ""
 set ELFTOOL         ""
 set START_SYMBOL    ""
 set ARM_THUMB       0
-set WAIT_FLAG       0
 
 set argv_last_idx [llength $argv]
 set argv_idx 0
@@ -94,7 +95,6 @@ while {$argv_idx < $argv_last_idx} {
         -server      {set SERVER_MODE 1}
         -shutdown    {set SHUTDOWN_MODE 1}
         -thumb       {set ARM_THUMB 1}
-        -w           {set WAIT_FLAG 1}
         default {
             puts stderr "$SCRIPT_FILENAME: *** Error: unknown argument."
             exit 1
@@ -107,6 +107,12 @@ if {$SHUTDOWN_MODE ne 0} {
     set SERVER_MODE 0
 }
 
+# batch file helper
+if {$PLATFORM eq "windows"} {
+    set TEMP [file nativename $::env(TEMP)]
+    set helperfilename [file join $TEMP openocd-tcl.bat]
+}
+
 if {$SERVER_MODE ne 0} {
     if {$OPENOCD_PREFIX eq ""} {
         puts stderr "$SCRIPT_FILENAME: *** Error: no OpenOCD prefix specified."
@@ -114,46 +120,48 @@ if {$SERVER_MODE ne 0} {
     }
     if {$PLATFORM eq "windows"} {
         set ::env(PATH) [join [list [file join $OPENOCD_PREFIX bin] $::env(PATH)] ";"]
-        set cmd_args ""
-        if {$WAIT_FLAG ne 0} {
-            append cmd_args "/K "
-        } else {
-            append cmd_args "/C "
-        }
-        append cmd_args "openocd.exe -f \"$OPENOCD_CFGFILE\""
-        if {[catch {eval exec {$::env(ComSpec)} /C START "OpenOCD" {$::env(ComSpec)} $cmd_args &} result] ne 0} {
+        set fd [open $helperfilename "w"]
+        set batch_cmds ""
+        append batch_cmds "@ECHO OFF\n"
+        append batch_cmds "SET \"PATH=$OPENOCD_PREFIX\\bin;%PATH%\"\n"
+        append batch_cmds "openocd.exe -f \"$OPENOCD_CFGFILE\"\n"
+        append batch_cmds "IF NOT \"%ERRORLEVEL%\" == \"0\" PAUSE\n"
+        puts -nonewline $fd $batch_cmds
+        close $fd
+        if {[catch {exec $::env(ComSpec) /C START $::env(ComSpec) /C $helperfilename &} result] ne 0} {
             puts stderr "$SCRIPT_FILENAME: *** Error: system failure or OpenOCD executable not found."
+            file delete -force $helperfilename
             exit 1
         }
     } elseif {$PLATFORM eq "unix"} {
         set ::env(PATH) [join [list [file join $OPENOCD_PREFIX bin] $::env(PATH)] ":"]
         if {$OSTYPE eq "darwin"} {
-            set osascript_args ""
-            append osascript_args " -e \"tell application \\\"Terminal\\\"\""
-            append osascript_args " -e \"do script \\\"openocd -f \\\\\\\"$OPENOCD_CFGFILE\\\\\\\""
-            if {$WAIT_FLAG eq 0} {
-                append osascript_args " ; exit"
-            }
-            append osascript_args "\\\"\""
-            append osascript_args " -e \"end tell\""
-            if {[catch {eval exec /usr/bin/osascript $osascript_args &} result] ne 0} {
+            set osascript_cmds ""
+            append osascript_cmds "tell application \"Terminal\"\ndo script \""
+            append osascript_cmds "clear"                                                      " ; "
+            append osascript_cmds "openocd -f \\\"$OPENOCD_CFGFILE\\\""                        " ; "
+            append osascript_cmds "if \[ \$? -ne 0 \] ; then :"                                " ; "
+            append osascript_cmds "  printf \\\"%s\\\" \\\"press any key to continue ... \\\"" " ; "
+            append osascript_cmds "  read answer"                                              " ; "
+            append osascript_cmds "fi"                                                         " ; "
+            append osascript_cmds "exit 0"
+            append osascript_cmds "\"\nend tell\n"
+            if {[catch {exec osascript -e $osascript_cmds > /dev/null &} result] ne 0} {
                 puts stderr "$SCRIPT_FILENAME: *** Error: system failure or OpenOCD executable not found."
                 exit 1
             }
         } else {
-            # __FIX__
-            # if this script is called from Makefile, and the output is redirected
-            # on a tee pipe (menu-dialog.sh), then the script hangs because tee
-            # seems to wait on an inherited stdout file descriptor, which is kept
-            # opened by the xterm sub-process; have we to re-open it?
-            close stdout
-            set xterm_args ""
-            if {$WAIT_FLAG ne 0} {
-                append xterm_args "-hold "
-            }
-            append xterm_args "-e "
-            append xterm_args "openocd -f \"$OPENOCD_CFGFILE\""
-            if {[catch {eval exec xterm $xterm_args &} result] ne 0} {
+            set sh_cmds ""
+            append sh_cmds "source [file join $::env(SHARE_DIRECTORY) terminal.sh]"     " ; "
+            append sh_cmds "\$(terminal $::env(TERMINAL)) /bin/sh -c \""                  " "
+            append sh_cmds "openocd -f \\\"$OPENOCD_CFGFILE\\\""                        " ; "
+            append sh_cmds "if \[ \\\$? -ne 0 \] ; then : "                             " ; "
+            append sh_cmds "  printf \\\"%s\\\" \\\"press any key to continue ... \\\"" " ; "
+            append sh_cmds "  read answer"                                              " ; "
+            append sh_cmds "fi"                                                         " ; "
+            append sh_cmds "exit 0"
+            append sh_cmds "\""
+            if {[catch {exec /bin/sh -c $sh_cmds &} result] ne 0} {
                 puts stderr "$SCRIPT_FILENAME: *** Error: system failure or OpenOCD executable not found."
                 exit 1
             }
@@ -174,6 +182,9 @@ if {[catch {openocd_rpc_init 127.0.0.1 6666} result] ne 0} {
 if {$SHUTDOWN_MODE ne 0} {
     openocd_rpc_tx "shutdown"
     openocd_rpc_disconnect
+    if {$PLATFORM eq "windows"} {
+        file delete -force $helperfilename
+    }
     exit 0
 }
 
