@@ -24,7 +24,6 @@
 # -server                 start OpenOCD server (no executable processing)
 # -shutdown               shutdown OpenOCD server (no executable processing)
 # -thumb                  ARM Thumb address handling
-# -w                      wait after OpenOCD termination
 #
 # The following hold inside OpenOCD command execution:
 # -debug sets $debug_mode and $noexec_flag to 1 (default 0)
@@ -37,6 +36,8 @@
 # OSTYPE
 # SWEETADA_PATH
 # LIBUTILS_DIRECTORY
+# SHARE_DIRECTORY
+# TERMINAL
 #
 
 ################################################################################
@@ -88,7 +89,6 @@ SWEETADA_ELF    = None
 ELFTOOL         = None
 START_SYMBOL    = None
 ARM_THUMB       = 0
-WAIT_FLAG       = 0
 
 argc = len(sys.argv)
 argv_idx = 1
@@ -127,8 +127,6 @@ while argv_idx < argc:
         SHUTDOWN_MODE = 1
     elif sys.argv[argv_idx] == '-thumb':
         ARM_THUMB = 1
-    elif sys.argv[argv_idx] == '-w':
-        WAIT_FLAG = 1
     else:
         errprintf('%s: *** Error: unknown argument.\n', SCRIPT_FILENAME)
         exit(1)
@@ -143,40 +141,48 @@ if SERVER_MODE != 0:
         exit(1)
     if   PLATFORM == 'windows':
         os.environ['PATH'] = os.path.join(OPENOCD_PREFIX, 'bin') + ';' + os.environ.get('PATH')
-        if WAIT_FLAG != 0:
-            cmd_exec_option = ' /K'
-        else:
-            cmd_exec_option = ' /C'
         try:
-            os.system('cmd.exe /C START "OpenOCD" cmd.exe' + cmd_exec_option + ' openocd.exe -f "' + OPENOCD_CFGFILE + '"')
+            os.system(
+                      'START "OpenOCD" cmd.exe /C "'                           + ' ' +
+                      'openocd.exe -f "' + OPENOCD_CFGFILE + '"' + ' || PAUSE' + ' ' +
+                      '"'
+                     )
         except:
             errprintf('%s: *** Error: system failure or OpenOCD executable not found.\n', SCRIPT_FILENAME)
             exit(1)
     elif PLATFORM == 'unix':
         os.environ['PATH'] = os.path.join(OPENOCD_PREFIX, 'bin') + ':' + os.environ.get('PATH')
         if OSTYPE == 'darwin':
-            exit_command = ''
-            if WAIT_FLAG == 0:
-                exit_command = ' ; exit'
             try:
                 os.system(
-                          '/usr/bin/osascript'                                                    +
-                          ' -e "tell application \\\"Terminal\\\""'                               +
-                          ' -e "do script \\\"openocd -f \\\\\\\"' + OPENOCD_CFGFILE + '\\\\\\\"' +
-                          exit_command                                                            +
-                          '\\\""'                                                                 +
-                          ' -e "end tell"'
+                          'osascript -e "tell application \\"Terminal\\"\ndo script \\"'                   +
+                          'clear'                                                                  + ' ; ' +
+                          'openocd -f \\\\\\"' + OPENOCD_CFGFILE + '\\\\\\"'                       + ' ; ' +
+                          'if [ \\$? -ne 0 ] ; then :'                                             + ' ; ' +
+                          '  printf \\\\\\"%s\\\\\\" \\\\\\"press any key to continue ... \\\\\\"' + ' ; ' +
+                          '  read answer'                                                          + ' ; ' +
+                          'fi'                                                                     + ' ; ' +
+                          'exit 0'                                                                         +
+                          '\\"\nend tell\n" > /dev/null &'
                          )
             except:
                 errprintf('%s: *** Error: system failure or OpenOCD executable not found.\n', SCRIPT_FILENAME)
                 exit(1)
         else:
-            if WAIT_FLAG != 0:
-                xterm_hold_option = ' -hold'
-            else:
-                xterm_hold_option = ''
             try:
-                os.system('xterm' + xterm_hold_option + ' -e openocd -f "' + OPENOCD_CFGFILE + '" &')
+                os.system(
+                          'source' + ' ' + os.path.join(os.getenv('SHARE_DIRECTORY'), 'terminal.sh') + ' ' +
+                          ';'                                                                        + ' ' +
+                          '$(terminal' + ' ' + os.getenv('TERMINAL') + ')'                           + ' ' +
+                          '/bin/sh -c "'                                                             + ' ' +
+                          'openocd -f \\"' + OPENOCD_CFGFILE + '\\"'                               + ' ; ' +
+                          'if [ \\$? -ne 0 ] ; then : '                                            + ' ; ' +
+                          '  printf \\"%s\\" \\"press any key to continue ... \\"'                 + ' ; ' +
+                          '  read answer'                                                          + ' ; ' +
+                          'fi'                                                                     + ' ; ' +
+                          'exit 0'                                                                         +
+                          '" &'
+                         )
             except:
                 errprintf('%s: *** Error: system failure or OpenOCD executable not found.\n', SCRIPT_FILENAME)
                 exit(1)
