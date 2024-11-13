@@ -85,7 +85,7 @@ fi
 
 #
 # Parse a number (eventually in units of kilobyte).
-# The strange "s + 0" is a workaround for OS X awk which lacks strtonum().
+# The strange "s + 0" is a workaround for Darwin awk which lacks strtonum().
 #
 AWK_SCRIPT_FUNCTION='\
 $1 ~ /^[0-9]+[k|K]?$/               \
