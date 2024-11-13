@@ -28,7 +28,7 @@ else ifeq ($(OSTYPE),msys)
   TCLSH  := C:/Tcl/bin/tclsh86.exe
 else ifeq ($(OSTYPE),darwin)
   #
-  # OS X
+  # Darwin
   #
   PYTHON := python3
   TCLSH  := tclsh
@@ -76,7 +76,7 @@ else ifeq ($(OSTYPE),msys)
   GPRBUILD_PREFIX  := C:/Program Files/GNAT/gprbuild-x86_64-windows64-22.0.0-1
 else ifeq ($(OSTYPE),darwin)
   #
-  # OS X
+  # Darwin
   #
   TOOLCHAIN_PREFIX := /opt/toolchains
   GPRBUILD_PREFIX  := /opt/toolchains
