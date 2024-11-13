@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 
-${GDB} \
+# load terminal handling
+source ${SHARE_DIRECTORY}/terminal.sh
+
+$(terminal ${TERMINAL}) ${GDB} \
   -q \
   -ex "target extended-remote localhost:3333" \
   -ex "set language asm" \

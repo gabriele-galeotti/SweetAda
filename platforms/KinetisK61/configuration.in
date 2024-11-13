@@ -61,7 +61,7 @@ endif
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -p "$(OPENOCD_PREFIX)"                                     \
                            -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg    \
-                           -server -w
+                           -server
 SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
                            -shutdown
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py        \
