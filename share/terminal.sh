@@ -2,10 +2,15 @@
 #
 # Terminal handling utilities.
 #
+# Copyright (C) 2020-2024 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
 
 #
 # Arguments:
-# -none
+# none
 #
 # Environment variables:
 # GNATSTUDIO_PREFIX
