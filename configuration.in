@@ -27,7 +27,7 @@ else ifeq ($(OSTYPE),msys)
   #
   PYTHON := C:/Users/Administrator/AppData/Local/Programs/Python/Python38/python.exe
   TCLSH  := C:/Tcl/bin/tclsh86.exe
-  #export TERMINAL := mintty
+  export TERMINAL := mintty
   #export TERMINAL := conemu
 else ifeq ($(OSTYPE),darwin)
   #
