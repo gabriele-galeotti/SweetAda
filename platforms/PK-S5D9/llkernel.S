@@ -14,7 +14,7 @@
 
                 .syntax unified
 
-                .sect   .text,"ax"
+                .sect   .vectors,"ax"
 
                 .align  7
 
@@ -283,7 +283,11 @@ Interrupt237:   .long   0
 Interrupt238:   .long   0
 Interrupt239:   .long   0
 
+                .sect   .text,"ax"
+
                 .thumb_func
+                .type   systick_handler,%function
+                .global systick_handler
 systick_handler:
                 push    {lr}
                 .extern irq_process
