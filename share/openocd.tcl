@@ -1,7 +1,7 @@
 #!/usr/bin/env tclsh
 
 #
-# SweetAda OpenOCD code download.
+# SweetAda OpenOCD manager.
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
@@ -219,6 +219,8 @@ if {$ELFTOOL ne ""} {
 openocd_rpc_tx "set sweetada_elf \"$SWEETADA_ELF\" ; list"
 openocd_rpc_rx
 openocd_rpc_tx "set start_address $START_ADDRESS ; list"
+openocd_rpc_rx
+openocd_rpc_tx "set debug_mode $DEBUG_MODE ; list"
 openocd_rpc_rx
 openocd_rpc_tx "set noload_flag $NOLOAD_FLAG ; list"
 openocd_rpc_rx

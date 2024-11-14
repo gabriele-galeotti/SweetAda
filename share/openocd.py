@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #
-# OpenOCD code download.
+# SweetAda OpenOCD manager.
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
