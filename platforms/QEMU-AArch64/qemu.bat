@@ -14,9 +14,11 @@ REM Arguments:
 REM -debug
 REM
 REM Environment variables:
+REM SHARE_DIRECTORY
 REM TOOLCHAIN_PREFIX
 REM KERNEL_OUTFILE
 REM KERNEL_ROMFILE
+REM TERMINAL
 REM PUTTY
 REM GDB
 REM
@@ -79,10 +81,18 @@ IF NOT "%ERRORLEVEL%" == "0" (
 
 REM debug session
 IF "%1" == "-debug" (
-  SET "TERM="
-  START "GDB" cmd.exe /C %GDB% ^
+  IF "%OSTYPE%" == "msys" (
+    SET "MSYS_TERMINAL=source %SHARE_DIRECTORY%/terminal.sh ; terminal %TERMINAL%"
+    FOR /F "delims=" %%T IN ('sh -c "!MSYS_TERMINAL!"') DO (
+      SET "CONSOLE=%%T"
+      )
+    )
+  IF "!CONSOLE!" == "" (
+    SET "CONSOLE=cmd.exe /C"
+    )
+  SET TERM=
+  START "GDB" !CONSOLE! %GDB% ^
     -q ^
-    -iex "set new-console on" ^
     -iex "set basenames-may-differ" ^
     -ex "set tcp connect-timeout 30" ^
     -ex "target extended-remote tcp:localhost:1234" ^
