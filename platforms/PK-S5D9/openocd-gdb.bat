@@ -1,8 +1,18 @@
 @ECHO OFF
 
-SET "TERM="
+SETLOCAL ENABLEDELAYEDEXPANSION
 
-START "GDB" cmd.exe /C %GDB% ^
+IF "%OSTYPE%" == "msys" (
+  SET "MSYS_TERMINAL=source %SHARE_DIRECTORY%/terminal.sh ; terminal %TERMINAL%"
+  FOR /F "delims=" %%T IN ('sh -c "!MSYS_TERMINAL!"') DO (
+    SET "CONSOLE=%%T"
+    )
+  )
+IF "!CONSOLE!" == "" (
+  SET "CONSOLE=cmd.exe /C"
+  )
+SET "TERM="
+START "GDB" !CONSOLE! %GDB% ^
   -q ^
   -ex "target extended-remote localhost:3333" ^
   -ex "set language asm" ^
