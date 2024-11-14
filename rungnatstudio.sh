@@ -6,8 +6,11 @@
 
 # GNAT Studio prefix and executable
 GNATSTUDIO_PREFIX=/opt/GNAT/2021
+GNATSTUDIO_FILENAME=gnatstudio
+#GNATSTUDIO_PREFIX="C:/Program Files/GNATSTUDIO"
+#GNATSTUDIO_FILENAME=gnatstudio.exe
 export GNATSTUDIO_PREFIX
-GNATSTUDIO="${GNATSTUDIO_PREFIX}"/bin/gnatstudio
+GNATSTUDIO="${GNATSTUDIO_PREFIX}"/bin/${GNATSTUDIO_FILENAME}
 
 # detect toolchain from configuration.in
 TOOLCHAIN_PREFIX=$(make PROBEVARIABLE=TOOLCHAIN_PREFIX probevariable)
