@@ -48,7 +48,6 @@ GOTO :SCRIPTEXIT
 REM debug options
 IF "%1" == "-debug" (
   SET "QEMU_DEBUG=-S -gdb tcp:localhost:1234,ipv4"
-  SET "PYTHONHOME=%TOOLCHAIN_PREFIX%"
   ) ELSE (
   SET "QEMU_DEBUG="
   )
@@ -85,9 +84,11 @@ IF "%1" == "-debug" (
     FOR /F "delims=" %%T IN ('sh -c "!MSYS_TERMINAL!"') DO (
       SET "CONSOLE=%%T"
       )
-    )
-  IF "!CONSOLE!" == "" (
-    SET "CONSOLE=cmd.exe /C"
+    ) ELSE (
+    SET "CMD_TERMINAL=%SHARE_DIRECTORY%\terminal.bat %TERMINAL%"
+    FOR /F "delims=" %%T IN ('cmd.exe /C "!CMD_TERMINAL!"') DO (
+      SET "CONSOLE=%%T"
+      )
     )
   SET TERM=
   START "GDB" !CONSOLE! %GDB% ^
@@ -118,12 +119,12 @@ REM ############################################################################
 SET "PORTOK=N"
 SET "NLOOPS=0"
 :TIL_LOOP
-FOR /F "tokens=*" %%I IN (' ^
+FOR /F "tokens=*" %%L IN (' ^
   %SystemRoot%\System32\NETSTAT.EXE -an ^| ^
   %SystemRoot%\System32\find.exe ":%1" ^| ^
   %SystemRoot%\System32\find.exe /C "LISTENING" ^
-  ') DO SET VAR=%%I
-IF "%VAR%" NEQ "0" (
+  ') DO SET LISTEN=%%L
+IF "%LISTEN%" NEQ "0" (
   SET "PORTOK=Y"
   GOTO :TIL_LOOPEND
   )

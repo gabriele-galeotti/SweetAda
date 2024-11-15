@@ -7,9 +7,11 @@ IF "%OSTYPE%" == "msys" (
   FOR /F "delims=" %%T IN ('sh -c "!MSYS_TERMINAL!"') DO (
     SET "CONSOLE=%%T"
     )
-  )
-IF "!CONSOLE!" == "" (
-  SET "CONSOLE=cmd.exe /C"
+  ) ELSE (
+  SET "CMD_TERMINAL=%SHARE_DIRECTORY%\terminal.bat %TERMINAL%"
+  FOR /F "delims=" %%T IN ('cmd.exe /C "!CMD_TERMINAL!"') DO (
+    SET "CONSOLE=%%T"
+    )
   )
 SET "TERM="
 START "GDB" !CONSOLE! %GDB% ^
