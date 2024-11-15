@@ -164,16 +164,15 @@ puts "$SCRIPT_FILENAME: partition sector start: $PARTITION_SECTOR_START"
 puts "$SCRIPT_FILENAME: partition sector size:  $PARTITION_SECTORS_SIZE"
 
 # build MBR (MS-DOS 6.22)
-eval exec $::env(TOOLCHAIN_CC)  \
+exec {*}$::env(TOOLCHAIN_CC)    \
     -o mbr.o                    \
     -c                          \
-    \"[file join                \
+    "[file join                 \
         $::env(SWEETADA_PATH)   \
         $::env(SHARE_DIRECTORY) \
-        mbr.S                   \
-    ]\"
-eval exec $::env(TOOLCHAIN_LD) -o mbr.bin -Ttext=0 --oformat=binary mbr.o
-eval exec $::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary mbr.bin > mbr.lst
+        mbr.S]"
+exec {*}$::env(TOOLCHAIN_LD) -o mbr.bin -Ttext=0 --oformat=binary mbr.o
+exec {*}$::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary mbr.bin > mbr.lst
 
 # write MBR @ CHS(0,0,1)
 puts "$SCRIPT_FILENAME: creating MBR ..."
@@ -200,7 +199,7 @@ if {$PARTITION_SECTORS_SIZE > 65535} {
     set PARTITION_SECTORS_SSIZE $PARTITION_SECTORS_SIZE
     set PARTITION_SECTORS_LSIZE 0
 }
-eval exec $::env(TOOLCHAIN_CC)                         \
+exec {*}$::env(TOOLCHAIN_CC)                           \
     -o bootsector.o                                    \
     -c                                                 \
     -DCYLINDERS=$CYL                                   \
@@ -212,13 +211,12 @@ eval exec $::env(TOOLCHAIN_CC)                         \
     -DNSECTORS=$KERNEL_SECTORS                         \
     -DBOOTSEGMENT=$bootsegment                         \
     -DDELAY                                            \
-    \"[file join                                       \
+    "[file join                                        \
         $::env(SWEETADA_PATH)                          \
         $::env(SHARE_DIRECTORY)                        \
-        bootsector.S                                   \
-    ]\"
-eval exec $::env(TOOLCHAIN_LD) -o bootsector.bin -Ttext=0 --oformat=binary bootsector.o
-eval exec $::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary bootsector.bin > bootsector.lst
+        bootsector.S]"
+exec {*}$::env(TOOLCHAIN_LD) -o bootsector.bin -Ttext=0 --oformat=binary bootsector.o
+exec {*}$::env(TOOLCHAIN_OBJDUMP) -m i8086 -D -M i8086 -b binary bootsector.bin > bootsector.lst
 
 # write bootsector @ CHS(1,0,1)
 puts "$SCRIPT_FILENAME: creating bootsector ..."

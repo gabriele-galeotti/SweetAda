@@ -201,7 +201,7 @@ if {$START_SYMBOL eq ""} {
 }
 
 if {$ELFTOOL ne ""} {
-    if {[catch {eval exec "\"$ELFTOOL\"" -c findsymbol=$START_SYMBOL "\"$SWEETADA_ELF\""} result] eq 0} {
+    if {[catch {exec "$ELFTOOL" -c findsymbol=$START_SYMBOL "$SWEETADA_ELF"} result] eq 0} {
         set START_ADDRESS [format "0x%X" [expr $result]]
         if {$ARM_THUMB ne 0} {
             # ARM Thumb functions have LSb = 1
