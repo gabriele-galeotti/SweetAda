@@ -20,7 +20,7 @@ ifeq      ($(OSTYPE),cmd)
   #
   PYTHON := C:\Users\Administrator\AppData\Local\Programs\Python\Python38\python.exe
   TCLSH  := C:\Tcl\bin\tclsh86.exe
-  #export CONSOLE := ConEmu64.exe -run
+  #export TERMINAL := conemu
 else ifeq ($(OSTYPE),msys)
   #
   # MSYS2
