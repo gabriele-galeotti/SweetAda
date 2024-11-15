@@ -12,8 +12,8 @@ REM GNAT Studio executable
 SET GNATSTUDIO="C:\Program Files"\GNATSTUDIO\bin\gnatstudio.exe
 
 REM detect toolchain from configuration.in
-FOR /F "delims=" %%A IN ('%MAKE% PROBEVARIABLE^=TOOLCHAIN_PREFIX probevariable') DO (
-  SET TOOLCHAIN_PREFIX=%%A
+FOR /F "delims=" %%T IN ('%MAKE% PROBEVARIABLE^=TOOLCHAIN_PREFIX probevariable') DO (
+  SET TOOLCHAIN_PREFIX=%%T
   )
 IF "%TOOLCHAIN_PREFIX%" == "" ECHO *** Warning: no TOOLCHAIN_PREFIX detected.>&2
 
