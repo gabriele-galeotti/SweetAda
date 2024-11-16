@@ -40,10 +40,6 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 #                                                                              #
 ################################################################################
 
-# parameters for createbootdevice.sh (if used)
-#export USDCARD_UUID       := 3FFC-F14C
-#export USDCARD_MOUNTPOINT := /mnt/hd
-
 ################################################################################
 # Run/debug interface.                                                         #
 #                                                                              #
