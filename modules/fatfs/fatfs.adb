@@ -259,6 +259,7 @@ package body FATFS
       end Sector_Offset;
       Offset : constant Sector_Type := Sector_Offset (S);
    begin
+      Success := False;
       for Index in D.FAT_Start'Range loop
          if D.FAT_Start (Index) /= 0 then
             IDE.Write (D.Device.all, Physical_Sector (D, D.FAT_Start (Index)) + Offset, B, Success);

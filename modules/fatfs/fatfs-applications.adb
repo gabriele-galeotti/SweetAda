@@ -95,7 +95,7 @@ package body FATFS.Applications
          Print_File_Name (DE);
          Directory.Entry_Next (D, DCB, DE, Success);
       end loop;
-      Directory.Close (DCB);
+      -- Directory.Close (DCB);
    end Test;
 
    ----------------------------------------------------------------------------
@@ -145,7 +145,7 @@ package body FATFS.Applications
             exit when not Success;
          end if;
       end loop;
-      Directory.Close (DCB);
+      -- Directory.Close (DCB);
    end Load_AUTOEXECBAT;
 
 end FATFS.Applications;
