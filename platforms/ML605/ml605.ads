@@ -22,6 +22,7 @@ with MicroBlaze;
 with XPS;
 
 package ML605
+   with Preelaborate => True
    is
 
    --========================================================================--
