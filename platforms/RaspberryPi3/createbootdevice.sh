@@ -110,9 +110,9 @@ while [ $# -gt 0 ] ; do
   shift
 done
 
-#UUID=3FFC-F14C
-#MOUNTPOINT=/mnt/hd
-
+#
+# Check parameters.
+#
 if [ "x${DEVICE}" = "x" ] && [ "x${UUID}" = "x" ] ; then
   printf "%s\n" "*** Error: no -d nor -u option specified." 1>&2
   usage
@@ -123,8 +123,6 @@ if [ "x${FILENAME}" = "x" ] ; then
   usage
   exit 1
 fi
-
-# install executable on FAT32 1st partition
 if [ "x${UUID}" != "x" ] ; then
   DEVICE=$(blkid                                | \
            grep -e "UUID=\"${UUID}\""           | \
@@ -135,6 +133,10 @@ if [ "x${UUID}" != "x" ] ; then
     exit 1
   fi
 fi
+
+#
+# Install an executable on FAT32 1st partition.
+#
 
 mount ${DEVICE} ${MOUNTPOINT} || exit 1
 
