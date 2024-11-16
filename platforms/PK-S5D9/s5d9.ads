@@ -19,7 +19,9 @@ with System;
 with Interfaces;
 with Bits;
 
-package S5D9 is
+package S5D9
+   with Preelaborate => True
+   is
 
    --========================================================================--
    --                                                                        --
@@ -46,12 +48,12 @@ pragma Style_Checks (Off);
    -- 6.2.1 Reset Status Register 0 (RSTSR0)
 
    type RSTSR0_Type is record
-      PORF     : Boolean;     -- Power-On Reset Detect Flag
-      LVD0RF   : Boolean;     -- Voltage Monitor 0 Reset Detect Flag
-      LVD1RF   : Boolean;     -- Voltage Monitor 1 Reset Detect Flag
-      LVD2RF   : Boolean;     -- Voltage Monitor 2 Reset Detect Flag
-      Reserved : Bits_3 := 0;
-      DPSRSTF  : Boolean;     -- Deep Software Standby Reset Flag
+      PORF     : Boolean;      -- Power-On Reset Detect Flag
+      LVD0RF   : Boolean;      -- Voltage Monitor 0 Reset Detect Flag
+      LVD1RF   : Boolean;      -- Voltage Monitor 1 Reset Detect Flag
+      LVD2RF   : Boolean;      -- Voltage Monitor 2 Reset Detect Flag
+      Reserved : Bits_3  := 0;
+      DPSRSTF  : Boolean;      -- Deep Software Standby Reset Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -75,16 +77,16 @@ pragma Style_Checks (Off);
    -- 6.2.2 Reset Status Register 1 (RSTSR1)
 
    type RSTSR1_Type is record
-      IWDTRF    : Boolean;     -- Independent Watchdog Timer Reset Detect Flag
-      WDTRF     : Boolean;     -- Watchdog Timer Reset Detect Flag
-      SWRF      : Boolean;     -- Software Reset Detect Flag
-      Reserved1 : Bits_5 := 0;
-      RPERF     : Boolean;     -- SRAM Parity Error Reset Detect Flag
-      REERF     : Boolean;     -- SRAM ECC Error Reset Detect Flag
-      BUSSRF    : Boolean;     -- Bus Slave MPU Error Reset Detect Flag
-      BUSMRF    : Boolean;     -- Bus Master MPU Error Reset Detect Flag
-      SPERF     : Boolean;     -- SP Error Reset Detect Flag
-      Reserved2 : Bits_3 := 0;
+      IWDTRF    : Boolean;      -- Independent Watchdog Timer Reset Detect Flag
+      WDTRF     : Boolean;      -- Watchdog Timer Reset Detect Flag
+      SWRF      : Boolean;      -- Software Reset Detect Flag
+      Reserved1 : Bits_5  := 0;
+      RPERF     : Boolean;      -- SRAM Parity Error Reset Detect Flag
+      REERF     : Boolean;      -- SRAM ECC Error Reset Detect Flag
+      BUSSRF    : Boolean;      -- Bus Slave MPU Error Reset Detect Flag
+      BUSMRF    : Boolean;      -- Bus Master MPU Error Reset Detect Flag
+      SPERF     : Boolean;      -- SP Error Reset Detect Flag
+      Reserved2 : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -112,8 +114,8 @@ pragma Style_Checks (Off);
    -- 6.2.3 Reset Status Register 2 (RSTSR2)
 
    type RSTSR2_Type is record
-      CWSF     : Boolean;     -- Cold/Warm Start Determination Flag
-      Reserved : Bits_7 := 0;
+      CWSF     : Boolean;      -- Cold/Warm Start Determination Flag
+      Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -323,8 +325,8 @@ pragma Style_Checks (Off);
    -- 9.2.5 PLL Control Register (PLLCR)
 
    type PLLCR_Type is record
-      PLLSTP   : Boolean;     -- PLL Stop Control
-      Reserved : Bits_7 := 0;
+      PLLSTP   : Boolean;      -- PLL Stop Control
+      Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -344,8 +346,8 @@ pragma Style_Checks (Off);
    -- 9.2.7 Main Clock Oscillator Control Register (MOSCCR)
 
    type MOSCCR_Type is record
-      MOSTP    : Boolean;     -- Main Clock Oscillator Stop
-      Reserved : Bits_7 := 0;
+      MOSTP    : Boolean;      -- Main Clock Oscillator Stop
+      Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -365,8 +367,8 @@ pragma Style_Checks (Off);
    -- 9.2.8 Subclock Oscillator Control Register (SOSCCR)
 
    type SOSCCR_Type is record
-      SOSTP    : Boolean;     -- Sub-Clock Oscillator Stop
-      Reserved : Bits_7 := 0;
+      SOSTP    : Boolean;      -- Sub-Clock Oscillator Stop
+      Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -386,8 +388,8 @@ pragma Style_Checks (Off);
    -- 9.2.9 Low-Speed On-Chip Oscillator Control Register (LOCOCR)
 
    type LOCOCR_Type is record
-      LCSTP    : Boolean;     -- LOCO Stop
-      Reserved : Bits_7 := 0;
+      LCSTP    : Boolean;      -- LOCO Stop
+      Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -407,8 +409,8 @@ pragma Style_Checks (Off);
    -- 9.2.10 High-Speed On-Chip Oscillator Control Register (HOCOCR)
 
    type HOCOCR_Type is record
-      HCSTP    : Boolean;     -- HOCO Stop
-      Reserved : Bits_7 := 0;
+      HCSTP    : Boolean;      -- HOCO Stop
+      Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -428,12 +430,12 @@ pragma Style_Checks (Off);
    -- 9.2.15 Oscillation Stabilization Flag Register (OSCSF)
 
    type OSCSF_Type is record
-      HOCOSF    : Boolean;     -- HOCO Clock Oscillation Stabilization Flag
-      Reserved1 : Bits_2 := 0;
-      MOSCSF    : Boolean;     -- Main Clock Oscillation Stabilization Flag
-      Reserved2 : Bits_1 := 0;
-      PLLSF     : Boolean;     -- PLL Clock Oscillation Stabilization Flag
-      Reserved3 : Bits_2 := 0;
+      HOCOSF    : Boolean;      -- HOCO Clock Oscillation Stabilization Flag
+      Reserved1 : Bits_2  := 0;
+      MOSCSF    : Boolean;      -- Main Clock Oscillation Stabilization Flag
+      Reserved2 : Bits_1  := 0;
+      PLLSF     : Boolean;      -- PLL Clock Oscillation Stabilization Flag
+      Reserved3 : Bits_2  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -497,10 +499,10 @@ pragma Style_Checks (Off);
    MOSEL_EXT : constant := 1; -- External clock input.
 
    type MOMCR_Type is record
-      Reserved  : Bits_4 := 0;
-      MODRV     : Bits_2;      -- Main Clock Oscillator Drive Capability 0 Switching
-      MOSEL     : Bits_1;      -- Main Clock Oscillator Switching
-      AUTODRVEN : Boolean;     -- PLL Clock Oscillation Stabilization Flag
+      Reserved  : Bits_4  := 0;
+      MODRV     : Bits_2;       -- Main Clock Oscillator Drive Capability 0 Switching
+      MOSEL     : Bits_1;       -- Main Clock Oscillator Switching
+      AUTODRVEN : Boolean;      -- PLL Clock Oscillation Stabilization Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -551,13 +553,13 @@ pragma Style_Checks (Off);
    type MSTPCRA_Type is record
       MSTPA0    : Boolean;             -- SRAM0 Module Stop
       MSTPA1    : Boolean;             -- SRAM1 Module Stop
-      Reserved1 : Bits_3 := 16#07#;
+      Reserved1 : Bits_3  := 16#07#;
       MSTPA5    : Boolean;             -- High-Speed SRAM Module Stop
       MSTPA6    : Boolean;             -- ECC SRAM Module Stop
       MSTPA7    : Boolean;             -- Standby SRAM Module Stop
       Reserved2 : Bits_14 := 16#3FFF#;
       MSTPA22   : Boolean;             -- DMA Controller/Data Transfer Controller Module Stop
-      Reserved3 : Bits_9 := 16#1FF#;
+      Reserved3 : Bits_9  := 16#1FF#;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -584,35 +586,35 @@ pragma Style_Checks (Off);
    -- 11.2.3 Module Stop Control Register B (MSTPCRB)
 
    type MSTPCRB_Type is record
-      Reserved1 : Bits_1 := 1;
-      MSTPB1    : Boolean;         -- Controller Area Network 1 Module Stop
-      MSTPB2    : Boolean;         -- Controller Area Network 0 Module Stop
-      Reserved2 : Bits_2 := 2#11#;
-      MSTPB5    : Boolean;         -- IrDA Module Stop
-      MSTPB6    : Boolean;         -- Quad Serial Peripheral Interface Module Stop
-      MSTPB7    : Boolean;         -- I2C Bus Interface 2 Module Stop
-      MSTPB8    : Boolean;         -- I2C Bus Interface 1 Module Stop
-      MSTPB9    : Boolean;         -- I2C Bus Interface 0 Module Stop
-      Reserved3 : Bits_1 := 1;
-      MSTPB11   : Boolean;         -- Universal Serial Bus 2.0 FS Interface Module Stop
-      MSTPB12   : Boolean;         -- Universal Serial Bus 2.0 HS Interface Module Stop
-      MSTPB13   : Boolean;         -- EPTPC and PTPEDMAC Module Stop
-      Reserved4 : Bits_1 := 1;
-      MSTPB15   : Boolean;         -- ETHERC0 and EDMAC0 Controller Module Stop
-      Reserved5 : Bits_2 := 2#11#;
-      MSTPB18   : Boolean;         -- Serial Peripheral Interface 1 Module Stop
-      MSTPB19   : Boolean;         -- Serial Peripheral Interface 0 Module Stop
-      Reserved6 : Bits_2 := 2#11#;
-      MSTPB22   : Boolean;         -- Serial Communication Interface 9 Module Stop
-      MSTPB23   : Boolean;         -- Serial Communication Interface 8 Module Stop
-      MSTPB24   : Boolean;         -- Serial Communication Interface 7 Module Stop
-      MSTPB25   : Boolean;         -- Serial Communication Interface 6 Module Stop
-      MSTPB26   : Boolean;         -- Serial Communication Interface 5 Module Stop
-      MSTPB27   : Boolean;         -- Serial Communication Interface 4 Module Stop
-      MSTPB28   : Boolean;         -- Serial Communication Interface 3 Module Stop
-      MSTPB29   : Boolean;         -- Serial Communication Interface 2 Module Stop
-      MSTPB30   : Boolean;         -- Serial Communication Interface 1 Module Stop
-      MSTPB31   : Boolean;         -- Serial Communication Interface 0 Module Stop
+      Reserved1 : Bits_1  := 1;
+      MSTPB1    : Boolean;          -- Controller Area Network 1 Module Stop
+      MSTPB2    : Boolean;          -- Controller Area Network 0 Module Stop
+      Reserved2 : Bits_2  := 2#11#;
+      MSTPB5    : Boolean;          -- IrDA Module Stop
+      MSTPB6    : Boolean;          -- Quad Serial Peripheral Interface Module Stop
+      MSTPB7    : Boolean;          -- I2C Bus Interface 2 Module Stop
+      MSTPB8    : Boolean;          -- I2C Bus Interface 1 Module Stop
+      MSTPB9    : Boolean;          -- I2C Bus Interface 0 Module Stop
+      Reserved3 : Bits_1  := 1;
+      MSTPB11   : Boolean;          -- Universal Serial Bus 2.0 FS Interface Module Stop
+      MSTPB12   : Boolean;          -- Universal Serial Bus 2.0 HS Interface Module Stop
+      MSTPB13   : Boolean;          -- EPTPC and PTPEDMAC Module Stop
+      Reserved4 : Bits_1  := 1;
+      MSTPB15   : Boolean;          -- ETHERC0 and EDMAC0 Controller Module Stop
+      Reserved5 : Bits_2  := 2#11#;
+      MSTPB18   : Boolean;          -- Serial Peripheral Interface 1 Module Stop
+      MSTPB19   : Boolean;          -- Serial Peripheral Interface 0 Module Stop
+      Reserved6 : Bits_2  := 2#11#;
+      MSTPB22   : Boolean;          -- Serial Communication Interface 9 Module Stop
+      MSTPB23   : Boolean;          -- Serial Communication Interface 8 Module Stop
+      MSTPB24   : Boolean;          -- Serial Communication Interface 7 Module Stop
+      MSTPB25   : Boolean;          -- Serial Communication Interface 6 Module Stop
+      MSTPB26   : Boolean;          -- Serial Communication Interface 5 Module Stop
+      MSTPB27   : Boolean;          -- Serial Communication Interface 4 Module Stop
+      MSTPB28   : Boolean;          -- Serial Communication Interface 3 Module Stop
+      MSTPB29   : Boolean;          -- Serial Communication Interface 2 Module Stop
+      MSTPB30   : Boolean;          -- Serial Communication Interface 1 Module Stop
+      MSTPB31   : Boolean;          -- Serial Communication Interface 0 Module Stop
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -669,12 +671,12 @@ pragma Style_Checks (Off);
       MSTPC7    : Boolean;             -- Serial Sound Interface Enhanced (channel 1) Module Stop
       MSTPC8    : Boolean;             -- Serial Sound Interface Enhanced (channel 0) Module Stop
       MSTPC9    : Boolean;             -- Sampling Rate Converter Module Stop
-      Reserved1 : Bits_1 := 1;
+      Reserved1 : Bits_1  := 1;
       MSTPC11   : Boolean;             -- Secure Digital Host IF/MultiMediaCard 1 Module Stop
       MSTPC12   : Boolean;             -- Secure Digital Host IF/MultiMediaCard 0 Module Stop
       MSTPC13   : Boolean;             -- Data Operation Circuit Module Stop
       MSTPC14   : Boolean;             -- Event Link Controller Module Stop
-      Reserved2 : Bits_1 := 1;
+      Reserved2 : Bits_1  := 1;
       Reserved3 : Bits_15 := 16#7FFF#;
       MSTPC31   : Boolean;             -- SCE7 Module Stop
    end record
@@ -712,27 +714,27 @@ pragma Style_Checks (Off);
    -- 11.2.5 Module Stop Control Register D (MSTPCRD)
 
    type MSTPCRD_Type is record
-      Reserved1 : Bits_2 := 2#11#;
-      MSTPD2    : Boolean;          -- Asynchronous General Purpose Timer 1 Module Stop
-      MSTPD3    : Boolean;          -- Asynchronous General Purpose Timer 0 Module Stop
-      Reserved2 : Bits_1 := 1;
-      MSTPD5    : Boolean;          -- General PWM Timer 32EH0 to 32EH3 and 32E4 to 32E7 and PWM Delay Gen Circuit Module Stop
-      MSTPD6    : Boolean;          -- General PWM Timer 328 to 3213 Module Stop
-      Reserved3 : Bits_7 := 16#7F#;
-      MSTPD14   : Boolean;          -- Port Output Enable for GPT Module Stop
-      MSTPD15   : Boolean;          -- 12-Bit A/D Converter 1 Module Stop
-      MSTPD16   : Boolean;          -- 12-Bit A/D Converter 0 Module Stop
-      Reserved4 : Bits_3 := 16#7#;
-      MSTPD20   : Boolean;          -- 12-Bit D/A Converter Module Stop
-      Reserved5 : Bits_1 := 1;
-      MSTPD22   : Boolean;          -- Temperature Sensor Module Stop
-      MSTPD23   : Boolean;          -- High-Speed Analog Comparator 5 Module Stop
-      MSTPD24   : Boolean;          -- High-Speed Analog Comparator 4 Module Stop
-      MSTPD25   : Boolean;          -- High-Speed Analog Comparator 3 Module Stop
-      MSTPD26   : Boolean;          -- High-Speed Analog Comparator 2 Module Stop
-      MSTPD27   : Boolean;          -- High-Speed Analog Comparator 1 Module Stop
-      MSTPD28   : Boolean;          -- High-Speed Analog Comparator 0 Module Stop
-      Reserved6 : Bits_3 := 16#7#;
+      Reserved1 : Bits_2  := 2#11#;
+      MSTPD2    : Boolean;           -- Asynchronous General Purpose Timer 1 Module Stop
+      MSTPD3    : Boolean;           -- Asynchronous General Purpose Timer 0 Module Stop
+      Reserved2 : Bits_1  := 1;
+      MSTPD5    : Boolean;           -- General PWM Timer 32EH0 to 32EH3 and 32E4 to 32E7 and PWM Delay Gen Circuit Module Stop
+      MSTPD6    : Boolean;           -- General PWM Timer 328 to 3213 Module Stop
+      Reserved3 : Bits_7  := 16#7F#;
+      MSTPD14   : Boolean;           -- Port Output Enable for GPT Module Stop
+      MSTPD15   : Boolean;           -- 12-Bit A/D Converter 1 Module Stop
+      MSTPD16   : Boolean;           -- 12-Bit A/D Converter 0 Module Stop
+      Reserved4 : Bits_3  := 16#7#;
+      MSTPD20   : Boolean;           -- 12-Bit D/A Converter Module Stop
+      Reserved5 : Bits_1  := 1;
+      MSTPD22   : Boolean;           -- Temperature Sensor Module Stop
+      MSTPD23   : Boolean;           -- High-Speed Analog Comparator 5 Module Stop
+      MSTPD24   : Boolean;           -- High-Speed Analog Comparator 4 Module Stop
+      MSTPD25   : Boolean;           -- High-Speed Analog Comparator 3 Module Stop
+      MSTPD26   : Boolean;           -- High-Speed Analog Comparator 2 Module Stop
+      MSTPD27   : Boolean;           -- High-Speed Analog Comparator 1 Module Stop
+      MSTPD28   : Boolean;           -- High-Speed Analog Comparator 0 Module Stop
+      Reserved6 : Bits_3  := 16#7#;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -777,12 +779,12 @@ pragma Style_Checks (Off);
    PRCR_KEY_CODE : constant := 16#A5#;
 
    type PRCR_Type is record
-      PRC0      : Boolean;     -- Protect Bit 0
-      PRC1      : Boolean;     -- Protect Bit 1
-      Reserved1 : Bits_1 := 0;
-      PRC3      : Boolean;     -- Protect Bit 3
-      Reserved2 : Bits_4 := 0;
-      PRKEY     : Unsigned_8;  -- PRC Key Code
+      PRC0      : Boolean;         -- Protect Bit 0
+      PRC1      : Boolean;         -- Protect Bit 1
+      Reserved1 : Bits_1     := 0;
+      PRC3      : Boolean;         -- Protect Bit 3
+      Reserved2 : Bits_4     := 0;
+      PRKEY     : Unsigned_8;      -- PRC Key Code
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -810,11 +812,11 @@ pragma Style_Checks (Off);
    -- 14.2.1 IRQ Control Register i (IRQCRi) (i = 0 to 15)
 
    type IRQCR_Type is record
-      IRQMD     : Bits_2;      -- IRQi Detection Sense Select
-      Reserved1 : Bits_2 := 0;
-      FCLKSEL   : Bits_2;      -- IRQi Digital Filter Sampling Clock Select
-      Reserved2 : Bits_1 := 0;
-      FLTEN     : Boolean;     -- IRQi Digital Filter Enable
+      IRQMD     : Bits_2;       -- IRQi Detection Sense Select
+      Reserved1 : Bits_2  := 0;
+      FCLKSEL   : Bits_2;       -- IRQi Digital Filter Sampling Clock Select
+      Reserved2 : Bits_1  := 0;
+      FLTEN     : Boolean;      -- IRQi Digital Filter Enable
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 8,
@@ -865,19 +867,19 @@ pragma Style_Checks (Off);
    -- 14.2.3 Non-Maskable Interrupt Enable Register (NMIER)
 
    type NMIER_Type is record
-      IWDTEN    : Boolean;     -- IWDT Underflow/Refresh Error Interrupt Enable
-      WDTEN     : Boolean;     -- WDT Underflow/Refresh Error Interrupt Enable
-      LVD1EN    : Boolean;     -- Voltage Monitor 1 Interrupt Enable
-      LVD2EN    : Boolean;     -- Voltage Monitor 2 Interrupt Enable
-      Reserved1 : Bits_2 := 0;
-      OSTEN     : Boolean;     -- Main Oscillation Stop Detection Interrupt Enable
-      NMIEN     : Boolean;     -- NMI Interrupt Enable
-      RPEEN     : Boolean;     -- SRAM Parity Error Interrupt Enable
-      RECCEN    : Boolean;     -- SRAM ECC Error Interrupt Enable
-      BUSSEN    : Boolean;     -- MPU Bus Slave Error Interrupt Enable
-      BUSMEN    : Boolean;     -- MPU Bus Master Error Interrupt Enable
-      SPEEN     : Boolean;     -- CPU Stack Pointer Monitor Interrupt Enable
-      Reserved2 : Bits_3 := 0;
+      IWDTEN    : Boolean;      -- IWDT Underflow/Refresh Error Interrupt Enable
+      WDTEN     : Boolean;      -- WDT Underflow/Refresh Error Interrupt Enable
+      LVD1EN    : Boolean;      -- Voltage Monitor 1 Interrupt Enable
+      LVD2EN    : Boolean;      -- Voltage Monitor 2 Interrupt Enable
+      Reserved1 : Bits_2  := 0;
+      OSTEN     : Boolean;      -- Main Oscillation Stop Detection Interrupt Enable
+      NMIEN     : Boolean;      -- NMI Interrupt Enable
+      RPEEN     : Boolean;      -- SRAM Parity Error Interrupt Enable
+      RECCEN    : Boolean;      -- SRAM ECC Error Interrupt Enable
+      BUSSEN    : Boolean;      -- MPU Bus Slave Error Interrupt Enable
+      BUSMEN    : Boolean;      -- MPU Bus Master Error Interrupt Enable
+      SPEEN     : Boolean;      -- CPU Stack Pointer Monitor Interrupt Enable
+      Reserved2 : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -900,19 +902,19 @@ pragma Style_Checks (Off);
    -- 14.2.4 Non-Maskable Interrupt Status Clear Register (NMICLR)
 
    type NMICLR_Type is record
-      IWDTCLR   : Boolean;     -- IWDT Clear
-      WDTCLR    : Boolean;     -- WDT Clear
-      LVD1CLR   : Boolean;     -- LVD1 Clear
-      LVD2CLR   : Boolean;     -- LVD2 Clear
-      Reserved1 : Bits_2 := 0;
-      OSTCLR    : Boolean;     -- OSR Clear
-      NMICLR    : Boolean;     -- NMI Clear
-      RPECLR    : Boolean;     -- SRAM Parity Error Clear
-      RECCCLR   : Boolean;     -- SRAM ECC Error Clear
-      BUSSCLR   : Boolean;     -- Bus Slave Error Clear
-      BUSMCLR   : Boolean;     -- Bus Master Error Clear
-      SPECLR    : Boolean;     -- CPU Stack Pointer Monitor Interrupt Clear
-      Reserved2 : Bits_3 := 0;
+      IWDTCLR   : Boolean;      -- IWDT Clear
+      WDTCLR    : Boolean;      -- WDT Clear
+      LVD1CLR   : Boolean;      -- LVD1 Clear
+      LVD2CLR   : Boolean;      -- LVD2 Clear
+      Reserved1 : Bits_2  := 0;
+      OSTCLR    : Boolean;      -- OSR Clear
+      NMICLR    : Boolean;      -- NMI Clear
+      RPECLR    : Boolean;      -- SRAM Parity Error Clear
+      RECCCLR   : Boolean;      -- SRAM ECC Error Clear
+      BUSSCLR   : Boolean;      -- Bus Slave Error Clear
+      BUSMCLR   : Boolean;      -- Bus Master Error Clear
+      SPECLR    : Boolean;      -- CPU Stack Pointer Monitor Interrupt Clear
+      Reserved2 : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -935,11 +937,11 @@ pragma Style_Checks (Off);
    -- 14.2.5 NMI Pin Interrupt Control Register (NMICR)
 
    type NMICR_Type is record
-      NMIMD     : Bits_1;      -- NMI Detection Set
-      Reserved1 : Bits_3 := 0;
-      NFCLKSEL  : Bits_2;      -- NMI Digital Filter Sampling Clock Select
-      Reserved2 : Bits_1 := 0;
-      NFLTEN    : Boolean;     -- NMI Digital Filter Enable
+      NMIMD     : Bits_1;       -- NMI Detection Set
+      Reserved1 : Bits_3  := 0;
+      NFCLKSEL  : Bits_2;       -- NMI Digital Filter Sampling Clock Select
+      Reserved2 : Bits_1  := 0;
+      NFLTEN    : Boolean;      -- NMI Digital Filter Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -954,12 +956,12 @@ pragma Style_Checks (Off);
    -- 14.2.6 ICU Event Link Setting Register n (IELSRn) (n = 0 to 95)
 
    type IELSR_Type is record
-      IELS      : Bits_9;      -- ICU Event Link Select
-      Reserved1 : Bits_7 := 0;
-      IR        : Boolean;     -- Interrupt Status Flag
-      Reserved2 : Bits_7 := 0;
-      DTCE      : Boolean;     -- DTC Activation Enable
-      Reserved3 : Bits_7 := 0;
+      IELS      : Bits_9;       -- ICU Event Link Select
+      Reserved1 : Bits_7  := 0;
+      IR        : Boolean;      -- Interrupt Status Flag
+      Reserved2 : Bits_7  := 0;
+      DTCE      : Boolean;      -- DTC Activation Enable
+      Reserved3 : Bits_7  := 0;
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 32,
@@ -977,7 +979,7 @@ pragma Style_Checks (Off);
 
    type DELSR_Type is record
       IELS      : Bits_9;       -- DMAC Event Link Select
-      Reserved1 : Bits_7 := 0;
+      Reserved1 : Bits_7  := 0;
       IR        : Boolean;      -- Interrupt Status Flag for DMAC
       Reserved2 : Bits_15 := 0;
    end record
@@ -1007,22 +1009,22 @@ pragma Style_Checks (Off);
    -- 14.2.9 Wake Up Interrupt Enable Register (WUPEN)
 
    type WUPEN_Type is record
-      IRQWUPEN     : Bitmap_16;   -- IRQ Interrupt Software Standby Returns Enable
-      IWDTWUPEN    : Boolean;     -- IWDT Interrupt Software Standby Returns Enable
-      KEYWUPEN     : Boolean;     -- Key Interrupt Software Standby Returns Enable
-      LVD1WUPEN    : Boolean;     -- LVD1 Interrupt Software Standby Returns Enable
-      LVD2WUPEN    : Boolean;     -- LVD2 Interrupt Software Standby Returns Enable
-      Reserved1    : Bits_2 := 0;
-      ACMPHS0WUPEN : Boolean;     -- ACMPHS0 Interrupt Software Standby Returns Enable
-      Reserved2    : Bits_1 := 0;
-      RTCALMWUPEN  : Boolean;     -- RTC Alarm Interrupt Software Standby Returns Enable
-      RTCPRDWUPEN  : Boolean;     -- RTC Period Interrupt Software Standby Returns Enable
-      USBHSWUPEN   : Boolean;     -- USBHS Interrupt Software Standby Returns Enable
-      USBFSWUPEN   : Boolean;     -- USBFS Interrupt Software Standby Returns Enable
-      AGT1UDWUPEN  : Boolean;     -- AGT1 Underflow Interrupt Software Standby Returns Enable
-      AGT1CAWUPEN  : Boolean;     -- AGT1 Compare Match A Interrupt Software Standby Returns Enable
-      AGT1CBWUPEN  : Boolean;     -- AGT1 Compare Match B Interrupt Software Standby Returns Enable
-      IIC0WUPEN    : Boolean;     -- IIC0 Address Match Interrupt Software Standby Returns Enable
+      IRQWUPEN     : Bitmap_16;      -- IRQ Interrupt Software Standby Returns Enable
+      IWDTWUPEN    : Boolean;        -- IWDT Interrupt Software Standby Returns Enable
+      KEYWUPEN     : Boolean;        -- Key Interrupt Software Standby Returns Enable
+      LVD1WUPEN    : Boolean;        -- LVD1 Interrupt Software Standby Returns Enable
+      LVD2WUPEN    : Boolean;        -- LVD2 Interrupt Software Standby Returns Enable
+      Reserved1    : Bits_2    := 0;
+      ACMPHS0WUPEN : Boolean;        -- ACMPHS0 Interrupt Software Standby Returns Enable
+      Reserved2    : Bits_1    := 0;
+      RTCALMWUPEN  : Boolean;        -- RTC Alarm Interrupt Software Standby Returns Enable
+      RTCPRDWUPEN  : Boolean;        -- RTC Period Interrupt Software Standby Returns Enable
+      USBHSWUPEN   : Boolean;        -- USBHS Interrupt Software Standby Returns Enable
+      USBFSWUPEN   : Boolean;        -- USBFS Interrupt Software Standby Returns Enable
+      AGT1UDWUPEN  : Boolean;        -- AGT1 Underflow Interrupt Software Standby Returns Enable
+      AGT1CAWUPEN  : Boolean;        -- AGT1 Compare Match A Interrupt Software Standby Returns Enable
+      AGT1CBWUPEN  : Boolean;        -- AGT1 Compare Match B Interrupt Software Standby Returns Enable
+      IIC0WUPEN    : Boolean;        -- IIC0 Address Match Interrupt Software Standby Returns Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -1588,22 +1590,22 @@ pragma Warnings (On);
    PSEL_TraceDebug        : constant := 2#11010#; -- - - - - - - - - - - - -
 
    type PFSR_Type is record
-      PODR      : Boolean := False;          -- Port Output Data
-      PIDR      : Boolean := False;          -- Pmn State
-      PDR       : Bits_1 := PDR_PORTIN;      -- Port Direction
-      Reserved1 : Bits_1 := 0;
-      PCR       : Boolean := False;          -- Pull-up Control
-      Reserved2 : Bits_1 := 0;
-      NCODR     : Bits_1 := NCODR_CMOS;      -- N-Channel Open-Drain Control
-      Reserved3 : Bits_3 := 0;
-      DSCR      : Bits_2 := DSCR_LowDrive;   -- Port Drive Capability
-      EOFEOR    : Bits_2 := EOFEOR_Dontcare; -- Event on Falling/Event on Rising
-      ISEL      : Boolean := False;          -- IRQ Input Enable
-      ASEL      : Boolean := False;          -- Analog Input Enable
-      PMR       : Boolean := False;          -- Port Mode Control
-      Reserved4 : Bits_7 := 0;
-      PSEL      : Bits_5;                    -- Peripheral Select
-      Reserved5 : Bits_3 := 0;
+      PODR      : Boolean := False;           -- Port Output Data
+      PIDR      : Boolean := False;           -- Pmn State
+      PDR       : Bits_1  := PDR_PORTIN;      -- Port Direction
+      Reserved1 : Bits_1  := 0;
+      PCR       : Boolean := False;           -- Pull-up Control
+      Reserved2 : Bits_1  := 0;
+      NCODR     : Bits_1  := NCODR_CMOS;      -- N-Channel Open-Drain Control
+      Reserved3 : Bits_3  := 0;
+      DSCR      : Bits_2  := DSCR_LowDrive;   -- Port Drive Capability
+      EOFEOR    : Bits_2  := EOFEOR_Dontcare; -- Event on Falling/Event on Rising
+      ISEL      : Boolean := False;           -- IRQ Input Enable
+      ASEL      : Boolean := False;           -- Analog Input Enable
+      PMR       : Boolean := False;           -- Port Mode Control
+      Reserved4 : Bits_7  := 0;
+      PSEL      : Bits_5;                     -- Peripheral Select
+      Reserved5 : Bits_3  := 0;
    end record
       with Bit_Order               => Low_Order_First,
            Size                    => 32,
@@ -1711,9 +1713,9 @@ pragma Warnings (On);
    -- 20.2.6 Write-Protect Register (PWPR)
 
    type PWPR_Type is record
-      Reserved : Bits_6 := 0;
-      PFSWE    : Boolean;     -- PmnPFS Register Write Enable
-      B0WI     : Boolean;     -- PFSWE Bit Write Disable
+      Reserved : Bits_6  := 0;
+      PFSWE    : Boolean;      -- PmnPFS Register Write Enable
+      B0WI     : Boolean;      -- PFSWE Bit Write Disable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1747,14 +1749,14 @@ pragma Warnings (On);
    AGTCR_TSTOP_STOP : constant := 1;
 
    type AGTCR_Type is record
-      TSTART   : Bits_1;      -- AGT Count Start
-      TCSTF    : Bits_1;      -- AGT Count Status Flag
-      TSTOP    : Bits_1;      -- AGT Count Forced Stop
-      Reserved : Bits_1 := 0;
-      TEDGF    : Boolean;     -- Active Edge Judgment Flag
-      TUNDF    : Boolean;     -- Underflow Flag
-      TCMAF    : Boolean;     -- Compare Match A Flag
-      TCMBF    : Boolean;     -- Compare Match B Flag
+      TSTART   : Bits_1;       -- AGT Count Start
+      TCSTF    : Bits_1;       -- AGT Count Status Flag
+      TSTOP    : Bits_1;       -- AGT Count Forced Stop
+      Reserved : Bits_1  := 0;
+      TEDGF    : Boolean;      -- Active Edge Judgment Flag
+      TUNDF    : Boolean;      -- Underflow Flag
+      TCMAF    : Boolean;      -- Compare Match A Flag
+      TCMBF    : Boolean;      -- Compare Match B Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1814,9 +1816,9 @@ pragma Warnings (On);
    AGTMR2_FDIV128 : constant := 2#111#;
 
    type AGTMR2_Type is record
-      CKS      : Bits_3;      -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
-      Reserved : Bits_4 := 0;
-      LPM      : Boolean;     -- Low Power Mode
+      CKS      : Bits_3;       -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
+      Reserved : Bits_4  := 0;
+      LPM      : Boolean;      -- Low Power Mode
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1829,14 +1831,14 @@ pragma Warnings (On);
    -- 25.2.9 AGT Compare Match Function Select Register (AGTCMSR)
 
    type AGTCMSR_Type is record
-      TCMEA     : Boolean;     -- Compare Match A Register Enable
-      TOEA      : Boolean;     -- AGTOAn Output Enable
-      TOPOLA    : Boolean;     -- AGTOAn Polarity Select
-      Reserved1 : Bits_1 := 0;
-      TCMEB     : Boolean;     -- Compare Match B Register Enable
-      TOEB      : Boolean;     -- AGTOBn Output Enable
-      TOPOLB    : Boolean;     -- AGTOBn Polarity Select
-      Reserved2 : Bits_1 := 0;
+      TCMEA     : Boolean;      -- Compare Match A Register Enable
+      TOEA      : Boolean;      -- AGTOAn Output Enable
+      TOPOLA    : Boolean;      -- AGTOAn Polarity Select
+      Reserved1 : Bits_1  := 0;
+      TCMEB     : Boolean;      -- Compare Match B Register Enable
+      TOEB      : Boolean;      -- AGTOBn Output Enable
+      TOPOLB    : Boolean;      -- AGTOBn Polarity Select
+      Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1965,12 +1967,12 @@ pragma Warnings (On);
    end record;
 
    type SMR_SMIF_Type is record
-      CKS   : Bits_2;                 -- Clock Select
-      BCP10 : Bits_2 := BCP_32.BCP10; -- Base Clock Pulse
-      PM    : Bits_1;                 -- Parity Mode
-      PE    : Boolean;                -- Parity Enable
-      BLK   : Boolean;                -- Block Transfer Mode
-      GM    : Boolean;                -- GSM Mode
+      CKS   : Bits_2;                  -- Clock Select
+      BCP10 : Bits_2  := BCP_32.BCP10; -- Base Clock Pulse
+      PM    : Bits_1;                  -- Parity Mode
+      PE    : Boolean;                 -- Parity Enable
+      BLK   : Boolean;                 -- Block Transfer Mode
+      GM    : Boolean;                 -- GSM Mode
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2057,14 +2059,14 @@ pragma Warnings (On);
    -- 34.2.14 Serial Status Register for Non-Smart Card Interface and FIFO Mode (SSR_FIFO) (SCMR.SMIF = 0 and FCR.FM = 1)
 
    type SSR_FIFO_Type is record
-      DR       : Boolean;     -- Receive Data Ready Flag
-      Reserved : Bits_1 := 1;
-      TEND     : Boolean;     -- Transmit End Flag
-      PER      : Boolean;     -- Parity Error Flag
-      FER      : Boolean;     -- Framing Error Flag
-      ORER     : Boolean;     -- Overrun Error Flag
-      RDF      : Boolean;     -- Receive FIFO Data Full Flag
-      TDFE     : Boolean;     -- Transmit FIFO Data Empty Flag
+      DR       : Boolean;      -- Receive Data Ready Flag
+      Reserved : Bits_1  := 1;
+      TEND     : Boolean;      -- Transmit End Flag
+      PER      : Boolean;      -- Parity Error Flag
+      FER      : Boolean;      -- Framing Error Flag
+      ORER     : Boolean;      -- Overrun Error Flag
+      RDF      : Boolean;      -- Receive FIFO Data Full Flag
+      TDFE     : Boolean;      -- Transmit FIFO Data Empty Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2124,13 +2126,13 @@ pragma Warnings (On);
    SCMR_SDIR_MSB : constant := 1;
 
    type SCMR_Type is record
-      SMIF      : Boolean;               -- Smart Card Interface Mode Select
-      Reserved1 : Bits_1 := 1;
-      SINV      : Bits_1;                -- Transmitted/Received Data Invert
-      SDIR      : Bits_1;                -- Transmitted/Received Data Transfer Direction
-      CHR1      : Bits_1;                -- Character Length 1
-      Reserved2 : Bits_2 := 2#11#;
-      BCP2      : Bits_1 := BCP_32.BCP2; -- Base Clock Pulse 2
+      SMIF      : Boolean;                -- Smart Card Interface Mode Select
+      Reserved1 : Bits_1  := 1;
+      SINV      : Bits_1;                 -- Transmitted/Received Data Invert
+      SDIR      : Bits_1;                 -- Transmitted/Received Data Transfer Direction
+      CHR1      : Bits_1;                 -- Character Length 1
+      Reserved2 : Bits_2  := 2#11#;
+      BCP2      : Bits_1  := BCP_32.BCP2; -- Base Clock Pulse 2
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2147,13 +2149,13 @@ pragma Warnings (On);
    -- 34.2.19 Serial Extended Mode Register (SEMR)
 
    type SEMR_Type is record
-      Reserved : Bits_2 := 0;
-      BRME     : Boolean;     -- Bit Rate Modulation Enable
-      ABCSE    : Boolean;     -- Asynchronous Mode Extended Base Clock Select 1
-      ABCS     : Boolean;     -- Asynchronous Mode Base Clock Select
-      NFEN     : Boolean;     -- Digital Noise Filter Function Enable
-      BGDM     : Boolean;     -- Baud Rate Generator Double-Speed Mode Select
-      RXDESEL  : Boolean;     -- Asynchronous Start Bit Edge Detection Select
+      Reserved : Bits_2  := 0;
+      BRME     : Boolean;      -- Bit Rate Modulation Enable
+      ABCSE    : Boolean;      -- Asynchronous Mode Extended Base Clock Select 1
+      ABCS     : Boolean;      -- Asynchronous Mode Base Clock Select
+      NFEN     : Boolean;      -- Digital Noise Filter Function Enable
+      BGDM     : Boolean;      -- Baud Rate Generator Double-Speed Mode Select
+      RXDESEL  : Boolean;      -- Asynchronous Start Bit Edge Detection Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2189,9 +2191,9 @@ pragma Warnings (On);
    -- 34.2.21 IIC Mode Register 1 (SIMR1)
 
    type SIMR1_Type is record
-      IICM     : Boolean;     -- Simple IIC Mode Select
-      Reserved : Bits_2 := 0;
-      IICDL    : Bits_5;      -- SDA Delay Output Select
+      IICM     : Boolean;      -- Simple IIC Mode Select
+      Reserved : Bits_2  := 0;
+      IICDL    : Bits_5;       -- SDA Delay Output Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2210,11 +2212,11 @@ pragma Warnings (On);
    SIMR2_IICACKT_NACK : constant := 1;
 
    type SIMR2_Type is record
-      IICINTM   : Bits_1;      -- IIC Interrupt Mode Select
-      IICCSC    : Boolean;     -- Clock Synchronization
-      Reserved1 : Bits_3 := 0;
-      IICACKT   : Bits_1;      -- ACK Transmission Data
-      Reserved2 : Bits_2 := 0;
+      IICINTM   : Bits_1;       -- IIC Interrupt Mode Select
+      IICCSC    : Boolean;      -- Clock Synchronization
+      Reserved1 : Bits_3  := 0;
+      IICACKT   : Bits_1;       -- ACK Transmission Data
+      Reserved2 : Bits_2  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2260,8 +2262,8 @@ pragma Warnings (On);
    -- 34.2.24 IIC Status Register (SISR)
 
    type SISR_Type is record
-      IICACKR  : Boolean;          -- ACK Reception Data Flag
-      Reserved : Bits_7 := 16#7F#;
+      IICACKR  : Boolean;           -- ACK Reception Data Flag
+      Reserved : Bits_7  := 16#7F#;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2282,14 +2284,14 @@ pragma Warnings (On);
    SPMR_CKPH_DELAY  : constant := 1;
 
    type SPMR_Type is record
-      SSE       : Boolean;     -- SSn Pin Function Enable
-      CTSE      : Boolean;     -- CTS Enable
-      MSS       : Bits_1;      -- Master Slave Select
-      Reserved1 : Bits_1 := 0;
-      MFF       : Boolean;     -- Mode Fault Flag
-      Reserved2 : Bits_1 := 0;
-      CKPOL     : Bits_1;      -- Clock Polarity Select
-      CKPH      : Bits_1;      -- Clock Phase Select
+      SSE       : Boolean;      -- SSn Pin Function Enable
+      CTSE      : Boolean;      -- CTS Enable
+      MSS       : Bits_1;       -- Master Slave Select
+      Reserved1 : Bits_1  := 0;
+      MFF       : Boolean;      -- Mode Fault Flag
+      Reserved2 : Bits_1  := 0;
+      CKPOL     : Bits_1;       -- Clock Polarity Select
+      CKPH      : Bits_1;       -- Clock Phase Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2347,12 +2349,12 @@ pragma Warnings (On);
    -- 34.2.28 Line Status Register (LSR)
 
    type LSR_Type is record
-      ORER      : Boolean;     -- Overrun Error Flag
-      Reserved1 : Bits_1 := 0;
-      FNUM      : Bits_5;      -- Framing Error Count
-      Reserved2 : Bits_1 := 0;
-      PNUM      : Bits_5;      -- Parity Error Count
-      Reserved3 : Bits_3 := 0;
+      ORER      : Boolean;      -- Overrun Error Flag
+      Reserved1 : Bits_1  := 0;
+      FNUM      : Bits_5;       -- Framing Error Count
+      Reserved2 : Bits_1  := 0;
+      PNUM      : Bits_5;       -- Parity Error Count
+      Reserved3 : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -2384,13 +2386,13 @@ pragma Warnings (On);
    DCCR_IDSEL_IDFrame : constant := 1;
 
    type DCCR_Type is record
-      DCMF      : Boolean;     -- Data Compare Match Flag
-      Reserved1 : Bits_2 := 0;
-      DPER      : Boolean;     -- Data Compare Match Parity Error Flag
-      DFER      : Boolean;     -- Data Compare Match Framing Error Flag
-      Reserved2 : Bits_1 := 0;
-      IDSEL     : Bits_1;      -- ID Frame Select
-      DCME      : Boolean;     -- Data Compare Match Enable
+      DCMF      : Boolean;      -- Data Compare Match Flag
+      Reserved1 : Bits_2  := 0;
+      DPER      : Boolean;      -- Data Compare Match Parity Error Flag
+      DFER      : Boolean;      -- Data Compare Match Framing Error Flag
+      Reserved2 : Bits_1  := 0;
+      IDSEL     : Bits_1;       -- ID Frame Select
+      DCME      : Boolean;      -- Data Compare Match Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2407,10 +2409,10 @@ pragma Warnings (On);
    -- 34.2.31 Serial Port Register (SPTR)
 
    type SPTR_Type is record
-      RXDMON   : Boolean;     -- Serial Input Data Monitor
-      SPB2DT   : Boolean;     -- Serial Port Break Data Select
-      SPB2IO   : Boolean;     -- Serial Port Break I/O
-      Reserved : Bits_5 := 0;
+      RXDMON   : Boolean;      -- Serial Input Data Monitor
+      SPB2DT   : Boolean;      -- Serial Port Break Data Select
+      SPB2IO   : Boolean;      -- Serial Port Break I/O
+      Reserved : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2518,14 +2520,14 @@ pragma Warnings (On);
    -- 36.2.2 I2C Bus Control Register 2 (ICCR2)
 
    type ICCR2_Type is record
-      Reserved1 : Bits_1 := 0;
-      ST        : Boolean;     -- Start Condition Issuance Request
-      RS        : Boolean;     -- Restart Condition Issuance Request
-      SP        : Boolean;     -- Stop Condition Issuance Request
-      Reserved2 : Bits_1 := 0;
-      TRS       : Boolean;     -- Transmit/Receive Mode
-      MST       : Boolean;     -- Master/Slave Mode
-      BBSY      : Boolean;     -- Bus Busy Detection Flag
+      Reserved1 : Bits_1  := 0;
+      ST        : Boolean;      -- Start Condition Issuance Request
+      RS        : Boolean;      -- Restart Condition Issuance Request
+      SP        : Boolean;      -- Stop Condition Issuance Request
+      Reserved2 : Bits_1  := 0;
+      TRS       : Boolean;      -- Transmit/Receive Mode
+      MST       : Boolean;      -- Master/Slave Mode
+      BBSY      : Boolean;      -- Bus Busy Detection Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2560,12 +2562,12 @@ pragma Warnings (On);
    -- 36.2.4 I2C Bus Mode Register 2 (ICMR2)
 
    type ICMR2_Type is record
-      TMOS     : Boolean;     -- Timeout Detection Time Select
-      TMOL     : Boolean;     -- Timeout L Count Control
-      TMOH     : Boolean;     -- Timeout H Count Control
-      Reserved : Bits_1 := 0;
-      SDDL     : Bits_3;      -- SDA Output Delay Counter
-      DLCS     : Boolean;     -- SDA Output Delay Clock Source Select
+      TMOS     : Boolean;      -- Timeout Detection Time Select
+      TMOL     : Boolean;      -- Timeout L Count Control
+      TMOH     : Boolean;      -- Timeout H Count Control
+      Reserved : Bits_1  := 0;
+      SDDL     : Bits_3;       -- SDA Output Delay Counter
+      DLCS     : Boolean;      -- SDA Output Delay Clock Source Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2634,14 +2636,14 @@ pragma Warnings (On);
    -- 36.2.7 I2C Bus Status Enable Register (ICSER)
 
    type ICSER_Type is record
-      SAR0E     : Boolean;     -- Slave Address Register 0 Enable
-      SAR1E     : Boolean;     -- Slave Address Register 1 Enable
-      SAR2E     : Boolean;     -- Slave Address Register 2 Enable
-      GCAE      : Boolean;     -- General Call Address Enable
-      Reserved1 : Bits_1 := 0;
-      DIDE      : Boolean;     -- Device-ID Address Detection Enable
-      Reserved2 : Bits_1 := 0;
-      HOAE      : Boolean;     -- Host Address Enable
+      SAR0E     : Boolean;      -- Slave Address Register 0 Enable
+      SAR1E     : Boolean;      -- Slave Address Register 1 Enable
+      SAR2E     : Boolean;      -- Slave Address Register 2 Enable
+      GCAE      : Boolean;      -- General Call Address Enable
+      Reserved1 : Bits_1  := 0;
+      DIDE      : Boolean;      -- Device-ID Address Detection Enable
+      Reserved2 : Bits_1  := 0;
+      HOAE      : Boolean;      -- Host Address Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2684,14 +2686,14 @@ pragma Warnings (On);
    -- 36.2.9 I2C Bus Status Register 1 (ICSR1)
 
    type ICSR1_Type is record
-      AAS0      : Boolean;     -- Slave Address 0 Detection Flag
-      AAS1      : Boolean;     -- Slave Address 1 Detection Flag
-      AAS2      : Boolean;     -- Slave Address 2 Detection Flag
-      GCA       : Boolean;     -- General Call Address Detection Flag
-      Reserved1 : Bits_1 := 0;
-      DID       : Boolean;     -- Device-ID Address Detection Flag
-      Reserved2 : Bits_1 := 0;
-      HOA       : Boolean;     -- Host Address Detection Flag
+      AAS0      : Boolean;      -- Slave Address 0 Detection Flag
+      AAS1      : Boolean;      -- Slave Address 1 Detection Flag
+      AAS2      : Boolean;      -- Slave Address 2 Detection Flag
+      GCA       : Boolean;      -- General Call Address Detection Flag
+      Reserved1 : Bits_1  := 0;
+      DID       : Boolean;      -- Device-ID Address Detection Flag
+      Reserved2 : Bits_1  := 0;
+      HOA       : Boolean;      -- Host Address Detection Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2734,12 +2736,12 @@ pragma Warnings (On);
    -- 36.2.11 I2C Bus Wakeup Unit Register (ICWUR)
 
    type ICWUR_Type is record
-      WUAFA    : Boolean;     -- Wakeup Analog Filter Additional Selection
-      Reserved : Bits_3 := 0;
-      WUACK    : Boolean;     -- ACK Bit for Wakeup Mode
-      WUF      : Boolean;     -- Wakeup Event Occurrence Flag
-      WUIE     : Boolean;     -- Wakeup Interrupt Request Enable
-      WUE      : Boolean;     -- Wakeup Function Enable
+      WUAFA    : Boolean;      -- Wakeup Analog Filter Additional Selection
+      Reserved : Bits_3  := 0;
+      WUACK    : Boolean;      -- ACK Bit for Wakeup Mode
+      WUF      : Boolean;      -- Wakeup Event Occurrence Flag
+      WUIE     : Boolean;      -- Wakeup Interrupt Request Enable
+      WUE      : Boolean;      -- Wakeup Function Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2755,10 +2757,10 @@ pragma Warnings (On);
    -- 36.2.12 I2C Bus Wakeup Unit Register 2 (ICWUR2)
 
    type ICWUR2_Type is record
-      WUSEN    : Boolean;          -- Wakeup Analog Filter Additional Selection
-      WUASYF   : Boolean;          -- Wakeup Analog Filter Additional Selection
-      WUSYF    : Boolean;          -- Wakeup Analog Filter Additional Selection
-      Reserved : Bits_5 := 16#1F#;
+      WUSEN    : Boolean;           -- Wakeup Analog Filter Additional Selection
+      WUASYF   : Boolean;           -- Wakeup Analog Filter Additional Selection
+      WUSYF    : Boolean;           -- Wakeup Analog Filter Additional Selection
+      Reserved : Bits_5  := 16#1F#;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2874,14 +2876,14 @@ pragma Warnings (On);
    -- 38.2.4 SPI Status Register (SPSR)
 
    type SPSR_Type is record
-      OVRF     : Boolean;     -- Overrun Error Flag
-      IDLNF    : Boolean;     -- SPI Idle Flag
-      MODF     : Boolean;     -- Mode Fault Error Flag
-      PERF     : Boolean;     -- Parity Error Flag
-      UDRF     : Boolean;     -- Underrun Error Flag
-      SPTEF    : Boolean;     -- SPI Transmit Buffer Empty Flag
-      Reserved : Bits_1 := 0;
-      SPRF     : Boolean;     -- SPI Receive Buffer Full Flag
+      OVRF     : Boolean;      -- Overrun Error Flag
+      IDLNF    : Boolean;      -- SPI Idle Flag
+      MODF     : Boolean;      -- Mode Fault Error Flag
+      PERF     : Boolean;      -- Parity Error Flag
+      UDRF     : Boolean;      -- Underrun Error Flag
+      SPTEF    : Boolean;      -- SPI Transmit Buffer Empty Flag
+      Reserved : Bits_1  := 0;
+      SPRF     : Boolean;      -- SPI Receive Buffer Full Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2986,8 +2988,8 @@ pragma Warnings (On);
    -- 39.2.5 Communication Port Register (SFMCOM)
 
    type SFMCOM_Type is record
-      SFMD     : Unsigned_8;   -- Port select for direct communication with the SPI bus
-      Reserved : Bits_24 := 0;
+      SFMD     : Unsigned_8;      -- Port select for direct communication with the SPI bus
+      Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
