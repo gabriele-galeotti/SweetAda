@@ -20,6 +20,7 @@ with Interfaces;
 with Bits;
 
 package XPS
+   with Preelaborate => True
    is
 
    --========================================================================--
