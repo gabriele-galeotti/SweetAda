@@ -53,8 +53,8 @@ case ${BOOT_TYPE} in
 esac
 
 "${GXEMUL_EXECUTABLE}" \
-  -X                   \
-  -E dreamcast         \
+  -X \
+  -E dreamcast \
   ${GXEMUL_BOOT}
 
 exit $?

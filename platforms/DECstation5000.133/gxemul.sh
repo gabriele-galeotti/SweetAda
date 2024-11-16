@@ -41,9 +41,9 @@ GXEMUL_EXECUTABLE="/opt/GXemul/bin/gxemul"
 # print executed instructions (-i) and dump registers (-r) on stdout
 # -i -r
 #
-"${GXEMUL_EXECUTABLE}"                          \
-  -Q -X -x                                      \
-  -E decstation -e 3min                         \
+"${GXEMUL_EXECUTABLE}" \
+  -Q -X -x \
+  -E decstation -e 3min \
   0xBFC00000:${SWEETADA_PATH}/${KERNEL_ROMFILE} \
   &
 
