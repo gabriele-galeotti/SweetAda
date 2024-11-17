@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with System;
 with Definitions;
 with Bits;
 with MMIO;
@@ -33,7 +33,6 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -74,15 +73,17 @@ package body BSP
       is
    begin
       -- UART1 ----------------------------------------------------------------
-      UART1_Descriptor.Base_Address  := To_Address (UART1_BASEADDRESS);
+      UART1_Descriptor.Base_Address  := System'To_Address (UART1_BASEADDRESS);
       UART1_Descriptor.Scale_Address := 0;
       UART1_Descriptor.Baud_Clock    := CLK_UART1M8;
       UART1_Descriptor.Read_8        := MMIO.Read'Access;
       UART1_Descriptor.Write_8       := MMIO.Write'Access;
       UART16x50.Init (UART1_Descriptor);
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Atlas", NL => True);
