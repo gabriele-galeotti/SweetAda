@@ -19,6 +19,7 @@ with System;
 with Interfaces;
 
 package MVME162FX
+   with Preelaborate => True
    is
 
    --========================================================================--
