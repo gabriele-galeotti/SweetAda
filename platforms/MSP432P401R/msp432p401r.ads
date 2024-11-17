@@ -20,6 +20,7 @@ with Interfaces;
 with Bits;
 
 package MSP432P401R
+   with Preelaborate => True
    is
 
    --========================================================================--
