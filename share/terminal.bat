@@ -11,7 +11,8 @@ REM
 
 REM
 REM Arguments:
-REM <TERMINAL name>
+REM $1     <TERMINAL name>
+REM $2 ... terminal options
 REM
 REM Environment variables:
 REM none
@@ -23,9 +24,9 @@ REM #                                                                          #
 REM ############################################################################
 
 IF "%1" == "conemu" (
-  ECHO ConEmu64.exe -run
+  ECHO ConEmu64.exe %2 %3 %4 %5 %6 %7 %8 %9 -run
   ) ELSE (
-  ECHO cmd.exe /C
+  ECHO cmd.exe %1 %2 %3 %4 %5 %6 %7 %8 %9 /C
   )
 
 EXIT /B 0
