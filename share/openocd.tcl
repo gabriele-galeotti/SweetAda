@@ -107,7 +107,7 @@ if {$SHUTDOWN_MODE ne 0} {
     set SERVER_MODE 0
 }
 
-# batch file helper
+# cmd.exe file helper
 if {$PLATFORM eq "windows"} {
     set TEMP [file nativename $::env(TEMP)]
     set helperfilename [file join $TEMP openocd-tcl.bat]
