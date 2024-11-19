@@ -18,7 +18,7 @@ project SweetAda is
 
    for Target use Configure.Toolchain_Name;
    for Source_Dirs use Configure.Include_Directories;
-   for Object_Dir use project'Project_Dir & "/" & Configure.Object_Directory;
+   for Object_Dir use Configure.Object_Directory;
    for Default_Language use "Ada";
    for Main use ("main.adb");
 
