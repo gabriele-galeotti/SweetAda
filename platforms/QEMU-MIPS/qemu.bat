@@ -81,31 +81,37 @@ CALL :TCPPORT_IS_LISTENING %SERIALPORT0% %TILTIMEOUT%
 START "PUTTY-1" %PUTTY% telnet://localhost:%SERIALPORT0%/
 IF NOT "%ERRORLEVEL%" == "0" (
   ECHO *** Error: executing %PUTTY%.>&2
+  CALL :ERRORLEVEL_RESET
   )
 
 REM debug session
 IF "%1" == "-debug" (
+  SET TERM=
+  SET "GDB_EXEC_CMD=%GDB% -q"
+  SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -iex "set basenames-may-differ""
+  SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -iex "set architecture %GDB_ARCH%""
+  SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -ex "set tcp connect-timeout 30""
+  SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -ex "target extended-remote tcp:localhost:1234""
+  SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! %KERNEL_OUTFILE%"
   IF "%OSTYPE%" == "msys" (
     SET "MSYS_TERMINAL=source %SHARE_DIRECTORY%/terminal.sh ; terminal %TERMINAL%"
     FOR /F "delims=" %%T IN ('sh -c "!MSYS_TERMINAL!"') DO (
       SET "CONSOLE=%%T"
       )
+    SET GDB_EXEC_CMD=!GDB_EXEC_CMD:"=\"!
+    SET "GDB_EXEC_CMD_FAIL= || cmd.exe //C PAUSE"
+    START "GDB" !CONSOLE! sh -c "!GDB_EXEC_CMD!!GDB_EXEC_CMD_FAIL!"
     ) ELSE (
     SET "CMD_TERMINAL=%SHARE_DIRECTORY%\terminal.bat %TERMINAL%"
     FOR /F "delims=" %%T IN ('cmd.exe /C "!CMD_TERMINAL!"') DO (
       SET "CONSOLE=%%T"
       )
+    SET "GDB_EXEC_CMD_FAIL= || PAUSE"
+    START "GDB" !CONSOLE! cmd.exe /C "!GDB_EXEC_CMD!!GDB_EXEC_CMD_FAIL!"
     )
-  SET TERM=
-  START "GDB" !CONSOLE! %GDB% ^
-    -q ^
-    -iex "set basenames-may-differ" ^
-    -iex "set architecture %GDB_ARCH%" ^
-    -ex "set tcp connect-timeout 30" ^
-    -ex "target extended-remote tcp:localhost:1234" ^
-    %KERNEL_OUTFILE%
   IF NOT "!ERRORLEVEL!" == "0" (
     ECHO *** Error: executing %GDB%.>&2
+    CALL :ERRORLEVEL_RESET
     ) ELSE (
     CALL :PROCESSWAIT -s %GDB%
     CALL :PROCESSWAIT -e %GDB%
@@ -180,4 +186,11 @@ REM ############################################################################
 SET /A SLEEPTIME=%1+1
 %SystemRoot%\System32\PING.EXE -n %SLEEPTIME% 127.0.0.1 >nul 2>&1
 GOTO :EOF
+
+REM ############################################################################
+REM # ERRORLEVEL_RESET                                                         #
+REM #                                                                          #
+REM ############################################################################
+:ERRORLEVEL_RESET
+EXIT /B 0
 
