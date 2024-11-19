@@ -128,7 +128,7 @@ if {$SERVER_MODE ne 0} {
         append batch_cmds "IF NOT \"%ERRORLEVEL%\" == \"0\" PAUSE\n"
         puts -nonewline $fd $batch_cmds
         close $fd
-        if {[catch {exec $::env(ComSpec) /C START $::env(ComSpec) /C $helperfilename &} result] ne 0} {
+        if {[catch {exec $::env(ComSpec) /C START "OpenOCD " $::env(ComSpec) /C $helperfilename &} result] ne 0} {
             puts stderr "$SCRIPT_FILENAME: *** Error: system failure or OpenOCD executable not found."
             file delete -force $helperfilename
             exit 1
@@ -141,7 +141,7 @@ if {$SERVER_MODE ne 0} {
             append osascript_cmds "clear"                                                      " ; "
             append osascript_cmds "openocd -f \\\"$OPENOCD_CFGFILE\\\""                        " ; "
             append osascript_cmds "if \[ \$? -ne 0 \] ; then :"                                " ; "
-            append osascript_cmds "  printf \\\"%s\\\" \\\"press any key to continue ... \\\"" " ; "
+            append osascript_cmds "  printf \\\"%s\\\" \\\"Press any key to continue ... \\\"" " ; "
             append osascript_cmds "  read answer"                                              " ; "
             append osascript_cmds "fi"                                                         " ; "
             append osascript_cmds "exit 0"
@@ -156,7 +156,7 @@ if {$SERVER_MODE ne 0} {
             append sh_cmds "\$(terminal $::env(TERMINAL)) /bin/sh -c \""                  " "
             append sh_cmds "openocd -f \\\"$OPENOCD_CFGFILE\\\""                        " ; "
             append sh_cmds "if \[ \\\$? -ne 0 \] ; then : "                             " ; "
-            append sh_cmds "  printf \\\"%s\\\" \\\"press any key to continue ... \\\"" " ; "
+            append sh_cmds "  printf \\\"%s\\\" \\\"Press any key to continue ... \\\"" " ; "
             append sh_cmds "  read answer"                                              " ; "
             append sh_cmds "fi"                                                         " ; "
             append sh_cmds "exit 0"

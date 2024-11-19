@@ -159,7 +159,7 @@ if SERVER_MODE != 0:
                           'clear'                                                                  + ' ; ' +
                           'openocd -f \\\\\\"' + OPENOCD_CFGFILE + '\\\\\\"'                       + ' ; ' +
                           'if [ \\$? -ne 0 ] ; then :'                                             + ' ; ' +
-                          '  printf \\\\\\"%s\\\\\\" \\\\\\"press any key to continue ... \\\\\\"' + ' ; ' +
+                          '  printf \\\\\\"%s\\\\\\" \\\\\\"Press any key to continue ... \\\\\\"' + ' ; ' +
                           '  read answer'                                                          + ' ; ' +
                           'fi'                                                                     + ' ; ' +
                           'exit 0'                                                                         +
@@ -177,7 +177,7 @@ if SERVER_MODE != 0:
                           '/bin/sh -c "'                                                             + ' ' +
                           'openocd -f \\"' + OPENOCD_CFGFILE + '\\"'                               + ' ; ' +
                           'if [ \\$? -ne 0 ] ; then : '                                            + ' ; ' +
-                          '  printf \\"%s\\" \\"press any key to continue ... \\"'                 + ' ; ' +
+                          '  printf \\"%s\\" \\"Press any key to continue ... \\"'                 + ' ; ' +
                           '  read answer'                                                          + ' ; ' +
                           'fi'                                                                     + ' ; ' +
                           'exit 0'                                                                         +
