@@ -87,10 +87,21 @@ LIBM_FILENAME := $(TOOLCHAIN_PREFIX)/$(TOOLCHAIN_NAME)/lib/$(GCC_MULTIDIR)/libm.
 RTS_ROOT_PATH := $(RTS_BASE_PATH)/$(RTS)/$(TOOLCHAIN_NAME)
 RTS_PATH      := $(RTS_ROOT_PATH)/$(GCC_MULTIDIR)
 ifeq ($(OSTYPE),cmd)
-RTS_PATH_CMD  := $(shell $(ECHO) $(RTS_PATH)| $(SED) -e "s|/|\\|g" -e "s|\.\\||g")
-RTS_INSTALLED := $(shell IF EXIST "$(RTS_PATH_CMD)"\adainclude\system.ads (ECHO Y) ELSE (ECHO N))
+RTS_INSTALLED := $(shell                                              \
+                   SETLOCAL ENABLEDELAYEDEXPANSION                 && \
+                   SET "RTS_PATH=$(RTS_PATH)"                      && \
+                   SET "RTS_PATH_CMD=!RTS_PATH:/=\!"               && \
+                   IF EXIST "!RTS_PATH_CMD!"\adainclude\system.ads    \
+                     (ECHO Y) ELSE (ECHO N)                           \
+                   )
 else
-RTS_INSTALLED := $(shell if [ -e "$(RTS_PATH)"/adainclude/system.ads ] ; then echo "Y" ; else echo "N" ; fi)
+RTS_INSTALLED := $(shell                                                  \
+                   if [ -e "$(RTS_PATH)"/adainclude/system.ads ] ; then   \
+                     printf "%s\n" "Y"                                  ; \
+                   else                                                   \
+                     printf "%s\n" "N"                                  ; \
+                   fi                                                     \
+                   )
 endif
 
 ################################################################################
