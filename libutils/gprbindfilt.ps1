@@ -89,7 +89,8 @@ foreach ($line in $input)
   $empty_line = $false
   if ($line.StartsWith("__exitstatus__="))
   {
-    $exit_status = 1
+    $linearray = $line.Trim(" ") -Split "="
+    $exit_status = [int]$linearray[1]
     break
   }
   if     ($line.StartsWith("ELABORATION ORDER DEPENDENCIES"))
