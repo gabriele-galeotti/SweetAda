@@ -18,14 +18,14 @@ ifeq      ($(OSTYPE),cmd)
   #
   # Win64 cmd.exe
   #
-  PYTHON := C:\Users\Administrator\AppData\Local\Programs\Python\Python38\python.exe
+  PYTHON := C:\Users\Administrator\AppData\Local\Programs\Python\Python311\python.exe
   TCLSH  := C:\Tcl\bin\tclsh86.exe
   #export TERMINAL := conemu
 else ifeq ($(OSTYPE),msys)
   #
   # MSYS2
   #
-  PYTHON := C:/Users/Administrator/AppData/Local/Programs/Python/Python38/python.exe
+  PYTHON := C:/Users/Administrator/AppData/Local/Programs/Python/Python311/python.exe
   TCLSH  := C:/Tcl/bin/tclsh86.exe
   export TERMINAL := mintty
   #export TERMINAL := conemu
@@ -42,6 +42,7 @@ else ifeq ($(OSTYPE),linux)
   PYTHON := python3
   TCLSH  := tclsh
   export TERMINAL := xterm
+  #export TERMINAL := rxvt
   #export TERMINAL := xfce4
   #export TERMINAL := gnome
   #export TERMINAL := konsole
