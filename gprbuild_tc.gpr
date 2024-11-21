@@ -152,11 +152,11 @@ abstract project Gprbuild_Tc is
    Binder_Switches := ();
 
    case Configure.Gnatbind_SecStack is
-      when ""     => null;
+      when ""     =>
+         null;
       when others =>
-         Binder_Switches :=
-            Binder_Switches                      &
-            ("-D" & Configure.Gnatbind_SecStack);
+         Binder_Switches := Binder_Switches                      &
+                            ("-D" & Configure.Gnatbind_SecStack);
    end case;
 
    package Binder is
