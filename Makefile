@@ -19,6 +19,7 @@
 # VERBOSE
 # PLATFORM
 # SUBPLATFORM
+# RTS
 # NOBUILD
 # PROBEVARIABLE
 #
@@ -1053,17 +1054,17 @@ ifeq ($(OSTYPE),cmd)
          $(GPRBUILD)                         \
                      -b                      \
                      -P $(KERNEL_GPRFILE)    \
-         || $(ECHO) __exitstatus__=1         \
+         || ECHO __exitstatus__=1            \
         ) | $(GPRBINDFILT) gnatbind_elab.lst \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 else
-	$(call brief-command,                \
-        (                                    \
-         $(GPRBUILD)                         \
-                     -b                      \
-                     -P $(KERNEL_GPRFILE)    \
-         || $(ECHO) "__exitstatus__=$$?"     \
-        ) | $(GPRBINDFILT) gnatbind_elab.lst \
+	$(call brief-command,                  \
+        (                                      \
+         $(GPRBUILD)                           \
+                     -b                        \
+                     -P $(KERNEL_GPRFILE)      \
+         || printf "%s\n" "__exitstatus__=$$?" \
+        ) | $(GPRBINDFILT) gnatbind_elab.lst   \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 endif
 ifeq ($(OSTYPE),cmd)
@@ -1360,6 +1361,7 @@ endif
 	@$(call echo-print,"SWEETADA PATH:           $(SWEETADA_PATH)")
 	@$(call echo-print,"TOOLCHAIN PREFIX:        $(TOOLCHAIN_PREFIX)")
 	@$(call echo-print,"TOOLCHAIN NAME:          $(TOOLCHAIN_NAME)")
+	@$(call echo-print,"MAKE:                    $(MAKE)")
 	@$(call echo-print,"MAKE VERSION:            $(MAKE_VERSION)")
 	@$(call echo-print,"BUILD MODE:              $(BUILD_MODE)")
 ifeq      ($(BUILD_MODE),GNATMAKE)
@@ -1491,12 +1493,14 @@ ifeq ($(OSTYPE),cmd)
            "$(MAKE)" $(MAKE_RTS) MULTILIB=%%M multilib                       \
           ) || EXIT /B 1
 else
-	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                                \
-          (                                                                               \
-           echo "" && echo "$(CPU): RTS = $(RTS_BUILD), multilib = \"$$m\"" && echo "" && \
-           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" configure  && \
-           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" multilib      \
-          ) || exit $$? ;                                                                 \
+	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                               \
+          (                                                                              \
+           printf "%s\n" ""                                                           && \
+           printf "%s\n" "$(CPU): RTS = $(RTS_BUILD), multilib = \"$$m\""             && \
+           printf "%s\n" ""                                                           && \
+           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" configure && \
+           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" multilib     \
+          ) || exit $$? ;                                                                \
         done
 endif
 
