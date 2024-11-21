@@ -28,6 +28,7 @@ case $1 in
   konsole) _TERMINAL_EXECUTABLE=konsole ; _EXECUTE_OPTION=-e ;;
   gnome)   _TERMINAL_EXECUTABLE=gnome-terminal ; _EXECUTE_OPTION=-- ;;
   xfce4)   _TERMINAL_EXECUTABLE=xfce4-terminal ; _EXECUTE_OPTION=-e ;;
+  rxvt)    _TERMINAL_EXECUTABLE=urxvt ; _EXECUTE_OPTION=-e ;;
   xterm)   _TERMINAL_EXECUTABLE=xterm ; _EXECUTE_OPTION=-e ;;
   mintty)  _TERMINAL_EXECUTABLE=mintty ; _EXECUTE_OPTION= ;;
   conemu)  _TERMINAL_EXECUTABLE=ConEmu64.exe ; _EXECUTE_OPTION=-run ;;
