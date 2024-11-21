@@ -158,7 +158,7 @@ if SERVER_MODE != 0:
                           'osascript -e "tell application \\"Terminal\\"\ndo script \\"'                   +
                           'clear'                                                                  + ' ; ' +
                           'openocd -f \\\\\\"' + OPENOCD_CFGFILE + '\\\\\\"'                       + ' ; ' +
-                          'if [ \\$? -ne 0 ] ; then :'                                             + ' ; ' +
+                          'if [ \\$? -ne 0 ] ; then'                                                 + ' ' +
                           '  printf \\\\\\"%s\\\\\\" \\\\\\"Press any key to continue ... \\\\\\"' + ' ; ' +
                           '  read answer'                                                          + ' ; ' +
                           'fi'                                                                     + ' ; ' +
@@ -171,16 +171,15 @@ if SERVER_MODE != 0:
         else:
             try:
                 os.system(
-                          'source' + ' ' + os.path.join(os.getenv('SHARE_DIRECTORY'), 'terminal.sh') + ' ' +
-                          ';'                                                                        + ' ' +
-                          '$(terminal' + ' ' + os.getenv('TERMINAL') + ')'                           + ' ' +
-                          '/bin/sh -c "'                                                             + ' ' +
-                          'openocd -f \\"' + OPENOCD_CFGFILE + '\\"'                               + ' ; ' +
-                          'if [ \\$? -ne 0 ] ; then : '                                            + ' ; ' +
-                          '  printf \\"%s\\" \\"Press any key to continue ... \\"'                 + ' ; ' +
-                          '  read answer'                                                          + ' ; ' +
-                          'fi'                                                                     + ' ; ' +
-                          'exit 0'                                                                         +
+                          '.' + ' ' + os.path.join(os.getenv('SHARE_DIRECTORY'), 'terminal.sh') + ' ; ' +
+                          '$(terminal' + ' ' + os.getenv('TERMINAL') + ')'                        + ' ' +
+                          'sh -c "'                                                               + ' ' +
+                          'openocd -f \\"' + OPENOCD_CFGFILE + '\\"'                            + ' ; ' +
+                          'if [ \\$? -ne 0 ] ; then'                                              + ' ' +
+                          '  printf \\"%s\\" \\"Press any key to continue ... \\"'              + ' ; ' +
+                          '  read answer'                                                       + ' ; ' +
+                          'fi'                                                                  + ' ; ' +
+                          'exit 0'                                                                      +
                           '" &'
                          )
             except:

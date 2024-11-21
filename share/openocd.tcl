@@ -140,7 +140,7 @@ if {$SERVER_MODE ne 0} {
             append osascript_cmds "tell application \"Terminal\"\ndo script \""
             append osascript_cmds "clear"                                                      " ; "
             append osascript_cmds "openocd -f \\\"$OPENOCD_CFGFILE\\\""                        " ; "
-            append osascript_cmds "if \[ \$? -ne 0 \] ; then :"                                " ; "
+            append osascript_cmds "if \[ \$? -ne 0 \] ; then"                                    " "
             append osascript_cmds "  printf \\\"%s\\\" \\\"Press any key to continue ... \\\"" " ; "
             append osascript_cmds "  read answer"                                              " ; "
             append osascript_cmds "fi"                                                         " ; "
@@ -152,10 +152,10 @@ if {$SERVER_MODE ne 0} {
             }
         } else {
             set sh_cmds ""
-            append sh_cmds "source [file join $::env(SHARE_DIRECTORY) terminal.sh]"     " ; "
+            append sh_cmds ". [file join $::env(SHARE_DIRECTORY) terminal.sh]"     " ; "
             append sh_cmds "\$(terminal $::env(TERMINAL)) /bin/sh -c \""                  " "
             append sh_cmds "openocd -f \\\"$OPENOCD_CFGFILE\\\""                        " ; "
-            append sh_cmds "if \[ \\\$? -ne 0 \] ; then : "                             " ; "
+            append sh_cmds "if \[ \\\$? -ne 0 \] ; then"                                  " "
             append sh_cmds "  printf \\\"%s\\\" \\\"Press any key to continue ... \\\"" " ; "
             append sh_cmds "  read answer"                                              " ; "
             append sh_cmds "fi"                                                         " ; "
