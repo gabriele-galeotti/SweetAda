@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Definitions;
 with Bits;
 with MMIO;
@@ -35,7 +34,6 @@ package body BSP
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -92,7 +90,7 @@ package body BSP
       is
    begin
       -- SCC ------------------------------------------------------------------
-      SCC_Descriptor.Base_Address   := To_Address (SCC_BASEADDRESS);
+      SCC_Descriptor.Base_Address   := System'To_Address (SCC_BASEADDRESS);
       SCC_Descriptor.AB_Address_Bit := 2;                            -- address bit2 --> A//B channel selector
       SCC_Descriptor.CD_Address_Bit := 1;                            -- address bit1 --> D//C data/command selector
       SCC_Descriptor.Baud_Clock     := 10_000_000; -- __FIX__
