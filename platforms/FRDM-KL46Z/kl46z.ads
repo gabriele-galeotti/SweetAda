@@ -75,19 +75,19 @@ pragma Style_Checks (Off);
    IRQC_IRQ_One     : constant := 2#1100#;
 
    type PORTx_PCRn_Type is record
-      PS        : Boolean;      -- Pull Select
-      PE        : Boolean;      -- Pull Enable
-      SRE       : Boolean;      -- Slew Rate Enable
+      PS        : Boolean;                  -- Pull Select
+      PE        : Boolean;                  -- Pull Enable
+      SRE       : Boolean;                  -- Slew Rate Enable
       Reserved1 : Bits_1  := 0;
-      PFE       : Boolean;      -- Passive Filter Enable
+      PFE       : Boolean;                  -- Passive Filter Enable
       Reserved2 : Bits_1  := 0;
-      DSE       : Boolean;      -- Drive Strength Enable
+      DSE       : Boolean;                  -- Drive Strength Enable
       Reserved3 : Bits_1  := 0;
-      MUX       : Bits_3;       -- Pin Mux Control
+      MUX       : Bits_3;                   -- Pin Mux Control
       Reserved4 : Bits_5  := 0;
-      IRQC      : Bits_4;       -- Interrupt Configuration
+      IRQC      : Bits_4  := IRQC_Disabled; -- Interrupt Configuration
       Reserved5 : Bits_4  := 0;
-      ISF       : Boolean;      -- Interrupt Status Flag
+      ISF       : Boolean := False;         -- Interrupt Status Flag
       Reserved6 : Bits_7  := 0;
    end record
       with Bit_Order            => Low_Order_First,
@@ -150,6 +150,133 @@ pragma Style_Checks (Off);
            Import     => True,
            Convention => Ada;
 
+   -- 11.5.2 Global Pin Control Low Register (PORTx_GPCLR)
+   -- 11.5.3 Global Pin Control High Register (PORTx_GPCHR)
+
+   type PORTx_GPCLHR_Type is record
+      GPWD : Bitmap_16 := [others => False]; -- Global Pin Write Data
+      GPWE : Bitmap_16 := [others => False]; -- Global Pin Write Enable
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 32,
+           Volatile_Full_Access => True;
+   for PORTx_GPCLHR_Type use record
+      GPWD at 0 range  0 .. 15;
+      GPWE at 0 range 16 .. 31;
+   end record;
+
+   PORTA_GPCLR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#0080#;
+   PORTA_GPCHR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#0084#;
+
+   PORTA_GPCLR : aliased PORTx_GPCLHR_Type
+      with Address    => System'To_Address (PORTA_GPCLR_ADDRESS),
+           Import     => True,
+           Convention => Ada;
+   PORTA_GPCHR : aliased PORTx_GPCLHR_Type
+      with Address    => System'To_Address (PORTA_GPCHR_ADDRESS),
+           Import     => True,
+           Convention => Ada;
+
+   PORTB_GPCLR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#1080#;
+   PORTB_GPCHR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#1084#;
+
+   PORTB_GPCLR : aliased PORTx_GPCLHR_Type
+      with Address    => System'To_Address (PORTB_GPCLR_ADDRESS),
+           Import     => True,
+           Convention => Ada;
+   PORTB_GPCHR : aliased PORTx_GPCLHR_Type
+      with Address    => System'To_Address (PORTB_GPCHR_ADDRESS),
+           Import     => True,
+           Convention => Ada;
+
+   PORTC_GPCLR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#2080#;
+   PORTC_GPCHR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#2084#;
+
+   PORTC_GPCLR : aliased PORTx_GPCLHR_Type
+      with Address    => System'To_Address (PORTC_GPCLR_ADDRESS),
+           Import     => True,
+           Convention => Ada;
+   PORTC_GPCHR : aliased PORTx_GPCLHR_Type
+      with Address    => System'To_Address (PORTC_GPCHR_ADDRESS),
+           Import     => True,
+           Convention => Ada;
+
+   PORTD_GPCLR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#3080#;
+   PORTD_GPCHR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#3084#;
+
+   PORTD_GPCLR : aliased PORTx_GPCLHR_Type
+      with Address    => System'To_Address (PORTD_GPCLR_ADDRESS),
+           Import     => True,
+           Convention => Ada;
+   PORTD_GPCHR : aliased PORTx_GPCLHR_Type
+      with Address    => System'To_Address (PORTD_GPCHR_ADDRESS),
+           Import     => True,
+           Convention => Ada;
+
+   PORTE_GPCLR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#4080#;
+   PORTE_GPCHR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#4084#;
+
+   PORTE_GPCLR : aliased PORTx_GPCLHR_Type
+      with Address    => System'To_Address (PORTE_GPCLR_ADDRESS),
+           Import     => True,
+           Convention => Ada;
+   PORTE_GPCHR : aliased PORTx_GPCLHR_Type
+      with Address    => System'To_Address (PORTE_GPCHR_ADDRESS),
+           Import     => True,
+           Convention => Ada;
+
+   -- 11.5.4 Interrupt Status Flag Register (PORTx_ISFR)
+
+   type PORTx_ISFR_Type is record
+      ISF : Bitmap_32 := [others => False]; -- Interrupt Status Flag
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 32,
+           Volatile_Full_Access => True;
+   for PORTx_ISFR_Type use record
+      ISF at 0 range 0 .. 31;
+   end record;
+
+   PORTA_ISFR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#00A0#;
+
+   PORTA_ISFR : aliased PORTx_ISFR_Type
+      with Address    => System'To_Address (PORTA_ISFR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   PORTB_ISFR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#10A0#;
+
+   PORTB_ISFR : aliased PORTx_ISFR_Type
+      with Address    => System'To_Address (PORTB_ISFR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   PORTC_ISFR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#20A0#;
+
+   PORTC_ISFR : aliased PORTx_ISFR_Type
+      with Address    => System'To_Address (PORTC_ISFR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   PORTD_ISFR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#30A0#;
+
+   PORTD_ISFR : aliased PORTx_ISFR_Type
+      with Address    => System'To_Address (PORTD_ISFR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   PORTE_ISFR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#40A0#;
+
+   PORTE_ISFR : aliased PORTx_ISFR_Type
+      with Address    => System'To_Address (PORTE_ISFR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- 12 System Integration Module (SIM)
    ----------------------------------------------------------------------------
@@ -164,11 +291,11 @@ pragma Style_Checks (Off);
    type SIM_SOPT1_Type is record
       Reserved1 : Bits_6;
       Reserved2 : Bits_12 := 0;
-      OSC32KSEL : Bits_2;       -- 32K oscillator clock select
+      OSC32KSEL : Bits_2  := OSC32KSEL_SYS; -- 32K oscillator clock select
       Reserved3 : Bits_9  := 0;
-      USBVSTBY  : Boolean;      -- USB voltage regulator in standby mode during VLPR and VLPW modes
-      USBSSTBY  : Boolean;      -- USB voltage regulator in standby mode during Stop, VLPS, LLS and VLLS modes.
-      USBREGEN  : Boolean;      -- USB voltage regulator enable
+      USBVSTBY  : Boolean := False;         -- USB voltage regulator in standby mode during VLPR and VLPW modes
+      USBSSTBY  : Boolean := False;         -- USB voltage regulator in standby mode during Stop, VLPS, LLS and VLLS modes.
+      USBREGEN  : Boolean := True;          -- USB voltage regulator enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -194,9 +321,9 @@ pragma Style_Checks (Off);
 
    type SIM_SOPT1CFG_Type is record
       Reserved1 : Bits_24 := 0;
-      URWE      : Boolean;      -- USB voltage regulator enable write enable
-      UVSWE     : Boolean;      -- USB voltage regulator VLP standby write enable
-      USSWE     : Boolean;      -- USB voltage regulator stop standby write enable
+      URWE      : Boolean := False; -- USB voltage regulator enable write enable
+      UVSWE     : Boolean := False; -- USB voltage regulator VLP standby write enable
+      USSWE     : Boolean := False; -- USB voltage regulator stop standby write enable
       Reserved2 : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -249,15 +376,15 @@ pragma Style_Checks (Off);
 
    type SIM_SOPT2_Type is record
       Reserved1    : Bits_4 := 0;
-      RTCCLKOUTSEL : Bits_1;      -- RTC clock out select
-      CLKOUTSEL    : Bits_3;      -- CLKOUT select
+      RTCCLKOUTSEL : Bits_1 := RTCCLKOUTSEL_RTC;    -- RTC clock out select
+      CLKOUTSEL    : Bits_3 := CLKOUTSEL_Reserved1; -- CLKOUT select
       Reserved2    : Bits_8 := 0;
-      PLLFLLSEL    : Bits_1;      -- PLL/FLL clock select
+      PLLFLLSEL    : Bits_1 := PLLFLLSEL_MCGFLLCLK; -- PLL/FLL clock select
       Reserved3    : Bits_1 := 0;
-      USBSRC       : Bits_1;      -- USB clock source select
+      USBSRC       : Bits_1 := USBSRC_EXT;          -- USB clock source select
       Reserved4    : Bits_5 := 0;
-      TPMSRC       : Bits_2;      -- TPM Clock Source Select
-      UART0SRC     : Bits_2;      -- UART0 Clock Source Select
+      TPMSRC       : Bits_2 := TPMSRC_DISABLED;     -- TPM Clock Source Select
+      UART0SRC     : Bits_2 := UART0SRC_DISABLED;   -- UART0 Clock Source Select
       Reserved5    : Bits_4 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -305,12 +432,12 @@ pragma Style_Checks (Off);
 
    type SIM_SOPT4_Type is record
       Reserved1  : Bits_18 := 0;
-      TPM1CH0SRC : Bits_2;       -- TPM1 channel 0 input capture source select
-      TPM2CH0SRC : Bits_1;       -- TPM2 channel 0 input capture source select
+      TPM1CH0SRC : Bits_2  := TPM1CH0SRC_TPM1_CH0;   -- TPM1 channel 0 input capture source select
+      TPM2CH0SRC : Bits_1  := TPM2CH0SRC_TPM2_CH0;   -- TPM2 channel 0 input capture source select
       Reserved2  : Bits_3  := 0;
-      TPM0CLKSEL : Bits_1;       -- TPM0 External Clock Pin Select
-      TPM1CLKSEL : Bits_1;       -- TPM1 External Clock Pin Select
-      TPM2CLKSEL : Bits_1;       -- TPM2 External Clock Pin Select
+      TPM0CLKSEL : Bits_1  := TPM0CLKSEL_TPM_CLKIN0; -- TPM0 External Clock Pin Select
+      TPM1CLKSEL : Bits_1  := TPM1CLKSEL_TPM_CLKIN0; -- TPM1 External Clock Pin Select
+      TPM2CLKSEL : Bits_1  := TPM2CLKSEL_TPM_CLKIN0; -- TPM2 External Clock Pin Select
       Reserved3  : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -345,15 +472,15 @@ pragma Style_Checks (Off);
    UARTnRXSRC_CMP0 : constant := 1; -- CMP0 output
 
    type SIM_SOPT5_Type is record
-      UART0TXSRC : Bits_2;       -- UART0 Transmit Data Source Select
-      UART0RXSRC : Bits_1;       -- UART0 Receive Data Source Select
+      UART0TXSRC : Bits_2  := UARTnTXSRC_TX; -- UART0 Transmit Data Source Select
+      UART0RXSRC : Bits_1  := UARTnRXSRC_RX; -- UART0 Receive Data Source Select
       Reserved1  : Bits_1  := 0;
-      UART1TXSRC : Bits_2;       -- UART1 Transmit Data Source Select
-      UART1RXSRC : Bits_1;       -- UART1 Receive Data Source Select
+      UART1TXSRC : Bits_2  := UARTnTXSRC_TX; -- UART1 Transmit Data Source Select
+      UART1RXSRC : Bits_1  := UARTnRXSRC_RX; -- UART1 Receive Data Source Select
       Reserved2  : Bits_9  := 0;
-      UART0ODE   : Boolean;      -- UART0 Open Drain Enable
-      UART1ODE   : Boolean;      -- UART1 Open Drain Enable
-      UART2ODE   : Boolean;      -- UART2 Open Drain Enable
+      UART0ODE   : Boolean := False;         -- UART0 Open Drain Enable
+      UART1ODE   : Boolean := False;         -- UART1 Open Drain Enable
+      UART2ODE   : Boolean := False;         -- UART2 Open Drain Enable
       Reserved3  : Bits_1  := 0;
       Reserved4  : Bits_12 := 0;
    end record
@@ -404,10 +531,10 @@ pragma Style_Checks (Off);
    ADC0PRETRGSEL_B : constant := 1; -- Pre-trigger B
 
    type SIM_SOPT7_Type is record
-      ADC0TRGSEL    : Bits_4;       -- ADC0 trigger select
-      ADC0PRETRGSEL : Bits_1;       -- ADC0 Pretrigger Select
+      ADC0TRGSEL    : Bits_4  := ADC0TRGSEL_EXTRG; -- ADC0 trigger select
+      ADC0PRETRGSEL : Bits_1  := ADC0PRETRGSEL_A;  -- ADC0 Pretrigger Select
       Reserved1     : Bits_2  := 0;
-      ADC0ALTTRGEN  : Boolean;      -- ADC0 Alternate Trigger Enable
+      ADC0ALTTRGEN  : Boolean := False;            -- ADC0 Alternate Trigger Enable
       Reserved2     : Bits_24 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -471,14 +598,14 @@ pragma Style_Checks (Off);
    FAMID_KL4x : constant := 2#0100#; -- KL4x Family (USB and Segment LCD)
 
    type SIM_SDID_Type is record
-      PINID    : Bits_4;      -- Pincount Identification
-      Reserved : Bits_3 := 0;
-      DIEID    : Bits_5;      -- Device Die Number
-      REVID    : Bits_4;      -- Device Revision Number
-      SRAMSIZE : Bits_4;      -- System SRAM Size
-      SERIESID : Bits_4;      -- Kinetis Series ID
-      SUBFAMID : Bits_4;      -- Kinetis Sub-Family ID
-      FAMID    : Bits_4;      -- Kinetis family ID
+      PINID    : Bits_4; -- Pincount Identification
+      Reserved : Bits_3;
+      DIEID    : Bits_5; -- Device Die Number
+      REVID    : Bits_4; -- Device Revision Number
+      SRAMSIZE : Bits_4; -- System SRAM Size
+      SERIESID : Bits_4; -- Kinetis Series ID
+      SUBFAMID : Bits_4; -- Kinetis Sub-Family ID
+      FAMID    : Bits_4; -- Kinetis family ID
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -506,19 +633,19 @@ pragma Style_Checks (Off);
    type SIM_SCGC4_Type is record
       Reserved1 : Bits_4  := 0;
       Reserved2 : Bits_2  := 2#11#;
-      I2C0      : Boolean;            -- I2C0 Clock Gate Control
-      I2C1      : Boolean;            -- I2C1 Clock Gate Control
+      I2C0      : Boolean := False;   -- I2C0 Clock Gate Control
+      I2C1      : Boolean := False;   -- I2C1 Clock Gate Control
       Reserved3 : Bits_2  := 0;
-      UART0     : Boolean;            -- UART0 Clock Gate Control
-      UART1     : Boolean;            -- UART1 Clock Gate Control
-      UART2     : Boolean;            -- UART2 Clock Gate Control
+      UART0     : Boolean := False;   -- UART0 Clock Gate Control
+      UART1     : Boolean := False;   -- UART1 Clock Gate Control
+      UART2     : Boolean := False;   -- UART2 Clock Gate Control
       Reserved4 : Bits_1  := 0;
       Reserved5 : Bits_4  := 0;
-      USBOTG    : Boolean;            -- USB Clock Gate Control
-      CMP       : Boolean;            -- Comparator Clock Gate Control
+      USBOTG    : Boolean := False;   -- USB Clock Gate Control
+      CMP       : Boolean := False;   -- Comparator Clock Gate Control
       Reserved6 : Bits_2  := 0;
-      SPI0      : Boolean;            -- SPI0 Clock Gate Control
-      SPI1      : Boolean;            -- SPI1 Clock Gate Control
+      SPI0      : Boolean := False;   -- SPI0 Clock Gate Control
+      SPI1      : Boolean := False;   -- SPI1 Clock Gate Control
       Reserved7 : Bits_4  := 0;
       Reserved8 : Bits_4  := 2#1111#;
    end record
@@ -555,19 +682,19 @@ pragma Style_Checks (Off);
    -- 12.2.9 System Clock Gating Control Register 5 (SIM_SCGC5)
 
    type SIM_SCGC5_Type is record
-      LPTMR     : Boolean;          -- Low Power Timer Access Control
+      LPTMR     : Boolean := False; -- Low Power Timer Access Control
       Reserved1 : Bits_1  := 1;
       Reserved2 : Bits_3  := 0;
-      TSI       : Boolean;          -- TSI Access Control
+      TSI       : Boolean := False; -- TSI Access Control
       Reserved3 : Bits_1  := 0;
       Reserved4 : Bits_2  := 2#11#;
-      PORTA     : Boolean;          -- PORTA Clock Gate Control
-      PORTB     : Boolean;          -- PORTB Clock Gate Control
-      PORTC     : Boolean;          -- PORTC Clock Gate Control
-      PORTD     : Boolean;          -- PORTD Clock Gate Control
-      PORTE     : Boolean;          -- PORTE Clock Gate Control
+      PORTA     : Boolean := False; -- PORTA Clock Gate Control
+      PORTB     : Boolean := False; -- PORTB Clock Gate Control
+      PORTC     : Boolean := False; -- PORTC Clock Gate Control
+      PORTD     : Boolean := False; -- PORTD Clock Gate Control
+      PORTE     : Boolean := False; -- PORTE Clock Gate Control
       Reserved5 : Bits_5  := 0;
-      SLCD      : Boolean;          -- Segment LCD Clock Gate Control
+      SLCD      : Boolean := False; -- Segment LCD Clock Gate Control
       Reserved6 : Bits_12 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -600,20 +727,20 @@ pragma Style_Checks (Off);
    -- 12.2.10 System Clock Gating Control Register 6 (SIM_SCGC6)
 
    type SIM_SCGC6_Type is record
-      FTF       : Boolean;      -- Flash Memory Clock Gate Control
-      DMAMUX    : Boolean;      -- DMA Mux Clock Gate Control
+      FTF       : Boolean := True;  -- Flash Memory Clock Gate Control
+      DMAMUX    : Boolean := False; -- DMA Mux Clock Gate Control
       Reserved1 : Bits_13 := 0;
-      I2S       : Boolean;      -- I2S Clock Gate Control
+      I2S       : Boolean := False; -- I2S Clock Gate Control
       Reserved2 : Bits_7  := 0;
-      PIT       : Boolean;      -- PIT Clock Gate Control
-      TPM0      : Boolean;      -- TPM0 Clock Gate Control
-      TPM1      : Boolean;      -- TPM1 Clock Gate Control
-      TPM2      : Boolean;      -- TPM2 Clock Gate Control
-      ADC0      : Boolean;      -- ADC0 Clock Gate Control
+      PIT       : Boolean := False; -- PIT Clock Gate Control
+      TPM0      : Boolean := False; -- TPM0 Clock Gate Control
+      TPM1      : Boolean := False; -- TPM1 Clock Gate Control
+      TPM2      : Boolean := False; -- TPM2 Clock Gate Control
+      ADC0      : Boolean := False; -- ADC0 Clock Gate Control
       Reserved3 : Bits_1  := 0;
-      RTC       : Boolean;      -- RTC Access Control
+      RTC       : Boolean := False; -- RTC Access Control
       Reserved4 : Bits_1  := 0;
-      DAC0      : Boolean;      -- DAC0 Clock Gate Control
+      DAC0      : Boolean := False; -- DAC0 Clock Gate Control
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -646,7 +773,7 @@ pragma Style_Checks (Off);
 
    type SIM_SCGC7_Type is record
       Reserved1 : Bits_8  := 0;
-      DMA       : Boolean;      -- DMA Clock Gate Control
+      DMA       : Boolean := True; -- DMA Clock Gate Control
       Reserved2 : Bits_23 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -695,9 +822,9 @@ pragma Style_Checks (Off);
 
    type SIM_CLKDIV1_Type is record
       Reserved1 : Bits_16 := 0;
-      OUTDIV4   : Bits_3;       -- Clock 4 Output Divider value
+      OUTDIV4   : Bits_3  := OUTDIV4_DIV2; -- Clock 4 Output Divider value
       Reserved2 : Bits_9  := 0;
-      OUTDIV1   : Bits_4;       -- Clock 1 Output Divider value
+      OUTDIV1   : Bits_4;                  -- Clock 1 Output Divider value
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -712,6 +839,181 @@ pragma Style_Checks (Off);
 
    SIM_CLKDIV1 : aliased SIM_CLKDIV1_Type
       with Address              => System'To_Address (SIM_CLKDIV1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.13 Flash Configuration Register 1 (SIM_FCFG1)
+
+   PFSIZE_8     : constant := 2#0000#; -- 8 KB of program flash memory, 0.25 KB protection region
+   PFSIZE_16    : constant := 2#0001#; -- 16 KB of program flash memory, 0.5 KB protection region
+   PFSIZE_32    : constant := 2#0011#; -- 32 KB of program flash memory, 1 KB protection region
+   PFSIZE_64    : constant := 2#0101#; -- 64 KB of program flash memory, 2 KB protection region
+   PFSIZE_128   : constant := 2#0111#; -- 128 KB of program flash memory, 4 KB protection region
+   PFSIZE_256   : constant := 2#1001#; -- 256 KB of program flash memory, 8 KB protection region
+   PFSIZE_256_2 : constant := 2#1111#; -- 256 KB of program flash memory, 8 KB protection region
+
+   type SIM_FCFG1_Type is record
+      FLASHDIS  : Boolean := False; -- Flash Disable
+      FLASHDOZE : Boolean := False; -- Flash Doze
+      Reserved1 : Bits_22 := 0;
+      PFSIZE    : Bits_4;           -- Program Flash Size
+      Reserved2 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_FCFG1_Type use record
+      FLASHDIS  at 0 range  0 ..  0;
+      FLASHDOZE at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 .. 23;
+      PFSIZE    at 0 range 24 .. 27;
+      Reserved2 at 0 range 28 .. 31;
+   end record;
+
+   SIM_FCFG1_ADDRESS : constant := 16#4004_804C#;
+
+   SIM_FCFG1 : aliased SIM_FCFG1_Type
+      with Address              => System'To_Address (SIM_FCFG1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.14 Flash Configuration Register 2 (SIM_FCFG2)
+
+   type SIM_FCFG2_Type is record
+      Reserved1 : Bits_16;
+      MAXADDR1  : Bits_7;  -- This field concatenated with leading zeros plus the value of the MAXADDR1 field indicates ...
+      Reserved2 : Bits_1;
+      MAXADDR0  : Bits_7;  -- Max address block
+      Reserved3 : Bits_1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_FCFG2_Type use record
+      Reserved1 at 0 range  0 .. 15;
+      MAXADDR1  at 0 range 16 .. 22;
+      Reserved2 at 0 range 23 .. 23;
+      MAXADDR0  at 0 range 24 .. 30;
+      Reserved3 at 0 range 31 .. 31;
+   end record;
+
+   SIM_FCFG2_ADDRESS : constant := 16#4004_8050#;
+
+   SIM_FCFG2 : aliased SIM_FCFG2_Type
+      with Address              => System'To_Address (SIM_FCFG2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.15 Unique Identification Register Mid-High (SIM_UIDMH)
+
+   type SIM_UIDMH_Type is record
+      UID      : Bits_16; -- Unique Identification
+      Reserved : Bits_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_UIDMH_Type use record
+      UID      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   SIM_UIDMH_ADDRESS : constant := 16#4004_8058#;
+
+   SIM_UIDMH : aliased SIM_UIDMH_Type
+      with Address              => System'To_Address (SIM_UIDMH_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.16 Unique Identification Register Mid Low (SIM_UIDML)
+
+   type SIM_UIDML_Type is record
+      UID : Bits_32; -- Unique Identification
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_UIDML_Type use record
+      UID at 0 range 0 .. 31;
+   end record;
+
+   SIM_UIDML_ADDRESS : constant := 16#4004_805C#;
+
+   SIM_UIDML : aliased SIM_UIDML_Type
+      with Address              => System'To_Address (SIM_UIDML_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.17 Unique Identification Register Low (SIM_UIDL)
+
+   type SIM_UIDL_Type is record
+      UID : Bits_32; -- Unique Identification
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_UIDL_Type use record
+      UID at 0 range 0 .. 31;
+   end record;
+
+   SIM_UIDL_ADDRESS : constant := 16#4004_8060#;
+
+   SIM_UIDL : aliased SIM_UIDL_Type
+      with Address              => System'To_Address (SIM_UIDL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.18 COP Control Register (SIM_COPC)
+
+   COPT_NONE : constant := 2#00#; -- COP disabled
+   COPT_5    : constant := 2#01#; -- COP timeout after 2^5 LPO cycles or 2^13 bus clock cycles
+   COPT_8    : constant := 2#10#; -- COP timeout after 2^8 LPO cycles or 2^16 bus clock cycles
+   COPT_10   : constant := 2#11#; -- COP timeout after 2^10 LPO cycles or 2^18 bus clock cycles
+
+   type SIM_COPC_Type is record
+      COPW     : Boolean := False;   -- COP Windowed Mode
+      COPCLKS  : Boolean := False;   -- COP Clock Select
+      COPT     : Bits_2  := COPT_10; -- COP Watchdog Timeout
+      Reserved : Bits_28 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_COPC_Type use record
+      COPW     at 0 range 0 ..  0;
+      COPCLKS  at 0 range 1 ..  1;
+      COPT     at 0 range 2 ..  3;
+      Reserved at 0 range 4 .. 31;
+   end record;
+
+   SIM_COPC_ADDRESS : constant := 16#4004_8100#;
+
+   SIM_COPC : aliased SIM_COPC_Type
+      with Address              => System'To_Address (SIM_COPC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.2.19 Service COP Register (SIM_SRVCOP)
+
+   SRVCOP_VALUE1 : constant := 16#55#;
+   SRVCOP_VALUE2 : constant := 16#AA#;
+
+   type SIM_SRVCOP_Type is record
+      SRVCOP   : Bits_8  := 0; -- Service COP Register
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_SRVCOP_Type use record
+      SRVCOP   at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   SIM_SRVCOP_ADDRESS : constant := 16#4004_8104#;
+
+   SIM_SRVCOP : aliased SIM_SRVCOP_Type
+      with Address              => System'To_Address (SIM_SRVCOP_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
