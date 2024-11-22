@@ -70,33 +70,25 @@ IF NOT "%ERRORLEVEL%" == "0" (
 REM debug session
 IF "%1" == "-debug" (
   SET TERM=
-  SET "GDB_EXEC_CMD=%GDB% -q"
+  SET "GDB_EXEC_CMD=%GDB%"
+  SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -q"
   SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -iex "set basenames-may-differ""
   SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -ex "set tcp connect-timeout 30""
   SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -ex "target extended-remote tcp:localhost:1234""
   SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! %KERNEL_OUTFILE%"
   IF "%OSTYPE%" == "msys" (
-    SET "MSYS_TERMINAL=source %SHARE_DIRECTORY%/terminal.sh ; terminal %TERMINAL%"
-    FOR /F "delims=" %%T IN ('sh -c "!MSYS_TERMINAL!"') DO (
-      SET "CONSOLE=%%T"
-      )
+    SET "MSYS_TERMINAL=. %SHARE_DIRECTORY%/terminal.sh ; terminal %TERMINAL%"
+    FOR /F "delims=" %%T IN ('sh -c "!MSYS_TERMINAL!"') DO SET "CONSOLE=%%T"
     SET GDB_EXEC_CMD=!GDB_EXEC_CMD:"=\"!
     SET "GDB_EXEC_CMD_FAIL= || cmd.exe //C PAUSE"
-    START "GDB" !CONSOLE! sh -c "!GDB_EXEC_CMD!!GDB_EXEC_CMD_FAIL!"
+    START "GDB" /WAIT !CONSOLE! sh -c "!GDB_EXEC_CMD!!GDB_EXEC_CMD_FAIL!"
+    IF NOT "!ERRORLEVEL!" == "0" CALL :ERRORLEVEL_RESET
     ) ELSE (
     SET "CMD_TERMINAL=%SHARE_DIRECTORY%\terminal.bat %TERMINAL%"
-    FOR /F "delims=" %%T IN ('cmd.exe /C "!CMD_TERMINAL!"') DO (
-      SET "CONSOLE=%%T"
-      )
+    FOR /F "delims=" %%T IN ('cmd.exe /C "!CMD_TERMINAL!"') DO SET "CONSOLE=%%T"
     SET "GDB_EXEC_CMD_FAIL= || PAUSE"
-    START "GDB" !CONSOLE! cmd.exe /C "!GDB_EXEC_CMD!!GDB_EXEC_CMD_FAIL!"
-    )
-  IF NOT "!ERRORLEVEL!" == "0" (
-    ECHO *** Error: executing %GDB%.>&2
-    CALL :ERRORLEVEL_RESET
-    ) ELSE (
-    CALL :PROCESSWAIT -s %GDB%
-    CALL :PROCESSWAIT -e %GDB%
+    START "GDB" /WAIT !CONSOLE! cmd.exe /C "!GDB_EXEC_CMD!!GDB_EXEC_CMD_FAIL!"
+    IF NOT "!ERRORLEVEL!" == "0" CALL :ERRORLEVEL_RESET
     )
   )
 
@@ -148,9 +140,7 @@ IF "%1" == "-s" (
     )
   )
 :PW_LOOP
-%SystemRoot%\System32\tasklist.exe | ^
-  %SystemRoot%\System32\find.exe /I "%2" ^
-  >nul 2>&1
+%SystemRoot%\System32\tasklist.exe | %SystemRoot%\System32\find.exe /I "%2" >nul 2>&1
 IF "%ERRORLEVEL%" == "%EL%" (
   GOTO :PW_LOOPEND
   ) ELSE (

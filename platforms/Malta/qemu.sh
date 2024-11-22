@@ -66,13 +66,14 @@ return 0
 #                                                                              #
 ################################################################################
 
+# MSYS: hand over to cmd.exe
 if [ "x${OSTYPE}" = "xmsys" ] ; then
   exec ${PLATFORM_DIRECTORY}/qemu.bat "$@"
   exit $?
 fi
 
 # load terminal handling
-source ${SHARE_DIRECTORY}/terminal.sh
+. ${SHARE_DIRECTORY}/terminal.sh
 
 # QEMU executable and CPU model
 case ${CPU_MODEL} in

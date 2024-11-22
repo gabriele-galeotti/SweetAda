@@ -65,13 +65,14 @@ return 0
 #                                                                              #
 ################################################################################
 
+# MSYS: hand over to cmd.exe
 if [ "x${OSTYPE}" = "xmsys" ] ; then
   exec ${PLATFORM_DIRECTORY}/qemu.bat "$@"
   exit $?
 fi
 
 # load terminal handling
-source ${SHARE_DIRECTORY}/terminal.sh
+. ${SHARE_DIRECTORY}/terminal.sh
 
 # QEMU executable and CPU model
 QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-sh4"
@@ -129,11 +130,18 @@ esac
 
 # debug session
 if [ "x$1" = "x-debug" ] ; then
-  $(terminal ${TERMINAL}) "${GDB}" \
-    -q \
-    -iex "set basenames-may-differ" \
-    -ex "target extended-remote tcp:localhost:1234" \
-    ${KERNEL_OUTFILE}
+  $(terminal ${TERMINAL}) sh -c '\
+    "'"${GDB}"'" \
+      -q \
+      -iex "set basenames-may-differ" \
+      -ex "target extended-remote tcp:localhost:1234" \
+      '${KERNEL_OUTFILE}' \
+    ; \
+    if [ $? -ne 0 ] ; then \
+      printf "%s" "Press any key to continue ... " ; \
+      read answer ; \
+    fi \
+    '
 fi
 
 # wait QEMU termination

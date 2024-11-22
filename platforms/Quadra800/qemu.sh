@@ -19,6 +19,7 @@
 # SHARE_DIRECTORY
 # KERNEL_OUTFILE
 # KERNEL_ROMFILE
+# TERMINAL
 # GDB
 #
 
@@ -64,13 +65,14 @@ return 0
 #                                                                              #
 ################################################################################
 
+# MSYS: hand over to cmd.exe
 if [ "x${OSTYPE}" = "xmsys" ] ; then
   exec ${PLATFORM_DIRECTORY}/qemu.bat "$@"
   exit $?
 fi
 
 # load terminal handling
-source ${SHARE_DIRECTORY}/terminal.sh
+. ${SHARE_DIRECTORY}/terminal.sh
 
 # QEMU executable and CPU model
 QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-m68k"
@@ -105,11 +107,9 @@ QEMU_PID=$!
 tcpport_is_listening ${SERIALPORT0} ${TILTIMEOUT} "*** Error"
 case ${OSTYPE} in
   darwin)
-    /usr/bin/osascript \
-      -e "tell application \"Terminal\"" \
-      -e "do script \"telnet 127.0.0.1 ${SERIALPORT0}\"" \
-      -e "end tell" \
-      &
+    osascript -e \
+      "tell application \"Terminal\" to do script \"clear ; telnet localhost ${SERIALPORT0} ; exit 0\"" \
+      > /dev/null &
     ;;
   *)
     $(terminal ${TERMINAL}) /bin/telnet localhost ${SERIALPORT0} &
@@ -119,11 +119,9 @@ esac
 tcpport_is_listening ${SERIALPORT1} ${TILTIMEOUT} "*** Error"
 case ${OSTYPE} in
   darwin)
-    /usr/bin/osascript \
-      -e "tell application \"Terminal\"" \
-      -e "do script \"telnet 127.0.0.1 ${SERIALPORT1}\"" \
-      -e "end tell" \
-      &
+    osascript -e \
+      "tell application \"Terminal\" to do script \"clear ; telnet localhost ${SERIALPORT1} ; exit 0\"" \
+      > /dev/null &
     ;;
   *)
     $(terminal ${TERMINAL}) /bin/telnet localhost ${SERIALPORT1} &
@@ -132,11 +130,19 @@ esac
 
 # debug session
 if [ "x$1" = "x-debug" ] ; then
-  $(terminal ${TERMINAL}) "${GDB}" \
-    -q \
-    -iex "set basenames-may-differ" \
-    -ex "target extended-remote tcp:localhost:1234" \
-    ${KERNEL_OUTFILE}
+  $(terminal ${TERMINAL}) sh -c '\
+    "'"${GDB}"'" \
+      -q \
+      -iex "set basenames-may-differ" \
+      -ex "set tcp connect-timeout 30" \
+      -ex "target extended-remote tcp:localhost:1234" \
+      '${KERNEL_OUTFILE}' \
+    ; \
+    if [ $? -ne 0 ] ; then \
+      printf "%s" "Press any key to continue ... " ; \
+      read answer ; \
+    fi \
+    '
 fi
 
 # wait QEMU termination
