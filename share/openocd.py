@@ -143,45 +143,46 @@ if SERVER_MODE != 0:
         os.environ['PATH'] = os.path.join(OPENOCD_PREFIX, 'bin') + ';' + os.environ.get('PATH')
         try:
             os.system(
-                      'START "OpenOCD" cmd.exe /C "'                           + ' ' +
-                      'openocd.exe -f "' + OPENOCD_CFGFILE + '"' + ' || PAUSE' + ' ' +
-                      '"'
-                     )
+                'START "OpenOCD" cmd.exe /C "'                           + ' ' +
+                'openocd.exe -f "' + OPENOCD_CFGFILE + '"' + ' || PAUSE' + ' ' +
+                '"'
+                )
         except:
             errprintf('%s: *** Error: system failure or OpenOCD executable not found.\n', SCRIPT_FILENAME)
             exit(1)
     elif PLATFORM == 'unix':
-        os.environ['PATH'] = os.path.join(OPENOCD_PREFIX, 'bin') + ':' + os.environ.get('PATH')
         if OSTYPE == 'darwin':
             try:
+                OPENOCD_EXECUTABLE = OPENOCD_PREFIX + '/bin/openocd'
                 os.system(
-                          'osascript -e "tell application \\"Terminal\\"\ndo script \\"'                   +
-                          'clear'                                                                  + ' ; ' +
-                          'openocd -f \\\\\\"' + OPENOCD_CFGFILE + '\\\\\\"'                       + ' ; ' +
-                          'if [ \\$? -ne 0 ] ; then'                                                 + ' ' +
-                          '  printf \\\\\\"%s\\\\\\" \\\\\\"Press any key to continue ... \\\\\\"' + ' ; ' +
-                          '  read answer'                                                          + ' ; ' +
-                          'fi'                                                                     + ' ; ' +
-                          'exit 0'                                                                         +
-                          '\\"\nend tell\n" > /dev/null &'
-                         )
+                    'osascript -e "tell application \\"Terminal\\"\ndo script \\"'                              +
+                    'clear'                                                                             + ' ; ' +
+                    '\\\\\\"' + OPENOCD_EXECUTABLE + '\\\\\\" -f \\\\\\"' + OPENOCD_CFGFILE + '\\\\\\"' + ' ; ' +
+                    'if [ \\$? -ne 0 ] ; then'                                                            + ' ' +
+                    '  printf \\\\\\"%s\\\\\\" \\\\\\"Press any key to continue ... \\\\\\"'            + ' ; ' +
+                    '  read answer'                                                                     + ' ; ' +
+                    'fi'                                                                                + ' ; ' +
+                    'exit 0'                                                                                    +
+                    '\\"\nend tell\n" > /dev/null'
+                    )
             except:
                 errprintf('%s: *** Error: system failure or OpenOCD executable not found.\n', SCRIPT_FILENAME)
                 exit(1)
         else:
+            os.environ['PATH'] = os.path.join(OPENOCD_PREFIX, 'bin') + ':' + os.environ.get('PATH')
             try:
                 os.system(
-                          '.' + ' ' + os.path.join(os.getenv('SHARE_DIRECTORY'), 'terminal.sh') + ' ; ' +
-                          '$(terminal' + ' ' + os.getenv('TERMINAL') + ')'                        + ' ' +
-                          'sh -c "'                                                               + ' ' +
-                          'openocd -f \\"' + OPENOCD_CFGFILE + '\\"'                            + ' ; ' +
-                          'if [ \\$? -ne 0 ] ; then'                                              + ' ' +
-                          '  printf \\"%s\\" \\"Press any key to continue ... \\"'              + ' ; ' +
-                          '  read answer'                                                       + ' ; ' +
-                          'fi'                                                                  + ' ; ' +
-                          'exit 0'                                                                      +
-                          '" &'
-                         )
+                    '.' + ' ' + os.path.join(os.getenv('SHARE_DIRECTORY'), 'terminal.sh') + ' ; ' +
+                    '$(terminal' + ' ' + os.getenv('TERMINAL') + ')'                        + ' ' +
+                    'sh -c "'                                                               + ' ' +
+                    'openocd -f \\"' + OPENOCD_CFGFILE + '\\"'                            + ' ; ' +
+                    'if [ \\$? -ne 0 ] ; then'                                              + ' ' +
+                    '  printf \\"%s\\" \\"Press any key to continue ... \\"'              + ' ; ' +
+                    '  read answer'                                                       + ' ; ' +
+                    'fi'                                                                  + ' ; ' +
+                    'exit 0'                                                                      +
+                    '"'
+                    )
             except:
                 errprintf('%s: *** Error: system failure or OpenOCD executable not found.\n', SCRIPT_FILENAME)
                 exit(1)
