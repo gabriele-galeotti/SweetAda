@@ -119,7 +119,7 @@ case ${OSTYPE} in
   darwin)
     osascript -e \
       "tell application \"Terminal\" to do script \"clear ; telnet localhost ${SERIALPORT0} ; exit 0\"" \
-      > /dev/null &
+      > /dev/null
     ;;
   *)
     $(terminal ${TERMINAL}) /bin/telnet localhost ${SERIALPORT0} &

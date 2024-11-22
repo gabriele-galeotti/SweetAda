@@ -109,7 +109,7 @@ case ${OSTYPE} in
   darwin)
     osascript -e \
       "tell application \"Terminal\" to do script \"clear ; telnet localhost ${SERIALPORT0} ; exit 0\"" \
-      > /dev/null &
+      > /dev/null
     ;;
   *)
     $(terminal ${TERMINAL}) /bin/telnet localhost ${SERIALPORT0} &
@@ -121,7 +121,7 @@ case ${OSTYPE} in
   darwin)
     osascript -e \
       "tell application \"Terminal\" to do script \"clear ; telnet localhost ${SERIALPORT1} ; exit 0\"" \
-      > /dev/null &
+      > /dev/null
     ;;
   *)
     $(terminal ${TERMINAL}) /bin/telnet localhost ${SERIALPORT1} &
@@ -134,6 +134,7 @@ if [ "x$1" = "x-debug" ] ; then
     "'"${GDB}"'" \
       -q \
       -iex "set basenames-may-differ" \
+      -ex "set tcp connect-timeout 30" \
       -ex "target extended-remote tcp:localhost:1234" \
       '${KERNEL_OUTFILE}' \
     ; \
