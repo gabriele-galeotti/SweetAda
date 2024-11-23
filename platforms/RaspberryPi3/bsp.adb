@@ -16,15 +16,16 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Parameters;
-with System.Secondary_Stack;
 with Interfaces.C;
 with Definitions;
 with Bits;
+with Secondary_Stack;
 with ARMv8A;
 with RPI3;
 with Exceptions;
 with Console;
+
+with CPU;
 
 package body BSP
    is
@@ -41,19 +42,13 @@ package body BSP
    use Definitions;
    use Bits;
 
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
+   Timer_Constant : constant := 2_000_000 / 1_000;
 
    function Number_Of_CPUs
       return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_number_of_cpus";
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
 
    --========================================================================--
    --                                                                        --
@@ -64,6 +59,15 @@ package body BSP
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- Timer_Reload
+   ----------------------------------------------------------------------------
+   procedure Timer_Reload
+      is
+   begin
+      RPI3.SYSTEM_TIMER.C1 := RPI3.SYSTEM_TIMER.CLO + Timer_Constant;
+   end Timer_Reload;
+
+   ----------------------------------------------------------------------------
    -- Number_Of_CPUs
    ----------------------------------------------------------------------------
    function Number_Of_CPUs
@@ -72,16 +76,6 @@ package body BSP
    begin
       return 4;
    end Number_Of_CPUs;
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -118,16 +112,21 @@ package body BSP
       Baud_Rate    : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
       Exceptions.Init;
+      -- GPIOs 5/6 (header pins 29/31) are output -----------------------------
+      RPI3.GPFSEL0.FSEL5 := RPI3.GPIO_OUTPUT;
+      RPI3.GPFSEL0.FSEL6 := RPI3.GPIO_OUTPUT;
       -- GPIO pins 14/15 (8/10) take alternate function 5 ---------------------
       RPI3.GPFSEL1.FSEL14 := RPI3.GPIO_ALT5;
       RPI3.GPFSEL1.FSEL15 := RPI3.GPIO_ALT5;
       -- mini-UART (UART1) ----------------------------------------------------
       RPI3.AUXENB.MiniUART_Enable := True;
       -- baud_rate_reg = SYSTEM_CLK / 8 * baud_rate - 1
-      RPI3.AUX_MU_BAUD.Baudrate := Unsigned_16 ((System_Clock + (Baud_Rate * 8 / 2)) / (Baud_Rate * 8) - 1);
+      RPI3.AUX_MU_BAUD.Baudrate := Unsigned_16 (
+         (System_Clock + (Baud_Rate * 8 / 2)) / (Baud_Rate * 8) - 1
+         );
       RPI3.AUX_MU_LCR_REG := (
          Data_Size   => RPI3.UART_8BIT,
          Break       => False,
@@ -153,12 +152,7 @@ package body BSP
       Console.Print ("Raspberry Pi 3", NL => True);
       Console.Print (Natural (ARMv8A.CurrentEL_Read.EL), Prefix => "Current EL:   ", NL => True);
       Console.Print (RPI3.ARMTIMER_IRQ_ClrAck,           Prefix => "ARM Timer ID: ", NL => True); -- "TMRA"
-      -- GPIOs 5/6 (header pins 29/31) are output -----------------------------
-      RPI3.GPFSEL0.FSEL5 := RPI3.GPIO_OUTPUT;
-      RPI3.GPFSEL0.FSEL6 := RPI3.GPIO_OUTPUT;
-      -- Timer IRQ ------------------------------------------------------------
-      RPI3.Enable_IRQs_1 (RPI3.system_timer_match_1) := True;
-      -- handle IRQs at EL2
+      -- handle IRQs at EL2 ---------------------------------------------------
       if ARMv8A.CurrentEL_Read.EL = 2 then
          declare
             HCR_EL2 : ARMv8A.HCR_EL2_Type;
@@ -168,8 +162,11 @@ package body BSP
             ARMv8A.HCR_EL2_Write (HCR_EL2);
          end;
       end if;
+      -- Timer IRQ ------------------------------------------------------------
+      RPI3.Enable_IRQs_1 (RPI3.system_timer_match_1) := True;
+      Timer_Reload;
+      -------------------------------------------------------------------------
       ARMv8A.Irq_Enable;
-      RPI3.Timer_Reload;
       -------------------------------------------------------------------------
    end Setup;
 

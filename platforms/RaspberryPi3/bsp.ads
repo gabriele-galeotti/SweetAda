@@ -34,8 +34,7 @@ package BSP
            Convention    => Asm,
            External_Name => "tick_count";
 
-   Timer_Constant : constant := 2_000_000 / 1_000;
-
+   procedure Timer_Reload;
    procedure Console_Putchar
       (C : in Character);
    procedure Console_Getchar
