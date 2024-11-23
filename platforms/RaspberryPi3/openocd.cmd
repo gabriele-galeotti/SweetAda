@@ -20,7 +20,14 @@ targets bcm2837.cpu3 ; halt
 
 # default CPU #0
 targets bcm2837.cpu0
-targets
+
+# mask DAIF
+dict set cpsr_register cpsr [
+    expr {[dict get [get_reg cpsr] cpsr] | 0x000003C0}
+    ]
+set_reg $cpsr_register
+
+puts stdout [targets]
 
 # we specify "-noload" in configuration.in, so we have to download explicitly
 # the executable in the target memory
