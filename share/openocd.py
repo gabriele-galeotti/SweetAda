@@ -181,7 +181,7 @@ if SERVER_MODE != 0:
                     '  read answer'                                                       + ' ; ' +
                     'fi'                                                                  + ' ; ' +
                     'exit 0'                                                                      +
-                    '"'
+                    '" &'
                     )
             except:
                 errprintf('%s: *** Error: system failure or OpenOCD executable not found.\n', SCRIPT_FILENAME)

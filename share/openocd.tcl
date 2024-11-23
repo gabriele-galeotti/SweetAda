@@ -161,7 +161,7 @@ if {$SERVER_MODE ne 0} {
             append sh_cmds "  read answer"                                              " ; "
             append sh_cmds "fi"                                                         " ; "
             append sh_cmds "exit 0"
-            append sh_cmds "\""
+            append sh_cmds "\" &"
             if {[catch {exec /bin/sh -c $sh_cmds &} result] ne 0} {
                 puts stderr "$SCRIPT_FILENAME: *** Error: system failure or OpenOCD executable not found."
                 exit 1
