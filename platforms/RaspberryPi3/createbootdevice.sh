@@ -70,7 +70,7 @@ while [ $# -gt 0 ] ; do
         ;;
       "d")
         if [ "x${UUID}" != "x" ] ; then
-          printf "%s\n" echo "*** Error: only one of -d or -u option must be specified." 1>&2
+          printf "%s\n" "*** Error: only one of -d or -u option must be specified." 1>&2
           usage
           exit 1
         fi
@@ -79,7 +79,7 @@ while [ $# -gt 0 ] ; do
         ;;
       "u")
         if [ "x${DEVICE}" != "x" ] ; then
-          printf "%s\n" echo "*** Error: only one of -d or -u option must be specified." 1>&2
+          printf "%s\n" "*** Error: only one of -d or -u option must be specified." 1>&2
           usage
           exit 1
         fi
@@ -102,7 +102,7 @@ while [ $# -gt 0 ] ; do
       token_seen=Y
       FILENAME="$1"
     else
-      printf "%s\n" echo "*** Error: multiple files specified." 1>&2
+      printf "%s\n" "*** Error: multiple files specified." 1>&2
       usage
       exit 1
     fi
