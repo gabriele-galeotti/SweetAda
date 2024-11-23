@@ -21,6 +21,7 @@ with Ada.Unchecked_Conversion;
 with Bits;
 
 package Sun4m
+   with Preelaborate => True
    is
 
    --========================================================================--
