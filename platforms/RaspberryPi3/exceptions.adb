@@ -22,6 +22,8 @@ with Bits;
 with ARMv8A;
 with RPI3;
 with BSP;
+with Abort_Library;
+with Console;
 
 package body Exceptions
    is
@@ -62,7 +64,8 @@ package body Exceptions
    procedure Exception_Process
       is
    begin
-      null;
+      Console.Print ("*** EXCEPTION", NL => True);
+      Abort_Library.System_Abort;
    end Exception_Process;
 
    ----------------------------------------------------------------------------
@@ -79,7 +82,7 @@ package body Exceptions
          -- GPIO05 OFF
          RPI3.GPCLR0 := (CLR5 => True, others => False);
       end if;
-      RPI3.Timer_Reload;
+      BSP.Timer_Reload;
       RPI3.SYSTEM_TIMER.CS.M1 := True;
    end Irq_Process;
 
