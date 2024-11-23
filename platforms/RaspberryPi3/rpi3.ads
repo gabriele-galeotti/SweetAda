@@ -20,6 +20,7 @@ with Interfaces;
 with Bits;
 
 package RPI3
+   with Preelaborate => True
    is
 
    --========================================================================--
@@ -1149,11 +1150,5 @@ package RPI3
    -- TEMPERATURE
    TAG_GET_TEMPERATURE : constant := TAG_HW + TAG_GET + TAG_TEMPERATURE;
    TEMPERATURE_ID      : constant := 16#0#;
-
-   ----------------------------------------------------------------------------
-   -- System Timer subprograms
-   ----------------------------------------------------------------------------
-
-   procedure Timer_Reload;
 
 end RPI3;
