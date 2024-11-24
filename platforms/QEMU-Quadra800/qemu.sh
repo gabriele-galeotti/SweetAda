@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# Quadra 800 (QEMU emulator).
+# QEMU-Quadra800 (QEMU emulator).
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #

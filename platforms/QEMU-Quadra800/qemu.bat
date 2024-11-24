@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM Quadra800 (QEMU emulator).
+REM QEMU-Quadra800 (QEMU emulator).
 REM
 REM Copyright (C) 2020-2024 Gabriele Galeotti
 REM

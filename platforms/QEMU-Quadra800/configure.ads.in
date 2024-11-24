@@ -4,7 +4,7 @@ package Configure
    is
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "Quadra800";
+   PLATFORM  : constant String := "QEMU-Quadra800";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
