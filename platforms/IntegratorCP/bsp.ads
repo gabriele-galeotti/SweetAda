@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with PL031;
 with PL011;
 with PL110;
 
@@ -36,6 +37,7 @@ package BSP
            Convention    => Asm,
            External_Name => "tick_count";
 
+   PL031_Descriptor : aliased PL031.Descriptor_Type := PL031.DESCRIPTOR_INVALID;
    PL011_Descriptor : aliased PL011.Descriptor_Type := PL011.DESCRIPTOR_INVALID;
    PL110_Descriptor : aliased PL110.Descriptor_Type := PL110.DESCRIPTOR_INVALID;
 

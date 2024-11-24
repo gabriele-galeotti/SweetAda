@@ -37,6 +37,7 @@ package IntegratorCP
 
    COUNTERTIMER_BASEADDRESS : constant := 16#1300_0000#;
    PIC_PRIMARY_BASEADDRESS  : constant := 16#1400_0000#;
+   PL031_RTC_BASEADDRESS    : constant := 16#1500_0000#;
    PL011_UART0_BASEADDRESS  : constant := 16#1600_0000#;
    PL011_UART1_BASEADDRESS  : constant := 16#1700_0000#;
    PL110_BASEADDRESS        : constant := 16#C000_0000#;
