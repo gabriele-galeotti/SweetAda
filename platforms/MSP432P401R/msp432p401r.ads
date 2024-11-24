@@ -305,6 +305,8 @@ pragma Style_Checks (Off);
       Reserved   at 0 range 16 .. 31;
    end record;
 
+   -- 4.11.5 SYS_SRAM_SIZE Register
+
    -- 4.11.6 SYS_SRAM_BANKEN Register
 
    type SYS_SRAM_BANKEN_Type is record
@@ -334,6 +336,143 @@ pragma Style_Checks (Off);
       Reserved1 at 0 range  8 .. 15;
       SRAM_RDY  at 0 range 16 .. 16;
       Reserved2 at 0 range 17 .. 31;
+   end record;
+
+   -- 4.11.7 SYS_SRAM_BANKRET Register
+
+   type SYS_SRAM_BANKRET_Type is record
+      BNK0_RET  : Boolean := True;  -- Bank0 is always retained in LPM3, LPM4 and LPM3.5 modes of operation
+      BNK1_RET  : Boolean := True;  -- 1b = Bank? of the SRAM is retained in LPM3 and LPM4
+      BNK2_RET  : Boolean := True;  -- ''
+      BNK3_RET  : Boolean := True;  -- ''
+      BNK4_RET  : Boolean := True;  -- ''
+      BNK5_RET  : Boolean := True;  -- ''
+      BNK6_RET  : Boolean := True;  -- ''
+      BNK7_RET  : Boolean := True;  -- ''
+      Reserved1 : Bits_8  := 0;
+      SRAM_RDY  : Boolean := False; -- 1b = SRAM is ready for accesses.
+      Reserved2 : Bits_15 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_SRAM_BANKRET_Type use record
+      BNK0_RET  at 0 range  0 ..  0;
+      BNK1_RET  at 0 range  1 ..  1;
+      BNK2_RET  at 0 range  2 ..  2;
+      BNK3_RET  at 0 range  3 ..  3;
+      BNK4_RET  at 0 range  4 ..  4;
+      BNK5_RET  at 0 range  5 ..  5;
+      BNK6_RET  at 0 range  6 ..  6;
+      BNK7_RET  at 0 range  7 ..  7;
+      Reserved1 at 0 range  8 .. 15;
+      SRAM_RDY  at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 31;
+   end record;
+
+   -- 4.11.8 SYS_FLASH_SIZE Register
+
+   -- 4.11.9 SYS_DIO_GLTFLT_CTL Register
+
+   type SYS_DIO_GLTFLT_CTL_Type is record
+      GLTCH_EN : Boolean := True; -- 1b = Enables glitch filter on the digital I/Os
+      Reserved : Bits_31 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_DIO_GLTFLT_CTL_Type use record
+      GLTCH_EN at 0 range 0 ..  0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
+   -- 4.11.10 SYS_SECDATA_UNLOCK Register
+   -- 4.11.11 SYS_MASTER_UNLOCK Register
+
+   UNLKEY_KEY : constant := 16#695A#; -- Write to unlock
+
+   type SYS_X_UNLOCK_Type is record
+      UNLKEY   : Bits_16 := 0; -- Unlock Key
+      Reserved : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_X_UNLOCK_Type use record
+      UNLKEY   at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 4.11.12 SYS_BOOTOVER_REQ0 Register
+
+   -- 4.11.13 SYS_BOOTOVER_REQ1 Register
+
+   -- 4.11.14 SYS_BOOTOVER_ACK Register
+
+   -- 4.11.15 SYS_RESET_REQ Register
+
+   WKEY_KEY : constant := 16#69#;
+
+   type SYS_RESET_REQ_Type is record
+      POR       : Boolean := False; -- When written with 1, generates a POR pulse to the device Reset Controller
+      REBOOT    : Boolean := False; -- When written with 1, generates a Reboot Reset pulse to the device Reset Controller
+      Reserved1 : Bits_6  := 0;
+      WKEY      : Bits_8  := 0;     -- Key to validate/enable write to bits '1-0'. Bits '1-0' are written only if WKEY is 69h in the same write cycle end record
+      Reserved2 : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_RESET_REQ_Type use record
+      POR       at 0 range  0 ..  0;
+      REBOOT    at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  7;
+      WKEY      at 0 range  8 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   -- 4.11.16 SYS_RESET_STATOVER Register
+
+   type SYS_RESET_STATOVER_Type is record
+      SOFT      : Boolean;          -- Indicates if SOFT Reset is asserted
+      HARD      : Boolean;          -- Indicates if HARD Reset is asserted
+      REBOOT    : Boolean;          -- Indicates if Reboot Reset is asserted
+      Reserved1 : Bits_5  := 0;
+      SOFT_OVER : Boolean := False; -- When 1, activates the override request for the SOFT Reset output of the Reset Controller.
+      HARD_OVER : Boolean := False; -- When 1, activates the override request for the HARD Reset output of the Reset Controller.
+      RBT_OVER  : Boolean := False; -- When 1, activates the override request for the Reboot Reset output of the Reset Controller
+      Reserved2 : Bits_21 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_RESET_STATOVER_Type use record
+      SOFT      at 0 range  0 ..  0;
+      HARD      at 0 range  1 ..  1;
+      REBOOT    at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 ..  7;
+      SOFT_OVER at 0 range  8 ..  8;
+      HARD_OVER at 0 range  9 ..  9;
+      RBT_OVER  at 0 range 10 .. 10;
+      Reserved2 at 0 range 11 .. 31;
+   end record;
+
+   -- 4.11.17 SYS_SYSTEM_STAT Register
+
+   type SYS_SYSTEM_STAT_Type is record
+      Reserved1         : Bits_1;
+      Reserved2         : Bits_1;
+      Reserved3         : Bits_1;
+      DBG_SEC_ACT       : Boolean; -- Indicates if the Debug Security is currently active
+      JTAG_SWD_LOCK_ACT : Boolean; -- Indicates if JTAG and SWD Lock is active
+      IP_PROT_ACT       : Boolean; -- Indicates if IP protection is active
+      Reserved4         : Bits_26;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_SYSTEM_STAT_Type use record
+      Reserved1         at 0 range 0 ..  0;
+      Reserved2         at 0 range 1 ..  1;
+      Reserved3         at 0 range 2 ..  2;
+      DBG_SEC_ACT       at 0 range 3 ..  3;
+      JTAG_SWD_LOCK_ACT at 0 range 4 ..  4;
+      IP_PROT_ACT       at 0 range 5 ..  5;
+      Reserved4         at 0 range 6 .. 31;
    end record;
 
    -- Table 6-34. SYSCTL Registers
@@ -372,6 +511,72 @@ pragma Style_Checks (Off);
 
    SYS_SRAM_BANKEN : aliased SYS_SRAM_BANKEN_Type
       with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0014#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_SRAM_BANKRET : aliased SYS_SRAM_BANKRET_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0018#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_FLASH_SIZE : aliased Unsigned_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0020#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_DIO_GLTFLT_CTL : aliased SYS_DIO_GLTFLT_CTL_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0030#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_SECDATA_UNLOCK : aliased SYS_X_UNLOCK_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0040#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_MASTER_UNLOCK : aliased SYS_X_UNLOCK_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#1000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_BOOTOVER_REQ0 : aliased Unsigned_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#1004#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_BOOTOVER_REQ1 : aliased Unsigned_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#1008#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_BOOTOVER_ACK : aliased Unsigned_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#100C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_RESET_REQ : aliased SYS_RESET_REQ_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#1010#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_RESET_STATOVER : aliased SYS_RESET_STATOVER_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#1014#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   SYS_SYSTEM_STAT : aliased SYS_SYSTEM_STAT_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#1020#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
