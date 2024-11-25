@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# PowerPC POWER8 (QEMU emulator).
+# QEMU-PPC64 (QEMU emulator).
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
