@@ -82,11 +82,6 @@ package body BSP
       Secondary_Stack.Init;
       -------------------------------------------------------------------------
       Exceptions.Init;
-      -- PL031 RTC ------------------------------------------------------------
-      PL031_Descriptor := (
-         Base_Address => System'To_Address (PL031_RTC_BASEADDRESS)
-         );
-      PL031.Init (PL031_Descriptor);
       -- PL011 UART0 ----------------------------------------------------------
       PL011_Descriptor := (
          Base_Address => System'To_Address (PL011_UART0_BASEADDRESS),
@@ -109,6 +104,11 @@ package body BSP
       if Core.Debug_Flag then
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
+      -- PL031 RTC ------------------------------------------------------------
+      PL031_Descriptor := (
+         Base_Address => System'To_Address (PL031_RTC_BASEADDRESS)
+         );
+      PL031.Init (PL031_Descriptor);
       -- PL110 LCD ------------------------------------------------------------
       PL110_Descriptor.Base_Address := System'To_Address (PL110_BASEADDRESS);
       PL110.Init (PL110_Descriptor);
