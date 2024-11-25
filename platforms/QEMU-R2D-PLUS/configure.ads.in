@@ -4,7 +4,7 @@ package Configure
    is
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "R2D-PLUS";
+   PLATFORM  : constant String := "QEMU-R2D-PLUS";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
 

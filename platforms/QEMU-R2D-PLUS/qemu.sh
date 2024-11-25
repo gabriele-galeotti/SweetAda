@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# R2D-PLUS (QEMU emulator).
+# QEMU-R2D-PLUS (QEMU emulator).
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #

@@ -2,7 +2,7 @@
 #ifndef _CONFIGURE_H
 #define _CONFIGURE_H 1
 
-#define PLATFORM  "R2D-PLUS"
+#define PLATFORM  "QEMU-R2D-PLUS"
 #define CPU       "@CPU@"
 #define CPU_MODEL "@CPU_MODEL@"
 
