@@ -70,7 +70,7 @@ package body Exceptions
          declare
             function To_U32 is new Ada.Unchecked_Conversion (mcause_Type, Unsigned_32);
          begin
-            Console.Print (To_U32 (mcause), Prefix => "*** Exception: ", NL => True);
+            Console.Print (To_U32 (mcause), Prefix => "*** EXCEPTION: ", NL => True);
          end;
          loop null; end loop;
       end if;
