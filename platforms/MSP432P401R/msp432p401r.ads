@@ -1856,14 +1856,14 @@ pragma Style_Checks (Off);
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for UCAxCTLW0_Type use record
-      UCSWRST  at 0 range  0 .. 0;
-      UCTXBRK  at 0 range  1 .. 1;
-      UCTXADDR at 0 range  2 .. 2;
-      UCDORM   at 0 range  3 .. 3;
-      UCBRKIE  at 0 range  4 .. 4;
-      UCRXEIE  at 0 range  5 .. 5;
-      UCSSELx  at 0 range  6 .. 7;
-      UCSYNC   at 0 range  8 .. 8;
+      UCSWRST  at 0 range  0 ..  0;
+      UCTXBRK  at 0 range  1 ..  1;
+      UCTXADDR at 0 range  2 ..  2;
+      UCDORM   at 0 range  3 ..  3;
+      UCBRKIE  at 0 range  4 ..  4;
+      UCRXEIE  at 0 range  5 ..  5;
+      UCSSELx  at 0 range  6 ..  7;
+      UCSYNC   at 0 range  8 ..  8;
       UCMODEx  at 0 range  9 .. 10;
       UCSPB    at 0 range 11 .. 11;
       UC7BIT   at 0 range 12 .. 12;
