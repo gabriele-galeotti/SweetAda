@@ -25,6 +25,11 @@ _start:
 startcode:
 
                 //
+                // Disable all DAIF exceptions.
+                //
+                msr     daifset,#0xF
+
+                //
                 // CPACR_EL1/FPEN Advanced SIMD and floating-point registers.
                 //
                 mrs     x1,cpacr_el1
