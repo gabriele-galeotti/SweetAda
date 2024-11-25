@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM LEON3 (QEMU emulator).
+REM QEMU-LEON3 (QEMU emulator).
 REM
 REM Copyright (C) 2020-2024 Gabriele Galeotti
 REM

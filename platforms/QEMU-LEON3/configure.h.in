@@ -2,7 +2,7 @@
 #ifndef _CONFIGURE_H
 #define _CONFIGURE_H 1
 
-#define PLATFORM  "LEON3"
+#define PLATFORM  "QEMU-LEON3"
 #define CPU       "@CPU@"
 #define CPU_MODEL "@CPU_MODEL@"
 

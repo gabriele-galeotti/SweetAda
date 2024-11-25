@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# LEON3 (QEMU emulator).
+# QEMU-LEON3 (QEMU emulator).
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
