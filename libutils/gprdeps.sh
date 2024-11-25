@@ -69,17 +69,20 @@ parse_gpr()
 if [ ! -e $1 ] ; then
   return 0
 fi
-while IFS= read -r line ; do
-  line=$(printf "%s" "${line}" | sed                \
+while IFS= read -r textline ; do
+  textline=$(printf "%s" "${textline}" | sed        \
           -e "s|^[[:blank:]]*||;s|[[:blank:]]*\$||" \
           -e "s|^[Ww][Ii][Tt][Hh]|with|"            \
         )
-  case ${line} in
+  case ${textline} in
     --* | "")
       continue
       ;;
     with*)
-      unit=$(printf "%s" "${line}" | sed -e "s|^with[[:blank:]]*\"\(.*\)\"[[:blank:]]*;.*\$|\1|")
+      unit=$(
+             printf "%s" "${textline}"                                   | \
+             sed -e "s|^with[[:blank:]]*\"\(.*\)\"[[:blank:]]*;.*\$|\1|"   \
+            )
       printf " %s.gpr" "${unit}"
       ;;
     *)

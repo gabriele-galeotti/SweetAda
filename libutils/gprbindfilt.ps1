@@ -81,38 +81,38 @@ $exit_status = 0
 
 $state = 0
 $elaboration_createfile = $false
-foreach ($line in $input)
+foreach ($textline in $input)
 {
   $elaboration = $false
   $elaboration_order_deps = $false
   $elaboration_order = $false
-  $empty_line = $false
-  if ($line.StartsWith("__exitstatus__="))
+  $empty_textline = $false
+  if ($textline.StartsWith("__exitstatus__="))
   {
-    $linearray = $line.Trim(" ") -Split "="
-    $exit_status = [int]$linearray[1]
+    $textlinearray = $textline.Trim(" ") -Split "="
+    $exit_status = [int]$textlinearray[1]
     break
   }
-  if     ($line.StartsWith("ELABORATION ORDER DEPENDENCIES"))
+  if     ($textline.StartsWith("ELABORATION ORDER DEPENDENCIES"))
   {
     $elaboration = $true
     $elaboration_order_deps = $true
   }
-  elseif ($line.StartsWith("ELABORATION ORDER"))
+  elseif ($textline.StartsWith("ELABORATION ORDER"))
   {
     $elaboration = $true
     $elaboration_order = $true
   }
-  elseif ([string]::IsNullOrEmpty($line))
+  elseif ([string]::IsNullOrEmpty($textline))
   {
-    $empty_line = $true
+    $empty_textline = $true
   }
   switch ($state)
   {
     0
     {
       $print = "STDOUT"
-      if ($empty_line)
+      if ($empty_textline)
       {
         $print =
         $state = 1
@@ -120,7 +120,7 @@ foreach ($line in $input)
     }
     1
     {
-      $line = "$($nl)$($line)"
+      $textline = "$($nl)$($textline)"
       if ($elaboration)
       {
         if (-not ($elaboration_createfile))
@@ -148,7 +148,7 @@ foreach ($line in $input)
     # ELABORATION ORDER
     2
     {
-      if ($empty_line)
+      if ($empty_textline)
       {
         $state = 0
       }
@@ -157,14 +157,14 @@ foreach ($line in $input)
     3
     {
       # empty line after "ELABORATION ORDER DEPENDENCIES"
-      if ($empty_line)
+      if ($empty_textline)
       {
         $state = 4
       }
     }
     4
     {
-      if ($empty_line)
+      if ($empty_textline)
       {
         $state = 0
       }
@@ -176,8 +176,8 @@ foreach ($line in $input)
   }
   switch ($print)
   {
-    "STDOUT" { Write-Host "$($line)" }
-    "FILE"   { Add-Content -Path $elaboration_filename -Value "$($line)" }
+    "STDOUT" { Write-Host "$($textline)" }
+    "FILE"   { Add-Content -Path $elaboration_filename -Value "$($textline)" }
     default  { }
   }
 }

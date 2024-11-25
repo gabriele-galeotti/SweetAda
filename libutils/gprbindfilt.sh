@@ -80,14 +80,14 @@ exit_status=0
 
 STATE=0
 NL=$(printf "\n%s" "_") ; NL=${NL%_}
-while IFS= read -r line ; do
+while IFS= read -r textline ; do
   ELABORATION=
   ELABORATION_ORDER_DEPS=
   ELABORATION_ORDER=
-  EMPTY_LINE=
-  case ${line} in
+  EMPTY_TEXTLINE=
+  case ${textline} in
     __exitstatus__=*)
-      eval ${line}
+      eval ${textline}
       exit_status=${__exitstatus__}
       break
       ;;
@@ -100,7 +100,7 @@ while IFS= read -r line ; do
       ELABORATION_ORDER=Y
       ;;
     "")
-      EMPTY_LINE=Y
+      EMPTY_TEXTLINE=Y
       ;;
     *)
       ;;
@@ -108,13 +108,13 @@ while IFS= read -r line ; do
   case ${STATE} in
     0)
       PRINT=STDOUT
-      if [ "${EMPTY_LINE}" = "Y" ] ; then
+      if [ "${EMPTY_TEXTLINE}" = "Y" ] ; then
         PRINT=
         STATE=1
       fi
       ;;
     1)
-      line="${NL}${line}"
+      textline="${NL}${textline}"
       if [ "${ELABORATION}" = "Y" ] ; then
         PRINT=FILE
         if   [ "${ELABORATION_ORDER}" = "Y" ] ; then
@@ -129,19 +129,19 @@ while IFS= read -r line ; do
       ;;
     # ELABORATION ORDER
     2)
-      if [ "${EMPTY_LINE}" = "Y" ] ; then
+      if [ "${EMPTY_TEXTLINE}" = "Y" ] ; then
         STATE=0
       fi
       ;;
     # ELABORATION ORDER DEPENDENCIES
     3)
       # empty line after "ELABORATION ORDER DEPENDENCIES"
-      if [ "${EMPTY_LINE}" = "Y" ] ; then
+      if [ "${EMPTY_TEXTLINE}" = "Y" ] ; then
         STATE=4
       fi
       ;;
     4)
-      if [ "${EMPTY_LINE}" = "Y" ] ; then
+      if [ "${EMPTY_TEXTLINE}" = "Y" ] ; then
         STATE=0
       fi
       ;;
@@ -151,10 +151,10 @@ while IFS= read -r line ; do
   esac
   case ${PRINT} in
     STDOUT)
-      printf "%s\n" "${line}"
+      printf "%s\n" "${textline}"
       ;;
     FILE)
-      gnatbindelab=${gnatbindelab}$(printf "%s\n" "${line}")${NL}
+      gnatbindelab=${gnatbindelab}$(printf "%s\n" "${textline}")${NL}
       ;;
     *)
       ;;
