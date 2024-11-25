@@ -39,6 +39,10 @@ puts stdout "start address: $start_address"
 # the target CPU (only if we do not specify "-debug")
 if {$debug_mode eq 0} {
     puts stdout "starting CPU @ $start_address"
-    resume $start_address
+    targets bcm2837.cpu0 ; resume $start_address
+    targets bcm2837.cpu1 ; resume $start_address
+    targets bcm2837.cpu2 ; resume $start_address
+    targets bcm2837.cpu3 ; resume $start_address
+    targets bcm2837.cpu0
 }
 

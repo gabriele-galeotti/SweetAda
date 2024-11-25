@@ -75,25 +75,6 @@ _start:
                 and     x0,x0,#0xFF
                 cbnz    x0,core_is_ap
 
-#if 0
-                //
-                // SMP setup.
-                //
-                .equ    spin_cpu1,0xE0
-                .equ    spin_cpu2,0xE8
-                .equ    spin_cpu3,0xF0
-                ldr     x1,_start
-                mov     x2,#spin_cpu1
-                str     x1,[x2]
-                sev
-                mov     x2,#spin_cpu2
-                str     x1,[x2]
-                sev
-                mov     x2,#spin_cpu3
-                str     x1,[x2]
-                sev
-#endif
-
                 //
                 // Initialize .bss section.
                 //
@@ -127,9 +108,6 @@ core_is_ap:
                 .extern ap_key
                 .extern ap_sp
                 .extern ap_pc
-                wfe
-                b       core_is_ap
-#if 0
                 ldr     x1,=ap_key
                 ldr     w2,=0xAA55AA55
 1:              ldr     w3,[x1],#0
@@ -146,7 +124,6 @@ core_is_ap:
                 cbz     x3,1b
                 mov     sp,x13
                 br      x3
-#endif
 
                 .size   _start,.-_start
 
