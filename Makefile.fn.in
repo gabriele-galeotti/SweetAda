@@ -14,8 +14,6 @@
 # SPACE
 # OSTYPE
 # VERBOSE
-# ECHO
-# SED
 # UPDATETM
 # VERBOSE
 #
@@ -89,9 +87,9 @@ unquote = $(subst ,$(SPACE),$(patsubst "%",%,$(subst $(SPACE),,$1)))
 #
 ifeq ($(OSTYPE),cmd)
 __echo-print-xform__ = $(subst <,^<,$(subst >,^>,$(subst &,^&,$(subst |,^|,$(call unquote,$1)))))
-echo-print = $(if $(call __echo-print-xform__,$1),$(ECHO) $(call __echo-print-xform__,$1),$(ECHO).&)
+echo-print = $(if $(call __echo-print-xform__,$1),ECHO $(call __echo-print-xform__,$1),ECHO.&)
 else
-echo-print = $(ECHO) "$(call unquote,$1)"
+echo-print = printf "%s\n" "$(call unquote,$1)"
 endif
 
 #
@@ -182,25 +180,5 @@ ifeq ($(OSTYPE),cmd)
 create-emptyfile = TYPE nul > $1
 else
 create-emptyfile = touch $1
-endif
-
-#
-# remove-basename
-#
-# Usage:
-# $(call remove-basename,<file_list>,<file_basename>)
-#
-# This function will remove a [relative-path-prefix]file from a list.
-# If:
-# LIBGNAT_SRCS_COMMON = xxx.ads ../common/yyy.ads ../common/zzz.ads
-# then, after the command:
-# $(call remove-basename,LIBGNAT_SRCS_COMMON,yyy.ads)
-# the unit will be removed from the list and the content of the list will be:
-# LIBGNAT_SRCS_COMMON = xxx.ads ../common/zzz.ads
-#
-ifeq ($(OSTYPE),cmd)
-remove-basename = $(eval $1 := $(shell $(ECHO) $($1)| $(SED) -e "s|[^ ]*$2||"))
-else
-remove-basename = $(eval $1 := $(shell $(ECHO) "$($1)" | $(SED) -e "s|[^ ]*$2||"))
 endif
 
