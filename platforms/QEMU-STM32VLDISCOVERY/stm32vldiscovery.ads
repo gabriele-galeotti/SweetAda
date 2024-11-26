@@ -36,6 +36,162 @@ package STM32VLDISCOVERY
    use Bits;
 
    ----------------------------------------------------------------------------
+   -- 17 Real-time clock (RTC)
+   ----------------------------------------------------------------------------
+
+   -- 17.4.1 RTC control register high (RTC_CRH)
+
+   type RTC_CRH_Type is record
+      SECIE    : Boolean := False; -- Second interrupt enable
+      ALRIE    : Boolean := False; -- Alarm interrupt enable
+      OWIE     : Boolean := False; -- Overflow interrupt enable
+      Reserved : Bits_13 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTC_CRH_Type use record
+      SECIE    at 0 range 0 ..  0;
+      ALRIE    at 0 range 1 ..  1;
+      OWIE     at 0 range 2 ..  2;
+      Reserved at 0 range 3 .. 15;
+   end record;
+
+   -- 17.4.2 RTC control register low (RTC_CRL)
+
+   type RTC_CRL_Type is record
+      SECF     : Boolean := False; -- Second flag
+      ALRF     : Boolean := False; -- Alarm flag
+      OWF      : Boolean := False; -- Overflow flag
+      RSF      : Boolean := False; -- Registers synchronized flag
+      CNF      : Boolean := False; -- Configuration flag
+      RTOFF    : Boolean := True;  -- RTC operation OFF
+      Reserved : Bits_10 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTC_CRL_Type use record
+      SECF     at 0 range 0 ..  0;
+      ALRF     at 0 range 1 ..  1;
+      OWF      at 0 range 2 ..  2;
+      RSF      at 0 range 3 ..  3;
+      CNF      at 0 range 4 ..  4;
+      RTOFF    at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 15;
+   end record;
+
+   -- 17.4.3 RTC prescaler load register (RTC_PRLH / RTC_PRLL)
+
+   type RTC_PRLH_Type is record
+      PRL      : Bits_4  := 0; -- RTC prescaler reload value high
+      Reserved : Bits_12 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTC_PRLH_Type use record
+      PRL      at 0 range 0 ..  3;
+      Reserved at 0 range 4 .. 15;
+   end record;
+
+   type RTC_PRLL_Type is record
+      PRL : Bits_16 := 0; -- RTC prescaler reload value low
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTC_PRLL_Type use record
+      PRL at 0 range 0 .. 15;
+   end record;
+
+   -- 17.4.4 RTC prescaler divider register (RTC_DIVH / RTC_DIVL)
+
+   type RTC_DIVH_Type is record
+      RTC_DIV  : Bits_4  := 0; -- RTC clock divider high
+      Reserved : Bits_12 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTC_DIVH_Type use record
+      RTC_DIV  at 0 range 0 ..  3;
+      Reserved at 0 range 4 .. 15;
+   end record;
+
+   type RTC_DIVL_Type is record
+      RTC_DIV : Bits_16 := 0; -- RTC clock divider low
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTC_DIVL_Type use record
+      RTC_DIV at 0 range 0 .. 15;
+   end record;
+
+   -- 17.4.5 RTC counter register (RTC_CNTH / RTC_CNTL)
+
+   -- 17.4.6 RTC alarm register high (RTC_ALRH / RTC_ALRL)
+
+   -- 17.4.7 RTC register map
+
+   RTC_BASEADDRESS : constant := 16#4000_2800#;
+
+   RTC_CRH : aliased RTC_CRH_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_CRL : aliased RTC_CRL_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_PRLH : aliased RTC_PRLH_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_PRLL : aliased RTC_PRLL_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_DIVH : aliased RTC_DIVH_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#10#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_DIVL : aliased RTC_DIVL_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#14#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_CNTH : aliased Unsigned_16
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#18#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_CNTL : aliased Unsigned_16
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#1C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_ALRH : aliased Unsigned_16
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#20#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTC_ALRL : aliased Unsigned_16
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#24#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 23 Universal synchronous asynchronous receiver transmitter (USART)
    ----------------------------------------------------------------------------
 
