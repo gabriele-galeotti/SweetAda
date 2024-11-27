@@ -59,8 +59,6 @@ endif
 #                                                                              #
 ################################################################################
 
-include $(KERNEL_PARENT_PATH)/Makefile.fn.in
-
 TARGET := $(CPU)
 
 ifeq ($(OSTYPE),cmd)
