@@ -278,7 +278,7 @@ include gnatmake.tc.in
 CONFIGURE_DEPS += gnatmake.tc.in
 ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
-GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GNATMAKE) --version 2>nul|$(SED) -e "2,$$d")
+GNATMAKE_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GNATMAKE) --version 2>nul| $(SED) -e "2,$$d")
 else
 GNATMAKE_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_GNATMAKE) --version 2> /dev/null | $(SED) -e "2,\$$d")
 endif
@@ -287,7 +287,7 @@ else ifeq ($(BUILD_MODE),GPRbuild)
 GPRBUILD := gprbuild$(EXEEXT)
 ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
-GPRBUILD_VERSION := $(shell SET "PATH=$(PATH)" && $(GPRBUILD) --version 2>nul|$(SED) -e "2,$$d")
+GPRBUILD_VERSION := $(shell SET "PATH=$(PATH)" && $(GPRBUILD) --version 2>nul| $(SED) -e "2,$$d")
 else
 GPRBUILD_VERSION := $(shell PATH="$(PATH)" $(GPRBUILD) --version 2> /dev/null | $(SED) -e "2,\$$d")
 endif
