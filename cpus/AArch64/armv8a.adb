@@ -111,6 +111,10 @@ pragma Style_Checks (Off);
    function HCR_EL2_Read return HCR_EL2_Type is function MRS_Read is new MRS ("hcr_el2", HCR_EL2_Type); begin return MRS_Read; end HCR_EL2_Read;
    procedure HCR_EL2_Write (Value : in HCR_EL2_Type) is procedure MSR_Write is new MSR ("hcr_el2", HCR_EL2_Type); begin MSR_Write (Value); end HCR_EL2_Write;
 
+   function ID_AA64ISAR0_EL1_Read return ID_AA64ISAR0_EL1_Type is function MRS_Read is new MRS ("id_aa64isar0_el1", ID_AA64ISAR0_EL1_Type); begin return MRS_Read; end ID_AA64ISAR0_EL1_Read;
+   function ID_AA64ISAR1_EL1_Read return ID_AA64ISAR1_EL1_Type is function MRS_Read is new MRS ("id_aa64isar1_el1", ID_AA64ISAR1_EL1_Type); begin return MRS_Read; end ID_AA64ISAR1_EL1_Read;
+   function ID_AA64ISAR2_EL1_Read return ID_AA64ISAR2_EL1_Type is function MRS_Read is new MRS ("id_aa64isar2_el1", ID_AA64ISAR2_EL1_Type); begin return MRS_Read; end ID_AA64ISAR2_EL1_Read;
+
    function ISR_EL1_Read return ISR_EL1_Type is function MRS_Read is new MRS ("isr_el1", ISR_EL1_Type); begin return MRS_Read; end ISR_EL1_Read;
 
    function MPIDR_EL1_Read return MPIDR_EL1_Type is function MRS_Read is new MRS ("mpidr_el1", MPIDR_EL1_Type); begin return MRS_Read; end MPIDR_EL1_Read;
@@ -126,6 +130,9 @@ pragma Style_Checks (Off);
 
    -- function TCR2_EL2_Read return TCR2_EL2_Type is function MRS_Read is new MRS ("tcr2_el2", TCR2_EL2_Type); begin return MRS_Read; end TCR2_EL2_Read;
    -- procedure TCR2_EL2_Write (Value : in TCR2_EL2_Type) is procedure MSR_Write is new MSR ("tcr2_el2", TCR2_EL2_Type); begin MSR_Write (Value); end TCR2_EL2_Write;
+
+   function TCR_EL1_Read return TCR_EL1_Type is function MRS_Read is new MRS ("tcr_el1", TCR_EL1_Type); begin return MRS_Read; end TCR_EL1_Read;
+   procedure TCR_EL1_Write (Value : in TCR_EL1_Type) is procedure MSR_Write is new MSR ("tcr_el1", TCR_EL1_Type); begin MSR_Write (Value); end TCR_EL1_Write;
 
    function TTBR0_EL1_Read return TTBR0_EL1_Type is function MRS_Read is new MRS ("ttbr0_el1", TTBR0_EL1_Type); begin return MRS_Read; end TTBR0_EL1_Read;
    procedure TTBR0_EL1_Write (Value : in TTBR0_EL1_Type) is procedure MSR_Write is new MSR ("ttbr0_el1", TTBR0_EL1_Type); begin MSR_Write (Value); end TTBR0_EL1_Write;

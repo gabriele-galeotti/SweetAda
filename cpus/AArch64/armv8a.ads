@@ -318,6 +318,11 @@ pragma Style_Checks (Off);
       (Value : in FPEXC32_EL2_Type)
       with Inline => True;
 
+   -- D19.2.44 GCR_EL1, Tag Control Register.
+   -- D19.2.45 GMID_EL1, Multiple tag transfer ID register
+   -- D19.2.46 HACR_EL2, Hypervisor Auxiliary Control Register
+   -- D19.2.47 HAFGRTR_EL2, Hypervisor Activity Monitors Fine-Grained Read Trap Register
+
    -- D19.2.48 HCR_EL2, Hypervisor Configuration Register
 
    type HCR_EL2_Type is record
@@ -454,6 +459,304 @@ pragma Style_Checks (Off);
       (Value : in HCR_EL2_Type)
       with Inline => True;
 
+   -- D19.2.49 HCRX_EL2, Extended Hypervisor Configuration Register
+   -- D19.2.50 HDFGRTR_EL2, Hypervisor Debug Fine-Grained Read Trap Register
+   -- D19.2.51 HDFGWTR_EL2, Hypervisor Debug Fine-Grained Write Trap Register
+   -- D19.2.52 HFGITR_EL2, Hypervisor Fine-Grained Instruction Trap Register
+   -- D19.2.53 HFGRTR_EL2, Hypervisor Fine-Grained Read Trap Register
+   -- D19.2.54 HFGWTR_EL2, Hypervisor Fine-Grained Write Trap Register
+   -- D19.2.55 HPFAR_EL2, Hypervisor IPA Fault Address Register
+   -- D19.2.56 HSTR_EL2, Hypervisor System Trap Register
+   -- D19.2.57 ID_AA64AFR0_EL1, AArch64 Auxiliary Feature Register 0
+   -- D19.2.58 ID_AA64AFR1_EL1, AArch64 Auxiliary Feature Register 1
+   -- D19.2.59 ID_AA64DFR0_EL1, AArch64 Debug Feature Register 0
+   -- D19.2.60 ID_AA64DFR1_EL1, AArch64 Debug Feature Register 1
+
+   -- D19.2.61 ID_AA64ISAR0_EL1, AArch64 Instruction Set Attribute Register 0
+
+   AES_NONE  : constant := 2#0000#; -- No AES instructions implemented.
+   AES_YES   : constant := 2#0001#; -- AESE, AESD, AESMC, and AESIMC instructions implemented.
+   AES_PMULL : constant := 2#0010#; -- As for 0b0001, plus PMULL and PMULL2 instructions operating on 64-bit source elements.
+
+   SHA1_NONE : constant := 2#0000#; -- No SHA1 instructions implemented.
+   SHA1_YES  : constant := 2#0001#; -- SHA1C, SHA1P, SHA1M, SHA1H, SHA1SU0, and SHA1SU1 instructions implemented.
+
+   SHA2_NONE : constant := 2#0000#; -- No SHA2 instructions implemented.
+   SHA2_YES  : constant := 2#0001#; -- Implements instructions: SHA256H, SHA256H2, SHA256SU0, and SHA256SU1.
+   SHA2_512  : constant := 2#0010#; -- Implements instructions: SHA256H, SHA256H2, SHA256SU0, and SHA256SU1. SHA512H, SHA512H2, SHA512SU0, and SHA512SU1.
+
+   CRC32_NONE : constant := 2#0000#; -- CRC32 instructions are not implemented.
+   CRC32_YES  : constant := 2#0001#; -- CRC32B, CRC32H, CRC32W, CRC32X, CRC32CB, CRC32CH, CRC32CW, and CRC32CX instructions are implemented.
+
+   ATOMIC_NONE : constant := 2#0000#; -- No Atomic instructions implemented.
+   ATOMIC_YES  : constant := 2#0010#; -- LDADD, LDCLR, LDEOR, LDSET, LDSMAX, LDSMIN, LDUMAX, LDUMIN, CAS, CASP, and SWP instructions implemented.
+
+   TME_NONE : constant := 2#0000#; -- TME instructions are not implemented.
+   TME_YES  : constant := 2#0001#; -- TCANCEL, TCOMMIT, TSTART, and TTEST instructions are implemented.
+
+   RDM_NONE : constant := 2#0000#; -- No RDMA instructions implemented.
+   RDM_YES  : constant := 2#0001#; -- SQRDMLAH and SQRDMLSH instructions implemented.
+
+   SHA3_NONE : constant := 2#0000#; -- No SHA3 instructions implemented.
+   SHA3_YES  : constant := 2#0001#; -- EOR3, RAX1, XAR, and BCAX instructions implemented.
+
+   SM3_NONE : constant := 2#0000#; -- No SM3 instructions implemented.
+   SM3_YES  : constant := 2#0001#; -- SM3SS1, SM3TT1A, SM3TT1B, SM3TT2A, SM3TT2B, SM3PARTW1, and SM3PARTW2 instructions implemented.
+
+   SM4_NONE : constant := 2#0000#; -- No SM4 instructions implemented.
+   SM4_YES  : constant := 2#0001#; -- SM4E and SM4EKEY instructions implemented.
+
+   DP_NONE : constant := 2#0000#; -- No Dot Product instructions implemented.
+   DP_YES  : constant := 2#0001#; -- UDOT and SDOT instructions implemented.
+
+   FHM_NONE : constant := 2#0000#; -- FMLAL and FMLSL instructions are not implemented.
+   FHM_YES  : constant := 2#0001#; -- FMLAL and FMLSL instructions are implemented.
+
+   TS_NONE : constant := 2#0000#; -- No flag manipulation instructions are implemented.
+   TS_YES  : constant := 2#0001#; -- CFINV, RMIF, SETF16, and SETF8 instructions are implemented.
+   TS_AXXA : constant := 2#0010#; -- CFINV, RMIF, SETF16, SETF8, AXFLAG, and XAFLAG instructions are implemented.
+
+   TLB_NONE  : constant := 2#0000#; -- Outer Shareable and TLB range maintenance instructions are not implemented.
+   TLB_YES   : constant := 2#0001#; -- Outer Shareable TLB maintenance instructions are implemented.
+   TLB_RANGE : constant := 2#0010#; -- Outer Shareable and TLB range maintenance instructions are implemented.
+
+   RNDR_NONE : constant := 2#0000#; -- No Random Number instructions are implemented.
+   RNDR_YES  : constant := 2#0001#; -- RNDR and RNDRRS registers are implemented.
+
+   type ID_AA64ISAR0_EL1_Type is record
+      Reserved : Bits_4;
+      AES      : Bits_4; -- Indicates support for AES instructions in AArch64 state.
+      SHA1     : Bits_4; -- Indicates support for SHA1 instructions in AArch64 state.
+      SHA2     : Bits_4; -- Indicates support for SHA2 instructions in AArch64 state.
+      CRC32    : Bits_4; -- Indicates support for CRC32 instructions in AArch64 state.
+      Atomic   : Bits_4; -- Indicates support for Atomic instructions in AArch64 state.
+      TME      : Bits_4; -- Indicates support for TME instructions.
+      RDM      : Bits_4; -- Indicates support for SQRDMLAH and SQRDMLSH instructions in AArch64 state.
+      SHA3     : Bits_4; -- Indicates support for SHA3 instructions in AArch64 state.
+      SM3      : Bits_4; -- Indicates support for SM3 instructions in AArch64 state.
+      SM4      : Bits_4; -- Indicates support for SM4 instructions in AArch64 state.
+      DP       : Bits_4; -- Indicates support for Dot Product instructions in AArch64 state.
+      FHM      : Bits_4; -- Indicates support for FMLAL and FMLSL instructions.
+      TS       : Bits_4; -- Indicates support for flag manipulation instructions.
+      TLB      : Bits_4; -- Indicates support for Outer Shareable and TLB range maintenance instructions.
+      RNDR     : Bits_4; -- Indicates support for Random Number instructions in AArch64 state.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ID_AA64ISAR0_EL1_Type use record
+      Reserved at 0 range  0 ..  3;
+      AES      at 0 range  4 ..  7;
+      SHA1     at 0 range  8 .. 11;
+      SHA2     at 0 range 12 .. 15;
+      CRC32    at 0 range 16 .. 19;
+      Atomic   at 0 range 20 .. 23;
+      TME      at 0 range 24 .. 27;
+      RDM      at 0 range 28 .. 31;
+      SHA3     at 0 range 32 .. 35;
+      SM3      at 0 range 36 .. 39;
+      SM4      at 0 range 40 .. 43;
+      DP       at 0 range 44 .. 47;
+      FHM      at 0 range 48 .. 51;
+      TS       at 0 range 52 .. 55;
+      TLB      at 0 range 56 .. 59;
+      RNDR     at 0 range 60 .. 63;
+   end record;
+
+   function ID_AA64ISAR0_EL1_Read
+      return ID_AA64ISAR0_EL1_Type
+      with Inline => True;
+
+   -- D19.2.62 ID_AA64ISAR1_EL1, AArch64 Instruction Set Attribute Register 1
+
+   DPB_NONE  : constant := 2#0000#; -- DC CVAP not supported.
+   DPB_YES   : constant := 2#0001#; -- DC CVAP supported.
+   DPB_CVADP : constant := 2#0010#; -- DC CVAP and DC CVADP supported.
+
+   APA_NONE : constant := 2#0000#; -- Address Authentication using the QARMA5 algorithm is not implemented.
+   APA_1    : constant := 2#0001#; -- Address Authentication using the QARMA5 algorithm is implemented, with the HaveEnhancedPAC() and HaveEnhancedPAC2() functions returning FALSE.
+   APA_2    : constant := 2#0010#; -- Address Authentication using the QARMA5 algorithm is implemented, with the HaveEnhancedPAC() function returning TRUE and the HaveEnhancedPAC2() function returning FALSE.
+   APA_3    : constant := 2#0011#; -- Address Authentication using the QARMA5 algorithm is implemented, with the HaveEnhancedPAC2() function returning TRUE, the HaveFPAC() function returning FALSE, the HaveFPACCombined() function returning FALSE, and the HaveEnhancedPAC() function returning FALSE.
+   APA_4    : constant := 2#0100#; -- Address Authentication using the QARMA5 algorithm is implemented, with the HaveEnhancedPAC2() function returning TRUE, the HaveFPAC() function returning TRUE, the HaveFPACCombined() function returning FALSE, and the HaveEnhancedPAC() function returning FALSE.
+   APA_5    : constant := 2#0101#; -- Address Authentication using the QARMA5 algorithm is implemented, with the HaveEnhancedPAC2() function returning TRUE, the HaveFPAC() function returning TRUE, the HaveFPACCombined() function returning TRUE, and the HaveEnhancedPAC() function returning FALSE.
+
+   API_NONE : constant := 2#0000#; -- Address Authentication using an IMPLEMENTATION DEFINED algorithm is not implemented.
+   API_1    : constant := 2#0001#; -- Address Authentication using an IMPLEMENTATION DEFINED algorithm is implemented, with the HaveEnhancedPAC() and HaveEnhancedPAC2() functions returning FALSE.
+   API_2    : constant := 2#0010#; -- Address Authentication using an IMPLEMENTATION DEFINED algorithm is implemented, with the HaveEnhancedPAC() function returning TRUE, and the HaveEnhancedPAC2() function returning FALSE.
+   API_3    : constant := 2#0011#; -- Address Authentication using an IMPLEMENTATION DEFINED algorithm is implemented, with the HaveEnhancedPAC2() function returning TRUE, and the HaveEnhancedPAC() function returning FALSE.
+   API_4    : constant := 2#0100#; -- Address Authentication using an IMPLEMENTATION DEFINED algorithm is implemented, with the HaveEnhancedPAC2() function returning TRUE, the HaveFPAC() function returning TRUE, the HaveFPACCombined() function returning FALSE, and the HaveEnhancedPAC() function returning FALSE.
+   API_5    : constant := 2#0101#; -- Address Authentication using an IMPLEMENTATION DEFINED algorithm is implemented, with the HaveEnhancedPAC2() function returning TRUE, the HaveFPAC() function returning TRUE, the HaveFPACCombined() function returning TRUE, and the HaveEnhancedPAC() function returning FALSE.
+
+   JSCVT_NONE : constant := 2#0000#; -- The FJCVTZS instruction is not implemented.
+   JSCVT_YES  : constant := 2#0001#; -- The FJCVTZS instruction is implemented.
+
+   FCMA_NONE : constant := 2#0000#; -- The FCMLA and FCADD instructions are not implemented.
+   FCMA_YES  : constant := 2#0001#; -- The FCMLA and FCADD instructions are implemented.
+
+   LRCPC_NONE      : constant := 2#0000#; -- RCpc instructions are not implemented.
+   LRCPC_YES       : constant := 2#0001#; -- The no offset LDAPR, LDAPRB, and LDAPRH instructions are implemented.
+   LRCPC_LDAPRSTLR : constant := 2#0010#; -- As 0b0001, and the LDAPR (unscaled immediate) and STLR (unscaled immediate) instructions are implemented.
+
+   GPA_NONE : constant := 2#0000#; -- Generic Authentication using the QARMA5 algorithm is not implemented.
+   GPA_YES  : constant := 2#0001#; -- Generic Authentication using the QARMA5 algorithm is implemented. This includes the PACGA instruction.
+
+   GPI_NONE : constant := 2#0000#; -- Generic Authentication using an IMPLEMENTATION DEFINED algorithm is not implemented.
+   GPI_YES  : constant := 2#0001#; -- Generic Authentication using an IMPLEMENTATION DEFINED algorithm is implemented. This includes the PACGA instruction.
+
+   FRINTTS_NONE : constant := 2#0000#; -- FRINT32Z, FRINT32X, FRINT64Z, and FRINT64X instructions are not implemented.
+   FRINTTS_YES  : constant := 2#0001#; -- FRINT32Z, FRINT32X, FRINT64Z, and FRINT64X instructions are implemented.
+
+   SB_NONE : constant := 2#0000#; -- SB instruction is not implemented.
+   SB_YES  : constant := 2#0001#; -- SB instruction is implemented.
+
+   SPECRES_NONE : constant := 2#0000#; -- Prediction invalidation instructions are not implemented.
+   SPECRES_YES  : constant := 2#0001#; -- CFP RCTX, DVP RCTX and CPP RCTX instructions are implemented.
+
+   BF16_NONE    : constant := 2#0000#; -- BFloat16 instructions are not implemented.
+   BF16_YES     : constant := 2#0001#; -- BFCVT, BFCVTN, BFCVTN2, BFDOT, BFMLALB, BFMLALT, and BFMMLA instructions are implemented.
+   BF16_FPCREBF : constant := 2#0010#; -- As 0b0001, but the FPCR.EBF field is also supported.
+
+   DGH_NONE : constant := 2#0000#; -- Data Gathering Hint is not implemented.
+   DGH_YES  : constant := 2#0001#; -- Data Gathering Hint is implemented.
+
+   I8MM_NONE : constant := 2#0000#; -- Int8 matrix multiplication instructions are not implemented.
+   I8MM_YES  : constant := 2#0001#; -- SMMLA, SUDOT, UMMLA, USMMLA, and USDOT instructions are implemented.
+
+   XS_NONE : constant := 2#0000#; -- The XS attribute, the TLBI and DSB instructions with the nXS qualifier, and the HCRX_EL2.{FGTnXS, FnXS} fields are not supported.
+   XS_YES  : constant := 2#0001#; -- The XS attribute, the TLBI and DSB instructions with the nXS qualifier, and the HCRX_EL2.{FGTnXS, FnXS} fields are supported.
+
+   LS64_NONE   : constant := 2#0000#; -- The LD64B, ST64B, ST64BV, and ST64BV0 instructions, the ACCDATA_EL1 register, and associated traps are not supported.
+   LS64_YES    : constant := 2#0001#; -- The LD64B and ST64B instructions are supported.
+   LS64_TRAPS1 : constant := 2#0010#; -- The LD64B, ST64B, and ST64BV instructions, and their associated traps are supported.
+   LS64_TRAPS2 : constant := 2#0011#; -- The LD64B, ST64B, ST64BV, and ST64BV0 instructions, the ACCDATA_EL1 register, and their associated traps are supported.
+
+   type ID_AA64ISAR1_EL1_Type is record
+      DPB     : Bits_4; -- Data Persistence writeback. Indicates support for the DC CVAP and DC CVADP instructions in AArch64 state.
+      APA     : Bits_4; -- Indicates whether the QARMA5 algorithm is implemented in the PE for address authentication, in AArch64 state.
+      API     : Bits_4; -- Indicates whether an IMPLEMENTATION DEFINED algorithm is implemented in the PE for address authentication, in AArch64 state.
+      JSCVT   : Bits_4; -- Indicates support for JavaScript conversion from double precision floating point values to integers in AArch64 state.
+      FCMA    : Bits_4; -- Indicates support for complex number addition and multiplication, where numbers are stored in vectors.
+      LRCPC   : Bits_4; -- Indicates support for weaker release consistency, RCpc, based model.
+      GPA     : Bits_4; -- Indicates whether the QARMA5 algorithm is implemented in the PE for generic code authentication in AArch64 state.
+      GPI     : Bits_4; -- Indicates support for an IMPLEMENTATION DEFINED algorithm is implemented in the PE for generic code authentication in AArch64 state.
+      FRINTTS : Bits_4; -- Indicates support for the FRINT32Z, FRINT32X, FRINT64Z, and FRINT64X instructions are implemented.
+      SB      : Bits_4; -- Indicates support for SB instruction in AArch64 state.
+      SPECRES : Bits_4; -- Indicates support for prediction invalidation instructions in AArch64 state.
+      BF16    : Bits_4; -- Indicates support for Advanced SIMD and Floating-point BFloat16 instructions in AArch64 state.
+      DGH     : Bits_4; -- Indicates support for the Data Gathering Hint instruction.
+      I8MM    : Bits_4; -- Indicates support for Advanced SIMD and Floating-point Int8 matrix multiplication instructions in AArch64 state.
+      XS      : Bits_4; -- Indicates support for the XS attribute, the TLBI and DSB instructions with the nXS qualifier, and the HCRX_EL2.{FGTnXS, FnXS} fields in AArch64 state.
+      LS64    : Bits_4; -- Indicates support for LD64B and ST64B* instructions, and the ACCDATA_EL1 register.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ID_AA64ISAR1_EL1_Type use record
+      DPB     at 0 range  0 ..  3;
+      APA     at 0 range  4 ..  7;
+      API     at 0 range  8 .. 11;
+      JSCVT   at 0 range 12 .. 15;
+      FCMA    at 0 range 16 .. 19;
+      LRCPC   at 0 range 20 .. 23;
+      GPA     at 0 range 24 .. 27;
+      GPI     at 0 range 28 .. 31;
+      FRINTTS at 0 range 32 .. 35;
+      SB      at 0 range 36 .. 39;
+      SPECRES at 0 range 40 .. 43;
+      BF16    at 0 range 44 .. 47;
+      DGH     at 0 range 48 .. 51;
+      I8MM    at 0 range 52 .. 55;
+      XS      at 0 range 56 .. 59;
+      LS64    at 0 range 60 .. 63;
+   end record;
+
+   function ID_AA64ISAR1_EL1_Read
+      return ID_AA64ISAR1_EL1_Type
+      with Inline => True;
+
+   -- D19.2.63 ID_AA64ISAR2_EL1, AArch64 Instruction Set Attribute Register 2
+
+   WFxT_NONE : constant := 2#0000#; -- WFET and WFIT are not supported.
+   WFxT_YES  : constant := 2#0010#; -- WFET and WFIT are supported, and the register number is reported in the ESR_ELx on exceptions.
+
+   RPRES_NONE : constant := 2#0000#; -- When FPCR.AH == 1: Reciprocal and reciprocal square root estimates give 8 bits of mantissa, when FPCR.AH is 1.
+   RPRES_YES  : constant := 2#0001#; -- When FPCR.AH == 1: Reciprocal and reciprocal square root estimates give 12 bits of mantissa, when FPCR.AH is 1.
+
+   GPA3_NONE : constant := 2#0000#; -- Generic Authentication using the QARMA3 algorithm is not implemented.
+   GPA3_YES  : constant := 2#0001#; -- Generic Authentication using the QARMA3 algorithm is implemented. This includes the PACGA instruction.
+
+   APA3_NONE : constant := 2#0000#; -- Address Authentication using the QARMA3 algorithm is not implemented.
+   APA3_1    : constant := 2#0001#; -- Address Authentication using the QARMA3 algorithm is implemented, with the HaveEnhancedPAC() and HaveEnhancedPAC2() functions returning FALSE.
+   APA3_2    : constant := 2#0010#; -- Address Authentication using the QARMA3 algorithm is implemented, with the HaveEnhancedPAC() function returning TRUE and the HaveEnhancedPAC2() function returning FALSE.
+   APA3_3    : constant := 2#0011#; -- Address Authentication using the QARMA3 algorithm is implemented, with the HaveEnhancedPAC2() function returning TRUE, the HaveFPAC() function returning FALSE, the HaveFPACCombined() function returning FALSE, and the HaveEnhancedPAC() function returning FALSE.
+   APA3_4    : constant := 2#0100#; -- Address Authentication using the QARMA3 algorithm is implemented, with the HaveEnhancedPAC2() function returning TRUE, the HaveFPAC() function returning TRUE, the HaveFPACCombined() function returning FALSE, and the HaveEnhancedPAC() function returning FALSE.
+   APA3_5    : constant := 2#0101#; -- Address Authentication using the QARMA3 algorithm is implemented, with the HaveEnhancedPAC2() function returning TRUE, the HaveFPAC() function returning TRUE, the HaveFPACCombined() function returning TRUE, and the HaveEnhancedPAC() function returning FALSE.
+
+   MOPS_NONE : constant := 2#0000#; -- The Memory Copy and Memory Set instructions are not implemented in AArch64 state.
+   MOPS_YES  : constant := 2#0001#; -- The Memory Copy and Memory Set instructions are implemented in AArch64 state with the following exception. If FEAT_MTE is implemented, then SETGP*, SETGM* and SETGE* instructions are also supported.
+
+   BC_NONE : constant := 2#0000#; -- BC instruction is not implemented.
+   BC_YES  : constant := 2#0001#; -- BC instruction is implemented.
+
+   PAC_NONE : constant := 2#0000#; -- ConstPACField() returns FALSE.
+   PAC_YES  : constant := 2#0001#; -- ConstPACField() returns TRUE.
+
+   type ID_AA64ISAR2_EL1_Type is record
+      WFxT     : Bits_4;  -- Indicates support for the WFET and WFIT instructions in AArch64 state.
+      RPRES    : Bits_4;  -- Indicates support for 12 bits of mantissa in reciprocal and reciprocal square root instructions in AArch64 state, when FPCR.AH is 1.
+      GPA3     : Bits_4;  -- Indicates whether the QARMA3 algorithm is implemented in the PE for generic code authentication in AArch64 state.
+      APA3     : Bits_4;  -- Indicates whether the QARMA3 algorithm is implemented in the PE for address authentication in AArch64 state.
+      MOPS     : Bits_4;  -- Indicates support for the Memory Copy and Memory Set instructions in AArch64 state.
+      BC       : Bits_4;  -- Indicates support for the BC instruction in AArch64 state.
+      PAC      : Bits_4;  -- Indicates whether the ConstPACField() function used as part of the PAC addition returns FALSE or TRUE.
+      Reserved : Bits_36;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ID_AA64ISAR2_EL1_Type use record
+      WFxT     at 0 range  0 ..  3;
+      RPRES    at 0 range  4 ..  7;
+      GPA3     at 0 range  8 .. 11;
+      APA3     at 0 range 12 .. 15;
+      MOPS     at 0 range 16 .. 19;
+      BC       at 0 range 20 .. 23;
+      PAC      at 0 range 24 .. 27;
+      Reserved at 0 range 28 .. 63;
+   end record;
+
+   function ID_AA64ISAR2_EL1_Read
+      return ID_AA64ISAR2_EL1_Type
+      with Inline => True;
+
+   -- D19.2.64 ID_AA64MMFR0_EL1, AArch64 Memory Model Feature Register 0
+   -- D19.2.65 ID_AA64MMFR1_EL1, AArch64 Memory Model Feature Register 1
+   -- D19.2.66 ID_AA64MMFR2_EL1, AArch64 Memory Model Feature Register 2
+   -- D19.2.67 ID_AA64MMFR3_EL1, AArch64 Memory Model Feature Register 3
+   -- D19.2.68 ID_AA64MMFR4_EL1, AArch64 Memory Model Feature Register 4
+   -- D19.2.69 ID_AA64PFR0_EL1, AArch64 Processor Feature Register 0
+   -- D19.2.70 ID_AA64PFR1_EL1, AArch64 Processor Feature Register 1
+   -- D19.2.71 ID_AA64PFR2_EL1, AArch64 Processor Feature Register 2
+   -- D19.2.72 ID_AA64SMFR0_EL1, SME Feature ID register 0
+   -- D19.2.73 ID_AA64ZFR0_EL1, SVE Feature ID register 0
+   -- D19.2.74 ID_AFR0_EL1, AArch32 Auxiliary Feature Register 0
+   -- D19.2.75 ID_DFR0_EL1, AArch32 Debug Feature Register 0
+   -- D19.2.76 ID_DFR1_EL1, Debug Feature Register 1
+   -- D19.2.77 ID_ISAR0_EL1, AArch32 Instruction Set Attribute Register 0
+   -- D19.2.78 ID_ISAR1_EL1, AArch32 Instruction Set Attribute Register 1
+   -- D19.2.79 ID_ISAR2_EL1, AArch32 Instruction Set Attribute Register 2
+   -- D19.2.80 ID_ISAR3_EL1, AArch32 Instruction Set Attribute Register 3
+   -- D19.2.81 ID_ISAR4_EL1, AArch32 Instruction Set Attribute Register 4
+   -- D19.2.82 ID_ISAR5_EL1, AArch32 Instruction Set Attribute Register 5
+   -- D19.2.83 ID_ISAR6_EL1, AArch32 Instruction Set Attribute Register 6
+   -- D19.2.84 ID_MMFR0_EL1, AArch32 Memory Model Feature Register 0
+   -- D19.2.85 ID_MMFR1_EL1, AArch32 Memory Model Feature Register 1
+   -- D19.2.86 ID_MMFR2_EL1, AArch32 Memory Model Feature Register 2
+   -- D19.2.87 ID_MMFR3_EL1, AArch32 Memory Model Feature Register 3
+   -- D19.2.88 ID_MMFR4_EL1, AArch32 Memory Model Feature Register 4
+   -- D19.2.89 ID_MMFR5_EL1, AArch32 Memory Model Feature Register 5
+   -- D19.2.90 ID_PFR0_EL1, AArch32 Processor Feature Register 0
+   -- D19.2.91 ID_PFR1_EL1, AArch32 Processor Feature Register 1
+   -- D19.2.92 ID_PFR2_EL1, AArch32 Processor Feature Register 2
+   -- D19.2.93 IFSR32_EL2, Instruction Fault Status Register (EL2)
+
    -- D19.2.94 ISR_EL1, Interrupt Status Register
 
    type ISR_EL1_Type is record
@@ -480,6 +783,16 @@ pragma Style_Checks (Off);
    function ISR_EL1_Read
       return ISR_EL1_Type
       with Inline => True;
+
+   -- D19.2.95 LORC_EL1, LORegion Control (EL1)
+   -- D19.2.96 LOREA_EL1, LORegion End Address (EL1)
+   -- D19.2.97 LORID_EL1, LORegionID (EL1)
+   -- D19.2.98 LORN_EL1, LORegion Number (EL1)
+   -- D19.2.99 LORSA_EL1, LORegion Start Address (EL1)
+   -- D19.2.100 MAIR_EL1, Memory Attribute Indirection Register (EL1)
+   -- D19.2.101 MAIR_EL2, Memory Attribute Indirection Register (EL2)
+   -- D19.2.102 MAIR_EL3, Memory Attribute Indirection Register (EL3)
+   -- D19.2.103 MIDR_EL1, Main ID Register
 
    -- D19.2.104 MPIDR_EL1, Multiprocessor Affinity Register
 
@@ -511,6 +824,22 @@ pragma Style_Checks (Off);
    function MPIDR_EL1_Read
       return MPIDR_EL1_Type
       with Inline => True;
+
+   -- D19.2.105 MVFR0_EL1, AArch32 Media and VFP Feature Register 0
+   -- D19.2.106 MVFR1_EL1, AArch32 Media and VFP Feature Register 1
+   -- D19.2.107 MVFR2_EL1, AArch32 Media and VFP Feature Register 2
+   -- D19.2.108 PAR_EL1, Physical Address Register
+   -- D19.2.109 REVIDR_EL1, Revision ID Register
+   -- D19.2.110 RGSR_EL1, Random Allocation Tag Seed Register.
+   -- D19.2.111 RMR_EL1, Reset Management Register (EL1)
+   -- D19.2.112 RMR_EL2, Reset Management Register (EL2)
+   -- D19.2.113 RMR_EL3, Reset Management Register (EL3)
+   -- D19.2.114 RNDR, Random Number
+   -- D19.2.115 RNDRRS, Reseeded Random Number
+   -- D19.2.116 RVBAR_EL1, Reset Vector Base Address Register (if EL2 and EL3 not implemented)
+   -- D19.2.117 RVBAR_EL2, Reset Vector Base Address Register (if EL3 not implemented)
+   -- D19.2.118 RVBAR_EL3, Reset Vector Base Address Register (if EL3 implemented)
+   -- D19.2.119 S3_<op1>_<Cn>_<Cm>_<op2>, IMPLEMENTATION DEFINED registers
 
    -- D19.2.120 SCR_EL3, Secure Configuration Register
 
@@ -627,6 +956,10 @@ pragma Style_Checks (Off);
    procedure SCR_EL3_Write
       (Value : in SCR_EL3_Type)
       with Inline => True;
+
+   -- D19.2.121 SCTLR2_EL1, System Control Register (EL1)
+   -- D19.2.122 SCTLR2_EL2, System Control Register (EL2)
+   -- D19.2.123 SCTLR2_EL3, System Control Register (EL3)
 
    -- D19.2.124 SCTLR_EL1, System Control Register (EL1)
 
@@ -774,6 +1107,19 @@ pragma Style_Checks (Off);
       (Value : in SCTLR_EL1_Type)
       with Inline => True;
 
+   -- D19.2.125 SCTLR_EL2, System Control Register (EL2)
+   -- D19.2.126 SCTLR_EL3, System Control Register (EL3)
+   -- D19.2.127 SCXTNUM_EL0, EL0 Read/Write Software Context Number
+   -- D19.2.128 SCXTNUM_EL1, EL1 Read/Write Software Context Number
+   -- D19.2.129 SCXTNUM_EL2, EL2 Read/Write Software Context Number
+   -- D19.2.130 SCXTNUM_EL3, EL3 Read/Write Software Context Number
+   -- D19.2.131 SMCR_EL1, SME Control Register (EL1)
+   -- D19.2.132 SMCR_EL2, SME Control Register (EL2)
+   -- D19.2.133 SMCR_EL3, SME Control Register (EL3)
+   -- D19.2.134 SMIDR_EL1, Streaming Mode Identification Register
+   -- D19.2.135 SMPRIMAP_EL2, Streaming Mode Priority Mapping Register
+   -- D19.2.136 SMPRI_EL1, Streaming Mode Priority Register
+
    -- TCR2_EL1/2 are unknown in Cortex A-53
 
    -- D19.2.137 TCR2_EL1, Extended Translation Control Register (EL1)
@@ -797,6 +1143,149 @@ pragma Style_Checks (Off);
    -- procedure TCR2_EL2_Write
    --    (Value : in TCR2_EL2_Type)
    --    with Inline => True;
+
+   -- D19.2.139 TCR_EL1, Translation Control Register (EL1)
+
+   IRGN_NM          : constant := 2#00#; -- Normal memory, Inner Non-cacheable.
+   IRGN_NM_IWBRAWAC : constant := 2#01#; -- Normal memory, Inner Write-Back Read-Allocate Write-Allocate Cacheable.
+   IRGN_NM_IWTRA    : constant := 2#10#; -- Normal memory, Inner Write-Through Read-Allocate No Write-Allocate Cacheable.
+   IRGN_NM_IWBRA    : constant := 2#11#; -- Normal memory, Inner Write-Back Read-Allocate No Write-Allocate Cacheable.
+
+   ORGN_NM          : constant := 2#00#; -- Normal memory, Outer Non-cacheable.
+   ORGN_NM_IWBRAWAC : constant := 2#01#; -- Normal memory, Outer Write-Back Read-Allocate Write-Allocate Cacheable.
+   ORGN_NM_IWTRA    : constant := 2#10#; -- Normal memory, Outer Write-Through Read-Allocate No Write-Allocate Cacheable.
+   ORGN_NM_IWBRA    : constant := 2#11#; -- Normal memory, Outer Write-Back Read-Allocate No Write-Allocate Cacheable.
+
+   SH_NOSHARE : constant := 2#00#; -- Non-shareable
+   SH_OUTER   : constant := 2#10#; -- Outer Shareable
+   SH_INNER   : constant := 2#11#; -- Inner Shareable
+
+   TG_4  : constant := 2#00#; -- 4KB
+   TG_64 : constant := 2#01#; -- 64KB
+   TG_16 : constant := 2#10#; -- 16KB
+
+   A1_TTBR0 : constant := 0; -- TTBR0_EL1.ASID defines the ASID.
+   A1_TTBR1 : constant := 1; -- TTBR1_EL1.ASID defines the ASID.
+
+   IPS_4G    : constant := 2#000#; -- 32 bits, 4GB.
+   IPS_64G   : constant := 2#001#; -- 36 bits, 64GB.
+   IPS_1TB   : constant := 2#010#; -- 40 bits, 1TB.
+   IPS_4TB   : constant := 2#011#; -- 42 bits, 4TB.
+   IPS_16TB  : constant := 2#100#; -- 44 bits, 16TB.
+   IPS_256TB : constant := 2#101#; -- 48 bits, 256TB.
+   IPS_4PB   : constant := 2#110#; -- 52 bits, 4PB.
+
+   AS_8  : constant := 0; -- 8 bit - the upper 8 bits of TTBR0_EL1 and TTBR1_EL1 are ignored by hardware for every purpose except reading back the register, and are treated as if they are all zeros for when used for allocation and matching entries in the TLB.
+   AS_16 : constant := 1; -- 16 bit - the upper 16 bits of TTBR0_EL1 and TTBR1_EL1 are used for allocation and matching in the TLB.
+
+   type TCR_EL1_Type is record
+      T0SZ      : Bits_6  := 0;     -- The size offset of the memory region addressed by TTBR0_EL1.
+      Reserved1 : Bits_1  := 0;
+      EPD0      : Boolean := False; -- Translation table walk disable for translations using TTBR0_EL1.
+      IRGN0     : Bits_2  := 0;     -- Inner cacheability attribute for memory associated with translation table walks using TTBR0_EL1.
+      ORGN0     : Bits_2  := 0;     -- Outer cacheability attribute for memory associated with translation table walks using TTBR0_EL1.
+      SH0       : Bits_2  := 0;     -- Shareability attribute for memory associated with translation table walks using TTBR0_EL1.
+      TG0       : Bits_2  := 0;     -- Granule size for the TTBR0_EL1.
+      T1SZ      : Bits_6  := 0;     -- The size offset of the memory region addressed by TTBR1_EL1.
+      A1        : Bits_1  := 0;     -- Selects whether TTBR0_EL1 or TTBR1_EL1 defines the ASID.
+      EPD1      : Boolean := False; -- Translation table walk disable for translations using TTBR1_EL1.
+      IRGN1     : Bits_2  := 0;     -- Inner cacheability attribute for memory associated with translation table walks using TTBR1_EL1.
+      ORGN1     : Bits_2  := 0;     -- Outer cacheability attribute for memory associated with translation table walks using TTBR1_EL1.
+      SH1       : Bits_2  := 0;     -- Shareability attribute for memory associated with translation table walks using TTBR1_EL1.
+      TG1       : Bits_2  := 0;     -- Granule size for the TTBR1_EL1.
+      IPS       : Bits_3  := 0;     -- Intermediate Physical Address Size.
+      Reserved2 : Bits_1  := 0;
+      AS        : Boolean := False; -- ASID Size.
+      TBI0      : Boolean := False; -- Top Byte ignored. Indicates whether the top byte of an address is used for address match for the TTBR0_EL1 region, or ignored and used for tagged addresses.
+      TBI1      : Boolean := False; -- Top Byte ignored. Indicates whether the top byte of an address is used for address match for the TTBR1_EL1 region, or ignored and used for tagged addresses.
+      HA        : Boolean := False; -- Hardware Access flag update in stage 1 translations from EL0 and EL1.
+      HD        : Boolean := False; -- Hardware management of dirty state in stage 1 translations from EL0 and EL1.
+      HPD0      : Boolean := False; -- Hierarchical Permission Disables. This affects the hierarchical control bits, APTable, PXNTable, and UXNTable, except NSTable, in the translation tables pointed to by TTBR0_EL1.
+      HPD1      : Boolean := False; -- Hierarchical Permission Disables. This affects the hierarchical control bits, APTable, PXNTable, and UXNTable, except NSTable, in the translation tables pointed to by TTBR1_EL1.
+      HWU059    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[59] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
+      HWU060    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[60] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
+      HWU061    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[61] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
+      HWU062    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[62] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
+      HWU159    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[59] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
+      HWU160    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[60] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
+      HWU161    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[61] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
+      HWU162    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[62] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
+      TBID0     : Boolean := False; -- Controls the use of the top byte of instruction addresses for address matching.
+      TBID1     : Boolean := False; -- Controls the use of the top byte of instruction addresses for address matching.
+      NFD0      : Boolean := False; -- Non-fault translation timing disable for stage 1 translations using TTBR0_EL1.
+      NFD1      : Boolean := False; -- Non-fault translation timing disable for stage 1 translations using TTBR1_EL1.
+      E0PD0     : Boolean := False; -- Faulting control for Unprivileged access to any address translated by TTBR0_EL1.
+      E0PD1     : Boolean := False; -- Faulting control for Unprivileged access to any address translated by TTBR1_EL1.
+      TCMA0     : Boolean := False; -- Controls the generation of Unchecked accesses at EL1, and at EL0 if HCR_EL2.{E2H,TGE}!={1,1}, when address[59:55] = 0b00000.
+      TCMA1     : Boolean := False; -- Controls the generation of Unchecked accesses at EL1, and at EL0 if HCR_EL2.{E2H,TGE}!={1,1}, when address[59:55] = 0b11111.
+      DS        : Boolean := False; -- This field affects whether a 52-bit output address can be described by the translation tables of the 4KB or 16KB translation granules.
+      Reserved3 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for TCR_EL1_Type use record
+      T0SZ      at 0 range  0 ..  5;
+      Reserved1 at 0 range  6 ..  6;
+      EPD0      at 0 range  7 ..  7;
+      IRGN0     at 0 range  8 ..  9;
+      ORGN0     at 0 range 10 .. 11;
+      SH0       at 0 range 12 .. 13;
+      TG0       at 0 range 14 .. 15;
+      T1SZ      at 0 range 16 .. 21;
+      A1        at 0 range 22 .. 22;
+      EPD1      at 0 range 23 .. 23;
+      IRGN1     at 0 range 24 .. 25;
+      ORGN1     at 0 range 26 .. 27;
+      SH1       at 0 range 28 .. 29;
+      TG1       at 0 range 30 .. 31;
+      IPS       at 0 range 32 .. 34;
+      Reserved2 at 0 range 35 .. 35;
+      AS        at 0 range 36 .. 36;
+      TBI0      at 0 range 37 .. 37;
+      TBI1      at 0 range 38 .. 38;
+      HA        at 0 range 39 .. 39;
+      HD        at 0 range 40 .. 40;
+      HPD0      at 0 range 41 .. 41;
+      HPD1      at 0 range 42 .. 42;
+      HWU059    at 0 range 43 .. 43;
+      HWU060    at 0 range 44 .. 44;
+      HWU061    at 0 range 45 .. 45;
+      HWU062    at 0 range 46 .. 46;
+      HWU159    at 0 range 47 .. 47;
+      HWU160    at 0 range 48 .. 48;
+      HWU161    at 0 range 49 .. 49;
+      HWU162    at 0 range 50 .. 50;
+      TBID0     at 0 range 51 .. 51;
+      TBID1     at 0 range 52 .. 52;
+      NFD0      at 0 range 53 .. 53;
+      NFD1      at 0 range 54 .. 54;
+      E0PD0     at 0 range 55 .. 55;
+      E0PD1     at 0 range 56 .. 56;
+      TCMA0     at 0 range 57 .. 57;
+      TCMA1     at 0 range 58 .. 58;
+      DS        at 0 range 59 .. 59;
+      Reserved3 at 0 range 60 .. 63;
+   end record;
+
+   function TCR_EL1_Read
+      return TCR_EL1_Type
+      with Inline => True;
+   procedure TCR_EL1_Write
+      (Value : in TCR_EL1_Type)
+      with Inline => True;
+
+   -- D19.2.140 TCR_EL2, Translation Control Register (EL2)
+   -- D19.2.141 TCR_EL3, Translation Control Register (EL3)
+   -- D19.2.142 TFSRE0_EL1, Tag Fault Status Register (EL0).
+   -- D19.2.143 TFSR_EL1, Tag Fault Status Register (EL1)
+   -- D19.2.144 TFSR_EL2, Tag Fault Status Register (EL2)
+   -- D19.2.145 TFSR_EL3, Tag Fault Status Register (EL3)
+   -- D19.2.146 TPIDR2_EL0, EL0 Read/Write Software Thread ID Register 2
+   -- D19.2.147 TPIDR_EL0, EL0 Read/Write Software Thread ID Register
+   -- D19.2.148 TPIDR_EL1, EL1 Software Thread ID Register
+   -- D19.2.149 TPIDR_EL2, EL2 Software Thread ID Register
+   -- D19.2.150 TPIDR_EL3, EL3 Software Thread ID Register
+   -- D19.2.151 TPIDRRO_EL0, EL0 Read-Only Software Thread ID Register
 
    -- D19.2.152 TTBR0_EL1, Translation Table Base Register 0 (EL1)
    -- D19.2.153 TTBR0_EL2, Translation Table Base Register 0 (EL2)
@@ -899,6 +1388,17 @@ pragma Style_Checks (Off);
       (Value : in Unsigned_64)
       with Inline => True;
 
+   -- D19.2.160 VMPIDR_EL2, Virtualization Multiprocessor ID Register
+   -- D19.2.161 VNCR_EL2, Virtual Nested Control Register
+   -- D19.2.162 VPIDR_EL2, Virtualization Processor ID Register
+   -- D19.2.163 VSTCR_EL2, Virtualization Secure Translation Control Register
+   -- D19.2.164 VSTTBR_EL2, Virtualization Secure Translation Table Base Register
+   -- D19.2.165 VTCR_EL2, Virtualization Translation Control Register
+   -- D19.2.166 VTTBR_EL2, Virtualization Translation Table Base Register
+   -- D19.2.167 ZCR_EL1, SVE Control Register (EL1)
+   -- D19.2.168 ZCR_EL2, SVE Control Register (EL2)
+   -- D19.2.169 ZCR_EL3, SVE Control Register (EL3)
+
    ----------------------------------------------------------------------------
    -- D19.12 Generic Timer registers
    ----------------------------------------------------------------------------
@@ -919,6 +1419,21 @@ pragma Style_Checks (Off);
    function CNTFRQ_EL0_Read
       return CNTFRQ_EL0_Type
       with Inline => True;
+
+   -- D19.12.2 CNTHCTL_EL2, Counter-timer Hypervisor Control register
+   -- D19.12.3 CNTHP_CTL_EL2, Counter-timer Hypervisor Physical Timer Control register
+   -- D19.12.4 CNTHP_CVAL_EL2, Counter-timer Physical Timer CompareValue register (EL2)
+   -- D19.12.5 CNTHP_TVAL_EL2, Counter-timer Physical Timer TimerValue register (EL2)
+   -- D19.12.6 CNTHPS_CTL_EL2, Counter-timer Secure Physical Timer Control register (EL2)
+   -- D19.12.7 CNTHPS_CVAL_EL2, Counter-timer Secure Physical Timer CompareValue register (EL2)
+   -- D19.12.8 CNTHPS_TVAL_EL2, Counter-timer Secure Physical Timer TimerValue register (EL2)
+   -- D19.12.9 CNTHV_CTL_EL2, Counter-timer Virtual Timer Control register (EL2)
+   -- D19.12.10 CNTHV_CVAL_EL2, Counter-timer Virtual Timer CompareValue register (EL2)
+   -- D19.12.11 CNTHV_TVAL_EL2, Counter-timer Virtual Timer TimerValue Register (EL2)
+   -- D19.12.12 CNTHVS_CTL_EL2, Counter-timer Secure Virtual Timer Control register (EL2)
+   -- D19.12.13 CNTHVS_CVAL_EL2, Counter-timer Secure Virtual Timer CompareValue register (EL2)
+   -- D19.12.14 CNTHVS_TVAL_EL2, Counter-timer Secure Virtual Timer TimerValue register (EL2)
+   -- D19.12.15 CNTKCTL_EL1, Counter-timer Kernel Control register
 
    -- D19.12.16 CNTP_CTL_EL0, Counter-timer Physical Timer Control register
 
@@ -975,11 +1490,24 @@ pragma Style_Checks (Off);
       (Value : in CNTP_TVAL_EL0_Type)
       with Inline => True;
 
+   -- D19.12.19 CNTPCTSS_EL0, Counter-timer Self-Synchronized Physical Count register
+
    -- D19.12.20 CNTPCT_EL0, Counter-timer Physical Count register
 
    function CNTPCT_EL0_Read
       return Unsigned_64
       with Inline => True;
+
+   -- D19.12.21 CNTPS_CTL_EL1, Counter-timer Physical Secure Timer Control register
+   -- D19.12.22 CNTPOFF_EL2, Counter-timer Physical Offset register
+   -- D19.12.23 CNTPS_CVAL_EL1, Counter-timer Physical Secure Timer CompareValue register
+   -- D19.12.24 CNTPS_TVAL_EL1, Counter-timer Physical Secure Timer TimerValue register
+   -- D19.12.25 CNTV_CTL_EL0, Counter-timer Virtual Timer Control register
+   -- D19.12.26 CNTV_CVAL_EL0, Counter-timer Virtual Timer CompareValue register
+   -- D19.12.27 CNTV_TVAL_EL0, Counter-timer Virtual Timer TimerValue register
+   -- D19.12.28 CNTVCTSS_EL0, Counter-timer Self-Synchronized Virtual Count register
+   -- D19.12.29 CNTVCT_EL0, Counter-timer Virtual Count register
+   -- D19.12.30 CNTVOFF_EL2, Counter-timer Virtual Offset register
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
