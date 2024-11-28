@@ -20,8 +20,8 @@ with Configure;
 with Definitions;
 with Core;
 with Bits;
-with MMIO;
 with Secondary_Stack;
+with MMIO;
 with M68k;
 with Amiga;
 with ZorroII;
@@ -30,6 +30,7 @@ with Gayle;
 with MMU.Amiga;
 with Exceptions;
 with Console;
+with Malloc;
 
 package body BSP is
 
@@ -94,8 +95,10 @@ package body BSP is
       -- Serialport -----------------------------------------------------------
       Serialport_Init;
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Amiga/FS-UAE", NL => True);
@@ -105,10 +108,28 @@ package body BSP is
             Success : Boolean;
             PIC     : ZorroII.PIC_Type;
          begin
-            ZorroII.Setup (A2065.A2065_BASEADDRESS);
-            A2065.Probe (PIC, Success);
+            loop
+               PIC := ZorroII.Read;
+               exit when PIC.Board = 0;
+               Console.Print (PIC.Board,           Prefix => "Board:   ", NL => True);
+               Console.Print (PIC.ID_Product,      Prefix => "ID_Prod: ", NL => True);
+               Console.Print (PIC.ID_Manufacturer, Prefix => "ID_Manu: ", NL => True);
+               Console.Print (PIC.Serial_Number,   Prefix => "S/N:     ", NL => True);
+               Console.Print (PIC.Control_Status,  Prefix => "CTRL:    ", NL => True);
+               ZorroII.Setup (16#00E9_0000#);
+               -- ZorroII.Shutup;
+            end loop;
          end;
       end if;
+      -- if False then
+      --    declare
+      --       Success : Boolean;
+      --       PIC     : ZorroII.PIC_Type;
+      --    begin
+      --       ZorroII.Setup (A2065.A2065_BASEADDRESS);
+      --       A2065.Probe (PIC, Success);
+      --    end;
+      -- end if;
       -- Gayle IDE ------------------------------------------------------------
       if False then
          IDE_Descriptor.Base_Address  := System'To_Address (Gayle.GAYLE_IDE_BASEADDRESS);
@@ -132,6 +153,8 @@ package body BSP is
       INTENA_SetBitMask (PORTS);
       -- enable CPU interrupts
       Irq_Enable;
+      -------------------------------------------------------------------------
+      Malloc.Init (System'To_Address (16#000C_0000#), 16#0001_0000#, True);
       -------------------------------------------------------------------------
    end Setup;
 

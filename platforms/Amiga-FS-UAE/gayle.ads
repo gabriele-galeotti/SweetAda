@@ -19,6 +19,7 @@ with System;
 with Bits;
 
 package Gayle
+   with Preelaborate => True
    is
 
    --========================================================================--

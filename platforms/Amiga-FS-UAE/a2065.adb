@@ -38,7 +38,6 @@ package body A2065
    use Amiga;
    use Am7990;
    use Ethernet;
-   use PBUF;
 
    ----------------------------------------------------------------------------
    -- The Am7990 LANCE chip in the A2065 is wrapped with D0..D15 data lines
@@ -299,7 +298,7 @@ package body A2065
       is
       Result       : Boolean;
       A2065_Status : CSR0_Type;
-      P            : Pbuf_Ptr;
+      P            : PBUF.Pbuf_Ptr;
    begin
       Result := False;
       if not Am7990_Descriptor_Initialized then
@@ -321,7 +320,7 @@ package body A2065
             Result := True;
             -- Console.Print ("A2065: Initialization done.", NL => True);
          elsif A2065_Status.RINT then
-            while True loop
+            loop
                exit when not Receive_Ring (RX_Buffer_Index).RMD1.OWN;
                RX_Buffer_Index := (RX_Buffer_Index + 1) mod 2**RDR_ORDER;
             end loop;
@@ -341,10 +340,10 @@ package body A2065
                   ))
                );
             -- Console.Print (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT), Prefix => "RECEIVE = ", NL => True);
-            P := Allocate (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT) - 4); -- discard FCS
+            P := PBUF.Allocate (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT) - 4); -- discard FCS
             Memory_Functions.Cpymem (
                Receive_Buffers (RX_Buffer_Index)'Address,
-               Payload_Address (P),
+               PBUF.Payload_Address (P),
                Bytesize (Receive_Ring (RX_Buffer_Index).RMD3.MCNT - 4)
                );
             -- Receive_Ring (RX_Buffer_Index).RMD3.MCNT := 0; ???
@@ -382,7 +381,7 @@ package body A2065
    ----------------------------------------------------------------------------
    procedure Transmit
       (Data_Address : in System.Address;
-       P            : in Pbuf_Ptr)
+       P            : in PBUF.Pbuf_Ptr)
       is
       pragma Unreferenced (Data_Address);
    begin
@@ -393,7 +392,7 @@ package body A2065
       Console.Print (P.all.Size, Prefix => "TRANSMIT: ", NL => True);
       -- __FIX__ only one pbuf
       Memory_Functions.Cpymem (
-         Payload_Address (P),
+         PBUF.Payload_Address (P),
          Transmit_Buffers (0)'Address,
          Bytesize (P.all.Size)
          );

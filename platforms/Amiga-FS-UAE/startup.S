@@ -13,6 +13,9 @@
 #include <configure.h>
 #include <m68k.h>
 
+#define CIAA_PRA  0x00BFE001 // Port A
+#define CIAA_DDRA 0x00BFE201 // Data Direction Port A
+
 ////////////////////////////////////////////////////////////////////////////////
 
                 // macros for calling code without using the stack (which will
@@ -72,22 +75,24 @@ _start:
 #endif
 #endif
 
-#define CIAA_PRA  0x00BFE001 // Port A
-#define CIAA_DDRA 0x00BFE201 // Data Direction Port A
+                //
+                // Configure CIA A.
+                //
                 move.b  #0x3,CIAA_DDRA                  // CIAA: LED, OVL signals are outputs
                 move.b  #0x2,CIAA_PRA                   // CIAA: PWR LED on, disable aliased ROM and make RAM appears @ 0x00000000
 
-#if (CODE_RAM == 1)
+#if CODE_RAM == 1
                 //
                 // Code relocation.
                 //
-                //fjsr    movcode
+                fjsr    movcode
 #endif
-
+#if DATA_RELOC == 1
                 //
                 // Static data relocation.
                 //
-                //fjsr    movdata
+                fjsr    movdata
+#endif
 
                 //
                 // Setup stack pointers (ISP and/or MSP).
@@ -134,7 +139,7 @@ dead:           jmp     .
 // A6 = return address                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 
-#if 0
+#if CODE_RAM == 1
 movcode:
                 .extern _text_start
                 .extern _stext
@@ -155,7 +160,7 @@ movcode:
 // A6 = return address                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 
-#if 0
+#if DATA_RELOC == 1
 movdata:
                 .extern _data_start
                 .extern _sdata

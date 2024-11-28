@@ -15,6 +15,8 @@
 #
 # Environment variables:
 # PLATFORM_DIRECTORY
+# SHARE_DIRECTORY
+# TERMINAL
 #
 
 ################################################################################
@@ -29,25 +31,28 @@ SCRIPT_FILENAME=$(basename "$0")
 #                                                                              #
 ################################################################################
 
-# make the platform directory the CWD so that log files do not end up in the
-# top-level directory
-cd ${PLATFORM_DIRECTORY}
-
 # FS-UAE executable
 FS_UAE_EXECUTABLE="/opt/FS-UAE/bin/fs-uae"
 
 # TCP port for serial port
 SERIALPORT=1235
 
-# console for serial port
-setsid /usr/bin/xterm \
-  -T "FS-UAE" -geometry 80x24 -bg blue -fg white -sl 1024 -e \
-  "stty -icanon -echo ; while ! nc localhost ${SERIALPORT} 2> /dev/null ; do sleep 0.1 ; done" \
-  &
+# load terminal handling
+. ${SHARE_DIRECTORY}/terminal.sh
 
 # FS-UAE caches .adf disks
 rm -f ~/"Documents/FS-UAE/Save States/fs-uae/boot.adf"
 
+# make the platform directory the CWD so that log files do not end up in the
+# top-level directory
+cd ${PLATFORM_DIRECTORY}
+
+# console for serial port
+$(terminal ${TERMINAL}) \
+  "stty -icanon -echo ; while ! nc localhost ${SERIALPORT} 2> /dev/null ; do sleep 0.1 ; done" \
+  &
+
+# run FS-UAE
 "${FS_UAE_EXECUTABLE}" \
   fs-uae.conf \
   &

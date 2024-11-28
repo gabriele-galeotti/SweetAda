@@ -10,7 +10,9 @@
 #                                                                              #
 ################################################################################
 
-USE_APPLICATION := test-Amiga-FS-UAE
+USE_APPLICATION := test-amiga-fs-uae
+
+BOOT_FLOPPY := Y
 
 ################################################################################
 # CPU.                                                                         #
@@ -19,9 +21,9 @@ USE_APPLICATION := test-Amiga-FS-UAE
 
 CPU := M68k
 
-#CPU_MODEL := M68010
+CPU_MODEL := M68010
 #CPU_MODEL := M68020
-CPU_MODEL := M68030
+#CPU_MODEL := M68030
 #CPU_MODEL := M68040
 
 FPU_MODEL := M68881
@@ -32,23 +34,30 @@ FPU_MODEL := M68881
 #                                                                              #
 ################################################################################
 
-#GCC_SWITCHES_PLATFORM     := -mcpu=68010
+GCC_SWITCHES_PLATFORM     := -mcpu=68010
 #GCC_SWITCHES_PLATFORM     := -mcpu=68020 -m68881
-GCC_SWITCHES_PLATFORM     := -mcpu=68030 -m68881
+#GCC_SWITCHES_PLATFORM     := -mcpu=68030 -m68881
 #GCC_SWITCHES_PLATFORM     := -mcpu=68040
 
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
-#LD_SCRIPT                 := linker-rom.lds
-LD_SCRIPT                 := linker-chipram.lds
-#LD_SCRIPT                 := linker-fastram.lds
+
+ifeq ($(BOOT_FLOPPY),Y)
+GCC_SWITCHES_LOWLEVEL_PLATFORM :=
+LD_SCRIPT                      := linker-chipram.lds
+#LD_SCRIPT                      := linker-fastram.lds
+POSTBUILD_COMMAND              := $(SHELL_EXEC) postbuild-adfcreate$(SCREXT)
+else
+GCC_SWITCHES_LOWLEVEL_PLATFORM := -DCODE_RAM=1 -DDATA_RELOC=1
+LD_SCRIPT                      := linker-rom.lds
+POSTBUILD_COMMAND              :=
+endif
+
 OBJDUMP_SWITCHES_PLATFORM := -m m68k:$(CPU_MODEL:M%=%)
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 POSTBUILD_ROMFILE         := Y
-POSTBUILD_COMMAND         := $(SHELL_EXEC) postbuild-adfcreate$(SCREXT)
 
-CONFIGURE_FILES_PLATFORM       := fs-uae.conf configure.ads configure.h
-LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S
-GCC_SWITCHES_LOWLEVEL_PLATFORM := -DCODE_RAM=1
+CONFIGURE_FILES_PLATFORM := fs-uae.conf configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 
 CLEAN_OBJECTS_COMMON += debug.uae fs-uae.log.txt adfboot.* boot.adf
 
@@ -60,11 +69,15 @@ CLEAN_OBJECTS_COMMON += debug.uae fs-uae.log.txt adfboot.* boot.adf
 # FS-UAE parameters
 #export AMIGA_MODEL := A1000
 export AMIGA_MODEL := A4000/040
-#export KICKSTART_FILE := $(SWEETADA_PATH)/$(KERNEL_ROMFILE)
-export KICKSTART_FILE := /root/workspace/devices/Amiga-FS-UAE/Kickstart/kickstart_13_345.rom
 export CPU_FSUAE := $(CPU_MODEL:M%=%)
 export FPU_FSUAE := $(FPU_MODEL:M%=%)
+ifeq ($(BOOT_FLOPPY),Y)
+export KICKSTART_FILE := /root/workspace/devices/Amiga-FS-UAE/Kickstart/kickstart_13_345.rom
 export FLOPPY_DRIVE_0 := boot.adf
+else
+export KICKSTART_FILE := $(SWEETADA_PATH)/$(KERNEL_ROMFILE)
+export FLOPPY_DRIVE_0 :=
+endif
 export HARD_DRIVE_0 := disk.hdf
 
 ################################################################################

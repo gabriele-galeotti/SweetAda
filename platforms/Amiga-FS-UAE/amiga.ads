@@ -23,6 +23,7 @@ with Bits;
 with Videofont8x8;
 
 package Amiga
+   with Preelaborate => True
    is
 
    --========================================================================--
