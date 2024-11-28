@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body ARMv8A
@@ -92,6 +93,115 @@ package body ARMv8A
    end MSR;
 
    ----------------------------------------------------------------------------
+   -- Memory Attribute functions
+   ----------------------------------------------------------------------------
+
+   function Device_Memory_Attribute
+      (Device : Device_Attribute_Type;
+       XS     : Boolean)
+      return Memory_Attribute_Type
+      is
+      type MA_Device_Type is record
+         XS   : Bits_2;
+         dd   : Bits_2;
+         Zero : Bits_4;
+      end record
+         with Bit_Order => Low_Order_First,
+              Size      => 8;
+      for MA_Device_Type use record
+         XS   at 0 range 0 .. 1;
+         dd   at 0 range 2 .. 3;
+         Zero at 0 range 4 .. 7;
+      end record;
+      function To_MAT is new Ada.Unchecked_Conversion (MA_Device_Type, Memory_Attribute_Type);
+      MA_Device : MA_Device_Type;
+   begin
+      MA_Device.XS := (if XS then 2#01# else 2#00#);
+      case Device is
+         when DEVICE_nGnRnE => MA_Device.dd := 2#00#;
+         when DEVICE_nGnRE  => MA_Device.dd := 2#01#;
+         when DEVICE_nGRE   => MA_Device.dd := 2#10#;
+         when DEVICE_GRE    => MA_Device.dd := 2#11#;
+      end case;
+      MA_Device.Zero := 0;
+      return To_MAT (MA_Device);
+   end Device_Memory_Attribute;
+
+   function Normal_Memory_Attribute
+      (Attribute      : Normal_Memory_Attribute_Type;
+       Inner_Policy   : Normal_Memory_Policy_Type;
+       Inner_R_Policy : Bits_1;
+       Inner_W_Policy : Bits_1;
+       Outer_Policy   : Normal_Memory_Policy_Type;
+       Outer_R_Policy : Bits_1;
+       Outer_W_Policy : Bits_1)
+      return Memory_Attribute_Type
+      is
+      type MA_Memory_Type is record
+         Inner_W : Bits_1;
+         Inner_R : Bits_1;
+         Inner   : Bits_2;
+         Outer_W : Bits_1;
+         Outer_R : Bits_1;
+         Outer   : Bits_2;
+      end record
+         with Bit_Order => Low_Order_First,
+              Size      => 8;
+      for MA_Memory_Type use record
+         Inner_W at 0 range 0 .. 0;
+         Inner_R at 0 range 1 .. 1;
+         Inner   at 0 range 2 .. 3;
+         Outer_W at 0 range 4 .. 4;
+         Outer_R at 0 range 5 .. 5;
+         Outer   at 0 range 6 .. 7;
+      end record;
+      MA_Memory : MA_Memory_Type;
+      function To_Bits
+         (P : Normal_Memory_Policy_Type)
+         return Bits_2;
+      function To_Bits
+         (P : Normal_Memory_Policy_Type)
+         return Bits_2
+         is
+         B : Bits_2;
+      begin
+         case P is
+            when WTT  => B := 2#00#;
+            when nC   => B := 2#01#;
+            when WBT  => B := 2#01#;
+            when WTnT => B := 2#10#;
+            when WBnT => B := 2#11#;
+         end case;
+         return B;
+      end To_Bits;
+      function To_MAT is new Ada.Unchecked_Conversion (MA_Memory_Type, Memory_Attribute_Type);
+   begin
+      case Attribute is
+         when NORMAL_XS_InCOnC          => MA_Memory := (0, 0, 2#00#, 0, 0, 2#01#);
+         when NORMAL_XS_IWTCOWTCRAnWAnT => MA_Memory := (0, 0, 2#00#, 0, 1, 2#10#);
+         when NORMAL_MTE2_TIWBOWBRAWAnT => MA_Memory := (0, 0, 2#00#, 1, 1, 2#11#);
+         when NORMAL                    =>
+            if (Inner_Policy = WTT or else Inner_Policy = WBT) and then
+               Inner_W_Policy = NoAllocate                     and then
+               Inner_R_Policy = NoAllocate
+            then
+               raise Constraint_Error;
+            end if;
+            if (Outer_Policy = WTT or else Outer_Policy = WBT) and then
+               Outer_W_Policy = NoAllocate                     and then
+               Outer_R_Policy = NoAllocate
+            then
+               raise Constraint_Error;
+            end if;
+            MA_Memory := (
+               Inner_W_Policy, Inner_R_Policy, To_Bits (Inner_Policy),
+               Outer_W_Policy, Outer_R_Policy, To_Bits (Outer_Policy)
+               );
+      end case;
+      return To_MAT (MA_Memory);
+   end Normal_Memory_Attribute;
+
+   ----------------------------------------------------------------------------
    -- MRS/MSR instantiations
    ----------------------------------------------------------------------------
 
@@ -116,6 +226,10 @@ pragma Style_Checks (Off);
    function ID_AA64ISAR2_EL1_Read return ID_AA64ISAR2_EL1_Type is function MRS_Read is new MRS ("id_aa64isar2_el1", ID_AA64ISAR2_EL1_Type); begin return MRS_Read; end ID_AA64ISAR2_EL1_Read;
 
    function ISR_EL1_Read return ISR_EL1_Type is function MRS_Read is new MRS ("isr_el1", ISR_EL1_Type); begin return MRS_Read; end ISR_EL1_Read;
+
+   function MAIR_EL1_Read return MAIR_ELx_Type is function MRS_Read is new MRS ("mair_el1", MAIR_ELx_Type); begin return MRS_Read; end MAIR_EL1_Read;
+   function MAIR_EL2_Read return MAIR_ELx_Type is function MRS_Read is new MRS ("mair_el2", MAIR_ELx_Type); begin return MRS_Read; end MAIR_EL2_Read;
+   function MAIR_EL3_Read return MAIR_ELx_Type is function MRS_Read is new MRS ("mair_el3", MAIR_ELx_Type); begin return MRS_Read; end MAIR_EL3_Read;
 
    function MPIDR_EL1_Read return MPIDR_EL1_Type is function MRS_Read is new MRS ("mpidr_el1", MPIDR_EL1_Type); begin return MRS_Read; end MPIDR_EL1_Read;
 

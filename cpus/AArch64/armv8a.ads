@@ -72,6 +72,56 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    ----------------------------------------------------------------------------
+   -- Memory attributes (D19.2.100 .. D19.2.102)
+   ----------------------------------------------------------------------------
+
+   type Memory_Attribute_Type is new Bits_8;
+
+   -- "device" memory
+
+   type Device_Attribute_Type is (
+      DEVICE_nGnRnE, -- Device_nGnRnE
+      DEVICE_nGnRE,  -- Device_nGnRE
+      DEVICE_nGRE,   -- Device_nGRE
+      DEVICE_GRE     -- Device_GRE
+      );
+
+   function Device_Memory_Attribute
+      (Device : Device_Attribute_Type;
+       XS     : Boolean)
+      return Memory_Attribute_Type;
+
+   --  "normal" memory
+
+   type Normal_Memory_Attribute_Type is (
+      NORMAL_XS_InCOnC,          -- If FEAT_XS is implemented: Normal Inner Non-cacheable, Outer Non-cacheable memory with the XS attribute set to 0. Otherwise, UNPREDICTABLE.
+      NORMAL_XS_IWTCOWTCRAnWAnT, -- If FEAT_XS is implemented: Normal Inner Write-through Cacheable, Outer Write-through Cacheable, Read-Allocate, No-Write Allocate, Non-transient memory with the XS attribute set to 0. Otherwise, UNPREDICTABLE.
+      NORMAL_MTE2_TIWBOWBRAWAnT, -- If FEAT_MTE2 is implemented: Tagged Normal Inner Write-Back, Outer Write-Back, Read-Allocate, Write-Allocate Non-transient memory. Otherwise, UNPREDICTABLE.
+      NORMAL                     -- everything else
+      );
+
+   type Normal_Memory_Policy_Type is (
+      WTT,  -- Write-Through Transient (RW not 00)
+      nC,   -- Non-cacheable (RW = 00)
+      WBT,  -- Write-Back Transient (RW not 00)
+      WTnT, -- Write-Through Non-transient
+      WBnT  -- Write-Back Non-transient
+      );
+
+   NoAllocate : constant := 0;
+   Allocate   : constant := 1;
+
+   function Normal_Memory_Attribute
+      (Attribute      : Normal_Memory_Attribute_Type;
+       Inner_Policy   : Normal_Memory_Policy_Type;
+       Inner_R_Policy : Bits_1;
+       Inner_W_Policy : Bits_1;
+       Outer_Policy   : Normal_Memory_Policy_Type;
+       Outer_R_Policy : Bits_1;
+       Outer_W_Policy : Bits_1)
+      return Memory_Attribute_Type;
+
+   ----------------------------------------------------------------------------
    -- C5.2 Special-purpose registers
    ----------------------------------------------------------------------------
 
@@ -789,9 +839,44 @@ pragma Style_Checks (Off);
    -- D19.2.97 LORID_EL1, LORegionID (EL1)
    -- D19.2.98 LORN_EL1, LORegion Number (EL1)
    -- D19.2.99 LORSA_EL1, LORegion Start Address (EL1)
+
    -- D19.2.100 MAIR_EL1, Memory Attribute Indirection Register (EL1)
    -- D19.2.101 MAIR_EL2, Memory Attribute Indirection Register (EL2)
    -- D19.2.102 MAIR_EL3, Memory Attribute Indirection Register (EL3)
+
+   type MAIR_ELx_Type is record
+      Attr0 : Memory_Attribute_Type;
+      Attr1 : Memory_Attribute_Type;
+      Attr2 : Memory_Attribute_Type;
+      Attr3 : Memory_Attribute_Type;
+      Attr4 : Memory_Attribute_Type;
+      Attr5 : Memory_Attribute_Type;
+      Attr6 : Memory_Attribute_Type;
+      Attr7 : Memory_Attribute_Type;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for MAIR_ELx_Type use record
+      Attr0 at 0 range  0 ..  7;
+      Attr1 at 0 range  8 .. 15;
+      Attr2 at 0 range 16 .. 23;
+      Attr3 at 0 range 24 .. 31;
+      Attr4 at 0 range 32 .. 39;
+      Attr5 at 0 range 40 .. 47;
+      Attr6 at 0 range 48 .. 55;
+      Attr7 at 0 range 56 .. 63;
+   end record;
+
+   function MAIR_EL1_Read
+      return MAIR_ELx_Type
+      with Inline => True;
+   function MAIR_EL2_Read
+      return MAIR_ELx_Type
+      with Inline => True;
+   function MAIR_EL3_Read
+      return MAIR_ELx_Type
+      with Inline => True;
+
    -- D19.2.103 MIDR_EL1, Main ID Register
 
    -- D19.2.104 MPIDR_EL1, Multiprocessor Affinity Register
