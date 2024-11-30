@@ -582,6 +582,142 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 5 System Controller A (SYSCTL_A)
+   ----------------------------------------------------------------------------
+
+   -- additional types for SYSCTL_A
+
+   type Bitmap_32_0 is array (0 .. 31) of Boolean
+      with Component_Size => 1,
+           Size           => 32;
+   type Bitmap_32_32 is array (32 .. 63) of Boolean
+      with Component_Size => 1,
+           Size           => 32;
+   type Bitmap_32_64 is array (64 .. 95) of Boolean
+      with Component_Size => 1,
+           Size           => 32;
+   type Bitmap_32_96 is array (96 .. 127) of Boolean
+      with Component_Size => 1,
+           Size           => 32;
+
+   type SYS_SRAM_STAT_Type is record
+      BNKEN_RDY  : Boolean; -- SRAM is ready for accesses. All SRAM banks are enabled/disabled according to values of registers SYS_SRAM_BANKEN_CTLx (x=0,1,2,3)
+      BLKRET_RDY : Boolean; -- SRAM is ready for accesses. All SRAM banks are enabled/disabled for retention according to values of registers SYS_SRAM_BLKRET_CTLx (x = 0,1,2,3)
+      Reserved   : Bits_30;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SYS_SRAM_STAT_Type use record
+      BNKEN_RDY  at 0 range 0 ..  0;
+      BLKRET_RDY at 0 range 1 ..  1;
+      Reserved   at 0 range 2 .. 31;
+   end record;
+
+   -- 5.11.6 SYS_SRAM_NUMBANKS Register
+
+   SYS_SRAM_NUMBANKS : aliased Unsigned_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0014#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.7 SYS_SRAM_NUMBLOCKS Register
+
+   SYS_SRAM_NUMBLOCKS : aliased Unsigned_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0018#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.8 SYS_MAINFLASH_SIZE Register
+
+   SYS_MAINFLASH_SIZE : aliased Unsigned_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0020#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.9 SYS_INFOFLASH_SIZE Register
+
+   SYS_INFOFLASH_SIZE : aliased Unsigned_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0024#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.12 SYS_SRAM_BANKEN_CTL0 Register
+
+   SYS_SRAM_BANKEN_CTL0 : aliased Bitmap_32_0
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0050#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.13 SYS_SRAM_BANKEN_CTL1 Register
+
+   SYS_SRAM_BANKEN_CTL1 : aliased Bitmap_32_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0054#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.14 SYS_SRAM_BANKEN_CTL2 Register
+
+   SYS_SRAM_BANKEN_CTL2 : aliased Bitmap_32_64
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0058#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.15 SYS_SRAM_BANKEN_CTL3 Register
+
+   SYS_SRAM_BANKEN_CTL3 : aliased Bitmap_32_96
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#005C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.16 SYS_SRAM_BLKRET_CTL0 Register
+
+   SYS_SRAM_BLKRET_CTL0 : aliased Bitmap_32_0
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0070#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.17 SYS_SRAM_BLKRET_CTL1 Register
+
+   SYS_SRAM_BLKRET_CTL1 : aliased Bitmap_32_32
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0074#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.18 SYS_SRAM_BLKRET_CTL2 Register
+
+   SYS_SRAM_BLKRET_CTL2 : aliased Bitmap_32_64
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0078#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.19 SYS_SRAM_BLKRET_CTL3 Register
+
+   SYS_SRAM_BLKRET_CTL3 : aliased Bitmap_32_96
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#007C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 5.11.20 SYS_SRAM_STAT Register
+
+   SYS_SRAM_STAT : aliased SYS_SRAM_STAT_Type
+      with Address              => System'To_Address (SYSCTL_BASEADDRESS + 16#0090#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 6 Clock System (CS)
    ----------------------------------------------------------------------------
 
