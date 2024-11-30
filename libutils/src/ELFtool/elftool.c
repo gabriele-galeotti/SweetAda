@@ -157,6 +157,47 @@ uint64_t SWAP64(uint64_t x) { if (application.endianness_swap) { return swap64(x
 #define ERROR_NO_SYMBOL -2
 
 /******************************************************************************
+ * print_value()                                                              *
+ *                                                                            *
+ ******************************************************************************/
+static void
+print_value(void)
+{
+        switch (application.pelf->class)
+        {
+                case ELFCLASS32:
+                        fprintf(
+                                stdout,
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+                                "0x%08I64X\n",
+#elif defined(__APPLE__)
+                                "0x%08X\n",
+#else
+                                "0x%08X\n",
+#endif
+                                (uint32_t)application.symbol_value
+                                );
+                        break;
+                case ELFCLASS64:
+                        fprintf(
+                                stdout,
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+                                "0x%016I64X\n",
+#elif defined(__APPLE__)
+                                "0x%016llX\n",
+#else
+                                "0x%016lX\n",
+#endif
+                                application.symbol_value
+                                );
+                default:
+                        break;
+        }
+}
+
+/******************************************************************************
  * compute_tabs()                                                             *
  *                                                                            *
  ******************************************************************************/
@@ -544,6 +585,7 @@ elf_find_symbol(Elf_t *pelf, const char *symbol, uint64_t *pvalue)
                 if (strcmp(symbol_name, symbol) == 0)
                 {
                         *pvalue = value;
+                        print_value();
                         return 0;
                 }
         }
@@ -712,47 +754,6 @@ command_dumpsections(void)
         }
 
         return 0;
-}
-
-/******************************************************************************
- * print_value()                                                              *
- *                                                                            *
- ******************************************************************************/
-static void
-print_value(void)
-{
-        switch (application.pelf->class)
-        {
-                case ELFCLASS32:
-                        fprintf(
-                                stdout,
-#if __START_IF_SELECTION__
-#elif defined(_WIN32)
-                                "0x%08I64X\n",
-#elif defined(__APPLE__)
-                                "0x%08X\n",
-#else
-                                "0x%08X\n",
-#endif
-                                (uint32_t)application.symbol_value
-                                );
-                        break;
-                case ELFCLASS64:
-                        fprintf(
-                                stdout,
-#if __START_IF_SELECTION__
-#elif defined(_WIN32)
-                                "0x%016I64X\n",
-#elif defined(__APPLE__)
-                                "0x%016llX\n",
-#else
-                                "0x%016lX\n",
-#endif
-                                application.symbol_value
-                                );
-                default:
-                        break;
-        }
 }
 
 /******************************************************************************
