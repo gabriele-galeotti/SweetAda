@@ -5,15 +5,18 @@
 
 #
 # Environment variables:
-# OSTYPE
-# PATH
-# SED
 # EXEEXT
 # TOOLCHAIN_PROGRAM_PREFIX
-# ADA_MODE
 # RTS_PATH
-# GNATBIND_SECSTACK
+# ADAC_*
+# AS_*
+# CC_*
+# GNATBIND_*
+# GNATMAKE_*
+# ENABLE_SPLIT_DWARF
+# OPTIMIZATION_LEVEL
 # CONFIGURE_DEPS
+# VERBOSE
 #
 
 ################################################################################
