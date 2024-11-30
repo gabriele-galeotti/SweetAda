@@ -38,8 +38,6 @@ source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 #                                                                              #
 ################################################################################
 
-set BAUD_RATE 19200
-
 if {[llength $argv] < 1} {
     puts stderr "$SCRIPT_FILENAME: *** Error: invalid number of arguments."
     exit 1
@@ -47,6 +45,8 @@ if {[llength $argv] < 1} {
 
 set KERNEL_SRECFILE   [file join $::env(SWEETADA_PATH) $::env(KERNEL_BASENAME).srec]
 set SERIALPORT_DEVICE [lindex $argv 0]
+
+set BAUD_RATE 19200
 
 set serialport_fd [open $SERIALPORT_DEVICE "r+"]
 fconfigure $serialport_fd \
