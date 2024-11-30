@@ -215,6 +215,10 @@ pragma Style_Checks (Off);
    function FPSR_Read return FPSR_Type is function MRS_Read is new MRS ("fpsr", FPSR_Type); begin return MRS_Read; end FPSR_Read;
    procedure FPSR_Write (Value : in FPSR_Type) is procedure MSR_Write is new MSR ("fpsr", FPSR_Type); begin MSR_Write (Value); end FPSR_Write;
 
+   function FAR_EL1_Read return Unsigned_64 is function MRS_Read is new MRS ("far_el1", Unsigned_64); begin return MRS_Read; end FAR_EL1_Read;
+   function FAR_EL2_Read return Unsigned_64 is function MRS_Read is new MRS ("far_el2", Unsigned_64); begin return MRS_Read; end FAR_EL2_Read;
+   function FAR_EL3_Read return Unsigned_64 is function MRS_Read is new MRS ("far_el3", Unsigned_64); begin return MRS_Read; end FAR_EL3_Read;
+
    function FPEXC32_EL2_Read return FPEXC32_EL2_Type is function MRS_Read is new MRS ("fpexc32_el2", FPEXC32_EL2_Type); begin return MRS_Read; end FPEXC32_EL2_Read;
    procedure FPEXC32_EL2_Write (Value : in FPEXC32_EL2_Type) is procedure MSR_Write is new MSR ("fpexc32_el2", FPEXC32_EL2_Type); begin MSR_Write (Value); end FPEXC32_EL2_Write;
 

@@ -316,9 +316,24 @@ pragma Style_Checks (Off);
    -- D19.2.37 ESR_EL1, Exception Syndrome Register (EL1)
    -- D19.2.38 ESR_EL2, Exception Syndrome Register (EL2)
    -- D19.2.39 ESR_EL3, Exception Syndrome Register (EL3)
+
    -- D19.2.40 FAR_EL1, Fault Address Register (EL1)
+
+   function FAR_EL1_Read
+      return Unsigned_64
+      with Inline => True;
+
    -- D19.2.41 FAR_EL2, Fault Address Register (EL2)
+
+   function FAR_EL2_Read
+      return Unsigned_64
+      with Inline => True;
+
    -- D19.2.42 FAR_EL3, Fault Address Register (EL3)
+
+   function FAR_EL3_Read
+      return Unsigned_64
+      with Inline => True;
 
    -- D19.2.43 FPEXC32_EL2, Floating-Point Exception Control register
 
