@@ -22,7 +22,7 @@
  * setdebugflag=<value>
  *
  * Environment variables:
- * VERBOSE
+ * none
  */
 
 /******************************************************************************
@@ -125,7 +125,6 @@ typedef struct {
         const char *input_filename;
         int         command;
         Elf_t      *pelf;
-        bool        flag_verbose;               /* VERBOSE environment variable */
         bool        endianness_swap;
         size_t      scn_max_string_length;
         const char *symbol_name;
@@ -1012,7 +1011,6 @@ main(int argc, char **argv)
         int         exit_status;
         char        program_name[PATH_MAX + 1];
         int         fd;
-        char       *verbose_string;
         const char *process_arguments_error_message;
 
         exit_status = EXIT_FAILURE;
@@ -1021,7 +1019,6 @@ main(int argc, char **argv)
         application.input_filename        = NULL;
         application.command               = COMMAND_NONE;
         application.pelf                  = NULL;
-        application.flag_verbose          = false;
         application.endianness_swap       = false;
         application.scn_max_string_length = 0;
         application.symbol_name           = NULL;
@@ -1036,20 +1033,6 @@ main(int argc, char **argv)
          */
         log_init(program_name, NULL, NULL);
         log_mode_set(LOG_STDOUT | LOG_STDERR);
-
-        /*
-         * Verbose mode.
-         */
-        verbose_string = (char *)env_get("VERBOSE");
-        if (verbose_string != NULL)
-        {
-                if (strcmp(verbose_string, "Y") == 0)
-                {
-                        application.flag_verbose = true;
-                }
-                lib_free(verbose_string);
-                verbose_string = NULL;
-        }
 
         /*
          * Argument processing.
