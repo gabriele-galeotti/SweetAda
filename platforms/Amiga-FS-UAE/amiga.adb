@@ -235,13 +235,13 @@ package body Amiga
       -- Setup Copper.
       --
       Copperlist := [
-                     BPL1PTH,
-                     HWord (Unsigned_32'(FRAMEBUFFER_BASEADDRESS)),
-                     BPL1PTL,
-                     LWord (Unsigned_32'(FRAMEBUFFER_BASEADDRESS)),
-                     16#FFFF#,
-                     16#FFFE#
-                    ];
+         BPL1PTH,
+         HWord (Unsigned_32'(FRAMEBUFFER_BASEADDRESS)),
+         BPL1PTL,
+         LWord (Unsigned_32'(FRAMEBUFFER_BASEADDRESS)),
+         16#FFFF#,
+         16#FFFE#
+         ];
       --
       -- "... when the end of  vertical blanking  occurs, the Copper is
       -- automatically forced to restart its operations at the address
@@ -351,16 +351,16 @@ package body Amiga
       --
       -- CIAA uses interrupt on Level 2 (PORTS).
       --
-      CIAA.CRA  := (
-                    START   => False,
-                    PBON    => False,
-                    OUTMODE => OUTMODE_PULSE,
-                    RUNMODE => RUNMODE_RUN,
-                    LOAD    => False,
-                    INMODE  => INMODE_02,
-                    SPMODE  => SPMODE_IN,
-                    others  => <>
-                   );
+      CIAA.CRA := (
+         START   => False,
+         PBON    => False,
+         OUTMODE => OUTMODE_PULSE,
+         RUNMODE => RUNMODE_RUN,
+         LOAD    => False,
+         INMODE  => INMODE_02,
+         SPMODE  => SPMODE_IN,
+         others  => <>
+         );
       CIAA.TALO := Unsigned_8 (Tclk_Value mod 2**8);
       CIAA.TAHI := Unsigned_8 (Tclk_Value / 2**8);
       CIAA.CRA.START := True;
