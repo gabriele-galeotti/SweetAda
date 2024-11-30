@@ -36,6 +36,8 @@ package GT64120
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    GT64120_DEFAULT_ISD_ADDRESS : constant := 16#1400_0000#;
 
    -- 20.3 CPU Configuration
@@ -243,5 +245,7 @@ pragma Warnings (On, "* bits of ""GT64120_Type"" unused");
       (Start_Address : Unsigned_64;
        Size          : Unsigned_64)
       return PCI_High_Decode_Address_Type;
+
+pragma Style_Checks (On);
 
 end GT64120;
