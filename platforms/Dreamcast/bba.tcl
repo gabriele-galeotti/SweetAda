@@ -1,7 +1,7 @@
 #!/usr/bin/env tclsh
 
 #
-# Download and run a SweetAda ELF executable through a Dreamcast BBA adapter.
+# Download and run a SweetAda executable through a Dreamcast BBA adapter.
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
@@ -53,9 +53,8 @@ proc send_command {s command address size data} {
     if {[string length $data] ne 0} {
         append buffer $data
     }
+    #puts "sending [string length $buffer] bytes"
     puts -nonewline $s $buffer
-    #set count [string length $buffer]
-    #puts "sending $count bytes"
 }
 
 ################################################################################
@@ -66,10 +65,10 @@ proc send_command {s command address size data} {
 set ELFTOOL              $::env(ELFTOOL)
 set KERNEL_OUTFILE       [file join $::env(SWEETADA_PATH) $::env(KERNEL_OUTFILE)]
 set KERNEL_ROMFILE       [file join $::env(SWEETADA_PATH) $::env(KERNEL_ROMFILE)]
-set LOAD_ADDRESS         0x8C010000
 set START_SYMBOL         _start
 set HOST_IP_ADDRESS      192.168.2.1
 set DREAMCAST_IP_ADDRESS 192.168.2.2
+set DREAMCAST_UDP_PORT   31313
 set BBA_MAC_ADDRESS      00:d0:f1:02:bc:5d
 
 set CMD_EXECUTE  "EXEC" ;# execute
@@ -82,10 +81,19 @@ set CMD_VERSION  "VERS" ;# send version info
 set CMD_RETVAL   "RETV" ;# return value
 set CMD_REBOOT   "RBOT" ;# reboot
 
+# load address
+if {[catch {exec $ELFTOOL -c sectionvaddr=.text $KERNEL_OUTFILE} result] eq 0} {
+    set START_ADDRESS [format "0x%08X" $result]
+} else {
+    puts stderr "$SCRIPT_FILENAME: *** Error: no $KERNEL_OUTFILE file available or no section \".text\"."
+    exit 1
+}
+
+# start address
 if {[catch {exec $ELFTOOL -c findsymbol=$START_SYMBOL $KERNEL_OUTFILE} result] eq 0} {
     set START_ADDRESS [format "0x%08X" $result]
 } else {
-    puts stderr "$SCRIPT_FILENAME: *** Error: no symbol $START_SYMBOL or no $KERNEL_OUTFILE file available."
+    puts stderr "$SCRIPT_FILENAME: *** Error: no $KERNEL_OUTFILE file available or no symbol \"$START_SYMBOL\"."
     exit 1
 }
 
@@ -107,9 +115,8 @@ if {[catch {exec >@stdout 2>@stderr arp -s $DREAMCAST_IP_ADDRESS $BBA_MAC_ADDRES
 
 # create UDP socket
 set s [udp_open]
-fconfigure $s -remote [list $DREAMCAST_IP_ADDRESS 31313]
+fconfigure $s -remote [list $DREAMCAST_IP_ADDRESS $DREAMCAST_UDP_PORT]
 fconfigure $s \
-    -blocking false \
     -buffering none \
     -encoding binary \
     -eofchar {}
@@ -129,7 +136,7 @@ if {[eof $s]} {
     exit 1
 }
 if {[string compare -length 4 $recv_data $CMD_LOADBIN]} {
-    puts "CMD_LOADBIN @$LOAD_ADDRESS OK"
+    puts "CMD_LOADBIN @$LOAD_ADDRESS OK."
 } else {
     puts stderr "$SCRIPT_FILENAME: *** Error: CMD_LOADBIN error."
     close $s
@@ -139,27 +146,15 @@ if {[string compare -length 4 $recv_data $CMD_LOADBIN]} {
 # now send the binary file in chunks with size 1kB
 set chunk_length 1024
 set sequence 1
-puts -nonewline "sending"
+puts -nonewline "sending "
 while {true} {
     set data [read $fd_input $chunk_length]
     set data_length [string length $data]
-    if {$data_length eq 0} {
+    if {$data_length < 1} {
         break
     }
     send_command $s $CMD_PARTBIN $LOAD_ADDRESS $data_length $data
-    set recv_data [read $s 4096]
-    if {[eof $s]} {
-        puts stderr "$SCRIPT_FILENAME: *** Error: CMD_PARTBIN error."
-        close $s
-        exit 1
-    }
-    if {[string compare -length 4 $recv_data $CMD_PARTBIN]} {
-        #puts "CMD_PARTBIN sequence $sequence OK"
-    } else {
-        puts stderr "$SCRIPT_FILENAME: *** Error: CMD_PARTBIN error."
-        close $s
-        exit 1
-    }
+    puts -nonewline "."
     # update
     if {$data_length < $chunk_length} {
         break
@@ -167,12 +162,27 @@ while {true} {
     set LOAD_ADDRESS [expr $LOAD_ADDRESS + $data_length]
     incr sequence
     msleep 30
-    puts -nonewline "."
 }
 puts ""
 
 # close the binary file
 close $fd_input
+
+# done uploading
+send_command $s $CMD_DONEBIN 0 0 ""
+set recv_data [read $s 4096]
+if {[eof $s]} {
+    puts stderr "$SCRIPT_FILENAME: *** Error: CMD_DONEBIN error."
+    close $s
+    exit 1
+}
+if {[string compare -length 4 $recv_data $CMD_DONEBIN]} {
+    puts "CMD_DONEBIN OK."
+} else {
+    puts stderr "$SCRIPT_FILENAME: *** Error: CMD_DONEBIN error."
+    close $s
+    exit 1
+}
 
 # execute
 send_command $s $CMD_EXECUTE $START_ADDRESS 0 ""
@@ -183,7 +193,7 @@ if {[eof $s]} {
     exit 1
 }
 if {[string compare -length 4 $recv_data $CMD_EXECUTE]} {
-    puts "CMD_EXECUTE @$START_ADDRESS OK"
+    puts "CMD_EXECUTE @$START_ADDRESS OK."
 } else {
     puts stderr "$SCRIPT_FILENAME: *** Error: CMD_EXECUTE error."
     close $s

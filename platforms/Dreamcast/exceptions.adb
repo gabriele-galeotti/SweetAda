@@ -34,7 +34,7 @@ package body Exceptions
    procedure Exception_Process
       is
    begin
-      Console.Print ("Exception", NL => True);
+      Console.Print ("*** EXCEPTION", NL => True);
    end Exception_Process;
 
    ----------------------------------------------------------------------------

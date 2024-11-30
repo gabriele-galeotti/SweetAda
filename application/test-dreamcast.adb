@@ -43,16 +43,27 @@ package body Application
       is
    begin
       -------------------------------------------------------------------------
-      if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then
+      if True then
          Console.Print ("Starting ""video"" demo ...", NL => True);
          Video;
          for Delay_Loop_Count in 1 .. 30_000_000 loop CPU.NOP; end loop;
       end if;
       -------------------------------------------------------------------------
-      if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then
+      if True then
          Console.Print ("Starting ""roto"" demo ...", NL => True);
          Roto;
       end if;
+      -------------------------------------------------------------------------
+      -- if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then
+      --    Console.Print ("Starting ""video"" demo ...", NL => True);
+      --    Video;
+      --    for Delay_Loop_Count in 1 .. 30_000_000 loop CPU.NOP; end loop;
+      -- end if;
+      -------------------------------------------------------------------------
+      -- if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then
+      --    Console.Print ("Starting ""roto"" demo ...", NL => True);
+      --    Roto;
+      -- end if;
       -------------------------------------------------------------------------
       if True then
          declare

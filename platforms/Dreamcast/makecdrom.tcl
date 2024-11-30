@@ -16,8 +16,7 @@
 # $3 = kernel filename
 #
 # Environment variables:
-# SWEETADA_PATH
-# LIBUTILS_DIRECTORY
+# none
 #
 
 ################################################################################
