@@ -10,11 +10,14 @@
 
 /*
  * Arguments:
- * $1 = object file
+ * $1 = -c | -v
+ * if $1 = "-c":
  * $2 = command
- * $3 = argument ...
+ * $3 = ELF filename
  * commands:
  * dumpsections
+ * sectionvaddr=<section>
+ * sectionsize=<section>
  * findsymbol=<symbol>
  * setdebugflag=<value>
  *
@@ -142,8 +145,13 @@ uint64_t SWAP64(uint64_t x) { if (application.endianness_swap) { return swap64(x
 #define COMMAND_NONE         0
 #define COMMAND_VERSION      1
 #define COMMAND_DUMPSECTIONS 2
-#define COMMAND_FINDSYMBOL   3
-#define COMMAND_SETDEBUGFLAG 4
+#define COMMAND_SECTIONVADDR 3
+#define COMMAND_SECTIONSIZE  4
+#define COMMAND_FINDSYMBOL   5
+#define COMMAND_SETDEBUGFLAG 6
+
+#define SECTION_VADDR 1
+#define SECTION_SIZE  2
 
 #define ERROR_ERROR     -1
 #define ERROR_NO_SYMBOL -2
@@ -707,6 +715,102 @@ command_dumpsections(void)
 }
 
 /******************************************************************************
+ * print_value()                                                              *
+ *                                                                            *
+ ******************************************************************************/
+static void
+print_value(void)
+{
+        switch (application.pelf->class)
+        {
+                case ELFCLASS32:
+                        fprintf(
+                                stdout,
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+                                "0x%08I64X\n",
+#elif defined(__APPLE__)
+                                "0x%08X\n",
+#else
+                                "0x%08X\n",
+#endif
+                                (uint32_t)application.symbol_value
+                                );
+                        break;
+                case ELFCLASS64:
+                        fprintf(
+                                stdout,
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+                                "0x%016I64X\n",
+#elif defined(__APPLE__)
+                                "0x%016llX\n",
+#else
+                                "0x%016lX\n",
+#endif
+                                application.symbol_value
+                                );
+                default:
+                        break;
+        }
+}
+
+/******************************************************************************
+ * command_section()                                                          *
+ *                                                                            *
+ ******************************************************************************/
+static int
+command_section(int vaddr_or_size)
+{
+        int idx;
+
+        elf_analyze(application.pelf);
+
+        for (idx = 0; idx < (int)application.pelf->shnum; idx++)
+        {
+                off_t name;
+                size_t size;
+                uint64_t addr;
+                const char *scn_name;
+                name = 0;
+                if (application.pelf->class == ELFCLASS32)
+                {
+                        Elf32_Shdr *shdr;
+                        shdr = (Elf32_Shdr *)(application.pelf->data + application.pelf->shoff + idx * application.pelf->shentsize);
+                        name = SWAP32(shdr->sh_name);
+                        size = SWAP32(shdr->sh_size);
+                        addr = SWAP32(shdr->sh_addr);
+                }
+                else if (application.pelf->class == ELFCLASS64)
+                {
+                        Elf64_Shdr *shdr;
+                        shdr = (Elf64_Shdr *)(application.pelf->data + application.pelf->shoff + idx * application.pelf->shentsize);
+                        name = SWAP32(shdr->sh_name);
+                        size = SWAP64(shdr->sh_size);
+                        addr = SWAP64(shdr->sh_addr);
+                }
+                /* get section name */
+                scn_name = (const char *)(application.pelf->data + application.pelf->scn_shstrtab_offset + name);
+                if (strcmp(scn_name, application.symbol_name) == 0)
+                {
+                        switch (vaddr_or_size)
+                        {
+                                case SECTION_VADDR:
+                                        application.symbol_value = addr;
+                                        break;
+                                case SECTION_SIZE:
+                                        application.symbol_value = size;
+                                        break;
+                        }
+                        print_value();
+                        return 0;
+                }
+        }
+
+        return ERROR_NO_SYMBOL;
+}
+
+/******************************************************************************
  * command_findsymbol()                                                       *
  *                                                                            *
  ******************************************************************************/
@@ -794,8 +898,12 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                 {
                         char c;
                         const char *dumpsections_option = "dumpsections";
+                        const char *sectionvaddr_option = "sectionvaddr=";
+                        const char *sectionsize_option = "sectionsize=";
                         const char *findsymbol_option = "findsymbol=";
                         const char *setdebugflag_option = "setdebugflag=";
+                        size_t sectionvaddr_optionlength = STRING_LENGTH(sectionvaddr_option);
+                        size_t sectionsize_optionlength = STRING_LENGTH(sectionsize_option);
                         size_t findsymbol_optionlength = STRING_LENGTH(findsymbol_option);
                         size_t setdebugflag_optionlength = STRING_LENGTH(setdebugflag_option);
                         if (STRING_LENGTH(argv[idx]) != 2)
@@ -813,9 +921,19 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                                         if (number_of_arguments-- > 0)
                                         {
                                                 ++idx;
-                                                if (strcmp(argv[idx], dumpsections_option) == 0)
+                                                if      (strcmp(argv[idx], dumpsections_option) == 0)
                                                 {
                                                         p->command = COMMAND_DUMPSECTIONS;
+                                                }
+                                                else if (strncmp(argv[idx], sectionvaddr_option, sectionvaddr_optionlength) == 0)
+                                                {
+                                                        p->command = COMMAND_SECTIONVADDR;
+                                                        p->symbol_name = argv[idx] + sectionvaddr_optionlength;
+                                                }
+                                                else if (strncmp(argv[idx], sectionsize_option, sectionsize_optionlength) == 0)
+                                                {
+                                                        p->command = COMMAND_SECTIONSIZE;
+                                                        p->symbol_name = argv[idx] + sectionsize_optionlength;
                                                 }
                                                 else if (strncmp(argv[idx], findsymbol_option, findsymbol_optionlength) == 0)
                                                 {
@@ -935,23 +1053,23 @@ main(int argc, char **argv)
         /*
          * Argument processing.
          */
-        if (process_arguments(argc, argv, &application, &process_arguments_error_message) < 0)
+        if      (process_arguments(argc, argv, &application, &process_arguments_error_message) < 0)
         {
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: %s.", process_arguments_error_message);
                 goto main_exit;
         }
-        if (application.command == COMMAND_NONE)
+        else if (application.command == COMMAND_NONE)
         {
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: no command supplied.");
                 goto main_exit;
         }
-        if (application.command == COMMAND_VERSION)
+        else if (application.command == COMMAND_VERSION)
         {
                 log_printf(LOG_STDOUT, "version %s", ELFTOOL_VERSION);
                 exit_status = EXIT_SUCCESS;
                 goto main_exit;
         }
-        if (application.input_filename == NULL)
+        else if (application.input_filename == NULL)
         {
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: no input file.");
                 goto main_exit;
@@ -988,44 +1106,30 @@ main(int argc, char **argv)
         switch (application.command)
         {
                 case COMMAND_DUMPSECTIONS:
-                        exit_status = command_dumpsections() < 0 ? EXIT_FAILURE : EXIT_SUCCESS;
-                        break;
-                case COMMAND_FINDSYMBOL:
-                        if (command_findsymbol() < 0)
+                        if (command_dumpsections() < 0)
                         {
                                 break;
                         }
-                        switch (application.pelf->class)
+                        exit_status = EXIT_SUCCESS;
+                        break;
+                case COMMAND_SECTIONVADDR:
+                        if (STRING_LENGTH(application.symbol_name) == 0 || command_section(SECTION_VADDR) < 0)
                         {
-                                case ELFCLASS32:
-                                        fprintf(
-                                                stdout,
-#if __START_IF_SELECTION__
-#elif defined(_WIN32)
-                                                "0x%08I64X\n",
-#elif defined(__APPLE__)
-                                                "0x%08X\n",
-#else
-                                                "0x%08X\n",
-#endif
-                                                (uint32_t)application.symbol_value
-                                                );
-                                        break;
-                                case ELFCLASS64:
-                                        fprintf(
-                                                stdout,
-#if __START_IF_SELECTION__
-#elif defined(_WIN32)
-                                                "0x%016I64X\n",
-#elif defined(__APPLE__)
-                                                "0x%016llX\n",
-#else
-                                                "0x%016lX\n",
-#endif
-                                                application.symbol_value
-                                                );
-                                default:
-                                        break;
+                                break;
+                        }
+                        exit_status = EXIT_SUCCESS;
+                        break;
+                case COMMAND_SECTIONSIZE:
+                        if (STRING_LENGTH(application.symbol_name) == 0 || command_section(SECTION_SIZE) < 0)
+                        {
+                                break;
+                        }
+                        exit_status = EXIT_SUCCESS;
+                        break;
+                case COMMAND_FINDSYMBOL:
+                        if (STRING_LENGTH(application.symbol_name) == 0 || command_findsymbol() < 0)
+                        {
+                                break;
                         }
                         exit_status = EXIT_SUCCESS;
                         break;
