@@ -859,37 +859,32 @@ pragma Style_Checks (Off);
    -- D19.2.101 MAIR_EL2, Memory Attribute Indirection Register (EL2)
    -- D19.2.102 MAIR_EL3, Memory Attribute Indirection Register (EL3)
 
+   type MAIR_Array_Type is array (0 .. 7) of Memory_Attribute_Type
+      with Pack => True,
+           Size => 64;
+
    type MAIR_ELx_Type is record
-      Attr0 : Memory_Attribute_Type;
-      Attr1 : Memory_Attribute_Type;
-      Attr2 : Memory_Attribute_Type;
-      Attr3 : Memory_Attribute_Type;
-      Attr4 : Memory_Attribute_Type;
-      Attr5 : Memory_Attribute_Type;
-      Attr6 : Memory_Attribute_Type;
-      Attr7 : Memory_Attribute_Type;
+      Attr : MAIR_Array_Type;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 64;
-   for MAIR_ELx_Type use record
-      Attr0 at 0 range  0 ..  7;
-      Attr1 at 0 range  8 .. 15;
-      Attr2 at 0 range 16 .. 23;
-      Attr3 at 0 range 24 .. 31;
-      Attr4 at 0 range 32 .. 39;
-      Attr5 at 0 range 40 .. 47;
-      Attr6 at 0 range 48 .. 55;
-      Attr7 at 0 range 56 .. 63;
-   end record;
+      with Size => 64;
 
    function MAIR_EL1_Read
       return MAIR_ELx_Type
       with Inline => True;
+   procedure MAIR_EL1_Write
+      (Value : in MAIR_ELx_Type)
+      with Inline => True;
    function MAIR_EL2_Read
       return MAIR_ELx_Type
       with Inline => True;
+   procedure MAIR_EL2_Write
+      (Value : in MAIR_ELx_Type)
+      with Inline => True;
    function MAIR_EL3_Read
       return MAIR_ELx_Type
+      with Inline => True;
+   procedure MAIR_EL3_Write
+      (Value : in MAIR_ELx_Type)
       with Inline => True;
 
    -- D19.2.103 MIDR_EL1, Main ID Register

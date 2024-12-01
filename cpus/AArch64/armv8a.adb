@@ -232,8 +232,11 @@ pragma Style_Checks (Off);
    function ISR_EL1_Read return ISR_EL1_Type is function MRS_Read is new MRS ("isr_el1", ISR_EL1_Type); begin return MRS_Read; end ISR_EL1_Read;
 
    function MAIR_EL1_Read return MAIR_ELx_Type is function MRS_Read is new MRS ("mair_el1", MAIR_ELx_Type); begin return MRS_Read; end MAIR_EL1_Read;
+   procedure MAIR_EL1_Write (Value : in MAIR_ELx_Type) is procedure MSR_Write is new MSR ("mair_el1", MAIR_ELx_Type); begin MSR_Write (Value); end MAIR_EL1_Write;
    function MAIR_EL2_Read return MAIR_ELx_Type is function MRS_Read is new MRS ("mair_el2", MAIR_ELx_Type); begin return MRS_Read; end MAIR_EL2_Read;
+   procedure MAIR_EL2_Write (Value : in MAIR_ELx_Type) is procedure MSR_Write is new MSR ("mair_el2", MAIR_ELx_Type); begin MSR_Write (Value); end MAIR_EL2_Write;
    function MAIR_EL3_Read return MAIR_ELx_Type is function MRS_Read is new MRS ("mair_el3", MAIR_ELx_Type); begin return MRS_Read; end MAIR_EL3_Read;
+   procedure MAIR_EL3_Write (Value : in MAIR_ELx_Type) is procedure MSR_Write is new MSR ("mair_el3", MAIR_ELx_Type); begin MSR_Write (Value); end MAIR_EL3_Write;
 
    function MPIDR_EL1_Read return MPIDR_EL1_Type is function MRS_Read is new MRS ("mpidr_el1", MPIDR_EL1_Type); begin return MRS_Read; end MPIDR_EL1_Read;
 
