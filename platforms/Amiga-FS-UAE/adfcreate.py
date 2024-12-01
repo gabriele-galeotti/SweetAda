@@ -19,7 +19,6 @@
 #
 # Environment variables:
 # SWEETADA_PATH
-# SHARE_DIRECTORY
 # TOOLCHAIN_CC
 # TOOLCHAIN_LD
 # TOOLCHAIN_OBJDUMP
@@ -105,11 +104,7 @@ os.system(
     '-DLOADADDRESS=' + str(load_address) + ' ' +
     '-DNSECTORS=' + str(kernel_sectors)  + ' ' +
     '-DENTRYPOINT=' + str(entry_point)   + ' ' +
-    os.path.join(
-        '"' + os.getenv('SWEETADA_PATH') + '"',
-        os.getenv('SHARE_DIRECTORY'),
-        asmboot_filename + '.S'
-        )
+    asmboot_filename + '.S'
     )
 os.system(
     os.getenv('TOOLCHAIN_LD')         + ' ' +
@@ -118,10 +113,10 @@ os.system(
     asmboot_filename + '.o'
     )
 os.system(
-    os.getenv('TOOLCHAIN_OBJDUMP') + ' ' +
-    '-D -m m68k -b binary'         + ' ' +
-    asmboot_filename + '.bin'      + ' ' +
-    '> adfboot.lst'
+    os.getenv('TOOLCHAIN_OBJDUMP')   + ' ' +
+    '-D -m m68k -b binary'           + ' ' +
+    asmboot_filename + '.bin'        + ' ' +
+    '> ' + asmboot_filename + '.lst'
     )
 
 fd_input = open(asmboot_filename + '.bin', 'rb')

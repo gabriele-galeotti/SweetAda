@@ -59,7 +59,7 @@ POSTBUILD_ROMFILE         := Y
 CONFIGURE_FILES_PLATFORM := fs-uae.conf configure.ads configure.h
 LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 
-CLEAN_OBJECTS_COMMON += debug.uae fs-uae.log.txt adfboot.* boot.adf
+CLEAN_OBJECTS_COMMON += debug.uae fs-uae.log.txt adfboot.o adboot.bin adfboot.lst boot.adf
 
 ################################################################################
 # User parameters.                                                             #
