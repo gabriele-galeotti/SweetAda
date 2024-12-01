@@ -153,7 +153,7 @@ if {$SERVER_MODE ne 0} {
         } else {
             set ::env(PATH) [join [list [file join $OPENOCD_PREFIX bin] $::env(PATH)] ":"]
             set sh_cmds ""
-            append sh_cmds ". [file join $::env(SHARE_DIRECTORY) terminal.sh]"     " ; "
+            append sh_cmds ". [file join $::env(SHARE_DIRECTORY) terminal.sh]"          " ; "
             append sh_cmds "\$(terminal $::env(TERMINAL)) /bin/sh -c \""                  " "
             append sh_cmds "openocd -f \\\"$OPENOCD_CFGFILE\\\""                        " ; "
             append sh_cmds "if \[ \\\$? -ne 0 \] ; then"                                  " "
