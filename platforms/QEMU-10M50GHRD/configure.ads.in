@@ -8,7 +8,7 @@ package Configure
    use Definitions;
 
    -- PLATFORM and CPU definitions
-   PLATFORM : constant String := "Altera10M50GHRD";
+   PLATFORM : constant String := "QEMU-10M50GHRD";
    CPU      : constant String := "@CPU@";
 
    -- basic configuration parameters

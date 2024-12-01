@@ -2,7 +2,7 @@
 #ifndef _CONFIGURE_H
 #define _CONFIGURE_H 1
 
-#define PLATFORM "Altera10M50GHRD"
+#define PLATFORM "QEMU-10M50GHRD"
 #define CPU      "@CPU@"
 
 #endif /* _CONFIGURE_H */
