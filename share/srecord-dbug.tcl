@@ -48,6 +48,7 @@ fconfigure $serialport_fd \
     -blocking 0 \
     -buffering none \
     -eofchar {} \
+    -handshake xonxoff \
     -mode $baud_rate,n,8,1 \
     -translation binary
 flush $serialport_fd
