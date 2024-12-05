@@ -70,10 +70,12 @@ if [ ! -e $1 ] ; then
   return 0
 fi
 while IFS= read -r textline ; do
-  textline=$(printf "%s" "${textline}" | sed        \
-          -e "s|^[[:blank:]]*||;s|[[:blank:]]*\$||" \
-          -e "s|^[Ww][Ii][Tt][Hh]|with|"            \
-        )
+  textline=$(                                              \
+             printf "%s" "${textline}"                   | \
+             sed                                           \
+               -e "s|^[[:blank:]]*||;s|[[:blank:]]*\$||"   \
+               -e "s|^[Ww][Ii][Tt][Hh]|with|"              \
+            )
   case ${textline} in
     --* | "")
       continue

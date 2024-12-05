@@ -84,7 +84,10 @@ function ParseGpr
     }
     elseif ($textline.ToLower().StartsWith("with"))
     {
-      $unit = $textline -Replace "`t"," " -Replace "with *`"","" -Replace "`" *;.*",""
+      $unit = $textline                `
+                -Replace "`t"," "      `
+                -Replace "with *`"","" `
+                -Replace "`" *;.*",""
       if ($unit.Length -gt 0)
       {
         $units = "$units $($unit).gpr"
