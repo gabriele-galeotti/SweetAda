@@ -1487,13 +1487,13 @@ pragma Style_Checks (Off);
    LOCRE0_RES : constant := 1; -- Generate a reset request on a loss of OSC0 external reference clock.
 
    type MCG_C2_Type is record
-      IRCS    : Bits_1  := IRCS_SLOW;   -- Internal Reference Clock Select
-      LP      : Boolean := False;       -- Low Power Select
-      EREFS0  : Bits_1  := EREFS0_EXT;  -- External Reference Select
-      HGO0    : Boolean := False;       -- High Gain Oscillator Select
-      RANGE0  : Bits_2  := RANGE0_LO;   -- Frequency Range Select
-      FCFTRIM : Boolean := True;        -- Fast Internal Reference Clock Fine Trim
-      LOCRE0  : Bits_1  := LOCRE0_RES;  -- Loss of Clock Reset Enable
+      IRCS    : Bits_1  := IRCS_SLOW;  -- Internal Reference Clock Select
+      LP      : Boolean := False;      -- Low Power Select
+      EREFS0  : Bits_1  := EREFS0_EXT; -- External Reference Select
+      HGO0    : Boolean := False;      -- High Gain Oscillator Select
+      RANGE0  : Bits_2  := RANGE0_LO;  -- Frequency Range Select
+      FCFTRIM : Boolean := True;       -- Fast Internal Reference Clock Fine Trim
+      LOCRE0  : Bits_1  := LOCRE0_RES; -- Loss of Clock Reset Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
