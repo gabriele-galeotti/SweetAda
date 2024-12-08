@@ -15,12 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Parameters;
-with System.Secondary_Stack;
+with System;
 with System.Storage_Elements;
 with Definitions;
 with Bits;
 with MMIO;
+with Secondary_Stack;
 with CPU;
 with MCF523x;
 with M5235BCC;
@@ -37,20 +37,15 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
+   use System;
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
+   use MCF523x;
+   use M5235BCC;
 
-   Flash_ROM_Address : constant Integer_Address := 16#FFE0_0000#;
-
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
+   procedure FlashROM_Detect;
 
    --========================================================================--
    --                                                                        --
@@ -61,14 +56,33 @@ package body BSP
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
+   -- FlashROM_Detect
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
+   procedure FlashROM_Detect
       is
+      FlashROM_Address : constant Address := System'To_Address (FlashROM_BASEADDRESS);
+      Address_Scale    : constant := 2; -- 16-bit mode
+      Manufacturer     : Unsigned_16;
+      DeviceCode       : Unsigned_16;
    begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
+      Console.Print ("Detect Flash ROM ...", NL => True);
+      -- Read/Reset
+      MMIO.Write_U16 (FlashROM_Address, 16#F0#);
+      -- Auto Select
+      MMIO.Write_U16 (FlashROM_Address + 16#555# * Address_Scale, 16#AA#);
+      MMIO.Write_U16 (FlashROM_Address + 16#2AA# * Address_Scale, 16#55#);
+      MMIO.Write_U16 (FlashROM_Address + 16#555# * Address_Scale, 16#90#);
+      -- Read Manufacturer/Device code
+      Manufacturer := MMIO.Read_U16 (FlashROM_Address + 16#00# * Address_Scale);
+      DeviceCode   := MMIO.Read_U16 (FlashROM_Address + 16#01# * Address_Scale);
+      Console.Print (Prefix => "Manufacturer: ", Value => Manufacturer, NL => True);
+      Console.Print (Prefix => "Device Code:  ", Value => DeviceCode, NL => True);
+      if Manufacturer = 16#0020# and then DeviceCode = 16#2249# then
+         Console.Print ("STM29W160EB Flash ROM", NL => True);
+      end if;
+      -- Read/Reset
+      MMIO.Write_U16 (FlashROM_Address, 16#F0#);
+   end FlashROM_Detect;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -80,9 +94,9 @@ package body BSP
    begin
       -- wait for transmitter available
       loop
-         exit when MCF523x.USR0.TXRDY;
+         exit when USR0.TXRDY;
       end loop;
-      MCF523x.UTB0 := To_U8 (C);
+      UTB0 := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -92,57 +106,36 @@ package body BSP
    begin
       -- wait for receiver available
       loop
-         exit when MCF523x.USR0.RXRDY;
+         exit when USR0.RXRDY;
       end loop;
-      Data := MCF523x.URB0;
+      Data := URB0;
       C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
    -- Setup
    ----------------------------------------------------------------------------
-pragma Warnings (Off, "volatile actual passed by copy");
    procedure Setup
       is
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("M5235BCC", NL => True);
-      Console.Print (Unsigned_32 (MCF523x.CIR.PIN), Prefix => "PIN:    ", NL => True);
-      Console.Print (Unsigned_32 (MCF523x.CIR.PRN), Prefix => "PRN:    ", NL => True);
-      Console.Print (MCF523x.To_U32 (MCF523x.IPSBAR), Prefix => "IPSBAR: ", NL => True);
+      Console.Print (Prefix => "PIN:    ", Value => Unsigned_32 (CIR.PIN), NL => True);
+      Console.Print (Prefix => "PRN:    ", Value => Unsigned_32 (CIR.PRN), NL => True);
+      pragma Warnings (Off, "volatile actual passed by copy");
+      Console.Print (Prefix => "IPSBAR: ", Value => To_U32 (IPSBAR) and 16#FFFF_FFFE#, NL => True);
+      pragma Warnings (On, "volatile actual passed by copy");
       -------------------------------------------------------------------------
-      declare
-         Address_Scale : constant := 2; -- 16-bit mode
-      begin
-         Console.Print ("STM29W160EB Flash ROM", NL => True);
-         -- Read/Reset
-         MMIO.Write_U16 (To_Address (Flash_ROM_Address), 16#F0#);
-         -- Auto Select
-         MMIO.Write_U16 (To_Address (Flash_ROM_Address + 16#555# * Address_Scale), 16#AA#);
-         MMIO.Write_U16 (To_Address (Flash_ROM_Address + 16#2AA# * Address_Scale), 16#55#);
-         MMIO.Write_U16 (To_Address (Flash_ROM_Address + 16#555# * Address_Scale), 16#90#);
-         -- Read Manufacturer/Device code
-         Console.Print (
-            MMIO.Read_U16 (To_Address (Flash_ROM_Address + 16#00# * Address_Scale)),
-            Prefix => "Manufacturer: ",
-            NL => True
-            );
-         Console.Print (
-            MMIO.Read_U16 (To_Address (Flash_ROM_Address + 16#01# * Address_Scale)),
-            Prefix => "Device:       ",
-            NL => True
-            );
-         -- Read/Reset
-         MMIO.Write_U16 (To_Address (Flash_ROM_Address), 16#F0#);
-      end;
+      FlashROM_Detect;
       -------------------------------------------------------------------------
    end Setup;
-pragma Warnings (On, "volatile actual passed by copy");
 
 end BSP;
