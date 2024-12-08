@@ -1924,6 +1924,153 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 32 Periodic Interrupt Timer (PIT)
+   ----------------------------------------------------------------------------
+
+   -- 32.3.1 PIT Module Control Register (PIT_MCR)
+
+   type PIT_MCR_Type is record
+      FRZ       : Boolean := False; -- Freeze
+      MDIS      : Boolean := True;  -- Module Disable - (PIT section)
+      Reserved1 : Bits_1  := 1;
+      Reserved2 : Bits_29 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PIT_MCR_Type use record
+      FRZ       at 0 range 0 ..  0;
+      MDIS      at 0 range 1 ..  1;
+      Reserved1 at 0 range 2 ..  2;
+      Reserved2 at 0 range 3 .. 31;
+   end record;
+
+   PIT_MCR_ADDRESS : constant := 16#4003_7000#;
+
+   PIT_MCR : aliased PIT_MCR_Type
+      with Address              => System'To_Address (PIT_MCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 32.3.2 PIT Upper Lifetime Timer Register (PIT_LTMR64H)
+
+   PIT_LTMR64H_ADDRESS : constant := 16#4003_70E0#;
+
+   PIT_LTMR64H : aliased Unsigned_32
+      with Address              => System'To_Address (PIT_LTMR64H_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 32.3.3 PIT Lower Lifetime Timer Register (PIT_LTMR64L)
+
+   PIT_LTMR64L_ADDRESS : constant := 16#4003_70E4#;
+
+   PIT_LTMR64L : aliased Unsigned_32
+      with Address              => System'To_Address (PIT_LTMR64L_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 32.3.4 Timer Load Value Register (PIT_LDVALn)
+
+   PIT_LDVAL0_ADDRESS : constant := 16#4003_7100#;
+
+   PIT_LDVAL0 : aliased Unsigned_32
+      with Address              => System'To_Address (PIT_LDVAL0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PIT_LDVAL1_ADDRESS : constant := 16#4003_7110#;
+
+   PIT_LDVAL1 : aliased Unsigned_32
+      with Address              => System'To_Address (PIT_LDVAL1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 32.3.5 Current Timer Value Register (PIT_CVALn)
+
+   PIT_CVAL0_ADDRESS : constant := 16#4003_7104#;
+
+   PIT_CVAL0 : aliased Unsigned_32
+      with Address              => System'To_Address (PIT_CVAL0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PIT_CVAL1_ADDRESS : constant := 16#4003_7114#;
+
+   PIT_CVAL1 : aliased Unsigned_32
+      with Address              => System'To_Address (PIT_CVAL1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 32.3.6 Timer Control Register (PIT_TCTRLn)
+
+   type PIT_TCTRLn_Type is record
+      TEN      : Boolean := False; -- Timer Enable
+      TIE      : Boolean := False; -- Timer Interrupt Enable
+      CHN      : Boolean := False; -- Chain Mode
+      Reserved : Bits_29 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PIT_TCTRLn_Type use record
+      TEN      at 0 range 0 ..  0;
+      TIE      at 0 range 1 ..  1;
+      CHN      at 0 range 2 ..  2;
+      Reserved at 0 range 3 .. 31;
+   end record;
+
+   PIT_TCTRL0_ADDRESS : constant := 16#4003_7108#;
+
+   PIT_TCTRL0 : aliased PIT_TCTRLn_Type
+      with Address              => System'To_Address (PIT_TCTRL0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PIT_TCTRL1_ADDRESS : constant := 16#4003_7118#;
+
+   PIT_TCTRL1 : aliased PIT_TCTRLn_Type
+      with Address              => System'To_Address (PIT_TCTRL1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 32.3.7 Timer Flag Register (PIT_TFLGn)
+
+   type PIT_TFLGn_Type is record
+      TIF      : Boolean := False; -- Timer Interrupt Flag
+      Reserved : Bits_31 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PIT_TFLGn_Type use record
+      TIF      at 0 range 0 ..  0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
+   PIT_TFLG0_ADDRESS : constant := 16#4003_710C#;
+
+   PIT_TFLG0 : aliased PIT_TFLGn_Type
+      with Address              => System'To_Address (PIT_TFLG0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PIT_TFLG1_ADDRESS : constant := 16#4003_711C#;
+
+   PIT_TFLG1 : aliased PIT_TFLGn_Type
+      with Address              => System'To_Address (PIT_TFLG1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 34 Real Time Clock (RTC)
    ----------------------------------------------------------------------------
 
