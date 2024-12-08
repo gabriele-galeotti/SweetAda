@@ -37,6 +37,8 @@ package PL110
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- PL110 Registers
    ----------------------------------------------------------------------------
@@ -44,11 +46,11 @@ package PL110
    -- Horizontal Axis Panel Control Register, LCDTiming0
 
    type LCDTiming0_Type is record
-      Reserved : Bits_2 := 0;
-      PPL      : Natural range 0 .. 2**6 - 1; -- Pixels-per-line. Actual pixels-per-line = 16 * (PPL + 1).
-      HSW      : Natural range 0 .. 2**8 - 1; -- Horizontal synchronization pulse width, ...
-      HFP      : Natural range 0 .. 2**8 - 1; -- Horizontal front porch, ...
-      HBP      : Natural range 0 .. 2**8 - 1; -- Horizontal back porch,
+      Reserved : Bits_2                      := 0;
+      PPL      : Natural range 0 .. 2**6 - 1;      -- Pixels-per-line. Actual pixels-per-line = 16 * (PPL + 1).
+      HSW      : Natural range 0 .. 2**8 - 1;      -- Horizontal synchronization pulse width, ...
+      HFP      : Natural range 0 .. 2**8 - 1;      -- Horizontal front porch, ...
+      HBP      : Natural range 0 .. 2**8 - 1;      -- Horizontal back porch,
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -103,20 +105,20 @@ package PL110
    WATERMARK_8 : constant WATERMARK_Type := 1; -- HBUSREQM ... when either of the DMA FIFOs have eight or more empty locations.
 
    type LCDControl_Type is record
-      LcdEn       : Boolean;        -- LCD controller enable:
-      LcdBpp      : LcdBpp_Type;    -- LCD bits per pixel:
-      LcdBW       : Boolean;        -- STN LCD is monochrome (black and white):
-      LcdTFT      : Boolean;        -- LCD is TFT:
-      LcdMono8    : Boolean;        -- Monochrome LCD has an 8-bit interface.
-      LcdDual     : Boolean;        -- LCD interface is dual panel STN:
-      BGR         : BGR_Type;       -- RGB of BGR format selection:
-      BEBO        : Boolean;        -- Big-endian byte order:
-      BEPO        : Boolean;        -- Big-endian pixel ordering within a byte:
-      LcdPwr      : Boolean;        -- LCD power enable:
-      LcdVComp    : LcdVComp_Type;  -- Generate interrupt at:
+      LcdEn       : Boolean;             -- LCD controller enable:
+      LcdBpp      : LcdBpp_Type;         -- LCD bits per pixel:
+      LcdBW       : Boolean;             -- STN LCD is monochrome (black and white):
+      LcdTFT      : Boolean;             -- LCD is TFT:
+      LcdMono8    : Boolean;             -- Monochrome LCD has an 8-bit interface.
+      LcdDual     : Boolean;             -- LCD interface is dual panel STN:
+      BGR         : BGR_Type;            -- RGB of BGR format selection:
+      BEBO        : Boolean;             -- Big-endian byte order:
+      BEPO        : Boolean;             -- Big-endian pixel ordering within a byte:
+      LcdPwr      : Boolean;             -- LCD power enable:
+      LcdVComp    : LcdVComp_Type;       -- Generate interrupt at:
       Reserved1   : Bits_2;
-      WATERMARK   : WATERMARK_Type; -- LCD DMA FIFO Watermark level:
-      Reserved2   : Bits_15 := 0;
+      WATERMARK   : WATERMARK_Type;      -- LCD DMA FIFO Watermark level:
+      Reserved2   : Bits_15        := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -215,5 +217,7 @@ package PL110
       (X : in Video_X_Coordinate_Type;
        Y : in Video_Y_Coordinate_Type;
        S : in String);
+
+pragma Style_Checks (On);
 
 end PL110;
