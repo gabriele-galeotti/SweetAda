@@ -21,6 +21,7 @@ with Abort_Library;
 with ARMv6M;
 with KL46Z;
 with BSP;
+with Console;
 
 package body Exceptions
    is
@@ -50,6 +51,7 @@ package body Exceptions
    procedure Exception_Process
       is
    begin
+      Console.Print ("*** EXCEPTION", NL => True);
       Abort_Library.System_Abort;
    end Exception_Process;
 
