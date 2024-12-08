@@ -78,39 +78,42 @@ try:
 except:
     errprintf('%s: *** Error: open().\n', SCRIPT_FILENAME)
     exit(1)
-if serialport_fd.isOpen():
-    # delay for processing of data on remote side
-    if   baud_rate == 115200:
-        delay = 10
-    elif baud_rate == 38400:
-        delay = 30
-    else:
-        delay = 50
-    # flush input buffer, discarding all its contents
-    serialport_fd.flushInput()
-    # flush output buffer, aborting current output
-    serialport_fd.flushOutput()
-    kernel_fd = open(kernel_srecfile, 'r')
-    srecs = kernel_fd.readlines()
-    kernel_fd.close()
-    for srec in srecs:
-        serialport_fd.write(str.encode(srec).strip())
-        serialport_fd.write(str.encode('\r\n'))
-        errprintf('.')
-        time.sleep(delay / 1000)
-        srec_type = srec[0:2]
-        if   srec_type == 'S7':
-            start_address = srec[4:12]
-        elif srec_type == 'S8':
-            start_address = srec[4:10]
-        elif srec_type == 'S9':
-            start_address = srec[4:8]
-    serialport_fd.write(str.encode('\r\n'))
-    errprintf('\n')
-    serialport_fd.close()
+serialport_fd.flushInput()
+serialport_fd.flushOutput()
+
+# delay for processing of data on remote side
+if   baud_rate == 115200:
+    delay = 10
+elif baud_rate == 57600:
+    delay = 20
+elif baud_rate == 38400:
+    delay = 30
 else:
-    errprintf('%s: *** Error: open().\n', SCRIPT_FILENAME)
-    exit(1)
+    delay = 50
+
+# read kernel file and write to the serial port
+kernel_fd = open(kernel_srecfile, 'r')
+srecs = kernel_fd.readlines()
+kernel_fd.close()
+printf('sending ')
+sys.stdout.flush()
+for srec in srecs:
+    serialport_fd.write(str.encode(srec).strip())
+    serialport_fd.write(str.encode('\r\n'))
+    printf('.')
+    sys.stdout.flush()
+    time.sleep(delay / 1000)
+    srec_type = srec[0:2]
+    if   srec_type == 'S7':
+        start_address = srec[4:12]
+    elif srec_type == 'S8':
+        start_address = srec[4:10]
+    elif srec_type == 'S9':
+        start_address = srec[4:8]
+serialport_fd.write(str.encode('\r\n'))
+printf('\n')
+
+serialport_fd.close()
 
 exit(0)
 

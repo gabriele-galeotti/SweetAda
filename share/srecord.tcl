@@ -52,18 +52,22 @@ fconfigure $serialport_fd \
     -translation binary
 flush $serialport_fd
 
-# read kernel file and write to serial port
-set kernel_fd [open $kernel_srecfile r]
-fconfigure $kernel_fd -buffering line
 # delay for processing of data on remote side
 switch $baud_rate {
     "115200" {set delay 10}
+    "57600"  {set delay 20}
     "38400"  {set delay 30}
     default  {set delay 50}
 }
+
+# read kernel file and write to the serial port
+set kernel_fd [open $kernel_srecfile r]
+fconfigure $kernel_fd -buffering line
+fconfigure stdout -buffering none
+puts -nonewline stdout "sending "
 while {[gets $kernel_fd data] >= 0} {
     puts -nonewline $serialport_fd "$data\x0D\x0A"
-    puts -nonewline stderr "."
+    puts -nonewline stdout "."
     after $delay
     set srec_type [string range $data 0 1]
     if {$srec_type eq "S7"} {
@@ -76,9 +80,9 @@ while {[gets $kernel_fd data] >= 0} {
         set start_address [string range $data 4 7]
     }
 }
-# close download of S-record data
 puts -nonewline $serialport_fd "\x0D\x0A"
-puts stderr ""
+puts stdout ""
+fconfigure stdout -buffering line
 close $kernel_fd
 
 close $serialport_fd

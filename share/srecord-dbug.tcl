@@ -1,7 +1,7 @@
 #!/usr/bin/env tclsh
 
 #
-# dBUG S-record download.
+# S-record download (dBUG version).
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
@@ -53,18 +53,27 @@ fconfigure $serialport_fd \
     -translation binary
 flush $serialport_fd
 
+# delay for processing of data on remote side
+switch $baud_rate {
+    "115200" {set delay 10}
+    "57600"  {set delay 20}
+    "38400"  {set delay 30}
+    default  {set delay 50}
+}
+
 # download an S19 executable on console port (with echoing)
 puts -nonewline $serialport_fd "dl\x0D\x0A"
 after 1000
 
-# read kernel file and write to serial port
+# read kernel file and write to the serial port
 set kernel_fd [open $kernel_srecfile r]
 fconfigure $kernel_fd -buffering line
+fconfigure stdout -buffering none
+puts -nonewline stdout "sending "
 while {[gets $kernel_fd data] >= 0} {
     puts -nonewline $serialport_fd "$data\x0D\x0A"
-    puts -nonewline stderr "."
-    # allow processing of data on remote side
-    after 30
+    puts -nonewline stdout "."
+    after $delay
     set srec_type [string range $data 0 1]
     if {$srec_type eq "S7"} {
         set start_address [string range $data 4 11]
@@ -76,9 +85,9 @@ while {[gets $kernel_fd data] >= 0} {
         set start_address [string range $data 4 7]
     }
 }
-# close download of S-record data
 puts -nonewline $serialport_fd "\x0D\x0A"
-puts stderr ""
+puts stdout ""
+fconfigure stdout -buffering line
 close $kernel_fd
 
 # execute
