@@ -11,8 +11,8 @@ REM
 
 REM
 REM Arguments:
-REM $1     <TERMINAL name>
-REM $2 ... terminal options
+REM $1 <TERMINAL name>
+REM $2 ... $9 terminal options
 REM
 REM Environment variables:
 REM none
