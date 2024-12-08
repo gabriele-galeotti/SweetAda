@@ -122,7 +122,7 @@ fconfigure $s -buffering none -encoding binary -eofchar {}
 set fd_input [open $KERNEL_ROMFILE r]
 fconfigure $fd_input -encoding binary -translation binary
 
-# we are uploading a binary file
+# upload a binary file
 send_command $s $CMD_LOADBIN $LOAD_ADDRESS [file size $KERNEL_ROMFILE] ""
 set recv_data [read $s 4096]
 if {[eof $s]} {
@@ -138,7 +138,7 @@ if {[string compare -length 4 $recv_data $CMD_LOADBIN]} {
     exit 1
 }
 
-# now send the binary file in chunks with size 1kB
+# send the binary file in chunks with size 1kB
 fconfigure stdout -buffering none
 set chunk_length 1024
 set sequence 1
@@ -151,7 +151,6 @@ while {true} {
     }
     send_command $s $CMD_PARTBIN $LOAD_ADDRESS $data_length $data
     puts -nonewline "."
-    # update
     if {$data_length < $chunk_length} {
         break
     }
@@ -160,12 +159,12 @@ while {true} {
     msleep 30
 }
 puts ""
-fconfigure stdout -buffering full
+fconfigure stdout -buffering line
 
 # close the binary file
 close $fd_input
 
-# done uploading
+# upload done
 send_command $s $CMD_DONEBIN 0 0 ""
 set recv_data [read $s 4096]
 if {[eof $s]} {

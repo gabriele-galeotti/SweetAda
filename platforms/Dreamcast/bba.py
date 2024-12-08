@@ -127,7 +127,7 @@ s.connect((DREAMCAST_IP_ADDRESS, DREAMCAST_UDP_PORT))
 # open files
 fd = open(KERNEL_ROMFILE, 'rb')
 
-# we are uploading a binary file
+# upload a binary file
 send_command(s, CMD_LOADBIN, LOAD_ADDRESS, os.stat(KERNEL_ROMFILE).st_size, [])
 recv_data, address = s.recvfrom(4096)
 if len(recv_data) == 0:
@@ -141,7 +141,7 @@ else:
     s.close()
     exit(1)
 
-# now send the binary file in chunks with size 1kB
+# send the binary file in chunks with size 1kB
 chunk_length = 1024
 sequence = 1
 printf('sending ')
@@ -154,7 +154,6 @@ while True:
     send_command(s, CMD_PARTBIN, LOAD_ADDRESS, data_length, data)
     printf('.')
     sys.stdout.flush()
-    # update
     if data_length < chunk_length:
         break
     LOAD_ADDRESS = LOAD_ADDRESS + data_length
@@ -165,7 +164,7 @@ printf('\n')
 # close the binary file
 fd.close()
 
-# done uploading
+# upload done
 send_command(s, CMD_DONEBIN, 0, 0, [])
 recv_data, address = s.recvfrom(4096)
 if len(recv_data) == 0:
