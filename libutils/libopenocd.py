@@ -58,7 +58,6 @@ def openocd_rpc_rx(mode='noecho'):
     s = openocd_rpc_get_socket()
     while True:
         data = s.recv(4096)
-        # __FIX__ disconnect and return on EOF?
         if len(data) > 0:
             c = 0x1A
             if data[-1] == c:
@@ -70,6 +69,7 @@ def openocd_rpc_rx(mode='noecho'):
                 # continue reading
                 if mode == 'echo':
                     sys.stdout.write(data.decode('utf-8'))
+    return data
 
 ################################################################################
 # openocd_rpc_tx                                                               #

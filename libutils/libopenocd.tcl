@@ -54,7 +54,7 @@ proc openocd_rpc_rx {{mode ""}} {
         set data [read $s 4096]
         if {[eof $s]} {
             openocd_rpc_disconnect
-            return
+            return ""
         }
         if {[llength $data] > 0} {
             set token [string first \x1A $data]
