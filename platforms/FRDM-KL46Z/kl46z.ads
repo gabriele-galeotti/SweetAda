@@ -1426,6 +1426,8 @@ pragma Style_Checks (Off);
    -- 24 Multipurpose Clock Generator (MCG)
    ----------------------------------------------------------------------------
 
+   MCG_BASEADDRESS : constant := 16#4006_4000#;
+
    -- 24.3.1 MCG Control 1 Register (MCG_C1)
 
    IREFS_EXT : constant := 0; -- External reference clock is selected.
@@ -1462,10 +1464,8 @@ pragma Style_Checks (Off);
       CLKS     at 0 range 6 .. 7;
    end record;
 
-   MCG_C1_ADDRESS : constant := 16#4006_4000#;
-
    MCG_C1 : aliased MCG_C1_Type
-      with Address              => System'To_Address (MCG_C1_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#0#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1507,10 +1507,8 @@ pragma Style_Checks (Off);
       LOCRE0  at 0 range 7 .. 7;
    end record;
 
-   MCG_C2_ADDRESS : constant := 16#4006_4001#;
-
    MCG_C2 : aliased MCG_C2_Type
-      with Address              => System'To_Address (MCG_C2_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#1#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1526,10 +1524,8 @@ pragma Style_Checks (Off);
       SCTRIM at 0 range 0 .. 7;
    end record;
 
-   MCG_C3_ADDRESS : constant := 16#4006_4002#;
-
    MCG_C3 : aliased MCG_C3_Type
-      with Address              => System'To_Address (MCG_C3_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#2#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1561,10 +1557,8 @@ pragma Style_Checks (Off);
       DMX32    at 0 range 7 .. 7;
    end record;
 
-   MCG_C4_ADDRESS : constant := 16#4006_4003#;
-
    MCG_C4 : aliased MCG_C4_Type
-      with Address              => System'To_Address (MCG_C4_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#3#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1612,10 +1606,8 @@ pragma Style_Checks (Off);
       Reserved  at 0 range 7 .. 7;
    end record;
 
-   MCG_C5_ADDRESS : constant := 16#4006_4004#;
-
    MCG_C5 : aliased MCG_C5_Type
-      with Address              => System'To_Address (MCG_C5_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#4#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1673,10 +1665,8 @@ pragma Style_Checks (Off);
       LOLIE0 at 0 range 7 .. 7;
    end record;
 
-   MCG_C6_ADDRESS : constant := 16#4006_4005#;
-
    MCG_C6 : aliased MCG_C6_Type
-      with Address              => System'To_Address (MCG_C6_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#5#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1718,10 +1708,8 @@ pragma Style_Checks (Off);
       LOLS0    at 0 range 7 .. 7;
    end record;
 
-   MCG_S_ADDRESS : constant := 16#4006_4006#;
-
    MCG_S : aliased MCG_S_Type
-      with Address              => System'To_Address (MCG_S_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#6#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1759,30 +1747,24 @@ pragma Style_Checks (Off);
       ATME     at 0 range 7 .. 7;
    end record;
 
-   MCG_SC_ADDRESS : constant := 16#4006_4008#;
-
    MCG_SC : aliased MCG_SC_Type
-      with Address              => System'To_Address (MCG_SC_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#8#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- 24.3.9 MCG Auto Trim Compare Value High Register (MCG_ATCVH)
 
-   MCG_ATCVH_ADDRESS : constant := 16#4006_400A#;
-
    MCG_ATCVH : aliased Unsigned_8
-      with Address              => System'To_Address (MCG_ATCVH_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#A#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- 24.3.10 MCG Auto Trim Compare Value Low Register (MCG_ATCVL)
 
-   MCG_ATCVL_ADDRESS : constant := 16#4006_400B#;
-
    MCG_ATCVL : aliased Unsigned_8
-      with Address              => System'To_Address (MCG_ATCVL_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#B#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1805,10 +1787,8 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 6 .. 7;
    end record;
 
-   MCG_C7_ADDRESS : constant := 16#4006_400C#;
-
    MCG_C7 : aliased MCG_C7_Type
-      with Address              => System'To_Address (MCG_C7_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1832,10 +1812,8 @@ pragma Style_Checks (Off);
       Reserved4 at 0 range 7 .. 7;
    end record;
 
-   MCG_C8_ADDRESS : constant := 16#4006_400D#;
-
    MCG_C8 : aliased MCG_C8_Type
-      with Address              => System'To_Address (MCG_C8_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#D#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1857,10 +1835,8 @@ pragma Style_Checks (Off);
       Reserved4 at 0 range 6 .. 7;
    end record;
 
-   MCG_C9_ADDRESS : constant := 16#4006_400E#;
-
    MCG_C9 : aliased MCG_C9_Type
-      with Address              => System'To_Address (MCG_C9_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#E#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1878,10 +1854,8 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 4 .. 7;
    end record;
 
-   MCG_C10_ADDRESS : constant := 16#4006_400F#;
-
    MCG_C10 : aliased MCG_C10_Type
-      with Address              => System'To_Address (MCG_C10_ADDRESS),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#F#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
