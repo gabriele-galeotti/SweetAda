@@ -59,8 +59,7 @@ def openocd_rpc_rx(mode='noecho'):
     while True:
         data = s.recv(4096)
         if len(data) > 0:
-            c = 0x1A
-            if data[-1] == c:
+            if data[-1] == 0x1A:
                 # end of response, exit
                 if mode == 'echo':
                     sys.stdout.write(data[:-1].decode('utf-8'))
