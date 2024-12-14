@@ -25,13 +25,6 @@
 # -shutdown               shutdown OpenOCD server (no executable processing)
 # -thumb                  ARM Thumb address handling
 #
-# The following hold inside OpenOCD command execution:
-# -debug sets $debug_mode and $noexec_flag to 1 (default 0)
-# -f <SWEETADA_ELF> sets $sweetada_elf to <SWEETADA_ELF> (default "")
-# -noexec sets $noexec_flag to 1 (default 0)
-# -noload sets $noload_flag to 1 (default 0)
-# $start_address resolves to the detected start address of the executable
-#
 # Environment variables:
 # OSTYPE
 # SWEETADA_PATH
@@ -39,6 +32,15 @@
 # SHARE_DIRECTORY
 # TEMP
 # TERMINAL
+#
+
+#
+# The following hold inside OpenOCD command execution:
+# -debug sets $debug_mode and $noexec_flag to 1 (default 0)
+# -f <SWEETADA_ELF> sets $sweetada_elf to <SWEETADA_ELF> (default "")
+# -noexec sets $noexec_flag to 1 (default 0)
+# -noload sets $noload_flag to 1 (default 0)
+# $start_address resolves to the detected start address of the executable
 #
 
 ################################################################################
