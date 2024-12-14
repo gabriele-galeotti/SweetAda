@@ -816,9 +816,17 @@ command_section(int vaddr_or_size)
 static int
 command_findsymbol(void)
 {
+        int efs_status;
+
         elf_analyze(application.pelf);
 
-        return elf_find_symbol(application.pelf, application.symbol_name, &application.symbol_value);
+        efs_status = elf_find_symbol(application.pelf, application.symbol_name, &application.symbol_value);
+        if (efs_status == 0)
+        {
+                print_value();
+        }
+
+        return efs_status;
 }
 
 /******************************************************************************
