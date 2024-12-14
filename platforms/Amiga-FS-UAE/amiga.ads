@@ -363,8 +363,8 @@ package Amiga
    INMODE_02  : constant := 0; -- Timer A counts 02 pulses
    INMODE_CNT : constant := 1; -- Timer A counts positive CNT transitions
 
-   SPMODE_IN   : constant := 0; -- Serial port=input  (external shift clock is required)
-   SPMODE_OUT  : constant := 1; -- Serial port=output (CNT is the source of the shift clock)
+   SPMODE_IN  : constant := 0; -- Serial port=input  (external shift clock is required)
+   SPMODE_OUT : constant := 1; -- Serial port=output (CNT is the source of the shift clock)
 
    type CIA_CRA_Type is record
       START   : Boolean;      -- start/stop Timer A
