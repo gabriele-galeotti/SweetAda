@@ -584,7 +584,6 @@ elf_find_symbol(Elf_t *pelf, const char *symbol, uint64_t *pvalue)
                 if (strcmp(symbol_name, symbol) == 0)
                 {
                         *pvalue = value;
-                        print_value();
                         return 0;
                 }
         }
