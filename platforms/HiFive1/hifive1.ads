@@ -40,8 +40,10 @@ package HiFive1
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
-   -- __REF__ SiFive FE310-G002 Manual v1p0
+   -- SiFive FE310-G002 Manual v1p0
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
@@ -50,6 +52,8 @@ package HiFive1
 
    package PRCI
       is
+
+      PRCI_BASEADDRESS : constant := 16#1000_8000#;
 
       -- 6.3 Internal Trimmable Programmable 72 MHz Oscillator (HFROSC)
 
@@ -220,8 +224,6 @@ package HiFive1
          Reserved            at 0 range  1 .. 30;
          lfextclk_mux_status at 0 range 31 .. 31;
       end record;
-
-      PRCI_BASEADDRESS : constant := 16#1000_8000#;
 
       hfrosccfg : aliased hfrosccfg_Type
          with Address              => System'To_Address (PRCI_BASEADDRESS + 16#00#),
@@ -455,6 +457,8 @@ package HiFive1
    package OTP
       is
 
+      OTP_BASEADDRESS : constant := 16#1001_0000#;
+
       -- 12.4 Read sequencer control register (otp_rsctrl)
 
       type rsctrl_Type is record
@@ -474,11 +478,8 @@ package HiFive1
          Reserved at 0 range 6 .. 31;
       end record;
 
-      OTP_BASEADDRESS : constant := 16#1001_0000#;
-
       -- 12.1 Memory Map
 
-pragma Style_Checks (Off);
       -- Programmed-I/O lock register
       lock   : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#00#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP device output-enable signal
@@ -507,7 +508,6 @@ pragma Style_Checks (Off);
       otp_q  : aliased Unsigned_32 with Address => System'To_Address (OTP_BASEADDRESS + 16#30#), Volatile_Full_Access => True, Import => True, Convention => Ada;
       -- OTP read sequencer control
       rsctrl : aliased rsctrl_Type with Address => System'To_Address (OTP_BASEADDRESS + 16#34#), Volatile_Full_Access => True, Import => True, Convention => Ada;
-pragma Style_Checks (On);
 
    end OTP;
 
@@ -964,6 +964,9 @@ pragma Style_Checks (On);
    package UART
       is
 
+      UART0_BASEADDRESS : constant := 16#1001_3000#;
+      UART1_BASEADDRESS : constant := 16#1002_3000#;
+
       -- 18.4 Transmit Data Register (txdata)
 
       type txdata_Type is record
@@ -1096,15 +1099,11 @@ pragma Style_Checks (On);
          div    at 16#18# range 0 .. 31;
       end record;
 
-      UART0_BASEADDRESS : constant := 16#1001_3000#;
-
       UART0 : aliased UART_Type
          with Address    => System'To_Address (UART0_BASEADDRESS),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
-
-      UART1_BASEADDRESS : constant := 16#1002_3000#;
 
       UART1 : aliased UART_Type
          with Address    => System'To_Address (UART1_BASEADDRESS),
@@ -1120,6 +1119,10 @@ pragma Style_Checks (On);
 
    package SPI
       is
+
+      QSPI0_BASEADDRESS : constant := 16#1001_4000#;
+      SPI1_BASEADDRESS  : constant := 16#1002_4000#;
+      SPI2_BASEADDRESS  : constant := 16#1003_4000#;
 
       -- protocol definitions for
       -- fmt.proto
@@ -1412,8 +1415,6 @@ pragma Style_Checks (On);
 
       -- QSPI0: Flash Controller = Y, cs_width = 1, div_width = 12
 
-      QSPI0_BASEADDRESS : constant := 16#1001_4000#;
-
       QSPI0 : aliased SPI_Type
          with Address    => System'To_Address (QSPI0_BASEADDRESS),
               Volatile   => True,
@@ -1422,8 +1423,6 @@ pragma Style_Checks (On);
 
       -- SPI1: Flash Controller = N, cs_width = 4, div_width = 12
 
-      SPI1_BASEADDRESS : constant := 16#1002_4000#;
-
       SPI1 : aliased SPI_Type
          with Address    => System'To_Address (SPI1_BASEADDRESS),
               Volatile   => True,
@@ -1431,8 +1430,6 @@ pragma Style_Checks (On);
               Convention => Ada;
 
       -- SPI2: Flash Controller = N, cs_width = 1, div_width = 12
-
-      SPI2_BASEADDRESS : constant := 16#1003_4000#;
 
       SPI2 : aliased SPI_Type
          with Address    => System'To_Address (SPI2_BASEADDRESS),
@@ -1448,6 +1445,10 @@ pragma Style_Checks (On);
 
    package PWM
       is
+
+      PWM0_BASEADDRESS : constant := 16#1001_5000#;
+      PWM1_BASEADDRESS : constant := 16#1002_5000#;
+      PWM2_BASEADDRESS : constant := 16#1003_5000#;
 
       -- 20.4 PWM Count Register (pwmcount)
 
@@ -1606,8 +1607,6 @@ pragma Style_Checks (On);
          pwmcmp3   at 16#2C# range 0 .. 31;
       end record;
 
-      PWM0_BASEADDRESS : constant := 16#1001_5000#;
-
       PWM0 : aliased pwm_cmpwidth8_Type
          with Address    => System'To_Address (PWM0_BASEADDRESS),
               Volatile   => True,
@@ -1644,15 +1643,11 @@ pragma Style_Checks (On);
          pwmcmp3   at 16#2C# range 0 .. 31;
       end record;
 
-      PWM1_BASEADDRESS : constant := 16#1002_5000#;
-
       PWM1 : aliased pwm_cmpwidth16_Type
          with Address    => System'To_Address (PWM1_BASEADDRESS),
               Volatile   => True,
               Import     => True,
               Convention => Ada;
-
-      PWM2_BASEADDRESS : constant := 16#1003_5000#;
 
       PWM2 : aliased pwm_cmpwidth16_Type
          with Address    => System'To_Address (PWM2_BASEADDRESS),
@@ -1661,5 +1656,7 @@ pragma Style_Checks (On);
               Convention => Ada;
 
    end PWM;
+
+pragma Style_Checks (On);
 
 end HiFive1;
