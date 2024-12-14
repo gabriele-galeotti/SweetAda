@@ -1,11 +1,18 @@
 
+with Definitions;
+
 package Configure
    with Pure => True
    is
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM  : constant String := "FRDM-KL46Z";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   EXTAL_FREQUENCY : constant := 8 * MHz1;
 
 end Configure;

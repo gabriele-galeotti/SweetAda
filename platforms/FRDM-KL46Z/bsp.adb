@@ -20,6 +20,7 @@ with Bits;
 with CPU;
 with ARMv6M;
 with KL46Z;
+with Clocks;
 with Exceptions;
 with Console;
 
@@ -79,7 +80,7 @@ package body BSP
       loop
          exit when UART0.S1.TDRE;
       end loop;
-      UART0.D := To_U8 (C);
+      UART0.D.RT := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -98,32 +99,7 @@ package body BSP
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- clock initialization -------------------------------------------------
-      OSC0_CR.ERCLKEN := True;
-      MCG_C1 := (
-         IRCLKEN => True,
-         IREFS   => IREFS_EXT,
-         FRDIV   => FRDIV_8_256,
-         CLKS    => CLKS_FLLPLL,
-         others  => <>
-         );
-      MCG_C2 := (
-         EREFS0  => EREFS0_OSC,
-         RANGE0  => RANGE0_VHI1,
-         LOCRE0  => LOCRE0_IRQ,
-         others  => <>
-         );
-      MCG_C5.PRDIV0 := PRDIV0_DIV2;
-      MCG_C6.PLLS := PLLS_PLL;
-      MCG_C7.OSCSEL := OSCSEL_OSC;
-      SIM_SOPT2 := (
-         RTCCLKOUTSEL => RTCCLKOUTSEL_OSCERCLK,
-         CLKOUTSEL    => CLKOUTSEL_OSCERCLK,
-         PLLFLLSEL    => PLLFLLSEL_MCGFLLCLKDIV2,
-         USBSRC       => USBSRC_MCGxLL,
-         TPMSRC       => TPMSRC_DISABLED,
-         UART0SRC     => UART0SRC_OSCERCLK,
-         others       => <>
-         );
+      Clocks.Init;
       -- clock gating ---------------------------------------------------------
       SIM_SCGC4 := (
          I2C0   => False,
@@ -149,15 +125,15 @@ package body BSP
          others => <>
          );
       -- UART0 ----------------------------------------------------------------
-      PORTA_PCR (1).MUX := MUX_ALT2;
-      PORTA_PCR (2).MUX := MUX_ALT2;
+      PORTA_MUXCTRL.PCR (1).MUX := MUX_ALT2;
+      PORTA_MUXCTRL.PCR (2).MUX := MUX_ALT2;
       UART0.C4 := (
          OSR    => OSR_16x,
          M10    => False,
          MAEN2  => False,
          MAEN1  => False
          );
-      UART0.BDL     := Unsigned_8 ((8 * MHz1 / 16) / 9_600);
+      UART0.BDL.SBR := Bits_8 ((8 * MHz1 / 16) / 9_600);
       UART0.BDH.SBR := 0;
       UART0.C2.TE := True;
       -- Console --------------------------------------------------------------

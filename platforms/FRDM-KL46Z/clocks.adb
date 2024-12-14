@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ exceptions.adb                                                                                            --
+-- __FLN__ clocks.adb                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,15 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with LLutils;
-with Abort_Library;
-with ARMv6M;
 with KL46Z;
-with BSP;
-with Console;
 
-package body Exceptions
+package body Clocks
    is
 
    --========================================================================--
@@ -34,7 +28,6 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
    use KL46Z;
 
    --========================================================================--
@@ -46,43 +39,38 @@ package body Exceptions
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Exception_Process
-   ----------------------------------------------------------------------------
-   procedure Exception_Process
-      is
-   begin
-      Console.Print ("*** EXCEPTION", NL => True);
-      Abort_Library.System_Abort;
-   end Exception_Process;
-
-   ----------------------------------------------------------------------------
-   -- Irq_Process
-   ----------------------------------------------------------------------------
-   procedure Irq_Process
-      is
-   begin
-      BSP.Tick_Count := @ + 1;
-      -- blink on-board RED LED
-      if (BSP.Tick_Count and 16#FFF#) = 0 then
-         GPIOE.PTOR (29) := True;
-      end if;
-   end Irq_Process;
-
-   ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
       is
-      Vector_Table : constant Asm_Entry_Point
-         with Import        => True,
-              External_Name => "vectors";
    begin
-      ARMv6M.NVIC_ICER := [others => True];
-      ARMv6M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
-      -- LED2 (RED)
-      SIM_SCGC5.PORTE := True;
-      PORTE_MUXCTRL.PCR (29).MUX := MUX_ALT1_GPIO;
-      GPIOE.PDDR (29) := True;
+      -- MCG comes out of reset in FEI mode
+      OSC0_CR.ERCLKEN := True;
+      MCG_C1 := (
+         IRCLKEN => True,
+         IREFS   => IREFS_EXT,
+         FRDIV   => FRDIV_8_256,
+         CLKS    => CLKS_FLLPLL,
+         others  => <>
+         );
+      MCG_C2 := (
+         EREFS0  => EREFS0_OSC,
+         RANGE0  => RANGE0_VHI1,
+         LOCRE0  => LOCRE0_IRQ,
+         others  => <>
+         );
+      MCG_C5.PRDIV0 := PRDIV0_DIV2;
+      MCG_C6.PLLS := PLLS_PLL;
+      MCG_C7.OSCSEL := OSCSEL_OSC;
+      SIM_SOPT2 := (
+         RTCCLKOUTSEL => RTCCLKOUTSEL_OSCERCLK,
+         CLKOUTSEL    => CLKOUTSEL_OSCERCLK,
+         PLLFLLSEL    => PLLFLLSEL_MCGFLLCLKDIV2,
+         USBSRC       => USBSRC_MCGxLL,
+         TPMSRC       => TPMSRC_DISABLED,
+         UART0SRC     => UART0SRC_OSCERCLK,
+         others       => <>
+         );
    end Init;
 
-end Exceptions;
+end Clocks;

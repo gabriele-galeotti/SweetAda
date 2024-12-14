@@ -38,10 +38,10 @@ package body Application
          Delay_Count : constant := 10_000_000;
       begin
          -- LED1 (GREEN)
-         PORTD_PCR (5).MUX := MUX_ALT1_GPIO;
-         GPIOD_PDDR (5) := True;
+         PORTD_MUXCTRL.PCR (5).MUX := MUX_ALT1_GPIO;
+         GPIOD.PDDR (5) := True;
          while True loop
-            GPIOD_PTOR (5) := True;
+            GPIOD.PTOR (5) := True;
             Console.Print (".");
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
          end loop;
