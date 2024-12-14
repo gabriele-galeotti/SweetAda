@@ -14,5 +14,10 @@
 #define VBR  0x801
 #define MBAR 0xC0F
 
+#define IPSBAR_DEFAULT 0x40000000
+
+#define SCM_CWCR (IPSBAR + 0x11)
+#define CCM_TEST (IPSBAR + 0x11000C)
+
 #endif /* _COLDFIRE_H */
 
