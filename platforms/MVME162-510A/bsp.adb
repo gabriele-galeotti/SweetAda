@@ -91,8 +91,8 @@ package body BSP
    begin
       -- SCC ------------------------------------------------------------------
       SCC_Descriptor.Base_Address   := System'To_Address (SCC_BASEADDRESS);
-      SCC_Descriptor.AB_Address_Bit := 2;                            -- address bit2 --> A//B channel selector
-      SCC_Descriptor.CD_Address_Bit := 1;                            -- address bit1 --> D//C data/command selector
+      SCC_Descriptor.AB_Address_Bit := 2;          -- address bit2 --> A//B channel selector
+      SCC_Descriptor.CD_Address_Bit := 1;          -- address bit1 --> D//C data/command selector
       SCC_Descriptor.Baud_Clock     := 10_000_000; -- __FIX__
       SCC_Descriptor.Read_8         := MMIO.Read'Access;
       SCC_Descriptor.Write_8        := SCC_Write_8'Access;
@@ -101,8 +101,8 @@ package body BSP
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor := (
          Write => Console_Putchar'Access,
-         Read  => Console_Getchar'Access)
-         ;
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("MVME162-510A", NL => True);
