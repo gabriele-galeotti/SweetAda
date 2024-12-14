@@ -38,6 +38,11 @@ package MSP432P401R
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
+   -- SLAU356H March 2015 – Revised December 2017
+   -- SLAS826H – MARCH 2015 – REVISED JUNE 2019
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
    -- 3 Reset Controller (RSTCTL)
    ----------------------------------------------------------------------------
 
@@ -49,7 +54,7 @@ pragma Style_Checks (Off);
       SOFT_REQ  : Boolean;      -- If written with 1, generates a Hard Reset request to the Reset Controller
       HARD_REQ  : Boolean;      -- If written with 1, generates a Soft Reset request to the Reset Controller
       Reserved1 : Bits_6  := 0;
-      RSTKEY    : Bits_8;       -- Must be written with 69h to enable writes to bits 1-0 (in the same write ...
+      RSTKEY    : Bits_8;       -- Must be written with 69h to enable writes to bits 1-0 (in the same write operation), else writes to bits 1-0 are ignored
       Reserved2 : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1520,7 +1525,7 @@ pragma Style_Checks (Off);
    type PCMCTL1_Type is record
       LOCKLPM5        : Boolean;          -- Lock LPM5.
       LOCKBKUP        : Boolean;          -- Lock Backup.
-      FORCE_LPM_ENTRY : Boolean;          -- Bit selection for the application to determine whether the entry into LPM3/LPMx.5 ...
+      FORCE_LPM_ENTRY : Boolean;          -- Bit selection for the application to determine whether the entry into LPM3/LPMx.5 should be forced even if there are active system clocks running which do not meet the LPM3/LPMx.5 criteria.
       Reserved1       : Bits_5      := 0;
       PMR_BUSY        : Boolean;          -- Power mode request busy flag.
       Reserved2       : Bits_7      := 0;
@@ -2047,7 +2052,7 @@ pragma Style_Checks (Off);
 
    type UCAxSTATW_Type is record
       UCBUSY        : Boolean;      -- eUSCI_A busy.
-      UCADDR_UCIDLE : Boolean;      -- UCADDR: Address received in address-bit multiprocessor mode. UCIDLE: ...
+      UCADDR_UCIDLE : Boolean;      -- UCADDR: Address received in address-bit multiprocessor mode. UCADDR is cleared when UCAxRXBUF is read. UCIDLE: Idle line detected in idle-line multiprocessor mode. UCIDLE is cleared when UCAxRXBUF is read.
       UCRXERR       : Boolean;      -- Receive error flag.
       UCBRK         : Boolean;      -- Break detect flag.
       UCPE          : Boolean;      -- Parity error flag.
@@ -2073,7 +2078,7 @@ pragma Style_Checks (Off);
    -- 24.4.6 UCAxRXBUF Register
 
    type UCAxRXBUF_Type is record
-      UCRXBUFx : Unsigned_8;      -- The receive-data buffer is user accessible and contains the last received ...
+      UCRXBUFx : Unsigned_8;      -- The receive-data buffer is user accessible and contains the last received character from the receive shift register.
       Reserved : Bits_8     := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2086,7 +2091,7 @@ pragma Style_Checks (Off);
    -- 24.4.7 UCAxTXBUF Register Transmit Buffer Register
 
    type UCAxTXBUF_Type is record
-      UCTXBUFx : Unsigned_8;      -- The transmit data buffer is user accessible and holds the data waiting to be ...
+      UCTXBUFx : Unsigned_8;      -- The transmit data buffer is user accessible and holds the data waiting to be moved into the transmit shift register and transmitted on UCAxTXD.
       Reserved : Bits_8     := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2190,10 +2195,10 @@ pragma Style_Checks (Off);
    -- 24.4.12 UCAxIV Register Interrupt Vector Register
 
    UCAxIV_NONE    : constant := 16#00#; -- No interrupt pending
-   UCAxIV_RXFULL  : constant := 16#02#; -- Interrupt Source: Receive buffer full; Interrupt Flag: UCRXIFG; ...: Highest
+   UCAxIV_RXFULL  : constant := 16#02#; -- Interrupt Source: Receive buffer full; Interrupt Flag: UCRXIFG; Interrupt Priority: Highest
    UCAxIV_TXEMPTY : constant := 16#04#; -- Interrupt Source: Transmit buffer empty; Interrupt Flag: UCTXIFG
    UCAxIV_START   : constant := 16#06#; -- Interrupt Source: Start bit received; Interrupt Flag: UCSTTIFG
-   UCAxIV_TXDONE  : constant := 16#08#; -- Interrupt Source: Transmit complete; Interrupt Flag: UCTXCPTIFG; ...: Lowest
+   UCAxIV_TXDONE  : constant := 16#08#; -- Interrupt Source: Transmit complete; Interrupt Flag: UCTXCPTIFG; Interrupt Priority: Lowest
 
    -- 24.4 eUSCI_A UART Registers
 
