@@ -35,6 +35,8 @@ package STM32F769I
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- 3 Embedded Flash memory (FLASH)
    ----------------------------------------------------------------------------
@@ -3846,23 +3848,23 @@ pragma Warnings (On);
    -- 34.8.9 Interrupt flag clear register (USART_ICR)
 
    type USART_ICR_Type is record
-      PECF      : Boolean;       -- Parity error clear flag
-      FECF      : Boolean;       -- Framing error clear flag
-      NCF       : Boolean;       -- Noise detected clear flag
-      ORECF     : Boolean;       -- Overrun error clear flag
-      IDLECF    : Boolean;       -- Idle line detected clear flag
+      PECF      : Boolean;      -- Parity error clear flag
+      FECF      : Boolean;      -- Framing error clear flag
+      NCF       : Boolean;      -- Noise detected clear flag
+      ORECF     : Boolean;      -- Overrun error clear flag
+      IDLECF    : Boolean;      -- Idle line detected clear flag
       Reserved1 : Bits_1  := 0;
-      TCCF      : Boolean;       -- Transmission complete clear flag
-      TCBGTCF   : Boolean;       -- Transmission completed before guard time clear flag
-      LBDCF     : Boolean;       -- LIN break detection clear flag
-      CTSCF     : Boolean;       -- CTS clear flag
+      TCCF      : Boolean;      -- Transmission complete clear flag
+      TCBGTCF   : Boolean;      -- Transmission completed before guard time clear flag
+      LBDCF     : Boolean;      -- LIN break detection clear flag
+      CTSCF     : Boolean;      -- CTS clear flag
       Reserved2 : Bits_1  := 0;
-      RTOCF     : Boolean;       -- Receiver timeout clear flag
-      EOBCF     : Boolean;       -- End of block clear flag
+      RTOCF     : Boolean;      -- Receiver timeout clear flag
+      EOBCF     : Boolean;      -- End of block clear flag
       Reserved3 : Bits_4  := 0;
-      CMCF      : Boolean;       -- Character match clear flag
+      CMCF      : Boolean;      -- Character match clear flag
       Reserved4 : Bits_2  := 0;
-      WUCF      : Boolean;       -- Wakeup from Stop mode clear flag
+      WUCF      : Boolean;      -- Wakeup from Stop mode clear flag
       Reserved5 : Bits_11 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3998,5 +4000,7 @@ pragma Warnings (On);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+pragma Style_Checks (On);
 
 end STM32F769I;
