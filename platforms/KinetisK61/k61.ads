@@ -38,15 +38,48 @@ package K61
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
+   -- K61P256M150SF3RM
+   -- Rev. 4, 10/2015
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
    -- Chapter 11 Port Control and Interrupts (PORT)
    ----------------------------------------------------------------------------
+
+   PORT_MUXCTRL_BASEADDRESS : constant := 16#4004_9000#;
 
    -- 11.5.1 Pin Control Register n (PORTx_PCRn)
 
    PS_PULLDOWN : constant := 0; -- Internal pulldown resistor is enabled on the corresponding pin, if the corresponding PE field is set.
    PS_PULLUP   : constant := 1; -- Internal pullup resistor is enabled on the corresponding pin, if the corresponding PE field is set.
 
-   type PORT_PCR_Pin_Type is record
+   MUX_DISABLED  : constant := 2#000#; -- Pin disabled (analog).
+   MUX_ALT1_GPIO : constant := 2#001#; -- Alternative 1 (GPIO).
+   MUX_ALT2      : constant := 2#010#; -- Alternative 2 (chip-specific).
+   MUX_ALT3      : constant := 2#011#; -- Alternative 3 (chip-specific).
+   MUX_ALT4      : constant := 2#100#; -- Alternative 4 (chip-specific).
+   MUX_ALT5      : constant := 2#101#; -- Alternative 5 (chip-specific).
+   MUX_ALT6      : constant := 2#110#; -- Alternative 6 (chip-specific).
+   MUX_ALT7      : constant := 2#111#; -- Alternative 7 (chip-specific).
+
+   IRQC_DISABLED   : constant := 2#0000#; -- Flag is disabled.
+   IRQC_DMARISING  : constant := 2#0001#; -- Flag and DMA request on rising edge.
+   IRQC_DMAFALLING : constant := 2#0010#; -- Flag and DMA request on falling edge.
+   IRQC_DMAEITHER  : constant := 2#0011#; -- Flag and DMA request on either edge.
+   IRQC_RSVD1      : constant := 2#0100#; -- Reserved.
+   IRQC_RSVD2      : constant := 2#0101#; -- Reserved.
+   IRQC_RSVD3      : constant := 2#0110#; -- Reserved.
+   IRQC_RSVD4      : constant := 2#0111#; -- Reserved.
+   IRQC_IRQZERO    : constant := 2#1000#; -- Flag and Interrupt when logic 0.
+   IRQC_IRQRISING  : constant := 2#1001#; -- Flag and Interrupt on rising-edge.
+   IRQC_IRQFALLING : constant := 2#1010#; -- Flag and Interrupt on falling-edge.
+   IRQC_IRQEITHER  : constant := 2#1011#; -- Flag and Interrupt on either edge.
+   IRQC_IRQONE     : constant := 2#1100#; -- Flag and Interrupt when logic 1.
+   IRQC_RSVD5      : constant := 2#1101#; -- Reserved.
+   IRQC_RSVD6      : constant := 2#1110#; -- Reserved.
+   IRQC_RSVD7      : constant := 2#1111#; -- Reserved.
+
+   type PORTx_PCRn_Type is record
       PS        : Bits_1;       -- Pull Select
       PE        : Boolean;      -- Pull Enable
       SRE       : Boolean;      -- Slew Rate Enable
@@ -66,7 +99,7 @@ pragma Style_Checks (Off);
       with Bit_Order            => Low_Order_First,
            Size                 => 32,
            Volatile_Full_Access => True;
-   for PORT_PCR_Pin_Type use record
+   for PORTx_PCRn_Type use record
       PS        at 0 range  0 ..  0;
       PE        at 0 range  1 ..  1;
       SRE       at 0 range  2 ..  2;
@@ -84,49 +117,101 @@ pragma Style_Checks (Off);
       Reserved5 at 0 range 25 .. 31;
    end record;
 
-   type PORT_PCR_Pins_Type is array (0 .. 31) of PORT_PCR_Pin_Type
+   type PORTx_PCR_Type is array (0 .. 31) of PORTx_PCRn_Type
       with Pack => True;
 
-   type PORT_PCR_Type is record
-      Pins  : PORT_PCR_Pins_Type;
-      GPCLR : Unsigned_32        with Volatile_Full_Access => True;
-      GPCHR : Unsigned_32        with Volatile_Full_Access => True;
-      ISFR  : Unsigned_32        with Volatile_Full_Access => True;
+   -- 11.5.2 Global Pin Control Low Register (PORTx_GPCLR)
+
+   type Bitmap_16L is array (0 .. 15) of Boolean
+      with Component_Size => 1,
+           Size           => 16;
+
+   type PORTx_GPCLR_Type is record
+      GPWD : Bits_16    := 0;                 -- Global Pin Write Data
+      GPWE : Bitmap_16L := [others => False]; -- Global Pin Write Enable
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 32,
+           Volatile_Full_Access => True;
+   for PORTx_GPCLR_Type use record
+      GPWD at 0 range  0 .. 15;
+      GPWE at 0 range 16 .. 31;
+   end record;
+
+   -- 11.5.3 Global Pin Control High Register (PORTx_GPCHR)
+
+   type Bitmap_16H is array (16 .. 31) of Boolean
+      with Component_Size => 1,
+           Size           => 16;
+
+   type PORTx_GPCHR_Type is record
+      GPWD : Bits_16    := 0;                 -- Global Pin Write Data
+      GPWE : Bitmap_16H := [others => False]; -- Global Pin Write Enable
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 32,
+           Volatile_Full_Access => True;
+   for PORTx_GPCHR_Type use record
+      GPWD at 0 range  0 .. 15;
+      GPWE at 0 range 16 .. 31;
+   end record;
+
+   -- 11.5.4 Interrupt Status Flag Register (PORTx_ISFR)
+
+   type PORTx_ISFR_Type is record
+      ISF : Bitmap_32; -- Interrupt Status Flag
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 32,
+           Volatile_Full_Access => True;
+   for PORTx_ISFR_Type use record
+      ISF at 0 range 0 .. 31;
+   end record;
+
+   -- 11.5 Memory map and register definition
+
+   type PORT_MUXCTRL_Type is record
+      PCR   : PORTx_PCR_Type;
+      GPCLR : PORTx_GPCLR_Type;
+      GPCHR : PORTx_GPCHR_Type;
+      ISFR  : PORTx_ISFR_Type;
    end record
       with Size => 16#A4# * 8;
-   for PORT_PCR_Type use record
-      Pins  at 16#00# range 0 .. 32 * 32 - 1;
+   for PORT_MUXCTRL_Type use record
+      PCR   at 16#00# range 0 .. 32 * 32 - 1;
       GPCLR at 16#80# range 0 .. 31;
       GPCHR at 16#84# range 0 .. 31;
       ISFR  at 16#A0# range 0 .. 31;
    end record;
 
-   -- 11.5 Memory map and register definition
-
-   PORT_PCR_BASEADDRESS : constant := 16#4004_9000#;
-
-   PORTA_PCR : aliased PORT_PCR_Type
-      with Address    => System'To_Address (PORT_PCR_BASEADDRESS + 16#0000#),
+   PORTA_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#0000#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
-   PORTB_PCR : aliased PORT_PCR_Type
-      with Address    => System'To_Address (PORT_PCR_BASEADDRESS + 16#1000#),
+   PORTB_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#1000#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
-   PORTC_PCR : aliased PORT_PCR_Type
-      with Address    => System'To_Address (PORT_PCR_BASEADDRESS + 16#2000#),
+   PORTC_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#2000#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
-   PORTD_PCR : aliased PORT_PCR_Type
-      with Address    => System'To_Address (PORT_PCR_BASEADDRESS + 16#3000#),
+   PORTD_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#3000#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
-   PORTE_PCR : aliased PORT_PCR_Type
-      with Address    => System'To_Address (PORT_PCR_BASEADDRESS + 16#4000#),
+   PORTE_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#4000#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
-   PORTF_PCR : aliased PORT_PCR_Type
-      with Address    => System'To_Address (PORT_PCR_BASEADDRESS + 16#5000#),
+   PORTF_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#5000#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -389,21 +474,21 @@ pragma Style_Checks (Off);
 
    -- 12.2.5 System Options Register 5 (SIM_SOPT5)
 
-   UARTxTXSRC_TXPIN   : constant := 2#00#; -- UART0_TX pin
-   UARTxTXSRC_FTM1CH0 : constant := 2#01#; -- UART0_TX pin modulated with FTM1 channel 0 output
-   UARTxTXSRC_FTM2CH0 : constant := 2#10#; -- UART0_TX pin modulated with FTM2 channel 0 output
+   UARTxTXSRC_TXPIN   : constant := 2#00#; -- UART?_TX pin
+   UARTxTXSRC_FTM1CH0 : constant := 2#01#; -- UART?_TX pin modulated with FTM1 channel 0 output
+   UARTxTXSRC_FTM2CH0 : constant := 2#10#; -- UART?_TX pin modulated with FTM2 channel 0 output
    UARTxTXSRC_RSVD    : constant := 2#11#; -- Reserved
 
-   UARTxRXSRC_RXPIN : constant := 2#00#; -- UART0_RX pin
+   UARTxRXSRC_RXPIN : constant := 2#00#; -- UART?_RX pin
    UARTxRXSRC_CMP0  : constant := 2#01#; -- CMP0
    UARTxRXSRC_CMP1  : constant := 2#10#; -- CMP1
    UARTxRXSRC_RSVD  : constant := 2#11#; -- Reserved
 
    type SIM_SOPT5_Type is record
-      UART0TXSRC : Bits_2  := UARTxTXSRC_TXPIN; -- UART0 transmit data source selec
-      UART0RXSRC : Bits_2  := UARTxRXSRC_RXPIN; -- UART0 receive data source selec
-      UART1TXSRC : Bits_2  := UARTxTXSRC_TXPIN; -- UART1 transmit data source selec
-      UART1RXSRC : Bits_2  := UARTxRXSRC_RXPIN; -- UART1 receive data source selec
+      UART0TXSRC : Bits_2  := UARTxTXSRC_TXPIN; -- UART0 transmit data source select
+      UART0RXSRC : Bits_2  := UARTxRXSRC_RXPIN; -- UART0 receive data source select
+      UART1TXSRC : Bits_2  := UARTxTXSRC_TXPIN; -- UART1 transmit data source select
+      UART1RXSRC : Bits_2  := UARTxRXSRC_RXPIN; -- UART1 receive data source select
       Reserved   : Bits_24 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -445,14 +530,14 @@ pragma Style_Checks (Off);
 
    -- 12.2.7 System Options Register 7 (SIM_SOPT7)
 
-   ADCxTRGSEL_EXT     : constant := 2#0000#; -- External trigger
+   ADCxTRGSEL_EXTTRG  : constant := 2#0000#; -- External trigger
    ADCxTRGSEL_HSC0    : constant := 2#0001#; -- High speed comparator 0 asynchronous interrupt
    ADCxTRGSEL_HSC1    : constant := 2#0010#; -- High speed comparator 1 asynchronous interrupt
    ADCxTRGSEL_HSC2    : constant := 2#0011#; -- High speed comparator 2 asynchronous interrupt
-   ADCxTRGSEL_PIT0    : constant := 2#0100#; -- PIT trigger 0
-   ADCxTRGSEL_PIT1    : constant := 2#0101#; -- PIT trigger 1
-   ADCxTRGSEL_PIT2    : constant := 2#0110#; -- PIT trigger 2
-   ADCxTRGSEL_PIT3    : constant := 2#0111#; -- PIT trigger 3
+   ADCxTRGSEL_PITTRG0 : constant := 2#0100#; -- PIT trigger 0
+   ADCxTRGSEL_PITTRG1 : constant := 2#0101#; -- PIT trigger 1
+   ADCxTRGSEL_PITTRG2 : constant := 2#0110#; -- PIT trigger 2
+   ADCxTRGSEL_PITTRG3 : constant := 2#0111#; -- PIT trigger 3
    ADCxTRGSEL_FTM0    : constant := 2#1000#; -- FTM0 trigger
    ADCxTRGSEL_FTM1    : constant := 2#1001#; -- FTM1 trigger
    ADCxTRGSEL_FTM2    : constant := 2#1010#; -- FTM2 trigger
@@ -469,19 +554,19 @@ pragma Style_Checks (Off);
    ADCxALTTRGEN_ALT : constant := 1; -- Alternate trigger selected for ADC?.
 
    type SIM_SOPT7_Type is record
-      ADC0TRGSEL    : Bits_4 := ADCxTRGSEL_EXT;        -- ADC0 trigger select
+      ADC0TRGSEL    : Bits_4 := ADCxTRGSEL_EXTTRG;     -- ADC0 trigger select
       ADC0PRETRGSEL : Bits_1 := ADCxPRETRGSEL_PRETRGA; -- ADC0 pre-trigger select
       Reserved1     : Bits_2 := 0;
       ADC0ALTTRGEN  : Bits_1 := ADCxALTTRGEN_PDB;      -- ADC0 alternate trigger enable
-      ADC1TRGSEL    : Bits_4 := ADCxTRGSEL_EXT;        -- ADC1 trigger select
+      ADC1TRGSEL    : Bits_4 := ADCxTRGSEL_EXTTRG;     -- ADC1 trigger select
       ADC1PRETRGSEL : Bits_1 := ADCxPRETRGSEL_PRETRGA; -- ADC1 pre-trigger select
       Reserved2     : Bits_2 := 0;
       ADC1ALTTRGEN  : Bits_1 := ADCxALTTRGEN_PDB;      -- ADC1 alternate trigger enable
-      ADC2TRGSEL    : Bits_4 := ADCxTRGSEL_EXT;        -- ADC2 trigger select
+      ADC2TRGSEL    : Bits_4 := ADCxTRGSEL_EXTTRG;     -- ADC2 trigger select
       ADC2PRETRGSEL : Bits_1 := ADCxPRETRGSEL_PRETRGA; -- ADC2 pre-trigger select
       Reserved3     : Bits_2 := 0;
       ADC2ALTTRGEN  : Bits_1 := ADCxALTTRGEN_PDB;      -- ADC2 alternate trigger enable
-      ADC3TRGSEL    : Bits_4 := ADCxTRGSEL_EXT;        -- ADC3 trigger select
+      ADC3TRGSEL    : Bits_4 := ADCxTRGSEL_EXTTRG;     -- ADC3 trigger select
       ADC3PRETRGSEL : Bits_1 := ADCxPRETRGSEL_PRETRGA; -- ADC3 pre-trigger select
       Reserved4     : Bits_2 := 0;
       ADC3ALTTRGEN  : Bits_1 := ADCxALTTRGEN_PDB;      -- ADC3 alternate trigger enable
@@ -933,11 +1018,166 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    -- 12.2.18 Flash Configuration Register 1 (SIM_FCFG1)
+
+   -- Table 30-4. FlexNVM partition code field description
+   -- DEPART                                   Data flash (KByte) EEPROM backup (KByte)
+   DEPART_D256E0     : constant := 2#0000#; -- 256                0
+   DEPART_RSVD1      : constant := 2#0001#; -- Reserved           Reserved
+   DEPART_RSVD2      : constant := 2#0010#; -- Reserved           Reserved
+   DEPART_RSVD3      : constant := 2#0011#; -- Reserved           Reserved
+   DEPART_D192E64    : constant := 2#0100#; -- 192                64
+   DEPART_D128E128   : constant := 2#0101#; -- 128                128
+   DEPART_D0E256     : constant := 2#0110#; -- 0                  256
+   DEPART_RSVD4      : constant := 2#0111#; -- Reserved           Reserved
+   DEPART_D0E256_2   : constant := 2#1000#; -- 0                  256
+   DEPART_RSVD5      : constant := 2#1001#; -- Reserved           Reserved
+   DEPART_RSVD6      : constant := 2#1010#; -- Reserved           Reserved
+   DEPART_RSVD7      : constant := 2#1011#; -- Reserved           Reserved
+   DEPART_D64E192    : constant := 2#1100#; -- 64                 192
+   DEPART_D128E128_2 : constant := 2#1101#; -- 128                128
+   DEPART_D256E0_2   : constant := 2#1110#; -- 256                0
+   DEPART_D256E0_3   : constant := 2#1111#; -- 256                0
+
+   EESIZE_16k   : constant := 2#0000#; -- 16 KB
+   EESIZE_8k    : constant := 2#0001#; -- 8 KB
+   EESIZE_4k    : constant := 2#0010#; -- 4 KB
+   EESIZE_2k    : constant := 2#0011#; -- 2 KB
+   EESIZE_1k    : constant := 2#0100#; -- 1 KB
+   EESIZE_512   : constant := 2#0101#; -- 512 Bytes
+   EESIZE_256   : constant := 2#0110#; -- 256 Bytes
+   EESIZE_128   : constant := 2#0111#; -- 128 Bytes
+   EESIZE_64    : constant := 2#1000#; -- 64 Bytes
+   EESIZE_32    : constant := 2#1001#; -- 32 Bytes
+   EESIZE_RSVD1 : constant := 2#1010#; -- Reserved
+   EESIZE_RSVD2 : constant := 2#1011#; -- Reserved
+   EESIZE_RSVD3 : constant := 2#1100#; -- Reserved
+   EESIZE_RSVD4 : constant := 2#1101#; -- Reserved
+   EESIZE_RSVD5 : constant := 2#1110#; -- Reserved
+   EESIZE_0     : constant := 2#1111#; -- 0 Bytes
+
+   PFSIZE_RSVD1      : constant := 2#0000#; -- Reserved
+   PFSIZE_RSVD2      : constant := 2#0001#; -- Reserved
+   PFSIZE_RSVD3      : constant := 2#0010#; -- Reserved
+   PFSIZE_RSVD4      : constant := 2#0011#; -- Reserved
+   PFSIZE_RSVD5      : constant := 2#0100#; -- Reserved
+   PFSIZE_RSVD6      : constant := 2#0101#; -- Reserved
+   PFSIZE_RSVD7      : constant := 2#0110#; -- Reserved
+   PFSIZE_RSVD8      : constant := 2#0111#; -- Reserved
+   PFSIZE_RSVD9      : constant := 2#1000#; -- Reserved
+   PFSIZE_RSVD10     : constant := 2#1001#; -- Reserved
+   PFSIZE_RSVD11     : constant := 2#1010#; -- Reserved
+   PFSIZE_512k16p    : constant := 2#1011#; -- 512 KB, 16 KB protection size
+   PFSIZE_RSVD12     : constant := 2#1100#; -- Reserved
+   PFSIZE_1024k32p   : constant := 2#1101#; -- 1024 KB, 32 KB protection size
+   PFSIZE_RSVD13     : constant := 2#1110#; -- Reserved
+   PFSIZE_1024k32p_2 : constant := 2#1111#; -- 1024 KB, 32 KB protection size
+
+   NVMSIZE_0k        : constant := 2#0000#; -- 0 KB
+   NVMSIZE_RSVD1     : constant := 2#0001#; -- Reserved
+   NVMSIZE_RSVD2     : constant := 2#0010#; -- Reserved
+   NVMSIZE_RSVD3     : constant := 2#0011#; -- Reserved
+   NVMSIZE_RSVD4     : constant := 2#0100#; -- Reserved
+   NVMSIZE_RSVD5     : constant := 2#0101#; -- Reserved
+   NVMSIZE_RSVD6     : constant := 2#0110#; -- Reserved
+   NVMSIZE_RSVD7     : constant := 2#0111#; -- Reserved
+   NVMSIZE_RSVD8     : constant := 2#1000#; -- Reserved
+   NVMSIZE_RSVD9     : constant := 2#1001#; -- Reserved
+   NVMSIZE_RSVD10    : constant := 2#1010#; -- Reserved
+   NVMSIZE_512k16p   : constant := 2#1011#; -- 512 KB, 16 KB protection region
+   NVMSIZE_RSVD11    : constant := 2#1100#; -- Reserved
+   NVMSIZE_RSVD12    : constant := 2#1101#; -- Reserved
+   NVMSIZE_RSVD13    : constant := 2#1110#; -- Reserved
+   NVMSIZE_512k16p_2 : constant := 2#1111#; -- 512 KB, 16 KB protection region
+
+   type SIM_FCFG1_Type is record
+      FTFDIS    : Boolean := False;          -- Disable FTFE
+      Reserved1 : Bits_7  := 0;
+      DEPART    : Bits_4  := DEPART_D256E0;  -- FlexNVM partition
+      Reserved2 : Bits_4  := 0;
+      EESIZE    : Bits_4  := EESIZE_16k;     -- EEPROM size
+      Reserved3 : Bits_4  := 0;
+      PFSIZE    : Bits_4  := PFSIZE_512k16p; -- Program flash size
+      NVMSIZE   : Bits_4  := NVMSIZE_0k;     -- FlexNVM size
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_FCFG1_Type use record
+      FTFDIS    at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  7;
+      DEPART    at 0 range  8 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+      EESIZE    at 0 range 16 .. 19;
+      Reserved3 at 0 range 20 .. 23;
+      PFSIZE    at 0 range 24 .. 27;
+      NVMSIZE   at 0 range 28 .. 31;
+   end record;
+
+   SIM_FCFG1 : aliased SIM_FCFG1_Type
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#104C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.2.19 Flash Configuration Register 2 (SIM_FCFG2)
+
+   type SIM_FCFG2_Type is record
+      Reserved1 : Bits_16 := 0;
+      MAXADDR23 : Bits_6  := 0;     -- Max address block 2 or 3
+      Reserved2 : Bits_1  := 0;
+      PFLSH     : Boolean := False; -- Program flash only
+      MAXADDR01 : Bits_6  := 0;     -- Max address block 0 or 1
+      Reserved3 : Bits_1  := 0;
+      SWAPPFLSH : Boolean := False; -- Swap program flash
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SIM_FCFG2_Type use record
+      Reserved1 at 0 range  0 .. 15;
+      MAXADDR23 at 0 range 16 .. 21;
+      Reserved2 at 0 range 22 .. 22;
+      PFLSH     at 0 range 23 .. 23;
+      MAXADDR01 at 0 range 24 .. 29;
+      Reserved3 at 0 range 30 .. 30;
+      SWAPPFLSH at 0 range 31 .. 31;
+   end record;
+
+   SIM_FCFG2 : aliased SIM_FCFG2_Type
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1050#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.2.20 Unique Identification Register High (SIM_UIDH)
+
+   SIM_UIDH : aliased Unsigned_32
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1054#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.2.21 Unique Identification Register Mid-High (SIM_UIDMH)
+
+   SIM_UIDMH : aliased Unsigned_32
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1058#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.2.22 Unique Identification Register Mid Low (SIM_UIDML)
+
+   SIM_UIDML : aliased Unsigned_32
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#105C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.2.23 Unique Identification Register Low (SIM_UIDL)
+
+   SIM_UIDL : aliased Unsigned_32
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1060#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 12.2.24 System Clock Divider Register 4 (SIM_CLKDIV4)
 
@@ -1680,7 +1920,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_4  := 0;
       VERSION   : Bits_16 := VERSION_VERSION; -- Version
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR00_Type use record
       START     at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -1690,7 +1931,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR00 : aliased DDR_CR00_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#00#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#000#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1705,7 +1946,8 @@ pragma Style_Checks (Off);
       CSMAX     : Bits_2  := 2#10#;    -- Chip Select Maximum
       Reserved3 : Bits_14 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR01_Type use record
       MAXROW    at 0 range  0 ..  4;
       Reserved1 at 0 range  5 ..  7;
@@ -1716,7 +1958,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR01 : aliased DDR_CR01_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#004#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1728,7 +1970,8 @@ pragma Style_Checks (Off);
       INITAREF : Bits_4  := 0; -- Initialization Auto-Refresh
       Reserved : Bits_4  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR02_Type use record
       TINIT    at 0 range  0 .. 23;
       INITAREF at 0 range 24 .. 27;
@@ -1736,7 +1979,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR02 : aliased DDR_CR02_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#08#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#008#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1753,7 +1996,8 @@ pragma Style_Checks (Off);
       TCCD      : Bits_5 := 0; -- Time CAS-to-CAS Delay
       Reserved4 : Bits_3 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR03_Type use record
       LATLIN    at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  7;
@@ -1766,7 +2010,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR03 : aliased DDR_CR03_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0C#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#00C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1782,7 +2026,8 @@ pragma Style_Checks (Off);
       Reserved3 : Bits_2 := 0;
       TRASMIN   : Bits_8 := 0; -- Time RAS Minimum
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR04_Type use record
       TBINT     at 0 range  0 ..  2;
       Reserved1 at 0 range  3 ..  7;
@@ -1794,7 +2039,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR04 : aliased DDR_CR04_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#10#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#010#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1811,7 +2056,8 @@ pragma Style_Checks (Off);
       TMRD      : Bits_5 := 0; -- DRAM TMRD parameter in cycles.
       Reserved4 : Bits_3 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR05_Type use record
       TWTR      at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  7;
@@ -1824,7 +2070,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR05 : aliased DDR_CR05_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#14#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#014#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1837,7 +2083,8 @@ pragma Style_Checks (Off);
       INTWBR   : Boolean := False; -- Interrupt Write Burst
       Reserved : Bits_7  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR06_Type use record
       TMOD     at 0 range  0 ..  7;
       TRASMAX  at 0 range  8 .. 23;
@@ -1846,7 +2093,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR06 : aliased DDR_CR06_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#18#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#018#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1863,7 +2110,8 @@ pragma Style_Checks (Off);
       CCAPEN    : Boolean := False; -- Concurrent Auto-Precharge Enable
       Reserved4 : Bits_7  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR07_Type use record
       CLKPW     at 0 range  0 ..  2;
       Reserved1 at 0 range  3 ..  7;
@@ -1876,7 +2124,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR07 : aliased DDR_CR07_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#1C#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#01C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1892,7 +2140,8 @@ pragma Style_Checks (Off);
       TDAL      : Bits_5  := 0;     -- Defines the auto-precharge write recovery time when auto-precharge is enabled (CR01[AP] is set), in cycles.
       Reserved3 : Bits_3  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR08_Type use record
       TRAS      at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -1904,7 +2153,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR08 : aliased DDR_CR08_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#20#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#020#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1918,7 +2167,8 @@ pragma Style_Checks (Off);
       BSTLEN    : Bits_3  := 0;     -- Burst Length
       Reserved2 : Bits_5  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR09_Type use record
       TDLL      at 0 range  0 .. 15;
       NOCMD     at 0 range 16 .. 16;
@@ -1928,7 +2178,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR09 : aliased DDR_CR09_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#24#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#024#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1942,7 +2192,8 @@ pragma Style_Checks (Off);
       TRPAB     : Bits_4  := 0; -- TRP All Bank
       Reserved2 : Bits_4  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR10_Type use record
       TFAW      at 0 range  0 ..  5;
       Reserved1 at 0 range  6 ..  7;
@@ -1952,7 +2203,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR10 : aliased DDR_CR10_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#28#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#028#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1972,7 +2223,8 @@ pragma Style_Checks (Off);
       TREFEN    : Boolean := False;                  -- Enables refresh commands.
       Reserved4 : Bits_7  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR11_Type use record
       REGDIMM   at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -1985,7 +2237,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR11 : aliased DDR_CR11_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#2C#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#02C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1998,7 +2250,8 @@ pragma Style_Checks (Off);
       TREF      : Bits_14 := 0; -- Time Refresh
       Reserved2 : Bits_2  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR12_Type use record
       TRFC      at 0 range  0 ..  9;
       Reserved1 at 0 range 10 .. 15;
@@ -2007,7 +2260,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR12 : aliased DDR_CR12_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#30#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#030#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2020,7 +2273,8 @@ pragma Style_Checks (Off);
       PD        : Boolean := False; -- Power Down
       Reserved3 : Bits_15 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR13_Type use record
       Reserved1 at 0 range  0 .. 13;
       Reserved2 at 0 range 14 .. 15;
@@ -2029,7 +2283,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR13 : aliased DDR_CR13_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#34#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#034#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2040,14 +2294,15 @@ pragma Style_Checks (Off);
       TPDEX : Bits_16 := 0; -- Time Power Down Exit
       TXSR  : Bits_16 := 0; -- Time Exit Self Refresh
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR14_Type use record
       TPDEX at 0 range  0 .. 15;
       TXSR  at 0 range 16 .. 31;
    end record;
 
    DDR_CR14 : aliased DDR_CR14_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#38#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#038#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2061,7 +2316,8 @@ pragma Style_Checks (Off);
       PUREF     : Boolean := False; -- Power Up Refresh
       Reserved2 : Bits_7  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR15_Type use record
       TXSNR     at 0 range  0 .. 15;
       SREF      at 0 range 16 .. 16;
@@ -2071,7 +2327,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR15 : aliased DDR_CR15_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#3C#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#03C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2090,7 +2346,8 @@ pragma Style_Checks (Off);
       LPCTRL_MODE1 : Boolean := False; -- Memory power-down mode (mode 1)
       Reserved3    : Bits_11 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR16_Type use record
       QKREF        at 0 range  0 ..  0;
       Reserved1    at 0 range  1 ..  7;
@@ -2105,7 +2362,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR16 : aliased DDR_CR16_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#40#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#040#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2116,14 +2373,15 @@ pragma Style_Checks (Off);
       LPPDCNT : Bits_16 := 0; -- Low Power Power Down Count
       LPRFCNT : Bits_16 := 0; -- Low Power Refresh Count
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR17_Type use record
       LPPDCNT at 0 range  0 .. 15;
       LPRFCNT at 0 range 16 .. 31;
    end record;
 
    DDR_CR17 : aliased DDR_CR17_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#44#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#044#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2135,7 +2393,8 @@ pragma Style_Checks (Off);
       LPAUTO   : Bits_5  := 0; -- Low Power Auto
       Reserved : Bits_11 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR18_Type use record
       LPEXTCNT at 0 range  0 .. 15;
       LPAUTO   at 0 range 16 .. 20;
@@ -2143,7 +2402,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR18 : aliased DDR_CR18_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#48#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#048#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2154,14 +2413,15 @@ pragma Style_Checks (Off);
       LPINTCNT : Bits_16 := 0; -- Low Power Interval Count
       LPRFHOLD : Bits_16 := 0; -- Low Power Refresh Hold
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR19_Type use record
       LPINTCNT at 0 range  0 .. 15;
       LPRFHOLD at 0 range 16 .. 31;
    end record;
 
    DDR_CR19 : aliased DDR_CR19_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#4C#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#04C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2183,7 +2443,8 @@ pragma Style_Checks (Off);
       WRMD      : Boolean := False;    -- Write Mode Register
       Reserved4 : Bits_7  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR20_Type use record
       LPRE      at 0 range  0 ..  1;
       Reserved1 at 0 range  2 ..  7;
@@ -2196,7 +2457,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR20 : aliased DDR_CR20_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#50#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#050#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2207,14 +2468,15 @@ pragma Style_Checks (Off);
       MR0DAT0 : Bits_16 := 0; -- Data to program into memory mode register 0 for chip select .
       MR1DAT0 : Bits_16 := 0; -- Data to program into memory mode register 1 for chip select .
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR21_Type use record
       MR0DAT0 at 0 range  0 .. 15;
       MR1DAT0 at 0 range 16 .. 31;
    end record;
 
    DDR_CR21 : aliased DDR_CR21_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#54#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#054#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2225,14 +2487,15 @@ pragma Style_Checks (Off);
       MR2DAT0 : Bits_16 := 0; -- Data to program into memory mode register 2 for chip select .
       MR3DAT0 : Bits_16 := 0; -- Data to program into memory mode register 3 for chip select .
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR22_Type use record
       MR2DAT0 at 0 range  0 .. 15;
       MR3DAT0 at 0 range 16 .. 31;
    end record;
 
    DDR_CR22 : aliased DDR_CR22_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#58#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#058#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2243,14 +2506,15 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR23_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
    end record;
 
    DDR_CR23 : aliased DDR_CR23_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#5C#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#05C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2261,14 +2525,15 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR24_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
    end record;
 
    DDR_CR24 : aliased DDR_CR24_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#60#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#060#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2288,7 +2553,8 @@ pragma Style_Checks (Off);
       APREBIT   : Bits_4 := 0;      -- Auto Precharge Bit
       Reserved4 : Bits_4 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR25_Type use record
       BNK8      at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -2301,7 +2567,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR25 : aliased DDR_CR25_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#64#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#064#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2316,7 +2582,8 @@ pragma Style_Checks (Off);
       BNKSPT    : Boolean := False; -- Bank Split enable
       Reserved2 : Bits_7  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR26_Type use record
       AGECNT    at 0 range  0 ..  7;
       CMDAGE    at 0 range  8 .. 15;
@@ -2327,7 +2594,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR26 : aliased DDR_CR26_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#68#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#068#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2344,7 +2611,8 @@ pragma Style_Checks (Off);
       SWPEN     : Boolean := False; -- Swap Enable
       Reserved4 : Bits_7  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR27_Type use record
       PLEN      at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -2357,7 +2625,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR27 : aliased DDR_CR27_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#6C#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#06C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2380,7 +2648,8 @@ pragma Style_Checks (Off);
       CMDLATR   : Boolean := False;         -- Command Latency Reduction Enable
       Reserved4 : Bits_7  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR28_Type use record
       CSMAP     at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -2393,7 +2662,7 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR28 : aliased DDR_CR28_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#70#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#070#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2413,7 +2682,8 @@ pragma Style_Checks (Off);
       RESYNC    : Boolean := False;       -- Resyncronize
       Reserved4 : Bits_7  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR29_Type use record
       WRLATR    at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -2426,67 +2696,829 @@ pragma Style_Checks (Off);
    end record;
 
    DDR_CR29 : aliased DDR_CR29_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#74#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#074#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- 34.4.31 DDR Control Register 30 (DDR_CR30)
-   DDR_CR30 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#78#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR30_Type is record
+      RSYNCRF    : Boolean := False; -- Resynchroize after Refresh
+      Reserved1  : Bits_7  := 0;
+      INTSTAT_SA : Boolean := False; -- A single access outside the defined physical memory space detected
+      INTSTAT_MA : Boolean := False; -- Multiple accesses outside the defined physical memory space detected
+      INTSTAT_DI : Boolean := False; -- DRAM initialization complete
+      INTSTAT_DM : Boolean := False; -- Both DDR2 and Mobile modes have been enabled
+      INTSTAT_OE : Boolean := False; -- ODT enabled and CAS Latency 3 programmed error detected. This is an unsupported programming option
+      INTSTAT_RI : Boolean := False; -- Indicates that a register interface mode register write has finished and that another register interface mode register write may be issued
+      INTSTAT_DC : Boolean := False; -- dfi_int_complete state change detected
+      INTSTAT_UD : Boolean := False; -- User-initiated DLL resync is finished
+      INTSTAT    : Boolean := False; -- Logical OR of INTSTATUS[7:0]
+      Reserved2  : Bits_7  := 0;
+      INTACK_SA  : Boolean := False; -- ACK for INTSTAT_SA
+      INTACK_MA  : Boolean := False; -- ACK for INTSTAT_MA
+      INTACK_DI  : Boolean := False; -- ACK for INTSTAT_DI
+      INTACK_DM  : Boolean := False; -- ACK for INTSTAT_DM
+      INTACK_OE  : Boolean := False; -- ACK for INTSTAT_OE
+      INTACK_RI  : Boolean := False; -- ACK for INTSTAT_RI
+      INTACK_DC  : Boolean := False; -- ACK for INTSTAT_DC
+      INTACK_UD  : Boolean := False; -- ACK for INTSTAT_UD
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR30_Type use record
+      RSYNCRF    at 0 range  0 ..  0;
+      Reserved1  at 0 range  1 ..  7;
+      INTSTAT_SA at 0 range  8 ..  8;
+      INTSTAT_MA at 0 range  9 ..  9;
+      INTSTAT_DI at 0 range 10 .. 10;
+      INTSTAT_DM at 0 range 11 .. 11;
+      INTSTAT_OE at 0 range 12 .. 12;
+      INTSTAT_RI at 0 range 13 .. 13;
+      INTSTAT_DC at 0 range 14 .. 14;
+      INTSTAT_UD at 0 range 15 .. 15;
+      INTSTAT    at 0 range 16 .. 16;
+      Reserved2  at 0 range 17 .. 23;
+      INTACK_SA  at 0 range 24 .. 24;
+      INTACK_MA  at 0 range 25 .. 25;
+      INTACK_DI  at 0 range 26 .. 26;
+      INTACK_DM  at 0 range 27 .. 27;
+      INTACK_OE  at 0 range 28 .. 28;
+      INTACK_RI  at 0 range 29 .. 29;
+      INTACK_DC  at 0 range 30 .. 30;
+      INTACK_UD  at 0 range 31 .. 31;
+   end record;
+
+   DDR_CR30 : aliased DDR_CR30_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#078#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.32 DDR Control Register 31 (DDR_CR31)
-   DDR_CR31 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#7C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR31_Type is record
+      INTMASK_SA : Boolean := False; -- MASK for INTSTAT_SA
+      INTMASK_MA : Boolean := False; -- MASK for INTSTAT_MA
+      INTMASK_DI : Boolean := False; -- MASK for INTSTAT_DI
+      INTMASK_DM : Boolean := False; -- MASK for INTSTAT_DM
+      INTMASK_OE : Boolean := False; -- MASK for INTSTAT_OE
+      INTMASK_RI : Boolean := False; -- MASK for INTSTAT_RI
+      INTMASK_DC : Boolean := False; -- MASK for INTSTAT_DC
+      INTMASK_UD : Boolean := False; -- MASK for INTSTAT_UD
+      INTMASK    : Boolean := False; -- MASK for INTSTAT
+      Reserved   : Bits_23 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR31_Type use record
+      INTMASK_SA at 0 range 0 ..  0;
+      INTMASK_MA at 0 range 1 ..  1;
+      INTMASK_DI at 0 range 2 ..  2;
+      INTMASK_DM at 0 range 3 ..  3;
+      INTMASK_OE at 0 range 4 ..  4;
+      INTMASK_RI at 0 range 5 ..  5;
+      INTMASK_DC at 0 range 6 ..  6;
+      INTMASK_UD at 0 range 7 ..  7;
+      INTMASK    at 0 range 8 ..  8;
+      Reserved   at 0 range 9 .. 31;
+   end record;
+
+   DDR_CR31 : aliased DDR_CR31_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#07C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.33 DDR Control Register 32 (DDR_CR32)
-   DDR_CR32 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#80#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR32_Type is record
+      OORAD : Unsigned_32 := 0; -- Out Of Range Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR32_Type use record
+      OORAD at 0 range 0 .. 31;
+   end record;
+
+   DDR_CR32 : aliased DDR_CR32_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#080#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.34 DDR Control Register 33 (DDR_CR33)
-   DDR_CR33 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#84#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR33_Type is record
+      OORLEN    : Bits_10 := 0; -- Out Of Range Length
+      Reserved1 : Bits_6  := 0;
+      OORTYP    : Bits_6  := 0; -- Out Of Range Type
+      Reserved2 : Bits_2  := 0;
+      OORID     : Bits_2  := 0; -- Out Of Range source ID
+      Reserved3 : Bits_6  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR33_Type use record
+      OORLEN    at 0 range  0 ..  9;
+      Reserved1 at 0 range 10 .. 15;
+      OORTYP    at 0 range 16 .. 21;
+      Reserved2 at 0 range 22 .. 23;
+      OORID     at 0 range 24 .. 25;
+      Reserved3 at 0 range 26 .. 31;
+   end record;
+
+   DDR_CR33 : aliased DDR_CR33_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#084#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.35 DDR Control Register 34 (DDR_CR34)
-   DDR_CR34 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#88#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   ODTRDC_RES : constant := 0; -- Reserved ODT termination when CS performs a read
+   ODTRDC_ACT : constant := 1; -- CS has active ODT termination when CS performs a read
+
+   ODTWRCS_NO  : constant := 0; -- No ODT termination when CS performs a write
+   ODTWRCS_ACT : constant := 1; -- CS has active ODT termination when CS performs a write
+
+   type DDR_CR34_Type is record
+      ODTRDC    : Bits_1 := ODTRDC_RES; -- ODT Read map CS
+      Reserved1 : Bits_7 := 0;
+      ODTWRCS   : Bits_1 := ODTWRCS_NO; -- ODT Write map CS
+      Reserved2 : Bits_7 := 0;
+      Reserved3 : Bits_2 := 0;
+      Reserved4 : Bits_6 := 0;
+      Reserved5 : Bits_2 := 0;
+      Reserved6 : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR34_Type use record
+      ODTRDC    at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  7;
+      ODTWRCS   at 0 range  8 ..  8;
+      Reserved2 at 0 range  9 .. 15;
+      Reserved3 at 0 range 16 .. 17;
+      Reserved4 at 0 range 18 .. 23;
+      Reserved5 at 0 range 24 .. 25;
+      Reserved6 at 0 range 26 .. 31;
+   end record;
+
+   DDR_CR34 : aliased DDR_CR34_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#088#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.36 DDR Control Register 35 (DDR_CR35)
-   DDR_CR35 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#8C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR35_Type is record
+      R2WSMCS   : Bits_4  := 0; -- Read To Write Same Chip Select
+      Reserved1 : Bits_4  := 0;
+      W2RSMCS   : Bits_4  := 0; -- Write To Read Same Chip Select
+      Reserved2 : Bits_20 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR35_Type use record
+      R2WSMCS   at 0 range  0 ..  3;
+      Reserved1 at 0 range  4 ..  7;
+      W2RSMCS   at 0 range  8 .. 11;
+      Reserved2 at 0 range 12 .. 31;
+   end record;
+
+   DDR_CR35 : aliased DDR_CR35_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#08C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.37 DDR Control Register 36 (DDR_CR36)
-   DDR_CR36 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#90#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR36_Type is record
+      Reserved1 : Bits_16 := 0;
+      Reserved2 : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR36_Type use record
+      Reserved1 at 0 range  0 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   DDR_CR36 : aliased DDR_CR36_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#090#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.38 DDR Control Register 37 (DDR_CR37)
-   DDR_CR37 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#94#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR37_Type is record
+      R2RSAME   : Bits_3 := 0; -- R2R Same chip select delay
+      Reserved1 : Bits_5 := 0;
+      R2WSAME   : Bits_3 := 0; -- R2W Same chip select delay
+      Reserved2 : Bits_5 := 0;
+      W2RSAME   : Bits_3 := 0; -- W2R Same chip select delay
+      Reserved3 : Bits_5 := 0;
+      W2WSAME   : Bits_3 := 0; -- W2W Same chip select delay
+      Reserved4 : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR37_Type use record
+      R2RSAME   at 0 range  0 ..  2;
+      Reserved1 at 0 range  3 ..  7;
+      R2WSAME   at 0 range  8 .. 10;
+      Reserved2 at 0 range 11 .. 15;
+      W2RSAME   at 0 range 16 .. 18;
+      Reserved3 at 0 range 19 .. 23;
+      W2WSAME   at 0 range 24 .. 26;
+      Reserved4 at 0 range 27 .. 31;
+   end record;
+
+   DDR_CR37 : aliased DDR_CR37_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#094#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.39 DDR Control Register 38 (DDR_CR38)
-   DDR_CR38 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#98#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   PDNCS_MODE_DEC : constant := 0; -- Decrement OCD settings
+   PDNCS_MODE_INC : constant := 1; -- Increment OCD settings
+
+   PUPCS_MODE_DEC : constant := 0; -- Decrement OCD settings
+   PUPCS_MODE_INC : constant := 1; -- Increment OCD settings
+
+   type DDR_CR38_Type is record
+      PDNCS_NADJ : Bits_4  := 0;              -- OCD Pull Down adjustment Chip Select (Number of OCD adjustment commands to issue)
+      PDNCS_MODE : Bits_1  := PDNCS_MODE_DEC; -- OCD Pull Down adjustment Chip Select (Decrement/Increment OCD settings)
+      Reserved1  : Bits_3  := 0;
+      PUPCS_NADJ : Bits_4  := 0;              -- OCD Pull Up adjustment Chip Select (Number of OCD adjustment commands to issue)
+      PUPCS_MODE : Bits_1  := PUPCS_MODE_DEC; -- OCD Pull Up adjustment Chip Select (Decrement/Increment OCD settings)
+      Reserved2  : Bits_3  := 0;
+      P0WRCNT    : Bits_11 := 0;              -- Port 0 Write Count
+      Reserved3  : Bits_5  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR38_Type use record
+      PDNCS_NADJ at 0 range  0 ..  3;
+      PDNCS_MODE at 0 range  4 ..  4;
+      Reserved1  at 0 range  5 ..  7;
+      PUPCS_NADJ at 0 range  8 .. 11;
+      PUPCS_MODE at 0 range 12 .. 12;
+      Reserved2  at 0 range 13 .. 15;
+      P0WRCNT    at 0 range 16 .. 26;
+      Reserved3  at 0 range 27 .. 31;
+   end record;
+
+   DDR_CR38 : aliased DDR_CR38_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#098#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.40 DDR Control Register 39 (DDR_CR39)
-   DDR_CR39 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#9C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR39_Type is record
+      P0RDCNT    : Bits_11 := 0; -- Port 0 Read command Count
+      Reserved1  : Bits_5  := 0;
+      RP0        : Bits_2  := 0; -- Port 0 Read command Priority
+      Reserved2  : Bits_6  := 0;
+      WP0        : Bits_2  := 0; -- Port 0 Write command Priority
+      Reserved3  : Bits_6  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR39_Type use record
+      P0RDCNT   at 0 range  0 .. 10;
+      Reserved1 at 0 range 11 .. 15;
+      RP0       at 0 range 16 .. 17;
+      Reserved2 at 0 range 18 .. 23;
+      WP0       at 0 range 24 .. 25;
+      Reserved3 at 0 range 26 .. 31;
+   end record;
+
+   DDR_CR39 : aliased DDR_CR39_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#09C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.41 DDR Control Register 40 (DDR_CR40)
-   DDR_CR40 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#A0#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   P0TYP_ASYNC : constant := 2#00#; -- Asynchronous
+   P0TYP_RSVD1 : constant := 2#01#; -- Reserved
+   P0TYP_RSVD2 : constant := 2#01#; -- Reserved
+   P0TYP_SYNC  : constant := 2#11#; -- Synchronous
+
+   type DDR_CR40_Type is record
+      P0TYP     : Bits_2  := P0TYP_ASYNC; -- Port 0 Type
+      Reserved1 : Bits_6  := 0;
+      P1WRCNT   : Bits_11 := 0;           -- Port 1 Write command Count
+      Reserved2 : Bits_13 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR40_Type use record
+      P0TYP     at 0 range  0 ..  1;
+      Reserved1 at 0 range  2 ..  7;
+      P1WRCNT   at 0 range  8 .. 18;
+      Reserved2 at 0 range 19 .. 31;
+   end record;
+
+   DDR_CR40 : aliased DDR_CR40_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0A0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.42 DDR Control Register 41 (DDR_CR41)
-   DDR_CR41 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#A4#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR41_Type is record
+      P1RDCNT    : Bits_11 := 0; -- Port 1 Read command Count
+      Reserved1  : Bits_5  := 0;
+      RP1        : Bits_2  := 0; -- Port 1 Read command Priority
+      Reserved2  : Bits_6  := 0;
+      WP1        : Bits_2  := 0; -- Port 1 Write command Priority
+      Reserved3  : Bits_6  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR41_Type use record
+      P1RDCNT   at 0 range  0 .. 10;
+      Reserved1 at 0 range 11 .. 15;
+      RP1       at 0 range 16 .. 17;
+      Reserved2 at 0 range 18 .. 23;
+      WP1       at 0 range 24 .. 25;
+      Reserved3 at 0 range 26 .. 31;
+   end record;
+
+   DDR_CR41 : aliased DDR_CR41_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0A4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.43 DDR Control Register 42 (DDR_CR42)
-   DDR_CR42 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#A8#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   P1TYP_ASYNC : constant := 2#00#; -- Asynchronous
+   P1TYP_RSVD1 : constant := 2#01#; -- Reserved
+   P1TYP_RSVD2 : constant := 2#01#; -- Reserved
+   P1TYP_SYNC  : constant := 2#11#; -- Synchronous
+
+   type DDR_CR42_Type is record
+      P1TYP     : Bits_2  := P1TYP_ASYNC; -- Port 1 Type
+      Reserved1 : Bits_6  := 0;
+      P2WRCNT   : Bits_11 := 0;           -- Port 2 Write command Count
+      Reserved2 : Bits_13 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR42_Type use record
+      P1TYP     at 0 range  0 ..  1;
+      Reserved1 at 0 range  2 ..  7;
+      P2WRCNT   at 0 range  8 .. 18;
+      Reserved2 at 0 range 19 .. 31;
+   end record;
+
+   DDR_CR42 : aliased DDR_CR42_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0A8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.44 DDR Control Register 43 (DDR_CR43)
-   DDR_CR43 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#AC#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR43_Type is record
+      P2RDCNT    : Bits_11 := 0; -- Port 2 Read command Count
+      Reserved1  : Bits_5  := 0;
+      RP2        : Bits_2  := 0; -- Port 2 Read command Priority
+      Reserved2  : Bits_6  := 0;
+      WP2        : Bits_2  := 0; -- Port 2 Write command Priority
+      Reserved3  : Bits_6  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR43_Type use record
+      P2RDCNT   at 0 range  0 .. 10;
+      Reserved1 at 0 range 11 .. 15;
+      RP2       at 0 range 16 .. 17;
+      Reserved2 at 0 range 18 .. 23;
+      WP2       at 0 range 24 .. 25;
+      Reserved3 at 0 range 26 .. 31;
+   end record;
+
+   DDR_CR43 : aliased DDR_CR43_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0AC#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.45 DDR Control Register 44 (DDR_CR44)
-   DDR_CR44 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#B0#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   P2TYP_ASYNC : constant := 2#00#; -- Asynchronous
+   P2TYP_RSVD1 : constant := 2#01#; -- Reserved
+   P2TYP_RSVD2 : constant := 2#01#; -- Reserved
+   P2TYP_SYNC  : constant := 2#11#; -- Synchronous
+
+   WRRLAT_FREERUN : constant := 0; -- Free-running
+   WRRLAT_LIMITED : constant := 1; -- Limited
+
+   WRRSHARE_INDPNDNT : constant := 0; -- Port 0 and port 1 are treated independently for arbitration
+   WRRSHARE_GROUPED  : constant := 1; -- Port 0 and port 1 are grouped together for arbitration
+
+   type DDR_CR44_Type is record
+      P2TYP           : Bits_2  := P2TYP_ASYNC;       -- Port 2 Type
+      Reserved1       : Bits_6  := 0;
+      WRRLAT          : Bits_1  := WRRLAT_FREERUN;    -- WRR Latency
+      Reserved2       : Bits_7  := 0;
+      WRRSHARE        : Bits_1  := WRRSHARE_INDPNDNT; -- WRR Shared arbitration
+      Reserved3       : Bits_7  := 0;
+      WRRERR_NOTUNIQ  : Boolean := False;             -- The port ordering parameters do not all contain unique values.
+      WRRERR_ANYZERO  : Boolean := False;             -- Any of the relative priority parameters have been programmed with a zero value.
+      WRRERR_RELPNEQ  : Boolean := False;             -- The relative priority values for any of the ports paired through the weighted_round_robin_weight_sharing parameter are not identical.
+      WRRERR_PORDNSEQ : Boolean := False;             -- The port ordering parameter values for paired ports is not sequential.
+      Reserved4       : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR44_Type use record
+      P2TYP           at 0 range  0 ..  1;
+      Reserved1       at 0 range  2 ..  7;
+      WRRLAT          at 0 range  8 ..  8;
+      Reserved2       at 0 range  9 .. 15;
+      WRRSHARE        at 0 range 16 .. 16;
+      Reserved3       at 0 range 17 .. 23;
+      WRRERR_NOTUNIQ  at 0 range 24 .. 24;
+      WRRERR_ANYZERO  at 0 range 25 .. 25;
+      WRRERR_RELPNEQ  at 0 range 26 .. 26;
+      WRRERR_PORDNSEQ at 0 range 27 .. 27;
+      Reserved4       at 0 range 28 .. 31;
+   end record;
+
+   DDR_CR44 : aliased DDR_CR44_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0B0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.46 DDR Control Register 45 (DDR_CR45)
-   DDR_CR45 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#B4#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR45_Type is record
+      P0PRI0    : Bits_4 := 0; -- Port 0 Priority 0 commands
+      Reserved1 : Bits_4 := 0;
+      P0PRI1    : Bits_4 := 0; -- Port 0 Priority 1 commands
+      Reserved2 : Bits_4 := 0;
+      P0PRI2    : Bits_4 := 0; -- Port 0 Priority 2 commands
+      Reserved3 : Bits_4 := 0;
+      P0PRI3    : Bits_4 := 0; -- Port 0 Priority 3 commands
+      Reserved4 : Bits_4 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR45_Type use record
+      P0PRI0    at 0 range  0 ..  3;
+      Reserved1 at 0 range  4 ..  7;
+      P0PRI1    at 0 range  8 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+      P0PRI2    at 0 range 16 .. 19;
+      Reserved3 at 0 range 20 .. 23;
+      P0PRI3    at 0 range 24 .. 27;
+      Reserved4 at 0 range 28 .. 31;
+   end record;
+
+   DDR_CR45 : aliased DDR_CR45_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0B4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.47 DDR Control Register 46 (DDR_CR46)
-   DDR_CR46 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#B8#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR46_Type is record
+      P0ORD     : Bits_2  := 0; -- Port 0 Order
+      Reserved1 : Bits_6  := 0;
+      P0PRIRLX  : Bits_10 := 0; -- Port 0 Priority Relax
+      Reserved2 : Bits_6  := 0;
+      P1PRI0    : Bits_4  := 0; -- Port 1 Priority 0 commands
+      Reserved3 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR46_Type use record
+      P0ORD     at 0 range  0 ..  1;
+      Reserved1 at 0 range  2 ..  7;
+      P0PRIRLX  at 0 range  8 .. 17;
+      Reserved2 at 0 range 18 .. 23;
+      P1PRI0    at 0 range 24 .. 27;
+      Reserved3 at 0 range 28 .. 31;
+   end record;
+
+   DDR_CR46 : aliased DDR_CR46_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0B8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.48 DDR Control Register 47 (DDR_CR47)
-   DDR_CR47 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#BC#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR47_Type is record
+      P1PRI1    : Bits_4 := 0; -- Port 1 Priority 1 commands
+      Reserved1 : Bits_4 := 0;
+      P1PRI2    : Bits_4 := 0; -- Port 1 Priority 2 commands
+      Reserved2 : Bits_4 := 0;
+      P1PRI3    : Bits_4 := 0; -- Port 1 Priority 3 commands
+      Reserved3 : Bits_4 := 0;
+      P1ORD     : Bits_2 := 0; -- Port 1 Order
+      Reserved4 : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR47_Type use record
+      P1PRI1    at 0 range  0 ..  3;
+      Reserved1 at 0 range  4 ..  7;
+      P1PRI2    at 0 range  8 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+      P1PRI3    at 0 range 16 .. 19;
+      Reserved3 at 0 range 20 .. 23;
+      P1ORD     at 0 range 24 .. 25;
+      Reserved4 at 0 range 26 .. 31;
+   end record;
+
+   DDR_CR47 : aliased DDR_CR47_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0BC#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.49 DDR Control Register 48 (DDR_CR48)
-   DDR_CR48 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#C0#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR48_Type is record
+      P1PRIRLX  : Bits_10 := 0; -- Port 1 Priority Relax
+      Reserved1 : Bits_6  := 0;
+      P2PRI0    : Bits_4  := 0; -- Port 2 Priority 0 commands
+      Reserved2 : Bits_4  := 0;
+      P2PRI1    : Bits_4  := 0; -- Port 2 Priority 1 commands
+      Reserved3 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR48_Type use record
+      P1PRIRLX  at 0 range  0 ..  9;
+      Reserved1 at 0 range 10 .. 15;
+      P2PRI0    at 0 range 16 .. 19;
+      Reserved2 at 0 range 20 .. 23;
+      P2PRI1    at 0 range 24 .. 27;
+      Reserved3 at 0 range 28 .. 31;
+   end record;
+
+   DDR_CR48 : aliased DDR_CR48_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0C0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.50 DDR Control Register 49 (DDR_CR49)
-   DDR_CR49 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#C4#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR49_Type is record
+      P2PRI2    : Bits_4  := 0; -- Port 2 Priority 2 commands
+      Reserved1 : Bits_4  := 0;
+      P2PRI3    : Bits_4  := 0; -- Port 2 Priority 3 commands
+      Reserved2 : Bits_4  := 0;
+      P2ORD     : Bits_2  := 0; -- Port 2 Order
+      Reserved3 : Bits_14 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR49_Type use record
+      P2PRI2    at 0 range  0 ..  3;
+      Reserved1 at 0 range  4 ..  7;
+      P2PRI3    at 0 range  8 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+      P2ORD     at 0 range 16 .. 17;
+      Reserved3 at 0 range 18 .. 31;
+   end record;
+
+   DDR_CR49 : aliased DDR_CR49_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0C4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.51 DDR Control Register 50 (DDR_CR50)
-   DDR_CR50 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#C8#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR50_Type is record
+      P2PRIRLX  : Bits_10 := 0;     -- Port 2 Priority Relax
+      Reserved1 : Bits_6  := 0;
+      CLKSTATUS : Boolean := False; -- Clock Status
+      Reserved2 : Bits_15 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR50_Type use record
+      P2PRIRLX  at 0 range  0 ..  9;
+      Reserved1 at 0 range 10 .. 15;
+      CLKSTATUS at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 31;
+   end record;
+
+   DDR_CR50 : aliased DDR_CR50_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0C8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.52 DDR Control Register 51 (DDR_CR51)
-   DDR_CR51 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#CC#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR51_Type is record
+      DLLRSTDLY : Bits_16 := 0; -- DLL Reset Delay
+      DLLRADLY  : Bits_8  := 0; -- DLL Reset Adjust Delay
+      PHYWRLAT  : Bits_4  := 0; -- PHY Write Latency
+      Reserved  : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR51_Type use record
+      DLLRSTDLY at 0 range  0 .. 15;
+      DLLRADLY  at 0 range 16 .. 23;
+      PHYWRLAT  at 0 range 24 .. 27;
+      Reserved  at 0 range 28 .. 31;
+   end record;
+
+   DDR_CR51 : aliased DDR_CR51_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0CC#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.53 DDR Control Register 52 (DDR_CR52)
-   DDR_CR52 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#D0#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR52_Type is record
+      PYWRLTBS  : Bits_4 := 0; -- PHY Write Latency Base
+      Reserved1 : Bits_4 := 0;
+      PHYRDLAT  : Bits_4 := 0; -- PHY Read Latency
+      Reserved2 : Bits_4 := 0;
+      RDDATAEN  : Bits_4 := 0; -- Read Data Enable
+      Reserved3 : Bits_4 := 0;
+      RDDTENBAS : Bits_4 := 0; -- Read Data Enable Base
+      Reserved4 : Bits_4 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR52_Type use record
+      PYWRLTBS  at 0 range  0 ..  3;
+      Reserved1 at 0 range  4 ..  7;
+      PHYRDLAT  at 0 range  8 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+      RDDATAEN  at 0 range 16 .. 19;
+      Reserved3 at 0 range 20 .. 23;
+      RDDTENBAS at 0 range 24 .. 27;
+      Reserved4 at 0 range 28 .. 31;
+   end record;
+
+   DDR_CR52 : aliased DDR_CR52_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0D0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.54 DDR Control Register 53 (DDR_CR53)
-   DDR_CR53 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#D4#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR53_Type is record
+      CLKDISCS  : Boolean := False; -- DRAM Clock Disable for chip select
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_6  := 0;
+      Reserved3 : Bits_4  := 0;
+      Reserved4 : Bits_4  := 0;
+      Reserved5 : Bits_14 := 0;
+      Reserved6 : Bits_2  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR53_Type use record
+      CLKDISCS  at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      Reserved2 at 0 range  2 ..  7;
+      Reserved3 at 0 range  8 .. 11;
+      Reserved4 at 0 range 12 .. 15;
+      Reserved5 at 0 range 16 .. 29;
+      Reserved6 at 0 range 30 .. 31;
+   end record;
+
+   DDR_CR53 : aliased DDR_CR53_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0D4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.55 DDR Control Register 54 (DDR_CR54)
-   DDR_CR54 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#D8#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR54_Type is record
+      Reserved1 : Bits_14 := 0;
+      Reserved2 : Bits_2  := 0;
+      Reserved3 : Bits_14 := 0;
+      Reserved4 : Bits_2  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR54_Type use record
+      Reserved1 at 0 range  0 .. 13;
+      Reserved2 at 0 range 14 .. 15;
+      Reserved3 at 0 range 16 .. 29;
+      Reserved4 at 0 range 30 .. 31;
+   end record;
+
+   DDR_CR54 : aliased DDR_CR54_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0D8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.56 DDR Control Register 55 (DDR_CR55)
-   DDR_CR55 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#DC#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR55_Type is record
+      Reserved1 : Bits_14 := 0;
+      Reserved2 : Bits_2  := 0;
+      Reserved3 : Bits_14 := 0;
+      Reserved4 : Bits_2  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR55_Type use record
+      Reserved1 at 0 range  0 .. 13;
+      Reserved2 at 0 range 14 .. 15;
+      Reserved3 at 0 range 16 .. 29;
+      Reserved4 at 0 range 30 .. 31;
+   end record;
+
+   DDR_CR55 : aliased DDR_CR55_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0DC#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.57 DDR Control Register 56 (DDR_CR56)
-   DDR_CR56 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#E0#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR56_Type is record
+      Reserved1 : Bits_14 := 0;
+      Reserved2 : Bits_2  := 0;
+      RDLATADJ  : Bits_4  := 0; -- Read Latency Adjust
+      Reserved3 : Bits_4  := 0;
+      WRLATADJ  : Bits_4  := 0; -- Write Latency Adjust
+      Reserved4 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR56_Type use record
+      Reserved1 at 0 range  0 .. 13;
+      Reserved2 at 0 range 14 .. 15;
+      RDLATADJ  at 0 range 16 .. 19;
+      Reserved3 at 0 range 20 .. 23;
+      WRLATADJ  at 0 range 24 .. 27;
+      Reserved4 at 0 range 28 .. 31;
+   end record;
+
+   DDR_CR56 : aliased DDR_CR56_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0E0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 34.4.58 DDR Control Register 57 (DDR_CR57)
-   DDR_CR57 : aliased Unsigned_32 with Address => System'To_Address (DDRMC_BASEADDRESS + 16#E4#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type DDR_CR57_Type is record
+      Reserved1 : Bits_4  := 0;
+      Reserved2 : Bits_4  := 0;
+      Reserved3 : Bits_5  := 0;
+      Reserved4 : Bits_3  := 0;
+      Reserved5 : Bits_4  := 0;
+      Reserved6 : Bits_4  := 0;
+      ODTALTEN  : Boolean := False; -- ODT Alternate Enable
+      Reserved7 : Bits_7  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DDR_CR57_Type use record
+      Reserved1 at 0 range  0 ..  3;
+      Reserved2 at 0 range  4 ..  7;
+      Reserved3 at 0 range  8 .. 12;
+      Reserved4 at 0 range 13 .. 15;
+      Reserved5 at 0 range 16 .. 19;
+      Reserved6 at 0 range 20 .. 23;
+      ODTALTEN  at 0 range 24 .. 24;
+      Reserved7 at 0 range 25 .. 31;
+   end record;
+
+   DDR_CR57 : aliased DDR_CR57_Type
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0E4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 34.4.59 DDR Control Register 58 (DDR_CR58)
 
@@ -2494,14 +3526,15 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR58_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
    end record;
 
    DDR_CR58 : aliased DDR_CR58_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#E8#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0E8#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2512,14 +3545,15 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR59_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
    end record;
 
    DDR_CR59 : aliased DDR_CR59_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#EC#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0EC#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2530,14 +3564,15 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR60_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
    end record;
 
    DDR_CR60 : aliased DDR_CR60_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#F0#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0F0#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2548,14 +3583,15 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR61_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
    end record;
 
    DDR_CR61 : aliased DDR_CR61_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#F4#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0F4#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2566,14 +3602,15 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR62_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
    end record;
 
    DDR_CR62 : aliased DDR_CR62_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#F8#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0F8#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2584,14 +3621,15 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_CR63_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
    end record;
 
    DDR_CR63 : aliased DDR_CR63_Type
-      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#FC#),
+      with Address              => System'To_Address (DDRMC_BASEADDRESS + 16#0FC#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -2603,7 +3641,8 @@ pragma Style_Checks (Off);
       RST       : Boolean := False; -- Reset
       Reserved2 : Bits_1  := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_RCR_Type use record
       Reserved1 at 0 range  0 .. 29;
       RST       at 0 range 30 .. 30;
@@ -2640,7 +3679,8 @@ pragma Style_Checks (Off);
       Reserved7      : Bits_2 := 0;
       Reserved8      : Bits_4 := 0;
    end record
-      with Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for DDR_PAD_CTRL_Type use record
       SPARE_DLY_CTRL at 0 range  0 ..  3;
       Reserved1      at 0 range  4 ..  7;
@@ -2670,7 +3710,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1 := 0;
       AD       : Bits_7 := 0; -- Address
    end record
-      with Size => 8;
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
    for I2Cx_A1_Type use record
       Reserved at 0 range 0 .. 0;
       AD       at 0 range 1 .. 7;
@@ -2687,7 +3728,8 @@ pragma Style_Checks (Off);
       ICR  : Bits_6 := 0;      -- ClockRate
       MULT : Bits_2 := MULT_1; -- Multiplier Factor
    end record
-      with Size => 8;
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
    for I2Cx_F_Type use record
       ICR  at 0 range 0 .. 5;
       MULT at 0 range 6 .. 7;
@@ -2711,7 +3753,8 @@ pragma Style_Checks (Off);
       IICIE : Boolean := False;   -- I2C Interrupt Enable
       IICEN : Boolean := False;   -- I2C Enable
    end record
-      with Size => 8;
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
    for I2Cx_C1_Type use record
       DMAEN at 0 range 0 .. 0;
       WUEN  at 0 range 1 .. 1;
@@ -2738,7 +3781,8 @@ pragma Style_Checks (Off);
       IAAS  : Boolean := False;           -- Addressed As A Slave
       TCF   : Boolean := True;            -- Transfer Complete Flag
    end record
-      with Size => 8;
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
    for I2Cx_S_Type use record
       RXAK  at 0 range 0 .. 0;
       IICIF at 0 range 1 .. 1;
@@ -2768,7 +3812,8 @@ pragma Style_Checks (Off);
       ADEXT : Bits_1  := ADEXT_7;     -- Address Extension
       GCAEN : Boolean := False;       -- General Call Address Enable
    end record
-      with Size => 8;
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
    for I2Cx_C2_Type use record
       AD    at 0 range 0 .. 2;
       RMEN  at 0 range 3 .. 3;
@@ -2787,7 +3832,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_2 := 0;
       Reserved2 : Bits_1 := 0;
    end record
-      with Size => 8;
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
    for I2Cx_FLT_Type use record
       FLT       at 0 range 0 .. 4;
       Reserved1 at 0 range 5 .. 6;
@@ -2800,7 +3846,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1 := 0;
       RAD      : Bits_7 := 0; -- Range Slave Address
    end record
-      with Size => 8;
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
    for I2Cx_RA_Type use record
       Reserved at 0 range 0 .. 0;
       RAD      at 0 range 1 .. 7;
@@ -2821,7 +3868,8 @@ pragma Style_Checks (Off);
       ALERTEN : Boolean := False;        -- SMBus Alert Response Address Enable
       FACK    : Boolean := False;        -- Fast NACK/ACK Enable
    end record
-      with Size => 8;
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
    for I2Cx_SMB_Type use record
       SHTF2IE at 0 range 0 .. 0;
       SHTF2   at 0 range 1 .. 1;
@@ -2839,7 +3887,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1 := 0;
       SAD      : Bits_7 := 2#1100001#; -- SMBus Address
    end record
-      with Size => 8;
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
    for I2Cx_A2_Type use record
       Reserved at 0 range 0 .. 0;
       SAD      at 0 range 1 .. 7;
@@ -2879,11 +3928,328 @@ pragma Style_Checks (Off);
 
    I2C0 : aliased I2C_Type
       with Address    => System'To_Address (16#4006_6000#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    I2C1 : aliased I2C_Type
       with Address    => System'To_Address (16#4006_7000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 56 Universal Asynchronous Receiver/Transmitter (UART)
+   ----------------------------------------------------------------------------
+
+   -- 56.3.1 UART Baud Rate Registers: High (UARTx_BDH)
+
+   type UARTx_BDH_Type is record
+      SBR      : Bits_5  := 0;     -- UART Baud Rate Bits
+      Reserved : Bits_1  := 0;
+      RXEDGIE  : Boolean := False; -- RxD Input Active Edge Interrupt Enable
+      LBKDIE   : Boolean := False; -- LIN Break Detect Interrupt Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_BDH_Type use record
+      SBR      at 0 range 0 .. 4;
+      Reserved at 0 range 5 .. 5;
+      RXEDGIE  at 0 range 6 .. 6;
+      LBKDIE   at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.2 UART Baud Rate Registers: Low (UARTx_BDL)
+
+   type UARTx_BDL_Type is record
+      SBR : Bits_8 := 4; -- UART Baud Rate Bits
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_BDL_Type use record
+      SBR at 0 range 0 .. 7;
+   end record;
+
+   -- 56.3.3 UART Control Register 1 (UARTx_C1)
+
+   PT_EVEN : constant := 0; -- Even parity.
+   PT_ODD  : constant := 1; -- Odd parity.
+
+   ILT_START : constant := 0; -- Idle character bit count starts after start bit.
+   ILT_STOP  : constant := 1; -- Idle character bit count starts after stop bit.
+
+   WAKE_IDLE : constant := 0; -- Idle line wakeup.
+   WAKE_ADDR : constant := 1; -- Address mark wakeup.
+
+   M_8 : constant := 0; -- Normal—start + 8 data bits (MSB/LSB first as determined by MSBF) + stop.
+   M_9 : constant := 1; -- Use—start + 9 data bits (MSB/LSB first as determined by MSBF) + stop.
+
+   RSRC_INTLOOPBACK : constant := 0; -- Selects internal loop back mode. The receiver input is internally connected to transmitter output.
+   RSRC_SINGLEWIRE  : constant := 1; -- Single wire UART mode where the receiver input is connected to the transmit pin input signal.
+
+   UARTSWAI_CONT   : constant := 0; -- UART clock continues to run in Wait mode.
+   UARTSWAI_FREEZE : constant := 1; -- UART clock freezes while CPU is in Wait mode.
+
+   type UARTx_C1_Type is record
+      PT       : Bits_1  := PT_EVEN;          -- Parity Type
+      PE       : Boolean := False;            -- Parity Enable
+      ILT      : Bits_1  := ILT_START;        -- Idle Line Type Select
+      WAKE     : Bits_1  := WAKE_IDLE;        -- Receiver Wakeup Method Select
+      M        : Bits_1  := M_8;              -- 9-bit or 8-bit Mode Select
+      RSRC     : Bits_1  := RSRC_INTLOOPBACK; -- Receiver Source Select
+      UARTSWAI : Bits_1  := UARTSWAI_CONT;    -- UART Stops in Wait Mode
+      LOOPS    : Boolean := False;            -- Loop Mode Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_C1_Type use record
+      PT       at 0 range 0 .. 0;
+      PE       at 0 range 1 .. 1;
+      ILT      at 0 range 2 .. 2;
+      WAKE     at 0 range 3 .. 3;
+      M        at 0 range 4 .. 4;
+      RSRC     at 0 range 5 .. 5;
+      UARTSWAI at 0 range 6 .. 6;
+      LOOPS    at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.4 UART Control Register 2 (UARTx_C2)
+
+   type UARTx_C2_Type is record
+      SBK  : Boolean := False; -- Send Break
+      RWU  : Boolean := False; -- Receiver Wakeup Control
+      RE   : Boolean := False; -- Receiver Enable
+      TE   : Boolean := False; -- Transmitter Enable
+      ILIE : Boolean := False; -- Idle Line Interrupt Enable
+      RIE  : Boolean := False; -- Receiver Full Interrupt or DMA Transfer Enable
+      TCIE : Boolean := False; -- Transmission Complete Interrupt Enable
+      TIE  : Boolean := False; -- Transmitter Interrupt or DMA Transfer Enable.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_C2_Type use record
+      SBK  at 0 range 0 .. 0;
+      RWU  at 0 range 1 .. 1;
+      RE   at 0 range 2 .. 2;
+      TE   at 0 range 3 .. 3;
+      ILIE at 0 range 4 .. 4;
+      RIE  at 0 range 5 .. 5;
+      TCIE at 0 range 6 .. 6;
+      TIE  at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.5 UART Status Register 1 (UARTx_S1)
+
+   type UARTx_S1_Type is record
+      PF   : Boolean; -- Parity Error Flag
+      FE   : Boolean; -- Framing Error Flag
+      NF   : Boolean; -- Noise Flag
+      OVR  : Boolean; -- Receiver Overrun Flag
+      IDLE : Boolean; -- Idle Line Flag
+      RDRF : Boolean; -- Receive Data Register Full Flag
+      TC   : Boolean; -- Transmit Complete Flag
+      TDRE : Boolean; -- Transmit Data Register Empty Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_S1_Type use record
+      PF   at 0 range 0 .. 0;
+      FE   at 0 range 1 .. 1;
+      NF   at 0 range 2 .. 2;
+      OVR  at 0 range 3 .. 3;
+      IDLE at 0 range 4 .. 4;
+      RDRF at 0 range 5 .. 5;
+      TC   at 0 range 6 .. 6;
+      TDRE at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.6 UART Status Register 2 (UARTx_S2)
+
+   type UARTx_S2_Type is record
+      RAF     : Boolean := False; -- Receiver Active Flag
+      LBKDE   : Boolean := False; -- LIN Break Detection Enable
+      BRK13   : Boolean := False; -- Break Transmit Character Length
+      RWUID   : Boolean := False; -- Receive Wakeup Idle Detect
+      RXINV   : Boolean := False; -- Receive Data Inversion
+      MSBF    : Boolean := False; -- Most Significant Bit First
+      RXEDGIF : Boolean := False; -- RxD Pin Active Edge Interrupt Flag
+      LBKDIF  : Boolean := False; -- LIN Break Detect Interrupt Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_S2_Type use record
+      RAF     at 0 range 0 .. 0;
+      LBKDE   at 0 range 1 .. 1;
+      BRK13   at 0 range 2 .. 2;
+      RWUID   at 0 range 3 .. 3;
+      RXINV   at 0 range 4 .. 4;
+      MSBF    at 0 range 5 .. 5;
+      RXEDGIF at 0 range 6 .. 6;
+      LBKDIF  at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.7 UART Control Register 3 (UARTx_C3)
+
+   TXDIR_SWIN  : constant := 0; -- TXD pin is an input in single wire mode.
+   TXDIR_SWOUT : constant := 1; -- TXD pin is an output in single wire mode.
+
+   type UARTx_C3_Type is record
+      PEIE  : Boolean := False;      -- Parity Error Interrupt Enable
+      FEIE  : Boolean := False;      -- Framing Error Interrupt Enable
+      NEIE  : Boolean := False;      -- Noise Error Interrupt Enable
+      ORIE  : Boolean := False;      -- Overrun Error Interrupt Enable
+      TXINV : Boolean := False;      -- Transmit Data Inversion.
+      TXDIR : Bits_1  := TXDIR_SWIN; -- Transmitter Pin Data Direction in Single-Wire mode
+      T8    : Bits_1  := 0;          -- Transmit Bit 8
+      R8    : Bits_1  := 0;          -- Received Bit 8
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_C3_Type use record
+      PEIE  at 0 range 0 .. 0;
+      FEIE  at 0 range 1 .. 1;
+      NEIE  at 0 range 2 .. 2;
+      ORIE  at 0 range 3 .. 3;
+      TXINV at 0 range 4 .. 4;
+      TXDIR at 0 range 5 .. 5;
+      T8    at 0 range 6 .. 6;
+      R8    at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.8 UART Data Register (UARTx_D)
+
+   type UARTx_D_Type is record
+      RT : Unsigned_8; -- Reads return the contents of the read-only receive data register and writes go to the write-only transmit data register.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_D_Type use record
+      RT at 0 range 0 .. 7;
+   end record;
+
+   -- 56.3.9 UART Match Address Registers 1 (UARTx_MA1)
+
+   type UARTx_MA1_Type is record
+      MA : Unsigned_8 := 0; -- Match Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_MA1_Type use record
+      MA at 0 range 0 .. 7;
+   end record;
+
+   -- 56.3.10 UART Match Address Registers 2 (UARTx_MA2)
+
+   type UARTx_MA2_Type is record
+      MA : Unsigned_8 := 0; -- Match Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_MA2_Type use record
+      MA at 0 range 0 .. 7;
+   end record;
+
+   -- 56.3.11 UART Control Register 4 (UARTx_C4)
+
+   OSR_4x  : constant := 2#00011#; -- oversampling ratio for the receiver = 4x
+   OSR_8x  : constant := 2#00111#; -- oversampling ratio for the receiver = 8x
+   OSR_16x : constant := 2#01111#; -- oversampling ratio for the receiver = 16x
+   OSR_32x : constant := 2#11111#; -- oversampling ratio for the receiver = 32x
+
+   type UARTx_C4_Type is record
+      BRFA  : Bits_5  := OSR_16x; -- Baud Rate Fine Adjust
+      M10   : Boolean := False;   -- 10-bit Mode select
+      MAEN2 : Boolean := False;   -- Match Address Mode Enable 2
+      MAEN1 : Boolean := False;   -- Match Address Mode Enable 1
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_C4_Type use record
+      BRFA  at 0 range 0 .. 4;
+      M10   at 0 range 5 .. 5;
+      MAEN2 at 0 range 6 .. 6;
+      MAEN1 at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.12 UART Control Register 5 (UARTx_C5)
+
+   type UARTx_C5_Type is record
+      Reserved1 : Bits_4  := 0;
+      Reserved2 : Bits_1  := 0;
+      RDMAS     : Boolean := False; -- Receiver Full DMA Select
+      Reserved3 : Bits_1  := 0;
+      TDMAS     : Boolean := False; -- Transmitter DMA Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_C5_Type use record
+      Reserved1 at 0 range 0 .. 3;
+      Reserved2 at 0 range 4 .. 4;
+      RDMAS     at 0 range 5 .. 5;
+      Reserved3 at 0 range 6 .. 6;
+      TDMAS     at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3 Memory map and registers
+
+   type UART_Type is record
+      BDH : UARTx_BDH_Type with Volatile_Full_Access => True;
+      BDL : UARTx_BDL_Type with Volatile_Full_Access => True;
+      C1  : UARTx_C1_Type  with Volatile_Full_Access => True;
+      C2  : UARTx_C2_Type  with Volatile_Full_Access => True;
+      S1  : UARTx_S1_Type  with Volatile_Full_Access => True;
+      S2  : UARTx_S2_Type  with Volatile_Full_Access => True;
+      C3  : UARTx_C3_Type  with Volatile_Full_Access => True;
+      D   : UARTx_D_Type   with Volatile_Full_Access => True;
+      MA1 : UARTx_MA1_Type with Volatile_Full_Access => True;
+      MA2 : UARTx_MA2_Type with Volatile_Full_Access => True;
+      C4  : UARTx_C4_Type  with Volatile_Full_Access => True;
+      C5  : UARTx_C5_Type  with Volatile_Full_Access => True;
+   end record
+      with Size => 16#C# * 8;
+   for UART_Type use record
+      BDH at 16#0# range 0 .. 7;
+      BDL at 16#1# range 0 .. 7;
+      C1  at 16#2# range 0 .. 7;
+      C2  at 16#3# range 0 .. 7;
+      S1  at 16#4# range 0 .. 7;
+      S2  at 16#5# range 0 .. 7;
+      C3  at 16#6# range 0 .. 7;
+      D   at 16#7# range 0 .. 7;
+      MA1 at 16#8# range 0 .. 7;
+      MA2 at 16#9# range 0 .. 7;
+      C4  at 16#A# range 0 .. 7;
+      C5  at 16#B# range 0 .. 7;
+   end record;
+
+   UART0 : aliased UART_Type
+      with Address    => System'To_Address (16#4006_A000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   UART1 : aliased UART_Type
+      with Address    => System'To_Address (16#4006_B000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   UART2 : aliased UART_Type
+      with Address    => System'To_Address (16#4006_C000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   UART3 : aliased UART_Type
+      with Address    => System'To_Address (16#4006_D000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   UART4 : aliased UART_Type
+      with Address    => System'To_Address (16#400E_A000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   UART5 : aliased UART_Type
+      with Address    => System'To_Address (16#400E_B000#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2891,7 +4257,14 @@ pragma Style_Checks (Off);
    -- Chapter 59 General-Purpose Input/Output (GPIO)
    ----------------------------------------------------------------------------
 
-   -- 59.2 Memory map and register definition
+   GPIO_BASEADDRESS : constant := 16#400F_F000#;
+
+   -- 59.2.1 Port Data Output Register (GPIOx_PDOR)
+   -- 59.2.2 Port Set Output Register (GPIOx_PSOR)
+   -- 59.2.3 Port Clear Output Register (GPIOx_PCOR)
+   -- 59.2.4 Port Toggle Output Register (GPIOx_PTOR)
+   -- 59.2.5 Port Data Input Register (GPIOx_PDIR)
+   -- 59.2.6 Port Data Direction Register (GPIOx_PDDR)
 
    type GPIO_PORT_Type is record
       PDOR : Bitmap_32 with Volatile_Full_Access => True;
@@ -2911,30 +4284,36 @@ pragma Style_Checks (Off);
       PDDR at 16#14# range 0 .. 31;
    end record;
 
-   GPIO_BASEADDRESS : constant := 16#400F_F000#;
+   -- 59.2 Memory map and register definition
 
    GPIOA : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#000#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOB : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#040#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOC : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#080#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOD : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#0C0#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOE : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#100#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOF : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#140#),
+           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
