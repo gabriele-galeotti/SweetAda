@@ -27,6 +27,8 @@ package ARMv7M.FPU
    --                                                                        --
    --========================================================================--
 
+pragma Style_Checks (Off);
+
    -- B3.2.21 Floating Point Context Control Register, FPCCR
 
    type FPCCR_Type is record
@@ -164,5 +166,7 @@ package ARMv7M.FPU
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+pragma Style_Checks (On);
 
 end ARMv7M.FPU;

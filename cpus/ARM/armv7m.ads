@@ -37,6 +37,8 @@ package ARMv7M
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- B1.4 Registers
    ----------------------------------------------------------------------------
@@ -799,5 +801,7 @@ package ARMv7M
       renames ARMv6M.Fault_Irq_Enable;
    procedure Fault_Irq_Disable
       renames ARMv6M.Fault_Irq_Disable;
+
+pragma Style_Checks (On);
 
 end ARMv7M;
