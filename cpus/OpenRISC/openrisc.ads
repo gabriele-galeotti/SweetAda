@@ -38,6 +38,8 @@ package OpenRISC
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- SPRs
    ----------------------------------------------------------------------------
@@ -201,5 +203,7 @@ package OpenRISC
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end OpenRISC;
