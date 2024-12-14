@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
-with Interfaces;
 with Definitions;
 
 package body Dreamcast
@@ -31,7 +30,6 @@ package body Dreamcast
    --========================================================================--
 
    use System.Machine_Code;
-   use Interfaces;
    use Definitions;
 
    --========================================================================--
@@ -61,7 +59,7 @@ package body Dreamcast
    begin
       -- set PORT8 and PORT9 to input
       PortA := (PortA and 16#FFF0FFFF#) or 16#000A_0000#;
-      case Bits.Bits_2 (Shift_Right (Port89, 8) and 16#0003#) is
+      case Bits_2 (Shift_Right (Port89, 8) and 16#0003#) is
          when 0 => return CABLE_VGA;
          when 1 => return CABLE_NONE;
          when 2 => return CABLE_RGB;
@@ -91,5 +89,16 @@ package body Dreamcast
           );
       return Result;
    end Video_Font;
+
+   ----------------------------------------------------------------------------
+   -- RTC_Read
+   ----------------------------------------------------------------------------
+   function RTC_Read
+      return Unsigned_32
+      is
+      EPOCH_50_70 : constant := (20 * 365 + 5) * 24 * 60 * 60;
+   begin
+      return 0;
+   end RTC_Read;
 
 end Dreamcast;
